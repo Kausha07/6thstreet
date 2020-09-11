@@ -1,0 +1,10 @@
+:root {
+    --dynamic-content-grid-column-count: 1;
+}
+
+.DynamicContentGrid {
+    &-Grid {
+        display: grid;
+        grid-template-columns: repeat(var(--dynamic-content-grid-column-count), 1fr);
+    }
+}

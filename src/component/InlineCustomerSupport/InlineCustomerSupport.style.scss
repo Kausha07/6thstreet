@@ -1,0 +1,9 @@
+.InlineCustomerSupport {
+    &-Dropdown {
+        display: none;
+
+        &_isExpanded {
+            display: block;            
+        }
+    }
+}
