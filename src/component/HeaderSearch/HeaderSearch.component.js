@@ -26,7 +26,8 @@ class HeaderSearch extends PureComponent {
             <Field
               id="search-field"
               name="search"
-              type="string"
+              type="text"
+              placeholder={ __('What are you looking for?') }
               onChange={ onSearchChange }
               value={ search }
             />

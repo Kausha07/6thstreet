@@ -28,23 +28,43 @@ class HeaderMainSection extends NavigationAbstract {
     };
 
     renderAccount() {
-        return <HeaderAccount />;
+        return (
+            <HeaderAccount
+              key="account"
+            />
+        );
     }
 
     renderCart() {
-        return <HeaderCart />;
+        return (
+            <HeaderCart
+              key="cart"
+            />
+        );
     }
 
     renderWishlist() {
-        return <HeaderWishlist />;
+        return (
+            <HeaderWishlist
+              key="wishlist"
+            />
+        );
     }
 
     renderGenderSwitcher() {
-        return <HeaderGenders />;
+        return (
+            <HeaderGenders
+              key="genders"
+            />
+        );
     }
 
     renderLogo() {
-        return <HeaderLogo />;
+        return (
+            <HeaderLogo
+              key="logo"
+            />
+        );
     }
 
     render() {

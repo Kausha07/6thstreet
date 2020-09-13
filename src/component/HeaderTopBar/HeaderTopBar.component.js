@@ -1,3 +1,5 @@
+import { Fragment } from 'react';
+
 import CountrySwitcher from 'Component/CountrySwitcher';
 import InlineCustomerSupport from 'Component/InlineCustomerSupport';
 import LanguageSwitcher from 'Component/LanguageSwitcher';
@@ -28,16 +30,16 @@ class HeaderTopBar extends NavigationAbstract {
 
     renderCustomerSupport() {
         return (
-            <InlineCustomerSupport />
+            <InlineCustomerSupport key="support" />
         );
     }
 
     renderStoreSwitcher() {
         return (
-            <>
+            <Fragment key="store-switcher">
                 <LanguageSwitcher />
                 <CountrySwitcher />
-            </>
+            </Fragment>
         );
     }
 

@@ -11,6 +11,7 @@ class Menu extends PureComponent {
         categories: Categories.isRequired
     };
 
+    // TODO: if needed, labels and renders of category content can be split here
     renderCategory(category) {
         const {
             data,
@@ -36,9 +37,9 @@ class Menu extends PureComponent {
 
     render() {
         return (
-            <div block="Menu">
+            <ul block="Menu">
                 { this.renderCategories() }
-            </div>
+            </ul>
         );
     }
 }

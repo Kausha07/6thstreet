@@ -19,11 +19,19 @@ class HeaderBottomBar extends NavigationAbstract {
     };
 
     renderMenu() {
-        return <HeaderMenu />;
+        return (
+            <HeaderMenu
+              key="menu"
+            />
+        );
     }
 
     renderSearch() {
-        return <HeaderSearch />;
+        return (
+            <HeaderSearch
+              key="search"
+            />
+        );
     }
 
     render() {

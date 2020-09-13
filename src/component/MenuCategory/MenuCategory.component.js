@@ -8,7 +8,7 @@ import './MenuCategory.style';
 
 class MenuCategory extends PureComponent {
     static propTypes = {
-        data: CategoryData.isRequired,
+        data: PropTypes.arrayOf(CategoryData).isRequired,
         label: PropTypes.string.isRequired
         // TODO: implement design
         // design: Design.isRequired
@@ -48,14 +48,14 @@ class MenuCategory extends PureComponent {
 
     render() {
         return (
-            <div
+            <li
               block="MenuCategory"
               onMouseEnter={ this.onEnter }
               onMouseLeave={ this.onLeave }
             >
                 { this.renderLabel() }
                 { this.renderDynamicContent() }
-            </div>
+            </li>
         );
     }
 }

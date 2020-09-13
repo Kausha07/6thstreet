@@ -20,15 +20,20 @@ class HeaderGenders extends PureComponent {
         }
     ];
 
-    renderGender = (gender) => (
-        <GenderButton
-          gender={ gender }
-          mix={ {
-              block: 'HeaderGenders',
-              elem: 'Button'
-          } }
-        />
-    );
+    renderGender = (gender) => {
+        const { key } = gender;
+
+        return (
+            <GenderButton
+              key={ key }
+              gender={ gender }
+              mix={ {
+                  block: 'HeaderGenders',
+                  elem: 'Button'
+              } }
+            />
+        );
+    };
 
     renderGenders() {
         return this.genderList.map(this.renderGender);
