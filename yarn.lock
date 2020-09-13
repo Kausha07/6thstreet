@@ -1464,16 +1464,16 @@
     react-dev-utils "^10.2.1"
     semver "^7.3.2"
 
-"@scandipwa/scandipwa-scripts@0.0.5":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@scandipwa/scandipwa-scripts/-/scandipwa-scripts-0.0.5.tgz#f5f89c3c5c541eb652f3f38b65041ce7beb7481c"
-  integrity sha512-wl8gmh+Y5XbQ0FiH7jb+L6+laGR6np6QIguahYym6kcL46k/DdYwFiCTWKsYAd785iEtUuo6sMysqIC2Qlln1Q==
+"@scandipwa/scandipwa-scripts@0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@scandipwa/scandipwa-scripts/-/scandipwa-scripts-0.0.6.tgz#ba9f86bbc9b2c49c43d48ffdf3c93ec45a0512dc"
+  integrity sha512-OVJ+wTZ8X3RCcN8LKUPoCs6N9H/Xh64V6j01NEPIHr5BaAQZ9cPZDgi7jqLHMVOX4lRoVL79f/binD9N1iHZCg==
   dependencies:
     "@scandipwa/craco" "^0.0.1"
     "@scandipwa/eslint-config" "^0.0.1"
     "@scandipwa/eslint-plugin-scandipwa-guidelines" "^1.0"
     "@scandipwa/scandipwa-dev-utils" "^0.0.5"
-    "@scandipwa/webpack-fallback-plugin" "^0.0.2"
+    "@scandipwa/webpack-fallback-plugin" "^0.0.3"
     "@scandipwa/webpack-i18n-plugin" "^0.0.5"
     babel-plugin-module-resolver "^4.0.0"
     babel-plugin-transform-rebem-jsx "^0.3.3"
@@ -1522,10 +1522,10 @@
     redux "^4.0.5"
     unstated "^2.1.1"
 
-"@scandipwa/webpack-fallback-plugin@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@scandipwa/webpack-fallback-plugin/-/webpack-fallback-plugin-0.0.2.tgz#4e9ce46507d4d03a1289230866192d928b116f21"
-  integrity sha512-hLOJEENZuTq/hS6Nt9PAAn8Kebhmpiyw53teW7dyOAyyCL/53alqbKS/9om0aJO+H/nZJoAdChgMA7RythSzyQ==
+"@scandipwa/webpack-fallback-plugin@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@scandipwa/webpack-fallback-plugin/-/webpack-fallback-plugin-0.0.3.tgz#0c6dc80e5e1ce535ada8f1fcb94234c3ca9790ab"
+  integrity sha512-bAgXVOL0giXDnaJeczOTYQdjjdcFDIdW1PZ9r26GeovoCq7U9t/sQs6k99lpZE4pOnfZTh1/gXvwHy4O0gFwKA==
 
 "@scandipwa/webpack-i18n-plugin@^0.0.5":
   version "0.0.5"

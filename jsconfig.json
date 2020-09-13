@@ -1,0 +1,49 @@
+{
+    "compilerOptions": {
+        "baseUrl": "./",
+        "paths": {
+            "Style/*": [
+                "/Users/alfreds.genkins/Projects/6thstreet/src/style//*"
+            ],
+            "Component/*": [
+                "/Users/alfreds.genkins/Projects/6thstreet/src/component//*"
+            ],
+            "Route/*": [
+                "/Users/alfreds.genkins/Projects/6thstreet/src/route//*"
+            ],
+            "Store/*": [
+                "/Users/alfreds.genkins/Projects/6thstreet/src/store//*"
+            ],
+            "Util/*": [
+                "/Users/alfreds.genkins/Projects/6thstreet/src/util//*"
+            ],
+            "Query/*": [
+                "/Users/alfreds.genkins/Projects/6thstreet/src/query//*"
+            ],
+            "Type/*": [
+                "/Users/alfreds.genkins/Projects/6thstreet/src/type//*"
+            ],
+            "SourceStyle/*": [
+                "/Users/alfreds.genkins/Projects/6thstreet/node_modules/@scandipwa/scandipwa/src/style//*"
+            ],
+            "SourceComponent/*": [
+                "/Users/alfreds.genkins/Projects/6thstreet/node_modules/@scandipwa/scandipwa/src/component//*"
+            ],
+            "SourceRoute/*": [
+                "/Users/alfreds.genkins/Projects/6thstreet/node_modules/@scandipwa/scandipwa/src/route//*"
+            ],
+            "SourceStore/*": [
+                "/Users/alfreds.genkins/Projects/6thstreet/node_modules/@scandipwa/scandipwa/src/store//*"
+            ],
+            "SourceUtil/*": [
+                "/Users/alfreds.genkins/Projects/6thstreet/node_modules/@scandipwa/scandipwa/src/util//*"
+            ],
+            "SourceQuery/*": [
+                "/Users/alfreds.genkins/Projects/6thstreet/node_modules/@scandipwa/scandipwa/src/query//*"
+            ],
+            "SourceType/*": [
+                "/Users/alfreds.genkins/Projects/6thstreet/node_modules/@scandipwa/scandipwa/src/type//*"
+            ]
+        }
+    }
+}
