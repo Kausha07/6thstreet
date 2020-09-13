@@ -33,6 +33,10 @@ export class RouterContainer extends SourceRouterContainer {
         locale: ''
     };
 
+    initializeApplication() {
+        // implement init (disabled for now - 6th street has no endpoint)
+    }
+
     containerProps = () => {
         const { isBigOffline } = this.props;
 

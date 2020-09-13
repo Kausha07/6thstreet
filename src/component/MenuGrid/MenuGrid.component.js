@@ -17,7 +17,7 @@ class MenuGrid extends PureComponent {
         button: {}
     };
 
-    renderItem = (item) => {
+    renderItem = (item, i) => {
         const {
             image_url,
             label,
@@ -25,7 +25,7 @@ class MenuGrid extends PureComponent {
         } = item;
 
         return (
-            <Link to={ link }>
+            <Link to={ link } key={ i }>
                 <Image src={ image_url } />
                 { label }
             </Link>
