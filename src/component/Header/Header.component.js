@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import HeaderBottomBar from 'Component/HeaderBottomBar';
 import HeaderMainSection from 'Component/HeaderMainSection';
 import HeaderTopBar from 'Component/HeaderTopBar';
 import OfflineNotice from 'Component/OfflineNotice';
@@ -16,7 +17,8 @@ export class Header extends PureComponent {
 
     headerSections = [
         HeaderTopBar,
-        HeaderMainSection
+        HeaderMainSection,
+        HeaderBottomBar
     ];
 
     renderSection = (Component, i) => {

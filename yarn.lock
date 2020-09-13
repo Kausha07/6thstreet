@@ -1464,10 +1464,10 @@
     react-dev-utils "^10.2.1"
     semver "^7.3.2"
 
-"@scandipwa/scandipwa-scripts@0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@scandipwa/scandipwa-scripts/-/scandipwa-scripts-0.0.6.tgz#ba9f86bbc9b2c49c43d48ffdf3c93ec45a0512dc"
-  integrity sha512-OVJ+wTZ8X3RCcN8LKUPoCs6N9H/Xh64V6j01NEPIHr5BaAQZ9cPZDgi7jqLHMVOX4lRoVL79f/binD9N1iHZCg==
+"@scandipwa/scandipwa-scripts@0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@scandipwa/scandipwa-scripts/-/scandipwa-scripts-0.0.7.tgz#ef3f56802c0fafdd7bad9f093d541e414dfbe3e0"
+  integrity sha512-E2cITmfFR+vloSxpPMi7TGfceXuEYeIng4TNfbxnuvQVdntT+lghzp6TGUUJGzVnv3OQL7RgveLMVk3vIu8OZw==
   dependencies:
     "@scandipwa/craco" "^0.0.1"
     "@scandipwa/eslint-config" "^0.0.1"

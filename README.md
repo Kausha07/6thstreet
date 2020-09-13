@@ -6,5 +6,6 @@
 ## Missing data
 
 1. Algolia brands endpoint does not contain the link to a brand category
-2. Link to Product in PLp response (bad for SEO)
+2. Link to Product in PLP response (bad for SEO)
 3. Allowed countries - take from Magento 2 ?
+4. Where are gender sources?

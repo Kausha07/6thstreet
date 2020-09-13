@@ -3,7 +3,7 @@ import { getStore } from 'Store';
 import CDN from '../../provider/CDN';
 
 // eslint-disable-next-line import/prefer-default-export
-export const getStaticFile = async (key, TemplateParamsOverride) => {
+export const getStaticFile = async (key, TemplateParamsOverride = {}) => {
     if (!key) {
         throw new Error('Can not load static file, KEY is not specified.');
     }

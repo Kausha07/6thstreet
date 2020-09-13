@@ -1,4 +1,4 @@
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import DynamicContent from 'Component/DynamicContent';
@@ -8,7 +8,8 @@ import './HomePage.style';
 
 class HomePage extends PureComponent {
     static propTypes = {
-        dynamicContent: DynamicContentType.isRequired
+        dynamicContent: DynamicContentType.isRequired,
+        isLoading: PropTypes.bool.isRequired
     };
 
     renderDynamicContent() {
@@ -21,10 +22,24 @@ class HomePage extends PureComponent {
         );
     }
 
+    renderLoading() {
+        return 'loading ...';
+    }
+
+    renderContent() {
+        const { isLoading } = this.props;
+
+        if (isLoading) {
+            return this.renderLoading();
+        }
+
+        return this.renderDynamicContent();
+    }
+
     render() {
         return (
             <main block="HomePage">
-                { this.renderDynamicContent() }
+                { this.renderContent() }
             </main>
         );
     }
