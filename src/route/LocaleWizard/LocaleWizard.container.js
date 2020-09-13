@@ -22,6 +22,7 @@ export const mapDispatchToProps = (dispatch) => ({
     setLanguage: (value) => dispatch(setLanguage(value))
 });
 
+// TODO: rework, using StoreSwitcher and LanguageSwitcher
 export class LocaleWizardContainer extends PureComponent {
     static propTypes = {
         setLanguage: PropTypes.func.isRequired,

@@ -36,7 +36,6 @@ class StoreSwitcher extends PureComponent {
     render() {
         return (
             <div block="StoreSwitcher">
-                { __('Country') }
                 { this.renderCountrySelect() }
             </div>
         );
