@@ -48,7 +48,7 @@ class MenuGrid extends PureComponent {
 
         const linkTo = {
             pathname: link,
-            plp_config: {} // TODO: implement based on plp_title
+            state: { plp_config: {} } // TODO: implement based on plp_title
         };
 
         return (
