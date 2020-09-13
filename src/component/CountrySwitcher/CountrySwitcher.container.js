@@ -6,7 +6,7 @@ import { setCountry } from 'Store/AppState/AppState.action';
 import { getCountriesForSelect } from 'Util/API/endpoint/Config/Config.format';
 import { Config } from 'Util/API/endpoint/Config/Config.type';
 
-import StoreSwitcher from './StoreSwitcher.component';
+import CountrySwitcher from './CountrySwitcher.component';
 
 export const mapStateToProps = (state) => ({
     config: state.AppConfig.config,
@@ -17,7 +17,7 @@ export const mapDispatchToProps = (dispatch) => ({
     setCountry: (value) => dispatch(setCountry(value))
 });
 
-export class StoreSwitcherContainer extends PureComponent {
+export class CountrySwitcherContainer extends PureComponent {
     static propTypes = {
         setCountry: PropTypes.func.isRequired,
         config: Config.isRequired,
@@ -44,7 +44,7 @@ export class StoreSwitcherContainer extends PureComponent {
 
     render() {
         return (
-            <StoreSwitcher
+            <CountrySwitcher
               { ...this.containerFunctions }
               { ...this.containerProps() }
             />
@@ -52,4 +52,4 @@ export class StoreSwitcherContainer extends PureComponent {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(StoreSwitcherContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(CountrySwitcherContainer);

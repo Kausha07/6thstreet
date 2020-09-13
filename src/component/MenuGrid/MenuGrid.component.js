@@ -61,8 +61,8 @@ class MenuGrid extends PureComponent {
     render() {
         return (
             <div block="MenuGrid">
-                { this.renderButton() }
                 { this.renderItems() }
+                { this.renderButton() }
             </div>
         );
     }

@@ -4,9 +4,9 @@ import { PureComponent } from 'react';
 import Field from 'Component/Field';
 import { SelectOptions } from 'Type/Field';
 
-import './StoreSwitcher.style';
+import './CountrySwitcher.style';
 
-class StoreSwitcher extends PureComponent {
+class CountrySwitcher extends PureComponent {
     static propTypes = {
         countrySelectOptions: SelectOptions.isRequired,
         onCountrySelect: PropTypes.func.isRequired,
@@ -22,7 +22,7 @@ class StoreSwitcher extends PureComponent {
 
         return (
             <Field
-              id="locale-wizard-country"
+              id="language-switcher-country"
               name="country"
               type="select"
               placeholder={ __('Choose country') }
@@ -35,11 +35,11 @@ class StoreSwitcher extends PureComponent {
 
     render() {
         return (
-            <div block="StoreSwitcher">
+            <div block="CountrySwitcher">
                 { this.renderCountrySelect() }
             </div>
         );
     }
 }
 
-export default StoreSwitcher;
+export default CountrySwitcher;

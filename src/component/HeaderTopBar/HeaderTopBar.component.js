@@ -1,7 +1,8 @@
+import CountrySwitcher from 'Component/CountrySwitcher';
 import InlineCustomerSupport from 'Component/InlineCustomerSupport';
+import LanguageSwitcher from 'Component/LanguageSwitcher';
 import NavigationAbstract from 'Component/NavigationAbstract/NavigationAbstract.component';
 import { DEFAULT_STATE_NAME } from 'Component/NavigationAbstract/NavigationAbstract.config';
-import StoreSwitcher from 'Component/StoreSwitcher';
 
 import './HeaderTopBar.style';
 
@@ -33,7 +34,10 @@ class HeaderTopBar extends NavigationAbstract {
 
     renderStoreSwitcher() {
         return (
-            <StoreSwitcher />
+            <>
+                <LanguageSwitcher />
+                <CountrySwitcher />
+            </>
         );
     }
 

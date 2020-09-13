@@ -14,8 +14,25 @@ class MenuCategory extends PureComponent {
         // design: Design.isRequired
     };
 
+    state = {
+        isVisible: false
+    };
+
+    onEnter = this.handleHover.bind(this, true);
+
+    onLeave = this.handleHover.bind(this, false);
+
+    handleHover(isVisible) {
+        this.setState({ isVisible });
+    }
+
     renderDynamicContent() {
+        const { isVisible } = this.state;
         const { data } = this.props;
+
+        if (!isVisible) {
+            return null;
+        }
 
         return (
             <MenuDynamicContent
@@ -31,7 +48,11 @@ class MenuCategory extends PureComponent {
 
     render() {
         return (
-            <div block="MenuCategory">
+            <div
+              block="MenuCategory"
+              onMouseEnter={ this.onEnter }
+              onMouseLeave={ this.onLeave }
+            >
                 { this.renderLabel() }
                 { this.renderDynamicContent() }
             </div>

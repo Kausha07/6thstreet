@@ -1,1 +1,1 @@
-export { default } from './LocaleWizard.container';
+export { default } from './LocaleWizard.component';
