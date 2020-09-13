@@ -18,10 +18,12 @@ export const CategoryItem = PropTypes.shape({
     link: PropTypes.string
 });
 
+export const CategoryItems = PropTypes.arrayOf(CategoryItem);
+
 export const CategoryData = PropTypes.shape({
     type: PropTypes.string,
     button: CategoryButton,
-    items: PropTypes.arrayOf(CategoryItem)
+    items: CategoryItems
 });
 
 export const Category = PropTypes.shape({

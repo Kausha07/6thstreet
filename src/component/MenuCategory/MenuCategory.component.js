@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-// import DynamicContent from 'Component/DynamicContent';
+import MenuDynamicContent from 'Component/MenuDynamicContent';
 import { CategoryData } from 'Util/API/endpoint/Categories/Categories.type';
 
 import './MenuCategory.style';
@@ -17,15 +17,11 @@ class MenuCategory extends PureComponent {
     renderDynamicContent() {
         const { data } = this.props;
 
-        console.log(data);
-
-        return 'dynamic content';
-
-        // return (
-        //     <DynamicContent
-        //       content={ data }
-        //     />
-        // );
+        return (
+            <MenuDynamicContent
+              content={ data }
+            />
+        );
     }
 
     renderLabel() {

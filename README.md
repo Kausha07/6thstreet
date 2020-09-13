@@ -9,3 +9,4 @@
 2. Link to Product in PLP response (bad for SEO)
 3. Allowed countries - take from Magento 2 ?
 4. Where are gender sources?
+5. Homepage, Categories dynamic-content data does not match one format
