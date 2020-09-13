@@ -1,4 +1,3 @@
-// import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
@@ -13,17 +12,26 @@ export const mapDispatchToProps = (_dispatch) => ({
 });
 
 export class HeaderSearchContainer extends PureComponent {
-    static propTypes = {
-        // TODO: implement prop-types
+    static defaultProps = {
+        search: ''
+    };
+
+    state = {
+        search: ''
     };
 
     containerFunctions = {
-        // getData: this.getData.bind(this)
+        onSearchChange: this.onSearchChange.bind(this)
     };
 
     containerProps = () => {
-        // isDisabled: this._getIsDisabled()
+        const { search } = this.state;
+        return { search };
     };
+
+    onSearchChange(search) {
+        this.setState({ search });
+    }
 
     render() {
         return (
