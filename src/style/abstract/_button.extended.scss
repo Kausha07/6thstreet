@@ -1,0 +1,90 @@
+button,
+.button {
+    font-weight: 700;
+    height: 50px;
+    padding: 0 15px;
+    text-transform: uppercase;
+
+    // Button colors
+    &.primary {
+        background: $black;
+        color: $white;
+    }
+
+    &.secondary {
+        border: 2px solid $black;
+        color: $black;
+    }
+
+    &.red {
+        border: 2px solid $white;
+        background-color: red;
+        color: $white;
+    }
+
+    &.bright-red {
+        border: 2px solid $bright-red;
+        background-color: $bright-red;
+        color: $white;
+    }
+
+    &.transparent {
+        border: none;
+        color: $bright-pink;
+        text-transform: capitalize;
+    }
+
+    // Button sizes
+    &.xs {
+        min-width: 100px;
+    }
+
+    &.small {
+        min-width: 150px;
+    }
+
+    &.medium {
+        min-width: 200px;
+    }
+
+    &.big {
+        min-width: 300px;
+    }
+
+    &.full {
+        min-width: 100%;
+    }
+
+    &.wide {
+        height: 70px;
+    }
+
+    // Button with images
+    &.image {
+        background-repeat: no-repeat;
+        background-size: 25px;
+
+        &-left {
+            background-position: 15% 45%;
+        }
+
+        &-right {
+            background-position: 85% 45%;
+        }
+
+        &-no-label {
+            background-position: 50% 45%;
+            min-width: 60px;
+        }
+    }
+
+    // Button additional styles
+    &.rounded {
+        border-radius: 7px;
+    }
+
+    &.thin {
+        border-width: 1px;
+        font-weight: 400;
+    }
+}
