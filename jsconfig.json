@@ -3,53 +3,53 @@
         "baseUrl": "./",
         "paths": {
             "Style/*": [
-                "/home/scandiweb/Projects/6th-street/src/style/*"
+                "src/style/*"
             ],
             "Component/*": [
-                "/home/scandiweb/Projects/6th-street/src/component/*"
+                "src/component/*"
             ],
             "Route/*": [
-                "/home/scandiweb/Projects/6th-street/src/route/*"
+                "src/route/*"
             ],
             "Store/*": [
-                "/home/scandiweb/Projects/6th-street/src/store/*"
+                "src/store/*"
             ],
             "Util/*": [
-                "/home/scandiweb/Projects/6th-street/src/util/*"
+                "src/util/*"
             ],
             "Query/*": [
-                "/home/scandiweb/Projects/6th-street/src/query/*"
+                "src/query/*"
             ],
             "Type/*": [
-                "/home/scandiweb/Projects/6th-street/src/type/*"
+                "src/type/*"
             ],
             "SourceStyle/*": [
-                "/home/scandiweb/Projects/6th-street/src/style/*",
-                "/home/scandiweb/Projects/6th-street/node_modules/@scandipwa/scandipwa/src/style/*"
+                "src/style/*",
+                "node_modules/@scandipwa/scandipwa/src/style/*"
             ],
             "SourceComponent/*": [
-                "/home/scandiweb/Projects/6th-street/src/component/*",
-                "/home/scandiweb/Projects/6th-street/node_modules/@scandipwa/scandipwa/src/component/*"
+                "src/component/*",
+                "node_modules/@scandipwa/scandipwa/src/component/*"
             ],
             "SourceRoute/*": [
-                "/home/scandiweb/Projects/6th-street/src/route/*",
-                "/home/scandiweb/Projects/6th-street/node_modules/@scandipwa/scandipwa/src/route/*"
+                "src/route/*",
+                "node_modules/@scandipwa/scandipwa/src/route/*"
             ],
             "SourceStore/*": [
-                "/home/scandiweb/Projects/6th-street/src/store/*",
-                "/home/scandiweb/Projects/6th-street/node_modules/@scandipwa/scandipwa/src/store/*"
+                "src/store/*",
+                "node_modules/@scandipwa/scandipwa/src/store/*"
             ],
             "SourceUtil/*": [
-                "/home/scandiweb/Projects/6th-street/src/util/*",
-                "/home/scandiweb/Projects/6th-street/node_modules/@scandipwa/scandipwa/src/util/*"
+                "src/util/*",
+                "node_modules/@scandipwa/scandipwa/src/util/*"
             ],
             "SourceQuery/*": [
-                "/home/scandiweb/Projects/6th-street/src/query/*",
-                "/home/scandiweb/Projects/6th-street/node_modules/@scandipwa/scandipwa/src/query/*"
+                "src/query/*",
+                "node_modules/@scandipwa/scandipwa/src/query/*"
             ],
             "SourceType/*": [
-                "/home/scandiweb/Projects/6th-street/src/type/*",
-                "/home/scandiweb/Projects/6th-street/node_modules/@scandipwa/scandipwa/src/type/*"
+                "src/type/*",
+                "node_modules/@scandipwa/scandipwa/src/type/*"
             ]
         }
     }
