@@ -4,28 +4,57 @@ button,
     height: 50px;
     padding: 0 15px;
     text-transform: uppercase;
+    transition-property: background-color, color, border;
+    transition-timing-function: ease-out;
+    transition-duration: .25s;
 
     // Button colors
     &.primary {
         background: $black;
+        border: 2px solid $black;
         color: $white;
+
+        &:hover,
+        &:focus {
+            background: transparent;
+            color: $black;
+        }
     }
 
     &.secondary {
         border: 2px solid $black;
         color: $black;
+
+        &:hover,
+        &:focus {
+            background: $black;
+            color: $white;
+        }
     }
 
     &.red {
+        background-color: $red;
         border: 2px solid $white;
-        background-color: red;
         color: $white;
+
+        &:hover,
+        &:focus {
+            background: $white;
+            border: 2px solid $red;
+            color: $red;
+        }
     }
 
     &.bright-red {
         border: 2px solid $bright-red;
         background-color: $bright-red;
         color: $white;
+
+        &:hover,
+        &:focus {
+            background: $white;
+            color: $bright-red;
+        }
     }
 
     &.transparent {
