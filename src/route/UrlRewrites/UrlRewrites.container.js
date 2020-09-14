@@ -1,18 +1,16 @@
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import UrlRewritesQuery from 'Query/UrlRewrites.query';
 import { LocationType } from 'Type/Common';
-// import { prepareQuery } from 'Util/Query';
-// import { executeGet } from 'Util/Request';
 import { fetchQuery } from 'Util/Request';
 
 import UrlRewrites from './UrlRewrites.component';
 import { TYPE_NOTFOUND } from './UrlRewrites.config';
 
-export const mapStateToProps = (_state) => ({
-    // wishlistItems: state.WishlistReducer.productsInWishlist
+export const mapStateToProps = (state) => ({
+    locale: state.AppState.locale
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
@@ -21,7 +19,8 @@ export const mapDispatchToProps = (_dispatch) => ({
 
 export class UrlRewritesContainer extends PureComponent {
     static propTypes = {
-        location: LocationType.isRequired
+        location: LocationType.isRequired,
+        locale: PropTypes.string.isRequired
     };
 
     containerFunctions = {
@@ -40,11 +39,16 @@ export class UrlRewritesContainer extends PureComponent {
         this.requestUrlRewrite();
     }
 
-    componentDidUpdate() {
-        const { location: { pathname } } = this.props;
+    componentDidUpdate(prevProps) {
+        const { location: { pathname }, locale } = this.props;
+        const { locale: prevLocale } = prevProps;
         const { prevPathname } = this.state;
 
-        if (pathname !== prevPathname) {
+        // Request URL rewrite if pathname or locale changed
+        if (
+            pathname !== prevPathname
+            || locale !== prevLocale
+        ) {
             this.requestUrlRewrite(true);
         }
     }
