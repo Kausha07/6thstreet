@@ -1,10 +1,47 @@
 :root {
-    --dynamic-content-grid-column-count: 1;
+    --dynamic-content-grid-column-count: 3;
+    --subtitle-font-size: 17px;
+    --title-font-size: 25px;
+    --title-font-weight: 1000;
+}
+
+@media (max-width: 700px) {
+    :root {
+        --dynamic-content-grid-column-count: 1;
+    }
+}
+
+@media (min-width: 700px) and (max-width: 850px) {
+    :root {
+        --dynamic-content-grid-column-count: 2;
+    }
 }
 
 .DynamicContentGrid {
+    margin: 0 100px;
+
     &-Grid {
         display: grid;
-        grid-template-columns: repeat(var(--dynamic-content-grid-column-count), 1fr);
+        grid-gap: 20px 70px;
+        grid-template-columns: repeat(var(--dynamic-content-grid-column-count), 5fr);
+    }
+}
+
+.CategoryItem {
+    text-align: center;
+
+    &-Text {
+        margin-bottom: 30px;
+
+        &-Title {
+            display: block;
+            font-size: var(--title-font-size);
+            font-weight: var(--title-font-weight);
+            margin-bottom: 10px;
+        }
+
+        &-SubTitle {
+            font-size: var(--subtitle-font-size);
+        }
     }
 }

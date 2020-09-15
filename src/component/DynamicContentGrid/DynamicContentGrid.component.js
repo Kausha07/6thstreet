@@ -12,7 +12,7 @@ class DynamicContentGrid extends PureComponent {
         // background_color: PropTypes.string,
         // TODO: use height and width to calculate height, so nothing jumps
         // item_height: PropTypes.number.isRequired,
-        items_per_row: PropTypes.number.isRequired,
+        /* items_per_row: PropTypes.number.isRequired, */
         items: PropTypes.arrayOf(
             PropTypes.shape({
                 link: PropTypes.string,
@@ -29,9 +29,32 @@ class DynamicContentGrid extends PureComponent {
         const { link, url } = item;
 
         return (
-            <Link to={ link } key={ i }>
-                <Image src={ url } />
-            </Link>
+            <div block="CategoryItem">
+                <Link to={ link } key={ i }>
+                    <Image src={ url } />
+                </Link>
+                <div block="CategoryItem" elem="Text">
+                    <span
+                      block="CategoryItem"
+                      elem="Text-Title"
+                    >
+                        { __('CATEGORY TITLE') }
+                    </span>
+                    <span
+                      block="CategoryItem"
+                      elem="Text-SubTitle"
+                    >
+                        { __('Category subtitle') }
+                    </span>
+                </div>
+                <Link to={ link } key={ i }>
+                    <button
+                      block="button secondary medium"
+                    >
+                        { __('SHOP NOW') }
+                    </button>
+                </Link>
+            </div>
         );
     }
 
@@ -41,7 +64,7 @@ class DynamicContentGrid extends PureComponent {
     }
 
     renderGrid() {
-        const { items_per_row } = this.props;
+        const { items_per_row } = 3;
 
         return (
             <div
