@@ -13,6 +13,15 @@ class LanguageSwitcher extends PureComponent {
         language: PropTypes.string.isRequired
     };
 
+    getNonSelectedLanguage() {
+        const {
+            languageSelectOptions,
+            language
+        } = this.props;
+
+        return languageSelectOptions.filter((obj) => obj.id !== language);
+    }
+
     renderLanguageSelect() {
         const {
             languageSelectOptions,
@@ -33,10 +42,28 @@ class LanguageSwitcher extends PureComponent {
         );
     }
 
+    renderLanguageButton() {
+        const {
+            onLanguageSelect
+        } = this.props;
+
+        const buttonLabelObject = this.getNonSelectedLanguage();
+
+        return (
+            <button
+                /* eslint-disable-next-line */
+              onClick={ () => onLanguageSelect(buttonLabelObject[0].id) }
+            >
+                { buttonLabelObject[0].label }
+            </button>
+        );
+    }
+
     render() {
         return (
             <div block="LanguageSwitcher">
                 { this.renderLanguageSelect() }
+                { this.renderLanguageButton() }
             </div>
         );
     }
