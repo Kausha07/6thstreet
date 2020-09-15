@@ -1,0 +1,23 @@
+:root {
+    --input-padding: 13px 15px;
+}
+
+input,
+textarea,
+select {
+    background-repeat: no-repeat;
+    background-size: 20px;
+    background-position: 95% 45%;
+    text-transform: uppercase;
+
+    &.image {
+        &-left {
+            background-position: 10px 45%;
+            padding-left: 35px;
+        }
+
+        &-right {
+            background-position: 95% 45%;
+        }
+    }
+}

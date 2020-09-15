@@ -4,33 +4,62 @@ button,
     height: 50px;
     padding: 0 15px;
     text-transform: uppercase;
+    transition-property: background-color, color, border;
+    transition-timing-function: ease-out;
+    transition-duration: .25s;
 
     // Button colors
     &.primary {
         background: $black;
+        border: 2px solid $black;
         color: $white;
+
+        &:hover,
+        &:focus {
+            background: transparent;
+            color: $black;
+        }
     }
 
     &.secondary {
         border: 2px solid $black;
         color: $black;
+
+        &:hover,
+        &:focus {
+            background: $black;
+            color: $white;
+        }
     }
 
     &.red {
+        background-color: $default-primary-dark-color;
         border: 2px solid $white;
-        background-color: red;
         color: $white;
+
+        &:hover,
+        &:focus {
+            background: $white;
+            border: 2px solid $default-primary-dark-color;
+            color: $default-primary-dark-color;
+        }
     }
 
     &.bright-red {
-        border: 2px solid $bright-red;
-        background-color: $bright-red;
+        border: 2px solid $default-primary-base-color;
+        background-color: $default-primary-base-color;
         color: $white;
+
+        &:hover,
+        &:focus {
+            background: $white;
+            color: $default-primary-base-color;
+        }
     }
 
     &.transparent {
         border: none;
-        color: $bright-pink;
+        color: $default-primary-light-color;
         text-transform: capitalize;
     }
 
