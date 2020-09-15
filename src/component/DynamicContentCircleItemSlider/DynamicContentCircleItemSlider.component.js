@@ -41,8 +41,14 @@ class DynamicContentCircleItemSlider extends PureComponent {
                 <Image
                   src={ image_url }
                   alt={ label }
+                  mix={ { block: 'DynamicContentCircleItemSlider', elem: 'Image' } }
                 />
-                <p>{ label }</p>
+                <p
+                  block="DynamicContentCircleItemSlider"
+                  elem="Label"
+                >
+                    { label }
+                </p>
             </Link>
         );
     };

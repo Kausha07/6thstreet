@@ -4,7 +4,13 @@
 
 .DynamicContentGrid {
     &-Grid {
-        display: grid;
-        grid-template-columns: repeat(var(--dynamic-content-grid-column-count), 1fr);
+        // display: grid;
+        // grid-template-columns: repeat(var(--dynamic-content-grid-column-count), 1fr);
+        display: block;
+        margin: 10px;
     }
+}
+
+.Slider-Wrapper {
+    width: 90%;
 }
