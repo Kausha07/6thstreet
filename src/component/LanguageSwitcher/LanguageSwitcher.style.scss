@@ -1,3 +1,13 @@
 .LanguageSwitcher {
-    
+    .Field {
+        display: none;
+    }
+
+    button {
+        font-family: 'Avenir Next Ultra Light';
+        font-size: 12px;
+        height: auto;
+        letter-spacing: 1px;
+        text-transform: capitalize;
+    }
 }
