@@ -9,14 +9,14 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import Breadcrumb from 'Component/Breadcrumb';
 import ContentWrapper from 'Component/ContentWrapper';
 import { BreadcrumbsType } from 'Type/Breadcrumbs';
+import { appendWithStoreCode } from 'Util/Url';
 
-// import { appendWithStoreCode } from 'Util/Url';
 import './Breadcrumbs.style';
 
 /**
@@ -25,8 +25,8 @@ import './Breadcrumbs.style';
  */
 export class Breadcrumbs extends PureComponent {
     static propTypes = {
-        breadcrumbs: BreadcrumbsType.isRequired
-        // areBreadcrumbsVisible: PropTypes.bool.isRequired
+        breadcrumbs: BreadcrumbsType.isRequired,
+        areBreadcrumbsVisible: PropTypes.bool.isRequired
     };
 
     renderBreadcrumb({ url, name }, i) {
@@ -51,15 +51,15 @@ export class Breadcrumbs extends PureComponent {
     }
 
     render() {
-        // const { breadcrumbs, areBreadcrumbsVisible } = this.props;
+        const { breadcrumbs, areBreadcrumbsVisible } = this.props;
 
-        // if (
-        //     !areBreadcrumbsVisible
-        //     || location.pathname === appendWithStoreCode('/')
-        //     || location.pathname === '/'
-        // ) {
-        //     return null;
-        // }
+        if (
+            !areBreadcrumbsVisible
+            || location.pathname === appendWithStoreCode('/')
+            || location.pathname === '/'
+        ) {
+            return null;
+        }
 
         return (
             <ContentWrapper mix={ { block: 'Breadcrumbs' } } label={ __('Breadcrumbs (current location)...') }>
@@ -70,32 +70,11 @@ export class Breadcrumbs extends PureComponent {
                       itemScope
                       itemType="http://schema.org/BreadcrumbList"
                     >
-                        <Breadcrumb
-                          name="Home"
-                          url="/"
-                          index="0"
-                          key="0"
-                          isDisabled="false"
-                        />
-                        <Breadcrumb
-                          name="Women"
-                          url="/women"
-                          index="1"
-                          key="1"
-                          isDisabled="false"
-                        />
-                        <Breadcrumb
-                          name="Clothing"
-                          url="/women/clothing"
-                          index="2"
-                          key="2"
-                          isDisabled="false"
-                        />
-                        { /* { (
+                        { (
                             breadcrumbs.length
                                 ? this.renderBreadcrumbList(breadcrumbs)
                                 : this.renderBreadcrumb({}, 0)
-                        ) } */ }
+                        ) }
                     </ul>
                 </nav>
             </ContentWrapper>
