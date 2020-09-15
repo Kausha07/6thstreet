@@ -10,32 +10,29 @@
  */
 
 :root {
-    --breadcrumbs-height: 50px;
-    --breadcrumbs-background: #fff;
-    --breadcrumbs-active-color: #9B9B9B;
-    --breadcrumbs-color: #000000;
+    --breadcrumbs-height-main: 50px;
+    --breadcrumbs-background-main: #fff;
+    --breadcrumbs-active-color-main: #9B9B9B;
+    --breadcrumbs-color-main: #000000;
     --shadow-color: rgba(0,0,0,0.1);
 }
 
 .Breadcrumbs {
+    --breadcrumbs-background: var(--breadcrumbs-background-main);
+    --breadcrumbs-height: var(--breadcrumbs-height-main);
+    --breadcrumbs-active-color: var(--breadcrumbs-active-color-main);
+    --breadcrumbs-color: var(--breadcrumbs-color-main);
+
     box-shadow: 0 1px 0 0 var(--shadow-color);
     background-color: var(--breadcrumbs-background);
     margin-top: var(--header-total-height);
-    padding-left: 70px;
-    padding-right: 70px;
+    padding: 0 70px;
 
     $crumb-padding: 20px;
-    $arrow-size: 4px;
-
-    @include before-desktop {
-        --breadcrumbs-background: #fff;
-
-        display: none;
-    }
+    $arrow-size: 5px;
 
     &-List {
-        list-style: none;
-        padding: 15px 0;
-        height: 50px;
+        padding: 15px 0 !important;
+        height: 50px !important;
     }
 }

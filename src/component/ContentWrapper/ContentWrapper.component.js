@@ -9,47 +9,6 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import PropTypes from 'prop-types';
-import { PureComponent } from 'react';
+import './ContentWrapper.extended.style';
 
-import { ChildrenType, MixType } from 'Type/Common';
-
-import './ContentWrapper.style';
-
-/**
- * Content Wrapper
- * @class ContentWrapper
- */
-export class ContentWrapper extends PureComponent {
-    static propTypes = {
-        children: ChildrenType,
-        mix: MixType,
-        wrapperMix: PropTypes.shape({
-            block: PropTypes.string,
-            elem: PropTypes.string
-        }),
-        label: PropTypes.string.isRequired
-    };
-
-    static defaultProps = {
-        mix: {},
-        wrapperMix: {},
-        children: null
-    };
-
-    render() {
-        const {
-            children, mix, wrapperMix, label
-        } = this.props;
-
-        return (
-            <section mix={ mix } aria-label={ label }>
-                <div block="ContentWrapper" mix={ wrapperMix }>
-                    { children }
-                </div>
-            </section>
-        );
-    }
-}
-
-export default ContentWrapper;
+export { default } from 'SourceComponent/ContentWrapper/ContentWrapper.component';

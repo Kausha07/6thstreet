@@ -9,4 +9,11 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-export { default } from './ContentWrapper.component';
+:root {
+    --content-wrapper-width: 1400px;
+}
+
+.ContentWrapper {
+    height: 50px;
+    margin: 0 !important;
+}
