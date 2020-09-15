@@ -5,12 +5,12 @@ import './InlineCustomerSupport.style';
 
 class InlineCustomerSupport extends PureComponent {
     static propTypes = {
-        isEmailSupported: PropTypes.bool.isRequired,
+        // isEmailSupported: PropTypes.bool.isRequired,
         isPhoneSupported: PropTypes.bool.isRequired,
         isContactEmail: PropTypes.bool.isRequired,
         contactLabel: PropTypes.string.isRequired,
         openHoursLabel: PropTypes.string.isRequired,
-        email: PropTypes.string.isRequired,
+        // email: PropTypes.string.isRequired,
         phone: PropTypes.string.isRequired
     };
 
@@ -24,14 +24,17 @@ class InlineCustomerSupport extends PureComponent {
     };
 
     renderEmail = () => {
-        const { isEmailSupported, email } = this.props;
+        // const { isEmailSupported, email } = this.props;
+
+        const isEmailSupported = true;
+        const email = 'maxmislin@example.com';
 
         if (!isEmailSupported) {
             return null;
         }
 
         return (
-            <a href={ `mailto:${ email }` }>
+            <a block="InlineCustomerSupport" elem="Email" href={ `mailto:${ email }` }>
                 { email }
             </a>
         );
@@ -45,7 +48,7 @@ class InlineCustomerSupport extends PureComponent {
         }
 
         return (
-            <a href={ `tel:${ phone }` }>
+            <a block="InlineCustomerSupport" elem="Phone" href={ `tel:${ phone }` }>
                 { phone }
             </a>
         );
@@ -57,7 +60,7 @@ class InlineCustomerSupport extends PureComponent {
         return (
             <>
                 <p>{ __('We are available all days from:') }</p>
-                <p>{ openHoursLabel }</p>
+                <p block="InlineCustomerSupport" elem="OpenHours">{ openHoursLabel }</p>
             </>
         );
     }
@@ -81,8 +84,14 @@ class InlineCustomerSupport extends PureComponent {
                   mods={ { isExpanded } }
                 >
                     { this.renderWorkingHours() }
-                    { this.renderEmail() }
-                    { this.renderPhone() }
+                    <div block="InlineCustomerSupport" elem="DisplayPhone">
+                        <div block="InlineCustomerSupport" elem="PhoneIcon" />
+                        { this.renderPhone() }
+                    </div>
+                    <div block="InlineCustomerSupport" elem="DisplayEmail">
+                        <div block="InlineCustomerSupport" elem="EmailIcon" />
+                        { this.renderEmail() }
+                    </div>
                 </div>
             </div>
         );
@@ -110,7 +119,9 @@ class InlineCustomerSupport extends PureComponent {
         return (
             <div block="InlineCustomerSupport">
                 { this.renderDropdown() }
-                { this.renderQuickAccess() }
+                <div block="InlineCustomerSupport" elem="DisplayQuickAccess">
+                    { this.renderQuickAccess() }
+                </div>
             </div>
         );
     }
