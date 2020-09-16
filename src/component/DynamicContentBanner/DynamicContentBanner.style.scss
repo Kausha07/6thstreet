@@ -1,14 +1,14 @@
-@import './node_modules/@scandipwa/scandipwa/src/style/abstract/_media.scss';
-
-$White: white;
-$BurningOrange: #ff742f;
+:root { 
+    --White: #ffffff;
+    --Burning-Orange: #ff742f;
+}
 
 .DynamicContentBanner {
     margin: 20px 31px;
-    background: $BurningOrange;
-    
+    background: var(--Burning-Orange);
+
     h2 {
-        color: $White;
+        color: var(--White);
         text-align: center;
         text-transform: uppercase;
         font-weight: 400;
