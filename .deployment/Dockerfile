@@ -2,8 +2,8 @@ FROM ubuntu:bionic
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN echo 'deb https://deb.nodesource.com/setup_12.x xenial main' > /etc/apt/sources.list.d/nodesource.list\
- && echo 'deb-src https://deb.nodesource.com/setup_12.x xenial main' >> /etc/apt/sources.list.d/nodesource.list
+RUN echo 'deb [trusted=yes] https://deb.nodesource.com/setup_12.x xenial main' > /etc/apt/sources.list.d/nodesource.list\
+ && echo 'deb-src [trusted=yes] https://deb.nodesource.com/setup_12.x xenial main' >> /etc/apt/sources.list.d/nodesource.list
 
 RUN apt-get update && apt-get upgrade -y && \
     apt-get install -y \
@@ -11,7 +11,10 @@ RUN apt-get update && apt-get upgrade -y && \
     ca-certificates \
     curl \
     dirmngr \
-    lsb-release \
+    lsb-release
+
+RUN apt-get update && apt-get upgrade -y && \
+    apt-get install -y \
     nodejs \
     npm
 
