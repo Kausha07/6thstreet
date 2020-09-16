@@ -8,11 +8,6 @@ import './DynamicContentGrid.style';
 
 class DynamicContentGrid extends PureComponent {
     static propTypes = {
-        // TODO: implement background color ?
-        // background_color: PropTypes.string,
-        // TODO: use height and width to calculate height, so nothing jumps
-        // item_height: PropTypes.number.isRequired,
-        items_per_row: PropTypes.number.isRequired,
         items: PropTypes.arrayOf(
             PropTypes.shape({
                 link: PropTypes.string,
@@ -21,17 +16,36 @@ class DynamicContentGrid extends PureComponent {
         ).isRequired
     };
 
-    // static defaultProps = {
-    //     background_color: ''
-    // };
-
     renderItem(item, i) {
         const { link, url } = item;
 
         return (
-            <Link to={ link } key={ i }>
-                <Image src={ url } />
-            </Link>
+            <div block="CategoryItem" elem="Content">
+                <Link to={ link } key={ i }>
+                    <Image src={ url } />
+                </Link>
+                <div block="CategoryItem" elem="Text">
+                    <span
+                      block="CategoryItem"
+                      elem="Title"
+                    >
+                        { __('category title') }
+                    </span>
+                    <span
+                      block="CategoryItem"
+                      elem="SubTitle"
+                    >
+                        { __('category subtitle') }
+                    </span>
+                </div>
+                <Link to={ link } key={ i }>
+                    <button
+                      block="button secondary medium"
+                    >
+                        { __('shop now') }
+                    </button>
+                </Link>
+            </div>
         );
     }
 
@@ -41,7 +55,7 @@ class DynamicContentGrid extends PureComponent {
     }
 
     renderGrid() {
-        const { items_per_row } = this.props;
+        const { items_per_row } = 3;
 
         return (
             <div
