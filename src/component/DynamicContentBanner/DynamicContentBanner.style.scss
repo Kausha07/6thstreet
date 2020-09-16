@@ -1,11 +1,22 @@
+$White: white;
+$BurningOrange: #ff742f;
+
+$text-mobile: 769px;
+
 .DynamicContentBanner {
     margin: 20px 31px;
-    color: #fff;
-    text-align: center;
-    text-transform: uppercase;
-    font-weight: 400;
-    background: #ff742f;
-    .Image_ratio_square {
-        padding-bottom: 7.09%;
+    background: $BurningOrange;
+    h2 {
+        color: $White;
+        text-align: center;
+        text-transform: uppercase;
+        font-weight: 400;
+        font-size: 16px;
+        padding: 10px 20px;
+        margin: 0 0 20px 0;
+
+        @media (min-width: $text-mobile) {
+            font-size: 24px;
+        }
     }
 }
