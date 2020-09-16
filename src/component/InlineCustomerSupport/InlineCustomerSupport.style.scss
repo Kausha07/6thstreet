@@ -10,12 +10,11 @@
     @media (max-width: 1024px) {
         width: 100%;
     }
-    
+
     &-Button {
         width: 160px;
         height: 30px;
         font-size: 12px;
-        margin-left: 40%;
 
         @media (max-width: 1024px) {
             display: none;
@@ -39,10 +38,10 @@
                 border-right: 5px solid transparent;
                 border-bottom: 5px solid black;
                 border-top: 0px;
-            }            
+            }
         }
     }
-    
+
     &-Dropdown {
         border: 1px solid var(--border-color);
         border-radius: 5px;
@@ -56,7 +55,7 @@
         display: none;
 
         &_isExpanded {
-            display: block;            
+            display: block;
         }
     }
 
@@ -112,11 +111,11 @@
         height: 20px;
         top: -3px;
         margin-right: 15px;
-        
+
     }
 
     &-DisplayQuickAccess {
-        margin-left: 75px;
+        margin-left: 20px;
         padding-left: 15px;
         margin-top: 7px;
         margin-bottom: 7px;
@@ -131,7 +130,7 @@
             text-align: center;
             padding: 0;
             border: none;
-        }    
+        }
 
         p {
             display: flex;
