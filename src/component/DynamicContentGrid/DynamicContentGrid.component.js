@@ -8,11 +8,6 @@ import './DynamicContentGrid.style';
 
 class DynamicContentGrid extends PureComponent {
     static propTypes = {
-        // TODO: implement background color ?
-        // background_color: PropTypes.string,
-        // TODO: use height and width to calculate height, so nothing jumps
-        // item_height: PropTypes.number.isRequired,
-        /* items_per_row: PropTypes.number.isRequired, */
         items: PropTypes.arrayOf(
             PropTypes.shape({
                 link: PropTypes.string,
@@ -20,10 +15,6 @@ class DynamicContentGrid extends PureComponent {
             })
         ).isRequired
     };
-
-    // static defaultProps = {
-    //     background_color: ''
-    // };
 
     renderItem(item, i) {
         const { link, url } = item;
@@ -38,13 +29,13 @@ class DynamicContentGrid extends PureComponent {
                       block="CategoryItem"
                       elem="Text-Title"
                     >
-                        { __('CATEGORY TITLE') }
+                        { __('category title') }
                     </span>
                     <span
                       block="CategoryItem"
                       elem="Text-SubTitle"
                     >
-                        { __('Category subtitle') }
+                        { __('category subtitle') }
                     </span>
                 </div>
                 <Link to={ link } key={ i }>

@@ -2,7 +2,7 @@
     --dynamic-content-grid-column-count: 3;
     --subtitle-font-size: 17px;
     --title-font-size: 25px;
-    --title-font-weight: 1000;
+    --title-font-family: "Avenir Next Bold";
 }
 
 @media (max-width: 768px) {
@@ -35,10 +35,11 @@
         margin-bottom: 30px;
 
         &-Title {
+            font-family: var(--title-font-family);
             display: block;
             font-size: var(--title-font-size);
-            font-weight: var(--title-font-weight);
             margin-bottom: 10px;
+            text-transform: uppercase;
         }
 
         &-SubTitle {
