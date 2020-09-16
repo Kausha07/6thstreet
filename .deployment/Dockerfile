@@ -2,7 +2,7 @@ FROM ubuntu:bionic
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN npm install --global grunt-cli
+RUN npm install
 
 WORKDIR /app
 
