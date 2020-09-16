@@ -10,15 +10,18 @@
         align-items: center;
         vertical-align: center;
     }
+
     .Slider {
         &-Crumbs {
             position: static;
         }
+        
         &-Crumb {
             width: 9px;
             height: 9px;
             border: 1px solid $black;
             background: $white;
+
             &_isActive {
                 width: 11px;
                 height: 11px;
@@ -28,25 +31,30 @@
             }
         }
     }
+
     .Image {
         &-Image {
             object-fit: cover;
         }
     }   
+
     @include mobile {
         max-height: 700px;
         overflow: none;
+
         &-Label {
             right: 2rem;
             bottom: 2rem;
             text-decoration: underline;
             background: none !important;
         }
+
         .Slider {
             &-Wrapper {
                 width: 80%;
                 margin: 10px;
             }
+
             &-Crumbs {
                 display: none;
             }
