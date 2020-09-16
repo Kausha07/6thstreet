@@ -1,4 +1,8 @@
 .LanguageSwitcher {
+    @media (max-width: 1024px) {
+        display: none;
+    }
+}
     .Field {
         display: none;
     }
