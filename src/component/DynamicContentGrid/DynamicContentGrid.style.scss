@@ -1,7 +1,8 @@
+@import './node_modules/@scandipwa/scandipwa/src/style/abstract/_media.scss';
+
 :root {
     --dynamic-content-grid-column-count: 1;
 }
-$mobile: 769px;
 
 .DynamicContentGrid {
     padding: 0 31px;
@@ -11,16 +12,20 @@ $mobile: 769px;
         grid-template-columns: auto;
         grid-column-gap: 10px;
         grid-row-gap: 5px;
+
         a {
             margin: 0;
         }
-        @media (min-width: $mobile) {
+
+        @include after-mobile {
             grid-template-columns: auto auto;
         }
     }
+
     .Image-Image {
         object-fit: cover;
     }
+
     .Image_ratio_square {
         padding-bottom: 29%;
     }
