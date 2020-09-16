@@ -1,3 +1,14 @@
 .HeaderGenders {
-    
+  .GenderButton {
+    &-Container {
+      display: inline-block;
+      height: 14px;
+      margin: 20px 0;
+      padding: 0 30px;
+
+      &:not(:last-child) {
+        border-right: 1px solid black;
+      }
+    }
+  }
 }
