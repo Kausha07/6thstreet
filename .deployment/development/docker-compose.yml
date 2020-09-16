@@ -1,0 +1,9 @@
+version: '3.6'
+  services:
+    app:
+      build:
+        context: .
+      environment:
+        - SERVER_PORT=3000
+      port:
+        - 8080:3000
