@@ -10,9 +10,7 @@ class HeaderCart extends PureComponent {
 
     render() {
         return (
-            <div block="HeaderCart">
-                cart
-            </div>
+            <div block="HeaderCart" />
         );
     }
 }

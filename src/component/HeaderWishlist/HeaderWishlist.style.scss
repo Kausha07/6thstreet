@@ -1,3 +1,15 @@
 .HeaderWishlist {
-    
+    top: 24px;
+    position: absolute;
+    right: 245px;
+
+    &::before{
+        content: "";
+        background: url(../../style/heart.svg) no-repeat;
+        background-size: 27px;
+        width: 27px;
+        height: 27px;
+        display: inline-block;
+        font-size: 0;
+    }
 }

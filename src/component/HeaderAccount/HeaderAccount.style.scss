@@ -1,3 +1,22 @@
 .HeaderAccount {
-    
+    top: 28px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 19px;
+    position: absolute;
+    right: 60px;
+
+    &::before{
+        position: absolute;
+        left: -30px;
+        top: -4px;
+        content: "";
+        background: url(../../style/account.svg) no-repeat;
+        background-size: 27px;
+        width: 27px;
+        height: 27px;
+        display: inline-block;
+        font-size: 0;
+    }
 }

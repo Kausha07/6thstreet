@@ -1,3 +1,11 @@
 .HeaderCart {
-    
+    position: absolute;
+    right: 0;
+    top: 24px;
+    background: url(../../style/basket.svg) no-repeat;
+    background-size: 27px;
+    width: 27px;
+    height: 27px;
+    display: inline-block;
+    font-size: 0;
 }
