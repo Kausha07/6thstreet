@@ -1,5 +1,3 @@
-@import './node_modules/@scandipwa/scandipwa/src/style/abstract/_media.scss';
-
 :root {
     --dynamic-content-grid-column-count: 1;
 }
@@ -22,11 +20,13 @@
         }
     }
 
-    .Image-Image {
-        object-fit: cover;
-    }
+    .Image {
+        &-Image {
+            object-fit: cover;
+        }
 
-    .Image_ratio_square {
-        padding-bottom: 29%;
+        &_ratio_square {
+            padding-bottom: 29%;
+        }
     }
 }
