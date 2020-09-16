@@ -1,3 +1,21 @@
 .GenderButton {
-    
+  &-Button {
+    font-family: 'Avenir Next Regular', serif;
+    height: 30px;
+    letter-spacing: .8px;
+    margin-top: -30px;
+    padding: 0;
+
+    &_isCurrentGender,
+    &:hover
+    {
+      border-bottom: 2px solid black;
+      font-family: 'Avenir Next Bold', serif;
+      font-size: 14.4px;
+      letter-spacing: 0;
+      transition-duration: unset;
+    }
+  }
 }
+
+
