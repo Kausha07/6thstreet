@@ -54,7 +54,9 @@ class LanguageSwitcher extends PureComponent {
                 /* eslint-disable-next-line */
               onClick={ () => onLanguageSelect(buttonLabelObject[0].id) }
             >
-                { buttonLabelObject[0].label }
+                <span>
+                    { buttonLabelObject[0].label }
+                </span>
             </button>
         );
     }
