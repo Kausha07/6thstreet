@@ -3,7 +3,6 @@ import { PureComponent } from 'react';
 
 import Image from 'Component/Image';
 import Link from 'Component/Link';
-import Slider from 'Component/Slider';
 
 import './DynamicContentGrid.style';
 
@@ -50,9 +49,7 @@ class DynamicContentGrid extends PureComponent {
               elem="Grid"
               style={ { '--dynamic-content-grid-column-count': items_per_row } }
             >
-            <Slider>
-                { this.renderItems() }
-            </Slider>
+            { this.renderItems() }
             </div>
         );
     }
