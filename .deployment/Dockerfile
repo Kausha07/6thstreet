@@ -10,16 +10,8 @@ RUN apt-get update && apt-get upgrade -y && \
     dirmngr \
     lsb-release
 
-RUN add-apt-repository -y -r ppa:chris-lea/node.js
-RUN rm -f /etc/apt/sources.list.d/chris-lea-node_js-*.list
-
-RUN echo 'deb [trusted=yes] https://deb.nodesource.com/setup_12.x xenial main' > /etc/apt/sources.list.d/nodesource.list\
- && echo 'deb-src [trusted=yes] https://deb.nodesource.com/setup_12.x xenial main' >> /etc/apt/sources.list.d/nodesource.list
-
-RUN apt-get update && apt-get upgrade -y && \
-    apt-get install -y \
-    nodejs \
-    npm
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
+RUN apt-get install -y nodejs npm
 
 RUN npm install
 
