@@ -11,7 +11,7 @@ class HeaderAccount extends PureComponent {
     render() {
         return (
             <div block="HeaderAccount">
-                account
+                Account
             </div>
         );
     }

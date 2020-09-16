@@ -11,7 +11,7 @@ class HeaderWishlist extends PureComponent {
     render() {
         return (
             <div block="HeaderWishlist">
-                wishlist
+                Wishlist
             </div>
         );
     }

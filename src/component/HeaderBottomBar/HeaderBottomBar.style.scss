@@ -1,3 +1,94 @@
+:root{
+    --background-color: #fff;
+}
+
+
 .HeaderBottomBar {
-    
+    @media (max-width: 1024px){
+        display: flex;
+        z-index: 90;
+        background: var(--background-color);
+        height: 83px;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+    }
+
+    &-Home {
+        display: none;
+        text-transform: none;
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: -0.2px;
+        line-height: 14px;
+        text-align: center;
+        color: #4A4A4A;
+        height: 40px;
+        width: 40px;
+        padding: 0;
+        margin-top: 10px;
+        text-align: center;
+        margin-left: 5%;
+        margin-right: 5%;
+
+        &::before{
+            content: "";
+            right: 0;
+            background: url(../../style/home-solid.svg) no-repeat;
+            background-size: 27px;
+            width: 27px;
+            height: 27px;
+            display: inline-block;
+            font-size: 0;
+            filter: invert(26%) sepia(2%) saturate(21%) hue-rotate(43deg) brightness(90%) contrast(80%);
+            
+        }
+
+        &_isHome {
+            color: #F96446;
+
+            &::before{
+                filter: invert(43%) sepia(60%) saturate(1535%) hue-rotate(335deg) brightness(107%) contrast(95%);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            display: block;
+        }
+    }
+
+    &-Brand {
+        display: none;
+        text-transform: none;
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: -0.2px;
+        line-height: 14px;
+        text-align: center;
+        color: #4A4A4A;
+        height: 40px;
+        width: 40px;
+        margin-top: 10px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0;
+        text-align: center;
+
+        &::before{
+            content: "";
+            right: 0;
+            background: url(../../style/brand.svg) no-repeat;
+            background-size: 27px;
+            width: 27px;
+            height: 27px;
+            display: inline-block;
+            font-size: 0;
+            filter: invert(26%) sepia(2%) saturate(21%) hue-rotate(43deg) brightness(90%) contrast(80%);
+            
+        }
+
+        @media (max-width: 1024px) {
+            display: block;
+        }
+    }
 }

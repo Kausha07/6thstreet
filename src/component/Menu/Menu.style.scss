@@ -1,3 +1,36 @@
 .Menu {
     display: flex;
+
+    @media (max-width: 1024px) {
+        
+        position: absolute;
+        display: none;
+        left: -105%;
+        top: -600px;
+        z-index: 90;
+        background: white;
+        height: 600px;
+        width: 150px;
+        transition: 0.5s;
+        border-right: 1px solid #ECECEC;
+
+        li {
+            font-size: 12px;
+            letter-spacing: 0.5px;
+            line-height: 16px;
+            height: 40px;
+            width: 144px;
+            padding: 12px 0 0 30px;
+            text-transform: uppercase;
+
+            &::before{
+                content: none;
+            }
+        }
+
+        &_isExpanded {
+            display: block;
+        }
+        
+    }
 }

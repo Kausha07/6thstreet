@@ -1,3 +1,47 @@
 .HeaderMenu {
-    
+
+    &-Button {
+        display: none;
+        text-transform: none;
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: -0.2px;
+        line-height: 14px;
+        text-align: center;
+        color: #4A4A4A;
+        height: 40px;
+        width: 40px;
+        padding: 0;
+        margin: 10px auto 0 auto; 
+        text-align: center;
+
+        &::before{
+            content: "";
+            right: 0;
+            background: url(../../style/search-solid.svg) no-repeat;
+            background-size: 27px;
+            width: 27px;
+            height: 27px;
+            display: inline-block;
+            font-size: 0;
+            filter: invert(26%) sepia(2%) saturate(21%) hue-rotate(43deg) brightness(90%) contrast(80%);
+            
+        }
+
+        @media (max-width: 1024px) {
+            display: block;
+        }
+
+        &_isExpanded {
+            color: #F96446;
+
+            &::before{
+                filter: invert(43%) sepia(60%) saturate(1535%) hue-rotate(335deg) brightness(107%) contrast(95%);
+            }
+        }
+    }
+
+    @media (max-width: 1024px) {
+        width: 20%;
+    }
 }

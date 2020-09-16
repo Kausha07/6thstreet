@@ -10,15 +10,42 @@ class HeaderMenu extends PureComponent {
         // TODO: implement prop-types
     };
 
+    state = {
+        isExpanded: false
+    };
+
+    onCategoriesClick = () => {
+        // Toggle dropdown
+        this.setState(({ isExpanded }) => ({ isExpanded: !isExpanded }));
+    };
+
     renderMenu() {
+        const { isExpanded } = this.state;
+
         return (
-            <Menu />
+            <Menu isExpanded={ isExpanded } />
+        );
+    }
+
+    renderCategoriesButton() {
+        const { isExpanded } = this.state;
+
+        return (
+            <button
+              block="HeaderMenu"
+              elem="Button"
+              mods={ { isExpanded } }
+              onClick={ this.onCategoriesClick }
+            >
+                { __('Categories') }
+            </button>
         );
     }
 
     render() {
         return (
             <div block="HeaderMenu">
+                { this.renderCategoriesButton() }
                 { this.renderMenu() }
             </div>
         );
