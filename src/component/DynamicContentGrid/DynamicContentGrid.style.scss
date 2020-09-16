@@ -14,13 +14,29 @@
 
 .DynamicContentGrid {
     margin: 0 100px;
+    padding: 0 31px;
 
     &-Grid {
         display: grid;
         grid-gap: 20px 70px;
         grid-template-columns: repeat(var(--dynamic-content-grid-column-count-mobile), 1fr);
-        @include desktop {
+
+        a {
+            margin: 0;
+        }
+
+        @include after-mobile {
             grid-template-columns: repeat(var(--dynamic-content-grid-column-count-desktop), 1fr);
+        }
+    }
+
+    .Image {
+        &-Image {
+            object-fit: cover;
+        }
+
+        &_ratio_square {
+            padding-bottom: 29%;
         }
     }
 }
