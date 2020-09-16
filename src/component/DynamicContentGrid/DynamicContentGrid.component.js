@@ -49,7 +49,7 @@ class DynamicContentGrid extends PureComponent {
               elem="Grid"
               style={ { '--dynamic-content-grid-column-count': items_per_row } }
             >
-                { this.renderItems() }
+            { this.renderItems() }
             </div>
         );
     }
