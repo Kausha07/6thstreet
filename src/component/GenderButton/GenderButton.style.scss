@@ -6,7 +6,9 @@
     margin-top: -30px;
     padding: 0;
 
-    &_isCurrentGender, &:hover {
+    &_isCurrentGender,
+    &:hover
+    {
       border-bottom: 2px solid black;
       font-family: 'Avenir Next Bold', serif;
       font-size: 14.4px;

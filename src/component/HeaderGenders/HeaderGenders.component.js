@@ -24,7 +24,10 @@ class HeaderGenders extends PureComponent {
         const { key } = gender;
 
         return (
-            <div block="GenderButton" elem="Container">
+            <div
+              block="GenderButton"
+              elem="Container"
+            >
                 <GenderButton
                   key={ key }
                   gender={ gender }
