@@ -33,6 +33,7 @@ class GenderButton extends PureComponent {
             <button
               mix={ mix }
               block="GenderButton"
+              elem="Button"
               mods={ { isCurrentGender } }
               onClick={ onGenderClick }
             >

@@ -5,3 +5,6 @@
     --primary-light-color: var(--imported_primary_light_color, #{$default-primary-light-color});
 }
 
+body {
+    font-family: 'Avenir Next Medium';
+}

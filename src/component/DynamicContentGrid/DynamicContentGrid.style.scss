@@ -1,10 +1,65 @@
 :root {
-    --dynamic-content-grid-column-count: 1;
+    --dynamic-content-grid-column-count-mobile: 1;
+    --dynamic-content-grid-column-count-desktop: 3;
+    --subtitle-font-size: 17px;
+    --title-font-size: 25px;
+    --title-font-family: "Avenir Next Bold";
+}
+
+@media (max-width: 768px) {
+    :root {
+        --dynamic-content-grid-column-count: 1;
+    }
 }
 
 .DynamicContentGrid {
+    margin: 0 100px;
+    padding: 0 31px;
+
     &-Grid {
         display: grid;
-        grid-template-columns: repeat(var(--dynamic-content-grid-column-count), 1fr);
+        grid-gap: 20px 70px;
+        grid-template-columns: repeat(var(--dynamic-content-grid-column-count-mobile), 1fr);
+
+        a {
+            margin: 0;
+        }
+
+        @include after-mobile {
+            grid-template-columns: repeat(var(--dynamic-content-grid-column-count-desktop), 1fr);
+        }
+    }
+
+    .Image {
+        &-Image {
+            object-fit: cover;
+        }
+
+        &_ratio_square {
+            padding-bottom: 29%;
+        }
+    }
+}
+
+.CategoryItem {
+    &-Content {
+        text-align: center;
+    }
+
+    &-Text {
+        margin-top: 20px;
+        margin-bottom: 30px;
+    }
+
+    &-Title {
+        display: block;
+        font-family: var(--title-font-family);
+        font-size: var(--title-font-size);
+        margin-bottom: 10px;
+        text-transform: uppercase;
+    }
+
+    &-SubTitle {
+        font-size: var(--subtitle-font-size);
     }
 }
