@@ -28,22 +28,21 @@
 }
 
 .CategoryItem {
-    text-align: center;
-
+    &-Content {
+        text-align: center;
+    }
     &-Text {
         margin-top: 20px;
         margin-bottom: 30px;
-
-        &-Title {
-            font-family: var(--title-font-family);
-            display: block;
-            font-size: var(--title-font-size);
-            margin-bottom: 10px;
-            text-transform: uppercase;
-        }
-
-        &-SubTitle {
-            font-size: var(--subtitle-font-size);
-        }
+    }
+    &-Title {
+        display: block;
+        font-family: var(--title-font-family);
+        font-size: var(--title-font-size);
+        margin-bottom: 10px;
+        text-transform: uppercase;
+    }
+    &-SubTitle {
+        font-size: var(--subtitle-font-size);
     }
 }

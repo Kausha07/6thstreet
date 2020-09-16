@@ -20,20 +20,20 @@ class DynamicContentGrid extends PureComponent {
         const { link, url } = item;
 
         return (
-            <div block="CategoryItem">
+            <div block="CategoryItem" elem="Content">
                 <Link to={ link } key={ i }>
                     <Image src={ url } />
                 </Link>
                 <div block="CategoryItem" elem="Text">
                     <span
                       block="CategoryItem"
-                      elem="Text-Title"
+                      elem="Title"
                     >
                         { __('category title') }
                     </span>
                     <span
                       block="CategoryItem"
-                      elem="Text-SubTitle"
+                      elem="SubTitle"
                     >
                         { __('category subtitle') }
                     </span>
