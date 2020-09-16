@@ -5,12 +5,12 @@ import './InlineCustomerSupport.style';
 
 class InlineCustomerSupport extends PureComponent {
     static propTypes = {
-        // isEmailSupported: PropTypes.bool.isRequired,
+        isEmailSupported: PropTypes.bool.isRequired,
         isPhoneSupported: PropTypes.bool.isRequired,
         isContactEmail: PropTypes.bool.isRequired,
         contactLabel: PropTypes.string.isRequired,
         openHoursLabel: PropTypes.string.isRequired,
-        // email: PropTypes.string.isRequired,
+        email: PropTypes.string.isRequired,
         phone: PropTypes.string.isRequired
     };
 
@@ -24,10 +24,7 @@ class InlineCustomerSupport extends PureComponent {
     };
 
     renderEmail = () => {
-        // const { isEmailSupported, email } = this.props;
-
-        const isEmailSupported = true;
-        const email = 'maxmislin@example.com';
+        const { isEmailSupported, email } = this.props;
 
         if (!isEmailSupported) {
             return null;
