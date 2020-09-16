@@ -5,8 +5,6 @@ set -euxo pipefail
 
 PROJECT_BRANCH="${BAMBOO_BRANCH:-undefined}"
 BUILD_ID="${BAMBOO_BUILD_ID:-undefined}"
-COMPOSER_AUTH="${BAMBOO_COMPOSER_AUTH}"
-MAGENTO_MODE="${BAMBOO_MAGENTO_MODE}"
 ARTIFACT_NAME="artifact-${PROJECT_BRANCH}-${BUILD_ID}.tar.gz"
 
 #############################################################
@@ -52,8 +50,6 @@ build() {
     --name "${DOCKER_NAME}" \
     -e HOST_USER_UID="$(id -u)" \
     -e HOST_USER_GID="$(id -g)" \
-    -e COMPOSER_AUTH="${COMPOSER_AUTH}" \
-    -e MAGENTO_MODE="${MAGENTO_MODE}" \
     "${DOCKER_IMAGE}"
 
   log_info "Finished execution of 'entrypoint.sh'."
