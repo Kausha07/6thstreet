@@ -11,8 +11,7 @@ COPY . /app
 WORKDIR /app
 
 RUN npm i npm -g; \
-    npm install;
+    npm install; \
+    npm rebuild node-sass
 
-USER node
-
-CMD ['npm', 'run', 'start']
+CMD ["npm", "run", "start"]
