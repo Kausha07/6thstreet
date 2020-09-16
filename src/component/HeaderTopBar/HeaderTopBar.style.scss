@@ -4,7 +4,6 @@
 
 .HeaderTopBar {
     height: 30px;
-    display: flex;
     box-shadow: 0 1px 0 0 var(--shadow-color);
 
     @media (max-width: 1024px) {
@@ -14,6 +13,12 @@
         z-index: 4;
         background: black;
         height: 35px;
+    }
+
+    &-ContentWrapper {
+        display: flex;
+        max-width: 1280px;
+        margin: 0 auto;
     }
 
     &-CmsBlock {
