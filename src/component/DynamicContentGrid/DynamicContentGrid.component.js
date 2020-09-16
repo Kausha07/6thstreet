@@ -42,7 +42,7 @@ class DynamicContentGrid extends PureComponent {
                     <button
                       block="button secondary medium"
                     >
-                        { __('SHOP NOW') }
+                        { __('shop now') }
                     </button>
                 </Link>
             </div>

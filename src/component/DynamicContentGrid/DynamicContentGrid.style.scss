@@ -1,5 +1,6 @@
 :root {
-    --dynamic-content-grid-column-count: 3;
+    --dynamic-content-grid-column-count-mobile: 1;
+    --dynamic-content-grid-column-count-desktop: 3;
     --subtitle-font-size: 17px;
     --title-font-size: 25px;
     --title-font-family: "Avenir Next Bold";
@@ -17,7 +18,10 @@
     &-Grid {
         display: grid;
         grid-gap: 20px 70px;
-        grid-template-columns: repeat(var(--dynamic-content-grid-column-count), 1fr);
+        grid-template-columns: repeat(var(--dynamic-content-grid-column-count-mobile), 1fr);
+        @include desktop {
+            grid-template-columns: repeat(var(--dynamic-content-grid-column-count-desktop), 1fr);
+        }
     }
 }
 
