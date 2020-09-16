@@ -1,4 +1,7 @@
 .LanguageSwitcher {
+    display: flex;
+    margin-left: auto;
+
     @media (max-width: 1024px) {
         display: none;
     }
@@ -12,6 +15,11 @@
         font-size: 12px;
         height: auto;
         letter-spacing: 1px;
-        textg-transform: capitalize;
+        text-transform: capitalize;
+
+        span {
+            border-right: 1px solid var(--border-color);
+            padding-right: 15px;
+        }
     }
 }
