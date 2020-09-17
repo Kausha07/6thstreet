@@ -34,6 +34,7 @@ export class Header extends PureComponent {
 
     render() {
         const { navigationState: { name } } = this.props;
+
         return (
             <>
                 <header block="Header" mods={ { name } }>

@@ -1,9 +1,9 @@
 .LanguageSwitcher {
-    display: flex;
+    display: none;
     margin-left: auto;
 
-    @media (max-width: 1024px) {
-        display: none;
+    @include desktop {
+        display: flex;
     }
 
     .Field {

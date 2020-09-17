@@ -123,7 +123,7 @@ class HeaderBottomBar extends NavigationAbstract {
 
         return (
             <button onClick={ this.routeChangeHome } block="HeaderBottomBar" elem="Home" mods={ { isHome } }>
-                Home
+                <label htmlFor="Home">{ __('Home') }</label>
             </button>
         );
     }
@@ -153,7 +153,7 @@ class HeaderBottomBar extends NavigationAbstract {
 
         return (
             <button onClick={ this.routeChangeBrand } block="HeaderBottomBar" elem="Brand" mods={ { isBrand } }>
-                Brand
+                <label htmlFor="Home">{ __('Brand') }</label>
             </button>
         );
     }

@@ -6,18 +6,24 @@
 
 
 .HeaderBottomBar {
-    @media (max-width: 1024px){
+    display: flex;
+    z-index: 90;
+    background: var(--background-color);
+    height: 83px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+
+    @include desktop {
         display: flex;
-        z-index: 90;
-        background: var(--background-color);
-        height: 83px;
-        position: fixed;
-        bottom: 0;
-        width: 100%;
+        z-index: 0;
+        background: none;
+        height: auto;
+        position: relative;
     }
 
     &-Home {
-        display: none;
+        display: block;
         text-transform: none;
         font-size: 10px;
         font-weight: 500;
@@ -54,13 +60,13 @@
             }
         }
 
-        @media (max-width: 1024px) {
-            display: block;
+        @include desktop {
+            display: none;
         }
     }
 
     &-Brand {
-        display: none;
+        display: block;
         text-transform: none;
         font-size: 10px;
         font-weight: 500;
@@ -97,8 +103,8 @@
             }
         }
 
-        @media (max-width: 1024px) {
-            display: block;
+        @include desktop {
+            display: none;
         }
     }
 

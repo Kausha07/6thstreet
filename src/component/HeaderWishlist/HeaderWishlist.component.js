@@ -22,7 +22,7 @@ class HeaderWishlist extends PureComponent {
                   mods: { isBottomBar }
               } }
             >
-                Wishlist
+                <label htmlFor="WishList">{ __('WishList') }</label>
             </div>
         );
     }

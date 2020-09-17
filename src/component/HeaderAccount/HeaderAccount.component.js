@@ -7,7 +7,6 @@ class HeaderAccount extends PureComponent {
     static propTypes = {
         isBottomBar: PropTypes.bool.isRequired,
         isAccount: PropTypes.bool.isRequired
-        // TODO: implement prop-types
     };
 
     render() {
@@ -15,7 +14,7 @@ class HeaderAccount extends PureComponent {
 
         return (
             <div block="HeaderAccount" mods={ { isBottomBar } } mix={ { block: 'HeaderAccount', mods: { isAccount } } }>
-                Account
+                <label htmlFor="Account">{ __('Account') }</label>
             </div>
         );
     }

@@ -53,7 +53,7 @@ class HeaderMenu extends PureComponent {
               mods={ { isExpanded } }
               onClick={ this.onCategoriesClick }
             >
-                { __('Categories') }
+               <label htmlFor="Categories">{ __('Categories') }</label>
             </button>
         );
     }

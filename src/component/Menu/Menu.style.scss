@@ -1,7 +1,7 @@
 .Menu {
-    display: flex;
+    display: none;
 
-    @media (max-width: 1024px) {
-        display: none;
+    @include desktop {
+        display: flex;
     }
 }

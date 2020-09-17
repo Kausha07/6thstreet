@@ -1,8 +1,6 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-import isMobile from 'Util/Mobile';
-
 import './InlineCustomerSupport.style';
 
 class InlineCustomerSupport extends PureComponent {
@@ -67,37 +65,33 @@ class InlineCustomerSupport extends PureComponent {
     renderDropdown() {
         const { isExpanded } = this.state;
 
-        if (!isMobile.any()) {
-            return (
-                <div>
-                    <button
-                      block="InlineCustomerSupport"
-                      elem="Button"
-                      mods={ { isExpanded } }
-                      onClick={ this.onDropdownClick }
-                    >
-                        { __('customer service') }
-                    </button>
-                    <div
-                      block="InlineCustomerSupport"
-                      elem="Dropdown"
-                      mods={ { isExpanded } }
-                    >
-                        { this.renderWorkingHours() }
-                        <div block="InlineCustomerSupport" elem="DisplayPhone">
-                            <div block="InlineCustomerSupport" elem="PhoneIcon" />
-                            { this.renderPhone() }
-                        </div>
-                        <div block="InlineCustomerSupport" elem="DisplayEmail">
-                            <div block="InlineCustomerSupport" elem="EmailIcon" />
-                            { this.renderEmail() }
-                        </div>
+        return (
+            <div>
+                <button
+                  block="InlineCustomerSupport"
+                  elem="Button"
+                  mods={ { isExpanded } }
+                  onClick={ this.onDropdownClick }
+                >
+                    { __('customer service') }
+                </button>
+                <div
+                  block="InlineCustomerSupport"
+                  elem="Dropdown"
+                  mods={ { isExpanded } }
+                >
+                    { this.renderWorkingHours() }
+                    <div block="InlineCustomerSupport" elem="DisplayPhone">
+                        <div block="InlineCustomerSupport" elem="PhoneIcon" />
+                        { this.renderPhone() }
+                    </div>
+                    <div block="InlineCustomerSupport" elem="DisplayEmail">
+                        <div block="InlineCustomerSupport" elem="EmailIcon" />
+                        { this.renderEmail() }
                     </div>
                 </div>
-            );
-        }
-
-        return null;
+            </div>
+        );
     }
 
     renderQuickAccess() {
