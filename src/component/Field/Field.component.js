@@ -6,11 +6,7 @@ import FieldInput from 'SourceComponent/FieldInput';
 
 import {
     CHECKBOX_TYPE,
-    NUMBER_TYPE,
-    PASSWORD_TYPE,
     RADIO_TYPE,
-    SELECT_TYPE,
-    TEXTAREA_TYPE,
     TOGGLE_TYPE
 } from './Field.config';
 
@@ -41,25 +37,25 @@ export class Field extends SourceField {
         );
     }
 
-    renderInputOfType(type) {
-        switch (type) {
-        case CHECKBOX_TYPE:
-            return this.renderCheckbox();
-        case RADIO_TYPE:
-            return this.renderRadioButton();
-        case NUMBER_TYPE:
-            return this.renderTypeNumber();
-        case TEXTAREA_TYPE:
-            return this.renderTextarea();
-        case PASSWORD_TYPE:
-            return this.renderTypePassword();
-        case SELECT_TYPE:
-            return this.renderSelectWithOptions();
-        case TOGGLE_TYPE:
-            return this.renderToggle();
-        default:
-            return this.renderTypeText();
+    renderLabel() {
+        const { type } = this.props;
+
+        if (
+            type === RADIO_TYPE
+            || type === CHECKBOX_TYPE
+        ) {
+            return null;
         }
+
+        return super.renderLabel();
+    }
+
+    renderInputOfType(type) {
+        if (type === TOGGLE_TYPE) {
+            return this.renderToggle();
+        }
+
+        return super.renderInputOfType(type);
     }
 }
 

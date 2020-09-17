@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import PLP from 'Route/PLP';
+
 import { TYPE_CATEGORY, TYPE_CMS_PAGE, TYPE_PRODUCT } from './UrlRewrites.config';
 
 import './UrlRewrites.style';
@@ -16,7 +18,7 @@ class UrlRewrites extends PureComponent {
     };
 
     typeMap = {
-        [TYPE_CATEGORY]: () => 'category',
+        [TYPE_CATEGORY]: () => <PLP />,
         [TYPE_CMS_PAGE]: () => 'cms',
         [TYPE_PRODUCT]: () => 'product'
     };
