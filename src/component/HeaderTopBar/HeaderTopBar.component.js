@@ -46,7 +46,9 @@ class HeaderTopBar extends NavigationAbstract {
     render() {
         return (
             <div block="HeaderTopBar">
-                { this.renderNavigationState() }
+                <div block="HeaderTopBar" elem="ContentWrapper">
+                    { this.renderNavigationState() }
+                </div>
             </div>
         );
     }
