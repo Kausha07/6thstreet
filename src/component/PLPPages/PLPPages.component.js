@@ -20,7 +20,8 @@ class PLPPages extends PureComponent {
 
     renderPages() {
         const { pages } = this.props;
-        return Object.entries(pages).map(this.renderPage);
+
+        return pages ? Object.entries(pages).map(this.renderPage) : null;
     }
 
     render() {
