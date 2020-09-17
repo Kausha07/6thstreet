@@ -44,7 +44,11 @@ export class HeaderContainer extends NavigationAbstractContainer {
     };
 
     containerProps = () => {
-        // isDisabled: this._getIsDisabled()
+        const navigationState = this.getNavigationState();
+
+        return {
+            navigationState
+        };
     };
 
     getNavigationState() {
@@ -74,8 +78,6 @@ export class HeaderContainer extends NavigationAbstractContainer {
     render() {
         return (
             <Header
-              // TODO: remove this props destruction, prefer containerProps
-              { ...this.props }
               { ...this.containerFunctions }
               { ...this.containerProps() }
             />
