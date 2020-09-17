@@ -1,5 +1,6 @@
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
+import { withRouter } from 'react-router';
 
 import Menu from 'Component/Menu';
 
@@ -7,12 +8,27 @@ import './HeaderMenu.style';
 
 class HeaderMenu extends PureComponent {
     static propTypes = {
-        // TODO: implement prop-types
+        location: PropTypes.object.isRequired
     };
 
     state = {
-        isExpanded: false
+        isExpanded: false,
+        prevLocation: ''
     };
+
+    static getDerivedStateFromProps(props, state) {
+        const { location } = props;
+        const { prevLocation } = state;
+
+        if (location !== prevLocation) {
+            return {
+                isExpanded: false,
+                prevLocation: location
+            };
+        }
+
+        return null;
+    }
 
     onCategoriesClick = () => {
         // Toggle dropdown
@@ -52,4 +68,4 @@ class HeaderMenu extends PureComponent {
     }
 }
 
-export default HeaderMenu;
+export default withRouter(HeaderMenu);

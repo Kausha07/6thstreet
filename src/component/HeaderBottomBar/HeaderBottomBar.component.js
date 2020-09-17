@@ -1,6 +1,8 @@
 /* eslint-disable eqeqeq */
-import { Redirect } from 'react-router';
+import PropTypes from 'prop-types';
+import { withRouter } from 'react-router';
 
+// import { withRouter } from 'react-router-dom';
 import HeaderAccount from 'Component/HeaderAccount';
 import HeaderMenu from 'Component/HeaderMenu';
 import HeaderSearch from 'Component/HeaderSearch';
@@ -11,6 +13,11 @@ import { DEFAULT_STATE_NAME } from 'Component/NavigationAbstract/NavigationAbstr
 import './HeaderBottomBar.style';
 
 class HeaderBottomBar extends NavigationAbstract {
+    static propTypes = {
+        location: PropTypes.object.isRequired,
+        history: PropTypes.object.isRequired
+    };
+
     stateMap = {
         [DEFAULT_STATE_NAME]: {
             menu: true,
@@ -20,7 +27,13 @@ class HeaderBottomBar extends NavigationAbstract {
 
     state = {
         isHome: false,
-        redirect: false
+        redirectHome: false,
+        redirectBrand: false,
+        isBrand: false,
+        isBottomBar: true,
+        isLoggedIn: false,
+        isWishlist: false,
+        isAccount: false
     };
 
     renderMap = {
@@ -32,29 +45,84 @@ class HeaderBottomBar extends NavigationAbstract {
         search: this.renderSearch.bind(this)
     };
 
-    onClickHomeButton() {
-        history.push('/');
+    routeChangeHome=() => {
+        this.setState({
+            redirectHome: true,
+            isWishlist: false,
+            isAccount: false
+        });
+    };
+
+    routeChangeBrand=() => {
+        this.setState({
+            redirectBrand: true,
+            isWishlist: false,
+            isAccount: false
+        });
+    };
+
+    routeChangeAccount=() => {
+        const { history } = this.props;
+        const { isLoggedIn } = this.state;
+
+        this.setState({
+            isAccount: true,
+            isWishlist: false
+        });
+
+        if (!isLoggedIn) {
+            return history.push('/myaccount/login');
+        }
+
+        return null;
+    };
+
+    routeChangeWishlist=() => {
+        const { history } = this.props;
+        const { isLoggedIn } = this.state;
+
+        this.setState({
+            isWishlist: true,
+            isAccount: false
+        });
+
+        if (!isLoggedIn) {
+            return history.push('/myaccount/login');
+        }
+
+        return null;
+    };
+
+    componentDidUpdate(prevProps) {
+        const { location } = this.props;
+
+        if (location !== prevProps.location) {
+            this.renderHome();
+            this.renderBrand();
+        }
     }
 
-    routeChange=() => {
-        this.setState({ redirect: true });
+    routeChangeLogin=() => {
+        this.setState({ redirectLogin: true });
     };
 
     renderHome() {
-        const { isHome } = this.state;
-        if (this.state.redirect) {
-            this.setState({ redirect: false });
-            return <Redirect push to="/" />;
+        const { history } = this.props;
+        const { isHome, redirectHome } = this.state;
+
+        if (redirectHome) {
+            this.setState({ redirectHome: false });
+            return history.push('/');
         }
 
         if (window.location.pathname === '/') {
             this.setState({ isHome: true });
+        } else {
+            this.setState({ isHome: false });
         }
 
-        console.log('heree------------------');
-
         return (
-            <button onClick={ this.routeChange } block="HeaderBottomBar" elem="Home" mods={ { isHome } }>
+            <button onClick={ this.routeChangeHome } block="HeaderBottomBar" elem="Home" mods={ { isHome } }>
                 Home
             </button>
         );
@@ -69,26 +137,52 @@ class HeaderBottomBar extends NavigationAbstract {
     }
 
     renderBrand() {
+        const { history } = this.props;
+        const { isBrand, redirectBrand } = this.state;
+
+        if (redirectBrand) {
+            this.setState({ redirectBrand: false });
+            return history.push('/brands.html');
+        }
+
+        if (window.location.pathname === '/brands.html') {
+            this.setState({ isBrand: true });
+        } else {
+            this.setState({ isBrand: false });
+        }
+
         return (
-            <div block="HeaderBottomBar" elem="Brand">
+            <button onClick={ this.routeChangeBrand } block="HeaderBottomBar" elem="Brand" mods={ { isBrand } }>
                 Brand
-            </div>
+            </button>
         );
     }
 
     renderWishlist() {
+        const { isBottomBar, isWishlist } = this.state;
+
         return (
-            <HeaderWishlist
-              key="wishlist"
-            />
+            <button onClick={ this.routeChangeWishlist } block="HeaderBottomBar" elem="WishList">
+                <HeaderWishlist
+                  isWishlist={ isWishlist }
+                  isBottomBar={ isBottomBar }
+                  key="wishlist"
+                />
+            </button>
         );
     }
 
     renderAccount() {
+        const { isBottomBar, isAccount } = this.state;
+
         return (
-            <HeaderAccount
-              key="account"
-            />
+            <button onClick={ this.routeChangeAccount } block="HeaderBottomBar" elem="Account">
+                <HeaderAccount
+                  isAccount={ isAccount }
+                  isBottomBar={ isBottomBar }
+                  key="account"
+                />
+            </button>
         );
     }
 
@@ -109,4 +203,4 @@ class HeaderBottomBar extends NavigationAbstract {
     }
 }
 
-export default HeaderBottomBar;
+export default withRouter(HeaderBottomBar);
