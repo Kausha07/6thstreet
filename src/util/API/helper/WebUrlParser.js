@@ -1,5 +1,7 @@
 import urlparse from 'url-parse';
 
+import browserHistory from 'Util/History';
+
 import { clean } from './Object';
 
 const pipe = (...funcs) => (value) => funcs.reduce((v, f) => f(v), value);
@@ -122,6 +124,35 @@ const Parser = {
         return {
             params
         };
+    },
+
+    setParam(key, values = []) {
+        const url = new URL(location.href);
+
+        // remove all matchign search params
+        url.searchParams.forEach((_, sKey) => {
+            if (sKey.includes(key)) {
+                url.searchParams.delete(sKey);
+            }
+        });
+
+        const prefix = /categories\.level/.test(key) ? 'hFR' : 'dFR';
+
+        if (Array.isArray(values)) {
+            // For arrays case
+            url.searchParams.append(`${prefix}[${key}][0]`, values.join(','));
+        } else {
+            // For non-array cases
+            url.searchParams.append(`${prefix}[${key}][0]`, values);
+        }
+
+        const {
+            pathname,
+            search
+        } = url;
+
+        // update the URL, preserve the state
+        browserHistory.push(pathname + search);
     }
 };
 

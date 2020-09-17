@@ -20,3 +20,24 @@ export const Product = PropTypes.shape({
 });
 
 export const Products = PropTypes.arrayOf(Product);
+
+export const Pages = PropTypes.objectOf(Products);
+
+export const FilterOption = PropTypes.shape({
+    facet_key: PropTypes.string,
+    facet_value: PropTypes.string,
+    label: PropTypes.string,
+    product_count: PropTypes.number,
+    selected_filters_count: PropTypes.number
+});
+
+export const Filter = PropTypes.shape({
+    category: PropTypes.string,
+    data: PropTypes.objectOf(FilterOption),
+    is_nested: PropTypes.bool,
+    is_radio: PropTypes.bool,
+    label: PropTypes.string,
+    selected_filters_count: PropTypes.number
+});
+
+export const Filters = PropTypes.objectOf(Filter);
