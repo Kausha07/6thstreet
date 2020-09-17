@@ -30,7 +30,7 @@ export class PLPDispatcher {
             // done, because we want PLP container
             // to set isLoading to false.
             const {
-                products,
+                data: products,
                 meta,
                 filters
             } = await Algolia.getPLP(options);

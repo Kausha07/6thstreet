@@ -2,10 +2,12 @@
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import { Pages } from 'Util/API/endpoint/Product/Product.type';
+
 import PLPPages from './PLPPages.component';
 
-export const mapStateToProps = (_state) => ({
-    // wishlistItems: state.WishlistReducer.productsInWishlist
+export const mapStateToProps = (state) => ({
+    pages: state.PLP.pages
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
@@ -14,7 +16,7 @@ export const mapDispatchToProps = (_dispatch) => ({
 
 export class PLPPagesContainer extends PureComponent {
     static propTypes = {
-        // TODO: implement prop-types
+        pages: Pages.isRequired
     };
 
     containerFunctions = {
@@ -22,7 +24,8 @@ export class PLPPagesContainer extends PureComponent {
     };
 
     containerProps = () => {
-        // isDisabled: this._getIsDisabled()
+        const { pages } = this.props;
+        return pages;
     };
 
     render() {

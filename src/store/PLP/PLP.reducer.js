@@ -92,8 +92,6 @@ export const PLPReducer = (state = getInitialState(), action) => {
             filters: isInitial ? formatFilters(filters) : combineFilters(filters, stateInitialFilters)
         };
 
-        console.log(combinedFilters);
-
         return {
             ...state,
             ...combinedFilters,

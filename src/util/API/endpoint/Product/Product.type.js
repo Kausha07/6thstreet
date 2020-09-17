@@ -21,6 +21,8 @@ export const Product = PropTypes.shape({
 
 export const Products = PropTypes.arrayOf(Product);
 
+export const Pages = PropTypes.objectOf(Products);
+
 export const FilterOption = PropTypes.shape({
     facet_key: PropTypes.string,
     facet_value: PropTypes.string,
