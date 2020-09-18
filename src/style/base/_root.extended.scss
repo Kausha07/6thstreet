@@ -1,8 +1,17 @@
+/**
+ * @category  sixth-street
+ * @author    Vladislavs Belavskis <info@scandiweb.com>
+ * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
+ * @copyright Copyright (c) 2020 Scandiweb, Inc (https://scandiweb.com)
+ */
+
 :root {
     // Declare imported primary colors to change the theme's colors
     --primary-base-color: var(--imported_primary_base_color, #{$default-primary-base-color});
     --primary-dark-color: var(--imported_primary_dark_color, #{$default-primary-dark-color});
     --primary-light-color: var(--imported_primary_light_color, #{$default-primary-light-color});
+    --color-white: #{$white};
+    --color-dove-gray: #{$dove-gray};
 }
 
 body {

@@ -1,6 +1,6 @@
 /**
- * @category  sixstreet
- * @author    Vladislavs Belavskis <vladislavs.belavskis@scandiweb.com>
+ * @category  sixth-street
+ * @author    Vladislavs Belavskis <info@scandiweb.com>
  * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
  * @copyright Copyright (c) 2020 Scandiweb, Inc (https://scandiweb.com)
  */
@@ -9,21 +9,21 @@
     margin: auto;
 
     &-PageNotFound {
-        margin-top: var(--header-height);
+        align-items: center;
         display: flex;
         flex-direction: column;
-        align-items: center;
+        font-size: 1.4rem;
+        margin-top: var(--header-height);
         padding: 30px 0;
-        font-size: 1.3846153846154em;
 
         @include tablet {
-            background: #fff;
-            width: 100%;
+            background: var(--color-white);
             text-align: center;
+            width: 100%;
         }
 
         @include mobile {
-            font-size: 1.0769230769230769em;
+            font-size: 1rem;
             margin: 0 0 20px;
             padding: 60px 0;
         }
@@ -31,9 +31,9 @@
 
     .PageNotFound {
         &-Title {
-            text-transform: uppercase;
+            font-size: 1.4rem;
             margin-bottom: 45px;
-            font-size: 100%;
+            text-transform: uppercase;
 
             span {
                 color: var(--primary-dark-color);
@@ -45,27 +45,32 @@
             }
 
             @include mobile {
+                font-size: 1rem;
                 margin-bottom: 20px;
             }
         }
 
         &-SubTitle {
-            text-transform: uppercase;
-            color: #666;
-            margin: 17px 0;
+            color: var(--color-dove-gray);
             display: block;
-            font-size: 100%;
             font-family: "Avenir Next Regular";
+            font-size: 1.4rem;
+            margin: 17px 0;
+            text-transform: uppercase;
+
+            @include mobile {
+                font-size: 1rem;
+            }
         }
 
         &-Content {
-            margin-bottom: 20px;
-            line-height: 33px;
             color: #999;
-            text-align: center;
-            font-size: 100%;
-            width: 356px;
             font-family: "Muli", sans-serif;
+            font-size: 1.4rem;
+            line-height: 33px;
+            margin-bottom: 20px;
+            text-align: center;
+            width: 356px;
 
             @include mobile {
                 font-size: 14px;
@@ -75,17 +80,17 @@
 
         &-LinkHome {
             background-color: var(--link-color);
-            color: white;
+            color: var(--color-white);
+            font-family: "Avenir Next Regular";
+            font-size: 12px;
             padding: 13px 23px;
             text-decoration: none;
             text-transform: uppercase;
-            font-size: 12px;
-            font-family: "Avenir Next Regular";
         }
 
         &-Image {
-            max-width: 160px;
             height: auto;
+            max-width: 160px;
 
             @include mobile {
                 width: 23%;
@@ -93,8 +98,8 @@
 
             img {
                 display: inline-block;
-                max-width: 100%;
                 height: auto;
+                max-width: 100%;
             }
         }
     }
