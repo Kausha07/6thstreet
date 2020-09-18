@@ -14,7 +14,7 @@
     @include desktop {
         width: 100%;
         position: relative;
-        bottom: none;
+        top: 0;
         z-index: 4;
         box-shadow: 0 1px 0 0 var(--shadow-color);
         background: none;
