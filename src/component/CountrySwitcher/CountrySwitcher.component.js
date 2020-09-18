@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import Field from 'Component/Field';
-// import MyAccountOverlay from 'Component/MyAccountOverlay';
-// import Popup from 'Component/Popup';
 import StoreSwitcherPopup from 'Component/StoreSwitcherPopup';
 import { SelectOptions } from 'Type/Field';
 
@@ -15,36 +13,49 @@ export const STORE_POPUP_ID = 'storePopupId';
 class CountrySwitcher extends PureComponent {
     static propTypes = {
         countrySelectOptions: SelectOptions.isRequired,
+        onCountrySelect: PropTypes.func.isRequired,
         payload: PropTypes.shape({
             text: PropTypes.string
         }).isRequired,
-        // onCountrySelect: PropTypes.func.isRequired,
-        // onClickSwitcher: PropTypes.func.isRequired,
         country: PropTypes.string.isRequired
     };
 
-    // renderContent() {
-    //     const { payload: { text = 'No text was passed' } } = this.props;
-    //     return (
-    //         <Popup>
-    //             <Html content={ text } />
-    //             <div>Helloo</div>
-    //         </Popup>
-    //     );
-    // }
+    constructor(props) {
+        super(props);
 
-    onClickSwitcher() {
-        console.log('click');
-        return <StoreSwitcherPopup />;
+        this.state = {
+            content: ''
+        };
     }
 
-    renderCountrySelect() {
+    openPopup = () => {
         const {
             countrySelectOptions,
             country
         } = this.props;
 
-        console.log(this.props);
+        this.setState({
+            content: <StoreSwitcherPopup
+              countrySelectOptions={ countrySelectOptions }
+              country={ country }
+              closePopup={ this.closePopup }
+            />
+        });
+    };
+
+    closePopup = () => {
+        this.setState({
+            content: ''
+        });
+    };
+
+    renderCountrySelect() {
+        const {
+            countrySelectOptions,
+            onCountrySelect,
+            country
+        } = this.props;
+
         return (
             <Field
               id="language-switcher-country"
@@ -53,8 +64,7 @@ class CountrySwitcher extends PureComponent {
               placeholder={ __('Choose country') }
               selectOptions={ countrySelectOptions }
               value={ country }
-            //   onChange={ onCountrySelect }
-              onClick={ this.onClickSwitcher }
+              onChange={ onCountrySelect }
             />
         );
     }
@@ -66,7 +76,11 @@ class CountrySwitcher extends PureComponent {
         } = this.props;
 
         const countryName = countrySelectOptions.filter((obj) => obj.id === country);
-        return countryName[0].label;
+        if (countryName.length > 0) {
+            return countryName[0].label;
+        }
+
+        return 'SELECT COUNTRY';
     }
 
     renderStoreButton() {
@@ -74,8 +88,10 @@ class CountrySwitcher extends PureComponent {
 
         return (
             <button
+              block="CountrySwitcher"
+              elem="CountryBtn"
                 /* eslint-disable-next-line */
-              onClick={ this.onClickSwitcher }
+              onClick={ this.openPopup  }
             >
                 <span>
                     { country }
@@ -85,10 +101,12 @@ class CountrySwitcher extends PureComponent {
     }
 
     render() {
+        const { content } = this.state;
         return (
             <div block="CountrySwitcher">
                 { this.renderCountrySelect() }
                 { this.renderStoreButton() }
+                { content }
             </div>
         );
     }

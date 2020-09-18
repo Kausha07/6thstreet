@@ -20,13 +20,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="04d772fa-3a53-46a5-b246-0b692007e7fa" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/i18n/en_US.json" beforeDir="false" afterPath="$PROJECT_DIR$/i18n/en_US.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/component/CountrySwitcher/CountrySwitcher.component.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/CountrySwitcher/CountrySwitcher.component.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/component/CountrySwitcher/CountrySwitcher.container.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/CountrySwitcher/CountrySwitcher.container.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/component/CountrySwitcher/CountrySwitcher.style.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/CountrySwitcher/CountrySwitcher.style.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/component/HeaderTopBar/HeaderTopBar.component.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/HeaderTopBar/HeaderTopBar.component.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/component/HeaderTopBar/HeaderTopBar.style.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/HeaderTopBar/HeaderTopBar.style.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/component/InlineCustomerSupport/InlineCustomerSupport.style.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/InlineCustomerSupport/InlineCustomerSupport.style.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/component/HeaderCart/HeaderCart.component.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/HeaderCart/HeaderCart.component.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/component/StoreSwitcherPopup/StoreSwitcherPopup.component.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/StoreSwitcherPopup/StoreSwitcherPopup.component.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/component/StoreSwitcherPopup/StoreSwitcherPopup.container.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/StoreSwitcherPopup/StoreSwitcherPopup.container.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/component/StoreSwitcherPopup/StoreSwitcherPopup.style.scss" beforeDir="false" afterPath="$PROJECT_DIR$/src/component/StoreSwitcherPopup/StoreSwitcherPopup.style.scss" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,7 +46,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$USER_HOME$/tutorial-1" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
@@ -66,6 +64,7 @@
       <updated>1600260394586</updated>
       <workItem from="1600260396087" duration="1716000" />
       <workItem from="1600336884095" duration="399000" />
+      <workItem from="1600352866064" duration="15000" />
     </task>
     <servers />
   </component>
@@ -85,10 +84,10 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="2727" y="334" width="424" height="491" key="FileChooserDialogImpl" timestamp="1600262367811">
+    <state x="2727" y="334" width="424" height="491" key="FileChooserDialogImpl" timestamp="1600352877816">
       <screen x="1920" y="0" width="2048" height="1152" />
     </state>
-    <state x="2727" y="334" width="424" height="491" key="FileChooserDialogImpl/72.27.1848.1053/1920.0.2048.1152@1920.0.2048.1152" timestamp="1600262367811" />
+    <state x="2727" y="334" width="424" height="491" key="FileChooserDialogImpl/72.27.1848.1053/1920.0.2048.1152@1920.0.2048.1152" timestamp="1600352877816" />
     <state x="2440" y="211" width="1007" height="737" key="SettingsEditor" timestamp="1600260405370">
       <screen x="1920" y="0" width="2048" height="1152" />
     </state>

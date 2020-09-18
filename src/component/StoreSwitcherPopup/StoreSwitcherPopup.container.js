@@ -1,33 +1,56 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
+import { connect } from 'react-redux';
 
-import { hideActiveOverlay, toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
+import { setCountry } from 'Store/AppState/AppState.action';
+import { getCountriesForSelect } from 'Util/API/endpoint/Config/Config.format';
+import { Config } from 'Util/API/endpoint/Config/Config.type';
 
-import StoreSwitcherPopup, { STORE_POPUP_ID } from './StoreSwitcherPopup.component';
+import StoreSwitcherPopup from './StoreSwitcherPopup.component';
+
+export const mapStateToProps = (state) => ({
+    config: state.AppConfig.config,
+    country: state.AppState.country
+});
 
 export const mapDispatchToProps = (dispatch) => ({
-    showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
-    hideActiveOverlay: () => dispatch(hideActiveOverlay())
+    setCountry: (value) => dispatch(setCountry(value))
 });
 
 class StoreSwitcherPopupContainer extends PureComponent {
     static propTypes = {
-        showOverlay: PropTypes.func.isRequired
+        setCountry: PropTypes.func.isRequired,
+        config: Config.isRequired,
+        country: PropTypes.string.isRequired
     };
 
-    componentDidMount() {
-        const { showOverlay } = this.props;
+    containerFunctions = {
+        onCountrySelect: this.onCountrySelect.bind(this)
+    };
 
-        showOverlay(STORE_POPUP_ID);
+    onCountrySelect(value) {
+        const { setCountry } = this.props;
+        setCountry(value);
     }
+
+    containerProps = () => {
+        const { country, config } = this.props;
+
+        return {
+            countrySelectOptions: getCountriesForSelect(config),
+            country
+        };
+    };
 
     render() {
         return (
             <StoreSwitcherPopup
+              { ...this.containerFunctions }
+              { ...this.containerProps() }
               { ...this.props }
             />
         );
     }
 }
 
-export default StoreSwitcherPopupContainer;
+export default connect(mapStateToProps, mapDispatchToProps)(StoreSwitcherPopupContainer);
