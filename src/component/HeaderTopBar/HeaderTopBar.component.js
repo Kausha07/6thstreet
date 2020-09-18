@@ -25,7 +25,15 @@ class HeaderTopBar extends NavigationAbstract {
 
     renderCmsBlock() {
         // TODO: find out what is this, render here
-        return <div block="HeaderTopBar" elem="CmsBlock">cms block in header</div>;
+        return (
+            <div
+              key="cms"
+              block="HeaderTopBar"
+              elem="CmsBlock"
+            >
+                cms block in header
+            </div>
+        );
     }
 
     renderCustomerSupport() {
