@@ -16,40 +16,41 @@ import { TYPE_CATEGORY, TYPE_CMS_PAGE, TYPE_PRODUCT } from './UrlRewrites.config
 import './UrlRewrites.style';
 
 class UrlRewrites extends PureComponent {
-  static propTypes = {
-      type: PropTypes.string,
-      isLoading: PropTypes.bool.isRequired
-  };
+    static propTypes = {
+        type: PropTypes.string,
+        isLoading: PropTypes.bool.isRequired
+    };
 
-  static defaultProps = {
-      type: ''
-  };
+    static defaultProps = {
+        type: ''
+    };
 
-  typeMap = {
-      [TYPE_CATEGORY]: () => <PLP />,
-      [TYPE_CMS_PAGE]: () => 'cms',
-      [TYPE_PRODUCT]: () => 'product'
-  };
+    typeMap = {
+        [TYPE_CATEGORY]: () => <PLP />,
+        [TYPE_CMS_PAGE]: () => 'cms',
+        [TYPE_PRODUCT]: () => 'product'
+    };
 
-  render404;
+    render404;
 
-  render() {
-      const { props } = this;
-      const { type, isLoading } = this.props;
+    render() {
+        const { props } = this;
+        const { type, isLoading } = this.props;
 
-      this.render404 = () => <NoMatch { ...props } />;
-      if (isLoading) {
-          return 'loading...';
-      }
+        this.render404 = () => <NoMatch { ...props } />;
 
-      const renderFunction = this.typeMap[type] || this.render404;
+        if (isLoading) {
+            return 'loading...';
+        }
 
-      return (
-        <div block="UrlRewrites">
-          { renderFunction() }
-        </div>
-      );
-  }
+        const renderFunction = this.typeMap[type] || this.render404;
+
+        return (
+            <div block="UrlRewrites">
+                { renderFunction() }
+            </div>
+        );
+    }
 }
 
 export default UrlRewrites;

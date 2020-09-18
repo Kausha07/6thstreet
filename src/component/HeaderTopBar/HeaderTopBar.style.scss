@@ -7,7 +7,7 @@
     box-shadow: none;
     width: 100%;
     position: fixed;
-    bottom: 0;
+    bottom: 83px;
     z-index: 4;
     background: $black;
 
@@ -33,8 +33,7 @@
         font-weight: 600;
         letter-spacing: 0.5px;
         line-height: 16px;
-        margin-top: 7px;
-        margin-bottom: 7px;
+        margin: 7px 0;
         text-transform: uppercase;
 
         @include desktop {
@@ -45,6 +44,18 @@
     &_isOnMobile {
         display: none;
 
+    }
+
+    .LanguageSwitcher {
+        @include before-desktop() {
+            display: none;
+        }
+    }
+
+    .CountrySwitcher {
+        @include before-desktop() {
+            display: none;
+        }
     }
 
     .LanguageSwitcher {
