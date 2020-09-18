@@ -28,6 +28,7 @@ export class HeaderAccountContainer extends PureComponent {
     render() {
         return (
             <HeaderAccount
+              { ...this.props }
               { ...this.containerFunctions }
               { ...this.containerProps() }
             />
