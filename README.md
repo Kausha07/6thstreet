@@ -1,5 +1,3 @@
-# TODO list
-
 1. Add `gender` to global state
 2. Replace PDP and PLP context
 
@@ -11,3 +9,4 @@
 4. Icons and titles of countries are missing
 5. Where are gender sources?
 6. Homepage, Categories dynamic-content data does not match one format
+7. Filters logic is unclear, architecture?
