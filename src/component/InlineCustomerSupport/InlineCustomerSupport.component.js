@@ -64,6 +64,8 @@ class InlineCustomerSupport extends PureComponent {
 
     renderDropdown() {
         const { isExpanded } = this.state;
+        const Email = this.renderEmail();
+        const Phone = this.renderPhone();
 
         return (
             <div>
@@ -81,14 +83,18 @@ class InlineCustomerSupport extends PureComponent {
                   mods={ { isExpanded } }
                 >
                     { this.renderWorkingHours() }
-                    <div block="InlineCustomerSupport" elem="DisplayPhone">
-                        <div block="InlineCustomerSupport" elem="PhoneIcon" />
-                        { this.renderPhone() }
-                    </div>
-                    <div block="InlineCustomerSupport" elem="DisplayEmail">
-                        <div block="InlineCustomerSupport" elem="EmailIcon" />
-                        { this.renderEmail() }
-                    </div>
+                    { Phone ? (
+                        <div block="InlineCustomerSupport" elem="DisplayPhone">
+                            <div block="InlineCustomerSupport" elem="PhoneIcon" />
+                            { Phone }
+                        </div>
+                    ) : (Phone) }
+                    { Email ? (
+                        <div block="InlineCustomerSupport" elem="DisplayEmail">
+                            <div block="InlineCustomerSupport" elem="EmailIcon" />
+                            { Email }
+                        </div>
+                    ) : (Email) }
                 </div>
             </div>
         );
