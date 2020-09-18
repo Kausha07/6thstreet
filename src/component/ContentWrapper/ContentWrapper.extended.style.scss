@@ -15,12 +15,6 @@
 
 .ContentWrapper {
     max-width: var(--content-wrapper-width);
-    padding: {
-        left: 1rem;
-        right: 1rem;
-    };
-    margin: {
-        left: auto;
-        right: auto;
-    };
+    padding: 0 1rem;
+    margin: 0 auto;
 }
