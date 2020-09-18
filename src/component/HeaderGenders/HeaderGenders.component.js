@@ -27,9 +27,9 @@ class HeaderGenders extends PureComponent {
             <div
               block="GenderButton"
               elem="Container"
+              key={ key }
             >
                 <GenderButton
-                  key={ key }
                   gender={ gender }
                   mix={ {
                       block: 'HeaderGenders',
