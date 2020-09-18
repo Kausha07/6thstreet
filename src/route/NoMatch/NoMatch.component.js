@@ -62,35 +62,31 @@ export class NoMatch extends PureComponent {
   render() {
       return (
         <main block="NoMatch" aria-label={ __('Page not found') }>
-            <ContentWrapper
-              mix={ { block: 'NoMatch' } }
-              wrapperMix={ {
-                  block: 'NoMatch',
-                  elem: 'Wrapper'
-              } }
-              label={ __('Page Not Found Content') }
-            >
+          <ContentWrapper
+            mix={ { block: 'NoMatch' } }
+            wrapperMix={ {
+                block: 'NoMatch',
+                elem: 'Wrapper'
+            } }
+            label={ __('Page Not Found Content') }
+          >
             <div block="NoMatch">
-               <div block="NoMatch-PageNotFound">
-                 <h4 block="PageNotFound-Title">
-                    WE ARE SORRY!
-                    <span>ERROR 404!</span>
-                 </h4>
-                 <div block="PageNotFound-Image">
-                    <img src={ pageNotFound } alt="pageNotFound" />
-                 </div>
-                 <span block="PageNotFound-SubTitle">THIS PAGE COULD NOT BE FOUND :(</span>
-                 <p block="PageNotFound-Content">
-                    { /* eslint-disable-next-line react/no-unescaped-entities */ }
-                    Can't find what you need? Take a moment
-                    and do a search or start from our homepage.
-                 </p>
-                 { /* eslint-disable-next-line max-len */ }
-                 { /* eslint-disable-next-line jsx-a11y/anchor-has-content,jsx-a11y/control-has-associated-label */ }
-                 <a block="PageNotFound-LinkHome" href="/">BACK TO HOMEPAGE</a>
-               </div>
+              <div block="NoMatch-PageNotFound">
+                <h4 block="PageNotFound-Title">
+                  { __('we are sorry!') }
+                  <span>{ __('error 404!') }</span>
+                </h4>
+                <div block="PageNotFound-Image">
+                  <img src={ pageNotFound } alt="pageNotFound" />
+                </div>
+                <span block="PageNotFound-SubTitle">{ __('this page could not be found :(') }</span>
+                <p block="PageNotFound-Content">
+                  { __('Can`t find what you need? Take a moment\nand do a search or start from our homepage') }
+                </p>
+                <a block="PageNotFound-LinkHome" href="/">{ __('back to homepage') }</a>
+              </div>
             </div>
-            </ContentWrapper>
+          </ContentWrapper>
         </main>
       );
   }

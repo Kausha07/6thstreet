@@ -5,6 +5,12 @@
  * @copyright Copyright (c) 2020 Scandiweb, Inc (https://scandiweb.com)
  */
 
+:root {
+    --color-dove-gray: #666;
+    --color-dusty-gray: #999;
+    --color-white: #fff;;
+}
+
 .NoMatch {
     margin: auto;
 
@@ -64,7 +70,7 @@
         }
 
         &-Content {
-            color: #999;
+            color: var(--color-dusty-gray);
             font-family: "Muli", sans-serif;
             font-size: 1.4rem;
             line-height: 33px;
