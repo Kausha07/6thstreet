@@ -33,13 +33,12 @@
         }
     }
     &-List {
-        margin-top: 20px;
         li {
             list-style: none;
             &::before {
                 content: '';
             }
-            padding: 15px 0;
+            padding: 0;
             text-transform: uppercase;
             border-bottom: 1px solid rgb(230, 230, 230);
             cursor: pointer;
@@ -74,5 +73,11 @@
         width: 20px;
         height: 13px;
         margin-right: 8px;
+    }
+    &-CountryBtn {
+        width: 100%;
+        text-align: start;
+        padding: 0;
+        margin-top: 10px;
     }
 }

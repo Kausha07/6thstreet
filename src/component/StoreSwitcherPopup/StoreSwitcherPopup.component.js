@@ -26,10 +26,11 @@ class StoreSwitcherPopup extends PureComponent {
         const check = item.value === country ? <span block="StoreSwitcherPopup" elem="Check">{ svg }</span> : '';
         return (
         <li key={ item.id }>
-            { flag }
-            { item.label }
-            { check }
-            <button onClick={ () => onCountrySelect(item.value) }>Change</button>
+            <button onClick={ () => onCountrySelect(item.value) } block="StoreSwitcherPopup" elem="CountryBtn">
+                { flag }
+                { item.label }
+                { check }
+            </button>
         </li>
         );
     }
@@ -77,10 +78,6 @@ class StoreSwitcherPopup extends PureComponent {
     }
 
     render() {
-        // const {
-        //     country
-        // } = this.props;
-
         return this.renderPopupContent();
     }
 }
