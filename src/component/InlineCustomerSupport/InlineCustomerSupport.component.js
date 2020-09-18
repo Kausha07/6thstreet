@@ -15,15 +15,20 @@ class InlineCustomerSupport extends PureComponent {
     };
 
     state = {
-        isExpanded: false,
+        // eslint-disable-next-line react/no-unused-state
+        language: JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data.language,
         isArabic: false
     };
 
-    static getDerivedStateFromProps() {
-        return JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data.language === 'ar' ? {
-            isArabic: true
+    static getDerivedStateFromProps(state) {
+        const { language } = state;
+        // eslint-disable-next-line max-len
+        return language === 'ar' ? {
+            isArabic: true,
+            language: 'ar'
         } : {
-            isArabic: false
+            isArabic: false,
+            language: 'en'
         };
     }
 

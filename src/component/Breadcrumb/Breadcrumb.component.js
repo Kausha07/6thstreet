@@ -1,3 +1,4 @@
+/* eslint-disable react/no-redundant-should-component-update */
 /**
  * ScandiPWA - Progressive Web App for Magento
  *
@@ -9,6 +10,81 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import './Breadcrumb.extended.style';
+import PropTypes from 'prop-types';
+import { PureComponent } from 'react';
 
-export { default } from 'SourceComponent/Breadcrumb/Breadcrumb.component';
+import Link from 'Component/Link';
+import TextPlaceholder from 'Component/TextPlaceholder';
+
+import './Breadcrumb.extended.style';
+import './Breadcrumb.style';
+
+export class Breadcrumb extends PureComponent {
+    static propTypes = {
+        index: PropTypes.number.isRequired,
+        isDisabled: PropTypes.bool.isRequired,
+        isArabic: PropTypes.bool.isRequired,
+        url: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.shape({})
+        ]),
+        name: PropTypes.string
+    };
+
+    static defaultProps = {
+        url: '',
+        name: ''
+    };
+
+    renderLink() {
+        const {
+            url,
+            index,
+            isDisabled
+        } = this.props;
+
+        return (
+            <Link
+              block="Breadcrumb"
+              elem="Link"
+              to={ url || '' }
+              tabIndex={ isDisabled ? '-1' : '0' }
+            >
+                <meta itemProp="item" content={ window.location.origin + (url || '') } />
+                <span itemProp="name">
+                    { this.renderName() }
+                </span>
+                <meta itemProp="position" content={ index } />
+            </Link>
+        );
+    }
+
+    renderName() {
+        const { name } = this.props;
+
+        return (
+            <TextPlaceholder content={ name } />
+        );
+    }
+
+    render() {
+        const { index } = this.props;
+        const { isArabic } = this.props;
+        console.log(this.props);
+
+        return (
+            <li
+              block="Breadcrumb"
+              mods={ { isArabic } }
+              key={ index }
+              itemProp="itemListElement"
+              itemScope
+              itemType="http://schema.org/ListItem"
+            >
+                { this.renderLink() }
+            </li>
+        );
+    }
+}
+
+export default Breadcrumb;
