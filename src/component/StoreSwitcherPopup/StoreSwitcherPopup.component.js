@@ -15,8 +15,11 @@ class StoreSwitcherPopup extends PureComponent {
     static propTypes = {
         onCountrySelect: PropTypes.func.isRequired,
         countrySelectOptions: SelectOptions.isRequired,
+        languageSelectOptions: SelectOptions.isRequired,
+        onLanguageSelect: PropTypes.func.isRequired,
         closePopup: PropTypes.func.isRequired,
-        country: PropTypes.string.isRequired
+        country: PropTypes.string.isRequired,
+        language: PropTypes.string.isRequired
     };
 
     renderListItem(item, country) {
@@ -32,6 +35,41 @@ class StoreSwitcherPopup extends PureComponent {
                 { check }
             </button>
         </li>
+        );
+    }
+
+    renderLangBtn(obj) {
+        const {
+            language,
+            onLanguageSelect
+        } = this.props;
+
+        const btnType = obj.id === language ? 'primary' : 'secondary';
+        const btnBlock = `button ${ btnType}`;
+        return (
+            <button
+              key={ obj.id }
+              block={ btnBlock }
+              onClick={ () => onLanguageSelect(obj.id) }
+            >
+                { obj.label }
+            </button>
+        );
+    }
+
+    renderLanguageButtons() {
+        const {
+            languageSelectOptions
+        } = this.props;
+
+        // console.log(languageSelectOptions);
+
+        const buttons = languageSelectOptions.map((obj) => this.renderLangBtn(obj));
+
+        return (
+            <div block="StoreSwitcherPopup" elem="ButtonsContainer">
+                { buttons }
+            </div>
         );
     }
 
@@ -65,10 +103,7 @@ class StoreSwitcherPopup extends PureComponent {
                         <div block="StoreSwitcherPopup" elem="Options">
                             <h1>Welcome</h1>
                             <p>you are shopping in</p>
-                            <div block="StoreSwitcherPopup" elem="ButtonsContainer">
-                                <button block="button primary">DUMMY</button>
-                                <button block="button primary">TEST</button>
-                            </div>
+                            { this.renderLanguageButtons() }
                             { this.renderCountryList() }
                         </div>
                     </div>
