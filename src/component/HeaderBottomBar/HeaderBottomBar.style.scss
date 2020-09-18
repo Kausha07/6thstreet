@@ -22,7 +22,7 @@
         position: relative;
     }
 
-    &-Home {
+    &-HomeAndBrand {
         display: block;
         text-transform: none;
         font-size: 10px;
@@ -34,86 +34,49 @@
         height: 40px;
         width: 40px;
         padding: 0;
-        margin-top: 10px;
         text-align: center;
-        margin-left: auto;
-        margin-right: auto;
+        margin: 10px auto 0 auto;
 
         &::before{
             content: "";
             right: 0;
-            background: url(./icons/home-solid.svg) no-repeat;
             background-size: 27px;
             width: 27px;
             height: 27px;
             display: inline-block;
             font-size: 0;
             filter: invert(26%) sepia(2%) saturate(21%) hue-rotate(43deg) brightness(90%) contrast(80%);
-            
         }
 
-        &_isHome {
+        &_isHomeButton {
+            &::before{
+                background: url(./icons/home-solid.svg) no-repeat;
+                background-size: 27px;
+            }
+        }
+
+        &_isBrandButton {
+            &::before{
+                background: url(./icons/brand.svg) no-repeat;
+                background-size: 27px;
+            }
+        }
+
+        &_isActive {
             color: var(--active-text-color);
 
             &::before{
                 filter: invert(43%) sepia(60%) saturate(1535%) hue-rotate(335deg) brightness(107%) contrast(95%);
             }
         }
+        
 
         @include desktop {
             display: none;
         }
     }
 
-    &-Brand {
-        display: block;
-        text-transform: none;
-        font-size: 10px;
-        font-weight: 500;
-        letter-spacing: -0.2px;
-        line-height: 14px;
-        text-align: center;
-        color: var(--inactive-text-color);
-        height: 40px;
-        width: 40px;
-        margin-top: 10px;
-        margin-left: auto;
-        margin-right: auto;
-        padding: 0;
-        text-align: center;
-
-        &::before{
-            content: "";
-            right: 0;
-            background: url(./icons/brand.svg) no-repeat;
-            background-size: 27px;
-            width: 27px;
-            height: 27px;
-            display: inline-block;
-            font-size: 0;
-            filter: invert(26%) sepia(2%) saturate(21%) hue-rotate(43deg) brightness(90%) contrast(80%);
-            
-        }
-
-        &_isBrand {
-            color: var(--active-text-color);
-
-            &::before{
-                filter: invert(43%) sepia(60%) saturate(1535%) hue-rotate(335deg) brightness(107%) contrast(95%);
-            }
-        }
-
-        @include desktop {
-            display: none;
-        }
-    }
-
-    &-WishList {
+    &-WishListAndAccount {
         width: 20%;
     }
-
-    &-Account {
-        width: 20%;
-    }
-
 }

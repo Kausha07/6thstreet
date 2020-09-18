@@ -2,10 +2,6 @@
     display: none;
     margin-left: auto;
 
-    @include desktop {
-        display: flex;
-    }
-
     .Field {
         display: none;
     }

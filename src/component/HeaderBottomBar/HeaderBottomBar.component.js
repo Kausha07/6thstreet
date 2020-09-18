@@ -47,28 +47,19 @@ class HeaderBottomBar extends NavigationAbstract {
 
     routeChangeHome=() => {
         this.setState({
-            redirectHome: true,
-            isWishlist: false,
-            isAccount: false
+            redirectHome: true
         });
     };
 
     routeChangeBrand=() => {
         this.setState({
-            redirectBrand: true,
-            isWishlist: false,
-            isAccount: false
+            redirectBrand: true
         });
     };
 
     routeChangeAccount=() => {
         const { history } = this.props;
         const { isLoggedIn } = this.state;
-
-        this.setState({
-            isAccount: true,
-            isWishlist: false
-        });
 
         if (!isLoggedIn) {
             return history.push('/myaccount/login');
@@ -80,11 +71,6 @@ class HeaderBottomBar extends NavigationAbstract {
     routeChangeWishlist=() => {
         const { history } = this.props;
         const { isLoggedIn } = this.state;
-
-        this.setState({
-            isWishlist: true,
-            isAccount: false
-        });
 
         if (!isLoggedIn) {
             return history.push('/myaccount/login');
@@ -99,6 +85,7 @@ class HeaderBottomBar extends NavigationAbstract {
         if (location !== prevProps.location) {
             this.renderHome();
             this.renderBrand();
+            this.renderAccount();
         }
     }
 
@@ -115,14 +102,20 @@ class HeaderBottomBar extends NavigationAbstract {
             return history.push('/');
         }
 
-        if (window.location.pathname === '/') {
-            this.setState({ isHome: true });
-        } else {
-            this.setState({ isHome: false });
-        }
+        this.setState({ isHome: window.location.pathname === '/' });
 
         return (
-            <button onClick={ this.routeChangeHome } block="HeaderBottomBar" elem="Home" mods={ { isHome } }>
+            <button
+              onClick={ this.routeChangeHome }
+              block="HeaderBottomBar"
+              elem="HomeAndBrand"
+              mods={ { isHomeButton: true } }
+              mix={ {
+                  block: 'HeaderBottomBar',
+                  elem: 'HomeAndBrand',
+                  mods: { isActive: isHome }
+              } }
+            >
                 <label htmlFor="Home">{ __('Home') }</label>
             </button>
         );
@@ -145,14 +138,20 @@ class HeaderBottomBar extends NavigationAbstract {
             return history.push('/brands.html');
         }
 
-        if (window.location.pathname === '/brands.html') {
-            this.setState({ isBrand: true });
-        } else {
-            this.setState({ isBrand: false });
-        }
+        this.setState({ isBrand: window.location.pathname === '/brands.html' });
 
         return (
-            <button onClick={ this.routeChangeBrand } block="HeaderBottomBar" elem="Brand" mods={ { isBrand } }>
+            <button
+              onClick={ this.routeChangeBrand }
+              block="HeaderBottomBar"
+              elem="HomeAndBrand"
+              mods={ { isBrandButton: true } }
+              mix={ {
+                  block: 'HeaderBottomBar',
+                  elem: 'HomeAndBrand',
+                  mods: { isActive: isBrand }
+              } }
+            >
                 <label htmlFor="Home">{ __('Brand') }</label>
             </button>
         );
@@ -162,7 +161,7 @@ class HeaderBottomBar extends NavigationAbstract {
         const { isBottomBar, isWishlist } = this.state;
 
         return (
-            <button onClick={ this.routeChangeWishlist } block="HeaderBottomBar" elem="WishList">
+            <button onClick={ this.routeChangeWishlist } block="HeaderBottomBar" elem="WishListAndAccount">
                 <HeaderWishlist
                   isWishlist={ isWishlist }
                   isBottomBar={ isBottomBar }
@@ -174,9 +173,16 @@ class HeaderBottomBar extends NavigationAbstract {
 
     renderAccount() {
         const { isBottomBar, isAccount } = this.state;
+        const { location } = this.props;
+
+        this.setState(location.pathname === '/myaccount/login' ? {
+            isAccount: true
+        } : {
+            isAccount: false
+        });
 
         return (
-            <button onClick={ this.routeChangeAccount } block="HeaderBottomBar" elem="Account">
+            <button onClick={ this.routeChangeAccount } block="HeaderBottomBar" elem="WishListAndAccount">
                 <HeaderAccount
                   isAccount={ isAccount }
                   isBottomBar={ isBottomBar }

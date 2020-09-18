@@ -25,7 +25,7 @@ export class PLPPagesContainer extends PureComponent {
 
     containerProps = () => {
         const { pages } = this.props;
-        return pages;
+        return { pages };
     };
 
     render() {
