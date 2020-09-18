@@ -9,12 +9,14 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-:root {
-    --content-wrapper-width: 1400px;
-}
+/* eslint-disable simple-import-sort/sort */
+import 'Util/Polyfill';
+import 'Style/main';
 
-.ContentWrapper {
-    max-width: var(--content-wrapper-width);
-    padding: 0 1rem;
-    margin: 0 auto;
-}
+import { render } from 'react-dom';
+
+import App from 'Component/App';
+
+window.__DEV__ = process.env.NODE_ENV === 'development';
+
+render(<App />, document.getElementById('root'));
