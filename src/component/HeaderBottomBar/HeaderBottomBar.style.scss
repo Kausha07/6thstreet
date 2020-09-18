@@ -1,14 +1,13 @@
 :root{
-    --background-color: #fff;
-    --active-text-color: #F96446;
-    --inactive-text-color: #4A4A4A;
+    --active-button-header-color: #f96446;
+    --inactive-button-header-color: #4a4a4a;
 }
 
 
 .HeaderBottomBar {
     display: flex;
     z-index: 90;
-    background: var(--background-color);
+    background: $white;
     height: 83px;
     position: fixed;
     bottom: 0;
@@ -30,12 +29,12 @@
         letter-spacing: -0.2px;
         line-height: 14px;
         text-align: center;
-        color: var(--inactive-text-color);
+        color: var(--inactive-button-header-color);
         height: 40px;
         width: 40px;
         padding: 0;
         text-align: center;
-        margin: 10px auto 0 auto;
+        margin: 10px auto 0;
 
         &::before{
             content: "";
@@ -63,7 +62,7 @@
         }
 
         &_isActive {
-            color: var(--active-text-color);
+            color: var(--active-button-header-color);
 
             &::before{
                 filter: invert(43%) sepia(60%) saturate(1535%) hue-rotate(335deg) brightness(107%) contrast(95%);

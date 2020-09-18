@@ -20,14 +20,10 @@ class HeaderMenu extends PureComponent {
         const { location } = props;
         const { prevLocation } = state;
 
-        if (location !== prevLocation) {
-            return {
-                isExpanded: false,
-                prevLocation: location
-            };
-        }
-
-        return null;
+        return location !== prevLocation ? ({
+            isExpanded: false,
+            prevLocation: location
+        }) : null;
     }
 
     onCategoriesClick = () => {
