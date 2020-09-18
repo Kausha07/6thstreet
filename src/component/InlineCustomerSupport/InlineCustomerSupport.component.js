@@ -15,8 +15,17 @@ class InlineCustomerSupport extends PureComponent {
     };
 
     state = {
-        isExpanded: false
+        isExpanded: false,
+        isArabic: false
     };
+
+    static getDerivedStateFromProps() {
+        return JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data.language === 'ar' ? {
+            isArabic: true
+        } : {
+            isArabic: false
+        };
+    }
 
     onDropdownClick = () => {
         // Toggle dropdown
@@ -46,7 +55,7 @@ class InlineCustomerSupport extends PureComponent {
 
         return (
             <a block="InlineCustomerSupport" elem="Phone" href={ `tel:${ phone }` }>
-                { phone }
+                <bdi>{ phone }</bdi>
             </a>
         );
     };
@@ -63,7 +72,7 @@ class InlineCustomerSupport extends PureComponent {
     }
 
     renderDropdown() {
-        const { isExpanded } = this.state;
+        const { isExpanded, isArabic } = this.state;
         const Email = this.renderEmail();
         const Phone = this.renderPhone();
 
@@ -73,6 +82,11 @@ class InlineCustomerSupport extends PureComponent {
                   block="InlineCustomerSupport"
                   elem="Button"
                   mods={ { isExpanded } }
+                  mix={ {
+                      block: 'InlineCustomerSupport',
+                      elem: 'Button',
+                      mods: { isArabic }
+                  } }
                   onClick={ this.onDropdownClick }
                 >
                     { __('customer service') }
@@ -85,13 +99,13 @@ class InlineCustomerSupport extends PureComponent {
                     { this.renderWorkingHours() }
                     { Phone ? (
                         <div block="InlineCustomerSupport" elem="DisplayPhone">
-                            <div block="InlineCustomerSupport" elem="PhoneIcon" />
+                            <div block="InlineCustomerSupport" elem="PhoneIcon" mods={ { isArabic } } />
                             { Phone }
                         </div>
                     ) : (Phone) }
                     { Email ? (
                         <div block="InlineCustomerSupport" elem="DisplayEmail">
-                            <div block="InlineCustomerSupport" elem="EmailIcon" />
+                            <div block="InlineCustomerSupport" elem="EmailIcon" mods={ { isArabic } } />
                             { Email }
                         </div>
                     ) : (Email) }
@@ -119,10 +133,12 @@ class InlineCustomerSupport extends PureComponent {
     }
 
     render() {
+        const { isArabic } = this.state;
+
         return (
             <div block="InlineCustomerSupport">
                 { this.renderDropdown() }
-                <div block="InlineCustomerSupport" elem="DisplayQuickAccess">
+                <div block="InlineCustomerSupport" elem="DisplayQuickAccess" mods={ { isArabic } }>
                     { this.renderQuickAccess() }
                 </div>
             </div>
