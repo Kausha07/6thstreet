@@ -1,3 +1,5 @@
+/* eslint-disable prefer-destructuring */
+/* eslint-disable quote-props */
 /* eslint-disable @scandipwa/scandipwa-guidelines/create-config-files */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
@@ -8,15 +10,10 @@ import { SelectOptions } from 'Type/Field';
 
 import './CountrySwitcher.style';
 
-export const STORE_POPUP_ID = 'storePopupId';
-
 class CountrySwitcher extends PureComponent {
     static propTypes = {
         countrySelectOptions: SelectOptions.isRequired,
         onCountrySelect: PropTypes.func.isRequired,
-        payload: PropTypes.shape({
-            text: PropTypes.string
-        }).isRequired,
         country: PropTypes.string.isRequired
     };
 
@@ -77,14 +74,24 @@ class CountrySwitcher extends PureComponent {
 
         const countryName = countrySelectOptions.filter((obj) => obj.id === country);
         if (countryName.length > 0) {
-            return countryName[0].label;
+            return countryName[0];
         }
 
-        return 'SELECT COUNTRY';
+        return '';
     }
 
     renderStoreButton() {
+        const flagValues = {
+            'AE': '0px',
+            'SA': '-14px',
+            'QA': '-28px',
+            'OM': '-42px',
+            'BH': '-56px',
+            'KW': '-70px'
+        };
         const country = this.getCurrentCountry();
+        const id = country.id;
+        const flagValue = `0 ${ flagValues[id]}`;
 
         return (
             <button
@@ -93,8 +100,9 @@ class CountrySwitcher extends PureComponent {
                 /* eslint-disable-next-line */
               onClick={ this.openPopup  }
             >
+                <span block="CountrySwitcher" elem="Flag" style={ { backgroundPosition: flagValue } } />
                 <span>
-                    { country }
+                    { country.label || 'SELECT COUNTRY' }
                 </span>
             </button>
         );

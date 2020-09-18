@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 /* eslint-disable quote-props */
 /* eslint-disable react/jsx-no-bind */
 /* eslint-disable max-len */
@@ -61,6 +62,12 @@ class StoreSwitcherPopup extends PureComponent {
 
         const btnType = obj.id === language ? 'primary' : 'secondary';
         const btnBlock = `button ${ btnType}`;
+
+        let label = obj.label;
+        if (label === 'Arabic') {
+            label = 'العربية';
+        }
+
         return (
             <button
               key={ obj.id }
@@ -69,7 +76,7 @@ class StoreSwitcherPopup extends PureComponent {
               mix={ { block: btnBlock } }
               onClick={ () => onLanguageSelect(obj.id) }
             >
-                { obj.label }
+                { label }
             </button>
         );
     }
