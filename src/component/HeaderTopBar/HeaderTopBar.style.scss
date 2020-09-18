@@ -1,5 +1,5 @@
 :root {
-    --shadow-color: rgba(0,0,0,0.1);
+    --shadow-color: rgba(0, 0, 0, 0.1);
 }
 
 .HeaderTopBar {
@@ -44,5 +44,17 @@
 
     &_isOnMobile {
         display: none;
+    }
+
+    .LanguageSwitcher {
+        @include before-desktop() {
+            display: none;
+        }
+    }
+
+    .CountrySwitcher {
+        @include before-desktop() {
+            display: none;
+        }
     }
 }
