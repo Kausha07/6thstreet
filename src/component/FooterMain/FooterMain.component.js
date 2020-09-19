@@ -4,6 +4,7 @@
 import { PureComponent } from 'react';
 
 import FooterCustomerSupport from 'Component/FooterCustomerSupport';
+import Link from 'Component/Link';
 
 import './FooterMain.style';
 
@@ -17,19 +18,19 @@ class FooterMain extends PureComponent {
             },
             {
                 name: 'Consumer Rights',
-                href: 'www.consumerrights.ae/en/Pages/default.aspx'
+                href: 'https://www.consumerrights.ae/en/Pages/default.aspx'
             },
             {
                 name: 'Disclaimer',
-                href: ''
+                href: '/disclaimer'
             },
             {
                 name: 'Careers',
-                href: ''
+                href: '/careers'
             },
             {
                 name: 'Press',
-                href: ''
+                href: '/press'
             }
         ]
     },
@@ -46,29 +47,15 @@ class FooterMain extends PureComponent {
             },
             {
                 name: 'Order Tracking',
-                href: ''
+                href: 'https://track.fetchr.us/'
             },
             {
                 name: "FAQ's",
-                href: ''
+                href: '/faq'
             },
             {
                 name: 'Feedback',
-                href: ''
-            }
-        ]
-    },
-    {
-        title: 'Customer Support',
-        items: [
-            {
-                text: 'We are available all days from:',
-                time: '9am - 9pm',
-                phone_icon: '',
-                number: '',
-                email_icon: 'customercare@6thstreet.com',
-                email: 'customercare@6thstreet.com',
-                email_href: 'mailto:customercare@6thstreet.com'
+                href: '/contact'
             }
         ]
     },
@@ -77,9 +64,9 @@ class FooterMain extends PureComponent {
         items: [
             {
                 app_store: 'https://static.6media.me/static/version1600320971/frontend/6SNEW/6snew/en_US/images/apple-store-badge.svg',
-                app_onclick: '',
+                app_onclick: 'https://apps.apple.com/ro/app/6thstreet-com/id1370217070',
                 google_play: 'https://static.6media.me/static/version1600320042/frontend/6SNEW/6snew/en_US/images/google-play-badge.svg',
-                google_onclick: '',
+                google_onclick: 'https://play.google.com/store/apps/details?id=com.apparel.app6thstreet',
                 header: 'Follow The Latest Trends',
                 facebook_href: 'https://www.facebook.com/shop6thstreet/',
                 insta_href: 'https://www.instagram.com/shop6thstreet/'
@@ -97,7 +84,17 @@ class FooterMain extends PureComponent {
                     <h4>{ column.title }</h4>
                     <div block="FooterMain" elem="Nav">
                     <ul>
-                    { column.items.map((items) => <li><a href={ items.href }>{ items.name }</a></li>) }
+                    { column.items.map((items) => (
+                    <li>
+                        <Link
+                          block="FooterMain"
+                          elem="Link"
+                          to={ items.href }
+                        >
+                        { items.name }
+                        </Link>
+                    </li>
+                    )) }
                     </ul>
                     </div>
                     </div>
@@ -116,21 +113,35 @@ class FooterMain extends PureComponent {
                     { column.items.map((items) => (
                         <>
                         <div block="FooterMain" elem="WrapperFirst">
-                            <img src={ items.app_store } alt="app store download" />
+                            <Link
+                              to={ items.app_onclick }
+                            >
+                                <img src={ items.app_store } alt="app store download" />
+                            </Link>
                             &nbsp;&nbsp;
-                            <img src={ items.google_play } alt="google play download" />
+                            <Link
+                              to={ items.app_onclick }
+                            >
+                                <img src={ items.google_play } alt="google play download" />
+                            </Link>
                         </div>
                             <h4>{ items.header }</h4>
                             <div block="FooterMain" elem="WrapperSecond">
-                                <a
-                                  block="FooterMain"
-                                  elem="SocialIcon"
-                                  href="fdhgf"
-                                >
-                                    <i className="fa fa-facebook-f" />
-                                </a>
-                                &nbsp;
-                                <a block="FooterMain" elem="SocialIcon" href="ghjh"><i /></a>
+                                <div block="FooterMain" elem="SocialIcon">
+                                    <Link
+                                      to={ items.facebook_href }
+                                    >
+                                    <i />
+                                    </Link>
+                                </div>
+                                <div block="FooterMain" elem="SocialIcon">
+                                    &nbsp;
+                                    <Link
+                                      to={ items.insta_href }
+                                    >
+                                    <i />
+                                    </Link>
+                                </div>
                             </div>
                         </>
                     )) }
