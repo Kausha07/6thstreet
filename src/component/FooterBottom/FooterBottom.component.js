@@ -1,24 +1,8 @@
 import NavigationAbstract from 'Component/NavigationAbstract/NavigationAbstract.component';
 
-// import { withRouter } from 'react-router';
 import './FooterBottom.style';
 
 class FooterBottom extends NavigationAbstract {
-    // static propTypes = {
-    //     location: PropTypes.object
-    // };
-
-    state = {
-        visible: false
-    };
-
-    static getDerivedStateFromProps() {
-        const regex = /home/;
-
-        return regex.test(window.location.pathname) ? { visible: true }
-            : { visible: false };
-    }
-
     getCurrentYear() {
         return new Date().getFullYear();
     }
@@ -53,9 +37,8 @@ class FooterBottom extends NavigationAbstract {
     }
 
     render() {
-        const { visible } = this.state;
         return (
-            <div block="FooterBottom" mods={ { visible } }>
+            <div block="FooterBottom">
                 { this.renderCopyright() }
                 { this.renderHyperlinks() }
                 { this.renderPaymentIcons() }
