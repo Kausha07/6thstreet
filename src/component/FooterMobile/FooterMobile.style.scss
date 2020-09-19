@@ -9,15 +9,16 @@
     display: flex;
     justify-content: space-between;
     padding: 17px 20px 18px 21px;
-    max-width: auto;
     height: 50px;
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
 
     @include desktop{
         display: none;
     }
 
     &-Copyright {
-        //padding-top: 12px;
         color: var(--footer-bottom-text-color);
         font-family: "Avenir Next Medium";
         font-size: 11px;
