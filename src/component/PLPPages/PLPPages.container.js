@@ -2,6 +2,7 @@
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import { PLPContainer } from 'Route/PLP/PLP.container';
 import { Pages } from 'Util/API/endpoint/Product/Product.type';
 
 import PLPPages from './PLPPages.component';
@@ -23,10 +24,30 @@ export class PLPPagesContainer extends PureComponent {
         // getData: this.getData.bind(this)
     };
 
-    containerProps = () => {
+    containerProps = () => ({
+        pages: this.getPages()
+    });
+
+    getPages() {
         const { pages } = this.props;
-        return { pages };
-    };
+        const { page } = PLPContainer.getRequestOptions();
+
+        return Array.from({
+            // assume there are pages before and after our current page
+            length: page + 1
+        }, (_, pageIndex) => ({
+            isPlaceholder: !pages[pageIndex],
+            products: pages[pageIndex] || []
+        }));
+    }
+
+    getIsLoading() {
+        const { pages } = this.props;
+        const { page } = PLPContainer.getRequestOptions();
+
+        // If the page in URL is not yet present -> we are loading
+        return !pages[page];
+    }
 
     render() {
         return (

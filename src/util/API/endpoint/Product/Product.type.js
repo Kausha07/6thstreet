@@ -41,3 +41,8 @@ export const Filter = PropTypes.shape({
 });
 
 export const Filters = PropTypes.objectOf(Filter);
+
+export const RequestedOptions = PropTypes.shape({
+    page: PropTypes.string,
+    q: PropTypes.string
+});

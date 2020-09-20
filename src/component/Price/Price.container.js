@@ -28,6 +28,7 @@ export class PriceContainer extends PureComponent {
     };
 
     containerProps = () => {
+        console.log('123');
         const { price: [priceObj] } = this.props;
         const [currency, priceData] = Object.entries(priceObj)[0];
         const {

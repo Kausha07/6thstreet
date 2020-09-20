@@ -2,15 +2,20 @@
 import {
     SET_PLP_DATA,
     SET_PLP_INIT_FILTERS,
-    SET_PLP_LOADING
+    SET_PLP_LOADING,
+    SET_PLP_PAGE
 } from './PLP.action';
 
 export const getInitialState = () => ({
-    pages: {},
+    // loading state (controlled by PLP container)
     isLoading: true,
+    // actual data (pages, filters, options)
+    pages: {},
     filters: {},
+    options: {},
+    // initial data (filters, options)
     initialFilters: {},
-    options: {}
+    initialOptions: {}
 });
 
 export const formatFilters = (filters) => (
@@ -67,20 +72,42 @@ export const PLPReducer = (state = getInitialState(), action) => {
     const { type } = action;
 
     switch (type) {
-    case SET_PLP_INIT_FILTERS:
-        const { initialFilters } = action;
+    case SET_PLP_PAGE:
+        const {
+            pageProducts,
+            page
+        } = action;
+
+        const {
+            pages: prevPages
+        } = state;
 
         return {
             ...state,
-            initialFilters
+            pages: {
+                ...prevPages,
+                [page]: pageProducts
+            }
+        };
+
+    case SET_PLP_INIT_FILTERS:
+        const {
+            initialFilters,
+            initialOptions
+        } = action;
+
+        return {
+            ...state,
+            initialFilters,
+            initialOptions
         };
 
     case SET_PLP_DATA:
         const {
             products,
-            meta: { page },
             filters,
             options: requestedOptions,
+            options: { page: initialPage },
             isInitial
         } = action;
 
@@ -97,7 +124,7 @@ export const PLPReducer = (state = getInitialState(), action) => {
             ...combinedFilters,
             options: requestedOptions,
             pages: {
-                [page]: products
+                [initialPage]: products
             }
         };
 

@@ -126,6 +126,14 @@ const Parser = {
         };
     },
 
+    setPage(number) {
+        const url = new URL(location.href);
+        url.searchParams.set('page', number);
+        // update the URL, preserve the state
+        const { pathname, search } = url;
+        browserHistory.push(pathname + search);
+    },
+
     setParam(key, values = []) {
         const url = new URL(location.href);
 
@@ -146,12 +154,8 @@ const Parser = {
             url.searchParams.append(`${prefix}[${key}][0]`, values);
         }
 
-        const {
-            pathname,
-            search
-        } = url;
-
         // update the URL, preserve the state
+        const { pathname, search } = url;
         browserHistory.push(pathname + search);
     }
 };
