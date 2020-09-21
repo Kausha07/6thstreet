@@ -32,7 +32,7 @@ class PLPPagePlaceholder extends PureComponent {
               minTopValue="1"
               onChange={ onVisibilityChange }
             >
-                <div>
+                <div block="PLPPagePlaceholder">
                     { this.renderPlaceholders() }
                 </div>
             </VisibilitySensor>

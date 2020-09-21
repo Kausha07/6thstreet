@@ -12,6 +12,7 @@ export const getInitialState = () => ({
     // actual data (pages, filters, options)
     pages: {},
     filters: {},
+    meta: {},
     options: {},
     // initial data (filters, options)
     initialFilters: {},
@@ -104,8 +105,11 @@ export const PLPReducer = (state = getInitialState(), action) => {
 
     case SET_PLP_DATA:
         const {
-            products,
-            filters,
+            response: {
+                data: products,
+                meta,
+                filters
+            },
             options: requestedOptions,
             options: { page: initialPage },
             isInitial
@@ -123,6 +127,7 @@ export const PLPReducer = (state = getInitialState(), action) => {
             ...state,
             ...combinedFilters,
             options: requestedOptions,
+            meta,
             pages: {
                 [initialPage]: products
             }

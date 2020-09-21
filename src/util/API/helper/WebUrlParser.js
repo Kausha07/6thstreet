@@ -128,7 +128,7 @@ const Parser = {
 
     setPage(number) {
         const url = new URL(location.href);
-        url.searchParams.set('page', number);
+        url.searchParams.set('p', number);
         // update the URL, preserve the state
         const { pathname, search } = url;
         browserHistory.push(pathname + search);

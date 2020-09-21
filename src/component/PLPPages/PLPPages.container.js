@@ -3,12 +3,13 @@ import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import { PLPContainer } from 'Route/PLP/PLP.container';
-import { Pages } from 'Util/API/endpoint/Product/Product.type';
+import { Meta, Pages } from 'Util/API/endpoint/Product/Product.type';
 
 import PLPPages from './PLPPages.component';
 
 export const mapStateToProps = (state) => ({
-    pages: state.PLP.pages
+    pages: state.PLP.pages,
+    meta: state.PLP.meta
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
@@ -17,7 +18,8 @@ export const mapDispatchToProps = (_dispatch) => ({
 
 export class PLPPagesContainer extends PureComponent {
     static propTypes = {
-        pages: Pages.isRequired
+        pages: Pages.isRequired,
+        meta: Meta.isRequired
     };
 
     containerFunctions = {
@@ -29,12 +31,19 @@ export class PLPPagesContainer extends PureComponent {
     });
 
     getPages() {
-        const { pages } = this.props;
-        const { page } = PLPContainer.getRequestOptions();
+        const { pages, meta } = this.props;
+        const { page_count } = meta;
 
+        // If lastRequestedPage === -Infinity -> assume it's -1, else use value, i.e. 0
+        const lastRequestedPage = Math.max(...Object.keys(pages));
+        const page = lastRequestedPage < 0 ? -1 : lastRequestedPage;
+        const pagesToShow = page + 2;
+        const maxPage = page_count + 1;
+
+        // assume there are pages before and after our current page
         return Array.from({
-            // assume there are pages before and after our current page
-            length: page + 1
+            // cap the placeholders from showing above the max page
+            length: pagesToShow < maxPage ? pagesToShow : maxPage
         }, (_, pageIndex) => ({
             isPlaceholder: !pages[pageIndex],
             products: pages[pageIndex] || []

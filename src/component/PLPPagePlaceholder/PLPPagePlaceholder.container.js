@@ -20,7 +20,7 @@ export class PLPPagePlaceholderContainer extends PureComponent {
     };
 
     state = {
-        wasRequested: true
+        wasRequested: false
     };
 
     containerFunctions = {

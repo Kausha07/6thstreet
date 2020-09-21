@@ -36,14 +36,10 @@ export class PLPDispatcher {
         }
 
         try {
-            const {
-                data: products,
-                filters
-            } = await Algolia.getPLP(options);
+            const response = await Algolia.getPLP(options);
 
             dispatch(setPLPData(
-                products,
-                filters,
+                response,
                 options,
                 isInitial
             ));

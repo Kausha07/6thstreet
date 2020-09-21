@@ -13,14 +13,12 @@ export const setPLPPage = (
 });
 
 export const setPLPData = (
-    products,
-    filters,
+    response,
     options,
     isInitial
 ) => ({
     type: SET_PLP_DATA,
-    products,
-    filters,
+    response,
     options,
     isInitial
 });

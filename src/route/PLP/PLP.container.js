@@ -20,6 +20,7 @@ export const mapStateToProps = (state) => ({
 
 export const mapDispatchToProps = (dispatch, state) => ({
     requestProductList: (options) => PLPDispatcher.requestProductList(options, dispatch, state),
+    requestProductListPage: (options) => PLPDispatcher.requestProductListPage(options, dispatch),
     setIsLoading: (isLoading) => dispatch(setPLPLoading(isLoading))
 });
 
@@ -28,6 +29,7 @@ export class PLPContainer extends PureComponent {
         gender: PropTypes.string.isRequired,
         locale: PropTypes.string.isRequired,
         requestProductList: PropTypes.func.isRequired,
+        requestProductListPage: PropTypes.func.isRequired,
         isLoading: PropTypes.bool.isRequired,
         setIsLoading: PropTypes.func.isRequired,
         requestedOptions: RequestedOptions.isRequired,
@@ -77,11 +79,7 @@ export class PLPContainer extends PureComponent {
     }
 
     static async request(isPage, props) {
-        const {
-            requestProductList,
-            requestProductListPage
-        } = props;
-
+        const { requestProductList, requestProductListPage } = props;
         const options = PLPContainer.getRequestOptions();
         const requestFunction = isPage ? requestProductListPage : requestProductList;
         requestFunction({ options });
