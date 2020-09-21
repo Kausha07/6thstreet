@@ -44,11 +44,11 @@ export class UrlRewritesContainer extends PureComponent {
         const { locale: prevLocale } = prevProps;
         const { prevPathname } = this.state;
 
-        // Request URL rewrite if pathname or locale changed
         if (
             pathname !== prevPathname
             || locale !== prevLocale
         ) {
+            // Request URL rewrite if pathname or locale changed
             this.requestUrlRewrite(true);
         }
     }

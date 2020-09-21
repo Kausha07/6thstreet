@@ -1,6 +1,15 @@
 import PropTypes from 'prop-types';
 
-export const Price = PropTypes.arrayOf(
+export const Price = PropTypes.oneOfType(
+    PropTypes.arrayOf(
+        PropTypes.objectOf(
+            PropTypes.shape({
+                // TODO: implement all
+                '6s_base_price': PropTypes.number,
+                '6s_special_price': PropTypes.number
+            })
+        )
+    ),
     PropTypes.objectOf(
         PropTypes.shape({
             // TODO: implement all
@@ -41,3 +50,12 @@ export const Filter = PropTypes.shape({
 });
 
 export const Filters = PropTypes.objectOf(Filter);
+
+export const RequestedOptions = PropTypes.shape({
+    page: PropTypes.string,
+    q: PropTypes.string
+});
+
+export const Meta = PropTypes.shape({
+    page_count: PropTypes.number
+});
