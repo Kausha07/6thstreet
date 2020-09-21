@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import DynamicContent from 'Component/DynamicContent';
+import LoginBlockContainer from 'Component/LoginBlock';
 import { DynamicContent as DynamicContentType } from 'Util/API/endpoint/StaticFiles/StaticFiles.type';
 
 import './HomePage.style';
@@ -22,6 +23,10 @@ class HomePage extends PureComponent {
         );
     }
 
+    renderLoginBlock() {
+        return (<LoginBlockContainer />);
+    }
+
     renderLoading() {
         return 'loading ...';
     }
@@ -39,6 +44,7 @@ class HomePage extends PureComponent {
     render() {
         return (
             <main block="HomePage">
+                { this.renderLoginBlock() }
                 { this.renderContent() }
             </main>
         );
