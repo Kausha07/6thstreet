@@ -14,8 +14,7 @@ button,
         border: 2px solid $black;
         color: $white;
 
-        &:hover,
-        &:focus {
+        &:hover {
             background: transparent;
             color: $black;
         }
@@ -25,8 +24,7 @@ button,
         border: 2px solid $black;
         color: $black;
 
-        &:hover,
-        &:focus {
+        &:hover {
             background: $black;
             color: $white;
         }
