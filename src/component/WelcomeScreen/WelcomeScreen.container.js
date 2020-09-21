@@ -3,14 +3,13 @@ import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import { setCountry, setLanguage } from 'Store/AppState/AppState.action';
-import { getCountriesForSelect } from 'Util/API/endpoint/Config/Config.format';
+import { getCountriesForSelect, getCountryLocaleForSelect } from 'Util/API/endpoint/Config/Config.format';
 import { Config } from 'Util/API/endpoint/Config/Config.type';
 
-import StoreSwitcherPopup from './StoreSwitcherPopup.component';
+import WelcomeScreen from './WelcomeScreen.component';
 
 export const mapStateToProps = (state) => ({
     config: state.AppConfig.config,
-    language: state.AppState.language,
     country: state.AppState.country
 });
 
@@ -19,7 +18,7 @@ export const mapDispatchToProps = (dispatch) => ({
     setLanguage: (value) => dispatch(setLanguage(value))
 });
 
-class StoreSwitcherPopupContainer extends PureComponent {
+class WelcomeScreenContainer extends PureComponent {
     static propTypes = {
         setLanguage: PropTypes.func.isRequired,
         setCountry: PropTypes.func.isRequired,
@@ -27,18 +26,34 @@ class StoreSwitcherPopupContainer extends PureComponent {
         country: PropTypes.string.isRequired
     };
 
+    containerFunctions = {
+        onCountrySelect: this.onCountrySelect.bind(this),
+        onLanguageSelect: this.onLanguageSelect.bind(this)
+    };
+
+    onCountrySelect(value) {
+        const { setCountry } = this.props;
+        setCountry(value);
+    }
+
+    onLanguageSelect(value) {
+        const { setLanguage } = this.props;
+        setLanguage(value);
+    }
+
     containerProps = () => {
         const { country, config } = this.props;
 
         return {
             countrySelectOptions: getCountriesForSelect(config),
+            languageSelectOptions: getCountryLocaleForSelect(config, country),
             country
         };
     };
 
     render() {
         return (
-            <StoreSwitcherPopup
+            <WelcomeScreen
               { ...this.containerFunctions }
               { ...this.containerProps() }
               { ...this.props }
@@ -47,4 +62,4 @@ class StoreSwitcherPopupContainer extends PureComponent {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(StoreSwitcherPopupContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(WelcomeScreenContainer);

@@ -15,7 +15,6 @@ class LoginBlock extends PureComponent {
 
     constructor() {
         super();
-        console.log(this.props);
         this.state = { isOpen: true };
     }
 
