@@ -13,4 +13,14 @@
     $crumb-padding: 20px;
     $arrow-size: 5px;
     font-size: 12px;
+
+    &_isArabic {
+        &:not(:last-child) {
+            &::after {
+                transform: rotate(45deg) !important;
+                margin-right: $crumb-padding - 4 !important;
+                margin-left: 0 !important;
+            }
+        }
+    }
 }

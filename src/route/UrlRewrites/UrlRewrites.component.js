@@ -8,7 +8,6 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-
 import PDP from 'Route/PDP';
 import NoMatch from 'Route/NoMatch';
 import PLP from 'Route/PLP';
