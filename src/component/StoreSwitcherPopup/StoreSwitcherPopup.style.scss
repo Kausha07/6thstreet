@@ -103,6 +103,8 @@
         &-Container {
             flex-direction: column;
             width: 100%;
+            top: 0;
+            bottom: 0;
         }
 
         &-Image {
