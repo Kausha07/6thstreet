@@ -58,15 +58,4 @@
         }
     }
 
-    .LanguageSwitcher {
-        @include before-desktop() {
-            display: none;
-        }
-    }
-
-    .CountrySwitcher {
-        @include before-desktop() {
-            display: none;
-        }
-    }
 }
