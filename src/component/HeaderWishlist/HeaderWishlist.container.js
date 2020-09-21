@@ -28,6 +28,7 @@ export class HeaderWishlistContainer extends PureComponent {
     render() {
         return (
             <HeaderWishlist
+              { ...this.props }
               { ...this.containerFunctions }
               { ...this.containerProps() }
             />
