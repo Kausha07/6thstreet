@@ -1,3 +1,5 @@
+/* eslint-disable fp/no-let */
+/* eslint-disable prefer-destructuring */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
@@ -48,6 +50,10 @@ class LanguageSwitcher extends PureComponent {
         } = this.props;
 
         const buttonLabelObject = this.getNonSelectedLanguage();
+        let label = buttonLabelObject[0].label;
+        if (label === 'Arabic') {
+            label = 'العربية';
+        }
 
         return (
             <button
@@ -55,7 +61,7 @@ class LanguageSwitcher extends PureComponent {
               onClick={ () => onLanguageSelect(buttonLabelObject[0].id) }
             >
                 <span>
-                    { buttonLabelObject[0].label }
+                    { label }
                 </span>
             </button>
         );

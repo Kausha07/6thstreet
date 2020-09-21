@@ -32,6 +32,7 @@ class UrlRewrites extends PureComponent {
         const { type, isLoading } = this.props;
 
         this.render404 = () => <NoMatch { ...props } />;
+
         if (isLoading) {
             return 'loading...';
         }
