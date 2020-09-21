@@ -21,11 +21,13 @@
         font-size: 1.4rem;
         margin-top: var(--header-height);
         padding: 30px 0;
+
         @include tablet {
             background: var(--color-white);
             text-align: center;
             width: 100%;
         }
+
         @include mobile {
             font-size: 1rem;
             margin: 0 0 20px;
@@ -47,6 +49,7 @@
             @include tablet {
                 margin-bottom: 30px;
             }
+
             @include mobile {
                 font-size: 1rem;
                 margin-bottom: 20px;
@@ -60,6 +63,7 @@
             font-size: 1.4rem;
             margin: 17px 0;
             text-transform: uppercase;
+
             @include mobile {
                 font-size: 1rem;
             }
@@ -73,6 +77,7 @@
             margin-bottom: 20px;
             text-align: center;
             width: 356px;
+
             @include mobile {
                 font-size: 14px;
                 width: 290px;
@@ -92,6 +97,7 @@
         &-Image {
             height: auto;
             max-width: 160px;
+
             @include mobile {
                 width: 23%;
             }
