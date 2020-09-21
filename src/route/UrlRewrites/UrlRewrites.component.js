@@ -1,6 +1,10 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import PDP from 'Route/PDP';
+import NoMatch from 'Route/NoMatch';
+import PLP from 'Route/PLP';
+
 import { TYPE_CATEGORY, TYPE_CMS_PAGE, TYPE_PRODUCT } from './UrlRewrites.config';
 
 import './UrlRewrites.style';
@@ -16,15 +20,18 @@ class UrlRewrites extends PureComponent {
     };
 
     typeMap = {
-        [TYPE_CATEGORY]: () => 'category',
+        [TYPE_CATEGORY]: () => <PLP />,
         [TYPE_CMS_PAGE]: () => 'cms',
-        [TYPE_PRODUCT]: () => 'product'
+        [TYPE_PRODUCT]: () => <PDP />
     };
 
-    render404 = () => '404';
+    render404;
 
     render() {
+        const { props } = this;
         const { type, isLoading } = this.props;
+
+        this.render404 = () => <NoMatch { ...props } />;
 
         if (isLoading) {
             return 'loading...';

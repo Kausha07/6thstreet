@@ -1,23 +1,26 @@
 :root {
     --border-color: #D1D3D4;
     --link-color: hsl(0, 0%, 0%);
+    --white-color: #fff;
+    --black-color: #000;
 }
 
 .InlineCustomerSupport {
-    display: flex;
-    width: 50%;
+    width: 100%;
 
-    @media (max-width: 1024px) {
-        width: 100%;
+    @include desktop {
+        display: flex;
+        width: 50%;
     }
 
     &-Button {
         width: 160px;
         height: 30px;
         font-size: 12px;
+        display: none;
 
-        @media (max-width: 1024px) {
-            display: none;
+        @include desktop {
+            display: block;
         }
 
         &::after {
@@ -27,7 +30,7 @@
             height: 0px;
             border-left: 5px solid transparent;
             border-right: 5px solid transparent;
-            border-top: 5px solid black;
+            border-top: 5px solid var(--black-color);
             top: 11px;
             right: -1px;
         }
@@ -36,8 +39,14 @@
             &::after {
                 border-left: 5px solid transparent;
                 border-right: 5px solid transparent;
-                border-bottom: 5px solid black;
+                border-bottom: 5px solid var(--black-color);
                 border-top: 0px;
+            }
+        }
+
+        &_isArabic {
+            &::after {
+                right: 150px;
             }
         }
     }
@@ -45,13 +54,12 @@
     &-Dropdown {
         border: 1px solid var(--border-color);
         border-radius: 5px;
-        height: 160px;
         width: 260px;
         margin-left: 80px;
         position: absolute;
         z-index: 4;
-        background: white;
-        padding: 20px 20px 30px;
+        background: var(--white-color);
+        padding: 20px 20px 8px;
         display: none;
 
         &_isExpanded {
@@ -67,21 +75,21 @@
 
     a {
         display: block;
-        color: var(--link-color);
+        color: var(--white-color);
 
-        @media (max-width: 1024px) {
-            color: #fff;
+        @include desktop {
+            color: var(--link-color);
         }
     }
 
     &-OpenHours {
         font-weight: bold;
-        padding-bottom: 25px;
+        padding-bottom: 12px;
     }
 
     &-DisplayPhone{
         display: flex;
-        margin-bottom: 25px;
+        padding: 12px 0;
     }
 
     &-Phone {
@@ -89,15 +97,21 @@
     }
 
     &-PhoneIcon {
-        background: url(../../style/icons.png) -10px -36px no-repeat;
+        background: url(./icons/icons.png) -10px -36px no-repeat;
         width: 20px;
         height: 21px;
         top: -3px;
         margin-right: 15px;
+
+        &_isArabic {
+            margin-left: 15px;
+            margin-right: 0;
+        }
     }
 
     &-DisplayEmail{
         display: flex;
+        padding: 12px 0;
     }
 
     &-Email {
@@ -106,41 +120,61 @@
     }
 
     &-EmailIcon {
-        background: url(../../style/icons.png) -41px -36px no-repeat;
+        background: url(./icons/icons.png) -41px -36px no-repeat;
         width: 28px;
         height: 20px;
         top: -3px;
         margin-right: 15px;
 
+        &_isArabic {
+            margin-left: 15px;
+            margin-right: 0;
+        }
     }
 
     &-DisplayQuickAccess {
-        margin-left: 20px;
-        padding-left: 15px;
-        margin-top: 7px;
-        margin-bottom: 7px;
-        border-left: 1px solid var(--border-color);
-        font-size: 12px;
+        width: 100%;
+        margin: 10px 0;
+        color: var(--white-color);
+        font-weight: 600;
+        text-align: center;
+        padding: 0;
+        border: none;
 
-        @media (max-width: 1024px) {
-            width: 100%;
-            margin: 10px 0;
-            color:#fff;
-            font-weight: 600;
-            text-align: center;
-            padding: 0;
-            border: none;
+        @include desktop {
+            color: var(--black-color);
+            margin-left: 20px;
+            padding-left: 15px;
+            margin-top: 7px;
+            margin-bottom: 7px;
+            border-left: 1px solid var(--border-color);
+            font-size: 12px;
         }
 
         p {
             display: flex;
+            text-align: center;
+            width: 40%;
+            margin-left: 30%;
+            margin-right: 30%;
 
-            @media (max-width: 1024px) {
-                text-align: center;
-                width: 40%;
-                margin-left: 30%;
-                margin-right: 30%;
+            @include desktop {
+                width: auto;
+                margin-left: 0;
+                margin-right: 0;
             }
         }
+
+        &_isArabic {
+            @include desktop {
+                margin-left: 0;
+                padding-left: 0;
+                margin-right: 20px;
+                padding-right: 15px;
+                border-right: 1px solid var(--border-color);
+                border-left: none;
+            }
+        }
+
     }
 }

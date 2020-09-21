@@ -5,6 +5,7 @@ import { App as SourceApp } from 'SourceComponent/App/App.component';
 import configureStore from 'Store';
 import AppConfig from 'Store/AppConfig/AppConfig.reducer';
 import AppState from 'Store/AppState/AppState.reducer';
+import PLP from 'Store/PLP/PLP.reducer';
 
 class App extends SourceApp {
     rootComponents = [
@@ -16,6 +17,7 @@ class App extends SourceApp {
 
         store.injectReducer('AppConfig', AppConfig);
         store.injectReducer('AppState', AppState);
+        store.injectReducer('PLP', PLP);
 
         return store;
     }

@@ -14,6 +14,7 @@
 }
 
 .ContentWrapper {
-    height: 50px;
-    margin: 0 !important;
+    max-width: var(--content-wrapper-width);
+    padding: 0 1rem;
+    margin: 0 auto;
 }
