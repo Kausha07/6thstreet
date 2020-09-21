@@ -8,7 +8,7 @@ import './PLPPage.style';
 
 class PLPPage extends PureComponent {
     static propTypes = {
-        page: Products.isRequired
+        products: Products.isRequired
     };
 
     renderProduct = (product) => {
@@ -22,15 +22,15 @@ class PLPPage extends PureComponent {
         );
     };
 
-    renderPage() {
-        const { page } = this.props;
-        return page.map(this.renderProduct);
+    renderProducts() {
+        const { products } = this.props;
+        return products.map(this.renderProduct);
     }
 
     render() {
         return (
             <div block="PLPPage">
-                { this.renderPage() }
+                { this.renderProducts() }
             </div>
         );
     }

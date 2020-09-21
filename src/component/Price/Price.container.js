@@ -28,11 +28,13 @@ export class PriceContainer extends PureComponent {
     };
 
     containerProps = () => {
-        const { price: [priceObj] } = this.props;
+        const { price } = this.props;
+        const priceObj = Array.isArray(price) ? price[0] : price;
         const [currency, priceData] = Object.entries(priceObj)[0];
         const {
-            '6s_base_price': basePrice,
-            '6s_special_price': specialPrice
+            default: defaultPrice,
+            '6s_base_price': basePrice = defaultPrice,
+            '6s_special_price': specialPrice = defaultPrice
         } = priceData;
 
         return {
@@ -59,10 +61,17 @@ export class PriceContainer extends PureComponent {
     }
 
     render() {
+        const props = this.containerProps();
+        const { currency, basePrice } = props;
+
+        if (!currency || !basePrice) {
+            return null;
+        }
+
         return (
             <Price
               { ...this.containerFunctions }
-              { ...this.containerProps() }
+              { ...props }
             />
         );
     }

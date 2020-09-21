@@ -1,30 +1,44 @@
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import PLPPage from 'Component/PLPPage';
-import { Pages } from 'Util/API/endpoint/Product/Product.type';
+import PLPPagePlaceholder from 'Component/PLPPagePlaceholder';
+import { Products } from 'Util/API/endpoint/Product/Product.type';
 
 import './PLPPages.style';
 
 class PLPPages extends PureComponent {
     static propTypes = {
-        pages: Pages.isRequired
+        pages: PropTypes.arrayOf(
+            PropTypes.shape({
+                products: Products,
+                isPlaceholder: PropTypes.bool
+            })
+        ).isRequired
     };
 
-    renderPage = ([key, page]) => (
-        <PLPPage
-          key={ key }
-          page={ page }
-        />
-    );
+    renderPage = ([key, page]) => {
+        const { products, isPlaceholder } = page;
+
+        if (isPlaceholder) {
+            return (
+                <PLPPagePlaceholder
+                  key={ key }
+                  pageIndex={ key }
+                />
+            );
+        }
+
+        return (
+            <PLPPage
+              key={ key }
+              products={ products }
+            />
+        );
+    };
 
     renderPages() {
         const { pages } = this.props;
-
-        // if (!pages) {
-        //     return null;
-        // }
-
         return Object.entries(pages).map(this.renderPage);
     }
 
