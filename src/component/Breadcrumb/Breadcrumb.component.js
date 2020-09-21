@@ -68,9 +68,7 @@ export class Breadcrumb extends PureComponent {
     }
 
     render() {
-        const { index } = this.props;
-        const { isArabic } = this.props;
-        console.log(this.props);
+        const { index, isArabic } = this.props;
 
         return (
             <li
