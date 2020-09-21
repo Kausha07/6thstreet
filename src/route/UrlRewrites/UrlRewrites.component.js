@@ -11,23 +11,36 @@ import './UrlRewrites.style';
 class UrlRewrites extends PureComponent {
     static propTypes = {
         type: PropTypes.string,
+        id: PropTypes.number,
         isLoading: PropTypes.bool.isRequired
     };
 
     static defaultProps = {
-        type: ''
+        type: '',
+        id: -1
     };
 
     typeMap = {
         [TYPE_CATEGORY]: () => <PLP />,
         [TYPE_CMS_PAGE]: () => 'cms',
-        [TYPE_PRODUCT]: () => <PDP />
+        [TYPE_PRODUCT]: this.renderPDP.bind(this)
     };
+
+    renderPDP() {
+        const { id } = this.props;
+
+        return (
+            <PDP id={ id } />
+        );
+    }
 
     render404 = () => '404';
 
     render() {
-        const { type, isLoading } = this.props;
+        const {
+            type,
+            isLoading
+        } = this.props;
 
         if (isLoading) {
             return 'loading...';
