@@ -1,9 +1,9 @@
 .StoreSwitcherPopup {
     position: fixed;
-    top:0px;
-    right:0px;
-    bottom:0px;
-    left:0px;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
     background: rgba(70, 70, 70, 0.6);
     z-index: 8;
 
@@ -26,106 +26,4 @@
         height: auto;
         object-fit: cover;
     }
-
-    &-Content {
-        min-width: 385px;
-    }
-
-    &-ButtonsContainer {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 20px;
-    }
-
-    &-List {
-        li {
-            list-style: none;
-
-            &::before {
-                content: '';
-            }
-            padding: 0;
-            text-transform: uppercase;
-            border-bottom: 1px solid rgb(230, 230, 230);
-            cursor: pointer;
-        }
-        li:last-child {
-            border-bottom: none;
-        }
-    }
-
-    &-Options {
-        padding: 30px 60px 10px;
-    }
-
-    &-Close {
-        float: right;
-        width: 30px;
-        height: 30px;
-        border-radius: 100%;
-        background: black;
-        color: white;
-        padding: 0;
-        margin: 10px;
-        cursor: pointer;
-        z-index: 10;
-        padding: 5px;
-        display: flex;
-        align-items: center;
-        svg {
-            fill: $white;
-            margin: 0 auto;
-        }
-    }
-
-    &-LanguageBtn {
-        width: 130px;
-    }
-
-    &-Check {
-        float: right;
-    }
-
-    &-CountryBtn {
-        width: 100%;
-        text-align: start;
-        padding: 0;
-        margin-top: 10px;
-        font-weight: 400;
-
-        &_isCurrent {
-            font-weight: 600;
-        }
-    }
-    
-    @media (max-width: 780px) {
-
-        &-Container {
-            flex-direction: column;
-            width: 100%;
-            top: 0;
-            bottom: 0;
-        }
-
-        &-Image {
-            width: 100%;
-            height: 400px;
-            object-fit: start;
-        }
-
-        &-Content {
-            min-width: 300px;
-        }
-
-        &-Options {
-            padding: 30px 20px 10px;
-        }
-
-        &-Close {
-            position: absolute;
-            top: -400px;
-            right: 10px;
-        }
-    }
-
 }
