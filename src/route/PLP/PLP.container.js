@@ -5,6 +5,7 @@ import { withRouter } from 'react-router';
 
 import { setPLPLoading } from 'Store/PLP/PLP.action';
 import PLPDispatcher from 'Store/PLP/PLP.dispatcher';
+import { Pages, RequestedOptions } from 'Util/API/endpoint/Product/Product.type';
 import WebUrlParser from 'Util/API/helper/WebUrlParser';
 
 import PLP from './PLP.component';
@@ -13,11 +14,13 @@ export const mapStateToProps = (state) => ({
     gender: state.AppState.gender,
     locale: state.AppState.locale,
     requestedOptions: state.PLP.options,
-    isLoading: state.PLP.isLoading
+    isLoading: state.PLP.isLoading,
+    pages: state.PLP.pages
 });
 
-export const mapDispatchToProps = (dispatch) => ({
-    requestProduct: (options) => PLPDispatcher.requestProducts(options, dispatch),
+export const mapDispatchToProps = (dispatch, state) => ({
+    requestProductList: (options) => PLPDispatcher.requestProductList(options, dispatch, state),
+    requestProductListPage: (options) => PLPDispatcher.requestProductListPage(options, dispatch),
     setIsLoading: (isLoading) => dispatch(setPLPLoading(isLoading))
 });
 
@@ -25,32 +28,40 @@ export class PLPContainer extends PureComponent {
     static propTypes = {
         gender: PropTypes.string.isRequired,
         locale: PropTypes.string.isRequired,
-        requestProduct: PropTypes.func.isRequired,
+        requestProductList: PropTypes.func.isRequired,
+        requestProductListPage: PropTypes.func.isRequired,
         isLoading: PropTypes.bool.isRequired,
         setIsLoading: PropTypes.func.isRequired,
-        // TODO: change to proper type
-        requestedOptions: PropTypes.object.isRequired
+        requestedOptions: RequestedOptions.isRequired,
+        pages: Pages.isRequired
     };
 
-    static getDerivedStateFromProps(props, state) {
-        const { prevHref, prevQ } = state;
-        const { href } = location;
-        const q = PLPContainer.getQuery();
+    static requestProductList = PLPContainer.request.bind({}, false);
 
-        // TODO: this is probably a poor check!
-        if (prevHref === href) {
-            return null;
+    static requestProductListPage = PLPContainer.request.bind({}, true);
+
+    static getDerivedStateFromProps(props, state) {
+        const { pages } = props;
+        const requestOptions = PLPContainer.getRequestOptions();
+        const { page, ...restOptions } = requestOptions;
+
+        const {
+            prevRequestOptions: {
+                page: prevPage,
+                ...prevRestOptions
+            }
+        } = state;
+
+        if (JSON.stringify(restOptions) !== JSON.stringify(prevRestOptions)) {
+            // if queries match (excluding pages) => not inital
+            PLPContainer.requestProductList(props);
+        } else if (page !== prevPage && !pages[page]) {
+            // if only page has changed, and it is not yet loaded => request that page
+            PLPContainer.requestProductListPage(props);
         }
 
-        // if queries match => not inital
-        PLPContainer.requestProductList(
-            props,
-            q !== prevQ
-        );
-
         return {
-            prevQ: q,
-            prevHref: href
+            prevRequestOptions: requestOptions
         };
     }
 
@@ -67,19 +78,15 @@ export class PLPContainer extends PureComponent {
         };
     }
 
-    static async requestProductList(props) {
-        const { requestProduct } = props;
+    static async request(isPage, props) {
+        const { requestProductList, requestProductListPage } = props;
         const options = PLPContainer.getRequestOptions();
-        requestProduct({ options });
-    }
-
-    static getQuery() {
-        return new URL(location.href).searchParams.get('q');
+        const requestFunction = isPage ? requestProductListPage : requestProductList;
+        requestFunction({ options });
     }
 
     state = {
-        prevHref: location.href,
-        prevQ: PLPContainer.getQuery()
+        prevRequestOptions: PLPContainer.getRequestOptions()
     };
 
     containerFunctions = {
@@ -89,16 +96,8 @@ export class PLPContainer extends PureComponent {
     constructor(props) {
         super(props);
 
-        const {
-            requestedOptions: { q }
-        } = props;
-
         if (this.getIsLoading()) {
-            // if queries match => not inital
-            PLPContainer.requestProductList(
-                props,
-                q !== PLPContainer.getQuery()
-            );
+            PLPContainer.requestProductList(props);
         }
     }
 
@@ -117,8 +116,21 @@ export class PLPContainer extends PureComponent {
         const { requestedOptions } = this.props;
         const options = PLPContainer.getRequestOptions();
 
-        // if requested options are not matching requested options -> we are loading
-        return JSON.stringify(requestedOptions) !== JSON.stringify(options);
+        const {
+            // eslint-disable-next-line no-unused-vars
+            page: requestedPage,
+            ...requestedRestOptions
+        } = requestedOptions;
+
+        const {
+            // eslint-disable-next-line no-unused-vars
+            page,
+            ...restOptions
+        } = options;
+
+        // If requested options are not matching requested options -> we are loading
+        // we also ignore pages, this is handled by PLPPages
+        return JSON.stringify(requestedRestOptions) !== JSON.stringify(restOptions);
     }
 
     containerProps = () => ({

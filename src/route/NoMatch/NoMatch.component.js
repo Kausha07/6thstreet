@@ -81,7 +81,7 @@ export class NoMatch extends PureComponent {
                 </div>
                 <span block="PageNotFound-SubTitle">{ __('this page could not be found :(') }</span>
                 <p block="PageNotFound-Content">
-                  { __('Can\'t find what you need? Take a moment\nand do a search or start from our homepage') }
+                  { __('Can`t find what you need? Take a moment\nand do a search or start from our homepage') }
                 </p>
                 <a block="PageNotFound-LinkHome" href="/">{ __('back to homepage') }</a>
               </div>
