@@ -1,0 +1,50 @@
+:root{
+    --footer-bottom-background-color: #333;
+    --footer-bottom-text-color: $white;
+    --footer-bottom-hyperlink-color: #9b9b9b;
+}
+
+.FooterBottom {
+        background: var(--footer-bottom-background-color);
+        display: flex;
+        justify-content: space-between;
+        padding: 26px 50px 26px 80px;
+        height: 90px;  
+
+    @include before-desktop {
+        display: none;
+    }
+    
+    &_visible {
+        display: none;
+    }
+
+    &-Copyright {
+        padding-top: 12px;
+        color: var(--footer-bottom-text-color);
+        font-family: "Avenir Next Medium";
+        font-size: 13px;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        line-height: 18px;
+    }
+
+    &-Hyperlinks, a {
+        margin-left: 0;
+        text-decoration: none;
+        padding-top: 16px;
+        text-transform: uppercase;
+        text-align: center;
+        font-size: 10px;
+        color: var(--footer-bottom-hyperlink-color);
+        font-family: "Avenir Next Demi";
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+
+    &-PaymentIcons {
+        background: url(../../style/icons/icons.png) -720px -953px no-repeat;
+        width: 277px;
+        height: 37px;
+    }
+}
