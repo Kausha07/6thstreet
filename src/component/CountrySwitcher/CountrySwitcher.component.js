@@ -4,6 +4,7 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import CountryMiniFlag from 'Component/CountryMiniFlag';
 import Field from 'Component/Field';
 import StoreSwitcherPopup from 'Component/StoreSwitcherPopup';
 import { SelectOptions } from 'Type/Field';
@@ -81,17 +82,8 @@ class CountrySwitcher extends PureComponent {
     }
 
     renderStoreButton() {
-        const flagValues = {
-            'AE': '0px',
-            'SA': '-14px',
-            'QA': '-28px',
-            'OM': '-42px',
-            'BH': '-56px',
-            'KW': '-70px'
-        };
         const country = this.getCurrentCountry();
         const id = country.id;
-        const flagValue = `0 ${ flagValues[id]}`;
 
         return (
             <button
@@ -100,7 +92,7 @@ class CountrySwitcher extends PureComponent {
                 /* eslint-disable-next-line */
               onClick={ this.openPopup  }
             >
-                <span block="CountrySwitcher" elem="Flag" style={ { backgroundPosition: flagValue } } />
+                <CountryMiniFlag label={ id } />
                 <span>
                     { country.label || 'SELECT COUNTRY' }
                 </span>

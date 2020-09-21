@@ -1,12 +1,11 @@
 /* eslint-disable prefer-destructuring */
-/* eslint-disable quote-props */
 /* eslint-disable react/jsx-no-bind */
 /* eslint-disable max-len */
 /* eslint-disable fp/no-let */
-/* eslint-disable @scandipwa/scandipwa-guidelines/create-config-files */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import CountryMiniFlag from 'Component/CountryMiniFlag';
 import { SelectOptions } from 'Type/Field';
 
 import './StoreSwitcherPopup.style';
@@ -27,26 +26,20 @@ class StoreSwitcherPopup extends PureComponent {
             onCountrySelect
         } = this.props;
 
-        const flagValues = {
-            'AE': '0px',
-            'SA': '-14px',
-            'QA': '-28px',
-            'OM': '-42px',
-            'BH': '-56px',
-            'KW': '-70px'
-        };
-
         const { id } = item;
-        const flagValue = `0 ${ flagValues[id]}`;
 
-        const flag = <span block="StoreSwitcherPopup" elem="Flag" style={ { backgroundPosition: flagValue } } />;
         const svg = <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"><path d="M9 22l-10-10.598 2.798-2.859 7.149 7.473 13.144-14.016 2.909 2.806z" /></svg>;
         const check = item.value === country ? <span block="StoreSwitcherPopup" elem="Check">{ svg }</span> : '';
 
         return (
         <li key={ id }>
-            <button onClick={ () => onCountrySelect(item.value) } block="StoreSwitcherPopup" elem="CountryBtn">
-                { flag }
+            <button
+              onClick={ () => onCountrySelect(item.value) }
+              block="StoreSwitcherPopup"
+              elem="CountryBtn"
+              mods={ item.value === country && { isCurrent: true } }
+            >
+                <CountryMiniFlag label={ id } />
                 { item.label }
                 { check }
             </button>
@@ -126,7 +119,7 @@ class StoreSwitcherPopup extends PureComponent {
         return (
             <div block="StoreSwitcherPopup">
                 <div block="StoreSwitcherPopup" elem="Container">
-                <img block="StoreSwitcherPopup" elem="Image" src="https://static.6media.me/static/version1600395563/frontend/6SNEW/6snew/en_US/images/store-selector-background.png" alt="Store" />
+                    <img block="StoreSwitcherPopup" elem="Image" src="https://static.6media.me/static/version1600395563/frontend/6SNEW/6snew/en_US/images/store-selector-background.png" alt="Store" />
                     <div block="StoreSwitcherPopup" elem="Content">
                             { this.renderCloseBtn() }
                         <div block="StoreSwitcherPopup" elem="Options">

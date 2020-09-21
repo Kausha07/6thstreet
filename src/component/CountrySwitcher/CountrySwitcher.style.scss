@@ -3,9 +3,6 @@
     display: flex;
     font-size: 11px;
 
-    @media (max-width: 1024px) {
-        display: none;
-    }
     &-CountryBtn {
         display: flex;
         margin-top: 0;
@@ -15,6 +12,7 @@
         letter-spacing: 1px;
         text-transform: capitalize;
         margin-left: -10px;
+        
         &::after {
             content: "";
             position: absolute;
@@ -28,15 +26,6 @@
             right: -1px;
             transform: rotate(-90deg);
         }
-    }
-    &-Flag {
-        display: inline-block;
-        background-image: url(flags.png);
-        background-repeat: no-repeat;
-        width: 20px;
-        height: 13px;
-        margin-right: 8px;
-        top: 0;
     }
 
     .Field {
