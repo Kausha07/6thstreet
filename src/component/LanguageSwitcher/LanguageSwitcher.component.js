@@ -15,6 +15,16 @@ class LanguageSwitcher extends PureComponent {
         language: PropTypes.string.isRequired
     };
 
+    state = {
+        isArabic: false
+    };
+
+    static getDerivedStateFromProps() {
+        return {
+            isArabic: JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data.language === 'ar'
+        };
+    }
+
     getNonSelectedLanguage() {
         const {
             languageSelectOptions,
@@ -68,8 +78,12 @@ class LanguageSwitcher extends PureComponent {
     }
 
     render() {
+        const {
+            isArabic
+        } = this.state;
+
         return (
-            <div block="LanguageSwitcher">
+            <div block="LanguageSwitcher" mods={ { isArabic } }>
                 { this.renderLanguageSelect() }
                 { this.renderLanguageButton() }
             </div>
