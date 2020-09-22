@@ -49,12 +49,12 @@
     
         &-Special,
         &-Discount {
+            display: none;
+            
             &_discount {
                 display: inline;
                 color: $default-primary-dark-color;
             }
-            display: none;
-    
         }
 
         &-Base {

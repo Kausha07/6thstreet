@@ -15,11 +15,7 @@ class Price extends PureComponent {
     haveDiscount() {
         const { basePrice, specialPrice } = this.props;
 
-        if (specialPrice !== 'undefined' && basePrice !== specialPrice) {
-            return true;
-        }
-
-        return false;
+        return specialPrice !== 'undefined' && basePrice !== specialPrice;
     }
 
     renderBasePrice() {
