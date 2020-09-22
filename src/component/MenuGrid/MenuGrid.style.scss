@@ -1,0 +1,103 @@
+body {
+  background-color: bisque;   // remove after styling
+}
+.UrlRewrites {
+  margin-top: 300px;  // remove after styling
+}
+
+.MenuGrid {
+  pointer-events: none;
+  height: 100%;
+  position: fixed;
+  width: 100vw;
+  left: 0;
+
+  @include before-desktop {
+    position: relative;
+  }
+  &-Content {
+    pointer-events: all;
+    opacity: 1 !important;
+    width: 1400px;
+    height: 390px;
+    margin: 0 auto;
+    background-color: #fff;
+    @include  before-desktop {
+      height: 100%;
+      width: 280px;
+      margin: 0;
+    }
+    span, a {
+      color: black;
+    }
+    a {
+      font-weight: 500;
+    }
+  }
+
+  &-Columns {
+    display: flex;
+    height: 100%;
+    > div {
+      border-right: solid 1px lightgrey;
+      margin: 20px 0 30px 35px;
+    }
+    :last-child {
+      border: 0;
+      margin-right: 35px;
+    }
+    @include  before-desktop {
+      flex-direction: column;
+
+      :last-child {
+        margin-right: 0;
+      }
+
+      > div {
+        margin: 0;
+      }
+    }
+
+  }
+
+  &-Column {
+    border: 0;
+    width: 20%;
+    span {
+      width: 100%;
+      text-transform: uppercase;
+    }
+
+    &-Content {
+      margin-top: 10px;
+      grid-template-columns: auto auto;
+      display: grid;
+      a{
+        margin: 0;
+      }
+      @include  before-desktop {
+        a {
+          border-bottom: 1px solid lightgrey;
+          line-height: 10px;
+
+        }
+      }
+    }
+
+    @include  before-desktop {
+      line-height: 30px;
+      width: 100%;
+      &-Content {
+        width: 260px;
+        grid-auto-flow: row;
+        grid-template-columns: auto;
+
+        overflow: scroll;
+        a{
+          line-height: 50px;
+          margin-left: 10px;
+        }
+      }
+    }
+  }
+}
