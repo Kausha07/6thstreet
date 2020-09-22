@@ -27,7 +27,11 @@ class CountryMiniFlag extends PureComponent {
         const flagValue = `${left} ${ flagValues[label]}`;
 
         return (
-        <div block="CountryMiniFlag" elem="Container" style={ { backgroundPosition: flagValue } }>
+        <div
+          block="CountryMiniFlag"
+          elem="Container"
+          style={ { backgroundPosition: flagValue } }
+        >
             <span block="CountryMiniFlag" elem="top" />
             <span block="CountryMiniFlag" elem="bottom" />
         </div>
