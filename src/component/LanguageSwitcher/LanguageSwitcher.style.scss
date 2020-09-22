@@ -18,4 +18,17 @@
             padding-right: 15px;
         }
     }
+
+    &_isArabic {
+        margin-left: 0;
+        margin-right: auto;
+
+        button {
+            span {
+                border-left: 1px solid var(--border-color);
+                border-right: none;
+                padding-left: 15px;
+            }
+        }
+    }
 }
