@@ -51,8 +51,6 @@ class ProductItem extends PureComponent {
             product: { sku }
         } = this.props;
 
-        console.log(product);
-
         const linkTo = {
             pathname: `/pdp/${ sku }`,
             state: { product }

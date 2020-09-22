@@ -1,6 +1,7 @@
 .ProductItem {
     padding-left: 0;
-    margin: 0 10px;
+    margin: 20px 10px;
+    font-family: "Avenir Next Regular";
     text-align: center;
     position: relative;
     min-width: 0;
@@ -15,6 +16,10 @@
         }
     }
 
+    p {
+        font-size: 14px;
+    }
+
     &-Brand {
         margin: 5px 0;
     }
@@ -22,7 +27,7 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-
+        margin-bottom: 0;
     }
 
 }
