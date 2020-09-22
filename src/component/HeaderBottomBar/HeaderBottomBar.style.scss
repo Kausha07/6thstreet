@@ -1,3 +1,25 @@
 .HeaderBottomBar {
-    
-}
+   background-color: black;
+   &-Content {
+     background-color: black;
+
+     @include desktop {
+       display: flex;
+       width: 1400px;
+       margin: 0 auto;
+     }
+     @include before-desktop {
+       background-color: #fff;
+       position: fixed;
+       z-index: 1;
+       top: 0;
+       width: 280px;
+       height: 100%;
+       overflow: scroll;
+
+       .HeaderSearch-container {
+         display: none;
+       }
+     }
+   }
+ }

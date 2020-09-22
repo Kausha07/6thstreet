@@ -28,16 +28,26 @@ class HeaderBottomBar extends NavigationAbstract {
 
     renderSearch() {
         return (
-            <HeaderSearch
-              key="search"
-            />
+            <div
+              block="HeaderSearch"
+              elem="Container"
+            >
+                <HeaderSearch
+                  key="search"
+                />
+            </div>
         );
     }
 
     render() {
         return (
             <div block="HeaderBottomBar">
-                { this.renderNavigationState() }
+                <div
+                  block="HeaderBottomBar"
+                  elem="Content"
+                >
+                    { this.renderNavigationState() }
+                </div>
             </div>
         );
     }

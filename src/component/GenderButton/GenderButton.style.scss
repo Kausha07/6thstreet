@@ -5,6 +5,7 @@
     letter-spacing: .8px;
     margin-top: -30px;
     padding: 0;
+    pointer-events: all;
 
     &_isCurrentGender,
     &:hover
@@ -15,7 +16,10 @@
       letter-spacing: 0;
       transition-duration: unset;
     }
+
+    @include before-desktop {
+      height: 60px;
+    }
   }
 }
-
 

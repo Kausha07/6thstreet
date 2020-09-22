@@ -5,10 +5,21 @@
       height: 14px;
       margin: 20px 0;
       padding: 0 30px;
-
       &:not(:last-child) {
         border-right: 1px solid black;
       }
+
+      @include before-desktop {
+        pointer-events: none;
+        border-right: 0 !important;
+        margin-bottom: 0;
+        padding: 0 9px;
+        padding-top: 15px;
+        padding-bottom: 50px;
+      }
     }
+  }
+  @include before-desktop {
+    margin-top: -20px;
   }
 }
