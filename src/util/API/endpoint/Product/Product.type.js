@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-export const Price = PropTypes.oneOfType(
+export const Price = PropTypes.oneOfType([
     PropTypes.arrayOf(
         PropTypes.objectOf(
             PropTypes.shape({
@@ -17,7 +17,7 @@ export const Price = PropTypes.oneOfType(
             '6s_special_price': PropTypes.number
         })
     )
-);
+]);
 
 // eslint-disable-next-line import/prefer-default-export
 export const Product = PropTypes.shape({

@@ -2,10 +2,12 @@
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import { Product } from 'Util/API/endpoint/Product/Product.type';
+
 import PDPSummary from './PDPSummary.component';
 
-export const mapStateToProps = (_state) => ({
-    // wishlistItems: state.WishlistReducer.productsInWishlist
+export const mapStateToProps = (state) => ({
+    product: state.PDP.product
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
@@ -14,7 +16,7 @@ export const mapDispatchToProps = (_dispatch) => ({
 
 export class PDPSummaryContainer extends PureComponent {
     static propTypes = {
-        // TODO: implement prop-types
+        product: Product.isRequired
     };
 
     containerFunctions = {
@@ -22,13 +24,13 @@ export class PDPSummaryContainer extends PureComponent {
     };
 
     containerProps = () => {
-        // isDisabled: this._getIsDisabled()
+        const { product } = this.props;
+        return { product };
     };
 
     render() {
         return (
             <PDPSummary
-              { ...this.props }
               { ...this.containerFunctions }
               { ...this.containerProps() }
             />

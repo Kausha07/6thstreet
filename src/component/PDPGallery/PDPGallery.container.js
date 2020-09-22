@@ -1,11 +1,15 @@
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import { Product } from 'Util/API/endpoint/Product/Product.type';
+
 import PDPGallery from './PDPGallery.component';
 
-export const mapStateToProps = (_state) => ({
-    // wishlistItems: state.WishlistReducer.productsInWishlist
+export const mapStateToProps = (state) => ({
+    currentIndex: state.PDP.imageIndex,
+    isLoading: state.PDP.isLoading,
+    product: state.PDP.product
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
@@ -14,21 +18,48 @@ export const mapDispatchToProps = (_dispatch) => ({
 
 export class PDPGalleryContainer extends PureComponent {
     static propTypes = {
-        // TODO: implement prop-types
+        currentIndex: PropTypes.number.isRequired,
+        isLoading: PropTypes.bool.isRequired,
+        product: Product.isRequired
     };
 
     containerFunctions = {
-        // getData: this.getData.bind(this)
     };
 
     containerProps = () => {
-        // isDisabled: this._getIsDisabled()
+        const { currentIndex } = this.props;
+
+        return {
+            gallery: this.getGallery(),
+            crumbs: this.getCrumbs(),
+            currentIndex
+        };
     };
+
+    getCrumbs() {
+        // TODO: determine if has video append it here
+        const galleryCrumbs = Object.keys(this.getGallery());
+        return galleryCrumbs;
+    }
+
+    getGallery() {
+        const {
+            isLoading,
+            product: {
+                gallery_images = []
+            }
+        } = this.props;
+
+        if (isLoading) {
+            return Array.from({ length: 4 });
+        }
+
+        return gallery_images;
+    }
 
     render() {
         return (
             <PDPGallery
-              { ...this.props }
               { ...this.containerFunctions }
               { ...this.containerProps() }
             />
