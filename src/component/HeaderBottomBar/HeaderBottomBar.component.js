@@ -2,7 +2,6 @@
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router';
 
-// import { withRouter } from 'react-router-dom';
 import HeaderAccount from 'Component/HeaderAccount';
 import HeaderMenu from 'Component/HeaderMenu';
 import HeaderSearch from 'Component/HeaderSearch';
@@ -79,16 +78,6 @@ class HeaderBottomBar extends NavigationAbstract {
         return null;
     };
 
-    componentDidUpdate(prevProps) {
-        const { location } = this.props;
-
-        if (location !== prevProps.location) {
-            this.renderHome();
-            this.renderBrand();
-            this.renderAccount();
-        }
-    }
-
     routeChangeLogin=() => {
         this.setState({ redirectLogin: true });
     };
@@ -107,6 +96,7 @@ class HeaderBottomBar extends NavigationAbstract {
         return (
             <button
               onClick={ this.routeChangeHome }
+              key="homeButton"
               block="HeaderBottomBar"
               elem="HomeAndBrand"
               mods={ { isHomeButton: true } }
@@ -143,6 +133,7 @@ class HeaderBottomBar extends NavigationAbstract {
         return (
             <button
               onClick={ this.routeChangeBrand }
+              key="brandButton"
               block="HeaderBottomBar"
               elem="HomeAndBrand"
               mods={ { isBrandButton: true } }
@@ -161,7 +152,12 @@ class HeaderBottomBar extends NavigationAbstract {
         const { isBottomBar, isWishlist } = this.state;
 
         return (
-            <button onClick={ this.routeChangeWishlist } block="HeaderBottomBar" elem="WishListAndAccount">
+            <button
+              onClick={ this.routeChangeWishlist }
+              key="wishlistButton"
+              block="HeaderBottomBar"
+              elem="WishListAndAccount"
+            >
                 <HeaderWishlist
                   isWishlist={ isWishlist }
                   isBottomBar={ isBottomBar }
@@ -182,7 +178,12 @@ class HeaderBottomBar extends NavigationAbstract {
         });
 
         return (
-            <button onClick={ this.routeChangeAccount } block="HeaderBottomBar" elem="WishListAndAccount">
+            <button
+              onClick={ this.routeChangeAccount }
+              key="accountButton"
+              block="HeaderBottomBar"
+              elem="WishListAndAccount"
+            >
                 <HeaderAccount
                   isAccount={ isAccount }
                   isBottomBar={ isBottomBar }
