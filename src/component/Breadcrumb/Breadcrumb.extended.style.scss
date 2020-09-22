@@ -15,12 +15,16 @@
     font-size: 12px;
 
     &_isArabic {
-        &:not(:last-child) {
-            &::after {
-                transform: rotate(45deg) !important;
-                margin-right: $crumb-padding - 4 !important;
-                margin-left: 0 !important;
+
+        &.Breadcrumb{
+            &:not(:last-child) {
+                &::after {
+                    transform: rotate(45deg);
+                    margin-right: $crumb-padding - 4;
+                    margin-left: 0;
+                }
             }
         }
     }
+    
 }
