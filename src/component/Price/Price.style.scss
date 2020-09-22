@@ -1,24 +1,3 @@
 .Price {
-    display: flex;
-    justify-content: space-around;
-    position: relative;
-    padding: 0 30px;
-    font-weight: 600;
-    font-size: 16px;
 
-    &-Special,
-    &-Discount {
-        &_discount {
-            display: inline;
-            color: $default-primary-dark-color;
-        }
-        display: none;
-
-    }
-    &-Base {
-        &_discount {
-            font-size: 11px;
-        }
-
-    }
 }
