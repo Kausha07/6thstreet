@@ -10,6 +10,7 @@ import WelcomeScreen from './WelcomeScreen.component';
 
 export const mapStateToProps = (state) => ({
     config: state.AppConfig.config,
+    language: state.AppState.language,
     country: state.AppState.country
 });
 
@@ -23,6 +24,7 @@ class WelcomeScreenContainer extends PureComponent {
         setLanguage: PropTypes.func.isRequired,
         setCountry: PropTypes.func.isRequired,
         config: Config.isRequired,
+        language: PropTypes.string.isRequired,
         country: PropTypes.string.isRequired
     };
 
@@ -42,12 +44,13 @@ class WelcomeScreenContainer extends PureComponent {
     }
 
     containerProps = () => {
-        const { country, config } = this.props;
+        const { country, config, language } = this.props;
 
         return {
             countrySelectOptions: getCountriesForSelect(config),
             languageSelectOptions: getCountryLocaleForSelect(config, country),
-            country
+            country,
+            language
         };
     };
 

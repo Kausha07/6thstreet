@@ -14,7 +14,8 @@ class WelcomeScreen extends PureComponent {
         languageSelectOptions: SelectOptions.isRequired,
         onLanguageSelect: PropTypes.func.isRequired,
         closePopup: PropTypes.func.isRequired,
-        country: PropTypes.string.isRequired
+        country: PropTypes.string.isRequired,
+        language: PropTypes.string.isRequired
     };
 
     renderCloseBtn() {
@@ -47,12 +48,13 @@ class WelcomeScreen extends PureComponent {
 
     renderLangBtn(lang) {
         const {
-            onLanguageSelect
+            onLanguageSelect,
+            language
         } = this.props;
 
         const { id, label } = lang;
 
-        const btnType = id === 'en' ? 'primary' : 'secondary';
+        const btnType = id === language ? 'primary' : 'secondary';
         const btnBlock = `button ${ btnType}`;
 
         return (
@@ -84,7 +86,8 @@ class WelcomeScreen extends PureComponent {
 
     renderListItem(item, country) {
         const {
-            onCountrySelect
+            onCountrySelect,
+            language
         } = this.props;
 
         const { id, value } = item;
@@ -92,13 +95,19 @@ class WelcomeScreen extends PureComponent {
         const svg = <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"><path d="M9 22l-10-10.598 2.798-2.859 7.149 7.473 13.144-14.016 2.909 2.806z" /></svg>;
         const check = item.value === country ? <span block="WelcomeScreen" elem="Check">{ svg }</span> : '';
 
+        const currentLangBool = value === country && true;
+        const currentLang = language === 'en' ? 'en' : 'ar';
+
         return (
             <li key={ id }>
                 <button
                   onClick={ () => onCountrySelect(value) }
                   block="WelcomeScreen"
                   elem="CountryBtn"
-                  mods={ value === country && { isCurrent: true } }
+                  mods={ {
+                      isCurrent: currentLangBool,
+                      lang: currentLang
+                  } }
                 >
                     <CountryMiniFlag label={ id } />
                     { item.label }
