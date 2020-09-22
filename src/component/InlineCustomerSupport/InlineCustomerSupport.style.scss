@@ -54,13 +54,12 @@
     &-Dropdown {
         border: 1px solid var(--border-color);
         border-radius: 5px;
-        height: 160px;
         width: 260px;
         margin-left: 80px;
         position: absolute;
         z-index: 4;
         background: var(--white-color);
-        padding: 20px 20px 30px;
+        padding: 20px 20px 8px;
         display: none;
 
         &_isExpanded {
@@ -85,12 +84,12 @@
 
     &-OpenHours {
         font-weight: bold;
-        padding-bottom: 25px;
+        padding-bottom: 12px;
     }
 
     &-DisplayPhone{
         display: flex;
-        margin-bottom: 25px;
+        padding: 12px 0;
     }
 
     &-Phone {
@@ -112,6 +111,7 @@
 
     &-DisplayEmail{
         display: flex;
+        padding: 12px 0;
     }
 
     &-Email {
