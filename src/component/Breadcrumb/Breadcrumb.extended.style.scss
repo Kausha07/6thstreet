@@ -27,4 +27,7 @@
         }
     }
     
+    &:last-child {
+        color: var(--breadcrumbs-color);
+    }
 }
