@@ -2,17 +2,20 @@
     &-Container {
         display: flex;
     }
+
     list-style-type: square !important;
 
     @include desktop {
         display: flex;
         justify-content: left;
         width: 1020px;
+
         &-Container {
             .HeaderGenders {
                 display: none;
             }
         }
+
         &-LastCategoryBackground {
             background-color: #e4001a;
             width: 70px;
@@ -21,8 +24,11 @@
             transform: skew(-15deg, 0deg);
         }
     }
+
     @include before-desktop {
-        border-top: .5px solid lightgrey;
+        border-top: 1px solid lightgrey;
+        width: 270px;
+
         &-Container {
             flex-direction: column;
         }

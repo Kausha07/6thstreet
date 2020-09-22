@@ -1,3 +1,63 @@
+:root {
+    --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
 .HeaderTopBar {
-    
+    display: none;
+    height: 35px;
+    box-shadow: none;
+    width: 100%;
+    position: fixed;
+    bottom: 83px;
+    z-index: 4;
+    background: $black;
+
+    @include desktop {
+        display: block;
+        width: 100%;
+        position: relative;
+        top: 0;
+        z-index: 4;
+        box-shadow: 0 1px 0 0 var(--shadow-color);
+        background: none;
+        height: 30px;
+    }
+
+    &-ContentWrapper {
+        display: flex;
+        max-width: 1440px;
+        margin: 0 auto;
+    }
+
+    &-CmsBlock {
+        display: none;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        line-height: 16px;
+        margin: 7px 0;
+        text-transform: uppercase;
+
+        @include desktop {
+            display: block;
+        }
+    }
+
+    &_isOnMobile {
+        display: none;
+
+    }
+
+    .LanguageSwitcher {
+        @include before-desktop() {
+            display: none;
+        }
+    }
+
+    .CountrySwitcher {
+        @include before-desktop() {
+            display: none;
+        }
+    }
+
 }

@@ -1,25 +1,34 @@
 .HeaderBottomBar {
-   background-color: black;
-   &-Content {
-     background-color: black;
+    background-color: black;
+    z-index: 1;
 
-     @include desktop {
-       display: flex;
-       width: 1400px;
-       margin: 0 auto;
-     }
-     @include before-desktop {
-       background-color: #fff;
-       position: fixed;
-       z-index: 1;
-       top: 0;
-       width: 280px;
-       height: 100%;
-       overflow: scroll;
+    &-Content {
+        background-color: black;
 
-       .HeaderSearch-container {
-         display: none;
-       }
-     }
-   }
- }
+        @include before-desktop {
+            background-color: $white;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            width: 280px;
+            height: 100%;
+            overflow: scroll;
+
+            .HeaderSearch-container {
+                display: none;
+            }
+        }
+
+        @include desktop {
+            display: flex;
+            width: 1400px;
+            margin: 0 auto;
+        }
+
+        .HeaderMenu {
+            &-Button {
+                display: none;
+            }
+        }
+    }
+}
