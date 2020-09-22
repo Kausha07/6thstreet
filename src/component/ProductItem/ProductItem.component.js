@@ -42,11 +42,13 @@ class ProductItem extends PureComponent {
     renderLink() {
         const {
             product,
-            product: { sku }
+            product: { url }
         } = this.props;
 
+        const { pathname } = new URL(url);
+
         const linkTo = {
-            pathname: `/pdp/${ sku }`,
+            pathname,
             state: { product }
         };
 

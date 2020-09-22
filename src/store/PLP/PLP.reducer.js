@@ -106,15 +106,15 @@ export const PLPReducer = (state = getInitialState(), action) => {
     case SET_PLP_DATA:
         const {
             response: {
-                data: products,
-                meta,
-                filters
+                data: products = {},
+                meta = {},
+                filters = {}
             },
-            options: requestedOptions,
-            options: { page: initialPage },
+            options: requestedOptions = {},
             isInitial
         } = action;
 
+        const { page: initialPage } = requestedOptions;
         const { initialFilters: stateInitialFilters } = state;
 
         const combinedFilters = {

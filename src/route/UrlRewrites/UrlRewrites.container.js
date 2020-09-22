@@ -30,7 +30,8 @@ export class UrlRewritesContainer extends PureComponent {
     state = {
         prevPathname: '',
         isLoading: true,
-        type: ''
+        type: '',
+        id: -1
     };
 
     constructor(props) {
@@ -66,24 +67,27 @@ export class UrlRewritesContainer extends PureComponent {
 
         // TODO: switch to "executeGet" afterwards
         const { urlResolver } = await fetchQuery(UrlRewritesQuery.getQuery({ urlParam }));
-        const { type = TYPE_NOTFOUND } = urlResolver || {};
+        const { type = TYPE_NOTFOUND, id } = urlResolver || {};
 
         this.setState({
             prevPathname: urlParam,
             isLoading: false,
-            type
+            type,
+            id
         });
     }
 
     containerProps = () => {
         const {
             isLoading,
-            type
+            type,
+            id
         } = this.state;
 
         return {
             isLoading,
-            type
+            type,
+            id
         };
     };
 

@@ -47,7 +47,7 @@ export class PLPDispatcher {
             Logger.log(e);
 
             // Needed, so PLP container sets "isLoading" to false
-            dispatch(setPLPData({}, {}, options, isInitial));
+            dispatch(setPLPData({}, options, isInitial));
         }
     }
 
