@@ -27,6 +27,8 @@ class UrlRewrites extends PureComponent {
         [TYPE_PRODUCT]: this.renderPDP.bind(this)
     };
 
+    render404;
+
     renderPDP() {
         const { id } = this.props;
 
@@ -34,8 +36,6 @@ class UrlRewrites extends PureComponent {
             <PDP id={ id } />
         );
     }
-
-    render404;
 
     render() {
         const { props } = this;
