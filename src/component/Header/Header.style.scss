@@ -2,7 +2,7 @@
   height: 170px;
 }
 
-@media (max-width: 768px) {
+@include before-desktop {
   .Header {
     height: 50px;
   }
