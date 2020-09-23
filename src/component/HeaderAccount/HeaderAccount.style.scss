@@ -1,4 +1,43 @@
 .HeaderAccount {
+    &:not(&_isBottomBar) {
+        margin-left: 40px;
+        margin-right: 40px;
+
+        label {
+            position: relative;
+            text-transform: unset;
+            height: 27px;
+            padding: 0;
+
+            &::before{
+                position: absolute;
+                left: -30px;
+                top: -6px;
+                content: "";
+                background: url(./icons/account.svg) no-repeat;
+                background-size: 27px;
+                width: 30px;
+                height: 27px;
+                display: inline-block;
+                font-size: 0;
+            }
+
+            span {
+                display: none;
+                font-size: 14px;
+                font-weight: 600;
+                letter-spacing: 0;
+                line-height: 19px;
+                height: 27px;
+                color: var(--black);
+
+                @include after-mobile {
+                    display: block;
+                }
+            }
+        }
+    }
+
     &_isBottomBar{
         display: block;
         text-transform: none;
@@ -24,7 +63,7 @@
             display: inline-block;
             font-size: 0;
             filter: invert(26%) sepia(2%) saturate(21%) hue-rotate(43deg) brightness(90%) contrast(80%);
-            
+
         }
 
         @include desktop {
