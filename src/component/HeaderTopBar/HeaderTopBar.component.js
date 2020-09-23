@@ -52,7 +52,7 @@ class HeaderTopBar extends NavigationAbstract {
               block="HeaderTopBar"
               elem="CmsBlock"
             >
-                cms block in header
+                ALL PRICES ARE INCLUSIVE OF VAT
             </div>
         );
     }
