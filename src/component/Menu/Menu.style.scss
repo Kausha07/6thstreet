@@ -1,10 +1,17 @@
 .Menu {
+    list-style-type: square !important;
+
     &-Container {
         display: flex;
     }
+    @include before-desktop {
+        border-top: 1px solid var(--light-border-color);
+        width: 270px;
 
-    list-style-type: square !important;
-
+        &-Container {
+            flex-direction: column;
+        }
+    }
     @include desktop {
         display: flex;
         justify-content: left;
@@ -14,23 +21,6 @@
             .HeaderGenders {
                 display: none;
             }
-        }
-
-        &-LastCategoryBackground {
-            background-color: #e4001a;
-            width: 70px;
-            color: transparent;
-            margin-left: -90px;
-            transform: skew(-15deg, 0deg);
-        }
-    }
-
-    @include before-desktop {
-        border-top: 1px solid lightgrey;
-        width: 270px;
-
-        &-Container {
-            flex-direction: column;
         }
     }
 }

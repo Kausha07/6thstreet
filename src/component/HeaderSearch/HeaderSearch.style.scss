@@ -1,13 +1,13 @@
 .HeaderSearch {
   @include before-desktop {
-    visibility: hidden;               //for no-desktop need to be positioned to separate block
-    // remove it when work on Header Search block for mobile
+    visibility: hidden;
   }
   &-Container {
-    margin-left:auto; margin-right:20px;
-    width: 320px;
     height: 33px;
+    margin-left:auto;
+    margin-right:20px;
     padding: 3px;
+    width: 320px;
   }
   .Field {
     margin: 0;

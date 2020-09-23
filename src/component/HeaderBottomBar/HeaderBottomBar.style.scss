@@ -1,25 +1,125 @@
+:root {
+    --menu-background-color-desktop:#000;
+    --menu-background-color-mobile:#fff;
+    --mobile-menu-category-background-color: #f3f4f6;
+    --sales-block-background-color-desktop: #e4001a;
+    --light-border-color: #d3d3d3;
+    --default-text-color: var(--menu-background-color-desktop);
+    --light-text-color: var(--menu-background-color-mobile);
+
+}
 .HeaderBottomBar {
-    background-color: black;
+    background-color: var(--menu-background-color-desktop);
     z-index: 1;
 
     &-Content {
-        background-color: black;
-
+        background-color: var(--menu-background-color-desktop);
         @include before-desktop {
+            .HeaderSearch-Container {
+            display: none;
+            }
+
+            .FooterMain {
+                background-color: var(--menu-background-color-mobile);
+                display: block;
+                height: 440px;
+                margin-bottom: -144px;
+                padding: 0;
+
+                &-Layout {
+                    display: flex;
+                    flex-direction: column-reverse;
+                    margin: 0;
+
+                    h4 {
+                        display: none;
+                    }
+
+                    :not(:first-child) {
+                        display: none;
+                    }
+
+                    :last-child {
+                        display: flex;
+                        flex-direction: column-reverse;
+
+                        .FooterMain {
+                            margin-bottom: -30px;
+
+                            &-WrapperSecond {
+                                flex-direction: row;
+                                margin-left: 10px;
+                            }
+
+                            &-WrapperFirst {
+                                display: flex;
+                                flex-direction: row-reverse;
+                                margin-bottom: 20px;
+                                margin-right: 10px;
+                            }
+                        }
+                    }
+
+                    :first-child {
+                        .FooterMain-Nav {
+                            display: flex;
+
+                            ul {
+                                flex-direction: column;
+                                margin-left: 10px;
+
+                                li {
+                                    border-bottom: 1px solid var(--light-border-color);
+                                    line-height: 50px;
+                                }
+
+                                :nth-child(-n+3) {
+                                    display: block;
+                                }
+
+                                li:last-child {
+                                    display: none;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                &-Column {
+                    min-height: 0;
+                }
+            }
+            .FooterMiddle {
+                background-color: #fff;
+                padding-left: 0;
+                display: inline-flex;
+                .HeaderAccount {
+                    display: none;
+                }
+                .CountrySwitcher {
+                    &-CountryBtn {
+                        margin-left: -20px;
+                    }
+                }
+            }
             background-color: $white;
             position: fixed;
             z-index: 1;
             top: 0;
             width: 280px;
             height: 100%;
-            overflow: scroll;
-
-            .HeaderSearch-container {
-                display: none;
-            }
+            overflow-y: scroll;
         }
 
         @include desktop {
+            .FooterMain {
+                display: none;
+            }
+
+            .FooterMiddle {
+                display: none;
+            }
+
             display: flex;
             width: 1400px;
             margin: 0 auto;

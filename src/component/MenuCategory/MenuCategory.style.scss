@@ -1,54 +1,20 @@
-:root {
-  --mobile-menu-category-background-color: #f3f4f6;
-}
-
 .MenuCategory {
   font-weight: 200;
   padding: 0;
-  &::before {
+
+  .DynamicContentBanner {
+    display: none;
+  }
+  &:before {
     content: none;
   }
-  @include desktop {
-    &.Sale {
-      .DynamicContent {
-        .MenuGrid {
-          &-Content {
-            background-color: #e4001a;
-            a, span {
-              color: #fff !important;
-            }
-          }
-        }
-      }
-    }
-    padding: 0 40px;
-    z-index: 3;
-    &:hover {
-      height: 40px;
-      font-weight: bold;
-      cursor: default;
-      .MenuGrid {
-        background: rgba(0, 0, 0, 0.7);
-      }
-    }
-    .DynamicContent {
-      &Banner {
-        // position: absolute;
-        height: 0;
-        width: 0;
-        visibility: hidden;
-      }
-    }
-
-  }
-
   @include before-desktop {
     &.IsVisible-true {
       height: 100%;
     }
 
     background-color: var(--mobile-menu-category-background-color);
-    color: black;
+    color: var(--default-text-color);
     margin: 10px !important;
     width: 260px;
     height: 80px;
@@ -63,6 +29,52 @@
       visibility: hidden;
       width: 0;
       height: 0;
+    }
+  }
+  @include desktop {
+    padding: 0 40px;
+    z-index: 3;
+
+    &.Sale {
+      &:before,
+      &:after {
+        border-color: transparent var(--menu-background-color-desktop) transparent var(--menu-background-color-desktop);
+        border-style: solid;
+        content: '';
+        position: absolute;
+      }
+      &:before {
+        border-width: 0px 0px 40px 20px;
+        left: 0px;
+      }
+      &:after {
+        border-width: 40px 20px 0px 0px;
+        left: 83.5px;
+        top: 0;
+      }
+      background-color: var(--sales-block-background-color-desktop);
+      .DynamicContent {
+        &Banner {
+          display: none;
+        }
+        .MenuGrid {
+          &-Content {
+            background-color: var(--sales-block-background-color-desktop);
+            a, span {
+              color: var(--light-text-color) !important;
+            }
+          }
+        }
+      }
+    }
+
+    &:hover {
+      height: 40px;
+      font-weight: bold;
+      cursor: default;
+      .MenuGrid {
+        background: rgba(0, 0, 0, 0.7);
+      }
     }
   }
 }

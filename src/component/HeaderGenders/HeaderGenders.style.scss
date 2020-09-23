@@ -1,3 +1,7 @@
+:root {
+    --black-border-color: black;
+}
+
 .HeaderGenders {
     display: flex;
 
@@ -9,16 +13,16 @@
             padding: 0 30px;
 
             &:not(:last-child) {
-                border-right: 1px solid black;
+                border-right: 1px solid var(--black-border-color);
             }
 
             @include before-desktop {
-                pointer-events: none;
                 border-right: 0 !important;
                 margin-bottom: 0;
                 padding: 0 9px;
-                padding-top: 15px;
                 padding-bottom: 50px;
+                padding-top: 15px;
+                pointer-events: none;
             }
         }
     }
