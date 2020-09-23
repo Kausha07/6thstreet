@@ -3,6 +3,7 @@
 }
 
 .HeaderTopBar {
+    display: none;
     height: 35px;
     box-shadow: none;
     width: 100%;
@@ -12,6 +13,7 @@
     background: $black;
 
     @include desktop {
+        display: block;
         width: 100%;
         position: relative;
         top: 0;
