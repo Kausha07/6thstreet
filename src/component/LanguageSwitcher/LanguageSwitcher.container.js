@@ -33,7 +33,6 @@ export class LanguageSwitcherContainer extends PureComponent {
     onLanguageSelect(value) {
         const { setLanguage } = this.props;
         setLanguage(value);
-        window.location.reload();
     }
 
     containerProps = () => {
