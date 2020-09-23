@@ -7,7 +7,6 @@ class InlineCustomerSupport extends PureComponent {
     static propTypes = {
         isEmailSupported: PropTypes.bool.isRequired,
         isPhoneSupported: PropTypes.bool.isRequired,
-        // contactLabel: PropTypes.string.isRequired,
         openHoursLabel: PropTypes.string.isRequired,
         email: PropTypes.string.isRequired,
         phone: PropTypes.string.isRequired
