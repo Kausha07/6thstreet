@@ -1,15 +1,14 @@
-import { Fragment } from 'react';
+import { Fragment, PureComponent } from 'react';
 
 import CountrySwitcher from 'Component/CountrySwitcher';
 import HeaderAccount from 'Component/HeaderAccount';
 import InlineCustomerSupport from 'Component/InlineCustomerSupport';
 import LanguageSwitcher from 'Component/LanguageSwitcher';
-import NavigationAbstract from 'Component/NavigationAbstract/NavigationAbstract.component';
 import { DEFAULT_STATE_NAME } from 'Component/NavigationAbstract/NavigationAbstract.config';
 
 import './FooterMiddle.style';
 
-class FooterMiddle extends NavigationAbstract {
+class FooterMiddle extends PureComponent {
     stateMap = {
         [DEFAULT_STATE_NAME]: {
             support: true,

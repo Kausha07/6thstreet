@@ -31,8 +31,10 @@ class FooterMobile extends Component {
     render() {
         return (
             <div block="FooterMobile">
-                { this.renderCopyright() }
-                { this.renderHyperlinks() }
+                <div block="FooterMobile" elem="Wrapper">
+                    { this.renderCopyright() }
+                    { this.renderHyperlinks() }
+                </div>
             </div>
         );
     }
