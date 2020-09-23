@@ -1,3 +1,5 @@
+/* eslint-disable no-magic-numbers */
+
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
@@ -10,11 +12,19 @@ class Price extends PureComponent {
         currency: PropTypes.string.isRequired
     };
 
+    haveDiscount() {
+        const { basePrice, specialPrice } = this.props;
+
+        return specialPrice !== 'undefined' && basePrice !== specialPrice;
+    }
+
     renderBasePrice() {
         const { basePrice } = this.props;
 
         return (
-            <span>
+            <span block="Price" elem="Base" mods={ { discount: this.haveDiscount() } }>
+                { this.renderCurrency() }
+                <span> </span>
                 { basePrice }
             </span>
         );
@@ -24,8 +34,28 @@ class Price extends PureComponent {
         const { specialPrice } = this.props;
 
         return (
-            <span>
+            <span block="Price" elem="Special" mods={ { discount: this.haveDiscount() } }>
+                { this.renderCurrency() }
+                <span> </span>
                 { specialPrice }
+            </span>
+        );
+    }
+
+    discountPercentage() {
+        const {
+            basePrice,
+            specialPrice
+        } = this.props;
+
+        const discountPercentage = Math.floor(100 * (1 - (specialPrice / basePrice)));
+
+        return (
+            <span block="Price" elem="Discount" mods={ { discount: this.haveDiscount() } }>
+            -
+            { discountPercentage }
+            %
+            <span> </span>
             </span>
         );
     }
@@ -43,21 +73,23 @@ class Price extends PureComponent {
         return (
             <>
                 <del>{ this.renderBasePrice() }</del>
-                { this.renderSpecialPrice() }
+                <span>
+                    { this.discountPercentage() }
+                    { this.renderSpecialPrice() }
+                </span>
             </>
         );
     }
 
     renderCurrency() {
         const { currency } = this.props;
-        return currency;
+        return <span block="Price" elem="Currency">{ currency }</span>;
     }
 
     render() {
         return (
             <p block="Price">
                 { this.renderPrice() }
-                { this.renderCurrency() }
             </p>
         );
     }

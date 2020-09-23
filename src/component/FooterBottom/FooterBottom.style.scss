@@ -15,7 +15,7 @@
         display: none;
     }
     
-    &_visible {
+    &_FooterBottomHidden {
         display: none;
     }
 
@@ -35,7 +35,7 @@
         padding-top: 16px;
         text-transform: uppercase;
         text-align: center;
-        font-size: 10px;
+        font-size: 11px;
         color: var(--footer-bottom-hyperlink-color);
         font-family: "Avenir Next Demi";
         font-weight: 600;

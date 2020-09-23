@@ -13,15 +13,6 @@ class FooterCustomerSupport extends PureComponent {
         phone: PropTypes.string.isRequired
     };
 
-    state = {
-        isExpanded: false
-    };
-
-    onDropdownClick = () => {
-        // Toggle dropdown
-        this.setState(({ isExpanded }) => ({ isExpanded: !isExpanded }));
-    };
-
     renderEmail = () => {
         const { isEmailSupported, email } = this.props;
 
