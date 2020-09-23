@@ -15,8 +15,15 @@ class LoginBlock extends PureComponent {
 
     constructor() {
         super();
+<<<<<<< Updated upstream
         console.log(this.props);
         this.state = { isOpen: true };
+=======
+        this.state = {
+            isOpen: true,
+            isArabic: JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data.language === 'ar'
+        };
+>>>>>>> Stashed changes
     }
 
     handleDismiss = () => {
@@ -75,6 +82,8 @@ class LoginBlock extends PureComponent {
 
     renderButtons() {
         const { isSignedIn } = this.props;
+        const { isArabic } = this.state;
+
         if (isSignedIn) {
             return (
                 <div mix={ { block: 'LoginBlock', elem: 'ButtonContainer' } }>
@@ -87,10 +96,10 @@ class LoginBlock extends PureComponent {
 
         return (
             <div mix={ { block: 'LoginBlock', elem: 'ButtonContainer' } }>
-                <button mix={ { block: 'LoginBlock', elem: 'CreateButton secondary' } }>
+                <button mix={ { block: 'LoginBlock', elem: 'CreateButton secondary', mods: { isArabic } } }>
                     Create Account
                 </button>
-                <button mix={ { block: 'LoginBlock', elem: 'LoginButton primary' } }>
+                <button mix={ { block: 'LoginBlock', elem: 'LoginButton primary', mods: { isArabic } } }>
                     Sign in
                 </button>
             </div>
