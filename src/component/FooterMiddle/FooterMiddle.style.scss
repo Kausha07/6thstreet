@@ -1,7 +1,6 @@
-
 :root{
     --footer-background-color:#f6f6f6;
-    --foter-hyperlink-color: black;
+    --foter-hyperlink-color: $black;
 }
 
 .FooterMiddle {
@@ -12,7 +11,7 @@
     padding: 25px 50px 25px 60px;
     background: var(--footer-background-color);
 
-    @media (max-width: 1024px) {
+    @include before-desktop {
         display: none;
     }
 
@@ -25,6 +24,16 @@
     
         &-DisplayQuickAccess {
             display: none;
+        }
+    }
+
+    .CountrySwitcher {
+
+        .Field {
+
+            &Select::after {
+                transform: rotate(360deg);
+        }
         }
     }
 }
