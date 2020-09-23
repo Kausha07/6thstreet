@@ -44,13 +44,14 @@ class InlineCustomerSupport extends PureComponent {
 
     renderPhone = () => {
         const { isPhoneSupported, phone } = this.props;
+        const { isArabic } = this.state;
 
         if (!isPhoneSupported) {
             return null;
         }
 
         return (
-            <a block="InlineCustomerSupport" elem="Phone" href={ `tel:${ phone }` }>
+            <a block="InlineCustomerSupport" elem="Phone" mods={ { isArabic } } href={ `tel:${ phone }` }>
                 <bdi>{ phone }</bdi>
             </a>
         );

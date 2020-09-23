@@ -133,6 +133,18 @@
                 visibility: visible;
             }
         }
+
+        &_isArabic {
+            &::after{
+                right: 35px;
+                left: 0;
+            }
+
+            &::before{
+                right: 5px;
+                left: 0;
+            }
+        }
     }
 
     &-PhoneIcon {
@@ -217,6 +229,10 @@
         }
 
         &_isArabic {
+            p {
+                padding-left: 3px;
+                padding-right: 0;
+            }
             @include desktop {
                 margin-left: 0;
                 padding-left: 0;
