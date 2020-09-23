@@ -15,15 +15,12 @@ class LoginBlock extends PureComponent {
 
     constructor() {
         super();
-<<<<<<< Updated upstream
-        console.log(this.props);
         this.state = { isOpen: true };
-=======
+
         this.state = {
             isOpen: true,
             isArabic: JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data.language === 'ar'
         };
->>>>>>> Stashed changes
     }
 
     handleDismiss = () => {

@@ -50,12 +50,12 @@ class Algolia {
 
     async getPDP(params = {}) {
         const {
-            sku = '',
+            id = '',
             highlights = PRODUCT_HIGHLIGHTS
         } = params;
 
         // TODO: add validation
-        return AlgoliaSDK.getPDP({ sku, highlights });
+        return AlgoliaSDK.getPDP({ id, highlights });
     }
 
     searchBy(params) {

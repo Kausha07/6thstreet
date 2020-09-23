@@ -1,4 +1,4 @@
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
@@ -14,7 +14,13 @@ export const mapDispatchToProps = (_dispatch) => ({
 
 export class HeaderAccountContainer extends PureComponent {
     static propTypes = {
-        // TODO: implement prop-types
+        isBottomBar: PropTypes.bool,
+        isAccount: PropTypes.bool
+    };
+
+    static defaultProps = {
+        isBottomBar: false,
+        isAccount: false
     };
 
     containerFunctions = {
@@ -28,6 +34,7 @@ export class HeaderAccountContainer extends PureComponent {
     render() {
         return (
             <HeaderAccount
+              { ...this.props }
               { ...this.containerFunctions }
               { ...this.containerProps() }
             />

@@ -30,7 +30,8 @@ export class UrlRewritesContainer extends PureComponent {
     state = {
         prevPathname: '',
         isLoading: true,
-        type: ''
+        type: '',
+        id: -1
     };
 
     constructor(props) {
@@ -44,11 +45,11 @@ export class UrlRewritesContainer extends PureComponent {
         const { locale: prevLocale } = prevProps;
         const { prevPathname } = this.state;
 
-        // Request URL rewrite if pathname or locale changed
         if (
             pathname !== prevPathname
             || locale !== prevLocale
         ) {
+            // Request URL rewrite if pathname or locale changed
             this.requestUrlRewrite(true);
         }
     }
@@ -66,24 +67,29 @@ export class UrlRewritesContainer extends PureComponent {
 
         // TODO: switch to "executeGet" afterwards
         const { urlResolver } = await fetchQuery(UrlRewritesQuery.getQuery({ urlParam }));
-        const { type = TYPE_NOTFOUND } = urlResolver || {};
+        const { type = TYPE_NOTFOUND, id } = urlResolver || {};
+
+        window.pageType = type;
 
         this.setState({
             prevPathname: urlParam,
             isLoading: false,
-            type
+            type,
+            id
         });
     }
 
     containerProps = () => {
         const {
             isLoading,
-            type
+            type,
+            id
         } = this.state;
 
         return {
             isLoading,
-            type
+            type,
+            id
         };
     };
 
