@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import LoginBlock from './LoginBlock.component';
 
-export const mapStateToProps = (state) => ({
+const mapStateToProps = (state) => ({
     config: state.MyAccountReducer.isSignedIn
 });
 
