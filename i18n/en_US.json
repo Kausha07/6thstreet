@@ -307,5 +307,10 @@
     "this page could not be found :(": null,
     "Can`t find what you need? Take a moment\nand do a search or start from our homepage": null,
     "back to homepage": null,
-    "Can't find what you need? Take a moment\nand do a search or start from our homepage": null
+    "Rate: ": null,
+    "Login/Register": null,
+    "Tax total:": null,
+    "View cart": null,
+    "Error loading Stripe! No API-key specified.": null,
+    "Carrier method: ": null
 }
