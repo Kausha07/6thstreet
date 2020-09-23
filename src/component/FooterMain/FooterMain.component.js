@@ -1,10 +1,10 @@
-/* eslint-disable react/forbid-dom-props */
-/* eslint-disable react/no-string-refs */
-/* eslint-disable jsx-a11y/control-has-associated-label */
-import { PureComponent } from 'react';
+import { Fragment, PureComponent } from 'react';
 
 import FooterCustomerSupport from 'Component/FooterCustomerSupport';
 import Link from 'Component/Link';
+
+import facebook from './icons/facebook.png';
+import instagram from './icons/instagram.png';
 
 import './FooterMain.style';
 
@@ -39,11 +39,11 @@ class FooterMain extends PureComponent {
         items: [
             {
                 name: 'Shipping Information',
-                href: 'https://www.appareluae.com/6th-street/'
+                href: '/shipping-policy'
             },
             {
                 name: 'Returns Information',
-                href: 'www.consumerrights.ae/en/Pages/default.aspx'
+                href: '/return-information'
             },
             {
                 name: 'Order Tracking',
@@ -63,12 +63,16 @@ class FooterMain extends PureComponent {
         title: 'Download The App',
         items: [
             {
+                id_app: 'App1',
                 app_store: 'https://static.6media.me/static/version1600320971/frontend/6SNEW/6snew/en_US/images/apple-store-badge.svg',
                 app_onclick: 'https://apps.apple.com/ro/app/6thstreet-com/id1370217070',
+                id_google: 'Google1',
                 google_play: 'https://static.6media.me/static/version1600320042/frontend/6SNEW/6snew/en_US/images/google-play-badge.svg',
                 google_onclick: 'https://play.google.com/store/apps/details?id=com.apparel.app6thstreet',
                 header: 'Follow The Latest Trends',
+                id_facebook: 'Facebook1',
                 facebook_href: 'https://www.facebook.com/shop6thstreet/',
+                id_insta: 'Insta1',
                 insta_href: 'https://www.instagram.com/shop6thstreet/'
             }
         ]
@@ -80,12 +84,12 @@ class FooterMain extends PureComponent {
             this.linksMap
                 .filter((column) => column.title === 'About' || column.title === 'Customer Service')
                 .map((column) => (
-                    <div block="FooterMain" elem="Column">
+                    <div block="FooterMain" elem="Column" key={ column.title }>
                     <h4>{ column.title }</h4>
-                    <div block="FooterMain" elem="Nav">
-                    <ul>
+                    <div block="FooterMain" elem="Nav" key={ column.title }>
+                    <ul key={ column.title }>
                     { column.items.map((items) => (
-                    <li>
+                    <li key={ items.name }>
                         <Link
                           block="FooterMain"
                           elem="Link"
@@ -107,45 +111,49 @@ class FooterMain extends PureComponent {
             this.linksMap
                 .filter((column) => column.title === 'Download The App')
                 .map((column) => (
-                    <div block="FooterMain" elem="Column">
-                    <h4>{ column.title }</h4>
-                    <div block="FooterMain" elem="Nav">
-                    { column.items.map((items) => (
-                        <>
-                        <div block="FooterMain" elem="WrapperFirst">
-                            <Link
-                              to={ items.app_onclick }
-                            >
-                                <img src={ items.app_store } alt="app store download" />
-                            </Link>
-                            &nbsp;&nbsp;
-                            <Link
-                              to={ items.app_onclick }
-                            >
-                                <img src={ items.google_play } alt="google play download" />
-                            </Link>
-                        </div>
-                            <h4>{ items.header }</h4>
-                            <div block="FooterMain" elem="WrapperSecond">
-                                <div block="FooterMain" elem="SocialIcon">
+                    <div block="FooterMain" elem="Column" key={ column.title }>
+                        <h4>{ column.title }</h4>
+                        <div block="FooterMain" elem="Nav">
+                            { column.items.map((items) => (
+                                <Fragment key="last_main_footer_column">
+                                <div block="FooterMain" elem="WrapperFirst">
                                     <Link
-                                      to={ items.facebook_href }
+                                      to={ items.app_onclick }
+                                      key={ items.id_app }
                                     >
-                                    <i />
+                                        <img src={ items.app_store } alt="app store download" />
                                     </Link>
-                                </div>
-                                <div block="FooterMain" elem="SocialIcon">
                                     &nbsp;
                                     <Link
-                                      to={ items.insta_href }
+                                      to={ items.app_onclick }
+                                      key={ items.id_google }
                                     >
-                                    <i />
+                                        <img src={ items.google_play } alt="google play download" />
                                     </Link>
                                 </div>
-                            </div>
-                        </>
-                    )) }
-                    </div>
+                                <h4>{ items.header }</h4>
+                                <div block="FooterMain" elem="WrapperSecond">
+                                    <div block="FooterMain" elem="SocialIcon">
+                                        <Link
+                                          to={ items.facebook_href }
+                                          key={ items.id_facebook }
+                                        >
+                                            <img src={ facebook } alt="facebook icon" />
+                                        </Link>
+                                    </div>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <div block="FooterMain" elem="SocialIcon">
+                                        <Link
+                                          to={ items.insta_href }
+                                          key={ items.id_insta }
+                                        >
+                                            <img src={ instagram } alt="instagram icon" />
+                                        </Link>
+                                    </div>
+                                </div>
+                                </Fragment>
+                            )) }
+                        </div>
                     </div>
                 ))
         );
@@ -155,9 +163,9 @@ class FooterMain extends PureComponent {
         return (
             <div block="FooterMain">
                 <div block="FooterMain" elem="Layout">
-                { this.renderFirstTwoCloumns() }
-                    <FooterCustomerSupport />
-                { this.renderAppColumn() }
+                    { this.renderFirstTwoCloumns() }
+                        <FooterCustomerSupport />
+                    { this.renderAppColumn() }
                 </div>
             </div>
         );
