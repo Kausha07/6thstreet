@@ -22,7 +22,14 @@ class CountrySwitcher extends PureComponent {
         super(props);
 
         this.state = {
-            content: ''
+            content: '',
+            isArabic: false
+        };
+    }
+
+    static getDerivedStateFromProps() {
+        return {
+            isArabic: JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data.language === 'ar'
         };
     }
 
@@ -82,6 +89,7 @@ class CountrySwitcher extends PureComponent {
     }
 
     renderStoreButton() {
+        const { isArabic } = this.state;
         const country = this.getCurrentCountry();
         const id = country.id;
 
@@ -89,6 +97,7 @@ class CountrySwitcher extends PureComponent {
             <button
               block="CountrySwitcher"
               elem="CountryBtn"
+              mods={ { isArabic } }
                 /* eslint-disable-next-line */
               onClick={ this.openPopup  }
             >
@@ -104,7 +113,6 @@ class CountrySwitcher extends PureComponent {
         const { content } = this.state;
         return (
             <div block="CountrySwitcher">
-                { this.renderCountrySelect() }
                 { this.renderStoreButton() }
                 { content }
             </div>

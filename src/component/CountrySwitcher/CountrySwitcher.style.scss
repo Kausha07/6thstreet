@@ -11,7 +11,8 @@
         height: auto;
         letter-spacing: 1px;
         text-transform: capitalize;
-        margin-left: -10px;
+        margin-left: -20px;
+        margin-right: 10px;
         
         &::after {
             content: "";
@@ -25,6 +26,15 @@
             top: 5px;
             right: -1px;
             transform: rotate(-90deg);
+        }
+
+        &_isArabic {
+            margin-left: 20px;
+            margin-right: -20px;
+            &::after { 
+                right: 90px;
+                transform: rotate(90deg);
+            }
         }
     }
 

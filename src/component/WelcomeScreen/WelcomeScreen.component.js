@@ -18,6 +18,12 @@ class WelcomeScreen extends PureComponent {
         language: PropTypes.string.isRequired
     };
 
+    isArabic() {
+        return {
+            isArabic: JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data.language === 'ar'
+        };
+    }
+
     renderCloseBtn() {
         const {
             closePopup
@@ -119,7 +125,7 @@ class WelcomeScreen extends PureComponent {
 
     render() {
         return (
-            <div block="WelcomeScreen" elem="Content">
+            <div block="WelcomeScreen" elem="Content" mods={ { isArabic: this.isArabic() } }>
                 { this.renderCloseBtn() }
                 <div block="WelcomeScreen" elem="Options">
                     <h1>Welcome</h1>
