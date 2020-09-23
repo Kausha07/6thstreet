@@ -29,11 +29,11 @@
 
     .CountrySwitcher {
 
-        .Field {
+        &-CountryBtn {
 
-            &Select::after {
-                transform: rotate(360deg);
-        }
+            &::after {
+                transform: none;
+            }
         }
     }
 }
