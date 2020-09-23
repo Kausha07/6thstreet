@@ -21,11 +21,17 @@ class ProductItem extends PureComponent {
         );
     }
 
+    renderBrand() {
+        const { product: { brand_name } } = this.props;
+
+        return <h2 block="ProductItem" elem="Brand">{ brand_name }</h2>;
+    }
+
     renderTitle() {
         const { product: { name } } = this.props;
 
         return (
-            <p>
+            <p block="ProductItem" elem="Title">
                 { name }
             </p>
         );
@@ -42,17 +48,20 @@ class ProductItem extends PureComponent {
     renderLink() {
         const {
             product,
-            product: { sku }
+            product: { url }
         } = this.props;
 
+        const { pathname } = new URL(url);
+
         const linkTo = {
-            pathname: `/pdp/${ sku }`,
+            pathname,
             state: { product }
         };
 
         return (
             <Link to={ linkTo }>
                 { this.renderImage() }
+                { this.renderBrand() }
                 { this.renderTitle() }
                 { this.renderPrice() }
             </Link>

@@ -3,6 +3,7 @@ import { PureComponent } from 'react';
 
 import Image from 'Component/Image';
 import Link from 'Component/Link';
+import Slider from 'Component/Slider';
 
 import './DynamicContentCircleItemSlider.style';
 
@@ -41,15 +42,26 @@ class DynamicContentCircleItemSlider extends PureComponent {
                 <Image
                   src={ image_url }
                   alt={ label }
+                  mix={ { block: 'DynamicContentCircleItemSlider', elem: 'Image' } }
                 />
-                <p>{ label }</p>
+                <button
+                  block="DynamicContentCircleItemSlider"
+                  elem="Label"
+                  mix={ { block: 'button primary' } }
+                >
+                    { label }
+                </button>
             </Link>
         );
     };
 
     renderCircles() {
         const { items } = this.props;
-        return items.map(this.renderCircle);
+        return (
+            <Slider showCrumbs>
+                { items.map(this.renderCircle) }
+            </Slider>
+        );
     }
 
     render() {

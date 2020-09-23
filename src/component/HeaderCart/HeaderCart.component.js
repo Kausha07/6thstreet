@@ -1,6 +1,8 @@
 // import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import CartOverlay from 'SourceComponent/CartOverlay';
+
 import './HeaderCart.style';
 
 class HeaderCart extends PureComponent {
@@ -8,9 +10,29 @@ class HeaderCart extends PureComponent {
         // TODO: implement prop-types
     };
 
+    state = {
+        cartPopUp: ''
+    };
+
+    renderCartPopUp = () => {
+        const popUpElement = (
+            <div block="HeaderCart" elem="PupUp">
+                <CartOverlay />
+            </div>
+        );
+
+        this.setState({ cartPopUp: popUpElement });
+    }
+
     render() {
+        const { cartPopUp } = this.state;
+
         return (
-            <div block="HeaderCart" />
+            <div block="HeaderCart">
+                <button onClick={ this.renderCartPopUp } block="HeaderCart" elem="Button">
+                    { cartPopUp }
+                </button>
+            </div>
         );
     }
 }

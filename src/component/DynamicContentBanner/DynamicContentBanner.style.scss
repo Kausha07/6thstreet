@@ -1,3 +1,23 @@
+:root { 
+    --white: #ffffff;
+    --burning-orange: #ff742f;
+}
+
 .DynamicContentBanner {
-    
+    margin: 20px 31px;
+    background: var(--burning-orange);
+
+    h2 {
+        color: var(--white);
+        text-align: center;
+        text-transform: uppercase;
+        font-weight: 400;
+        font-size: 16px;
+        padding: 10px 20px;
+        margin: 0 0 20px 0;
+
+        @include after-mobile {
+            font-size: 24px;
+        }
+    }
 }

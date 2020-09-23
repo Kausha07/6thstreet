@@ -1,29 +1,19 @@
 import { PureComponent } from 'react';
 
-import CountrySwitcher from 'Component/CountrySwitcher';
-import LanguageSwitcher from 'Component/LanguageSwitcher';
+import HeaderLogo from 'Component/HeaderLogo';
+import WelcomeScreen from 'Component/WelcomeScreen';
 
 import './LocaleWizard.style';
 
 class LocaleWizard extends PureComponent {
-    renderCountrySelect() {
-        return (
-            <CountrySwitcher />
-        );
-    }
-
-    renderLanguageSelect() {
-        return (
-            <LanguageSwitcher />
-        );
-    }
-
     render() {
         return (
-            <>
-                { this.renderCountrySelect() }
-                { this.renderLanguageSelect() }
-            </>
+            <div block="LocaleWizard">
+                <div block="LocaleWizard" elem="Logo">
+                    <HeaderLogo />
+                </div>
+                <WelcomeScreen />
+            </div>
         );
     }
 }

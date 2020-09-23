@@ -1,0 +1,89 @@
+.WelcomeScreen {
+
+    &-Content {
+        min-width: 385px;
+        font-family: "Avenir Next Regular";
+
+        @include mobile() {
+            min-width: 300px;
+        }
+    }
+
+    &-ButtonsContainer {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+
+    &-List {
+        li {
+            list-style: none;
+            padding: 0;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgb(230, 230, 230);
+            cursor: pointer;
+
+            &::before {
+                content: '';
+            }
+
+            &:last-child {
+                border-bottom: none;
+            }
+        }
+    }
+
+    &-Options {
+        padding: 30px 60px 10px;
+
+        @include mobile() {
+            padding: 30px 20px 10px;
+        }
+    }
+
+    &-Close {
+        float: right;
+        width: 30px;
+        height: 30px;
+        border-radius: 100%;
+        background: black;
+        color: white;
+        margin: 10px;
+        cursor: pointer;
+        z-index: 10;
+        padding: 5px;
+        display: flex;
+        align-items: center;
+
+        @include mobile() {
+            position: absolute;
+            top: -400px;
+            right: 10px;
+        }
+
+        svg {
+            fill: $white;
+            margin: 0 auto;
+        }
+    }
+
+    &-LanguageBtn {
+        width: 130px;
+    }
+
+    &-Check {
+        float: right;
+    }
+
+    &-CountryBtn {
+        width: 100%;
+        text-align: start;
+        padding: 0;
+        margin-top: 10px;
+        font-weight: 400;
+
+        &_isCurrent {
+            font-weight: 600;
+        }
+    }
+}

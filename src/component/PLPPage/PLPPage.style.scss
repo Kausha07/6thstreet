@@ -1,0 +1,68 @@
+.PLPPage {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin: 0 20px;
+
+    @include mobile() {
+        grid-template-columns: repeat(1, 1fr);
+    }
+
+    .ProductItem {
+        padding-left: 0;
+        margin: 20px 10px;
+        font-family: "Avenir Next Regular";
+        text-align: center;
+        position: relative;
+        min-width: 0;
+    
+        &::before {
+            display: none;
+        }
+    
+        .Image {
+            &-Image {
+                object-fit: cover;
+            }
+        }
+    
+        p {
+            font-size: 14px;
+        }
+    
+        &-Brand {
+            margin: 5px 0;
+        }
+        &-Title {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 0;
+        }
+    }
+
+    .Price {
+        display: flex;
+        justify-content: center;
+        position: relative;
+        font-weight: 600;
+        font-size: 16px;
+    
+        &-Special,
+        &-Discount {
+            display: none;
+            
+            &_discount {
+                display: inline;
+                color: $default-primary-dark-color;
+            }
+        }
+
+        &-Base {
+            &_discount {
+                font-size: 11px;
+                margin-right: 20px;
+            }
+        }
+    }
+
+}

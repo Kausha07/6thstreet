@@ -1,5 +1,55 @@
 .CountrySwitcher {
-    @media (max-width: 1024px) {
+    align-items: center;
+    display: flex;
+    font-size: 11px;
+
+    &-CountryBtn {
+        display: flex;
+        margin-top: 0;
+        font-family: 'Avenir Next Ultra Light';
+        font-size: 12px;
+        height: auto;
+        letter-spacing: 1px;
+        text-transform: capitalize;
+        margin-left: -10px;
+        
+        &::after {
+            content: "";
+            position: absolute;
+            width: 0px;
+            height: 0px;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 5px solid black;
+            border-width: 5px 5px 0 5px;
+            top: 5px;
+            right: -1px;
+            transform: rotate(-90deg);
+        }
+    }
+
+    .Field {
+        margin-top: 0;
         display: none;
+
+        select {
+            border: none;
+            min-height: 0;
+            padding: 0;
+        }
+
+        &Select::after {
+            content: "";
+            position: absolute;
+            width: 0px;
+            height: 0px;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 5px solid black;
+            border-width: 5px 5px 0 5px;
+            top: 0px;
+            right: -1px;
+            transform: rotate(-90deg);
+        }
     }
 }

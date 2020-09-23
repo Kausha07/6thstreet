@@ -1,0 +1,29 @@
+.StoreSwitcherPopup {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(70, 70, 70, 0.6);
+    z-index: 8;
+
+    &-Container {
+        display: flex;
+        position: fixed;
+        top: 150px;
+        right: 0;
+        left: 0;
+        margin-right: auto;
+        margin-left: auto;
+        z-index: 9;
+        background: $white;
+        min-height: 10em;
+        width: 770px;
+    }
+
+    &-Image {
+        width: 385px;
+        height: auto;
+        object-fit: cover;
+    }
+}

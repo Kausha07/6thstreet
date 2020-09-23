@@ -24,14 +24,19 @@ class HeaderGenders extends PureComponent {
         const { key } = gender;
 
         return (
-            <GenderButton
+            <div
+              block="GenderButton"
+              elem="Container"
               key={ key }
-              gender={ gender }
-              mix={ {
-                  block: 'HeaderGenders',
-                  elem: 'Button'
-              } }
-            />
+            >
+                <GenderButton
+                  gender={ gender }
+                  mix={ {
+                      block: 'HeaderGenders',
+                      elem: 'Button'
+                  } }
+                />
+            </div>
         );
     };
 
