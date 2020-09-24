@@ -48,13 +48,13 @@ class WelcomeScreen extends PureComponent {
 
     renderLangBtn(lang) {
         const {
-            onLanguageSelect,
-            language
+            onLanguageSelect
         } = this.props;
 
         const { id, label } = lang;
 
-        const btnType = id === language ? 'primary' : 'secondary';
+        const btnType = id === 'en' ? 'primary' : 'secondary';
+
         const btnBlock = `button ${ btnType}`;
 
         return (

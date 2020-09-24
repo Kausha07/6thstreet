@@ -1,14 +1,57 @@
+:root {
+    --milk-white: #e8e8e8;
+}
+
 .LocaleWizard {
-    margin: 10% auto;
-    max-width: 385px;
+    background: url('./icons/trans-bg.png') top center no-repeat;
+
+    @include mobile() {
+        background-size: 500%;
+        min-height: 90vh;
+        padding: 10px 10px 30px;
+    }
+
+    &-ContentWrapper {
+        margin: 10% auto 0;
+        max-width: 385px;
+        padding-bottom: 10%;
+
+        @include mobile {
+            background: $white;
+            border: solid 2px var(--milk-white);
+        }
+    }
 
     &-Logo {
+        padding-top: 50px;
         text-align: center;
     }
 
     .WelcomeScreen {
         &-Close {
             display: none;
+        }
+
+        &-Options {
+            margin-top: 20px;
+
+            @include mobile() {
+                margin: 0 auto;
+                padding: 30px 20px;
+                text-align: center;
+            }
+        }
+
+        &-ButtonsContainer {
+            @include mobile() {
+                button {
+                    width: 100%;
+
+                    &:first-of-type {
+                        margin-right: 16px;
+                    }
+                }
+            }
         }
     }
 }
