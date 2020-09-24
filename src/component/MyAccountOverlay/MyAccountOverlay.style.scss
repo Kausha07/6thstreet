@@ -469,8 +469,6 @@
         display: flex;
         margin-top: 10px;
         
-
-        .Field [type='checkbox'],
         .Field [type='radio']{
 
             +label {
@@ -483,16 +481,7 @@
                             --checkmark-color: black;
                     }
                 }
-            }
-            &:disabled + label {
-                color: #b8b8b8;
-                cursor: auto;
-            }
 
-        }
-
-        .Field [type='radio'] {
-            + label {
                 border-radius: 50%;
     
                 &::after {
@@ -508,15 +497,11 @@
                     will-change: background-color, box-shadow;
                 }
             }
-
-            &:checked {
-                
-                #text { 
-                    --radio-label-color: red !important;
-                }
-                
+            &:disabled + label {
+                color: #b8b8b8;
+                cursor: auto;
             }
-    
+
             &:focus {
                 
                 + label {
@@ -524,12 +509,18 @@
                         --checkmark-color: black;
                     }
                 }
-
-                &parent{
-                    --radio-label-color: red !important;
-                }
             }
 
+        }
+
+        .Field [type='checkbox'] {
+            &:checked + label {
+                --primary-base-color: black;
+            }
+
+            &:hover + label {
+                --primary-base-color: black;
+            }
         }
 
         label {

@@ -99,7 +99,6 @@ export class MyAccountOverlayContainer extends PureComponent {
         super(props);
 
         this.state = this.redirectOrGetState(props);
-        console.log(this.state);
     }
 
     static getDerivedStateFromProps(props, state) {
@@ -109,8 +108,6 @@ export class MyAccountOverlayContainer extends PureComponent {
             showNotification,
             isPopup
         } = props;
-
-        console.log(isPopup);
 
         const {
             isPasswordForgotSend: currentIsPasswordForgotSend,
@@ -150,12 +147,7 @@ export class MyAccountOverlayContainer extends PureComponent {
             stateToBeUpdated.state = STATE_SIGN_IN;
         }
 
-        console.log(state);
         return Object.keys(stateToBeUpdated).length ? stateToBeUpdated : null;
-    }
-
-    componentDidMount() {
-        console.log(this.state);
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -362,8 +354,7 @@ export class MyAccountOverlayContainer extends PureComponent {
         const { setHeaderState } = this.props;
         e.preventDefault();
         e.nativeEvent.stopImmediatePropagation();
-        this.setState({ test: STATE_CREATE_ACCOUNT });
-        this.setState({ state: STATE_CREATE_ACCOUNT }, () => console.log(this.state));
+        this.setState({ state: STATE_CREATE_ACCOUNT });
 
         setHeaderState({
             name: CUSTOMER_SUB_ACCOUNT,

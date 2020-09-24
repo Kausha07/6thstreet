@@ -282,8 +282,7 @@ export class MyAccountOverlay extends PureComponent {
                         <div block="MyAccountOverlay" elem="Radio">
                             <Field
                               type="checkbox"
-                              id="selectMale"
-                              name="gender"
+                              id="privacyPolicy"
                             />
                             <label htmlFor="PrivacyPolicy">
                                 { __('Yes, I\'d like to receive news and promotions from 6TH STREET. ') }
