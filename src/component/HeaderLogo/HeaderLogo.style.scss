@@ -1,15 +1,14 @@
 .HeaderLogo {
-    height: 40px;
-  @include before-desktop {
-    .Image {
-      height: 22px;
-      width: 100px;
-      padding: 0;
-    }
-  }
-    .Image {
+  height: 40px;
+
+  .Image {
+    height: 22px;
+    width: 100px;
+
+    @include desktop {
       height: 40px;
       width: 190px;
       padding: 0;
     }
+  }
 }
