@@ -1,7 +1,13 @@
 .Header {
   height: 50px;
 
+<<<<<<< HEAD
   @include desktop {
     height: 170px;
+=======
+@include before-desktop {
+  .Header {
+    height: 50px;
+>>>>>>> SIXTH-139
   }
 }
