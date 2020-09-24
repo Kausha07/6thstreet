@@ -4,28 +4,47 @@
 }
 
 .FooterMiddle {
-    max-width: auto;
     display: flex;
     justify-content: space-between;
     margin-top: 3px;
-    padding: 25px 50px 25px 60px;
+    padding: 25px 50px 23px 60px;
     background: var(--footer-background-color);
 
     @include before-desktop {
         display: none;
     }
 
-    .InlineCustomerSupport{
+    &-CustomerSupport {
+        width: 33%;
 
-        &-Dropdown {
-            top: auto;
-            bottom: 100%
-        }
-    
-        &-DisplayQuickAccess {
-            display: none;
+        .InlineCustomerSupport{
+            &-Dropdown {
+                top: auto;
+                bottom: 100%
+            }
+        
+            &-DisplayQuickAccess {
+                display: none;
+            }
         }
     }
+
+    &-FooterAccount{
+        padding-left: 40px;
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0;
+        line-height: 19px;
+
+        .HeaderAccount {
+            padding-top: 5px;
+            margin: 0;
+        }
+    }
+
+    &-StoreSwitcher {
+        width: 33%;
+        display: flex;
 
     .CountrySwitcher {
 
@@ -35,5 +54,16 @@
                 transform: none;
             }
         }
+    }
+
+    .CountryMiniFlag {
+        &-Container {
+    
+            span {
+                border-left: 7px solid #f6f6f6;
+                border-right: 7px solid #f6f6f6;
+            }
+        }
+    }
     }
 }
