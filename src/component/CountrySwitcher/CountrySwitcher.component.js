@@ -22,14 +22,7 @@ class CountrySwitcher extends PureComponent {
         super(props);
 
         this.state = {
-            content: '',
-            isArabic: false
-        };
-    }
-
-    static getDerivedStateFromProps() {
-        return {
-            isArabic: JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data.language === 'ar'
+            content: ''
         };
     }
 
