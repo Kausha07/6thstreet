@@ -1,4 +1,5 @@
 // import PropTypes from 'prop-types';
+import ContentWrapper from '@scandipwa/scandipwa/src/component/ContentWrapper/ContentWrapper.component';
 import { PureComponent } from 'react';
 
 import PLPDetails from 'Component/PLPDetails';
@@ -33,9 +34,13 @@ class PLP extends PureComponent {
     render() {
         return (
             <main block="PLP">
+                <ContentWrapper
+                  label={ __('Product List Page') }
+                >
                 { this.renderPLPDetails() }
                 { this.renderPLPFilters() }
                 { this.renderPLPPages() }
+                </ContentWrapper>
             </main>
         );
     }

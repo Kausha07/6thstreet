@@ -1,3 +1,59 @@
+:root {
+    --color-medium-grey: #b5b5b5;
+    --color-light-grey: #D3D3D3;
+    --color-gainsboro: #DCDCDC;
+}
+
 .PLPFilters {
-    
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 100px;
+
+    &-Filter {
+        @include tablet() {
+            display: none;
+        }
+
+        @include desktop() {
+            display: none;
+        }
+    }
+
+    .Field {
+        @include mobile() {
+            display: none;
+        }
+        .FieldSelect {
+            height: 50px;
+            margin-right: 10px;
+            width: 205px;
+
+            &-Options {
+                font-family: 'Avenir Next Regular';
+                font-size: 13px;
+
+                &::-webkit-scrollbar {
+                    width: 7px; /* width of the entire scrollbar */
+                }
+
+                &::-webkit-scrollbar-track {
+                    background: var(--color-gainsboro); /* color of the tracking area */
+                }
+
+                &::-webkit-scrollbar-thumb {
+                    background-color: var(--color-medium-grey); /* color of the scroll thumb */
+                    border-radius: 7px; /* roundness of the scroll thumb */
+                }
+            }
+
+            &::after {
+                border-color: var(--color-medium-grey);
+            }
+
+            &-Select {
+                font-family: 'Avenir Next Regular';
+                font-size: 13px;
+            }
+        }
+    }
 }
