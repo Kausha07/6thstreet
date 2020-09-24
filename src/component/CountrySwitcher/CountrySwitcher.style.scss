@@ -27,15 +27,6 @@
             right: -1px;
             transform: rotate(-90deg);
         }
-
-        // &_isArabic {
-        //     margin-left: 20px;
-        //     margin-right: -20px;
-        //     &::after { 
-        //         right: 90px;
-        //         transform: rotate(90deg);
-        //     }
-        // }
     }
 
     .Field {
@@ -51,9 +42,11 @@
             &-CountryBtn {
                 margin-left: 20px;
                 margin-right: -20px;
+
                 &::after { 
                     display: none; 
                 }
+
                 &::before {
                     content: "";
                     position: absolute;
