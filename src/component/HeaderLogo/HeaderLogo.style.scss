@@ -3,9 +3,14 @@
     height: 40px;
     text-align: center;
 
-    .Image {
+  .Image {
+    height: 22px;
+    width: 100px;
+
+    @include desktop {
       height: 40px;
       width: 190px;
       padding: 0;
     }
+  }
 }
