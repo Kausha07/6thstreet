@@ -1,50 +1,46 @@
 .HeaderAccount {
+    width: auto;
+
     &-Button {
-        position: absolute;
-        width: 120px;
         height: 30px;
         left: -30px;
-        top: -5px;
-        z-index: 4;
+        z-index: 10;
 
-        &_isOpen {
-            pointer-events: all;
-        }
-    }
-
-    &:not(&_isBottomBar) {
-        margin-left: 40px;
-        margin-right: 40px;
-
-        label {
-            position: relative;
-            height: 27px;
-            padding: 0;
-
-            &::before{
-                position: absolute;
-                left: -30px;
-                top: -6px;
-                content: "";
-                background: url(./icons/account.svg) no-repeat;
-                background-size: 27px;
-                width: 30px;
+        &:not(&_isBottomBar) {
+            margin-left: 60px;
+    
+            label {
+                text-transform: none;
+                position: relative;
                 height: 27px;
-                display: inline-block;
-                font-size: 0;
-            }
-
-            span {
-                display: none;
-                font-size: 14px;
-                font-weight: 600;
-                letter-spacing: 0;
-                line-height: 19px;
-                height: 27px;
-                color: var(--black);
-
-                @include after-mobile {
-                    display: block;
+                padding: 0;
+                cursor: pointer;
+    
+                &::before{
+                    position: absolute;
+                    left: -30px;
+                    top: -6px;
+                    content: "";
+                    background: url(./icons/account.svg) no-repeat;
+                    background-size: 27px;
+                    width: 30px;
+                    height: 27px;
+                    display: inline-block;
+                    font-size: 0;
+                }
+    
+                span {
+                    display: none;
+                    font-size: 14px;
+                    font-weight: 600;
+                    letter-spacing: 0;
+                    line-height: 19px;
+                    height: 27px;
+                    color: var(--black);
+    
+                    @include after-mobile {
+                        display: block;
+                    }
                 }
             }
         }
@@ -99,7 +95,8 @@
         left: 0;
         background: rgba(70, 70, 70, 0.6);
         cursor: default;
-        pointer-events: none;
+        pointer-events: all;
+        z-index: 10;
 
         &_isHidden {
             display: none;

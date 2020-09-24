@@ -90,6 +90,7 @@
         text-transform: none;
         font-size: 18px;
         font-weight: 600;
+        text-align: center;
 
         @include before-desktop {
             display: none;
@@ -548,7 +549,9 @@
     &-LockImg {
         width: auto;
         height: 60px;
+        justify-content: center;
+        text-align: center;
         align-items: center;
-        margin-bottom: 40px;
+        margin: 0 42% 40px;
     }
 }
