@@ -8,8 +8,10 @@ import {
 import { showNotification } from 'Store/Notification/Notification.action';
 import {
     addProductToCart,
+    applyCouponCode,
     createCart,
     getCartTotals,
+    removeCouponCode,
     removeProductFromCart,
     updateProductInCart
 } from 'Util/API/endpoint/Cart/Cart.enpoint';
@@ -91,6 +93,38 @@ export class MobileCartDispatcher {
         try {
             const { data } = await updateProductInCart({ cartId, productId, qty });
             dispatch(updateCartItem(data));
+        } catch (e) {
+            Logger.log(e);
+        }
+
+        await this.getCartTotals(dispatch, cartId);
+    }
+
+    async applyCouponCode(dispatch, couponCode) {
+        const { MobileCart: { cartId } } = getStore().getState();
+
+        try {
+            const resp = await applyCouponCode({ cartId, couponCode });
+
+            // TODO Validate response and update UI,
+            //  by adding option to remove coupon code or show error
+            console.log('*** RESP', resp);
+        } catch (e) {
+            Logger.log(e);
+        }
+
+        await this.getCartTotals(dispatch, cartId);
+    }
+
+    async removeCouponCode(dispatch, couponCode) {
+        const { MobileCart: { cartId } } = getStore().getState();
+
+        try {
+            const resp = await removeCouponCode({ cartId, couponCode });
+
+            // TODO Validate response and update UI,
+            //  by removing option to remove coupon code or show error
+            console.log('*** RESP', resp);
         } catch (e) {
             Logger.log(e);
         }
