@@ -23,15 +23,7 @@ class LoginBlock extends PureComponent {
 
     static getDerivedStateFromProps(nextProps) {
         const { language } = nextProps;
-        if (language === 'en') {
-            return ({
-                isArabic: false
-            });
-        }
-
-        return ({
-            isArabic: true
-        });
+        return ({ isArabic: language !== 'en' });
     }
 
     handleDismiss = () => {
