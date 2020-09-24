@@ -59,7 +59,8 @@ export class MyAccountOverlay extends PureComponent {
         handleSignIn: PropTypes.func.isRequired,
         handleCreateAccount: PropTypes.func.isRequired,
         isCheckout: PropTypes.bool,
-        closePopup: PropTypes.func.isRequired
+        closePopup: PropTypes.func.isRequired,
+        isHidden: PropTypes.bool.isRequired
     };
 
     static defaultProps = {
@@ -68,7 +69,7 @@ export class MyAccountOverlay extends PureComponent {
 
     state = {
         isPopup: false
-    }
+    };
 
     renderMap = {
         [STATE_SIGN_IN]: {
@@ -356,22 +357,25 @@ export class MyAccountOverlay extends PureComponent {
         const {
             isLoading,
             onVisible,
-            isCheckout
+            isCheckout,
+            isHidden
         } = this.props;
         const {
             isPopup
         } = this.state;
 
         return (
-            <Overlay
-              id={ CUSTOMER_ACCOUNT_OVERLAY_KEY }
-              mix={ { block: 'MyAccountOverlay', mods: { isPopup } } }
-              onVisible={ onVisible }
-              isStatic={ !isCheckout && !!isMobile.any() }
-            >
-                <Loader isLoading={ isLoading } />
-                { this.renderMyAccount() }
-            </Overlay>
+            <div block="HeaderAccount" elem="PupUp" mods={ { isHidden } }>
+                <Overlay
+                  id={ CUSTOMER_ACCOUNT_OVERLAY_KEY }
+                  mix={ { block: 'MyAccountOverlay', mods: { isPopup } } }
+                  onVisible={ onVisible }
+                  isStatic={ !isCheckout && !!isMobile.any() }
+                >
+                    <Loader isLoading={ isLoading } />
+                    { this.renderMyAccount() }
+                </Overlay>
+            </div>
         );
     }
 }

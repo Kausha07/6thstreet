@@ -45,8 +45,10 @@ export class Router extends SourceRouter {
     };
 
     static getDerivedStateFromProps() {
+        const appStateCacheKey = JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY'));
+
         return {
-            isArabic: JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data.language === 'ar'
+            isArabic: appStateCacheKey && appStateCacheKey.data.language === 'ar'
         };
     }
 

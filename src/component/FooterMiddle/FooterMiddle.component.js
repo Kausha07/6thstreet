@@ -25,24 +25,30 @@ class FooterMiddle extends PureComponent {
 
     renderCustomerSupport() {
         return (
+            <div block="FooterMiddle" elem="CustomerSupport">
                 <InlineCustomerSupport key="support" />
+            </div>
         );
     }
 
     renderAccount() {
         return (
+        <div block="FooterMiddle" elem="FooterAccount">
             <HeaderAccount
               key="account"
             />
+        </div>
         );
     }
 
     renderStoreSwitcher() {
         return (
+            <div block="FooterMiddle" elem="StoreSwitcher">
             <Fragment key="store-switcher">
                 <LanguageSwitcher />
                 <CountrySwitcher />
             </Fragment>
+            </div>
         );
     }
 

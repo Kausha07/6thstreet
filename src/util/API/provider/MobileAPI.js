@@ -20,7 +20,7 @@ class MobileAPI {
         const url = `/api/${relativeURL}${localePrefix}locale=${locale}`
             .replace(/([^:]\/)\/+/g, '$1'); // this replaces // to /
 
-        const onPost = (value) => (method === 'post' ? value : {});
+        const payload = (value) => (['post', 'put', 'delete'].includes(method) ? value : {});
         const tokenHeader = this.token ? { 'X-API-Token': this.token } : {};
 
         const options = {
@@ -29,7 +29,7 @@ class MobileAPI {
                 'Content-Type': 'application/json',
                 ...tokenHeader
             },
-            ...onPost({ body: JSON.stringify(body) })
+            ...payload({ body: JSON.stringify(body) })
         };
 
         return doFetch(url, options);
@@ -41,6 +41,14 @@ class MobileAPI {
 
     get(url) {
         return this._fetch('get', url);
+    }
+
+    delete(url) {
+        return this._fetch('delete', url);
+    }
+
+    put(url, data) {
+        return this._fetch('put', url, data);
     }
 }
 

@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
@@ -14,12 +15,18 @@ class HeaderAccount extends PureComponent {
     state = {
         accountPopUp: '',
         isPopup: true,
-        isHidden: true
+        isHidden: false
     };
+
+    componentDidMount() {
+        console.log('Mount');
+    }
 
     closePopup = () => {
         console.log(this.state);
-        this.setState({ isHidden: true }, () => this.renderAccountPopUp());
+        this.setState({ isHidden: true },
+            () => this.renderAccountPopUp(),
+            () => this.setState({ isHidden: false }));
     };
 
     openPopup = () => {
@@ -28,13 +35,10 @@ class HeaderAccount extends PureComponent {
     };
 
     renderAccountPopUp = () => {
-        const { isPopup } = this.state;
+        const { isPopup, isHidden } = this.state;
         console.log(this.state);
-
         const popUpElement = (
-            <div>
-                <MyAccountOverlay isPopup={ isPopup } closePopup={ this.closePopup } />
-            </div>
+                <MyAccountOverlay isPopup={ isPopup } closePopup={ this.closePopup } isHidden={ isHidden } />
         );
 
         this.setState({ accountPopUp: popUpElement });
@@ -43,12 +47,13 @@ class HeaderAccount extends PureComponent {
     render() {
         const { isBottomBar, isAccount } = this.props;
         const { accountPopUp, isHidden } = this.state;
+        const isOpen = !isHidden;
 
         return (
             <div block="HeaderAccount" mods={ { isBottomBar } } mix={ { block: 'HeaderAccount', mods: { isAccount } } }>
                 { !isBottomBar ? (
-                    <div block="HeaderAccount" elem="PupUp" mods={ { isHidden } }>
-                        <button onClick={ this.renderAccountPopUp } block="HeaderAccount" elem="Button">
+                    <div>
+                        <button onClick={ this.renderAccountPopUp } block="HeaderAccount" elem="Button" mods={ { isOpen } }>
                             { accountPopUp }
                         </button>
                         <label htmlFor="Account">{ __('Login/Register') }</label>
