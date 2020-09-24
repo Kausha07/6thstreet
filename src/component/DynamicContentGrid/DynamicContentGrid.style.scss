@@ -44,6 +44,11 @@
 .CategoryItem {
     &-Content {
         text-align: center;
+        a {
+            .Image {
+                height: 35rem;
+            }
+        }
     }
 
     &-Text {

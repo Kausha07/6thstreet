@@ -17,6 +17,10 @@ class HeaderGenders extends PureComponent {
         {
             label: __('Kids'),
             key: 'kids'
+        },
+        {
+            label: __('Ramadan'),
+            key: 'ramadan'
         }
     ];
 
@@ -46,7 +50,9 @@ class HeaderGenders extends PureComponent {
 
     render() {
         return (
-            <div block="HeaderGenders">
+            <div
+              block="HeaderGenders"
+            >
                 { this.renderGenders() }
             </div>
         );
