@@ -2,11 +2,11 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { changeNavigationState, goToPreviousNavigationState } from 'Component/MyAccountOverlay/node_modules/Store/Navigation/Navigation.action';
-import { TOP_NAVIGATION_TYPE } from 'Component/MyAccountOverlay/node_modules/Store/Navigation/Navigation.reducer';
-import { hideActiveOverlay, toggleOverlayByKey } from 'Component/MyAccountOverlay/node_modules/Store/Overlay/Overlay.action';
 import { DEFAULT_STATE_NAME } from 'Component/NavigationAbstract/NavigationAbstract.config';
 import { NavigationAbstractContainer } from 'Component/NavigationAbstract/NavigationAbstract.container';
+import { changeNavigationState, goToPreviousNavigationState } from 'Store/Navigation/Navigation.action';
+import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
+import { hideActiveOverlay, toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
 import { appendWithStoreCode } from 'Util/Url';
 
 import Header from './Header.component';

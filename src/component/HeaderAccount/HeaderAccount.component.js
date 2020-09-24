@@ -13,15 +13,27 @@ class HeaderAccount extends PureComponent {
 
     state = {
         accountPopUp: '',
-        isPopup: true
+        isPopup: true,
+        isHidden: true
+    };
+
+    closePopup = () => {
+        console.log(this.state);
+        this.setState({ isHidden: true }, () => this.renderAccountPopUp());
+    };
+
+    openPopup = () => {
+        console.log(this.state);
+        this.setState(({ isHidden }) => ({ isHidden: !isHidden }), () => this.renderAccountPopUp());
     };
 
     renderAccountPopUp = () => {
         const { isPopup } = this.state;
+        console.log(this.state);
 
         const popUpElement = (
-            <div block="HeaderCart" elem="PupUp">
-                <MyAccountOverlay isPopup={ isPopup } />
+            <div>
+                <MyAccountOverlay isPopup={ isPopup } closePopup={ this.closePopup } />
             </div>
         );
 
@@ -30,12 +42,12 @@ class HeaderAccount extends PureComponent {
 
     render() {
         const { isBottomBar, isAccount } = this.props;
-        const { accountPopUp } = this.state;
+        const { accountPopUp, isHidden } = this.state;
 
         return (
             <div block="HeaderAccount" mods={ { isBottomBar } } mix={ { block: 'HeaderAccount', mods: { isAccount } } }>
                 { !isBottomBar ? (
-                    <div>
+                    <div block="HeaderAccount" elem="PupUp" mods={ { isHidden } }>
                         <button onClick={ this.renderAccountPopUp } block="HeaderAccount" elem="Button">
                             { accountPopUp }
                         </button>

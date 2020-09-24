@@ -6,7 +6,7 @@ import FooterBottom from 'Component/FooterBottom';
 import FooterMain from 'Component/FooterMain';
 import FooterMiddle from 'Component/FooterMiddle';
 import FooterMobile from 'Component/FooterMobile';
-import isMobile from 'Component/MyAccountOverlay/node_modules/Util/Mobile';
+import isMobile from 'Util/Mobile';
 
 export class Footer extends PureComponent {
     static propTypes = {

@@ -12,14 +12,15 @@
 :root {
     --checkbox-label-color: #0a0a0a;
     --my-account-input-label-color: rgba(10, 10, 10, .59);
-    --my-account-overlay-width: 400px;
+    --my-account-overlay-width: 450px;
     --my-account-overlay-border-width: 1px;
+    --radio-label-color: black;
 }
 
 .MyAccountOverlay {
+    
     --overlay-background: var(--overlay-content-background);
 
-    justify-self: flex-end;
     grid-column: 3;
     right: 0;
     padding-top: 1rem;
@@ -29,11 +30,18 @@
     pointer-events: all;
     cursor: auto;
 
+
+    &_isPopup {
+        opacity: 0;
+        overflow: hidden;
+    }
+
     &-Image {
         height: 240px;
         width: 100%;
         vertical-align: middle;
         object-fit: cover;
+        object-position: 0 -330px;
     }
 
     label {
@@ -43,9 +51,12 @@
     }
 
     @include desktop {
-        position: absolute;
-        top: calc(var(--header-nav-height) - 10px);
-        right: -40px;
+        position: fixed;
+        top: 50px;
+        right: 0;
+        left: 0;
+        margin-right: auto;
+        margin-left: auto;
         padding: 0;
         width: var(--my-account-overlay-width);
     }
@@ -70,16 +81,25 @@
 
     input {
         width: 100%;
+        height: 40px;
+        --input-color: black;
+        caret-color: black;
     }
 
     &-Heading {
+        text-transform: none;
         font-size: 18px;
-        font-weight: bold;
-        padding: 0 1rem 1rem;
+        font-weight: 600;
 
         @include before-desktop {
             display: none;
         }
+    }
+
+    &-Subtitle {
+        font-size: 13px;
+        text-transform: none;
+        font-weight: 300;
     }
 
     &-Notification {
@@ -132,12 +152,7 @@
 
     &-Action form,
     &-Additional {
-        padding: {
-            top: 0;
-            left: 1rem;
-            right: 1rem;
-            bottom: 1rem;
-        };
+        padding: 0 60px 60px;
     }
 
     &-Action {
@@ -317,21 +332,98 @@
         }
     }
 
+    &-Close {
+        position: absolute;
+        right: 0;
+        width: 30px !important;
+        height: 30px;
+        border-radius: 100%;
+        background: black;
+        color: white;
+        margin: 10px;
+        cursor: pointer;
+        z-index: 10;
+        padding: 5px;
+        display: flex;
+        align-items: center;
+
+        svg {
+            fill: $white;
+            margin: 0 auto;
+        }
+    }
+
     &-ForgotPasswordButton {
         @include desktop {
             display: none;
         }
     }
 
+    &-ForgotPasswordSubheading {
+        font-weight: 600;
+        font-size: 14px;
+        text-transform: none;
+        padding-bottom: 10px;
+    }
+
     &-Buttons {
         display: flex;
-        margin:.5rem 0;
+        margin: 30px 90px;
+
+        .Button {
+            --button-color: gray;
+            --button-background: white;
+            --button-border: white;
+            --button-hover-color: black;
+            --button-hover-border: black;
+            --button-hover-background: white;
+            white-space:nowrap;
+            padding: 0 5%;
+            font-size: 11px;
+            height: 30px;
+            border-radius: 20px;
+            margin: 0 10px;
+
+            button {
+                padding: 0;
+
+                &:focus{
+                    background-color: var(--color-cart-light) !important;
+                }
+            }
+
+            &_isSignIn,
+            &_isCreateAccount
+             {
+                --button-border: black;
+                --button-color: black;
+            }
+        }
     }
 
     &-Button {
+        
+        .Button{
+            --button-background: #D1D3D4;
+            --button-border:  #D1D3D4;
+            --button-hover-background: black;
+            --button-hover-border: black;
+
+            &_isMargin {
+                margin-top: 40px;
+            }
+        }
+
         &_likeLink {
+            height: 20px;
+            --button-color: gray;
+            text-transform: none;
+            text-align: left;
+            vertical-align: bottom;
+            padding: 0;
+            margin-bottom: 20px;
             font-size: .95rem;
-            margin-top: 1.2rem;
+            color: var(--button-color);
         }
     }
 
@@ -373,6 +465,90 @@
     }
 
     &-Radio{
-        flex-direction: row-reverse;
+        display: flex;
+        margin-top: 10px;
+        
+
+        .Field [type='checkbox'],
+        .Field [type='radio']{
+
+            +label {
+                height: 14px;
+                width: 14px;
+                margin-right: 6px;
+                
+                &:hover {
+                    &::after {
+                            --checkmark-color: black;
+                    }
+                }
+            }
+            &:disabled + label {
+                color: #b8b8b8;
+                cursor: auto;
+            }
+
+        }
+
+        .Field [type='radio'] {
+            + label {
+                border-radius: 50%;
+    
+                &::after {
+                    left: 0;
+                    right: 0;
+                    top: 0;
+                    bottom: 0;
+                    margin: auto;
+                    width: .5rem;
+                    height: .5rem;
+                    border-radius: 50%;
+                    transition-property: background-color, box-shadow;
+                    will-change: background-color, box-shadow;
+                }
+            }
+
+            &:checked {
+                
+                #text { 
+                    --radio-label-color: red !important;
+                }
+                
+            }
+    
+            &:focus {
+                
+                + label {
+                    &::after {
+                        --checkmark-color: black;
+                    }
+                }
+
+                &parent{
+                    --radio-label-color: red !important;
+                }
+            }
+
+        }
+
+        label {
+            color: var(--radio-label-color);
+            text-transform: none;
+            margin-right: 12px;
+            font-weight: 300;
+            font-size: 13px;
+        }
+    }
+
+
+    &-Legend {
+        margin-top: 10px;
+    }
+
+    &-LockImg {
+        width: auto;
+        height: 60px;
+        align-items: center;
+        margin-bottom: 40px;
     }
 }
