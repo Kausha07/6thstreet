@@ -14,15 +14,20 @@ class DynamicContentProductSlider extends PureComponent {
     static propTypes = {
         title: PropTypes.string.isRequired,
         isLoading: PropTypes.bool.isRequired,
-        products: Products.isRequired
+        products: Products.isRequired,
+        language: PropTypes.string.isRequired
     };
 
     constructor() {
         super();
         this.state = {
-            currentPage: 0,
-            isArabic: JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data.language === 'ar'
+            currentPage: 0
         };
+    }
+
+    static getDerivedStateFromProps(nextProps) {
+        const { language } = nextProps;
+        return ({ isArabic: language !== 'en' });
     }
 
     renderProduct = (product) => {
@@ -118,8 +123,9 @@ class DynamicContentProductSlider extends PureComponent {
     }
 
     renderButtonPrev() {
-        const { isLoading } = this.props;
+        const { isLoading, language } = this.props;
         const { currentPage, isArabic } = this.state;
+        console.log(language);
 
         if (isLoading) {
             return null;
