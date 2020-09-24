@@ -123,9 +123,8 @@ class DynamicContentProductSlider extends PureComponent {
     }
 
     renderButtonPrev() {
-        const { isLoading, language } = this.props;
+        const { isLoading } = this.props;
         const { currentPage, isArabic } = this.state;
-        console.log(language);
 
         if (isLoading) {
             return null;
