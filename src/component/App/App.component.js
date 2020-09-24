@@ -5,6 +5,7 @@ import { App as SourceApp } from 'SourceComponent/App/App.component';
 import configureStore from 'Store';
 import AppConfig from 'Store/AppConfig/AppConfig.reducer';
 import AppState from 'Store/AppState/AppState.reducer';
+import MobileCart from 'Store/MobileCart/MobileCart.reducer';
 import PDP from 'Store/PDP/PDP.reducer';
 import PLP from 'Store/PLP/PLP.reducer';
 
@@ -18,6 +19,7 @@ class App extends SourceApp {
 
         store.injectReducer('AppConfig', AppConfig);
         store.injectReducer('AppState', AppState);
+        store.injectReducer('MobileCart', MobileCart);
         store.injectReducer('PLP', PLP);
         store.injectReducer('PDP', PDP);
 

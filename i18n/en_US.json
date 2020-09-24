@@ -307,6 +307,7 @@
     "Login/Register": null,
     "Tax total:": null,
     "View cart": null,
+    "There was an error creating your cart, please refresh the page in a little while": null,
     "Error loading Stripe! No API-key specified.": null,
     "Carrier method: ": null
 }
