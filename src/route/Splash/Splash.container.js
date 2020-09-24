@@ -3,6 +3,7 @@ import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import AppConfigDispatcher from 'Store/AppConfig/AppConfig.dispatcher';
+import MobileCartDispatcher from 'Store/MobileCart/MobileCart.dispatcher';
 import { Config } from 'Util/API/endpoint/Config/Config.type';
 
 import Splash from './Splash.component';
@@ -12,12 +13,14 @@ export const mapStateToProps = (state) => ({
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-    getConfig: () => AppConfigDispatcher.getAppConfig(dispatch)
+    getConfig: () => AppConfigDispatcher.getAppConfig(dispatch),
+    getCart: () => MobileCartDispatcher.getCart(dispatch)
 });
 
 export class SplashContainer extends PureComponent {
     static propTypes = {
         getConfig: PropTypes.func.isRequired,
+        getCart: PropTypes.func.isRequired,
         config: Config.isRequired
     };
 
@@ -25,11 +28,17 @@ export class SplashContainer extends PureComponent {
         super(props);
 
         this.requestConfig();
+        this.getCart();
     }
 
     requestConfig() {
         const { getConfig } = this.props;
         getConfig();
+    }
+
+    getCart() {
+        const { getCart } = this.props;
+        getCart();
     }
 
     containerProps = () => ({

@@ -17,10 +17,14 @@ class MobileAPI {
         // TODO: get proper locale
         const locale = process.env.REACT_APP_LOCATE;
         const localePrefix = relativeURL.indexOf('?') >= 0 ? '&' : '?';
-        const url = `/api/${relativeURL}${localePrefix}locale=${locale}`
+        // TODO Restore proper redirect
+        // TODO Restore proper redirect
+        // TODO Restore proper redirect
+        // const url = `/api/${relativeURL}${localePrefix}locale=${locale}`
+        const url = `https://mobileapi.dev.6thstreet.com/v2/${relativeURL}${localePrefix}locale=${locale}`
             .replace(/([^:]\/)\/+/g, '$1'); // this replaces // to /
 
-        const onPost = (value) => (method === 'post' ? value : {});
+        const payload = (value) => (['post', 'put'].includes(method) ? value : {});
         const tokenHeader = this.token ? { 'X-API-Token': this.token } : {};
 
         const options = {
@@ -29,7 +33,7 @@ class MobileAPI {
                 'Content-Type': 'application/json',
                 ...tokenHeader
             },
-            ...onPost({ body: JSON.stringify(body) })
+            ...payload({ body: JSON.stringify(body) })
         };
 
         return doFetch(url, options);
@@ -41,6 +45,14 @@ class MobileAPI {
 
     get(url) {
         return this._fetch('get', url);
+    }
+
+    delete(url) {
+        return this._fetch('delete', url);
+    }
+
+    put(url, data) {
+        return this._fetch('put', url, data);
     }
 }
 
