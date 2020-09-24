@@ -1,3 +1,27 @@
 .HeaderMainSection {
-    
+    align-items: center;
+    display: flex;
+    height: 84px;
+    max-width: 1440px;
+    margin: 0 auto;
+
+    .HeaderGenders {
+        order: 0;
+    }
+
+    .HeaderLogo {
+        order: 1;
+    }
+
+    .HeaderWishlist {
+        order: 2;
+    }
+
+    .HeaderAccount {
+        order: 3;
+    }
+
+    .HeaderCart {
+        order: 4;
+    }
 }

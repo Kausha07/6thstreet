@@ -15,6 +15,9 @@ import {
     WishlistShared,
     withStoreRegex
 } from 'SourceComponent/Router/Router.component';
+import { AFTER_ITEMS_TYPE, BEFORE_ITEMS_TYPE } from 'SourceComponent/Router/Router.config';
+
+import './Router.style';
 
 export {
     CartPage,
@@ -36,9 +39,34 @@ export class Router extends SourceRouter {
         isAppReady: PropTypes.bool.isRequired
     };
 
+    state = {
+        ...SourceRouter.state,
+        isArabic: false
+    };
+
+    static getDerivedStateFromProps() {
+        const appStateCacheKey = JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY'));
+
+        return {
+            isArabic: appStateCacheKey && appStateCacheKey.data.language === 'ar'
+        };
+    }
+
     renderLocaleWizard() {
         return (
             <LocaleWizard />
+        );
+    }
+
+    renderContent() {
+        const { isArabic } = this.state;
+
+        return (
+            <div block="PageWrapper" mods={ { isArabic } }>
+                { this.renderItemsOfType(BEFORE_ITEMS_TYPE) }
+                { this.renderMainItems() }
+                { this.renderItemsOfType(AFTER_ITEMS_TYPE) }
+            </div>
         );
     }
 
@@ -46,7 +74,7 @@ export class Router extends SourceRouter {
         const { isAppReady } = this.props;
 
         if (isAppReady) {
-            return super.renderDefaultRouterContent();
+            return this.renderContent();
         }
 
         return this.renderLocaleWizard();

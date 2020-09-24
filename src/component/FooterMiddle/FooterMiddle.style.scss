@@ -1,0 +1,39 @@
+:root{
+    --footer-background-color:#f6f6f6;
+    --foter-hyperlink-color: $black;
+}
+
+.FooterMiddle {
+    max-width: auto;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 3px;
+    padding: 25px 50px 25px 60px;
+    background: var(--footer-background-color);
+
+    @include before-desktop {
+        display: none;
+    }
+
+    .InlineCustomerSupport{
+
+        &-Dropdown {
+            top: auto;
+            bottom: 100%
+        }
+    
+        &-DisplayQuickAccess {
+            display: none;
+        }
+    }
+
+    .CountrySwitcher {
+
+        &-CountryBtn {
+
+            &::after {
+                transform: none;
+            }
+        }
+    }
+}

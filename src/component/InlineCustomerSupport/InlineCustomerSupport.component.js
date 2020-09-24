@@ -7,8 +7,6 @@ class InlineCustomerSupport extends PureComponent {
     static propTypes = {
         isEmailSupported: PropTypes.bool.isRequired,
         isPhoneSupported: PropTypes.bool.isRequired,
-        isContactEmail: PropTypes.bool.isRequired,
-        contactLabel: PropTypes.string.isRequired,
         openHoursLabel: PropTypes.string.isRequired,
         email: PropTypes.string.isRequired,
         phone: PropTypes.string.isRequired
@@ -20,10 +18,8 @@ class InlineCustomerSupport extends PureComponent {
     };
 
     static getDerivedStateFromProps() {
-        return JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data.language === 'ar' ? {
-            isArabic: true
-        } : {
-            isArabic: false
+        return {
+            isArabic: JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data.language === 'ar'
         };
     }
 
@@ -48,13 +44,14 @@ class InlineCustomerSupport extends PureComponent {
 
     renderPhone = () => {
         const { isPhoneSupported, phone } = this.props;
+        const { isArabic } = this.state;
 
         if (!isPhoneSupported) {
             return null;
         }
 
         return (
-            <a block="InlineCustomerSupport" elem="Phone" href={ `tel:${ phone }` }>
+            <a block="InlineCustomerSupport" elem="Phone" mods={ { isArabic } } href={ `tel:${ phone }` }>
                 <bdi>{ phone }</bdi>
             </a>
         );
@@ -116,31 +113,31 @@ class InlineCustomerSupport extends PureComponent {
 
     renderQuickAccess() {
         const {
-            isContactEmail,
-            contactLabel
+            isPhoneSupported,
+            openHoursLabel
         } = this.props;
+        const { isArabic } = this.state;
 
-        const contactRenderer = isContactEmail
-            ? this.renderEmail
-            : this.renderPhone;
+        const contactRenderer = isPhoneSupported
+            ? this.renderPhone
+            : this.renderEmail;
 
         return (
-            <p>
-                { contactLabel }
+            <div block="InlineCustomerSupport" elem="DisplayQuickAccess" mods={ { isArabic } }>
+                <p>
+                    { openHoursLabel }
+                    { contactRenderer() ? ' at' : '' }
+                </p>
                 { contactRenderer() }
-            </p>
+            </div>
         );
     }
 
     render() {
-        const { isArabic } = this.state;
-
         return (
             <div block="InlineCustomerSupport">
                 { this.renderDropdown() }
-                <div block="InlineCustomerSupport" elem="DisplayQuickAccess" mods={ { isArabic } }>
-                    { this.renderQuickAccess() }
-                </div>
+                { this.renderQuickAccess() }
             </div>
         );
     }
