@@ -104,6 +104,26 @@ class WelcomeScreen extends PureComponent {
         const currentLangBool = value === country && true;
         const currentLang = language === 'en' ? 'en' : 'ar';
 
+        if (currentLang === 'ar') {
+            return (
+                <li key={ id }>
+                    <button
+                      onClick={ () => onCountrySelect(value) }
+                      block="WelcomeScreen"
+                      elem="CountryBtn"
+                      mods={ {
+                          isCurrent: currentLangBool,
+                          lang: currentLang
+                      } }
+                    >
+                        <CountryMiniFlag label={ id } />
+                        { check }
+                        { item.label }
+                    </button>
+                </li>
+            );
+        }
+
         return (
             <li key={ id }>
                 <button
