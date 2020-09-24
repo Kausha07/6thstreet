@@ -25,6 +25,12 @@
     &-Logo {
         padding-top: 50px;
         text-align: center;
+
+        .Image {
+            height: 40px;
+            margin: 0 auto;
+            width: 190px;
+        }
     }
 
     .WelcomeScreen {
@@ -49,6 +55,31 @@
 
                     &:first-of-type {
                         margin-right: 16px;
+                    }
+                }
+            }
+        }
+
+        &-Content {
+            &_isArabic {
+                direction: rtl;
+
+                .WelcomeScreen {
+                    &-Check {
+                        float: left;
+                    }
+
+                    &-ButtonsContainer {
+                        @include mobile() {
+                            button {
+                                width: 100%;
+
+                                &:first-of-type {
+                                    margin-right: 0;
+                                    margin-left: 16px;
+                                }
+                            }
+                        }
                     }
                 }
             }
