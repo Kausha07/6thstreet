@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import NoMatch from 'Route/NoMatch';
 import PDP from 'Route/PDP';
 import PLP from 'Route/PLP';
 
@@ -34,14 +35,16 @@ class UrlRewrites extends PureComponent {
         );
     }
 
-    render404 = () => '404';
+    render404;
 
     render() {
+        const { props } = this;
         const {
             type,
             isLoading
         } = this.props;
 
+        this.render404 = () => <NoMatch { ...props } />;
         if (isLoading) {
             return 'loading...';
         }
