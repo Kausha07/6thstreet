@@ -1,4 +1,4 @@
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
@@ -14,7 +14,13 @@ export const mapDispatchToProps = (_dispatch) => ({
 
 export class HeaderWishlistContainer extends PureComponent {
     static propTypes = {
-        // TODO: implement prop-types
+        isBottomBar: PropTypes.bool,
+        isWishlist: PropTypes.bool
+    };
+
+    static defaultProps = {
+        isBottomBar: false,
+        isWishlist: false
     };
 
     containerFunctions = {
@@ -28,6 +34,7 @@ export class HeaderWishlistContainer extends PureComponent {
     render() {
         return (
             <HeaderWishlist
+              { ...this.props }
               { ...this.containerFunctions }
               { ...this.containerProps() }
             />

@@ -20,10 +20,8 @@ class InlineCustomerSupport extends PureComponent {
     };
 
     static getDerivedStateFromProps() {
-        return JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data.language === 'ar' ? {
-            isArabic: true
-        } : {
-            isArabic: false
+        return {
+            isArabic: JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data.language === 'ar'
         };
     }
 

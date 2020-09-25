@@ -7,14 +7,14 @@
     box-shadow: none;
     width: 100%;
     position: fixed;
-    bottom: 0;
+    bottom: 83px;
     z-index: 4;
     background: $black;
 
     @include desktop {
         width: 100%;
         position: relative;
-        bottom: none;
+        top: 0;
         z-index: 4;
         box-shadow: 0 1px 0 0 var(--shadow-color);
         background: none;
@@ -33,8 +33,7 @@
         font-weight: 600;
         letter-spacing: 0.5px;
         line-height: 16px;
-        margin-top: 7px;
-        margin-bottom: 7px;
+        margin: 7px 0;
         text-transform: uppercase;
 
         @include desktop {
@@ -58,4 +57,5 @@
             display: none;
         }
     }
+
 }

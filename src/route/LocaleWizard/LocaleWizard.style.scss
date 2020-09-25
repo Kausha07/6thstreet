@@ -1,3 +1,14 @@
 .LocaleWizard {
-    
+    margin: 10% auto;
+    max-width: 385px;
+
+    &-Logo {
+        text-align: center;
+    }
+
+    .WelcomeScreen {
+        &-Close {
+            display: none;
+        }
+    }
 }
