@@ -1,6 +1,8 @@
 .WelcomeScreen {
+
     &-Content {
         min-width: 385px;
+        font-family: "Avenir Next Regular";
 
         @include mobile() {
             min-width: 300px;

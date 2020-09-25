@@ -304,5 +304,8 @@
     "Error loading Stripe! No API-key specified.": null,
     "Carrier method: ": null,
     "Rate: ": null,
-    "Choose %s": null
+    "Choose %s": null,
+    "Login/Register": null,
+    "Tax total:": null,
+    "View cart": null
 }

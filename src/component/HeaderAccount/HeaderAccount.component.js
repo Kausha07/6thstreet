@@ -14,7 +14,7 @@ class HeaderAccount extends PureComponent {
 
         return (
             <div block="HeaderAccount" mods={ { isBottomBar } } mix={ { block: 'HeaderAccount', mods: { isAccount } } }>
-                <label htmlFor="Account">{ __('Account') }</label>
+                <label htmlFor="Account">{ isBottomBar ? __('Account') : __('Login/Register') }</label>
             </div>
         );
     }
