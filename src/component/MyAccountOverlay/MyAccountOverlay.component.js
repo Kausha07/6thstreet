@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-bind */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable react/jsx-max-depth */
 /* eslint-disable max-len */
@@ -68,7 +69,8 @@ export class MyAccountOverlay extends PureComponent {
     };
 
     state = {
-        isPopup: false
+        isPopup: false,
+        gender: 'selectPreferNot'
     };
 
     renderMap = {
@@ -225,11 +227,19 @@ export class MyAccountOverlay extends PureComponent {
         );
     }
 
+    handleGenderChange = (e) => {
+        this.setState({ gender: e.target.id });
+    };
+
     renderCreateAccount() {
         const {
             onCreateAccountAttempt,
             onCreateAccountSuccess
         } = this.props;
+
+        const { gender } = this.state;
+
+        console.log(gender);
 
         return (
             <Form
@@ -257,11 +267,37 @@ export class MyAccountOverlay extends PureComponent {
                           validation={ ['notEmpty'] }
                         />
                     </fieldset>
-                    <div block="MyAccountOverlay" elem="Radio">
-                        <Field type="radio" id="selectMale" label={ __('Male') } name="gender" value="selectMale" checked />
-                        <Field type="radio" id="selectFemale" label={ __('Female') } name="gender" value="selectFemale" />
-                        <Field type="radio" id="selectPreferNot" label={ __('Prefer not to say') } name="gender" value="selectPreferNot" />
-                    </div>
+                    <fieldset block="MyAccountOverlay" elem="Gender">
+                        <div block="MyAccountOverlay" elem="Radio">
+                            <Field
+                              type="radio"
+                              id="selectMale"
+                              label={ __('Male') }
+                              name="gender"
+                              value={ gender }
+                              onClick={ this.handleGenderChange }
+                              checked={ gender === 'selectMale' }
+                            />
+                            <Field
+                              type="radio"
+                              id="selectFemale"
+                              label={ __('Female') }
+                              name="gender"
+                              value={ gender }
+                              onClick={ this.handleGenderChange }
+                              checked={ gender === 'selectFemale' }
+                            />
+                            <Field
+                              type="radio"
+                              id="selectPreferNot"
+                              label={ __('Prefer not to say') }
+                              name="gender"
+                              value={ gender }
+                              onClick={ this.handleGenderChange }
+                              checked={ gender === 'selectPreferNot' }
+                            />
+                        </div>
+                    </fieldset>
                     <fieldset block="MyAccountOverlay" elem="Legend">
                         <Field
                           type="text"

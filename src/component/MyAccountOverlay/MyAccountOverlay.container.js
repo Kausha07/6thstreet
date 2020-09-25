@@ -253,6 +253,7 @@ export class MyAccountOverlayContainer extends PureComponent {
 
     onCreateAccountAttempt(_, invalidFields) {
         const { showNotification } = this.props;
+        console.log(invalidFields);
 
         if (invalidFields) {
             showNotification('info', __('Incorrect data! Please resolve all field validation errors.'));
@@ -262,8 +263,6 @@ export class MyAccountOverlayContainer extends PureComponent {
     }
 
     onCreateAccountSuccess(fields) {
-        console.log(this.props);
-        console.log(this.state);
         const {
             createAccount,
             onSignIn
