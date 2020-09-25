@@ -21,3 +21,27 @@ select {
         }
     }
 }
+
+.Field {
+    input[type='radio'] {
+        &:focus + label {
+            &::after {
+                @include after-mobile {
+                    --checkmark-color: var(--primary-base-color);
+                }
+            }
+
+            border-color: var(--input-border-color);
+        }
+
+        + label {
+            &:hover {
+                border-color: var(--input-border-color) !important;
+
+                &::after {
+                    --checkmark-color: var(--primary-base-color);
+                }
+            }
+        }
+    }
+}
