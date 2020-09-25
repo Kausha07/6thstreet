@@ -258,9 +258,9 @@ export class MyAccountOverlay extends PureComponent {
                         />
                     </fieldset>
                     <div block="MyAccountOverlay" elem="Radio">
-                        <Field type="radio" id="selectMale" label={ __('Male') } name="gender" value="1" />
-                        <Field type="radio" id="selectFemale" label={ __('Female') } name="gender" value="2" />
-                        <Field type="radio" id="selectPreferNot" label={ __('Prefer not to say') } name="gender" value="3" />
+                        <Field type="radio" id="selectMale" label={ __('Male') } name="gender" value="selectMale" checked />
+                        <Field type="radio" id="selectFemale" label={ __('Female') } name="gender" value="selectFemale" />
+                        <Field type="radio" id="selectPreferNot" label={ __('Prefer not to say') } name="gender" value="selectPreferNot" />
                     </div>
                     <fieldset block="MyAccountOverlay" elem="Legend">
                         <Field
@@ -283,6 +283,8 @@ export class MyAccountOverlay extends PureComponent {
                             <Field
                               type="checkbox"
                               id="privacyPolicy"
+                              name="privacyPolicy"
+                              value="privacyPolicy"
                             />
                             <label htmlFor="PrivacyPolicy">
                                 { __('Yes, I\'d like to receive news and promotions from 6TH STREET. ') }

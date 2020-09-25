@@ -84,6 +84,7 @@
         height: 40px;
         --input-color: black;
         caret-color: black;
+        text-transform: none;
     }
 
     &-Heading {
@@ -99,6 +100,7 @@
 
     &-Subtitle {
         font-size: 13px;
+        text-align: center;
         text-transform: none;
         font-weight: 300;
     }
@@ -365,6 +367,7 @@
         font-size: 14px;
         text-transform: none;
         padding-bottom: 10px;
+        text-align: center;
     }
 
     &-Buttons {
@@ -500,6 +503,10 @@
             &:disabled + label {
                 color: #b8b8b8;
                 cursor: auto;
+            }
+
+            &:checked + label {
+                --primary-base-color: black;
             }
 
             &:focus {

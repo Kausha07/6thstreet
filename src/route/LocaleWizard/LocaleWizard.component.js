@@ -9,10 +9,12 @@ class LocaleWizard extends PureComponent {
     render() {
         return (
             <div block="LocaleWizard">
-                <div block="LocaleWizard" elem="Logo">
-                    <HeaderLogo />
+                <div block="LocaleWizard" elem="ContentWrapper">
+                    <div block="LocaleWizard" elem="Logo">
+                        <HeaderLogo />
+                    </div>
+                    <WelcomeScreen />
                 </div>
-                <WelcomeScreen />
             </div>
         );
     }

@@ -262,6 +262,8 @@ export class MyAccountOverlayContainer extends PureComponent {
     }
 
     onCreateAccountSuccess(fields) {
+        console.log(this.props);
+        console.log(this.state);
         const {
             createAccount,
             onSignIn
@@ -272,15 +274,19 @@ export class MyAccountOverlayContainer extends PureComponent {
             email,
             firstname,
             lastname,
-            is_subscribed
+            privacyPolicy,
+            gender
         } = fields;
+
+        console.log(fields);
 
         const customerData = {
             customer: {
                 firstname,
                 lastname,
                 email,
-                is_subscribed
+                privacyPolicy,
+                gender
             },
             password
         };
