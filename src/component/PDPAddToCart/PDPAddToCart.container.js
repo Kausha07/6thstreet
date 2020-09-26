@@ -28,42 +28,73 @@ export class PDPAddToCartContainer extends PureComponent {
     };
 
     state = {
+        sizeTypes: [],
         selectedSizeType: 'eu',
-        selectedSize: ''
+        selectedSize: '',
+        errorMessage: '',
+        validation: true
     };
+
+    static getDerivedStateFromProps(props) {
+        const { product } = props;
+        console.log(product);
+        const filteredKeys = [];
+
+        // const { validation } = this.state;
+        // eslint-disable-next-line quotes
+        if (product.size_uk !== undefined) {
+            if (product.size_uk.length === 0) {
+                return { validation: false };
+            }
+        }
+
+        Object.keys(product).forEach((item) => {
+            if (item.includes('size_')) {
+                filteredKeys.push(item.replace('size_', ''));
+            }
+        });
+        // eslint-disable-next-line dot-notation
+
+        return { sizeTypes: filteredKeys };
+    }
 
     containerProps = () => {
         const { product } = this.props;
         return { ...this.state, product };
     };
 
-    onSizeTypeSelect() {
-        console.log('*** Selecting size type - eu/uk/us...');
+    onSizeTypeSelect(type) {
+        this.setState({ selectedSizeType: type.target.value });
     }
 
-    onSizeSelect() {
-        const { product } = this.props;
-        const { selectedSizeType } = this.state;
-
-        console.log('*** Selecting size in selected size type...', product[`size_${selectedSizeType}`][0]);
-
-        // TODO Select proper size, currently will select first available
-        this.setState({ selectedSize: product[`size_${selectedSizeType}`][0] });
+    onSizeSelect(size) {
+        console.log('*** Selecting size in selected size type...', size.target.value);
+        this.setState({ errorMessage: '' });
+        this.setState({ selectedSize: size.target.value });
     }
 
     addToCart() {
-        const { product: { sku }, addProductToCart } = this.props;
-        const { selectedSizeType, selectedSize } = this.state;
-        // TODO Validate if size has been selected
+        const { product, product: { sku }, addProductToCart } = this.props;
+        const {
+            selectedSizeType, selectedSize, errorMessage, validation
+        } = this.state;
 
-        console.log('*** Adding to cart:', sku, selectedSizeType, selectedSize);
+        console.log(selectedSize);
+        if (product.size_uk.length !== 0 && selectedSize === '') {
+            this.setState({ errorMessage: 'Please, select a size.' });
+            console.log(errorMessage);
+        }
 
-        addProductToCart({
-            sku,
-            qty: 1,
-            optionId: selectedSizeType.toLocaleUpperCase(),
-            optionValue: selectedSize
-        });
+        if ((product.size_uk.length !== 0 && selectedSize !== '') || (validation === false)) {
+            console.log('*** Adding to cart:', sku, selectedSizeType, selectedSize);
+
+            addProductToCart({
+                sku,
+                qty: 1,
+                optionId: selectedSizeType.toLocaleUpperCase(),
+                optionValue: selectedSize
+            });
+        }
     }
 
     render() {

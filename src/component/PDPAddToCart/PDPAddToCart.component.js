@@ -1,3 +1,4 @@
+/* eslint-disable */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
@@ -11,34 +12,61 @@ class PDPAddToCart extends PureComponent {
         onSizeTypeSelect: PropTypes.func.isRequired,
         onSizeSelect: PropTypes.func.isRequired,
         addToCart: PropTypes.func.isRequired,
+        sizeTypes: PropTypes.array.isRequired,
         selectedSizeType: PropTypes.string.isRequired,
-        selectedSize: PropTypes.string.isRequired
+        selectedSize: PropTypes.string.isRequired,
+        errorMessage: PropTypes.string.isRequired,
+        validation: PropTypes.bool.isRequired
     };
 
     renderSizeTypeSelect() {
-        const { onSizeTypeSelect, selectedSizeType } = this.props;
+        const { sizeTypes, onSizeTypeSelect, product, validation } = this.props;
 
-        // TODO Get available size types from product, render list
-        return (
-            <button onClick={ onSizeTypeSelect }>
-                { `Size type selector: ${selectedSizeType}` }
-            </button>
-        );
+        
+        console.log(validation);
+        
+        if (product[`size_uk`] !== undefined ){
+
+        if(validation) {
+            const listItems = sizeTypes.map((type) =>   <option value={type}>{type}</option>  );
+            return (
+                <div>
+                    <select onChange={onSizeTypeSelect}>
+                    { listItems }
+                    </select>
+                </div>
+            );
+        }
+    }
+        return null;
     }
 
     renderSizeSelect() {
         const {
-            product, selectedSizeType, selectedSize, onSizeSelect
+            product, selectedSizeType, onSizeSelect, errorMessage
         } = this.props;
 
-        console.log('*** Available sizes:', product[`size_${selectedSizeType}`]);
+        if (product[`size_${selectedSizeType}`] !== undefined ){
+        const sizes = product[`size_${selectedSizeType}`];
+        const quantity = Object.keys(product.simple_products);
+        console.log(quantity);
 
-        // TODO Get available sizes from product, for type, render list
+        const listItems = sizes.map((size) => <option value={size}>{size}</option>  );
+
+        console.log('*** Available sizes:', product[`size_${selectedSizeType}`].length);
+        if(product[`size_${selectedSizeType}`].length !== 0) {
         return (
-            <button onClick={ onSizeSelect }>
-                { `Size selector: ${selectedSize}` }
-            </button>
+            <>
+            <select onChange={onSizeSelect}>
+                <option selected disabled hidden>{ __('Please select size') }</option>
+                { listItems }
+            </select>
+            <span>{ errorMessage }</span>
+            </>
         );
+        }
+    }
+        return null;
     }
 
     renderAddToCartButton() {
@@ -46,7 +74,7 @@ class PDPAddToCart extends PureComponent {
 
         return (
             <button onClick={ addToCart }>
-                { __('Add to cart') }
+                { __('Add to bag') }
             </button>
         );
     }
