@@ -1,3 +1,90 @@
+$gold: #C8B581;
+$silver: #9B9B9B;
+$gallery: #EFEFEF;
+
 .PDPSummary {
-    
+    font-family: "Avenir Next Regular";
+    &-Header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+    &-New {
+        color: $gold;
+        font-size: 16px;
+    }
+    &-Exclusive {
+        color: $silver;
+        font-size: 16px;
+    }
+    &-HeaderWardrobeBtn {
+        font-family: 'Avenir Next Medium';
+        margin: 0 15px;
+        width: 147px;
+        height: 30px;
+        font-size: 10px;
+        border-radius: 15px;
+    }
+    &-HeaderShare {
+        width: 87px;
+        height: 30px;
+        border-radius: 8px;
+        text-transform: none;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        &:hover {
+            svg {
+                fill: $white;
+            }
+        }
+    }
+    &-ShareSvg {
+        svg {
+            width: 13px;
+            height: 13px;
+            margin-bottom: -2px;
+        }
+    }
+    .Price {
+        font-family: 'Avenir Next Bold';
+        font-size: 20px;
+        &-Base {
+            &_discount {
+                margin-right: 20px;
+                font-family: 'Avenir Next Medium';
+            }
+        }
+        &-Discount,
+        &-Special {
+            color: $default-primary-dark-color;
+        }
+    }
+    &-ProductColorBlock {
+        display: flex;
+        align-items: center;
+        border-top: 1px solid $gallery;
+        margin-top: 20px;
+        padding: 20px 0;
+        font-size: 17px;
+    }
+    &-ProductColor {
+        width: 22px;
+        height: 22px;
+        display: inline-block;
+        margin: 0 8px;
+    }
+    &-CreditBlock {
+        width: 363px;
+        height: 50px;
+        border-radius: 6px;
+        -webkit-box-shadow: 0px 0px 7px -3px rgba(0,0,0,0.75);
+        -moz-box-shadow: 0px 0px 7px -3px rgba(0,0,0,0.75);
+        box-shadow: 0px 0px 7px -3px rgba(0,0,0,0.75);
+    }
+    &-AvailableItems {
+        margin-top: 20px;
+        font-size: 17px;
+    }
 }

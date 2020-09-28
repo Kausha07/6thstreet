@@ -1,3 +1,87 @@
+$wildSand: #F6F6F6;
+$nickel: #4A4A4A;
+
 .PDPDetailsSection {
-    
+    padding: 28px 77px;
+    font-family: 'Avenir Next Regular';
+    h2 {
+        text-transform: none;
+        font-family: 'Avenir Next Demi Bold', sans-serif;
+        font-size: 24px;
+    }
+    &-IconsSection,
+    &-IconContainer {
+        display: flex;
+        align-items: center;
+        margin-right: 60px;
+        font-family: 'Avenir Next Demi Bold', sans-serif;
+        font-size: 15px;
+        color: $nickel;
+        font-weight: 400;
+    }
+    &-Icon {
+        display: flex;
+        align-items: center;
+        background: $wildSand;
+        width: 40px;
+        height: 40px;
+        border-radius: 13px;
+        margin-right: 7px;
+
+        &::before{
+            content: '';
+            width: 22px;
+            height: 22px;
+            display: block;
+            margin: auto;
+            filter: opacity(60%);
+        }
+
+        &_isGenuine {
+            &::before{
+                background: url(./icons/thumbs-up.svg) no-repeat;
+            }
+        }
+        &_freeReturn {
+            &::before{
+                background: url(./icons/sync-solid.svg) no-repeat;
+            }
+        }
+    }
+    &-Description {
+        margin-top: 40px;
+        font-size: 16px;
+        line-height: 24px;
+        
+    }
+    &-Highlights {
+        font-size: 16px;
+        margin-top: 20px;
+        font-weight: 600;
+    }
+    &-ListLi {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+        padding-left: 0;
+        width: 250px;
+        font-size: 16px;
+        &::before {
+            display: none;
+        }
+    }
+    &-ListItem {
+        &_mod_title {
+
+            &::after {
+                content: ':';
+            }
+        }
+        &_mod_value {
+            font-weight: 400;
+
+        }
+        
+    }
+
 }
