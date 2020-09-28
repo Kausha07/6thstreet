@@ -49,6 +49,7 @@
         }
 
         &-Options {
+            background: $white;
             margin-top: 20px;
 
             @include mobile() {
