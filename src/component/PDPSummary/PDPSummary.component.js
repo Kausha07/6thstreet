@@ -126,7 +126,11 @@ class PDPSummary extends PureComponent {
     }
 
     renderCreditSection() {
-        return <div block="PDPSummary" elem="CreditBlock" />;
+        return (
+        <div block="PDPSummary" elem="CreditBlock">
+            Credit info
+        </div>
+        );
     }
 
     renderAvailableItemsSection() {

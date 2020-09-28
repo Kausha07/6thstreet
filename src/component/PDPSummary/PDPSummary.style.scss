@@ -76,6 +76,9 @@ $gallery: #EFEFEF;
         margin: 0 8px;
     }
     &-CreditBlock {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         width: 363px;
         height: 50px;
         border-radius: 6px;
