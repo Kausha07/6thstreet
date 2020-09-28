@@ -59,7 +59,7 @@ $nickel: #4A4A4A;
         margin-top: 20px;
         font-weight: 600;
     }
-    &-ListLi {
+    &-HighlightsList {
         display: flex;
         justify-content: space-between;
         margin-top: 10px;
@@ -72,16 +72,67 @@ $nickel: #4A4A4A;
     }
     &-ListItem {
         &_mod_title {
-
             &::after {
                 content: ':';
             }
         }
         &_mod_value {
             font-weight: 400;
-
         }
-        
+    }
+
+    &-MoreDetails {
+        position: relative;
+        margin-top: 40px;
+        margin-bottom: 100px;
+        height: 100%;
+        &_isHidden {
+            height: 80px;
+            overflow: hidden;
+            &::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                background: rgba(255, 255, 255, 0.8);
+            }
+        }
+
+        @include desktop() {
+            margin-bottom: 40px;
+        }
+    }
+
+    &-MoreDetailsList {
+        padding-left: 0;
+        font-size: 16px;
+        &::before {
+            display: none;
+        }
+        .PDPDetailsSection {
+            &-ListItem {
+                &_mod_title {
+                    margin-right: 20px;
+                }
+            }
+        }
+    }
+
+    &-MoreDetailsBtn {
+        display: none;
+        &_isHidden {
+            display: block;
+            position: absolute;
+            z-index: 9;
+            top: 25px;
+            right: 0;
+            left: 0;
+            margin-right: auto;
+            margin-left: auto;
+            background: $white;   
+        }
     }
 
 }

@@ -10,6 +10,14 @@ class PDPDetailsSection extends PureComponent {
         product: Product.isRequired
     };
 
+    state = {
+        isHidden: true
+    };
+
+    openFullInfo = () => {
+        this.setState({ isHidden: false });
+    };
+
     renderIconsSection() {
         return (
             <div block="PDPDetailsSection" elem="IconsSection">
@@ -50,6 +58,8 @@ class PDPDetailsSection extends PureComponent {
             }
         } = this.props;
 
+        // got this info from API at this moment, should be changed when new API will be implemented.
+
         const productInfo = {
             material,
             dress_length,
@@ -60,11 +70,9 @@ class PDPDetailsSection extends PureComponent {
             toe_shape
         };
 
-        console.log(Object.entries(productInfo));
-
         const list = Object.entries(productInfo).filter((item) => item[1] != null)
             .map((item) => (
-                <li block="PDPDetailsSection" elem="ListLi" key={ item[0] }>
+                <li block="PDPDetailsSection" elem="HighlightsList" key={ item[0] }>
                     <span block="PDPDetailsSection" elem="ListItem" mods={ { mod: 'title' } }>
                         { this.listTitle(item[0]) }
                     </span>
@@ -72,10 +80,46 @@ class PDPDetailsSection extends PureComponent {
                 </li>
             ));
 
-        // console.log('list ', list);
         return (
             <div block="PDPDetailsSection" elem="Highlights">
                 <ul>{ list }</ul>
+            </div>
+        );
+    }
+
+    renderMoreDetailsList() {
+        const { product: { highlighted_attributes } } = this.props;
+
+        if (highlighted_attributes !== undefined) {
+            const list = highlighted_attributes.map((item) => (
+                <li block="PDPDetailsSection" elem="MoreDetailsList" key={ item.key }>
+                    <span block="PDPDetailsSection" elem="ListItem" mods={ { mod: 'title' } }>
+                        { item.key.toUpperCase() }
+                    </span>
+                    <span block="PDPDetailsSection" elem="ListItem" mods={ { mod: 'value' } }>{ item.value }</span>
+                </li>
+            ));
+
+            return <ul block="PDPDetailsSection" elem="MoreDetailsUl">{ list }</ul>;
+        }
+
+        return null;
+    }
+
+    renderMoreDetailsSection() {
+        const { isHidden } = this.state;
+        return (
+            <div block="PDPDetailsSection" elem="MoreDetails" mods={ { isHidden } }>
+                <button
+                  block="PDPDetailsSection"
+                  elem="MoreDetailsBtn"
+                  mods={ { isHidden } }
+                  mix={ { block: 'button secondary' } }
+                  onClick={ this.openFullInfo }
+                >
+                    view more details
+                </button>
+                { this.renderMoreDetailsList() }
             </div>
         );
     }
@@ -90,6 +134,7 @@ class PDPDetailsSection extends PureComponent {
                 { this.renderIconsSection() }
                 { this.renderDescription() }
                 { this.renderHighlights() }
+                { this.renderMoreDetailsSection() }
             </div>
         );
     }
