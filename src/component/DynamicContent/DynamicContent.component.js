@@ -1,10 +1,8 @@
 // import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-import DynamicContentBanner from 'Component/DynamicContentBanner';
 import DynamicContentCircleItemSlider from 'Component/DynamicContentCircleItemSlider';
 import DynamicContentGrid from 'Component/DynamicContentGrid';
-import DynamicContentMainBanner from 'Component/DynamicContentMainBanner';
 import DynamicContentProductSlider from 'Component/DynamicContentProductSlider';
 import { DynamicContent as DynamicContentType } from 'Util/API/endpoint/StaticFiles/StaticFiles.type';
 import Logger from 'Util/Logger';
@@ -18,8 +16,6 @@ class DynamicContent extends PureComponent {
 
     renderMap = {
         circleItemSlider: DynamicContentCircleItemSlider,
-        banner: DynamicContentBanner,
-        mainBanner: DynamicContentMainBanner,
         grid: DynamicContentGrid,
         productSlider: DynamicContentProductSlider
     };
