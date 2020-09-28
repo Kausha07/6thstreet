@@ -6,14 +6,7 @@
     --title-font-family: "Avenir Next Bold";
 }
 
-@media (max-width: 768px) {
-    :root {
-        --dynamic-content-grid-column-count: 1;
-    }
-}
-
 .DynamicContentGrid {
-    margin: 0 100px;
     padding: 0 31px;
 
     &-Grid {
@@ -25,7 +18,8 @@
             margin: 0;
         }
 
-        @include after-mobile {
+        @include desktop {
+            margin: 0 100px;
             grid-template-columns: repeat(var(--dynamic-content-grid-column-count-desktop), 1fr);
         }
     }
