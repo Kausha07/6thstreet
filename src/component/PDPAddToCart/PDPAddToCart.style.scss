@@ -1,3 +1,11 @@
 .PDPAddToCart {
+    &-SizeSelect {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+    }
 
+    &-SizeTYpeSelectro{
+        margin-top: 20px;
+    }
 }

@@ -28,34 +28,36 @@ export class PDPAddToCartContainer extends PureComponent {
     };
 
     state = {
-        sizeTypes: [],
+        sizeObject: {},
         selectedSizeType: 'eu',
         selectedSize: '',
         errorMessage: '',
-        validation: true
+        validation: true,
+        isLoading: false
     };
 
     static getDerivedStateFromProps(props) {
         const { product } = props;
         console.log(product);
-        const filteredKeys = [];
 
-        // const { validation } = this.state;
-        // eslint-disable-next-line quotes
-        if (product.size_uk !== undefined) {
-            if (product.size_uk.length === 0) {
+        if (product.simple_products !== undefined) {
+            const filteredProductKeys = Object.keys(product.simple_products);
+
+            if (filteredProductKeys.length <= 1) {
                 return { validation: false };
             }
+
+            const filteredProductSizeKeys = Object.keys(product.simple_products[filteredProductKeys[0]].size);
+
+            const object = {
+                sizeCodes: filteredProductKeys,
+                sizeTypes: filteredProductSizeKeys
+            };
+
+            return { sizeObject: object };
         }
 
-        Object.keys(product).forEach((item) => {
-            if (item.includes('size_')) {
-                filteredKeys.push(item.replace('size_', ''));
-            }
-        });
-        // eslint-disable-next-line dot-notation
-
-        return { sizeTypes: filteredKeys };
+        return null;
     }
 
     containerProps = () => {
@@ -86,6 +88,7 @@ export class PDPAddToCartContainer extends PureComponent {
         }
 
         if ((product.size_uk.length !== 0 && selectedSize !== '') || (validation === false)) {
+            this.setState({ isLoading: true });
             console.log('*** Adding to cart:', sku, selectedSizeType, selectedSize);
 
             addProductToCart({

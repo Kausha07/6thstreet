@@ -311,5 +311,7 @@
     "View cart": null,
     "There was an error creating your cart, please refresh the page in a little while": null,
     "Add to bag": null,
-    "Please select size": null
+    "Please select size": null,
+    "Size:": null,
+    "Color:": null
 }
