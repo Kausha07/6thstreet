@@ -3,7 +3,7 @@ export const getCountriesForSelect = (config) => {
 
     const countryMap = {
         AE: __('United Arab Emirates'),
-        SA: __('South Africa'),
+        SA: __('Saudi Arabia'),
         KW: __('Kuwait'),
         OM: __('Oman'),
         BH: __('Bahrain'),

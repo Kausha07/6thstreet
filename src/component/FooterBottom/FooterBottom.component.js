@@ -71,9 +71,9 @@ class FooterBottom extends PureComponent {
         return (
         <div block="FooterBottom" elem="Hyperlinks">
             <a href="cookie">COOKIE POLICY</a>
-            &nbsp;/&nbsp;
+            /
             <a href="terms">TERMS &amp; CONDITIONS</a>
-            &nbsp;/&nbsp;
+            /
             <a href="privacy-policy">Privacy</a>
         </div>
         );

@@ -20,7 +20,7 @@ class MobileAPI {
         const url = `/api/${relativeURL}${localePrefix}locale=${locale}`
             .replace(/([^:]\/)\/+/g, '$1'); // this replaces // to /
 
-        const payload = (value) => (['post', 'put'].includes(method) ? value : {});
+        const payload = (value) => (['post', 'put', 'delete'].includes(method) ? value : {});
         const tokenHeader = this.token ? { 'X-API-Token': this.token } : {};
 
         const options = {

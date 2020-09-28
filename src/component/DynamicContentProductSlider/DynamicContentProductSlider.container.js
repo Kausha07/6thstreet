@@ -10,6 +10,7 @@ import DynamicContentProductSlider from './DynamicContentProductSlider.component
 
 export const mapStateToProps = (_state) => ({
     // wishlistItems: state.WishlistReducer.productsInWishlist
+    language: _state.AppState.language
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
@@ -19,7 +20,8 @@ export const mapDispatchToProps = (_dispatch) => ({
 export class DynamicContentProductSliderContainer extends PureComponent {
     static propTypes = {
         title: PropTypes.string,
-        data_url: PropTypes.string.isRequired
+        data_url: PropTypes.string.isRequired,
+        language: PropTypes.string.isRequired
     };
 
     static defaultProps = {
@@ -44,7 +46,8 @@ export class DynamicContentProductSliderContainer extends PureComponent {
     containerProps = () => {
         const {
             title,
-            data_url
+            data_url,
+            language
         } = this.props;
 
         const {
@@ -55,6 +58,7 @@ export class DynamicContentProductSliderContainer extends PureComponent {
         return {
             title,
             data_url,
+            language,
             isLoading,
             products
         };
