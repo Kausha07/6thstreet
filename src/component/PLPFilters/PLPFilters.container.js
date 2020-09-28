@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import { toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
 import { Filters } from 'Util/API/endpoint/Product/Product.type';
 
 import PLPFilters from './PLPFilters.component';
@@ -11,7 +12,8 @@ export const mapStateToProps = (state) => ({
     isLoading: state.PLP.isLoading
 });
 
-export const mapDispatchToProps = (_dispatch) => ({
+export const mapDispatchToProps = (dispatch) => ({
+    toggleOverlayByKey: (key) => dispatch(toggleOverlayByKey(key))
     // addProduct: options => CartDispatcher.addProductToCart(dispatch, options)
 });
 

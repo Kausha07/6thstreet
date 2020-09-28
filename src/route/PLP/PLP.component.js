@@ -1,7 +1,7 @@
 // import PropTypes from 'prop-types';
-import ContentWrapper from '@scandipwa/scandipwa/src/component/ContentWrapper/ContentWrapper.component';
 import { PureComponent } from 'react';
 
+import ContentWrapper from 'Component/ContentWrapper/ContentWrapper.component';
 import PLPDetails from 'Component/PLPDetails';
 import PLPFilters from 'Component/PLPFilters';
 import PLPPages from 'Component/PLPPages';

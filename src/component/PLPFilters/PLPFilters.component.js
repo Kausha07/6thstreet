@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-import { CATEGORY_FILTER_OVERLAY_ID } from 'Component/CategoryFilterOverlay/CategoryFilterOverlay.config';
 import PLPFilter from 'Component/PLPFilter';
+import { PLPFilterOverlay } from 'Component/PLPFilterOverlay/PLPFilterOverlay.component';
+import { PLP_FILTER_OVERLAY_ID } from 'Component/PLPFilterOverlay/PLPFilterOverlay.config';
 import { Filters } from 'Util/API/endpoint/Product/Product.type';
 
 import './PLPFilters.style';
@@ -45,7 +46,8 @@ class PLPFilters extends PureComponent {
 
     onFilterButtonClick() {
         const { toggleOverlayByKey } = this.props;
-        toggleOverlayByKey(CATEGORY_FILTER_OVERLAY_ID);
+
+        toggleOverlayByKey(PLP_FILTER_OVERLAY_ID);
     }
 
     renderFilterButton() {
@@ -66,6 +68,11 @@ class PLPFilters extends PureComponent {
         );
     }
 
+    renderFilterOverlay() {
+        return (
+            <PLPFilterOverlay />);
+    }
+
     renderFilter = ([key, filter]) => (
         <PLPFilter
           key={ key }
@@ -80,6 +87,7 @@ class PLPFilters extends PureComponent {
               name="filters"
             >
                 { this.renderFilters() }
+                { this.renderFilterOverlay() }
                 { this.renderFilterButton() }
             </form>
         );
