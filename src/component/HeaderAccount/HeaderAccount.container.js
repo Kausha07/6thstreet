@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import HeaderAccount from './HeaderAccount.component';
 
 export const mapStateToProps = (_state) => ({
-    // wishlistItems: state.WishlistReducer.productsInWishlist
+    language: _state.AppState.language
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
@@ -15,7 +15,8 @@ export const mapDispatchToProps = (_dispatch) => ({
 export class HeaderAccountContainer extends PureComponent {
     static propTypes = {
         isBottomBar: PropTypes.bool,
-        isAccount: PropTypes.bool
+        isAccount: PropTypes.bool,
+        language: PropTypes.string.isRequired
     };
 
     static defaultProps = {
