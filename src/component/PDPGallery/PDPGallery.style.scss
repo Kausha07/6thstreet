@@ -1,4 +1,10 @@
 .PDPGallery {
     display: grid;
     grid-template-columns: 1fr 6fr;
+    .Slider-Wrapper > * {
+        height: 0;
+    }
+    .Crumbs {
+        margin-left: 10px;
+    }
 }
