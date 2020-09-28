@@ -8,7 +8,7 @@
 
         &:not(&_isBottomBar) {
             margin-left: 60px;
-    
+
             label {
                 text-transform: none;
                 position: relative;
@@ -42,6 +42,12 @@
                         display: block;
                     }
                 }
+            }
+        }
+
+        &_isArabic {
+            &:not(&_isBottomBar) {
+                margin-left: 90px;
             }
         }
     }
@@ -87,7 +93,8 @@
         }
     }
 
-    &-PupUp {
+    &-PopUp {
+        display: none;
         position: fixed;
         top: 0;
         right: 0;
@@ -97,6 +104,10 @@
         cursor: default;
         pointer-events: all;
         z-index: 10;
+
+        @include desktop {
+            display: block;
+        }
 
         &_isHidden {
             display: none;

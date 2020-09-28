@@ -61,7 +61,8 @@ export class MyAccountOverlay extends PureComponent {
         handleCreateAccount: PropTypes.func.isRequired,
         isCheckout: PropTypes.bool,
         closePopup: PropTypes.func.isRequired,
-        isHidden: PropTypes.bool.isRequired
+        isHidden: PropTypes.bool.isRequired,
+        language: PropTypes.string.isRequired
     };
 
     static defaultProps = {
@@ -70,7 +71,9 @@ export class MyAccountOverlay extends PureComponent {
 
     state = {
         isPopup: false,
-        gender: 'selectPreferNot'
+        gender: 'selectPreferNot',
+        isChecked: false,
+        isArabic: false
     };
 
     renderMap = {
@@ -96,6 +99,11 @@ export class MyAccountOverlay extends PureComponent {
             title: __('Confirm the email')
         }
     };
+
+    static getDerivedStateFromProps(nextProps) {
+        const { language } = nextProps;
+        return ({ isArabic: language !== 'en' });
+    }
 
     renderMyAccount() {
         const {
@@ -231,15 +239,17 @@ export class MyAccountOverlay extends PureComponent {
         this.setState({ gender: e.target.id });
     };
 
+    handleCheckboxChange = () => {
+        this.setState(({ isChecked }) => ({ isChecked: !isChecked }));
+    };
+
     renderCreateAccount() {
         const {
             onCreateAccountAttempt,
             onCreateAccountSuccess
         } = this.props;
 
-        const { gender } = this.state;
-
-        console.log(gender);
+        const { gender, isChecked, isArabic } = this.state;
 
         return (
             <Form
@@ -268,7 +278,7 @@ export class MyAccountOverlay extends PureComponent {
                         />
                     </fieldset>
                     <fieldset block="MyAccountOverlay" elem="Gender">
-                        <div block="MyAccountOverlay" elem="Radio">
+                        <div block="MyAccountOverlay" elem="Radio" mods={ { isArabic } }>
                             <Field
                               type="radio"
                               id="selectMale"
@@ -315,12 +325,14 @@ export class MyAccountOverlay extends PureComponent {
                           autocomplete="new-password"
                           validation={ ['notEmpty', 'password'] }
                         />
-                        <div block="MyAccountOverlay" elem="Radio">
+                        <div block="MyAccountOverlay" elem="Checkbox" mods={ { isArabic } }>
                             <Field
                               type="checkbox"
                               id="privacyPolicy"
                               name="privacyPolicy"
                               value="privacyPolicy"
+                              onClick={ this.handleCheckboxChange }
+                              checked={ isChecked }
                             />
                             <label htmlFor="PrivacyPolicy">
                                 { __('Yes, I\'d like to receive news and promotions from 6TH STREET. ') }
@@ -349,6 +361,8 @@ export class MyAccountOverlay extends PureComponent {
             onFormError,
             handleForgotPassword
         } = this.props;
+
+        const { isArabic } = this.state;
 
         return (
             <Form
@@ -379,11 +393,12 @@ export class MyAccountOverlay extends PureComponent {
                   block="MyAccountOverlay"
                   elem="Button"
                   mods={ { likeLink: true } }
+                  mix={ { block: 'MyAccountOverlay', elem: 'Button', mods: { isArabic } } }
                   onClick={ handleForgotPassword }
                 >
                     { __('Forgot password?') }
                 </button>
-                <div block="MyAccountOverlay" elem="Button">
+                <div block="MyAccountOverlay" elem="Button" mods={ { isSignIn: true } }>
                     <button block="Button">{ __('Sign in') }</button>
                 </div>
             </Form>
@@ -402,7 +417,7 @@ export class MyAccountOverlay extends PureComponent {
         } = this.state;
 
         return (
-            <div block="HeaderAccount" elem="PupUp" mods={ { isHidden } }>
+            <div block="HeaderAccount" elem="PopUp" mods={ { isHidden } }>
                 <Overlay
                   id={ CUSTOMER_ACCOUNT_OVERLAY_KEY }
                   mix={ { block: 'MyAccountOverlay', mods: { isPopup } } }

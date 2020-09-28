@@ -40,7 +40,8 @@ export const mapStateToProps = (state) => ({
     isSignedIn: state.MyAccountReducer.isSignedIn,
     customer: state.MyAccountReducer.customer,
     isPasswordForgotSend: state.MyAccountReducer.isPasswordForgotSend,
-    isOverlayVisible: state.OverlayReducer.activeOverlay === CUSTOMER_ACCOUNT
+    isOverlayVisible: state.OverlayReducer.activeOverlay === CUSTOMER_ACCOUNT,
+    language: state.AppState.language
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -72,7 +73,8 @@ export class MyAccountOverlayContainer extends PureComponent {
         onSignIn: PropTypes.func,
         goToPreviousHeaderState: PropTypes.func,
         isCheckout: PropTypes.bool,
-        hideActiveOverlay: PropTypes.func.isRequired
+        hideActiveOverlay: PropTypes.func.isRequired,
+        language: PropTypes.string.isRequired
     };
 
     static defaultProps = {
@@ -253,7 +255,6 @@ export class MyAccountOverlayContainer extends PureComponent {
 
     onCreateAccountAttempt(_, invalidFields) {
         const { showNotification } = this.props;
-        console.log(invalidFields);
 
         if (invalidFields) {
             showNotification('info', __('Incorrect data! Please resolve all field validation errors.'));
@@ -276,8 +277,6 @@ export class MyAccountOverlayContainer extends PureComponent {
             privacyPolicy,
             gender
         } = fields;
-
-        console.log(fields);
 
         const customerData = {
             customer: {
