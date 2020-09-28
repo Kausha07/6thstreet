@@ -1,6 +1,6 @@
 .HeaderMainSection {
     align-items: center;
-    display: flex;
+    display: none;
     height: 84px;
     max-width: 1440px;
     margin: 0 auto;
@@ -23,5 +23,9 @@
 
     .HeaderCart {
         order: 4;
+    }
+
+    @include desktop() {
+        display: flex;
     }
 }
