@@ -1,11 +1,21 @@
 .HeaderLogo {
-    flex: 1;
-    height: 40px;
-    text-align: center;
+  flex: 1;
+  height: 40px;
+  text-align: center;
 
-    .Image {
-      height: 40px;
-      width: 190px;
+  .Image {
+    height: 22px;
+    width: 100px;
+
+    @include before-desktop {
+      display: block;
       padding: 0;
     }
+    @include desktop {
+      height: 40px;
+      margin-top: 0;
+      padding: 0;
+      width: 190px;
+    }
+  }
 }
