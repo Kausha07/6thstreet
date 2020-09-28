@@ -357,6 +357,11 @@
             fill: $white;
             margin: 0 auto;
         }
+
+        &_isArabic {
+            left: 0;
+            right: unset;
+        }
     }
 
     &-ForgotPasswordButton {

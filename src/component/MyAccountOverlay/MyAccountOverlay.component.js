@@ -1,7 +1,3 @@
-/* eslint-disable react/jsx-no-bind */
-/* eslint-disable jsx-a11y/label-has-associated-control */
-/* eslint-disable react/jsx-max-depth */
-/* eslint-disable max-len */
 /**
  * ScandiPWA - Progressive Web App for Magento
  *
@@ -116,8 +112,17 @@ export class MyAccountOverlay extends PureComponent {
         const isCreateAccount = state === STATE_CREATE_ACCOUNT;
 
         return (
-            <div block="MyAccountOverlay" elem="Action" mods={ { state } }>
-                <img block="MyAccountOverlay" elem="Image" src="https://static.6media.me/static/version1600859154/frontend/6SNEW/6snew/en_US/images/6street-login-banner.png" alt="" />
+            <div
+              block="MyAccountOverlay"
+              elem="Action"
+              mods={ { state } }
+            >
+                <img
+                  block="MyAccountOverlay"
+                  elem="Image"
+                  src="https://static.6media.me/static/version1600859154/frontend/6SNEW/6snew/en_US/images/6street-login-banner.png"
+                  alt=""
+                />
                 <div block="MyAccountOverlay" elem="Buttons">
                     <button block="Button" mods={ { isSignIn } } onClick={ handleSignIn }>{ __('Sign in') }</button>
                     <button
@@ -141,12 +146,27 @@ export class MyAccountOverlay extends PureComponent {
 
     renderCloseBtn() {
         const { closePopup } = this.props;
+        const { isArabic } = this.state;
 
-        const svg = <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path d="M23.954 21.03l-9.184-9.095 9.092-9.174-2.832-2.807-9.09 9.179-9.176-9.088-2.81 2.81 9.186 9.105-9.095 9.184 2.81 2.81 9.112-9.192 9.18 9.1z" /></svg>;
+        const svg = (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+            >
+                <path
+                  d="M23.954 21.03l-9.184-9.095 9.092-9.174-2.832-2.807-9.09 9.179-9.176-9.088-2.81
+                  2.81 9.186 9.105-9.095 9.184 2.81 2.81 9.112-9.192 9.18 9.1z"
+                />
+            </svg>
+        );
+
         return (
             <button
               block="MyAccountOverlay"
               elem="Close"
+              mods={ { isArabic } }
               onClick={ closePopup }
             >
                 { svg }
@@ -192,9 +212,24 @@ export class MyAccountOverlay extends PureComponent {
               onSubmitSuccess={ onForgotPasswordSuccess }
               onSubmitError={ onFormError }
             >
-                <img block="MyAccountOverlay" elem="LockImg" src="https://static.6media.me/static/version1600859154/frontend/6SNEW/6snew/en_US/images/forgot_pass.png" alt="" />
-                <p block="MyAccountOverlay" elem="Heading">{ __('Forgot your Password?') }</p>
-                <p block="MyAccountOverlay" elem="ForgotPasswordSubheading">{ __('Please enter your email and we will send you a link to reset your password') }</p>
+                <img
+                  block="MyAccountOverlay"
+                  elem="LockImg"
+                  src="https://static.6media.me/static/version1600859154/frontend/6SNEW/6snew/en_US/images/forgot_pass.png"
+                  alt=""
+                />
+                <p
+                  block="MyAccountOverlay"
+                  elem="Heading"
+                >
+                    { __('Forgot your Password?') }
+                </p>
+                <p
+                  block="MyAccountOverlay"
+                  elem="ForgotPasswordSubheading"
+                >
+                    { __('Please enter your email and we will send you a link to reset your password') }
+                </p>
                     <Field
                       type="text"
                       id="email"
@@ -223,6 +258,7 @@ export class MyAccountOverlay extends PureComponent {
               mods={ { state } }
             >
                 <p id="forgot-password-success">
+                    { /* eslint-disable-next-line max-len */ }
                     { __('If there is an account associated with the provided address you will receive an email with a link to reset your password') }
                 </p>
                 <button
@@ -258,7 +294,9 @@ export class MyAccountOverlay extends PureComponent {
               onSubmitSuccess={ onCreateAccountSuccess }
               onSubmitError={ onCreateAccountAttempt }
             >
-                    <p block="MyAccountOverlay" elem="Subtitle">Sign up for a tailored shopping experience</p>
+                    <p block="MyAccountOverlay" elem="Subtitle">
+                        { __('Sign up for a tailored shopping experience') }
+                    </p>
                     <fieldset block="MyAccountOverlay" elem="Legend">
                         <Field
                           type="text"
@@ -278,7 +316,11 @@ export class MyAccountOverlay extends PureComponent {
                         />
                     </fieldset>
                     <fieldset block="MyAccountOverlay" elem="Gender">
-                        <div block="MyAccountOverlay" elem="Radio" mods={ { isArabic } }>
+                        <div
+                          block="MyAccountOverlay"
+                          elem="Radio"
+                          mods={ { isArabic } }
+                        >
                             <Field
                               type="radio"
                               id="selectMale"
@@ -325,7 +367,11 @@ export class MyAccountOverlay extends PureComponent {
                           autocomplete="new-password"
                           validation={ ['notEmpty', 'password'] }
                         />
-                        <div block="MyAccountOverlay" elem="Checkbox" mods={ { isArabic } }>
+                        <div
+                          block="MyAccountOverlay"
+                          elem="Checkbox"
+                          mods={ { isArabic } }
+                        >
                             <Field
                               type="checkbox"
                               id="privacyPolicy"
@@ -336,12 +382,17 @@ export class MyAccountOverlay extends PureComponent {
                             />
                             <label htmlFor="PrivacyPolicy">
                                 { __('Yes, I\'d like to receive news and promotions from 6TH STREET. ') }
-                                <a href="https://en-ae.6thstreet.com/privacy-policy"><strong>{ __('Click here') }</strong></a>
+                                <a href="https://en-ae.6thstreet.com/privacy-policy">
+                                    <strong>{ __('Click here') }</strong>
+                                </a>
                                 { __(' to view privacy policy') }
                             </label>
                         </div>
                     </fieldset>
-                    <div block="MyAccountOverlay" elem="Button">
+                    <div
+                      block="MyAccountOverlay"
+                      elem="Button"
+                    >
                         <button
                           block="Button"
                           mods={ { isMargin: true } }
@@ -398,7 +449,11 @@ export class MyAccountOverlay extends PureComponent {
                 >
                     { __('Forgot password?') }
                 </button>
-                <div block="MyAccountOverlay" elem="Button" mods={ { isSignIn: true } }>
+                <div
+                  block="MyAccountOverlay"
+                  elem="Button"
+                  mods={ { isSignIn: true } }
+                >
                     <button block="Button">{ __('Sign in') }</button>
                 </div>
             </Form>
@@ -417,10 +472,17 @@ export class MyAccountOverlay extends PureComponent {
         } = this.state;
 
         return (
-            <div block="HeaderAccount" elem="PopUp" mods={ { isHidden } }>
+            <div
+              block="HeaderAccount"
+              elem="PopUp"
+              mods={ { isHidden } }
+            >
                 <Overlay
                   id={ CUSTOMER_ACCOUNT_OVERLAY_KEY }
-                  mix={ { block: 'MyAccountOverlay', mods: { isPopup } } }
+                  mix={ {
+                      block: 'MyAccountOverlay',
+                      mods: { isPopup }
+                  } }
                   onVisible={ onVisible }
                   isStatic={ !isCheckout && !!isMobile.any() }
                 >
