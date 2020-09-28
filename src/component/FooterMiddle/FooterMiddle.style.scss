@@ -4,14 +4,19 @@
 }
 
 .FooterMiddle {
-    display: flex;
-    justify-content: space-between;
+    padding: 25px 30px 23px 30px;
     margin-top: 3px;
-    padding: 25px 50px 23px 60px;
     background: var(--footer-background-color);
 
     @include before-desktop {
         display: none;
+    }
+
+    &-Layout {
+        display: flex;
+        justify-content: space-between;
+        max-width: 1420px;
+        margin: auto;
     }
 
     &-CustomerSupport {
@@ -25,6 +30,9 @@
         
             &-DisplayQuickAccess {
                 display: none;
+            }
+            &-Button {
+                padding: 0;
             }
         }
     }
@@ -65,5 +73,27 @@
             }
         }
     }
+    }
+}
+
+.PageWrapper {
+
+    &_isArabic {
+
+        .FooterMiddle {
+
+            &-StoreSwitcher {
+        
+                .CountrySwitcher {
+                    
+                    &-CountryBtn {
+            
+                        &::before {
+                            transform: none;
+                        }
+                    }
+                }
+            }
+        }
     }
 }
