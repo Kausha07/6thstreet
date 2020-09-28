@@ -90,9 +90,11 @@ class FooterBottom extends PureComponent {
 
         return (
             <div block="FooterBottom" mods={ { FooterBottomHidden } }>
-                { this.renderCopyright() }
-                { this.renderHyperlinks() }
-                { this.renderPaymentIcons() }
+                <div block="FooterBottom" elem="Layout">
+                    { this.renderCopyright() }
+                    { this.renderHyperlinks() }
+                    { this.renderPaymentIcons() }
+                </div>
             </div>
         );
     }
