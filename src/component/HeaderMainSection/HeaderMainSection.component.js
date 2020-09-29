@@ -29,37 +29,37 @@ class HeaderMainSection extends NavigationAbstract {
 
     renderAccount() {
         return (
-                <HeaderAccount
-                  key="account"
-                  isMobile
-                />
+            <HeaderAccount
+              key="account"
+              isMobile
+            />
         );
     }
 
     renderCart() {
         return (
-                <HeaderCart
-                  key="cart"
-                  CartButton="CartButton"
-                />
+            <HeaderCart
+              key="cart"
+              CartButton="CartButton"
+            />
         );
     }
 
     renderWishlist() {
         return (
-                <HeaderWishlist
-                  key="wishlist"
-                  isMobile
-                />
+            <HeaderWishlist
+              key="wishlist"
+              isMobile
+            />
         );
     }
 
     renderGenderSwitcher() {
         return (
-                <HeaderGenders
-                  key="genders"
-                  isMobile
-                />
+            <HeaderGenders
+              key="genders"
+              isMobile
+            />
         );
     }
 

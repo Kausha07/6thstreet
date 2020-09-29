@@ -11,7 +11,11 @@ class HeaderAccount extends PureComponent {
         isBottomBar: PropTypes.bool.isRequired,
         isAccount: PropTypes.bool.isRequired,
         language: PropTypes.string.isRequired,
-        isMobile: PropTypes.bool.isRequired
+        isMobile: PropTypes.bool
+    };
+
+    static defaultProps = {
+        isMobile: false
     };
 
     state = {
