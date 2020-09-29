@@ -188,6 +188,10 @@ class DynamicContentProductSlider extends PureComponent {
 
     render() {
         const { isArabic } = this.state;
+        const { products: productArray } = this.props;
+        if (productArray.length === 0) {
+            return null;
+        }
         const products = (
             <div mix={ { block: 'DynamicContentProductSlider', elem: 'ProductContainer', mods: { isArabic } } }>
                 { this.renderButtonPrev() }

@@ -97,7 +97,8 @@
         }
     }
     &-MobileSlider {
-        width: 100%;
+        width: 80%;
+        overflow: visible;
         &_isArabic {
             direction: ltr;
         }
