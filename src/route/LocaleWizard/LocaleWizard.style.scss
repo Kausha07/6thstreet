@@ -1,5 +1,6 @@
 :root {
     --milk-white: #e8e8e8;
+    --lightest-gray: #f5f5f5;
 }
 
 .LocaleWizard {
@@ -11,8 +12,17 @@
         padding: 10px 10px 30px;
     }
 
+    &-Background {
+        background: var(--lightest-gray);
+        height: 100%;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: -1;
+    }
+
     &-ContentWrapper {
-        margin: 10% auto 0;
+        margin: 5% auto 0;
         max-width: 385px;
         padding-bottom: 10%;
 
@@ -39,6 +49,7 @@
         }
 
         &-Options {
+            background: $white;
             margin-top: 20px;
 
             @include mobile() {

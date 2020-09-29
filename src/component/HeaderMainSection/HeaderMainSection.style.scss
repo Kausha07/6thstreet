@@ -1,9 +1,10 @@
 .HeaderMainSection {
     align-items: center;
     display: flex;
-    height: 84px;
+    height: 50px;
     max-width: 1440px;
     margin: 0 auto;
+    flex-direction: row-reverse;
 
     .HeaderGenders {
         order: 0;
@@ -23,5 +24,28 @@
 
     .HeaderCart {
         order: 4;
+    }
+
+    &_isMobile {
+        display: none;
+    }
+
+    @include desktop() {
+        display: flex;
+        height: 84px;
+        max-width: 100%;
+        flex-direction: unset;
+
+        &_isMobile {
+            display: block;
+        }
+    }
+
+    &-Cart {
+        @include before-desktop {
+            top: 5px;
+            width: 45px;
+            margin: 0 auto;
+        }
     }
 }

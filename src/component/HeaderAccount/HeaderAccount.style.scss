@@ -1,39 +1,53 @@
 .HeaderAccount {
-    &:not(&_isBottomBar) {
-        margin-left: 40px;
-        margin-right: 40px;
+    width: auto;
 
-        label {
-            position: relative;
-            text-transform: unset;
-            height: 27px;
-            padding: 0;
+    &-Button {
+        height: 30px;
+        left: -30px;
+        z-index: 10;
 
-            &::before{
-                position: absolute;
-                left: -30px;
-                top: -6px;
-                content: "";
-                background: url(./icons/account.svg) no-repeat;
-                background-size: 27px;
-                width: 30px;
+        &:not(&_isBottomBar) {
+            margin-left: 60px;
+
+            label {
+                text-transform: none;
+                position: relative;
                 height: 27px;
-                display: inline-block;
-                font-size: 0;
-            }
-
-            span {
-                display: none;
-                font-size: 14px;
-                font-weight: 600;
-                letter-spacing: 0;
-                line-height: 19px;
-                height: 27px;
-                color: var(--black);
-
-                @include after-mobile {
-                    display: block;
+                padding: 0;
+                cursor: pointer;
+    
+                &::before{
+                    position: absolute;
+                    left: -30px;
+                    top: -6px;
+                    content: "";
+                    background: url(./icons/account.svg) no-repeat;
+                    background-size: 27px;
+                    width: 30px;
+                    height: 27px;
+                    display: inline-block;
+                    font-size: 0;
                 }
+    
+                span {
+                    display: none;
+                    font-size: 14px;
+                    font-weight: 600;
+                    letter-spacing: 0;
+                    line-height: 19px;
+                    height: 27px;
+                    color: var(--black);
+    
+                    @include after-mobile {
+                        display: block;
+                    }
+                }
+            }
+        }
+
+        &_isArabic {
+            &:not(&_isBottomBar) {
+                margin-left: 90px;
             }
         }
     }
@@ -76,6 +90,27 @@
 
         &::before{
             filter: invert(43%) sepia(60%) saturate(1535%) hue-rotate(335deg) brightness(107%) contrast(95%);
+        }
+    }
+
+    &-PopUp {
+        display: none;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: rgba(70, 70, 70, 0.6);
+        cursor: default;
+        pointer-events: all;
+        z-index: 10;
+
+        @include desktop {
+            display: block;
+        }
+
+        &_isHidden {
+            display: none;
         }
     }
 }
