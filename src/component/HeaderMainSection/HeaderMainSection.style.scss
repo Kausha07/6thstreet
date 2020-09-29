@@ -8,11 +8,6 @@
     .HeaderGenders {
         display: flex;
         order: 0;
-        &_isMobile {
-            @include before-desktop{
-                display: none;
-            }
-        }
     }
 
     .HeaderLogo {
@@ -21,31 +16,33 @@
 
     .HeaderWishlist {
         order: 2;
-        &_isMobile {
-            @include before-desktop{
-                display: none;
-            }
-        }
     }
 
     .HeaderAccount {
         order: 3;
-        &_isMobile {
-            @include before-desktop{
-                display: none;
-            }
-        }
     }
 
     .HeaderCart {
         order: 4;
-        
+
         @include before-desktop {
             top: 5px;
             width: 45px;
             margin: 0 auto;
         }
     }
+
+    .HeaderGenders,
+    .HeaderWishlist,
+    .HeaderAccount {
+        &_isMobile {
+            @include before-desktop{
+                display: none;
+            }
+        }
+    }
+
+
 
     @include desktop() {
         display: flex;
