@@ -1,6 +1,13 @@
 .PDPGalleryCrumb {
     display: block;
-    width: 100%;
+    min-width: 80px;
     height: auto;
     padding: 0;
+
+    &_isActive {
+        img {
+            border: 1px solid $black;
+        }
+    }
+
 }
