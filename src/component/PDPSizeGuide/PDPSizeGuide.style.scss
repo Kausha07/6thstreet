@@ -1,0 +1,19 @@
+.PDPSizeGuide {
+    &-Modal {
+        width: 100%;
+        height: 100%;
+        justify-content: flex-end;
+        &_isOpen {
+            .Popup-Content {
+                width: 30%;
+                margin-top: 15%;
+                max-height: 100%;
+                height: 100vh;
+            }
+        }
+    }
+    &-GuideContainer {        
+        height: 1000px;
+        background: white;
+    }
+}

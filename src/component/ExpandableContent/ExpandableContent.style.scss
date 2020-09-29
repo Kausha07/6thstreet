@@ -1,0 +1,32 @@
+.ExpandableContent {
+    width: 100%;
+    &-HeaderBlock {
+        width: 100%;
+        display: inline-block;
+        min-height: 1.5rem;
+        font-weight: bold;
+        padding-top: 2rem;
+    }
+    &-Header {
+       font-size: larger; 
+    }
+    &-Button {
+        float: right;
+        border: solid black;
+        border-width: 0 3px 3px 0;
+        padding: 3px;
+        transform: rotate(-45deg);
+        -webkit-transform: rotate(-45deg);
+        &_isOpen {
+            transform: rotate(-135deg);
+            -webkit-transform: rotate(-135deg);
+        }
+    }
+    &-Body {
+        display: none;
+        &_isOpen {
+            display: inline;
+        }
+    }
+      
+}
