@@ -4,6 +4,7 @@ import { PureComponent } from 'react';
 import Image from 'Component/Image';
 import PDPGalleryCrumb from 'Component/PDPGalleryCrumb';
 import Slider from 'Component/Slider';
+import SliderVertical from 'Component/SliderVertical';
 
 import './PDPGallery.style';
 
@@ -14,7 +15,8 @@ class PDPGallery extends PureComponent {
         crumbs: PropTypes.arrayOf(PropTypes.oneOfType([
             PropTypes.string,
             PropTypes.number
-        ])).isRequired
+        ])).isRequired,
+        onSliderChange: PropTypes.func.isRequired
     };
 
     renderCrumb = (index, i) => (
@@ -33,9 +35,23 @@ class PDPGallery extends PureComponent {
         const { crumbs } = this.props;
 
         return (
+
             <div block="PDPGallery" elem="Crumbs">
+                <SliderVertical
+                  mix={ {
+                      block: 'Slider',
+                      mods: { isCrumbs: true },
+                      mix: {
+                          block: 'Slider',
+                          elem: 'Wrapper',
+                          mods: { isCrumbs: true }
+                      }
+                  } }
+                >
                 { crumbs.map(this.renderCrumb) }
+                </SliderVertical>
             </div>
+
         );
     }
 
@@ -45,8 +61,7 @@ class PDPGallery extends PureComponent {
     }
 
     renderSlider() {
-        const { currentIndex, gallery } = this.props;
-        const activeImage = currentIndex >= 0 ? currentIndex : 0;
+        const { gallery, currentIndex, onSliderChange } = this.props;
 
         if (!gallery.length) {
             return null;
@@ -54,7 +69,8 @@ class PDPGallery extends PureComponent {
 
         return (
             <Slider
-              activeImage={ activeImage }
+              activeImage={ currentIndex }
+              onActiveImageChange={ onSliderChange }
               mix={ { block: 'PDPGallery', elem: 'Slider' } }
             >
                 { this.renderGallery() }
