@@ -41,6 +41,7 @@ class PDPDetailsSection extends PureComponent {
 
     listTitle(str) {
         const capitalized = str.charAt(0).toUpperCase() + str.slice(1);
+
         return capitalized.replace('_', ' ');
     }
 
@@ -59,7 +60,7 @@ class PDPDetailsSection extends PureComponent {
 
         const { isHidden } = this.state;
 
-        // got this info from API at this moment, should be changed when new API will be implemented.
+        // got this info from API at this moment, should be changed when new DATA will be implemented.
 
         const productInfo = {
             material,
@@ -118,6 +119,7 @@ class PDPDetailsSection extends PureComponent {
 
     renderMoreDetailsSection() {
         const { isHidden } = this.state;
+
         return (
             <div block="PDPDetailsSection" elem="MoreDetails" mods={ { isHidden } }>
                 { this.renderMoreDetailsList() }
@@ -126,9 +128,6 @@ class PDPDetailsSection extends PureComponent {
     }
 
     render() {
-        const { product } = this.props;
-
-        console.log(product);
         return (
             <div block="PDPDetailsSection">
                 <h2>Product details:</h2>

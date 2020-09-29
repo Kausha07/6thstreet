@@ -14,6 +14,7 @@ $nickel: #4A4A4A;
         font-family: 'Avenir Next Demi Bold', sans-serif;
         font-size: 24px;
     }
+
     &-IconsSection,
     &-IconContainer {
         display: flex;
@@ -24,13 +25,16 @@ $nickel: #4A4A4A;
         color: $nickel;
         font-weight: 400;
     }
+
     &-IconsSection {
         flex-direction: column;
         align-items: start;
+
         @include desktop() {
             flex-direction: row;
         }
     }
+
     &-IconContainer {
         margin-top: 10px;
     }
@@ -64,17 +68,19 @@ $nickel: #4A4A4A;
             }
         }
     }
+
     &-Description {
         margin-top: 40px;
         font-size: 16px;
         line-height: 24px;
-        
     }
+
     &-Highlights {
         font-size: 16px;
         margin-top: 20px;
         font-weight: 600;
     }
+
     &-HighlightsList {
         display: flex;
         justify-content: space-between;
@@ -82,16 +88,19 @@ $nickel: #4A4A4A;
         padding-left: 0;
         width: 250px;
         font-size: 16px;
+
         &::before {
             display: none;
         }
     }
+
     &-ListItem {
         &_mod_title {
             &::after {
                 content: ':';
             }
         }
+
         &_mod_value {
             font-weight: 400;
         }
@@ -102,10 +111,12 @@ $nickel: #4A4A4A;
         margin-top: 40px;
         margin-bottom: 140px;
         height: 100%;
+
         &_isHidden {
             margin-bottom: 200px;
             height: 80px;
             overflow: hidden;
+
             &::after {
                 content: '';
                 position: absolute;
@@ -126,9 +137,11 @@ $nickel: #4A4A4A;
         display: flex;
         padding-left: 0;
         font-size: 16px;
+
         &::before {
             display: none;
         }
+
         .PDPDetailsSection {
             &-ListItem {
                 &_mod_title {
@@ -140,6 +153,7 @@ $nickel: #4A4A4A;
 
     &-MoreDetailsBtn {
         display: none;
+
         &_isHidden {
             display: block;
             position: absolute;
@@ -150,6 +164,7 @@ $nickel: #4A4A4A;
             margin-right: auto;
             margin-left: auto;
             background: $white;
+            
             @include desktop() {
                 bottom: -120px;
             }   
@@ -166,11 +181,13 @@ $nickel: #4A4A4A;
                     margin-left: 20px;
                 }
             }
+
             &-IconsSection,
             &-IconContainer {
                 margin-right: 0;
                 margin-left: 60px;
             }
+
             &-Icon {
                 margin-left: 8px;
                 margin-right: 0;
