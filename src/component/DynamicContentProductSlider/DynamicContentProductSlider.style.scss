@@ -1,6 +1,8 @@
 :root {
     --new-tag-color: #C8B581;
     --divider-color: #EFEFEF;
+    --button-text-color: #ffffff; 
+    --button-color: #000000; 
 }
 
 .DynamicContentProductSlider {
@@ -9,7 +11,12 @@
     position: relative; 
     left: 50%;
     transform: translateX(-50%);
-    width: 85%;    
+    width: 85%;
+    &_isArabic {
+        right: 50%;
+        left: 0;
+        transform: translateX(50%);
+    }    
 
     &-HeaderContainer {
         position: relative; 
@@ -21,11 +28,25 @@
         padding-bottom: 2rem;
         text-align: center;
         margin-bottom: 2%;
+        &_isArabic {
+            right: 50%;
+            transform: translateX(50%);
+        }
     }
-    &-Header, &-SubHeader{
+    &-Header, &-SubHeader {
         width: 100%;
         margin: 0;
         line-height: 1.5rem;
+    }
+    &-Header {
+        @include desktop {
+            font-size: large;
+        }
+    }
+    &-SubHeader {
+        @include desktop {
+            font-size: 1.2rem;
+        }
     }
     li {
         content: '';
@@ -34,7 +55,12 @@
     img {
         object-fit: cover;
     }
-    &-ProductItem{
+    &-ProductContainer {
+        @include desktop {
+            position: relative;
+        }
+    }
+    &-ProductItem {
         display: block;
         margin-right: 10%;
         width: calc(90%);
@@ -43,6 +69,10 @@
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
+        h2 {
+            margin-top: 1rem;
+            margin-bottom: 0rem;
+        }
         p {
             margin-bottom: 0;
             font-family: 'Avenir Next Regular', serif;
@@ -53,22 +83,44 @@
         .Price {
             font-weight: bold;
         }
+        &_isArabic {
+            margin-right: auto;
+            margin-left: 10%;
+            overflow: hidden;
+        }
+        @include desktop {
+            vertical-align: top;
+            display: inline-block;
+            width: 21%;
+            margin-left: 2%;
+            margin-right: 2%; 
+        }
     }
     &-MobileSlider {
         width: 100%;
-        overflow: visible;
+        &_isArabic {
+            direction: ltr;
+        }
     }
-    &-TagOverlay{
+    &-TagOverlay {
         position: absolute;
         top: 1rem;
         border-top-right-radius: 1rem; 
         border-bottom-right-radius: 1rem;
         font-size: 1rem;
-        color: white;
+        color: var(--button-text-color);
         background-color: var(--new-tag-color);
         width: 3rem;
         height: 1.5rem;
         padding: 1.5px;
+        &_isArabic {
+            @include desktop {
+                border-top-left-radius: 1rem; 
+                border-bottom-left-radius: 1rem;        
+                border-top-right-radius: 0rem;
+                border-bottom-right-radius: 0rem;
+            }
+        }
     }
     &-FavoriteOverlay {
         position: absolute;
@@ -77,45 +129,18 @@
         right: 1rem;
         width: 25px;
         height: 20px;
+
     }
-}
-@media only screen and (min-width: 700px) {
-    .DynamicContentProductSlider {
-        &-Header {
-            font-size: large;
-        }
-        &-SubHeader {
-            font-size: 1.2rem;
-        }
-        &-ProductItem{
-            vertical-align: top;
-            display: inline-block;
-            width: 21%;
-            margin-left: 2%;
-            margin-right: 2%; 
-        }
-        &-ProductContainer {
-            position: relative;
-        }
-        &-ButtonPrev, &-ButtonNext {
+    &-ButtonPrev, &-ButtonNext {
+        @include desktop {
+            background-color: var(--button-color);
+            color: var(--button-text-color);
             position: absolute;
             width: 3.5vw; 
             height: 3.5vw;
             top: 7vw;
             z-index: 2;
             font-size: 1.5rem;
-            font-family: 'Avenir Next Regular', serif;
-            
-            border: solid white;
-            border-width: 0 3px 3px 0;
-            display: inline-block;
-            padding: 3px;
-        }
-        &-ButtonPrev {
-            left: 0;
-        }
-        &-ButtonNext{
-            right: 0;
         }
     }
 }

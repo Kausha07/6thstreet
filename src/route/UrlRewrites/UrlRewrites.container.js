@@ -69,6 +69,8 @@ export class UrlRewritesContainer extends PureComponent {
         const { urlResolver } = await fetchQuery(UrlRewritesQuery.getQuery({ urlParam }));
         const { type = TYPE_NOTFOUND, id } = urlResolver || {};
 
+        window.pageType = type;
+
         this.setState({
             prevPathname: urlParam,
             isLoading: false,

@@ -4,22 +4,25 @@ import { connect } from 'react-redux';
 
 import LoginBlock from './LoginBlock.component';
 
-export const mapStateToProps = (state) => ({
-    config: state.MyAccountReducer.isSignedIn
+const mapStateToProps = (state) => ({
+    config: state.MyAccountReducer.isSignedIn,
+    language: state.AppState.language
 });
 
 export class LoginBlockContainer extends PureComponent {
     static propTypes = {
-        isSignedIn: PropTypes.bool.isRequired
+        isSignedIn: PropTypes.bool.isRequired,
+        language: PropTypes.string.isRequired
     };
 
     render() {
         // TODO: test if redux connection works properly
-        const { isSignedIn } = this.props;
+        const { isSignedIn, language } = this.props;
 
         return (
             <LoginBlock
               isSignedIn={ isSignedIn }
+              language={ language }
               name="Username"
             />
         );

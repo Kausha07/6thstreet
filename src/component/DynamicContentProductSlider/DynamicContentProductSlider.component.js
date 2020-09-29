@@ -14,21 +14,40 @@ class DynamicContentProductSlider extends PureComponent {
     static propTypes = {
         title: PropTypes.string.isRequired,
         isLoading: PropTypes.bool.isRequired,
-        products: Products.isRequired
+        products: Products.isRequired,
+        language: PropTypes.string.isRequired
     };
 
     constructor() {
         super();
-        this.state = { currentPage: 0 };
+        this.state = {
+            currentPage: 0
+        };
+    }
+
+    static getDerivedStateFromProps(nextProps) {
+        const { language } = nextProps;
+        return ({ isArabic: language !== 'en' });
     }
 
     renderProduct = (product) => {
         const { sku } = product;
-        const newTag = <div mix={ { block: 'DynamicContentProductSlider', elem: 'TagOverlay' } }>New</div>;
+        const { isArabic } = this.state;
+        const newTag = (
+        <div
+          mix={ {
+              block: 'DynamicContentProductSlider',
+              elem: 'TagOverlay',
+              mods: { isArabic }
+          } }
+        >
+            New
+        </div>
+        );
 
         // TODO: remove if statement and add appropriate query for items with new
         return (
-            <div mix={ { block: 'DynamicContentProductSlider', elem: 'ProductItem' } }>
+            <div mix={ { block: 'DynamicContentProductSlider', elem: 'ProductItem', mods: { isArabic } } }>
                 <ProductItem
                   product={ product }
                   key={ sku }
@@ -52,7 +71,6 @@ class DynamicContentProductSlider extends PureComponent {
         const productArray = products.map(this.renderProduct);
         const lastPage = parseInt(Math.floor(products.length / ITEMS_PER_PAGE), 10); // first page is 0
         const lastPageItemCount = products.length % ITEMS_PER_PAGE; // number of products on last page'
-        console.log(productArray.slice(currentPage * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE + ITEMS_PER_PAGE));
         if (currentPage !== lastPage) {
             return productArray.slice(currentPage * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE + ITEMS_PER_PAGE);
         }
@@ -69,8 +87,9 @@ class DynamicContentProductSlider extends PureComponent {
     }
 
     renderCTA() {
+        const { isArabic } = this.state;
         return (
-            <div mix={ { block: 'DynamicContentProductSlider', elem: 'FavoriteOverlay' } } />
+            <div mix={ { block: 'DynamicContentProductSlider', elem: 'FavoriteOverlay', mods: { isArabic } } } />
         );
     }
 
@@ -79,7 +98,7 @@ class DynamicContentProductSlider extends PureComponent {
             isLoading,
             products
         } = this.props;
-        const { currentPage } = this.state;
+        const { currentPage, isArabic } = this.state;
 
         if (isLoading) {
             return null;
@@ -89,8 +108,11 @@ class DynamicContentProductSlider extends PureComponent {
             return (
                 <button
                   onClick={ this.handleClickNext }
-                  block="DynamicContentProductSlider"
-                  elem="ButtonNext primary"
+                  mix={ {
+                      block: 'DynamicContentProductSlider',
+                      elem: 'ButtonNext',
+                      mods: { isArabic }
+                  } }
                 >
                     &gt;
                 </button>
@@ -102,7 +124,7 @@ class DynamicContentProductSlider extends PureComponent {
 
     renderButtonPrev() {
         const { isLoading } = this.props;
-        const { currentPage } = this.state;
+        const { currentPage, isArabic } = this.state;
 
         if (isLoading) {
             return null;
@@ -111,8 +133,11 @@ class DynamicContentProductSlider extends PureComponent {
             return (
                 <button
                   onClick={ this.handleClickPrev }
-                  block="DynamicContentProductSlider"
-                  elem="ButtonPrev primary"
+                  mix={ {
+                      block: 'DynamicContentProductSlider',
+                      elem: 'ButtonPrev',
+                      mods: { isArabic }
+                  } }
                 >
                     &lt;
                 </button>
@@ -137,7 +162,10 @@ class DynamicContentProductSlider extends PureComponent {
             isLoading,
             products
         } = this.props;
-        const { currentPage } = this.state;
+        const {
+            currentPage,
+            isArabic
+        } = this.state;
 
         if (isLoading) {
             return 'loading...';
@@ -145,7 +173,7 @@ class DynamicContentProductSlider extends PureComponent {
 
         return (
             <Slider
-              mix={ { block: 'DynamicContentProductSlider', elem: 'MobileSlider' } }
+              mix={ { block: 'DynamicContentProductSlider', elem: 'MobileSlider', mods: { isArabic } } }
               activeImage={ currentPage }
               onActiveImageChange={ this.mobileSliderCallback }
             >
@@ -159,8 +187,9 @@ class DynamicContentProductSlider extends PureComponent {
     };
 
     render() {
+        const { isArabic } = this.state;
         const products = (
-            <div mix={ { block: 'DynamicContentProductSlider', elem: 'ProductContainer' } }>
+            <div mix={ { block: 'DynamicContentProductSlider', elem: 'ProductContainer', mods: { isArabic } } }>
                 { this.renderButtonPrev() }
                 { this.renderProductsDesktop() }
                 { this.renderButtonNext() }
@@ -168,12 +197,12 @@ class DynamicContentProductSlider extends PureComponent {
         );
 
         return (
-            <div block="DynamicContentProductSlider">
+            <div mix={ { block: 'DynamicContentProductSlider', mods: { isArabic } } }>
                 <hr />
-                <div mix={ { block: 'DynamicContentProductSlider', elem: 'HeaderContainer' } }>
+                <div mix={ { block: 'DynamicContentProductSlider', elem: 'HeaderContainer', mods: { isArabic } } }>
                     { this.renderTitle() }
                     <span
-                      mix={ { block: 'DynamicContentProductSlider', elem: 'SubHeader' } }
+                      mix={ { block: 'DynamicContentProductSlider', elem: 'SubHeader', mods: { isArabic } } }
                     >
                         Latest trends, new looks, must have... don&apos;t miss it
                     </span>

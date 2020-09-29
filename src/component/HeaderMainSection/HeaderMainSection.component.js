@@ -20,42 +20,50 @@ class HeaderMainSection extends NavigationAbstract {
     };
 
     renderMap = {
+        gender: this.renderGenderSwitcher.bind(this),
+        logo: this.renderLogo.bind(this),
         account: this.renderAccount.bind(this),
         cart: this.renderCart.bind(this),
-        wishlist: this.renderWishlist.bind(this),
-        gender: this.renderGenderSwitcher.bind(this),
-        logo: this.renderLogo.bind(this)
+        wishlist: this.renderWishlist.bind(this)
     };
 
     renderAccount() {
         return (
-            <HeaderAccount
-              key="account"
-            />
+            <div block="HeaderMainSection" mods={ { isMobile: true } }>
+                <HeaderAccount
+                  key="account"
+                />
+            </div>
         );
     }
 
     renderCart() {
         return (
-            <HeaderCart
-              key="cart"
-            />
+            <div block="HeaderMainSection" elem="Cart">
+                <HeaderCart
+                  key="cart"
+                />
+            </div>
         );
     }
 
     renderWishlist() {
         return (
-            <HeaderWishlist
-              key="wishlist"
-            />
+            <div block="HeaderMainSection" mods={ { isMobile: true } }>
+                <HeaderWishlist
+                  key="wishlist"
+                />
+            </div>
         );
     }
 
     renderGenderSwitcher() {
         return (
-            <HeaderGenders
-              key="genders"
-            />
+            <div block="HeaderMainSection" mods={ { isMobile: true } }>
+                <HeaderGenders
+                  key="genders"
+                />
+            </div>
         );
     }
 

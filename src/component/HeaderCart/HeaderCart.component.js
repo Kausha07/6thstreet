@@ -22,7 +22,7 @@ class HeaderCart extends PureComponent {
         );
 
         this.setState({ cartPopUp: popUpElement });
-    }
+    };
 
     render() {
         const { cartPopUp } = this.state;

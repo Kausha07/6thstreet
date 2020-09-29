@@ -5,17 +5,21 @@
 }
 
 .FooterMobile {
-    background: var(--footer-bottom-background-color);
-    display: flex;
-    justify-content: space-between;
-    padding: 17px 20px 18px 21px;
-    height: 50px;
+    
     position: fixed;
     bottom: 0px;
     width: 100%;
 
     @include desktop{
         display: none;
+    }
+
+    &-Wrapper {
+        background: var(--footer-bottom-background-color);
+        display: flex;
+        justify-content: space-between;
+        padding: 17px 20px 18px 21px;
+        height: 50px;
     }
 
     &-Copyright {
