@@ -54,9 +54,10 @@ class PDPDetailsSection extends PureComponent {
                 neck_line,
                 skirt_length,
                 toe_shape
-
             }
         } = this.props;
+
+        const { isHidden } = this.state;
 
         // got this info from API at this moment, should be changed when new API will be implemented.
 
@@ -83,6 +84,15 @@ class PDPDetailsSection extends PureComponent {
         return (
             <div block="PDPDetailsSection" elem="Highlights">
                 <ul>{ list }</ul>
+                <button
+                  block="PDPDetailsSection"
+                  elem="MoreDetailsBtn"
+                  mods={ { isHidden } }
+                  mix={ { block: 'button secondary' } }
+                  onClick={ this.openFullInfo }
+                >
+                    view more details
+                </button>
             </div>
         );
     }
@@ -110,15 +120,6 @@ class PDPDetailsSection extends PureComponent {
         const { isHidden } = this.state;
         return (
             <div block="PDPDetailsSection" elem="MoreDetails" mods={ { isHidden } }>
-                <button
-                  block="PDPDetailsSection"
-                  elem="MoreDetailsBtn"
-                  mods={ { isHidden } }
-                  mix={ { block: 'button secondary' } }
-                  onClick={ this.openFullInfo }
-                >
-                    view more details
-                </button>
                 { this.renderMoreDetailsList() }
             </div>
         );
