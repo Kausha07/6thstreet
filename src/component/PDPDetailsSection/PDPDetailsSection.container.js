@@ -10,10 +10,6 @@ export const mapStateToProps = (state) => ({
     product: state.PDP.product
 });
 
-export const mapDispatchToProps = (_dispatch) => ({
-    // addProduct: options => CartDispatcher.addProductToCart(dispatch, options)
-});
-
 export class PDPDetailsSectionContainer extends PureComponent {
     static propTypes = {
         product: Product.isRequired
@@ -38,4 +34,4 @@ export class PDPDetailsSectionContainer extends PureComponent {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PDPDetailsSectionContainer);
+export default connect(mapStateToProps, null)(PDPDetailsSectionContainer);

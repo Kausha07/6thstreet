@@ -1,5 +1,7 @@
-$wildSand: #F6F6F6;
-$nickel: #4A4A4A;
+:root {
+    --pdp-icon-backgroud: #F6F6F6;
+    --pdp-icon-text-color: #4A4A4A;
+}
 
 .PDPDetailsSection {
     padding: 0 20px;
@@ -22,7 +24,7 @@ $nickel: #4A4A4A;
         margin-right: 60px;
         font-family: 'Avenir Next Demi Bold', sans-serif;
         font-size: 15px;
-        color: $nickel;
+        color: var(--pdp-icon-text-color);
         font-weight: 400;
     }
 
@@ -42,7 +44,7 @@ $nickel: #4A4A4A;
     &-Icon {
         display: flex;
         align-items: center;
-        background: $wildSand;
+        background: var(--pdp-icon-backgroud);
         min-width: 40px;
         height: 40px;
         border-radius: 13px;
@@ -164,7 +166,7 @@ $nickel: #4A4A4A;
             margin-right: auto;
             margin-left: auto;
             background: $white;
-            
+
             @include desktop() {
                 bottom: -120px;
             }   

@@ -1,6 +1,8 @@
-$gold: #C8B581;
-$silver: #9B9B9B;
-$gallery: #EFEFEF;
+:root {
+    --pdp-new-text-color: #C8B581;
+    --pdp-exclusive-text-color: #9B9B9B;
+    --pdp-line-color: #EFEFEF;
+}
 
 .PDPSummary {
     font-family: "Avenir Next Regular";
@@ -19,12 +21,12 @@ $gallery: #EFEFEF;
     }
 
     &-New {
-        color: $gold;
+        color: var(-pdp-new-text-color);
         font-size: 16px;
     }
 
     &-Exclusive {
-        color: $silver;
+        color: var(--pdp-exclusive-text-color);
         font-size: 16px;
     }
 
@@ -128,7 +130,7 @@ $gallery: #EFEFEF;
     &-ProductColorBlock {
         display: flex;
         align-items: center;
-        border-top: 1px solid $gallery;
+        border-top: 1px solid var(--pdp-line-color);
         margin-top: 20px;
         padding: 20px 0;
         font-size: 17px;

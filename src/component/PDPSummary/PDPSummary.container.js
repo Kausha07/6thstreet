@@ -25,7 +25,6 @@ export class PDPSummaryContainer extends PureComponent {
 
     containerProps = () => {
         const { product } = this.props;
-        // console.log(product);
         return { product };
     };
 
