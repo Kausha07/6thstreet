@@ -129,6 +129,32 @@
         right: 1rem;
         width: 25px;
         height: 20px;
+<<<<<<< HEAD
+=======
+        &_isArabic {
+            @include desktop {
+                right: auto;
+                left: 1rem;
+            }
+        }
+    }
+    &-ButtonPrev {
+        @include desktop {
+            left: 0;
+        }
+        &_isArabic {
+            right: 0;
+        }
+    }
+    &-ButtonNext{
+        @include desktop {
+            right: 0;
+        }
+        &_isArabic {
+            right: auto;
+            left: 0;
+        }
+>>>>>>> 0b634ea309e7c7f96479c2a86e8b2d433e2295b2
 
     }
     &-ButtonPrev, &-ButtonNext {
@@ -141,6 +167,10 @@
             top: 7vw;
             z-index: 2;
             font-size: 1.5rem;
+<<<<<<< HEAD
+=======
+            font-family: 'Avenir Next Regular', serif;;
+>>>>>>> 0b634ea309e7c7f96479c2a86e8b2d433e2295b2
         }
     }
 }

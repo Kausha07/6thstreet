@@ -29,41 +29,37 @@ class HeaderMainSection extends NavigationAbstract {
 
     renderAccount() {
         return (
-            <div block="HeaderMainSection" mods={ { isMobile: true } }>
-                <HeaderAccount
-                  key="account"
-                />
-            </div>
+            <HeaderAccount
+              key="account"
+              isMobile
+            />
         );
     }
 
     renderCart() {
         return (
-            <div block="HeaderMainSection" elem="Cart">
-                <HeaderCart
-                  key="cart"
-                />
-            </div>
+            <HeaderCart
+              key="cart"
+              CartButton="CartButton"
+            />
         );
     }
 
     renderWishlist() {
         return (
-            <div block="HeaderMainSection" mods={ { isMobile: true } }>
-                <HeaderWishlist
-                  key="wishlist"
-                />
-            </div>
+            <HeaderWishlist
+              key="wishlist"
+              isMobile
+            />
         );
     }
 
     renderGenderSwitcher() {
         return (
-            <div block="HeaderMainSection" mods={ { isMobile: true } }>
-                <HeaderGenders
-                  key="genders"
-                />
-            </div>
+            <HeaderGenders
+              key="genders"
+              isMobile
+            />
         );
     }
 

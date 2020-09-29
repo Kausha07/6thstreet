@@ -10,7 +10,12 @@ class HeaderAccount extends PureComponent {
     static propTypes = {
         isBottomBar: PropTypes.bool.isRequired,
         isAccount: PropTypes.bool.isRequired,
-        language: PropTypes.string.isRequired
+        language: PropTypes.string.isRequired,
+        isMobile: PropTypes.bool
+    };
+
+    static defaultProps = {
+        isMobile: false
     };
 
     state = {
@@ -38,11 +43,22 @@ class HeaderAccount extends PureComponent {
     };
 
     render() {
-        const { isBottomBar, isAccount } = this.props;
+        const { isBottomBar, isAccount, isMobile } = this.props;
         const { accountPopUp, isArabic } = this.state;
 
         return (
-            <div block="HeaderAccount" mods={ { isBottomBar } } mix={ { block: 'HeaderAccount', mods: { isAccount } } }>
+            <div
+              block="HeaderAccount"
+              mods={ { isBottomBar } }
+              mix={ {
+                  block: 'HeaderAccount',
+                  mods: { isAccount },
+                  mix: {
+                      block: 'HeaderAccount',
+                      mods: { isMobile }
+                  }
+              } }
+            >
                 { !isBottomBar ? (
                     <div>
                         <button onClick={ this.renderAccountPopUp } block="HeaderAccount" elem="Button" mods={ { isArabic } }>
