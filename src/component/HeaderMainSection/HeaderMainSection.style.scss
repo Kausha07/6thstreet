@@ -4,10 +4,15 @@
     height: 50px;
     max-width: 1440px;
     margin: 0 auto;
-    flex-direction: row-reverse;
 
     .HeaderGenders {
+        display: flex;
         order: 0;
+        &_isMobile {
+            @include before-desktop{
+                display: none;
+            }
+        }
     }
 
     .HeaderLogo {
@@ -16,18 +21,30 @@
 
     .HeaderWishlist {
         order: 2;
+        &_isMobile {
+            @include before-desktop{
+                display: none;
+            }
+        }
     }
 
     .HeaderAccount {
         order: 3;
+        &_isMobile {
+            @include before-desktop{
+                display: none;
+            }
+        }
     }
 
     .HeaderCart {
         order: 4;
-    }
-
-    &_isMobile {
-        display: none;
+        
+        @include before-desktop {
+            top: 5px;
+            width: 45px;
+            margin: 0 auto;
+        }
     }
 
     @include desktop() {
@@ -38,14 +55,6 @@
 
         &_isMobile {
             display: block;
-        }
-    }
-
-    &-Cart {
-        @include before-desktop {
-            top: 5px;
-            width: 45px;
-            margin: 0 auto;
         }
     }
 }
