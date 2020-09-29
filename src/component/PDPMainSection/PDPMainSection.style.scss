@@ -6,4 +6,10 @@ $gallery: #EFEFEF;
     padding: 36px 77px;
     padding-bottom: 40px;
     border-bottom: 1px solid $gallery;
+
+    @include mobile() {
+        grid-template-columns: repeat(1, 1fr);
+        padding: 36px 0;
+    }
 }
+
