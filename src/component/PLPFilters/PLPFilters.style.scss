@@ -19,7 +19,10 @@
     width: 70%;
 
     &_isArabic {
+        direction: rtl;
+        left: unset;
         right: 0;
+
     }
 
     &-Title {
@@ -40,6 +43,11 @@
 
     .left {
         transform: rotate(135deg);
+
+        &_isArabic {
+            margin-left: 10px;
+            transform: rotate(-45deg);
+        }
     }
 
     @include tablet() {
@@ -69,10 +77,21 @@
                 padding: 0 0 10px;
                 text-transform: capitalize;
             }
-        }
 
-        .Field {
-            margin-top: 0;
+            .Field {
+                &_isArabic {
+                    .FieldSelect {
+                        &::after {
+                            width: 10px;
+                            height: 10px;
+                            margin-right: 280px;
+                            transform: rotate(135deg);
+                            margin-top: 5px;
+                            border-width: 0 2px 2px 0;
+                        }
+                    }
+                }
+            }
         }
 
         &-SeeResult {
@@ -130,6 +149,20 @@
     .Field {
         @include mobile() {
             display: none;
+
+        }
+
+        &_isArabic {
+            .FieldSelect {
+                padding-right: 15px;
+
+                &:after {
+                    height: 10px;
+                    margin-left: 323px;
+                    transform: rotate(135deg);
+                    width: 10px;
+                }
+            }
         }
 
         .FieldSelect {
@@ -157,11 +190,21 @@
 
             &::after {
                 border-color: var(--color-medium-grey);
+
+
+                @include tablet() {
+                    border: none;
+                }
+
+                @include desktop() {
+                    border: none;
+                }
             }
 
             &-Select {
                 font-family: 'Avenir Next Regular';
                 font-size: 13px;
+                padding-right: 15px;
             }
         }
     }

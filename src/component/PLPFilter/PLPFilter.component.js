@@ -19,6 +19,18 @@ class PLPFilter extends PureComponent {
         onSelect: PropTypes.func.isRequired
     };
 
+    state = {
+        isArabic: false
+    };
+
+    static getDerivedStateFromProps() {
+        return (
+            {
+                isArabic: JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data.language === 'ar'
+            }
+        );
+    }
+
     filterData: {
         id: (string),
         label: (string),
@@ -29,6 +41,7 @@ class PLPFilter extends PureComponent {
         const { filter: { label } } = this.props;
         const { filter: { data } } = this.props;
         const { filter: { category } } = this.props;
+        const { isArabic } = this.state;
         const { onSelect } = this.props;
 
         // eslint-disable-next-line no-return-assign
@@ -45,6 +58,12 @@ class PLPFilter extends PureComponent {
               id={ category }
               name={ category }
               type="select"
+              mix={ {
+                  block: 'Field',
+                  mods: {
+                      isArabic
+                  }
+              } }
               placeholder={ label }
               selectOptions={ template }
               onChange={ onSelect }

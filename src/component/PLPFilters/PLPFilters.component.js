@@ -29,13 +29,10 @@ class PLPFilters extends PureComponent {
     constructor() {
         super();
         this.state = {
-            isOpen: false
+            isOpen: false,
+            isArabic: false
         };
     }
-
-    state = {
-        isArabic: false
-    };
 
     static getDerivedStateFromProps(nextProps) {
         const { activeOverlay } = nextProps;
@@ -78,7 +75,6 @@ class PLPFilters extends PureComponent {
             <button
               block="Content"
               elem="SeeResult"
-              aria-label={ __('Close') }
               onClick={ this.hidePopUp }
             >
                 { __('show result') }
@@ -119,13 +115,12 @@ class PLPFilters extends PureComponent {
     }
 
     renderPopupFilters() {
-        const { isOpen, isArabic } = this.state;
+        const { isArabic } = this.state;
         return (
             <Popup
               mix={ {
                   block: 'FilterPopup',
                   mods: {
-                      isOpen,
                       isArabic
                   }
               } }
@@ -135,9 +130,21 @@ class PLPFilters extends PureComponent {
                 <div
                   block="FilterPopup"
                   elem="Title"
+                  mix={ {
+                      block: 'Title',
+                      mods: {
+                          isArabic
+                      }
+                  } }
                 >
                     <i
                       block="arrow left"
+                      mix={ {
+                          block: 'left',
+                          mods: {
+                              isArabic
+                          }
+                      } }
                     />
                     { __('refine') }
                 </div>
