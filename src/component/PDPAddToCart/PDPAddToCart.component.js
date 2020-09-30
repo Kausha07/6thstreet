@@ -1,10 +1,10 @@
-/* eslint-disable fp/no-let */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import { Product } from 'Util/API/endpoint/Product/Product.type';
 
 import './PDPAddToCart.style';
+import './NotificationList.extended.style.scss';
 
 class PDPAddToCart extends PureComponent {
     static propTypes = {
@@ -14,35 +14,32 @@ class PDPAddToCart extends PureComponent {
         addToCart: PropTypes.func.isRequired,
         sizeObject: PropTypes.object.isRequired,
         selectedSizeType: PropTypes.string.isRequired,
-        // selectedSize: PropTypes.string.isRequired,
         errorMessage: PropTypes.string.isRequired,
-        validation: PropTypes.bool.isRequired,
-        isLoading: PropTypes.bool.isRequired
+        insertedSizeStatus: PropTypes.bool.isRequired,
+        isLoading: PropTypes.bool.isRequired,
+        addedToCart: PropTypes.bool.isRequired
     };
 
-    renderProductColor() {
-        const { product } = this.props;
-        return (
-        <div>
-            <span>{ __('Color:') }</span>
-            <span>{ product.color }</span>
-        </div>
-        );
-    }
-
     renderSizeTypeSelect() {
-        const { sizeObject, onSizeTypeSelect, validation } = this.props;
+        const { sizeObject, onSizeTypeSelect, insertedSizeStatus } = this.props;
 
-        console.log(sizeObject);
         if (sizeObject.sizeTypes !== undefined) {
-            if (validation) {
-                console.log(sizeObject.sizeTypes);
-                const listItems = sizeObject.sizeTypes.map((type) => <option value={ type }>{ type }</option>);
+            if (insertedSizeStatus) {
+                const listItems = sizeObject.sizeTypes.map((type) => (
+                    <option
+                      block="PDPAddToCart"
+                      elem="SizeTypeOption"
+                      value={ type }
+                    >
+                        { type.toUpperCase() }
+                    </option>
+                ));
+
                 return (
                 <div>
-                    <span>{ __('Size:') }</span>
+                    <span block="PDPAddToCart" elem="SizeLabel">{ __('Size:') }</span>
                     <div block="PDPAddToCart" elem="SizeTypeSelector">
-                        <select onChange={ onSizeTypeSelect }>
+                        <select block="PDPAddToCart" elem="SizeTypeSelectElement" onChange={ onSizeTypeSelect }>
                             { listItems }
                         </select>
                     </div>
@@ -60,39 +57,38 @@ class PDPAddToCart extends PureComponent {
         } = this.props;
 
         if (product.simple_products !== undefined) {
-            console.log('*** Available sizes:', product[`size_${selectedSizeType}`]);
             if (product[`size_${selectedSizeType}`].length !== 0) {
                 const sizes = product[`size_${selectedSizeType}`];
                 const codes = sizeObject.sizeCodes;
                 const listItems = [];
 
+                // eslint-disable-next-line fp/no-let
                 for (let index = 0; index < sizes.length; index++) {
                     const { quantity } = product.simple_products[codes[index]];
 
                     listItems.push(
                         <option
-                          value={ sizes[index] }
+                          block="PDPAddToCart"
+                          elem="SizeOption"
+                          value={ codes[index] }
                           disabled={ quantity === '0' }
                         >
-                            { sizes[index] }
+                            { product.simple_products[codes[index]].size[selectedSizeType] }
                             { quantity === '0' ? '- Out of stock' : '' }
                             { quantity === '1' ? ' - 1 left in stock' : '' }
                         </option>
                     );
                 }
 
-                // TODO Low stock quantity and out of stock - disabled option with string out of stock
-                // or dont add such option at all
-                // if product is out of stock it will be not visible at plp or I habe o disable/ remove add to cart option for it
                 return (
                     <div block="PDPAddToCart" elem="SizeSelector">
-                        <select onChange={ onSizeSelect }>
+                        <select block="PDPAddToCart" elem="SizeSelectElement" onChange={ onSizeSelect }>
                             <option selected disabled hidden>
                                 { __('Please select size') }
                             </option>
                             { listItems }
                         </select>
-                        <span>{ errorMessage }</span>
+                        <span block="PDPAddToCart" elem="EmptySizeError">{ errorMessage }</span>
                     </div>
                 );
             }
@@ -102,11 +98,24 @@ class PDPAddToCart extends PureComponent {
     }
 
     renderAddToCartButton() {
-        const { addToCart, isLoading } = this.props;
+        const { addToCart, isLoading, addedToCart } = this.props;
 
         return (
-            <button onClick={ addToCart } mods={ { isLoading } }>
-                { isLoading ? 'Adding...' : 'Add to bag' }
+            <button
+              onClick={ addToCart }
+              block="PDPAddToCart"
+              elem="AddToCartButton"
+              mods={ { isLoading } }
+              mix={ {
+                  block: 'PDPAddToCart',
+                  elem: 'AddToCartButton',
+                  mods: { addedToCart }
+              } }
+              disabled={ isLoading }
+            >
+                <span>{ __('Add to bag') }</span>
+                <span>{ __('Adding...') }</span>
+                <span>{ __('Added to bag') }</span>
             </button>
         );
     }
@@ -114,7 +123,6 @@ class PDPAddToCart extends PureComponent {
     render() {
         return (
             <div block="PDPAddToCart">
-                { this.renderProductColor() }
                 <div block="PDPAddToCart" elem="SizeSelect">
                     { this.renderSizeTypeSelect() }
                     { this.renderSizeSelect() }
