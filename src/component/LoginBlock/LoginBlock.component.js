@@ -1,12 +1,13 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import { isArabic } from 'Util/App';
+
 import './LoginBlock.style';
 
 class LoginBlock extends PureComponent {
     static propTypes = {
         isSignedIn: PropTypes.bool.isRequired,
-        language: PropTypes.string.isRequired,
         name: PropTypes.string
     };
 
@@ -14,17 +15,10 @@ class LoginBlock extends PureComponent {
         name: 'Guest'
     };
 
-    constructor() {
-        super();
-        this.state = {
-            isOpen: true
-        };
-    }
-
-    static getDerivedStateFromProps(nextProps) {
-        const { language } = nextProps;
-        return ({ isArabic: language !== 'en' });
-    }
+    state = {
+        isOpen: true,
+        isArabic: isArabic()
+    };
 
     handleDismiss = () => {
         this.setState({

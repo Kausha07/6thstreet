@@ -5,6 +5,7 @@ import { PureComponent } from 'react';
 
 import Field from 'Component/Field';
 import { SelectOptions } from 'Type/Field';
+import { isArabic } from 'Util/App';
 
 import './LanguageSwitcher.style';
 
@@ -16,14 +17,8 @@ class LanguageSwitcher extends PureComponent {
     };
 
     state = {
-        isArabic: false
+        isArabic: isArabic()
     };
-
-    static getDerivedStateFromProps() {
-        return {
-            isArabic: JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data.language === 'ar'
-        };
-    }
 
     getNonSelectedLanguage() {
         const {

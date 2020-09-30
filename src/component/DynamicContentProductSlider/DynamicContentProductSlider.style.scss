@@ -12,6 +12,7 @@
     left: 50%;
     transform: translateX(-50%);
     width: 85%;
+
     &_isArabic {
         right: 50%;
         left: 0;
@@ -33,11 +34,13 @@
             transform: translateX(50%);
         }
     }
+
     &-Header, &-SubHeader {
         width: 100%;
         margin: 0;
         line-height: 1.5rem;
     }
+
     &-Header {
         @include desktop {
             font-size: large;
@@ -48,46 +51,56 @@
             font-size: 1.2rem;
         }
     }
+
     li {
         content: '';
         padding: 0px;
     }
+
     img {
         object-fit: cover;
     }
+
     &-ProductContainer {
         @include desktop {
             position: relative;
         }
     }
+
     &-ProductItem {
         display: block;
-        margin-right: 10%;
-        width: calc(90%);
+        margin-right: 11%;
+        width: 89%;
         height: 100%;
         text-align: center;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
+
         h2 {
             margin-top: 1rem;
             margin-bottom: 0rem;
         }
+
         p {
             margin-bottom: 0;
             font-family: 'Avenir Next Regular', serif;
         }
+
         del {
             display: none;
         }
+
         .Price {
             font-weight: bold;
         }
+
         &_isArabic {
             margin-right: auto;
             margin-left: 10%;
             overflow: hidden;
         }
+
         @include desktop {
             vertical-align: top;
             display: inline-block;
@@ -96,12 +109,15 @@
             margin-right: 2%; 
         }
     }
+
     &-MobileSlider {
-        width: 100%;
+        width: 80%;
+        overflow: visible;
         &_isArabic {
             direction: ltr;
         }
     }
+
     &-TagOverlay {
         position: absolute;
         top: 1rem;
@@ -113,6 +129,7 @@
         width: 3rem;
         height: 1.5rem;
         padding: 1.5px;
+
         &_isArabic {
             @include desktop {
                 border-top-left-radius: 1rem; 
@@ -122,6 +139,7 @@
             }
         }
     }
+
     &-FavoriteOverlay {
         position: absolute;
         background: url(../../style/icons/icons.png) -33px -980px no-repeat;
@@ -129,6 +147,7 @@
         right: 1rem;
         width: 25px;
         height: 20px;
+
         &_isArabic {
             @include desktop {
                 right: auto;
@@ -136,10 +155,12 @@
             }
         }
     }
+
     &-ButtonPrev {
         @include desktop {
             left: 0;
         }
+
         &_isArabic {
             right: 0;
         }
@@ -148,14 +169,19 @@
         @include desktop {
             right: 0;
         }
+
         &_isArabic {
             right: auto;
             left: 0;
         }
 
     }
+
     &-ButtonPrev, &-ButtonNext {
+        display: none;
+        
         @include desktop {
+            display: block;
             background-color: var(--button-color);
             color: var(--button-text-color);
             position: absolute;

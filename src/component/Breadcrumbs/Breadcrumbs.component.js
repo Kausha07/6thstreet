@@ -15,6 +15,7 @@ import { PureComponent } from 'react';
 import Breadcrumb from 'Component/Breadcrumb';
 import ContentWrapper from 'Component/ContentWrapper';
 import { BreadcrumbsType } from 'Type/Breadcrumbs';
+import { isArabic } from 'Util/App';
 import { appendWithStoreCode } from 'Util/Url';
 
 import './Breadcrumbs.style';
@@ -31,14 +32,8 @@ export class Breadcrumbs extends PureComponent {
     };
 
     state = {
-        isArabic: false
+        isArabic: isArabic()
     };
-
-    static getDerivedStateFromProps() {
-        return {
-            isArabic: JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data.language === 'ar'
-        };
-    }
 
     renderBreadcrumb({ url, name }, i) {
         const { breadcrumbs } = this.props;
