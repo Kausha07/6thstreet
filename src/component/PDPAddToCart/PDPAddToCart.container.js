@@ -76,7 +76,6 @@ export class PDPAddToCartContainer extends PureComponent {
     }
 
     addToCart() {
-        // eslint-disable-next-line no-unused-vars
         const { product, product: { simple_products }, addProductToCart } = this.props;
         const {
             selectedSizeType, selectedSizeCode, insertedSizeStatus
@@ -84,7 +83,6 @@ export class PDPAddToCartContainer extends PureComponent {
 
         const { size } = simple_products[selectedSizeCode];
 
-        console.log(size[selectedSizeType]);
         if (product.size_uk.length !== 0 && selectedSizeCode === '') {
             this.setState({ errorMessage: 'Please, select a size.' });
         }

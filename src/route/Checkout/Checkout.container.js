@@ -1,54 +1,50 @@
-import PropTypes from 'prop-types';
-import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import {
+    CheckoutContainer as SourceCheckoutContainer,
+    mapDispatchToProps as sourceMapDispatchToProps,
+    mapStateToProps
+} from 'SourceRoute/Checkout/Checkout.container';
 import CheckoutDispatcher from 'Store/Checkout/Checkout.dispatcher';
-
-import Checkout from './Checkout.component';
-
-export const mapStateToProps = () => ({});
+import { updateMeta } from 'Store/Meta/Meta.action';
+import { isSignedIn } from 'Util/Auth';
 
 export const mapDispatchToProps = (dispatch) => ({
+    ...sourceMapDispatchToProps(dispatch),
     estimateShipping: (address) => CheckoutDispatcher.estimateShipping(dispatch, address)
 });
 
-export class CheckoutContainer extends PureComponent {
-    static propTypes = {
-        estimateShipping: PropTypes.func.isRequired
-    };
-
-    containerFunctions = {
-        estimateShipping: this.estimateShipping.bind(this)
-    };
-
-    estimateShipping() {
-        console.log('*** Will send shipping request...');
-
-        const { estimateShipping } = this.props;
-
-        estimateShipping({
-            country_code: 'KW',
-            phone_dial_code: '965',
-            email: 'raivisd@scandiweb.com',
-            firstname: 'Raivis',
-            lastname: 'Dejus',
-            street: 'Briana 9a',
-            city: 'Kuwait',
-            city_ar: 'Kuwait',
-            area: 'Abdali',
-            area_ar: 'Abdali',
-            phone_number: '55501040',
-            phone: '+96555501040',
-            default_shipping: true
-        });
+export class CheckoutContainer extends SourceCheckoutContainer {
+    componentDidMount() {
+        updateMeta({ title: __('Checkout') });
     }
 
-    render() {
-        return (
-            <Checkout
-              { ...this.containerFunctions }
-            />
-        );
+    componentDidUpdate() {
+        const {
+            history,
+            showInfoNotification,
+            guest_checkout = true,
+            totals,
+            totals: {
+                items = []
+            }
+        } = this.props;
+
+        if (Object.keys(totals).length && !items.length) {
+            showInfoNotification(__('Please add at least one product to cart!'));
+            history.push('/cart');
+        }
+
+        // if guest checkout is disabled and user is not logged in => throw him to homepage
+        if (!guest_checkout && !isSignedIn()) {
+            history.push('/');
+        }
+    }
+
+    onShippingEstimationFieldsChange(address) {
+        const { estimateShipping } = this.props;
+
+        estimateShipping(address);
     }
 }
 
