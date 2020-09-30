@@ -40,6 +40,7 @@ class WelcomeScreenContainer extends PureComponent {
 
     onLanguageSelect(value) {
         const { setLanguage } = this.props;
+
         setLanguage(value);
     }
 

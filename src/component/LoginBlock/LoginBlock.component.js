@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import { isArabic } from 'Util/App';
+
 import './LoginBlock.style';
 
 class LoginBlock extends PureComponent {
@@ -13,10 +15,10 @@ class LoginBlock extends PureComponent {
         name: 'Guest'
     };
 
-    constructor() {
-        super();
-        this.state = { isOpen: true };
-    }
+    state = {
+        isOpen: true,
+        isArabic: isArabic()
+    };
 
     handleDismiss = () => {
         this.setState({
@@ -74,6 +76,8 @@ class LoginBlock extends PureComponent {
 
     renderButtons() {
         const { isSignedIn } = this.props;
+        const { isArabic } = this.state;
+
         if (isSignedIn) {
             return (
                 <div mix={ { block: 'LoginBlock', elem: 'ButtonContainer' } }>
@@ -86,10 +90,10 @@ class LoginBlock extends PureComponent {
 
         return (
             <div mix={ { block: 'LoginBlock', elem: 'ButtonContainer' } }>
-                <button mix={ { block: 'LoginBlock', elem: 'CreateButton secondary' } }>
+                <button mix={ { block: 'LoginBlock', elem: 'CreateButton secondary', mods: { isArabic } } }>
                     Create Account
                 </button>
-                <button mix={ { block: 'LoginBlock', elem: 'LoginButton primary' } }>
+                <button mix={ { block: 'LoginBlock', elem: 'LoginButton primary', mods: { isArabic } } }>
                     Sign in
                 </button>
             </div>
