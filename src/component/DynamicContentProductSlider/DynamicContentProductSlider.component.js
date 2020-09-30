@@ -100,6 +100,10 @@ class DynamicContentProductSlider extends PureComponent {
         } = this.props;
         const { currentPage, isArabic } = this.state;
 
+        if (isMobile.any()) {
+            return null;
+        }
+
         if (isLoading) {
             return null;
         }
@@ -125,6 +129,10 @@ class DynamicContentProductSlider extends PureComponent {
     renderButtonPrev() {
         const { isLoading } = this.props;
         const { currentPage, isArabic } = this.state;
+
+        if (isMobile.any()) {
+            return null;
+        }
 
         if (isLoading) {
             return null;
@@ -211,7 +219,7 @@ class DynamicContentProductSlider extends PureComponent {
                         Latest trends, new looks, must have... don&apos;t miss it
                     </span>
                 </div>
-                { isMobile.any() ? this.renderProductsMobile() : products }
+                { isMobile.any() || isMobile.tablet() ? this.renderProductsMobile() : products }
             </div>
         );
     }

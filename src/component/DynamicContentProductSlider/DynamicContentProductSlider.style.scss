@@ -62,8 +62,8 @@
     }
     &-ProductItem {
         display: block;
-        margin-right: 10%;
-        width: calc(90%);
+        margin-right: 11%;
+        width: calc(89%);
         height: 100%;
         text-align: center;
         overflow: hidden;
@@ -156,7 +156,9 @@
 
     }
     &-ButtonPrev, &-ButtonNext {
+        display: none;
         @include desktop {
+            display: block;
             background-color: var(--button-color);
             color: var(--button-text-color);
             position: absolute;
