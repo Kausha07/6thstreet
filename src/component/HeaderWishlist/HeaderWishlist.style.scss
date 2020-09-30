@@ -64,4 +64,14 @@
             filter: invert(43%) sepia(60%) saturate(1535%) hue-rotate(335deg) brightness(107%) contrast(95%);
         }
     }
+
+    &_isArabic {
+        &:not(&_isBottomBar) {
+            div {
+                &::before {
+                    left: 0;
+                }
+            }
+        }
+    }
 }

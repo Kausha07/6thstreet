@@ -6,6 +6,7 @@ import './LoginBlock.style';
 class LoginBlock extends PureComponent {
     static propTypes = {
         isSignedIn: PropTypes.bool.isRequired,
+        language: PropTypes.string.isRequired,
         name: PropTypes.string
     };
 
@@ -15,12 +16,14 @@ class LoginBlock extends PureComponent {
 
     constructor() {
         super();
-        this.state = { isOpen: true };
-
         this.state = {
-            isOpen: true,
-            isArabic: JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data.language === 'ar'
+            isOpen: true
         };
+    }
+
+    static getDerivedStateFromProps(nextProps) {
+        const { language } = nextProps;
+        return ({ isArabic: language !== 'en' });
     }
 
     handleDismiss = () => {

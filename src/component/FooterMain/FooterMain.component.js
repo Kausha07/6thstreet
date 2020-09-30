@@ -111,7 +111,7 @@ class FooterMain extends PureComponent {
             this.linksMap
                 .filter((column) => column.title === 'Download The App')
                 .map((column) => (
-                    <div block="FooterMain" elem="Column" key={ column.title }>
+                    <div block="FooterMain" elem="LastColumn" key={ column.title }>
                         <h4>{ column.title }</h4>
                         <div block="FooterMain" elem="Nav">
                             { column.items.map((items) => (

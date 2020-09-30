@@ -6,12 +6,27 @@ import './HeaderWishlist.style';
 class HeaderWishlist extends PureComponent {
     static propTypes = {
         isBottomBar: PropTypes.bool.isRequired,
-        isWishlist: PropTypes.bool.isRequired
-        // TODO: implement prop-types
+        isWishlist: PropTypes.bool.isRequired,
+        language: PropTypes.string.isRequired,
+        isMobile: PropTypes.bool
     };
 
+    static defaultProps = {
+        isMobile: false
+    };
+
+    state = {
+        isArabic: false
+    };
+
+    static getDerivedStateFromProps(nextProps) {
+        const { language } = nextProps;
+        return ({ isArabic: language !== 'en' });
+    }
+
     render() {
-        const { isBottomBar, isWishlist } = this.props;
+        const { isBottomBar, isWishlist, isMobile } = this.props;
+        const { isArabic } = this.state;
 
         return (
             <div
@@ -19,7 +34,15 @@ class HeaderWishlist extends PureComponent {
               mods={ { isWishlist } }
               mix={ {
                   block: 'HeaderWishlist',
-                  mods: { isBottomBar }
+                  mods: { isBottomBar },
+                  mix: {
+                      block: 'HeaderWishlist',
+                      mods: { isArabic },
+                      mix: {
+                          block: 'HeaderWishlist',
+                          mods: { isMobile }
+                      }
+                  }
               } }
             >
                 <div> </div>

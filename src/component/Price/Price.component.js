@@ -1,3 +1,4 @@
+/* eslint-disable fp/no-let */
 /* eslint-disable no-magic-numbers */
 
 import PropTypes from 'prop-types';
@@ -10,6 +11,10 @@ class Price extends PureComponent {
         basePrice: PropTypes.number.isRequired,
         specialPrice: PropTypes.number.isRequired,
         currency: PropTypes.string.isRequired
+    };
+
+    state = {
+        isArabic: JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data.language === 'ar'
     };
 
     haveDiscount() {
@@ -47,8 +52,21 @@ class Price extends PureComponent {
             basePrice,
             specialPrice
         } = this.props;
+        const { isArabic } = this.state;
 
-        const discountPercentage = Math.floor(100 * (1 - (specialPrice / basePrice)));
+        let discountPercentage = Math.round(100 * (1 - (specialPrice / basePrice)));
+        if (discountPercentage === 0) {
+            discountPercentage = 1;
+        }
+
+        if (isArabic) {
+            return (
+                <span block="Price" elem="Discount" mods={ { discount: this.haveDiscount() } }>
+                { discountPercentage }
+                %-
+                </span>
+            );
+        }
 
         return (
             <span block="Price" elem="Discount" mods={ { discount: this.haveDiscount() } }>
@@ -72,8 +90,8 @@ class Price extends PureComponent {
 
         return (
             <>
-                <del>{ this.renderBasePrice() }</del>
-                <span>
+                <del block="Price" elem="Del">{ this.renderBasePrice() }</del>
+                <span block="Price" elem="Wrapper">
                     { this.discountPercentage() }
                     { this.renderSpecialPrice() }
                 </span>

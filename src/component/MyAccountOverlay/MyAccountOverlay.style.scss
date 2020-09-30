@@ -1,0 +1,571 @@
+/**
+ * ScandiPWA - Progressive Web App for Magento
+ *
+ * Copyright © Scandiweb, Inc. All rights reserved.
+ * See LICENSE for license details.
+ *
+ * @license OSL-3.0 (Open Software License ("OSL") v. 3.0)
+ * @package scandipwa/base-theme
+ * @link https://github.com/scandipwa/base-theme
+ */
+
+:root {
+    --checkbox-label-color: #0a0a0a;
+    --my-account-input-label-color: rgba(10, 10, 10, .59);
+    --my-account-overlay-width: 450px;
+    --my-account-overlay-border-width: 1px;
+    --radio-label-color: black;
+    --gray-color: #9b9b9b;
+    --btn-bg-lite-gray-color: #d1d3d4;
+}
+
+.MyAccountOverlay {
+    --overlay-background: var(--overlay-content-background);
+
+    display: none;
+    grid-column: 3;
+    right: 0;
+    padding-top: 1rem;
+    opacity: 1;
+    overflow: visible;
+    z-index: 100;
+    pointer-events: all;
+    cursor: auto;
+
+
+    &_isPopup {
+        opacity: 0;
+        overflow: hidden;
+    }
+
+    &-Image {
+        height: 240px;
+        width: 100%;
+        vertical-align: middle;
+        object-fit: cover;
+        object-position: 0 -330px;
+    }
+
+    label {
+        &::before{
+            content: none !important;
+        }
+    }
+
+    @include desktop {
+        display: block;
+        position: fixed;
+        top: 50px;
+        right: 0;
+        left: 0;
+        margin-right: auto;
+        margin-left: auto;
+        padding: 0;
+        width: var(--my-account-overlay-width);
+    }
+
+    @include before-desktop {
+        height: auto;
+        padding-bottom: 0;
+        top: 0;
+        position: relative;
+    }
+
+    &_isVisible {
+        @include desktop {
+            border: var(--my-account-overlay-border-width) solid var(--overlay-desktop-border-color);
+        }
+    }
+
+    button {
+        width: 100%;
+        margin-top: .5rem;
+    }
+
+    input {
+        width: 100%;
+        height: 40px;
+        --input-color: var(--black-color);
+        caret-color: var(--black-color);
+        text-transform: none;
+    }
+
+    &-Heading {
+        text-transform: none;
+        font-size: 18px;
+        font-weight: 600;
+        text-align: center;
+
+        @include before-desktop {
+            display: none;
+        }
+    }
+
+    &-Subtitle {
+        font-size: 13px;
+        text-align: center;
+        text-transform: none;
+        font-weight: 300;
+    }
+
+    &-Notification {
+        background-color: var(--primary-dark-color);
+        padding: 2rem;
+    }
+
+    &-Navigation {
+        li {
+            margin: 0;
+            padding: 0;
+
+            &::before {
+                content: none;
+            }
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+
+            a {
+                display: block;
+            }
+        }
+
+        a,
+        button {
+            width: 100%;
+            text-align: left;
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+
+            &:hover {
+                background-color: var(--color-cart-light);
+                text-decoration: none;
+            }
+
+            &:focus {
+                text-decoration: none;
+            }
+
+            @include desktop {
+                padding: .5rem;
+            }
+        }
+        @include desktop {
+            padding: .5rem;
+        }
+    }
+
+    &-Action form,
+    &-Additional {
+        padding: 0 60px 60px;
+    }
+
+    &-Action {
+        display: grid;
+        grid-template-rows: max-content 1fr;
+
+        &_state {
+            &_createAccount {
+                h4 {
+                    padding-right: 1rem;
+                    display: inline;
+                }
+
+                h3 {
+                    margin-bottom: 1rem;
+                }
+
+                .Field {
+                    margin-top: .7rem;
+                }
+                @include before-desktop {
+                    padding-top: 1rem;
+                }
+            }
+
+            &_forgotPassword {
+                h4 {
+                    width: initial;
+                }
+
+                button {
+                    font-weight: bold;
+                }
+            }
+
+            &_signIn {
+                h4 {
+                    text-align: center;
+                }
+            }
+
+            &_loggedIn {
+                .MyAccountOverlay-Heading {
+                    @include desktop {
+                        display: none;
+                    }
+                }
+                @include desktop {
+                    width: 180px;
+                    padding: 0;
+                }
+            }
+        }
+
+        h4 {
+            font-size: 1.15rem;
+            font-weight: bold;
+            margin-bottom: .5rem;
+        }
+
+        h3 {
+            margin-top: 0;
+        }
+
+        @include desktop {
+            width: calc(var(--my-account-overlay-width) - (var(--my-account-overlay-border-width) * 2));
+        }
+    }
+
+    &-Additional {
+        padding-top: 5.5rem;
+
+        section {
+            display: flex;
+
+            padding-top: 20px;
+
+            &:first-of-type {
+                padding-top: 0;
+            }
+        }
+
+        &_state {
+            &_createAccount {
+                padding-top: 2rem;
+
+                @include before-desktop {
+                    display: none;
+                }
+
+                h4 {
+                    margin: 0;
+                    padding-right: 0;
+                }
+
+                button {
+                    width: initial;
+                    height: initial;
+                    margin: 0;
+                    padding-left: .4rem;
+                }
+            }
+
+            &_signIn {
+                section {
+                    flex-direction: column;
+                }
+            }
+
+            &_confirmEmail {
+                padding-top: 0;
+            }
+
+            &_forgotPassword {
+                padding-top: 2.8rem;
+                padding-left: 2.1rem;
+
+                @include before-desktop {
+                    display: none;
+                }
+
+                section {
+                    display: flex;
+
+                    button {
+                        width: initial;
+                        margin-top: 0;
+                        padding-left: 5px;
+                        font-weight: 600;
+                    }
+
+                    h4 {
+                        margin-bottom: 0;
+                        align-self: center;
+                    }
+
+                    &:last-of-type {
+                        padding-top: .1rem;
+                    }
+                }
+            }
+
+            &_forgotPasswordSuccess {
+                padding-top: 0;
+
+                h4 {
+                    font-size: 1rem;
+                    line-height: 1.5;
+                    padding-bottom: 1.4rem;
+                    font-weight: normal;
+                    letter-spacing: normal;
+                }
+            }
+        }
+    }
+
+    &-CloseButton {
+        &::before,
+        &::after {
+            background-color: var(--header-color);
+            content: '';
+            height: 20px;
+            position: absolute;
+            right: 27px;
+            top: -13px;
+            transform-origin: 50% 50%;
+            width: 1px;
+            z-index: 1;
+        }
+
+        &::before {
+            transform: rotate(-45deg);
+        }
+
+        &::after {
+            transform: rotate(45deg);
+        }
+    }
+
+    &-Close {
+        position: absolute;
+        right: 0;
+        width: 30px !important;
+        height: 30px;
+        border-radius: 100%;
+        background: var(--black-color);
+        color: var(--white-color);
+        margin: 10px;
+        cursor: pointer;
+        z-index: 10;
+        padding: 5px;
+        display: flex;
+        align-items: center;
+
+        svg {
+            fill: $white;
+            margin: 0 auto;
+        }
+
+        &_isArabic {
+            left: 0;
+            right: unset;
+        }
+    }
+
+    &-ForgotPasswordButton {
+        @include desktop {
+            display: none;
+        }
+    }
+
+    &-ForgotPasswordSubheading {
+        font-weight: 600;
+        font-size: 14px;
+        text-transform: none;
+        padding-bottom: 10px;
+        text-align: center;
+    }
+
+    &-Buttons {
+        display: flex;
+        margin: 30px 90px;
+
+        .Button {
+            --button-color: var(--gray-color);
+            --button-background: var(--white-color);
+            --button-border: var(--white-color);
+            --button-hover-color: var(--black-color);
+            --button-hover-border: var(--black-color);
+            --button-hover-background: var(--white-color);
+            white-space:nowrap;
+            padding: 0 5%;
+            font-size: 11px;
+            height: 30px;
+            border-radius: 20px;
+            margin: 0 10px;
+
+            button {
+                padding: 0;
+
+                &:focus{
+                    background-color: var(--color-cart-light) !important;
+                }
+            }
+
+            &_isSignIn,
+            &_isCreateAccount
+             {
+                --button-border: var(--black-color);
+                --button-color: var(--black-color);
+            }
+        }
+    }
+
+    &-Button {
+        
+        .Button{
+            --button-background: var(--btn-bg-lite-gray-color);
+            --button-border:  var(--btn-bg-lite-gray-color);
+            --button-hover-background: var(--black-color);
+            --button-hover-border: var(--black-color);
+
+            &_isMargin {
+                margin-top: 40px;
+            }
+        }
+
+        &_likeLink {
+            height: 20px;
+            --button-color: var(--gray-color);
+            text-transform: none;
+            text-align: left;
+            vertical-align: bottom;
+            padding: 0;
+            margin-bottom: 20px;
+            font-size: .95rem;
+            color: var(--button-color);
+        }
+
+        &_isArabic {
+            text-align: right;
+        }
+
+        &_isSignIn {
+            &::after {
+                position: absolute;
+                content: "";
+                top: 17px;
+                right: 10px;
+                background: url(./icons/lock.svg) no-repeat;
+                background-size: 25px;
+                width: 20px;
+                height: 25px;
+                display: inline-block;
+                font-size: 0;
+            }
+        }
+    }
+
+    &-Checkbox {
+        margin-top: 15px;
+        display: flex;
+
+        .Field [type='checkbox'] {
+            + label {
+                margin-right: 10px ;
+            }
+
+            &:checked + label {
+                --primary-base-color: var(--black-color);
+            }
+
+            &:hover + label {
+                --primary-base-color: var(--black-color);
+            }
+        }
+
+        &_isArabic {
+            .Field [type='checkbox'] {
+                + label {
+                    margin-left: 10px;
+                    margin-right: 0;
+                }
+            }
+        }
+    }
+
+    &-Radio{
+        display: flex;
+        margin-top: 10px;
+        
+        .Field [type='radio']{
+            
+            +label {
+                position: relative;
+                height: 14px;
+                width: 14px;
+                margin-right: 6px;
+                
+                
+                &:hover {
+                    &::after {
+                            --checkmark-color: var(--black-color);
+                    }
+                }
+
+                border-radius: 50%;
+    
+                &::after {
+                    left: 0;
+                    right: 0;
+                    top: 0;
+                    bottom: 0;
+                    margin: auto;
+                    width: .5rem;
+                    height: .5rem;
+                    border-radius: 50%;
+                    transition-property: background-color, box-shadow;
+                    will-change: background-color, box-shadow;
+                }
+            }
+            &:disabled + label {
+                color: #b8b8b8;
+                cursor: auto;
+            }
+
+            &:checked + label {
+                --primary-base-color: var(--black-color);
+            }
+
+            &:focus {
+                
+                + label {
+                    &::after {
+                        --checkmark-color: var(--black-color);
+                    }
+                }
+            }
+
+        }
+
+        label {
+            color: var(--radio-label-color);
+            text-transform: none;
+            margin-right: 12px;
+            font-weight: 300;
+            font-size: 13px;
+        }
+
+        &_isArabic {
+            label {
+                direction: ltr;
+            }
+        }
+    }
+
+
+    &-Legend {
+        margin-top: 10px;
+    }
+
+    &-LockImg {
+        width: auto;
+        height: 60px;
+        justify-content: center;
+        text-align: center;
+        align-items: center;
+        margin: 0 42% 40px;
+    }
+}
