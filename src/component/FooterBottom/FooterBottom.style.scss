@@ -6,15 +6,20 @@
 
 .FooterBottom {
         background: var(--footer-bottom-background-color);
-        display: flex;
-        justify-content: space-between;
-        padding: 26px 50px 26px 80px;
+        padding: 26px 30px 26px 50px;
         height: 90px;  
 
     @include before-desktop {
         display: none;
     }
     
+    &-Layout {
+        display: flex;
+        justify-content: space-between;
+        margin: auto;
+        max-width: 1400px;
+    }
+
     &_FooterBottomHidden {
         display: none;
     }
@@ -27,10 +32,11 @@
         font-weight: 500;
         letter-spacing: 0.5px;
         line-height: 18px;
+        width:auto;
     }
 
     &-Hyperlinks, a {
-        margin: 0 10px;
+        margin: 0 5px;
         text-decoration: none;
         padding-top: 16px;
         text-transform: uppercase;
@@ -46,5 +52,15 @@
         background: url(../../style/icons/icons.png) -720px -953px no-repeat;
         width: 277px;
         height: 37px;
+    }
+}
+
+.PageWrapper {
+
+    &_isArabic {
+        
+        .FooterBottom {
+            padding: 26px 50px 26px 30px;
+        }
     }
 }

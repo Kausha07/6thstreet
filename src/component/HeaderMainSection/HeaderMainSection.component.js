@@ -20,17 +20,18 @@ class HeaderMainSection extends NavigationAbstract {
     };
 
     renderMap = {
+        gender: this.renderGenderSwitcher.bind(this),
+        logo: this.renderLogo.bind(this),
         account: this.renderAccount.bind(this),
         cart: this.renderCart.bind(this),
-        wishlist: this.renderWishlist.bind(this),
-        gender: this.renderGenderSwitcher.bind(this),
-        logo: this.renderLogo.bind(this)
+        wishlist: this.renderWishlist.bind(this)
     };
 
     renderAccount() {
         return (
             <HeaderAccount
               key="account"
+              isMobile
             />
         );
     }
@@ -39,6 +40,7 @@ class HeaderMainSection extends NavigationAbstract {
         return (
             <HeaderCart
               key="cart"
+              CartButton="CartButton"
             />
         );
     }
@@ -47,6 +49,7 @@ class HeaderMainSection extends NavigationAbstract {
         return (
             <HeaderWishlist
               key="wishlist"
+              isMobile
             />
         );
     }
@@ -55,6 +58,7 @@ class HeaderMainSection extends NavigationAbstract {
         return (
             <HeaderGenders
               key="genders"
+              isMobile
             />
         );
     }

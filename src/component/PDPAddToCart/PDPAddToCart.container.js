@@ -11,15 +11,21 @@ export const mapStateToProps = (state) => ({
     product: state.PDP.product
 });
 
+<<<<<<< HEAD
 export const mapDispatchToProps = (_dispatch) => ({
     addProductToCart:
      (productData, thumbnail_url) => CartDispatcher.addProductToCart(_dispatch, productData, thumbnail_url)
+=======
+export const mapDispatchToProps = (dispatch) => ({
+    addProductToCart: (productData) => MobileCartDispatcher.addProductToCart(dispatch, productData)
+>>>>>>> staging
 });
 
 export class PDPAddToCartContainer extends PureComponent {
     static propTypes = {
         product: Product.isRequired,
-        addProductToCart: PropTypes.func.isRequired
+        addProductToCart: PropTypes.func.isRequired,
+        showNotification: PropTypes.func.isRequired
     };
 
     containerFunctions = {
@@ -29,15 +35,44 @@ export class PDPAddToCartContainer extends PureComponent {
     };
 
     state = {
+        sizeObject: {},
         selectedSizeType: 'eu',
-        selectedSize: ''
+        selectedSizeCode: '',
+        errorMessage: '',
+        insertedSizeStatus: true,
+        isLoading: false,
+        addedToCart: false
     };
+
+    static getDerivedStateFromProps(props) {
+        const { product } = props;
+
+        if (product.simple_products !== undefined) {
+            const filteredProductKeys = Object.keys(product.simple_products);
+
+            if (filteredProductKeys.length <= 1) {
+                return { insertedSizeStatuson: false };
+            }
+
+            const filteredProductSizeKeys = Object.keys(product.simple_products[filteredProductKeys[0]].size);
+
+            const object = {
+                sizeCodes: filteredProductKeys,
+                sizeTypes: filteredProductSizeKeys
+            };
+
+            return { sizeObject: object };
+        }
+
+        return null;
+    }
 
     containerProps = () => {
         const { product } = this.props;
         return { ...this.state, product };
     };
 
+<<<<<<< HEAD
     onSizeTypeSelect() {
     }
 
@@ -60,6 +95,49 @@ export class PDPAddToCartContainer extends PureComponent {
             optionId: selectedSizeType.toLocaleUpperCase(),
             optionValue: size[selectedSizeType]
         }, thumbnail_url);
+=======
+    onSizeTypeSelect(type) {
+        this.setState({ selectedSizeType: type.target.value });
+    }
+
+    onSizeSelect(size) {
+        this.setState({ errorMessage: '' });
+        this.setState({ selectedSizeCode: size.target.value });
+    }
+
+    addToCart() {
+        // eslint-disable-next-line no-unused-vars
+        const { product, product: { simple_products }, addProductToCart } = this.props;
+        const {
+            selectedSizeType, selectedSizeCode, insertedSizeStatus
+        } = this.state;
+
+        const { size } = simple_products[selectedSizeCode];
+
+        console.log(size[selectedSizeType]);
+        if (product.size_uk.length !== 0 && selectedSizeCode === '') {
+            this.setState({ errorMessage: 'Please, select a size.' });
+        }
+
+        if ((product.size_uk.length !== 0 && selectedSizeCode !== '') || (insertedSizeStatus === false)) {
+            this.setState({ isLoading: true });
+
+            addProductToCart({
+                sku: selectedSizeCode,
+                qty: 1,
+                optionId: selectedSizeType.toLocaleUpperCase(),
+                optionValue: size[selectedSizeType]
+            }).then(
+                () => this.afterAddToCart()
+            );
+        }
+    }
+
+    afterAddToCart() {
+        this.setState({ isLoading: false });
+        // TODO props for addedToCart
+        this.setState({ addedToCart: true });
+>>>>>>> staging
     }
 
     render() {
