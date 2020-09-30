@@ -126,11 +126,7 @@ class DynamicContentProductSlider extends PureComponent {
         const { isLoading } = this.props;
         const { currentPage, isArabic } = this.state;
 
-        if (isMobile.any()) {
-            return null;
-        }
-
-        if (isLoading) {
+        if (isLoading || isMobile.any()) {
             return null;
         }
         if (currentPage !== 0) {
