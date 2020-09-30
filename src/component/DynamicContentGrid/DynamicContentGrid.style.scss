@@ -1,5 +1,6 @@
 :root {
     --dynamic-content-grid-column-count-mobile: 1;
+    --dynamic-content-grid-column-count-tablet: 1;
     --dynamic-content-grid-column-count-desktop: 3;
     --subtitle-font-size: 17px;
     --title-font-size: 25px;
@@ -9,7 +10,7 @@
 
 .DynamicContentGrid {
     border-top: 2px solid var(--light-gray);
-    margin: 50px 100px 0;
+    margin: 50px 0;
     padding: 0 31px;
 
     &-Grid {
@@ -19,10 +20,6 @@
 
         a {
             margin: 0;
-        }
-
-        @include after-mobile {
-            grid-template-columns: repeat(var(--dynamic-content-grid-column-count-desktop), 1fr);
         }
     }
 
@@ -63,6 +60,20 @@
             }
         }
     }
+
+    @include desktop {
+        &-Grid {
+            grid-template-columns: repeat(var(--dynamic-content-grid-column-count-desktop), 1fr);
+            margin-left: 70px;
+            margin-right: 70px;
+        }
+    }
+
+    @include  tablet {
+        &-Grid {
+            grid-template-columns: repeat(var(--dynamic-content-grid-column-count-tablet), 1fr);
+        }
+    }
 }
 
 .CategoryItem {
@@ -72,7 +83,7 @@
 
         a {
             .Image {
-                height: 35rem;
+                padding-bottom: 100%;
             }
         }
     }
