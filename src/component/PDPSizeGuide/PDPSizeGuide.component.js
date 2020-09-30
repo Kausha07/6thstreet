@@ -1,10 +1,10 @@
-import Popup from '@scandipwa/scandipwa/src/component/Popup';
-import isMobile from '@scandipwa/scandipwa/src/util/Mobile/isMobile';
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import ExpandableContent from 'Component/ExpandableContent';
 import SizeTable from 'Component/SizeTable';
+import Popup from 'SourceComponent/Popup';
+import isMobile from 'SourceUtil/Mobile/isMobile';
 
 import './PDPSizeGuide.style';
 
@@ -45,7 +45,7 @@ class PDPSizeGuide extends PureComponent {
               tabIndex={ 0 }
               mix={ { block: 'PDPSizeGuide', elem: 'Button' } }
             >
-                { isMobile.any() && !isMobile.tablet() ? __('View Size Guide') : __('Size guide') }
+                { isMobile.any() ? __('View Size Guide') : __('Size guide') }
             </span>
         );
     }
@@ -85,19 +85,11 @@ class PDPSizeGuide extends PureComponent {
         return (
             <div mix={ { block: 'PDPSizeGuide', elem: 'GuideContainer', mods: { isArabic } } }>
                 <div mix={ { block: 'PDPSizeGuide', elem: 'HeaderContainer', mods: { isArabic } } }>
-                    { isMobile.any() && !isMobile.tablet() ? closeBtn : null }
-                    { isMobile.any() && !isMobile.tablet()
-                        ? (
-                            <h1 mix={ { block: 'PDPSizeGuide', elem: 'Header', mods: { isArabic } } }>
-                                { __('SIZE GUIDE') }
-                            </h1>
-                        )
-                        : (
-                            <h1 mix={ { block: 'PDPSizeGuide', elem: 'Header', mods: { isArabic } } }>
-                                { __('Sizing Guide') }
-                            </h1>
-                        ) }
-                    <div mix={ { block: 'PDPSizeGuide', elem: 'Line', mods: { isArabic } } } />
+                    { isMobile.any() ? closeBtn : null }
+                    <h1 mix={ { block: 'PDPSizeGuide', elem: 'Header', mods: { isArabic } } }>
+                       { isMobile.any() ? __('SIZE GUIDE') : __('Sizing Guide') }
+                    </h1>
+                    <hr mix={ { block: 'PDPSizeGuide', elem: 'Line', mods: { isArabic } } } />
                 </div>
                 <span
                   mix={ { block: 'PDPSizeGuide', elem: 'SubHeader', mods: { isArabic } } }
@@ -106,9 +98,9 @@ class PDPSizeGuide extends PureComponent {
                 </span>
                 <div mix={ { block: 'PDPSizeGuide', elem: 'TableContainer', mods: { isArabic } } }>
                     { this.renderTableUK() }
-                    <div mix={ { block: 'PDPSizeGuide', elem: 'Divider', mods: { isArabic } } } />
+                    <hr mix={ { block: 'PDPSizeGuide', elem: 'Divider', mods: { isArabic } } } />
                     { this.renderTableInt() }
-                    <div mix={ { block: 'PDPSizeGuide', elem: 'Divider', mods: { isArabic } } } />
+                    <hr mix={ { block: 'PDPSizeGuide', elem: 'Divider', mods: { isArabic } } } />
                     { this.renderTableEu() }
                 </div>
             </div>

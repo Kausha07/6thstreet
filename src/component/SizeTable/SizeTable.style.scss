@@ -9,11 +9,13 @@
     &-Table {
         width: 100%;
     }
+
     &-TableCellTop {
         text-align: center;
         font-size: 23px;
         border: solid 1px var(--table-border-color);   
     }
+
     &-TableCell{
         text-align: center;
         line-height: 25px;
@@ -21,21 +23,25 @@
         border: solid 1px var(--table-border-color);
         font-family: 'Avenir Next Regular';
     }
+
     &-TopRow {
         font-family: 'Avenir Next Demi';
         background-color: var(--top-row-background);
         color: var(--top-row-fontcolor)
     }
+
     &-ButtonContainer {
         display: flex;
         width: 100%;
         align-items: center;
         justify-content: center;
         margin-bottom: 1.5rem;
+
         @include desktop {
             margin-bottom: 3rem;
         }
     }
+
     &-ButtonCm, &-ButtonInch {
         font-family: 'Avenir Next Regular';
         font-size: 20px;
@@ -46,28 +52,31 @@
         margin-top: 2.5rem;
         padding-left: 0.7rem;
         padding-right: 0.7rem;
+
         @include desktop {
             height: 4.5rem;
         }
     }
+
     &-ButtonCm {
         color: var(--unselected-color);
         border-style: none;
         font-weight: lighter;
+
         &_isCm {
             border: solid 1px var(--top-row-background);
             font-weight: bold;
             color: var(--top-row-background);
         }
     } 
+
     &-ButtonInch {
         border: solid 1px var(--top-row-background);
         font-weight: bold;
+
         &_isCm {
             border-style: none;
             font-weight: lighter;
         }
     }
-    
-
 }

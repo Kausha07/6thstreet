@@ -53,12 +53,16 @@ class PDPAddToCart extends PureComponent {
         );
     }
 
+    renderSizeGuide() {
+        return <PDPSizeGuide />;
+    }
+
     render() {
         return (
             <div block="PDPAddToCart">
                 { this.renderSizeTypeSelect() }
                 { this.renderSizeSelect() }
-                <PDPSizeGuide />
+                { this.renderSizeGuide() }
                 { this.renderAddToCartButton() }
             </div>
         );
