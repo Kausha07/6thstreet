@@ -1,7 +1,5 @@
 .Header {
-  height: 50px;
-
-  @include desktop {
-    height: 170px;
-  }
+    @include desktop {
+        height: 170px;
+    }
 }

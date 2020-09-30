@@ -1,13 +1,15 @@
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
+import { withRouter } from 'react-router';
 
 import CartOverlay from 'SourceComponent/CartOverlay';
+import isMobile from 'Util/Mobile';
 
 import './HeaderCart.style';
 
 class HeaderCart extends PureComponent {
     static propTypes = {
-        // TODO: implement prop-types
+        history: PropTypes.object.isRequired
     };
 
     state = {
@@ -22,14 +24,26 @@ class HeaderCart extends PureComponent {
         );
 
         this.setState({ cartPopUp: popUpElement });
-    }
+    };
+
+    routeChangeCart = () => {
+        const { history } = this.props;
+
+        history.push('/cart');
+    };
 
     render() {
         const { cartPopUp } = this.state;
 
         return (
             <div block="HeaderCart">
-                <button onClick={ this.renderCartPopUp } block="HeaderCart" elem="Button">
+                <button
+                  onClick={ isMobile.any()
+                      ? this.routeChangeCart
+                      : this.renderCartPopUp }
+                  block="HeaderCart"
+                  elem="Button"
+                >
                     { cartPopUp }
                 </button>
             </div>
@@ -37,4 +51,4 @@ class HeaderCart extends PureComponent {
     }
 }
 
-export default HeaderCart;
+export default withRouter(HeaderCart);

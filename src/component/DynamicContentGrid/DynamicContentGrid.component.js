@@ -68,9 +68,22 @@ class DynamicContentGrid extends PureComponent {
         );
     }
 
+    renderHeading() {
+        return (
+            <div
+              block="DynamicContentGrid"
+              elem="Heading"
+            >
+                <h2>Category Heading</h2>
+                <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit</span>
+            </div>
+        );
+    }
+
     render() {
         return (
             <div block="DynamicContentGrid">
+                { this.renderHeading() }
                 { this.renderGrid() }
             </div>
         );

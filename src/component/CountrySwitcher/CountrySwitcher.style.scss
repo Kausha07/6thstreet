@@ -11,7 +11,8 @@
         height: auto;
         letter-spacing: 1px;
         text-transform: capitalize;
-        margin-left: -10px;
+        margin-left: -20px;
+        margin-right: 10px;
         
         &::after {
             content: "";
@@ -31,25 +32,35 @@
     .Field {
         margin-top: 0;
         display: none;
+    }
+}
 
-        select {
-            border: none;
-            min-height: 0;
-            padding: 0;
-        }
+.PageWrapper {
+    &_isArabic {
 
-        &Select::after {
-            content: "";
-            position: absolute;
-            width: 0px;
-            height: 0px;
-            border-left: 5px solid transparent;
-            border-right: 5px solid transparent;
-            border-top: 5px solid black;
-            border-width: 5px 5px 0 5px;
-            top: 0px;
-            right: -1px;
-            transform: rotate(-90deg);
+        .CountrySwitcher {
+            &-CountryBtn {
+                margin-left: 20px;
+                margin-right: -20px;
+
+                &::after { 
+                    display: none; 
+                }
+
+                &::before {
+                    content: "";
+                    position: absolute;
+                    width: 0px;
+                    height: 0px;
+                    border-left: 5px solid transparent;
+                    border-right: 5px solid transparent;
+                    border-top: 5px solid black;
+                    border-width: 5px 5px 0 5px;
+                    top: 5px;
+                    left: 0;
+                    transform: rotate(90deg);
+                }
+            }
         }
     }
 }
