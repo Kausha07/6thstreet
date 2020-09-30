@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
-import MobileCartDispatcher from 'Store/MobileCart/MobileCart.dispatcher';
+import CartDispatcher from 'Store/Cart/Cart.dispatcher';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
 
 import PDPAddToCart from './PDPAddToCart.component';
@@ -12,7 +12,8 @@ export const mapStateToProps = (state) => ({
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
-    addProductToCart: (productData) => MobileCartDispatcher.addProductToCart(_dispatch, productData)
+    addProductToCart:
+     (productData, thumbnail_url) => CartDispatcher.addProductToCart(_dispatch, productData, thumbnail_url)
 });
 
 export class PDPAddToCartContainer extends PureComponent {
@@ -38,32 +39,27 @@ export class PDPAddToCartContainer extends PureComponent {
     };
 
     onSizeTypeSelect() {
-        console.log('*** Selecting size type - eu/uk/us...');
     }
 
     onSizeSelect() {
         const { product } = this.props;
         const { selectedSizeType } = this.state;
 
-        console.log('*** Selecting size in selected size type...', product[`size_${selectedSizeType}`][0]);
-
         // TODO Select proper size, currently will select first available
         this.setState({ selectedSize: product[`size_${selectedSizeType}`][0] });
     }
 
     addToCart() {
-        const { product: { sku }, addProductToCart } = this.props;
-        const { selectedSizeType, selectedSize } = this.state;
-        // TODO Validate if size has been selected
-
-        console.log('*** Adding to cart:', sku, selectedSizeType, selectedSize);
+        const { product: { simple_products, thumbnail_url }, addProductToCart } = this.props;
+        const { selectedSizeType, selectedSizeCode = '191755128603' } = this.state;
+        const { size } = simple_products[selectedSizeCode];
 
         addProductToCart({
-            sku,
+            sku: selectedSizeCode,
             qty: 1,
             optionId: selectedSizeType.toLocaleUpperCase(),
-            optionValue: selectedSize
-        });
+            optionValue: size[selectedSizeType]
+        }, thumbnail_url);
     }
 
     render() {
