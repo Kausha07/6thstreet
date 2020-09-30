@@ -23,21 +23,23 @@
     overflow: hidden;
     touch-action: pan-y;
 
+    margin: 20px 20px;
+
     transition: height 300ms;
 
     &-Wrapper {
-        display: grid;
+        display: flex;
         height: 50px;
 
         will-change: transform;
         transition: transform var(--animation-speed);
+        flex-direction: column;
         transform: translate3d(0, var(--translateY), 0);
 
         > * {
-            flex-grow: 1;
             flex-shrink: 0;
             width: 100%;
-            height: 100%;
+            height: auto;
         }
     }
 
@@ -47,10 +49,14 @@
         display: grid;
         grid-gap: 10px;
 
-        width: 100%;
-        grid-template-columns: repeat(auto-fit, 7px);
-        justify-content: center;
-        bottom: 1rem;
+        width: auto;
+        justify-content: flex-start;
+        height: min-content;
+        grid-template-columns: 1fr;
+        grid-auto-rows: min-content;
+        right: 1rem;
+        top: 50%;
+        bottom: 0;
     }
 
     &-Crumb {
@@ -65,5 +71,57 @@
             background-color: var(--slider-crumb-color);
             border-color: var(--slider-crumb-background);
         }
+    }
+
+    &-ButtonUp {
+        height: 30px !important;
+        position: absolute;
+        top: 0;
+        z-index: 6;
+        background-color: white;
+        width: 100%;
+        padding: 0;
+        opacity: .8;
+
+        &_isArrowUpHidden{
+            display: none;
+        }
+    }
+
+    &-ButtonDown {
+        height: 30px !important;
+        display: block;
+        position: absolute !important;
+        bottom: 0;
+        z-index: 10000000000 !important;
+        overflow: visible;
+        background-color: white;
+        width: 100%;
+        opacity: .8;
+
+        &_isArrowDownHidden{
+            display: none;
+        }
+    }
+
+    &-ArrowUp,
+    &-ArrowDown {
+        width: 0;
+        height: 0;
+        border: solid black;
+        border-width: 0 1px 1px 0;
+        display: inline-block;
+        padding: 5px 10px 10px 5px;
+        margin: 0 auto;
+    }
+
+    &-ArrowUp{
+        transform: rotate(-135deg);
+        top: 7px;
+    }
+
+    &-ArrowDown{
+        transform: rotate(45deg);
+        bottom: 7px;
     }
 }

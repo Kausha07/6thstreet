@@ -3,7 +3,11 @@
     min-width: 80px;
     height: auto;
     padding: 0;
-    margin-bottom: 10px;
+    padding-bottom: 10px;
+
+    &:last-of-type{
+        padding-bottom: 0;
+    }
 
     &_isActive {
         img {

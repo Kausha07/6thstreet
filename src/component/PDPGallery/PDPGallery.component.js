@@ -32,10 +32,9 @@ class PDPGallery extends PureComponent {
     );
 
     renderCrumbs() {
-        const { crumbs } = this.props;
+        const { crumbs, currentIndex, onSliderChange } = this.props;
 
         return (
-
             <div block="PDPGallery" elem="Crumbs">
                 <SliderVertical
                   mix={ {
@@ -47,6 +46,8 @@ class PDPGallery extends PureComponent {
                           mods: { isCrumbs: true }
                       }
                   } }
+                  activeImage={ currentIndex }
+                  onActiveImageChange={ onSliderChange }
                 >
                 { crumbs.map(this.renderCrumb) }
                 </SliderVertical>

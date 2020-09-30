@@ -17,7 +17,6 @@ import { Children, createRef, PureComponent } from 'react';
 import Draggable from 'Component/Draggable';
 import { ChildrenType, MixType } from 'Type/Common';
 import CSS from 'Util/CSS';
-import isMobile from 'Util/Mobile';
 
 import {
     ACTIVE_SLIDE_PERCENT,
@@ -48,7 +47,7 @@ export class SliderVertical extends PureComponent {
         mix: {}
     };
 
-    sliderWidth = 0;
+    sliderHeight = 0;
 
     prevPosition = 0;
 
@@ -70,94 +69,158 @@ export class SliderVertical extends PureComponent {
         const { activeImage } = this.props;
 
         this.state = {
-            prevActiveImage: activeImage
+            draggableRef: null,
+            prevActiveImage: activeImage,
+            height: 0,
+            sliderChildren: null,
+            sliderHeightChildren: null,
+            sliderHeight: null,
+            count: 0,
+            countPerPage: 0,
+            isArrowUpHidden: true,
+            isArrowDownHidden: false
         };
     }
 
     static getDerivedStateFromProps(props, state) {
         const { activeImage } = props;
-        const { prevActiveImage } = state;
+        const {
+            draggableRef,
+            prevActiveImage,
+            sliderChildren,
+            sliderHeightChildren,
+            count,
+            countPerPage
+        } = state;
+
+        if (activeImage > prevActiveImage) {
+            if (activeImage === count) {
+                const newTranslate = sliderChildren.length / count < 2
+                    ? -(sliderChildren.length - countPerPage) * sliderHeightChildren
+                    : -((countPerPage - 1) * sliderHeightChildren);
+
+                CSS.setVariable(
+                    draggableRef,
+                    'animation-speed',
+                    `${ Math.abs((prevActiveImage - activeImage) * ANIMATION_DURATION) }ms`
+                );
+
+                CSS.setVariable(
+                    draggableRef,
+                    'translateY',
+                    `${newTranslate}px`
+                );
+
+                if (activeImage === sliderChildren.length - 1) {
+                    return {
+                        prevActiveImage: activeImage,
+                        count: sliderChildren.length,
+                        isArrowDownHidden: activeImage === sliderChildren.length - 1
+                    };
+                }
+
+                return {
+                    prevActiveImage: activeImage,
+                    count: count + countPerPage - 1,
+                    isArrowDownHidden: activeImage === sliderChildren.length - 1
+                };
+            }
+        }
+
+        if (activeImage < prevActiveImage) {
+            if (activeImage === count - countPerPage - 1) {
+                const newTranslate = count / countPerPage > 2
+                    ? -(countPerPage - 1) * sliderHeightChildren
+                    : 0;
+
+                CSS.setVariable(
+                    draggableRef,
+                    'animation-speed',
+                    `${ Math.abs((prevActiveImage - activeImage) * ANIMATION_DURATION) }ms`
+                );
+
+                CSS.setVariable(
+                    draggableRef,
+                    'translateY',
+                    `${newTranslate}px`
+                );
+
+                if (newTranslate === 0) {
+                    return {
+                        prevActiveImage: activeImage,
+                        count: countPerPage,
+                        isArrowUpHidden: activeImage === 0
+                    };
+                }
+
+                return {
+                    prevActiveImage: activeImage,
+                    count: count - countPerPage,
+                    isArrowUpHidden: activeImage === 0
+                };
+            }
+        }
 
         if (prevActiveImage !== activeImage) {
-            return { prevActiveImage: activeImage };
+            return {
+                prevActiveImage: activeImage,
+                isArrowUpHidden: activeImage === 0,
+                isArrowDownHidden: activeImage === sliderChildren.length - 1
+            };
         }
 
         return null;
     }
 
     componentDidMount() {
-        const sliderChildren = this.draggableRef.current.children;
-        const sliderWidth = this.draggableRef.current.offsetWidth;
-        this.sliderWidth = sliderWidth;
+        const { draggableRef } = this;
+        const sliderChildren = draggableRef.current.children;
+        const sliderHeightChildren = draggableRef.current.children[0].offsetHeight;
+        const sliderHeight = draggableRef.current.offsetHeight;
+        const countPerPage = Math.round(sliderHeight / sliderHeightChildren);
+
+        // eslint-disable-next-line no-magic-numbers
+        this.setState({
+            draggableRef,
+            sliderChildren,
+            sliderHeightChildren,
+            sliderHeight,
+            countPerPage,
+            count: countPerPage
+        });
+
+        console.log(countPerPage);
 
         if (!sliderChildren || !sliderChildren[0]) {
             return;
         }
 
         sliderChildren[0].onload = () => {
-            CSS.setVariable(this.sliderRef, 'slider-height', `${sliderChildren[0].offsetHeight}px`);
+            CSS.setVariable(this.sliderRef, 'slider-width', `${sliderChildren[0].offsetHeight}px`);
         };
 
         setTimeout(() => {
-            CSS.setVariable(this.sliderRef, 'slider-height', `${sliderChildren[0].offsetHeight}px`);
+            CSS.setVariable(this.sliderRef, 'slider-width', `${sliderChildren[0].offsetHeight}px`);
         }, ANIMATION_DURATION);
     }
 
-    componentDidUpdate(prevProps) {
-        const { activeImage: prevActiveImage } = prevProps;
-        const { activeImage } = this.props;
+    onArrowUpClick = () => {
+        const { onActiveImageChange, activeImage } = this.props;
 
-        if (activeImage !== prevActiveImage) {
-            const newTranslate = -activeImage * this.sliderWidth;
+        // if (activeImage === 1) {
+        //     this.setState({ isArrowUpHidden: true });
+        // }
+        onActiveImageChange(activeImage - 1);
+    };
 
-            CSS.setVariable(
-                this.draggableRef,
-                'animation-speed',
-                `${ Math.abs((prevActiveImage - activeImage) * ANIMATION_DURATION) }ms`
-            );
+    onArrowDownClick = () => {
+        const { onActiveImageChange, activeImage } = this.props;
+        onActiveImageChange(activeImage + 1);
+    };
 
-            CSS.setVariable(
-                this.draggableRef,
-                'translateY',
-                `${newTranslate}px`
-            );
-        }
-    }
-
-    onClickChangeSlide(state, slideSize, lastTranslate, fullSliderSize) {
-        const { originalX } = state;
-        const { prevActiveImage: prevActiveSlider } = this.state;
-        const { onActiveImageChange } = this.props;
-
-        const fullSliderPoss = Math.round(fullSliderSize / slideSize);
-        const elementPossitionInDOM = this.draggableRef.current.getBoundingClientRect().x;
-
-        const sliderPossition = -prevActiveSlider;
-        const realElementPossitionInDOM = elementPossitionInDOM - lastTranslate;
-        const mousePossitionInElement = originalX - realElementPossitionInDOM;
-
-        if (isMobile.any()) {
-            return sliderPossition;
-        }
-
-        if (slideSize / 2 < mousePossitionInElement && -fullSliderPoss < sliderPossition) {
-            const activeSlide = sliderPossition - 1;
-            onActiveImageChange(-activeSlide);
-            return activeSlide;
-        }
-
-        if (slideSize / 2 > mousePossitionInElement && lastTranslate) {
-            const activeSlide = sliderPossition + 1;
-            onActiveImageChange(-activeSlide);
-            return activeSlide;
-        }
-
-        return sliderPossition;
-    }
-
-    getFullSliderWidth() {
-        const fullSliderWidth = this.draggableRef.current.scrollWidth;
-        return fullSliderWidth - this.sliderWidth;
+    getFullSliderHeight() {
+        const fullSliderHeight = this.draggableRef.current.scrollHeight;
+        return fullSliderHeight - this.sliderHeight;
     }
 
     calculateNextSlide(state) {
@@ -168,9 +231,9 @@ export class SliderVertical extends PureComponent {
 
         const { onActiveImageChange } = this.props;
 
-        const slideSize = this.sliderWidth;
+        const slideSize = this.sliderHeight;
 
-        const fullSliderSize = this.getFullSliderWidth();
+        const fullSliderSize = this.getFullSliderHeight();
 
         const activeSlidePosition = translate / slideSize;
         const activeSlidePercent = Math.abs(activeSlidePosition % 1);
@@ -217,7 +280,7 @@ export class SliderVertical extends PureComponent {
 
         const translate = translateY;
 
-        const fullSliderSize = this.getFullSliderWidth();
+        const fullSliderSize = this.getFullSliderHeight();
 
         if (translate < 0 && translate > -fullSliderSize) {
             CSS.setVariable(
@@ -231,7 +294,7 @@ export class SliderVertical extends PureComponent {
     handleDragEnd(state, callback) {
         const activeSlide = this.calculateNextSlide(state);
 
-        const slideSize = this.sliderWidth;
+        const slideSize = this.sliderHeight;
 
         const newTranslate = activeSlide * slideSize;
 
@@ -315,12 +378,22 @@ export class SliderVertical extends PureComponent {
             children
         } = this.props;
 
+        const { isArrowUpHidden, isArrowDownHidden } = this.state;
+
         return (
             <div
               block="SliderVertical"
               mix={ mix }
               ref={ this.sliderRef }
             >
+                <button
+                  block="SliderVertical"
+                  elem="ButtonUp"
+                  mods={ { isArrowUpHidden } }
+                  onClick={ this.onArrowUpClick }
+                >
+                    <div block="SliderVertical" elem="ArrowUp" />
+                </button>
                 <Draggable
                   mix={ { block: 'SliderVertical', elem: 'Wrapper' } }
                   draggableRef={ this.draggableRef }
@@ -328,10 +401,18 @@ export class SliderVertical extends PureComponent {
                   onDragEnd={ this.handleDragEnd }
                   onDrag={ this.handleDrag }
                   onClick={ this.handleClick }
-                  shiftX={ -activeImage * this.sliderWidth }
+                  shiftX={ -activeImage * this.sliderHeight }
                 >
                     { children }
                 </Draggable>
+                <button
+                  block="SliderVertical"
+                  elem="ButtonDown"
+                  mods={ { isArrowDownHidden } }
+                  onClick={ this.onArrowDownClick }
+                >
+                    <div block="SliderVertical" elem="ArrowDown" />
+                </button>
                 { showCrumbs && this.renderCrumbs() }
             </div>
         );
