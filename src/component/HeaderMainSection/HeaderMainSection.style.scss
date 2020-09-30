@@ -4,9 +4,9 @@
     height: 50px;
     max-width: 1440px;
     margin: 0 auto;
-    flex-direction: row-reverse;
 
     .HeaderGenders {
+        display: flex;
         order: 0;
     }
 
@@ -24,11 +24,25 @@
 
     .HeaderCart {
         order: 4;
+
+        @include before-desktop {
+            top: 5px;
+            width: 45px;
+            margin: 0 auto;
+        }
     }
 
-    &_isMobile {
-        display: none;
+    .HeaderGenders,
+    .HeaderWishlist,
+    .HeaderAccount {
+        &_isMobile {
+            @include before-desktop{
+                display: none;
+            }
+        }
     }
+
+
 
     @include desktop() {
         display: flex;
@@ -38,14 +52,6 @@
 
         &_isMobile {
             display: block;
-        }
-    }
-
-    &-Cart {
-        @include before-desktop {
-            top: 5px;
-            width: 45px;
-            margin: 0 auto;
         }
     }
 }
