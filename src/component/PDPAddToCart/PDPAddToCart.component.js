@@ -3,6 +3,8 @@ import { PureComponent } from 'react';
 
 import { Product } from 'Util/API/endpoint/Product/Product.type';
 
+import PDPSizeGuide from '../PDPSizeGuide';
+
 import './PDPAddToCart.style';
 
 class PDPAddToCart extends PureComponent {
@@ -51,11 +53,16 @@ class PDPAddToCart extends PureComponent {
         );
     }
 
+    renderSizeGuide() {
+        return <PDPSizeGuide />;
+    }
+
     render() {
         return (
             <div block="PDPAddToCart">
                 { this.renderSizeTypeSelect() }
                 { this.renderSizeSelect() }
+                { this.renderSizeGuide() }
                 { this.renderAddToCartButton() }
             </div>
         );
