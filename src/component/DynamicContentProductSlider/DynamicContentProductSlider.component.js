@@ -1,9 +1,9 @@
-import Slider from '@scandipwa/scandipwa/src/component/Slider';
-import isMobile from '@scandipwa/scandipwa/src/util/Mobile/isMobile';
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import ProductItem from 'Component/ProductItem';
+import Slider from 'SourceComponent/Slider';
+import isMobile from 'SourceUtil/Mobile/isMobile';
 import { Products } from 'Util/API/endpoint/Product/Product.type';
 
 import { ITEMS_PER_PAGE } from './DynamicContentProductSlider.config';
@@ -100,11 +100,7 @@ class DynamicContentProductSlider extends PureComponent {
         } = this.props;
         const { currentPage, isArabic } = this.state;
 
-        if (isMobile.any()) {
-            return null;
-        }
-
-        if (isLoading) {
+        if (isLoading || isMobile.any()) {
             return null;
         }
         const lastPage = parseInt(Math.floor(products.length / ITEMS_PER_PAGE), 10); // first page is 0
