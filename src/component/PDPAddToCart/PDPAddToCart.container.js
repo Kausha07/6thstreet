@@ -11,14 +11,8 @@ export const mapStateToProps = (state) => ({
     product: state.PDP.product
 });
 
-<<<<<<< HEAD
-export const mapDispatchToProps = (_dispatch) => ({
-    addProductToCart:
-     (productData, thumbnail_url) => CartDispatcher.addProductToCart(_dispatch, productData, thumbnail_url)
-=======
 export const mapDispatchToProps = (dispatch) => ({
-    addProductToCart: (productData) => MobileCartDispatcher.addProductToCart(dispatch, productData)
->>>>>>> staging
+    addProductToCart: (productData) => CartDispatcher.addProductToCart(dispatch, productData)
 });
 
 export class PDPAddToCartContainer extends PureComponent {
@@ -72,30 +66,6 @@ export class PDPAddToCartContainer extends PureComponent {
         return { ...this.state, product };
     };
 
-<<<<<<< HEAD
-    onSizeTypeSelect() {
-    }
-
-    onSizeSelect() {
-        const { product } = this.props;
-        const { selectedSizeType } = this.state;
-
-        // TODO Select proper size, currently will select first available
-        this.setState({ selectedSize: product[`size_${selectedSizeType}`][0] });
-    }
-
-    addToCart() {
-        const { product: { simple_products, thumbnail_url }, addProductToCart } = this.props;
-        const { selectedSizeType, selectedSizeCode = '191755128603' } = this.state;
-        const { size } = simple_products[selectedSizeCode];
-
-        addProductToCart({
-            sku: selectedSizeCode,
-            qty: 1,
-            optionId: selectedSizeType.toLocaleUpperCase(),
-            optionValue: size[selectedSizeType]
-        }, thumbnail_url);
-=======
     onSizeTypeSelect(type) {
         this.setState({ selectedSizeType: type.target.value });
     }
@@ -137,7 +107,6 @@ export class PDPAddToCartContainer extends PureComponent {
         this.setState({ isLoading: false });
         // TODO props for addedToCart
         this.setState({ addedToCart: true });
->>>>>>> staging
     }
 
     render() {
