@@ -3,7 +3,7 @@ import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import AppConfigDispatcher from 'Store/AppConfig/AppConfig.dispatcher';
-import MobileCartDispatcher from 'Store/MobileCart/MobileCart.dispatcher';
+import CartDispatcher from 'Store/Cart/Cart.dispatcher';
 import { Config } from 'Util/API/endpoint/Config/Config.type';
 
 import Splash from './Splash.component';
@@ -14,7 +14,7 @@ export const mapStateToProps = (state) => ({
 
 export const mapDispatchToProps = (dispatch) => ({
     getConfig: () => AppConfigDispatcher.getAppConfig(dispatch),
-    getCart: () => MobileCartDispatcher.getCart(dispatch)
+    getCart: () => CartDispatcher.getCart(dispatch)
 });
 
 export class SplashContainer extends PureComponent {

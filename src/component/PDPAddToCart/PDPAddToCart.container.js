@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
-import MobileCartDispatcher from 'Store/MobileCart/MobileCart.dispatcher';
+import CartDispatcher from 'Store/Cart/Cart.dispatcher';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
 
 import PDPAddToCart from './PDPAddToCart.component';
@@ -12,7 +12,7 @@ export const mapStateToProps = (state) => ({
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-    addProductToCart: (productData) => MobileCartDispatcher.addProductToCart(dispatch, productData)
+    addProductToCart: (productData) => CartDispatcher.addProductToCart(dispatch, productData)
 });
 
 export class PDPAddToCartContainer extends PureComponent {
