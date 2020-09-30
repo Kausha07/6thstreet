@@ -9,7 +9,12 @@ export class ExpandableContent extends PureComponent {
     static propTypes = {
         isOpen: PropTypes.bool.isRequired,
         header: PropTypes.string.isRequired,
-        children: ChildrenType.isRequired
+        children: ChildrenType.isRequired,
+        isArabic: PropTypes.bool
+    };
+
+    static defaultProps = {
+        isArabic: false
     };
 
     constructor(props) {
@@ -24,15 +29,15 @@ export class ExpandableContent extends PureComponent {
     };
 
     render() {
-        const { header, children } = this.props;
+        const { header, children, isArabic } = this.props;
         const { isOpen } = this.state;
 
         return (
             <div mix={ { block: 'ExpandableContent' } }>
-                <div mix={ { block: 'ExpandableContent', elem: 'HeaderBlock' } }>
-                    <span mix={ { block: 'ExpandableContent', elem: 'Header' } }>{ header }</span>
+                <div mix={ { block: 'ExpandableContent', elem: 'HeaderBlock', mods: { isOpen, isArabic } } }>
+                    <span mix={ { block: 'ExpandableContent', elem: 'Header', mods: { isArabic } } }>{ header }</span>
                     <div
-                      mix={ { block: 'ExpandableContent', elem: 'Button', mods: { isOpen } } }
+                      mix={ { block: 'ExpandableContent', elem: 'Button', mods: { isOpen, isArabic } } }
                       role="button"
                       aria-label="Open"
                       tabIndex={ 0 }
@@ -40,7 +45,7 @@ export class ExpandableContent extends PureComponent {
                       onKeyDown={ this.handleClick }
                     />
                 </div>
-                <div mix={ { block: 'ExpandableContent', elem: 'Body', mods: { isOpen } } }>
+                <div mix={ { block: 'ExpandableContent', elem: 'Body', mods: { isOpen, isArabic } } }>
                     { children }
                 </div>
             </div>

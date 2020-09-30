@@ -1,4 +1,5 @@
 import Popup from '@scandipwa/scandipwa/src/component/Popup';
+import isMobile from '@scandipwa/scandipwa/src/util/Mobile/isMobile';
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
@@ -11,7 +12,8 @@ class PDPSizeGuide extends PureComponent {
     static propTypes = {
         language: PropTypes.string.isRequired,
         activeOverlay: PropTypes.string.isRequired,
-        showOverlay: PropTypes.func.isRequired
+        showOverlay: PropTypes.func.isRequired,
+        hideActiveOverlay: PropTypes.func.isRequired
     };
 
     constructor() {
@@ -41,8 +43,9 @@ class PDPSizeGuide extends PureComponent {
               role="button"
               aria-label="Dismiss"
               tabIndex={ 0 }
+              mix={ { block: 'PDPSizeGuide', elem: 'Button' } }
             >
-                Size guide
+                { isMobile.any() && !isMobile.tablet() ? __('View Size Guide') : __('Size guide') }
             </span>
         );
     }
@@ -61,44 +64,82 @@ class PDPSizeGuide extends PureComponent {
         );
     }
 
+    hideOverlay = () => {
+        const { hideActiveOverlay } = this.props;
+        hideActiveOverlay();
+    };
+
     renderModalContents() {
         const { isArabic } = this.state;
+        const closeBtn = (
+            <div
+              mix={ { block: 'PDPSizeGuide', elem: 'BackBtn', mods: { isArabic } } }
+              onClick={ this.hideOverlay }
+              onKeyDown={ this.hideOverlay }
+              role="button"
+              aria-label="Dismiss"
+              tabIndex={ 0 }
+            />
+        );
 
         return (
             <div mix={ { block: 'PDPSizeGuide', elem: 'GuideContainer', mods: { isArabic } } }>
-                <h1>Sizing Guide</h1>
-                <span>Fitting Information - Items fits true to size</span>
-                { this.renderTableUK() }
-                <hr />
-                { this.renderTableInt() }
-                <hr />
-                { this.renderTableEu() }
+                <div mix={ { block: 'PDPSizeGuide', elem: 'HeaderContainer', mods: { isArabic } } }>
+                    { isMobile.any() && !isMobile.tablet() ? closeBtn : null }
+                    { isMobile.any() && !isMobile.tablet()
+                        ? (
+                            <h1 mix={ { block: 'PDPSizeGuide', elem: 'Header', mods: { isArabic } } }>
+                                { __('SIZE GUIDE') }
+                            </h1>
+                        )
+                        : (
+                            <h1 mix={ { block: 'PDPSizeGuide', elem: 'Header', mods: { isArabic } } }>
+                                { __('Sizing Guide') }
+                            </h1>
+                        ) }
+                    <div mix={ { block: 'PDPSizeGuide', elem: 'Line', mods: { isArabic } } } />
+                </div>
+                <span
+                  mix={ { block: 'PDPSizeGuide', elem: 'SubHeader', mods: { isArabic } } }
+                >
+                    { __('Fitting Information - Items fits true to size') }
+                </span>
+                <div mix={ { block: 'PDPSizeGuide', elem: 'TableContainer', mods: { isArabic } } }>
+                    { this.renderTableUK() }
+                    <div mix={ { block: 'PDPSizeGuide', elem: 'Divider', mods: { isArabic } } } />
+                    { this.renderTableInt() }
+                    <div mix={ { block: 'PDPSizeGuide', elem: 'Divider', mods: { isArabic } } } />
+                    { this.renderTableEu() }
+                </div>
             </div>
         );
     }
 
     renderTableUK() {
+        const { isArabic } = this.state;
         const isOpen = true;
         return (
-            <ExpandableContent isOpen={ isOpen } header={ __('UK') }>
+            <ExpandableContent isOpen={ isOpen } header={ __('UK') } isArabic={ isArabic }>
                 <SizeTable />
             </ExpandableContent>
         );
     }
 
     renderTableInt() {
+        const { isArabic } = this.state;
         const isOpen = true;
         return (
-            <ExpandableContent isOpen={ isOpen } header={ __('International') }>
+            <ExpandableContent isOpen={ isOpen } header={ __('International') } isArabic={ isArabic }>
                 <SizeTable />
             </ExpandableContent>
         );
     }
 
     renderTableEu() {
+        const { isArabic } = this.state;
         const isOpen = false;
         return (
-            <ExpandableContent isOpen={ isOpen } header={ __('European') }>
+            <ExpandableContent isOpen={ isOpen } header={ __('European') } isArabic={ isArabic }>
                 <SizeTable />
             </ExpandableContent>
         );
@@ -106,10 +147,10 @@ class PDPSizeGuide extends PureComponent {
 
     render() {
         const { isOpen } = this.state;
-        console.log(isOpen);
         return (
             <div block="PDPSizeGuide">
-                { isOpen ? this.renderModal() : this.renderButton() }
+                { this.renderButton() }
+                { isOpen ? this.renderModal() : null }
             </div>
         );
     }

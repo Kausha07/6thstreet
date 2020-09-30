@@ -8,7 +8,8 @@ import PDPSizeGuide from './PDPSizeGuide.component';
 
 export const mapStateToProps = (_state) => ({
     language: _state.AppState.language,
-    activeOverlay: _state.OverlayReducer.activeOverlay
+    activeOverlay: _state.OverlayReducer.activeOverlay,
+    hideActiveOverlay: _state.OverlayReducer.hideActiveOverlay
 });
 export const mapDispatchToProps = (_dispatch) => ({
     showOverlay: (overlayKey) => _dispatch(toggleOverlayByKey(overlayKey)),
@@ -19,7 +20,8 @@ export class PDPSizeGuideContainer extends PureComponent {
     static propTypes = {
         language: PropTypes.string.isRequired,
         showOverlay: PropTypes.func.isRequired,
-        activeOverlay: PropTypes.string.isRequired
+        activeOverlay: PropTypes.string.isRequired,
+        hideActiveOverlay: PropTypes.string.isRequired
     };
 
     containerProps = () => {
@@ -28,8 +30,8 @@ export class PDPSizeGuideContainer extends PureComponent {
     };
 
     containerFunctons = () => {
-        const { showOverlay } = this.props;
-        return { showOverlay };
+        const { showOverlay, hideActiveOverlay } = this.props;
+        return { showOverlay, hideActiveOverlay };
     };
 
     render() {

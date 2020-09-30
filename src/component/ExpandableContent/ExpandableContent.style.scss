@@ -8,18 +8,24 @@
         padding-top: 2rem;
     }
     &-Header {
-       font-size: larger; 
+       font-size: 24px; 
+       font-family: 'Avenir Next Demi';
+       font-weight: bold;
     }
     &-Button {
         float: right;
+        margin-top: 0.5rem;
         border: solid black;
-        border-width: 0 3px 3px 0;
-        padding: 3px;
+        border-width: 0 2px 2px 0;
+        padding: 6px;
         transform: rotate(-45deg);
-        -webkit-transform: rotate(-45deg);
+        &_isArabic {
+            float: left;
+            margin-left: 5px;
+            transform: rotate(-225deg);
+        }
         &_isOpen {
             transform: rotate(-135deg);
-            -webkit-transform: rotate(-135deg);
         }
     }
     &-Body {
@@ -28,5 +34,4 @@
             display: inline;
         }
     }
-      
 }
