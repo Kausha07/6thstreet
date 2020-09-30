@@ -104,8 +104,6 @@ class PLPFilters extends PureComponent {
     }
 
     renderFilterButton() {
-        const { filters } = this.props;
-        console.log(filters);
         return (
             <button
               onClick={ this.handleFilterClick }
@@ -125,7 +123,7 @@ class PLPFilters extends PureComponent {
         return (
             <Popup
               mix={ {
-                  block: 'Popup',
+                  block: 'FilterPopup',
                   mods: {
                       isOpen,
                       isArabic
@@ -135,7 +133,7 @@ class PLPFilters extends PureComponent {
               title="Filters"
             >
                 <div
-                  block="Popup"
+                  block="FilterPopup"
                   elem="Title"
                 >
                     <i
