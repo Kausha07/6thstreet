@@ -110,6 +110,11 @@
         }
     }
 
+    &-MobileSliderWrapper{
+        overflow: hidden;
+        width: 92.6vw;
+    }
+
     &-MobileSlider {
         width: 80%;
         overflow: visible;

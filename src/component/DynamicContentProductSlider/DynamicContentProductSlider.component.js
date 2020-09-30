@@ -172,13 +172,15 @@ class DynamicContentProductSlider extends PureComponent {
         }
 
         return (
-            <Slider
-              mix={ { block: 'DynamicContentProductSlider', elem: 'MobileSlider', mods: { isArabic } } }
-              activeImage={ currentPage }
-              onActiveImageChange={ this.mobileSliderCallback }
-            >
-                { products.map(this.renderProduct) }
-            </Slider>
+            <div mix={ { block: 'DynamicContentProductSlider', elem: 'MobileSliderWrapper', mods: { isArabic } } }>
+                <Slider
+                  mix={ { block: 'DynamicContentProductSlider', elem: 'MobileSlider', mods: { isArabic } } }
+                  activeImage={ currentPage }
+                  onActiveImageChange={ this.mobileSliderCallback }
+                >
+                    { products.map(this.renderProduct) }
+                </Slider>
+            </div>
         );
     }
 
