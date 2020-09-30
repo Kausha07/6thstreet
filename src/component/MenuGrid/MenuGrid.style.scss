@@ -1,3 +1,108 @@
 .MenuGrid {
-    
+  pointer-events: none;
+  height: 100%;
+  position: fixed;
+  width: 100vw;
+  left: 0;
+
+  &-Content {
+    pointer-events: all;
+    opacity: 1 !important;
+    width: 1400px;
+    height: 390px;
+    margin: 0 auto;
+    background-color: var(--menu-background-color-mobile);
+    span, a {
+      color: var(--default-text-color);
+    }
+    a {
+      font-weight: 500;
+    }
+  }
+
+  &-Columns {
+    display: flex;
+    height: 100%;
+  }
+
+  &-Column {
+    border: 0;
+    margin: 20px 0 30px 35px;
+    width: 25%;
+
+    &:not(:last-child) {
+      border-right: solid 1px var(--light-border-color);
+    }
+
+    span {
+      text-transform: uppercase;
+      width: 100%;
+    }
+
+    &-Content {
+      display: grid;
+      grid-template-columns: auto auto;
+      margin-top: 10px;
+      a{
+        margin: 0;
+      }
+    }
+  }
+  @include before-desktop {
+    position: relative;
+    &-Content {
+      height: 100%;
+      margin: 0;
+      width: 280px;
+      a {
+        border-bottom: 1px solid var(--mobile-menu-category-background-color);
+      }
+    }
+    &-Columns {
+      flex-direction: column;
+
+      :last-child {
+        margin-right: 0;
+      }
+
+      > div {
+        margin: 0;
+      }
+    }
+    &-Column {
+      line-height: 30px;
+      width: 100%;
+
+      &-Content {
+        grid-auto-flow: row;
+        grid-template-columns: auto;
+        overflow: scroll;
+        width: 260px;
+
+        a{
+          line-height: 50px;
+          margin-left: 10px;
+        }
+      }
+    }
+  }
+
+  @include desktop {
+    &-Content {
+      &_isArabic {
+        .MenuGrid {
+          &-Column {
+            border-left: solid 1px var(--light-border-color);
+            border-right: 0;
+            margin-left: 0;
+            margin-right: 35px;
+            &:nth-last-child(1) {
+              border-left: 0;
+            }
+          }
+        }
+      }
+    }
+  }
+
 }

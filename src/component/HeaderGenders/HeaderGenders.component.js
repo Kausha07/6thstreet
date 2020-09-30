@@ -29,25 +29,35 @@ class HeaderGenders extends PureComponent {
         }
     ];
 
+    constructor() {
+        super();
+        this.state = {
+            isArabic: false
+        };
+    }
+
+    static getDerivedStateFromProps() {
+        return ({
+            isArabic: JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data.language === 'ar'
+        });
+    }
+
     renderGender = (gender) => {
         const { key } = gender;
-        const { isMobile } = this.props;
 
         return (
-            <div block="HeaderGenders" mods={ { isMobile } }>
-                <div
-                  block="GenderButton"
-                  elem="Container"
-                  key={ key }
-                >
-                    <GenderButton
-                      gender={ gender }
-                      mix={ {
-                          block: 'HeaderGenders',
-                          elem: 'Button'
-                      } }
-                    />
-                </div>
+            <div
+              block="GenderButton"
+              elem="Container"
+              key={ key }
+            >
+                <GenderButton
+                  gender={ gender }
+                  mix={ {
+                      block: 'HeaderGenders',
+                      elem: 'Button'
+                  } }
+                />
             </div>
         );
     };
@@ -57,8 +67,13 @@ class HeaderGenders extends PureComponent {
     }
 
     render() {
+        const { isArabic } = this.state;
+        const { isMobile } = this.props;
+
         return (
-            <div block="HeaderGenders">
+            <div
+              mix={ { block: 'HeaderGenders', mods: { isArabic, isMobile } } }
+            >
                 { this.renderGenders() }
             </div>
         );

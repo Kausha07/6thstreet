@@ -10,8 +10,6 @@ class MenuCategory extends PureComponent {
     static propTypes = {
         data: PropTypes.arrayOf(CategoryData).isRequired,
         label: PropTypes.string.isRequired
-        // TODO: implement design
-        // design: Design.isRequired
     };
 
     state = {
@@ -21,6 +19,19 @@ class MenuCategory extends PureComponent {
     onEnter = this.handleHover.bind(this, true);
 
     onLeave = this.handleHover.bind(this, false);
+
+    constructor() {
+        super();
+        this.state = {
+            isArabic: false
+        };
+    }
+
+    static getDerivedStateFromProps() {
+        return ({
+            isArabic: JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data.language === 'ar'
+        });
+    }
 
     handleHover(isVisible) {
         this.setState({ isVisible });
@@ -47,15 +58,18 @@ class MenuCategory extends PureComponent {
     }
 
     render() {
+        const { isVisible } = this.state;
+        const { isArabic } = this.state;
+
         return (
-            <li
-              block="MenuCategory"
+            <div
+              mix={ { block: 'MenuCategory', mods: { isArabic, isVisible } } }
               onMouseEnter={ this.onEnter }
               onMouseLeave={ this.onLeave }
             >
                 { this.renderLabel() }
                 { this.renderDynamicContent() }
-            </li>
+            </div>
         );
     }
 }

@@ -1,6 +1,6 @@
-// import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import HeaderGenders from 'Component/HeaderGenders';
 import MenuCategory from 'Component/MenuCategory';
 import { Categories } from 'Util/API/endpoint/Categories/Categories.type';
 
@@ -11,7 +11,19 @@ class Menu extends PureComponent {
         categories: Categories.isRequired
     };
 
-    // TODO: if needed, labels and renders of category content can be split here
+    constructor() {
+        super();
+        this.state = {
+            isArabic: false
+        };
+    }
+
+    static getDerivedStateFromProps() {
+        return ({
+            isArabic: JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data.language === 'ar'
+        });
+    }
+
     renderCategory(category) {
         const {
             data,
@@ -36,10 +48,21 @@ class Menu extends PureComponent {
     }
 
     render() {
+        const { isArabic } = this.state;
+
         return (
-            <ul block="Menu">
-                { this.renderCategories() }
-            </ul>
+            <div
+              block="Menu"
+              elem="Container"
+            >
+                <HeaderGenders />
+                <div
+                  mix={ { block: 'Menu', mods: { isArabic } } }
+                >
+                    { this.renderCategories() }
+                    <div block="MenuCategory" elem="LastCategoryBackground" />
+                </div>
+            </div>
         );
     }
 }

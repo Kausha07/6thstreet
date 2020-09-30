@@ -1,81 +1,155 @@
-:root{
-    --active-button-header-color: #f96446;
-    --inactive-button-header-color: #4a4a4a;
+:root {
+    --menu-background-color-desktop:#000;
+    --menu-background-color-mobile:#fff;
+    --mobile-menu-category-background-color: #f3f4f6;
+    --sales-block-background-color-desktop: #d12229;
+    --light-border-color: #d3d3d3;
+    --default-text-color: var(--menu-background-color-desktop);
+    --light-text-color: var(--menu-background-color-mobile);
+
 }
-
-
 .HeaderBottomBar {
-    display: flex;
-    z-index: 90;
-    background: $white;
-    height: 83px;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-
-    @include desktop {
-        display: flex;
-        z-index: 0;
-        background: none;
-        height: auto;
-        position: relative;
+    background-color: var(--menu-background-color-desktop);
+    z-index: 1;
+    @include before-desktop {
+        display: none;
     }
 
-    &-HomeAndBrand {
-        display: block;
-        text-transform: none;
-        font-size: 10px;
-        font-weight: 500;
-        letter-spacing: -0.2px;
-        line-height: 14px;
-        text-align: center;
-        color: var(--inactive-button-header-color);
-        height: 40px;
-        width: 40px;
-        padding: 0;
-        text-align: center;
-        margin: 10px auto 0;
+    &-Content {
+        background-color: var(--menu-background-color-desktop);
+        @include before-desktop {
+            background-color: var(--menu-background-color-mobile);
+            height: 100%;
+            overflow-y: scroll;
+            position: fixed;
+            top: 0;
+            width: 280px;
+            z-index: 1;
 
-        &::before{
-            content: "";
-            right: 0;
-            background-size: 27px;
-            width: 27px;
-            height: 27px;
-            display: inline-block;
-            font-size: 0;
-            filter: invert(26%) sepia(2%) saturate(21%) hue-rotate(43deg) brightness(90%) contrast(80%);
-        }
+            .HeaderSearch-Container {
+            display: none;
+            }
 
-        &_isHomeButton {
-            &::before{
-                background: url(./icons/home-solid.svg) no-repeat;
-                background-size: 27px;
+            .FooterMain {
+                background-color: var(--menu-background-color-mobile);
+                display: block;
+                height: 440px;
+                margin-bottom: -144px;
+                padding: 0;
+
+                &-Layout {
+                    display: flex;
+                    flex-direction: column-reverse;
+                    margin: 0;
+
+                    h4 {
+                        display: none;
+                    }
+
+                    :not(:first-child) {
+                        display: none;
+                    }
+
+                    :last-child {
+                        display: flex;
+                        flex-direction: column-reverse;
+
+                        .FooterMain {
+                            margin-bottom: -30px;
+
+                            &-WrapperSecond {
+                                flex-direction: row;
+                                margin-left: 10px;
+                            }
+
+                            &-WrapperFirst {
+                                display: flex;
+                                flex-direction: row-reverse;
+                                margin-bottom: 20px;
+                                margin-right: 10px;
+                            }
+                        }
+                    }
+
+                    :first-child {
+                        .FooterMain-Nav {
+                            display: flex;
+
+                            ul {
+                                flex-direction: column;
+                                margin-left: 10px;
+
+                                li {
+                                    border-bottom: 1px solid var(--light-border-color);
+                                    line-height: 50px;
+                                }
+
+                                :nth-child(-n+3) {
+                                    display: block;
+                                }
+
+                                li:last-child {
+                                    display: none;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                &-Column {
+                    min-height: 0;
+                }
+            }
+
+            .FooterMiddle {
+                background-color: var(--menu-background-color-mobile);
+                display: inline-flex;
+                padding-left: 0;
+
+                .HeaderAccount {
+                    display: none;
+                }
+
+                .CountrySwitcher {
+                    &-CountryBtn {
+                        margin-left: -20px;
+                    }
+                }
+
+                &-Layout {
+                    display: block;
+
+                    .FooterMiddle {
+                        &-CustomerSupport {
+                            display: none;
+                        }
+
+                        &-FooterAccount {
+                            display: none;
+                        }
+                    }
+                }
             }
         }
 
-        &_isBrandButton {
-            &::before{
-                background: url(./icons/brand.svg) no-repeat;
-                background-size: 27px;
+        .HeaderMenu {
+            &-Button {
+                display: none;
             }
         }
-
-        &_isActive {
-            color: var(--active-button-header-color);
-
-            &::before{
-                filter: invert(43%) sepia(60%) saturate(1535%) hue-rotate(335deg) brightness(107%) contrast(95%);
-            }
-        }
-        
 
         @include desktop {
-            display: none;
-        }
-    }
+            .FooterMain {
+                display: none;
+            }
 
-    &-WishListAndAccount {
-        width: 20%;
+            .FooterMiddle {
+                display: none;
+            }
+
+            display: flex;
+            margin: 0 auto;
+            max-width: 1440px;
+        }
     }
 }

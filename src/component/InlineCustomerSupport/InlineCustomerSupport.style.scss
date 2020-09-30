@@ -14,6 +14,7 @@
     }
 
     &-Button {
+        padding-left: 27px;
         width: 160px;
         height: 30px;
         font-size: 12px;
@@ -45,6 +46,7 @@
         }
 
         &_isArabic {
+            padding-left: 5px;
             &::after {
                 right: 150px;
             }
@@ -218,7 +220,7 @@
             &::first-letter{
                 text-transform: uppercase;
             }
-            
+
             @include desktop {
                 width: auto;
             }
