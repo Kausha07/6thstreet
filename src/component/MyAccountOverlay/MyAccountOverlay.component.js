@@ -17,6 +17,7 @@ import Field from 'SourceComponent/Field';
 import Form from 'SourceComponent/Form';
 import Loader from 'SourceComponent/Loader';
 import Overlay from 'SourceComponent/Overlay';
+import { isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
 
 import {
@@ -57,8 +58,7 @@ export class MyAccountOverlay extends PureComponent {
         handleCreateAccount: PropTypes.func.isRequired,
         isCheckout: PropTypes.bool,
         closePopup: PropTypes.func.isRequired,
-        isHidden: PropTypes.bool.isRequired,
-        language: PropTypes.string.isRequired
+        isHidden: PropTypes.bool.isRequired
     };
 
     static defaultProps = {
@@ -69,7 +69,7 @@ export class MyAccountOverlay extends PureComponent {
         isPopup: false,
         gender: 'selectPreferNot',
         isChecked: false,
-        isArabic: false
+        isArabic: isArabic()
     };
 
     renderMap = {
@@ -95,11 +95,6 @@ export class MyAccountOverlay extends PureComponent {
             title: __('Confirm the email')
         }
     };
-
-    static getDerivedStateFromProps(nextProps) {
-        const { language } = nextProps;
-        return ({ isArabic: language !== 'en' });
-    }
 
     renderMyAccount() {
         const {

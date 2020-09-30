@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import MyAccountOverlay from 'Component/MyAccountOverlay';
+import { isArabic } from 'Util/App';
 
 import './HeaderAccount.style';
 
@@ -10,7 +11,6 @@ class HeaderAccount extends PureComponent {
     static propTypes = {
         isBottomBar: PropTypes.bool.isRequired,
         isAccount: PropTypes.bool.isRequired,
-        language: PropTypes.string.isRequired,
         isMobile: PropTypes.bool
     };
 
@@ -21,13 +21,8 @@ class HeaderAccount extends PureComponent {
     state = {
         accountPopUp: '',
         isPopup: true,
-        isArabic: false
+        isArabic: isArabic()
     };
-
-    static getDerivedStateFromProps(nextProps) {
-        const { language } = nextProps;
-        return ({ isArabic: language !== 'en' });
-    }
 
     closePopup = () => {
         this.setState({ accountPopUp: '' });
