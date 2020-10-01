@@ -13,7 +13,7 @@ export const mapStateToProps = (state) => ({
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-    showNotification: (type, message) => dispatch(showNotification(type, message))
+    showNotification: (type, message) => dispatch(showNotification(type, message)),
     addProductToCart:
      (productData, thumbnail_url) => CartDispatcher.addProductToCart(dispatch, productData, thumbnail_url)
 });
@@ -80,7 +80,7 @@ export class PDPAddToCartContainer extends PureComponent {
 
     addToCart() {
         const {
-            product, product: { simple_products }, addProductToCart, showNotification
+            product, product: { simple_products, thumbnail_url }, addProductToCart, showNotification
         } = this.props;
         const {
             selectedSizeType, selectedSizeCode, insertedSizeStatus
