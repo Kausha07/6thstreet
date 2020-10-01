@@ -1,6 +1,6 @@
 :root {
     --footer-background-color: #f6f6f6;
-    --foter-hyperlink-color: $black;
+    --foter-hyperlink-color: #000;
 }
 
 .FooterMiddle {
@@ -39,7 +39,6 @@
     }
 
     &-FooterAccount {
-
         padding-left: 40px;
         font-size: 14px;
         font-weight: 600;
@@ -69,8 +68,8 @@
             &-Container {
 
                 span {
-                    border-left: 7px solid #f6f6f6;
-                    border-right: 7px solid #f6f6f6;
+                    border-left: 7px solid var(--footer-background-color);
+                    border-right: 7px solid var(--footer-background-color);
                 }
             }
         }
