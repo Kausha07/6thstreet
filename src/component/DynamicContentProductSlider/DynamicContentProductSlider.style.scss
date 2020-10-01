@@ -139,10 +139,7 @@
         padding: 3px;
 
         &_isArabic {
-            border-top-left-radius: 1rem; 
-            border-bottom-left-radius: 1rem;        
-            border-top-right-radius: 0rem;
-            border-bottom-right-radius: 0rem;
+            border-radius: 1rem 0rem 0rem 1rem;
             right: 0;
         }
     }
