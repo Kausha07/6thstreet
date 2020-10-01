@@ -115,10 +115,10 @@ export class SliderVertical extends PureComponent {
     }
 
     componentDidMount() {
-        const { draggableRef } = this;
+        const { draggableRef, sliderRef } = this;
         const sliderChildren = draggableRef.current.children;
         const sliderHeightChildren = draggableRef.current.children[0].offsetHeight;
-        const sliderHeight = draggableRef.current.offsetHeight;
+        const sliderHeight = sliderRef.current.offsetHeight;
         // eslint-disable-next-line no-magic-numbers
         const countPerPage = sliderHeight % sliderHeightChildren > 85
             ? Math.round(sliderHeight / sliderHeightChildren)
@@ -272,11 +272,7 @@ export class SliderVertical extends PureComponent {
         const { children } = this.props;
         const { countPerPage } = this.state;
 
-        if (countPerPage >= children.length) {
-            this.setState({ isSlider: false });
-        } else {
-            this.setState({ isSlider: true });
-        }
+        this.setState({ isSlider: countPerPage < children.length });
     }
 
     onArrowUpClick = () => {

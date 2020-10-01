@@ -3,7 +3,6 @@ import { PureComponent } from 'react';
 
 import Image from 'Component/Image';
 
-// import Slider from 'SourceComponent/Slider';
 import { GALLERY_IMAGE_TYPE, GALLERY_VIDEO_TYPE } from './PDPGalleryCrumb.config';
 
 import './PDPGalleryCrumb.style';

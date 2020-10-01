@@ -32,13 +32,12 @@ export class PDPGalleryOverlayContainer extends PureComponent {
     };
 
     containerProps = () => {
-        const { currentIndex, closeGalleryOverlay } = this.props;
+        const { currentIndex } = this.props;
 
         return {
             gallery: this.getGallery(),
             crumbs: this.getCrumbs(),
-            currentIndex,
-            closeGalleryOverlay
+            currentIndex
         };
     };
 
@@ -51,6 +50,7 @@ export class PDPGalleryOverlayContainer extends PureComponent {
     getCrumbs() {
         // TODO: determine if has video append it here
         const galleryCrumbs = Object.keys(this.getGallery());
+
         return galleryCrumbs;
     }
 

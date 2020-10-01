@@ -67,9 +67,6 @@ class PDPGalleryOverlay extends PureComponent {
         );
     }
 
-    renderCloseButton() {
-    }
-
     render() {
         const { closeGalleryOverlay } = this.props;
 
