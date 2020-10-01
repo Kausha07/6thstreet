@@ -161,11 +161,7 @@ class MobileBottomBar extends NavigationAbstract {
         const { isBottomBar, isAccount } = this.state;
         const { location } = this.props;
 
-        this.setState(location.pathname === '/myaccount/login' ? {
-            isAccount: true
-        } : {
-            isAccount: false
-        });
+        this.setState({ isAccount: location.pathname === '/myaccount/login' });
 
         return (
             <button
