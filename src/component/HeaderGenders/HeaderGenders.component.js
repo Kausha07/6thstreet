@@ -9,7 +9,7 @@ import './HeaderGenders.style';
 class HeaderGenders extends PureComponent {
     state = {
         isArabic: isArabic()
-    }
+    };
 
     static propTypes = {
         isMobile: PropTypes.bool
@@ -39,16 +39,16 @@ class HeaderGenders extends PureComponent {
 
         return (
             <div
-              block="GenderButton"
-              elem="Container"
-              key={ key }
+                block="GenderButton"
+                elem="Container"
+                key={ key }
             >
                 <GenderButton
-                  gender={ gender }
-                  mix={ {
-                      block: 'HeaderGenders',
-                      elem: 'Button'
-                  } }
+                    gender={ gender }
+                    mix={ {
+                        block: 'HeaderGenders',
+                        elem: 'Button'
+                    } }
                 />
             </div>
         );
@@ -64,7 +64,7 @@ class HeaderGenders extends PureComponent {
 
         return (
             <div
-              mix={ { block: 'HeaderGenders', mods: { isArabic, isMobile } } }
+                mix={ { block: 'HeaderGenders', mods: { isArabic, isMobile } } }
             >
                 { this.renderGenders() }
             </div>
