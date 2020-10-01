@@ -32,12 +32,13 @@ export class PDPGalleryOverlayContainer extends PureComponent {
     };
 
     containerProps = () => {
-        const { currentIndex } = this.props;
+        const { currentIndex, closeGalleryOverlay } = this.props;
 
         return {
             gallery: this.getGallery(),
             crumbs: this.getCrumbs(),
-            currentIndex
+            currentIndex,
+            closeGalleryOverlay
         };
     };
 
