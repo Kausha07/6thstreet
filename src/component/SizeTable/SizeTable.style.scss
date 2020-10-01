@@ -8,20 +8,36 @@
 .SizeTable {
     &-Table {
         width: 100%;
+        border-collapse: separate;
+        border: solid 1px var(--table-border-color); 
+        border-bottom: 0px;
     }
 
     &-TableCellTop {
+        overflow: hidden;
         text-align: center;
         font-size: 23px;
-        border: solid 1px var(--table-border-color);   
+        border-right: solid 1px var(--table-border-color); 
+        border-bottom: solid 1px var(--table-border-color); 
+        background-clip: padding-box; 
+    }
+
+    td:nth-child(3) {
+        border-right: 0px;
+    }
+
+    td:nth-child(1) {
+        border-left: 0px;
     }
 
     &-TableCell{
         text-align: center;
         line-height: 25px;
         font-size: 20px;
-        border: solid 1px var(--table-border-color);
+        border-right: solid 1px var(--table-border-color); 
+        border-bottom: solid 1px var(--table-border-color); 
         font-family: 'Avenir Next Regular';
+        background-clip: padding-box; 
     }
 
     &-TopRow {
