@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { setPDPGaleryImage } from 'Store/PDP/PDP.action';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
 
-import PDPGallery from './PDPGallery.component';
+import PDPGallery from './PDPGalleryOverlay.component';
 
 export const mapStateToProps = (state) => ({
     currentIndex: state.PDP.imageIndex,
@@ -17,13 +17,14 @@ export const mapDispatchToProps = (_dispatch) => ({
     setImageIndex: (index) => _dispatch(setPDPGaleryImage(index))
 });
 
-export class PDPGalleryContainer extends PureComponent {
+export class PDPGalleryOverlayContainer extends PureComponent {
     static propTypes = {
         currentIndex: PropTypes.number.isRequired,
         isLoading: PropTypes.bool.isRequired,
         product: Product.isRequired,
         setImageIndex: PropTypes.func.isRequired,
-        index: PropTypes.number.isRequired
+        index: PropTypes.number.isRequired,
+        closeGalleryOverlay: PropTypes.func.isRequired
     };
 
     containerFunctions = {
@@ -49,6 +50,7 @@ export class PDPGalleryContainer extends PureComponent {
     getCrumbs() {
         // TODO: determine if has video append it here
         const galleryCrumbs = Object.keys(this.getGallery());
+
         return galleryCrumbs;
     }
 
@@ -77,4 +79,4 @@ export class PDPGalleryContainer extends PureComponent {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PDPGalleryContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(PDPGalleryOverlayContainer);
