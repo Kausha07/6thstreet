@@ -1,26 +1,27 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import { isArabic } from 'Util/App';
+
 import './HeaderWishlist.style';
 
 class HeaderWishlist extends PureComponent {
     static propTypes = {
         isBottomBar: PropTypes.bool.isRequired,
         isWishlist: PropTypes.bool.isRequired,
-        language: PropTypes.string.isRequired
+        isMobile: PropTypes.bool
+    };
+
+    static defaultProps = {
+        isMobile: false
     };
 
     state = {
-        isArabic: false
+        isArabic: isArabic()
     };
 
-    static getDerivedStateFromProps(nextProps) {
-        const { language } = nextProps;
-        return ({ isArabic: language !== 'en' });
-    }
-
     render() {
-        const { isBottomBar, isWishlist } = this.props;
+        const { isBottomBar, isWishlist, isMobile } = this.props;
         const { isArabic } = this.state;
 
         return (
@@ -32,7 +33,11 @@ class HeaderWishlist extends PureComponent {
                   mods: { isBottomBar },
                   mix: {
                       block: 'HeaderWishlist',
-                      mods: { isArabic }
+                      mods: { isArabic },
+                      mix: {
+                          block: 'HeaderWishlist',
+                          mods: { isMobile }
+                      }
                   }
               } }
             >

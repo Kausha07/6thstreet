@@ -31,6 +31,7 @@ class HeaderMainSection extends NavigationAbstract {
         return (
             <HeaderAccount
               key="account"
+              isMobile
             />
         );
     }
@@ -39,6 +40,7 @@ class HeaderMainSection extends NavigationAbstract {
         return (
             <HeaderCart
               key="cart"
+              CartButton="CartButton"
             />
         );
     }
@@ -47,6 +49,7 @@ class HeaderMainSection extends NavigationAbstract {
         return (
             <HeaderWishlist
               key="wishlist"
+              isMobile
             />
         );
     }
@@ -55,6 +58,7 @@ class HeaderMainSection extends NavigationAbstract {
         return (
             <HeaderGenders
               key="genders"
+              isMobile
             />
         );
     }

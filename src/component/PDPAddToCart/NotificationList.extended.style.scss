@@ -1,0 +1,15 @@
+:root {
+    --error-color: #d12229;
+}
+
+.NotificationList {
+    top: calc(35px + var(--breadcrumbs-height-main) + 20px);
+    
+    .Notification {
+        &_type {
+            &_error {
+                --notification-background: var(--error-color);
+            }
+        }
+    }
+}
