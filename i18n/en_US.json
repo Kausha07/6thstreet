@@ -336,5 +336,6 @@
     "FIRST NAME*": null,
     "LAST NAME*": null,
     "EMAIL*": null,
-    "Welcome Back": null
+    "Welcome Back": null,
+    "Please select a size.": null
 }
