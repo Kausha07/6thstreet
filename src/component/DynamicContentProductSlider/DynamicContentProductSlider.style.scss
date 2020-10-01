@@ -139,32 +139,27 @@
         padding: 3px;
 
         &_isArabic {
-            @include desktop {
-                border-top-left-radius: 1rem; 
-                border-bottom-left-radius: 1rem;        
-                border-top-right-radius: 0rem;
-                border-bottom-right-radius: 0rem;
-            }
+            border-top-left-radius: 1rem; 
+            border-bottom-left-radius: 1rem;        
+            border-top-right-radius: 0rem;
+            border-bottom-right-radius: 0rem;
+            right: 0;
         }
     }
 
     &-FavoriteOverlay {
         position: absolute;
         background: url(../../style/icons/heart.svg) 5px no-repeat;
-        top: 1.5rem;
+        top: 1.2rem;
         right: 1rem;
         width: 30px;
         height: 30px;
         padding: 1rem;
         border-radius: 2rem;
         background-color: var(--heart-background);
-        
-
         &_isArabic {
-            @include desktop {
                 right: auto;
                 left: 1rem;
-            }
         }
     }
 
@@ -203,6 +198,18 @@
     &-ArrowPrev {
         transform: rotate(225deg);
         left: 40%;
+
+        &_isArabic {
+            transform: rotate(45deg);
+            right: 45%;
+        }
+    }
+
+    &-ArrowNext {
+        &_isArabic {
+            transform: rotate(225deg);
+            right: 40%;
+        }
     }
 
 
