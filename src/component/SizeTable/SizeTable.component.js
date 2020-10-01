@@ -36,7 +36,7 @@ export class SizeTable extends PureComponent {
                 <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>{ (waist * CM_TO_INCH).toFixed(2) }</td>
             </tr>
         );
-    }
+    };
 
     renderTableRows() {
         const rows = UK_SIZE_CM.map(this.renderTableRow);

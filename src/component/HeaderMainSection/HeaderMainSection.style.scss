@@ -1,11 +1,12 @@
 .HeaderMainSection {
     align-items: center;
     display: flex;
-    height: 84px;
+    height: 50px;
     max-width: 1440px;
     margin: 0 auto;
 
     .HeaderGenders {
+        display: flex;
         order: 0;
     }
 
@@ -23,5 +24,34 @@
 
     .HeaderCart {
         order: 4;
+
+        @include before-desktop {
+            top: 5px;
+            width: 45px;
+            margin: 0 auto;
+        }
+    }
+
+    .HeaderGenders,
+    .HeaderWishlist,
+    .HeaderAccount {
+        &_isMobile {
+            @include before-desktop{
+                display: none;
+            }
+        }
+    }
+
+
+
+    @include desktop() {
+        display: flex;
+        height: 84px;
+        max-width: 100%;
+        flex-direction: unset;
+
+        &_isMobile {
+            display: block;
+        }
     }
 }

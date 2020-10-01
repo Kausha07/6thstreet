@@ -5,27 +5,25 @@ import ExpandableContent from 'Component/ExpandableContent';
 import SizeTable from 'Component/SizeTable';
 import Popup from 'SourceComponent/Popup';
 import isMobile from 'SourceUtil/Mobile/isMobile';
+import { isArabic } from 'Util/App';
 
 import './PDPSizeGuide.style';
 
 class PDPSizeGuide extends PureComponent {
     static propTypes = {
-        language: PropTypes.string.isRequired,
         activeOverlay: PropTypes.string.isRequired,
         showOverlay: PropTypes.func.isRequired,
         hideActiveOverlay: PropTypes.func.isRequired
     };
 
-    constructor() {
-        super();
-        this.state = {
-            isOpen: false
-        };
-    }
+    state = {
+        isArabic: isArabic(),
+        isOpen: false
+    };
 
     static getDerivedStateFromProps(nextProps) {
-        const { language, activeOverlay } = nextProps;
-        return ({ isArabic: language !== 'en', isOpen: activeOverlay === 'PDPSizeGuide' });
+        const { activeOverlay } = nextProps;
+        return ({ isOpen: activeOverlay === 'PDPSizeGuide' });
     }
 
     handleModalClick = () => {

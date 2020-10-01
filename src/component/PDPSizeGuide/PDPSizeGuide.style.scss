@@ -3,6 +3,7 @@
     --divider-color: #EFEFEF;
     --scrollbar-color: #F3F3F3;
     --scrollbar-thumb-color: #D1D3D4;
+    --guide-button-color: #4A4A4A;
 }
 .PDPSizeGuide {
     &-HeaderContainer {
@@ -104,17 +105,19 @@
     }
 
     &-Button {
+        cursor: pointer;
+        color: var(--guide-button-color);
         border: 1px solid var(--button-border-color);
         border-radius: 5px;
         padding: 0.4rem 0.8rem 0.4rem 0.8rem;
         font-weight: lighter;
         font-family: 'Avenir Next Regular';
+        line-height: 30px;
 
         @include desktop {
             border: none;
             text-decoration: underline
         }
-
     }
 
     &-Modal {

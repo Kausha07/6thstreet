@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import { isArabic } from 'Util/App';
+
 import './InlineCustomerSupport.style';
 
 class InlineCustomerSupport extends PureComponent {
@@ -14,14 +16,8 @@ class InlineCustomerSupport extends PureComponent {
 
     state = {
         isExpanded: false,
-        isArabic: false
+        isArabic: isArabic()
     };
-
-    static getDerivedStateFromProps() {
-        return {
-            isArabic: JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data.language === 'ar'
-        };
-    }
 
     onDropdownClick = () => {
         // Toggle dropdown
