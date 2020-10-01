@@ -55,9 +55,11 @@ class FooterMiddle extends PureComponent {
     render() {
         return (
             <div block="FooterMiddle">
-                { this.renderCustomerSupport() }
-                { this.renderAccount() }
-                { this.renderStoreSwitcher() }
+                <div block="FooterMiddle" elem="Layout">
+                    { this.renderCustomerSupport() }
+                    { this.renderAccount() }
+                    { this.renderStoreSwitcher() }
+                </div>
             </div>
         );
     }
