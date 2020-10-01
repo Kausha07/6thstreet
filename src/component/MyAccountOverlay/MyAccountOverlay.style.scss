@@ -17,6 +17,7 @@
     --radio-label-color: black;
     --gray-color: #9b9b9b;
     --btn-bg-lite-gray-color: #d1d3d4;
+    --likelink-button-color: #4A4A4A;
 }
 
 .MyAccountOverlay {
@@ -88,6 +89,14 @@
         --input-color: var(--black-color);
         caret-color: var(--black-color);
         text-transform: none;
+
+        &::placeholder {
+            text-transform: uppercase;
+            color: var(--gray-color);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            line-height: 16px;
+        }
     }
 
     &-Heading {
@@ -340,6 +349,7 @@
 
     &-Close {
         position: absolute;
+        top: 5px;
         right: 0;
         width: 30px !important;
         height: 30px;
@@ -413,6 +423,19 @@
         }
     }
 
+    &_isArabic {
+        .MyAccountOverlay {
+            &-Button{
+                &_isSignIn {
+                    &::after {
+                        left: 10px;
+                        right: unset;
+                    }
+                }
+            }
+        }   
+    }
+
     &-Button {
         
         .Button{
@@ -420,6 +443,11 @@
             --button-border:  var(--btn-bg-lite-gray-color);
             --button-hover-background: var(--black-color);
             --button-hover-border: var(--black-color);
+            --button-color: var(--white-color);
+
+            font-size: 12px;
+            font-weight: bold;
+            line-height: 16px;
 
             &_isMargin {
                 margin-top: 40px;
@@ -427,6 +455,7 @@
         }
 
         &_likeLink {
+            top: 4px;
             height: 20px;
             --button-color: var(--gray-color);
             text-transform: none;
@@ -435,7 +464,11 @@
             padding: 0;
             margin-bottom: 20px;
             font-size: .95rem;
-            color: var(--button-color);
+            color: var(--likelink-button-color);
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 16px;
+            text-decoration: underline;
         }
 
         &_isArabic {
