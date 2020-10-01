@@ -331,5 +331,12 @@
     "Inches": null,
     "Size": null,
     "Bust": null,
-    "Waist": null
+    "Waist": null,
+    "EMAIL OR PHONE*": null,
+    "PASSWORD*": null,
+    "PASSWORD": null,
+    "FIRST NAME*": null,
+    "LAST NAME*": null,
+    "EMAIL*": null,
+    "Welcome Back": null
 }
