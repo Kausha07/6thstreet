@@ -3,26 +3,18 @@ import { PureComponent } from 'react';
 import HeaderGenders from 'Component/HeaderGenders';
 import MenuCategory from 'Component/MenuCategory';
 import { Categories } from 'Util/API/endpoint/Categories/Categories.type';
+import { isArabic } from 'Util/App';
 
 import './Menu.style';
 
 class Menu extends PureComponent {
+    state = {
+        isArabic: isArabic()
+    }
+
     static propTypes = {
         categories: Categories.isRequired
     };
-
-    constructor() {
-        super();
-        this.state = {
-            isArabic: false
-        };
-    }
-
-    static getDerivedStateFromProps() {
-        return ({
-            isArabic: JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data.language === 'ar'
-        });
-    }
 
     renderCategory(category) {
         const {

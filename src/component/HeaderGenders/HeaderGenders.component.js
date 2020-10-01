@@ -2,10 +2,15 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import GenderButton from 'Component/GenderButton';
+import { isArabic } from 'Util/App';
 
 import './HeaderGenders.style';
 
 class HeaderGenders extends PureComponent {
+    state = {
+        isArabic: isArabic()
+    }
+
     static propTypes = {
         isMobile: PropTypes.bool
     };
@@ -28,19 +33,6 @@ class HeaderGenders extends PureComponent {
             key: 'kids'
         }
     ];
-
-    constructor() {
-        super();
-        this.state = {
-            isArabic: false
-        };
-    }
-
-    static getDerivedStateFromProps() {
-        return ({
-            isArabic: JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data.language === 'ar'
-        });
-    }
 
     renderGender = (gender) => {
         const { key } = gender;

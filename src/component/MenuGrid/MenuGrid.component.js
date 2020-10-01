@@ -2,10 +2,15 @@ import { PureComponent } from 'react';
 
 import Link from 'Component/Link';
 import { CategoryButton, CategoryItems } from 'Util/API/endpoint/Categories/Categories.type';
+import { isArabic } from 'Util/App';
 
 import './MenuGrid.style';
 
 class MenuGrid extends PureComponent {
+    state = {
+        isArabic: isArabic()
+    };
+
     static propTypes = {
         button: CategoryButton,
         items: CategoryItems.isRequired
@@ -14,19 +19,6 @@ class MenuGrid extends PureComponent {
     static defaultProps = {
         button: {}
     };
-
-    constructor() {
-        super();
-        this.state = {
-            isArabic: false
-        };
-    }
-
-    static getDerivedStateFromProps() {
-        return ({
-            isArabic: JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data.language === 'ar'
-        });
-    }
 
     renderItem = (item, i) => {
         const {

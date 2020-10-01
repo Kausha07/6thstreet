@@ -47,6 +47,16 @@
         }
     }
 
+    .HeaderGenders,
+    .HeaderWishlist,
+    .HeaderAccount {
+        &_isMobile {
+            @include before-desktop{
+                display: none;
+            }
+        }
+    }
+
     @include desktop() {
         display: flex;
         height: 84px;

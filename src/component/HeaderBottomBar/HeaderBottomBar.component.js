@@ -4,21 +4,13 @@ import HeaderMenu from 'Component/HeaderMenu';
 import HeaderSearch from 'Component/HeaderSearch';
 import NavigationAbstract from 'Component/NavigationAbstract/NavigationAbstract.component';
 import { DEFAULT_STATE_NAME } from 'Component/NavigationAbstract/NavigationAbstract.config';
+import { isArabic } from 'Util/App';
 
 import './HeaderBottomBar.style';
 
 class HeaderBottomBar extends NavigationAbstract {
-    constructor() {
-        super();
-        this.state = {
-            isArabic: false
-        };
-    }
-
-    static getDerivedStateFromProps() {
-        return ({
-            isArabic: JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data.language === 'ar'
-        });
+    state = {
+        isArabic: isArabic()
     }
 
     stateMap = {

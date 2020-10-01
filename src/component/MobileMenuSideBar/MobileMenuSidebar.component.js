@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import HeaderBottomBar from 'Component/HeaderBottomBar';
+import { isArabic } from 'Util/App';
 
 import { MOBILE_MENU_SIDEBAR_ID } from './MoblieMenuSideBar.config';
 
@@ -17,15 +18,14 @@ class MobileMenuSidebar extends PureComponent {
         super();
         this.state = {
             isOpen: false,
-            isArabic: false
+            isArabic: isArabic()
         };
     }
 
     static getDerivedStateFromProps(nextProps) {
         const { activeOverlay } = nextProps;
         return ({
-            isOpen: activeOverlay === MOBILE_MENU_SIDEBAR_ID,
-            isArabic: JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data.language === 'ar'
+            isOpen: activeOverlay === MOBILE_MENU_SIDEBAR_ID
         });
     }
 

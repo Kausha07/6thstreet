@@ -1,24 +1,24 @@
 :root {
-    --menu-background-color-desktop:#000;
-    --menu-background-color-mobile:#fff;
-    --mobile-menu-category-background-color: #f3f4f6;
-    --sales-block-background-color-desktop: #d12229;
-    --light-border-color: #d3d3d3;
-    --default-text-color: var(--menu-background-color-desktop);
-    --light-text-color: var(--menu-background-color-mobile);
-
+    --black: #000;
+    --grey: #d3d3d3;
+    --light-grey: #f3f4f6;
+    --red: #d12229;
+    --white: #fff;
 }
+
 .HeaderBottomBar {
-    background-color: var(--menu-background-color-desktop);
+    background-color: var(--black);
     z-index: 1;
+
     @include before-desktop {
         display: none;
     }
 
     &-Content {
-        background-color: var(--menu-background-color-desktop);
+        background-color: var(--black);
+
         @include before-desktop {
-            background-color: var(--menu-background-color-mobile);
+            background-color: var(--white);
             height: 100%;
             overflow-y: scroll;
             position: fixed;
@@ -27,11 +27,11 @@
             z-index: 1;
 
             .HeaderSearch-Container {
-            display: none;
+                    display: none;
             }
 
             .FooterMain {
-                background-color: var(--menu-background-color-mobile);
+                background-color: var(--white);
                 display: block;
                 height: 440px;
                 margin-bottom: -144px;
@@ -80,7 +80,7 @@
                                 margin-left: 10px;
 
                                 li {
-                                    border-bottom: 1px solid var(--light-border-color);
+                                    border-bottom: 1px solid var(--grey);
                                     line-height: 50px;
                                 }
 
@@ -102,7 +102,7 @@
             }
 
             .FooterMiddle {
-                background-color: var(--menu-background-color-mobile);
+                background-color: var(--white);
                 display: inline-flex;
                 padding-left: 0;
 

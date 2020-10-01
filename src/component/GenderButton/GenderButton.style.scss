@@ -1,48 +1,48 @@
 .GenderButton {
-  &-Container {
-    display: inline-block;
-    height: 14px;
-    margin: 20px 0;
+    &-Container {
+        display: inline-block;
+        height: 14px;
+        margin: 20px 0;
 
-    @include before-desktop {
-      border-left: 0 !important;
-      border-right: 0 !important;
-      margin-bottom: 0;
-      padding: 0 23px;
-      padding-bottom: 49px;
-      padding-top: 15px;
-      pointer-events: none;
+        @include before-desktop {
+            border-left: 0;
+            border-right: 0;
+            margin-bottom: 0;
+            padding: 0 23px;
+            padding-bottom: 49px;
+            padding-top: 15px;
+            pointer-events: none;
+        }
+
+        @include desktop {
+            padding: 0 30px;
+            &:not(:last-child) {
+                border-right: 1px solid var(--black);
+            }
+        }
     }
 
-    @include desktop {
-      padding: 0 30px;
-      &:not(:last-child) {
-        border-right: 1px solid var(--border-color);
-      }
-    }
-  }
+    &-Button {
+        font-family: 'Avenir Next Regular', serif;
+        letter-spacing: .8px;
+        padding: 0;
+        pointer-events: all;
+        z-index: 2;
 
-  &-Button {
-    z-index: 2;
-    font-family: 'Avenir Next Regular', serif;
-    letter-spacing: .8px;
-    padding: 0;
-    pointer-events: all;
+        &_isCurrentGender,
+            &:hover
+            {
+                border-bottom: 2px solid var(--black);
+                font-family: 'Avenir Next Bold', serif;
+                font-size: 14.4px;
+                letter-spacing: 0;
+                transition-duration: unset;
+            }
 
-    &_isCurrentGender,
-    &:hover
-    {
-      border-bottom: 2px solid var(--border-color);
-      font-family: 'Avenir Next Bold', serif;
-      font-size: 14.4px;
-      letter-spacing: 0;
-      transition-duration: unset;
+        @include desktop {
+            height: 30px;
+            margin-top: -30px;
+            }
     }
-
-    @include desktop {
-      height: 30px;
-      margin-top: -30px;
-    }
-  }
 }
 

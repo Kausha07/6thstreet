@@ -1,41 +1,42 @@
 .MobileMenuSidebar-Modal {
-  width: 100% !important;
-  top: 0;
-  z-index: 50;
-
-  .Popup-Content {
-    background-color: rgba(0,0,0,0.1);
-    height: 100%;
-    pointer-events: none;
-    position: fixed;
+    width: 100% !important; //rewrites default popup styling without affecting it
     top: 0;
+    z-index: 50;
 
-    .HeaderBottomBar {
-      display: block;
-      left: 0;
-      pointer-events: all;
-      position: fixed;
-
-      .GenderButton {
-        display: flex;
-      }
-    }
-    @include tablet {
-      background-color: transparent;
-    }
-  }
-
-  @include desktop {
-    display: none;
-  }
-
-  &_isArabic {
     .Popup-Content {
-      .HeaderBottomBar {
-        left: unset;
-        right: 280px;
-      }
+        background-color: rgba(0,0,0,0.1);
+        height: 100%;
+        pointer-events: none;
+        position: fixed;
+        top: 0;
+
+        .HeaderBottomBar {
+            display: block;
+            left: 0;
+            pointer-events: all;
+            position: fixed;
+
+            .GenderButton {
+                display: flex;
+            }
+        }
+
+        @include tablet {
+            background-color: transparent;
+        }
     }
-  }
+
+    @include desktop {
+        display: none;
+    }
+
+    &_isArabic {
+        .Popup-Content {
+            .HeaderBottomBar {
+                left: unset;
+                right: 280px;
+            }
+        }
+    }
 }
 

@@ -1,7 +1,3 @@
-:root {
-    --header-background-color: #fff;
-}
-
 .UrlRewrites {
     @include desktop {
         padding-top: 154px;
@@ -18,11 +14,11 @@ main {
 
 .Header {
     @include desktop {
+        background-color: var(--white);
         height: 150px;
         position: fixed;
-        z-index: 500;
-        background-color: var(--header-background-color);
         width: 100vw;
+        z-index: 500;
     }
 }
 

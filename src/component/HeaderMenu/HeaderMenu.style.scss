@@ -1,6 +1,6 @@
 .HeaderMenu {
     line-height: 40px;
-    color: var(--light-text-color);
+    color: var(--white);
     width: 20%;
 
     &-Button {
@@ -16,7 +16,6 @@
         width: 40px;
         padding: 0;
         margin: 10px auto 0 auto;
-        text-align: center;
 
         &::before{
             content: "";

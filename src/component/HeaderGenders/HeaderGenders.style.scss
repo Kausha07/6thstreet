@@ -1,6 +1,3 @@
-:root {
-    --border-color: #000;
-}
 .HeaderGenders {
     display: flex;
 
@@ -13,8 +10,10 @@
         .GenderButton {
             &-Container {
                 &:not(:last-child) {
-                    border-left: 1px solid var(--border-color);
-                    border-right: 0;
+                    @include desktop {
+                        border-left: 1px solid var(--black);
+                        border-right: 0;
+                    }
                 }
             }
         }

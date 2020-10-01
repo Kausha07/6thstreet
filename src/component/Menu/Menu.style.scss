@@ -1,11 +1,11 @@
 .Menu {
-    list-style-type: square !important;
+    list-style-type: square;
 
     &-Container {
         display: flex;
     }
     @include before-desktop {
-        border-top: 1px solid var(--light-border-color);
+        border-top: 1px solid var(--grey);
         width: 270px;
 
         &-Container {
@@ -26,7 +26,7 @@
         }
         .MenuCategory {
             &-LastCategoryBackground {
-                background-color: var(--sales-block-background-color-desktop);
+                background-color: var(--red);
                 color: transparent;
                 margin-left: -90px;
                 transform: skew(-15deg, 0deg);
@@ -37,7 +37,7 @@
         &_isArabic {
             .MenuCategory {
                 &-LastCategoryBackground {
-                    background-color: var(--sales-block-background-color-desktop);
+                    background-color: var(--red);
                     color: transparent;
                     margin-right: -125px;
                     transform: skew(-15deg, 0deg);
