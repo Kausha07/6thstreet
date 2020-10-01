@@ -1,5 +1,5 @@
-:root{
-    --footer-background-color:#f6f6f6;
+:root {
+    --footer-background-color: #f6f6f6;
     --foter-hyperlink-color: $black;
 }
 
@@ -22,15 +22,16 @@
     &-CustomerSupport {
         width: 33%;
 
-        .InlineCustomerSupport{
+        .InlineCustomerSupport {
             &-Dropdown {
                 top: auto;
                 bottom: 100%
             }
-        
+
             &-DisplayQuickAccess {
                 display: none;
             }
+
             &-Button {
                 padding: 0;
             }
@@ -56,23 +57,23 @@
         width: 33%;
         display: flex;
 
-    .CountrySwitcher {
-        &-CountryBtn {
-            &::after {
-                transform: none;
+        .CountrySwitcher {
+            &-CountryBtn {
+                &::after {
+                    transform: none;
+                }
             }
         }
-    }
 
-    .CountryMiniFlag {
-        &-Container {
-    
-            span {
-                border-left: 7px solid #f6f6f6;
-                border-right: 7px solid #f6f6f6;
+        .CountryMiniFlag {
+            &-Container {
+
+                span {
+                    border-left: 7px solid #f6f6f6;
+                    border-right: 7px solid #f6f6f6;
+                }
             }
         }
-    }
     }
 }
 
