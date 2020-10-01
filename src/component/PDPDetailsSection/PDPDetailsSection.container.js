@@ -15,10 +15,6 @@ export class PDPDetailsSectionContainer extends PureComponent {
         product: Product.isRequired
     };
 
-    containerFunctions = {
-        // getData: this.getData.bind(this)
-    };
-
     containerProps = () => {
         const { product } = this.props;
         return { product };
@@ -27,7 +23,6 @@ export class PDPDetailsSectionContainer extends PureComponent {
     render() {
         return (
             <PDPDetailsSection
-              { ...this.containerFunctions }
               { ...this.containerProps() }
             />
         );

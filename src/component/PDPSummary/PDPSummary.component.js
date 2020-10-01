@@ -4,6 +4,7 @@ import { PureComponent } from 'react';
 import PDPAddToCart from 'Component/PDPAddToCart/PDPAddToCart.container';
 import Price from 'Component/Price';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
+import { isArabic } from 'Util/App';
 
 import './PDPSummary.style';
 
@@ -11,16 +12,6 @@ class PDPSummary extends PureComponent {
     static propTypes = {
         product: Product.isRequired
     };
-
-    state = {
-        isArabic: false
-    };
-
-    static getDerivedStateFromProps() {
-        return {
-            isArabic: JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data.language === 'ar'
-        };
-    }
 
     renderNew() {
         const { product: { in_new_in } } = this.props;
@@ -75,9 +66,8 @@ class PDPSummary extends PureComponent {
 
     renderName() {
         const { product: { name, alternate_name } } = this.props;
-        const { isArabic } = this.state;
 
-        if (isArabic) {
+        if (isArabic()) {
             return <p>{ alternate_name }</p>;
         }
 

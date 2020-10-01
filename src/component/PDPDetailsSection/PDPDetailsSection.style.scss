@@ -98,6 +98,10 @@
 
     &-ListItem {
         &_mod_title {
+            &::first-letter {
+                text-transform: uppercase;
+            }
+
             &::after {
                 content: ':';
             }

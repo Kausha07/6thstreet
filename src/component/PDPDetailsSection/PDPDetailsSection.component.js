@@ -40,9 +40,23 @@ class PDPDetailsSection extends PureComponent {
     }
 
     listTitle(str) {
-        const capitalized = str.charAt(0).toUpperCase() + str.slice(1);
+        return str.replace('_', ' ');
+    }
 
-        return capitalized.replace('_', ' ');
+    renderListItem(arr) {
+        return (
+            <li block="PDPDetailsSection" elem="HighlightsList" key={ arr[0] }>
+                <span block="PDPDetailsSection" elem="ListItem" mods={ { mod: 'title' } }>
+                    { this.listTitle(arr[0]) }
+                </span>
+                <span block="PDPDetailsSection" elem="ListItem" mods={ { mod: 'value' } }>{ arr[1] }</span>
+            </li>
+        );
+    }
+
+    renderListItems(obj) {
+        return Object.entries(obj).filter((item) => item[1] != null)
+            .map((item) => this.renderListItem(item));
     }
 
     renderHighlights() {
@@ -72,15 +86,7 @@ class PDPDetailsSection extends PureComponent {
             toe_shape
         };
 
-        const list = Object.entries(productInfo).filter((item) => item[1] != null)
-            .map((item) => (
-                <li block="PDPDetailsSection" elem="HighlightsList" key={ item[0] }>
-                    <span block="PDPDetailsSection" elem="ListItem" mods={ { mod: 'title' } }>
-                        { this.listTitle(item[0]) }
-                    </span>
-                    <span block="PDPDetailsSection" elem="ListItem" mods={ { mod: 'value' } }>{ item[1] }</span>
-                </li>
-            ));
+        const list = this.renderListItems(productInfo);
 
         return (
             <div block="PDPDetailsSection" elem="Highlights">
@@ -98,18 +104,22 @@ class PDPDetailsSection extends PureComponent {
         );
     }
 
+    renderMoreDetailsItem(item) {
+        return (
+            <li block="PDPDetailsSection" elem="MoreDetailsList" key={ item.key }>
+                <span block="PDPDetailsSection" elem="ListItem" mods={ { mod: 'title' } }>
+                    { item.key.toUpperCase() }
+                </span>
+                <span block="PDPDetailsSection" elem="ListItem" mods={ { mod: 'value' } }>{ item.value }</span>
+            </li>
+        );
+    }
+
     renderMoreDetailsList() {
         const { product: { highlighted_attributes } } = this.props;
 
-        if (highlighted_attributes !== undefined) {
-            const list = highlighted_attributes.map((item) => (
-                <li block="PDPDetailsSection" elem="MoreDetailsList" key={ item.key }>
-                    <span block="PDPDetailsSection" elem="ListItem" mods={ { mod: 'title' } }>
-                        { item.key.toUpperCase() }
-                    </span>
-                    <span block="PDPDetailsSection" elem="ListItem" mods={ { mod: 'value' } }>{ item.value }</span>
-                </li>
-            ));
+        if (highlighted_attributes !== undefined && highlighted_attributes !== null) {
+            const list = highlighted_attributes.map((item) => this.renderMoreDetailsItem(item));
 
             return <ul block="PDPDetailsSection" elem="MoreDetailsUl">{ list }</ul>;
         }
