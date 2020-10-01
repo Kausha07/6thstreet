@@ -23,11 +23,11 @@ class PDPDetailsSection extends PureComponent {
             <div block="PDPDetailsSection" elem="IconsSection">
                 <div block="PDPDetailsSection" elem="IconContainer">
                     <div block="PDPDetailsSection" elem="Icon" mods={ { isGenuine: true } } />
-                    100% Genuine
+                    { __('100% Genuine') }
                 </div>
                 <div block="PDPDetailsSection" elem="IconContainer">
                     <div block="PDPDetailsSection" elem="Icon" mods={ { freeReturn: true } } />
-                    Free Returns
+                    { __('Free Returns') }
                 </div>
             </div>
         );
@@ -86,11 +86,9 @@ class PDPDetailsSection extends PureComponent {
             toe_shape
         };
 
-        const list = this.renderListItems(productInfo);
-
         return (
             <div block="PDPDetailsSection" elem="Highlights">
-                <ul>{ list }</ul>
+                <ul>{ this.renderListItems(productInfo) }</ul>
                 <button
                   block="PDPDetailsSection"
                   elem="MoreDetailsBtn"
@@ -98,7 +96,7 @@ class PDPDetailsSection extends PureComponent {
                   mix={ { block: 'button secondary' } }
                   onClick={ this.openFullInfo }
                 >
-                    view more details
+                    { __('view more details') }
                 </button>
             </div>
         );
@@ -119,9 +117,11 @@ class PDPDetailsSection extends PureComponent {
         const { product: { highlighted_attributes } } = this.props;
 
         if (highlighted_attributes !== undefined && highlighted_attributes !== null) {
-            const list = highlighted_attributes.map((item) => this.renderMoreDetailsItem(item));
-
-            return <ul block="PDPDetailsSection" elem="MoreDetailsUl">{ list }</ul>;
+            return (
+            <ul block="PDPDetailsSection" elem="MoreDetailsUl">
+                { highlighted_attributes.map((item) => this.renderMoreDetailsItem(item)) }
+            </ul>
+            );
         }
 
         return null;
