@@ -106,10 +106,7 @@
     &-Button {
         border: 1px solid var(--button-border-color);
         border-radius: 5px;
-        padding-left: 0.8rem;
-        padding-right: 0.8rem;
-        padding-top: 0.4rem;
-        padding-bottom: 0.4rem;
+        padding: 0.4rem 0.8rem 0.4rem 0.8rem;
         font-weight: lighter;
         font-family: 'Avenir Next Regular';
 
@@ -142,7 +139,7 @@
                 }
 
                 @include tablet {
-                    max-height: 100%;
+                    min-height: 100%;
                 }
             }
         }

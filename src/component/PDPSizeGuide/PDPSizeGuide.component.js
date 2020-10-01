@@ -85,9 +85,9 @@ class PDPSizeGuide extends PureComponent {
         return (
             <div mix={ { block: 'PDPSizeGuide', elem: 'GuideContainer', mods: { isArabic } } }>
                 <div mix={ { block: 'PDPSizeGuide', elem: 'HeaderContainer', mods: { isArabic } } }>
-                    { isMobile.any() ? closeBtn : null }
+                    { isMobile.any() || isMobile.tablet() ? closeBtn : null }
                     <h1 mix={ { block: 'PDPSizeGuide', elem: 'Header', mods: { isArabic } } }>
-                       { isMobile.any() ? __('SIZE GUIDE') : __('Sizing Guide') }
+                       { isMobile.any() || isMobile.tablet() ? __('SIZE GUIDE') : __('Sizing Guide') }
                     </h1>
                     <hr mix={ { block: 'PDPSizeGuide', elem: 'Line', mods: { isArabic } } } />
                 </div>
