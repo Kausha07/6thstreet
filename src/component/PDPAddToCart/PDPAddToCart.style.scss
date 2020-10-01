@@ -2,9 +2,9 @@ $select-arrow-height: 6px !default;
 $select-arrow-width: 6px !default;
 
 :root {
-    --text-color: black;
-    --text-color-on-dark-background: white;
-    --loading-button-background-color: grey;
+    --text-color: #000;
+    --text-color-on-dark-background: #fff;
+    --loading-button-background-color: #808080;
     --success-color: #00f0a5;
 }
 

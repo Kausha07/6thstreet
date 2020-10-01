@@ -76,10 +76,10 @@ class PDPAddToCart extends PureComponent {
         }
 
         return (
-        <div block="PDPAddToCart" elem="SizeInfo">
-            <span block="PDPAddToCart" elem="SizeLabel">{ __('Size:') }</span>
-            <PDPSizeGuide />
-        </div>
+            <div block="PDPAddToCart" elem="SizeInfo">
+                <span block="PDPAddToCart" elem="SizeLabel">{ __('Size:') }</span>
+                <PDPSizeGuide />
+            </div>
         );
     }
 
@@ -92,14 +92,14 @@ class PDPAddToCart extends PureComponent {
 
         return (
             <div block="PDPAddToCart" elem="SizeTypeSelector">
-                    <select
-                      key="SizeTypeSelect"
-                      block="PDPAddToCart"
-                      elem="SizeTypeSelectElement"
-                      onChange={ onSizeTypeSelect }
-                    >
-                        { this.getSizeTypeSelect() }
-                    </select>
+                <select
+                  key="SizeTypeSelect"
+                  block="PDPAddToCart"
+                  elem="SizeTypeSelectElement"
+                  onChange={ onSizeTypeSelect }
+                >
+                    { this.getSizeTypeSelect() }
+                </select>
             </div>
         );
     }
@@ -117,9 +117,9 @@ class PDPAddToCart extends PureComponent {
                           block="PDPAddToCart"
                           elem="SizeSelectElement"
                           onChange={ onSizeSelect }
-                          defaultValue="DEFAULT"
+                          defaultValue="default"
                         >
-                            <option value="DEFAULT" disabled hidden>
+                            <option value="default" selected disabled hidden>
                                 { __('Please select size') }
                             </option>
                             { this.getSizeSelect() }

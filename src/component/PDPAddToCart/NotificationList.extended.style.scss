@@ -3,7 +3,7 @@
 }
 
 .NotificationList {
-    top: calc(100px + var(--breadcrumbs-height-main) + 20px);
+    top: calc(120px + var(--breadcrumbs-height-main));
     
     .Notification {
         &_type {
