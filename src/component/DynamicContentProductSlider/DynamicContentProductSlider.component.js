@@ -106,16 +106,16 @@ class DynamicContentProductSlider extends PureComponent {
         const lastPage = parseInt(Math.floor(products.length / ITEMS_PER_PAGE), 10); // first page is 0
         if (currentPage !== lastPage) {
             return (
-                <button
+                <div
+                  role="button"
+                  aria-label="Next"
+                  tabIndex={ 0 }
                   onClick={ this.handleClickNext }
-                  mix={ {
-                      block: 'DynamicContentProductSlider',
-                      elem: 'ButtonNext',
-                      mods: { isArabic }
-                  } }
+                  onKeyDown={ this.handleClickNext }
+                  mix={ { block: 'DynamicContentProductSlider', elem: 'ButtonNext', mods: { isArabic } } }
                 >
-                    &gt;
-                </button>
+                    <div mix={ { block: 'DynamicContentProductSlider', elem: 'ArrowNext', mods: { isArabic } } } />
+                </div>
             );
         }
 
@@ -131,16 +131,16 @@ class DynamicContentProductSlider extends PureComponent {
         }
         if (currentPage !== 0) {
             return (
-                <button
+                <div
+                  role="button"
+                  aria-label="Next"
+                  tabIndex={ 0 }
                   onClick={ this.handleClickPrev }
-                  mix={ {
-                      block: 'DynamicContentProductSlider',
-                      elem: 'ButtonPrev',
-                      mods: { isArabic }
-                  } }
+                  onKeyDown={ this.handleClickPrev }
+                  mix={ { block: 'DynamicContentProductSlider', elem: 'ButtonPrev', mods: { isArabic } } }
                 >
-                    &lt;
-                </button>
+                    <div mix={ { block: 'DynamicContentProductSlider', elem: 'ArrowPrev', mods: { isArabic } } } />
+                </div>
             );
         }
 
