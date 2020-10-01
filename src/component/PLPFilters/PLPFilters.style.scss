@@ -16,7 +16,7 @@
 .FilterPopup {
     box-shadow: 10px 10px 0 250px rgba(0, 0, 0, 0.7);
     top: 0;
-    width: 70%;
+    width: 80%;
 
     &_isArabic {
         direction: rtl;
@@ -25,17 +25,34 @@
 
     }
 
+    &-ResetButton {
+        position: absolute;
+        right: 5px;
+        top: 7px;
+        text-transform: capitalize;
+        font-size: 12px;
+        font-weight: bold;
+        color: var(--primary-dark-color);
+    }
+
+    .ResetButton {
+        &_isArabic {
+            right: auto;
+            left: 5px;
+        }
+    }
+
     &-CloseBtn {
         cursor: pointer;
         height: 55px;
-        position: absolute;
+        position: fixed;
         right: 5px;
         top: 7px;
         width: 55px;
 
         &:before,
         &:after {
-            background: #e62f57;
+            background: var(--color-white);
             content: "";
             height: 4px;
             left: 10px;
@@ -123,6 +140,7 @@
                         margin-top: 5px;
                         transform: rotate(-45deg);
                         width: 10px;
+                        right: 5px;
                     }
                 }
 
@@ -184,6 +202,12 @@
     }
 }
 
+.Reset {
+    &_isArabic {
+        padding: 0 10px !important;
+    }
+}
+
 .PLPFilters {
     display: flex;
     flex-wrap: wrap;
@@ -192,6 +216,22 @@
 
     @include mobile() {
         display: none;
+    }
+
+    &-Reset {
+        width: 100%;
+    }
+
+    .Reset{
+        &-Button {
+            text-transform: capitalize;
+            color: var(--primary-dark-color);
+            font-weight: bold;
+            font-size: 12px;
+            padding: 0;
+            margin-bottom: 50px;
+            height: auto;
+        }
     }
 
     .Field {

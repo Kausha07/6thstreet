@@ -12,7 +12,8 @@ import { connect } from 'react-redux';
 import { changeNavigationState, goToPreviousNavigationState } from 'Store/Navigation/Navigation.action';
 import { BOTTOM_NAVIGATION_TYPE, TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
 import { hideActiveOverlay, toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
-import { Filters } from 'Util/API/endpoint/Product/Product.type';
+import { Filter, Filters } from 'Util/API/endpoint/Product/Product.type';
+import WebUrlParser from 'Util/API/helper/WebUrlParser';
 
 import PLPFilters from './PLPFilters.component';
 
@@ -39,7 +40,12 @@ export class PLPFiltersContainer extends PureComponent {
         goToPreviousHeaderState: PropTypes.func.isRequired,
         hideActiveOverlay: PropTypes.func.isRequired,
         goToPreviousNavigationState: PropTypes.func.isRequired,
-        changeHeaderState: PropTypes.func.isRequired
+        changeHeaderState: PropTypes.func.isRequired,
+        filter: Filter.isRequired
+    };
+
+    containerFunction = {
+        onReset: this.onReset.bind(this)
     };
 
     containerFunctions = () => {
@@ -47,8 +53,21 @@ export class PLPFiltersContainer extends PureComponent {
         return { showOverlay };
     };
 
+    onReset() {
+        const { filters } = this.props;
+
+        // eslint-disable-next-line no-restricted-syntax
+        for (const [key] of Object.entries(filters)) {
+            WebUrlParser.setParam(`${key}`, '');
+        }
+    }
+
     containerProps = () => {
-        const { filters, isLoading, activeOverlay } = this.props;
+        const {
+            filters,
+            isLoading,
+            activeOverlay
+        } = this.props;
 
         return {
             filters,
@@ -62,6 +81,7 @@ export class PLPFiltersContainer extends PureComponent {
             <PLPFilters
               { ...this.props }
               { ...this.containerFunctions() }
+              { ...this.containerFunction }
               { ...this.containerProps() }
             />
         );

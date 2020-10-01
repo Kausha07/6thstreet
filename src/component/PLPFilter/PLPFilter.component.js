@@ -10,6 +10,7 @@ import { PureComponent } from 'react';
 
 import Field from 'Component/Field';
 import { Filter } from 'Util/API/endpoint/Product/Product.type';
+import { isArabic } from 'Util/App';
 
 import './PLPFilter.style';
 
@@ -20,16 +21,8 @@ class PLPFilter extends PureComponent {
     };
 
     state = {
-        isArabic: false
+        isArabic: isArabic()
     };
-
-    static getDerivedStateFromProps() {
-        return (
-            {
-                isArabic: JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data.language === 'ar'
-            }
-        );
-    }
 
     filterData: {
         id: (string),
