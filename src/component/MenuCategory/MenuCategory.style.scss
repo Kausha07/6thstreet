@@ -1,3 +1,81 @@
 .MenuCategory {
-    
+    display: table;
+    font-weight: 200;
+    padding: 0;
+
+    .DynamicContentBanner {
+        display: none;
+    }
+
+    &:before {
+        content: none;
+    }
+
+    @include before-desktop {
+        background-color: var(--light-grey);
+        color: var(--black);
+        font-family: "Avenir Next Regular";
+        font-size: 13px;
+        font-weight: 600;
+        height: 80px;
+        line-height: 80px;
+        margin: 10px;
+        text-indent: 20px;
+        text-transform: uppercase;
+        width: 260px;
+
+        &.IsVisible {
+            height: 100%;
+        }
+
+        .DynamicContentBanner {
+            height: 0;
+            visibility: hidden;
+            width: 0;
+        }
+    }
+
+    @include desktop {
+        padding: 0 40px;
+        z-index: 3;
+
+        &:first-child {
+            padding-left: 30px;
+        }
+
+        &_isArabic {
+            &:first-child {
+                padding-left: 40px;
+                padding-right: 30px;
+            }
+        }
+
+        .DynamicContent {
+            margin-top: 0;
+        }
+
+        &:nth-last-child(2) {
+            .DynamicContent {
+                .MenuGrid {
+                    &-Content {
+                        background-color: var(--red);
+
+                        a, span {
+                            color: var(--white);
+                        }
+                    }
+                }
+            }
+        }
+
+        &:hover {
+            cursor: default;
+            font-weight: bold;
+            height: 40px;
+
+            .MenuGrid {
+                background: rgba(0, 0, 0, 0.7);
+            }
+        }
+    }
 }

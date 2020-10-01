@@ -1,5 +1,24 @@
-.Header {
+.UrlRewrites {
     @include desktop {
-        height: 170px;
+        padding-top: 154px;
     }
 }
+
+main {
+    &.HomePage {
+        @include desktop {
+            padding-top: 104px;
+        }
+    }
+}
+
+.Header {
+    @include desktop {
+        background-color: var(--white);
+        height: 150px;
+        position: fixed;
+        width: 100vw;
+        z-index: 500;
+    }
+}
+
