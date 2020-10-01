@@ -17,6 +17,7 @@ import Field from 'SourceComponent/Field';
 import Form from 'SourceComponent/Form';
 import Loader from 'SourceComponent/Loader';
 import Overlay from 'SourceComponent/Overlay';
+import { isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
 
 import {
@@ -57,8 +58,7 @@ export class MyAccountOverlay extends PureComponent {
         handleCreateAccount: PropTypes.func.isRequired,
         isCheckout: PropTypes.bool,
         closePopup: PropTypes.func.isRequired,
-        isHidden: PropTypes.bool.isRequired,
-        language: PropTypes.string.isRequired
+        isHidden: PropTypes.bool.isRequired
     };
 
     static defaultProps = {
@@ -69,13 +69,13 @@ export class MyAccountOverlay extends PureComponent {
         isPopup: false,
         gender: 'selectPreferNot',
         isChecked: false,
-        isArabic: false
+        isArabic: isArabic()
     };
 
     renderMap = {
         [STATE_SIGN_IN]: {
             render: () => this.renderSignIn(),
-            title: __('Welcome back')
+            title: __('Welcome Back')
         },
         [STATE_FORGOT_PASSWORD]: {
             render: () => this.renderForgotPassword()
@@ -95,11 +95,6 @@ export class MyAccountOverlay extends PureComponent {
             title: __('Confirm the email')
         }
     };
-
-    static getDerivedStateFromProps(nextProps) {
-        const { language } = nextProps;
-        return ({ isArabic: language !== 'en' });
-    }
 
     renderMyAccount() {
         const {
@@ -156,8 +151,8 @@ export class MyAccountOverlay extends PureComponent {
               viewBox="0 0 24 24"
             >
                 <path
-                  d="M23.954 21.03l-9.184-9.095 9.092-9.174-2.832-2.807-9.09 9.179-9.176-9.088-2.81
-                  2.81 9.186 9.105-9.095 9.184 2.81 2.81 9.112-9.192 9.18 9.1z"
+                  d="M23.954 21.03l-9.184-9.095 9.092-9.174-1.832-1.807-9.09 9.179-9.176-9.088-1.81
+                  1.81 9.186 9.105-9.095 9.184 1.81 1.81 9.112-9.192 9.18 9.1z"
                 />
             </svg>
         );
@@ -234,7 +229,7 @@ export class MyAccountOverlay extends PureComponent {
                       type="text"
                       id="email"
                       name="email"
-                      placeholder={ __('Email or phone') }
+                      placeholder={ __('EMAIL OR PHONE*') }
                       autocomplete="email"
                       validation={ ['notEmpty', 'email'] }
                     />
@@ -300,7 +295,7 @@ export class MyAccountOverlay extends PureComponent {
                     <fieldset block="MyAccountOverlay" elem="Legend">
                         <Field
                           type="text"
-                          placeholder={ __('First Name') }
+                          placeholder={ __('FIRST NAME*') }
                           id="firstname"
                           name="firstname"
                           autocomplete="given-name"
@@ -308,7 +303,7 @@ export class MyAccountOverlay extends PureComponent {
                         />
                         <Field
                           type="text"
-                          placeholder={ __('Last Name') }
+                          placeholder={ __('LAST NAME*') }
                           id="lastname"
                           name="lastname"
                           autocomplete="family-name"
@@ -353,7 +348,7 @@ export class MyAccountOverlay extends PureComponent {
                     <fieldset block="MyAccountOverlay" elem="Legend">
                         <Field
                           type="text"
-                          placeholder={ __('Email') }
+                          placeholder={ __('EMAIL*') }
                           id="email"
                           name="email"
                           autocomplete="email"
@@ -361,7 +356,7 @@ export class MyAccountOverlay extends PureComponent {
                         />
                         <Field
                           type="password"
-                          placeholder={ __('Password') }
+                          placeholder={ __('PASSWORD*') }
                           id="password"
                           name="password"
                           autocomplete="new-password"
@@ -425,7 +420,7 @@ export class MyAccountOverlay extends PureComponent {
                 <fieldset block="MyAccountOverlay" elem="Legend">
                     <Field
                       type="text"
-                      placeholder={ __('Email') }
+                      placeholder={ __('EMAIL OR PHONE*') }
                       id="email"
                       name="email"
                       autocomplete="email"
@@ -433,7 +428,7 @@ export class MyAccountOverlay extends PureComponent {
                     />
                     <Field
                       type="password"
-                      placeholder={ __('Password') }
+                      placeholder={ __('PASSWORD*') }
                       id="password"
                       name="password"
                       autocomplete="current-password"
@@ -468,7 +463,8 @@ export class MyAccountOverlay extends PureComponent {
             isHidden
         } = this.props;
         const {
-            isPopup
+            isPopup,
+            isArabic
         } = this.state;
 
         return (
@@ -481,7 +477,7 @@ export class MyAccountOverlay extends PureComponent {
                   id={ CUSTOMER_ACCOUNT_OVERLAY_KEY }
                   mix={ {
                       block: 'MyAccountOverlay',
-                      mods: { isPopup }
+                      mods: { isPopup, isArabic }
                   } }
                   onVisible={ onVisible }
                   isStatic={ !isCheckout && !!isMobile.any() }

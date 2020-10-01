@@ -329,5 +329,13 @@
     "Size": null,
     "Bust": null,
     "Waist": null,
-    "There was an error": null
+    "There was an error": null,
+    "EMAIL OR PHONE*": null,
+    "PASSWORD*": null,
+    "PASSWORD": null,
+    "FIRST NAME*": null,
+    "LAST NAME*": null,
+    "EMAIL*": null,
+    "Welcome Back": null,
+    "Please select a size.": null
 }

@@ -59,9 +59,9 @@ export class CartDispatcher {
         const { Cart: { cartId } } = getStore().getState();
 
         try {
-            const response = await addProductToCart({ ...productData, cartId });
+            const { data } = await addProductToCart({ ...productData, cartId });
 
-            dispatch(updateCartItem(response.data, thumbnail_url));
+            dispatch(updateCartItem(data, thumbnail_url));
         } catch (e) {
             Logger.log(e);
             if (e) {
