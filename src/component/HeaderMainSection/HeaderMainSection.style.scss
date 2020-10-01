@@ -42,12 +42,9 @@
         }
     }
 
-
-
     @include desktop() {
         display: flex;
         height: 84px;
-        max-width: 100%;
         flex-direction: unset;
 
         &_isMobile {
@@ -55,25 +52,7 @@
         }
     }
 
-    &_isMobile {
-        display: none;
-    }
-
     @include desktop() {
         display: flex;
-        height: 84px;
-        max-width: 100%;
-
-        &_isMobile {
-            display: block;
-        }
-    }
-
-    &-Cart {
-        @include before-desktop {
-            top: 5px;
-            width: 45px;
-            margin: 0 auto;
-        }
     }
 }

@@ -2,7 +2,8 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
-import MobileCartDispatcher from 'Store/MobileCart/MobileCart.dispatcher';
+import CartDispatcher from 'Store/Cart/Cart.dispatcher';
+import { showNotification } from 'Store/Notification/Notification.action';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
 
 import PDPAddToCart from './PDPAddToCart.component';
@@ -11,14 +12,17 @@ export const mapStateToProps = (state) => ({
     product: state.PDP.product
 });
 
-export const mapDispatchToProps = (_dispatch) => ({
-    addProductToCart: (productData) => MobileCartDispatcher.addProductToCart(_dispatch, productData)
+export const mapDispatchToProps = (dispatch) => ({
+    showNotification: (type, message) => dispatch(showNotification(type, message)),
+    addProductToCart:
+     (productData, thumbnail_url) => CartDispatcher.addProductToCart(dispatch, productData, thumbnail_url)
 });
 
 export class PDPAddToCartContainer extends PureComponent {
     static propTypes = {
         product: Product.isRequired,
-        addProductToCart: PropTypes.func.isRequired
+        addProductToCart: PropTypes.func.isRequired,
+        showNotification: PropTypes.func.isRequired
     };
 
     containerFunctions = {
@@ -28,42 +32,97 @@ export class PDPAddToCartContainer extends PureComponent {
     };
 
     state = {
+        sizeObject: {},
         selectedSizeType: 'eu',
-        selectedSize: ''
+        selectedSizeCode: '',
+        errorMessage: '',
+        insertedSizeStatus: true,
+        isLoading: false,
+        addedToCart: false
     };
+
+    static getDerivedStateFromProps(props) {
+        const { product } = props;
+
+        if (product.simple_products !== undefined) {
+            const filteredProductKeys = Object.keys(product.simple_products);
+
+            if (filteredProductKeys.length <= 1) {
+                return { insertedSizeStatus: false };
+            }
+
+            const filteredProductSizeKeys = Object.keys(product.simple_products[filteredProductKeys[0]].size);
+
+            const object = {
+                sizeCodes: filteredProductKeys,
+                sizeTypes: filteredProductSizeKeys
+            };
+
+            return { sizeObject: object };
+        }
+
+        return null;
+    }
 
     containerProps = () => {
         const { product } = this.props;
         return { ...this.state, product };
     };
 
-    onSizeTypeSelect() {
-        console.log('*** Selecting size type - eu/uk/us...');
+    onSizeTypeSelect(type) {
+        this.setState({ selectedSizeType: type.target.value });
     }
 
-    onSizeSelect() {
-        const { product } = this.props;
-        const { selectedSizeType } = this.state;
-
-        console.log('*** Selecting size in selected size type...', product[`size_${selectedSizeType}`][0]);
-
-        // TODO Select proper size, currently will select first available
-        this.setState({ selectedSize: product[`size_${selectedSizeType}`][0] });
+    onSizeSelect(size) {
+        this.setState({ errorMessage: '' });
+        this.setState({ selectedSizeCode: size.target.value });
     }
 
     addToCart() {
-        const { product: { sku }, addProductToCart } = this.props;
-        const { selectedSizeType, selectedSize } = this.state;
-        // TODO Validate if size has been selected
+        const {
+            product, product: { simple_products, thumbnail_url }, addProductToCart, showNotification
+        } = this.props;
+        const {
+            selectedSizeType, selectedSizeCode, insertedSizeStatus
+        } = this.state;
 
-        console.log('*** Adding to cart:', sku, selectedSizeType, selectedSize);
+        if (product.size_uk.length !== 0 && selectedSizeCode === '') {
+            showNotification('error', __('Please select a size.'));
+        }
 
-        addProductToCart({
-            sku,
-            qty: 1,
-            optionId: selectedSizeType.toLocaleUpperCase(),
-            optionValue: selectedSize
-        });
+        if (product.size_uk.length !== 0 && selectedSizeCode !== '') {
+            this.setState({ isLoading: true });
+            const { size } = simple_products[selectedSizeCode];
+
+            addProductToCart({
+                sku: selectedSizeCode,
+                qty: 1,
+                optionId: selectedSizeType.toLocaleUpperCase(),
+                optionValue: size[selectedSizeType]
+            }, thumbnail_url).then(
+                () => this.afterAddToCart()
+            );
+        }
+
+        if (insertedSizeStatus === false) {
+            this.setState({ isLoading: true });
+            const code = Object.keys(simple_products);
+
+            addProductToCart({
+                sku: code[0],
+                qty: 1,
+                optionId: '',
+                optionValue: ''
+            }).then(
+                () => this.afterAddToCart()
+            );
+        }
+    }
+
+    afterAddToCart() {
+        this.setState({ isLoading: false });
+        // TODO props for addedToCart
+        this.setState({ addedToCart: true });
     }
 
     render() {

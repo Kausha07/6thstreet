@@ -3,16 +3,17 @@ import { PureComponent } from 'react';
 import { withRouter } from 'react-router';
 
 import Menu from 'Component/Menu';
+import { MOBILE_MENU_SIDEBAR_ID } from 'Component/MobileMenuSideBar/MoblieMenuSideBar.config';
 
 import './HeaderMenu.style';
 
 class HeaderMenu extends PureComponent {
     static propTypes = {
-        location: PropTypes.object.isRequired
+        location: PropTypes.object.isRequired,
+        toggleOverlayByKey: PropTypes.func.isRequired
     };
 
     state = {
-        isExpanded: false,
         prevLocation: ''
     };
 
@@ -27,26 +28,21 @@ class HeaderMenu extends PureComponent {
     }
 
     onCategoriesClick = () => {
-        // Toggle dropdown
-        this.setState(({ isExpanded }) => ({ isExpanded: !isExpanded }));
+        const { toggleOverlayByKey } = this.props;
+        toggleOverlayByKey(MOBILE_MENU_SIDEBAR_ID);
     };
 
     renderMenu() {
-        const { isExpanded } = this.state;
-
         return (
-            <Menu isExpanded={ isExpanded } />
+            <Menu />
         );
     }
 
     renderCategoriesButton() {
-        const { isExpanded } = this.state;
-
         return (
             <button
               block="HeaderMenu"
               elem="Button"
-              mods={ { isExpanded } }
               onClick={ this.onCategoriesClick }
             >
                <label htmlFor="Categories">{ __('Categories') }</label>

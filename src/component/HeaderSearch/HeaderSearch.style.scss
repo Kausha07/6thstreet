@@ -1,7 +1,34 @@
 .HeaderSearch {
-    display: none;
-    
-    @include desktop {
-        display: block;
+    @include before-desktop {
+        display: none;
+    }
+
+    &-Container {
+        // non displayed to solve conflict with menu categories on small desktop screen
+        // have to be solved by adding search popup or other way
+        @media (max-width: 1220px) {
+            display: none;
+        }
+
+        height: 33px;
+        margin-left: auto;
+        margin-right: 5px;
+        padding: 3px;
+        width: 320px;
+
+        &_isArabic {
+            margin-left: 5px;
+            margin-right: auto;
+        }
+    }
+
+    .Field {
+        margin: 0;
+
+        #search-field {
+          border-radius: 5px;
+          height: 33px;
+          width: 320px;
+        }
     }
 }

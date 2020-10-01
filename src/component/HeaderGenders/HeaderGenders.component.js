@@ -2,10 +2,15 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import GenderButton from 'Component/GenderButton';
+import { isArabic } from 'Util/App';
 
 import './HeaderGenders.style';
 
 class HeaderGenders extends PureComponent {
+    state = {
+        isArabic: isArabic()
+    }
+
     static propTypes = {
         isMobile: PropTypes.bool
     };
@@ -31,23 +36,20 @@ class HeaderGenders extends PureComponent {
 
     renderGender = (gender) => {
         const { key } = gender;
-        const { isMobile } = this.props;
 
         return (
-            <div block="HeaderGenders" mods={ { isMobile } }>
-                <div
-                  block="GenderButton"
-                  elem="Container"
-                  key={ key }
-                >
-                    <GenderButton
-                      gender={ gender }
-                      mix={ {
-                          block: 'HeaderGenders',
-                          elem: 'Button'
-                      } }
-                    />
-                </div>
+            <div
+              block="GenderButton"
+              elem="Container"
+              key={ key }
+            >
+                <GenderButton
+                  gender={ gender }
+                  mix={ {
+                      block: 'HeaderGenders',
+                      elem: 'Button'
+                  } }
+                />
             </div>
         );
     };
@@ -57,8 +59,13 @@ class HeaderGenders extends PureComponent {
     }
 
     render() {
+        const { isArabic } = this.state;
+        const { isMobile } = this.props;
+
         return (
-            <div block="HeaderGenders">
+            <div
+              mix={ { block: 'HeaderGenders', mods: { isArabic, isMobile } } }
+            >
                 { this.renderGenders() }
             </div>
         );

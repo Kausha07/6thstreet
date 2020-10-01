@@ -1,7 +1,49 @@
 .Menu {
-    display: none;
+    list-style-type: square;
 
+    &-Container {
+        display: flex;
+    }
+    @include before-desktop {
+        border-top: 1px solid var(--grey);
+        width: 270px;
+
+        &-Container {
+            flex-direction: column;
+            .HeaderGenders {
+                display: flex;
+            }
+        }
+    }
     @include desktop {
         display: flex;
+        justify-content: left;
+
+        &-Container {
+            .HeaderGenders {
+                display: none;
+            }
+        }
+        .MenuCategory {
+            &-LastCategoryBackground {
+                background-color: var(--red);
+                color: transparent;
+                margin-left: -90px;
+                transform: skew(-15deg, 0deg);
+                width: 80px;
+            }
+        }
+
+        &_isArabic {
+            .MenuCategory {
+                &-LastCategoryBackground {
+                    background-color: var(--red);
+                    color: transparent;
+                    margin-right: -125px;
+                    transform: skew(-15deg, 0deg);
+                    width: 105px;
+                }
+            }
+        }
     }
 }

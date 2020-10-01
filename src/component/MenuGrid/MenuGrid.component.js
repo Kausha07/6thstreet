@@ -1,13 +1,16 @@
-// import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-import Image from 'Component/Image';
 import Link from 'Component/Link';
 import { CategoryButton, CategoryItems } from 'Util/API/endpoint/Categories/Categories.type';
+import { isArabic } from 'Util/App';
 
 import './MenuGrid.style';
 
 class MenuGrid extends PureComponent {
+    state = {
+        isArabic: isArabic()
+    };
+
     static propTypes = {
         button: CategoryButton,
         items: CategoryItems.isRequired
@@ -19,14 +22,12 @@ class MenuGrid extends PureComponent {
 
     renderItem = (item, i) => {
         const {
-            image_url,
             label,
             link
         } = item;
 
         return (
             <Link to={ link } key={ i }>
-                <Image src={ image_url } />
                 { label }
             </Link>
         );
@@ -42,13 +43,12 @@ class MenuGrid extends PureComponent {
             button: {
                 label,
                 link
-                // plp_title
             }
         } = this.props;
 
         const linkTo = {
             pathname: link,
-            state: { plp_config: {} } // TODO: implement based on plp_title
+            state: { plp_config: {} }
         };
 
         return (
@@ -59,10 +59,48 @@ class MenuGrid extends PureComponent {
     }
 
     render() {
+        const { isArabic } = this.state;
+
         return (
             <div block="MenuGrid">
-                { this.renderItems() }
-                { this.renderButton() }
+                <div mix={ { block: 'MenuGrid', elem: 'Content', mods: { isArabic } } }>
+                    <div
+                      block="MenuGrid"
+                      elem="Columns"
+                    >
+                        <div
+                          block="MenuGrid"
+                          elem="Column"
+                        >
+                            <span>
+                                Shop by product
+                            </span>
+                            <div
+                              block="MenuGrid-Column"
+                              elem="Content"
+                            >
+                                { this.renderButton() }
+                                { this.renderItems() }
+                            </div>
+                        </div>
+                        <div
+                          block="MenuGrid"
+                          elem="Column"
+                        >
+                            <span>
+                                Shop by brand
+                            </span>
+                            <div
+                              block="MenuGrid-Column"
+                              elem="Content"
+                            />
+                        </div>
+                        <div
+                          block="MenuGrid"
+                          elem="Column"
+                        />
+                    </div>
+                </div>
             </div>
         );
     }

@@ -1,10 +1,11 @@
-import Slider from '@scandipwa/scandipwa/src/component/Slider';
-import isMobile from '@scandipwa/scandipwa/src/util/Mobile/isMobile';
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import ProductItem from 'Component/ProductItem';
+import Slider from 'SourceComponent/Slider';
+import isMobile from 'SourceUtil/Mobile/isMobile';
 import { Products } from 'Util/API/endpoint/Product/Product.type';
+import { isArabic } from 'Util/App';
 
 import { ITEMS_PER_PAGE } from './DynamicContentProductSlider.config';
 
@@ -14,21 +15,13 @@ class DynamicContentProductSlider extends PureComponent {
     static propTypes = {
         title: PropTypes.string.isRequired,
         isLoading: PropTypes.bool.isRequired,
-        products: Products.isRequired,
-        language: PropTypes.string.isRequired
+        products: Products.isRequired
     };
 
-    constructor() {
-        super();
-        this.state = {
-            currentPage: 0
-        };
-    }
-
-    static getDerivedStateFromProps(nextProps) {
-        const { language } = nextProps;
-        return ({ isArabic: language !== 'en' });
-    }
+    state = {
+        currentPage: 0,
+        isArabic: isArabic()
+    };
 
     renderProduct = (product) => {
         const { sku } = product;
@@ -100,22 +93,22 @@ class DynamicContentProductSlider extends PureComponent {
         } = this.props;
         const { currentPage, isArabic } = this.state;
 
-        if (isLoading) {
+        if (isLoading || isMobile.any()) {
             return null;
         }
         const lastPage = parseInt(Math.floor(products.length / ITEMS_PER_PAGE), 10); // first page is 0
         if (currentPage !== lastPage) {
             return (
-                <button
+                <div
+                  role="button"
+                  aria-label="Next"
+                  tabIndex={ 0 }
                   onClick={ this.handleClickNext }
-                  mix={ {
-                      block: 'DynamicContentProductSlider',
-                      elem: 'ButtonNext',
-                      mods: { isArabic }
-                  } }
+                  onKeyDown={ this.handleClickNext }
+                  mix={ { block: 'DynamicContentProductSlider', elem: 'ButtonNext', mods: { isArabic } } }
                 >
-                    &gt;
-                </button>
+                    <div mix={ { block: 'DynamicContentProductSlider', elem: 'ArrowNext', mods: { isArabic } } } />
+                </div>
             );
         }
 
@@ -126,21 +119,21 @@ class DynamicContentProductSlider extends PureComponent {
         const { isLoading } = this.props;
         const { currentPage, isArabic } = this.state;
 
-        if (isLoading) {
+        if (isLoading || isMobile.any()) {
             return null;
         }
         if (currentPage !== 0) {
             return (
-                <button
+                <div
+                  role="button"
+                  aria-label="Next"
+                  tabIndex={ 0 }
                   onClick={ this.handleClickPrev }
-                  mix={ {
-                      block: 'DynamicContentProductSlider',
-                      elem: 'ButtonPrev',
-                      mods: { isArabic }
-                  } }
+                  onKeyDown={ this.handleClickPrev }
+                  mix={ { block: 'DynamicContentProductSlider', elem: 'ButtonPrev', mods: { isArabic } } }
                 >
-                    &lt;
-                </button>
+                    <div mix={ { block: 'DynamicContentProductSlider', elem: 'ArrowPrev', mods: { isArabic } } } />
+                </div>
             );
         }
 
@@ -172,13 +165,15 @@ class DynamicContentProductSlider extends PureComponent {
         }
 
         return (
-            <Slider
-              mix={ { block: 'DynamicContentProductSlider', elem: 'MobileSlider', mods: { isArabic } } }
-              activeImage={ currentPage }
-              onActiveImageChange={ this.mobileSliderCallback }
-            >
-                { products.map(this.renderProduct) }
-            </Slider>
+            <div mix={ { block: 'DynamicContentProductSlider', elem: 'MobileSliderWrapper', mods: { isArabic } } }>
+                <Slider
+                  mix={ { block: 'DynamicContentProductSlider', elem: 'MobileSlider', mods: { isArabic } } }
+                  activeImage={ currentPage }
+                  onActiveImageChange={ this.mobileSliderCallback }
+                >
+                    { products.map(this.renderProduct) }
+                </Slider>
+            </div>
         );
     }
 
@@ -188,6 +183,10 @@ class DynamicContentProductSlider extends PureComponent {
 
     render() {
         const { isArabic } = this.state;
+        const { products: productArray } = this.props;
+        if (productArray.length === 0) {
+            return null;
+        }
         const products = (
             <div mix={ { block: 'DynamicContentProductSlider', elem: 'ProductContainer', mods: { isArabic } } }>
                 { this.renderButtonPrev() }
@@ -207,7 +206,7 @@ class DynamicContentProductSlider extends PureComponent {
                         Latest trends, new looks, must have... don&apos;t miss it
                     </span>
                 </div>
-                { isMobile.any() ? this.renderProductsMobile() : products }
+                { isMobile.any() || isMobile.tablet() ? this.renderProductsMobile() : products }
             </div>
         );
     }
