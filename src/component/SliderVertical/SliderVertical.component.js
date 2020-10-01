@@ -218,6 +218,30 @@ export class SliderVertical extends PureComponent {
         onActiveImageChange(activeImage + 1);
     };
 
+    onClickChangeSlide(state, slideSize, lastTranslate, fullSliderSize) {
+        const { originalY } = state;
+        const { prevActiveImage: prevActiveSlider } = this.state;
+        // const { onActiveImageChange } = this.props;
+
+        const fullSliderPoss = Math.round(fullSliderSize / slideSize);
+        const elementPossitionInDOM = this.draggableRef.current.getBoundingClientRect().x;
+
+        const sliderPossition = -prevActiveSlider;
+        const realElementPossitionInDOM = elementPossitionInDOM - lastTranslate;
+        const mousePossitionInElement = originalY - realElementPossitionInDOM;
+
+        if (slideSize / 2 < mousePossitionInElement && -fullSliderPoss < sliderPossition) {
+            console.log('here');
+        }
+
+        if (slideSize / 2 > mousePossitionInElement && lastTranslate) {
+            console.log('here');
+            console.log('here');
+        }
+
+        return sliderPossition;
+    }
+
     getFullSliderHeight() {
         const fullSliderHeight = this.draggableRef.current.scrollHeight;
         return fullSliderHeight - this.sliderHeight;
