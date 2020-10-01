@@ -25,10 +25,39 @@
 
     }
 
+    &-CloseBtn {
+        cursor: pointer;
+        height: 55px;
+        position: absolute;
+        right: 5px;
+        top: 7px;
+        width: 55px;
+
+        &:before,
+        &:after {
+            background: #e62f57;
+            content: "";
+            height: 4px;
+            left: 10px;
+            position: absolute;
+            top: 21px;
+            width: 26px;
+        }
+
+        &:before {
+            transform: rotate(45deg);
+        }
+
+        &:after {
+            transform: rotate(-45deg);
+        }
+
+    }
+
     &-Title {
         border-bottom: 1px solid var(--color-light-grey);
         font-size: 18px;
-        padding: 0 20px 20px;
+        padding: 20px;
         position: relative;
         text-transform: capitalize;
     }
@@ -58,8 +87,10 @@
         display: none;
     }
 
-    &-Content {
-        padding: 20px 0;
+    .Popup {
+        &-Content {
+            padding: 0;
+        }
     }
 
     .Content {
@@ -74,20 +105,31 @@
                 font-family: "Avenir Next Ultra Light";
                 font-size: 12px;
                 font-weight: 600;
-                padding: 0 0 10px;
+                padding: 0 0 15px;
                 text-transform: capitalize;
             }
 
             .Field {
+                .FieldSelect {
+                    &::after {
+                        border-width: 0 2px 2px 0;
+                        height: 10px;
+                        margin-top: 5px;
+                        transform: rotate(-45deg);
+                        width: 10px;
+                    }
+                }
+
                 &_isArabic {
                     .FieldSelect {
                         &::after {
-                            width: 10px;
-                            height: 10px;
-                            margin-right: 280px;
-                            transform: rotate(135deg);
-                            margin-top: 5px;
                             border-width: 0 2px 2px 0;
+                            height: 10px;
+                            left: 10px;
+                            margin-top: 5px;
+                            right: auto;
+                            transform: rotate(135deg);
+                            width: 10px;
                         }
                     }
                 }
@@ -150,19 +192,6 @@
         @include mobile() {
             display: none;
 
-        }
-
-        &_isArabic {
-            .FieldSelect {
-                padding-right: 15px;
-
-                &:after {
-                    height: 10px;
-                    margin-left: 323px;
-                    transform: rotate(135deg);
-                    width: 10px;
-                }
-            }
         }
 
         .FieldSelect {

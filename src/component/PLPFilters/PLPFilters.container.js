@@ -9,7 +9,6 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
-import { POPUP } from 'Component/Header/Header.config';
 import { changeNavigationState, goToPreviousNavigationState } from 'Store/Navigation/Navigation.action';
 import { BOTTOM_NAVIGATION_TYPE, TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
 import { hideActiveOverlay, toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
@@ -27,6 +26,7 @@ export const mapDispatchToProps = (_dispatch) => ({
     showOverlay: (overlayKey) => _dispatch(toggleOverlayByKey(overlayKey)),
     hideActiveOverlay: () => _dispatch(hideActiveOverlay()),
     goToPreviousNavigationState: () => _dispatch(goToPreviousNavigationState(BOTTOM_NAVIGATION_TYPE)),
+    goToPreviousHeaderState: () => _dispatch(goToPreviousNavigationState(TOP_NAVIGATION_TYPE)),
     changeHeaderState: (state) => _dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, state))
 });
 
@@ -36,36 +36,16 @@ export class PLPFiltersContainer extends PureComponent {
         filters: Filters.isRequired,
         showOverlay: PropTypes.func.isRequired,
         activeOverlay: PropTypes.string.isRequired,
+        goToPreviousHeaderState: PropTypes.func.isRequired,
         hideActiveOverlay: PropTypes.func.isRequired,
         goToPreviousNavigationState: PropTypes.func.isRequired,
-        onVisible: PropTypes.func,
         changeHeaderState: PropTypes.func.isRequired
     };
 
-    static defaultProps = {
-        onVisible: () => {
-        }
-    };
-
     containerFunctions = () => {
-        this.onVisible = this.onVisible.bind(this);
         const { showOverlay } = this.props;
         return { showOverlay };
     };
-
-    onVisible() {
-        const { changeHeaderState, onVisible } = this.props;
-
-        changeHeaderState({
-            name: POPUP,
-            title: this._getPopupTitle(),
-            onCloseClick: () => {
-                history.back();
-            }
-        });
-
-        onVisible();
-    }
 
     containerProps = () => {
         const { filters, isLoading, activeOverlay } = this.props;

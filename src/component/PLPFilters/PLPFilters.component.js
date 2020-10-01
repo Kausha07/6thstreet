@@ -11,6 +11,7 @@ import { PureComponent } from 'react';
 import PLPFilter from 'Component/PLPFilter';
 import Popup from 'Component/Popup';
 import { Filters } from 'Util/API/endpoint/Product/Product.type';
+import { isArabic } from 'Util/App';
 
 import fitlerImage from './icons/filter-button.png';
 
@@ -30,7 +31,7 @@ class PLPFilters extends PureComponent {
         super();
         this.state = {
             isOpen: false,
-            isArabic: false
+            isArabic: isArabic()
         };
     }
 
@@ -79,6 +80,17 @@ class PLPFilters extends PureComponent {
             >
                 { __('show result') }
             </button>
+        );
+    }
+
+    renderCloseButton() {
+        return (
+            <button
+              block="FilterPopup"
+              elem="CloseBtn"
+              aria-label={ __('Close') }
+              onClick={ this.hidePopUp }
+            />
         );
     }
 
@@ -137,6 +149,7 @@ class PLPFilters extends PureComponent {
                       }
                   } }
                 >
+                    { this.renderCloseButton() }
                     <i
                       block="arrow left"
                       mix={ {
