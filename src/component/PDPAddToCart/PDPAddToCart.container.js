@@ -12,7 +12,8 @@ export const mapStateToProps = (state) => ({
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-    addProductToCart: (productData) => CartDispatcher.addProductToCart(dispatch, productData)
+    addProductToCart:
+     (productData, thumbnail_url) => CartDispatcher.addProductToCart(dispatch, productData, thumbnail_url)
 });
 
 export class PDPAddToCartContainer extends PureComponent {
@@ -77,7 +78,7 @@ export class PDPAddToCartContainer extends PureComponent {
 
     addToCart() {
         // eslint-disable-next-line no-unused-vars
-        const { product, product: { simple_products }, addProductToCart } = this.props;
+        const { product, product: { simple_products, thumbnail_url }, addProductToCart } = this.props;
         const {
             selectedSizeType, selectedSizeCode, insertedSizeStatus
         } = this.state;
@@ -97,7 +98,7 @@ export class PDPAddToCartContainer extends PureComponent {
                 qty: 1,
                 optionId: selectedSizeType.toLocaleUpperCase(),
                 optionValue: size[selectedSizeType]
-            }).then(
+            }, thumbnail_url).then(
                 () => this.afterAddToCart()
             );
         }
