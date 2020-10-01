@@ -119,7 +119,7 @@ class PDPAddToCart extends PureComponent {
                           onChange={ onSizeSelect }
                           defaultValue="default"
                         >
-                            <option value="default" selected disabled hidden>
+                            <option value="default" disabled hidden>
                                 { __('Please select size') }
                             </option>
                             { this.getSizeSelect() }
