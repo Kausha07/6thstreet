@@ -1,0 +1,90 @@
+.PDPGalleryOverlay {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: #f4f4f4;
+    z-index: 99;
+
+    grid-template-columns: 1fr 6fr;
+    .Slider-Wrapper > * {
+        height: 0;
+    }
+    &-Crumbs {
+        z-index: 100;
+        height: 150px;
+        order: 2;
+        display: flex;
+        background: var(--white-color);
+
+        .PDPGalleryCrumb{
+            margin-right: 1px;
+            display: block;
+            width: 150px;
+            height: auto;
+            padding: 30px 30px 30px 0;
+            border: 1px solid #ececec;
+            transition: unset;
+    
+        
+            &_isActive {
+                border: 2px solid $black;
+                img {
+                    border: unset;
+                }
+            }
+
+            .Image {
+                &-Image {
+                    object-position: 0 50%;
+                }
+
+                &_ratio{
+                    &_square{
+                        padding-bottom: 90px;
+                    }
+                }
+            }
+        }
+    }
+    .Slider {
+        position: relative;
+        min-width: 0;
+        margin: auto 10px !important;
+        order: 1;
+
+        &_isCrumbs {
+            width: 85px;
+        }
+
+        &-Wrapper{
+            &_isCrumbs {
+                flex-direction: column;
+            }
+        }
+
+        .Image {
+            &-Image {
+                object-fit: contain;
+            }
+
+            &_ratio{
+                &_square{
+                    padding-bottom: 600px;
+                }
+            }
+        }
+    }
+
+    &-Button {
+        position: absolute;
+        width: 80px;
+        height: 80px !important;
+        right: 0;
+        background: #ffffff4d;
+    }
+
+}

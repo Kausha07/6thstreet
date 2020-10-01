@@ -3,6 +3,7 @@ import { PureComponent } from 'react';
 
 import Image from 'Component/Image';
 import PDPGalleryCrumb from 'Component/PDPGalleryCrumb';
+import PDPGalleryOverlay from 'Component/PDPGalleryOverlay';
 import Slider from 'Component/Slider';
 import SliderVertical from 'Component/SliderVertical';
 
@@ -19,6 +20,10 @@ class PDPGallery extends PureComponent {
         onSliderChange: PropTypes.func.isRequired
     };
 
+    state = {
+        galleryOverlay: ''
+    };
+
     renderCrumb = (index, i) => (
         <PDPGalleryCrumb
           key={ i }
@@ -28,8 +33,20 @@ class PDPGallery extends PureComponent {
     );
 
     renderGalleryImage = (src, i) => (
-        <Image src={ src } key={ i } />
+                <Image src={ src } key={ i } />
     );
+
+    renderGalleryOverlay = () => {
+        const galleryOverlay = (
+                <PDPGalleryOverlay closeGalleryOverlay={ this.closeGalleryOverlay } />
+        );
+
+        this.setState({ galleryOverlay });
+    };
+
+    closeGalleryOverlay = () => {
+        this.setState({ galleryOverlay: '' });
+    };
 
     renderCrumbs() {
         const { crumbs, currentIndex, onSliderChange } = this.props;
@@ -73,6 +90,7 @@ class PDPGallery extends PureComponent {
               activeImage={ currentIndex }
               onActiveImageChange={ onSliderChange }
               mix={ { block: 'PDPGallery', elem: 'Slider' } }
+              isInteractionDisabled
             >
                 { this.renderGallery() }
             </Slider>
@@ -80,10 +98,15 @@ class PDPGallery extends PureComponent {
     }
 
     render() {
+        const { galleryOverlay } = this.state;
+
         return (
             <div block="PDPGallery">
+                { galleryOverlay }
                 { this.renderCrumbs() }
-                { this.renderSlider() }
+                <button onClick={ this.renderGalleryOverlay }>
+                    { this.renderSlider() }
+                </button>
             </div>
         );
     }

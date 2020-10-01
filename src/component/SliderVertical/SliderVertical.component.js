@@ -63,6 +63,8 @@ export class SliderVertical extends PureComponent {
 
     renderCrumb = this.renderCrumb.bind(this);
 
+    isSlider = this.isSlider.bind(this);
+
     constructor(props) {
         super(props);
 
@@ -78,87 +80,24 @@ export class SliderVertical extends PureComponent {
             count: 0,
             countPerPage: 0,
             isArrowUpHidden: true,
-            isArrowDownHidden: false
+            isArrowDownHidden: false,
+            isSlider: false
         };
     }
 
     static getDerivedStateFromProps(props, state) {
         const { activeImage } = props;
         const {
-            draggableRef,
             prevActiveImage,
             sliderChildren,
-            sliderHeightChildren,
-            count,
-            countPerPage
+            isSlider
         } = state;
 
-        if (activeImage > prevActiveImage) {
-            if (activeImage === count) {
-                const newTranslate = sliderChildren.length / count < 2
-                    ? -(sliderChildren.length - countPerPage) * sliderHeightChildren
-                    : -((countPerPage - 1) * sliderHeightChildren);
-
-                CSS.setVariable(
-                    draggableRef,
-                    'animation-speed',
-                    `${ Math.abs((prevActiveImage - activeImage) * ANIMATION_DURATION) }ms`
-                );
-
-                CSS.setVariable(
-                    draggableRef,
-                    'translateY',
-                    `${newTranslate}px`
-                );
-
-                if (activeImage === sliderChildren.length - 1) {
-                    return {
-                        prevActiveImage: activeImage,
-                        count: sliderChildren.length,
-                        isArrowDownHidden: activeImage === sliderChildren.length - 1
-                    };
-                }
-
-                return {
-                    prevActiveImage: activeImage,
-                    count: count + countPerPage - 1,
-                    isArrowDownHidden: activeImage === sliderChildren.length - 1
-                };
-            }
-        }
-
-        if (activeImage < prevActiveImage) {
-            if (activeImage === count - countPerPage - 1) {
-                const newTranslate = count / countPerPage > 2
-                    ? -(countPerPage - 1) * sliderHeightChildren
-                    : 0;
-
-                CSS.setVariable(
-                    draggableRef,
-                    'animation-speed',
-                    `${ Math.abs((prevActiveImage - activeImage) * ANIMATION_DURATION) }ms`
-                );
-
-                CSS.setVariable(
-                    draggableRef,
-                    'translateY',
-                    `${newTranslate}px`
-                );
-
-                if (newTranslate === 0) {
-                    return {
-                        prevActiveImage: activeImage,
-                        count: countPerPage,
-                        isArrowUpHidden: activeImage === 0
-                    };
-                }
-
-                return {
-                    prevActiveImage: activeImage,
-                    count: count - countPerPage,
-                    isArrowUpHidden: activeImage === 0
-                };
-            }
+        if (!isSlider) {
+            return {
+                isArrowUpHidden: true,
+                isArrowDownHidden: true
+            };
         }
 
         if (prevActiveImage !== activeImage) {
@@ -169,7 +108,10 @@ export class SliderVertical extends PureComponent {
             };
         }
 
-        return null;
+        return {
+            isArrowUpHidden: activeImage === 0,
+            isArrowDownHidden: activeImage === sliderChildren.length - 1
+        };
     }
 
     componentDidMount() {
@@ -177,9 +119,11 @@ export class SliderVertical extends PureComponent {
         const sliderChildren = draggableRef.current.children;
         const sliderHeightChildren = draggableRef.current.children[0].offsetHeight;
         const sliderHeight = draggableRef.current.offsetHeight;
-        const countPerPage = Math.round(sliderHeight / sliderHeightChildren);
-
         // eslint-disable-next-line no-magic-numbers
+        const countPerPage = sliderHeight % sliderHeightChildren > 85
+            ? Math.round(sliderHeight / sliderHeightChildren)
+            : Math.floor(sliderHeight / sliderHeightChildren);
+
         this.setState({
             draggableRef,
             sliderChildren,
@@ -188,8 +132,6 @@ export class SliderVertical extends PureComponent {
             countPerPage,
             count: countPerPage
         });
-
-        console.log(countPerPage);
 
         if (!sliderChildren || !sliderChildren[0]) {
             return;
@@ -204,12 +146,141 @@ export class SliderVertical extends PureComponent {
         }, ANIMATION_DURATION);
     }
 
+    componentDidUpdate(prevProps) {
+        const { activeImage } = this.props;
+        const { activeImage: prevActiveImage } = prevProps;
+
+        const {
+            draggableRef,
+            sliderChildren,
+            sliderHeightChildren,
+            count,
+            countPerPage,
+            isSlider
+        } = this.state;
+
+        if (isSlider) {
+            if (activeImage > prevActiveImage) {
+                this.handleSliderDown(
+                    activeImage,
+                    count,
+                    sliderChildren,
+                    countPerPage,
+                    sliderHeightChildren,
+                    draggableRef,
+                    prevActiveImage
+                );
+            }
+
+            if (activeImage < prevActiveImage) {
+                this.handleSliderUp(
+                    activeImage,
+                    count,
+                    countPerPage,
+                    sliderHeightChildren,
+                    draggableRef,
+                    prevActiveImage
+                );
+            }
+        }
+    }
+
+    handleSliderDown = (
+        activeImage,
+        count,
+        sliderChildren,
+        countPerPage,
+        sliderHeightChildren,
+        draggableRef,
+        prevActiveImage
+    ) => {
+        if (activeImage === count) {
+            const newTranslate = sliderChildren.length / count < 2
+                ? -(sliderChildren.length - countPerPage) * sliderHeightChildren
+                : -((countPerPage - 1) * sliderHeightChildren);
+
+            CSS.setVariable(
+                draggableRef,
+                'animation-speed',
+                `${ Math.abs((prevActiveImage - activeImage) * ANIMATION_DURATION) }ms`
+            );
+
+            CSS.setVariable(
+                draggableRef,
+                'translateY',
+                `${newTranslate}px`
+            );
+
+            if (activeImage === sliderChildren.length - 1) {
+                this.setState({
+                    prevActiveImage: activeImage,
+                    count: sliderChildren.length,
+                    isArrowDownHidden: activeImage === sliderChildren.length - 1
+                });
+            }
+
+            this.setState({
+                prevActiveImage: activeImage,
+                count: count + countPerPage - 1,
+                isArrowDownHidden: activeImage === sliderChildren.length - 1
+            });
+        }
+    };
+
+    handleSliderUp = (
+        activeImage,
+        count,
+        countPerPage,
+        sliderHeightChildren,
+        draggableRef,
+        prevActiveImage
+    ) => {
+        if (activeImage === count - countPerPage - 1) {
+            const newTranslate = count / countPerPage > 2
+                ? -(countPerPage - 1) * sliderHeightChildren
+                : 0;
+
+            CSS.setVariable(
+                draggableRef,
+                'animation-speed',
+                `${ Math.abs((prevActiveImage - activeImage) * ANIMATION_DURATION) }ms`
+            );
+
+            CSS.setVariable(
+                draggableRef,
+                'translateY',
+                `${newTranslate}px`
+            );
+
+            if (newTranslate === 0) {
+                this.setState({
+                    prevActiveImage: activeImage,
+                    count: countPerPage,
+                    isArrowUpHidden: activeImage === 0
+                });
+            }
+
+            this.setState({
+                prevActiveImage: activeImage,
+                count: count - countPerPage,
+                isArrowUpHidden: activeImage === 0
+            });
+        }
+    };
+
+    isSlider() {
+        const { children } = this.props;
+        const { countPerPage } = this.state;
+
+        if (countPerPage >= children.length) {
+            this.setState({ isSlider: false });
+        } else {
+            this.setState({ isSlider: true });
+        }
+    }
+
     onArrowUpClick = () => {
         const { onActiveImageChange, activeImage } = this.props;
-
-        // if (activeImage === 1) {
-        //     this.setState({ isArrowUpHidden: true });
-        // }
         onActiveImageChange(activeImage - 1);
     };
 
@@ -217,30 +288,6 @@ export class SliderVertical extends PureComponent {
         const { onActiveImageChange, activeImage } = this.props;
         onActiveImageChange(activeImage + 1);
     };
-
-    onClickChangeSlide(state, slideSize, lastTranslate, fullSliderSize) {
-        const { originalY } = state;
-        const { prevActiveImage: prevActiveSlider } = this.state;
-        // const { onActiveImageChange } = this.props;
-
-        const fullSliderPoss = Math.round(fullSliderSize / slideSize);
-        const elementPossitionInDOM = this.draggableRef.current.getBoundingClientRect().x;
-
-        const sliderPossition = -prevActiveSlider;
-        const realElementPossitionInDOM = elementPossitionInDOM - lastTranslate;
-        const mousePossitionInElement = originalY - realElementPossitionInDOM;
-
-        if (slideSize / 2 < mousePossitionInElement && -fullSliderPoss < sliderPossition) {
-            console.log('here');
-        }
-
-        if (slideSize / 2 > mousePossitionInElement && lastTranslate) {
-            console.log('here');
-            console.log('here');
-        }
-
-        return sliderPossition;
-    }
 
     getFullSliderHeight() {
         const fullSliderHeight = this.draggableRef.current.scrollHeight;
@@ -250,49 +297,50 @@ export class SliderVertical extends PureComponent {
     calculateNextSlide(state) {
         const {
             translateY: translate,
-            lastTranslateY: lastTranslate
+            lastTranslateY: lastTranslate,
+            isSlider
         } = state;
 
-        const { onActiveImageChange } = this.props;
+        if (isSlider) {
+            const { onActiveImageChange } = this.props;
 
-        const slideSize = this.sliderHeight;
+            const slideSize = this.sliderHeight;
 
-        const fullSliderSize = this.getFullSliderHeight();
+            const fullSliderSize = this.getFullSliderHeight();
 
-        const activeSlidePosition = translate / slideSize;
-        const activeSlidePercent = Math.abs(activeSlidePosition % 1);
-        const isSlideBack = translate > lastTranslate;
+            const activeSlidePosition = translate / slideSize;
+            const activeSlidePercent = Math.abs(activeSlidePosition % 1);
+            const isSlideBack = translate > lastTranslate;
 
-        if (!translate) {
-            return this.onClickChangeSlide(state, slideSize, lastTranslate, fullSliderSize);
-        }
+            if (translate >= 0) {
+                onActiveImageChange(0);
+                return 0;
+            }
 
-        if (translate >= 0) {
-            onActiveImageChange(0);
-            return 0;
-        }
+            if (translate < -fullSliderSize) {
+                const activeSlide = Math.round(fullSliderSize / -slideSize);
+                onActiveImageChange(-activeSlide);
+                return activeSlide;
+            }
 
-        if (translate < -fullSliderSize) {
-            const activeSlide = Math.round(fullSliderSize / -slideSize);
+            if (isSlideBack && activeSlidePercent < 1 - ACTIVE_SLIDE_PERCENT) {
+                const activeSlide = Math.ceil(activeSlidePosition);
+                onActiveImageChange(-activeSlide);
+                return activeSlide;
+            }
+
+            if (!isSlideBack && activeSlidePercent > ACTIVE_SLIDE_PERCENT) {
+                const activeSlide = Math.floor(activeSlidePosition);
+                onActiveImageChange(-activeSlide);
+                return activeSlide;
+            }
+
+            const activeSlide = Math.round(activeSlidePosition);
             onActiveImageChange(-activeSlide);
             return activeSlide;
         }
 
-        if (isSlideBack && activeSlidePercent < 1 - ACTIVE_SLIDE_PERCENT) {
-            const activeSlide = Math.ceil(activeSlidePosition);
-            onActiveImageChange(-activeSlide);
-            return activeSlide;
-        }
-
-        if (!isSlideBack && activeSlidePercent > ACTIVE_SLIDE_PERCENT) {
-            const activeSlide = Math.floor(activeSlidePosition);
-            onActiveImageChange(-activeSlide);
-            return activeSlide;
-        }
-
-        const activeSlide = Math.round(activeSlidePosition);
-        onActiveImageChange(-activeSlide);
-        return activeSlide;
+        return null;
     }
 
     handleDragStart() {
@@ -300,18 +348,20 @@ export class SliderVertical extends PureComponent {
     }
 
     handleDrag(state) {
-        const { translateY } = state;
+        const { translateY, isSlider } = state;
 
-        const translate = translateY;
+        if (isSlider) {
+            const translate = translateY;
 
-        const fullSliderSize = this.getFullSliderHeight();
+            const fullSliderSize = this.getFullSliderHeight();
 
-        if (translate < 0 && translate > -fullSliderSize) {
-            CSS.setVariable(
-                this.draggableRef,
-                'translateY',
-                `${translate}px`
-            );
+            if (translate < 0 && translate > -fullSliderSize) {
+                CSS.setVariable(
+                    this.draggableRef,
+                    'translateY',
+                    `${translate}px`
+                );
+            }
         }
     }
 
@@ -403,6 +453,8 @@ export class SliderVertical extends PureComponent {
         } = this.props;
 
         const { isArrowUpHidden, isArrowDownHidden } = this.state;
+
+        this.isSlider();
 
         return (
             <div
