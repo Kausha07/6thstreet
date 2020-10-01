@@ -53,6 +53,12 @@
         }
 
     }
+    .CloseBtn {
+        &_isArabic {
+            right: auto;
+            left: 5px;
+        }
+    }
 
     &-Title {
         border-bottom: 1px solid var(--color-light-grey);

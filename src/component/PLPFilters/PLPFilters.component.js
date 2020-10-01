@@ -39,8 +39,7 @@ class PLPFilters extends PureComponent {
         const { activeOverlay } = nextProps;
         return (
             {
-                isOpen: activeOverlay === 'PLPFilter',
-                isArabic: JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data.language === 'ar'
+                isOpen: activeOverlay === 'PLPFilter'
             }
         );
     }
@@ -84,10 +83,18 @@ class PLPFilters extends PureComponent {
     }
 
     renderCloseButton() {
+        const { isArabic } = this.state;
+
         return (
             <button
               block="FilterPopup"
               elem="CloseBtn"
+              mix={ {
+                  block: 'CloseBtn',
+                  mods: {
+                      isArabic
+                  }
+              } }
               aria-label={ __('Close') }
               onClick={ this.hidePopUp }
             />
