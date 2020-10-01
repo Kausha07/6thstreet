@@ -33,12 +33,12 @@ class PDPGallery extends PureComponent {
     );
 
     renderGalleryImage = (src, i) => (
-                <Image src={ src } key={ i } />
+        <Image src={ src } key={ i } />
     );
 
     renderGalleryOverlay = () => {
         const galleryOverlay = (
-                <PDPGalleryOverlay closeGalleryOverlay={ this.closeGalleryOverlay } />
+            <PDPGalleryOverlay closeGalleryOverlay={ this.closeGalleryOverlay } />
         );
 
         this.setState({ galleryOverlay });

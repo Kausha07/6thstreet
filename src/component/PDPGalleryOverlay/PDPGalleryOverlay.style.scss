@@ -1,3 +1,9 @@
+:root {
+    --button-background-color: #f8f8f8;
+    --overlay-background-color:  #f4f4f4;
+    --crumb-border-color: #ececec;
+}
+
 .PDPGalleryOverlay {
     display: flex;
     flex-direction: column;
@@ -6,7 +12,7 @@
     right: 0;
     bottom: 0;
     left: 0;
-    background: #f4f4f4;
+    background: var(--overlay-background-color);
     z-index: 600;
 
     grid-template-columns: 1fr 6fr;
@@ -26,7 +32,7 @@
             width: 150px;
             height: auto;
             padding: 30px 30px 30px 0;
-            border: 1px solid #ececec;
+            border: 1px solid var(--crumb-border-color);
             transition: unset;
     
         
@@ -53,7 +59,6 @@
     .Slider {
         position: relative;
         min-width: 0;
-        margin: auto 10px !important;
         order: 1;
 
         &_isCrumbs {
@@ -82,9 +87,19 @@
     &-Button {
         position: absolute;
         width: 80px;
-        height: 80px !important;
         right: 0;
-        background: #ffffff4d;
+        background: var(--button-background-color);
     }
+}
 
+.PDPGallery {
+    .PDPGalleryOverlay {
+        .Slider {
+            margin: auto 10px;
+        }
+
+        &-Button {
+            height: 80px;
+        }
+    }
 }
