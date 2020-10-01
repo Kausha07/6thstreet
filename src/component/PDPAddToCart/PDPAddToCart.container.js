@@ -3,6 +3,7 @@ import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import CartDispatcher from 'Store/Cart/Cart.dispatcher';
+import { showNotification } from 'Store/Notification/Notification.action';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
 
 import PDPAddToCart from './PDPAddToCart.component';
@@ -12,7 +13,8 @@ export const mapStateToProps = (state) => ({
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-    addProductToCart: (productData) => CartDispatcher.addProductToCart(dispatch, productData)
+    addProductToCart: (productData) => CartDispatcher.addProductToCart(dispatch, productData),
+    showNotification: (type, message) => dispatch(showNotification(type, message))
 });
 
 export class PDPAddToCartContainer extends PureComponent {
@@ -32,7 +34,6 @@ export class PDPAddToCartContainer extends PureComponent {
         sizeObject: {},
         selectedSizeType: 'eu',
         selectedSizeCode: '',
-        errorMessage: '',
         insertedSizeStatus: true,
         isLoading: false,
         addedToCart: false
@@ -45,7 +46,7 @@ export class PDPAddToCartContainer extends PureComponent {
             const filteredProductKeys = Object.keys(product.simple_products);
 
             if (filteredProductKeys.length <= 1) {
-                return { insertedSizeStatuson: false };
+                return { insertedSizeStatus: false };
             }
 
             const filteredProductSizeKeys = Object.keys(product.simple_products[filteredProductKeys[0]].size);
@@ -71,32 +72,44 @@ export class PDPAddToCartContainer extends PureComponent {
     }
 
     onSizeSelect(size) {
-        this.setState({ errorMessage: '' });
         this.setState({ selectedSizeCode: size.target.value });
     }
 
     addToCart() {
-        // eslint-disable-next-line no-unused-vars
-        const { product, product: { simple_products }, addProductToCart } = this.props;
+        const {
+            product, product: { simple_products }, addProductToCart, showNotification
+        } = this.props;
         const {
             selectedSizeType, selectedSizeCode, insertedSizeStatus
         } = this.state;
 
-        const { size } = simple_products[selectedSizeCode];
-
-        console.log(size[selectedSizeType]);
         if (product.size_uk.length !== 0 && selectedSizeCode === '') {
-            this.setState({ errorMessage: 'Please, select a size.' });
+            showNotification('error', __('Please select a size.'));
         }
 
-        if ((product.size_uk.length !== 0 && selectedSizeCode !== '') || (insertedSizeStatus === false)) {
+        if (product.size_uk.length !== 0 && selectedSizeCode !== '') {
             this.setState({ isLoading: true });
+            const { size } = simple_products[selectedSizeCode];
 
             addProductToCart({
                 sku: selectedSizeCode,
                 qty: 1,
                 optionId: selectedSizeType.toLocaleUpperCase(),
                 optionValue: size[selectedSizeType]
+            }).then(
+                () => this.afterAddToCart()
+            );
+        }
+
+        if (insertedSizeStatus === false) {
+            this.setState({ isLoading: true });
+            const code = Object.keys(simple_products);
+
+            addProductToCart({
+                sku: code[0],
+                qty: 1,
+                optionId: '',
+                optionValue: ''
             }).then(
                 () => this.afterAddToCart()
             );
