@@ -44,7 +44,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     onShippingEstimationFieldsChange(address) {
         const { estimateShipping } = this.props;
 
-        estimateShipping(address);
+        estimateShipping({
+            default_shipping: true,
+            ...address
+        });
     }
 }
 
