@@ -2,24 +2,32 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import {
-    CartDispatcher,
     ConfigDispatcher,
-    mapDispatchToProps,
+    mapDispatchToProps as sourceMapDispatchToProps,
     mapStateToProps as sourceMapStateToProps,
-    RouterContainer as SourceRouterContainer,
-    WishlistDispatcher
+    RouterContainer as SourceRouterContainer
 } from 'SourceComponent/Router/Router.container';
 
 export {
-    CartDispatcher,
-    ConfigDispatcher,
-    WishlistDispatcher,
-    mapDispatchToProps
+    ConfigDispatcher
 };
 
 export const mapStateToProps = (state) => ({
     ...sourceMapStateToProps(state),
     locale: state.AppState.locale
+});
+
+export const mapDispatchToProps = (dispatch) => ({
+    ...sourceMapDispatchToProps(dispatch)
+    /* init: async () => {
+        if (!isSignedIn()) {
+            // ignore non-signed in
+            return;
+        }
+
+        const { default: dispatcher } = await WishlistDispatcher;
+        dispatcher.updateInitialWishlistData(dispatch);
+    } */
 });
 
 export class RouterContainer extends SourceRouterContainer {
