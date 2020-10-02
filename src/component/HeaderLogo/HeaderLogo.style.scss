@@ -2,17 +2,27 @@
     flex: 1;
     height: 40px;
     text-align: center;
+    margin: 0 200px;
 
-  .Image {
-    margin-top: -150px;
-    height: 22px;
-    width: 100px;
-
-    @include desktop {
-      margin-top: 0;
-      height: 40px;
-      width: 190px;
-      padding: 0;
+    @include before-desktop {
+        height: auto;
     }
-  }
+
+    .Image {
+        height: 22px;
+        width: 30%;
+
+        @include before-desktop {
+            display: block;
+            padding: 0;
+            margin-left: calc(35% + 30px);
+            margin-right: calc(35% - 30px);
+        }
+        @include desktop {
+            height: 40px;
+            margin-top: 0;
+            padding: 0;
+            width: 190px;
+        }
+    }
 }

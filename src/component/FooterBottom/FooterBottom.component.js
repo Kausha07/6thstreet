@@ -71,9 +71,9 @@ class FooterBottom extends PureComponent {
         return (
         <div block="FooterBottom" elem="Hyperlinks">
             <a href="cookie">COOKIE POLICY</a>
-            &nbsp;/&nbsp;
+            /
             <a href="terms">TERMS &amp; CONDITIONS</a>
-            &nbsp;/&nbsp;
+            /
             <a href="privacy-policy">Privacy</a>
         </div>
         );
@@ -90,9 +90,11 @@ class FooterBottom extends PureComponent {
 
         return (
             <div block="FooterBottom" mods={ { FooterBottomHidden } }>
-                { this.renderCopyright() }
-                { this.renderHyperlinks() }
-                { this.renderPaymentIcons() }
+                <div block="FooterBottom" elem="Layout">
+                    { this.renderCopyright() }
+                    { this.renderHyperlinks() }
+                    { this.renderPaymentIcons() }
+                </div>
             </div>
         );
     }

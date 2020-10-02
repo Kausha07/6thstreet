@@ -13,7 +13,7 @@ export const getInitialState = () => (
     BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {
         locale: '', // en-ae, ar-ae, en-sa, ar-sa, en-kw, ar-kw ...
         country: '', // one of AE, SA, KW, OM, BH, QA
-        language: '', // one of en, ar
+        language: 'en', // one of en, ar
         gender: 'men' // one of 'men', 'women', 'kids'
     }
 );
