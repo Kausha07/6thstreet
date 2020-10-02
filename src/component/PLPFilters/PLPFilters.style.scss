@@ -212,7 +212,6 @@
     display: flex;
     flex-wrap: wrap;
     margin-top: 100px;
-    padding: 0 20px;
 
     @include mobile() {
         display: none;
