@@ -26,10 +26,10 @@ class Menu extends PureComponent {
 
         return (
             <MenuCategory
-                key={ key }
-                data={ data }
-                label={ label }
-                design={ design }
+              key={ key }
+              data={ data }
+              label={ label }
+              design={ design }
             />
         );
     }
@@ -44,12 +44,12 @@ class Menu extends PureComponent {
 
         return (
             <div
-                block="Menu"
-                elem="Container"
+              block="Menu"
+              elem="Container"
             >
                 <HeaderGenders />
                 <div
-                    mix={ { block: 'Menu', mods: { isArabic } } }
+                  mix={ { block: 'Menu', mods: { isArabic } } }
                 >
                     { this.renderCategories() }
                     <div block="MenuCategory" elem="LastCategoryBackground" />

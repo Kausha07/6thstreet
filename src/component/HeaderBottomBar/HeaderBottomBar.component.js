@@ -52,30 +52,30 @@ class HeaderBottomBar extends NavigationAbstract {
             }
         ]
     },
-        {
-            title: 'Download The App',
-            items: [
-                {
-                    id_app: 'App1',
-                    app_store: 'https://static.6media.me/static/version1600320971/frontend/6SNEW/6snew/en_US/images/apple-store-badge.svg',
-                    app_onclick: 'https://apps.apple.com/ro/app/6thstreet-com/id1370217070',
-                    id_google: 'Google1',
-                    google_play: 'https://static.6media.me/static/version1600320042/frontend/6SNEW/6snew/en_US/images/google-play-badge.svg',
-                    google_onclick: 'https://play.google.com/store/apps/details?id=com.apparel.app6thstreet',
-                    header: 'Follow The Latest Trends',
-                    id_facebook: 'Facebook1',
-                    facebook_href: 'https://www.facebook.com/shop6thstreet/',
-                    id_insta: 'Insta1',
-                    insta_href: 'https://www.instagram.com/shop6thstreet/'
-                }
-            ]
-        }
+    {
+        title: 'Download The App',
+        items: [
+            {
+                id_app: 'App1',
+                app_store: 'https://static.6media.me/static/version1600320971/frontend/6SNEW/6snew/en_US/images/apple-store-badge.svg',
+                app_onclick: 'https://apps.apple.com/ro/app/6thstreet-com/id1370217070',
+                id_google: 'Google1',
+                google_play: 'https://static.6media.me/static/version1600320042/frontend/6SNEW/6snew/en_US/images/google-play-badge.svg',
+                google_onclick: 'https://play.google.com/store/apps/details?id=com.apparel.app6thstreet',
+                header: 'Follow The Latest Trends',
+                id_facebook: 'Facebook1',
+                facebook_href: 'https://www.facebook.com/shop6thstreet/',
+                id_insta: 'Insta1',
+                insta_href: 'https://www.instagram.com/shop6thstreet/'
+            }
+        ]
+    }
     ];
 
     renderMenu() {
         return (
             <HeaderMenu
-                key="menu"
+              key="menu"
             />
         );
     }
@@ -85,10 +85,10 @@ class HeaderBottomBar extends NavigationAbstract {
 
         return (
             <div
-                mix={ { block: 'HeaderSearch', elem: 'Container', mods: { isArabic } } }
+              mix={ { block: 'HeaderSearch', elem: 'Container', mods: { isArabic } } }
             >
                 <HeaderSearch
-                    key="search"
+                  key="search"
                 />
             </div>
         );
@@ -106,8 +106,8 @@ class HeaderBottomBar extends NavigationAbstract {
                                     <div block="FooterMain" elem="WrapperSecond">
                                         <div block="FooterMain" elem="SocialIcon">
                                             <Link
-                                                to={ items.facebook_href }
-                                                key={ items.id_facebook }
+                                              to={ items.facebook_href }
+                                              key={ items.id_facebook }
                                             >
                                                 <img src={ facebook } alt="facebook icon" />
                                             </Link>
@@ -115,8 +115,8 @@ class HeaderBottomBar extends NavigationAbstract {
                                         &nbsp;&nbsp;&nbsp;
                                         <div block="FooterMain" elem="SocialIcon">
                                             <Link
-                                                to={ items.insta_href }
-                                                key={ items.id_insta }
+                                              to={ items.insta_href }
+                                              key={ items.id_insta }
                                             >
                                                 <img src={ instagram } alt="instagram icon" />
                                             </Link>
@@ -126,15 +126,15 @@ class HeaderBottomBar extends NavigationAbstract {
                                     <h4>{ column.title }</h4>
                                     <div block="FooterMain" elem="WrapperFirst">
                                         <Link
-                                            to={ items.app_onclick }
-                                            key={ items.id_app }
+                                          to={ items.app_onclick }
+                                          key={ items.id_app }
                                         >
                                             <img src={ items.app_store } alt="app store download" />
                                         </Link>
                                         &nbsp;
                                         <Link
-                                            to={ items.app_onclick }
-                                            key={ items.id_google }
+                                          to={ items.app_onclick }
+                                          key={ items.id_google }
                                         >
                                             <img src={ items.google_play } alt="google play download" />
                                         </Link>
@@ -158,9 +158,9 @@ class HeaderBottomBar extends NavigationAbstract {
                                 { column.items.map((items) => (
                                     <li key={ items.name }>
                                         <Link
-                                            block="FooterMain"
-                                            elem="Link"
-                                            to={ items.href }
+                                          block="FooterMain"
+                                          elem="Link"
+                                          to={ items.href }
                                         >
                                             { items.name }
                                         </Link>
@@ -189,10 +189,10 @@ class HeaderBottomBar extends NavigationAbstract {
 
         return (
             <div
-                mix={ { block: 'HeaderBottomBar', mods: { isArabic } } }
+              mix={ { block: 'HeaderBottomBar', mods: { isArabic } } }
             >
                 <div
-                    mix={ { block: 'HeaderBottomBar', elem: 'Content', mods: { isArabic } } }
+                  mix={ { block: 'HeaderBottomBar', elem: 'Content', mods: { isArabic } } }
                 >
                     { this.renderNavigationState() }
                     { this.renderAppContent() }
