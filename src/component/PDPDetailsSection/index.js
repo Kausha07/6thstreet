@@ -1,1 +1,1 @@
-export { default } from './PDPDetailsSection.component';
+export { default } from './PDPDetailsSection.container';

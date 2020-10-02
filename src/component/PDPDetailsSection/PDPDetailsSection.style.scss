@@ -1,3 +1,203 @@
+:root {
+    --pdp-icon-backgroud: #F6F6F6;
+    --pdp-icon-text-color: #4A4A4A;
+}
+
 .PDPDetailsSection {
-    
+    padding: 0 20px;
+    font-family: 'Avenir Next Regular';
+
+    @include desktop() {
+        padding: 28px 77px;
+    }
+
+    h2 {
+        text-transform: none;
+        font-family: 'Avenir Next Demi Bold', sans-serif;
+        font-size: 24px;
+    }
+
+    &-IconsSection,
+    &-IconContainer {
+        display: flex;
+        align-items: center;
+        margin-right: 60px;
+        font-family: 'Avenir Next Demi Bold', sans-serif;
+        font-size: 15px;
+        color: var(--pdp-icon-text-color);
+        font-weight: 400;
+    }
+
+    &-IconsSection {
+        flex-direction: column;
+        align-items: start;
+
+        @include desktop() {
+            flex-direction: row;
+        }
+    }
+
+    &-IconContainer {
+        margin-top: 10px;
+    }
+
+    &-Icon {
+        display: flex;
+        align-items: center;
+        background: var(--pdp-icon-backgroud);
+        min-width: 40px;
+        height: 40px;
+        border-radius: 13px;
+        margin-right: 7px;
+
+        &::before{
+            content: '';
+            width: 22px;
+            height: 22px;
+            display: block;
+            margin: auto;
+            filter: opacity(60%);
+        }
+
+        &_isGenuine {
+            &::before{
+                background: url(./icons/thumbs-up.svg) no-repeat;
+            }
+        }
+        &_freeReturn {
+            &::before{
+                background: url(./icons/sync-solid.svg) no-repeat;
+            }
+        }
+    }
+
+    &-Description {
+        margin-top: 40px;
+        font-size: 16px;
+        line-height: 24px;
+    }
+
+    &-Highlights {
+        font-size: 16px;
+        margin-top: 20px;
+        font-weight: 600;
+    }
+
+    &-HighlightsList {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+        padding-left: 0;
+        width: 250px;
+        font-size: 16px;
+
+        &::before {
+            display: none;
+        }
+    }
+
+    &-ListItem {
+        &_mod_title {
+            &::first-letter {
+                text-transform: uppercase;
+            }
+
+            &::after {
+                content: ':';
+            }
+        }
+
+        &_mod_value {
+            font-weight: 400;
+        }
+    }
+
+    &-MoreDetails {
+        position: relative;
+        margin-top: 40px;
+        margin-bottom: 140px;
+        height: 100%;
+
+        &_isHidden {
+            margin-bottom: 200px;
+            height: 80px;
+            overflow: hidden;
+
+            &::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                background: rgba(255, 255, 255, 0.8);
+            }
+        }
+
+        @include desktop() {
+            margin-bottom: 40px;
+        }
+    }
+
+    &-MoreDetailsList {
+        display: flex;
+        padding-left: 0;
+        font-size: 16px;
+
+        &::before {
+            display: none;
+        }
+
+        .PDPDetailsSection {
+            &-ListItem {
+                &_mod_title {
+                    margin-right: 20px;
+                }
+            }
+        }
+    }
+
+    &-MoreDetailsBtn {
+        display: none;
+
+        &_isHidden {
+            display: block;
+            position: absolute;
+            z-index: 3;
+            bottom: -180px;
+            right: 0;
+            left: 0;
+            margin-right: auto;
+            margin-left: auto;
+            background: $white;
+
+            @include desktop() {
+                bottom: -120px;
+            }   
+        }
+    }
+}
+
+.PageWrapper {
+    &_isArabic {
+        .PDPDetailsSection {
+            &-ListItem {
+                &_mod_title {
+                    margin-right: 0;
+                    margin-left: 20px;
+                }
+            }
+
+            &-IconsSection,
+            &-IconContainer {
+                margin-right: 0;
+                margin-left: 60px;
+            }
+
+            &-Icon {
+                margin-left: 8px;
+                margin-right: 0;
+            }
+        }
+    }
 }
