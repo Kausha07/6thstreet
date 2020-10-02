@@ -100,76 +100,72 @@ class HeaderBottomBar extends NavigationAbstract {
         const title = 'Download The App';
 
         return (
-            this.linksMap
-                .filter((column) => column.title === title)
-                .map((column) => (
-                    <div block="FooterMain" key={ column.title }>
-                        <div block="FooterMain" elem="Nav">
-                            { column.items.map((items) => (
-                                <Fragment key="last_main_footer_column">
-                                    <div block="FooterMain" elem="WrapperSecond">
-                                        <div block="FooterMain" elem="SocialIcon">
-                                            <Link
-                                              to={ items.facebook_href }
-                                              key={ items.id_facebook }
-                                            >
-                                                <img src={ facebook } alt="facebook icon" />
-                                            </Link>
-                                        </div>
-                                        &nbsp;&nbsp;&nbsp;
-                                        <div block="FooterMain" elem="SocialIcon">
-                                            <Link
-                                              to={ items.insta_href }
-                                              key={ items.id_insta }
-                                            >
-                                                <img src={ instagram } alt="instagram icon" />
-                                            </Link>
-                                        </div>
-                                    </div>
-                                    <HeaderAccount />
-                                    <h4>{ column.titleName }</h4>
-                                    <div block="FooterMain" elem="WrapperFirst">
+            this.linksMap.filter((column) => column.title === title).map((column) => (
+                <div block="FooterMain" key={ column.title }>
+                    <div block="FooterMain" elem="Nav">
+                        { column.items.map((items) => (
+                            <Fragment key="last_main_footer_column">
+                                <div block="FooterMain" elem="WrapperSecond">
+                                    <div block="FooterMain" elem="SocialIcon">
                                         <Link
-                                          to={ items.app_onclick }
-                                          key={ items.id_app }
+                                          to={ items.facebook_href }
+                                          key={ items.id_facebook }
                                         >
-                                            <img src={ items.app_store } alt="app store download" />
-                                        </Link>
-                                        &nbsp;
-                                        <Link
-                                          to={ items.app_onclick }
-                                          key={ items.id_google }
-                                        >
-                                            <img src={ items.google_play } alt="google play download" />
+                                            <img src={ facebook } alt="facebook icon" />
                                         </Link>
                                     </div>
-                                </Fragment>
-                            )) }
-                        </div>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <div block="FooterMain" elem="SocialIcon">
+                                        <Link
+                                          to={ items.insta_href }
+                                          key={ items.id_insta }
+                                        >
+                                            <img src={ instagram } alt="instagram icon" />
+                                        </Link>
+                                    </div>
+                                </div>
+                                <HeaderAccount />
+                                <h4>{ column.titleName }</h4>
+                                <div block="FooterMain" elem="WrapperFirst">
+                                    <Link
+                                      to={ items.app_onclick }
+                                      key={ items.id_app }
+                                    >
+                                        <img src={ items.app_store } alt="app store download" />
+                                    </Link>
+                                    &nbsp;
+                                    <Link
+                                      to={ items.app_onclick }
+                                      key={ items.id_google }
+                                    >
+                                        <img src={ items.google_play } alt="google play download" />
+                                    </Link>
+                                </div>
+                            </Fragment>
+                        )) }
                     </div>
-                ))
+                </div>
+            ))
         );
     }
 
     renderAboutSection() {
         return (
-            this.linksMap
-                .filter((column) => column.title === 'About')
-                .map((column) => (
-                    <div block="FooterMain" elem="Column" key={ column.title }>
-                        <div block="FooterMain" elem="Nav" key={ column.title }>
-                            { column.items.map((items) => (
-                                <Link
-                                  block="FooterMain"
-                                  elem="Link"
-                                  to={ items.href }
-                                >
-                                    { items.name }
-                                </Link>
-                            )) }
-                        </div>
+            this.linksMap.filter((column) => column.title === 'About').map((column) => (
+                <div block="FooterMain" elem="Column" key={ column.title }>
+                    <div block="FooterMain" elem="Nav" key={ column.title }>
+                        { column.items.map((items) => (
+                            <Link
+                              block="FooterMain"
+                              elem="Link"
+                              to={ items.href }
+                            >
+                                { items.name }
+                            </Link>
+                        )) }
                     </div>
-                ))
+                </div>
+            ))
         );
     }
 
