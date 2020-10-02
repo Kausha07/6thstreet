@@ -54,7 +54,7 @@ export class MyAccountOrderListContainer extends PureComponent {
             const { data: { orders } } = await MagentoAPI.get('/orders/list');
             this.setState({ orders, isLoading: false });
         } catch (e) {
-            showErrorNotification(e);
+            showErrorNotification(__('No orders were found'));
             this.setState({ isLoading: false });
         }
     }

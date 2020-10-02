@@ -334,5 +334,6 @@
     "Failed to add item to wishlist": null,
     "Failed to remove item from wishlist": null,
     "You must be logged in to add items to wishlist": null,
-    "You must be logged in to remove items to wishlist": null
+    "You must be logged in to remove items to wishlist": null,
+    "No orders were found": null
 }
