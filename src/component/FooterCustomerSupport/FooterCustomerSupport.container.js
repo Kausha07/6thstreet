@@ -12,19 +12,11 @@ export const mapStateToProps = (state) => ({
     language: state.AppState.language
 });
 
-export const mapDispatchToProps = (_dispatch) => ({
-    // addProduct: options => CartDispatcher.addProductToCart(dispatch, options)
-});
-
 export class FooterCustomerSupportContainer extends PureComponent {
     static propTypes = {
         config: Config.isRequired,
         country: PropTypes.string.isRequired,
         language: PropTypes.string.isRequired
-    };
-
-    containerFunctions = {
-        // getData: this.getData.bind(this)
     };
 
     containerProps = () => {
@@ -94,4 +86,4 @@ export class FooterCustomerSupportContainer extends PureComponent {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(FooterCustomerSupportContainer);
+export default connect(mapStateToProps)(FooterCustomerSupportContainer);
