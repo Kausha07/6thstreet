@@ -148,6 +148,7 @@
                 font-family: var(--font-family-demi-bold);
                 color: var(--color-green-cyan);
                 letter-spacing: -0.1px;
+                text-transform: capitalize;
             }
         }
 
@@ -292,9 +293,10 @@
     height: 3rem;
     margin-top: 2rem;
     margin-bottom: 1.5rem;
-    font-size: 27px;
+    font-size: 20px;
     font-family: var(--font-family-bold);
     font-weight: bold;
+    text-transform: capitalize;
 
     @include before-desktop {
         display: none;
@@ -361,8 +363,41 @@
             content: unset;
         }
     }
-}
 
+    .CartCoupon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 50px;
+        margin-bottom: 15px;
+        border: 1px solid var(--color-light-gray);
+
+        &-Input {
+            margin: 0;
+            height: 100%;
+            width: 100%;
+            font-size: 13px;
+            text-transform: capitalize;
+
+            input:focus, textarea:focus, select:focus {
+                border: 1px solid var(--color-black);
+            }
+        }
+
+        &-Button {
+            margin: 0;
+            background-color: var(--color-white);
+            border: 1px solid var(--color-light-gray);
+            color: var(--color-light-gray);
+
+            &:not([disabled]):hover,
+            &:not([disabled]):focus {
+                color: var(--color-black);
+                border: 1px solid var(--color-black);
+            }
+        }
+    }
+}
 .LeftMenu {
     min-width: 300px;
     border: 1px solid gray;
