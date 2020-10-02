@@ -28,6 +28,7 @@
     &-New {
         color: var(--pdp-new-text-color);
         font-size: 16px;
+        margin-right: 4px;
     }
 
     &-Exclusive {
@@ -37,7 +38,7 @@
 
     &-HeaderWardrobeBtn {
         font-family: 'Avenir Next Medium';
-        margin: 0 15px;
+        margin: 0 25px;
         width: 30px;
         height: 30px;
         font-size: 10px;
@@ -48,7 +49,7 @@
             content: ' ';
             position: absolute;
             width: 20px;
-            left: 3px;
+            left: 4px;
             top: -12px;
             height: 20px;
             background-image: url(./icons/hanger.svg);
@@ -153,6 +154,10 @@
         margin-top: 20px;
         padding: 20px 0;
         font-size: 17px;
+
+        @include desktop() {
+            max-width: 550px;
+        }
     }
 
     &-ProductColor {
@@ -174,16 +179,13 @@
             &-HeaderShare {
                 @include desktop() {
                     div::before {
-                        left: -14px
+                        left: -60px
                     }
                 }
             }
-    
-            &-ShareTxt {
-                @include desktop() {
-                    margin-left: 0;
-                    margin-right: 20px;
-                }
+
+            &-New {
+                margin: 0 0 0 4px;
             }
         }
     }
