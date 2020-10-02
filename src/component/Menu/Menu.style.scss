@@ -1,7 +1,26 @@
 .Menu {
-    display: none;
+    list-style-type: square !important;
 
+    &-Container {
+        display: flex;
+    }
+    @include before-desktop {
+        border-top: 1px solid var(--light-border-color);
+        width: 270px;
+
+        &-Container {
+            flex-direction: column;
+        }
+    }
     @include desktop {
         display: flex;
+        justify-content: left;
+        width: 1020px;
+
+        &-Container {
+            .HeaderGenders {
+                display: none;
+            }
+        }
     }
 }

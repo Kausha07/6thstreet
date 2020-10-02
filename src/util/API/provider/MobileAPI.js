@@ -17,7 +17,11 @@ class MobileAPI {
         // TODO: get proper locale
         const locale = process.env.REACT_APP_LOCATE;
         const localePrefix = relativeURL.indexOf('?') >= 0 ? '&' : '?';
-        const url = `/api/${relativeURL}${localePrefix}locale=${locale}`
+        // TODO Restore proper redirect
+        // TODO Restore proper redirect
+        // TODO Restore proper redirect
+        // const url = `/api/${relativeURL}${localePrefix}locale=${locale}`
+        const url = `https://mobileapi.dev.6thstreet.com/v2/${relativeURL}${localePrefix}locale=${locale}`
             .replace(/([^:]\/)\/+/g, '$1'); // this replaces // to /
 
         const payload = (value) => (['post', 'put'].includes(method) ? value : {});

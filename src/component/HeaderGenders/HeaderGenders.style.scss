@@ -1,14 +1,33 @@
-.HeaderGenders {
-  .GenderButton {
-    &-Container {
-      display: inline-block;
-      height: 14px;
-      margin: 20px 0;
-      padding: 0 30px;
+:root {
+    --black-border-color: black;
+}
 
-      &:not(:last-child) {
-        border-right: 1px solid black;
-      }
+.HeaderGenders {
+    display: flex;
+
+    .GenderButton {
+        &-Container {
+            display: inline-block;
+            height: 14px;
+            margin: 20px 0;
+            padding: 0 30px;
+
+            &:not(:last-child) {
+                border-right: 1px solid var(--black-border-color);
+            }
+
+            @include before-desktop {
+                border-right: 0 !important;
+                margin-bottom: 0;
+                padding: 0 9px;
+                padding-bottom: 50px;
+                padding-top: 15px;
+                pointer-events: none;
+            }
+        }
     }
-  }
+
+    @include before-desktop {
+        margin-top: -20px;
+    }
 }

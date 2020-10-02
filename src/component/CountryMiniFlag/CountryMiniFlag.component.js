@@ -20,7 +20,7 @@ class CountryMiniFlag extends PureComponent {
             'QA': '-27px',
             'OM': '-41px',
             'BH': '-55px',
-            'KW': '-69.5px'
+            'KW': '-70px'
         };
 
         const left = label === 'SA' ? '-3px' : '-1px';

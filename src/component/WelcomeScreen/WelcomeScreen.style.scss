@@ -87,3 +87,18 @@
         }
     }
 }
+
+.PageWrapper {
+    &_isArabic {
+
+        .WelcomeScreen {
+            &-Close {
+                float: left;
+                margin-top: 10px;
+            }
+            &-Check {
+                float: left;
+            }
+        }
+    }
+}

@@ -1,15 +1,15 @@
 :root {
     --new-tag-color: #C8B581;
     --divider-color: #EFEFEF;
-    --button-text-color: #ffffff; 
-    --button-color: #000000; 
+    --button-text-color: #ffffff;
+    --button-color: #000000;
     --heart-background: #F9F9F9;
 }
 
 .DynamicContentProductSlider {
     border-top: solid 1px var(--divider-color);
     margin-top: 2rem;
-    position: relative; 
+    position: relative;
     left: 50%;
     transform: translateX(-50%);
     width: 85%;
@@ -18,10 +18,10 @@
         right: 50%;
         left: 0;
         transform: translateX(50%);
-    }    
+    }
 
     &-HeaderContainer {
-        position: relative; 
+        position: relative;
         left: 50%;
         transform: translateX(-50%);
         width: 80%;
@@ -109,7 +109,7 @@
             display: inline-block;
             width: 21%;
             margin-left: 2%;
-            margin-right: 2%; 
+            margin-right: 2%;
         }
     }
 
@@ -129,7 +129,7 @@
     &-TagOverlay {
         position: absolute;
         top: 1.5rem;
-        border-top-right-radius: 1rem; 
+        border-top-right-radius: 1rem;
         border-bottom-right-radius: 1rem;
         font-size: 1.2rem;
         color: var(--button-text-color);
@@ -171,7 +171,7 @@
         }
     }
 
-    &-ButtonPrev {        
+    &-ButtonPrev {
         @include desktop {
             left: 0;
         }
@@ -182,7 +182,7 @@
     }
 
     &-ArrowNext, &-ArrowPrev {
-        position: relative; 
+        position: relative;
         left: 35%;
         top: 40%;
         width: 0.6vw;
@@ -212,12 +212,12 @@
 
     &-ButtonPrev, &-ButtonNext {
         display: none;
-        
+
         @include desktop {
             display: block;
             background-color: var(--button-color);
             position: absolute;
-            width: 3.5vw; 
+            width: 3.5vw;
             height: 3.5vw;
             top: 7vw;
             z-index: 2;

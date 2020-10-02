@@ -5,6 +5,7 @@ import ProductItem from 'Component/ProductItem';
 import Slider from 'SourceComponent/Slider';
 import isMobile from 'SourceUtil/Mobile/isMobile';
 import { Products } from 'Util/API/endpoint/Product/Product.type';
+import { isArabic } from 'Util/App';
 
 import { ITEMS_PER_PAGE } from './DynamicContentProductSlider.config';
 
@@ -14,21 +15,13 @@ class DynamicContentProductSlider extends PureComponent {
     static propTypes = {
         title: PropTypes.string.isRequired,
         isLoading: PropTypes.bool.isRequired,
-        products: Products.isRequired,
-        language: PropTypes.string.isRequired
+        products: Products.isRequired
     };
 
-    constructor() {
-        super();
-        this.state = {
-            currentPage: 0
-        };
-    }
-
-    static getDerivedStateFromProps(nextProps) {
-        const { language } = nextProps;
-        return ({ isArabic: language !== 'en' });
-    }
+    state = {
+        currentPage: 0,
+        isArabic: isArabic()
+    };
 
     renderProduct = (product) => {
         const { sku } = product;
