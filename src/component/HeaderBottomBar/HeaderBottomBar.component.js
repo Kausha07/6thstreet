@@ -32,28 +32,28 @@ class HeaderBottomBar extends NavigationAbstract {
     };
 
     linksMap = [{
-        title: 'About',
+        title: __('About'),
         items: [
             {
-                name: 'About 6TH STREET',
+                name: __('About 6TH STREET'),
                 href: 'https://www.appareluae.com/6th-street/'
             },
             {
-                name: 'Consumer Rights',
+                name: __('Consumer Rights'),
                 href: 'https://www.consumerrights.ae/en/Pages/default.aspx'
             },
             {
-                name: 'Careers',
+                name: __('Careers'),
                 href: '/careers'
             },
             {
-                name: 'Disclaimer',
+                name: __('Disclaimer'),
                 href: '/disclaimer'
             }
         ]
     },
     {
-        title: 'Download The App',
+        title: __('Download The App'),
         items: [
             {
                 id_app: 'App1',
@@ -95,77 +95,77 @@ class HeaderBottomBar extends NavigationAbstract {
     }
 
     renderAppContent() {
+        const title = __('Download The App');
+
         return (
-            this.linksMap
-                .filter((column) => column.title === 'Download The App')
-                .map((column) => (
-                    <div block="FooterMain" key={ column.title }>
-                        <div block="FooterMain" elem="Nav">
-                            { column.items.map((items) => (
-                                <Fragment key="last_main_footer_column">
-                                    <div block="FooterMain" elem="WrapperSecond">
-                                        <div block="FooterMain" elem="SocialIcon">
-                                            <Link
-                                              to={ items.facebook_href }
-                                              key={ items.id_facebook }
-                                            >
-                                                <img src={ facebook } alt="facebook icon" />
-                                            </Link>
-                                        </div>
-                                        &nbsp;&nbsp;&nbsp;
-                                        <div block="FooterMain" elem="SocialIcon">
-                                            <Link
-                                              to={ items.insta_href }
-                                              key={ items.id_insta }
-                                            >
-                                                <img src={ instagram } alt="instagram icon" />
-                                            </Link>
-                                        </div>
-                                    </div>
-                                    <HeaderAccount />
-                                    <h4>{ column.title }</h4>
-                                    <div block="FooterMain" elem="WrapperFirst">
+            this.linksMap.filter((column) => column.title === title).map((column) => (
+                <div block="FooterMain" key={ column.title }>
+                    <div block="FooterMain" elem="Nav">
+                        { column.items.map((items) => (
+                            <Fragment key="last_main_footer_column">
+                                <div block="FooterMain" elem="WrapperSecond">
+                                    <div block="FooterMain" elem="SocialIcon">
                                         <Link
-                                          to={ items.app_onclick }
-                                          key={ items.id_app }
+                                          to={ items.facebook_href }
+                                          key={ items.id_facebook }
                                         >
-                                            <img src={ items.app_store } alt="app store download" />
-                                        </Link>
-                                        &nbsp;
-                                        <Link
-                                          to={ items.app_onclick }
-                                          key={ items.id_google }
-                                        >
-                                            <img src={ items.google_play } alt="google play download" />
+                                            <img src={ facebook } alt="facebook icon" />
                                         </Link>
                                     </div>
-                                </Fragment>
-                            )) }
-                        </div>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <div block="FooterMain" elem="SocialIcon">
+                                        <Link
+                                          to={ items.insta_href }
+                                          key={ items.id_insta }
+                                        >
+                                            <img src={ instagram } alt="instagram icon" />
+                                        </Link>
+                                    </div>
+                                </div>
+                                <HeaderAccount />
+                                <h4>{ column.title }</h4>
+                                <div block="FooterMain" elem="WrapperFirst">
+                                    <Link
+                                      to={ items.app_onclick }
+                                      key={ items.id_app }
+                                    >
+                                        <img src={ items.app_store } alt="app store download" />
+                                    </Link>
+                                    &nbsp;
+                                    <Link
+                                      to={ items.app_onclick }
+                                      key={ items.id_google }
+                                    >
+                                        <img src={ items.google_play } alt="google play download" />
+                                    </Link>
+                                </div>
+                            </Fragment>
+                        )) }
                     </div>
-                ))
+                </div>
+            ))
         );
     }
 
     renderAboutSection() {
+        const title = __('About');
+
         return (
-            this.linksMap
-                .filter((column) => column.title === 'About')
-                .map((column) => (
-                    <div block="FooterMain" elem="Column" key={ column.title }>
-                        <div block="FooterMain" elem="Nav" key={ column.title }>
-                            { column.items.map((items) => (
-                                <Link
-                                  block="FooterMain"
-                                  elem="Link"
-                                  to={ items.href }
-                                >
-                                    { items.name }
-                                </Link>
-                            )) }
-                        </div>
+            this.linksMap.filter((column) => column.title === title).map((column) => (
+                <div block="FooterMain" elem="Column" key={ column.title }>
+                    <div block="FooterMain" elem="Nav" key={ column.title }>
+                        { column.items.map((items) => (
+                            <Link
+                              block="FooterMain"
+                              elem="Link"
+                              to={ items.href }
+                            >
+                                { items.name }
+                            </Link>
+                        )) }
                     </div>
-                ))
+                </div>
+            ))
         );
     }
 
