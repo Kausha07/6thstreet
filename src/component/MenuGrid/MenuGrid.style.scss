@@ -8,7 +8,6 @@
     &-Content {
         background-color: var(--white);
         height: 390px;
-        left: 13px;
         margin: 0 auto;
         pointer-events: all;
         width: 1410px;
@@ -42,17 +41,12 @@
         }
 
         &-Content {
-            display: flex;
-            flex-direction: column;
-            flex-wrap: wrap;
-            height: 290px;
-            justify-content: flex-start;
+            display: grid;
+            grid-template-columns: auto auto;
             margin-top: 10px;
 
-            a {
-                box-sizing: border-box;
+            a{
                 margin: 0;
-                max-width: 50%;
             }
         }
     }
@@ -92,7 +86,7 @@
                 overflow: scroll;
                 width: 260px;
 
-                a {
+                a{
                     line-height: 50px;
                     margin-left: 10px;
                 }
@@ -102,8 +96,10 @@
 
     @include desktop {
         &-Content {
+            left: 13px;
+
             &_isArabic {
-                left: -28px;
+                left: -13px;
 
                 .MenuGrid {
                     &-Column {
@@ -117,6 +113,16 @@
                         }
                     }
                 }
+            }
+        }
+        &-Column {
+            &-Content {
+                display: flex;
+                flex-direction: column;
+                flex-wrap: wrap;
+                height: 290px;
+                justify-content: flex-start;
+                margin-top: 10px;
             }
         }
     }
