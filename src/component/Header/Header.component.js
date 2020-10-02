@@ -4,6 +4,7 @@ import { PureComponent } from 'react';
 import HeaderBottomBar from 'Component/HeaderBottomBar';
 import HeaderMainSection from 'Component/HeaderMainSection';
 import HeaderTopBar from 'Component/HeaderTopBar';
+import MobileBottomBar from 'Component/MobileBottomBar';
 import OfflineNotice from 'Component/OfflineNotice';
 
 import './Header.style';
@@ -18,7 +19,8 @@ export class Header extends PureComponent {
     headerSections = [
         HeaderTopBar,
         HeaderMainSection,
-        HeaderBottomBar
+        HeaderBottomBar,
+        MobileBottomBar
     ];
 
     renderSection = (Component, i) => {

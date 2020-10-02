@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unescaped-entities */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
@@ -11,15 +10,6 @@ class FooterCustomerSupport extends PureComponent {
         openHoursLabel: PropTypes.string.isRequired,
         email: PropTypes.string.isRequired,
         phone: PropTypes.string.isRequired
-    };
-
-    state = {
-        isExpanded: false
-    };
-
-    onDropdownClick = () => {
-        // Toggle dropdown
-        this.setState(({ isExpanded }) => ({ isExpanded: !isExpanded }));
     };
 
     renderEmail = () => {

@@ -18,6 +18,18 @@ class WelcomeScreen extends PureComponent {
         language: PropTypes.string.isRequired
     };
 
+    state = {
+        isArabic: false
+    };
+
+    static getDerivedStateFromProps() {
+        const appStateCacheKey = JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY'));
+
+        return {
+            isArabic: appStateCacheKey && appStateCacheKey.data.language === 'ar'
+        };
+    }
+
     renderCloseBtn() {
         const {
             closePopup
@@ -48,13 +60,13 @@ class WelcomeScreen extends PureComponent {
 
     renderLangBtn(lang) {
         const {
-            onLanguageSelect,
-            language
+            onLanguageSelect
         } = this.props;
 
         const { id, label } = lang;
 
-        const btnType = id === language ? 'primary' : 'secondary';
+        const btnType = id === 'en' ? 'primary' : 'secondary';
+
         const btnBlock = `button ${ btnType}`;
 
         return (
@@ -118,8 +130,10 @@ class WelcomeScreen extends PureComponent {
     }
 
     render() {
+        const { isArabic } = this.state;
+
         return (
-            <div block="WelcomeScreen" elem="Content">
+            <div block="WelcomeScreen" elem="Content" mods={ { isArabic } }>
                 { this.renderCloseBtn() }
                 <div block="WelcomeScreen" elem="Options">
                     <h1>Welcome</h1>

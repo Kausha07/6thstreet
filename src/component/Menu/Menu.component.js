@@ -1,10 +1,20 @@
 // import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+// import DesktopContent from 'Component/DesktopContent';
+import HeaderGenders from 'Component/HeaderGenders';
 import MenuCategory from 'Component/MenuCategory';
 import { Categories } from 'Util/API/endpoint/Categories/Categories.type';
 
 import './Menu.style';
+
+/* const MyComponent = () => {
+    const width = window.innerWidth;
+    const breakpoint = 1200;
+    return width < breakpoint ? <HeaderGenders /> : <DesktopContent />;
+}; */
+
+// window.addEventListener('resize', MyComponent);
 
 class Menu extends PureComponent {
     static propTypes = {
@@ -37,9 +47,17 @@ class Menu extends PureComponent {
 
     render() {
         return (
-            <ul block="Menu">
-                { this.renderCategories() }
-            </ul>
+            <div
+              block="Menu"
+              elem="Container"
+            >
+                <HeaderGenders />
+                <div
+                  block="Menu"
+                >
+                    { this.renderCategories() }
+                </div>
+            </div>
         );
     }
 }

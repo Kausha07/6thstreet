@@ -47,15 +47,17 @@ class MenuCategory extends PureComponent {
     }
 
     render() {
+        const { isVisible } = this.state;
+
         return (
-            <li
-              block="MenuCategory"
+            <div
+              block={ `MenuCategory ${ this.renderLabel()} IsVisible-${isVisible}` }
               onMouseEnter={ this.onEnter }
               onMouseLeave={ this.onLeave }
             >
                 { this.renderLabel() }
                 { this.renderDynamicContent() }
-            </li>
+            </div>
         );
     }
 }
