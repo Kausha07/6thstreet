@@ -31,11 +31,8 @@ class PLPFilter extends PureComponent {
     };
 
     renderDropDownList() {
-        const { filter: { label } } = this.props;
-        const { filter: { data } } = this.props;
-        const { filter: { category } } = this.props;
+        const { filter: { label, data, category }, onSelect } = this.props;
         const { isArabic } = this.state;
-        const { onSelect } = this.props;
 
         // eslint-disable-next-line no-return-assign
         const template = Object.keys(data).map((item) => (

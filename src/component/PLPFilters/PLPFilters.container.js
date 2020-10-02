@@ -50,15 +50,17 @@ export class PLPFiltersContainer extends PureComponent {
 
     containerFunctions = () => {
         const { showOverlay } = this.props;
+
         return { showOverlay };
     };
 
+    // eslint-disable-next-line consistent-return
     onReset() {
         const { filters } = this.props;
 
         // eslint-disable-next-line no-restricted-syntax
-        for (const [key] of Object.entries(filters)) {
-            WebUrlParser.setParam(`${key}`, '');
+        for (const [key] of filters.entries()) {
+            WebUrlParser.setParam(`${key}`, null);
         }
     }
 

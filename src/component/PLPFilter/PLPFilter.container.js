@@ -30,19 +30,15 @@ class PLPFilterContainer extends PureComponent {
     };
 
     onSelect(value) {
-        const {
-            // setPLPFilter,
-            filter: { category }
-        } = this.props;
+        const { filter: { category } } = this.props;
 
         WebUrlParser.setParam(category, value);
     }
 
     containerProps = () => {
         const { filter } = this.props;
-        return {
-            filter
-        };
+
+        return { filter };
     };
 
     render() {

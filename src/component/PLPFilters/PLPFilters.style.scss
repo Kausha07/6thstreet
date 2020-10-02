@@ -22,23 +22,22 @@
         direction: rtl;
         left: unset;
         right: 0;
-
     }
 
     &-ResetButton {
-        position: absolute;
-        right: 5px;
-        top: 7px;
-        text-transform: capitalize;
+        color: var(--primary-dark-color);
         font-size: 12px;
         font-weight: bold;
-        color: var(--primary-dark-color);
+        position: absolute;
+        right: 5px;
+        text-transform: capitalize;
+        top: 7px;
     }
 
     .ResetButton {
         &_isArabic {
-            right: auto;
             left: 5px;
+            right: auto;
         }
     }
 
@@ -70,10 +69,11 @@
         }
 
     }
+
     .CloseBtn {
         &_isArabic {
-            right: auto;
             left: 5px;
+            right: auto;
         }
     }
 
@@ -138,9 +138,9 @@
                         border-width: 0 2px 2px 0;
                         height: 10px;
                         margin-top: 5px;
+                        right: 5px;
                         transform: rotate(-45deg);
                         width: 10px;
-                        right: 5px;
                     }
                 }
 
@@ -222,22 +222,21 @@
         width: 100%;
     }
 
-    .Reset{
+    .Reset {
         &-Button {
-            text-transform: capitalize;
             color: var(--primary-dark-color);
-            font-weight: bold;
             font-size: 12px;
-            padding: 0;
-            margin-bottom: 50px;
+            font-weight: bold;
             height: auto;
+            margin-bottom: 50px;
+            padding: 0;
+            text-transform: capitalize;
         }
     }
 
     .Field {
         @include mobile() {
             display: none;
-
         }
 
         .FieldSelect {
@@ -265,7 +264,6 @@
 
             &::after {
                 border-color: var(--color-medium-grey);
-
 
                 @include tablet() {
                     border: none;
