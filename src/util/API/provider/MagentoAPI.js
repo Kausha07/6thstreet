@@ -34,6 +34,10 @@ class MagentoAPI {
         return this.makeRequest('get', url);
     }
 
+    delete(url, body) {
+        return this.makeRequest('delete', url, body);
+    }
+
     post(url, body) {
         return this.makeRequest('post', url, body);
     }

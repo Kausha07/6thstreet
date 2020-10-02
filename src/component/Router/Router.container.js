@@ -2,10 +2,10 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import {
-    // ConfigDispatcher,
     mapDispatchToProps as sourceMapDispatchToProps,
     mapStateToProps as sourceMapStateToProps,
-    RouterContainer as SourceRouterContainer
+    RouterContainer as SourceRouterContainer,
+    WishlistDispatcher
 } from 'SourceComponent/Router/Router.container';
 
 export const mapStateToProps = (state) => ({
@@ -14,11 +14,11 @@ export const mapStateToProps = (state) => ({
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-    ...sourceMapDispatchToProps(dispatch)
-    /* init: async () => {
-        const { default: configDisp } = await ConfigDispatcher;
-        configDisp.handleData(dispatch);
-    } */
+    ...sourceMapDispatchToProps(dispatch),
+    init: async () => {
+        const { default: wishlistDisp } = await WishlistDispatcher;
+        wishlistDisp.syncWishlist(dispatch);
+    }
 });
 
 export class RouterContainer extends SourceRouterContainer {
@@ -31,10 +31,6 @@ export class RouterContainer extends SourceRouterContainer {
         ...SourceRouterContainer.defaultProps,
         locale: ''
     };
-
-    initializeApplication() {
-        // implement init (disabled for now - 6th street has no endpoint)
-    }
 
     containerProps = () => {
         const { isBigOffline } = this.props;
