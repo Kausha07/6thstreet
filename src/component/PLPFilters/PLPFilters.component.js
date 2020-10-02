@@ -28,22 +28,15 @@ class PLPFilters extends PureComponent {
         onReset: PropTypes.func.isRequired
     };
 
-    constructor() {
-        super();
-        this.state = {
-            isOpen: false,
-            isArabic: isArabic()
-        };
-    }
+    state = {
+        isOpen: false,
+        isArabic: isArabic()
+    };
 
     static getDerivedStateFromProps(nextProps) {
         const { activeOverlay } = nextProps;
 
-        return (
-            {
-                isOpen: activeOverlay === 'PLPFilter'
-            }
-        );
+        return ({ isOpen: activeOverlay === 'PLPFilter' });
     }
 
     handleFilterClick = () => {
@@ -57,8 +50,7 @@ class PLPFilters extends PureComponent {
     renderFilters() {
         const { filters } = this.props;
 
-        return Object.entries(filters)
-            .map(this.renderFilter);
+        return Object.entries(filters).map(this.renderFilter);
     }
 
     renderPlaceholder() {
@@ -66,8 +58,7 @@ class PLPFilters extends PureComponent {
     }
 
     hidePopUp = () => {
-        const { hideActiveOverlay, goToPreviousNavigationState } = this.props;
-        const { activeOverlay } = this.props;
+        const { hideActiveOverlay, goToPreviousNavigationState, activeOverlay } = this.props;
 
         if (activeOverlay === 'PLPFilter') {
             hideActiveOverlay();
@@ -76,8 +67,12 @@ class PLPFilters extends PureComponent {
     };
 
     resetFilters = () => {
-        const { hideActiveOverlay, goToPreviousNavigationState, onReset } = this.props;
-        const { activeOverlay } = this.props;
+        const {
+            hideActiveOverlay,
+            goToPreviousNavigationState,
+            onReset,
+            activeOverlay
+        } = this.props;
 
         if (activeOverlay === 'PLPFilter') {
             hideActiveOverlay();
@@ -118,7 +113,7 @@ class PLPFilters extends PureComponent {
     }
 
     renderResetFilterButton() {
-        const { isArabic } = this.state;
+        const { isArabic, isOpen } = this.state;
 
         return (
             <button
@@ -127,28 +122,8 @@ class PLPFilters extends PureComponent {
               mix={ {
                   block: 'Reset',
                   mods: {
-                      isArabic
-                  }
-              } }
-              aria-label={ __('Reset') }
-              onClick={ this.resetFilters }
-            >
-                { __('clear all') }
-            </button>
-        );
-    }
-
-    renderResetFilterPopupButton() {
-        const { isArabic } = this.state;
-
-        return (
-            <button
-              block="FilterPopup"
-              elem="ResetButton"
-              mix={ {
-                  block: 'ResetButton',
-                  mods: {
-                      isArabic
+                      isArabic,
+                      isOpen
                   }
               } }
               aria-label={ __('Reset') }
@@ -191,8 +166,23 @@ class PLPFilters extends PureComponent {
         );
     }
 
+    renderRefineIcon() {
+        return (
+            <i
+              block="arrow left"
+              mix={ {
+                  block: 'left',
+                  mods: {
+                      isArabic
+                  }
+              } }
+            />
+        );
+    }
+
     renderPopupFilters() {
         const { isArabic } = this.state;
+
         return (
             <Popup
               mix={ {
@@ -215,16 +205,8 @@ class PLPFilters extends PureComponent {
                   } }
                 >
                     { this.renderCloseButton() }
-                    { this.renderResetFilterPopupButton() }
-                    <i
-                      block="arrow left"
-                      mix={ {
-                          block: 'left',
-                          mods: {
-                              isArabic
-                          }
-                      } }
-                    />
+                    { this.renderResetFilterButton() }
+                    { this.renderRefineIcon() }
                     { __('refine') }
                 </div>
                 { this.renderContent() }
@@ -241,7 +223,7 @@ class PLPFilters extends PureComponent {
     );
 
     render() {
-        const { isOpen } = this.state;
+        const { isOpen, isArabic } = this.state;
 
         return (
             <>
@@ -254,6 +236,12 @@ class PLPFilters extends PureComponent {
                     <div
                       block="PLPFilters"
                       elem="Reset"
+                      mix={ {
+                          block: 'Reset',
+                          mods: {
+                              isArabic
+                          }
+                      } }
                     >
                         { this.renderResetFilterButton() }
                     </div>

@@ -12,7 +12,7 @@ import { connect } from 'react-redux';
 import { changeNavigationState, goToPreviousNavigationState } from 'Store/Navigation/Navigation.action';
 import { BOTTOM_NAVIGATION_TYPE, TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
 import { hideActiveOverlay, toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
-import { Filter, Filters } from 'Util/API/endpoint/Product/Product.type';
+import { Filters } from 'Util/API/endpoint/Product/Product.type';
 import WebUrlParser from 'Util/API/helper/WebUrlParser';
 
 import PLPFilters from './PLPFilters.component';
@@ -40,8 +40,7 @@ export class PLPFiltersContainer extends PureComponent {
         goToPreviousHeaderState: PropTypes.func.isRequired,
         hideActiveOverlay: PropTypes.func.isRequired,
         goToPreviousNavigationState: PropTypes.func.isRequired,
-        changeHeaderState: PropTypes.func.isRequired,
-        filter: Filter.isRequired
+        changeHeaderState: PropTypes.func.isRequired
     };
 
     containerFunction = {
@@ -56,11 +55,18 @@ export class PLPFiltersContainer extends PureComponent {
 
     // eslint-disable-next-line consistent-return
     onReset() {
-        const { filters } = this.props;
+        this.arr = [
+            'sort',
+            'brand_name',
+            'gender',
+            'sizes',
+            'price.AED.default',
+            'discount'
+        ];
 
-        // eslint-disable-next-line no-restricted-syntax
-        for (const [key] of filters.entries()) {
-            WebUrlParser.setParam(`${key}`, null);
+        // eslint-disable-next-line fp/no-let
+        for (let i = 0; i < this.arr.length; i++) {
+            WebUrlParser.setParam(this.arr[i], '');
         }
     }
 

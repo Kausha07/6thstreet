@@ -34,6 +34,10 @@ class PLPFilter extends PureComponent {
         const { filter: { label, data, category }, onSelect } = this.props;
         const { isArabic } = this.state;
 
+        if (category === 'categories_without_path' || category === 'categories.level1') {
+            return null;
+        }
+
         // eslint-disable-next-line no-return-assign
         const template = Object.keys(data).map((item) => (
             this.filterData = {

@@ -37,9 +37,9 @@ class PLP extends PureComponent {
                 <ContentWrapper
                   label={ __('Product List Page') }
                 >
-                { this.renderPLPDetails() }
-                { this.renderPLPFilters() }
-                { this.renderPLPPages() }
+                    { this.renderPLPDetails() }
+                    { this.renderPLPFilters() }
+                    { this.renderPLPPages() }
                 </ContentWrapper>
             </main>
         );
