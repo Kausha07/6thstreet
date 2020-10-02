@@ -1,6 +1,7 @@
 // import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import ContentWrapper from 'Component/ContentWrapper/ContentWrapper.component';
 import PLPDetails from 'Component/PLPDetails';
 import PLPFilters from 'Component/PLPFilters';
 import PLPPages from 'Component/PLPPages';
@@ -33,9 +34,13 @@ class PLP extends PureComponent {
     render() {
         return (
             <main block="PLP">
-                { this.renderPLPDetails() }
-                { this.renderPLPFilters() }
-                { this.renderPLPPages() }
+                <ContentWrapper
+                  label={ __('Product List Page') }
+                >
+                    { this.renderPLPDetails() }
+                    { this.renderPLPFilters() }
+                    { this.renderPLPPages() }
+                </ContentWrapper>
             </main>
         );
     }
