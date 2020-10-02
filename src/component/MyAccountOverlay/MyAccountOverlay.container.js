@@ -283,7 +283,7 @@ export class MyAccountOverlayContainer extends PureComponent {
                 firstname,
                 lastname,
                 email,
-                privacyPolicy,
+                is_subscribed: privacyPolicy,
                 gender
             },
             password
