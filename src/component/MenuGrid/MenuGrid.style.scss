@@ -10,7 +10,7 @@
         height: 390px;
         margin: 0 auto;
         pointer-events: all;
-        width: 1400px;
+        width: 1410px;
 
         span, a {
             color: var(--black);
@@ -96,7 +96,11 @@
 
     @include desktop {
         &-Content {
+            left: 13px;
+
             &_isArabic {
+                left: -13px;
+
                 .MenuGrid {
                     &-Column {
                         border-left: solid 1px var(--grey);
@@ -109,6 +113,16 @@
                         }
                     }
                 }
+            }
+        }
+        &-Column {
+            &-Content {
+                display: flex;
+                flex-direction: column;
+                flex-wrap: wrap;
+                height: 290px;
+                justify-content: flex-start;
+                margin-top: 10px;
             }
         }
     }
