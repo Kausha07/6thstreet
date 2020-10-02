@@ -4,6 +4,8 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import { isArabic } from 'Util/App';
+
 import './Price.style';
 
 class Price extends PureComponent {
@@ -14,7 +16,7 @@ class Price extends PureComponent {
     };
 
     state = {
-        isArabic: JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data.language === 'ar'
+        isArabic: isArabic()
     };
 
     haveDiscount() {

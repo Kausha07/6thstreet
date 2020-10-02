@@ -63,13 +63,12 @@ export const CartReducer = (state = getInitialState(), action) => {
         };
 
     case SET_CART_TOTALS:
-        // const { cartTotals } = action;
         return {
             ...state,
             cartTotals: {
                 ...cartTotals,
                 items: cartItems,
-                subtotal_incl_tax: Number(totals.subtotal),
+                subtotal_incl_tax: totals.subtotal || 0,
                 quote_currency_code: currency.currency_code
             },
             currency: currency.currency_code
@@ -80,7 +79,7 @@ export const CartReducer = (state = getInitialState(), action) => {
             customizable_options: [],
             bundle_options: [],
             item_id: item.item_id,
-            price: item.price,
+            price: item.price || 0,
             product: {
                 name: item.name,
                 type_id: item.product_type,
@@ -92,7 +91,7 @@ export const CartReducer = (state = getInitialState(), action) => {
                 url: '',
                 variants: []
             },
-            row_total: item.price,
+            row_total: item.price || 0,
             sku: item.sku,
             qty: item.qty
         };

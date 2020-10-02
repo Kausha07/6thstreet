@@ -1,6 +1,6 @@
 import { PureComponent } from 'react';
 
-import { groupByName } from 'Util/API/endpoint/Brands/Brands.endpoint';
+import { groupByName } from 'Util/API/endpoint/Brands/Brands.format';
 import Algolia from 'Util/API/provider/Algolia';
 
 // import PropTypes from 'prop-types';

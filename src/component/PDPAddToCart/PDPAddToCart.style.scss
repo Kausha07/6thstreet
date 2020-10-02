@@ -2,14 +2,23 @@ $select-arrow-height: 6px !default;
 $select-arrow-width: 6px !default;
 
 :root {
-    --text-color: black;
-    --text-color-on-dark-background: white;
-    --error-text-color: #d12229;
-    --loading-button-background-color: grey;
-    --success-color: #88eea5;
+    --text-color: #000;
+    --text-color-on-dark-background: #fff;
+    --loading-button-background-color: #808080;
+    --success-color: #00f0a5;
 }
 
 .PDPAddToCart {
+
+    &-SizeInfo {
+        margin-bottom: 5px;
+        display: flex;
+        justify-content: space-between;
+        
+        @include desktop {
+            width: 363px;
+        }
+    }
     
     &-SizeLabel {
         font-family: "Avenir Next Demi";
@@ -22,7 +31,7 @@ $select-arrow-width: 6px !default;
         position: relative;
         display: flex;
         justify-content: space-between;
-        padding-bottom: 32px;
+        padding-bottom: 35px;
 
         @include desktop {
             width: 363px;
@@ -39,7 +48,7 @@ $select-arrow-width: 6px !default;
     }
 
     &-SizeTypeSelector {
-        padding-top: 7px;
+        height: 50px;
 
         &::after {
             content: '';
@@ -51,19 +60,17 @@ $select-arrow-width: 6px !default;
             right: 14px;
             bottom: 0;
             top: 0;
-            margin-top: 29px;
+            margin-top: 22px;
             border: solid var(--text-color);
             border-width: 0 1px 1px 0;
         }
     }
 
     &-SizeSelector {
-        padding-top: 37px;
         width: 75%;
 
         &::after {
             @extend .PDPAddToCart-SizeTypeSelector::after;
-            margin-top: 58px;
         }
     }
 
@@ -149,7 +156,7 @@ $select-arrow-width: 6px !default;
 
         &_addedToCart {
             border: 2px solid var(--success-color);
-            background:var(--success-color);
+            background: var(--success-color);
 
             span {
                 &:first-child, &:nth-child(2) {
@@ -162,14 +169,6 @@ $select-arrow-width: 6px !default;
                 }
             }
         }
-
-    }
-
-    &-EmptySizeError {
-        color: var(--error-text-color);
-        font-family: "Avenir Next Demi";
-        display: block;
-        height: 10px;
     }
 }
 

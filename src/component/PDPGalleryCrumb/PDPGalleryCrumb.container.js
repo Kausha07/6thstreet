@@ -22,7 +22,8 @@ export class PDPGalleryCrumbContainer extends PureComponent {
         index: PropTypes.number.isRequired,
         currentIndex: PropTypes.number.isRequired,
         product: Product.isRequired,
-        setImageIndex: PropTypes.func.isRequired
+        setImageIndex: PropTypes.func.isRequired,
+        activeImage: PropTypes.number.isRequired
     };
 
     indexTypeMap = {

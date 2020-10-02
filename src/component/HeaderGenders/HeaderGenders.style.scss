@@ -1,14 +1,21 @@
 .HeaderGenders {
-  .GenderButton {
-    &-Container {
-      display: inline-block;
-      height: 14px;
-      margin: 20px 0;
-      padding: 0 30px;
+    display: flex;
 
-      &:not(:last-child) {
-        border-right: 1px solid black;
-      }
+    @include before-desktop {
+        display: none;
+        margin-top: -30px;
     }
-  }
+
+    &_isArabic {
+        .GenderButton {
+            &-Container {
+                &:not(:last-child) {
+                    @include desktop {
+                        border-left: 1px solid var(--black);
+                        border-right: 0;
+                    }
+                }
+            }
+        }
+    }
 }
