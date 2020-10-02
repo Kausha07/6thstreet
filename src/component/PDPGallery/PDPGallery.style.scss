@@ -2,6 +2,13 @@
     display: grid;
     grid-template-columns: 1fr 6fr;
 
+    &-Crumbs {
+        display: none;
+        @include desktop {
+            display: block;
+        } 
+    }
+
     .Slider-Wrapper > * {
         height: 0;
     }
