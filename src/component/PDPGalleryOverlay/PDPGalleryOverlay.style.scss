@@ -16,9 +16,7 @@
     z-index: 600;
 
     grid-template-columns: 1fr 6fr;
-    .Slider-Wrapper > * {
-        height: 0;
-    }
+
     &-Crumbs {
         z-index: 100;
         height: 150px;
@@ -77,18 +75,41 @@
 
             &_ratio{
                 &_square{
-                    padding-bottom: 600px;
+                    padding-bottom: 100%;
+                    @include desktop {
+                        padding-bottom: 600px;
+                    }
                 }
             }
+        }
+
+        &-Crumbs {
+            position: fixed;
+            left: 0;
         }
     }
 
     &-Button {
-        position: absolute;
-        width: 80px;
+        position: fixed;
         right: 0;
-        background: var(--button-background-color);
+        padding: 0;
+        background: transparent;
+        z-index: 601;
+
+        @include desktop {
+            background: var(--button-background-color);
+        }
+        
+        
+        
     }
+
+    &-ZoomIn {
+        position: fixed;
+        left: 0;
+        z-index: 601;
+    }
+
 }
 
 .PDPGallery {
@@ -98,7 +119,31 @@
         }
 
         &-Button {
-            height: 80px;
+            height: 50px;
+            width: 50px;
+
+            @include desktop {
+                width: 80px;
+                height: 80px;
+            }
+
+            svg {
+                height: 20px;
+                width: 20px;
+
+                @include desktop {
+                    height: unset;
+                    width: unset;
+                }
+            }
+        }
+
+        &-Crumbs {
+            display: none;
+    
+            @include desktop {
+                display: flex;
+            }
         }
     }
 }
