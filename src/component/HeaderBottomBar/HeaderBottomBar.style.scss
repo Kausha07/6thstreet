@@ -55,6 +55,10 @@
                     padding-bottom: 10px;
                     &-Button {
                         margin-left: 50px;
+
+                        &_isArabic {
+                            left: 12px;
+                        }
                     }
 
                     label {
@@ -92,32 +96,29 @@
                     height: 250px;
                     margin-top: 150px;
 
-                    li {
-                        border-bottom: 1px solid var(--light-gray);
-                        line-height: 50px;
-                        margin-bottom: 0;
-                        margin-left: 12px;
-                        margin-right: 12px;
+                    .FooterMain-Nav {
+                        display: grid;
 
                         a {
-                            padding-bottom: 15px;
-                            padding-top: 15px;
-                        }
+                            border-bottom: 1px solid var(--light-gray);
+                            line-height: 50px;
+                            margin-left: 12px;
 
-                        &:after {
-                            border-bottom: 2px solid var(--dark-grey);
-                            border-right: 2px solid var(--dark-grey);
-                            content: "";
-                            display: inline-block;
-                            height: 7px;
-                            margin-left: auto;
-                            margin-right: 0;
-                            position: absolute;
-                            right: 20px;
-                            top: 20px;
-                            transform: rotate(-45deg);
-                            width: 7px;
-                            z-index: 100
+                            &:after {
+                                border-bottom: 2px solid var(--dark-grey);
+                                border-right: 2px solid var(--dark-grey);
+                                content: "";
+                                display: inline-block;
+                                height: 7px;
+                                margin-left: auto;
+                                margin-right: 0;
+                                position: absolute;
+                                right: 20px;
+                                top: 20px;
+                                transform: rotate(-45deg);
+                                width: 7px;
+                                z-index: 100
+                            }
                         }
                     }
                 }
@@ -130,24 +131,31 @@
             }
 
             &_isArabic {
-                .FooterMain-Column {
-                    li {
-                        &:before {
-                            border-bottom: 2px solid var(--dark-grey);
-                            border-right: 2px solid var(--dark-grey);
-                            content: "";
-                            display: inline-block;
-                            height: 7px;
-                            padding-right: 0;
-                            position: absolute;
-                            top: 20px;
-                            transform: rotate(135deg);
-                            width: 7px;
-                            z-index: 100;
+                .FooterMain {
+                    &-Column {
+                        .FooterMain-Nav {
+                            a {
+                                margin-left: 0;
+                                margin-right: 12px;
+
+                                &:after {
+                                    left: 20px;
+                                    right: unset;
+                                    top: 20px;
+                                    transform: rotate(135deg);
+                                }
+                            }
                         }
-                        &:after {
-                            display: none;
-                        }
+                    }
+
+                    h4 {
+                        margin-left: 0;
+                        margin-right: 12px;
+                    }
+
+                    &-WrapperFirst {
+                        margin-left: 0;
+                        margin-right: 12px;
                     }
                 }
             }

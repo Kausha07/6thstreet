@@ -8,9 +8,10 @@
     &-Content {
         background-color: var(--white);
         height: 390px;
+        left: 13px;
         margin: 0 auto;
         pointer-events: all;
-        width: 1390px;
+        width: 1410px;
 
         span, a {
             color: var(--black);
@@ -41,12 +42,17 @@
         }
 
         &-Content {
-            display: grid;
-            grid-template-columns: auto auto;
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            height: 290px;
+            justify-content: flex-start;
             margin-top: 10px;
 
-            a{
+            a {
+                box-sizing: border-box;
                 margin: 0;
+                max-width: 50%;
             }
         }
     }
@@ -86,7 +92,7 @@
                 overflow: scroll;
                 width: 260px;
 
-                a{
+                a {
                     line-height: 50px;
                     margin-left: 10px;
                 }
@@ -97,6 +103,8 @@
     @include desktop {
         &-Content {
             &_isArabic {
+                left: -28px;
+
                 .MenuGrid {
                     &-Column {
                         border-left: solid 1px var(--grey);

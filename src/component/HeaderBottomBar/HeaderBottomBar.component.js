@@ -43,12 +43,12 @@ class HeaderBottomBar extends NavigationAbstract {
                 href: 'https://www.consumerrights.ae/en/Pages/default.aspx'
             },
             {
-                name: 'Disclaimer',
-                href: '/disclaimer'
-            },
-            {
                 name: 'Careers',
                 href: '/careers'
+            },
+            {
+                name: 'Disclaimer',
+                href: '/disclaimer'
             }
         ]
     },
@@ -154,19 +154,15 @@ class HeaderBottomBar extends NavigationAbstract {
                 .map((column) => (
                     <div block="FooterMain" elem="Column" key={ column.title }>
                         <div block="FooterMain" elem="Nav" key={ column.title }>
-                            <ul key={ column.title }>
-                                { column.items.map((items) => (
-                                    <li key={ items.name }>
-                                        <Link
-                                          block="FooterMain"
-                                          elem="Link"
-                                          to={ items.href }
-                                        >
-                                            { items.name }
-                                        </Link>
-                                    </li>
-                                )) }
-                            </ul>
+                            { column.items.map((items) => (
+                                <Link
+                                  block="FooterMain"
+                                  elem="Link"
+                                  to={ items.href }
+                                >
+                                    { items.name }
+                                </Link>
+                            )) }
                         </div>
                     </div>
                 ))
