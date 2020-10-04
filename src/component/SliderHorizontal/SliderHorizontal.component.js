@@ -82,7 +82,8 @@ export class SliderHorizontal extends PureComponent {
             countPerPage: 0,
             isArrowUpHidden: true,
             isArrowDownHidden: false,
-            isSlider: false
+            isSlider: false,
+            oldTranslate: 0
         };
     }
 
@@ -121,9 +122,7 @@ export class SliderHorizontal extends PureComponent {
         const sliderWidthChildren = draggableRef.current.children[0].offsetWidth;
         const sliderWidth = sliderRef.current.offsetWidth;
         // eslint-disable-next-line no-magic-numbers
-        const countPerPage = sliderWidth % sliderWidthChildren > 85
-            ? Math.round(sliderWidth / sliderWidthChildren)
-            : Math.floor(sliderWidth / sliderWidthChildren);
+        const countPerPage = Math.floor(sliderWidth / sliderWidthChildren);
 
         this.setState({
             draggableRef,
@@ -162,7 +161,7 @@ export class SliderHorizontal extends PureComponent {
 
         console.log(sliderWidthChildren,
             count,
-            countPerPage);
+            countPerPage, activeImage);
 
         if (isSlider) {
             if (activeImage > prevActiveImage) {
@@ -199,10 +198,11 @@ export class SliderHorizontal extends PureComponent {
         draggableRef,
         prevActiveImage
     ) => {
-        if (activeImage === count) {
-            const newTranslate = sliderChildren.length / count < 2
-                ? -(sliderChildren.length - countPerPage) * sliderWidthChildren
-                : -((countPerPage - 1) * sliderWidthChildren);
+        if (activeImage >= count) {
+            const { oldTranslate } = this.state;
+            const newTranslate = sliderChildren.length - count < countPerPage
+                ? oldTranslate - (sliderChildren.length - count) * sliderWidthChildren
+                : oldTranslate - (countPerPage * sliderWidthChildren);
 
             CSS.setVariable(
                 draggableRef,
@@ -219,15 +219,17 @@ export class SliderHorizontal extends PureComponent {
             if (activeImage === sliderChildren.length - 1) {
                 this.setState({
                     prevActiveImage: activeImage,
-                    count: sliderChildren.length + 1,
-                    isArrowDownHidden: activeImage === sliderChildren.length - 1
+                    count: sliderChildren.length,
+                    isArrowDownHidden: activeImage === sliderChildren.length - 1,
+                    oldTranslate: newTranslate
                 });
             }
 
             this.setState({
                 prevActiveImage: activeImage,
-                count: count + countPerPage - 1,
-                isArrowDownHidden: activeImage === sliderChildren.length - 1
+                count: count + countPerPage > sliderChildren.length ? sliderChildren.length : count + countPerPage,
+                isArrowDownHidden: activeImage === sliderChildren.length - 1,
+                oldTranslate: newTranslate
             });
         }
     };
@@ -240,10 +242,11 @@ export class SliderHorizontal extends PureComponent {
         draggableRef,
         prevActiveImage
     ) => {
-        if (activeImage === count - countPerPage - 1) {
-            const newTranslate = count / countPerPage > 2
-                ? -(countPerPage - 1) * sliderWidthChildren
-                : 0;
+        const { oldTranslate } = this.state;
+        if (activeImage <= count - countPerPage - 1) {
+            const newTranslate = count <= countPerPage * 2
+                ? 0
+                : oldTranslate + (countPerPage * sliderWidthChildren);
 
             CSS.setVariable(
                 draggableRef,
@@ -261,14 +264,16 @@ export class SliderHorizontal extends PureComponent {
                 this.setState({
                     prevActiveImage: activeImage,
                     count: countPerPage,
-                    isArrowUpHidden: activeImage === 0
+                    isArrowUpHidden: activeImage === 0,
+                    oldTranslate: newTranslate
                 });
             }
 
             this.setState({
                 prevActiveImage: activeImage,
-                count: count - countPerPage + 1,
-                isArrowUpHidden: activeImage === 0
+                count: count - countPerPage,
+                isArrowUpHidden: activeImage === 0,
+                oldTranslate: newTranslate
             });
         }
     };
@@ -277,12 +282,9 @@ export class SliderHorizontal extends PureComponent {
         const { children, isZoomEnabled } = this.props;
         const { countPerPage } = this.state;
 
-        console.log(isZoomEnabled);
-
         if (!isZoomEnabled) {
             this.setState({ isSlider: countPerPage < children.length });
         } else {
-            console.log('here');
             this.setState({ isSlider: false });
         }
     }
