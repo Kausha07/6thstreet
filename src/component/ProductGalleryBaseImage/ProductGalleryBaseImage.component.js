@@ -18,14 +18,33 @@ import Image from 'Component/Image';
 export class ProductGalleryBaseImage extends PureComponent {
     static propTypes = {
         src: PropTypes.string.isRequired,
-        alt: PropTypes.string.isRequired
+        alt: PropTypes.string.isRequired,
+        imageRef: PropTypes.oneOfType([
+            PropTypes.func,
+            PropTypes.shape({ current: PropTypes.instanceOf(Element) })
+        ]),
+        containerRef: PropTypes.oneOfType([
+            PropTypes.func,
+            PropTypes.shape({ current: PropTypes.instanceOf(Element) })
+        ])
+    };
+
+    static defaultProps = {
+        imageRef: () => {},
+        containerRef: () => {}
     };
 
     render() {
-        const { src, alt } = this.props;
+        const {
+            src,
+            alt,
+            imageRef,
+            containerRef
+        } = this.props;
 
         return (
             <TransformComponent>
+                <div ref={ containerRef }>
                 <Image
                   src={ src }
                   ratio="custom"
@@ -38,10 +57,12 @@ export class ProductGalleryBaseImage extends PureComponent {
                   alt={ alt }
                 />
                 <img
+                  ref={ imageRef }
                   alt={ alt }
                   src={ src }
                   itemProp="image"
                 />
+                </div>
             </TransformComponent>
         );
     }

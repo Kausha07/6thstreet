@@ -38,7 +38,20 @@ export class ProductGalleryBaseImageContainer extends Component {
         isZoomEnabled: PropTypes.bool.isRequired,
         setTransform: PropTypes.func.isRequired,
         location: LocationType.isRequired,
-        zoomIn: PropTypes.func.isRequired
+        zoomIn: PropTypes.func.isRequired,
+        imageRef: PropTypes.oneOfType([
+            PropTypes.func,
+            PropTypes.shape({ current: PropTypes.instanceOf(Element) })
+        ]),
+        containerRef: PropTypes.oneOfType([
+            PropTypes.func,
+            PropTypes.shape({ current: PropTypes.instanceOf(Element) })
+        ])
+    };
+
+    static defaultProps = {
+        imageRef: () => {},
+        containerRef: () => {}
     };
 
     shouldComponentUpdate(nextProps) {
@@ -74,10 +87,16 @@ export class ProductGalleryBaseImageContainer extends Component {
         }
     }
 
-    containerProps = () => ({
-        alt: this._getAlt(),
-        src: this._getSrc()
-    });
+    containerProps = () => {
+        const { imageRef, containerRef } = this.props;
+
+        return ({
+            containerRef,
+            imageRef,
+            alt: this._getAlt(),
+            src: this._getSrc()
+        });
+    };
 
     _getAlt() {
         const { mediaData: { label } = {} } = this.props;

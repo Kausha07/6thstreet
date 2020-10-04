@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-var */
 /* eslint-disable no-magic-numbers */
 import PropTypes from 'prop-types';
 import { createRef, PureComponent } from 'react';
@@ -7,10 +9,12 @@ import Image from 'Component/Image';
 import PDPGalleryCrumb from 'Component/PDPGalleryCrumb';
 import ProductGalleryBaseImage from 'Component/ProductGalleryBaseImage';
 import Slider from 'Component/Slider';
+import SliderHorizontal from 'Component/SliderHorizontal';
 import isMobile from 'Util/Mobile';
 
 import { ReactComponent as Close } from './icons/close.svg';
-import { MAX_ZOOM_SCALE } from './PDPGalleryOverlay.config';
+import { ReactComponent as Minus } from './icons/minus.svg';
+import { ReactComponent as Plus } from './icons/plus.svg';
 
 import './PDPGalleryOverlay.style';
 
@@ -31,20 +35,44 @@ class PDPGalleryOverlay extends PureComponent {
 
     overlayRef = createRef();
 
+    imageRef = createRef();
+
     constructor(props) {
         super(props);
         this.renderImage = this.renderImage.bind(this);
 
         this.state = {
-            scrollEnabled: true,
             scale: 1,
             positionY: 0,
-            positionX: 0
+            positionX: 0,
+            imageRef: null,
+            addY: 0,
+            addX: 0
         };
     }
 
     componentDidMount() {
-        const { onSliderChange } = this.props;
+        const { onSliderChange, crumbs } = this.props;
+        const { imageRef, overlayRef } = this;
+        const imgHeight = imageRef.current.offsetHeight;
+        const imgWidth = imageRef.current.offsetWidth;
+        const overlayHeight = overlayRef.current.children[3].offsetHeight;
+        const overlayWidth = overlayRef.current.children[3].offsetWidth;
+        const addX = (overlayWidth - imgWidth) / 2 - (overlayWidth - imgWidth * 1.5) / 2;
+        const addY = (overlayHeight - imgHeight) / 2 - (overlayHeight - imgHeight * 1.5) / 2;
+
+        this.setState({ addX, addY });
+
+        // // eslint-disable-next-line array-callback-return
+        // crumbs.map((crumb) => {
+        //     this.setState(({ crumbArr }) => ({ crumbArr: crumbArr.push(crumb) }));
+        //     this.setState(({ crumbArr }) => ({ crumbArr: crumbArr.push(crumb) }));
+        //     this.setState(({ crumbArr }) => ({ crumbArr: crumbArr.push(crumb) }));
+        // });
+
+        // const { crumbArr } = this.state;
+
+        // console.log(crumbs);
 
         onSliderChange(0);
     }
@@ -57,52 +85,25 @@ class PDPGalleryOverlay extends PureComponent {
         />
     );
 
-    stopScrolling() {
-        this.setState({ scrollEnabled: false });
-        this.timeout = setTimeout(() => {
-            this.setState({ scrollEnabled: true });
-            this.timeout = null;
-
-            // 20 ms is time give to scroll down, usually that is enough
-            // eslint-disable-next-line no-magic-numbers
-        }, 20);
-    }
-
-    onWheel = (zoomState) => {
-        const { scale } = zoomState;
-
-        if (this.timeout) {
-            return;
-        }
-
-        if (scale === 1 || scale === MAX_ZOOM_SCALE) {
-            this.stopScrolling();
-        }
-    };
-
     zoomIn = () => {
-        const { scale } = this.state;
-        const addX = this.overlayRef.current.offsetWidth * 0.14;
-        const addY = this.overlayRef.current.offsetHeight * 0.3;
+        const { scale, addX, addY } = this.state;
 
-        this.setState({
-            scale: scale + 0.5,
-            positionX: addX,
-            positionY: addY
-        });
-        // console.log(this.overlayRef.current.offsetWidth);
+        if (scale < 8) {
+            this.setState({
+                scale: scale + 0.5,
+                positionX: addX,
+                positionY: addY
+            });
+        }
     };
 
     zoomOut = () => {
-        const { scale } = this.state;
+        const { scale, addX, addY } = this.state;
         if (scale !== 1) {
-            const addX = -this.overlayRef.current.offsetWidth * 0.14;
-            const addY = -this.overlayRef.current.offsetHeight * 0.3;
-
             this.setState({
                 scale: scale - 0.5,
-                positionX: addX,
-                positionY: addY
+                positionX: -addX,
+                positionY: -addY
             });
         }
     };
@@ -111,16 +112,14 @@ class PDPGalleryOverlay extends PureComponent {
         // console.log(src);
         const { isZoomEnabled, handleZoomChange, disableZoom } = this.props;
         // eslint-disable-next-line object-curly-newline
-        const { scrollEnabled, scale, positionX, positionY } = this.state;
+        const { scale, positionX, positionY } = this.state;
 
         return (
             <TransformWrapper
               key={ i }
               scale={ scale }
               onZoomChange={ handleZoomChange }
-              onWheelStart={ this.onWheelStart }
-              onWheel={ this.onWheel }
-              wheel={ { limitsOnWheel: true, disabled: !scrollEnabled } }
+              wheel={ { disabled: true, wheelEnabled: false } }
             //   doubleClick={ { mode: 'reset' } }
               pan={ {
                   disabled: !isZoomEnabled,
@@ -146,7 +145,7 @@ class PDPGalleryOverlay extends PureComponent {
                     const { minPositionY, minPositionX } = options;
                     // console.log(previousScale);
                     if (scale === 1 && previousScale !== 1) {
-                        console.log(previousScale);
+                        // console.log(previousScale);
                         resetTransform();
                     }
 
@@ -160,6 +159,7 @@ class PDPGalleryOverlay extends PureComponent {
 
                     return (
                         <ProductGalleryBaseImage
+                          imageRef={ this.imageRef }
                           centerContent
                           setTransform={ setTransform }
                           index={ i }
@@ -180,11 +180,50 @@ class PDPGalleryOverlay extends PureComponent {
     );
 
     renderCrumbs() {
-        const { crumbs } = this.props;
+        const {
+            crumbs,
+            currentIndex, onSliderChange,
+            isZoomEnabled
+        } = this.props;
+        // console.log(crumbs);
+        const arr = [
+            '0',
+            '1',
+            '2',
+            '3',
+            '4',
+            '5',
+            '6',
+            '7',
+            '8',
+            '9',
+            '10',
+            '11',
+            '12',
+            '13',
+            '14',
+            '15'
+        ];
 
         return (
             <div block="PDPGalleryOverlay" elem="Crumbs">
-                { crumbs.map(this.renderCrumb) }
+                <SliderHorizontal
+                  mix={ {
+                      block: 'Slider',
+                      mods: { isCrumbs: true },
+                      mix: {
+                          block: 'Slider',
+                          elem: 'Wrapper',
+                          mods: { isCrumbs: true }
+                      }
+                  } }
+                  activeImage={ currentIndex }
+                  onActiveImageChange={ onSliderChange }
+                  isInteractionDisabled
+                  isZoomEnabled={ isZoomEnabled }
+                >
+                { arr.map(this.renderCrumb) }
+                </SliderHorizontal>
             </div>
 
         );
@@ -192,7 +231,7 @@ class PDPGalleryOverlay extends PureComponent {
 
     renderGallery() {
         const { gallery } = this.props;
-        console.log(gallery[0] !== undefined);
+        // console.log(gallery[0] !== undefined);
 
         if (gallery[0] !== undefined) {
             return gallery.map(this.renderImage);
@@ -228,16 +267,27 @@ class PDPGalleryOverlay extends PureComponent {
 
     render() {
         const { closeGalleryOverlay } = this.props;
+        const {
+            imgWidth,
+            imgHeight,
+            imageRef,
+            overlayHeight,
+            overlayWidth
+        } = this.state;
 
-        console.log(closeGalleryOverlay);
+        // console.log(imgWidth, imgHeight, imageRef, overlayHeight, overlayWidth);
+        // console.log(closeGalleryOverlay);
 
         return (
             <div block="PDPGalleryOverlay" ref={ this.overlayRef }>
-                <button block="PDPGalleryOverlay" elem="Button" onClick={ this.zoomIn }>
+                <button block="PDPGalleryOverlay" elem="Button" onClick={ closeGalleryOverlay }>
                     <Close />
                 </button>
-                <button block="PDPGalleryOverlay" elem="ZoomIn" onClick={ this.zoomOut }>
-                    <Close />
+                <button block="PDPGalleryOverlay" elem="ZoomIn" onClick={ this.zoomIn }>
+                    <Plus />
+                </button>
+                <button block="PDPGalleryOverlay" elem="ZoomOut" onClick={ this.zoomOut }>
+                    <Minus />
                 </button>
                 { this.renderCrumbs() }
                 { this.renderSlider() }

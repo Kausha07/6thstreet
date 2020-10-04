@@ -21,22 +21,23 @@ import CSS from 'Util/CSS';
 import {
     ACTIVE_SLIDE_PERCENT,
     ANIMATION_DURATION
-} from './SliderVertical.config';
+} from './SliderHorizontal.config';
 
-import './SliderVertical.style';
+import './SliderHorizontal.style';
 
 /**
  * Slider component
  * @class Slider
  */
-export class SliderVertical extends PureComponent {
+export class SliderHorizontal extends PureComponent {
     static propTypes = {
         showCrumbs: PropTypes.bool,
         activeImage: PropTypes.number,
         onActiveImageChange: PropTypes.func,
         mix: MixType,
         children: ChildrenType.isRequired,
-        isInteractionDisabled: PropTypes.bool
+        isInteractionDisabled: PropTypes.bool,
+        isZoomEnabled: PropTypes.bool.isRequired
     };
 
     static defaultProps = {
@@ -47,7 +48,7 @@ export class SliderVertical extends PureComponent {
         mix: {}
     };
 
-    sliderHeight = 0;
+    sliderWidth = 0;
 
     prevPosition = 0;
 
@@ -73,10 +74,10 @@ export class SliderVertical extends PureComponent {
         this.state = {
             draggableRef: null,
             prevActiveImage: activeImage,
-            height: 0,
+            width: 0,
             sliderChildren: null,
-            sliderHeightChildren: null,
-            sliderHeight: null,
+            sliderWidthChildren: null,
+            sliderWidth: null,
             count: 0,
             countPerPage: 0,
             isArrowUpHidden: true,
@@ -117,18 +118,18 @@ export class SliderVertical extends PureComponent {
     componentDidMount() {
         const { draggableRef, sliderRef } = this;
         const sliderChildren = draggableRef.current.children;
-        const sliderHeightChildren = draggableRef.current.children[0].offsetHeight;
-        const sliderHeight = sliderRef.current.offsetHeight;
+        const sliderWidthChildren = draggableRef.current.children[0].offsetWidth;
+        const sliderWidth = sliderRef.current.offsetWidth;
         // eslint-disable-next-line no-magic-numbers
-        const countPerPage = sliderHeight % sliderHeightChildren > 85
-            ? Math.round(sliderHeight / sliderHeightChildren)
-            : Math.floor(sliderHeight / sliderHeightChildren);
+        const countPerPage = sliderWidth % sliderWidthChildren > 85
+            ? Math.round(sliderWidth / sliderWidthChildren)
+            : Math.floor(sliderWidth / sliderWidthChildren);
 
         this.setState({
             draggableRef,
             sliderChildren,
-            sliderHeightChildren,
-            sliderHeight,
+            sliderWidthChildren,
+            sliderWidth,
             countPerPage,
             count: countPerPage
         });
@@ -138,11 +139,11 @@ export class SliderVertical extends PureComponent {
         }
 
         sliderChildren[0].onload = () => {
-            CSS.setVariable(this.sliderRef, 'slider-width', `${sliderChildren[0].offsetHeight}px`);
+            CSS.setVariable(this.sliderRef, 'slider-height', `${sliderChildren[0].offsetWidth}px`);
         };
 
         setTimeout(() => {
-            CSS.setVariable(this.sliderRef, 'slider-width', `${sliderChildren[0].offsetHeight}px`);
+            CSS.setVariable(this.sliderRef, 'slider-height', `${sliderChildren[0].offsetWidth}px`);
         }, ANIMATION_DURATION);
     }
 
@@ -153,11 +154,15 @@ export class SliderVertical extends PureComponent {
         const {
             draggableRef,
             sliderChildren,
-            sliderHeightChildren,
+            sliderWidthChildren,
             count,
             countPerPage,
             isSlider
         } = this.state;
+
+        console.log(sliderWidthChildren,
+            count,
+            countPerPage);
 
         if (isSlider) {
             if (activeImage > prevActiveImage) {
@@ -166,7 +171,7 @@ export class SliderVertical extends PureComponent {
                     count,
                     sliderChildren,
                     countPerPage,
-                    sliderHeightChildren,
+                    sliderWidthChildren,
                     draggableRef,
                     prevActiveImage
                 );
@@ -177,7 +182,7 @@ export class SliderVertical extends PureComponent {
                     activeImage,
                     count,
                     countPerPage,
-                    sliderHeightChildren,
+                    sliderWidthChildren,
                     draggableRef,
                     prevActiveImage
                 );
@@ -190,14 +195,14 @@ export class SliderVertical extends PureComponent {
         count,
         sliderChildren,
         countPerPage,
-        sliderHeightChildren,
+        sliderWidthChildren,
         draggableRef,
         prevActiveImage
     ) => {
         if (activeImage === count) {
             const newTranslate = sliderChildren.length / count < 2
-                ? -(sliderChildren.length - countPerPage) * sliderHeightChildren
-                : -((countPerPage - 1) * sliderHeightChildren);
+                ? -(sliderChildren.length - countPerPage) * sliderWidthChildren
+                : -((countPerPage - 1) * sliderWidthChildren);
 
             CSS.setVariable(
                 draggableRef,
@@ -207,14 +212,14 @@ export class SliderVertical extends PureComponent {
 
             CSS.setVariable(
                 draggableRef,
-                'translateY',
+                'translateX',
                 `${newTranslate}px`
             );
 
             if (activeImage === sliderChildren.length - 1) {
                 this.setState({
                     prevActiveImage: activeImage,
-                    count: sliderChildren.length,
+                    count: sliderChildren.length + 1,
                     isArrowDownHidden: activeImage === sliderChildren.length - 1
                 });
             }
@@ -231,13 +236,13 @@ export class SliderVertical extends PureComponent {
         activeImage,
         count,
         countPerPage,
-        sliderHeightChildren,
+        sliderWidthChildren,
         draggableRef,
         prevActiveImage
     ) => {
         if (activeImage === count - countPerPage - 1) {
             const newTranslate = count / countPerPage > 2
-                ? -(countPerPage - 1) * sliderHeightChildren
+                ? -(countPerPage - 1) * sliderWidthChildren
                 : 0;
 
             CSS.setVariable(
@@ -248,7 +253,7 @@ export class SliderVertical extends PureComponent {
 
             CSS.setVariable(
                 draggableRef,
-                'translateY',
+                'translateX',
                 `${newTranslate}px`
             );
 
@@ -269,10 +274,17 @@ export class SliderVertical extends PureComponent {
     };
 
     isSlider() {
-        const { children } = this.props;
+        const { children, isZoomEnabled } = this.props;
         const { countPerPage } = this.state;
 
-        this.setState({ isSlider: countPerPage < children.length });
+        console.log(isZoomEnabled);
+
+        if (!isZoomEnabled) {
+            this.setState({ isSlider: countPerPage < children.length });
+        } else {
+            console.log('here');
+            this.setState({ isSlider: false });
+        }
     }
 
     onArrowUpClick = () => {
@@ -285,24 +297,24 @@ export class SliderVertical extends PureComponent {
         onActiveImageChange(activeImage + 1);
     };
 
-    getFullSliderHeight() {
-        const fullSliderHeight = this.draggableRef.current.scrollHeight;
-        return fullSliderHeight - this.sliderHeight;
+    getFullSliderWidth() {
+        const fullSliderWidth = this.draggableRef.current.scrollWidth;
+        return fullSliderWidth - this.sliderWidth;
     }
 
     calculateNextSlide(state) {
         const {
-            translateY: translate,
-            lastTranslateY: lastTranslate,
+            translateX: translate,
+            lastTranslateX: lastTranslate,
             isSlider
         } = state;
 
         if (isSlider) {
             const { onActiveImageChange } = this.props;
 
-            const slideSize = this.sliderHeight;
+            const slideSize = this.sliderWidth;
 
-            const fullSliderSize = this.getFullSliderHeight();
+            const fullSliderSize = this.getFullSliderWidth();
 
             const activeSlidePosition = translate / slideSize;
             const activeSlidePercent = Math.abs(activeSlidePosition % 1);
@@ -344,17 +356,17 @@ export class SliderVertical extends PureComponent {
     }
 
     handleDrag(state) {
-        const { translateY, isSlider } = state;
+        const { translateX, isSlider } = state;
 
         if (isSlider) {
-            const translate = translateY;
+            const translate = translateX;
 
-            const fullSliderSize = this.getFullSliderHeight();
+            const fullSliderSize = this.getFullSliderWidth();
 
             if (translate < 0 && translate > -fullSliderSize) {
                 CSS.setVariable(
                     this.draggableRef,
-                    'translateY',
+                    'translateX',
                     `${translate}px`
                 );
             }
@@ -364,7 +376,7 @@ export class SliderVertical extends PureComponent {
     handleDragEnd(state, callback) {
         const activeSlide = this.calculateNextSlide(state);
 
-        const slideSize = this.sliderHeight;
+        const slideSize = this.sliderWidth;
 
         const newTranslate = activeSlide * slideSize;
 
@@ -372,13 +384,13 @@ export class SliderVertical extends PureComponent {
 
         CSS.setVariable(
             this.draggableRef,
-            'translateY',
+            'translateX',
             `${newTranslate}px`
         );
 
         callback({
-            originalY: newTranslate,
-            lastTranslateY: newTranslate
+            originalX: newTranslate,
+            lastTranslateX: newTranslate
         });
     }
 
@@ -411,7 +423,7 @@ export class SliderVertical extends PureComponent {
 
         return (
             <div
-              block="SliderVertical"
+              block="SliderHorizontal"
               elem="Crumbs"
             >
                 { Children.map(children, this.renderCrumb) }
@@ -425,14 +437,14 @@ export class SliderVertical extends PureComponent {
 
         return (
             <button
-              block="SliderVertical"
+              block="SliderHorizontal"
               elem="Image"
               mods={ { type: 'single' } }
               // eslint-disable-next-line react/jsx-no-bind
               onClick={ () => this.changeActiveImage(i) }
             >
                 <div
-                  block="SliderVertical"
+                  block="SliderHorizontal"
                   elem="Crumb"
                   mods={ { isActive } }
                 />
@@ -454,36 +466,36 @@ export class SliderVertical extends PureComponent {
 
         return (
             <div
-              block="SliderVertical"
+              block="SliderHorizontal"
               mix={ mix }
               ref={ this.sliderRef }
             >
                 <button
-                  block="SliderVertical"
+                  block="SliderHorizontal"
                   elem="ButtonUp"
                   mods={ { isArrowUpHidden } }
                   onClick={ this.onArrowUpClick }
                 >
-                    <div block="SliderVertical" elem="ArrowUp" />
+                    <div block="SliderHorizontal" elem="ArrowUp" />
                 </button>
                 <Draggable
-                  mix={ { block: 'SliderVertical', elem: 'Wrapper' } }
+                  mix={ { block: 'SliderHorizontal', elem: 'Wrapper' } }
                   draggableRef={ this.draggableRef }
                   onDragStart={ this.handleDragStart }
                   onDragEnd={ this.handleDragEnd }
                   onDrag={ this.handleDrag }
                   onClick={ this.handleClick }
-                  shiftX={ -activeImage * this.sliderHeight }
+                  shiftX={ -activeImage * this.sliderWidth }
                 >
                     { children }
                 </Draggable>
                 <button
-                  block="SliderVertical"
+                  block="SliderHorizontal"
                   elem="ButtonDown"
                   mods={ { isArrowDownHidden } }
                   onClick={ this.onArrowDownClick }
                 >
-                    <div block="SliderVertical" elem="ArrowDown" />
+                    <div block="SliderHorizontal" elem="ArrowDown" />
                 </button>
                 { showCrumbs && this.renderCrumbs() }
             </div>
@@ -491,4 +503,4 @@ export class SliderVertical extends PureComponent {
     }
 }
 
-export default SliderVertical;
+export default SliderHorizontal;

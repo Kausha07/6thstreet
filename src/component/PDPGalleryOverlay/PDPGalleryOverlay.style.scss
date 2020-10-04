@@ -27,9 +27,8 @@
         .PDPGalleryCrumb{
             margin-right: 1px;
             display: block;
-            width: 150px;
+            width: 120px;
             height: auto;
-            padding: 30px 30px 30px 0;
             border: 1px solid var(--crumb-border-color);
             transition: unset;
         
@@ -43,12 +42,6 @@
             .Image {
                 &-Image {
                     object-position: 0 50%;
-                }
-
-                &_ratio{
-                    &_square{
-                        padding-bottom: 90px;
-                    }
                 }
             }
         }
@@ -99,15 +92,49 @@
         @include desktop {
             background: var(--button-background-color);
         }
-        
-        
-        
     }
 
     &-ZoomIn {
         position: fixed;
         left: 0;
         z-index: 601;
+
+        svg {
+            height: 30px;
+            width: 30px;
+
+            @include desktop {
+                height: 60px;
+                width: 60px;
+            }
+        }
+
+    }
+
+    &-ZoomOut {
+        position: fixed;
+        top: 50px;
+        left: 0;
+        z-index: 601;
+
+        @include desktop {
+            top: 80px
+        }
+
+        svg {
+            height: 20px;
+            width: 20px;
+
+            @include desktop {
+                height: 35px;
+                width: 35px;
+            }
+        }
+
+    }
+
+    svg {
+        filter: invert(45%) sepia(0%) saturate(358%) hue-rotate(137deg) brightness(90%) contrast(93%);
     }
 
 }
@@ -138,11 +165,32 @@
             }
         }
 
+        &-ZoomIn,
+        &-ZoomOut{
+            height: 50px;
+            width: 50px;
+
+            @include desktop {
+                width: 80px;
+                height: 80px;
+                background: var(--button-background-color);
+            }
+        }
+
         &-Crumbs {
             display: none;
     
             @include desktop {
                 display: flex;
+            }
+        }
+    }
+
+    .Slider-Wrapper {
+        .SliderVertical {
+            &-ButtonUp,
+            &-ButtonDown {
+                height: 30px;
             }
         }
     }
