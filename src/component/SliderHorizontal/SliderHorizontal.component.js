@@ -159,10 +159,6 @@ export class SliderHorizontal extends PureComponent {
             isSlider
         } = this.state;
 
-        console.log(sliderWidthChildren,
-            count,
-            countPerPage, activeImage);
-
         if (isSlider) {
             if (activeImage > prevActiveImage) {
                 this.handleSliderDown(
@@ -223,14 +219,14 @@ export class SliderHorizontal extends PureComponent {
                     isArrowDownHidden: activeImage === sliderChildren.length - 1,
                     oldTranslate: newTranslate
                 });
+            } else {
+                this.setState({
+                    prevActiveImage: activeImage,
+                    count: count + countPerPage > sliderChildren.length ? sliderChildren.length : count + countPerPage,
+                    isArrowDownHidden: activeImage === sliderChildren.length - 1,
+                    oldTranslate: newTranslate
+                });
             }
-
-            this.setState({
-                prevActiveImage: activeImage,
-                count: count + countPerPage > sliderChildren.length ? sliderChildren.length : count + countPerPage,
-                isArrowDownHidden: activeImage === sliderChildren.length - 1,
-                oldTranslate: newTranslate
-            });
         }
     };
 
@@ -267,14 +263,14 @@ export class SliderHorizontal extends PureComponent {
                     isArrowUpHidden: activeImage === 0,
                     oldTranslate: newTranslate
                 });
+            } else {
+                this.setState({
+                    prevActiveImage: activeImage,
+                    count: count - countPerPage,
+                    isArrowUpHidden: activeImage === 0,
+                    oldTranslate: newTranslate
+                });
             }
-
-            this.setState({
-                prevActiveImage: activeImage,
-                count: count - countPerPage,
-                isArrowUpHidden: activeImage === 0,
-                oldTranslate: newTranslate
-            });
         }
     };
 
