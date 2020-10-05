@@ -148,7 +148,7 @@ export class MyAccountOverlay extends PureComponent {
               xmlns="http://www.w3.org/2000/svg"
               width="16"
               height="16"
-              viewBox="0 0 24 24"
+              viewBox="0 -1 26 26"
             >
                 <path
                   d="M23.954 21.03l-9.184-9.095 9.092-9.174-1.832-1.807-9.09 9.179-9.176-9.088-1.81
