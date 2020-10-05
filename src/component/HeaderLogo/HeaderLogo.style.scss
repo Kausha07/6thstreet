@@ -5,6 +5,7 @@
 
   @include before-desktop {
     height: auto;
+    margin: 0;
   }
   @include desktop {
     margin: 0 100px;

@@ -7,6 +7,9 @@ import PDPGalleryOverlay from 'Component/PDPGalleryOverlay';
 import Slider from 'Component/Slider';
 import SliderVertical from 'Component/SliderVertical';
 import WishlistIcon from 'Component/WishlistIcon';
+import isMobile from 'Util/Mobile';
+
+import { MAX_ZOOM_SCALE } from './PDPGallery.config';
 
 import './PDPGallery.style';
 
@@ -21,6 +24,8 @@ class PDPGallery extends PureComponent {
         onSliderChange: PropTypes.func.isRequired,
         sku: PropTypes.string.isRequired
     };
+
+    maxScale = MAX_ZOOM_SCALE;
 
     state = {
         galleryOverlay: ''
@@ -49,10 +54,13 @@ class PDPGallery extends PureComponent {
             <PDPGalleryOverlay closeGalleryOverlay={ this.closeGalleryOverlay } />
         );
 
+        document.body.style.overflow = 'hidden';
+
         this.setState({ galleryOverlay });
     };
 
     closeGalleryOverlay = () => {
+        document.body.style.overflow = 'visible';
         this.setState({ galleryOverlay: '' });
     };
 
@@ -73,6 +81,7 @@ class PDPGallery extends PureComponent {
                   } }
                   activeImage={ currentIndex }
                   onActiveImageChange={ onSliderChange }
+                  isInteractionDisabled
                 >
                 { crumbs.map(this.renderCrumb) }
                 </SliderVertical>
@@ -83,6 +92,7 @@ class PDPGallery extends PureComponent {
 
     renderGallery() {
         const { gallery } = this.props;
+
         return gallery.map(this.renderGalleryImage);
     }
 
@@ -98,7 +108,8 @@ class PDPGallery extends PureComponent {
               activeImage={ currentIndex }
               onActiveImageChange={ onSliderChange }
               mix={ { block: 'PDPGallery', elem: 'Slider' } }
-              isInteractionDisabled
+              isInteractionDisabled={ !isMobile.any() }
+              showCrumbs={ isMobile.any() }
             >
                 { this.renderGallery() }
             </Slider>
