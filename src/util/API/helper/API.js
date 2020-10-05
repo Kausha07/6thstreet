@@ -2,23 +2,51 @@ export const asyncTimeout = (callBack, timeout) => new Promise((resolve) => {
     setTimeout(() => resolve(callBack()), timeout);
 });
 
-export const getErrorMsg = (res) => {
-    const { error, message } = res.data || {};
-    // eslint-disable-next-line fp/no-let
-    let msg = '';
-
-    // TODO: Talk to backend team
-    // to standardize error messages
-
-    if (typeof error === 'string') {
-        msg += ` ${error}`;
-    } else if (error?.error) {
-        msg += ` ${error?.error}`;
-    } else if (message) {
-        msg += ` ${message}`;
-    } else {
-        msg += ` ${__('Something Went Wrong')}`;
+export const getErrSource = (json) => {
+    if (json === 'string') {
+        return json;
     }
 
-    return msg;
+    const { data } = json;
+
+    if (!data) {
+        return json;
+    }
+
+    return data;
+};
+
+export const getErrorMsg = async (res) => {
+    try {
+        const json = await res.json();
+        const data = getErrSource(json);
+
+        if (typeof data === 'string') {
+            return data;
+        }
+
+        const { error, message } = data;
+
+        if (!error && !message) {
+            return __('Something Went Wrong');
+        }
+
+        if (message) {
+            return message;
+        }
+
+        if (typeof error === 'string') {
+            return error;
+        }
+
+        if (error.error) {
+            return error.error;
+        }
+
+        return __('Something Went Wrong');
+    } catch (e) {
+        // eslint-disable-next-line no-console
+        console.log(e);
+        return __('Something Went Wrong');
+    }
 };

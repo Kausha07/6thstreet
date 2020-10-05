@@ -1,3 +1,293 @@
+/**
+ * @category  sixth-street
+ * @author    Vladislavs Belavskis <info@scandiweb.com>
+ * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
+ * @copyright Copyright (c) 2020 Scandiweb, Inc (https://scandiweb.com)
+ */
+
+:root {
+    --color-button-red: #ff5637;
+    --color-gainsboro: #dcdcdc;
+    --color-gray: #808080;
+    --color-light-grey: #d3d3d3;
+    --color-medium-grey: #b5b5b5;
+}
+
+.FilterPopup {
+    box-shadow: 10px 10px 0 250px rgba(0, 0, 0, 0.7);
+    top: 0;
+    width: 80%;
+
+    &_isArabic {
+        direction: rtl;
+        left: unset;
+        right: 0;
+    }
+
+    .Reset {
+        &_isOpen {
+            color: var(--primary-dark-color);
+            font-size: 12px;
+            font-weight: bold;
+            position: absolute;
+            right: 5px;
+            text-transform: capitalize;
+            top: 7px;
+        }
+
+        &_isArabic {
+            left: 5px;
+            right: auto;
+        }
+    }
+
+    &-CloseBtn {
+        cursor: pointer;
+        height: 55px;
+        position: fixed;
+        right: 5px;
+        top: 7px;
+        width: 55px;
+
+        &:before,
+        &:after {
+            background: var(--color-white);
+            content: "";
+            height: 4px;
+            left: 10px;
+            position: absolute;
+            top: 21px;
+            width: 26px;
+        }
+
+        &:before {
+            transform: rotate(45deg);
+        }
+
+        &:after {
+            transform: rotate(-45deg);
+        }
+
+    }
+
+    .CloseBtn {
+        &_isArabic {
+            left: 5px;
+            right: auto;
+        }
+    }
+
+    &-Title {
+        border-bottom: 1px solid var(--color-light-grey);
+        font-size: 18px;
+        padding: 20px;
+        position: relative;
+        text-transform: capitalize;
+    }
+
+    .arrow {
+        border: solid black;
+        border-width: 0 3px 3px 0;
+        display: inline-block;
+        margin-right: 10px;
+        padding: 5px;
+    }
+
+    .left {
+        transform: rotate(135deg);
+
+        &_isArabic {
+            margin-left: 10px;
+            transform: rotate(-45deg);
+        }
+    }
+
+    @include desktop() {
+        display: none;
+    }
+
+    @include tablet() {
+        display: none;
+    }
+
+    .Popup {
+        &-Content {
+            padding: 0;
+        }
+    }
+
+    .Content {
+        &-Filters {
+            height: calc(100% - 120px);
+            overflow-y: auto;
+            padding: 0 15px;
+
+            .FieldSelect-Select {
+                border: none;
+                border-bottom: 1px solid var(--color-light-grey);
+                font-family: "Avenir Next Ultra Light";
+                font-size: 12px;
+                font-weight: 600;
+                padding: 0 0 15px;
+                text-transform: capitalize;
+            }
+
+            .Field {
+                .FieldSelect {
+                    &::after {
+                        border-width: 0 2px 2px 0;
+                        height: 10px;
+                        margin-top: 5px;
+                        right: 5px;
+                        transform: rotate(-45deg);
+                        width: 10px;
+                    }
+                }
+
+                &_isArabic {
+                    .FieldSelect {
+                        &::after {
+                            border-width: 0 2px 2px 0;
+                            height: 10px;
+                            left: 10px;
+                            margin-top: 5px;
+                            right: auto;
+                            transform: rotate(135deg);
+                            width: 10px;
+                        }
+                    }
+                }
+            }
+        }
+
+        &-SeeResult {
+            background-color: var(--color-button-red);
+            color: var(--color-white);
+            font-family: Avenir;
+            font-size: 15px;
+            font-weight: bold;
+            height: 60px;
+            margin-top: 25px;
+            text-transform: uppercase;
+            width: 100%;
+        }
+    }
+}
+
+.PLPFilterMobile {
+    align-items: center;
+    border: 1px solid black;
+    border-radius: 5px;
+    display: flex;
+    font-family: "Avenir Next Regular";
+    font-size: 14px;
+    font-weight: 100;
+    height: 34px;
+    justify-content: space-between;
+    letter-spacing: 0.5px;
+    margin-top: 100px;
+    text-transform: capitalize;
+    width: 106px;
+
+    img {
+        width: 25%;
+    }
+
+    @include tablet() {
+        display: none;
+    }
+
+    @include desktop() {
+        display: none;
+    }
+}
+
+.Reset {
+    &_isArabic {
+        padding: 0 10px;
+    }
+}
+
 .PLPFilters {
-    
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 100px;
+
+    @include mobile() {
+        display: none;
+    }
+
+    &-Reset {
+        width: 100%;
+    }
+
+    .Reset {
+        &-Button {
+            color: var(--primary-dark-color);
+            font-size: 12px;
+            font-weight: bold;
+            height: auto;
+            margin-bottom: 50px;
+            padding: 0;
+            text-transform: capitalize;
+        }
+
+        &_isOpen {
+            color: var(--primary-dark-color);
+            font-size: 12px;
+            font-weight: bold;
+            position: absolute;
+            right: 5px;
+            text-transform: capitalize;
+            top: 7px;
+        }
+    }
+
+    .Field {
+        @include mobile() {
+            display: none;
+        }
+
+        .FieldSelect {
+            height: 50px;
+            margin-right: 10px;
+            width: 205px;
+
+            &-Options {
+                font-family: 'Avenir Next Regular';
+                font-size: 13px;
+
+                &::-webkit-scrollbar {
+                    width: 7px;
+                }
+
+                &::-webkit-scrollbar-track {
+                    background: var(--color-gainsboro);
+                }
+
+                &::-webkit-scrollbar-thumb {
+                    background-color: var(--color-medium-grey);
+                    border-radius: 7px;
+                }
+            }
+
+            &::after {
+                border-color: var(--color-medium-grey);
+
+                @include tablet() {
+                    border: none;
+                }
+
+                @include desktop() {
+                    border: none;
+                }
+            }
+
+            &-Select {
+                font-family: 'Avenir Next Regular';
+                font-size: 13px;
+                padding-right: 15px;
+            }
+        }
+    }
 }
