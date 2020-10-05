@@ -8,6 +8,7 @@ import {
 import Logger from 'Util/Logger';
 
 export class CheckoutDispatcher {
+    /* eslint-disable-next-line */
     async estimateShipping(dispatch, address) {
         const { Cart: { cartId } } = getStore().getState();
 
@@ -15,27 +16,22 @@ export class CheckoutDispatcher {
             const { success: isAddressValid } = await validateShippingAddress({ address });
 
             if (isAddressValid) {
-                const res = await estimateShippingMethods({ cartId, address });
-
-                console.log('*** SHIPPING:', res);
-
-                const rest = await saveShippingInformation({
-                    cartId,
-                    data: {
-                        shipping_address: address,
-                        billing_address: address,
-                        shipping_carrier_code: 'fetchr',
-                        shipping_method_code: 'fetchr'
-                    }
-                });
-
-                console.log('***', rest);
-
-                dispatch(setShipping({}));
+                return await estimateShippingMethods({ cartId, address });
             }
         } catch (e) {
             Logger.log(e);
         }
+    }
+
+    async saveAddressInformation(dispatch, address) {
+        const { Cart: { cartId } } = getStore().getState();
+
+        dispatch(setShipping({}));
+
+        return saveShippingInformation({
+            cartId,
+            data: address
+        });
     }
 }
 

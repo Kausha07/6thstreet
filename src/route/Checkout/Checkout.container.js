@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 
+import { BILLING_STEP, PAYMENT_TOTALS } from 'SourceRoute/Checkout/Checkout.config';
 import {
     CheckoutContainer as SourceCheckoutContainer,
     mapDispatchToProps as sourceMapDispatchToProps,
@@ -8,10 +9,13 @@ import {
 import CheckoutDispatcher from 'Store/Checkout/Checkout.dispatcher';
 import { updateMeta } from 'Store/Meta/Meta.action';
 import { isSignedIn } from 'Util/Auth';
+import BrowserDatabase from 'Util/BrowserDatabase';
+import { ONE_MONTH_IN_SECONDS } from 'Util/Request/QueryDispatcher';
 
 export const mapDispatchToProps = (dispatch) => ({
     ...sourceMapDispatchToProps(dispatch),
-    estimateShipping: (address) => CheckoutDispatcher.estimateShipping(dispatch, address)
+    estimateShipping: (address) => CheckoutDispatcher.estimateShipping(dispatch, address),
+    saveAddressInformation: (address) => CheckoutDispatcher.saveAddressInformation(dispatch, address)
 });
 
 export class CheckoutContainer extends SourceCheckoutContainer {
@@ -43,11 +47,59 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
     onShippingEstimationFieldsChange(address) {
         const { estimateShipping } = this.props;
+        const Checkout = this;
+
+        /* eslint-disable */
+        delete address.region_id;
 
         estimateShipping({
             default_shipping: true,
             ...address
+        }).then(
+            ({ data }) => {
+                Checkout.setState({
+                    shippingMethods: data
+                })
+            },
+            this._handleError
+        );
+    }
+
+    async saveAddressInformation(addressInformation) {
+        const { saveAddressInformation } = this.props;
+        const { shipping_address } = addressInformation;
+
+        this.setState({
+            isLoading: true,
+            shippingAddress: shipping_address
         });
+
+        if (!isSignedIn()) {
+            if (!await this.createUserOrSaveGuest()) {
+                this.setState({ isLoading: false });
+                return;
+            }
+        }
+
+        saveAddressInformation(addressInformation).then(
+            ({ data }) => {
+                const { payment_methods, totals } = data;
+
+                BrowserDatabase.setItem(
+                    totals,
+                    PAYMENT_TOTALS,
+                    ONE_MONTH_IN_SECONDS
+                );
+
+                this.setState({
+                    isLoading: false,
+                    paymentMethods: payment_methods,
+                    checkoutStep: BILLING_STEP,
+                    paymentTotals: totals
+                });
+            },
+            this._handleError
+        );
     }
 }
 
