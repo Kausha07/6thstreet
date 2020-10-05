@@ -58,7 +58,7 @@ export class WishlistDispatcher {
         }
     }
 
-    async addSkuToWishlist(sku, dispatch) {
+    async addSkuToWishlist(dispatch, sku) {
         if (!isSignedIn()) {
             // skip non-authorized users
             dispatch(showNotification(
