@@ -21,6 +21,7 @@ import Link from 'Component/Link';
 import ProductLinks from 'Component/ProductLinks';
 import { CROSS_SELL } from 'Store/LinkedProducts/LinkedProducts.reducer';
 import { TotalsType } from 'Type/MiniCart';
+import { isArabic } from 'Util/App';
 import { formatCurrency, roundPrice } from 'Util/Price';
 
 import Delivery from './icons/delivery-icon.png';
@@ -31,6 +32,10 @@ export class CartPage extends PureComponent {
     static propTypes = {
         totals: TotalsType.isRequired,
         onCheckoutButtonClick: PropTypes.func.isRequired
+    };
+
+    state = {
+        isArabic: isArabic()
     };
 
     renderCartItems() {
@@ -209,13 +214,20 @@ export class CartPage extends PureComponent {
 
     renderHeading() {
         return (
+            <div>
             <h1 block="CartPage" elem="Heading">
                 { __('My bag') }
+                <span> (# items)</span>
             </h1>
+            </div>
         );
     }
 
     render() {
+        const {
+            isArabic
+        } = this.state;
+
         return (
             <main block="CartPage" aria-label="Cart Page">
                 <placeholder block="LeftMenu">Text</placeholder>
@@ -223,13 +235,13 @@ export class CartPage extends PureComponent {
                   wrapperMix={ { block: 'CartPage', elem: 'Wrapper' } }
                   label="Cart page details"
                 >
-                    <div block="CartPage" elem="Static">
+                    <div block="CartPage" elem="Static" mods={ { isArabic } }>
                         { this.renderHeading() }
                         { this.renderCartItems() }
                         { this.renderTotalDetails(true) }
                         { this.renderCrossSellProducts() }
                     </div>
-                    <div block="CartPage" elem="Floating">
+                    <div block="CartPage" elem="Floating" mods={ { isArabic } }>
                         { this.renderDiscountCode() }
                         { this.renderPromo() }
                         { this.renderTotals() }

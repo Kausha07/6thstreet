@@ -14,13 +14,13 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import CartItemPrice from 'Component/CartItemPrice';
-import Field from 'Component/Field';
 import Image from 'Component/Image';
 import Link from 'Component/Link';
 import Loader from 'Component/Loader';
 import { CartItemType } from 'Type/MiniCart';
+import { isArabic } from 'Util/App';
 
-import './CartItem.style';
+import './CartItem.extended.style';
 
 /**
  * Cart and CartOverlay item
@@ -51,6 +51,10 @@ export class CartItem extends PureComponent {
     static defaultProps = {
         isEditing: false,
         isLikeTable: false
+    };
+
+    state = {
+        isArabic: isArabic()
     };
 
     renderProductConfigurationOption = ([key, attribute]) => {
@@ -195,20 +199,24 @@ export class CartItem extends PureComponent {
     }
 
     renderProductName() {
+        const name = 'R&M';
+        const color = 'Yellow';
+        const size = 'XL';
+        const qty = '1';
         const {
-            item: {
-                product: {
-                    name
-                }
-            }
-        } = this.props;
+            isArabic
+        } = this.state;
 
         return (
             <p
               block="CartItem"
               elem="Heading"
+              mods={ { isArabic } }
             >
-                { name }
+                <h2> { name } </h2>
+                <span> { color }  </span>
+                <span> Size: <text>{ size } </text></span>
+                <span> Qty: <text>{ qty } </text></span>
             </p>
         );
     }
@@ -259,48 +267,6 @@ export class CartItem extends PureComponent {
         );
     }
 
-    renderActions() {
-        const {
-            isEditing,
-            isLikeTable,
-            item: { qty },
-            minSaleQuantity,
-            maxSaleQuantity,
-            handleRemoveItem,
-            handleChangeQuantity
-        } = this.props;
-
-        return (
-            <div
-              block="CartItem"
-              elem="Actions"
-              mods={ { isEditing, isLikeTable } }
-            >
-                <button
-                  block="CartItem"
-                  id="RemoveItem"
-                  name="RemoveItem"
-                  elem="Delete"
-                  aria-label="Remove item from cart"
-                  onClick={ handleRemoveItem }
-                >
-                    <span>{ __('Delete') }</span>
-                </button>
-                <Field
-                  id="item_qty"
-                  name="item_qty"
-                  type="number"
-                  isControlled
-                  min={ minSaleQuantity }
-                  max={ maxSaleQuantity }
-                  mix={ { block: 'CartItem', elem: 'Qty' } }
-                  value={ qty }
-                  onChange={ handleChangeQuantity }
-                />
-            </div>
-        );
-    }
-
     renderImage() {
         const { item: { product: { name } }, thumbnail } = this.props;
 
@@ -328,11 +294,10 @@ export class CartItem extends PureComponent {
         const { isLoading } = this.props;
 
         return (
-            <li block="CartItem">
+            <div block="CartItem">
                 <Loader isLoading={ isLoading } />
                 { this.renderWrapper() }
-                { this.renderActions() }
-            </li>
+            </div>
         );
     }
 }

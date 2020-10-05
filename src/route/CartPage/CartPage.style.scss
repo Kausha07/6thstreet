@@ -27,33 +27,46 @@
 }
 
 .CartPage {
+    top: 110px;
     display: flex;
     font-family: var(--font-family-regular);
+    section {
+        width: 100%;
+    }
 
-    @include before-desktop {
+    @include mobile {
         padding-bottom: calc(var(--navigation-tabs-height) + 120px);
         margin-bottom: 0;
+        height: auto;
+        padding: 17px 20px;
     }
 
     &-Wrapper {
-        @include desktop {
             display: flex;
             flex-direction: column;
             margin-left: 100px;
             width: 340px;
-        }
+            max-height: 65vh;
 
-        @include tablet {
-            grid-template-columns: 1fr;
-        }
-
-        @include before-desktop {
+        @include mobile {
             padding: 0;
+            margin-left: 0;
+            width: 100%;
+        }
+    }
+
+    &-Items {
+        overflow: scroll;
+        max-height: 35vh;
+        overflow-x: hidden;
+
+        @include mobile {
+            max-height: 55vh;
         }
     }
 
     &-Empty {
-        @include before-desktop {
+        @include mobile {
             padding: 1rem;
             border-bottom: 1px solid var(--expandable-content-divider-color);
         }
@@ -63,13 +76,14 @@
         order: 3;
         display: flex;
         flex-wrap: wrap;
+        background-color: var(--color-white);
 
-        @include before-desktop {
-            position: fixed;
-            bottom: var(--navigation-tabs-height);
+        @include mobile {
+            position: sticky;
+            bottom: 80px;
             left: 0;
             width: 100%;
-            border-top: 1px solid var(--primary-divider-color);
+            padding-bottom: 10px;
         }
     }
 
@@ -79,7 +93,7 @@
         font-size: 1.5rem;
         margin-bottom: 1rem;
 
-        @include before-desktop {
+        @include mobile {
             display: none;
         }
     }
@@ -87,6 +101,14 @@
     &-CheckoutButtons {
         padding: 1rem 0;
         width: 100%;
+
+        @include mobile {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: space-around;
+            align-items: center;
+            height: 40px;
+        }
     }
 
     &-CheckoutButton {
@@ -97,6 +119,13 @@
         color: var(--color-white);
         font-family: var(--font-family-bold);
         border: none;
+
+        @include mobile {
+            width: 45%;
+            height: 40px;
+            font-size: 12px;
+            order: 2;
+        }
     }
 
     &-ContinueShopping {
@@ -109,8 +138,12 @@
         align-items: center;
         font-family: var(--font-family-bold);
 
-        @include before-desktop {
-            display: none;
+        @include mobile {
+            width: 45%;
+            height: 40px;
+            margin: 0;
+            font-size: 12px;
+            order: 1;
         }
     }
 
@@ -118,7 +151,7 @@
     &-Total {
         min-height: 4rem;
 
-        @include before-desktop {
+        @include mobile {
             min-height: 0;
         }
     }
@@ -134,13 +167,13 @@
             padding: 2rem 1rem;
             height: 40px;
 
-            @include before-desktop {
+            @include mobile {
                 padding: 1rem;
                 border: 0;
                 border-bottom: 1px solid var(--primary-divider-color);
             }
 
-            span:first-child {
+            span:nth-child(2) {
                 font-family: var(--font-family-bold);
             }
 
@@ -156,7 +189,7 @@
             width: 46px;
             margin-right: .5rem;
 
-            @include before-desktop {
+            @include mobile {
                 width: 36px;
             }
         }
@@ -177,6 +210,10 @@
                 height: auto;
                 margin-right: 5px;
             }
+
+            @include mobile {
+                font-size:11px;
+            }
     }
 }
 
@@ -187,7 +224,7 @@
     max-height: 50px;
     margin: 1rem auto;
 
-    @include before-desktop {
+    @include mobile {
         max-width: 60%;
     }
 
@@ -206,8 +243,8 @@
     padding: 1rem 0;
     font-family: var(--font-family-bold);
 
-    @include before-desktop {
-        padding: 1rem 1rem 0;
+    @include mobile {
+        padding: 1rem;
     }
 }
 
@@ -217,22 +254,18 @@
     font-size: 15px;
     align-items: center;
 
-    @include before-desktop {
+    @include mobile {
         padding: 1rem;
         margin-top: 0;
     }
 
     dt:last-child {
-        margin-left: 20px;
+        margin: 0 20px;
         color: var(--color-light-gray);
     }
 
     &_isMobile {
         display: none;
-
-        @include before-desktop {
-            display: grid;
-        }
     }
 }
 
@@ -247,7 +280,7 @@
     padding: .9rem 1rem;
     margin-bottom: 0;
 
-    @include before-desktop {
+    @include mobile {
         display: none;
     }
 
@@ -271,9 +304,11 @@
 }
 
 &-Static {
-    @include before-desktop {
-        overflow: scroll;
-        max-height: calc(100% - 12rem);
+    &_isArabic {
+        .CartItem-Wrapper img {
+            margin-right: 0;
+            margin-left: 15px;
+        }
     }
 }
 
@@ -281,11 +316,27 @@
     @include desktop {
         display: flex;
         flex-direction: column;
-        margin-top: 6.5rem;
+    }
+
+    @include mobile {
+        position: fixed;
+        width: 100%;
+        left: 0;
+        background-color: var(--color-white);
+        bottom: 40px;
     }
 
     @include tablet {
         margin-top: 2rem;
+    }
+
+    &_isArabic {
+        .ExpandableContent-Button{
+            float:left;
+        }
+            img{
+                transform: scaleX(-1);
+            }
     }
 }
 
@@ -295,11 +346,11 @@
     margin-bottom: 1.5rem;
     font-size: 20px;
     font-family: var(--font-family-bold);
-    font-weight: bold;
     text-transform: capitalize;
 
-    @include before-desktop {
-        display: none;
+    span {
+        font-family: var(--font-family-regular);
+        font-weight: normal;
     }
 }
 
@@ -323,13 +374,20 @@
 }
 
 .ExpandableContent {
+    @include mobile {
+        padding: 0 1rem;
+    }
+
     &-HeaderBlock {
-        padding: 16px 0;
+        padding: 1rem 0;
     }
 
     &-Header {
         font-size: 15px;
 
+        @include mobile {
+            font-size: 12px;
+        }
     }
 
     &-Button {
@@ -345,6 +403,11 @@
             background: #000;
             height: 14px;
             width: 2px;
+
+            @include mobile {
+                height: 10px;
+                right: 4px;
+            }
         }
 
         &:after {
@@ -355,6 +418,18 @@
             background: #000;
             width: 14px;
             height: 2px;
+
+            @include mobile {
+                width: 10px;
+                top: 5px;
+            }
+        }
+
+        @include mobile {
+            &:before,
+            &:after {
+                display: none;
+            }
         }
     }
 
@@ -382,6 +457,10 @@
             input:focus, textarea:focus, select:focus {
                 border: 1px solid var(--color-black);
             }
+
+            @include mobile {
+                font-size: 11px;
+            }
         }
 
         &-Button {
@@ -395,6 +474,17 @@
                 color: var(--color-black);
                 border: 1px solid var(--color-black);
             }
+
+            @include mobile {
+                width: 25%;
+                font-size: 11px;
+            }
+        }
+    }
+
+    &-Body {
+        @include mobile {
+            display: block;
         }
     }
 }
@@ -403,6 +493,11 @@
     border: 1px solid gray;
     display: block;
     height: 1000px;
+
+    @include mobile {
+        display: none;
+    }
 }
 
 }
+
