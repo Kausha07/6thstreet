@@ -20,7 +20,7 @@
     &-Divider {
         width: 100%;
         border-top: solid 1px var(--divider-color);
-        margin-top: 3rem;
+        margin-top: none;
 
         @include desktop {
             margin-top: 4rem;
@@ -203,6 +203,10 @@
                     transform: rotate(-225deg);
                 }
 
+                &:before {
+                    content: none;
+                }
+
                 &:after {
                     position: absolute;
                     content: '';
@@ -216,6 +220,7 @@
                     transform: rotate(-45deg);
                     right: 0;
                     top: 16px;
+                    background: transparent;
                 }
             }
             

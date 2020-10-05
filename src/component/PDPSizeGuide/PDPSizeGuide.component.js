@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-import ExpandableContent from 'Component/ExpandableContent';
 import SizeTable from 'Component/SizeTable';
+import ExpandableContent from 'SourceComponent/ExpandableContent';
 import Popup from 'SourceComponent/Popup';
 import isMobile from 'SourceUtil/Mobile/isMobile';
 import { isArabic } from 'Util/App';
