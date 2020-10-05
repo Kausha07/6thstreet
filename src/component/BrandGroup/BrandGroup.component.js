@@ -33,8 +33,10 @@ class BrandGroup extends PureComponent {
 
         return (
             <div block="BrandGroup">
-                <h4>{ letter }</h4>
-                { this.renderBrands() }
+                <h4 block="BrandGroup" elem="Letter">{ letter }</h4>
+                <div block="BrandGroup" elem="Group">
+                    { this.renderBrands() }
+                </div>
             </div>
         );
     }

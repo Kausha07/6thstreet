@@ -1,3 +1,19 @@
 .Brands {
-    
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 1fr;
+    justify-content: center;
+    margin: 0 auto;
+    max-width: 1440px;
+    padding: 25px 40px;
+
+    @include after-mobile {
+        grid-template-columns: repeat(auto-fill, 210px);
+    }
+
+    @include desktop {
+        gap: 40px 20px;
+        margin: 110px auto 0;
+        padding: 25px 20px;
+    }
 }
