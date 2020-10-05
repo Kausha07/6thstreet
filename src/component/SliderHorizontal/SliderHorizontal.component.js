@@ -12,14 +12,14 @@
  */
 
 import PropTypes from 'prop-types';
-import { Children, createRef, PureComponent } from 'react';
+import { Children } from 'react';
 
 import Draggable from 'Component/Draggable';
+import SliderVertical from 'Component/SliderVertical';
 import { ChildrenType, MixType } from 'Type/Common';
 import CSS from 'Util/CSS';
 
 import {
-    ACTIVE_SLIDE_PERCENT,
     ANIMATION_DURATION
 } from './SliderHorizontal.config';
 
@@ -29,7 +29,7 @@ import './SliderHorizontal.style';
  * Slider component
  * @class Slider
  */
-export class SliderHorizontal extends PureComponent {
+export class SliderHorizontal extends SliderVertical {
     static propTypes = {
         showCrumbs: PropTypes.bool,
         activeImage: PropTypes.number,
@@ -48,74 +48,6 @@ export class SliderHorizontal extends PureComponent {
         mix: {}
     };
 
-    sliderWidth = 0;
-
-    prevPosition = 0;
-
-    draggableRef = createRef();
-
-    sliderRef = createRef();
-
-    handleDragStart = this.handleInteraction.bind(this, this.handleDragStart);
-
-    handleDrag = this.handleInteraction.bind(this, this.handleDrag);
-
-    handleDragEnd = this.handleInteraction.bind(this, this.handleDragEnd);
-
-    renderCrumb = this.renderCrumb.bind(this);
-
-    isSlider = this.isSlider.bind(this);
-
-    constructor(props) {
-        super(props);
-
-        const { activeImage } = this.props;
-
-        this.state = {
-            draggableRef: null,
-            prevActiveImage: activeImage,
-            width: 0,
-            sliderChildren: null,
-            sliderWidthChildren: null,
-            sliderWidth: null,
-            count: 0,
-            countPerPage: 0,
-            isArrowUpHidden: true,
-            isArrowDownHidden: false,
-            isSlider: false,
-            oldTranslate: 0
-        };
-    }
-
-    static getDerivedStateFromProps(props, state) {
-        const { activeImage } = props;
-        const {
-            prevActiveImage,
-            sliderChildren,
-            isSlider
-        } = state;
-
-        if (!isSlider) {
-            return {
-                isArrowUpHidden: true,
-                isArrowDownHidden: true
-            };
-        }
-
-        if (prevActiveImage !== activeImage) {
-            return {
-                prevActiveImage: activeImage,
-                isArrowUpHidden: activeImage === 0,
-                isArrowDownHidden: activeImage === sliderChildren.length - 1
-            };
-        }
-
-        return {
-            isArrowUpHidden: activeImage === 0,
-            isArrowDownHidden: activeImage === sliderChildren.length - 1
-        };
-    }
-
     componentDidMount() {
         const { draggableRef, sliderRef } = this;
         const sliderChildren = draggableRef.current.children;
@@ -127,8 +59,8 @@ export class SliderHorizontal extends PureComponent {
         this.setState({
             draggableRef,
             sliderChildren,
-            sliderWidthChildren,
-            sliderWidth,
+            sliderHeightChildren: sliderWidthChildren,
+            sliderHeight: sliderWidth,
             countPerPage,
             count: countPerPage
         });
@@ -146,134 +78,6 @@ export class SliderHorizontal extends PureComponent {
         }, ANIMATION_DURATION);
     }
 
-    componentDidUpdate(prevProps) {
-        const { activeImage } = this.props;
-        const { activeImage: prevActiveImage } = prevProps;
-
-        const {
-            draggableRef,
-            sliderChildren,
-            sliderWidthChildren,
-            count,
-            countPerPage,
-            isSlider
-        } = this.state;
-
-        if (isSlider) {
-            if (activeImage > prevActiveImage) {
-                this.handleSliderDown(
-                    activeImage,
-                    count,
-                    sliderChildren,
-                    countPerPage,
-                    sliderWidthChildren,
-                    draggableRef,
-                    prevActiveImage
-                );
-            }
-
-            if (activeImage < prevActiveImage) {
-                this.handleSliderUp(
-                    activeImage,
-                    count,
-                    countPerPage,
-                    sliderWidthChildren,
-                    draggableRef,
-                    prevActiveImage
-                );
-            }
-        }
-    }
-
-    handleSliderDown = (
-        activeImage,
-        count,
-        sliderChildren,
-        countPerPage,
-        sliderWidthChildren,
-        draggableRef,
-        prevActiveImage
-    ) => {
-        if (activeImage >= count) {
-            const { oldTranslate } = this.state;
-            const newTranslate = sliderChildren.length - count < countPerPage
-                ? oldTranslate - (sliderChildren.length - count) * sliderWidthChildren
-                : oldTranslate - (countPerPage * sliderWidthChildren);
-
-            CSS.setVariable(
-                draggableRef,
-                'animation-speed',
-                `${ Math.abs((prevActiveImage - activeImage) * ANIMATION_DURATION) }ms`
-            );
-
-            CSS.setVariable(
-                draggableRef,
-                'translateX',
-                `${newTranslate}px`
-            );
-
-            if (activeImage === sliderChildren.length - 1) {
-                this.setState({
-                    prevActiveImage: activeImage,
-                    count: sliderChildren.length,
-                    isArrowDownHidden: activeImage === sliderChildren.length - 1,
-                    oldTranslate: newTranslate
-                });
-            } else {
-                this.setState({
-                    prevActiveImage: activeImage,
-                    count: count + countPerPage > sliderChildren.length ? sliderChildren.length : count + countPerPage,
-                    isArrowDownHidden: activeImage === sliderChildren.length - 1,
-                    oldTranslate: newTranslate
-                });
-            }
-        }
-    };
-
-    handleSliderUp = (
-        activeImage,
-        count,
-        countPerPage,
-        sliderWidthChildren,
-        draggableRef,
-        prevActiveImage
-    ) => {
-        const { oldTranslate } = this.state;
-        if (activeImage <= count - countPerPage - 1) {
-            const newTranslate = count <= countPerPage * 2
-                ? 0
-                : oldTranslate + (countPerPage * sliderWidthChildren);
-
-            CSS.setVariable(
-                draggableRef,
-                'animation-speed',
-                `${ Math.abs((prevActiveImage - activeImage) * ANIMATION_DURATION) }ms`
-            );
-
-            CSS.setVariable(
-                draggableRef,
-                'translateX',
-                `${newTranslate}px`
-            );
-
-            if (newTranslate === 0) {
-                this.setState({
-                    prevActiveImage: activeImage,
-                    count: countPerPage,
-                    isArrowUpHidden: activeImage === 0,
-                    oldTranslate: newTranslate
-                });
-            } else {
-                this.setState({
-                    prevActiveImage: activeImage,
-                    count: count - countPerPage,
-                    isArrowUpHidden: activeImage === 0,
-                    oldTranslate: newTranslate
-                });
-            }
-        }
-    };
-
     isSlider() {
         const { children, isZoomEnabled } = this.props;
         const { countPerPage } = this.state;
@@ -283,134 +87,6 @@ export class SliderHorizontal extends PureComponent {
         } else {
             this.setState({ isSlider: false });
         }
-    }
-
-    onArrowUpClick = () => {
-        const { onActiveImageChange, activeImage } = this.props;
-        onActiveImageChange(activeImage - 1);
-    };
-
-    onArrowDownClick = () => {
-        const { onActiveImageChange, activeImage } = this.props;
-        onActiveImageChange(activeImage + 1);
-    };
-
-    getFullSliderWidth() {
-        const fullSliderWidth = this.draggableRef.current.scrollWidth;
-        return fullSliderWidth - this.sliderWidth;
-    }
-
-    calculateNextSlide(state) {
-        const {
-            translateX: translate,
-            lastTranslateX: lastTranslate,
-            isSlider
-        } = state;
-
-        if (isSlider) {
-            const { onActiveImageChange } = this.props;
-
-            const slideSize = this.sliderWidth;
-
-            const fullSliderSize = this.getFullSliderWidth();
-
-            const activeSlidePosition = translate / slideSize;
-            const activeSlidePercent = Math.abs(activeSlidePosition % 1);
-            const isSlideBack = translate > lastTranslate;
-
-            if (translate >= 0) {
-                onActiveImageChange(0);
-                return 0;
-            }
-
-            if (translate < -fullSliderSize) {
-                const activeSlide = Math.round(fullSliderSize / -slideSize);
-                onActiveImageChange(-activeSlide);
-                return activeSlide;
-            }
-
-            if (isSlideBack && activeSlidePercent < 1 - ACTIVE_SLIDE_PERCENT) {
-                const activeSlide = Math.ceil(activeSlidePosition);
-                onActiveImageChange(-activeSlide);
-                return activeSlide;
-            }
-
-            if (!isSlideBack && activeSlidePercent > ACTIVE_SLIDE_PERCENT) {
-                const activeSlide = Math.floor(activeSlidePosition);
-                onActiveImageChange(-activeSlide);
-                return activeSlide;
-            }
-
-            const activeSlide = Math.round(activeSlidePosition);
-            onActiveImageChange(-activeSlide);
-            return activeSlide;
-        }
-
-        return null;
-    }
-
-    handleDragStart() {
-        CSS.setVariable(this.draggableRef, 'animation-speed', '0');
-    }
-
-    handleDrag(state) {
-        const { translateX, isSlider } = state;
-
-        if (isSlider) {
-            const translate = translateX;
-
-            const fullSliderSize = this.getFullSliderWidth();
-
-            if (translate < 0 && translate > -fullSliderSize) {
-                CSS.setVariable(
-                    this.draggableRef,
-                    'translateX',
-                    `${translate}px`
-                );
-            }
-        }
-    }
-
-    handleDragEnd(state, callback) {
-        const activeSlide = this.calculateNextSlide(state);
-
-        const slideSize = this.sliderWidth;
-
-        const newTranslate = activeSlide * slideSize;
-
-        CSS.setVariable(this.draggableRef, 'animation-speed', '300ms');
-
-        CSS.setVariable(
-            this.draggableRef,
-            'translateX',
-            `${newTranslate}px`
-        );
-
-        callback({
-            originalX: newTranslate,
-            lastTranslateX: newTranslate
-        });
-    }
-
-    handleClick = (state, callback, e) => {
-        if (e.type === 'contextmenu') {
-            this.handleDragEnd(state, callback);
-        }
-    };
-
-    handleInteraction(callback, ...args) {
-        const { isInteractionDisabled } = this.props;
-
-        if (isInteractionDisabled || !callback) {
-            return;
-        }
-
-        callback.call(this, ...args);
-    }
-
-    changeActiveImage(activeImage) {
-        const { onActiveImageChange } = this.props;
-        onActiveImageChange(activeImage);
     }
 
     renderCrumbs() {
@@ -470,11 +146,11 @@ export class SliderHorizontal extends PureComponent {
             >
                 <button
                   block="SliderHorizontal"
-                  elem="ButtonUp"
+                  elem="ButtonLeft"
                   mods={ { isArrowUpHidden } }
                   onClick={ this.onArrowUpClick }
                 >
-                    <div block="SliderHorizontal" elem="ArrowUp" />
+                    <div block="SliderHorizontal" elem="ArrowLeft" />
                 </button>
                 <Draggable
                   mix={ { block: 'SliderHorizontal', elem: 'Wrapper' } }
@@ -489,11 +165,11 @@ export class SliderHorizontal extends PureComponent {
                 </Draggable>
                 <button
                   block="SliderHorizontal"
-                  elem="ButtonDown"
+                  elem="ButtonRight"
                   mods={ { isArrowDownHidden } }
                   onClick={ this.onArrowDownClick }
                 >
-                    <div block="SliderHorizontal" elem="ArrowDown" />
+                    <div block="SliderHorizontal" elem="ArrowRight" />
                 </button>
                 { showCrumbs && this.renderCrumbs() }
             </div>

@@ -35,6 +35,8 @@
         min-width: 0;
         margin: 0 10px;
 
+        direction: ltr;
+
         &-Crumb {
             background: var(--crumb-background-color);
             border: none;

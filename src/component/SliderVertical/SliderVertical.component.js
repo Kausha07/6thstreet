@@ -158,8 +158,6 @@ export class SliderVertical extends PureComponent {
             isSlider
         } = this.state;
 
-        console.log(activeImage, count, countPerPage, sliderChildren.length);
-
         if (isSlider) {
             if (activeImage > prevActiveImage) {
                 this.handleSliderDown(
@@ -200,8 +198,6 @@ export class SliderVertical extends PureComponent {
             const newTranslate = sliderChildren.length - count < countPerPage
                 ? oldTranslate - (sliderChildren.length - count) * sliderHeightChildren
                 : oldTranslate - (countPerPage * sliderHeightChildren);
-
-            console.log(newTranslate);
 
             CSS.setVariable(
                 draggableRef,
@@ -246,8 +242,6 @@ export class SliderVertical extends PureComponent {
             const newTranslate = count <= countPerPage * 2
                 ? 0
                 : oldTranslate + (countPerPage * sliderHeightChildren);
-
-            console.log(newTranslate, 'herereeee');
 
             CSS.setVariable(
                 draggableRef,
@@ -458,6 +452,8 @@ export class SliderVertical extends PureComponent {
             activeImage,
             children
         } = this.props;
+
+        console.log(this.sliderRef);
 
         const { isArrowUpHidden, isArrowDownHidden } = this.state;
 

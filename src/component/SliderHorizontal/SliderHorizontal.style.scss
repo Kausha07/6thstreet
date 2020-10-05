@@ -15,7 +15,7 @@
 }
 
 .SliderHorizontal {
-    --translateX: 0;
+    --translateY: 0;
     --animation-speed: 0;
     --slider-height: 0;
 
@@ -34,7 +34,7 @@
         will-change: transform;
         transition: transform var(--animation-speed);
         flex-direction: row;
-        transform: translate3d(var(--translateX), 0, 0);
+        transform: translate3d(var(--translateY), 0, 0);
 
         > * {
             flex-shrink: 0;
@@ -73,7 +73,7 @@
         }
     }
 
-    &-ButtonUp {
+    &-ButtonLeft {
         position: absolute;
         left: 0;
         z-index: 6;
@@ -87,7 +87,7 @@
         }
     }
 
-    &-ButtonDown {
+    &-ButtonRight {
         display: block;
         position: absolute;
         right: 0;
@@ -106,8 +106,8 @@
         }
     }
 
-    &-ArrowUp,
-    &-ArrowDown {
+    &-ArrowLeft,
+    &-ArrowRight {
         width: 0;
         height: 0;
         border: solid black;
@@ -117,12 +117,12 @@
         margin: 0 auto;
     }
 
-    &-ArrowUp{
+    &-ArrowLeft {
         transform: rotate(135deg);
         left: 7px;
     }
 
-    &-ArrowDown{
+    &-ArrowRight {
         transform: rotate(-45deg);
         right: 7px;
     }
@@ -131,8 +131,8 @@
 .PDPGallery{
     .PDPGalleryOverlay {
         .SliderHorizontal {
-            &-ButtonUp,
-            &-ButtonDown {
+            &-ButtonLeft,
+            &-ButtonRight {
                 width: 30px;
             }
 

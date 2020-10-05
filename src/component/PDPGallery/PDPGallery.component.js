@@ -46,10 +46,13 @@ class PDPGallery extends PureComponent {
             <PDPGalleryOverlay closeGalleryOverlay={ this.closeGalleryOverlay } />
         );
 
+        document.body.style.overflow = 'hidden';
+
         this.setState({ galleryOverlay });
     };
 
     closeGalleryOverlay = () => {
+        document.body.style.overflow = 'visible';
         this.setState({ galleryOverlay: '' });
     };
 
