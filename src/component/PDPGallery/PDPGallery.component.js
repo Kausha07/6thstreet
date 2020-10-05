@@ -85,10 +85,6 @@ class PDPGallery extends PureComponent {
     renderGallery() {
         const { gallery } = this.props;
 
-        if (gallery[0] !== undefined) {
-            return gallery.map(this.renderGalleryImage);
-        }
-
         return gallery.map(this.renderGalleryImage);
     }
 
