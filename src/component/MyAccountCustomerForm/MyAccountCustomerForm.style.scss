@@ -88,6 +88,15 @@
             left: 0;
             right: unset;
         }
+
+        .MyAccountPasswordForm {
+            &-Title {
+                .Cross {
+                    margin-left: 0;
+                    margin-right: auto;
+                }
+            }
+        }
     }
 
     @include  after-mobile {
