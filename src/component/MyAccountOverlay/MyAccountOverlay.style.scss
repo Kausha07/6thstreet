@@ -399,19 +399,26 @@
             --button-hover-color: var(--black-color);
             --button-hover-border: var(--black-color);
             --button-hover-background: var(--white-color);
-            white-space:nowrap;
+            white-space: nowrap;
             padding: 0 5%;
             font-size: 11px;
             height: 30px;
             border-radius: 20px;
             margin: 0 10px;
+            transition: none;
 
             button {
                 padding: 0;
 
                 &:focus{
                     background-color: var(--color-cart-light) !important;
+                    border: 2px solid var(--button-hover-border);
                 }
+
+            }
+
+            &:hover {
+                border: 2px solid $black;
             }
 
             &_isSignIn,
@@ -419,6 +426,7 @@
              {
                 --button-border: var(--black-color);
                 --button-color: var(--black-color);
+                border: 2px solid var(--button-border);
             }
         }
     }
