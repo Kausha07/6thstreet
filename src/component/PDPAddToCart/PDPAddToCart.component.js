@@ -44,10 +44,10 @@ class PDPAddToCart extends PureComponent {
 
     getSizeSelect() {
         const {
-            product, selectedSizeType, sizeObject
+            product: { simple_products }, product, selectedSizeType, sizeObject
         } = this.props;
 
-        if (product.simple_products !== undefined && product[`size_${selectedSizeType}`].length !== 0) {
+        if (simple_products !== undefined && product[`size_${selectedSizeType}`].length !== 0) {
             const listItems = sizeObject.sizeCodes.map((code) => (
                 <option
                   key={ code }
@@ -56,9 +56,11 @@ class PDPAddToCart extends PureComponent {
                   value={ code }
                   disabled={ product.simple_products[code].quantity === '0' }
                 >
-                    { product.simple_products[code].size[selectedSizeType] }
-                    { product.simple_products[code].quantity === '0' ? '- Out of stock' : '' }
-                    { product.simple_products[code].quantity === '1' ? ' - 1 left in stock' : '' }
+                    { simple_products[code].size[selectedSizeType] }
+                    { simple_products[code].quantity === '0' ? '- Out of stock' : '' }
+                    { simple_products[code].quantity === '1' ? ' - 1 left in stock' : '' }
+                    { simple_products[code].quantity === '3'
+                     || simple_products[code].quantity === '2' ? ' - low stock' : '' }
                 </option>
             ));
 
