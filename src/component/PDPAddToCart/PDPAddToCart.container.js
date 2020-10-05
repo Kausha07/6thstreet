@@ -122,7 +122,11 @@ export class PDPAddToCartContainer extends PureComponent {
     afterAddToCart() {
         this.setState({ isLoading: false });
         // TODO props for addedToCart
+        const timeout = 1250;
         this.setState({ addedToCart: true });
+        const timer = setTimeout(() => this.setState({ addedToCart: false }), timeout);
+
+        return () => clearTimeout(timer);
     }
 
     render() {
