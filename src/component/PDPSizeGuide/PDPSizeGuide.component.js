@@ -109,7 +109,7 @@ class PDPSizeGuide extends PureComponent {
         const { isArabic } = this.state;
         const isOpen = true;
         return (
-            <ExpandableContent isOpen={ isOpen } header={ __('UK') } isArabic={ isArabic }>
+            <ExpandableContent isOpen={ isOpen } heading={ __('UK') } isArabic={ isArabic }>
                 <SizeTable />
             </ExpandableContent>
         );
@@ -119,7 +119,7 @@ class PDPSizeGuide extends PureComponent {
         const { isArabic } = this.state;
         const isOpen = true;
         return (
-            <ExpandableContent isOpen={ isOpen } header={ __('International') } isArabic={ isArabic }>
+            <ExpandableContent isOpen={ isOpen } heading={ __('International') } isArabic={ isArabic }>
                 <SizeTable />
             </ExpandableContent>
         );
@@ -129,7 +129,7 @@ class PDPSizeGuide extends PureComponent {
         const { isArabic } = this.state;
         const isOpen = false;
         return (
-            <ExpandableContent isOpen={ isOpen } header={ __('European') } isArabic={ isArabic }>
+            <ExpandableContent isOpen={ isOpen } heading={ __('European') } isArabic={ isArabic }>
                 <SizeTable />
             </ExpandableContent>
         );
