@@ -28,26 +28,44 @@ export class ExpandableContent extends PureComponent {
         this.setState({ isOpen: !isOpen });
     };
 
+    renderButton() {
+        const { isOpen } = this.state;
+        const { isArabic } = this.props;
+
+        return (
+            <div
+              mix={ { block: 'ExpandableContent', elem: 'Button', mods: { isOpen, isArabic } } }
+              role="button"
+              aria-label="Open"
+              tabIndex={ 0 }
+              onClick={ this.handleClick }
+              onKeyDown={ this.handleClick }
+            />
+        );
+    }
+
+    renderContent() {
+        const { isOpen } = this.state;
+        const { children, isArabic } = this.props;
+
+        return (
+            <div mix={ { block: 'ExpandableContent', elem: 'Body', mods: { isOpen, isArabic } } }>
+                { children }
+            </div>
+        );
+    }
+
     render() {
-        const { header, children, isArabic } = this.props;
+        const { header, isArabic } = this.props;
         const { isOpen } = this.state;
 
         return (
             <div mix={ { block: 'ExpandableContent' } }>
                 <div mix={ { block: 'ExpandableContent', elem: 'HeaderBlock', mods: { isOpen, isArabic } } }>
                     <span mix={ { block: 'ExpandableContent', elem: 'Header', mods: { isArabic } } }>{ header }</span>
-                    <div
-                      mix={ { block: 'ExpandableContent', elem: 'Button', mods: { isOpen, isArabic } } }
-                      role="button"
-                      aria-label="Open"
-                      tabIndex={ 0 }
-                      onClick={ this.handleClick }
-                      onKeyDown={ this.handleClick }
-                    />
+                    { this.renderButton() }
                 </div>
-                <div mix={ { block: 'ExpandableContent', elem: 'Body', mods: { isOpen, isArabic } } }>
-                    { children }
-                </div>
+                { this.renderContent() }
             </div>
         );
     }
