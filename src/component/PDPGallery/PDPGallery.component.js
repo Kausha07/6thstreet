@@ -18,7 +18,8 @@ class PDPGallery extends PureComponent {
             PropTypes.string,
             PropTypes.number
         ])).isRequired,
-        onSliderChange: PropTypes.func.isRequired
+        onSliderChange: PropTypes.func.isRequired,
+        sku: PropTypes.string.isRequired
     };
 
     state = {
@@ -26,7 +27,9 @@ class PDPGallery extends PureComponent {
     };
 
     renderWishlistIcon() {
-        return <WishlistIcon />;
+        const { sku } = this.props;
+
+        return <WishlistIcon sku={ sku } />;
     }
 
     renderCrumb = (index, i) => (
