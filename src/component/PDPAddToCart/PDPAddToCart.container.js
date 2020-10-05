@@ -38,7 +38,8 @@ export class PDPAddToCartContainer extends PureComponent {
         errorMessage: '',
         insertedSizeStatus: true,
         isLoading: false,
-        addedToCart: false
+        addedToCart: false,
+        buttonRefreshTimeout: 1250
     };
 
     static getDerivedStateFromProps(props) {
@@ -120,11 +121,14 @@ export class PDPAddToCartContainer extends PureComponent {
     }
 
     afterAddToCart() {
+        const { buttonRefreshTimeout } = this.state;
+
         this.setState({ isLoading: false });
         // TODO props for addedToCart
-        const timeout = 1250;
         this.setState({ addedToCart: true });
-        const timer = setTimeout(() => this.setState({ addedToCart: false }), timeout);
+        const timer = setTimeout(
+            () => this.setState({ addedToCart: false }), buttonRefreshTimeout
+        );
 
         return () => clearTimeout(timer);
     }
