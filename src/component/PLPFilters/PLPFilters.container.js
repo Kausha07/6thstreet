@@ -1,43 +1,95 @@
+/**
+ * @category  sixth-street
+ * @author    Vladislavs Belavskis <info@scandiweb.com>
+ * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
+ * @copyright Copyright (c) 2020 Scandiweb, Inc (https://scandiweb.com)
+ */
+
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import { changeNavigationState, goToPreviousNavigationState } from 'Store/Navigation/Navigation.action';
+import { BOTTOM_NAVIGATION_TYPE, TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
+import { hideActiveOverlay, toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
 import { Filters } from 'Util/API/endpoint/Product/Product.type';
+import WebUrlParser from 'Util/API/helper/WebUrlParser';
 
 import PLPFilters from './PLPFilters.component';
 
-export const mapStateToProps = (state) => ({
-    filters: state.PLP.filters,
-    isLoading: state.PLP.isLoading
+export const mapStateToProps = (_state) => ({
+    filters: _state.PLP.filters,
+    isLoading: _state.PLP.isLoading,
+    activeOverlay: _state.OverlayReducer.activeOverlay
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
-    // addProduct: options => CartDispatcher.addProductToCart(dispatch, options)
+    showOverlay: (overlayKey) => _dispatch(toggleOverlayByKey(overlayKey)),
+    hideActiveOverlay: () => _dispatch(hideActiveOverlay()),
+    goToPreviousNavigationState: () => _dispatch(goToPreviousNavigationState(BOTTOM_NAVIGATION_TYPE)),
+    goToPreviousHeaderState: () => _dispatch(goToPreviousNavigationState(TOP_NAVIGATION_TYPE)),
+    changeHeaderState: (state) => _dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, state))
 });
 
 export class PLPFiltersContainer extends PureComponent {
     static propTypes = {
         isLoading: PropTypes.bool.isRequired,
-        filters: Filters.isRequired
+        filters: Filters.isRequired,
+        showOverlay: PropTypes.func.isRequired,
+        activeOverlay: PropTypes.string.isRequired,
+        goToPreviousHeaderState: PropTypes.func.isRequired,
+        hideActiveOverlay: PropTypes.func.isRequired,
+        goToPreviousNavigationState: PropTypes.func.isRequired,
+        changeHeaderState: PropTypes.func.isRequired
     };
 
-    containerFunctions = {
-        // getData: this.getData.bind(this)
+    containerFunction = {
+        onReset: this.onReset.bind(this)
     };
+
+    containerFunctions = () => {
+        const { showOverlay } = this.props;
+
+        return { showOverlay };
+    };
+
+    // eslint-disable-next-line consistent-return
+    onReset() {
+        this.arr = [
+            'sort',
+            'brand_name',
+            'gender',
+            'sizes',
+            'price.AED.default',
+            'discount'
+        ];
+
+        // eslint-disable-next-line fp/no-let
+        for (let i = 0; i < this.arr.length; i++) {
+            WebUrlParser.setParam(this.arr[i], '');
+        }
+    }
 
     containerProps = () => {
-        const { filters, isLoading } = this.props;
+        const {
+            filters,
+            isLoading,
+            activeOverlay
+        } = this.props;
 
         return {
             filters,
-            isLoading
+            isLoading,
+            activeOverlay
         };
     };
 
     render() {
         return (
             <PLPFilters
-              { ...this.containerFunctions }
+              { ...this.props }
+              { ...this.containerFunctions() }
+              { ...this.containerFunction }
               { ...this.containerProps() }
             />
         );

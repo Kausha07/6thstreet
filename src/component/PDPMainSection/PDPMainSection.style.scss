@@ -1,17 +1,12 @@
-:root {
-    --pdp-split-line: #EFEFEF;
-}
-
 .PDPMainSection {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
     padding-bottom: 36px;
     padding-bottom: 40px;
-    border-bottom: 1px solid var(--pdp-split-line);
 
     @include desktop() {
         grid-template-columns: repeat(2, 1fr);
-        padding: 36px 77px;
+        padding: 36px 0;
     }
 }
 

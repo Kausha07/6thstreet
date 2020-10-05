@@ -10,7 +10,7 @@ import './Menu.style';
 class Menu extends PureComponent {
     state = {
         isArabic: isArabic()
-    }
+    };
 
     static propTypes = {
         categories: Categories.isRequired

@@ -8,7 +8,6 @@
             border-left: 0;
             border-right: 0;
             margin-bottom: 0;
-            padding: 0 23px;
             padding-bottom: 49px;
             padding-top: 15px;
             pointer-events: none;
@@ -30,19 +29,19 @@
         z-index: 2;
 
         &_isCurrentGender,
-            &:hover
-            {
-                border-bottom: 2px solid var(--black);
-                font-family: 'Avenir Next Bold', serif;
-                font-size: 14.4px;
-                letter-spacing: 0;
-                transition-duration: unset;
-            }
+        &:hover
+        {
+            border-bottom: 2px solid var(--black);
+            font-family: 'Avenir Next Bold', serif;
+            font-size: 14.4px;
+            letter-spacing: 0;
+            transition-duration: unset;
+        }
 
         @include desktop {
             height: 30px;
             margin-top: -30px;
-            }
+        }
     }
 }
 

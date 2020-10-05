@@ -4,17 +4,28 @@
     &-Container {
         display: flex;
     }
+
     @include before-desktop {
         border-top: 1px solid var(--grey);
         width: 270px;
 
         &-Container {
             flex-direction: column;
+
             .HeaderGenders {
-                display: flex;
+                display: grid;
+                grid-auto-flow: column;
+                width: 280px;
+
+                .GenderButton {
+                    &-Button {
+                        width: 100%;
+                    }
+                }
             }
         }
     }
+
     @include desktop {
         display: flex;
         justify-content: left;
@@ -24,6 +35,7 @@
                 display: none;
             }
         }
+
         .MenuCategory {
             &-LastCategoryBackground {
                 background-color: var(--red);

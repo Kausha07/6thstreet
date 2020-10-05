@@ -32,8 +32,9 @@
     &_isArabic {
         .Popup-Content {
             .HeaderBottomBar {
+                direction: rtl;
                 left: unset;
-                right: 280px;
+                right: 0px;
             }
         }
     }
