@@ -53,11 +53,12 @@
 
     @include before-desktop {
         position: relative;
+        width: 260px;
 
         &-Content {
             height: 100%;
             margin: 0;
-            width: 280px;
+            width: 260px;
 
             a {
                 border-bottom: 1px solid var(--light-grey);
@@ -77,6 +78,9 @@
         }
 
         &-Column {
+            &:not(:last-child) {
+                border-right: 0;
+            }
             line-height: 30px;
             width: 100%;
 
@@ -99,7 +103,7 @@
             left: 13px;
 
             &_isArabic {
-                left: -13px;
+                left: -27px;
 
                 .MenuGrid {
                     &-Column {
