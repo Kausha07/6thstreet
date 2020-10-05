@@ -72,15 +72,21 @@
     p {
         font-size: 12px;
         line-height: 16px;
-        margin-bottom: 0;
+        margin: 4px 0;
+
+        @include desktop {
+            margin: unset;
+        }
     }
 
     a {
+        margin: 4px 0;
         display: block;
         color: var(--white-color);
 
         @include desktop {
             color: var(--link-color);
+            margin: unset;
         }
     }
 
