@@ -6,6 +6,7 @@ import PDPGalleryCrumb from 'Component/PDPGalleryCrumb';
 import PDPGalleryOverlay from 'Component/PDPGalleryOverlay';
 import Slider from 'Component/Slider';
 import SliderVertical from 'Component/SliderVertical';
+import WishlistIcon from 'Component/WishlistIcon';
 
 import './PDPGallery.style';
 
@@ -23,6 +24,10 @@ class PDPGallery extends PureComponent {
     state = {
         galleryOverlay: ''
     };
+
+    renderWishlistIcon() {
+        return <WishlistIcon />;
+    }
 
     renderCrumb = (index, i) => (
         <PDPGalleryCrumb
@@ -104,6 +109,7 @@ class PDPGallery extends PureComponent {
             <div block="PDPGallery">
                 { galleryOverlay }
                 { this.renderCrumbs() }
+                { this.renderWishlistIcon() }
                 <button onClick={ this.renderGalleryOverlay }>
                     { this.renderSlider() }
                 </button>
