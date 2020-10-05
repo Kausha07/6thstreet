@@ -56,10 +56,12 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             default_shipping: true,
             ...address
         }).then(
-            ({ data }) => {
-                Checkout.setState({
-                    shippingMethods: data
-                })
+            (response) => {
+                if (typeof response !== 'undefined') {
+                    Checkout.setState({
+                        shippingMethods: response.data
+                    })
+                }
             },
             this._handleError
         );
@@ -73,13 +75,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             isLoading: true,
             shippingAddress: shipping_address
         });
-
-        if (!isSignedIn()) {
-            if (!await this.createUserOrSaveGuest()) {
-                this.setState({ isLoading: false });
-                return;
-            }
-        }
 
         saveAddressInformation(addressInformation).then(
             ({ data }) => {
