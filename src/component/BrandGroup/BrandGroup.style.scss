@@ -1,3 +1,25 @@
 .BrandGroup {
-    
+    display: inline-block;
+    min-width: 210px;
+    vertical-align: top;
+
+    &-Letter {
+        align-items: center;
+        border: 1px solid var(--black);
+        display: flex;
+        font-family: var(--avenir-refular-font);
+        height: 25px;
+        justify-content: center;
+        margin-bottom: 5px;
+        width: 25px;
+    }
+
+    &-Group {
+        // Custom media query is needed to make brands page similar to original one
+        @media (max-width: 500px) {
+            display: grid;
+            gap: 0 20px;
+            grid-template-columns: 1fr 1fr;
+        }
+    }
 }

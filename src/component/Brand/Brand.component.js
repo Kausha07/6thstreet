@@ -24,10 +24,9 @@ class Brand extends PureComponent {
 
     render() {
         return (
-            <div block="Brand">
+            <p block="Brand">
                 { this.renderName() }
-                { this.renderCount() }
-            </div>
+            </p>
         );
     }
 }

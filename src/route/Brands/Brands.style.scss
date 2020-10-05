@@ -1,3 +1,37 @@
 .Brands {
-    
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 1fr;
+    margin: 0 auto;
+    max-width: 1356px;
+    padding: 25px 40px;
+
+    @include desktop {
+        margin: 110px auto 0;
+        padding: 25px 20px;
+    }
+
+    // Custom media queries are needed to make brands page similar to original one
+    @media (min-width: 500px) {
+        gap: 30px 20px;
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (min-width: 720px) {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    @media (min-width: 960px) {
+        gap: 30px 20px;
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    @media (min-width: 1180px) {
+        gap: 40px 20px;
+        grid-template-columns: repeat(5, 1fr);
+    }
+
+    @media (min-width: 1356px) {
+        grid-template-columns: repeat(6, 1fr);
+    }
 }
