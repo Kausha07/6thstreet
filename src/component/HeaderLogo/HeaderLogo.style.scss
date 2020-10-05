@@ -2,10 +2,12 @@
   flex: 1;
   height: 40px;
   text-align: center;
-  margin: 0 200px;
 
   @include before-desktop {
     height: auto;
+  }
+  @include desktop {
+    margin: 0 100px;
   }
 
   .Image {
