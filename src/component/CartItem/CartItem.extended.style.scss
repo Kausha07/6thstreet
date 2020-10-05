@@ -11,7 +11,8 @@
     &-Wrapper {
         display: flex;
 
-        .Image_hasSrc {
+        .Image_hasSrc
+        {
             display: none;
         }
 
@@ -20,6 +21,10 @@
             width: 95px;
             height: 130px;
             margin-right: 15px;
+        }
+
+        .Image {
+            display: none;
         }
     }
 
