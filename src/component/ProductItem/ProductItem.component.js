@@ -15,7 +15,9 @@ class ProductItem extends PureComponent {
     };
 
     renderWishlistIcon() {
-        return <WishlistIcon />;
+        const { product: { sku } } = this.props;
+
+        return <WishlistIcon sku={ sku } />;
     }
 
     renderImage() {
