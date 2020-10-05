@@ -15,8 +15,7 @@
     }
 
     &-Group {
-        // Custom media query is needed to make brands page similar to original one
-        @media (max-width: 500px) {
+        @include mobile {
             display: grid;
             gap: 0 20px;
             grid-template-columns: 1fr 1fr;
