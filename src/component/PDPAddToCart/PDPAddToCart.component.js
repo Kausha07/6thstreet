@@ -42,6 +42,25 @@ class PDPAddToCart extends PureComponent {
         return null;
     }
 
+    renderSizeAndOnQunatityBasedMessage(code) {
+        const {
+            product: { simple_products }, selectedSizeType
+        } = this.props;
+
+        const size = simple_products[code].size[selectedSizeType];
+
+        switch (simple_products[code].quantity) {
+        case '0':
+            return (`${size} - Out of stock`);
+        case '1':
+            return (`${size} - 1 left in stock`);
+        case '2' || '3':
+            return (`${size} - low stock`);
+        default:
+            return size;
+        }
+    }
+
     getSizeSelect() {
         const {
             product: { simple_products }, product, selectedSizeType, sizeObject
@@ -54,13 +73,9 @@ class PDPAddToCart extends PureComponent {
                   block="PDPAddToCart"
                   elem="SizeOption"
                   value={ code }
-                  disabled={ product.simple_products[code].quantity === '0' }
+                  disabled={ simple_products[code].quantity === '0' }
                 >
-                    { simple_products[code].size[selectedSizeType] }
-                    { simple_products[code].quantity === '0' ? '- Out of stock' : '' }
-                    { simple_products[code].quantity === '1' ? ' - 1 left in stock' : '' }
-                    { simple_products[code].quantity === '3'
-                     || simple_products[code].quantity === '2' ? ' - low stock' : '' }
+                    { this.renderSizeAndOnQunatityBasedMessage(code) }
                 </option>
             ));
 
