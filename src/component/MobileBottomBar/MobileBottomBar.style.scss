@@ -3,6 +3,60 @@
     --inactive-button-header-color: #4a4a4a;
 }
 
+@include before-desktop{
+    .HeaderAccount-PopUp, .HeaderAccount-PopUp_isHidden_undefined{
+        display: block;
+        overflow-y: scroll;
+    }
+    .MyAccountOverlay-Heading{
+        display: block;
+    }
+    .MyAccountOverlay{
+        display: block;
+        height: 100%;
+        padding-top: 0;
+    }
+    .MyAccountOverlay-Action_state_createAccount{
+        padding-top: 0;
+    }
+    .MyAccountOverlay-Image{
+        object-position: 0;
+        width: 100%;
+    }
+    .MyAccountOverlay-ForgotPasswordSubheading{
+        font-weight: inherit;
+    }
+}
+@include mobile{
+    .MyAccountOverlay-Action{
+        display: block;
+    }
+    .MyAccountOverlay-Buttons{
+        margin: 30px;
+    }
+}
+@media (min-width: 320px) {
+    .MyAccountOverlay-Action form{
+        padding: 0 20px
+    }
+}
+@media (min-width: 385px) {
+    .MyAccountOverlay-Action form{
+        padding: 0 40px
+    }
+}
+
+.MyAccountOverlay-Button .Button{
+    &:hover{
+        background-color: var(--black-color);
+    }
+
+}
+.MyAccountOverlay-Button_isSignIn::after{
+    background: none;
+}
+
+
 .MobileBottomBar {
     display: flex;
     z-index: 90;
