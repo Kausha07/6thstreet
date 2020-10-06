@@ -27,6 +27,7 @@
         width: 100%;
 
         &:first-child {
+            margin-top: 0;
             color: var(--gold);
 
             &:hover {
@@ -60,7 +61,7 @@
         .DynamicContent {
             left: 35%;
             position: fixed;
-            top: 100px;
+            top: 140px;
             width: 65%;
         }
     }

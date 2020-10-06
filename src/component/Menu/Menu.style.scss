@@ -5,10 +5,27 @@
         display: flex;
     }
 
+    @include mobile {
+        &-Container {
+            .HeaderGenders {
+                    width: 280px;
+                }
+        }
+    }
+
+    @include tablet {
+        &-Container {
+            .HeaderGenders {
+                width: 50%;
+            }
+        }
+    }
+
     @include before-desktop {
         border-right: 1px solid var(--light-gray);
         height: 100%;
         width: 35%;
+        margin-top: 20px;
 
         &-Container {
             flex-direction: column;
@@ -17,7 +34,6 @@
             .HeaderGenders {
                 display: grid;
                 grid-auto-flow: column;
-                width: 280px;
 
                 .GenderButton {
                     &-Button {
@@ -27,8 +43,29 @@
             }
 
             .HeaderSearch {
-                &-Mobile {
-                    height: 60px;
+                height: 70px;
+
+                .Field {
+                    width: 340px;
+                    margin: 10px auto;
+
+                    #search-field {
+                        width: 340px;
+                    }
+                }
+            }
+        }
+
+        &-Header {
+            &-Mobile {
+                border-bottom: 1px solid var(--grey);
+
+                .HeaderCart {
+                    &-Button {
+                        float: right;
+                        margin-right: 20px;
+                        margin-top: -35px;
+                    }
                 }
             }
         }

@@ -1,7 +1,9 @@
+import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import Image from 'Component/Image';
 import Link from 'Component/Link';
+import { MOBILE_MENU_SIDEBAR_ID } from 'Component/MobileMenuSideBar/MoblieMenuSideBar.config';
 import { CategoryButton, CategoryItems } from 'Util/API/endpoint/Categories/Categories.type';
 import { isArabic } from 'Util/App';
 
@@ -15,7 +17,8 @@ class MenuGrid extends PureComponent {
 
     static propTypes = {
         button: CategoryButton,
-        items: CategoryItems.isRequired
+        items: CategoryItems.isRequired,
+        toggleOverlayByKey: PropTypes.func.isRequired
     };
 
     static defaultProps = {
@@ -70,12 +73,17 @@ class MenuGrid extends PureComponent {
               block="ViewAll"
               elem="Link"
             >
-                <Link to={ linkTo }>
+                <Link to={ linkTo } onClick={ this.hideMenu }>
                     { label }
                 </Link>
             </div>
         );
     }
+
+    hideMenu = () => {
+        const { toggleOverlayByKey } = this.props;
+        toggleOverlayByKey(MOBILE_MENU_SIDEBAR_ID);
+    };
 
     showAllCategories() {
         this.setState(({ isAllShowing }) => ({ isAllShowing: !isAllShowing }));
