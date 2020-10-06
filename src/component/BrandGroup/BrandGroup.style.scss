@@ -20,5 +20,16 @@
             gap: 0 20px;
             grid-template-columns: 1fr 1fr;
         }
+
+        &_isFiltered {
+            display: flex;
+            flex-wrap: wrap;
+            // justify-content: space-between;
+
+            .Brand {
+                margin-bottom: 5px;
+                min-width: 210px;
+            }
+        }
     }
 }

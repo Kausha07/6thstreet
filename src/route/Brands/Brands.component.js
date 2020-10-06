@@ -3,7 +3,6 @@ import { PureComponent } from 'react';
 
 import BrandGroup from 'Component/BrandGroup';
 import Loader from 'Component/Loader';
-import { FormattedBrands } from 'Util/API/endpoint/Brands/Brands.type';
 
 import { KIDS_TYPE, MEN_TYPE, WOMEN_TYPE } from './Brands.config';
 
@@ -13,7 +12,7 @@ class Brands extends PureComponent {
     static propTypes = {
         changeBrandType: PropTypes.func.isRequired,
         isLoading: PropTypes.bool.isRequired,
-        brands: FormattedBrands.isRequired,
+        brands: PropTypes.array.isRequired,
         type: PropTypes.string
     };
 
@@ -21,10 +20,18 @@ class Brands extends PureComponent {
         type: null
     };
 
+    state = {
+        filteredLetter: null
+    };
+
     onBrandCategoryClick = (categoryName) => () => {
         const { changeBrandType } = this.props;
 
         changeBrandType(categoryName);
+    }
+
+    onBrandLetterClick = (letter = null) => () => {
+        this.setState({ filteredLetter: letter });
     }
 
     renderCategorySelector() {
@@ -68,30 +75,71 @@ class Brands extends PureComponent {
         );
     }
 
-    renderBrandGroup([letter, brands]) {
+    renderBrandGroup = ([letter, brands]) => {
+        const { filteredLetter } = this.state;
+
         return (
             <BrandGroup
               key={ letter }
               letter={ letter }
               brands={ brands }
+              isFiltered={ !!filteredLetter }
             />
+        );
+    };
+
+    renderLetterSelector() {
+        const { brands } = this.props;
+        const { filteredLetter } = this.state;
+
+        return (
+            <div block="Brands" elem="LetterFilter">
+                <button
+                  block="Brands"
+                  elem="LetterButton"
+                  mods={ { isSelected: !filteredLetter } }
+                  onClick={ this.onBrandLetterClick() }
+                >
+                    #
+                </button>
+                { brands.map(([key]) => (
+                    <button
+                      key={ key }
+                      block="Brands"
+                      elem="LetterButton"
+                      mods={ { isSelected: filteredLetter === key } }
+                      onClick={ this.onBrandLetterClick(key) }
+                    >
+                        { key }
+                    </button>
+                )) }
+            </div>
         );
     }
 
     renderBrandGroups() {
         const { brands } = this.props;
-        return Object.entries(brands).map(this.renderBrandGroup);
+        const { filteredLetter } = this.state;
+
+        if (filteredLetter) {
+            return brands.filter(([key]) => key === filteredLetter)
+                .map(this.renderBrandGroup);
+        }
+
+        return brands.map(this.renderBrandGroup);
     }
 
     render() {
         const { isLoading } = this.props;
+        const { filteredLetter } = this.state;
 
         return (
             <div block="Brands">
                 <Loader isLoading={ isLoading } />
                 <h2 block="Brands" elem="Heading">{ __('Brands A-Z') }</h2>
                 { this.renderCategorySelector() }
-                <div block="Brands" elem="Groups">
+                { this.renderLetterSelector() }
+                <div block="Brands" elem="Groups" mods={ { isFiltered: !!filteredLetter } }>
                     { this.renderBrandGroups() }
                 </div>
             </div>

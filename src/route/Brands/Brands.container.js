@@ -16,7 +16,7 @@ class BrandsContainer extends PureComponent {
     };
 
     state = {
-        brands: {},
+        brands: [],
         isLoading: true
     };
 
@@ -45,8 +45,23 @@ class BrandsContainer extends PureComponent {
         this.setState({ isLoading: true });
 
         this._brandRequest = Algolia.getBrands(brandType).then((data) => {
+            const groupedBrands = groupByName(data);
+
+            // This sort places numeric brands to the end of the list
+            const sortedBrands = Object.entries(groupedBrands).sort(([a], [b]) => {
+                if (a === '0-9') {
+                    return 1;
+                }
+
+                if (b === '0-9') {
+                    return -1;
+                }
+
+                return a - b;
+            });
+
             this.setState({
-                brands: groupByName(data),
+                brands: sortedBrands,
                 isLoading: false
             });
         }).catch((error) => console.error(error));
