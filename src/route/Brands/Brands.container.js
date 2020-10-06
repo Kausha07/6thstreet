@@ -58,16 +58,16 @@ class BrandsContainer extends PureComponent {
             const groupedBrands = groupByName(data);
 
             // This sort places numeric brands to the end of the list
-            const sortedBrands = Object.entries(groupedBrands).sort(([a], [b]) => {
-                if (a === '0-9') {
+            const sortedBrands = Object.entries(groupedBrands).sort(([letter1], [letter2]) => {
+                if (letter1 === '0-9') {
                     return 1;
                 }
 
-                if (b === '0-9') {
+                if (letter2 === '0-9') {
                     return -1;
                 }
 
-                return a - b;
+                return letter1 - letter2;
             });
 
             this.setState({
