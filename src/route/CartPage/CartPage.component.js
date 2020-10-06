@@ -66,7 +66,7 @@ export class CartPage extends PureComponent {
         const {
             totals: { coupon_code }
         } = this.props;
-        const isOpen = true;
+        const isOpen = this.state;
 
         return (
             <ExpandableContent
