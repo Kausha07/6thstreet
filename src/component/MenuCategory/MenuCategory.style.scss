@@ -1,7 +1,11 @@
+:root {
+    --gold: #ccb47a;
+}
+
 .MenuCategory {
-    position: unset;
     font-weight: 200;
     padding: 0;
+    position: unset;
 
     .DynamicContentBanner {
         display: none;
@@ -13,19 +17,39 @@
 
     @include before-desktop {
         color: var(--black);
-        font-family: "Avenir Next Regular";
+        font-family: "Avenir Next Regular", serif;
         font-size: 13px;
         font-weight: 600;
-        height: 40px;
-        line-height: 80px;
-        margin:10px 0;
+        line-height: 45px;
+        margin: 15px 0;
         text-indent: 20px;
         text-transform: uppercase;
         width: 100%;
 
-        /*&.IsVisible {
-            height: 100%;
-        }*/
+        &:first-child {
+            color: var(--gold);
+
+            &:hover {
+                background-color: var(--gold);
+                color: var(--white);
+            }
+        }
+
+        &:nth-last-child(2) {
+            color: var(--red);
+
+            &:hover {
+                background-color: var(--red);
+                color: var(--white);
+            }
+        }
+
+        &:hover {
+            background-color: var(--black);
+            color: var(--white);
+            font-weight: 1000;
+            font-family: 'Avenir Next Demi Bold', sans-serif;
+        }
 
         .DynamicContentBanner {
             height: 0;
@@ -34,9 +58,10 @@
         }
 
         .DynamicContent {
-            position: absolute;
-            left: 215px;
-            top: 0px;
+            left: 35%;
+            position: fixed;
+            top: 100px;
+            width: 65%;
         }
     }
 
