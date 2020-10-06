@@ -83,7 +83,7 @@ export class MyAccountAddressPopup extends PureComponent {
 
     render() {
         const { isLoading, formContent } = this.props;
-        // console.log(this.props);
+
         return (
             <div
               id={ ADDRESS_POPUP_ID }

@@ -16,6 +16,9 @@ import Loader from 'Component/Loader';
 import { addressType } from 'Type/Account';
 import { MixType } from 'Type/Common';
 
+import pencil from './icons/pencil.svg';
+import trash from './icons/trash.svg';
+
 import './MyAccountAddressTable.style';
 
 export class MyAccountAddressTable extends KeyValueTable {
@@ -67,7 +70,13 @@ export class MyAccountAddressTable extends KeyValueTable {
                 <button
                   onClick={ onEditClick }
                 >
-                    edit
+                    <img
+                      block="MyAccountAddressTable"
+                      elem="Icon"
+                      mods={ { pencil: true } }
+                      alt="pencil"
+                      src={ pencil }
+                    />
                 </button>
                 <button
                   mods={ { isHollow: true } }
@@ -75,7 +84,13 @@ export class MyAccountAddressTable extends KeyValueTable {
                   disabled={ isDeleteAllowed }
                   title={ isDeleteAllowed ? __('Can not delete - address is set as default.') : 'Delete this address' }
                 >
-                    del
+                    <img
+                      block="MyAccountAddressTable"
+                      elem="Icon"
+                      mods={ { trash: true } }
+                      alt="trash"
+                      src={ trash }
+                    />
                 </button>
             </>
         );
@@ -94,7 +109,7 @@ export class MyAccountAddressTable extends KeyValueTable {
             }
         } = this.props;
 
-        const def = default_billing === true ? 'default' : ' ';
+        const def = default_billing === true ? 'default' : 'not';
         const countryId = `(${country_id})`;
 
         return (
@@ -111,7 +126,7 @@ export class MyAccountAddressTable extends KeyValueTable {
                     -
                     { countryId }
                 </div>
-                <div block="MyAccountAddressCard" elem="Telephone">{ telephone }</div>
+                <div block="MyAccountAddressCard" elem="Phone">{ telephone }</div>
             </div>
         );
     }

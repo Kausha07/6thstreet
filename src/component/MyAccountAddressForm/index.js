@@ -8,17 +8,5 @@
  * @package scandipwa/base-theme
  * @link https://github.com/scandipwa/base-theme
  */
-.MyAccount {
-    margin-top: 150px;
-}
-.MyAccountAddressBook {
-    display: grid;
-    grid-gap: 2rem;
-    grid-template-columns: 1fr;
 
-    &-NewAddress {
-        max-width: 200px;
-        margin-top: 38px;
-    }
-
-}
+export { default } from './MyAccountAddressForm.container';

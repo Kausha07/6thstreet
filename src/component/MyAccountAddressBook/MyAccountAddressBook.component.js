@@ -13,6 +13,7 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+// import MyAccountAddressField from 'Component/MyAccountAddressField';
 import MyAccountAddressForm from 'Component/MyAccountAddressForm';
 import MyAccountAddressPopup from 'Component/MyAccountAddressPopup';
 import MyAccountAddressTable from 'Component/MyAccountAddressTable';
@@ -36,7 +37,7 @@ export class MyAccountAddressBook extends PureComponent {
 
     renderPopup() {
         const { formContent, closeForm, openForm } = this.props;
-        // console.log(formContent);
+
         return <MyAccountAddressPopup formContent={ formContent } closeForm={ closeForm } openForm={ openForm } />;
     }
 
