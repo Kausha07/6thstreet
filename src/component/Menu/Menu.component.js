@@ -53,12 +53,23 @@ class Menu extends PureComponent {
                   block="Menu"
                   elem="Header-Mobile"
                 >
-                    <HeaderGenders />
-                    <HeaderCart />
+                    <div
+                      mix={ {
+                          block: 'Menu',
+                          elem: 'Header-Mobile-Top',
+                          mods: { isArabic }
+                      } }
+                    >
+                        <HeaderGenders />
+                        <HeaderCart />
+                    </div>
+                    <HeaderSearch />
                 </div>
-                <HeaderSearch />
                 <div
-                  mix={ { block: 'Menu', mods: { isArabic } } }
+                  mix={ {
+                      block: 'Menu',
+                      mods: { isArabic }
+                  } }
                 >
                     { this.renderCategories() }
                     <div block="MenuCategory" elem="LastCategoryBackground" />

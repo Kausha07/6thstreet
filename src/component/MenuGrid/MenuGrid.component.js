@@ -108,7 +108,13 @@ class MenuGrid extends PureComponent {
 
         return (
             <div block="MenuGrid">
-                <div mix={ { block: 'MenuGrid', elem: 'Content', mods: { isArabic } } }>
+                <div
+                  mix={ {
+                      block: 'MenuGrid',
+                      elem: 'Content',
+                      mods: { isArabic }
+                  } }
+                >
                     <div
                       block="MenuGrid"
                       elem="Columns"
@@ -128,8 +134,11 @@ class MenuGrid extends PureComponent {
                             </span>
                             { this.renderButton() }
                             <div
-                              block="MenuGrid-Column"
-                              elem="Content"
+                              mix={ {
+                                  block: 'MenuGrid-Column',
+                                  elem: 'Content',
+                                  mods: { isArabic }
+                              } }
                             >
                                 { this.renderItems() }
                             </div>

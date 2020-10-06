@@ -48,8 +48,8 @@
         &:hover {
             background-color: var(--black);
             color: var(--white);
-            font-weight: 1000;
             font-family: 'Avenir Next Demi Bold', sans-serif;
+            font-weight: 1000;
         }
 
         .DynamicContentBanner {
@@ -61,8 +61,15 @@
         .DynamicContent {
             left: 35%;
             position: fixed;
-            top: 140px;
-            width: 65%;
+            top: 130px;
+            width: 63%;
+        }
+
+        &_isArabic {
+            .DynamicContent {
+                left: 10px;
+                top: 130px;
+            }
         }
     }
 
