@@ -43,7 +43,7 @@
             transform: translateX(0);
             left: 0;
             text-align: left;
-            font-size: 26px;
+            font-size: 24px;
             letter-spacing: 0.5px;
 
             &_isArabic {
@@ -55,7 +55,7 @@
 
     &-SubHeader {
         position:relative;
-        font-size: 20px;
+        font-size: 14px;
         font-family: 'Avenir Next Regular';
         display: block;
         margin-bottom: 1.5rem;
@@ -182,7 +182,7 @@
 
             &-Heading {
                 float: left;
-                font-size: 24px; 
+                font-size: 16px; 
                 font-family: 'Avenir Next Demi';
                 font-weight: bold;
             }
