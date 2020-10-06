@@ -161,7 +161,7 @@ export class CartPage extends PureComponent {
         return (
             <>
                 <dt>
-                    { __('Coupon ') }
+                    { __('Coupon?') }
                     <strong block="CartPage" elem="DiscountCoupon">{ coupon_code.toUpperCase() }</strong>
                 </dt>
                 <dd>{ `-${this.renderPriceLine(Math.abs(discount_amount))}` }</dd>
@@ -229,8 +229,8 @@ export class CartPage extends PureComponent {
         } = this.state;
 
         return (
-            <main block="CartPage" aria-label="Cart Page">
-                <placeholder block="LeftMenu">Text</placeholder>
+            <main block="CartPage" aria-label="Cart Page" mods={ { isArabic } }>
+                <placeholder block="LeftMenu">Menu placeholder</placeholder>
                 <ContentWrapper
                   wrapperMix={ { block: 'CartPage', elem: 'Wrapper' } }
                   label="Cart page details"
