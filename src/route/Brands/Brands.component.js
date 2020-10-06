@@ -28,11 +28,11 @@ class Brands extends PureComponent {
         const { changeBrandType } = this.props;
 
         changeBrandType(categoryName);
-    }
+    };
 
     onBrandLetterClick = (letter = null) => () => {
         this.setState({ filteredLetter: letter });
-    }
+    };
 
     renderCategorySelector() {
         const { type } = this.props;

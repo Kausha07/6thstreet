@@ -1,6 +1,9 @@
+import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
+import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
+import { showNotification } from 'Store/Notification/Notification.action';
 import { HistoryType, LocationType } from 'Type/Common';
 import { groupByName } from 'Util/API/endpoint/Brands/Brands.format';
 import Algolia from 'Util/API/provider/Algolia';
@@ -9,10 +12,17 @@ import { getQueryParam, setQueryParams } from 'Util/Url';
 import Brands from './Brands.component';
 import { TYPES_ARRAY } from './Brands.config';
 
+export const mapStateToProps = () => ({});
+
+export const mapDispatchToProps = (dispatch) => ({
+    showErrorNotification: (message) => dispatch(showNotification('error', message))
+});
+
 class BrandsContainer extends PureComponent {
     static propTypes = {
         history: HistoryType.isRequired,
-        location: LocationType.isRequired
+        location: LocationType.isRequired,
+        showErrorNotification: PropTypes.func.isRequired
     };
 
     state = {
@@ -26,22 +36,22 @@ class BrandsContainer extends PureComponent {
 
     componentDidMount() {
         const brandUrlParam = getQueryParam('type', location);
-        const brandType = TYPES_ARRAY.includes(brandUrlParam) ? brandUrlParam
-            : '';
+        const brandType = TYPES_ARRAY.includes(brandUrlParam) ? brandUrlParam : '';
 
         this.requestBrands(brandType);
     }
 
     changeBrandType(brandUrlParam) {
         const { location, history } = this.props;
-        const brandType = TYPES_ARRAY.includes(brandUrlParam) ? brandUrlParam
-            : '';
+        const brandType = TYPES_ARRAY.includes(brandUrlParam) ? brandUrlParam : '';
 
         setQueryParams({ type: brandType }, location, history);
         this.requestBrands(brandType);
     }
 
     requestBrands(brandType = '') {
+        const { showErrorNotification } = this.props;
+
         this.setState({ isLoading: true });
 
         this._brandRequest = Algolia.getBrands(brandType).then((data) => {
@@ -64,7 +74,7 @@ class BrandsContainer extends PureComponent {
                 brands: sortedBrands,
                 isLoading: false
             });
-        }).catch((error) => console.error(error));
+        }).catch((error) => showErrorNotification(error));
     }
 
     containerProps = () => {
@@ -87,4 +97,4 @@ class BrandsContainer extends PureComponent {
     }
 }
 
-export default withRouter(BrandsContainer);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(BrandsContainer));
