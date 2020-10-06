@@ -80,7 +80,8 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
             city,
             postcode,
             phone: telephone,
-            street
+            street,
+            telephone: telephone.substring('4')
         });
     }
 }

@@ -11,7 +11,7 @@ export const mapStateToProps = (state) => ({
 
 export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     onShippingSuccess(fields) {
-        const { saveAddressInformation } = this.props;
+        const { saveAddressInformation, customer: { email } } = this.props;
 
         const {
             selectedCustomerAddressId,
@@ -26,7 +26,9 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
             ...shippingAddress,
             street: shippingAddress.street[0],
             area: shippingAddress.region,
-            country_code: shippingAddress.country_id
+            country_code: shippingAddress.country_id,
+            phone: shippingAddress.telephone,
+            email
         };
 
         const {

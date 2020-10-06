@@ -49,7 +49,8 @@ export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookConta
             area: region,
             postcode,
             phone: telephone,
-            street
+            street,
+            telephone: telephone.substring('4')
         });
     }
 }
