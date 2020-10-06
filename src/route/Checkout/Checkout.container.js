@@ -15,7 +15,8 @@ import { ONE_MONTH_IN_SECONDS } from 'Util/Request/QueryDispatcher';
 export const mapDispatchToProps = (dispatch) => ({
     ...sourceMapDispatchToProps(dispatch),
     estimateShipping: (address) => CheckoutDispatcher.estimateShipping(dispatch, address),
-    saveAddressInformation: (address) => CheckoutDispatcher.saveAddressInformation(dispatch, address)
+    saveAddressInformation: (address) => CheckoutDispatcher.saveAddressInformation(dispatch, address),
+    createOrder: (code, additional_data) => CheckoutDispatcher.createOrder(dispatch, code, additional_data)
 });
 
 export class CheckoutContainer extends SourceCheckoutContainer {
@@ -48,13 +49,15 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     onShippingEstimationFieldsChange(address) {
         const { estimateShipping } = this.props;
         const Checkout = this;
+        const { email } = this.state;
 
         /* eslint-disable */
         delete address.region_id;
 
         estimateShipping({
+            ...address,
             default_shipping: true,
-            ...address
+            email: address.email ?? email
         }).then(
             (response) => {
                 if (typeof response !== 'undefined') {
@@ -95,6 +98,32 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             },
             this._handleError
         );
+    }
+
+    async savePaymentInformation(paymentInformation) {
+        this.setState({ isLoading: true });
+        
+        await this.savePaymentMethodAndPlaceOrder(paymentInformation)
+    }
+
+    async savePaymentMethodAndPlaceOrder(paymentInformation) {
+        const { paymentMethod: { code, additional_data } } = paymentInformation;
+        const { createOrder } = this.props;
+
+        try {
+            createOrder(code, additional_data).then(
+                ({ data }) => {
+                    const { order_id, success } = data;
+
+                    if (success) {
+                        this.setDetailsStep(order_id);
+                    }
+                },
+                this._handleError
+            );
+        } catch (e) {
+            this._handleError(e);
+        }
     }
 }
 

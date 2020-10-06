@@ -68,7 +68,7 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
             region,
             city,
             postcode,
-            telephone,
+            telephone = '',
             street
         } = this.state;
 
@@ -80,7 +80,8 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
             city,
             postcode,
             phone: telephone,
-            street
+            street,
+            telephone: telephone.substring('4')
         });
     }
 }

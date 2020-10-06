@@ -453,8 +453,6 @@ export class SliderVertical extends PureComponent {
             children
         } = this.props;
 
-        console.log(this.sliderRef);
-
         const { isArrowUpHidden, isArrowDownHidden } = this.state;
 
         this.isSlider();
