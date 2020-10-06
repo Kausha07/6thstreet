@@ -330,7 +330,7 @@
         width: 100%;
         left: 0;
         background-color: var(--color-white);
-        bottom: 40px;
+        bottom: 80px;
     }
 
     @include tablet {
@@ -387,6 +387,10 @@
 
     &-HeaderBlock {
         padding: 1rem 0;
+
+        @include mobile {
+            display: none;
+        }
     }
 
     &-Header {
@@ -502,6 +506,7 @@
         }
     }
 }
+
 .LeftMenu {
     min-width: 300px;
     border: 1px solid gray;
