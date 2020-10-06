@@ -49,15 +49,13 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     onShippingEstimationFieldsChange(address) {
         const { estimateShipping } = this.props;
         const Checkout = this;
-        const { email } = this.state;
 
         /* eslint-disable */
         delete address.region_id;
 
         estimateShipping({
             ...address,
-            default_shipping: true,
-            email: address.email ?? email
+            default_shipping: true
         }).then(
             (response) => {
                 if (typeof response !== 'undefined') {
