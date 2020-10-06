@@ -49,13 +49,15 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     onShippingEstimationFieldsChange(address) {
         const { estimateShipping } = this.props;
         const Checkout = this;
+        const { email } = this.state;
 
         /* eslint-disable */
         delete address.region_id;
 
         estimateShipping({
+            ...address,
             default_shipping: true,
-            ...address
+            email: address.email ?? email
         }).then(
             (response) => {
                 if (typeof response !== 'undefined') {
@@ -99,15 +101,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     }
 
     async savePaymentInformation(paymentInformation) {
-        const { isGuestEmailSaved } = this.state;
         this.setState({ isLoading: true });
-
-        if (!isSignedIn() && !isGuestEmailSaved) {
-            if (!await this.createUserOrSaveGuest()) {
-                this.setState({ isLoading: false });
-                return;
-            }
-        }
         
         await this.savePaymentMethodAndPlaceOrder(paymentInformation)
     }

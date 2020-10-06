@@ -68,7 +68,7 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
             region,
             city,
             postcode,
-            telephone,
+            telephone = '',
             street
         } = this.state;
 
