@@ -397,6 +397,13 @@
         }
     }
 
+    &-Heading {
+        font-family: var(--font-family-regular);
+        font-weight: bold;
+        font-size: 15px;
+        text-transform: capitalize;
+    }
+
     &-Button {
         border: none;
         transform: none;
@@ -420,11 +427,11 @@
         &:after {
             content: '' !important;
             position: absolute;
-            right: 0;
-            top: 7px;
+            right: 6px;
+            top: 1px;
             background: #000;
-            width: 14px;
-            height: 2px;
+            width: 2px;
+            height: 12px;
 
             @include mobile {
                 width: 10px;

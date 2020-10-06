@@ -66,10 +66,12 @@ export class CartPage extends PureComponent {
         const {
             totals: { coupon_code }
         } = this.props;
+        const isOpen = false;
 
         return (
             <ExpandableContent
-              heading={ __('Have a discount code?') }
+              isOpen={ isOpen }
+              header={ __('Have a discount code?') }
               mix={ { block: 'CartPage', elem: 'Discount' } }
             >
                 <CartCoupon couponCode={ coupon_code } />
