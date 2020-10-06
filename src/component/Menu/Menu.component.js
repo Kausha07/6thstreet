@@ -1,6 +1,7 @@
 import { PureComponent } from 'react';
 
 import HeaderGenders from 'Component/HeaderGenders';
+import HeaderSearch from 'Component/HeaderSearch/HeaderSearch.component';
 import MenuCategory from 'Component/MenuCategory';
 import { Categories } from 'Util/API/endpoint/Categories/Categories.type';
 import { isArabic } from 'Util/App';
@@ -48,6 +49,12 @@ class Menu extends PureComponent {
               elem="Container"
             >
                 <HeaderGenders />
+                <div
+                  block="HeaderSearch"
+                  elem="Mobile"
+                >
+                    <HeaderSearch />
+                </div>
                 <div
                   mix={ { block: 'Menu', mods: { isArabic } } }
                 >

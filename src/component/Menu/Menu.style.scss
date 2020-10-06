@@ -6,8 +6,9 @@
     }
 
     @include before-desktop {
-        border-top: 1px solid var(--grey);
-        width: 270px;
+        width: 35%;
+        height: 100%;
+        border-right: 1px solid grey;
 
         &-Container {
             flex-direction: column;
@@ -23,6 +24,11 @@
                     }
                 }
             }
+            .HeaderSearch {
+                &-Mobile {
+                    height: 60px;
+                }
+            }
         }
     }
 
@@ -33,6 +39,11 @@
         &-Container {
             .HeaderGenders {
                 display: none;
+            }
+            .HeaderSearch {
+                &-Mobile {
+                    display: none;
+                }
             }
         }
 

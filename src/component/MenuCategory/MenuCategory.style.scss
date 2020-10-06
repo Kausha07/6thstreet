@@ -1,5 +1,5 @@
 .MenuCategory {
-    display: table;
+    position: unset;
     font-weight: 200;
     padding: 0;
 
@@ -12,26 +12,31 @@
     }
 
     @include before-desktop {
-        background-color: var(--light-grey);
         color: var(--black);
         font-family: "Avenir Next Regular";
         font-size: 13px;
         font-weight: 600;
-        height: 80px;
+        height: 40px;
         line-height: 80px;
-        margin: 10px;
+        margin:10px 0;
         text-indent: 20px;
         text-transform: uppercase;
-        width: 260px;
+        width: 100%;
 
-        &.IsVisible {
+        /*&.IsVisible {
             height: 100%;
-        }
+        }*/
 
         .DynamicContentBanner {
             height: 0;
             visibility: hidden;
             width: 0;
+        }
+
+        .DynamicContent {
+            position: absolute;
+            left: 215px;
+            top: 0px;
         }
     }
 
