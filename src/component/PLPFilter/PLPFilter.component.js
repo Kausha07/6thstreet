@@ -8,7 +8,7 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-import Field from 'Component/Field';
+import FieldMultiselect from 'Component/Field';
 import { Filter } from 'Util/API/endpoint/Product/Product.type';
 import { isArabic } from 'Util/App';
 
@@ -24,10 +24,10 @@ class PLPFilter extends PureComponent {
         isArabic: isArabic()
     };
 
-    filterData: {
-        id: (string),
-        label: (string),
-        value: (string)
+    filterData = {
+        id: '',
+        label: '',
+        value: ''
     };
 
     renderDropDownList() {
@@ -48,7 +48,7 @@ class PLPFilter extends PureComponent {
         ));
 
         return (
-            <Field
+            <FieldMultiselect
               id={ category }
               name={ category }
               type="select"
