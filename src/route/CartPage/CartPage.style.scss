@@ -418,7 +418,7 @@
         }
 
         &:after {
-            content: '';
+            content: '' !important;
             position: absolute;
             right: 0;
             top: 7px;

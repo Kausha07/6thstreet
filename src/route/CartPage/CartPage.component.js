@@ -91,7 +91,6 @@ export class CartPage extends PureComponent {
               mods={ { isMobile } }
             >
                 <dt>{ __('Subtotal') }</dt>
-                { this.renderDiscount() }
                 <dt>{ __('(Taxes included)') }</dt>
             </dl>
         );
