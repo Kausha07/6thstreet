@@ -223,8 +223,6 @@ class PDPGalleryOverlay extends PureComponent {
     }
 
     render() {
-        // eslint-disable-next-line react/no-find-dom-node
-        console.log(document.getElementById('root'));
         const { closeGalleryOverlay } = this.props;
 
         return (
