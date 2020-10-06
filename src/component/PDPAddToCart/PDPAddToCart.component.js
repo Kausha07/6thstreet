@@ -154,6 +154,19 @@ class PDPAddToCart extends PureComponent {
         );
     }
 
+    renderPickUpButton() {
+        return (
+            <button
+              block="PDPAddToCart"
+              elem="PickUpButton"
+              mix={ { block: 'button secondary' } }
+            >
+                <span>{ __('pick up in store') }</span>
+                <div block="PDPSummary" elem="shopSvg" />
+            </button>
+        );
+    }
+
     render() {
         return (
             <div block="PDPAddToCart">
@@ -162,7 +175,10 @@ class PDPAddToCart extends PureComponent {
                     { this.renderSizeTypeSelect() }
                     { this.renderSizeSelect() }
                 </div>
-                { this.renderAddToCartButton() }
+                <div block="PDPAddToCart" elem="Bottom">
+                    { this.renderAddToCartButton() }
+                    { this.renderPickUpButton() }
+                </div>
             </div>
         );
     }

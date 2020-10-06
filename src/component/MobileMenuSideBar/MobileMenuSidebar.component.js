@@ -24,6 +24,7 @@ class MobileMenuSidebar extends PureComponent {
 
     static getDerivedStateFromProps(nextProps) {
         const { activeOverlay } = nextProps;
+        console.log(activeOverlay);
         return ({
             isOpen: activeOverlay === MOBILE_MENU_SIDEBAR_ID
         });

@@ -4,6 +4,7 @@ import { PureComponent } from 'react';
 import Image from 'Component/Image';
 import Link from 'Component/Link';
 import Price from 'Component/Price';
+import WishlistIcon from 'Component/WishlistIcon';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
 
 import './ProductItem.style';
@@ -12,6 +13,12 @@ class ProductItem extends PureComponent {
     static propTypes = {
         product: Product.isRequired
     };
+
+    renderWishlistIcon() {
+        const { product: { sku } } = this.props;
+
+        return <WishlistIcon sku={ sku } />;
+    }
 
     renderImage() {
         const { product: { thumbnail_url } } = this.props;
@@ -71,6 +78,7 @@ class ProductItem extends PureComponent {
     render() {
         return (
             <li block="ProductItem">
+                { this.renderWishlistIcon() }
                 { this.renderLink() }
             </li>
         );

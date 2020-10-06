@@ -24,22 +24,53 @@ export class PDPGalleryOverlayContainer extends PureComponent {
         product: Product.isRequired,
         setImageIndex: PropTypes.func.isRequired,
         index: PropTypes.number.isRequired,
-        closeGalleryOverlay: PropTypes.func.isRequired
+        closeGalleryOverlay: PropTypes.func.isRequired,
+        key: PropTypes.number.isRequired
     };
 
     containerFunctions = {
+        handleZoomChange: this.handleZoomChange.bind(this),
+        disableZoom: this.disableZoom.bind(this),
         onSliderChange: this.onSliderChange.bind(this)
     };
 
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            isZoomEnabled: false
+        };
+    }
+
     containerProps = () => {
-        const { currentIndex } = this.props;
+        const { isZoomEnabled } = this.state;
+        const { currentIndex, closeGalleryOverlay } = this.props;
 
         return {
             gallery: this.getGallery(),
             crumbs: this.getCrumbs(),
-            currentIndex
+            currentIndex,
+            isZoomEnabled,
+            closeGalleryOverlay
         };
     };
+
+    disableZoom() {
+        document.documentElement.classList.remove('overscrollPrevented');
+        this.setState({ isZoomEnabled: false });
+    }
+
+    handleZoomChange(args) {
+        const { isZoomEnabled } = this.state;
+
+        if (args.scale !== 1) {
+            if (isZoomEnabled) {
+                return;
+            }
+            document.documentElement.classList.add('overscrollPrevented');
+            this.setState({ isZoomEnabled: true });
+        }
+    }
 
     onSliderChange(activeSlide) {
         const { setImageIndex } = this.props;

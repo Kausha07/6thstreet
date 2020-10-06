@@ -9,7 +9,7 @@ import './HeaderGenders.style';
 class HeaderGenders extends PureComponent {
     state = {
         isArabic: isArabic()
-    }
+    };
 
     static propTypes = {
         isMobile: PropTypes.bool

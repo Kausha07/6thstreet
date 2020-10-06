@@ -1,9 +1,3 @@
-.UrlRewrites {
-    @include desktop {
-        padding-top: 154px;
-    }
-}
-
 main {
     &.HomePage {
         @include desktop {
@@ -18,7 +12,7 @@ main {
         height: 150px;
         position: fixed;
         width: 100vw;
-        z-index: 500;
+        z-index: 5;
     }
 }
 
