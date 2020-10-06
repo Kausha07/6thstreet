@@ -9,7 +9,12 @@ import './BrandGroup.style';
 class BrandGroup extends PureComponent {
     static propTypes = {
         letter: PropTypes.string.isRequired,
+        isFiltered: PropTypes.bool,
         brands: Brands.isRequired
+    };
+
+    static defaultProps = {
+        isFiltered: false
     };
 
     renderBrand(brand) {
@@ -25,16 +30,19 @@ class BrandGroup extends PureComponent {
 
     renderBrands() {
         const { brands } = this.props;
+
         return brands.map(this.renderBrand);
     }
 
     render() {
-        const { letter } = this.props;
+        const { letter, isFiltered } = this.props;
 
         return (
             <div block="BrandGroup">
-                <h4 block="BrandGroup" elem="Letter">{ letter }</h4>
-                <div block="BrandGroup" elem="Group">
+                { !isFiltered && (
+                    <h4 block="BrandGroup" elem="Letter">{ letter }</h4>
+                ) }
+                <div block="BrandGroup" elem="Group" mods={ { isFiltered } }>
                     { this.renderBrands() }
                 </div>
             </div>
