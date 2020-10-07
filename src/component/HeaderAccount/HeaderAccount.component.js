@@ -12,8 +12,10 @@ import './HeaderAccount.style';
 
 class HeaderAccount extends PureComponent {
     static propTypes = {
+        requestCustomerData: PropTypes.func.isRequired,
         isBottomBar: PropTypes.bool.isRequired,
         isAccount: PropTypes.bool.isRequired,
+        isSignedIn: PropTypes.bool.isRequired,
         customer: customerType,
         isMobile: PropTypes.bool
     };
@@ -37,15 +39,22 @@ class HeaderAccount extends PureComponent {
         this.setState({ showPopup: true });
     };
 
+    onSignIn = () => {
+        const { requestCustomerData } = this.props;
+
+        requestCustomerData();
+        this.closePopup();
+    }
+
     renderMyAccountPopup() {
-        const { customer } = this.props;
+        const { isSignedIn } = this.props;
         const { showPopup } = this.state;
 
         if (!showPopup) {
             return null;
         }
 
-        if (customer) {
+        if (isSignedIn) {
             return (
                 <ClickOutside onClick={ this.closePopup }>
                     <div>
@@ -55,11 +64,11 @@ class HeaderAccount extends PureComponent {
             );
         }
 
-        return <MyAccountOverlay closePopup={ this.closePopup } isPopup />;
+        return <MyAccountOverlay closePopup={ this.closePopup } onSignIn={ this.onSignIn } isPopup />;
     }
 
     renderAccountButton() {
-        const { customer, isBottomBar } = this.props;
+        const { isSignedIn, customer, isBottomBar } = this.props;
 
         if (isBottomBar) {
             return (
@@ -67,7 +76,7 @@ class HeaderAccount extends PureComponent {
             );
         }
 
-        const accountButtonText = customer ? `${customer.firstname} ${customer.lastname}`
+        const accountButtonText = isSignedIn && customer ? `${customer.firstname} ${customer.lastname}`
             : __('Login/Register');
 
         return (

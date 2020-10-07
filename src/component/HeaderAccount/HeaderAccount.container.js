@@ -2,50 +2,72 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
-import { CUSTOMER } from 'Store/MyAccount/MyAccount.dispatcher';
+import { customerType } from 'Type/Account';
 import { isSignedIn } from 'Util/Auth';
-import BrowserDatabase from 'Util/BrowserDatabase';
 
 import HeaderAccount from './HeaderAccount.component';
 
+export const MyAccountDispatcher = import(
+    /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
+    'Store/MyAccount/MyAccount.dispatcher'
+);
+
 export const mapStateToProps = (state) => ({
     language: state.AppState.language,
-    isLoggedIn: state.MyAccountReducer.isSignedIn
+    customer: state.MyAccountReducer.customer
 });
 
-export const mapDispatchToProps = () => ({});
+export const mapDispatchToProps = (dispatch) => ({
+    requestCustomerData: () => MyAccountDispatcher
+        .then(({ default: dispatcher }) => dispatcher.requestCustomerData(dispatch))
+});
 
 export class HeaderAccountContainer extends PureComponent {
     static propTypes = {
         isBottomBar: PropTypes.bool,
         isAccount: PropTypes.bool,
         isLoggedIn: PropTypes.bool.isRequired,
-        language: PropTypes.string.isRequired
+        language: PropTypes.string.isRequired,
+        customer: customerType,
+        requestCustomerData: PropTypes.func.isRequired
     };
 
     static defaultProps = {
         isBottomBar: false,
-        isAccount: false
+        isAccount: false,
+        customer: null
+    };
+
+    containerFunctions = {
+        requestCustomerData: this.requestCustomerData.bind(this)
     };
 
     containerProps = () => ({
-        customer: this._getCustomerInformation()
+        customer: this._getCustomerInformation(),
+        isSignedIn: isSignedIn()
     });
 
-    _getCustomerInformation() {
-        const { isLoggedIn } = this.props;
+    requestCustomerData() {
+        const { requestCustomerData } = this.props;
 
-        if (!isSignedIn() && !isLoggedIn) {
+        requestCustomerData();
+    }
+
+    _getCustomerInformation() {
+        const { customer } = this.props;
+
+        if (!isSignedIn()) {
             return null;
         }
 
-        return BrowserDatabase.getItem(CUSTOMER);
+        return customer;
     }
 
     render() {
         return (
             <HeaderAccount
               { ...this.props }
+              { ...this.containerFunctions }
               { ...this.containerProps() }
             />
         );
