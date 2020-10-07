@@ -1,10 +1,30 @@
+:root {
+    --crumb-background-color: #9b9b9b;
+}
+
 .PDPGallery {
-    display: grid;
-    grid-template-columns: 1fr 6fr;
+    display: block;
+    @include desktop {
+        display: grid;
+        grid-template-columns: 1fr 6fr;
+    }
+    
+
+    &-Crumbs {
+        display: none;
+        @include desktop {
+            display: block;
+        } 
+    }
 
     .Slider-Wrapper > * {
-        height: 0;
+       
     }
+
+    .Slider-Wrapper {
+        align-items: unset;
+    }
+
 
     .Crumbs {
         margin-left: 10px;
@@ -14,6 +34,26 @@
         position: relative;
         min-width: 0;
         margin: 0 10px;
+
+        direction: ltr;
+
+        &-Crumb {
+            background: var(--crumb-background-color);
+            border: none;
+            width: 5px;
+            height: 5px;
+
+            &_isActive {
+                background: $black;
+                width: 7px;
+                height: 7px;
+            }
+        }
+
+        &-Crumbs {
+            height: 7px;
+            grid-gap: 5px;
+        }        
     }
 
     .Image {
@@ -23,6 +63,11 @@
     }
 
     button {
-        height: auto;
+        height: 100%;
+        width: 100%;
+        padding: 0;
+        @include desktop {
+            height: auto;
+        }
     }
 }

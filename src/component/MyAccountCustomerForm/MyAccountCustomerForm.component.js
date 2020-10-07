@@ -6,6 +6,7 @@ import MyAccountPasswordForm from 'Component/MyAccountPasswordForm';
 import {
     MyAccountCustomerForm as SourceMyAccountCustomerForm
 } from 'SourceComponent/MyAccountCustomerForm/MyAccountCustomerForm.component';
+import { isArabic } from 'Util/App';
 
 import './MyAccountCustomerForm.style';
 
@@ -17,6 +18,10 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
         hidePasswordFrom: PropTypes.func.isRequired,
         onSave: PropTypes.func.isRequired,
         isLoading: PropTypes.bool.isRequired
+    };
+
+    state = {
+        isArabic: isArabic()
     };
 
     get fieldMap() {
@@ -48,7 +53,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
         return (
             <div
               key="password"
-              block="MyAccountCusomerForm"
+              block="MyAccountCustomerForm"
               elem="PasswordField"
             >
                 <Field
@@ -61,6 +66,9 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
                 />
                 <button
                   type="button"
+                  block="MyAccountCustomerForm"
+                  elem="Change"
+                  id="change-password-button"
                   onClick={ showPasswordFrom }
                 >
                     { __('Change') }
@@ -83,13 +91,29 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
 
     renderPasswordForm() {
         const { isShowPassword } = this.props;
+        const { hidePasswordFrom } = this.props;
 
         if (!isShowPassword) {
             return null;
         }
 
         return (
-            <MyAccountPasswordForm />
+            <div>
+                <div
+                  block="MyAccountPasswordForm"
+                  elem="Title"
+                >
+                    <span>{ __('Change Password') }</span>
+                    <button
+                      type="button"
+                      block="Cross"
+                      onClick={ hidePasswordFrom }
+                    >
+                        <span />
+                    </button>
+                </div>
+                <MyAccountPasswordForm />
+            </div>
         );
     }
 
@@ -102,8 +126,12 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
     }
 
     render() {
+        const { isArabic } = this.state;
+
         return (
-            <div block="MyAccountCustomerForm">
+            <div
+              mix={ { block: 'MyAccountCustomerForm', mods: { isArabic } } }
+            >
                 { super.render() }
                 { this.renderPasswordForm() }
                 { this.renderLoader() }

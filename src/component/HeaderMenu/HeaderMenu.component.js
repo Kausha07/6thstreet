@@ -10,21 +10,23 @@ import './HeaderMenu.style';
 class HeaderMenu extends PureComponent {
     static propTypes = {
         location: PropTypes.object.isRequired,
-        toggleOverlayByKey: PropTypes.func.isRequired
+        toggleOverlayByKey: PropTypes.func.isRequired,
+        activeOverlay: PropTypes.string.isRequired
     };
 
     state = {
-        prevLocation: ''
+        prevLocation: '',
+        isExpanded: true
     };
 
     static getDerivedStateFromProps(props, state) {
-        const { location } = props;
+        const { location, activeOverlay } = props;
         const { prevLocation } = state;
 
         return location !== prevLocation ? ({
             isExpanded: false,
             prevLocation: location
-        }) : null;
+        }) : ({ isExpanded: activeOverlay === MOBILE_MENU_SIDEBAR_ID });
     }
 
     onCategoriesClick = () => {
@@ -39,10 +41,13 @@ class HeaderMenu extends PureComponent {
     }
 
     renderCategoriesButton() {
+        const { isExpanded } = this.state;
+
         return (
             <button
               block="HeaderMenu"
               elem="Button"
+              mods={ { isExpanded } }
               onClick={ this.onCategoriesClick }
             >
                <label htmlFor="Categories">{ __('Categories') }</label>

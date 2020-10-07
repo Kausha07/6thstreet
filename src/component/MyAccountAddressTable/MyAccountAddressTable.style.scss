@@ -8,7 +8,6 @@
  * @package scandipwa/base-theme
  * @link https://github.com/scandipwa/base-theme
  */
-
 .MyAccountAddressTable {
     display: flex;
     align-items: center;
@@ -26,8 +25,7 @@
 
     .MyAccountAddressCard {
         background: #F9F9F9;
-        width: 100%;
-        max-width: 335px;
+        width: 335px;
         font-size: 14px;
         line-height: 19px;
         padding: 10px 24px 17px;
@@ -59,4 +57,11 @@
         }
     }
 
+}
+
+////////////////// REMOVE myAccount!
+.MyAccount {
+    &-TabContent {
+        margin-left: 80px;
+    }
 }
