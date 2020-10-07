@@ -21,7 +21,7 @@ main {
     background-color: var(--white);
     display: flex;
     justify-content: space-between;
-    max-width: 1420px;
+    max-width: 1120px;
     margin: 0 auto;
     padding: 20px;
 
@@ -40,21 +40,24 @@ main {
             background-image: url(./icons/arrow-left-black.svg);
             background-size: 16px;
             background-repeat: no-repeat;
+        }
 
-            @include desktop {
-                //right: -8px;
-                //top: -11px;
+            &_isArabic {
+                ::before {
+                    transform: rotate(180deg);
+                    right: 6px;
+                    top: 9px;
+                }
             }
         }
 
-        &:hover {
+        :hover {
             @include desktop {
                 ::before {
                     background-image: url(./icons/arrow-left-white.svg);
                 }
             }
         }
-    }
 
     .HeaderLogo {
         @include before-desktop {
@@ -72,6 +75,11 @@ main {
 
         @include before-desktop {
             display: none;
+        }
+
+        &_isArabic {
+            text-align: left;
+            background-position: 95% 35%;
         }
     }
 

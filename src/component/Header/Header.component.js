@@ -9,6 +9,7 @@ import MobileBottomBar from 'Component/MobileBottomBar';
 import MobileMenuSidebar from 'Component/MobileMenuSideBar/MobileMenuSidebar.component';
 import { MOBILE_MENU_SIDEBAR_ID } from 'Component/MobileMenuSideBar/MoblieMenuSideBar.config';
 import OfflineNotice from 'Component/OfflineNotice';
+import { isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
 
 import './Header.style';
@@ -18,6 +19,10 @@ export class Header extends PureComponent {
         navigationState: PropTypes.shape({
             name: PropTypes.string
         }).isRequired
+    };
+
+    state = {
+        isArabic: isArabic()
     };
 
     headerSections = [
@@ -39,13 +44,17 @@ export class Header extends PureComponent {
     };
 
     renderBackToShoppingButton() {
+        const { isArabic } = this.state;
+
         if (isMobile.any() || isMobile.tablet()) {
             return (
                 <div
                   block="CheckoutHeader"
                   elem="BackToShopping"
                 >
-                    <button block="BackMobileButton">{ ' ' }</button>
+                    <button block="BackMobileButton">
+                        { ' ' }
+                    </button>
                 </div>
             );
         }
@@ -54,6 +63,7 @@ export class Header extends PureComponent {
             <div
               block="CheckoutHeader"
               elem="BackToShopping"
+              mods={ { isArabic } }
             >
                 <button
                   block="button secondary medium"
@@ -65,10 +75,13 @@ export class Header extends PureComponent {
     }
 
     renderSecureShippingLabel() {
+        const { isArabic } = this.state;
+
         return (
             <div
               block="CheckoutHeader"
               elem="SecureShipping"
+              mods={ { isArabic } }
             >
                 <span
                   block="CheckoutHeader"

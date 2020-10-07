@@ -378,5 +378,10 @@
     "Secure shipping": null,
     "Delivery": null,
     "Payment": null,
-    "DELIVERY": null
+    "DELIVERY": null,
+    "Proceed to secure payment": null,
+    "Place order": null,
+    "Subtotal": null,
+    "Cash on delivery Fee": null,
+    "Cash on Delivery Fee": null
 }
