@@ -1,6 +1,5 @@
 :root {
     --footer-background-color: #f6f6f6;
-    --foter-hyperlink-color: $black;
 }
 
 .FooterMiddle {
@@ -10,6 +9,18 @@
 
     @include before-desktop {
         display: none;
+    }
+
+    &_isCheckout {
+        height: 70px;
+        padding: 20px 30px 30px 30px;
+        .HeaderAccount, 
+        .CountrySwitcher,
+        .LanguageSwitcher {
+            display: none;
+        }
+
+        background: var(--white);
     }
 
     &-Layout {

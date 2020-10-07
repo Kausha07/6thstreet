@@ -9,6 +9,10 @@ import { DEFAULT_STATE_NAME } from 'Component/NavigationAbstract/NavigationAbstr
 import './FooterMiddle.style';
 
 class FooterMiddle extends PureComponent {
+    state = {
+        isCheckout: false
+    };
+
     stateMap = {
         [DEFAULT_STATE_NAME]: {
             support: true,
@@ -22,6 +26,12 @@ class FooterMiddle extends PureComponent {
         account: this.renderAccount.bind(this),
         store: this.renderStoreSwitcher.bind(this)
     };
+
+    static getDerivedStateFromProps() {
+        return location.pathname.match(/checkout/)
+            ? { isCheckout: true }
+            : { isCheckout: false };
+    }
 
     renderCustomerSupport() {
         return (
@@ -53,8 +63,10 @@ class FooterMiddle extends PureComponent {
     }
 
     render() {
+        const { isCheckout } = this.state;
+
         return (
-            <div block="FooterMiddle">
+            <div block="FooterMiddle" mods={ { isCheckout } }>
                 <div block="FooterMiddle" elem="Layout">
                     { this.renderCustomerSupport() }
                     { this.renderAccount() }
