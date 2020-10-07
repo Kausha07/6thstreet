@@ -25,7 +25,8 @@ class PLPFilters extends PureComponent {
         showOverlay: PropTypes.func.isRequired,
         hideActiveOverlay: PropTypes.isRequired,
         goToPreviousNavigationState: PropTypes.isRequired,
-        onReset: PropTypes.func.isRequired
+        onReset: PropTypes.func.isRequired,
+        productsCount: PropTypes.string.isRequired
     };
 
     state = {
@@ -225,8 +226,9 @@ class PLPFilters extends PureComponent {
     );
 
     render() {
-        console.log('-----------------------------');
+        const { productsCount } = this.props;
         const { isOpen, isArabic } = this.state;
+        const count = productsCount ? productsCount.toLocaleString() : null;
 
         return (
             <>
@@ -249,6 +251,12 @@ class PLPFilters extends PureComponent {
                         { this.renderResetFilterButton() }
                     </div>
                 </form>
+                <div block="PLPFilters" elem="ToolBar">
+                    <div block="PLPFilters" elem="ProductsCount" mods={ { isArabic } }>
+                      <span>{ count }</span>
+                      Products
+                    </div>
+                </div>
             </>
         );
     }

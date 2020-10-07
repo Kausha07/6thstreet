@@ -3,6 +3,7 @@ import { PureComponent } from 'react';
 
 import Field from 'Component/Field';
 import { FilterOption } from 'Util/API/endpoint/Product/Product.type';
+import { isArabic } from 'Util/App';
 
 import './PLPFilterOption.style';
 
@@ -10,6 +11,10 @@ class PLPFilterOption extends PureComponent {
     static propTypes = {
         option: FilterOption.isRequired,
         isRadio: PropTypes.bool.isRequired
+    };
+
+    state = {
+        isArabic: isArabic()
     };
 
     renderField() {
@@ -44,7 +49,9 @@ class PLPFilterOption extends PureComponent {
         } = this.props;
 
         return (
-            <span>{ ` (${product_count})` }</span>
+            <span>
+                { `(${product_count})` }
+            </span>
         );
     }
 
@@ -69,7 +76,7 @@ class PLPFilterOption extends PureComponent {
     }
 
     render() {
-        console.log(this.props);
+        const { isArabic } = this.state;
         const {
             option: {
                 facet_value
@@ -81,7 +88,7 @@ class PLPFilterOption extends PureComponent {
         }
 
         return (
-            <li block="PLPFilterOption" elem="List">
+            <li block="PLPFilterOption" elem="List" mods={ { isArabic } }>
                 { this.renderField() }
                 { this.renderLabel() }
             </li>

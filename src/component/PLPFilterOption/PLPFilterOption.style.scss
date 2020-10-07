@@ -1,6 +1,16 @@
 .PLPFilterOption {
     &-List {
         display: flex;
+
+        label {
+            display: flex;
+            align-items: center;
+        }
+
+        span {
+            margin-left: 5px;
+            color: #666;
+        }
     
         .Field {
             margin: auto 5px auto 15px;
@@ -67,9 +77,20 @@
                     --primary-base-color: var(--black-color);
 
                     &::after {
-                        --checkmark-color: var(--white-color);
+                        --checkmark-color: transparent;
                     }
                 }
+            }
+        }
+
+        &_isArabic {
+            span {
+                margin-left: 0;
+                margin-right: 5px;
+            }
+        
+            .Field {
+                margin: auto 15px auto 5px;
             }
         }
     }

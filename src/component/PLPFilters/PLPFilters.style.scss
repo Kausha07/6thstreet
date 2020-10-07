@@ -224,11 +224,10 @@
     .Reset {
         &-Button {
             color: var(--primary-dark-color);
-            font-size: 12px;
+            font-size: 13px;
             font-weight: bold;
             height: auto;
             margin-left: 10px;
-            margin-bottom: 50px;
             padding: 0;
             text-transform: capitalize;
         }
@@ -288,6 +287,33 @@
                 font-family: 'Avenir Next Regular';
                 font-size: 13px;
                 padding-right: 15px;
+            }
+        }
+    }
+
+    &-ToolBar {
+        display: flex;
+        justify-content: flex-end;
+        height: 60px;
+        margin: 0 30px;
+        padding: 7px 0 20px;
+    }
+
+    &-ProductsCount{
+        display: flex;
+        align-items: flex-end;
+        font-size: 16px;
+
+        span {
+            font-weight: 600;
+            font-size: 16px;
+            margin-right: 5px;
+        }
+
+        &_isArabic {
+            span{
+                margin-right: 0;
+                margin-left: 5px;
             }
         }
     }
