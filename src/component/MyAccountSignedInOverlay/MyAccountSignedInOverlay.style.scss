@@ -2,7 +2,7 @@
     border: 1px solid var(--color-gainsboro);
     border-radius: 5px;
     left: 50%;
-    min-width: 220px;
+    min-width: 240px;
     padding: 0 20px;
     top: 40px;
     transform: translateX(-50%);
@@ -39,7 +39,6 @@
     a {
         border-bottom: 1px solid var(--color-gainsboro);
         display: block;
-        font-size: 14px;
         font-weight: bold;
         padding: 20px 0;
         text-decoration: none;
@@ -53,7 +52,6 @@
     button {
         color: var(--black);
         display: block;
-        font-size: 14px;
         font-weight: bold;
         height: auto;
         padding: 20px 0;
@@ -63,6 +61,7 @@
     }
 
     span {
+        font-size: 13px;
         vertical-align: middle;
     }
 }
