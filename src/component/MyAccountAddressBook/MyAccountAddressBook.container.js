@@ -46,12 +46,10 @@ export class MyAccountAddressBookContainer extends PureComponent {
     };
 
     openForm() {
-        console.log('openForm');
         this.setState({ formContent: true });
     }
 
     closeForm() {
-        console.log('closeForm');
         this.setState({ formContent: false });
     }
 

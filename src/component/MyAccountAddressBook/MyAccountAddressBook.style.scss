@@ -16,7 +16,30 @@
 
     &-NewAddress {
         max-width: 200px;
-        margin-top: 38px;
+        margin: 28px auto;
+        border: none;
+        font-size: 12px;
+        color:  #868686;
+
+        &::before {
+            content: ' + ';
+        }
+
+        @include desktop() {
+            border: 2px solid $black;
+            font-size: 14px;
+            color: $black;
+            margin: 28px 0;
+
+            &::before {
+                content: 'ADD ';
+            }
+    
+            &:hover {
+                background: $black;
+                color: $white;
+            }
+        }
     }
 
 }

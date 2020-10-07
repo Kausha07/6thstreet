@@ -1,67 +1,124 @@
-/**
- * ScandiPWA - Progressive Web App for Magento
- *
- * Copyright © Scandiweb, Inc. All rights reserved.
- * See LICENSE for license details.
- *
- * @license OSL-3.0 (Open Software License ("OSL") v. 3.0)
- * @package scandipwa/base-theme
- * @link https://github.com/scandipwa/base-theme
- */
 .MyAccountAddressTable {
     display: flex;
     align-items: center;
 
-    &-Icon {
-        margin-left: 20px;
-        &_pencil {
-            width: 20px;
+    &-ActionBtn {
+        display: none;
+        height: 20px;
+        padding: 3px;
+        margin-left: 30px;
+
+        &_isOpen {
+            display: block;
         }
+
+        @include desktop() {
+            display: block;
+        }
+    }
+
+    &-Icon {
+        width: 17px;
 
         &_trash {
-            width: 17px;
+            width: 15px;
         }
     }
+}
 
-    .MyAccountAddressCard {
-        background: #F9F9F9;
+.MyAccountAddressCard {
+    background: #F9F9F9;
+    width: 100%;
+    font-size: 14px;
+    line-height: 19px;
+    padding: 10px 24px 17px;
+    border-radius: 7px;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,.1);
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    &::after {
+        content: '';
+        position: absolute;
+        right: 15px;
+        top: 47%;
+        border: solid black;
+        border-width: 0 2px 2px 0;
+        display: inline-block;
+        padding: 4px;
+        transform: rotate(-45deg);
+        -webkit-transform: rotate(-45deg);
+    }
+
+    @include desktop() {
         width: 335px;
-        font-size: 14px;
-        line-height: 19px;
-        padding: 10px 24px 17px;
-        border-radius: 7px;
-
-        &-Default {
-            // remove opacity!!
-            opacity: 0;
-        }
-
-        &-Name {
-            font-family: 'Avenir Next Demi Bold';
-            font: 12px sans-serif;
-            font-weight: 600;
-            text-transform: uppercase;
-            line-height: 16px;
-        }
-
-        &-Street {
-            color: #4A4A4A;
-        }
-
-        &-City {
-            font-family: 'Avenir Next Regular';
-        }
-
-        &-Phone {
-            font-family: 'Avenir Next Medium';
+        &:hover {
+            cursor: auto;
         }
     }
 
+    &-Default {
+        // remove opacity!!
+        opacity: 0;
+    }
+
+    &-Name {
+        font-family: 'Avenir Next Demi Bold';
+        font: 12px sans-serif;
+        font-weight: 600;
+        text-transform: uppercase;
+        line-height: 16px;
+    }
+
+    &-Street {
+        color: #4A4A4A;
+    }
+
+    &-City {
+        font-family: 'Avenir Next Regular';
+    }
+
+    &-Phone {
+        font-family: 'Avenir Next Medium';
+    }
+}
+
+.PageWrapper {
+    &_isArabic {
+        .MyAccountAddressTable {
+            &-ActionBtn {
+                margin: 0 30px 0 0;
+            }
+        }
+        .MyAccountAddressCard {
+            &::after {
+                content: none;
+            }
+            &::before {
+                content: '';
+                position: absolute;
+                left: 15px;
+                top: 47%;
+                border: solid black;
+                border-width: 0 2px 2px 0;
+                display: inline-block;
+                padding: 4px;
+                transform: rotate(135deg);
+                -webkit-transform: rotate(135deg);
+            }
+        }
+    }
 }
 
 ////////////////// REMOVE myAccount!
 .MyAccount {
     &-TabContent {
-        margin-left: 80px;
+        width: 100%;
+
+        @include desktop() {
+            margin-left: 80px;
+        }
     }
 }
