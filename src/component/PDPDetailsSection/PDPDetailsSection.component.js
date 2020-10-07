@@ -118,8 +118,7 @@ class PDPDetailsSection extends PureComponent {
     }
 
     renderMoreDetailsList() {
-        const { product, product: { highlighted_attributes } } = this.props;
-        console.log(product);
+        const { product: { highlighted_attributes } } = this.props;
 
         if (highlighted_attributes !== undefined && highlighted_attributes !== null) {
             return (
