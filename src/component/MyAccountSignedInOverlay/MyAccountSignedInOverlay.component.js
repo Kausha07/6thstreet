@@ -10,7 +10,6 @@ import AddressIcon from './icons/address.png';
 import ClubIcon from './icons/club-apparel.png';
 import LogoutIcon from './icons/logout.png';
 import OrdersIcon from './icons/orders.png';
-import PaymentsIcon from './icons/payments.png';
 import { MY_ACCOUNT_SIGNED_IN_OVERLAY } from './MyAccountSignedInOverlay.config';
 
 import './MyAccountSignedInOverlay.style';
@@ -48,16 +47,6 @@ export class MyAccountSignedInOverlay extends PureComponent {
         );
     }
 
-    renderPaymentsLink() {
-        // TODO: Add link to payments section when available
-        return (
-            <Link block="MyAccountSignedInOverlay" elem="LinkPayments" to="/">
-                <Image src={ PaymentsIcon } mix={ { block: 'MyAccountSignedInOverlay', elem: 'Image' } } />
-                <span>{ __('Payment methods') }</span>
-            </Link>
-        );
-    }
-
     renderDeliveryLink() {
         return (
             <Link block="MyAccountSignedInOverlay" elem="LinkDelivery" to="/my-account/address-book">
@@ -84,7 +73,6 @@ export class MyAccountSignedInOverlay extends PureComponent {
                 { this.renderMyAccountLink() }
                 { this.renderOrderHistoryLink() }
                 { this.renderClubLink() }
-                { this.renderPaymentsLink() }
                 { this.renderDeliveryLink() }
                 { this.renderLogoutButton() }
             </div>

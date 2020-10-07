@@ -2,6 +2,7 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import ClickOutside from 'Component/ClickOutside';
 import MyAccountOverlay from 'Component/MyAccountOverlay';
 import MyAccountSignedInOverlay from 'Component/MyAccountSignedInOverlay';
 import { customerType } from 'Type/Account';
@@ -45,7 +46,13 @@ class HeaderAccount extends PureComponent {
         }
 
         if (customer) {
-            return <MyAccountSignedInOverlay onHide={ this.closePopup } />;
+            return (
+                <ClickOutside onClick={ this.closePopup }>
+                    <div>
+                        <MyAccountSignedInOverlay onHide={ this.closePopup } />
+                    </div>
+                </ClickOutside>
+            );
         }
 
         return <MyAccountOverlay closePopup={ this.closePopup } isPopup />;

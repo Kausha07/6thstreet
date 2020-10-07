@@ -54,7 +54,12 @@ export class MyAccountSignedInOverlayContainer extends PureComponent {
     render() {
         const { onHide } = this.props;
 
-        return <MyAccountSignedInOverlay onHide={ onHide } { ...this.containerFunctions } />;
+        return (
+            <MyAccountSignedInOverlay
+              onHide={ onHide }
+              { ...this.containerFunctions }
+            />
+        );
     }
 }
 
