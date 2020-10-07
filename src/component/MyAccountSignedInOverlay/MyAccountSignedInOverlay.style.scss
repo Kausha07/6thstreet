@@ -1,0 +1,68 @@
+.MyAccountSignedInOverlay {
+    border: 1px solid var(--color-gainsboro);
+    border-radius: 5px;
+    left: 50%;
+    min-width: 220px;
+    padding: 0 20px;
+    top: 40px;
+    transform: translateX(-50%);
+
+    &::before {
+        background: var(--white);
+        border-top: 1px solid var(--color-gainsboro);
+        border-right: 1px solid var(--color-gainsboro);
+        content: '';
+        height: 15px;
+        left: 50%;
+        position: absolute;
+        top: -9px;
+        transform: translateX(-50%) rotate(-45deg);
+        width: 15px;
+    }
+
+    &-Link {
+        &Account {
+            svg {
+                margin-right: 10px;
+                vertical-align: middle;
+            }
+        }
+    }
+
+    &-Image {
+        margin-right: 10px;
+        padding-bottom: 20px;
+        vertical-align: middle;
+        width: 20px;
+    }
+
+    a {
+        border-bottom: 1px solid var(--color-gainsboro);
+        display: block;
+        font-size: 14px;
+        font-weight: bold;
+        padding: 20px 0;
+        text-decoration: none;
+        text-transform: capitalize;
+
+        & + a {
+            margin-left: 0;
+        }
+    }
+
+    button {
+        color: var(--black);
+        display: block;
+        font-size: 14px;
+        font-weight: bold;
+        height: auto;
+        padding: 20px 0;
+        text-align: left;
+        text-transform: none;
+        width: 100%;
+    }
+
+    span {
+        vertical-align: middle;
+    }
+}
