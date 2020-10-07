@@ -8,9 +8,8 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-import FieldMultiselect from 'Component/Field';
+import FieldMultiselect from 'Component/FiledMultiselect';
 import { Filter } from 'Util/API/endpoint/Product/Product.type';
-import { isArabic } from 'Util/App';
 
 import './PLPFilter.style';
 
@@ -20,10 +19,6 @@ class PLPFilter extends PureComponent {
         onSelect: PropTypes.func.isRequired
     };
 
-    state = {
-        isArabic: isArabic()
-    };
-
     filterData = {
         id: '',
         label: '',
@@ -31,8 +26,14 @@ class PLPFilter extends PureComponent {
     };
 
     renderDropDownList() {
-        const { filter: { label, data, category }, onSelect } = this.props;
-        const { isArabic } = this.state;
+        const {
+            filter: {
+                label,
+                data,
+                category,
+                is_radio
+            }, onSelect, filter
+        } = this.props;
 
         if (category === 'categories_without_path' || category === 'categories.level1') {
             return null;
@@ -41,26 +42,29 @@ class PLPFilter extends PureComponent {
         // eslint-disable-next-line no-return-assign
         const template = Object.keys(data).map((item) => (
             this.filterData = {
-                label: data[item].label,
-                id: data[item].facet_value,
-                value: data[item].facet_value
+                name: data[item].label,
+                id: data[item].facet_key,
+                count: data[item].product_count,
+                value: data[item].facet_value,
+                checked: data[item].is_selected
             }
         ));
 
+        // eslint-disable-next-line no-return-assign
+        // const values = Object.keys(data).map((item) => (
+        //     this.filterData = {
+        //         value: data[item].facet_value
+        //     }
+        // ));
+
         return (
             <FieldMultiselect
-              id={ category }
-              name={ category }
-              type="select"
-              mix={ {
-                  block: 'Field',
-                  mods: {
-                      isArabic
-                  }
-              } }
               placeholder={ label }
-              selectOptions={ template }
+              showCheckbox
+              isRadio={ is_radio }
+              options={ template }
               onChange={ onSelect }
+              filter={ filter }
             />
         );
     }
@@ -75,3 +79,63 @@ class PLPFilter extends PureComponent {
 }
 
 export default PLPFilter;
+// import PropTypes from 'prop-types';
+// import { PureComponent } from 'react';
+
+// import PLPFilterOption from 'Component/PLPFilterOption';
+// import { Filter } from 'Util/API/endpoint/Product/Product.type';
+
+// import './PLPFilter.style';
+
+// class PLPFilter extends PureComponent {
+//     static propTypes = {
+//         filter: Filter.isRequired,
+//         onSelect: PropTypes.func.isRequired
+//     };
+
+//     renderLabel() {
+//         const { filter: { label } } = this.props;
+
+//         return (
+//             <h3>{ label }</h3>
+//         );
+//     }
+
+//     renderOption = ([key, option]) => {
+//         const { filter: { is_radio } } = this.props;
+
+//         return (
+//             <PLPFilterOption
+//               key={ key }
+//               option={ option }
+//               isRadio={ is_radio }
+//             />
+//         );
+//     };
+
+//     renderOptions() {
+//         const { filter: { data } } = this.props;
+
+//         return (
+//             <ul>
+//                 { Object.entries(data).map(this.renderOption) }
+//             </ul>
+//         );
+//     }
+
+//     render() {
+//         const { onSelect } = this.props;
+
+//         return (
+//             <fieldset
+//               block="PLPFilter"
+//               onChange={ onSelect }
+//             >
+//                 { this.renderLabel() }
+//                 { this.renderOptions() }
+//             </fieldset>
+//         );
+//     }
+// }
+
+// export default PLPFilter;

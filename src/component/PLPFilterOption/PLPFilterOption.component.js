@@ -31,7 +31,7 @@ class PLPFilterOption extends PureComponent {
               id={ facet_value }
               name={ facet_key }
               value={ facet_value }
-              defaultChecked={ checked }
+              checked={ checked }
             />
         );
     }
@@ -44,7 +44,7 @@ class PLPFilterOption extends PureComponent {
         } = this.props;
 
         return (
-            <strong>{ product_count }</strong>
+            <span>{ ` (${product_count})` }</span>
         );
     }
 
@@ -52,21 +52,24 @@ class PLPFilterOption extends PureComponent {
         const {
             option: {
                 label,
-                facet_value
+                facet_value,
+                product_count
             }
         } = this.props;
 
         return (
             <label
+              block="PLPFilterOption"
               htmlFor={ facet_value }
             >
                 { label }
-                { this.renderCount() }
+                { product_count ? this.renderCount() : null }
             </label>
         );
     }
 
     render() {
+        console.log(this.props);
         const {
             option: {
                 facet_value
@@ -78,7 +81,7 @@ class PLPFilterOption extends PureComponent {
         }
 
         return (
-            <li block="PLPFilterOption">
+            <li block="PLPFilterOption" elem="List">
                 { this.renderField() }
                 { this.renderLabel() }
             </li>

@@ -1,9 +1,10 @@
 /* eslint-disable */
 import React from 'react';
 
-import ms from './multiselect.component.css';
-
-import '../assets/closeicon/css/fontello.css';
+import ms from './FieldMultiselect.style';
+import Field from 'SourceComponent/Field';
+// import '../assets/closeicon/css/fontello.css';
+import PLPFilterOption from 'Component/PLPFilterOption';
 
 const closeIconTypes = {
     circle: 'icon_cancel_circled',
@@ -13,6 +14,29 @@ const closeIconTypes = {
 };
 
 class FieldMultiselect extends React.Component {
+    static defaultProps = {
+        options: [],
+        disablePreSelectedValues: false,
+        selectedValues: [],
+        isObject: true,
+        displayValue: 'model',
+        showCheckbox: false,
+        selectionLimit: -1,
+        placeholder: 'Select',
+        groupBy: '',
+        style: {},
+        emptyRecordMsg: 'No Options Available',
+        onSelect: () => {},
+        onRemove: () => {},
+        closeIcon: 'circle2',
+        singleSelect: false,
+        caseSensitiveSearch: false,
+        id: '',
+        closeOnSelect: true,
+        avoidHighlightFirstOption: false,
+        hidePlaceholder: false
+    };
+    
     constructor(props) {
         super(props);
         this.state = {
@@ -32,17 +56,11 @@ class FieldMultiselect extends React.Component {
         this.searchBox = React.createRef();
         this.onChange = this.onChange.bind(this);
         this.renderMultiselectContainer = this.renderMultiselectContainer.bind(this);
-        this.renderSelectedList = this.renderSelectedList.bind(this);
         this.onRemoveSelectedItem = this.onRemoveSelectedItem.bind(this);
         this.toggelOptionList = this.toggelOptionList.bind(this);
         this.onArrowKeyNavigation = this.onArrowKeyNavigation.bind(this);
-        this.onSelectItem = this.onSelectItem.bind(this);
         this.filterOptionsByInput = this.filterOptionsByInput.bind(this);
         this.removeSelectedValuesFromOptions = this.removeSelectedValuesFromOptions.bind(this);
-        this.isSelectedValue = this.isSelectedValue.bind(this);
-        this.fadeOutSelection = this.fadeOutSelection.bind(this);
-        this.isDisablePreSelectedValues = this.isDisablePreSelectedValues.bind(this);
-        this.renderGroupByOptions = this.renderGroupByOptions.bind(this);
         this.renderNormalOption = this.renderNormalOption.bind(this);
         this.listenerCallback = this.listenerCallback.bind(this);
         this.resetSelectedValues = this.resetSelectedValues.bind(this);
@@ -183,46 +201,46 @@ class FieldMultiselect extends React.Component {
             return value.indexOf(search) > -1;
         }
 
-        return value.toLowerCase().indexOf(search.toLowerCase()) > -1;
+        return value;
     }
 
     onArrowKeyNavigation(e) {
-        const {
-            options,
-            highlightOption,
-            toggleOptionsList,
-            inputValue,
-            selectedValues
-        } = this.state;
+        // const {
+        //     options,
+        //     highlightOption,
+        //     toggleOptionsList,
+        //     inputValue,
+        //     selectedValues
+        // } = this.state;
 
-        if (e.keyCode === 8 && !inputValue && selectedValues.length) {
-            this.onRemoveSelectedItem(selectedValues.length - 1);
-        }
-        if (!options.length) {
-            return;
-        }
-        if (e.keyCode === 38) {
-            if (highlightOption > 0) {
-                this.setState((previousState) => ({
-                    highlightOption: previousState.highlightOption - 1
-                }));
-            } else {
-                this.setState({ highlightOption: options.length - 1 });
-            }
-        } else if (e.keyCode === 40) {
-            if (highlightOption < options.length - 1) {
-                this.setState((previousState) => ({
-                    highlightOption: previousState.highlightOption + 1
-                }));
-            } else {
-                this.setState({ highlightOption: 0 });
-            }
-        } else if (e.key === 'Enter' && options.length && toggleOptionsList) {
-            if (highlightOption === -1) {
-                return;
-            }
-            this.onSelectItem(options[highlightOption]);
-        }
+        // if (e.keyCode === 8 && !inputValue && selectedValues.length) {
+        //     this.onRemoveSelectedItem(selectedValues.length - 1);
+        // }
+        // if (!options.length) {
+        //     return;
+        // }
+        // if (e.keyCode === 38) {
+        //     if (highlightOption > 0) {
+        //         this.setState((previousState) => ({
+        //             highlightOption: previousState.highlightOption - 1
+        //         }));
+        //     } else {
+        //         this.setState({ highlightOption: options.length - 1 });
+        //     }
+        // } else if (e.keyCode === 40) {
+        //     if (highlightOption < options.length - 1) {
+        //         this.setState((previousState) => ({
+        //             highlightOption: previousState.highlightOption + 1
+        //         }));
+        //     } else {
+        //         this.setState({ highlightOption: 0 });
+        //     }
+        // } else if (e.key === 'Enter' && options.length && toggleOptionsList) {
+        //     if (highlightOption === -1) {
+        //         return;
+        //     }
+        //     this.onSelectItem(options[highlightOption]);
+        // }
     // TODO: Instead of scrollIntoView need to find better soln for scroll the dropwdown container.
     // setTimeout(() => {
     //   const element = document.querySelector("ul.optionContainer .highlight");
@@ -254,16 +272,14 @@ class FieldMultiselect extends React.Component {
         }
     }
 
-    onSelectItem(item) {
+    onSelectItem = (item) => {
         const { selectedValues } = this.state;
         const {
-            selectionLimit, onSelect, singleSelect, showCheckbox
+            selectionLimit, onSelect, showCheckbox, isRadio, closeOnSelect
         } = this.props;
 
-        this.setState({
-            inputValue: ''
-        });
-        if (singleSelect) {
+ 
+        if (isRadio) {
             this.onSingleSelect(item);
             onSelect([item], item);
             return;
@@ -277,168 +293,72 @@ class FieldMultiselect extends React.Component {
         }
         selectedValues.push(item);
         onSelect(selectedValues, item);
-        this.setState({ selectedValues }, () => {
-            if (!showCheckbox) {
-                this.removeSelectedValuesFromOptions(true);
-            } else {
-                this.filterOptionsByInput();
-            }
-        });
-        if (!this.props.closeOnSelect) {
+        // this.setState({ selectedValues }, () => {
+        //     if (!showCheckbox) {
+        //         this.removeSelectedValuesFromOptions(true);
+        //     } else {
+        //         this.filterOptionsByInput();
+        //     }
+        // });
+        if (!closeOnSelect) {
             this.searchBox.current.focus();
         }
     }
 
-    onSingleSelect(item) {
-        this.setState({ selectedValues: [item], toggleOptionsList: false });
-    }
+    renderOption = ([key, option]) => {
+        const { filter: { is_radio } } = this.props;
 
-    isSelectedValue(item) {
-        const { isObject, displayValue } = this.props;
-        const { selectedValues } = this.state;
-        if (isObject) {
-            return (
-                selectedValues.filter((i) => i[displayValue] === item[displayValue])
-                    .length > 0
-            );
-        }
-
-        return selectedValues.filter((i) => i === item).length > 0;
-    }
-
-    renderOptionList() {
-        const {
-            groupBy, style, emptyRecordMsg, loading, loadingMessage = 'loading...'
-        } = this.props;
-        const { options } = this.state;
-        if (loading) {
-            return (
-        <ul className="optionContainer" style={ style.optionContainer }>
-          { typeof loadingMessage === 'string' && <span style={ style.loadingMessage } className={ `notFound ${ms.notFound}` }>{ loadingMessage }</span> }
-          { typeof loadingMessage !== 'string' && loadingMessage }
-        </ul>
-            );
+        if (option.subcategories) {
+            return Object.entries(option.subcategories).map(this.renderOption)
         }
 
         return (
-      <ul className="optionContainer" style={ style.optionContainer }>
-        { options.length === 0 && <span style={ style.notFound } className={ `notFound ${ms.notFound}` }>{ emptyRecordMsg }</span> }
-        { !groupBy ? this.renderNormalOption() : this.renderGroupByOptions() }
-      </ul>
+            <PLPFilterOption
+                key={ key }
+                option={ option }
+                isRadio={ is_radio }
+            />
         );
-    }
+    };
 
-    renderGroupByOptions() {
-        const {
-            isObject = false, displayValue, showCheckbox, style, singleSelect
-        } = this.props;
-        const { groupedObject } = this.state;
-        return Object.keys(groupedObject).map((obj) => (
-				<React.Fragment key={ obj }>
-					<li className={ ms.groupHeading } style={ style.groupHeading }>{ obj }</li>
-					{ groupedObject[obj].map((option, i) => (
-						<li
-  key={ `option${i}` }
-  style={ style.option }
-  className={ `${ms.groupChildEle} ${this.fadeOutSelection(option) && ms.disableSelection} option` }
-  onClick={ () => this.onSelectItem(option) }
-						>
-							{ showCheckbox && !singleSelect && (
-                  <input
-                    type="checkbox"
-                    className={ ms.checkbox }
-                    readOnly
-                    checked={ this.isSelectedValue(option) }
-                  />
-							) }
-							{ isObject ? option[displayValue] : (option || '').toString() }
-						</li>
-					)) }
-				</React.Fragment>
-        ));
+    renderOptions() {
+        const { filter: { data } } = this.props;
+
+        return (
+            <ul>
+                { Object.entries(data).map(this.renderOption) }
+            </ul>
+        );
     }
 
     renderNormalOption() {
         const {
-            isObject = false, displayValue, showCheckbox, style, singleSelect
+            isObject = false, displayValue, showCheckbox, style, singleSelect, isRadio, onSelect
         } = this.props;
-        const { highlightOption } = this.state;
+
         return this.state.options.map((option, i) => (
-          <li
-            key={ `option${i}` }
-            style={ style.option }
-            className={ `${
-                highlightOption === i ? `${ms.highlightOption} highlight` : ''
-            } ${this.fadeOutSelection(option) && ms.disableSelection} option` }
-            onClick={ () => this.onSelectItem(option) }
-          >
-            { showCheckbox && !singleSelect && (
-              <input
-                type="checkbox"
-                readOnly
-                className={ `checkbox ${ms.checkbox}` }
-                checked={ this.isSelectedValue(option) }
-              />
-            ) }
-            { isObject ? option[displayValue] : (option || '').toString() }
-          </li>
+        //   <li
+        //     block="FieldMultiselect"
+        //     elem="List"
+        //   >
+        //     { showCheckbox && !singleSelect && (
+        //       <Field
+        //         type={ isRadio ? 'radio' : 'checkbox' }
+        //         id={ option.value }
+        //         name={ option.name }
+        //         value={ option.value }
+        //         checked={ option.checked }
+        //       />
+        //     ) }
+        //     <label>
+        //     { option.name }
+        //         <span>
+        //             { option.count ? ` (${option.count})` : null}
+        //         </span>
+        //     </label>
+        //   </li>
+        this.renderOption
         ));
-    }
-
-    renderSelectedList() {
-        const {
-            isObject = false, displayValue, style, singleSelect
-        } = this.props;
-        const { selectedValues, closeIconType } = this.state;
-        return selectedValues.map((value, index) => (
-      <span className={ `chip ${ms.chip} ${singleSelect && ms.singleChip} ${this.isDisablePreSelectedValues(value) && ms.disableSelection}` } key={ index } style={ style.chips }>
-        { !isObject ? (value || '').toString() : value[displayValue] }
-        <i
-          className={ `icon_cancel ${ms[closeIconType]} ${ms.closeIcon}` }
-          onClick={ () => this.onRemoveSelectedItem(value) }
-        />
-      </span>
-        ));
-    }
-
-    isDisablePreSelectedValues(value) {
-        const { isObject, disablePreSelectedValues, displayValue } = this.props;
-        const { preSelectedValues } = this.state;
-        if (!disablePreSelectedValues || !preSelectedValues.length) {
-            return false;
-        }
-        if (isObject) {
-            return (
-                preSelectedValues.filter((i) => i[displayValue] === value[displayValue])
-                    .length > 0
-            );
-        }
-
-        return preSelectedValues.filter((i) => i === value).length > 0;
-    }
-
-    fadeOutSelection(item) {
-        const { selectionLimit, showCheckbox, singleSelect } = this.props;
-        if (singleSelect) {
-            return;
-        }
-        const { selectedValues } = this.state;
-        if (selectionLimit == -1) {
-            return false;
-        }
-        if (selectionLimit != selectedValues.length) {
-            return false;
-        }
-        if (selectionLimit == selectedValues.length) {
-            if (!showCheckbox) {
-                return true;
-            }
-            if (this.isSelectedValue(item)) {
-                return false;
-            }
-
-            return true;
-        }
     }
 
     toggelOptionList() {
@@ -451,7 +371,7 @@ class FieldMultiselect extends React.Component {
     renderMultiselectContainer() {
         const { inputValue, toggleOptionsList, selectedValues } = this.state;
         const {
-            placeholder, style, singleSelect, id, hidePlaceholder, disable
+            placeholder, style, singleSelect, id, hidePlaceholder, disable, onChange
         } = this.props;
 
         return (
@@ -462,22 +382,24 @@ class FieldMultiselect extends React.Component {
           style={ style.searchBox }
           onClick={ singleSelect ? this.toggelOptionList : () => {} }
         >
-          { this.renderSelectedList() }
-          <input
-            type="text"
+          <button
             ref={ this.searchBox }
-            className="searchBox"
-            id={ `${id || 'search'}_input` }
+            type="button"
+            block="FieldMultiselect"
+            elem="FilterButton"
+            mods={ { toggleOptionsList } }
+            id={ placeholder }
             onChange={ this.onChange }
             value={ inputValue }
             onFocus={ this.toggelOptionList }
             onBlur={ () => setTimeout(this.toggelOptionList, 200) }
-            placeholder={ ((singleSelect && selectedValues.length) || (hidePlaceholder && selectedValues.length)) ? '' : placeholder }
             onKeyDown={ this.onArrowKeyNavigation }
             style={ style.inputField }
             autoComplete="off"
             disabled={ singleSelect || disable }
-          />
+          >
+            { placeholder }
+          </button>
           { singleSelect && (
 <i
   className={ `icon_cancel ${ms.icon_down_dir}` }
@@ -485,11 +407,16 @@ class FieldMultiselect extends React.Component {
           ) }
         </div>
         <div
-          className={ `optionListContainer ${ms.optionListContainer} ${
-              toggleOptionsList ? ms.displayBlock : ms.displayNone
-          }` }
+          block="FieldMultiselect"
+          elem="OptionListContainer"
+          mods={ { toggleOptionsList } }
         >
-          { this.renderOptionList() }
+          <fieldset
+              block="PLPFilter"
+              onChange={ onChange }
+            >
+                { this.renderOptions() }
+            </fieldset>
         </div>
       </div>
         );
@@ -501,26 +428,3 @@ class FieldMultiselect extends React.Component {
 }
 
 export default FieldMultiselect;
-
-Multiselect.defaultProps = {
-    options: [],
-    disablePreSelectedValues: false,
-    selectedValues: [],
-    isObject: true,
-    displayValue: 'model',
-    showCheckbox: false,
-    selectionLimit: -1,
-    placeholder: 'Select',
-    groupBy: '',
-    style: {},
-    emptyRecordMsg: 'No Options Available',
-    onSelect: () => {},
-    onRemove: () => {},
-    closeIcon: 'circle2',
-    singleSelect: false,
-    caseSensitiveSearch: false,
-    id: '',
-    closeOnSelect: true,
-    avoidHighlightFirstOption: false,
-    hidePlaceholder: false
-};

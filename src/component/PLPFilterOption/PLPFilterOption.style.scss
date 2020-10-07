@@ -1,3 +1,76 @@
 .PLPFilterOption {
+    &-List {
+        display: flex;
     
+        .Field {
+            margin: auto 5px auto 15px;
+
+            [type='radio']{
+                +label {           
+                    &:hover {
+                        &::after {
+                                --checkmark-color: var(--black-color);
+                        }
+                    }
+    
+                    border-radius: 50%;
+    
+                }
+                &:disabled + label {
+                    color: #b8b8b8;
+                    cursor: auto;
+                }
+    
+                &:checked + label {
+                    --primary-base-color: var(--white-color);
+                    border-color: #b8b8b8;
+                    
+                    &::after {
+                        --checkmark-color: var(--black-color);
+                    }
+                }
+
+                
+    
+                &:focus {
+
+                    &::after {
+                        --checkmark-color: var(--black-color);
+                    }
+                    
+                    + label {
+                        &::after {
+                            --checkmark-color: var(--black-color);
+                        }
+                    }
+                }
+
+                .PLPFilterOption {
+                    label {
+                        padding-top: 20px;
+                    }
+                }
+            }
+    
+    
+            [type='checkbox'] {
+    
+                &:checked + label {
+                    --primary-base-color: var(--black-color);
+
+                    &::after {
+                        --checkmark-color: var(--black-color);
+                    }
+                }
+    
+                &:hover + label {
+                    --primary-base-color: var(--black-color);
+
+                    &::after {
+                        --checkmark-color: var(--white-color);
+                    }
+                }
+            }
+        }
+    }
 }

@@ -1,3 +1,91 @@
+.FieldMultiselect {
+  &-FilterButton {
+    display: inline-block;
+    height: 42px;
+    line-height: 42px;
+    width: 200px;
+    border: solid 1px #ddd;
+    position: relative;
+    margin: 10px;
+    color: #000000;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    line-height: 18px;
+    font-weight: 200;
+    text-align: left;
+
+    &:after {
+      position: absolute;
+      content: '';
+      width: 0;
+      height: 0;
+      border: solid black;
+      border-width: 0 1px 1px 0;
+      display: inline-block;
+      padding: 2px 5px 5px 2px;
+      margin: 0 auto;
+      transform: rotate(45deg);
+      right: 10px;
+      top: 13px;
+      background: transparent;
+  }
+
+    &_toggleOptionsList {
+      margin-bottom: 0;
+      border-bottom: none;
+      max-height: 400px;
+    }
+  }
+
+  &-OptionListContainer {
+    position: absolute;
+    display: block;
+    width: 200px;
+    max-height: 0;
+    background: #fff;
+    margin-top: 1px;
+    z-index: 2;
+    overflow-y: auto;
+    border: none;
+    left: 10px;
+    transition: 150ms;
+
+    &_toggleOptionsList {
+      border: 1px solid #ddd;
+      border-top: none;
+      max-height: 400px;
+    }
+
+    li {
+      display: inline-flex;
+      min-height: 42px;
+      width: 100%;
+      font-size: 13px;
+      vertical-align: baseline;
+  
+      &::before {
+        content: none;
+      }
+      padding: 0;
+    }
+
+    &::-webkit-scrollbar {
+      background-color: var(--scrollbar-color);
+      width: 7px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: var(--scrollbar-thumb-color);
+    }
+  }
+
+
+  ul {
+    list-style-type: none;
+  }
+}
+
+
 .multiSelectContainer {
     position: relative;
     text-align: left;

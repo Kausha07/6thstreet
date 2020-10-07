@@ -22,10 +22,10 @@ class PLPFilters extends PureComponent {
         isLoading: PropTypes.bool.isRequired,
         filters: Filters.isRequired,
         activeOverlay: PropTypes.string.isRequired,
-        showOverlay: PropTypes.func.isRequired
-        // hideActiveOverlay: PropTypes.isRequired,
-        // goToPreviousNavigationState: PropTypes.isRequired,
-        // onReset: PropTypes.func.isRequired
+        showOverlay: PropTypes.func.isRequired,
+        hideActiveOverlay: PropTypes.isRequired,
+        goToPreviousNavigationState: PropTypes.isRequired,
+        onReset: PropTypes.func.isRequired
     };
 
     state = {
@@ -67,18 +67,19 @@ class PLPFilters extends PureComponent {
     };
 
     resetFilters = () => {
-        // const {
-        //     hideActiveOverlay,
-        //     goToPreviousNavigationState,
-        //     onReset,
-        //     activeOverlay
-        // } = this.props;
+        const {
+            hideActiveOverlay,
+            goToPreviousNavigationState,
+            onReset,
+            activeOverlay
+        } = this.props;
 
-        // if (activeOverlay === 'PLPFilter') {
-        //     hideActiveOverlay();
-        //     goToPreviousNavigationState();
-        //     onReset();
-        // }
+        if (activeOverlay === 'PLPFilter') {
+            hideActiveOverlay();
+            goToPreviousNavigationState();
+        }
+
+        onReset();
     };
 
     renderSeeResultButton() {
@@ -119,6 +120,7 @@ class PLPFilters extends PureComponent {
             <button
               block="Reset"
               elem="Button"
+              type="button"
               mix={ {
                   block: 'Reset',
                   mods: {
@@ -127,7 +129,7 @@ class PLPFilters extends PureComponent {
                   }
               } }
               aria-label={ __('Reset') }
-            //   onClick={ this.resetFilters }
+              onClick={ this.resetFilters }
             >
                 { __('clear all') }
             </button>
@@ -223,12 +225,13 @@ class PLPFilters extends PureComponent {
     );
 
     render() {
+        console.log('-----------------------------');
         const { isOpen, isArabic } = this.state;
 
         return (
             <>
                 { isOpen ? this.renderPopupFilters() : this.renderFilterButton() }
-                <div
+                <form
                   block="PLPFilters"
                   name="filters"
                 >
@@ -245,7 +248,7 @@ class PLPFilters extends PureComponent {
                     >
                         { this.renderResetFilterButton() }
                     </div>
-                </div>
+                </form>
             </>
         );
     }

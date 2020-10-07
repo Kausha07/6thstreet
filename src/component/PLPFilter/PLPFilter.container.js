@@ -29,10 +29,27 @@ class PLPFilterContainer extends PureComponent {
         onSelect: this.onSelect.bind(this)
     };
 
-    onSelect(value) {
-        const { filter: { category } } = this.props;
+    onSelect() {
+        const {
+            // setPLPFilter,
+            filter: { category }
+        } = this.props;
 
-        WebUrlParser.setParam(category, value);
+        // This syntax gets form with name "filters" from document
+        // then it extracts all inputs from form
+        const inputs = Array.from(document.forms.filters[category] || []);
+
+        const values = inputs.reduce((acc, node) => {
+            const { checked, value } = node;
+
+            if (checked) {
+                acc.push(value);
+            }
+
+            return acc;
+        }, []);
+
+        WebUrlParser.setParam(category, values);
     }
 
     containerProps = () => {

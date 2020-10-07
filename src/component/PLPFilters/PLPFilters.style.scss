@@ -209,6 +209,7 @@
 }
 
 .PLPFilters {
+    margin: 0 20px;
     display: flex;
     flex-wrap: wrap;
 
@@ -226,6 +227,7 @@
             font-size: 12px;
             font-weight: bold;
             height: auto;
+            margin-left: 10px;
             margin-bottom: 50px;
             padding: 0;
             text-transform: capitalize;
