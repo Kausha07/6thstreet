@@ -41,12 +41,9 @@ export class WishlistDispatcher {
                 ({ product }) => product.sku === sku
             );
 
-            await MagentoAPI.delete(
-                `/wishlist/delete/${ id }`,
-                { sku }
-            );
+            await MagentoAPI.delete(`/wishlist/delete/${ id }`);
 
-            this.updateWishlist(dispatch);
+            this.updateInitialWishlistData(dispatch);
         } catch (e) {
             // eslint-disable-next-line no-console
             console.log(e);
@@ -70,12 +67,9 @@ export class WishlistDispatcher {
         }
 
         try {
-            await MagentoAPI.post(
-                `/wishlist/add/${sku}`,
-                { sku }
-            );
+            await MagentoAPI.post(`/wishlist/add/${sku}`);
 
-            this.updateWishlist(dispatch);
+            this.updateInitialWishlistData(dispatch);
         } catch (e) {
             // eslint-disable-next-line no-console
             console.log(e);
