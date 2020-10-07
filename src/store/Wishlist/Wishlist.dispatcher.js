@@ -44,6 +44,8 @@ export class WishlistDispatcher {
             await MagentoAPI.delete(`/wishlist/delete/${ id }`);
 
             this.updateInitialWishlistData(dispatch);
+
+            dispatch(showNotification('success', __('Product has been removed from your Wish List!')));
         } catch (e) {
             // eslint-disable-next-line no-console
             console.log(e);
@@ -70,6 +72,8 @@ export class WishlistDispatcher {
             await MagentoAPI.post(`/wishlist/add/${sku}`);
 
             this.updateInitialWishlistData(dispatch);
+
+            dispatch(showNotification('success', __('Product added to wish-list!')));
         } catch (e) {
             // eslint-disable-next-line no-console
             console.log(e);
