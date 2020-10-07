@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 // import MyAccountAddressPopup from '../../../node_modules/@scandipwa/scandipwa/src/component/MyAccountAddressPopup.coponent';
 
-import MyAccountAddressPopup from 'Component/MyAccountAddressPopup';
+import MyAccountAddressPopup from 'SourceComponent/MyAccountAddressPopup/MyAccountAddressPopup.component';
 
 import './MyAccountAddressField.style';
 
