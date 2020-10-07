@@ -7,13 +7,7 @@
         }
 
         a {
-            line-height: 20px;
-            margin: 10px;
-            text-align: center;
-
-            &:last-child {
-                margin: 10px;
-            }
+            font-weight: 500;
 
             .Image {
                 margin-left: -20px;
@@ -32,6 +26,24 @@
                     margin-left: 0;
                     margin-right: -20px;
                 }
+            }
+        }
+    }
+
+    &-Title {
+        text-transform: uppercase;
+        width: 100%;
+    }
+
+    @include desktop {
+        &-ContentWrapper {
+            &-Content {
+                display: flex;
+                flex-direction: column;
+                flex-wrap: wrap;
+                height: 290px;
+                justify-content: flex-start;
+                margin-top: 10px;
             }
         }
     }

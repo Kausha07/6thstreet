@@ -7,10 +7,6 @@
     padding: 0;
     position: unset;
 
-    .DynamicContentBanner {
-        display: none;
-    }
-
     &:before {
         content: none;
     }
@@ -74,29 +70,38 @@
     }
 
     @include desktop {
-        padding: 0 40px;
+        padding: 0 15px;
         z-index: 3;
 
         &:first-child {
             padding-left: 30px;
         }
 
-        &_isArabic {
-            &:first-child {
-                padding-left: 40px;
-                padding-right: 30px;
-            }
-        }
-
         .DynamicContent {
             background-color: var(--white);
             display: flex;
-            height: 100%;
+            height: 390px;
+            pointer-events: all;
+            position: absolute;
+            width: 100vw;
+            max-width: 1410px;
             left: 0;
-            pointer-events: none;
-            position: fixed;
-            width: 1410px;
-            margin: 0 auto;
+
+            &:after {
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.7);
+                position: fixed;
+                left: 0;
+                content: ".";
+                color: transparent;
+                z-index: -1;
+                pointer-events: none;
+            }
+
+            & > div {
+                border-right: 1px solid var(--light-gray);
+            }
 
             .DynamicContentBanner {
                 display: block;
@@ -111,11 +116,23 @@
             .MenuBrands {
                 order: 1;
                 width: 25%;
+
+                &-ContentWrapper {
+                    a {
+                        .Image {
+                            display: none;
+                        }
+                    }
+                }
             }
         }
 
         &:nth-last-child(2) {
+            text-transform: uppercase;       //capitalize
+
             .DynamicContent {
+                background-color: var(--red);
+
                 .MenuGrid {
                     &-Content {
                         background-color: var(--red);
@@ -128,14 +145,40 @@
             }
         }
 
+        &-LastCategoryBackground {
+            background-color: var(--red);
+            color: transparent;
+            margin-left: -65px;
+            transform: skew(-15deg, 0deg);
+            width: 70px;
+
+            &_isArabic {
+                background-color: var(--red);
+                color: transparent;
+                margin-right: -90px;
+                transform: skew(-15deg, 0deg);
+                width: 85px;
+            }
+        }
+
         &:hover {
             cursor: default;
             font-weight: bold;
             height: 40px;
 
-            .MenuGrid {
+            /*.MenuGrid {
                 background: rgba(0, 0, 0, 0.7);
+            }*/
+        }
+
+        &_isArabic {
+            padding: 0 10px;
+
+            &:first-child {
+                padding-left: 10px;
+                padding-right: 30px;
             }
+
         }
     }
 }

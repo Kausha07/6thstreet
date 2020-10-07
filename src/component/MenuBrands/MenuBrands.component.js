@@ -40,8 +40,20 @@ class MenuBrands extends PureComponent {
         return (
             <div block="MenuBrands">
                 <div block="MenuBrands" elem="ContentWrapper">
-                    <span>Shop By Brads</span>
-                    { this.renderItems() }
+                    <span
+                      block="MenuBrands"
+                      elem="Title"
+                    >
+                        { __('Shop By Brads') }
+                    </span>
+                    <div
+                      mix={ {
+                          block: 'MenuBrands',
+                          elem: 'ContentWrapper-Content'
+                      } }
+                    >
+                        { this.renderItems() }
+                    </div>
                 </div>
             </div>
         );

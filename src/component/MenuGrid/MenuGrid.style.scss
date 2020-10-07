@@ -1,5 +1,6 @@
 .MenuGrid {
     width: 25%;
+    margin: 20px 0 30px 35px;
 
     &-Content {
         background-color: var(--white);
@@ -20,8 +21,6 @@
     }
 
     &-Column {
-        border: 0;
-        margin: 20px 0 30px 35px;
         width: 100%;
 
         &:not(:last-child) {
@@ -158,9 +157,9 @@
     }
 
     @include desktop {
-        &-Content {
-            left: 13px;
+        border-right: 3px solid green;
 
+        &-Content {
             &_isArabic {
                 left: -27px;
 

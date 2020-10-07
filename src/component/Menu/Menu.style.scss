@@ -98,32 +98,11 @@
             }
         }
 
-        .MenuCategory {
-            &-LastCategoryBackground {
-                background-color: var(--red);
-                color: transparent;
-                margin-left: -90px;
-                transform: skew(-15deg, 0deg);
-                width: 80px;
-            }
-        }
-
         &-Header {
             &-Mobile {
                 display: none;
             }
         }
 
-        &_isArabic {
-            .MenuCategory {
-                &-LastCategoryBackground {
-                    background-color: var(--red);
-                    color: transparent;
-                    margin-right: -125px;
-                    transform: skew(-15deg, 0deg);
-                    width: 105px;
-                }
-            }
-        }
     }
 }
