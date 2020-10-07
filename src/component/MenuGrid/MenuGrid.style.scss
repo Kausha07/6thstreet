@@ -111,6 +111,10 @@
                         display: none;
                     }*/
 
+                    &:first-child {
+                        display: none;
+                    }
+
                     &:last-child {
                         margin: 10px;
                     }
@@ -195,6 +199,15 @@
                     div {
                         display: none;
                     }
+                }
+            }
+            .ViewAll {
+                &-Link {
+                    display: none;
+                }
+
+                &-Button {
+                    display: none;
                 }
             }
         }

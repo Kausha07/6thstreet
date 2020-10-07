@@ -14,7 +14,12 @@ class HeaderMenu extends PureComponent {
     };
 
     state = {
-        prevLocation: ''
+        prevLocation: '',
+        expanded: false
+    };
+
+    renderMap = {
+        renderCategoriesButton: this.renderCategoriesButton.bind(this)
     };
 
     static getDerivedStateFromProps(props, state) {
@@ -22,13 +27,14 @@ class HeaderMenu extends PureComponent {
         const { prevLocation } = state;
 
         return location !== prevLocation ? ({
-            isExpanded: false,
+            expanded: false,
             prevLocation: location
         }) : null;
     }
 
     onCategoriesClick = () => {
         const { toggleOverlayByKey } = this.props;
+        this.setState(({ expanded }) => ({ expanded: !expanded }));
         toggleOverlayByKey(MOBILE_MENU_SIDEBAR_ID);
     };
 
@@ -39,10 +45,15 @@ class HeaderMenu extends PureComponent {
     }
 
     renderCategoriesButton() {
+        const { expanded } = this.state;
+
         return (
             <button
-              block="HeaderMenu"
-              elem="Button"
+              mix={ {
+                  block: 'HeaderMenu',
+                  elem: 'Button',
+                  mods: { isExpanded: expanded }
+              } }
               onClick={ this.onCategoriesClick }
             >
                <label htmlFor="Categories">{ __('Categories') }</label>

@@ -55,7 +55,7 @@ class MenuGrid extends PureComponent {
         return items.map(this.renderItem);
     }
 
-    renderButton() {
+    renderMobileButton() {
         const {
             button: {
                 label,
@@ -77,6 +77,26 @@ class MenuGrid extends PureComponent {
                     { label }
                 </Link>
             </div>
+        );
+    }
+
+    renderDesktopButton() {
+        const {
+            button: {
+                label,
+                link
+            }
+        } = this.props;
+
+        const linkTo = {
+            pathname: link,
+            state: { plp_config: {} }
+        };
+
+        return (
+            <Link to={ linkTo } onClick={ this.hideMenu }>
+                { label }
+            </Link>
         );
     }
 
@@ -132,7 +152,7 @@ class MenuGrid extends PureComponent {
                             >
                                 { __('Shop by product') }
                             </span>
-                            { this.renderButton() }
+                            { this.renderMobileButton() }
                             <div
                               mix={ {
                                   block: 'MenuGrid-Column',
@@ -140,6 +160,7 @@ class MenuGrid extends PureComponent {
                                   mods: { isArabic }
                               } }
                             >
+                                { this.renderDesktopButton() }
                                 { this.renderItems() }
                             </div>
                         </div>
