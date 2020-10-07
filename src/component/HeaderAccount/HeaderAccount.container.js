@@ -28,10 +28,6 @@ export class HeaderAccountContainer extends PureComponent {
         isAccount: false
     };
 
-    containerFunctions = {
-        // getData: this.getData.bind(this)
-    };
-
     containerProps = () => ({
         customer: this._getCustomerInformation()
     });
@@ -50,7 +46,6 @@ export class HeaderAccountContainer extends PureComponent {
         return (
             <HeaderAccount
               { ...this.props }
-              { ...this.containerFunctions }
               { ...this.containerProps() }
             />
         );
