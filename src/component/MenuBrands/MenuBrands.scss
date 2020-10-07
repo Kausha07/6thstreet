@@ -1,0 +1,38 @@
+.MenuBrands {
+    margin: 20px 0 30px 35px;
+
+    &-ContentWrapper {
+        span, a {
+            color: $black;
+        }
+
+        a {
+            line-height: 20px;
+            margin: 10px;
+            text-align: center;
+
+            &:last-child {
+                margin: 10px;
+            }
+
+            .Image {
+                margin-left: -20px;
+                padding: 50px;
+                width: 100px;
+
+                &-Image {
+                    border-radius: 50%;
+                }
+            }
+        }
+
+        &_isArabic {
+            a {
+                .Image {
+                    margin-left: 0;
+                    margin-right: -20px;
+                }
+            }
+        }
+    }
+}

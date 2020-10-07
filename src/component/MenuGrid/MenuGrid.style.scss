@@ -1,16 +1,9 @@
 .MenuGrid {
-    height: 100%;
-    left: 0;
-    pointer-events: none;
-    position: fixed;
-    width: 100vw;
+    width: 25%;
 
     &-Content {
         background-color: var(--white);
-        height: 390px;
-        margin: 0 auto;
         pointer-events: all;
-        width: 1410px;
 
         span, a {
             color: var(--black);
@@ -29,7 +22,7 @@
     &-Column {
         border: 0;
         margin: 20px 0 30px 35px;
-        width: 25%;
+        width: 100%;
 
         &:not(:last-child) {
             border-right: solid 1px var(--grey);

@@ -122,6 +122,30 @@ class MenuGrid extends PureComponent {
         );
     }
 
+    renderSubcategories() {
+        return (
+            <>
+                <span
+                  block="MenuGrid"
+                  elem="Title"
+                >
+                    { __('Shop by product') }
+                </span>
+                { this.renderMobileButton() }
+                <div
+                  mix={ {
+                      block: 'MenuGrid-Column',
+                      elem: 'Content',
+                      mods: { isArabic }
+                  } }
+                >
+                    { this.renderDesktopButton() }
+                    { this.renderItems() }
+                </div>
+            </>
+        );
+    }
+
     render() {
         const { isArabic } = this.state;
         const { isAllShowing } = this.state;
@@ -146,37 +170,8 @@ class MenuGrid extends PureComponent {
                               mods: { isAllShow: isAllShowing }
                           } }
                         >
-                            <span
-                              block="MenuGrid"
-                              elem="Title"
-                            >
-                                { __('Shop by product') }
-                            </span>
-                            { this.renderMobileButton() }
-                            <div
-                              mix={ {
-                                  block: 'MenuGrid-Column',
-                                  elem: 'Content',
-                                  mods: { isArabic }
-                              } }
-                            >
-                                { this.renderDesktopButton() }
-                                { this.renderItems() }
-                            </div>
+                            { this.renderSubcategories() }
                         </div>
-                        <div
-                          block="MenuGrid"
-                          elem="Column"
-                        >
-                            <div
-                              block="MenuGrid-Column"
-                              elem="Content"
-                            />
-                        </div>
-                        <div
-                          block="MenuGrid"
-                          elem="Column"
-                        />
                     </div>
                 </div>
             </div>

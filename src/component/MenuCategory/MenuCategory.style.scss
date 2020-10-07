@@ -89,7 +89,29 @@
         }
 
         .DynamicContent {
-            margin-top: 0;
+            background-color: var(--white);
+            display: flex;
+            height: 100%;
+            left: 0;
+            pointer-events: none;
+            position: fixed;
+            width: 1410px;
+            margin: 0 auto;
+
+            .DynamicContentBanner {
+                display: block;
+                order: 2;
+
+                .Image {
+                    height: 300px;
+                    width: 300px;
+                }
+            }
+
+            .MenuBrands {
+                order: 1;
+                width: 25%;
+            }
         }
 
         &:nth-last-child(2) {
