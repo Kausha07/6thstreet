@@ -1,6 +1,9 @@
+import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import Image from 'Component/Image';
 import Link from 'Component/Link';
+import { MOBILE_MENU_SIDEBAR_ID } from 'Component/MobileMenuSideBar/MoblieMenuSideBar.config';
 import { CategoryButton, CategoryItems } from 'Util/API/endpoint/Categories/Categories.type';
 import { isArabic } from 'Util/App';
 
@@ -8,26 +11,40 @@ import './MenuGrid.style';
 
 class MenuGrid extends PureComponent {
     state = {
-        isArabic: isArabic()
+        isArabic: isArabic(),
+        isAllShowing: false
     };
 
     static propTypes = {
         button: CategoryButton,
-        items: CategoryItems.isRequired
+        items: CategoryItems.isRequired,
+        toggleOverlayByKey: PropTypes.func.isRequired
     };
 
     static defaultProps = {
         button: {}
     };
 
+    constructor(props) {
+        super(props);
+        this.showAllCategories = this.showAllCategories.bind(this);
+    }
+
     renderItem = (item, i) => {
         const {
+            image_url,
             label,
             link
         } = item;
 
         return (
-            <Link to={ link } key={ i }>
+            <Link
+              to={ link }
+              key={ i }
+            >
+                <Image
+                  src={ image_url }
+                />
                 { label }
             </Link>
         );
@@ -38,7 +55,7 @@ class MenuGrid extends PureComponent {
         return items.map(this.renderItem);
     }
 
-    renderButton() {
+    renderMobileButton() {
         const {
             button: {
                 label,
@@ -52,34 +69,98 @@ class MenuGrid extends PureComponent {
         };
 
         return (
-            <Link to={ linkTo }>
+            <div
+              block="ViewAll"
+              elem="Link"
+            >
+                <Link to={ linkTo } onClick={ this.hideMenu }>
+                    { label }
+                </Link>
+            </div>
+        );
+    }
+
+    renderDesktopButton() {
+        const {
+            button: {
+                label,
+                link
+            }
+        } = this.props;
+
+        const linkTo = {
+            pathname: link,
+            state: { plp_config: {} }
+        };
+
+        return (
+            <Link to={ linkTo } onClick={ this.hideMenu }>
                 { label }
             </Link>
         );
     }
 
+    hideMenu = () => {
+        const { toggleOverlayByKey } = this.props;
+        toggleOverlayByKey(MOBILE_MENU_SIDEBAR_ID);
+    };
+
+    showAllCategories() {
+        this.setState(({ isAllShowing }) => ({ isAllShowing: !isAllShowing }));
+    }
+
+    // in case if Promo block will be added, use this function (styles already made)
+    renderViewAllButton() {
+        return (
+            <button
+              block="ViewAll"
+              elem="Button"
+              onClick={ this.showAllCategories }
+            >
+                view all
+            </button>
+        );
+    }
+
     render() {
         const { isArabic } = this.state;
+        const { isAllShowing } = this.state;
 
         return (
             <div block="MenuGrid">
-                <div mix={ { block: 'MenuGrid', elem: 'Content', mods: { isArabic } } }>
+                <div
+                  mix={ {
+                      block: 'MenuGrid',
+                      elem: 'Content',
+                      mods: { isArabic }
+                  } }
+                >
                     <div
                       block="MenuGrid"
                       elem="Columns"
                     >
                         <div
-                          block="MenuGrid"
-                          elem="Column"
+                          mix={ {
+                              block: 'MenuGrid',
+                              elem: 'Column',
+                              mods: { isAllShow: isAllShowing }
+                          } }
                         >
-                            <span>
-                                Shop by product
-                            </span>
-                            <div
-                              block="MenuGrid-Column"
-                              elem="Content"
+                            <span
+                              block="MenuGrid"
+                              elem="Title"
                             >
-                                { this.renderButton() }
+                                { __('Shop by product') }
+                            </span>
+                            { this.renderMobileButton() }
+                            <div
+                              mix={ {
+                                  block: 'MenuGrid-Column',
+                                  elem: 'Content',
+                                  mods: { isArabic }
+                              } }
+                            >
+                                { this.renderDesktopButton() }
                                 { this.renderItems() }
                             </div>
                         </div>
@@ -87,9 +168,6 @@ class MenuGrid extends PureComponent {
                           block="MenuGrid"
                           elem="Column"
                         >
-                            <span>
-                                Shop by brand
-                            </span>
                             <div
                               block="MenuGrid-Column"
                               elem="Content"

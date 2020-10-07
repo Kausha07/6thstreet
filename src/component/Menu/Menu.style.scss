@@ -5,17 +5,35 @@
         display: flex;
     }
 
+    @include mobile {
+        &-Container {
+            .HeaderGenders {
+                    width: 280px;
+                }
+        }
+    }
+
+    @include tablet {
+        &-Container {
+            .HeaderGenders {
+                width: 50%;
+            }
+        }
+    }
+
     @include before-desktop {
-        border-top: 1px solid var(--grey);
-        width: 270px;
+        border-right: 1px solid var(--light-gray);
+        height: 100%;
+        margin-top: 20px;
+        width: 35%;
 
         &-Container {
             flex-direction: column;
+            height: 100%;
 
             .HeaderGenders {
                 display: grid;
                 grid-auto-flow: column;
-                width: 280px;
 
                 .GenderButton {
                     &-Button {
@@ -23,6 +41,50 @@
                     }
                 }
             }
+        }
+
+        &-Header {
+            &-Mobile {
+                &-Top {
+                    border-bottom: 1px solid var(--grey);
+
+                    .HeaderCart {
+                        &-Button {
+                            float: right;
+                            margin-right: 20px;
+                            margin-top: -35px;
+                        }
+                    }
+
+                    &_isArabic {
+                        .HeaderCart {
+                            &-Button {
+                                float: left;
+                                margin-left: 20px;
+                                margin-right: 0;
+                            }
+                        }
+                    }
+                }
+
+                .HeaderSearch {
+                    height: 30px;
+                    margin-top: 15px;
+
+                    .Field {
+                        margin: 10px 20px;
+                        width: 340px;
+
+                        #search-field {
+                            width: 340px;
+                        }
+                    }
+                }
+            }
+        }
+
+        &_isArabic {
+            border-left: 1px solid var(--light-gray);
         }
     }
 
@@ -43,6 +105,12 @@
                 margin-left: -90px;
                 transform: skew(-15deg, 0deg);
                 width: 80px;
+            }
+        }
+
+        &-Header {
+            &-Mobile {
+                display: none;
             }
         }
 

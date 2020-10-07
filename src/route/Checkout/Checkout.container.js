@@ -6,6 +6,9 @@ import {
     mapDispatchToProps as sourceMapDispatchToProps,
     mapStateToProps
 } from 'SourceRoute/Checkout/Checkout.container';
+import { setCartId } from 'Store/Cart/Cart.action';
+import CartDispatcher from 'Store/Cart/Cart.dispatcher';
+import { CART_ITEMS_CACHE_KEY } from 'Store/Cart/Cart.reducer';
 import CheckoutDispatcher from 'Store/Checkout/Checkout.dispatcher';
 import { updateMeta } from 'Store/Meta/Meta.action';
 import { isSignedIn } from 'Util/Auth';
@@ -16,7 +19,9 @@ export const mapDispatchToProps = (dispatch) => ({
     ...sourceMapDispatchToProps(dispatch),
     estimateShipping: (address) => CheckoutDispatcher.estimateShipping(dispatch, address),
     saveAddressInformation: (address) => CheckoutDispatcher.saveAddressInformation(dispatch, address),
-    createOrder: (code, additional_data) => CheckoutDispatcher.createOrder(dispatch, code, additional_data)
+    createOrder: (code, additional_data) => CheckoutDispatcher.createOrder(dispatch, code, additional_data),
+    setCartId: (cartId) => dispatch(setCartId(cartId)),
+    createEmptyCart: () => CartDispatcher.getCart(dispatch)
 });
 
 export class CheckoutContainer extends SourceCheckoutContainer {
@@ -49,15 +54,13 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     onShippingEstimationFieldsChange(address) {
         const { estimateShipping } = this.props;
         const Checkout = this;
-        const { email } = this.state;
 
         /* eslint-disable */
         delete address.region_id;
 
         estimateShipping({
             ...address,
-            default_shipping: true,
-            email: address.email ?? email
+            default_shipping: true
         }).then(
             (response) => {
                 if (typeof response !== 'undefined') {
@@ -117,6 +120,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
                     if (success) {
                         this.setDetailsStep(order_id);
+                        this.resetCart();
                     }
                 },
                 this._handleError
@@ -124,6 +128,14 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         } catch (e) {
             this._handleError(e);
         }
+    }
+
+    resetCart() {
+        const { setCartId, createEmptyCart } = this.props;
+
+        BrowserDatabase.deleteItem(CART_ITEMS_CACHE_KEY);
+        setCartId('');
+        createEmptyCart();
     }
 }
 
