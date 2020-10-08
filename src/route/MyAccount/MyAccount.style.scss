@@ -1,5 +1,19 @@
 .MyAccount {
     &-Wrapper {
-        display: flex;
+        @include desktop {
+            display: flex;
+        }
+    }
+
+    &-Heading {
+        @include before-desktop {
+            display: none;
+        }
+    }
+
+    &-TabContent {
+        @include desktop {
+            min-width: 540px;
+        }
     }
 }
