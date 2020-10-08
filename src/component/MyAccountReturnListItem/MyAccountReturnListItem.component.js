@@ -16,20 +16,9 @@ class MyAccountReturnListItem extends PureComponent {
         const { return: { date } } = this.props;
 
         return (
-            <p>{ date }</p>
-        );
-    }
-
-    renderID() {
-        const {
-            linkTo,
-            return: { return_increment_id }
-        } = this.props;
-
-        return (
-            <Link to={ linkTo }>
-                { return_increment_id }
-            </Link>
+            <span block="MyAccountReturnListItem" elem="Date">
+                { date }
+            </span>
         );
     }
 
@@ -37,7 +26,9 @@ class MyAccountReturnListItem extends PureComponent {
         const { return: { status } } = this.props;
 
         return (
-            <p>{ status }</p>
+            <span block="MyAccountReturnListItem" elem="Status">
+                { status }
+            </span>
         );
     }
 
@@ -47,7 +38,7 @@ class MyAccountReturnListItem extends PureComponent {
         return (
             <Link
               block="MyAccountReturnListItem"
-              elem="Order"
+              elem="OrderNumber"
               to={ `/my-account/my-orders/${ order_id }` }
             >
                 { order_id }
@@ -56,15 +47,17 @@ class MyAccountReturnListItem extends PureComponent {
     }
 
     render() {
+        const { linkTo } = this.props;
+
         return (
-            <div
+            <Link
               block="MyAccountReturnListItem"
+              to={ linkTo }
             >
-                { this.renderID() }
                 { this.renderDate() }
                 { this.renderOrder() }
                 { this.renderStatus() }
-            </div>
+            </Link>
         );
     }
 }

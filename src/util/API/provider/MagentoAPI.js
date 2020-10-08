@@ -21,7 +21,7 @@ class MagentoAPI {
 
         if (body) {
             // Handle POST requests
-            options.body = body;
+            options.body = JSON.stringify(body);
         }
 
         const { AppState: { locale } } = getStore().getState();

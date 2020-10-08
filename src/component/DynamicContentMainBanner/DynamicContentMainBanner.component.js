@@ -32,6 +32,8 @@ class DynamicContentMainBanner extends PureComponent {
                 <Image
                   key={ i }
                   src={ url }
+                  ratio="custom"
+                  height="auto"
                 />
             );
         }
@@ -41,7 +43,11 @@ class DynamicContentMainBanner extends PureComponent {
               to={ link }
               key={ i }
             >
-                <Image src={ url } />
+                <Image
+                  src={ url }
+                  ratio="custom"
+                  height="auto"
+                />
             </Link>
         );
     }

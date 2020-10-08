@@ -22,28 +22,7 @@ class DynamicContentGrid extends PureComponent {
         return (
             <div block="CategoryItem" elem="Content">
                 <Link to={ link } key={ i }>
-                    <Image src={ url } />
-                </Link>
-                <div block="CategoryItem" elem="Text">
-                    <span
-                      block="CategoryItem"
-                      elem="Title"
-                    >
-                        { __('category title') }
-                    </span>
-                    <span
-                      block="CategoryItem"
-                      elem="SubTitle"
-                    >
-                        { __('category subtitle') }
-                    </span>
-                </div>
-                <Link to={ link } key={ i }>
-                    <button
-                      block="button secondary medium"
-                    >
-                        { __('shop now') }
-                    </button>
+                    <Image src={ url } ratio="custom" height="auto" />
                 </Link>
             </div>
         );
@@ -68,22 +47,9 @@ class DynamicContentGrid extends PureComponent {
         );
     }
 
-    renderHeading() {
-        return (
-            <div
-              block="DynamicContentGrid"
-              elem="Heading"
-            >
-                <h2>Category Heading</h2>
-                <span>Lorem ipsum dolor sit amet, consectetur adipiscing elit</span>
-            </div>
-        );
-    }
-
     render() {
         return (
             <div block="DynamicContentGrid">
-                { this.renderHeading() }
                 { this.renderGrid() }
             </div>
         );

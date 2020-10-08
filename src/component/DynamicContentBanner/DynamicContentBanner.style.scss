@@ -4,15 +4,18 @@
 }
 
 .DynamicContentBanner {
-    margin: 20px 31px;
-    background: var(--burning-orange);
+    margin: 20px 10px;
     color: var(--white);
     text-align: center;
     text-transform: uppercase;
     font-weight: 400;
     font-size: 16px;
-        
-    .Image_ratio_square {
-        padding-bottom: 7.09%;
+
+    .Image {
+        height: auto;
+
+        &-Image {
+            position: static;
+        }
     }
 }

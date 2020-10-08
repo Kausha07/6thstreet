@@ -1,1 +1,1 @@
-export { default } from './MenuGrid.component';
+export { default } from './MenuGrid.container';

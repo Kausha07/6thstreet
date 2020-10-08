@@ -42,23 +42,40 @@ class PDPAddToCart extends PureComponent {
         return null;
     }
 
-    getSizeSelect() {
+    renderSizeAndOnQunatityBasedMessage(code) {
         const {
-            product, selectedSizeType, sizeObject
+            product: { simple_products }, selectedSizeType
         } = this.props;
 
-        if (product.simple_products !== undefined && product[`size_${selectedSizeType}`].length !== 0) {
+        const size = simple_products[code].size[selectedSizeType];
+
+        switch (simple_products[code].quantity) {
+        case '0':
+            return (`${size} - Out of stock`);
+        case '1':
+            return (`${size} - 1 left in stock`);
+        case '2' || '3':
+            return (`${size} - low stock`);
+        default:
+            return size;
+        }
+    }
+
+    getSizeSelect() {
+        const {
+            product: { simple_products }, product, selectedSizeType, sizeObject
+        } = this.props;
+
+        if (simple_products !== undefined && product[`size_${selectedSizeType}`].length !== 0) {
             const listItems = sizeObject.sizeCodes.map((code) => (
                 <option
                   key={ code }
                   block="PDPAddToCart"
                   elem="SizeOption"
                   value={ code }
-                  disabled={ product.simple_products[code].quantity === '0' }
+                  disabled={ simple_products[code].quantity === '0' }
                 >
-                    { product.simple_products[code].size[selectedSizeType] }
-                    { product.simple_products[code].quantity === '0' ? '- Out of stock' : '' }
-                    { product.simple_products[code].quantity === '1' ? ' - 1 left in stock' : '' }
+                    { this.renderSizeAndOnQunatityBasedMessage(code) }
                 </option>
             ));
 

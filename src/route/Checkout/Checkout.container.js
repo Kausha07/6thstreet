@@ -6,6 +6,9 @@ import {
     mapDispatchToProps as sourceMapDispatchToProps,
     mapStateToProps
 } from 'SourceRoute/Checkout/Checkout.container';
+import { setCartId } from 'Store/Cart/Cart.action';
+import CartDispatcher from 'Store/Cart/Cart.dispatcher';
+import { CART_ITEMS_CACHE_KEY } from 'Store/Cart/Cart.reducer';
 import CheckoutDispatcher from 'Store/Checkout/Checkout.dispatcher';
 import { updateMeta } from 'Store/Meta/Meta.action';
 import { isSignedIn } from 'Util/Auth';
@@ -15,7 +18,10 @@ import { ONE_MONTH_IN_SECONDS } from 'Util/Request/QueryDispatcher';
 export const mapDispatchToProps = (dispatch) => ({
     ...sourceMapDispatchToProps(dispatch),
     estimateShipping: (address) => CheckoutDispatcher.estimateShipping(dispatch, address),
-    saveAddressInformation: (address) => CheckoutDispatcher.saveAddressInformation(dispatch, address)
+    saveAddressInformation: (address) => CheckoutDispatcher.saveAddressInformation(dispatch, address),
+    createOrder: (code, additional_data) => CheckoutDispatcher.createOrder(dispatch, code, additional_data),
+    setCartId: (cartId) => dispatch(setCartId(cartId)),
+    createEmptyCart: () => CartDispatcher.getCart(dispatch)
 });
 
 export class CheckoutContainer extends SourceCheckoutContainer {
@@ -53,8 +59,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         delete address.region_id;
 
         estimateShipping({
-            default_shipping: true,
-            ...address
+            ...address,
+            default_shipping: true
         }).then(
             (response) => {
                 if (typeof response !== 'undefined') {
@@ -95,6 +101,41 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             },
             this._handleError
         );
+    }
+
+    async savePaymentInformation(paymentInformation) {
+        this.setState({ isLoading: true });
+        
+        await this.savePaymentMethodAndPlaceOrder(paymentInformation)
+    }
+
+    async savePaymentMethodAndPlaceOrder(paymentInformation) {
+        const { paymentMethod: { code, additional_data } } = paymentInformation;
+        const { createOrder } = this.props;
+
+        try {
+            createOrder(code, additional_data).then(
+                ({ data }) => {
+                    const { order_id, success } = data;
+
+                    if (success) {
+                        this.setDetailsStep(order_id);
+                        this.resetCart();
+                    }
+                },
+                this._handleError
+            );
+        } catch (e) {
+            this._handleError(e);
+        }
+    }
+
+    resetCart() {
+        const { setCartId, createEmptyCart } = this.props;
+
+        BrowserDatabase.deleteItem(CART_ITEMS_CACHE_KEY);
+        setCartId('');
+        createEmptyCart();
     }
 }
 

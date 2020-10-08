@@ -1,8 +1,10 @@
 import { getStore } from 'Store';
 import { setShipping } from 'Store/Checkout/Checkout.action';
 import {
+    createOrder,
     estimateShippingMethods,
     saveShippingInformation,
+    selectPaymentMethod,
     validateShippingAddress
 } from 'Util/API/endpoint/Checkout/Checkout.enpoint';
 import Logger from 'Util/Logger';
@@ -31,6 +33,32 @@ export class CheckoutDispatcher {
         return saveShippingInformation({
             cartId,
             data: address
+        });
+    }
+
+    async selectPaymentMethod(dispatch, code) {
+        const { Cart: { cartId } } = getStore().getState();
+
+        return selectPaymentMethod({
+            cartId,
+            data: {
+                method: code,
+                cart_id: cartId
+            }
+        });
+    }
+
+    async createOrder(dispatch, code, additional_data) {
+        const { Cart: { cartId } } = getStore().getState();
+
+        return createOrder({
+            data: {
+                cart_id: cartId,
+                payment: {
+                    method: code,
+                    data: additional_data
+                }
+            }
         });
     }
 }
