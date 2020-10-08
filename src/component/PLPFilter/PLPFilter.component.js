@@ -19,17 +19,10 @@ class PLPFilter extends PureComponent {
         onSelect: PropTypes.func.isRequired
     };
 
-    filterData = {
-        id: '',
-        label: '',
-        value: ''
-    };
-
     renderDropDownList() {
         const {
             filter: {
                 label,
-                data,
                 category,
                 is_radio
             }, onSelect, filter
@@ -39,25 +32,11 @@ class PLPFilter extends PureComponent {
             return null;
         }
 
-        console.log(filter);
-
-        // eslint-disable-next-line no-return-assign
-        const template = Object.keys(data).map((item) => (
-            this.filterData = {
-                name: data[item].label,
-                id: data[item].facet_key,
-                count: data[item].product_count,
-                value: data[item].facet_value,
-                checked: data[item].is_selected
-            }
-        ));
-
         return (
             <FieldMultiselect
               placeholder={ label }
               showCheckbox
               isRadio={ is_radio }
-              options={ template }
               onChange={ onSelect }
               filter={ filter }
             />
