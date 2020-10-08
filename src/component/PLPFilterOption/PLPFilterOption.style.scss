@@ -1,4 +1,9 @@
 .PLPFilterOption {
+    &-Input {
+        &:checked {
+            background: black !important;
+        }
+    }
     &-List {
         display: flex;
 
@@ -10,6 +15,13 @@
         span {
             margin-left: 5px;
             color: #666;
+        }
+
+        @include before-desktop {
+            justify-content: space-between;
+            border-bottom: solid 1px #ddd;
+            margin: auto 7%;
+            flex-direction: row-reverse;
         }
     
         .Field {
@@ -60,6 +72,14 @@
                         padding-top: 20px;
                     }
                 }
+
+                @include before-desktop {
+                    &:checked + label {
+                        &::after {
+                            --checkmark-color: #F96446;
+                        }
+                    }
+                }
             }
     
     
@@ -78,6 +98,20 @@
 
                     &::after {
                         --checkmark-color: transparent;
+                    }
+                }
+
+                @include before-desktop {
+                    + label {
+                        border-color: transparent;
+                    }
+
+                    &:checked + label {
+                        --primary-base-color: transparent;
+    
+                        &::after {
+                            --checkmark-color: #F96446;
+                        }
                     }
                 }
             }

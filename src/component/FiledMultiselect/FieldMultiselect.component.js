@@ -11,11 +11,15 @@ class FieldMultiselect extends PureComponent {
     static propTypes = {
         filter: Filter.isRequired,
         onChange: PropTypes.func.isRequired,
-        placeholder: PropTypes.string
+        placeholder: PropTypes.string,
+        activeFilter: PropTypes.object,
+        isChecked: PropTypes.bool
     };
 
     static defaultProps = {
-        placeholder: ''
+        placeholder: '',
+        activeFilter: {},
+        isChecked: false
     };
 
     constructor(props) {
@@ -28,7 +32,7 @@ class FieldMultiselect extends PureComponent {
     }
 
     renderOption = ([key, option]) => {
-        const { filter: { is_radio } } = this.props;
+        const { filter: { is_radio }, activeFilter, isChecked } = this.props;
 
         if (option.subcategories) {
             return Object.entries(option.subcategories).map(this.renderOption);
@@ -39,6 +43,8 @@ class FieldMultiselect extends PureComponent {
               key={ key }
               option={ option }
               isRadio={ is_radio }
+              activeFilter={ activeFilter }
+              isChecked={ isChecked }
             />
         );
     };

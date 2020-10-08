@@ -11,6 +11,7 @@ import { PureComponent } from 'react';
 import PLPFilter from 'Component/PLPFilter';
 import Popup from 'Component/Popup';
 import { Filters } from 'Util/API/endpoint/Product/Product.type';
+import WebUrlParser from 'Util/API/helper/WebUrlParser';
 import { isArabic } from 'Util/App';
 
 import fitlerImage from './icons/filter-button.png';
@@ -29,9 +30,10 @@ class PLPFilters extends PureComponent {
         productsCount: PropTypes.string.isRequired
     };
 
-    state = {
+    activeFilters = {
         isOpen: false,
-        isArabic: isArabic()
+        isArabic: isArabic(),
+        data: null
     };
 
     static getDerivedStateFromProps(nextProps) {
@@ -83,12 +85,18 @@ class PLPFilters extends PureComponent {
         onReset();
     };
 
+    onShowResultButton = () => {
+        const { activeFilters } = this.state;
+
+        Object.keys(activeFilters).map((key) => WebUrlParser.setParam(key, activeFilters[key]));
+    };
+
     renderSeeResultButton() {
         return (
             <button
               block="Content"
               elem="SeeResult"
-              onClick={ this.hidePopUp }
+              onClick={ this.onShowResultButton }
             >
                 { __('show result') }
             </button>
@@ -132,7 +140,7 @@ class PLPFilters extends PureComponent {
               aria-label={ __('Reset') }
               onClick={ this.resetFilters }
             >
-                { __('clear all') }
+                { __('clear') }
             </button>
         );
     }
@@ -169,17 +177,17 @@ class PLPFilters extends PureComponent {
         );
     }
 
-    renderRefineIcon() {
+    renderRefine() {
+        const { isArabic } = this.state;
+
         return (
-            <i
-              block="arrow left"
-              mix={ {
-                  block: 'left',
-                  mods: {
-                      isArabic
-                  }
-              } }
-            />
+            <div
+              block="PLPFilters"
+              elem="Refine"
+              mods={ { isArabic } }
+            >
+                { __('refine') }
+            </div>
         );
     }
 
@@ -188,6 +196,7 @@ class PLPFilters extends PureComponent {
 
         return (
             <Popup
+              clickOutside={ false }
               mix={ {
                   block: 'FilterPopup',
                   mods: {
@@ -207,9 +216,9 @@ class PLPFilters extends PureComponent {
                       }
                   } }
                 >
+                    { this.renderCloseButton() }
+                    { this.renderRefine() }
                     { this.renderResetFilterButton() }
-                    { this.renderRefineIcon() }
-                    { __('refine') }
                 </div>
                 { this.renderContent() }
                 { this.renderSeeResultButton() }
@@ -221,13 +230,27 @@ class PLPFilters extends PureComponent {
         <PLPFilter
           key={ key }
           filter={ filter }
+          parentCallback={ this.handleCallback }
         />
     );
 
+    handleCallback = (category, values) => {
+        console.log(category, values);
+        const { activeFilters } = this.state;
+        this.setState({
+            activeFilters: {
+                ...activeFilters,
+                [category]: values
+            }
+        });
+    };
+
     render() {
         const { productsCount } = this.props;
-        const { isOpen, isArabic } = this.state;
+        const { isOpen, isArabic, activeFilters } = this.state;
         const count = productsCount ? productsCount.toLocaleString() : null;
+
+        console.log(activeFilters);
 
         return (
             <>

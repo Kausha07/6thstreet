@@ -4,17 +4,30 @@ import { PureComponent } from 'react';
 import Field from 'Component/Field';
 import { FilterOption } from 'Util/API/endpoint/Product/Product.type';
 import { isArabic } from 'Util/App';
+import isMobile from 'Util/Mobile';
 
 import './PLPFilterOption.style';
 
 class PLPFilterOption extends PureComponent {
     static propTypes = {
         option: FilterOption.isRequired,
-        isRadio: PropTypes.bool.isRequired
+        isRadio: PropTypes.bool.isRequired,
+        activeFilter: PropTypes.object
+    };
+
+    static defaultProps = {
+        activeFilter: {}
     };
 
     state = {
-        isArabic: isArabic()
+        isArabic: isArabic(),
+        onSelectChecked: null,
+        isChecked: false
+    };
+
+    handleCheckboxChange = () => {
+        this.setState(({ isChecked }) => ({ isChecked: !isChecked }));
+        this.forceUpdate();
     };
 
     renderField() {
@@ -24,13 +37,37 @@ class PLPFilterOption extends PureComponent {
                 facet_value,
                 is_selected: checked
             },
-            isRadio
+            isRadio,
+            activeFilter
         } = this.props;
+        const { onSelectChecked, isChecked } = this.state;
+
+        const category = Object.keys(activeFilter)[0];
+
+        if (category !== undefined) {
+            const { values } = activeFilter[category];
+            this.setState({ onSelectChecked: facet_value === values.find((value) => value === facet_value) });
+        }
 
         // TODO: fix radio ?
         const type = isRadio ? 'radio' : 'checkbox';
+        if (facet_value === 'Adidas') {
+            console.log(isChecked);
+        }
 
-        return (
+        return isMobile.any() ? (
+            <Field
+              mix={ {
+                  block: 'PLPFilterOption',
+                  elem: 'Input'
+              } }
+              type={ type }
+              id={ facet_value }
+              name={ facet_key }
+              value={ facet_value }
+              checked={ checked || onSelectChecked }
+            />
+        ) : (
             <Field
               type={ type }
               id={ facet_value }
@@ -70,7 +107,7 @@ class PLPFilterOption extends PureComponent {
               htmlFor={ facet_value }
             >
                 { label }
-                { product_count ? this.renderCount() : null }
+                { product_count && !isMobile.any() ? this.renderCount() : null }
             </label>
         );
     }

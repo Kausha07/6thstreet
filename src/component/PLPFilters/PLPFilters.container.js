@@ -80,6 +80,7 @@ export class PLPFiltersContainer extends PureComponent {
             activeOverlay
         } = this.props;
 
+        console.log(activeOverlay);
         return {
             filters,
             isLoading,

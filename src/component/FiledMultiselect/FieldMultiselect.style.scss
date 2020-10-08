@@ -56,16 +56,25 @@
       display: inline-block;
       height: 40px;
       line-height: 42px;
-      width: 200px;
-      border: solid 1px #ddd;
+      width: 100%;
+      border: none;
       position: relative;
-      margin: 10px;
+      margin: 0;
       color: #000000;
-      font-size: 13px;
-      letter-spacing: 0.5px;
-      line-height: 18px;
+      font-size: 12px;
+      letter-spacing: 1px;
       font-weight: 200;
-      text-align: left;
+      text-align: center;
+
+      &:after {
+        content: none;
+      }
+  
+      &:focus {
+        background: var(--black-color);
+        color: var(--white-color);
+        font-weight: 600;
+      }
     }
   }
 
@@ -99,6 +108,10 @@
         content: none;
       }
       padding: 0;
+
+      @include before-desktop {
+        width: 86%;
+      }
     }
 
     &::-webkit-scrollbar {
@@ -108,6 +121,19 @@
 
     &::-webkit-scrollbar-thumb {
         background-color: var(--scrollbar-thumb-color);
+    }
+
+    @include before-desktop {
+      position: fixed;
+      top: 50px;
+      right: 0;
+      left: unset;
+      width: 65%;
+
+      &_toggleOptionsList {
+        border: none;
+        max-height: 85%;
+      }
     }
   }
 

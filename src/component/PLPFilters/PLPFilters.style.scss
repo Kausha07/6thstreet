@@ -24,14 +24,16 @@
     }
 
     .Reset {
+        padding-left: 0;
         &_isOpen {
-            color: var(--primary-dark-color);
-            font-size: 12px;
-            font-weight: bold;
-            position: absolute;
+            color: var(--black-color);
+            font-size: 14px;
+            font-weight: 200;
+            letter-spacing: 0;
+            line-height: 19px;
+            text-align: right;
             right: 5px;
             text-transform: capitalize;
-            top: 7px;
         }
 
         &_isArabic {
@@ -42,31 +44,23 @@
 
     &-CloseBtn {
         cursor: pointer;
-        height: 55px;
-        position: fixed;
-        right: 5px;
-        top: 7px;
         width: 55px;
 
-        &:before,
         &:after {
-            background: var(--color-white);
-            content: "";
-            height: 4px;
-            left: 10px;
             position: absolute;
-            top: 21px;
-            width: 26px;
-        }
-
-        &:before {
-            transform: rotate(45deg);
-        }
-
-        &:after {
-            transform: rotate(-45deg);
-        }
-
+            content: '';
+            width: 0;
+            height: 0;
+            border: solid black;
+            border-width: 0 2px 2px 0;
+            display: inline-block;
+            padding: 2px 5px 5px 2px;
+            margin: 0 auto;
+            transform: rotate(135deg);
+            left: 20px;
+            top: 20px;
+            background: transparent;
+          }
     }
 
     .CloseBtn {
@@ -77,11 +71,13 @@
     }
 
     &-Title {
+        display: flex;
+        justify-content: space-between;
         border-bottom: 1px solid var(--color-light-grey);
         font-size: 18px;
-        padding: 20px;
         position: relative;
         text-transform: capitalize;
+        height: 50px;
     }
 
     .arrow {
@@ -112,12 +108,13 @@
     .Popup {
         &-Content {
             padding: 0;
+            overflow: hidden;
         }
     }
 
     .Content {
         &-Filters {
-            height: calc(100% - 120px);
+            height: calc(100% - 140px);
             overflow-y: auto;
             padding: 0;
             border-right: 1px solid var(--light-gray);
@@ -128,7 +125,7 @@
                 border-bottom: 1px solid var(--color-light-grey);
                 font-family: "Avenir Next Ultra Light";
                 font-size: 12px;
-                font-weight: 600;
+                font-weight: bold;
                 padding: 0 0 15px;
                 text-transform: capitalize;
             }
@@ -164,12 +161,16 @@
         &-SeeResult {
             background-color: var(--color-button-red);
             color: var(--color-white);
-            font-family: Avenir;
-            font-size: 15px;
+            font-size: 12px;
+            font-family: "Avenir Next Bold";
             font-weight: bold;
-            height: 60px;
+            letter-spacing: 0;
+            line-height: 16px;
+            text-align: center;
+            margin: 20px 7% 30px;
+            height: 50px;
             text-transform: uppercase;
-            width: 100%;
+            width: 86%;
         }
     }
 }
@@ -212,6 +213,16 @@
     margin: 0 20px;
     display: flex;
     flex-wrap: wrap;
+
+    &-Refine {
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        line-height: 16px;
+    }
 
     @include mobile() {
         display: none;

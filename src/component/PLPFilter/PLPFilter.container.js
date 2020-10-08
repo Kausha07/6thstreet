@@ -4,13 +4,14 @@
  * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
  * @copyright Copyright (c) 2020 Scandiweb, Inc (https://scandiweb.com)
  */
-
+import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import { toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
 import { Filter } from 'Util/API/endpoint/Product/Product.type';
 import WebUrlParser from 'Util/API/helper/WebUrlParser';
+import isMobile from 'Util/Mobile';
 
 import PLPFilter from './PLPFilter.component';
 
@@ -22,19 +23,33 @@ export const mapDispatchToProps = (_dispatch) => ({
 
 class PLPFilterContainer extends PureComponent {
     static propTypes = {
-        filter: Filter.isRequired
+        filter: Filter.isRequired,
+        toggleOverlayByKey: PropTypes.func.isRequired,
+        parentCallback: PropTypes.func.isRequired
+    };
+
+    state = {
+        activeFilter: {},
+        isChecked: false
     };
 
     containerFunctions = {
         onSelect: this.onSelect.bind(this)
     };
 
+    componentDidUpdate() {
+        const { activeFilter } = this.state;
+        console.log(activeFilter);
+    }
+
     onSelect() {
         const {
             // setPLPFilter,
-            filter: { category }
+            filter: { category },
+            parentCallback
         } = this.props;
-
+        const { activeFilter } = this.state;
+        console.log(activeFilter);
         // This syntax gets form with name "filters" from document
         // then it extracts all inputs from form
         const inputs = Array.from(document.forms.filters[category] || []);
@@ -49,7 +64,17 @@ class PLPFilterContainer extends PureComponent {
             return acc;
         }, []);
 
-        WebUrlParser.setParam(category, values);
+        if (!isMobile.any()) {
+            WebUrlParser.setParam(category, values);
+        } else {
+            parentCallback(category, values);
+            this.setState({
+                activeFilter: {
+                    [ category ]: { values }
+                },
+                isChecked: true
+            });
+        }
     }
 
     containerProps = () => {
@@ -59,8 +84,11 @@ class PLPFilterContainer extends PureComponent {
     };
 
     render() {
+        const { activeFilter } = this.state;
+        console.log(activeFilter);
         return (
             <PLPFilter
+              { ...this.state }
               { ...this.containerFunctions }
               { ...this.containerProps() }
             />
