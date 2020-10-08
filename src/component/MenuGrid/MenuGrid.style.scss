@@ -43,19 +43,18 @@
     }
 
     @include before-desktop {
+        margin-top: 20px;
         position: relative;
         width: 100%;
 
         &-Content {
-            height: 600px;
             margin: 0;
-            overflow-x: hidden;
-            overflow-y: scroll;
             width: 100%;
         }
 
         &-Columns {
             flex-direction: column;
+            text-align: center;
 
             :last-child {
                 margin-right: 0;
@@ -128,9 +127,10 @@
             }
 
             &_isAllShow {
-                position: fixed;
-                width: 66%;
-                top: 120px;
+                position: absolute;
+                width: 100%;
+                left: 0;
+                top: 0;
                 background-color: var(--white);
 
                 .ViewAll {

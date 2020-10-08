@@ -51,7 +51,7 @@ class MobileBottomBar extends NavigationAbstract {
         const { isLoggedIn } = this.state;
 
         if (!isLoggedIn) {
-            return history.push('/myaccount/login');
+            return history.push('/my-account');
         }
 
         return null;
@@ -62,7 +62,7 @@ class MobileBottomBar extends NavigationAbstract {
         const { isLoggedIn } = this.state;
 
         if (!isLoggedIn) {
-            return history.push('/myaccount/login');
+            return history.push('/my-account');
         }
 
         return null;
@@ -107,10 +107,10 @@ class MobileBottomBar extends NavigationAbstract {
 
         if (redirectBrand) {
             this.setState({ redirectBrand: false });
-            return history.push('/brands.html');
+            return history.push('/brands');
         }
 
-        this.setState({ isBrand: window.location.pathname === '/brands.html' });
+        this.setState({ isBrand: window.location.pathname === '/brands' });
 
         return (
             <button
@@ -161,7 +161,7 @@ class MobileBottomBar extends NavigationAbstract {
         const { isBottomBar, isAccount } = this.state;
         const { location } = this.props;
 
-        this.setState({ isAccount: location.pathname === '/myaccount/login' });
+        this.setState({ isAccount: location.pathname === '/my-account' });
 
         return (
             <button

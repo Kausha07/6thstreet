@@ -140,8 +140,6 @@ export class SliderVertical extends PureComponent {
             CSS.setVariable(this.sliderRef, 'slider-width', `${sliderChildren[0].offsetHeight}px`);
         };
 
-        console.log('***', sliderChildren[0].offsetHeight);
-
         setTimeout(() => {
             CSS.setVariable(this.sliderRef, 'slider-width', `${sliderChildren[0].offsetHeight}px`);
         }, ANIMATION_DURATION);

@@ -30,6 +30,10 @@
             &:hover {
                 background-color: var(--gold);
                 color: var(--white);
+
+                .MenuCategory-CategoryLabel {
+                    background: none;
+                }
             }
         }
 
@@ -37,39 +41,56 @@
             color: var(--red);
 
             &:hover {
-                background-color: var(--red);
+                background: none;
                 color: var(--white);
+
+                .MenuCategory-CategoryLabel {
+                    background-color: var(--red);
+                }
             }
         }
 
         &:hover {
-            background-color: var(--black);
             color: var(--white);
             font-family: 'Avenir Next Demi Bold', sans-serif;
             font-weight: 1000;
+
+            .MenuCategory-CategoryLabel {
+                background-color: var(--black);
+                width: 38%;
+            }
         }
 
         .DynamicContentBanner {
             background-color: transparent;
             margin: 0;
-            margin-right: 30px;
-            height: 250px;
 
             a {
+                display: flex;
                 height: 100%;
 
                 .Image {
+                    display: flex;
+                    height: auto;
                     padding-bottom: unset;
-                    height: 100%;
+
+                    &-Image {
+                        position: static;
+                    }
                 }
             }
         }
 
         .DynamicContent {
-            left: 35%;
-            position: fixed;
-            top: 130px;
+            border-left: 1px solid var(--light-gray);
+            background-color: $white;
+            left: 38%;
+            position: absolute;
+            top: 0;
             width: 63%;
+            z-index: 5;
+            height: 100vh;
+            padding: 0 20px 0 10px;
         }
 
         &_isArabic {

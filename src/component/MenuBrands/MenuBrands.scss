@@ -10,7 +10,6 @@
             font-weight: 500;
 
             .Image {
-                margin-left: -20px;
                 padding: 50px;
                 width: 100px;
 
@@ -35,15 +34,36 @@
         width: 100%;
     }
 
+    &-MobileSliderWrapper {
+        .Slider-Wrapper {
+            max-width: 67%;
+
+            a {
+                align-items: center;
+                display: flex;
+                font-family: 'Avenir Next Semi Bold', serif;
+                flex-direction: column;
+                width: 110px;
+
+                .Image {
+                    margin-bottom: 10px;
+                }
+            }
+        }
+    }
+
     @include before-desktop {
         &-ContentWrapper {
+            margin-top: 20px;
+
             &-Brands {
                 display: flex;
                 text-align: center;
 
                 a {
                     line-height: 25px;
-                    margin: 0 10px;
+                    margin-left: 0;
+                    padding: 0 5px;
                 }
             }
         }

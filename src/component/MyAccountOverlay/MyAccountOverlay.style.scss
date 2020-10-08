@@ -23,7 +23,6 @@
 .MyAccountOverlay {
     --overlay-background: var(--overlay-content-background);
 
-    display: none;
     grid-column: 3;
     right: 0;
     padding-top: 1rem;
@@ -66,8 +65,9 @@
     }
 
     @include before-desktop {
-        height: auto;
+        height: 100%;
         padding-bottom: 0;
+        padding-top: 0;
         top: 0;
         position: relative;
     }
@@ -168,6 +168,11 @@
     &-Action form,
     &-Additional {
         padding: 0 60px 60px;
+
+        @include before-desktop() {
+            max-width: 100vw;
+            padding: 0 20px;
+        }
     }
 
     &-Action {
@@ -187,9 +192,6 @@
 
                 .Field {
                     margin-top: .7rem;
-                }
-                @include before-desktop {
-                    padding-top: 1rem;
                 }
             }
 
@@ -372,6 +374,10 @@
             left: 0;
             right: unset;
         }
+
+        @include before-desktop() {
+            display: none;
+        }
     }
 
     &-ForgotPasswordButton {
@@ -391,6 +397,10 @@
     &-Buttons {
         display: flex;
         margin: 30px 90px;
+
+        @include before-desktop() {
+            margin: 30px auto;
+        }
 
         .Button {
             --button-color: var(--gray-color);

@@ -116,7 +116,7 @@ class MenuGrid extends PureComponent {
               elem="Button"
               onClick={ this.showAllCategories }
             >
-                view all
+                <span>view all</span>
             </button>
         );
     }

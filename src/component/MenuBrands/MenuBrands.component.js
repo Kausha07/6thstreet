@@ -2,7 +2,10 @@ import { PureComponent } from 'react';
 
 import Image from 'Component/Image';
 import Link from 'Component/Link';
+import MobileMenuSlider from 'Component/MobileMenuSlider';
 import { CategorySliderItems } from 'Util/API/endpoint/Categories/Categories.type';
+import { isArabic } from 'Util/App';
+import isMobile from 'Util/Mobile';
 
 import './MenuBrands.scss';
 
@@ -11,9 +14,18 @@ class MenuBrands extends PureComponent {
         items: CategorySliderItems.isRequired
     };
 
+    state = {
+        isArabic: isArabic(),
+        activeSliderImage: 0
+    }
+
     renderItems() {
         const { items } = this.props;
         return items.map(this.renderItem);
+    }
+
+    handleChange = (activeImage) => {
+        this.setState({ activeSliderImage: activeImage });
     }
 
     renderItem = (item, i) => {
@@ -36,6 +48,22 @@ class MenuBrands extends PureComponent {
         );
     };
 
+    renderBrandsSlider() {
+        const { isArabic, activeSliderImage } = this.state;
+
+        return (
+            <div mix={ { block: 'MenuBrands', elem: 'MobileSliderWrapper', mods: { isArabic } } }>
+                <MobileMenuSlider
+                  mix={ { block: 'MenuBrands', elem: 'MobileSlider', mods: { isArabic } } }
+                  activeImage={ activeSliderImage }
+                  onActiveImageChange={ this.handleChange }
+                >
+                    { this.renderItems() }
+                </MobileMenuSlider>
+            </div>
+        );
+    }
+
     render() {
         return (
             <div block="MenuBrands">
@@ -52,7 +80,7 @@ class MenuBrands extends PureComponent {
                           elem: 'ContentWrapper-Brands'
                       } }
                     >
-                        { this.renderItems() }
+                        { isMobile.any() ? this.renderBrandsSlider() : this.renderItems() }
                     </div>
                 </div>
             </div>
