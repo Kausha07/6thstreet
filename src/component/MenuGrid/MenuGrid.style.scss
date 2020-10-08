@@ -1,6 +1,5 @@
 .MenuGrid {
     width: 23%;
-    margin: 20px 0 30px 35px;
 
     &-Content {
         background-color: var(--white);
@@ -84,8 +83,7 @@
                     font-family: 'Avenir Next Bold', serif;
                     text-align: center;
 
-                    // in case if Promo block will be added
-                    //display: none;
+                    display: none;
                 }
             }
 
@@ -98,10 +96,9 @@
                     margin: 10px;
                     text-align: center;
 
-                    // in case if Promo block will be added
-                    /*&:not(:nth-child(-n+4)) {
+                    &:not(:nth-child(-n+5)) {
                         display: none;
-                    }*/
+                    }
 
                     &:first-child {
                         display: none;
@@ -131,6 +128,11 @@
             }
 
             &_isAllShow {
+                position: fixed;
+                width: 66%;
+                top: 120px;
+                background-color: var(--white);
+
                 .ViewAll {
                     &-Link {
                         display: block;
@@ -144,6 +146,8 @@
                 .MenuGrid {
                     &-Column {
                         &-Content {
+                            position: relative;
+
                             a {
                                 &:not(:nth-child(-n+4)) {
                                     display: block;
@@ -157,6 +161,8 @@
     }
 
     @include desktop {
+        margin: 20px 0 30px 35px;
+
         &-Content {
             &_isArabic {
                 .MenuGrid {

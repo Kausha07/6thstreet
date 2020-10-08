@@ -109,7 +109,6 @@ class MenuGrid extends PureComponent {
         this.setState(({ isAllShowing }) => ({ isAllShowing: !isAllShowing }));
     }
 
-    // in case if Promo block will be added, use this function (styles already made)
     renderViewAllButton() {
         return (
             <button
@@ -123,6 +122,8 @@ class MenuGrid extends PureComponent {
     }
 
     renderSubcategories() {
+        const { isArabic } = this.state;
+
         return (
             <>
                 <span
@@ -132,6 +133,7 @@ class MenuGrid extends PureComponent {
                     { __('Shop by product') }
                 </span>
                 { this.renderMobileButton() }
+                { this.renderViewAllButton() }
                 <div
                   mix={ {
                       block: 'MenuGrid-Column',

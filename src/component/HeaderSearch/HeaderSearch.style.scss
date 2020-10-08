@@ -1,8 +1,4 @@
 .HeaderSearch {
-    @include before-desktop {
-        //display: none;
-    }
-
     &-Container {
         // non displayed to solve conflict with menu categories on small desktop screen
         // have to be solved by adding search popup or other way
