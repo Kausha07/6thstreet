@@ -2,10 +2,10 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import Field from 'Component/Field';
+import SearchSuggestion from 'Component/SearchSuggestion';
 
 import './HeaderSearch.style';
 
-// TODO: see if this is Algolia widget or not.
 class HeaderSearch extends PureComponent {
     static propTypes = {
         search: PropTypes.string,
@@ -37,12 +37,11 @@ class HeaderSearch extends PureComponent {
     renderSuggestions() {
         const { search } = this.props;
 
-        // If there is no search (or search is by " " empty string)
-        if (!search.trim()) {
-            return null;
-        }
-
-        return `Suggestions for: ${ search }!`;
+        return (
+            <SearchSuggestion
+              search={ search }
+            />
+        );
     }
 
     render() {
