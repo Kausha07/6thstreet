@@ -1,4 +1,15 @@
+:root {
+    --OutrageousOrange: #F96446;
+}
+
 .HeaderCart {
+    @include after-mobile {
+        display: none;
+    }
+    @include desktop {
+        display: block;
+    }
+    
     &-Button {
         content: "";
         background: url(./icons/basket.svg) no-repeat;
@@ -8,5 +19,21 @@
         display: inline-block;
         position: relative;
         top: -4px;
+    }
+
+    &-Count {
+        position: absolute;
+        top: -2px;
+        right: 0;
+        background-color: var(--OutrageousOrange);
+        border-radius: 50%;
+        height: 14px;
+        width: 14px;
+        color: var(--White);
+        text-align: center;
+        font-size: 8px;
+        font-weight: 600;
+        font-family: 'Avenir Next Regular';
+        padding-top: 2px;
     }
 }
