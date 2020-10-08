@@ -35,12 +35,12 @@
         margin: 30px;
     }
 }
-@media (min-width: 320px) {
+@media (min-width: 320px) and (max-width: 376px) {
     .MyAccountOverlay-Action form{
         padding: 0 20px
     }
 }
-@media (min-width: 385px) {
+@media (min-width: 375px) and (max-width: 426px) {
     .MyAccountOverlay-Action form{
         padding: 0 40px
     }
