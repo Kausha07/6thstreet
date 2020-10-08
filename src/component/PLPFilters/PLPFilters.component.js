@@ -59,12 +59,12 @@ class PLPFilters extends PureComponent {
     }
 
     hidePopUp = () => {
-        // const { hideActiveOverlay, goToPreviousNavigationState, activeOverlay } = this.props;
+        const { hideActiveOverlay, goToPreviousNavigationState, activeOverlay } = this.props;
 
-        // if (activeOverlay === 'PLPFilter') {
-        //     hideActiveOverlay();
-        //     goToPreviousNavigationState();
-        // }
+        if (activeOverlay === 'PLPFilter') {
+            hideActiveOverlay();
+            goToPreviousNavigationState();
+        }
     };
 
     resetFilters = () => {
