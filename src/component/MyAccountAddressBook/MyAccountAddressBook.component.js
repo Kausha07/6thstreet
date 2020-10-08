@@ -35,9 +35,21 @@ export class MyAccountAddressBook extends PureComponent {
     };
 
     renderPopup() {
-        const { formContent, closeForm, openForm } = this.props;
+        const {
+            formContent,
+            closeForm,
+            openForm,
+            customer
+        } = this.props;
 
-        return <MyAccountAddressPopup formContent={ formContent } closeForm={ closeForm } openForm={ openForm } />;
+        return (
+            <MyAccountAddressPopup
+              formContent={ formContent }
+              closeForm={ closeForm }
+              openForm={ openForm }
+              customer={ customer }
+            />
+        );
     }
 
     renderAddress = (address, index) => {

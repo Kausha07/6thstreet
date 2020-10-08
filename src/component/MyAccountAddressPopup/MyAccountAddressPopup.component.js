@@ -41,12 +41,13 @@ export class MyAccountAddressPopup extends PureComponent {
     };
 
     renderAddressForm() {
-        const { payload: { address }, handleAddress } = this.props;
+        const { payload: { address }, handleAddress, customer } = this.props;
 
         return (
             <MyAccountAddressForm
               address={ address }
               onSave={ handleAddress }
+              customer={ customer }
             />
         );
     }
