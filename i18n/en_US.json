@@ -364,5 +364,15 @@
     "Failed to remove item from wishlist": null,
     "You must be logged in to add items to wishlist": null,
     "You must be logged in to remove items to wishlist": null,
-    "No orders were found": null
+    "No orders were found": null,
+    "Product List Page": null,
+    "show result": null,
+    "clear all": null,
+    "refine": null,
+    "You have no items in your shopping cart.": null,
+    "Subtotal ": null,
+    "(Taxes Included) ": null,
+    "View bag": null,
+    "My Bag": null,
+    " item(s)": null
 }

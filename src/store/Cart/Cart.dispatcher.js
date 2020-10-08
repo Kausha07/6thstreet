@@ -55,13 +55,13 @@ export class CartDispatcher {
         }
     }
 
-    async addProductToCart(dispatch, productData, thumbnail_url) {
+    async addProductToCart(dispatch, productData, color, optionValue, discount = null, brand_name, thumbnail_url) {
         const { Cart: { cartId } } = getStore().getState();
 
         try {
             const { data } = await addProductToCart({ ...productData, cartId });
 
-            dispatch(updateCartItem(data, thumbnail_url));
+            dispatch(updateCartItem(data, color, optionValue, discount, brand_name, thumbnail_url));
         } catch (e) {
             Logger.log(e);
             if (e) {
@@ -99,12 +99,12 @@ export class CartDispatcher {
         await this.getCartTotals(dispatch, cartId);
     }
 
-    async updateProductInCart(dispatch, productId, qty) {
+    async updateProductInCart(dispatch, productId, qty, color, optionValue, thumbnail_url) {
         const { Cart: { cartId } } = getStore().getState();
 
         try {
             const { data } = await updateProductInCart({ cartId, productId, qty });
-            dispatch(updateCartItem(data));
+            dispatch(updateCartItem(data, color, optionValue, thumbnail_url));
         } catch (e) {
             Logger.log(e);
         }
