@@ -4,6 +4,16 @@
     @include before-desktop {
         display: none;
         margin-top: -30px;
+
+        .GenderButton {
+            &-Button {
+                font-family: "Avenir Next Thin", serif;
+
+                &_isCurrentGender {
+                    font-family: "Avenir Next Bold", serif;
+                }
+            }
+        }
     }
 
     &_isArabic {

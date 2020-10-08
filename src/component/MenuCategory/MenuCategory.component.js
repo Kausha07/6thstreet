@@ -4,6 +4,7 @@ import { PureComponent } from 'react';
 import MenuDynamicContent from 'Component/MenuDynamicContent';
 import { CategoryData } from 'Util/API/endpoint/Categories/Categories.type';
 import { isArabic } from 'Util/App';
+import isMobile from 'Util/Mobile';
 
 import './MenuCategory.style';
 
@@ -21,6 +22,14 @@ class MenuCategory extends PureComponent {
     onEnter = this.handleHover.bind(this, true);
 
     onLeave = this.handleHover.bind(this, false);
+
+    componentDidMount() {
+        const { label } = this.props;
+
+        if (label === 'New In' && isMobile.any()) {
+            this.handleHover(true);
+        }
+    }
 
     handleHover(isVisible) {
         this.setState({ isVisible });
@@ -43,12 +52,16 @@ class MenuCategory extends PureComponent {
 
     renderLabel() {
         const { label } = this.props;
-        return label;
+
+        return (
+            <div block="MenuCategory" elem="CategoryLabel">
+                { label }
+            </div>
+        );
     }
 
     render() {
-        const { isVisible } = this.state;
-        const { isArabic } = this.state;
+        const { isVisible, isArabic } = this.state;
 
         return (
             <div
