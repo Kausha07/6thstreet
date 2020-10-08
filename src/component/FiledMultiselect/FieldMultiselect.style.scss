@@ -51,6 +51,22 @@
         left: 10px;
       }
     }
+
+    @include before-desktop {
+      display: inline-block;
+      height: 40px;
+      line-height: 42px;
+      width: 200px;
+      border: solid 1px #ddd;
+      position: relative;
+      margin: 10px;
+      color: #000000;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      line-height: 18px;
+      font-weight: 200;
+      text-align: left;
+    }
   }
 
   &-OptionListContainer {

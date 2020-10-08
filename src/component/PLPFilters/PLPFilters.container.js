@@ -63,7 +63,8 @@ export class PLPFiltersContainer extends PureComponent {
             'gender',
             'sizes',
             'price.AED.default',
-            'discount'
+            'discount',
+            'colorfamily'
         ];
 
         // eslint-disable-next-line fp/no-let
