@@ -14,14 +14,26 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
-import { CART, CART_EDITING } from 'Component/Header/Header.config';
+import {
+    CART, CART_EDITING, CUSTOMER_ACCOUNT, CUSTOMER_ACCOUNT_PAGE
+} from 'Component/Header/Header.config';
 import { CUSTOMER_ACCOUNT_OVERLAY_KEY } from 'Component/MyAccountOverlay/MyAccountOverlay.config';
 import { CHECKOUT_URL } from 'Route/Checkout/Checkout.config';
+import { MY_ACCOUNT_URL } from 'Route/MyAccount/MyAccount.config';
+import MyAccountContainer from 'Route/MyAccount/MyAccount.container';
 import { updateMeta } from 'Store/Meta/Meta.action';
 import { changeNavigationState } from 'Store/Navigation/Navigation.action';
 import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
+import {
+    ADDRESS_BOOK,
+    CLUB_APPAREL,
+    DASHBOARD,
+    MY_ORDERS,
+    MY_WISHLIST,
+    RETURN_ITEM
+} from 'Type/Account';
 import { HistoryType } from 'Type/Common';
 import { TotalsType } from 'Type/MiniCart';
 import { isSignedIn } from 'Util/Auth';
@@ -39,7 +51,8 @@ export const BreadcrumbsDispatcher = import(
 export const mapStateToProps = (state) => ({
     totals: state.CartReducer.cartTotals,
     headerState: state.NavigationReducer[TOP_NAVIGATION_TYPE].navigationState,
-    guest_checkout: state.ConfigReducer.guest_checkout
+    guest_checkout: state.ConfigReducer.guest_checkout,
+    isSignedIn: state.MyAccountReducer.isSignedIn
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -61,14 +74,67 @@ export class CartPageContainer extends PureComponent {
         updateMeta: PropTypes.func.isRequired,
         guest_checkout: PropTypes.bool.isRequired,
         history: HistoryType.isRequired,
-        totals: TotalsType.isRequired
+        totals: TotalsType.isRequired,
+        tabMap: PropTypes.isRequired
     };
 
     state = { isEditing: false };
 
-    containerFunctions = {
-        onCheckoutButtonClick: this.onCheckoutButtonClick.bind(this)
+    tabMap = {
+        [CLUB_APPAREL]: {
+            url: '/club-apparel',
+            name: __('Club Apparel Loyalty')
+        },
+        [DASHBOARD]: {
+            url: '/dashboard',
+            name: __('My Account')
+        },
+        [MY_ORDERS]: {
+            url: '/my-orders',
+            name: __('Order history')
+        },
+        [RETURN_ITEM]: {
+            url: '/return-item',
+            name: __('Return an item')
+        },
+        [MY_WISHLIST]: {
+            url: '/my-wishlist',
+            name: __('My wishlist')
+        },
+        [ADDRESS_BOOK]: {
+            url: '/address-book',
+            name: __('Delivery addresses')
+        }
     };
+
+    containerFunctions = {
+        onCheckoutButtonClick: this.onCheckoutButtonClick.bind(this),
+        changeActiveTab: this.changeActiveTab.bind(this),
+        onSignIn: this.onSignIn.bind(this)
+    };
+
+    constructor(props) {
+        super(props);
+
+        const {
+            isSignedIn,
+            updateMeta
+        } = this.props;
+
+        this.state = MyAccountContainer.navigateToSelectedTab(this.props) || {};
+
+        if (!isSignedIn) {
+            toggleOverlayByKey(CUSTOMER_ACCOUNT);
+        }
+
+        updateMeta({ title: __('My account') });
+
+        this.onSignIn();
+    }
+
+    static getDerivedStateFromProps(props, state) {
+        return MyAccountContainer.navigateToSelectedTab(props, state);
+    }
 
     componentDidMount() {
         const { updateMeta } = this.props;
@@ -105,6 +171,12 @@ export class CartPageContainer extends PureComponent {
                 title
             });
         }
+    }
+
+    changeActiveTab(activeTab) {
+        const { history } = this.props;
+        const { [activeTab]: { url } } = this.tabMap;
+        history.push(`${ MY_ACCOUNT_URL }${ url }`);
     }
 
     onCheckoutButtonClick(e) {
@@ -148,12 +220,13 @@ export class CartPageContainer extends PureComponent {
 
     _updateBreadcrumbs() {
         const { updateBreadcrumbs } = this.props;
-        const breadcrumbs = [
-            { url: '/cart', name: __('Shopping cart') },
-            { url: '/', name: __('Home') }
-        ];
+        const { activeTab } = this.state;
+        const { url, name } = this.tabMap[activeTab];
 
-        updateBreadcrumbs(breadcrumbs);
+        updateBreadcrumbs([
+            { url: `${ MY_ACCOUNT_URL }${ url }`, name },
+            { name: __('My Account'), url: `${ MY_ACCOUNT_URL }/${ DASHBOARD }` }
+        ]);
     }
 
     _changeHeaderState() {
@@ -179,15 +252,28 @@ export class CartPageContainer extends PureComponent {
         });
     }
 
+    onSignIn() {
+        const {
+            changeHeaderState,
+            history
+        } = this.props;
+
+        changeHeaderState({
+            title: 'My account',
+            name: CUSTOMER_ACCOUNT_PAGE,
+            onBackClick: () => history.push('/')
+        });
+    }
+
     render() {
         return (
             <CartPage
               { ...this.props }
               { ...this.state }
               { ...this.containerFunctions }
+              tabMap={ this.tabMap }
             />
         );
     }
 }
-
 export default connect(mapStateToProps, mapDispatchToProps)(CartPageContainer);

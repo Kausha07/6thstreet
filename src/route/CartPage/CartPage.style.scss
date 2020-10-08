@@ -27,12 +27,9 @@
 }
 
 .CartPage {
-    top: 110px;
     display: flex;
     font-family: var(--font-family-regular);
-    section {
-        width: 100%;
-    }
+    padding: 75px;
 
     @include mobile {
         padding-bottom: calc(var(--navigation-tabs-height) + 120px);
@@ -49,11 +46,11 @@
     }
 
     &-Wrapper {
-            display: flex;
-            flex-direction: column;
-            margin-left: 100px;
-            width: 340px;
-            max-height: 65vh;
+        display: flex;
+        flex-direction: column;
+        margin-left: 100px;
+        width: 340px;
+        max-height: 65vh;
 
         @include mobile {
             padding: 0;
@@ -219,304 +216,309 @@
             }
 
             @include mobile {
-                font-size:11px;
+                font-size: 11px;
             }
-    }
-}
-
-&-PaymentMethods {
-    order: 4;
-    display: block;
-    max-width: 80%;
-    max-height: 50px;
-    margin: 1rem auto;
-
-    @include mobile {
-        max-width: 60%;
-    }
-
-    @include tablet {
-        max-width: 330px;
-        height: 55px;
-    }
-}
-
-&-Total {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 18px;
-    font-weight: bold;
-    padding: 1rem 0;
-    font-family: var(--font-family-bold);
-
-    @include mobile {
-        padding: 1rem;
-    }
-}
-
-&-TotalDetails {
-    flex-grow: 1;
-    display: flex;
-    font-size: 15px;
-    align-items: center;
-
-    @include mobile {
-        padding: 1rem;
-        margin-top: 0;
-    }
-
-    dt:last-child {
-        margin: 0 20px;
-        color: var(--color-light-gray);
-    }
-
-    &_isMobile {
-        display: none;
-    }
-}
-
-&-TableHead {
-    display: grid;
-    grid-template-columns: 3fr 1fr 1fr;
-    border-bottom: 1px solid var(--cart-page-divider-background);
-    background-color: var(--cart-page-table-head-background);
-    text-transform: uppercase;
-    font-size: 12px;
-    font-weight: 600;
-    padding: .9rem 1rem;
-    margin-bottom: 0;
-
-    @include mobile {
-        display: none;
-    }
-
-    span {
-        text-align: center;
-
-        &:last-of-type {
-            text-align: right;
-        }
-
-        &:first-of-type {
-            text-align: left;
         }
     }
-}
 
-&-Discount {
-    @include desktop {
-        margin-top: 2rem;
-    }
-}
-
-&-Static {
-    &_isArabic {
-        .CartItem-Wrapper img {
-            margin-right: 0;
-            margin-left: 15px;
-        }
-    }
-}
-
-&-Floating {
-    @include desktop {
-        display: flex;
-        flex-direction: column;
-    }
-
-    @include mobile {
-        position: fixed;
-        width: 100%;
-        left: 0;
-        background-color: var(--color-white);
-        bottom: 80px;
-    }
-
-    @include tablet {
-        margin-top: 2rem;
-    }
-
-    &_isArabic {
-        .ExpandableContent-Button{
-            float:left;
-        }
-            img{
-                transform: scaleX(-1);
-            }
-    }
-}
-
-&-Heading {
-    height: 3rem;
-    margin-top: 2rem;
-    margin-bottom: 1.5rem;
-    font-size: 20px;
-    font-family: var(--font-family-bold);
-    text-transform: capitalize;
-
-    span {
-        font-family: var(--font-family-regular);
-        font-weight: normal;
-    }
-}
-
-.CartItem-Actions {
-    @include tablet {
-        flex-direction: column-reverse;
-        justify-content: center;
-    }
-}
-
-&-DiscountCoupon {
-    &::after {
-        content: ':';
-        font-weight: normal;
-    }
-}
-
-&-ExpandableContentContent {
-    margin-top: 0;
-    order: 1;
-}
-
-.ExpandableContent {
-    @include mobile {
-        padding: 0 1rem;
-    }
-
-    &-HeaderBlock {
-        padding: 1rem 0;
+    &-PaymentMethods {
+        order: 4;
+        display: block;
+        max-width: 80%;
+        max-height: 50px;
+        margin: 1rem auto;
 
         @include mobile {
+            max-width: 60%;
+        }
+
+        @include tablet {
+            max-width: 330px;
+            height: 55px;
+        }
+    }
+
+    &-Total {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 1rem 0;
+        font-family: var(--font-family-bold);
+
+        @include mobile {
+            padding: 1rem;
+        }
+    }
+
+    &-TotalDetails {
+        flex-grow: 1;
+        display: flex;
+        font-size: 15px;
+        align-items: center;
+
+        @include mobile {
+            padding: 1rem;
+            margin-top: 0;
+        }
+
+        dt:last-child {
+            margin: 0 20px;
+            color: var(--color-light-gray);
+        }
+
+        &_isMobile {
             display: none;
         }
     }
 
-    &-Header {
-        font-size: 15px;
+    &-TableHead {
+        display: grid;
+        grid-template-columns: 3fr 1fr 1fr;
+        border-bottom: 1px solid var(--cart-page-divider-background);
+        background-color: var(--cart-page-table-head-background);
+        text-transform: uppercase;
+        font-size: 12px;
+        font-weight: 600;
+        padding: .9rem 1rem;
+        margin-bottom: 0;
 
         @include mobile {
-            font-size: 12px;
+            display: none;
+        }
+
+        span {
+            text-align: center;
+
+            &:last-of-type {
+                text-align: right;
+            }
+
+            &:first-of-type {
+                text-align: left;
+            }
+        }
+    }
+
+    &-Discount {
+            margin: 1rem 0;
+    }
+
+    &-Static {
+        &_isArabic {
+            .CartItem-Wrapper img {
+                margin-right: 0;
+                margin-left: 15px;
+            }
+        }
+    }
+
+    &-Floating {
+        @include desktop {
+            display: flex;
+            flex-direction: column;
+        }
+
+        @include mobile {
+            position: fixed;
+            width: 100%;
+            left: 0;
+            background-color: var(--color-white);
+            bottom: 80px;
+        }
+
+        &_isArabic {
+            img {
+                transform: scaleX(-1);
+            }
         }
     }
 
     &-Heading {
-        font-family: var(--font-family-regular);
-        font-weight: bold;
-        font-size: 15px;
+        height: 3rem;
+        margin-top: 2rem;
+        margin-bottom: 1.5rem;
+        font-size: 20px;
+        font-family: var(--font-family-bold);
         text-transform: capitalize;
+
+        span {
+            font-family: var(--font-family-regular);
+            font-weight: normal;
+        }
     }
 
-    &-Button {
-        border: none;
-        transform: none;
-        margin: 0px;
+    .CartItem-Actions {
+        @include tablet {
+            flex-direction: column-reverse;
+            justify-content: center;
+        }
+    }
 
-        &:before {
-            content: '';
-            position: absolute;
-            right: 6px;
-            top: 1px;
-            background: #000;
-            height: 14px;
-            width: 2px;
+    &-DiscountCoupon {
+        &::after {
+            content: ':';
+            font-weight: normal;
+        }
+    }
 
-            @include mobile {
-                height: 10px;
-                right: 4px;
+    &-ExpandableContentContent {
+        margin-top: 0;
+    }
+
+    .ExpandableContent {
+        &-Content {
+            padding: 0 1rem;
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+
+            @include before-desktop {
+                transition-property: opacity;
+                transition-duration: 200ms;
+                max-height: 100%;
+                opacity: 1;
+                padding: 1rem;
+            }
+
+
+            &_isContentExpanded {
+                    padding: 1rem 0;
+                    opacity: 1;
+                    max-height: 100%;
+
+                @include mobile {
+                    padding: 1rem;
+                }
             }
         }
 
-        &:after {
-            content: '' !important;
-            position: absolute;
-            right: 6px;
-            top: 1px;
-            background: #000;
-            width: 2px;
-            height: 12px;
+        &-HeaderBlock {
+            padding: 1rem 0;
 
             @include mobile {
-                width: 10px;
-                top: 5px;
+                display: none;
             }
         }
 
-        @include mobile {
-            &:before,
+        &-Header {
+            font-size: 15px;
+
+            @include mobile {
+                font-size: 12px;
+            }
+        }
+
+        &-Heading {
+            font-family: var(--font-family-regular);
+            font-weight: bold;
+            font-size: 15px;
+            text-transform: capitalize;
+        }
+
+        &-Button {
+            border: none;
+            transform: none;
+            margin: 0px;
+
+            &:before {
+                content: '';
+                position: absolute;
+                right: 6px;
+                top: 1px;
+                background: #000;
+                height: 14px;
+                width: 2px;
+
+                @include mobile {
+                    height: 10px;
+                    right: 4px;
+                }
+            }
+
             &:after {
+                content: '' !important;
+                position: absolute;
+                right: 6px;
+                top: 1px;
+                background: #000;
+                width: 2px;
+                height: 12px;
+
+                @include mobile {
+                    width: 10px;
+                    top: 5px;
+                }
+            }
+
+            @include mobile {
+                display: none;
+            }
+        }
+
+
+        .CartCoupon {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 50px;
+            margin-bottom: 15px;
+            border: 1px solid var(--color-light-gray);
+
+            &-Input {
+                margin: 0;
+                height: 100%;
+                width: 100%;
+                font-size: 13px;
+                text-transform: capitalize;
+
+                input:focus, textarea:focus, select:focus {
+                    border: 1px solid var(--color-black);
+                }
+
+                @include mobile {
+                    font-size: 11px;
+                }
+            }
+
+            &-Button {
+                margin: 0;
+                background-color: var(--color-white);
+                border: 1px solid var(--color-light-gray);
+                color: var(--color-light-gray);
+
+                &:not([disabled]):hover,
+                &:not([disabled]):focus {
+                    color: var(--color-black);
+                    border: 1px solid var(--color-black);
+                }
+
+                @include mobile {
+                    width: 25%;
+                    font-size: 11px;
+                }
+            }
+        }
+
+        &-Body {
+            @include mobile {
+                display: block;
+            }
+        }
+    }
+
+    .MyAccount {
+        &-TabContent {
+            display: none;
+        }
+
+        &-Wrapper {
+            @include before-desktop {
                 display: none;
             }
         }
     }
-
-    &-Button_isOpen {
-        &:before {
-            content: unset;
-        }
-    }
-
-    .CartCoupon {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 50px;
-        margin-bottom: 15px;
-        border: 1px solid var(--color-light-gray);
-
-        &-Input {
-            margin: 0;
-            height: 100%;
-            width: 100%;
-            font-size: 13px;
-            text-transform: capitalize;
-
-            input:focus, textarea:focus, select:focus {
-                border: 1px solid var(--color-black);
-            }
-
-            @include mobile {
-                font-size: 11px;
-            }
-        }
-
-        &-Button {
-            margin: 0;
-            background-color: var(--color-white);
-            border: 1px solid var(--color-light-gray);
-            color: var(--color-light-gray);
-
-            &:not([disabled]):hover,
-            &:not([disabled]):focus {
-                color: var(--color-black);
-                border: 1px solid var(--color-black);
-            }
-
-            @include mobile {
-                width: 25%;
-                font-size: 11px;
-            }
-        }
-    }
-
-    &-Body {
-        @include mobile {
-            display: block;
-        }
-    }
 }
 
-.LeftMenu {
-    min-width: 300px;
-    border: 1px solid gray;
-    display: block;
-    height: 1000px;
-
-    @include mobile {
-        display: none;
-    }
-}
-
-}
 

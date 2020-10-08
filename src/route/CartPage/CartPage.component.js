@@ -18,8 +18,13 @@ import CmsBlock from 'Component/CmsBlock';
 import ContentWrapper from 'Component/ContentWrapper';
 import ExpandableContent from 'Component/ExpandableContent';
 import Link from 'Component/Link';
+import MyAccountTabList from 'Component/MyAccountTabList';
 import ProductLinks from 'Component/ProductLinks';
+import { tabMap } from 'Route/MyAccount/MyAccount.container';
 import { CROSS_SELL } from 'Store/LinkedProducts/LinkedProducts.reducer';
+import {
+    activeTabType
+} from 'Type/Account';
 import { TotalsType } from 'Type/MiniCart';
 import { isArabic } from 'Util/App';
 import { formatCurrency, roundPrice } from 'Util/Price';
@@ -31,7 +36,9 @@ import './CartPage.style';
 export class CartPage extends PureComponent {
     static propTypes = {
         totals: TotalsType.isRequired,
-        onCheckoutButtonClick: PropTypes.func.isRequired
+        onCheckoutButtonClick: PropTypes.func.isRequired,
+        activeTab: activeTabType.isRequired,
+        changeActiveTab: PropTypes.func.isRequired
     };
 
     state = {
@@ -224,6 +231,28 @@ export class CartPage extends PureComponent {
         );
     }
 
+    renderContent() {
+        const { activeTab, changeActiveTab } = this.props;
+        const { name } = tabMap[activeTab];
+        console.log(tabMap[activeTab]);
+
+        return (
+            <ContentWrapper
+              label={ __('My Account page') }
+              wrapperMix={ { block: 'MyAccount', elem: 'Wrapper' } }
+            >
+                <MyAccountTabList
+                  tabMap={ tabMap }
+                  activeTab={ activeTab }
+                  changeActiveTab={ changeActiveTab }
+                />
+                <div block="MyAccount" elem="TabContent">
+                    <h1 block="MyAccount" elem="Heading">{ name }</h1>
+                </div>
+            </ContentWrapper>
+        );
+    }
+
     render() {
         const {
             isArabic
@@ -231,7 +260,7 @@ export class CartPage extends PureComponent {
 
         return (
             <main block="CartPage" aria-label="Cart Page" mods={ { isArabic } }>
-                <placeholder block="LeftMenu">Menu placeholder</placeholder>
+                { this.renderContent() }
                 <ContentWrapper
                   wrapperMix={ { block: 'CartPage', elem: 'Wrapper' } }
                   label="Cart page details"
