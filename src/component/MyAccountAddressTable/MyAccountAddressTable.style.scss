@@ -118,12 +118,12 @@
 }
 
 ////////////////// REMOVE myAccount!
-.MyAccount {
-    &-TabContent {
-        width: 100%;
+// .MyAccount {
+//     &-TabContent {
+//         width: 100%;
 
-        @include desktop() {
-            margin-left: 80px;
-        }
-    }
-}
+//         @include desktop() {
+//             margin-left: 80px;
+//         }
+//     }
+// }
