@@ -1,4 +1,5 @@
 .MenuBrands {
+    width: 23%;
     margin: 20px 0 30px 35px;
 
     &-ContentWrapper {
@@ -37,13 +38,17 @@
 
     @include desktop {
         &-ContentWrapper {
-            &-Content {
+            &-Brands {
                 display: flex;
                 flex-direction: column;
                 flex-wrap: wrap;
                 height: 290px;
                 justify-content: flex-start;
                 margin-top: 10px;
+
+                a {
+                    margin-left: 0;
+                }
             }
         }
     }

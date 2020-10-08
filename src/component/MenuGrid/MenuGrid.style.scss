@@ -1,5 +1,5 @@
 .MenuGrid {
-    width: 25%;
+    width: 23%;
     margin: 20px 0 30px 35px;
 
     &-Content {
@@ -157,12 +157,8 @@
     }
 
     @include desktop {
-        border-right: 3px solid green;
-
         &-Content {
             &_isArabic {
-                left: -27px;
-
                 .MenuGrid {
                     &-Column {
                         border-left: solid 1px var(--grey);
@@ -193,6 +189,7 @@
                     }
                 }
             }
+
             .ViewAll {
                 &-Link {
                     display: none;

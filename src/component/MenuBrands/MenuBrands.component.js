@@ -44,12 +44,12 @@ class MenuBrands extends PureComponent {
                       block="MenuBrands"
                       elem="Title"
                     >
-                        { __('Shop By Brads') }
+                        { __('Shop By Brands') }
                     </span>
                     <div
                       mix={ {
                           block: 'MenuBrands',
-                          elem: 'ContentWrapper-Content'
+                          elem: 'ContentWrapper-Brands'
                       } }
                     >
                         { this.renderItems() }

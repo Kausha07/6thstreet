@@ -85,7 +85,7 @@
             position: absolute;
             width: 100vw;
             max-width: 1410px;
-            left: 0;
+            left: 30px;
 
             &:after {
                 width: 100%;
@@ -106,6 +106,8 @@
             .DynamicContentBanner {
                 display: block;
                 order: 2;
+                background-color: transparent;
+                border-right: 0;
 
                 .Image {
                     height: 300px;
@@ -115,7 +117,6 @@
 
             .MenuBrands {
                 order: 1;
-                width: 25%;
 
                 &-ContentWrapper {
                     a {
@@ -128,10 +129,23 @@
         }
 
         &:nth-last-child(2) {
-            text-transform: uppercase;       //capitalize
+            text-transform: uppercase;
 
             .DynamicContent {
                 background-color: var(--red);
+
+                .MenuBrands {
+                    &-ContentWrapper {
+                        &-Brands {
+                            a {
+                                color: var(--white);
+                            }
+                        }
+                        span {
+                            color: var(--white);
+                        }
+                    }
+                }
 
                 .MenuGrid {
                     &-Content {
@@ -165,20 +179,35 @@
             cursor: default;
             font-weight: bold;
             height: 40px;
-
-            /*.MenuGrid {
-                background: rgba(0, 0, 0, 0.7);
-            }*/
         }
 
         &_isArabic {
             padding: 0 10px;
 
+            .DynamicContent {
+                left: unset;
+                max-width: 1410px;
+                right: 30px;
+
+                & > div {
+                    border-left: 1px solid var(--light-gray);
+                    border-right: 0;
+
+                    &:first-child {
+                        border: 0;
+                    }
+                }
+            }
+
+            .DynamicContentBanner {
+                margin-left: 0;
+                margin-right: 0;
+            }
+
             &:first-child {
                 padding-left: 10px;
                 padding-right: 30px;
             }
-
         }
     }
 }

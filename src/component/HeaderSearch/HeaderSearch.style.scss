@@ -6,10 +6,9 @@
     &-Container {
         // non displayed to solve conflict with menu categories on small desktop screen
         // have to be solved by adding search popup or other way
-        @media (max-width: 1220px) {
-            //display: none;
+        @media (max-width: 1330px) {
+            display: none;
         }
-
 
         height: 33px;
         margin-left: auto;
