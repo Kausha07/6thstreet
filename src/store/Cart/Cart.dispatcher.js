@@ -116,11 +116,7 @@ export class CartDispatcher {
         const { Cart: { cartId } } = getStore().getState();
 
         try {
-            const resp = await applyCouponCode({ cartId, couponCode });
-
-            // TODO Validate response and update UI,
-            //  by adding option to remove coupon code or show error
-            console.log('*** RESP', resp);
+            await applyCouponCode({ cartId, couponCode });
         } catch (e) {
             Logger.log(e);
         }
@@ -132,11 +128,7 @@ export class CartDispatcher {
         const { Cart: { cartId } } = getStore().getState();
 
         try {
-            const resp = await removeCouponCode({ cartId, couponCode });
-
-            // TODO Validate response and update UI,
-            //  by removing option to remove coupon code or show error
-            console.log('*** RESP', resp);
+            await removeCouponCode({ cartId, couponCode });
         } catch (e) {
             Logger.log(e);
         }

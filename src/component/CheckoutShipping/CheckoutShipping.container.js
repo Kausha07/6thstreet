@@ -19,7 +19,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
 
     static defaultProps = {
         guestEmail: ''
-    }
+    };
 
     onShippingSuccess(fields) {
         const { saveAddressInformation, customer: { email }, guestEmail } = this.props;

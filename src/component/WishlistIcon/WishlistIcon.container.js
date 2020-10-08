@@ -13,7 +13,7 @@ export const mapDispatchToProps = (dispatch) => ({
 class WishlistIconContainer extends PureComponent {
     static propTypes = {
         sku: PropTypes.string.isRequired
-    }
+    };
 
     render() {
         return (
