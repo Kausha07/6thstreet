@@ -47,15 +47,8 @@ export class MyAccountAddressForm extends FieldForm {
         this.state = {
             countryId,
             availableRegions,
-            regionId,
-            defaultChecked: this.isDefaultShipping()
+            regionId
         };
-    }
-
-    isDefaultShipping = () => {
-        const { address: { id } } = this.props;
-        const defaultAddressId = JSON.parse(localStorage.getItem('customer')).data.default_shipping;
-        return Number(id) === Number(defaultAddressId);
     }
 
     onFormSuccess = (fields) => {
@@ -101,8 +94,10 @@ export class MyAccountAddressForm extends FieldForm {
     };
 
     get fieldMap() {
-        const { countryId, defaultChecked } = this.state;
+        const { countryId } = this.state;
         const {
+            defaultChecked,
+            changeDefaultShipping,
             countries,
             address,
             customer: {
@@ -110,8 +105,9 @@ export class MyAccountAddressForm extends FieldForm {
                 lastname
             }
         } = this.props;
-        const { street = [] } = address;
-        console.log(this.isDefaultShipping());
+
+        const { default_billing, street = [] } = address;
+        console.log('def_billing', default_billing);
 
         return {
             default_billing: {
@@ -166,7 +162,7 @@ export class MyAccountAddressForm extends FieldForm {
             default_common: {
                 type: 'toggle',
                 label: __('Make default'),
-                onChange: this.changeDefaultShipping,
+                onChange: changeDefaultShipping,
                 checked: defaultChecked
             }
             // Will be back with B2B update
@@ -176,16 +172,10 @@ export class MyAccountAddressForm extends FieldForm {
         };
     }
 
-    changeDefaultShipping = () => {
-        const { defaultChecked } = this.state;
-
-        this.setState({ defaultChecked: !defaultChecked });
-    };
-
     getDefaultValues(fieldEntry) {
         const [key, { value }] = fieldEntry;
         const { address: { [key]: addressValue } } = this.props;
-        this.setState({ defaultChecked: this.isDefaultShipping() });
+        // this.setState({ defaultChecked: this.isDefaultShipping() });
 
         return {
             ...super.getDefaultValues(fieldEntry),

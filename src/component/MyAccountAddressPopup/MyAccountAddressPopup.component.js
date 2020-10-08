@@ -40,14 +40,51 @@ export class MyAccountAddressPopup extends PureComponent {
         }).isRequired
     };
 
+    state = {
+        defaultChecked: false
+    };
+
+    componentDidUpdate(prevProps, _) {
+        const { payload } = this.props;
+        const { payload: prevPayload } = prevProps;
+
+        if (Object.keys(payload).length > 0 && Object.keys(prevPayload).length > 0) {
+            const { address: { id } } = payload;
+            const { address: { id: prevId } } = prevPayload;
+
+            if (id !== prevId) {
+                this.checkAddressChange();
+            }
+        }
+    }
+
+    isDefaultShipping() {
+        const { payload: { address } } = this.props;
+        const defaultAddressId = JSON.parse(localStorage.getItem('customer')).data.default_shipping;
+        return Number(address.id) === Number(defaultAddressId);
+    }
+
+    changeDefaultShipping = () => {
+        const { defaultChecked } = this.state;
+
+        this.setState({ defaultChecked: !defaultChecked });
+    };
+
+    checkAddressChange() {
+        this.setState({ defaultChecked: this.isDefaultShipping() });
+    }
+
     renderAddressForm() {
         const { payload: { address }, handleAddress, customer } = this.props;
+        const { defaultChecked } = this.state;
 
         return (
             <MyAccountAddressForm
               address={ address }
               onSave={ handleAddress }
               customer={ customer }
+              defaultChecked={ defaultChecked }
+              changeDefaultShipping={ this.changeDefaultShipping }
             />
         );
     }

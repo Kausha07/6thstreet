@@ -54,6 +54,11 @@
 
     @include desktop() {
         width: 335px;
+
+        &::after {
+            content: none;
+        }
+        
         &:hover {
             cursor: auto;
         }
