@@ -1,5 +1,9 @@
+import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
+
+import { HistoryType } from 'Type/Common';
 
 import HeaderSearch from './HeaderSearch.component';
 
@@ -12,6 +16,11 @@ export const mapDispatchToProps = (_dispatch) => ({
 });
 
 export class HeaderSearchContainer extends PureComponent {
+    static propTypes = {
+        search: PropTypes.string,
+        history: HistoryType.isRequired
+    };
+
     static defaultProps = {
         search: ''
     };
@@ -21,7 +30,8 @@ export class HeaderSearchContainer extends PureComponent {
     };
 
     containerFunctions = {
-        onSearchChange: this.onSearchChange.bind(this)
+        onSearchChange: this.onSearchChange.bind(this),
+        onSearchSubmit: this.onSearchSubmit.bind(this)
     };
 
     containerProps = () => {
@@ -31,6 +41,12 @@ export class HeaderSearchContainer extends PureComponent {
 
     onSearchChange(search) {
         this.setState({ search });
+    }
+
+    onSearchSubmit() {
+        const { history } = this.props;
+        const { search } = this.state;
+        history.push(`/catalogsearch/result/?q=${ search }`);
     }
 
     render() {
@@ -43,4 +59,6 @@ export class HeaderSearchContainer extends PureComponent {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(HeaderSearchContainer);
+export default withRouter(
+    connect(mapStateToProps, mapDispatchToProps)(HeaderSearchContainer)
+);

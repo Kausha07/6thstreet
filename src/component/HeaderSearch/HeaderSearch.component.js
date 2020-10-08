@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import Field from 'Component/Field';
+import Form from 'Component/Form';
 import SearchSuggestion from 'Component/SearchSuggestion';
 
 import './HeaderSearch.style';
@@ -9,7 +10,8 @@ import './HeaderSearch.style';
 class HeaderSearch extends PureComponent {
     static propTypes = {
         search: PropTypes.string,
-        onSearchChange: PropTypes.func.isRequired
+        onSearchChange: PropTypes.func.isRequired,
+        onSearchSubmit: PropTypes.func.isRequired
     };
 
     static defaultProps = {
@@ -19,18 +21,24 @@ class HeaderSearch extends PureComponent {
     renderField() {
         const {
             search,
-            onSearchChange
+            onSearchChange,
+            onSearchSubmit
         } = this.props;
 
         return (
-            <Field
-              id="search-field"
-              name="search"
-              type="text"
-              placeholder={ __('What are you looking for?') }
-              onChange={ onSearchChange }
-              value={ search }
-            />
+            <Form
+              id="header-search"
+              onSubmit={ onSearchSubmit }
+            >
+                <Field
+                  id="search-field"
+                  name="search"
+                  type="text"
+                  placeholder={ __('What are you looking for?') }
+                  onChange={ onSearchChange }
+                  value={ search }
+                />
+            </Form>
         );
     }
 

@@ -55,10 +55,6 @@ export class Router extends SourceRouter {
             position: 10
         },
         {
-            component: <Route path={ withStoreRegex('/search/:query/') } component={ SearchPage } />,
-            position: 25
-        },
-        {
             component: <Route path={ withStoreRegex('/page') } component={ CmsPage } />,
             position: 40
         },
@@ -87,15 +83,11 @@ export class Router extends SourceRouter {
             position: 71
         },
         {
-            component: <Route path={ withStoreRegex('/menu') } component={ MenuPage } />,
-            position: 80
-        },
-        {
-            component: <Route path={ withStoreRegex('/wishlist/shared/:code') } component={ WishlistShared } />,
-            position: 81
-        },
-        {
             component: <Route path={ withStoreRegex('/brands') } component={ BrandsPage } />,
+            position: 90
+        },
+        {
+            component: <Route path={ withStoreRegex('/catalogsearch/result') } component={ SearchPage } />,
             position: 90
         },
         {
