@@ -3,3 +3,45 @@
         display: flex;
     }
 }
+@include before-desktop{
+    .MyAccountTabList{
+        width: 100%;
+    }
+    .MyAccountTabListItem_isActive{
+        display:block !important;
+    }
+    .MyAccountTabListItem_isActive, .MyAccountTabListItem:hover {
+        --border-width: 2px !important;
+        --text-shadow: -.02ex 0 var(--my-account-tab-list-item-color), .02ex 0 var(--my-account-tab-list-item-color) !important;
+    }
+    .ExpandableContent-Content{
+        opacity: 1;
+        overflow: visible;
+    }
+    .ExpandableContent-Button{
+        display: none;
+    }
+    .Hidden {
+        display: none;
+    }
+    .Active{
+        display: block;
+        width: 100%;
+    }
+    .Cross{
+        width: 16px;
+        height: 16px;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    .TermsAndPrivacy{
+        width: 100%;
+        position: fixed;
+        bottom: 83px;
+        background-color: var(--white);
+    }
+    .MyAccountTabListItem-Button {
+        width: 100%;
+    }
+}

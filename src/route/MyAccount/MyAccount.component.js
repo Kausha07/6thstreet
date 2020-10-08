@@ -1,22 +1,45 @@
+import PropTypes from 'prop-types';
+
+import ContentWrapper from 'Component/ContentWrapper';
 import MyAccountAddressBook from 'Component/MyAccountAddressBook';
 import MyAccountClubApparel from 'Component/MyAccountClubApparel';
 import MyAccountDashboard from 'Component/MyAccountDashboard';
 import MyAccountMyOrders from 'Component/MyAccountMyOrders';
 import MyAccountMyWishlist from 'Component/MyAccountMyWishlist';
 import MyAccountReturns from 'Component/MyAccountReturns';
+import MyAccountTabList from 'Component/MyAccountTabList';
 import {
     MyAccount as SourceMyAccount
 } from 'SourceRoute/MyAccount/MyAccount.component';
 import {
+    activeTabType,
     ADDRESS_BOOK,
     CLUB_APPAREL,
     DASHBOARD,
     MY_ORDERS,
     MY_WISHLIST,
-    RETURN_ITEM
+    RETURN_ITEM,
+    tabMapType
 } from 'Type/Account';
+import isMobile from 'Util/Mobile';
+
+import { ReactComponent as Close } from './icons/x-close.svg';
 
 export class MyAccount extends SourceMyAccount {
+    constructor(props) {
+        super(props);
+        this.handleClick = this.handleClick.bind(this);
+    }
+
+    static propTypes = {
+        activeTab: activeTabType.isRequired,
+        tabMap: tabMapType.isRequired,
+        changeActiveTab: PropTypes.func.isRequired,
+        onSignIn: PropTypes.func.isRequired,
+        onSignOut: PropTypes.func.isRequired,
+        isSignedIn: PropTypes.bool.isRequired
+    };
+
     renderMap = {
         [CLUB_APPAREL]: MyAccountClubApparel,
         [DASHBOARD]: MyAccountDashboard,
@@ -25,6 +48,106 @@ export class MyAccount extends SourceMyAccount {
         [MY_WISHLIST]: MyAccountMyWishlist,
         [ADDRESS_BOOK]: MyAccountAddressBook
     };
+
+    state = {
+        mobTabActive: false,
+        context: this
+    };
+
+    componentDidUpdate(prevProps) {
+        const { activeTab } = this.props;
+        if (isMobile.any() !== null && prevProps.activeTab !== activeTab) {
+            this.openTabContent(this);
+        }
+    }
+
+    openTabContent() {
+        this.setState({ mobTabActive: true });
+        console.log('Opened TabContent');
+    }
+
+    openTabMenu() {
+        this.setState({ mobTabActive: false });
+        console.log('Opened TabMenu');
+    }
+
+    handleClick(e) {
+        e.preventDefault();
+        this.openTabMenu();
+    }
+
+    renderContent() {
+        const {
+            activeTab,
+            tabMap,
+            changeActiveTab,
+            isSignedIn,
+            onSignOut
+        } = this.props;
+
+        const { mobTabActive } = this.state;
+
+        const hiddenTabContent = mobTabActive ? 'Active' : 'Hidden';
+        const hiddenTabList = mobTabActive ? 'Hidden' : 'Active';
+
+        if (!isSignedIn) {
+            return this.renderLoginOverlay();
+        }
+
+        const TabContent = this.renderMap[activeTab];
+        const { name } = tabMap[activeTab];
+
+        return (
+            <ContentWrapper
+              label={ __('My Account page') }
+              wrapperMix={ { block: 'MyAccount', elem: 'Wrapper' } }
+            >
+                { !isMobile.any() ? (
+                    <MyAccountTabList
+                      tabMap={ tabMap }
+                      activeTab={ activeTab }
+                      changeActiveTab={ changeActiveTab }
+                      onSignOut={ onSignOut }
+                    />
+                ) : (
+                    <div block={ hiddenTabList }>
+                        <MyAccountTabList
+                          tabMap={ tabMap }
+                          activeTab={ activeTab }
+                          changeActiveTab={ changeActiveTab }
+                          onSignOut={ onSignOut }
+                        />
+                        <div block="TermsAndPrivacy">
+                            Terms and conditions and
+                            <a href="https://en-ae.6thstreet.com/privacy-policy"> privacy policy</a>
+                        </div>
+                    </div>
+                ) }
+                { isMobile.any() && hiddenTabContent === 'Active' ? (
+                    <button
+                      elem="Button"
+                      block="Cross"
+                      onClick={ this.handleClick }
+                    >
+                        <Close />
+                    </button>
+                ) : ('') }
+                { !isMobile.any() ? (
+                    <div block="MyAccount" elem="TabContent">
+                        <h1 block="MyAccount" elem="Heading">{ name }</h1>
+                        <TabContent />
+                    </div>
+                ) : (
+                    <div block={ hiddenTabContent }>
+                        <div block="MyAccount" elem="TabContent">
+                            <h1 block="MyAccount" elem="Heading">{ name }</h1>
+                            <TabContent />
+                        </div>
+                    </div>
+                ) }
+            </ContentWrapper>
+        );
+    }
 }
 
 export default MyAccount;
