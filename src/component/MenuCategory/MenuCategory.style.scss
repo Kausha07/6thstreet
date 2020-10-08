@@ -13,7 +13,7 @@
 
     @include before-desktop {
         color: var(--black);
-        font-family: "Avenir Next Regular", serif;
+        font-family: "Avenir Next Thin", serif;
         font-size: 13px;
         font-weight: 600;
         line-height: 45px;
@@ -52,7 +52,7 @@
 
         &:hover {
             color: var(--white);
-            font-family: 'Avenir Next Demi Bold', sans-serif;
+            font-family: 'Avenir Next Semi Bold', sans-serif;
             font-weight: 1000;
 
             .MenuCategory-CategoryLabel {

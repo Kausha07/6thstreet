@@ -37,6 +37,10 @@ class MenuGrid extends PureComponent {
             link
         } = item;
 
+        if (!link) {
+            return null;
+        }
+
         return (
             <Link
               to={ link }
