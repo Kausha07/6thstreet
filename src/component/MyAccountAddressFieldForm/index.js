@@ -9,9 +9,4 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-.MyAccountAddressPopup {
-    margin-bottom: 150px;
-    &-Address {
-        margin: 1rem 0;
-    }
-}
+export { default } from './MyAccountAddressFieldForm.component';

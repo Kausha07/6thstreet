@@ -11,11 +11,11 @@
 
 import PropTypes from 'prop-types';
 
-import FieldForm from 'Component/FieldForm';
+import MyAccountAddressFieldForm from 'Component/MyAccountAddressFieldForm';
 import { addressType } from 'Type/Account';
 import { countriesType } from 'Type/Config';
 
-export class MyAccountAddressForm extends FieldForm {
+export class MyAccountAddressForm extends MyAccountAddressFieldForm {
     static propTypes = {
         address: addressType.isRequired,
         countries: countriesType.isRequired,
@@ -106,44 +106,39 @@ export class MyAccountAddressForm extends FieldForm {
             }
         } = this.props;
 
-        const { default_billing, street = [] } = address;
-        console.log('def_billing', default_billing);
+        const { street = [] } = address;
 
         return {
             default_billing: {
                 type: 'checkbox',
-                label: __('This is default Billing Address'),
-                // value: defaultChecked,
+                value: 'default_billing',
                 checked: defaultChecked
             },
             default_shipping: {
                 type: 'checkbox',
-                label: __('This is default Shipping Address'),
-                // value: defaultChecked,
+                value: 'default_shipping',
                 checked: defaultChecked
             },
             firstname: {
-                label: __('First name'),
                 validation: ['notEmpty'],
                 value: firstname,
                 type: 'hidden'
             },
             lastname: {
-                label: __('Last name'),
                 validation: ['notEmpty'],
-                value: lastname
+                value: lastname,
+                type: 'hidden'
             },
             telephone: {
-                label: __('Phone number'),
-                validation: ['notEmpty']
+                validation: ['notEmpty'],
+                placeholder: __('Telephone')
             },
             city: {
-                label: __('City'),
-                validation: ['notEmpty']
+                validation: ['notEmpty'],
+                placeholder: __('City')
             },
             country_id: {
                 type: 'select',
-                label: __('Country'),
                 validation: ['notEmpty'],
                 value: countryId,
                 selectOptions: countries.map(({ id, label }) => ({ id, label, value: id })),
@@ -151,17 +146,16 @@ export class MyAccountAddressForm extends FieldForm {
             },
             ...this.getRegionFields(),
             postcode: {
-                label: __('Zip/Postal code'),
-                validation: ['notEmpty']
+                validation: ['notEmpty'],
+                placeholder: __('Area')
             },
             street: {
-                label: __('Street address'),
                 value: street[0],
-                validation: ['notEmpty']
+                validation: ['notEmpty'],
+                placeholder: __('Street')
             },
             default_common: {
                 type: 'toggle',
-                label: __('Make default'),
                 onChange: changeDefaultShipping,
                 checked: defaultChecked
             }
@@ -187,8 +181,8 @@ export class MyAccountAddressForm extends FieldForm {
         return (
             <button
               type="submit"
-              block="Button"
-              mix={ { block: 'MyAccount', elem: 'Button' } }
+              block="MyAccountBtn"
+              mix={ { block: 'button primary' } }
             >
                 { __('Save address') }
             </button>
