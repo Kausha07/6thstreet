@@ -123,7 +123,6 @@ export class SearchSuggestionContainer extends PureComponent {
     render() {
         return (
             <SearchSuggestion
-              { ...this.props }
               { ...this.containerFunctions }
               { ...this.containerProps() }
             />
