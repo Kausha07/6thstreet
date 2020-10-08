@@ -42,13 +42,20 @@ export class MyAccountAddressForm extends FieldForm {
         const { available_regions: availableRegions } = country || {};
         const regions = availableRegions || [{}];
         const regionId = region_id || regions[0].id;
+        // console.log(default_billing);
 
         this.state = {
             countryId,
             availableRegions,
             regionId,
-            defaultChecked: false
+            defaultChecked: this.isDefaultShipping()
         };
+    }
+
+    isDefaultShipping = () => {
+        const { address: { id } } = this.props;
+        const defaultAddressId = JSON.parse(localStorage.getItem('customer')).data.default_shipping;
+        return Number(id) === Number(defaultAddressId);
     }
 
     onFormSuccess = (fields) => {
@@ -104,25 +111,26 @@ export class MyAccountAddressForm extends FieldForm {
             }
         } = this.props;
         const { street = [] } = address;
-        console.log(countryId);
+        console.log(this.isDefaultShipping());
 
         return {
             default_billing: {
                 type: 'checkbox',
                 label: __('This is default Billing Address'),
-                value: 'default_billing',
+                // value: defaultChecked,
                 checked: defaultChecked
             },
             default_shipping: {
                 type: 'checkbox',
                 label: __('This is default Shipping Address'),
-                value: 'default_shipping',
+                // value: defaultChecked,
                 checked: defaultChecked
             },
             firstname: {
                 label: __('First name'),
                 validation: ['notEmpty'],
-                value: firstname
+                value: firstname,
+                type: 'hidden'
             },
             lastname: {
                 label: __('Last name'),
@@ -158,7 +166,8 @@ export class MyAccountAddressForm extends FieldForm {
             default_common: {
                 type: 'toggle',
                 label: __('Make default'),
-                onChange: this.changeDefaultShipping
+                onChange: this.changeDefaultShipping,
+                checked: defaultChecked
             }
             // Will be back with B2B update
             // company: {
@@ -169,12 +178,14 @@ export class MyAccountAddressForm extends FieldForm {
 
     changeDefaultShipping = () => {
         const { defaultChecked } = this.state;
+
         this.setState({ defaultChecked: !defaultChecked });
     };
 
     getDefaultValues(fieldEntry) {
         const [key, { value }] = fieldEntry;
         const { address: { [key]: addressValue } } = this.props;
+        this.setState({ defaultChecked: this.isDefaultShipping() });
 
         return {
             ...super.getDefaultValues(fieldEntry),
