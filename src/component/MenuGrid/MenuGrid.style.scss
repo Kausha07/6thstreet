@@ -45,7 +45,7 @@
             grid-template-columns: auto auto;
             margin-top: 10px;
 
-            a{
+            a {
                 margin: 0;
             }
         }
@@ -53,16 +53,14 @@
 
     @include before-desktop {
         position: relative;
-        width: 260px;
+        width: 100%;
 
         &-Content {
-            height: 100%;
+            height: 600px;
             margin: 0;
-            width: 260px;
-
-            a {
-                border-bottom: 1px solid var(--light-grey);
-            }
+            overflow-x: hidden;
+            overflow-y: scroll;
+            width: 100%;
         }
 
         &-Columns {
@@ -77,22 +75,90 @@
             }
         }
 
+        &-Title {
+            display: none;
+        }
+
         &-Column {
-            &:not(:last-child) {
-                border-right: 0;
-            }
             line-height: 30px;
             width: 100%;
 
+            &:not(:last-child) {
+                border-right: 0;
+            }
+
+            .ViewAll {
+                &-Link {
+                    font-family: 'Avenir Next Bold', serif;
+                    text-align: center;
+
+                    // in case if Promo block will be added
+                    //display: none;
+                }
+            }
+
             &-Content {
                 grid-auto-flow: row;
-                grid-template-columns: auto;
-                overflow: scroll;
-                width: 260px;
+                grid-template-columns: 1fr 1fr;
 
                 a{
-                    line-height: 50px;
-                    margin-left: 10px;
+                    line-height: 20px;
+                    margin: 10px;
+                    text-align: center;
+
+                    // in case if Promo block will be added
+                    /*&:not(:nth-child(-n+4)) {
+                        display: none;
+                    }*/
+
+                    &:first-child {
+                        display: none;
+                    }
+
+                    &:last-child {
+                        margin: 10px;
+                    }
+
+                    .Image {
+                        margin-left: -20px;
+
+                        &-Image {
+                            border-radius: 50%;
+                        }
+                    }
+                }
+
+                &_isArabic {
+                    a {
+                        .Image {
+                            margin-left: 0;
+                            margin-right: -20px;
+                        }
+                    }
+                }
+            }
+
+            &_isAllShow {
+                .ViewAll {
+                    &-Link {
+                        display: block;
+                    }
+
+                    &-Button {
+                        display: none;
+                    }
+                }
+
+                .MenuGrid {
+                    &-Column {
+                        &-Content {
+                            a {
+                                &:not(:nth-child(-n+4)) {
+                                    display: block;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -119,6 +185,7 @@
                 }
             }
         }
+
         &-Column {
             &-Content {
                 display: flex;
@@ -127,6 +194,21 @@
                 height: 290px;
                 justify-content: flex-start;
                 margin-top: 10px;
+
+                a {
+                    div {
+                        display: none;
+                    }
+                }
+            }
+            .ViewAll {
+                &-Link {
+                    display: none;
+                }
+
+                &-Button {
+                    display: none;
+                }
             }
         }
     }

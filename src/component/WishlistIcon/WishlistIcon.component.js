@@ -13,7 +13,7 @@ class WishlistIcon extends PureComponent {
         const { sku, addToWishlist } = this.props;
 
         addToWishlist(sku);
-    }
+    };
 
     renderIcon() {
         return (

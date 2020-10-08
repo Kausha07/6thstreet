@@ -3,6 +3,10 @@
     color: var(--white);
     width: 20%;
 
+    @include before-desktop {
+        overflow-y: scroll;
+    }
+
     &-Button {
         display: block;
         text-transform: none;

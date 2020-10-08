@@ -50,9 +50,21 @@ class MyAccountReturnList extends PureComponent {
         );
     }
 
+    renderHeading() {
+        return (
+            <div block="MyAccountReturnList" elem="Header">
+                <h2 block="MyAccountReturnList" elem="Heading">{ __('Return statement') }</h2>
+                <button block="MyAccountReturnList" elem="Button">
+                    { __('Return an item') }
+                </button>
+            </div>
+        );
+    }
+
     render() {
         return (
-            <div block="MyAccountOrderList">
+            <div block="MyAccountReturnList">
+                { this.renderHeading() }
                 { this.renderReturns() }
                 { this.renderLoader() }
             </div>

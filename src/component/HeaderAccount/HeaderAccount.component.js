@@ -2,44 +2,100 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import ClickOutside from 'Component/ClickOutside';
 import MyAccountOverlay from 'Component/MyAccountOverlay';
+import MyAccountSignedInOverlay from 'Component/MyAccountSignedInOverlay';
+import { customerType } from 'Type/Account';
 import { isArabic } from 'Util/App';
 
 import './HeaderAccount.style';
 
 class HeaderAccount extends PureComponent {
     static propTypes = {
+        requestCustomerData: PropTypes.func.isRequired,
         isBottomBar: PropTypes.bool.isRequired,
         isAccount: PropTypes.bool.isRequired,
+        isSignedIn: PropTypes.bool.isRequired,
+        customer: customerType,
         isMobile: PropTypes.bool
     };
 
     static defaultProps = {
-        isMobile: false
+        isMobile: false,
+        customer: null
     };
 
+    _isArabic = isArabic();
+
     state = {
-        accountPopUp: '',
-        isPopup: true,
-        isArabic: isArabic()
+        showPopup: false
     };
 
     closePopup = () => {
-        this.setState({ accountPopUp: '' });
+        this.setState({ showPopup: false });
     };
 
-    renderAccountPopUp = () => {
-        const { isPopup } = this.state;
-        const popUpElement = (
-                <MyAccountOverlay isPopup={ isPopup } closePopup={ this.closePopup } />
+    showMyAccountPopup = () => {
+        this.setState({ showPopup: true });
+    };
+
+    onSignIn = () => {
+        const { requestCustomerData } = this.props;
+
+        requestCustomerData();
+        this.closePopup();
+    }
+
+    renderMyAccountPopup() {
+        const { isSignedIn } = this.props;
+        const { showPopup } = this.state;
+
+        if (!showPopup) {
+            return null;
+        }
+
+        if (isSignedIn) {
+            return (
+                <ClickOutside onClick={ this.closePopup }>
+                    <div>
+                        <MyAccountSignedInOverlay onHide={ this.closePopup } />
+                    </div>
+                </ClickOutside>
+            );
+        }
+
+        return <MyAccountOverlay closePopup={ this.closePopup } onSignIn={ this.onSignIn } isPopup />;
+    }
+
+    renderAccountButton() {
+        const { isSignedIn, customer, isBottomBar } = this.props;
+
+        if (isBottomBar) {
+            return (
+                <label htmlFor="Account">{ __('Account') }</label>
+            );
+        }
+
+        const accountButtonText = isSignedIn && customer ? `${customer.firstname} ${customer.lastname}`
+            : __('Login/Register');
+
+        return (
+            <div block="HeaderAccount" elem="ButtonWrapper">
+                <button
+                  block="HeaderAccount"
+                  elem="Button"
+                  mods={ { isArabic: this._isArabic } }
+                  onClick={ this.showMyAccountPopup }
+                >
+                    <label htmlFor="Account">{ accountButtonText }</label>
+                </button>
+                { this.renderMyAccountPopup() }
+            </div>
         );
-
-        this.setState({ accountPopUp: popUpElement });
-    };
+    }
 
     render() {
         const { isBottomBar, isAccount, isMobile } = this.props;
-        const { accountPopUp, isArabic } = this.state;
 
         return (
             <div
@@ -54,16 +110,7 @@ class HeaderAccount extends PureComponent {
                   }
               } }
             >
-                { !isBottomBar ? (
-                    <div>
-                        <button onClick={ this.renderAccountPopUp } block="HeaderAccount" elem="Button" mods={ { isArabic } }>
-                            <label htmlFor="Account">{ __('Login/Register') }</label>
-                        </button>
-                        { accountPopUp }
-                    </div>
-                ) : (
-                    <label htmlFor="Account">{ __('Account') }</label>
-                ) }
+                { this.renderAccountButton() }
             </div>
         );
     }
