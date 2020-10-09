@@ -13,6 +13,7 @@ import Popup from 'Component/Popup';
 import { Filters } from 'Util/API/endpoint/Product/Product.type';
 import WebUrlParser from 'Util/API/helper/WebUrlParser';
 import { isArabic } from 'Util/App';
+import isMobile from 'Util/Mobile';
 
 import fitlerImage from './icons/filter-button.png';
 
@@ -36,11 +37,32 @@ class PLPFilters extends PureComponent {
         data: null
     };
 
-    static getDerivedStateFromProps(nextProps) {
-        const { activeOverlay } = nextProps;
+    state = {
+        activeFilter: undefined
+    };
 
-        return ({ isOpen: activeOverlay === 'PLPFilter' });
+    static getDerivedStateFromProps(props, state) {
+        const { activeOverlay, filters } = props;
+        const { activeFilter } = state;
+
+        if (isMobile.any()) {
+            if (!activeFilter) {
+                return ({
+                    isOpen: activeOverlay === 'PLPFilter',
+                    activeFilter: Object.keys(filters)[0]
+                });
+            }
+        }
+
+        return ({
+            isOpen: activeOverlay === 'PLPFilter'
+        });
     }
+
+    changeActiveFilter = (newFilter) => {
+        console.log(newFilter);
+        this.setState({ activeFilter: newFilter });
+    };
 
     handleFilterClick = () => {
         const { isOpen } = this.state;
@@ -82,6 +104,8 @@ class PLPFilters extends PureComponent {
             goToPreviousNavigationState();
         }
 
+        this.setState({ activeFilters: {} });
+
         onReset();
     };
 
@@ -89,6 +113,7 @@ class PLPFilters extends PureComponent {
         const { activeFilters } = this.state;
 
         Object.keys(activeFilters).map((key) => WebUrlParser.setParam(key, activeFilters[key]));
+        this.hidePopUp();
     };
 
     renderSeeResultButton() {
@@ -226,13 +251,19 @@ class PLPFilters extends PureComponent {
         );
     }
 
-    renderFilter = ([key, filter]) => (
-        <PLPFilter
-          key={ key }
-          filter={ filter }
-          parentCallback={ this.handleCallback }
-        />
-    );
+    renderFilter = ([key, filter]) => {
+        const { activeFilter } = this.state;
+
+        return (
+            <PLPFilter
+              key={ key }
+              filter={ filter }
+              parentCallback={ this.handleCallback }
+              currentActiveFilter={ activeFilter }
+              changeActiveFilter={ this.changeActiveFilter }
+            />
+        );
+    };
 
     handleCallback = (category, values) => {
         console.log(category, values);

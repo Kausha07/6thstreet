@@ -1,4 +1,45 @@
+.FieldMultiselect-OptionListContainer {
+  .FieldMultiselect-MobileOptionList {
+    li {
+      width: 79%;
+      margin: 0 7% 0 14%;
+    }
+  }
+}
+
 .FieldMultiselect {
+  &-MobileOptionButton {
+    padding: 0;
+    width: 86%;
+    margin: 0 7%;
+    text-align: left;
+    font-size: 13px;
+    vertical-align: baseline;
+    padding: 0;
+    font-weight: 200;
+    text-transform: none;
+    border-bottom: solid 1px #ddd;
+
+    &::before {
+      position: absolute;
+      content: "";
+      right: 0;
+      background: url(./icons/minus@2x.png) no-repeat;
+      background-size: 20px;
+      width: 20px;
+      height: 20px;
+      display: inline-block;
+      font-size: 0;
+    }
+
+    &_isClosed {
+      &::before {
+        background: url(./icons/plus@2x.png) no-repeat;
+        background-size: 20px;
+      }
+    }
+  }
+
   &-FilterButton {
     display: inline-block;
     height: 42px;
@@ -69,8 +110,8 @@
       &:after {
         content: none;
       }
-  
-      &:focus {
+
+      &_toggleOptionsList {
         background: var(--black-color);
         color: var(--white-color);
         font-weight: 600;

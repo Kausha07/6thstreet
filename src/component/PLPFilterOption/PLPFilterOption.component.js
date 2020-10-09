@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { PureComponent } from 'react';
+import { createRef, PureComponent } from 'react';
 
 import Field from 'Component/Field';
 import { FilterOption } from 'Util/API/endpoint/Product/Product.type';
@@ -19,15 +19,17 @@ class PLPFilterOption extends PureComponent {
         activeFilter: {}
     };
 
+    fieldRef = createRef();
+
+    optionRef = createRef();
+
     state = {
         isArabic: isArabic(),
-        onSelectChecked: null,
-        isChecked: false
+        onSelectChecked: false
     };
 
-    handleCheckboxChange = () => {
-        this.setState(({ isChecked }) => ({ isChecked: !isChecked }));
-        this.forceUpdate();
+    handleClick = () => {
+        this.optionRef.current.children[1].click();
     };
 
     renderField() {
@@ -40,7 +42,7 @@ class PLPFilterOption extends PureComponent {
             isRadio,
             activeFilter
         } = this.props;
-        const { onSelectChecked, isChecked } = this.state;
+        const { onSelectChecked } = this.state;
 
         const category = Object.keys(activeFilter)[0];
 
@@ -52,11 +54,13 @@ class PLPFilterOption extends PureComponent {
         // TODO: fix radio ?
         const type = isRadio ? 'radio' : 'checkbox';
         if (facet_value === 'Adidas') {
-            console.log(isChecked);
+            console.log(onSelectChecked);
         }
 
         return isMobile.any() ? (
             <Field
+              formRef={ this.fieldRef }
+              onClick={ this.handleClick }
               mix={ {
                   block: 'PLPFilterOption',
                   elem: 'Input'
@@ -65,7 +69,7 @@ class PLPFilterOption extends PureComponent {
               id={ facet_value }
               name={ facet_key }
               value={ facet_value }
-              checked={ checked || onSelectChecked }
+              defaultChecked={ checked || onSelectChecked }
             />
         ) : (
             <Field
@@ -125,7 +129,7 @@ class PLPFilterOption extends PureComponent {
         }
 
         return (
-            <li block="PLPFilterOption" elem="List" mods={ { isArabic } }>
+            <li ref={ this.optionRef } block="PLPFilterOption" elem="List" mods={ { isArabic } }>
                 { this.renderField() }
                 { this.renderLabel() }
             </li>

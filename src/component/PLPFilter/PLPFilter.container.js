@@ -25,7 +25,13 @@ class PLPFilterContainer extends PureComponent {
     static propTypes = {
         filter: Filter.isRequired,
         toggleOverlayByKey: PropTypes.func.isRequired,
-        parentCallback: PropTypes.func.isRequired
+        parentCallback: PropTypes.func.isRequired,
+        currentActiveFilter: PropTypes.string,
+        changeActiveFilter: PropTypes.func.isRequired
+    };
+
+    static defaultProps = {
+        currentActiveFilter: ''
     };
 
     state = {
@@ -78,9 +84,9 @@ class PLPFilterContainer extends PureComponent {
     }
 
     containerProps = () => {
-        const { filter } = this.props;
+        const { filter, changeActiveFilter, currentActiveFilter } = this.props;
 
-        return { filter };
+        return { filter, changeActiveFilter, currentActiveFilter };
     };
 
     render() {

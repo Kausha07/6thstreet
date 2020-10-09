@@ -10,6 +10,7 @@ import { PureComponent } from 'react';
 
 import FieldMultiselect from 'Component/FiledMultiselect';
 import { Filter } from 'Util/API/endpoint/Product/Product.type';
+import isMobile from 'Util/Mobile';
 
 import './PLPFilter.style';
 
@@ -18,12 +19,15 @@ class PLPFilter extends PureComponent {
         filter: Filter.isRequired,
         onSelect: PropTypes.func.isRequired,
         activeFilter: PropTypes.object,
-        isChecked: PropTypes.bool
+        isChecked: PropTypes.bool,
+        currentActiveFilter: PropTypes.string,
+        changeActiveFilter: PropTypes.func.isRequired
     };
 
     static defaultProps = {
         activeFilter: {},
-        isChecked: false
+        isChecked: false,
+        currentActiveFilter: ''
     };
 
     renderDropDownList() {
@@ -32,10 +36,19 @@ class PLPFilter extends PureComponent {
                 label,
                 category,
                 is_radio
-            }, onSelect, filter, activeFilter, isChecked
+            }, onSelect,
+            filter,
+            activeFilter,
+            isChecked,
+            currentActiveFilter,
+            changeActiveFilter
         } = this.props;
 
-        if (category === 'categories_without_path' || category === 'categories.level1') {
+        if (isMobile.any()) {
+            if (category === 'categories.level1') {
+                return null;
+            }
+        } else if (category === 'categories_without_path' || category === 'categories.level1') {
             return null;
         }
 
@@ -48,6 +61,8 @@ class PLPFilter extends PureComponent {
               filter={ filter }
               activeFilter={ activeFilter }
               isChecked={ isChecked }
+              currentActiveFilter={ currentActiveFilter }
+              changeActiveFilter={ changeActiveFilter }
             />
         );
     }
