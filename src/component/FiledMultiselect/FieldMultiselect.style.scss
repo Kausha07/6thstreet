@@ -4,6 +4,12 @@
       width: 79%;
       margin: 0 7% 0 14%;
     }
+
+    &_isArabic{
+      li {
+        margin: 0 14% 0 7%;
+      }
+    }
   }
 }
 
@@ -16,9 +22,18 @@
     font-size: 13px;
     vertical-align: baseline;
     padding: 0;
-    font-weight: 200;
+    font-weight: normal;
     text-transform: none;
     border-bottom: solid 1px #ddd;
+
+    &_isArabic {
+      text-align: right;
+
+      &::before {
+        right: unset;
+        left: 0;
+      }
+    }
 
     &::before {
       position: absolute;
@@ -52,7 +67,6 @@
     font-size: 13px;
     letter-spacing: 0.5px;
     line-height: 18px;
-    font-weight: 200;
     text-align: left;
 
     &:after {
@@ -171,9 +185,14 @@
       left: unset;
       width: 65%;
 
+      &_isArabic {
+        left: 0;
+        right: unset;
+      }
+
       &_toggleOptionsList {
         border: none;
-        max-height: 85%;
+        max-height: calc(100% - 130px);
       }
     }
   }

@@ -72,11 +72,15 @@ class FieldMultiselect extends PureComponent {
         );
     };
 
-    renderSubcategoryOptions = (option) => (
-            <div block="FieldMultiselect" elem="MobileOptionList">
+    renderSubcategoryOptions = (option) => {
+        const { isArabic } = this.state;
+
+        return (
+            <div block="FieldMultiselect" elem="MobileOptionList" mods={ { isArabic } }>
                 { Object.entries(option.subcategories).map(this.renderOption) }
             </div>
-    );
+        );
+    };
 
     handleSubcategoryClick = (option) => {
         const { subcategoryOptions } = this.state;
@@ -100,7 +104,7 @@ class FieldMultiselect extends PureComponent {
     };
 
     renderOptionMobile = (option) => {
-        const { subcategoryOptions } = this.state;
+        const { subcategoryOptions, isArabic } = this.state;
 
         return (
             <div block="FieldMultiselect" elem="MobileOptions">
@@ -110,6 +114,11 @@ class FieldMultiselect extends PureComponent {
                   mods={ {
                       isClosed:
                     subcategoryOptions[option.label] === '' || subcategoryOptions[option.label] === undefined
+                  } }
+                  mix={ {
+                      block: 'FieldMultiselect',
+                      elem: 'MobileOptionButton',
+                      mods: { isArabic }
                   } }
                   onClick={ () => this.handleSubcategoryClick(option) }
                 >
@@ -200,6 +209,11 @@ class FieldMultiselect extends PureComponent {
                   block="FieldMultiselect"
                   elem="OptionListContainer"
                   mods={ { toggleOptionsList } }
+                  mix={ {
+                      block: 'FieldMultiselect',
+                      elem: 'OptionListContainer',
+                      mods: { isArabic }
+                  } }
                 >
                 <fieldset
                   block="PLPFilter"

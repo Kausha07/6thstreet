@@ -22,6 +22,22 @@
             justify-content: space-between;
             border-bottom: solid 1px #ddd;
             margin: auto 7%;
+
+            &_isArabic {
+                justify-content: flex-end;
+
+                .Field {
+                    [type='radio'],
+                    [type='checkbox']{
+                        + label{
+                            @include before-desktop {
+                                left: 5px;
+                                right: unset;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         .Field_type_radio {
