@@ -387,10 +387,10 @@ export class MyAccountOverlay extends PureComponent {
                     <div
                       block="MyAccountOverlay"
                       elem="Button"
+                      mods={ { isCreateAccountButton: true } }
                     >
                         <button
                           block="Button"
-                          mods={ { isMargin: true } }
                           type="submit"
                         >
                             { __('Create Account') }
@@ -436,6 +436,7 @@ export class MyAccountOverlay extends PureComponent {
                     />
                 </fieldset>
                 <button
+                  type="button"
                   block="MyAccountOverlay"
                   elem="Button"
                   mods={ { likeLink: true } }

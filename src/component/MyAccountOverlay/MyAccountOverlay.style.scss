@@ -80,7 +80,6 @@
 
     button {
         width: 100%;
-        margin-top: .5rem;
     }
 
     input {
@@ -487,6 +486,10 @@
             font-weight: 500;
             line-height: 16px;
             text-decoration: underline;
+
+            &:hover {
+                background: transparent !important;
+            }
         }
 
         &_isArabic {
@@ -506,6 +509,10 @@
                 display: inline-block;
                 font-size: 0;
             }
+        }
+
+        &_isCreateAccountButton {
+            margin-top: 40px;
         }
     }
 
