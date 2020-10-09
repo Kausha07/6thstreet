@@ -17,7 +17,7 @@ class MenuBrands extends PureComponent {
     state = {
         isArabic: isArabic(),
         activeSliderImage: 0
-    }
+    };
 
     renderItems() {
         const { items } = this.props;
@@ -26,7 +26,7 @@ class MenuBrands extends PureComponent {
 
     handleChange = (activeImage) => {
         this.setState({ activeSliderImage: activeImage });
-    }
+    };
 
     renderItem = (item, i) => {
         const {
