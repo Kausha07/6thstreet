@@ -268,7 +268,6 @@ export class MyAccountOverlay extends PureComponent {
 
     handleGenderChange = (e) => {
         this.setState({ gender: e.target.value });
-        console.log(e.target.value);
     };
 
     handleCheckboxChange = () => {
