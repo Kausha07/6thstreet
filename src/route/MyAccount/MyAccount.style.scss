@@ -4,6 +4,13 @@
     }
 }
 @include before-desktop{
+    .MyAccountOverlay-Close {
+        display: block !important;
+    }
+    #privacy-link{
+        font-weight: bold;
+        text-decoration: underline;
+    }
     .MyAccountTabList{
         width: 100%;
     }
@@ -28,7 +35,7 @@
         display: block;
         width: 100%;
     }
-    .Cross{
+    .Cross-button{
         width: 16px;
         height: 16px;
         position: absolute;

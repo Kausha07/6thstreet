@@ -50,8 +50,7 @@ export class MyAccount extends SourceMyAccount {
     };
 
     state = {
-        mobTabActive: false,
-        context: this
+        mobTabActive: false
     };
 
     componentDidUpdate(prevProps) {
@@ -63,12 +62,10 @@ export class MyAccount extends SourceMyAccount {
 
     openTabContent() {
         this.setState({ mobTabActive: true });
-        console.log('Opened TabContent');
     }
 
     openTabMenu() {
         this.setState({ mobTabActive: false });
-        console.log('Opened TabMenu');
     }
 
     handleClick(e) {
@@ -119,14 +116,14 @@ export class MyAccount extends SourceMyAccount {
                         />
                         <div block="TermsAndPrivacy">
                             Terms and conditions and
-                            <a href="https://en-ae.6thstreet.com/privacy-policy"> privacy policy</a>
+                            <a id="privacy-link" href="https://en-ae.6thstreet.com/privacy-policy"> privacy policy</a>
                         </div>
                     </div>
                 ) }
                 { isMobile.any() && hiddenTabContent === 'Active' ? (
                     <button
                       elem="Button"
-                      block="Cross"
+                      block="Cross-button"
                       onClick={ this.handleClick }
                     >
                         <Close />
