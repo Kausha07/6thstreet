@@ -38,8 +38,11 @@ export class PDPGalleryOverlayContainer extends PureComponent {
         super(props);
 
         this.state = {
-            isZoomEnabled: false
+            isZoomEnabled: false,
+            isGalleryEmpty: false
         };
+
+        this.getGallery = this.getGallery.bind(this);
     }
 
     containerProps = () => {
@@ -93,7 +96,8 @@ export class PDPGalleryOverlayContainer extends PureComponent {
             }
         } = this.props;
 
-        if (isLoading) {
+        if (isLoading || gallery_images.length === 0) {
+            this.setState({ isGalleryEmty: true });
             return Array.from({ length: 4 });
         }
 
@@ -103,6 +107,7 @@ export class PDPGalleryOverlayContainer extends PureComponent {
     render() {
         return (
             <PDPGallery
+              { ...this.state }
               { ...this.containerFunctions }
               { ...this.containerProps() }
             />

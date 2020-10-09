@@ -60,7 +60,7 @@ export class PDPGalleryContainer extends PureComponent {
             }
         } = this.props;
 
-        if (isLoading) {
+        if (isLoading || gallery_images.length === 0) {
             return Array.from({ length: 4 });
         }
 
