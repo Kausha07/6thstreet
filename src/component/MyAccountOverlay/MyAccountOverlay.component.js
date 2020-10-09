@@ -67,7 +67,7 @@ export class MyAccountOverlay extends PureComponent {
 
     state = {
         isPopup: false,
-        gender: 'selectPreferNot',
+        gender: 0,
         isChecked: false,
         isArabic: isArabic()
     };
@@ -268,6 +268,7 @@ export class MyAccountOverlay extends PureComponent {
 
     handleGenderChange = (e) => {
         this.setState({ gender: e.target.value });
+        console.log(e.target.value);
     };
 
     handleCheckboxChange = () => {
