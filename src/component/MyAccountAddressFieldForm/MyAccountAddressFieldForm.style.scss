@@ -95,13 +95,18 @@
 
     .MyAccountBtn {
         &-Discart {
-            color: var(--my-acc-discart-btn);
-            text-transform: none;
-            padding: 0;
-            margin-left: 50px;
-            font-size: 15px;
-            font-family: 'Avenir Next Medium';
-            font-weight: 400;
+            display: none;
+
+            @include desktop() {
+                display: inline-block;
+                color: var(--my-acc-discart-btn);
+                text-transform: none;
+                padding: 0;
+                margin-left: 50px;
+                font-size: 15px;
+                font-family: 'Avenir Next Medium';
+                font-weight: 400;
+            }
         }
     }
 
