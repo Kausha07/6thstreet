@@ -8,9 +8,7 @@ import MyAccountMyOrders from 'Component/MyAccountMyOrders';
 import MyAccountMyWishlist from 'Component/MyAccountMyWishlist';
 import MyAccountReturns from 'Component/MyAccountReturns';
 import MyAccountTabList from 'Component/MyAccountTabList';
-import {
-    MyAccount as SourceMyAccount
-} from 'SourceRoute/MyAccount/MyAccount.component';
+import { MyAccount as SourceMyAccount } from 'SourceRoute/MyAccount/MyAccount.component';
 import {
     activeTabType,
     ADDRESS_BOOK,
@@ -73,7 +71,41 @@ export class MyAccount extends SourceMyAccount {
         this.openTabMenu();
     }
 
-    renderContent() {
+    renderDesktop() {
+        const {
+            activeTab,
+            tabMap,
+            changeActiveTab,
+            isSignedIn,
+            onSignOut
+        } = this.props;
+
+        if (!isSignedIn) {
+            return this.renderLoginOverlay();
+        }
+
+        const TabContent = this.renderMap[activeTab];
+        const { name } = tabMap[activeTab];
+        return (
+            <ContentWrapper
+              label={ __('My Account page') }
+              wrapperMix={ { block: 'MyAccount', elem: 'Wrapper' } }
+            >
+                <MyAccountTabList
+                  tabMap={ tabMap }
+                  activeTab={ activeTab }
+                  changeActiveTab={ changeActiveTab }
+                  onSignOut={ onSignOut }
+                />
+                <div block="MyAccount" elem="TabContent">
+                    <h1 block="MyAccount" elem="Heading">{ name }</h1>
+                    <TabContent />
+                </div>
+            </ContentWrapper>
+        );
+    }
+
+    renderMobile() {
         const {
             activeTab,
             tabMap,
@@ -93,34 +125,24 @@ export class MyAccount extends SourceMyAccount {
 
         const TabContent = this.renderMap[activeTab];
         const { name } = tabMap[activeTab];
-
         return (
             <ContentWrapper
               label={ __('My Account page') }
               wrapperMix={ { block: 'MyAccount', elem: 'Wrapper' } }
             >
-                { !isMobile.any() ? (
+                <div block={ hiddenTabList }>
                     <MyAccountTabList
                       tabMap={ tabMap }
                       activeTab={ activeTab }
                       changeActiveTab={ changeActiveTab }
                       onSignOut={ onSignOut }
                     />
-                ) : (
-                    <div block={ hiddenTabList }>
-                        <MyAccountTabList
-                          tabMap={ tabMap }
-                          activeTab={ activeTab }
-                          changeActiveTab={ changeActiveTab }
-                          onSignOut={ onSignOut }
-                        />
-                        <div block="TermsAndPrivacy">
-                            Terms and conditions and
-                            <a id="privacy-link" href="https://en-ae.6thstreet.com/privacy-policy"> privacy policy</a>
-                        </div>
+                    <div block="TermsAndPrivacy">
+                        Terms and conditions and
+                        <a id="privacy-link" href="https://en-ae.6thstreet.com/privacy-policy"> privacy policy</a>
                     </div>
-                ) }
-                { isMobile.any() && hiddenTabContent === 'Active' ? (
+                </div>
+                { hiddenTabContent === 'Active' ? (
                     <button
                       elem="Button"
                       block="Cross-button"
@@ -129,21 +151,18 @@ export class MyAccount extends SourceMyAccount {
                         <Close />
                     </button>
                 ) : ('') }
-                { !isMobile.any() ? (
+                <div block={ hiddenTabContent }>
                     <div block="MyAccount" elem="TabContent">
                         <h1 block="MyAccount" elem="Heading">{ name }</h1>
                         <TabContent />
                     </div>
-                ) : (
-                    <div block={ hiddenTabContent }>
-                        <div block="MyAccount" elem="TabContent">
-                            <h1 block="MyAccount" elem="Heading">{ name }</h1>
-                            <TabContent />
-                        </div>
-                    </div>
-                ) }
+                </div>
             </ContentWrapper>
         );
+    }
+
+    renderContent() {
+        return isMobile.any() ? this.renderMobile() : this.renderDesktop();
     }
 }
 
