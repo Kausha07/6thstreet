@@ -1,3 +1,102 @@
+:root {
+    --filter-product-count-color: #666;
+    --disabeled-radio-button-color:  #b8b8b8;
+}
+
 .PLPFilterOption {
+    &-List {
+        display: flex;
+
+        label {
+            display: flex;
+            align-items: center;
+        }
+
+        span {
+            margin-left: 5px;
+            color: var(--filter-product-count-color);
+        }
     
+        .Field {
+            margin: auto 5px auto 15px;
+
+            [type='radio']{
+                +label {           
+                    &:hover {
+                        &::after {
+                                --checkmark-color: var(--black-color);
+                        }
+                    }
+    
+                    border-radius: 50%;
+    
+                }
+                &:disabled + label {
+                    color: var(--disabeled-radio-button-color);
+                    cursor: auto;
+                }
+    
+                &:checked + label {
+                    --primary-base-color: var(--white-color);
+                    border-color: var(--disabeled-radio-button-color);
+                    
+                    &::after {
+                        --checkmark-color: var(--black-color);
+                    }
+                }
+
+                
+    
+                &:focus {
+
+                    &::after {
+                        --checkmark-color: var(--black-color);
+                    }
+                    
+                    + label {
+                        &::after {
+                            --checkmark-color: var(--black-color);
+                        }
+                    }
+                }
+
+                .PLPFilterOption {
+                    label {
+                        padding-top: 20px;
+                    }
+                }
+            }
+    
+    
+            [type='checkbox'] {
+    
+                &:checked + label {
+                    --primary-base-color: var(--black-color);
+
+                    &::after {
+                        --checkmark-color: var(--black-color);
+                    }
+                }
+    
+                &:hover + label {
+                    --primary-base-color: var(--black-color);
+
+                    &::after {
+                        --checkmark-color: transparent;
+                    }
+                }
+            }
+        }
+
+        &_isArabic {
+            span {
+                margin-left: 0;
+                margin-right: 5px;
+            }
+        
+            .Field {
+                margin: auto 15px auto 5px;
+            }
+        }
+    }
 }

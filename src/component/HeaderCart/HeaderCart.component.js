@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { withRouter } from 'react-router';
@@ -9,31 +10,39 @@ import './HeaderCart.style';
 
 class HeaderCart extends PureComponent {
     static propTypes = {
-        history: PropTypes.object.isRequired
+        history: PropTypes.object.isRequired,
+        renderCountItems: PropTypes.func.isRequired,
+        hideActiveOverlay: PropTypes.func.isRequired
     };
 
     state = {
-        cartPopUp: ''
+        cartPopUp: '',
+        isPopup: true
+    };
+
+    closePopup = () => {
+        this.setState({ cartPopUp: '' });
     };
 
     renderCartPopUp = () => {
+        const { isPopup } = this.state;
         const popUpElement = (
-            <div block="HeaderCart" elem="PupUp">
-                <CartOverlay />
-            </div>
+            <CartOverlay isPopup={ isPopup } closePopup={ this.closePopup } />
         );
 
         this.setState({ cartPopUp: popUpElement });
     };
 
     routeChangeCart = () => {
-        const { history } = this.props;
+        const { history, hideActiveOverlay } = this.props;
 
+        hideActiveOverlay();
         history.push('/cart');
     };
 
     render() {
         const { cartPopUp } = this.state;
+        const { renderCountItems } = this.props;
 
         return (
             <div block="HeaderCart">
@@ -43,9 +52,9 @@ class HeaderCart extends PureComponent {
                       : this.renderCartPopUp }
                   block="HeaderCart"
                   elem="Button"
-                >
-                    { cartPopUp }
-                </button>
+                />
+                { cartPopUp }
+                { renderCountItems }
             </div>
         );
     }

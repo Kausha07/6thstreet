@@ -26,6 +26,14 @@ export const CategoryData = PropTypes.shape({
     items: CategoryItems
 });
 
+export const CategorySliderItem = PropTypes.shape({
+    type: PropTypes.string,
+    title: PropTypes.string,
+    items: CategoryItems
+});
+
+export const CategorySliderItems = PropTypes.arrayOf(CategorySliderItem);
+
 export const Category = PropTypes.shape({
     key: PropTypes.string,
     label: PropTypes.string,

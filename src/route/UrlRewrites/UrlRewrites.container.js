@@ -3,6 +3,7 @@ import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import UrlRewritesQuery from 'Query/UrlRewrites.query';
+import { hideActiveOverlay } from 'Store/Overlay/Overlay.action';
 import { LocationType } from 'Type/Common';
 import { fetchQuery } from 'Util/Request';
 
@@ -14,13 +15,14 @@ export const mapStateToProps = (state) => ({
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
-    // addProduct: options => CartDispatcher.addProductToCart(dispatch, options)
+    hideActiveOverlay: () => _dispatch(hideActiveOverlay())
 });
 
 export class UrlRewritesContainer extends PureComponent {
     static propTypes = {
         location: LocationType.isRequired,
-        locale: PropTypes.string.isRequired
+        locale: PropTypes.string.isRequired,
+        hideActiveOverlay: PropTypes.func.isRequired
     };
 
     containerFunctions = {
@@ -41,7 +43,7 @@ export class UrlRewritesContainer extends PureComponent {
     }
 
     componentDidUpdate(prevProps) {
-        const { location: { pathname }, locale } = this.props;
+        const { location: { pathname }, locale, hideActiveOverlay } = this.props;
         const { locale: prevLocale } = prevProps;
         const { prevPathname } = this.state;
 
@@ -49,6 +51,7 @@ export class UrlRewritesContainer extends PureComponent {
             pathname !== prevPathname
             || locale !== prevLocale
         ) {
+            hideActiveOverlay();
             // Request URL rewrite if pathname or locale changed
             this.requestUrlRewrite(true);
         }

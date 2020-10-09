@@ -1,16 +1,9 @@
 .MenuGrid {
-    height: 100%;
-    left: 0;
-    pointer-events: none;
-    position: fixed;
-    width: 100vw;
+    width: 23%;
 
     &-Content {
         background-color: var(--white);
-        height: 390px;
-        margin: 0 auto;
         pointer-events: all;
-        width: 1410px;
 
         span, a {
             color: var(--black);
@@ -27,9 +20,7 @@
     }
 
     &-Column {
-        border: 0;
-        margin: 20px 0 30px 35px;
-        width: 25%;
+        width: 100%;
 
         &:not(:last-child) {
             border-right: solid 1px var(--grey);
@@ -52,19 +43,18 @@
     }
 
     @include before-desktop {
+        margin-top: 20px;
         position: relative;
         width: 100%;
 
         &-Content {
-            height: 600px;
             margin: 0;
-            overflow-x: hidden;
-            overflow-y: scroll;
             width: 100%;
         }
 
         &-Columns {
             flex-direction: column;
+            text-align: center;
 
             :last-child {
                 margin-right: 0;
@@ -92,8 +82,7 @@
                     font-family: 'Avenir Next Bold', serif;
                     text-align: center;
 
-                    // in case if Promo block will be added
-                    //display: none;
+                    display: none;
                 }
             }
 
@@ -106,10 +95,9 @@
                     margin: 10px;
                     text-align: center;
 
-                    // in case if Promo block will be added
-                    /*&:not(:nth-child(-n+4)) {
+                    &:not(:nth-child(-n+5)) {
                         display: none;
-                    }*/
+                    }
 
                     &:first-child {
                         display: none;
@@ -139,19 +127,17 @@
             }
 
             &_isAllShow {
-                .ViewAll {
-                    &-Link {
-                        display: block;
-                    }
-
-                    &-Button {
-                        display: none;
-                    }
-                }
+                position: absolute;
+                width: 100%;
+                left: 0;
+                top: 0;
+                background-color: var(--white);
 
                 .MenuGrid {
                     &-Column {
                         &-Content {
+                            position: relative;
+
                             a {
                                 &:not(:nth-child(-n+4)) {
                                     display: block;
@@ -165,12 +151,10 @@
     }
 
     @include desktop {
+        margin: 20px 0 30px 35px;
+
         &-Content {
-            left: 13px;
-
             &_isArabic {
-                left: -27px;
-
                 .MenuGrid {
                     &-Column {
                         border-left: solid 1px var(--grey);
@@ -201,6 +185,7 @@
                     }
                 }
             }
+
             .ViewAll {
                 &-Link {
                     display: none;

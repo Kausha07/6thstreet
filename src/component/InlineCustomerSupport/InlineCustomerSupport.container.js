@@ -65,7 +65,7 @@ export class InlineCustomerSupportContainer extends PureComponent {
             contact_using: {
                 text: {
                     [language]: contactLabel
-                }
+                } = {}
             },
             opening_hours: {
                 [language]: openHoursLabel
