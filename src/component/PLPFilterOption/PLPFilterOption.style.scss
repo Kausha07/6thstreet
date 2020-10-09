@@ -1,3 +1,8 @@
+:root {
+    --filter-product-count-color: #666;
+    --disabeled-radio-button-color:  #b8b8b8;
+}
+
 .PLPFilterOption {
     &-Input {
         position: absolute;
@@ -15,7 +20,7 @@
 
         span {
             margin-left: 5px;
-            color: #666;
+            color: var(--filter-product-count-color);
         }
 
         @include before-desktop {
@@ -78,13 +83,13 @@
     
                 }
                 &:disabled + label {
-                    color: #b8b8b8;
+                    color: var(--disabeled-radio-button-color);
                     cursor: auto;
                 }
     
                 &:checked + label {
                     --primary-base-color: var(--white-color);
-                    border-color: #b8b8b8;
+                    border-color: var(--disabeled-radio-button-color);
                     
                     &::after {
                         --checkmark-color: var(--black-color);

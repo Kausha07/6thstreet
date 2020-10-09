@@ -5,10 +5,11 @@ import { withRouter } from 'react-router';
 import HeaderAccount from 'Component/HeaderAccount';
 import HeaderMenu from 'Component/HeaderMenu';
 import HeaderWishlist from 'Component/HeaderWishlist';
+import MyAccountOverlay from 'Component/MyAccountOverlay';
 import NavigationAbstract from 'Component/NavigationAbstract/NavigationAbstract.component';
 import { isSignedIn } from 'Util/Auth';
 
-import './MobileBottomBar.style';
+import './MobileBottomBar.style.scss';
 
 class MobileBottomBar extends NavigationAbstract {
     static propTypes = {
@@ -24,7 +25,9 @@ class MobileBottomBar extends NavigationAbstract {
         isBottomBar: true,
         isLoggedIn: isSignedIn(),
         isWishlist: false,
-        isAccount: false
+        isAccount: false,
+        isPopup: true,
+        accountPopUp: ''
     };
 
     renderMap = {
@@ -45,6 +48,20 @@ class MobileBottomBar extends NavigationAbstract {
         this.setState({
             redirectBrand: true
         });
+    };
+
+    renderAccountPopUp = () => {
+        const { isPopup } = this.state;
+        const popUpElement = (
+            <MyAccountOverlay isPopup={ isPopup } closePopup={ this.closePopup } />
+        );
+
+        this.setState({ accountPopUp: popUpElement });
+        return popUpElement;
+    };
+
+    closePopup = () => {
+        this.setState({ accountPopUp: '' });
     };
 
     routeChangeAccount=() => {
@@ -152,24 +169,27 @@ class MobileBottomBar extends NavigationAbstract {
     }
 
     renderAccount() {
-        const { isBottomBar, isAccount } = this.state;
+        const { isBottomBar, isAccount, accountPopUp } = this.state;
         const { location } = this.props;
 
         this.setState({ isAccount: location.pathname === '/my-account' });
 
         return (
-            <button
-              onClick={ this.routeChangeAccount }
-              key="accountButton"
-              block="MobileBottomBar"
-              elem="WishListAndAccount"
-            >
-                <HeaderAccount
-                  isAccount={ isAccount }
-                  isBottomBar={ isBottomBar }
-                  key="account"
-                />
-            </button>
+            <div>
+                <button
+                  onClick={ this.renderAccountPopUp }
+                  key="accountButton"
+                  block="MobileBottomBar"
+                  elem="WishListAndAccount"
+                >
+                    <HeaderAccount
+                      isAccount={ isAccount }
+                      isBottomBar={ isBottomBar }
+                      key="account"
+                    />
+                </button>
+                { accountPopUp }
+            </div>
         );
     }
 

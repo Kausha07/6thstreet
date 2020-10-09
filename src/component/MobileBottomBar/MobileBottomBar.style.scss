@@ -1,6 +1,61 @@
-:root{
+:root {
     --active-button-header-color: #f96446;
     --inactive-button-header-color: #4a4a4a;
+}
+
+@include before-desktop {
+
+    .HeaderAccount-PopUp,
+    .HeaderAccount-PopUp_isHidden_undefined {
+        display: block;
+        overflow-y: scroll;
+    }
+
+    .MyAccountOverlay-Heading {
+        display: block;
+    }
+
+    .MyAccountOverlay {
+        display: block;
+        height: 100%;
+        padding-top: 0;
+    }
+
+    .MyAccountOverlay-Action_state_createAccount {
+        padding-top: 0;
+    }
+
+    .MyAccountOverlay-Image {
+        object-position: 0;
+        width: 100%;
+    }
+
+    .MyAccountOverlay-ForgotPasswordSubheading {
+        font-weight: inherit;
+    }
+}
+
+@include mobile {
+
+    .MyAccountOverlay-Action {
+        display: block;
+    }
+
+    .MyAccountOverlay-Buttons {
+        margin: 30px;
+    }
+}
+
+.MyAccountOverlay-Button,
+.Button {
+
+    &:hover {
+        background-color: var(--black-color);
+    }
+}
+
+.MyAccountOverlay-Button_isSignIn::after {
+    background: none;
 }
 
 .MobileBottomBar {
@@ -35,7 +90,7 @@
         text-align: center;
         margin: 10px auto 0;
 
-        &::before{
+        &::before {
             content: "";
             right: 0;
             background-size: 27px;
@@ -63,7 +118,7 @@
         &_isActive {
             color: var(--active-button-header-color);
 
-            &::before{
+            &::before {
                 filter: invert(43%) sepia(60%) saturate(1535%) hue-rotate(335deg) brightness(107%) contrast(95%);
             }
         }

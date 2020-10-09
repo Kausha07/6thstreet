@@ -88,6 +88,8 @@ class PLPFilters extends PureComponent {
             hideActiveOverlay();
             goToPreviousNavigationState();
         }
+
+        document.body.style.overflow = 'visible';
     };
 
     resetFilters = () => {
@@ -208,6 +210,8 @@ class PLPFilters extends PureComponent {
 
     renderPopupFilters() {
         const { isArabic } = this.state;
+
+        document.body.style.overflow = 'hidden';
 
         return (
             <Popup
