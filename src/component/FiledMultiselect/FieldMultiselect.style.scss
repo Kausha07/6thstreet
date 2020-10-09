@@ -1,3 +1,7 @@
+:root {
+  --field-multiselect-border:  #ddd;
+}
+
 .FieldMultiselect-OptionListContainer {
   .FieldMultiselect-MobileOptionList {
     li {
@@ -60,7 +64,7 @@
     height: 42px;
     line-height: 42px;
     width: 200px;
-    border: solid 1px #ddd;
+    border: solid 1px var(--field-multiselect-border);
     position: relative;
     margin: 10px;
     color: #000000;
