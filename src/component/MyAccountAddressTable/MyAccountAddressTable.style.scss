@@ -1,3 +1,8 @@
+:root {
+    --my-acc-default: rgb(216, 0, 0);
+    --my-acc-background: #F9F9F9;
+    --my-acc-street: #4A4A4A;
+}
 .MyAccountAddressTable {
     display: flex;
     align-items: center;
@@ -27,13 +32,12 @@
 }
 
 .MyAccountAddressCard {
-    background: #F9F9F9;
+    background: var(--my-acc-background);
     width: 100%;
     font-size: 14px;
     line-height: 19px;
     padding: 10px 24px 17px;
     border-radius: 7px;
-    box-shadow: 0 2px 4px 0 rgba(0,0,0,.1);
 
     &:hover {
         cursor: pointer;
@@ -44,7 +48,7 @@
         position: absolute;
         right: 15px;
         top: 47%;
-        border: solid black;
+        border: solid $black;
         border-width: 0 2px 2px 0;
         display: inline-block;
         padding: 4px;
@@ -65,8 +69,7 @@
     }
 
     &-Default {
-        // remove opacity!!
-        color: red;
+        color: var(--my-acc-default);
     }
 
     &-Name {
@@ -78,7 +81,7 @@
     }
 
     &-Street {
-        color: #4A4A4A;
+        color: var(--my-acc-street);
     }
 
     &-City {
@@ -97,16 +100,18 @@
                 margin: 0 30px 0 0;
             }
         }
+
         .MyAccountAddressCard {
             &::after {
                 content: none;
             }
+
             &::before {
                 content: '';
                 position: absolute;
                 left: 15px;
                 top: 47%;
-                border: solid black;
+                border: solid $black;
                 border-width: 0 2px 2px 0;
                 display: inline-block;
                 padding: 4px;
@@ -117,13 +122,3 @@
     }
 }
 
-////////////////// REMOVE myAccount!
-// .MyAccount {
-//     &-TabContent {
-//         width: 100%;
-
-//         @include desktop() {
-//             margin-left: 80px;
-//         }
-//     }
-// }

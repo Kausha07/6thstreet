@@ -111,7 +111,7 @@ export class MyAccountAddressTable extends KeyValueTable {
     toggleCard = () => {
         const { expand } = this.state;
         this.setState({ expand: !expand });
-    }
+    };
 
     renderCard() {
         const {
