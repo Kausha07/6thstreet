@@ -81,6 +81,7 @@ export class MenuContainer extends PureComponent {
     render() {
         return (
             <Menu
+              { ...this.props }
               { ...this.containerFunctions }
               { ...this.containerProps() }
             />

@@ -6,6 +6,7 @@ import HeaderAccount from 'Component/HeaderAccount';
 import HeaderMenu from 'Component/HeaderMenu';
 import HeaderWishlist from 'Component/HeaderWishlist';
 import NavigationAbstract from 'Component/NavigationAbstract/NavigationAbstract.component';
+import { isSignedIn } from 'Util/Auth';
 
 import './MobileBottomBar.style';
 
@@ -21,7 +22,7 @@ class MobileBottomBar extends NavigationAbstract {
         redirectBrand: false,
         isBrand: false,
         isBottomBar: true,
-        isLoggedIn: false,
+        isLoggedIn: isSignedIn(),
         isWishlist: false,
         isAccount: false
     };
@@ -48,24 +49,14 @@ class MobileBottomBar extends NavigationAbstract {
 
     routeChangeAccount=() => {
         const { history } = this.props;
-        const { isLoggedIn } = this.state;
 
-        if (!isLoggedIn) {
-            return history.push('/myaccount/login');
-        }
-
-        return null;
+        return history.push('/my-account');
     };
 
     routeChangeWishlist=() => {
         const { history } = this.props;
-        const { isLoggedIn } = this.state;
 
-        if (!isLoggedIn) {
-            return history.push('/myaccount/login');
-        }
-
-        return null;
+        return history.push('/my-account/my-wishlist');
     };
 
     routeChangeLogin=() => {
@@ -107,10 +98,10 @@ class MobileBottomBar extends NavigationAbstract {
 
         if (redirectBrand) {
             this.setState({ redirectBrand: false });
-            return history.push('/brands.html');
+            return history.push('/brands');
         }
 
-        this.setState({ isBrand: window.location.pathname === '/brands.html' });
+        this.setState({ isBrand: window.location.pathname === '/brands' });
 
         return (
             <button
@@ -125,7 +116,7 @@ class MobileBottomBar extends NavigationAbstract {
                   mods: { isActive: isBrand }
               } }
             >
-                <label htmlFor="Home">{ __('Brand') }</label>
+                <label htmlFor="Home">{ __('Brands') }</label>
             </button>
         );
     }
@@ -141,12 +132,15 @@ class MobileBottomBar extends NavigationAbstract {
     renderWishlist() {
         const { isBottomBar, isWishlist } = this.state;
 
+        this.setState({ isWishlist: location.pathname === '/my-account/my-wishlist' });
+
         return (
             <button
               onClick={ this.routeChangeWishlist }
               key="wishlistButton"
               block="MobileBottomBar"
               elem="WishListAndAccount"
+              mods={ { isActive: isWishlist } }
             >
                 <HeaderWishlist
                   isWishlist={ isWishlist }
@@ -161,7 +155,7 @@ class MobileBottomBar extends NavigationAbstract {
         const { isBottomBar, isAccount } = this.state;
         const { location } = this.props;
 
-        this.setState({ isAccount: location.pathname === '/myaccount/login' });
+        this.setState({ isAccount: location.pathname === '/my-account' });
 
         return (
             <button

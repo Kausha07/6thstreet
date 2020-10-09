@@ -9,22 +9,68 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-:root {
+ :root {
     --cart-overlay-totals-background: var(--secondary-base-color);
     --cart-overlay-divider-background: #d8d8d8;
     --cart-overlay-promo-background: #fff;
     --cart-overlay-width: 400px;
+
+    --White: #ffffff;
+    --Black: #000000;
+    --BlackOpacityOf6: #00000099;
+    --BlackOpacityOf1: #0000001a;
+    --Tundora: #4A4A4A;
+    --Iron: #D1D3D4;
+    --DustyGray: #9B9B9B;
 }
 
 .CartOverlay {
+    text-transform: initial;
+
+    &_isPopup {
+        opacity: 0;
+        overflow: hidden;
+    }
+
     @include after-mobile {
         position: absolute;
-        top: calc(var(--header-nav-height) - 7px);
-        right: 22px;
+        top: 30px;
+        right: -13.5px;
         padding: 0;
         width: var(--cart-overlay-width);
     }
+    
+    &-ItemCount {
+        height: 50px;
+        background-color: var(--Tundora);
+        color: var(--White);
+        padding: 1rem 1rem .5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        
+        div {
+            display: flex;
+            font-size: 15px;
 
+            div {
+                font-weight: lighter;
+                padding-left: 7px;
+            }          
+        }
+
+        span:last-of-type {
+            @include close-button;
+            --header-color: var(--White);
+            padding-right: 10px;
+            top: -18px;
+        }
+    }
+    
+    &-ItemCount, &-Promo, &-Total dt, &-Empty {
+        font-family: 'Avenir Next Regular';
+    }
+    
     &_isVisible {
         @include after-mobile {
             border: 1px solid var(--overlay-desktop-border-color);
@@ -35,22 +81,18 @@
         @include after-mobile {
             content: '';
             position: absolute;
-            top: -9px;
+            top: -5px;
             right: 9px;
-            height: 15px;
-            width: 15px;
+            height: 10px;
+            width: 10px;
+            z-index: 900;
             transform: rotate(45deg);
-            background-color: var(--overlay-desktop-border-color);
+            background-color: var(--Tundora);
             border: {
-                top: 1px solid var(--overlay-desktop-border-color);
-                left: 1px solid var(--overlay-desktop-border-color);
+                top: 1px solid var(--Tundora);
+                left: 1px solid var(--Tundora);
             }
         }
-    }
-
-    &-Empty {
-        padding: 1rem;
-        border-bottom: 1px solid var(--expandable-content-color);
     }
 
     &-Actions {
@@ -60,10 +102,9 @@
 
     &-CheckoutButton {
         margin-left: 1rem;
-
-        span {
-            @include lock-button;
-        }
+        width: 50%;
+        color: var(--White);
+        box-shadow: 0 1px 4px var(--BlackOpacityOf6);
 
         @include mobile {
             width: 100%;
@@ -78,15 +119,28 @@
     }
 
     &-CartButton {
+        border: 2px solid var(--Black);
+        color: var(--Black);
+        width: 50%;
+
         @include mobile {
             display: none;
         }
     }
 
+    &-CheckoutButton, &-CartButton {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 40px;
+        font-size: 12px;
+        font-family: 'Avenir Next Bold';
+    }
+
     &-Promo,
     &-Total {
         min-height: 4rem;
-
+       
         @include after-mobile {
             min-height: 3rem;
         }
@@ -97,6 +151,8 @@
         text-align: center;
         background: var(--cart-overlay-promo-background);
         margin-bottom: 0;
+        color: var(--Tundora);
+        font-size: 12px;
 
         @include mobile {
             border-bottom: 1px solid var(--cart-overlay-divider-background);
@@ -105,7 +161,7 @@
 
         @include after-mobile {
             padding: .7rem;
-            background: var(--primary-light-color);
+            background: var(--white);
         }
 
         strong {
@@ -114,8 +170,9 @@
     }
 
     &-Items {
-        max-height: 40vh;
+        max-height: 320px;
         overflow-y: scroll;
+        overflow: auto;
     }
 
     &-Total,
@@ -126,20 +183,31 @@
         align-items: center;
         padding: 1rem 1rem .5rem;
         font-size: 18px;
-        background: var(--cart-overlay-totals-background);
 
         @include after-mobile {
-            font-size: 16px;
+            font-size: 14px;
         }
     }
 
     &-Total {
-        font-weight: bold;
+        font-weight: lighter;
         padding: .5rem 1rem 1rem;
 
-        @include after-mobile {
-            border-bottom: 1px solid var(--cart-item-divider-color);
+        dd {
+            font-weight: bold;
+            font-size: 15px;
         }
+
+        span {
+            color: var(--DustyGray);
+        }
+    }
+
+    &-Empty {
+        font-size: 15px;
+        font-weight: lighter;
+        padding: 20px 0;
+        letter-spacing: .75px;
     }
 
     &-DiscountCoupon {
@@ -148,4 +216,28 @@
             font-weight: normal;
         }
     }
+
+    
+}
+.Overlay {
+    &_isInstant {
+        pointer-events: all;
+        touch-action: pan-y;
+        opacity: 1;
+        z-index: 99;
+
+        @include desktop {
+            height: auto;
+            overflow: visible;
+        }
+    }
+}
+
+div.CartOverlay.Overlay {
+    width: 348px;
+    overflow: unset;
+    opacity: 1;
+    border: 1px solid var(--Iron);
+    background-color: var(--White);
+    box-shadow: 0 0 6px 0 var(--BlackOpacityOf1);
 }
