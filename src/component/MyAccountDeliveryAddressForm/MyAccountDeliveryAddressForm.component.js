@@ -46,7 +46,8 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         this.state = {
             countryId,
             availableRegions,
-            regionId
+            regionId,
+            postCodeValue: ''
         };
     }
 
@@ -57,6 +58,10 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         onSave(newAddress);
     };
 
+    copyValue = (text) => {
+        this.setState({ postCodeValue: text });
+    }
+
     getRegionFields() {
         const { address: { region: { region } = {} } } = this.props;
         const { availableRegions, regionId } = this.state;
@@ -64,19 +69,22 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         if (!availableRegions || !availableRegions.length) {
             return {
                 region_string: {
-                    label: __('State/Province'),
-                    value: region
+                    validation: ['notEmpty'],
+                    value: region,
+                    placeholder: __('City area'),
+                    onChange: this.copyValue
                 }
             };
         }
 
         return {
             region_id: {
-                label: __('State/Province'),
+                validation: ['notEmpty'],
                 type: 'select',
                 selectOptions: availableRegions.map(({ id, name }) => ({ id, label: name, value: id })),
                 onChange: (regionId) => this.setState({ regionId }),
-                value: regionId
+                value: regionId,
+                placeholder: __('City area')
             }
         };
     }
@@ -100,7 +108,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
     };
 
     get fieldMap() {
-        const { countryId } = this.state;
+        const { countryId, postCodeValue } = this.state;
         const {
             defaultChecked,
             changeDefaultShipping,
@@ -114,64 +122,9 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         } = this.props;
 
         const { street = [] } = address;
+        // const { region: { region } = {} } = address;
 
-        if (newForm) {
-            return {
-                default_billing: {
-                    type: 'checkbox',
-                    value: 'default_billing',
-                    checked: defaultChecked
-                },
-                default_shipping: {
-                    type: 'checkbox',
-                    value: 'default_shipping',
-                    checked: defaultChecked
-                },
-                firstname: {
-                    validation: ['notEmpty'],
-                    value: firstname,
-                    type: 'hidden'
-                },
-                lastname: {
-                    validation: ['notEmpty'],
-                    value: lastname,
-                    type: 'hidden'
-                },
-                telephone: {
-                    validation: ['notEmpty'],
-                    placeholder: __('Phone Number'),
-                    value: ''
-                },
-                city: {
-                    validation: ['notEmpty'],
-                    placeholder: __('City'),
-                    value: ''
-                },
-                country_id: {
-                    type: 'select',
-                    validation: ['notEmpty'],
-                    value: countryId,
-                    selectOptions: countries.map(({ id, label }) => ({ id, label, value: id })),
-                    onChange: this.onCountryChange
-                },
-                ...this.getRegionFields(),
-                postcode: {
-                    placeholder: __('Post code'),
-                    value: ''
-                },
-                street: {
-                    value: '',
-                    validation: ['notEmpty'],
-                    placeholder: __('Street Address')
-                },
-                default_common: {
-                    type: 'toggle',
-                    label: __('Make default'),
-                    onChange: changeDefaultShipping,
-                    checked: defaultChecked
-                }
-            };
-        }
+        const clearValue = newForm ? { value: '' } : null;
 
         return {
             default_billing: {
@@ -196,11 +149,14 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
             },
             telephone: {
                 validation: ['notEmpty'],
-                placeholder: __('Phone Number')
+                placeholder: __('Phone Number'),
+                ...clearValue
+
             },
             city: {
                 validation: ['notEmpty'],
-                placeholder: __('City')
+                placeholder: __('City'),
+                ...clearValue
             },
             country_id: {
                 type: 'select',
@@ -209,14 +165,22 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
                 selectOptions: countries.map(({ id, label }) => ({ id, label, value: id })),
                 onChange: this.onCountryChange
             },
-            ...this.getRegionFields(),
+            region_string: {
+                validation: ['notEmpty'],
+                placeholder: __('City area'),
+                ...clearValue,
+                onChange: this.copyValue
+            },
             postcode: {
-                placeholder: __('Post code')
+                placeholder: __('Post code'),
+                ...clearValue,
+                value: postCodeValue
             },
             street: {
                 value: street[0],
                 validation: ['notEmpty'],
-                placeholder: __('Street Address')
+                placeholder: __('Street Address'),
+                ...clearValue
             },
             default_common: {
                 type: 'toggle',

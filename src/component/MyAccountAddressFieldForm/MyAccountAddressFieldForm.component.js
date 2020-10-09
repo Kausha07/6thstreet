@@ -85,6 +85,7 @@ export class MyAccountAddressFieldForm extends PureComponent {
                     { this.renderField(['firstname', firstname]) }
                     { this.renderField(['lastname', lastname]) }
                     { this.renderField(['country_id', country_id]) }
+                    { this.renderField(['postcode', postcode]) }
                 </div>
 
                 <div
@@ -101,7 +102,7 @@ export class MyAccountAddressFieldForm extends PureComponent {
                   mods={ { twoFields: true } }
                 >
                     { this.renderField(['city', city]) }
-                    { this.renderField(['postcode', postcode]) }
+                    { this.renderField(['region', region]) }
                 </div>
 
                 <div
@@ -110,14 +111,6 @@ export class MyAccountAddressFieldForm extends PureComponent {
                   mods={ { phone: true } }
                 >
                     { this.renderField(['telephone', telephone]) }
-                </div>
-
-                <div
-                  block="MyAccountAddressFieldForm"
-                  elem="FieldWrapper"
-                  mods={ { region: true } }
-                >
-                    { this.renderField(['region', region]) }
                 </div>
 
                 <div
