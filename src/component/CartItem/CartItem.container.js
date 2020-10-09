@@ -30,8 +30,10 @@ export const mapDispatchToProps = (dispatch) => ({
     addProduct: (options) => CartDispatcher.then(
         ({ default: dispatcher }) => dispatcher.addProductToCart(dispatch, options)
     ),
-    changeItemQty: (options) => CartDispatcher.then(
-        ({ default: dispatcher }) => dispatcher.changeItemQty(dispatch, options)
+    updateProductInCart: (item_id, quantity, color, optionValue, thumbnail_url) => CartDispatcher.then(
+        ({ default: dispatcher }) => dispatcher.updateProductInCart(
+            dispatch, item_id, quantity, color, optionValue, thumbnail_url
+        )
     ),
     removeProduct: (options) => CartDispatcher.then(
         ({ default: dispatcher }) => dispatcher.removeProductFromCart(dispatch, options)
@@ -42,7 +44,8 @@ export class CartItemContainer extends PureComponent {
     static propTypes = {
         item: CartItemType.isRequired,
         currency_code: PropTypes.string.isRequired,
-        changeItemQty: PropTypes.func.isRequired,
+        brand_name: PropTypes.string.isRequired,
+        updateProductInCart: PropTypes.func.isRequired,
         removeProduct: PropTypes.func.isRequired
     };
 
@@ -104,8 +107,17 @@ export class CartItemContainer extends PureComponent {
      */
     handleChangeQuantity(quantity) {
         this.setState({ isLoading: true }, () => {
-            const { changeItemQty, item: { item_id, sku } } = this.props;
-            this.hideLoaderAfterPromise(changeItemQty({ item_id, quantity, sku }));
+            const {
+                updateProductInCart,
+                item: {
+                    item_id,
+                    color,
+                    optionValue,
+                    product: { thumbnail: { url } }
+                }
+            } = this.props;
+
+            this.hideLoaderAfterPromise(updateProductInCart(item_id, quantity, color, optionValue, url));
         });
     }
 
@@ -205,7 +217,6 @@ export class CartItemContainer extends PureComponent {
     }
 
     render() {
-        console.log(this.props);
         return (
             <CartItem
               { ...this.props }

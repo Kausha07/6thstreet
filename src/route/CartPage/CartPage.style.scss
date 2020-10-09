@@ -1,13 +1,9 @@
 /**
- * ScandiPWA - Progressive Web App for Magento
- *
- * Copyright © Scandiweb, Inc. All rights reserved.
- * See LICENSE for license details.
- *
- * @license OSL-3.0 (Open Software License ("OSL") v. 3.0)
- * @package scandipwa/base-theme
- * @link https://github.com/scandipwa/base-theme
- */
+* @category  6thstreet
+* @author    Alona Zvereva <alona.zvereva@scandiweb.com>
+* @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
+* @copyright Copyright (c) 2020 Scandiweb, Inc (https://scandiweb.com)
+*/
 
 :root {
     --cart-page-totals-background: var(--secondary-base-color);
@@ -29,7 +25,8 @@
 .CartPage {
     display: flex;
     font-family: var(--font-family-regular);
-    padding: 75px;
+    padding: 50px 75px;
+    height: 100vh;
 
     @include mobile {
         padding-bottom: calc(var(--navigation-tabs-height) + 120px);
@@ -42,6 +39,10 @@
         .CartPage-Wrapper {
             margin-left: auto;
             margin-right: 100px;
+
+            @include mobile {
+                margin-right: 0;
+            }
         }
     }
 
@@ -302,7 +303,7 @@
     }
 
     &-Discount {
-            margin: 1rem 0;
+        margin: 1rem 0;
     }
 
     &-Static {
@@ -384,9 +385,9 @@
 
 
             &_isContentExpanded {
-                    padding: 1rem 0;
-                    opacity: 1;
-                    max-height: 100%;
+                padding: 1rem 0;
+                opacity: 1;
+                max-height: 100%;
 
                 @include mobile {
                     padding: 1rem;
@@ -452,7 +453,7 @@
                 }
             }
 
-            @include mobile {
+            @include before-desktop {
                 display: none;
             }
         }
@@ -509,14 +510,37 @@
     }
 
     .MyAccount {
-        &-TabContent {
-            display: none;
-        }
-
         &-Wrapper {
+            max-width: var(--content-wrapper-width);
+            padding-left: 1rem;
+            padding-right: 1rem;
+            margin-left: auto;
+            margin-right: auto;
+            display: flex;
+
             @include before-desktop {
                 display: none;
             }
+
+            .MyAccountTabList {
+                padding: 1rem 0;
+
+                &-ExpandableContentContent {
+                    margin-top: 0;
+                    padding: 0 1rem;
+                    max-height: 100%;
+                    overflow: hidden;
+                    opacity: 1;
+                }
+
+                &-ExpandableContentButton {
+                    display: none;
+                }
+            }
+        }
+
+        &-TabContent {
+            display: none;
         }
     }
 }

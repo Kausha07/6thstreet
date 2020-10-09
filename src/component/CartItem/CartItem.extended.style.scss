@@ -1,75 +1,95 @@
+/**
+* @category  6thstreet
+* @author    Alona Zvereva <alona.zvereva@scandiweb.com>
+* @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
+* @copyright Copyright (c) 2020 Scandiweb, Inc (https://scandiweb.com)
+*/
 :root {
+    --cart-page-totals-background: var(--secondary-base-color);
+    --cart-page-divider-background: #d8d8d8;
+    --cart-page-promo-background: #F6F6F6;
+    --cart-page-table-head-background: var(--secondary-base-color);
+
+    --color-black: #000;
+    --color-green-cyan: #28d9aa;
+    --color-light-gray: #9B9B9B;
+    --color-orange-soda: #F96446;
+    --color-white: #fff;
     --color-charcoal: #4a4a4a;
-    --color-nobel:#9b9b9b;
+    --color-nobel: #9B9B9B;
 
+    --font-family-regular: Avenir Next Regular;
+    --font-family-demi-bold: Avenir Next Demi Bold;
+    --font-family-bold: Avenir Next Bold;
 }
-.CartItem {
-    display: flex;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
 
-    &-Wrapper {
+.CartPage {
+    .CartItem {
         display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
 
-        .Image_hasSrc
-        {
+        &-Actions {
             display: none;
         }
 
-        img {
-            display: block !important;
-            width: 95px;
-            height: 130px;
-            margin-right: 15px;
-        }
+        &-Wrapper {
+            display: flex;
 
-        .Image {
-            display: none;
-        }
-    }
-
-    &-Content {
-        display: flex;
-        flex-wrap: wrap;
-        flex-direction: column;
-    }
-
-    &-Heading {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-
-        h2 {
-            margin: 0;
-            width: 100%;
-        }
-
-        span {
-            color: var(--color-nobel);
-            border-right: 1px solid var(--color-nobel);;
-            padding-right: 15px;
-
-            &:last-child {
-                border: none;
-                padding: 0;
+            .Image_hasSrc {
+                display: none;
             }
 
-            text {
-                color: var(--color-charcoal);
+            img {
+                display: block !important;
+                width: 95px;
+                height: 130px;
+                margin-right: 15px;
+            }
 
+            .Image {
+                display: none;
             }
         }
 
-    }
+        &-Content {
+            display: flex;
+            flex-wrap: wrap;
+            flex-direction: column;
+
+            &_isLikeTable {
+                align-self: unset;
+            }
+        }
+
+        &-Heading {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            font-size: 15px;
+            font-weight: bold;
+
+            &:first-child{
+                display: none;
+            }
+        }
+
+        &-ColSizeQty {
+            color: var(--color-charcoal);
+
+            span {
+                color: var( --color-nobel);
+            }
+        }
+
         &_isArabic {
             span {
                 padding-right: 0;
                 padding-left: 15px;
                 border-right: none;
-                border-left: 1px solid var(--color-nobel);;
-
-
+                border-left: 1px solid var(--color-nobel);
             }
         }
     }
 
+}

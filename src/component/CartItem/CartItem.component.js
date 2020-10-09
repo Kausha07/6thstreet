@@ -13,13 +13,14 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-import CartItemPrice from 'Component/CartItemPrice';
+import Field from 'Component/Field';
 import Image from 'Component/Image';
 import Link from 'Component/Link';
 import Loader from 'Component/Loader';
 import { CartItemType } from 'Type/MiniCart';
 import { isArabic } from 'Util/App';
 
+import './CartItem.style';
 import './CartItem.extended.style';
 
 /**
@@ -31,6 +32,7 @@ export class CartItem extends PureComponent {
         isLoading: PropTypes.bool.isRequired,
         item: CartItemType.isRequired,
         currency_code: PropTypes.string.isRequired,
+        brand_name: PropTypes.string.isRequired,
         isEditing: PropTypes.bool,
         isLikeTable: PropTypes.bool,
         handleRemoveItem: PropTypes.func.isRequired,
@@ -199,10 +201,26 @@ export class CartItem extends PureComponent {
     }
 
     renderProductName() {
-        const name = 'R&M';
-        const color = 'Yellow';
-        const size = 'XL';
-        const qty = '1';
+        const {
+            item: {
+                product: {
+                    name
+                }
+            }
+        } = this.props;
+
+        return (
+            <p
+              block="CartItem"
+              elem="Heading"
+            >
+                { name }
+            </p>
+        );
+    }
+
+    renderBrandName() {
+        const { brand_name } = this.props;
         const {
             isArabic
         } = this.state;
@@ -213,33 +231,85 @@ export class CartItem extends PureComponent {
               elem="Heading"
               mods={ { isArabic } }
             >
-                <h2> { name } </h2>
-                <span> { color }  </span>
-                <span> Size: <text>{ size } </text></span>
-                <span> Qty: <text>{ qty } </text></span>
+                { brand_name }
             </p>
         );
     }
 
     renderProductPrice() {
         const {
-            isLikeTable,
             currency_code,
             item: {
-                row_total
+                row_total,
+                discount_amount
             }
         } = this.props;
 
+        const withoutDiscount = (
+            <>
+                { currency_code }
+                <span>
+                    { `${parseFloat(row_total).toFixed(2)}` }
+                </span>
+            </>
+        );
+
+        const withDiscount = (
+            <div
+              block="CartItem"
+              elem="DiscountPrice"
+            >
+                <div>
+                    { currency_code }
+                    <span>
+                        { `${parseFloat(discount_amount).toFixed(2)}` }
+                    </span>
+                </div>
+                { withoutDiscount }
+            </div>
+        );
+
         return (
-            <CartItemPrice
-              row_total={ row_total }
-              currency_code={ currency_code }
-              mix={ {
-                  block: 'CartItem',
-                  elem: 'Price',
-                  mods: { isLikeTable }
-              } }
-            />
+            <div
+              block="CartItem"
+              elem="Price"
+            >
+                { discount_amount ? withDiscount : withoutDiscount }
+            </div>
+        );
+    }
+
+    renderColSizeQty() {
+        const color = 'Yellow';
+        const optionValue = 'XL';
+        // const qty = '1';
+        // const { item: { color, optionValue, qty } } = this.props;
+        const { item: { qty } } = this.props;
+
+        if (optionValue) {
+            return (
+                <div
+                  block="CartItem"
+                  elem="ColSizeQty"
+                >
+                    { color }
+                    <span>| Size:    </span>
+                    { optionValue }
+                    <span>| Qty: </span>
+                    { qty }
+                </div>
+            );
+        }
+
+        return (
+            <div
+              block="CartItem"
+              elem="ColSizeQty"
+            >
+                { color }
+                <span>| Qty: </span>
+                { qty }
+            </div>
         );
     }
 
@@ -258,12 +328,56 @@ export class CartItem extends PureComponent {
               elem="Content"
               mods={ { isLikeTable } }
             >
+                { this.renderBrandName() }
                 { this.renderProductName() }
                 { this.renderProductOptions(customizable_options) }
                 { this.renderProductOptions(bundle_options) }
                 { this.renderProductConfigurations() }
+                { this.renderColSizeQty() }
                 { this.renderProductPrice() }
             </figcaption>
+        );
+    }
+
+    renderActions() {
+        const {
+            isEditing,
+            isLikeTable,
+            item: { qty },
+            minSaleQuantity,
+            maxSaleQuantity,
+            handleRemoveItem,
+            handleChangeQuantity
+        } = this.props;
+
+        return (
+            <div
+              block="CartItem"
+              elem="Actions"
+              mods={ { isEditing, isLikeTable } }
+            >
+                <button
+                  block="CartItem"
+                  id="RemoveItem"
+                  name="RemoveItem"
+                  elem="Delete"
+                  aria-label="Remove item from cart"
+                  onClick={ handleRemoveItem }
+                >
+                    <span />
+                </button>
+                <Field
+                  id="item_qty"
+                  name="item_qty"
+                  type="number"
+                  isControlled
+                  min={ minSaleQuantity }
+                  max={ maxSaleQuantity }
+                  mix={ { block: 'CartItem', elem: 'Qty' } }
+                  value={ qty }
+                  onChange={ handleChangeQuantity }
+                />
+            </div>
         );
     }
 
@@ -294,10 +408,11 @@ export class CartItem extends PureComponent {
         const { isLoading } = this.props;
 
         return (
-            <div block="CartItem">
+            <li block="CartItem">
                 <Loader isLoading={ isLoading } />
                 { this.renderWrapper() }
-            </div>
+                { this.renderActions() }
+            </li>
         );
     }
 }

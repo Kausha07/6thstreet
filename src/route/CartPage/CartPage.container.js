@@ -1,13 +1,9 @@
 /* eslint-disable react/prop-types */
 /**
- * ScandiPWA - Progressive Web App for Magento
- *
- * Copyright © Scandiweb, Inc. All rights reserved.
- * See LICENSE for license details.
- *
- * @license OSL-3.0 (Open Software License ("OSL") v. 3.0)
- * @package scandipwa/base-theme
- * @link https://github.com/scandipwa/base-theme
+ * @category  6thstreet
+ * @author    Alona Zvereva <alona.zvereva@scandiweb.com>
+ * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
+ * @copyright Copyright (c) 2020 Scandiweb, Inc (https://scandiweb.com)
  */
 
 import PropTypes from 'prop-types';

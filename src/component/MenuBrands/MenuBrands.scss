@@ -1,0 +1,91 @@
+.MenuBrands {
+    width: 100%;
+
+    &-ContentWrapper {
+        span, a {
+            color: $black;
+        }
+
+        a {
+            font-weight: 500;
+
+            .Image {
+                padding: 50px;
+                width: 100px;
+
+                &-Image {
+                    border-radius: 50%;
+                }
+            }
+        }
+
+        &_isArabic {
+            a {
+                .Image {
+                    margin-left: 0;
+                    margin-right: -20px;
+                }
+            }
+        }
+    }
+
+    &-Title {
+        text-transform: uppercase;
+        width: 100%;
+    }
+
+    &-MobileSliderWrapper {
+        .Slider-Wrapper {
+            max-width: 67%;
+
+            a {
+                align-items: center;
+                display: flex;
+                font-family: 'Avenir Next Semi Bold', serif;
+                flex-direction: column;
+                width: 110px;
+
+                .Image {
+                    margin-bottom: 10px;
+                }
+            }
+        }
+    }
+
+    @include before-desktop {
+        &-ContentWrapper {
+            margin-top: 20px;
+
+            &-Brands {
+                display: flex;
+                text-align: center;
+
+                a {
+                    line-height: 25px;
+                    margin-left: 0;
+                    padding: 0 5px;
+                }
+            }
+        }
+    }
+
+    @include desktop {
+        width: 23%;
+        margin: 20px 0 30px 35px;
+
+        &-ContentWrapper {
+            &-Brands {
+                display: flex;
+                flex-direction: column;
+                flex-wrap: wrap;
+                height: 290px;
+                justify-content: flex-start;
+                margin-top: 10px;
+
+                a {
+                    margin-left: 0;
+                }
+            }
+        }
+    }
+}

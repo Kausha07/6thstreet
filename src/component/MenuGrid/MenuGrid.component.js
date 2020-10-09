@@ -37,6 +37,10 @@ class MenuGrid extends PureComponent {
             link
         } = item;
 
+        if (!link) {
+            return null;
+        }
+
         return (
             <Link
               to={ link }
@@ -109,7 +113,6 @@ class MenuGrid extends PureComponent {
         this.setState(({ isAllShowing }) => ({ isAllShowing: !isAllShowing }));
     }
 
-    // in case if Promo block will be added, use this function (styles already made)
     renderViewAllButton() {
         return (
             <button
@@ -117,8 +120,35 @@ class MenuGrid extends PureComponent {
               elem="Button"
               onClick={ this.showAllCategories }
             >
-                view all
+                <span>view all</span>
             </button>
+        );
+    }
+
+    renderSubcategories() {
+        const { isArabic } = this.state;
+
+        return (
+            <>
+                <span
+                  block="MenuGrid"
+                  elem="Title"
+                >
+                    { __('Shop by product') }
+                </span>
+                { this.renderMobileButton() }
+                { this.renderViewAllButton() }
+                <div
+                  mix={ {
+                      block: 'MenuGrid-Column',
+                      elem: 'Content',
+                      mods: { isArabic }
+                  } }
+                >
+                    { this.renderDesktopButton() }
+                    { this.renderItems() }
+                </div>
+            </>
         );
     }
 
@@ -146,37 +176,8 @@ class MenuGrid extends PureComponent {
                               mods: { isAllShow: isAllShowing }
                           } }
                         >
-                            <span
-                              block="MenuGrid"
-                              elem="Title"
-                            >
-                                { __('Shop by product') }
-                            </span>
-                            { this.renderMobileButton() }
-                            <div
-                              mix={ {
-                                  block: 'MenuGrid-Column',
-                                  elem: 'Content',
-                                  mods: { isArabic }
-                              } }
-                            >
-                                { this.renderDesktopButton() }
-                                { this.renderItems() }
-                            </div>
+                            { this.renderSubcategories() }
                         </div>
-                        <div
-                          block="MenuGrid"
-                          elem="Column"
-                        >
-                            <div
-                              block="MenuGrid-Column"
-                              elem="Content"
-                            />
-                        </div>
-                        <div
-                          block="MenuGrid"
-                          elem="Column"
-                        />
                     </div>
                 </div>
             </div>
