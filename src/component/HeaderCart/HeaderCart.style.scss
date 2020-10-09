@@ -24,7 +24,7 @@
     &-Count {
         position: absolute;
         top: -2px;
-        right: 0;
+        right: 14px;
         background-color: var(--OutrageousOrange);
         border-radius: 50%;
         height: 14px;
@@ -35,5 +35,9 @@
         font-weight: 600;
         font-family: 'Avenir Next Regular';
         padding-top: 2px;
+
+        @include desktop() {
+            right: 0;
+        }
     }
 }
