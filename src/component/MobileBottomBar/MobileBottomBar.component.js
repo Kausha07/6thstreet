@@ -6,6 +6,7 @@ import HeaderAccount from 'Component/HeaderAccount';
 import HeaderMenu from 'Component/HeaderMenu';
 import HeaderWishlist from 'Component/HeaderWishlist';
 import NavigationAbstract from 'Component/NavigationAbstract/NavigationAbstract.component';
+import { isSignedIn } from 'Util/Auth';
 
 import './MobileBottomBar.style';
 
@@ -21,7 +22,7 @@ class MobileBottomBar extends NavigationAbstract {
         redirectBrand: false,
         isBrand: false,
         isBottomBar: true,
-        isLoggedIn: false,
+        isLoggedIn: isSignedIn(),
         isWishlist: false,
         isAccount: false
     };
@@ -48,24 +49,14 @@ class MobileBottomBar extends NavigationAbstract {
 
     routeChangeAccount=() => {
         const { history } = this.props;
-        const { isLoggedIn } = this.state;
 
-        if (!isLoggedIn) {
-            return history.push('/my-account');
-        }
-
-        return null;
+        return history.push('/my-account');
     };
 
     routeChangeWishlist=() => {
         const { history } = this.props;
-        const { isLoggedIn } = this.state;
 
-        if (!isLoggedIn) {
-            return history.push('/my-account');
-        }
-
-        return null;
+        return history.push('/my-account/my-wishlist');
     };
 
     routeChangeLogin=() => {
@@ -125,7 +116,7 @@ class MobileBottomBar extends NavigationAbstract {
                   mods: { isActive: isBrand }
               } }
             >
-                <label htmlFor="Home">{ __('Brand') }</label>
+                <label htmlFor="Home">{ __('Brands') }</label>
             </button>
         );
     }
@@ -141,12 +132,15 @@ class MobileBottomBar extends NavigationAbstract {
     renderWishlist() {
         const { isBottomBar, isWishlist } = this.state;
 
+        this.setState({ isWishlist: location.pathname === '/my-account/my-wishlist' });
+
         return (
             <button
               onClick={ this.routeChangeWishlist }
               key="wishlistButton"
               block="MobileBottomBar"
               elem="WishListAndAccount"
+              mods={ { isActive: isWishlist } }
             >
                 <HeaderWishlist
                   isWishlist={ isWishlist }

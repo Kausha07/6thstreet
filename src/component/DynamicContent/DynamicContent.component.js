@@ -2,7 +2,6 @@
 import { PureComponent } from 'react';
 
 import DynamicContentBanner from 'Component/DynamicContentBanner';
-import DynamicContentCircleItemSlider from 'Component/DynamicContentCircleItemSlider';
 import DynamicContentGrid from 'Component/DynamicContentGrid';
 import DynamicContentMainBanner from 'Component/DynamicContentMainBanner';
 import DynamicContentProductSlider from 'Component/DynamicContentProductSlider';
@@ -17,7 +16,6 @@ class DynamicContent extends PureComponent {
     };
 
     renderMap = {
-        circleItemSlider: DynamicContentCircleItemSlider,
         banner: DynamicContentBanner,
         mainBanner: DynamicContentMainBanner,
         grid: DynamicContentGrid,

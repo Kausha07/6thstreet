@@ -12,7 +12,7 @@ import './MenuGrid.style';
 class MenuGrid extends PureComponent {
     state = {
         isArabic: isArabic(),
-        isAllShowing: false
+        isAllShowing: true
     };
 
     static propTypes = {
@@ -59,31 +59,6 @@ class MenuGrid extends PureComponent {
         return items.map(this.renderItem);
     }
 
-    renderMobileButton() {
-        const {
-            button: {
-                label,
-                link
-            }
-        } = this.props;
-
-        const linkTo = {
-            pathname: link,
-            state: { plp_config: {} }
-        };
-
-        return (
-            <div
-              block="ViewAll"
-              elem="Link"
-            >
-                <Link to={ linkTo } onClick={ this.hideMenu }>
-                    { label }
-                </Link>
-            </div>
-        );
-    }
-
     renderDesktopButton() {
         const {
             button: {
@@ -114,13 +89,25 @@ class MenuGrid extends PureComponent {
     }
 
     renderViewAllButton() {
+        const {
+            button: {
+                link
+            }
+        } = this.props;
+
+        const linkTo = {
+            pathname: link,
+            state: { plp_config: {} }
+        };
+
         return (
             <button
               block="ViewAll"
               elem="Button"
-              onClick={ this.showAllCategories }
             >
-                <span>view all</span>
+                <Link to={ linkTo } onClick={ this.hideMenu }>
+                    <span>view all</span>
+                </Link>
             </button>
         );
     }
@@ -136,7 +123,6 @@ class MenuGrid extends PureComponent {
                 >
                     { __('Shop by product') }
                 </span>
-                { this.renderMobileButton() }
                 { this.renderViewAllButton() }
                 <div
                   mix={ {

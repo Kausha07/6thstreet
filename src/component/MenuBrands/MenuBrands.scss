@@ -10,8 +10,8 @@
             font-weight: 500;
 
             .Image {
-                padding: 50px;
-                width: 100px;
+                padding: 35px;
+                width: 70px;
 
                 &-Image {
                     border-radius: 50%;
@@ -41,9 +41,11 @@
             a {
                 align-items: center;
                 display: flex;
-                font-family: 'Avenir Next Semi Bold', serif;
+                font-family: 'Avenir Next Medium', serif;
+                font-size: 9px;
                 flex-direction: column;
-                width: 110px;
+                line-height: 16px;
+                width: 80px;
 
                 .Image {
                     margin-bottom: 10px;
