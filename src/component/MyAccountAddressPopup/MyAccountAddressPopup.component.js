@@ -75,7 +75,9 @@ export class MyAccountAddressPopup extends PureComponent {
     }
 
     renderNewAddressForm() {
-        const { payload: { address }, handleAddress, customer } = this.props;
+        const {
+            payload: { address }, handleAddress, customer, closeForm
+        } = this.props;
         const { defaultChecked } = this.state;
 
         return (
@@ -84,6 +86,7 @@ export class MyAccountAddressPopup extends PureComponent {
               address={ address }
               onSave={ handleAddress }
               customer={ customer }
+              closeForm={ closeForm }
               defaultChecked={ defaultChecked }
               changeDefaultShipping={ this.changeDefaultShipping }
             />
@@ -91,13 +94,16 @@ export class MyAccountAddressPopup extends PureComponent {
     }
 
     renderAddressForm() {
-        const { payload: { address }, handleAddress, customer } = this.props;
+        const {
+            payload: { address }, handleAddress, customer, closeForm
+        } = this.props;
         const { defaultChecked } = this.state;
 
         return (
             <MyAccountDeliveryAddressForm
               address={ address }
               onSave={ handleAddress }
+              closeForm={ closeForm }
               customer={ customer }
               defaultChecked={ defaultChecked }
               changeDefaultShipping={ this.changeDefaultShipping }

@@ -381,5 +381,8 @@
     "New Address": null,
     "Shop by product": null,
     "Phone Number": null,
-    "Street Address": null
+    "Street Address": null,
+    "Post code": null,
+    "Discard": null,
+    "Discart": null
 }

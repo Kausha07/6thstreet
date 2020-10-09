@@ -49,7 +49,6 @@ export class MyAccountAddressPopupContainer extends PureComponent {
         updateCustomerDetails: PropTypes.func.isRequired,
         hideActiveOverlay: PropTypes.func.isRequired,
         goToPreviousHeaderState: PropTypes.func.isRequired,
-        openForm: PropTypes.func.isRequired,
         closeForm: PropTypes.func.isRequired,
         payload: PropTypes.shape({
             address: addressType
@@ -91,8 +90,7 @@ export class MyAccountAddressPopupContainer extends PureComponent {
 
     handleAddress(address) {
         const { payload: { address: { id } } } = this.props;
-        // console.log(openForm);
-        // openForm();
+
         this.setState({ isLoading: true });
         if (id) {
             return this.handleEditAddress(address);
@@ -109,7 +107,7 @@ export class MyAccountAddressPopupContainer extends PureComponent {
 
     handleDeleteAddress() {
         const { payload: { address: { id } } } = this.props;
-        // openForm();
+
         this.setState({ isLoading: true });
         const query = MyAccountQuery.getDeleteAddressMutation(id);
         fetchMutation(query).then(this.handleAfterAction, this.handleError);

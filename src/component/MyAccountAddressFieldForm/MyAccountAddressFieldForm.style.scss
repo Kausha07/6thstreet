@@ -1,6 +1,7 @@
 :root {
     --my-acc-border: #EFEFEF;
     --my-acc-input-border: #a5a5a5;
+    --my-acc-discart-btn: #F96446;
 }
 
 .MyAccountAddressFieldForm {
@@ -89,6 +90,18 @@
             &_type_toggle {
                 display: flex;
             }
+        }
+    }
+
+    .MyAccountBtn {
+        &-Discart {
+            color: var(--my-acc-discart-btn);
+            text-transform: none;
+            padding: 0;
+            margin-left: 50px;
+            font-size: 15px;
+            font-family: 'Avenir Next Medium';
+            font-weight: 400;
         }
     }
 

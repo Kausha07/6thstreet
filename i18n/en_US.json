@@ -333,5 +333,8 @@
     "Zip/Postal code": null,
     "Street address": null,
     "County": null,
-    "Postal code": null
+    "Postal code": null,
+    "Post code": null,
+    "Discard": null,
+    "Discart": null
 }

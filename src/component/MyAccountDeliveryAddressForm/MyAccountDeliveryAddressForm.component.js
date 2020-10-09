@@ -92,6 +92,13 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         });
     };
 
+    closeField = (e) => {
+        e.preventDefault();
+
+        const { closeForm } = this.props;
+        closeForm();
+    };
+
     get fieldMap() {
         const { countryId } = this.state;
         const {
@@ -147,9 +154,9 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
                     selectOptions: countries.map(({ id, label }) => ({ id, label, value: id })),
                     onChange: this.onCountryChange
                 },
+                ...this.getRegionFields(),
                 postcode: {
-                    validation: ['notEmpty'],
-                    placeholder: __('Area'),
+                    placeholder: __('Post code'),
                     value: ''
                 },
                 street: {
@@ -204,8 +211,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
             },
             ...this.getRegionFields(),
             postcode: {
-                validation: ['notEmpty'],
-                placeholder: __('Area')
+                placeholder: __('Post code')
             },
             street: {
                 value: street[0],
@@ -239,6 +245,18 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
               mix={ { block: 'button primary' } }
             >
                 { __('Save address') }
+            </button>
+        );
+    }
+
+    renderDiscart() {
+        return (
+            <button
+              block="MyAccountBtn"
+              elem="Discart"
+              onClick={ this.closeField }
+            >
+                { __('Discart') }
             </button>
         );
     }
