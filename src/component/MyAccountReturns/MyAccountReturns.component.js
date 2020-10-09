@@ -2,6 +2,8 @@
 import { PureComponent } from 'react';
 import { Route, Switch } from 'react-router-dom';
 
+import MyAccountCancelCreate from 'Component/MyAccountCancelCreate';
+import MyAccountReturnCreate from 'Component/MyAccountReturnCreate';
 import MyAccountReturnList from 'Component/MyAccountReturnList';
 import MyAccountReturnView from 'Component/MyAccountReturnView';
 import { withStoreRegex } from 'Component/Router/Router.component';
@@ -12,6 +14,22 @@ class MyAccountReturns extends PureComponent {
     static propTypes = {
         // TODO: implement prop-types
     };
+
+    renderCreateCancel({ match }) {
+        return (
+            <MyAccountCancelCreate
+              match={ match }
+            />
+        );
+    }
+
+    renderCreateReturn({ match }) {
+        return (
+            <MyAccountReturnCreate
+              match={ match }
+            />
+        );
+    }
 
     renderOrderList() {
         return <MyAccountReturnList />;
@@ -29,8 +47,18 @@ class MyAccountReturns extends PureComponent {
         return (
             <Switch>
                 <Route
+                  path={ withStoreRegex('/my-account/return-item/create/:order') }
+                  render={ this.renderCreateReturn }
+                  exact
+                />
+                <Route
                   path={ withStoreRegex('/my-account/return-item') }
                   render={ this.renderOrderList }
+                  exact
+                />
+                <Route
+                  path={ withStoreRegex('/my-account/return-item/cancel/:order') }
+                  render={ this.renderCreateCancel }
                   exact
                 />
                 <Route

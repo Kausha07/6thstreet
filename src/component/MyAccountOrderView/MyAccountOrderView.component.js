@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import Link from 'Component/Link';
 import Loader from 'Component/Loader';
 import { Order } from 'Util/API/endpoint/Order/Order.type';
 
@@ -11,6 +12,26 @@ class MyAccountOrderView extends PureComponent {
         order: Order.isRequired,
         isLoading: PropTypes.bool.isRequired
     };
+
+    renderReturnItem() {
+        const { order: { entity_id } } = this.props;
+
+        return (
+            <Link to={ `/my-account/return-item/create/${ entity_id }` } block="Button">
+                { __('Return item') }
+            </Link>
+        );
+    }
+
+    renderCancelItem() {
+        const { order: { entity_id } } = this.props;
+
+        return (
+            <Link to={ `/my-account/return-item/cancel/${ entity_id }` } block="Button">
+                { __('Cancel item') }
+            </Link>
+        );
+    }
 
     renderTitle() {
         const { order: { increment_id } } = this.props;
@@ -96,6 +117,8 @@ class MyAccountOrderView extends PureComponent {
 
         return (
             <>
+                { this.renderReturnItem() }
+                { this.renderCancelItem() }
                 { this.renderTitle() }
                 { this.renderDetails() }
                 { this.renderItems() }

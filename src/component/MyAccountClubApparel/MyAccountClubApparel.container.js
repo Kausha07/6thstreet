@@ -47,10 +47,6 @@ export class MyAccountClubApparelContainer extends PureComponent {
         }
     }
 
-    containerProps = () => {
-        // isDisabled: this._getIsDisabled()
-    };
-
     linkAccount(fields) {
         const { customer: { id }, linkAccount } = this.props;
         const { phone } = fields;
