@@ -43,19 +43,13 @@ class PLPFilterContainer extends PureComponent {
         onSelect: this.onSelect.bind(this)
     };
 
-    componentDidUpdate() {
-        const { activeFilter } = this.state;
-        console.log(activeFilter);
-    }
-
     onSelect() {
         const {
             // setPLPFilter,
             filter: { category },
             parentCallback
         } = this.props;
-        const { activeFilter } = this.state;
-        console.log(activeFilter);
+
         // This syntax gets form with name "filters" from document
         // then it extracts all inputs from form
         const inputs = Array.from(document.forms.filters[category] || []);
@@ -90,8 +84,6 @@ class PLPFilterContainer extends PureComponent {
     };
 
     render() {
-        const { activeFilter } = this.state;
-        console.log(activeFilter);
         return (
             <PLPFilter
               { ...this.state }

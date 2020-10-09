@@ -17,29 +17,22 @@
     top: 0;
     width: 100%;
 
-    &_isArabic {
-        direction: rtl;
-        left: unset;
-        right: 0;
-    }
-
-    .Reset {
+    &-Reset {
         padding-left: 0;
-        &_isOpen {
-            color: var(--black-color);
-            font-size: 14px;
-            font-weight: 200;
-            letter-spacing: 0;
-            line-height: 19px;
-            text-align: right;
-            right: 5px;
-            text-transform: capitalize;
-        }
+        color: var(--black-color);
+        font-size: 14px;
+        font-weight: 200;
+        letter-spacing: 0;
+        line-height: 19px;
+        text-align: right;
+        right: 5px;
+        text-transform: capitalize;
 
         &_isArabic {
-            left: 5px;
-            right: auto;
+            padding-left: 15px;
+            padding-right: 0;
         }
+
     }
 
     &-CloseBtn {
@@ -60,13 +53,10 @@
             left: 20px;
             top: 20px;
             background: transparent;
-          }
-    }
+        }
 
-    .CloseBtn {
         &_isArabic {
-            left: 5px;
-            right: auto;
+            transform: rotate(-180deg);
         }
     }
 
@@ -78,6 +68,10 @@
         position: relative;
         text-transform: capitalize;
         height: 50px;
+
+        &_isArabic {
+            flex-direction: row-reverse;
+        }
     }
 
     .arrow {
@@ -90,11 +84,6 @@
 
     .left {
         transform: rotate(135deg);
-
-        &_isArabic {
-            margin-left: 10px;
-            transform: rotate(-45deg);
-        }
     }
 
     @include desktop() {
@@ -139,20 +128,6 @@
                         right: 5px;
                         transform: rotate(-45deg);
                         width: 10px;
-                    }
-                }
-
-                &_isArabic {
-                    .FieldSelect {
-                        &::after {
-                            border-width: 0 2px 2px 0;
-                            height: 10px;
-                            left: 10px;
-                            margin-top: 5px;
-                            right: auto;
-                            transform: rotate(135deg);
-                            width: 10px;
-                        }
                     }
                 }
             }
@@ -200,12 +175,6 @@
 
     @include desktop() {
         display: none;
-    }
-}
-
-.Reset {
-    &_isArabic {
-        padding: 0 10px;
     }
 }
 
@@ -321,11 +290,5 @@
             margin-right: 5px;
         }
 
-        &_isArabic {
-            span{
-                margin-right: 0;
-                margin-left: 5px;
-            }
-        }
     }
 }

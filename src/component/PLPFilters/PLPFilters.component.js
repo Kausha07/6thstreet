@@ -32,13 +32,13 @@ class PLPFilters extends PureComponent {
     };
 
     activeFilters = {
-        isOpen: false,
-        isArabic: isArabic(),
         data: null
     };
 
     state = {
-        activeFilter: undefined
+        isOpen: false,
+        activeFilter: undefined,
+        isArabic: isArabic()
     };
 
     static getDerivedStateFromProps(props, state) {
@@ -60,7 +60,6 @@ class PLPFilters extends PureComponent {
     }
 
     changeActiveFilter = (newFilter) => {
-        console.log(newFilter);
         this.setState({ activeFilter: newFilter });
     };
 
@@ -135,12 +134,7 @@ class PLPFilters extends PureComponent {
             <button
               block="FilterPopup"
               elem="CloseBtn"
-              mix={ {
-                  block: 'CloseBtn',
-                  mods: {
-                      isArabic
-                  }
-              } }
+              mods={ { isArabic } }
               aria-label={ __('Close') }
               onClick={ this.hidePopUp }
             />
@@ -148,20 +142,14 @@ class PLPFilters extends PureComponent {
     }
 
     renderResetFilterButton() {
-        const { isArabic, isOpen } = this.state;
+        const { isArabic } = this.state;
 
         return (
             <button
-              block="Reset"
-              elem="Button"
+              block="FilterPopup"
+              elem="Reset"
               type="button"
-              mix={ {
-                  block: 'Reset',
-                  mods: {
-                      isArabic,
-                      isOpen
-                  }
-              } }
+              mods={ { isArabic } }
               aria-label={ __('Reset') }
               onClick={ this.resetFilters }
             >
@@ -172,6 +160,7 @@ class PLPFilters extends PureComponent {
 
     renderContent() {
         const { isLoading } = this.props;
+        const { isArabic } = this.state;
 
         if (isLoading) {
             return this.renderPlaceholder();
@@ -181,6 +170,7 @@ class PLPFilters extends PureComponent {
             <div
               block="Content"
               elem="Filters"
+              mods={ { isArabic } }
             >
                 { this.renderFilters() }
             </div>
@@ -234,12 +224,7 @@ class PLPFilters extends PureComponent {
                 <div
                   block="FilterPopup"
                   elem="Title"
-                  mix={ {
-                      block: 'Title',
-                      mods: {
-                          isArabic
-                      }
-                  } }
+                  mods={ { isArabic } }
                 >
                     { this.renderCloseButton() }
                     { this.renderRefine() }
@@ -266,7 +251,6 @@ class PLPFilters extends PureComponent {
     };
 
     handleCallback = (category, values) => {
-        console.log(category, values);
         const { activeFilters } = this.state;
         this.setState({
             activeFilters: {
@@ -278,10 +262,8 @@ class PLPFilters extends PureComponent {
 
     render() {
         const { productsCount } = this.props;
-        const { isOpen, isArabic, activeFilters } = this.state;
+        const { isOpen, isArabic } = this.state;
         const count = productsCount ? productsCount.toLocaleString() : null;
-
-        console.log(activeFilters);
 
         return (
             <>

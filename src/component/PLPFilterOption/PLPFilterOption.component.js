@@ -53,9 +53,6 @@ class PLPFilterOption extends PureComponent {
 
         // TODO: fix radio ?
         const type = isRadio ? 'radio' : 'checkbox';
-        if (facet_value === 'Adidas') {
-            console.log(onSelectChecked);
-        }
 
         return isMobile.any() ? (
             <Field

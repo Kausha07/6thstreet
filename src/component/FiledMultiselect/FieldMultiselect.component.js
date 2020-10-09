@@ -39,20 +39,20 @@ class FieldMultiselect extends PureComponent {
     }
 
     static getDerivedStateFromProps(props) {
-        const { currentActiveFilter, filter } = props;
+        if (isMobile.any()) {
+            const { currentActiveFilter, filter } = props;
 
-        return {
-            toggleOptionsList: currentActiveFilter === filter.category
-        };
+            return {
+                toggleOptionsList: currentActiveFilter === filter.category
+            };
+        }
+
+        return null;
     }
 
     renderOptionMobile = ([key, option]) => {
         // eslint-disable-next-line object-curly-newline
         const { filter: { is_radio }, activeFilter, isChecked, onChange } = this.props;
-
-        if (option === 'sizes') {
-            console.log(option.subcategories);
-        }
 
         if (option.subcategories) {
             return isMobile.any()
@@ -128,10 +128,6 @@ class FieldMultiselect extends PureComponent {
             onChange
         } = this.props;
 
-        if (option === 'sizes') {
-            console.log(option.subcategories);
-        }
-
         if (option.subcategories) {
             return !isMobile.any()
                 ? Object.entries(option.subcategories).map(this.renderOption)
@@ -182,8 +178,6 @@ class FieldMultiselect extends PureComponent {
         const { toggleOptionsList, isArabic } = this.state;
         const { placeholder, onChange } = this.props;
 
-        console.log(toggleOptionsList, placeholder);
-
         return (
             <div block="FieldMultiselect">
             <button
@@ -196,9 +190,9 @@ class FieldMultiselect extends PureComponent {
                   elem: 'FilterButton',
                   mods: { isArabic }
               } }
-              onClick={ this.handleFilterChange }
-            //   onFocus={ this.toggelOptionList }
-            //   onBlur={ this.onBlur }
+              onClick={ isMobile.any() ? this.handleFilterChange : null }
+              onFocus={ !isMobile.any() ? this.toggelOptionList : null }
+              onBlur={ !isMobile.any() ? this.onBlur : null }
             >
                 { placeholder }
             </button>
