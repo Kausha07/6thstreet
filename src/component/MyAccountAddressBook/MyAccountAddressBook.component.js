@@ -56,7 +56,6 @@ export class MyAccountAddressBook extends PureComponent {
         const { getDefaultPostfix, closeForm, openForm } = this.props;
         const addressNumber = index + 1;
         const postfix = getDefaultPostfix(address);
-        // console.log(address);
 
         return (
             <MyAccountAddressTable

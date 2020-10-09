@@ -1,5 +1,6 @@
 :root {
     --my-acc-border: #EFEFEF;
+    --my-acc-input-border: #a5a5a5;
 }
 
 .MyAccountAddressFieldForm {
@@ -38,6 +39,10 @@
             font-size: 18px;
             font-family: 'Avenir Next Demi Regular', sans-serif;
         }
+
+        input:focus {
+            border: 1px solid var(--my-acc-input-border);
+        }
     }
 
     &-FieldWrapper {
@@ -60,12 +65,23 @@
             display: flex;
             align-items: center;
             margin-top: 20px;
-            font-family: 'Avenir Next Regular';
-            font-size: 14px;
+
             div {
+                display: flex;
+                flex-direction: row-reverse;
+                align-items: center;
                 margin-top: 0;
-                margin-right: 5px;
+                padding-right: 15px;
                 display: inline-block;
+            }
+
+            label {
+
+                font-family: 'Avenir Next Regular';
+                font-size: 14px;
+                font-weight: 400;
+                padding-bottom: 0;;
+                cursor: pointer;
             }
         }
     }

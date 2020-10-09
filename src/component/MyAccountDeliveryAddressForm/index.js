@@ -9,4 +9,4 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-export { default } from './MyAccountAddressForm.container';
+export { default } from './MyAccountDeliveryAddressForm.container';

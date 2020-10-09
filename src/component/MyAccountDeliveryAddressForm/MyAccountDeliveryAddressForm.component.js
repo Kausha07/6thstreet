@@ -15,7 +15,7 @@ import MyAccountAddressFieldForm from 'Component/MyAccountAddressFieldForm';
 import { addressType } from 'Type/Account';
 import { countriesType } from 'Type/Config';
 
-export class MyAccountAddressForm extends MyAccountAddressFieldForm {
+export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
     static propTypes = {
         address: addressType.isRequired,
         countries: countriesType.isRequired,
@@ -42,7 +42,6 @@ export class MyAccountAddressForm extends MyAccountAddressFieldForm {
         const { available_regions: availableRegions } = country || {};
         const regions = availableRegions || [{}];
         const regionId = region_id || regions[0].id;
-        // console.log(default_billing);
 
         this.state = {
             countryId,
@@ -100,6 +99,7 @@ export class MyAccountAddressForm extends MyAccountAddressFieldForm {
             changeDefaultShipping,
             countries,
             address,
+            newForm,
             customer: {
                 firstname,
                 lastname
@@ -107,6 +107,64 @@ export class MyAccountAddressForm extends MyAccountAddressFieldForm {
         } = this.props;
 
         const { street = [] } = address;
+
+        if (newForm) {
+            return {
+                default_billing: {
+                    type: 'checkbox',
+                    value: 'default_billing',
+                    checked: defaultChecked
+                },
+                default_shipping: {
+                    type: 'checkbox',
+                    value: 'default_shipping',
+                    checked: defaultChecked
+                },
+                firstname: {
+                    validation: ['notEmpty'],
+                    value: firstname,
+                    type: 'hidden'
+                },
+                lastname: {
+                    validation: ['notEmpty'],
+                    value: lastname,
+                    type: 'hidden'
+                },
+                telephone: {
+                    validation: ['notEmpty'],
+                    placeholder: __('Phone Number'),
+                    value: ''
+                },
+                city: {
+                    validation: ['notEmpty'],
+                    placeholder: __('City'),
+                    value: ''
+                },
+                country_id: {
+                    type: 'select',
+                    validation: ['notEmpty'],
+                    value: countryId,
+                    selectOptions: countries.map(({ id, label }) => ({ id, label, value: id })),
+                    onChange: this.onCountryChange
+                },
+                postcode: {
+                    validation: ['notEmpty'],
+                    placeholder: __('Area'),
+                    value: ''
+                },
+                street: {
+                    value: '',
+                    validation: ['notEmpty'],
+                    placeholder: __('Street Address')
+                },
+                default_common: {
+                    type: 'toggle',
+                    label: __('Make default'),
+                    onChange: changeDefaultShipping,
+                    checked: defaultChecked
+                }
+            };
+        }
 
         return {
             default_billing: {
@@ -131,7 +189,7 @@ export class MyAccountAddressForm extends MyAccountAddressFieldForm {
             },
             telephone: {
                 validation: ['notEmpty'],
-                placeholder: __('Telephone')
+                placeholder: __('Phone Number')
             },
             city: {
                 validation: ['notEmpty'],
@@ -152,24 +210,20 @@ export class MyAccountAddressForm extends MyAccountAddressFieldForm {
             street: {
                 value: street[0],
                 validation: ['notEmpty'],
-                placeholder: __('Street')
+                placeholder: __('Street Address')
             },
             default_common: {
                 type: 'toggle',
+                label: __('Make default'),
                 onChange: changeDefaultShipping,
                 checked: defaultChecked
             }
-            // Will be back with B2B update
-            // company: {
-            //     label: __('Company')
-            // }
         };
     }
 
     getDefaultValues(fieldEntry) {
         const [key, { value }] = fieldEntry;
         const { address: { [key]: addressValue } } = this.props;
-        // this.setState({ defaultChecked: this.isDefaultShipping() });
 
         return {
             ...super.getDefaultValues(fieldEntry),
@@ -190,4 +244,4 @@ export class MyAccountAddressForm extends MyAccountAddressFieldForm {
     }
 }
 
-export default MyAccountAddressForm;
+export default MyAccountDeliveryAddressForm;

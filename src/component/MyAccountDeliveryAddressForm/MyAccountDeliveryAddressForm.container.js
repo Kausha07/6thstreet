@@ -11,11 +11,11 @@
 
 import { connect } from 'react-redux';
 
-import MyAccountAddressForm from './MyAccountAddressForm.component';
+import MyAccountDeliveryAddressForm from './MyAccountDeliveryAddressForm.component';
 
 export const mapStateToProps = (state) => ({
     countries: state.ConfigReducer.countries,
     default_country: state.ConfigReducer.default_country
 });
 
-export default connect(mapStateToProps)(MyAccountAddressForm);
+export default connect(mapStateToProps)(MyAccountDeliveryAddressForm);

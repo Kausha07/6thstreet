@@ -323,5 +323,15 @@
     "Size": null,
     "Bust": null,
     "Waist": null,
-    "Choose %s": null
+    "Choose %s": null,
+    "Phone Number": null,
+    "Street Address": null,
+    "This is default Billing Address": null,
+    "This is default Shipping Address": null,
+    "Phone number": null,
+    "Country": null,
+    "Zip/Postal code": null,
+    "Street address": null,
+    "County": null,
+    "Postal code": null
 }

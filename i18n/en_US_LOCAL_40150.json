@@ -429,5 +429,7 @@
     "Telephone": null,
     "Area": null,
     "New Address": null,
-    "Shop by product": null
+    "Shop by product": null,
+    "Phone Number": null,
+    "Street Address": null
 }

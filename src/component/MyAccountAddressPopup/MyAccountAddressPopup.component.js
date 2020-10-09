@@ -14,8 +14,8 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import Loader from 'Component/Loader';
-import MyAccountAddressForm from 'Component/MyAccountAddressForm';
 import MyAccountAddressTable from 'Component/MyAccountAddressTable';
+import MyAccountDeliveryAddressForm from 'Component/MyAccountDeliveryAddressForm';
 // import Popup from 'Component/Popup';
 import { addressType } from 'Type/Account';
 
@@ -74,12 +74,28 @@ export class MyAccountAddressPopup extends PureComponent {
         this.setState({ defaultChecked: this.isDefaultShipping() });
     }
 
+    renderNewAddressForm() {
+        const { payload: { address }, handleAddress, customer } = this.props;
+        const { defaultChecked } = this.state;
+
+        return (
+            <MyAccountDeliveryAddressForm
+              newForm
+              address={ address }
+              onSave={ handleAddress }
+              customer={ customer }
+              defaultChecked={ defaultChecked }
+              changeDefaultShipping={ this.changeDefaultShipping }
+            />
+        );
+    }
+
     renderAddressForm() {
         const { payload: { address }, handleAddress, customer } = this.props;
         const { defaultChecked } = this.state;
 
         return (
-            <MyAccountAddressForm
+            <MyAccountDeliveryAddressForm
               address={ address }
               onSave={ handleAddress }
               customer={ customer }
@@ -98,7 +114,7 @@ export class MyAccountAddressPopup extends PureComponent {
                 <div block="MyAccountAddressPopup" elem="Address">
                     <MyAccountAddressTable address={ address } title={ __('Address details') } />
                 </div>
-                <button block="Button" onClick={ handleDeleteAddress }>
+                <button block="button primary" onClick={ handleDeleteAddress }>
                     { __('Yes, delete address') }
                 </button>
             </>
@@ -110,8 +126,9 @@ export class MyAccountAddressPopup extends PureComponent {
 
         switch (action) {
         case EDIT_ADDRESS:
-        case ADD_ADDRESS:
             return this.renderAddressForm();
+        case ADD_ADDRESS:
+            return this.renderNewAddressForm();
         case DELETE_ADDRESS:
             return this.renderDeleteNotice();
         default:

@@ -96,8 +96,8 @@ export class MyAccountAddressFieldForm extends PureComponent {
                   elem="FieldWrapper"
                   mods={ { twoFields: true } }
                 >
-                    { this.renderField(['postcode', postcode]) }
                     { this.renderField(['city', city]) }
+                    { this.renderField(['postcode', postcode]) }
                 </div>
 
                 <div
@@ -114,7 +114,6 @@ export class MyAccountAddressFieldForm extends PureComponent {
                   mods={ { toggle: true } }
                 >
                     { this.renderField(['default_common', default_common]) }
-                    <span>{ __('Make default') }</span>
                 </div>
             </div>
         );
