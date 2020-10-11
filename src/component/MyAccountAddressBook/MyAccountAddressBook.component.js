@@ -13,7 +13,6 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-import MyAccountAddressForm from 'Component/MyAccountAddressForm';
 import MyAccountAddressPopup from 'Component/MyAccountAddressPopup';
 import MyAccountAddressTable from 'Component/MyAccountAddressTable';
 import { addressType, customerType } from 'Type/Account';
@@ -98,17 +97,6 @@ export class MyAccountAddressBook extends PureComponent {
         }
 
         return addresses.map(this.renderAddress);
-    }
-
-    renderAddresForm() {
-        const { payload: { address }, handleAddress } = this.props;
-
-        return (
-            <MyAccountAddressForm
-              address={ address }
-              onSave={ handleAddress }
-            />
-        );
     }
 
     render() {

@@ -47,8 +47,36 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
             countryId,
             availableRegions,
             regionId,
-            postCodeValue: ''
+            postCodeValue: null
         };
+    }
+
+    componentDidUpdate(prevProps, _) {
+        const { address: { region: { region: prevRegion } = {} } } = prevProps;
+        const { address: { region: { region } = {} } } = this.props;
+
+        if (prevRegion !== region) {
+            this.setPostCode();
+        }
+    }
+
+    copyValue = (text) => {
+        this.setState({ initRegion: null, postCodeValue: text });
+    };
+
+    setPostCode() {
+        const { address: { region: { region } = {} } } = this.props;
+        this.setState({ postCodeValue: region });
+    }
+
+    getPostCodeValue() {
+        const { postCodeValue } = this.state;
+        const { address: { region: { region } = {} } } = this.props;
+        if (postCodeValue == null) {
+            return region;
+        }
+
+        return postCodeValue;
     }
 
     onFormSuccess = (fields) => {
@@ -58,13 +86,11 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         onSave(newAddress);
     };
 
-    copyValue = (text) => {
-        this.setState({ postCodeValue: text });
-    }
-
     getRegionFields() {
+        const { newForm } = this.props;
         const { address: { region: { region } = {} } } = this.props;
         const { availableRegions, regionId } = this.state;
+        const clearValue = newForm ? { value: '' } : null;
 
         if (!availableRegions || !availableRegions.length) {
             return {
@@ -72,6 +98,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
                     validation: ['notEmpty'],
                     value: region,
                     placeholder: __('City area'),
+                    ...clearValue,
                     onChange: this.copyValue
                 }
             };
@@ -108,7 +135,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
     };
 
     get fieldMap() {
-        const { countryId, postCodeValue } = this.state;
+        const { countryId } = this.state;
         const {
             defaultChecked,
             changeDefaultShipping,
@@ -122,7 +149,6 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         } = this.props;
 
         const { street = [] } = address;
-        // const { region: { region } = {} } = address;
 
         const clearValue = newForm ? { value: '' } : null;
 
@@ -165,16 +191,10 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
                 selectOptions: countries.map(({ id, label }) => ({ id, label, value: id })),
                 onChange: this.onCountryChange
             },
-            region_string: {
-                validation: ['notEmpty'],
-                placeholder: __('City area'),
-                ...clearValue,
-                onChange: this.copyValue
-            },
+            ...this.getRegionFields(),
             postcode: {
                 placeholder: __('Post code'),
-                ...clearValue,
-                value: postCodeValue
+                value: this.getPostCodeValue()
             },
             street: {
                 value: street[0],
