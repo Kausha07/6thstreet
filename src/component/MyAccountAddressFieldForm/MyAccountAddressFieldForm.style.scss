@@ -5,7 +5,10 @@
 }
 
 .MyAccountAddressFieldForm {
-    max-width: 540px;
+
+    @include desktop() {
+        max-width: 540px;
+    }
 
     input {
         width: 100%;
@@ -32,19 +35,33 @@
     &-Fields {
         margin-bottom: 1rem;
 
-        h2 {
-            text-transform: none;
-            border-top: 1px solid var(--my-acc-border);
-            margin-top: 0;
-            padding-top: 29px;
-            font-size: 18px;
-            font-family: 'Avenir Next Demi Regular', sans-serif;
-        }
-
         input:focus {
             border: 1px solid var(--my-acc-input-border);
         }
     }
+
+    &-Header {
+        display: flex;
+        justify-content: center;
+        @include desktop() {
+            display: block;
+        }
+    }
+
+    &-Title {
+        text-transform: none;
+        font-size: 18px;
+        font-family: 'Avenir Next Demi Regular', sans-serif;
+        display: inline-block;
+        margin: 20px;
+
+        @include desktop() {
+            display: block;
+            border-top: 1px solid var(--my-acc-border);
+            margin-top: 0;
+            padding-top: 29px;
+        }
+    } 
 
     &-FieldWrapper {
         &_hidden {

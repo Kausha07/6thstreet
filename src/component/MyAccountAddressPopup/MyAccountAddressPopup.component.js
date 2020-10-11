@@ -80,10 +80,16 @@ export class MyAccountAddressPopup extends PureComponent {
             payload: { address }, handleAddress, customer, closeForm
         } = this.props;
         const { defaultChecked, mobileDeleteNotice } = this.state;
-        console.log(this.props);
+
         return (
             <>
-                <button onClick={ this.openMobileDeleteNotice }>DELETE</button>
+                <button
+                  block="MyAccountAddressPopup"
+                  elem="DeleteBtn"
+                  onClick={ this.openMobileDeleteNotice }
+                >
+                    delete
+                </button>
                 { mobileDeleteNotice ? this.renderMobileDeleteNotice() : null }
                 <MyAccountDeliveryAddressForm
                   newForm={ form }

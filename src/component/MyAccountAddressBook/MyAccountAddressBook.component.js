@@ -128,7 +128,13 @@ export class MyAccountAddressBook extends PureComponent {
         if (hideCards) {
             return (
                 <div block="MyAccountAddressBook">
-                    <button onClick={ this.showCards }>GO</button>
+                    <button
+                      block="MyAccountAddressBook"
+                      elem="backBtn"
+                      onClick={ this.showCards }
+                    >
+                        &#10005;
+                    </button>
                     { this.renderPopup() }
                 </div>
             );

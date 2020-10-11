@@ -53,6 +53,13 @@
         margin-left: 20px;
     }
 
+    &-DeleteBtn{
+        position: absolute;
+        top: 5px;
+        right: 0;
+        z-index: 9;
+    }
+
     &-xBtn {
         position: absolute;
         top: 10px;

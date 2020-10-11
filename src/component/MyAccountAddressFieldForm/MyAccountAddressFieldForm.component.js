@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /**
  * ScandiPWA - Progressive Web App for Magento
  *
@@ -67,8 +68,9 @@ export class MyAccountAddressFieldForm extends PureComponent {
             default_common
         } = this.fieldMap;
 
-        // const { postCodeValue } = this.state;
-        // console.log(postCodeValue);
+        const { newForm } = this.props;
+
+        const fromTitle = newForm ? __('New Address') : __('Edit Address');
 
         const region = region_id === undefined ? region_string : region_id;
 
@@ -77,7 +79,17 @@ export class MyAccountAddressFieldForm extends PureComponent {
               block="MyAccountAddressFieldForm"
               elem="Fields"
             >
-                <h2>{ __('New Address') }</h2>
+                <div
+                  block="MyAccountAddressFieldForm"
+                  elem="Header"
+                >
+                    <h2
+                      block="MyAccountAddressFieldForm"
+                      elem="Title"
+                    >
+                        { fromTitle }
+                    </h2>
+                </div>
                 <div
                   block="MyAccountAddressFieldForm"
                   elem="FieldWrapper"
