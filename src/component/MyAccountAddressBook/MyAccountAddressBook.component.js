@@ -16,6 +16,7 @@ import { PureComponent } from 'react';
 import MyAccountAddressPopup from 'Component/MyAccountAddressPopup';
 import MyAccountAddressTable from 'Component/MyAccountAddressTable';
 import { addressType, customerType } from 'Type/Account';
+import isMobile from 'Util/Mobile';
 
 import './MyAccountAddressBook.style';
 
@@ -47,6 +48,14 @@ export class MyAccountAddressBook extends PureComponent {
         this.setState({ hideCards: false });
     };
 
+    openNewForm = () => {
+        const { showCreateNewPopup } = this.props;
+        if (isMobile.any()) {
+            this.hideCards();
+        }
+        showCreateNewPopup();
+    };
+
     renderPopup() {
         const {
             formContent,
@@ -60,6 +69,7 @@ export class MyAccountAddressBook extends PureComponent {
               formContent={ formContent }
               closeForm={ closeForm }
               openForm={ openForm }
+              showCards={ this.showCards }
               customer={ customer }
             />
         );
@@ -92,13 +102,11 @@ export class MyAccountAddressBook extends PureComponent {
     }
 
     renderActions() {
-        const { showCreateNewPopup } = this.props;
-
         return (
             <button
               block="MyAccountAddressBook"
               elem="NewAddress"
-              onClick={ showCreateNewPopup }
+              onClick={ this.openNewForm }
             >
                 { __('new address') }
             </button>

@@ -41,7 +41,8 @@ export class MyAccountAddressPopup extends PureComponent {
     };
 
     state = {
-        defaultChecked: false
+        defaultChecked: false,
+        mobileDeleteNotice: false
     };
 
     componentDidUpdate(prevProps, _) {
@@ -78,18 +79,61 @@ export class MyAccountAddressPopup extends PureComponent {
         const {
             payload: { address }, handleAddress, customer, closeForm
         } = this.props;
-        const { defaultChecked } = this.state;
-
+        const { defaultChecked, mobileDeleteNotice } = this.state;
+        console.log(this.props);
         return (
-            <MyAccountDeliveryAddressForm
-              newForm={ form }
-              address={ address }
-              onSave={ handleAddress }
-              closeForm={ closeForm }
-              customer={ customer }
-              defaultChecked={ defaultChecked }
-              changeDefaultShipping={ this.changeDefaultShipping }
-            />
+            <>
+                <button onClick={ this.openMobileDeleteNotice }>DELETE</button>
+                { mobileDeleteNotice ? this.renderMobileDeleteNotice() : null }
+                <MyAccountDeliveryAddressForm
+                  newForm={ form }
+                  address={ address }
+                  onSave={ handleAddress }
+                  closeForm={ closeForm }
+                  customer={ customer }
+                  defaultChecked={ defaultChecked }
+                  changeDefaultShipping={ this.changeDefaultShipping }
+                />
+            </>
+        );
+    }
+
+    openMobileDeleteNotice = () => {
+        this.setState({ mobileDeleteNotice: true });
+    };
+
+    closeMobileDeleteNotice = () => {
+        this.setState({ mobileDeleteNotice: false });
+    };
+
+    deleteMobile = () => {
+        const { handleDeleteAddress } = this.props;
+        handleDeleteAddress();
+        this.closeMobileDeleteNotice();
+        // showCards();
+    };
+
+    renderMobileDeleteNotice() {
+        return (
+            <div
+              block="MyAccountAddressPopup"
+              elem="DeletePopup"
+            >
+                <div
+                  block="MyAccountAddressPopup"
+                  elem="DeletePopupContainer"
+                >
+                    <h2>{ __('Delete') }</h2>
+                    <p>{ __('Are you sure you want to delete this address?') }</p>
+
+                    <button block="MyAccountAddressPopup" elem="NoBtn" onClick={ this.closeMobileDeleteNotice }>
+                        { __('Cancel') }
+                    </button>
+                    <button block="MyAccountAddressPopup" elem="YesBtn" onClick={ this.deleteMobile }>
+                    { __('Yes') }
+                    </button>
+                </div>
+            </div>
         );
     }
 
