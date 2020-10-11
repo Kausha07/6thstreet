@@ -17,6 +17,7 @@ import KeyValueTable from 'Component/KeyValueTable';
 import Loader from 'Component/Loader';
 import { addressType } from 'Type/Account';
 import { MixType } from 'Type/Common';
+import isMobile from 'Util/Mobile';
 
 import pencil from './icons/edit_btn.png';
 import trash from './icons/trash.png';
@@ -53,10 +54,6 @@ export class MyAccountAddressTable extends KeyValueTable {
         mix: {}
     };
 
-    state = {
-        expand: false
-    };
-
     renderActions() {
         const {
             onEditClick,
@@ -64,7 +61,6 @@ export class MyAccountAddressTable extends KeyValueTable {
             showActions,
             address: { default_billing, default_shipping }
         } = this.props;
-        const { expand } = this.state;
 
         const isDeleteAllowed = default_shipping || default_billing;
 
@@ -77,7 +73,6 @@ export class MyAccountAddressTable extends KeyValueTable {
                 <button
                   block="MyAccountAddressTable"
                   elem="ActionBtn"
-                  mods={ { isOpen: expand } }
                   onClick={ onEditClick }
                 >
                     <img
@@ -91,7 +86,6 @@ export class MyAccountAddressTable extends KeyValueTable {
                 <button
                   block="MyAccountAddressTable"
                   elem="ActionBtn"
-                  mods={ { isHollow: true, isOpen: expand } }
                   onClick={ onDeleteClick }
                   disabled={ isDeleteAllowed }
                   title={ isDeleteAllowed ? __('Can not delete - address is set as default.') : 'Delete this address' }
@@ -108,9 +102,12 @@ export class MyAccountAddressTable extends KeyValueTable {
         );
     }
 
-    toggleCard = () => {
-        const { expand } = this.state;
-        this.setState({ expand: !expand });
+    mobileEditAddress = () => {
+        const { hideCards, onEditClick } = this.props;
+        if (isMobile.any()) {
+            onEditClick();
+            hideCards();
+        }
     };
 
     renderCard() {
@@ -130,7 +127,7 @@ export class MyAccountAddressTable extends KeyValueTable {
         const countryId = `(${country_id})`;
 
         return (
-            <div block="MyAccountAddressCard" onClick={ this.toggleCard }>
+            <div block="MyAccountAddressCard" onClick={ this.mobileEditAddress }>
                 <div block="MyAccountAddressCard" elem="Default">{ def }</div>
                 <div block="MyAccountAddressCard" elem="Name">
                     { firstname }

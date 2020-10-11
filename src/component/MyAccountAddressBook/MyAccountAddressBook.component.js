@@ -33,6 +33,20 @@ export class MyAccountAddressBook extends PureComponent {
         }).isRequired
     };
 
+    state = {
+        hideCards: false
+    };
+
+    hideCards = () => {
+        this.setState({ hideCards: true });
+    };
+
+    showCards = () => {
+        const { closeForm } = this.props;
+        closeForm();
+        this.setState({ hideCards: false });
+    };
+
     renderPopup() {
         const {
             formContent,
@@ -60,6 +74,7 @@ export class MyAccountAddressBook extends PureComponent {
             <MyAccountAddressTable
               title={ __('Address #%s%s', addressNumber, postfix) }
               showActions
+              hideCards={ this.hideCards }
               address={ address }
               key={ addressNumber }
               closeForm={ closeForm }
@@ -100,6 +115,17 @@ export class MyAccountAddressBook extends PureComponent {
     }
 
     render() {
+        const { hideCards } = this.state;
+
+        if (hideCards) {
+            return (
+                <div block="MyAccountAddressBook">
+                    <button onClick={ this.showCards }>GO</button>
+                    { this.renderPopup() }
+                </div>
+            );
+        }
+
         return (
             <div block="MyAccountAddressBook">
                 { this.renderAddressList() }
