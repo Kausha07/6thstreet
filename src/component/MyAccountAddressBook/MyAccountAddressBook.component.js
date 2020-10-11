@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable react/no-unused-prop-types */
 /**
  * ScandiPWA - Progressive Web App for Magento
@@ -132,9 +133,7 @@ export class MyAccountAddressBook extends PureComponent {
                       block="MyAccountAddressBook"
                       elem="backBtn"
                       onClick={ this.showCards }
-                    >
-                        &#10005;
-                    </button>
+                    />
                     { this.renderPopup() }
                 </div>
             );

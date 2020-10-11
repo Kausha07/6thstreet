@@ -47,6 +47,7 @@ export class MyAccountAddressPopupContainer extends PureComponent {
     static propTypes = {
         showErrorNotification: PropTypes.func.isRequired,
         updateCustomerDetails: PropTypes.func.isRequired,
+        showCards: PropTypes.func.isRequired,
         hideActiveOverlay: PropTypes.func.isRequired,
         goToPreviousHeaderState: PropTypes.func.isRequired,
         closeForm: PropTypes.func.isRequired,
@@ -100,22 +101,23 @@ export class MyAccountAddressPopupContainer extends PureComponent {
     }
 
     handleEditAddress(address) {
-        const { payload: { address: { id } } } = this.props;
+        const { showCards, payload: { address: { id } } } = this.props;
         const query = MyAccountQuery.getUpdateAddressMutation(id, address);
-        fetchMutation(query).then(this.handleAfterAction, this.handleError);
+        fetchMutation(query).then(this.handleAfterAction, this.handleError).then(showCards);
     }
 
     handleDeleteAddress() {
-        const { payload: { address: { id } } } = this.props;
+        const { showCards, payload: { address: { id } } } = this.props;
 
         this.setState({ isLoading: true });
         const query = MyAccountQuery.getDeleteAddressMutation(id);
-        fetchMutation(query).then(this.handleAfterAction, this.handleError);
+        fetchMutation(query).then(this.handleAfterAction, this.handleError).then(showCards);
     }
 
     handleCreateAddress(address) {
+        const { showCards } = this.props;
         const query = MyAccountQuery.getCreateAddressMutation(address);
-        fetchMutation(query).then(this.handleAfterAction, this.handleError);
+        fetchMutation(query).then(this.handleAfterAction, this.handleError).then(showCards);
     }
 
     render() {
