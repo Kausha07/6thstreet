@@ -165,13 +165,11 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
             },
             firstname: {
                 validation: ['notEmpty'],
-                value: firstname,
-                type: 'hidden'
+                value: firstname
             },
             lastname: {
                 validation: ['notEmpty'],
-                value: lastname,
-                type: 'hidden'
+                value: lastname
             },
             telephone: {
                 validation: ['notEmpty'],

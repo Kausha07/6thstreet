@@ -14,7 +14,7 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import Loader from 'Component/Loader';
-import MyAccountAddressTable from 'Component/MyAccountAddressTable';
+// import MyAccountAddressTable from 'Component/MyAccountAddressTable';
 import MyAccountDeliveryAddressForm from 'Component/MyAccountDeliveryAddressForm';
 // import Popup from 'Component/Popup';
 import { addressType } from 'Type/Account';
@@ -48,8 +48,6 @@ export class MyAccountAddressPopup extends PureComponent {
         const { payload } = this.props;
         const { payload: prevPayload } = prevProps;
 
-        // console.log('hey');
-
         if (Object.keys(payload).length > 0 && Object.keys(prevPayload).length > 0) {
             const { address: { id } } = payload;
             const { address: { id: prevId } } = prevPayload;
@@ -76,7 +74,7 @@ export class MyAccountAddressPopup extends PureComponent {
         this.setState({ defaultChecked: this.isDefaultShipping() });
     }
 
-    renderNewAddressForm() {
+    renderAddressForm(form) {
         const {
             payload: { address }, handleAddress, customer, closeForm
         } = this.props;
@@ -84,25 +82,7 @@ export class MyAccountAddressPopup extends PureComponent {
 
         return (
             <MyAccountDeliveryAddressForm
-              newForm
-              address={ address }
-              onSave={ handleAddress }
-              customer={ customer }
-              closeForm={ closeForm }
-              defaultChecked={ defaultChecked }
-              changeDefaultShipping={ this.changeDefaultShipping }
-            />
-        );
-    }
-
-    renderAddressForm() {
-        const {
-            payload: { address }, handleAddress, customer, closeForm
-        } = this.props;
-        const { defaultChecked } = this.state;
-
-        return (
-            <MyAccountDeliveryAddressForm
+              newForm={ form }
               address={ address }
               onSave={ handleAddress }
               closeForm={ closeForm }
@@ -114,18 +94,29 @@ export class MyAccountAddressPopup extends PureComponent {
     }
 
     renderDeleteNotice() {
-        const { payload: { address }, handleDeleteAddress } = this.props;
+        const { handleDeleteAddress, closeForm } = this.props;
 
         return (
-            <>
-                <p>{ __('Are you sure you want to delete this address?') }</p>
-                <div block="MyAccountAddressPopup" elem="Address">
-                    <MyAccountAddressTable address={ address } title={ __('Address details') } />
+            <div
+              block="MyAccountAddressPopup"
+              elem="DeletePopup"
+            >
+                <div
+                  block="MyAccountAddressPopup"
+                  elem="DeletePopupContainer"
+                >
+                    <p>{ __('Are you sure you want to delete this address?') }</p>
+                    <button block="button primary" onClick={ handleDeleteAddress }>
+                        { __('Yes') }
+                    </button>
+                    <button block="MyAccountAddressPopup" elem="CancelBtn" onClick={ closeForm }>
+                        { __('Cancel') }
+                    </button>
+                    <button block="MyAccountAddressPopup" elem="xBtn" onClick={ closeForm }>
+                        &#10005;
+                    </button>
                 </div>
-                <button block="button primary" onClick={ handleDeleteAddress }>
-                    { __('Yes, delete address') }
-                </button>
-            </>
+            </div>
         );
     }
 
@@ -134,9 +125,9 @@ export class MyAccountAddressPopup extends PureComponent {
 
         switch (action) {
         case EDIT_ADDRESS:
-            return this.renderAddressForm();
+            return this.renderAddressForm(false);
         case ADD_ADDRESS:
-            return this.renderNewAddressForm();
+            return this.renderAddressForm(true);
         case DELETE_ADDRESS:
             return this.renderDeleteNotice();
         default:

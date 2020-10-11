@@ -416,5 +416,6 @@
     "Total: %s": null,
     "Item": null,
     "Items": null,
-    "Order placed: ": null
+    "Order placed: ": null,
+    "Cancel": null
 }

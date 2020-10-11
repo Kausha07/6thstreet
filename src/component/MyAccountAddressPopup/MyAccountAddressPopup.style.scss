@@ -14,4 +14,51 @@
     &-Address {
         margin: 1rem 0;
     }
+
+    &-DeletePopup {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: rgba(70, 70, 70, 0.8);
+        z-index: 8;
+    }
+
+    &-DeletePopupContainer {
+        display: block;
+        position: fixed;
+        top: 250px;
+        right: 0;
+        left: 0;
+        margin-right: auto;
+        margin-left: auto;
+        z-index: 9;
+        background: $white;
+        width: 80%;
+        padding: 20px 20px 30px;
+
+        p {
+            font-size: 16px;
+            margin-bottom: 20px;;
+        }
+
+        .primary {
+            min-width: 150px;
+        }
+    }
+
+    &-CancelBtn {
+        color: var(--primary-base-color);
+        margin-left: 20px;
+    }
+
+    &-xBtn {
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        padding: 0;
+        height: 30px;
+        font-size: 20px;
+    }
 }
