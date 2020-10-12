@@ -12,6 +12,7 @@
 
     input {
         width: 100%;
+        font-size: 14px;
 
         &[type='checkbox'],
         &[type='radio'] {
@@ -43,6 +44,7 @@
     &-Header {
         display: flex;
         justify-content: center;
+
         @include desktop() {
             display: block;
         }
@@ -61,7 +63,20 @@
             margin-top: 0;
             padding-top: 29px;
         }
-    } 
+    }
+
+    &-PhoneCode {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        top: 14px;
+        left: 10px;
+        
+        @include desktop() {
+            top: 15px;
+        }
+
+    }
 
     &-FieldWrapper {
         &_hidden {
@@ -80,6 +95,29 @@
             }
         }
 
+        &_phone {
+            position: relative;
+
+            input {
+                padding-left: 80px;
+            }
+        }
+
+        &_street {
+            &:after {
+                content: '';
+                position: absolute;
+                width: 20px;
+                height: 20px;
+                background: url(icons/path-address.svg);
+                background-size: 20px;
+                background-repeat: no-repeat;
+                top: 14px;
+                right: 10px;
+            }
+        }
+        
+
         &_toggle {
             display: flex;
             align-items: center;
@@ -90,7 +128,6 @@
                 flex-direction: row-reverse;
                 align-items: center;
                 margin-top: 0;
-                padding-right: 15px;
                 display: inline-block;
             }
 
@@ -98,7 +135,8 @@
                 font-family: 'Avenir Next Regular';
                 font-size: 14px;
                 font-weight: 400;
-                padding-bottom: 0;;
+                padding-bottom: 0;
+                padding-left: 15px;
                 cursor: pointer;
             }
         }
@@ -127,4 +165,62 @@
         }
     }
 
+}
+
+
+.PageWrapper {
+    &_isArabic {
+        .MyAccountAddressFieldForm {
+
+            &-PhoneCode {
+                right: 10px;
+            }
+
+            &-FieldWrapper {
+
+                &_phone {
+                    input {
+                        padding-left: 0;
+                        padding-right: 80px;
+                    }
+                }
+
+                &_toggle {
+        
+                    label {
+                        padding-left: 0;
+                        padding-right: 15px;
+                    }
+                }
+
+                &_street {
+                    &:after {
+                        display: none;
+                    }
+                    &:before {
+                        content: '';
+                        position: absolute;
+                        width: 20px;
+                        height: 20px;
+                        background: url(icons/path-address.svg);
+                        background-size: 20px;
+                        background-repeat: no-repeat;
+                        top: 14px;
+                        left: 10px;
+                        z-index: 2;
+                    }
+                }
+             }
+
+             .MyAccountBtn {
+                &-Discart {
+
+                    @include desktop() {
+                        margin-left: 0;
+                        margin-right: 50px;
+                    }
+                }
+            }
+        }
+    }
 }

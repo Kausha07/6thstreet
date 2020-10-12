@@ -119,7 +119,10 @@ export class MyAccountAddressTable extends KeyValueTable {
                 street,
                 city,
                 country_id,
-                telephone
+                telephone,
+                region: {
+                    region
+                }
             }
         } = this.props;
 
@@ -136,6 +139,8 @@ export class MyAccountAddressTable extends KeyValueTable {
                 </div>
                 <div block="MyAccountAddressCard" elem="Street">{ street }</div>
                 <div block="MyAccountAddressCard" elem="City">
+                    { region }
+                    { ' - ' }
                     { city }
                     { ' - ' }
                     { countryId }
