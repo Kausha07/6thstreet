@@ -20,7 +20,7 @@
         margin: 15px 0;
         text-indent: 20px;
         text-transform: uppercase;
-        //width: 100%;
+        width: 100%;
         overflow-y: scroll;
 
         &:first-child {
@@ -102,8 +102,8 @@
     }
 
     @include desktop {
-        z-index: 3;
         padding: 0 15px;
+        z-index: 3;
 
         &:first-child {
             padding-left: 30px;
@@ -173,7 +173,6 @@
                                 color: var(--white);
                             }
                         }
-
                         span {
                             color: var(--white);
                         }
