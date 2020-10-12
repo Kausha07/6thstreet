@@ -50,28 +50,6 @@ class FieldMultiselect extends PureComponent {
         return null;
     }
 
-    renderOptionMobile = ([key, option]) => {
-        // eslint-disable-next-line object-curly-newline
-        const { filter: { is_radio }, activeFilter, isChecked, onChange } = this.props;
-
-        if (option.subcategories) {
-            return isMobile.any()
-                ? Object.entries(option.subcategories).map(this.renderOptionMobile)
-                : Object.entries(option.subcategories).map(this.renderOption);
-        }
-
-        return (
-            <PLPFilterOption
-              key={ key }
-              option={ option }
-              isRadio={ is_radio }
-              activeFilter={ activeFilter }
-              isChecked={ isChecked }
-              onChange={ onChange }
-            />
-        );
-    };
-
     renderSubcategoryOptions = (option) => {
         const { isArabic } = this.state;
 
