@@ -16,6 +16,8 @@ import CountryMiniFlag from 'Component/CountryMiniFlag';
 import Field from 'Component/Field';
 import Form from 'Component/Form';
 
+import { PHONE_CODES } from './MyAccountAddressFieldForm.config';
+
 import './MyAccountAddressFieldForm.style';
 
 export class MyAccountAddressFieldForm extends PureComponent {
@@ -50,16 +52,8 @@ export class MyAccountAddressFieldForm extends PureComponent {
 
     renderCurrentPhoneCode() {
         const { country_id } = this.fieldMap;
-        const phoneCodeMap = {
-            AE: '+971',
-            SA: '+971',
-            KW: '+971',
-            OM: '+971',
-            BH: '+973',
-            QA: '+974'
-        };
 
-        return phoneCodeMap[country_id.value];
+        return PHONE_CODES[country_id.value];
     }
 
     renderFields() {
