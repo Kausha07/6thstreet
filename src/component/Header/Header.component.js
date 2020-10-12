@@ -48,6 +48,7 @@ export class Header extends PureComponent {
 
         if (isMobile.any() || isMobile.tablet()) {
             return (
+                <a href="/">
                 <div
                   block="CheckoutHeader"
                   elem="BackToShopping"
@@ -56,21 +57,24 @@ export class Header extends PureComponent {
                         { ' ' }
                     </button>
                 </div>
+                </a>
             );
         }
 
         return (
-            <div
-              block="CheckoutHeader"
-              elem="BackToShopping"
-              mods={ { isArabic } }
-            >
-                <button
-                  block="button secondary medium"
+            <a href="/">
+                <div
+                  block="CheckoutHeader"
+                  elem="BackToShopping"
+                  mods={ { isArabic } }
                 >
-                    { __('Back to shopping') }
-                </button>
-            </div>
+                    <button
+                      block="button secondary medium"
+                    >
+                        { __('Back to shopping') }
+                    </button>
+                </div>
+            </a>
         );
     }
 
