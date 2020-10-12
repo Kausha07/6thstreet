@@ -93,7 +93,12 @@ export const CartReducer = (state = getInitialState(), action) => {
             },
             row_total: item.price || 0,
             sku: item.sku,
-            qty: item.qty
+            qty: item.qty,
+            color: item.color,
+            optionValue: item.optionValue,
+            thumbnail_url: item.thumbnail_url,
+            discount_amount: item.discount,
+            brand_name: item.brand_name
         };
 
         const updatedCartItems = updateCartItem(cartItems, formattedCartItem);

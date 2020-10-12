@@ -72,7 +72,13 @@ class Menu extends PureComponent {
                   } }
                 >
                     { this.renderCategories() }
-                    <div block="MenuCategory" elem="LastCategoryBackground" />
+                    <div
+                      mix={ {
+                          block: 'MenuCategory',
+                          elem: 'LastCategoryBackground',
+                          mods: { isArabic }
+                      } }
+                    />
                 </div>
             </div>
         );

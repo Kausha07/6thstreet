@@ -67,7 +67,7 @@ export class MyAccountOverlay extends PureComponent {
 
     state = {
         isPopup: false,
-        gender: 'selectPreferNot',
+        gender: 0,
         isChecked: false,
         isArabic: isArabic()
     };
