@@ -20,7 +20,8 @@ import PLPFilters from './PLPFilters.component';
 export const mapStateToProps = (_state) => ({
     filters: _state.PLP.filters,
     isLoading: _state.PLP.isLoading,
-    activeOverlay: _state.OverlayReducer.activeOverlay
+    activeOverlay: _state.OverlayReducer.activeOverlay,
+    productsCount: _state.PLP.meta.hits_count
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
@@ -40,7 +41,8 @@ export class PLPFiltersContainer extends PureComponent {
         goToPreviousHeaderState: PropTypes.func.isRequired,
         hideActiveOverlay: PropTypes.func.isRequired,
         goToPreviousNavigationState: PropTypes.func.isRequired,
-        changeHeaderState: PropTypes.func.isRequired
+        changeHeaderState: PropTypes.func.isRequired,
+        productsCount: PropTypes.string.isRequired
     };
 
     containerFunction = {

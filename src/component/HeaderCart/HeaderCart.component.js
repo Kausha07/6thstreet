@@ -11,7 +11,8 @@ import './HeaderCart.style';
 class HeaderCart extends PureComponent {
     static propTypes = {
         history: PropTypes.object.isRequired,
-        renderCountItems: PropTypes.func.isRequired
+        renderCountItems: PropTypes.func.isRequired,
+        hideActiveOverlay: PropTypes.func.isRequired
     };
 
     state = {
@@ -33,8 +34,9 @@ class HeaderCart extends PureComponent {
     };
 
     routeChangeCart = () => {
-        const { history } = this.props;
+        const { history, hideActiveOverlay } = this.props;
 
+        hideActiveOverlay();
         history.push('/cart');
     };
 

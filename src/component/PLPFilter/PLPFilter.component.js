@@ -8,9 +8,8 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-import Field from 'Component/Field';
+import FieldMultiselect from 'Component/FiledMultiselect';
 import { Filter } from 'Util/API/endpoint/Product/Product.type';
-import { isArabic } from 'Util/App';
 
 import './PLPFilter.style';
 
@@ -20,47 +19,26 @@ class PLPFilter extends PureComponent {
         onSelect: PropTypes.func.isRequired
     };
 
-    state = {
-        isArabic: isArabic()
-    };
-
-    filterData: {
-        id: (string),
-        label: (string),
-        value: (string)
-    };
-
     renderDropDownList() {
-        const { filter: { label, data, category }, onSelect } = this.props;
-        const { isArabic } = this.state;
+        const {
+            filter: {
+                label,
+                category,
+                is_radio
+            }, onSelect, filter
+        } = this.props;
 
         if (category === 'categories_without_path' || category === 'categories.level1') {
             return null;
         }
 
-        // eslint-disable-next-line no-return-assign
-        const template = Object.keys(data).map((item) => (
-            this.filterData = {
-                label: data[item].label,
-                id: data[item].facet_value,
-                value: data[item].facet_value
-            }
-        ));
-
         return (
-            <Field
-              id={ category }
-              name={ category }
-              type="select"
-              mix={ {
-                  block: 'Field',
-                  mods: {
-                      isArabic
-                  }
-              } }
+            <FieldMultiselect
               placeholder={ label }
-              selectOptions={ template }
+              showCheckbox
+              isRadio={ is_radio }
               onChange={ onSelect }
+              filter={ filter }
             />
         );
     }

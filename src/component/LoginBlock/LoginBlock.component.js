@@ -2,6 +2,8 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import { isArabic } from 'Util/App';
+import { isSignedIn } from 'Util/Auth';
+import history from 'Util/History';
 
 import './LoginBlock.style';
 
@@ -26,9 +28,12 @@ class LoginBlock extends PureComponent {
         });
     };
 
+    routeChangeAccount = () => history.push('/my-account');
+
     renderBlock() {
         const { isOpen } = this.state;
-        if (!isOpen) {
+
+        if (!isOpen || isSignedIn()) {
             return null;
         }
 
@@ -90,10 +95,16 @@ class LoginBlock extends PureComponent {
 
         return (
             <div mix={ { block: 'LoginBlock', elem: 'ButtonContainer' } }>
-                <button mix={ { block: 'LoginBlock', elem: 'CreateButton secondary', mods: { isArabic } } }>
+                <button
+                  onClick={ this.routeChangeAccount }
+                  mix={ { block: 'LoginBlock', elem: 'CreateButton secondary', mods: { isArabic } } }
+                >
                     Create Account
                 </button>
-                <button mix={ { block: 'LoginBlock', elem: 'LoginButton primary', mods: { isArabic } } }>
+                <button
+                  onClick={ this.routeChangeAccount }
+                  mix={ { block: 'LoginBlock', elem: 'LoginButton primary', mods: { isArabic } } }
+                >
                     Sign in
                 </button>
             </div>

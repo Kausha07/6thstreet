@@ -44,7 +44,7 @@ class HeaderAccount extends PureComponent {
 
         requestCustomerData();
         this.closePopup();
-    }
+    };
 
     renderMyAccountPopup() {
         const { isSignedIn } = this.props;

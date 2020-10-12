@@ -2,6 +2,7 @@
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import { hideActiveOverlay } from 'Store/Overlay/Overlay.action';
 import { TotalsType } from 'Type/MiniCart';
 
 // import BrowserDatabase from 'Util/BrowserDatabase';
@@ -12,7 +13,7 @@ export const mapStateToProps = (state) => ({
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
-    // addProduct: options => CartDispatcher.addProductToCart(dispatch, options)
+    hideActiveOverlay: () => _dispatch(hideActiveOverlay())
 });
 
 export class HeaderCartContainer extends PureComponent {
