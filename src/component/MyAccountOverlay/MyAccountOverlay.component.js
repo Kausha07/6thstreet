@@ -67,7 +67,7 @@ export class MyAccountOverlay extends PureComponent {
 
     state = {
         isPopup: false,
-        gender: 0,
+        gender: 'preferNot',
         isChecked: false,
         isArabic: isArabic()
     };
@@ -233,8 +233,8 @@ export class MyAccountOverlay extends PureComponent {
                       autocomplete="email"
                       validation={ ['notEmpty', 'email'] }
                     />
-                    <div block="MyAccountOverlay" elem="Button">
-                        <button block="Button" mods={ { isMargin: true } } type="submit">
+                    <div block="MyAccountOverlay" elem="Button" mods={ { isMargin: true } }>
+                        <button block="Button" type="submit">
                             { __('Send') }
                         </button>
                     </div>
@@ -267,7 +267,7 @@ export class MyAccountOverlay extends PureComponent {
     }
 
     handleGenderChange = (e) => {
-        this.setState({ gender: e.target.value });
+        this.setState({ gender: e.target.id });
     };
 
     handleCheckboxChange = () => {
@@ -318,30 +318,30 @@ export class MyAccountOverlay extends PureComponent {
                         >
                             <Field
                               type="radio"
-                              id="selectMale"
+                              id="male"
                               label={ __('Male') }
                               name="gender"
-                              value={ 1 }
+                              value={ gender }
                               onClick={ this.handleGenderChange }
-                              checked={ gender === 1 }
+                              defaultChecked={ gender }
                             />
                             <Field
                               type="radio"
-                              id="selectFemale"
+                              id="female"
                               label={ __('Female') }
                               name="gender"
-                              value={ 2 }
+                              value={ gender }
                               onClick={ this.handleGenderChange }
-                              checked={ gender === 2 }
+                              defaultChecked={ gender }
                             />
                             <Field
                               type="radio"
-                              id="selectPreferNot"
+                              id="preferNot"
                               label={ __('Prefer not to say') }
                               name="gender"
-                              value={ 0 }
+                              value={ gender }
                               onClick={ this.handleGenderChange }
-                              checked={ gender === 0 }
+                              defaultChecked={ gender }
                             />
                         </div>
                     </fieldset>
