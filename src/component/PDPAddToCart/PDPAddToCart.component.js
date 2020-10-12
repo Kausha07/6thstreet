@@ -134,20 +134,20 @@ class PDPAddToCart extends PureComponent {
         if ((sizeObject.sizeTypes !== undefined)
         && (sizeObject.sizeTypes.length !== 0)) {
             return (
-                    <div block="PDPAddToCart" elem="SizeSelector">
-                        <select
-                          key="SizeSelect"
-                          block="PDPAddToCart"
-                          elem="SizeSelectElement"
-                          onChange={ onSizeSelect }
-                          defaultValue="default"
-                        >
-                            <option value="default" disabled hidden>
+                <div block="PDPAddToCart" elem="SizeSelector">
+                    <select
+                      key="SizeSelect"
+                      block="PDPAddToCart"
+                      elem="SizeSelectElement"
+                      onChange={ onSizeSelect }
+                      defaultValue="default"
+                    >
+                        <option value="default" disabled hidden>
                                 { __('Please select size') }
-                            </option>
+                        </option>
                             { this.getSizeSelect() }
-                        </select>
-                    </div>
+                    </select>
+                </div>
             );
         }
 
@@ -160,22 +160,22 @@ class PDPAddToCart extends PureComponent {
         } = this.props;
 
         return (
-                    <button
-                      onClick={ addToCart }
-                      block="PDPAddToCart"
-                      elem="AddToCartButton"
-                      mods={ { isLoading } }
-                      mix={ {
-                          block: 'PDPAddToCart',
-                          elem: 'AddToCartButton',
-                          mods: { addedToCart }
-                      } }
-                      disabled={ isLoading || addedToCart || stock_qty === 0 }
-                    >
-                        <span>{ __('Add to bag') }</span>
-                        <span>{ __('Adding...') }</span>
-                        <span>{ __('Added to bag') }</span>
-                    </button>
+            <button
+              onClick={ addToCart }
+              block="PDPAddToCart"
+              elem="AddToCartButton"
+              mods={ { isLoading } }
+              mix={ {
+                  block: 'PDPAddToCart',
+                  elem: 'AddToCartButton',
+                  mods: { addedToCart }
+              } }
+              disabled={ isLoading || addedToCart || stock_qty === 0 }
+            >
+                <span>{ __('Add to bag') }</span>
+                <span>{ __('Adding...') }</span>
+                <span>{ __('Added to bag') }</span>
+            </button>
         );
     }
 
