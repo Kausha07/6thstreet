@@ -1,16 +1,9 @@
 .MenuGrid {
-    height: 100%;
-    left: 0;
-    pointer-events: none;
-    position: fixed;
-    width: 100vw;
+    width: 23%;
 
     &-Content {
         background-color: var(--white);
-        height: 390px;
-        margin: 0 auto;
         pointer-events: all;
-        width: 1410px;
 
         span, a {
             color: var(--black);
@@ -27,9 +20,7 @@
     }
 
     &-Column {
-        border: 0;
-        margin: 20px 0 30px 35px;
-        width: 25%;
+        width: 100%;
 
         &:not(:last-child) {
             border-right: solid 1px var(--grey);
@@ -45,28 +36,25 @@
             grid-template-columns: auto auto;
             margin-top: 10px;
 
-            a{
+            a {
                 margin: 0;
             }
         }
     }
 
     @include before-desktop {
+        margin-top: 20px;
         position: relative;
-        width: 260px;
+        width: 100%;
 
         &-Content {
-            height: 100%;
             margin: 0;
-            width: 260px;
-
-            a {
-                border-bottom: 1px solid var(--light-grey);
-            }
+            width: 100%;
         }
 
         &-Columns {
             flex-direction: column;
+            text-align: center;
 
             :last-child {
                 margin-right: 0;
@@ -77,34 +65,96 @@
             }
         }
 
+        &-Title {
+            display: none;
+        }
+
         &-Column {
-            &:not(:last-child) {
-                border-right: 0;
-            }
             line-height: 30px;
             width: 100%;
 
+            &:not(:last-child) {
+                border-right: 0;
+            }
+
+            .ViewAll {
+                &-Link {
+                    font-family: 'Avenir Next Bold', serif;
+                    text-align: center;
+
+                    display: none;
+                }
+            }
+
             &-Content {
                 grid-auto-flow: row;
-                grid-template-columns: auto;
-                overflow: scroll;
-                width: 260px;
+                grid-template-columns: 1fr 1fr;
 
                 a{
-                    line-height: 50px;
-                    margin-left: 10px;
+                    line-height: 20px;
+                    margin: 10px;
+                    text-align: center;
+
+                    &:not(:nth-child(-n+5)) {
+                        display: none;
+                    }
+
+                    &:first-child {
+                        display: none;
+                    }
+
+                    &:last-child {
+                        margin: 10px;
+                    }
+
+                    .Image {
+                        margin-left: -20px;
+
+                        &-Image {
+                            border-radius: 50%;
+                        }
+                    }
+                }
+
+                &_isArabic {
+                    a {
+                        .Image {
+                            margin-left: 0;
+                            margin-right: -20px;
+                        }
+                    }
+                }
+            }
+
+            &_isAllShow {
+                position: absolute;
+                width: 100%;
+                left: 0;
+                top: 0;
+                background-color: var(--white);
+
+                .MenuGrid {
+                    &-Column {
+                        &-Content {
+                            position: relative;
+
+                            a {
+                                &:not(:nth-child(-n+4)) {
+                                    display: block;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
     }
 
     @include desktop {
+        margin: 20px 0 30px 35px;
+
         &-Content {
-            left: 13px;
-
             &_isArabic {
-                left: -27px;
-
                 .MenuGrid {
                     &-Column {
                         border-left: solid 1px var(--grey);
@@ -119,6 +169,7 @@
                 }
             }
         }
+
         &-Column {
             &-Content {
                 display: flex;
@@ -127,6 +178,22 @@
                 height: 290px;
                 justify-content: flex-start;
                 margin-top: 10px;
+
+                a {
+                    div {
+                        display: none;
+                    }
+                }
+            }
+
+            .ViewAll {
+                &-Link {
+                    display: none;
+                }
+
+                &-Button {
+                    display: none;
+                }
             }
         }
     }
