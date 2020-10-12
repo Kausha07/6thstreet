@@ -17,23 +17,23 @@ class WishlistIcon extends PureComponent {
         addToWishlist(sku);
     };
 
+    isBlack = (item) => {
+        const { sku } = this.props;
+        const { product: { sku: wishlistSku } } = item;
+
+        return sku === wishlistSku;
+    };
+
     renderIcon() {
-        const { sku, items } = this.props;
-
-        let isBlack = false;
-
-        items.forEach((item) => {
-            if (item.product.sku === sku) {
-                isBlack = true;
-            }
-        });
+        const { items } = this.props;
+        const blackMod = items.some(this.isBlack);
 
         return (
             <div
               role="button"
               block="WishlistIcon"
               elem="Icon"
-              mods={ { black: isBlack } }
+              mods={ { black: blackMod } }
               tabIndex={ 0 }
               aria-label="Wishlist"
               onClick={ this.handleClick }

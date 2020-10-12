@@ -384,5 +384,11 @@
     "View bag": null,
     "My Bag": null,
     " item(s)": null,
-    "Brands": null
+    "Brands": null,
+    "You must be logged in to remove items to wishlist": null,
+    "Failed to remove item from wishlist": null,
+    "You must be logged in to add items to wishlist": null,
+    "Failed to add item to wishlist": null,
+    "Order history": null,
+    "Delivery addresses": null
 }
