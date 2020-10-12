@@ -408,5 +408,8 @@
     "Items": null,
     "Order placed: ": null,
     "Cancel": null,
-    "Edit Address": null
+    "Edit Address": null,
+    " - default shipping, billing address": null,
+    " - default billing address": null,
+    " - default shipping address": null
 }
