@@ -101,9 +101,17 @@ class PDPAddToCart extends PureComponent {
     }
 
     renderSizeTypeSelect() {
-        const { onSizeTypeSelect, sizeObject, insertedSizeStatus } = this.props;
+        const {
+            product, onSizeTypeSelect, sizeObject, insertedSizeStatus
+        } = this.props;
+
+        console.log(product);
 
         if (sizeObject.sizeTypes === undefined && !insertedSizeStatus) {
+            return null;
+        }
+
+        if (product.stock_qty === '0') {
             return null;
         }
 
