@@ -112,7 +112,7 @@ class SearchSuggestion extends PureComponent {
 
     renderTrendingTag = ({ link, label }) => (
         <li>
-            <Link to={ link }>
+            <Link to={ { pathname: link } }>
                 { label }
             </Link>
         </li>
