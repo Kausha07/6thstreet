@@ -51,17 +51,17 @@ export class CartPage extends PureComponent {
         }
 
         return (
-                <ul block="CartPage" elem="Items" aria-label="List of items in cart">
-                    { items.map((item) => (
-                        <CartItem
-                          key={ item.item_id }
-                          item={ item }
-                          currency_code={ quote_currency_code }
-                          isEditing
-                          isLikeTable
-                        />
-                    )) }
-                </ul>
+            <ul block="CartPage" elem="Items" aria-label="List of items in cart">
+                { items.map((item) => (
+                    <CartItem
+                        key={ item.item_id }
+                        item={ item }
+                        currency_code={ quote_currency_code }
+                        isEditing
+                        isLikeTable
+                    />
+                )) }
+            </ul>
         );
     }
 

@@ -40,21 +40,15 @@
                 display: none;
             }
 
-            img {
-                display: block !important;
-                width: 95px;
-                height: 130px;
-                margin-right: 15px;
-            }
-
             .Image {
-                display: none;
+                display: block;
+                width: 100%;
             }
         }
 
         &-Content {
             display: flex;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
             flex-direction: column;
 
             &_isLikeTable {

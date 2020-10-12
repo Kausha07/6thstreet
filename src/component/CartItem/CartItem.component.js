@@ -282,8 +282,6 @@ export class CartItem extends PureComponent {
     renderColSizeQty() {
         const color = 'Yellow';
         const optionValue = 'XL';
-        // const qty = '1';
-        // const { item: { color, optionValue, qty } } = this.props;
         const { item: { qty } } = this.props;
 
         if (optionValue) {
