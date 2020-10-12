@@ -12,7 +12,7 @@ class PLPPagePlaceholder extends PureComponent {
     renderPlaceholder = (_, index) => (
         <div
           key={ index }
-          height={ 200 }
+          style={ { height: '400px' } }
         >
             product placeholder
         </div>

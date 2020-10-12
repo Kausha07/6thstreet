@@ -28,7 +28,8 @@ class PDPGalleryOverlay extends PureComponent {
         closeGalleryOverlay: PropTypes.func.isRequired,
         isZoomEnabled: PropTypes.bool.isRequired,
         handleZoomChange: PropTypes.func.isRequired,
-        disableZoom: PropTypes.func.isRequired
+        disableZoom: PropTypes.func.isRequired,
+        isGalleryEmpty: PropTypes.bool.isRequired
     };
 
     overlayRef = createRef();
@@ -51,8 +52,8 @@ class PDPGalleryOverlay extends PureComponent {
     componentDidMount() {
         const { onSliderChange } = this.props;
         const { imageRef, overlayRef } = this;
-        const imgHeight = imageRef.current.offsetHeight;
-        const imgWidth = imageRef.current.offsetWidth;
+        const imgHeight = imageRef.current === null ? null : imageRef.current.offsetHeight;
+        const imgWidth = imageRef.current === null ? null : imageRef.current.offsetWidth;
         const overlayHeight = overlayRef.current.children[3].offsetHeight;
         const overlayWidth = overlayRef.current.children[3].offsetWidth;
         const addX = (overlayWidth - imgWidth) / 2 - (overlayWidth - imgWidth * 1.5) / 2;
@@ -188,9 +189,9 @@ class PDPGalleryOverlay extends PureComponent {
     }
 
     renderGallery() {
-        const { gallery } = this.props;
+        const { gallery, isGalleryEmpty } = this.props;
 
-        if (gallery[0] !== undefined) {
+        if (gallery[0] !== undefined && !isGalleryEmpty) {
             return gallery.map(this.renderImage);
         }
 
