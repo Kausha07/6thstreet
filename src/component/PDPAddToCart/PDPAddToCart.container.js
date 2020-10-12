@@ -51,7 +51,7 @@ export class PDPAddToCartContainer extends PureComponent {
 
     static getDerivedStateFromProps(props) {
         const { product } = props;
-
+        console.log(product);
         if (product.simple_products !== undefined) {
             const filteredProductKeys = Object.keys(product.simple_products);
 

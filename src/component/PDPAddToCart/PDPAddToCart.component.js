@@ -156,13 +156,18 @@ class PDPAddToCart extends PureComponent {
 
     checkStateForButtonDisabling() {
         const {
-            isLoading, addedToCart, product: { stock_qty, highlighted_attributes }
+            isLoading,
+            addedToCart,
+            product: { stock_qty, highlighted_attributes },
+            product
         } = this.props;
 
         if (isLoading
             || addedToCart
             || stock_qty === 0
-            || highlighted_attributes === null) {
+            || highlighted_attributes === null
+            || (Object.keys(product).length === 0
+            && product.constructor === Object)) {
             return true;
         }
 
