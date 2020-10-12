@@ -167,7 +167,7 @@ export class CartOverlay extends PureComponent {
     }
 
     renderItemCount() {
-        const { totals: { items } } = this.props;
+        const { totals: { items = {} } } = this.props;
 
         return (
             <div block="CartOverlay" elem="ItemCount">
