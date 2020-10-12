@@ -16,7 +16,6 @@ class PDPAddToCart extends PureComponent {
         addToCart: PropTypes.func.isRequired,
         sizeObject: PropTypes.object.isRequired,
         selectedSizeType: PropTypes.string.isRequired,
-        insertedSizeStatus: PropTypes.bool.isRequired,
         isLoading: PropTypes.bool.isRequired,
         addedToCart: PropTypes.bool.isRequired
     };
@@ -66,7 +65,9 @@ class PDPAddToCart extends PureComponent {
             product: { simple_products }, product, selectedSizeType, sizeObject
         } = this.props;
 
-        if (sizeObject.sizeCodes !== undefined && product[`size_${selectedSizeType}`].length !== 0) {
+        if (sizeObject.sizeCodes !== undefined
+            && simple_products !== undefined
+            && product[`size_${selectedSizeType}`].length !== 0) {
             const listItems = sizeObject.sizeCodes.map((code) => (
                 <option
                   key={ code }
@@ -86,49 +87,52 @@ class PDPAddToCart extends PureComponent {
     }
 
     renderSizeInfo() {
-        const { sizeObject, insertedSizeStatus } = this.props;
+        const { sizeObject } = this.props;
 
-        if (sizeObject.sizeTypes === undefined && !insertedSizeStatus) {
-            return null;
+        if ((sizeObject.sizeTypes !== undefined)
+        && (sizeObject.sizeTypes.length !== 0)) {
+            return (
+                <div block="PDPAddToCart" elem="SizeInfo">
+                    <span block="PDPAddToCart" elem="SizeLabel">{ __('Size:') }</span>
+                    <PDPSizeGuide />
+                </div>
+            );
         }
 
-        return (
-            <div block="PDPAddToCart" elem="SizeInfo">
-                <span block="PDPAddToCart" elem="SizeLabel">{ __('Size:') }</span>
-                <PDPSizeGuide />
-            </div>
-        );
+        return null;
     }
 
     renderSizeTypeSelect() {
         const {
-            onSizeTypeSelect, insertedSizeStatus
+            onSizeTypeSelect, sizeObject
         } = this.props;
 
-        if (!insertedSizeStatus) {
-            return null;
+        if ((sizeObject.sizeTypes !== undefined)
+        && (sizeObject.sizeTypes.length !== 0)) {
+            return (
+                <div block="PDPAddToCart" elem="SizeTypeSelector">
+                    <select
+                      key="SizeTypeSelect"
+                      block="PDPAddToCart"
+                      elem="SizeTypeSelectElement"
+                      onChange={ onSizeTypeSelect }
+                    >
+                        { this.getSizeTypeSelect() }
+                    </select>
+                </div>
+            );
         }
 
-        return (
-            <div block="PDPAddToCart" elem="SizeTypeSelector">
-                <select
-                  key="SizeTypeSelect"
-                  block="PDPAddToCart"
-                  elem="SizeTypeSelectElement"
-                  onChange={ onSizeTypeSelect }
-                >
-                    { this.getSizeTypeSelect() }
-                </select>
-            </div>
-        );
+        return null;
     }
 
     renderSizeSelect() {
         const {
-            product, selectedSizeType, onSizeSelect
+            onSizeSelect, sizeObject
         } = this.props;
 
-        if (product.simple_products !== undefined && product[`size_${selectedSizeType}`].length !== 0) {
+        if ((sizeObject.sizeTypes !== undefined)
+        && (sizeObject.sizeTypes.length !== 0)) {
             return (
                     <div block="PDPAddToCart" elem="SizeSelector">
                         <select
@@ -151,25 +155,27 @@ class PDPAddToCart extends PureComponent {
     }
 
     renderAddToCartButton() {
-        const { addToCart, isLoading, addedToCart } = this.props;
+        const {
+            addToCart, isLoading, addedToCart, product: { stock_qty }
+        } = this.props;
 
         return (
-            <button
-              onClick={ addToCart }
-              block="PDPAddToCart"
-              elem="AddToCartButton"
-              mods={ { isLoading } }
-              mix={ {
-                  block: 'PDPAddToCart',
-                  elem: 'AddToCartButton',
-                  mods: { addedToCart }
-              } }
-              disabled={ isLoading || addedToCart }
-            >
-                <span>{ __('Add to bag') }</span>
-                <span>{ __('Adding...') }</span>
-                <span>{ __('Added to bag') }</span>
-            </button>
+                    <button
+                      onClick={ addToCart }
+                      block="PDPAddToCart"
+                      elem="AddToCartButton"
+                      mods={ { isLoading } }
+                      mix={ {
+                          block: 'PDPAddToCart',
+                          elem: 'AddToCartButton',
+                          mods: { addedToCart }
+                      } }
+                      disabled={ isLoading || addedToCart || stock_qty === 0 }
+                    >
+                        <span>{ __('Add to bag') }</span>
+                        <span>{ __('Adding...') }</span>
+                        <span>{ __('Added to bag') }</span>
+                    </button>
         );
     }
 
