@@ -66,7 +66,7 @@ class PDPAddToCart extends PureComponent {
             product: { simple_products }, product, selectedSizeType, sizeObject
         } = this.props;
 
-        if (simple_products !== undefined && product[`size_${selectedSizeType}`].length !== 0) {
+        if (sizeObject.sizeCodes !== undefined && product[`size_${selectedSizeType}`].length !== 0) {
             const listItems = sizeObject.sizeCodes.map((code) => (
                 <option
                   key={ code }
@@ -101,9 +101,11 @@ class PDPAddToCart extends PureComponent {
     }
 
     renderSizeTypeSelect() {
-        const { onSizeTypeSelect, sizeObject, insertedSizeStatus } = this.props;
+        const {
+            onSizeTypeSelect, insertedSizeStatus
+        } = this.props;
 
-        if (sizeObject.sizeTypes === undefined && !insertedSizeStatus) {
+        if (!insertedSizeStatus) {
             return null;
         }
 

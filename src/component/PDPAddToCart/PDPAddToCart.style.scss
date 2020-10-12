@@ -121,11 +121,25 @@ $select-arrow-width: 6px !default;
             }
 
             &:last-child {
-                background: url(./icons/confirm.png) no-repeat;
-                background-size: 30px 40px;
-                background-position: 27% 104%;
-                margin-top: 12px;
+                left: 25%;
+                margin-top: 5px;
+                padding-top: 7px;
+                background: url(./icons/confirm@2x.png) no-repeat;
+                background-size: 30px 30px;
                 height: 30px;
+                width: 180px;
+
+                @media (max-width: 1020px) {
+                    left: 40%;
+                }
+
+                @media (max-width: 700px) {
+                    left: 30%;
+                }
+
+                @media (max-width: 430px) {
+                    left: 16%;
+                }
             }
         }
 
