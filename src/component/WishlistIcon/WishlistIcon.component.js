@@ -1,3 +1,4 @@
+/* eslint-disable fp/no-let */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
@@ -6,7 +7,8 @@ import './WishlistIcon.style';
 class WishlistIcon extends PureComponent {
     static propTypes = {
         sku: PropTypes.string.isRequired,
-        addToWishlist: PropTypes.func.isRequired
+        addToWishlist: PropTypes.func.isRequired,
+        items: PropTypes.array.isRequired
     };
 
     handleClick = () => {
@@ -15,12 +17,23 @@ class WishlistIcon extends PureComponent {
         addToWishlist(sku);
     };
 
+    isBlack = (item) => {
+        const { sku } = this.props;
+        const { product: { sku: wishlistSku } } = item;
+
+        return sku === wishlistSku;
+    };
+
     renderIcon() {
+        const { items } = this.props;
+        const blackMod = items.some(this.isBlack);
+
         return (
             <div
               role="button"
               block="WishlistIcon"
               elem="Icon"
+              mods={ { black: blackMod } }
               tabIndex={ 0 }
               aria-label="Wishlist"
               onClick={ this.handleClick }
