@@ -5,9 +5,11 @@ import { withRouter } from 'react-router';
 import HeaderAccount from 'Component/HeaderAccount';
 import HeaderMenu from 'Component/HeaderMenu';
 import HeaderWishlist from 'Component/HeaderWishlist';
+import MyAccountOverlay from 'Component/MyAccountOverlay';
 import NavigationAbstract from 'Component/NavigationAbstract/NavigationAbstract.component';
+import { isSignedIn } from 'Util/Auth';
 
-import './MobileBottomBar.style';
+import './MobileBottomBar.style.scss';
 
 class MobileBottomBar extends NavigationAbstract {
     static propTypes = {
@@ -21,9 +23,11 @@ class MobileBottomBar extends NavigationAbstract {
         redirectBrand: false,
         isBrand: false,
         isBottomBar: true,
-        isLoggedIn: false,
+        isLoggedIn: isSignedIn(),
         isWishlist: false,
-        isAccount: false
+        isAccount: false,
+        isPopup: true,
+        accountPopUp: ''
     };
 
     renderMap = {
@@ -46,26 +50,30 @@ class MobileBottomBar extends NavigationAbstract {
         });
     };
 
+    renderAccountPopUp = () => {
+        const { isPopup } = this.state;
+        const popUpElement = (
+            <MyAccountOverlay isPopup={ isPopup } closePopup={ this.closePopup } />
+        );
+
+        this.setState({ accountPopUp: popUpElement });
+        return popUpElement;
+    };
+
+    closePopup = () => {
+        this.setState({ accountPopUp: '' });
+    };
+
     routeChangeAccount=() => {
         const { history } = this.props;
-        const { isLoggedIn } = this.state;
 
-        if (!isLoggedIn) {
-            return history.push('/my-account');
-        }
-
-        return null;
+        return history.push('/my-account');
     };
 
     routeChangeWishlist=() => {
         const { history } = this.props;
-        const { isLoggedIn } = this.state;
 
-        if (!isLoggedIn) {
-            return history.push('/my-account');
-        }
-
-        return null;
+        return history.push('/my-account/my-wishlist');
     };
 
     routeChangeLogin=() => {
@@ -125,7 +133,7 @@ class MobileBottomBar extends NavigationAbstract {
                   mods: { isActive: isBrand }
               } }
             >
-                <label htmlFor="Home">{ __('Brand') }</label>
+                <label htmlFor="Home">{ __('Brands') }</label>
             </button>
         );
     }
@@ -141,12 +149,15 @@ class MobileBottomBar extends NavigationAbstract {
     renderWishlist() {
         const { isBottomBar, isWishlist } = this.state;
 
+        this.setState({ isWishlist: location.pathname === '/my-account/my-wishlist' });
+
         return (
             <button
               onClick={ this.routeChangeWishlist }
               key="wishlistButton"
               block="MobileBottomBar"
               elem="WishListAndAccount"
+              mods={ { isActive: isWishlist } }
             >
                 <HeaderWishlist
                   isWishlist={ isWishlist }
@@ -158,24 +169,27 @@ class MobileBottomBar extends NavigationAbstract {
     }
 
     renderAccount() {
-        const { isBottomBar, isAccount } = this.state;
+        const { isBottomBar, isAccount, accountPopUp } = this.state;
         const { location } = this.props;
 
         this.setState({ isAccount: location.pathname === '/my-account' });
 
         return (
-            <button
-              onClick={ this.routeChangeAccount }
-              key="accountButton"
-              block="MobileBottomBar"
-              elem="WishListAndAccount"
-            >
-                <HeaderAccount
-                  isAccount={ isAccount }
-                  isBottomBar={ isBottomBar }
-                  key="account"
-                />
-            </button>
+            <div>
+                <button
+                  onClick={ this.renderAccountPopUp }
+                  key="accountButton"
+                  block="MobileBottomBar"
+                  elem="WishListAndAccount"
+                >
+                    <HeaderAccount
+                      isAccount={ isAccount }
+                      isBottomBar={ isBottomBar }
+                      key="account"
+                    />
+                </button>
+                { accountPopUp }
+            </div>
         );
     }
 

@@ -51,6 +51,8 @@ class PDPSizeGuide extends PureComponent {
     renderModal() {
         const { isArabic, isOpen } = this.state;
 
+        document.body.style.overflow = 'hidden';
+
         return (
             <Popup
               mix={ { block: 'PDPSizeGuide', elem: 'Modal', mods: { isOpen, isArabic } } }
@@ -65,6 +67,7 @@ class PDPSizeGuide extends PureComponent {
     hideOverlay = () => {
         const { hideActiveOverlay } = this.props;
         hideActiveOverlay();
+        document.body.style.overflow = 'visible';
     };
 
     renderModalContents() {
