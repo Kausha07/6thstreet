@@ -483,10 +483,6 @@
             font-weight: 500;
             line-height: 16px;
             text-decoration: underline;
-
-            &:hover {
-                background: transparent !important;
-            }
         }
 
         &_isArabic {
@@ -622,5 +618,25 @@
         text-align: center;
         align-items: center;
         margin: 0 42% 40px;
+    }
+}
+
+.HeaderAccount {
+    &-PopUp { 
+        .MyAccountOverlay {
+            .MyAccountOverlay-Action {
+                .Form{
+                    .MyAccountOverlay {
+                        &-Button {
+                            &_likeLink {
+                                &:hover {
+                                    background: transparent;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
