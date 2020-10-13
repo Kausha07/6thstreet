@@ -29,6 +29,7 @@ class MobileAPI {
             method,
             headers: {
                 'Content-Type': 'application/json',
+                'X-App-Version': '2.20.0',
                 ...tokenHeader
             },
             ...payload({ body: JSON.stringify(body) })
