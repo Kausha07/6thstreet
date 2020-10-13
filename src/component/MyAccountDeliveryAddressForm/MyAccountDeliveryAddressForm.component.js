@@ -58,15 +58,15 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
 
     componentDidUpdate(prevProps, _) {
         const { address: { region: { region: prevRegion } = {} } } = prevProps;
-        const { address: { city }, address: { region: { region } = {} } } = this.props;
-        const { cities, city: cityFromState } = this.state;
-
+        // const { address: { city }, address: { region: { region } = {} } } = this.props;
+        // const { cities, city: cityFromState } = this.state;
+        const { address: { region: { region } = {} } } = this.props;
         // console.log('cityFromState', cityFromState);
         // console.log('cities', cities);
         // console.log('city', city);
-        if (city && cities && cityFromState) {
-            this.onCityChange(city);
-        }
+        // if (city && cities && cityFromState) {
+        //     this.onCityChange(city);
+        // }
 
         if (prevRegion !== region) {
             this.setPostCode();
@@ -102,12 +102,18 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
     getRegionFields() {
         const { newForm } = this.props;
         const { address: { region: { region } = {} } } = this.props;
+        const { address: { city } } = this.props;
         // const { availableRegions, regionId } = this.state;
-        const { availableAreas } = this.state;
+        const { availableAreas, cities } = this.state;
         const clearValue = newForm ? { value: '' } : null;
 
+        if (cities.length && city) {
+            console.log('1');
+            this.setArea(city);
+        }
         if (!availableAreas.length) {
-            // console.log(availableAreas);
+            console.log('2');
+
             return {
                 region_string: {
                     validation: ['notEmpty'],
@@ -118,26 +124,34 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
                 }
             };
         }
-        console.log('enter');
+        console.log('3');
+
         return {
             region_id: {
                 validation: ['notEmpty'],
                 type: 'select',
                 selectOptions: availableAreas.map((area) => ({ id: area, label: area, value: area })),
-                onChange: this.copyValue,
                 value: region,
                 placeholder: __('City area'),
-                ...clearValue
+                ...clearValue,
+                onChange: this.copyValue
             }
         };
     }
 
     async getCitiesData() {
         const { cities } = this.state;
+        // const { address: { city } } = this.props;
+        // console.log('props', city);
         if (cities.length === 0) {
             const test = await fetch('https://mobileapi.6thstreet.com/v2/cities?locale=en-ae');
             const json = await test.json();
-            this.setState({ cities: json.data });
+            const { data } = json;
+            this.setState({ cities: data });
+            // if (city) {
+            //     console.log('WEEEEEEEEEEEEEE');
+            //     this.setArea(city);
+            // }
         }
     }
 
@@ -151,6 +165,18 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
     //         availableRegions: available_regions || []
     //     });
     // };
+
+    setArea = (cityFromProps) => {
+        const { cities } = this.state;
+        const trueCity = cities.find(({ city }) => cityFromProps === city);
+        if (trueCity) {
+            const { areas } = trueCity;
+
+            this.setState({
+                availableAreas: areas || []
+            });
+        }
+    };
 
     onCityChange = (selectedCity) => {
         const { cities } = this.state;
