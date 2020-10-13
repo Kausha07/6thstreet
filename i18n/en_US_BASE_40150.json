@@ -405,9 +405,21 @@
     "Order placed": null,
     "Brands": null,
     "Recommended": null,
+    "new address": null,
+    "City area": null,
+    "Phone Number": null,
+    "Post code": null,
+    "Street Address": null,
+    "Make default": null,
+    "Discart": null,
     "Save": null,
     "Total: %s": null,
     "Item": null,
     "Items": null,
-    "Order placed: ": null
+    "Order placed: ": null,
+    "Cancel": null,
+    "Edit Address": null,
+    " - default shipping, billing address": null,
+    " - default billing address": null,
+    " - default shipping address": null
 }

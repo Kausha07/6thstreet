@@ -80,7 +80,6 @@
 
     button {
         width: 100%;
-        margin-top: .5rem;
     }
 
     input {
@@ -374,10 +373,6 @@
             left: 0;
             right: unset;
         }
-
-        @include before-desktop() {
-            display: none;
-        }
     }
 
     &-ForgotPasswordButton {
@@ -428,6 +423,7 @@
             }
 
             &:hover {
+                background-color: var(--white-color);
                 border: 2px solid $black;
             }
 
@@ -466,10 +462,10 @@
             font-size: 12px;
             font-weight: bold;
             line-height: 16px;
+        }
 
-            &_isMargin {
-                margin-top: 40px;
-            }
+        &_isMargin {
+            margin-top: 40px;
         }
 
         &_likeLink {
@@ -506,6 +502,10 @@
                 display: inline-block;
                 font-size: 0;
             }
+        }
+
+        &_isCreateAccountButton {
+            margin-top: 40px;
         }
     }
 
@@ -618,5 +618,25 @@
         text-align: center;
         align-items: center;
         margin: 0 42% 40px;
+    }
+}
+
+.HeaderAccount {
+    &-PopUp { 
+        .MyAccountOverlay {
+            .MyAccountOverlay-Action {
+                .Form{
+                    .MyAccountOverlay {
+                        &-Button {
+                            &_likeLink {
+                                &:hover {
+                                    background: transparent;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
