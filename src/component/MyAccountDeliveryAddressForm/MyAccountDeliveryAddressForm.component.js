@@ -32,6 +32,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         super(props);
 
         const {
+            cities,
             countries,
             default_country,
             address: { city = null, country_id, region: { region_id } = {} }
@@ -42,7 +43,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         const { available_regions: availableRegions } = country || {};
         const regions = availableRegions || [{}];
         const regionId = region_id || regions[0].id;
-        // console.log(props);
+        console.log(props);
 
         this.state = {
             countryId,
@@ -51,7 +52,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
             availableRegions,
             area: null,
             regionId,
-            cities: [],
+            cities,
             postCodeValue: null
         };
     }
@@ -61,11 +62,10 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         const { address: { city }, address: { region: { region } = {} } } = this.props;
         const { cities, city: cityFromState } = this.state;
 
-        console.log('cityFromState', cityFromState);
-        console.log('cities', cities);
-        console.log('city', city);
+        // console.log('cityFromState', cityFromState);
+        // console.log('cities', cities);
+        // console.log('city', city);
         if (city && cities && cityFromState) {
-            console.log('GOO');
             this.onCityChange(city);
         }
 
@@ -133,16 +133,14 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         };
     }
 
-    async testFunct() {
-        const { cities } = this.state;
-        if (cities.length === 0) {
-            const test = await fetch('https://mobileapi.6thstreet.com/v2/cities?locale=en-ae');
-            const json = await test.json();
-            this.setState({ cities: json.data });
-            // const trueCity = await cities.find(({ city }) => cityFromState === city);
-            // console.log('true ********', trueCity);
-        }
-    }
+    // async testFunct() {
+    //     const { cities } = this.state;
+    //     if (cities.length === 0) {
+    //         const test = await fetch('https://mobileapi.6thstreet.com/v2/cities?locale=en-ae');
+    //         const json = await test.json();
+    //         this.setState({ cities: json.data });
+    //     }
+    // }
 
     // onCountryChange = (countryId) => {
     //     const { countries } = this.props;
@@ -159,7 +157,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         const { cities } = this.state;
         const trueCity = cities.find(({ city }) => selectedCity === city);
         const { areas } = trueCity;
-        console.log(selectedCity);
+
         this.setState({
             city: trueCity,
             availableAreas: areas || []

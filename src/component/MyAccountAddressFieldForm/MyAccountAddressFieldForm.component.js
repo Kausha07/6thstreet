@@ -72,9 +72,9 @@ export class MyAccountAddressFieldForm extends PureComponent {
             default_common
         } = this.fieldMap;
 
-        this.testFunct();
+        const { newForm, getCities } = this.props;
 
-        const { newForm } = this.props;
+        getCities();
 
         const fromTitle = newForm ? __('New Address') : __('Edit Address');
 
