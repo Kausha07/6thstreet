@@ -57,6 +57,16 @@
 
     &-Resolution {
         padding-left: 40px;
+
+        @include desktop {
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+
+    &-Resolutions,
+    &-Reasons {
+        width: calc(50% - 10px);
     }
 
     &-Price {

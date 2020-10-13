@@ -10,6 +10,7 @@ import './MyAccountReturnCreate.style';
 export class MyAccountReturnCreate extends PureComponent {
     static propTypes = {
         onItemClick: PropTypes.func.isRequired,
+        onReasonChange: PropTypes.func.isRequired,
         onResolutionChange: PropTypes.func.isRequired,
         onFormSubmit: PropTypes.func.isRequired,
         incrementId: PropTypes.string,
@@ -25,17 +26,30 @@ export class MyAccountReturnCreate extends PureComponent {
         ),
         isLoading: PropTypes.bool.isRequired,
         selectedNumber: PropTypes.number.isRequired,
-        handleDiscardClick: PropTypes.func.isRequired
+        handleDiscardClick: PropTypes.func.isRequired,
+        // TODO: Move to API types
+        resolutions: PropTypes.arrayOf(
+            PropTypes.shape({
+                id: PropTypes.string.isRequired,
+                label: PropTypes.string.isRequired
+            })
+        )
     };
 
     static defaultProps = {
         items: [],
-        incrementId: ''
+        incrementId: '',
+        resolutions: []
     };
 
     renderOrderItem = (item) => {
         const { item_id } = item;
-        const { onItemClick, onResolutionChange } = this.props;
+        const {
+            onItemClick,
+            onResolutionChange,
+            onReasonChange,
+            resolutions
+        } = this.props;
 
         return (
             <li block="MyAccountReturnCreate" elem="Item" key={ item_id }>
@@ -43,6 +57,8 @@ export class MyAccountReturnCreate extends PureComponent {
                   item={ item }
                   onClick={ onItemClick }
                   onResolutionChange={ onResolutionChange }
+                  onReasonChange={ onReasonChange }
+                  resolutions={ resolutions }
                 />
             </li>
         );

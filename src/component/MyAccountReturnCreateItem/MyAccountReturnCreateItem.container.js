@@ -19,7 +19,19 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
             item_id: PropTypes.string
         }).isRequired,
         onClick: PropTypes.func.isRequired,
-        onResolutionChange: PropTypes.func.isRequired
+        onResolutionChange: PropTypes.func.isRequired,
+        onReasonChange: PropTypes.func.isRequired,
+        // TODO: Move to API types
+        resolutions: PropTypes.arrayOf(
+            PropTypes.shape({
+                id: PropTypes.string.isRequired,
+                label: PropTypes.string.isRequired
+            })
+        )
+    };
+
+    static defaultProps = {
+        resolutions: []
     };
 
     state = {
@@ -28,11 +40,19 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
 
     containerFunctions = {
         onClick: this.onClick.bind(this),
+        onReasonChange: this.onReasonChange.bind(this),
         onResolutionChange: this.onResolutionChange.bind(this)
     };
 
+    onReasonChange(value) {
+        const { onReasonChange, item: { item_id } } = this.props;
+
+        onReasonChange(item_id, value);
+    }
+
     onResolutionChange(value) {
         const { onResolutionChange, item: { item_id } } = this.props;
+
         onResolutionChange(item_id, value);
     }
 
@@ -53,11 +73,22 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
         return {
             item,
             isSelected,
-            resolutionOptions: this.getResolutionOptions()
+            resolutions: this.getResolutionOptions(),
+            reasonOptions: this.getReasonOptions()
         };
     };
 
     getResolutionOptions() {
+        const { resolutions } = this.props;
+
+        return resolutions.map(({ id, label }) => ({
+            id,
+            label,
+            value: id
+        }));
+    }
+
+    getReasonOptions() {
         const { item: { reason_options } } = this.props;
 
         return reason_options.map(({ id, label }) => {

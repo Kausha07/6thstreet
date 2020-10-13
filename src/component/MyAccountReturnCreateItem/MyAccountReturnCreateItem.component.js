@@ -11,8 +11,16 @@ class MyAccountReturnCreateItem extends PureComponent {
     static propTypes = {
         isSelected: PropTypes.bool.isRequired,
         onResolutionChange: PropTypes.func.isRequired,
-        resolutionOptions: PropTypes.array.isRequired,
+        onReasonChange: PropTypes.func.isRequired,
+        reasonOptions: PropTypes.array.isRequired,
         onClick: PropTypes.func.isRequired,
+        // TODO: Move to API types
+        resolutions: PropTypes.arrayOf(
+            PropTypes.shape({
+                id: PropTypes.string.isRequired,
+                label: PropTypes.string.isRequired
+            })
+        ).isRequired,
         item: PropTypes.shape({
             item_id: PropTypes.string,
             name: PropTypes.string,
@@ -33,9 +41,13 @@ class MyAccountReturnCreateItem extends PureComponent {
         }).isRequired
     };
 
-    renderResolution() {
-        const { item: { item_id }, isSelected } = this.props;
-        const { onResolutionChange, resolutionOptions } = this.props;
+    renderResolutions() {
+        const {
+            item: { item_id },
+            isSelected,
+            onResolutionChange,
+            resolutions
+        } = this.props;
 
         if (!isSelected) {
             return null;
@@ -47,9 +59,34 @@ class MyAccountReturnCreateItem extends PureComponent {
               id={ `${item_id}_resolution` }
               name={ `${item_id}_resolution` }
               placeholder={ __('Select a resolution') }
-              mix={ { block: 'MyAccountReturnCreateItem', elem: 'Resolution' } }
+              mix={ { block: 'MyAccountReturnCreateItem', elem: 'Resolutions' } }
               onChange={ onResolutionChange }
-              selectOptions={ resolutionOptions }
+              selectOptions={ resolutions }
+            />
+        );
+    }
+
+    renderReasons() {
+        const {
+            item: { item_id },
+            isSelected,
+            onReasonChange,
+            reasonOptions
+        } = this.props;
+
+        if (!isSelected) {
+            return null;
+        }
+
+        return (
+            <Field
+              type="select"
+              id={ `${item_id}_reason` }
+              name={ `${item_id}_reason` }
+              placeholder={ __('Select a reason') }
+              mix={ { block: 'MyAccountReturnCreateItem', elem: 'Reasons' } }
+              onChange={ onReasonChange }
+              selectOptions={ reasonOptions }
             />
         );
     }
@@ -132,7 +169,7 @@ class MyAccountReturnCreateItem extends PureComponent {
                                 { `(-${ +discount_percent }%)` }
                             </span>
                             <span block="MyAccountReturnCreateItem" elem="PriceDiscount">
-                                { `${ formatPrice(+discount_amount) }` }
+                                { `${ formatPrice(+row_total - +discount_amount) }` }
                             </span>
                         </>
                     ) }
@@ -149,7 +186,10 @@ class MyAccountReturnCreateItem extends PureComponent {
                     { this.renderImage() }
                     { this.renderDetails() }
                 </div>
-                { this.renderResolution() }
+                <div block="MyAccountReturnCreateItem" elem="Resolution">
+                    { this.renderResolutions() }
+                    { this.renderReasons() }
+                </div>
             </div>
         );
     }

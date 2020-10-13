@@ -25,6 +25,7 @@ export class MyAccountReturnCreateContainer extends PureComponent {
     containerFunctions = {
         onFormSubmit: this.onFormSubmit.bind(this),
         onItemClick: this.onItemClick.bind(this),
+        onReasonChange: this.onReasonChange.bind(this),
         onResolutionChange: this.onResolutionChange.bind(this),
         handleDiscardClick: this.onDiscardClick.bind(this)
     };
@@ -46,7 +47,8 @@ export class MyAccountReturnCreateContainer extends PureComponent {
             isLoading,
             incrementId,
             items,
-            selectedItems
+            selectedItems,
+            resolutions
         } = this.state;
 
         return {
@@ -54,7 +56,8 @@ export class MyAccountReturnCreateContainer extends PureComponent {
             incrementId,
             items,
             selectedNumber: Object.keys(selectedItems).length,
-            history
+            history,
+            resolutions
         };
     };
 
@@ -82,13 +85,19 @@ export class MyAccountReturnCreateContainer extends PureComponent {
 
         this.setState({ isLoading: true });
 
-        MagentoAPI.get(`orders/${ orderId }/returnable-items`).then(({ data: { items, order_id } }) => {
-            this.setState({ items, incrementId: order_id, isLoading: false });
-        }).catch((error) => {
-            // TODO: Show error message
-            console.error(error);
-            this.setState({ isLoading: false });
-        });
+        MagentoAPI.get(`orders/${ orderId }/returnable-items`)
+            .then(({ data: { items, order_id, resolution_options } }) => {
+                this.setState({
+                    items,
+                    incrementId: order_id,
+                    isLoading: false,
+                    resolutions: resolution_options
+                });
+            }).catch((error) => {
+                // TODO: Show error message
+                console.error(error);
+                this.setState({ isLoading: false });
+            });
     }
 
     onItemClick(itemId, isSelected) {
@@ -104,26 +113,54 @@ export class MyAccountReturnCreateContainer extends PureComponent {
     }
 
     onResolutionChange(itemId, resolutionId) {
-        this.setState(({ selectedItems }) => ({ selectedItems: { ...selectedItems, [itemId]: resolutionId } }));
+        const { selectedItems: { [itemId]: item } } = this.state;
+
+        this.setState(({ selectedItems }) => ({
+            selectedItems: { ...selectedItems, [itemId]: { ...item, resolutionId } }
+        }));
+    }
+
+    onReasonChange(itemId, reasonId) {
+        const { selectedItems: { [itemId]: item } } = this.state;
+
+        this.setState(({ selectedItems }) => ({
+            selectedItems: { ...selectedItems, [itemId]: { ...item, reasonId } }
+        }));
     }
 
     onFormSubmit() {
-        const { selectedItems } = this.state;
+        const { history } = this.props;
+        const { selectedItems, items } = this.state;
         const payload = {
             order_id: this.getOrderId(),
-            items: Object.entries(selectedItems).map(([order_item_id, resolution]) => ({
-                order_item_id,
-                resolution: {
-                    id: resolution
-                }
-            }))
+            items: Object.entries(selectedItems).map(([order_item_id, { reasonId, resolutionId }]) => {
+                const {
+                    product_options: {
+                        info_buyRequest: {
+                            qty = 1
+                        } = {}
+                    } = {}
+                } = items.find(({ item_id }) => item_id === order_item_id) || {};
+
+                return {
+                    order_item_id,
+                    qty_requested: qty,
+                    resolution: {
+                        id: resolutionId,
+                        data: null
+                    },
+                    reason: {
+                        id: reasonId,
+                        data: null
+                    }
+                };
+            })
         };
 
         this.setState({ isLoading: true });
 
-        MagentoAPI.post('returns/request', payload).then(() => {
-            this.setState({ isLoading: false });
-            // TODO: Redirect to success page
+        MagentoAPI.post('returns/request', payload).then(({ data: { id } }) => {
+            history.push(`/my-account/return-item/create/success/${ id }`);
         }).catch((error) => {
             // TODO: Change to show error message
             this.setState({ isLoading: false });
