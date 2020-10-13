@@ -34,7 +34,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         const {
             countries,
             default_country,
-            address: { country_id, region: { region_id } = {} }
+            address: { city = null, country_id, region: { region_id } = {} }
         } = props;
 
         const countryId = country_id || default_country;
@@ -42,18 +42,32 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         const { available_regions: availableRegions } = country || {};
         const regions = availableRegions || [{}];
         const regionId = region_id || regions[0].id;
+        // console.log(props);
 
         this.state = {
             countryId,
+            city,
+            availableAreas: [],
             availableRegions,
+            area: null,
             regionId,
+            cities: [],
             postCodeValue: null
         };
     }
 
     componentDidUpdate(prevProps, _) {
         const { address: { region: { region: prevRegion } = {} } } = prevProps;
-        const { address: { region: { region } = {} } } = this.props;
+        const { address: { city }, address: { region: { region } = {} } } = this.props;
+        const { cities, city: cityFromState } = this.state;
+
+        console.log('cityFromState', cityFromState);
+        console.log('cities', cities);
+        console.log('city', city);
+        if (city && cities && cityFromState) {
+            console.log('GOO');
+            this.onCityChange(city);
+        }
 
         if (prevRegion !== region) {
             this.setPostCode();
@@ -89,10 +103,12 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
     getRegionFields() {
         const { newForm } = this.props;
         const { address: { region: { region } = {} } } = this.props;
-        const { availableRegions, regionId } = this.state;
+        // const { availableRegions, regionId } = this.state;
+        const { availableAreas } = this.state;
         const clearValue = newForm ? { value: '' } : null;
 
-        if (!availableRegions || !availableRegions.length) {
+        if (!availableAreas.length) {
+            // console.log(availableAreas);
             return {
                 region_string: {
                     validation: ['notEmpty'],
@@ -103,27 +119,50 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
                 }
             };
         }
-
+        console.log('enter');
         return {
             region_id: {
                 validation: ['notEmpty'],
                 type: 'select',
-                selectOptions: availableRegions.map(({ id, name }) => ({ id, label: name, value: id })),
-                onChange: (regionId) => this.setState({ regionId }),
-                value: regionId,
-                placeholder: __('City area')
+                selectOptions: availableAreas.map((area) => ({ id: area, label: area, value: area })),
+                onChange: this.copyValue,
+                value: region,
+                placeholder: __('City area'),
+                ...clearValue
             }
         };
     }
 
-    onCountryChange = (countryId) => {
-        const { countries } = this.props;
-        const country = countries.find(({ id }) => id === countryId);
-        const { available_regions } = country;
+    async testFunct() {
+        const { cities } = this.state;
+        if (cities.length === 0) {
+            const test = await fetch('https://mobileapi.6thstreet.com/v2/cities?locale=en-ae');
+            const json = await test.json();
+            this.setState({ cities: json.data });
+            // const trueCity = await cities.find(({ city }) => cityFromState === city);
+            // console.log('true ********', trueCity);
+        }
+    }
 
+    // onCountryChange = (countryId) => {
+    //     const { countries } = this.props;
+    //     const country = countries.find(({ id }) => id === countryId);
+    //     const { available_regions } = country;
+
+    //     this.setState({
+    //         countryId,
+    //         availableRegions: available_regions || []
+    //     });
+    // };
+
+    onCityChange = (selectedCity) => {
+        const { cities } = this.state;
+        const trueCity = cities.find(({ city }) => selectedCity === city);
+        const { areas } = trueCity;
+        console.log(selectedCity);
         this.setState({
-            countryId,
-            availableRegions: available_regions || []
+            city: trueCity,
+            availableAreas: areas || []
         });
     };
 
@@ -135,7 +174,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
     };
 
     get fieldMap() {
-        const { countryId } = this.state;
+        const { countryId, cities } = this.state;
         const {
             defaultChecked,
             changeDefaultShipping,
@@ -151,6 +190,10 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         const { street = [] } = address;
 
         const clearValue = newForm ? { value: '' } : null;
+
+        // console.log(countries);
+        // console.log(cities);
+        // const testCities = [{ id: 't1', label: 'l1' }];
 
         return {
             default_billing: {
@@ -180,14 +223,17 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
             city: {
                 validation: ['notEmpty'],
                 placeholder: __('City'),
-                ...clearValue
+                ...clearValue,
+                selectOptions: cities.map((item) => ({ id: item.city, label: item.city, value: item.city })),
+                type: 'select',
+                onChange: this.onCityChange
             },
             country_id: {
                 type: 'select',
                 validation: ['notEmpty'],
                 value: countryId,
-                selectOptions: countries.map(({ id, label }) => ({ id, label, value: id })),
-                onChange: this.onCountryChange
+                selectOptions: countries.map(({ id, label }) => ({ id, label, value: id }))
+                // onChange: this.onCountryChange
             },
             ...this.getRegionFields(),
             postcode: {
