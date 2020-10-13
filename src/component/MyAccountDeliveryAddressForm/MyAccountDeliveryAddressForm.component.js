@@ -15,6 +15,8 @@ import MyAccountAddressFieldForm from 'Component/MyAccountAddressFieldForm';
 import { addressType } from 'Type/Account';
 import { countriesType } from 'Type/Config';
 
+import { CITIES_DATA_URLS } from './MyAccountDeliveryAddressForm.config';
+
 export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
     static propTypes = {
         address: addressType.isRequired,
@@ -42,7 +44,6 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         const { available_regions: availableRegions } = country || {};
         const regions = availableRegions || [{}];
         const regionId = region_id || regions[0].id;
-        // console.log(props);
 
         this.state = {
             countryId,
@@ -58,14 +59,13 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
 
     componentDidUpdate(prevProps, _) {
         const { address: { city: prevCity, region: { region: prevRegion } = {} } } = prevProps;
-        // const { address: { city }, address: { region: { region } = {} } } = this.props;
-        // const { cities, city: cityFromState } = this.state;
         const { address: { city, region: { region } = {} } } = this.props;
-        // console.log('PREV', prevProps);
-        // console.log('pr', this.props);
+        console.log(this.props);
+
         if (prevCity !== city) {
             this.onCityChange(city);
         }
+
         if (prevRegion !== region) {
             this.setPostCode();
         }
@@ -83,6 +83,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
     getPostCodeValue() {
         const { postCodeValue } = this.state;
         const { address: { region: { region } = {} } } = this.props;
+
         if (postCodeValue == null) {
             return region;
         }
@@ -93,22 +94,20 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
     onFormSuccess = (fields) => {
         const { onSave } = this.props;
         const { region_id, region_string: region, ...newAddress } = fields;
+
         newAddress.region = { region_id, region };
         onSave(newAddress);
     };
 
     getRegionFields() {
-        const { newForm } = this.props;
-        const { address: { region: { region } = {} } } = this.props;
-        const { address: { city } } = this.props;
-        // const { availableRegions, regionId } = this.state;
+        const { newForm, address: { city, region: { region } = {} } } = this.props;
         const { availableAreas, cities } = this.state;
         const clearValue = newForm ? { value: '' } : null;
 
         if (cities.length && city && !availableAreas.length) {
-            console.log('1');
             this.setArea(city);
         }
+
         if (!availableAreas.length) {
             return {
                 region_string: {
@@ -136,17 +135,15 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
 
     async getCitiesData() {
         const { cities } = this.state;
-        // const { address: { city } } = this.props;
-        // console.log('props', city);
+        const { default_country } = this.props;
+
+        const url = CITIES_DATA_URLS[default_country];
+
         if (cities.length === 0) {
-            const test = await fetch('https://mobileapi.6thstreet.com/v2/cities?locale=en-ae');
+            const test = await fetch(url);
             const json = await test.json();
             const { data } = json;
             this.setState({ cities: data });
-            // if (city) {
-            //     console.log('WEEEEEEEEEEEEEE');
-            //     this.setArea(city);
-            // }
         }
     }
 
@@ -164,6 +161,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
     setArea = (cityFromProps) => {
         const { cities } = this.state;
         const trueCity = cities.find(({ city }) => cityFromProps === city);
+
         if (trueCity) {
             const { areas } = trueCity;
 
@@ -176,6 +174,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
     onCityChange = (selectedCity) => {
         const { cities } = this.state;
         const trueCity = cities.find(({ city }) => selectedCity === city);
+
         if (trueCity) {
             const { areas } = trueCity;
 
