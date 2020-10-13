@@ -9,6 +9,6 @@ export const getConfig = () => {
     return indexConfig(CDN.get(`${directory}/${configFile}`));
 };
 
-export const getCities = () => MobileAPI.get(
-    '/cities',
+export const getCities = (locale) => MobileAPI.get(
+    `/cities?locale=${locale}`,
 ) || {};

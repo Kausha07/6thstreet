@@ -13,9 +13,9 @@ export class AppConfigDispatcher {
     }
 
     /* eslint-disable-next-line */
-    async getCities(dispatch) {
+    async getCities(dispatch, locale) {
         try {
-            return await getCities();
+            return await getCities(locale);
         } catch (e) {
             Logger.log(e);
         }

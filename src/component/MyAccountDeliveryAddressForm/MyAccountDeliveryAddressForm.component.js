@@ -135,15 +135,16 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
 
     async getCitiesData() {
         const { cities } = this.state;
-        const { default_country } = this.props;
-
-        const url = CITIES_DATA_URLS[default_country];
+        const { default_country, getCities } = this.props;
 
         if (cities.length === 0) {
-            const test = await fetch(url);
-            const json = await test.json();
-            const { data } = json;
-            this.setState({ cities: data });
+            getCities(CITIES_DATA_URLS[default_country]).then(
+                ({ data }) => {
+                    if (data) {
+                        this.setState({ cities: data });
+                    }
+                }
+            );
         }
     }
 
