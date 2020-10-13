@@ -72,12 +72,10 @@ export class MyAccountAddressFieldForm extends PureComponent {
             default_common
         } = this.fieldMap;
 
-        const { newForm, getCities } = this.props;
+        this.getCitiesData();
 
-        getCities();
-
+        const { newForm } = this.props;
         const fromTitle = newForm ? __('New Address') : __('Edit Address');
-
         const region = region_id === undefined ? region_string : region_id;
 
         return (

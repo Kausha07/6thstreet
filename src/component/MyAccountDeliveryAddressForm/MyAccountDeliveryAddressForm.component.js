@@ -32,7 +32,6 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         super(props);
 
         const {
-            cities,
             countries,
             default_country,
             address: { city = null, country_id, region: { region_id } = {} }
@@ -43,7 +42,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         const { available_regions: availableRegions } = country || {};
         const regions = availableRegions || [{}];
         const regionId = region_id || regions[0].id;
-        console.log(props);
+        // console.log(props);
 
         this.state = {
             countryId,
@@ -52,7 +51,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
             availableRegions,
             area: null,
             regionId,
-            cities,
+            cities: [],
             postCodeValue: null
         };
     }
@@ -133,14 +132,14 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         };
     }
 
-    // async testFunct() {
-    //     const { cities } = this.state;
-    //     if (cities.length === 0) {
-    //         const test = await fetch('https://mobileapi.6thstreet.com/v2/cities?locale=en-ae');
-    //         const json = await test.json();
-    //         this.setState({ cities: json.data });
-    //     }
-    // }
+    async getCitiesData() {
+        const { cities } = this.state;
+        if (cities.length === 0) {
+            const test = await fetch('https://mobileapi.6thstreet.com/v2/cities?locale=en-ae');
+            const json = await test.json();
+            this.setState({ cities: json.data });
+        }
+    }
 
     // onCountryChange = (countryId) => {
     //     const { countries } = this.props;
