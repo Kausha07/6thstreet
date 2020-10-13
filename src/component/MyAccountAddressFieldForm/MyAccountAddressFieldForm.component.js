@@ -51,9 +51,9 @@ export class MyAccountAddressFieldForm extends PureComponent {
     );
 
     renderCurrentPhoneCode() {
-        const { country_id } = this.fieldMap;
+        const { default_country } = this.props;
 
-        return PHONE_CODES[country_id.value];
+        return PHONE_CODES[default_country];
     }
 
     renderFields() {
@@ -74,7 +74,7 @@ export class MyAccountAddressFieldForm extends PureComponent {
 
         this.getCitiesData();
 
-        const { newForm } = this.props;
+        const { newForm, default_country } = this.props;
         const fromTitle = newForm ? __('New Address') : __('Edit Address');
         const region = region_id === undefined ? region_string : region_id;
 
@@ -134,7 +134,7 @@ export class MyAccountAddressFieldForm extends PureComponent {
                       block="MyAccountAddressFieldForm"
                       elem="PhoneCode"
                     >
-                        <CountryMiniFlag label={ country_id.value } />
+                        <CountryMiniFlag label={ default_country } />
                         { this.renderCurrentPhoneCode() }
                     </div>
                 </div>

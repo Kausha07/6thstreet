@@ -57,17 +57,15 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
     }
 
     componentDidUpdate(prevProps, _) {
-        const { address: { region: { region: prevRegion } = {} } } = prevProps;
+        const { address: { city: prevCity, region: { region: prevRegion } = {} } } = prevProps;
         // const { address: { city }, address: { region: { region } = {} } } = this.props;
         // const { cities, city: cityFromState } = this.state;
-        const { address: { region: { region } = {} } } = this.props;
-        // console.log('cityFromState', cityFromState);
-        // console.log('cities', cities);
-        // console.log('city', city);
-        // if (city && cities && cityFromState) {
-        //     this.onCityChange(city);
-        // }
-
+        const { address: { city, region: { region } = {} } } = this.props;
+        // console.log('PREV', prevProps);
+        // console.log('pr', this.props);
+        if (prevCity !== city) {
+            this.onCityChange(city);
+        }
         if (prevRegion !== region) {
             this.setPostCode();
         }
@@ -107,13 +105,11 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         const { availableAreas, cities } = this.state;
         const clearValue = newForm ? { value: '' } : null;
 
-        if (cities.length && city) {
+        if (cities.length && city && !availableAreas.length) {
             console.log('1');
             this.setArea(city);
         }
         if (!availableAreas.length) {
-            console.log('2');
-
             return {
                 region_string: {
                     validation: ['notEmpty'],
@@ -124,7 +120,6 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
                 }
             };
         }
-        console.log('3');
 
         return {
             region_id: {
@@ -181,12 +176,14 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
     onCityChange = (selectedCity) => {
         const { cities } = this.state;
         const trueCity = cities.find(({ city }) => selectedCity === city);
-        const { areas } = trueCity;
+        if (trueCity) {
+            const { areas } = trueCity;
 
-        this.setState({
-            city: trueCity,
-            availableAreas: areas || []
-        });
+            this.setState({
+                city: trueCity,
+                availableAreas: areas || []
+            });
+        }
     };
 
     closeField = (e) => {
@@ -213,10 +210,6 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         const { street = [] } = address;
 
         const clearValue = newForm ? { value: '' } : null;
-
-        // console.log(countries);
-        // console.log(cities);
-        // const testCities = [{ id: 't1', label: 'l1' }];
 
         return {
             default_billing: {
@@ -256,7 +249,6 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
                 validation: ['notEmpty'],
                 value: countryId,
                 selectOptions: countries.map(({ id, label }) => ({ id, label, value: id }))
-                // onChange: this.onCountryChange
             },
             ...this.getRegionFields(),
             postcode: {
