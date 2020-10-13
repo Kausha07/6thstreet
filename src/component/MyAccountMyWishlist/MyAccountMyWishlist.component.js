@@ -23,7 +23,11 @@ class MyAccountMyWishlist extends PureComponent {
     }
 
     renderNoItems() {
-        return 'You have no items in your wish list.';
+        return (
+            <p>
+                { __('You have no items in your wish list.') }
+            </p>
+        );
     }
 
     renderButtons(product) {
