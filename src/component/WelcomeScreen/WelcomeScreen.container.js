@@ -3,6 +3,7 @@ import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import { setCountry, setLanguage } from 'Store/AppState/AppState.action';
+import StoreCreditDispatcher from 'Store/StoreCredit/StoreCredit.dispatcher';
 import { getCountriesForSelect, getCountryLocaleForSelect } from 'Util/API/endpoint/Config/Config.format';
 import { Config } from 'Util/API/endpoint/Config/Config.type';
 
@@ -16,13 +17,15 @@ export const mapStateToProps = (state) => ({
 
 export const mapDispatchToProps = (dispatch) => ({
     setCountry: (value) => dispatch(setCountry(value)),
-    setLanguage: (value) => dispatch(setLanguage(value))
+    setLanguage: (value) => dispatch(setLanguage(value)),
+    updateStoreCredits: () => StoreCreditDispatcher.getStoreCredit(dispatch)
 });
 
 class WelcomeScreenContainer extends PureComponent {
     static propTypes = {
         setLanguage: PropTypes.func.isRequired,
         setCountry: PropTypes.func.isRequired,
+        updateStoreCredits: PropTypes.func.isRequired,
         config: Config.isRequired,
         language: PropTypes.string.isRequired,
         country: PropTypes.string.isRequired
@@ -34,8 +37,10 @@ class WelcomeScreenContainer extends PureComponent {
     };
 
     onCountrySelect(value) {
-        const { setCountry } = this.props;
+        const { setCountry, updateStoreCredits } = this.props;
+
         setCountry(value);
+        updateStoreCredits();
     }
 
     onLanguageSelect(value) {
