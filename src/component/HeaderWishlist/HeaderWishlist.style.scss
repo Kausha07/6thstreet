@@ -3,7 +3,7 @@
         margin-left: auto;
 
         span {
-            width: 27px;
+            display: inline-block;
 
             &::before {
                 background: url(./icons/heart-regular.svg) no-repeat;
@@ -14,7 +14,7 @@
                 display: inline-block;
                 position: absolute;
                 left: -30px;
-                top: -17px;
+                top: -22px;
             }
         }
 

@@ -38,10 +38,10 @@ class MyAccountMyWishlist extends PureComponent {
         return (
             <div block="MyAccountMyWishlist" elem="Buttons">
                 <Link to={ linkTo }>
-                    Details
+                    { __('Details') }
                 </Link>
                 <Link to={ linkTo }>
-                    Add to bag
+                    { __('Add to bag') }
                 </Link>
             </div>
         );
