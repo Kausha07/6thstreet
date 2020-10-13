@@ -5,9 +5,9 @@ function getProduct(id, highlights, options) {
     const { index } = options;
 
     return new Promise((resolve, reject) => {
-        if (!index || !id) {
-            return reject('No index or id provided');
-        }
+        // if (!index || !id) {
+        //     return reject('No index or id provided');
+        // }
 
         // const newSearchParams = Object.assign({}, searchParams);
         // newSearchParams.hitsPerPage = 1;

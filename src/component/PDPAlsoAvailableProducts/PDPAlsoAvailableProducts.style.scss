@@ -1,0 +1,25 @@
+.PDPAlsoAvailableProducts {
+    margin-top: 25px;
+
+    li {
+        padding: 0;
+    
+        &:before {
+            content: none;
+        }
+    }
+
+    &-List {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    &-Title {
+        font-size: 15px;
+
+        @include desktop {
+            font-size: 17px;
+            font-weight: 600;
+        }
+    }
+}

@@ -2,6 +2,7 @@
 import { PureComponent } from 'react';
 
 import PDPAddToCart from 'Component/PDPAddToCart/PDPAddToCart.container';
+import PDPAlsoAvailableProducts from 'Component/PDPAlsoAvailableProducts';
 import Price from 'Component/Price';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
 import { isArabic } from 'Util/App';
@@ -114,7 +115,18 @@ class PDPSummary extends PureComponent {
     }
 
     renderAvailableItemsSection() {
-        // data unavailable at this moment
+        const { product } = this.props;
+        const alsoAvailable = product['6s_also_available'];
+
+        if (alsoAvailable) {
+            if (alsoAvailable.length > 0) {
+                const productArr = ['622441', '622438'];
+                return (
+                    <PDPAlsoAvailableProducts productsAvailable={ productArr } />
+                );
+            }
+        }
+
         return null;
     }
 
