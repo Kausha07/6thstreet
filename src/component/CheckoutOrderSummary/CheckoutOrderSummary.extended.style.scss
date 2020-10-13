@@ -1,0 +1,6 @@
+.CheckoutOrderSummary {
+    
+    @include before-desktop {
+        display: none;
+    }
+}

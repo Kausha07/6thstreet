@@ -2,12 +2,15 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import HeaderBottomBar from 'Component/HeaderBottomBar';
+import HeaderLogo from 'Component/HeaderLogo';
 import HeaderMainSection from 'Component/HeaderMainSection';
 import HeaderTopBar from 'Component/HeaderTopBar';
 import MobileBottomBar from 'Component/MobileBottomBar';
 import MobileMenuSidebar from 'Component/MobileMenuSideBar/MobileMenuSidebar.component';
 import { MOBILE_MENU_SIDEBAR_ID } from 'Component/MobileMenuSideBar/MoblieMenuSideBar.config';
 import OfflineNotice from 'Component/OfflineNotice';
+import { isArabic } from 'Util/App';
+import isMobile from 'Util/Mobile';
 
 import './Header.style';
 
@@ -16,6 +19,10 @@ export class Header extends PureComponent {
         navigationState: PropTypes.shape({
             name: PropTypes.string
         }).isRequired
+    };
+
+    state = {
+        isArabic: isArabic()
     };
 
     headerSections = [
@@ -36,12 +43,84 @@ export class Header extends PureComponent {
         );
     };
 
+    renderBackToShoppingButton() {
+        const { isArabic } = this.state;
+
+        if (isMobile.any() || isMobile.tablet()) {
+            return (
+                <a href="/">
+                <div
+                  block="CheckoutHeader"
+                  elem="BackToShopping"
+                >
+                    <button block="BackMobileButton">
+                        { ' ' }
+                    </button>
+                </div>
+                </a>
+            );
+        }
+
+        return (
+            <a href="/">
+                <div
+                  block="CheckoutHeader"
+                  elem="BackToShopping"
+                  mods={ { isArabic } }
+                >
+                    <button
+                      block="button secondary medium"
+                    >
+                        { __('Back to shopping') }
+                    </button>
+                </div>
+            </a>
+        );
+    }
+
+    renderSecureShippingLabel() {
+        const { isArabic } = this.state;
+
+        return (
+            <div
+              block="CheckoutHeader"
+              elem="SecureShipping"
+              mods={ { isArabic } }
+            >
+                <span
+                  block="CheckoutHeader"
+                  elem="SecureShippingLabel"
+                >
+                    { __('Secure checkout') }
+                </span>
+            </div>
+        );
+    }
+
+    renderCheckoutHeder() {
+        if (isMobile.any() || isMobile.tablet()) {
+            return this.renderBackToShoppingButton();
+        }
+
+        return (
+            <div block="CheckoutHeader">
+                { this.renderBackToShoppingButton() }
+                <HeaderLogo
+                  key="logo"
+                />
+                { this.renderSecureShippingLabel() }
+            </div>
+        );
+    }
+
     render() {
         const { navigationState: { name } } = this.props;
         return (
             <>
                 <header block="Header" mods={ { name } }>
-                    { this.headerSections.map(this.renderSection) }
+                    { location.pathname.match(/checkout/)
+                        ? this.renderCheckoutHeder()
+                        : this.headerSections.map(this.renderSection) }
                     <MobileMenuSidebar activeOverlay={ MOBILE_MENU_SIDEBAR_ID } />
                 </header>
                 <OfflineNotice />
