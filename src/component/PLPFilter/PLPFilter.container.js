@@ -45,7 +45,6 @@ class PLPFilterContainer extends PureComponent {
 
     onSelect() {
         const {
-            // setPLPFilter,
             filter: { category },
             parentCallback
         } = this.props;

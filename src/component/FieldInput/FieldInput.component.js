@@ -33,12 +33,6 @@ export class FieldInput extends SourceFieldInput {
             ...validProps
         } = this.props;
 
-        // if (this.fieldRef.current) {
-        //     if (this.fieldRef.current.checked) {
-        //         console.log('Im checked', formRef);
-        //     }
-        // }
-
         return (
             <input
               ref={ formRef }

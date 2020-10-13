@@ -11,6 +11,7 @@
     --color-gray: #808080;
     --color-light-grey: #d3d3d3;
     --color-medium-grey: #b5b5b5;
+    --reset-button-color: #cc0000;
 }
 
 .FilterPopup {
@@ -18,7 +19,7 @@
     width: 100%;
 
     &-Reset {
-        color:#cc0000;
+        color:var(--reset-button-color);
         font-weight:bold;
         text-transform: capitalize;
     

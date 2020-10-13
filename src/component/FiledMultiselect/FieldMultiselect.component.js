@@ -33,7 +33,6 @@ class FieldMultiselect extends PureComponent {
             toggleOptionsList: false,
             isArabic: isArabic(),
             subcategoryOptions: {}
-            // isExpanded: false
         };
         this.toggelOptionList = this.toggelOptionList.bind(this);
     }

@@ -24,6 +24,10 @@ export class Footer extends PureComponent {
             return <CmsBlock identifier={ footer_cms } />;
         }
 
+        if (location.pathname.match(/checkout/)) {
+            return <FooterMiddle />;
+        }
+
         return (
             <>
                 <FooterMain />

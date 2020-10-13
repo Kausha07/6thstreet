@@ -1,6 +1,7 @@
 :root {
     --filter-product-count-color: #666;
     --disabeled-radio-button-color:  #b8b8b8;
+    --check-mark-mobile-filter-color: #f96446;
 }
 
 .PLPFilterOption {
@@ -163,7 +164,7 @@
                         --primary-base-color: transparent;
     
                         &::after {
-                            --checkmark-color: #F96446;
+                            --checkmark-color: var(--check-mark-mobile-filter-color);
                         }
                     }
                 }

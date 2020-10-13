@@ -11,17 +11,21 @@
 
     &-Icon {
         position: absolute;
-        width: 2rem;
-        height: 2rem;
-        left: 7px;
-        top: 10px;
-        background-image: url(./icons/heart.svg);
-        background-size: 2rem;
+        width: 2.4rem;
+        height: 2.4rem;
+        left: 5px;
+        top: 7px;
+        background-image: url(./icons/heart.png);
+        background-size: 2.4rem;
         background-repeat: no-repeat;
 
+        &_black {
+            background-image: url(./icons/hear-black.png);
+        }
+
         @include desktop() {
-            left: 6px;
-            top: 9px;
+            left: 4px;
+            top: 5px;
         }
 
         &:hover {
@@ -39,4 +43,16 @@
             right: 2.8rem;
         }
      }
+}
+
+.PageWrapper {
+    &_isArabic {
+        .PDPGallery {
+            .WishlistIcon {
+                @include desktop() {
+                    right: 9.8rem;
+                }
+             }
+        }
+    }
 }

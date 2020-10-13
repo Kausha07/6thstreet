@@ -18,8 +18,10 @@ import Image from 'Component/Image';
 import Link from 'Component/Link';
 import Loader from 'Component/Loader';
 import { CartItemType } from 'Type/MiniCart';
+import { isArabic } from 'Util/App';
 
 import './CartItem.style';
+import './CartItem.extended.style';
 
 /**
  * Cart and CartOverlay item
@@ -51,6 +53,10 @@ export class CartItem extends PureComponent {
     static defaultProps = {
         isEditing: false,
         isLikeTable: false
+    };
+
+    state = {
+        isArabic: isArabic()
     };
 
     renderProductConfigurationOption = ([key, attribute]) => {
@@ -215,10 +221,15 @@ export class CartItem extends PureComponent {
 
     renderBrandName() {
         const { brand_name } = this.props;
+        const {
+            isArabic
+        } = this.state;
+
         return (
             <p
               block="CartItem"
               elem="Heading"
+              mods={ { isArabic } }
             >
                 { brand_name }
             </p>
@@ -269,7 +280,9 @@ export class CartItem extends PureComponent {
     }
 
     renderColSizeQty() {
-        const { item: { color, optionValue, qty } } = this.props;
+        const color = 'Yellow';
+        const optionValue = 'XL';
+        const { item: { qty } } = this.props;
 
         if (optionValue) {
             return (
@@ -278,7 +291,7 @@ export class CartItem extends PureComponent {
                   elem="ColSizeQty"
                 >
                     { color }
-                    <span>| Size </span>
+                    <span>| Size:    </span>
                     { optionValue }
                     <span>| Qty: </span>
                     { qty }
