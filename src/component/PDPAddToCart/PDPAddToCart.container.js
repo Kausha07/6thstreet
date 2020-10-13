@@ -43,7 +43,6 @@ export class PDPAddToCartContainer extends PureComponent {
         sizeObject: {},
         selectedSizeType: 'eu',
         selectedSizeCode: '',
-        errorMessage: '',
         insertedSizeStatus: true,
         isLoading: false,
         addedToCart: false,
@@ -56,7 +55,7 @@ export class PDPAddToCartContainer extends PureComponent {
         if (product.simple_products !== undefined) {
             const filteredProductKeys = Object.keys(product.simple_products);
 
-            if (filteredProductKeys.length <= 1) {
+            if (filteredProductKeys.length < 1) {
                 return { insertedSizeStatus: false };
             }
 
@@ -83,7 +82,6 @@ export class PDPAddToCartContainer extends PureComponent {
     }
 
     onSizeSelect(size) {
-        this.setState({ errorMessage: '' });
         this.setState({ selectedSizeCode: size.target.value });
     }
 
@@ -134,17 +132,31 @@ export class PDPAddToCartContainer extends PureComponent {
                 () => this.afterAddToCart()
             );
         }
+
+        if (insertedSizeStatus === false) {
+            this.setState({ isLoading: true });
+            const code = Object.keys(simple_products);
+
+            addProductToCart({
+                sku: code[0],
+                qty: 1,
+                optionId: '',
+                optionValue: ''
+            }).then(
+                () => this.afterAddToCart()
+            );
+        }
     }
 
     afterAddToCart() {
+        // eslint-disable-next-line no-unused-vars
         const { buttonRefreshTimeout } = this.state;
 
         this.setState({ isLoading: false });
         // TODO props for addedToCart
+        const timeout = 1250;
         this.setState({ addedToCart: true });
-        const timer = setTimeout(
-            () => this.setState({ addedToCart: false }), buttonRefreshTimeout
-        );
+        const timer = setTimeout(() => this.setState({ addedToCart: false }), timeout);
 
         return () => clearTimeout(timer);
     }

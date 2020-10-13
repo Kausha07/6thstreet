@@ -11,6 +11,10 @@
         content: none;
     }
 
+    &:nth-child(n+8) {
+        display: none;
+    }
+
     @include before-desktop {
         color: var(--black);
         font-family: "Avenir Next Thin", serif;

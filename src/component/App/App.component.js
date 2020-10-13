@@ -8,6 +8,7 @@ import AppState from 'Store/AppState/AppState.reducer';
 import Cart from 'Store/Cart/Cart.reducer';
 import PDP from 'Store/PDP/PDP.reducer';
 import PLP from 'Store/PLP/PLP.reducer';
+import SearchSuggestions from 'Store/SearchSuggestions/SearchSuggestions.reducer';
 
 class App extends SourceApp {
     rootComponents = [
@@ -22,6 +23,7 @@ class App extends SourceApp {
         store.injectReducer('Cart', Cart);
         store.injectReducer('PLP', PLP);
         store.injectReducer('PDP', PDP);
+        store.injectReducer('SearchSuggestions', SearchSuggestions);
 
         return store;
     }

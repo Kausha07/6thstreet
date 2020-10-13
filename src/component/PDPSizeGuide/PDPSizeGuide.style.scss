@@ -112,6 +112,7 @@
         font-family: 'Avenir Next Regular';
         line-height: 30px;
         text-decoration: underline;
+        font-size: 13px;
     }
 
     &-Modal {
@@ -160,11 +161,23 @@
             top: 10%;
             width: 100%;
             padding-right: 6%;
-            overflow-y: scroll;
+            overflow-y: auto;
 
             &_isArabic {
                 padding-right: 0px;
                 padding-left: 6%;
+
+                .ExpandableContent {
+                    width: 100%;
+                
+                    &-Button {
+                        &:after {
+                            right: unset;
+                            left: 0;
+                            margin: 0;
+                        }
+                    }
+                }
             }
 
             &::-webkit-scrollbar {
@@ -257,6 +270,34 @@
                             .SizeTable {
                                 display: block;
                             }
+                        }
+                    }
+                }
+
+                &_isArabic {
+                    padding-right: 0px;
+                    padding-left: 6%;
+    
+                    .ExpandableContent {
+                        width: 100%;
+                    
+                        &-Button {
+                            &:after {
+                                right: unset;
+                                left: 0;
+                                margin: 0;
+                                transform: rotate(135deg);
+                            }
+
+                            &_isContentExpanded{
+                                &:after{
+                                    transform: rotate(-135deg);
+                                }
+                            }
+                        }
+
+                        &-Heading {
+                            float: right;
                         }
                     }
                 }
