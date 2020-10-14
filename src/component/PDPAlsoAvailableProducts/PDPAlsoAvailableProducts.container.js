@@ -1,17 +1,10 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
-import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import Algolia from 'Util/API/provider/Algolia';
 
 import PDPAlsoAvailableProducts from './PDPAlsoAvailableProducts.component';
-
-export const mapStateToProps = (_state) => ({
-});
-
-export const mapDispatchToProps = (_dispatch) => ({
-});
 
 export class PDPAlsoAvailableProductsContainer extends PureComponent {
     static propTypes = {
@@ -23,10 +16,6 @@ export class PDPAlsoAvailableProductsContainer extends PureComponent {
     state = {
         products: [],
         isAlsoAvailable: true
-    };
-
-    containerFunctions = {
-        // getData: this.getData.bind(this)
     };
 
     componentDidMount() {
@@ -58,23 +47,18 @@ export class PDPAlsoAvailableProductsContainer extends PureComponent {
         });
     }
 
-    async getAvailableProduct(productID) {
-        const product = await Algolia.getPDP({ id: productID });
+    async getAvailableProduct(sku) {
+        const product = await new Algolia().getProductBySku({ sku });
         return product;
     }
-
-    containerProps = () => {
-    };
 
     render() {
         return (
             <PDPAlsoAvailableProducts
               { ...this.state }
-              { ...this.containerFunctions }
-              { ...this.containerProps() }
             />
         );
     }
 }
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PDPAlsoAvailableProductsContainer));
+export default withRouter(PDPAlsoAvailableProductsContainer);

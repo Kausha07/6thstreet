@@ -72,8 +72,14 @@
             height: auto;
         }
     }
+}
 
-    &-OverlayButton {
-        height: fit-content !important;
+.PDP {
+    .PDPMainSection {
+        .PDPGallery {
+            &-OverlayButton {
+                height: fit-content;
+            }
+        }
     }
 }

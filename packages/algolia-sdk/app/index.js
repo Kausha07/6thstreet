@@ -7,4 +7,13 @@ import getPopularBrands from './get-popular-brands';
 import getBrands from './get-brands';
 import getProductBySku from './get-product-by-sku';
 
-export { init, getPLP, getPDP, searchBy, getPopularBrands, getBrands, getProductBySku, getSuggestions };
+export {
+    init,
+    getPLP,
+    getPDP,
+    searchBy,
+    getPopularBrands,
+    getBrands,
+    getProductBySku,
+    getSuggestions
+};

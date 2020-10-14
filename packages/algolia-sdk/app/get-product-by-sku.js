@@ -1,22 +1,13 @@
 import { formatResult, formatNewInTag } from './utils';
 import { searchParams } from './config';
 
-function getProduct(id, highlights, options) {
+function getAvailableProduct(sku, highlights, options) {
     const { index } = options;
 
     return new Promise((resolve, reject) => {
-        // if (!index || !id) {
-        //     return reject('No index or id provided');
-        // }
-
-        // const newSearchParams = Object.assign({}, searchParams);
-        // newSearchParams.hitsPerPage = 1;
-        // newSearchParams.attributesToHighlight = highlights;
-        // newSearchParams.attributesToRetrieve = '*';
-
         index.search(
             '',
-            { filters: `sku:${id}` },
+            { filters: `sku:${sku}` },
             (error, data) => {
                 if (error) {
                     return reject(error);
@@ -79,11 +70,12 @@ function getProductVariants(skuList = [], highlights, options) {
 }
 
 export default async function getProductBySku(
-    { id = '', highlights = '*' },
+    { sku = '', highlights = '*' },
     options = {}
 ) {
-    const product = await getProduct(id, highlights, options);
-    const { sku } = product;
+    console.log(sku);
+
+    const product = await getAvailableProduct(sku, highlights, options);
 
     let variantSKUs =
         product.data && product.data['6s_also_available']

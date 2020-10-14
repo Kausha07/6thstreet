@@ -66,16 +66,13 @@ export class Algolia {
 
     async getProductBySku(params = {}) {
         const {
-            id = '',
+            sku = '',
             highlights = PRODUCT_HIGHLIGHTS
         } = params;
 
         // TODO: add validation
-        return AlgoliaSDK.getProductBySku({ id, highlights });
+        return AlgoliaSDK.getProductBySku({ sku, highlights });
     }
-    // getSuggestions(params) {
-    //     return AlgoliaSDK.getSuggestions(params);
-    // }
 
     searchBy(params) {
         return AlgoliaSDK.searchBy(params);
