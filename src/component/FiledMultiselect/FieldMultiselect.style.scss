@@ -1,22 +1,82 @@
 :root {
-  --field-multiselect-border:  #ddd;
+    --field-multiselect-border:  #ddd;
+}
+
+.FieldMultiselect-OptionListContainer {
+    .FieldMultiselect-MobileOptionList {
+        .PLPFilterOption {
+            width: 100%;
+            &-Input {
+              z-index: 0;
+            }
+        }
+        li {
+            width: 79%;
+            margin: 0 7% 0 14%;
+        }
+
+        &_isArabic{
+            li {
+              margin: 0 14% 0 7%;
+            }
+        }
+    }
 }
 
 .FieldMultiselect {
-    &-FilterButton {
-        display: inline-block;
-        height: 42px;
-        line-height: 42px;
-        width: 200px;
-        border: solid 1px var(--field-multiselect-border);
-        position: relative;
-        margin: 10px;
-        color: var(--black-color);
-        font-size: 13px;
-        letter-spacing: 0.5px;
-        line-height: 18px;
-        font-weight: 200;
+    &-MobileOptionButton {
+        padding: 0;
+        width: 86%;
+        margin: 0 7%;
         text-align: left;
+        font-size: 13px;
+        vertical-align: baseline;
+        padding: 0;
+        font-weight: normal;
+        text-transform: none;
+        border-bottom: solid 1px var(--field-multiselect-border);
+
+      &_isArabic {
+          text-align: right;
+
+          &::before {
+              right: unset;
+              left: 0;
+          }
+      }
+
+      &::before {
+          position: absolute;
+          content: "";
+          right: 0;
+          background: url(./icons/minus@2x.png) no-repeat;
+          background-size: 20px;
+          width: 20px;
+          height: 20px;
+          display: inline-block;
+          font-size: 0;
+      }
+
+      &_isClosed {
+          &::before {
+            background: url(./icons/plus@2x.png) no-repeat;
+            background-size: 20px;
+          }
+      }
+    }
+
+    &-FilterButton {
+          display: inline-block;
+          height: 42px;
+          line-height: 42px;
+          width: 200px;
+          border: solid 1px var(--field-multiselect-border);
+          position: relative;
+          margin: 10px;
+          font-size: 13px;
+          letter-spacing: 0.5px;
+          line-height: 18px;
+          text-align: left;
 
         &:after {
             position: absolute;
@@ -55,6 +115,30 @@
                 left: 10px;
             }
         }
+
+        @include before-desktop {
+            display: inline-block;
+            height: 40px;
+            line-height: 42px;
+            width: 100%;
+            border: none;
+            position: relative;
+            margin: 0;
+            font-size: 12px;
+            letter-spacing: 1px;
+            font-weight: normal;
+            text-align: left;
+
+            &:after {
+                content: none;
+            }
+
+            &_toggleOptionsList {
+                background: var(--black-color);
+                color: var(--white-color);
+                font-weight: 600;
+            }
+        }
     }
 
     &-OptionListContainer {
@@ -87,7 +171,11 @@
                 content: none;
             }
             padding: 0;
-      }
+
+            @include before-desktop {
+              width: 86%;
+            }
+          }
 
       &::-webkit-scrollbar {
           background-color: var(--scrollbar-color);
@@ -97,8 +185,25 @@
       &::-webkit-scrollbar-thumb {
           background-color: var(--scrollbar-thumb-color);
       }
-    }
 
+      @include before-desktop {
+          position: fixed;
+          top: 50px;
+          right: 0;
+          left: unset;
+          width: 65%;
+
+          &_isArabic {
+              left: 0;
+              right: unset;
+          }
+
+          &_toggleOptionsList {
+              border: none;
+              max-height: calc(100% - 130px);
+          }
+      }
+    }
 
     ul {
         list-style-type: none;
