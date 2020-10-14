@@ -12,12 +12,13 @@
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
+import { withRouter } from 'react-router';
 
 import Field from 'Component/Field';
 import Image from 'Component/Image';
-import Link from 'Component/Link';
 import Loader from 'Component/Loader';
 import { CartItemType } from 'Type/MiniCart';
+import { isArabic } from 'Util/App';
 
 import './CartItem.style';
 
@@ -33,19 +34,21 @@ export class CartItem extends PureComponent {
         brand_name: PropTypes.string.isRequired,
         isEditing: PropTypes.bool,
         isLikeTable: PropTypes.bool,
+        history: PropTypes.object.isRequired,
         handleRemoveItem: PropTypes.func.isRequired,
         minSaleQuantity: PropTypes.number.isRequired,
         maxSaleQuantity: PropTypes.number.isRequired,
         handleChangeQuantity: PropTypes.func.isRequired,
         getCurrentProduct: PropTypes.func.isRequired,
-        linkTo: PropTypes.oneOfType([
-            PropTypes.shape({
-                pathname: PropTypes.string,
-                search: PropTypes.string
-            }),
-            PropTypes.string
-        ]).isRequired,
-        thumbnail: PropTypes.string.isRequired
+        linkTo: PropTypes.string.isRequired,
+        thumbnail: PropTypes.string.isRequired,
+        hideActiveOverlay: PropTypes.func.isRequired,
+        hideLoaderAfterPromise: PropTypes.func.isRequired,
+        closePopup: PropTypes.func.isRequired
+    };
+
+    state = {
+        isArabic: isArabic()
     };
 
     static defaultProps = {
@@ -123,18 +126,34 @@ export class CartItem extends PureComponent {
         );
     }
 
-    renderWrapper() {
-        const { linkTo } = this.props;
+    routeToProduct = () => {
+        const {
+            history,
+            hideActiveOverlay,
+            closePopup,
+            item: {
+                product: {
+                    url
+                }
+            }
+        } = this.props;
+        const cropUrl = 28;
 
+        hideActiveOverlay();
+        closePopup();
+        history.push(url.substring(cropUrl));
+    };
+
+    renderWrapper() {
         // TODO: implement shared-transition here?
 
         return (
-            <Link to={ linkTo } block="CartItem" elem="Link">
+            <button onClick={ this.routeToProduct } block="CartItem" elem="Link">
                 <figure block="CartItem" elem="Wrapper">
                     { this.renderImage() }
                     { this.renderContent() }
                 </figure>
-            </Link>
+            </button>
         );
     }
 
@@ -202,11 +221,13 @@ export class CartItem extends PureComponent {
                 }
             }
         } = this.props;
+        const isArabic = this.state;
 
         return (
             <p
               block="CartItem"
               elem="Heading"
+              mods={ isArabic }
             >
                 { name }
             </p>
@@ -215,10 +236,13 @@ export class CartItem extends PureComponent {
 
     renderBrandName() {
         const { brand_name } = this.props;
+        const isArabic = this.state;
+
         return (
             <p
               block="CartItem"
               elem="Heading"
+              mods={ isArabic }
             >
                 { brand_name }
             </p>
@@ -270,12 +294,14 @@ export class CartItem extends PureComponent {
 
     renderColSizeQty() {
         const { item: { color, optionValue, qty } } = this.props;
+        const isArabic = this.state;
 
         if (optionValue) {
             return (
                 <div
                   block="CartItem"
                   elem="ColSizeQty"
+                  mods={ isArabic }
                 >
                     { color }
                     <span>| Size </span>
@@ -334,12 +360,13 @@ export class CartItem extends PureComponent {
             handleRemoveItem,
             handleChangeQuantity
         } = this.props;
+        const { isArabic } = this.state;
 
         return (
             <div
               block="CartItem"
               elem="Actions"
-              mods={ { isEditing, isLikeTable } }
+              mods={ { isEditing, isLikeTable, isArabic } }
             >
                 <button
                   block="CartItem"
@@ -368,6 +395,7 @@ export class CartItem extends PureComponent {
 
     renderImage() {
         const { item: { product: { name } }, thumbnail } = this.props;
+        const { isArabic } = this.state;
 
         return (
             <>
@@ -375,7 +403,8 @@ export class CartItem extends PureComponent {
                   src={ thumbnail }
                   mix={ {
                       block: 'CartItem',
-                      elem: 'Picture'
+                      elem: 'Picture',
+                      mods: { isArabic }
                   } }
                   ratio="custom"
                   alt={ `Product ${name} thumbnail.` }
@@ -402,4 +431,4 @@ export class CartItem extends PureComponent {
     }
 }
 
-export default CartItem;
+export default withRouter(CartItem);

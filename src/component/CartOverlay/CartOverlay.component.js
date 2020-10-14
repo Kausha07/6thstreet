@@ -18,6 +18,7 @@ import { CART_OVERLAY } from 'Component/Header/Header.config';
 import Link from 'Component/Link';
 import Overlay from 'SourceComponent/Overlay';
 import { TotalsType } from 'Type/MiniCart';
+import { isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
 
 import './CartOverlay.style';
@@ -25,10 +26,17 @@ import './CartOverlay.style';
 export class CartOverlay extends PureComponent {
     static propTypes = {
         totals: TotalsType.isRequired,
-        changeHeaderState: PropTypes.func.isRequired,
+        onVisible: PropTypes.func.isRequired,
         handleCheckoutClick: PropTypes.func.isRequired,
         showOverlay: PropTypes.func.isRequired,
-        closePopup: PropTypes.func.isRequired
+        hideActiveOverlay: PropTypes.func.isRequired,
+        closePopup: PropTypes.func.isRequired,
+        isHidden: PropTypes.bool.isRequired
+    };
+
+    state = {
+        isArabic: isArabic(),
+        isPopup: false
     };
 
     componentDidMount() {
@@ -44,7 +52,7 @@ export class CartOverlay extends PureComponent {
     }
 
     renderCartItems() {
-        const { totals: { items, quote_currency_code } } = this.props;
+        const { totals: { items, quote_currency_code }, closePopup } = this.props;
 
         if (!items || items.length < 1) {
             return this.renderNoCartItems();
@@ -59,6 +67,7 @@ export class CartOverlay extends PureComponent {
                       currency_code={ quote_currency_code }
                       brand_name={ item.brand_name }
                       isEditing
+                      closePopup={ closePopup }
                     />
                 )) }
             </ul>
@@ -75,6 +84,7 @@ export class CartOverlay extends PureComponent {
 
     renderTotals() {
         const { totals: { items, subtotal_incl_tax = 0 } } = this.props;
+        const isArabic = this.state;
 
         if (!items || items.length < 1) {
             return null;
@@ -84,6 +94,7 @@ export class CartOverlay extends PureComponent {
             <dl
               block="CartOverlay"
               elem="Total"
+              mods={ isArabic }
             >
                 <dt>
                     { __('Subtotal ') }
@@ -127,7 +138,6 @@ export class CartOverlay extends PureComponent {
                 <Link
                   block="CartOverlay"
                   elem="CartButton"
-                  mix={ { block: 'Button', mods: { isHollow: true } } }
                   to="/cart"
                 >
                     { __('View bag') }
@@ -135,7 +145,6 @@ export class CartOverlay extends PureComponent {
                 <button
                   block="CartOverlay"
                   elem="CheckoutButton"
-                  mix={ { block: 'Button' } }
                   onClick={ handleCheckoutClick }
                 >
                     { __('Checkout') }
@@ -166,26 +175,12 @@ export class CartOverlay extends PureComponent {
         );
     }
 
+    onCloseClick = () => {
+        this.setState({ isPopup: true });
+    };
+
     renderItemCount() {
-        const { totals: { items = {} } } = this.props;
-
-        return (
-            <div block="CartOverlay" elem="ItemCount">
-                <div>
-                    { __('My Bag') }
-                    <div>
-                        { items.length }
-                        { __(' item(s)') }
-                    </div>
-                </div>
-                { this.renderCloseBtn() }
-            </div>
-        );
-    }
-
-    renderCloseBtn() {
-        const { closePopup } = this.props;
-
+        const { hideActiveOverlay, closePopup, totals: { items = [] } } = this.props;
         const svg = (
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -202,20 +197,44 @@ export class CartOverlay extends PureComponent {
         );
 
         return (
-            <button onClick={ closePopup }>
-                { svg }
-            </button>
+            <div block="CartOverlay" elem="ItemCount">
+                <div>
+                    { __('My Bag') }
+                    <div>
+                        { items.length }
+                        { __(' item(s)') }
+                    </div>
+                </div>
+                <button onClick={ hideActiveOverlay && closePopup }>
+                    { svg }
+                </button>
+            </div>
         );
     }
 
     render() {
-        const { changeHeaderState } = this.props;
+        const {
+            onVisible,
+            isHidden,
+            hideActiveOverlay,
+            closePopup
+        } = this.props;
+        const { isArabic, isPopup } = this.state;
 
         return (
+            <>
+                <button
+                  block="HeaderCart"
+                  elem="PopUp"
+                  mods={ { isHidden } }
+                  onClick={ hideActiveOverlay && closePopup }
+                >
+                    closes popup
+                </button>
                 <Overlay
                   id={ CART_OVERLAY }
-                  onVisible={ changeHeaderState }
-                  mix={ { block: 'CartOverlay' } }
+                  onVisible={ onVisible }
+                  mix={ { block: 'CartOverlay', mods: { isArabic, isPopup } } }
                 >
                     { this.renderItemCount() }
                     { this.renderCartItems() }
@@ -224,6 +243,7 @@ export class CartOverlay extends PureComponent {
                     { this.renderActions() }
                     { this.renderPromo() }
                 </Overlay>
+            </>
         );
     }
 }

@@ -15,14 +15,15 @@ export const mapStateToProps = (state) => ({
 export const mapDispatchToProps = (dispatch) => ({
     showNotification: (type, message) => dispatch(showNotification(type, message)),
     addProductToCart:
-    (productData, color, optionValue, discount, brand_name, thumbnail_url) => CartDispatcher.addProductToCart(
+    (productData, color, optionValue, discount, brand_name, thumbnail_url, url) => CartDispatcher.addProductToCart(
         dispatch,
         productData,
         color,
         optionValue,
         discount,
         brand_name,
-        thumbnail_url
+        thumbnail_url,
+        url
     )
 });
 
@@ -91,6 +92,7 @@ export class PDPAddToCartContainer extends PureComponent {
                 simple_products,
                 discount,
                 thumbnail_url,
+                url,
                 color,
                 brand_name
             }, addProductToCart, showNotification
@@ -114,7 +116,7 @@ export class PDPAddToCartContainer extends PureComponent {
                 qty: 1,
                 optionId,
                 optionValue
-            }, color, optionValue, discount, brand_name, thumbnail_url).then(
+            }, color, optionValue, discount, brand_name, thumbnail_url, url).then(
                 () => this.afterAddToCart()
             );
         }
@@ -128,7 +130,7 @@ export class PDPAddToCartContainer extends PureComponent {
                 qty: 1,
                 optionId: '',
                 optionValue: ''
-            }, color, null, discount, brand_name, thumbnail_url).then(
+            }, color, null, discount, brand_name, thumbnail_url, url).then(
                 () => this.afterAddToCart()
             );
         }

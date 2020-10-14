@@ -27,53 +27,16 @@
 .CartOverlay {
     text-transform: initial;
 
-    &_isPopup {
-        opacity: 0;
-        overflow: hidden;
-    }
-
     @include after-mobile {
         position: absolute;
         top: 30px;
-        right: -13.5px;
+        right: 0px;
         padding: 0;
         width: var(--cart-overlay-width);
-    }
-    
-    &-ItemCount {
-        height: 50px;
-        background-color: var(--Tundora);
-        color: var(--White);
-        padding: 1rem 1rem .5rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        
-        div {
-            display: flex;
-            font-size: 15px;
 
-            div {
-                font-weight: lighter;
-                padding-left: 7px;
-            }          
-        }
-
-        span:last-of-type {
-            @include close-button;
-            --header-color: var(--White);
-            padding-right: 10px;
-            top: -18px;
-        }
-    }
-    
-    &-ItemCount, &-Promo, &-Total dt, &-Empty {
-        font-family: 'Avenir Next Regular';
-    }
-    
-    &_isVisible {
-        @include after-mobile {
-            border: 1px solid var(--overlay-desktop-border-color);
+        &_isArabic {
+            right: unset;
+            left: 0px;
         }
     }
 
@@ -95,15 +58,69 @@
         }
     }
 
-    &-Actions {
+    &_isArabic {
+        &::before {
+            @include after-mobile {
+                right: 327px;
+            }
+        }
+    }
+
+
+    &_isPopup {
+        opacity: 0;
+        overflow: hidden;
+    }
+    
+    &-ItemCount {
+        height: 50px;
+        background-color: var(--Tundora);
+        color: var(--White);
+        padding: 1rem 1rem .5rem;
         display: flex;
+        justify-content: space-between;
+        align-items: center;
+        
+        div {
+            display: flex;
+            font-size: 15px;
+            font-weight: 600;
+
+            div {
+                font-weight: lighter;
+                padding-left: 7px;
+                padding-right: 5px;
+            }          
+        }
+
+        span:last-of-type {
+            @include close-button;
+            --header-color: var(--White);
+            padding-right: 10px;
+            top: -18px;
+        }
+    }
+    
+    &-ItemCount, &-Promo, &-Total dt, &-Empty {
+        font-family: 'Avenir Next Regular';
+    }
+    
+    &_isVisible {
+        @include after-mobile {
+            border: 1px solid var(--overlay-desktop-border-color);
+        }
+    }
+
+    &-Actions {
+        display: grid;
+        grid-template-columns: 47.775% 47.775%;
+        grid-column-gap: 4.45%;
         padding: 1rem;
     }
 
     &-CheckoutButton {
-        margin-left: 1rem;
-        width: 50%;
         color: var(--White);
+        background-color: var(--OutrageousOrange);
         box-shadow: 0 1px 4px var(--BlackOpacityOf6);
 
         @include mobile {
@@ -120,12 +137,15 @@
 
     &-CartButton {
         border: 2px solid var(--Black);
-        color: var(--Black);
-        width: 50%;
+        color: var(--Black); 
 
         @include mobile {
             display: none;
         }
+    }
+
+    &-CartButton:hover {
+        text-decoration: none;
     }
 
     &-CheckoutButton, &-CartButton {
@@ -170,7 +190,8 @@
     }
 
     &-Items {
-        max-height: 320px;
+        padding-bottom: 20px;
+        max-height: 382px;
         overflow-y: scroll;
         overflow: auto;
     }
@@ -191,23 +212,34 @@
 
     &-Total {
         font-weight: lighter;
-        padding: .5rem 1rem 1rem;
+        padding: 1rem 1rem 1rem;
 
         dd {
             font-weight: bold;
             font-size: 15px;
         }
 
-        span {
-            color: var(--DustyGray);
+        dt {            
+            span {
+                color: var(--DustyGray); 
+            }
+        }
+
+        &_isArabic {
+            dt {
+                display: grid;
+                grid-template-columns: auto auto;
+                grid-column-gap: 10px;
+            }
         }
     }
 
     &-Empty {
         font-size: 15px;
         font-weight: lighter;
-        padding: 20px 0;
+        text-align: center;
         letter-spacing: .75px;
+        padding: 20px 0;
     }
 
     &-DiscountCoupon {

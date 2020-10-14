@@ -19,7 +19,7 @@ import { CHECKOUT_URL } from 'Route/Checkout/Checkout.config';
 import { changeNavigationState } from 'Store/Navigation/Navigation.action';
 import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
 import { showNotification } from 'Store/Notification/Notification.action';
-import { toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
+import { hideActiveOverlay, toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
 import { TotalsType } from 'Type/MiniCart';
 import { isSignedIn } from 'Util/Auth';
 import history from 'Util/History';
@@ -44,7 +44,8 @@ export const mapDispatchToProps = (dispatch) => ({
         ({ default: dispatcher }) => dispatcher.updateTotals(dispatch, options)
     ),
     showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
-    showNotification: (type, message) => dispatch(showNotification(type, message))
+    showNotification: (type, message) => dispatch(showNotification(type, message)),
+    hideActiveOverlay: () => dispatch(hideActiveOverlay())
 });
 
 export class CartOverlayContainer extends PureComponent {
@@ -56,7 +57,8 @@ export class CartOverlayContainer extends PureComponent {
         showNotification: PropTypes.func.isRequired,
         setNavigationState: PropTypes.func.isRequired,
         rednerNoCartPopUp: PropTypes.func.isRequired,
-        isPopup: PropTypes.bool.isRequired
+        isPopup: PropTypes.bool.isRequired,
+        hideActiveOverlay: PropTypes.func.isRequired
     };
 
     static defaultProps = {
