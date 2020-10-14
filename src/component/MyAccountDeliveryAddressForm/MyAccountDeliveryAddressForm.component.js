@@ -36,7 +36,12 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         const {
             countries,
             default_country,
-            address: { city = null, country_id, region: { region_id } = {} }
+            address: {
+                // telephone = null,
+                city = null,
+                country_id,
+                region: { region_id } = {}
+            }
         } = props;
 
         const countryId = country_id || default_country;
@@ -48,7 +53,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         this.state = {
             countryId,
             city,
-            phone: null,
+            // phone: telephone,
             availableAreas: [],
             availableRegions,
             area: null,
@@ -67,8 +72,12 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
             }
         } = prevProps;
         const { address: { telephone, city, region: { region } = {} } } = this.props;
-        console.log(prevTelephone);
-        console.log(telephone);
+        console.log('*** prev', prevTelephone);
+        console.log('*** current', telephone);
+        // if (prevTelephone !== telephone) {
+        //     this.copyPhoneValue(telephone);
+        // }
+
         if (prevCity !== city) {
             this.onCityChange(city);
         }
@@ -83,9 +92,9 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         this.setState({ initRegion: null, postCodeValue: text });
     };
 
-    copyPhoneValue = (text) => {
-        this.setState({ phone: text });
-    };
+    // copyPhoneValue = (text) => {
+    //     this.setState({ phone: text });
+    // };
 
     setPostCode() {
         const { address: { region: { region } = {} } } = this.props;
@@ -103,22 +112,28 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         return postCodeValue;
     }
 
-    getPhoneValue() {
-        const { phone } = this.state;
-        const { address: { telephone } } = this.props;
+    // getPhoneValue() {
+    //     const { phone } = this.state;
+    //     const { address: { telephone } } = this.props;
 
-        if (phone == null) {
-            return telephone;
-        }
+    //     const code = this.addPhoneCode();
+    //     if (phone == null) {
+    //         return code + telephone;
+    //     }
 
-        return phone;
-    }
+    //     return code + phone;
+    // }
 
     onFormSuccess = (fields) => {
         const { onSave } = this.props;
-        const { region_id, region_string: region, ...newAddress } = fields;
+        const {
+            region_id,
+            region_string: region,
+            telephone, ...newAddress
+        } = fields;
 
         newAddress.region = { region_id, region };
+        newAddress.telephone = this.addPhoneCode() + telephone;
         onSave(newAddress);
     };
 
@@ -205,6 +220,18 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         closeForm();
     };
 
+    addPhoneCode = () => {
+        const { default_country } = this.props;
+        const code = this.renderCurrentPhoneCode(default_country);
+        return code;
+        // console.log('****', this.renderCurrentPhoneCode);
+    };
+
+    cutPhoneCode(phone) {
+        // eslint-disable-next-line no-magic-numbers
+        return phone.slice(4);
+    }
+
     get fieldMap() {
         const { cities } = this.state;
         const {
@@ -219,10 +246,10 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
             }
         } = this.props;
 
-        const { street = [] } = address;
+        const { telephone, street = [] } = address;
 
         const clearValue = newForm ? { value: '' } : null;
-        console.log('***', this.props);
+        // console.log('***', this.props);
 
         return {
             default_billing: {
@@ -246,13 +273,15 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
             telephone: {
                 validation: ['notEmpty'],
                 placeholder: __('Phone Number'),
-                value: this.getPhoneValue()
+                value: this.cutPhoneCode(telephone),
+                ...clearValue
             },
-            raw_telephone: {
-                placeholder: __('Raw phone'),
-                ...clearValue,
-                onChange: this.copyPhoneValue
-            },
+            // raw_telephone: {
+            //     placeholder: __('Raw phone'),
+            //     value: phone,
+            //     ...clearValue,
+            //     onChange: this.copyPhoneValue
+            // },
             city: {
                 validation: ['notEmpty'],
                 placeholder: __('City'),
