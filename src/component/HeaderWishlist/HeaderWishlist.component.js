@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
+import { withRouter } from 'react-router';
 
 import { isArabic } from 'Util/App';
 
@@ -7,6 +8,7 @@ import './HeaderWishlist.style';
 
 class HeaderWishlist extends PureComponent {
     static propTypes = {
+        history: PropTypes.object.isRequired,
         isBottomBar: PropTypes.bool.isRequired,
         isWishlist: PropTypes.bool.isRequired,
         isMobile: PropTypes.bool
@@ -18,6 +20,12 @@ class HeaderWishlist extends PureComponent {
 
     state = {
         isArabic: isArabic()
+    };
+
+    routeChangeWishlist = () => {
+        const { history } = this.props;
+
+        history.push('/my-account/my-wishlist');
     };
 
     render() {
@@ -41,11 +49,15 @@ class HeaderWishlist extends PureComponent {
                   }
               } }
             >
-                <div> </div>
+                <button
+                  onClick={ this.routeChangeWishlist }
+                >
+                    <span />
+                </button>
                 <label htmlFor="WishList">{ __('WishList') }</label>
             </div>
         );
     }
 }
 
-export default HeaderWishlist;
+export default withRouter(HeaderWishlist);
