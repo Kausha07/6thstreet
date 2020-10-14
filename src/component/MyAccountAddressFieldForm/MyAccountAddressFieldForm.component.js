@@ -64,7 +64,6 @@ export class MyAccountAddressFieldForm extends PureComponent {
             street,
             city,
             postcode,
-            // raw_telephone,
             country_id,
             region_id,
             region_string,

@@ -37,7 +37,6 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
             countries,
             default_country,
             address: {
-                // telephone = null,
                 city = null,
                 country_id,
                 region: { region_id } = {}
@@ -53,7 +52,6 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         this.state = {
             countryId,
             city,
-            // phone: telephone,
             availableAreas: [],
             availableRegions,
             area: null,
@@ -66,17 +64,11 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
     componentDidUpdate(prevProps, _) {
         const {
             address: {
-                telephone: prevTelephone,
                 city: prevCity,
                 region: { region: prevRegion } = {}
             }
         } = prevProps;
-        const { address: { telephone, city, region: { region } = {} } } = this.props;
-        console.log('*** prev', prevTelephone);
-        console.log('*** current', telephone);
-        // if (prevTelephone !== telephone) {
-        //     this.copyPhoneValue(telephone);
-        // }
+        const { address: { city, region: { region } = {} } } = this.props;
 
         if (prevCity !== city) {
             this.onCityChange(city);
@@ -86,15 +78,10 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
             this.setPostCode();
         }
     }
-    // clear init region
 
     copyValue = (text) => {
-        this.setState({ initRegion: null, postCodeValue: text });
+        this.setState({ postCodeValue: text });
     };
-
-    // copyPhoneValue = (text) => {
-    //     this.setState({ phone: text });
-    // };
 
     setPostCode() {
         const { address: { region: { region } = {} } } = this.props;
@@ -111,18 +98,6 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
 
         return postCodeValue;
     }
-
-    // getPhoneValue() {
-    //     const { phone } = this.state;
-    //     const { address: { telephone } } = this.props;
-
-    //     const code = this.addPhoneCode();
-    //     if (phone == null) {
-    //         return code + telephone;
-    //     }
-
-    //     return code + phone;
-    // }
 
     onFormSuccess = (fields) => {
         const { onSave } = this.props;
@@ -224,12 +199,15 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         const { default_country } = this.props;
         const code = this.renderCurrentPhoneCode(default_country);
         return code;
-        // console.log('****', this.renderCurrentPhoneCode);
     };
 
     cutPhoneCode(phone) {
-        // eslint-disable-next-line no-magic-numbers
-        return phone.slice(4);
+        if (phone) {
+            // eslint-disable-next-line no-magic-numbers
+            return phone.slice(4);
+        }
+
+        return phone;
     }
 
     get fieldMap() {
@@ -249,7 +227,6 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         const { telephone, street = [] } = address;
 
         const clearValue = newForm ? { value: '' } : null;
-        // console.log('***', this.props);
 
         return {
             default_billing: {
@@ -276,12 +253,6 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
                 value: this.cutPhoneCode(telephone),
                 ...clearValue
             },
-            // raw_telephone: {
-            //     placeholder: __('Raw phone'),
-            //     value: phone,
-            //     ...clearValue,
-            //     onChange: this.copyPhoneValue
-            // },
             city: {
                 validation: ['notEmpty'],
                 placeholder: __('City'),
