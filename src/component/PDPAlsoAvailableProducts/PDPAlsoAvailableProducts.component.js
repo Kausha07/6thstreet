@@ -7,7 +7,8 @@ import './PDPAlsoAvailableProducts.style';
 
 class PDPAlsoAvailableProducts extends PureComponent {
     static propTypes = {
-        products: PropTypes.array.isRequired
+        products: PropTypes.array.isRequired,
+        isAlsoAvailable: PropTypes.bool.isRequired
     };
 
     renderAvailableProduct = (product) => {
@@ -28,8 +29,9 @@ class PDPAlsoAvailableProducts extends PureComponent {
     }
 
     render() {
+        const { isAlsoAvailable } = this.props;
         return (
-            <div block="PDPAlsoAvailableProducts">
+            <div block="PDPAlsoAvailableProducts" mods={ { isAlsoAvailable } }>
                 <h1 block="PDPAlsoAvailableProducts" elem="Title">{ __('Also available in:') }</h1>
                 <div block="PDPAlsoAvailableProducts" elem="List">
                     { this.renderAvailableProducts() }

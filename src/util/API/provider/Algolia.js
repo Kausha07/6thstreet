@@ -58,6 +58,16 @@ class Algolia {
         return AlgoliaSDK.getPDP({ id, highlights });
     }
 
+    async getProductBySku(params = {}) {
+        const {
+            id = '',
+            highlights = PRODUCT_HIGHLIGHTS
+        } = params;
+
+        // TODO: add validation
+        return AlgoliaSDK.getProductBySku({ id, highlights });
+    }
+
     searchBy(params) {
         return AlgoliaSDK.searchBy(params);
     }

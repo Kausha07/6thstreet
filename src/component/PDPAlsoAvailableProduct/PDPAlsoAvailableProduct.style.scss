@@ -2,6 +2,14 @@
     height: 100%;
     width: 120px;
 
+    @include before-desktop {
+        width: 50%;
+    }
+
+    @include tablet {
+        width: 33%;
+    }
+
     p {
         text-transform: uppercase;
         font-family: 'Avenir Next Bold';

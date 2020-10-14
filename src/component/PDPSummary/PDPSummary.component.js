@@ -120,9 +120,8 @@ class PDPSummary extends PureComponent {
 
         if (alsoAvailable) {
             if (alsoAvailable.length > 0) {
-                const productArr = ['622441', '622438'];
                 return (
-                    <PDPAlsoAvailableProducts productsAvailable={ productArr } />
+                    <PDPAlsoAvailableProducts productsAvailable={ alsoAvailable } />
                 );
             }
         }
