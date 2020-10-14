@@ -15,8 +15,6 @@ import MyAccountAddressFieldForm from 'Component/MyAccountAddressFieldForm';
 import { addressType } from 'Type/Account';
 import { countriesType } from 'Type/Config';
 
-import { CITIES_DATA_URLS } from './MyAccountDeliveryAddressForm.config';
-
 export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
     static propTypes = {
         address: addressType.isRequired,
@@ -148,13 +146,13 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
 
     async getCitiesData() {
         const { cities } = this.state;
-        const { default_country, getCities } = this.props;
+        const { getCities } = this.props;
 
         if (cities.length === 0) {
-            getCities(CITIES_DATA_URLS[default_country]).then(
-                ({ data }) => {
-                    if (data) {
-                        this.setState({ cities: data });
+            getCities().then(
+                (response) => {
+                    if (response && response.data) {
+                        this.setState({ cities: response.data });
                     }
                 }
             );
