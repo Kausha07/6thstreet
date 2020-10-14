@@ -84,7 +84,7 @@ export class CartOverlay extends PureComponent {
 
     renderTotals() {
         const { totals: { items, subtotal_incl_tax = 0 } } = this.props;
-        const isArabic = this.state;
+        const { isArabic } = this.state;
 
         if (!items || items.length < 1) {
             return null;
@@ -94,7 +94,7 @@ export class CartOverlay extends PureComponent {
             <dl
               block="CartOverlay"
               elem="Total"
-              mods={ isArabic }
+              mods={ { isArabic } }
             >
                 <dt>
                     { __('Subtotal ') }

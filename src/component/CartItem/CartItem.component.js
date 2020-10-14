@@ -137,11 +137,10 @@ export class CartItem extends PureComponent {
                 }
             }
         } = this.props;
-        const cropUrl = 28;
 
         hideActiveOverlay();
         closePopup();
-        history.push(url.substring(cropUrl));
+        history.push(url.split('.com')[1]);
     };
 
     renderWrapper() {
@@ -221,13 +220,13 @@ export class CartItem extends PureComponent {
                 }
             }
         } = this.props;
-        const isArabic = this.state;
+        const { isArabic } = this.state;
 
         return (
             <p
               block="CartItem"
               elem="Heading"
-              mods={ isArabic }
+              mods={ { isArabic } }
             >
                 { name }
             </p>
@@ -236,13 +235,13 @@ export class CartItem extends PureComponent {
 
     renderBrandName() {
         const { brand_name } = this.props;
-        const isArabic = this.state;
+        const { isArabic } = this.state;
 
         return (
             <p
               block="CartItem"
               elem="Heading"
-              mods={ isArabic }
+              mods={ { isArabic } }
             >
                 { brand_name }
             </p>
@@ -294,14 +293,14 @@ export class CartItem extends PureComponent {
 
     renderColSizeQty() {
         const { item: { color, optionValue, qty } } = this.props;
-        const isArabic = this.state;
+        const { isArabic } = this.state;
 
         if (optionValue) {
             return (
                 <div
                   block="CartItem"
                   elem="ColSizeQty"
-                  mods={ isArabic }
+                  mods={ { isArabic } }
                 >
                     { color }
                     <span>| Size </span>

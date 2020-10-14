@@ -111,14 +111,14 @@ export class CartItemContainer extends PureComponent {
                     item_id,
                     color,
                     optionValue,
-                    product,
+                    product: { url, thumbnail },
                     brand_name,
                     discount_amount
                 }
             } = this.props;
 
             this.hideLoaderAfterPromise(updateProductInCart(
-                item_id, quantity, color, optionValue, discount_amount, brand_name, product.thumbnail.url, product.url
+                item_id, quantity, color, optionValue, discount_amount, brand_name, thumbnail.url, url
             ));
         });
     }
