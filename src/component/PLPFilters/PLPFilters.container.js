@@ -57,18 +57,11 @@ export class PLPFiltersContainer extends PureComponent {
 
     // eslint-disable-next-line consistent-return
     onReset() {
-        this.arr = [
-            'sort',
-            'brand_name',
-            'gender',
-            'sizes',
-            'price.AED.default',
-            'discount'
-        ];
+        const { filters } = this.props;
 
         // eslint-disable-next-line fp/no-let
-        for (let i = 0; i < this.arr.length; i++) {
-            WebUrlParser.setParam(this.arr[i], '');
+        for (let i = 0; i < Object.keys(filters).length; i++) {
+            WebUrlParser.setParam(Object.keys(filters)[i], '');
         }
     }
 

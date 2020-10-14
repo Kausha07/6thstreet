@@ -4,13 +4,14 @@
  * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
  * @copyright Copyright (c) 2020 Scandiweb, Inc (https://scandiweb.com)
  */
-
+import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import { toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
 import { Filter } from 'Util/API/endpoint/Product/Product.type';
 import WebUrlParser from 'Util/API/helper/WebUrlParser';
+import isMobile from 'Util/Mobile';
 
 import PLPFilter from './PLPFilter.component';
 
@@ -22,7 +23,20 @@ export const mapDispatchToProps = (_dispatch) => ({
 
 class PLPFilterContainer extends PureComponent {
     static propTypes = {
-        filter: Filter.isRequired
+        filter: Filter.isRequired,
+        toggleOverlayByKey: PropTypes.func.isRequired,
+        parentCallback: PropTypes.func.isRequired,
+        currentActiveFilter: PropTypes.string,
+        changeActiveFilter: PropTypes.func.isRequired
+    };
+
+    static defaultProps = {
+        currentActiveFilter: ''
+    };
+
+    state = {
+        activeFilter: {},
+        isChecked: false
     };
 
     containerFunctions = {
@@ -31,8 +45,8 @@ class PLPFilterContainer extends PureComponent {
 
     onSelect() {
         const {
-            // setPLPFilter,
-            filter: { category }
+            filter: { category },
+            parentCallback
         } = this.props;
 
         // This syntax gets form with name "filters" from document
@@ -49,18 +63,29 @@ class PLPFilterContainer extends PureComponent {
             return acc;
         }, []);
 
-        WebUrlParser.setParam(category, values);
+        if (!isMobile.any()) {
+            WebUrlParser.setParam(category, values);
+        } else {
+            parentCallback(category, values);
+            this.setState({
+                activeFilter: {
+                    [ category ]: { values }
+                },
+                isChecked: true
+            });
+        }
     }
 
     containerProps = () => {
-        const { filter } = this.props;
+        const { filter, changeActiveFilter, currentActiveFilter } = this.props;
 
-        return { filter };
+        return { filter, changeActiveFilter, currentActiveFilter };
     };
 
     render() {
         return (
             <PLPFilter
+              { ...this.state }
               { ...this.containerFunctions }
               { ...this.containerProps() }
             />
