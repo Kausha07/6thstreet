@@ -72,9 +72,7 @@ export class PLPContainer extends PureComponent {
 
         return {
             // TODO: inject gender ?
-            ...parsedParams,
-            // TODO switch sort ?
-            sort: 'recommended'
+            ...parsedParams
         };
     }
 
