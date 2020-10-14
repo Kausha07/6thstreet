@@ -23,7 +23,7 @@ const transformParams = (str) => str.replace('#', '?');
 const parseURL = (URL) => urlparse(URL, true);
 
 const hFR = (str) => str.match(/hFR\[(categories\.level)\d\]\[(\d)\]/);
-const dFR = (str) => str.match(/dFR\[(\w*)\]\[(\d)\]/);
+const dFR = (str) => str.match(/dFR\[(.*)\]\[(\d)\]/);
 const nR = (str) => str.match(/nR\[(\w*)\]\[(\W*)\]\[(\d)\]/);
 
 const getAlgoliaOperator = (urlOperator = '') => {
@@ -145,7 +145,6 @@ const Parser = {
         });
 
         const prefix = /categories\.level/.test(key) ? 'hFR' : 'dFR';
-
         if (Array.isArray(values)) {
             // For arrays case
             url.searchParams.append(`${prefix}[${key}][0]`, values.join(','));
