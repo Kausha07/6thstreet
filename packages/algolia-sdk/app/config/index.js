@@ -156,7 +156,7 @@ const config = {
       'url'
     ],
     facets: FACET_FILTERS,
-    facetFilters: ['sku'],
+    facetFilters: [/*'sku'*/],
     numericFilters: [],
     maxValuesPerFacet: 1000,
     sortFacetValuesBy: 'alpha'

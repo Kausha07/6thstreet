@@ -14,14 +14,6 @@ function getProduct(id, highlights, options) {
         // newSearchParams.attributesToHighlight = highlights;
         // newSearchParams.attributesToRetrieve = '*';
 
-        index.setSettings({
-            attributesForFaceting: [
-              'sku' // or 'filterOnly(brand)' for filtering purposes only
-            ]
-          }).then(() => {
-            // done
-          });
-
         index.search(
             '',
             { filters: `sku:${id}` },

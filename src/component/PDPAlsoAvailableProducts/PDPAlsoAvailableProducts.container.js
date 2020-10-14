@@ -36,8 +36,6 @@ export class PDPAlsoAvailableProductsContainer extends PureComponent {
     componentDidUpdate(prevProps) {
         const { productsAvailable } = this.props;
 
-        console.log(prevProps.productsAvailable, productsAvailable);
-
         if (prevProps.productsAvailable !== productsAvailable) {
             // eslint-disable-next-line react/no-did-update-set-state
             this.getAvailableProducts();
@@ -61,7 +59,7 @@ export class PDPAlsoAvailableProductsContainer extends PureComponent {
     }
 
     async getAvailableProduct(productID) {
-        const product = await Algolia.getProductBySku({ id: productID });
+        const product = await Algolia.getPDP({ id: productID });
         return product;
     }
 
