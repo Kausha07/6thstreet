@@ -23,7 +23,7 @@
         grid-template-rows: auto;
         grid-column-gap: 2%;
 
-        @include desktop {
+        @include after-mobile {
             grid-template-columns: 33.3% 33.3% 33.3%;
             grid-column-gap: 16px;
             grid-row-gap: 64px;
