@@ -88,7 +88,7 @@ export const CartReducer = (state = getInitialState(), action) => {
                 thumbnail: {
                     url: item.thumbnail_url
                 },
-                url: '',
+                url: item.url,
                 variants: []
             },
             row_total: item.price || 0,

@@ -10,7 +10,8 @@ const getBrandsArrayFromFacets = ({ facets = {} }) => {
             .map((item) => ({ brand_name: item, count: facets.brand_name[item] }))
             .slice(0, BRANDS_RESULT_LIMIT);
     } catch (err) {
-        console.log(err);
+        // eslint-disable-next-line no-console
+        console.error(err);
         return [];
     }
 };
