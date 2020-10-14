@@ -43,7 +43,6 @@ export class PDPAddToCartContainer extends PureComponent {
         sizeObject: {},
         selectedSizeType: 'eu',
         selectedSizeCode: '',
-        errorMessage: '',
         insertedSizeStatus: true,
         isLoading: false,
         addedToCart: false,
@@ -56,16 +55,16 @@ export class PDPAddToCartContainer extends PureComponent {
         if (product.simple_products !== undefined) {
             const filteredProductKeys = Object.keys(product.simple_products);
 
-            if (filteredProductKeys.length <= 1) {
-                return { insertedSizeStatus: false };
-            }
-
             const filteredProductSizeKeys = Object.keys(product.simple_products[filteredProductKeys[0]].size);
 
             const object = {
                 sizeCodes: filteredProductKeys,
                 sizeTypes: filteredProductSizeKeys
             };
+
+            if (filteredProductKeys.length <= 1 && filteredProductSizeKeys.length === 0) {
+                return { insertedSizeStatus: false, sizeObject: object };
+            }
 
             return { sizeObject: object };
         }
@@ -83,7 +82,6 @@ export class PDPAddToCartContainer extends PureComponent {
     }
 
     onSizeSelect(size) {
-        this.setState({ errorMessage: '' });
         this.setState({ selectedSizeCode: size.target.value });
     }
 
@@ -121,7 +119,7 @@ export class PDPAddToCartContainer extends PureComponent {
             );
         }
 
-        if (insertedSizeStatus === false) {
+        if (!insertedSizeStatus) {
             this.setState({ isLoading: true });
             const code = Object.keys(simple_products);
 
@@ -137,14 +135,14 @@ export class PDPAddToCartContainer extends PureComponent {
     }
 
     afterAddToCart() {
+        // eslint-disable-next-line no-unused-vars
         const { buttonRefreshTimeout } = this.state;
 
         this.setState({ isLoading: false });
         // TODO props for addedToCart
+        const timeout = 1250;
         this.setState({ addedToCart: true });
-        const timer = setTimeout(
-            () => this.setState({ addedToCart: false }), buttonRefreshTimeout
-        );
+        const timer = setTimeout(() => this.setState({ addedToCart: false }), timeout);
 
         return () => clearTimeout(timer);
     }

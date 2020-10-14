@@ -54,7 +54,7 @@ class BrandsContainer extends PureComponent {
 
         this.setState({ isLoading: true });
 
-        this._brandRequest = Algolia.getBrands(brandType).then((data) => {
+        this._brandRequest = new Algolia().getBrands(brandType).then((data) => {
             const groupedBrands = groupByName(data);
 
             // This sort places numeric brands to the end of the list

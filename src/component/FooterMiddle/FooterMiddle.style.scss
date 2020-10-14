@@ -1,6 +1,5 @@
 :root {
     --footer-background-color: #f6f6f6;
-    --foter-hyperlink-color: $black;
 }
 
 .FooterMiddle {
@@ -12,11 +11,27 @@
         display: none;
     }
 
+    &_isCheckout {
+        height: 70px;
+        padding: 20px 30px 30px 30px;
+        background: var(--white);
+
+        .HeaderAccount, 
+        .CountrySwitcher,
+        .LanguageSwitcher {
+            display: none;
+        }
+    }
+
     &-Layout {
         display: flex;
         justify-content: space-between;
         max-width: 1420px;
         margin: auto;
+
+        &_isCheckout {
+            max-width: 1150px;
+        }
     }
 
     &-CustomerSupport {

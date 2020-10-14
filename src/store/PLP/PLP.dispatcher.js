@@ -24,7 +24,7 @@ export class PLPDispatcher {
         if (!isInitial && initialOptions !== stateInitialOptions) {
             try {
                 // Load initial filters to combine them with selected filters
-                const { filters: initialFilters } = await Algolia.getPLP(initialOptions);
+                const { filters: initialFilters } = await new Algolia().getPLP(initialOptions);
 
                 dispatch(setPLPInitialFilters(
                     initialFilters,
@@ -36,7 +36,7 @@ export class PLPDispatcher {
         }
 
         try {
-            const response = await Algolia.getPLP(options);
+            const response = await new Algolia().getPLP(options);
 
             dispatch(setPLPData(
                 response,
@@ -60,7 +60,7 @@ export class PLPDispatcher {
         try {
             const {
                 data: products
-            } = await Algolia.getPLP(options);
+            } = await new Algolia().getPLP(options);
 
             dispatch(setPLPPage(
                 products,
