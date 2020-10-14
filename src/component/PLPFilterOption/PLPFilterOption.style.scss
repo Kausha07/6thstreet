@@ -2,6 +2,7 @@
     --filter-product-count-color: #666;
     --disabeled-radio-button-color:  #b8b8b8;
     --check-mark-mobile-filter-color: #f96446;
+    --option-list-bottom-border-color: #ddd;
 }
 
 .PLPFilterOption {
@@ -27,7 +28,7 @@
 
         @include before-desktop {
             justify-content: space-between;
-            border-bottom: solid 1px #ddd;
+            border-bottom: solid 1px var(--option-list-bottom-border-color);
             margin: auto 7%;
 
             &_isArabic {
