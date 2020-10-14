@@ -2,8 +2,8 @@
     &:not(&_isBottomBar) {
         margin-left: auto;
 
-        div {
-            width: 27px;
+        span {
+            display: inline-block;
 
             &::before {
                 background: url(./icons/heart-regular.svg) no-repeat;
@@ -14,7 +14,7 @@
                 display: inline-block;
                 position: absolute;
                 left: -30px;
-                top: -17px;
+                top: -22px;
             }
         }
 

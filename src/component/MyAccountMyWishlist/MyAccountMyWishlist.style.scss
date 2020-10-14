@@ -1,3 +1,154 @@
 .MyAccountMyWishlist {
-    
+    margin: 20px 0px 100px 0px;
+
+    &-Empty {
+        h2 {
+            font-family: "Avenir Next Regular";
+            font-size: 30px;
+            font-weight: 600;
+            letter-spacing: -0.83px;
+            line-height: 20px;
+            text-align: center;
+            text-transform: unset;
+        }
+        
+        span {
+            background: linear-gradient(225deg, #FF8960 0%, #FF62A5 100%);
+        }
+    }
+
+    &-Items {
+        display: grid;
+        grid-template-columns: 48% 48%;
+        grid-template-rows: auto;
+        grid-column-gap: 2%;
+
+        @include desktop {
+            grid-template-columns: 33.3% 33.3% 33.3%;
+            grid-column-gap: 16px;
+            grid-row-gap: 64px;
+        }
+    }
+
+    &-Item {
+        overflow: hidden;
+        width: 100%;
+        text-align: center;
+        font-family: 'Avenir Next Regular';
+
+        a {
+            text-decoration: none;
+        }
+        
+        li::before {
+            content: '';
+        }
+
+        .ProductItem {
+            padding: 0;
+
+            &-Brand {
+                font-family: 'Avenir Next Bold';
+                margin-bottom: 0px;
+                font-size: 12px;
+                letter-spacing: 0.2px;
+                line-height: 16px;
+                
+                @include desktop {
+                    font-size: 15px;
+                    line-height: 20px;
+                    letter-spacing: 0.25px;
+                }
+            }
+
+            &-Title {
+                font-size: 13px;
+                letter-spacing: 0;
+                line-height: 15px;
+                white-space: nowrap; 
+                overflow: hidden;
+                text-overflow: ellipsis; 
+                color: var(--Tundora);
+                margin: 1.4px 0 6px 0;
+
+                @include desktop {
+                    font-size: 15px;
+                }
+            }
+
+            .Price {
+                font-size: 13px;
+                font-weight: bold;
+                line-height: 23px;
+                    
+                @include desktop {
+                    font-size: 17px;
+                    font-weight: 600;
+                    letter-spacing: -0.61px;
+                    line-height: 23px;
+                }
+            }
+            
+            @include mobile {
+                .WishlistIcon {
+                    height: 20px;
+                    width: 20px;
+
+                    &-Icon {
+                        left: 3px;
+                        top: 4px;
+                        width: 15px;
+                        height: 15px;
+                        background-size: 15px;
+                    }
+                }
+            }
+        }
+
+        @include desktop {
+            padding-bottom: 65px;
+        }
+    }
+
+    &-Buttons {
+        display: none;
+    }
+
+    @include desktop {
+        &-Item:hover {
+            .MyAccountMyWishlist-Buttons {
+                transform: translateY(-100px);
+            }
+        }
+        
+        &-Buttons {
+            display: flex;
+            background-color: var(--White);
+            width: 100%;
+            position: absolute;
+            bottom: -100px;
+            transition: transform .4s;
+
+            a:first-of-type {
+                border: 2px solid var(--Black);
+                max-height: 70px;
+                width: 35%;
+                font-size: 12px;
+                font-family: 'Avenir Next Bold';
+                margin-right: 3.5%;
+                padding: 20px 0;
+            }
+
+            a:last-of-type {
+                max-height: 70px;
+                width: 60%;
+                font-size: 12px;
+                font-family: 'Avenir Next Bold';
+                color: var(--White);
+                background-color: var(--Black);
+                padding: 20px 0;
+                margin: 0;
+            }
+        }
+    }
 }
