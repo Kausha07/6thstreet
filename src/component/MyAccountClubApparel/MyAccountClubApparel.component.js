@@ -8,7 +8,8 @@ import './MyAccountClubApparel.style';
 
 class MyAccountClubApparel extends PureComponent {
     static propTypes = {
-        linkAccount: PropTypes.func.isRequired
+        linkAccount: PropTypes.func.isRequired,
+        verifyOtp: PropTypes.func.isRequired
     };
 
     renderLinkAccount() {
@@ -35,10 +36,35 @@ class MyAccountClubApparel extends PureComponent {
         );
     }
 
+    renderVerifyOtp() {
+        const { verifyOtp } = this.props;
+
+        return (
+            <Form
+              onSubmitSuccess={ verifyOtp }
+            >
+                <Field
+                  type="text"
+                  placeholder="00000"
+                  id="otp"
+                  name="otp"
+                  validation={ ['notEmpty'] }
+                />
+                <button
+                  block="Button"
+                  type="submit"
+                >
+                    { __('Verify number') }
+                </button>
+            </Form>
+        );
+    }
+
     render() {
         return (
             <div block="MyAccountClubApparel">
                 { this.renderLinkAccount() }
+                { this.renderVerifyOtp() }
             </div>
         );
     }
