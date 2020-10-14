@@ -54,9 +54,17 @@ export class MyAccountAddressTable extends KeyValueTable {
         mix: {}
     };
 
+    onEdit = () => {
+        const { onEditClick } = this.props;
+        onEditClick();
+        if (!isMobile.any()) {
+            const elmnts = document.getElementsByClassName('MyAccountAddressBook-NewAddress');
+            elmnts[0].scrollIntoView();
+        }
+    };
+
     renderActions() {
         const {
-            onEditClick,
             onDeleteClick,
             showActions,
             address: { default_billing, default_shipping }
@@ -73,7 +81,7 @@ export class MyAccountAddressTable extends KeyValueTable {
                 <button
                   block="MyAccountAddressTable"
                   elem="ActionBtn"
-                  onClick={ onEditClick }
+                  onClick={ this.onEdit }
                 >
                     <img
                       block="MyAccountAddressTable"

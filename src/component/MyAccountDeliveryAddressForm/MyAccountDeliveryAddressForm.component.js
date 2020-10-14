@@ -312,7 +312,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
               elem="Discart"
               onClick={ this.closeField }
             >
-                { __('Discart') }
+                { __('Cancel') }
             </button>
         );
     }
