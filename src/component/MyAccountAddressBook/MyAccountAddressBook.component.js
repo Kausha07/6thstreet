@@ -51,10 +51,16 @@ export class MyAccountAddressBook extends PureComponent {
 
     openNewForm = () => {
         const { showCreateNewPopup } = this.props;
+
         if (isMobile.any()) {
             this.hideCards();
         }
         showCreateNewPopup();
+
+        if (!isMobile.any()) {
+            const elmnts = document.getElementsByClassName('MyAccountAddressBook-NewAddress');
+            elmnts[0].scrollIntoView();
+        }
     };
 
     renderPopup() {
