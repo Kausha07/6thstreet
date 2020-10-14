@@ -41,6 +41,7 @@ class FieldMultiselect extends PureComponent {
               key={ key }
               option={ option }
               isRadio={ is_radio }
+              onClick={ this.onCheckboxOptionClick }
             />
         );
     };
@@ -56,7 +57,8 @@ class FieldMultiselect extends PureComponent {
     }
 
     onCheckboxOptionClick = () => {
-
+        console.log('-------------------');
+        this.filterButtonRef.current.focus();
     };
 
     toggelOptionList() {

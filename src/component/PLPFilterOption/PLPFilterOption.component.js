@@ -10,7 +10,8 @@ import './PLPFilterOption.style';
 class PLPFilterOption extends PureComponent {
     static propTypes = {
         option: FilterOption.isRequired,
-        isRadio: PropTypes.bool.isRequired
+        isRadio: PropTypes.bool.isRequired,
+        onCheckboxOptionClick: PropTypes.func.isRequired
     };
 
     state = {
@@ -24,14 +25,17 @@ class PLPFilterOption extends PureComponent {
                 facet_value,
                 is_selected: checked
             },
-            isRadio
+            isRadio,
+            onCheckboxOptionClick
         } = this.props;
 
+        console.log(onCheckboxOptionClick);
         // TODO: fix radio ?
         const type = isRadio ? 'radio' : 'checkbox';
 
         return (
             <Field
+            //   onClick={ !isRadio ? onCheckboxOptionClick : null }
               type={ type }
               id={ facet_value }
               name={ facet_key }
@@ -65,6 +69,7 @@ class PLPFilterOption extends PureComponent {
         } = this.props;
 
         return (
+            // eslint-disable-next-line jsx-a11y/click-events-have-key-events
             <label
               block="PLPFilterOption"
               htmlFor={ facet_value }
