@@ -71,7 +71,7 @@ export class DynamicContentProductSliderContainer extends PureComponent {
 
         try {
             // request first 10 items from algolia
-            const { data: products } = await Algolia.getPLP({
+            const { data: products } = await new Algolia().getPLP({
                 ...params,
                 limit: 10
             });

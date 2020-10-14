@@ -55,16 +55,16 @@ export class PDPAddToCartContainer extends PureComponent {
         if (product.simple_products !== undefined) {
             const filteredProductKeys = Object.keys(product.simple_products);
 
-            if (filteredProductKeys.length < 1) {
-                return { insertedSizeStatus: false };
-            }
-
             const filteredProductSizeKeys = Object.keys(product.simple_products[filteredProductKeys[0]].size);
 
             const object = {
                 sizeCodes: filteredProductKeys,
                 sizeTypes: filteredProductSizeKeys
             };
+
+            if (filteredProductKeys.length <= 1 && filteredProductSizeKeys.length === 0) {
+                return { insertedSizeStatus: false, sizeObject: object };
+            }
 
             return { sizeObject: object };
         }
@@ -119,7 +119,7 @@ export class PDPAddToCartContainer extends PureComponent {
             );
         }
 
-        if (insertedSizeStatus === false) {
+        if (!insertedSizeStatus) {
             this.setState({ isLoading: true });
             const code = Object.keys(simple_products);
 
@@ -129,20 +129,6 @@ export class PDPAddToCartContainer extends PureComponent {
                 optionId: '',
                 optionValue: ''
             }, color, null, discount, brand_name, thumbnail_url).then(
-                () => this.afterAddToCart()
-            );
-        }
-
-        if (insertedSizeStatus === false) {
-            this.setState({ isLoading: true });
-            const code = Object.keys(simple_products);
-
-            addProductToCart({
-                sku: code[0],
-                qty: 1,
-                optionId: '',
-                optionValue: ''
-            }).then(
                 () => this.afterAddToCart()
             );
         }

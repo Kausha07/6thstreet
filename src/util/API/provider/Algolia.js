@@ -1,4 +1,5 @@
 import AlgoliaSDK from '@6thstreetdotcom/algolia-sdk';
+import { getStore } from 'Store';
 
 import { queryString } from '../helper/Object';
 
@@ -15,33 +16,38 @@ export const PRODUCT_HIGHLIGHTS = [
     'toe_shape'
 ];
 
-class Algolia {
-    constructor() {
-        this.init();
+export class Algolia {
+    constructor(options = {}) {
+        const { AppState: { locale: appLocale } } = getStore().getState();
+
+        const {
+            locale = appLocale || process.env.REACT_APP_LOCATE,
+            env = process.env.REACT_APP_ALGOLIA_ENV,
+            appId = process.env.REACT_APP_ALGOLIA_APP_ID,
+            adminKey = process.env.REACT_APP_ALGOLIA_KEY,
+            index = ''
+        } = options;
+
+        AlgoliaSDK.init(
+            appId,
+            adminKey,
+        );
 
         AlgoliaSDK.setIndex.call(
             AlgoliaSDK,
-            process.env.REACT_APP_LOCATE,
-            process.env.REACT_APP_ALGOLIA_ENV
+            locale,
+            env,
+            index
         );
-    }
-
-    init() {
-        AlgoliaSDK.init(
-            process.env.REACT_APP_ALGOLIA_APP_ID,
-            process.env.REACT_APP_ALGOLIA_KEY,
-        );
-    }
-
-    setIndex(locale, env) {
-        AlgoliaSDK.setIndex(locale, env);
     }
 
     async getPLP(params = {}) {
+        const { AppState: { locale = process.env.REACT_APP_LOCATE } } = getStore().getState();
+
         const url = queryString({
             ...params,
             // TODO: get proper locale
-            locale: process.env.REACT_APP_LOCATE
+            locale
         });
 
         // TODO: add validation
@@ -67,6 +73,9 @@ class Algolia {
         // TODO: add validation
         return AlgoliaSDK.getProductBySku({ id, highlights });
     }
+    // getSuggestions(params) {
+    //     return AlgoliaSDK.getSuggestions(params);
+    // }
 
     searchBy(params) {
         return AlgoliaSDK.searchBy(params);
@@ -85,4 +94,4 @@ class Algolia {
     }
 }
 
-export default new Algolia();
+export default Algolia;

@@ -1,3 +1,5 @@
+import { getStore } from 'Store';
+
 import { doFetch } from '../helper/Fetch';
 
 class MobileAPI {
@@ -15,7 +17,7 @@ class MobileAPI {
 
     async _fetch(method, relativeURL, body = {}) {
         // TODO: get proper locale
-        const locale = process.env.REACT_APP_LOCATE;
+        const { AppState: { locale } } = getStore().getState();
         const localePrefix = relativeURL.indexOf('?') >= 0 ? '&' : '?';
         const url = `/api/${relativeURL}${localePrefix}locale=${locale}`
             .replace(/([^:]\/)\/+/g, '$1'); // this replaces // to /
@@ -27,6 +29,7 @@ class MobileAPI {
             method,
             headers: {
                 'Content-Type': 'application/json',
+                'X-App-Version': '2.20.0',
                 ...tokenHeader
             },
             ...payload({ body: JSON.stringify(body) })
