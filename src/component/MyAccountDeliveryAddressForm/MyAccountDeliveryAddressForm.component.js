@@ -102,7 +102,8 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         const {
             region_id,
             region_string: region,
-            telephone, ...newAddress
+            telephone,
+            ...newAddress
         } = fields;
 
         newAddress.region = { region_id, region };

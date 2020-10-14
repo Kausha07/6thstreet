@@ -65,6 +65,9 @@ export class MyAccountAddressFieldForm extends PureComponent {
             city,
             postcode,
             country_id,
+            country_id: {
+                value
+            },
             region_id,
             region_string,
             default_common
@@ -132,8 +135,8 @@ export class MyAccountAddressFieldForm extends PureComponent {
                       block="MyAccountAddressFieldForm"
                       elem="PhoneCode"
                     >
-                        <CountryMiniFlag label={ country_id.value } />
-                        { this.renderCurrentPhoneCode(country_id.value) }
+                        <CountryMiniFlag label={ value } />
+                        { this.renderCurrentPhoneCode(value) }
                     </div>
                 </div>
 
