@@ -50,10 +50,8 @@ export class MyAccountAddressFieldForm extends PureComponent {
         <Field { ...this.getDefaultValues(fieldEntry) } />
     );
 
-    renderCurrentPhoneCode() {
-        const { default_country } = this.props;
-
-        return PHONE_CODES[default_country];
+    renderCurrentPhoneCode(country_id) {
+        return PHONE_CODES[country_id];
     }
 
     renderFields() {
@@ -62,11 +60,12 @@ export class MyAccountAddressFieldForm extends PureComponent {
             default_shipping,
             firstname,
             lastname,
-            country_id,
             telephone,
             street,
             city,
             postcode,
+            // raw_telephone,
+            country_id,
             region_id,
             region_string,
             default_common
@@ -74,7 +73,7 @@ export class MyAccountAddressFieldForm extends PureComponent {
 
         this.getCitiesData();
 
-        const { newForm, default_country } = this.props;
+        const { newForm } = this.props;
         const fromTitle = newForm ? __('New Address') : __('Edit Address');
         const region = region_id === undefined ? region_string : region_id;
 
@@ -103,8 +102,8 @@ export class MyAccountAddressFieldForm extends PureComponent {
                     { this.renderField(['default_shipping', default_shipping]) }
                     { this.renderField(['firstname', firstname]) }
                     { this.renderField(['lastname', lastname]) }
-                    { this.renderField(['country_id', country_id]) }
                     { this.renderField(['postcode', postcode]) }
+                    { this.renderField(['country_id', country_id]) }
                 </div>
 
                 <div
@@ -134,8 +133,8 @@ export class MyAccountAddressFieldForm extends PureComponent {
                       block="MyAccountAddressFieldForm"
                       elem="PhoneCode"
                     >
-                        <CountryMiniFlag label={ default_country } />
-                        { this.renderCurrentPhoneCode() }
+                        <CountryMiniFlag label={ country_id.value } />
+                        { this.renderCurrentPhoneCode(country_id.value) }
                     </div>
                 </div>
 

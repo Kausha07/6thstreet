@@ -48,6 +48,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         this.state = {
             countryId,
             city,
+            phone: null,
             availableAreas: [],
             availableRegions,
             area: null,
@@ -58,10 +59,16 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
     }
 
     componentDidUpdate(prevProps, _) {
-        const { address: { city: prevCity, region: { region: prevRegion } = {} } } = prevProps;
-        const { address: { city, region: { region } = {} } } = this.props;
-        console.log(this.props);
-
+        const {
+            address: {
+                telephone: prevTelephone,
+                city: prevCity,
+                region: { region: prevRegion } = {}
+            }
+        } = prevProps;
+        const { address: { telephone, city, region: { region } = {} } } = this.props;
+        console.log(prevTelephone);
+        console.log(telephone);
         if (prevCity !== city) {
             this.onCityChange(city);
         }
@@ -70,9 +77,14 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
             this.setPostCode();
         }
     }
+    // clear init region
 
     copyValue = (text) => {
         this.setState({ initRegion: null, postCodeValue: text });
+    };
+
+    copyPhoneValue = (text) => {
+        this.setState({ phone: text });
     };
 
     setPostCode() {
@@ -89,6 +101,17 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         }
 
         return postCodeValue;
+    }
+
+    getPhoneValue() {
+        const { phone } = this.state;
+        const { address: { telephone } } = this.props;
+
+        if (phone == null) {
+            return telephone;
+        }
+
+        return phone;
     }
 
     onFormSuccess = (fields) => {
@@ -148,17 +171,6 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         }
     }
 
-    // onCountryChange = (countryId) => {
-    //     const { countries } = this.props;
-    //     const country = countries.find(({ id }) => id === countryId);
-    //     const { available_regions } = country;
-
-    //     this.setState({
-    //         countryId,
-    //         availableRegions: available_regions || []
-    //     });
-    // };
-
     setArea = (cityFromProps) => {
         const { cities } = this.state;
         const trueCity = cities.find(({ city }) => cityFromProps === city);
@@ -194,13 +206,13 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
     };
 
     get fieldMap() {
-        const { countryId, cities } = this.state;
+        const { cities } = this.state;
         const {
             defaultChecked,
             changeDefaultShipping,
-            countries,
             address,
             newForm,
+            default_country,
             customer: {
                 firstname,
                 lastname
@@ -210,6 +222,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         const { street = [] } = address;
 
         const clearValue = newForm ? { value: '' } : null;
+        console.log('***', this.props);
 
         return {
             default_billing: {
@@ -233,8 +246,12 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
             telephone: {
                 validation: ['notEmpty'],
                 placeholder: __('Phone Number'),
-                ...clearValue
-
+                value: this.getPhoneValue()
+            },
+            raw_telephone: {
+                placeholder: __('Raw phone'),
+                ...clearValue,
+                onChange: this.copyPhoneValue
             },
             city: {
                 validation: ['notEmpty'],
@@ -245,10 +262,8 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
                 onChange: this.onCityChange
             },
             country_id: {
-                type: 'select',
                 validation: ['notEmpty'],
-                value: countryId,
-                selectOptions: countries.map(({ id, label }) => ({ id, label, value: id }))
+                value: default_country
             },
             ...this.getRegionFields(),
             postcode: {
