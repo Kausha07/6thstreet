@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { PureComponent } from 'react';
+import { createRef, PureComponent } from 'react';
 
 import PLPFilterOption from 'Component/PLPFilterOption';
 import { Filter } from 'Util/API/endpoint/Product/Product.type';
@@ -17,6 +17,8 @@ class FieldMultiselect extends PureComponent {
     static defaultProps = {
         placeholder: ''
     };
+
+    filterButtonRef = createRef();
 
     constructor(props) {
         super(props);
@@ -53,6 +55,10 @@ class FieldMultiselect extends PureComponent {
         );
     }
 
+    onCheckboxOptionClick = () => {
+
+    };
+
     toggelOptionList() {
         const { toggleOptionsList } = this.state;
 
@@ -73,6 +79,7 @@ class FieldMultiselect extends PureComponent {
         return (
             <div block="FieldMultiselect">
             <button
+              ref={ this.filterButtonRef }
               type="button"
               block="FieldMultiselect"
               elem="FilterButton"
@@ -104,6 +111,7 @@ class FieldMultiselect extends PureComponent {
     }
 
     render() {
+        console.log(this.filterButtonRef.current);
         return this.renderMultiselectContainer();
     }
 }

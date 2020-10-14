@@ -1,6 +1,7 @@
 :root {
     --filter-product-count-color: #666;
     --disabeled-radio-button-color:  #b8b8b8;
+    --check-mark-mobile-filter-color: #f96446;
 }
 
 .PLPFilterOption {
@@ -24,7 +25,7 @@
                 +label {           
                     &:hover {
                         &::after {
-                                --checkmark-color: var(--black-color);
+                                --checkmark-color:  var(--check-mark-mobile-filter-color);
                         }
                     }
     
@@ -41,7 +42,7 @@
                     border-color: var(--disabeled-radio-button-color);
                     
                     &::after {
-                        --checkmark-color: var(--black-color);
+                        --checkmark-color:  var(--check-mark-mobile-filter-color);
                     }
                 }
 
@@ -55,7 +56,7 @@
                     
                     + label {
                         &::after {
-                            --checkmark-color: var(--black-color);
+                            --checkmark-color:  var(--check-mark-mobile-filter-color);
                         }
                     }
                 }
@@ -71,18 +72,19 @@
             [type='checkbox'] {
     
                 &:checked + label {
-                    --primary-base-color: var(--black-color);
+                    --primary-base-color: transparent;
+                    border-color: var(--disabeled-radio-button-color);
 
                     &::after {
-                        --checkmark-color: var(--black-color);
+                        --checkmark-color: var(--check-mark-mobile-filter-color);
                     }
                 }
     
                 &:hover + label {
-                    --primary-base-color: var(--black-color);
+                    --primary-base-color: transparent;
 
                     &::after {
-                        --checkmark-color: transparent;
+                        --checkmark-color: var(--check-mark-mobile-filter-color);
                     }
                 }
             }
