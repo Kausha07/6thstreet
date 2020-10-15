@@ -43,7 +43,7 @@ export class StoreCreditDispatcher {
                 // @TODO: Implement a way to check if store credit is applied to cart for checkbox state
             } catch (e) {
                 data.data = true;
-                // Do nothing as requests above will fail do to missing mobile API authorization
+                // Do nothing as requests above will fail due to missing mobile API authorization
             }
 
             await CartDispatcher.getCartTotals(dispatch, cartId);
