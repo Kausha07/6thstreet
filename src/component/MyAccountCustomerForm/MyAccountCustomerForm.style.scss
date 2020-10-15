@@ -36,55 +36,85 @@
         }
     }
 
-    &-Radio {
-        display: flex;
-        margin-top: 10px;
+    &-Gender {
+        height: 35px;
 
-        .Field [type='radio'] {
+        &-Radio {
+            display: flex;
 
-            + label {
-                position: relative;
-                height: 14px;
-                width: 14px;
-                margin-right: 6px;
+            .Field {
+                margin-top: 5px;
+                margin-right: 23px;
+                label {
+                    label {
+                        margin-top: -2px;
+                        margin-right: 5px;
+                    }
+                }
+            }
 
+            .Field [type='radio'] {
 
-                &:hover {
+                + label {
+                    position: relative;
+                    height: 15px;
+                    width: 15px;
+
+                    @include after-mobile() {
+                        height: 14px;
+                        width: 14px;
+                    }
+
+                    &:hover {
+                        &::after {
+                            --checkmark-color: var(--black-color);
+                        }
+                    }
+
+                    border-radius: 50%;
+
                     &::after {
-                        --checkmark-color: var(--black-color);
+                        left: 0;
+                        right: 0;
+                        top: 0;
+                        bottom: 0;
+                        margin: auto;
+                        width: .5rem;
+                        height: .5rem;
+                        border-radius: 50%;
+                        transition-property: background-color, box-shadow;
+                        will-change: background-color, box-shadow;
                     }
                 }
 
-                border-radius: 50%;
-
-                &::after {
-                    left: 0;
-                    right: 0;
-                    top: 0;
-                    bottom: 0;
-                    margin: auto;
-                    width: .5rem;
-                    height: .5rem;
-                    border-radius: 50%;
-                    transition-property: background-color, box-shadow;
-                    will-change: background-color, box-shadow;
+                &:disabled + label {
+                    color: #b8b8b8;
+                    cursor: auto;
                 }
-            }
 
-            &:disabled + label {
-                color: #b8b8b8;
-                cursor: auto;
-            }
+                &:checked + label {
+                    --primary-base-color: var(--black-color);
+                }
 
-            &:checked + label {
-                --primary-base-color: var(--black-color);
-            }
+                &:not(:checked) + label {
+                    &:after {
+                        transition-duration: 0s;
+                        background-color: rgba(255,255,255,0.5);
+                        border-radius: 0;
+                        z-index: 1;
+                        content: ' ';
+                        margin-left: -1px;
+                        width: 60px;
+                        height: 20px;
+                    }
+                }
 
-            &:focus {
+                &:focus {
 
-                + label {
-                    &::after {
-                        --checkmark-color: var(--black-color);
+                    + label {
+                        &::after {
+                            --checkmark-color: var(--black-color);
+                        }
                     }
                 }
             }
@@ -138,9 +168,41 @@
 
     &-PhoneField {
         position: absolute;
-        top: -60px;
+        top: -58px;
         width: 100%;
         margin-left: 90px;
+    }
+
+    &-BirthDay {
+        margin-top: 2rem;
+
+        &:after {
+            margin-left: -60px;
+            margin-bottom: 2px;
+            pointer-events: none;
+            content: " ";
+            width: 59px;
+            height: 58px;
+            background-color: white;
+            position: absolute;
+            top: 1px;
+        }
+
+        input {
+            &:after {
+                z-index: 1;
+                margin-left: -15px;
+                margin-bottom: 2px;
+                pointer-events: none;
+                content: " ";
+                width: 6px;
+                height: 6px;
+                border: solid var(--light-gray);
+                border-width:  0 2px 2px 0;
+                transform: rotate(45deg);
+
+            }
+        }
     }
 
     #change-password-button {
@@ -187,15 +249,16 @@
             margin-top: 0;
 
             &-Title {
-                margin-bottom: 2rem;
+                margin-bottom: 8px;
                 margin-left: 0;
                 margin-right: 0;
-                margin-top: 2px;
+                margin-top: 18px;
             }
         }
     }
 
     @include desktop {
         width: 800px;
+        margin-bottom: 150px;
     }
 }

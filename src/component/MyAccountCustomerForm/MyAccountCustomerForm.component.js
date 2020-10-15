@@ -29,13 +29,8 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
 
     get fieldMap() {
         return {
-            firstname: {
-                placeholder: __('First name'),
-                validation: ['notEmpty']
-            },
-            lastname: {
-                placeholder: __('Last name'),
-                validation: ['notEmpty']
+            fullname: {
+                render: this.renderFullName.bind(this)
             },
             gender: {
                 render: this.renderGernder.bind(this)
@@ -53,6 +48,37 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
                 render: this.renderBirthDay.bind(this)
             }
         };
+    }
+
+    getCustomerFullName() {
+        const { customer } = this.props;
+
+        if (Object.keys(customer).length !== 0) {
+            const firstName = customer.firstname;
+            const lastName = customer.firstname;
+            return { firstName, lastName };
+        }
+
+        return [];
+    }
+
+    renderFullName() {
+        const fullName = this.getCustomerFullName();
+
+        return (
+            <div
+              block="MyAccountCustomerForm"
+              elem="FullNameField"
+            >
+                <Field
+                  type="text"
+                  name="fullname"
+                  id="full-name"
+                  placeholder={ __('fullname') }
+                  value={ `${fullName.firstName } ${ fullName.lastName}` }
+                />
+            </div>
+        );
     }
 
     renderPassword() {
@@ -93,7 +119,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
             <fieldset block="MyAccountCustomerForm" elem="Gender">
                 <div
                   block="MyAccountCustomerForm"
-                  elem="Radio"
+                  elem="Gender-Radio"
                   mods={ { isArabic } }
                 >
                     <Field
@@ -137,7 +163,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
         const customerPhoneData = this.getCustomerPhoneData();
 
         return (
-            <fieldset block="MyAccountCustomerForm" elem="Phone">
+            <div block="MyAccountCustomerForm" elem="Phone">
                 <PhoneCountryCodeField label={ customerPhoneData.customerCountry } />
                 <Field
                   block="MyAccountCustomerForm"
@@ -147,7 +173,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
                   placeholder="Phone number"
                   value={ customerPhoneData.customerPhone }
                 />
-            </fieldset>
+            </div>
         );
     }
 
@@ -155,13 +181,12 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
         // birthday need to be added to customer API
 
         return (
-            <fieldset block="MyAccountCustomerForm" elem="BirthDay">
-                <Field
-                  type="text"
-                  id="birthDay"
-                  placeholder="your birthday"
+            <div block="MyAccountCustomerForm" elem="BirthDay">
+                <input
+                  type="date"
+                  id="birth-day"
                 />
-            </fieldset>
+            </div>
         );
     }
 
