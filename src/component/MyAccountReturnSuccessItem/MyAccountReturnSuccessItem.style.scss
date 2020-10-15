@@ -1,7 +1,6 @@
-.MyAccountReturnCreateItem {
+.MyAccountReturnSuccessItem {
     &-Content {
         display: flex;
-        padding-left: 40px;
     }
 
     &-Checkbox {
@@ -62,20 +61,6 @@
             margin: 0 0 10px;
             text-transform: none;
         }
-    }
-
-    &-Resolution {
-        padding-left: 40px;
-
-        @include desktop {
-            display: flex;
-            justify-content: space-between;
-        }
-    }
-
-    &-Resolutions,
-    &-Reasons {
-        width: calc(50% - 10px);
     }
 
     &-Price {

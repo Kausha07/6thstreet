@@ -7,7 +7,7 @@ import Image from 'Component/Image';
 
 import './MyAccountReturnCreateItem.style';
 
-class MyAccountReturnCreateItem extends PureComponent {
+export class MyAccountReturnCreateItem extends PureComponent {
     static propTypes = {
         isSelected: PropTypes.bool.isRequired,
         onResolutionChange: PropTypes.func.isRequired,
