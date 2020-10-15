@@ -4,6 +4,7 @@ import { PureComponent } from 'react';
 
 import CountryMiniFlag from 'Component/CountryMiniFlag';
 import Field from 'Component/Field';
+import { isArabic } from 'Util/App';
 
 import './PhoneCountryCodeField.style';
 
@@ -12,10 +13,16 @@ class PhoneCountryCodeField extends PureComponent {
         label: PropTypes.string.isRequired
     };
 
+    state = {
+        isArabic: isArabic()
+    }
+
     renderCountryPhoneCodeField() {
         const {
             label
         } = this.props;
+
+        const { isArabic } = this.state;
 
         const countryPhoneCodeValues = {
             'AE': '+971',
@@ -27,7 +34,7 @@ class PhoneCountryCodeField extends PureComponent {
         };
 
         return (
-            <div block="PhoneCountryCodeField">
+            <div block="PhoneCountryCodeField" mods={ { isArabic } }>
                 <CountryMiniFlag label={ label } />
                 <Field
                   type="text"

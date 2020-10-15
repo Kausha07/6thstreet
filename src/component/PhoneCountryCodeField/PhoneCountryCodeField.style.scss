@@ -15,4 +15,15 @@
         padding-left: 35px;
         padding-right: 0;
     }
+
+    &_isArabic {
+        .CountryMiniFlag-Container {
+            margin-left: 0;
+        }
+
+        input {
+            padding-left: 0;
+            padding-right: 35px;
+        }
+    }
 }

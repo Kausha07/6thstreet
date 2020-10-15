@@ -113,7 +113,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
 
     renderGernder() {
         // gender need to be added to customer API
-        const gender = this.state;
+        const { gender, isArabic } = this.state;
 
         return (
             <fieldset block="MyAccountCustomerForm" elem="Gender">
@@ -160,14 +160,16 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
     }
 
     renderPhone() {
+        const { isArabic } = this.state;
         const customerPhoneData = this.getCustomerPhoneData();
 
         return (
-            <div block="MyAccountCustomerForm" elem="Phone">
+            <div block="MyAccountCustomerForm" elem="Phone" mods={ { isArabic } }>
                 <PhoneCountryCodeField label={ customerPhoneData.customerCountry } />
                 <Field
                   block="MyAccountCustomerForm"
                   elem="PhoneField"
+                  mods={ { isArabic } }
                   type="text"
                   id="phone"
                   placeholder="Phone number"
@@ -179,9 +181,10 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
 
     renderBirthDay() {
         // birthday need to be added to customer API
+        const { isArabic } = this.state;
 
         return (
-            <div block="MyAccountCustomerForm" elem="BirthDay">
+            <div block="MyAccountCustomerForm" elem="BirthDay" mods={ { isArabic } }>
                 <input
                   type="date"
                   id="birth-day"
