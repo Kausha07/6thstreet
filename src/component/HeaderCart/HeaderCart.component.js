@@ -27,7 +27,10 @@ class HeaderCart extends PureComponent {
     renderCartPopUp = () => {
         const { isPopup } = this.state;
         const popUpElement = (
-            <CartOverlay isPopup={ isPopup } closePopup={ this.closePopup } />
+            <CartOverlay
+              isPopup={ isPopup }
+              closePopup={ this.closePopup }
+            />
         );
 
         this.setState({ cartPopUp: popUpElement });
@@ -52,9 +55,10 @@ class HeaderCart extends PureComponent {
                       : this.renderCartPopUp }
                   block="HeaderCart"
                   elem="Button"
-                />
+                >
+                    { renderCountItems }
+                </button>
                 { cartPopUp }
-                { renderCountItems }
             </div>
         );
     }

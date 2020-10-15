@@ -214,7 +214,6 @@ class FieldMultiselect extends PureComponent {
     }
 
     render() {
-        console.log(this.filterButtonRef.current);
         return this.renderMultiselectContainer();
     }
 }

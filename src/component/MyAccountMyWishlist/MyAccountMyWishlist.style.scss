@@ -23,7 +23,7 @@
         grid-template-rows: auto;
         grid-column-gap: 2%;
 
-        @include desktop {
+        @include after-mobile {
             grid-template-columns: 33.3% 33.3% 33.3%;
             grid-column-gap: 16px;
             grid-row-gap: 64px;
@@ -107,48 +107,6 @@
 
         @include desktop {
             padding-bottom: 65px;
-        }
-    }
-
-    &-Buttons {
-        display: none;
-    }
-
-    @include desktop {
-        &-Item:hover {
-            .MyAccountMyWishlist-Buttons {
-                transform: translateY(-100px);
-            }
-        }
-        
-        &-Buttons {
-            display: flex;
-            background-color: var(--White);
-            width: 100%;
-            position: absolute;
-            bottom: -100px;
-            transition: transform .4s;
-
-            a:first-of-type {
-                border: 2px solid var(--Black);
-                max-height: 70px;
-                width: 35%;
-                font-size: 12px;
-                font-family: 'Avenir Next Bold';
-                margin-right: 3.5%;
-                padding: 20px 0;
-            }
-
-            a:last-of-type {
-                max-height: 70px;
-                width: 60%;
-                font-size: 12px;
-                font-family: 'Avenir Next Bold';
-                color: var(--White);
-                background-color: var(--Black);
-                padding: 20px 0;
-                margin: 0;
-            }
         }
     }
 }
