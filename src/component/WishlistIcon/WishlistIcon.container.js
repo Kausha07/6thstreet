@@ -8,7 +8,8 @@ import { WishlistItems } from 'Util/API/endpoint/Wishlist/Wishlist.type';
 import WishlistIcon from './WishlistIcon.component';
 
 export const mapDispatchToProps = (dispatch) => ({
-    addToWishlist: (sku) => Wishlist.addSkuToWishlist(dispatch, sku)
+    addToWishlist: (sku) => Wishlist.addSkuToWishlist(dispatch, sku),
+    removeFromWishlist: (sku) => Wishlist.removeSkuFromWishlist(sku, dispatch)
 });
 
 export const mapStateToProps = (state) => ({
@@ -18,7 +19,8 @@ export const mapStateToProps = (state) => ({
 class WishlistIconContainer extends PureComponent {
     static propTypes = {
         sku: PropTypes.string.isRequired,
-        items: WishlistItems.isRequired
+        items: WishlistItems.isRequired,
+        removeFromWishlist: PropTypes.func.isRequired
     };
 
     render() {

@@ -25,7 +25,8 @@ export class WishlistDispatcher {
         }
     }
 
-    async removeSkuFromWishlist(sku, dispatch, store) {
+    async removeSkuFromWishlist(sku, dispatch) {
+        // console.log(store);
         if (!isSignedIn()) {
             // skip non-authorized users
             dispatch(showNotification(
@@ -37,11 +38,11 @@ export class WishlistDispatcher {
         }
 
         try {
-            const { wishlist_item_id: id } = store.wishlistReducer.items.find(
-                ({ product }) => product.sku === sku
-            );
-
-            await MagentoAPI.delete(`/wishlist/delete/${ id }`);
+            // const { wishlist_item_id: id } = store.wishlistReducer.items.find(
+            //     ({ product }) => product.sku === sku
+            // );
+            console.log('sku **', sku);
+            await MagentoAPI.delete(`/wishlist/delete/${ sku }`);
 
             this.updateInitialWishlistData(dispatch);
 

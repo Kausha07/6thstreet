@@ -7,14 +7,15 @@ import './WishlistIcon.style';
 class WishlistIcon extends PureComponent {
     static propTypes = {
         sku: PropTypes.string.isRequired,
-        addToWishlist: PropTypes.func.isRequired,
+        removeFromWishlist: PropTypes.func.isRequired,
         items: PropTypes.array.isRequired
     };
 
     handleClick = () => {
-        const { sku, addToWishlist } = this.props;
-
-        addToWishlist(sku);
+        const { removeFromWishlist } = this.props;
+        console.log(this.props);
+        const s = '2961365';
+        removeFromWishlist(s);
     };
 
     isBlack = (item) => {
@@ -27,6 +28,7 @@ class WishlistIcon extends PureComponent {
     renderIcon() {
         const { items } = this.props;
         const blackMod = items.some(this.isBlack);
+        console.log(items);
 
         return (
             <div
