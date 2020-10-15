@@ -234,18 +234,16 @@ class PLPFilters extends PureComponent {
 
     renderQuickFilter([key, filter]) {
         const genders = [
-            'men',
-            'woman',
-            'kids'
+            __('men'),
+            __('women'),
+            __('kids')
         ];
         const brandsLabel = 'Brands';
         const categoriesLabel = 'Categories';
         const pathname = location.pathname.split('/');
+        const isBrandsFilterRequired = genders.includes(pathname[1]);
 
-        switch (pathname[1]) {
-        case genders[0]:
-        case genders[1]:
-        case genders[2]:
+        if (isBrandsFilterRequired) {
             if (filter.label === brandsLabel) {
                 return (
                     <PLPQuickFilter
@@ -254,16 +252,13 @@ class PLPFilters extends PureComponent {
                     />
                 );
             }
-            break;
-        default:
-            if (filter.label === categoriesLabel) {
-                return (
-                    <PLPQuickFilter
-                      key={ key }
-                      filter={ filter }
-                    />
-                );
-            }
+        } else if (filter.label === categoriesLabel) {
+            return (
+                <PLPQuickFilter
+                  key={ key }
+                  filter={ filter }
+                />
+            );
         }
 
         return null;

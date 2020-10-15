@@ -5,6 +5,8 @@ import { Slider } from 'SourceComponent/Slider/Slider.component';
 import { Filter } from 'Util/API/endpoint/Product/Product.type';
 import isMobile from 'Util/Mobile';
 
+import { SUBCATEGORIES } from './QuickCategoriesOptions.config';
+
 import './QuickCategoriesOptions.style';
 
 class QuickCategoriesOptions extends PureComponent {
@@ -53,7 +55,7 @@ class QuickCategoriesOptions extends PureComponent {
     }
 
     getSubcategories(data) {
-        const haveSubcategories = 'subcategories' in Object.entries(data)[0][1];
+        const haveSubcategories = SUBCATEGORIES in Object.entries(data)[0][1];
 
         if (haveSubcategories) {
             const subCategories = Object.entries(data).map((entry) => entry[1]);
