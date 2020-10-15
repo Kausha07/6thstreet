@@ -5,8 +5,6 @@ import { Slider } from 'SourceComponent/Slider/Slider.component';
 import { Filter } from 'Util/API/endpoint/Product/Product.type';
 import isMobile from 'Util/Mobile';
 
-import { SUBCATEGORIES } from './QuickCategoriesOptions.config';
-
 import './QuickCategoriesOptions.style';
 
 class QuickCategoriesOptions extends PureComponent {
@@ -48,23 +46,6 @@ class QuickCategoriesOptions extends PureComponent {
         }, []);
     }
 
-    getSubCategoryList(values) {
-        const categoryList = this.concatSubCategories(values);
-
-        return categoryList.reduce((acc, item) => ({ ...acc, ...item }));
-    }
-
-    getSubcategories(data) {
-        const haveSubcategories = SUBCATEGORIES in Object.entries(data)[0][1];
-
-        if (haveSubcategories) {
-            const subCategories = Object.entries(data).map((entry) => entry[1]);
-            return this.getSubCategoryList(subCategories);
-        }
-
-        return data;
-    }
-
     prepareCategoryOptionsList() {
         const { showFilterCount } = this.state;
         const { filter: { data } } = this.props;
@@ -72,9 +53,33 @@ class QuickCategoriesOptions extends PureComponent {
         const subCategoryList = this.getSubcategories(data);
         const sortedList = Object.entries(subCategoryList)
             .sort(([, a], [, b]) => b.product_count - a.product_count)
-            .reduce((r, [k, v]) => ({ ...r, [k]: v }), {});
+            .reduce((acc,
+                [k, v]) => {
+                if (Object.keys(acc).length < showFilterCount) {
+                    return { ...acc, [k]: v };
+                }
 
-        return Object.entries(sortedList).slice(0, showFilterCount).map((entry) => entry[1]);
+                return acc;
+            }, {});
+
+        return Object.entries(sortedList).map((entry) => entry[1]);
+    }
+
+    getSubCategoryList(values) {
+        const categoryList = this.concatSubCategories(values);
+
+        return categoryList.reduce((acc, item) => ({ ...acc, ...item }));
+    }
+
+    getSubcategories(data) {
+        const haveSubcategories = 'subcategories' in Object.entries(data)[0][1];
+
+        if (haveSubcategories) {
+            const subCategories = Object.entries(data).map((entry) => entry[1]);
+            return this.getSubCategoryList(subCategories);
+        }
+
+        return data;
     }
 
     renderOptions() {
