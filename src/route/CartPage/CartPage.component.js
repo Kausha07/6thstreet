@@ -16,7 +16,6 @@ import ExpandableContent from 'Component/ExpandableContent';
 import Link from 'Component/Link';
 import MyAccountTabList from 'Component/MyAccountTabList';
 import ProductLinks from 'Component/ProductLinks';
-import StoreCredit from 'Component/StoreCredit';
 import { tabMap } from 'Route/MyAccount/MyAccount.container';
 import { CROSS_SELL } from 'Store/LinkedProducts/LinkedProducts.reducer';
 import {
@@ -268,7 +267,6 @@ export class CartPage extends PureComponent {
                         { this.renderCrossSellProducts() }
                     </div>
                     <div block="CartPage" elem="Floating" mods={ { isArabic } }>
-                        <StoreCredit canApply />
                         { this.renderDiscountCode() }
                         { this.renderPromo() }
                         { this.renderTotals() }
