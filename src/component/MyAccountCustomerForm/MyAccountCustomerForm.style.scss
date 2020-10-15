@@ -1,5 +1,6 @@
 :root {
     --light-gray: #cacaca;
+    --dark-gray: #b8b8b8
 }
 
 .MyAccountCustomerForm {
@@ -43,21 +44,21 @@
             display: flex;
 
             .Field {
-                margin-top: 5px;
                 margin-right: 23px;
+                margin-top: 5px;
                 label {
                     label {
-                        margin-top: -2px;
                         margin-right: 5px;
+                        margin-top: -2px;
                     }
                 }
             }
 
             .Field [type='radio'] {
-
                 + label {
-                    position: relative;
+                    border-radius: 50%;
                     height: 15px;
+                    position: relative;
                     width: 15px;
 
                     @include after-mobile() {
@@ -71,24 +72,22 @@
                         }
                     }
 
-                    border-radius: 50%;
-
                     &::after {
+                        border-radius: 50%;
+                        bottom: 0;
+                        height: .5rem;
                         left: 0;
+                        margin: auto;
                         right: 0;
                         top: 0;
-                        bottom: 0;
-                        margin: auto;
-                        width: .5rem;
-                        height: .5rem;
-                        border-radius: 50%;
                         transition-property: background-color, box-shadow;
+                        width: .5rem;
                         will-change: background-color, box-shadow;
                     }
                 }
 
                 &:disabled + label {
-                    color: #b8b8b8;
+                    color: var(--dark-gray);
                     cursor: auto;
                 }
 
@@ -98,14 +97,14 @@
 
                 &:not(:checked) + label {
                     &:after {
-                        transition-duration: 0s;
                         background-color: rgba(255,255,255,0.5);
                         border-radius: 0;
-                        z-index: 1;
                         content: ' ';
-                        margin-left: -1px;
-                        width: 61px;
                         height: 20px;
+                        margin-left: -1px;
+                        transition-duration: 0s;
+                        width: 61px;
+                        z-index: 1;
                     }
                 }
 
@@ -123,8 +122,8 @@
                 .Field {
                     label {
                         label {
-                            margin-right: 0;
                             margin-left: 5px;
+                            margin-right: 0;
                         }
                     }
 
@@ -291,16 +290,13 @@
             margin-top: 0;
 
             &-Title {
-                margin-bottom: 8px;
-                margin-left: 0;
-                margin-right: 0;
-                margin-top: 18px;
+                margin: 18px 0 8px;
             }
         }
     }
 
     @include desktop {
-        width: 800px;
         margin-bottom: 150px;
+        width: 800px;
     }
 }

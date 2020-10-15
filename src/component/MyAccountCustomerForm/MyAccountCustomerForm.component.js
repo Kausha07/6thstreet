@@ -112,7 +112,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
     }
 
     renderGernder() {
-        // gender need to be added to customer API
+        // gender need to be added to customer data
         const { gender, isArabic } = this.state;
 
         return (
@@ -180,7 +180,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
     }
 
     renderBirthDay() {
-        // birthday need to be added to customer API
+        // birthday need to be added to customer data
         const { isArabic } = this.state;
 
         return (
