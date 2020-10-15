@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-bind */
 import PropTypes from 'prop-types';
-import { PureComponent } from 'react';
+import { createRef, PureComponent } from 'react';
 
 import PLPFilterOption from 'Component/PLPFilterOption';
 import { Filter } from 'Util/API/endpoint/Product/Product.type';
@@ -26,6 +26,8 @@ class FieldMultiselect extends PureComponent {
         isChecked: false,
         currentActiveFilter: ''
     };
+
+    filterButtonRef = createRef();
 
     constructor(props) {
         super(props);
@@ -142,6 +144,13 @@ class FieldMultiselect extends PureComponent {
         );
     }
 
+    onCheckboxOptionClick = () => {
+        const { onChange } = this.props;
+
+        onChange();
+        this.filterButtonRef.current.focus();
+    };
+
     handleFilterChange = () => {
         const { changeActiveFilter, filter } = this.props;
         changeActiveFilter(filter.category);
@@ -162,11 +171,12 @@ class FieldMultiselect extends PureComponent {
 
     renderMultiselectContainer() {
         const { toggleOptionsList, isArabic } = this.state;
-        const { placeholder, onChange } = this.props;
+        const { placeholder, onChange, filter: { is_radio } } = this.props;
 
         return (
             <div block="FieldMultiselect">
             <button
+              ref={ this.filterButtonRef }
               type="button"
               block="FieldMultiselect"
               elem="FilterButton"
@@ -194,7 +204,7 @@ class FieldMultiselect extends PureComponent {
                 >
                 <fieldset
                   block="PLPFilter"
-                  onChange={ onChange }
+                  onChange={ !is_radio ? this.onCheckboxOptionClick : onChange }
                 >
                         { this.renderOptions() }
                 </fieldset>
