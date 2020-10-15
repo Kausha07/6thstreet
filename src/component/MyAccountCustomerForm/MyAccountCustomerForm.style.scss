@@ -201,6 +201,10 @@
         top: -60px;
         margin-left: 90px;
 
+        @include desktop() {
+            top: -58px;
+        }
+
         &_isArabic {
             margin-right: 90px;
             margin-left: 0;
