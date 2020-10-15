@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Field from 'Component/Field';
 import Loader from 'Component/Loader';
 import MyAccountPasswordForm from 'Component/MyAccountPasswordForm';
+import PhoneCountryCodeField from 'Component/PhoneCountryCodeField';
 import {
     MyAccountCustomerForm as SourceMyAccountCustomerForm
 } from 'SourceComponent/MyAccountCustomerForm/MyAccountCustomerForm.component';
@@ -14,6 +15,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
     static propTypes = {
         ...SourceMyAccountCustomerForm.propTypes,
         isShowPassword: PropTypes.bool.isRequired,
+        customer: PropTypes.isRequired,
         showPasswordFrom: PropTypes.func.isRequired,
         hidePasswordFrom: PropTypes.func.isRequired,
         onSave: PropTypes.func.isRequired,
@@ -22,7 +24,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
 
     state = {
         isArabic: isArabic(),
-        gender: 'men'
+        gender: 'male'
     };
 
     get fieldMap() {
@@ -48,8 +50,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
                 render: this.renderPhone.bind(this)
             },
             dob: {
-                label: __('Date of Birth'),
-                placeholder: __('Your birthday')
+                render: this.renderBirthDay.bind(this)
             }
         };
     }
@@ -85,12 +86,13 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
     }
 
     renderGernder() {
+        // gender need to be added to customer API
         const gender = this.state;
 
         return (
-            <fieldset block="MyAccountOverlay" elem="Gender">
+            <fieldset block="MyAccountCustomerForm" elem="Gender">
                 <div
-                  block="MyAccountOverlay"
+                  block="MyAccountCustomerForm"
                   elem="Radio"
                   mods={ { isArabic } }
                 >
@@ -117,13 +119,47 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
         );
     }
 
+    getCustomerPhoneData() {
+        const { customer } = this.props;
+
+        if (Object.keys(customer).length !== 0) {
+            const customerAdressesData = customer.addresses[0];
+            const customerPhone = customerAdressesData.telephone;
+            const customerCountry = customerAdressesData.country_id;
+
+            return { customerPhone, customerCountry };
+        }
+
+        return [];
+    }
+
     renderPhone() {
+        const customerPhoneData = this.getCustomerPhoneData();
+
         return (
-            <fieldset block="MyAccountOverlay" elem="Phone">
+            <fieldset block="MyAccountCustomerForm" elem="Phone">
+                <PhoneCountryCodeField label={ customerPhoneData.customerCountry } />
                 <Field
+                  block="MyAccountCustomerForm"
+                  elem="PhoneField"
                   type="text"
                   id="phone"
                   placeholder="Phone number"
+                  value={ customerPhoneData.customerPhone }
+                />
+            </fieldset>
+        );
+    }
+
+    renderBirthDay() {
+        // birthday need to be added to customer API
+
+        return (
+            <fieldset block="MyAccountCustomerForm" elem="BirthDay">
+                <Field
+                  type="text"
+                  id="birthDay"
+                  placeholder="your birthday"
                 />
             </fieldset>
         );

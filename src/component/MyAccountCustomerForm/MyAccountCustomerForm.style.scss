@@ -36,6 +36,61 @@
         }
     }
 
+    &-Radio {
+        display: flex;
+        margin-top: 10px;
+
+        .Field [type='radio'] {
+
+            + label {
+                position: relative;
+                height: 14px;
+                width: 14px;
+                margin-right: 6px;
+
+
+                &:hover {
+                    &::after {
+                        --checkmark-color: var(--black-color);
+                    }
+                }
+
+                border-radius: 50%;
+
+                &::after {
+                    left: 0;
+                    right: 0;
+                    top: 0;
+                    bottom: 0;
+                    margin: auto;
+                    width: .5rem;
+                    height: .5rem;
+                    border-radius: 50%;
+                    transition-property: background-color, box-shadow;
+                    will-change: background-color, box-shadow;
+                }
+            }
+
+            &:disabled + label {
+                color: #b8b8b8;
+                cursor: auto;
+            }
+
+            &:checked + label {
+                --primary-base-color: var(--black-color);
+            }
+
+            &:focus {
+
+                + label {
+                    &::after {
+                        --checkmark-color: var(--black-color);
+                    }
+                }
+            }
+        }
+    }
+
     input {
         font-size: 12px;
         height: 60px;
@@ -71,6 +126,21 @@
                 width: 20px;
             }
         }
+    }
+
+    &-Phone {
+        margin-right: 90px;
+
+        .Field {
+            margin-bottom: -14px;
+        }
+    }
+
+    &-PhoneField {
+        position: absolute;
+        top: -60px;
+        width: 100%;
+        margin-left: 90px;
     }
 
     #change-password-button {

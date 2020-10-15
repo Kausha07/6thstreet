@@ -1,0 +1,13 @@
+.PhoneCountryCodeField {
+    width: 80px;
+    margin-top: -18px;
+
+    .CountryMiniFlag-Container {
+        margin-bottom: -55px;
+        margin-left: 12px;
+        z-index: 1;
+    }
+    input {
+        padding-left: 35px;
+    }
+}
