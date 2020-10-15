@@ -55,6 +55,14 @@
         }
 
         .Field_type_radio {
+            label {
+                display: inline-block;
+                max-width: calc(100vw - 2rem - 45px);
+                vertical-align: middle;
+                padding: 0;
+                top: -5px;
+            }
+
             @include before-desktop {
                 label {
                     width: 100%;
@@ -101,7 +109,7 @@
                     border-color: var(--disabeled-radio-button-color);
                     
                     &::after {
-                        --checkmark-color: var(--black-color);
+                        --checkmark-color: var(--check-mark-mobile-filter-color);
                     }
                 }
 
@@ -110,12 +118,12 @@
                 &:focus {
 
                     &::after {
-                        --checkmark-color: var(--black-color);
+                        --checkmark-color: var(--check-mark-mobile-filter-color);
                     }
                     
                     + label {
                         &::after {
-                            --checkmark-color: var(--black-color);
+                            --checkmark-color: var(--check-mark-mobile-filter-color);
                         }
                     }
                 }
