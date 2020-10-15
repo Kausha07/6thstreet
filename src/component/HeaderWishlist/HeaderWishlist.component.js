@@ -31,6 +31,7 @@ class HeaderWishlist extends PureComponent {
     render() {
         const { isBottomBar, isWishlist, isMobile } = this.props;
         const { isArabic } = this.state;
+        console.log(this.props);
 
         return (
             <div
