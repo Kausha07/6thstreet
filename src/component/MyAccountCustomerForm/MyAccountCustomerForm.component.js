@@ -21,7 +21,8 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
     };
 
     state = {
-        isArabic: isArabic()
+        isArabic: isArabic(),
+        gender: 'men'
     };
 
     get fieldMap() {
@@ -34,11 +35,17 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
                 placeholder: __('Last name'),
                 validation: ['notEmpty']
             },
+            gender: {
+                render: this.renderGernder.bind(this)
+            },
             email: {
                 isDisabled: true
             },
             password: {
                 render: this.renderPassword.bind(this)
+            },
+            phone: {
+                render: this.renderPhone.bind(this)
             },
             dob: {
                 label: __('Date of Birth'),
@@ -74,6 +81,51 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
                     { __('Change') }
                 </button>
             </div>
+        );
+    }
+
+    renderGernder() {
+        const gender = this.state;
+
+        return (
+            <fieldset block="MyAccountOverlay" elem="Gender">
+                <div
+                  block="MyAccountOverlay"
+                  elem="Radio"
+                  mods={ { isArabic } }
+                >
+                    <Field
+                      type="radio"
+                      id="male"
+                      label={ __('Male') }
+                      name="gender"
+                      value={ gender }
+                      onClick={ this.handleGenderChange }
+                      defaultChecked={ gender }
+                    />
+                    <Field
+                      type="radio"
+                      id="female"
+                      label={ __('Female') }
+                      name="gender"
+                      value={ gender }
+                      onClick={ this.handleGenderChange }
+                      defaultChecked={ gender }
+                    />
+                </div>
+            </fieldset>
+        );
+    }
+
+    renderPhone() {
+        return (
+            <fieldset block="MyAccountOverlay" elem="Phone">
+                <Field
+                  type="text"
+                  id="phone"
+                  placeholder="Phone number"
+                />
+            </fieldset>
         );
     }
 
