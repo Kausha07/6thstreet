@@ -11,78 +11,73 @@
     --color-gray: #808080;
     --color-light-grey: #d3d3d3;
     --color-medium-grey: #b5b5b5;
+    --reset-button-color: #cc0000;
 }
 
 .FilterPopup {
-    box-shadow: 10px 10px 0 250px rgba(0, 0, 0, 0.7);
     top: 0;
-    width: 80%;
+    width: 100%;
 
-    &_isArabic {
-        direction: rtl;
-        left: unset;
-        right: 0;
-    }
-
-    .Reset {
-        &_isOpen {
-            color: var(--primary-dark-color);
-            font-size: 12px;
-            font-weight: bold;
-            position: absolute;
+    &-Reset {
+        color:var(--reset-button-color);
+        font-weight:bold;
+        text-transform: capitalize;
+    
+        @include before-desktop {
+            padding-left: 0;
+            color: var(--black-color);
+            font-size: 14px;
+            font-weight: 200;
+            letter-spacing: 0;
+            line-height: 19px;
+            text-align: right;
             right: 5px;
             text-transform: capitalize;
-            top: 7px;
-        }
 
-        &_isArabic {
-            left: 5px;
-            right: auto;
+            &_isArabic {
+                padding-left: 15px;
+                padding-right: 0;
+            }
         }
     }
 
     &-CloseBtn {
         cursor: pointer;
-        height: 55px;
-        position: fixed;
-        right: 5px;
-        top: 7px;
         width: 55px;
 
-        &:before,
         &:after {
-            background: var(--color-white);
-            content: "";
-            height: 4px;
-            left: 10px;
             position: absolute;
-            top: 21px;
-            width: 26px;
+            content: '';
+            width: 0;
+            height: 0;
+            border: solid black;
+            border-width: 0 2px 2px 0;
+            display: inline-block;
+            padding: 2px 5px 5px 2px;
+            margin: 0 auto;
+            transform: rotate(135deg);
+            left: 20px;
+            top: 20px;
+            background: transparent;
         }
 
-        &:before {
-            transform: rotate(45deg);
-        }
-
-        &:after {
-            transform: rotate(-45deg);
-        }
-
-    }
-
-    .CloseBtn {
         &_isArabic {
-            left: 5px;
-            right: auto;
+            transform: rotate(-180deg);
         }
     }
 
     &-Title {
+        display: flex;
+        justify-content: space-between;
         border-bottom: 1px solid var(--color-light-grey);
         font-size: 18px;
-        padding: 20px;
         position: relative;
         text-transform: capitalize;
+        height: 50px;
+
+        &_isArabic {
+            flex-direction: row-reverse;
+        }
     }
 
     .arrow {
@@ -95,11 +90,6 @@
 
     .left {
         transform: rotate(135deg);
-
-        &_isArabic {
-            margin-left: 10px;
-            transform: rotate(-45deg);
-        }
     }
 
     @include desktop() {
@@ -113,21 +103,30 @@
     .Popup {
         &-Content {
             padding: 0;
+            overflow: hidden;
         }
     }
 
     .Content {
         &-Filters {
-            height: calc(100% - 120px);
+            height: calc(100% - 140px);
             overflow-y: auto;
-            padding: 0 15px;
+            padding: 0;
+            border-right: 1px solid var(--light-gray);
+            width: 35%;
+
+            &_isArabic {
+                border-right: 0;
+                border-left: 1px solid var(--light-gray);
+                margin-left: 65%;
+            }
 
             .FieldSelect-Select {
                 border: none;
                 border-bottom: 1px solid var(--color-light-grey);
                 font-family: "Avenir Next Ultra Light";
                 font-size: 12px;
-                font-weight: 600;
+                font-weight: bold;
                 padding: 0 0 15px;
                 text-transform: capitalize;
             }
@@ -143,33 +142,22 @@
                         width: 10px;
                     }
                 }
-
-                &_isArabic {
-                    .FieldSelect {
-                        &::after {
-                            border-width: 0 2px 2px 0;
-                            height: 10px;
-                            left: 10px;
-                            margin-top: 5px;
-                            right: auto;
-                            transform: rotate(135deg);
-                            width: 10px;
-                        }
-                    }
-                }
             }
         }
 
         &-SeeResult {
             background-color: var(--color-button-red);
             color: var(--color-white);
-            font-family: Avenir;
-            font-size: 15px;
+            font-size: 12px;
+            font-family: "Avenir Next Bold";
             font-weight: bold;
-            height: 60px;
-            margin-top: 25px;
+            letter-spacing: 0;
+            line-height: 16px;
+            text-align: center;
+            margin: 20px 7% 30px;
+            height: 50px;
             text-transform: uppercase;
-            width: 100%;
+            width: 86%;
         }
     }
 }
@@ -185,7 +173,6 @@
     height: 34px;
     justify-content: space-between;
     letter-spacing: 0.5px;
-    margin-top: 100px;
     text-transform: capitalize;
     width: 106px;
 
@@ -202,16 +189,20 @@
     }
 }
 
-.Reset {
-    &_isArabic {
-        padding: 0 10px;
-    }
-}
-
 .PLPFilters {
     margin: 0 20px;
     display: flex;
     flex-wrap: wrap;
+
+    &-Refine {
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        line-height: 16px;
+    }
 
     @include mobile() {
         display: none;
@@ -310,11 +301,5 @@
             margin-right: 5px;
         }
 
-        &_isArabic {
-            span{
-                margin-right: 0;
-                margin-left: 5px;
-            }
-        }
     }
 }

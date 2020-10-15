@@ -28,6 +28,8 @@
 
     border-top: 1px solid var(--Gallery);
     margin: 1rem;
+    font-family: 'Avenir Next Regular';
+    height: 200px;
 
     &-Link {
         color: inherit;
@@ -40,7 +42,7 @@
     &-Option,
     & {
         padding-left: 0;
-        margin-bottom: 0;
+        margin-bottom: 30px;
 
         &::before {
             content: none;
@@ -55,7 +57,7 @@
         display: flex;
         flex-wrap: wrap;
         flex-direction: column;
-        height: 130px;
+        height: 150px;
 
         &_isLikeTable {
             @include after-mobile {
@@ -71,7 +73,8 @@
         grid-template-columns: auto auto;
         background: var(--cart-item-background);
         padding-top: 15px;
-        height: 190px;
+        height: 200px;
+        text-transform: capitalize;
     }
 
     &-Options {
@@ -123,6 +126,11 @@
         margin-bottom: .5rem;
         color: var(--cart-item-heading-color);
         text-align: left;   
+        letter-spacing: .75px;
+
+        &_isArabic {
+            text-align: right;
+        }
     }
 
     &-Picture {
@@ -130,11 +138,14 @@
         width: 85px;
         margin-right: 24px;
         background-color: var(--image-default-background);
+
+        &_isArabic {
+            margin: 0 0 0 24px;
+        }
     }
 
     &-Price, &-ColSizeQty {
         line-height: 30px;
-        font-family: 'Avenir Next Regular';
         font-size: 13px;
         text-align: left;
         color: var(--Black);
@@ -166,22 +177,28 @@
 
     &-ColSizeQty {
         color: var(--Tundora);
+        font-weight: 500;
+        margin-bottom: 10px;
+        width: 190px;
+
         span {
             color: var(--DustyGray);
+            
+        }
+
+        &_isArabic {
+            text-align: right;
         }
     }
 
     &-Actions {
         opacity: 0;
-        padding: 0 1rem;
         max-height: 0;
         pointer-events: none;
-
         display: flex;
         justify-content: space-between;
         align-items: center;
         flex-direction: row-reverse;
-
         will-change: max-height, opacity, padding;
         transition-property: padding, max-height;
         transition-duration: 200ms;
@@ -193,10 +210,15 @@
 
         @include after-mobile {
             position: absolute;
-            bottom: 1rem;
+            bottom: 0rem;
             right: 0;
             width: calc(100% - 8rem);
             height: 3rem;
+        }
+
+        &_isArabic {
+            right: unset;
+            left: 0;
         }
 
         &_isLikeTable {
