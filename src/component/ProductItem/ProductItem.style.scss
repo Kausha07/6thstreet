@@ -1,3 +1,28 @@
-.ProductItem {
+/**
+ * @category  6thstreet
+ * @author    Alona Zvereva <alona.zvereva@scandiweb.com>
+ * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
+ * @copyright Copyright (c) 2020 Scandiweb, Inc (https://scandiweb.com)
+ */
 
+.ProductItem {
+    .ProductLabel {
+        width: 40px;
+        height: 25px;
+        background-color: #C8B581;
+        z-index: 10;
+        display: flex;
+        font-size: 13px;
+        color: white;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        top: 20px;
+        border-radius: 0 10px 10px 0;
+
+        &_isArabic {
+            right: 0;
+            border-radius: 10px 0 0 10px;
+        }
+    }
 }
