@@ -1,6 +1,8 @@
 import { PureComponent } from 'react';
 
+import HeaderCart from 'Component/HeaderCart';
 import HeaderGenders from 'Component/HeaderGenders';
+import HeaderSearch from 'Component/HeaderSearch';
 import MenuCategory from 'Component/MenuCategory';
 import { Categories } from 'Util/API/endpoint/Categories/Categories.type';
 import { isArabic } from 'Util/App';
@@ -47,12 +49,36 @@ class Menu extends PureComponent {
               block="Menu"
               elem="Container"
             >
-                <HeaderGenders />
                 <div
-                  mix={ { block: 'Menu', mods: { isArabic } } }
+                  block="Menu"
+                  elem="Header-Mobile"
+                >
+                    <div
+                      mix={ {
+                          block: 'Menu',
+                          elem: 'Header-Mobile-Top',
+                          mods: { isArabic }
+                      } }
+                    >
+                        <HeaderGenders />
+                        <HeaderCart />
+                    </div>
+                    <HeaderSearch />
+                </div>
+                <div
+                  mix={ {
+                      block: 'Menu',
+                      mods: { isArabic }
+                  } }
                 >
                     { this.renderCategories() }
-                    <div block="MenuCategory" elem="LastCategoryBackground" />
+                    <div
+                      mix={ {
+                          block: 'MenuCategory',
+                          elem: 'LastCategoryBackground',
+                          mods: { isArabic }
+                      } }
+                    />
                 </div>
             </div>
         );

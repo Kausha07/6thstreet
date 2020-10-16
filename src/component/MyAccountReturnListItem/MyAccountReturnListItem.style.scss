@@ -1,3 +1,49 @@
 .MyAccountReturnListItem {
-    
+    border-bottom: 1px solid var(--color-gainsboro);
+    display: table;
+    font-family: var(--avenir-regular-font);
+    padding: 30px 0;
+    text-decoration: none;
+    width: 100%;
+
+    &:hover,
+    &:active {
+        text-decoration: none;
+    }
+
+    &:first-of-type {
+        border-top: 1px solid var(--color-gainsboro);
+    }
+
+    &-Status {
+        display: table-cell;
+        padding-right: 20px;
+        text-align: right;
+        width: calc(100% / 3);
+
+        &::after {
+            border-bottom: 1px solid var(--black);
+            border-right: 1px solid var(--black);
+            content: '';
+            height: 5px;
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%) rotate(-45deg) scale(1.5);
+            width: 5px;
+        }
+    }
+
+    &-OrderNumber {
+        display: table-cell;
+        font-weight: bold;
+        text-align: center;
+        text-decoration: underline;
+        width: calc(100% / 3);
+    }
+
+    &-Date {
+        display: table-cell;
+        width: calc(100% / 3);
+    }
 }

@@ -6,16 +6,20 @@
     }
 
     @include before-desktop {
-        border-top: 1px solid var(--grey);
-        width: 270px;
+        border-right: 1px solid var(--light-gray);
+        margin-top: 120px;
+        height: 100%;
+        width: 100%;
 
         &-Container {
             flex-direction: column;
+            height: 100%;
+            width: 100%;
 
             .HeaderGenders {
                 display: grid;
                 grid-auto-flow: column;
-                width: 280px;
+                max-width: calc(100% - 60px);
 
                 .GenderButton {
                     &-Button {
@@ -23,6 +27,56 @@
                     }
                 }
             }
+        }
+
+        &-Header {
+            &-Mobile {
+                background-color: var(--white);
+                position: fixed;
+                width: 100%;
+                z-index: 10;
+
+                &-Top {
+                    border-bottom: 1px solid var(--grey);
+
+                    .HeaderCart {
+                        &-Button {
+                            float: right;
+                            margin-right: 20px;
+                            margin-top: -35px;
+                        }
+                    }
+
+                    &_isArabic {
+                        .HeaderCart {
+                            &-Button {
+                                float: left;
+                                margin-left: 20px;
+                                margin-right: 0;
+                            }
+                        }
+                    }
+                }
+
+                .HeaderSearch {
+                    height: 50px;
+                    margin-top: 15px;
+
+                    .Field {
+                        margin: 10px 0;
+                        padding: 0 20px;
+                        width: 100%;
+
+                        #search-field {
+                            width: 100%;
+                        }
+                    }
+                }
+            }
+        }
+
+        &_isArabic {
+            border-left: 1px solid var(--light-gray);
         }
     }
 
@@ -36,26 +90,11 @@
             }
         }
 
-        .MenuCategory {
-            &-LastCategoryBackground {
-                background-color: var(--red);
-                color: transparent;
-                margin-left: -90px;
-                transform: skew(-15deg, 0deg);
-                width: 80px;
+        &-Header {
+            &-Mobile {
+                display: none;
             }
         }
 
-        &_isArabic {
-            .MenuCategory {
-                &-LastCategoryBackground {
-                    background-color: var(--red);
-                    color: transparent;
-                    margin-right: -125px;
-                    transform: skew(-15deg, 0deg);
-                    width: 105px;
-                }
-            }
-        }
     }
 }

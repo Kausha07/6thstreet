@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-import ExpandableContent from 'Component/ExpandableContent';
 import SizeTable from 'Component/SizeTable';
+import ExpandableContent from 'SourceComponent/ExpandableContent';
 import Popup from 'SourceComponent/Popup';
 import isMobile from 'SourceUtil/Mobile/isMobile';
 import { isArabic } from 'Util/App';
@@ -51,6 +51,8 @@ class PDPSizeGuide extends PureComponent {
     renderModal() {
         const { isArabic, isOpen } = this.state;
 
+        document.body.style.overflow = 'hidden';
+
         return (
             <Popup
               mix={ { block: 'PDPSizeGuide', elem: 'Modal', mods: { isOpen, isArabic } } }
@@ -65,6 +67,7 @@ class PDPSizeGuide extends PureComponent {
     hideOverlay = () => {
         const { hideActiveOverlay } = this.props;
         hideActiveOverlay();
+        document.body.style.overflow = 'visible';
     };
 
     renderModalContents() {
@@ -109,7 +112,7 @@ class PDPSizeGuide extends PureComponent {
         const { isArabic } = this.state;
         const isOpen = true;
         return (
-            <ExpandableContent isOpen={ isOpen } header={ __('UK') } isArabic={ isArabic }>
+            <ExpandableContent isOpen={ isOpen } heading={ __('UK') } isArabic={ isArabic }>
                 <SizeTable />
             </ExpandableContent>
         );
@@ -119,7 +122,7 @@ class PDPSizeGuide extends PureComponent {
         const { isArabic } = this.state;
         const isOpen = true;
         return (
-            <ExpandableContent isOpen={ isOpen } header={ __('International') } isArabic={ isArabic }>
+            <ExpandableContent isOpen={ isOpen } heading={ __('International') } isArabic={ isArabic }>
                 <SizeTable />
             </ExpandableContent>
         );
@@ -129,7 +132,7 @@ class PDPSizeGuide extends PureComponent {
         const { isArabic } = this.state;
         const isOpen = false;
         return (
-            <ExpandableContent isOpen={ isOpen } header={ __('European') } isArabic={ isArabic }>
+            <ExpandableContent isOpen={ isOpen } heading={ __('European') } isArabic={ isArabic }>
                 <SizeTable />
             </ExpandableContent>
         );

@@ -24,23 +24,56 @@ export class PDPGalleryOverlayContainer extends PureComponent {
         product: Product.isRequired,
         setImageIndex: PropTypes.func.isRequired,
         index: PropTypes.number.isRequired,
-        closeGalleryOverlay: PropTypes.func.isRequired
+        closeGalleryOverlay: PropTypes.func.isRequired,
+        key: PropTypes.number.isRequired
     };
 
     containerFunctions = {
+        handleZoomChange: this.handleZoomChange.bind(this),
+        disableZoom: this.disableZoom.bind(this),
         onSliderChange: this.onSliderChange.bind(this)
     };
 
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            isZoomEnabled: false,
+            isGalleryEmpty: false
+        };
+
+        this.getGallery = this.getGallery.bind(this);
+    }
+
     containerProps = () => {
+        const { isZoomEnabled } = this.state;
         const { currentIndex, closeGalleryOverlay } = this.props;
 
         return {
             gallery: this.getGallery(),
             crumbs: this.getCrumbs(),
             currentIndex,
+            isZoomEnabled,
             closeGalleryOverlay
         };
     };
+
+    disableZoom() {
+        document.documentElement.classList.remove('overscrollPrevented');
+        this.setState({ isZoomEnabled: false });
+    }
+
+    handleZoomChange(args) {
+        const { isZoomEnabled } = this.state;
+
+        if (args.scale !== 1) {
+            if (isZoomEnabled) {
+                return;
+            }
+            document.documentElement.classList.add('overscrollPrevented');
+            this.setState({ isZoomEnabled: true });
+        }
+    }
 
     onSliderChange(activeSlide) {
         const { setImageIndex } = this.props;
@@ -63,7 +96,8 @@ export class PDPGalleryOverlayContainer extends PureComponent {
             }
         } = this.props;
 
-        if (isLoading) {
+        if (isLoading || gallery_images.length === 0) {
+            this.setState({ isGalleryEmty: true });
             return Array.from({ length: 4 });
         }
 
@@ -73,6 +107,7 @@ export class PDPGalleryOverlayContainer extends PureComponent {
     render() {
         return (
             <PDPGallery
+              { ...this.state }
               { ...this.containerFunctions }
               { ...this.containerProps() }
             />

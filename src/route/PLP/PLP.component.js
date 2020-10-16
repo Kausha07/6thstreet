@@ -8,7 +8,7 @@ import PLPPages from 'Component/PLPPages';
 
 import './PLP.style';
 
-class PLP extends PureComponent {
+export class PLP extends PureComponent {
     static propTypes = {
         // TODO: implement prop-types
     };

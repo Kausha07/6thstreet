@@ -60,7 +60,7 @@ export class PDPGalleryContainer extends PureComponent {
             }
         } = this.props;
 
-        if (isLoading) {
+        if (isLoading || gallery_images.length === 0) {
             return Array.from({ length: 4 });
         }
 
@@ -68,10 +68,13 @@ export class PDPGalleryContainer extends PureComponent {
     }
 
     render() {
+        const { product: { sku = '' } } = this.props;
+
         return (
             <PDPGallery
               { ...this.containerFunctions }
               { ...this.containerProps() }
+              sku={ sku }
             />
         );
     }

@@ -9,7 +9,7 @@ export class PDPDispatcher {
         const { options } = payload;
 
         try {
-            const response = await Algolia.getPDP(options);
+            const response = await new Algolia().getPDP(options);
 
             dispatch(setPDPData(
                 response,

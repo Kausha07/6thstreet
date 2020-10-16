@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import Link from 'Component/Link';
 import Loader from 'Component/Loader';
 import ProductItem from 'Component/ProductItem';
 import { WishlistItems } from 'Util/API/endpoint/Wishlist/Wishlist.type';
@@ -22,17 +23,45 @@ class MyAccountMyWishlist extends PureComponent {
     }
 
     renderNoItems() {
-        return 'no items in wishlist';
+        return (
+            <p>
+                { __('You have no items in your wish list.') }
+            </p>
+        );
+    }
+
+    renderButtons(product) {
+        const { url } = product;
+        const { pathname } = new URL(url);
+
+        const linkTo = {
+            pathname,
+            state: { product }
+        };
+
+        return (
+            <div block="MyAccountMyWishlist" elem="Buttons">
+                <Link to={ linkTo }>
+                    { __('Details') }
+                </Link>
+                <Link to={ linkTo }>
+                    { __('Add to bag') }
+                </Link>
+            </div>
+        );
     }
 
     renderItem = (item) => {
         const { product, wishlist_item_id } = item;
 
         return (
-            <ProductItem
-              key={ wishlist_item_id }
-              product={ product }
-            />
+            <div block="MyAccountMyWishlist" elem="Item">
+                <ProductItem
+                  key={ wishlist_item_id }
+                  product={ product }
+                />
+                { this.renderButtons(product) }
+            </div>
         );
     };
 

@@ -2,6 +2,7 @@
 
 import DynamicContent from 'Component/DynamicContent';
 import MenuBanner from 'Component/MenuBanner';
+import MenuBrands from 'Component/MenuBrands';
 import MenuGrid from 'Component/MenuGrid';
 
 import './MenuDynamicContent.style';
@@ -9,7 +10,8 @@ import './MenuDynamicContent.style';
 class MenuDynamicContent extends DynamicContent {
     renderMap = {
         banner: MenuBanner,
-        grid: MenuGrid
+        grid: MenuGrid,
+        slider: MenuBrands
     };
 }
 

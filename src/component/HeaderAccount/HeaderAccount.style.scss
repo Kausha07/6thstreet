@@ -70,10 +70,10 @@
         &::before{
             content: "";
             right: 0;
-            background: url(./icons/account.svg) no-repeat;
+            background: url(./icons/account-gray@2x.png) no-repeat;
             background-size: 27px;
             width: 27px;
-            height: 27px;
+            height: 29px;
             display: inline-block;
             font-size: 0;
             filter: invert(26%) sepia(2%) saturate(21%) hue-rotate(43deg) brightness(90%) contrast(80%);
@@ -94,7 +94,6 @@
     }
 
     &-PopUp {
-        display: none;
         position: fixed;
         top: 0;
         right: 0;

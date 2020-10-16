@@ -41,12 +41,11 @@ export class WishlistDispatcher {
                 ({ product }) => product.sku === sku
             );
 
-            await MagentoAPI.delete(
-                `/wishlist/delete/${ id }`,
-                { sku }
-            );
+            await MagentoAPI.delete(`/wishlist/delete/${ id }`);
 
-            this.updateWishlist(dispatch);
+            this.updateInitialWishlistData(dispatch);
+
+            dispatch(showNotification('success', __('Product has been removed from your Wish List!')));
         } catch (e) {
             // eslint-disable-next-line no-console
             console.log(e);
@@ -58,7 +57,7 @@ export class WishlistDispatcher {
         }
     }
 
-    async addSkuToWishlist(sku, dispatch) {
+    async addSkuToWishlist(dispatch, sku) {
         if (!isSignedIn()) {
             // skip non-authorized users
             dispatch(showNotification(
@@ -70,12 +69,11 @@ export class WishlistDispatcher {
         }
 
         try {
-            await MagentoAPI.post(
-                `/wishlist/add/${sku}`,
-                { sku }
-            );
+            await MagentoAPI.post(`/wishlist/add/${sku}`);
 
-            this.updateWishlist(dispatch);
+            this.updateInitialWishlistData(dispatch);
+
+            dispatch(showNotification('success', __('Product added to wish-list!')));
         } catch (e) {
             // eslint-disable-next-line no-console
             console.log(e);

@@ -1,6 +1,61 @@
-:root{
+:root {
     --active-button-header-color: #f96446;
     --inactive-button-header-color: #4a4a4a;
+}
+
+@include before-desktop {
+
+    .HeaderAccount-PopUp,
+    .HeaderAccount-PopUp_isHidden_undefined {
+        display: block;
+        overflow-y: scroll;
+    }
+
+    .MyAccountOverlay-Heading {
+        display: block;
+    }
+
+    .MyAccountOverlay {
+        display: block;
+        height: 100%;
+        padding-top: 0;
+    }
+
+    .MyAccountOverlay-Action_state_createAccount {
+        padding-top: 0;
+    }
+
+    .MyAccountOverlay-Image {
+        object-position: 0;
+        width: 100%;
+    }
+
+    .MyAccountOverlay-ForgotPasswordSubheading {
+        font-weight: inherit;
+    }
+}
+
+@include mobile {
+
+    .MyAccountOverlay-Action {
+        display: block;
+    }
+
+    .MyAccountOverlay-Buttons {
+        margin: 30px;
+    }
+}
+
+.MyAccountOverlay-Button,
+.Button {
+
+    &:hover {
+        background-color: var(--black-color);
+    }
+}
+
+.MyAccountOverlay-Button_isSignIn::after {
+    background: none;
 }
 
 .MobileBottomBar {
@@ -13,7 +68,7 @@
     width: 100%;
 
     @include desktop {
-        display: flex;
+        display: none;
         z-index: 0;
         background: none;
         height: auto;
@@ -35,12 +90,12 @@
         text-align: center;
         margin: 10px auto 0;
 
-        &::before{
+        &::before {
             content: "";
             right: 0;
             background-size: 27px;
             width: 27px;
-            height: 27px;
+            height: 29px;
             display: inline-block;
             font-size: 0;
             filter: invert(26%) sepia(2%) saturate(21%) hue-rotate(43deg) brightness(90%) contrast(80%);
@@ -48,14 +103,14 @@
 
         &_isHomeButton {
             &::before{
-                background: url(./icons/home-solid.svg) no-repeat;
+                background: url(./icons/home-gray@2x.png) no-repeat;
                 background-size: 27px;
             }
         }
 
         &_isBrandButton {
             &::before{
-                background: url(./icons/brand.svg) no-repeat;
+                background: url(./icons/brands-gray@2x.png) no-repeat;
                 background-size: 27px;
             }
         }
@@ -63,7 +118,7 @@
         &_isActive {
             color: var(--active-button-header-color);
 
-            &::before{
+            &::before {
                 filter: invert(43%) sepia(60%) saturate(1535%) hue-rotate(335deg) brightness(107%) contrast(95%);
             }
         }

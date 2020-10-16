@@ -3,6 +3,7 @@ import { PureComponent } from 'react';
 
 import Field from 'Component/Field';
 import { FilterOption } from 'Util/API/endpoint/Product/Product.type';
+import { isArabic } from 'Util/App';
 
 import './PLPFilterOption.style';
 
@@ -10,6 +11,10 @@ class PLPFilterOption extends PureComponent {
     static propTypes = {
         option: FilterOption.isRequired,
         isRadio: PropTypes.bool.isRequired
+    };
+
+    state = {
+        isArabic: isArabic()
     };
 
     renderField() {
@@ -31,7 +36,7 @@ class PLPFilterOption extends PureComponent {
               id={ facet_value }
               name={ facet_key }
               value={ facet_value }
-              defaultChecked={ checked }
+              checked={ checked }
             />
         );
     }
@@ -44,7 +49,9 @@ class PLPFilterOption extends PureComponent {
         } = this.props;
 
         return (
-            <strong>{ product_count }</strong>
+            <span>
+                { `(${product_count})` }
+            </span>
         );
     }
 
@@ -52,21 +59,24 @@ class PLPFilterOption extends PureComponent {
         const {
             option: {
                 label,
-                facet_value
+                facet_value,
+                product_count
             }
         } = this.props;
 
         return (
             <label
+              block="PLPFilterOption"
               htmlFor={ facet_value }
             >
                 { label }
-                { this.renderCount() }
+                { product_count ? this.renderCount() : null }
             </label>
         );
     }
 
     render() {
+        const { isArabic } = this.state;
         const {
             option: {
                 facet_value
@@ -78,7 +88,7 @@ class PLPFilterOption extends PureComponent {
         }
 
         return (
-            <li block="PLPFilterOption">
+            <li block="PLPFilterOption" elem="List" mods={ { isArabic } }>
                 { this.renderField() }
                 { this.renderLabel() }
             </li>

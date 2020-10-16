@@ -43,35 +43,27 @@
 
     &-IconContainer {
         margin-top: 10px;
+        font-weight: 600;
     }
 
     &-Icon {
         display: flex;
         align-items: center;
-        background: var(--pdp-icon-backgroud);
         min-width: 40px;
         height: 40px;
-        border-radius: 13px;
         margin-right: 7px;
 
-        &::before{
-            content: '';
-            width: 22px;
-            height: 22px;
-            display: block;
-            margin: auto;
-            filter: opacity(60%);
+        &_isGenuine {
+            background: url(./icons/genuine.png) no-repeat;
         }
 
-        &_isGenuine {
-            &::before{
-                background: url(./icons/thumbs-up.svg) no-repeat;
-            }
-        }
         &_freeReturn {
-            &::before{
-                background: url(./icons/sync-solid.svg) no-repeat;
-            }
+            background: url(./icons/returns.png) no-repeat;
+        }
+
+        &_isGenuine,
+        &_freeReturn {
+            background-size: 40px;
         }
     }
 
@@ -167,6 +159,11 @@
         &_isHidden {
             display: block;
             position: absolute;
+            font-family: 'Avenir Next Bold';
+            font-size: 12px;
+            height: 40px;
+            font-weight: 600;
+            padding: 0 30px;
             z-index: 3;
             bottom: -180px;
             right: 0;

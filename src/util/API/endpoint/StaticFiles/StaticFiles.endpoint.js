@@ -38,6 +38,13 @@ export const getStaticFile = async (key, TemplateParamsOverride = {}) => {
         template
     );
 
-    const { data } = await CDN.get(url);
-    return data;
+    const { pathname } = new URL(url);
+
+    const res = await CDN.get(pathname);
+
+    if (res.data) {
+        return res.data;
+    }
+
+    return res;
 };

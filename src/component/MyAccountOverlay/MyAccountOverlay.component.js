@@ -67,7 +67,7 @@ export class MyAccountOverlay extends PureComponent {
 
     state = {
         isPopup: false,
-        gender: 'selectPreferNot',
+        gender: 'preferNot',
         isChecked: false,
         isArabic: isArabic()
     };
@@ -148,7 +148,7 @@ export class MyAccountOverlay extends PureComponent {
               xmlns="http://www.w3.org/2000/svg"
               width="16"
               height="16"
-              viewBox="0 0 24 24"
+              viewBox="0 -1 26 26"
             >
                 <path
                   d="M23.954 21.03l-9.184-9.095 9.092-9.174-1.832-1.807-9.09 9.179-9.176-9.088-1.81
@@ -233,8 +233,8 @@ export class MyAccountOverlay extends PureComponent {
                       autocomplete="email"
                       validation={ ['notEmpty', 'email'] }
                     />
-                    <div block="MyAccountOverlay" elem="Button">
-                        <button block="Button" mods={ { isMargin: true } } type="submit">
+                    <div block="MyAccountOverlay" elem="Button" mods={ { isMargin: true } }>
+                        <button block="Button" type="submit">
                             { __('Send') }
                         </button>
                     </div>
@@ -267,7 +267,7 @@ export class MyAccountOverlay extends PureComponent {
     }
 
     handleGenderChange = (e) => {
-        this.setState({ gender: e.target.value });
+        this.setState({ gender: e.target.id });
     };
 
     handleCheckboxChange = () => {
@@ -318,30 +318,30 @@ export class MyAccountOverlay extends PureComponent {
                         >
                             <Field
                               type="radio"
-                              id="selectMale"
+                              id="male"
                               label={ __('Male') }
                               name="gender"
-                              value={ 1 }
+                              value={ gender }
                               onClick={ this.handleGenderChange }
-                              checked={ gender === 1 }
+                              defaultChecked={ gender }
                             />
                             <Field
                               type="radio"
-                              id="selectFemale"
+                              id="female"
                               label={ __('Female') }
                               name="gender"
-                              value={ 2 }
+                              value={ gender }
                               onClick={ this.handleGenderChange }
-                              checked={ gender === 2 }
+                              defaultChecked={ gender }
                             />
                             <Field
                               type="radio"
-                              id="selectPreferNot"
+                              id="preferNot"
                               label={ __('Prefer not to say') }
                               name="gender"
-                              value={ 0 }
+                              value={ gender }
                               onClick={ this.handleGenderChange }
-                              checked={ gender === 0 }
+                              defaultChecked={ gender }
                             />
                         </div>
                     </fieldset>
@@ -387,10 +387,10 @@ export class MyAccountOverlay extends PureComponent {
                     <div
                       block="MyAccountOverlay"
                       elem="Button"
+                      mods={ { isCreateAccountButton: true } }
                     >
                         <button
                           block="Button"
-                          mods={ { isMargin: true } }
                           type="submit"
                         >
                             { __('Create Account') }
@@ -436,6 +436,7 @@ export class MyAccountOverlay extends PureComponent {
                     />
                 </fieldset>
                 <button
+                  type="button"
                   block="MyAccountOverlay"
                   elem="Button"
                   mods={ { likeLink: true } }

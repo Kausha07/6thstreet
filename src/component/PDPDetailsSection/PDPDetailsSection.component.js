@@ -65,10 +65,12 @@ class PDPDetailsSection extends PureComponent {
                 material,
                 dress_length,
                 heel_height,
+                heel_shape,
                 leg_length,
                 neck_line,
                 skirt_length,
-                toe_shape
+                toe_shape,
+                sleeve_length
             }
         } = this.props;
 
@@ -80,10 +82,12 @@ class PDPDetailsSection extends PureComponent {
             material,
             dress_length,
             heel_height,
+            heel_shape,
             leg_length,
             neck_line,
             skirt_length,
-            toe_shape
+            toe_shape,
+            sleeve_length
         };
 
         return (

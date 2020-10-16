@@ -1,3 +1,4 @@
+/* eslint-disable no-constant-condition */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 

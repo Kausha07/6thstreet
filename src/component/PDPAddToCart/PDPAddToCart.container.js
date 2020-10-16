@@ -15,7 +15,15 @@ export const mapStateToProps = (state) => ({
 export const mapDispatchToProps = (dispatch) => ({
     showNotification: (type, message) => dispatch(showNotification(type, message)),
     addProductToCart:
-     (productData, thumbnail_url) => CartDispatcher.addProductToCart(dispatch, productData, thumbnail_url)
+    (productData, color, optionValue, discount, brand_name, thumbnail_url) => CartDispatcher.addProductToCart(
+        dispatch,
+        productData,
+        color,
+        optionValue,
+        discount,
+        brand_name,
+        thumbnail_url
+    )
 });
 
 export class PDPAddToCartContainer extends PureComponent {
@@ -35,10 +43,10 @@ export class PDPAddToCartContainer extends PureComponent {
         sizeObject: {},
         selectedSizeType: 'eu',
         selectedSizeCode: '',
-        errorMessage: '',
         insertedSizeStatus: true,
         isLoading: false,
-        addedToCart: false
+        addedToCart: false,
+        buttonRefreshTimeout: 1250
     };
 
     static getDerivedStateFromProps(props) {
@@ -47,16 +55,16 @@ export class PDPAddToCartContainer extends PureComponent {
         if (product.simple_products !== undefined) {
             const filteredProductKeys = Object.keys(product.simple_products);
 
-            if (filteredProductKeys.length <= 1) {
-                return { insertedSizeStatus: false };
-            }
-
             const filteredProductSizeKeys = Object.keys(product.simple_products[filteredProductKeys[0]].size);
 
             const object = {
                 sizeCodes: filteredProductKeys,
                 sizeTypes: filteredProductSizeKeys
             };
+
+            if (filteredProductKeys.length <= 1 && filteredProductSizeKeys.length === 0) {
+                return { insertedSizeStatus: false, sizeObject: object };
+            }
 
             return { sizeObject: object };
         }
@@ -74,13 +82,18 @@ export class PDPAddToCartContainer extends PureComponent {
     }
 
     onSizeSelect(size) {
-        this.setState({ errorMessage: '' });
         this.setState({ selectedSizeCode: size.target.value });
     }
 
     addToCart() {
         const {
-            product, product: { simple_products, thumbnail_url }, addProductToCart, showNotification
+            product, product: {
+                simple_products,
+                discount,
+                thumbnail_url,
+                color,
+                brand_name
+            }, addProductToCart, showNotification
         } = this.props;
         const {
             selectedSizeType, selectedSizeCode, insertedSizeStatus
@@ -93,18 +106,20 @@ export class PDPAddToCartContainer extends PureComponent {
         if (product.size_uk.length !== 0 && selectedSizeCode !== '') {
             this.setState({ isLoading: true });
             const { size } = simple_products[selectedSizeCode];
+            const optionId = selectedSizeType.toLocaleUpperCase();
+            const optionValue = size[selectedSizeType];
 
             addProductToCart({
                 sku: selectedSizeCode,
                 qty: 1,
-                optionId: selectedSizeType.toLocaleUpperCase(),
-                optionValue: size[selectedSizeType]
-            }, thumbnail_url).then(
+                optionId,
+                optionValue
+            }, color, optionValue, discount, brand_name, thumbnail_url).then(
                 () => this.afterAddToCart()
             );
         }
 
-        if (insertedSizeStatus === false) {
+        if (!insertedSizeStatus) {
             this.setState({ isLoading: true });
             const code = Object.keys(simple_products);
 
@@ -113,16 +128,23 @@ export class PDPAddToCartContainer extends PureComponent {
                 qty: 1,
                 optionId: '',
                 optionValue: ''
-            }).then(
+            }, color, null, discount, brand_name, thumbnail_url).then(
                 () => this.afterAddToCart()
             );
         }
     }
 
     afterAddToCart() {
+        // eslint-disable-next-line no-unused-vars
+        const { buttonRefreshTimeout } = this.state;
+
         this.setState({ isLoading: false });
         // TODO props for addedToCart
+        const timeout = 1250;
         this.setState({ addedToCart: true });
+        const timer = setTimeout(() => this.setState({ addedToCart: false }), timeout);
+
+        return () => clearTimeout(timer);
     }
 
     render() {
