@@ -443,5 +443,13 @@
     "men": null,
     "woman": null,
     "kids": null,
-    "women": null
+    "women": null,
+    "Balance": null,
+    "Use Store Credit": null,
+    "Store Credit:": null,
+    "Password should be at least 6 characters long": null,
+    "Current Store Credit:": null,
+    "Action": null,
+    "Balance Change": null,
+    "Transactions History": null
 }

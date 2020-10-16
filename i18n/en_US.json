@@ -340,5 +340,14 @@
     "Details": null,
     "County": null,
     "Street": null,
-    "Postal code": null
+    "Postal code": null,
+    "Balance": null,
+    "Use Store Credit": null,
+    "Store Credit:": null,
+    "Password should be at least 6 characters long": null,
+    "Current Store Credit:": null,
+    "Action": null,
+    "Balance Change": null,
+    "Date": null,
+    "Transactions History": null
 }
