@@ -1,0 +1,90 @@
+:root {
+ --field-gray-text-color: #9B9B9B;
+ --choosed-field-gray-color: #F3F4F6;
+}
+
+.FieldMultiselect {
+    .PLPQuickFilter {
+        .Slider {
+            &-Wrapper {
+                width: 200px;
+            }
+        }
+
+        .QuickFilter {
+            &-List {
+                display: flex;
+                width: 100%;
+                max-width: 1200px;
+
+                .PLPFilterOption {
+                    &-List {
+                        display: inline-table;
+                    }
+                }
+
+                li {
+                    display: block;
+                    margin: 5px;
+                    margin-top: 40px;
+                    max-width: 200px;
+
+                    label {
+                        pointer-events: none;
+                        margin-left: 10px;
+                        padding-right: 10px;
+                        position: relative;
+                        left: 0;
+                        margin-top: -55px;
+                        height: 40px;
+                        color: var(--field-gray-text-color);
+                    }
+
+
+                    .Field [type='checkbox']:checked + label {
+                        --primary-base-color: var(--choosed-field-gray-color);
+                    }
+
+                    .Field {
+                        border-radius: 10px;
+                        margin: 0;
+                        width: 100%;
+
+                        label {
+                            border-radius: 20px;
+                            color: var(--field-gray-text-color);
+                            margin-left: 0;
+                            max-width: 200px;
+                            pointer-events: all;
+                            width: 100%;
+
+                            &:after {
+                                height: 0;
+                                width: 0;
+                            }
+
+                            &:hover {
+                                border-color: var(--field-gray-text-color);
+                                content: ' ';
+                            }
+                        }
+                    }
+
+                    span {
+                        display: none;
+                    }
+
+                    &::before {
+                        content: none;
+                    }
+
+                    padding: 0;
+                }
+            }
+        }
+    }
+
+    @include before-desktop() {
+        direction: ltr;
+    }
+}
