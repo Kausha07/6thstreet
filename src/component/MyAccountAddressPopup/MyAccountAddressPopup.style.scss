@@ -69,14 +69,18 @@
 
     &-DeleteBtn{
         position: absolute;
-        top: -115px;
+        top: -113px;
         right: 0;
-        z-index: 8;
+        z-index: 91;
         text-transform: none;
         font-family: 'Avenir Next Demi Regular', sans-serif;
         font-weight: 400;
         font-size: 16px;
         padding: 0;
+
+        &_newForm {
+            display: none;
+        }
 
         @include desktop() {
             display: none;
