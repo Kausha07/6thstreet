@@ -29,23 +29,23 @@ export class MyAccountCancelCreateContainer extends MyAccountReturnCreateContain
     async onFormSubmit() {
         // const { selectedItems, items } = this.state;
 
-        const payload = {
-            order_id: this.getOrderId()
-            // TODO: for some reasons items break the BE (report to 6th street)
-            // items: Object.entries(selectedItems).map(([id, resolutionId]) => {
-            //     const { qty_to_cancel } = items.find(({ item_id }) => item_id === id);
+        // const payload = {
+        //     order_id: this.getOrderId()
+        //     // TODO: for some reasons items break the BE (report to 6th street)
+        //     // items: Object.entries(selectedItems).map(([id, resolutionId]) => {
+        //     //     const { qty_to_cancel } = items.find(({ item_id }) => item_id === id);
 
-            //     return {
-            //         order_item_id: id,
-            //         qty: qty_to_cancel,
-            //         resolution: {
-            //             id: resolutionId
-            //         }
-            //     };
-            // })
-        };
+        //     //     return {
+        //     //         order_item_id: id,
+        //     //         qty: qty_to_cancel,
+        //     //         resolution: {
+        //     //             id: resolutionId
+        //     //         }
+        //     //     };
+        //     // })
+        // };
 
-        console.log(payload);
+        // console.log(payload);
     }
 
     render() {

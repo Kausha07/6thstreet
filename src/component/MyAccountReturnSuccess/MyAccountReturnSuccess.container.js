@@ -1,7 +1,8 @@
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import { showNotification } from 'Store/Notification/Notification.action';
 import { customerType } from 'Type/Account';
 import { MatchType } from 'Type/Common';
 import MagentoAPI from 'Util/API/provider/MagentoAPI';
@@ -12,12 +13,15 @@ export const mapStateToProps = (state) => ({
     customer: state.MyAccountReducer.customer
 });
 
-export const mapDispatchToProps = () => ({});
+export const mapDispatchToProps = (dispatch) => ({
+    showErrorMessage: (message) => dispatch(showNotification('error', message))
+});
 
 export class MyAccountReturnSuccessContainer extends PureComponent {
     static propTypes = {
         match: MatchType.isRequired,
-        customer: customerType.isRequired
+        customer: customerType.isRequired,
+        showErrorMessage: PropTypes.func.isRequired
     };
 
     state = {
@@ -68,6 +72,7 @@ export class MyAccountReturnSuccessContainer extends PureComponent {
     }
 
     getReturnInformation() {
+        const { showErrorMessage } = this.props;
         const returnId = this.getReturnId();
 
         this.setState({ isLoading: true });
@@ -89,10 +94,9 @@ export class MyAccountReturnSuccessContainer extends PureComponent {
                 date,
                 items
             });
-        }).catch((error) => {
+        }).catch(() => {
+            showErrorMessage('Error appeared while fetching return request information');
             this.setState({ isLoading: false });
-
-            console.error(error);
         });
     }
 

@@ -1,25 +1,25 @@
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
+import { showNotification } from 'Store/Notification/Notification.action';
 import { HistoryType, MatchType } from 'Type/Common';
 import MagentoAPI from 'Util/API/provider/MagentoAPI';
 
 import MyAccountReturnCreate from './MyAccountReturnCreate.component';
 
-export const mapStateToProps = (_state) => ({
-    // wishlistItems: state.WishlistReducer.productsInWishlist
-});
+export const mapStateToProps = () => ({});
 
-export const mapDispatchToProps = (_dispatch) => ({
-    // addProduct: options => CartDispatcher.addProductToCart(dispatch, options)
+export const mapDispatchToProps = (dispatch) => ({
+    showErrorMessage: (message) => dispatch(showNotification('error', message))
 });
 
 export class MyAccountReturnCreateContainer extends PureComponent {
     static propTypes = {
         match: MatchType.isRequired,
-        history: HistoryType.isRequired
+        history: HistoryType.isRequired,
+        showErrorMessage: PropTypes.func.isRequired
     };
 
     containerFunctions = {
@@ -81,6 +81,7 @@ export class MyAccountReturnCreateContainer extends PureComponent {
     }
 
     getReturnableItems() {
+        const { showErrorMessage } = this.props;
         const orderId = this.getOrderId();
 
         this.setState({ isLoading: true });
@@ -93,9 +94,8 @@ export class MyAccountReturnCreateContainer extends PureComponent {
                     isLoading: false,
                     resolutions: resolution_options
                 });
-            }).catch((error) => {
-                // TODO: Show error message
-                console.error(error);
+            }).catch(() => {
+                showErrorMessage(__('Error appeared while fetching returnable items'));
                 this.setState({ isLoading: false });
             });
     }
@@ -129,7 +129,7 @@ export class MyAccountReturnCreateContainer extends PureComponent {
     }
 
     onFormSubmit() {
-        const { history } = this.props;
+        const { history, showErrorMessage } = this.props;
         const { selectedItems, items } = this.state;
         const payload = {
             order_id: this.getOrderId(),
@@ -161,10 +161,9 @@ export class MyAccountReturnCreateContainer extends PureComponent {
 
         MagentoAPI.post('returns/request', payload).then(({ data: { id } }) => {
             history.push(`/my-account/return-item/create/success/${ id }`);
-        }).catch((error) => {
-            // TODO: Change to show error message
+        }).catch(() => {
+            showErrorMessage(__('Error appeared while requesting a return'));
             this.setState({ isLoading: false });
-            console.error(error);
         });
     }
 
