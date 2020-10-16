@@ -13,17 +13,40 @@
         z-index: 1;
     }
     &-List {
+        margin: 0;
         display: flex;
 
         label {
             display: flex;
             align-items: center;
             width: 100%;
+
             @include desktop {
                 position: absolute;
                 height: 42px;
                 padding-left: 42px;
                 cursor: pointer;
+            }
+        }
+
+        &_isArabic {
+            label {
+                display: unset;
+                align-items: unset;
+                text-align: right;
+                overflow: hidden;
+                justify-content: right;
+                top: 12px;
+
+                @include desktop {
+                    display: flex;
+                    align-items: center;
+                    width: 100%;
+                    top: unset;
+                    padding-right: 42px;
+                    padding-left: 0;
+                    cursor: pointer;
+                }
             }
         }
 
@@ -45,7 +68,7 @@
                     [type='checkbox']{
                         + label{
                             @include before-desktop {
-                                left: 5px;
+                                left: 5%;
                                 right: unset;
                             }
                         }
@@ -55,12 +78,20 @@
         }
 
         .Field_type_radio {
+            @include desktop {
+                width: 18px;
+                height: 18px;
+            }
+            
             label {
                 display: inline-block;
                 max-width: calc(100vw - 2rem - 45px);
                 vertical-align: middle;
                 padding: 0;
-                top: -5px;
+
+                @include before-desktop {
+                    top: unset;
+                }
             }
 
             @include before-desktop {
@@ -79,6 +110,11 @@
             }
 
             [type='radio']{
+
+                @include before-desktop {
+                    left: 5%;
+                }
+
                 + label{
                     @include before-desktop {
                         position: absolute;
