@@ -15,7 +15,7 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import MyAccountAddressPopup from 'Component/MyAccountAddressPopup';
-import MyAccountAddressTableCard from 'Component/MyAccountAddressTableCard';
+import MyAccountAddressTable from 'Component/MyAccountAddressTable';
 import { addressType, customerType } from 'Type/Account';
 import isMobile from 'Util/Mobile';
 
@@ -88,7 +88,7 @@ export class MyAccountAddressBook extends PureComponent {
         const postfix = getDefaultPostfix(address);
 
         return (
-            <MyAccountAddressTableCard
+            <MyAccountAddressTable
               title={ __('Address #%s%s', addressNumber, postfix) }
               showActions
               hideCards={ this.hideCards }

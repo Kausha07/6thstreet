@@ -24,9 +24,9 @@ import isMobile from 'Util/Mobile';
 import pencil from './icons/edit_btn.png';
 import trash from './icons/trash.png';
 
-import './MyAccountAddressTableCard.style';
+import './MyAccountAddressTable.style';
 
-export class MyAccountAddressTableCard extends KeyValueTable {
+export class MyAccountAddressTable extends KeyValueTable {
     static propTypes = {
         mix: MixType,
         getFormatedRegion: PropTypes.func.isRequired,
@@ -81,12 +81,12 @@ export class MyAccountAddressTableCard extends KeyValueTable {
         return (
             <>
                 <button
-                  block="MyAccountAddressTableCard"
+                  block="MyAccountAddressTable"
                   elem="ActionBtn"
                   onClick={ this.onEdit }
                 >
                     <img
-                      block="MyAccountAddressTableCard"
+                      block="MyAccountAddressTable"
                       elem="Icon"
                       mods={ { pencil: true } }
                       alt="pencil"
@@ -94,14 +94,14 @@ export class MyAccountAddressTableCard extends KeyValueTable {
                     />
                 </button>
                 <button
-                  block="MyAccountAddressTableCard"
+                  block="MyAccountAddressTable"
                   elem="ActionBtn"
                   onClick={ onDeleteClick }
                   disabled={ isDeleteAllowed }
                   title={ isDeleteAllowed ? __('Can not delete - address is set as default.') : 'Delete this address' }
                 >
                     <img
-                      block="MyAccountAddressTableCard"
+                      block="MyAccountAddressTable"
                       elem="Icon"
                       mods={ { trash: true } }
                       alt="trash"
@@ -176,7 +176,7 @@ export class MyAccountAddressTableCard extends KeyValueTable {
         const { countries, mix } = this.props;
 
         return (
-            <div block="MyAccountAddressTableCard" mix={ mix }>
+            <div block="MyAccountAddressTable" mix={ mix }>
                 <Loader isLoading={ !countries.length } />
                 { this.renderCard() }
                 { this.renderActions() }
@@ -185,4 +185,4 @@ export class MyAccountAddressTableCard extends KeyValueTable {
     }
 }
 
-export default MyAccountAddressTableCard;
+export default MyAccountAddressTable;

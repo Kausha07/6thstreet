@@ -22,7 +22,7 @@ import { showPopup } from 'Store/Popup/Popup.action';
 import { addressType } from 'Type/Account';
 import { countriesType } from 'Type/Config';
 
-import MyAccountAddressTableCard from './MyAccountAddressTableCard.component';
+import MyAccountAddressTable from './MyAccountAddressTable.component';
 
 export const mapStateToProps = (state) => ({
     countries: state.ConfigReducer.countries
@@ -32,7 +32,7 @@ export const mapDispatchToProps = (dispatch) => ({
     showEditPopup: (payload) => dispatch(showPopup(ADDRESS_POPUP_ID, payload))
 });
 
-export class MyAccountAddressTableCardContainer extends PureComponent {
+export class MyAccountAddressTableContainer extends PureComponent {
     static propTypes = {
         address: addressType.isRequired,
         showEditPopup: PropTypes.func.isRequired,
@@ -87,7 +87,7 @@ export class MyAccountAddressTableCardContainer extends PureComponent {
 
     render() {
         return (
-            <MyAccountAddressTableCard
+            <MyAccountAddressTable
               { ...this.props }
               { ...this.containerFunctions }
             />
@@ -95,4 +95,4 @@ export class MyAccountAddressTableCardContainer extends PureComponent {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MyAccountAddressTableCardContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(MyAccountAddressTableContainer);

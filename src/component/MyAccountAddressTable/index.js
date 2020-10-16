@@ -9,4 +9,4 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-export { default } from './MyAccountAddressTableCard.container';
+export { default } from './MyAccountAddressTable.container';
