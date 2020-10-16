@@ -38,3 +38,25 @@ export const ReturnSuccessItemType = PropTypes.shape({
     original_price: PropTypes.string,
     qty_requested: PropTypes.number
 });
+
+export const OrderType = PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    customer_id: PropTypes.string.isRequired,
+    increment_id: PropTypes.string.isRequired,
+    created_at: PropTypes.string.isRequired,
+    state: PropTypes.string.isRequired,
+    status: PropTypes.string.isRequired,
+    currency_code: PropTypes.string.isRequired,
+    discount_amount: PropTypes.string.isRequired,
+    msp_cod_amount: PropTypes.string,
+    shipping_amount: PropTypes.string.isRequired,
+    subtotal: PropTypes.string.isRequired,
+    grand_total: PropTypes.string.isRequired,
+    tax_amount: PropTypes.string.isRequired,
+    method: PropTypes.string.isRequired,
+    thumbnail: PropTypes.string.isRequired,
+    brand_name: PropTypes.string.isRequired,
+    items_count: PropTypes.number.isRequired,
+    courier_deliver_date: PropTypes.string.isRequired,
+    packages_count: PropTypes.number
+});

@@ -4,6 +4,7 @@ import { Route, Switch } from 'react-router-dom';
 
 import MyAccountCancelCreate from 'Component/MyAccountCancelCreate';
 import MyAccountReturnCreate from 'Component/MyAccountReturnCreate';
+import MyAccountReturnCreateList from 'Component/MyAccountReturnCreateList';
 import MyAccountReturnList from 'Component/MyAccountReturnList';
 import MyAccountReturnSuccess from 'Component/MyAccountReturnSuccess';
 import MyAccountReturnView from 'Component/MyAccountReturnView';
@@ -22,6 +23,10 @@ class MyAccountReturns extends PureComponent {
               match={ match }
             />
         );
+    }
+
+    renderCreateReturnList() {
+        return <MyAccountReturnCreateList />;
     }
 
     renderCreateReturn({ match }) {
@@ -58,6 +63,11 @@ class MyAccountReturns extends PureComponent {
                 <Route
                   path={ withStoreRegex('/my-account/return-item/create/success/:returnId') }
                   render={ this.renderCreateReturnSuccess }
+                  exact
+                />
+                <Route
+                  path={ withStoreRegex('/my-account/return-item/create/') }
+                  render={ this.renderCreateReturnList }
                   exact
                 />
                 <Route
