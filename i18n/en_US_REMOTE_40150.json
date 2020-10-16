@@ -495,5 +495,17 @@
     "You have no items in your wish list.": null,
     "Details": null,
     "number": null,
-    "fullname": null
+    "fullname": null,
+    "You must be logged in to remove items from wishlist": null,
+    "Balance": null,
+    "Back to shopping": null,
+    "Use Store Credit": null,
+    "Store Credit:": null,
+    "Password should be at least 6 characters long": null,
+    "Current Store Credit:": null,
+    "Action": null,
+    "Balance Change": null,
+    "Transactions History": null,
+    "New": null,
+    "male": null
 }

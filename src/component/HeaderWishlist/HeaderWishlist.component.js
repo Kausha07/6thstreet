@@ -11,6 +11,7 @@ class HeaderWishlist extends PureComponent {
         history: PropTypes.object.isRequired,
         isBottomBar: PropTypes.bool.isRequired,
         isWishlist: PropTypes.bool.isRequired,
+        wishListItems: PropTypes.array.isRequired,
         isMobile: PropTypes.bool
     };
 
@@ -29,8 +30,14 @@ class HeaderWishlist extends PureComponent {
     };
 
     render() {
-        const { isBottomBar, isWishlist, isMobile } = this.props;
+        const {
+            isBottomBar,
+            isWishlist,
+            isMobile,
+            wishListItems
+        } = this.props;
         const { isArabic } = this.state;
+        const itemsCount = wishListItems.length;
 
         return (
             <div
@@ -52,7 +59,8 @@ class HeaderWishlist extends PureComponent {
                 <button
                   onClick={ this.routeChangeWishlist }
                 >
-                    <span />
+                    <div block="HeaderWishlist" elem="Count" mods={ { have: !!itemsCount } }>{ itemsCount }</div>
+                    <span block="HeaderWishlist" elem="Heart" mods={ { isBlack: !!itemsCount } } />
                 </button>
                 <label htmlFor="WishList">{ __('WishList') }</label>
             </div>
