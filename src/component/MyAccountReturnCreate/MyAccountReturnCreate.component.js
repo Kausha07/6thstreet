@@ -4,6 +4,7 @@ import { PureComponent } from 'react';
 import Form from 'Component/Form';
 import Loader from 'Component/Loader';
 import MyAccountReturnCreateItem from 'Component/MyAccountReturnCreateItem';
+import { ReturnReasonType, ReturnResolutionType } from 'Type/API';
 
 import './MyAccountReturnCreate.style';
 
@@ -14,26 +15,16 @@ export class MyAccountReturnCreate extends PureComponent {
         onResolutionChange: PropTypes.func.isRequired,
         onFormSubmit: PropTypes.func.isRequired,
         incrementId: PropTypes.string,
-        // TODO: move this to API types
         items: PropTypes.arrayOf(
             PropTypes.shape({
                 item_id: PropTypes.string,
-                reason_options: PropTypes.arrayOf(PropTypes.shape({
-                    id: PropTypes.number,
-                    label: PropTypes.string
-                }))
+                reason_options: PropTypes.arrayOf(ReturnReasonType)
             })
         ),
         isLoading: PropTypes.bool.isRequired,
         selectedNumber: PropTypes.number.isRequired,
         handleDiscardClick: PropTypes.func.isRequired,
-        // TODO: Move to API types
-        resolutions: PropTypes.arrayOf(
-            PropTypes.shape({
-                id: PropTypes.string.isRequired,
-                label: PropTypes.string.isRequired
-            })
-        )
+        resolutions: PropTypes.arrayOf(ReturnResolutionType)
     };
 
     static defaultProps = {

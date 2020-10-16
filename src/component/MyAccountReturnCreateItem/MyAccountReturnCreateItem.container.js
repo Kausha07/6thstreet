@@ -2,15 +2,13 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import { ReturnResolutionType } from 'Type/API';
+
 import MyAccountReturnCreateItem from './MyAccountReturnCreateItem.component';
 
-export const mapStateToProps = (_state) => ({
-    // wishlistItems: state.WishlistReducer.productsInWishlist
-});
+export const mapStateToProps = () => ({});
 
-export const mapDispatchToProps = (_dispatch) => ({
-    // addProduct: options => CartDispatcher.addProductToCart(dispatch, options)
-});
+export const mapDispatchToProps = () => ({});
 
 export class MyAccountReturnCreateItemContainer extends PureComponent {
     static propTypes = {
@@ -21,13 +19,7 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
         onClick: PropTypes.func.isRequired,
         onResolutionChange: PropTypes.func.isRequired,
         onReasonChange: PropTypes.func.isRequired,
-        // TODO: Move to API types
-        resolutions: PropTypes.arrayOf(
-            PropTypes.shape({
-                id: PropTypes.string.isRequired,
-                label: PropTypes.string.isRequired
-            })
-        )
+        resolutions: PropTypes.arrayOf(ReturnResolutionType)
     };
 
     static defaultProps = {

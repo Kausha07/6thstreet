@@ -4,6 +4,7 @@ import { PureComponent } from 'react';
 import { formatPrice } from '@6thstreetdotcom/algolia-sdk/app/utils/filters';
 import Field from 'Component/Field';
 import Image from 'Component/Image';
+import { ReturnItemType, ReturnResolutionType } from 'Type/API';
 
 import './MyAccountReturnCreateItem.style';
 
@@ -14,31 +15,8 @@ export class MyAccountReturnCreateItem extends PureComponent {
         onReasonChange: PropTypes.func.isRequired,
         reasonOptions: PropTypes.array.isRequired,
         onClick: PropTypes.func.isRequired,
-        // TODO: Move to API types
-        resolutions: PropTypes.arrayOf(
-            PropTypes.shape({
-                id: PropTypes.string.isRequired,
-                label: PropTypes.string.isRequired
-            })
-        ).isRequired,
-        item: PropTypes.shape({
-            item_id: PropTypes.string,
-            name: PropTypes.string,
-            thumbnail: PropTypes.string,
-            color: PropTypes.string,
-            row_total: PropTypes.string,
-            discount_percent: PropTypes.string,
-            discount_amount: PropTypes.string,
-            product_options: PropTypes.shape({
-                info_buyRequest: PropTypes.shape({
-                    qty: PropTypes.string
-                })
-            }),
-            size: PropTypes.shape({
-                label: PropTypes.string,
-                value: PropTypes.string
-            })
-        }).isRequired
+        resolutions: PropTypes.arrayOf(ReturnResolutionType).isRequired,
+        item: ReturnItemType.isRequired
     };
 
     renderResolutions() {

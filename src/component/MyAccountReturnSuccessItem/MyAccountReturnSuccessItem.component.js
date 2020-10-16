@@ -1,25 +1,12 @@
-import PropTypes from 'prop-types';
-
 import { formatPrice } from '@6thstreetdotcom/algolia-sdk/app/utils/filters';
 import { MyAccountReturnCreateItem } from 'Component/MyAccountReturnCreateItem/MyAccountReturnCreateItem.component';
+import { ReturnSuccessItemType } from 'Type/API';
 
 import './MyAccountReturnSuccessItem.style';
 
 export class MyAccountReturnSuccessItem extends MyAccountReturnCreateItem {
     static propTypes = {
-        item: PropTypes.shape({
-            id: PropTypes.string,
-            name: PropTypes.string,
-            thumbnail: PropTypes.string,
-            color: PropTypes.string,
-            price: PropTypes.string,
-            original_price: PropTypes.string,
-            qty_requested: PropTypes.number,
-            size: PropTypes.shape({
-                label: PropTypes.string,
-                value: PropTypes.string
-            })
-        }).isRequired
+        item: ReturnSuccessItemType.isRequired
     };
 
     renderDetails() {
