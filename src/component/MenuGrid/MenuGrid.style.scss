@@ -50,6 +50,13 @@
         &-Content {
             margin: 0;
             width: 100%;
+
+            &_isArabic {
+                button {
+                    margin-left: 0;
+                    margin-right: -30px;
+                }
+            }
         }
 
         &-Columns {
@@ -83,6 +90,10 @@
                     text-align: center;
 
                     display: none;
+                }
+
+                &-Button {
+                    margin-left: -30px;
                 }
             }
 
