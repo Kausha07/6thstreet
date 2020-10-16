@@ -145,9 +145,6 @@ class FieldMultiselect extends PureComponent {
     }
 
     onCheckboxOptionClick = () => {
-        const { onChange } = this.props;
-
-        onChange();
         this.filterButtonRef.current.focus();
     };
 
@@ -204,7 +201,8 @@ class FieldMultiselect extends PureComponent {
                 >
                 <fieldset
                   block="PLPFilter"
-                  onChange={ !is_radio ? this.onCheckboxOptionClick : onChange }
+                  onChange={ onChange }
+                  onFocus={ !is_radio ? this.onCheckboxOptionClick : null }
                 >
                         { this.renderOptions() }
                 </fieldset>
