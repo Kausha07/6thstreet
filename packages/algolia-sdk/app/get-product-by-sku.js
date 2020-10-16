@@ -6,8 +6,7 @@ function getAvailableProduct(sku, highlights, options) {
 
     return new Promise((resolve, reject) => {
         index.search(
-            '',
-            { filters: `sku:${sku}` },
+            sku,
             (error, data) => {
                 if (error) {
                     return reject(error);
@@ -63,7 +62,7 @@ function formatData(productData) {
 function getProductVariants(skuList = [], highlights, options) {
     return Promise.all(
         skuList.map(async (sku) => {
-            const product = await getProduct(sku, highlights, options);
+            const product = await getAvailableProduct(sku, highlights, options);
             return product.data ? product.data : {};
         })
     );
@@ -73,8 +72,6 @@ export default async function getProductBySku(
     { sku = '', highlights = '*' },
     options = {}
 ) {
-    console.log(sku);
-
     const product = await getAvailableProduct(sku, highlights, options);
 
     let variantSKUs =

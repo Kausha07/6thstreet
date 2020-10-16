@@ -10,26 +10,48 @@ export class PDPAlsoAvailableProductsContainer extends PureComponent {
     static propTypes = {
         productsAvailable: PropTypes.array.isRequired,
         isLoading: PropTypes.bool.isRequired,
-        location: PropTypes.object.isRequired
+        location: PropTypes.object.isRequired,
+        productSku: PropTypes.string.isRequired
     };
 
     state = {
         products: [],
-        isAlsoAvailable: true
+        isAlsoAvailable: true,
+        prevProductsAvailable: []
     };
 
+    // static getDerivedStateFromProps(props, state) {
+    //     const { productsAvailable } = props;
+    //     const { prevProductsAvailable } = state;
+
+    //     if (prevProductsAvailable !== productsAvailable) {
+    //         console.log('here-----------', productsAvailable);
+    //         // eslint-disable-next-line react/no-did-update-set-state
+    //         // this.getAvailableProducts();
+    //         return {
+    //             prevProductsAvailable: productsAvailable
+    //         };
+    //     }
+    //     console.log(productsAvailable, prevProductsAvailable);
+
+    //     return null;
+    // }
+
     componentDidMount() {
-        this.getAvailableProducts();
+        this.setState({ products: [] }, this.getAvailableProducts());
     }
 
-    componentDidUpdate(prevProps) {
-        const { productsAvailable } = this.props;
+    // componentDidUpdate(prevProps) {
+    //     const { productsAvailable } = this.props;
 
-        if (prevProps.productsAvailable !== productsAvailable) {
-            // eslint-disable-next-line react/no-did-update-set-state
-            this.getAvailableProducts();
-        }
-    }
+    //     // console.log(productsAvailable);
+    //     // console.log(prevProps.productsAvailable);
+
+    //     if (prevProps.productsAvailable !== productsAvailable) {
+    //         this.setState({ products: [] }, () => this.getAvailableProducts());
+    //         // eslint-disable-next-line react/no-did-update-set-state
+    //     }
+    // }
 
     getAvailableProducts() {
         this.setState({ products: [] }, () => {
@@ -53,6 +75,7 @@ export class PDPAlsoAvailableProductsContainer extends PureComponent {
     }
 
     render() {
+        console.log(this.state);
         return (
             <PDPAlsoAvailableProducts
               { ...this.state }

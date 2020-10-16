@@ -14,6 +14,25 @@ class PDPSummary extends PureComponent {
         product: Product.isRequired
     };
 
+    state = {
+        alsoAvailable: [],
+        prevAlsoAvailable: []
+    };
+
+    static getDerivedStateFromProps(props, state) {
+        const { product } = props;
+        const { alsoAvailable, prevAlsoAvailable } = state;
+
+        if (prevAlsoAvailable !== product['6s_also_available']) {
+            return {
+                alsoAvailable: product['6s_also_available'],
+                prevAlsoAvailable: alsoAvailable === undefined ? [''] : alsoAvailable
+            };
+        }
+
+        return null;
+    }
+
     renderNew() {
         const { product: { in_new_in } } = this.props;
         if (!in_new_in) {
@@ -115,13 +134,15 @@ class PDPSummary extends PureComponent {
     }
 
     renderAvailableItemsSection() {
-        const { product } = this.props;
-        const alsoAvailable = product['6s_also_available'];
+        const { product: { sku } } = this.props;
+        const { alsoAvailable, prevAlsoAvailable } = this.state;
+
+        console.log(alsoAvailable, prevAlsoAvailable);
 
         if (alsoAvailable) {
-            if (alsoAvailable.length > 0) {
+            if (alsoAvailable.length > 0 && prevAlsoAvailable.length !== 0) {
                 return (
-                    <PDPAlsoAvailableProducts productsAvailable={ alsoAvailable } />
+                    <PDPAlsoAvailableProducts productsAvailable={ alsoAvailable } productSku={ sku } />
                 );
             }
         }
