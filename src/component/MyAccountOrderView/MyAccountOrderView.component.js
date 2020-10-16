@@ -17,7 +17,12 @@ class MyAccountOrderView extends PureComponent {
         const { order: { entity_id } } = this.props;
 
         return (
-            <Link to={ `/my-account/return-item/create/${ entity_id }` } block="Button">
+            <Link
+              block="MyAccountOrderView"
+              elem="ButtonReturn"
+              mix={ { block: 'Button' } }
+              to={ `/my-account/return-item/create/${ entity_id }` }
+            >
                 { __('Return item') }
             </Link>
         );
@@ -27,7 +32,12 @@ class MyAccountOrderView extends PureComponent {
         const { order: { entity_id } } = this.props;
 
         return (
-            <Link to={ `/my-account/return-item/cancel/${ entity_id }` } block="Button">
+            <Link
+              block="MyAccountOrderView"
+              elem="ButtonCancel"
+              mix={ { block: 'Button' } }
+              to={ `/my-account/return-item/cancel/${ entity_id }` }
+            >
                 { __('Cancel item') }
             </Link>
         );
