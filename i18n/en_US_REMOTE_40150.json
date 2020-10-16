@@ -485,13 +485,15 @@
     "Add": null,
     "Proceed to secure payment": null,
     "Place order": null,
-    "Link Account": null,
-    "You have no items in your wish list.": null,
-    "Details": null,
     "Verify number": null,
     "clear": null,
     "men": null,
     "woman": null,
     "kids": null,
-    "women": null
+    "women": null,
+    "Link Account": null,
+    "You have no items in your wish list.": null,
+    "Details": null,
+    "number": null,
+    "fullname": null
 }
