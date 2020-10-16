@@ -3,6 +3,7 @@ import { PureComponent } from 'react';
 
 import PDPAddToCart from 'Component/PDPAddToCart/PDPAddToCart.container';
 import Price from 'Component/Price';
+import ProductLabel from 'Component/ProductLabel/ProductLabel.component';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
 import { isArabic } from 'Util/App';
 
@@ -13,34 +14,15 @@ class PDPSummary extends PureComponent {
         product: Product.isRequired
     };
 
-    renderNew() {
-        const { product: { in_new_in } } = this.props;
-        if (!in_new_in) {
-            return (
-                <>
-                    <span block="PDPSummary" elem="New">NEW</span>
-                    { ' ' }
-                    <span block="PDPSummary" elem="Exclusive"> - Exclusive</span>
-                </>
-            );
-        }
-
-        return <p block="PDPSummary" elem="New" />;
-    }
-
     renderSummaryHeader() {
+        const { product } = this.props;
+
         return (
             <div block="PDPSummary" elem="Header">
                 <div block="PDPSummary" elem="HeaderNew">
-                    { this.renderNew() }
-                    <button
-                      block="PDPSummary"
-                      elem="HeaderWardrobeBtn"
-                      mix={ { block: 'button secondary thin' } }
-                    >
-                        <div block="PDPSummary" elem="hangerSvg" />
-                        <span block="PDPSummary" elem="WardrobeTxt">in my wardrobe</span>
-                    </button>
+                    <ProductLabel
+                      product={ product }
+                    />
                 </div>
                 <div block="PDPSummary" elem="HeaderShare">
                     <button
