@@ -145,7 +145,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
         );
     }
 
-    getCustomerPhoneData() {
+    getCustomerPhone() {
         const { customer } = this.props;
 
         if (Object.keys(customer).length !== 0) {
@@ -161,7 +161,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
 
     renderPhone() {
         const { isArabic } = this.state;
-        const customerPhoneData = this.getCustomerPhoneData();
+        const customerPhoneData = this.getCustomerPhone();
 
         return (
             <div block="MyAccountCustomerForm" elem="Phone" mods={ { isArabic } }>

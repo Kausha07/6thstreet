@@ -1,6 +1,6 @@
 :root {
-    --light-gray: #cacaca;
-    --dark-gray: #b8b8b8
+    --dark-gray: #b8b8b8;
+    --light-gray: #cacaca
 }
 
 .MyAccountCustomerForm {
@@ -18,9 +18,9 @@
     }
 
     .Button {
-        background: $black;
-        border: 2px solid $black;
-        color: $white;
+        background: var(--black);
+        border: 2px solid var(--black);
+        color: var(--white);
         font-weight: 700;
         height: 50px;
         margin-top: 9px;
@@ -32,8 +32,8 @@
 
         &:hover {
             background: transparent;
-            border-color: $black;
-            color: $black;
+            border-color: var(--black);
+            color: var(--black);
         }
     }
 
@@ -197,17 +197,17 @@
     }
 
     &-PhoneField {
+        margin-left: 90px;
         position: absolute;
         top: -60px;
-        margin-left: 90px;
 
         @include desktop() {
             top: -58px;
         }
 
         &_isArabic {
-            margin-right: 90px;
             margin-left: 0;
+            margin-right: 90px;
         }
     }
 
@@ -215,29 +215,29 @@
         margin-top: 2rem;
 
         &:after {
-            margin-left: -60px;
-            margin-bottom: 2px;
-            pointer-events: none;
+            background-color: var(--white);
             content: " ";
-            width: 59px;
             height: 58px;
-            background-color: white;
+            margin-bottom: 2px;
+            margin-left: -60px;
+            pointer-events: none;
             position: absolute;
             top: 1px;
+            width: 59px;
         }
 
         input {
             &:after {
-                z-index: 1;
-                margin-left: -15px;
-                margin-bottom: 2px;
-                pointer-events: none;
-                content: " ";
-                width: 6px;
-                height: 6px;
                 border: solid var(--light-gray);
                 border-width:  0 2px 2px 0;
+                content: " ";
+                height: 6px;
+                margin-bottom: 2px;
+                margin-left: -15px;
+                pointer-events: none;
                 transform: rotate(45deg);
+                width: 6px;
+                z-index: 1;
 
             }
         }
