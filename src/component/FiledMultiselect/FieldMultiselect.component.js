@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable react/jsx-no-bind */
 import PropTypes from 'prop-types';
 import { createRef, PureComponent } from 'react';
@@ -40,30 +39,16 @@ class FieldMultiselect extends PureComponent {
         this.toggelOptionList = this.toggelOptionList.bind(this);
     }
 
-    static getDerivedStateFromProps(props, state) {
-        const { currentActiveFilter, filter } = props;
-        const { toggleOptionsList, prevActiveFilter } = state;
-
+    static getDerivedStateFromProps(props) {
         if (isMobile.any()) {
+            const { currentActiveFilter, filter } = props;
+
             return {
                 toggleOptionsList: currentActiveFilter === filter.category
             };
         }
 
-        console.log(!toggleOptionsList);
-
-        if (currentActiveFilter === prevActiveFilter) {
-            return {
-                toggleOptionsList: !toggleOptionsList
-            };
-        }
-
-        console.log('hereeeeeeeeeeeeee');
-
-        return {
-            toggleOptionsList: currentActiveFilter === filter.category,
-            prevActiveFilter: currentActiveFilter
-        };
+        return null;
     }
 
     renderSubcategoryOptions = (option) => {
@@ -169,22 +154,11 @@ class FieldMultiselect extends PureComponent {
     };
 
     toggelOptionList() {
-        const { currentActiveFilter } = this.props;
-        const { toggleOptionsList, prevActiveFilter } = this.state;
+        const { toggleOptionsList } = this.state;
 
-        console.log(toggleOptionsList && currentActiveFilter === prevActiveFilter);
-
-        if (toggleOptionsList && currentActiveFilter === prevActiveFilter) {
-            this.setState({
-                toggleOptionsList: !toggleOptionsList
-            });
-        } else {
-            this.setState({
-                toggleOptionsList
-            });
-        }
-
-        this.handleFilterChange();
+        this.setState({
+            toggleOptionsList: !toggleOptionsList
+        });
     }
 
     onBlur = () => {
@@ -195,8 +169,6 @@ class FieldMultiselect extends PureComponent {
     renderMultiselectContainer() {
         const { toggleOptionsList, isArabic } = this.state;
         const { placeholder, onChange, filter: { is_radio } } = this.props;
-
-        console.log(toggleOptionsList);
 
         return (
             <div block="FieldMultiselect">
@@ -211,9 +183,9 @@ class FieldMultiselect extends PureComponent {
                   elem: 'FilterButton',
                   mods: { isArabic }
               } }
-              onClick={ isMobile.any() ? this.handleFilterChange : this.toggelOptionList }
-            //   onFocus={ !isMobile.any() ? this.toggelOptionList : null }
-            //   onBlur={ !isMobile.any() ? this.onBlur : null }
+              onClick={ isMobile.any() ? this.handleFilterChange : null }
+              onFocus={ !isMobile.any() ? this.toggelOptionList : null }
+              onBlur={ !isMobile.any() ? this.onBlur : null }
             >
                 { placeholder }
             </button>
