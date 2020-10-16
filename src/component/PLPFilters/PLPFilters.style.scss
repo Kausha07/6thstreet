@@ -22,7 +22,7 @@
         color:var(--reset-button-color);
         font-weight:bold;
         text-transform: capitalize;
-    
+
         @include before-desktop {
             padding-left: 0;
             color: var(--black-color);
@@ -234,6 +234,10 @@
         }
     }
 
+    &-QuickCategories {
+        width: 100%;
+    }
+
     .Field {
         @include mobile() {
             display: none;
@@ -284,22 +288,53 @@
 
     &-ToolBar {
         display: flex;
-        justify-content: flex-end;
         height: 60px;
-        margin: 0 30px;
         padding: 7px 0 20px;
+
+        @include mobile() {
+            margin-left: 120px;
+            margin-top: -47px;
+
+            &_isArabic {
+                margin-left: 0;
+                margin-right: 120px;
+            }
+        }
+
+        @include after-mobile() {
+            margin: 0 30px 0 22px;
+        }
+
+        @include desktop() {
+            justify-content: flex-end;
+
+            &_isArabic {
+                margin: 0 22px 0 30px;
+            }
+        }
     }
 
     &-ProductsCount{
-        display: flex;
-        align-items: flex-end;
+        @include before-desktop() {
+            display: none;
+        }
+
         font-size: 16px;
+        margin-left: auto;
+        margin-right: 0;
+        margin-top: 16px;
 
         span {
-            font-weight: 600;
             font-size: 16px;
+            font-weight: 600;
             margin-right: 5px;
         }
 
+        &_isArabic {
+            span{
+                margin-left: 5px;
+                margin-right: 0;
+            }
+        }
     }
 }
