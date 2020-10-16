@@ -24,7 +24,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
 
     state = {
         isArabic: isArabic(),
-        gender: 'male'
+        gender: __('male')
     };
 
     get fieldMap() {
@@ -172,7 +172,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
                   mods={ { isArabic } }
                   type="text"
                   id="phone"
-                  placeholder="Phone number"
+                  placeholder={ __('Phone number') }
                   value={ customerPhoneData.customerPhone }
                 />
             </div>
