@@ -65,39 +65,39 @@ class MenuGrid extends PureComponent {
             <div block="MenuGrid">
                 <div mix={ { block: 'MenuGrid', elem: 'Content', mods: { isArabic } } }>
                     <div
-                        block="MenuGrid"
-                        elem="Columns"
+                      block="MenuGrid"
+                      elem="Columns"
                     >
                         <div
-                            block="MenuGrid"
-                            elem="Column"
+                          block="MenuGrid"
+                          elem="Column"
                         >
                             <span>
-                                Shop by product
+                                { __('Shop by product') }
                             </span>
                             <div
-                                block="MenuGrid-Column"
-                                elem="Content"
+                              block="MenuGrid-Column"
+                              elem="Content"
                             >
                                 { this.renderButton() }
                                 { this.renderItems() }
                             </div>
                         </div>
                         <div
-                            block="MenuGrid"
-                            elem="Column"
+                          block="MenuGrid"
+                          elem="Column"
                         >
                             <span>
                                 Shop by brand
                             </span>
                             <div
-                                block="MenuGrid-Column"
-                                elem="Content"
+                              block="MenuGrid-Column"
+                              elem="Content"
                             />
                         </div>
                         <div
-                            block="MenuGrid"
-                            elem="Column"
+                          block="MenuGrid"
+                          elem="Column"
                         />
                     </div>
                 </div>

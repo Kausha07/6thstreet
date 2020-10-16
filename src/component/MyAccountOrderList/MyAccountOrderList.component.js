@@ -1,0 +1,63 @@
+import PropTypes from 'prop-types';
+import { PureComponent } from 'react';
+
+import Loader from 'Component/Loader';
+import MyAccountOrderListItem from 'Component/MyAccountOrderListItem';
+
+import './MyAccountOrderList.style';
+
+class MyAccountOrderList extends PureComponent {
+    static propTypes = {
+        isLoading: PropTypes.bool.isRequired,
+        orders: PropTypes.array.isRequired
+    };
+
+    renderOrder(order) {
+        const { increment_id } = order;
+
+        return (
+            <MyAccountOrderListItem
+              order={ order }
+              key={ increment_id }
+            />
+        );
+    }
+
+    renderNoOrders() {
+        return (
+            <p>{ __('No orders') }</p>
+        );
+    }
+
+    renderOrders() {
+        const {
+            orders,
+            isLoading
+        } = this.props;
+
+        if (!orders.length && !isLoading) {
+            return this.renderNoOrders();
+        }
+
+        return orders.map(this.renderOrder);
+    }
+
+    renderLoader() {
+        const { isLoading } = this.props;
+
+        return (
+            <Loader isLoading={ isLoading } />
+        );
+    }
+
+    render() {
+        return (
+            <div block="MyAccountOrderList">
+                { this.renderOrders() }
+                { this.renderLoader() }
+            </div>
+        );
+    }
+}
+
+export default MyAccountOrderList;

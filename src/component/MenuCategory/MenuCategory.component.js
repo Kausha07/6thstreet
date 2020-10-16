@@ -36,7 +36,7 @@ class MenuCategory extends PureComponent {
 
         return (
             <MenuDynamicContent
-                content={ data }
+              content={ data }
             />
         );
     }
@@ -52,9 +52,9 @@ class MenuCategory extends PureComponent {
 
         return (
             <div
-                mix={ { block: 'MenuCategory', mods: { isArabic, isVisible } } }
-                onMouseEnter={ this.onEnter }
-                onMouseLeave={ this.onLeave }
+              mix={ { block: 'MenuCategory', mods: { isArabic, isVisible } } }
+              onMouseEnter={ this.onEnter }
+              onMouseLeave={ this.onLeave }
             >
                 { this.renderLabel() }
                 { this.renderDynamicContent() }

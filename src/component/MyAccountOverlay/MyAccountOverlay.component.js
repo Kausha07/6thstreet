@@ -267,7 +267,7 @@ export class MyAccountOverlay extends PureComponent {
     }
 
     handleGenderChange = (e) => {
-        this.setState({ gender: e.target.id });
+        this.setState({ gender: e.target.value });
     };
 
     handleCheckboxChange = () => {
@@ -321,27 +321,27 @@ export class MyAccountOverlay extends PureComponent {
                               id="selectMale"
                               label={ __('Male') }
                               name="gender"
-                              value={ gender }
+                              value={ 1 }
                               onClick={ this.handleGenderChange }
-                              checked={ gender === 'selectMale' }
+                              checked={ gender === 1 }
                             />
                             <Field
                               type="radio"
                               id="selectFemale"
                               label={ __('Female') }
                               name="gender"
-                              value={ gender }
+                              value={ 2 }
                               onClick={ this.handleGenderChange }
-                              checked={ gender === 'selectFemale' }
+                              checked={ gender === 2 }
                             />
                             <Field
                               type="radio"
                               id="selectPreferNot"
                               label={ __('Prefer not to say') }
                               name="gender"
-                              value={ gender }
+                              value={ 0 }
                               onClick={ this.handleGenderChange }
-                              checked={ gender === 'selectPreferNot' }
+                              checked={ gender === 0 }
                             />
                         </div>
                     </fieldset>

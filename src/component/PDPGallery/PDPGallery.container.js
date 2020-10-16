@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import { setPDPGaleryImage } from 'Store/PDP/PDP.action';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
 
 import PDPGallery from './PDPGallery.component';
@@ -13,17 +14,20 @@ export const mapStateToProps = (state) => ({
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
-    // addProduct: options => CartDispatcher.addProductToCart(dispatch, options)
+    setImageIndex: (index) => _dispatch(setPDPGaleryImage(index))
 });
 
 export class PDPGalleryContainer extends PureComponent {
     static propTypes = {
         currentIndex: PropTypes.number.isRequired,
         isLoading: PropTypes.bool.isRequired,
-        product: Product.isRequired
+        product: Product.isRequired,
+        setImageIndex: PropTypes.func.isRequired,
+        index: PropTypes.number.isRequired
     };
 
     containerFunctions = {
+        onSliderChange: this.onSliderChange.bind(this)
     };
 
     containerProps = () => {
@@ -35,6 +39,12 @@ export class PDPGalleryContainer extends PureComponent {
             currentIndex
         };
     };
+
+    onSliderChange(activeSlide) {
+        const { setImageIndex } = this.props;
+
+        return setImageIndex(activeSlide);
+    }
 
     getCrumbs() {
         // TODO: determine if has video append it here

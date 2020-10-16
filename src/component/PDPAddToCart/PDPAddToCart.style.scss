@@ -68,6 +68,7 @@ $select-arrow-width: 6px !default;
 
     &-SizeSelector {
         width: 75%;
+        margin-left: 20px;
 
         &::after {
             @extend .PDPAddToCart-SizeTypeSelector::after;
@@ -170,6 +171,56 @@ $select-arrow-width: 6px !default;
             }
         }
     }
+
+    &-Bottom {
+        display: flex;
+    }
+
+    &-PickUpButton {
+        display: flex;
+        align-items: center;
+        min-width: 60px;
+        margin-left: 20px;
+        font-size: 13px;
+        font-family: "Avenir Next Bold";
+
+        span {
+            display: none;
+            
+            @include desktop {
+                display: block;
+                padding-right: 20px;
+                white-space: nowrap;
+            }
+        }
+
+        div::before {
+            content: ' ';
+            position: absolute;
+            width: 22px;
+            right: -24px;
+            top: -10px;
+            height: 22px;
+            background-image: url(./icons/shop.svg);
+            background-size: 22px;
+            background-repeat: no-repeat;
+
+            @include desktop {
+                right: -8px;
+                top: -11px;
+            }
+        }
+
+        &:hover {
+            div::before {
+                background-image: url(./icons/shop-white.svg);
+            }
+        }
+
+    }
+    &-shopSvg {
+        display: inline;
+    }
 }
 
 .PageWrapper {
@@ -180,6 +231,28 @@ $select-arrow-width: 6px !default;
                 &::after {
                         left:15px;
                         right: auto;
+                }
+            }
+            &-SizeSelector {
+                margin-left: 0;
+                margin-right: 20px;
+            }
+
+            &-PickUpButton {
+                margin: 0 20px 0 0;
+
+                span {
+                    @include desktop {
+                        padding: 0 0 0 20px;
+                    }
+                }
+
+                div::before {
+                    right: 2px;
+
+                    @include desktop {
+                        right: -14px;
+                    }
                 }
             }
         }
