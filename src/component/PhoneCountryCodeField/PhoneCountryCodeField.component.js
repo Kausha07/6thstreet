@@ -15,7 +15,7 @@ class PhoneCountryCodeField extends PureComponent {
 
     state = {
         isArabic: isArabic()
-    }
+    };
 
     renderCountryPhoneCodeField() {
         const {
