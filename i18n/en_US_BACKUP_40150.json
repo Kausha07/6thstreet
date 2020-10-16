@@ -437,5 +437,12 @@
     "Total: %s": null,
     "Item": null,
     "Items": null,
-    "Order placed: ": null
+    "Order placed: ": null,
+    "Balance": null,
+    "Use Store Credit": null,
+    "Store Credit:": null,
+    "Current Store Credit:": null,
+    "Action": null,
+    "Balance Change": null,
+    "Transactions History": null
 }

@@ -16,20 +16,13 @@ import {
 import { CUSTOMER_ACCOUNT_OVERLAY_KEY } from 'Component/MyAccountOverlay/MyAccountOverlay.config';
 import { CHECKOUT_URL } from 'Route/Checkout/Checkout.config';
 import { MY_ACCOUNT_URL } from 'Route/MyAccount/MyAccount.config';
-import MyAccountContainer from 'Route/MyAccount/MyAccount.container';
+import MyAccountContainer, { tabMap } from 'Route/MyAccount/MyAccount.container';
 import { updateMeta } from 'Store/Meta/Meta.action';
 import { changeNavigationState } from 'Store/Navigation/Navigation.action';
 import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
-import {
-    ADDRESS_BOOK,
-    CLUB_APPAREL,
-    DASHBOARD,
-    MY_ORDERS,
-    MY_WISHLIST,
-    RETURN_ITEM
-} from 'Type/Account';
+import { DASHBOARD } from 'Type/Account';
 import { HistoryType } from 'Type/Common';
 import { TotalsType } from 'Type/MiniCart';
 import { isSignedIn } from 'Util/Auth';
@@ -75,33 +68,6 @@ export class CartPageContainer extends PureComponent {
     };
 
     state = { isEditing: false };
-
-    tabMap = {
-        [CLUB_APPAREL]: {
-            url: '/club-apparel',
-            name: __('Club Apparel Loyalty')
-        },
-        [DASHBOARD]: {
-            url: '/dashboard',
-            name: __('My Account')
-        },
-        [MY_ORDERS]: {
-            url: '/my-orders',
-            name: __('Order history')
-        },
-        [RETURN_ITEM]: {
-            url: '/return-item',
-            name: __('Return an item')
-        },
-        [MY_WISHLIST]: {
-            url: '/my-wishlist',
-            name: __('My wishlist')
-        },
-        [ADDRESS_BOOK]: {
-            url: '/address-book',
-            name: __('Delivery addresses')
-        }
-    };
 
     containerFunctions = {
         onCheckoutButtonClick: this.onCheckoutButtonClick.bind(this),
@@ -171,7 +137,7 @@ export class CartPageContainer extends PureComponent {
 
     changeActiveTab(activeTab) {
         const { history } = this.props;
-        const { [activeTab]: { url } } = this.tabMap;
+        const { [activeTab]: { url } } = tabMap;
         history.push(`${ MY_ACCOUNT_URL }${ url }`);
     }
 
@@ -217,7 +183,7 @@ export class CartPageContainer extends PureComponent {
     _updateBreadcrumbs() {
         const { updateBreadcrumbs } = this.props;
         const { activeTab } = this.state;
-        const { url, name } = this.tabMap[activeTab];
+        const { url, name } = tabMap[activeTab];
 
         updateBreadcrumbs([
             { url: `${ MY_ACCOUNT_URL }${ url }`, name },
@@ -267,7 +233,7 @@ export class CartPageContainer extends PureComponent {
               { ...this.props }
               { ...this.state }
               { ...this.containerFunctions }
-              tabMap={ this.tabMap }
+              tabMap={ tabMap }
             />
         );
     }
