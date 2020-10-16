@@ -62,7 +62,6 @@ class MenuCategory extends PureComponent {
 
     render() {
         const { isVisible, isArabic } = this.state;
-
         return (
             <div
               mix={ { block: 'MenuCategory', mods: { isArabic, isVisible } } }
