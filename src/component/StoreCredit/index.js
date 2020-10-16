@@ -1,1 +1,1 @@
-export { default } from './StoreCredit.component';
+export { default } from './StoreCredit.container';

@@ -1,70 +1,33 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
-import { connect } from 'react-redux';
 
 import Field from 'Component/Field';
 import Loader from 'Component/Loader';
-import StoreCreditDispatcher from 'Store/StoreCredit/StoreCredit.dispatcher';
-import { StoreCreditData } from 'Util/API/endpoint/StoreCredit/StoreCredit.type';
 
 import './StoreCredit.style';
-
-export const mapStateToProps = ({
-    StoreCreditReducer: {
-        storeCredit,
-        isLoading
-    }
-}) => ({
-    storeCredit,
-    isLoading
-});
-
-export const mapDispatchToProps = (dispatch) => ({
-    toggleStoreCredit: (apply) => StoreCreditDispatcher.toggleStoreCredit(dispatch, apply)
-});
 
 export class StoreCredit extends PureComponent {
     static propTypes = {
         isLoading: PropTypes.bool.isRequired,
-        storeCredit: StoreCreditData.isRequired,
-        canApply: PropTypes.bool,
-        toggleStoreCredit: PropTypes.func.isRequired
+        canApply: PropTypes.bool.isRequired,
+        creditIsApplied: PropTypes.bool.isRequired,
+        storeCreditBalance: PropTypes.string.isRequired,
+        toggleStoreCredit: PropTypes.func.isRequired,
+        setCreditIsApplied: PropTypes.func.isRequired
     };
-
-    static defaultProps = {
-        canApply: false
-    };
-
-    state = {
-        storeCreditBalance: null,
-        creditIsApplied: false
-    };
-
-    static getDerivedStateFromProps(props, state) {
-        const { storeCredit: { current_balance: storeCreditBalance } = {} } = props;
-        const { storeCreditBalance: currentStoreCreditBalance } = state;
-
-        if (storeCreditBalance !== currentStoreCreditBalance) {
-            return { storeCreditBalance };
-        }
-
-        return null;
-    }
 
     handleCheckboxChange = () => {
-        const { creditIsApplied } = this.state;
-        const { toggleStoreCredit } = this.props;
+        const { toggleStoreCredit, creditIsApplied, setCreditIsApplied } = this.props;
 
         toggleStoreCredit(!creditIsApplied).then((isApplied) => {
-            this.setState({ creditIsApplied: isApplied });
+            setCreditIsApplied({ creditIsApplied: isApplied });
 
             return isApplied;
         });
     };
 
     renderAmount() {
-        const { canApply } = this.props;
-        const { storeCreditBalance } = this.state;
+        const { canApply, storeCreditBalance } = this.props;
         const amount = canApply ? `(${ storeCreditBalance })` : storeCreditBalance;
 
         return (
@@ -75,7 +38,7 @@ export class StoreCredit extends PureComponent {
     }
 
     renderCheckbox(checkboxId) {
-        const { creditIsApplied } = this.state;
+        const { creditIsApplied } = this.props;
 
         return (
             <Field
@@ -113,4 +76,4 @@ export class StoreCredit extends PureComponent {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(StoreCredit);
+export default StoreCredit;

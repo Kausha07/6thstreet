@@ -1,5 +1,47 @@
+:root {
+    --store-credit-link-background: #F3F3F3;
+}
+
 .StoreCredit {
     &-Amount {
         font-weight: bold;
+    }
+}
+
+li.MyAccountTabListItem {
+    &_StoreCreditLink {
+        padding: 15px 0;
+
+        @include mobile {
+            // because someone set important when active :(
+            display: none !important;
+        }
+
+        button {
+            min-width: auto;
+            min-height: auto;
+            height: auto;
+            background-color: var(--store-credit-link-background);
+            padding: 10px 20px 10px 10px;
+            cursor: pointer;
+            border-radius: 6px;
+
+            &::after {
+                display: none;
+            }
+        }
+
+        label {
+            font-family: "Avenir Next Regular", serif;
+            text-transform: capitalize;
+            font-weight: normal;
+            cursor: pointer;
+            line-height: 20px;
+
+            span {
+                font-family: "Avenir Next Demi", serif;
+                font-weight: normal;
+            }
+        }
     }
 }

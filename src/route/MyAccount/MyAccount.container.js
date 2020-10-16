@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 
+import StoreCredit from 'Component/StoreCredit';
 import {
     BreadcrumbsDispatcher,
     mapDispatchToProps,
@@ -13,7 +14,8 @@ import {
     DASHBOARD,
     MY_ORDERS,
     MY_WISHLIST,
-    RETURN_ITEM
+    RETURN_ITEM,
+    STORE_CREDIT
 } from 'Type/Account';
 
 import { MY_ACCOUNT_URL } from './MyAccount.config';
@@ -26,6 +28,12 @@ export {
 };
 
 export const tabMap = {
+    [STORE_CREDIT]: {
+        url: '/storecredit/info',
+        name: (<StoreCredit />),
+        alternativePageName: __('Balance'),
+        linkClassName: 'StoreCreditLink'
+    },
     [CLUB_APPAREL]: {
         url: '/club-apparel',
         name: __('Club Apparel Loyalty')
@@ -58,10 +66,10 @@ export class MyAccountContainer extends SourceMyAccountContainer {
     updateBreadcrumbs() {
         const { updateBreadcrumbs } = this.props;
         const { activeTab } = this.state;
-        const { url, name } = tabMap[activeTab];
+        const { url, name, alternativePageName } = tabMap[activeTab];
 
         updateBreadcrumbs([
-            { url: `${ MY_ACCOUNT_URL }${ url }`, name },
+            { url: `${ MY_ACCOUNT_URL }${ url }`, name: alternativePageName || name },
             { name: __('My Account'), url: `${ MY_ACCOUNT_URL }/${ DASHBOARD }` }
         ]);
     }
