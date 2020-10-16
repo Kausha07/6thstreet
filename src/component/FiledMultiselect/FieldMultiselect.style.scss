@@ -152,7 +152,7 @@
         overflow-y: auto;
         border: none;
         left: 10px;
-        transition: 150ms;
+        transition: 0;
 
         &_toggleOptionsList {
             border: 1px solid var(--field-multiselect-border);

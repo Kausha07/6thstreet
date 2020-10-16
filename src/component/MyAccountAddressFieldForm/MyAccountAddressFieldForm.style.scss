@@ -5,9 +5,13 @@
 }
 
 .MyAccountAddressFieldForm {
+    top: -120px;
+    background: $white;
 
     @include desktop() {
         max-width: 540px;
+        top: 0;
+        background: none;
     }
 
     input {
@@ -21,6 +25,21 @@
 
         + label {
             min-width: auto;
+        }
+    }
+
+    select {
+        font-size: 14px;
+        &:focus {
+            border: 1px solid var(--my-acc-input-border);
+        }
+    }
+
+    .FieldSelect {
+        &-Select {
+            &_isExpanded {
+                border: 1px solid var(--my-acc-input-border);
+            }
         }
     }
 

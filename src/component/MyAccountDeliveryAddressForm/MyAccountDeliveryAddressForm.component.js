@@ -14,6 +14,7 @@ import PropTypes from 'prop-types';
 import MyAccountAddressFieldForm from 'Component/MyAccountAddressFieldForm';
 import { addressType } from 'Type/Account';
 import { countriesType } from 'Type/Config';
+import { isArabic } from 'Util/App';
 
 export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
     static propTypes = {
@@ -162,6 +163,19 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
 
     setArea = (cityFromProps) => {
         const { cities } = this.state;
+
+        if (isArabic()) {
+            const trueArabicCity = cities.find(({ city_ar }) => cityFromProps === city_ar);
+
+            if (trueArabicCity) {
+                const { areas_ar } = trueArabicCity;
+                this.setState({
+                    availableAreas: areas_ar || []
+                });
+            }
+
+            return;
+        }
         const trueCity = cities.find(({ city }) => cityFromProps === city);
 
         if (trueCity) {
@@ -175,6 +189,20 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
 
     onCityChange = (selectedCity) => {
         const { cities } = this.state;
+
+        if (isArabic()) {
+            const trueArabicCity = cities.find(({ city_ar }) => selectedCity === city_ar);
+
+            if (trueArabicCity) {
+                const { areas_ar } = trueArabicCity;
+                this.setState({
+                    city: trueArabicCity,
+                    availableAreas: areas_ar || []
+                });
+            }
+
+            return;
+        }
         const trueCity = cities.find(({ city }) => selectedCity === city);
 
         if (trueCity) {
@@ -209,8 +237,27 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         return phone;
     }
 
-    get fieldMap() {
+    getCitiesSelectOptions = () => {
         const { cities } = this.state;
+
+        if (isArabic()) {
+            return cities.map((item) => ({ id: item.city_ar, label: item.city_ar, value: item.city_ar }));
+        }
+
+        return cities.map((item) => ({ id: item.city, label: item.city, value: item.city }));
+    };
+
+    getAreasSelectOptions = () => {
+        const { availableAreas } = this.state;
+
+        if (isArabic()) {
+            return availableAreas.map((area) => ({ id: area, label: area, value: area }));
+        }
+
+        return availableAreas.map((area) => ({ id: area, label: area, value: area }));
+    };
+
+    get fieldMap() {
         const {
             defaultChecked,
             changeDefaultShipping,
@@ -256,7 +303,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
                 validation: ['notEmpty'],
                 placeholder: __('City'),
                 ...clearValue,
-                selectOptions: cities.map((item) => ({ id: item.city, label: item.city, value: item.city })),
+                selectOptions: this.getCitiesSelectOptions(),
                 type: 'select',
                 onChange: this.onCityChange
             },
