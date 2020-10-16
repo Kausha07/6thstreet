@@ -62,6 +62,21 @@ class MenuCategory extends PureComponent {
 
     render() {
         const { isVisible, isArabic } = this.state;
+        const { label } = this.props;
+
+        if (label === 'New In' && isMobile.any()) {
+            return (
+                <div
+                  mix={ { block: 'MenuCategory', mods: { isArabic, isVisible } } }
+                  onMouseEnter={ this.onEnter }
+                  onMouseLeave={ this.onLeave }
+                >
+                    { this.renderLabel() }
+                    { this.renderDynamicContent() }
+                </div>
+            );
+        }
+
         return (
             <div
               mix={ { block: 'MenuCategory', mods: { isArabic, isVisible } } }
