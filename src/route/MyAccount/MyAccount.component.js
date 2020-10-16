@@ -7,8 +7,8 @@ import MyAccountDashboard from 'Component/MyAccountDashboard';
 import MyAccountMyOrders from 'Component/MyAccountMyOrders';
 import MyAccountMyWishlist from 'Component/MyAccountMyWishlist';
 import MyAccountReturns from 'Component/MyAccountReturns';
+import MyAccountStoreCredit from 'Component/MyAccountStoreCredit';
 import MyAccountTabList from 'Component/MyAccountTabList';
-import StoreCredit from 'Component/StoreCredit';
 import { MyAccount as SourceMyAccount } from 'SourceRoute/MyAccount/MyAccount.component';
 import {
     activeTabType,
@@ -18,6 +18,7 @@ import {
     MY_ORDERS,
     MY_WISHLIST,
     RETURN_ITEM,
+    STORE_CREDIT,
     tabMapType
 } from 'Type/Account';
 import isMobile from 'Util/Mobile';
@@ -40,6 +41,7 @@ export class MyAccount extends SourceMyAccount {
     };
 
     renderMap = {
+        [STORE_CREDIT]: MyAccountStoreCredit,
         [CLUB_APPAREL]: MyAccountClubApparel,
         [DASHBOARD]: MyAccountDashboard,
         [MY_ORDERS]: MyAccountMyOrders,
@@ -86,13 +88,12 @@ export class MyAccount extends SourceMyAccount {
         }
 
         const TabContent = this.renderMap[activeTab];
-        const { name } = tabMap[activeTab];
+        const { name, alternativePageName } = tabMap[activeTab];
         return (
             <ContentWrapper
               label={ __('My Account page') }
               wrapperMix={ { block: 'MyAccount', elem: 'Wrapper' } }
             >
-                <StoreCredit />
                 <MyAccountTabList
                   tabMap={ tabMap }
                   activeTab={ activeTab }
@@ -100,7 +101,7 @@ export class MyAccount extends SourceMyAccount {
                   onSignOut={ onSignOut }
                 />
                 <div block="MyAccount" elem="TabContent">
-                    <h1 block="MyAccount" elem="Heading">{ name }</h1>
+                    <h1 block="MyAccount" elem="Heading">{ alternativePageName || name }</h1>
                     <TabContent />
                 </div>
             </ContentWrapper>
