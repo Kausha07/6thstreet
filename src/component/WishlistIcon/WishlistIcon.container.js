@@ -9,7 +9,7 @@ import WishlistIcon from './WishlistIcon.component';
 
 export const mapDispatchToProps = (dispatch) => ({
     addToWishlist: (sku) => Wishlist.addSkuToWishlist(dispatch, sku),
-    removeFromWishlist: (sku) => Wishlist.removeSkuFromWishlist(sku, dispatch)
+    removeFromWishlist: (id) => Wishlist.removeSkuFromWishlist(id, dispatch)
 });
 
 export const mapStateToProps = (state) => ({
