@@ -3,6 +3,7 @@ import { PureComponent } from 'react';
 
 import MenuDynamicContent from 'Component/MenuDynamicContent';
 import { CategoryData } from 'Util/API/endpoint/Categories/Categories.type';
+import { isArabic } from 'Util/App';
 
 import './MenuCategory.style';
 
@@ -10,12 +11,11 @@ class MenuCategory extends PureComponent {
     static propTypes = {
         data: PropTypes.arrayOf(CategoryData).isRequired,
         label: PropTypes.string.isRequired
-        // TODO: implement design
-        // design: Design.isRequired
     };
 
     state = {
-        isVisible: false
+        isVisible: false,
+        isArabic: isArabic()
     };
 
     onEnter = this.handleHover.bind(this, true);
@@ -36,7 +36,7 @@ class MenuCategory extends PureComponent {
 
         return (
             <MenuDynamicContent
-              content={ data }
+                content={ data }
             />
         );
     }
@@ -48,12 +48,13 @@ class MenuCategory extends PureComponent {
 
     render() {
         const { isVisible } = this.state;
+        const { isArabic } = this.state;
 
         return (
             <div
-              block={ `MenuCategory ${ this.renderLabel()} IsVisible-${isVisible}` }
-              onMouseEnter={ this.onEnter }
-              onMouseLeave={ this.onLeave }
+                mix={ { block: 'MenuCategory', mods: { isArabic, isVisible } } }
+                onMouseEnter={ this.onEnter }
+                onMouseLeave={ this.onLeave }
             >
                 { this.renderLabel() }
                 { this.renderDynamicContent() }

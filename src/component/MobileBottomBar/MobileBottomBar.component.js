@@ -85,16 +85,16 @@ class MobileBottomBar extends NavigationAbstract {
 
         return (
             <button
-              onClick={ this.routeChangeHome }
-              key="homeButton"
-              block="MobileBottomBar"
-              elem="HomeAndBrand"
-              mods={ { isHomeButton: true } }
-              mix={ {
-                  block: 'MobileBottomBar',
-                  elem: 'HomeAndBrand',
-                  mods: { isActive: isHome }
-              } }
+                onClick={ this.routeChangeHome }
+                key="homeButton"
+                block="MobileBottomBar"
+                elem="HomeAndBrand"
+                mods={ { isHomeButton: true } }
+                mix={ {
+                    block: 'MobileBottomBar',
+                    elem: 'HomeAndBrand',
+                    mods: { isActive: isHome }
+                } }
             >
                 <label htmlFor="Home">{ __('Home') }</label>
             </button>
@@ -114,16 +114,16 @@ class MobileBottomBar extends NavigationAbstract {
 
         return (
             <button
-              onClick={ this.routeChangeBrand }
-              key="brandButton"
-              block="MobileBottomBar"
-              elem="HomeAndBrand"
-              mods={ { isBrandButton: true } }
-              mix={ {
-                  block: 'MobileBottomBar',
-                  elem: 'HomeAndBrand',
-                  mods: { isActive: isBrand }
-              } }
+                onClick={ this.routeChangeBrand }
+                key="brandButton"
+                block="MobileBottomBar"
+                elem="HomeAndBrand"
+                mods={ { isBrandButton: true } }
+                mix={ {
+                    block: 'MobileBottomBar',
+                    elem: 'HomeAndBrand',
+                    mods: { isActive: isBrand }
+                } }
             >
                 <label htmlFor="Home">{ __('Brand') }</label>
             </button>
@@ -133,7 +133,7 @@ class MobileBottomBar extends NavigationAbstract {
     renderMenu() {
         return (
             <HeaderMenu
-              key="menu"
+                key="menu"
             />
         );
     }
@@ -143,15 +143,15 @@ class MobileBottomBar extends NavigationAbstract {
 
         return (
             <button
-              onClick={ this.routeChangeWishlist }
-              key="wishlistButton"
-              block="MobileBottomBar"
-              elem="WishListAndAccount"
+                onClick={ this.routeChangeWishlist }
+                key="wishlistButton"
+                block="MobileBottomBar"
+                elem="WishListAndAccount"
             >
                 <HeaderWishlist
-                  isWishlist={ isWishlist }
-                  isBottomBar={ isBottomBar }
-                  key="wishlist"
+                    isWishlist={ isWishlist }
+                    isBottomBar={ isBottomBar }
+                    key="wishlist"
                 />
             </button>
         );
@@ -161,23 +161,19 @@ class MobileBottomBar extends NavigationAbstract {
         const { isBottomBar, isAccount } = this.state;
         const { location } = this.props;
 
-        this.setState(location.pathname === '/myaccount/login' ? {
-            isAccount: true
-        } : {
-            isAccount: false
-        });
+        this.setState({ isAccount: location.pathname === '/myaccount/login' });
 
         return (
             <button
-              onClick={ this.routeChangeAccount }
-              key="accountButton"
-              block="MobileBottomBar"
-              elem="WishListAndAccount"
+                onClick={ this.routeChangeAccount }
+                key="accountButton"
+                block="MobileBottomBar"
+                elem="WishListAndAccount"
             >
                 <HeaderAccount
-                  isAccount={ isAccount }
-                  isBottomBar={ isBottomBar }
-                  key="account"
+                    isAccount={ isAccount }
+                    isBottomBar={ isBottomBar }
+                    key="account"
                 />
             </button>
         );

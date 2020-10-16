@@ -1,27 +1,21 @@
-// import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-// import DesktopContent from 'Component/DesktopContent';
 import HeaderGenders from 'Component/HeaderGenders';
 import MenuCategory from 'Component/MenuCategory';
 import { Categories } from 'Util/API/endpoint/Categories/Categories.type';
+import { isArabic } from 'Util/App';
 
 import './Menu.style';
 
-/* const MyComponent = () => {
-    const width = window.innerWidth;
-    const breakpoint = 1200;
-    return width < breakpoint ? <HeaderGenders /> : <DesktopContent />;
-}; */
-
-// window.addEventListener('resize', MyComponent);
-
 class Menu extends PureComponent {
+    state = {
+        isArabic: isArabic()
+    };
+
     static propTypes = {
         categories: Categories.isRequired
     };
 
-    // TODO: if needed, labels and renders of category content can be split here
     renderCategory(category) {
         const {
             data,
@@ -32,10 +26,10 @@ class Menu extends PureComponent {
 
         return (
             <MenuCategory
-              key={ key }
-              data={ data }
-              label={ label }
-              design={ design }
+                key={ key }
+                data={ data }
+                label={ label }
+                design={ design }
             />
         );
     }
@@ -46,16 +40,19 @@ class Menu extends PureComponent {
     }
 
     render() {
+        const { isArabic } = this.state;
+
         return (
             <div
-              block="Menu"
-              elem="Container"
+                block="Menu"
+                elem="Container"
             >
                 <HeaderGenders />
                 <div
-                  block="Menu"
+                    mix={ { block: 'Menu', mods: { isArabic } } }
                 >
                     { this.renderCategories() }
+                    <div block="MenuCategory" elem="LastCategoryBackground" />
                 </div>
             </div>
         );

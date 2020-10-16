@@ -1,134 +1,193 @@
 :root {
-    --menu-background-color-desktop:#000;
-    --menu-background-color-mobile:#fff;
-    --mobile-menu-category-background-color: #f3f4f6;
-    --sales-block-background-color-desktop: #e4001a;
-    --light-border-color: #d3d3d3;
-    --default-text-color: var(--menu-background-color-desktop);
-    --light-text-color: var(--menu-background-color-mobile);
-
+    --black: #000;
+    --dark-grey: #a9a9a9;
+    --grey: #d3d3d3;
+    --light-grey: #f3f4f6;
+    --red: #d12229;
+    --white: #fff;
 }
+
 .HeaderBottomBar {
-    background-color: var(--menu-background-color-desktop);
+    background-color: var(--black);
     z-index: 1;
 
+    @include before-desktop {
+        display: none;
+    }
+
     &-Content {
-        background-color: var(--menu-background-color-desktop);
+        background-color: var(--black);
+
         @include before-desktop {
+            background-color: var(--white);
+            height: 100%;
+            overflow-y: scroll;
+            padding-bottom: 120px;
+            position: fixed;
+            top: 0;
+            width: 280px;
+            z-index: 1;
+
             .HeaderSearch-Container {
-            display: none;
+                display: none;
             }
 
             .FooterMain {
-                background-color: var(--menu-background-color-mobile);
+                background-color: var(--white);
                 display: block;
-                height: 440px;
+                height: 280px;
                 margin-bottom: -144px;
                 padding: 0;
 
-                &-Layout {
-                    display: flex;
-                    flex-direction: column-reverse;
-                    margin: 0;
+                &-WrapperSecond {
+                    margin-bottom: 40px;
+                    margin-left: 10px;
+                    margin-top: 10px;
+                }
 
-                    h4 {
-                        display: none;
-                    }
+                &-SocialIcon {
+                    background-color: var(--light-grey);
+                }
 
-                    :not(:first-child) {
-                        display: none;
-                    }
+                .HeaderAccount {
+                    border-bottom: 1px solid var(--light-grey);
+                    margin: 0 10px;
+                    padding-bottom: 10px;
+                    &-Button {
+                        margin-left: 50px;
 
-                    :last-child {
-                        display: flex;
-                        flex-direction: column-reverse;
-
-                        .FooterMain {
-                            margin-bottom: -30px;
-
-                            &-WrapperSecond {
-                                flex-direction: row;
-                                margin-left: 10px;
-                            }
-
-                            &-WrapperFirst {
-                                display: flex;
-                                flex-direction: row-reverse;
-                                margin-bottom: 20px;
-                                margin-right: 10px;
-                            }
+                        &_isArabic {
+                            left: 12px;
                         }
                     }
 
-                    :first-child {
-                        .FooterMain-Nav {
-                            display: flex;
+                    label {
+                        font-size: 17px;
+                        font-weight: 100;
+                        padding-left: 10px;
 
-                            ul {
-                                flex-direction: column;
-                                margin-left: 10px;
+                        &:before {
+                            margin-top: 2px;
+                        }
+                    }
+                }
 
-                                li {
-                                    border-bottom: 1px solid var(--light-border-color);
-                                    line-height: 50px;
-                                }
+                h4 {
+                    font-family: inherit;
+                    font-weight: 100;
+                    margin-bottom: 10px;
+                    margin-left: 12px;
+                    margin-top: 30px;
+                }
 
-                                :nth-child(-n+3) {
-                                    display: block;
-                                }
+                &-WrapperFirst {
+                    margin: 10px 11px;
+                    margin-right: 0;
 
-                                li:last-child {
-                                    display: none;
-                                }
-                            }
+                    a {
+                        margin-left: 0;
+
+                        img {
+                            max-width: 125px;
                         }
                     }
                 }
 
                 &-Column {
-                    min-height: 0;
-                }
-            }
-            .FooterMiddle {
-                background-color: #fff;
-                padding-left: 0;
-                display: inline-flex;
-                .HeaderAccount {
-                    display: none;
-                }
-                .CountrySwitcher {
-                    &-CountryBtn {
-                        margin-left: -20px;
+                    height: 250px;
+                    margin-top: 150px;
+
+                    .FooterMain-Nav {
+                        display: grid;
+
+                        a {
+                            border-bottom: 1px solid var(--light-gray);
+                            line-height: 50px;
+                            margin-left: 12px;
+
+                            &:after {
+                                border-bottom: 2px solid var(--dark-grey);
+                                border-right: 2px solid var(--dark-grey);
+                                content: "";
+                                display: inline-block;
+                                height: 7px;
+                                margin-left: auto;
+                                margin-right: 0;
+                                position: absolute;
+                                right: 20px;
+                                top: 20px;
+                                transform: rotate(-45deg);
+                                width: 7px;
+                                z-index: 100
+                            }
+                        }
                     }
                 }
             }
-            background-color: $white;
-            position: fixed;
-            z-index: 1;
-            top: 0;
-            width: 280px;
-            height: 100%;
-            overflow-y: scroll;
-        }
-
-        @include desktop {
-            .FooterMain {
-                display: none;
-            }
 
             .FooterMiddle {
-                display: none;
+                &-StoreSwitcher {
+                    margin-top: -20px;
+                }
             }
 
-            display: flex;
-            width: 1400px;
-            margin: 0 auto;
+            &_isArabic {
+                .FooterMain {
+                    &-Column {
+                        .FooterMain-Nav {
+                            a {
+                                margin-left: 0;
+                                margin-right: 12px;
+
+                                &:after {
+                                    left: 20px;
+                                    right: unset;
+                                    top: 20px;
+                                    transform: rotate(135deg);
+                                }
+                            }
+                        }
+                    }
+
+                    h4 {
+                        margin-left: 0;
+                        margin-right: 12px;
+                    }
+
+                    &-WrapperFirst {
+                        margin-left: 0;
+                        margin-right: 12px;
+                    }
+                }
+            }
         }
 
         .HeaderMenu {
             &-Button {
                 display: none;
             }
+        }
+
+        @include desktop {
+            .FooterMain {
+                display: none;
+
+                &-Column {
+                    display: none;
+                }
+            }
+
+            .FooterMiddle {
+                display: none;
+
+                &-StoreSwitcher {
+                    display: none;
+                }
+            }
+
+            display: flex;
+            margin: 0 auto;
+            max-width: 1440px;
         }
     }
 }

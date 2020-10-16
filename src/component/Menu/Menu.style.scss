@@ -1,25 +1,60 @@
 .Menu {
-    list-style-type: square !important;
+    list-style-type: square;
 
     &-Container {
         display: flex;
     }
+
     @include before-desktop {
-        border-top: 1px solid var(--light-border-color);
+        border-top: 1px solid var(--grey);
         width: 270px;
 
         &-Container {
             flex-direction: column;
+
+            .HeaderGenders {
+                display: grid;
+                grid-auto-flow: column;
+                width: 280px;
+
+                .GenderButton {
+                    &-Button {
+                        width: 100%;
+                    }
+                }
+            }
         }
     }
+
     @include desktop {
         display: flex;
         justify-content: left;
-        width: 1020px;
 
         &-Container {
             .HeaderGenders {
                 display: none;
+            }
+        }
+
+        .MenuCategory {
+            &-LastCategoryBackground {
+                background-color: var(--red);
+                color: transparent;
+                margin-left: -90px;
+                transform: skew(-15deg, 0deg);
+                width: 80px;
+            }
+        }
+
+        &_isArabic {
+            .MenuCategory {
+                &-LastCategoryBackground {
+                    background-color: var(--red);
+                    color: transparent;
+                    margin-right: -125px;
+                    transform: skew(-15deg, 0deg);
+                    width: 105px;
+                }
             }
         }
     }
