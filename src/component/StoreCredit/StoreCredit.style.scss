@@ -13,8 +13,7 @@ li.MyAccountTabListItem {
         padding: 15px 0;
 
         @include mobile {
-            // because someone set important when active :(
-            display: none !important;
+            display: none;
         }
 
         button {
