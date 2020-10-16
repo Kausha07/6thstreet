@@ -53,7 +53,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
     getCustomerFullName() {
         const { customer } = this.props;
 
-        if (Object.keys(customer).length !== 0) {
+        if (Object.keys(customer).length) {
             const firstName = customer.firstname;
             const lastName = customer.firstname;
             return { firstName, lastName };
@@ -148,7 +148,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
     getCustomerPhone() {
         const { customer } = this.props;
 
-        if (Object.keys(customer).length !== 0) {
+        if (Object.keys(customer).length) {
             const customerAdressesData = customer.addresses[0];
             const customerPhone = customerAdressesData.telephone;
             const customerCountry = customerAdressesData.country_id;

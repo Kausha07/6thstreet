@@ -97,7 +97,7 @@
 
                 &:not(:checked) + label {
                     &:after {
-                        background-color: rgba(255,255,255,0.5);
+                        background-color: rgba(255, 255, 255, 0.5);
                         border-radius: 0;
                         content: ' ';
                         height: 20px;
@@ -109,7 +109,6 @@
                 }
 
                 &:focus {
-
                     + label {
                         &::after {
                             --checkmark-color: var(--black-color);
@@ -216,7 +215,7 @@
 
         &:after {
             background-color: var(--white);
-            content: " ";
+            content: ' ';
             height: 58px;
             margin-bottom: 2px;
             margin-left: -60px;
@@ -230,7 +229,7 @@
             &:after {
                 border: solid var(--light-gray);
                 border-width: 0 2px 2px 0;
-                content: " ";
+                content: ' ';
                 height: 6px;
                 margin-bottom: 2px;
                 margin-left: -15px;
