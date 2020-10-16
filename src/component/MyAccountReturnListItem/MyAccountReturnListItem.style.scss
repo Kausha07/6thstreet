@@ -19,6 +19,7 @@
         display: table-cell;
         padding-right: 20px;
         text-align: right;
+        vertical-align: middle;
         width: calc(100% / 3);
 
         &::after {
@@ -51,11 +52,13 @@
         font-weight: bold;
         text-align: center;
         text-decoration: underline;
+        vertical-align: middle;
         width: calc(100% / 3);
     }
 
     &-Date {
         display: table-cell;
+        vertical-align: middle;
         width: calc(100% / 3);
     }
 }
