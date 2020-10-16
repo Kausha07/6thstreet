@@ -8,6 +8,7 @@ import MyAccountMyOrders from 'Component/MyAccountMyOrders';
 import MyAccountMyWishlist from 'Component/MyAccountMyWishlist';
 import MyAccountReturns from 'Component/MyAccountReturns';
 import MyAccountTabList from 'Component/MyAccountTabList';
+import StoreCredit from 'Component/StoreCredit';
 import { MyAccount as SourceMyAccount } from 'SourceRoute/MyAccount/MyAccount.component';
 import {
     activeTabType,
@@ -91,6 +92,7 @@ export class MyAccount extends SourceMyAccount {
               label={ __('My Account page') }
               wrapperMix={ { block: 'MyAccount', elem: 'Wrapper' } }
             >
+                <StoreCredit />
                 <MyAccountTabList
                   tabMap={ tabMap }
                   activeTab={ activeTab }
