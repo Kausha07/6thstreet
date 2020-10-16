@@ -3,7 +3,7 @@
     --my-acc-background: #F9F9F9;
     --my-acc-street: #4A4A4A;
 }
-.MyAccountAddressTable {
+.MyAccountAddressTableCard {
     display: flex;
     align-items: center;
 
@@ -101,7 +101,7 @@
 
 .PageWrapper {
     &_isArabic {
-        .MyAccountAddressTable {
+        .MyAccountAddressTableCard {
             &-ActionBtn {
                 margin: 0 30px 0 0;
             }
