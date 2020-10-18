@@ -16,7 +16,7 @@ class MyAccountStoreCredit extends PureComponent {
         const {
             storeCredit: {
                 current_balance: balance
-            }
+            } = {}
         } = this.props;
 
         return (
@@ -25,7 +25,7 @@ class MyAccountStoreCredit extends PureComponent {
                     { __('Current Store Credit:') }
                 </span>
                 <span block={ this.blockClass } elem="BalanceAmount">
-                    { balance }
+                    { balance || '' }
                 </span>
             </div>
         );
@@ -59,8 +59,13 @@ class MyAccountStoreCredit extends PureComponent {
         const {
             storeCredit: {
                 history
-            }
+            } = {}
         } = this.props;
+
+        if (!history || !history.length) {
+            return null;
+        }
+
         const headers = [
             __('Action'),
             __('Balance Change'),
