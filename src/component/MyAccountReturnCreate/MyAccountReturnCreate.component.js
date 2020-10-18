@@ -70,8 +70,8 @@ export class MyAccountReturnCreate extends PureComponent {
 
     renderActions() {
         const { handleDiscardClick, selectedNumber } = this.props;
-        const submitText = selectedNumber !== 1 ? __('Return %s items', selectedNumber)
-            : __('Return %s item', selectedNumber);
+        const submitText = selectedNumber !== 1
+            ? __('Return %s items', selectedNumber) : __('Return %s item', selectedNumber);
 
         return (
             <div block="MyAccountReturnCreate" elem="Actions">
@@ -124,7 +124,7 @@ export class MyAccountReturnCreate extends PureComponent {
     }
 
     renderReturnNotPossible() {
-        return 'return is not possible at the time';
+        return __('Return is not possible at the time');
     }
 
     renderContent() {

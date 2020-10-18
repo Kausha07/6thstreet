@@ -1,5 +1,3 @@
-// import PropTypes from 'prop-types';
-// import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import { MyAccountReturnCreateContainer } from 'Component/MyAccountReturnCreate/MyAccountReturnCreate.container';
@@ -7,13 +5,9 @@ import MagentoAPI from 'Util/API/provider/MagentoAPI';
 
 import MyAccountCancelCreate from './MyAccountCancelCreate.component';
 
-export const mapStateToProps = (_state) => ({
-    // wishlistItems: state.WishlistReducer.productsInWishlist
-});
+export const mapStateToProps = () => ({});
 
-export const mapDispatchToProps = (_dispatch) => ({
-    // addProduct: options => CartDispatcher.addProductToCart(dispatch, options)
-});
+export const mapDispatchToProps = () => ({});
 
 export class MyAccountCancelCreateContainer extends MyAccountReturnCreateContainer {
     async getReturnableItems() {
@@ -26,6 +20,8 @@ export class MyAccountCancelCreateContainer extends MyAccountReturnCreateContain
         }
     }
 
+    // TODO: For now this is an example of a request function
+    // It will be needed when developing cancel functionality
     async onFormSubmit() {
         // const { selectedItems, items } = this.state;
 
@@ -44,8 +40,6 @@ export class MyAccountCancelCreateContainer extends MyAccountReturnCreateContain
         //     //     };
         //     // })
         // };
-
-        // console.log(payload);
     }
 
     render() {

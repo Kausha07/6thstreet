@@ -1,6 +1,3 @@
-// import PropTypes from 'prop-types';
-// import { PureComponent } from 'react';
-
 import Form from 'Component/Form';
 import { MyAccountReturnCreate } from 'Component/MyAccountReturnCreate/MyAccountReturnCreate.component';
 
