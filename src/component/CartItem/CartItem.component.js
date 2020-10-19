@@ -260,7 +260,7 @@ export class CartItem extends PureComponent {
             currency_code,
             item: {
                 row_total,
-                discount_amount
+                basePrice
             }
         } = this.props;
 
@@ -281,7 +281,7 @@ export class CartItem extends PureComponent {
                 <div>
                     { currency_code }
                     <span>
-                        { `${parseFloat(discount_amount).toFixed(2)}` }
+                        { `${parseFloat(basePrice).toFixed(2)}` }
                     </span>
                 </div>
                 { withoutDiscount }
@@ -293,7 +293,7 @@ export class CartItem extends PureComponent {
               block="CartItem"
               elem="Price"
             >
-                { discount_amount ? withDiscount : withoutDiscount }
+                { basePrice === row_total ? withoutDiscount : withDiscount }
             </div>
         );
     }

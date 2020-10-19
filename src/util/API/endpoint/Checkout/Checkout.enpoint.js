@@ -26,3 +26,7 @@ export const createOrder = ({ data }) => MobileAPI.post(
     '/create-order2',
     data
 ) || {};
+
+export const getPaymentMethods = () => MobileAPI.get(
+    '/payment-methods'
+) || {};
