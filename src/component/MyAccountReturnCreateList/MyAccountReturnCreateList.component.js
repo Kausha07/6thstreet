@@ -19,7 +19,7 @@ export class MyAccountReturnCreateList extends PureComponent {
         return (
             <div block="MyAccountReturnCreateList">
                 <Loader isLoading={ isLoading } />
-                { orders.map((order) => <MyAccountReturnCreateListItem order={ order } />) }
+                { orders.map((order) => <MyAccountReturnCreateListItem key={ order.id } order={ order } />) }
             </div>
         );
     }
