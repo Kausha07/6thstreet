@@ -59,7 +59,7 @@ export class FooterCustomerSupportContainer extends PureComponent {
                     [language]: contactLabel
                 } = {},
                 type: contactType
-            },
+            } = {},
             opening_hours: {
                 [language]: openHoursLabel
             },

@@ -462,8 +462,8 @@
     "Discart": null,
     "Save": null,
     "Order placed": null,
-    "No orders": null,
     "New Address": null,
+    "No orders": null,
     "Total: %s": null,
     "Item": null,
     "Items": null,
@@ -507,5 +507,7 @@
     "Balance Change": null,
     "Transactions History": null,
     "New": null,
-    "male": null
+    "male": null,
+    "Select a resolution": null,
+    "Return": null
 }
