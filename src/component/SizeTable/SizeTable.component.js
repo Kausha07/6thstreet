@@ -1,5 +1,7 @@
 import { PureComponent } from 'react';
 
+import { isArabic } from 'Util/App';
+
 import { CM_TO_INCH, UK_SIZE_CM } from './SizeTable.config';
 
 import './SizeTable.style';
@@ -7,7 +9,10 @@ import './SizeTable.style';
 export class SizeTable extends PureComponent {
     constructor() {
         super();
-        this.state = { isCm: true };
+        this.state = {
+            isCm: true,
+            isArabic: isArabic()
+        };
     }
 
     handleClick = () => {
@@ -52,10 +57,10 @@ export class SizeTable extends PureComponent {
     };
 
     render() {
-        const { isCm } = this.state;
+        const { isCm, isArabic } = this.state;
 
         return (
-            <div block="SizeTable">
+            <div block="SizeTable" mods={ { isArabic } }>
                 <div mix={ { block: 'SizeTable', elem: 'ButtonContainer' } }>
                     <button
                       onClick={ this.SwitchToCm }
