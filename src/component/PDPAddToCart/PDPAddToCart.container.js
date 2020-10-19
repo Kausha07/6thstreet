@@ -14,16 +14,19 @@ export const mapStateToProps = (state) => ({
 
 export const mapDispatchToProps = (dispatch) => ({
     showNotification: (type, message) => dispatch(showNotification(type, message)),
-    addProductToCart:
-    (productData, color, optionValue, discount, brand_name, thumbnail_url, url) => CartDispatcher.addProductToCart(
+    addProductToCart: (
+        productData, color, optionValue, basePrice, brand_name, thumbnail_url, url, itemPrice, currency
+    ) => CartDispatcher.addProductToCart(
         dispatch,
         productData,
         color,
         optionValue,
-        discount,
+        basePrice,
         brand_name,
         thumbnail_url,
-        url
+        url,
+        itemPrice,
+        currency
     )
 });
 
@@ -90,17 +93,21 @@ export class PDPAddToCartContainer extends PureComponent {
         const {
             product, product: {
                 simple_products,
-                discount,
                 thumbnail_url,
                 url,
                 color,
-                brand_name
+                brand_name,
+                price
             }, addProductToCart, showNotification
         } = this.props;
         const {
             selectedSizeType, selectedSizeCode, insertedSizeStatus
         } = this.state;
+        const itemPrice = price[0][Object.keys(price[0])[0]]['6s_special_price'];
+        const basePrice = price[0][Object.keys(price[0])[0]]['6s_base_price'];
+        const currency = Object.keys(price[0])[0];
 
+        console.log('***', product);
         if (product.size_uk.length !== 0 && selectedSizeCode === '') {
             showNotification('error', __('Please select a size.'));
         }
@@ -116,7 +123,7 @@ export class PDPAddToCartContainer extends PureComponent {
                 qty: 1,
                 optionId,
                 optionValue
-            }, color, optionValue, discount, brand_name, thumbnail_url, url).then(
+            }, color, optionValue, basePrice, brand_name, thumbnail_url, url, itemPrice, currency).then(
                 () => this.afterAddToCart()
             );
         }
@@ -130,7 +137,7 @@ export class PDPAddToCartContainer extends PureComponent {
                 qty: 1,
                 optionId: '',
                 optionValue: ''
-            }, color, null, discount, brand_name, thumbnail_url, url).then(
+            }, color, null, basePrice, brand_name, thumbnail_url, url, itemPrice, currency).then(
                 () => this.afterAddToCart()
             );
         }
