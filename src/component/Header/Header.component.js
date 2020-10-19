@@ -52,6 +52,7 @@ export class Header extends PureComponent {
                 <div
                   block="CheckoutHeader"
                   elem="BackToShopping"
+                  mods={ { isArabic } }
                 >
                     <button block="BackMobileButton">
                         { ' ' }

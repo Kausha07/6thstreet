@@ -130,10 +130,10 @@
                     overflow: visible;
                     padding: 1%;
                     width: 28.5%;
-                    max-height: 100%;
+                    max-height: calc(100% - 50px);
                     height: 100vh;
                     border-radius: 0;
-                    top: 205px;
+                    top: 180px;
                 }
 
                 @include tablet {

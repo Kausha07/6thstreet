@@ -153,7 +153,9 @@ const config = {
       'categories.level1',
       'promotion',
       'is_new_in',
-      'url'
+      'url',
+      'news_from_date',
+      'news_to_date'
     ],
     facets: FACET_FILTERS,
     facetFilters: [/*'sku'*/],

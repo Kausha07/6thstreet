@@ -1,0 +1,30 @@
+.PhoneCountryCodeField {
+    margin-top: -18px;
+    width: 80px;
+
+    .CountryMiniFlag-Container {
+        margin-bottom: -55px;
+        margin-left: 12px;
+        z-index: 1;
+
+        @include desktop() {
+            margin-bottom: -53px;
+        }
+    }
+    input {
+        padding-left: 35px;
+        padding-right: 0;
+    }
+
+    &_isArabic {
+        .CountryMiniFlag-Container {
+            margin-left: 0;
+            margin-right: 12px;
+        }
+
+        input {
+            padding-left: 0;
+            padding-right: 35px;
+        }
+    }
+}

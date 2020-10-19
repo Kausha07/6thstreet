@@ -53,7 +53,8 @@ export class SearchSuggestionsDispatcher {
                 results
             ));
         } catch (e) {
-            console.log(e);
+            // eslint-disable-next-line no-console
+            console.error(e);
             dispatch(setSearchSuggestions(search));
         }
     }

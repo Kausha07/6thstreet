@@ -75,7 +75,6 @@ export class PDPAlsoAvailableProductsContainer extends PureComponent {
     }
 
     render() {
-        console.log(this.state);
         return (
             <PDPAlsoAvailableProducts
               { ...this.state }

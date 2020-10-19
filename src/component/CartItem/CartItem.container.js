@@ -14,10 +14,9 @@ import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import { DEFAULT_MAX_PRODUCTS } from 'Component/ProductActions/ProductActions.config';
+import { hideActiveOverlay } from 'Store/Overlay/Overlay.action';
 import { CartItemType } from 'Type/MiniCart';
-import { CONFIGURABLE } from 'Util/Product';
 import { makeCancelable } from 'Util/Promise';
-import { objectToUri } from 'Util/Url';
 
 import CartItem from './CartItem.component';
 
@@ -30,14 +29,17 @@ export const mapDispatchToProps = (dispatch) => ({
     addProduct: (options) => CartDispatcher.then(
         ({ default: dispatcher }) => dispatcher.addProductToCart(dispatch, options)
     ),
-    updateProductInCart: (item_id, quantity, color, optionValue, thumbnail_url) => CartDispatcher.then(
+    updateProductInCart: (
+        item_id, quantity, color, optionValue, discount, brand_name, thumbnail_url, url
+    ) => CartDispatcher.then(
         ({ default: dispatcher }) => dispatcher.updateProductInCart(
-            dispatch, item_id, quantity, color, optionValue, thumbnail_url
+            dispatch, item_id, quantity, color, optionValue, discount, brand_name, thumbnail_url, url
         )
     ),
     removeProduct: (options) => CartDispatcher.then(
         ({ default: dispatcher }) => dispatcher.removeProductFromCart(dispatch, options)
-    )
+    ),
+    hideActiveOverlay: () => dispatch(hideActiveOverlay())
 });
 
 export class CartItemContainer extends PureComponent {
@@ -46,7 +48,8 @@ export class CartItemContainer extends PureComponent {
         currency_code: PropTypes.string.isRequired,
         brand_name: PropTypes.string.isRequired,
         updateProductInCart: PropTypes.func.isRequired,
-        removeProduct: PropTypes.func.isRequired
+        removeProduct: PropTypes.func.isRequired,
+        closePopup: PropTypes.func.isRequired
     };
 
     state = { isLoading: false };
@@ -72,11 +75,7 @@ export class CartItemContainer extends PureComponent {
      */
     getCurrentProduct() {
         const { item: { product } } = this.props;
-        const variantIndex = this._getVariantIndex();
-
-        return variantIndex < 0
-            ? product
-            : product.variants[variantIndex];
+        return product;
     }
 
     getMinQuantity() {
@@ -94,7 +93,6 @@ export class CartItemContainer extends PureComponent {
     }
 
     containerProps = () => ({
-        linkTo: this._getProductLinkTo(),
         thumbnail: this._getProductThumbnail(),
         minSaleQuantity: this.getMinQuantity(),
         maxSaleQuantity: this.getMaxQuantity()
@@ -113,11 +111,15 @@ export class CartItemContainer extends PureComponent {
                     item_id,
                     color,
                     optionValue,
-                    product: { thumbnail: { url } }
+                    product: { url, thumbnail },
+                    brand_name,
+                    discount_amount
                 }
             } = this.props;
 
-            this.hideLoaderAfterPromise(updateProductInCart(item_id, quantity, color, optionValue, url));
+            this.hideLoaderAfterPromise(updateProductInCart(
+                item_id, quantity, color, optionValue, discount_amount, brand_name, thumbnail.url, url
+            ));
         });
     }
 
@@ -169,46 +171,6 @@ export class CartItemContainer extends PureComponent {
      * @param url_key Url to product
      * @return {{pathname: String, state Object}} Pathname and product state
      */
-    _getProductLinkTo() {
-        const {
-            item: {
-                product,
-                product: {
-                    type_id,
-                    configurable_options,
-                    parent,
-                    variants = [],
-                    url
-                }
-            }
-        } = this.props;
-
-        if (type_id !== CONFIGURABLE) {
-            return {
-                pathname: url,
-                state: { product }
-            };
-        }
-
-        const variant = variants[this._getVariantIndex()];
-        const { attributes } = variant;
-
-        const parameters = Object.entries(attributes).reduce(
-            (parameters, [code, { attribute_value }]) => {
-                if (Object.keys(configurable_options).includes(code)) {
-                    return { ...parameters, [code]: attribute_value };
-                }
-
-                return parameters;
-            }, {}
-        );
-
-        return {
-            pathname: url,
-            state: { product: parent || product },
-            search: objectToUri(parameters)
-        };
-    }
 
     _getProductThumbnail() {
         const product = this.getCurrentProduct();

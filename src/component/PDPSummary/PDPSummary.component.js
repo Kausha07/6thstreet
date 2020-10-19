@@ -4,6 +4,7 @@ import { PureComponent } from 'react';
 import PDPAddToCart from 'Component/PDPAddToCart/PDPAddToCart.container';
 import PDPAlsoAvailableProducts from 'Component/PDPAlsoAvailableProducts';
 import Price from 'Component/Price';
+import ProductLabel from 'Component/ProductLabel/ProductLabel.component';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
 import { isArabic } from 'Util/App';
 
@@ -49,18 +50,14 @@ class PDPSummary extends PureComponent {
     }
 
     renderSummaryHeader() {
+        const { product } = this.props;
+
         return (
             <div block="PDPSummary" elem="Header">
                 <div block="PDPSummary" elem="HeaderNew">
-                    { this.renderNew() }
-                    <button
-                      block="PDPSummary"
-                      elem="HeaderWardrobeBtn"
-                      mix={ { block: 'button secondary thin' } }
-                    >
-                        <div block="PDPSummary" elem="hangerSvg" />
-                        <span block="PDPSummary" elem="WardrobeTxt">in my wardrobe</span>
-                    </button>
+                    <ProductLabel
+                      product={ product }
+                    />
                 </div>
                 <div block="PDPSummary" elem="HeaderShare">
                     <button
@@ -136,8 +133,6 @@ class PDPSummary extends PureComponent {
     renderAvailableItemsSection() {
         const { product: { sku } } = this.props;
         const { alsoAvailable, prevAlsoAvailable } = this.state;
-
-        console.log(alsoAvailable, prevAlsoAvailable);
 
         if (alsoAvailable) {
             if (alsoAvailable.length > 0 && prevAlsoAvailable.length !== 0) {
