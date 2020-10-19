@@ -2,25 +2,54 @@
     &:not(&_isBottomBar) {
         margin-left: auto;
 
-        div {
-            width: 27px;
-
-            &::before {
-                background: url(./icons/heart-regular.svg) no-repeat;
-                background-size: 23px;
-                content: "";
-                width: 27px;
-                height: 27px;
-                display: inline-block;
-                position: absolute;
-                left: -30px;
-                top: -17px;
-            }
-        }
-
         label {
             display: none;
         }
+
+        .HeaderWishlist {
+            &-Heart {
+                display: inline-block;
+
+                &::before {
+                    background: url(./icons/heart-regular.svg) no-repeat;
+                    background-size: 23px;
+                    content: '';
+                    width: 27px;
+                    height: 27px;
+                    display: inline-block;
+                    position: absolute;
+                    left: -30px;
+                    top: -22px;
+                }
+
+                &_isBlack {
+                    &::before {
+                        background: url(./icons/heart-solid.svg) no-repeat;
+                        background-size: 23px;
+                    }
+                }
+            }
+
+            &-Count {
+                display: none;
+                
+                &_have {
+                    color: $white;
+                    display: inline-block;
+                    position: absolute;
+                    font-size: 10px;
+                    left: -15px;
+                    text-align: center;
+                    top: 12px;
+                    width: 23px;
+                    z-index: 99;
+                }
+            }
+        }
+    }
+
+    &-Count {
+        display: none;
     }
 
     &_isBottomBar{
@@ -38,6 +67,10 @@
         margin: 10px auto 0;
         padding: 0;
         text-align: center;
+
+        button {
+            display: none;
+        }
 
         &::before{
             content: "";

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Field from 'Component/Field';
 import Loader from 'Component/Loader';
 import MyAccountPasswordForm from 'Component/MyAccountPasswordForm';
+import PhoneCountryCodeField from 'Component/PhoneCountryCodeField';
 import {
     MyAccountCustomerForm as SourceMyAccountCustomerForm
 } from 'SourceComponent/MyAccountCustomerForm/MyAccountCustomerForm.component';
@@ -14,6 +15,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
     static propTypes = {
         ...SourceMyAccountCustomerForm.propTypes,
         isShowPassword: PropTypes.bool.isRequired,
+        customer: PropTypes.isRequired,
         showPasswordFrom: PropTypes.func.isRequired,
         hidePasswordFrom: PropTypes.func.isRequired,
         onSave: PropTypes.func.isRequired,
@@ -21,18 +23,17 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
     };
 
     state = {
-        isArabic: isArabic()
+        isArabic: isArabic(),
+        gender: __('male')
     };
 
     get fieldMap() {
         return {
-            firstname: {
-                placeholder: __('First name'),
-                validation: ['notEmpty']
+            fullname: {
+                render: this.renderFullName.bind(this)
             },
-            lastname: {
-                placeholder: __('Last name'),
-                validation: ['notEmpty']
+            gender: {
+                render: this.renderGernder.bind(this)
             },
             email: {
                 isDisabled: true
@@ -40,11 +41,44 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
             password: {
                 render: this.renderPassword.bind(this)
             },
+            phone: {
+                render: this.renderPhone.bind(this)
+            },
             dob: {
-                label: __('Date of Birth'),
-                placeholder: __('Your birthday')
+                render: this.renderBirthDay.bind(this)
             }
         };
+    }
+
+    getCustomerFullName() {
+        const { customer } = this.props;
+
+        if (Object.keys(customer).length) {
+            const firstName = customer.firstname;
+            const lastName = customer.firstname;
+            return { firstName, lastName };
+        }
+
+        return [];
+    }
+
+    renderFullName() {
+        const fullName = this.getCustomerFullName();
+
+        return (
+            <div
+              block="MyAccountCustomerForm"
+              elem="FullNameField"
+            >
+                <Field
+                  type="text"
+                  name="fullname"
+                  id="full-name"
+                  placeholder={ __('fullname') }
+                  value={ `${fullName.firstName } ${ fullName.lastName}` }
+                />
+            </div>
+        );
     }
 
     renderPassword() {
@@ -73,6 +107,88 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
                 >
                     { __('Change') }
                 </button>
+            </div>
+        );
+    }
+
+    renderGernder() {
+        // gender need to be added to customer data
+        const { gender, isArabic } = this.state;
+
+        return (
+            <fieldset block="MyAccountCustomerForm" elem="Gender">
+                <div
+                  block="MyAccountCustomerForm"
+                  elem="Gender-Radio"
+                  mods={ { isArabic } }
+                >
+                    <Field
+                      type="radio"
+                      id="male"
+                      label={ __('Male') }
+                      name="gender"
+                      value={ gender }
+                      onClick={ this.handleGenderChange }
+                      defaultChecked={ gender }
+                    />
+                    <Field
+                      type="radio"
+                      id="female"
+                      label={ __('Female') }
+                      name="gender"
+                      value={ gender }
+                      onClick={ this.handleGenderChange }
+                      defaultChecked={ gender }
+                    />
+                </div>
+            </fieldset>
+        );
+    }
+
+    getCustomerPhone() {
+        const { customer } = this.props;
+
+        if (Object.keys(customer).length) {
+            const customerAdressesData = customer.addresses[0];
+            const customerPhone = customerAdressesData.telephone;
+            const customerCountry = customerAdressesData.country_id;
+
+            return { customerPhone, customerCountry };
+        }
+
+        return [];
+    }
+
+    renderPhone() {
+        const { isArabic } = this.state;
+        const customerPhoneData = this.getCustomerPhone();
+
+        return (
+            <div block="MyAccountCustomerForm" elem="Phone" mods={ { isArabic } }>
+                <PhoneCountryCodeField label={ customerPhoneData.customerCountry } />
+                <Field
+                  block="MyAccountCustomerForm"
+                  elem="PhoneField"
+                  mods={ { isArabic } }
+                  type="text"
+                  id="phone"
+                  placeholder={ __('Phone number') }
+                  value={ customerPhoneData.customerPhone }
+                />
+            </div>
+        );
+    }
+
+    renderBirthDay() {
+        // birthday need to be added to customer data
+        const { isArabic } = this.state;
+
+        return (
+            <div block="MyAccountCustomerForm" elem="BirthDay" mods={ { isArabic } }>
+                <input
+                  type="date"
+                  id="birth-day"
+                />
             </div>
         );
     }

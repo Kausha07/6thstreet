@@ -4,7 +4,8 @@ import {
     REMOVE_CART_ITEM,
     SET_CART_ID,
     SET_CART_TOTALS,
-    UPDATE_CART_ITEM
+    UPDATE_CART_ITEM,
+    UPDATE_TOTALS
 } from './Cart.action';
 
 export const CART_ID_CACHE_KEY = 'CART_ID_CACHE_KEY';
@@ -88,7 +89,7 @@ export const CartReducer = (state = getInitialState(), action) => {
                 thumbnail: {
                     url: item.thumbnail_url
                 },
-                url: '',
+                url: item.url,
                 variants: []
             },
             row_total: item.price || 0,
@@ -128,6 +129,7 @@ export const CartReducer = (state = getInitialState(), action) => {
             cartItems: reducedCartItems
         };
 
+    case UPDATE_TOTALS:
     default:
         return state;
     }

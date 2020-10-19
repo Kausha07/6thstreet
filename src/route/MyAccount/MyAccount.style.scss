@@ -12,29 +12,33 @@
     }
 
     &-TabContent {
+        @include after-mobile {
+            width: 100%;
+            padding: 0 20px;
+        }
+
         @include desktop {
-            min-width: 540px;
+            width: 70%;
         }
     }
 }
 
-@include before-desktop{
-
+@include before-desktop {
     .MyAccountOverlay-Close {
         display: block;
     }
 
-    #privacy-link{
+    #privacy-link {
         font-weight: bold;
         text-decoration: underline;
     }
 
-    .MyAccountTabList{
+    .MyAccountTabList {
         width: 100%;
     }
 
-    .MyAccountTabListItem_isActive{
-        display:block !important;
+    .MyAccountTabListItem_isActive {
+        display: block;
     }
 
     .MyAccountTabListItem_isActive,
@@ -43,12 +47,12 @@
         --text-shadow: -.02ex 0 var(--my-account-tab-list-item-color), .02ex 0 var(--my-account-tab-list-item-color) !important;
     }
 
-    .ExpandableContent-Content{
+    .ExpandableContent-Content {
         opacity: 1;
         overflow: visible;
     }
 
-    .ExpandableContent-Button{
+    .ExpandableContent-Button {
         display: none;
     }
 
@@ -56,12 +60,12 @@
         display: none;
     }
 
-    .Active{
+    .Active {
         display: block;
         width: 100%;
     }
 
-    .Cross-button{
+    .Cross-button {
         width: 16px;
         height: 16px;
         position: absolute;
@@ -69,7 +73,7 @@
         left: 0;
     }
 
-    .TermsAndPrivacy{
+    .TermsAndPrivacy {
         width: 100%;
         position: fixed;
         bottom: 83px;
