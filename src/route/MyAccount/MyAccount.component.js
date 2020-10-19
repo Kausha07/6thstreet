@@ -8,7 +8,6 @@ import MyAccountMyOrders from 'Component/MyAccountMyOrders';
 import MyAccountMyWishlist from 'Component/MyAccountMyWishlist';
 import MyAccountReturns from 'Component/MyAccountReturns';
 import MyAccountTabList from 'Component/MyAccountTabList';
-// import StoreCredit from 'Component/StoreCredit';
 import { MyAccount as SourceMyAccount } from 'SourceRoute/MyAccount/MyAccount.component';
 import {
     activeTabType,
