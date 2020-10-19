@@ -72,21 +72,5 @@ export default async function getProductBySku(
     { sku = '', highlights = '*' },
     options = {}
 ) {
-    const product = await getAvailableProduct(sku, highlights, options);
-
-    let variantSKUs =
-        product.data && product.data['6s_also_available']
-            ? product.data['6s_also_available']
-            : [];
-
-    if (variantSKUs.length > 0) {
-        variantSKUs = [...variantSKUs, sku];
-        product.data['variants'] = await getProductVariants(
-            variantSKUs,
-            highlights,
-            options
-        );
-    }
-
-    return product;
+    return await getAvailableProduct(sku, highlights, options);
 }

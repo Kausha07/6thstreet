@@ -8,7 +8,8 @@ import './PDPAlsoAvailableProduct.style';
 
 class PDPAlsoAvailableProduct extends PureComponent {
     static propTypes = {
-        product: PropTypes.object.isRequired
+        product: PropTypes.object.isRequired,
+        setIsLoading: PropTypes.func.isRequired
     };
 
     renderImage() {
@@ -29,6 +30,12 @@ class PDPAlsoAvailableProduct extends PureComponent {
         );
     }
 
+    alsoAvailableClick = () => {
+        const { setIsLoading } = this.props;
+
+        setIsLoading(true);
+    };
+
     renderLink() {
         const {
             product,
@@ -43,7 +50,7 @@ class PDPAlsoAvailableProduct extends PureComponent {
         };
 
         return (
-            <Link to={ linkTo }>
+            <Link to={ linkTo } onClick={ this.alsoAvailableClick }>
                 { this.renderImage() }
                 { this.renderColor() }
             </Link>

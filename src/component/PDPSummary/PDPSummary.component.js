@@ -1,4 +1,4 @@
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import PDPAddToCart from 'Component/PDPAddToCart/PDPAddToCart.container';
@@ -12,7 +12,8 @@ import './PDPSummary.style';
 
 class PDPSummary extends PureComponent {
     static propTypes = {
-        product: Product.isRequired
+        product: Product.isRequired,
+        isLoading: PropTypes.bool.isRequired
     };
 
     state = {
@@ -27,7 +28,7 @@ class PDPSummary extends PureComponent {
         if (prevAlsoAvailable !== product['6s_also_available']) {
             return {
                 alsoAvailable: product['6s_also_available'],
-                prevAlsoAvailable: alsoAvailable === undefined ? [''] : alsoAvailable
+                prevAlsoAvailable: alsoAvailable !== undefined ? alsoAvailable : null
             };
         }
 
@@ -131,11 +132,11 @@ class PDPSummary extends PureComponent {
     }
 
     renderAvailableItemsSection() {
-        const { product: { sku } } = this.props;
-        const { alsoAvailable, prevAlsoAvailable } = this.state;
+        const { product: { sku }, isLoading } = this.props;
+        const { alsoAvailable } = this.state;
 
         if (alsoAvailable) {
-            if (alsoAvailable.length > 0 && prevAlsoAvailable.length !== 0) {
+            if (alsoAvailable.length > 0 && !isLoading) {
                 return (
                     <PDPAlsoAvailableProducts productsAvailable={ alsoAvailable } productSku={ sku } />
                 );
