@@ -4,6 +4,7 @@ import ContentWrapper from 'Component/ContentWrapper';
 import MyAccountAddressBook from 'Component/MyAccountAddressBook';
 import MyAccountClubApparel from 'Component/MyAccountClubApparel';
 import MyAccountDashboard from 'Component/MyAccountDashboard';
+import MyAccountMobileHeader from 'Component/MyAccountMobileHeader';
 import MyAccountMyOrders from 'Component/MyAccountMyOrders';
 import MyAccountMyWishlist from 'Component/MyAccountMyWishlist';
 import MyAccountReturns from 'Component/MyAccountReturns';
@@ -127,12 +128,13 @@ export class MyAccount extends SourceMyAccount {
         }
 
         const TabContent = this.renderMap[activeTab];
-        const { name } = tabMap[activeTab];
+        const { alternativePageName, name } = tabMap[activeTab];
         return (
             <ContentWrapper
               label={ __('My Account page') }
               wrapperMix={ { block: 'MyAccount', elem: 'Wrapper' } }
             >
+                <MyAccountMobileHeader />
                 <div block={ hiddenTabList }>
                     <MyAccountTabList
                       tabMap={ tabMap }
@@ -156,7 +158,7 @@ export class MyAccount extends SourceMyAccount {
                 ) : ('') }
                 <div block={ hiddenTabContent }>
                     <div block="MyAccount" elem="TabContent">
-                        <h1 block="MyAccount" elem="Heading">{ name }</h1>
+                        <h1 block="MyAccount" elem="Heading">{ alternativePageName || name }</h1>
                         <TabContent />
                     </div>
                 </div>
