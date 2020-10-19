@@ -102,10 +102,20 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
         getPaymentMethods().then(
             ({ data }) => {
+                const availablePaymentMethods = data.reduce((acc, paymentMethod) => {
+                    const { is_enabled } = paymentMethod;
+                    
+                    if (is_enabled) {
+                        acc.push(paymentMethod);
+                    }
+
+                    return acc;
+                }, []);
+
                 if (data) {
                     this.setState({
                         isLoading: false,
-                        paymentMethods: data,
+                        paymentMethods: availablePaymentMethods,
                         checkoutStep: BILLING_STEP
                     })
                 }
