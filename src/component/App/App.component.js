@@ -1,3 +1,5 @@
+/* eslint-disable prefer-arrow-callback */
+/* eslint-disable no-console */
 import { Provider } from 'react-redux';
 
 import Splash from 'Route/Splash';
@@ -14,6 +16,18 @@ class App extends SourceApp {
     rootComponents = [
         this.renderSplash.bind(this)
     ];
+
+    componentDidMount() {
+        window.addEventListener('load', function () {
+            navigator.serviceWorker.register('service-worker.js').then(function (registration) {
+                console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            }, function (err) {
+                console.error('ServiceWorker registration failed: ', err);
+            }).catch(function (err) {
+                console.error(err);
+            });
+        });
+    }
 
     getStore() {
         const store = configureStore();
