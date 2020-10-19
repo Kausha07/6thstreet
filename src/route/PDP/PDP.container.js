@@ -82,6 +82,8 @@ export class PDPContainer extends PureComponent {
     };
 
     render() {
+        const { product } = this.props;
+        localStorage.setItem('product', JSON.stringify(product.name));
         return (
             <PDP
               { ...this.containerFunctions }

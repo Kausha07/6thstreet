@@ -144,7 +144,7 @@ class HeaderMainSection extends NavigationAbstract {
         if (isMobile.any()) {
             if (this.isPLP()) {
                 const pagePLPTitle = this.getCategory() ? (
-                    String(this.getCategory().q).toUpperCase()
+                    String(this.getCategory()).toUpperCase()
                 ) : (
                     __('AVAILABLE PRODUCTS')
                 );
@@ -158,7 +158,7 @@ class HeaderMainSection extends NavigationAbstract {
                 );
             }
             if (this.isPDP()) {
-                const pagePDPTitle = String(this.getProduct().name).toUpperCase();
+                const pagePDPTitle = String(this.getProduct()).toUpperCase();
 
                 this.setMainContentPadding('50px');
 
@@ -190,15 +190,11 @@ class HeaderMainSection extends NavigationAbstract {
                     <p>{ __('Back') }</p>
                 </button>
             </div>
-        ) : (
-            ''
-        );
+        ) : null;
     }
 
     renderSearch() {
-        return this.isPLP() || this.isPDP() ? (
-            ''
-        ) : (
+        return this.isPLP() || this.isPDP() ? null : (
             <HeaderSearch />
         );
     }
