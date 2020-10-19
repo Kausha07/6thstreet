@@ -1,47 +1,18 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-import Link from 'Component/Link';
+import { formatPrice } from '@6thstreetdotcom/algolia-sdk/app/utils/filters';
 import Loader from 'Component/Loader';
-import { Order } from 'Util/API/endpoint/Order/Order.type';
+import { STATUS_FAILED } from 'Component/MyAccountOrderListItem/MyAccountOrderListItem.config';
+import { OrderType } from 'Type/API';
 
 import './MyAccountOrderView.style';
 
 class MyAccountOrderView extends PureComponent {
     static propTypes = {
-        order: Order.isRequired,
+        order: OrderType.isRequired,
         isLoading: PropTypes.bool.isRequired
     };
-
-    renderReturnItem() {
-        const { order: { entity_id } } = this.props;
-
-        return (
-            <Link
-              block="MyAccountOrderView"
-              elem="ButtonReturn"
-              mix={ { block: 'Button' } }
-              to={ `/my-account/return-item/create/${ entity_id }` }
-            >
-                { __('Return item') }
-            </Link>
-        );
-    }
-
-    renderCancelItem() {
-        const { order: { entity_id } } = this.props;
-
-        return (
-            <Link
-              block="MyAccountOrderView"
-              elem="ButtonCancel"
-              mix={ { block: 'Button' } }
-              to={ `/my-account/return-item/cancel/${ entity_id }` }
-            >
-                { __('Cancel item') }
-            </Link>
-        );
-    }
 
     renderTitle() {
         const { order: { increment_id } } = this.props;
@@ -49,6 +20,21 @@ class MyAccountOrderView extends PureComponent {
         return (
             <p>{ __('Order #%s', increment_id) }</p>
         );
+    }
+
+    renderStatus() {
+        const { order: { status } } = this.props;
+
+        if (STATUS_FAILED.includes(status)) {
+            return (
+                <p block="MyAccountOrderView" elem="Status" mods={ { failed: true } }>
+                    { /* Some statuses are written with _ so they need to be splitted and joined */ }
+                    { `${ status.split('_').join(' ') }` }
+                </p>
+            );
+        }
+
+        return null;
     }
 
     renderDetails() {
@@ -64,79 +50,12 @@ class MyAccountOrderView extends PureComponent {
         );
     }
 
-    renderItems() {
-        // const { order: { } } = this.props;
-        return <p>items</p>;
-    }
-
-    renderShippingAddress() {
-        return <p>shipping address</p>;
-        /* const { order: {  } } = this.props;
-
-        return (
-            <div />
-        ); */
-    }
-
-    renderBillingAddress() {
-        return <p>billing address</p>;
-        /* const { order: { billing_address } } = this.props;
-
-        return (
-            <div />
-        ); */
-    }
-
     renderSection(title, children) {
         return (
             <div>
                 <p>{ title }</p>
                 { children }
             </div>
-        );
-    }
-
-    renderShippingMethod() {
-        return <p>shipping method</p>;
-        /* const { order: { } } = this.props;
-
-        return (
-            <div />
-        ); */
-    }
-
-    renderPaymentMethod() {
-        return <p>payment method</p>;
-        /* const { order: { } } = this.props;
-
-        return (
-            <div />
-        ); */
-    }
-
-    renderOrderDetails() {
-        const { isLoading, order } = this.props;
-
-        if (isLoading) {
-            return this.renderLoader();
-        }
-
-        if (!Object.keys(order).length) {
-            return this.renderNoFound();
-        }
-
-        return (
-            <>
-                { this.renderReturnItem() }
-                { this.renderCancelItem() }
-                { this.renderTitle() }
-                { this.renderDetails() }
-                { this.renderItems() }
-                { this.renderShippingAddress() }
-                { this.renderBillingAddress() }
-                { this.renderShippingMethod() }
-                { this.renderPaymentMethod() }
-            </>
         );
     }
 
@@ -152,10 +71,47 @@ class MyAccountOrderView extends PureComponent {
         );
     }
 
+    renderSummary() {
+        const {
+            order: {
+                status,
+                subtotal,
+                grand_total,
+                currency_code,
+                msp_cod_amount
+            }
+        } = this.props;
+
+        if (!STATUS_FAILED.includes(status)) {
+            return null;
+        }
+
+        return (
+            <div block="MyAccountOrderView" elem="Summary">
+                <p block="MyAccountOrderView" elem="SummaryItem">
+                    <span>{ __('Subtotal') }</span>
+                    <span>{ formatPrice(+subtotal, currency_code) }</span>
+                </p>
+                { !!msp_cod_amount && (
+                    <p block="MyAccountOrderView" elem="SummaryItem">
+                        <span>{ __('Cash on Delivery Fee') }</span>
+                        <span>{ formatPrice(+msp_cod_amount, currency_code) }</span>
+                    </p>
+                ) }
+                <p block="MyAccountOrderView" elem="SummaryItem" mods={ { grandTotal: true } }>
+                    <span>{ __('Total') }</span>
+                    <span>{ formatPrice(+grand_total, currency_code) }</span>
+                </p>
+            </div>
+        );
+    }
+
     render() {
         return (
             <div block="MyAccountOrderView">
-                { this.renderOrderDetails() }
+                { this.renderTitle() }
+                { this.renderStatus() }
+                { this.renderSummary() }
             </div>
         );
     }

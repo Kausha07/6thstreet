@@ -1,4 +1,18 @@
 .MyAccountOrderView {
+    &-Status {
+        &_failed {
+            background: var(--color-failed);
+            color: var(--white);
+            font-family: var(--avenir-medium-font);
+            font-size: 16px;
+            font-weight: bold;
+            padding: 20px 0;
+            text-align: center;
+            text-transform: capitalize;
+            width: 100%;
+        }
+    }
+
     &-Button {
         &Return,
         &Cancel {
