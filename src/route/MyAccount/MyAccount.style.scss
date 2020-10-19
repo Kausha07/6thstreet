@@ -8,12 +8,20 @@
     &-Heading {
         @include before-desktop {
             display: none;
+            @include mobile {
+                display: block;
+            }
         }
     }
 
     &-TabContent {
+        @include after-mobile {
+            width: 100%;
+            padding: 0 20px;
+        }
+
         @include desktop {
-            min-width: 540px;
+            width: 70%;
         }
     }
 }

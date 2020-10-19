@@ -67,7 +67,7 @@ export class MyAccountOverlay extends PureComponent {
 
     state = {
         isPopup: false,
-        gender: 'preferNot',
+        gender: '0',
         isChecked: false,
         isArabic: isArabic()
     };
@@ -225,19 +225,19 @@ export class MyAccountOverlay extends PureComponent {
                 >
                     { __('Please enter your email and we will send you a link to reset your password') }
                 </p>
-                    <Field
-                      type="text"
-                      id="email"
-                      name="email"
-                      placeholder={ __('EMAIL OR PHONE*') }
-                      autocomplete="email"
-                      validation={ ['notEmpty', 'email'] }
-                    />
-                    <div block="MyAccountOverlay" elem="Button" mods={ { isMargin: true } }>
-                        <button block="Button" type="submit">
-                            { __('Send') }
-                        </button>
-                    </div>
+                <Field
+                  type="text"
+                  id="email"
+                  name="email"
+                  placeholder={ __('EMAIL OR PHONE*') }
+                  autocomplete="email"
+                  validation={ ['notEmpty', 'email'] }
+                />
+                <div block="MyAccountOverlay" elem="Button" mods={ { isMargin: true } }>
+                    <button block="Button" type="submit">
+                        { __('Send') }
+                    </button>
+                </div>
             </Form>
         );
     }
@@ -289,113 +289,113 @@ export class MyAccountOverlay extends PureComponent {
               onSubmitSuccess={ onCreateAccountSuccess }
               onSubmitError={ onCreateAccountAttempt }
             >
-                    <p block="MyAccountOverlay" elem="Subtitle">
-                        { __('Sign up for a tailored shopping experience') }
-                    </p>
-                    <fieldset block="MyAccountOverlay" elem="Legend">
-                        <Field
-                          type="text"
-                          placeholder={ __('FIRST NAME*') }
-                          id="firstname"
-                          name="firstname"
-                          autocomplete="given-name"
-                          validation={ ['notEmpty'] }
-                        />
-                        <Field
-                          type="text"
-                          placeholder={ __('LAST NAME*') }
-                          id="lastname"
-                          name="lastname"
-                          autocomplete="family-name"
-                          validation={ ['notEmpty'] }
-                        />
-                    </fieldset>
-                    <fieldset block="MyAccountOverlay" elem="Gender">
-                        <div
-                          block="MyAccountOverlay"
-                          elem="Radio"
-                          mods={ { isArabic } }
-                        >
-                            <Field
-                              type="radio"
-                              id="male"
-                              label={ __('Male') }
-                              name="gender"
-                              value={ gender }
-                              onClick={ this.handleGenderChange }
-                              defaultChecked={ gender }
-                            />
-                            <Field
-                              type="radio"
-                              id="female"
-                              label={ __('Female') }
-                              name="gender"
-                              value={ gender }
-                              onClick={ this.handleGenderChange }
-                              defaultChecked={ gender }
-                            />
-                            <Field
-                              type="radio"
-                              id="preferNot"
-                              label={ __('Prefer not to say') }
-                              name="gender"
-                              value={ gender }
-                              onClick={ this.handleGenderChange }
-                              defaultChecked={ gender }
-                            />
-                        </div>
-                    </fieldset>
-                    <fieldset block="MyAccountOverlay" elem="Legend">
-                        <Field
-                          type="text"
-                          placeholder={ __('EMAIL*') }
-                          id="email"
-                          name="email"
-                          autocomplete="email"
-                          validation={ ['notEmpty', 'email'] }
-                        />
-                        <Field
-                          type="password"
-                          placeholder={ __('PASSWORD*') }
-                          id="password"
-                          name="password"
-                          autocomplete="new-password"
-                          validation={ ['notEmpty', 'password'] }
-                        />
-                        <div
-                          block="MyAccountOverlay"
-                          elem="Checkbox"
-                          mods={ { isArabic } }
-                        >
-                            <Field
-                              type="checkbox"
-                              id="privacyPolicy"
-                              name="privacyPolicy"
-                              value="privacyPolicy"
-                              onClick={ this.handleCheckboxChange }
-                              checked={ isChecked }
-                            />
-                            <label htmlFor="PrivacyPolicy">
-                                { __('Yes, I\'d like to receive news and promotions from 6TH STREET. ') }
-                                <a href="https://en-ae.6thstreet.com/privacy-policy">
-                                    <strong>{ __('Click here') }</strong>
-                                </a>
-                                { __(' to view privacy policy') }
-                            </label>
-                        </div>
-                    </fieldset>
+                <p block="MyAccountOverlay" elem="Subtitle">
+                    { __('Sign up for a tailored shopping experience') }
+                </p>
+                <fieldset block="MyAccountOverlay" elem="Legend">
+                    <Field
+                      type="text"
+                      placeholder={ __('FIRST NAME*') }
+                      id="firstname"
+                      name="firstname"
+                      autocomplete="given-name"
+                      validation={ ['notEmpty'] }
+                    />
+                    <Field
+                      type="text"
+                      placeholder={ __('LAST NAME*') }
+                      id="lastname"
+                      name="lastname"
+                      autocomplete="family-name"
+                      validation={ ['notEmpty'] }
+                    />
+                </fieldset>
+                <fieldset block="MyAccountOverlay" elem="Gender">
                     <div
                       block="MyAccountOverlay"
-                      elem="Button"
-                      mods={ { isCreateAccountButton: true } }
+                      elem="Radio"
+                      mods={ { isArabic } }
                     >
-                        <button
-                          block="Button"
-                          type="submit"
-                        >
-                            { __('Create Account') }
-                        </button>
+                        <Field
+                          type="radio"
+                          id="male"
+                          label={ __('Male') }
+                          name="gender"
+                          value={ gender }
+                          onClick={ this.handleGenderChange }
+                          defaultChecked={ gender }
+                        />
+                        <Field
+                          type="radio"
+                          id="female"
+                          label={ __('Female') }
+                          name="gender"
+                          value={ gender }
+                          onClick={ this.handleGenderChange }
+                          defaultChecked={ gender }
+                        />
+                        <Field
+                          type="radio"
+                          id="preferNot"
+                          label={ __('Prefer not to say') }
+                          name="gender"
+                          value={ gender }
+                          onClick={ this.handleGenderChange }
+                          defaultChecked={ gender }
+                        />
                     </div>
+                </fieldset>
+                <fieldset block="MyAccountOverlay" elem="Legend">
+                    <Field
+                      type="text"
+                      placeholder={ __('EMAIL*') }
+                      id="email"
+                      name="email"
+                      autocomplete="email"
+                      validation={ ['notEmpty', 'email'] }
+                    />
+                    <Field
+                      type="password"
+                      placeholder={ __('PASSWORD*') }
+                      id="password"
+                      name="password"
+                      autocomplete="new-password"
+                      validation={ ['notEmpty', 'password'] }
+                    />
+                    <div
+                      block="MyAccountOverlay"
+                      elem="Checkbox"
+                      mods={ { isArabic } }
+                    >
+                        <Field
+                          type="checkbox"
+                          id="privacyPolicy"
+                          name="privacyPolicy"
+                          value="privacyPolicy"
+                          onClick={ this.handleCheckboxChange }
+                          checked={ isChecked }
+                        />
+                        <label htmlFor="PrivacyPolicy">
+                            { __('Yes, I\'d like to receive news and promotions from 6TH STREET. ') }
+                            <a href="https://en-ae.6thstreet.com/privacy-policy">
+                                <strong>{ __('Click here') }</strong>
+                            </a>
+                            { __(' to view privacy policy') }
+                        </label>
+                    </div>
+                </fieldset>
+                <div
+                  block="MyAccountOverlay"
+                  elem="Button"
+                  mods={ { isCreateAccountButton: true } }
+                >
+                    <button
+                      block="Button"
+                      type="submit"
+                    >
+                        { __('Create Account') }
+                    </button>
+                </div>
             </Form>
         );
     }

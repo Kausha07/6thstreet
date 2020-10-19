@@ -147,37 +147,54 @@ class MobileBottomBar extends NavigationAbstract {
     }
 
     renderWishlist() {
-        const { isBottomBar, isWishlist } = this.state;
+        const {
+            isBottomBar,
+            accountPopUp,
+            isLoggedIn,
+            isWishlist
+        } = this.state;
 
         this.setState({ isWishlist: location.pathname === '/my-account/my-wishlist' });
 
-        return (
-            <button
-              onClick={ this.routeChangeWishlist }
-              key="wishlistButton"
-              block="MobileBottomBar"
-              elem="WishListAndAccount"
-              mods={ { isActive: isWishlist } }
-            >
-                <HeaderWishlist
-                  isWishlist={ isWishlist }
-                  isBottomBar={ isBottomBar }
-                  key="wishlist"
-                />
-            </button>
-        );
-    }
-
-    renderAccount() {
-        const { isBottomBar, isAccount, accountPopUp } = this.state;
-        const { location } = this.props;
-
-        this.setState({ isAccount: location.pathname === '/my-account' });
+        const onClickHandle = !isLoggedIn ? this.renderAccountPopUp : this.routeChangeWishlist;
 
         return (
             <div>
                 <button
-                  onClick={ this.renderAccountPopUp }
+                  onClick={ onClickHandle }
+                  key="wishlistButton"
+                  block="MobileBottomBar"
+                  elem="WishListAndAccount"
+                  mods={ { isActive: isWishlist } }
+                >
+                    <HeaderWishlist
+                      isWishlist={ isWishlist }
+                      isBottomBar={ isBottomBar }
+                      key="wishlist"
+                    />
+                </button>
+                { accountPopUp }
+            </div>
+        );
+    }
+
+    renderAccount() {
+        const {
+            isBottomBar,
+            isAccount,
+            accountPopUp,
+            isLoggedIn
+        } = this.state;
+        const { location } = this.props;
+
+        this.setState({ isAccount: location.pathname === '/my-account' });
+
+        const onClickHandle = !isLoggedIn ? this.renderAccountPopUp : this.routeChangeAccount;
+
+        return (
+            <div>
+                <button
+                  onClick={ onClickHandle }
                   key="accountButton"
                   block="MobileBottomBar"
                   elem="WishListAndAccount"
@@ -196,6 +213,7 @@ class MobileBottomBar extends NavigationAbstract {
     render() {
         return (
             <div block="MobileBottomBar">
+                { this.setState({ isLoggedIn: isSignedIn() }) }
                 { this.renderNavigationState() }
             </div>
         );
