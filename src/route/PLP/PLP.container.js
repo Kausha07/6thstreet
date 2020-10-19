@@ -138,6 +138,8 @@ export class PLPContainer extends PureComponent {
     });
 
     render() {
+        const { requestedOptions } = this.props;
+        localStorage.setItem('category', JSON.stringify(requestedOptions));
         return (
             <PLP
               { ...this.containerFunctions }
