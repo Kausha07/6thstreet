@@ -3,13 +3,19 @@ import { PureComponent } from 'react';
 
 import Field from 'Component/Field';
 import Form from 'Component/Form';
+import { ClubApparelMember } from 'Util/API/endpoint/ClubApparel/ClubApparel.type';
 
 import './MyAccountClubApparel.style';
 
 class MyAccountClubApparel extends PureComponent {
     static propTypes = {
         linkAccount: PropTypes.func.isRequired,
-        verifyOtp: PropTypes.func.isRequired
+        verifyOtp: PropTypes.func.isRequired,
+        clubApparelMember: ClubApparelMember
+    };
+
+    static defaultProps = {
+        clubApparelMember: {}
     };
 
     renderLinkAccount() {
@@ -60,11 +66,39 @@ class MyAccountClubApparel extends PureComponent {
         );
     }
 
-    render() {
+    renderLinkedMember() {
+        const { clubApparelMember: { caPoints, currency, memberDetails: { memberTier } } } = this.props;
+
         return (
-            <div block="MyAccountClubApparel">
+            <div block="MyAccountClubApparel" elem="MemberData">
+                <div block="MyAccountClubApparel" elem="Points">
+                    Rewards Worth
+                    { currency }
+                    { caPoints }
+                </div>
+                <div block="MyAccountClubApparel" elem="Tier">
+                    { memberTier }
+                    Tier
+                </div>
+            </div>
+        );
+    }
+
+    renderLinkForm() {
+        return (
+            <div block="MyAccountClubApparel" elem="LinkForm">
                 { this.renderLinkAccount() }
                 { this.renderVerifyOtp() }
+            </div>
+        );
+    }
+
+    render() {
+        const { clubApparelMember } = this.props;
+
+        return (
+            <div block="MyAccountClubApparel">
+                { clubApparelMember ? this.renderLinkedMember() : this.renderLinkForm() }
             </div>
         );
     }
