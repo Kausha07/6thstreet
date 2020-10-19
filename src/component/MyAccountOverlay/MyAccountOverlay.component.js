@@ -56,13 +56,19 @@ export class MyAccountOverlay extends PureComponent {
         handleForgotPassword: PropTypes.func.isRequired,
         handleSignIn: PropTypes.func.isRequired,
         handleCreateAccount: PropTypes.func.isRequired,
+        onCreateAccountClick: PropTypes.func.isRequired,
+        setRegisterFieldFalse: PropTypes.func,
         isCheckout: PropTypes.bool,
+        registerField: PropTypes.bool,
         closePopup: PropTypes.func.isRequired,
-        isHidden: PropTypes.bool.isRequired
+        isHidden: PropTypes.bool
     };
 
     static defaultProps = {
-        isCheckout: false
+        isCheckout: false,
+        registerField: false,
+        setRegisterFieldFalse: null,
+        isHidden: false
     };
 
     state = {
@@ -100,11 +106,19 @@ export class MyAccountOverlay extends PureComponent {
         const {
             state,
             handleSignIn,
-            handleCreateAccount
+            handleCreateAccount,
+            onCreateAccountClick,
+            setRegisterFieldFalse,
+            registerField
         } = this.props;
         const { render, title } = this.renderMap[state];
         const isSignIn = state === STATE_SIGN_IN;
         const isCreateAccount = state === STATE_CREATE_ACCOUNT;
+
+        if (registerField) {
+            onCreateAccountClick();
+            setRegisterFieldFalse();
+        }
 
         return (
             <div

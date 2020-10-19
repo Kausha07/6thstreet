@@ -42,21 +42,23 @@
     }
     &-ButtonContainer{
         padding-top: 1rem;
-        button{
-            padding-top: 0.25rem;
-            padding-left: 0;
-            padding-right: 0;
-            font-size: 0.9rem;
-            min-width: 9rem;
-            max-height: 2.9rem;
-        }
+    }
+    &-CreateButton,
+    &-LoginButton {
+        padding-top: 0.25rem;
+        padding-left: 0;
+        padding-right: 0;
+        font-size: 0.9rem;
+        min-width: 9rem;
+        max-height: 2.9rem;
     }
     &-CreateButton{      
         background-color: var(--button-bg-white); 
     }
     &-LoginButton{
         margin-left: 1rem;
-    }    @include desktop {
+    }    
+    @include desktop {
         display: none;
     }
     .primary {
