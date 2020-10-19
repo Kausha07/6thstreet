@@ -1,8 +1,11 @@
 import CheckoutDeliveryOptions from 'Component/CheckoutDeliveryOptions';
+import Field from 'Component/Field';
 import {
     CheckoutShipping as SourceCheckoutShipping
 } from 'SourceComponent/CheckoutShipping/CheckoutShipping.component';
 import isMobile from 'Util/Mobile';
+
+import './CheckoutShipping.style';
 
 export class CheckoutShipping extends SourceCheckoutShipping {
     renderButtonsPlaceholder() {
@@ -11,15 +14,23 @@ export class CheckoutShipping extends SourceCheckoutShipping {
             : __('Place order');
     }
 
-    renderActions() {
+    checkForDisabling() {
         const { selectedShippingMethod } = this.props;
 
+        if (!selectedShippingMethod || !isMobile.any() || !isMobile.tablet()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    renderActions() {
         return (
             <div block="Checkout" elem="StickyButtonWrapper">
                 <button
                   type="submit"
                   block="Button"
-                  disabled={ !selectedShippingMethod }
+                  disabled={ this.checkForDisabling() }
                   mix={ { block: 'CheckoutShipping', elem: 'Button' } }
                 >
                     { this.renderButtonsPlaceholder() }
@@ -28,6 +39,35 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         );
     }
 
+    renderDeliveryButton() {
+        const { selectedShippingMethod } = this.props;
+
+        if (isMobile.any() || isMobile.tablet()) {
+            return null;
+        }
+
+        return (
+            <div block="CheckoutShippingStep" elem="DeliveryButton">
+                <button
+                  type="submit"
+                  block="Button button primary medium"
+                  disabled={ !selectedShippingMethod }
+                >
+                    { __('Deliver to this address') }
+                </button>
+            </div>
+        );
+    }
+
+    renderDifferentBillingLabel = () => (
+        <>
+            { __('Add a different ') }
+            <span>
+                { __('Billing address') }
+            </span>
+        </>
+    );
+
     renderDelivery() {
         const {
             shippingMethods,
@@ -35,10 +75,20 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         } = this.props;
 
         return (
-            <CheckoutDeliveryOptions
-              shippingMethods={ shippingMethods }
-              onShippingMethodSelect={ onShippingMethodSelect }
-            />
+            <div block="CheckoutShippingStep">
+                <Field
+                  type="toggle"
+                  id="DifferentBilling"
+                  name="DifferentBilling"
+                  label={ this.renderDifferentBillingLabel() }
+                  onChange={ this.test }
+                />
+                { this.renderDeliveryButton() }
+                <CheckoutDeliveryOptions
+                  shippingMethods={ shippingMethods }
+                  onShippingMethodSelect={ onShippingMethodSelect }
+                />
+            </div>
         );
     }
 }
