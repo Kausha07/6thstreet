@@ -3,6 +3,7 @@ import { setShipping } from 'Store/Checkout/Checkout.action';
 import {
     createOrder,
     estimateShippingMethods,
+    getPaymentMethods,
     saveShippingInformation,
     selectPaymentMethod,
     validateShippingAddress
@@ -34,6 +35,10 @@ export class CheckoutDispatcher {
             cartId,
             data: address
         });
+    }
+
+    async getPaymentMethods() {
+        return getPaymentMethods();
     }
 
     async selectPaymentMethod(dispatch, code) {
