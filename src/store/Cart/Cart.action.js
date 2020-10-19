@@ -14,16 +14,28 @@ export const setCartTotals = (cartTotals) => ({
     cartTotals
 });
 
-export const updateCartItem = (cartItem, color, optionValue, discount, brand_name, thumbnail_url, url) => ({
+export const updateCartItem = (
+    cartItem,
+    color,
+    optionValue,
+    basePrice,
+    brand_name,
+    thumbnail_url,
+    url,
+    itemPrice,
+    currency
+) => ({
     type: UPDATE_CART_ITEM,
     cartItem: {
         ...cartItem,
         color,
         optionValue,
-        discount,
+        basePrice,
         brand_name,
         thumbnail_url,
-        url
+        url,
+        itemPrice,
+        currency
     }
 });
 
