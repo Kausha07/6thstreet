@@ -23,19 +23,61 @@
         text-indent: 20px;
         text-transform: uppercase;
 
+        button {
+            transition-duration: 0s;
+        }
+
+        &-CategoryButton {
+            width: 80%;
+            text-align: left;
+            margin-left: -20px;
+            padding: 0 30px;
+        }
+
         &:first-child {
             color: var(--gold);
             margin-top: 0;
         }
 
         &:nth-last-child(2) {
-            color: var(--red);
+            .MenuCategory {
+                &-CategoryButton {
+                    color: var(--red);
+                }
+            }
+        }
+
+        &_isDefaultCategoryOpen {
+            background-color: var(--gold);
+            font-family: 'Avenir Next Bold', serif;
+
+            .MenuCategory {
+                &-CategoryButton {
+                    color: var(--white);
+                    font-size: 15px;
+                }
+            }
+
+            .DynamicContent {
+                font-family: "Avenir Next Regular", serif;
+            }
+
+            .ViewAll-Button {
+                font-family: 'Avenir Next Bold', serif;
+            }
         }
 
         &_isVisible {
             background-color: var(--black);
-            color: var(--white);
-            font-family: 'Avenir Next Bold', serif;
+
+            .MenuCategory {
+                &-CategoryButton {
+                    color: var(--white);
+                    font-family: 'Avenir Next Bold', serif;
+                    font-size: 15px;
+                    transition-duration: 0s;
+                }
+            }
 
             .DynamicContent {
                 font-family: "Avenir Next Regular", serif;
@@ -43,26 +85,19 @@
 
             &:first-child {
                 background-color: var(--gold);
-                color: var(--white);
+
+                .MenuCategory {
+                    &-CategoryButton {
+                        color: var(--white);
+                    }
+                }
             }
 
             &:nth-last-child(2) {
-                background-color: var(--red);
-                color: var(--white);
-
-                .ViewAll-Button {
-                    a {
-                        span {
-                            visibility: hidden;
-
-                            &:after {
-                                content: 'CATEGORIES ON SALE';
-                                height: 100px;
-                                margin-left: -50px;
-                                visibility: visible;
-                                width: 100%;
-                            }
-                        }
+                .MenuCategory {
+                    &-CategoryButton {
+                        background-color: var(--red);
+                        color: var(--white);
                     }
                 }
             }
@@ -106,16 +141,27 @@
 
             .MenuBrands {
                 &-ContentWrapper {
-                   font-family: 'Avenir Next Bold', serif;
+                    font-family: 'Avenir Next Bold', serif;
                 }
             }
         }
 
         &_isArabic {
+            .MenuCategory-CategoryButton {
+                text-align: right;
+                margin-right: -20px;
+            }
+
             .DynamicContent {
                 border-left: 0;
                 border-right: 1px solid var(--light-gray);
                 left: 0;
+            }
+
+            .ViewAll {
+                &-Button {
+                    padding-left: 20px;
+                }
             }
         }
     }

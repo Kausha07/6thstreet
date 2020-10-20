@@ -6,19 +6,55 @@ import HeaderSearch from 'Component/HeaderSearch';
 import MenuCategory from 'Component/MenuCategory';
 import { Categories } from 'Util/API/endpoint/Categories/Categories.type';
 import { isArabic } from 'Util/App';
+import BrowserDatabase from 'Util/BrowserDatabase';
+
+import { APP_STATE_CACHE_KEY } from './Menu.config';
 
 import './Menu.style';
 
 class Menu extends PureComponent {
     state = {
-        isArabic: isArabic()
+        isArabic: isArabic(),
+        isDefaultCategoryOpen: true,
+        browserDatabase: BrowserDatabase.getItem(APP_STATE_CACHE_KEY),
+        currentGender: ''
+    };
+
+    activeCategories = {
+        data: null
     };
 
     static propTypes = {
         categories: Categories.isRequired
     };
 
-    renderCategory(category) {
+    componentDidMount() {
+        const { browserDatabase } = this.state;
+        const { gender } = Object(browserDatabase);
+
+        this.setState({ currentGender: gender });
+    }
+
+    componentDidUpdate() {
+        const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
+        this.setNewGender(gender);
+    }
+
+    setNewGender = (newGender) => {
+        const { currentGender } = this.state;
+        if (currentGender !== newGender) {
+            this.setState({ currentGender: newGender });
+            this.setState({ isDefaultCategoryOpen: true });
+        }
+    };
+
+    closeDefaultCategory = () => {
+        this.setState({ isDefaultCategoryOpen: false });
+    };
+
+    renderCategory = (category) => {
+        const { activeCategory, isDefaultCategoryOpen } = this.state;
+
         const {
             data,
             label,
@@ -29,12 +65,16 @@ class Menu extends PureComponent {
         return (
             <MenuCategory
               key={ key }
+              categoryKey={ key }
               data={ data }
               label={ label }
               design={ design }
+              currentActiveCategory={ activeCategory }
+              closeDefaultCategory={ this.closeDefaultCategory }
+              isDefaultCategoryOpen={ isDefaultCategoryOpen }
             />
         );
-    }
+    };
 
     renderCategories() {
         const { categories } = this.props;
