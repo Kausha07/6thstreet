@@ -13,6 +13,47 @@
         }
     }
 
+    &-Address,
+    &-PaymentType {
+        padding: 20px 0;
+
+        &:not(:last-of-type) {
+            border-bottom: 2px solid var(--divider-color);
+        }
+
+        h3 {
+            margin: 0;
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin: 0;
+        }
+    }
+
+    &-Summary {
+        border-bottom: 2px solid var(--divider-color);
+        padding: 15px 0;
+
+        &Item {
+            &_grandTotal {
+                span {
+                    &:last-of-type {
+                        font-family: var(--avenir-bold-font);
+                        font-size: 18px;
+                    }
+                }
+            }
+        }
+
+        p {
+            align-items: center;
+            display: flex;
+            justify-content: space-between;
+            margin: 0;
+        }
+    }
+
     &-Button {
         &Return,
         &Cancel {

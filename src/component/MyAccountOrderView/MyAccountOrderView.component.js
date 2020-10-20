@@ -4,6 +4,7 @@ import { PureComponent } from 'react';
 import { formatPrice } from '@6thstreetdotcom/algolia-sdk/app/utils/filters';
 import Loader from 'Component/Loader';
 import { STATUS_FAILED } from 'Component/MyAccountOrderListItem/MyAccountOrderListItem.config';
+import MyAccountOrderViewItem from 'Component/MyAccountOrderViewItem';
 import { OrderType } from 'Type/API';
 
 import './MyAccountOrderView.style';
@@ -11,14 +12,46 @@ import './MyAccountOrderView.style';
 class MyAccountOrderView extends PureComponent {
     static propTypes = {
         order: OrderType.isRequired,
-        isLoading: PropTypes.bool.isRequired
+        isLoading: PropTypes.bool.isRequired,
+        getCountryNameById: PropTypes.func.isRequired
     };
+
+    renderAddress = (title, address) => {
+        const { getCountryNameById } = this.props;
+        const {
+            firstname,
+            middlename,
+            lastname,
+            street,
+            postcode,
+            city,
+            country_id,
+            telephone
+        } = address;
+
+        return (
+            <div block="MyAccountOrderView" elem="Address">
+                <h3>{ title }</h3>
+                <p>{ `${ firstname } ${ middlename || '' } ${ lastname }`.trim() }</p>
+                <p>{ `${ street } ${ postcode }` }</p>
+                { /* TODO: Get country name */ }
+                <p>{ `${ city } - ${ getCountryNameById(country_id) }` }</p>
+                <p>{ `${ telephone }` }</p>
+            </div>
+        );
+    };
+
+    renderItem(item) {
+        return (
+            <MyAccountOrderViewItem item={ item } />
+        );
+    }
 
     renderTitle() {
         const { order: { increment_id } } = this.props;
 
         return (
-            <p>{ __('Order #%s', increment_id) }</p>
+            <h3>{ __('Order #%s', increment_id) }</h3>
         );
     }
 
@@ -37,37 +70,19 @@ class MyAccountOrderView extends PureComponent {
         return null;
     }
 
-    renderDetails() {
-        const { order: { status, created_at } } = this.props;
+    renderFailedOrderDetails() {
+        const { order: { status, unship } } = this.props;
+        const itemsArray = unship.reduce((acc, { items }) => [...acc, ...items], []);
+
+        if (!STATUS_FAILED.includes(status)) {
+            return null;
+        }
 
         return (
-            <dl>
-                <dt>{ __('Status') }</dt>
-                <dd>{ status }</dd>
-                <dt>{ __('Order placed') }</dt>
-                <dd>{ created_at }</dd>
-            </dl>
-        );
-    }
-
-    renderSection(title, children) {
-        return (
-            <div>
-                <p>{ title }</p>
-                { children }
+            <div block="MyAccountOrderView" elem="OrderDetails" mods={ { failed: true } }>
+                <h3>{ __('Order detail') }</h3>
+                { itemsArray.map(this.renderItem) }
             </div>
-        );
-    }
-
-    renderNoFound() {
-        return 'order not found';
-    }
-
-    renderLoader() {
-        const { isLoading } = this.props;
-
-        return (
-            <Loader isLoading={ isLoading } />
         );
     }
 
@@ -106,12 +121,43 @@ class MyAccountOrderView extends PureComponent {
         );
     }
 
+    renderPaymentType() {
+        const {
+            order: {
+                payment: {
+                    additional_information: { method_title }
+                }
+            }
+        } = this.props;
+
+        return (
+            <div block="MyAccountOrderView" elem="PaymentType">
+                <h3>{ __('Payment Type') }</h3>
+                <p>{ method_title }</p>
+            </div>
+        );
+    }
+
     render() {
+        const { isLoading, order: { billing_address } } = this.props;
+
+        if (isLoading) {
+            return (
+                <div block="MyAccountOrderView">
+                    <Loader isLoading={ isLoading } />
+                </div>
+            );
+        }
+
         return (
             <div block="MyAccountOrderView">
+                <Loader isLoading={ isLoading } />
                 { this.renderTitle() }
                 { this.renderStatus() }
+                { this.renderFailedOrderDetails() }
                 { this.renderSummary() }
+                { this.renderAddress(__('Billing Address'), billing_address) }
+                { this.renderPaymentType() }
             </div>
         );
     }
