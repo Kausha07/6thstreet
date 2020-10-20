@@ -10,11 +10,24 @@ export class StoreCredit extends PureComponent {
     static propTypes = {
         isLoading: PropTypes.bool.isRequired,
         canApply: PropTypes.bool.isRequired,
+        hideIfZero: PropTypes.bool.isRequired,
         creditIsApplied: PropTypes.bool.isRequired,
         storeCreditBalance: PropTypes.string.isRequired,
         toggleStoreCredit: PropTypes.func.isRequired,
         setCreditIsApplied: PropTypes.func.isRequired
     };
+
+    hasCredit() {
+        const { storeCreditBalance } = this.props;
+
+        if (storeCreditBalance && storeCreditBalance.length) {
+            const [, amount] = storeCreditBalance.split(' ');
+
+            return parseFloat(amount) > 0;
+        }
+
+        return false;
+    }
 
     handleCheckboxChange = () => {
         const { toggleStoreCredit, creditIsApplied, setCreditIsApplied } = this.props;
@@ -44,7 +57,7 @@ export class StoreCredit extends PureComponent {
             <Field
               block="StoreCredit"
               elem="Toggle"
-              type="checkbox"
+              type="toggle"
               id={ checkboxId }
               name={ checkboxId }
               value={ checkboxId }
@@ -55,14 +68,19 @@ export class StoreCredit extends PureComponent {
     }
 
     render() {
-        const { isLoading, canApply } = this.props;
+        const { isLoading, canApply, hideIfZero } = this.props;
+
+        if (hideIfZero && !this.hasCredit()) {
+            return null;
+        }
+
         const checkboxId = 'store_credit_applied';
         const label = canApply
             ? __('Use Store Credit')
             : __('Store Credit:');
 
         return (
-            <div block="StoreCredit">
+            <div block="StoreCredit" mods={ { canApply } }>
                 <Loader isLoading={ isLoading } />
 
                 { canApply && this.renderCheckbox(checkboxId) }

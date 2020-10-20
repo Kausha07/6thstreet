@@ -55,12 +55,33 @@ export class CartDispatcher {
         }
     }
 
-    async addProductToCart(dispatch, productData, color, optionValue, discount = null, brand_name, thumbnail_url, url) {
+    async addProductToCart(
+        dispatch,
+        productData,
+        color,
+        optionValue,
+        basePrice = null,
+        brand_name,
+        thumbnail_url,
+        url,
+        itemPrice,
+        currency
+    ) {
         const { Cart: { cartId } } = getStore().getState();
 
         try {
             const { data } = await addProductToCart({ ...productData, cartId });
-            dispatch(updateCartItem(data, color, optionValue, discount, brand_name, thumbnail_url, url));
+            dispatch(updateCartItem(
+                data,
+                color,
+                optionValue,
+                basePrice,
+                brand_name,
+                thumbnail_url,
+                url,
+                itemPrice,
+                currency
+            ));
         } catch (e) {
             Logger.log(e);
             if (e) {
@@ -99,13 +120,33 @@ export class CartDispatcher {
     }
 
     async updateProductInCart(
-        dispatch, productId, qty, color, optionValue, discount = null, brand_name, thumbnail_url, url
+        dispatch,
+        productId,
+        qty,
+        color,
+        optionValue,
+        basePrice = null,
+        brand_name,
+        thumbnail_url,
+        url,
+        itemPrice,
+        currency
     ) {
         const { Cart: { cartId } } = getStore().getState();
 
         try {
             const { data } = await updateProductInCart({ cartId, productId, qty });
-            dispatch(updateCartItem(data, color, optionValue, discount, brand_name, thumbnail_url, url));
+            dispatch(updateCartItem(
+                data,
+                color,
+                optionValue,
+                basePrice,
+                brand_name,
+                thumbnail_url,
+                url,
+                itemPrice,
+                currency
+            ));
         } catch (e) {
             Logger.log(e);
         }

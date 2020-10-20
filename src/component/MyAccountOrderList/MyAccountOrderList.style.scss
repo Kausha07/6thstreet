@@ -1,3 +1,8 @@
 .MyAccountOrderList {
-    
+    margin-bottom: 110px;
+    max-width: 500px;
+
+    @include desktop {
+        margin-bottom: 50px;
+    }
 }
