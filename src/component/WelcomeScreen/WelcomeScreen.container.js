@@ -2,9 +2,11 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import { setCountry, setLanguage } from 'Store/AppState/AppState.action';
 import StoreCreditDispatcher from 'Store/StoreCredit/StoreCredit.dispatcher';
 import { getCountriesForSelect, getCountryLocaleForSelect } from 'Util/API/endpoint/Config/Config.format';
 import { Config } from 'Util/API/endpoint/Config/Config.type';
+import { DEV_URLS, URLS } from 'Util/Url/Url.config';
 
 import WelcomeScreen from './WelcomeScreen.component';
 
@@ -15,11 +17,15 @@ export const mapStateToProps = (state) => ({
 });
 
 export const mapDispatchToProps = (dispatch) => ({
+    setCountry: (value) => dispatch(setCountry(value)),
+    setLanguage: (value) => dispatch(setLanguage(value)),
     updateStoreCredits: () => StoreCreditDispatcher.getStoreCredit(dispatch)
 });
 
 class WelcomeScreenContainer extends PureComponent {
     static propTypes = {
+        setLanguage: PropTypes.func.isRequired,
+        setCountry: PropTypes.func.isRequired,
         updateStoreCredits: PropTypes.func.isRequired,
         config: Config.isRequired,
         language: PropTypes.string.isRequired,
@@ -32,23 +38,38 @@ class WelcomeScreenContainer extends PureComponent {
     };
 
     onCountrySelect(value) {
-        const { country } = this.props;
+        const { country, language } = this.props;
 
-        window.location.href = location.href.replace(
-            country.toLowerCase(),
-            value,
-            location.href
-        );
+        if (country) {
+            window.location.href = location.href.replace(
+                country.toLowerCase(),
+                value,
+                location.href
+            );
+        } else {
+            const locale = `${language}-${value.toLowerCase()}`;
+
+            // TODO: logic use hardcoded URLs. Switch URLS to PROD before GO LIVE
+            if (location.href.match('dev')) {
+                window.location.href = DEV_URLS[locale];
+            } else {
+                window.location.href = URLS[locale];
+            }
+        }
     }
 
     onLanguageSelect(value) {
-        const { language } = this.props;
+        const { country, language, setLanguage } = this.props;
 
-        window.location.href = location.href.replace(
-            language.toLowerCase(),
-            value,
-            location.href
-        );
+        if (language && country) {
+            window.location.href = location.href.replace(
+                language.toLowerCase(),
+                value,
+                location.href
+            );
+        } else {
+            setLanguage(value);
+        }
     }
 
     containerProps = () => {

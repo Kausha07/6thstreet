@@ -1,5 +1,6 @@
 /* eslint-disable prefer-arrow-callback */
 /* eslint-disable no-console */
+/* eslint-disable func-names */
 import { Provider } from 'react-redux';
 
 import Splash from 'Route/Splash';
