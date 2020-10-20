@@ -209,7 +209,6 @@ class FieldMultiselect extends PureComponent {
               } }
               onClick={ isMobile.any() ? this.handleFilterChange : null }
               onFocus={ !isMobile.any() ? this.toggelOptionList : null }
-            //   onBlur={ !isMobile.any() ? this.onBlur : null }
             >
                 { placeholder }
             </button>
