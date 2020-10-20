@@ -5,15 +5,6 @@ function getProduct(id, highlights, options) {
     const { index } = options;
 
     return new Promise((resolve, reject) => {
-        // if (!index || !id) {
-        //     return reject('No index or id provided');
-        // }
-
-        // const newSearchParams = Object.assign({}, searchParams);
-        // newSearchParams.hitsPerPage = 1;
-        // newSearchParams.attributesToHighlight = highlights;
-        // newSearchParams.attributesToRetrieve = '*';
-
         index.search(
             '',
             { filters: `objectID:${id}` },

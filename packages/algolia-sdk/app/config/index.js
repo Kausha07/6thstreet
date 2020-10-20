@@ -158,7 +158,7 @@ const config = {
       'news_to_date'
     ],
     facets: FACET_FILTERS,
-    facetFilters: [/*'sku'*/],
+    facetFilters: [],
     numericFilters: [],
     maxValuesPerFacet: 1000,
     sortFacetValuesBy: 'alpha'
