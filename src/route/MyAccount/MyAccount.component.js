@@ -22,6 +22,7 @@ import {
     STORE_CREDIT,
     tabMapType
 } from 'Type/Account';
+import { deleteAuthorizationToken } from 'Util/Auth';
 import isMobile from 'Util/Mobile';
 
 import { ReactComponent as Close } from './icons/x-close.svg';
@@ -30,6 +31,8 @@ export class MyAccount extends SourceMyAccount {
     constructor(props) {
         super(props);
         this.handleClick = this.handleClick.bind(this);
+        this.handleTabChange = this.handleTabChange.bind(this);
+        this.handleSignOut = this.handleSignOut.bind(this);
     }
 
     static propTypes = {
@@ -52,22 +55,17 @@ export class MyAccount extends SourceMyAccount {
     };
 
     state = {
-        mobTabActive: false
+        mobTabActive: true
     };
 
-    componentDidUpdate(prevProps) {
-        const { activeTab } = this.props;
-        if (isMobile.any() !== null && prevProps.activeTab !== activeTab) {
-            this.openTabContent(this);
-        }
-    }
-
-    openTabContent() {
-        this.setState({ mobTabActive: true });
+    handleTabChange(key) {
+        const { changeActiveTab } = this.props;
+        this.setState(({ mobTabActive }) => ({ mobTabActive: !mobTabActive }));
+        changeActiveTab(key);
     }
 
     openTabMenu() {
-        this.setState({ mobTabActive: false });
+        this.setState(({ mobTabActive }) => ({ mobTabActive: !mobTabActive }));
     }
 
     handleClick(e) {
@@ -75,13 +73,20 @@ export class MyAccount extends SourceMyAccount {
         this.openTabMenu();
     }
 
+    handleSignOut() {
+        const { onSignOut } = this.props;
+        onSignOut();
+        deleteAuthorizationToken();
+        const { history } = this.props;
+        history.push('/');
+    }
+
     renderDesktop() {
         const {
             activeTab,
             tabMap,
             changeActiveTab,
-            isSignedIn,
-            onSignOut
+            isSignedIn
         } = this.props;
 
         if (!isSignedIn) {
@@ -99,7 +104,7 @@ export class MyAccount extends SourceMyAccount {
                   tabMap={ tabMap }
                   activeTab={ activeTab }
                   changeActiveTab={ changeActiveTab }
-                  onSignOut={ onSignOut }
+                  onSignOut={ this.handleSignOut }
                 />
                 <div block="MyAccount" elem="TabContent">
                     <h1 block="MyAccount" elem="Heading">{ alternativePageName || name }</h1>
@@ -113,9 +118,7 @@ export class MyAccount extends SourceMyAccount {
         const {
             activeTab,
             tabMap,
-            changeActiveTab,
-            isSignedIn,
-            onSignOut
+            isSignedIn
         } = this.props;
 
         const { mobTabActive } = this.state;
@@ -139,8 +142,8 @@ export class MyAccount extends SourceMyAccount {
                     <MyAccountTabList
                       tabMap={ tabMap }
                       activeTab={ activeTab }
-                      changeActiveTab={ changeActiveTab }
-                      onSignOut={ onSignOut }
+                      changeActiveTab={ this.handleTabChange }
+                      onSignOut={ this.handleSignOut }
                     />
                     <div block="TermsAndPrivacy">
                         Terms and conditions and
