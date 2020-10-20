@@ -15,6 +15,7 @@ export const mapStateToProps = (_state) => ({
 export const mapDispatchToProps = (dispatch) => ({
     getMember: (id) => ClubApparelDispatcher.getMember(dispatch, id),
     linkAccount: (data) => ClubApparelDispatcher.linkAccount(dispatch, data),
+    verifyOtp: (data) => ClubApparelDispatcher.verifyOtp(dispatch, data),
     showNotification: (type, message) => dispatch(showNotification(type, message))
 });
 
@@ -22,6 +23,7 @@ export class MyAccountClubApparelContainer extends PureComponent {
     static propTypes = {
         getMember: PropTypes.func.isRequired,
         linkAccount: PropTypes.func.isRequired,
+        verifyOtp: PropTypes.func.isRequired,
         customer: customerType,
         showNotification: PropTypes.func.isRequired
     };
@@ -31,7 +33,8 @@ export class MyAccountClubApparelContainer extends PureComponent {
     };
 
     containerFunctions = {
-        linkAccount: this.linkAccount.bind(this)
+        linkAccount: this.linkAccount.bind(this),
+        verifyOtp: this.verifyOtp.bind(this)
     };
 
     state = {
@@ -48,7 +51,11 @@ export class MyAccountClubApparelContainer extends PureComponent {
     }
 
     containerProps = () => {
-        // isDisabled: this._getIsDisabled()
+        const { clubApparelMember } = this.state;
+
+        return {
+            clubApparelMember
+        };
     };
 
     linkAccount(fields) {
@@ -56,10 +63,20 @@ export class MyAccountClubApparelContainer extends PureComponent {
         const { phone } = fields;
 
         linkAccount({ customerId: id, mobileNo: phone }).then(
-            (response) => {
-                if (response && response.data) {
-                    this.setState({ clubApparelMember: response.data });
-                }
+            () => {
+                // TODO: Create response processing after Club Apparel will begin work on Client side
+            },
+            this._handleError
+        );
+    }
+
+    verifyOtp(fields) {
+        const { customer: { id }, verifyOtp } = this.props;
+        const { otp } = fields;
+
+        verifyOtp({ customerId: id, otp }).then(
+            () => {
+                // TODO: Create response processing after Club Apparel will begin work on Client side
             },
             this._handleError
         );

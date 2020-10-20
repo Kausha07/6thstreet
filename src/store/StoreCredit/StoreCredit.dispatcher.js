@@ -10,6 +10,7 @@ import {
     getStoreCredit,
     removeStoreCredit
 } from 'Util/API/endpoint/StoreCredit/StoreCredit.enpoint';
+import { isSignedIn } from 'Util/Auth';
 import Logger from 'Util/Logger';
 
 export const STORE_CREDIT = 'store_credit';
@@ -21,7 +22,9 @@ export class StoreCreditDispatcher {
         try {
             dispatch(setIsLoading(true));
 
-            const { data } = await getStoreCredit();
+            const { data } = isSignedIn()
+                ? await getStoreCredit()
+                : {};
 
             dispatch(setStoreCredit(data));
         } catch (e) {

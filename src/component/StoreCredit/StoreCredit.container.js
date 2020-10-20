@@ -2,8 +2,9 @@ import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
-import StoreCreditDispatcher from 'Store/StoreCredit/StoreCredit.dispatcher';
+import StoreCreditDispatcher, { STORE_CREDIT } from 'Store/StoreCredit/StoreCredit.dispatcher';
 import { StoreCreditData } from 'Util/API/endpoint/StoreCredit/StoreCredit.type';
+import BrowserDatabase from 'Util/BrowserDatabase';
 
 import StoreCredit from './StoreCredit.component';
 
@@ -20,7 +21,8 @@ export const mapStateToProps = ({
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-    toggleStoreCredit: (apply) => StoreCreditDispatcher.toggleStoreCredit(dispatch, apply)
+    toggleStoreCredit: (apply) => StoreCreditDispatcher.toggleStoreCredit(dispatch, apply),
+    fetchStoreCredit: () => StoreCreditDispatcher.getStoreCredit(dispatch)
 });
 
 export class StoreCreditContainer extends PureComponent {
@@ -28,11 +30,14 @@ export class StoreCreditContainer extends PureComponent {
         isLoading: PropTypes.bool.isRequired,
         storeCredit: StoreCreditData.isRequired,
         canApply: PropTypes.bool,
-        toggleStoreCredit: PropTypes.func.isRequired
+        hideIfZero: PropTypes.bool,
+        toggleStoreCredit: PropTypes.func.isRequired,
+        fetchStoreCredit: PropTypes.func.isRequired
     };
 
     static defaultProps = {
-        canApply: false
+        canApply: false,
+        hideIfZero: false
     };
 
     state = {
@@ -49,6 +54,15 @@ export class StoreCreditContainer extends PureComponent {
         }
 
         return null;
+    }
+
+    componentDidMount() {
+        const dbStoreCredit = BrowserDatabase.getItem(STORE_CREDIT) || null;
+        const { fetchStoreCredit } = this.props;
+
+        if (!dbStoreCredit) {
+            fetchStoreCredit();
+        }
     }
 
     render() {

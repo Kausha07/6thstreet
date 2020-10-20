@@ -1,0 +1,9 @@
+.CheckoutPayments {
+    &-DiscountOptionWrapper {
+        padding: 50px 36px;
+
+        @include desktop {
+            display: none;
+        }
+    }
+}

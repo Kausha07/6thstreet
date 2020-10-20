@@ -94,6 +94,7 @@ export class MyAccountOverlayContainer extends PureComponent {
         handleForgotPassword: this.handleForgotPassword.bind(this),
         handleSignIn: this.handleSignIn.bind(this),
         handleCreateAccount: this.handleCreateAccount.bind(this),
+        onCreateAccountClick: this.onCreateAccountClick.bind(this),
         onVisible: this.onVisible.bind(this)
     };
 
@@ -364,6 +365,17 @@ export class MyAccountOverlayContainer extends PureComponent {
             name: CUSTOMER_SUB_ACCOUNT,
             title: __('Create account'),
             onBackClick: () => this.handleSignIn(e)
+        });
+    }
+
+    onCreateAccountClick() {
+        const { setHeaderState } = this.props;
+
+        this.setState({ state: STATE_CREATE_ACCOUNT });
+
+        setHeaderState({
+            name: CUSTOMER_SUB_ACCOUNT,
+            title: __('Create account')
         });
     }
 
