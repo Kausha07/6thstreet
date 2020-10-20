@@ -30,6 +30,7 @@ class MobileAPI {
             headers: {
                 'Content-Type': 'application/json',
                 'X-App-Version': '2.20.0',
+                'Request-Source': 'PWA',
                 ...tokenHeader
             },
             ...payload({ body: JSON.stringify(body) })

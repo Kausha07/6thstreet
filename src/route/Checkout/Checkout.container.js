@@ -20,6 +20,7 @@ export const mapDispatchToProps = (dispatch) => ({
     estimateShipping: (address) => CheckoutDispatcher.estimateShipping(dispatch, address),
     saveAddressInformation: (address) => CheckoutDispatcher.saveAddressInformation(dispatch, address),
     createOrder: (code, additional_data) => CheckoutDispatcher.createOrder(dispatch, code, additional_data),
+    getTabbyInstallment: (price) => CheckoutDispatcher.getTabbyInstallment(dispatch, price),
     getPaymentMethods: () => CheckoutDispatcher.getPaymentMethods(),
     setCartId: (cartId) => dispatch(setCartId(cartId)),
     createEmptyCart: () => CartDispatcher.getCart(dispatch)
@@ -75,7 +76,14 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     }
 
     async saveAddressInformation(addressInformation) {
-        const { getPaymentMethods, saveAddressInformation } = this.props;
+        const {
+            getPaymentMethods,
+            saveAddressInformation,
+            getTabbyInstallment,
+            totals: {
+                total: totalPrice
+            }
+        } = this.props;
         const { shipping_address } = addressInformation;
 
         this.setState({
@@ -118,6 +126,43 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                         paymentMethods: availablePaymentMethods,
                         checkoutStep: BILLING_STEP
                     })
+                }
+            },
+            this._handleError
+        );
+
+        getTabbyInstallment(totalPrice).then(
+            (response) => {
+                if (response) {
+                    const { paymentMethods } = this.state;
+                    const { message, value } = response;
+
+                    if (message && value) {
+                        const updatedPaymentMethods = paymentMethods.reduce((acc, paymentMethod) => {
+                            const { m_code } = paymentMethod;
+
+                            if (m_code !== 'tabby_installments') {
+                                acc.push(paymentMethod)
+                            } else {
+                                const { options } = paymentMethod;
+
+                                acc.push(
+                                    {
+                                        ...paymentMethod,
+                                        options: {
+                                            ...options,
+                                            promo_message: message,
+                                            value
+                                        }
+                                    }
+                                )
+                            }
+
+                            return acc;
+                        }, []);
+
+                        this.setState({ paymentMethods: updatedPaymentMethods });
+                    }
                 }
             },
             this._handleError

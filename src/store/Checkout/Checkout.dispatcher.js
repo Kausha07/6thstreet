@@ -8,6 +8,9 @@ import {
     selectPaymentMethod,
     validateShippingAddress
 } from 'Util/API/endpoint/Checkout/Checkout.enpoint';
+import {
+    getInstallmentForValue
+} from 'Util/API/endpoint/Tabby/Tabby.enpoint';
 import Logger from 'Util/Logger';
 
 export class CheckoutDispatcher {
@@ -39,6 +42,10 @@ export class CheckoutDispatcher {
 
     async getPaymentMethods() {
         return getPaymentMethods();
+    }
+
+    async getTabbyInstallment(dispatch, price) {
+        return getInstallmentForValue(price);
     }
 
     async selectPaymentMethod(dispatch, code) {
