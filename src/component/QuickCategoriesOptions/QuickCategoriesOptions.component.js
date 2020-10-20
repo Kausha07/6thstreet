@@ -16,10 +16,26 @@ class QuickCategoriesOptions extends PureComponent {
     };
 
     state = {
+        isArabic: isArabic(),
         activeSliderImage: 0,
-        showFilterCount: 10,
-        isArabic: isArabic()
+        showFilterCountForEnglish: 10,
+        showFilterCountForArabic: 8,
+        showFilterCount: 0
     };
+
+    componentDidMount() {
+        const {
+            showFilterCountForEnglish,
+            showFilterCountForArabic,
+            isArabic
+        } = this.state;
+
+        if (!isArabic) {
+            this.setState({ showFilterCount: showFilterCountForEnglish });
+        } else {
+            this.setState({ showFilterCount: showFilterCountForArabic });
+        }
+    }
 
     handleChange = (activeImage) => {
         this.setState({ activeSliderImage: activeImage });

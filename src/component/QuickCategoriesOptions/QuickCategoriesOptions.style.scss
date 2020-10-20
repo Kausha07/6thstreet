@@ -27,8 +27,8 @@
                 li {
                     display: block;
                     margin: 5px;
-                    // margin-top: 40px;
                     max-width: 200px;
+                    height: 60px;
 
                     label {
                         color: var(--field-gray-text-color);
@@ -49,6 +49,7 @@
 
                     .Field [type='checkbox']:checked + label {
                         --primary-base-color: var(--choosed-field-gray-color);
+                        border-color: var(--choosed-field-gray-color);
                     }
 
                     .Field {
