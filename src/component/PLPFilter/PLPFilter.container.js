@@ -64,7 +64,6 @@ class PLPFilterContainer extends PureComponent {
         }, []);
 
         if (!isMobile.any()) {
-            console.log(category, values);
             WebUrlParser.setParam(category, values);
         } else {
             parentCallback(category, values);

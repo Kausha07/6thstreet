@@ -76,8 +76,6 @@ export class PLPFiltersContainer extends PureComponent {
     onReset() {
         const { initialFilters } = this.state;
 
-        console.log(initialFilters);
-
         // eslint-disable-next-line fp/no-let
         for (let i = 0; i < Object.keys(initialFilters).length; i++) {
             WebUrlParser.setParam(Object.keys(initialFilters)[i], '');
@@ -99,7 +97,6 @@ export class PLPFiltersContainer extends PureComponent {
     };
 
     render() {
-        console.log(this.state);
         return (
             <PLPFilters
               { ...this.props }

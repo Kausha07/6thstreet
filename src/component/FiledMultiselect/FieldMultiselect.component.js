@@ -195,7 +195,7 @@ class FieldMultiselect extends PureComponent {
         const { placeholder, onChange } = this.props;
 
         return (
-            <div block="FieldMultiselect">
+            <div ref={ this.filterDropdownRef } block="FieldMultiselect">
             <button
               ref={ this.filterButtonRef }
               type="button"
@@ -214,7 +214,6 @@ class FieldMultiselect extends PureComponent {
                 { placeholder }
             </button>
                 <div
-                  ref={ this.filterDropdownRef }
                   block="FieldMultiselect"
                   elem="OptionListContainer"
                   mods={ { toggleOptionsList } }
