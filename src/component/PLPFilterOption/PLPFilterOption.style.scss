@@ -199,31 +199,6 @@
                         --checkmark-color: var(--check-mark-mobile-filter-color);
                     }
                 }
-    
-                &:hover + label {
-                    --primary-base-color: transparent;
-
-                    &::after {
-                        --checkmark-color: transparent;
-
-                        @include desktop {
-                            --checkmark-color:  var(--check-mark-mobile-filter-color);
-                        }
-                    }
-                }
-
-                &:focus {
-
-                    &::after {
-                        --checkmark-color: var(--black-color);
-                    }
-                    
-                    + label {
-                        &::after {
-                            --checkmark-color:  var(--check-mark-mobile-filter-color);
-                        }
-                    }
-                }
 
                 @include before-desktop {
                     + label {

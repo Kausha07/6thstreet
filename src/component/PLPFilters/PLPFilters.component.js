@@ -32,14 +32,11 @@ class PLPFilters extends PureComponent {
         productsCount: PropTypes.string.isRequired
     };
 
-    activeFilters = {
-        data: null
-    };
-
     state = {
         isOpen: false,
         activeFilter: undefined,
-        isArabic: isArabic()
+        isArabic: isArabic(),
+        activeFilters: {}
     };
 
     static getDerivedStateFromProps(props, state) {
@@ -95,6 +92,8 @@ class PLPFilters extends PureComponent {
             hideActiveOverlay();
             goToPreviousNavigationState();
         }
+
+        this.setState({ activeFilters: {} });
 
         document.body.style.overflow = 'visible';
     };
