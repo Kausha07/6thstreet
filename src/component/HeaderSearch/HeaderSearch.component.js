@@ -4,6 +4,7 @@ import { PureComponent } from 'react';
 import Field from 'Component/Field';
 import Form from 'Component/Form';
 import SearchSuggestion from 'Component/SearchSuggestion';
+import { isArabic } from 'Util/App';
 
 import './HeaderSearch.style';
 
@@ -16,6 +17,10 @@ class HeaderSearch extends PureComponent {
 
     static defaultProps = {
         search: ''
+    };
+
+    state = {
+        isArabic: isArabic()
     };
 
     renderField() {
@@ -53,11 +58,15 @@ class HeaderSearch extends PureComponent {
     }
 
     render() {
+        const { isArabic } = this.state;
         return (
-            <div block="HeaderSearch">
+            <>
+            <div block="SearchBackground" mods={ { isArabic } } />
+            <div block="HeaderSearch" mods={ { isArabic } }>
                 { this.renderField() }
                 { this.renderSuggestions() }
             </div>
+            </>
         );
     }
 }

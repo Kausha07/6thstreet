@@ -4,6 +4,7 @@ import { PureComponent } from 'react';
 import Link from 'Component/Link';
 import Loader from 'Component/Loader';
 import { Products } from 'Util/API/endpoint/Product/Product.type';
+import { isArabic } from 'Util/App';
 
 import './SearchSuggestion.style';
 
@@ -17,6 +18,10 @@ class SearchSuggestion extends PureComponent {
         brands: PropTypes.array.isRequired,
         trendingBrands: PropTypes.array.isRequired,
         trendingTags: PropTypes.array.isRequired
+    };
+
+    state = {
+        isArabic: isArabic()
     };
 
     renderLoader() {
@@ -160,8 +165,9 @@ class SearchSuggestion extends PureComponent {
     }
 
     render() {
+        const { isArabic } = this.state;
         return (
-            <div block="SearchSuggestion">
+            <div block="SearchSuggestion" mods={ { isArabic } }>
                 { this.renderLoader() }
                 { this.renderContent() }
             </div>
