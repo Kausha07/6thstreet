@@ -5,6 +5,7 @@
 .StoreCredit {
     &-Amount {
         font-weight: bold;
+        white-space: nowrap;
     }
 
     &_canApply {
