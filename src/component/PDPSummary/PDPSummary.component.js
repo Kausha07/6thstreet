@@ -1,7 +1,8 @@
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import PDPAddToCart from 'Component/PDPAddToCart/PDPAddToCart.container';
+import PDPAlsoAvailableProducts from 'Component/PDPAlsoAvailableProducts';
 import Price from 'Component/Price';
 import ProductLabel from 'Component/ProductLabel/ProductLabel.component';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
@@ -11,8 +12,43 @@ import './PDPSummary.style';
 
 class PDPSummary extends PureComponent {
     static propTypes = {
-        product: Product.isRequired
+        product: Product.isRequired,
+        isLoading: PropTypes.bool.isRequired
     };
+
+    state = {
+        alsoAvailable: [],
+        prevAlsoAvailable: []
+    };
+
+    static getDerivedStateFromProps(props, state) {
+        const { product } = props;
+        const { alsoAvailable, prevAlsoAvailable } = state;
+
+        if (prevAlsoAvailable !== product['6s_also_available']) {
+            return {
+                alsoAvailable: product['6s_also_available'],
+                prevAlsoAvailable: alsoAvailable !== undefined ? alsoAvailable : null
+            };
+        }
+
+        return null;
+    }
+
+    renderNew() {
+        const { product: { in_new_in } } = this.props;
+        if (!in_new_in) {
+            return (
+                <>
+                    <span block="PDPSummary" elem="New">NEW</span>
+                    { ' ' }
+                    <span block="PDPSummary" elem="Exclusive"> - Exclusive</span>
+                </>
+            );
+        }
+
+        return <p block="PDPSummary" elem="New" />;
+    }
 
     renderSummaryHeader() {
         const { product } = this.props;
@@ -96,7 +132,17 @@ class PDPSummary extends PureComponent {
     }
 
     renderAvailableItemsSection() {
-        // data unavailable at this moment
+        const { product: { sku }, isLoading } = this.props;
+        const { alsoAvailable } = this.state;
+
+        if (alsoAvailable) {
+            if (alsoAvailable.length > 0 && !isLoading) {
+                return (
+                    <PDPAlsoAvailableProducts productsAvailable={ alsoAvailable } productSku={ sku } />
+                );
+            }
+        }
+
         return null;
     }
 
