@@ -27,15 +27,11 @@ class Menu extends PureComponent {
     };
 
     componentDidMount() {
-        const { browserDatabase } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
-        const { gender } = Object(browserDatabase);
-
-        this.setState({ currentGender: gender });
+        this.setState({ currentGender: BrowserDatabase.getItem(APP_STATE_CACHE_KEY).gender });
     }
 
     componentDidUpdate() {
-        const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
-        this.setNewGender(gender);
+        this.setNewGender(BrowserDatabase.getItem(APP_STATE_CACHE_KEY).gender);
     }
 
     setNewGender = (newGender) => {
