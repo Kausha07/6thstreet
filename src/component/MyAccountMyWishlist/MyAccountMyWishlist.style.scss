@@ -97,8 +97,7 @@
 
             .Image {
                 &-Image {
-                    object-fit: contain;
-                    height: auto !important;
+                    object-fit: cover;
                 }
             }
 
