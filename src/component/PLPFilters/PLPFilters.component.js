@@ -277,13 +277,13 @@ class PLPFilters extends PureComponent {
             __('women'),
             __('kids')
         ];
-        const brandsLabel = 'Brands';
-        const categoriesLabel = 'Categories';
+        const brandsCategoryName = 'brand_name';
+        const CategoryName = 'categories_without_path';
         const pathname = location.pathname.split('/');
         const isBrandsFilterRequired = genders.includes(pathname[1]);
 
         if (isBrandsFilterRequired) {
-            if (filter.label === brandsLabel) {
+            if (filter.category === brandsCategoryName) {
                 return (
                     <PLPQuickFilter
                       key={ key }
@@ -291,7 +291,7 @@ class PLPFilters extends PureComponent {
                     />
                 );
             }
-        } else if (filter.label === categoriesLabel) {
+        } else if (filter.category === CategoryName) {
             return (
                 <PLPQuickFilter
                   key={ key }

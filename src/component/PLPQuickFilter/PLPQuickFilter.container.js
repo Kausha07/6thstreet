@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Filter } from 'Util/API/endpoint/Product/Product.type';
 import WebUrlParser from 'Util/API/helper/WebUrlParser';
 
-import PLPFilter from './PLPQuickFilter.component';
+import PLPQuickFilter from './PLPQuickFilter.component';
 
 export const mapStateToProps = (_state) => ({});
 
@@ -45,7 +45,7 @@ class PLPQuickFilterContainer extends PureComponent {
 
     render() {
         return (
-            <PLPFilter
+            <PLPQuickFilter
               { ...this.containerFunctions }
               { ...this.containerProps() }
             />
