@@ -346,5 +346,14 @@
     "Edit Address": null,
     " - default shipping, billing address": null,
     " - default billing address": null,
-    " - default shipping address": null
+    " - default shipping address": null,
+    "Delivery": null,
+    "Payment": null,
+    "Close": null,
+    "Proceed to secure payment": null,
+    "Place order": null,
+    "Create Password": null,
+    "Enter personal information": null,
+    "Create free account and keep track of your orders": null,
+    "What are you looking for?": null
 }
