@@ -17,14 +17,16 @@ class FieldMultiselect extends PureComponent {
         activeFilter: PropTypes.object,
         isChecked: PropTypes.bool,
         changeActiveFilter: PropTypes.func.isRequired,
-        currentActiveFilter: PropTypes.string
+        currentActiveFilter: PropTypes.string,
+        isHidden: PropTypes.bool
     };
 
     static defaultProps = {
         placeholder: '',
         activeFilter: {},
         isChecked: false,
-        currentActiveFilter: ''
+        currentActiveFilter: '',
+        isHidden: false
     };
 
     filterButtonRef = createRef();
@@ -168,10 +170,15 @@ class FieldMultiselect extends PureComponent {
 
     renderMultiselectContainer() {
         const { toggleOptionsList, isArabic } = this.state;
-        const { placeholder, onChange, filter: { is_radio } } = this.props;
+        const {
+            placeholder,
+            onChange,
+            filter: { is_radio },
+            isHidden
+        } = this.props;
 
         return (
-            <div block="FieldMultiselect">
+            <div block="FieldMultiselect" mods={ { isHidden } }>
             <button
               ref={ this.filterButtonRef }
               type="button"

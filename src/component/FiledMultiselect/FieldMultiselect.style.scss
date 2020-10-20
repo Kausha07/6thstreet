@@ -24,6 +24,10 @@
 }
 
 .FieldMultiselect {
+    &_isHidden {
+        display: none;
+    }
+
     &-MobileOptionButton {
         padding: 0;
         width: 86%;
@@ -170,7 +174,7 @@
               width: 100%;
               font-size: 13px;
               vertical-align: baseline;
-        
+
             &::before {
                 content: none;
             }
