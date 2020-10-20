@@ -9,7 +9,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     renderToggleableDiscountOptions() {
         return (
             <div block="CheckoutOrderSummary" elem="DiscountOptionWrapper">
-                <StoreCredit canApply />
+                <StoreCredit canApply hideIfZero />
             </div>
         );
     }

@@ -30,12 +30,14 @@ export class StoreCreditContainer extends PureComponent {
         isLoading: PropTypes.bool.isRequired,
         storeCredit: StoreCreditData.isRequired,
         canApply: PropTypes.bool,
+        hideIfZero: PropTypes.bool,
         toggleStoreCredit: PropTypes.func.isRequired,
         fetchStoreCredit: PropTypes.func.isRequired
     };
 
     static defaultProps = {
-        canApply: false
+        canApply: false,
+        hideIfZero: false
     };
 
     state = {
