@@ -8,7 +8,13 @@ import HeaderSearch from 'Component/HeaderSearch/HeaderSearch.component';
 import HeaderWishlist from 'Component/HeaderWishlist';
 import NavigationAbstract from 'Component/NavigationAbstract/NavigationAbstract.component';
 import { DEFAULT_STATE_NAME } from 'Component/NavigationAbstract/NavigationAbstract.config';
-import { TYPE_CATEGORY, TYPE_PRODUCT } from 'Route/UrlRewrites/UrlRewrites.config';
+import {
+    TYPE_ACCOUNT,
+    TYPE_BRAND,
+    TYPE_CATEGORY,
+    TYPE_HOME,
+    TYPE_PRODUCT
+} from 'Route/UrlRewrites/UrlRewrites.config';
 import isMobile from 'Util/Mobile';
 
 import './HeaderMainSection.style';
@@ -35,7 +41,7 @@ class HeaderMainSection extends NavigationAbstract {
     };
 
     state = {
-        type: '',
+        type: null,
         delay: 150,
         lastProduct: null,
         lastCategory: null
@@ -78,24 +84,24 @@ class HeaderMainSection extends NavigationAbstract {
 
     getPageType() {
         if (location.pathname === '/') {
-            return 'HOME';
+            return TYPE_HOME;
         }
         if (matchPath(location.pathname, '/brands')) {
-            return 'BRANDS';
+            return TYPE_BRAND;
         }
         if (matchPath(location.pathname, '/my-account')) {
-            return 'ACCOUNT';
+            return TYPE_ACCOUNT;
         }
 
         return window.pageType;
     }
 
     getCategory() {
-        return JSON.parse(localStorage.getItem('category'));
+        return JSON.parse(localStorage.getItem('CATEGORY_NAME'));
     }
 
     getProduct() {
-        return JSON.parse(localStorage.getItem('product'));
+        return JSON.parse(localStorage.getItem('PRODUCT_NAME'));
     }
 
     setMainContentPadding(px = '0') {
@@ -130,9 +136,7 @@ class HeaderMainSection extends NavigationAbstract {
     }
 
     renderGenderSwitcher() {
-        return (this.isPLP() || this.isPDP()) && isMobile.any() ? (
-            ''
-        ) : (
+        return (this.isPLP() || this.isPDP()) && isMobile.any() ? null : (
             <HeaderGenders
               key="genders"
               isMobile
