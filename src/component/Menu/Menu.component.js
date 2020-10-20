@@ -4,11 +4,10 @@ import HeaderCart from 'Component/HeaderCart';
 import HeaderGenders from 'Component/HeaderGenders';
 import HeaderSearch from 'Component/HeaderSearch';
 import MenuCategory from 'Component/MenuCategory';
+import { APP_STATE_CACHE_KEY } from 'Store/AppState/AppState.reducer';
 import { Categories } from 'Util/API/endpoint/Categories/Categories.type';
 import { isArabic } from 'Util/App';
 import BrowserDatabase from 'Util/BrowserDatabase';
-
-import { APP_STATE_CACHE_KEY } from './Menu.config';
 
 import './Menu.style';
 
@@ -16,7 +15,6 @@ class Menu extends PureComponent {
     state = {
         isArabic: isArabic(),
         isDefaultCategoryOpen: true,
-        browserDatabase: BrowserDatabase.getItem(APP_STATE_CACHE_KEY),
         currentGender: ''
     };
 
@@ -29,15 +27,11 @@ class Menu extends PureComponent {
     };
 
     componentDidMount() {
-        const { browserDatabase } = this.state;
-        const { gender } = Object(browserDatabase);
-
-        this.setState({ currentGender: gender });
+        this.setState({ currentGender: BrowserDatabase.getItem(APP_STATE_CACHE_KEY).gender });
     }
 
     componentDidUpdate() {
-        const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY);
-        this.setNewGender(gender);
+        this.setNewGender(BrowserDatabase.getItem(APP_STATE_CACHE_KEY).gender);
     }
 
     setNewGender = (newGender) => {
