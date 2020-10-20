@@ -107,7 +107,6 @@ export class PDPAddToCartContainer extends PureComponent {
         const basePrice = price[0][Object.keys(price[0])[0]]['6s_base_price'];
         const currency = Object.keys(price[0])[0];
 
-        console.log('***', product);
         if (product.size_uk.length !== 0 && selectedSizeCode === '') {
             showNotification('error', __('Please select a size.'));
         }
