@@ -21,11 +21,16 @@
 			input,
 			select {
 				font-size: 14px;
-                padding: 16px 15px;
-                height: 50px;
+				padding: 16px 15px;
+				height: 50px;
 			}
 
 			.Field {
+				&[type="checkbox"],
+				&[type="radio"] {
+					width: 0;
+				}
+
 				&:first-child {
 					grid-column: 1 / span 4;
 					grid-row: 1;
@@ -91,6 +96,7 @@
 					grid-column: 1;
 					grid-row: 5;
 					padding-right: 5px;
+					padding-bottom: 20px;
 
 					@include desktop {
 						grid-row: 6;
@@ -126,40 +132,7 @@
 					display: none;
 				}
 
-				&_type_toggle {
-					display: grid;
-					padding-top: 13px;
-					padding-bottom: 30px;
-					grid-row: 7;
-					grid-column: 1 / span 4;
-
-					@include before-desktop {
-						width: 180px;
-						grid-column: 1 / span 2;
-						grid-row: 6;
-					}
-
-					label {
-						grid-column: 2;
-						grid-row: 1;
-						padding-top: 1px;
-						color: var(--balck);
-						font-family: "Avenir Next Regular";
-						font-size: 14px;
-						font-weight: 300;
-
-						@include desktop {
-							grid-column: 2 / span 20;
-						}
-					}
-
-					div {
-						grid-row: 1;
-						grid-column: 1;
-					}
-				}
-
-				&:nth-child(7) {
+				&:nth-child(6) {
 					grid-column: 1 / span 2;
 					grid-row: 4;
 					padding-right: 5px;
@@ -181,10 +154,6 @@
 				}
 
 				&:nth-child(8) {
-					display: none;
-				}
-
-				&:nth-child(9) {
 					grid-column: 1 / span 4;
 					grid-row: 3;
 
@@ -204,17 +173,22 @@
 					}
 				}
 
-				&:nth-child(10) {
+				&:nth-child(7) {
+					display: none;
+				}
+
+				&:nth-child(9) {
 					grid-column: 2 / span 3;
 					grid-row: 5;
 					padding-left: 5px;
+					padding-bottom: 20px;
 
 					@include desktop {
 						grid-row: 6;
 					}
 				}
 
-				&:nth-child(11) {
+				&:nth-child(10) {
 					grid-column: 1;
 					grid-row: 5;
 
@@ -224,8 +198,12 @@
 				}
 
 				background: var(--white);
-				padding: 0 30px 10px;
+				padding: 0 20px 10px;
 				margin: 0;
+
+				@include desktop {
+					padding: 0 30px 10px;
+				}
 			}
 		}
 	}
@@ -245,6 +223,11 @@
 						padding-right: 20px;
 						padding-left: 5px;
 
+						@include desktop {
+							padding-right: 30px;
+							padding-left: 5px;
+						}
+
 						input {
 							text-align: left;
 						}
@@ -261,16 +244,40 @@
 					&:nth-child(5) {
 						padding-left: 20px;
 						padding-right: 5px;
+						@include desktop {
+							padding-left: 30px;
+							padding-right: 5px;
+						}
 					}
 
-					&:nth-child(7) {
+					&:nth-child(6) {
 						padding-right: 20px;
 						padding-left: 5px;
+
+						@include desktop {
+							padding-right: 30px;
+							padding-left: 5px;
+						}
+
+						::after {
+							right: none;
+							left: 20px;
+						}
 					}
 
-					&:nth-child(10) {
+					&:nth-child(8) {
+						&::before {
+							margin-right: 490px;
+						}
+					}
+
+					&:nth-child(9) {
 						padding-left: 20px;
 						padding-right: 5px;
+						@include desktop {
+							padding-left: 30px;
+							padding-right: 5px;
+						}
 					}
 				}
 			}
@@ -291,8 +298,8 @@
 						border: none;
 						background: url(icons/flags.png) no-repeat;
 						background-position: 0 0;
-                        width: 100%;
-                        top: 10%;
+						width: 100%;
+						top: 10%;
 						height: 14px;
 						margin-left: 10px;
 						right: auto;
@@ -315,7 +322,7 @@
 							position: absolute;
 							width: 20px;
 							height: 14px;
-							top: 31%;
+							top: 27%;
 							left: 37px;
 						}
 					}
@@ -390,6 +397,30 @@
 				.FieldSelect {
 					&::after {
 						background-position: 0 -70px;
+					}
+				}
+			}
+		}
+	}
+
+	&_isArabic {
+		.Field {
+			.FieldSelect {
+				&::after {
+					left: 320px;
+				}
+			}
+		}
+		.Field {
+			&_type {
+				&_AE,
+				&_SA,
+				&_QA,
+				&_OM,
+				&_BH,
+				&_KW {
+					&::after {
+						left: 61px;
 					}
 				}
 			}

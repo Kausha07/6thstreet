@@ -139,12 +139,16 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
     }
 
     get fieldMap() {
-        const { countryId, city, defaultChecked } = this.state;
+        const {
+            countryId,
+            city,
+            defaultChecked,
+            regionId
+        } = this.state;
 
         const {
             countries,
-            address,
-            changeDefaultShipping
+            address
         } = this.props;
 
         const { street = [] } = address;
@@ -197,18 +201,12 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
             ...this.getRegionFields(),
             postcode: {
                 validation: ['notEmpty'],
-                placeholder: __('Postcode')
+                value: regionId
             },
             street: {
                 value: street[0],
                 validation: ['notEmpty'],
                 placeholder: this.renderStreetPlaceholder()
-            },
-            default_common: {
-                type: this.renderContentType(),
-                label: __('Make default'),
-                onChange: changeDefaultShipping,
-                checked: defaultChecked
             }
         };
     }

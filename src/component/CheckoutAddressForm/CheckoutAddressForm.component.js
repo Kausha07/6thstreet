@@ -80,31 +80,28 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
             area: regionId,
             city,
             postcode: regionId,
-            phone: telephone,
+            phone: this.renderCurrentPhoneCode() + telephone,
             telephone
         });
     }
 
     render() {
         const { id } = this.props;
-        const { countryId } = this.state;
+        const { countryId, isArabic } = this.state;
 
         return (
-            <>
-                <FormPortal
-                  id={ id }
-                  name="CheckoutAddressForm"
-                >
+            <FormPortal
+              id={ id }
+              name="CheckoutAddressForm"
+            >
                     <div
                       block="FieldForm"
                       mix={ { block: 'CheckoutAddressForm' } }
-                      mods={ { countryId } }
+                      mods={ { countryId, isArabic } }
                     >
                         { this.renderFields() }
                     </div>
-                </FormPortal>
-                <hr />
-            </>
+            </FormPortal>
         );
     }
 }

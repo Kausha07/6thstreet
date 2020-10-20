@@ -3,11 +3,16 @@ import Field from 'Component/Field';
 import {
     CheckoutShipping as SourceCheckoutShipping
 } from 'SourceComponent/CheckoutShipping/CheckoutShipping.component';
+import { isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
 
 import './CheckoutShipping.style';
 
 export class CheckoutShipping extends SourceCheckoutShipping {
+    state = {
+        isArabic: isArabic()
+    };
+
     renderButtonsPlaceholder() {
         return isMobile.any() || isMobile.tablet()
             ? __('Proceed to secure payment')
@@ -74,14 +79,15 @@ export class CheckoutShipping extends SourceCheckoutShipping {
             onShippingMethodSelect
         } = this.props;
 
+        const { isArabic } = this.state;
+
         return (
-            <div block="CheckoutShippingStep">
+            <div block="CheckoutShippingStep" mods={ { isArabic } }>
                 <Field
                   type="toggle"
                   id="DifferentBilling"
                   name="DifferentBilling"
                   label={ this.renderDifferentBillingLabel() }
-                  onChange={ this.test }
                 />
                 { this.renderDeliveryButton() }
                 <CheckoutDeliveryOptions

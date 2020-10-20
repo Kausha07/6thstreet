@@ -1,16 +1,31 @@
+/* eslint-disable jsx-a11y/control-has-associated-label */
+import PropTypes from 'prop-types';
+
 import CheckoutAddressForm from 'Component/CheckoutAddressForm';
+import MyAccountAddressPopup from 'Component/MyAccountAddressPopup';
 import Slider from 'Component/Slider';
 import { BILLING_STEP, SHIPPING_STEP } from 'Route/Checkout/Checkout.config';
 import { CheckoutAddressBook as SourceCheckoutAddressBook }
     from 'SourceComponent/CheckoutAddressBook/CheckoutAddressBook.component';
+import { customerType } from 'Type/Account';
 import isMobile from 'Util/Mobile';
 
 import './CheckoutAddressBook.style.scss';
 
 export class CheckoutAddressBook extends SourceCheckoutAddressBook {
+    static propTypes = {
+        customer: customerType.isRequired,
+        onAddressSelect: PropTypes.func.isRequired,
+        onShippingEstimationFieldsChange: PropTypes.func.isRequired,
+        selectedAddressId: PropTypes.number.isRequired,
+        isSignedIn: PropTypes.bool.isRequired,
+        isBilling: PropTypes.bool.isRequired
+    };
+
     state = {
         isCustomAddressExpanded: false,
-        currentPage: 0
+        currentPage: 0,
+        hideCards: false
     };
 
     renderCustomAddress() {
@@ -61,15 +76,15 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
         this.setState({ currentPage: newPage });
     };
 
+    hideCards = () => {
+        this.setState({ hideCards: true });
+    };
+
     renderButtonLabel() {
         return isMobile.any()
             ? __('new address')
             : __('Add new address');
     }
-
-    hideCards = () => {
-        this.setState({ hideCards: true });
-    };
 
     openNewForm = () => {
         const { showCreateNewPopup } = this.props;
@@ -78,11 +93,6 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
             this.hideCards();
         }
         showCreateNewPopup();
-
-        if (!isMobile.any()) {
-            const elmnts = document.getElementsByClassName('MyAccountAddressBook-NewAddress');
-            elmnts[0].scrollIntoView();
-        }
     };
 
     renderOptionalCustomAddress() {
@@ -100,14 +110,57 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
                   mix={ {
                       block: 'button primary medium',
                       mods: { isHollow: true }
-                      // mix: { block: 'button primary medium', mods: { isMobile } }
                   } }
                   type="button"
-                  onClick={ isMobile.any() ? this.openNewForm : this.expandCustomAddress }
+                  onClick={ this.openNewForm }
                 >
                     { this.renderButtonLabel() }
                 </button>
                 { isCustomAddressExpanded && this.renderCustomAddress() }
+            </div>
+        );
+    }
+
+    renderPopup() {
+        const {
+            formContent,
+            closeForm,
+            openForm,
+            customer
+        } = this.props;
+
+        return (
+            <MyAccountAddressPopup
+              formContent={ formContent }
+              closeForm={ closeForm }
+              openForm={ openForm }
+              showCards={ this.showCards }
+              customer={ customer }
+            />
+        );
+    }
+
+    render() {
+        const { hideCards } = this.state;
+
+        if (hideCards) {
+            return (
+                <div block="MyAccountAddressBook">
+                    <button
+                      block="MyAccountAddressBook"
+                      elem="backBtn"
+                      onClick={ this.showCards }
+                    />
+                    { this.renderPopup() }
+                </div>
+            );
+        }
+
+        return (
+            <div block="CheckoutAddressBook">
+                { this.renderHeading() }
+                { this.renderContent() }
+                { this.renderPopup() }
             </div>
         );
     }
