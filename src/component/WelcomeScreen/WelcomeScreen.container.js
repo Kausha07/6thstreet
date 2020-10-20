@@ -41,7 +41,7 @@ class WelcomeScreenContainer extends PureComponent {
         const { country, language } = this.props;
 
         if (country) {
-            window.location.href = location.href.replace(
+            window.location.href = location.origin.replace(
                 country.toLowerCase(),
                 value,
                 location.href
@@ -62,7 +62,7 @@ class WelcomeScreenContainer extends PureComponent {
         const { country, language, setLanguage } = this.props;
 
         if (language && country) {
-            window.location.href = location.href.replace(
+            window.location.href = location.origin.replace(
                 language.toLowerCase(),
                 value,
                 location.href
