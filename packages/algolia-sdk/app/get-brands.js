@@ -6,7 +6,7 @@ export default function getBrands(gender = '', options = {}) {
   return new Promise((resolve, reject) => {
     const newSearchParams = Object.assign({}, searchParams);
     newSearchParams.hitsPerPage = 0;
-    newSearchParams.facets = ['brand_name'];
+    newSearchParams.facets = ['brand_name', 'url'];
     newSearchParams.facetFilters = [[`gender: ${gender}`]];
 
     index.search({ query: '', ...newSearchParams }, (err, data = {}) => {
@@ -30,6 +30,8 @@ export default function getBrands(gender = '', options = {}) {
           }
         ];
       });
+
+      console.log(data);
 
       return resolve({ data: brands });
     });

@@ -5,7 +5,10 @@ import {
     CheckoutShipping as SourceCheckoutShipping
 } from 'SourceComponent/CheckoutShipping/CheckoutShipping.component';
 import { shippingMethodsType, shippingMethodType } from 'Type/Checkout';
+import { isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
+
+import './CheckoutShipping.style';
 
 export class CheckoutShipping extends SourceCheckoutShipping {
     static propTypes = {
@@ -23,6 +26,10 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     static defaultProps = {
         selectedShippingMethod: null,
         totals: {}
+    };
+
+    state = {
+        isArabic: isArabic()
     };
 
     renderButtonsPlaceholder() {
@@ -66,19 +73,47 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         return null;
     }
 
-    renderActions() {
+    checkForDisabling() {
         const { selectedShippingMethod } = this.props;
 
+        if (!selectedShippingMethod || !isMobile.any() || !isMobile.tablet()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    renderActions() {
         return (
             <div block="Checkout" elem="StickyButtonWrapper">
                 { this.renderTotals() }
                 <button
                   type="submit"
                   block="Button"
-                  disabled={ !selectedShippingMethod }
+                  disabled={ this.checkForDisabling() }
                   mix={ { block: 'CheckoutShipping', elem: 'Button' } }
                 >
                     { this.renderButtonsPlaceholder() }
+                </button>
+            </div>
+        );
+    }
+
+    renderDeliveryButton() {
+        const { selectedShippingMethod } = this.props;
+
+        if (isMobile.any() || isMobile.tablet()) {
+            return null;
+        }
+
+        return (
+            <div block="CheckoutShippingStep" elem="DeliveryButton">
+                <button
+                  type="submit"
+                  block="Button button primary medium"
+                  disabled={ !selectedShippingMethod }
+                >
+                    { __('Deliver to this address') }
                 </button>
             </div>
         );
@@ -90,11 +125,16 @@ export class CheckoutShipping extends SourceCheckoutShipping {
             onShippingMethodSelect
         } = this.props;
 
+        const { isArabic } = this.state;
+
         return (
-            <CheckoutDeliveryOptions
-              shippingMethods={ shippingMethods }
-              onShippingMethodSelect={ onShippingMethodSelect }
-            />
+            <div block="CheckoutShippingStep" mods={ { isArabic } }>
+                { this.renderDeliveryButton() }
+                <CheckoutDeliveryOptions
+                  shippingMethods={ shippingMethods }
+                  onShippingMethodSelect={ onShippingMethodSelect }
+                />
+            </div>
         );
     }
 }

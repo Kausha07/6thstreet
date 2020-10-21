@@ -20,8 +20,9 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     }
 
     renderHeading() {
-        const { totals: { items = [] } } = this.props;
+        const { totals: { items = [] }, totals } = this.props;
 
+        console.log(totals);
         return (
             <div block="CheckoutOrderSummary" elem="HeaderWrapper">
                 <span block="CheckoutOrderSummary" elem="ItemCount">

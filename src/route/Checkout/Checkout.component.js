@@ -4,11 +4,20 @@ import { Checkout as SourceCheckout } from 'SourceRoute/Checkout/Checkout.compon
 import './Checkout.style';
 
 export class Checkout extends SourceCheckout {
-    renderTitle() {
-        const { checkoutStep } = this.props;
+  state = {
+      isCustomAddressExpanded: false
+  };
 
-        return (
-                <div block="CheckoutNavigation">
+  callbackFunction = (childData) => {
+      this.setState({ isCustomAddressExpanded: childData });
+  };
+
+  renderTitle() {
+      const { checkoutStep } = this.props;
+      const { isCustomAddressExpanded } = this.state;
+
+      return (
+                <div block="CheckoutNavigation" mods={ { isCustomAddressExpanded } }>
                   <div block="CheckoutNavigation" elem="FirstColumn">
                     <div
                       block="CheckoutNavigation"
@@ -39,20 +48,20 @@ export class Checkout extends SourceCheckout {
                     </span>
                   </div>
                 </div>
-        );
-    }
+      );
+  }
 
-    renderShippingStep() {
-        const {
-            shippingMethods,
-            onShippingEstimationFieldsChange,
-            saveAddressInformation,
-            isDeliveryOptionsLoading,
-            email,
-            checkoutTotals
-        } = this.props;
+  renderShippingStep() {
+      const {
+          shippingMethods,
+          onShippingEstimationFieldsChange,
+          saveAddressInformation,
+          isDeliveryOptionsLoading,
+          email,
+          checkoutTotals
+      } = this.props;
 
-        return (
+      return (
             <CheckoutShipping
               isLoading={ isDeliveryOptionsLoading }
               shippingMethods={ shippingMethods }
@@ -60,9 +69,10 @@ export class Checkout extends SourceCheckout {
               onShippingEstimationFieldsChange={ onShippingEstimationFieldsChange }
               guestEmail={ email }
               totals={ checkoutTotals }
+              parentCallback={ this.callbackFunction }
             />
-        );
-    }
+      );
+  }
 }
 
 export default Checkout;
