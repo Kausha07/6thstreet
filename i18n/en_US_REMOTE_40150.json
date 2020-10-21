@@ -395,5 +395,7 @@
     "Where can we send your order?": null,
     "Area": null,
     "Type your address here": null,
-    "Postcode": null
+    "Postcode": null,
+    "AVAILABLE PRODUCTS": null,
+    "Back": null
 }
