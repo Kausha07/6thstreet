@@ -9,3 +9,10 @@ export const TYPES_ARRAY = [
     MEN_TYPE,
     KIDS_TYPE
 ];
+
+export const KIDS_GENDERS = [
+    'Boy',
+    'Girl',
+    'Baby Girl',
+    'Baby Boy'
+];
