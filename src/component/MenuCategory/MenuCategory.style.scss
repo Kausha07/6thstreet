@@ -19,7 +19,6 @@
         font-size: 13px;
         font-weight: 600;
         line-height: 45px;
-        overflow-y: scroll;
         text-indent: 20px;
         text-transform: uppercase;
 
@@ -28,18 +27,23 @@
         }
 
         &-CategoryButton {
-            width: 80%;
+            width: 35%;
+            font-size: calc(9px + 1vw);
             text-align: left;
             margin-left: -20px;
-            padding: 0 30px;
+            padding: 0 3vw;
         }
 
         &:first-child {
-            color: var(--gold);
-            margin-top: 0;
+            .MenuCategory {
+                &-CategoryButton {
+                    color: var(--gold);
+                    margin-top: 0;
+                }
+            }
         }
 
-        &:nth-last-child(2) {
+        &:last-child {
             .MenuCategory {
                 &-CategoryButton {
                     color: var(--red);
@@ -48,8 +52,15 @@
         }
 
         &_isDefaultCategoryOpen {
-            background-color: var(--gold);
-            font-family: 'Avenir Next Bold', serif;
+            &:first-child {
+                .MenuCategory {
+                    &-CategoryButton {
+                        color: white;
+                        background-color: var(--gold);
+                        font-family: 'Avenir Next Bold', serif;
+                    }
+                }
+            }
 
             .MenuCategory {
                 &-CategoryButton {
@@ -68,10 +79,9 @@
         }
 
         &_isVisible {
-            background-color: var(--black);
-
             .MenuCategory {
                 &-CategoryButton {
+                    background-color: var(--black);
                     color: var(--white);
                     font-family: 'Avenir Next Bold', serif;
                     font-size: 15px;
@@ -84,16 +94,15 @@
             }
 
             &:first-child {
-                background-color: var(--gold);
-
                 .MenuCategory {
                     &-CategoryButton {
                         color: var(--white);
+                        background-color: var(--gold);
                     }
                 }
             }
 
-            &:nth-last-child(2) {
+            &:last-child {
                 .MenuCategory {
                     &-CategoryButton {
                         background-color: var(--red);
@@ -131,13 +140,20 @@
             background-color: var(--white);
             border-left: 1px solid var(--light-gray);
             height: 100%;
-            left: 38%;
             overflow-x: hidden;
             overflow-y: auto;
             position: absolute;
-            top: 0;
-            width: 63%;
+            width: 100%;
             z-index: 5;
+
+            &-Wrapper {
+                height: 70vh;
+                min-height: 500px;
+                width: 66%;
+                top: 140px;
+                left: 33%;
+                position: fixed;
+            }
 
             .MenuBrands {
                 &-ContentWrapper {
@@ -182,7 +198,7 @@
             position: absolute;
             width: 100vw;
             max-width: 1440px;
-            left: 30px;
+            left: 0;
 
             &:after {
                 background: rgba(0, 0, 0, 0.7);

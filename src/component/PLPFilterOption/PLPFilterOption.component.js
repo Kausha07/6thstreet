@@ -54,7 +54,27 @@ class PLPFilterOption extends PureComponent {
         // TODO: fix radio ?
         const type = isRadio ? 'radio' : 'checkbox';
 
-        return isMobile.any() ? (
+        if (isMobile.any()) {
+            return this.renderMobileField(facet_value, facet_key, checked, onSelectChecked);
+        }
+
+        return (
+            <Field
+              type={ type }
+              id={ facet_value }
+              name={ facet_key }
+              value={ facet_value }
+              checked={ checked }
+            />
+        );
+    }
+
+    renderMobileField(facet_value, facet_key, checked, onSelectChecked) {
+        const { isRadio } = this.props;
+
+        const type = isRadio ? 'radio' : 'checkbox';
+
+        return (
             <Field
               formRef={ this.fieldRef }
               onClick={ this.handleClick }
@@ -67,14 +87,6 @@ class PLPFilterOption extends PureComponent {
               name={ facet_key }
               value={ facet_value }
               defaultChecked={ checked || onSelectChecked }
-            />
-        ) : (
-            <Field
-              type={ type }
-              id={ facet_value }
-              name={ facet_key }
-              value={ facet_value }
-              checked={ checked }
             />
         );
     }

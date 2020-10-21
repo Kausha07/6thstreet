@@ -8,7 +8,7 @@ import { LocationType } from 'Type/Common';
 import { fetchQuery } from 'Util/Request';
 
 import UrlRewrites from './UrlRewrites.component';
-import { TYPE_NOTFOUND } from './UrlRewrites.config';
+import { TYPE_NOTFOUND, TYPE_PRODUCT } from './UrlRewrites.config';
 
 export const mapStateToProps = (state) => ({
     locale: state.AppState.locale
@@ -61,6 +61,10 @@ export class UrlRewritesContainer extends PureComponent {
         // TODO: rename this to pathname, urlParam is strange
         const { location: { pathname: urlParam } } = this.props;
 
+        const slicedUrl = urlParam.slice(urlParam.search('id/'));
+        // eslint-disable-next-line no-magic-numbers
+        const magentoProductId = Number((slicedUrl.slice('3')).split('/')[0]);
+
         if (isUpdate) {
             this.setState({
                 prevPathname: urlParam,
@@ -70,7 +74,7 @@ export class UrlRewritesContainer extends PureComponent {
 
         // TODO: switch to "executeGet" afterwards
         const { urlResolver } = await fetchQuery(UrlRewritesQuery.getQuery({ urlParam }));
-        const { type = TYPE_NOTFOUND, id } = urlResolver || {};
+        const { type = magentoProductId ? TYPE_PRODUCT : TYPE_NOTFOUND, id } = urlResolver || {};
 
         window.pageType = type;
 
@@ -78,7 +82,7 @@ export class UrlRewritesContainer extends PureComponent {
             prevPathname: urlParam,
             isLoading: false,
             type,
-            id
+            id: id === undefined ? magentoProductId : id
         });
     }
 
