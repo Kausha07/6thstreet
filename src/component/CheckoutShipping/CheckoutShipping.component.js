@@ -65,7 +65,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         if (subtotal !== {}) {
             return (
                     <div block="Checkout" elem="OrderTotals">
-                            { this.renderPriceLine(subtotal, __('Subtotal')) }
+                        { this.renderPriceLine(subtotal, __('Subtotal')) }
                     </div>
             );
         }

@@ -300,7 +300,6 @@ export class CartItem extends PureComponent {
 
     renderColSizeQty() {
         const { item: { color, optionValue, qty } } = this.props;
-
         const { isArabic } = this.state;
 
         if (optionValue) {

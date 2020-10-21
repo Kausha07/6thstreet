@@ -47,30 +47,30 @@ export class Header extends PureComponent {
     renderBackToShoppingButton() {
         return (
             <>
-            <a href="/">
-            <div
-              block="CheckoutHeader"
-              elem="BackToShoppingMobile"
-              mods={ { isArabic } }
-            >
-                <button block="BackMobileButton">
-                    { ' ' }
-                </button>
-            </div>
-            </a>
-            <a href="/">
-                <div
-                  block="CheckoutHeader"
-                  elem="BackToShoppingDesktop"
-                  mods={ { isArabic } }
-                >
-                    <button
-                      block="button secondary medium"
+                <a href="/">
+                    <div
+                      block="CheckoutHeader"
+                      elem="BackToShoppingMobile"
+                      mods={ { isArabic } }
                     >
-                        { __('Back to shopping') }
-                    </button>
-                </div>
-            </a>
+                        <button block="BackMobileButton">
+                            { ' ' }
+                        </button>
+                    </div>
+                </a>
+                <a href="/">
+                    <div
+                      block="CheckoutHeader"
+                      elem="BackToShoppingDesktop"
+                      mods={ { isArabic } }
+                    >
+                        <button
+                          block="button secondary medium"
+                        >
+                            { __('Back to shopping') }
+                        </button>
+                    </div>
+                </a>
             </>
         );
     }

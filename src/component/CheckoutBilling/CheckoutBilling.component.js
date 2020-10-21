@@ -4,6 +4,8 @@ import {
     CheckoutBilling as SourceCheckoutBilling
 } from 'SourceComponent/CheckoutBilling/CheckoutBilling.component';
 
+import './CheckoutBilling.extended.style';
+
 export class CheckoutBilling extends SourceCheckoutBilling {
     renderPriceLine(price, name, mods) {
         const { totals: { currency_code } } = this.props;

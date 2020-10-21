@@ -29,7 +29,7 @@ main {
         
         @include desktop {
             display: none;
-    }
+        }
 
     ::before {
         content: ' ';

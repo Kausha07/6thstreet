@@ -91,7 +91,6 @@
         background: var(--light-gray);
         height: 40px;
         margin: 21px 18px 15px;
-        
     }
 
     &-PromoText {
@@ -128,7 +127,7 @@
                 &-Text, &-Price {
                     font-size: 13px;
                 }
-        }
+            }
         }
     }
 
@@ -148,13 +147,14 @@
                     margin-top: 3px;
                     font-size: 15px;
                 }
+
                 &-Price {
                     font-family: "Avenir Next Bold";
                     font-size: 18px;
                     font-weight: bold;
                     line-height: 25px;
                 }
-        }
+            }
         }
 
         span {
