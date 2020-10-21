@@ -33,9 +33,9 @@ export class CreditCardContainer extends PureComponent {
             (response) => {
                 if (response.id) {
                     BrowserDatabase.setItem(response.id, 'CREDIT_CART_TOKEN', FIVE_MINUTES_IN_SECONDS);
-                    showSuccessMessage('Credit card successfully added');
+                    showSuccessMessage(__('Credit card successfully added'));
                 } else {
-                    showErrorMessage('Something went wrong');
+                    showErrorMessage(__('Something went wrong'));
                 }
             },
             this._handleError

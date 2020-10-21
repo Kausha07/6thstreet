@@ -38,7 +38,7 @@ class CreditCard extends PureComponent {
             <>
                 <input
                   type="text"
-                  placeholder="Card number"
+                  placeholder={ __('Card number') }
                   id="number"
                   name="number"
                   onChange={ this.handleNumberChange }
@@ -46,7 +46,7 @@ class CreditCard extends PureComponent {
                 />
                 <input
                   type="text"
-                  placeholder="Expiration Date"
+                  placeholder={ __('Expiration Date') }
                   id="expData"
                   name="expData"
                   onChange={ this.handleExpDateChange }
@@ -54,7 +54,7 @@ class CreditCard extends PureComponent {
                 />
                 <input
                   type="text"
-                  placeholder="CVV"
+                  placeholder={ __('CVV') }
                   id="cvv"
                   name="cvv"
                   onChange={ this.handleCvvChange }

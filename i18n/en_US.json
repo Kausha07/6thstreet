@@ -375,5 +375,10 @@
     "Carrier method: ": null,
     "Rate: ": null,
     "New Address": null,
-    "Edit Address": null
+    "Edit Address": null,
+    "Credit card successfully added": null,
+    "Something went wrong": null,
+    "Card number": null,
+    "Expiration Date": null,
+    "CVV": null
 }
