@@ -24,19 +24,14 @@ export class CheckoutBilling extends SourceCheckoutBilling {
 
     renderTotals() {
         const {
-            totals: { subtotal }, totals
+            totals: { total }
         } = this.props;
 
-        console.log(totals);
-        if (subtotal !== {}) {
-            return (
-                    <div block="Checkout" elem="OrderTotals">
-                            { this.renderPriceLine(subtotal, __('Total')) }
-                    </div>
-            );
-        }
-
-        return null;
+        return (
+                <div block="Checkout" elem="OrderTotals">
+                        { this.renderPriceLine(total, __('Total Amount')) }
+                </div>
+        );
     }
 
     renderActions() {

@@ -127,17 +127,13 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
         const {
             totals: {
                 subtotal,
+                total,
                 tax_amount,
-                grand_total,
                 shipping_amount
-            }, totals, paymentTotals,
-            paymentTotals: {
-                grand_total: payment_grand_total
-            }, checkoutStep
+            },
+            checkoutStep
         } = this.props;
 
-        console.log(paymentTotals);
-        console.log(totals);
         return (
             <div block="CheckoutOrderSummary" elem="OrderTotals">
                 <ul>
@@ -151,8 +147,8 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                     </div>
                     <div block="CheckoutOrderSummary" elem="Totals">
                         { checkoutStep !== SHIPPING_STEP
-                            ? this.renderPriceLine(payment_grand_total || grand_total, __('Total'))
-                            : this.renderPriceLine(subtotal + tax_amount, __('Total')) }
+                            ? this.renderPriceLine(Math.round(total + tax_amount), __('Total'))
+                            : this.renderPriceLine(Math.round(total + tax_amount), __('Total')) }
                             <span>{ __('(Taxes included)') }</span>
                     </div>
                 </ul>
