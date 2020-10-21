@@ -1,0 +1,50 @@
+.CheckoutGuestForm {
+    background: var(--white);
+    padding: 0 20px;
+
+    @include desktop {
+        padding: 20px 20px;
+        margin-bottom: 20px;
+    }
+
+    .Field {
+        label {
+
+            @include before-desktop {
+                display: none;
+            }
+        }
+
+        input {
+            font-size: 14px;
+            padding: 16px 15px;
+        }
+        
+        &_type {
+            &_checkbox {
+                    display: none;
+            }
+        }
+    }
+
+    label {
+        font-size: 16px;
+    }
+
+    #guest_create_user {
+        display: none;
+    }
+
+    .Checkout {
+        &-Heading {
+                font-family: "Avenir Next Demi";
+                font-size: 18px;
+                font-weight: 600;
+                line-height: 25px;;
+                text-align: center;
+                display: block;
+                margin:  0 65px 30px;
+        }
+    }
+
+}
