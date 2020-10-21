@@ -135,6 +135,8 @@
     &-Totals {
         display: grid;
         font-size: 15px;
+        border-top: 1.5px solid var(--Gallery);
+        padding-bottom: 13px;
 
         li {
             grid-column: 1 / span 4;

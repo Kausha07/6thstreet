@@ -20,13 +20,15 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     }
 
     renderHeading() {
-        const { totals: { items = [] }, totals } = this.props;
+        const { totals: { items = [] } } = this.props;
 
-        console.log(totals);
+        const itemQuantityArray = items.map((item) => item.qty);
+        const totalQuantity = itemQuantityArray.reduce((qty, nextQty) => qty + nextQty, 0);
+
         return (
             <div block="CheckoutOrderSummary" elem="HeaderWrapper">
                 <span block="CheckoutOrderSummary" elem="ItemCount">
-                    { items.length }
+                    { totalQuantity }
                     { this.renderItemSuffix() }
                 </span>
                 <Link block="CheckoutOrderSummary" elem="Edit" to="/cart">
