@@ -33,7 +33,7 @@ export class PDPAlsoAvailableProductsContainer extends PureComponent {
         productsAvailable.map((productID) => this.getAvailableProduct(productID).then((productData) => {
             const { products } = this.state;
 
-            if (productData.nbHits !== 0) {
+            if (productData.nbHits === 1) {
                 this.setState({ products: [...products, productData.data] });
             }
 
