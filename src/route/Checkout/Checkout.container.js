@@ -103,7 +103,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
                 this.setState({
                     paymentTotals: totals
-                })
+                });
             },
             this._handleError
         );
