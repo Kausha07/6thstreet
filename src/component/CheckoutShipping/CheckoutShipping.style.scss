@@ -8,43 +8,7 @@
 
 .CheckoutShippingStep {
 	background: var(--white);
-
-	.Field {
-		&_type {
-			&_toggle {
-				display: grid;
-				padding-left: 30px;
-				padding-top: 20px;
-				grid-row: 7;
-				grid-column: 1 / span 4;
-
-				@include before-desktop {
-					width: 300px;
-					grid-column: 1 / span 2;
-					grid-row: 6;
-				}
-
-				label {
-					grid-column: 2 / span 20;
-					grid-row: 1;
-					padding-top: 1px;
-					color: var(--balck);
-					font-family: "Avenir Next Regular";
-					font-size: 14px;
-					font-weight: 300;
-
-					span {
-						font-family: "Avenir Next Demi";
-					}
-				}
-
-				div {
-					grid-row: 1;
-					grid-column: 1;
-				}
-			}
-		}
-	}
+	margin-top: 20px;
 
 	&-DeliveryButton {
 		padding: 30px;

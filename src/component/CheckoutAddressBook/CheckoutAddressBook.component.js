@@ -1,8 +1,6 @@
-/* eslint-disable jsx-a11y/control-has-associated-label */
 import PropTypes from 'prop-types';
 
 import CheckoutAddressForm from 'Component/CheckoutAddressForm';
-import MyAccountAddressPopup from 'Component/MyAccountAddressPopup';
 import Slider from 'Component/Slider';
 import { BILLING_STEP, SHIPPING_STEP } from 'Route/Checkout/Checkout.config';
 import { CheckoutAddressBook as SourceCheckoutAddressBook }
@@ -24,8 +22,7 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
 
     state = {
         isCustomAddressExpanded: false,
-        currentPage: 0,
-        hideCards: false
+        currentPage: 0
     };
 
     renderCustomAddress() {
@@ -43,12 +40,16 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
     }
 
     renderSignedInContent() {
-        const { currentPage } = this.state;
+        const { currentPage, isCustomAddressExpanded } = this.state;
 
         if (isMobile.any()) {
             return (
                 <>
-                    <div block="CheckoutAddressBookSlider" elem="Wrapper">
+                    <div
+                      block="CheckoutAddressBookSlider"
+                      elem="Wrapper"
+                      mods={ { isCustomAddressExpanded } }
+                    >
                         <Slider
                           mix={ { block: 'CheckoutAddressBookSlider', elem: 'MobileSlider' } }
                           activeImage={ currentPage }
@@ -112,7 +113,7 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
                       mods: { isHollow: true }
                   } }
                   type="button"
-                  onClick={ this.openNewForm }
+                  onClick={ this.expandCustomAddress }
                 >
                     { this.renderButtonLabel() }
                 </button>
@@ -121,46 +122,11 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
         );
     }
 
-    renderPopup() {
-        const {
-            formContent,
-            closeForm,
-            openForm,
-            customer
-        } = this.props;
-
-        return (
-            <MyAccountAddressPopup
-              formContent={ formContent }
-              closeForm={ closeForm }
-              openForm={ openForm }
-              showCards={ this.showCards }
-              customer={ customer }
-            />
-        );
-    }
-
     render() {
-        const { hideCards } = this.state;
-
-        if (hideCards) {
-            return (
-                <div block="MyAccountAddressBook">
-                    <button
-                      block="MyAccountAddressBook"
-                      elem="backBtn"
-                      onClick={ this.showCards }
-                    />
-                    { this.renderPopup() }
-                </div>
-            );
-        }
-
         return (
             <div block="CheckoutAddressBook">
                 { this.renderHeading() }
                 { this.renderContent() }
-                { this.renderPopup() }
             </div>
         );
     }

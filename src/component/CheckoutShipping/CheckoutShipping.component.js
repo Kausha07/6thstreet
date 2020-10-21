@@ -1,5 +1,4 @@
 import CheckoutDeliveryOptions from 'Component/CheckoutDeliveryOptions';
-import Field from 'Component/Field';
 import {
     CheckoutShipping as SourceCheckoutShipping
 } from 'SourceComponent/CheckoutShipping/CheckoutShipping.component';
@@ -64,15 +63,6 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         );
     }
 
-    renderDifferentBillingLabel = () => (
-        <>
-            { __('Add a different ') }
-            <span>
-                { __('Billing address') }
-            </span>
-        </>
-    );
-
     renderDelivery() {
         const {
             shippingMethods,
@@ -83,12 +73,6 @@ export class CheckoutShipping extends SourceCheckoutShipping {
 
         return (
             <div block="CheckoutShippingStep" mods={ { isArabic } }>
-                <Field
-                  type="toggle"
-                  id="DifferentBilling"
-                  name="DifferentBilling"
-                  label={ this.renderDifferentBillingLabel() }
-                />
                 { this.renderDeliveryButton() }
                 <CheckoutDeliveryOptions
                   shippingMethods={ shippingMethods }

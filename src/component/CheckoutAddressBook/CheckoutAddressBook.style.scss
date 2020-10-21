@@ -32,6 +32,16 @@
 
 	&-CustomAddressWrapper {
 		background: var(--white);
+		
+		.FieldForm {
+			margin-top: 20px;
+
+			.Field {
+				&:first-child {
+					display: none;
+				}
+			}
+		}
 
 		@include before-desktop {
 			display: flex;
@@ -62,7 +72,7 @@
 	}
 
 	.CheckoutAddressBookSlider {
-
+		
 		@include before-desktop {
 			transform: translateX(-50%);
 			position: relative;
@@ -77,6 +87,10 @@
 		&-Wrapper {
 			overflow: hidden;
 			width: 92.6vw;
+
+			&_isCustomAddressExpanded {
+				display: none;
+			}
         }
         
 		&-MobileSlider {
@@ -102,4 +116,10 @@
 			}
 		}
 	}
+
+	& &-Button {
+        &_isCustomAddressExpanded {
+            display: none;
+        }
+    }
 }
