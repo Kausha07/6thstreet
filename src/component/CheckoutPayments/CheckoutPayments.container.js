@@ -8,7 +8,7 @@ import CheckoutDispatcher from 'Store/Checkout/Checkout.dispatcher';
 
 export const mapDispatchToProps = (dispatch) => ({
     ...SourceMapDispatchToProps,
-    selectPaymentMethod: (code) => CheckoutDispatcher.selectPaymentMethod(dispatch, code)
+    selectPaymentMethod: (billingData) => CheckoutDispatcher.selectPaymentMethod(dispatch, billingData)
 });
 
 export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
@@ -16,16 +16,29 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
         const {
             onPaymentMethodSelect,
             setOrderButtonEnableStatus,
-            selectPaymentMethod
+            selectPaymentMethod,
+            billingAddress
         } = this.props;
 
         this.setState({
             selectedPaymentCode: code
         });
-
         onPaymentMethodSelect(code);
         setOrderButtonEnableStatus(true);
-        selectPaymentMethod(code);
+        selectPaymentMethod({ code, billingAddress }).then(
+            (response) => {
+                if (response.configuration) {
+                    const { configuration: { available_products: { installments, pay_later } } } = response;
+
+                    this.setState({
+                        tabby_url: code === 'tabby_installments'
+                            ? installments[0].web_url
+                            : pay_later[0].web_url
+                    });
+                }
+            },
+            this._handleError
+        );
     }
 }
 

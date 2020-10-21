@@ -4,7 +4,7 @@ export const getInstallmentForValue = (price) => MobileAPI.get(
     `/tabby/installments/${price}`
 ) || {};
 
-export const createSession = ({ data }) => MobileAPI.post(
+export const createSession = (data) => MobileAPI.post(
     '/tabby/payments',
     data
 ) || {};
