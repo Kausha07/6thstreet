@@ -2,11 +2,19 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import { setGender } from 'Store/AppState/AppState.action';
+import { changeNavigationState } from 'Store/Navigation/Navigation.action';
+import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
 import { setPDPLoading } from 'Store/PDP/PDP.action';
 import PDPDispatcher from 'Store/PDP/PDP.dispatcher';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
 
 import PDP from './PDP.component';
+
+export const BreadcrumbsDispatcher = import(
+    /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
+    'Store/Breadcrumbs/Breadcrumbs.dispatcher'
+);
 
 export const mapStateToProps = (state) => ({
     isLoading: state.PDP.isLoading,
@@ -16,7 +24,12 @@ export const mapStateToProps = (state) => ({
 
 export const mapDispatchToProps = (dispatch) => ({
     requestProduct: (options) => PDPDispatcher.requestProduct(options, dispatch),
-    setIsLoading: (isLoading) => dispatch(setPDPLoading(isLoading))
+    setIsLoading: (isLoading) => dispatch(setPDPLoading(isLoading)),
+    updateBreadcrumbs: (breadcrumbs) => {
+        BreadcrumbsDispatcher.then(({ default: dispatcher }) => dispatcher.update(breadcrumbs, dispatch));
+    },
+    changeHeaderState: (state) => dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, state)),
+    setGender: (gender) => dispatch(setGender(gender))
 });
 
 export class PDPContainer extends PureComponent {
@@ -26,7 +39,10 @@ export class PDPContainer extends PureComponent {
         setIsLoading: PropTypes.func.isRequired,
         isLoading: PropTypes.bool.isRequired,
         product: Product.isRequired,
-        id: PropTypes.number.isRequired
+        id: PropTypes.number.isRequired,
+        updateBreadcrumbs: PropTypes.func.isRequired,
+        changeHeaderState: PropTypes.func.isRequired,
+        setGender: PropTypes.func.isRequired
     };
 
     containerFunctions = {
@@ -78,7 +94,19 @@ export class PDPContainer extends PureComponent {
     }
 
     containerProps = () => {
-        // isDisabled: this._getIsDisabled()
+        const {
+            updateBreadcrumbs,
+            changeHeaderState,
+            product,
+            setGender
+        } = this.props;
+
+        return {
+            updateBreadcrumbs,
+            changeHeaderState,
+            product,
+            setGender
+        };
     };
 
     render() {
