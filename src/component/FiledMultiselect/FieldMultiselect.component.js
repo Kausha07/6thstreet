@@ -194,10 +194,10 @@ class FieldMultiselect extends PureComponent {
 
     renderMultiselectContainer() {
         const { toggleOptionsList, isArabic } = this.state;
-        const { placeholder, onChange } = this.props;
+        const { placeholder, onChange, isHidden } = this.props;
 
         return (
-            <div ref={ this.filterDropdownRef } block="FieldMultiselect">
+            <div ref={ this.filterDropdownRef } block="FieldMultiselect" mods={ { isHidden } }>
             <button
               ref={ this.filterButtonRef }
               type="button"
