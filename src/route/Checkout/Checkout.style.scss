@@ -97,6 +97,7 @@
         }
 
         &-Delivery {
+            margin: 5px 10px 15px;
             background: url(./icons/address-gray@3x.png) no-repeat;
             background-size: 24px 24px;
             background-position: 50% 50%;
@@ -131,6 +132,7 @@
             background-position: 50% 50%;
             border: 2px solid var(--selected-step-color);
             border-radius: 50%;
+            margin: 0 10px 10px;
             width: 60px;
             height: 60px;
 

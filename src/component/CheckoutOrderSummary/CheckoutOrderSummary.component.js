@@ -130,12 +130,14 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                 tax_amount,
                 grand_total,
                 shipping_amount
-            },
+            }, totals, paymentTotals,
             paymentTotals: {
                 grand_total: payment_grand_total
             }, checkoutStep
         } = this.props;
 
+        console.log(paymentTotals);
+        console.log(totals);
         return (
             <div block="CheckoutOrderSummary" elem="OrderTotals">
                 <ul>

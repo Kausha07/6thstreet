@@ -1,5 +1,4 @@
 import CheckoutShipping from 'Component/CheckoutShipping';
-import Loader from 'Component/Loader';
 import { Checkout as SourceCheckout } from 'SourceRoute/Checkout/Checkout.component';
 
 import './Checkout.style';
@@ -41,11 +40,6 @@ export class Checkout extends SourceCheckout {
                   </div>
                 </div>
         );
-    }
-
-    renderLoader() {
-        const { isLoading } = this.props;
-        return <Loader isLoading={ isLoading } />;
     }
 
     renderShippingStep() {

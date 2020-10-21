@@ -55,8 +55,6 @@ export class CheckoutShipping extends SourceCheckoutShipping {
             totals: { subtotal }
         } = this.props;
 
-        console.log(subtotal);
-
         if (subtotal !== {}) {
             return (
                     <div block="Checkout" elem="OrderTotals">
