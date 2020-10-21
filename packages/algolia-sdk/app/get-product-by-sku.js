@@ -1,13 +1,12 @@
 import { formatResult, formatNewInTag } from './utils';
 import { searchParams } from './config';
 
-function getProduct(id, highlights, options) {
+function getAvailableProduct(sku, highlights, options) {
     const { index } = options;
 
     return new Promise((resolve, reject) => {
         index.search(
-            '',
-            { filters: `objectID:${id}` },
+            sku,
             (error, data) => {
                 if (error) {
                     return reject(error);
@@ -63,15 +62,15 @@ function formatData(productData) {
 function getProductVariants(skuList = [], highlights, options) {
     return Promise.all(
         skuList.map(async (sku) => {
-            const product = await getProduct(sku, highlights, options);
+            const product = await getAvailableProduct(sku, highlights, options);
             return product.data ? product.data : {};
         })
     );
 }
 
-export default async function getPDP(
-    { id = '', highlights = '*' },
+export default async function getProductBySku(
+    { sku = '', highlights = '*' },
     options = {}
 ) {
-    return await getProduct(id, highlights, options);
+    return await getAvailableProduct(sku, highlights, options);
 }
