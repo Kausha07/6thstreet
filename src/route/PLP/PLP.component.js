@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable react/no-unused-prop-types */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
@@ -16,12 +17,17 @@ export class PLP extends PureComponent {
         updateBreadcrumbs: PropTypes.func.isRequired,
         changeHeaderState: PropTypes.func.isRequired,
         setGender: PropTypes.func.isRequired,
-        filters: Filters.isRequired
+        filters: Filters.isRequired,
+        options: PropTypes.object.isRequired
     };
 
-    componentDidMount() {
+    componentDidUpdate() {
         this.updateBreadcrumbs();
         this.updateHeaderState();
+    }
+
+    capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
     updateHeaderState() {
@@ -34,45 +40,78 @@ export class PLP extends PureComponent {
     }
 
     updateBreadcrumbs() {
+        const { options: { categories_without_path, q } } = this.props;
         const breadcrumbLevels = window.location.pathname.split('.html')[0]
             .substring(1)
             .split('/');
-        const {
-            updateBreadcrumbs, setGender
-        } = this.props;
 
-        const breadcrumbsMapped = breadcrumbLevels.reduce((acc, breadcrumbLevel) => {
-            switch (breadcrumbLevel) {
-            case breadcrumbLevels[0]:
-                acc.push({
-                    url: '/',
-                    name: breadcrumbLevel,
-                    onClick: setGender
-                });
-                break;
-            case breadcrumbLevels[1]:
-                acc.push({
-                    url: `/${breadcrumbLevels[0]}/${breadcrumbLevel}.html?q=${breadcrumbLevels[0]}+${breadcrumbLevel}`,
-                    name: breadcrumbLevel
-                });
-                break;
-            default:
-                acc.push({ name: breadcrumbLevel, url: '/' });
+        console.log(breadcrumbLevels, categories_without_path);
+        if (q) {
+            const {
+                updateBreadcrumbs, setGender
+            } = this.props;
+
+            if (breadcrumbLevels.length === 1) {
+                const breadcrumbs = [
+                    {
+                        url: `/${breadcrumbLevels[0]}.html?q=${breadcrumbLevels[0]}`,
+                        name: __(breadcrumbLevels[0].replace(/-/g, ' '))
+                    },
+                    {
+                        url: '/',
+                        name: __('Home')
+                    }
+                ];
+
+                updateBreadcrumbs(breadcrumbs);
+            } else {
+                // const selectedSubcategories = breadcrumbLevels[2] ? breadcrumbLevels[2] : 0;
+                const breadcrumbsMapped = breadcrumbLevels.reduce((acc, breadcrumbLevel) => {
+                    switch (breadcrumbLevel) {
+                    case breadcrumbLevels[0]:
+                        acc.push({
+                            url: '/',
+                            name: breadcrumbLevel,
+                            onClick: setGender
+                        });
+                        break;
+                    case breadcrumbLevels[1]:
+                        acc.push({
+                            url: `/${breadcrumbLevels[0]}/${breadcrumbLevel}.html?q=${breadcrumbLevels[0]}+${breadcrumbLevel}`,
+                            name: breadcrumbLevel
+                        });
+                        break;
+                    default:
+                        acc.push({ name: breadcrumbLevel, url: '/' });
+                    }
+
+                    return acc;
+                }, []);
+
+                // eslint-disable-next-line no-magic-numbers
+                const breadcrumbs = breadcrumbLevels.length === 3 ? [
+                    {
+                        url: '/',
+                        name: __(breadcrumbLevels[2].replace(/-/g, ' '))
+                    },
+                    breadcrumbsMapped[1],
+                    breadcrumbsMapped[0],
+                    {
+                        url: '/',
+                        name: __('Home')
+                    }
+                ] : [
+                    breadcrumbsMapped[1],
+                    breadcrumbsMapped[0],
+                    {
+                        url: '/',
+                        name: __('Home')
+                    }
+                ];
+
+                updateBreadcrumbs(breadcrumbs);
             }
-
-            return acc;
-        }, []);
-
-        const breadcrumbs = [
-            breadcrumbsMapped[1],
-            breadcrumbsMapped[0],
-            {
-                url: '/',
-                name: __('Home')
-            }
-        ];
-
-        updateBreadcrumbs(breadcrumbs);
+        }
     }
 
     renderPLPDetails() {

@@ -8,6 +8,8 @@ import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
 import { setPDPLoading } from 'Store/PDP/PDP.action';
 import PDPDispatcher from 'Store/PDP/PDP.dispatcher';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
+import { getStaticFile } from 'Util/API/endpoint/StaticFiles/StaticFiles.endpoint';
+import Logger from 'Util/Logger';
 
 import PDP from './PDP.component';
 
@@ -49,10 +51,15 @@ export class PDPContainer extends PureComponent {
         // getData: this.getData.bind(this)
     };
 
+    state = {
+        categories: []
+    };
+
     constructor(props) {
         super(props);
 
         this.requestProduct();
+        this.requestCategories();
     }
 
     componentDidUpdate(prevProps) {
@@ -93,6 +100,19 @@ export class PDPContainer extends PureComponent {
         requestProduct({ options: { id } });
     }
 
+    async requestCategories() {
+        try {
+            const categories = await getStaticFile('categories');
+
+            this.setState({
+                categories
+            });
+        } catch (e) {
+            // TODO: handle error
+            Logger.log(e);
+        }
+    }
+
     containerProps = () => {
         const {
             updateBreadcrumbs,
@@ -100,12 +120,14 @@ export class PDPContainer extends PureComponent {
             product,
             setGender
         } = this.props;
+        const { categories } = this.state;
 
         return {
             updateBreadcrumbs,
             changeHeaderState,
             product,
-            setGender
+            setGender,
+            categories
         };
     };
 

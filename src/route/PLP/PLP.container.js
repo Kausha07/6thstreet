@@ -24,7 +24,8 @@ export const mapStateToProps = (state) => ({
     requestedOptions: state.PLP.options,
     isLoading: state.PLP.isLoading,
     pages: state.PLP.pages,
-    filters: state.PLP.filters
+    filters: state.PLP.filters,
+    options: state.PLP.options
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
@@ -51,7 +52,8 @@ export class PLPContainer extends PureComponent {
         updateBreadcrumbs: PropTypes.func.isRequired,
         changeHeaderState: PropTypes.func.isRequired,
         setGender: PropTypes.func.isRequired,
-        filters: Filters.isRequired
+        filters: Filters.isRequired,
+        options: PropTypes.object.isRequired
     };
 
     static requestProductList = PLPContainer.request.bind({}, false);
@@ -154,14 +156,16 @@ export class PLPContainer extends PureComponent {
             updateBreadcrumbs,
             changeHeaderState,
             setGender,
-            filters
+            filters,
+            options
         } = this.props;
 
         return {
             updateBreadcrumbs,
             changeHeaderState,
             setGender,
-            filters
+            filters,
+            options
         };
     };
 
