@@ -16,14 +16,14 @@
         display: none;
     }
 
-    //.HeaderSearch {
-    //    @include before-desktop {
-    //        display: none;
-    //    }
-    //}
+    .HeaderSearch {
+        @include before-desktop {
+            display: none;
+        }
+    }
 
     div.HeaderSearch div.SearchSuggestion {
-        display: none;
+        display: flex;
     }
 
     .HeaderSearch:focus-within .SearchSuggestion {
