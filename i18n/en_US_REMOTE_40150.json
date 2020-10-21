@@ -359,6 +359,10 @@
     "Discart": null,
     "Details": null,
     "Verify number": null,
+    "woman": null,
+    "number": null,
+    "You must be logged in to remove items from wishlist": null,
+    "Return": null,
     "New In": null,
     "We have received your request.": null,
     "An email has been sent to ": null,
@@ -383,10 +387,6 @@
     "Ordered": null,
     "Processing": null,
     "Completed": null,
-    " Item": null,
-    " Items": null,
-    " Edit": null,
-    "Total": null,
-    "Enter a coupon or Dicode": null,
-    "Enter a coupon or Discount code": null
+    "Also available in:": null,
+    "brand_name": null
 }

@@ -124,7 +124,7 @@ class PDPGallery extends PureComponent {
                 { galleryOverlay }
                 { this.renderCrumbs() }
                 { this.renderWishlistIcon() }
-                <button onClick={ this.renderGalleryOverlay }>
+                <button block="PDPGallery" elem="OverlayButton" onClick={ this.renderGalleryOverlay }>
                     { this.renderSlider() }
                 </button>
             </div>
