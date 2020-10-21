@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-bind */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
@@ -11,7 +12,10 @@ import './MenuCategory.style';
 class MenuCategory extends PureComponent {
     static propTypes = {
         data: PropTypes.arrayOf(CategoryData).isRequired,
-        label: PropTypes.string.isRequired
+        categoryKey: PropTypes.string.isRequired,
+        label: PropTypes.string.isRequired,
+        isDefaultCategoryOpen: PropTypes.bool.isRequired,
+        closeDefaultCategory: PropTypes.func.isRequired
     };
 
     state = {
@@ -23,23 +27,27 @@ class MenuCategory extends PureComponent {
 
     onLeave = this.handleHover.bind(this, false);
 
-    componentDidMount() {
-        const { label } = this.props;
-
-        if (label === 'New In' && isMobile.any()) {
-            this.handleHover(true);
-        }
-    }
-
     handleHover(isVisible) {
         this.setState({ isVisible });
     }
 
     renderDynamicContent() {
         const { isVisible } = this.state;
-        const { data } = this.props;
+        const {
+            data,
+            isDefaultCategoryOpen,
+            categoryKey
+        } = this.props;
 
         if (!isVisible) {
+            if (categoryKey === 'new_in' && isDefaultCategoryOpen && isMobile.any()) {
+                return (
+                    <MenuDynamicContent
+                      content={ data }
+                    />
+                );
+            }
+
             return null;
         }
 
@@ -60,8 +68,53 @@ class MenuCategory extends PureComponent {
         );
     }
 
+    renderMobileLabel() {
+        const { label, closeDefaultCategory } = this.props;
+
+        return (
+            <div block="MenuCategory" elem="CategoryLabel">
+                <button
+                  block="MenuCategory"
+                  elem="CategoryButton"
+                  onClick={ () => {
+                      closeDefaultCategory();
+                  } }
+                >
+                    { label }
+                </button>
+            </div>
+        );
+    }
+
     render() {
         const { isVisible, isArabic } = this.state;
+        const { isDefaultCategoryOpen, categoryKey } = this.props;
+
+        if (isMobile.any()) {
+            if (categoryKey === 'new_in') {
+                return (
+                    <div
+                      mix={ { block: 'MenuCategory', mods: { isArabic, isVisible, isDefaultCategoryOpen } } }
+                      onMouseEnter={ this.onEnter }
+                      onMouseLeave={ this.onLeave }
+                    >
+                        { this.renderMobileLabel() }
+                        { this.renderDynamicContent() }
+                    </div>
+                );
+            }
+
+            return (
+                <div
+                  mix={ { block: 'MenuCategory', mods: { isArabic, isVisible } } }
+                  onMouseEnter={ this.onEnter }
+                  onMouseLeave={ this.onLeave }
+                >
+                    { this.renderMobileLabel() }
+                    { this.renderDynamicContent() }
+                </div>
+            );
+        }
 
         return (
             <div

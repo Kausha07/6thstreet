@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import MyAccountOverlay from 'Component/MyAccountOverlay';
 import { isArabic } from 'Util/App';
 import { isSignedIn } from 'Util/Auth';
 import history from 'Util/History';
@@ -19,7 +20,9 @@ class LoginBlock extends PureComponent {
 
     state = {
         isOpen: true,
-        isArabic: isArabic()
+        isArabic: isArabic(),
+        showPopup: false,
+        registerField: false
     };
 
     handleDismiss = () => {
@@ -79,6 +82,39 @@ class LoginBlock extends PureComponent {
         );
     }
 
+    closePopup = () => {
+        this.setState({ showPopup: false, registerField: false });
+    };
+
+    showPopup = () => {
+        this.setState({ showPopup: true, registerField: false });
+    };
+
+    showRegisterPopup = () => {
+        this.setState({ showPopup: true, registerField: true });
+    };
+
+    setRegisterFieldFalse = () => {
+        this.setState({ registerField: false });
+    };
+
+    renderMyAccountPopup() {
+        const { showPopup, registerField } = this.state;
+
+        if (!showPopup) {
+            return null;
+        }
+
+        return (
+            <MyAccountOverlay
+              setRegisterFieldFalse={ this.setRegisterFieldFalse }
+              registerField={ registerField }
+              closePopup={ this.closePopup }
+              isPopup
+            />
+        );
+    }
+
     renderButtons() {
         const { isSignedIn } = this.props;
         const { isArabic } = this.state;
@@ -96,17 +132,18 @@ class LoginBlock extends PureComponent {
         return (
             <div mix={ { block: 'LoginBlock', elem: 'ButtonContainer' } }>
                 <button
-                  onClick={ this.routeChangeAccount }
+                  onClick={ this.showRegisterPopup }
                   mix={ { block: 'LoginBlock', elem: 'CreateButton secondary', mods: { isArabic } } }
                 >
                     Create Account
                 </button>
                 <button
-                  onClick={ this.routeChangeAccount }
+                  onClick={ this.showPopup }
                   mix={ { block: 'LoginBlock', elem: 'LoginButton primary', mods: { isArabic } } }
                 >
                     Sign in
                 </button>
+                { this.renderMyAccountPopup() }
             </div>
         );
     }

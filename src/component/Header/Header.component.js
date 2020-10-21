@@ -22,7 +22,8 @@ export class Header extends PureComponent {
     };
 
     state = {
-        isArabic: isArabic()
+        isArabic: isArabic(),
+        isMobile: isMobile.any() || isMobile.tablet()
     };
 
     headerSections = [
@@ -44,29 +45,23 @@ export class Header extends PureComponent {
     };
 
     renderBackToShoppingButton() {
-        const { isArabic } = this.state;
-
-        if (isMobile.any() || isMobile.tablet()) {
-            return (
-                <a href="/">
-                <div
-                  block="CheckoutHeader"
-                  elem="BackToShopping"
-                  mods={ { isArabic } }
-                >
-                    <button block="BackMobileButton">
-                        { ' ' }
-                    </button>
-                </div>
-                </a>
-            );
-        }
-
         return (
+            <>
+            <a href="/">
+            <div
+              block="CheckoutHeader"
+              elem="BackToShoppingMobile"
+              mods={ { isArabic } }
+            >
+                <button block="BackMobileButton">
+                    { ' ' }
+                </button>
+            </div>
+            </a>
             <a href="/">
                 <div
                   block="CheckoutHeader"
-                  elem="BackToShopping"
+                  elem="BackToShoppingDesktop"
                   mods={ { isArabic } }
                 >
                     <button
@@ -76,6 +71,7 @@ export class Header extends PureComponent {
                     </button>
                 </div>
             </a>
+            </>
         );
     }
 
@@ -99,7 +95,8 @@ export class Header extends PureComponent {
     }
 
     renderCheckoutHeder() {
-        if (isMobile.any() || isMobile.tablet()) {
+        const { isMobile } = this.state;
+        if (isMobile) {
             return this.renderBackToShoppingButton();
         }
 

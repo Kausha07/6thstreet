@@ -1,0 +1,47 @@
+.MyAccountStoreCredit {
+    &-Balance {
+        padding-bottom: 45px;
+    }
+
+    &-BalanceText {
+        font-family: 'Avenir Next Regular', serif;
+        font-size: 16px;
+        margin-right: 5px;
+    }
+
+    &-BalanceAmount {
+        font-family: 'Avenir Next Bold', serif;
+        font-size: 16px;
+    }
+
+    &-BlockTitle {
+        font-size: 22px;
+        padding-bottom: 22px;
+    }
+
+    table {
+        width: 60%;
+        table-layout: auto;
+        margin-bottom: 25px;
+
+        th {
+            font-family: 'Avenir Next Medium', serif;
+            font-weight: normal;
+        }
+
+        th,
+        td {
+            padding: 0 5px 15px 0;
+            font-size: 14px;
+            min-width: auto;
+        }
+
+        td {
+            font-family: 'Avenir Next Regular', serif;
+        }
+
+        tr {
+            background: none;
+        }
+    }
+}

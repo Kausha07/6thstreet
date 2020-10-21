@@ -22,17 +22,23 @@ class MyAccountMyWishlist extends PureComponent {
     }
 
     renderNoItems() {
-        return 'no items in wishlist';
+        return (
+            <p>
+                { __('You have no items in your wish list.') }
+            </p>
+        );
     }
 
     renderItem = (item) => {
         const { product, wishlist_item_id } = item;
 
         return (
-            <ProductItem
-              key={ wishlist_item_id }
-              product={ product }
-            />
+            <div block="MyAccountMyWishlist" elem="Item">
+                <ProductItem
+                  key={ wishlist_item_id }
+                  product={ product }
+                />
+            </div>
         );
     };
 

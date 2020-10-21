@@ -67,6 +67,10 @@
                     margin-left: 0;
                     padding: 0 5px;
                 }
+
+                &_isArabic {
+                    direction: ltr;
+                }
             }
         }
     }

@@ -1,6 +1,6 @@
 import CheckoutShipping from 'Component/CheckoutShipping';
+import Loader from 'Component/Loader';
 import { Checkout as SourceCheckout } from 'SourceRoute/Checkout/Checkout.component';
-import isMobile from 'Util/Mobile';
 
 import './Checkout.style';
 
@@ -8,8 +8,7 @@ export class Checkout extends SourceCheckout {
     renderTitle() {
         const { checkoutStep } = this.props;
 
-        if (isMobile.any() || isMobile.tablet()) {
-            return (
+        return (
                 <div block="CheckoutNavigation">
                   <div block="CheckoutNavigation" elem="FirstColumn">
                     <div
@@ -41,10 +40,12 @@ export class Checkout extends SourceCheckout {
                     </span>
                   </div>
                 </div>
-            );
-        }
+        );
+    }
 
-        return null;
+    renderLoader() {
+        const { isLoading } = this.props;
+        return <Loader isLoading={ isLoading } />;
     }
 
     renderShippingStep() {
@@ -53,7 +54,8 @@ export class Checkout extends SourceCheckout {
             onShippingEstimationFieldsChange,
             saveAddressInformation,
             isDeliveryOptionsLoading,
-            email
+            email,
+            checkoutTotals
         } = this.props;
 
         return (
@@ -63,6 +65,7 @@ export class Checkout extends SourceCheckout {
               saveAddressInformation={ saveAddressInformation }
               onShippingEstimationFieldsChange={ onShippingEstimationFieldsChange }
               guestEmail={ email }
+              totals={ checkoutTotals }
             />
         );
     }

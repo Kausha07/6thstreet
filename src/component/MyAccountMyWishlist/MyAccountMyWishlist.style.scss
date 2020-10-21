@@ -1,3 +1,141 @@
 .MyAccountMyWishlist {
-    
+    margin: 20px 0px 150px 0px;
+
+    &-Empty {
+        h2 {
+            font-family: "Avenir Next Regular";
+            font-size: 30px;
+            font-weight: 600;
+            letter-spacing: -0.83px;
+            line-height: 20px;
+            text-align: center;
+            text-transform: unset;
+        }
+        
+        span {
+            background: linear-gradient(225deg, #FF8960 0%, #FF62A5 100%);
+        }
+    }
+
+    &-Items {
+        display: grid;
+        grid-template-columns: 48% 48%;
+        grid-column-gap: 1.8%;
+
+        @include after-mobile {
+            grid-template-columns: 32.66% 32.66% 32.66%;
+            grid-column-gap: 2%;
+            grid-row-gap: 65px;
+        }
+    }
+
+    &-Item {
+        overflow: hidden;
+        width: 100%;
+        text-align: center;
+        font-family: 'Avenir Next Regular';
+        
+        li::before {
+            content: '';
+        }
+        
+        a {
+            text-decoration: none;
+        }
+
+        .ProductItem {
+            padding: 0;
+
+            &-Brand {
+                font-family: 'Avenir Next Bold';
+                margin-bottom: 0px;
+                font-size: 12px;
+                letter-spacing: 0.2px;
+                line-height: 16px;
+                
+                @include desktop {
+                    font-size: 15px;
+                    line-height: 20px;
+                    letter-spacing: 0.25px;
+                }
+            }
+
+            &-Title {
+                font-size: 13px;
+                letter-spacing: 0;
+                line-height: 15px;
+                white-space: nowrap; 
+                overflow: hidden;
+                text-overflow: ellipsis; 
+                color: var(--Tundora);
+                margin: 1.4px 0 6px 0;
+
+                @include desktop {
+                    font-size: 15px;
+                }
+            }
+            
+            .WishlistIcon {
+                top: 4%;
+                right: 6%;
+                height: 7.7%;
+                width: 11.96%;
+
+                &-Icon {
+                    height: 90%;
+                    width: 90%;
+                    background-size: 90%;
+                    left: 11%;
+                    top: 8%;
+                }
+
+                @include desktop {
+                    height: 8.28%;
+                    width: 11.96%;
+                }
+            }
+
+            .Image {
+                &-Image {
+                    object-fit: cover;
+                }
+            }
+
+            .Price {
+                display: flex;
+                justify-content: center;
+                position: relative;
+                font-weight: 600;
+                font-size: 13px;
+            
+                &-Special,
+                &-Discount {
+                    display: none;
+                    
+                    &_discount {
+                        display: inline;
+                        color: var(--Cardinal);
+                    }
+                }
+
+                &-Base {
+                    &_discount {
+                        font-size: 12px;
+                        margin-right: 10px;
+                    }
+                }
+
+                @include desktop {
+                    font-size: 16px;
+
+                    &-Base {
+                        &_discount {
+                            font-size: 11px;
+                            margin-right: 20px;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
