@@ -12,7 +12,7 @@ export const mapDispatchToProps = (dispatch) => ({
 });
 
 export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
-    selectPaymentMethod({ m_code: code }) {
+    selectPaymentMethod({ code }) {
         const {
             onPaymentMethodSelect,
             setOrderButtonEnableStatus,

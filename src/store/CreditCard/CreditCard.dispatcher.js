@@ -5,12 +5,12 @@ import {
 export class CreditCardDispatcher {
     /* eslint-disable-next-line */
     async addNewCreditCard(dispatch, data) {
-        const { number, expData, cvv } = data;
+        const { number, expDate, cvv } = data;
 
         return addNewCreditCard({
             number,
-            expiryMonth: expData.substr('0', '2'),
-            expiryyear: expData.substr('3', '5'),
+            expiryMonth: expDate.substr('0', '2'),
+            expiryyear: expDate.substr('3', '5'),
             cvv
         });
     }

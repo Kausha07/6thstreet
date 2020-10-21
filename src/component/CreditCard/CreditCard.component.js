@@ -1,9 +1,6 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-import Field from 'Component/Field';
-import Form from 'Component/Form';
-
 import './CreditCard.style';
 
 class CreditCard extends PureComponent {
@@ -11,41 +8,66 @@ class CreditCard extends PureComponent {
         onCreditCardAdd: PropTypes.func.isRequired
     };
 
-    renderCreditCardForm() {
-        const { onCreditCardAdd } = this.props;
+    state = {
+        number: '',
+        expDate: '',
+        cvv: ''
+    };
 
+    handleNumberChange = (e) => {
+        this.setState({ number: e.target.value });
+    };
+
+    handleExpDateChange = (e) => {
+        this.setState({ expDate: e.target.value });
+    };
+
+    handleCvvChange = (e) => {
+        this.setState({ cvv: e.target.value });
+    };
+
+    handleClick = () => {
+        const { onCreditCardAdd } = this.props;
+        const { cvv, expDate, number } = this.state;
+
+        onCreditCardAdd({ cvv, expDate, number });
+    };
+
+    renderCreditCardForm() {
         return (
-            <Form
-              onSubmitSuccess={ onCreditCardAdd }
-            >
-                <Field
+            <>
+                <input
                   type="text"
                   placeholder="Card number"
                   id="number"
                   name="number"
+                  onChange={ this.handleNumberChange }
                   validation={ ['notEmpty'] }
                 />
-                <Field
+                <input
                   type="text"
                   placeholder="Expiration Date"
                   id="expData"
                   name="expData"
+                  onChange={ this.handleExpDateChange }
                   validation={ ['notEmpty'] }
                 />
-                <Field
+                <input
                   type="text"
                   placeholder="CVV"
                   id="cvv"
                   name="cvv"
+                  onChange={ this.handleCvvChange }
                   validation={ ['notEmpty'] }
                 />
                 <button
                   block="Button"
-                  type="submit"
+                  type="button"
+                  onClick={ this.handleClick }
                 >
                     { __('Add credit cart') }
                 </button>
-            </Form>
+            </>
         );
     }
 
