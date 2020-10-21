@@ -20,7 +20,6 @@ export const mapDispatchToProps = (dispatch) => ({
     estimateShipping: (address) => CheckoutDispatcher.estimateShipping(dispatch, address),
     saveAddressInformation: (address) => CheckoutDispatcher.saveAddressInformation(dispatch, address),
     createOrder: (code, additional_data) => CheckoutDispatcher.createOrder(dispatch, code, additional_data),
-    getPaymentMethods: () => CheckoutDispatcher.getPaymentMethods(),
     setCartId: (cartId) => dispatch(setCartId(cartId)),
     createEmptyCart: () => CartDispatcher.getCart(dispatch)
 });
@@ -75,7 +74,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     }
 
     async saveAddressInformation(addressInformation) {
-        const { getPaymentMethods, saveAddressInformation } = this.props;
+        const { saveAddressInformation } = this.props;
         const { shipping_address } = addressInformation;
 
         this.setState({
@@ -85,7 +84,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
         saveAddressInformation(addressInformation).then(
             ({ data }) => {
-                const { totals } = data;
+                const { payment_methods, totals } = data;
 
                 BrowserDatabase.setItem(
                     totals,
@@ -94,31 +93,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                 );
 
                 this.setState({
+                    isLoading: false,
+                    paymentMethods: payment_methods,
+                    checkoutStep: BILLING_STEP,
                     paymentTotals: totals
-                })
-            },
-            this._handleError
-        );
-
-        getPaymentMethods().then(
-            ({ data }) => {
-                const availablePaymentMethods = data.reduce((acc, paymentMethod) => {
-                    const { is_enabled } = paymentMethod;
-                    
-                    if (is_enabled) {
-                        acc.push(paymentMethod);
-                    }
-
-                    return acc;
-                }, []);
-
-                if (data) {
-                    this.setState({
-                        isLoading: false,
-                        paymentMethods: availablePaymentMethods,
-                        checkoutStep: BILLING_STEP
-                    })
-                }
+                });
             },
             this._handleError
         );

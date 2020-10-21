@@ -1,0 +1,62 @@
+.CheckoutShipping {
+	&-Button {
+		@include desktop {
+			height: 60px;
+		}
+	}
+}
+
+.CheckoutShippingStep {
+	background: var(--white);
+	margin-top: 20px;
+
+	&-DeliveryButton {
+		padding: 30px;
+		background: var(--white);
+
+		button.primary {
+			height: 50px;
+			width: 250px;
+			font-family: "Avenir Next Bold";
+			font-size: 13px;
+			font-weight: bold;
+			letter-spacing: 0;
+			line-height: 18px;
+			text-align: center;
+		}
+
+		@include before-desktop {
+			display: none;
+		}
+	}
+
+	&_isArabic {
+		.Field {
+			&_type {
+				&_toggle {
+					padding-right: 20px;
+					label {
+						padding-right: 10px;
+					}
+
+					@include desktop {
+						padding-right: 30px;
+					}
+				}
+			}
+		}
+	}
+}
+
+.CheckoutAddressBook {
+	margin-bottom: 0;
+}
+.CheckoutDeliveryOptions {
+	display: none;
+
+	.Checkout {
+		&-Heading {
+			display: none;
+		}
+	}
+}
