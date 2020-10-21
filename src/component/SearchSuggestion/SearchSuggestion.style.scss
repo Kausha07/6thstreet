@@ -1,6 +1,8 @@
 root {
     --black: #000;
     --charcoal: #4a4a4a;
+    --gray: #f0f0f0;
+    --dark-gray: #4a4a4a;
 }
 
 .SearchSuggestion {
@@ -14,6 +16,62 @@ root {
     padding: 20px 40px;
     font-family: 'Avenir Next Regular';
     vertical-align: middle;
+    display: block;
+    padding-top: 0;
+
+    @include before-desktop {
+        height: 100vh;
+        margin-left: -20px;
+    }
+
+    .TrandingTags,
+    .TrandingBrands {
+        ul {
+            display: flex;
+        }
+
+        li {
+            margin-top: 0;
+            margin-right: 5px;
+        }
+    }
+
+    .TrandingTags {
+        margin: 0;
+    }
+
+
+    &-TrandingImg {
+        width: 70px;
+        height: 70px;
+        border: 2px solid rgba(249, 100, 70, 0.3);
+        border-radius: 45px;
+        margin: 0;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+
+        img {
+            border-radius: 45px;
+        }
+    }
+
+    &-TrandingTag {
+        margin: 0;
+        height: 30px;
+        background: var(--gray);
+        color: var(--dark-gray);
+        width: auto;
+        padding: 5px 10px;
+        border-radius: 15px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        &:first-letter {
+            font-weight: normal;
+        }
+    }
 
     ul {
         :before {
@@ -32,6 +90,12 @@ root {
             width: 100%;
             display: block;
 
+            @include before-desktop {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
             span {
                 position: absolute;
                 right: 0;
@@ -48,10 +112,16 @@ root {
         font-size: 17px;
         text-transform: none;
         margin: 0;
+
+        @include before-desktop {
+            color: black;
+            text-transform: uppercase;
+        }
     }
 
     div:first-child {
         margin-bottom: 30px;
+        margin-top: 15px;
     }
 
     &_isArabic {

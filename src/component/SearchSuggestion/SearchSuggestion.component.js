@@ -100,7 +100,10 @@ class SearchSuggestion extends PureComponent {
     renderTrendingBrand = ({ label, image_url }) => (
         <li>
             <Link to={ `/brands/${ label }` }>
-                { label }
+                <div block="SearchSuggestion" elem="TrandingImg">
+                    <img src={ image_url } alt="Trending" />
+                    { label }
+                </div>
             </Link>
         </li>
     );
@@ -109,16 +112,21 @@ class SearchSuggestion extends PureComponent {
         const { trendingBrands } = this.props;
 
         return (
+            <div block="TrandingBrands">
+            <h2>{ __('Tranding brands') }</h2>
             <ul>
                 { trendingBrands.map(this.renderTrendingBrand) }
             </ul>
+            </div>
         );
     }
 
     renderTrendingTag = ({ link, label }) => (
         <li>
             <Link to={ { pathname: link } }>
+                <div block="SearchSuggestion" elem="TrandingTag">
                 { label }
+                </div>
             </Link>
         </li>
     );
@@ -127,9 +135,12 @@ class SearchSuggestion extends PureComponent {
         const { trendingTags } = this.props;
 
         return (
+            <div block="TrandingTags">
+                <h2>{ __('Tranding tags') }</h2>
             <ul>
                 { trendingTags.map(this.renderTrendingTag) }
             </ul>
+            </div>
         );
     }
 

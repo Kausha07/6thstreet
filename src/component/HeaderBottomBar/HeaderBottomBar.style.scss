@@ -16,6 +16,12 @@
         display: none;
     }
 
+    //.HeaderSearch {
+    //    @include before-desktop {
+    //        display: none;
+    //    }
+    //}
+
     div.HeaderSearch div.SearchSuggestion {
         display: none;
     }
@@ -34,6 +40,11 @@
             z-index: -1;
             pointer-events: none;
             top: 159px;
+
+            @include before-desktop {
+                margin-left: -20px;
+                height: 100vh;
+            }
         }
     }
 
@@ -52,10 +63,6 @@
             top: 0;
             width: 100%;
             z-index: 1;
-
-            .HeaderSearch-Container {
-                display: flex;
-            }
 
             .FooterMain {
                 background-color: var(--white);
