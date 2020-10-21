@@ -27,7 +27,7 @@
         }
 
         &-CategoryButton {
-            width: 40%;
+            width: 35%;
             font-size: calc(9px + 1vw);
             text-align: left;
             margin-left: -20px;
@@ -35,8 +35,12 @@
         }
 
         &:first-child {
-            color: var(--gold);
-            margin-top: 0;
+            .MenuCategory {
+                &-CategoryButton {
+                    color: var(--gold);
+                    margin-top: 0;
+                }
+            }
         }
 
         &:last-child {
@@ -48,10 +52,13 @@
         }
 
         &_isDefaultCategoryOpen {
-            .MenuCategory {
-                &-CategoryButton {
-                    background-color: var(--gold);
-                    font-family: 'Avenir Next Bold', serif;
+            &:first-child {
+                .MenuCategory {
+                    &-CategoryButton {
+                        color: white;
+                        background-color: var(--gold);
+                        font-family: 'Avenir Next Bold', serif;
+                    }
                 }
             }
 
