@@ -1,4 +1,3 @@
-// import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import AppConfigDispatcher from 'Store/AppConfig/AppConfig.dispatcher';
@@ -13,16 +12,5 @@ export const mapStateToProps = (state) => ({
 export const mapDispatchToProps = (dispatch) => ({
     getCities: (locale) => AppConfigDispatcher.getCities(dispatch, locale)
 });
-
-// class MyAccountAddressFormContainer extends PureComponent {
-//     render() {
-//         console.log('------------------------------');
-//         return (
-//             <MyAccountAddressForm
-//               { ...this.props }
-//             />
-//         );
-//     }
-// }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyAccountAddressForm);
