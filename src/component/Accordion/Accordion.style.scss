@@ -1,0 +1,17 @@
+.Accordion {
+    &-Heading {
+        align-items: center;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    &-Expand {
+        font-family: var(--avenir-regular-font);
+        font-weight: 24px;
+        font-weight: normal;
+
+        @include desktop {
+            font-size: 30px;
+        }
+    }
+}

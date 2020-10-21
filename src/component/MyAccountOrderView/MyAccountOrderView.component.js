@@ -2,10 +2,13 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import { formatPrice } from '@6thstreetdotcom/algolia-sdk/app/utils/filters';
+import Accordion from 'Component/Accordion';
 import Loader from 'Component/Loader';
-import { STATUS_FAILED } from 'Component/MyAccountOrderListItem/MyAccountOrderListItem.config';
+import { STATUS_FAILED, STATUS_SUCCESS } from 'Component/MyAccountOrderListItem/MyAccountOrderListItem.config';
 import MyAccountOrderViewItem from 'Component/MyAccountOrderViewItem';
 import { OrderType } from 'Type/API';
+import { appendOrdinalSuffix } from 'Util/Common';
+import { formatDate } from 'Util/Date';
 
 import './MyAccountOrderView.style';
 
@@ -34,7 +37,6 @@ class MyAccountOrderView extends PureComponent {
                 <h3>{ title }</h3>
                 <p>{ `${ firstname } ${ middlename || '' } ${ lastname }`.trim() }</p>
                 <p>{ `${ street } ${ postcode }` }</p>
-                { /* TODO: Get country name */ }
                 <p>{ `${ city } - ${ getCountryNameById(country_id) }` }</p>
                 <p>{ `${ telephone }` }</p>
             </div>
@@ -56,18 +58,52 @@ class MyAccountOrderView extends PureComponent {
     }
 
     renderStatus() {
-        const { order: { status } } = this.props;
+        const { order: { status, created_at } } = this.props;
 
         if (STATUS_FAILED.includes(status)) {
             return (
-                <p block="MyAccountOrderView" elem="Status" mods={ { failed: true } }>
+                <p block="MyAccountOrderView" elem="StatusFailed">
                     { /* Some statuses are written with _ so they need to be splitted and joined */ }
                     { `${ status.split('_').join(' ') }` }
                 </p>
             );
         }
 
-        return null;
+        return (
+            <div block="MyAccountOrderView" elem="Status">
+                <p
+                  block="MyAccountOrderView"
+                  elem="StatusTitle"
+                  mods={ { isSuccess: STATUS_SUCCESS.includes(status) } }
+                >
+                    { __('Status: ') }
+                    <span>{ `${ status.split('_').join(' ') }` }</span>
+                </p>
+                <p block="MyAccountOrderView" elem="StatusDate">
+                    { __('Order placed: ') }
+                    <span>{ formatDate('DD MMM YYYY', new Date(created_at)) }</span>
+                </p>
+            </div>
+        );
+    }
+
+    renderAccordions() {
+        const { order: { shipped } } = this.props;
+        const itemNumber = shipped.length;
+
+        return (
+            <div block="MyAccountOrderView" elem="Accordions">
+                { shipped.map((item, index) => (
+                    <Accordion
+                      key={ item.shipment_number }
+                      mix={ { block: 'MyAccountOrderView', elem: 'Accordion' } }
+                      title={ __('%s Package', appendOrdinalSuffix(itemNumber - index)) }
+                    >
+                        { item.items.map(this.renderItem) }
+                    </Accordion>
+                )) }
+            </div>
+        );
     }
 
     renderFailedOrderDetails() {
@@ -154,6 +190,7 @@ class MyAccountOrderView extends PureComponent {
                 <Loader isLoading={ isLoading } />
                 { this.renderTitle() }
                 { this.renderStatus() }
+                { this.renderAccordions() }
                 { this.renderFailedOrderDetails() }
                 { this.renderSummary() }
                 { this.renderAddress(__('Billing Address'), billing_address) }

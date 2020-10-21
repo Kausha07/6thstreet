@@ -1,6 +1,6 @@
 .MyAccountOrderView {
     &-Status {
-        &_failed {
+        &Failed {
             background: var(--color-failed);
             color: var(--white);
             font-family: var(--avenir-medium-font);
@@ -10,6 +10,27 @@
             text-align: center;
             text-transform: capitalize;
             width: 100%;
+        }
+
+        &Title,
+        &Date {
+            span {
+                color: var(--black);
+                font-family: var(--avenir-medium-font);
+                font-weight: bold;
+                text-transform: capitalize;
+            }
+
+            &_isSuccess {
+                span {
+                    color: var(--color-green-cyan);
+                }
+            }
+        }
+
+        p {
+            color: var(--color-light-gray);
+            margin: 0;
         }
     }
 
