@@ -1,12 +1,12 @@
-import { SearchOverlay } from '@scandipwa/scandipwa/src/component/SearchField/SearchField.component';
 import PropTypes from 'prop-types';
-import { PureComponent, Suspense } from 'react';
+import { PureComponent } from 'react';
 
 import Field from 'Component/Field';
 import Form from 'Component/Form';
-import Loader from 'Component/Loader';
 import SearchSuggestion from 'Component/SearchSuggestion';
 import { isArabic } from 'Util/App';
+
+import Clear from './icons/close-black.png';
 
 import './HeaderSearch.style';
 
@@ -15,60 +15,26 @@ class HeaderSearch extends PureComponent {
         search: PropTypes.string,
         onSearchChange: PropTypes.func.isRequired,
         onSearchSubmit: PropTypes.func.isRequired,
-        isVisible: PropTypes.bool,
-        onClearSearchButtonClick: PropTypes.func.isRequired,
-        searchCriteria: PropTypes.string
+        onSearchClean: PropTypes.func.isRequired,
+        isVisible: PropTypes.bool
     };
 
     static defaultProps = {
         search: '',
-        isVisible: true,
-        searchCriteria: ''
+        isVisible: true
     };
 
     state = {
         isArabic: isArabic()
     };
 
-    clearSearch = () => {
-        this.onClearSearchButtonClick(false);
-    };
-
-    onClearSearchButtonClick(isFocusOnSearchBar = true) {
-        const { onClearSearchButtonClick } = this.props;
-        if (isFocusOnSearchBar) {
-            this.searchBarRef.current.focus();
-        }
-        onClearSearchButtonClick();
-    }
-
-    renderClearSearch() {
-        const { isVisible } = this.props;
-
-        return (
-            <button
-              block="Header"
-              elem="Button"
-              onClick={ this.onClearSearchButtonClick }
-              mods={ {
-                  type: 'searchClear',
-                  isVisible
-              } }
-              aria-label="Clear search"
-            />
-        );
-    }
-
-    renderOverlayFallback() {
-        return <Loader isLoading />;
-    }
-
     renderField() {
         const {
             search,
             onSearchChange,
             onSearchSubmit,
-            searchCriteria
+            isVisible,
+            onSearchClean
         } = this.props;
 
         return (
@@ -84,9 +50,17 @@ class HeaderSearch extends PureComponent {
                   onChange={ onSearchChange }
                   value={ search }
                 />
-                <Suspense fallback={ this.renderOverlayFallback() }>
-                    <SearchOverlay clearSearch={ this.clearSearch } searchCriteria={ searchCriteria } />
-                </Suspense>
+                <button
+                  elem="Clear"
+                  onClick={ onSearchClean }
+                  mods={ {
+                      type: 'searchClear',
+                      isVisible
+                  } }
+                  aria-label="Clear search"
+                >
+                    <img src={ Clear } alt="Clear button" />
+                </button>
             </Form>
         );
     }

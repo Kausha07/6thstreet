@@ -31,7 +31,8 @@ export class HeaderSearchContainer extends PureComponent {
 
     containerFunctions = {
         onSearchChange: this.onSearchChange.bind(this),
-        onSearchSubmit: this.onSearchSubmit.bind(this)
+        onSearchSubmit: this.onSearchSubmit.bind(this),
+        onSearchClean: this.onSearchClean.bind(this)
     };
 
     containerProps = () => {
@@ -47,6 +48,10 @@ export class HeaderSearchContainer extends PureComponent {
         const { history } = this.props;
         const { search } = this.state;
         history.push(`/catalogsearch/result/?q=${ search }`);
+    }
+
+    onSearchClean() {
+        this.setState({ search: '' });
     }
 
     render() {

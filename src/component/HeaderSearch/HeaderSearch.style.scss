@@ -15,6 +15,18 @@
         padding: 15px 20px 0;
     }
 
+    &-Clear {
+        display: none;
+
+        @include before-desktop {
+            width: 40px;
+            height: auto;
+            right: 0;
+            top: 10px;
+            display: block;
+        }
+    }
+
     &-Container {
         height: auto;
         flex-grow: 1;
@@ -46,14 +58,28 @@
         }
     }
 
-    .Field {
-        margin: 0;
+    .Form {
+        button {
+            display: none;
+        }
 
         @include before-desktop {
             border-radius: 10px;
             background-color: var(--gray);
             height: 36px;
+            display: flex;
+            align-items: center;
+
+            button {
+                width: 45px;
+                height: auto;
+                display: block;
+            }
         }
+    }
+
+    .Field {
+        margin: 0;
 
         input {
             background-image: url('./icons/search-black.png');
@@ -63,11 +89,11 @@
             border: none;
             font-family: 'Avenir Next Regular', Serif;
             font-size: 15px;
-            height: 40px;
             padding-left: 35px;
             text-transform: none;
             width: 100%;
             color: black;
+            height: 36px;
 
             &::placeholder {
                 color: $black;
@@ -79,7 +105,6 @@
         #search-field {
             background-position: right;
             padding-right: 25px;
-            margin-right: 20px;
         }
     }
 }

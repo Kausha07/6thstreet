@@ -16,12 +16,6 @@
         display: none;
     }
 
-    .HeaderSearch {
-        @include before-desktop {
-            display: none;
-        }
-    }
-
     div.HeaderSearch div.SearchSuggestion {
         display: none;
     }
