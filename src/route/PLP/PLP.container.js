@@ -3,25 +3,39 @@ import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
+import { setGender } from 'Store/AppState/AppState.action';
+import { changeNavigationState } from 'Store/Navigation/Navigation.action';
+import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
 import { setPLPLoading } from 'Store/PLP/PLP.action';
 import PLPDispatcher from 'Store/PLP/PLP.dispatcher';
-import { Pages, RequestedOptions } from 'Util/API/endpoint/Product/Product.type';
+import { Filters, Pages, RequestedOptions } from 'Util/API/endpoint/Product/Product.type';
 import WebUrlParser from 'Util/API/helper/WebUrlParser';
 
 import PLP from './PLP.component';
+
+export const BreadcrumbsDispatcher = import(
+    /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
+    'Store/Breadcrumbs/Breadcrumbs.dispatcher'
+);
 
 export const mapStateToProps = (state) => ({
     gender: state.AppState.gender,
     locale: state.AppState.locale,
     requestedOptions: state.PLP.options,
     isLoading: state.PLP.isLoading,
-    pages: state.PLP.pages
+    pages: state.PLP.pages,
+    filters: state.PLP.filters
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
     requestProductList: (options) => PLPDispatcher.requestProductList(options, dispatch, state),
     requestProductListPage: (options) => PLPDispatcher.requestProductListPage(options, dispatch),
-    setIsLoading: (isLoading) => dispatch(setPLPLoading(isLoading))
+    setIsLoading: (isLoading) => dispatch(setPLPLoading(isLoading)),
+    updateBreadcrumbs: (breadcrumbs) => {
+        BreadcrumbsDispatcher.then(({ default: dispatcher }) => dispatcher.update(breadcrumbs, dispatch));
+    },
+    changeHeaderState: (state) => dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, state)),
+    setGender: (gender) => dispatch(setGender(gender))
 });
 
 export class PLPContainer extends PureComponent {
@@ -33,7 +47,11 @@ export class PLPContainer extends PureComponent {
         isLoading: PropTypes.bool.isRequired,
         setIsLoading: PropTypes.func.isRequired,
         requestedOptions: RequestedOptions.isRequired,
-        pages: Pages.isRequired
+        pages: Pages.isRequired,
+        updateBreadcrumbs: PropTypes.func.isRequired,
+        changeHeaderState: PropTypes.func.isRequired,
+        setGender: PropTypes.func.isRequired,
+        filters: Filters.isRequired
     };
 
     static requestProductList = PLPContainer.request.bind({}, false);
@@ -131,9 +149,21 @@ export class PLPContainer extends PureComponent {
         return JSON.stringify(requestedRestOptions) !== JSON.stringify(restOptions);
     }
 
-    containerProps = () => ({
-        // isDisabled: this._getIsDisabled()
-    });
+    containerProps = () => {
+        const {
+            updateBreadcrumbs,
+            changeHeaderState,
+            setGender,
+            filters
+        } = this.props;
+
+        return {
+            updateBreadcrumbs,
+            changeHeaderState,
+            setGender,
+            filters
+        };
+    };
 
     render() {
         const { requestedOptions } = this.props;

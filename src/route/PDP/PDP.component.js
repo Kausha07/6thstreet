@@ -6,8 +6,8 @@ import { DEFAULT_STATE_NAME } from 'Component/NavigationAbstract/NavigationAbstr
 import PDPDetailsSection from 'Component/PDPDetailsSection';
 import PDPMainSection from 'Component/PDPMainSection';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
+import WebUrlParser from 'Util/API/helper/WebUrlParser';
 
-// import WebUrlParser from 'Util/API/helper/WebUrlParser';
 // import browserHistory from 'Util/History';
 import './PDP.style';
 
@@ -20,8 +20,8 @@ class PDP extends PureComponent {
     };
 
     state = {
-        categoryLevels: {},
-        firstLoad: true
+        firstLoad: true,
+        productBreadcrumbs: []
     };
 
     componentDidUpdate() {
@@ -45,38 +45,29 @@ class PDP extends PureComponent {
 
     updateBreadcrumbs() {
         const { updateBreadcrumbs, product: { categories, name }, setGender } = this.props;
-        const { categoryLevels } = this.state;
-        console.log(categories, setGender, categoryLevels);
         const categoriesLastLevel = categories[Object.keys(categories)[Object.keys(categories).length - 1]][0]
             .split(' /// ');
 
-        // categoriesLastLevel.map((categoryLevel) => {
-        //     const { categoryLevels } = this.state;
-
-        //     this.setState({
-        //         categoryLevels: {
-        //             ...categoryLevels,
-        //             name: categoryLevel
-        //         }
-        //     });
-
-        //     return categoryLevels;
-        // });
-
         const breadcrumbsMapped = categoriesLastLevel.reduce((acc, categoryLevel) => {
-            console.log(categoryLevel);
             switch (categoryLevel) {
             case categoriesLastLevel[0]:
-                acc.push({ name: categoryLevel, url: '/' });
+                acc.push({
+                    url: '/',
+                    name: categoryLevel,
+                    onClick: setGender
+                });
                 break;
             case categoriesLastLevel[1]:
-                // eslint-disable-next-line max-len
-                acc.push({ name: categoryLevel, url: `/${categoriesLastLevel[0]}/${categoryLevel}.html?q=${categoriesLastLevel[0]}+${categoryLevel}` });
+                acc.push({
+                    url: `/${categoriesLastLevel[0]}/${categoryLevel}.html?q=${categoriesLastLevel[0]}+${categoryLevel}`,
+                    name: categoryLevel
+                });
                 break;
             case categoriesLastLevel[2]:
+                const search = WebUrlParser.setParam('categories_without_path', categoryLevel);
                 acc.push({
-                    name: categoryLevel,
-                    url: `/${categoriesLastLevel[0]}/${categoriesLastLevel[1]}.html?q=${categoriesLastLevel[0]}+${categoriesLastLevel[1]}`
+                    url: `/${categoriesLastLevel[0]}/${categoriesLastLevel[1]}.html?q=${categoriesLastLevel[0]}+${categoriesLastLevel[1]}${search}`,
+                    name: categoryLevel
                 });
                 break;
             default:
@@ -86,8 +77,6 @@ class PDP extends PureComponent {
             return acc;
         }, []);
 
-        console.log(breadcrumbsMapped);
-        this.setState({ categoryLevels: breadcrumbsMapped });
         const breadcrumbs = [
             {
                 url: '',
@@ -101,6 +90,8 @@ class PDP extends PureComponent {
                 name: __('Home')
             }
         ];
+
+        this.setState({ productBreadcrumbs: breadcrumbs });
 
         updateBreadcrumbs(breadcrumbs);
         this.setState({ firstLoad: false });
