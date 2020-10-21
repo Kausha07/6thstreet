@@ -175,11 +175,15 @@
     }
 
     &-Action {
+        height: 90vh;
+        overflow-y: auto;
         display: grid;
         grid-template-rows: max-content 1fr;
 
         &_state {
             &_createAccount {
+                max-height: 830px;
+
                 h4 {
                     padding-right: 1rem;
                     display: inline;
@@ -195,6 +199,8 @@
             }
 
             &_forgotPassword {
+                max-height: 750px;
+
                 h4 {
                     width: initial;
                 }
@@ -448,11 +454,11 @@
                     }
                 }
             }
-        }   
+        }
     }
 
     &-Button {
-        
+
         .Button{
             --button-background: var(--btn-bg-lite-gray-color);
             --button-border:  var(--btn-bg-lite-gray-color);
@@ -541,16 +547,16 @@
     &-Radio{
         display: flex;
         margin-top: 10px;
-        
+
         .Field [type='radio']{
-            
+
             +label {
                 position: relative;
                 height: 14px;
                 width: 14px;
                 margin-right: 6px;
-                
-                
+
+
                 &:hover {
                     &::after {
                             --checkmark-color: var(--black-color);
@@ -558,7 +564,7 @@
                 }
 
                 border-radius: 50%;
-    
+
                 &::after {
                     left: 0;
                     right: 0;
@@ -582,7 +588,7 @@
             }
 
             &:focus {
-                
+
                 + label {
                     &::after {
                         --checkmark-color: var(--black-color);
@@ -623,7 +629,7 @@
 }
 
 .HeaderAccount {
-    &-PopUp { 
+    &-PopUp {
         .MyAccountOverlay {
             .MyAccountOverlay-Action {
                 .Form{
