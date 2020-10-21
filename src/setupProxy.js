@@ -70,4 +70,16 @@ module.exports = (app) => {
             changeOrigin: true
         })
     );
+
+    // Proxy Checkout API (bypass CORS)
+    app.use(
+        '/api2/v2',
+        proxy({
+            target: process.env.REACT_APP_CHECKOUT_COM_API_URL,
+            changeOrigin: true,
+            pathRewrite: {
+                '/api2/v2/': '/'
+            }
+        })
+    );
 };

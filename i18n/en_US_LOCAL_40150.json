@@ -396,5 +396,11 @@
     "Type your address here": null,
     "Postcode": null,
     "AVAILABLE PRODUCTS": null,
-    "Back": null
+    "Back": null,
+    "Add credit cart": null,
+    "Credit card successfully added": null,
+    "Something went wrong": null,
+    "Card number": null,
+    "Expiration Date": null,
+    "CVV": null
 }
