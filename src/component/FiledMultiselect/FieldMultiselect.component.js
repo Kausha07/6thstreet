@@ -17,15 +17,19 @@ class FieldMultiselect extends PureComponent {
         activeFilter: PropTypes.object,
         isChecked: PropTypes.bool,
         changeActiveFilter: PropTypes.func.isRequired,
-        currentActiveFilter: PropTypes.string
+        currentActiveFilter: PropTypes.string,
+        isHidden: PropTypes.bool
     };
 
     static defaultProps = {
         placeholder: '',
         activeFilter: {},
         isChecked: false,
-        currentActiveFilter: ''
+        currentActiveFilter: '',
+        isHidden: false
     };
+
+    filterDropdownRef = createRef();
 
     filterButtonRef = createRef();
 
@@ -50,6 +54,24 @@ class FieldMultiselect extends PureComponent {
 
         return null;
     }
+
+    componentDidMount() {
+        document.addEventListener('mousedown', this.handleClickOutside);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('mousedown', this.handleClickOutside);
+    }
+
+    handleClickOutside = (event) => {
+        const { toggleOptionsList } = this.state;
+
+        if (toggleOptionsList) {
+            if (this.filterDropdownRef && !this.filterDropdownRef.current.contains(event.target)) {
+                this.onBlur();
+            }
+        }
+    };
 
     renderSubcategoryOptions = (option) => {
         const { isArabic } = this.state;
@@ -146,6 +168,10 @@ class FieldMultiselect extends PureComponent {
 
     onCheckboxOptionClick = () => {
         this.filterButtonRef.current.focus();
+
+        this.setState({
+            toggleOptionsList: false
+        });
     };
 
     handleFilterChange = () => {
@@ -163,15 +189,15 @@ class FieldMultiselect extends PureComponent {
 
     onBlur = () => {
         // eslint-disable-next-line no-magic-numbers
-        setTimeout(this.toggelOptionList, 100);
+        this.toggelOptionList();
     };
 
     renderMultiselectContainer() {
         const { toggleOptionsList, isArabic } = this.state;
-        const { placeholder, onChange, filter: { is_radio } } = this.props;
+        const { placeholder, onChange } = this.props;
 
         return (
-            <div block="FieldMultiselect">
+            <div ref={ this.filterDropdownRef } block="FieldMultiselect">
             <button
               ref={ this.filterButtonRef }
               type="button"
@@ -185,7 +211,6 @@ class FieldMultiselect extends PureComponent {
               } }
               onClick={ isMobile.any() ? this.handleFilterChange : null }
               onFocus={ !isMobile.any() ? this.toggelOptionList : null }
-              onBlur={ !isMobile.any() ? this.onBlur : null }
             >
                 { placeholder }
             </button>
@@ -202,7 +227,6 @@ class FieldMultiselect extends PureComponent {
                 <fieldset
                   block="PLPFilter"
                   onChange={ onChange }
-                  onFocus={ !is_radio ? this.onCheckboxOptionClick : null }
                 >
                         { this.renderOptions() }
                 </fieldset>
