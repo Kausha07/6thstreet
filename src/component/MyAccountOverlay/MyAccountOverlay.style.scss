@@ -175,10 +175,10 @@
     }
 
     &-Action {
-        height: 90vh;
-        overflow-y: auto;
         display: grid;
         grid-template-rows: max-content 1fr;
+        height: 100vh;
+        overflow-y: auto;
 
         &_state {
             &_createAccount {
@@ -199,7 +199,7 @@
             }
 
             &_forgotPassword {
-                max-height: 750px;
+                max-height: 740px;
 
                 h4 {
                     width: initial;
@@ -211,6 +211,8 @@
             }
 
             &_signIn {
+                max-height: 626px;
+
                 h4 {
                     text-align: center;
                 }
