@@ -74,7 +74,8 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
 
         setMobileAuthorizationToken(token);
 
-        await CartDispatcher.getCart(dispatch);
+        // Run async otherwise login gets slow
+        CartDispatcher.getCart(dispatch);
     }
 }
 

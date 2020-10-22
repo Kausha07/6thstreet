@@ -61,7 +61,7 @@ export class StoreCreditContainer extends PureComponent {
             newState.creditIsApplied = creditIsApplied;
         }
 
-        return newState.length ? newState : null;
+        return Object.keys(newState).length ? newState : null;
     }
 
     componentDidMount() {
