@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import {
@@ -12,17 +13,24 @@ export const mapDispatchToProps = (dispatch) => ({
 });
 
 export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
+    static propTypes = {
+        ...SourceCheckoutPaymentsContainer.propTypes,
+        setTabbyWebUrl: PropTypes.func.isRequired
+    };
+
     selectPaymentMethod({ m_code: code }) {
         const {
             onPaymentMethodSelect,
             setOrderButtonEnableStatus,
             selectPaymentMethod,
-            billingAddress
+            billingAddress,
+            setTabbyWebUrl
         } = this.props;
 
         this.setState({
             selectedPaymentCode: code
         });
+
         onPaymentMethodSelect(code);
         setOrderButtonEnableStatus(true);
         selectPaymentMethod({ code, billingAddress }).then(
@@ -30,11 +38,11 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
                 if (response.configuration) {
                     const { configuration: { available_products: { installments, pay_later } } } = response;
 
-                    this.setState({
-                        tabby_url: code === 'tabby_installments'
+                    setTabbyWebUrl(
+                        code === 'tabby_installments'
                             ? installments[0].web_url
                             : pay_later[0].web_url
-                    });
+                    );
                 }
             },
             this._handleError
