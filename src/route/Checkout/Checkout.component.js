@@ -30,12 +30,12 @@ export class Checkout extends SourceCheckout {
       }
 
       return (
-    <CheckoutOrderSummary
-      checkoutStep={ checkoutStep }
-      totals={ checkoutTotals }
-      paymentTotals={ paymentTotals }
-      cashOnDeliveryFee={ cashOnDeliveryFee }
-    />
+          <CheckoutOrderSummary
+            checkoutStep={ checkoutStep }
+            totals={ checkoutTotals }
+            paymentTotals={ paymentTotals }
+            cashOnDeliveryFee={ cashOnDeliveryFee }
+          />
       );
   }
 
@@ -92,14 +92,14 @@ export class Checkout extends SourceCheckout {
       } = this.props;
 
       return (
-    <CheckoutBilling
-      setLoading={ setLoading }
-      paymentMethods={ paymentMethods }
-      setDetailsStep={ setDetailsStep }
-      shippingAddress={ shippingAddress }
-      savePaymentInformation={ savePaymentInformation }
-      setCashOnDeliveryFee={ this.setCashOnDeliveryFee }
-    />
+          <CheckoutBilling
+            setLoading={ setLoading }
+            paymentMethods={ paymentMethods }
+            setDetailsStep={ setDetailsStep }
+            shippingAddress={ shippingAddress }
+            savePaymentInformation={ savePaymentInformation }
+            setCashOnDeliveryFee={ this.setCashOnDeliveryFee }
+          />
       );
   }
 
