@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { CARD } from 'Component/CheckoutPayments/CheckoutPayments.config';
@@ -12,6 +13,10 @@ import CartDispatcher from 'Store/Cart/Cart.dispatcher';
 import { CART_ITEMS_CACHE_KEY } from 'Store/Cart/Cart.reducer';
 import CheckoutDispatcher from 'Store/Checkout/Checkout.dispatcher';
 import { updateMeta } from 'Store/Meta/Meta.action';
+import StoreCreditDispatcher from 'Store/StoreCredit/StoreCredit.dispatcher';
+import { customerType } from 'Type/Account';
+import { HistoryType } from 'Type/Common';
+import { TotalsType } from 'Type/MiniCart';
 import { isSignedIn } from 'Util/Auth';
 import BrowserDatabase from 'Util/BrowserDatabase';
 import { ONE_MONTH_IN_SECONDS } from 'Util/Request/QueryDispatcher';
@@ -23,10 +28,38 @@ export const mapDispatchToProps = (dispatch) => ({
     createOrder: (code, additional_data) => CheckoutDispatcher.createOrder(dispatch, code, additional_data),
     getPaymentMethods: () => CheckoutDispatcher.getPaymentMethods(),
     setCartId: (cartId) => dispatch(setCartId(cartId)),
-    createEmptyCart: () => CartDispatcher.getCart(dispatch)
+    createEmptyCart: () => CartDispatcher.getCart(dispatch),
+    updateStoreCredit: () => StoreCreditDispatcher.getStoreCredit(dispatch)
 });
 
 export class CheckoutContainer extends SourceCheckoutContainer {
+    static propTypes = {
+        showErrorNotification: PropTypes.func.isRequired,
+        showInfoNotification: PropTypes.func.isRequired,
+        toggleBreadcrumbs: PropTypes.func.isRequired,
+        setNavigationState: PropTypes.func.isRequired,
+        createAccount: PropTypes.func.isRequired,
+        updateMeta: PropTypes.func.isRequired,
+        resetCart: PropTypes.func.isRequired,
+        guest_checkout: PropTypes.bool.isRequired,
+        totals: TotalsType.isRequired,
+        history: HistoryType.isRequired,
+        customer: customerType.isRequired,
+        countries: PropTypes.arrayOf(
+            PropTypes.shape({
+                label: PropTypes.string,
+                id: PropTypes.string,
+                available_regions: PropTypes.arrayOf(
+                    PropTypes.shape({
+                        code: PropTypes.string,
+                        name: PropTypes.string,
+                        id: PropTypes.number
+                    })
+                )
+            })
+        ).isRequired
+    };
+
     componentDidMount() {
         updateMeta({ title: __('Checkout') });
     }
@@ -127,7 +160,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
     async savePaymentInformation(paymentInformation) {
         this.setState({ isLoading: true });
-        
+
         await this.savePaymentMethodAndPlaceOrder(paymentInformation)
     }
 
@@ -178,6 +211,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         BrowserDatabase.deleteItem(CART_ITEMS_CACHE_KEY);
         setCartId('');
         createEmptyCart();
+        updateStoreCredit();
     }
 }
 

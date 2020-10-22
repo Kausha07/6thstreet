@@ -74,7 +74,6 @@ export class StoreCreditContainer extends PureComponent {
     }
 
     render() {
-        console.log(this.props);
         const props = {
             ...this.props,
             ...this.state
