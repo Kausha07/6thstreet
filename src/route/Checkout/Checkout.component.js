@@ -2,7 +2,6 @@ import CheckoutBilling from 'Component/CheckoutBilling';
 import CheckoutOrderSummary from 'Component/CheckoutOrderSummary';
 import CheckoutShipping from 'Component/CheckoutShipping';
 import { Checkout as SourceCheckout } from 'SourceRoute/Checkout/Checkout.component';
-import isMobile from 'Util/Mobile';
 
 import './Checkout.style';
 
@@ -43,8 +42,7 @@ export class Checkout extends SourceCheckout {
       const { checkoutStep } = this.props;
       const { isCustomAddressExpanded } = this.state;
 
-      if (isMobile.any() || isMobile.tablet()) {
-          return (
+      return (
                 <div block="CheckoutNavigation" mods={ { isCustomAddressExpanded } }>
                   <div block="CheckoutNavigation" elem="FirstColumn">
                     <div
@@ -76,10 +74,7 @@ export class Checkout extends SourceCheckout {
                     </span>
                   </div>
                 </div>
-          );
-      }
-
-      return null;
+      );
   }
 
   renderBillingStep() {
@@ -109,7 +104,8 @@ export class Checkout extends SourceCheckout {
           onShippingEstimationFieldsChange,
           saveAddressInformation,
           isDeliveryOptionsLoading,
-          email
+          email,
+          checkoutTotals
       } = this.props;
 
       return (
@@ -119,6 +115,7 @@ export class Checkout extends SourceCheckout {
               saveAddressInformation={ saveAddressInformation }
               onShippingEstimationFieldsChange={ onShippingEstimationFieldsChange }
               guestEmail={ email }
+              totals={ checkoutTotals }
               parentCallback={ this.callbackFunction }
             />
       );
