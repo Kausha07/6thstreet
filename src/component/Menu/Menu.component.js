@@ -2,6 +2,7 @@ import { PureComponent } from 'react';
 
 import HeaderCart from 'Component/HeaderCart';
 import HeaderGenders from 'Component/HeaderGenders';
+import HeaderSearch from 'Component/HeaderSearch';
 import MenuCategory from 'Component/MenuCategory';
 import { Categories } from 'Util/API/endpoint/Categories/Categories.type';
 import { isArabic } from 'Util/App';
@@ -62,6 +63,7 @@ class Menu extends PureComponent {
                         <HeaderGenders />
                         <HeaderCart />
                     </div>
+                    <HeaderSearch />
                 </div>
                 <div
                   mix={ {
