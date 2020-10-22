@@ -24,6 +24,10 @@
 }
 
 .FieldMultiselect {
+    &_isHidden {
+        display: none;
+    }
+
     &-MobileOptionButton {
         padding: 0;
         width: 86%;
@@ -138,6 +142,10 @@
                 color: var(--white-color);
                 font-weight: 600;
             }
+
+            &_isArabic {
+                text-align: right;
+            }
         }
     }
 
@@ -152,7 +160,7 @@
         overflow-y: auto;
         border: none;
         left: 10px;
-        transition: 0;
+        transition: 200ms;
 
         &_toggleOptionsList {
             border: 1px solid var(--field-multiselect-border);
@@ -166,7 +174,7 @@
               width: 100%;
               font-size: 13px;
               vertical-align: baseline;
-        
+
             &::before {
                 content: none;
             }

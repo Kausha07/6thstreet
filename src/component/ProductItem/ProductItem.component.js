@@ -4,8 +4,10 @@ import { PureComponent } from 'react';
 import Image from 'Component/Image';
 import Link from 'Component/Link';
 import Price from 'Component/Price';
+import ProductLabel from 'Component/ProductLabel/ProductLabel.component';
 import WishlistIcon from 'Component/WishlistIcon';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
+import { isArabic } from 'Util/App';
 
 import './ProductItem.style';
 
@@ -14,10 +16,19 @@ class ProductItem extends PureComponent {
         product: Product.isRequired
     };
 
+    state = {
+        isArabic: isArabic()
+    };
+
     renderWishlistIcon() {
         const { product: { sku } } = this.props;
 
         return <WishlistIcon sku={ sku } />;
+    }
+
+    renderLabel() {
+        const { product } = this.props;
+        return <ProductLabel product={ product } />;
     }
 
     renderImage() {
@@ -76,8 +87,13 @@ class ProductItem extends PureComponent {
     }
 
     render() {
+        const {
+            isArabic
+        } = this.state;
+
         return (
-            <li block="ProductItem">
+            <li block="ProductItem" mods={ { isArabic } }>
+                { this.renderLabel() }
                 { this.renderWishlistIcon() }
                 { this.renderLink() }
             </li>

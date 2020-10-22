@@ -3,7 +3,9 @@
 }
 
 .PDPGallery {
+    height: fit-content;
     display: block;
+
     @include desktop {
         display: grid;
         grid-template-columns: 1fr 6fr;
@@ -68,6 +70,16 @@
         padding: 0;
         @include desktop {
             height: auto;
+        }
+    }
+}
+
+.PDP {
+    .PDPMainSection {
+        .PDPGallery {
+            &-OverlayButton {
+                height: fit-content;
+            }
         }
     }
 }

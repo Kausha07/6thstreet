@@ -25,7 +25,7 @@ export class WishlistDispatcher {
         }
     }
 
-    async removeSkuFromWishlist(sku, dispatch, store) {
+    async removeSkuFromWishlist(id, dispatch) {
         if (!isSignedIn()) {
             // skip non-authorized users
             dispatch(showNotification(
@@ -37,10 +37,6 @@ export class WishlistDispatcher {
         }
 
         try {
-            const { wishlist_item_id: id } = store.wishlistReducer.items.find(
-                ({ product }) => product.sku === sku
-            );
-
             await MagentoAPI.delete(`/wishlist/delete/${ id }`);
 
             this.updateInitialWishlistData(dispatch);

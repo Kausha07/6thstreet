@@ -17,6 +17,7 @@ export {
     NEWSLETTER_SUBSCRIPTION
 } from 'SourceType/Account';
 
+export const STORE_CREDIT = 'storecredit';
 export const CLUB_APPAREL = 'club-apparel';
 export const RETURN_ITEM = 'return-item';
 

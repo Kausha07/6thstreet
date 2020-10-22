@@ -1,4 +1,4 @@
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
@@ -7,7 +7,8 @@ import { Product } from 'Util/API/endpoint/Product/Product.type';
 import PDPSummary from './PDPSummary.component';
 
 export const mapStateToProps = (state) => ({
-    product: state.PDP.product
+    product: state.PDP.product,
+    isLoading: state.PDP.isLoading
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
@@ -16,7 +17,8 @@ export const mapDispatchToProps = (_dispatch) => ({
 
 export class PDPSummaryContainer extends PureComponent {
     static propTypes = {
-        product: Product.isRequired
+        product: Product.isRequired,
+        isLoading: PropTypes.bool.isRequired
     };
 
     containerFunctions = {
@@ -24,8 +26,8 @@ export class PDPSummaryContainer extends PureComponent {
     };
 
     containerProps = () => {
-        const { product } = this.props;
-        return { product };
+        const { product, isLoading } = this.props;
+        return { product, isLoading };
     };
 
     render() {

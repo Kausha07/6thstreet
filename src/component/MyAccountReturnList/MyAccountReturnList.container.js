@@ -1,8 +1,10 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
 import { showNotification } from 'Store/Notification/Notification.action';
+import { HistoryType } from 'Type/Common';
 import MagentoAPI from 'Util/API/provider/MagentoAPI';
 
 import MyAccountReturnList from './MyAccountReturnList.component';
@@ -17,7 +19,8 @@ export const mapDispatchToProps = (dispatch) => ({
 
 export class MyAccountReturnListContainer extends PureComponent {
     static propTypes = {
-        showErrorNotification: PropTypes.func.isRequired
+        showErrorNotification: PropTypes.func.isRequired,
+        history: HistoryType.isRequired
     };
 
     state = {
@@ -26,13 +29,19 @@ export class MyAccountReturnListContainer extends PureComponent {
     };
 
     containerFunctions = {
-        // getData: this.getData.bind(this)
+        handleCreateClick: this.handleCreateClick.bind(this)
     };
 
     constructor(props) {
         super(props);
 
         this.getReturns();
+    }
+
+    handleCreateClick() {
+        const { history } = this.props;
+
+        history.push('/my-account/return-item/create');
     }
 
     containerProps = () => {
@@ -69,4 +78,4 @@ export class MyAccountReturnListContainer extends PureComponent {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MyAccountReturnListContainer);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MyAccountReturnListContainer));

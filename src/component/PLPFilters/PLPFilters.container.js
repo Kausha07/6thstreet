@@ -45,9 +45,26 @@ export class PLPFiltersContainer extends PureComponent {
         productsCount: PropTypes.string.isRequired
     };
 
+    state = {
+        initialFilters: {}
+    };
+
     containerFunction = {
         onReset: this.onReset.bind(this)
     };
+
+    static getDerivedStateFromProps(props, state) {
+        const { filters } = props;
+        const { initialFilters } = state;
+
+        if (Object.keys(filters).length > Object.keys(initialFilters).length) {
+            return {
+                initialFilters: filters
+            };
+        }
+
+        return null;
+    }
 
     containerFunctions = () => {
         const { showOverlay } = this.props;
@@ -57,11 +74,11 @@ export class PLPFiltersContainer extends PureComponent {
 
     // eslint-disable-next-line consistent-return
     onReset() {
-        const { filters } = this.props;
+        const { initialFilters } = this.state;
 
         // eslint-disable-next-line fp/no-let
-        for (let i = 0; i < Object.keys(filters).length; i++) {
-            WebUrlParser.setParam(Object.keys(filters)[i], '');
+        for (let i = 0; i < Object.keys(initialFilters).length; i++) {
+            WebUrlParser.setParam(Object.keys(initialFilters)[i], '');
         }
     }
 

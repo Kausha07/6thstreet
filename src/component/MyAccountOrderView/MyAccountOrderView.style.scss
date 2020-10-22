@@ -1,3 +1,14 @@
 .MyAccountOrderView {
-    
+    &-Button {
+        &Return,
+        &Cancel {
+            --button-background: var(--white);
+            --button-border: var(--black);
+            --button-border-width: 2px;
+            --button-color: var(--black);
+            --button-hover-background: var(--black);
+            --button-hover-border: var(--black);
+            --button-hover-color: var(--white);
+        }
+    }
 }
