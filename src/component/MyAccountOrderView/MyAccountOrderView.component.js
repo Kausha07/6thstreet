@@ -240,12 +240,14 @@ class MyAccountOrderView extends PureComponent {
                     </div>
                 )) }
                 { !!unship.length && (
-                    <Accordion
-                      mix={ { block: 'MyAccountOrderView', elem: 'Accordion' } }
-                      title={ this.renderAccordionTitle(__('Items under processing'), TimerImage) }
-                    >
-                        { unship.reduce((acc, { items }) => [...acc, ...items], []).map(this.renderItem) }
-                    </Accordion>
+                    <div block="MyAccountOrderView" elem="AccordionWrapper">
+                        <Accordion
+                          mix={ { block: 'MyAccountOrderView', elem: 'Accordion' } }
+                          title={ this.renderAccordionTitle(__('Items under processing'), TimerImage) }
+                        >
+                            { unship.reduce((acc, { items }) => [...acc, ...items], []).map(this.renderItem) }
+                        </Accordion>
+                    </div>
                 ) }
                 { this.renderCanceledAccordion() }
             </div>
