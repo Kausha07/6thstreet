@@ -3,6 +3,7 @@ import HeaderSearch from 'Component/HeaderSearch';
 import NavigationAbstract from 'Component/NavigationAbstract/NavigationAbstract.component';
 import { DEFAULT_STATE_NAME } from 'Component/NavigationAbstract/NavigationAbstract.config';
 import { isArabic } from 'Util/App';
+import isMobile from 'Util/Mobile';
 
 import './HeaderBottomBar.style';
 
@@ -32,16 +33,24 @@ class HeaderBottomBar extends NavigationAbstract {
 
     renderSearch() {
         const { isArabic } = this.state;
+        if (!isMobile.any()) {
+            return (
+                <div
+                  mix={ {
+                      block: 'HeaderSearch',
+                      elem: 'Container',
+                      mods: { isArabic }
+                  } }
+                >
+                    <HeaderSearch
+                      key="search"
+                      isMobile
+                    />
+                </div>
+            );
+        }
 
-        return (
-            <div
-              mix={ { block: 'HeaderSearch', elem: 'Container', mods: { isArabic } } }
-            >
-                <HeaderSearch
-                  key="search"
-                />
-            </div>
-        );
+        return (null);
     }
 
     render() {

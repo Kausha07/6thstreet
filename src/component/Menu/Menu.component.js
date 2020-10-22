@@ -6,6 +6,7 @@ import HeaderSearch from 'Component/HeaderSearch';
 import MenuCategory from 'Component/MenuCategory';
 import { Categories } from 'Util/API/endpoint/Categories/Categories.type';
 import { isArabic } from 'Util/App';
+import isMobile from 'Util/Mobile';
 
 import './Menu.style';
 
@@ -41,6 +42,16 @@ class Menu extends PureComponent {
         return categories.map(this.renderCategory);
     }
 
+    renderSearch() {
+        if (isMobile.any()) {
+            return (
+            <HeaderSearch />
+            );
+        }
+
+        return null;
+    }
+
     render() {
         const { isArabic } = this.state;
 
@@ -63,7 +74,7 @@ class Menu extends PureComponent {
                         <HeaderGenders />
                         <HeaderCart />
                     </div>
-                    <HeaderSearch />
+                    { this.renderSearch() }
                 </div>
                 <div
                   mix={ {
