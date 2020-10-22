@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 
+import { CARD } from 'Component/CheckoutPayments/CheckoutPayments.config';
 import { BILLING_STEP, PAYMENT_TOTALS } from 'SourceRoute/Checkout/Checkout.config';
 import {
     CheckoutContainer as SourceCheckoutContainer,
@@ -112,7 +113,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             ({ data }) => {
                 const availablePaymentMethods = data.reduce((acc, paymentMethod) => {
                     const { is_enabled } = paymentMethod;
-                    
+
                     if (is_enabled) {
                         acc.push(paymentMethod);
                     }
@@ -178,13 +179,33 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     async savePaymentMethodAndPlaceOrder(paymentInformation) {
         const { paymentMethod: { code, additional_data } } = paymentInformation;
         const { createOrder } = this.props;
+        const { shippingAddress: { email } } = this.state;
+
+        const data = code === CARD
+            ? {
+                ...additional_data,
+                source: {
+                    type: 'token',
+                    token: BrowserDatabase.getItem('CREDIT_CART_TOKEN')
+                },
+                customer: {
+                    email: email
+                },
+                '3ds': {
+                    enable: true
+                },
+                metadata: {
+                    udf1: null
+                }
+            }
+            : additional_data;
 
         try {
-            createOrder(code, additional_data).then(
+            createOrder(code, data).then(
                 ({ data }) => {
-                    const { order_id, success } = data;
+                    const { order_id, success, response_code } = data;
 
-                    if (success) {
+                    if (success || response_code === 200) {
                         this.setDetailsStep(order_id);
                         this.resetCart();
                     }
