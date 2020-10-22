@@ -8,6 +8,8 @@ import FooterMiddle from 'Component/FooterMiddle';
 import FooterMobile from 'Component/FooterMobile';
 import isMobile from 'Util/Mobile';
 
+import './Footer.style';
+
 export class Footer extends PureComponent {
     static propTypes = {
         isVisibleOnMobile: PropTypes.bool

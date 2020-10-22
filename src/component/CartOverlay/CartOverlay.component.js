@@ -83,7 +83,7 @@ export class CartOverlay extends PureComponent {
     }
 
     renderTotals() {
-        const { totals: { items = 0 } } = this.props;
+        const { totals: { items = [] } } = this.props;
         const { isArabic } = this.state;
 
         if (!items || items.length < 1) {
