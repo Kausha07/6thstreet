@@ -8,6 +8,7 @@ import Loader from 'Component/Loader';
 import {
     STATUS_CANCELED,
     STATUS_FAILED,
+    STATUS_PAYMENT_ABORTED,
     STATUS_SUCCESS
 } from 'Component/MyAccountOrderListItem/MyAccountOrderListItem.config';
 import MyAccountOrderViewItem from 'Component/MyAccountOrderViewItem';
@@ -19,6 +20,7 @@ import CancelledImage from './icons/cancelled.png';
 import PackageImage from './icons/package.png';
 import TimerImage from './icons/timer.png';
 import TruckImage from './icons/truck.png';
+import WarningImage from './icons/warning.png';
 import { STATUS_DELIVERED, STATUS_LABEL_MAP, STATUS_SENT } from './MyAccountOrderView.config';
 
 import './MyAccountOrderView.style';
@@ -71,12 +73,18 @@ class MyAccountOrderView extends PureComponent {
     renderStatus() {
         const { order: { status, created_at } } = this.props;
 
-        if (STATUS_FAILED.includes(status)) {
+        if (status === STATUS_PAYMENT_ABORTED) {
             return (
-                <p block="MyAccountOrderView" elem="StatusFailed">
-                    { /* Some statuses are written with _ so they need to be splitted and joined */ }
-                    { `${ status.split('_').join(' ') }` }
-                </p>
+                <div block="MyAccountOrderView" elem="StatusFailed">
+                    <Image
+                      src={ WarningImage }
+                      mix={ { block: 'MyAccountOrderView', elem: 'WarningImage' } }
+                    />
+                    <p>
+                        { /* Some statuses are written with _ so they need to be splitted and joined */ }
+                        { `${ status.split('_').join(' ') }` }
+                    </p>
+                </div>
             );
         }
 
@@ -99,9 +107,9 @@ class MyAccountOrderView extends PureComponent {
     }
 
     renderPackagesMessage() {
-        const { order: { shipped } } = this.props;
+        const { order: { status, shipped } } = this.props;
 
-        if (shipped === 1) {
+        if (shipped.length <= 1 || STATUS_FAILED.includes(status)) {
             return null;
         }
 
@@ -169,6 +177,25 @@ class MyAccountOrderView extends PureComponent {
         );
     }
 
+    renderProcessingItems() {
+        const { order: { status, unship } } = this.props;
+
+        if (status === STATUS_CANCELED || !unship.length) {
+            return null;
+        }
+
+        return (
+            <div block="MyAccountOrderView" elem="AccordionWrapper">
+                <Accordion
+                  mix={ { block: 'MyAccountOrderView', elem: 'Accordion' } }
+                  title={ this.renderAccordionTitle(__('Items under processing'), TimerImage) }
+                >
+                    { unship.reduce((acc, { items }) => [...acc, ...items], []).map(this.renderItem) }
+                </Accordion>
+            </div>
+        );
+    }
+
     renderCanceledAccordion() {
         const { order: { status, shipped, unship } } = this.props;
         const allItems = [
@@ -208,10 +235,10 @@ class MyAccountOrderView extends PureComponent {
     }
 
     renderAccordions() {
-        const { order: { status, shipped, unship } } = this.props;
+        const { order: { status, shipped } } = this.props;
         const itemNumber = shipped.length;
 
-        if (STATUS_FAILED.includes(status)) {
+        if (status === STATUS_PAYMENT_ABORTED) {
             return null;
         }
 
@@ -239,16 +266,7 @@ class MyAccountOrderView extends PureComponent {
                         </Accordion>
                     </div>
                 )) }
-                { !!unship.length && (
-                    <div block="MyAccountOrderView" elem="AccordionWrapper">
-                        <Accordion
-                          mix={ { block: 'MyAccountOrderView', elem: 'Accordion' } }
-                          title={ this.renderAccordionTitle(__('Items under processing'), TimerImage) }
-                        >
-                            { unship.reduce((acc, { items }) => [...acc, ...items], []).map(this.renderItem) }
-                        </Accordion>
-                    </div>
-                ) }
+                { this.renderProcessingItems() }
                 { this.renderCanceledAccordion() }
             </div>
         );
@@ -258,7 +276,7 @@ class MyAccountOrderView extends PureComponent {
         const { order: { status, unship } } = this.props;
         const itemsArray = unship.reduce((acc, { items }) => [...acc, ...items], []);
 
-        if (!STATUS_FAILED.includes(status)) {
+        if (status !== STATUS_PAYMENT_ABORTED) {
             return null;
         }
 
@@ -281,7 +299,7 @@ class MyAccountOrderView extends PureComponent {
             }
         } = this.props;
 
-        if (!STATUS_FAILED.includes(status)) {
+        if (status !== STATUS_PAYMENT_ABORTED) {
             return null;
         }
 
