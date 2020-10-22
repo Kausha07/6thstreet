@@ -17,16 +17,14 @@ class FieldMultiselect extends PureComponent {
         activeFilter: PropTypes.object,
         isChecked: PropTypes.bool,
         changeActiveFilter: PropTypes.func.isRequired,
-        currentActiveFilter: PropTypes.string,
-        isHidden: PropTypes.bool
+        currentActiveFilter: PropTypes.string
     };
 
     static defaultProps = {
         placeholder: '',
         activeFilter: {},
         isChecked: false,
-        currentActiveFilter: '',
-        isHidden: false
+        currentActiveFilter: ''
     };
 
     filterDropdownRef = createRef();

@@ -44,7 +44,7 @@ export class Accordion extends PureComponent {
                   mods={ { isExpanded } }
                   onClick={ this.toggleAccordion }
                 >
-                    +
+                    .
                 </button>
             </div>
         );
@@ -69,7 +69,7 @@ export class Accordion extends PureComponent {
         const { isExpanded } = this.state;
 
         return (
-            <div block="Accordeon" mix={ mix }>
+            <div block="Accordion" mods={ { isExpanded } } mix={ { ...mix, mods: { isExpanded } } }>
                 { this.renderHeading() }
                 { this.renderShortDescription() }
                 { isExpanded && children }

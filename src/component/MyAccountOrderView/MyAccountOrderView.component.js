@@ -3,12 +3,23 @@ import { PureComponent } from 'react';
 
 import { formatPrice } from '@6thstreetdotcom/algolia-sdk/app/utils/filters';
 import Accordion from 'Component/Accordion';
+import Image from 'Component/Image';
 import Loader from 'Component/Loader';
-import { STATUS_FAILED, STATUS_SUCCESS } from 'Component/MyAccountOrderListItem/MyAccountOrderListItem.config';
+import {
+    STATUS_CANCELED,
+    STATUS_FAILED,
+    STATUS_SUCCESS
+} from 'Component/MyAccountOrderListItem/MyAccountOrderListItem.config';
 import MyAccountOrderViewItem from 'Component/MyAccountOrderViewItem';
 import { OrderType } from 'Type/API';
 import { appendOrdinalSuffix } from 'Util/Common';
 import { formatDate } from 'Util/Date';
+
+import CancelledImage from './icons/cancelled.png';
+import PackageImage from './icons/package.png';
+import TimerImage from './icons/timer.png';
+import TruckImage from './icons/truck.png';
+import { STATUS_DELIVERED, STATUS_LABEL_MAP, STATUS_SENT } from './MyAccountOrderView.config';
 
 import './MyAccountOrderView.style';
 
@@ -87,21 +98,156 @@ class MyAccountOrderView extends PureComponent {
         );
     }
 
-    renderAccordions() {
+    renderPackagesMessage() {
         const { order: { shipped } } = this.props;
+
+        if (shipped === 1) {
+            return null;
+        }
+
+        return (
+            <div block="MyAccountOrderView" elem="PackagesMessage">
+                <Image
+                  src={ TruckImage }
+                  mix={ { block: 'MyAccountOrderView', elem: 'TruckImage' } }
+                />
+                <p>
+                    { __('Your order has been shipped in multiple packages, please find the package details below.') }
+                </p>
+            </div>
+        );
+    }
+
+    renderAccordionTitle(title, image, status = null) {
+        const { [status]: statusTitle = null } = STATUS_LABEL_MAP;
+
+        return (
+            <div block="MyAccountOrderView" elem="AccordionTitle">
+                <Image
+                  src={ image }
+                  mix={ { block: 'MyAccountOrderView', elem: 'AccordionTitleImage' } }
+                />
+                <h3>
+                    { title }
+                    { !!statusTitle && <span>{ ` - ${ statusTitle }` }</span> }
+                </h3>
+            </div>
+        );
+    }
+
+    renderAccordionProgress(status) {
+        if (STATUS_DELIVERED === status) {
+            return null;
+        }
+
+        return (
+            <div
+              block="MyAccountOrderView"
+              elem="AccordionStatus"
+              mix={ { block: 'MyAccountOrderListItem', elem: 'Status' } }
+            >
+                <div block="MyAccountOrderListItem" elem="ProgressBar">
+                    <div
+                      block="MyAccountOrderListItem"
+                      elem="ProgressCurrent"
+                      mods={ { isProcessing: status === STATUS_SENT } }
+                    />
+                    <div
+                      block="MyAccountOrderListItem"
+                      elem="ProgressCheckbox"
+                      mods={ { isProcessing: status === STATUS_SENT } }
+                    />
+                </div>
+                <div block="MyAccountOrderListItem" elem="StatusList">
+                    { Object.values(STATUS_LABEL_MAP).map((label) => (
+                        <p block="MyAccountOrderListItem" elem="StatusTitle">
+                            { label }
+                        </p>
+                    )) }
+                </div>
+            </div>
+        );
+    }
+
+    renderCanceledAccordion() {
+        const { order: { status, shipped, unship } } = this.props;
+        const allItems = [
+            ...shipped.reduce((acc, { items }) => [...acc, ...items], []),
+            ...unship.reduce((acc, { items }) => [...acc, ...items], [])
+        ];
+
+        if (STATUS_CANCELED === status) {
+            return (
+                <div block="MyAccountOrderView" elem="AccordionWrapper">
+                    <Accordion
+                      mix={ { block: 'MyAccountOrderView', elem: 'Accordion' } }
+                      title={ this.renderAccordionTitle(__('Cancelled items'), CancelledImage) }
+                    >
+                        { allItems.map(this.renderItem) }
+                    </Accordion>
+                </div>
+            );
+        }
+
+        const canceledItems = allItems.filter(({ qty_partial_canceled }) => +qty_partial_canceled > 0);
+
+        if (!canceledItems.length) {
+            return null;
+        }
+
+        return (
+            <div block="MyAccountOrderView" elem="AccordionWrapper">
+                <Accordion
+                  mix={ { block: 'MyAccountOrderView', elem: 'Accordion' } }
+                  title={ this.renderAccordionTitle(__('Cancelled items'), CancelledImage) }
+                >
+                    { allItems.filter(({ qty_partial_canceled }) => +qty_partial_canceled > 0).map(this.renderItem) }
+                </Accordion>
+            </div>
+        );
+    }
+
+    renderAccordions() {
+        const { order: { status, shipped, unship } } = this.props;
         const itemNumber = shipped.length;
+
+        if (STATUS_FAILED.includes(status)) {
+            return null;
+        }
 
         return (
             <div block="MyAccountOrderView" elem="Accordions">
                 { shipped.map((item, index) => (
-                    <Accordion
-                      key={ item.shipment_number }
-                      mix={ { block: 'MyAccountOrderView', elem: 'Accordion' } }
-                      title={ __('%s Package', appendOrdinalSuffix(itemNumber - index)) }
-                    >
-                        { item.items.map(this.renderItem) }
-                    </Accordion>
+                    <div key={ item.shipment_number } block="MyAccountOrderView" elem="AccordionWrapper">
+                        <Accordion
+                          mix={ { block: 'MyAccountOrderView', elem: 'Accordion' } }
+                          shortDescription={ this.renderAccordionProgress(item.courier_status_code) }
+                          title={ this.renderAccordionTitle(
+                              __('%s Package', appendOrdinalSuffix(itemNumber - index)),
+                              PackageImage,
+                              item.courier_status_code
+                          ) }
+                        >
+                            <p>
+                                { __(
+                                    'Package contains %s %s',
+                                    item.items.length,
+                                    item.items.length === 1 ? __('item') : __('items')
+                                ) }
+                            </p>
+                            { item.items.map(this.renderItem) }
+                        </Accordion>
+                    </div>
                 )) }
+                { !!unship.length && (
+                    <Accordion
+                      mix={ { block: 'MyAccountOrderView', elem: 'Accordion' } }
+                      title={ this.renderAccordionTitle(__('Items under processing'), TimerImage) }
+                    >
+                        { unship.reduce((acc, { items }) => [...acc, ...items], []).map(this.renderItem) }
+                    </Accordion>
+                ) }
+                { this.renderCanceledAccordion() }
             </div>
         );
     }
@@ -190,9 +336,11 @@ class MyAccountOrderView extends PureComponent {
                 <Loader isLoading={ isLoading } />
                 { this.renderTitle() }
                 { this.renderStatus() }
+                { this.renderPackagesMessage() }
                 { this.renderAccordions() }
                 { this.renderFailedOrderDetails() }
                 { this.renderSummary() }
+                { this.renderAddress(__('Delivering to'), billing_address) }
                 { this.renderAddress(__('Billing Address'), billing_address) }
                 { this.renderPaymentType() }
             </div>
