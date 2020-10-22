@@ -199,7 +199,7 @@
             }
 
             &_forgotPassword {
-                max-height: 740px;
+                max-height: 745px;
 
                 h4 {
                     width: initial;
@@ -208,6 +208,10 @@
                 button {
                     font-weight: bold;
                 }
+            }
+
+            &_forgotPasswordSuccess {
+                max-height: 522px;
             }
 
             &_signIn {
