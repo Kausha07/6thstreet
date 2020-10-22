@@ -5,6 +5,7 @@ import Field from 'Component/Field';
 import Form from 'Component/Form';
 import SearchSuggestion from 'Component/SearchSuggestion';
 import { isArabic } from 'Util/App';
+import isMobile from 'Util/Mobile';
 
 import Clear from './icons/close-black.png';
 
@@ -37,6 +38,36 @@ class HeaderSearch extends PureComponent {
             onSearchClean
         } = this.props;
 
+        if (isMobile.any()) {
+            return (
+            <Form
+              id="header-search-mob"
+              onSubmit={ onSearchSubmit }
+            >
+                <Field
+                  id="search-field-mob"
+                  name="search"
+                  type="text"
+                  placeholder={ __('What are you looking for?') }
+                  onChange={ onSearchChange }
+                  value={ search }
+                />
+                <button
+                  block="Button"
+                  elem="Clear"
+                  onClick={ onSearchClean }
+                  mods={ {
+                      type: 'searchClear',
+                      isVisible
+                  } }
+                  aria-label="Clear search"
+                >
+                    <img src={ Clear } alt="Clear button" />
+                </button>
+            </Form>
+            );
+        }
+
         return (
             <Form
               id="header-search"
@@ -51,6 +82,7 @@ class HeaderSearch extends PureComponent {
                   value={ search }
                 />
                 <button
+                  block="Button"
                   elem="Clear"
                   onClick={ onSearchClean }
                   mods={ {
