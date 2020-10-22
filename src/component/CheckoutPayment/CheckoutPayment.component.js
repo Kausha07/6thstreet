@@ -3,10 +3,7 @@ import { PureComponent } from 'react';
 
 import { paymentMethodType } from 'Type/Checkout';
 
-import apple from './icons/apple.png';
-import card from './icons/card.png';
-import cash from './icons/cash.png';
-import tabby from './icons/tabby.png';
+import { PAYMENTS_DATA } from './CheckoutPayment.config';
 
 import './CheckoutPayment.style';
 
@@ -39,61 +36,27 @@ export class CheckoutPayment extends PureComponent {
             method: { m_code }
         } = this.props;
 
-        switch (m_code) {
-        case 'checkoutcom_card_payment':
+        const {
+            name,
+            mod,
+            paragraph,
+            img
+        } = PAYMENTS_DATA[m_code];
+
+        if (PAYMENTS_DATA[m_code]) {
             return (
-                <div block="CheckoutPayment" elem="Method" mods={ { card: true } }>
-                    <img src={ card } alt="card" />
-                    <p>card</p>
-                </div>
-            );
-        case 'checkout':
-            return (
-                <div block="CheckoutPayment" elem="Method" mods={ { card: true } }>
-                    <img src={ card } alt="card" />
-                    <p>checkout</p>
-                </div>
-            );
-        case 'apple_pay':
-            return (
-                <div block="CheckoutPayment" elem="Method" mods={ { apple: true } }>
-                    <img src={ apple } alt="apple" />
-                </div>
-            );
-        case 'checkout_apple_pay':
-            return (
-                <div block="CheckoutPayment" elem="Method" mods={ { apple: true } }>
-                    <img src={ apple } alt="apple" />
-                    <p>checkout</p>
-                </div>
-            );
-        case 'tabby_checkout':
-            return (
-                <div block="CheckoutPayment" elem="Method" mods={ { tabby: true } }>
-                    <img src={ tabby } alt="tabby" />
-                    <p>checkout</p>
-                </div>
-            );
-        case 'tabby_installments':
-            return (
-                <div block="CheckoutPayment" elem="Method" mods={ { tabby: true } }>
-                    <img src={ tabby } alt="tabby" />
-                </div>
-            );
-        case 'msp_cashondelivery':
-            return (
-                <div block="CheckoutPayment" elem="Method" mods={ { cash: true } }>
-                    <img src={ cash } alt="cash" />
-                    <p>cash</p>
-                </div>
-            );
-        default:
-            return (
-                <div block="CheckoutPayment" elem="Method">
-                    <p>{ m_code }</p>
+                <div block="CheckoutPayment" elem="Method" mods={ mod }>
+                    <img src={ img } alt={ name } />
+                    <p>{ paragraph }</p>
                 </div>
             );
         }
+
+        return (
+            <div block="CheckoutPayment" elem="Method">
+                <p>{ m_code }</p>
+            </div>
+        );
     }
 
     render() {

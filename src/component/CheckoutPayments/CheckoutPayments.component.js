@@ -12,7 +12,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     paymentRenderMap = {
         ...SourceCheckoutPayments.paymentRenderMap,
         [CARD]: this.renderCreditCard.bind(this),
-        [CASH_ON_DELIVERY]: this.cashOnDelivery.bind(this)
+        [CASH_ON_DELIVERY]: this.renderCashOnDelivery.bind(this)
     };
 
     state = {
@@ -51,7 +51,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
         return selectedMethod;
     };
 
-    cashOnDelivery() {
+    renderCashOnDelivery() {
         const { options: { method_description, method_title } } = this.getSelectedMethodData();
 
         return (
