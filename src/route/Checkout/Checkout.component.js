@@ -17,7 +17,6 @@ export class Checkout extends SourceCheckout {
   };
 
   setCashOnDeliveryFee = (fee) => {
-      console.log('fee', fee);
       this.setState({ cashOnDeliveryFee: fee });
   };
 

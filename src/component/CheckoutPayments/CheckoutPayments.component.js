@@ -4,14 +4,14 @@ import Slider from 'Component/Slider';
 import StoreCredit from 'Component/StoreCredit';
 import SourceCheckoutPayments from 'SourceComponent/CheckoutPayments/CheckoutPayments.component';
 
-import { CASH_ON_DELIVERY } from './CheckoutPayments.config';
+import { CARD, CASH_ON_DELIVERY } from './CheckoutPayments.config';
 
 import './CheckoutPayments.extended.style';
 
 export class CheckoutPayments extends SourceCheckoutPayments {
     paymentRenderMap = {
-        // ...SourceCheckoutPayments.paymentRenderMap,
-        // [CARD]: this.renderCreditCard.bind(this),
+        ...SourceCheckoutPayments.paymentRenderMap,
+        [CARD]: this.renderCreditCard.bind(this),
         [CASH_ON_DELIVERY]: this.cashOnDelivery.bind(this)
     };
 
@@ -99,7 +99,6 @@ export class CheckoutPayments extends SourceCheckoutPayments {
 
     renderContent() {
         const { hasError, activeSliderImage } = this.state;
-        console.log(this.props);
 
         if (hasError) {
             return (
@@ -120,7 +119,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
                 </ul>
                 { this.renderSelectedPayment() }
                 { this.renderPayPal() }
-                { /* { this.renderToggleableDiscountOptions() } */ }
+                { this.renderToggleableDiscountOptions() }
             </>
         );
     }

@@ -3,6 +3,7 @@ import { SHIPPING_STEP } from 'Route/Checkout/Checkout.config';
 import {
     CheckoutOrderSummary as SourceCheckoutOrderSummary
 } from 'SourceComponent/CheckoutOrderSummary/CheckoutOrderSummary.component';
+import { formatCurrency } from 'Util/Price';
 
 import './CheckoutOrderSummary.extended.style';
 
@@ -31,6 +32,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
         return (
             <div block="CheckoutOrderSummary" elem="OrderTotals">
                 <ul>
+                    { this.renderCashOnDeliveryFee() }
                     { this.renderPriceLine(subtotal, __('Cart Subtotal')) }
                     { checkoutStep !== SHIPPING_STEP
                         ? this.renderPriceLine(shipping_amount, __('Shipping'), { divider: true })
@@ -46,13 +48,19 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     }
 
     renderCashOnDeliveryFee() {
-        const { cashOnDeliveryFee } = this.props;
+        const { cashOnDeliveryFee, totals: { quote_currency_code } } = this.props;
+        const priceString = formatCurrency(quote_currency_code);
+
         if (cashOnDeliveryFee) {
             return (
-                <p>
-                FEE:
-                { cashOnDeliveryFee }
-                </p>
+                <li block="CheckoutOrderSummary" elem="SummaryItem">
+                    <span block="CheckoutOrderSummary" elem="Text">
+                        { __('Cash on Delivery Fee') }
+                    </span>
+                    <span block="CheckoutOrderSummary" elem="Text">
+                        { `${priceString}${cashOnDeliveryFee}` }
+                    </span>
+                </li>
             );
         }
 
@@ -65,7 +73,6 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                 { this.renderItems() }
                 { this.renderToggleableDiscountOptions() }
                 { this.renderTotals() }
-                { this.renderCashOnDeliveryFee() }
             </article>
         );
     }

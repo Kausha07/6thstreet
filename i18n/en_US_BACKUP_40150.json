@@ -405,5 +405,6 @@
     "Card number": null,
     "Expiration Date": null,
     "CVV": null,
-    "Payment type": null
+    "Payment type": null,
+    "Cash on Delivery Fee": null
 }
