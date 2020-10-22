@@ -42,13 +42,24 @@ class MenuCategory extends PureComponent {
         if (!isVisible) {
             if (categoryKey === 'new_in' && isDefaultCategoryOpen && isMobile.any()) {
                 return (
-                    <MenuDynamicContent
-                      content={ data }
-                    />
+                    <div block="DynamicContent" elem="Wrapper">
+                        <MenuDynamicContent
+                          content={ data }
+                        />
+                    </div>
                 );
             }
 
             return null;
+        }
+        if (isMobile.any()) {
+            return (
+                <div block="DynamicContent" elem="Wrapper">
+                    <MenuDynamicContent
+                      content={ data }
+                    />
+                </div>
+            );
         }
 
         return (

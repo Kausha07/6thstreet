@@ -7,6 +7,7 @@ import {
     RouterContainer as SourceRouterContainer,
     WishlistDispatcher
 } from 'SourceComponent/Router/Router.container';
+import { setCountry, setLanguage } from 'Store/AppState/AppState.action';
 
 export const mapStateToProps = (state) => ({
     ...sourceMapStateToProps(state),
@@ -18,7 +19,9 @@ export const mapDispatchToProps = (dispatch) => ({
     init: async () => {
         const { default: wishlistDisp } = await WishlistDispatcher;
         wishlistDisp.syncWishlist(dispatch);
-    }
+    },
+    setCountry: (value) => dispatch(setCountry(value)),
+    setLanguage: (value) => dispatch(setLanguage(value))
 });
 
 export class RouterContainer extends SourceRouterContainer {
@@ -33,16 +36,19 @@ export class RouterContainer extends SourceRouterContainer {
     };
 
     containerProps = () => {
-        const { isBigOffline } = this.props;
+        const { isBigOffline, setCountry, setLanguage } = this.props;
 
         return {
             isBigOffline,
-            isAppReady: this.getIsAppReady()
+            isAppReady: this.getIsAppReady(),
+            setCountry,
+            setLanguage
         };
     };
 
     getIsAppReady() {
         const { locale } = this.props;
+
         return !!locale; // locale is '' => not ready
     }
 }

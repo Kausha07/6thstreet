@@ -24,6 +24,10 @@
 }
 
 .FieldMultiselect {
+    &_isHidden {
+        display: none;
+    }
+
     &-MobileOptionButton {
         padding: 0;
         width: 86%;
@@ -156,7 +160,7 @@
         overflow-y: auto;
         border: none;
         left: 10px;
-        transition: 0;
+        transition: 200ms;
 
         &_toggleOptionsList {
             border: 1px solid var(--field-multiselect-border);
@@ -170,7 +174,7 @@
               width: 100%;
               font-size: 13px;
               vertical-align: baseline;
-        
+
             &::before {
                 content: none;
             }
