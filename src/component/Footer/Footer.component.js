@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
+import { withRouter } from 'react-router';
 
 import CmsBlock from 'Component/CmsBlock';
 import FooterBottom from 'Component/FooterBottom';
@@ -19,14 +20,28 @@ export class Footer extends PureComponent {
         isVisibleOnMobile: false
     };
 
+    state = {
+        isCheckout: false
+    };
+
+    static getDerivedStateFromProps() {
+        return location.pathname.match(/checkout/) ? {
+            isCheckout: true
+        } : {
+            isCheckout: false
+        };
+    }
+
     renderSections() {
         const { footer_content: { footer_cms } = {} } = window.contentConfiguration;
+
+        const { isCheckout } = this.state;
 
         if (footer_cms) {
             return <CmsBlock identifier={ footer_cms } />;
         }
 
-        if (location.pathname.match(/checkout/)) {
+        if (isCheckout) {
             return <FooterMiddle />;
         }
 
@@ -59,4 +74,4 @@ export class Footer extends PureComponent {
     }
 }
 
-export default Footer;
+export default withRouter(Footer);
