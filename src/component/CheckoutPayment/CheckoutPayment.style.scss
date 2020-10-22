@@ -1,0 +1,70 @@
+:root {
+    --checkout-payment-standart: #9B9B9B;
+}
+
+.CheckoutPayment {
+    padding: 0;
+    border: 1px solid var(--checkout-payment-standart);
+    border-radius: 4px;
+    font-size: 10px;
+    max-width: 85px;
+    height: 55px;
+    margin: 0 2px;
+
+    &::before {
+        content: none;
+    }
+
+    &-Method {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+
+        p {
+            margin-top: 5px;
+            font-size: 10px;
+            line-height: 14px;
+            color: var(--checkout-payment-standart);
+        }
+
+        &_card,
+        &_cash {
+            img {
+                width: 22px;
+            }
+        }
+
+        &_apple,
+        &_tabby {
+            img {
+                width: 40px;
+                filter: invert(50%);
+            }
+        }
+    }
+
+    &-Button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        text-align: left;
+        width: 100%;
+        padding: 0;
+        height: 100%;
+
+        &_isSelected {
+            background: $black;
+
+            img {
+                filter: invert(100%) brightness(20);
+            }
+            
+            p {
+                color: $white;
+            }
+        }
+
+    }
+}
