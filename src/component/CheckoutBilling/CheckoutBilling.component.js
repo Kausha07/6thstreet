@@ -86,7 +86,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
 
         return (
             <div block="Checkout" elem="OrderTotals">
-                    { this.renderPriceLine(total, __('Total Amount')) }
+                { this.renderPriceLine(total, __('Total Amount')) }
             </div>
         );
     }
