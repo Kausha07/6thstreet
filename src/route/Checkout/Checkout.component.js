@@ -1,3 +1,5 @@
+import CheckoutBilling from 'Component/CheckoutBilling';
+import CheckoutOrderSummary from 'Component/CheckoutOrderSummary';
 import CheckoutShipping from 'Component/CheckoutShipping';
 import { Checkout as SourceCheckout } from 'SourceRoute/Checkout/Checkout.component';
 import isMobile from 'Util/Mobile';
@@ -6,12 +8,36 @@ import './Checkout.style';
 
 export class Checkout extends SourceCheckout {
   state = {
-      isCustomAddressExpanded: false
+      isCustomAddressExpanded: false,
+      cashOnDeliveryFee: null
   };
 
   callbackFunction = (childData) => {
       this.setState({ isCustomAddressExpanded: childData });
   };
+
+  setCashOnDeliveryFee = (fee) => {
+      this.setState({ cashOnDeliveryFee: fee });
+  };
+
+  renderSummary() {
+      const { cashOnDeliveryFee } = this.state;
+      const { checkoutTotals, checkoutStep, paymentTotals } = this.props;
+      const { areTotalsVisible } = this.stepMap[checkoutStep];
+
+      if (!areTotalsVisible) {
+          return null;
+      }
+
+      return (
+    <CheckoutOrderSummary
+      checkoutStep={ checkoutStep }
+      totals={ checkoutTotals }
+      paymentTotals={ paymentTotals }
+      cashOnDeliveryFee={ cashOnDeliveryFee }
+    />
+      );
+  }
 
   renderTitle() {
       const { checkoutStep } = this.props;
@@ -54,6 +80,27 @@ export class Checkout extends SourceCheckout {
       }
 
       return null;
+  }
+
+  renderBillingStep() {
+      const {
+          setLoading,
+          setDetailsStep,
+          shippingAddress,
+          paymentMethods = [],
+          savePaymentInformation
+      } = this.props;
+
+      return (
+    <CheckoutBilling
+      setLoading={ setLoading }
+      paymentMethods={ paymentMethods }
+      setDetailsStep={ setDetailsStep }
+      shippingAddress={ shippingAddress }
+      savePaymentInformation={ savePaymentInformation }
+      setCashOnDeliveryFee={ this.setCashOnDeliveryFee }
+    />
+      );
   }
 
   renderShippingStep() {
