@@ -23,7 +23,7 @@ export const getBreadcrumbs = (data, onClick) => data.reduce((acc, categoryLevel
     acc.push({
         url: idx !== 0 ? url[idx] : '/',
         name: transformedCategory,
-        onClick: idx !== 0 ? onClick : () => {}
+        onClick: idx === 0 ? onClick : () => {}
     });
 
     return acc;

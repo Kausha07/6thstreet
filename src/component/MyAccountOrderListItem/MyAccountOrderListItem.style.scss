@@ -47,6 +47,12 @@
     }
 
     &-Heading {
+        max-width: calc(100% - 10px);
+
+        @include mobile {
+            font-size: 14px;
+        }
+
         &_isSuccess span {
             color: var(--color-green-cyan);
         }
@@ -57,10 +63,14 @@
     }
 
     &-Image {
-        margin-right: 15px;
-        margin-top: 5px;
-        max-width: 70px;
+        margin-right: 10px;
+        max-width: 55px;
         padding-bottom: 75px;
+
+        @include desktop {
+            margin-top: 5px;
+            max-width: 70px;
+        }
 
         .PageWrapper_isArabic &  {
             margin-left: 15px;

@@ -61,6 +61,8 @@
             &-Brands {
                 display: flex;
                 text-align: center;
+                padding-right: 2px;
+                margin-left: 5px;
 
                 a {
                     line-height: 25px;
@@ -70,6 +72,10 @@
 
                 &_isArabic {
                     direction: ltr;
+                }
+
+                div {
+                    width: 100%;
                 }
             }
         }

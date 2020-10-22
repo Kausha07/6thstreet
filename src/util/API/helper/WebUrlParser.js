@@ -136,7 +136,6 @@ const Parser = {
 
     setParam(key, values = []) {
         const url = new URL(location.href);
-        console.log(url);
         // remove all matchign search params
         url.searchParams.forEach((_, sKey) => {
             if (sKey.includes(key)) {
@@ -155,6 +154,7 @@ const Parser = {
 
         // update the URL, preserve the state
         const { pathname, search } = url;
+
         browserHistory.push(pathname + search);
     }
 };

@@ -3,6 +3,7 @@ import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
+import { DEFAULT_STATE_NAME } from 'Component/NavigationAbstract/NavigationAbstract.config';
 import { setGender } from 'Store/AppState/AppState.action';
 import { changeNavigationState } from 'Store/Navigation/Navigation.action';
 import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
@@ -10,6 +11,7 @@ import { setPLPLoading } from 'Store/PLP/PLP.action';
 import PLPDispatcher from 'Store/PLP/PLP.dispatcher';
 import { Filters, Pages, RequestedOptions } from 'Util/API/endpoint/Product/Product.type';
 import WebUrlParser from 'Util/API/helper/WebUrlParser';
+import { getBreadcrumbs } from 'Util/Breadcrumbs/Breadcrubms';
 
 import PLP from './PLP.component';
 
@@ -114,11 +116,12 @@ export class PLPContainer extends PureComponent {
     constructor(props) {
         super(props);
 
-        console.log(props);
-
         if (this.getIsLoading()) {
             PLPContainer.requestProductList(props);
         }
+
+        this.updateBreadcrumbs();
+        this.updateHeaderState();
     }
 
     componentDidUpdate() {
@@ -129,6 +132,51 @@ export class PLPContainer extends PureComponent {
         // options recieved results from
         if (isLoading !== currentIsLoading) {
             setIsLoading(currentIsLoading);
+        }
+
+        this.updateBreadcrumbs();
+        this.updateHeaderState();
+    }
+
+    capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
+    updateHeaderState() {
+        const { changeHeaderState } = this.props;
+
+        changeHeaderState({
+            name: DEFAULT_STATE_NAME,
+            isHiddenOnMobile: true
+        });
+    }
+
+    updateBreadcrumbs() {
+        const { options: { q: query } } = this.props;
+        const breadcrumbLevels = location.pathname.split('.html')[0]
+            .substring(1)
+            .split('/');
+
+        if (query) {
+            const {
+                updateBreadcrumbs, setGender
+            } = this.props;
+            const breadcrumbsMapped = getBreadcrumbs(breadcrumbLevels, setGender);
+            const productListBreadcrumbs = breadcrumbsMapped.reduce((acc, item) => {
+                acc.unshift(item);
+
+                return acc;
+            }, []);
+
+            const breadcrumbs = [
+                ...productListBreadcrumbs,
+                {
+                    url: '/',
+                    name: __('Home')
+                }
+            ];
+
+            updateBreadcrumbs(breadcrumbs);
         }
     }
 
@@ -154,21 +202,7 @@ export class PLPContainer extends PureComponent {
     }
 
     containerProps = () => {
-        const {
-            updateBreadcrumbs,
-            changeHeaderState,
-            setGender,
-            filters,
-            options
-        } = this.props;
-
-        return {
-            updateBreadcrumbs,
-            changeHeaderState,
-            setGender,
-            filters,
-            options
-        };
+        // isDisabled: this._getIsDisabled()
     };
 
     render() {

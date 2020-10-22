@@ -1,7 +1,6 @@
 :root {
     --unselected-step-color: #dbdddd;
     --selected-step-color: #f96446;
-    --payment-button-color: #ff003b;
     --checkout-max-width: 1100px;
 }
 
@@ -29,21 +28,26 @@
         .Button {
             width: 100%;
             color: var(--white);
-            background-color: var(--payment-button-color);
+            background-color: var(--selected-step-color);
             font-family: "Avenir Next Bold";
 
             @include before-desktop {
                 opacity: 1;
                 border-radius: 7px;
             }
+
+            @include desktop {
+                margin-top: 25px;
+            }
         }
     }
     
     &-Step {
         max-width: 600px;
-
+        
         @include before-desktop {
             margin: 0 auto;
+            max-width: 700px;
         }
     }
     
@@ -137,5 +141,15 @@
                 }
             }
         }
-    }   
+    }
+
+    .CheckoutAddressBook {
+        margin-top: -3px;
+
+        .Checkout {
+            &-Heading{
+                display: none;
+            }
+        }
+    }
 }
