@@ -21,7 +21,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     checkForDisabling() {
         const { selectedShippingMethod } = this.props;
 
-        if (!selectedShippingMethod || !isMobile.any() || !isMobile.tablet()) {
+        if (!selectedShippingMethod) {
             return true;
         }
 
