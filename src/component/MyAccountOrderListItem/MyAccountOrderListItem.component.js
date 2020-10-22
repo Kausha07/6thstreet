@@ -106,8 +106,8 @@ class MyAccountOrderListItem extends SourceComponent {
                           elem="DetailsQty"
                           mix={ { block: 'MyAccountReturnCreateListItem', elem: 'DetailsProp' } }
                         >
-                            { __('Products: ') }
                             <span>{ items_count }</span>
+                            { items_count !== 1 ? __(' Items') : __(' Item') }
                         </p>
                     </div>
                     <p
