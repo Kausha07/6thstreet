@@ -33,7 +33,13 @@
         display: flex;
 
         @include before-desktop {
-            display: none;
+         position: absolute;
+            top: 35px;
+            margin: 0;
+            width: 100%;
+            background: var(--white);
+            padding-top: 15px;
+
         }
 
         &_isArabic {

@@ -17,12 +17,14 @@ class HeaderSearch extends PureComponent {
         onSearchChange: PropTypes.func.isRequired,
         onSearchSubmit: PropTypes.func.isRequired,
         onSearchClean: PropTypes.func.isRequired,
-        isVisible: PropTypes.bool
+        isVisible: PropTypes.bool,
+        isMobile: PropTypes.bool
     };
 
     static defaultProps = {
         search: '',
-        isVisible: true
+        isVisible: true,
+        isMobile: false
     };
 
     state = {
@@ -37,36 +39,6 @@ class HeaderSearch extends PureComponent {
             isVisible,
             onSearchClean
         } = this.props;
-
-        if (isMobile.any()) {
-            return (
-            <Form
-              id="header-search-mob"
-              onSubmit={ onSearchSubmit }
-            >
-                <Field
-                  id="search-field-mob"
-                  name="search"
-                  type="text"
-                  placeholder={ __('What are you looking for?') }
-                  onChange={ onSearchChange }
-                  value={ search }
-                />
-                <button
-                  block="Button"
-                  elem="Clear"
-                  onClick={ onSearchClean }
-                  mods={ {
-                      type: 'searchClear',
-                      isVisible
-                  } }
-                  aria-label="Clear search"
-                >
-                    <img src={ Clear } alt="Clear button" />
-                </button>
-            </Form>
-            );
-        }
 
         return (
             <Form
@@ -87,7 +59,8 @@ class HeaderSearch extends PureComponent {
                   onClick={ onSearchClean }
                   mods={ {
                       type: 'searchClear',
-                      isVisible
+                      isVisible,
+                      isMobile
                   } }
                   aria-label="Clear search"
                 >
@@ -109,10 +82,11 @@ class HeaderSearch extends PureComponent {
 
     render() {
         const { isArabic } = this.state;
+        const { isMobile } = this.props;
         return (
             <>
-            <div block="SearchBackground" mods={ { isArabic } } />
-            <div block="HeaderSearch" mods={ { isArabic } }>
+            <div block="SearchBackground" mods={ { isArabic, isMobile } } />
+            <div block="HeaderSearch" mods={ { isArabic, isMobile } }>
                 { this.renderField() }
                 { this.renderSuggestions() }
             </div>
