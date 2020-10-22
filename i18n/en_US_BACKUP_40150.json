@@ -454,5 +454,6 @@
     "Deliver to this address": null,
     "Where can we send your order?": null,
     "Type your address here": null,
-    "Postcode": null
+    "Postcode": null,
+    "New address": null
 }
