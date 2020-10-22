@@ -2,6 +2,7 @@ export const SET_CART_ID = 'SET_CART_ID';
 export const SET_CART_TOTALS = 'SET_CART_TOTALS';
 export const UPDATE_CART_ITEM = 'UPDATE_CART_ITEM';
 export const REMOVE_CART_ITEM = 'REMOVE_CART_ITEM';
+export const REMOVE_CART_ITEMS = 'REMOVE_CART_ITEMS';
 export const UPDATE_TOTALS = 'UPDATE_TOTALS';
 
 export const setCartId = (cartId) => ({
@@ -42,6 +43,10 @@ export const updateCartItem = (
 export const removeCartItem = (cartItem) => ({
     type: REMOVE_CART_ITEM,
     cartItem
+});
+
+export const removeCartItems = () => ({
+    type: REMOVE_CART_ITEMS
 });
 
 export const updateTotals = (cartData) => ({
