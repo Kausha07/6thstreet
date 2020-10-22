@@ -96,7 +96,6 @@ class SearchSuggestion extends PureComponent {
         return 'nothing found';
     }
 
-    // eslint-disable-next-line no-unused-vars
     renderTrendingBrand = ({ label, image_url }) => (
         <li>
             <Link to={ `/brands/${ label }` }>

@@ -20,7 +20,7 @@
         display: none;
     }
 
-    .HeaderSearch:focus-within .SearchSuggestion {
+    .HeaderSearch:hover .SearchSuggestion {
         display: flex;
 
         &:after {

@@ -59,6 +59,8 @@
     }
 
     .Form {
+        width: 100%;
+
         button {
             display: none;
         }
@@ -80,6 +82,7 @@
 
     .Field {
         margin: 0;
+        width: 100%;
 
         input {
             background-image: url('./icons/search-black.png');
