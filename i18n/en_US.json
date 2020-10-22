@@ -389,5 +389,8 @@
     " Items": null,
     " Item": null,
     "Payment type": null,
-    "Cash on Delivery Fee": null
+    "Cash on Delivery Fee": null,
+    "Catalog": null,
+    "null": null,
+    "refine ": null
 }

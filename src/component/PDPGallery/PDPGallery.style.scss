@@ -3,7 +3,9 @@
 }
 
 .PDPGallery {
-    height: fit-content;
+    --gallery-crumbs-height: auto;
+
+    height: auto;
     display: block;
 
     @include desktop {
@@ -14,6 +16,7 @@
 
     &-Crumbs {
         display: none;
+        height: var(--gallery-crumbs-height);
         @include desktop {
             display: block;
         } 
