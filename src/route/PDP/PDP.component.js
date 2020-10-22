@@ -1,3 +1,4 @@
+/* eslint-disable fp/no-let */
 /* eslint-disable max-len */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
@@ -6,6 +7,7 @@ import { DEFAULT_STATE_NAME } from 'Component/NavigationAbstract/NavigationAbstr
 import PDPDetailsSection from 'Component/PDPDetailsSection';
 import PDPMainSection from 'Component/PDPMainSection';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
+import { getBreadcrumbs } from 'Util/Breadcrumbs/Breadcrubms';
 
 // import browserHistory from 'Util/History';
 import './PDP.style';
@@ -21,14 +23,15 @@ class PDP extends PureComponent {
 
     state = {
         firstLoad: true,
-        productBreadcrumbs: []
+        productBreadcrumbs: [],
+        subcategory: []
     };
 
     componentDidUpdate() {
-        const { product } = this.props;
+        const { product, categories } = this.props;
         const { firstLoad } = this.state;
 
-        if (Object.keys(product).length !== 0 && firstLoad) {
+        if (Object.keys(product).length !== 0 && firstLoad && categories.length !== 0) {
             this.updateBreadcrumbs();
             this.updateHeaderState();
         }
@@ -47,52 +50,16 @@ class PDP extends PureComponent {
         const {
             updateBreadcrumbs,
             product: { categories, name },
-            setGender,
-            categories: menuCategories
+            setGender
         } = this.props;
         const categoriesLastLevel = categories[Object.keys(categories)[Object.keys(categories).length - 1]][0]
             .split(' /// ');
 
-        const subcategory = menuCategories.reduce((acc, category) => {
-            if (category.label === categoriesLastLevel[1]) {
-                const activeSubcategory = category.data[2].items.reduce((acc, subcategory) => {
-                    if (subcategory.label === categoriesLastLevel[2]) {
-                        acc.push(subcategory);
-                    }
+        const breadcrumbsMapped = getBreadcrumbs(categoriesLastLevel, setGender);
 
-                    return acc;
-                }, []);
-
-                acc.push(activeSubcategory[0]);
-            }
-
-            return acc;
-        }, []);
-
-        const breadcrumbsMapped = categoriesLastLevel.reduce((acc, categoryLevel) => {
-            switch (categoryLevel) {
-            case categoriesLastLevel[0]:
-                acc.push({
-                    url: '/',
-                    name: categoryLevel,
-                    onClick: setGender
-                });
-                break;
-            case categoriesLastLevel[1]:
-                acc.push({
-                    url: `/${categoriesLastLevel[0]}/${categoryLevel}.html?q=${categoriesLastLevel[0]}+${categoryLevel}`,
-                    name: categoryLevel
-                });
-                break;
-            case categoriesLastLevel[2]:
-                acc.push({
-                    url: subcategory[0].link,
-                    name: categoryLevel
-                });
-                break;
-            default:
-                acc.push({ name: categoryLevel, url: '/' });
-            }
+        // TODO: RENAME IT!
+        const test = breadcrumbsMapped.reduce((acc, item) => {
+            acc.unshift(item);
 
             return acc;
         }, []);
@@ -102,9 +69,7 @@ class PDP extends PureComponent {
                 url: '',
                 name: __(name)
             },
-            breadcrumbsMapped[2],
-            breadcrumbsMapped[1],
-            breadcrumbsMapped[0],
+            ...test,
             {
                 url: '/',
                 name: __('Home')

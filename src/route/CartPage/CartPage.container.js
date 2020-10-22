@@ -182,12 +182,18 @@ export class CartPageContainer extends PureComponent {
 
     _updateBreadcrumbs() {
         const { updateBreadcrumbs } = this.props;
-        const { activeTab } = this.state;
-        const { url, name } = tabMap[activeTab];
+        // const { activeTab } = this.state;
+        // const { url, name } = tabMap[activeTab];
+        console.log(DASHBOARD);
+
+        // updateBreadcrumbs([
+        //     { url: `${ MY_ACCOUNT_URL }${ url }`, name },
+        //     { name: __('My Account'), url: `${ MY_ACCOUNT_URL }/${ DASHBOARD }` }
+        // ]);
 
         updateBreadcrumbs([
-            { url: `${ MY_ACCOUNT_URL }${ url }`, name },
-            { name: __('My Account'), url: `${ MY_ACCOUNT_URL }/${ DASHBOARD }` }
+            { url: '', name: __('My bag') },
+            { name: __('Home'), url: '/' }
         ]);
     }
 

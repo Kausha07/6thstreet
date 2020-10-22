@@ -114,6 +114,8 @@ export class PLPContainer extends PureComponent {
     constructor(props) {
         super(props);
 
+        console.log(props);
+
         if (this.getIsLoading()) {
             PLPContainer.requestProductList(props);
         }

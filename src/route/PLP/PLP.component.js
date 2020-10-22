@@ -1,5 +1,4 @@
-/* eslint-disable max-len */
-/* eslint-disable react/no-unused-prop-types */
+/* eslint-disable fp/no-let */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
@@ -8,7 +7,7 @@ import { DEFAULT_STATE_NAME } from 'Component/NavigationAbstract/NavigationAbstr
 import PLPDetails from 'Component/PLPDetails';
 import PLPFilters from 'Component/PLPFilters';
 import PLPPages from 'Component/PLPPages';
-import { Filters } from 'Util/API/endpoint/Product/Product.type';
+import { getBreadcrumbs } from 'Util/Breadcrumbs/Breadcrubms';
 
 import './PLP.style';
 
@@ -17,7 +16,6 @@ export class PLP extends PureComponent {
         updateBreadcrumbs: PropTypes.func.isRequired,
         changeHeaderState: PropTypes.func.isRequired,
         setGender: PropTypes.func.isRequired,
-        filters: Filters.isRequired,
         options: PropTypes.object.isRequired
     };
 
@@ -40,77 +38,36 @@ export class PLP extends PureComponent {
     }
 
     updateBreadcrumbs() {
-        const { options: { categories_without_path, q } } = this.props;
-        const breadcrumbLevels = window.location.pathname.split('.html')[0]
+        const { options: { categories_without_path, q: query } } = this.props;
+        const breadcrumbLevels = location.pathname.split('.html')[0]
             .substring(1)
             .split('/');
 
+        console.log(location);
         console.log(breadcrumbLevels, categories_without_path);
-        if (q) {
+        if (query) {
             const {
                 updateBreadcrumbs, setGender
             } = this.props;
 
-            if (breadcrumbLevels.length === 1) {
-                const breadcrumbs = [
-                    {
-                        url: `/${breadcrumbLevels[0]}.html?q=${breadcrumbLevels[0]}`,
-                        name: __(breadcrumbLevels[0].replace(/-/g, ' '))
-                    },
-                    {
-                        url: '/',
-                        name: __('Home')
-                    }
-                ];
+            const breadcrumbsMapped = getBreadcrumbs(breadcrumbLevels, setGender);
 
-                updateBreadcrumbs(breadcrumbs);
-            } else {
-                // const selectedSubcategories = breadcrumbLevels[2] ? breadcrumbLevels[2] : 0;
-                const breadcrumbsMapped = breadcrumbLevels.reduce((acc, breadcrumbLevel) => {
-                    switch (breadcrumbLevel) {
-                    case breadcrumbLevels[0]:
-                        acc.push({
-                            url: '/',
-                            name: breadcrumbLevel,
-                            onClick: setGender
-                        });
-                        break;
-                    case breadcrumbLevels[1]:
-                        acc.push({
-                            url: `/${breadcrumbLevels[0]}/${breadcrumbLevel}.html?q=${breadcrumbLevels[0]}+${breadcrumbLevel}`,
-                            name: breadcrumbLevel
-                        });
-                        break;
-                    default:
-                        acc.push({ name: breadcrumbLevel, url: '/' });
-                    }
+            // TODO: RENAME IT!
+            const test = breadcrumbsMapped.reduce((acc, item) => {
+                acc.unshift(item);
 
-                    return acc;
-                }, []);
+                return acc;
+            }, []);
 
-                // eslint-disable-next-line no-magic-numbers
-                const breadcrumbs = breadcrumbLevels.length === 3 ? [
-                    {
-                        url: '/',
-                        name: __(breadcrumbLevels[2].replace(/-/g, ' '))
-                    },
-                    breadcrumbsMapped[1],
-                    breadcrumbsMapped[0],
-                    {
-                        url: '/',
-                        name: __('Home')
-                    }
-                ] : [
-                    breadcrumbsMapped[1],
-                    breadcrumbsMapped[0],
-                    {
-                        url: '/',
-                        name: __('Home')
-                    }
-                ];
+            const breadcrumbs = [
+                ...test,
+                {
+                    url: '/',
+                    name: __('Home')
+                }
+            ];
 
-                updateBreadcrumbs(breadcrumbs);
-            }
+            updateBreadcrumbs(breadcrumbs);
         }
     }
 

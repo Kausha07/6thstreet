@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import { toggleBreadcrumbs } from 'Store/Breadcrumbs/Breadcrumbs.action';
 import { getStaticFile } from 'Util/API/endpoint/StaticFiles/StaticFiles.endpoint';
 import Logger from 'Util/Logger';
 
@@ -15,13 +16,14 @@ export const mapStateToProps = (state) => ({
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
-    // addProduct: options => CartDispatcher.addProductToCart(dispatch, options)
+    toggleBreadcrumbs: (areBreadcrumbsVisible) => _dispatch(toggleBreadcrumbs(areBreadcrumbsVisible))
 });
 
 export class HomePageContainer extends PureComponent {
     static propTypes = {
         gender: PropTypes.string.isRequired,
-        locale: PropTypes.string.isRequired
+        locale: PropTypes.string.isRequired,
+        toggleBreadcrumbs: PropTypes.func.isRequired
     };
 
     containerFunctions = {
@@ -41,7 +43,9 @@ export class HomePageContainer extends PureComponent {
 
     componentDidUpdate(prevProps) {
         const { gender: prevGender, locale: prevLocale } = prevProps;
-        const { gender, locale } = this.props;
+        const { gender, locale, toggleBreadcrumbs } = this.props;
+
+        toggleBreadcrumbs(false);
 
         if (gender !== prevGender || locale !== prevLocale) {
             this.requestDynamicContent(true);

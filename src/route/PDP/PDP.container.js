@@ -104,6 +104,8 @@ export class PDPContainer extends PureComponent {
         try {
             const categories = await getStaticFile('categories');
 
+            console.log(categories);
+
             this.setState({
                 categories
             });
@@ -121,6 +123,8 @@ export class PDPContainer extends PureComponent {
             setGender
         } = this.props;
         const { categories } = this.state;
+
+        console.log(categories);
 
         return {
             updateBreadcrumbs,
