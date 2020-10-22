@@ -5,7 +5,6 @@ import Field from 'Component/Field';
 import Form from 'Component/Form';
 import SearchSuggestion from 'Component/SearchSuggestion';
 import { isArabic } from 'Util/App';
-import isMobile from 'Util/Mobile';
 
 import Clear from './icons/close-black.png';
 
@@ -17,14 +16,12 @@ class HeaderSearch extends PureComponent {
         onSearchChange: PropTypes.func.isRequired,
         onSearchSubmit: PropTypes.func.isRequired,
         onSearchClean: PropTypes.func.isRequired,
-        isVisible: PropTypes.bool,
-        isMobile: PropTypes.bool
+        isVisible: PropTypes.bool
     };
 
     static defaultProps = {
         search: '',
-        isVisible: true,
-        isMobile: false
+        isVisible: true
     };
 
     state = {
@@ -59,8 +56,7 @@ class HeaderSearch extends PureComponent {
                   onClick={ onSearchClean }
                   mods={ {
                       type: 'searchClear',
-                      isVisible,
-                      isMobile
+                      isVisible
                   } }
                   aria-label="Clear search"
                 >
@@ -82,11 +78,10 @@ class HeaderSearch extends PureComponent {
 
     render() {
         const { isArabic } = this.state;
-        const { isMobile } = this.props;
         return (
             <>
-            <div block="SearchBackground" mods={ { isArabic, isMobile } } />
-            <div block="HeaderSearch" mods={ { isArabic, isMobile } }>
+            <div block="SearchBackground" mods={ { isArabic } } />
+            <div block="HeaderSearch" mods={ { isArabic } }>
                 { this.renderField() }
                 { this.renderSuggestions() }
             </div>
