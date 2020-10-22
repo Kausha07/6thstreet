@@ -1,3 +1,128 @@
+.Checkout {
+	&-Step {
+		.ShippingStep {
+			&_isSignedIn {
+				@include before-desktop {
+					display: grid;
+				}
+
+				.MyAccountAddressBook {
+					&-backBtn {
+						display: none;
+					}
+
+					&-ContentWrapper {
+						@include before-desktop {
+							top: -70px;
+						}
+
+						&_formContent {
+							.MyAccountAddressBook {
+
+							&-backBtn {
+								transform: translateX(-50%);
+								position: absolute;
+								width: 20px;
+								height: 30px;
+								top: -110px;
+								left: 0;
+								z-index: 1;
+						
+								&::before {
+									content: '';
+									position: absolute;
+									left: 5px;
+									border: solid var(--black);
+									border-width: 0 2px 2px 0;
+									display: inline-block;
+									padding: 4px;
+									transform: rotate(135deg);
+									-webkit-transform: rotate(135deg);
+								}
+						
+								@include desktop() {
+									height: 0;
+								}
+							}
+						}
+						}
+					}
+
+					&-NewAddressWrapper {
+						grid-row: 4;
+						background: var(--white);
+						padding: 20px 30px;
+
+						@include before-desktop {
+							display: flex;
+							justify-content: center;
+						}
+
+						&_formContent {
+							display: none;
+						}
+					}
+			
+					&-NewAddress {
+						font-family: "Avenir Next Bold";
+						font-size: 13px;
+						font-weight: bold;
+						line-height: 18px;
+			
+						@include before-desktop {
+							border: none;
+							border-radius: 7px;
+							background: var(--my-acc-background);
+							color: var(--black);
+							font-family: "Avenir Next Regular";
+							text-transform: capitalize;
+							min-width: 140px;
+							margin-top: 38px;
+
+							&::before {
+								content: '+ ';
+							}
+			
+							&:hover {
+								background: var(--my-acc-background);
+							}
+						}
+					}
+				}
+
+				.MyAccountAddressPopup {
+					margin-bottom: 20px;
+					background: var(--white);
+			
+					.Form {
+						@include desktop {
+							padding: 20px 30px;
+						}
+			
+						.MyAccountAddressFieldForm {
+							&-Header {
+								h2 {
+									border-top: none;
+									margin-left: 0;
+								}
+							}	
+						}
+					}
+				}
+
+				.Form .CheckoutShipping{
+					grid-row: 3;
+				}
+			}
+
+			&_formContent {
+				.CheckoutShipping {
+					display: none;
+				}
+			}
+		}
+}
+}
 .CheckoutShipping {
 	&-Button {
 		@include desktop {
@@ -8,7 +133,6 @@
 
 .CheckoutShippingStep {
 	background: var(--white);
-	margin-top: 20px;
 
 	&-DeliveryButton {
 		padding: 30px;
@@ -23,6 +147,10 @@
 			letter-spacing: 0;
 			line-height: 18px;
 			text-align: center;
+
+			&:hover {
+				border: 2px solid var(--black);
+			}
 		}
 
 		@include before-desktop {

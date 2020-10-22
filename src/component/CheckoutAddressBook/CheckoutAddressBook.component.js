@@ -22,7 +22,8 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
 
     state = {
         isCustomAddressExpanded: false,
-        currentPage: 0
+        currentPage: 0,
+        isMobile: isMobile.any() || isMobile.tablet()
     };
 
     renderCustomAddress() {
@@ -40,16 +41,15 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
     }
 
     renderSignedInContent() {
-        const { currentPage, isCustomAddressExpanded } = this.state;
+        const { currentPage, isCustomAddressExpanded, isMobile } = this.state;
 
-        if (isMobile.any()) {
+        if (isMobile) {
             return (
-                <>
-                    <div
-                      block="CheckoutAddressBookSlider"
-                      elem="Wrapper"
-                      mods={ { isCustomAddressExpanded } }
-                    >
+                <div
+                  block="CheckoutAddressBookSlider"
+                  elem="Wrapper"
+                  mods={ { isCustomAddressExpanded } }
+                >
                         <Slider
                           mix={ { block: 'CheckoutAddressBookSlider', elem: 'MobileSlider' } }
                           activeImage={ currentPage }
@@ -57,9 +57,7 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
                         >
                             { this.renderAddressList() }
                         </Slider>
-                    </div>
-                    { this.renderOptionalCustomAddress() }
-                </>
+                </div>
             );
         }
 
@@ -81,45 +79,8 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
         this.setState({ hideCards: true });
     };
 
-    renderButtonLabel() {
-        return isMobile.any()
-            ? __('new address')
-            : __('Add new address');
-    }
-
-    openNewForm = () => {
-        const { showCreateNewPopup } = this.props;
-
-        if (isMobile.any()) {
-            this.hideCards();
-        }
-        showCreateNewPopup();
-    };
-
     renderOptionalCustomAddress() {
-        const { isCustomAddressExpanded } = this.state;
-
-        return (
-            <div
-              block="CheckoutAddressBook"
-              elem="CustomAddressWrapper"
-            >
-                <button
-                  block="CheckoutAddressBook"
-                  elem="Button"
-                  mods={ { isCustomAddressExpanded } }
-                  mix={ {
-                      block: 'button primary medium',
-                      mods: { isHollow: true }
-                  } }
-                  type="button"
-                  onClick={ this.expandCustomAddress }
-                >
-                    { this.renderButtonLabel() }
-                </button>
-                { isCustomAddressExpanded && this.renderCustomAddress() }
-            </div>
-        );
+        return null;
     }
 
     render() {

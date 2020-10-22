@@ -3,10 +3,15 @@
 import Loader from 'Component/Loader';
 import { CheckoutAddressTable as SourceCheckoutAddressTable }
     from 'SourceComponent/CheckoutAddressTable/CheckoutAddressTable.component';
+import { isArabic } from 'Util/App';
 
 import './CheckoutAddressTable.style.scss';
 
 export class CheckoutAddressTable extends SourceCheckoutAddressTable {
+    state = {
+        isArabic: isArabic()
+    };
+
     renderCard() {
         const {
             address: {
@@ -53,9 +58,10 @@ export class CheckoutAddressTable extends SourceCheckoutAddressTable {
 
     render() {
         const { countries, mix } = this.props;
+        const { isArabic } = this.state;
 
         return (
-            <div block="MyAccountAddressTable" mix={ mix }>
+            <div block="MyAccountAddressTable" mods={ { isArabic } } mix={ mix }>
                 <Loader isLoading={ !countries.length } />
                 { this.renderCard() }
                 { this.renderActions() }
