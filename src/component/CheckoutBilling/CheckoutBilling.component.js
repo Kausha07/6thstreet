@@ -15,13 +15,13 @@ export class CheckoutBilling extends SourceCheckoutBilling {
                 <strong block="CheckoutOrderSummary" elem="Text">
                     { name }
                 </strong>
-                { price !== undefined
-                    ? (
-                <strong block="CheckoutOrderSummary" elem="Price">
-                    { `${currency_code } ${ price}` }
-                </strong>
-                    )
-                    : null }
+                    { price !== undefined
+                        ? (
+                        <strong block="CheckoutOrderSummary" elem="Price">
+                            { `${currency_code } ${ price}` }
+                        </strong>
+                        )
+                        : null }
             </li>
         );
     }
@@ -85,9 +85,9 @@ export class CheckoutBilling extends SourceCheckoutBilling {
         } = this.props;
 
         return (
-                <div block="Checkout" elem="OrderTotals">
-                        { this.renderPriceLine(total, __('Total Amount')) }
-                </div>
+            <div block="Checkout" elem="OrderTotals">
+                    { this.renderPriceLine(total, __('Total Amount')) }
+            </div>
         );
     }
 

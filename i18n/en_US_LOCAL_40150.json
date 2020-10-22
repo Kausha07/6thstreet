@@ -397,11 +397,14 @@
     "Postcode": null,
     "AVAILABLE PRODUCTS": null,
     "Back": null,
-    " Item": null,
+    "Add credit cart": null,
+    "Credit card successfully added": null,
+    "Something went wrong": null,
+    "Card number": null,
+    "Expiration Date": null,
+    "CVV": null,
+    "This field should contain at least 1 number character": null,
+    "This field should contain at least 1 capitalized character": null,
     " Items": null,
-    " Edit": null,
-    "Total": null,
-    "Total Amount": null,
-    "First Name": null,
-    "Last Name": null
+    " Item": null
 }

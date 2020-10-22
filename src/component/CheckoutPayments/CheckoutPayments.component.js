@@ -1,9 +1,21 @@
+import CreditCard from 'Component/CreditCard';
 import StoreCredit from 'Component/StoreCredit';
 import SourceCheckoutPayments from 'SourceComponent/CheckoutPayments/CheckoutPayments.component';
+
+import { CARD } from './CheckoutPayments.config';
 
 import './CheckoutPayments.extended.style';
 
 export class CheckoutPayments extends SourceCheckoutPayments {
+    paymentRenderMap = {
+        ...SourceCheckoutPayments.paymentRenderMap,
+        [CARD]: this.renderCreditCard.bind(this)
+    };
+
+    renderCreditCard() {
+        return <CreditCard />;
+    }
+
     renderToggleableDiscountOptions() {
         return (
             <div block="CheckoutPayments" elem="DiscountOptionWrapper">
