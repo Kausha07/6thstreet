@@ -26,7 +26,6 @@ export class CheckoutPayments extends SourceCheckoutPayments {
 
     renderContent() {
         const { hasError } = this.state;
-        console.log(this.props);
 
         if (hasError) {
             return (
