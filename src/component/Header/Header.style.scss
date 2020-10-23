@@ -26,7 +26,7 @@ main {
     padding: 20px;
 
     &-BackToShoppingMobile {
-        
+
         @include desktop {
             display: none;
         }
@@ -89,7 +89,7 @@ main {
             display: none;
         }
     }
-    
+
     &-SecureShipping {
         padding: 10px;
         text-align: right;
@@ -109,9 +109,8 @@ main {
     }
 
     &-SecureShippingLabel {
-        font-family: "Avenir Next Demi";
         font-size: 20px;
-        font-weight: 500;
+        font-weight: var(--fw-demi);
     }
 }
 

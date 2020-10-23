@@ -1,6 +1,6 @@
 :root {
-    --top-row-background: #000000;
-    --top-row-fontcolor: #ffffff;
+    --top-row-background: #000;
+    --top-row-fontcolor: #fff;
     --table-border-color: #E0E0E0;
     --unselected-color: #4A4A4A;
 }
@@ -9,51 +9,51 @@
     &-Table {
         width: 100%;
         border-collapse: separate;
-        border: solid 1px var(--table-border-color); 
-        border-bottom: 0px;
+        border: solid 1px var(--table-border-color);
+        border-bottom: 0;
     }
 
     &-TableCellTop {
         overflow: hidden;
         text-align: center;
         font-size: 16px;
-        border-right: solid 1px var(--table-border-color); 
-        border-bottom: solid 1px var(--table-border-color); 
-        background-clip: padding-box; 
+        border-right: solid 1px var(--table-border-color);
+        border-bottom: solid 1px var(--table-border-color);
+        background-clip: padding-box;
     }
 
     &_isArabic {
         td:nth-child(3) {
             border-right: solid 1px var(--table-border-color);
-            border-left: 0px;
+            border-left: 0;
         }
-    
+
         td:nth-child(1) {
-            border-right: 0px;
+            border-right: 0;
             border-left: solid 1px var(--table-border-color);
         }
     }
 
     td:nth-child(3) {
-        border-right: 0px;
+        border-right: 0;
     }
 
     td:nth-child(1) {
-        border-left: 0px;
+        border-left: 0;
     }
 
     &-TableCell{
         text-align: center;
         line-height: 25px;
         font-size: 14px;
-        border-right: solid 1px var(--table-border-color); 
-        border-bottom: solid 1px var(--table-border-color); 
-        font-family: 'Avenir Next Regular';
-        background-clip: padding-box; 
+        border-right: solid 1px var(--table-border-color);
+        border-bottom: solid 1px var(--table-border-color);
+        font-weight: var(--fw-regular);
+        background-clip: padding-box;
     }
 
     &-TopRow {
-        font-family: 'Avenir Next Demi';
+        font-weight: var(--fw-demi);
         background-color: var(--top-row-background);
         color: var(--top-row-fontcolor)
     }
@@ -71,7 +71,7 @@
     }
 
     &-ButtonCm, &-ButtonInch {
-        font-family: 'Avenir Next Regular';
+        font-weight: var(--fw-regular);
         font-size: 14px;
         letter-spacing: 2px;
         height: 4rem;
@@ -89,22 +89,22 @@
     &-ButtonCm {
         color: var(--unselected-color);
         border-style: none;
-        font-weight: lighter;
+        font-weight: var(--fw-light);
 
         &_isCm {
             border: solid 1px var(--top-row-background);
-            font-weight: bold;
+            font-weight: var(--fw-bold);
             color: var(--top-row-background);
         }
-    } 
+    }
 
     &-ButtonInch {
         border: solid 1px var(--top-row-background);
-        font-weight: bold;
+        font-weight: var(--fw-bold);
 
         &_isCm {
             border-style: none;
-            font-weight: lighter;
+            font-weight: var(--fw-light);
         }
     }
 }
@@ -114,7 +114,7 @@
         &_isArabic {
             td:nth-child(3) {
                 border-right: solid 1px var(--table-border-color);
-                border-left: 0px;
+                border-left: 0;
             }
         }
     }

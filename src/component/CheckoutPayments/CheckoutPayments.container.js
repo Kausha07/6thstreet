@@ -15,7 +15,8 @@ export const mapDispatchToProps = (dispatch) => ({
 export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
     static propTypes = {
         ...SourceCheckoutPaymentsContainer.propTypes,
-        setTabbyWebUrl: PropTypes.func.isRequired
+        setTabbyWebUrl: PropTypes.func.isRequired,
+        setCreditCardData: PropTypes.func.isRequired
     };
 
     selectPaymentMethod({ m_code: code }) {

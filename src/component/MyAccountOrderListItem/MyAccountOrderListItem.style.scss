@@ -93,7 +93,7 @@
 
         &Packages {
             color: var(--color-gray);
-            font-family: var(--avenir-regular-font);
+            font-weight: var(--fw-regular);
             margin: 0;
             text-transform: none;
 
@@ -138,7 +138,7 @@
 
         &Title {
             color: var(--color-gray);
-            font-family: var(--avenir-regular-font);
+            font-weight: var(--fw-regular);
             font-size: 12px;
             text-transform: none;
         }

@@ -10,7 +10,7 @@
         right: 0;
         bottom: 0;
         left: 0;
-        background: rgba(70, 70, 70, 0.8);
+        background: rgba(70, 70, 70, .8);
         z-index: 8;
     }
 
@@ -53,11 +53,10 @@
             }
 
             h2 {
-                font-family: 'Avenir Next Demi Regular', sans-serif;
                 margin-top: 0;
                 text-transform: none;
                 font-size: 18px;
-                font-weight: 400;
+                font-weight: var(--fw-demi);
             }
         }
     }
@@ -73,8 +72,7 @@
         right: 0;
         z-index: 9;
         text-transform: none;
-        font-family: 'Avenir Next Demi Regular', sans-serif;
-        font-weight: 400;
+        font-weight: var(--fw-regular);
         font-size: 16px;
         padding: 0;
 
@@ -98,7 +96,7 @@
 }
 
 .PageWrapper {
-    &_isArabic { 
+    &_isArabic {
         .MyAccountAddressPopup {
             &-xBtn {
                 right: auto;
