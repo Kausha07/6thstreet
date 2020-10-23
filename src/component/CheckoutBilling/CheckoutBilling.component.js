@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 import CheckoutAddressBook from 'Component/CheckoutAddressBook';
 import CheckoutPayments from 'Component/CheckoutPayments';
 import Field from 'Component/Field';
@@ -8,6 +10,11 @@ import {
 import './CheckoutBilling.extended.style';
 
 export class CheckoutBilling extends SourceCheckoutBilling {
+    static propTypes = {
+        ...SourceCheckoutBilling.propTypes,
+        setTabbyWebUrl: PropTypes.func.isRequired
+    };
+
     renderPriceLine(price, name, mods) {
         const { totals: { currency_code } } = this.props;
 
@@ -24,34 +31,6 @@ export class CheckoutBilling extends SourceCheckoutBilling {
                         )
                         : null }
             </li>
-        );
-    }
-
-    renderPayments() {
-        const {
-            paymentMethods,
-            onPaymentMethodSelect,
-            setLoading,
-            setDetailsStep,
-            shippingAddress,
-            setCashOnDeliveryFee
-        } = this.props;
-
-        if (!paymentMethods.length) {
-            return null;
-        }
-
-        return (
-            <CheckoutPayments
-              setCashOnDeliveryFee={ setCashOnDeliveryFee }
-              setLoading={ setLoading }
-              setDetailsStep={ setDetailsStep }
-              paymentMethods={ paymentMethods }
-              onPaymentMethodSelect={ onPaymentMethodSelect }
-              setOrderButtonVisibility={ this.setOrderButtonVisibility }
-              billingAddress={ shippingAddress }
-              setOrderButtonEnableStatus={ this.setOrderButtonEnableStatus }
-            />
         );
     }
 
@@ -108,6 +87,36 @@ export class CheckoutBilling extends SourceCheckoutBilling {
         );
     }
 
+    renderPayments() {
+        const {
+            paymentMethods,
+            onPaymentMethodSelect,
+            setLoading,
+            setDetailsStep,
+            shippingAddress,
+            setTabbyWebUrl,
+            setCashOnDeliveryFee
+        } = this.props;
+
+        if (!paymentMethods.length) {
+            return null;
+        }
+
+        return (
+            <CheckoutPayments
+              setCashOnDeliveryFee={ setCashOnDeliveryFee }
+              setLoading={ setLoading }
+              setDetailsStep={ setDetailsStep }
+              paymentMethods={ paymentMethods }
+              onPaymentMethodSelect={ onPaymentMethodSelect }
+              setOrderButtonVisibility={ this.setOrderButtonVisibility }
+              billingAddress={ shippingAddress }
+              setOrderButtonEnableStatus={ this.setOrderButtonEnableStatus }
+              setTabbyWebUrl={ setTabbyWebUrl }
+            />
+        );
+    }
+
     renderTotals() {
         const {
             totals: { total }
@@ -153,4 +162,5 @@ export class CheckoutBilling extends SourceCheckoutBilling {
         );
     }
 }
+
 export default CheckoutBilling;
