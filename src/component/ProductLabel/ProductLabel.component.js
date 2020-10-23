@@ -41,10 +41,32 @@ class ProductLabel extends PureComponent {
         return null;
     }
 
+    renderExclusive() {
+        const { product: { promotion } } = this.props;
+
+        if (promotion !== undefined) {
+            return promotion !== null
+                ? <span block="PDPSummary" elem="Exclusive">{ promotion.toLowerCase() }</span>
+                : null;
+        }
+
+        return null;
+    }
+
+    renderDash() {
+        if (this.renderNew() !== null && this.renderExclusive() !== null) {
+            return <span block="PDPSummary" elem="Dash">&nbsp; &#8210; &nbsp;</span>;
+        }
+
+        return null;
+    }
+
     render() {
         return (
             <div>
                 { this.renderNew() }
+                { this.renderDash() }
+                { this.renderExclusive() }
             </div>
         );
     }

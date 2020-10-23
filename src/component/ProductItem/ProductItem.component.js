@@ -31,6 +31,18 @@ class ProductItem extends PureComponent {
         return <ProductLabel product={ product } />;
     }
 
+    renderExclusive() {
+        const { product: { promotion } } = this.props;
+
+        if (promotion !== undefined) {
+            return promotion !== null
+                ? <span block="PLPSummary" elem="Exclusive">{ promotion }</span>
+                : null;
+        }
+
+        return null;
+    }
+
     renderImage() {
         const { product: { thumbnail_url } } = this.props;
 
@@ -96,6 +108,7 @@ class ProductItem extends PureComponent {
                 { this.renderLabel() }
                 { this.renderWishlistIcon() }
                 { this.renderLink() }
+                { this.renderExclusive() }
             </li>
         );
     }

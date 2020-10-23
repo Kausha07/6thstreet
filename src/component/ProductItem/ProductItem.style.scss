@@ -25,4 +25,25 @@
             border-radius: 10px 0 0 10px;
         }
     }
+
+    .PDPSummary {
+        &-Dash, &-Exclusive {
+            display: none;
+        }
+    }
+
+    .PLPSummary {
+        &-Exclusive {
+            color: var(--Tundora);
+            font-size: 17px;
+            position: absolute;
+            padding: 4px 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.6);
+            z-index: 1;
+            right: 0;
+            grid-row: 3;
+            bottom: 83px;
+        }
+    }
 }
