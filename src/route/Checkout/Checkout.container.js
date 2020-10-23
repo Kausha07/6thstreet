@@ -188,7 +188,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
     async savePaymentMethodAndPlaceOrder(paymentInformation) {
         const { paymentMethod: { code, additional_data } } = paymentInformation;
-        const { createOrder } = this.props;
+        const { createOrder, customer: { email: customerEmail } } = this.props;
         const { shippingAddress: { email } } = this.state;
 
         const data = code === CARD
@@ -199,7 +199,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                     token: BrowserDatabase.getItem('CREDIT_CART_TOKEN')
                 },
                 customer: {
-                    email: email
+                    email: customerEmail ? customerEmail : email
                 },
                 '3ds': {
                     enable: true
