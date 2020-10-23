@@ -53,10 +53,6 @@ export class SearchSuggestionContainer extends PureComponent {
         requestSearchSuggestions(search);
     }
 
-    containerFunctions = {
-        // getData: this.getData.bind(this)
-    };
-
     constructor(props) {
         super(props);
 

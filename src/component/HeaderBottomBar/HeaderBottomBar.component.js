@@ -34,7 +34,6 @@ class HeaderBottomBar extends NavigationAbstract {
     renderSearch() {
         const { isArabic } = this.state;
         if (!isMobile.any()) {
-            console.log('isDesktop');
             return (
                 <div
                   mix={ {
@@ -45,13 +44,12 @@ class HeaderBottomBar extends NavigationAbstract {
                 >
                     <HeaderSearch
                       key="search"
-                      isMobile
                     />
                 </div>
             );
         }
 
-        return (null);
+        return null;
     }
 
     render() {

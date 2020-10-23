@@ -51,6 +51,7 @@ class HeaderSearch extends PureComponent {
                   value={ search }
                 />
                 <button
+                  block="Button"
                   elem="Clear"
                   onClick={ onSearchClean }
                   mods={ {
@@ -79,11 +80,11 @@ class HeaderSearch extends PureComponent {
         const { isArabic } = this.state;
         return (
             <>
-                    <div block="SearchBackground" mods={ { isArabic } } />
-                    <div block="HeaderSearch" mods={ { isArabic } }>
-                        { this.renderField() }
-                        { this.renderSuggestion() }
-                    </div>
+                <div block="SearchBackground" mods={ { isArabic } } />
+                <div block="HeaderSearch" mods={ { isArabic } }>
+                    { this.renderField() }
+                    { this.renderSuggestion() }
+                </div>
             </>
         );
     }

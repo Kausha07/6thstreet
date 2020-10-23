@@ -2,13 +2,11 @@ import { PureComponent } from 'react';
 
 import HeaderCart from 'Component/HeaderCart';
 import HeaderGenders from 'Component/HeaderGenders';
-import HeaderSearch from 'Component/HeaderSearch';
 import MenuCategory from 'Component/MenuCategory';
 import { APP_STATE_CACHE_KEY } from 'Store/AppState/AppState.reducer';
 import { Categories } from 'Util/API/endpoint/Categories/Categories.type';
 import { isArabic } from 'Util/App';
 import BrowserDatabase from 'Util/BrowserDatabase';
-import isMobile from 'Util/Mobile';
 
 import './Menu.style';
 
@@ -76,17 +74,6 @@ class Menu extends PureComponent {
         return categories.map(this.renderCategory);
     }
 
-    renderSearch() {
-        if (isMobile.any()) {
-            console.log('IsMobile');
-            return (
-            <HeaderSearch />
-            );
-        }
-
-        return null;
-    }
-
     render() {
         const { isArabic } = this.state;
 
@@ -109,7 +96,6 @@ class Menu extends PureComponent {
                         <HeaderGenders />
                         <HeaderCart />
                     </div>
-                    { this.renderSearch() }
                 </div>
                 <div
                   mix={ {
