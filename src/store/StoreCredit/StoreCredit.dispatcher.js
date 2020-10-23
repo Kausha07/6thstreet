@@ -32,27 +32,30 @@ export class StoreCreditDispatcher {
         }
     }
 
+    isStoreCreditApplied() {
+        const { Cart: { cartTotals: { total_segments: totals = [] } = {} } } = getStore().getState();
+
+        const { value: storeCreditBalance } = totals.find(({ code }) => code === 'customerbalance') || 0;
+
+        return storeCreditBalance && storeCreditBalance !== 0;
+    }
+
     async toggleStoreCredit(dispatch, apply) {
         try {
             dispatch(setIsLoading(true));
 
             const { Cart: { cartId } } = getStore().getState();
-            const data = {};
 
-            try {
-                data.data = apply
-                    ? await applyStoreCredit(cartId)
-                    : await removeStoreCredit(cartId);
-                // @TODO: Implement a way to check if store credit is applied to cart for checkbox state
-            } catch (e) {
-                data.data = true;
-                // Do nothing as requests above will fail due to missing mobile API authorization
+            if (apply) {
+                await applyStoreCredit(cartId);
+            } else {
+                await removeStoreCredit(cartId);
             }
 
             await CartDispatcher.getCartTotals(dispatch, cartId);
             await this.getStoreCredit(dispatch);
 
-            const result = data.data && apply;
+            const result = this.isStoreCreditApplied();
 
             dispatch(updateStoreCreditState(result));
 

@@ -2,6 +2,7 @@ import BrowserDatabase from 'Util/BrowserDatabase';
 
 import {
     REMOVE_CART_ITEM,
+    REMOVE_CART_ITEMS,
     SET_CART_ID,
     SET_CART_TOTALS,
     UPDATE_CART_ITEM,
@@ -126,6 +127,18 @@ export const CartReducer = (state = getInitialState(), action) => {
         return {
             ...state,
             cartItems: reducedCartItems
+        };
+
+    case REMOVE_CART_ITEMS:
+        BrowserDatabase.setItem(
+            [],
+            CART_ITEMS_CACHE_KEY,
+            ONE_YEAR_IN_SECONDS
+        );
+
+        return {
+            ...state,
+            cartItems: []
         };
 
     case UPDATE_TOTALS:
