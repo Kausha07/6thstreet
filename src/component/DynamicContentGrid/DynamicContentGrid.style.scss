@@ -4,7 +4,6 @@
     --dynamic-content-grid-column-count-desktop: 3;
     --subtitle-font-size: 17px;
     --title-font-size: 25px;
-    --title-font-family: "Avenir Next Bold";
     --light-gray: #efefef;
 }
 
@@ -42,7 +41,7 @@
         }
 
         h2 {
-            font-family: 'Avenir Next Bold', serif;
+            font-weight: var(--fw-bold);
             margin-bottom: 5px;
 
             @include desktop {
@@ -51,7 +50,7 @@
         }
 
         span {
-            font-family: 'Avenir Next Regular', serif;
+            font-weight: var(--fw-regular);
 
             @include desktop {
                 font-size: 1.2rem;
@@ -87,7 +86,7 @@
 
     &-Title {
         display: block;
-        font-family: var(--title-font-family);
+        font-weight: var(--fw-bold);
         font-size: var(--title-font-size);
         margin-bottom: 10px;
         text-transform: uppercase;

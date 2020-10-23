@@ -20,6 +20,7 @@
         height: 30px;
         font-size: 12px;
         display: none;
+        font-weight: var(--fw-demi);
 
         @include desktop {
             display: block;
@@ -92,7 +93,7 @@
     }
 
     &-OpenHours {
-        font-weight: bold;
+        font-weight: var(--fw-bold);
         padding-bottom: 12px;
     }
 
@@ -123,7 +124,7 @@
             position: absolute;
             left: 35px;
             content: "TAP TO CALL";
-            font-weight: 500;
+            font-weight: var(--fw-medium);
         }
 
         @include desktop {
@@ -201,7 +202,7 @@
         width: 100%;
         margin: 10px 0;
         color: var(--white-color);
-        font-weight: 600;
+        font-weight: var(--fw-demi);
         text-align: center;
         padding: 0;
         border: none;
@@ -220,7 +221,7 @@
 
         p {
             text-transform: lowercase;
-            font-weight: 500;
+            font-weight: var(--fw-medium);
             letter-spacing: 0;
             padding-right: 3px;
             font-size: 13px;
@@ -237,6 +238,7 @@
         a {
             font-size: 13px;
             line-height: 16px;
+            font-weight: var(--fw-bold);
         }
 
         &_isArabic {

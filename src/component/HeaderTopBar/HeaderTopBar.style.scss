@@ -30,8 +30,8 @@
     &-CmsBlock {
         display: none;
         font-size: 12px;
-        font-weight: 600;
-        letter-spacing: 0.5px;
+        font-weight: var(--fw-demi);
+        letter-spacing: .5px;
         line-height: 16px;
         margin: 7px 0;
         text-transform: uppercase;

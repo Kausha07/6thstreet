@@ -6,7 +6,7 @@
 
 .PDPDetailsSection {
     padding: 0 20px;
-    font-family: 'Avenir Next Regular';
+    font-weight: var(--fw-regular);
 
     @include desktop() {
         padding: 0 20px;
@@ -14,7 +14,7 @@
 
     h2 {
         text-transform: none;
-        font-family: 'Avenir Next Demi Bold', sans-serif;
+        font-weight: var(--fw-demi);
         font-size: 24px;
         border-top: 1px solid var(--pdp-split-line);
         margin-top: 0;
@@ -26,10 +26,9 @@
         display: flex;
         align-items: center;
         margin-right: 60px;
-        font-family: 'Avenir Next Demi Bold', sans-serif;
         font-size: 15px;
         color: var(--pdp-icon-text-color);
-        font-weight: 400;
+        font-weight: var(--fw-regular);
     }
 
     &-IconsSection {
@@ -43,7 +42,7 @@
 
     &-IconContainer {
         margin-top: 10px;
-        font-weight: 600;
+        font-weight: var(--fw-demi);
     }
 
     &-Icon {
@@ -76,7 +75,7 @@
     &-Highlights {
         font-size: 16px;
         margin-top: 20px;
-        font-weight: 600;
+        font-weight: var(--fw-demi);
     }
 
     &-HighlightsList {
@@ -104,7 +103,7 @@
         }
 
         &_mod_value {
-            font-weight: 400;
+            font-weight: var(--fw-regular);
         }
     }
 
@@ -159,10 +158,9 @@
         &_isHidden {
             display: block;
             position: absolute;
-            font-family: 'Avenir Next Bold';
             font-size: 12px;
             height: 40px;
-            font-weight: 600;
+            font-weight: var(--fw-bold);
             padding: 0 30px;
             z-index: 3;
             bottom: -180px;
@@ -174,7 +172,7 @@
 
             @include desktop() {
                 bottom: -120px;
-            }   
+            }
         }
     }
 }

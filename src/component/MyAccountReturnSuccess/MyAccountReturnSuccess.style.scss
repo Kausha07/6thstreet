@@ -15,7 +15,7 @@
         }
 
         p {
-            font-weight: normal;
+            font-weight: var(--fw-regular);
             margin-bottom: 0;
             text-align: center;
 
@@ -24,7 +24,7 @@
             }
 
             span {
-                font-family: var(--avenir-bold-font);
+                font-weight: var(--fw-bold);
             }
         }
     }
@@ -33,7 +33,7 @@
         margin-bottom: 30px;
 
         h3 {
-            font-family: var(--avenir-medium-font);
+            font-family: var(--fw-medium);
             font-size: 14px;
             margin-bottom: 10px;
             text-transform: capitalize;
@@ -55,7 +55,7 @@
     &-BackButton {
         border: 1px solid var(--black);
         border-radius: 10px;
-        font-family: var(--avenir-regular-font);
+        font-weight: var(--fw-regular);
         font-size: 14px;
         padding: 10px 15px;
 

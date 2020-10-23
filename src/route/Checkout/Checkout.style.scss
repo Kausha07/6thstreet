@@ -4,7 +4,7 @@
     --checkout-max-width: 1100px;
 }
 
-.Checkout {  
+.Checkout {
     padding-top: 0px;
 
      @include before-desktop {
@@ -17,19 +17,19 @@
         padding: 125px 0;
         background-color: var(--lightest-gray);
     }
-    
+
     &-StickyButtonWrapper {
         .Checkout {
             &-OrderTotals {
                 .CheckoutOrderSummary {
                     &-Text {
-                        font-family: "Avenir Next Regular";
+                        font-weight: var(--fw-regular);
                         font-size: 15px;
                         line-height: 20px;
                     }
 
                     &-Price {
-                        font-family: "Avenir Next Bold";
+                        font-weight: var(--fw-bold);
                         font-size: 18px;
                         line-height: 25px;
                     }
@@ -50,12 +50,12 @@
             width: 100%;
             z-index: 85;
         }
-    
+
         .Button {
             width: 100%;
             color: var(--white);
             background-color: var(--selected-step-color);
-            font-family: "Avenir Next Bold";
+            font-weight: var(--fw-bold);
 
             @include before-desktop {
                 opacity: 1;
@@ -67,19 +67,19 @@
             }
         }
     }
-    
+
     &-Step {
         max-width: 600px;
-        
+
         @include before-desktop {
             margin: 0 auto;
             max-width: 700px;
         }
     }
-    
+
     &-Wrapper {
         max-width: var(--checkout-max-width);
-            
+
         @include desktop {
             display: grid;
             grid-template-columns: minmax(calc(65% - 1rem), 600px) minmax(calc(35% - 1rem), 348px);
@@ -109,7 +109,7 @@
             border-radius: 50%;
             width: 50px;
             height: 50px;
-            
+
             &_checkoutStep {
                 &_SHIPPING_STEP {
                     margin: 0 10px 10px;
@@ -158,9 +158,8 @@
         &-PaymentLabel,
         &-DeliveryLabel {
             text-transform: uppercase;
-            font-family: "Avenir Next Demi";
             font-size: 14px;
-            font-weight: 600;
+            font-weight: var(--fw-demi);
             letter-spacing: 1px;
             line-height: 16px;
 
@@ -168,7 +167,7 @@
 
         &-PaymentLabel {
             &_checkoutStep {
-                &_SHIPPING_STEP {   
+                &_SHIPPING_STEP {
                     color: var(--unselected-step-color);
                 }
             }

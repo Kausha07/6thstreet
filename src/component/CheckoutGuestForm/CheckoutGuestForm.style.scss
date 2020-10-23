@@ -19,7 +19,7 @@
             font-size: 14px;
             padding: 16px 15px;
         }
-        
+
         &_type {
             &_checkbox {
                     display: none;
@@ -37,9 +37,8 @@
 
     .Checkout {
         &-Heading {
-                font-family: "Avenir Next Demi";
                 font-size: 18px;
-                font-weight: 600;
+                font-weight: var(--fw-demi);
                 line-height: 25px;;
                 text-align: center;
                 display: block;

@@ -2,27 +2,26 @@
     &-Checkbox {
         display: grid;
         margin-bottom: 2rem;
-    
+
                     @include before-desktop {
                         width: 300px;
                         grid-column: 1 / span 2;
                         grid-row: 6;
                     }
-    
+
                     label {
                         grid-column: 2 / span 20;
                         grid-row: 1;
                         padding-top: 1px;
                         color: var(--black);
-                        font-family: "Avenir Next Regular";
                         font-size: 14px;
-                        font-weight: 300;
-    
+                        font-weight: var(--fw-regular);
+
                         span {
-                            font-family: "Avenir Next Demi";
+                            font-weight: var(--fw-demi);
                         }
                     }
-    
+
                     div {
                         grid-row: 1;
                         grid-column: 1;

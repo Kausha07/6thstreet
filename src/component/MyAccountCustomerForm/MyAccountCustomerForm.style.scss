@@ -13,15 +13,14 @@
     }
 
     .Field-Label {
-        font-family: "Avenir Next Regular", serif;
-        font-weight: 500;
+        font-weight: var(--fw-medium);
     }
 
     .Button {
         background: var(--black);
         border: 2px solid var(--black);
         color: var(--white);
-        font-weight: 700;
+        font-weight: var(--fw-bold);
         height: 50px;
         margin-top: 9px;
         padding: 0 15px;
@@ -163,13 +162,12 @@
         &-Title {
             display: inline-flex;
             font-size: 20px;
-            font-weight: 400;
+            font-weight: var(--fw-regular);
             text-transform: none;
             width: 100%;
 
             span {
-                font-family: "Avenir Next Regular", serif;
-                font-weight: 100;
+                font-weight: var(--fw-thin);
             }
 
             .Cross {
@@ -251,7 +249,7 @@
 
     #change-password-button {
         color: var(--light-gray);
-        font-weight: 100;
+        font-weight: var(--fw-thin);
         height: 60px;
         position: absolute;
         right: 0;

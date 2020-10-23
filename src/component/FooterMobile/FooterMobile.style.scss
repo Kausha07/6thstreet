@@ -5,7 +5,7 @@
 }
 
 .FooterMobile {
-    
+
     position: fixed;
     bottom: 0px;
     width: 100%;
@@ -24,9 +24,8 @@
 
     &-Copyright {
         color: var(--footer-bottom-text-color);
-        font-family: "Avenir Next Medium";
         font-size: 11px;
-        font-weight: 500;
+        font-weight: var(--fw-medium);
         letter-spacing: 0.42px;
         line-height: 15px;
     }
@@ -37,8 +36,7 @@
         padding-top: 1px;
         font-size: 9px;
         color: var(--footer-bottom-hyperlink-color);
-        font-family: "Avenir Next Demi";
-        font-weight: 600;
+        font-weight: var(--fw-demi);
         letter-spacing: 0.5px;
         text-align: right;
     }

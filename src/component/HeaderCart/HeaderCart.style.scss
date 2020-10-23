@@ -5,7 +5,7 @@
 .HeaderCart {
     display: none;
     position: relative;
-    
+
     @include desktop {
         display: block;
     }
@@ -31,7 +31,7 @@
             display: none;
         }
     }
-    
+
     &-Button {
         content: "";
         background: url(./icons/basket.svg) no-repeat;
@@ -54,8 +54,7 @@
         color: var(--White);
         text-align: center;
         font-size: 8px;
-        font-weight: 600;
-        font-family: 'Avenir Next Regular';
+        font-weight: var(--fw-demi);
         padding-top: 2px;
 
         @include desktop() {

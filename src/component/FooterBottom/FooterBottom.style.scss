@@ -7,12 +7,12 @@
 .FooterBottom {
         background: var(--footer-bottom-background-color);
         padding: 26px 0;
-        height: 90px;  
+        height: 90px;
 
     @include before-desktop {
         display: none;
     }
-    
+
     &-Layout {
         display: flex;
         justify-content: space-between;
@@ -27,9 +27,8 @@
     &-Copyright {
         padding-top: 12px;
         color: var(--footer-bottom-text-color);
-        font-family: "Avenir Next Medium";
         font-size: 13px;
-        font-weight: 500;
+        font-weight: var(--fw-medium);
         letter-spacing: 0.5px;
         line-height: 18px;
         width:auto;
@@ -43,8 +42,7 @@
         text-align: center;
         font-size: 11px;
         color: var(--footer-bottom-hyperlink-color);
-        font-family: "Avenir Next Demi";
-        font-weight: 600;
+        font-weight: var(--fw-demi);
         letter-spacing: 0.5px;
     }
 
@@ -58,7 +56,7 @@
 .PageWrapper {
 
     &_isArabic {
-        
+
         .FooterBottom {
             padding: 26px 50px 26px 30px;
         }
