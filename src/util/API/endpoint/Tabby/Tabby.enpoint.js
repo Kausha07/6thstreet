@@ -10,7 +10,7 @@ export const createSession = (data) => MobileAPI.post(
 ) || {};
 
 export const verifyPayment = (paymentID) => MobileAPI.get(
-    `/tabby/installments/${paymentID}`
+    `/tabby/payments/${paymentID}`
 ) || {};
 
 export const updateTabbyPayment = ({ paymentID, order_id }) => MobileAPI.put(

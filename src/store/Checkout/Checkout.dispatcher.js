@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { getStore } from 'Store';
 import { setShipping } from 'Store/Checkout/Checkout.action';
 import {
@@ -10,7 +11,8 @@ import {
 } from 'Util/API/endpoint/Checkout/Checkout.enpoint';
 import {
     createSession,
-    getInstallmentForValue
+    getInstallmentForValue,
+    verifyPayment
 } from 'Util/API/endpoint/Tabby/Tabby.enpoint';
 import Logger from 'Util/Logger';
 
@@ -87,15 +89,19 @@ export class CheckoutDispatcher {
     async createOrder(dispatch, code, additional_data) {
         const { Cart: { cartId } } = getStore().getState();
 
-        return createOrder({
-            data: {
-                cart_id: cartId,
-                payment: {
-                    method: code,
-                    data: additional_data
-                }
-            }
-        });
+        // return createOrder({
+        //     data: {
+        //         cart_id: cartId,
+        //         payment: {
+        //             method: code,
+        //             data: additional_data
+        //         }
+        //     }
+        // });
+    }
+
+    async verifyPayment(dispatch, paymentId) {
+        return verifyPayment(paymentId);
     }
 }
 

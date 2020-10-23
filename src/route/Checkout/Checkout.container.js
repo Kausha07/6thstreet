@@ -12,6 +12,7 @@ import CartDispatcher from 'Store/Cart/Cart.dispatcher';
 import { CART_ITEMS_CACHE_KEY } from 'Store/Cart/Cart.reducer';
 import CheckoutDispatcher from 'Store/Checkout/Checkout.dispatcher';
 import { updateMeta } from 'Store/Meta/Meta.action';
+import { hideActiveOverlay } from 'Store/Overlay/Overlay.action';
 import { isSignedIn } from 'Util/Auth';
 import BrowserDatabase from 'Util/BrowserDatabase';
 import { ONE_MONTH_IN_SECONDS } from 'Util/Request/QueryDispatcher';
@@ -22,9 +23,11 @@ export const mapDispatchToProps = (dispatch) => ({
     saveAddressInformation: (address) => CheckoutDispatcher.saveAddressInformation(dispatch, address),
     createOrder: (code, additional_data) => CheckoutDispatcher.createOrder(dispatch, code, additional_data),
     getTabbyInstallment: (price) => CheckoutDispatcher.getTabbyInstallment(dispatch, price),
+    verifyPayment: (paymentId) => CheckoutDispatcher.verifyPayment(dispatch, paymentId),
     getPaymentMethods: () => CheckoutDispatcher.getPaymentMethods(),
     setCartId: (cartId) => dispatch(setCartId(cartId)),
-    createEmptyCart: () => CartDispatcher.getCart(dispatch)
+    createEmptyCart: () => CartDispatcher.getCart(dispatch),
+    hideActiveOverlay: () => dispatch(hideActiveOverlay())
 });
 
 export class CheckoutContainer extends SourceCheckoutContainer {

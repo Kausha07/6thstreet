@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 import CheckoutBilling from 'Component/CheckoutBilling';
 import CheckoutOrderSummary from 'Component/CheckoutOrderSummary';
 import CheckoutShipping from 'Component/CheckoutShipping';
@@ -5,12 +6,16 @@ import ContentWrapper from 'Component/ContentWrapper';
 import TabbyPopup from 'Component/TabbyPopup';
 import { Checkout as SourceCheckout } from 'SourceRoute/Checkout/Checkout.component';
 
+import { AUTHORIZED_STATUS } from './Checkout.config';
+
 import './Checkout.style';
 
 export class Checkout extends SourceCheckout {
     state = {
         isCustomAddressExpanded: false,
         tabbyWebUrl: '',
+        tabbyPaymentId: '',
+        tabbyPaymentStatus: '',
         isTabbyPopupShown: false,
         cashOnDeliveryFee: null
     };
@@ -21,11 +26,14 @@ export class Checkout extends SourceCheckout {
 
     savePaymentInformation = (paymentInformation) => {
         const { savePaymentInformation } = this.props;
-        const { tabbyWebUrl } = this.state;
+        const { tabbyWebUrl, tabbyPaymentStatus } = this.state;
 
         if (tabbyWebUrl) {
-            // TODO: Add response processing for the Tabby
             this.setState({ isTabbyPopupShown: true });
+            setTimeout(
+                () => this.processTabbyWithTimeout(3, paymentInformation),
+                10000
+            );
         } else {
             savePaymentInformation(paymentInformation);
         }
@@ -33,8 +41,44 @@ export class Checkout extends SourceCheckout {
         return null;
     };
 
-    setTabbyWebUrl = (url) => {
-        this.setState({ tabbyWebUrl: url });
+    processTabby(paymentInformation) {
+        const { savePaymentInformation, verifyPayment } = this.props;
+        const { tabbyPaymentId } = this.state;
+
+        verifyPayment(tabbyPaymentId).then(
+            ({ status }) => {
+                if (status === AUTHORIZED_STATUS) {
+                    savePaymentInformation(paymentInformation);
+                }
+
+                this.setState({ tabbyPaymentStatus: status });
+            }
+        );
+    }
+
+    processTabbyWithTimeout(counter, paymentInformation) {
+        const { tabbyPaymentStatus } = this.state;
+        const { showErrorNotification, hideActiveOverlay } = this.props;
+
+        if (tabbyPaymentStatus !== AUTHORIZED_STATUS && counter < 60) {
+            setTimeout(
+                () => {
+                    this.processTabby(paymentInformation);
+                    this.processTabbyWithTimeout(counter + 1, paymentInformation);
+                },
+                5000
+            );
+        }
+
+        if (counter === 60) {
+            showErrorNotification('Tabby session timeout');
+            hideActiveOverlay();
+            this.setState({ isTabbyPopupShown: false });
+        }
+    }
+
+    setTabbyWebUrl = (url, paymentId) => {
+        this.setState({ tabbyWebUrl: url, tabbyPaymentId: paymentId });
     };
 
     setCashOnDeliveryFee = (fee) => {

@@ -32,7 +32,6 @@ class TabbyPopup extends PureComponent {
         return (
             <Popup
               id={ TABBY_POPUP_ID }
-              clickOutside="true"
               mix={ { block: 'TabbyPopup' } }
             >
                 { this.renderContent() }

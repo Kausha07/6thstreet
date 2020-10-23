@@ -36,13 +36,25 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
         selectPaymentMethod({ code, billingAddress }).then(
             (response) => {
                 if (response.configuration) {
-                    const { configuration: { available_products: { installments, pay_later } } } = response;
+                    const {
+                        configuration: {
+                            available_products: {
+                                installments, pay_later
+                            }
+                        },
+                        payment: {
+                            id
+                        }
+                    } = response;
 
-                    setTabbyWebUrl(
-                        code === 'tabby_installments'
-                            ? installments[0].web_url
-                            : pay_later[0].web_url
-                    );
+                    if (installments || pay_later) {
+                        setTabbyWebUrl(
+                            code === 'tabby_installments'
+                                ? installments[0].web_url
+                                : pay_later[0].web_url,
+                            id
+                        );
+                    }
                 }
             },
             this._handleError
