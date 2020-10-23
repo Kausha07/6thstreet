@@ -21,18 +21,18 @@
         line-height: 45px;
         text-indent: 20px;
         text-transform: uppercase;
-        width: 33%;
+        width: 34%;
 
         button {
             transition-duration: 0s;
         }
 
         &-CategoryButton {
-            width: 100%;
             font-size: calc(9px + 1vw);
-            text-align: left;
             margin-left: -20px;
             padding: 0 3vw;
+            text-align: left;
+            width: 100%;
         }
 
         &:first-child {
@@ -56,8 +56,8 @@
             &:first-child {
                 .MenuCategory {
                     &-CategoryButton {
-                        color: white;
                         background-color: var(--gold);
+                        color: var(--white);
                         font-family: 'Avenir Next Bold', serif;
                     }
                 }
@@ -149,11 +149,11 @@
 
             &-Wrapper {
                 height: 70vh;
-                left: 33%;
                 min-height: 500px;
-                position: fixed;
+                width: 66%;
                 top: 140px;
-                width: 67%;
+                left: 33%;
+                position: fixed;
             }
 
             .MenuBrands {
@@ -172,7 +172,10 @@
             .DynamicContent {
                 border-left: 0;
                 border-right: 1px solid var(--light-gray);
-                left: 0;
+
+                &-Wrapper {
+                    left: 0;
+                }
             }
 
             .ViewAll {
@@ -195,11 +198,11 @@
             background-color: var(--white);
             display: flex;
             height: 390px;
-            left: 0;
-            max-width: 1440px;
             pointer-events: all;
             position: absolute;
             width: 100vw;
+            max-width: 1440px;
+            left: 0;
 
             &:after {
                 background: rgba(0, 0, 0, 0.7);
@@ -279,6 +282,7 @@
                                 color: var(--white);
                             }
                         }
+
                         span {
                             color: var(--white);
                         }
@@ -309,6 +313,7 @@
                 margin-right: -90px;
                 transform: skew(-15deg, 0deg);
                 width: 85px;
+                margin-left: 0;
             }
         }
 
