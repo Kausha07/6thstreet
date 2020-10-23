@@ -15,8 +15,8 @@
     --cart-overlay-promo-background: #fff;
     --cart-overlay-width: 400px;
 
-    --White: #ffffff;
-    --Black: #000000;
+    --White: #fff;
+    --Black: #000;
     --BlackOpacityOf6: #00000099;
     --BlackOpacityOf1: #0000001a;
     --Tundora: #4A4A4A;
@@ -30,13 +30,13 @@
     @include after-mobile {
         position: absolute;
         top: 30px;
-        right: 0px;
+        right: 0;
         padding: 0;
         width: var(--cart-overlay-width);
 
         &_isArabic {
             right: unset;
-            left: 0px;
+            left: 0;
         }
     }
 
@@ -212,7 +212,7 @@
 
     &-Total {
         font-weight: var(--fw-light);
-        padding: 0.5rem 1rem 1rem;
+        padding: .5rem 1rem 1rem;
 
         dd {
             font-weight: var(--fw-bold);

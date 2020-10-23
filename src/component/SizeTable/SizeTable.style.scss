@@ -1,6 +1,6 @@
 :root {
-    --top-row-background: #000000;
-    --top-row-fontcolor: #ffffff;
+    --top-row-background: #000;
+    --top-row-fontcolor: #fff;
     --table-border-color: #E0E0E0;
     --unselected-color: #4A4A4A;
 }
@@ -10,7 +10,7 @@
         width: 100%;
         border-collapse: separate;
         border: solid 1px var(--table-border-color);
-        border-bottom: 0px;
+        border-bottom: 0;
     }
 
     &-TableCellTop {
@@ -25,21 +25,21 @@
     &_isArabic {
         td:nth-child(3) {
             border-right: solid 1px var(--table-border-color);
-            border-left: 0px;
+            border-left: 0;
         }
 
         td:nth-child(1) {
-            border-right: 0px;
+            border-right: 0;
             border-left: solid 1px var(--table-border-color);
         }
     }
 
     td:nth-child(3) {
-        border-right: 0px;
+        border-right: 0;
     }
 
     td:nth-child(1) {
-        border-left: 0px;
+        border-left: 0;
     }
 
     &-TableCell{
@@ -114,7 +114,7 @@
         &_isArabic {
             td:nth-child(3) {
                 border-right: solid 1px var(--table-border-color);
-                border-left: 0px;
+                border-left: 0;
             }
         }
     }

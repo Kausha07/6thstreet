@@ -5,11 +5,11 @@
 }
 
 .Checkout {
-    padding-top: 0px;
+    padding-top: 0;
 
      @include before-desktop {
          .Checkout-StickyButtonWrapper {
-             padding-top: 0px;
+             padding-top: 0;
          }
      }
 

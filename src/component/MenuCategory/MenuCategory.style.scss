@@ -201,7 +201,7 @@
             left: 0;
 
             &:after {
-                background: rgba(0, 0, 0, 0.7);
+                background: rgba(0, 0, 0, .7);
                 content: ' ';
                 height: 100%;
                 left: 0;
@@ -248,7 +248,7 @@
                     &::before {
                         background-color: var(--red);
                         color: transparent;
-                        transform: skew(-15deg, 0deg) translate(-10px, 0px);
+                        transform: skew(-15deg, 0deg) translate(-10px, 0);
                         content: '';
                         width: calc(100% + 20px);
                         height: 100%;
@@ -261,7 +261,7 @@
                     .MenuCategory {
                         &-CategoryLabel {
                             &::before {
-                                transform: skew(-15deg, 0deg) translate(10px, 0px);
+                                transform: skew(-15deg, 0deg) translate(10px, 0);
                             }
                         }
                     }
@@ -354,7 +354,7 @@
                     .MenuCategory {
                         &-CategoryLabel {
                             &::before {
-                                transform: skew(-15deg, 0deg) translate(10px, 0px);
+                                transform: skew(-15deg, 0deg) translate(10px, 0);
                             }
                         }
                     }

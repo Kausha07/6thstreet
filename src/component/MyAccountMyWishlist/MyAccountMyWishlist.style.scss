@@ -1,5 +1,5 @@
 .MyAccountMyWishlist {
-    margin: 20px 0px 150px 0px;
+    margin: 20px 0 150px 0;
 
     &-Empty {
         h2 {
@@ -47,15 +47,15 @@
 
             &-Brand {
                 font-weight: var(--fw-bold);
-                margin-bottom: 0px;
+                margin-bottom: 0;
                 font-size: 12px;
-                letter-spacing: 0.2px;
+                letter-spacing: .2px;
                 line-height: 16px;
 
                 @include desktop {
                     font-size: 15px;
                     line-height: 20px;
-                    letter-spacing: 0.25px;
+                    letter-spacing: .25px;
                 }
             }
 
