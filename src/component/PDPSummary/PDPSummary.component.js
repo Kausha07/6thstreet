@@ -23,7 +23,7 @@ class PDPSummary extends PureComponent {
 
     static getDerivedStateFromProps(props, state) {
         const { product } = props;
-        console.log(product);
+
         const { alsoAvailable, prevAlsoAvailable } = state;
 
         if (prevAlsoAvailable !== product['6s_also_available']) {
