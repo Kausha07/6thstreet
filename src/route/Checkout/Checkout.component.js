@@ -30,6 +30,9 @@ export class Checkout extends SourceCheckout {
 
         if (tabbyWebUrl) {
             this.setState({ isTabbyPopupShown: true });
+
+            // Need to get payment data from Tabby.
+            // Could not get callback of Tabby another way because Tabby is iframe in iframe
             setTimeout(
                 () => this.processTabbyWithTimeout(3, paymentInformation),
                 10000
@@ -60,6 +63,8 @@ export class Checkout extends SourceCheckout {
         const { tabbyPaymentStatus } = this.state;
         const { showErrorNotification, hideActiveOverlay } = this.props;
 
+        // Need to get payment data from Tabby.
+        // Could not get callback of Tabby another way because Tabby is iframe in iframe
         if (tabbyPaymentStatus !== AUTHORIZED_STATUS && counter < 60) {
             setTimeout(
                 () => {

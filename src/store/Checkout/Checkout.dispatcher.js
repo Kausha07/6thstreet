@@ -89,15 +89,15 @@ export class CheckoutDispatcher {
     async createOrder(dispatch, code, additional_data) {
         const { Cart: { cartId } } = getStore().getState();
 
-        // return createOrder({
-        //     data: {
-        //         cart_id: cartId,
-        //         payment: {
-        //             method: code,
-        //             data: additional_data
-        //         }
-        //     }
-        // });
+        return createOrder({
+            data: {
+                cart_id: cartId,
+                payment: {
+                    method: code,
+                    data: additional_data
+                }
+            }
+        });
     }
 
     async verifyPayment(dispatch, paymentId) {
