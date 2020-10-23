@@ -68,6 +68,14 @@
 						padding-top: 20px;
 						grid-row: 2;
 					}
+
+					label {
+						padding-bottom: 22px;
+
+						@include before-desktop {
+							display: none;
+						}
+					}
 				}
 
 				&:nth-child(3) {

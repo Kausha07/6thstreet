@@ -31,7 +31,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     };
 
     renderButtonsPlaceholder() {
-        return isMobile.any() || isMobile.tablet()
+        return isMobile
             ? __('Proceed to secure payment')
             : __('Place order');
     }
@@ -163,14 +163,21 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         showCreateNewPopup();
     };
 
+    renderButtonLabel() {
+        const { isMobile } = this.state;
+
+        return isMobile ? __('New address') : __('Add new address');
+    }
+
     renderOpenPopupButton() {
-        const { isSignedIn, formContent } = this.state;
+        const { isSignedIn, formContent, isArabic } = this.state;
+
         if (isSignedIn) {
             return (
                 <div
                   block="MyAccountAddressBook"
                   elem="NewAddressWrapper"
-                  mods={ { formContent } }
+                  mods={ { formContent, isArabic } }
                 >
                     <button
                       block="MyAccountAddressBook"
@@ -181,7 +188,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
 
                       onClick={ this.openNewForm }
                     >
-                        { __('New address') }
+                        { this.renderButtonLabel() }
                     </button>
                 </div>
             );
@@ -231,6 +238,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
                   onSubmitError={ onShippingError }
                   onSubmitSuccess={ onShippingSuccess }
                 >
+                    { isSignedIn ? <h3>{ __('Delivering to') }</h3> : null }
                     { this.renderAddressBook() }
                     <div>
                         <Loader isLoading={ isLoading } />

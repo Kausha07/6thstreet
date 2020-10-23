@@ -393,5 +393,6 @@
     "Select shipping method": null,
     "There are no shipping methods available, try different address.": null,
     "Carrier method: ": null,
-    "Rate: ": null
+    "Rate: ": null,
+    "Delivering to": null
 }

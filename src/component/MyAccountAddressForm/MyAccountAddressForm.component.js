@@ -174,7 +174,8 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
             firstname: {
                 placeholder: __('First Name'),
                 validation: ['notEmpty'],
-                type: 'hidden'
+                type: 'hidden',
+                label: __('Delivering to')
             },
             lastname: {
                 placeholder: __('Last Name'),

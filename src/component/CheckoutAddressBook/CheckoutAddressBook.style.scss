@@ -18,8 +18,9 @@
 	}
 
 	.CheckoutAddressBookSlider {
-
+		
 		@include before-desktop {
+			transform: translateX(-50%);
 			position: relative;
 			left: 45%;
 			width: 80%;
@@ -27,63 +28,34 @@
 			padding-top: 2rem;
 			padding-bottom: 2rem;
 			margin-bottom: 2%;
-		}
-		
-		&_isArabic {
-			left: 0;
-		}
+        }
         
 		&-Wrapper {
-			left: 30px;
 			overflow: hidden;
+			width: 92.6vw;
 
-			&_isArabic {
-				left: 0;
-				right: 30px;
+			&_isCustomAddressExpanded {
+				display: none;
 			}
         }
         
 		&-MobileSlider {
 			width: 80%;
 			overflow: visible;
-
-			&_isArabic {
-				transform: translateX(50%);
-				direction: ltr;
-				left: 0;
-				right: 45%;
-
-				.MyAccountAddressTable {
-					margin-right: 0;
-					margin-left: 0;
-
-					.MyAccountAddressCard {
-						&::before {
-							left: 230px;
-						}
-
-						&_isSelected {
-							&::after {
-								left: 230px;
-							}
-						} 
-				}}
-			}
 		}
     }
     
 	.Slider {
 		.MyAccountAddressTable {
 			margin-right: 6%;
-			max-width: 270px;
-			height: 122px;
 			width: 95%;
+			height: 122px;
 			text-align: center;
 			overflow: hidden;
+			white-space: nowrap;
 
 			.MyAccountAddressCard {
 				height: 122px;
-
 				&::after {
 					border: none;
 				}
