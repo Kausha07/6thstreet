@@ -1,4 +1,7 @@
+import PropTypes from 'prop-types';
+
 import CheckoutAddressBook from 'Component/CheckoutAddressBook';
+import CheckoutPayments from 'Component/CheckoutPayments';
 import Field from 'Component/Field';
 import {
     CheckoutBilling as SourceCheckoutBilling
@@ -7,6 +10,12 @@ import {
 import './CheckoutBilling.extended.style';
 
 export class CheckoutBilling extends SourceCheckoutBilling {
+    static propTypes = {
+        ...SourceCheckoutBilling.propTypes,
+        setTabbyWebUrl: PropTypes.func.isRequired,
+        setCreditCardData: PropTypes.func.isRequired
+    };
+
     renderPriceLine(price, name, mods) {
         const { totals: { currency_code } } = this.props;
 
@@ -79,6 +88,38 @@ export class CheckoutBilling extends SourceCheckoutBilling {
         );
     }
 
+    renderPayments() {
+        const {
+            paymentMethods,
+            onPaymentMethodSelect,
+            setLoading,
+            setDetailsStep,
+            shippingAddress,
+            setTabbyWebUrl,
+            setCashOnDeliveryFee,
+            setCreditCardData
+        } = this.props;
+
+        if (!paymentMethods.length) {
+            return null;
+        }
+
+        return (
+            <CheckoutPayments
+              setCashOnDeliveryFee={ setCashOnDeliveryFee }
+              setLoading={ setLoading }
+              setDetailsStep={ setDetailsStep }
+              paymentMethods={ paymentMethods }
+              onPaymentMethodSelect={ onPaymentMethodSelect }
+              setOrderButtonVisibility={ this.setOrderButtonVisibility }
+              billingAddress={ shippingAddress }
+              setOrderButtonEnableStatus={ this.setOrderButtonEnableStatus }
+              setTabbyWebUrl={ setTabbyWebUrl }
+              setCreditCardData={ setCreditCardData }
+            />
+        );
+    }
+
     renderTotals() {
         const {
             totals: { total }
@@ -124,4 +165,5 @@ export class CheckoutBilling extends SourceCheckoutBilling {
         );
     }
 }
+
 export default CheckoutBilling;

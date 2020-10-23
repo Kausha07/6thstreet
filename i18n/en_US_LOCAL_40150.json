@@ -406,5 +406,11 @@
     "This field should contain at least 1 number character": null,
     "This field should contain at least 1 capitalized character": null,
     " Items": null,
-    " Item": null
+    " Item": null,
+    "Payment type": null,
+    "Cash on Delivery Fee": null,
+    "Catalog": null,
+    "null": null,
+    "Complete orders": null,
+    "Test": null
 }

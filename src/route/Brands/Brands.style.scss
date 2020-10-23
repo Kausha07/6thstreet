@@ -3,10 +3,6 @@
     max-width: 1440px;
     padding: 5px 0;
 
-    @include desktop {
-        margin: 110px auto 0;
-    }
-
     &-Heading {
         font-size: 29px;
         text-align: center;

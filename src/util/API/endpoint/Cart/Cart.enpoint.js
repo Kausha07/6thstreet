@@ -1,6 +1,7 @@
 import MobileAPI from '../../provider/MobileAPI';
 
-// eslint-disable-next-line import/prefer-default-export
+export const getCartItems = (cartId) => MobileAPI.get(`/carts2/${cartId}`) || {};
+
 export const createCart = () => MobileAPI.post('/carts2') || {};
 
 export const getCartTotals = (cartId) => MobileAPI.get(`/carts2/${cartId}/totals`) || {};

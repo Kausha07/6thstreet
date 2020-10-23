@@ -6,6 +6,7 @@ import { SHIPPING_STEP } from 'Route/Checkout/Checkout.config';
 import {
     CheckoutOrderSummary as SourceCheckoutOrderSummary
 } from 'SourceComponent/CheckoutOrderSummary/CheckoutOrderSummary.component';
+import { formatCurrency } from 'Util/Price';
 
 import Delivery from './icons/delivery-truck.png';
 
@@ -157,6 +158,26 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                 </ul>
             </div>
         );
+    }
+
+    renderCashOnDeliveryFee() {
+        const { cashOnDeliveryFee, totals: { quote_currency_code } } = this.props;
+        const priceString = formatCurrency(quote_currency_code);
+
+        if (cashOnDeliveryFee) {
+            return (
+                <li block="CheckoutOrderSummary" elem="SummaryItem">
+                    <span block="CheckoutOrderSummary" elem="Text">
+                        { __('Cash on Delivery Fee') }
+                    </span>
+                    <span block="CheckoutOrderSummary" elem="Text">
+                        { `${priceString}${cashOnDeliveryFee}` }
+                    </span>
+                </li>
+            );
+        }
+
+        return null;
     }
 
     render() {
