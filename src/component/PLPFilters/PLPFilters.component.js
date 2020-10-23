@@ -32,14 +32,11 @@ class PLPFilters extends PureComponent {
         productsCount: PropTypes.string.isRequired
     };
 
-    activeFilters = {
-        data: null
-    };
-
     state = {
         isOpen: false,
         activeFilter: undefined,
-        isArabic: isArabic()
+        isArabic: isArabic(),
+        activeFilters: {}
     };
 
     static getDerivedStateFromProps(props, state) {
@@ -74,7 +71,6 @@ class PLPFilters extends PureComponent {
 
     renderFilters() {
         const { filters } = this.props;
-
         return Object.entries(filters).map(this.renderFilter);
     }
 
@@ -95,6 +91,8 @@ class PLPFilters extends PureComponent {
             hideActiveOverlay();
             goToPreviousNavigationState();
         }
+
+        this.setState({ activeFilters: {} });
 
         document.body.style.overflow = 'visible';
     };
@@ -187,6 +185,14 @@ class PLPFilters extends PureComponent {
     }
 
     renderFilterButton() {
+        const { activeFilters } = this.state;
+        const { count } = activeFilters ? Object.entries(activeFilters).reduce((prev, [_key, value]) => ({
+            count: prev.count + value.length
+        }), { count: 0 })
+            : (
+                { count: 0 }
+            );
+
         return (
             <button
               onClick={ this.handleFilterClick }
@@ -196,7 +202,8 @@ class PLPFilters extends PureComponent {
               block="PLPFilterMobile"
             >
                 <img src={ fitlerImage } alt="fitler" />
-                { __('refine') }
+                { __('refine ') }
+                { `(${count})` }
             </button>
         );
     }
@@ -277,13 +284,13 @@ class PLPFilters extends PureComponent {
             __('women'),
             __('kids')
         ];
-        const brandsLabel = 'Brands';
-        const categoriesLabel = 'Categories';
+        const brandsCategoryName = 'brand_name';
+        const CategoryName = 'categories_without_path';
         const pathname = location.pathname.split('/');
         const isBrandsFilterRequired = genders.includes(pathname[1]);
 
         if (isBrandsFilterRequired) {
-            if (filter.label === brandsLabel) {
+            if (filter.category === brandsCategoryName) {
                 return (
                     <PLPQuickFilter
                       key={ key }
@@ -291,7 +298,7 @@ class PLPFilters extends PureComponent {
                     />
                 );
             }
-        } else if (filter.label === categoriesLabel) {
+        } else if (filter.category === CategoryName) {
             return (
                 <PLPQuickFilter
                   key={ key }

@@ -36,6 +36,41 @@ export class CheckoutShipping extends SourceCheckoutShipping {
             : __('Place order');
     }
 
+    renderPriceLine(price, name, mods) {
+        const { totals: { currency_code } } = this.props;
+
+        return (
+            <li block="CheckoutOrderSummary" elem="SummaryItem" mods={ mods }>
+                <strong block="CheckoutOrderSummary" elem="Text">
+                    { name }
+                </strong>
+                { price !== undefined
+                    ? (
+                <strong block="CheckoutOrderSummary" elem="Price">
+                    { `${currency_code } ${ price}` }
+                </strong>
+                    )
+                    : null }
+            </li>
+        );
+    }
+
+    renderTotals() {
+        const {
+            totals: { subtotal }
+        } = this.props;
+
+        if (subtotal !== {}) {
+            return (
+                    <div block="Checkout" elem="OrderTotals">
+                        { this.renderPriceLine(subtotal, __('Subtotal')) }
+                    </div>
+            );
+        }
+
+        return null;
+    }
+
     checkForDisabling() {
         const { selectedShippingMethod } = this.props;
         const { isMobile } = this.state;
@@ -50,6 +85,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     renderActions() {
         return (
             <div block="Checkout" elem="StickyButtonWrapper">
+                { this.renderTotals() }
                 <button
                   type="submit"
                   block="Button"
@@ -129,7 +165,6 @@ export class CheckoutShipping extends SourceCheckoutShipping {
 
     renderOpenPopupButton() {
         const { isSignedIn, formContent } = this.state;
-
         if (isSignedIn) {
             return (
                 <div
@@ -186,10 +221,12 @@ export class CheckoutShipping extends SourceCheckoutShipping {
             formContent
         } = this.state;
 
+        console.log(isSignedIn);
+
         return (
             <div block="ShippingStep" mods={ { isSignedIn, formContent } }>
                 { this.renderOpenPopupButton() }
-                { this.renderAddAdress() }
+                { isSignedIn ? this.renderAddAdress() : null }
                 <Form
                   id={ SHIPPING_STEP }
                   mix={ { block: 'CheckoutShipping' } }

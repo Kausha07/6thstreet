@@ -8,6 +8,9 @@
     &-Heading {
         @include before-desktop {
             display: none;
+            @include mobile {
+                display: block;
+            }
         }
     }
 

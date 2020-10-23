@@ -15,6 +15,10 @@
 
         @include desktop {
             padding: 0 30px;
+
+            &:first-child {
+                padding-left: 0;
+            }
             &:not(:last-child) {
                 border-right: 1px solid var(--black);
             }
@@ -45,3 +49,17 @@
     }
 }
 
+.PageWrapper {
+    &_isArabic {
+        .GenderButton {
+            &-Container {
+                @include desktop {      
+                    &:first-child {
+                        padding-left: 30px;
+                        padding-right: 0;
+                    }
+                }
+            }
+        }
+    }
+}

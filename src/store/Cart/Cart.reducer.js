@@ -2,6 +2,7 @@ import BrowserDatabase from 'Util/BrowserDatabase';
 
 import {
     REMOVE_CART_ITEM,
+    REMOVE_CART_ITEMS,
     SET_CART_ID,
     SET_CART_TOTALS,
     UPDATE_CART_ITEM,
@@ -48,7 +49,6 @@ export const CartReducer = (state = getInitialState(), action) => {
     const ONE_YEAR_IN_SECONDS = 31536000;
     const item = { ...cartItem };
     const totals = { ...cartTotals };
-    const currency = { ...cartTotals };
 
     switch (type) {
     case SET_CART_ID:
@@ -70,9 +70,9 @@ export const CartReducer = (state = getInitialState(), action) => {
                 ...cartTotals,
                 items: cartItems,
                 subtotal_incl_tax: totals.subtotal || 0,
-                quote_currency_code: currency.currency_code
+                quote_currency_code: totals.currency_code
             },
-            currency: currency.currency_code
+            currency: totals.currency_code
         };
 
     case UPDATE_CART_ITEM:
@@ -80,7 +80,6 @@ export const CartReducer = (state = getInitialState(), action) => {
             customizable_options: [],
             bundle_options: [],
             item_id: item.item_id,
-            price: item.price || 0,
             product: {
                 name: item.name,
                 type_id: item.product_type,
@@ -92,14 +91,15 @@ export const CartReducer = (state = getInitialState(), action) => {
                 url: item.url,
                 variants: []
             },
-            row_total: item.price || 0,
+            row_total: item.itemPrice || 0,
             sku: item.sku,
             qty: item.qty,
             color: item.color,
             optionValue: item.optionValue,
             thumbnail_url: item.thumbnail_url,
-            discount_amount: item.discount,
-            brand_name: item.brand_name
+            basePrice: item.basePrice,
+            brand_name: item.brand_name,
+            currency: item.currency
         };
 
         const updatedCartItems = updateCartItem(cartItems, formattedCartItem);
@@ -127,6 +127,18 @@ export const CartReducer = (state = getInitialState(), action) => {
         return {
             ...state,
             cartItems: reducedCartItems
+        };
+
+    case REMOVE_CART_ITEMS:
+        BrowserDatabase.setItem(
+            [],
+            CART_ITEMS_CACHE_KEY,
+            ONE_YEAR_IN_SECONDS
+        );
+
+        return {
+            ...state,
+            cartItems: []
         };
 
     case UPDATE_TOTALS:

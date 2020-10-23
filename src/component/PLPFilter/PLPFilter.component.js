@@ -10,7 +10,6 @@ import { PureComponent } from 'react';
 
 import FieldMultiselect from 'Component/FiledMultiselect';
 import { Filter } from 'Util/API/endpoint/Product/Product.type';
-import isMobile from 'Util/Mobile';
 
 import './PLPFilter.style';
 
@@ -44,12 +43,18 @@ class PLPFilter extends PureComponent {
             changeActiveFilter
         } = this.props;
 
-        if (isMobile.any()) {
-            if (category === 'categories.level1') {
-                return null;
-            }
-        } else if (category === 'categories_without_path' || category === 'categories.level1') {
+        if (category === 'categories.level1') {
             return null;
+        }
+
+        if (category === 'categories_without_path') {
+            return (
+                <FieldMultiselect
+                  onChange={ onSelect }
+                  filter={ filter }
+                  isHidden
+                />
+            );
         }
 
         return (
