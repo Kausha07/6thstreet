@@ -33,7 +33,8 @@ class HeaderBottomBar extends NavigationAbstract {
 
     renderSearch() {
         const { isArabic } = this.state;
-        if (!isMobile.any()) {
+        if (!isMobile.any() || !isMobile.tablet()) {
+            console.log('isDesktop');
             return (
                 <div
                   mix={ {

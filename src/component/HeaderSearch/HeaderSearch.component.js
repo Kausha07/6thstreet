@@ -16,7 +16,6 @@ class HeaderSearch extends PureComponent {
         onSearchChange: PropTypes.func.isRequired,
         onSearchSubmit: PropTypes.func.isRequired,
         onSearchClean: PropTypes.func.isRequired,
-        onSearchFocus: PropTypes.func.isRequired,
         isVisible: PropTypes.bool
     };
 
@@ -34,7 +33,6 @@ class HeaderSearch extends PureComponent {
             search,
             onSearchChange,
             onSearchSubmit,
-            onSearchFocus,
             isVisible,
             onSearchClean
         } = this.props;
@@ -51,7 +49,6 @@ class HeaderSearch extends PureComponent {
                   placeholder={ __('What are you looking for?') }
                   onChange={ onSearchChange }
                   value={ search }
-                  onClick={ onSearchFocus }
                 />
                 <button
                   elem="Clear"

@@ -77,7 +77,8 @@ class Menu extends PureComponent {
     }
 
     renderSearch() {
-        if (isMobile.any()) {
+        if (isMobile.any() || isMobile.tablet()) {
+            console.log('IsMobile');
             return (
             <HeaderSearch />
             );
