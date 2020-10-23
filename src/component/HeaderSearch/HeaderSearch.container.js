@@ -1,10 +1,18 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
+import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import { HistoryType } from 'Type/Common';
 
 import HeaderSearch from './HeaderSearch.component';
+
+export const mapStateToProps = (_state) => ({
+    // wishlistItems: state.WishlistReducer.productsInWishlist
+});
+export const mapDispatchToProps = (_dispatch) => ({
+    // addProduct: options => CartDispatcher.addProductToCart(dispatch, options)
+});
 
 export class HeaderSearchContainer extends PureComponent {
     static propTypes = {
@@ -57,4 +65,4 @@ export class HeaderSearchContainer extends PureComponent {
     }
 }
 
-export default withRouter(HeaderSearchContainer);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(HeaderSearchContainer));
