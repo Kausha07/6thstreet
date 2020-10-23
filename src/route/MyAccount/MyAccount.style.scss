@@ -1,4 +1,6 @@
 .MyAccount {
+    padding-top: 60px;
+
     &-Wrapper {
         @include desktop {
             display: flex;

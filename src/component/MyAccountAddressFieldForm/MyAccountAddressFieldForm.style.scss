@@ -5,8 +5,9 @@
 }
 
 .MyAccountAddressFieldForm {
-    top: -120px;
+    top: -90px;
     background: $white;
+    z-index: 8;
 
     @include desktop() {
         max-width: 540px;

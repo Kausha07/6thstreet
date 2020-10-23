@@ -204,11 +204,13 @@ class HeaderMainSection extends NavigationAbstract {
     }
 
     render() {
-        return (
+        const isMyAccount = this.getPageType() === 'ACCOUNT';
+
+        return !isMyAccount ? (
             <div block="HeaderMainSection">
                 { this.renderNavigationState() }
             </div>
-        );
+        ) : null;
     }
 }
 

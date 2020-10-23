@@ -4,7 +4,6 @@ import { PureComponent } from 'react';
 import PDPAddToCart from 'Component/PDPAddToCart/PDPAddToCart.container';
 import PDPAlsoAvailableProducts from 'Component/PDPAlsoAvailableProducts';
 import Price from 'Component/Price';
-import ProductLabel from 'Component/ProductLabel/ProductLabel.component';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
 import { isArabic } from 'Util/App';
 
@@ -48,30 +47,6 @@ class PDPSummary extends PureComponent {
         }
 
         return <p block="PDPSummary" elem="New" />;
-    }
-
-    renderSummaryHeader() {
-        const { product } = this.props;
-
-        return (
-            <div block="PDPSummary" elem="Header">
-                <div block="PDPSummary" elem="HeaderNew">
-                    <ProductLabel
-                      product={ product }
-                    />
-                </div>
-                <div block="PDPSummary" elem="HeaderShare">
-                    <button
-                      block="PDPSummary"
-                      elem="HeaderShare"
-                      mix={ { block: 'button secondary thin' } }
-                    >
-                        <div block="PDPSummary" elem="shareSvg" />
-                        <span block="PDPSummary" elem="ShareTxt">Share</span>
-                    </button>
-                </div>
-            </div>
-        );
     }
 
     renderBrand() {
@@ -149,7 +124,6 @@ class PDPSummary extends PureComponent {
     render() {
         return (
             <div block="PDPSummary">
-                { this.renderSummaryHeader() }
                 { this.renderBrand() }
                 { this.renderName() }
                 { this.renderPrice() }
