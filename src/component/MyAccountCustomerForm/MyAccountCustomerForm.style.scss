@@ -12,10 +12,15 @@
         margin-top: 40px;
     }
 
-    .Field-Label {
-        font-family: "Avenir Next Regular", serif;
-        font-weight: 500;
+    .Field {
+        margin-top: 1.8rem;
+
+        &-Label {
+            font-family: "Avenir Next Regular", serif;
+            font-weight: 500;
+        }
     }
+
 
     .Button {
         background: var(--black);
@@ -198,10 +203,10 @@
     &-PhoneField {
         margin-left: 90px;
         position: absolute;
-        top: -60px;
+        top: -71px;
 
         @include desktop() {
-            top: -58px;
+            top: -67px;
         }
 
         &_isArabic {
@@ -211,7 +216,7 @@
     }
 
     &-BirthDay {
-        margin-top: 2rem;
+        margin-top: 2.8rem;
 
         &:after {
             background-color: var(--white);
@@ -257,6 +262,7 @@
         right: 0;
         top: -1px;
         width: 100px;
+        text-transform: capitalize;
     }
 
     &_isArabic {
