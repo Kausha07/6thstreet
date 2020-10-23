@@ -8,8 +8,10 @@
     --avenir-regular-font: 'Avenir Next Regular', serif;
     --avenir-medium-font: 'Avenir Next Medium', serif;
     --avenir-bold-font: 'Avenir Next Bold', serif;
+
+    --avenir-next-font: 'Avenir Next', sans-serif;
 }
 
 body {
-    font-family: 'Avenir Next Medium';
+    font-family: var(--avenir-next-font);
 }
