@@ -6,6 +6,7 @@ import { SHIPPING_STEP } from 'Route/Checkout/Checkout.config';
 import {
     CheckoutOrderSummary as SourceCheckoutOrderSummary
 } from 'SourceComponent/CheckoutOrderSummary/CheckoutOrderSummary.component';
+import { isArabic } from 'Util/App';
 import { formatCurrency } from 'Util/Price';
 
 import Delivery from './icons/delivery-truck.png';
@@ -13,15 +14,13 @@ import Delivery from './icons/delivery-truck.png';
 import './CheckoutOrderSummary.extended.style';
 
 export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
-    renderItemSuffix() {
-        const { totals: { items = [] } } = this.props;
-        return (items.length === 1)
-            ? __(' Item')
-            : __(' Items');
-    }
+    state = {
+        isArabic: isArabic()
+    };
 
     renderHeading() {
         const { totals: { items = [] } } = this.props;
+        const { isArabic } = this.state;
 
         const itemQuantityArray = items.map((item) => item.qty);
         const totalQuantity = itemQuantityArray.reduce((qty, nextQty) => qty + nextQty, 0);
@@ -30,9 +29,16 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
             <div block="CheckoutOrderSummary" elem="HeaderWrapper">
                 <span block="CheckoutOrderSummary" elem="ItemCount">
                     { totalQuantity }
-                    { this.renderItemSuffix() }
+                    { (totalQuantity === 1)
+                        ? __(' Item')
+                        : __(' Items') }
                 </span>
-                <Link block="CheckoutOrderSummary" elem="Edit" to="/cart">
+                <Link
+                  block="CheckoutOrderSummary"
+                  elem="Edit"
+                  mods={ { isArabic } }
+                  to="/cart"
+                >
                     <span>{ __(' Edit') }</span>
                 </Link>
             </div>

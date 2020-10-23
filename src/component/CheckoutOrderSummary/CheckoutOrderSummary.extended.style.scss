@@ -20,6 +20,10 @@
             text-align: right;
             text-decoration: underline;
             padding-top: 3px;
+
+            &_isArabic {
+                flex: 0;
+            }
         }
 
     &-OrderItems {
@@ -88,7 +92,7 @@
     }
 
     &-PromoBlock {
-        background: var(--light-gray);
+        background: var(--cart-page-promo-background);
         height: 40px;
         margin: 21px 18px 15px;
     }

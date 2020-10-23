@@ -221,8 +221,6 @@ export class CheckoutShipping extends SourceCheckoutShipping {
             formContent
         } = this.state;
 
-        console.log(isSignedIn);
-
         return (
             <div block="ShippingStep" mods={ { isSignedIn, formContent } }>
                 { this.renderOpenPopupButton() }
