@@ -22,7 +22,8 @@ export class Header extends PureComponent {
     };
 
     state = {
-        isArabic: isArabic()
+        isArabic: isArabic(),
+        newMenuGender: ''
     };
 
     headerSections = [
@@ -34,11 +35,14 @@ export class Header extends PureComponent {
 
     renderSection = (Component, i) => {
         const { navigationState } = this.props;
+        const { newMenuGender } = this.state;
 
         return (
             <Component
               key={ i }
               navigationState={ navigationState }
+              changeMenuGender={ this.changeMenuGender }
+              newMenuGender={ newMenuGender }
             />
         );
     };
@@ -114,8 +118,13 @@ export class Header extends PureComponent {
         );
     }
 
+    changeMenuGender = (gender) => {
+        this.setState({ newMenuGender: gender });
+    };
+
     render() {
         const { navigationState: { name } } = this.props;
+
         return (
             <>
                 <header block="Header" mods={ { name } }>

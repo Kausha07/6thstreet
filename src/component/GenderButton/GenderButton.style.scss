@@ -32,8 +32,7 @@
         pointer-events: all;
         z-index: 2;
 
-        &_isCurrentGender,
-        &:hover
+        &_isCurrentGender
         {
             border-bottom: 2px solid var(--black);
             font-family: 'Avenir Next Bold', serif;
@@ -53,7 +52,7 @@
     &_isArabic {
         .GenderButton {
             &-Container {
-                @include desktop {      
+                @include desktop {
                     &:first-child {
                         padding-left: 30px;
                         padding-right: 0;

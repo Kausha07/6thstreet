@@ -16,12 +16,13 @@ export const mapDispatchToProps = (_dispatch) => ({
 
 export class HeaderMenuContainer extends PureComponent {
     static propTypes = {
-        activeOverlay: PropTypes.string.isRequired
+        activeOverlay: PropTypes.string.isRequired,
+        newMenuGender: PropTypes.string.isRequired
     };
 
     containerProps = () => {
-        const { activeOverlay } = this.props;
-        return { activeOverlay };
+        const { activeOverlay, newMenuGender } = this.props;
+        return { activeOverlay, newMenuGender };
     };
 
     render() {

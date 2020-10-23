@@ -8,6 +8,7 @@ import './GenderButton.style';
 class GenderButton extends PureComponent {
     static propTypes = {
         onGenderClick: PropTypes.func.isRequired,
+        onGenderEnter: PropTypes.func.isRequired,
         isCurrentGender: PropTypes.bool.isRequired,
         label: PropTypes.string.isRequired,
         mix: MixType
@@ -25,6 +26,7 @@ class GenderButton extends PureComponent {
     render() {
         const {
             onGenderClick,
+            onGenderEnter,
             isCurrentGender,
             mix
         } = this.props;
@@ -36,6 +38,7 @@ class GenderButton extends PureComponent {
               elem="Button"
               mods={ { isCurrentGender } }
               onClick={ onGenderClick }
+              onMouseEnter={ onGenderEnter }
             >
                 { this.renderLabel() }
             </button>

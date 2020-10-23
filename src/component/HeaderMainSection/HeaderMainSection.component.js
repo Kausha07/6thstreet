@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { matchPath, withRouter } from 'react-router';
 
 import HeaderAccount from 'Component/HeaderAccount';
@@ -20,6 +21,14 @@ import isMobile from 'Util/Mobile';
 import './HeaderMainSection.style';
 
 class HeaderMainSection extends NavigationAbstract {
+    static propTypes = {
+        changeMenuGender: PropTypes.func
+    };
+
+    static defaultProps = {
+        changeMenuGender: () => {}
+    };
+
     stateMap = {
         [DEFAULT_STATE_NAME]: {
             account: true,
@@ -136,10 +145,13 @@ class HeaderMainSection extends NavigationAbstract {
     }
 
     renderGenderSwitcher() {
+        const { changeMenuGender } = this.props;
+
         return (this.isPLP() || this.isPDP()) && isMobile.any() ? null : (
             <HeaderGenders
               key="genders"
               isMobile
+              changeMenuGender={ changeMenuGender }
             />
         );
     }
