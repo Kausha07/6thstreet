@@ -21,13 +21,14 @@
         line-height: 45px;
         text-indent: 20px;
         text-transform: uppercase;
+        width: 33%;
 
         button {
             transition-duration: 0s;
         }
 
         &-CategoryButton {
-            width: 35%;
+            width: 100%;
             font-size: calc(9px + 1vw);
             text-align: left;
             margin-left: -20px;
@@ -148,11 +149,11 @@
 
             &-Wrapper {
                 height: 70vh;
-                min-height: 500px;
-                width: 66%;
-                top: 140px;
                 left: 33%;
+                min-height: 500px;
                 position: fixed;
+                top: 140px;
+                width: 67%;
             }
 
             .MenuBrands {
@@ -194,11 +195,11 @@
             background-color: var(--white);
             display: flex;
             height: 390px;
+            left: 0;
+            max-width: 1440px;
             pointer-events: all;
             position: absolute;
             width: 100vw;
-            max-width: 1440px;
-            left: 0;
 
             &:after {
                 background: rgba(0, 0, 0, 0.7);
