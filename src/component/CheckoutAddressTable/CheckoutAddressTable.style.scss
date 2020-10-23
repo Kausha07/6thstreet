@@ -58,6 +58,7 @@
     &_isArabic {
         .MyAccountAddressCard {
             padding-right: 60px;
+            padding-left: 0;
             text-align: right;
         
             &::before {
@@ -67,11 +68,10 @@
             }
         
             &_isSelected {
-        
                 &::after {
-                    width: 15px
+                    width: 15px;
                 }
             }            
-            }
+        }
     }
 }

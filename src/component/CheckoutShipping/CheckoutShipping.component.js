@@ -91,13 +91,14 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     };
 
     renderAddAdress() {
-        const { formContent } = this.state;
+        const { formContent, isArabic } = this.state;
         const { customer } = this.props;
         return (
                 <div block="MyAccountAddressBook" elem="ContentWrapper" mods={ { formContent } }>
                     <button
                       block="MyAccountAddressBook"
                       elem="backBtn"
+                      mods={ { isArabic } }
                       onClick={ this.showCards }
                     />
                     <MyAccountAddressPopup
