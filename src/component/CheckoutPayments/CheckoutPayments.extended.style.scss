@@ -1,16 +1,16 @@
 .CheckoutPayments {
     h2 {
-        font-family: 'Avenir Next Demi Bold', sans-serif;
+        font-weight: var(--fw-demi);
         font-size: 18px;
         text-transform: none;
         line-height: 25px;
     }
 
     &-MethodDiscription {
-        font-family: 'Avenir Next Regular';
+        font-weight: var(--fw-regular);
         font-size: 15px;
     }
-    
+
     &-DiscountOptionWrapper {
         padding: 50px 36px;
 

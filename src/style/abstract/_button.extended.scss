@@ -1,6 +1,6 @@
 button,
 .button {
-    font-weight: 700;
+    font-weight: var(--fw-bold);
     height: 50px;
     padding: 0 15px;
     text-transform: uppercase;
@@ -112,6 +112,6 @@ button,
 
     &.thin {
         border-width: 1px;
-        font-weight: 400;
+        font-weight: var(--fw-regular);
     }
 }

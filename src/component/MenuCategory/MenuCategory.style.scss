@@ -3,9 +3,10 @@
 }
 
 .MenuCategory {
-    font-weight: 200;
+    font-weight: var(--fw-demi);
     padding: 0;
     position: unset;
+    letter-spacing: 1.3px;
 
     &:before {
         content: none;
@@ -15,9 +16,8 @@
         border: solid var(--white);
         border-width: 7px 0;
         color: var(--black);
-        font-family: "Avenir Next Thin", serif;
         font-size: 13px;
-        font-weight: 600;
+        font-weight: var(--fw-demi);
         line-height: 45px;
         text-indent: 20px;
         text-transform: uppercase;
@@ -57,7 +57,7 @@
                     &-CategoryButton {
                         color: white;
                         background-color: var(--gold);
-                        font-family: 'Avenir Next Bold', serif;
+                        font-weight: var(--fw-bold);
                     }
                 }
             }
@@ -70,11 +70,11 @@
             }
 
             .DynamicContent {
-                font-family: "Avenir Next Regular", serif;
+                font-weight: var(--fw-regular);
             }
 
             .ViewAll-Button {
-                font-family: 'Avenir Next Bold', serif;
+                font-weight: var(--fw-bold);
             }
         }
 
@@ -83,14 +83,14 @@
                 &-CategoryButton {
                     background-color: var(--black);
                     color: var(--white);
-                    font-family: 'Avenir Next Bold', serif;
+                    font-weight: var(--fw-bold);
                     font-size: 15px;
                     transition-duration: 0s;
                 }
             }
 
             .DynamicContent {
-                font-family: "Avenir Next Regular", serif;
+                font-weight: var(--fw-regular);
             }
 
             &:first-child {
@@ -112,7 +112,7 @@
             }
 
             .ViewAll-Button {
-                font-family: 'Avenir Next Bold', serif;
+                font-weight: var(--fw-bold);
             }
         }
 
@@ -157,7 +157,7 @@
 
             .MenuBrands {
                 &-ContentWrapper {
-                    font-family: 'Avenir Next Bold', serif;
+                    font-weight: var(--fw-bold);
                 }
             }
         }
@@ -201,7 +201,7 @@
             left: 0;
 
             &:after {
-                background: rgba(0, 0, 0, 0.7);
+                background: rgba(0, 0, 0, .7);
                 content: ' ';
                 height: 100%;
                 left: 0;
@@ -248,7 +248,7 @@
                     &::before {
                         background-color: var(--red);
                         color: transparent;
-                        transform: skew(-15deg, 0deg) translate(-10px, 0px);
+                        transform: skew(-15deg, 0deg) translate(-10px, 0);
                         content: '';
                         width: calc(100% + 20px);
                         height: 100%;
@@ -261,7 +261,7 @@
                     .MenuCategory {
                         &-CategoryLabel {
                             &::before {
-                                transform: skew(-15deg, 0deg) translate(10px, 0px);
+                                transform: skew(-15deg, 0deg) translate(10px, 0);
                             }
                         }
                     }
@@ -313,8 +313,9 @@
 
         &:hover {
             cursor: default;
-            font-weight: bold;
+            font-weight: var(--fw-bold);
             height: 40px;
+            letter-spacing: 1px;
         }
 
         &_isArabic {
@@ -353,7 +354,7 @@
                     .MenuCategory {
                         &-CategoryLabel {
                             &::before {
-                                transform: skew(-15deg, 0deg) translate(10px, 0px);
+                                transform: skew(-15deg, 0deg) translate(10px, 0);
                             }
                         }
                     }

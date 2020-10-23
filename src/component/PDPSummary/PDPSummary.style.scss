@@ -5,7 +5,7 @@
 }
 
 .PDPSummary {
-    font-family: "Avenir Next Regular";
+    font-weight: var(--fw-regular);
     margin-top: 20px;
     padding: 0 20px;
 
@@ -42,7 +42,7 @@
     }
 
     &-HeaderWardrobeBtn {
-        font-family: 'Avenir Next Medium';
+        font-weight: var(--fw-medium);
         margin: 0 25px;
         width: 30px;
         height: 30px;
@@ -136,13 +136,13 @@
     }
 
     .Price {
-        font-family: 'Avenir Next Bold';
+        font-weight: var(--fw-bold);
         font-size: 20px;
 
         &-Base {
             &_discount {
                 margin-right: 20px;
-                font-family: 'Avenir Next Medium';
+                font-weight: var(--fw-medium);
             }
         }
 
