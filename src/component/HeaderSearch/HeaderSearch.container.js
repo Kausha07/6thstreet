@@ -56,8 +56,6 @@ export class HeaderSearchContainer extends PureComponent {
     render() {
         return (
             <HeaderSearch
-              { ...this.props }
-              { ...this.state }
               { ...this.containerFunctions }
               { ...this.containerProps() }
             />
