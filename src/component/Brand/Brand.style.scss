@@ -1,4 +1,9 @@
 .Brand {
+    display: block;
+    text-transform: none;
+    height: unset;
+    font-weight: unset;
+    padding: 0;
     font-family: var(--avenir-regular-font);
     font-size: 13px;
     line-height: 1.5;

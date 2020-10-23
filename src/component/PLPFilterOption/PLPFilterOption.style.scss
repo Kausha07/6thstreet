@@ -1,26 +1,130 @@
 :root {
     --filter-product-count-color: #666;
     --disabeled-radio-button-color:  #b8b8b8;
+    --check-mark-mobile-filter-color: #f96446;
+    --option-list-bottom-border-color: #ddd;
 }
 
 .PLPFilterOption {
+    &-Input {
+        position: absolute;
+        height: 40px;
+        width: 100%;
+        z-index: 1;
+    }
     &-List {
+        margin: 0;
         display: flex;
 
         label {
             display: flex;
             align-items: center;
+            width: 100%;
+
+            @include desktop {
+                position: absolute;
+                height: 42px;
+                padding-left: 42px;
+                cursor: pointer;
+            }
+        }
+
+        &_isArabic {
+            label {
+                display: unset;
+                align-items: unset;
+                text-align: right;
+                overflow: hidden;
+                justify-content: right;
+                top: 12px;
+
+                @include desktop {
+                    display: flex;
+                    align-items: center;
+                    width: 100%;
+                    top: unset;
+                    padding-right: 42px;
+                    padding-left: 0;
+                    cursor: pointer;
+                }
+            }
         }
 
         span {
             margin-left: 5px;
             color: var(--filter-product-count-color);
         }
+
+        @include before-desktop {
+            justify-content: space-between;
+            border-bottom: solid 1px var(--option-list-bottom-border-color);
+            margin: auto 7%;
+
+            &_isArabic {
+                justify-content: flex-end;
+
+                .Field {
+                    [type='radio'],
+                    [type='checkbox']{
+                        + label{
+                            @include before-desktop {
+                                left: 5%;
+                                right: unset;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .Field_type_radio {
+            @include desktop {
+                width: 18px;
+                height: 18px;
+            }
+            
+            label {
+                display: inline-block;
+                max-width: calc(100vw - 2rem - 45px);
+                vertical-align: middle;
+                padding: 0;
+
+                @include before-desktop {
+                    top: unset;
+                }
+            }
+
+            @include before-desktop {
+                label {
+                    width: 100%;
+                    height: 42px;
+                }
+            }
+        }
     
         .Field {
             margin: auto 5px auto 15px;
 
+            @include before-desktop {
+                margin: 0;
+            }
+
             [type='radio']{
+
+                @include before-desktop {
+                    left: 5%;
+                }
+
+                + label{
+                    @include before-desktop {
+                        position: absolute;
+                        width: 21px;
+                        height: 21px;
+                        top: 10px;
+                        right: 5px;
+                    }
+                }
+
                 +label {           
                     &:hover {
                         &::after {
@@ -41,7 +145,7 @@
                     border-color: var(--disabeled-radio-button-color);
                     
                     &::after {
-                        --checkmark-color: var(--black-color);
+                        --checkmark-color: var(--check-mark-mobile-filter-color);
                     }
                 }
 
@@ -50,12 +154,12 @@
                 &:focus {
 
                     &::after {
-                        --checkmark-color: var(--black-color);
+                        --checkmark-color: var(--check-mark-mobile-filter-color);
                     }
                     
                     + label {
                         &::after {
-                            --checkmark-color: var(--black-color);
+                            --checkmark-color: var(--check-mark-mobile-filter-color);
                         }
                     }
                 }
@@ -65,25 +169,50 @@
                         padding-top: 20px;
                     }
                 }
+
+                @include before-desktop {
+                    &:checked + label {
+                        &::after {
+                            --checkmark-color: #F96446;
+                        }
+                    }
+                }
             }
     
-    
             [type='checkbox'] {
-    
-                &:checked + label {
-                    --primary-base-color: var(--black-color);
 
-                    &::after {
-                        --checkmark-color: var(--black-color);
+                + label{
+                    @include before-desktop {
+                        position: absolute;
+                        top: 10px;
+                        right: 5px;
                     }
                 }
     
-                &:hover + label {
-                    --primary-base-color: var(--black-color);
+                &:checked + label {
+                    --primary-base-color: transparent;
+                    @include desktop {
+                        border-color: var(--disabeled-radio-button-color);
+                    }
 
                     &::after {
-                        --checkmark-color: transparent;
+                        --checkmark-color: var(--check-mark-mobile-filter-color);
                     }
+                }
+
+                @include before-desktop {
+                    + label {
+                        border-color: transparent;
+                    }
+
+                    &:checked + label {
+                        --primary-base-color: transparent;
+    
+                        &::after {
+                            --checkmark-color: var(--check-mark-mobile-filter-color);
+                        }
+                    }
+                    
                 }
             }
         }

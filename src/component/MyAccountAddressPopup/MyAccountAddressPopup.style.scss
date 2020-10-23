@@ -69,7 +69,7 @@
 
     &-DeleteBtn{
         position: absolute;
-        top: 6px;
+        top: -113px;
         right: 0;
         z-index: 8;
         text-transform: none;
@@ -77,6 +77,10 @@
         font-weight: 400;
         font-size: 16px;
         padding: 0;
+
+        &_newForm {
+            display: none;
+        }
 
         @include desktop() {
             display: none;
@@ -90,5 +94,16 @@
         padding: 0;
         height: 30px;
         font-size: 20px;
+    }
+}
+
+.PageWrapper {
+    &_isArabic { 
+        .MyAccountAddressPopup {
+            &-xBtn {
+                right: auto;
+                left: 20px;
+            }
+        }
     }
 }

@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 
+import { CARD } from 'Component/CheckoutPayments/CheckoutPayments.config';
 import { BILLING_STEP, PAYMENT_TOTALS } from 'SourceRoute/Checkout/Checkout.config';
 import {
     CheckoutContainer as SourceCheckoutContainer,
@@ -20,6 +21,7 @@ export const mapDispatchToProps = (dispatch) => ({
     estimateShipping: (address) => CheckoutDispatcher.estimateShipping(dispatch, address),
     saveAddressInformation: (address) => CheckoutDispatcher.saveAddressInformation(dispatch, address),
     createOrder: (code, additional_data) => CheckoutDispatcher.createOrder(dispatch, code, additional_data),
+    getPaymentMethods: () => CheckoutDispatcher.getPaymentMethods(),
     setCartId: (cartId) => dispatch(setCartId(cartId)),
     createEmptyCart: () => CartDispatcher.getCart(dispatch)
 });
@@ -74,7 +76,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     }
 
     async saveAddressInformation(addressInformation) {
-        const { saveAddressInformation } = this.props;
+        const { getPaymentMethods, saveAddressInformation } = this.props;
         const { shipping_address } = addressInformation;
 
         this.setState({
@@ -84,7 +86,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
         saveAddressInformation(addressInformation).then(
             ({ data }) => {
-                const { payment_methods, totals } = data;
+                const { totals } = data;
 
                 BrowserDatabase.setItem(
                     totals,
@@ -93,11 +95,31 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                 );
 
                 this.setState({
-                    isLoading: false,
-                    paymentMethods: payment_methods,
-                    checkoutStep: BILLING_STEP,
                     paymentTotals: totals
-                });
+                })
+            },
+            this._handleError
+        );
+
+        getPaymentMethods().then(
+            ({ data }) => {
+                const availablePaymentMethods = data.reduce((acc, paymentMethod) => {
+                    const { is_enabled } = paymentMethod;
+
+                    if (is_enabled) {
+                        acc.push(paymentMethod);
+                    }
+
+                    return acc;
+                }, []);
+
+                if (data) {
+                    this.setState({
+                        isLoading: false,
+                        paymentMethods: availablePaymentMethods,
+                        checkoutStep: BILLING_STEP
+                    })
+                }
             },
             this._handleError
         );
@@ -112,13 +134,33 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     async savePaymentMethodAndPlaceOrder(paymentInformation) {
         const { paymentMethod: { code, additional_data } } = paymentInformation;
         const { createOrder } = this.props;
+        const { shippingAddress: { email } } = this.state;
+
+        const data = code === CARD
+            ? {
+                ...additional_data,
+                source: {
+                    type: 'token',
+                    token: BrowserDatabase.getItem('CREDIT_CART_TOKEN')
+                },
+                customer: {
+                    email: email
+                },
+                '3ds': {
+                    enable: true
+                },
+                metadata: {
+                    udf1: null
+                }
+            }
+            : additional_data;
 
         try {
-            createOrder(code, additional_data).then(
+            createOrder(code, data).then(
                 ({ data }) => {
-                    const { order_id, success } = data;
+                    const { order_id, success, response_code } = data;
 
-                    if (success) {
+                    if (success || response_code === 200) {
                         this.setDetailsStep(order_id);
                         this.resetCart();
                     }

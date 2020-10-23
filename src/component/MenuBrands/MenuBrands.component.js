@@ -65,6 +65,8 @@ class MenuBrands extends PureComponent {
     }
 
     render() {
+        const { isArabic } = this.state;
+
         return (
             <div block="MenuBrands">
                 <div block="MenuBrands" elem="ContentWrapper">
@@ -77,7 +79,8 @@ class MenuBrands extends PureComponent {
                     <div
                       mix={ {
                           block: 'MenuBrands',
-                          elem: 'ContentWrapper-Brands'
+                          elem: 'ContentWrapper-Brands',
+                          mods: { isArabic }
                       } }
                     >
                         { isMobile.any() ? this.renderBrandsSlider() : this.renderItems() }

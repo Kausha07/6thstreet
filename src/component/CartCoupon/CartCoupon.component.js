@@ -80,7 +80,7 @@ export class CartCoupon extends PureComponent {
                   id="couponCode"
                   name="couponCode"
                   value={ enteredCouponCode }
-                  placeholder={ __('Enter a coupon code') }
+                  placeholder={ __('Enter a coupon or Discount code') }
                   onChange={ this.handleCouponCodeChange }
                   mix={ { block: 'CartCoupon', elem: 'Input' } }
                 />

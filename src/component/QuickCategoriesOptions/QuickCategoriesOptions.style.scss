@@ -1,0 +1,112 @@
+:root {
+    --choosed-field-gray-color: #F3F4F6;
+    --field-gray-text-color: #9B9B9B;
+}
+
+.FieldMultiselect {
+    .PLPQuickFilter {
+        .Slider {
+            &-Wrapper {
+                width: 200px;
+            }
+        }
+
+        .QuickFilter {
+            &-List {
+                display: flex;
+                margin-top: -2px;
+                max-width: 1200px;
+                width: 100%;
+
+                .PLPFilterOption {
+                    &-List {
+                        border: 0;
+                        display: inline-table;
+                    }
+                }
+
+                li {
+                    display: block;
+                    height: 60px;
+                    margin: 5px;
+                    max-width: 200px;
+
+                    label {
+                        color: var(--field-gray-text-color);
+                        height: 40px;
+                        left: 0;
+                        margin-left: 10px;
+                        padding-left: 0;
+                        padding-right: 10px;
+                        pointer-events: none;
+                        position: relative;
+                        z-index: 1;
+
+                        @include desktop() {
+                            margin-top: -40px;
+                        }
+                    }
+
+
+                    .Field [type='checkbox']:checked + label {
+                        --primary-base-color: var(--choosed-field-gray-color);
+                        border-color: var(--choosed-field-gray-color);
+                    }
+
+                    .Field {
+                        margin: 0;
+                        width: 100%;
+
+                        label {
+                            border-radius: 20px;
+                            height: 30px;
+                            margin-left: 0;
+                            margin-top: -5px;
+                            max-width: 200px;
+                            pointer-events: none;
+                            width: 100%;
+
+                            &:after {
+                                height: 0;
+                                width: 0;
+                            }
+
+                            &:hover {
+                                border-color: var(--field-gray-text-color);
+                                content: ' ';
+                            }
+
+                            @include before-desktop() {
+                                border: 1px solid var(--field-gray-text-color);
+                            }
+
+                            @include desktop() {
+                                height: 30px;
+                                margin-top: -25px;
+                                pointer-events: all;
+                            }
+                        }
+                    }
+
+                    span {
+                        display: none;
+                    }
+
+                    &::before {
+                        content: none;
+                    }
+
+                    padding: 0;
+                }
+
+                @include desktop() {
+                    margin-top: 15px;
+                }
+            }
+        }
+    }
+
+    @include before-desktop() {
+        direction: ltr;
+    }
+}

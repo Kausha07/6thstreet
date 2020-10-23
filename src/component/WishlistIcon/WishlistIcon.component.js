@@ -7,14 +7,27 @@ import './WishlistIcon.style';
 class WishlistIcon extends PureComponent {
     static propTypes = {
         sku: PropTypes.string.isRequired,
+        removeFromWishlist: PropTypes.func.isRequired,
         addToWishlist: PropTypes.func.isRequired,
         items: PropTypes.array.isRequired
     };
 
     handleClick = () => {
-        const { sku, addToWishlist } = this.props;
+        const {
+            addToWishlist,
+            removeFromWishlist,
+            sku: skuFromProps,
+            items
+        } = this.props;
+        const wishListItem = items.find(({ product: { sku } }) => sku === skuFromProps);
 
-        addToWishlist(sku);
+        if (wishListItem) {
+            const { wishlist_item_id } = wishListItem;
+            removeFromWishlist(wishlist_item_id);
+            return;
+        }
+
+        addToWishlist(skuFromProps);
     };
 
     isBlack = (item) => {

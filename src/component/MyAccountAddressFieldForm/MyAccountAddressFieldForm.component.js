@@ -50,10 +50,8 @@ export class MyAccountAddressFieldForm extends PureComponent {
         <Field { ...this.getDefaultValues(fieldEntry) } />
     );
 
-    renderCurrentPhoneCode() {
-        const { country_id } = this.fieldMap;
-
-        return PHONE_CODES[country_id.value];
+    renderCurrentPhoneCode(country_id) {
+        return PHONE_CODES[country_id];
     }
 
     renderFields() {
@@ -62,20 +60,23 @@ export class MyAccountAddressFieldForm extends PureComponent {
             default_shipping,
             firstname,
             lastname,
-            country_id,
             telephone,
             street,
             city,
             postcode,
+            country_id,
+            country_id: {
+                value
+            },
             region_id,
             region_string,
             default_common
         } = this.fieldMap;
 
+        this.getCitiesData();
+
         const { newForm } = this.props;
-
         const fromTitle = newForm ? __('New Address') : __('Edit Address');
-
         const region = region_id === undefined ? region_string : region_id;
 
         return (
@@ -103,8 +104,8 @@ export class MyAccountAddressFieldForm extends PureComponent {
                     { this.renderField(['default_shipping', default_shipping]) }
                     { this.renderField(['firstname', firstname]) }
                     { this.renderField(['lastname', lastname]) }
-                    { this.renderField(['country_id', country_id]) }
                     { this.renderField(['postcode', postcode]) }
+                    { this.renderField(['country_id', country_id]) }
                 </div>
 
                 <div
@@ -134,8 +135,8 @@ export class MyAccountAddressFieldForm extends PureComponent {
                       block="MyAccountAddressFieldForm"
                       elem="PhoneCode"
                     >
-                        <CountryMiniFlag label={ country_id.value } />
-                        { this.renderCurrentPhoneCode() }
+                        <CountryMiniFlag label={ value } />
+                        { this.renderCurrentPhoneCode(value) }
                     </div>
                 </div>
 
