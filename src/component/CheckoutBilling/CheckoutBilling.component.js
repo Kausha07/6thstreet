@@ -12,7 +12,8 @@ import './CheckoutBilling.extended.style';
 export class CheckoutBilling extends SourceCheckoutBilling {
     static propTypes = {
         ...SourceCheckoutBilling.propTypes,
-        setTabbyWebUrl: PropTypes.func.isRequired
+        setTabbyWebUrl: PropTypes.func.isRequired,
+        setCreditCardData: PropTypes.func.isRequired
     };
 
     renderPriceLine(price, name, mods) {
@@ -95,7 +96,8 @@ export class CheckoutBilling extends SourceCheckoutBilling {
             setDetailsStep,
             shippingAddress,
             setTabbyWebUrl,
-            setCashOnDeliveryFee
+            setCashOnDeliveryFee,
+            setCreditCardData
         } = this.props;
 
         if (!paymentMethods.length) {
@@ -113,6 +115,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
               billingAddress={ shippingAddress }
               setOrderButtonEnableStatus={ this.setOrderButtonEnableStatus }
               setTabbyWebUrl={ setTabbyWebUrl }
+              setCreditCardData={ setCreditCardData }
             />
         );
     }
