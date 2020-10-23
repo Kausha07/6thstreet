@@ -9,9 +9,12 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import PLPFilter from 'Component/PLPFilter';
+import PLPQuickFilter from 'Component/PLPQuickFilter';
 import Popup from 'Component/Popup';
 import { Filters } from 'Util/API/endpoint/Product/Product.type';
+import WebUrlParser from 'Util/API/helper/WebUrlParser';
 import { isArabic } from 'Util/App';
+import isMobile from 'Util/Mobile';
 
 import fitlerImage from './icons/filter-button.png';
 
@@ -31,14 +34,32 @@ class PLPFilters extends PureComponent {
 
     state = {
         isOpen: false,
-        isArabic: isArabic()
+        activeFilter: undefined,
+        isArabic: isArabic(),
+        activeFilters: {}
     };
 
-    static getDerivedStateFromProps(nextProps) {
-        const { activeOverlay } = nextProps;
+    static getDerivedStateFromProps(props, state) {
+        const { activeOverlay, filters } = props;
+        const { activeFilter } = state;
 
-        return ({ isOpen: activeOverlay === 'PLPFilter' });
+        if (isMobile.any()) {
+            if (!activeFilter) {
+                return ({
+                    isOpen: activeOverlay === 'PLPFilter',
+                    activeFilter: Object.keys(filters)[0]
+                });
+            }
+        }
+
+        return ({
+            isOpen: activeOverlay === 'PLPFilter'
+        });
     }
+
+    changeActiveFilter = (newFilter) => {
+        this.setState({ activeFilter: newFilter });
+    };
 
     handleFilterClick = () => {
         const { isOpen } = this.state;
@@ -50,8 +71,13 @@ class PLPFilters extends PureComponent {
 
     renderFilters() {
         const { filters } = this.props;
-
         return Object.entries(filters).map(this.renderFilter);
+    }
+
+    renderQuickFilters() {
+        const { filters } = this.props;
+
+        return Object.entries(filters).map(this.renderQuickFilter);
     }
 
     renderPlaceholder() {
@@ -65,6 +91,10 @@ class PLPFilters extends PureComponent {
             hideActiveOverlay();
             goToPreviousNavigationState();
         }
+
+        this.setState({ activeFilters: {} });
+
+        document.body.style.overflow = 'visible';
     };
 
     resetFilters = () => {
@@ -80,7 +110,16 @@ class PLPFilters extends PureComponent {
             goToPreviousNavigationState();
         }
 
+        this.setState({ activeFilters: {} });
+
         onReset();
+    };
+
+    onShowResultButton = () => {
+        const { activeFilters } = this.state;
+
+        Object.keys(activeFilters).map((key) => WebUrlParser.setParam(key, activeFilters[key]));
+        this.hidePopUp();
     };
 
     renderSeeResultButton() {
@@ -88,7 +127,7 @@ class PLPFilters extends PureComponent {
             <button
               block="Content"
               elem="SeeResult"
-              onClick={ this.hidePopUp }
+              onClick={ this.onShowResultButton }
             >
                 { __('show result') }
             </button>
@@ -102,12 +141,7 @@ class PLPFilters extends PureComponent {
             <button
               block="FilterPopup"
               elem="CloseBtn"
-              mix={ {
-                  block: 'CloseBtn',
-                  mods: {
-                      isArabic
-                  }
-              } }
+              mods={ { isArabic } }
               aria-label={ __('Close') }
               onClick={ this.hidePopUp }
             />
@@ -115,30 +149,25 @@ class PLPFilters extends PureComponent {
     }
 
     renderResetFilterButton() {
-        const { isArabic, isOpen } = this.state;
+        const { isArabic } = this.state;
 
         return (
             <button
-              block="Reset"
-              elem="Button"
+              block="FilterPopup"
+              elem="Reset"
               type="button"
-              mix={ {
-                  block: 'Reset',
-                  mods: {
-                      isArabic,
-                      isOpen
-                  }
-              } }
+              mods={ { isArabic } }
               aria-label={ __('Reset') }
               onClick={ this.resetFilters }
             >
-                { __('clear all') }
+                { __('clear') }
             </button>
         );
     }
 
     renderContent() {
         const { isLoading } = this.props;
+        const { isArabic } = this.state;
 
         if (isLoading) {
             return this.renderPlaceholder();
@@ -148,6 +177,7 @@ class PLPFilters extends PureComponent {
             <div
               block="Content"
               elem="Filters"
+              mods={ { isArabic } }
             >
                 { this.renderFilters() }
             </div>
@@ -155,6 +185,14 @@ class PLPFilters extends PureComponent {
     }
 
     renderFilterButton() {
+        const { activeFilters } = this.state;
+        const { count } = activeFilters ? Object.entries(activeFilters).reduce((prev, [_key, value]) => ({
+            count: prev.count + value.length
+        }), { count: 0 })
+            : (
+                { count: 0 }
+            );
+
         return (
             <button
               onClick={ this.handleFilterClick }
@@ -164,30 +202,34 @@ class PLPFilters extends PureComponent {
               block="PLPFilterMobile"
             >
                 <img src={ fitlerImage } alt="fitler" />
-                { __('refine') }
+                { __('refine ') }
+                { `(${count})` }
             </button>
         );
     }
 
-    renderRefineIcon() {
+    renderRefine() {
+        const { isArabic } = this.state;
+
         return (
-            <i
-              block="arrow left"
-              mix={ {
-                  block: 'left',
-                  mods: {
-                      isArabic
-                  }
-              } }
-            />
+            <div
+              block="PLPFilters"
+              elem="Refine"
+              mods={ { isArabic } }
+            >
+                { __('refine') }
+            </div>
         );
     }
 
     renderPopupFilters() {
         const { isArabic } = this.state;
 
+        document.body.style.overflow = 'hidden';
+
         return (
             <Popup
+              clickOutside={ false }
               mix={ {
                   block: 'FilterPopup',
                   mods: {
@@ -200,17 +242,11 @@ class PLPFilters extends PureComponent {
                 <div
                   block="FilterPopup"
                   elem="Title"
-                  mix={ {
-                      block: 'Title',
-                      mods: {
-                          isArabic
-                      }
-                  } }
+                  mods={ { isArabic } }
                 >
                     { this.renderCloseButton() }
+                    { this.renderRefine() }
                     { this.renderResetFilterButton() }
-                    { this.renderRefineIcon() }
-                    { __('refine') }
                 </div>
                 { this.renderContent() }
                 { this.renderSeeResultButton() }
@@ -218,12 +254,61 @@ class PLPFilters extends PureComponent {
         );
     }
 
-    renderFilter = ([key, filter]) => (
-        <PLPFilter
-          key={ key }
-          filter={ filter }
-        />
-    );
+    renderFilter = ([key, filter]) => {
+        const { activeFilter } = this.state;
+
+        return (
+            <PLPFilter
+              key={ key }
+              filter={ filter }
+              parentCallback={ this.handleCallback }
+              currentActiveFilter={ activeFilter }
+              changeActiveFilter={ this.changeActiveFilter }
+            />
+        );
+    };
+
+    handleCallback = (category, values) => {
+        const { activeFilters } = this.state;
+        this.setState({
+            activeFilters: {
+                ...activeFilters,
+                [category]: values
+            }
+        });
+    };
+
+    renderQuickFilter([key, filter]) {
+        const genders = [
+            __('men'),
+            __('women'),
+            __('kids')
+        ];
+        const brandsCategoryName = 'brand_name';
+        const CategoryName = 'categories_without_path';
+        const pathname = location.pathname.split('/');
+        const isBrandsFilterRequired = genders.includes(pathname[1]);
+
+        if (isBrandsFilterRequired) {
+            if (filter.category === brandsCategoryName) {
+                return (
+                    <PLPQuickFilter
+                      key={ key }
+                      filter={ filter }
+                    />
+                );
+            }
+        } else if (filter.category === CategoryName) {
+            return (
+                <PLPQuickFilter
+                  key={ key }
+                  filter={ filter }
+                />
+            );
+        }
+
+        return null;
+    }
 
     render() {
         const { productsCount } = this.props;
@@ -251,10 +336,13 @@ class PLPFilters extends PureComponent {
                         { this.renderResetFilterButton() }
                     </div>
                 </form>
-                <div block="PLPFilters" elem="ToolBar">
+                <div block="PLPFilters" elem="ToolBar" mods={ { isArabic } }>
+                    <div block="PLPFilters" elem="QuickCategories" mods={ { isArabic } }>
+                        { this.renderQuickFilters() }
+                    </div>
                     <div block="PLPFilters" elem="ProductsCount" mods={ { isArabic } }>
-                      <span>{ count }</span>
-                      Products
+                        <span>{ count }</span>
+                        Products
                     </div>
                 </div>
             </>

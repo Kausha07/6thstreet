@@ -19,6 +19,7 @@
         display: table-cell;
         padding-right: 20px;
         text-align: right;
+        vertical-align: middle;
         width: calc(100% / 3);
 
         &::after {
@@ -31,6 +32,18 @@
             top: 50%;
             transform: translateY(-50%) rotate(-45deg) scale(1.5);
             width: 5px;
+
+            .PageWrapper_isArabic & {
+                left: 0;
+                right: unset;
+                transform: translateY(-50%) rotate(135deg) scale(1.5);
+            }
+        }
+
+        .PageWrapper_isArabic & {
+            padding-left: 20px;
+            padding-right: 0;
+            text-align: left;
         }
     }
 
@@ -39,11 +52,13 @@
         font-weight: bold;
         text-align: center;
         text-decoration: underline;
+        vertical-align: middle;
         width: calc(100% / 3);
     }
 
     &-Date {
         display: table-cell;
+        vertical-align: middle;
         width: calc(100% / 3);
     }
 }

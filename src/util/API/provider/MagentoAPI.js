@@ -8,7 +8,9 @@ class MagentoAPI {
         const options = {
             method: type,
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'X-App-Version': '2.20.0',
+                'Request-Source': 'PWA'
             }
         };
 

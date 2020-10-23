@@ -5,7 +5,8 @@ import { connect } from 'react-redux';
 import HeaderWishlist from './HeaderWishlist.component';
 
 export const mapStateToProps = (_state) => ({
-    language: _state.AppState.language
+    language: _state.AppState.language,
+    wishListItems: _state.WishlistReducer.items
 });
 
 export const mapDispatchToProps = (_dispatch) => ({

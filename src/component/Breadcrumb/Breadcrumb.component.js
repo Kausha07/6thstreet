@@ -28,12 +28,23 @@ export class Breadcrumb extends PureComponent {
             PropTypes.string,
             PropTypes.shape({})
         ]),
-        name: PropTypes.string
+        name: PropTypes.string,
+        onClick: PropTypes.func
     };
 
     static defaultProps = {
         url: '',
-        name: ''
+        name: '',
+        onClick: () => {}
+    };
+
+    handleBradcrumbClick = () => {
+        const {
+            onClick,
+            name
+        } = this.props;
+
+        onClick(name.toLowerCase());
     };
 
     renderLink() {
@@ -49,6 +60,7 @@ export class Breadcrumb extends PureComponent {
               elem="Link"
               to={ url || '' }
               tabIndex={ isDisabled ? '-1' : '0' }
+              onClick={ this.handleBradcrumbClick }
             >
                 <meta itemProp="item" content={ window.location.origin + (url || '') } />
                 <span itemProp="name">

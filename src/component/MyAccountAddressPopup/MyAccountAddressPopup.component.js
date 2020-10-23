@@ -86,6 +86,7 @@ export class MyAccountAddressPopup extends PureComponent {
                 <button
                   block="MyAccountAddressPopup"
                   elem="DeleteBtn"
+                  mods={ { newForm: form } }
                   onClick={ this.openMobileDeleteNotice }
                 >
                     { __('Delete') }

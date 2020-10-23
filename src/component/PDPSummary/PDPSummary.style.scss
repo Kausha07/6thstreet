@@ -23,16 +23,17 @@
         align-items: center;
         margin-bottom: 30px;
     }
-    
+
     &-HeaderNew {
         display: flex;
         align-items: center;
     }
 
-    &-New {
+    .ProductLabel {
         color: var(--pdp-new-text-color);
         font-size: 16px;
         margin-right: 4px;
+        text-transform: uppercase;
     }
 
     &-Exclusive {
@@ -68,7 +69,7 @@
 
         @include desktop() {
             width: 147px;
-            
+
             div:before {
                 top: -4px;
                 left: 10px;

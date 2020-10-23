@@ -1,1 +1,1 @@
-export { default } from './MyAccountOrderListItem.container';
+export { default } from './MyAccountOrderListItem.component';

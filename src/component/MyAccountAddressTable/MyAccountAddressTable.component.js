@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /**
@@ -17,6 +18,7 @@ import KeyValueTable from 'Component/KeyValueTable';
 import Loader from 'Component/Loader';
 import { addressType } from 'Type/Account';
 import { MixType } from 'Type/Common';
+import { isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
 
 import pencil from './icons/edit_btn.png';
@@ -54,9 +56,17 @@ export class MyAccountAddressTable extends KeyValueTable {
         mix: {}
     };
 
+    onEdit = () => {
+        const { onEditClick } = this.props;
+        onEditClick();
+        if (!isMobile.any()) {
+            const elmnts = document.getElementsByClassName('MyAccountAddressBook-NewAddress');
+            elmnts[0].scrollIntoView();
+        }
+    };
+
     renderActions() {
         const {
-            onEditClick,
             onDeleteClick,
             showActions,
             address: { default_billing, default_shipping }
@@ -73,7 +83,7 @@ export class MyAccountAddressTable extends KeyValueTable {
                 <button
                   block="MyAccountAddressTable"
                   elem="ActionBtn"
-                  onClick={ onEditClick }
+                  onClick={ this.onEdit }
                 >
                     <img
                       block="MyAccountAddressTable"
@@ -110,6 +120,19 @@ export class MyAccountAddressTable extends KeyValueTable {
         }
     };
 
+    getPhone = () => {
+        const { address: { telephone } } = this.props;
+        const numbers = telephone.slice(1);
+        const code = numbers.slice(0, 3);
+        const phone = numbers.slice(3);
+
+        if (isArabic()) {
+            return `${phone} ${code}+`;
+        }
+
+        return `+${code} ${phone}`;
+    };
+
     renderCard() {
         const {
             address: {
@@ -119,7 +142,6 @@ export class MyAccountAddressTable extends KeyValueTable {
                 street,
                 city,
                 country_id,
-                telephone,
                 region: {
                     region
                 }
@@ -145,7 +167,7 @@ export class MyAccountAddressTable extends KeyValueTable {
                     { ' - ' }
                     { countryId }
                 </div>
-                <div block="MyAccountAddressCard" elem="Phone">{ telephone }</div>
+                <div block="MyAccountAddressCard" elem="Phone">{ this.getPhone() }</div>
             </div>
         );
     }

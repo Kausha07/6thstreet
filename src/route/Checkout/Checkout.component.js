@@ -1,17 +1,121 @@
+/* eslint-disable no-magic-numbers */
+import CheckoutBilling from 'Component/CheckoutBilling';
+import CheckoutOrderSummary from 'Component/CheckoutOrderSummary';
 import CheckoutShipping from 'Component/CheckoutShipping';
+import ContentWrapper from 'Component/ContentWrapper';
+import TabbyPopup from 'Component/TabbyPopup';
 import { Checkout as SourceCheckout } from 'SourceRoute/Checkout/Checkout.component';
-import isMobile from 'Util/Mobile';
+
+import { AUTHORIZED_STATUS } from './Checkout.config';
 
 import './Checkout.style';
 
 export class Checkout extends SourceCheckout {
+    state = {
+        isCustomAddressExpanded: false,
+        tabbyWebUrl: '',
+        tabbyPaymentId: '',
+        tabbyPaymentStatus: '',
+        isTabbyPopupShown: false,
+        cashOnDeliveryFee: null
+    };
+
+    callbackFunction = (childData) => {
+        this.setState({ isCustomAddressExpanded: childData });
+    };
+
+    savePaymentInformation = (paymentInformation) => {
+        const { savePaymentInformation } = this.props;
+        const { tabbyWebUrl } = this.state;
+
+        if (tabbyWebUrl) {
+            this.setState({ isTabbyPopupShown: true });
+
+            // Need to get payment data from Tabby.
+            // Could not get callback of Tabby another way because Tabby is iframe in iframe
+            setTimeout(
+                () => this.processTabbyWithTimeout(3, paymentInformation),
+                10000
+            );
+        } else {
+            savePaymentInformation(paymentInformation);
+        }
+
+        return null;
+    };
+
+    processTabby(paymentInformation) {
+        const { savePaymentInformation, verifyPayment } = this.props;
+        const { tabbyPaymentId } = this.state;
+
+        verifyPayment(tabbyPaymentId).then(
+            ({ status }) => {
+                if (status === AUTHORIZED_STATUS) {
+                    savePaymentInformation(paymentInformation);
+                }
+
+                this.setState({ tabbyPaymentStatus: status });
+            }
+        );
+    }
+
+    processTabbyWithTimeout(counter, paymentInformation) {
+        const { tabbyPaymentStatus } = this.state;
+        const { showErrorNotification, hideActiveOverlay } = this.props;
+
+        // Need to get payment data from Tabby.
+        // Could not get callback of Tabby another way because Tabby is iframe in iframe
+        if (tabbyPaymentStatus !== AUTHORIZED_STATUS && counter < 60) {
+            setTimeout(
+                () => {
+                    this.processTabby(paymentInformation);
+                    this.processTabbyWithTimeout(counter + 1, paymentInformation);
+                },
+                5000
+            );
+        }
+
+        if (counter === 60) {
+            showErrorNotification('Tabby session timeout');
+            hideActiveOverlay();
+            this.setState({ isTabbyPopupShown: false });
+        }
+    }
+
+    setTabbyWebUrl = (url, paymentId) => {
+        this.setState({ tabbyWebUrl: url, tabbyPaymentId: paymentId });
+    };
+
+    setCashOnDeliveryFee = (fee) => {
+        this.setState({ cashOnDeliveryFee: fee });
+    };
+
+    renderSummary() {
+        const { cashOnDeliveryFee } = this.state;
+        const { checkoutTotals, checkoutStep, paymentTotals } = this.props;
+        const { areTotalsVisible } = this.stepMap[checkoutStep];
+
+        if (!areTotalsVisible) {
+            return null;
+        }
+
+        return (
+            <CheckoutOrderSummary
+              checkoutStep={ checkoutStep }
+              totals={ checkoutTotals }
+              paymentTotals={ paymentTotals }
+              cashOnDeliveryFee={ cashOnDeliveryFee }
+            />
+        );
+    }
+
     renderTitle() {
         const { checkoutStep } = this.props;
+        const { isCustomAddressExpanded } = this.state;
 
-        if (isMobile.any() || isMobile.tablet()) {
-            return (
-                <div block="CheckoutNavigation">
-                  <div block="CheckoutNavigation" elem="FirstColumn">
+        return (
+            <div block="CheckoutNavigation" mods={ { isCustomAddressExpanded } }>
+                <div block="CheckoutNavigation" elem="FirstColumn">
                     <div
                       block="CheckoutNavigation"
                       elem="Delivery"
@@ -24,9 +128,9 @@ export class Checkout extends SourceCheckout {
                     >
                         { __('Delivery') }
                     </span>
-                  </div>
-                  <hr />
-                  <div block="CheckoutNavigation" elem="SecondColumn">
+                </div>
+                <hr />
+                <div block="CheckoutNavigation" elem="SecondColumn">
                     <div
                       block="CheckoutNavigation"
                       elem="Payment"
@@ -39,12 +143,30 @@ export class Checkout extends SourceCheckout {
                     >
                         { __('Payment') }
                     </span>
-                  </div>
                 </div>
-            );
-        }
+            </div>
+        );
+    }
 
-        return null;
+    renderBillingStep() {
+        const {
+            setLoading,
+            setDetailsStep,
+            shippingAddress,
+            paymentMethods = []
+        } = this.props;
+
+        return (
+            <CheckoutBilling
+              setLoading={ setLoading }
+              paymentMethods={ paymentMethods }
+              setDetailsStep={ setDetailsStep }
+              shippingAddress={ shippingAddress }
+              setCashOnDeliveryFee={ this.setCashOnDeliveryFee }
+              savePaymentInformation={ this.savePaymentInformation }
+              setTabbyWebUrl={ this.setTabbyWebUrl }
+            />
+        );
     }
 
     renderShippingStep() {
@@ -53,7 +175,8 @@ export class Checkout extends SourceCheckout {
             onShippingEstimationFieldsChange,
             saveAddressInformation,
             isDeliveryOptionsLoading,
-            email
+            email,
+            checkoutTotals
         } = this.props;
 
         return (
@@ -63,7 +186,46 @@ export class Checkout extends SourceCheckout {
               saveAddressInformation={ saveAddressInformation }
               onShippingEstimationFieldsChange={ onShippingEstimationFieldsChange }
               guestEmail={ email }
+              totals={ checkoutTotals }
+              parentCallback={ this.callbackFunction }
             />
+        );
+    }
+
+    renderTabbyIframe() {
+        const { isTabbyPopupShown, tabbyWebUrl } = this.state;
+
+        if (!isTabbyPopupShown) {
+            return null;
+        }
+
+        return (
+            <TabbyPopup
+              tabbyWebUrl={ tabbyWebUrl }
+            />
+        );
+    }
+
+    render() {
+        return (
+            <main block="Checkout">
+                <ContentWrapper
+                  wrapperMix={ { block: 'Checkout', elem: 'Wrapper' } }
+                  label={ __('Checkout page') }
+                >
+                    <div block="Checkout" elem="Step">
+                        { this.renderTitle() }
+                        { this.renderGuestForm() }
+                        { this.renderStep() }
+                        { this.renderLoader() }
+                    </div>
+                    <div>
+                        { this.renderSummary() }
+                        { this.renderPromo() }
+                        { this.renderTabbyIframe() }
+                    </div>
+                </ContentWrapper>
+            </main>
         );
     }
 }
