@@ -22,7 +22,6 @@ import { changeNavigationState } from 'Store/Navigation/Navigation.action';
 import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
-import { DASHBOARD } from 'Type/Account';
 import { HistoryType } from 'Type/Common';
 import { TotalsType } from 'Type/MiniCart';
 import { isSignedIn } from 'Util/Auth';
@@ -182,12 +181,10 @@ export class CartPageContainer extends PureComponent {
 
     _updateBreadcrumbs() {
         const { updateBreadcrumbs } = this.props;
-        const { activeTab } = this.state;
-        const { url, name } = tabMap[activeTab];
 
         updateBreadcrumbs([
-            { url: `${ MY_ACCOUNT_URL }${ url }`, name },
-            { name: __('My Account'), url: `${ MY_ACCOUNT_URL }/${ DASHBOARD }` }
+            { url: '', name: __('My bag') },
+            { name: __('Home'), url: '/' }
         ]);
     }
 

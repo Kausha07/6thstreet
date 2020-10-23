@@ -15,6 +15,25 @@ export class CheckoutBilling extends SourceCheckoutBilling {
         setTabbyWebUrl: PropTypes.func.isRequired
     };
 
+    renderPriceLine(price, name, mods) {
+        const { totals: { currency_code } } = this.props;
+
+        return (
+            <li block="CheckoutOrderSummary" elem="SummaryItem" mods={ mods }>
+                <strong block="CheckoutOrderSummary" elem="Text">
+                    { name }
+                </strong>
+                    { price !== undefined
+                        ? (
+                        <strong block="CheckoutOrderSummary" elem="Price">
+                            { `${currency_code } ${ price}` }
+                        </strong>
+                        )
+                        : null }
+            </li>
+        );
+    }
+
     renderAddressBook() {
         const {
             onAddressSelect,
@@ -75,7 +94,8 @@ export class CheckoutBilling extends SourceCheckoutBilling {
             setLoading,
             setDetailsStep,
             shippingAddress,
-            setTabbyWebUrl
+            setTabbyWebUrl,
+            setCashOnDeliveryFee
         } = this.props;
 
         if (!paymentMethods.length) {
@@ -84,6 +104,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
 
         return (
             <CheckoutPayments
+              setCashOnDeliveryFee={ setCashOnDeliveryFee }
               setLoading={ setLoading }
               setDetailsStep={ setDetailsStep }
               paymentMethods={ paymentMethods }
@@ -93,6 +114,51 @@ export class CheckoutBilling extends SourceCheckoutBilling {
               setOrderButtonEnableStatus={ this.setOrderButtonEnableStatus }
               setTabbyWebUrl={ setTabbyWebUrl }
             />
+        );
+    }
+
+    renderTotals() {
+        const {
+            totals: { total }
+        } = this.props;
+
+        return (
+            <div block="Checkout" elem="OrderTotals">
+                { this.renderPriceLine(total, __('Total Amount')) }
+            </div>
+        );
+    }
+
+    renderActions() {
+        const {
+            isOrderButtonVisible,
+            isOrderButtonEnabled,
+            isTermsAndConditionsAccepted
+        } = this.state;
+
+        const { termsAreEnabled } = this.props;
+
+        if (!isOrderButtonVisible) {
+            return null;
+        }
+
+        // if terms and conditions are enabled, validate for acceptance
+        const isDisabled = termsAreEnabled
+            ? !isOrderButtonEnabled || !isTermsAndConditionsAccepted
+            : !isOrderButtonEnabled;
+
+        return (
+            <div block="Checkout" elem="StickyButtonWrapper">
+                { this.renderTotals() }
+                <button
+                  type="submit"
+                  block="Button"
+                  disabled={ isDisabled }
+                  mix={ { block: 'CheckoutBilling', elem: 'Button' } }
+                >
+                    { __('Place order') }
+                </button>
+            </div>
         );
     }
 }

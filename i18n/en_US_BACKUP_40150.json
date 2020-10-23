@@ -405,5 +405,17 @@
     "Card number": null,
     "Expiration Date": null,
     "CVV": null,
+    "This field should contain at least 1 number character": null,
+    "This field should contain at least 1 capitalized character": null,
+    " Items": null,
+    " Item": null,
+    "Payment type": null,
+    "Cash on Delivery Fee": null,
+    "Catalog": null,
+    "null": null,
+    "refine ": null,
+    "First Name": null,
+    "Last Name": null,
+    "Enter a coupon or Discount code": null,
     "Complete orders": null
 }
