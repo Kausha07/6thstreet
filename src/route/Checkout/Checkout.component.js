@@ -26,7 +26,7 @@ export class Checkout extends SourceCheckout {
 
     savePaymentInformation = (paymentInformation) => {
         const { savePaymentInformation } = this.props;
-        const { tabbyWebUrl, tabbyPaymentStatus } = this.state;
+        const { tabbyWebUrl } = this.state;
 
         if (tabbyWebUrl) {
             this.setState({ isTabbyPopupShown: true });
