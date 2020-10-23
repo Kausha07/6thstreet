@@ -59,7 +59,13 @@
         }
 
         &_isArabic {
-            transform: rotate(-180deg);
+            &:after {
+                left: unset;
+                right: 20px;
+                transform: rotate(-45deg);
+            }
+            left: unset;
+            right: 0;
         }
     }
 }

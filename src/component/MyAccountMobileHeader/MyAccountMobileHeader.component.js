@@ -4,6 +4,7 @@ import React, { PureComponent } from 'react';
 
 import Link from 'Component/Link';
 import StoreCredit from 'Component/StoreCredit';
+import { isArabic } from 'Util/App';
 
 import './MyAccountMobileHeader.style.scss';
 
@@ -13,6 +14,10 @@ class MyAccountMobileHeader extends PureComponent {
         isHiddenTabContent: PropTypes.bool.isRequired,
         alternativePageName: PropTypes.string.isRequired,
         name: PropTypes.string.isRequired
+    };
+
+    state = {
+        isArabic: isArabic()
     };
 
     renderStoreCredits() {
@@ -40,12 +45,14 @@ class MyAccountMobileHeader extends PureComponent {
 
     renderCloseButton() {
         const { onClose } = this.props;
+        const { isArabic } = this.state;
 
         return (
             <button
               elem="Button"
               block="MyAccountMobileHeader"
               onClick={ onClose }
+              mods={ { isArabic } }
             />
         );
     }
