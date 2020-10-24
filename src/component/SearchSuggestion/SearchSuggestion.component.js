@@ -160,10 +160,10 @@ class SearchSuggestion extends PureComponent {
         } = this.props;
 
         if (!isActive) {
-            return this.renderEmptySearch();
+            return null;
         }
 
-        if (isEmpty) {
+        if (isEmpty && isActive) {
             return this.renderEmptySearch();
         }
 
