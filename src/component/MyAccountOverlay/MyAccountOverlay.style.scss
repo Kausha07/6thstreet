@@ -91,8 +91,8 @@
         &::placeholder {
             text-transform: uppercase;
             color: var(--gray-color);
-            font-weight: 500;
-            letter-spacing: 0.5px;
+            font-weight: var(--fw-medium);
+            letter-spacing: .5px;
             line-height: 16px;
         }
     }
@@ -100,7 +100,7 @@
     &-Heading {
         text-transform: none;
         font-size: 18px;
-        font-weight: 600;
+        font-weight: var(--fw-demi);
         text-align: center;
 
         @include before-desktop {
@@ -112,7 +112,7 @@
         font-size: 13px;
         text-align: center;
         text-transform: none;
-        font-weight: 300;
+        font-weight: var(--fw-regular);
     }
 
     &-Notification {
@@ -176,11 +176,11 @@
     &-Action {
         display: grid;
         grid-template-rows: max-content 1fr;
-        height: 100vh;
         overflow-y: auto;
 
         &_state {
             &_createAccount {
+                height: 100vh;
                 max-height: 830px;
 
                 h4 {
@@ -198,6 +198,7 @@
             }
 
             &_forgotPassword {
+                height: 100vh;
                 max-height: 745px;
 
                 h4 {
@@ -205,15 +206,17 @@
                 }
 
                 button {
-                    font-weight: bold;
+                    font-weight: var(--fw-bold);
                 }
             }
 
             &_forgotPasswordSuccess {
+                height: 100vh;
                 max-height: 522px;
             }
 
             &_signIn {
+                height: 100vh;
                 max-height: 626px;
 
                 h4 {
@@ -236,7 +239,7 @@
 
         h4 {
             font-size: 1.15rem;
-            font-weight: bold;
+            font-weight: var(--fw-bold);
             margin-bottom: .5rem;
         }
 
@@ -308,7 +311,7 @@
                         width: initial;
                         margin-top: 0;
                         padding-left: 5px;
-                        font-weight: 600;
+                        font-weight: var(--fw-demi);
                     }
 
                     h4 {
@@ -329,7 +332,7 @@
                     font-size: 1rem;
                     line-height: 1.5;
                     padding-bottom: 1.4rem;
-                    font-weight: normal;
+                    font-weight: var(--fw-regular);
                     letter-spacing: normal;
                 }
             }
@@ -393,7 +396,7 @@
     }
 
     &-ForgotPasswordSubheading {
-        font-weight: 600;
+        font-weight: var(--fw-demi);
         font-size: 14px;
         text-transform: none;
         padding-bottom: 10px;
@@ -472,7 +475,7 @@
             --button-color: var(--white-color);
 
             font-size: 12px;
-            font-weight: bold;
+            font-weight: var(--fw-bold);
             line-height: 16px;
         }
 
@@ -489,10 +492,9 @@
             vertical-align: bottom;
             padding: 0;
             margin-bottom: 20px;
-            font-size: .95rem;
             color: var(--likelink-button-color);
             font-size: 12px;
-            font-weight: 500;
+            font-weight: var(--fw-medium);
             line-height: 16px;
             text-decoration: underline;
         }
@@ -607,7 +609,7 @@
             color: var(--radio-label-color);
             text-transform: none;
             margin-right: 12px;
-            font-weight: 300;
+            font-weight: var(--fw-light);
             font-size: 13px;
         }
 

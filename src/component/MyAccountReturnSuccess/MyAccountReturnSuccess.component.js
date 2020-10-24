@@ -26,10 +26,11 @@ export class MyAccountReturnSuccess extends MyAccountReturnCreate {
     };
 
     renderHeading() {
-        const { customer: { email } = {} } = this.props;
+        const { orderNumber, customer: { email } = {} } = this.props;
 
         return (
             <div block="MyAccountReturnSuccess" elem="Heading">
+                <h3>{ __('Order #%s', orderNumber) }</h3>
                 <p>{ __('We have received your request.') }</p>
                 { !!email && (
                     <p>

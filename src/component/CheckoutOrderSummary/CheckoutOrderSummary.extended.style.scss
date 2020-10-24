@@ -3,18 +3,19 @@
 
     &-HeaderWrapper {
         display: flex;
+        margin-top: 20px;
         padding: 25px 18px 0;
     }
         &-ItemCount {
             flex: 50%;
-            font-family: "Avenir Next Demi";
+            font-weight: var(--fw-demi);
             font-size: 18px;
             line-height: 25px;
         }
 
         &-Edit {
             flex: 50%;
-            font-family: "Avenir Next Regular";
+            font-weight: var(--fw-regular);
             font-size: 13px;
             line-height: 18px;
             text-align: right;
@@ -38,7 +39,7 @@
 
         .CartItem {
             margin: 1rem 18px 0;
-            
+
             &-Wrapper {
                 height: auto;
             }
@@ -99,7 +100,7 @@
 
     &-PromoText {
         display: flex;
-        font-family: "Avenir Next Regular";
+        font-weight: var(--fw-regular);
         font-size: 12px;
         padding: 12px 12px 0 9px;
         justify-content: space-between;
@@ -112,21 +113,21 @@
     }
 
     &-AED {
-        font-family: "Avenir Next Bold";
+        font-weight: var(--fw-bold);
     }
 
     &-FreeDelivery {
         color: var(--color-green-cyan);
-        font-family: "Avenir Next Bold";
+        font-weight: var(--fw-bold);
     }
 
     &-OrderTotals {
-        font-family: "Avenir Next Regular";
+        font-weight: var(--fw-regular);
         padding: 0 18px;
     }
 
     &-Subtotals {
-        li {            
+        li {
             .CheckoutOrderSummary {
                 &-Text, &-Price {
                     font-size: 13px;
@@ -144,18 +145,16 @@
         li {
             grid-column: 1 / span 4;
             grid-row: 1;
-            
-            .CheckoutOrderSummary {
 
+            .CheckoutOrderSummary {
                 &-Text {
                     margin-top: 3px;
                     font-size: 15px;
                 }
 
                 &-Price {
-                    font-family: "Avenir Next Bold";
                     font-size: 18px;
-                    font-weight: bold;
+                    font-weight: var(--fw-bold);
                     line-height: 25px;
                 }
             }
@@ -173,5 +172,9 @@
 
     @include before-desktop {
         display: none;
+    }
+
+    &-DiscountOptionWrapper {
+        padding: 0 18px;
     }
 }

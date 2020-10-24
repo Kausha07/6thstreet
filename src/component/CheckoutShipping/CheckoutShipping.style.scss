@@ -82,9 +82,8 @@
 					}
 			
 					&-NewAddress {
-						font-family: "Avenir Next Bold";
+						font-family: var(--fw-regular);
 						font-size: 13px;
-						font-weight: bold;
 						line-height: 18px;
 						background: transparent;
 						color: var(--black);
@@ -98,7 +97,6 @@
 						@include before-desktop {
 							border-radius: 7px;
 							background: var(--my-acc-background);						
-							font-family: "Avenir Next Regular";
 							text-transform: capitalize;
 							min-width: 140px;
 							margin-top: 38px;
@@ -116,7 +114,7 @@
 				}
 
 				.MyAccountAddressPopup {
-					margin-bottom: 20px;
+					margin: 20px auto;
 					background: var(--white);
 			
 					.Form {
@@ -138,8 +136,19 @@
 					}
 
 					&_isArabic {
-						@include desktop {
-							padding: 20px 60px 30px 0;
+						.Form {	
+							@include desktop {
+								padding: 20px 60px 30px 0;
+							}
+				
+							.MyAccountAddressFieldForm {
+								&-Header {
+									h2 {
+										border-top: none;
+										margin-left: 0;
+									}
+								}	
+							}
 						}
 					}
 				}
@@ -158,6 +167,12 @@
 }
 }
 .CheckoutShipping {
+	h2 {
+		@include before-desktop {
+			display: none;
+		}
+	}
+
 	h3 {
 		background: var(--white);
 		font-size: 21px;
@@ -186,9 +201,8 @@
 		button.primary {
 			height: 50px;
 			width: 250px;
-			font-family: "Avenir Next Bold";
 			font-size: 13px;
-			font-weight: bold;
+			font-weight: var(--fw-bold);
 			letter-spacing: 0;
 			line-height: 18px;
 			text-align: center;

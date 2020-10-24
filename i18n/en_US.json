@@ -394,5 +394,10 @@
     "There are no shipping methods available, try different address.": null,
     "Carrier method: ": null,
     "Rate: ": null,
-    "Delivering to": null
+    "Delivering to": null,
+    "Complete orders": null,
+    "Details": null,
+    "New In": null,
+    "brand_name": null,
+    "Test": null
 }

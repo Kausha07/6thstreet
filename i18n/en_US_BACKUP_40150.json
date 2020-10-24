@@ -418,5 +418,7 @@
     "First Name": null,
     "Last Name": null,
     "Enter a coupon or Discount code": null,
-    "Delivering to": null
+    "Delivering to": null,
+    "Complete orders": null,
+    "Test": null
 }

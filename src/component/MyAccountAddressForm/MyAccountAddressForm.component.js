@@ -159,6 +159,7 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
                 label: 'Delivery Country',
                 validation: ['notEmpty'],
                 value: countryId,
+                autocomplete: 'none',
                 selectOptions: countries.map(({ id, label }) => ({ id, label, value: id }))
             },
             default_billing: {
@@ -185,7 +186,8 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
             phonecode: {
                 type: countryId,
                 validation: ['notEmpty'],
-                value: this.renderCurrentPhoneCode()
+                value: this.renderCurrentPhoneCode(),
+                autocomplete: 'none'
             },
             telephone: {
                 validation: ['notEmpty'],
