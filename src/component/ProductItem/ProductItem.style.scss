@@ -19,10 +19,12 @@
         position: absolute;
         top: 20px;
         border-radius: 0 10px 10px 0;
+    }
 
         &_isArabic {
-            right: 0;
-            border-radius: 10px 0 0 10px;
+            .ProductLabel {
+                border-radius: 10px 0 0 10px;
+            }
         }
     }
-}
+
