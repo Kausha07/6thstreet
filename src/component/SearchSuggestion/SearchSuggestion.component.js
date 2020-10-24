@@ -93,7 +93,7 @@ class SearchSuggestion extends PureComponent {
     }
 
     renderNothingFound() {
-        return 'nothing found';
+        return 'Nothing found';
     }
 
     renderTrendingBrand = ({ label, image_url }) => (
@@ -160,10 +160,10 @@ class SearchSuggestion extends PureComponent {
         } = this.props;
 
         if (!isActive) {
-            return null;
+            return this.renderEmptySearch();
         }
 
-        if (isEmpty && isActive) {
+        if (isEmpty) {
             return this.renderEmptySearch();
         }
 
