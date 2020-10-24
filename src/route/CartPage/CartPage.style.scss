@@ -185,7 +185,7 @@
             padding: 1rem 1rem 0 3rem;
 
             @include mobile {
-                padding: 1rem;
+                padding: 1rem 1rem 1rem 3rem;
                 border: 0;
                 border-bottom: 1px solid var(--primary-divider-color);
             }
