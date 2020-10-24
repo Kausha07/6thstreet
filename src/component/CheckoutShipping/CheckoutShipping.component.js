@@ -63,9 +63,9 @@ export class CheckoutShipping extends SourceCheckoutShipping {
 
         if (subtotal !== {}) {
             return (
-                    <div block="Checkout" elem="OrderTotals">
-                        { this.renderPriceLine(subtotal, __('Subtotal')) }
-                    </div>
+                <div block="Checkout" elem="OrderTotals">
+                    { this.renderPriceLine(subtotal, __('Subtotal')) }
+                </div>
             );
         }
 
@@ -131,21 +131,21 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         const { formContent, isArabic } = this.state;
         const { customer } = this.props;
         return (
-                <div block="MyAccountAddressBook" elem="ContentWrapper" mods={ { formContent } }>
-                    <button
-                      block="MyAccountAddressBook"
-                      elem="backBtn"
-                      mods={ { isArabic } }
-                      onClick={ this.showCards }
-                    />
-                    <MyAccountAddressPopup
-                      formContent={ formContent }
-                      closeForm={ this.closeForm }
-                      openForm={ this.openForm }
-                      showCards={ this.showCards }
-                      customer={ customer }
-                    />
-                </div>
+             <div block="MyAccountAddressBook" elem="ContentWrapper" mods={ { formContent } }>
+                <button
+                  block="MyAccountAddressBook"
+                  elem="backBtn"
+                  mods={ { isArabic } }
+                  onClick={ this.showCards }
+                />
+                <MyAccountAddressPopup
+                  formContent={ formContent }
+                  closeForm={ this.closeForm }
+                  openForm={ this.openForm }
+                  showCards={ this.showCards }
+                  customer={ customer }
+                />
+             </div>
         );
     }
 

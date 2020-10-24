@@ -5,7 +5,7 @@
 				@include before-desktop {
 					display: grid;
 				}
-				
+
 				.MyAccountAddressBook {
 					&-ContentWrapper {
 						.MyAccountAddressBook {
@@ -24,39 +24,38 @@
 
 						&_formContent {
 							.MyAccountAddressBook {
-
-							&-backBtn {
-								position: absolute;
-								width: 20px;
-								height: 30px;
-								top: -120px;
-								left: 0;
-								z-index: 1;
-						
-								&::before {
-									content: '';
+								&-backBtn {
 									position: absolute;
-									left: 5px;
-									border: solid var(--black);
-									border-width: 0 2px 2px 0;
-									display: inline-block;
-									padding: 4px;
-									transform: rotate(135deg);
-									-webkit-transform: rotate(135deg);
-								}
-						
-								@include desktop() {
-									height: 0;
-								}
+									width: 20px;
+									height: 30px;
+									top: -120px;
+									left: 0;
+									z-index: 1;
 
-								&_isArabic {
-									top: -100px;
-									transform: rotate(180deg);
-									right: 5px;
-									-webkit-transform: rotate(180deg);
+									&::before {
+										content: "";
+										position: absolute;
+										left: 5px;
+										border: solid var(--black);
+										border-width: 0 2px 2px 0;
+										display: inline-block;
+										padding: 4px;
+										transform: rotate(135deg);
+										-webkit-transform: rotate(135deg);
+									}
+
+									@include desktop() {
+										height: 0;
+									}
+
+									&_isArabic {
+										top: -100px;
+										transform: rotate(180deg);
+										right: 5px;
+										-webkit-transform: rotate(180deg);
+									}
 								}
 							}
-						}
 						}
 					}
 
@@ -80,7 +79,7 @@
 							float: left;
 						}
 					}
-			
+
 					&-NewAddress {
 						font-family: var(--fw-regular);
 						font-size: 13px;
@@ -93,18 +92,18 @@
 						&:hover {
 							text-decoration: underline;
 						}
-			
+
 						@include before-desktop {
 							border-radius: 7px;
-							background: var(--my-acc-background);						
+							background: var(--my-acc-background);
 							text-transform: capitalize;
 							min-width: 140px;
 							margin-top: 38px;
 
 							&::before {
-								content: ' + ';
+								content: " + ";
 							}
-			
+
 							&:hover {
 								text-decoration: underline;
 								background: var(--my-acc-background);
@@ -116,7 +115,7 @@
 				.MyAccountAddressPopup {
 					margin: 20px auto;
 					background: var(--white);
-			
+
 					.Form {
 						top: -130px;
 
@@ -124,36 +123,36 @@
 							top: 0;
 							padding: 20px 0 30px 60px;
 						}
-			
+
 						.MyAccountAddressFieldForm {
 							&-Header {
 								h2 {
 									border-top: none;
 									margin-left: 0;
 								}
-							}	
+							}
 						}
 					}
 
 					&_isArabic {
-						.Form {	
+						.Form {
 							@include desktop {
 								padding: 20px 60px 30px 0;
 							}
-				
+
 							.MyAccountAddressFieldForm {
 								&-Header {
 									h2 {
 										border-top: none;
 										margin-left: 0;
 									}
-								}	
+								}
 							}
 						}
 					}
 				}
 
-				.Form .CheckoutShipping{
+				.Form .CheckoutShipping {
 					grid-row: 3;
 				}
 			}
@@ -164,7 +163,7 @@
 				}
 			}
 		}
-}
+	}
 }
 .CheckoutShipping {
 	h2 {
