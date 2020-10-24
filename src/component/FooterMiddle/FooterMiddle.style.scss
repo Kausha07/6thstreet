@@ -16,7 +16,7 @@
         padding: 20px 30px 30px 30px;
         background: var(--white);
 
-        .HeaderAccount, 
+        .HeaderAccount,
         .CountrySwitcher,
         .LanguageSwitcher {
             display: none;
@@ -56,7 +56,7 @@
     &-FooterAccount {
         padding-left: 40px;
         font-size: 14px;
-        font-weight: 600;
+        font-weight: var(--fw-demi);
         letter-spacing: 0;
         line-height: 19px;
 

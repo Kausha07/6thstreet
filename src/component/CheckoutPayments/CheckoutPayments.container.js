@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import {
@@ -8,15 +9,23 @@ import CheckoutDispatcher from 'Store/Checkout/Checkout.dispatcher';
 
 export const mapDispatchToProps = (dispatch) => ({
     ...SourceMapDispatchToProps,
-    selectPaymentMethod: (code) => CheckoutDispatcher.selectPaymentMethod(dispatch, code)
+    selectPaymentMethod: (billingData) => CheckoutDispatcher.selectPaymentMethod(dispatch, billingData)
 });
 
 export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
+    static propTypes = {
+        ...SourceCheckoutPaymentsContainer.propTypes,
+        setTabbyWebUrl: PropTypes.func.isRequired,
+        setCreditCardData: PropTypes.func.isRequired
+    };
+
     selectPaymentMethod({ m_code: code }) {
         const {
             onPaymentMethodSelect,
             setOrderButtonEnableStatus,
-            selectPaymentMethod
+            selectPaymentMethod,
+            billingAddress,
+            setTabbyWebUrl
         } = this.props;
 
         this.setState({
@@ -25,7 +34,32 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
 
         onPaymentMethodSelect(code);
         setOrderButtonEnableStatus(true);
-        selectPaymentMethod(code);
+        selectPaymentMethod({ code, billingAddress }).then(
+            (response) => {
+                if (response.configuration) {
+                    const {
+                        configuration: {
+                            available_products: {
+                                installments, pay_later
+                            }
+                        },
+                        payment: {
+                            id
+                        }
+                    } = response;
+
+                    if (installments || pay_later) {
+                        setTabbyWebUrl(
+                            code === 'tabby_installments'
+                                ? installments[0].web_url
+                                : pay_later[0].web_url,
+                            id
+                        );
+                    }
+                }
+            },
+            this._handleError
+        );
     }
 }
 

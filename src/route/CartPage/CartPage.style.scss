@@ -16,15 +16,11 @@
     --color-light-gray: #9B9B9B;
     --color-orange-soda: #F96446;
     --color-white: #fff;
-
-    --font-family-regular: Avenir Next Regular;
-    --font-family-demi-bold: Avenir Next Demi Bold;
-    --font-family-bold: Avenir Next Bold;
 }
 
 .CartPage {
     display: flex;
-    font-family: var(--font-family-regular);
+    font-weight: var(--fw-regular);
     padding: 50px 0;
     height: 100vh;
     max-width: 1440px;
@@ -124,7 +120,7 @@
         text-align: center;
         background-color: var(--color-orange-soda);
         color: var(--color-white);
-        font-family: var(--font-family-bold);
+        font-weight: var(--fw-bold);
         border: none;
 
         @include mobile {
@@ -143,7 +139,7 @@
         border: 2px solid var(--color-black);
         justify-content: center;
         align-items: center;
-        font-family: var(--font-family-bold);
+        font-weight: var(--fw-bold);
 
         @include mobile {
             width: 45%;
@@ -181,11 +177,11 @@
             }
 
             span:nth-child(2) {
-                font-family: var(--font-family-bold);
+                font-weight: var(--fw-bold);
             }
 
             span:last-child {
-                font-family: var(--font-family-demi-bold);
+                font-weight: var(--fw-demi);
                 color: var(--color-green-cyan);
                 letter-spacing: -0.1px;
                 text-transform: capitalize;
@@ -246,9 +242,9 @@
         justify-content: space-between;
         align-items: center;
         font-size: 18px;
-        font-weight: bold;
+        font-weight: var(--fw-bold);
         padding: 1rem 0;
-        font-family: var(--font-family-bold);
+        font-weight: var(--fw-bold);
 
         @include mobile {
             padding: 1rem;
@@ -283,7 +279,7 @@
         background-color: var(--cart-page-table-head-background);
         text-transform: uppercase;
         font-size: 12px;
-        font-weight: 600;
+        font-weight: var(--fw-demi);
         padding: .9rem 1rem;
         margin-bottom: 0;
 
@@ -343,12 +339,11 @@
         margin-top: 2rem;
         margin-bottom: 1.5rem;
         font-size: 20px;
-        font-family: var(--font-family-bold);
+        font-weight: var(--fw-bold);
         text-transform: capitalize;
 
         span {
-            font-family: var(--font-family-regular);
-            font-weight: normal;
+            font-weight: var(--fw-regular);
         }
     }
 
@@ -362,7 +357,7 @@
     &-DiscountCoupon {
         &::after {
             content: ':';
-            font-weight: normal;
+            font-weight: var(--fw-regular);
         }
     }
 
@@ -414,8 +409,7 @@
         }
 
         &-Heading {
-            font-family: var(--font-family-regular);
-            font-weight: bold;
+            font-weight: var(--fw-bold);
             font-size: 15px;
             text-transform: capitalize;
         }
@@ -423,7 +417,7 @@
         &-Button {
             border: none;
             transform: none;
-            margin: 0px;
+            margin: 0;
 
             &:before {
                 content: '';

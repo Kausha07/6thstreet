@@ -392,5 +392,10 @@
     "This is default Billing Address": null,
     "This is default Shipping Address": null,
     "Country": null,
-    "Zip/Postal code": null
+    "Zip/Postal code": null,
+    "Complete orders": null,
+    "Details": null,
+    "New In": null,
+    "brand_name": null,
+    "Test": null
 }

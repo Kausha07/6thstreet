@@ -4,7 +4,8 @@
     "dependencies": {
         "@6thstreetdotcom/algolia-sdk": "^1.6.0",
         "@scandipwa/scandipwa": "0.0.1",
-        "@scandipwa/scandipwa-scripts": "0.0.8"
+        "@scandipwa/scandipwa-scripts": "0.0.8",
+        "react-iframe": "^1.8.0"
     },
     "scripts": {
         "start": "scandipwa-scripts start",

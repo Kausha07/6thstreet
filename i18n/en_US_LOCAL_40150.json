@@ -410,5 +410,7 @@
     "Payment type": null,
     "Cash on Delivery Fee": null,
     "Catalog": null,
-    "null": null
+    "null": null,
+    "Complete orders": null,
+    "Test": null
 }

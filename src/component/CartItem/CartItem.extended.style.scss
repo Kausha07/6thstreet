@@ -17,10 +17,6 @@
     --color-white: #fff;
     --color-charcoal: #4a4a4a;
     --color-nobel: #9B9B9B;
-
-    --font-family-regular: Avenir Next Regular;
-    --font-family-demi-bold: Avenir Next Demi Bold;
-    --font-family-bold: Avenir Next Bold;
 }
 
 .CartPage {
@@ -61,7 +57,7 @@
             flex-wrap: wrap;
             justify-content: space-between;
             font-size: 15px;
-            font-weight: bold;
+            font-weight: var(--fw-demi);
 
             &:first-child{
                 display: none;

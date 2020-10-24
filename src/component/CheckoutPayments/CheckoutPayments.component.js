@@ -86,7 +86,13 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     }
 
     renderCreditCard() {
-        return <CreditCard />;
+        const { setCreditCardData } = this.props;
+
+        return (
+            <CreditCard
+              setCreditCardData={ setCreditCardData }
+            />
+        );
     }
 
     renderToggleableDiscountOptions() {

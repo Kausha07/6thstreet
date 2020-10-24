@@ -47,10 +47,10 @@
     }
 
     &-LetterButton {
-        font-weight: normal;
+        font-weight: var(--fw-regular);
 
         &_isSelected {
-            font-weight: bold;
+            font-weight: var(--fw-bold);
 
             &::after {
                 content: unset;
