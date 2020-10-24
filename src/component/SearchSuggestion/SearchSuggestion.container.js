@@ -91,7 +91,7 @@ export class SearchSuggestionContainer extends PureComponent {
         const { search, data } = this.props;
         const { brands = [], products = [] } = data;
 
-        const isEmpty = !search;
+        const isEmpty = search === '';
         const inNothingFound = (brands.length + products.length) === 0;
 
         return {
