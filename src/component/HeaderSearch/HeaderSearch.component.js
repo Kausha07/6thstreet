@@ -5,6 +5,8 @@ import Field from 'Component/Field';
 import Form from 'Component/Form';
 import SearchSuggestion from 'Component/SearchSuggestion';
 
+import searchPng from './icons/search-black.png';
+
 import './HeaderSearch.style';
 
 class HeaderSearch extends PureComponent {
@@ -38,6 +40,13 @@ class HeaderSearch extends PureComponent {
                   onChange={ onSearchChange }
                   value={ search }
                 />
+                <button
+                  block="HeaderSearch"
+                  elem="SubmitBtn"
+                  type="submit"
+                >
+                    <img src={ searchPng } alt="search" />
+                </button>
             </Form>
         );
     }
