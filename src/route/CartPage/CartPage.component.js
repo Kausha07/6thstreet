@@ -184,6 +184,7 @@ export class CartPage extends PureComponent {
 
     renderPromoContent() {
         const { cart_content: { cart_cms } = {} } = window.contentConfiguration;
+        const { totals: { currency_code, avail_free_shipping_amount } } = this.props;
 
         if (cart_cms) {
             return <CmsBlock identifier={ cart_cms } />;
@@ -197,7 +198,7 @@ export class CartPage extends PureComponent {
                 <figcaption block="CartPage" elem="PromoText">
                     <img src={ Delivery } alt="Delivery icon" />
                     { __('Add ') }
-                    <span>AED 200 </span>
+                    <span>{ `${currency_code } ${avail_free_shipping_amount}` }</span>
                     { __('more to your cart for ') }
                     <span>{ __('Free delivery') }</span>
                 </figcaption>
@@ -206,7 +207,9 @@ export class CartPage extends PureComponent {
     }
 
     renderPromo() {
-        return (
+        const { totals: { avail_free_shipping_amount } } = this.props;
+
+        return !avail_free_shipping_amount || avail_free_shipping_amount === 0 ? null : (
             <div
               block="CartPage"
               elem="Promo"
