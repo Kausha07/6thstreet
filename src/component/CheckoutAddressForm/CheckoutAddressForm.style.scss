@@ -12,10 +12,9 @@
 			}
 
 			.Field-Label {
-				color: var(--balck);
-				font-family: "Avenir Next Demi";
+				color: var(--black);
 				font-size: 18px;
-				font-weight: 600;
+				font-weight: var(--fw-demi);
 			}
 
 			input,

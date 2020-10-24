@@ -1,4 +1,16 @@
 .CheckoutPayments {
+    h2 {
+        font-weight: var(--fw-demi);
+        font-size: 18px;
+        text-transform: none;
+        line-height: 25px;
+    }
+
+    &-MethodDiscription {
+        font-weight: var(--fw-regular);
+        font-size: 15px;
+    }
+
     &-DiscountOptionWrapper {
         padding: 50px 36px;
 

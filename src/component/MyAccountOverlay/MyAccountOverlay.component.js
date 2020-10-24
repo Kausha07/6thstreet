@@ -374,7 +374,7 @@ export class MyAccountOverlay extends PureComponent {
                       id="password"
                       name="password"
                       autocomplete="new-password"
-                      validation={ ['notEmpty', 'password'] }
+                      validation={ ['notEmpty', 'password', 'containNumber', 'containCapitalize'] }
                     />
                     <div
                       block="MyAccountOverlay"

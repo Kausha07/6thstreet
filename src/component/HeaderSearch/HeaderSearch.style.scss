@@ -119,8 +119,10 @@
             background-color: transparent;
             background-position: 10px 50%;
             border: none;
-            font-family: 'Avenir Next Regular', Serif;
-            font-size: 15px;
+            border-radius: 5px;
+            font-weight: var(--fw-regular);
+            font-size: 14px;
+            height: 33px;
             padding-left: 35px;
             text-transform: none;
             width: 100%;

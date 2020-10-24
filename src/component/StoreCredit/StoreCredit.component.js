@@ -13,8 +13,7 @@ export class StoreCredit extends PureComponent {
         hideIfZero: PropTypes.bool.isRequired,
         creditIsApplied: PropTypes.bool.isRequired,
         storeCreditBalance: PropTypes.string.isRequired,
-        toggleStoreCredit: PropTypes.func.isRequired,
-        setCreditIsApplied: PropTypes.func.isRequired
+        toggleStoreCredit: PropTypes.func.isRequired
     };
 
     hasCredit() {
@@ -30,13 +29,9 @@ export class StoreCredit extends PureComponent {
     }
 
     handleCheckboxChange = () => {
-        const { toggleStoreCredit, creditIsApplied, setCreditIsApplied } = this.props;
+        const { toggleStoreCredit, creditIsApplied } = this.props;
 
-        toggleStoreCredit(!creditIsApplied).then((isApplied) => {
-            setCreditIsApplied({ creditIsApplied: isApplied });
-
-            return isApplied;
-        });
+        toggleStoreCredit(!creditIsApplied);
     };
 
     renderAmount() {

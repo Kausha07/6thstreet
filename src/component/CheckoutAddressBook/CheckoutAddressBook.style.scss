@@ -32,7 +32,7 @@
 
 	&-CustomAddressWrapper {
 		background: var(--white);
-		
+
 		.FieldForm {
 			margin-top: 20px;
 
@@ -49,9 +49,8 @@
 		}
 
 		.button {
-			font-family: "Avenir Next Bold";
 			font-size: 13px;
-			font-weight: bold;
+			font-weight: var(--fw-bold);
 			margin: 20px 30px 30px;
 
 			@include before-desktop {
@@ -59,7 +58,7 @@
 				border-radius: 7px;
 				background: var(--my-acc-background);
 				color: var(--black);
-				font-family: "Avenir Next Regular";
+				font-weight: var(--fw-regular);
 				text-transform: capitalize;
 				min-width: 140px;
 				margin-top: 38px;
@@ -72,7 +71,7 @@
 	}
 
 	.CheckoutAddressBookSlider {
-		
+
 		@include before-desktop {
 			transform: translateX(-50%);
 			position: relative;
@@ -83,7 +82,7 @@
 			padding-bottom: 2rem;
 			margin-bottom: 2%;
         }
-        
+
 		&-Wrapper {
 			overflow: hidden;
 			width: 92.6vw;
@@ -92,13 +91,13 @@
 				display: none;
 			}
         }
-        
+
 		&-MobileSlider {
 			width: 80%;
 			overflow: visible;
 		}
     }
-    
+
 	.Slider {
 		.MyAccountAddressTable {
 			margin-right: 6%;

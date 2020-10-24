@@ -4,15 +4,41 @@
     --checkout-max-width: 1100px;
 }
 
-.Checkout {  
-    padding-bottom: 100px;
+.Checkout {
+    padding-top: 0;
+
+     @include before-desktop {
+         .Checkout-StickyButtonWrapper {
+             padding-top: 0;
+         }
+     }
 
     @include desktop {
         padding: 125px 0;
         background-color: var(--lightest-gray);
     }
-    
+
     &-StickyButtonWrapper {
+        .Checkout {
+            &-OrderTotals {
+                .CheckoutOrderSummary {
+                    &-Text {
+                        font-weight: var(--fw-regular);
+                        font-size: 15px;
+                        line-height: 20px;
+                    }
+
+                    &-Price {
+                        font-weight: var(--fw-bold);
+                        font-size: 18px;
+                        line-height: 25px;
+                    }
+                }
+                @include desktop {
+                    display: none;
+                }
+            }
+        }
 
         @include before-desktop {
             border-top: 1px solid var(--primary-divider-color);
@@ -24,12 +50,12 @@
             width: 100%;
             z-index: 85;
         }
-    
+
         .Button {
             width: 100%;
             color: var(--white);
             background-color: var(--selected-step-color);
-            font-family: "Avenir Next Bold";
+            font-weight: var(--fw-bold);
 
             @include before-desktop {
                 opacity: 1;
@@ -41,19 +67,19 @@
             }
         }
     }
-    
+
     &-Step {
         max-width: 600px;
-        
+
         @include before-desktop {
             margin: 0 auto;
             max-width: 700px;
         }
     }
-    
+
     &-Wrapper {
         max-width: var(--checkout-max-width);
-            
+
         @include desktop {
             display: grid;
             grid-template-columns: minmax(calc(65% - 1rem), 600px) minmax(calc(35% - 1rem), 348px);
@@ -65,12 +91,17 @@
         padding: 19px 60px 45px;
         display: flex;
 
+        @include desktop {
+            display: none;
+        }
+
         &-FirstColumn,
         &-SecondColumn {
             text-align: center;
         }
 
         &-Delivery {
+            margin: 5px 10px 15px;
             background: url(./icons/address-gray@3x.png) no-repeat;
             background-size: 24px 24px;
             background-position: 50% 50%;
@@ -78,7 +109,7 @@
             border-radius: 50%;
             width: 50px;
             height: 50px;
-            
+
             &_checkoutStep {
                 &_SHIPPING_STEP {
                     margin: 0 10px 10px;
@@ -105,6 +136,7 @@
             background-position: 50% 50%;
             border: 2px solid var(--selected-step-color);
             border-radius: 50%;
+            margin: 0 10px 10px;
             width: 60px;
             height: 60px;
 
@@ -126,9 +158,8 @@
         &-PaymentLabel,
         &-DeliveryLabel {
             text-transform: uppercase;
-            font-family: "Avenir Next Demi";
             font-size: 14px;
-            font-weight: 600;
+            font-weight: var(--fw-demi);
             letter-spacing: 1px;
             line-height: 16px;
 
@@ -136,7 +167,7 @@
 
         &-PaymentLabel {
             &_checkoutStep {
-                &_SHIPPING_STEP {   
+                &_SHIPPING_STEP {
                     color: var(--unselected-step-color);
                 }
             }

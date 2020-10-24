@@ -79,10 +79,9 @@
         display: block;
         text-transform: none;
         font-size: 10px;
-        font-weight: 500;
+        font-weight: var(--fw-medium);
         letter-spacing: -0.2px;
         line-height: 14px;
-        text-align: center;
         color: var(--inactive-button-header-color);
         height: 40px;
         width: 40px;

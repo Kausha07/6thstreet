@@ -5,32 +5,25 @@ import './CreditCard.style';
 
 class CreditCard extends PureComponent {
     static propTypes = {
-        onCreditCardAdd: PropTypes.func.isRequired
-    };
-
-    state = {
-        number: '',
-        expDate: '',
-        cvv: ''
+        setCreditCardData: PropTypes.func.isRequired
     };
 
     handleNumberChange = (e) => {
-        this.setState({ number: e.target.value });
+        const { setCreditCardData } = this.props;
+
+        setCreditCardData({ number: e.target.value });
     };
 
     handleExpDateChange = (e) => {
-        this.setState({ expDate: e.target.value });
+        const { setCreditCardData } = this.props;
+
+        setCreditCardData({ expDate: e.target.value });
     };
 
     handleCvvChange = (e) => {
-        this.setState({ cvv: e.target.value });
-    };
+        const { setCreditCardData } = this.props;
 
-    handleClick = () => {
-        const { onCreditCardAdd } = this.props;
-        const { cvv, expDate, number } = this.state;
-
-        onCreditCardAdd({ cvv, expDate, number });
+        setCreditCardData({ cvv: e.target.value });
     };
 
     renderCreditCardForm() {
@@ -60,13 +53,6 @@ class CreditCard extends PureComponent {
                   onChange={ this.handleCvvChange }
                   validation={ ['notEmpty'] }
                 />
-                <button
-                  block="Button"
-                  type="button"
-                  onClick={ this.handleClick }
-                >
-                    { __('Add credit cart') }
-                </button>
             </>
         );
     }

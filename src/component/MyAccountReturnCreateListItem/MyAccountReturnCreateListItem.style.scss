@@ -46,7 +46,7 @@
 
         span {
             color: var(--color-gray);
-            font-family: var(--avenir-regular-font);
+            font-weight: var(--fw-regular);
             font-size: 13px;
             text-transform: capitalize;
         }
@@ -77,7 +77,7 @@
         &Qty,
         &Date {
             color: var(--color-gray);
-            font-family: var(--avenir-regular-font);
+            font-weight: var(--fw-regular);
             text-align: left;
             text-transform: none;
 
@@ -94,7 +94,7 @@
             color: var(--black);
 
             span {
-                font-family: var(--avenir-bold-font);
+                font-weight: var(--fw-bold);
             }
         }
 

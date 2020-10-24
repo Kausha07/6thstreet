@@ -83,13 +83,14 @@ export class CartOverlay extends PureComponent {
     }
 
     renderTotals() {
-        const { totals: { items = 0 } } = this.props;
+        const { totals: { items = [] } } = this.props;
         const { isArabic } = this.state;
-        const totalPrice = items.map((item) => item.row_total * item.qty);
 
         if (!items || items.length < 1) {
             return null;
         }
+
+        const totalPrice = items.map((item) => item.row_total * item.qty);
 
         return (
             <dl

@@ -157,6 +157,8 @@ export class MyAccountReturnCreateItem extends PureComponent {
     }
 
     render() {
+        const { isSelected } = this.props;
+
         return (
             <div block="MyAccountReturnCreateItem">
                 <div block="MyAccountReturnCreateItem" elem="Content">
@@ -164,10 +166,12 @@ export class MyAccountReturnCreateItem extends PureComponent {
                     { this.renderImage() }
                     { this.renderDetails() }
                 </div>
-                <div block="MyAccountReturnCreateItem" elem="Resolution">
-                    { this.renderResolutions() }
-                    { this.renderReasons() }
-                </div>
+                { isSelected && (
+                    <div block="MyAccountReturnCreateItem" elem="Resolution">
+                        { this.renderResolutions() }
+                        { this.renderReasons() }
+                    </div>
+                ) }
             </div>
         );
     }
