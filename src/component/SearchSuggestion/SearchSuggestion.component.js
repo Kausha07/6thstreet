@@ -163,7 +163,7 @@ class SearchSuggestion extends PureComponent {
             return null;
         }
 
-        if (isEmpty) {
+        if (isEmpty && isActive) {
             return this.renderEmptySearch();
         }
 
