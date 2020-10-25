@@ -216,12 +216,33 @@ export class CartPage extends PureComponent {
         );
     }
 
+    renderItemSuffix() {
+        const { totals: { items = [] } } = this.props;
+
+        const itemQuantityArray = items.map((item) => item.qty);
+        const totalQuantity = itemQuantityArray.reduce((qty, nextQty) => qty + nextQty, 0);
+
+        return (totalQuantity === 1)
+            ? __(' Item')
+            : __(' Items');
+    }
+
     renderHeading() {
+        const { totals: { items = [] } } = this.props;
+
+        const itemQuantityArray = items.map((item) => item.qty);
+        const totalQuantity = itemQuantityArray.reduce((qty, nextQty) => qty + nextQty, 0);
+
         return (
             <div>
             <h1 block="CartPage" elem="Heading">
-                { __('My bag') }
-                <span> (# items)</span>
+                { __('My bag ') }
+                <span>
+                    (
+                    { totalQuantity }
+                    { this.renderItemSuffix() }
+                    )
+                </span>
             </h1>
             </div>
         );

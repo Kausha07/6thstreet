@@ -15,7 +15,11 @@ import './CheckoutOrderSummary.extended.style';
 export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     renderItemSuffix() {
         const { totals: { items = [] } } = this.props;
-        return (items.length === 1)
+
+        const itemQuantityArray = items.map((item) => item.qty);
+        const totalQuantity = itemQuantityArray.reduce((qty, nextQty) => qty + nextQty, 0);
+
+        return (totalQuantity === 1)
             ? __(' Item')
             : __(' Items');
     }

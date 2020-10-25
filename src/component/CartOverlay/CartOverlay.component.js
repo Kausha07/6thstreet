@@ -181,8 +181,23 @@ export class CartOverlay extends PureComponent {
         this.setState({ isPopup: true });
     };
 
+    renderItemSuffix() {
+        const { totals: { items = [] } } = this.props;
+
+        const itemQuantityArray = items.map((item) => item.qty);
+        const totalQuantity = itemQuantityArray.reduce((qty, nextQty) => qty + nextQty, 0);
+
+        return (totalQuantity === 1)
+            ? __(' item')
+            : __(' items');
+    }
+
     renderItemCount() {
         const { hideActiveOverlay, closePopup, totals: { items = [] } } = this.props;
+
+        const itemQuantityArray = items.map((item) => item.qty);
+        const totalQuantity = itemQuantityArray.reduce((qty, nextQty) => qty + nextQty, 0);
+
         const svg = (
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -203,8 +218,8 @@ export class CartOverlay extends PureComponent {
                 <div>
                     { __('My Bag') }
                     <div>
-                        { items.length }
-                        { __(' item(s)') }
+                        { totalQuantity }
+                        { this.renderItemSuffix() }
                     </div>
                 </div>
                 <button onClick={ hideActiveOverlay && closePopup }>
