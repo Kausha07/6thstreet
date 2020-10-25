@@ -17,11 +17,13 @@ import { CUSTOMER_ACCOUNT_OVERLAY_KEY } from 'Component/MyAccountOverlay/MyAccou
 import { CHECKOUT_URL } from 'Route/Checkout/Checkout.config';
 import { MY_ACCOUNT_URL } from 'Route/MyAccount/MyAccount.config';
 import MyAccountContainer, { tabMap } from 'Route/MyAccount/MyAccount.container';
+import ClubApparelDispatcher from 'Store/ClubApparel/ClubApparel.dispatcher';
 import { updateMeta } from 'Store/Meta/Meta.action';
 import { changeNavigationState } from 'Store/Navigation/Navigation.action';
 import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
+import { customerType } from 'Type/Account';
 import { HistoryType } from 'Type/Common';
 import { TotalsType } from 'Type/MiniCart';
 import { isSignedIn } from 'Util/Auth';
@@ -40,6 +42,7 @@ export const mapStateToProps = (state) => ({
     totals: state.CartReducer.cartTotals,
     headerState: state.NavigationReducer[TOP_NAVIGATION_TYPE].navigationState,
     guest_checkout: state.ConfigReducer.guest_checkout,
+    customer: state.MyAccountReducer.customer,
     isSignedIn: state.MyAccountReducer.isSignedIn
 });
 
@@ -50,7 +53,8 @@ export const mapDispatchToProps = (dispatch) => ({
     ),
     showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
     showNotification: (type, message) => dispatch(showNotification(type, message)),
-    updateMeta: (meta) => dispatch(updateMeta(meta))
+    updateMeta: (meta) => dispatch(updateMeta(meta)),
+    getMember: (id) => ClubApparelDispatcher.getMember(dispatch, id)
 });
 
 export class CartPageContainer extends PureComponent {
@@ -63,10 +67,20 @@ export class CartPageContainer extends PureComponent {
         guest_checkout: PropTypes.bool.isRequired,
         history: HistoryType.isRequired,
         totals: TotalsType.isRequired,
-        tabMap: PropTypes.isRequired
+        tabMap: PropTypes.isRequired,
+        customer: customerType,
+        getMember: PropTypes.func.isRequired,
+        isSignedIn: PropTypes.bool.isRequired
     };
 
-    state = { isEditing: false };
+    static defaultProps = {
+        customer: null
+    };
+
+    state = {
+        isEditing: false,
+        clubApparelMember: null
+    };
 
     containerFunctions = {
         onCheckoutButtonClick: this.onCheckoutButtonClick.bind(this),
@@ -111,8 +125,10 @@ export class CartPageContainer extends PureComponent {
             changeHeaderState,
             totals: { items_qty },
             headerState,
-            headerState: { name }
+            headerState: { name },
+            customer: { id }
         } = this.props;
+        const { clubApparelMember } = this.state;
 
         const {
             totals: { items_qty: prevItemsQty },
@@ -132,6 +148,31 @@ export class CartPageContainer extends PureComponent {
                 title
             });
         }
+
+        if (id && !clubApparelMember) {
+            this.getClubApparelMember(id);
+        }
+    }
+
+    containerProps = () => {
+        const { clubApparelMember } = this.state;
+
+        return {
+            clubApparelMember
+        };
+    };
+
+    getClubApparelMember(id) {
+        const { getMember } = this.props;
+
+        getMember(id).then(
+            (response) => {
+                if (response && response.data) {
+                    this.setState({ clubApparelMember: response.data });
+                }
+            },
+            this._handleError
+        );
     }
 
     changeActiveTab(activeTab) {
@@ -230,6 +271,7 @@ export class CartPageContainer extends PureComponent {
               { ...this.props }
               { ...this.state }
               { ...this.containerFunctions }
+              { ...this.containerProps() }
               tabMap={ tabMap }
             />
         );

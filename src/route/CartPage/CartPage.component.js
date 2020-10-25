@@ -22,9 +22,11 @@ import {
     activeTabType
 } from 'Type/Account';
 import { TotalsType } from 'Type/MiniCart';
+import { ClubApparelMember } from 'Util/API/endpoint/ClubApparel/ClubApparel.type';
 import { isArabic } from 'Util/App';
 import { formatCurrency, roundPrice } from 'Util/Price';
 
+import ClubApparel from './icons/club-apparel.png';
 import Delivery from './icons/delivery-truck.png';
 
 import './CartPage.style';
@@ -34,11 +36,17 @@ export class CartPage extends PureComponent {
         totals: TotalsType.isRequired,
         onCheckoutButtonClick: PropTypes.func.isRequired,
         activeTab: activeTabType.isRequired,
-        changeActiveTab: PropTypes.func.isRequired
+        changeActiveTab: PropTypes.func.isRequired,
+        clubApparelMember: ClubApparelMember,
+        isSignedIn: PropTypes.bool.isRequired
     };
 
     state = {
         isArabic: isArabic()
+    };
+
+    static defaultProps = {
+        clubApparelMember: {}
     };
 
     renderCartItems() {
@@ -206,6 +214,81 @@ export class CartPage extends PureComponent {
         );
     }
 
+    renderClubApparelContent() {
+        const { cart_content: { cart_cms } = {} } = window.contentConfiguration;
+        const {
+            totals: {
+                currency_code,
+                extension_attributes: {
+                    club_apparel_estimated_pointsvalue
+                }
+            },
+            clubApparelMember: {
+                accountLinked
+            },
+            isSignedIn
+        } = this.props;
+        const { isArabic } = this.state;
+
+        if (cart_cms) {
+            return <CmsBlock identifier={ cart_cms } />;
+        }
+
+        if (accountLinked && isSignedIn) {
+            return (
+                <div
+                  block="CartPage"
+                  elem="ClubApparelBlock"
+                  mods={ { isArabic } }
+                >
+                    <img src={ ClubApparel } alt="Delivery icon" />
+                    <div block="CartPage" elem="ClubApparelText">
+                        { __('You may earn ') }
+                        <span>{ `${currency_code } ${club_apparel_estimated_pointsvalue} ` }</span>
+                        { __('worth of Club Apparel points for this purchase.') }
+                    </div>
+                </div>
+            );
+        }
+
+        if (!accountLinked && isSignedIn) {
+            return (
+                <div
+                  block="CartPage"
+                  elem="ClubApparelBlock"
+                >
+                    <img src={ ClubApparel } alt="Delivery icon" />
+                    <div block="CartPage" elem="ClubApparelText">
+                        { __('Link your Club Apparel account to earn ') }
+                        <span>{ `${currency_code } ${club_apparel_estimated_pointsvalue} ` }</span>
+                        { __('worth of points for this purchase. ') }
+                        <Link
+                          block="CartPage"
+                          elem="ClubApparelLink"
+                          to="/clubapparel/account"
+                        >
+                            { __('Link now') }
+                        </Link>
+                    </div>
+                </div>
+            );
+        }
+
+        return (
+            <div
+              block="CartPage"
+              elem="ClubApparelBlock"
+            >
+                <img src={ ClubApparel } alt="Delivery icon" />
+                <div block="CartPage" elem="ClubApparelText">
+                    { __('Link your Club Apparel account to earn ') }
+                    <span>{ `${currency_code } ${club_apparel_estimated_pointsvalue} ` }</span>
+                    { __('worth of points for this purchase.') }
+                </div>
+            </div>
+        );
+    }
+
     renderPromo() {
         const { totals: { avail_free_shipping_amount } } = this.props;
 
@@ -217,6 +300,19 @@ export class CartPage extends PureComponent {
                 { this.renderPromoContent() }
             </div>
         );
+    }
+
+    renderClubApparel() {
+        const { totals: { extension_attributes } } = this.props;
+
+        return extension_attributes ? (
+            <div
+              block="CartPage"
+              elem="ClubApparel"
+            >
+                { this.renderClubApparelContent() }
+            </div>
+        ) : null;
     }
 
     renderHeading() {
@@ -272,6 +368,7 @@ export class CartPage extends PureComponent {
                     <div block="CartPage" elem="Floating" mods={ { isArabic } }>
                         { this.renderDiscountCode() }
                         { this.renderPromo() }
+                        { this.renderClubApparel() }
                         { this.renderTotals() }
                     </div>
                 </ContentWrapper>
