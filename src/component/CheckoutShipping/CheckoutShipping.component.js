@@ -186,7 +186,6 @@ export class CheckoutShipping extends SourceCheckoutShipping {
                       mix={ {
                           block: 'button primary small'
                       } }
-
                       onClick={ this.openNewForm }
                     >
                         { this.renderButtonLabel() }
