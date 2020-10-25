@@ -397,5 +397,9 @@
     "Details": null,
     "New In": null,
     "brand_name": null,
-    "Test": null
+    "Test": null,
+    "You search for: ": null,
+    "Sorry, we couldn't find any Product!": null,
+    "Please check the spelling or try searching something else": null,
+    "Products": null
 }

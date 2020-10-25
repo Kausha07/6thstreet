@@ -342,7 +342,7 @@ class PLPFilters extends PureComponent {
                     </div>
                     <div block="PLPFilters" elem="ProductsCount" mods={ { isArabic } }>
                         <span>{ count }</span>
-                        Products
+                        { count ? __('Products') : null }
                     </div>
                 </div>
             </>
