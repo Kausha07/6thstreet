@@ -42,11 +42,11 @@
     padding-left: 10px;
     background-color: transparent;
 
-@include before-desktop {
-    position: absolute;
-    top: 75px;
-    padding: 0 20px;
-}
+    @include before-desktop {
+        position: absolute;
+        top: 75px;
+        padding: 0 20px;
+    }
 
     &-Clear {
         display: none;
@@ -72,7 +72,7 @@
 
         .SearchBackground {
             width: 100vw;
-            background-color: var(--white);
+            background-color: var(--pink);
             transform: skew(-15deg, 0deg);
             position: absolute;
             left: -1px;
@@ -122,11 +122,10 @@
             border-radius: 5px;
             font-weight: var(--fw-regular);
             font-size: 14px;
-            height: 33px;
             padding-left: 35px;
             text-transform: none;
             width: 100%;
-            color: black;
+            color: $black;
             height: 36px;
 
             &::placeholder {

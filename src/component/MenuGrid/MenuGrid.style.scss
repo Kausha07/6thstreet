@@ -2,7 +2,7 @@
     width: 23%;
 
     &-Content {
-        background-color: var(--white);
+        background-color: var(--pink);
         pointer-events: all;
 
         span, a {
@@ -134,7 +134,7 @@
             }
 
             &_isAllShow {
-                background-color: var(--white);
+                background-color: var(--pink);
                 left: 0;
                 position: absolute;
                 top: 0;

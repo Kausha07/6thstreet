@@ -82,7 +82,8 @@ export class SearchSuggestionContainer extends PureComponent {
                 trendingTags: data[1][gender]
             });
         } catch (e) {
-            console.log(e);
+            // eslint-disable-next-line no-console
+            console.error(e);
         }
     }
 

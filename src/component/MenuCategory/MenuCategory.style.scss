@@ -13,7 +13,7 @@
     }
 
     @include before-desktop {
-        border: solid var(--white);
+        border: solid var(--pink);
         border-width: 7px 0;
         color: var(--black);
         font-size: 13px;
@@ -57,7 +57,7 @@
                 .MenuCategory {
                     &-CategoryButton {
                         background-color: var(--gold);
-                        color: var(--white);
+                        color: var(--pink);
                         font-weight: var(--fw-bold);
                     }
                 }
@@ -65,7 +65,7 @@
 
             .MenuCategory {
                 &-CategoryButton {
-                    color: var(--white);
+                    color: var(--pink);
                     font-size: 15px;
                 }
             }
@@ -83,7 +83,7 @@
             .MenuCategory {
                 &-CategoryButton {
                     background-color: var(--black);
-                    color: var(--white);
+                    color: var(--pink);
                     font-weight: var(--fw-bold);
                     font-size: 15px;
                     transition-duration: 0s;
@@ -97,7 +97,7 @@
             &:first-child {
                 .MenuCategory {
                     &-CategoryButton {
-                        color: var(--white);
+                        color: var(--pink);
                         background-color: var(--gold);
                     }
                 }
@@ -107,7 +107,7 @@
                 .MenuCategory {
                     &-CategoryButton {
                         background-color: var(--red);
-                        color: var(--white);
+                        color: var(--pink);
                     }
                 }
             }
@@ -138,7 +138,7 @@
         }
 
         .DynamicContent {
-            background-color: var(--white);
+            background-color: var(--pink);
             border-left: 1px solid var(--light-gray);
             height: 100%;
             overflow-x: hidden;
@@ -195,7 +195,7 @@
         }
 
         .DynamicContent {
-            background-color: var(--white);
+            background-color: var(--pink);
             display: flex;
             height: 390px;
             pointer-events: all;
@@ -279,12 +279,12 @@
                     &-ContentWrapper {
                         &-Brands {
                             a {
-                                color: var(--white);
+                                color: var(--pink);
                             }
                         }
 
                         span {
-                            color: var(--white);
+                            color: var(--pink);
                         }
                     }
                 }
@@ -294,7 +294,7 @@
                         background-color: var(--red);
 
                         a, span {
-                            color: var(--white);
+                            color: var(--pink);
                         }
                     }
                 }

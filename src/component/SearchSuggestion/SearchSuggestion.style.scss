@@ -1,6 +1,5 @@
 root {
     --black: #000;
-    --charcoal: #4a4a4a;
     --gray: #f0f0f0;
     --dark-gray: #4a4a4a;
 }
@@ -11,13 +10,12 @@ root {
     position: absolute;
     width: inherit;
     margin-left: -16px;
-    background-color: var(--white);
+    background-color: var(--pink);
     flex-direction: column;
-    padding: 20px 40px;
-    font-family: 'Avenir Next Regular';
+    padding: 0 40px 20px;
+    font-family: var(--fw-regular);
     vertical-align: middle;
     display: block;
-    padding-top: 0;
 
     @include before-desktop {
         height: 100vh;
@@ -70,7 +68,7 @@ root {
         align-items: center;
 
         &:first-letter {
-            font-weight: normal;
+            font-weight: var(--fw-regular);
         }
     }
 
@@ -87,7 +85,7 @@ root {
         }
 
         a {
-            color: var(--charcoal);
+            color: var(--dark-gray);
             width: 100%;
             display: block;
 
@@ -104,7 +102,7 @@ root {
         }
 
         li:first-letter {
-            font-weight: bold;
+            font-weight: var(--fw-bold);
             color: var(--black);
         }
     }

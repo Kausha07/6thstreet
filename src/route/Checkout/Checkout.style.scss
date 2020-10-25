@@ -43,7 +43,7 @@
 
         @include before-desktop {
             border-top: 1px solid var(--primary-divider-color);
-            background-color: var(--white);
+            background-color: var(--pink);
             position: fixed;
             padding: 1rem 1rem calc(env(safe-area-inset-bottom) + 1rem);
             bottom: 0;
@@ -54,7 +54,7 @@
 
         .Button {
             width: 100%;
-            color: var(--white);
+            color: var(--pink);
             background-color: var(--selected-step-color);
             font-weight: var(--fw-bold);
 

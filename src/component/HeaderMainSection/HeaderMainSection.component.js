@@ -199,7 +199,6 @@ class HeaderMainSection extends NavigationAbstract {
     }
 
     renderSearch() {
-        // eslint-disable-next-line no-empty
         if (isMobile.any()) {
             return this.isPLP() || this.isPDP() ? null : (
                 <HeaderSearch

@@ -114,7 +114,7 @@
 
 				.MyAccountAddressPopup {
 					margin: 20px auto;
-					background: var(--white);
+					background: var(--pink);
 
 					.Form {
 						top: -130px;
@@ -173,7 +173,7 @@
 	}
 
 	h3 {
-		background: var(--white);
+		background: var(--pink);
 		font-size: 21px;
 		margin: 0;
 		padding: 30px 30px 3px;
@@ -191,11 +191,11 @@
 }
 
 .CheckoutShippingStep {
-	background: var(--white);
+	background: var(--pink);
 
 	&-DeliveryButton {
 		padding: 30px;
-		background: var(--white);
+		background: var(--pink);
 
 		button.primary {
 			height: 50px;
