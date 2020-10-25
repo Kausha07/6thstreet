@@ -53,6 +53,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
 
     renderPromoContent() {
         const { cart_content: { cart_cms } = {} } = window.contentConfiguration;
+        const { totals: { currency_code, avail_free_shipping_amount } } = this.props;
 
         if (cart_cms) {
             return <CmsBlock identifier={ cart_cms } />;
@@ -63,10 +64,15 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
               block="CheckoutOrderSummary"
               elem="PromoBlock"
             >
-                <div block="CheckoutOrderSummary" elem="PromoText">
+                <figcaption block="CheckoutOrderSummary" elem="PromoText">
                     <img src={ Delivery } alt="Delivery icon" />
                     { __('Add ') }
-                    <span block="CheckoutOrderSummary" elem="AED">AED 200</span>
+                    <span
+                      block="CheckoutOrderSummary"
+                      elem="Currency"
+                    >
+                        { `${currency_code } ${avail_free_shipping_amount}` }
+                    </span>
                     { __('more to your cart for ') }
                     <span
                       block="CheckoutOrderSummary"
@@ -74,7 +80,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                     >
                         { __('Free delivery') }
                     </span>
-                </div>
+                </figcaption>
             </div>
         );
     }
@@ -90,7 +96,9 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     }
 
     renderPromo() {
-        return (
+        const { totals: { avail_free_shipping_amount } } = this.props;
+
+        return !avail_free_shipping_amount || avail_free_shipping_amount === 0 ? null : (
             <div
               block="CheckoutOrderSummary"
               elem="Promo"
