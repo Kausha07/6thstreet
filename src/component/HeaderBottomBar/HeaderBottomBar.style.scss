@@ -4,7 +4,7 @@
     --grey: #d3d3d3;
     --light-grey: #f3f4f6;
     --red: #d12229;
-    --pink: #fff;
+    --white: #fff;
     --white-smoke: #f5f5f5;
 }
 
@@ -24,7 +24,7 @@
         }
 
         @include before-desktop {
-            background-color: var(--pink);
+            background-color: var(--white);
             height: 100%;
             padding-bottom: 120px;
             position: fixed;
@@ -33,7 +33,7 @@
             z-index: 1;
 
             .FooterMain {
-                background-color: var(--pink);
+                background-color: var(--white);
                 display: block;
                 height: 280px;
                 margin-bottom: -144px;

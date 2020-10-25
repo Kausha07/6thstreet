@@ -1,5 +1,5 @@
 .CheckoutOrderSummary {
-    background: var(--pink);
+    background: var(--white);
 
     &-HeaderWrapper {
         display: flex;
@@ -78,7 +78,7 @@
 
             &:hover {
                 color: var(--black);
-                background: var(--pink);
+                background: var(--white);
                 border-top: 1px solid var(--color-nobel);
                 border-right: none;
                 border-bottom: 1px solid var(--color-nobel);

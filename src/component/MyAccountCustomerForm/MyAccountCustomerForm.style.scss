@@ -19,7 +19,7 @@
     .Button {
         background: var(--black);
         border: 2px solid var(--black);
-        color: var(--pink);
+        color: var(--white);
         font-weight: var(--fw-bold);
         height: 50px;
         margin-top: 9px;
@@ -212,7 +212,7 @@
         margin-top: 2rem;
 
         &:after {
-            background-color: var(--pink);
+            background-color: var(--white);
             content: ' ';
             height: 58px;
             margin-bottom: 2px;

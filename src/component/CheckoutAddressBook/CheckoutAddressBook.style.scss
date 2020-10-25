@@ -1,7 +1,7 @@
 .CheckoutAddressBook {
 	&-Wrapper {
 		@include desktop {
-			background: var(--pink);
+			background: var(--white);
 			padding-top: 20px;
 		}
 	}
@@ -18,7 +18,7 @@
 	}
 
 	&-CustomAddressWrapper {
-		background: var(--pink);
+		background: var(--white);
 
 		.FieldForm {
 			margin-top: 20px;
