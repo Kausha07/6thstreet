@@ -1,7 +1,6 @@
 .HeaderMenu {
     line-height: 40px;
     color: var(--white);
-    width: 20%;
 
     @include before-desktop {
         overflow-x: hidden;
@@ -33,10 +32,6 @@
             font-size: 0;
             filter: invert(26%) sepia(2%) saturate(21%) hue-rotate(43deg) brightness(90%) contrast(80%);
 
-        }
-
-        @include desktop {
-            display: none;
         }
 
         &_isExpanded {

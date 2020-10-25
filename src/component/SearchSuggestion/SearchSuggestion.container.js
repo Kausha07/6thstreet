@@ -53,10 +53,6 @@ export class SearchSuggestionContainer extends PureComponent {
         requestSearchSuggestions(search);
     }
 
-    containerFunctions = {
-        // getData: this.getData.bind(this)
-    };
-
     constructor(props) {
         super(props);
 
@@ -96,7 +92,7 @@ export class SearchSuggestionContainer extends PureComponent {
         const { search, data } = this.props;
         const { brands = [], products = [] } = data;
 
-        const isEmpty = !search;
+        const isEmpty = search === '';
         const inNothingFound = (brands.length + products.length) === 0;
 
         return {
