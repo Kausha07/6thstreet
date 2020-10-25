@@ -6,6 +6,7 @@
 
 .Checkout {
     padding-top: 0;
+    padding-bottom: 150px;
 
      @include before-desktop {
          .Checkout-StickyButtonWrapper {
