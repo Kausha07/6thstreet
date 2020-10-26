@@ -49,7 +49,11 @@ class HeaderBottomBar extends NavigationAbstract {
             );
         }
 
-        return null;
+        return (
+            <HeaderSearch
+              key="search"
+            />
+        );
     }
 
     render() {
