@@ -1,8 +1,8 @@
-// import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
-import { MatchType } from 'Type/Common';
+import { HistoryType, MatchType } from 'Type/Common';
 import { getCountriesForSelect } from 'Util/API/endpoint/Config/Config.format';
 import { Config } from 'Util/API/endpoint/Config/Config.type';
 import MagentoAPI from 'Util/API/provider/MagentoAPI';
@@ -18,16 +18,18 @@ export const mapDispatchToProps = () => ({});
 export class MyAccountOrderViewContainer extends PureComponent {
     static propTypes = {
         match: MatchType.isRequired,
-        config: Config.isRequired
+        config: Config.isRequired,
+        history: HistoryType.isRequired
     };
 
     containerFunctions = {
-        getCountryNameById: this.getCountryNameById.bind(this)
+        getCountryNameById: this.getCountryNameById.bind(this),
+        openOrderCancelation: this.openOrderCancelation.bind(this)
     };
 
     state = {
         isLoading: true,
-        order: {}
+        order: null
     };
 
     constructor(props) {
@@ -67,6 +69,17 @@ export class MyAccountOrderViewContainer extends PureComponent {
         return order;
     }
 
+    openOrderCancelation() {
+        const { history } = this.props;
+        const { order: { entity_id } } = this.state;
+
+        if (!entity_id) {
+            return;
+        }
+
+        history.push(`/my-account/return-item/cancel/${ entity_id }`);
+    }
+
     async getOrder() {
         try {
             const orderId = this.getOrderId();
@@ -87,4 +100,4 @@ export class MyAccountOrderViewContainer extends PureComponent {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MyAccountOrderViewContainer);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MyAccountOrderViewContainer));

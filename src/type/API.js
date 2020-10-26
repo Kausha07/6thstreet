@@ -39,8 +39,7 @@ export const ReturnSuccessItemType = PropTypes.shape({
     qty_requested: PropTypes.number
 });
 
-export const OrderType = PropTypes.shape({
-    id: PropTypes.string.isRequired,
+export const AbstractOrderType = PropTypes.shape({
     customer_id: PropTypes.string.isRequired,
     increment_id: PropTypes.string.isRequired,
     created_at: PropTypes.string.isRequired,
@@ -59,4 +58,15 @@ export const OrderType = PropTypes.shape({
     items_count: PropTypes.number.isRequired,
     courier_deliver_date: PropTypes.string.isRequired,
     packages_count: PropTypes.number
+});
+
+export const OrderType = PropTypes.shape({
+    ...AbstractOrderType,
+    id: PropTypes.string.isRequired
+});
+
+export const ExtendedOrderType = PropTypes.shape({
+    ...AbstractOrderType,
+    entity_id: PropTypes.string.isRequired,
+    order_currency_code: PropTypes.string.isRequired
 });

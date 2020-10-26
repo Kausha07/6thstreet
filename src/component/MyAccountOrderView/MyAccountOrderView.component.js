@@ -12,7 +12,7 @@ import {
     STATUS_SUCCESS
 } from 'Component/MyAccountOrderListItem/MyAccountOrderListItem.config';
 import MyAccountOrderViewItem from 'Component/MyAccountOrderViewItem';
-import { OrderType } from 'Type/API';
+import { ExtendedOrderType } from 'Type/API';
 import { appendOrdinalSuffix } from 'Util/Common';
 import { formatDate } from 'Util/Date';
 
@@ -27,9 +27,14 @@ import './MyAccountOrderView.style';
 
 class MyAccountOrderView extends PureComponent {
     static propTypes = {
-        order: OrderType.isRequired,
+        order: ExtendedOrderType,
         isLoading: PropTypes.bool.isRequired,
-        getCountryNameById: PropTypes.func.isRequired
+        getCountryNameById: PropTypes.func.isRequired,
+        openOrderCancelation: PropTypes.func.isRequired
+    };
+
+    static defaultProps = {
+        order: null
     };
 
     renderAddress = (title, address) => {
@@ -63,10 +68,13 @@ class MyAccountOrderView extends PureComponent {
     }
 
     renderTitle() {
-        const { order: { increment_id } } = this.props;
+        const { openOrderCancelation, order: { increment_id } } = this.props;
 
         return (
-            <h3>{ __('Order #%s', increment_id) }</h3>
+            <div block="MyAccountOrderView" elem="Heading">
+                <h3>{ __('Order #%s', increment_id) }</h3>
+                <button onClick={ openOrderCancelation }>{ __('Cancel an Item') }</button>
+            </div>
         );
     }
 
@@ -294,7 +302,7 @@ class MyAccountOrderView extends PureComponent {
                 status,
                 subtotal,
                 grand_total,
-                currency_code,
+                order_currency_code,
                 msp_cod_amount
             }
         } = this.props;
@@ -307,17 +315,17 @@ class MyAccountOrderView extends PureComponent {
             <div block="MyAccountOrderView" elem="Summary">
                 <p block="MyAccountOrderView" elem="SummaryItem">
                     <span>{ __('Subtotal') }</span>
-                    <span>{ formatPrice(+subtotal, currency_code) }</span>
+                    <span>{ formatPrice(+subtotal, order_currency_code) }</span>
                 </p>
                 { !!msp_cod_amount && (
                     <p block="MyAccountOrderView" elem="SummaryItem">
                         <span>{ __('Cash on Delivery Fee') }</span>
-                        <span>{ formatPrice(+msp_cod_amount, currency_code) }</span>
+                        <span>{ formatPrice(+msp_cod_amount, order_currency_code) }</span>
                     </p>
                 ) }
                 <p block="MyAccountOrderView" elem="SummaryItem" mods={ { grandTotal: true } }>
                     <span>{ __('Total') }</span>
-                    <span>{ formatPrice(+grand_total, currency_code) }</span>
+                    <span>{ formatPrice(+grand_total, order_currency_code) }</span>
                 </p>
             </div>
         );
@@ -341,9 +349,9 @@ class MyAccountOrderView extends PureComponent {
     }
 
     render() {
-        const { isLoading, order: { billing_address } } = this.props;
+        const { isLoading, order, order: { billing_address } } = this.props;
 
-        if (isLoading) {
+        if (isLoading || !order) {
             return (
                 <div block="MyAccountOrderView">
                     <Loader isLoading={ isLoading } />
