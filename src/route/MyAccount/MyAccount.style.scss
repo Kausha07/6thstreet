@@ -18,8 +18,8 @@
 
     &-TabContent {
         @include after-mobile {
-            width: 100%;
             padding: 0 105px;
+            width: 100%;
         }
 
         @include desktop {
@@ -32,12 +32,6 @@
             @include desktop{
                 margin: 10px 10px 20px 0;
             }
-        }
-    }
-
-    .MyAccountCustomerForm-PasswordField {
-        @include desktop {
-            margin: 10px 10px 20px 0;
         }
     }
 }
