@@ -1,22 +1,37 @@
-import {
-    CheckoutGuestForm as SourceCheckoutGuestForm
-} from 'SourceComponent/CheckoutGuestForm/CheckoutGuestForm.component';
-import isMobile from 'Util/Mobile';
+/**
+ * ScandiPWA - Progressive Web App for Magento
+ *
+ * Copyright © Scandiweb, Inc. All rights reserved.
+ * See LICENSE for license details.
+ *
+ * @license OSL-3.0 (Open Software License ("OSL") v. 3.0)
+ * @package scandipwa/base-theme
+ * @link https://github.com/scandipwa/base-theme
+ */
+
+import PropTypes from 'prop-types';
+
+import FieldForm from 'Component/FieldForm/FieldForm.component';
+import FormPortal from 'Component/FormPortal';
+import MyAccountOverlay from 'Component/MyAccountOverlay';
+
+import lock from './icons/lock.png';
 
 import './CheckoutGuestForm.style';
 
-export class CheckoutGuestForm extends SourceCheckoutGuestForm {
-    renderHeading() {
-        if (isMobile.any() || isMobile.tablet()) {
-            return (
-                <span block="Checkout" elem="Heading">
-                    { __('Where can we send your order?') }
-                </span>
-            );
-        }
+export class CheckoutGuestForm extends FieldForm {
+    static propTypes = {
+        requestCustomerData: PropTypes.func.isRequired,
+        formId: PropTypes.string.isRequired,
+        handleEmailInput: PropTypes.func.isRequired,
+        handleCreateUser: PropTypes.func.isRequired,
+        isEmailAdded: PropTypes.bool.isRequired,
+        isInvalidEmail: PropTypes.bool.isRequired
+    };
 
-        return null;
-    }
+    state = {
+        showPopup: false
+    };
 
     get fieldMap() {
         const {
@@ -49,6 +64,76 @@ export class CheckoutGuestForm extends SourceCheckoutGuestForm {
         }
 
         return fields;
+    }
+
+    renderHeading(text) {
+        const { isEmailAdded } = this.props;
+        return (
+            <h2
+              block="Checkout"
+              elem="Heading"
+              mods={ { isEmailAdded } }
+            >
+                { __(text) }
+            </h2>
+        );
+    }
+
+    renderMyAccountPopup() {
+        const { showPopup } = this.state;
+
+        if (!showPopup) {
+            return null;
+        }
+
+        return <MyAccountOverlay closePopup={ this.closePopup } onSignIn={ this.onSignIn } isPopup />;
+    }
+
+    onSignIn = () => {
+        const { requestCustomerData } = this.props;
+
+        requestCustomerData();
+        this.closePopup();
+    };
+
+    closePopup = () => {
+        this.setState({ showPopup: false });
+    };
+
+    showMyAccountPopup = () => {
+        this.setState({ showPopup: true });
+    };
+
+    render() {
+        const { formId, isEmailAdded, isInvalidEmail } = this.props;
+
+        return (
+            <div
+              block="CheckoutGuestForm"
+              mods={ { isEmailAdded, isInvalidEmail } }
+              mix={ { block: 'FieldForm' } }
+            >
+                { this.renderHeading('Login / Sign Up') }
+                <FormPortal
+                  id={ formId }
+                  name="CheckoutGuestForm"
+                >
+                    <div
+                      block="CheckoutGuestForm"
+                      elem="FieldAndSignIn"
+                    >
+                        { this.renderFields() }
+                        <button onClick={ this.showMyAccountPopup }>
+                            { __('Sign In') }
+                            <img src={ lock } alt="" />
+                        </button>
+                    </div>
+                    <p>{ __('Email is invalid.') }</p>
+                    <p>{ __('You can create an account after checkout.') }</p>
+                </FormPortal>
+                { this.renderMyAccountPopup() }
+            </div>
+        );
     }
 }
 
