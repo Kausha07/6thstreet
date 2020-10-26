@@ -8,7 +8,7 @@ export const ReturnReasonType = PropTypes.shape({
 // They have the same type declaration. Creating it to be able to differetiate them
 export const ReturnResolutionType = ReturnReasonType;
 
-export const AbstractReturnItemType = PropTypes.shape({
+export const AbstractReturnItemType = {
     name: PropTypes.string,
     thumbnail: PropTypes.string,
     color: PropTypes.string,
@@ -16,7 +16,7 @@ export const AbstractReturnItemType = PropTypes.shape({
         label: PropTypes.string,
         value: PropTypes.string
     })
-});
+};
 
 export const ReturnItemType = PropTypes.shape({
     ...AbstractReturnItemType,
@@ -39,7 +39,7 @@ export const ReturnSuccessItemType = PropTypes.shape({
     qty_requested: PropTypes.number
 });
 
-export const AbstractOrderType = PropTypes.shape({
+export const AbstractOrderType = {
     customer_id: PropTypes.string.isRequired,
     increment_id: PropTypes.string.isRequired,
     created_at: PropTypes.string.isRequired,
@@ -58,7 +58,7 @@ export const AbstractOrderType = PropTypes.shape({
     items_count: PropTypes.number.isRequired,
     courier_deliver_date: PropTypes.string.isRequired,
     packages_count: PropTypes.number
-});
+};
 
 export const OrderType = PropTypes.shape({
     ...AbstractOrderType,

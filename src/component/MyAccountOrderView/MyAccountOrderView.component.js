@@ -198,7 +198,9 @@ class MyAccountOrderView extends PureComponent {
                   mix={ { block: 'MyAccountOrderView', elem: 'Accordion' } }
                   title={ this.renderAccordionTitle(__('Items under processing'), TimerImage) }
                 >
-                    { unship.reduce((acc, { items }) => [...acc, ...items], []).map(this.renderItem) }
+                    { unship.reduce((acc, { items }) => [...acc, ...items], [])
+                        .filter(({ qty_canceled, qty_ordered }) => +qty_canceled < +qty_ordered)
+                        .map(this.renderItem) }
                 </Accordion>
             </div>
         );
@@ -349,7 +351,7 @@ class MyAccountOrderView extends PureComponent {
     }
 
     render() {
-        const { isLoading, order, order: { billing_address } } = this.props;
+        const { isLoading, order } = this.props;
 
         if (isLoading || !order) {
             return (
@@ -358,6 +360,8 @@ class MyAccountOrderView extends PureComponent {
                 </div>
             );
         }
+
+        const { billing_address } = order;
 
         return (
             <div block="MyAccountOrderView">

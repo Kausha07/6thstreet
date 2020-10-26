@@ -1,3 +1,4 @@
+import Form from 'Component/Form';
 import MyAccountCancelCreateItem from 'Component/MyAccountCancelCreateItem';
 import { MyAccountReturnCreate } from 'Component/MyAccountReturnCreate/MyAccountReturnCreate.component';
 
@@ -25,6 +26,20 @@ class MyAccountCancelCreate extends MyAccountReturnCreate {
             </li>
         );
     };
+
+    renderOrderItems() {
+        const { items, onFormSubmit } = this.props;
+
+        return (
+            <Form id="create-cancel" onSubmitSuccess={ onFormSubmit }>
+                <ul>
+                    { items.filter(({ qty_canceled, qty_to_cancel }) => +qty_canceled < +qty_to_cancel)
+                        .map(this.renderOrderItem) }
+                </ul>
+                { this.renderActions() }
+            </Form>
+        );
+    }
 
     renderActions() {
         const { handleDiscardClick, selectedNumber } = this.props;

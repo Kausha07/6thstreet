@@ -10,7 +10,6 @@ import MyAccountCancelCreateItem from './MyAccountCancelCreateItem.component';
 
 export class MyAccountCancelCreateItemContainer extends SourceComponent {
     render() {
-        console.log(this.props);
         return (
             <MyAccountCancelCreateItem
               { ...this.containerFunctions }

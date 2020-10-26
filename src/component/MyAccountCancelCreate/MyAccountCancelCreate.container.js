@@ -1,8 +1,10 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
 import { MyAccountReturnCreateContainer } from 'Component/MyAccountReturnCreate/MyAccountReturnCreate.container';
 import { showNotification } from 'Store/Notification/Notification.action';
+import { HistoryType } from 'Type/Common';
 import MagentoAPI from 'Util/API/provider/MagentoAPI';
 
 import MyAccountCancelCreate from './MyAccountCancelCreate.component';
@@ -15,6 +17,7 @@ export const mapDispatchToProps = (dispatch) => ({
 
 export class MyAccountCancelCreateContainer extends MyAccountReturnCreateContainer {
     static propTypes = {
+        history: HistoryType.isRequired,
         showErrorNotification: PropTypes.func.isRequired
     };
 
@@ -57,24 +60,29 @@ export class MyAccountCancelCreateContainer extends MyAccountReturnCreateContain
     }
 
     onFormSubmit() {
-        const { selectedItems, items } = this.state;
+        const { showErrorNotification, history } = this.props;
+        const { selectedItems, items, incrementId } = this.state;
         const payload = {
-            order_id: this.getOrderId(),
+            order_id: incrementId,
             items: Object.entries(selectedItems).map(([order_item_id, { reasonId }]) => {
                 const { qty_to_cancel } = items.find(({ item_id }) => item_id === order_item_id) || {};
 
                 return {
-                    order_item_id,
+                    item_id: order_item_id,
                     qty: qty_to_cancel,
-                    reason: {
-                        id: reasonId,
-                        data: null
-                    }
+                    reason: reasonId
                 };
             })
         };
 
-        console.log(payload);
+        this.setState({ isLoading: true });
+
+        MagentoAPI.post('recan/commitRecan', payload).then(({ payload: { cancellation_id } }) => {
+            history.push(`/my-account/return-item/cancel/success/${ cancellation_id }`);
+        }).catch(() => {
+            showErrorNotification(__('Error appeared while requesting a cancelation'));
+            this.setState({ isLoading: false });
+        });
     }
 
     render() {
@@ -87,4 +95,4 @@ export class MyAccountCancelCreateContainer extends MyAccountReturnCreateContain
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MyAccountCancelCreateContainer);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MyAccountCancelCreateContainer));
