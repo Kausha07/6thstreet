@@ -3,12 +3,7 @@
 }
 
 .HeaderCart {
-    display: block;
     position: relative;
-
-    @include desktop {
-        display: block;
-    }
 
     &-PopUp {
         position: fixed;
