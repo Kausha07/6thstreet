@@ -63,13 +63,22 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
             ? this._getAddressById(selectedCustomerAddressId)
             : trimAddressFields(fields);
 
+        const {
+            region_id,
+            street,
+            country_id,
+            telephone
+        } = shippingAddress;
+
         const shippingAddressMapped = {
             ...shippingAddress,
-            street: shippingAddress.street[0],
-            area: shippingAddress.region,
-            country_code: shippingAddress.country_id,
-            phone: shippingAddress.telephone,
-            email: isSignedIn() ? email : guestEmail
+            street,
+            area: region_id,
+            country_code: country_id,
+            phone: telephone,
+            email: isSignedIn() ? email : guestEmail,
+            region: region_id,
+            region_id: 0
         };
 
         const {

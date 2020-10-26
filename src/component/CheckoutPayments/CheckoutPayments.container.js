@@ -5,11 +5,14 @@ import {
     CheckoutPaymentsContainer as SourceCheckoutPaymentsContainer,
     mapDispatchToProps as SourceMapDispatchToProps
 } from 'SourceComponent/CheckoutPayments/CheckoutPayments.container';
+import { getStore } from 'Store';
+import CartDispatcher from 'Store/Cart/Cart.dispatcher';
 import CheckoutDispatcher from 'Store/Checkout/Checkout.dispatcher';
 
 export const mapDispatchToProps = (dispatch) => ({
     ...SourceMapDispatchToProps,
-    selectPaymentMethod: (billingData) => CheckoutDispatcher.selectPaymentMethod(dispatch, billingData)
+    selectPaymentMethod: (billingData) => CheckoutDispatcher.selectPaymentMethod(dispatch, billingData),
+    updateTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId)
 });
 
 export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
@@ -20,12 +23,15 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
     };
 
     selectPaymentMethod({ m_code: code }) {
+        const { Cart: { cartId } } = getStore().getState();
+
         const {
             onPaymentMethodSelect,
             setOrderButtonEnableStatus,
             selectPaymentMethod,
             billingAddress,
-            setTabbyWebUrl
+            setTabbyWebUrl,
+            updateTotals
         } = this.props;
 
         this.setState({
@@ -34,6 +40,7 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
 
         onPaymentMethodSelect(code);
         setOrderButtonEnableStatus(true);
+        updateTotals(cartId);
         selectPaymentMethod({ code, billingAddress }).then(
             (response) => {
                 if (response.configuration) {
