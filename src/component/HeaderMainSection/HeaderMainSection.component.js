@@ -204,7 +204,7 @@ class HeaderMainSection extends NavigationAbstract {
     }
 
     render() {
-        const isMyAccount = this.getPageType() === 'ACCOUNT';
+        const isMyAccount = this.getPageType() === TYPE_ACCOUNT;
 
         return isMyAccount && isMobile.any() ? null : (
             <div block="HeaderMainSection">
