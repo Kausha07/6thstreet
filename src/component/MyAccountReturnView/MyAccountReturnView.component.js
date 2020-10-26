@@ -63,7 +63,7 @@ class MyAccountReturnView extends PureComponent {
     }
 
     renderReturnDetails() {
-        const { isLoading, return: returnItem } = this.props;
+        const { isLoading, return: returnItem = {} } = this.props;
 
         if (isLoading) {
             return this.renderLoader();
