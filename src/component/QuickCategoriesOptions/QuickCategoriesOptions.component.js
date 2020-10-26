@@ -1,6 +1,7 @@
+import { PropTypes } from 'prop-types';
 import { PureComponent } from 'react';
 
-import PLPFilterOption from 'Component/PLPFilterOption';
+import PLPQuickFilterOption from 'Component/PLPQuickFilterOption';
 import { Slider } from 'SourceComponent/Slider/Slider.component';
 import { Filter } from 'Util/API/endpoint/Product/Product.type';
 import { isArabic } from 'Util/App';
@@ -12,7 +13,8 @@ import './QuickCategoriesOptions.style';
 
 class QuickCategoriesOptions extends PureComponent {
     static propTypes = {
-        filter: Filter.isRequired
+        filter: Filter.isRequired,
+        updateFilters: PropTypes.func.isRequired
     };
 
     state = {
@@ -42,14 +44,16 @@ class QuickCategoriesOptions extends PureComponent {
     };
 
     renderOption = ([key, option]) => {
+        const { updateFilters } = this.props;
         if (option.subcategories) {
             return Object.entries(option.subcategories).map(this.renderOption);
         }
 
         return (
-            <PLPFilterOption
+            <PLPQuickFilterOption
               key={ key }
               option={ option }
+              updateFilters={ updateFilters }
             />
         );
     };
