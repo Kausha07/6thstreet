@@ -7,7 +7,6 @@ import {
     CheckoutOrderSummary as SourceCheckoutOrderSummary
 } from 'SourceComponent/CheckoutOrderSummary/CheckoutOrderSummary.component';
 import { isArabic } from 'Util/App';
-import { formatCurrency } from 'Util/Price';
 
 import Delivery from './icons/delivery-truck.png';
 
@@ -163,6 +162,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
             checkoutStep
         } = this.props;
 
+        console.log(this.props);
         return (
             <div block="CheckoutOrderSummary" elem="OrderTotals">
                 <ul>
@@ -173,6 +173,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                             : null }
                         { this.renderCouponCode() }
                         { this.renderPriceLine(tax_amount, __('Tax')) }
+                        { this.renderCashOnDeliveryFee() }
                     </div>
                     <div block="CheckoutOrderSummary" elem="Totals">
                         { checkoutStep !== SHIPPING_STEP
@@ -186,8 +187,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     }
 
     renderCashOnDeliveryFee() {
-        const { cashOnDeliveryFee, totals: { quote_currency_code } } = this.props;
-        const priceString = formatCurrency(quote_currency_code);
+        const { cashOnDeliveryFee, totals: { currency_code } } = this.props;
 
         if (cashOnDeliveryFee) {
             return (
@@ -196,7 +196,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                         { __('Cash on Delivery Fee') }
                     </span>
                     <span block="CheckoutOrderSummary" elem="Text">
-                        { `${priceString}${cashOnDeliveryFee}` }
+                    { `${currency_code } ${ cashOnDeliveryFee}` }
                     </span>
                 </li>
             );
