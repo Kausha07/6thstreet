@@ -5,58 +5,42 @@ import {
     CheckoutPaymentsContainer as SourceCheckoutPaymentsContainer,
     mapDispatchToProps as SourceMapDispatchToProps
 } from 'SourceComponent/CheckoutPayments/CheckoutPayments.container';
+import { getStore } from 'Store';
+import CartDispatcher from 'Store/Cart/Cart.dispatcher';
 import CheckoutDispatcher from 'Store/Checkout/Checkout.dispatcher';
-import { TotalsType } from 'Type/MiniCart';
-
-export const CartDispatcher = import(
-    /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
-    'Store/Cart/Cart.dispatcher'
-);
-
-export const mapStateToProps = (state) => ({
-    cartId: state.Cart.cartId,
-    totals: state.Cart.cartTotals
-});
 
 export const mapDispatchToProps = (dispatch) => ({
     ...SourceMapDispatchToProps,
     selectPaymentMethod: (billingData) => CheckoutDispatcher.selectPaymentMethod(dispatch, billingData),
-    getTotals: (cartId) => CartDispatcher.then(
-        ({ default: dispatcher }) => dispatcher.getCartTotals(dispatch, cartId)
-    )
+    updateTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId)
 });
 
 export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
     static propTypes = {
         ...SourceCheckoutPaymentsContainer.propTypes,
         setTabbyWebUrl: PropTypes.func.isRequired,
-        setCreditCardData: PropTypes.func.isRequired,
-        cartId: PropTypes.number.isRequired,
-        totals: TotalsType.isRequired
+        setCreditCardData: PropTypes.func.isRequired
     };
 
-    getUpdatedTotals() {
-        const { getTotals, cartId } = this.props;
-        getTotals(cartId);
-    }
-
     selectPaymentMethod({ m_code: code }) {
+        const { Cart: { cartId } } = getStore().getState();
+
         const {
             onPaymentMethodSelect,
             setOrderButtonEnableStatus,
             selectPaymentMethod,
             billingAddress,
-            setTabbyWebUrl
+            setTabbyWebUrl,
+            updateTotals
         } = this.props;
 
         this.setState({
             selectedPaymentCode: code
         });
 
-        this.getUpdatedTotals();
-
         onPaymentMethodSelect(code);
         setOrderButtonEnableStatus(true);
+        updateTotals(cartId);
         selectPaymentMethod({ code, billingAddress }).then(
             (response) => {
                 if (response.configuration) {
@@ -86,4 +70,4 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CheckoutPaymentsContainer);
+export default connect(null, mapDispatchToProps)(CheckoutPaymentsContainer);
