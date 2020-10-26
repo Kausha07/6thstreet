@@ -96,6 +96,9 @@ class QuickCategoriesOptions extends PureComponent {
     }
 
     getSubcategories(data) {
+        if (Object.keys(data).length === 0) {
+            return data;
+        }
         const haveSubcategories = SUBCATEGORIES in Object.entries(data)[0][1];
 
         if (haveSubcategories) {

@@ -87,12 +87,22 @@
         }
     }
 
-    .Form {
-        width: 100%;
+    &-SubmitBtn {
+        display: none;
+    }
 
-        button {
+    &-Clear {
+        width: 45px;
+        height: 100%;
+        top: 0;
+
+        @include desktop {
             display: none;
         }
+    }
+
+    .Form {
+        width: 100%;
 
         @include before-desktop {
             border-radius: 10px;
@@ -100,12 +110,6 @@
             height: 36px;
             display: flex;
             align-items: center;
-
-            button {
-                width: 45px;
-                height: auto;
-                display: block;
-            }
         }
     }
 
@@ -132,6 +136,10 @@
                 color: $black;
             }
         }
+    }
+
+    &-SubmitBtn {
+        display: none;
     }
 
     &_isArabic {

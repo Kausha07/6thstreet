@@ -415,6 +415,10 @@
     "Enter a coupon or Discount code": null,
     "Complete orders": null,
     "Test": null,
+    "You search for: ": null,
+    "Sorry, we couldn't find any Product!": null,
+    "Please check the spelling or try searching something else": null,
+    "Products": null,
     "You may earn ": null,
     "worth of Club Apparel points for this purchase.": null,
     "Link your Club Apparel account to earn ": null,
@@ -427,7 +431,6 @@
     " tem": null,
     "My bag ": null,
     "Tranding brands": null,
-    "Tranding tags": null,
     "Status: ": null,
     "Your order has been shipped in multiple packages, please find the package details below.": null,
     "Items under processing": null,
@@ -445,5 +448,7 @@
     "Sign In": null,
     "You can create an account after checkout.": null,
     "Edit": null,
-    "Continue as guest": null
+    "Continue as guest": null,
+    "Tranding tags": null,
+    "Delivering to": null
 }

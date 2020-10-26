@@ -1,0 +1,42 @@
+:root {
+    --empty-search-small: #999;
+    --empty-search-medium: #666;
+}
+
+.EmptySearch {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 50px;
+
+    &-SearchQuery,
+    &-Check {
+        color: var(--empty-search-small);
+        font-size: 16px;
+        margin-bottom: 45px;
+
+        span {
+            color: $black;
+        }
+    }
+
+    &-StaticContent {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        
+        img {
+            max-width: 310px;
+            width: 100%;
+        }
+    }
+
+    &-Sorry {
+        font-size: 28px;
+        color: var(--empty-search-medium);
+        margin-bottom: 15px;
+        line-height: 1.2;
+    }
+}

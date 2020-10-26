@@ -7,6 +7,7 @@ import SearchSuggestion from 'Component/SearchSuggestion';
 import { isArabic } from 'Util/App';
 
 import Clear from './icons/close-black.png';
+import searchPng from './icons/search-black.png';
 
 import './HeaderSearch.style';
 
@@ -51,7 +52,14 @@ class HeaderSearch extends PureComponent {
                   value={ search }
                 />
                 <button
-                  block="Button"
+                  block="HeaderSearch"
+                  elem="SubmitBtn"
+                  type="submit"
+                >
+                    <img src={ searchPng } alt="search" />
+                </button>
+                <button
+                  block="HeaderSearch"
                   elem="Clear"
                   onClick={ onSearchClean }
                   type="button"
