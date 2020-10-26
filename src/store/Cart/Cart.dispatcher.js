@@ -11,8 +11,7 @@ import {
     addProductToCart,
     applyCouponCode,
     createCart,
-    getCartItems,
-    getCartTotals,
+    getCart,
     removeCouponCode,
     removeProductFromCart,
     updateProductInCart
@@ -41,25 +40,21 @@ export class CartDispatcher {
                 }
 
                 dispatch(setCartId(requestedCartId));
-                await this.getCartItems(dispatch, requestedCartId);
                 await this.getCartTotals(dispatch, requestedCartId);
             } catch (e) {
                 Logger.log(e);
             }
         } else {
-            await this.getCartItems(dispatch, cartId);
             await this.getCartTotals(dispatch, cartId);
         }
     }
 
-    async getCartItems(dispatch, cartId) {
+    async setCartItems(dispatch, data) {
         try {
             const {
-                data: {
-                    items = [],
-                    currency_code: currency
-                } = {}
-            } = await getCartItems(cartId);
+                items = [],
+                currency_code: currency
+            } = data || {};
 
             if (items.length) {
                 dispatch(removeCartItems());
@@ -94,21 +89,14 @@ export class CartDispatcher {
     }
 
     async getCartTotals(dispatch, cartId) {
-        // console.log(await getCartItems(cartId));
         try {
-            const { data } = await getCartTotals(cartId);
             const {
-                data: {
-                    avail_free_shipping_amount,
-                    avail_free_shipping_message
-                } = {}
-            } = await getCartItems(cartId);
+                data
+            } = await getCart(cartId);
 
-            dispatch(setCartTotals({
-                ...data,
-                avail_free_shipping_amount,
-                avail_free_shipping_message
-            }));
+            await this.setCartItems(dispatch, data);
+
+            dispatch(setCartTotals(data));
         } catch (e) {
             Logger.log(e);
         }

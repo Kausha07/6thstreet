@@ -1,6 +1,6 @@
 import MobileAPI from '../../provider/MobileAPI';
 
-export const getCartItems = (cartId) => MobileAPI.get(`/carts2/${cartId}`) || {};
+export const getCart = (cartId) => MobileAPI.get(`/carts2/${cartId}`) || {};
 
 export const createCart = () => MobileAPI.post('/carts2') || {};
 
