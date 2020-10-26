@@ -162,7 +162,6 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
             checkoutStep
         } = this.props;
 
-        console.log(this.props);
         return (
             <div block="CheckoutOrderSummary" elem="OrderTotals">
                 <ul>
