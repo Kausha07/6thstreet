@@ -122,6 +122,11 @@ class PLPFilters extends PureComponent {
         this.hidePopUp();
     };
 
+    updateFilters = () => {
+        const { activeFilters } = this.state;
+        Object.keys(activeFilters).map((key) => WebUrlParser.setParam(key, activeFilters[key]));
+    };
+
     renderSeeResultButton() {
         return (
             <button
@@ -278,7 +283,7 @@ class PLPFilters extends PureComponent {
         });
     };
 
-    renderQuickFilter([key, filter]) {
+    renderQuickFilter = ([key, filter]) => {
         const genders = [
             __('men'),
             __('women'),
@@ -295,6 +300,8 @@ class PLPFilters extends PureComponent {
                     <PLPQuickFilter
                       key={ key }
                       filter={ filter }
+                      updateFilters={ this.updateFilters }
+                      onClick={ this.updateFilters }
                     />
                 );
             }
@@ -303,12 +310,14 @@ class PLPFilters extends PureComponent {
                 <PLPQuickFilter
                   key={ key }
                   filter={ filter }
+                  updateFilters={ this.updateFilters }
+                  onClick={ this.updateFilters }
                 />
             );
         }
 
         return null;
-    }
+    };
 
     render() {
         const { productsCount } = this.props;
