@@ -190,4 +190,8 @@
             max-width: 1440px;
         }
     }
+
+    @include desktop {
+        padding: 0 15px;
+    }
 }
