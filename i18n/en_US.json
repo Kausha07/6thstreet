@@ -434,5 +434,9 @@
     "Billing Address": null,
     "Shipped": null,
     "Our of Delivery": null,
-    "Delivered": null
+    "Delivered": null,
+    "Sign In": null,
+    "You can create an account after checkout.": null,
+    "Edit": null,
+    "Continue as guest": null
 }
