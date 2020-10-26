@@ -54,6 +54,7 @@ class HeaderSearch extends PureComponent {
                   block="Button"
                   elem="Clear"
                   onClick={ onSearchClean }
+                  type="button"
                   mods={ {
                       type: 'searchClear',
                       isVisible
