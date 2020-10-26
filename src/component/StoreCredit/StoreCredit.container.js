@@ -22,7 +22,8 @@ export const mapStateToProps = ({
 
 export const mapDispatchToProps = (dispatch) => ({
     toggleStoreCredit: (apply) => StoreCreditDispatcher.toggleStoreCredit(dispatch, apply),
-    fetchStoreCredit: () => StoreCreditDispatcher.getStoreCredit(dispatch)
+    fetchStoreCredit: () => StoreCreditDispatcher.getStoreCredit(dispatch),
+    isStoreCreditApplied: () => StoreCreditDispatcher.isStoreCreditApplied()
 });
 
 export class StoreCreditContainer extends PureComponent {
@@ -32,7 +33,8 @@ export class StoreCreditContainer extends PureComponent {
         canApply: PropTypes.bool,
         hideIfZero: PropTypes.bool,
         toggleStoreCredit: PropTypes.func.isRequired,
-        fetchStoreCredit: PropTypes.func.isRequired
+        fetchStoreCredit: PropTypes.func.isRequired,
+        isStoreCreditApplied: PropTypes.func.isRequired
     };
 
     static defaultProps = {
@@ -46,14 +48,20 @@ export class StoreCreditContainer extends PureComponent {
     };
 
     static getDerivedStateFromProps(props, state) {
-        const { storeCredit: { current_balance: storeCreditBalance } = {} } = props;
-        const { storeCreditBalance: currentStoreCreditBalance } = state;
+        const { storeCredit: { current_balance: storeCreditBalance } = {}, isStoreCreditApplied } = props;
+        const { storeCreditBalance: currentStoreCreditBalance, currentCreditIsApplied } = state;
+        const newState = {};
+        const creditIsApplied = isStoreCreditApplied();
 
         if (storeCreditBalance !== currentStoreCreditBalance) {
-            return { storeCreditBalance };
+            newState.storeCreditBalance = storeCreditBalance;
         }
 
-        return null;
+        if (creditIsApplied !== currentCreditIsApplied) {
+            newState.creditIsApplied = creditIsApplied;
+        }
+
+        return Object.keys(newState).length ? newState : null;
     }
 
     componentDidMount() {
@@ -68,8 +76,7 @@ export class StoreCreditContainer extends PureComponent {
     render() {
         const props = {
             ...this.props,
-            ...this.state,
-            setCreditIsApplied: (value) => this.setState(value)
+            ...this.state
         };
 
         return (

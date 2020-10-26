@@ -4,7 +4,7 @@ import HeaderAccount from 'Component/HeaderAccount';
 import HeaderCart from 'Component/HeaderCart';
 import HeaderGenders from 'Component/HeaderGenders';
 import HeaderLogo from 'Component/HeaderLogo';
-import HeaderSearch from 'Component/HeaderSearch/HeaderSearch.component';
+import HeaderSearch from 'Component/HeaderSearch';
 import HeaderWishlist from 'Component/HeaderWishlist';
 import NavigationAbstract from 'Component/NavigationAbstract/NavigationAbstract.component';
 import { DEFAULT_STATE_NAME } from 'Component/NavigationAbstract/NavigationAbstract.config';
@@ -44,7 +44,8 @@ class HeaderMainSection extends NavigationAbstract {
         type: null,
         delay: 150,
         lastProduct: null,
-        lastCategory: null
+        lastCategory: null,
+        search: ''
     };
 
     componentDidMount() {
@@ -198,9 +199,15 @@ class HeaderMainSection extends NavigationAbstract {
     }
 
     renderSearch() {
-        return this.isPLP() || this.isPDP() ? null : (
-            <HeaderSearch />
-        );
+        if (isMobile.any()) {
+            return this.isPLP() || this.isPDP() ? null : (
+                <HeaderSearch
+                  key="search"
+                />
+            );
+        }
+
+        return null;
     }
 
     render() {

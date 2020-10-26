@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { getStore } from 'Store';
 import { setShipping } from 'Store/Checkout/Checkout.action';
 import {
@@ -8,6 +9,11 @@ import {
     selectPaymentMethod,
     validateShippingAddress
 } from 'Util/API/endpoint/Checkout/Checkout.enpoint';
+import {
+    createSession,
+    getInstallmentForValue,
+    verifyPayment
+} from 'Util/API/endpoint/Tabby/Tabby.enpoint';
 import Logger from 'Util/Logger';
 
 export class CheckoutDispatcher {
@@ -41,16 +47,43 @@ export class CheckoutDispatcher {
         return getPaymentMethods();
     }
 
-    async selectPaymentMethod(dispatch, code) {
-        const { Cart: { cartId } } = getStore().getState();
+    async getTabbyInstallment(dispatch, price) {
+        return getInstallmentForValue(price);
+    }
 
-        return selectPaymentMethod({
+    async selectPaymentMethod(dispatch, billingData) {
+        const { Cart: { cartId } } = getStore().getState();
+        const { code } = billingData;
+        const tabbyPaymentCodes = ['tabby_checkout', 'tabby_installments'];
+
+        const result = selectPaymentMethod({
             cartId,
             data: {
                 method: code,
                 cart_id: cartId
             }
         });
+
+        if (tabbyPaymentCodes.includes(code)) {
+            const {
+                billingAddress: {
+                    email, firstname, lastname, phone, city, street
+                }
+            } = billingData;
+
+            return createSession({
+                cart_id: cartId,
+                buyer: {
+                    email,
+                    name: `${firstname} ${lastname}`,
+                    phone,
+                    city,
+                    address: street
+                }
+            });
+        }
+
+        return result;
     }
 
     async createOrder(dispatch, code, additional_data) {
@@ -65,6 +98,10 @@ export class CheckoutDispatcher {
                 }
             }
         });
+    }
+
+    async verifyPayment(dispatch, paymentId) {
+        return verifyPayment(paymentId);
     }
 }
 

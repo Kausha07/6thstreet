@@ -39,7 +39,7 @@
     a {
         border-bottom: 1px solid var(--color-gainsboro);
         display: block;
-        font-weight: bold;
+        font-weight: var(--fw-bold);
         padding: 20px 0;
         text-decoration: none;
         text-transform: capitalize;
@@ -52,7 +52,7 @@
     button {
         color: var(--black);
         display: block;
-        font-weight: bold;
+        font-weight: var(--fw-bold);
         height: auto;
         padding: 20px 0;
         text-align: left;

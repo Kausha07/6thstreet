@@ -12,10 +12,9 @@
 			}
 
 			.Field-Label {
-				color: var(--balck);
-				font-family: "Avenir Next Demi";
+				color: var(--black);
 				font-size: 18px;
-				font-weight: 600;
+				font-weight: var(--fw-demi);
 			}
 
 			input,
@@ -67,6 +66,14 @@
 					@include desktop {
 						padding-top: 20px;
 						grid-row: 2;
+					}
+
+					label {
+						padding-bottom: 22px;
+
+						@include before-desktop {
+							display: none;
+						}
 					}
 				}
 
@@ -162,7 +169,7 @@
 					}
 
 					&:before {
-						content: "";
+						content: '';
 						position: absolute;
 						width: 15px;
 						height: 15px;
@@ -267,7 +274,18 @@
 
 					&:nth-child(8) {
 						&::before {
-							margin-right: 490px;
+							display: none;
+						}
+
+						&:after {
+							content: '';
+							position: absolute;
+							width: 15px;
+							height: 15px;
+							background: url(icons/path-address.svg) no-repeat;
+							top: 33%;
+							left: 40px;
+							z-index: 2;
 						}
 					}
 
@@ -316,7 +334,7 @@
 					&_BH,
 					&_KW {
 						&::after {
-							content: "";
+							content: '';
 							background: url(icons/flags.png) no-repeat 0 0;
 							background-position: 0 0;
 							position: absolute;
@@ -420,7 +438,7 @@
 				&_BH,
 				&_KW {
 					&::after {
-						left: 61px;
+						right: 37px;
 					}
 				}
 			}

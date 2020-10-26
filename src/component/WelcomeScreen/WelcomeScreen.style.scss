@@ -2,7 +2,7 @@
 
     &-Content {
         min-width: 385px;
-        font-family: "Avenir Next Regular";
+        font-weight: var(--fw-regular);
 
         @include mobile() {
             min-width: 300px;
@@ -80,10 +80,10 @@
         text-align: start;
         padding: 0;
         margin-top: 10px;
-        font-weight: 400;
+        font-weight: var(--fw-regular);
 
         &_isCurrent {
-            font-weight: 600;
+            font-weight: var(--fw-demi);
         }
     }
 }

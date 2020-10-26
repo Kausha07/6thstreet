@@ -21,6 +21,8 @@ import { TotalsType } from 'Type/MiniCart';
 import { isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
 
+import Delivery from './icons/delivery-truck.png';
+
 import './CartOverlay.style';
 
 export class CartOverlay extends PureComponent {
@@ -83,13 +85,14 @@ export class CartOverlay extends PureComponent {
     }
 
     renderTotals() {
-        const { totals: { items = 0 } } = this.props;
+        const { totals: { items = [] } } = this.props;
         const { isArabic } = this.state;
-        const totalPrice = items.map((item) => item.row_total * item.qty);
 
         if (!items || items.length < 1) {
             return null;
         }
+
+        const totalPrice = items.map((item) => item.row_total * item.qty);
 
         return (
             <dl
@@ -154,25 +157,50 @@ export class CartOverlay extends PureComponent {
         );
     }
 
-    renderPromo() {
-        const { minicart_content: { minicart_cms } = {} } = window.contentConfiguration;
-        const { totals: { items } } = this.props;
+    renderPromoContent() {
+        const { cart_content: { cart_cms } = {} } = window.contentConfiguration;
+        const { totals: { currency_code, avail_free_shipping_amount } } = this.props;
 
-        if (!items || items.length < 1) {
-            return null;
-        }
-
-        if (minicart_cms) {
-            return <CmsBlock identifier={ minicart_cms } />;
+        if (cart_cms) {
+            return <CmsBlock identifier={ cart_cms } />;
         }
 
         return (
-            <p
+            <div
+              block="CartOverlay"
+              elem="PromoBlock"
+            >
+                <figcaption block="CartOverlay" elem="PromoText">
+                    <img src={ Delivery } alt="Delivery icon" />
+                    { __('Add ') }
+                    <span
+                      block="CartOverlay"
+                      elem="Currency"
+                    >
+                        { `${currency_code } ${avail_free_shipping_amount}` }
+                    </span>
+                    { __('more to your cart for ') }
+                    <span
+                      block="CartOverlay"
+                      elem="FreeDelivery"
+                    >
+                        { __('Free delivery') }
+                    </span>
+                </figcaption>
+            </div>
+        );
+    }
+
+    renderPromo() {
+        const { totals: { avail_free_shipping_amount } } = this.props;
+
+        return !avail_free_shipping_amount || avail_free_shipping_amount === 0 ? null : (
+            <div
               block="CartOverlay"
               elem="Promo"
             >
-                { __('Free shipping on order 49$ and more.') }
-            </p>
+                { this.renderPromoContent() }
+            </div>
         );
     }
 
@@ -180,8 +208,23 @@ export class CartOverlay extends PureComponent {
         this.setState({ isPopup: true });
     };
 
+    renderItemSuffix() {
+        const { totals: { items = [] } } = this.props;
+
+        const itemQuantityArray = items.map((item) => item.qty);
+        const totalQuantity = itemQuantityArray.reduce((qty, nextQty) => qty + nextQty, 0);
+
+        return (totalQuantity === 1)
+            ? __(' item')
+            : __(' items');
+    }
+
     renderItemCount() {
         const { hideActiveOverlay, closePopup, totals: { items = [] } } = this.props;
+
+        const itemQuantityArray = items.map((item) => item.qty);
+        const totalQuantity = itemQuantityArray.reduce((qty, nextQty) => qty + nextQty, 0);
+
         const svg = (
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -202,8 +245,8 @@ export class CartOverlay extends PureComponent {
                 <div>
                     { __('My Bag') }
                     <div>
-                        { items.length }
-                        { __(' item(s)') }
+                        { totalQuantity }
+                        { this.renderItemSuffix() }
                     </div>
                 </div>
                 <button onClick={ hideActiveOverlay && closePopup }>

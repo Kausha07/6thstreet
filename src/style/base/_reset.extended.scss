@@ -1,20 +1,19 @@
 h1 {
     font-size: 22px;
     letter-spacing: 0;
-    font-weight: 600;
+    font-weight: var(--fw-demi);
     margin: .8rem 0;
 }
 
 h2 {
-    font-family: 'Avenir Next Bold';
     font-size: 15px;
-    letter-spacing: 0.25px;
-    font-weight: bold;
+    letter-spacing: .25px;
+    font-weight: var(--fw-bold);
 }
 
 h3 {
     font-size: 17px;
-    font-weight: 600;
+    font-weight: var(--fw-demi);
     letter-spacing: -0.61px;
 }
 

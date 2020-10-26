@@ -66,7 +66,7 @@
         &::after {
             content: none;
         }
-        
+
         &:hover {
             cursor: auto;
         }
@@ -79,9 +79,8 @@
     }
 
     &-Name {
-        font-family: 'Avenir Next Demi Bold';
         font: 12px sans-serif;
-        font-weight: 600;
+        font-weight: var(--fw-bold);
         text-transform: uppercase;
         line-height: 16px;
     }
@@ -91,11 +90,11 @@
     }
 
     &-City {
-        font-family: 'Avenir Next Medium';
+        font-weight: var(--fw-medium);
     }
 
     &-Phone {
-        font-family: 'Avenir Next Medium';
+        font-weight: var(--fw-medium);
     }
 }
 

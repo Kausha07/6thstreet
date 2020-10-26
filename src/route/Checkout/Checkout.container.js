@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { CARD } from 'Component/CheckoutPayments/CheckoutPayments.config';
@@ -12,6 +13,8 @@ import CartDispatcher from 'Store/Cart/Cart.dispatcher';
 import { CART_ITEMS_CACHE_KEY } from 'Store/Cart/Cart.reducer';
 import CheckoutDispatcher from 'Store/Checkout/Checkout.dispatcher';
 import { updateMeta } from 'Store/Meta/Meta.action';
+import { hideActiveOverlay } from 'Store/Overlay/Overlay.action';
+import StoreCreditDispatcher from 'Store/StoreCredit/StoreCredit.dispatcher';
 import { isSignedIn } from 'Util/Auth';
 import BrowserDatabase from 'Util/BrowserDatabase';
 import { ONE_MONTH_IN_SECONDS } from 'Util/Request/QueryDispatcher';
@@ -21,12 +24,20 @@ export const mapDispatchToProps = (dispatch) => ({
     estimateShipping: (address) => CheckoutDispatcher.estimateShipping(dispatch, address),
     saveAddressInformation: (address) => CheckoutDispatcher.saveAddressInformation(dispatch, address),
     createOrder: (code, additional_data) => CheckoutDispatcher.createOrder(dispatch, code, additional_data),
+    getTabbyInstallment: (price) => CheckoutDispatcher.getTabbyInstallment(dispatch, price),
+    verifyPayment: (paymentId) => CheckoutDispatcher.verifyPayment(dispatch, paymentId),
     getPaymentMethods: () => CheckoutDispatcher.getPaymentMethods(),
     setCartId: (cartId) => dispatch(setCartId(cartId)),
-    createEmptyCart: () => CartDispatcher.getCart(dispatch)
+    createEmptyCart: () => CartDispatcher.getCart(dispatch),
+    hideActiveOverlay: () => dispatch(hideActiveOverlay()),
+    updateStoreCredit: () => StoreCreditDispatcher.getStoreCredit(dispatch)
 });
 
 export class CheckoutContainer extends SourceCheckoutContainer {
+    static propTypes = {
+        updateStoreCredit: PropTypes.func.isRequired
+    };
+
     componentDidMount() {
         updateMeta({ title: __('Checkout') });
     }
@@ -76,7 +87,14 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     }
 
     async saveAddressInformation(addressInformation) {
-        const { getPaymentMethods, saveAddressInformation } = this.props;
+        const {
+            getPaymentMethods,
+            saveAddressInformation,
+            getTabbyInstallment,
+            totals: {
+                total: totalPrice
+            }
+        } = this.props;
         const { shipping_address } = addressInformation;
 
         this.setState({
@@ -96,7 +114,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
                 this.setState({
                     paymentTotals: totals
-                })
+                });
             },
             this._handleError
         );
@@ -123,17 +141,54 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             },
             this._handleError
         );
+
+        getTabbyInstallment(totalPrice).then(
+            (response) => {
+                if (response) {
+                    const { paymentMethods } = this.state;
+                    const { message, value } = response;
+
+                    if (message && value) {
+                        const updatedPaymentMethods = paymentMethods.reduce((acc, paymentMethod) => {
+                            const { m_code } = paymentMethod;
+
+                            if (m_code !== 'tabby_installments') {
+                                acc.push(paymentMethod)
+                            } else {
+                                const { options } = paymentMethod;
+
+                                acc.push(
+                                    {
+                                        ...paymentMethod,
+                                        options: {
+                                            ...options,
+                                            promo_message: message,
+                                            value
+                                        }
+                                    }
+                                )
+                            }
+
+                            return acc;
+                        }, []);
+
+                        this.setState({ paymentMethods: updatedPaymentMethods });
+                    }
+                }
+            },
+            this._handleError
+        );
     }
 
     async savePaymentInformation(paymentInformation) {
         this.setState({ isLoading: true });
-        
+
         await this.savePaymentMethodAndPlaceOrder(paymentInformation)
     }
 
     async savePaymentMethodAndPlaceOrder(paymentInformation) {
         const { paymentMethod: { code, additional_data } } = paymentInformation;
-        const { createOrder } = this.props;
+        const { createOrder, customer: { email: customerEmail } } = this.props;
         const { shippingAddress: { email } } = this.state;
 
         const data = code === CARD
@@ -144,7 +199,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                     token: BrowserDatabase.getItem('CREDIT_CART_TOKEN')
                 },
                 customer: {
-                    email: email
+                    email: customerEmail ? customerEmail : email
                 },
                 '3ds': {
                     enable: true
@@ -173,11 +228,12 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     }
 
     resetCart() {
-        const { setCartId, createEmptyCart } = this.props;
+        const { setCartId, createEmptyCart, updateStoreCredit } = this.props;
 
         BrowserDatabase.deleteItem(CART_ITEMS_CACHE_KEY);
         setCartId('');
         createEmptyCart();
+        updateStoreCredit();
     }
 }
 
