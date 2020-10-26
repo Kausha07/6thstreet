@@ -82,6 +82,20 @@ class PDPSummary extends PureComponent {
         );
     }
 
+    renderTabby() {
+        const { product: { price } } = this.props;
+        if (price) {
+            const priceObj = Array.isArray(price) ? price[0] : price;
+
+            const [currency, priceData] = Object.entries(priceObj)[0];
+
+            const { country } = JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data;
+            console.log('currency', currency);
+            console.log('pricedata', priceData);
+            console.log('country', country);
+        }
+    }
+
     renderColor() {
         const { product: { color } } = this.props;
 
@@ -128,6 +142,7 @@ class PDPSummary extends PureComponent {
                 { this.renderBrand() }
                 { this.renderName() }
                 { this.renderPrice() }
+                { this.renderTabby() }
                 { this.renderColor() }
                 { this.renderAddToCartSection() }
                 { this.renderAvailableItemsSection() }
