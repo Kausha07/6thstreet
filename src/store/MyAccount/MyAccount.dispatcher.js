@@ -4,7 +4,10 @@ import {
     CUSTOMER,
     MyAccountDispatcher as SourceMyAccountDispatcher
 } from 'SourceStore/MyAccount/MyAccount.dispatcher';
-import { setCartId } from 'Store/Cart/Cart.action';
+import {
+    removeCartItems,
+    setCartId
+} from 'Store/Cart/Cart.action';
 import CartDispatcher from 'Store/Cart/Cart.dispatcher';
 import { ORDERS } from 'Store/Order/Order.reducer';
 import { setStoreCredit } from 'Store/StoreCredit/StoreCredit.action';
@@ -31,6 +34,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         deleteAuthorizationToken();
         deleteMobileAuthorizationToken();
         dispatch(setCartId(null));
+        dispatch(removeCartItems());
 
         CartDispatcher.getCart(dispatch);
         WishlistDispatcher.updateInitialWishlistData(dispatch);
