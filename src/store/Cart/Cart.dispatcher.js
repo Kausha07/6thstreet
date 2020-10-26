@@ -94,10 +94,21 @@ export class CartDispatcher {
     }
 
     async getCartTotals(dispatch, cartId) {
+        // console.log(await getCartItems(cartId));
         try {
             const { data } = await getCartTotals(cartId);
+            const {
+                data: {
+                    avail_free_shipping_amount,
+                    avail_free_shipping_message
+                } = {}
+            } = await getCartItems(cartId);
 
-            dispatch(setCartTotals(data));
+            dispatch(setCartTotals({
+                ...data,
+                avail_free_shipping_amount,
+                avail_free_shipping_message
+            }));
         } catch (e) {
             Logger.log(e);
         }

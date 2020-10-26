@@ -55,6 +55,8 @@ export class Header extends PureComponent {
     };
 
     renderBackToShoppingButton() {
+        const { isArabic } = this.state;
+
         return (
             <>
                 <a href="/">

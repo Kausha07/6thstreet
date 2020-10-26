@@ -159,6 +159,75 @@
         }
     }
 
+    &-ClubApparel {
+        order: 3;
+        &Text {
+            font-size: 12px;
+            display: inline;
+            align-items: center;
+            flex-wrap: wrap;
+            line-height: 20px;
+            text-align: center;
+
+            @include mobile {
+                font-size: 11px;
+            }
+        }
+
+        &Link {
+            text-decoration: underline;
+        }
+
+        &Block {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 1rem 0 3rem;
+
+            @include mobile {
+                padding: 1rem 1rem 1rem 3rem;
+                border: 0;
+                border-bottom: 1px solid var(--primary-divider-color);
+            }
+
+            span {
+                font-weight: var(--fw-bold);
+            }
+
+            img {
+                position: absolute;
+                top: 1rem;
+                left: 1rem;
+                width: 20px;
+                height: auto;
+            }
+
+            &_isArabic {
+                padding: 1rem 3rem 0 1rem;
+
+                img {
+                    top: 1rem;
+                    right: 1rem;
+                    left: 0;
+                }
+            }
+
+        }
+
+        &Image {
+            width: 46px;
+            margin-right: .5rem;
+
+            @include mobile {
+                width: 36px;
+            }
+        }
+
+        strong {
+            margin: 0 5px;
+        }
+    }
+
     &-Promo {
         order: 2;
         background: var(--cart-page-promo-background);

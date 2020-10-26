@@ -2,12 +2,6 @@
     --main-content-padding: 150px;
 }
 
-.SearchSuggestion{
-    @include mobile {
-        display: none;
-    }
-}
-
 main {
     @include mobile{
         padding-top: var(--main-content-padding);

@@ -4,6 +4,7 @@ import { PureComponent } from 'react';
 import Link from 'Component/Link';
 import Loader from 'Component/Loader';
 import { Products } from 'Util/API/endpoint/Product/Product.type';
+import { isArabic } from 'Util/App';
 
 import './SearchSuggestion.style';
 
@@ -17,6 +18,10 @@ class SearchSuggestion extends PureComponent {
         brands: PropTypes.array.isRequired,
         trendingBrands: PropTypes.array.isRequired,
         trendingTags: PropTypes.array.isRequired
+    };
+
+    state = {
+        isArabic: isArabic()
     };
 
     renderLoader() {
@@ -88,14 +93,16 @@ class SearchSuggestion extends PureComponent {
     }
 
     renderNothingFound() {
-        return 'nothing found';
+        return 'Nothing found';
     }
 
-    // eslint-disable-next-line no-unused-vars
     renderTrendingBrand = ({ label, image_url }) => (
         <li>
             <Link to={ `/brands/${ label }` }>
-                { label }
+                <div block="SearchSuggestion" elem="TrandingImg">
+                    <img src={ image_url } alt="Trending" />
+                    { label }
+                </div>
             </Link>
         </li>
     );
@@ -104,16 +111,21 @@ class SearchSuggestion extends PureComponent {
         const { trendingBrands } = this.props;
 
         return (
+            <div block="TrandingBrands">
+            <h2>{ __('Tranding brands') }</h2>
             <ul>
                 { trendingBrands.map(this.renderTrendingBrand) }
             </ul>
+            </div>
         );
     }
 
     renderTrendingTag = ({ link, label }) => (
         <li>
             <Link to={ { pathname: link } }>
+                <div block="SearchSuggestion" elem="TrandingTag">
                 { label }
+                </div>
             </Link>
         </li>
     );
@@ -122,9 +134,12 @@ class SearchSuggestion extends PureComponent {
         const { trendingTags } = this.props;
 
         return (
+            <div block="TrandingTags">
+                <h2>{ __('Tranding tags') }</h2>
             <ul>
                 { trendingTags.map(this.renderTrendingTag) }
             </ul>
+            </div>
         );
     }
 
@@ -148,7 +163,7 @@ class SearchSuggestion extends PureComponent {
             return null;
         }
 
-        if (isEmpty) {
+        if (isEmpty && isActive) {
             return this.renderEmptySearch();
         }
 
@@ -160,8 +175,9 @@ class SearchSuggestion extends PureComponent {
     }
 
     render() {
+        const { isArabic } = this.state;
         return (
-            <div block="SearchSuggestion">
+            <div block="SearchSuggestion" mods={ { isArabic } }>
                 { this.renderLoader() }
                 { this.renderContent() }
             </div>

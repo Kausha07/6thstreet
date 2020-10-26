@@ -1,4 +1,188 @@
+.Checkout {
+	&-Step {
+		.ShippingStep {
+			&_isSignedIn {
+				@include before-desktop {
+					display: grid;
+				}
+
+				.MyAccountAddressBook {
+					&-ContentWrapper {
+						.MyAccountAddressBook {
+							&-backBtn {
+								@include desktop {
+									display: none;
+								}
+							}
+						}
+					}
+
+					&-ContentWrapper {
+						@include before-desktop {
+							top: -70px;
+						}
+
+						&_formContent {
+							.MyAccountAddressBook {
+								&-backBtn {
+									position: absolute;
+									width: 20px;
+									height: 30px;
+									top: -120px;
+									left: 0;
+									z-index: 1;
+
+									&::before {
+										content: "";
+										position: absolute;
+										left: 5px;
+										border: solid var(--black);
+										border-width: 0 2px 2px 0;
+										display: inline-block;
+										padding: 4px;
+										transform: rotate(135deg);
+										-webkit-transform: rotate(135deg);
+									}
+
+									@include desktop() {
+										height: 0;
+									}
+
+									&_isArabic {
+										top: -100px;
+										transform: rotate(180deg);
+										right: 5px;
+										-webkit-transform: rotate(180deg);
+									}
+								}
+							}
+						}
+					}
+
+					&-NewAddressWrapper {
+						top: 17px;
+						float: right;
+						z-index: 1;
+
+						@include before-desktop {
+							top: 0;
+							display: flex;
+							justify-content: center;
+							grid-row: 4;
+						}
+
+						&_formContent {
+							display: none;
+						}
+
+						&_isArabic {
+							float: left;
+						}
+					}
+
+					&-NewAddress {
+						font-weight: var(--fw-regular);
+						font-size: 13px;
+						line-height: 18px;
+						background: transparent;
+						color: var(--black);
+						border: none;
+						margin: 0 20px;
+
+						&:hover {
+							text-decoration: underline;
+						}
+
+						@include before-desktop {
+							border-radius: 7px;
+							background: var(--my-acc-background);
+							text-transform: capitalize;
+							min-width: 140px;
+							margin-top: 38px;
+
+							&::before {
+								content: " + ";
+							}
+
+							&:hover {
+								text-decoration: underline;
+								background: var(--my-acc-background);
+							}
+						}
+					}
+				}
+
+				.MyAccountAddressPopup {
+					margin: 20px auto;
+					background: var(--white);
+
+					.Form {
+						top: -130px;
+
+						@include desktop {
+							top: 0;
+							padding: 20px 0 30px 60px;
+						}
+
+						.MyAccountAddressFieldForm {
+							&-Header {
+								h2 {
+									border-top: none;
+									margin-left: 0;
+								}
+							}
+						}
+					}
+
+					&_isArabic {
+						.Form {
+							@include desktop {
+								padding: 20px 60px 30px 0;
+							}
+
+							.MyAccountAddressFieldForm {
+								&-Header {
+									h2 {
+										border-top: none;
+										margin-left: 0;
+									}
+								}
+							}
+						}
+					}
+				}
+
+				.Form .CheckoutShipping {
+					grid-row: 3;
+				}
+			}
+
+			&_formContent {
+				.CheckoutShipping {
+					display: none;
+				}
+			}
+		}
+	}
+}
 .CheckoutShipping {
+	h2 {
+		@include before-desktop {
+			display: none;
+		}
+	}
+
+	h3 {
+		background: var(--white);
+		font-size: 21px;
+		margin: 0;
+		padding: 30px 30px 3px;
+
+		@include before-desktop {
+			display: none;
+		}
+	}
+
 	&-Button {
 		@include desktop {
 			height: 60px;
@@ -8,7 +192,6 @@
 
 .CheckoutShippingStep {
 	background: var(--white);
-	margin-top: 20px;
 
 	&-DeliveryButton {
 		padding: 30px;
@@ -22,6 +205,10 @@
 			letter-spacing: 0;
 			line-height: 18px;
 			text-align: center;
+
+			&:hover {
+				border: 2px solid var(--black);
+			}
 		}
 
 		@include before-desktop {
@@ -34,6 +221,7 @@
 			&_type {
 				&_toggle {
 					padding-right: 20px;
+
 					label {
 						padding-right: 10px;
 					}
