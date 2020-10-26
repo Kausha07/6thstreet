@@ -14,7 +14,7 @@ class SearchPage extends PLP {
             pages
         } = this.props;
 
-        if (!isLoading && ((pages.undefined && pages.undefined.length > 0) || (pages['0'] && pages['0'].length > 0))) {
+        if (isLoading || ((pages.undefined && pages.undefined.length > 0) || (pages['0'] && pages['0'].length > 0))) {
             return null;
         }
 
