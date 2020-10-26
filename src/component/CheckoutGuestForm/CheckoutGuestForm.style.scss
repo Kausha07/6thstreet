@@ -114,7 +114,7 @@
         }
 
         button {
-            @include mobile {
+            @include before-desktop {
                 bottom: -110px;
             }
         }
