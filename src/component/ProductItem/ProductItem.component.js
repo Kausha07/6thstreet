@@ -47,7 +47,10 @@ class ProductItem extends PureComponent {
         const { product: { thumbnail_url } } = this.props;
 
         return (
-            <Image src={ thumbnail_url } />
+            <div>
+                <Image src={ thumbnail_url } />
+                { this.renderExclusive() }
+            </div>
         );
     }
 
@@ -108,7 +111,6 @@ class ProductItem extends PureComponent {
                 { this.renderLabel() }
                 { this.renderWishlistIcon() }
                 { this.renderLink() }
-                { this.renderExclusive() }
             </li>
         );
     }

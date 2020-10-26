@@ -151,8 +151,8 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                     </div>
                     <div block="CheckoutOrderSummary" elem="Totals">
                         { checkoutStep !== SHIPPING_STEP
-                            ? this.renderPriceLine(Math.round(total + tax_amount), __('Total'))
-                            : this.renderPriceLine(Math.round(total + tax_amount), __('Total')) }
+                            ? this.renderPriceLine(total + tax_amount, __('Total'))
+                            : this.renderPriceLine(total + tax_amount, __('Total')) }
                             <span>{ __('(Taxes included)') }</span>
                     </div>
                 </ul>

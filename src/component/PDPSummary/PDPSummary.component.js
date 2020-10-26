@@ -78,7 +78,7 @@ class PDPSummary extends PureComponent {
         return (
             <p>{ name }</p>
         );
-    }
+    }z
 
     renderPrice() {
         const { product: { price } } = this.props;
