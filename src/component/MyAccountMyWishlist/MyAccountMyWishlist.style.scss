@@ -20,7 +20,8 @@
         display: grid;
         grid-template-columns: 48% 48%;
         grid-column-gap: 1.8%;
-
+        width: 102.5%;
+        
         @include after-mobile {
             grid-template-columns: 32.66% 32.66% 32.66%;
             grid-column-gap: 2%;
