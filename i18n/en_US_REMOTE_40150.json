@@ -428,5 +428,19 @@
     " tem": null,
     "My bag ": null,
     "Tranding brands": null,
-    "Tranding tags": null
+    "Tranding tags": null,
+    "Status: ": null,
+    "Your order has been shipped in multiple packages, please find the package details below.": null,
+    "Items under processing": null,
+    "Cancelled items": null,
+    "%s Package": null,
+    "Package contains %s %s": null,
+    "item": null,
+    "items": null,
+    "Order detail": null,
+    "Payment Type": null,
+    "Billing Address": null,
+    "Shipped": null,
+    "Our of Delivery": null,
+    "Delivered": null
 }
