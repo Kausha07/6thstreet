@@ -40,6 +40,34 @@
         }
     }
 
+    &-PromoBlock {
+        background: var(--cart-page-promo-background);
+        height: 40px;
+    }
+
+    &-PromoText {
+        display: flex;
+        font-weight: var(--fw-regular);
+        font-size: 12px;
+        padding: 12px 12px 0 9px;
+        justify-content: space-between;
+
+        img {
+            margin-top: 2px;
+            width: 21px;
+            height: 11px;
+        }
+    }
+
+    &-Currency {
+        font-weight: var(--fw-bold);
+    }
+
+    &-FreeDelivery {
+        color: var(--color-green-cyan);
+        font-weight: var(--fw-bold);
+    }
+
     &::before {
         @include after-mobile {
             content: '';
@@ -180,7 +208,7 @@
         }
 
         @include after-mobile {
-            padding: .7rem;
+            padding: 0 1rem 1rem 1rem;
             background: var(--white);
         }
 

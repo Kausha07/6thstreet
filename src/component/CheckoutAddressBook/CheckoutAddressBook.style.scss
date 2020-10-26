@@ -1,17 +1,4 @@
 .CheckoutAddressBook {
-	.MyAccountAddressPopup {
-		background: var(--white);
-		margin-bottom: 0;
-
-		.MyAccountAddressFieldForm {
-			padding: 0 30px 20px;
-
-			&-Title {
-				border: none;
-			}
-		}
-	}
-
 	&-Wrapper {
 		@include desktop {
 			background: var(--white);
@@ -95,6 +82,10 @@
 		&-MobileSlider {
 			width: 80%;
 			overflow: visible;
+
+			&_isArabic {
+				direction: ltr;
+			}
 		}
     }
 
@@ -109,16 +100,17 @@
 
 			.MyAccountAddressCard {
 				height: 122px;
+
 				&::after {
 					border: none;
 				}
 			}
+
+			&_isArabic {
+				.MyAccountAddressCard {
+					padding-right: 20px;
+				}
+			}
 		}
 	}
-
-	& &-Button {
-        &_isCustomAddressExpanded {
-            display: none;
-        }
-    }
 }

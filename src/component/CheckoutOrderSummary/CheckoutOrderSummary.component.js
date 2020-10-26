@@ -6,6 +6,7 @@ import { SHIPPING_STEP } from 'Route/Checkout/Checkout.config';
 import {
     CheckoutOrderSummary as SourceCheckoutOrderSummary
 } from 'SourceComponent/CheckoutOrderSummary/CheckoutOrderSummary.component';
+import { isArabic } from 'Util/App';
 import { formatCurrency } from 'Util/Price';
 
 import Delivery from './icons/delivery-truck.png';
@@ -13,15 +14,24 @@ import Delivery from './icons/delivery-truck.png';
 import './CheckoutOrderSummary.extended.style';
 
 export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
+    state = {
+        isArabic: isArabic()
+    };
+
     renderItemSuffix() {
         const { totals: { items = [] } } = this.props;
-        return (items.length === 1)
+
+        const itemQuantityArray = items.map((item) => item.qty);
+        const totalQuantity = itemQuantityArray.reduce((qty, nextQty) => qty + nextQty, 0);
+
+        return (totalQuantity === 1)
             ? __(' Item')
             : __(' Items');
     }
 
     renderHeading() {
         const { totals: { items = [] } } = this.props;
+        const { isArabic } = this.state;
 
         const itemQuantityArray = items.map((item) => item.qty);
         const totalQuantity = itemQuantityArray.reduce((qty, nextQty) => qty + nextQty, 0);
@@ -30,9 +40,16 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
             <div block="CheckoutOrderSummary" elem="HeaderWrapper">
                 <span block="CheckoutOrderSummary" elem="ItemCount">
                     { totalQuantity }
-                    { this.renderItemSuffix() }
+                    { (totalQuantity === 1)
+                        ? __(' Item')
+                        : __(' Items') }
                 </span>
-                <Link block="CheckoutOrderSummary" elem="Edit" to="/cart">
+                <Link
+                  block="CheckoutOrderSummary"
+                  elem="Edit"
+                  mods={ { isArabic } }
+                  to="/cart"
+                >
                     <span>{ __(' Edit') }</span>
                 </Link>
             </div>
@@ -53,6 +70,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
 
     renderPromoContent() {
         const { cart_content: { cart_cms } = {} } = window.contentConfiguration;
+        const { totals: { currency_code, avail_free_shipping_amount } } = this.props;
 
         if (cart_cms) {
             return <CmsBlock identifier={ cart_cms } />;
@@ -63,10 +81,15 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
               block="CheckoutOrderSummary"
               elem="PromoBlock"
             >
-                <div block="CheckoutOrderSummary" elem="PromoText">
+                <figcaption block="CheckoutOrderSummary" elem="PromoText">
                     <img src={ Delivery } alt="Delivery icon" />
                     { __('Add ') }
-                    <span block="CheckoutOrderSummary" elem="AED">AED 200</span>
+                    <span
+                      block="CheckoutOrderSummary"
+                      elem="Currency"
+                    >
+                        { `${currency_code } ${avail_free_shipping_amount}` }
+                    </span>
                     { __('more to your cart for ') }
                     <span
                       block="CheckoutOrderSummary"
@@ -74,7 +97,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                     >
                         { __('Free delivery') }
                     </span>
-                </div>
+                </figcaption>
             </div>
         );
     }
@@ -90,7 +113,9 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     }
 
     renderPromo() {
-        return (
+        const { totals: { avail_free_shipping_amount } } = this.props;
+
+        return !avail_free_shipping_amount || avail_free_shipping_amount === 0 ? null : (
             <div
               block="CheckoutOrderSummary"
               elem="Promo"

@@ -18,6 +18,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
 
     renderPriceLine(price, name, mods) {
         const { totals: { currency_code } } = this.props;
+        const { roundedPrice } = Math.round(price);
 
         return (
             <li block="CheckoutOrderSummary" elem="SummaryItem" mods={ mods }>
@@ -27,7 +28,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
                     { price !== undefined
                         ? (
                         <strong block="CheckoutOrderSummary" elem="Price">
-                            { `${currency_code } ${ price}` }
+                            { `${currency_code } ${ roundedPrice}` }
                         </strong>
                         )
                         : null }
