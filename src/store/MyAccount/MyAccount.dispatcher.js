@@ -15,7 +15,8 @@ import StoreCreditDispatcher from 'Store/StoreCredit/StoreCredit.dispatcher';
 import { getInitialState as getStoreCreditInitialState } from 'Store/StoreCredit/StoreCredit.reducer';
 import WishlistDispatcher from 'Store/Wishlist/Wishlist.dispatcher';
 import {
-    getMobileApiAuthorizationToken
+    getMobileApiAuthorizationToken,
+    resetPassword
 } from 'Util/API/endpoint/MyAccount/MyAccount.enpoint';
 import {
     deleteAuthorizationToken,
@@ -80,6 +81,12 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
 
         // Run async otherwise login gets slow
         CartDispatcher.getCart(dispatch);
+    }
+
+    forgotPassword(dispatch, options = {}) {
+        const { email } = options;
+
+        return resetPassword({ email });
     }
 }
 

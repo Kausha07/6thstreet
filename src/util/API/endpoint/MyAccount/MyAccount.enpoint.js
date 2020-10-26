@@ -8,3 +8,8 @@ import MobileAPI from '../../provider/MobileAPI';
  */
 // eslint-disable-next-line import/prefer-default-export
 export const getMobileApiAuthorizationToken = (data) => MobileAPI.post('/login', data) || {};
+
+export const resetPassword = (email) => MobileAPI.post(
+    '/buyers/password_reset',
+    email
+) || {};
