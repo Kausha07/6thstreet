@@ -24,11 +24,6 @@
         margin-bottom: 30px;
     }
 
-    &-HeaderNew {
-        display: flex;
-        align-items: center;
-    }
-
     .ProductLabel {
         color: var(--pdp-new-text-color);
         font-size: 16px;
@@ -92,45 +87,6 @@
         }
     }
 
-    &-HeaderShare {
-        width: 30px;
-        height: 30px;
-        border-radius: 8px;
-        text-transform: none;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        div {
-            display: inline;
-        }
-
-        div::before {
-            content: ' ';
-            position: absolute;
-            width: 16px;
-            left: -9px;
-            top: -8px;
-            height: 16px;
-            background-image: url(./icons/share.svg);
-            background-size: 16px;
-            background-repeat: no-repeat;
-        }
-
-        &:hover {
-            div::before {
-                background-image: url(./icons/share-white.svg);
-            }
-        }
-
-        @include desktop() {
-            width: 87px;
-
-            div::before {
-                left: -4px;
-            }
-        }
-    }
 
     &-ShareTxt {
         display: none;
