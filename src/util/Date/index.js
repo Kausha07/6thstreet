@@ -28,7 +28,8 @@ export const formatDate = (template, dateObject, locale = 'en-US', hourCycle = '
             [replace]: type,
             hourCycle
         });
+        const timeValue = dateFormatter.format(dateObject);
 
-        return finalString.replace(placeholder, dateFormatter.format(dateObject));
+        return finalString.replace(placeholder, timeValue.length <= 1 ? `0${ timeValue }` : timeValue);
     }, template);
 };
