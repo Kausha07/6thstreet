@@ -73,6 +73,8 @@ export class MyAccountAddressFieldForm extends PureComponent {
             default_common
         } = this.fieldMap;
 
+        console.log(telephone, country_id);
+
         this.getCitiesData();
 
         const { newForm } = this.props;

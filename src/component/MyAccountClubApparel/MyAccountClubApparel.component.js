@@ -2,8 +2,11 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import CountryMiniFlag from 'Component/CountryMiniFlag';
 import Field from 'Component/Field';
 import Form from 'Component/Form';
+import { PHONE_CODES } from 'Component/MyAccountAddressFieldForm/MyAccountAddressFieldForm.config';
+import Popup from 'SourceComponent/Popup';
 import { ClubApparelMember } from 'Util/API/endpoint/ClubApparel/ClubApparel.type';
 import { isArabic } from 'Util/App';
 
@@ -20,7 +23,11 @@ class MyAccountClubApparel extends PureComponent {
     static propTypes = {
         linkAccount: PropTypes.func.isRequired,
         verifyOtp: PropTypes.func.isRequired,
-        clubApparelMember: ClubApparelMember
+        clubApparelMember: ClubApparelMember,
+        activeOverlay: PropTypes.string.isRequired,
+        showOverlay: PropTypes.func.isRequired,
+        hideActiveOverlay: PropTypes.func.isRequired,
+        country: PropTypes.string.isRequired
     };
 
     static defaultProps = {
@@ -30,7 +37,27 @@ class MyAccountClubApparel extends PureComponent {
     state = {
         isArabic: isArabic(),
         isEarnExpanded: false,
-        isAboutExpanded: false
+        isAboutExpanded: false,
+        isLinkOpen: false
+    };
+
+    static getDerivedStateFromProps(props) {
+        const { activeOverlay } = props;
+        console.log(props);
+        document.body.style.overflow = activeOverlay !== '' ? 'hidden' : 'visible';
+        return ({ isLinkOpen: activeOverlay === 'LinkAccount' });
+    }
+
+    handleModalClick = () => {
+        const { showOverlay } = this.props;
+        console.log(this.props);
+        showOverlay('LinkAccount');
+        this.setState(({ isLinkOpen }) => ({ isLinkOpen: !isLinkOpen }));
+    };
+
+    hideOverlay = () => {
+        const { hideActiveOverlay } = this.props;
+        hideActiveOverlay();
     };
 
     onAboutClick = () => {
@@ -41,27 +68,95 @@ class MyAccountClubApparel extends PureComponent {
         this.setState(({ isEarnExpanded }) => ({ isEarnExpanded: !isEarnExpanded }));
     };
 
-    renderLinkAccount() {
-        const { linkAccount } = this.props;
+    getDefaultValues([key, props]) {
+        const {
+            type = 'text',
+            onChange = () => {},
+            ...otherProps
+        } = props;
+
+        return {
+            ...otherProps,
+            key,
+            name: key,
+            id: key,
+            type,
+            onChange
+        };
+    }
+
+    renderField = (fieldEntry) => (
+        <Field { ...this.getDefaultValues(fieldEntry) } />
+    );
+
+    renderCurrentPhoneCode(country_id) {
+        return PHONE_CODES[country_id];
+    }
+
+    renderPhone() {
+        const {
+            country
+        } = this.props;
+
+        const telephone = {
+            block: 'MyAccountClubApparel',
+            elem: 'LinkAccountPhoneField',
+            validation: ['notEmpty'],
+            placeholder: 'Phone Number',
+            value: '',
+            id: 'phone',
+            name: 'phone'
+        };
 
         return (
-            <Form
-              onSubmitSuccess={ linkAccount }
+            <div
+              block="MyAccountClubApparel"
+              elem="LinkAccountPhone"
             >
-                <Field
-                  type="text"
-                  placeholder="00000000"
-                  id="phone"
-                  name="phone"
-                  validation={ ['notEmpty'] }
-                />
-                <button
-                  block="Button"
-                  type="submit"
+                    { this.renderField(['telephone', telephone]) }
+                    <div
+                      block="MyAccountClubApparel"
+                      elem="PhoneCode"
+                    >
+                        <CountryMiniFlag label={ country } />
+                        { this.renderCurrentPhoneCode(country) }
+                    </div>
+            </div>
+        );
+    }
+
+    renderLinkAccount() {
+        const { linkAccount } = this.props;
+        const { isArabic } = this.state;
+
+        return (
+            <Popup
+              mix={ { block: 'MyAccountClubApparel', elem: 'LinkAccount', mods: { isArabic } } }
+              id="LinkAccount"
+              title="Link"
+            >
+                <div block="MyAccountClubApparel" elem="LinkAccountBanner">
+                    <img
+                      block="MyAccountClubApparel"
+                      elem="LinkAccountLogo"
+                      src={ isArabic ? ClubApparelLogoAR : ClubApparelLogoEN }
+                      alt="Logo icon"
+                    />
+                </div>
+                <p>{ __('Link Your Account by entering your mobile number') }</p>
+                <Form
+                  onSubmitSuccess={ linkAccount }
                 >
-                    { __('Link Account') }
-                </button>
-            </Form>
+                    { this.renderPhone() }
+                    <button
+                      block="MyAccountClubApparel"
+                      elem="LinkAccountButton"
+                      type="submit"
+                    >
+                        { __('Link Account') }
+                    </button>
+                </Form>
+            </Popup>
         );
     }
 
@@ -69,23 +164,28 @@ class MyAccountClubApparel extends PureComponent {
         const { verifyOtp } = this.props;
 
         return (
-            <Form
-              onSubmitSuccess={ verifyOtp }
+            <Popup
+              id="VerifyOtp"
+              title="Verify"
             >
-                <Field
-                  type="text"
-                  placeholder="00000"
-                  id="otp"
-                  name="otp"
-                  validation={ ['notEmpty'] }
-                />
-                <button
-                  block="Button"
-                  type="submit"
+                <Form
+                  onSubmitSuccess={ verifyOtp }
                 >
-                    { __('Verify number') }
-                </button>
-            </Form>
+                    <Field
+                      type="text"
+                      placeholder="00000"
+                      id="otp"
+                      name="otp"
+                      validation={ ['notEmpty'] }
+                    />
+                    <button
+                      block="Button"
+                      type="submit"
+                    >
+                        { __('Verify number') }
+                    </button>
+                </Form>
+            </Popup>
         );
     }
 
@@ -185,7 +285,7 @@ class MyAccountClubApparel extends PureComponent {
                     <span>{ __('Club Apparel') }</span>
                     { __(' account and start earning points.') }
                 </p>
-                <button block="MyAccountClubApparel" elem="ChangeButton">
+                <button block="MyAccountClubApparel" elem="ChangeButton" onClick={ this.handleModalClick }>
                     { __('link your account') }
                 </button>
             </div>
@@ -256,7 +356,12 @@ class MyAccountClubApparel extends PureComponent {
 
     render() {
         const { clubApparelMember } = this.props;
-        const { isAboutExpanded, isEarnExpanded, isArabic } = this.state;
+        const {
+            isAboutExpanded,
+            isEarnExpanded,
+            isArabic,
+            isLinkOpen
+        } = this.state;
 
         return (
             <div block="MyAccountClubApparel">
@@ -289,6 +394,7 @@ class MyAccountClubApparel extends PureComponent {
                     </button>
                     { this.renderEarn() }
                 </div>
+                { isLinkOpen ? this.renderLinkAccount() : null }
             </div>
         );
     }
