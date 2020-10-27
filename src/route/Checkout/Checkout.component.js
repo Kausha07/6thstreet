@@ -36,18 +36,23 @@ export class Checkout extends SourceCheckout {
   };
 
   savePaymentInformation = (paymentInformation) => {
-      const { savePaymentInformation } = this.props;
-      const { tabbyWebUrl } = this.state;
+      const { savePaymentInformation, showErrorNotification } = this.props;
+      const { selectedPaymentMethod, tabbyWebUrl } = this.state;
+      const tabbyPaymentCodes = ['tabby_checkout', 'tabby_installments'];
 
-      if (tabbyWebUrl) {
-          this.setState({ isTabbyPopupShown: true });
+      if (tabbyPaymentCodes.includes(selectedPaymentMethod)) {
+          if (tabbyWebUrl) {
+              this.setState({ isTabbyPopupShown: true });
 
-          // Need to get payment data from Tabby.
-          // Could not get callback of Tabby another way because Tabby is iframe in iframe
-          setTimeout(
-              () => this.processTabbyWithTimeout(3, paymentInformation),
-              10000
-          );
+              // Need to get payment data from Tabby.
+              // Could not get callback of Tabby another way because Tabby is iframe in iframe
+              setTimeout(
+                  () => this.processTabbyWithTimeout(3, paymentInformation),
+                  10000
+              );
+          } else {
+              showErrorNotification(__('Something went wrong with Tabby'));
+          }
       } else {
           savePaymentInformation(paymentInformation);
       }
@@ -93,9 +98,13 @@ export class Checkout extends SourceCheckout {
       }
   }
 
-  setTabbyWebUrl = (url, paymentId) => {
-      this.setState({ tabbyWebUrl: url, tabbyPaymentId: paymentId });
-  };
+    setTabbyWebUrl = (url, paymentId) => {
+        this.setState({ tabbyWebUrl: url, tabbyPaymentId: paymentId });
+    };
+
+    setPaymentCode = (code) => {
+        this.setState({ selectedPaymentMethod: code });
+    };
 
   setCashOnDeliveryFee = (fee) => {
       this.setState({ cashOnDeliveryFee: fee });
@@ -176,6 +185,7 @@ export class Checkout extends SourceCheckout {
             setCashOnDeliveryFee={ this.setCashOnDeliveryFee }
             savePaymentInformation={ this.savePaymentInformation }
             setTabbyWebUrl={ this.setTabbyWebUrl }
+            setPaymentCode={ this.setPaymentCode }
           />
       );
   }

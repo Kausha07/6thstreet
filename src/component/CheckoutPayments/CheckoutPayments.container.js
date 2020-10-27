@@ -60,7 +60,8 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
                             code === 'tabby_installments'
                                 ? installments[0].web_url
                                 : pay_later[0].web_url,
-                            id
+                            id,
+                            code
                         );
                     }
                 }
