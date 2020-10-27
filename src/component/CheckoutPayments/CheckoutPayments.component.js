@@ -1,8 +1,10 @@
 import CheckoutPayment from 'Component/CheckoutPayment';
+import ClubApparel from 'Component/ClubApparel';
 import CreditCard from 'Component/CreditCard';
 import Slider from 'Component/Slider';
 import StoreCredit from 'Component/StoreCredit';
 import SourceCheckoutPayments from 'SourceComponent/CheckoutPayments/CheckoutPayments.component';
+import { isSignedIn } from 'Util/Auth';
 
 import { CARD, CASH_ON_DELIVERY } from './CheckoutPayments.config';
 
@@ -96,9 +98,14 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     }
 
     renderToggleableDiscountOptions() {
+        if (!isSignedIn()) {
+            return null;
+        }
+
         return (
             <div block="CheckoutPayments" elem="DiscountOptionWrapper">
                 <StoreCredit canApply hideIfZero />
+                <ClubApparel hideIfZero />
             </div>
         );
     }
