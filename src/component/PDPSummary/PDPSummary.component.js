@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
@@ -6,6 +7,8 @@ import PDPAlsoAvailableProducts from 'Component/PDPAlsoAvailableProducts';
 import Price from 'Component/Price';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
 import { isArabic } from 'Util/App';
+
+import tabby from './icons/tabby.svg';
 
 import './PDPSummary.style';
 
@@ -92,19 +95,23 @@ class PDPSummary extends PureComponent {
             const { country } = JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data;
             const { default: defPrice } = priceData;
 
-            console.log('currency', currency);
-            console.log('pricedata', priceData);
-            console.log('country', country);
+            if (country === 'AE' && defPrice >= 150) {
+                const monthPrice = (defPrice / 4).toFixed(2);
+                return (
+                    <div
+                      block="PDPSummary"
+                      elem="Tabby"
+                    >
+                        { __('From') }
+                        <strong block="PDPSummary" elem="TabbyPrice">{ `${monthPrice} ${currency}` }</strong>
+                        { __(' a month with ') }
+                        <img src={ tabby } alt="tabby" />
+                        <span block="PDPSummary" elem="LearnMore">{ __('Learn more') }</span>
+                    </div>
+                );
+            }
 
-            return (
-                <div
-                  block="PDPSummary"
-                  elem="Tabby"
-                >
-                    { __('From ') }
-                 <span block="PDPSummary" elem="Tabby">{ `${defPrice} ${currency}` }</span>
-                </div>
-            );
+            return null;
         }
 
         return null;
