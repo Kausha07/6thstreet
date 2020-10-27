@@ -5,6 +5,7 @@ import { PureComponent } from 'react';
 import PDPAddToCart from 'Component/PDPAddToCart/PDPAddToCart.container';
 import PDPAlsoAvailableProducts from 'Component/PDPAlsoAvailableProducts';
 import Price from 'Component/Price';
+import TabbyMiniPopup from 'Component/TabbyMiniPopup';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
 import { isArabic } from 'Util/App';
 
@@ -20,7 +21,8 @@ class PDPSummary extends PureComponent {
 
     state = {
         alsoAvailable: [],
-        prevAlsoAvailable: []
+        prevAlsoAvailable: [],
+        showPopup: false
     };
 
     static getDerivedStateFromProps(props, state) {
@@ -98,16 +100,18 @@ class PDPSummary extends PureComponent {
             if (country === 'AE' && defPrice >= 150) {
                 const monthPrice = (defPrice / 4).toFixed(2);
                 return (
-                    <div
+                    <button
                       block="PDPSummary"
                       elem="Tabby"
+                      // eslint-disable-next-line react/jsx-no-bind
+                      onClick={ this.openTabbyPopup }
                     >
                         { __('From') }
                         <strong block="PDPSummary" elem="TabbyPrice">{ `${monthPrice} ${currency}` }</strong>
                         { __(' a month with ') }
                         <img src={ tabby } alt="tabby" />
                         <span block="PDPSummary" elem="LearnMore">{ __('Learn more') }</span>
-                    </div>
+                    </button>
                 );
             }
 
@@ -115,6 +119,24 @@ class PDPSummary extends PureComponent {
         }
 
         return null;
+    }
+
+    openTabbyPopup = () => {
+        this.setState({ showPopup: true });
+    };
+
+    closeTabbyPopup = () => {
+        this.setState({ showPopup: false });
+    };
+
+    renderTabbyPopup = () => {
+        const { showPopup } = this.state;
+
+        if (!showPopup) {
+            return null;
+        }
+
+        return <TabbyMiniPopup closeTabbyPopup={ this.closeTabbyPopup } />;
     }
 
     renderColor() {
@@ -167,6 +189,7 @@ class PDPSummary extends PureComponent {
                 { this.renderColor() }
                 { this.renderAddToCartSection() }
                 { this.renderAvailableItemsSection() }
+                { this.renderTabbyPopup() }
             </div>
         );
     }

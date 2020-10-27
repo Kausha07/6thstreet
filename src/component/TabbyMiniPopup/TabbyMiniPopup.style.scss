@@ -1,0 +1,38 @@
+:root {
+    --tabby-popup-text-color: #292929;
+}
+
+.TabbyMiniPopup {
+   &-Overlay {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: rgba(70, 70, 70, .6);
+        z-index: 8;
+    }
+
+    &-Content {
+        position: fixed;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        top: 150px;
+        right: 0;
+        left: 0;
+        margin-right: auto;
+        margin-left: auto;
+        z-index: 9;
+        background: $white;
+        width: 450px;
+        min-height: 470px;
+        margin: auto;
+        padding: 40px 64px 30px;
+        box-sizing: border-box;
+        border-radius: 17px;
+        color: var(--tabby-popup-text-color);
+        animation: scale 0.75s;
+
+    }
+}
