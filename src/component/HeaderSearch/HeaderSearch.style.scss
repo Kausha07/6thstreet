@@ -75,13 +75,13 @@
             background-color: var(--white);
             transform: skew(-15deg, 0deg);
             position: absolute;
-            left: -1px;
+            left: -4px;
             top: 0;
             min-height: 100%;
             border-bottom: 1px solid var(--zumthor);
 
             &_isArabic {
-                right: -1px;
+                right: -4px;
                 left: auto;
             }
         }
