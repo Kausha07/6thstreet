@@ -16,6 +16,7 @@
         padding: 0 20px;
         box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.25);
         border-radius: 12px;
+
         @include desktop {
             padding: 0 26px;
         }
@@ -65,7 +66,7 @@
             font-size: 18px;
             width: 61px;
             height: 36px;
-            padding: 0 9px;
+            padding: 0 7px;
             margin-left: 52px;
             letter-spacing: 2px;
             border-radius: 6px;
@@ -82,8 +83,8 @@
         max-width: 280px;
         
         @include desktop {
-            max-width: 355px;
-            padding: 0 26px;
+            max-width: 310px;
+            left: 26px;
         }
     }
 
@@ -133,6 +134,15 @@
             &-Secure {     
                 img {
                     margin:0 0 0 5px;
+                }
+            }
+
+            &-Validator {
+                right: 20px;
+ 
+                @include desktop {
+
+                    right: 26px;
                 }
             }
         }

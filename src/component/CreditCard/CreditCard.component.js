@@ -20,6 +20,8 @@ class CreditCard extends PureComponent {
     };
 
     state = {
+        number: '',
+        expDate: '',
         validatorMessage: null
     };
 
@@ -38,6 +40,7 @@ class CreditCard extends PureComponent {
         }
 
         setCreditCardData({ number: newValue });
+        this.setState({ number: newValue });
     };
 
     handleExpDateChange = (e) => {
@@ -58,6 +61,7 @@ class CreditCard extends PureComponent {
         this.setState({ validatorMessage: message });
 
         setCreditCardData({ expDate: newValue });
+        this.setState({ expDate: newValue, validatorMessage: message });
     };
 
     handleCvvChange = (e) => {
@@ -67,6 +71,7 @@ class CreditCard extends PureComponent {
     };
 
     renderCreditCardForm() {
+        const { number, expDate } = this.state;
         return (
             <div block="CreditCard" elem="Card">
                 <p>card number</p>
@@ -76,6 +81,7 @@ class CreditCard extends PureComponent {
                   id="number"
                   name="number"
                   pattern="\d*"
+                  value={ number }
                   maxLength="22"
                   onChange={ this.handleNumberChange }
                   validation={ ['notEmpty'] }
@@ -92,6 +98,7 @@ class CreditCard extends PureComponent {
                       name="expData"
                       pattern="\d*"
                       maxLength="5"
+                      value={ expDate }
                       onChange={ this.handleExpDateChange }
                       validation={ ['notEmpty'] }
                     />
