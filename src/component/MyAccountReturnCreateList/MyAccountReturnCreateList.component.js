@@ -10,7 +10,11 @@ import './MyAccountReturnCreateList.style';
 export class MyAccountReturnCreateList extends PureComponent {
     static propTypes = {
         isLoading: PropTypes.bool.isRequired,
-        orders: PropTypes.arrayOf(OrderType).isRequired
+        orders: PropTypes.arrayOf(OrderType)
+    };
+
+    static defaultProps = {
+        orders: []
     };
 
     render() {
