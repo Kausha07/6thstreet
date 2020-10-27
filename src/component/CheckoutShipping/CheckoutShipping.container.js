@@ -72,7 +72,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
 
         const shippingAddressMapped = {
             ...shippingAddress,
-            street,
+            street: Array.isArray(street) ? street[0] : street,
             area: region_id,
             country_code: country_id,
             phone: telephone,
