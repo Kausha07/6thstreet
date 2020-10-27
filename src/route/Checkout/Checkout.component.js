@@ -12,6 +12,7 @@ import {
 import CheckoutShipping from 'Component/CheckoutShipping';
 import ContentWrapper from 'Component/ContentWrapper';
 import TabbyPopup from 'Component/TabbyPopup';
+import { TABBY_POPUP_ID } from 'Component/TabbyPopup/TabbyPopup.config';
 import { Checkout as SourceCheckout } from 'SourceRoute/Checkout/Checkout.component';
 import { isArabic } from 'Util/App';
 
@@ -66,8 +67,12 @@ export class Checkout extends SourceCheckout {
   };
 
   processTabby(paymentInformation) {
-      const { savePaymentInformation, verifyPayment } = this.props;
+      const { savePaymentInformation, verifyPayment, checkoutStep } = this.props;
       const { tabbyPaymentId } = this.state;
+
+      if (checkoutStep !== BILLING_STEP) {
+          return;
+      }
 
       verifyPayment(tabbyPaymentId).then(
           ({ status }) => {
@@ -82,11 +87,11 @@ export class Checkout extends SourceCheckout {
 
   processTabbyWithTimeout(counter, paymentInformation) {
       const { tabbyPaymentStatus } = this.state;
-      const { showErrorNotification, hideActiveOverlay } = this.props;
+      const { showErrorNotification, hideActiveOverlay, activeOverlay } = this.props;
 
       // Need to get payment data from Tabby.
       // Could not get callback of Tabby another way because Tabby is iframe in iframe
-      if (tabbyPaymentStatus !== AUTHORIZED_STATUS && counter < 60) {
+      if (tabbyPaymentStatus !== AUTHORIZED_STATUS && counter < 60 && activeOverlay === TABBY_POPUP_ID) {
           setTimeout(
               () => {
                   this.processTabby(paymentInformation);
@@ -99,6 +104,9 @@ export class Checkout extends SourceCheckout {
       if (counter === 60) {
           showErrorNotification('Tabby session timeout');
           hideActiveOverlay();
+      }
+
+      if (counter === 60 || activeOverlay !== TABBY_POPUP_ID) {
           this.setState({ isTabbyPopupShown: false });
       }
   }
