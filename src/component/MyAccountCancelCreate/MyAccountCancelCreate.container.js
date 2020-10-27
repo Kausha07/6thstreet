@@ -2,23 +2,20 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { MyAccountReturnCreateContainer } from 'Component/MyAccountReturnCreate/MyAccountReturnCreate.container';
-import { showNotification } from 'Store/Notification/Notification.action';
+import {
+    mapDispatchToProps,
+    mapStateToProps,
+    MyAccountReturnCreateContainer
+} from 'Component/MyAccountReturnCreate/MyAccountReturnCreate.container';
 import { HistoryType } from 'Type/Common';
 import MagentoAPI from 'Util/API/provider/MagentoAPI';
 
 import MyAccountCancelCreate from './MyAccountCancelCreate.component';
 
-export const mapStateToProps = () => ({});
-
-export const mapDispatchToProps = (dispatch) => ({
-    showErrorNotification: (message) => dispatch(showNotification('error', message))
-});
-
 export class MyAccountCancelCreateContainer extends MyAccountReturnCreateContainer {
     static propTypes = {
         history: HistoryType.isRequired,
-        showErrorNotification: PropTypes.func.isRequired
+        showErrorMessage: PropTypes.func.isRequired
     };
 
     state = {
@@ -52,15 +49,15 @@ export class MyAccountCancelCreateContainer extends MyAccountReturnCreateContain
                 return;
             }
 
-            const { showErrorNotification } = this.props;
+            const { showErrorMessage } = this.props;
 
             this.setState({ isLoading: false });
-            showErrorNotification(__('Something went wrong while fetching items'));
+            showErrorMessage(__('Something went wrong while fetching items'));
         });
     }
 
     onFormSubmit() {
-        const { showErrorNotification, history } = this.props;
+        const { showErrorMessage, history } = this.props;
         const { selectedItems, items, incrementId } = this.state;
         const payload = {
             order_id: incrementId,
@@ -80,7 +77,7 @@ export class MyAccountCancelCreateContainer extends MyAccountReturnCreateContain
         MagentoAPI.post('recan/commitRecan', payload).then(({ payload: { cancellation_id } }) => {
             history.push(`/my-account/return-item/cancel/success/${ cancellation_id }`);
         }).catch(() => {
-            showErrorNotification(__('Error appeared while requesting a cancelation'));
+            showErrorMessage(__('Error appeared while requesting a cancelation'));
             this.setState({ isLoading: false });
         });
     }

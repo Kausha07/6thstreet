@@ -30,21 +30,15 @@ export class MyAccountCancelCreateSuccessContainer extends SourceComponent {
         };
     };
 
-    getCancelId() {
+    getReturnInformation() {
         const {
+            showErrorMessage,
             match: {
                 params: {
                     cancelId
                 } = {}
             } = {}
         } = this.props;
-
-        return cancelId;
-    }
-
-    getReturnInformation() {
-        const { showErrorMessage } = this.props;
-        const cancelId = this.getCancelId();
 
         this.setState({ isLoading: true });
 
