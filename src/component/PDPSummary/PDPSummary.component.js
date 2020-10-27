@@ -90,10 +90,24 @@ class PDPSummary extends PureComponent {
             const [currency, priceData] = Object.entries(priceObj)[0];
 
             const { country } = JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data;
+            const { default: defPrice } = priceData;
+
             console.log('currency', currency);
             console.log('pricedata', priceData);
             console.log('country', country);
+
+            return (
+                <div
+                  block="PDPSummary"
+                  elem="Tabby"
+                >
+                    { __('From ') }
+                 <span block="PDPSummary" elem="Tabby">{ `${defPrice} ${currency}` }</span>
+                </div>
+            );
         }
+
+        return null;
     }
 
     renderColor() {
