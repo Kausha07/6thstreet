@@ -22,6 +22,12 @@
         span {
             font-weight: 600;
         }
+
+        &_isDenied {
+            span {
+                color: var(--error-color);
+            }
+        }
     }
 
     &-SubDetails {
