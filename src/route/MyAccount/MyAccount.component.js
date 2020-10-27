@@ -105,7 +105,8 @@ export class MyAccount extends SourceMyAccount {
                   onSignOut={ this.handleSignOut }
                 />
                 <div block="MyAccount" elem="TabContent">
-                    <h1 block="MyAccount" elem="Heading">{ alternativePageName || name }</h1>
+                    { alternativePageName === 'Club Apparel Loyalty' || name === 'Club Apparel Loyalty'
+                        ? null : (<h1 block="MyAccount" elem="Heading">{ alternativePageName || name }</h1>) }
                     <TabContent />
                 </div>
             </ContentWrapper>
