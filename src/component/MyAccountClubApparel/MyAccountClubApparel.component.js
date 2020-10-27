@@ -11,11 +11,11 @@ class MyAccountClubApparel extends PureComponent {
     static propTypes = {
         linkAccount: PropTypes.func.isRequired,
         verifyOtp: PropTypes.func.isRequired,
-        clubApparelMember: ClubApparelMember
+        clubApparel: ClubApparelMember
     };
 
     static defaultProps = {
-        clubApparelMember: {}
+        clubApparel: {}
     };
 
     renderLinkAccount() {
@@ -67,14 +67,14 @@ class MyAccountClubApparel extends PureComponent {
     }
 
     renderLinkedMember() {
-        const { clubApparelMember: { caPoints, currency, memberDetails: { memberTier } } } = this.props;
+        const { clubApparel: { caPointsValue, currency, memberDetails: { memberTier } } } = this.props;
 
         return (
             <div block="MyAccountClubApparel" elem="MemberData">
                 <div block="MyAccountClubApparel" elem="Points">
                     Rewards Worth
                     { currency }
-                    { caPoints }
+                    { caPointsValue }
                 </div>
                 <div block="MyAccountClubApparel" elem="Tier">
                     { memberTier }
@@ -94,11 +94,11 @@ class MyAccountClubApparel extends PureComponent {
     }
 
     render() {
-        const { clubApparelMember } = this.props;
+        const { clubApparel } = this.props;
 
         return (
             <div block="MyAccountClubApparel">
-                { clubApparelMember ? this.renderLinkedMember() : this.renderLinkForm() }
+                { clubApparel ? this.renderLinkedMember() : this.renderLinkForm() }
             </div>
         );
     }
