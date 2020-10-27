@@ -14,6 +14,7 @@ export class CreditCardContainer extends PureComponent {
         return (
             <CreditCard
               setCreditCardData={ setCreditCardData }
+              { ...this.props }
             />
         );
     }
