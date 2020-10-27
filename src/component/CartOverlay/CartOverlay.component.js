@@ -131,7 +131,9 @@ export class CartOverlay extends PureComponent {
     }
 
     renderActions() {
-        const { totals: { items }, handleCheckoutClick } = this.props;
+        const {
+            totals: { items }, handleCheckoutClick, hideActiveOverlay, closePopup
+        } = this.props;
 
         if (!items || items.length < 1) {
             return null;
@@ -139,13 +141,17 @@ export class CartOverlay extends PureComponent {
 
         return (
             <div block="CartOverlay" elem="Actions">
-                <Link
+                <button
+                  onClick={ hideActiveOverlay && closePopup }
                   block="CartOverlay"
                   elem="CartButton"
-                  to="/cart"
                 >
-                    { __('View bag') }
-                </Link>
+                    <Link
+                      to="/cart"
+                    >
+                        { __('View bag') }
+                    </Link>
+                </button>
                 <button
                   block="CartOverlay"
                   elem="CheckoutButton"
