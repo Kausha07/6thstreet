@@ -72,7 +72,7 @@ export class CheckoutDispatcher {
             } = billingData;
 
             return createSession({
-                cart_id: cartId,
+                cart_id: cartId.toString(),
                 buyer: {
                     email,
                     name: `${firstname} ${lastname}`,
