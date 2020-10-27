@@ -34,7 +34,8 @@ export class HomePageContainer extends PureComponent {
     state = {
         dynamicContent: [],
         isLoading: true,
-        urlGender: ''
+        urlGender: '',
+        defaultGender: 'men'
     };
 
     constructor(props) {
@@ -45,6 +46,11 @@ export class HomePageContainer extends PureComponent {
 
     componentDidMount() {
         this.setUrlGender();
+        const { gender } = this.props;
+        const { urlGender } = this.state;
+        if (gender === '' && urlGender === '') {
+            this.setDefaultGender();
+        }
     }
 
     componentDidUpdate(prevProps) {
@@ -57,6 +63,13 @@ export class HomePageContainer extends PureComponent {
         if (gender !== prevGender || locale !== prevLocale) {
             this.requestDynamicContent(true, urlGender);
         }
+    }
+
+    setDefaultGender() {
+        const { setGender } = this.props;
+        const { defaultGender } = this.state;
+        setGender(defaultGender);
+        this.setState({ urlGender: defaultGender });
     }
 
     setUrlGender() {

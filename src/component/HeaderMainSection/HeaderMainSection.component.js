@@ -92,7 +92,7 @@ class HeaderMainSection extends NavigationAbstract {
     }
 
     getPageType() {
-        if (location.pathname === '/') {
+        if (location.pathname === '/' || location.pathname === '') {
             return TYPE_HOME;
         }
         if (matchPath(location.pathname, '/brands')) {
