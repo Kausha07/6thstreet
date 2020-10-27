@@ -1,5 +1,6 @@
 .PhoneCountryCodeField {
-    margin-top: -18px;
+    height: 88px;
+    margin-top: -25px;
     width: 80px;
 
     .CountryMiniFlag-Container {
@@ -7,8 +8,12 @@
         margin-left: 12px;
         z-index: 1;
 
+        @include mobile() {
+            margin-bottom: -55px;
+        }
+
         @include desktop() {
-            margin-bottom: -62px;
+            margin-bottom: -57px;
         }
     }
     input {
@@ -19,7 +24,7 @@
     &_isArabic {
         .CountryMiniFlag-Container {
             margin-left: 0;
-            margin-right: 12px;
+            margin-right: 22px;
         }
 
         input {
