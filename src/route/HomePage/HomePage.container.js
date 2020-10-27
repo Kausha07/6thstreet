@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import { setGender } from 'Store/AppState/AppState.action';
 import { getStaticFile } from 'Util/API/endpoint/StaticFiles/StaticFiles.endpoint';
 import Logger from 'Util/Logger';
 
@@ -14,12 +15,14 @@ export const mapStateToProps = (state) => ({
     // wishlistItems: state.WishlistReducer.productsInWishlist
 });
 
-export const mapDispatchToProps = (_dispatch) => ({
+export const mapDispatchToProps = (dispatch) => ({
+    setGender: (gender) => dispatch(setGender(gender))
     // addProduct: options => CartDispatcher.addProductToCart(dispatch, options)
 });
 
 export class HomePageContainer extends PureComponent {
     static propTypes = {
+        setGender: PropTypes.func.isRequired,
         gender: PropTypes.string.isRequired,
         locale: PropTypes.string.isRequired
     };
@@ -30,7 +33,8 @@ export class HomePageContainer extends PureComponent {
 
     state = {
         dynamicContent: [],
-        isLoading: true
+        isLoading: true,
+        urlGender: ''
     };
 
     constructor(props) {
@@ -39,13 +43,25 @@ export class HomePageContainer extends PureComponent {
         this.requestDynamicContent();
     }
 
+    componentDidMount() {
+        this.setUrlGender();
+    }
+
     componentDidUpdate(prevProps) {
+        this.setUrlGender();
         const { gender: prevGender, locale: prevLocale } = prevProps;
-        const { gender, locale } = this.props;
+        const { locale, gender, setGender } = this.props;
+        const { urlGender } = this.state;
+        setGender(urlGender);
 
         if (gender !== prevGender || locale !== prevLocale) {
-            this.requestDynamicContent(true);
+            this.requestDynamicContent(true, urlGender);
         }
+    }
+
+    setUrlGender() {
+        const urlWithoutSeparator = location.pathname.split('/');
+        this.setState({ urlGender: urlWithoutSeparator[1].split('.')[0].toLowerCase() });
     }
 
     async requestDynamicContent(isUpdate = false) {
