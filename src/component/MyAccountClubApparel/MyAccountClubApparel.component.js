@@ -2,11 +2,7 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-import CountryMiniFlag from 'Component/CountryMiniFlag';
-import Field from 'Component/Field';
-import Form from 'Component/Form';
-import { PHONE_CODES } from 'Component/MyAccountAddressFieldForm/MyAccountAddressFieldForm.config';
-import Popup from 'SourceComponent/Popup';
+import MyAccountClubApparelOverlay from 'Component/MyAccountClubApparelOverlay';
 import { ClubApparelMember } from 'Util/API/endpoint/ClubApparel/ClubApparel.type';
 import { isArabic } from 'Util/App';
 
@@ -38,21 +34,21 @@ class MyAccountClubApparel extends PureComponent {
         isArabic: isArabic(),
         isEarnExpanded: false,
         isAboutExpanded: false,
-        isLinkOpen: false
+        isPopupOpen: false
     };
 
     static getDerivedStateFromProps(props) {
         const { activeOverlay } = props;
         console.log(props);
         document.body.style.overflow = activeOverlay !== '' ? 'hidden' : 'visible';
-        return ({ isLinkOpen: activeOverlay === 'LinkAccount' });
+        return ({ isPopupOpen: activeOverlay === 'LinkAccount' });
     }
 
     handleModalClick = () => {
         const { showOverlay } = this.props;
         console.log(this.props);
         showOverlay('LinkAccount');
-        this.setState(({ isLinkOpen }) => ({ isLinkOpen: !isLinkOpen }));
+        this.setState(({ isPopupOpen }) => ({ isPopupOpen: !isPopupOpen }));
     };
 
     hideOverlay = () => {
@@ -83,110 +79,6 @@ class MyAccountClubApparel extends PureComponent {
             type,
             onChange
         };
-    }
-
-    renderField = (fieldEntry) => (
-        <Field { ...this.getDefaultValues(fieldEntry) } />
-    );
-
-    renderCurrentPhoneCode(country_id) {
-        return PHONE_CODES[country_id];
-    }
-
-    renderPhone() {
-        const {
-            country
-        } = this.props;
-
-        const telephone = {
-            block: 'MyAccountClubApparel',
-            elem: 'LinkAccountPhoneField',
-            validation: ['notEmpty'],
-            placeholder: 'Phone Number',
-            value: '',
-            id: 'phone',
-            name: 'phone'
-        };
-
-        return (
-            <div
-              block="MyAccountClubApparel"
-              elem="LinkAccountPhone"
-            >
-                    { this.renderField(['telephone', telephone]) }
-                    <div
-                      block="MyAccountClubApparel"
-                      elem="PhoneCode"
-                    >
-                        <CountryMiniFlag label={ country } />
-                        { this.renderCurrentPhoneCode(country) }
-                    </div>
-            </div>
-        );
-    }
-
-    renderLinkAccount() {
-        const { linkAccount } = this.props;
-        const { isArabic } = this.state;
-
-        return (
-            <Popup
-              mix={ { block: 'MyAccountClubApparel', elem: 'LinkAccount', mods: { isArabic } } }
-              id="LinkAccount"
-              title="Link"
-            >
-                <div block="MyAccountClubApparel" elem="LinkAccountBanner">
-                    <img
-                      block="MyAccountClubApparel"
-                      elem="LinkAccountLogo"
-                      src={ isArabic ? ClubApparelLogoAR : ClubApparelLogoEN }
-                      alt="Logo icon"
-                    />
-                </div>
-                <p>{ __('Link Your Account by entering your mobile number') }</p>
-                <Form
-                  onSubmitSuccess={ linkAccount }
-                >
-                    { this.renderPhone() }
-                    <button
-                      block="MyAccountClubApparel"
-                      elem="LinkAccountButton"
-                      type="submit"
-                    >
-                        { __('Link Account') }
-                    </button>
-                </Form>
-            </Popup>
-        );
-    }
-
-    renderVerifyOtp() {
-        const { verifyOtp } = this.props;
-
-        return (
-            <Popup
-              id="VerifyOtp"
-              title="Verify"
-            >
-                <Form
-                  onSubmitSuccess={ verifyOtp }
-                >
-                    <Field
-                      type="text"
-                      placeholder="00000"
-                      id="otp"
-                      name="otp"
-                      validation={ ['notEmpty'] }
-                    />
-                    <button
-                      block="Button"
-                      type="submit"
-                    >
-                        { __('Verify number') }
-                    </button>
-                </Form>
-            </Popup>
-        );
     }
 
     renderLinkedMember() {
@@ -231,7 +123,7 @@ class MyAccountClubApparel extends PureComponent {
                     { __('Phone Number: ') }
                     <span>{ number }</span>
                 </p>
-                <button block="MyAccountClubApparel" elem="ChangeButton">
+                <button block="MyAccountClubApparel" elem="ChangeButton" onClick={ this.handleModalClick }>
                     { __('change to another club apparel account') }
                 </button>
             </div>
@@ -355,16 +247,22 @@ class MyAccountClubApparel extends PureComponent {
     }
 
     render() {
-        const { clubApparelMember } = this.props;
+        const {
+            clubApparelMember,
+            linkAccount,
+            country,
+            verifyOtp
+        } = this.props;
         const {
             isAboutExpanded,
             isEarnExpanded,
             isArabic,
-            isLinkOpen
+            isPopupOpen
         } = this.state;
 
         return (
             <div block="MyAccountClubApparel">
+                <div block="MyAccountClubApparel" elem="Wrapper" />
                 <div block="MyAccountClubApparel" elem="ClubApparelContainer">
                     <img
                       block="MyAccountClubApparel"
@@ -394,7 +292,14 @@ class MyAccountClubApparel extends PureComponent {
                     </button>
                     { this.renderEarn() }
                 </div>
-                { isLinkOpen ? this.renderLinkAccount() : null }
+                { isPopupOpen
+                    ? (
+                        <MyAccountClubApparelOverlay
+                          linkAccount={ linkAccount }
+                          country={ country }
+                          verifyOtp={ verifyOtp }
+                        />
+                    ) : null }
             </div>
         );
     }

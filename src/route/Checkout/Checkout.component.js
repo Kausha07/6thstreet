@@ -4,9 +4,15 @@ import PropTypes from 'prop-types';
 import CheckoutBilling from 'Component/CheckoutBilling';
 import CheckoutGuestForm from 'Component/CheckoutGuestForm';
 import CheckoutOrderSummary from 'Component/CheckoutOrderSummary';
+import {
+    TABBY_ISTALLMENTS,
+    TABBY_PAY_LATER,
+    TABBY_PAYMENT_CODES
+} from 'Component/CheckoutPayments/CheckoutPayments.config';
 import CheckoutShipping from 'Component/CheckoutShipping';
 import ContentWrapper from 'Component/ContentWrapper';
 import TabbyPopup from 'Component/TabbyPopup';
+import { TABBY_POPUP_ID } from 'Component/TabbyPopup/TabbyPopup.config';
 import { Checkout as SourceCheckout } from 'SourceRoute/Checkout/Checkout.component';
 import { isArabic } from 'Util/App';
 
@@ -25,7 +31,8 @@ export class Checkout extends SourceCheckout {
         continueAsGuest: false,
         isInvalidEmail: false,
         isArabic: isArabic(),
-        tabbyWebUrl: '',
+        tabbyInstallmentsUrl: '',
+        tabbyPayLaterUrl: '',
         tabbyPaymentId: '',
         tabbyPaymentStatus: '',
         isTabbyPopupShown: false
@@ -36,18 +43,22 @@ export class Checkout extends SourceCheckout {
   };
 
   savePaymentInformation = (paymentInformation) => {
-      const { savePaymentInformation } = this.props;
-      const { tabbyWebUrl } = this.state;
+      const { savePaymentInformation, showErrorNotification } = this.props;
+      const { selectedPaymentMethod, tabbyInstallmentsUrl, tabbyPayLaterUrl } = this.state;
 
-      if (tabbyWebUrl) {
-          this.setState({ isTabbyPopupShown: true });
+      if (TABBY_PAYMENT_CODES.includes(selectedPaymentMethod)) {
+          if (tabbyInstallmentsUrl || tabbyPayLaterUrl) {
+              this.setState({ isTabbyPopupShown: true });
 
-          // Need to get payment data from Tabby.
-          // Could not get callback of Tabby another way because Tabby is iframe in iframe
-          setTimeout(
-              () => this.processTabbyWithTimeout(3, paymentInformation),
-              10000
-          );
+              // Need to get payment data from Tabby.
+              // Could not get callback of Tabby another way because Tabby is iframe in iframe
+              setTimeout(
+                  () => this.processTabbyWithTimeout(3, paymentInformation),
+                  10000
+              );
+          } else {
+              showErrorNotification(__('Something went wrong with Tabby'));
+          }
       } else {
           savePaymentInformation(paymentInformation);
       }
@@ -56,8 +67,12 @@ export class Checkout extends SourceCheckout {
   };
 
   processTabby(paymentInformation) {
-      const { savePaymentInformation, verifyPayment } = this.props;
+      const { savePaymentInformation, verifyPayment, checkoutStep } = this.props;
       const { tabbyPaymentId } = this.state;
+
+      if (checkoutStep !== BILLING_STEP) {
+          return;
+      }
 
       verifyPayment(tabbyPaymentId).then(
           ({ status }) => {
@@ -72,11 +87,11 @@ export class Checkout extends SourceCheckout {
 
   processTabbyWithTimeout(counter, paymentInformation) {
       const { tabbyPaymentStatus } = this.state;
-      const { showErrorNotification, hideActiveOverlay } = this.props;
+      const { showErrorNotification, hideActiveOverlay, activeOverlay } = this.props;
 
       // Need to get payment data from Tabby.
       // Could not get callback of Tabby another way because Tabby is iframe in iframe
-      if (tabbyPaymentStatus !== AUTHORIZED_STATUS && counter < 60) {
+      if (tabbyPaymentStatus !== AUTHORIZED_STATUS && counter < 60 && activeOverlay === TABBY_POPUP_ID) {
           setTimeout(
               () => {
                   this.processTabby(paymentInformation);
@@ -89,13 +104,32 @@ export class Checkout extends SourceCheckout {
       if (counter === 60) {
           showErrorNotification('Tabby session timeout');
           hideActiveOverlay();
+      }
+
+      if (counter === 60 || activeOverlay !== TABBY_POPUP_ID) {
           this.setState({ isTabbyPopupShown: false });
       }
   }
 
-  setTabbyWebUrl = (url, paymentId) => {
-      this.setState({ tabbyWebUrl: url, tabbyPaymentId: paymentId });
-  };
+    setTabbyWebUrl = (url, paymentId, type) => {
+        this.setState({ tabbyPaymentId: paymentId });
+        switch (type) {
+        case TABBY_ISTALLMENTS:
+            this.setState({ tabbyInstallmentsUrl: url });
+
+            break;
+        case TABBY_PAY_LATER:
+            this.setState({ tabbyPayLaterUrl: url });
+
+            break;
+        default:
+            break;
+        }
+    };
+
+    setPaymentCode = (code) => {
+        this.setState({ selectedPaymentMethod: code });
+    };
 
   setCashOnDeliveryFee = (fee) => {
       this.setState({ cashOnDeliveryFee: fee });
@@ -176,6 +210,7 @@ export class Checkout extends SourceCheckout {
             setCashOnDeliveryFee={ this.setCashOnDeliveryFee }
             savePaymentInformation={ this.savePaymentInformation }
             setTabbyWebUrl={ this.setTabbyWebUrl }
+            setPaymentCode={ this.setPaymentCode }
           />
       );
   }
@@ -230,7 +265,12 @@ export class Checkout extends SourceCheckout {
   }
 
   renderTabbyIframe() {
-      const { isTabbyPopupShown, tabbyWebUrl } = this.state;
+      const {
+          isTabbyPopupShown,
+          tabbyInstallmentsUrl,
+          tabbyPayLaterUrl,
+          selectedPaymentMethod
+      } = this.state;
 
       if (!isTabbyPopupShown) {
           return null;
@@ -238,7 +278,7 @@ export class Checkout extends SourceCheckout {
 
       return (
           <TabbyPopup
-            tabbyWebUrl={ tabbyWebUrl }
+            tabbyWebUrl={ selectedPaymentMethod === TABBY_ISTALLMENTS ? tabbyInstallmentsUrl : tabbyPayLaterUrl }
           />
       );
   }

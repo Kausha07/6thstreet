@@ -159,6 +159,12 @@ class MyAccountOrderListItem extends SourceComponent {
     }
 
     render() {
+        const { order } = this.props;
+
+        if (!order) {
+            return null;
+        }
+
         return (
             <button block="MyAccountOrderListItem" onClick={ this.handleClick }>
                 { this.renderHeading() }

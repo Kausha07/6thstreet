@@ -12,6 +12,26 @@
         margin: 0 10%;
     }
 
+    @include before-desktop { 
+        margin-bottom: 90px;
+    }
+
+
+    &-Wrapper {
+        @include before-desktop {
+            position: fixed;
+            top: 0;
+            right: 0;
+            height: 100%;
+            width: 100%;
+            overflow: scroll;
+            background-image: url(./images/bg-ca.png);
+            background-color: #231f20;
+            background-image: url(./images/bg-ca.png);
+            background-size: cover;
+        }
+    }
+
     &-Card {
         width: 31%;
         margin: 0 auto;
@@ -51,10 +71,6 @@
         }
     }
 
-    &-ClubApparelContainer {
-        text-align: center;
-    }
-
     &-About,
     &-Earn {
         height: 0;
@@ -71,6 +87,16 @@
             padding-bottom: 30px;
             border-bottom: 1px solid var(--ca-button-border-color);
             transition: 700ms;
+        }
+
+        @include before-desktop {
+            height: auto;
+            font-size: unset;
+            color: unset;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--ca-button-border-color);
+            transition: 700ms;
+            display: none;
         }
     }
 
@@ -101,6 +127,26 @@
                 top: 25px;
                 background: transparent;
             }
+
+            @include before-desktop {
+                color: var(--white);
+
+                &:after {
+                    position: absolute;
+                    content: '';
+                    width: 0;
+                    height: 0;
+                    border: solid var(--white);
+                    border-width: 0 2px 2px 0;
+                    display: inline-block;
+                    padding: 2px 5px 5px 2px;
+                    margin: 0 auto;
+                    transform: rotate(-45deg);
+                    right: 5px;
+                    top: 25px;
+                    background: transparent;
+                }
+            }
         }
 
         a {
@@ -117,6 +163,8 @@
                         transform: rotate(-135deg) !important;
                     }
                 }
+
+                display: block;
             }
         }
     }
@@ -126,6 +174,12 @@
         background-image: url(./images/bg-ca.png);
         background-size: cover;
         padding-bottom: 40px;
+        text-align: center;
+
+        @include before-desktop {
+            background-color: unset;
+            background-image: unset;
+        }
     }
 
     &-MemberData {
@@ -221,92 +275,5 @@
         &:hover {
             background-color: var(--light-gray);
         }
-    }
-
-    &-LinkAccount{
-        
-        &Banner {
-            background-color: #231f20;
-            background-image: url(./images/bg-ca.png);
-            background-size: cover;
-            text-align: center;
-        }
-
-        &Logo {
-            width: 150px;
-            display: inline-block;
-            max-width: 100%;
-            margin: 45px 0;
-        }
-
-        background-color: rgba(0, 0, 0, 0.7);
-
-        .Popup {
-            &-Content {
-                overflow: hidden;
-                padding: 0;
-                min-width: 440px;
-                border-radius: unset;
-                text-align: center;
-
-                p {
-                    margin: 45px 20% 0;
-                }
-            }
-
-            &-CloseBtn {
-                right: 15px;
-                top: 10px;
-                position: absolute;
-                background-color: var(--black);
-                border-radius: 50%;
-                height: 30px;
-                width: 30px;
-                padding: 0;
-
-                &::after,
-                &::before {
-                    height: 17px;
-                    width: 2px;
-                    background-color: var(--white);
-                    right: 14px;
-                    top: 6px
-                }
-            }
-        }
-
-        &Phone {
-            margin-top: 46px;
-
-            &Field {
-                height: 60px;
-                width: 80%;
-                padding-left: 70px;
-            }
-
-            .Field {
-                p {
-                    margin-top: 5px;
-                }
-            }
-        }
-
-        &Button {
-            background-color: var(--black);
-            color: var(--white);    
-            margin: 30px auto 65px;
-            width: 80%;
-            border-radius: 5px;
-
-            &:hover {
-                background-color: var(--light-gray);
-            }
-        }
-    }
-
-    &-PhoneCode {
-        position: absolute;
-        top: 21px;
-        left: 10%;
     }
 }

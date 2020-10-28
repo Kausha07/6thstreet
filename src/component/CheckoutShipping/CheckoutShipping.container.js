@@ -65,6 +65,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
 
         const {
             region_id,
+            region,
             street,
             country_id,
             telephone
@@ -73,11 +74,11 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
         const shippingAddressMapped = {
             ...shippingAddress,
             street: Array.isArray(street) ? street[0] : street,
-            area: region_id,
+            area: region ?? region_id,
             country_code: country_id,
             phone: telephone,
             email: isSignedIn() ? email : guestEmail,
-            region: region_id,
+            region: region ?? region_id,
             region_id: 0
         };
 

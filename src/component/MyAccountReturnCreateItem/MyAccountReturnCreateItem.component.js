@@ -105,10 +105,11 @@ export class MyAccountReturnCreateItem extends PureComponent {
                 row_total,
                 discount_percent,
                 discount_amount,
-                size: { value: size },
+                size: sizeField,
                 product_options: { info_buyRequest: { qty } }
             }
         } = this.props;
+        const size = typeof sizeField === 'string' ? sizeField : sizeField.value;
 
         return (
             <div block="MyAccountReturnCreateItem" elem="Details">

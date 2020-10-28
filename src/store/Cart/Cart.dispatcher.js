@@ -90,11 +90,7 @@ export class CartDispatcher {
 
     async getCartTotals(dispatch, cartId) {
         try {
-            const {
-                data
-            } = await getCart(cartId);
-
-            await this.setCartItems(dispatch, data);
+            const { data } = await getCart(cartId);
 
             dispatch(setCartTotals(data));
         } catch (e) {
