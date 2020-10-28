@@ -67,7 +67,7 @@ class MyAccountClubApparel extends PureComponent {
     }
 
     renderLinkedMember() {
-        const { clubApparel: { caPointsValue, currency, memberDetails: { memberTier } } } = this.props;
+        const { clubApparel: { caPointsValue, currency, memberDetails: { memberTier } = {} } } = this.props;
 
         return (
             <div block="MyAccountClubApparel" elem="MemberData">
@@ -94,11 +94,11 @@ class MyAccountClubApparel extends PureComponent {
     }
 
     render() {
-        const { clubApparel } = this.props;
+        const { clubApparel: { accountLinked } } = this.props;
 
         return (
             <div block="MyAccountClubApparel">
-                { clubApparel ? this.renderLinkedMember() : this.renderLinkForm() }
+                { accountLinked ? this.renderLinkedMember() : this.renderLinkForm() }
             </div>
         );
     }
