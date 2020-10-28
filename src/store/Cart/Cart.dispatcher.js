@@ -11,7 +11,7 @@ import {
     addProductToCart,
     applyCouponCode,
     createCart,
-    getCartTotals,
+    getCart,
     removeCouponCode,
     removeProductFromCart,
     updateProductInCart
@@ -52,8 +52,7 @@ export class CartDispatcher {
     async setCartItems(dispatch, data) {
         try {
             const {
-                items = [],
-                currency_code: currency
+                items = []
             } = data || {};
 
             if (items.length) {
@@ -78,8 +77,7 @@ export class CartDispatcher {
                         brandName,
                         thumbnail,
                         '',
-                        price,
-                        currency
+                        price
                     ));
                 });
             }
@@ -90,8 +88,11 @@ export class CartDispatcher {
 
     async getCartTotals(dispatch, cartId) {
         try {
-            const { data } = await getCartTotals(cartId);
+            const {
+                data
+            } = await getCart(cartId);
 
+            await this.setCartItems(dispatch, data);
             dispatch(setCartTotals(data));
         } catch (e) {
             Logger.log(e);
@@ -107,8 +108,7 @@ export class CartDispatcher {
         brand_name,
         thumbnail_url,
         url,
-        itemPrice,
-        currency
+        itemPrice
     ) {
         const { Cart: { cartId } } = getStore().getState();
 
@@ -122,8 +122,7 @@ export class CartDispatcher {
                 brand_name,
                 thumbnail_url,
                 url,
-                itemPrice,
-                currency
+                itemPrice
             ));
         } catch (e) {
             Logger.log(e);
@@ -172,8 +171,7 @@ export class CartDispatcher {
         brand_name,
         thumbnail_url,
         url,
-        itemPrice,
-        currency
+        itemPrice
     ) {
         const { Cart: { cartId } } = getStore().getState();
 
@@ -187,8 +185,7 @@ export class CartDispatcher {
                 brand_name,
                 thumbnail_url,
                 url,
-                itemPrice,
-                currency
+                itemPrice
             ));
         } catch (e) {
             Logger.log(e);

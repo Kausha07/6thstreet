@@ -30,7 +30,7 @@ export const mapDispatchToProps = (dispatch) => ({
         ({ default: dispatcher }) => dispatcher.addProductToCart(dispatch, options)
     ),
     updateProductInCart: (
-        item_id, quantity, color, optionValue, discount, brand_name, thumbnail_url, url, row_total, currency
+        item_id, quantity, color, optionValue, discount, brand_name, thumbnail_url, url, row_total
     ) => CartDispatcher.then(
         ({ default: dispatcher }) => dispatcher.updateProductInCart(
             dispatch,
@@ -42,8 +42,7 @@ export const mapDispatchToProps = (dispatch) => ({
             brand_name,
             thumbnail_url,
             url,
-            row_total,
-            currency
+            row_total
         )
     ),
     removeProduct: (options) => CartDispatcher.then(
@@ -124,8 +123,7 @@ export class CartItemContainer extends PureComponent {
                     product: { url, thumbnail },
                     brand_name,
                     basePrice,
-                    row_total,
-                    currency
+                    row_total
                 }
             } = this.props;
 
@@ -138,8 +136,7 @@ export class CartItemContainer extends PureComponent {
                 brand_name,
                 thumbnail.url,
                 url,
-                row_total,
-                currency
+                row_total
             ));
         });
     }
