@@ -44,7 +44,7 @@ class CreditCard extends PureComponent {
     };
 
     handleExpDateChange = (e) => {
-        const { setCreditCardData } = this.props;
+        const { setCreditCardData, expDateValidator } = this.props;
         let { value } = e.target;
 
         let newValue = '';
@@ -56,7 +56,7 @@ class CreditCard extends PureComponent {
             }
             newValue = newValue.concat(value[i]);
         }
-        const message = this.expDateValidator(newValue);
+        const message = expDateValidator(newValue);
 
         this.setState({ validatorMessage: message });
 
@@ -148,44 +148,6 @@ class CreditCard extends PureComponent {
                     { validatorMessage }
                 </div>
             );
-        }
-
-        return null;
-    }
-
-    expDateValidator(value) {
-        const message = __('Please check the correct card correct card correct card expiration date (MM/YY)');
-        const first = parseInt(value.charAt(0));
-        const month = parseInt(value.slice(0, 2));
-        const yearFirst = parseInt(value.slice(3, 4));
-        const year = parseInt(value.slice(3, 5));
-
-        // month validation
-        if (first > 1 || first < 0) {
-            return message;
-        }
-        if (value.length > 1) {
-            if (month === 0 || ((month > 12 || month < 1) && first !== 0)) {
-                return message;
-            }
-        }
-        if (value.length > 3) {
-            const date = new Date();
-            const thisYearFirst = date.getFullYear().toString().slice(2, 3);
-            // year gap
-            if (yearFirst > parseInt(thisYearFirst) + 1) {
-                return message;
-            }
-        }
-
-        // check if card expire
-        if (value.length > 4) {
-            const today = new Date();
-            const expDay = new Date(parseInt(`20${year}`), month, 1);
-
-            if (today > expDay) {
-                return message;
-            }
         }
 
         return null;

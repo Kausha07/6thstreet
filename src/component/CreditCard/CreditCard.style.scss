@@ -1,6 +1,6 @@
 :root {
-    --card-text: #d1d1d1;
-    --card-mini-text: #4A4A4A;
+    --card-paragraph-text-color: #d1d1d1;
+    --card-mini-text-color: #4A4A4A;
     --card-validator-color: #F01136;
 }
 
@@ -24,14 +24,13 @@
         input {
             max-width: 265px;
             margin: 0;
-            font-family: 'Avenir Next Regular';
-            font-weight: 400;
+            font-weight: var(--fw-regular);
         }
     
         p {
             margin: 0;
             line-height: 1.5;
-            color: var(--card-text);
+            color: var(--card-paragraph-text-color);
             text-transform: uppercase;
             font-size: 10px;
         }
@@ -103,7 +102,7 @@
         align-items: center;
         text-transform: uppercase;
         font-size: 8px;
-        color: var(--card-mini-text);
+        color: var(--card-mini-text-color);
 
         img {
             height: 14px;
