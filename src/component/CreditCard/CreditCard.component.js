@@ -127,7 +127,7 @@ class CreditCard extends PureComponent {
                   placeholder="0000  0000  0000  0000"
                   id="number"
                   name="number"
-                  pattern="[0-9]*"
+                  pattern="\d*"
                   value={ number }
                   maxLength="22"
                   onChange={ this.handleNumberChange }
@@ -154,6 +154,7 @@ class CreditCard extends PureComponent {
                       placeholder={ __('CVV') }
                       id="cvv"
                       name="cvv"
+                      pattern="\d*"
                       maxLength="3"
                       onChange={ this.handleCvvChange }
                       validation={ ['notEmpty'] }
