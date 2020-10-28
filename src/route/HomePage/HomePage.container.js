@@ -12,12 +12,10 @@ import { HOME_STATIC_FILE_KEY } from './HomePage.config';
 export const mapStateToProps = (state) => ({
     gender: state.AppState.gender,
     locale: state.AppState.locale
-    // wishlistItems: state.WishlistReducer.productsInWishlist
 });
 
 export const mapDispatchToProps = (dispatch) => ({
     setGender: (gender) => dispatch(setGender(gender))
-    // addProduct: options => CartDispatcher.addProductToCart(dispatch, options)
 });
 
 export class HomePageContainer extends PureComponent {
@@ -25,10 +23,6 @@ export class HomePageContainer extends PureComponent {
         setGender: PropTypes.func.isRequired,
         gender: PropTypes.string.isRequired,
         locale: PropTypes.string.isRequired
-    };
-
-    containerFunctions = {
-        // getData: this.getData.bind(this)
     };
 
     state = {
