@@ -91,8 +91,7 @@ export class CartOverlay extends PureComponent {
         if (!items || items.length < 1) {
             return null;
         }
-
-        const totalPrice = items.map((item) => item.row_total * item.qty);
+        const totalPrice = items.map((item) => item.row_total * item.qty).reduce((a, b) => a + b);
 
         return (
             <dl
@@ -141,17 +140,14 @@ export class CartOverlay extends PureComponent {
 
         return (
             <div block="CartOverlay" elem="Actions">
-                <button
-                  onClick={ hideActiveOverlay && closePopup }
+                <Link
                   block="CartOverlay"
                   elem="CartButton"
+                  to="/cart"
+                  onClick={ hideActiveOverlay && closePopup }
                 >
-                    <Link
-                      to="/cart"
-                    >
-                        { __('View bag') }
-                    </Link>
-                </button>
+                    { __('View bag') }
+                </Link>
                 <button
                   block="CartOverlay"
                   elem="CheckoutButton"
