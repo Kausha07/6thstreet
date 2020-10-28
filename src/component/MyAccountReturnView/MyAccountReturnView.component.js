@@ -1,10 +1,10 @@
-// import PropTypes from 'prop-types';
-
 import {
     MyAccountReturnSuccess as SourceComponent
 } from 'Component/MyAccountReturnSuccess/MyAccountReturnSuccess.component';
 import MyAccountReturnSuccessItem from 'Component/MyAccountReturnSuccessItem';
 import { formatDate } from 'Util/Date';
+
+import { STATUS_DENIED, STATUS_TITLE_MAP } from './MyAccountReturnView.config';
 
 import './MyAccountReturnView.style';
 
@@ -23,6 +23,7 @@ export class MyAccountReturnView extends SourceComponent {
         const { date, status, orderNumber } = this.props;
         const dateObject = new Date(date);
         const dateString = formatDate('YY/MM/DD at hh:mm', dateObject);
+        const { [status]: title } = STATUS_TITLE_MAP;
 
         return (
             <div block="MyAccountReturnView" elem="Details">
@@ -31,9 +32,9 @@ export class MyAccountReturnView extends SourceComponent {
                     <span>{ dateString }</span>
                 </p>
                 <div block="MyAccountReturnView" elem="SubDetails">
-                    <p block="MyAccountReturnView" elem="Status" mods={ { isDenied: status === 'Denied' } }>
+                    <p block="MyAccountReturnView" elem="Status" mods={ { isDenied: status === STATUS_DENIED } }>
                         { __('Status: ') }
-                        <span>{ status }</span>
+                        <span>{ title || status }</span>
                     </p>
                     <p block="MyAccountReturnView" elem="Order">
                         { __('Order ID: ') }
@@ -57,7 +58,7 @@ export class MyAccountReturnView extends SourceComponent {
                         />
                         <div block="MyAccountReturnView" elem="Reason">
                             <h3>{ __('Reason') }</h3>
-                            <p>{ item.reason[0].value }</p>
+                            { !!(item.reason || []).length && <p>{ item.reason[0].value }</p> }
                         </div>
                     </>
                 )) }

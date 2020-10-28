@@ -2,7 +2,7 @@
     &-Details {
         &Date {
             font-size: 15px;
-            font-weight: 500;
+            font-weight: var(--fe-medium);
 
             @include desktop {
                 font-size: 16px;
@@ -10,7 +10,7 @@
 
             span {
                 color: var(--color-gray);
-                font-weight: normal;
+                font-weight: var(--fw-regular);
             }
         }
     }
@@ -20,7 +20,7 @@
         margin-bottom: 0;
 
         span {
-            font-weight: 600;
+            font-weight: var(--fw-demi);
         }
 
         &_isDenied {
