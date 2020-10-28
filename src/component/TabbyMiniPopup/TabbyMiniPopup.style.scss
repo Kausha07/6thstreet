@@ -42,7 +42,6 @@
         box-sizing: border-box;
         border-radius: 17px;
         color: var(--tabby-popup-text-color);
-        animation: scale 0.75s;
 
         @include mobile {
             padding: 40px 20px 20px;

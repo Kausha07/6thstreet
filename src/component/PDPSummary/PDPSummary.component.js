@@ -91,9 +91,7 @@ class PDPSummary extends PureComponent {
         const { product: { price } } = this.props;
         if (price) {
             const priceObj = Array.isArray(price) ? price[0] : price;
-
             const [currency, priceData] = Object.entries(priceObj)[0];
-
             const { country } = JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data;
             const { default: defPrice } = priceData;
 
@@ -103,7 +101,6 @@ class PDPSummary extends PureComponent {
                     <button
                       block="PDPSummary"
                       elem="Tabby"
-                      // eslint-disable-next-line react/jsx-no-bind
                       onClick={ this.openTabbyPopup }
                     >
                         { __('From') }
