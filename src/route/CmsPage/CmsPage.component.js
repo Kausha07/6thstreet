@@ -1,6 +1,8 @@
 import Html from 'Component/Html';
 import { CmsPage as SourceCmsPage } from 'SourceRoute/CmsPage/CmsPage.component';
 
+import './CmsPage.extended.style';
+
 export class CmsPage extends SourceCmsPage {
     renderContent() {
         const {

@@ -1,43 +1,23 @@
-import { LOADING_TIME } from '@scandipwa/scandipwa/src/route/CmsPage/CmsPage.config';
-import { mapDispatchToProps, mapStateToProps } from '@scandipwa/scandipwa/src/route/CmsPage/CmsPage.container';
-import { gql, request } from 'graphql-request';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import { CMS_PAGE } from 'Component/Header/Header.config';
+import CmsPageQuery from 'Query/CmsPage.query';
+import { LOADING_TIME } from 'Route/CmsPage/CmsPage.config';
 import {
-    CmsPageContainer as SourceCmsPageContainer
+    CmsPageContainer as SourceCmsPageContainer,
+    mapDispatchToProps,
+    mapStateToProps
 } from 'SourceRoute/CmsPage/CmsPage.container';
-import { debounce, getGraphqlEndpoint } from 'Util/Request';
+import { debounce, fetchQuery } from 'Util/Request';
 import { appendWithStoreCode } from 'Util/Url';
 
 import CmsPage from './CmsPage.component';
 
 export class CmsPageContainer extends SourceCmsPageContainer {
     async requestPage() {
-        const params = this.getRequestQueryParams();
-        const { id } = params;
-        const CmsPageQuery = gql`
-            query cmsPage(
-                $id: Int!
-            ) {
-                cmsPage(id: $id) {
-                    title,
-                    content,
-                    content_heading,
-                    meta_title
-                }
-            }
-        `;
-        const endPoint = getGraphqlEndpoint();
-
-        const variables = {
-            id
-        };
-
-        const data = await request(endPoint, CmsPageQuery, variables);
-        const { cmsPage } = data;
-
+        const { id } = this.getRequestQueryParams();
+        const { cmsPage } = await fetchQuery(CmsPageQuery.getQuery({ id }));
         this.onPageLoad(cmsPage);
     }
 
