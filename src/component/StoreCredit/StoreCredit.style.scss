@@ -6,6 +6,11 @@
     &-Amount {
         font-weight: var(--fw-demi);
         white-space: nowrap;
+
+        &::before {
+            content: ' ';
+            display: inline;
+        }
     }
 
     &_canApply {
@@ -54,6 +59,7 @@ li.MyAccountTabListItem {
             font-weight: var(--fw-regular);
             cursor: pointer;
             line-height: 20px;
+            letter-spacing: .5px;
 
             span {
                 font-weight: var(--fw-demi);

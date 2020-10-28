@@ -8,14 +8,21 @@ export {
     baseOrderInfoType,
     orderType,
     ordersType,
-    tabType,
-    tabMapType,
     DASHBOARD,
     MY_ORDERS,
     MY_WISHLIST,
     ADDRESS_BOOK,
     NEWSLETTER_SUBSCRIPTION
 } from 'SourceType/Account';
+
+export const tabType = PropTypes.shape({
+    url: PropTypes.string,
+    name: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+    alternativePageName: PropTypes.string,
+    linkClassName: PropTypes.string
+});
+
+export const tabMapType = PropTypes.objectOf(tabType);
 
 export const STORE_CREDIT = 'storecredit';
 export const CLUB_APPAREL = 'club-apparel';

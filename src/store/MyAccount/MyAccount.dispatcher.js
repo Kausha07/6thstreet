@@ -9,6 +9,9 @@ import {
     setCartId
 } from 'Store/Cart/Cart.action';
 import CartDispatcher from 'Store/Cart/Cart.dispatcher';
+import { setClubApparel } from 'Store/ClubApparel/ClubApparel.action';
+import ClubApparelDispatcher from 'Store/ClubApparel/ClubApparel.dispatcher';
+import { getInitialState as getClubApparelInitialState } from 'Store/ClubApparel/ClubApparel.reducer';
 import { ORDERS } from 'Store/Order/Order.reducer';
 import { setStoreCredit } from 'Store/StoreCredit/StoreCredit.action';
 import StoreCreditDispatcher from 'Store/StoreCredit/StoreCredit.dispatcher';
@@ -45,6 +48,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
 
         dispatch(updateCustomerDetails({}));
         dispatch(setStoreCredit(getStoreCreditInitialState()));
+        dispatch(setClubApparel(getClubApparelInitialState()));
     }
 
     async signIn(options = {}, dispatch) {
@@ -60,9 +64,15 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
             await this.handleMobileAuthorization(dispatch, options);
             await WishlistDispatcher.updateInitialWishlistData(dispatch);
             await StoreCreditDispatcher.getStoreCredit(dispatch);
+            // Run async as Club Apparel is not visible anywhere after login
+
+            ClubApparelDispatcher.getMember(dispatch);
 
             return true;
         } catch ([e]) {
+            deleteAuthorizationToken();
+            deleteMobileAuthorizationToken();
+
             throw e;
         }
     }
