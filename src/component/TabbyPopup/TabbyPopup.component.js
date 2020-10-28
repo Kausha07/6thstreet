@@ -15,7 +15,7 @@ class TabbyPopup extends PureComponent {
 
     renderContent() {
         const { tabbyWebUrl } = this.props;
-        console.log(this.props);
+
         return (
             <Iframe
               src={ tabbyWebUrl }
