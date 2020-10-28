@@ -1,11 +1,4 @@
 /* eslint-disable react/prop-types */
-/**
- * @category  6thstreet
- * @author    Alona Zvereva <alona.zvereva@scandiweb.com>
- * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
- * @copyright Copyright (c) 2020 Scandiweb, Inc (https://scandiweb.com)
- */
-
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
@@ -13,8 +6,6 @@ import { connect } from 'react-redux';
 import {
     CART, CART_EDITING, CUSTOMER_ACCOUNT, CUSTOMER_ACCOUNT_PAGE
 } from 'Component/Header/Header.config';
-import { CUSTOMER_ACCOUNT_OVERLAY_KEY } from 'Component/MyAccountOverlay/MyAccountOverlay.config';
-import { CHECKOUT_URL } from 'Route/Checkout/Checkout.config';
 import { MY_ACCOUNT_URL } from 'Route/MyAccount/MyAccount.config';
 import MyAccountContainer, { tabMap } from 'Route/MyAccount/MyAccount.container';
 import ClubApparelDispatcher from 'Store/ClubApparel/ClubApparel.dispatcher';
@@ -26,15 +17,11 @@ import { toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
 import { customerType } from 'Type/Account';
 import { HistoryType } from 'Type/Common';
 import { TotalsType } from 'Type/MiniCart';
-import { isSignedIn } from 'Util/Auth';
 import history from 'Util/History';
-import isMobile from 'Util/Mobile';
-import { appendWithStoreCode } from 'Util/Url';
 
 import CheckoutSuccess from './CheckoutSuccess.component';
 
 export const BreadcrumbsDispatcher = import(
-    /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
     'Store/Breadcrumbs/Breadcrumbs.dispatcher'
 );
 
@@ -83,7 +70,6 @@ export class CheckoutSuccessContainer extends PureComponent {
     };
 
     containerFunctions = {
-        onCheckoutButtonClick: this.onCheckoutButtonClick.bind(this),
         changeActiveTab: this.changeActiveTab.bind(this),
         onSignIn: this.onSignIn.bind(this)
     };
@@ -120,40 +106,6 @@ export class CheckoutSuccessContainer extends PureComponent {
         this._changeHeaderState();
     }
 
-    componentDidUpdate(prevProps) {
-        const {
-            changeHeaderState,
-            totals: { items_qty },
-            headerState,
-            headerState: { name },
-            customer: { id }
-        } = this.props;
-        const { clubApparelMember } = this.state;
-
-        const {
-            totals: { items_qty: prevItemsQty },
-            headerState: { name: prevName }
-        } = prevProps;
-
-        if (name !== prevName) {
-            if (name === CART) {
-                this._changeHeaderState();
-            }
-        }
-
-        if (items_qty !== prevItemsQty) {
-            const title = `${ items_qty || '0' } Items`;
-            changeHeaderState({
-                ...headerState,
-                title
-            });
-        }
-
-        if (id && !clubApparelMember) {
-            this.getClubApparelMember(id);
-        }
-    }
-
     containerProps = () => {
         const { clubApparelMember } = this.state;
 
@@ -175,49 +127,11 @@ export class CheckoutSuccessContainer extends PureComponent {
         );
     }
 
+    // TODO: fix active tab change
     changeActiveTab(activeTab) {
         const { history } = this.props;
         const { [activeTab]: { url } } = tabMap;
         history.push(`${ MY_ACCOUNT_URL }${ url }`);
-    }
-
-    onCheckoutButtonClick(e) {
-        const {
-            history,
-            guest_checkout,
-            showOverlay,
-            showNotification
-        } = this.props;
-
-        // to prevent outside-click handler trigger
-        e.nativeEvent.stopImmediatePropagation();
-
-        if (guest_checkout) {
-            history.push({
-                pathname: appendWithStoreCode(CHECKOUT_URL)
-            });
-
-            return;
-        }
-
-        if (isSignedIn()) {
-            history.push({
-                pathname: appendWithStoreCode(CHECKOUT_URL)
-            });
-
-            return;
-        }
-
-        // fir notification whatever device that is
-        showNotification('info', __('Please sign-in to complete checkout!'));
-
-        if (isMobile.any()) { // for all mobile devices, simply switch route
-            history.push({ pathname: appendWithStoreCode('/my-account') });
-            return;
-        }
-
-        // for desktop, just open customer overlay
-        showOverlay(CUSTOMER_ACCOUNT_OVERLAY_KEY);
     }
 
     _updateBreadcrumbs() {
@@ -277,4 +191,4 @@ export class CheckoutSuccessContainer extends PureComponent {
         );
     }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(CheckoutSuccess);
+export default connect(mapStateToProps, mapDispatchToProps)(CheckoutSuccessContainer);

@@ -269,18 +269,18 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     }
 
     setDetailsStep(orderID) {
-        const { resetCart, setNavigationState } = this.props;
+        const { setNavigationState } = this.props;
 
         if (!isSignedIn()) {
             BrowserDatabase.deleteItem(GUEST_QUOTE_ID);
         }
 
-        BrowserDatabase.deleteItem(PAYMENT_TOTALS);
-        resetCart();
+        // BrowserDatabase.deleteItem(PAYMENT_TOTALS);
+        // resetCart();
 
         this.setState({
             isLoading: false,
-            paymentTotals: {},
+            // paymentTotals: {},
             checkoutStep: DETAILS_STEP,
             orderID
         });

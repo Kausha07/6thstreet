@@ -30,7 +30,8 @@ export class Checkout extends SourceCheckout {
         tabbyWebUrl: '',
         tabbyPaymentId: '',
         tabbyPaymentStatus: '',
-        isTabbyPopupShown: false
+        isTabbyPopupShown: false,
+        paymentInformation: {}
     };
 
   callbackFunction = (childData) => {
@@ -40,6 +41,7 @@ export class Checkout extends SourceCheckout {
   savePaymentInformation = (paymentInformation) => {
       const { savePaymentInformation } = this.props;
       const { tabbyWebUrl } = this.state;
+      this.setState({ paymentInformation });
 
       if (tabbyWebUrl) {
           this.setState({ isTabbyPopupShown: true });
@@ -246,11 +248,22 @@ export class Checkout extends SourceCheckout {
   }
 
   renderDetailsStep() {
-      const { orderID } = this.props;
+      console.log(this.state);
+      console.log(this.props);
+      const { orderID, shippingAddress } = this.props;
+      const {
+          paymentInformation: {
+              billing_address,
+              paymentMethod
+          }
+      } = this.state;
 
       return (
         <CheckoutSuccess
           orderID={ orderID }
+          shippingAddress={ shippingAddress }
+          billingAddress={ billing_address }
+          paymentMethod={ paymentMethod }
         />
       );
   }
