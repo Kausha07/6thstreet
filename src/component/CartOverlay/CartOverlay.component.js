@@ -50,10 +50,10 @@ export class CartOverlay extends PureComponent {
     }
 
     renderPriceLine(price) {
-        const { totals: { items, currency_code } } = this.props;
+        const { totals: { currency_code } } = this.props;
         const decimals = currency_code === 'KWD' || currency_code === 'BHD' ? 3 : 2;
 
-        return `${items[0].currency} ${parseFloat(price).toFixed(decimals)}`;
+        return `${currency_code} ${parseFloat(price).toFixed(decimals)}`;
     }
 
     renderCartItems() {
