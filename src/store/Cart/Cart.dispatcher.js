@@ -11,7 +11,7 @@ import {
     addProductToCart,
     applyCouponCode,
     createCart,
-    getCartTotals,
+    getCart,
     removeCouponCode,
     removeProductFromCart,
     updateProductInCart
@@ -90,7 +90,11 @@ export class CartDispatcher {
 
     async getCartTotals(dispatch, cartId) {
         try {
-            const { data } = await getCartTotals(cartId);
+            const {
+                data
+            } = await getCart(cartId);
+
+            await this.setCartItems(dispatch, data);
 
             dispatch(setCartTotals(data));
         } catch (e) {
