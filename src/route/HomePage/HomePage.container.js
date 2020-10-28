@@ -61,7 +61,11 @@ export class HomePageContainer extends PureComponent {
             toggleBreadcrumbs
         } = this.props;
         const { urlGender } = this.state;
-        setGender(urlGender);
+
+        if (urlGender !== '') {
+            setGender(urlGender);
+        }
+
         toggleBreadcrumbs(false);
 
         if (gender !== prevGender || locale !== prevLocale) {

@@ -29,7 +29,7 @@ class GenderButton extends PureComponent {
         } = this.props;
 
         return (
-            <Link to={ `/${label}.html` }>
+            <Link to={ `/${label.toLowerCase()}.html` }>
                 <button
                   mix={ mix }
                   block="GenderButton"
