@@ -32,7 +32,7 @@ export const PAYMENTS_DATA = {
     tabby_checkout: {
         name: 'tabby',
         mod: { tabby: true },
-        paragraph: 'checkout',
+        paragraph: null,
         img: tabby
     },
     tabby_installments: {

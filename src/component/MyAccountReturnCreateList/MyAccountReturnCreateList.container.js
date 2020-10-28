@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
+import { connect } from 'react-redux';
 
 import { showNotification } from 'Store/Notification/Notification.action';
 import MagentoAPI from 'Util/API/provider/MagentoAPI';
@@ -68,4 +69,4 @@ export class MyAccountReturnCreateListContainer extends PureComponent {
     }
 }
 
-export default MyAccountReturnCreateListContainer;
+export default connect(mapStateToProps, mapDispatchToProps)(MyAccountReturnCreateListContainer);

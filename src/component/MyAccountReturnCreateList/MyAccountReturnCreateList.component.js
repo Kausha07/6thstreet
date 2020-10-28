@@ -10,7 +10,11 @@ import './MyAccountReturnCreateList.style';
 export class MyAccountReturnCreateList extends PureComponent {
     static propTypes = {
         isLoading: PropTypes.bool.isRequired,
-        orders: PropTypes.arrayOf(OrderType).isRequired
+        orders: PropTypes.arrayOf(OrderType)
+    };
+
+    static defaultProps = {
+        orders: []
     };
 
     render() {
@@ -19,6 +23,7 @@ export class MyAccountReturnCreateList extends PureComponent {
         return (
             <div block="MyAccountReturnCreateList">
                 <Loader isLoading={ isLoading } />
+                { (!isLoading && !orders.length) && <p>{ __('Cannot create return. Try later') }</p> }
                 { orders.map((order) => <MyAccountReturnCreateListItem key={ order.id } order={ order } />) }
             </div>
         );

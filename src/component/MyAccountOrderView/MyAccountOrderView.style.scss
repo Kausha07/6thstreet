@@ -1,6 +1,28 @@
 .MyAccountOrderView {
     max-width: 420px;
 
+    &-Heading {
+        align-items: center;
+        display: flex;
+        margin-bottom: 20px;
+        justify-content: space-between;
+
+        button {
+            border: 1px solid var(--black);
+            border-radius: 5px;
+            font-family: var(--avenir-regular-font);
+            font-size: 14px;
+            font-weight: var(--fw-normal);
+            height: auto;
+            padding: 10px;
+            text-transform: none;
+        }
+
+        h3 {
+            margin: 0;
+        }
+    }
+
     &-Status {
         margin-bottom: 15px;
 
@@ -46,7 +68,7 @@
 
     &-WarningImage {
         filter: invert(1);
-        margin-right: 5px;
+        margin-right: 15px;
         max-width: 25px;
         padding-bottom: 25px;
 

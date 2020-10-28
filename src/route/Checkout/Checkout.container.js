@@ -36,7 +36,8 @@ export const mapStateToProps = (state) => ({
     customer: state.MyAccountReducer.customer,
     guest_checkout: state.ConfigReducer.guest_checkout,
     countries: state.ConfigReducer.countries,
-    isSignedIn: state.MyAccountReducer.isSignedIn
+    isSignedIn: state.MyAccountReducer.isSignedIn,
+    activeOverlay: state.OverlayReducer.activeOverlay
 });
 
 export class CheckoutContainer extends SourceCheckoutContainer {
