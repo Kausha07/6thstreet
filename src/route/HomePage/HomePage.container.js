@@ -3,6 +3,7 @@ import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import { toggleBreadcrumbs } from 'Store/Breadcrumbs/Breadcrumbs.action';
+import { setGender } from 'Store/AppState/AppState.action';
 import { getStaticFile } from 'Util/API/endpoint/StaticFiles/StaticFiles.endpoint';
 import Logger from 'Util/Logger';
 
@@ -12,27 +13,26 @@ import { HOME_STATIC_FILE_KEY } from './HomePage.config';
 export const mapStateToProps = (state) => ({
     gender: state.AppState.gender,
     locale: state.AppState.locale
-    // wishlistItems: state.WishlistReducer.productsInWishlist
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
-    toggleBreadcrumbs: (areBreadcrumbsVisible) => _dispatch(toggleBreadcrumbs(areBreadcrumbsVisible))
+    toggleBreadcrumbs: (areBreadcrumbsVisible) => _dispatch(toggleBreadcrumbs(areBreadcrumbsVisible)),
+    setGender: (gender) => dispatch(setGender(gender))
 });
 
 export class HomePageContainer extends PureComponent {
     static propTypes = {
+        setGender: PropTypes.func.isRequired,
         gender: PropTypes.string.isRequired,
         locale: PropTypes.string.isRequired,
         toggleBreadcrumbs: PropTypes.func.isRequired
     };
 
-    containerFunctions = {
-        // getData: this.getData.bind(this)
-    };
-
     state = {
         dynamicContent: [],
-        isLoading: true
+        isLoading: true,
+        urlGender: '',
+        defaultGender: 'men'
     };
 
     constructor(props) {
@@ -41,15 +41,39 @@ export class HomePageContainer extends PureComponent {
         this.requestDynamicContent();
     }
 
-    componentDidUpdate(prevProps) {
-        const { gender: prevGender, locale: prevLocale } = prevProps;
-        const { gender, locale, toggleBreadcrumbs } = this.props;
+    componentDidMount() {
+        this.setUrlGender();
+        const { gender } = this.props;
+        const { urlGender } = this.state;
+        if (gender === '' && urlGender === '') {
+            this.setDefaultGender();
+        }
+    }
 
+    componentDidUpdate(prevProps) {
+        this.setUrlGender();
+
+        const { gender: prevGender, locale: prevLocale } = prevProps;
+        const { locale, gender, setGender, toggleBreadcrumbs } = this.props;
+        const { urlGender } = this.state;
+        setGender(urlGender);
         toggleBreadcrumbs(false);
 
         if (gender !== prevGender || locale !== prevLocale) {
-            this.requestDynamicContent(true);
+            this.requestDynamicContent(true, urlGender);
         }
+    }
+
+    setDefaultGender() {
+        const { setGender } = this.props;
+        const { defaultGender } = this.state;
+        setGender(defaultGender);
+        this.setState({ urlGender: defaultGender });
+    }
+
+    setUrlGender() {
+        const urlWithoutSeparator = location.pathname.split('/');
+        this.setState({ urlGender: urlWithoutSeparator[1].split('.')[0].toLowerCase() });
     }
 
     async requestDynamicContent(isUpdate = false) {

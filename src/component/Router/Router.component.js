@@ -49,12 +49,13 @@ export class Router extends SourceRouter {
 
     state = {
         ...SourceRouter.state,
-        isArabic: false
+        isArabic: false,
+        homepageUrl: '/(|men.html|women.html|kids.html)/'
     };
 
     [SWITCH_ITEMS_TYPE] = [
         {
-            component: <Route path={ withStoreRegex('/') } exact component={ HomePage } />,
+            component: <Route path={ withStoreRegex(this.state.homepageUrl) } exact component={ HomePage } />,
             position: 10
         },
         {
