@@ -466,12 +466,20 @@
     "14 days after product delivery": null,
     "Error appeared while fetching return request information": null,
     "Error appeared while fetching cancel request information": null,
-    "Cancel ID: ": null,
-    "Cancel date: ": null,
     "Something went wrong while fetching items": null,
     "Error appeared while requesting a cancelation": null,
+    "Cancel ID: ": null,
+    "Cancel date: ": null,
     "Cancel %s %s": null,
     "Cancel an Item": null,
     "Payment Failed": null,
-    "Order Cancelled": null
+    "Order Cancelled": null,
+    "Date Requested: ": null,
+    "Reason": null,
+    "Cannot create return. Try later": null,
+    "Pending": null,
+    "Denied": null,
+    " Edit": null,
+    "Total": null,
+    "Total Amount": null
 }

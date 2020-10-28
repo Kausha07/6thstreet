@@ -186,26 +186,26 @@ class PDPAddToCart extends PureComponent {
         return (
             <div>
                 { (stock_qty !== 0 || highlighted_attributes === null
-                    || (Object.keys(product).length === 0
-                    && product.constructor === Object))
-                && (
-                    <button
-                      onClick={ addToCart }
-                      block="PDPAddToCart"
-                      elem="AddToCartButton"
-                      mods={ { isLoading } }
-                      mix={ {
-                          block: 'PDPAddToCart',
-                          elem: 'AddToCartButton',
-                          mods: { addedToCart }
-                      } }
-                      disabled={ this.checkStateForButtonDisabling() }
-                    >
-                        <span>{ __('Add to bag') }</span>
-                        <span>{ __('Adding...') }</span>
-                        <span>{ __('Added to bag') }</span>
-                    </button>
-                ) }
+                    || (Object.keys(product).length !== 0
+                    && product.constructor !== Object))
+                    && (
+                        <button
+                          onClick={ addToCart }
+                          block="PDPAddToCart"
+                          elem="AddToCartButton"
+                          mods={ { isLoading } }
+                          mix={ {
+                              block: 'PDPAddToCart',
+                              elem: 'AddToCartButton',
+                              mods: { addedToCart }
+                          } }
+                          disabled={ this.checkStateForButtonDisabling() }
+                        >
+                            <span>{ __('Add to bag') }</span>
+                            <span>{ __('Adding...') }</span>
+                            <span>{ __('Added to bag') }</span>
+                        </button>
+                    ) }
             </div>
         );
     }
