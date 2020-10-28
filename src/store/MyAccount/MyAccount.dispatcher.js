@@ -2,13 +2,15 @@ import MyAccountQuery from 'Query/MyAccount.query';
 import { updateCustomerDetails, updateCustomerSignInStatus } from 'SourceStore/MyAccount/MyAccount.action';
 import {
     CUSTOMER,
-    MyAccountDispatcher as SourceMyAccountDispatcher
+    MyAccountDispatcher as SourceMyAccountDispatcher,
+    ONE_MONTH_IN_SECONDS
 } from 'SourceStore/MyAccount/MyAccount.dispatcher';
 import {
     removeCartItems,
     setCartId
 } from 'Store/Cart/Cart.action';
 import CartDispatcher from 'Store/Cart/Cart.dispatcher';
+import { showNotification } from 'Store/Notification/Notification.action';
 import { ORDERS } from 'Store/Order/Order.reducer';
 import { setStoreCredit } from 'Store/StoreCredit/StoreCredit.action';
 import StoreCreditDispatcher from 'Store/StoreCredit/StoreCredit.dispatcher';
@@ -16,7 +18,8 @@ import { getInitialState as getStoreCreditInitialState } from 'Store/StoreCredit
 import WishlistDispatcher from 'Store/Wishlist/Wishlist.dispatcher';
 import {
     getMobileApiAuthorizationToken,
-    resetPassword
+    resetPassword,
+    updateCustomerData
 } from 'Util/API/endpoint/MyAccount/MyAccount.enpoint';
 import {
     deleteAuthorizationToken,
@@ -25,11 +28,29 @@ import {
     setMobileAuthorizationToken
 } from 'Util/Auth';
 import BrowserDatabase from 'Util/BrowserDatabase';
-import { fetchMutation } from 'Util/Request';
+import { prepareQuery } from 'Util/Query';
+import { executePost, fetchMutation } from 'Util/Request';
 
 export { CUSTOMER, ONE_MONTH_IN_SECONDS } from 'SourceStore/MyAccount/MyAccount.dispatcher';
 
 export class MyAccountDispatcher extends SourceMyAccountDispatcher {
+    requestCustomerData(dispatch) {
+        const query = MyAccountQuery.getCustomerQuery();
+
+        const stateCustomer = BrowserDatabase.getItem(CUSTOMER) || {};
+        if (stateCustomer.id) {
+            dispatch(updateCustomerDetails(stateCustomer));
+        }
+
+        return executePost(prepareQuery([query])).then(
+            ({ customer }) => {
+                dispatch(updateCustomerDetails({ ...stateCustomer, ...customer }));
+                BrowserDatabase.setItem({ ...stateCustomer, ...customer }, CUSTOMER, ONE_MONTH_IN_SECONDS);
+            },
+            (error) => dispatch(showNotification('error', error[0].message))
+        );
+    }
+
     logout(_, dispatch) {
         dispatch(updateCustomerSignInStatus(false));
         deleteAuthorizationToken();
@@ -87,6 +108,25 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         const { email } = options;
 
         return resetPassword({ email });
+    }
+
+    updateCustomerData(dispatch, data) {
+        const { fullname, gender, email } = data;
+
+        const mappedData = {
+            firstname: fullname.substr(0, fullname.indexOf(' ')),
+            lastname: fullname.substr(fullname.indexOf(' ') + 1),
+            email,
+            gender: gender === 'male' ? 1 : 2,
+            custom_attributes: []
+        };
+
+        const dataForUpdate = { ...data, ...mappedData };
+
+        dispatch(updateCustomerDetails(dataForUpdate));
+
+        // eslint-disable-next-line
+        return updateCustomerData(mappedData);
     }
 }
 

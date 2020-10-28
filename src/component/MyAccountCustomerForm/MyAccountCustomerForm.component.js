@@ -51,12 +51,10 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
     }
 
     getCustomerFullName() {
-        const { customer } = this.props;
+        const { customer: { firstname, lastname } = {} } = this.props;
 
-        if (Object.keys(customer).length) {
-            const firstName = customer.firstname;
-            const lastName = customer.firstname;
-            return { firstName, lastName };
+        if (firstname && lastname) {
+            return { firstName: firstname, lastName: lastname };
         }
 
         return [];
