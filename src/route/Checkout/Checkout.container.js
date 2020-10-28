@@ -1,3 +1,5 @@
+import { CART_TAB } from '@scandipwa/scandipwa/src/component/NavigationTabs/NavigationTabs.config';
+import { DETAILS_STEP, SHIPPING_STEP } from '@scandipwa/scandipwa/src/route/Checkout/Checkout.config';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -44,6 +46,38 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         updateStoreCredit: PropTypes.func.isRequired,
         isSignedIn: PropTypes.bool.isRequired
     };
+
+    constructor(props) {
+        super(props);
+
+        const {
+            toggleBreadcrumbs,
+            totals: {
+                is_virtual
+            }
+        } = props;
+
+        toggleBreadcrumbs(false);
+
+        this.state = {
+            isLoading: is_virtual,
+            isDeliveryOptionsLoading: false,
+            requestsSent: 0,
+            paymentMethods: [],
+            shippingMethods: [],
+            shippingAddress: {},
+            checkoutStep: is_virtual ? BILLING_STEP : SHIPPING_STEP,
+            orderID: '',
+            paymentTotals: BrowserDatabase.getItem(PAYMENT_TOTALS) || {},
+            email: '',
+            isCreateUser: false,
+            isGuestEmailSaved: false
+        };
+
+        if (is_virtual) {
+            this._getPaymentMethods();
+        }
+    }
 
     componentDidMount() {
         updateMeta({ title: __('Checkout') });
@@ -232,6 +266,28 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         } catch (e) {
             this._handleError(e);
         }
+    }
+
+    setDetailsStep(orderID) {
+        const { resetCart, setNavigationState } = this.props;
+
+        if (!isSignedIn()) {
+            BrowserDatabase.deleteItem(GUEST_QUOTE_ID);
+        }
+
+        BrowserDatabase.deleteItem(PAYMENT_TOTALS);
+        resetCart();
+
+        this.setState({
+            isLoading: false,
+            paymentTotals: {},
+            checkoutStep: DETAILS_STEP,
+            orderID
+        });
+
+        setNavigationState({
+            name: CART_TAB
+        });
     }
 
     resetCart() {

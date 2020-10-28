@@ -5,6 +5,7 @@ import CheckoutBilling from 'Component/CheckoutBilling';
 import CheckoutGuestForm from 'Component/CheckoutGuestForm';
 import CheckoutOrderSummary from 'Component/CheckoutOrderSummary';
 import CheckoutShipping from 'Component/CheckoutShipping';
+import CheckoutSuccess from 'Component/CheckoutSuccess';
 import ContentWrapper from 'Component/ContentWrapper';
 import TabbyPopup from 'Component/TabbyPopup';
 import { Checkout as SourceCheckout } from 'SourceRoute/Checkout/Checkout.component';
@@ -16,7 +17,8 @@ import './Checkout.style';
 
 export class Checkout extends SourceCheckout {
     static propTypes = {
-        isSignedIn: PropTypes.bool.isRequired
+        isSignedIn: PropTypes.bool.isRequired,
+        orderID: PropTypes.string.isRequired
     };
 
     state = {
@@ -240,6 +242,16 @@ export class Checkout extends SourceCheckout {
           <TabbyPopup
             tabbyWebUrl={ tabbyWebUrl }
           />
+      );
+  }
+
+  renderDetailsStep() {
+      const { orderID } = this.props;
+
+      return (
+        <CheckoutSuccess
+          orderID={ orderID }
+        />
       );
   }
 
