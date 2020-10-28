@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-globals */
+/* eslint-disable fp/no-let */
 /* eslint-disable no-magic-numbers */
 /* eslint-disable radix */
 import PropTypes from 'prop-types';
@@ -9,6 +11,10 @@ export class CreditCardContainer extends PureComponent {
     static propTypes = {
         setCreditCardData: PropTypes.func.isRequired
     };
+
+    numberValidator(value) {
+        return isNaN(-value) ? __('Please enter a valid card number') : null;
+    }
 
     expDateValidator(value) {
         const message = __('Please check the correct card correct card correct card expiration date (MM/YY)');
@@ -55,6 +61,7 @@ export class CreditCardContainer extends PureComponent {
             <CreditCard
               setCreditCardData={ setCreditCardData }
               expDateValidator={ this.expDateValidator }
+              numberValidator={ this.numberValidator }
               { ...this.props }
             />
         );

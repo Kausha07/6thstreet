@@ -54,7 +54,7 @@ class CreditCard extends PureComponent {
     }
 
     handleNumberChange = (e) => {
-        const { setCreditCardData } = this.props;
+        const { setCreditCardData, numberValidator } = this.props;
         let { value } = e.target;
 
         let newValue = '';
@@ -66,6 +66,8 @@ class CreditCard extends PureComponent {
             }
             newValue = newValue.concat(value[i]);
         }
+        const message = numberValidator(value);
+        this.setState({ validatorMessage: message });
 
         setCreditCardData({ number: newValue });
         if (newValue.length === 22) {
@@ -89,23 +91,28 @@ class CreditCard extends PureComponent {
             newValue = newValue.concat(value[i]);
         }
         const message = expDateValidator(newValue);
+        this.setState({ validatorMessage: message });
 
         setCreditCardData({ expDate: newValue });
         if (newValue.length === 5) {
             this.setState({ expDate: newValue, expDateFilled: true });
             return;
         }
-        this.setState({ expDate: newValue, validatorMessage: message, expDateFilled: false });
+        this.setState({ expDate: newValue, expDateFilled: false });
     };
 
     handleCvvChange = (e) => {
-        const { setCreditCardData } = this.props;
+        const { setCreditCardData, numberValidator } = this.props;
         const { value } = e.target;
+
+        const message = numberValidator(value);
+        this.setState({ validatorMessage: message });
 
         if (value.length === 3) {
             this.setState({ cvvFilled: true });
             return;
         }
+
         setCreditCardData({ cvv: e.target.value });
         this.setState({ cvvFilled: false });
     };
@@ -120,7 +127,7 @@ class CreditCard extends PureComponent {
                   placeholder="0000  0000  0000  0000"
                   id="number"
                   name="number"
-                  pattern="\d*"
+                  pattern="[0-9]*"
                   value={ number }
                   maxLength="22"
                   onChange={ this.handleNumberChange }
