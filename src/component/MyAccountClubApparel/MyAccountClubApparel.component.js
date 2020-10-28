@@ -5,6 +5,7 @@ import { PureComponent } from 'react';
 import MyAccountClubApparelOverlay from 'Component/MyAccountClubApparelOverlay';
 import { ClubApparelMember } from 'Util/API/endpoint/ClubApparel/ClubApparel.type';
 import { isArabic } from 'Util/App';
+import isMobile from 'Util/Mobile';
 
 import ClubApparelLogoAR from './images/ca-trans-ar-logo.png';
 import ClubApparelLogoEN from './images/ca-trans-logo.png';
@@ -159,7 +160,10 @@ class MyAccountClubApparel extends PureComponent {
                     <div block="MyAccountClubApparel" elem="Card">
                         <img src={ Redemption } alt="Redemption" />
                         <h3>{ __('REDEMPTION VALUE') }</h3>
-                        <p>
+                        <p
+                          block="MyAccountClubApparel"
+                          elem="RedemptionParagraph"
+                        >
                             { __('1 Point = ') }
                             <strong>{ __('1 AED') }</strong>
                         </p>
@@ -212,7 +216,7 @@ class MyAccountClubApparel extends PureComponent {
         );
     }
 
-    renderEarn() {
+    renderEarn = () => {
         const { isEarnExpanded } = this.state;
 
         return (
@@ -244,6 +248,48 @@ class MyAccountClubApparel extends PureComponent {
                 </p>
             </div>
         );
+    };
+
+    renderAboutMobile() {
+        const { isArabic } = this.state;
+
+        return (
+            <div block="MyAccountClubApparel" elem="MobileWrapper">
+                <div block="MyAccountClubApparel" elem="AboutMobile">
+                    <img
+                      block="MyAccountClubApparel"
+                      elem="MemberDataLogo"
+                      src={ isArabic ? ClubApparelLogoAR : ClubApparelLogoEN }
+                      alt="Logo icon"
+                    />
+                    <div block="MyAccountClubApparel" elem="AboutMobileText">
+                        <h3>{ __('About Club Apparel') }</h3>
+                        { this.renderAbout() }
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    renderEarnMobile() {
+        const { isArabic } = this.state;
+
+        return (
+            <div block="MyAccountClubApparel" elem="MobileWrapper">
+                <div block="MyAccountClubApparel" elem="EarnMobile">
+                    <img
+                      block="MyAccountClubApparel"
+                      elem="MemberDataLogo"
+                      src={ isArabic ? ClubApparelLogoAR : ClubApparelLogoEN }
+                      alt="Logo icon"
+                    />
+                    <div block="MyAccountClubApparel" elem="EarnMobileText">
+                        <h3>{ __('Earn & Burn') }</h3>
+                        { this.renderEarn() }
+                    </div>
+                </div>
+            </div>
+        );
     }
 
     render() {
@@ -260,6 +306,8 @@ class MyAccountClubApparel extends PureComponent {
             isPopupOpen
         } = this.state;
 
+        const isMobileLogo = isMobile.any() !== null;
+
         return (
             <div block="MyAccountClubApparel">
                 <div block="MyAccountClubApparel" elem="Wrapper" />
@@ -267,6 +315,7 @@ class MyAccountClubApparel extends PureComponent {
                     <img
                       block="MyAccountClubApparel"
                       elem="MemberDataLogo"
+                      mods={ { isMobileLogo } }
                       src={ isArabic ? ClubApparelLogoAR : ClubApparelLogoEN }
                       alt="Logo icon"
                     />
@@ -281,7 +330,7 @@ class MyAccountClubApparel extends PureComponent {
                     >
                         { __('About Club Apparel') }
                     </button>
-                    { this.renderAbout() }
+                    { isMobile.any() && isAboutExpanded ? this.renderAboutMobile() : this.renderAbout() }
                     <button
                       block="MyAccountClubApparel"
                       elem="EarnButton"
@@ -290,7 +339,7 @@ class MyAccountClubApparel extends PureComponent {
                     >
                         { __('Earn & Burn') }
                     </button>
-                    { this.renderEarn() }
+                    { isMobile.any() && isEarnExpanded ? this.renderEarnMobile() : this.renderEarn() }
                 </div>
                 { isPopupOpen
                     ? (
@@ -298,6 +347,10 @@ class MyAccountClubApparel extends PureComponent {
                           linkAccount={ linkAccount }
                           country={ country }
                           verifyOtp={ verifyOtp }
+                          renderAbout={ this.renderAbout }
+                          renderEarn={ this.renderEarn }
+                          isAboutExpanded={ isAboutExpanded }
+                          isEarnExpanded={ isEarnExpanded }
                         />
                     ) : null }
             </div>

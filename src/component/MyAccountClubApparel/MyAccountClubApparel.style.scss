@@ -10,6 +10,11 @@
     &-Cards {
         display: flex;
         margin: 0 10%;
+
+        @include before-desktop {
+            margin: 0;
+            order: 1;
+        }
     }
 
     @include before-desktop { 
@@ -24,10 +29,9 @@
             right: 0;
             height: 100%;
             width: 100%;
-            overflow: scroll;
-            background-image: url(./images/bg-ca.png);
+            overflow: auto;
+            background-image: url(./images/club_apparel_background@3x.png);
             background-color: #231f20;
-            background-image: url(./images/bg-ca.png);
             background-size: cover;
         }
     }
@@ -69,6 +73,30 @@
             opacity: 0.8;
             font-size: 11px;
         }
+
+        @include before-desktop {
+            p {
+                display: none;
+            }
+
+            h3 {
+                margin: 1rem 0;
+            }
+
+            .MyAccountClubApparel {
+                &-RedemptionParagraph{
+                    display: block;
+                }
+            }
+
+            .MyAccountClubApparel {
+                &-Card {
+                    &_countrySpecific {
+                        display: block;
+                    }
+                }
+            }
+        }
     }
 
     &-About,
@@ -90,14 +118,49 @@
         }
 
         @include before-desktop {
-            height: auto;
-            font-size: unset;
-            color: unset;
-            padding-bottom: 30px;
-            border-bottom: 1px solid var(--ca-button-border-color);
-            transition: 700ms;
             display: none;
+            color: var(--white);
+
+            a {
+                color: var(--white);
+            }
+
+            &_isAboutExpanded,
+            &_isEarnExpanded {
+                display: block;
+                border-bottom: none;
+            }
         }
+
+        &Mobile {
+            &Text {
+                text-align: left;
+
+                h3 { 
+                    color: var(--white);
+                }
+
+                padding: 0 10%;
+            }
+
+            margin-bottom: 85px;
+            
+        }
+    }
+
+    &-MobileWrapper {
+        position: fixed;
+        top: 0;
+        right: 0;
+        height: 100%;
+        width: 100%;
+        overflow: auto;
+        background-image: url(./images/club_apparel_background@3x.png);
+        background-color: #231f20;
+        background-size: cover;
+        z-index: 2;
+        overflow: auto;
+        text-align: center;
     }
 
     &-Buttons {
@@ -160,7 +223,17 @@
                 &_isEarnExpanded {
                     border-bottom: none;
                     &::after {
-                        transform: rotate(-135deg) !important;
+                        transform: rotate(-135deg);
+                    }
+
+                    @include before-desktop {
+                        &::after {
+                            position: fixed;
+                            transform: rotate(135deg);
+                            padding: 2px 7px 7px 2px;
+                            z-index: 3;
+                            left: -85%;
+                        }
                     }
                 }
 
@@ -179,6 +252,7 @@
         @include before-desktop {
             background-color: unset;
             background-image: unset;
+            padding-bottom: 100px;
         }
     }
 
@@ -190,6 +264,15 @@
             display: inline-block;
             max-width: 100%;
             margin: 60px 0 40px;
+
+            &_isMobileLogo {
+                margin: 0 0 40px;
+            }
+        }
+
+        @include before-desktop {
+            display: flex;
+            flex-direction: column;
         }
     }
 
@@ -264,6 +347,12 @@
         span {
             font-weight: 600;
         }
+
+        @include before-desktop {
+            padding-top: 10px;
+            order: 3;
+            margin: 0 15%;
+        }
     }
 
     &-ChangeButton {
@@ -271,9 +360,15 @@
         margin: 20px auto 0;
         background-color: var(--white);
         font-size: 12px;
+        border-radius: 5px;
 
         &:hover {
             background-color: var(--light-gray);
+        }
+
+        @include before-desktop {
+            order: 2;
+            margin: 50px auto 0;
         }
     }
 }

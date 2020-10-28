@@ -31,7 +31,9 @@ class MyAccountClubApparelOverlay extends PureComponent {
         handleNotSucces: PropTypes.func.isRequired,
         state: PropTypes.string.isRequired,
         verifyOtp: PropTypes.func.isRequired,
-        phone: PropTypes.string.isRequired
+        phone: PropTypes.string.isRequired,
+        renderAbout: PropTypes.func.isRequired,
+        renderEarn: PropTypes.func.isRequired
     };
 
     state = {
@@ -75,6 +77,16 @@ class MyAccountClubApparelOverlay extends PureComponent {
         console.log(e.length);
         // eslint-disable-next-line no-magic-numbers
         this.setState({ isButtonDisabled: e.length !== 5 });
+    };
+
+    renderEarn = () => {
+        const { renderEarn } = this.props;
+
+        return (
+            <div block="MyAccountClubApparelOverlay" elem="Earn">
+                { renderEarn() }
+            </div>
+        );
     };
 
     renderField = (fieldEntry) => (

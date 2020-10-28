@@ -26,11 +26,10 @@ export class MyAccountClubApparelOverlayContainer extends PureComponent {
         phone: ''
     };
 
-    containerFunctions = {
+    containerFunctions = () => ({
         handleVerify: this.handleVerify.bind(this),
-        handleSuccess: this.handleSuccess.bind(this),
-        handleNotSucces: this.handleNotSucces.bind(this)
-    };
+        handleSuccess: this.handleSuccess.bind(this)
+    });
 
     containerProps = () => {
         const { state, phone } = this.state;
@@ -62,10 +61,11 @@ export class MyAccountClubApparelOverlayContainer extends PureComponent {
     }
 
     render() {
+        console.log(this.props);
         return (
             <MyAccountClubApparelOverlay
               { ...this.props }
-              { ...this.containerFunctions }
+              { ...this.containerFunctions() }
               { ...this.containerProps() }
             />
         );
