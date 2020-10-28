@@ -20,15 +20,16 @@ export class PriceContainer extends PureComponent {
     static propTypes = {
         price: PriceType.isRequired,
         config: Config.isRequired,
-        country: PropTypes.string.isRequired
+        country: PropTypes.string.isRequired,
+        page: PropTypes.string
     };
 
-    containerFunctions = {
-        // getData: this.getData.bind(this)
+    static defaultProps = {
+        page: ''
     };
 
     containerProps = () => {
-        const { price } = this.props;
+        const { price, page } = this.props;
         const priceObj = Array.isArray(price) ? price[0] : price;
         const [currency, priceData] = Object.entries(priceObj)[0];
         const {
@@ -36,11 +37,13 @@ export class PriceContainer extends PureComponent {
             '6s_base_price': basePrice = defaultPrice,
             '6s_special_price': specialPrice = defaultPrice
         } = priceData;
+        const fixedPrice = (currency === 'BHD' || currency === 'KWD') && page !== 'plp';
 
         return {
             basePrice,
             specialPrice,
-            currency
+            currency,
+            fixedPrice
         };
     };
 

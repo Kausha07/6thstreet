@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 /**
  * @category  6thstreet
  * @author    Alona Zvereva <alona.zvereva@scandiweb.com>
@@ -24,7 +25,7 @@ import {
 import { TotalsType } from 'Type/MiniCart';
 import { ClubApparelMember } from 'Util/API/endpoint/ClubApparel/ClubApparel.type';
 import { isArabic } from 'Util/App';
-import { formatCurrency, roundPrice } from 'Util/Price';
+import { roundPrice } from 'Util/Price';
 
 import ClubApparel from './icons/club-apparel.png';
 import Delivery from './icons/delivery-truck.png';
@@ -91,8 +92,10 @@ export class CartPage extends PureComponent {
     }
 
     renderPriceLine(price) {
-        const { totals: { quote_currency_code } } = this.props;
-        return `${formatCurrency(quote_currency_code)}${roundPrice(price)}`;
+        const { totals: { currency_code } } = this.props;
+        const fixedPrice = currency_code === 'KWD' || currency_code === 'BHD';
+
+        return `${currency_code}${fixedPrice ? price.toFixed(3) : roundPrice(price)}`;
     }
 
     renderTotalDetails(isMobile = false) {

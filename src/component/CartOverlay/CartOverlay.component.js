@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 /**
  * ScandiPWA - Progressive Web App for Magento
  *
@@ -49,8 +50,10 @@ export class CartOverlay extends PureComponent {
     }
 
     renderPriceLine(price) {
-        const { totals: { items } } = this.props;
-        return `${items[0].currency} ${parseFloat(price).toFixed(2)}`;
+        const { totals: { items, currency_code } } = this.props;
+        const decimals = currency_code === 'KWD' || currency_code === 'BHD' ? 3 : 2;
+
+        return `${items[0].currency} ${parseFloat(price).toFixed(decimals)}`;
     }
 
     renderCartItems() {

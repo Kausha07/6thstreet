@@ -1,4 +1,4 @@
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import Image from 'Component/Image';
@@ -13,7 +13,12 @@ import './ProductItem.style';
 
 class ProductItem extends PureComponent {
     static propTypes = {
-        product: Product.isRequired
+        product: Product.isRequired,
+        page: PropTypes.string
+    };
+
+    static defaultProps = {
+        page: ''
     };
 
     state = {
@@ -71,10 +76,10 @@ class ProductItem extends PureComponent {
     }
 
     renderPrice() {
-        const { product: { price } } = this.props;
+        const { product: { price }, page } = this.props;
 
         return (
-            <Price price={ price } />
+            <Price price={ price } page={ page } />
         );
     }
 

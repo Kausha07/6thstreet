@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 /* eslint-disable react/jsx-one-expression-per-line */
 /**
  * ScandiPWA - Progressive Web App for Magento
@@ -262,12 +263,13 @@ export class CartItem extends PureComponent {
                 basePrice
             }
         } = this.props;
+        const decimals = currency_code === 'KWD' || currency_code === 'BHD' ? 3 : 2;
 
         const withoutDiscount = (
             <>
                 { currency_code }
                 <span>
-                    { `${parseFloat(row_total).toFixed(2)}` }
+                    { `${parseFloat(row_total).toFixed(decimals)}` }
                 </span>
             </>
         );
@@ -280,7 +282,7 @@ export class CartItem extends PureComponent {
                 <div>
                     { currency_code }
                     <span>
-                        { `${parseFloat(basePrice).toFixed(2)}` }
+                        { `${parseFloat(basePrice).toFixed(decimals)}` }
                     </span>
                 </div>
                 { withoutDiscount }

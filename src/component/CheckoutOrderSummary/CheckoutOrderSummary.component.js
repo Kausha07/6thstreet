@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 import CartCoupon from 'Component/CartCoupon';
 import ClubApparel from 'Component/ClubApparel';
 import CmsBlock from 'Component/CmsBlock';
@@ -164,16 +165,18 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                 subtotal,
                 total,
                 tax_amount,
-                shipping_amount
+                shipping_amount,
+                currency_code
             },
             checkoutStep
         } = this.props;
+        const fixedPrice = currency_code === 'KWD' || currency_code === 'BHD';
 
         return (
             <div block="CheckoutOrderSummary" elem="OrderTotals">
                 <ul>
                     <div block="CheckoutOrderSummary" elem="Subtotals">
-                        { this.renderPriceLine(subtotal, __('Subtotal')) }
+                        { this.renderPriceLine(fixedPrice ? subtotal.toFixed(3) : subtotal, __('Subtotal')) }
                         { checkoutStep !== SHIPPING_STEP
                             ? this.renderPriceLine(shipping_amount, __('Shipping'), { divider: true })
                             : null }
@@ -183,8 +186,12 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                     </div>
                     <div block="CheckoutOrderSummary" elem="Totals">
                         { checkoutStep !== SHIPPING_STEP
-                            ? this.renderPriceLine(total + tax_amount, __('Total'))
-                            : this.renderPriceLine(total + tax_amount, __('Total')) }
+                            ? this.renderPriceLine(
+                                fixedPrice ? (total + tax_amount).toFixed(3) : total + tax_amount, __('Total')
+                            )
+                            : this.renderPriceLine(
+                                fixedPrice ? (total + tax_amount).toFixed(3) : total + tax_amount, __('Total')
+                            ) }
                             <span>{ __('(Taxes included)') }</span>
                     </div>
                 </ul>

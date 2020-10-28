@@ -12,7 +12,12 @@ class Price extends PureComponent {
     static propTypes = {
         basePrice: PropTypes.number.isRequired,
         specialPrice: PropTypes.number.isRequired,
-        currency: PropTypes.string.isRequired
+        currency: PropTypes.string.isRequired,
+        fixedPrice: PropTypes.bool
+    };
+
+    static defaultProps = {
+        fixedPrice: false
     };
 
     state = {
@@ -26,25 +31,25 @@ class Price extends PureComponent {
     }
 
     renderBasePrice() {
-        const { basePrice } = this.props;
+        const { basePrice, fixedPrice } = this.props;
 
         return (
             <span block="Price" elem="Base" mods={ { discount: this.haveDiscount() } }>
                 { this.renderCurrency() }
                 <span> </span>
-                { basePrice }
+                { fixedPrice ? (1 * basePrice).toFixed(3) : basePrice }
             </span>
         );
     }
 
     renderSpecialPrice() {
-        const { specialPrice } = this.props;
+        const { specialPrice, fixedPrice } = this.props;
 
         return (
             <span block="Price" elem="Special" mods={ { discount: this.haveDiscount() } }>
                 { this.renderCurrency() }
                 <span> </span>
-                { specialPrice }
+                { fixedPrice ? (1 * specialPrice).toFixed(3) : specialPrice }
             </span>
         );
     }
@@ -83,11 +88,13 @@ class Price extends PureComponent {
     renderPrice() {
         const {
             basePrice,
-            specialPrice
+            specialPrice,
+            fixedPrice
         } = this.props;
+        const { country } = JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data;
 
         if (basePrice === specialPrice) {
-            return this.renderBasePrice();
+            return fixedPrice ? this.renderBasePrice() : this.renderBasePrice(country);
         }
 
         return (
@@ -95,7 +102,7 @@ class Price extends PureComponent {
                 <del block="Price" elem="Del">{ this.renderBasePrice() }</del>
                 <span block="Price" elem="Wrapper">
                     { this.discountPercentage() }
-                    { this.renderSpecialPrice() }
+                    { fixedPrice ? this.renderSpecialPrice() : this.renderSpecialPrice(country) }
                 </span>
             </>
         );
