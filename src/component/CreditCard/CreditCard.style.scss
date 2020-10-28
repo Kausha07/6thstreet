@@ -1,7 +1,7 @@
 :root {
-    --card-paragraph-text-color: #d1d1d1;
-    --card-mini-text-color: #4A4A4A;
-    --card-validator-color: #F01136;
+    --card-paragraph-text-light-gray: #D1D1D1;
+    --card-mini-text-dark-gray: #4A4A4A;
+    --card-validator-red: #F01136;
 }
 
 .CreditCard {
@@ -30,7 +30,7 @@
         p {
             margin: 0;
             line-height: 1.5;
-            color: var(--card-paragraph-text-color);
+            color: var(--card-paragraph-text-light-gray);
             text-transform: uppercase;
             font-size: 10px;
         }
@@ -76,7 +76,7 @@
         position: absolute;
         top: 20px;
         left: 20px;
-        color: var(--card-validator-color);
+        color: var(--card-validator-red);
         line-height: 19px;
         z-index: 1;
         max-width: 280px;
@@ -102,7 +102,7 @@
         align-items: center;
         text-transform: uppercase;
         font-size: 8px;
-        color: var(--card-mini-text-color);
+        color: var(--card-mini-text-dark-gray);
 
         img {
             height: 14px;

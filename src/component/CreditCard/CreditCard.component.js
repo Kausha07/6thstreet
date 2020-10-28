@@ -22,8 +22,36 @@ class CreditCard extends PureComponent {
     state = {
         number: '',
         expDate: '',
-        validatorMessage: null
+        validatorMessage: null,
+        numberFilled: false,
+        expDateFilled: false,
+        cvvFilled: false
     };
+
+    componentDidMount() {
+        const { setOrderButtonDisabled } = this.props;
+        setOrderButtonDisabled();
+    }
+
+    componentDidUpdate() {
+        const { setOrderButtonDisabled, setOrderButtonEnabled } = this.props;
+
+        setOrderButtonEnabled();
+        if (this.haveUnvalidFields()) {
+            setOrderButtonDisabled();
+        }
+    }
+
+    haveUnvalidFields() {
+        const {
+            validatorMessage,
+            numberFilled,
+            expDateFilled,
+            cvvFilled
+        } = this.state;
+
+        return validatorMessage || !numberFilled || !expDateFilled || !cvvFilled;
+    }
 
     handleNumberChange = (e) => {
         const { setCreditCardData } = this.props;
@@ -40,7 +68,11 @@ class CreditCard extends PureComponent {
         }
 
         setCreditCardData({ number: newValue });
-        this.setState({ number: newValue });
+        if (newValue.length === 22) {
+            this.setState({ number: newValue, numberFilled: true });
+            return;
+        }
+        this.setState({ number: newValue, numberFilled: false });
     };
 
     handleExpDateChange = (e) => {
@@ -58,16 +90,24 @@ class CreditCard extends PureComponent {
         }
         const message = expDateValidator(newValue);
 
-        this.setState({ validatorMessage: message });
-
         setCreditCardData({ expDate: newValue });
-        this.setState({ expDate: newValue, validatorMessage: message });
+        if (newValue.length === 5) {
+            this.setState({ expDate: newValue, expDateFilled: true });
+            return;
+        }
+        this.setState({ expDate: newValue, validatorMessage: message, expDateFilled: false });
     };
 
     handleCvvChange = (e) => {
         const { setCreditCardData } = this.props;
+        const { value } = e.target;
 
+        if (value.length === 3) {
+            this.setState({ cvvFilled: true });
+            return;
+        }
         setCreditCardData({ cvv: e.target.value });
+        this.setState({ cvvFilled: false });
     };
 
     renderCreditCardForm() {

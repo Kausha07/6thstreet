@@ -8,7 +8,7 @@ export class CreditCardDispatcher {
         const { number, expDate, cvv } = data;
 
         return addNewCreditCard({
-            number,
+            number: number.replace(/\s/g, ''),
             expiryMonth: expDate.substr('0', '2'),
             expiryyear: expDate.substr('3', '5'),
             cvv
