@@ -52,7 +52,9 @@ export class HomePageContainer extends PureComponent {
         const { gender: prevGender, locale: prevLocale } = prevProps;
         const { locale, gender, setGender } = this.props;
         const { urlGender } = this.state;
-        setGender(urlGender);
+        if (urlGender !== '') {
+            setGender(urlGender);
+        }
 
         if (gender !== prevGender || locale !== prevLocale) {
             this.requestDynamicContent(true, urlGender);
