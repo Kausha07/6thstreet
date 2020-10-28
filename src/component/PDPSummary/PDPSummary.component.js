@@ -76,9 +76,9 @@ class PDPSummary extends PureComponent {
     }
 
     renderPrice() {
-        const { product: { price } } = this.props;
+        const { product: { price, stock_qty } } = this.props;
 
-        if (!price) {
+        if (!price || stock_qty === 0) {
             return null;
         }
 
@@ -137,7 +137,11 @@ class PDPSummary extends PureComponent {
     };
 
     renderColor() {
-        const { product: { color } } = this.props;
+        const { product: { color, stock_qty } } = this.props;
+
+        if (stock_qty === 0) {
+            return null;
+        }
 
         return (
             <div

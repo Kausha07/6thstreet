@@ -188,49 +188,7 @@ $select-arrow-width: 6px !default;
     &-Bottom {
         display: flex;
     }
-
-    &-PickUpButton {
-        display: flex;
-        align-items: center;
-        min-width: 60px;
-        margin-left: 20px;
-        font-size: 13px;
-        font-weight: var(--fw-bold);
-
-        span {
-            display: none;
-
-            @include desktop {
-                display: block;
-                padding-right: 20px;
-                white-space: nowrap;
-            }
-        }
-
-        div::before {
-            content: ' ';
-            position: absolute;
-            width: 22px;
-            right: -24px;
-            top: -10px;
-            height: 22px;
-            background-image: url(./icons/shop.svg);
-            background-size: 22px;
-            background-repeat: no-repeat;
-
-            @include desktop {
-                right: -8px;
-                top: -11px;
-            }
-        }
-
-        &:hover {
-            div::before {
-                background-image: url(./icons/shop-white.svg);
-            }
-        }
-
-    }
+    
     &-shopSvg {
         display: inline;
     }
