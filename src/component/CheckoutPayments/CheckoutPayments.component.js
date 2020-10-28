@@ -180,11 +180,21 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     }
 
     renderCreditCard() {
-        const { setCreditCardData } = this.props;
+        const {
+            paymentMethods,
+            setCreditCardData,
+            setOrderButtonDisabled,
+            setOrderButtonEnabled
+        } = this.props;
+
+        const cardData = paymentMethods.find(({ m_code }) => m_code === CARD);
 
         return (
             <CreditCard
+              cardData={ cardData }
               setCreditCardData={ setCreditCardData }
+              setOrderButtonDisabled={ setOrderButtonDisabled }
+              setOrderButtonEnabled={ setOrderButtonEnabled }
             />
         );
     }

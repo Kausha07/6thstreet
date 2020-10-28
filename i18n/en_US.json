@@ -462,5 +462,10 @@
     "Completed": null,
     "Your password was successfully updated!": null,
     "Current Password": null,
-    "Save": null
+    "Save": null,
+    "Please enter a valid card number": null,
+    "Please check the correct card correct card correct card expiration date (MM/YY)": null,
+    "MM/YY": null,
+    "accepted cards:": null,
+    "100% secured payments": null
 }

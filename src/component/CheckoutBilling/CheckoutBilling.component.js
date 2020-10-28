@@ -117,6 +117,8 @@ export class CheckoutBilling extends SourceCheckoutBilling {
               setOrderButtonEnableStatus={ this.setOrderButtonEnableStatus }
               setTabbyWebUrl={ setTabbyWebUrl }
               setCreditCardData={ setCreditCardData }
+              setOrderButtonDisabled={ this.setOrderButtonDisabled }
+              setOrderButtonEnabled={ this.setOrderButtonEnabled }
             />
         );
     }
@@ -132,6 +134,14 @@ export class CheckoutBilling extends SourceCheckoutBilling {
             </div>
         );
     }
+
+    setOrderButtonDisabled = () => {
+        this.setState({ isOrderButtonEnabled: false });
+    };
+
+    setOrderButtonEnabled = () => {
+        this.setState({ isOrderButtonEnabled: true });
+    };
 
     renderActions() {
         const {
