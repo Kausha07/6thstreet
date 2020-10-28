@@ -2,8 +2,8 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
-import { toggleBreadcrumbs } from 'Store/Breadcrumbs/Breadcrumbs.action';
 import { setGender } from 'Store/AppState/AppState.action';
+import { toggleBreadcrumbs } from 'Store/Breadcrumbs/Breadcrumbs.action';
 import { getStaticFile } from 'Util/API/endpoint/StaticFiles/StaticFiles.endpoint';
 import Logger from 'Util/Logger';
 
@@ -17,7 +17,7 @@ export const mapStateToProps = (state) => ({
 
 export const mapDispatchToProps = (_dispatch) => ({
     toggleBreadcrumbs: (areBreadcrumbsVisible) => _dispatch(toggleBreadcrumbs(areBreadcrumbsVisible)),
-    setGender: (gender) => dispatch(setGender(gender))
+    setGender: (gender) => _dispatch(setGender(gender))
 });
 
 export class HomePageContainer extends PureComponent {
@@ -54,7 +54,12 @@ export class HomePageContainer extends PureComponent {
         this.setUrlGender();
 
         const { gender: prevGender, locale: prevLocale } = prevProps;
-        const { locale, gender, setGender, toggleBreadcrumbs } = this.props;
+        const {
+            locale,
+            gender,
+            setGender,
+            toggleBreadcrumbs
+        } = this.props;
         const { urlGender } = this.state;
         setGender(urlGender);
         toggleBreadcrumbs(false);

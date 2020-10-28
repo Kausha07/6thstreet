@@ -460,5 +460,10 @@
     "Cancel %s %s": null,
     "Cancel an Item": null,
     "Payment Failed": null,
-    "Order Cancelled": null
+    "Order Cancelled": null,
+    "Date Requested: ": null,
+    "Reason": null,
+    "Cannot create return. Try later": null,
+    "Pending": null,
+    "Denied": null
 }
