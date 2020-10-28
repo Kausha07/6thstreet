@@ -9,12 +9,15 @@
     margin-top: 20px;
     padding: 0 20px;
 
-    p {
-        font-size: 18px;
-    }
-
     h1 {
         font-size: 24px;
+    }
+
+    .ProductLabel {
+        color: var(--pdp-new-text-color);
+        font-size: 16px;
+        margin-right: 4px;
+        text-transform: uppercase;
     }
 
     &-Header {
@@ -24,11 +27,8 @@
         margin-bottom: 30px;
     }
 
-    .ProductLabel {
-        color: var(--pdp-new-text-color);
-        font-size: 16px;
-        margin-right: 4px;
-        text-transform: uppercase;
+    &-Name {
+        font-size: 18px;
     }
 
     &-Dash {
@@ -117,6 +117,8 @@
     &-Tabby {
         display: flex;
         align-items: center;
+        text-transform: none;
+        font-weight: 400;
         max-width: 366px;
         width: 100%;
         box-shadow: 0px 0px 11px rgba(0,0,0,.1);
@@ -199,12 +201,4 @@
             }
         }
     }
-}
-
-#tabbyPopup {
-    width: 200px;
-    height: 100px;
-    z-index: 999999;
-    top: 10px;
-    background: red;
 }

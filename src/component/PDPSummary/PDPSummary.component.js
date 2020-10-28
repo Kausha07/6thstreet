@@ -71,7 +71,7 @@ class PDPSummary extends PureComponent {
         }
 
         return (
-            <p>{ name }</p>
+            <p block="PDPSummary" elem="Name">{ name }</p>
         );
     }
 
@@ -137,7 +137,7 @@ class PDPSummary extends PureComponent {
         }
 
         return <TabbyMiniPopup closeTabbyPopup={ this.closeTabbyPopup } />;
-    }
+    };
 
     renderColor() {
         const { product: { color } } = this.props;
