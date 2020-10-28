@@ -176,39 +176,37 @@ class PDPAddToCart extends PureComponent {
 
     renderAddToCartButton() {
         const {
-            addToCart, isLoading, addedToCart
+            addToCart,
+            isLoading,
+            addedToCart,
+            product: { stock_qty, highlighted_attributes },
+            product
         } = this.props;
 
         return (
-            <button
-              onClick={ addToCart }
-              block="PDPAddToCart"
-              elem="AddToCartButton"
-              mods={ { isLoading } }
-              mix={ {
-                  block: 'PDPAddToCart',
-                  elem: 'AddToCartButton',
-                  mods: { addedToCart }
-              } }
-              disabled={ this.checkStateForButtonDisabling() }
-            >
-                <span>{ __('Add to bag') }</span>
-                <span>{ __('Adding...') }</span>
-                <span>{ __('Added to bag') }</span>
-            </button>
-        );
-    }
-
-    renderPickUpButton() {
-        return (
-            <button
-              block="PDPAddToCart"
-              elem="PickUpButton"
-              mix={ { block: 'button secondary' } }
-            >
-                <span>{ __('pick up in store') }</span>
-                <div block="PDPSummary" elem="shopSvg" />
-            </button>
+            <div>
+                { (stock_qty !== 0 || highlighted_attributes === null
+                    || (Object.keys(product).length === 0
+                    && product.constructor === Object))
+                && (
+                    <button
+                      onClick={ addToCart }
+                      block="PDPAddToCart"
+                      elem="AddToCartButton"
+                      mods={ { isLoading } }
+                      mix={ {
+                          block: 'PDPAddToCart',
+                          elem: 'AddToCartButton',
+                          mods: { addedToCart }
+                      } }
+                      disabled={ this.checkStateForButtonDisabling() }
+                    >
+                        <span>{ __('Add to bag') }</span>
+                        <span>{ __('Adding...') }</span>
+                        <span>{ __('Added to bag') }</span>
+                    </button>
+                ) }
+            </div>
         );
     }
 
@@ -222,7 +220,6 @@ class PDPAddToCart extends PureComponent {
                 </div>
                 <div block="PDPAddToCart" elem="Bottom">
                     { this.renderAddToCartButton() }
-                    { this.renderPickUpButton() }
                 </div>
             </div>
         );
