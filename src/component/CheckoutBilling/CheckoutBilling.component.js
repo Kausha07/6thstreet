@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 
 import CheckoutAddressBook from 'Component/CheckoutAddressBook';
 import CheckoutPayments from 'Component/CheckoutPayments';
+import CreditCardTooltip from 'Component/CreditCardTooltip';
 import Field from 'Component/Field';
 import {
     CheckoutBilling as SourceCheckoutBilling
@@ -133,6 +134,21 @@ export class CheckoutBilling extends SourceCheckoutBilling {
         );
     }
 
+    renderCreditCardTooltipBar() {
+        const {
+            paymentMethods
+        } = this.props;
+
+        console.log(paymentMethods[0].options.promo_message.expanded[0].value);
+        console.log(paymentMethods);
+        return (
+            <CreditCardTooltip
+              collapsedPromoMessage={ (paymentMethods[0].options.promo_message.collapsed.text) }
+              expandedPromoMessage={ (paymentMethods[0].options.promo_message.expanded[0].value) }
+            />
+        );
+    }
+
     renderActions() {
         const {
             isOrderButtonVisible,
@@ -152,6 +168,8 @@ export class CheckoutBilling extends SourceCheckoutBilling {
             : !isOrderButtonEnabled;
 
         return (
+            <>
+            { this.renderCreditCardTooltipBar() }
             <div block="Checkout" elem="StickyButtonWrapper">
                 { this.renderTotals() }
                 <button
@@ -163,6 +181,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
                     { __('Place order') }
                 </button>
             </div>
+            </>
         );
     }
 }

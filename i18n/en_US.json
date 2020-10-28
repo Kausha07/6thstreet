@@ -450,5 +450,15 @@
     "2,3 or 6 months": null,
     "": null,
     "14 days after": null,
-    "14 days after product delivery": null
+    "14 days after product delivery": null,
+    "Error appeared while fetching return request information": null,
+    "Error appeared while fetching cancel request information": null,
+    "Something went wrong while fetching items": null,
+    "Error appeared while requesting a cancelation": null,
+    "Cancel ID: ": null,
+    "Cancel date: ": null,
+    "Cancel %s %s": null,
+    "Cancel an Item": null,
+    "Payment Failed": null,
+    "Order Cancelled": null
 }
