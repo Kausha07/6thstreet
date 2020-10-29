@@ -74,9 +74,7 @@ class TabbyMiniPopup extends PureComponent {
                 <h4>{ __('Split your purchase into equal monthly installments') }</h4>
                 <div block="TabbyMiniPopup" elem="Columns">
                     <div block="TabbyMiniPopup" elem="Column">
-                        { this.renderTabbyPopupRow('fees') }
-                        { this.renderTabbyPopupRow('card') }
-                        { this.renderTabbyPopupRow('easy') }
+                        { TABBY_ROW_DATA.map((row) => this.renderTabbyPopupRow(row)) }
                     </div>
                 </div>
                 <p block="TabbyMiniPopup" elem="ContentFooter">
@@ -92,9 +90,7 @@ class TabbyMiniPopup extends PureComponent {
                 <h4>{ __('Split into 4 equal monthly payments') }</h4>
                 <div block="TabbyMiniPopup" elem="Columns">
                     <div block="TabbyMiniPopup" elem="Column">
-                        { this.renderTabbyPopupRow('fees') }
-                        { this.renderTabbyPopupRow('card') }
-                        { this.renderTabbyPopupRow('easy') }
+                        { TABBY_ROW_DATA.map((row) => this.renderTabbyPopupRow(row)) }
                     </div>
                 </div>
                 <p block="TabbyMiniPopup" elem="ContentFooter">
@@ -113,25 +109,25 @@ class TabbyMiniPopup extends PureComponent {
                         { TABBY_SUB_ROW_DATA.map((text, index) => this.renderTabbyPopupSubRow(text, index)) }
                     </div>
                     <div block="TabbyMiniPopup" elem="Column">
-                        { this.renderTabbyPopupRow('fees') }
-                        { this.renderTabbyPopupRow('card') }
-                        { this.renderTabbyPopupRow('easy') }
+                        { TABBY_ROW_DATA.map((row) => this.renderTabbyPopupRow(row)) }
                     </div>
                 </div>
                 <p block="TabbyMiniPopup" elem="ContentFooter">
-                    { __('Sounds good? Just select Tabby at checkout.') }
+                    { __('Sounds good? Select Pay after delivery at checkout.') }
                 </p>
             </>
         );
     }
 
-    renderTabbyPopupRow(data) {
+    renderTabbyPopupRow(row) {
+        const { img, title, text } = row;
+
         return (
             <div block="TabbyMiniPopup" elem="Row">
-                <img src={ TABBY_ROW_DATA[data].img } alt="icon" />
+                <img src={ img } alt="icon" />
                 <div block="TabbyMiniPopup" elem="RowText">
-                    <h5>{ TABBY_ROW_DATA[data].title }</h5>
-                    <p>{ TABBY_ROW_DATA[data].text }</p>
+                    <h5>{ title }</h5>
+                    <p>{ text }</p>
                 </div>
             </div>
         );
