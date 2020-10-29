@@ -206,7 +206,11 @@ export class CartDispatcher {
 
         try {
             await applyCouponCode({ cartId, couponCode });
+
+            dispatch(showNotification('success', __('Coupon was applied!')));
         } catch (e) {
+            dispatch(showNotification('error', __('The coupon code isn\'t valid. Verify the code and try again.')));
+
             Logger.log(e);
         }
 
@@ -218,7 +222,11 @@ export class CartDispatcher {
 
         try {
             await removeCouponCode({ cartId, couponCode });
+
+            dispatch(showNotification('success', __('Coupon was removed!')));
         } catch (e) {
+            dispatch(showNotification('error', __('The coupon code isn\'t valid. Verify the code and try again.')));
+
             Logger.log(e);
         }
 

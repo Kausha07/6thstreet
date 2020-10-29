@@ -10,6 +10,11 @@ import {
 import { getStore } from 'Store';
 import CartDispatcher from 'Store/Cart/Cart.dispatcher';
 import CheckoutDispatcher from 'Store/Checkout/Checkout.dispatcher';
+import { TotalsType } from 'Type/MiniCart';
+
+export const mapStateToProps = (state) => ({
+    totals: state.CartReducer.cartTotals
+});
 
 export const mapDispatchToProps = (dispatch) => ({
     ...SourceMapDispatchToProps,
@@ -22,7 +27,8 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
     static propTypes = {
         ...SourceCheckoutPaymentsContainer.propTypes,
         setTabbyWebUrl: PropTypes.func.isRequired,
-        setCreditCardData: PropTypes.func.isRequired
+        setCreditCardData: PropTypes.func.isRequired,
+        totals: TotalsType.isRequired
     };
 
     state = {
@@ -108,4 +114,4 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
     }
 }
 
-export default connect(null, mapDispatchToProps)(CheckoutPaymentsContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(CheckoutPaymentsContainer);
