@@ -189,18 +189,18 @@ export class CheckoutBilling extends SourceCheckoutBilling {
 
         return (
             <>
-            { this.renderCreditCardTooltipBar() }
-            <div block="Checkout" elem="StickyButtonWrapper">
-                { this.renderTotals() }
-                <button
-                  type="submit"
-                  block="Button"
-                  disabled={ isDisabled }
-                  mix={ { block: 'CheckoutBilling', elem: 'Button' } }
-                >
-                    { __('Place order') }
-                </button>
-            </div>
+                { this.renderCreditCardTooltipBar() }
+                <div block="Checkout" elem="StickyButtonWrapper">
+                    { this.renderTotals() }
+                    <button
+                      type="submit"
+                      block="Button"
+                      disabled={ isDisabled }
+                      mix={ { block: 'CheckoutBilling', elem: 'Button' } }
+                    >
+                        { __('Place order') }
+                    </button>
+                </div>
             </>
         );
     }
