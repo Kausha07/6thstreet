@@ -50,6 +50,16 @@
                 font-size: 13px;
                 font-weight: var(--fw-bold);
                 margin-bottom: 3px;
+
+                button {
+                    height: 20px;
+                    padding: 0 10px;
+                }
+
+                img {
+                    width: 16px;
+                    height: auto;
+                }
             }
 
             &Description {

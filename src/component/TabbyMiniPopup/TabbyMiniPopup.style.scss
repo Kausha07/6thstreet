@@ -69,6 +69,11 @@
         }
     }
 
+    &-Columns {
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+    }
+
     &-CloseBtn {
         padding: 0;
         margin: 0;

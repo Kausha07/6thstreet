@@ -133,7 +133,7 @@ class PDPSummary extends PureComponent {
             return null;
         }
 
-        return <TabbyMiniPopup closeTabbyPopup={ this.closeTabbyPopup } />;
+        return <TabbyMiniPopup page="pdp" closeTabbyPopup={ this.closeTabbyPopup } />;
     };
 
     renderColor() {

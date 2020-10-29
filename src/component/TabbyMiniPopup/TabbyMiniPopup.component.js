@@ -10,10 +10,15 @@ import './TabbyMiniPopup.style.scss';
 
 class TabbyMiniPopup extends PureComponent {
     static propTypes = {
-        closeTabbyPopup: PropTypes.func.isRequired
+        closeTabbyPopup: PropTypes.func.isRequired,
+        page: PropTypes.string
     };
 
-    renderPdpTabbyPopup() {
+    static defaultProps = {
+        page: ''
+    };
+
+    renderPopup() {
         const { closeTabbyPopup } = this.props;
 
         return (
@@ -27,15 +32,36 @@ class TabbyMiniPopup extends PureComponent {
                         { ' ' }
                     </button>
                     <img src={ tabby } alt="tabby" />
-                    <h2>{ __('Split your purchase into equal monthly installments') }</h2>
-                    { this.renderTabbyPopupRow('fees') }
-                    { this.renderTabbyPopupRow('card') }
-                    { this.renderTabbyPopupRow('easy') }
-                    <p block="TabbyMiniPopup" elem="ContentFooter">
-                        { __('Sounds good? Just select Tabby at checkout.') }
-                    </p>
+                    { this.renderTabbyContent() }
                 </div>
             </div>
+        );
+    }
+
+    renderTabbyContent = () => {
+        const { page } = this.props;
+        if (page === 'pdp') {
+            return this.renderPdpContent();
+        }
+
+        return null;
+    };
+
+    renderPdpContent() {
+        return (
+            <>
+                <h2>{ __('Split your purchase into equal monthly installments') }</h2>
+                <div block="TabbyMiniPopup" elem="Columns">
+                    <div block="TabbyMiniPopup" elem="Column">
+                        { this.renderTabbyPopupRow('fees') }
+                        { this.renderTabbyPopupRow('card') }
+                        { this.renderTabbyPopupRow('easy') }
+                    </div>
+                </div>
+                <p block="TabbyMiniPopup" elem="ContentFooter">
+                    { __('Sounds good? Just select Tabby at checkout.') }
+                </p>
+            </>
         );
     }
 
@@ -57,7 +83,7 @@ class TabbyMiniPopup extends PureComponent {
         return (
             <>
                 <div block="TabbyMiniPopup" elem="Overlay" onClick={ closeTabbyPopup } />
-                { this.renderPdpTabbyPopup() }
+                { this.renderPopup() }
             </>
         );
     }

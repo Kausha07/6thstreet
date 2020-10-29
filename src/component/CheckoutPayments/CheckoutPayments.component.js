@@ -1,9 +1,12 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 import CheckoutPayment from 'Component/CheckoutPayment';
 import { PAYMENTS_DATA } from 'Component/CheckoutPayment/CheckoutPayment.config';
 import ClubApparel from 'Component/ClubApparel';
 import CreditCard from 'Component/CreditCard';
 import Slider from 'Component/Slider';
 import StoreCredit from 'Component/StoreCredit';
+import TabbyMiniPopup from 'Component/TabbyMiniPopup';
 import SourceCheckoutPayments from 'SourceComponent/CheckoutPayments/CheckoutPayments.component';
 import { isSignedIn } from 'Util/Auth';
 
@@ -14,6 +17,7 @@ import {
     TABBY_PAY_LATER,
     TABBY_PAYMENT_CODES
 } from './CheckoutPayments.config';
+import info from './icons/info.svg';
 
 import './CheckoutPayments.extended.style';
 
@@ -29,7 +33,8 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     state = {
         activeSliderImage: 0,
         tabbyPaymentMethods: [],
-        tabbyIsRendered: false
+        tabbyIsRendered: false,
+        showTabbyMiniPopup: false
     };
 
     handleChange = (activeImage) => {
@@ -151,6 +156,9 @@ export class CheckoutPayments extends SourceCheckoutPayments {
                 <div block="CheckoutPayments" elem="TabbyPaymentContent">
                     <div block="CheckoutPayments" elem="TabbyPaymentContentTitle">
                         { title }
+                        { m_code === TABBY_ISTALLMENTS
+                            ? <button onClick={ this.openTabbyPopup }><img src={ info } alt="info" /></button>
+                            : <button onClick={ this.openTabbyPopup }><img src={ info } alt="info" /></button> }
                     </div>
                     <div block="CheckoutPayments" elem="TabbyPaymentContentDescription">
                         { m_code === TABBY_ISTALLMENTS
@@ -264,10 +272,32 @@ export class CheckoutPayments extends SourceCheckoutPayments {
         );
     }
 
+    openTabbyPopup = (e) => {
+        e.preventDefault();
+        console.log('open');
+        this.setState({ showTabbyMiniPopup: true });
+    };
+
+    closeTabbyPopup = (e) => {
+        e.preventDefault();
+        this.setState({ showTabbyMiniPopup: false });
+    };
+
+    renderTabbyPopup = () => {
+        const { showTabbyMiniPopup } = this.state;
+
+        if (!showTabbyMiniPopup) {
+            return null;
+        }
+
+        return <TabbyMiniPopup page="pdp" closeTabbyPopup={ this.closeTabbyPopup } />;
+    };
+
     render() {
         return (
             <div block="CheckoutPayments">
                 { this.renderContent() }
+                { this.renderTabbyPopup() }
             </div>
         );
     }
