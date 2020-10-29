@@ -23,7 +23,7 @@
         margin-top: none;
 
         @include desktop {
-            margin-top: 4rem;
+            float: left;
         }
     }
 
@@ -57,7 +57,6 @@
         font-size: 14px;
         font-weight: var(--fw-regular);
         display: block;
-        margin-bottom: 1.5rem;
     }
 
     &-Line{
@@ -156,7 +155,7 @@
         @include desktop {
             position: absolute;
             bottom: 0;
-            top: 10%;
+            top: 7%;
             width: 100%;
             padding-right: 6%;
             overflow-y: auto;
@@ -200,12 +199,12 @@
             &-Button {
                 width: 100%;
                 float: left;
-                margin-top: .5rem;
                 border: none;
                 border-width: unset;
                 padding: 6px;
                 transform: none;
                 z-index: 1;
+                height: 70px;
 
                 &_isArabic {
                     float: left;
@@ -229,7 +228,7 @@
                     margin: 0 auto;
                     transform: rotate(-45deg);
                     right: 0;
-                    top: 16px;
+                    top: 30px;
                     background: transparent;
                 }
             }
@@ -268,6 +267,8 @@
                                 display: block;
                             }
                         }
+
+                        margin-top: 0;
                     }
                 }
 
