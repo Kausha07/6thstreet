@@ -20,15 +20,15 @@ class MyAccountClubApparel extends PureComponent {
     static propTypes = {
         linkAccount: PropTypes.func.isRequired,
         verifyOtp: PropTypes.func.isRequired,
-        clubApparelMember: ClubApparelMember,
         activeOverlay: PropTypes.string.isRequired,
         showOverlay: PropTypes.func.isRequired,
         hideActiveOverlay: PropTypes.func.isRequired,
-        country: PropTypes.string.isRequired
+        country: PropTypes.string.isRequired,
+        clubApparel: ClubApparelMember
     };
 
     static defaultProps = {
-        clubApparelMember: {}
+        clubApparel: {}
     };
 
     state = {
@@ -83,7 +83,7 @@ class MyAccountClubApparel extends PureComponent {
 
     renderLinkedMember() {
         const {
-            clubApparelMember: {
+            clubApparel: {
                 caPoints,
                 currency,
                 memberDetails: {
@@ -296,10 +296,10 @@ class MyAccountClubApparel extends PureComponent {
 
     render() {
         const {
-            clubApparelMember,
             linkAccount,
             country,
-            verifyOtp
+            verifyOtp,
+            clubApparel: { accountLinked }
         } = this.props;
         const {
             isAboutExpanded,
@@ -323,7 +323,7 @@ class MyAccountClubApparel extends PureComponent {
                       src={ isArabic ? ClubApparelLogoAR : ClubApparelLogoEN }
                       alt="Logo icon"
                     />
-                    { clubApparelMember ? this.renderLinkedMember() : this.renderNotLinkedMember() }
+                    { accountLinked ? this.renderLinkedMember() : this.renderNotLinkedMember() }
                 </div>
                 <div block="MyAccountClubApparel" elem="Buttons" mods={ { isArabic } }>
                     <button

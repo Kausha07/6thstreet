@@ -32,14 +32,6 @@ export class StoreCreditDispatcher {
         }
     }
 
-    isStoreCreditApplied() {
-        const { Cart: { cartTotals: { total_segments: totals = [] } = {} } } = getStore().getState();
-
-        const { value: storeCreditBalance } = totals.find(({ code }) => code === 'customerbalance') || 0;
-
-        return storeCreditBalance && storeCreditBalance !== 0;
-    }
-
     async toggleStoreCredit(dispatch, apply) {
         try {
             dispatch(setIsLoading(true));

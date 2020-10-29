@@ -23,6 +23,7 @@ export class MyAccountReturnCreateList extends PureComponent {
         return (
             <div block="MyAccountReturnCreateList">
                 <Loader isLoading={ isLoading } />
+                { (!isLoading && !orders.length) && <p>{ __('Cannot create return. Try later') }</p> }
                 { orders.map((order) => <MyAccountReturnCreateListItem key={ order.id } order={ order } />) }
             </div>
         );

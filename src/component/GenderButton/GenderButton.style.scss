@@ -32,8 +32,7 @@
         pointer-events: all;
         z-index: 2;
 
-        &_isCurrentGender,
-        &:hover
+        &_isCurrentGender
         {
             border-bottom: 2px solid var(--black);
             font-weight: var(--fw-bold);

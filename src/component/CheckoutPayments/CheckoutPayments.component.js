@@ -1,9 +1,11 @@
 import CheckoutPayment from 'Component/CheckoutPayment';
 import { PAYMENTS_DATA } from 'Component/CheckoutPayment/CheckoutPayment.config';
+import ClubApparel from 'Component/ClubApparel';
 import CreditCard from 'Component/CreditCard';
 import Slider from 'Component/Slider';
 import StoreCredit from 'Component/StoreCredit';
 import SourceCheckoutPayments from 'SourceComponent/CheckoutPayments/CheckoutPayments.component';
+import { isSignedIn } from 'Util/Auth';
 
 import {
     CARD,
@@ -180,19 +182,34 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     }
 
     renderCreditCard() {
-        const { setCreditCardData } = this.props;
+        const {
+            paymentMethods,
+            setCreditCardData,
+            setOrderButtonDisabled,
+            setOrderButtonEnabled
+        } = this.props;
+
+        const cardData = paymentMethods.find(({ m_code }) => m_code === CARD);
 
         return (
             <CreditCard
+              cardData={ cardData }
               setCreditCardData={ setCreditCardData }
+              setOrderButtonDisabled={ setOrderButtonDisabled }
+              setOrderButtonEnabled={ setOrderButtonEnabled }
             />
         );
     }
 
     renderToggleableDiscountOptions() {
+        if (!isSignedIn()) {
+            return null;
+        }
+
         return (
             <div block="CheckoutPayments" elem="DiscountOptionWrapper">
                 <StoreCredit canApply hideIfZero />
+                <ClubApparel hideIfZero />
             </div>
         );
     }

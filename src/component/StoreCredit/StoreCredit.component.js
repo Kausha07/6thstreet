@@ -11,9 +11,13 @@ export class StoreCredit extends PureComponent {
         isLoading: PropTypes.bool.isRequired,
         canApply: PropTypes.bool.isRequired,
         hideIfZero: PropTypes.bool.isRequired,
-        creditIsApplied: PropTypes.bool.isRequired,
+        creditIsApplied: PropTypes.bool,
         storeCreditBalance: PropTypes.string.isRequired,
         toggleStoreCredit: PropTypes.func.isRequired
+    };
+
+    static defaultProps = {
+        creditIsApplied: false
     };
 
     hasCredit() {
@@ -40,7 +44,7 @@ export class StoreCredit extends PureComponent {
 
         return (
             <span block="StoreCredit" elem="Amount">
-                { ` ${ amount }` }
+                { `${ amount }` }
             </span>
         );
     }

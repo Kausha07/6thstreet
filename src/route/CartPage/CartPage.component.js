@@ -37,7 +37,7 @@ export class CartPage extends PureComponent {
         onCheckoutButtonClick: PropTypes.func.isRequired,
         activeTab: activeTabType.isRequired,
         changeActiveTab: PropTypes.func.isRequired,
-        clubApparelMember: ClubApparelMember,
+        clubApparel: ClubApparelMember,
         isSignedIn: PropTypes.bool.isRequired
     };
 
@@ -46,7 +46,7 @@ export class CartPage extends PureComponent {
     };
 
     static defaultProps = {
-        clubApparelMember: {}
+        clubApparel: {}
     };
 
     renderCartItems() {
@@ -223,7 +223,7 @@ export class CartPage extends PureComponent {
                     club_apparel_estimated_pointsvalue
                 }
             },
-            clubApparelMember: {
+            clubApparel: {
                 accountLinked
             },
             isSignedIn
