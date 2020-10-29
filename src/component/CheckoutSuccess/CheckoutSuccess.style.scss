@@ -1,82 +1,82 @@
 .CheckoutSuccess {
-  @include mobile {
-    margin-top: 2rem;
-    text-align: center;
-  }
-
-  &-ContinueButton {
     @include mobile {
-      width: 100%;
+        margin-top: 2rem;
+        text-align: center;
     }
 
-    @include after-mobile {
-      margin-top: 2rem;
-    }
-  }
+    &-ContinueButton {
+        @include mobile {
+            width: 100%;
+        }
 
-  &-ButtonWrapper {
-    @include mobile {
-      padding: 1rem;
-      position: fixed;
-      left: 0;
-      width: 100%;
-      bottom: var(--navigation-tabs-height);
-      border-top: 1px solid var(--primary-divider-color);
-    }
-  }
-
-  .Button {
-    @include before-desktop {
-      width: 100%;
-      text-align: center;
-    }
-  }
-
-  .SuccessOverlay{
-    height: 100%;
-    background-color: var(--color-green-cyan);
-    position: fixed;
-    left: 0;
-    opacity: 1;
-    visibility: visible;
-
-    &.hidden {
-      opacity: 0;
-      transition: opacity 1s linear;
+        @include after-mobile {
+            margin-top: 2rem;
+        }
     }
 
-    @include desktop {
-      width: 100%;
-      padding: 0 52%;
-      z-index: 90;
-      text-align: center;
-      transform: translate(-15px, 0);
-      top: 90px;
+    &-ButtonWrapper {
+        @include mobile {
+            padding: 1rem;
+            position: fixed;
+            left: 0;
+            width: 100%;
+            bottom: var(--navigation-tabs-height);
+            border-top: 1px solid var(--primary-divider-color);
+        }
     }
 
-    @include mobile {
-      padding: 50%;
-      top: 0;
+    .Button {
+        @include before-desktop {
+            width: 100%;
+            text-align: center;
+        }
     }
 
-    .OrderPlacedTextWrapper {
-      position: absolute;
-      bottom: 50%;
-      transform: translate(-50%, -50%);
+    .SuccessOverlay {
+        height: 100%;
+        background-color: var(--color-green-cyan);
+        position: fixed;
+        left: 0;
+        opacity: 1;
+        visibility: visible;
 
-      .confirmSimbol {
-        background: url('./icons/confirm@2x.png');
-        height: 50px;
-        background-size: 50px;
-        width: 50px;
-        margin: auto;
-      }
+        &.hidden {
+            opacity: 0;
+            transition: opacity 1s linear;
+        }
 
-      p {
-        font-size: 18px;
-        font-weight: var(--fw-demi);
-        color: var(--white);
-      }
+        @include desktop {
+            width: 100%;
+            padding: 0 52%;
+            z-index: 90;
+            text-align: center;
+            transform: translate(-15px, 0);
+            top: 90px;
+        }
+
+        @include mobile {
+            padding: 50%;
+            top: 0;
+        }
+
+        .OrderPlacedTextWrapper {
+            position: absolute;
+            bottom: 50%;
+            transform: translate(-50%, -50%);
+
+            .confirmSimbol {
+                background: url('./icons/confirm@2x.png');
+                height: 50px;
+                background-size: 50px;
+                width: 50px;
+                margin: auto;
+            }
+
+            p {
+                font-size: 18px;
+                font-weight: var(--fw-demi);
+                color: var(--white);
+            }
+        }
     }
-  }
 }
