@@ -27,6 +27,14 @@ class MyAccountCancelCreate extends MyAccountReturnCreate {
         );
     };
 
+    renderHeading() {
+        return (
+            <h2 block="MyAccountReturnCreate" elem="Heading">
+                { __('Select 1 or more items you wish to cancel.') }
+            </h2>
+        );
+    }
+
     renderOrderItems() {
         const { items, onFormSubmit } = this.props;
 
