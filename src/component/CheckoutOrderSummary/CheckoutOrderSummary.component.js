@@ -3,6 +3,7 @@ import CartCoupon from 'Component/CartCoupon';
 import ClubApparel from 'Component/ClubApparel';
 import CmsBlock from 'Component/CmsBlock';
 import Link from 'Component/Link';
+import { FIXED_CURRENCIES } from 'Component/Price/Price.config';
 import StoreCredit from 'Component/StoreCredit';
 import { SHIPPING_STEP } from 'Route/Checkout/Checkout.config';
 import {
@@ -170,7 +171,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
             },
             checkoutStep
         } = this.props;
-        const fixedPrice = currency_code === 'KWD' || currency_code === 'BHD';
+        const fixedPrice = FIXED_CURRENCIES.includes(currency_code);
 
         return (
             <div block="CheckoutOrderSummary" elem="OrderTotals">

@@ -16,6 +16,7 @@ import ContentWrapper from 'Component/ContentWrapper';
 import ExpandableContent from 'Component/ExpandableContent';
 import Link from 'Component/Link';
 import MyAccountTabList from 'Component/MyAccountTabList';
+import { FIXED_CURRENCIES } from 'Component/Price/Price.config';
 import ProductLinks from 'Component/ProductLinks';
 import { tabMap } from 'Route/MyAccount/MyAccount.container';
 import { CROSS_SELL } from 'Store/LinkedProducts/LinkedProducts.reducer';
@@ -93,7 +94,7 @@ export class CartPage extends PureComponent {
 
     renderPriceLine(price) {
         const { totals: { currency_code } } = this.props;
-        const fixedPrice = currency_code === 'KWD' || currency_code === 'BHD';
+        const fixedPrice = FIXED_CURRENCIES.includes(currency_code);
 
         return `${currency_code}${fixedPrice ? price.toFixed(3) : roundPrice(price)}`;
     }

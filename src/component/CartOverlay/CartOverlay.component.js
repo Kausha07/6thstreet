@@ -17,6 +17,7 @@ import CartItem from 'Component/CartItem';
 import CmsBlock from 'Component/CmsBlock';
 import { CART_OVERLAY } from 'Component/Header/Header.config';
 import Link from 'Component/Link';
+import { FIXED_CURRENCIES } from 'Component/Price/Price.config';
 import Overlay from 'SourceComponent/Overlay';
 import { TotalsType } from 'Type/MiniCart';
 import { isArabic } from 'Util/App';
@@ -51,7 +52,7 @@ export class CartOverlay extends PureComponent {
 
     renderPriceLine(price) {
         const { totals: { currency_code } } = this.props;
-        const decimals = currency_code === 'KWD' || currency_code === 'BHD' ? 3 : 2;
+        const decimals = FIXED_CURRENCIES.includes(currency_code) ? 3 : 2;
 
         return `${currency_code} ${parseFloat(price).toFixed(decimals)}`;
     }

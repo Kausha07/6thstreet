@@ -18,6 +18,7 @@ import { withRouter } from 'react-router';
 import Field from 'Component/Field';
 import Image from 'Component/Image';
 import Loader from 'Component/Loader';
+import { FIXED_CURRENCIES } from 'Component/Price/Price.config';
 import { CartItemType } from 'Type/MiniCart';
 import { isArabic } from 'Util/App';
 
@@ -263,7 +264,7 @@ export class CartItem extends PureComponent {
                 basePrice
             }
         } = this.props;
-        const decimals = currency_code === 'KWD' || currency_code === 'BHD' ? 3 : 2;
+        const decimals = FIXED_CURRENCIES.includes(currency_code) ? 3 : 2;
 
         const withoutDiscount = (
             <>

@@ -88,13 +88,11 @@ class Price extends PureComponent {
     renderPrice() {
         const {
             basePrice,
-            specialPrice,
-            fixedPrice
+            specialPrice
         } = this.props;
-        const { country } = JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data;
 
         if (basePrice === specialPrice) {
-            return fixedPrice ? this.renderBasePrice() : this.renderBasePrice(country);
+            return this.renderBasePrice();
         }
 
         return (
@@ -102,7 +100,7 @@ class Price extends PureComponent {
                 <del block="Price" elem="Del">{ this.renderBasePrice() }</del>
                 <span block="Price" elem="Wrapper">
                     { this.discountPercentage() }
-                    { fixedPrice ? this.renderSpecialPrice() : this.renderSpecialPrice(country) }
+                    { this.renderSpecialPrice() }
                 </span>
             </>
         );
