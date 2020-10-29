@@ -50,7 +50,6 @@ export const CartReducer = (state = getInitialState(), action) => {
     const item = { ...cartItem };
     const totals = { ...cartTotals };
 
-    console.log('***', totals);
     switch (type) {
     case SET_CART_ID:
         BrowserDatabase.setItem(
