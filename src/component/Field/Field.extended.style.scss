@@ -102,4 +102,10 @@
             background: rgba(67,67,67,1);
         }
     }
+
+    input[type="date"] {
+        &::after {
+            content: none;
+        }
+    }
 }

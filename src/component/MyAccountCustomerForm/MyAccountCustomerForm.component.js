@@ -23,8 +23,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
     };
 
     state = {
-        isArabic: isArabic(),
-        gender: __('male')
+        isArabic: isArabic()
     };
 
     get fieldMap() {
@@ -51,12 +50,10 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
     }
 
     getCustomerFullName() {
-        const { customer } = this.props;
+        const { customer: { firstname, lastname } = {} } = this.props;
 
-        if (Object.keys(customer).length) {
-            const firstName = customer.firstname;
-            const lastName = customer.firstname;
-            return { firstName, lastName };
+        if (firstname && lastname) {
+            return { firstName: firstname, lastName: lastname };
         }
 
         return [];
@@ -113,7 +110,9 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
 
     renderGernder() {
         // gender need to be added to customer data
-        const { gender, isArabic } = this.state;
+        const { isArabic } = this.state;
+        const { customer: { gender } } = this.props;
+        const isMale = gender === 1;
 
         return (
             <fieldset block="MyAccountCustomerForm" elem="Gender">
@@ -127,18 +126,20 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
                       id="male"
                       label={ __('Male') }
                       name="gender"
-                      value={ gender }
+                      value="1"
                       onClick={ this.handleGenderChange }
-                      defaultChecked={ gender }
+                      // eslint-disable-next-line
+                      checked={ isMale }
                     />
                     <Field
                       type="radio"
                       id="female"
                       label={ __('Female') }
                       name="gender"
-                      value={ gender }
+                      value="2"
                       onClick={ this.handleGenderChange }
-                      defaultChecked={ gender }
+                    // eslint-disable-next-line
+                      checked={ !isMale }
                     />
                 </div>
             </fieldset>
@@ -152,11 +153,18 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
             if (!customer.addresses.length) {
                 return [];
             }
-            const customerAdressesData = customer.addresses[0];
-            const customerPhone = customerAdressesData.telephone;
-            const customerCountry = customerAdressesData.country_id;
 
-            return { customerPhone, customerCountry };
+            const { phone: customerPhone } = customer;
+            const customerAddressesData = customer.addresses[0];
+            const customerAddressPhone = customerAddressesData.telephone.substr('4');
+            const customerCountry = customerAddressesData.country_id;
+
+            return {
+                customerPhone: customerPhone
+                    ? customerPhone.substr('4')
+                    : customerAddressPhone,
+                customerCountry
+            };
         }
 
         return [];
@@ -174,6 +182,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
                   elem="PhoneField"
                   mods={ { isArabic } }
                   type="text"
+                  name="phone"
                   id="phone"
                   placeholder={ __('Phone number') }
                   value={ customerPhoneData.customerPhone }
@@ -185,12 +194,18 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
     renderBirthDay() {
         // birthday need to be added to customer data
         const { isArabic } = this.state;
+        const { customer: { dob } } = this.props;
 
         return (
             <div block="MyAccountCustomerForm" elem="BirthDay" mods={ { isArabic } }>
-                <input
+                <Field
+                  block="MyAccountCustomerForm"
+                  elem="BirthDay"
                   type="date"
+                  mods={ { isArabic } }
+                  name="dob"
                   id="birth-day"
+                  value={ dob }
                 />
             </div>
         );
