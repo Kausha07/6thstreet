@@ -22,9 +22,10 @@ import { changeNavigationState } from 'Store/Navigation/Navigation.action';
 import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
-import { DASHBOARD } from 'Type/Account';
+import { customerType } from 'Type/Account';
 import { HistoryType } from 'Type/Common';
 import { TotalsType } from 'Type/MiniCart';
+import { ClubApparelMember } from 'Util/API/endpoint/ClubApparel/ClubApparel.type';
 import { isSignedIn } from 'Util/Auth';
 import history from 'Util/History';
 import isMobile from 'Util/Mobile';
@@ -41,7 +42,9 @@ export const mapStateToProps = (state) => ({
     totals: state.CartReducer.cartTotals,
     headerState: state.NavigationReducer[TOP_NAVIGATION_TYPE].navigationState,
     guest_checkout: state.ConfigReducer.guest_checkout,
-    isSignedIn: state.MyAccountReducer.isSignedIn
+    customer: state.MyAccountReducer.customer,
+    isSignedIn: state.MyAccountReducer.isSignedIn,
+    clubApparel: state.ClubApparelReducer.clubApparel
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -64,10 +67,21 @@ export class CartPageContainer extends PureComponent {
         guest_checkout: PropTypes.bool.isRequired,
         history: HistoryType.isRequired,
         totals: TotalsType.isRequired,
-        tabMap: PropTypes.isRequired
+        tabMap: PropTypes.isRequired,
+        customer: customerType,
+        isSignedIn: PropTypes.bool.isRequired,
+        clubApparel: ClubApparelMember
     };
 
-    state = { isEditing: false };
+    static defaultProps = {
+        customer: null,
+        clubApparel: {}
+    };
+
+    state = {
+        isEditing: false,
+        clubApparelMember: null
+    };
 
     containerFunctions = {
         onCheckoutButtonClick: this.onCheckoutButtonClick.bind(this),
@@ -182,12 +196,10 @@ export class CartPageContainer extends PureComponent {
 
     _updateBreadcrumbs() {
         const { updateBreadcrumbs } = this.props;
-        const { activeTab } = this.state;
-        const { url, name } = tabMap[activeTab];
 
         updateBreadcrumbs([
-            { url: `${ MY_ACCOUNT_URL }${ url }`, name },
-            { name: __('My Account'), url: `${ MY_ACCOUNT_URL }/${ DASHBOARD }` }
+            { url: '', name: __('My bag') },
+            { name: __('Home'), url: '/' }
         ]);
     }
 

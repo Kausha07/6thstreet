@@ -3,7 +3,7 @@
 
     li {
         padding: 0;
-    
+
         &:before {
             content: none;
         }
@@ -17,7 +17,7 @@
     &-Title {
         @include desktop {
             font-size: 17px;
-            font-weight: 600;
+            font-weight: var(--fw-demi);
         }
     }
 

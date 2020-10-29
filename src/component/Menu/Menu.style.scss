@@ -1,5 +1,6 @@
 .Menu {
     list-style-type: square;
+    --pink: #e35467;
 
     &-Container {
         display: flex;
@@ -7,7 +8,7 @@
 
     @include before-desktop {
         border-right: 1px solid var(--light-gray);
-        margin-top: 120px;
+        margin-top: 150px;
         height: 100%;
         width: 100%;
 
@@ -31,7 +32,7 @@
 
         &-Header {
             &-Mobile {
-                background-color: var(--white);
+                background-color: var(--pink);
                 position: fixed;
                 width: 100%;
                 z-index: 10;
@@ -54,21 +55,6 @@
                                 margin-left: 20px;
                                 margin-right: 0;
                             }
-                        }
-                    }
-                }
-
-                .HeaderSearch {
-                    height: 50px;
-                    margin-top: 15px;
-
-                    .Field {
-                        margin: 10px 0;
-                        padding: 0 20px;
-                        width: 100%;
-
-                        #search-field {
-                            width: 100%;
                         }
                     }
                 }
@@ -95,6 +81,5 @@
                 display: none;
             }
         }
-
     }
 }

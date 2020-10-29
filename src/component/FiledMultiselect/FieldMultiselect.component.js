@@ -139,9 +139,7 @@ class FieldMultiselect extends PureComponent {
         } = this.props;
 
         if (option.subcategories) {
-            return !isMobile.any()
-                ? Object.entries(option.subcategories).map(this.renderOption)
-                : this.renderOptionMobile(option);
+            return Object.entries(option.subcategories).map(this.renderOption);
         }
 
         return (

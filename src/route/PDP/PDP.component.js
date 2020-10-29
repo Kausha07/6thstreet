@@ -1,4 +1,5 @@
-// import PropTypes from 'prop-types';
+/* eslint-disable fp/no-let */
+/* eslint-disable max-len */
 import { PureComponent } from 'react';
 
 import PDPDetailsSection from 'Component/PDPDetailsSection';
@@ -7,10 +8,6 @@ import PDPMainSection from 'Component/PDPMainSection';
 import './PDP.style';
 
 class PDP extends PureComponent {
-    static propTypes = {
-        // TODO: implement prop-types
-    };
-
     renderMainSection() {
         return (
             <PDPMainSection />

@@ -30,6 +30,10 @@ class MyAccountOrderList extends SourceComponent {
             isLoading
         } = this.props;
 
+        if (!orders.length && isLoading) {
+            return null;
+        }
+
         if (!orders.length && !isLoading) {
             return this.renderNoOrders();
         }

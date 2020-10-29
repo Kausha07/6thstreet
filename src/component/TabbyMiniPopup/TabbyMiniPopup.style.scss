@@ -1,0 +1,143 @@
+:root {
+    --tabby-popup-text-color-dark: #292929;
+    --tabby-icon-background-color-green: rgba(62, 237, 191, 0.15);
+    --tabby-popup-paragraph-color-gray: #949494;
+    --tabby-popup-x-btn-color-chocolate: #3e3e3e;
+    --tabby-popup-standart-font: "Arial", "Roboto", "Helvetica", "Verdana", sans-serif;
+}
+
+.TabbyMiniPopup {
+    &-Overlay {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: rgba(70, 70, 70, .6);
+        z-index: 8;
+    }
+
+    &-Wrapper {
+        position: fixed;
+        top: 20%;
+        right: 0;
+        left: 0;
+        z-index: 9;
+        max-width: 450px;
+        min-height: 470px;
+        margin: auto;
+    }
+
+    &-Content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin: 0 10px;
+        z-index: 9;
+        background: $white;
+        max-width: 450px;
+        min-height: 470px;
+        padding: 40px 64px 30px;
+        box-sizing: border-box;
+        border-radius: 17px;
+        color: var(--tabby-popup-text-color-dark);
+
+        @include mobile {
+            padding: 40px 20px 20px;
+        }
+
+        h2, h3 {
+            text-transform: none;
+            font-weight: var(--fw-regular);
+            font-family: var(--tabby-popup-standart-font);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-size: 18px;
+            line-height: 24px;
+        }
+
+        h3 {
+            text-align: start;
+        }
+
+        img {
+            width: 66px;
+            height: auto;
+        }
+    }
+
+    &-CloseBtn {
+        padding: 0;
+        margin: 0;
+        width: 18px;
+        height: 18px;
+        position: absolute;
+        right: 18px;
+        top: 18px;
+
+        &:before,
+        &:after {
+            position: absolute;
+            top: 0;
+            left: 6px;
+            content: "";
+            height: 17px;
+            width: 2px;
+            background-color: var(--tabby-popup-x-btn-color-chocolate);
+            border-radius: 2px;
+        }
+
+        &:before {
+            transform: rotate(45deg);
+        }
+
+        &:after {
+            transform: rotate(-45deg);
+        }
+    }
+
+    &-Row {
+        width: 100%;
+        margin-bottom: 30px;
+
+        img {
+            float: left;
+            width: 56px;
+            height: 56px;
+            padding: 10px;
+            margin-right: 24px;
+            background-color: var(--tabby-icon-background-color-green);
+            border-radius: 21px;
+        }
+    }
+
+    &-RowText {
+        display: flex;
+        align-items: flex-start;
+        flex-direction: column;
+
+        h3 {
+            margin: 0;
+            font-size: 16px;
+            line-height: 22px;
+            font-weight: var(--fw-bold);
+        }
+
+        p {
+            text-align: start;
+            margin: 0;
+            color: var(--tabby-popup-paragraph-color-gray);
+            font-size: 12px;
+            line-height: 16px;
+        }
+    }
+
+    &-ContentFooter {
+        text-align: start;
+        font-size: 16px;
+        line-height: 22px;
+    }
+}

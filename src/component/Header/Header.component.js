@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
+import { withRouter } from 'react-router';
 
 import HeaderBottomBar from 'Component/HeaderBottomBar';
 import HeaderLogo from 'Component/HeaderLogo';
@@ -22,7 +23,10 @@ export class Header extends PureComponent {
     };
 
     state = {
-        isArabic: isArabic()
+        isArabic: isArabic(),
+        isMobile: isMobile.any() || isMobile.tablet(),
+        isCheckout: false,
+        newMenuGender: ''
     };
 
     headerSections = [
@@ -32,13 +36,24 @@ export class Header extends PureComponent {
         MobileBottomBar
     ];
 
+    static getDerivedStateFromProps() {
+        return location.pathname.match(/checkout/) ? {
+            isCheckout: true
+        } : {
+            isCheckout: false
+        };
+    }
+
     renderSection = (Component, i) => {
         const { navigationState } = this.props;
+        const { newMenuGender } = this.state;
 
         return (
             <Component
               key={ i }
               navigationState={ navigationState }
+              changeMenuGender={ this.changeMenuGender }
+              newMenuGender={ newMenuGender }
             />
         );
     };
@@ -46,36 +61,33 @@ export class Header extends PureComponent {
     renderBackToShoppingButton() {
         const { isArabic } = this.state;
 
-        if (isMobile.any() || isMobile.tablet()) {
-            return (
-                <a href="/">
-                <div
-                  block="CheckoutHeader"
-                  elem="BackToShopping"
-                  mods={ { isArabic } }
-                >
-                    <button block="BackMobileButton">
-                        { ' ' }
-                    </button>
-                </div>
-                </a>
-            );
-        }
-
         return (
-            <a href="/">
-                <div
-                  block="CheckoutHeader"
-                  elem="BackToShopping"
-                  mods={ { isArabic } }
-                >
-                    <button
-                      block="button secondary medium"
+            <>
+                <a href="/">
+                    <div
+                      block="CheckoutHeader"
+                      elem="BackToShoppingMobile"
+                      mods={ { isArabic } }
                     >
-                        { __('Back to shopping') }
-                    </button>
-                </div>
-            </a>
+                        <button block="BackMobileButton">
+                            { ' ' }
+                        </button>
+                    </div>
+                </a>
+                <a href="/">
+                    <div
+                      block="CheckoutHeader"
+                      elem="BackToShoppingDesktop"
+                      mods={ { isArabic } }
+                    >
+                        <button
+                          block="button secondary medium"
+                        >
+                            { __('Back to shopping') }
+                        </button>
+                    </div>
+                </a>
+            </>
         );
     }
 
@@ -99,7 +111,8 @@ export class Header extends PureComponent {
     }
 
     renderCheckoutHeder() {
-        if (isMobile.any() || isMobile.tablet()) {
+        const { isMobile } = this.state;
+        if (isMobile) {
             return this.renderBackToShoppingButton();
         }
 
@@ -114,12 +127,18 @@ export class Header extends PureComponent {
         );
     }
 
+    changeMenuGender = (gender) => {
+        this.setState({ newMenuGender: gender });
+    };
+
     render() {
         const { navigationState: { name } } = this.props;
+        const { isCheckout } = this.state;
+
         return (
             <>
                 <header block="Header" mods={ { name } }>
-                    { location.pathname.match(/checkout/)
+                    { isCheckout
                         ? this.renderCheckoutHeder()
                         : this.headerSections.map(this.renderSection) }
                     <MobileMenuSidebar activeOverlay={ MOBILE_MENU_SIDEBAR_ID } />
@@ -130,4 +149,4 @@ export class Header extends PureComponent {
     }
 }
 
-export default Header;
+export default withRouter(Header);

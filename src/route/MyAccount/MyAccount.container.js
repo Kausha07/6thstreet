@@ -70,7 +70,8 @@ export class MyAccountContainer extends SourceMyAccountContainer {
 
         updateBreadcrumbs([
             { url: `${ MY_ACCOUNT_URL }${ url }`, name: alternativePageName || name },
-            { name: __('My Account'), url: `${ MY_ACCOUNT_URL }/${ DASHBOARD }` }
+            { name: __('My Account'), url: `${ MY_ACCOUNT_URL }/${ DASHBOARD }` },
+            { name: __('Home'), url: '/' }
         ]);
     }
 }

@@ -4,8 +4,13 @@
 
 .StoreCredit {
     &-Amount {
-        font-weight: bold;
+        font-weight: var(--fw-demi);
         white-space: nowrap;
+
+        &::before {
+            content: ' ';
+            display: inline;
+        }
     }
 
     &_canApply {
@@ -29,7 +34,7 @@
 
 li.MyAccountTabListItem {
     &_StoreCreditLink {
-        padding: 15px 0;
+        padding: 15px 20px;
 
         @include mobile {
             display: none;
@@ -50,15 +55,14 @@ li.MyAccountTabListItem {
         }
 
         label {
-            font-family: "Avenir Next Regular", serif;
             text-transform: capitalize;
-            font-weight: normal;
+            font-weight: var(--fw-regular);
             cursor: pointer;
             line-height: 20px;
+            letter-spacing: .5px;
 
             span {
-                font-family: "Avenir Next Demi", serif;
-                font-weight: normal;
+                font-weight: var(--fw-demi);
             }
         }
     }

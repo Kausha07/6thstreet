@@ -1,6 +1,7 @@
 import { getStore } from 'Store';
 import {
     removeCartItem,
+    removeCartItems,
     setCartId,
     setCartTotals,
     updateCartItem
@@ -10,7 +11,7 @@ import {
     addProductToCart,
     applyCouponCode,
     createCart,
-    getCartTotals,
+    getCart,
     removeCouponCode,
     removeProductFromCart,
     updateProductInCart
@@ -25,8 +26,9 @@ export class CartDispatcher {
 
         if (!cartId) {
             try {
-                const { data: cartId = null } = await createCart();
-                if (!cartId) {
+                const { data: requestedCartId = null } = await createCart();
+
+                if (!requestedCartId) {
                     dispatch(
                         showNotification(
                             'error',
@@ -36,18 +38,63 @@ export class CartDispatcher {
 
                     return;
                 }
-                dispatch(setCartId(cartId));
+
+                dispatch(setCartId(requestedCartId));
+                await this.getCartTotals(dispatch, requestedCartId);
             } catch (e) {
                 Logger.log(e);
             }
+        } else {
+            await this.getCartTotals(dispatch, cartId);
         }
+    }
 
-        await this.getCartTotals(dispatch, cartId);
+    async setCartItems(dispatch, data) {
+        try {
+            const {
+                items = [],
+                currency_code: currency
+            } = data || {};
+
+            if (items.length) {
+                dispatch(removeCartItems());
+
+                items.map((item) => {
+                    const {
+                        thumbnail,
+                        color,
+                        size_value: optionValue,
+                        brand_name: brandName,
+                        price,
+                        original_price: basePrice,
+                        id
+                    } = item;
+
+                    return dispatch(updateCartItem(
+                        { ...item, item_id: id },
+                        color,
+                        optionValue,
+                        basePrice,
+                        brandName,
+                        thumbnail,
+                        '',
+                        price,
+                        currency
+                    ));
+                });
+            }
+        } catch (e) {
+            Logger.log(e);
+        }
     }
 
     async getCartTotals(dispatch, cartId) {
         try {
-            const { data } = await getCartTotals(cartId);
+            const {
+                data
+            } = await getCart(cartId);
+
+            await this.setCartItems(dispatch, data);
 
             dispatch(setCartTotals(data));
         } catch (e) {

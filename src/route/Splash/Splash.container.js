@@ -9,7 +9,8 @@ import { Config } from 'Util/API/endpoint/Config/Config.type';
 import Splash from './Splash.component';
 
 export const mapStateToProps = (state) => ({
-    config: state.AppConfig.config
+    config: state.AppConfig.config,
+    locale: state.AppState.locale
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -21,24 +22,36 @@ export class SplashContainer extends PureComponent {
     static propTypes = {
         getConfig: PropTypes.func.isRequired,
         getCart: PropTypes.func.isRequired,
-        config: Config.isRequired
+        config: Config.isRequired,
+        locale: Config.isRequired
+    };
+
+    state = {
+        isCartRetrieved: false
     };
 
     constructor(props) {
         super(props);
 
         this.requestConfig();
-        this.getCart();
+    }
+
+    static getDerivedStateFromProps(props, state) {
+        const { locale, getCart } = props;
+        const { isCartRetrieved } = state;
+
+        if (!isCartRetrieved && locale !== '') {
+            getCart();
+
+            return { isCartRetrieved: true };
+        }
+
+        return null;
     }
 
     requestConfig() {
         const { getConfig } = this.props;
         getConfig();
-    }
-
-    getCart() {
-        const { getCart } = this.props;
-        getCart();
     }
 
     containerProps = () => ({

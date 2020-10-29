@@ -5,8 +5,8 @@
     border-radius: 50%;
     position: absolute;
     display: inline-block;
-    top: 0.8rem;
-    right: 0.8rem;
+    top: .8rem;
+    right: .8rem;
     z-index: 1;
 
     &-Icon {
@@ -36,7 +36,7 @@
 
 .PDPGallery {
     .WishlistIcon {
-        top: 0.8rem;
+        top: .8rem;
         right: 2.4rem;
 
         @include desktop() {

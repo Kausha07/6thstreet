@@ -106,8 +106,8 @@ class MyAccountOrderListItem extends SourceComponent {
                           elem="DetailsQty"
                           mix={ { block: 'MyAccountReturnCreateListItem', elem: 'DetailsProp' } }
                         >
-                            { __('Products: ') }
                             <span>{ items_count }</span>
+                            { items_count !== 1 ? __(' Items') : __(' Item') }
                         </p>
                     </div>
                     <p
@@ -159,6 +159,12 @@ class MyAccountOrderListItem extends SourceComponent {
     }
 
     render() {
+        const { order } = this.props;
+
+        if (!order) {
+            return null;
+        }
+
         return (
             <button block="MyAccountOrderListItem" onClick={ this.handleClick }>
                 { this.renderHeading() }

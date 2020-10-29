@@ -8,6 +8,12 @@ import {
     WishlistDispatcher
 } from 'SourceComponent/Router/Router.container';
 import { setCountry, setLanguage } from 'Store/AppState/AppState.action';
+import { isSignedIn } from 'Util/Auth';
+
+export const MyAccountDispatcher = import(
+    /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
+    'Store/MyAccount/MyAccount.dispatcher'
+);
 
 export const mapStateToProps = (state) => ({
     ...sourceMapStateToProps(state),
@@ -21,19 +27,30 @@ export const mapDispatchToProps = (dispatch) => ({
         wishlistDisp.syncWishlist(dispatch);
     },
     setCountry: (value) => dispatch(setCountry(value)),
-    setLanguage: (value) => dispatch(setLanguage(value))
+    setLanguage: (value) => dispatch(setLanguage(value)),
+    requestCustomerData: () => MyAccountDispatcher
+        .then(({ default: dispatcher }) => dispatcher.requestCustomerData(dispatch))
 });
 
 export class RouterContainer extends SourceRouterContainer {
     static propTypes = {
         ...SourceRouterContainer.propTypes,
-        locale: PropTypes.string
+        locale: PropTypes.string,
+        requestCustomerData: PropTypes.func.isRequired
     };
 
     static defaultProps = {
         ...SourceRouterContainer.defaultProps,
         locale: ''
     };
+
+    componentDidMount() {
+        const { requestCustomerData } = this.props;
+
+        if (isSignedIn()) {
+            requestCustomerData();
+        }
+    }
 
     containerProps = () => {
         const { isBigOffline, setCountry, setLanguage } = this.props;

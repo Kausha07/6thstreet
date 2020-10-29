@@ -31,11 +31,26 @@ class ProductItem extends PureComponent {
         return <ProductLabel product={ product } />;
     }
 
+    renderExclusive() {
+        const { product: { promotion } } = this.props;
+
+        if (promotion !== undefined) {
+            return promotion !== null
+                ? <span block="PLPSummary" elem="Exclusive">{ promotion }</span>
+                : null;
+        }
+
+        return null;
+    }
+
     renderImage() {
         const { product: { thumbnail_url } } = this.props;
 
         return (
-            <Image src={ thumbnail_url } />
+            <div>
+                <Image src={ thumbnail_url } />
+                { this.renderExclusive() }
+            </div>
         );
     }
 

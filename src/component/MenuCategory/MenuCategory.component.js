@@ -2,6 +2,7 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import Link from 'Component/Link';
 import MenuDynamicContent from 'Component/MenuDynamicContent';
 import { CategoryData } from 'Util/API/endpoint/Categories/Categories.type';
 import { isArabic } from 'Util/App';
@@ -42,13 +43,24 @@ class MenuCategory extends PureComponent {
         if (!isVisible) {
             if (categoryKey === 'new_in' && isDefaultCategoryOpen && isMobile.any()) {
                 return (
-                    <MenuDynamicContent
-                      content={ data }
-                    />
+                    <div block="DynamicContent" elem="Wrapper">
+                        <MenuDynamicContent
+                          content={ data }
+                        />
+                    </div>
                 );
             }
 
             return null;
+        }
+        if (isMobile.any()) {
+            return (
+                <div block="DynamicContent" elem="Wrapper">
+                    <MenuDynamicContent
+                      content={ data }
+                    />
+                </div>
+            );
         }
 
         return (
@@ -58,13 +70,25 @@ class MenuCategory extends PureComponent {
         );
     }
 
+    getMenuCategoryLink() {
+        const { data } = this.props;
+        if (data[0].button !== undefined) {
+            return data[0].button.link;
+        }
+
+        return location.pathname;
+    }
+
     renderLabel() {
         const { label } = this.props;
+        const link = this.getMenuCategoryLink();
 
         return (
-            <div block="MenuCategory" elem="CategoryLabel">
-                { label }
-            </div>
+            <Link to={ link } block="MenuCategory" elem="CategoryLink">
+                <div block="MenuCategory" elem="CategoryLink-Label">
+                    { label }
+                </div>
+            </Link>
         );
     }
 

@@ -26,7 +26,11 @@ export class MyAccountReturnViewContainer extends PureComponent {
 
     state = {
         isLoading: true,
-        return: {}
+        order_id: null,
+        order_increment_id: null,
+        increment_id: null,
+        date: null,
+        items: []
     };
 
     constructor(props) {
@@ -37,13 +41,23 @@ export class MyAccountReturnViewContainer extends PureComponent {
 
     containerProps = () => {
         const {
+            order_id,
+            order_increment_id,
+            increment_id,
+            date,
+            items,
             isLoading,
-            return: returnItem
+            status
         } = this.state;
 
         return {
+            orderId: order_id,
+            orderNumber: order_increment_id,
+            returnNumber: increment_id,
+            date,
+            items,
             isLoading,
-            return: returnItem
+            status
         };
     };
 
@@ -62,11 +76,25 @@ export class MyAccountReturnViewContainer extends PureComponent {
     async getReturn() {
         try {
             const returnId = this.getReturnId();
-            const { data: returnItem } = await MagentoAPI.get(`/returns/${ returnId }`);
+            const {
+                data: {
+                    order_id,
+                    order_increment_id,
+                    increment_id,
+                    date,
+                    items,
+                    status
+                }
+            } = await MagentoAPI.get(`/returns/${ returnId }`);
 
             this.setState({
-                return: returnItem,
-                isLoading: false
+                order_id,
+                order_increment_id,
+                increment_id,
+                date,
+                items,
+                isLoading: false,
+                status
             });
         } catch (e) {
             this.setState({ isLoading: false });

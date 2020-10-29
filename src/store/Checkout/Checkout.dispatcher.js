@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { getStore } from 'Store';
 import { setShipping } from 'Store/Checkout/Checkout.action';
 import {
@@ -8,7 +9,13 @@ import {
     selectPaymentMethod,
     validateShippingAddress
 } from 'Util/API/endpoint/Checkout/Checkout.enpoint';
+import {
+    createSession,
+    getInstallmentForValue,
+    verifyPayment
+} from 'Util/API/endpoint/Tabby/Tabby.enpoint';
 import Logger from 'Util/Logger';
+import { TABBY_PAYMENT_CODES } from "Component/CheckoutPayments/CheckoutPayments.config";
 
 export class CheckoutDispatcher {
     /* eslint-disable-next-line */
@@ -41,6 +48,29 @@ export class CheckoutDispatcher {
         return getPaymentMethods();
     }
 
+    async getTabbyInstallment(dispatch, price) {
+        return getInstallmentForValue(price);
+    }
+
+    async createTabbySession(dispatch, billingData) {
+        const { Cart: { cartId } } = getStore().getState();
+
+        const {
+            email, firstname, lastname, phone, city, street
+        } = billingData;
+
+        return createSession({
+            cart_id: cartId.toString(),
+            buyer: {
+                email,
+                name: `${firstname} ${lastname}`,
+                phone,
+                city,
+                address: street
+            }
+        });
+    }
+
     async selectPaymentMethod(dispatch, code) {
         const { Cart: { cartId } } = getStore().getState();
 
@@ -65,6 +95,10 @@ export class CheckoutDispatcher {
                 }
             }
         });
+    }
+
+    async verifyPayment(dispatch, paymentId) {
+        return verifyPayment(paymentId);
     }
 }
 

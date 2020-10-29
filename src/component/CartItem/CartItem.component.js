@@ -57,10 +57,6 @@ export class CartItem extends PureComponent {
         isLikeTable: false
     };
 
-    state = {
-        isArabic: isArabic()
-    };
-
     renderProductConfigurationOption = ([key, attribute]) => {
         const {
             item: {
@@ -143,8 +139,11 @@ export class CartItem extends PureComponent {
             }
         } = this.props;
 
-        hideActiveOverlay();
-        closePopup();
+        if (window.location.pathname !== '/cart' && window.location.pathname !== '/checkout/shipping') {
+            hideActiveOverlay();
+            closePopup();
+        }
+
         history.push(url.split('.com')[1]);
     };
 

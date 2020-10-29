@@ -11,7 +11,8 @@ class HeaderMenu extends PureComponent {
     static propTypes = {
         location: PropTypes.object.isRequired,
         toggleOverlayByKey: PropTypes.func.isRequired,
-        activeOverlay: PropTypes.string.isRequired
+        activeOverlay: PropTypes.string.isRequired,
+        newMenuGender: PropTypes.string.isRequired
     };
 
     state = {
@@ -35,8 +36,10 @@ class HeaderMenu extends PureComponent {
     };
 
     renderMenu() {
+        const { newMenuGender } = this.props;
+
         return (
-            <Menu />
+            <Menu newMenuGender={ newMenuGender } />
         );
     }
 
