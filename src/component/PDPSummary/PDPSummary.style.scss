@@ -140,9 +140,13 @@
         }
 
         img {
-            width: 47px;
+            width: 42px;
             height: auto;
             margin: 0 3px;
+
+            @include desktop() {
+                width: 47px;
+            }
         }
 
         span {
