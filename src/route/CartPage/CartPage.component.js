@@ -193,6 +193,7 @@ export class CartPage extends PureComponent {
     renderPromoContent() {
         const { cart_content: { cart_cms } = {} } = window.contentConfiguration;
         const { totals: { currency_code, avail_free_shipping_amount } } = this.props;
+        const { isArabic } = this.state;
 
         if (cart_cms) {
             return <CmsBlock identifier={ cart_cms } />;
@@ -203,10 +204,10 @@ export class CartPage extends PureComponent {
               block="CartPage"
               elem="PromoBlock"
             >
-                <figcaption block="CartPage" elem="PromoText">
+                <figcaption block="CartPage" elem="PromoText" mods={ { isArabic } }>
                     <img src={ Delivery } alt="Delivery icon" />
                     { __('Add ') }
-                    <span>{ `${currency_code } ${avail_free_shipping_amount}` }</span>
+                    <span>{ `${currency_code } ${avail_free_shipping_amount} ` }</span>
                     { __('more to your cart for ') }
                     <span>{ __('Free delivery') }</span>
                 </figcaption>

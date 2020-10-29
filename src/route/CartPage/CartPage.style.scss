@@ -272,19 +272,31 @@
 
         &Text {
             font-size: 12px;
-            display: flex;
+            display: inline;
+            flex-wrap: wrap;
+            line-height: 20px;
             align-items: center;
-            justify-content: space-between;
             width: 100%;
+            text-align: center;
 
             img {
                 width: 20px;
                 height: auto;
                 margin-right: 5px;
+                float: left;
+                margin-top: 5px;
             }
 
             @include mobile {
                 font-size: 11px;
+            }
+
+            &_isArabic {
+                img {
+                    margin-right: unset;
+                    margin-left: 5px;
+                    float: right;
+                }
             }
         }
     }

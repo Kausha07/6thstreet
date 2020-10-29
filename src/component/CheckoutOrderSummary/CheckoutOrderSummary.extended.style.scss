@@ -92,23 +92,75 @@
         }
     }
 
-    &-PromoBlock {
-        background: var(--cart-page-promo-background);
-        height: 40px;
-        margin: 21px 18px 15px;
-    }
+    &-Promo {
+        &Block {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 21px 18px 15px;
+            padding: 2rem 1rem;
+            height: 40px;
+            background: var(--cart-page-promo-background);
 
-    &-PromoText {
-        display: flex;
-        font-weight: var(--fw-regular);
-        font-size: 12px;
-        padding: 12px 12px 0 9px;
-        justify-content: space-between;
+            @include mobile {
+                padding: 1rem;
+                border: 0;
+                border-bottom: 1px solid var(--primary-divider-color);
+            }
 
-        img {
-            margin-top: 2px;
-            width: 21px;
-            height: 11px;
+            span:nth-child(2) {
+                font-weight: var(--fw-bold);
+            }
+
+            span:last-child {
+                font-weight: var(--fw-demi);
+                color: var(--color-green-cyan);
+                letter-spacing: -0.1px;
+                text-transform: capitalize;
+            }
+        }
+
+        &Image {
+            width: 46px;
+            margin-right: .5rem;
+
+            @include mobile {
+                width: 36px;
+            }
+        }
+
+        strong {
+            margin: 0 5px;
+        }
+
+        &Text {
+            font-size: 12px;
+            display: inline;
+            flex-wrap: wrap;
+            line-height: 20px;
+            align-items: center;
+            width: 100%;
+            text-align: center;
+
+            img {
+                width: 20px;
+                height: auto;
+                margin-right: 5px;
+                float: left;
+                margin-top: 5px;
+            }
+
+            @include mobile {
+                font-size: 11px;
+            }
+
+            &_isArabic {
+                img {
+                    margin-right: unset;
+                    margin-left: 5px;
+                    float: right;
+                }
+            }
         }
     }
 

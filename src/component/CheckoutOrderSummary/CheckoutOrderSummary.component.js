@@ -72,6 +72,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     renderPromoContent() {
         const { cart_content: { cart_cms } = {} } = window.contentConfiguration;
         const { totals: { currency_code, avail_free_shipping_amount } } = this.props;
+        const { isArabic } = this.state;
 
         if (cart_cms) {
             return <CmsBlock identifier={ cart_cms } />;
@@ -82,14 +83,14 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
               block="CheckoutOrderSummary"
               elem="PromoBlock"
             >
-                <figcaption block="CheckoutOrderSummary" elem="PromoText">
+                <figcaption block="CheckoutOrderSummary" elem="PromoText" mods={ { isArabic } }>
                     <img src={ Delivery } alt="Delivery icon" />
                     { __('Add ') }
                     <span
                       block="CheckoutOrderSummary"
                       elem="Currency"
                     >
-                        { `${currency_code } ${avail_free_shipping_amount}` }
+                        { `${currency_code } ${avail_free_shipping_amount} ` }
                     </span>
                     { __('more to your cart for ') }
                     <span

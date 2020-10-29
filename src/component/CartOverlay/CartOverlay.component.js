@@ -162,6 +162,7 @@ export class CartOverlay extends PureComponent {
     renderPromoContent() {
         const { cart_content: { cart_cms } = {} } = window.contentConfiguration;
         const { totals: { currency_code, avail_free_shipping_amount } } = this.props;
+        const { isArabic } = this.state;
 
         if (cart_cms) {
             return <CmsBlock identifier={ cart_cms } />;
@@ -172,14 +173,14 @@ export class CartOverlay extends PureComponent {
               block="CartOverlay"
               elem="PromoBlock"
             >
-                <figcaption block="CartOverlay" elem="PromoText">
+                <figcaption block="CartOverlay" elem="PromoText" mods={ { isArabic } }>
                     <img src={ Delivery } alt="Delivery icon" />
                     { __('Add ') }
                     <span
                       block="CartOverlay"
                       elem="Currency"
                     >
-                        { `${currency_code } ${avail_free_shipping_amount}` }
+                        { `${currency_code } ${avail_free_shipping_amount} ` }
                     </span>
                     { __('more to your cart for ') }
                     <span
