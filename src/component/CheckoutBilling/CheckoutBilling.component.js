@@ -19,7 +19,6 @@ export class CheckoutBilling extends SourceCheckoutBilling {
 
     renderPriceLine(price, name, mods) {
         const { totals: { currency_code } } = this.props;
-        const { roundedPrice } = Math.round(price);
 
         return (
             <li block="CheckoutOrderSummary" elem="SummaryItem" mods={ mods }>
@@ -29,7 +28,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
                     { price !== undefined
                         ? (
                         <strong block="CheckoutOrderSummary" elem="Price">
-                            { `${currency_code } ${ roundedPrice}` }
+                            { `${currency_code } ${ price}` }
                         </strong>
                         )
                         : null }
@@ -139,13 +138,24 @@ export class CheckoutBilling extends SourceCheckoutBilling {
             paymentMethods
         } = this.props;
 
-        console.log(paymentMethods[0].options.promo_message.expanded[0].value);
-        console.log(paymentMethods);
+        const {
+            options: {
+                promo_message: {
+                    collapsed: { text } = {},
+                    expanded
+                } = {}
+            }
+        } = paymentMethods[0];
+
         return (
-            <CreditCardTooltip
-              collapsedPromoMessage={ (paymentMethods[0].options.promo_message.collapsed.text) }
-              expandedPromoMessage={ (paymentMethods[0].options.promo_message.expanded[0].value) }
-            />
+            expanded !== undefined
+            && (
+                <CreditCardTooltip
+                  collapsedPromoMessage={ (text) }
+                  expandedPromoMessage={ (expanded[0].value) }
+                  bankLogos={ (expanded[1].value) }
+                />
+            )
         );
     }
 

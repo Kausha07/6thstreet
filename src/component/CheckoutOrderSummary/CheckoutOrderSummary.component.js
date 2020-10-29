@@ -60,9 +60,9 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
 
         return (
             <div block="CheckoutOrderSummary" elem="OrderItems">
-                    <ul block="CheckoutOrderSummary" elem="CartItemList">
-                        { items.map(this.renderItem) }
-                    </ul>
+                <ul block="CheckoutOrderSummary" elem="CartItemList">
+                    { items.map(this.renderItem) }
+                </ul>
             </div>
         );
     }
@@ -145,7 +145,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                     { name }
                 </strong>
                 <strong block="CheckoutOrderSummary" elem="Price">
-                { `${currency_code } ${ price}` }
+                    { `${currency_code } ${ price}` }
                 </strong>
             </li>
         );
@@ -159,7 +159,8 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                 tax_amount,
                 shipping_amount
             },
-            checkoutStep
+            checkoutStep,
+            cashOnDeliveryFee
         } = this.props;
 
         return (
@@ -176,9 +177,9 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                     </div>
                     <div block="CheckoutOrderSummary" elem="Totals">
                         { checkoutStep !== SHIPPING_STEP
-                            ? this.renderPriceLine(total + tax_amount, __('Total'))
+                            ? this.renderPriceLine(total + tax_amount + cashOnDeliveryFee, __('Total'))
                             : this.renderPriceLine(total + tax_amount, __('Total')) }
-                            <span>{ __('(Taxes included)') }</span>
+                        <span>{ __('(Taxes included)') }</span>
                     </div>
                 </ul>
             </div>
@@ -186,19 +187,10 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     }
 
     renderCashOnDeliveryFee() {
-        const { cashOnDeliveryFee, totals: { currency_code } } = this.props;
+        const { cashOnDeliveryFee } = this.props;
 
         if (cashOnDeliveryFee) {
-            return (
-                <li block="CheckoutOrderSummary" elem="SummaryItem">
-                    <span block="CheckoutOrderSummary" elem="Text">
-                        { __('Cash on Delivery Fee') }
-                    </span>
-                    <span block="CheckoutOrderSummary" elem="Text">
-                    { `${currency_code } ${ cashOnDeliveryFee}` }
-                    </span>
-                </li>
-            );
+            return this.renderPriceLine(cashOnDeliveryFee, __('Cash on Delivery'));
         }
 
         return null;
