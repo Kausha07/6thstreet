@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import StoreCreditDispatcher, { STORE_CREDIT } from 'Store/StoreCredit/StoreCredit.dispatcher';
 import { StoreCreditData } from 'Util/API/endpoint/StoreCredit/StoreCredit.type';
+import { isDiscountApplied } from 'Util/App';
 import BrowserDatabase from 'Util/BrowserDatabase';
 
 import StoreCredit from './StoreCredit.component';
@@ -14,32 +15,36 @@ export const mapStateToProps = ({
     StoreCreditReducer: {
         storeCredit,
         isLoading
+    },
+    Cart: {
+        cartTotals
     }
 }) => ({
     storeCredit,
-    isLoading
+    isLoading,
+    cartTotals
 });
 
 export const mapDispatchToProps = (dispatch) => ({
     toggleStoreCredit: (apply) => StoreCreditDispatcher.toggleStoreCredit(dispatch, apply),
-    fetchStoreCredit: () => StoreCreditDispatcher.getStoreCredit(dispatch),
-    isStoreCreditApplied: () => StoreCreditDispatcher.isStoreCreditApplied()
+    fetchStoreCredit: () => StoreCreditDispatcher.getStoreCredit(dispatch)
 });
 
 export class StoreCreditContainer extends PureComponent {
     static propTypes = {
-        isLoading: PropTypes.bool.isRequired,
+        isLoading: PropTypes.bool,
         storeCredit: StoreCreditData.isRequired,
         canApply: PropTypes.bool,
         hideIfZero: PropTypes.bool,
         toggleStoreCredit: PropTypes.func.isRequired,
         fetchStoreCredit: PropTypes.func.isRequired,
-        isStoreCreditApplied: PropTypes.func.isRequired
+        cartTotals: PropTypes.object.isRequired
     };
 
     static defaultProps = {
         canApply: false,
-        hideIfZero: false
+        hideIfZero: false,
+        isLoading: false
     };
 
     state = {
@@ -48,10 +53,10 @@ export class StoreCreditContainer extends PureComponent {
     };
 
     static getDerivedStateFromProps(props, state) {
-        const { storeCredit: { current_balance: storeCreditBalance } = {}, isStoreCreditApplied } = props;
-        const { storeCreditBalance: currentStoreCreditBalance, currentCreditIsApplied } = state;
+        const { storeCredit: { current_balance: storeCreditBalance } = {}, cartTotals } = props;
+        const { storeCreditBalance: currentStoreCreditBalance, creditIsApplied: currentCreditIsApplied } = state;
         const newState = {};
-        const creditIsApplied = isStoreCreditApplied();
+        const creditIsApplied = isDiscountApplied(cartTotals, 'customerbalance');
 
         if (storeCreditBalance !== currentStoreCreditBalance) {
             newState.storeCreditBalance = storeCreditBalance;

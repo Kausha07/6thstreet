@@ -1,4 +1,5 @@
 import CartCoupon from 'Component/CartCoupon';
+import ClubApparel from 'Component/ClubApparel';
 import CmsBlock from 'Component/CmsBlock';
 import Link from 'Component/Link';
 import StoreCredit from 'Component/StoreCredit';
@@ -7,6 +8,7 @@ import {
     CheckoutOrderSummary as SourceCheckoutOrderSummary
 } from 'SourceComponent/CheckoutOrderSummary/CheckoutOrderSummary.component';
 import { isArabic } from 'Util/App';
+import { isSignedIn } from 'Util/Auth';
 
 import Delivery from './icons/delivery-truck.png';
 
@@ -125,9 +127,14 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     }
 
     renderToggleableDiscountOptions() {
+        if (!isSignedIn()) {
+            return null;
+        }
+
         return (
             <div block="CheckoutOrderSummary" elem="DiscountOptionWrapper">
                 <StoreCredit canApply hideIfZero />
+                <ClubApparel hideIfZero />
             </div>
         );
     }

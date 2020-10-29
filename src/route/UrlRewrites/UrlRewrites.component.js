@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import CmsPage from 'Route/CmsPage';
 import NoMatch from 'Route/NoMatch';
 import PDP from 'Route/PDP';
 import PLP from 'Route/PLP';
@@ -23,7 +24,7 @@ class UrlRewrites extends PureComponent {
 
     typeMap = {
         [TYPE_CATEGORY]: () => <PLP />,
-        [TYPE_CMS_PAGE]: () => 'cms',
+        [TYPE_CMS_PAGE]: this.renderCmsPage.bind(this),
         [TYPE_PRODUCT]: this.renderPDP.bind(this)
     };
 
@@ -34,6 +35,14 @@ class UrlRewrites extends PureComponent {
 
         return (
             <PDP id={ id } />
+        );
+    }
+
+    renderCmsPage() {
+        const { id } = this.props;
+
+        return (
+            <CmsPage pageIds={ id } />
         );
     }
 

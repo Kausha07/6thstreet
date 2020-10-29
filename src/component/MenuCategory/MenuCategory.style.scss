@@ -194,6 +194,12 @@
             padding-left: 0;
         }
 
+        &-CategoryLink {
+            &-Label {
+                color: var(--white);
+            }
+        }
+
         .DynamicContent {
             background-color: var(--white);
             display: flex;
@@ -248,25 +254,25 @@
             text-transform: uppercase;
 
             .MenuCategory {
-                &-CategoryLabel {
-                    &::before {
-                        background-color: var(--red);
-                        color: transparent;
-                        transform: skew(-15deg, 0deg) translate(-10px, 0);
-                        content: '';
-                        width: calc(100% + 20px);
-                        height: 100%;
-                        position: absolute;
-                        z-index: -1;
+                &-CategoryLink {
+                    &-Label {
+                        &::before {
+                            background-color: var(--red);
+                            color: transparent;
+                            transform: skew(-15deg, 0deg) translate(-10px, 0px);
+                            content: '';
+                            width: calc(100% + 20px);
+                            height: 100%;
+                            position: absolute;
+                            z-index: -1;
+                        }
                     }
                 }
 
                 &_isArabic {
                     .MenuCategory {
-                        &-CategoryLabel {
-                            &::before {
-                                transform: skew(-15deg, 0deg) translate(10px, 0);
-                            }
+                        &::before {
+                            transform: skew(-15deg, 0deg) translate(10px, 0px);
                         }
                     }
                 }
@@ -358,9 +364,11 @@
             @include desktop {
                 &:last-child {
                     .MenuCategory {
-                        &-CategoryLabel {
-                            &::before {
-                                transform: skew(-15deg, 0deg) translate(10px, 0);
+                        &-CategoryLink {
+                            &-Label {
+                                &::before {
+                                    transform: skew(-15deg, 0deg) translate(10px, 0px);
+                                }
                             }
                         }
                     }
