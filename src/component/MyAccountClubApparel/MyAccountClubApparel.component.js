@@ -40,14 +40,13 @@ class MyAccountClubApparel extends PureComponent {
 
     static getDerivedStateFromProps(props) {
         const { activeOverlay } = props;
-        console.log(props);
         document.body.style.overflow = activeOverlay !== '' ? 'hidden' : 'visible';
+
         return ({ isPopupOpen: activeOverlay === 'LinkAccount' });
     }
 
     handleModalClick = () => {
         const { showOverlay } = this.props;
-        console.log(this.props);
         showOverlay('LinkAccount');
         this.setState(({ isPopupOpen }) => ({ isPopupOpen: !isPopupOpen }));
     };
@@ -93,6 +92,7 @@ class MyAccountClubApparel extends PureComponent {
                 }
             }
         } = this.props;
+        const { isArabic } = this.state;
         const { img } = TIER_DATA[memberTier];
         const number = mobileNumber.startsWith('00')
             ? `+${mobileNumber.slice(2).replace(/^(.{3})(.*)$/, '$1 $2')}`
@@ -101,12 +101,12 @@ class MyAccountClubApparel extends PureComponent {
         return (
             <div block="MyAccountClubApparel" elem="MemberData">
                 <div block="MyAccountClubApparel" elem="Reward">
-                    <div block="MyAccountClubApparel" elem="Points">
+                    <div block="MyAccountClubApparel" elem="Points" mods={ { isArabic } }>
                         <p>Rewards Worth</p>
                         <span block="MyAccountClubApparel" elem="PointsCAP">{ caPoints }</span>
                         <span block="MyAccountClubApparel" elem="PointsCurrency">{ currency }</span>
                     </div>
-                    <div block="MyAccountClubApparel" elem="Tier">
+                    <div block="MyAccountClubApparel" elem="Tier" mods={ { isArabic } }>
                         <img
                           block="MyAccountClubApparel"
                           elem="TierImage"
@@ -120,11 +120,16 @@ class MyAccountClubApparel extends PureComponent {
                     <span>{ __('Club Apparel App') }</span>
                     { __(' to UNLOCK redemption.') }
                 </p>
-                <p block="MyAccountClubApparel" elem="Number">
+                <p block="MyAccountClubApparel" elem="Number" mods={ { isLinkedMember: true } }>
                     { __('Phone Number: ') }
                     <span>{ number }</span>
                 </p>
-                <button block="MyAccountClubApparel" elem="ChangeButton" onClick={ this.handleModalClick }>
+                <button
+                  block="MyAccountClubApparel"
+                  elem="ChangeButton"
+                  mods={ { isLinkedMember: true } }
+                  onClick={ this.handleModalClick }
+                >
                     { __('change to another club apparel account') }
                 </button>
             </div>
@@ -141,9 +146,6 @@ class MyAccountClubApparel extends PureComponent {
     }
 
     renderNotLinkedMember() {
-        const { isArabic } = this.state;
-        console.log(isArabic);
-
         return (
             <div block="MyAccountClubApparel" elem="MemberData">
                 <div block="MyAccountClubApparel" elem="Cards">
@@ -305,8 +307,10 @@ class MyAccountClubApparel extends PureComponent {
             isArabic,
             isPopupOpen
         } = this.state;
-
+        const beforeDesktop = isMobile.any() || isMobile.tablet();
         const isMobileLogo = isMobile.any() !== null;
+        const isArabicAbout = isArabic && isAboutExpanded;
+        const isArabicEarn = isArabic && isEarnExpanded;
 
         return (
             <div block="MyAccountClubApparel">
@@ -321,25 +325,25 @@ class MyAccountClubApparel extends PureComponent {
                     />
                     { clubApparelMember ? this.renderLinkedMember() : this.renderNotLinkedMember() }
                 </div>
-                <div block="MyAccountClubApparel" elem="Buttons">
+                <div block="MyAccountClubApparel" elem="Buttons" mods={ { isArabic } }>
                     <button
                       block="MyAccountClubApparel"
                       elem="AboutButton"
-                      mods={ { isAboutExpanded } }
+                      mods={ { isAboutExpanded, isArabicAbout } }
                       onClick={ this.onAboutClick }
                     >
                         { __('About Club Apparel') }
                     </button>
-                    { isMobile.any() && isAboutExpanded ? this.renderAboutMobile() : this.renderAbout() }
+                    { beforeDesktop && isAboutExpanded ? this.renderAboutMobile() : this.renderAbout() }
                     <button
                       block="MyAccountClubApparel"
                       elem="EarnButton"
-                      mods={ { isEarnExpanded } }
+                      mods={ { isEarnExpanded, isArabicEarn } }
                       onClick={ this.onEarnClick }
                     >
                         { __('Earn & Burn') }
                     </button>
-                    { isMobile.any() && isEarnExpanded ? this.renderEarnMobile() : this.renderEarn() }
+                    { beforeDesktop && isEarnExpanded ? this.renderEarnMobile() : this.renderEarn() }
                 </div>
                 { isPopupOpen
                     ? (

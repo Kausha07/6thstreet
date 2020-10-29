@@ -32,16 +32,18 @@ export class MyAccountClubApparelOverlayContainer extends PureComponent {
     });
 
     containerProps = () => {
-        const { state, phone } = this.state;
+        const { state, phone, countryPhoneCode } = this.state;
 
-        return { state, phone };
+        return { state, phone, countryPhoneCode };
     };
 
     handleVerify(fields) {
         const { linkAccount } = this.props;
-        const { phone } = fields;
+        const { phone, countryPhoneCode } = fields;
+
         this.setState({
             state: STATE_VERIFY,
+            countryPhoneCode,
             phone
         });
 
@@ -61,7 +63,6 @@ export class MyAccountClubApparelOverlayContainer extends PureComponent {
     }
 
     render() {
-        console.log(this.props);
         return (
             <MyAccountClubApparelOverlay
               { ...this.props }

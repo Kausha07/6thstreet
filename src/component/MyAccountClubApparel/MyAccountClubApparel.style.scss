@@ -4,6 +4,7 @@
     --ca-redemption-border-color: rgba(255,255,255, 0.1);
     --ca-card-color: rgba(0,0,0,0.7);
     --ca-card-heading-color: #ccba8a;
+    --ca-reward-light-gray:  #d6d6d6;
 }
 
 .MyAccountClubApparel {
@@ -212,6 +213,27 @@
             }
         }
 
+        &_isArabic {
+            button {
+                text-align: right;
+
+                &:after {
+                    right: unset;
+                    left: 0;
+                }
+    
+                @include before-desktop {
+                    color: var(--white);
+    
+                    &:after {
+                        transform: rotate(135deg);
+                        right: unset;
+                        left: 5px
+                    }
+                }
+            }
+        }
+
         a {
             font-weight: 600;
         }
@@ -232,7 +254,21 @@
                             transform: rotate(135deg);
                             padding: 2px 7px 7px 2px;
                             z-index: 3;
-                            left: -85%;
+                            left: calc(-100% + 55px);
+                        }
+                    }
+                }
+
+                &_isArabicAbout,
+                &_isArabicEarn {
+                    @include before-desktop {
+                        &::after {
+                            position: fixed;
+                            transform: rotate(-45deg);
+                            padding: 2px 7px 7px 2px;
+                            z-index: 3;
+                            right: 20px;
+                            left: unset;
                         }
                     }
                 }
@@ -288,6 +324,11 @@
         overflow-y: hidden;
         text-align: left;
         height: 75px;
+
+        @include before-desktop {
+            margin: 0 auto 20px;
+            width: 300px;
+        }
     }
 
     &-Points {
@@ -309,17 +350,30 @@
             line-height: 19px;
             margin-right: 5px;
         }
+
+        &_isArabic {
+            text-align: right;
+        }
     }
 
     &-Tier {
         height: 55px;
         margin-left: 20px;
-        border-left: 1px solid #d6d6d6;
+        border-left: 1px solid var(--ca-reward-light-gray);
         padding-left: 20px;
 
         &Image {
             height: 80px;
             width: auto;
+        }
+
+        &_isArabic {
+            margin-left: unset;
+            border-left: unset;
+            padding-left: unset;
+            margin-right: 20px;
+            border-right: 1px solid var(--ca-reward-light-gray);
+            padding-right: 20px;
         }
     }
 
@@ -352,6 +406,11 @@
             padding-top: 10px;
             order: 3;
             margin: 0 15%;
+
+            &_isLinkedMember {
+                order: 1;
+                padding-top: 35px;
+            }
         }
     }
 
@@ -369,6 +428,10 @@
         @include before-desktop {
             order: 2;
             margin: 50px auto 0;
+
+            &_isLinkedMember {
+                margin: 15px auto 0;
+            }
         }
     }
 }

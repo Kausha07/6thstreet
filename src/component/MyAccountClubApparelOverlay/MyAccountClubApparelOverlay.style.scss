@@ -6,6 +6,18 @@
 .MyAccountClubApparelOverlay {
     background-color: rgba(0, 0, 0, 0.7);
 
+    .CountryMiniFlag-Container {
+        position: absolute;
+        top: 23px;
+        left: 2%;
+        z-index: 1;
+
+        &_isArabic {
+            left: unset;
+            right: 2%;
+        }
+    }
+
     @include before-desktop {
         width: 100%;
         top: 0;
@@ -28,17 +40,46 @@
         }
 
         &Phone {
-            margin-top: 46px;
+            margin: 46px 10% 10px;
+            display: flex;
+            height: 60px;
 
             &Field {
                 height: 60px;
-                width: 80%;
-                padding-left: 70px;
+                margin-left: 10px;
+                width: calc(100% - 10px);
             }
 
             .Field {
+                margin-top: 0;
+
+                &_type_text {
+                    width: calc(100% - 100px);
+                }
+
                 p {
                     margin-top: 5px;
+                }
+            }
+
+            &_isArabic {
+                flex-direction: row-reverse;
+
+                .MyAccountClubApparelOverlay {
+                    &-LinkAccountPhoneField {
+                        margin-left: unset;
+                        margin-right: 10px;
+                        text-align: right;
+                    }
+                }
+
+                .Field {
+                    .FieldSelect {
+                        &-Select {
+                            padding-left: 15px;
+                            padding-right: 40px;
+                        }
+                    }
                 }
             }
         }
@@ -56,10 +97,20 @@
         }
     }
 
-    &-PhoneCode {
-        position: absolute;
-        top: 21px;
-        left: 10%;
+    .FieldSelect {
+        height: 60px;
+        width: 100px;
+
+        &-Select {
+            height: 60px;
+            width: 100px;
+            padding-left: 40px;
+            padding-right: 10px;
+        }
+
+        &::after {
+            display: none;
+        }
     }
 
     &-Verify {
@@ -108,7 +159,7 @@
 
     .Popup {
         &-Content {
-            overflow: hidden;
+            overflow: auto;
             padding: 0;
             width: 440px;
             min-width: unset;
@@ -180,7 +231,7 @@
                 top: 6px
             }
 
-            @include before-desktop {
+            @include mobile {
                 z-index: 1;
                 right: unset;
                 left: 10px;
@@ -207,5 +258,87 @@
                 }
             }
         }
+    }
+
+    &_isMessage {
+        @include before-desktop {
+            .Popup {
+                &-Content {
+                    overflow: auto;
+                    top: calc(100% - 350px);
+                    width: 100%;
+
+                    @include tablet {
+                        top: calc(75% - 350px);
+
+                    }
+        
+                    .MyAccountClubApparelOverlay {
+                        &-Success,
+                        &-NotSuccess {
+                            margin-top: 0;
+
+                            h3 {
+                                margin: 30px 10% 0;
+                                text-align: left;
+                            }
+        
+                            p {
+                                text-align: left;
+                                margin: 20px 10% 0;
+                            }
+
+                            &_isArabic {
+                                h3 {
+                                    text-align: right;
+                                }
+            
+                                p {
+                                    text-align: right;
+                                }
+                            }
+                        }
+                    }
+                }
+        
+                &-Header {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    &_isArabic {
+        .Popup {
+            &-CloseBtn {
+                right: unset;
+                left: 15px;
+    
+                @include mobile {
+                    left: unset;
+                    right: 10px;
+                    top: 16px;
+    
+                    &::after {
+                        content: none;
+                    }
+                    &::before {
+                        position: absolute;
+                        content: '';
+                        width: 0;
+                        height: 0;
+                        border: solid var(--white);
+                        border-width: 0 2px 2px 0;
+                        display: inline-block;
+                        padding: 2px 7px 7px 2px;
+                        margin: 0 auto;
+                        top: 9px;
+                        left: 10px;
+                        transform: rotate(-45deg);
+                        background: transparent;
+                    }
+                }
+            }
+        } 
     }
 }

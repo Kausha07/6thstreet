@@ -10,6 +10,7 @@ import ClubApparelLogoAR from 'Component/MyAccountClubApparel/images/ca-trans-ar
 import ClubApparelLogoEN from 'Component/MyAccountClubApparel/images/ca-trans-logo.png';
 import Popup from 'SourceComponent/Popup';
 import { isArabic } from 'Util/App';
+import isMobile from 'Util/Mobile';
 
 import {
     STATE_LINK,
@@ -24,7 +25,6 @@ class MyAccountClubApparelOverlay extends PureComponent {
     static propTypes = {
         showOverlay: PropTypes.func.isRequired,
         hideActiveOverlay: PropTypes.func.isRequired,
-        country: PropTypes.string.isRequired,
         handleLink: PropTypes.func.isRequired,
         handleVerify: PropTypes.func.isRequired,
         handleSuccess: PropTypes.func.isRequired,
@@ -32,6 +32,7 @@ class MyAccountClubApparelOverlay extends PureComponent {
         state: PropTypes.string.isRequired,
         verifyOtp: PropTypes.func.isRequired,
         phone: PropTypes.string.isRequired,
+        countryPhoneCode: PropTypes.string.isRequired,
         renderAbout: PropTypes.func.isRequired,
         renderEarn: PropTypes.func.isRequired
     };
@@ -74,7 +75,6 @@ class MyAccountClubApparelOverlay extends PureComponent {
     }
 
     handleVerifyChange = (e) => {
-        console.log(e.length);
         // eslint-disable-next-line no-magic-numbers
         this.setState({ isButtonDisabled: e.length !== 5 });
     };
@@ -97,10 +97,29 @@ class MyAccountClubApparelOverlay extends PureComponent {
         return PHONE_CODES[country_id];
     }
 
+    handleSelectChange = (e) => {
+        const countries = Object.keys(PHONE_CODES);
+
+        const countiresMapped = countries.reduce((acc, country) => {
+            if (e === this.renderCurrentPhoneCode(country)) {
+                acc.push(country);
+            }
+
+            return acc;
+        }, []);
+
+        this.setState({ selectedCountry: countiresMapped[0] });
+    };
+
+    renderOption = (country) => ({
+        id: country,
+        label: this.renderCurrentPhoneCode(country),
+        value: this.renderCurrentPhoneCode(country)
+    });
+
     renderPhone() {
-        const {
-            country
-        } = this.props;
+        const { selectedCountry, isArabic } = this.state;
+        const countries = Object.keys(PHONE_CODES);
 
         const phone = {
             block: 'MyAccountClubApparelOverlay',
@@ -116,24 +135,29 @@ class MyAccountClubApparelOverlay extends PureComponent {
             <div
               block="MyAccountClubApparelOverlay"
               elem="LinkAccountPhone"
+              mods={ { isArabic } }
             >
-                    { this.renderField(['phone', phone]) }
-                    <div
-                      block="MyAccountClubApparelOverlay"
-                      elem="PhoneCode"
-                    >
-                        <CountryMiniFlag label={ country } />
-                        { this.renderCurrentPhoneCode(country) }
-                    </div>
+                <Field
+                  type="select"
+                  id="countryPhoneCode"
+                  name="countryPhoneCode"
+                  onChange={ this.handleSelectChange }
+                  selectOptions={ countries.map(this.renderOption) }
+                />
+                { this.renderField(['phone', phone]) }
+                <CountryMiniFlag mods={ { isArabic } } label={ selectedCountry } />
             </div>
         );
     }
 
     renderSuccess() {
         const { hideActiveOverlay } = this.props;
+        const { isArabic } = this.state;
 
         return (
-            <div block="MyAccountClubApparelOverlay" elem="Success">
+            <div block="MyAccountClubApparelOverlay" elem="Success" mods={ { isArabic } }>
+                { isMobile.any() || isMobile.tablet()
+                    ? <h3>{ __('Linking Succesful!') }</h3> : null }
                 <p>
                     { __('You have successfully linked your 6thstreet.com Account with your ') }
                     <span>{ __('Club Apparel') }</span>
@@ -153,9 +177,10 @@ class MyAccountClubApparelOverlay extends PureComponent {
 
     renderNotSuccess() {
         const { hideActiveOverlay } = this.props;
+        const { isArabic } = this.state;
 
         return (
-            <div block="MyAccountClubApparelOverlay" elem="NotSuccess">
+            <div block="MyAccountClubApparelOverlay" elem="NotSuccess" mods={ { isArabic } }>
                 <h3>{ __('Linking Unsuccesful!') }</h3>
                 <p block="MyAccountClubApparelOverlay" elem="NotSuccessParagraphRed">
                     { __('Sorry! We were unable to find a ') }
@@ -203,13 +228,13 @@ class MyAccountClubApparelOverlay extends PureComponent {
     }
 
     renderVerify() {
-        const { verifyOtp, country, phone } = this.props;
+        const { verifyOtp, countryPhoneCode, phone } = this.props;
         const { isButtonDisabled } = this.state;
 
         return (
             <div block="MyAccountClubApparelOverlay" elem="Verify">
                 <p>
-                    { __(`Enter the verification code we sent to ${this.renderCurrentPhoneCode(country)} ${phone}`) }
+                    { __(`Enter the verification code we sent to ${countryPhoneCode} ${phone}`) }
                 </p>
                 <Form
                   onSubmitSuccess={ verifyOtp }
@@ -249,21 +274,27 @@ class MyAccountClubApparelOverlay extends PureComponent {
             state
         } = this.props;
         const { render } = this.renderMap[state];
+        const beforeDesktop = isMobile.any() || isMobile.tablet();
+
+        const isMessage = state === STATE_NOT_SUCCESS || state === STATE_SUCCESS;
 
         return (
             <Popup
-              mix={ { block: 'MyAccountClubApparelOverlay', mods: { isArabic } } }
+              mix={ { block: 'MyAccountClubApparelOverlay', mods: { isArabic, isMessage } } }
               id="LinkAccount"
               title="Link"
             >
-                <div block="MyAccountClubApparelOverlay" elem="LinkAccountBanner">
-                    <img
-                      block="MyAccountClubApparelOverlay"
-                      elem="LinkAccountLogo"
-                      src={ isArabic ? ClubApparelLogoAR : ClubApparelLogoEN }
-                      alt="Logo icon"
-                    />
-                </div>
+                { isMessage && beforeDesktop
+                    ? null : (
+                        <div block="MyAccountClubApparelOverlay" elem="LinkAccountBanner">
+                            <img
+                              block="MyAccountClubApparelOverlay"
+                              elem="LinkAccountLogo"
+                              src={ isArabic ? ClubApparelLogoAR : ClubApparelLogoEN }
+                              alt="Logo icon"
+                            />
+                        </div>
+                    ) }
                 { render() }
             </Popup>
         );

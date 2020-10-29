@@ -22,10 +22,16 @@ class MyAccountMobileHeader extends PureComponent {
     };
 
     static getDerivedStateFromProps(props) {
-        const { alternativePageName, name } = props;
+        const { alternativePageName, name, isHiddenTabContent } = props;
+
+        if (isHiddenTabContent) {
+            return {
+                isClubApparel: alternativePageName === 'Club Apparel Loyalty' || name === 'Club Apparel Loyalty'
+            };
+        }
 
         return {
-            isClubApparel: alternativePageName === 'Club Apparel Loyalty' || name === 'Club Apparel Loyalty'
+            isClubApparel: false
         };
     }
 
