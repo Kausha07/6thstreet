@@ -127,7 +127,7 @@ export class PDPAddToCartContainer extends PureComponent {
                 qty: 1,
                 optionId,
                 optionValue
-            }, color, basePrice, brand_name, thumbnail_url, url, itemPrice, currency).then(
+            }, color, optionValue, basePrice, brand_name, thumbnail_url, url, itemPrice, currency).then(
                 () => this.afterAddToCart()
             );
         }
