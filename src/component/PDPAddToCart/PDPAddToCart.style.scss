@@ -2,230 +2,206 @@ $select-arrow-height: 6px !default;
 $select-arrow-width: 6px !default;
 
 :root {
-    --text-color: #000;
-    --text-color-on-dark-background: #fff;
-    --loading-button-background-color: #808080;
-    --success-color: #00f0a5;
+	--text-color: #000;
+	--text-color-on-dark-background: #fff;
+	--loading-button-background-color: #808080;
+	--success-color: #00f0a5;
 }
 
 .PDPAddToCart {
+	&-SizeInfo {
+		margin-bottom: 5px;
+		display: flex;
+		justify-content: space-between;
 
-    &-SizeInfo {
-        margin-bottom: 5px;
-        display: flex;
-        justify-content: space-between;
+		@include desktop {
+			width: 363px;
+		}
+	}
 
-        @include desktop {
-            width: 363px;
-        }
-    }
+	&-SizeLabel {
+		font-size: 17px;
+		font-weight: var(--fw-demi);
+		line-height: 30px;
+	}
 
-    &-SizeLabel {
-        font-size: 17px;
-        font-weight: var(--fw-demi);
-        line-height: 30px;
-    }
+	&-SizeSelect {
+		position: relative;
+		display: flex;
+		justify-content: space-between;
+		padding-bottom: 35px;
 
-    &-SizeSelect {
-        position: relative;
-        display: flex;
-        justify-content: space-between;
-        padding-bottom: 35px;
+		@include desktop {
+			width: 363px;
+		}
+	}
 
-        @include desktop {
-            width: 363px;
-        }
-    }
+	select {
+		position: relative;
+		overflow: hidden;
+		cursor: pointer;
+		font-size: 13px;
+		letter-spacing: 0.5px;
+		line-height: 18px;
+	}
 
-    select {
-        position: relative;
-        overflow: hidden;
-        cursor: pointer;
-        font-size: 13px;
-        letter-spacing: .5px;
-        line-height: 18px;
-    }
+	&-SizeTypeSelector {
+		height: 50px;
 
-    &-SizeTypeSelector {
-        height: 50px;
+		&::after {
+			content: "";
+			display: block;
+			width: $select-arrow-width;
+			height: $select-arrow-height;
+			transform: translateY(-2px) rotate(44deg);
+			position: absolute;
+			right: 14px;
+			bottom: 0;
+			top: 0;
+			margin-top: 22px;
+			border: solid var(--text-color);
+			border-width: 0 1px 1px 0;
+		}
+	}
 
-        &::after {
-            content: '';
-            display: block;
-            width: $select-arrow-width;
-            height: $select-arrow-height;
-            transform: translateY(-2px) rotate(44deg);
-            position: absolute;
-            right: 14px;
-            bottom: 0;
-            top: 0;
-            margin-top: 22px;
-            border: solid var(--text-color);
-            border-width: 0 1px 1px 0;
-        }
-    }
+	&-SizeSelector {
+		width: 75%;
+		margin-left: 20px;
 
-    &-SizeSelector {
-        width: 75%;
-        margin-left: 20px;
+		&::after {
+			@extend .PDPAddToCart-SizeTypeSelector::after;
+		}
+	}
 
-        &::after {
-            @extend .PDPAddToCart-SizeTypeSelector::after;
-        }
-    }
+	&-SizeTypeSelectElement {
+		width: 70px;
+		height: 50px;
+	}
 
-    &-SizeTypeSelectElement {
-        width: 70px;
-        height: 50px;
-    }
+	&-SizeSelectElement {
+		height: 50px;
+		width: 100%;
 
-    &-SizeSelectElement{
-        height: 50px;
-        width: 100%;
+		@include desktop {
+			width: 271px;
+		}
+	}
 
-        @include desktop {
-            width: 271px;
-        }
-    }
+	&-AddToCartButton {
+		width: 100%;
+		height: 50px;
+		font-weight: var(--fw-bold);
+		font-size: 13px;
+		line-height: 18px;
+		background: var(--text-color);
+		border: 2px solid var(--text-color);
+		color: var(--text-color-on-dark-background);
 
-    &-AddToCartButton {
-        width: 100%;
-        height: 50px;
-        font-weight: var(--fw-bold);
-        font-size: 13px;
-        line-height: 18px;
-        background:var(--text-color);
-        border: 2px solid var(--text-color);
-        color: var(--text-color-on-dark-background);
+		@include desktop {
+			width: 363px;
+		}
 
-        @include desktop {
-            width: 363px;
-        }
+		span {
+			display: block;
+			opacity: 1;
+			transform: translateY(0);
+			transition-property: transform, opacity;
+			will-change: transform, opacity;
+			transition-timing-function: ease-in;
+			transition-duration: 0.25s;
 
-        span {
-            display: block;
-            opacity: 1;
-            transform: translateY(0);
-            transition-property: transform, opacity;
-            will-change: transform, opacity;
-            transition-timing-function: ease-in;
-            transition-duration: .25s;
+			&:nth-child(2),
+			&:last-child {
+				width: 100%;
+				left: 0;
+				opacity: 0;
+				position: absolute;
+				transform: translateY(0);
+			}
 
-            &:nth-child(2), &:last-child {
-                width: 100%;
-                left: 0;
-                opacity: 0;
-                position: absolute;
-                transform: translateY(0);
-            }
+			&:last-child {
+				left: 25%;
+				margin-top: 5px;
+				padding-top: 7px;
+				background: url(./icons/confirm@2x.png) no-repeat;
+				background-size: 30px 30px;
+				height: 30px;
+				width: 180px;
 
-            &:last-child {
-                left: 25%;
-                margin-top: 5px;
-                padding-top: 7px;
-                background: url(./icons/confirm@2x.png) no-repeat;
-                background-size: 30px 30px;
-                height: 30px;
-                width: 180px;
+				@media (max-width: 1020px) {
+					left: 40%;
+				}
 
-                @media (max-width: 1020px) {
-                    left: 40%;
-                }
+				@media (max-width: 700px) {
+					left: 30%;
+				}
 
-                @media (max-width: 700px) {
-                    left: 30%;
-                }
+				@media (max-width: 430px) {
+					left: 16%;
+				}
+			}
+		}
 
-                @media (max-width: 430px) {
-                    left: 16%;
-                }
-            }
-        }
+		&_isLoading {
+			border: 2px solid var(--loading-button-background-color);
+			background: var(--loading-button-background-color);
 
-        &_isLoading {
-            border: 2px solid var(--loading-button-background-color);
-            background:var(--loading-button-background-color);
+			span {
+				&:first-child,
+				&:last-child {
+					opacity: 0;
+					transform: translateY(-100%);
+				}
 
-            span {
-                &:first-child, &:last-child  {
-                    opacity: 0;
-                    transform: translateY(-100%);
-                }
+				&:nth-child(2) {
+					opacity: 1;
+					transform: translateY(-100%);
+				}
+			}
 
-                &:nth-child(2) {
-                    opacity: 1;
-                    transform: translateY(-100%);
-                  }
-            }
+			&:active {
+				span {
+					&:nth-child(2) {
+						opacity: 0.9;
+						transform: translateY(-120%);
+					}
+				}
+			}
+		}
 
-            &:active {
-                span {
-                    &:nth-child(2) {
-                        opacity: .9;
-                        transform: translateY(-120%);
-                    }
-                }
-            }
-        }
+		&_addedToCart {
+			border: 2px solid var(--success-color);
+			background: var(--success-color);
 
-        &_addedToCart {
-            border: 2px solid var(--success-color);
-            background: var(--success-color);
+			span {
+				&:first-child,
+				&:nth-child(2) {
+					opacity: 0;
+				}
 
-            span {
-                &:first-child, &:nth-child(2) {
-                    opacity: 0;
-                }
-
-                &:last-child {
-                    opacity: 1;
-                    transform: translateY(-100%);
-                }
-            }
-        }
-    }
-
-    &-Bottom {
-        display: flex;
-    }
-    
-    &-shopSvg {
-        display: inline;
-    }
+				&:last-child {
+					opacity: 1;
+					transform: translateY(-100%);
+				}
+			}
+		}
+	}
 }
 
 .PageWrapper {
-    &_isArabic {
-        .PDPAddToCart {
-            &-SizeSelector,
-            &-SizeTypeSelector {
-                &::after {
-                        left:15px;
-                        right: auto;
-                }
-            }
-            &-SizeSelector {
-                margin-left: 0;
-                margin-right: 20px;
-            }
-
-            &-PickUpButton {
-                margin: 0 20px 0 0;
-
-                span {
-                    @include desktop {
-                        padding: 0 0 0 20px;
-                    }
-                }
-
-                div::before {
-                    right: 2px;
-
-                    @include desktop {
-                        right: -14px;
-                    }
-                }
-            }
-        }
-    }
+	&_isArabic {
+		.PDPAddToCart {
+			&-SizeSelector,
+			&-SizeTypeSelector {
+				&::after {
+					left: 15px;
+					right: auto;
+				}
+			}
+			&-SizeSelector {
+				margin-left: 0;
+				margin-right: 20px;
+			}
+		}
+	}
 }
