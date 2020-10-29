@@ -118,16 +118,21 @@
         display: flex;
         align-items: center;
         text-transform: none;
+        justify-content: center;
         font-weight: 400;
         max-width: 366px;
         width: 100%;
         box-shadow: 0px 0px 11px rgba(0,0,0,.1);
         border-radius: 7px;
-        padding: 15px 15px 14px 18px;
-        transition: all .5s;
-        font-size: 14px;
+        padding: 15px 2px 14px;
+        font-size: 11px;
         margin-top: 20px;
         cursor: pointer;
+
+        @include desktop() {
+            padding: 15px 15px 14px 18px;
+            font-size: 14px;
+        }
 
         strong {
             padding: 0 4px;
@@ -143,7 +148,11 @@
         span {
             text-decoration: underline;
             font-weight: 600;
-            margin: 0 4px;
+            margin: 0;
+
+            @include desktop() {
+                margin: 0 4px;
+            }
         }
 
         &:hover {

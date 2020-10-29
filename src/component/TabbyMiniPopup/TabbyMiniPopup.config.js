@@ -3,7 +3,9 @@ import check from './icons/check.svg';
 import clock from './icons/clock.svg';
 import procent from './icons/procent.svg';
 
-export const TABBY_MINI_POPUP_ID = 'tabby_popup';
+export const TABBY_TOOLTIP_PAY_LATER = 'pay_later';
+export const TABBY_TOOLTIP_INSTALLMENTS = 'installments';
+export const TABBY_TOOLTIP_PDP = 'pdp';
 
 export const TABBY_ROW_DATA = {
     fees: {
@@ -22,3 +24,9 @@ export const TABBY_ROW_DATA = {
         img: clock
     }
 };
+
+export const TABBY_SUB_ROW_DATA = [
+    __('Select Pay after delivery and complete your order'),
+    __('Receive your package and enjoy it'),
+    __('Pay 14 days later using your debit or credit card by logging into your Tabby account')
+];

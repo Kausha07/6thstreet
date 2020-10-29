@@ -7,6 +7,7 @@ import PDPAlsoAvailableProducts from 'Component/PDPAlsoAvailableProducts';
 import Price from 'Component/Price';
 import ProductLabel from 'Component/ProductLabel/ProductLabel.component';
 import TabbyMiniPopup from 'Component/TabbyMiniPopup';
+import { TABBY_TOOLTIP_PDP } from 'Component/TabbyMiniPopup/TabbyMiniPopup.config';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
 import { isArabic } from 'Util/App';
 
@@ -133,7 +134,7 @@ class PDPSummary extends PureComponent {
             return null;
         }
 
-        return <TabbyMiniPopup page="pdp" closeTabbyPopup={ this.closeTabbyPopup } />;
+        return <TabbyMiniPopup content={ TABBY_TOOLTIP_PDP } closeTabbyPopup={ this.closeTabbyPopup } />;
     };
 
     renderColor() {

@@ -4,25 +4,39 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import tabby from './icons/tabby.png';
-import { TABBY_ROW_DATA } from './TabbyMiniPopup.config';
+import {
+    TABBY_ROW_DATA,
+    TABBY_SUB_ROW_DATA,
+    TABBY_TOOLTIP_INSTALLMENTS,
+    TABBY_TOOLTIP_PAY_LATER
+} from './TabbyMiniPopup.config';
 
 import './TabbyMiniPopup.style.scss';
 
 class TabbyMiniPopup extends PureComponent {
     static propTypes = {
         closeTabbyPopup: PropTypes.func.isRequired,
-        page: PropTypes.string
+        content: PropTypes.string
     };
 
     static defaultProps = {
-        page: ''
+        content: ''
     };
 
     renderPopup() {
-        const { closeTabbyPopup } = this.props;
+        const { closeTabbyPopup, content } = this.props;
 
         return (
-            <div block="TabbyMiniPopup" elem="Wrapper">
+            <div
+              block="TabbyMiniPopup"
+              elem="Wrapper"
+              mods={ { twoColumns: content === TABBY_TOOLTIP_PAY_LATER } }
+              mix={ {
+                  block: 'TabbyMiniPopup',
+                  elem: 'Wrapper',
+                  mods: { payments: content === TABBY_TOOLTIP_PAY_LATER || content === TABBY_TOOLTIP_INSTALLMENTS }
+              } }
+            >
                 <div block="TabbyMiniPopup" elem="Content">
                     <button
                       block="TabbyMiniPopup"
@@ -31,7 +45,9 @@ class TabbyMiniPopup extends PureComponent {
                     >
                         { ' ' }
                     </button>
-                    <img src={ tabby } alt="tabby" />
+                    <a href="https://tabby.ai">
+                        <img src={ tabby } alt="tabby" />
+                    </a>
                     { this.renderTabbyContent() }
                 </div>
             </div>
@@ -39,19 +55,63 @@ class TabbyMiniPopup extends PureComponent {
     }
 
     renderTabbyContent = () => {
-        const { page } = this.props;
-        if (page === 'pdp') {
-            return this.renderPdpContent();
+        const { content } = this.props;
+
+        if (content === TABBY_TOOLTIP_INSTALLMENTS) {
+            return this.renderInstallmentsContent();
         }
 
-        return null;
+        if (content === TABBY_TOOLTIP_PAY_LATER) {
+            return this.renderPayLaterContent();
+        }
+
+        return this.renderPdpContent();
     };
 
     renderPdpContent() {
         return (
             <>
-                <h2>{ __('Split your purchase into equal monthly installments') }</h2>
+                <h4>{ __('Split your purchase into equal monthly installments') }</h4>
                 <div block="TabbyMiniPopup" elem="Columns">
+                    <div block="TabbyMiniPopup" elem="Column">
+                        { this.renderTabbyPopupRow('fees') }
+                        { this.renderTabbyPopupRow('card') }
+                        { this.renderTabbyPopupRow('easy') }
+                    </div>
+                </div>
+                <p block="TabbyMiniPopup" elem="ContentFooter">
+                    { __('Sounds good? Just select Tabby at checkout.') }
+                </p>
+            </>
+        );
+    }
+
+    renderInstallmentsContent() {
+        return (
+            <>
+                <h4>{ __('Split into 4 equal monthly payments') }</h4>
+                <div block="TabbyMiniPopup" elem="Columns">
+                    <div block="TabbyMiniPopup" elem="Column">
+                        { this.renderTabbyPopupRow('fees') }
+                        { this.renderTabbyPopupRow('card') }
+                        { this.renderTabbyPopupRow('easy') }
+                    </div>
+                </div>
+                <p block="TabbyMiniPopup" elem="ContentFooter">
+                    { __('Sounds good? Just select Tabby at checkout.') }
+                </p>
+            </>
+        );
+    }
+
+    renderPayLaterContent() {
+        return (
+            <>
+                <h4>{ __('Buy now and pay after delivery') }</h4>
+                <div block="TabbyMiniPopup" elem="Columns" mods={ { grid: 'two' } }>
+                    <div block="TabbyMiniPopup" elem="Column">
+                        { TABBY_SUB_ROW_DATA.map((text, index) => this.renderTabbyPopupSubRow(text, index)) }
+                    </div>
                     <div block="TabbyMiniPopup" elem="Column">
                         { this.renderTabbyPopupRow('fees') }
                         { this.renderTabbyPopupRow('card') }
@@ -70,8 +130,19 @@ class TabbyMiniPopup extends PureComponent {
             <div block="TabbyMiniPopup" elem="Row">
                 <img src={ TABBY_ROW_DATA[data].img } alt="icon" />
                 <div block="TabbyMiniPopup" elem="RowText">
-                    <h3>{ TABBY_ROW_DATA[data].title }</h3>
+                    <h5>{ TABBY_ROW_DATA[data].title }</h5>
                     <p>{ TABBY_ROW_DATA[data].text }</p>
+                </div>
+            </div>
+        );
+    }
+
+    renderTabbyPopupSubRow(text, index) {
+        return (
+            <div block="TabbyMiniPopup" elem="SubRow">
+                <div block="TabbyMiniPopup" elem="SubRowCircle">{ index + 1 }</div>
+                <div block="TabbyMiniPopup" elem="SubRowText">
+                { text }
                 </div>
             </div>
         );
