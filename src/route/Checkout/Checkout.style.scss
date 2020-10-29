@@ -19,6 +19,52 @@
         background-color: var(--lightest-gray);
     }
 
+    .LoadingOverlay{
+        height: 100%;
+        background-color: var(--color-orange-soda);
+        opacity: 95%;
+        position: fixed;
+        left: 0;
+        top: 90px;
+
+        animation-name: fadeInOpacity;
+        animation-iteration-count: 1;
+        animation-timing-function: ease-in;
+        animation-duration: 1s;
+
+        @keyframes fadeInOpacity {
+            0% {
+                opacity: 0;
+            }
+            95% {
+                opacity: 95%;
+            }
+        }
+
+        @include desktop {
+            width: 100%;
+            padding: 0 52%;
+            z-index: 90;
+            text-align: center;
+            transform: translate(-15px, 0);
+        }
+
+        @include mobile {
+            padding: 50%;
+            top: 0;
+        }
+
+        p {
+            font-size: 18px;
+            font-weight: var(--fw-demi);
+            color: var(--white);
+            position: absolute;
+            bottom: 50%;
+            transform: translate(-50%, -50%);
+        }
+    }
+
+
     &-StickyButtonWrapper {
         .Checkout {
             &-OrderTotals {

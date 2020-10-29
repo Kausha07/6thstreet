@@ -13,6 +13,7 @@ import CheckoutShipping from 'Component/CheckoutShipping';
 import ContentWrapper from 'Component/ContentWrapper';
 import TabbyPopup from 'Component/TabbyPopup';
 import { TABBY_POPUP_ID } from 'Component/TabbyPopup/TabbyPopup.config';
+import Loader from 'SourceComponent/Loader';
 import { Checkout as SourceCheckout } from 'SourceRoute/Checkout/Checkout.component';
 import { isArabic } from 'Util/App';
 
@@ -134,6 +135,23 @@ export class Checkout extends SourceCheckout {
   setCashOnDeliveryFee = (fee) => {
       this.setState({ cashOnDeliveryFee: fee });
   };
+
+  renderLoader() {
+      const { isLoading, checkoutStep } = this.props;
+      if (checkoutStep === BILLING_STEP && isLoading) {
+          return (
+                <div block="CheckoutSuccess">
+                    <div block="LoadingOverlay">
+                        <p>
+                            { __('Processing Your Order') }
+                        </p>
+                    </div>
+                </div>
+          );
+      }
+
+      return <Loader isLoading={ isLoading } />;
+  }
 
   renderSummary() {
       const { cashOnDeliveryFee } = this.state;
