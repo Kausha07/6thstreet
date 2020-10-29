@@ -42,11 +42,20 @@ export const MyAccountReducer = (state = initialState, action) => {
         };
 
     case UPDATE_CUSTOMER_DETAILS:
-        BrowserDatabase.setItem(customer, CUSTOMER, ONE_MONTH_IN_SECONDS);
+        const { firstname = '', lastname = '' } = customer;
+        const data = firstname || lastname
+            ? {
+                ...customer,
+                firstname: firstname.indexOf(' ') > 0 ? firstname.substr(0, firstname.indexOf(' ')) : firstname,
+                lastname: firstname.indexOf(' ') > 0 ? firstname.substr(firstname.indexOf(' ') + 1) : lastname
+            }
+            : customer;
+
+        BrowserDatabase.setItem(data, CUSTOMER, ONE_MONTH_IN_SECONDS);
 
         return {
             ...state,
-            customer
+            customer: data
         };
 
     default:

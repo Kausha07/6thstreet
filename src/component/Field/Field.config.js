@@ -1,3 +1,4 @@
 export * from 'SourceComponent/Field/Field.config';
 
 export const TOGGLE_TYPE = 'toggle';
+export const DATE_TYPE = 'date';

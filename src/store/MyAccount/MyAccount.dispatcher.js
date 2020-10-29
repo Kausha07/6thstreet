@@ -44,8 +44,15 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
 
         return executePost(prepareQuery([query])).then(
             ({ customer }) => {
-                dispatch(updateCustomerDetails({ ...stateCustomer, ...customer }));
-                BrowserDatabase.setItem({ ...stateCustomer, ...customer }, CUSTOMER, ONE_MONTH_IN_SECONDS);
+                const { firstname } = customer;
+                const data = {
+                    ...customer,
+                    firstname: firstname.substr(0, firstname.indexOf(' ')),
+                    lastname: firstname.substr(firstname.indexOf(' ') + 1)
+                };
+
+                dispatch(updateCustomerDetails({ ...stateCustomer, ...data }));
+                BrowserDatabase.setItem({ ...stateCustomer, ...data }, CUSTOMER, ONE_MONTH_IN_SECONDS);
             },
             (error) => dispatch(showNotification('error', error[0].message))
         );
@@ -90,7 +97,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
 
     async handleMobileAuthorization(dispatch, options) {
         const { email: username, password } = options;
-        const { data: { token } = {} } = await getMobileApiAuthorizationToken({
+        const { data: { token, user: { custom_attributes, gender } } = {} } = await getMobileApiAuthorizationToken({
             username,
             password,
             cart_id: null
@@ -99,9 +106,26 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         dispatch(setCartId(null));
 
         setMobileAuthorizationToken(token);
+        this.setPhoneNumber(custom_attributes);
+        this.setGender(gender);
 
         // Run async otherwise login gets slow
         CartDispatcher.getCart(dispatch);
+    }
+
+    setPhoneNumber(custom_attributes) {
+        const customer = BrowserDatabase.getItem(CUSTOMER) || {};
+        const phone = custom_attributes.filter(({ attribute_code }) => attribute_code === 'contact_no');
+
+        if (phone && phone[0]) {
+            const { value } = phone[0];
+            BrowserDatabase.setItem({ ...customer, phone: value }, CUSTOMER, ONE_MONTH_IN_SECONDS);
+        }
+    }
+
+    setGender(gender) {
+        const customer = BrowserDatabase.getItem(CUSTOMER) || {};
+        BrowserDatabase.setItem({ ...customer, gender }, CUSTOMER, ONE_MONTH_IN_SECONDS);
     }
 
     forgotPassword(dispatch, options = {}) {
@@ -111,19 +135,25 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     }
 
     updateCustomerData(dispatch, data) {
-        const { fullname, gender, email } = data;
+        const {
+            fullname,
+            gender,
+            email,
+            phone,
+            dob
+        } = data;
 
         const mappedData = {
-            firstname: fullname.substr(0, fullname.indexOf(' ')),
-            lastname: fullname.substr(fullname.indexOf(' ') + 1),
+            firstname: fullname,
             email,
-            gender: gender === 'male' ? 1 : 2,
-            custom_attributes: []
+            gender,
+            custom_attributes: {
+                contact_no: phone,
+                dob
+            }
         };
 
-        const dataForUpdate = { ...data, ...mappedData };
-
-        dispatch(updateCustomerDetails(dataForUpdate));
+        dispatch(updateCustomerDetails({ ...data, ...mappedData }));
 
         // eslint-disable-next-line
         return updateCustomerData(mappedData);

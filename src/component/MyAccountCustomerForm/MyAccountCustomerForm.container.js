@@ -2,9 +2,11 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import { PHONE_CODES } from 'Component/MyAccountAddressForm/MyAccountAddressForm.config';
 import MyAccountDispatcher from 'Store/MyAccount/MyAccount.dispatcher';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { customerType } from 'Type/Account';
+import { getCountryFromUrl } from 'Util/Url';
 
 import MyAccountCustomerForm from './MyAccountCustomerForm.component';
 
@@ -28,7 +30,8 @@ export class MyAccountCustomerFormContainer extends PureComponent {
 
     state = {
         isShowPassword: false,
-        isLoading: false
+        isLoading: false,
+        countryCode: getCountryFromUrl()
     };
 
     containerFunctions = {
@@ -65,9 +68,11 @@ export class MyAccountCustomerFormContainer extends PureComponent {
             showSuccessNotification,
             customer: oldCustomerData
         } = this.props;
+        const { countryCode } = this.state;
+        const { phone } = customer;
 
         try {
-            updateCustomer({ ...oldCustomerData, ...customer });
+            updateCustomer({ ...oldCustomerData, ...customer, phone: PHONE_CODES[countryCode] + phone });
             showSuccessNotification(__('Your information was successfully updated!'));
         } catch (e) {
             showErrorNotification(e);
