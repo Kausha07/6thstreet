@@ -30,10 +30,12 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
 
     renderHeading() {
         const { isBilling } = this.props;
+        const { isArabic } = this.state;
+
         const addressName = isBilling ? null : __('Delivery country');
 
         return (
-            <h2 block="Checkout" elem="Heading">
+            <h2 block="Checkout" elem="Heading" mods={ { isArabic } }>
                 { addressName }
             </h2>
         );
@@ -90,8 +92,9 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
     };
 
     render() {
+        const { isBilling } = this.props;
         return (
-            <div block="CheckoutAddressBook">
+            <div block="CheckoutAddressBook" mods={ { isBilling } }>
                 { this.renderHeading() }
                 { this.renderContent() }
             </div>

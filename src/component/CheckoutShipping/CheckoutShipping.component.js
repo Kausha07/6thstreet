@@ -166,7 +166,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     renderButtonLabel() {
         const { isMobile } = this.state;
 
-        return isMobile ? __(' + New address') : __('Add new address');
+        return isMobile ? __('New address') : __('Add new address');
     }
 
     renderOpenPopupButton() {
