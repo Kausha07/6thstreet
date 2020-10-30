@@ -295,7 +295,7 @@ export class CartItem extends PureComponent {
               block="CartItem"
               elem="Price"
             >
-                { basePrice === row_total ? withoutDiscount : withDiscount }
+                { basePrice === row_total || !basePrice ? withoutDiscount : withDiscount }
             </div>
         );
     }
