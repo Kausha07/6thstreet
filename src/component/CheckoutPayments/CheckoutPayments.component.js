@@ -1,3 +1,4 @@
+import CartCoupon from 'Component/CartCoupon';
 import CheckoutPayment from 'Component/CheckoutPayment';
 import { PAYMENTS_DATA } from 'Component/CheckoutPayment/CheckoutPayment.config';
 import ClubApparel from 'Component/ClubApparel';
@@ -214,6 +215,16 @@ export class CheckoutPayments extends SourceCheckoutPayments {
         );
     }
 
+    renderCartCoupon() {
+        const { totals: { coupon_code } } = this.props;
+
+        return (
+            <div block="CheckoutPayments" elem="CartCouponWrapper">
+                <CartCoupon couponCode={ coupon_code } />
+            </div>
+        );
+    }
+
     renderPayments() {
         const { paymentMethods } = this.props;
         const { tabbyPaymentMethods } = this.state;
@@ -260,6 +271,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
                 { this.renderSelectedPayment() }
                 { this.renderPayPal() }
                 { this.renderToggleableDiscountOptions() }
+                { this.renderCartCoupon() }
             </>
         );
     }
