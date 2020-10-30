@@ -1,6 +1,180 @@
 .CheckoutOrderSummary {
-    
+    background: var(--white);
+
+    &-HeaderWrapper {
+        display: flex;
+        margin-top: 20px;
+        padding: 25px 18px 0;
+    }
+        &-ItemCount {
+            flex: 50%;
+            font-weight: var(--fw-demi);
+            font-size: 18px;
+            line-height: 25px;
+        }
+
+        &-Edit {
+            flex: 50%;
+            font-weight: var(--fw-regular);
+            font-size: 13px;
+            line-height: 18px;
+            text-align: right;
+            text-decoration: underline;
+            padding-top: 3px;
+
+            &_isArabic {
+                flex: 0;
+            }
+        }
+
+    &-OrderItems {
+        li {
+            border-top: none;
+            border-bottom: 1.5px solid var(--Gallery);
+        }
+    }
+
+    &-CartItemList {
+        margin-bottom: 10px;
+
+        .CartItem {
+            margin: 1rem 18px 0;
+
+            &-Wrapper {
+                height: auto;
+            }
+        }
+    }
+
+    .CartCoupon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 50px;
+        margin: 0 18px 0;
+        border: 1px solid var(--color-nobel);
+
+        &-Input {
+            margin: 0;
+            height: 100%;
+            width: 100%;
+            font-size: 13px;
+            text-transform: capitalize;
+            border: none;
+
+            @include mobile {
+                font-size: 11px;
+            }
+        }
+
+        &-Button {
+            margin: 0;
+            background-color: var(--color-white);
+            border-top: 1px solid var(--color-nobel);
+            border-right: none;
+            border-bottom: 1px solid var(--color-nobel);
+            color: var(--color-light-gray);
+            border-left: none;
+
+            &:hover {
+                color: var(--black);
+                background: var(--white);
+                border-top: 1px solid var(--color-nobel);
+                border-right: none;
+                border-bottom: 1px solid var(--color-nobel);
+                border-left: none;
+            }
+
+            &:not([disabled]):hover,
+            &:not([disabled]):focus {
+                color: var(--color-black);
+            }
+        }
+    }
+
+    &-PromoBlock {
+        background: var(--cart-page-promo-background);
+        height: 40px;
+        margin: 21px 18px 15px;
+    }
+
+    &-PromoText {
+        display: flex;
+        font-weight: var(--fw-regular);
+        font-size: 12px;
+        padding: 12px 12px 0 9px;
+        justify-content: space-between;
+
+        img {
+            margin-top: 2px;
+            width: 21px;
+            height: 11px;
+        }
+    }
+
+    &-Currency {
+        font-weight: var(--fw-bold);
+    }
+
+    &-FreeDelivery {
+        color: var(--color-green-cyan);
+        font-weight: var(--fw-bold);
+    }
+
+    &-OrderTotals {
+        font-weight: var(--fw-regular);
+        padding: 0 18px;
+    }
+
+    &-Subtotals {
+        li {
+            .CheckoutOrderSummary {
+                &-Text, &-Price {
+                    font-size: 13px;
+                }
+            }
+        }
+    }
+
+    &-Totals {
+        display: grid;
+        font-size: 15px;
+        border-top: 1.5px solid var(--Gallery);
+        padding-bottom: 13px;
+
+        li {
+            grid-column: 1 / span 4;
+            grid-row: 1;
+
+            .CheckoutOrderSummary {
+                &-Text {
+                    margin-top: 3px;
+                    font-size: 15px;
+                }
+
+                &-Price {
+                    font-size: 18px;
+                    font-weight: var(--fw-bold);
+                    line-height: 25px;
+                }
+            }
+        }
+
+        span {
+            font-size: 12px;
+            color: var(--color-nobel);
+            grid-column: 2;
+            grid-row: 1;
+            margin-top: 17px;
+            margin-right: 70px;
+        }
+    }
+
     @include before-desktop {
         display: none;
+    }
+
+    &-DiscountOptionWrapper {
+        padding: 0 18px;
     }
 }

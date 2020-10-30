@@ -149,6 +149,9 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
         const { customer } = this.props;
 
         if (Object.keys(customer).length) {
+            if (!customer.addresses.length) {
+                return [];
+            }
             const customerAdressesData = customer.addresses[0];
             const customerPhone = customerAdressesData.telephone;
             const customerCountry = customerAdressesData.country_id;

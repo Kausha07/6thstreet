@@ -1,5 +1,5 @@
 :root {
-    --button-border-color: #000000;
+    --button-border-color: #000;
     --divider-color: #EFEFEF;
     --scrollbar-color: #F3F3F3;
     --scrollbar-thumb-color: #D1D3D4;
@@ -13,7 +13,7 @@
         margin-bottom: 2rem;
 
         @include desktop {
-            margin-bottom: 0px;
+            margin-bottom: 0;
         }
     }
 
@@ -28,15 +28,14 @@
     }
 
     &-Header {
-        position: relative; 
+        position: relative;
         left: 50%;
         transform: translateX(-50%);
         width: 100%;
-        font-family: 'Avenir Next Demi';
+        font-weight: var(--fw-demi);
         text-align: center;
         font-size: 16px;
-        font-weight: 1px;
-        letter-spacing: 1.5px; 
+        letter-spacing: 1.5px;
 
         @include desktop {
             position: static;
@@ -44,19 +43,19 @@
             left: 0;
             text-align: left;
             font-size: 24px;
-            letter-spacing: 0.5px;
+            letter-spacing: .5px;
 
             &_isArabic {
                 text-align: right;
             }
         }
-        
+
     }
 
     &-SubHeader {
         position:relative;
         font-size: 14px;
-        font-family: 'Avenir Next Regular';
+        font-weight: var(--fw-regular);
         display: block;
         margin-bottom: 1.5rem;
     }
@@ -66,10 +65,10 @@
         width: 115%;
         margin-left: -7%;
         margin-top: 1.5rem;
-        border-bottom: 0.5px solid rgba(0,0,0,0.39);
+        border-bottom: .5px solid rgba(0, 0, 0, .39);
 
         &_isArabic {
-            margin-left: 0px;
+            margin-left: 0;
             margin-right: -7%;
         }
 
@@ -83,7 +82,7 @@
         border: solid black;
         border-width: 0 3px 3px 0;
         padding: 6px;
-        margin-top: 0.3rem;
+        margin-top: .3rem;
         margin-left: 5px;
         transform: rotate(-225deg);
         z-index: 100;
@@ -91,7 +90,7 @@
         &_isArabic {
             float: right;
             transform: rotate(-45deg);
-            margin-left: 0px;
+            margin-left: 0;
             margin-right: 5px;
         }
 
@@ -107,9 +106,8 @@
     &-Button {
         cursor: pointer;
         color: var(--guide-button-color);
-        padding: 0.4rem 0.8rem 0.4rem 0.8rem;
-        font-weight: lighter;
-        font-family: 'Avenir Next Regular';
+        padding: .4rem .8rem .4rem .8rem;
+        font-weight: var(--fw-light);
         line-height: 30px;
         text-decoration: underline;
         font-size: 13px;
@@ -164,12 +162,12 @@
             overflow-y: auto;
 
             &_isArabic {
-                padding-right: 0px;
+                padding-right: 0;
                 padding-left: 0;
 
                 .ExpandableContent {
                     width: 100%;
-                
+
                     &-Button {
                         &:after {
                             right: unset;
@@ -195,21 +193,20 @@
 
             &-Heading {
                 float: left;
-                font-size: 16px; 
-                font-family: 'Avenir Next Demi';
-                font-weight: bold;
+                font-size: 16px;
+                font-weight: var(--fw-bold);
             }
-        
+
             &-Button {
                 width: 100%;
                 float: left;
-                margin-top: 0.5rem;
+                margin-top: .5rem;
                 border: none;
                 border-width: unset;
                 padding: 6px;
                 transform: none;
                 z-index: 1;
-        
+
                 &_isArabic {
                     float: left;
                     margin-left: 5px;
@@ -236,10 +233,10 @@
                     background: transparent;
                 }
             }
-            
+
             &-Body {
                 display: none;
-                
+
                 &_isOpen {
                     display: inline;
                 }
@@ -265,7 +262,7 @@
                         .SizeTable {
                             display: none;
                         }
-    
+
                         &_isContentExpanded{
                             .SizeTable {
                                 display: block;
@@ -276,10 +273,10 @@
 
                 &_isArabic {
                     padding-right: 0;
-    
+
                     .ExpandableContent {
                         width: 100%;
-                    
+
                         &-Button {
                             &:after {
                                 right: unset;

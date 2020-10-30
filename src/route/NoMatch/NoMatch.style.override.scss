@@ -60,7 +60,7 @@
         &-SubTitle {
             color: var(--color-dove-gray);
             display: block;
-            font-family: "Avenir Next Regular";
+            font-weight: var(--fw-regular);
             font-size: 1.4rem;
             margin: 17px 0;
             text-transform: uppercase;
@@ -72,7 +72,7 @@
 
         &-Content {
             color: var(--color-dusty-gray);
-            font-family: 'Avenir Next Light';
+            font-weight: var(--fw-light);
             font-size: 1.4rem;
             line-height: 33px;
             margin-bottom: 20px;
@@ -88,7 +88,7 @@
         &-LinkHome {
             background-color: var(--link-color);
             color: var(--color-white);
-            font-family: "Avenir Next Regular";
+            font-weight: var(--fw-regular);
             font-size: 12px;
             padding: 13px 23px;
             text-decoration: none;

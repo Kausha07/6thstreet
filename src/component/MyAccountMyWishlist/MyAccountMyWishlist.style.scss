@@ -1,17 +1,16 @@
 .MyAccountMyWishlist {
-    margin: 20px 0px 150px 0px;
+    margin: 20px 0 150px 0;
 
     &-Empty {
         h2 {
-            font-family: "Avenir Next Regular";
             font-size: 30px;
-            font-weight: 600;
+            font-weight: var(--fw-demi);
             letter-spacing: -0.83px;
             line-height: 20px;
             text-align: center;
             text-transform: unset;
         }
-        
+
         span {
             background: linear-gradient(225deg, #FF8960 0%, #FF62A5 100%);
         }
@@ -21,7 +20,8 @@
         display: grid;
         grid-template-columns: 48% 48%;
         grid-column-gap: 1.8%;
-
+        width: 102.5%;
+        
         @include after-mobile {
             grid-template-columns: 32.66% 32.66% 32.66%;
             grid-column-gap: 2%;
@@ -33,12 +33,12 @@
         overflow: hidden;
         width: 100%;
         text-align: center;
-        font-family: 'Avenir Next Regular';
-        
+        font-weight: var(--fw-regular);
+
         li::before {
             content: '';
         }
-        
+
         a {
             text-decoration: none;
         }
@@ -47,16 +47,16 @@
             padding: 0;
 
             &-Brand {
-                font-family: 'Avenir Next Bold';
-                margin-bottom: 0px;
+                font-weight: var(--fw-bold);
+                margin-bottom: 0;
                 font-size: 12px;
-                letter-spacing: 0.2px;
+                letter-spacing: .2px;
                 line-height: 16px;
-                
+
                 @include desktop {
                     font-size: 15px;
                     line-height: 20px;
-                    letter-spacing: 0.25px;
+                    letter-spacing: .25px;
                 }
             }
 
@@ -64,9 +64,9 @@
                 font-size: 13px;
                 letter-spacing: 0;
                 line-height: 15px;
-                white-space: nowrap; 
+                white-space: nowrap;
                 overflow: hidden;
-                text-overflow: ellipsis; 
+                text-overflow: ellipsis;
                 color: var(--Tundora);
                 margin: 1.4px 0 6px 0;
 
@@ -74,7 +74,7 @@
                     font-size: 15px;
                 }
             }
-            
+
             .WishlistIcon {
                 top: 4%;
                 right: 6%;
@@ -105,13 +105,13 @@
                 display: flex;
                 justify-content: center;
                 position: relative;
-                font-weight: 600;
+                font-weight: var(--fw-demi);
                 font-size: 13px;
-            
+
                 &-Special,
                 &-Discount {
                     display: none;
-                    
+
                     &_discount {
                         display: inline;
                         color: var(--Cardinal);

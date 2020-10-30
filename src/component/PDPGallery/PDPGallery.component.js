@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { PureComponent } from 'react';
+import { createRef, PureComponent } from 'react';
 
 import Image from 'Component/Image';
 import PDPGalleryCrumb from 'Component/PDPGalleryCrumb';
@@ -7,6 +7,7 @@ import PDPGalleryOverlay from 'Component/PDPGalleryOverlay';
 import Slider from 'Component/Slider';
 import SliderVertical from 'Component/SliderVertical';
 import WishlistIcon from 'Component/WishlistIcon';
+import CSS from 'Util/CSS';
 import isMobile from 'Util/Mobile';
 
 import { MAX_ZOOM_SCALE } from './PDPGallery.config';
@@ -25,11 +26,19 @@ class PDPGallery extends PureComponent {
         sku: PropTypes.string.isRequired
     };
 
+    overlaybuttonRef = createRef();
+
+    crumbsRef = createRef();
+
     maxScale = MAX_ZOOM_SCALE;
 
     state = {
         galleryOverlay: ''
     };
+
+    componentDidMount() {
+        CSS.setVariable(this.crumbsRef, 'gallery-crumbs-height', `${this.overlaybuttonRef.current.offsetHeight}px`);
+    }
 
     renderWishlistIcon() {
         const { sku } = this.props;
@@ -68,7 +77,7 @@ class PDPGallery extends PureComponent {
         const { crumbs, currentIndex, onSliderChange } = this.props;
 
         return (
-            <div block="PDPGallery" elem="Crumbs">
+            <div ref={ this.crumbsRef } block="PDPGallery" elem="Crumbs">
                 <SliderVertical
                   mix={ {
                       block: 'Slider',
@@ -124,7 +133,12 @@ class PDPGallery extends PureComponent {
                 { galleryOverlay }
                 { this.renderCrumbs() }
                 { this.renderWishlistIcon() }
-                <button block="PDPGallery" elem="OverlayButton" onClick={ this.renderGalleryOverlay }>
+                <button
+                  ref={ this.overlaybuttonRef }
+                  block="PDPGallery"
+                  elem="OverlayButton"
+                  onClick={ this.renderGalleryOverlay }
+                >
                     { this.renderSlider() }
                 </button>
             </div>

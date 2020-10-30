@@ -10,7 +10,7 @@
     }
 
     &-OrderNumber {
-        font-family: var(--avenir-medium-font);
+        font-weight: var(--fw-medium);
         font-size: 22px;
         margin: 0 0 50px 40px;
         text-transform: none;
@@ -21,8 +21,7 @@
     }
 
     &-Heading {
-        font-family: var(--avenir-regular-font);
-        font-weight: normal;
+        font-weight: var(--fw-regular);
         font-size: 14px;
         margin: 15px 0 35px;
         text-align: center;

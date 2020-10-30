@@ -18,6 +18,7 @@ import Loader from 'Component/Loader';
 import MyAccountDeliveryAddressForm from 'Component/MyAccountDeliveryAddressForm';
 // import Popup from 'Component/Popup';
 import { addressType } from 'Type/Account';
+import { isArabic } from 'Util/App';
 
 import {
     ADD_ADDRESS, ADDRESS_POPUP_ID, DELETE_ADDRESS, EDIT_ADDRESS
@@ -42,7 +43,8 @@ export class MyAccountAddressPopup extends PureComponent {
 
     state = {
         defaultChecked: false,
-        mobileDeleteNotice: false
+        mobileDeleteNotice: false,
+        isArabic: isArabic()
     };
 
     componentDidUpdate(prevProps, _) {
@@ -192,12 +194,13 @@ export class MyAccountAddressPopup extends PureComponent {
 
     render() {
         const { isLoading, formContent } = this.props;
+        const { isArabic } = this.state;
 
         return (
             <div
               id={ ADDRESS_POPUP_ID }
               clickOutside={ false }
-              mix={ { block: 'MyAccountAddressPopup' } }
+              mix={ { block: 'MyAccountAddressPopup', mods: { isArabic } } }
             >
                 <Loader isLoading={ isLoading } />
                 { formContent ? this.renderContent() : null }

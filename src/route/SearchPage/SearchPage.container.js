@@ -11,6 +11,21 @@ import {
 import SearchPage from './SearchPage.component';
 
 export class SearchPageContainer extends PLPContainer {
+    updateBreadcrumbs() {
+        const { updateBreadcrumbs } = this.props;
+
+        updateBreadcrumbs([
+            { name: __('Catalog'), url: '' },
+            { name: __('Home'), url: '/' }
+        ]);
+    }
+
+    containerProps = () => {
+        const { options, pages, isLoading } = this.props;
+
+        return { options, pages, isLoading };
+    };
+
     render() {
         return (
             <SearchPage

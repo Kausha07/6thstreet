@@ -11,25 +11,25 @@
     .ProductItem {
         padding-left: 0;
         margin: 20px 10px;
-        font-family: "Avenir Next Regular";
+        font-weight: var(--fw-regular);
         text-align: center;
         position: relative;
         min-width: 0;
-    
+
         &::before {
             display: none;
         }
-    
+
         .Image {
             &-Image {
                 object-fit: cover;
             }
         }
-    
+
         p {
             font-size: 14px;
         }
-    
+
         &-Brand {
             margin: 5px 0;
         }
@@ -46,13 +46,13 @@
         display: flex;
         justify-content: center;
         position: relative;
-        font-weight: 600;
+        font-weight: var(--fw-demi);
         font-size: 16px;
-    
+
         &-Special,
         &-Discount {
             display: none;
-            
+
             &_discount {
                 display: inline;
                 color: $default-primary-dark-color;
@@ -76,13 +76,13 @@
 
                 &-Wrapper {
                     display: flex;
-                    flex-direction: row-reverse;                   
+                    flex-direction: row-reverse;
                 }
 
                 &-Discount {
                     margin-right: 4px;
                 }
-            }  
+            }
         }
     }
-} 
+}

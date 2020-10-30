@@ -1,11 +1,17 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+import { ADD_ADDRESS, ADDRESS_POPUP_ID } from 'Component/MyAccountAddressPopup/MyAccountAddressPopup.config';
 import {
     CheckoutShippingContainer as SourceCheckoutShippingContainer
 } from 'SourceComponent/CheckoutShipping/CheckoutShipping.container';
+import { showPopup } from 'Store/Popup/Popup.action';
 import { trimAddressFields } from 'Util/Address';
 import { isSignedIn } from 'Util/Auth';
+
+export const mapDispatchToProps = (dispatch) => ({
+    showPopup: (payload) => dispatch(showPopup(ADDRESS_POPUP_ID, payload))
+});
 
 export const mapStateToProps = (state) => ({
     customer: state.MyAccountReducer.customer
@@ -14,8 +20,32 @@ export const mapStateToProps = (state) => ({
 export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     static propTypes = {
         ...SourceCheckoutShippingContainer.propTypes,
-        guestEmail: PropTypes.string
+        guestEmail: PropTypes.string,
+        showPopup: PropTypes.func.isRequired
     };
+
+    containerFunctions = {
+        onShippingSuccess: this.onShippingSuccess.bind(this),
+        onShippingError: this.onShippingError.bind(this),
+        onAddressSelect: this.onAddressSelect.bind(this),
+        onShippingMethodSelect: this.onShippingMethodSelect.bind(this),
+        showCreateNewPopup: this.showCreateNewPopup.bind(this)
+    };
+
+    openForm() {
+        this.setState({ formContent: true });
+    }
+
+    showCreateNewPopup() {
+        const { showPopup } = this.props;
+
+        this.openForm();
+        showPopup({
+            action: ADD_ADDRESS,
+            title: __('Add new address'),
+            address: {}
+        });
+    }
 
     static defaultProps = {
         guestEmail: ''
@@ -33,13 +63,23 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
             ? this._getAddressById(selectedCustomerAddressId)
             : trimAddressFields(fields);
 
+        const {
+            region_id,
+            region,
+            street,
+            country_id,
+            telephone
+        } = shippingAddress;
+
         const shippingAddressMapped = {
             ...shippingAddress,
-            street: shippingAddress.street[0],
-            area: shippingAddress.region,
-            country_code: shippingAddress.country_id,
-            phone: shippingAddress.telephone,
-            email: isSignedIn() ? email : guestEmail
+            street: Array.isArray(street) ? street[0] : street,
+            area: region ?? region_id,
+            country_code: country_id,
+            phone: telephone,
+            email: isSignedIn() ? email : guestEmail,
+            region: region ?? region_id,
+            region_id: 0
         };
 
         const {
@@ -58,4 +98,4 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     }
 }
 
-export default connect(mapStateToProps)(CheckoutShippingContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(CheckoutShippingContainer);

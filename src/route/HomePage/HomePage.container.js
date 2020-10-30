@@ -3,6 +3,7 @@ import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import { setGender } from 'Store/AppState/AppState.action';
+import { toggleBreadcrumbs } from 'Store/Breadcrumbs/Breadcrumbs.action';
 import { getStaticFile } from 'Util/API/endpoint/StaticFiles/StaticFiles.endpoint';
 import Logger from 'Util/Logger';
 
@@ -14,15 +15,17 @@ export const mapStateToProps = (state) => ({
     locale: state.AppState.locale
 });
 
-export const mapDispatchToProps = (dispatch) => ({
-    setGender: (gender) => dispatch(setGender(gender))
+export const mapDispatchToProps = (_dispatch) => ({
+    toggleBreadcrumbs: (areBreadcrumbsVisible) => _dispatch(toggleBreadcrumbs(areBreadcrumbsVisible)),
+    setGender: (gender) => _dispatch(setGender(gender))
 });
 
 export class HomePageContainer extends PureComponent {
     static propTypes = {
         setGender: PropTypes.func.isRequired,
         gender: PropTypes.string.isRequired,
-        locale: PropTypes.string.isRequired
+        locale: PropTypes.string.isRequired,
+        toggleBreadcrumbs: PropTypes.func.isRequired
     };
 
     state = {
@@ -49,12 +52,19 @@ export class HomePageContainer extends PureComponent {
 
     componentDidUpdate(prevProps) {
         this.setUrlGender();
+
         const { gender: prevGender, locale: prevLocale } = prevProps;
-        const { locale, gender, setGender } = this.props;
+        const {
+            locale,
+            gender,
+            setGender,
+            toggleBreadcrumbs
+        } = this.props;
         const { urlGender } = this.state;
         if (urlGender !== '') {
             setGender(urlGender);
         }
+        toggleBreadcrumbs(false);
 
         if (gender !== prevGender || locale !== prevLocale) {
             this.requestDynamicContent(true, urlGender);

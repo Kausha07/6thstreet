@@ -71,7 +71,6 @@ class PLPFilters extends PureComponent {
 
     renderFilters() {
         const { filters } = this.props;
-
         return Object.entries(filters).map(this.renderFilter);
     }
 
@@ -121,6 +120,11 @@ class PLPFilters extends PureComponent {
 
         Object.keys(activeFilters).map((key) => WebUrlParser.setParam(key, activeFilters[key]));
         this.hidePopUp();
+    };
+
+    updateFilters = () => {
+        const { activeFilters } = this.state;
+        Object.keys(activeFilters).map((key) => WebUrlParser.setParam(key, activeFilters[key]));
     };
 
     renderSeeResultButton() {
@@ -186,6 +190,14 @@ class PLPFilters extends PureComponent {
     }
 
     renderFilterButton() {
+        const { activeFilters } = this.state;
+        const { count } = activeFilters ? Object.entries(activeFilters).reduce((prev, [_key, value]) => ({
+            count: prev.count + value.length
+        }), { count: 0 })
+            : (
+                { count: 0 }
+            );
+
         return (
             <button
               onClick={ this.handleFilterClick }
@@ -195,7 +207,8 @@ class PLPFilters extends PureComponent {
               block="PLPFilterMobile"
             >
                 <img src={ fitlerImage } alt="fitler" />
-                { __('refine') }
+                { __('refine ') }
+                { `(${count})` }
             </button>
         );
     }
@@ -270,7 +283,7 @@ class PLPFilters extends PureComponent {
         });
     };
 
-    renderQuickFilter([key, filter]) {
+    renderQuickFilter = ([key, filter]) => {
         const genders = [
             __('men'),
             __('women'),
@@ -287,6 +300,8 @@ class PLPFilters extends PureComponent {
                     <PLPQuickFilter
                       key={ key }
                       filter={ filter }
+                      updateFilters={ this.updateFilters }
+                      onClick={ this.updateFilters }
                     />
                 );
             }
@@ -295,12 +310,14 @@ class PLPFilters extends PureComponent {
                 <PLPQuickFilter
                   key={ key }
                   filter={ filter }
+                  updateFilters={ this.updateFilters }
+                  onClick={ this.updateFilters }
                 />
             );
         }
 
         return null;
-    }
+    };
 
     render() {
         const { productsCount } = this.props;
@@ -334,7 +351,7 @@ class PLPFilters extends PureComponent {
                     </div>
                     <div block="PLPFilters" elem="ProductsCount" mods={ { isArabic } }>
                         <span>{ count }</span>
-                        Products
+                        { count ? __('Products') : null }
                     </div>
                 </div>
             </>

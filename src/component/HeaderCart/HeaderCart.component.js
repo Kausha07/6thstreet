@@ -21,6 +21,9 @@ class HeaderCart extends PureComponent {
     };
 
     closePopup = () => {
+        const { hideActiveOverlay } = this.props;
+
+        hideActiveOverlay();
         this.setState({ cartPopUp: '' });
     };
 
@@ -46,7 +49,6 @@ class HeaderCart extends PureComponent {
     render() {
         const { cartPopUp } = this.state;
         const { renderCountItems } = this.props;
-
         return (
             <div block="HeaderCart">
                 <button

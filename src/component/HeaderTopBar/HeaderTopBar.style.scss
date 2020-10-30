@@ -1,5 +1,5 @@
 :root {
-    --shadow-color: rgba(0, 0, 0, 0.1);
+    --shadow-color: rgba(0, 0, 0, .1);
 }
 
 .HeaderTopBar {
@@ -19,6 +19,7 @@
         box-shadow: 0 1px 0 0 var(--shadow-color);
         background: none;
         height: 30px;
+        padding: 0 15px;
     }
 
     &-ContentWrapper {
@@ -30,8 +31,8 @@
     &-CmsBlock {
         display: none;
         font-size: 12px;
-        font-weight: 600;
-        letter-spacing: 0.5px;
+        font-weight: var(--fw-demi);
+        letter-spacing: .5px;
         line-height: 16px;
         margin: 7px 0;
         text-transform: uppercase;

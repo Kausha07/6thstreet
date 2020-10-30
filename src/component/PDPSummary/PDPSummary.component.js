@@ -23,6 +23,7 @@ class PDPSummary extends PureComponent {
 
     static getDerivedStateFromProps(props, state) {
         const { product } = props;
+
         const { alsoAvailable, prevAlsoAvailable } = state;
 
         if (prevAlsoAvailable !== product['6s_also_available']) {
@@ -35,21 +36,6 @@ class PDPSummary extends PureComponent {
         return null;
     }
 
-    renderNew() {
-        const { product: { in_new_in } } = this.props;
-        if (!in_new_in) {
-            return (
-                <>
-                    <span block="PDPSummary" elem="New">NEW</span>
-                    { ' ' }
-                    <span block="PDPSummary" elem="Exclusive"> - Exclusive</span>
-                </>
-            );
-        }
-
-        return <p block="PDPSummary" elem="New" />;
-    }
-
     renderSummaryHeader() {
         const { product } = this.props;
 
@@ -59,16 +45,6 @@ class PDPSummary extends PureComponent {
                     <ProductLabel
                       product={ product }
                     />
-                </div>
-                <div block="PDPSummary" elem="HeaderShare">
-                    <button
-                      block="PDPSummary"
-                      elem="HeaderShare"
-                      mix={ { block: 'button secondary thin' } }
-                    >
-                        <div block="PDPSummary" elem="shareSvg" />
-                        <span block="PDPSummary" elem="ShareTxt">Share</span>
-                    </button>
                 </div>
             </div>
         );
