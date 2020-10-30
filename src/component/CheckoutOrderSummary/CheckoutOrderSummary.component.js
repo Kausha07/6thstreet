@@ -74,6 +74,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     renderPromoContent() {
         const { cart_content: { cart_cms } = {} } = window.contentConfiguration;
         const { totals: { currency_code, avail_free_shipping_amount } } = this.props;
+        const { isArabic } = this.state;
 
         if (cart_cms) {
             return <CmsBlock identifier={ cart_cms } />;
@@ -84,14 +85,14 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
               block="CheckoutOrderSummary"
               elem="PromoBlock"
             >
-                <figcaption block="CheckoutOrderSummary" elem="PromoText">
+                <figcaption block="CheckoutOrderSummary" elem="PromoText" mods={ { isArabic } }>
                     <img src={ Delivery } alt="Delivery icon" />
                     { __('Add ') }
                     <span
                       block="CheckoutOrderSummary"
                       elem="Currency"
                     >
-                        { `${currency_code } ${avail_free_shipping_amount}` }
+                        { `${currency_code } ${avail_free_shipping_amount} ` }
                     </span>
                     { __('more to your cart for ') }
                     <span
@@ -191,14 +192,14 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                             ? this.renderPriceLine(
                                 fixedPrice
                                     ? (total + tax_amount + cashOnDeliveryFee).toFixed(3)
-                                    : total + tax_amount + cashOnDeliveryFee
-                                , __('Total')
+                                    : total + tax_amount + cashOnDeliveryFee,
+                                __('Total')
                             )
                             : this.renderPriceLine(
                                 fixedPrice
                                     ? (total + tax_amount).toFixed(3)
-                                    : total + tax_amount
-                                , __('Total')
+                                    : total + tax_amount,
+                                __('Total')
                             ) }
                             <span>{ __('(Taxes included)') }</span>
                     </div>
