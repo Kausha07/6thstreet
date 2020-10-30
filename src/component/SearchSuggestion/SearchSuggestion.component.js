@@ -28,6 +28,10 @@ class SearchSuggestion extends PureComponent {
         window.addEventListener('resize', this.setSearchSuggestionWidth);
     }
 
+    componentDidUpdate() {
+        this.setSearchSuggestionWidth();
+    }
+
     componentWillUnmount() {
         window.removeEventListener('resize', this.setSearchSuggestionWidth);
     }
