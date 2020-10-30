@@ -179,7 +179,7 @@ class SearchSuggestion extends PureComponent {
         return (
             <div block="SearchSuggestion" mods={ { isArabic } }>
                 { this.renderLoader() }
-                { this.renderContent() }
+                aaa
             </div>
         );
     }
