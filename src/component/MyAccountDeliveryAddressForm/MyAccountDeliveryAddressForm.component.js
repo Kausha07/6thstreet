@@ -257,6 +257,20 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         return availableAreas.map((area) => ({ id: area, label: area, value: area }));
     };
 
+    getValidationForTelephone() {
+        const { default_country } = this.props;
+
+        return default_country === 'AE' || default_country === 'SA'
+            ? 'telephoneAE' : 'telephone';
+    }
+
+    getPhoneNumberMaxLength() {
+        const { default_country } = this.props;
+
+        return default_country === 'AE' || default_country === 'SA'
+            ? '9' : '8';
+    }
+
     get fieldMap() {
         const {
             defaultChecked,
@@ -294,7 +308,8 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
                 value: lastname
             },
             telephone: {
-                validation: ['notEmpty'],
+                validation: ['notEmpty', this.getValidationForTelephone()],
+                maxLength: this.getPhoneNumberMaxLength(),
                 placeholder: __('Phone Number'),
                 value: this.cutPhoneCode(telephone),
                 ...clearValue

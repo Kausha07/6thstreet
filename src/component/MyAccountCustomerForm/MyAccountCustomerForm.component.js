@@ -170,6 +170,20 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
         return [];
     }
 
+    getValidationForTelephone() {
+        const { customerCountry } = this.props;
+
+        return customerCountry === 'AE' || customerCountry === 'SA'
+            ? 'telephoneAE' : 'telephone';
+    }
+
+    getPhoneNumberMaxLength() {
+        const { customerCountry } = this.getCustomerPhone();
+
+        return customerCountry === 'AE' || customerCountry === 'SA'
+            ? '9' : '8';
+    }
+
     renderPhone() {
         const { isArabic } = this.state;
         const customerPhoneData = this.getCustomerPhone();
@@ -184,8 +198,10 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
                   type="text"
                   name="phone"
                   id="phone"
+                  maxLength={ this.getPhoneNumberMaxLength() }
                   placeholder={ __('Phone number') }
                   value={ customerPhoneData.customerPhone }
+                  validation={ ['notEmpty', this.getValidationForTelephone()] }
                 />
             </div>
         );

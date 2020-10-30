@@ -126,6 +126,20 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
         return PHONE_CODES[countryId];
     }
 
+    getValidationForTelephone() {
+        const { default_country } = this.props;
+
+        return default_country === 'AE' || default_country === 'SA'
+            ? 'telephoneAE' : 'telephone';
+    }
+
+    getPhoneNumberMaxLength() {
+        const { default_country } = this.props;
+
+        return default_country === 'AE' || default_country === 'SA'
+            ? '9' : '8';
+    }
+
     renderStreetPlaceholder() {
         return isMobile.any() || isMobile.tablet()
             ? __('Street address')
@@ -190,7 +204,8 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
                 autocomplete: 'none'
             },
             telephone: {
-                validation: ['notEmpty'],
+                validation: ['notEmpty', this.getValidationForTelephone()],
+                maxLength: this.getPhoneNumberMaxLength(),
                 placeholder: __('Phone Number')
             },
             city: {
