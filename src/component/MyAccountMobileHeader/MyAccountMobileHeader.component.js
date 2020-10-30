@@ -17,8 +17,23 @@ class MyAccountMobileHeader extends PureComponent {
     };
 
     state = {
-        isArabic: isArabic()
+        isArabic: isArabic(),
+        isClubApparel: false
     };
+
+    static getDerivedStateFromProps(props) {
+        const { alternativePageName, name, isHiddenTabContent } = props;
+
+        if (isHiddenTabContent) {
+            return {
+                isClubApparel: alternativePageName === 'Club Apparel Loyalty' || name === 'Club Apparel Loyalty'
+            };
+        }
+
+        return {
+            isClubApparel: false
+        };
+    }
 
     renderStoreCredits() {
         return (
@@ -45,29 +60,30 @@ class MyAccountMobileHeader extends PureComponent {
 
     renderCloseButton() {
         const { onClose } = this.props;
-        const { isArabic } = this.state;
+        const { isArabic, isClubApparel } = this.state;
 
         return (
             <button
               elem="Button"
               block="MyAccountMobileHeader"
               onClick={ onClose }
-              mods={ { isArabic } }
+              mods={ { isArabic, isClubApparel } }
             />
         );
     }
 
     render() {
         const { isHiddenTabContent } = this.props;
+        const { isClubApparel } = this.state;
 
-        return (
+        return !isClubApparel ? (
             <div block="MyAccountMobileHeader">
                 { isHiddenTabContent
                     ? this.renderTabOptionHeader()
                     : this.renderStoreCredits() }
                 <div block="MyAccountMobileHeader" elem="Actions" />
             </div>
-        );
+        ) : this.renderCloseButton();
     }
 }
 
