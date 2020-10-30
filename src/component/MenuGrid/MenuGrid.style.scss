@@ -83,7 +83,7 @@
             .ViewAll {
                 &-Link {
                     display: none;
-                    font-family: 'Avenir Next Bold', serif;
+                    font-weight: var(--fw-bold);
 
                     text-align: center;
                 }
@@ -178,7 +178,7 @@
         }
 
         a {
-            font-weight: 500;
+            font-weight: var(--fw-medium);
         }
 
         &-Column {

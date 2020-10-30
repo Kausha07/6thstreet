@@ -2,14 +2,11 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
-import MyAccountQuery from 'Query/MyAccount.query';
-import { updateCustomerDetails } from 'Store/MyAccount/MyAccount.action';
-import { CUSTOMER } from 'Store/MyAccount/MyAccount.dispatcher';
+import { PHONE_CODES } from 'Component/MyAccountAddressForm/MyAccountAddressForm.config';
+import MyAccountDispatcher from 'Store/MyAccount/MyAccount.dispatcher';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { customerType } from 'Type/Account';
-import BrowserDatabase from 'Util/BrowserDatabase';
-import { fetchMutation } from 'Util/Request';
-import { ONE_MONTH_IN_SECONDS } from 'Util/Request/QueryDispatcher';
+import { getCountryFromUrl } from 'Util/Url';
 
 import MyAccountCustomerForm from './MyAccountCustomerForm.component';
 
@@ -18,7 +15,7 @@ export const mapStateToProps = (state) => ({
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-    updateCustomer: (customer) => dispatch(updateCustomerDetails(customer)),
+    updateCustomer: (customer) => MyAccountDispatcher.updateCustomerData(dispatch, customer),
     showSuccessNotification: (message) => dispatch(showNotification('success', message)),
     showErrorNotification: (error) => dispatch(showNotification('error', error[0].message))
 });
@@ -33,17 +30,24 @@ export class MyAccountCustomerFormContainer extends PureComponent {
 
     state = {
         isShowPassword: false,
-        isLoading: false
+        isLoading: false,
+        countryCode: getCountryFromUrl(),
+        gender: '0'
     };
 
     containerFunctions = {
         onSave: this.saveCustomer.bind(this),
         showPasswordFrom: this.togglePasswordForm.bind(this, true),
-        hidePasswordFrom: this.togglePasswordForm.bind(this, false)
+        hidePasswordFrom: this.togglePasswordForm.bind(this, false),
+        setGender: this.setGender.bind(this)
     };
 
     togglePasswordForm(isShowPassword) {
         this.setState({ isShowPassword });
+    }
+
+    setGender(gender) {
+        this.setState({ gender });
     }
 
     containerProps = () => {
@@ -67,15 +71,19 @@ export class MyAccountCustomerFormContainer extends PureComponent {
         const {
             updateCustomer,
             showErrorNotification,
-            showSuccessNotification
+            showSuccessNotification,
+            customer: oldCustomerData
         } = this.props;
-
-        const mutation = MyAccountQuery.getUpdateInformationMutation(customer);
+        const { countryCode, gender } = this.state;
+        const { phone } = customer;
 
         try {
-            const { updateCustomer: { customer } } = await fetchMutation(mutation);
-            BrowserDatabase.setItem(customer, CUSTOMER, ONE_MONTH_IN_SECONDS);
-            updateCustomer(customer);
+            updateCustomer({
+                ...oldCustomerData,
+                ...customer,
+                gender,
+                phone: PHONE_CODES[countryCode] + phone
+            });
             showSuccessNotification(__('Your information was successfully updated!'));
         } catch (e) {
             showErrorNotification(e);

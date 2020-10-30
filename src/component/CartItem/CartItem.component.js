@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 /* eslint-disable react/jsx-one-expression-per-line */
 /**
  * ScandiPWA - Progressive Web App for Magento
@@ -17,6 +18,7 @@ import { withRouter } from 'react-router';
 import Field from 'Component/Field';
 import Image from 'Component/Image';
 import Loader from 'Component/Loader';
+import { FIXED_CURRENCIES } from 'Component/Price/Price.config';
 import { CartItemType } from 'Type/MiniCart';
 import { isArabic } from 'Util/App';
 
@@ -55,10 +57,6 @@ export class CartItem extends PureComponent {
     static defaultProps = {
         isEditing: false,
         isLikeTable: false
-    };
-
-    state = {
-        isArabic: isArabic()
     };
 
     renderProductConfigurationOption = ([key, attribute]) => {
@@ -143,8 +141,11 @@ export class CartItem extends PureComponent {
             }
         } = this.props;
 
-        hideActiveOverlay();
-        closePopup();
+        if (window.location.pathname !== '/cart' && window.location.pathname !== '/checkout/shipping') {
+            hideActiveOverlay();
+            closePopup();
+        }
+
         history.push(url.split('.com')[1]);
     };
 
@@ -263,12 +264,13 @@ export class CartItem extends PureComponent {
                 basePrice
             }
         } = this.props;
+        const decimals = FIXED_CURRENCIES.includes(currency_code) ? 3 : 2;
 
         const withoutDiscount = (
             <>
                 { currency_code }
                 <span>
-                    { `${parseFloat(row_total).toFixed(2)}` }
+                    { `${parseFloat(row_total).toFixed(decimals)}` }
                 </span>
             </>
         );
@@ -281,7 +283,7 @@ export class CartItem extends PureComponent {
                 <div>
                     { currency_code }
                     <span>
-                        { `${parseFloat(basePrice).toFixed(2)}` }
+                        { `${parseFloat(basePrice).toFixed(decimals)}` }
                     </span>
                 </div>
                 { withoutDiscount }

@@ -11,8 +11,7 @@ import {
     addProductToCart,
     applyCouponCode,
     createCart,
-    getCartItems,
-    getCartTotals,
+    getCart,
     removeCouponCode,
     removeProductFromCart,
     updateProductInCart
@@ -41,25 +40,20 @@ export class CartDispatcher {
                 }
 
                 dispatch(setCartId(requestedCartId));
-                await this.getCartItems(dispatch, requestedCartId);
                 await this.getCartTotals(dispatch, requestedCartId);
             } catch (e) {
                 Logger.log(e);
             }
         } else {
-            await this.getCartItems(dispatch, cartId);
             await this.getCartTotals(dispatch, cartId);
         }
     }
 
-    async getCartItems(dispatch, cartId) {
+    async setCartItems(dispatch, data) {
         try {
             const {
-                data: {
-                    items = [],
-                    currency_code: currency
-                } = {}
-            } = await getCartItems(cartId);
+                items = []
+            } = data || {};
 
             if (items.length) {
                 dispatch(removeCartItems());
@@ -83,8 +77,7 @@ export class CartDispatcher {
                         brandName,
                         thumbnail,
                         '',
-                        price,
-                        currency
+                        price
                     ));
                 });
             }
@@ -95,8 +88,11 @@ export class CartDispatcher {
 
     async getCartTotals(dispatch, cartId) {
         try {
-            const { data } = await getCartTotals(cartId);
+            const {
+                data
+            } = await getCart(cartId);
 
+            await this.setCartItems(dispatch, data);
             dispatch(setCartTotals(data));
         } catch (e) {
             Logger.log(e);
@@ -112,8 +108,7 @@ export class CartDispatcher {
         brand_name,
         thumbnail_url,
         url,
-        itemPrice,
-        currency
+        itemPrice
     ) {
         const { Cart: { cartId } } = getStore().getState();
 
@@ -127,8 +122,7 @@ export class CartDispatcher {
                 brand_name,
                 thumbnail_url,
                 url,
-                itemPrice,
-                currency
+                itemPrice
             ));
         } catch (e) {
             Logger.log(e);
@@ -177,8 +171,7 @@ export class CartDispatcher {
         brand_name,
         thumbnail_url,
         url,
-        itemPrice,
-        currency
+        itemPrice
     ) {
         const { Cart: { cartId } } = getStore().getState();
 
@@ -192,8 +185,7 @@ export class CartDispatcher {
                 brand_name,
                 thumbnail_url,
                 url,
-                itemPrice,
-                currency
+                itemPrice
             ));
         } catch (e) {
             Logger.log(e);
@@ -207,7 +199,11 @@ export class CartDispatcher {
 
         try {
             await applyCouponCode({ cartId, couponCode });
+
+            dispatch(showNotification('success', __('Coupon was applied!')));
         } catch (e) {
+            dispatch(showNotification('error', __('The coupon code isn\'t valid. Verify the code and try again.')));
+
             Logger.log(e);
         }
 
@@ -219,7 +215,11 @@ export class CartDispatcher {
 
         try {
             await removeCouponCode({ cartId, couponCode });
+
+            dispatch(showNotification('success', __('Coupon was removed!')));
         } catch (e) {
+            dispatch(showNotification('error', __('The coupon code isn\'t valid. Verify the code and try again.')));
+
             Logger.log(e);
         }
 

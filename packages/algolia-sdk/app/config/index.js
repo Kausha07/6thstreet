@@ -155,7 +155,8 @@ const config = {
       'is_new_in',
       'url',
       'news_from_date',
-      'news_to_date'
+      'news_to_date',
+      'promotion'
     ],
     facets: FACET_FILTERS,
     facetFilters: [],

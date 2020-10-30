@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
@@ -10,7 +11,8 @@ export const mapStateToProps = (_state) => ({});
 
 class PLPQuickFilterContainer extends PureComponent {
     static propTypes = {
-        filter: Filter.isRequired
+        filter: Filter.isRequired,
+        updateFilters: PropTypes.func.isRequired
     };
 
     containerFunctions = {
@@ -38,9 +40,9 @@ class PLPQuickFilterContainer extends PureComponent {
     }
 
     containerProps = () => {
-        const { filter } = this.props;
+        const { filter, updateFilters } = this.props;
 
-        return { filter };
+        return { filter, updateFilters };
     };
 
     render() {

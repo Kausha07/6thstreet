@@ -1,8 +1,8 @@
-// import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { Route, Switch } from 'react-router-dom';
 
 import MyAccountCancelCreate from 'Component/MyAccountCancelCreate';
+import MyAccountCancelCreateSuccess from 'Component/MyAccountCancelCreateSuccess';
 import MyAccountReturnCreate from 'Component/MyAccountReturnCreate';
 import MyAccountReturnCreateList from 'Component/MyAccountReturnCreateList';
 import MyAccountReturnList from 'Component/MyAccountReturnList';
@@ -13,10 +13,6 @@ import { withStoreRegex } from 'Component/Router/Router.component';
 import './MyAccountReturns.style';
 
 class MyAccountReturns extends PureComponent {
-    static propTypes = {
-        // TODO: implement prop-types
-    };
-
     renderCreateCancel({ match }) {
         return (
             <MyAccountCancelCreate
@@ -57,6 +53,14 @@ class MyAccountReturns extends PureComponent {
         );
     }
 
+    renderCreateCancelSuccess({ match }) {
+        return (
+            <MyAccountCancelCreateSuccess
+              match={ match }
+            />
+        );
+    }
+
     render() {
         return (
             <Switch>
@@ -78,6 +82,11 @@ class MyAccountReturns extends PureComponent {
                 <Route
                   path={ withStoreRegex('/my-account/return-item') }
                   render={ this.renderOrderList }
+                  exact
+                />
+                <Route
+                  path={ withStoreRegex('/my-account/return-item/cancel/success/:cancelId') }
+                  render={ this.renderCreateCancelSuccess }
                   exact
                 />
                 <Route

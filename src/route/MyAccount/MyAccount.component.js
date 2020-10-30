@@ -25,8 +25,6 @@ import {
 import { deleteAuthorizationToken } from 'Util/Auth';
 import isMobile from 'Util/Mobile';
 
-import { ReactComponent as Close } from './icons/x-close.svg';
-
 export class MyAccount extends SourceMyAccount {
     constructor(props) {
         super(props);
@@ -107,7 +105,8 @@ export class MyAccount extends SourceMyAccount {
                   onSignOut={ this.handleSignOut }
                 />
                 <div block="MyAccount" elem="TabContent">
-                    <h1 block="MyAccount" elem="Heading">{ alternativePageName || name }</h1>
+                    { alternativePageName === 'Club Apparel Loyalty' || name === 'Club Apparel Loyalty'
+                        ? null : (<h1 block="MyAccount" elem="Heading">{ alternativePageName || name }</h1>) }
                     <TabContent />
                 </div>
             </ContentWrapper>
@@ -137,7 +136,12 @@ export class MyAccount extends SourceMyAccount {
               label={ __('My Account page') }
               wrapperMix={ { block: 'MyAccount', elem: 'Wrapper' } }
             >
-                <MyAccountMobileHeader />
+                <MyAccountMobileHeader
+                  onClose={ this.handleClick }
+                  isHiddenTabContent={ hiddenTabContent === 'Active' }
+                  alternativePageName={ alternativePageName }
+                  name={ name }
+                />
                 <div block={ hiddenTabList }>
                     <MyAccountTabList
                       tabMap={ tabMap }
@@ -150,18 +154,8 @@ export class MyAccount extends SourceMyAccount {
                         <a id="privacy-link" href="https://en-ae.6thstreet.com/privacy-policy"> privacy policy</a>
                     </div>
                 </div>
-                { hiddenTabContent === 'Active' ? (
-                    <button
-                      elem="Button"
-                      block="Cross-button"
-                      onClick={ this.handleClick }
-                    >
-                        <Close />
-                    </button>
-                ) : ('') }
                 <div block={ hiddenTabContent }>
                     <div block="MyAccount" elem="TabContent">
-                        <h1 block="MyAccount" elem="Heading">{ alternativePageName || name }</h1>
                         <TabContent />
                     </div>
                 </div>

@@ -27,17 +27,16 @@
     }
 
     &-Button {
-        font-family: 'Avenir Next Regular', serif;
+        font-weight: var(--fw-regular);
         letter-spacing: .8px;
         padding: 0;
         pointer-events: all;
         z-index: 2;
 
-        &_isCurrentGender,
-        &:hover
+        &_isCurrentGender
         {
             border-bottom: 2px solid var(--black);
-            font-family: 'Avenir Next Bold', serif;
+            font-weight: var(--fw-bold);
             font-size: 14.4px;
             letter-spacing: 0;
             transition-duration: unset;
@@ -54,7 +53,7 @@
     &_isArabic {
         .GenderButton {
             &-Container {
-                @include desktop {      
+                @include desktop {
                     &:first-child {
                         padding-left: 30px;
                         padding-right: 0;

@@ -22,8 +22,10 @@ import { changeNavigationState } from 'Store/Navigation/Navigation.action';
 import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
+import { customerType } from 'Type/Account';
 import { HistoryType } from 'Type/Common';
 import { TotalsType } from 'Type/MiniCart';
+import { ClubApparelMember } from 'Util/API/endpoint/ClubApparel/ClubApparel.type';
 import { isSignedIn } from 'Util/Auth';
 import history from 'Util/History';
 import isMobile from 'Util/Mobile';
@@ -40,7 +42,9 @@ export const mapStateToProps = (state) => ({
     totals: state.CartReducer.cartTotals,
     headerState: state.NavigationReducer[TOP_NAVIGATION_TYPE].navigationState,
     guest_checkout: state.ConfigReducer.guest_checkout,
-    isSignedIn: state.MyAccountReducer.isSignedIn
+    customer: state.MyAccountReducer.customer,
+    isSignedIn: state.MyAccountReducer.isSignedIn,
+    clubApparel: state.ClubApparelReducer.clubApparel
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -60,13 +64,25 @@ export class CartPageContainer extends PureComponent {
         showOverlay: PropTypes.func.isRequired,
         showNotification: PropTypes.func.isRequired,
         updateMeta: PropTypes.func.isRequired,
-        guest_checkout: PropTypes.bool.isRequired,
+        guest_checkout: PropTypes.bool,
         history: HistoryType.isRequired,
         totals: TotalsType.isRequired,
-        tabMap: PropTypes.isRequired
+        tabMap: PropTypes.isRequired,
+        customer: customerType,
+        isSignedIn: PropTypes.bool.isRequired,
+        clubApparel: ClubApparelMember
     };
 
-    state = { isEditing: false };
+    static defaultProps = {
+        customer: null,
+        clubApparel: {},
+        guest_checkout: true
+    };
+
+    state = {
+        isEditing: false,
+        clubApparelMember: null
+    };
 
     containerFunctions = {
         onCheckoutButtonClick: this.onCheckoutButtonClick.bind(this),

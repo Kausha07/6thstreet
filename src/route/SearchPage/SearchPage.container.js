@@ -20,6 +20,12 @@ export class SearchPageContainer extends PLPContainer {
         ]);
     }
 
+    containerProps = () => {
+        const { options, pages, isLoading } = this.props;
+
+        return { options, pages, isLoading };
+    };
+
     render() {
         return (
             <SearchPage

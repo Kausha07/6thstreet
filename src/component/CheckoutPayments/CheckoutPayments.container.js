@@ -1,42 +1,55 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+import { TABBY_ISTALLMENTS, TABBY_PAY_LATER } from 'Component/CheckoutPayments/CheckoutPayments.config';
+import { BILLING_STEP } from 'Route/Checkout/Checkout.config';
 import {
     CheckoutPaymentsContainer as SourceCheckoutPaymentsContainer,
     mapDispatchToProps as SourceMapDispatchToProps
 } from 'SourceComponent/CheckoutPayments/CheckoutPayments.container';
+import { getStore } from 'Store';
+import CartDispatcher from 'Store/Cart/Cart.dispatcher';
 import CheckoutDispatcher from 'Store/Checkout/Checkout.dispatcher';
+import { TotalsType } from 'Type/MiniCart';
+
+export const mapStateToProps = (state) => ({
+    totals: state.CartReducer.cartTotals
+});
 
 export const mapDispatchToProps = (dispatch) => ({
     ...SourceMapDispatchToProps,
-    selectPaymentMethod: (billingData) => CheckoutDispatcher.selectPaymentMethod(dispatch, billingData)
+    selectPaymentMethod: (code) => CheckoutDispatcher.selectPaymentMethod(dispatch, code),
+    createTabbySession: (code) => CheckoutDispatcher.createTabbySession(dispatch, code),
+    updateTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId)
 });
 
 export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
     static propTypes = {
         ...SourceCheckoutPaymentsContainer.propTypes,
         setTabbyWebUrl: PropTypes.func.isRequired,
-        setCreditCardData: PropTypes.func.isRequired
+        setCreditCardData: PropTypes.func.isRequired,
+        totals: TotalsType.isRequired
     };
 
-    selectPaymentMethod({ m_code: code }) {
+    state = {
+        isTabbyInstallmentAvailable: false,
+        isTabbyPayLaterAvailable: false
+    };
+
+    componentDidMount() {
+        const { createTabbySession } = this.props;
         const {
-            onPaymentMethodSelect,
-            setOrderButtonEnableStatus,
-            selectPaymentMethod,
             billingAddress,
             setTabbyWebUrl
         } = this.props;
 
-        this.setState({
-            selectedPaymentCode: code
-        });
+        if (window.formPortalCollector) {
+            window.formPortalCollector.subscribe(BILLING_STEP, this.collectAdditionalData, 'CheckoutPaymentsContainer');
+        }
 
-        onPaymentMethodSelect(code);
-        setOrderButtonEnableStatus(true);
-        selectPaymentMethod({ code, billingAddress }).then(
+        createTabbySession(billingAddress).then(
             (response) => {
-                if (response.configuration) {
+                if (response && response.configuration) {
                     const {
                         configuration: {
                             available_products: {
@@ -49,18 +62,56 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
                     } = response;
 
                     if (installments || pay_later) {
-                        setTabbyWebUrl(
-                            code === 'tabby_installments'
-                                ? installments[0].web_url
-                                : pay_later[0].web_url,
-                            id
-                        );
+                        if (installments) {
+                            setTabbyWebUrl(
+                                installments[0].web_url,
+                                id,
+                                TABBY_ISTALLMENTS
+                            );
+
+                            // this variable actually is used in the component
+                            // eslint-disable-next-line quote-props
+                            this.setState({ 'isTabbyInstallmentAvailable': true });
+                        }
+
+                        if (pay_later) {
+                            setTabbyWebUrl(
+                                pay_later[0].web_url,
+                                id,
+                                TABBY_PAY_LATER
+                            );
+
+                            // this variable actually is used in the component
+                            // eslint-disable-next-line quote-props
+                            this.setState({ 'isTabbyPayLaterAvailable': true });
+                        }
                     }
                 }
             },
             this._handleError
         );
     }
+
+    selectPaymentMethod(item) {
+        const { m_code: code } = item;
+        const { Cart: { cartId } } = getStore().getState();
+
+        const {
+            onPaymentMethodSelect,
+            setOrderButtonEnableStatus,
+            selectPaymentMethod,
+            updateTotals
+        } = this.props;
+
+        this.setState({
+            selectedPaymentCode: code
+        });
+
+        onPaymentMethodSelect(code);
+        setOrderButtonEnableStatus(true);
+        updateTotals(cartId);
+        selectPaymentMethod(code);
+    }
 }
 
-export default connect(null, mapDispatchToProps)(CheckoutPaymentsContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(CheckoutPaymentsContainer);

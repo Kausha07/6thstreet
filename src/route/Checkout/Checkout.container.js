@@ -5,8 +5,7 @@ import { CARD } from 'Component/CheckoutPayments/CheckoutPayments.config';
 import { BILLING_STEP, PAYMENT_TOTALS } from 'SourceRoute/Checkout/Checkout.config';
 import {
     CheckoutContainer as SourceCheckoutContainer,
-    mapDispatchToProps as sourceMapDispatchToProps,
-    mapStateToProps
+    mapDispatchToProps as sourceMapDispatchToProps
 } from 'SourceRoute/Checkout/Checkout.container';
 import { setCartId } from 'Store/Cart/Cart.action';
 import CartDispatcher from 'Store/Cart/Cart.dispatcher';
@@ -32,10 +31,19 @@ export const mapDispatchToProps = (dispatch) => ({
     hideActiveOverlay: () => dispatch(hideActiveOverlay()),
     updateStoreCredit: () => StoreCreditDispatcher.getStoreCredit(dispatch)
 });
+export const mapStateToProps = (state) => ({
+    totals: state.CartReducer.cartTotals,
+    customer: state.MyAccountReducer.customer,
+    guest_checkout: state.ConfigReducer.guest_checkout,
+    countries: state.ConfigReducer.countries,
+    isSignedIn: state.MyAccountReducer.isSignedIn,
+    activeOverlay: state.OverlayReducer.activeOverlay
+});
 
 export class CheckoutContainer extends SourceCheckoutContainer {
     static propTypes = {
-        updateStoreCredit: PropTypes.func.isRequired
+        updateStoreCredit: PropTypes.func.isRequired,
+        isSignedIn: PropTypes.bool.isRequired
     };
 
     componentDidMount() {

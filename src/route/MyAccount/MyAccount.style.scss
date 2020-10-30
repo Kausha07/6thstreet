@@ -1,4 +1,6 @@
 .MyAccount {
+    padding-top: 60px;
+
     &-Wrapper {
         @include desktop {
             display: flex;
@@ -9,21 +11,47 @@
         @include before-desktop {
             display: none;
             @include mobile {
-                display: block;
+                display: none;
             }
         }
     }
 
     &-TabContent {
         @include after-mobile {
+            padding: 0 105px;
             width: 100%;
-            padding: 0 20px;
         }
 
         @include desktop {
             width: 70%;
         }
     }
+
+    .FieldForm-Fields {
+        .Field {
+            @include desktop{
+                margin: 10px 10px 20px 0;
+            }
+        }
+    }
+}
+
+.MyAccountTabListItem {
+    &-Button {
+        font-weight: var(--fw-demi);
+        letter-spacing: .55px;
+    }
+
+    &_isActive,
+    &:hover {
+        --text-shadow: none;
+
+        button {
+            font-weight: var(--fw-bold);
+            letter-spacing: .3px;
+        }
+    }
+
 }
 
 @include before-desktop {
@@ -32,7 +60,7 @@
     }
 
     #privacy-link {
-        font-weight: bold;
+        font-weight: var(--fw-bold);
         text-decoration: underline;
     }
 
@@ -40,14 +68,18 @@
         width: 100%;
     }
 
-    .MyAccountTabListItem_isActive {
-        display: block;
-    }
+    .MyAccountTabListItem {
+        font-weight: var(--fw-demi);
 
-    .MyAccountTabListItem_isActive,
-    .MyAccountTabListItem:hover {
-        --border-width: 2px !important;
-        --text-shadow: -.02ex 0 var(--my-account-tab-list-item-color), .02ex 0 var(--my-account-tab-list-item-color) !important;
+        &_isActive {
+            display: block;
+        }
+
+        &_isActive,
+        &:hover {
+            --border-width: 2px !important;
+            font-weight: var(--fw-bold);
+        }
     }
 
     .ExpandableContent-Content {

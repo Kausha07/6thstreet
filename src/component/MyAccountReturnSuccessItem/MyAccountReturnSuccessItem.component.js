@@ -17,9 +17,11 @@ export class MyAccountReturnSuccessItem extends MyAccountReturnCreateItem {
                 price,
                 original_price,
                 size,
-                qty_requested: qty
+                qty: qtyRegular,
+                qty_requested: qtyRequested
             } = {}
         } = this.props;
+        const qty = qtyRegular || qtyRequested;
 
         return (
             <div block="MyAccountReturnSuccessItem" elem="Details">

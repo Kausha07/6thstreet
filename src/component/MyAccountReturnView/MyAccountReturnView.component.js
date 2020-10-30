@@ -1,93 +1,88 @@
-import PropTypes from 'prop-types';
-import { PureComponent } from 'react';
+import {
+    MyAccountReturnSuccess as SourceComponent
+} from 'Component/MyAccountReturnSuccess/MyAccountReturnSuccess.component';
+import MyAccountReturnSuccessItem from 'Component/MyAccountReturnSuccessItem';
+import { formatDate } from 'Util/Date';
 
-import Loader from 'Component/Loader';
-import { Return } from 'Util/API/endpoint/Return/Return.type';
+import { STATUS_DENIED, STATUS_TITLE_MAP } from './MyAccountReturnView.config';
 
 import './MyAccountReturnView.style';
 
-class MyAccountReturnView extends PureComponent {
-    static propTypes = {
-        return: Return.isRequired,
-        isLoading: PropTypes.bool.isRequired
-    };
-
-    renderTitle() {
-        const { return: { order_increment_id } } = this.props;
+export class MyAccountReturnView extends SourceComponent {
+    renderHeading() {
+        const { orderNumber } = this.props;
 
         return (
-            <p>{ __('Return #%s', order_increment_id) }</p>
-        );
-    }
-
-    renderDate() {
-        const { return: { date } } = this.props;
-
-        return (
-            <p>
-                { __('Date requested') }
-                { date }
-            </p>
+            <div block="MyAccountReturnSuccess" elem="Heading">
+                <h3>{ __('Order #%s', orderNumber) }</h3>
+            </div>
         );
     }
 
     renderDetails() {
-        const { return: { status, order_id } } = this.props;
+        const { date, status, orderNumber } = this.props;
+        const dateObject = new Date(date);
+        const dateString = formatDate('YY/MM/DD at hh:mm', dateObject);
+        const { [status]: title } = STATUS_TITLE_MAP;
 
         return (
-            <dl>
-                <dt>{ __('Status') }</dt>
-                <dd>{ status }</dd>
-                <dt>{ __('Order ID') }</dt>
-                <dd>{ order_id }</dd>
-            </dl>
+            <div block="MyAccountReturnView" elem="Details">
+                <p block="MyAccountReturnView" elem="DetailsDate">
+                    { __('Date Requested: ') }
+                    <span>{ dateString }</span>
+                </p>
+                <div block="MyAccountReturnView" elem="SubDetails">
+                    <p block="MyAccountReturnView" elem="Status" mods={ { isDenied: status === STATUS_DENIED } }>
+                        { __('Status: ') }
+                        <span>{ title || status }</span>
+                    </p>
+                    <p block="MyAccountReturnView" elem="Order">
+                        { __('Order ID: ') }
+                        <span>{ orderNumber }</span>
+                    </p>
+                </div>
+            </div>
         );
     }
 
     renderItems() {
+        const { items = [] } = this.props;
+
         return (
-            <p>items</p>
+            <div block="MyAccountReturnView" elem="Items" mix={ { block: 'MyAccountReturnSuccess', elem: 'Items' } }>
+                { items.map((item) => (
+                    <>
+                        <MyAccountReturnSuccessItem
+                          key={ item.id }
+                          item={ item }
+                        />
+                        <div block="MyAccountReturnView" elem="Reason">
+                            <h3>{ __('Reason') }</h3>
+                            { !!(item.reason || []).length && <p>{ item.reason[0].value }</p> }
+                        </div>
+                    </>
+                )) }
+            </div>
         );
     }
 
-    renderNoFound() {
-        return 'return not found';
-    }
-
-    renderLoader() {
-        const { isLoading } = this.props;
-
-        return (
-            <Loader isLoading={ isLoading } />
-        );
-    }
-
-    renderReturnDetails() {
-        const { isLoading, return: returnItem } = this.props;
+    renderContent() {
+        const { isLoading, returnNumber } = this.props;
 
         if (isLoading) {
-            return this.renderLoader();
+            return null;
         }
 
-        if (!Object.keys(returnItem).length) {
-            return this.renderNoFound();
+        if (!isLoading && !returnNumber) {
+            return this.renderReturnNotPossible();
         }
 
         return (
             <>
-                { this.renderTitle() }
-                { this.renderDate() }
+                { this.renderHeading() }
                 { this.renderDetails() }
                 { this.renderItems() }
             </>
-        );
-    }
-
-    render() {
-        return (
-            <div block="MyAccountReturnView">
-                { this.renderReturnDetails() }
-            </div>
         );
     }
 }

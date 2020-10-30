@@ -1,27 +1,40 @@
+/* eslint-disable no-magic-numbers */
 import CartCoupon from 'Component/CartCoupon';
+import ClubApparel from 'Component/ClubApparel';
 import CmsBlock from 'Component/CmsBlock';
 import Link from 'Component/Link';
+import { FIXED_CURRENCIES } from 'Component/Price/Price.config';
 import StoreCredit from 'Component/StoreCredit';
 import { SHIPPING_STEP } from 'Route/Checkout/Checkout.config';
 import {
     CheckoutOrderSummary as SourceCheckoutOrderSummary
 } from 'SourceComponent/CheckoutOrderSummary/CheckoutOrderSummary.component';
-import { formatCurrency } from 'Util/Price';
+import { isArabic } from 'Util/App';
+import { isSignedIn } from 'Util/Auth';
 
 import Delivery from './icons/delivery-truck.png';
 
 import './CheckoutOrderSummary.extended.style';
 
 export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
+    state = {
+        isArabic: isArabic()
+    };
+
     renderItemSuffix() {
         const { totals: { items = [] } } = this.props;
-        return (items.length === 1)
+
+        const itemQuantityArray = items.map((item) => item.qty);
+        const totalQuantity = itemQuantityArray.reduce((qty, nextQty) => qty + nextQty, 0);
+
+        return (totalQuantity === 1)
             ? __(' Item')
             : __(' Items');
     }
 
     renderHeading() {
         const { totals: { items = [] } } = this.props;
+        const { isArabic } = this.state;
 
         const itemQuantityArray = items.map((item) => item.qty);
         const totalQuantity = itemQuantityArray.reduce((qty, nextQty) => qty + nextQty, 0);
@@ -30,9 +43,16 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
             <div block="CheckoutOrderSummary" elem="HeaderWrapper">
                 <span block="CheckoutOrderSummary" elem="ItemCount">
                     { totalQuantity }
-                    { this.renderItemSuffix() }
+                    { (totalQuantity === 1)
+                        ? __(' Item')
+                        : __(' Items') }
                 </span>
-                <Link block="CheckoutOrderSummary" elem="Edit" to="/cart">
+                <Link
+                  block="CheckoutOrderSummary"
+                  elem="Edit"
+                  mods={ { isArabic } }
+                  to="/cart"
+                >
                     <span>{ __(' Edit') }</span>
                 </Link>
             </div>
@@ -44,15 +64,17 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
 
         return (
             <div block="CheckoutOrderSummary" elem="OrderItems">
-                    <ul block="CheckoutOrderSummary" elem="CartItemList">
-                        { items.map(this.renderItem) }
-                    </ul>
+                <ul block="CheckoutOrderSummary" elem="CartItemList">
+                    { items.map(this.renderItem) }
+                </ul>
             </div>
         );
     }
 
     renderPromoContent() {
         const { cart_content: { cart_cms } = {} } = window.contentConfiguration;
+        const { totals: { currency_code, avail_free_shipping_amount } } = this.props;
+        const { isArabic } = this.state;
 
         if (cart_cms) {
             return <CmsBlock identifier={ cart_cms } />;
@@ -63,10 +85,15 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
               block="CheckoutOrderSummary"
               elem="PromoBlock"
             >
-                <div block="CheckoutOrderSummary" elem="PromoText">
+                <figcaption block="CheckoutOrderSummary" elem="PromoText" mods={ { isArabic } }>
                     <img src={ Delivery } alt="Delivery icon" />
                     { __('Add ') }
-                    <span block="CheckoutOrderSummary" elem="AED">AED 200</span>
+                    <span
+                      block="CheckoutOrderSummary"
+                      elem="Currency"
+                    >
+                        { `${currency_code } ${avail_free_shipping_amount} ` }
+                    </span>
                     { __('more to your cart for ') }
                     <span
                       block="CheckoutOrderSummary"
@@ -74,7 +101,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                     >
                         { __('Free delivery') }
                     </span>
-                </div>
+                </figcaption>
             </div>
         );
     }
@@ -90,7 +117,9 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     }
 
     renderPromo() {
-        return (
+        const { totals: { avail_free_shipping_amount } } = this.props;
+
+        return !avail_free_shipping_amount || avail_free_shipping_amount === 0 ? null : (
             <div
               block="CheckoutOrderSummary"
               elem="Promo"
@@ -101,9 +130,14 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     }
 
     renderToggleableDiscountOptions() {
+        if (!isSignedIn()) {
+            return null;
+        }
+
         return (
             <div block="CheckoutOrderSummary" elem="DiscountOptionWrapper">
                 <StoreCredit canApply hideIfZero />
+                <ClubApparel hideIfZero />
             </div>
         );
     }
@@ -121,7 +155,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                     { name }
                 </strong>
                 <strong block="CheckoutOrderSummary" elem="Price">
-                { `${currency_code } ${ price}` }
+                    { `${currency_code } ${ price}` }
                 </strong>
             </li>
         );
@@ -133,26 +167,40 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                 subtotal,
                 total,
                 tax_amount,
-                shipping_amount
+                shipping_amount,
+                currency_code
             },
-            checkoutStep
+            checkoutStep,
+            cashOnDeliveryFee
         } = this.props;
+        const fixedPrice = FIXED_CURRENCIES.includes(currency_code);
 
         return (
             <div block="CheckoutOrderSummary" elem="OrderTotals">
                 <ul>
                     <div block="CheckoutOrderSummary" elem="Subtotals">
-                        { this.renderPriceLine(subtotal, __('Subtotal')) }
+                        { this.renderPriceLine(fixedPrice ? subtotal.toFixed(3) : subtotal, __('Subtotal')) }
                         { checkoutStep !== SHIPPING_STEP
                             ? this.renderPriceLine(shipping_amount, __('Shipping'), { divider: true })
                             : null }
                         { this.renderCouponCode() }
                         { this.renderPriceLine(tax_amount, __('Tax')) }
+                        { this.renderCashOnDeliveryFee() }
                     </div>
                     <div block="CheckoutOrderSummary" elem="Totals">
                         { checkoutStep !== SHIPPING_STEP
-                            ? this.renderPriceLine(Math.round(total + tax_amount), __('Total'))
-                            : this.renderPriceLine(Math.round(total + tax_amount), __('Total')) }
+                            ? this.renderPriceLine(
+                                fixedPrice
+                                    ? (total + tax_amount + cashOnDeliveryFee).toFixed(3)
+                                    : total + tax_amount + cashOnDeliveryFee,
+                                __('Total')
+                            )
+                            : this.renderPriceLine(
+                                fixedPrice
+                                    ? (total + tax_amount).toFixed(3)
+                                    : total + tax_amount,
+                                __('Total')
+                            ) }
                             <span>{ __('(Taxes included)') }</span>
                     </div>
                 </ul>
@@ -161,20 +209,10 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     }
 
     renderCashOnDeliveryFee() {
-        const { cashOnDeliveryFee, totals: { quote_currency_code } } = this.props;
-        const priceString = formatCurrency(quote_currency_code);
+        const { cashOnDeliveryFee } = this.props;
 
         if (cashOnDeliveryFee) {
-            return (
-                <li block="CheckoutOrderSummary" elem="SummaryItem">
-                    <span block="CheckoutOrderSummary" elem="Text">
-                        { __('Cash on Delivery Fee') }
-                    </span>
-                    <span block="CheckoutOrderSummary" elem="Text">
-                        { `${priceString}${cashOnDeliveryFee}` }
-                    </span>
-                </li>
-            );
+            return this.renderPriceLine(cashOnDeliveryFee, __('Cash on Delivery'));
         }
 
         return null;

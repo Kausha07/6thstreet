@@ -20,12 +20,14 @@ export const mapDispatchToProps = (_dispatch) => ({
 export class MenuContainer extends PureComponent {
     static propTypes = {
         gender: PropTypes.string.isRequired,
-        locale: PropTypes.string.isRequired
+        locale: PropTypes.string.isRequired,
+        newMenuGender: PropTypes.string.isRequired
     };
 
     state = {
         categories: [],
-        isLoading: true
+        isLoading: true,
+        menuGender: ''
     };
 
     containerFunctions = {
@@ -38,28 +40,49 @@ export class MenuContainer extends PureComponent {
         this.requestCategories();
     }
 
+    componentDidMount() {
+        const { gender } = this.props;
+        this.setState({ menuGender: gender });
+    }
+
     componentDidUpdate(prevProps) {
         const { gender: prevGender, locale: prevLocale } = prevProps;
-        const { gender, locale } = this.props;
+        const { gender, locale, newMenuGender } = this.props;
+        const { menuGender } = this.state;
+
+        if (newMenuGender !== menuGender) {
+            this.changeMenuGender();
+            this.requestCategories(true, newMenuGender);
+        }
 
         if (gender !== prevGender || locale !== prevLocale) {
             this.requestCategories(true);
         }
     }
 
-    async requestCategories(isUpdate = false) {
+    changeMenuGender = () => {
+        const { newMenuGender } = this.props;
+        this.setState({ menuGender: newMenuGender });
+    };
+
+    async requestCategories(isUpdate = false, gender = this.props) {
         if (isUpdate) {
             // Only set loading if this is an update
             this.setState({ isLoading: true });
         }
 
         try {
-            const categories = await getStaticFile(CATEGORIES_STATIC_FILE_KEY);
-
-            this.setState({
-                categories,
-                isLoading: false
-            });
+            if (typeof gender === 'object') {
+                this.setState({
+                    categories: await getStaticFile(CATEGORIES_STATIC_FILE_KEY, { $GENDER: gender.gender }),
+                    isLoading: false
+                });
+            } else {
+                this.setState({
+                    categories: await getStaticFile(CATEGORIES_STATIC_FILE_KEY, { $GENDER: gender }),
+                    isLoading: false
+                });
+            }
         } catch (e) {
             // TODO: handle error
             Logger.log(e);

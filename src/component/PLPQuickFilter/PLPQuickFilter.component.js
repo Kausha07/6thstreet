@@ -9,14 +9,15 @@ import './PLPQuickFilter.style';
 class PLPQuickFilter extends PureComponent {
     static propTypes = {
         filter: Filter.isRequired,
-        onSelect: PropTypes.func.isRequired
+        onSelect: PropTypes.func.isRequired,
+        updateFilters: PropTypes.func.isRequired
     };
 
     render() {
         const {
             filter: {
                 label
-            }, onSelect, filter
+            }, onSelect, filter, updateFilters
         } = this.props;
 
         return (
@@ -25,6 +26,7 @@ class PLPQuickFilter extends PureComponent {
               showCheckbox
               onChange={ onSelect }
               filter={ filter }
+              updateFilters={ updateFilters }
             />
         );
     }

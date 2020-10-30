@@ -85,6 +85,12 @@ export class MyAccountReturnCreateListItem extends PureComponent {
     }
 
     render() {
+        const { order } = this.props;
+
+        if (!order) {
+            return null;
+        }
+
         return (
             <button block="MyAccountReturnCreateListItem" onClick={ this.handleClick }>
                 { (isMobile.any() || isMobile.tablet()) && this.renderHeading() }

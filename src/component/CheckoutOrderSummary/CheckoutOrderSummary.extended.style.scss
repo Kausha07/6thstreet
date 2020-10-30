@@ -1,173 +1,196 @@
 .CheckoutOrderSummary {
-    background: var(--white);
+	background: var(--white);
 
-    &-HeaderWrapper {
-        display: flex;
-        padding: 25px 18px 0;
-    }
-        &-ItemCount {
-            flex: 50%;
-            font-family: "Avenir Next Demi";
-            font-size: 18px;
-            line-height: 25px;
-        }
+	&-HeaderWrapper {
+		display: flex;
+		margin-top: 20px;
+		padding: 25px 18px 0;
+	}
 
-        &-Edit {
-            flex: 50%;
-            font-family: "Avenir Next Regular";
-            font-size: 13px;
-            line-height: 18px;
-            text-align: right;
-            text-decoration: underline;
-            padding-top: 3px;
-        }
+	&-ItemCount {
+		flex: 50%;
+		font-weight: var(--fw-demi);
+		font-size: 18px;
+		line-height: 25px;
+	}
 
-    &-OrderItems {
-        li {
-            border-top: none;
-            border-bottom: 1.5px solid var(--Gallery);
-        }
-    }
+	&-Edit {
+		flex: 50%;
+		font-weight: var(--fw-regular);
+		font-size: 13px;
+		line-height: 18px;
+		text-align: right;
+		text-decoration: underline;
+		padding-top: 3px;
 
-    &-CartItemList {
-        margin-bottom: 10px;
+		&_isArabic {
+			flex: 0;
+		}
+	}
 
-        .CartItem {
-            margin: 1rem 18px 0;
-            
-            &-Wrapper {
-                height: auto;
+	&-OrderItems {
+		li {
+			border-top: none;
+			border-bottom: 1.5px solid var(--Gallery);
+		}
+	}
+
+	&-CartItemList {
+		margin-bottom: 10px;
+
+		.CartItem {
+			margin: 1rem 18px 0;
+
+			&-Wrapper {
+				height: auto;
+			}
+		}
+	}
+
+    &-Promo {
+        &Block {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 21px 18px 15px;
+            padding: 2rem 1rem;
+            height: 40px;
+            background: var(--cart-page-promo-background);
+
+            @include mobile {
+                padding: 1rem;
+                border: 0;
+                border-bottom: 1px solid var(--primary-divider-color);
+            }
+
+            span:nth-child(2) {
+                font-weight: var(--fw-bold);
+            }
+
+            span:last-child {
+                font-weight: var(--fw-demi);
+                color: var(--color-green-cyan);
+                letter-spacing: -0.1px;
+                text-transform: capitalize;
             }
         }
-    }
 
-    .CartCoupon {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 50px;
-        margin: 0 18px 0;
-        border: 1px solid var(--color-nobel);
+        &Image {
+            width: 46px;
+            margin-right: .5rem;
 
-        &-Input {
-            margin: 0;
-            height: 100%;
+            @include mobile {
+                width: 36px;
+            }
+        }
+
+        strong {
+            margin: 0 5px;
+        }
+
+        &Text {
+            font-size: 12px;
+            display: inline;
+            flex-wrap: wrap;
+            line-height: 20px;
+            align-items: center;
             width: 100%;
-            font-size: 13px;
-            text-transform: capitalize;
-            border: none;
+            text-align: center;
+
+            img {
+                width: 20px;
+                height: auto;
+                margin-right: 5px;
+                float: left;
+                margin-top: 5px;
+            }
 
             @include mobile {
                 font-size: 11px;
             }
-        }
 
-        &-Button {
-            margin: 0;
-            background-color: var(--color-white);
-            border-top: 1px solid var(--color-nobel);
-            border-right: none;
-            border-bottom: 1px solid var(--color-nobel);
-            color: var(--color-light-gray);
-            border-left: none;
-
-            &:hover {
-                color: var(--black);
-                background: var(--white);
-                border-top: 1px solid var(--color-nobel);
-                border-right: none;
-                border-bottom: 1px solid var(--color-nobel);
-                border-left: none;
-            }
-
-            &:not([disabled]):hover,
-            &:not([disabled]):focus {
-                color: var(--color-black);
-            }
-        }
-    }
-
-    &-PromoBlock {
-        background: var(--light-gray);
-        height: 40px;
-        margin: 21px 18px 15px;
-    }
-
-    &-PromoText {
-        display: flex;
-        font-family: "Avenir Next Regular";
-        font-size: 12px;
-        padding: 12px 12px 0 9px;
-        justify-content: space-between;
-
-        img {
-            margin-top: 2px;
-            width: 21px;
-            height: 11px;
-        }
-    }
-
-    &-AED {
-        font-family: "Avenir Next Bold";
-    }
-
-    &-FreeDelivery {
-        color: var(--color-green-cyan);
-        font-family: "Avenir Next Bold";
-    }
-
-    &-OrderTotals {
-        font-family: "Avenir Next Regular";
-        padding: 0 18px;
-    }
-
-    &-Subtotals {
-        li {            
-            .CheckoutOrderSummary {
-                &-Text, &-Price {
-                    font-size: 13px;
+            &_isArabic {
+                img {
+                    margin-right: unset;
+                    margin-left: 5px;
+                    float: right;
                 }
             }
         }
     }
 
-    &-Totals {
-        display: grid;
-        font-size: 15px;
-        border-top: 1.5px solid var(--Gallery);
-        padding-bottom: 13px;
+	&-Currency {
+		font-weight: var(--fw-bold);
+	}
 
-        li {
-            grid-column: 1 / span 4;
-            grid-row: 1;
-            
-            .CheckoutOrderSummary {
+	&-FreeDelivery {
+		color: var(--color-green-cyan);
+		font-weight: var(--fw-bold);
+	}
 
-                &-Text {
-                    margin-top: 3px;
-                    font-size: 15px;
-                }
+	&-OrderTotals {
+		font-weight: var(--fw-regular);
+		padding: 0 18px;
+	}
 
-                &-Price {
-                    font-family: "Avenir Next Bold";
-                    font-size: 18px;
-                    font-weight: bold;
-                    line-height: 25px;
-                }
-            }
-        }
+	&-SummaryItem {
+		padding: 5px 0;
+	}
 
-        span {
-            font-size: 12px;
-            color: var(--color-nobel);
-            grid-column: 2;
-            grid-row: 1;
-            margin-top: 17px;
-            margin-right: 70px;
-        }
-    }
+	&-Subtotals {
+		margin: 20px auto 11px;
 
-    @include before-desktop {
-        display: none;
-    }
+		li {
+			.CheckoutOrderSummary {
+				&-Text,
+				&-Price {
+					font-size: 13px;
+					font-weight: var(--fw-regular);
+				}
+			}
+		}
+	}
+
+	&-Totals {
+		display: grid;
+		font-size: 15px;
+		border-top: 1.5px solid var(--Gallery);
+		padding-bottom: 13px;
+
+		li {
+			grid-column: 1 / span 4;
+			grid-row: 1;
+
+			.CheckoutOrderSummary {
+				&-Text {
+					margin-top: 3px;
+					font-weight: var(--fw-regular);
+					font-size: 15px;
+				}
+
+				&-Price {
+					font-size: 18px;
+					font-weight: var(--fw-bold);
+					line-height: 25px;
+				}
+			}
+		}
+
+		span {
+			font-size: 12px;
+			color: var(--color-nobel);
+			grid-column: 2;
+			grid-row: 1;
+			margin-top: 11px;
+			margin-right: 70px;
+		}
+	}
+
+	@include before-desktop {
+		display: none;
+	}
+
+	&-DiscountOptionWrapper {
+		padding: 0 18px;
+	}
 }

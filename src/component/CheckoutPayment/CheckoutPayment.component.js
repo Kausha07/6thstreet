@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import { TABBY_PAYMENT_CODES } from 'Component/CheckoutPayments/CheckoutPayments.config';
 import { paymentMethodType } from 'Type/Checkout';
 
 import { PAYMENTS_DATA } from './CheckoutPayment.config';
@@ -61,11 +62,16 @@ export class CheckoutPayment extends PureComponent {
 
     render() {
         const {
-            isSelected
+            isSelected,
+            method: {
+                code
+            }
         } = this.props;
 
+        const isTabby = TABBY_PAYMENT_CODES.includes(code);
+
         return (
-            <li block="CheckoutPayment">
+            <li block="CheckoutPayment" mods={ { isTabby } }>
                 <button
                   block="CheckoutPayment"
                   mods={ { isSelected } }

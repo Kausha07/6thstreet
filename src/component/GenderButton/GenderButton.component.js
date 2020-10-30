@@ -1,3 +1,4 @@
+import Link from '@scandipwa/scandipwa/src/component/Link/Link.component';
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
@@ -8,6 +9,7 @@ import './GenderButton.style';
 class GenderButton extends PureComponent {
     static propTypes = {
         onGenderClick: PropTypes.func.isRequired,
+        onGenderEnter: PropTypes.func.isRequired,
         isCurrentGender: PropTypes.bool.isRequired,
         label: PropTypes.string.isRequired,
         mix: MixType
@@ -17,28 +19,28 @@ class GenderButton extends PureComponent {
         mix: {}
     };
 
-    renderLabel() {
-        const { label } = this.props;
-        return label;
-    }
-
     render() {
         const {
             onGenderClick,
+            onGenderEnter,
             isCurrentGender,
-            mix
+            mix,
+            label
         } = this.props;
 
         return (
-            <button
-              mix={ mix }
-              block="GenderButton"
-              elem="Button"
-              mods={ { isCurrentGender } }
-              onClick={ onGenderClick }
-            >
-                { this.renderLabel() }
-            </button>
+            <Link to={ `/${label.toLowerCase()}.html` }>
+                <button
+                  mix={ mix }
+                  block="GenderButton"
+                  elem="Button"
+                  mods={ { isCurrentGender } }
+                  onClick={ onGenderClick }
+                  onMouseEnter={ onGenderEnter }
+                >
+                    { label }
+                </button>
+            </Link>
         );
     }
 }
