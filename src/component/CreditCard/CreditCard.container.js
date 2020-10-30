@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable no-restricted-globals */
 /* eslint-disable fp/no-let */
 /* eslint-disable no-magic-numbers */
@@ -20,6 +21,40 @@ export class CreditCardContainer extends PureComponent {
         }
 
         return !isNaN(-value);
+    }
+
+    format(value, spacePosition) {
+        const regex = new RegExp(`(.{${spacePosition}})`, 'g');
+        return value.replace(/[^\dA-Z]/gi, '')
+            .toUpperCase()
+            .replace(regex, '$1 ')
+            .trim();
+    }
+
+    countSpaces(text) {
+        const spaces = text.match(/(\s+)/g);
+        return spaces ? spaces.length : 0;
+    }
+
+    reformatInputField = (element, spacePosition) => {
+        // const element = document.getElementById('number');
+        const onlyNumbers = element.value.replace(/\s/g, '');
+
+        if (!this.isNumber(onlyNumbers)) {
+            element.value = element.value.slice(0, -1);
+            return;
+        }
+
+        const position = element.selectionEnd;
+        const previousValue = element.value;
+        element.value = this.format(element.value, spacePosition);
+
+        if (position !== element.value.length) {
+            const beforeCaret = previousValue.substr(0, position);
+            const countPrevious = this.countSpaces(beforeCaret);
+            const countCurrent = this.countSpaces(this.format(beforeCaret, spacePosition));
+            element.selectionEnd = position + (countCurrent - countPrevious);
+        }
     }
 
     expDateValidator(value) {
@@ -68,6 +103,7 @@ export class CreditCardContainer extends PureComponent {
               setCreditCardData={ setCreditCardData }
               expDateValidator={ this.expDateValidator }
               isNumber={ this.isNumber }
+              reformatInputField={ this.reformatInputField }
               { ...this.props }
             />
         );

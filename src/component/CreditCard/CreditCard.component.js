@@ -54,45 +54,13 @@ class CreditCard extends PureComponent {
         return validatorMessage || !numberFilled || !expDateFilled || !cvvFilled;
     }
 
-    format(value) {
-        return value.replace(/[^\dA-Z]/gi, '')
-            .toUpperCase()
-            .replace(/(.{4})/g, '$1 ')
-            .trim();
-    }
-
-    countSpaces(text) {
-        var spaces = text.match(/(\s+)/g);
-        return spaces ? spaces.length : 0;
-    }
-
-    reformatInputField(isNumber) {
-        const element = document.getElementById('number');
-        const onlyNumbers = element.value.replace(/\s/g, '');
-
-        if (!isNumber(onlyNumbers)) {
-            element.value = element.value.slice(0, -1);
-            return;
-        }
-
-        const position = element.selectionEnd;
-        const previousValue = element.value;
-        element.value = this.format(element.value);
-
-        if (position !== element.value.length) {
-            const beforeCaret = previousValue.substr(0, position);
-            const countPrevious = this.countSpaces(beforeCaret);
-            const countCurrent = this.countSpaces(this.format(beforeCaret));
-            element.selectionEnd = position + (countCurrent - countPrevious);
-        }
-    }
-
     handleNumberChange = (e) => {
-        const { setCreditCardData, isNumber } = this.props;
+        const { setCreditCardData, reformatInputField } = this.props;
         const { value } = e.target;
+        const element = document.getElementById('number');
         const onlyNumbers = value.replace(/\s/g, '');
 
-        this.reformatInputField(isNumber);
+        reformatInputField(element, 4);
         setCreditCardData({ number: onlyNumbers });
 
         if (onlyNumbers.length === 16) {
