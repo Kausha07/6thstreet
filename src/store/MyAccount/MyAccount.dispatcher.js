@@ -116,26 +116,28 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         dispatch(setCartId(null));
 
         setMobileAuthorizationToken(token);
-        this.setPhoneNumber(custom_attributes);
-        this.setGender(gender);
+        this.setPhoneNumber(dispatch, custom_attributes);
+        this.setGender(dispatch, gender);
 
         // Run async otherwise login gets slow
         CartDispatcher.getCart(dispatch);
     }
 
-    setPhoneNumber(custom_attributes) {
+    setPhoneNumber(dispatch, custom_attributes) {
         const customer = BrowserDatabase.getItem(CUSTOMER) || {};
         const phone = custom_attributes.filter(({ attribute_code }) => attribute_code === 'contact_no');
 
         if (phone && phone[0]) {
             const { value } = phone[0];
-            BrowserDatabase.setItem({ ...customer, phone: value }, CUSTOMER, ONE_MONTH_IN_SECONDS);
+
+            dispatch(updateCustomerDetails({ ...customer, phone: value }));
         }
     }
 
-    setGender(gender) {
+    setGender(dispatch, gender) {
         const customer = BrowserDatabase.getItem(CUSTOMER) || {};
-        BrowserDatabase.setItem({ ...customer, gender }, CUSTOMER, ONE_MONTH_IN_SECONDS);
+
+        dispatch(updateCustomerDetails({ ...customer, gender }));
     }
 
     forgotPassword(dispatch, options = {}) {

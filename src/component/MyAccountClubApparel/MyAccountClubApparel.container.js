@@ -4,29 +4,28 @@ import { connect } from 'react-redux';
 
 import ClubApparelDispatcher, { CLUB_APPAREL } from 'Store/ClubApparel/ClubApparel.dispatcher';
 import { showNotification } from 'Store/Notification/Notification.action';
+import { hideActiveOverlay, toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
 import { customerType } from 'Type/Account';
 import { ClubApparelMember } from 'Util/API/endpoint/ClubApparel/ClubApparel.type';
 import BrowserDatabase from 'Util/BrowserDatabase';
 
 import MyAccountClubApparel from './MyAccountClubApparel.component';
 
-export const mapStateToProps = ({
-    ClubApparelReducer: {
-        clubApparel
-    },
-    MyAccountReducer: {
-        customer
-    }
-}) => ({
-    clubApparel,
-    customer
+export const mapStateToProps = (_state) => ({
+    customer: _state.MyAccountReducer.customer,
+    activeOverlay: _state.OverlayReducer.activeOverlay,
+    hideActiveOverlay: _state.OverlayReducer.hideActiveOverlay,
+    country: _state.AppState.country,
+    clubApparel: _state.ClubApparelReducer.clubApparel
 });
 
 export const mapDispatchToProps = (dispatch) => ({
     getMember: () => ClubApparelDispatcher.getMember(dispatch),
     linkAccount: (data) => ClubApparelDispatcher.linkAccount(dispatch, data),
     verifyOtp: (data) => ClubApparelDispatcher.verifyOtp(dispatch, data),
-    showNotification: (type, message) => dispatch(showNotification(type, message))
+    showNotification: (type, message) => dispatch(showNotification(type, message)),
+    showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
+    hideActiveOverlay: () => dispatch(hideActiveOverlay())
 });
 
 export class MyAccountClubApparelContainer extends PureComponent {
@@ -36,6 +35,10 @@ export class MyAccountClubApparelContainer extends PureComponent {
         verifyOtp: PropTypes.func.isRequired,
         customer: customerType,
         showNotification: PropTypes.func.isRequired,
+        showOverlay: PropTypes.func.isRequired,
+        activeOverlay: PropTypes.string.isRequired,
+        hideActiveOverlay: PropTypes.string.isRequired,
+        country: PropTypes.string.isRequired,
         clubApparel: ClubApparelMember.isRequired
     };
 
@@ -74,10 +77,18 @@ export class MyAccountClubApparelContainer extends PureComponent {
 
     containerProps = () => {
         const { clubApparel } = this.state;
+        const { activeOverlay, country } = this.props;
 
         return {
+            activeOverlay,
+            country,
             clubApparel
         };
+    };
+
+    containerFunctons = () => {
+        const { showOverlay, hideActiveOverlay } = this.props;
+        return { showOverlay, hideActiveOverlay, ...this.containerFunctions };
     };
 
     linkAccount(fields) {
@@ -107,8 +118,8 @@ export class MyAccountClubApparelContainer extends PureComponent {
     render() {
         return (
             <MyAccountClubApparel
-              { ...this.containerFunctions }
               { ...this.containerProps() }
+              { ...this.containerFunctons() }
             />
         );
     }
