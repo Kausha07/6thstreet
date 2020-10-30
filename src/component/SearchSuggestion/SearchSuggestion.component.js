@@ -71,7 +71,7 @@ class SearchSuggestion extends PureComponent {
         const { brands } = this.props;
 
         return (
-            <div>
+            <div block="SearchSuggestion" elem="Brands">
                 <h2>{ __('Brands') }</h2>
                 <ul>
                     { brands.map(this.renderBrand) }
@@ -96,7 +96,7 @@ class SearchSuggestion extends PureComponent {
         const { products } = this.props;
 
         return (
-            <div>
+            <div block="SearchSuggestion" elem="Recommended">
                 <h2>{ __('Recommended') }</h2>
                 <ul>
                     { products.map(this.renderProduct) }

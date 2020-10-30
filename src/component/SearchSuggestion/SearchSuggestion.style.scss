@@ -1,7 +1,7 @@
 root {
     --black: #000;
     --gray: #f0f0f0;
-    --dark-gray: #4a4a4a;
+    --link-dark-gray: #4a4a4a;
 }
 
 .SearchSuggestion {
@@ -37,6 +37,10 @@ root {
     &-ShadeWrapper {
         position: relative;
         top: 4px;
+    }
+
+    &-Recommended {
+        margin-top: 15px;
     }
 
     .TrandingTags,
@@ -137,17 +141,13 @@ root {
         margin: 0;
         height: 30px;
         background: var(--gray);
-        color: var(--dark-gray);
+        color: var(--link-dark-gray);
         width: auto;
         padding: 5px 10px;
         border-radius: 15px;
         display: flex;
         justify-content: center;
         align-items: center;
-
-        &:first-letter {
-            font-weight: var(--fw-regular);
-        }
     }
 
     ul {
@@ -163,7 +163,7 @@ root {
         }
 
         a {
-            color: var(--dark-gray);
+            color: var(--link-dark-gray);
             width: 100%;
             display: block;
 
@@ -177,11 +177,6 @@ root {
                 position: absolute;
                 right: 0;
             }
-        }
-
-        li:first-letter {
-            font-weight: var(--fw-bold);
-            color: var(--black);
         }
     }
 
