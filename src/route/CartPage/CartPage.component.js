@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 /**
  * @category  6thstreet
  * @author    Alona Zvereva <alona.zvereva@scandiweb.com>
@@ -15,6 +16,7 @@ import ContentWrapper from 'Component/ContentWrapper';
 import ExpandableContent from 'Component/ExpandableContent';
 import Link from 'Component/Link';
 import MyAccountTabList from 'Component/MyAccountTabList';
+import { FIXED_CURRENCIES } from 'Component/Price/Price.config';
 import ProductLinks from 'Component/ProductLinks';
 import { tabMap } from 'Route/MyAccount/MyAccount.container';
 import { CROSS_SELL } from 'Store/LinkedProducts/LinkedProducts.reducer';
@@ -24,7 +26,7 @@ import {
 import { TotalsType } from 'Type/MiniCart';
 import { ClubApparelMember } from 'Util/API/endpoint/ClubApparel/ClubApparel.type';
 import { isArabic } from 'Util/App';
-import { formatCurrency, roundPrice } from 'Util/Price';
+import { roundPrice } from 'Util/Price';
 
 import ClubApparel from './icons/club-apparel.png';
 import Delivery from './icons/delivery-truck.png';
@@ -91,8 +93,10 @@ export class CartPage extends PureComponent {
     }
 
     renderPriceLine(price) {
-        const { totals: { quote_currency_code } } = this.props;
-        return `${formatCurrency(quote_currency_code)}${roundPrice(price)}`;
+        const { totals: { currency_code } } = this.props;
+        const fixedPrice = FIXED_CURRENCIES.includes(currency_code);
+
+        return `${currency_code}${fixedPrice ? price.toFixed(3) : roundPrice(price)}`;
     }
 
     renderTotalDetails(isMobile = false) {

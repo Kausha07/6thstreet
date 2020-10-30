@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 /**
  * ScandiPWA - Progressive Web App for Magento
  *
@@ -16,6 +17,7 @@ import CartItem from 'Component/CartItem';
 import CmsBlock from 'Component/CmsBlock';
 import { CART_OVERLAY } from 'Component/Header/Header.config';
 import Link from 'Component/Link';
+import { FIXED_CURRENCIES } from 'Component/Price/Price.config';
 import Overlay from 'SourceComponent/Overlay';
 import { TotalsType } from 'Type/MiniCart';
 import { isArabic } from 'Util/App';
@@ -50,7 +52,9 @@ export class CartOverlay extends PureComponent {
 
     renderPriceLine(price) {
         const { totals: { quote_currency_code } } = this.props;
-        return `${quote_currency_code} ${parseFloat(price).toFixed(2)}`;
+        const decimals = FIXED_CURRENCIES.includes(quote_currency_code) ? 3 : 2;
+
+        return `${quote_currency_code} ${parseFloat(price).toFixed(decimals)}`;
     }
 
     renderCartItems() {

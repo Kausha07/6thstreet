@@ -1,7 +1,9 @@
+/* eslint-disable no-magic-numbers */
 import CartCoupon from 'Component/CartCoupon';
 import ClubApparel from 'Component/ClubApparel';
 import CmsBlock from 'Component/CmsBlock';
 import Link from 'Component/Link';
+import { FIXED_CURRENCIES } from 'Component/Price/Price.config';
 import StoreCredit from 'Component/StoreCredit';
 import { SHIPPING_STEP } from 'Route/Checkout/Checkout.config';
 import {
@@ -164,17 +166,19 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                 subtotal,
                 total,
                 tax_amount,
-                shipping_amount
+                shipping_amount,
+                currency_code
             },
             checkoutStep,
             cashOnDeliveryFee
         } = this.props;
+        const fixedPrice = FIXED_CURRENCIES.includes(currency_code);
 
         return (
             <div block="CheckoutOrderSummary" elem="OrderTotals">
                 <ul>
                     <div block="CheckoutOrderSummary" elem="Subtotals">
-                        { this.renderPriceLine(subtotal, __('Subtotal')) }
+                        { this.renderPriceLine(fixedPrice ? subtotal.toFixed(3) : subtotal, __('Subtotal')) }
                         { checkoutStep !== SHIPPING_STEP
                             ? this.renderPriceLine(shipping_amount, __('Shipping'), { divider: true })
                             : null }
@@ -184,9 +188,19 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                     </div>
                     <div block="CheckoutOrderSummary" elem="Totals">
                         { checkoutStep !== SHIPPING_STEP
-                            ? this.renderPriceLine(total + tax_amount + cashOnDeliveryFee, __('Total'))
-                            : this.renderPriceLine(total + tax_amount, __('Total')) }
-                        <span>{ __('(Taxes included)') }</span>
+                            ? this.renderPriceLine(
+                                fixedPrice
+                                    ? (total + tax_amount + cashOnDeliveryFee).toFixed(3)
+                                    : total + tax_amount + cashOnDeliveryFee
+                                , __('Total')
+                            )
+                            : this.renderPriceLine(
+                                fixedPrice
+                                    ? (total + tax_amount).toFixed(3)
+                                    : total + tax_amount
+                                , __('Total')
+                            ) }
+                            <span>{ __('(Taxes included)') }</span>
                     </div>
                 </ul>
             </div>
