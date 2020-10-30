@@ -62,6 +62,7 @@
             text-align: right;
         
             &::before {
+                left: auto;
                 right: 21px;
                 width: 10px;
                 height: 10px;
@@ -69,6 +70,7 @@
         
             &_isSelected {
                 &::after {
+                    left: auto;
                     width: 15px;
                 }
             }            

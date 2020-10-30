@@ -19,7 +19,7 @@
 
 					&-ContentWrapper {
 						@include before-desktop {
-							top: -70px;
+							top: -90px;
 						}
 
 						&_formContent {
@@ -28,15 +28,15 @@
 									position: absolute;
 									width: 20px;
 									height: 30px;
-									top: -120px;
+									top: -100px;
 									left: 0;
-									z-index: 1;
+									z-index: 9;
 
 									&::before {
-										content: "";
+										content: '';
 										position: absolute;
 										left: 5px;
-										border: solid var(--black);
+										border: solid $black;
 										border-width: 0 2px 2px 0;
 										display: inline-block;
 										padding: 4px;
@@ -99,10 +99,6 @@
 							text-transform: capitalize;
 							min-width: 140px;
 							margin-top: 38px;
-
-							&::before {
-								content: " + ";
-							}
 
 							&:hover {
 								text-decoration: underline;
