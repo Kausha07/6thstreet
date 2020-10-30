@@ -4,6 +4,13 @@
     --primary-dark-color: var(--imported_primary_dark_color, #{$default-primary-dark-color});
     --primary-light-color: var(--imported_primary_light_color, #{$default-primary-light-color});
 
+    // Colors
+    --color-turquoise: #{$color-turquoise};
+    --color-cardinal: #{$color-cardinal};
+    --color-tundora: #{$color-tundora};
+    --color-nobel: #{$color-nobel};
+    --color-silver: #{$color-silver};
+
     // Font declaration
     --avenir-next-font: 'Avenir Next', sans-serif;
 
