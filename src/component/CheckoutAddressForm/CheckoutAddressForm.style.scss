@@ -46,16 +46,18 @@
 
 					select {
 						padding-left: 35px;
-
-						&:after {
-							content: none;
-						}
 					}
 
 					label {
 						position: absolute;
 						bottom: 28px;
 						z-index: 1;
+					}
+
+					.FieldSelect {
+						&::after {
+							content: none;
+						}
 					}
 				}
 
@@ -308,146 +310,4 @@
 		}
 	}
 }
-// .FieldForm {
-// 	&_countryId {
-// 		&_AE,
-// 		&_SA,
-// 		&_QA,
-// 		&_OM,
-// 		&_BH,
-// 		&_KW {
-// 			.Field {
-// 				.FieldSelect {
-// 					&::after {
-// 						border: none;
-// 						background: url(icons/flags.png) no-repeat;
-// 						background-position: 0 0;
-// 						width: 100%;
-// 						top: 10%;
-// 						height: 14px;
-// 						margin-left: 10px;
-// 						right: auto;
-// 						transform: none;
-// 					}
-// 				}
-// 			}
-// 			.Field {
-// 				&_type {
-// 					&_AE,
-// 					&_SA,
-// 					&_QA,
-// 					&_OM,
-// 					&_BH,
-// 					&_KW {
-// 						&::after {
-// 							content: '';
-// 							background: url(icons/flags.png) no-repeat 0 0;
-// 							background-position: 0 0;
-// 							position: absolute;
-// 							width: 20px;
-// 							height: 14px;
-// 							top: 27%;
-// 							left: 37px;
-// 						}
-// 					}
 
-// 					&_BH {
-// 						&::after {
-// 							background: url(icons/flags.png) no-repeat 0 -55px;
-// 						}
-// 					}
-// 					&_SA {
-// 						&::after {
-// 							background: url(icons/flags.png) no-repeat 0 -13px;
-// 						}
-// 					}
-// 					&_QA {
-// 						&::after {
-// 							background: url(icons/flags.png) no-repeat 0 -27px;
-// 						}
-// 					}
-// 					&_OM {
-// 						&::after {
-// 							background: url(icons/flags.png) no-repeat 0 -41px;
-// 						}
-// 					}
-// 					&_KW {
-// 						&::after {
-// 							background: url(icons/flags.png) no-repeat 0 -70px;
-// 						}
-// 					}
-// 				}
-// 			}
-// 		}
-
-// 		&_BH {
-// 			.Field {
-// 				.FieldSelect {
-// 					&::after {
-// 						background-position: 0 -55px;
-// 					}
-// 				}
-// 			}
-// 		}
-// 		&_SA {
-// 			.Field {
-// 				.FieldSelect {
-// 					&::after {
-// 						background-position: 0 -13px;
-// 					}
-// 				}
-// 			}
-// 		}
-// 		&_QA {
-// 			.Field {
-// 				.FieldSelect {
-// 					&::after {
-// 						background-position: 0 -27px;
-// 					}
-// 				}
-// 			}
-// 		}
-// 		&_OM {
-// 			.Field {
-// 				.FieldSelect {
-// 					&::after {
-// 						background-position: 0 -41px;
-// 					}
-// 				}
-// 			}
-// 		}
-// 		&_KW {
-// 			.Field {
-// 				.FieldSelect {
-// 					&::after {
-// 						background-position: 0 -70px;
-// 					}
-// 				}
-// 			}
-// 		}
-// 	}
-
-// 	&_isArabic {
-// 		.Field {
-// 			.FieldSelect {
-// 				&::after {
-// 					left: 320px;
-// 				}
-// 			}
-// 		}
-// 		.Field {
-// 			&_type {
-// 				&_AE,
-// 				&_SA,
-// 				&_QA,
-// 				&_OM,
-// 				&_BH,
-// 				&_KW {
-// 					&::after {
-// 						right: 37px;
-// 					}
-// 				}
-// 			}
-// 		}
-// 	}
-// }
