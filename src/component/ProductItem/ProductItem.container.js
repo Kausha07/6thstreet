@@ -1,4 +1,4 @@
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
@@ -16,16 +16,17 @@ export const mapDispatchToProps = (_dispatch) => ({
 
 export class ProductItemContainer extends PureComponent {
     static propTypes = {
-        product: Product.isRequired
+        product: Product.isRequired,
+        page: PropTypes.string
     };
 
-    containerFunctions = {
-        // getData: this.getData.bind(this)
+    static defaultProps = {
+        page: ''
     };
 
     containerProps = () => {
-        const { product } = this.props;
-        return { product };
+        const { product, page } = this.props;
+        return { product, page };
     };
 
     render() {

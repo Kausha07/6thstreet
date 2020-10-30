@@ -23,8 +23,7 @@ export const updateCartItem = (
     brand_name,
     thumbnail_url,
     url,
-    itemPrice,
-    currency
+    itemPrice
 ) => ({
     type: UPDATE_CART_ITEM,
     cartItem: {
@@ -35,8 +34,7 @@ export const updateCartItem = (
         brand_name,
         thumbnail_url,
         url,
-        itemPrice,
-        currency
+        itemPrice
     }
 });
 
