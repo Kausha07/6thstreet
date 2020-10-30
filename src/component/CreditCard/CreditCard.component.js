@@ -89,30 +89,6 @@ class CreditCard extends PureComponent {
         }
 
         this.setState({ expDateFilled: false });
-
-        // let newValue = '';
-        // value = value.replace('/', '');
-
-        // for (let i = 0; i < value.length; i++) {
-        //     if (i === 2) {
-        //         newValue = newValue.concat('/');
-        //     }
-        //     newValue = newValue.concat(value[i]);
-        // }
-
-        // const onlyNumbers = newValue.length > 2 ? newValue.replace('/', '') : newValue;
-
-        // if (isNumber(onlyNumbers)) {
-        //     const message = expDateValidator(newValue);
-        //     this.setState({ validatorMessage: message });
-
-        //     setCreditCardData({ expDate: newValue });
-        //     if (newValue.length === 5) {
-        //         this.setState({ expDate: newValue, expDateFilled: true });
-        //         return;
-        //     }
-        //     this.setState({ expDate: newValue, expDateFilled: false });
-        // }
     };
 
     handleCvvChange = (e) => {
@@ -140,8 +116,7 @@ class CreditCard extends PureComponent {
                   placeholder="0000  0000  0000  0000"
                   id="number"
                   name="number"
-                //   pattern="[0-9]*"
-                //   inputMode="numeric"
+                  inputMode="numeric"
                   maxLength="19"
                   onChange={ this.handleNumberChange }
                   validation={ ['notEmpty'] }
@@ -156,6 +131,7 @@ class CreditCard extends PureComponent {
                       placeholder={ __('MM/YY') }
                       id="expData"
                       name="expData"
+                      inputMode="numeric"
                       maxLength="5"
                       onChange={ this.handleExpDateChange }
                       validation={ ['notEmpty'] }
@@ -165,7 +141,7 @@ class CreditCard extends PureComponent {
                       placeholder={ __('CVV') }
                       id="cvv"
                       name="cvv"
-                    //   pattern="\d*"
+                      inputMode="numeric"
                       maxLength="3"
                       value={ cvv }
                       onChange={ this.handleCvvChange }

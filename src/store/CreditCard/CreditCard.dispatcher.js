@@ -10,7 +10,7 @@ export class CreditCardDispatcher {
         return addNewCreditCard({
             number,
             expiryMonth: expDate.substr('0', '2'),
-            expiryyear: expDate.substr('3', '5'),
+            expiryyear: expDate.substr('2', '4'),
             cvv
         });
     }

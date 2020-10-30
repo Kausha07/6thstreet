@@ -23,22 +23,34 @@ export class CreditCardContainer extends PureComponent {
         return !isNaN(-value);
     }
 
-    format(value, spacePosition) {
+    format(value, spacePosition, expInput) {
         const regex = new RegExp(`(.{${spacePosition}})`, 'g');
+
+        if (expInput) {
+            return value.replace(/[^\dA-Z]/gi, '')
+                .toUpperCase()
+                .replace(regex, '$1/')
+                .replace(/^\|+|\/+$/g, '');
+        }
+
         return value.replace(/[^\dA-Z]/gi, '')
             .toUpperCase()
-            .replace(regex, '$1/')
-            .replace(/^\|+|\/+$/g, '');
+            .replace(regex, '$1 ')
+            .trim();
     }
 
-    countSpaces(text) {
-        // const spaces = text.match(/(\s+)/g);
-        const spaces = text.includes('/');
-        return spaces ? 1 : 0;
+    countSpaces(text, expInput) {
+        if (expInput) {
+            return text.includes('/') ? 1 : 0;
+        }
+
+        const spaces = text.match(/(\s+)/g);
+        return spaces ? spaces.length : 0;
     }
 
     reformatInputField = (element, spacePosition) => {
-        const onlyNumbers = element.value.replace('/', '');
+        const expInput = spacePosition === 2;
+        const onlyNumbers = expInput ? element.value.replace('/', '') : element.value.replace(/\s/g, '');
 
         if (!this.isNumber(onlyNumbers)) {
             element.value = element.value.slice(0, -1);
@@ -47,15 +59,15 @@ export class CreditCardContainer extends PureComponent {
 
         const position = element.selectionEnd;
         const previousValue = element.value;
-        element.value = this.format(element.value, spacePosition);
+        element.value = this.format(element.value, spacePosition, expInput);
 
         if (position !== element.value.length) {
             const beforeCaret = previousValue.substr(0, position);
-            const countPrevious = this.countSpaces(beforeCaret);
-            const countCurrent = this.countSpaces(this.format(beforeCaret, spacePosition));
+            const countPrevious = this.countSpaces(beforeCaret, expInput);
+            const countCurrent = this.countSpaces(this.format(beforeCaret, spacePosition, expInput), expInput);
             element.selectionEnd = position + (countCurrent - countPrevious);
         }
-    }
+    };
 
     expDateValidator(value) {
         const message = __('Please check the correct card correct card correct card expiration date (MM/YY)');
