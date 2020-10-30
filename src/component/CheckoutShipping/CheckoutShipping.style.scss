@@ -100,10 +100,6 @@
 							min-width: 140px;
 							margin-top: 38px;
 
-							&::before {
-								content: " + ";
-							}
-
 							&:hover {
 								text-decoration: underline;
 								background: var(--my-acc-background);
