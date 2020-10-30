@@ -136,6 +136,13 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
         return this.renderPriceLine(discount, __('Discount (%s)', couponCode));
     }
 
+    renderDeliveryTotal() {
+        const { totals: { total_segments: totals = [] } } = this.props;
+        const shipping = getDiscountFromTotals(totals, 'shipping');
+
+        return this.renderPriceLine(shipping || __('FREE'), __('Delivery Cost'));
+    }
+
     renderPromo() {
         const { totals: { avail_free_shipping_amount } } = this.props;
 
@@ -186,7 +193,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                     { name }
                 </strong>
                 <strong block="CheckoutOrderSummary" elem="Price">
-                    { `${currency_code } ${ price}` }
+                    { `${ parseFloat(price) ? currency_code : '' } ${ price }` }
                 </strong>
             </li>
         );
@@ -199,9 +206,8 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                 total = 0,
                 tax_amount = 0,
                 shipping_amount = 0,
-                currency_code = 0
+                currency_code = getCurrency()
             },
-            totals,
             checkoutStep,
             cashOnDeliveryFee
         } = this.props;
@@ -209,8 +215,6 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
         const grandTotal = checkoutStep !== SHIPPING_STEP
             ? total + tax_amount + cashOnDeliveryFee
             : total + tax_amount;
-
-        console.log(totals);
 
         return (
             <div block="CheckoutOrderSummary" elem="OrderTotals">
@@ -221,6 +225,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                             && this.renderPriceLine(shipping_amount, __('Shipping'), { divider: true }) }
                         { this.renderToggleableDiscountTotals() }
                         { this.renderCouponTotal() }
+                        { this.renderDeliveryTotal() }
                         { this.renderPriceLine(tax_amount, __('Tax')) }
                         { this.renderCashOnDeliveryFee() }
                     </div>
