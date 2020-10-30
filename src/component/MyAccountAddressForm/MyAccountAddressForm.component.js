@@ -8,7 +8,10 @@ import { countriesType } from 'Type/Config';
 import { isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
 
-import { PHONE_CODES } from './MyAccountAddressForm.config';
+import {
+    COUNTRY_CODES_FOR_PHONE_VALIDATION,
+    PHONE_CODES
+} from './MyAccountAddressForm.config';
 
 export class MyAccountAddressForm extends SourceMyAccountAddressForm {
     static propTypes = {
@@ -129,14 +132,14 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
     getValidationForTelephone() {
         const { default_country } = this.props;
 
-        return default_country === 'AE' || default_country === 'SA'
+        return COUNTRY_CODES_FOR_PHONE_VALIDATION[default_country]
             ? 'telephoneAE' : 'telephone';
     }
 
     getPhoneNumberMaxLength() {
         const { default_country } = this.props;
 
-        return default_country === 'AE' || default_country === 'SA'
+        return COUNTRY_CODES_FOR_PHONE_VALIDATION[default_country]
             ? '9' : '8';
     }
 

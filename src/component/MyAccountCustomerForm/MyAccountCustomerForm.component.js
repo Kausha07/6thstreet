@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 
 import Field from 'Component/Field';
 import Loader from 'Component/Loader';
+import { COUNTRY_CODES_FOR_PHONE_VALIDATION } from 'Component/MyAccountAddressForm/MyAccountAddressForm.config';
 import MyAccountPasswordForm from 'Component/MyAccountPasswordForm';
 import PhoneCountryCodeField from 'Component/PhoneCountryCodeField';
 import {
@@ -173,14 +174,14 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
     getValidationForTelephone() {
         const { customerCountry } = this.props;
 
-        return customerCountry === 'AE' || customerCountry === 'SA'
+        return COUNTRY_CODES_FOR_PHONE_VALIDATION[customerCountry]
             ? 'telephoneAE' : 'telephone';
     }
 
     getPhoneNumberMaxLength() {
         const { customerCountry } = this.getCustomerPhone();
 
-        return customerCountry === 'AE' || customerCountry === 'SA'
+        return COUNTRY_CODES_FOR_PHONE_VALIDATION[customerCountry]
             ? '9' : '8';
     }
 
