@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 import CartCoupon from 'Component/CartCoupon';
 import CheckoutPayment from 'Component/CheckoutPayment';
 import { PAYMENTS_DATA } from 'Component/CheckoutPayment/CheckoutPayment.config';
@@ -5,6 +7,11 @@ import ClubApparel from 'Component/ClubApparel';
 import CreditCard from 'Component/CreditCard';
 import Slider from 'Component/Slider';
 import StoreCredit from 'Component/StoreCredit';
+import TabbyMiniPopup from 'Component/TabbyMiniPopup';
+import {
+    TABBY_TOOLTIP_INSTALLMENTS,
+    TABBY_TOOLTIP_PAY_LATER
+} from 'Component/TabbyMiniPopup/TabbyMiniPopup.config';
 import SourceCheckoutPayments from 'SourceComponent/CheckoutPayments/CheckoutPayments.component';
 import { isSignedIn } from 'Util/Auth';
 
@@ -15,6 +22,7 @@ import {
     TABBY_PAY_LATER,
     TABBY_PAYMENT_CODES
 } from './CheckoutPayments.config';
+import info from './icons/info.png';
 
 import './CheckoutPayments.extended.style';
 
@@ -30,7 +38,8 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     state = {
         activeSliderImage: 0,
         tabbyPaymentMethods: [],
-        tabbyIsRendered: false
+        tabbyIsRendered: false,
+        tooltipContent: null
     };
 
     handleChange = (activeImage) => {
@@ -152,6 +161,17 @@ export class CheckoutPayments extends SourceCheckoutPayments {
                 <div block="CheckoutPayments" elem="TabbyPaymentContent">
                     <div block="CheckoutPayments" elem="TabbyPaymentContentTitle">
                         { title }
+                        { m_code === TABBY_ISTALLMENTS
+                            ? (
+                            <button onClick={ this.openTabbyInstallmentsTooltip }>
+                                <img src={ info } alt="info" />
+                            </button>
+                            )
+                            : (
+                            <button onClick={ this.openTabbyPayLaterTooltip }>
+                                <img src={ info } alt="info" />
+                            </button>
+                            ) }
                     </div>
                     <div block="CheckoutPayments" elem="TabbyPaymentContentDescription">
                         { m_code === TABBY_ISTALLMENTS
@@ -276,10 +296,40 @@ export class CheckoutPayments extends SourceCheckoutPayments {
         );
     }
 
+    openTabbyPayLaterTooltip = (e) => {
+        e.preventDefault();
+        this.setState({ tooltipContent: TABBY_TOOLTIP_PAY_LATER });
+    };
+
+    openTabbyInstallmentsTooltip = (e) => {
+        e.preventDefault();
+        this.setState({ tooltipContent: TABBY_TOOLTIP_INSTALLMENTS });
+    };
+
+    closeTabbyPopup = (e) => {
+        e.preventDefault();
+        this.setState({ tooltipContent: null });
+    };
+
+    renderTabbyPopup = () => {
+        const { tooltipContent } = this.state;
+
+        if (tooltipContent === TABBY_TOOLTIP_PAY_LATER) {
+            return <TabbyMiniPopup content={ TABBY_TOOLTIP_PAY_LATER } closeTabbyPopup={ this.closeTabbyPopup } />;
+        }
+
+        if (tooltipContent === TABBY_TOOLTIP_INSTALLMENTS) {
+            return <TabbyMiniPopup content={ TABBY_TOOLTIP_INSTALLMENTS } closeTabbyPopup={ this.closeTabbyPopup } />;
+        }
+
+        return null;
+    };
+
     render() {
         return (
             <div block="CheckoutPayments">
                 { this.renderContent() }
+                { this.renderTabbyPopup() }
             </div>
         );
     }

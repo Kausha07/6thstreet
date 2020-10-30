@@ -60,6 +60,18 @@
                 font-size: 13px;
                 font-weight: var(--fw-bold);
                 margin-bottom: 3px;
+
+                button {
+                    height: 16px;
+                    padding: 0 10px;
+                }
+
+                img {
+                    position: absolute;
+                    top: 2px;
+                    width: 16px;
+                    height: auto;
+                }
             }
 
             &Description {
