@@ -1,6 +1,5 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-restricted-globals */
-/* eslint-disable fp/no-let */
 /* eslint-disable no-magic-numbers */
 /* eslint-disable radix */
 import PropTypes from 'prop-types';

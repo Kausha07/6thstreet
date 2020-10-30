@@ -73,14 +73,13 @@ class CreditCard extends PureComponent {
     handleExpDateChange = (e) => {
         const { setCreditCardData, expDateValidator, reformatInputField } = this.props;
         const { value } = e.target;
-
         const element = document.getElementById('expData');
         const onlyNumbers = value.replace('/', '');
+        const message = expDateValidator(onlyNumbers);
 
         reformatInputField(element, 2);
         setCreditCardData({ expDate: onlyNumbers });
 
-        const message = expDateValidator(onlyNumbers);
         this.setState({ validatorMessage: message });
 
         if (onlyNumbers.length === 4) {
