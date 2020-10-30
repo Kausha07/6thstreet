@@ -49,12 +49,12 @@ export class CartOverlay extends PureComponent {
     }
 
     renderPriceLine(price) {
-        const { totals: { items } } = this.props;
-        return `${items[0].currency} ${parseFloat(price).toFixed(2)}`;
+        const { totals: { quote_currency_code } } = this.props;
+        return `${quote_currency_code} ${parseFloat(price).toFixed(2)}`;
     }
 
     renderCartItems() {
-        const { totals: { items }, closePopup } = this.props;
+        const { totals: { items, quote_currency_code }, closePopup } = this.props;
 
         if (!items || items.length < 1) {
             return this.renderNoCartItems();
@@ -66,7 +66,7 @@ export class CartOverlay extends PureComponent {
                     <CartItem
                       key={ item.item_id }
                       item={ item }
-                      currency_code={ items[0].currency }
+                      currency_code={ quote_currency_code }
                       brand_name={ item.brand_name }
                       isEditing
                       closePopup={ closePopup }
@@ -85,13 +85,12 @@ export class CartOverlay extends PureComponent {
     }
 
     renderTotals() {
-        const { totals: { items = [] } } = this.props;
+        const { totals: { items = [], subtotal_incl_tax } } = this.props;
         const { isArabic } = this.state;
 
         if (!items || items.length < 1) {
             return null;
         }
-        const totalPrice = items.map((item) => item.row_total * item.qty).reduce((a, b) => a + b);
 
         return (
             <dl
@@ -103,7 +102,7 @@ export class CartOverlay extends PureComponent {
                     { __('Subtotal ') }
                     <span>{ __('(Taxes Included) ') }</span>
                 </dt>
-                <dd>{ this.renderPriceLine(totalPrice) }</dd>
+                <dd>{ this.renderPriceLine(subtotal_incl_tax) }</dd>
             </dl>
         );
     }
