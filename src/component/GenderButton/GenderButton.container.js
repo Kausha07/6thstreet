@@ -24,6 +24,8 @@ export class GenderButtonContainer extends PureComponent {
         isCurrentGender: PropTypes.bool.isRequired,
         getNewActiveMenuGender: PropTypes.func.isRequired,
         getGenderCategory: PropTypes.func.isRequired,
+        handleUnsetStyle: PropTypes.func.isRequired,
+        isUnsetStyle: PropTypes.bool.isRequired,
         gender: PropTypes.shape({
             label: PropTypes.string,
             key: PropTypes.string
@@ -37,18 +39,21 @@ export class GenderButtonContainer extends PureComponent {
 
     containerFunctions = {
         onGenderClick: this.onGenderClick.bind(this),
-        onGenderEnter: this.onGenderEnter.bind(this)
+        onGenderEnter: this.onGenderEnter.bind(this),
+        onGenderLeave: this.onGenderLeave.bind(this)
     };
 
     containerProps = () => {
         const {
             gender: { label },
-            isCurrentGender
+            isCurrentGender,
+            isUnsetStyle
         } = this.props;
 
         return {
             label,
-            isCurrentGender
+            isCurrentGender,
+            isUnsetStyle
         };
     };
 
@@ -64,9 +69,22 @@ export class GenderButtonContainer extends PureComponent {
     }
 
     onGenderEnter() {
-        const { gender: { key }, changeMenuGender, getNewActiveMenuGender } = this.props;
+        const {
+            gender: { key },
+            changeMenuGender,
+            getNewActiveMenuGender,
+            handleUnsetStyle
+        } = this.props;
+
         getNewActiveMenuGender(key);
         changeMenuGender(key);
+        handleUnsetStyle(true);
+    }
+
+    onGenderLeave() {
+        const { handleUnsetStyle, changeMenuGender, currentContentGender } = this.props;
+        changeMenuGender(currentContentGender);
+        handleUnsetStyle(false);
     }
 
     render() {

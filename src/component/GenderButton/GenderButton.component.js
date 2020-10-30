@@ -10,8 +10,10 @@ class GenderButton extends PureComponent {
     static propTypes = {
         onGenderClick: PropTypes.func.isRequired,
         onGenderEnter: PropTypes.func.isRequired,
+        onGenderLeave: PropTypes.func.isRequired,
         isCurrentGender: PropTypes.bool.isRequired,
         label: PropTypes.string.isRequired,
+        isUnsetStyle: PropTypes.bool.isRequired,
         mix: MixType
     };
 
@@ -23,9 +25,11 @@ class GenderButton extends PureComponent {
         const {
             onGenderClick,
             onGenderEnter,
+            onGenderLeave,
             isCurrentGender,
             mix,
-            label
+            label,
+            isUnsetStyle
         } = this.props;
 
         return (
@@ -34,9 +38,10 @@ class GenderButton extends PureComponent {
                   mix={ mix }
                   block="GenderButton"
                   elem="Button"
-                  mods={ { isCurrentGender } }
+                  mods={ { isCurrentGender, isUnsetStyle } }
                   onClick={ onGenderClick }
                   onMouseEnter={ onGenderEnter }
+                  onMouseLeave={ onGenderLeave }
                 >
                     { label }
                 </button>
