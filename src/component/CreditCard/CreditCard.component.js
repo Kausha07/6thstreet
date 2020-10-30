@@ -21,7 +21,6 @@ class CreditCard extends PureComponent {
     };
 
     state = {
-        number: '',
         expDate: '',
         cvv: '',
         validatorMessage: null,
@@ -67,10 +66,17 @@ class CreditCard extends PureComponent {
         return spaces ? spaces.length : 0;
     }
 
-    reformatInputField() {
+    reformatInputField(isNumber) {
         const element = document.getElementById('number');
-        var position = element.selectionEnd;
-        var previousValue = element.value;
+        const onlyNumbers = element.value.replace(/\s/g, '');
+
+        if (!isNumber(onlyNumbers)) {
+            element.value = element.value.slice(0, -1);
+            return;
+        }
+
+        const position = element.selectionEnd;
+        const previousValue = element.value;
         element.value = this.format(element.value);
 
         if (position !== element.value.length) {
@@ -84,20 +90,17 @@ class CreditCard extends PureComponent {
     handleNumberChange = (e) => {
         const { setCreditCardData, isNumber } = this.props;
         const { value } = e.target;
-
         const onlyNumbers = value.replace(/\s/g, '');
 
-        if (isNumber(onlyNumbers)) {
-            setCreditCardData({ number: onlyNumbers });
-            if (onlyNumbers.length === 16) {
-                this.setState({ number: value, numberFilled: true });
-                return;
-            }
+        this.reformatInputField(isNumber);
+        setCreditCardData({ number: onlyNumbers });
 
-            this.setState({ number: value, numberFilled: false });
+        if (onlyNumbers.length === 16) {
+            this.setState({ numberFilled: true });
+            return;
         }
 
-        // this.reformatInputField();
+        this.setState({ numberFilled: false });
     };
 
     handleExpDateChange = (e) => {
@@ -114,7 +117,7 @@ class CreditCard extends PureComponent {
             newValue = newValue.concat(value[i]);
         }
 
-        const onlyNumbers = newValue.length > 2 ? newValue.substr('0', '2') + newValue.substr('3', '5') : newValue;
+        const onlyNumbers = newValue.length > 2 ? newValue.replace('/', '') : newValue;
 
         if (isNumber(onlyNumbers)) {
             const message = expDateValidator(newValue);
@@ -145,7 +148,7 @@ class CreditCard extends PureComponent {
     };
 
     renderCreditCardForm() {
-        const { expDate, cvv, number } = this.state;
+        const { expDate, cvv } = this.state;
         return (
             <div block="CreditCard" elem="Card">
                 <p>card number</p>
@@ -156,8 +159,7 @@ class CreditCard extends PureComponent {
                   name="number"
                 //   pattern="[0-9]*"
                 //   inputMode="numeric"
-                  value={ number }
-                  maxLength="16"
+                  maxLength="19"
                   onChange={ this.handleNumberChange }
                   validation={ ['notEmpty'] }
                 />
