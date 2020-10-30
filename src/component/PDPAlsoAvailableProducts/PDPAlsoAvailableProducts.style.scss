@@ -29,9 +29,11 @@
 .PDPSummary {
     .PDPAlsoAvailableProducts {
         &-Title {
-            text-align: center;
-            font-size: 15px;
-            margin-bottom: 25px;
+            @include before-desktop {
+                text-align: center;
+                font-size: 15px;
+                margin-bottom: 25px;
+            }
         }
     }
 }
