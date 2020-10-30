@@ -12,6 +12,7 @@
 import PropTypes from 'prop-types';
 
 import MyAccountAddressFieldForm from 'Component/MyAccountAddressFieldForm';
+import { COUNTRY_CODES_FOR_PHONE_VALIDATION } from 'Component/MyAccountAddressForm/MyAccountAddressForm.config';
 import { addressType } from 'Type/Account';
 import { countriesType } from 'Type/Config';
 import { isArabic } from 'Util/App';
@@ -257,6 +258,20 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         return availableAreas.map((area) => ({ id: area, label: area, value: area }));
     };
 
+    getValidationForTelephone() {
+        const { default_country } = this.props;
+
+        return COUNTRY_CODES_FOR_PHONE_VALIDATION[default_country]
+            ? 'telephoneAE' : 'telephone';
+    }
+
+    getPhoneNumberMaxLength() {
+        const { default_country } = this.props;
+
+        return COUNTRY_CODES_FOR_PHONE_VALIDATION[default_country]
+            ? '9' : '8';
+    }
+
     get fieldMap() {
         const {
             defaultChecked,
@@ -294,7 +309,8 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
                 value: lastname
             },
             telephone: {
-                validation: ['notEmpty'],
+                validation: ['notEmpty', this.getValidationForTelephone()],
+                maxLength: this.getPhoneNumberMaxLength(),
                 placeholder: __('Phone Number'),
                 value: this.cutPhoneCode(telephone),
                 ...clearValue
