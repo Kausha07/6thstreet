@@ -222,12 +222,8 @@
     }
 
     .CheckoutAddressBook {
-        margin-top: -3px;
-
-        .Checkout {
-            &-Heading{
-                display: none;
-            }
+        @include desktop {
+            margin-top: -110px;
         }
     }
 

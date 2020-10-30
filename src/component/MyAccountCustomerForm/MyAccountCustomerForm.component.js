@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import Field from 'Component/Field';
 import Loader from 'Component/Loader';
+import { COUNTRY_CODES_FOR_PHONE_VALIDATION } from 'Component/MyAccountAddressForm/MyAccountAddressForm.config';
 import MyAccountPasswordForm from 'Component/MyAccountPasswordForm';
 import PhoneCountryCodeField from 'Component/PhoneCountryCodeField';
 import {
@@ -219,6 +220,20 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
         return [];
     }
 
+    getValidationForTelephone() {
+        const { customerCountry } = this.props;
+
+        return COUNTRY_CODES_FOR_PHONE_VALIDATION[customerCountry]
+            ? 'telephoneAE' : 'telephone';
+    }
+
+    getPhoneNumberMaxLength() {
+        const { customerCountry } = this.getCustomerPhone();
+
+        return COUNTRY_CODES_FOR_PHONE_VALIDATION[customerCountry]
+            ? '9' : '8';
+    }
+
     renderPhone() {
         const { isArabic } = this.state;
         const customerPhoneData = this.getCustomerPhone();
@@ -233,8 +248,10 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
                   type="text"
                   name="phone"
                   id="phone"
+                  maxLength={ this.getPhoneNumberMaxLength() }
                   placeholder={ __('Phone number') }
                   value={ customerPhoneData.customerPhone }
+                  validation={ ['notEmpty', this.getValidationForTelephone()] }
                 />
             </div>
         );
