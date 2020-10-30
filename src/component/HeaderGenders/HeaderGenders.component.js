@@ -14,7 +14,8 @@ export const mapStateToProps = (state) => ({
 class HeaderGenders extends PureComponent {
     state = {
         isArabic: isArabic(),
-        currentGenderButton: ''
+        currentGenderButton: '',
+        isUnsetStyle: false
     };
 
     static propTypes = {
@@ -55,10 +56,15 @@ class HeaderGenders extends PureComponent {
         return key === currentContentGender;
     }
 
+    handleUnsetStyle = (isUnsetStyle) => {
+        console.log(isUnsetStyle);
+        this.setState({ isUnsetStyle });
+    }
+
     renderGender = (gender) => {
         const { key } = gender;
         const { changeMenuGender, currentContentGender } = this.props;
-        const { currentGenderButton } = this.state;
+        const { currentGenderButton, isUnsetStyle } = this.state;
         const isCurrentGender = this.isCurrentGender(key);
 
         if (currentGenderButton === '') {
@@ -77,6 +83,8 @@ class HeaderGenders extends PureComponent {
                       block: 'HeaderGenders',
                       elem: 'Button'
                   } }
+                  handleUnsetStyle={ this.handleUnsetStyle }
+                  isUnsetStyle={ isUnsetStyle }
                   isCurrentGender={ isCurrentGender }
                   changeMenuGender={ changeMenuGender }
                   getNewActiveMenuGender={ this.getNewActiveMenuGender }
