@@ -21,7 +21,6 @@ class CreditCard extends PureComponent {
     };
 
     state = {
-        expDate: '',
         cvv: '',
         validatorMessage: null,
         numberFilled: false,
@@ -72,32 +71,48 @@ class CreditCard extends PureComponent {
     };
 
     handleExpDateChange = (e) => {
-        const { setCreditCardData, expDateValidator, isNumber } = this.props;
-        let { value } = e.target;
+        const { setCreditCardData, expDateValidator, reformatInputField } = this.props;
+        const { value } = e.target;
 
-        let newValue = '';
-        value = value.replace('/', '');
+        const element = document.getElementById('expData');
+        const onlyNumbers = value.replace('/', '');
 
-        for (let i = 0; i < value.length; i++) {
-            if (i === 2) {
-                newValue = newValue.concat('/');
-            }
-            newValue = newValue.concat(value[i]);
+        reformatInputField(element, 2);
+        setCreditCardData({ expDate: onlyNumbers });
+
+        const message = expDateValidator(onlyNumbers);
+        this.setState({ validatorMessage: message });
+
+        if (onlyNumbers.length === 4) {
+            this.setState({ expDateFilled: true });
+            return;
         }
 
-        const onlyNumbers = newValue.length > 2 ? newValue.replace('/', '') : newValue;
+        this.setState({ expDateFilled: false });
 
-        if (isNumber(onlyNumbers)) {
-            const message = expDateValidator(newValue);
-            this.setState({ validatorMessage: message });
+        // let newValue = '';
+        // value = value.replace('/', '');
 
-            setCreditCardData({ expDate: newValue });
-            if (newValue.length === 5) {
-                this.setState({ expDate: newValue, expDateFilled: true });
-                return;
-            }
-            this.setState({ expDate: newValue, expDateFilled: false });
-        }
+        // for (let i = 0; i < value.length; i++) {
+        //     if (i === 2) {
+        //         newValue = newValue.concat('/');
+        //     }
+        //     newValue = newValue.concat(value[i]);
+        // }
+
+        // const onlyNumbers = newValue.length > 2 ? newValue.replace('/', '') : newValue;
+
+        // if (isNumber(onlyNumbers)) {
+        //     const message = expDateValidator(newValue);
+        //     this.setState({ validatorMessage: message });
+
+        //     setCreditCardData({ expDate: newValue });
+        //     if (newValue.length === 5) {
+        //         this.setState({ expDate: newValue, expDateFilled: true });
+        //         return;
+        //     }
+        //     this.setState({ expDate: newValue, expDateFilled: false });
+        // }
     };
 
     handleCvvChange = (e) => {
@@ -116,7 +131,7 @@ class CreditCard extends PureComponent {
     };
 
     renderCreditCardForm() {
-        const { expDate, cvv } = this.state;
+        const { cvv } = this.state;
         return (
             <div block="CreditCard" elem="Card">
                 <p>card number</p>
@@ -142,7 +157,6 @@ class CreditCard extends PureComponent {
                       id="expData"
                       name="expData"
                       maxLength="5"
-                      value={ expDate }
                       onChange={ this.handleExpDateChange }
                       validation={ ['notEmpty'] }
                     />

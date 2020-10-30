@@ -27,18 +27,18 @@ export class CreditCardContainer extends PureComponent {
         const regex = new RegExp(`(.{${spacePosition}})`, 'g');
         return value.replace(/[^\dA-Z]/gi, '')
             .toUpperCase()
-            .replace(regex, '$1 ')
-            .trim();
+            .replace(regex, '$1/')
+            .replace(/^\|+|\/+$/g, '');
     }
 
     countSpaces(text) {
-        const spaces = text.match(/(\s+)/g);
-        return spaces ? spaces.length : 0;
+        // const spaces = text.match(/(\s+)/g);
+        const spaces = text.includes('/');
+        return spaces ? 1 : 0;
     }
 
     reformatInputField = (element, spacePosition) => {
-        // const element = document.getElementById('number');
-        const onlyNumbers = element.value.replace(/\s/g, '');
+        const onlyNumbers = element.value.replace('/', '');
 
         if (!this.isNumber(onlyNumbers)) {
             element.value = element.value.slice(0, -1);
@@ -61,8 +61,8 @@ export class CreditCardContainer extends PureComponent {
         const message = __('Please check the correct card correct card correct card expiration date (MM/YY)');
         const first = parseInt(value.charAt(0));
         const month = parseInt(value.slice(0, 2));
-        const yearFirst = parseInt(value.slice(3, 4));
-        const year = parseInt(value.slice(3, 5));
+        const yearFirst = parseInt(value.slice(2, 3));
+        const year = parseInt(value.slice(2, 4));
 
         // month validation
         if (first > 1 || first < 0) {
@@ -73,17 +73,17 @@ export class CreditCardContainer extends PureComponent {
                 return message;
             }
         }
-        if (value.length > 3) {
+        if (value.length > 2) {
             const date = new Date();
             const thisYearFirst = date.getFullYear().toString().slice(2, 3);
             // year gap
-            if (yearFirst > parseInt(thisYearFirst) + 1) {
+            if ((yearFirst > parseInt(thisYearFirst) + 1) || yearFirst < parseInt(thisYearFirst)) {
                 return message;
             }
         }
 
         // check if card expire
-        if (value.length > 4) {
+        if (value.length > 3) {
             const today = new Date();
             const expDay = new Date(parseInt(`20${year}`), month, 1);
 
