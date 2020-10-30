@@ -39,10 +39,6 @@ export class Checkout extends SourceCheckout {
         isTabbyPopupShown: false
     };
 
-  callbackFunction = (childData) => {
-      this.setState({ isCustomAddressExpanded: childData });
-  };
-
   savePaymentInformation = (paymentInformation) => {
       const { savePaymentInformation, showErrorNotification } = this.props;
       const { selectedPaymentMethod, tabbyInstallmentsUrl, tabbyPayLaterUrl } = this.state;
@@ -173,41 +169,43 @@ export class Checkout extends SourceCheckout {
   }
 
   renderTitle() {
-      const { checkoutStep } = this.props;
-      const { isCustomAddressExpanded } = this.state;
+      const { checkoutStep, isSignedIn } = this.props;
+      const { isCustomAddressExpanded, continueAsGuest } = this.state;
 
-      return (
-          <div block="CheckoutNavigation" mods={ { isCustomAddressExpanded } }>
-              <div block="CheckoutNavigation" elem="FirstColumn">
-                  <div
-                    block="CheckoutNavigation"
-                    elem="Delivery"
-                    mods={ { checkoutStep } }
-                  />
-                  <span
-                    block="CheckoutNavigation"
-                    elem="DeliveryLabel"
-                    mods={ { checkoutStep } }
-                  >
-                      { __('Delivery') }
-                  </span>
-              </div>
-              <hr />
-              <div block="CheckoutNavigation" elem="SecondColumn">
-                  <div
-                    block="CheckoutNavigation"
-                    elem="Payment"
-                    mods={ { checkoutStep } }
-                  />
-                  <span
-                    block="CheckoutNavigation"
-                    elem="PaymentLabel"
-                    mods={ { checkoutStep } }
-                  >
-                      { __('Payment') }
-                  </span>
-              </div>
-          </div>
+      return ((isSignedIn || continueAsGuest)
+          && (
+            <div block="CheckoutNavigation" mods={ { isCustomAddressExpanded } }>
+                <div block="CheckoutNavigation" elem="FirstColumn">
+                    <div
+                      block="CheckoutNavigation"
+                      elem="Delivery"
+                      mods={ { checkoutStep } }
+                    />
+                    <span
+                      block="CheckoutNavigation"
+                      elem="DeliveryLabel"
+                      mods={ { checkoutStep } }
+                    >
+                        { __('Delivery') }
+                    </span>
+                </div>
+                <hr />
+                <div block="CheckoutNavigation" elem="SecondColumn">
+                    <div
+                      block="CheckoutNavigation"
+                      elem="Payment"
+                      mods={ { checkoutStep } }
+                    />
+                    <span
+                      block="CheckoutNavigation"
+                      elem="PaymentLabel"
+                      mods={ { checkoutStep } }
+                    >
+                        { __('Payment') }
+                    </span>
+                </div>
+            </div>
+          )
       );
   }
 
@@ -349,7 +347,6 @@ export class Checkout extends SourceCheckout {
               onShippingEstimationFieldsChange={ onShippingEstimationFieldsChange }
               guestEmail={ email }
               totals={ checkoutTotals }
-              parentCallback={ this.callbackFunction }
             />
           </div>
       );

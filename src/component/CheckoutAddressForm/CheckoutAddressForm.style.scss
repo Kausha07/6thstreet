@@ -5,7 +5,7 @@
 			grid-row: 1 / span 2;
 			grid-column: 1 / span 2;
 			display: grid;
-			grid-template-columns: 20% 30% 10% 40%;
+			grid-template-columns: 20% 10% 20% 10% 40%;
 
 			@include before-desktop {
 				grid-template-columns: 35% 15% 10% 40%;
@@ -31,9 +31,8 @@
 				}
 
 				&:first-child {
-					grid-column: 1 / span 4;
+					grid-column: 3 / span 5;
 					grid-row: 1;
-					display: flex;
 					justify-content: space-between;
 					background: var(--white);
 					padding: 20px 35px;
@@ -47,20 +46,21 @@
 
 					select {
 						padding-left: 35px;
+
+						&:after {
+							content: none;
+						}
 					}
 
 					label {
-						min-width: 170px;
-						padding-top: 15px;
-
-						@include before-desktop {
-							display: none;
-						}
+						position: absolute;
+						bottom: 28px;
+						z-index: 1;
 					}
 				}
 
 				&:nth-child(2) {
-					grid-column: 1 / span 4;
+					grid-column: 1 / span 5;
 					grid-row: 1;
 
 					@include desktop {
@@ -78,7 +78,7 @@
 				}
 
 				&:nth-child(3) {
-					grid-column: 1 / span 4;
+					grid-column: 1 / span 5;
 					grid-row: 2;
 
 					@include desktop {
@@ -108,10 +108,16 @@
 					@include desktop {
 						grid-row: 6;
 					}
+
+					label {
+						position: absolute;
+						bottom: 28px;
+						z-index: 1;
+					}
 				}
 
 				&:nth-child(5) {
-					grid-column: 3 / span 4;
+					grid-column: 4 / span 5;
 					grid-row: 4;
 					padding-left: 5px;
 
@@ -140,7 +146,7 @@
 				}
 
 				&:nth-child(6) {
-					grid-column: 1 / span 2;
+					grid-column: 1 / span 3;
 					grid-row: 4;
 					padding-right: 5px;
 
@@ -161,7 +167,7 @@
 				}
 
 				&:nth-child(8) {
-					grid-column: 1 / span 4;
+					grid-column: 1 / span 5;
 					grid-row: 3;
 
 					@include desktop {
@@ -185,7 +191,7 @@
 				}
 
 				&:nth-child(9) {
-					grid-column: 2 / span 3;
+					grid-column: 2 / span 5;
 					grid-row: 5;
 					padding-left: 5px;
 					padding-bottom: 20px;
@@ -302,146 +308,146 @@
 		}
 	}
 }
-.FieldForm {
-	&_countryId {
-		&_AE,
-		&_SA,
-		&_QA,
-		&_OM,
-		&_BH,
-		&_KW {
-			.Field {
-				.FieldSelect {
-					&::after {
-						border: none;
-						background: url(icons/flags.png) no-repeat;
-						background-position: 0 0;
-						width: 100%;
-						top: 10%;
-						height: 14px;
-						margin-left: 10px;
-						right: auto;
-						transform: none;
-					}
-				}
-			}
-			.Field {
-				&_type {
-					&_AE,
-					&_SA,
-					&_QA,
-					&_OM,
-					&_BH,
-					&_KW {
-						&::after {
-							content: '';
-							background: url(icons/flags.png) no-repeat 0 0;
-							background-position: 0 0;
-							position: absolute;
-							width: 20px;
-							height: 14px;
-							top: 27%;
-							left: 37px;
-						}
-					}
+// .FieldForm {
+// 	&_countryId {
+// 		&_AE,
+// 		&_SA,
+// 		&_QA,
+// 		&_OM,
+// 		&_BH,
+// 		&_KW {
+// 			.Field {
+// 				.FieldSelect {
+// 					&::after {
+// 						border: none;
+// 						background: url(icons/flags.png) no-repeat;
+// 						background-position: 0 0;
+// 						width: 100%;
+// 						top: 10%;
+// 						height: 14px;
+// 						margin-left: 10px;
+// 						right: auto;
+// 						transform: none;
+// 					}
+// 				}
+// 			}
+// 			.Field {
+// 				&_type {
+// 					&_AE,
+// 					&_SA,
+// 					&_QA,
+// 					&_OM,
+// 					&_BH,
+// 					&_KW {
+// 						&::after {
+// 							content: '';
+// 							background: url(icons/flags.png) no-repeat 0 0;
+// 							background-position: 0 0;
+// 							position: absolute;
+// 							width: 20px;
+// 							height: 14px;
+// 							top: 27%;
+// 							left: 37px;
+// 						}
+// 					}
 
-					&_BH {
-						&::after {
-							background: url(icons/flags.png) no-repeat 0 -55px;
-						}
-					}
-					&_SA {
-						&::after {
-							background: url(icons/flags.png) no-repeat 0 -13px;
-						}
-					}
-					&_QA {
-						&::after {
-							background: url(icons/flags.png) no-repeat 0 -27px;
-						}
-					}
-					&_OM {
-						&::after {
-							background: url(icons/flags.png) no-repeat 0 -41px;
-						}
-					}
-					&_KW {
-						&::after {
-							background: url(icons/flags.png) no-repeat 0 -70px;
-						}
-					}
-				}
-			}
-		}
+// 					&_BH {
+// 						&::after {
+// 							background: url(icons/flags.png) no-repeat 0 -55px;
+// 						}
+// 					}
+// 					&_SA {
+// 						&::after {
+// 							background: url(icons/flags.png) no-repeat 0 -13px;
+// 						}
+// 					}
+// 					&_QA {
+// 						&::after {
+// 							background: url(icons/flags.png) no-repeat 0 -27px;
+// 						}
+// 					}
+// 					&_OM {
+// 						&::after {
+// 							background: url(icons/flags.png) no-repeat 0 -41px;
+// 						}
+// 					}
+// 					&_KW {
+// 						&::after {
+// 							background: url(icons/flags.png) no-repeat 0 -70px;
+// 						}
+// 					}
+// 				}
+// 			}
+// 		}
 
-		&_BH {
-			.Field {
-				.FieldSelect {
-					&::after {
-						background-position: 0 -55px;
-					}
-				}
-			}
-		}
-		&_SA {
-			.Field {
-				.FieldSelect {
-					&::after {
-						background-position: 0 -13px;
-					}
-				}
-			}
-		}
-		&_QA {
-			.Field {
-				.FieldSelect {
-					&::after {
-						background-position: 0 -27px;
-					}
-				}
-			}
-		}
-		&_OM {
-			.Field {
-				.FieldSelect {
-					&::after {
-						background-position: 0 -41px;
-					}
-				}
-			}
-		}
-		&_KW {
-			.Field {
-				.FieldSelect {
-					&::after {
-						background-position: 0 -70px;
-					}
-				}
-			}
-		}
-	}
+// 		&_BH {
+// 			.Field {
+// 				.FieldSelect {
+// 					&::after {
+// 						background-position: 0 -55px;
+// 					}
+// 				}
+// 			}
+// 		}
+// 		&_SA {
+// 			.Field {
+// 				.FieldSelect {
+// 					&::after {
+// 						background-position: 0 -13px;
+// 					}
+// 				}
+// 			}
+// 		}
+// 		&_QA {
+// 			.Field {
+// 				.FieldSelect {
+// 					&::after {
+// 						background-position: 0 -27px;
+// 					}
+// 				}
+// 			}
+// 		}
+// 		&_OM {
+// 			.Field {
+// 				.FieldSelect {
+// 					&::after {
+// 						background-position: 0 -41px;
+// 					}
+// 				}
+// 			}
+// 		}
+// 		&_KW {
+// 			.Field {
+// 				.FieldSelect {
+// 					&::after {
+// 						background-position: 0 -70px;
+// 					}
+// 				}
+// 			}
+// 		}
+// 	}
 
-	&_isArabic {
-		.Field {
-			.FieldSelect {
-				&::after {
-					left: 320px;
-				}
-			}
-		}
-		.Field {
-			&_type {
-				&_AE,
-				&_SA,
-				&_QA,
-				&_OM,
-				&_BH,
-				&_KW {
-					&::after {
-						right: 37px;
-					}
-				}
-			}
-		}
-	}
-}
+// 	&_isArabic {
+// 		.Field {
+// 			.FieldSelect {
+// 				&::after {
+// 					left: 320px;
+// 				}
+// 			}
+// 		}
+// 		.Field {
+// 			&_type {
+// 				&_AE,
+// 				&_SA,
+// 				&_QA,
+// 				&_OM,
+// 				&_BH,
+// 				&_KW {
+// 					&::after {
+// 						right: 37px;
+// 					}
+// 				}
+// 			}
+// 		}
+// 	}
+// }
