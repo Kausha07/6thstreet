@@ -1,6 +1,5 @@
 import { PureComponent } from 'react';
 
-import HeaderCart from 'Component/HeaderCart';
 import HeaderGenders from 'Component/HeaderGenders';
 import MenuCategory from 'Component/MenuCategory';
 import { APP_STATE_CACHE_KEY } from 'Store/AppState/AppState.reducer';
@@ -94,7 +93,6 @@ class Menu extends PureComponent {
                       } }
                     >
                         <HeaderGenders />
-                        <HeaderCart />
                     </div>
                 </div>
                 <div

@@ -18,13 +18,22 @@
             width: 100%;
 
             .HeaderGenders {
-                display: grid;
-                grid-auto-flow: column;
-                max-width: calc(100% - 60px);
+                display: flex;
+                background: #fff;
+                width: 100%;
+                top: 94px;
+                position: fixed;
+                justify-content: center;
 
-                .GenderButton {
-                    &-Button {
-                        width: 100%;
+                .GenderButton-Container {
+                    display: flex;
+                    justify-content: center;
+                    width: 33.33%;
+
+                    .GenderButton-Button {
+                        margin-top: 6px;
+                        padding: 0 15px;
+                        height: 30px;
                     }
                 }
             }
@@ -38,8 +47,6 @@
                 z-index: 10;
 
                 &-Top {
-                    border-bottom: 1px solid var(--grey);
-
                     .HeaderCart {
                         &-Button {
                             float: right;
