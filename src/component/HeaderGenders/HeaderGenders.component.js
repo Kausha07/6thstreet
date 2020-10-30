@@ -51,8 +51,8 @@ class HeaderGenders extends PureComponent {
     };
 
     isCurrentGender(key) {
-        const { currentGenderButton } = this.state;
-        return key === currentGenderButton;
+        const { currentContentGender } = this.props;
+        return key === currentContentGender;
     }
 
     renderGender = (gender) => {

@@ -42,9 +42,12 @@ export class HomePageContainer extends PureComponent {
     }
 
     componentDidMount() {
-        this.setUrlGender();
-        const { gender } = this.props;
-        const { urlGender } = this.state;
+        const urlGender = this.setUrlGender();
+        const { gender, setGender } = this.props;
+        if (urlGender !== '') {
+            setGender(urlGender);
+        }
+
         if (gender === '' && urlGender === '') {
             this.setDefaultGender();
         }
@@ -80,7 +83,9 @@ export class HomePageContainer extends PureComponent {
 
     setUrlGender() {
         const urlWithoutSeparator = location.pathname.split('/');
-        this.setState({ urlGender: urlWithoutSeparator[1].split('.')[0].toLowerCase() });
+        const urlGender = urlWithoutSeparator[1].split('.')[0].toLowerCase();
+        this.setState({ urlGender });
+        return urlGender;
     }
 
     async requestDynamicContent(isUpdate = false) {
