@@ -293,11 +293,11 @@
 
         &_isSignedIn {
             display: none;
-            padding-bottom: 0px;
+            padding-bottom: 0;
         }
 
         @include desktop {
-            margin-top: 0px;
+            margin-top: 0;
         }
     }
 
