@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 
 import CheckoutAddressBook from 'Component/CheckoutAddressBook';
 import CheckoutPayments from 'Component/CheckoutPayments';
+import CreditCardTooltip from 'Component/CreditCardTooltip';
 import Field from 'Component/Field';
 import {
     CheckoutBilling as SourceCheckoutBilling
@@ -18,7 +19,6 @@ export class CheckoutBilling extends SourceCheckoutBilling {
 
     renderPriceLine(price, name, mods) {
         const { totals: { currency_code } } = this.props;
-        const { roundedPrice } = Math.round(price);
 
         return (
             <li block="CheckoutOrderSummary" elem="SummaryItem" mods={ mods }>
@@ -28,7 +28,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
                     { price !== undefined
                         ? (
                         <strong block="CheckoutOrderSummary" elem="Price">
-                            { `${currency_code } ${ roundedPrice}` }
+                            { `${currency_code } ${ price}` }
                         </strong>
                         )
                         : null }
@@ -135,6 +135,32 @@ export class CheckoutBilling extends SourceCheckoutBilling {
         );
     }
 
+    renderCreditCardTooltipBar() {
+        const {
+            paymentMethods
+        } = this.props;
+
+        const {
+            options: {
+                promo_message: {
+                    collapsed: { text } = {},
+                    expanded
+                } = {}
+            }
+        } = paymentMethods[0];
+
+        return (
+            expanded !== undefined
+            && (
+                <CreditCardTooltip
+                  collapsedPromoMessage={ (text) }
+                  expandedPromoMessage={ (expanded[0].value) }
+                  bankLogos={ (expanded[1].value) }
+                />
+            )
+        );
+    }
+
     setOrderButtonDisabled = () => {
         this.setState({ isOrderButtonEnabled: false });
     };
@@ -162,17 +188,20 @@ export class CheckoutBilling extends SourceCheckoutBilling {
             : !isOrderButtonEnabled;
 
         return (
-            <div block="Checkout" elem="StickyButtonWrapper">
-                { this.renderTotals() }
-                <button
-                  type="submit"
-                  block="Button"
-                  disabled={ isDisabled }
-                  mix={ { block: 'CheckoutBilling', elem: 'Button' } }
-                >
-                    { __('Place order') }
-                </button>
-            </div>
+            <>
+                { this.renderCreditCardTooltipBar() }
+                <div block="Checkout" elem="StickyButtonWrapper">
+                    { this.renderTotals() }
+                    <button
+                      type="submit"
+                      block="Button"
+                      disabled={ isDisabled }
+                      mix={ { block: 'CheckoutBilling', elem: 'Button' } }
+                    >
+                        { __('Place order') }
+                    </button>
+                </div>
+            </>
         );
     }
 }
