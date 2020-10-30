@@ -21,7 +21,7 @@
         grid-template-columns: 48% 48%;
         grid-column-gap: 1.8%;
         width: 102.5%;
-        
+
         @include after-mobile {
             grid-template-columns: 32.66% 32.66% 32.66%;
             grid-column-gap: 2%;
@@ -76,22 +76,27 @@
             }
 
             .WishlistIcon {
-                top: 4%;
-                right: 6%;
-                height: 7.7%;
-                width: 11.96%;
-
-                &-Icon {
-                    height: 90%;
-                    width: 90%;
-                    background-size: 90%;
-                    left: 11%;
-                    top: 8%;
-                }
+                width: 28px;
+                height: 28px;
 
                 @include desktop {
-                    height: 8.28%;
-                    width: 11.96%;
+                    width: 36px;
+                    height: 36px;
+                }
+
+                &-Icon {
+                    height: 22px;
+                    width: 22px;
+                    background-size: 100%;
+                    left: 3px;
+                    top: 4px;
+
+                    @include desktop {
+                        height: 28px;
+                        width: 28px;
+                        left: 4px;
+                        top: 5px;
+                    }
                 }
             }
 
