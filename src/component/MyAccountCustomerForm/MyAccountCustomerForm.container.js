@@ -31,17 +31,23 @@ export class MyAccountCustomerFormContainer extends PureComponent {
     state = {
         isShowPassword: false,
         isLoading: false,
-        countryCode: getCountryFromUrl()
+        countryCode: getCountryFromUrl(),
+        gender: '0'
     };
 
     containerFunctions = {
         onSave: this.saveCustomer.bind(this),
         showPasswordFrom: this.togglePasswordForm.bind(this, true),
-        hidePasswordFrom: this.togglePasswordForm.bind(this, false)
+        hidePasswordFrom: this.togglePasswordForm.bind(this, false),
+        setGender: this.setGender.bind(this)
     };
 
     togglePasswordForm(isShowPassword) {
         this.setState({ isShowPassword });
+    }
+
+    setGender(gender) {
+        this.setState({ gender });
     }
 
     containerProps = () => {
@@ -68,11 +74,16 @@ export class MyAccountCustomerFormContainer extends PureComponent {
             showSuccessNotification,
             customer: oldCustomerData
         } = this.props;
-        const { countryCode } = this.state;
+        const { countryCode, gender } = this.state;
         const { phone } = customer;
 
         try {
-            updateCustomer({ ...oldCustomerData, ...customer, phone: PHONE_CODES[countryCode] + phone });
+            updateCustomer({
+                ...oldCustomerData,
+                ...customer,
+                gender,
+                phone: PHONE_CODES[countryCode] + phone
+            });
             showSuccessNotification(__('Your information was successfully updated!'));
         } catch (e) {
             showErrorNotification(e);
