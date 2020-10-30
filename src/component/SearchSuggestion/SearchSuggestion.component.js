@@ -4,6 +4,7 @@ import { PureComponent } from 'react';
 import Link from 'Component/Link';
 import Loader from 'Component/Loader';
 import { Products } from 'Util/API/endpoint/Product/Product.type';
+import { isArabic } from 'Util/App';
 
 import './SearchSuggestion.style';
 
@@ -18,6 +19,32 @@ class SearchSuggestion extends PureComponent {
         trendingBrands: PropTypes.array.isRequired,
         trendingTags: PropTypes.array.isRequired
     };
+
+    state = {
+        isArabic: isArabic()
+    };
+
+    componentDidMount() {
+        window.addEventListener('resize', this.setSearchSuggestionWidth);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.setSearchSuggestionWidth);
+    }
+
+    setSearchSuggestionWidth() {
+        const searchSuggestion = document.getElementsByClassName('SearchSuggestion')[0];
+        const bodyWidth = document.body.offsetWidth;
+        const headerWidth = document.getElementsByClassName('HeaderBottomBar-Content')[0].offsetWidth;
+        const headerSearchWidth = document.getElementsByClassName('HeaderSearch')[0].offsetWidth;
+
+        if (searchSuggestion) {
+            // eslint-disable-next-line no-magic-numbers
+            const width = (bodyWidth - headerWidth) / 2 + headerSearchWidth + 20;
+
+            searchSuggestion.style.setProperty('max-width', `${width}px`);
+        }
+    }
 
     renderLoader() {
         const { isLoading } = this.props;
@@ -44,7 +71,7 @@ class SearchSuggestion extends PureComponent {
         const { brands } = this.props;
 
         return (
-            <div>
+            <div block="SearchSuggestion" elem="Brands">
                 <h2>{ __('Brands') }</h2>
                 <ul>
                     { brands.map(this.renderBrand) }
@@ -69,7 +96,7 @@ class SearchSuggestion extends PureComponent {
         const { products } = this.props;
 
         return (
-            <div>
+            <div block="SearchSuggestion" elem="Recommended">
                 <h2>{ __('Recommended') }</h2>
                 <ul>
                     { products.map(this.renderProduct) }
@@ -88,14 +115,16 @@ class SearchSuggestion extends PureComponent {
     }
 
     renderNothingFound() {
-        return 'nothing found';
+        return 'Nothing found';
     }
 
-    // eslint-disable-next-line no-unused-vars
     renderTrendingBrand = ({ label, image_url }) => (
         <li>
             <Link to={ `/brands/${ label }` }>
-                { label }
+                <div block="SearchSuggestion" elem="TrandingImg">
+                    <img src={ image_url } alt="Trending" />
+                    { label }
+                </div>
             </Link>
         </li>
     );
@@ -104,16 +133,21 @@ class SearchSuggestion extends PureComponent {
         const { trendingBrands } = this.props;
 
         return (
+            <div block="TrandingBrands">
+            <h2>{ __('Tranding brands') }</h2>
             <ul>
                 { trendingBrands.map(this.renderTrendingBrand) }
             </ul>
+            </div>
         );
     }
 
     renderTrendingTag = ({ link, label }) => (
         <li>
             <Link to={ { pathname: link } }>
+                <div block="SearchSuggestion" elem="TrandingTag">
                 { label }
+                </div>
             </Link>
         </li>
     );
@@ -122,9 +156,12 @@ class SearchSuggestion extends PureComponent {
         const { trendingTags } = this.props;
 
         return (
+            <div block="TrandingTags">
+                <h2>{ __('Tranding tags') }</h2>
             <ul>
                 { trendingTags.map(this.renderTrendingTag) }
             </ul>
+            </div>
         );
     }
 
@@ -148,7 +185,7 @@ class SearchSuggestion extends PureComponent {
             return null;
         }
 
-        if (isEmpty) {
+        if (isEmpty && isActive) {
             return this.renderEmptySearch();
         }
 
@@ -160,10 +197,16 @@ class SearchSuggestion extends PureComponent {
     }
 
     render() {
+        const { isArabic } = this.state;
         return (
-            <div block="SearchSuggestion">
-                { this.renderLoader() }
-                { this.renderContent() }
+            <div block="SearchSuggestion" mods={ { isArabic } }>
+                <div block="SearchSuggestion" elem="Content">
+                    { this.renderLoader() }
+                    { this.renderContent() }
+                </div>
+                <div block="SearchSuggestion" elem="ShadeWrapper">
+                    <div block="SearchSuggestion" elem="Shade" />
+                </div>
             </div>
         );
     }

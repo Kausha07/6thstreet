@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 
 import CheckoutAddressBook from 'Component/CheckoutAddressBook';
 import CheckoutPayments from 'Component/CheckoutPayments';
+import CreditCardTooltip from 'Component/CreditCardTooltip';
 import Field from 'Component/Field';
 import {
     CheckoutBilling as SourceCheckoutBilling
@@ -116,6 +117,8 @@ export class CheckoutBilling extends SourceCheckoutBilling {
               setOrderButtonEnableStatus={ this.setOrderButtonEnableStatus }
               setTabbyWebUrl={ setTabbyWebUrl }
               setCreditCardData={ setCreditCardData }
+              setOrderButtonDisabled={ this.setOrderButtonDisabled }
+              setOrderButtonEnabled={ this.setOrderButtonEnabled }
             />
         );
     }
@@ -131,6 +134,40 @@ export class CheckoutBilling extends SourceCheckoutBilling {
             </div>
         );
     }
+
+    renderCreditCardTooltipBar() {
+        const {
+            paymentMethods
+        } = this.props;
+
+        const {
+            options: {
+                promo_message: {
+                    collapsed: { text } = {},
+                    expanded
+                } = {}
+            }
+        } = paymentMethods[0];
+
+        return (
+            expanded !== undefined
+            && (
+                <CreditCardTooltip
+                  collapsedPromoMessage={ (text) }
+                  expandedPromoMessage={ (expanded[0].value) }
+                  bankLogos={ (expanded[1].value) }
+                />
+            )
+        );
+    }
+
+    setOrderButtonDisabled = () => {
+        this.setState({ isOrderButtonEnabled: false });
+    };
+
+    setOrderButtonEnabled = () => {
+        this.setState({ isOrderButtonEnabled: true });
+    };
 
     renderActions() {
         const {
@@ -151,17 +188,20 @@ export class CheckoutBilling extends SourceCheckoutBilling {
             : !isOrderButtonEnabled;
 
         return (
-            <div block="Checkout" elem="StickyButtonWrapper">
-                { this.renderTotals() }
-                <button
-                  type="submit"
-                  block="Button"
-                  disabled={ isDisabled }
-                  mix={ { block: 'CheckoutBilling', elem: 'Button' } }
-                >
-                    { __('Place order') }
-                </button>
-            </div>
+            <>
+                { this.renderCreditCardTooltipBar() }
+                <div block="Checkout" elem="StickyButtonWrapper">
+                    { this.renderTotals() }
+                    <button
+                      type="submit"
+                      block="Button"
+                      disabled={ isDisabled }
+                      mix={ { block: 'CheckoutBilling', elem: 'Button' } }
+                    >
+                        { __('Place order') }
+                    </button>
+                </div>
+            </>
         );
     }
 }

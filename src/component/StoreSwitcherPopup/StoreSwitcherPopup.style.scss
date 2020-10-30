@@ -4,13 +4,14 @@
     right: 0;
     bottom: 0;
     left: 0;
-    background: rgba(70, 70, 70, 0.6);
+    background: rgba(70, 70, 70, .6);
     z-index: 8;
 
     &-Container {
         display: flex;
         position: fixed;
-        top: 150px;
+        top: 25%;
+        bottom: 25%;
         right: 0;
         left: 0;
         margin-right: auto;
@@ -18,12 +19,15 @@
         z-index: 9;
         background: $white;
         min-height: 10em;
-        width: 770px;
+        width: 790px;
+        height: 50%;
+
+        overflow-y: scroll;
     }
 
     &-Image {
         width: 385px;
-        height: auto;
+        height: fit-content;
         object-fit: cover;
     }
 }

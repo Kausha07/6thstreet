@@ -2,18 +2,28 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
-import ClubApparelDispatcher from 'Store/ClubApparel/ClubApparel.dispatcher';
+import ClubApparelDispatcher, { CLUB_APPAREL } from 'Store/ClubApparel/ClubApparel.dispatcher';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { customerType } from 'Type/Account';
+import { ClubApparelMember } from 'Util/API/endpoint/ClubApparel/ClubApparel.type';
+import BrowserDatabase from 'Util/BrowserDatabase';
 
 import MyAccountClubApparel from './MyAccountClubApparel.component';
 
-export const mapStateToProps = (_state) => ({
-    customer: _state.MyAccountReducer.customer
+export const mapStateToProps = ({
+    ClubApparelReducer: {
+        clubApparel
+    },
+    MyAccountReducer: {
+        customer
+    }
+}) => ({
+    clubApparel,
+    customer
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-    getMember: (id) => ClubApparelDispatcher.getMember(dispatch, id),
+    getMember: () => ClubApparelDispatcher.getMember(dispatch),
     linkAccount: (data) => ClubApparelDispatcher.linkAccount(dispatch, data),
     verifyOtp: (data) => ClubApparelDispatcher.verifyOtp(dispatch, data),
     showNotification: (type, message) => dispatch(showNotification(type, message))
@@ -25,7 +35,8 @@ export class MyAccountClubApparelContainer extends PureComponent {
         linkAccount: PropTypes.func.isRequired,
         verifyOtp: PropTypes.func.isRequired,
         customer: customerType,
-        showNotification: PropTypes.func.isRequired
+        showNotification: PropTypes.func.isRequired,
+        clubApparel: ClubApparelMember.isRequired
     };
 
     static defaultProps = {
@@ -38,23 +49,34 @@ export class MyAccountClubApparelContainer extends PureComponent {
     };
 
     state = {
-        clubApparelMember: null
+        clubApparel: null
     };
 
-    componentDidUpdate() {
-        const { customer: { id } } = this.props;
-        const { clubApparelMember } = this.state;
+    static getDerivedStateFromProps(props, state) {
+        const { clubApparel } = props;
+        const { clubApparel: currentClubApparel } = state;
 
-        if (id && !clubApparelMember) {
-            this.getClubApparelMember(id);
+        if (clubApparel !== currentClubApparel) {
+            return { clubApparel };
+        }
+
+        return null;
+    }
+
+    componentDidMount() {
+        const storageClubApparel = BrowserDatabase.getItem(CLUB_APPAREL) || null;
+        const { getMember } = this.props;
+
+        if (!storageClubApparel) {
+            getMember();
         }
     }
 
     containerProps = () => {
-        const { clubApparelMember } = this.state;
+        const { clubApparel } = this.state;
 
         return {
-            clubApparelMember
+            clubApparel
         };
     };
 
@@ -77,19 +99,6 @@ export class MyAccountClubApparelContainer extends PureComponent {
         verifyOtp({ customerId: id, otp }).then(
             () => {
                 // TODO: Create response processing after Club Apparel will begin work on Client side
-            },
-            this._handleError
-        );
-    }
-
-    getClubApparelMember(id) {
-        const { getMember } = this.props;
-
-        getMember(id).then(
-            (response) => {
-                if (response && response.data) {
-                    this.setState({ clubApparelMember: response.data });
-                }
             },
             this._handleError
         );

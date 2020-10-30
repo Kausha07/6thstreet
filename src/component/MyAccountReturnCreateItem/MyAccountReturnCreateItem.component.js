@@ -105,10 +105,11 @@ export class MyAccountReturnCreateItem extends PureComponent {
                 row_total,
                 discount_percent,
                 discount_amount,
-                size: { value: size },
+                size: sizeField,
                 product_options: { info_buyRequest: { qty } }
             }
         } = this.props;
+        const size = typeof sizeField === 'string' ? sizeField : sizeField.value;
 
         return (
             <div block="MyAccountReturnCreateItem" elem="Details">
@@ -157,6 +158,8 @@ export class MyAccountReturnCreateItem extends PureComponent {
     }
 
     render() {
+        const { isSelected } = this.props;
+
         return (
             <div block="MyAccountReturnCreateItem">
                 <div block="MyAccountReturnCreateItem" elem="Content">
@@ -164,10 +167,12 @@ export class MyAccountReturnCreateItem extends PureComponent {
                     { this.renderImage() }
                     { this.renderDetails() }
                 </div>
-                <div block="MyAccountReturnCreateItem" elem="Resolution">
-                    { this.renderResolutions() }
-                    { this.renderReasons() }
-                </div>
+                { isSelected && (
+                    <div block="MyAccountReturnCreateItem" elem="Resolution">
+                        { this.renderResolutions() }
+                        { this.renderReasons() }
+                    </div>
+                ) }
             </div>
         );
     }

@@ -28,7 +28,7 @@
 
     border-top: 1px solid var(--Gallery);
     margin: 1rem;
-    font-family: 'Avenir Next Regular';
+    font-weight: var(--fw-regular);
     height: 200px;
 
     &-Link {
@@ -115,7 +115,7 @@
 
     &-ItemOptionLabel {
         align-self: center;
-        font-weight: bold;
+        font-weight: var(--fw-bold);
         margin-right: .5rem;
     }
 
@@ -126,8 +126,9 @@
         width: 100%;
         margin-bottom: .5rem;
         color: var(--cart-item-heading-color);
-        text-align: left;   
+        text-align: left;
         letter-spacing: .75px;
+        font-weight: var(--fw-demi);
 
         &_isArabic {
             text-align: right;
@@ -136,9 +137,9 @@
 
     &-Picture {
         height: 130px;
-        width: 85px;
+        width: 95px;
+        object-fit: cover;
         margin-right: 24px;
-        background-color: var(--image-default-background);
 
         &_isArabic {
             margin: 0 0 0 24px;
@@ -151,7 +152,7 @@
         text-align: left;
         color: var(--Black);
         letter-spacing: .75px;
-        
+
         span {
             margin-left: 5px;
         }
@@ -166,25 +167,25 @@
     &-DiscountPrice {
         color: var(--Cardinal);
         text-decoration: unset;
-        font-weight: 600;
-        
+        font-weight: var(--fw-demi);
+
         div {
             color: var(--Black);
             text-decoration: line-through;
             padding-right: 5px;
-            font-weight: 500;
+            font-weight: var(--fw-regular);
         }
     }
 
     &-ColSizeQty {
         color: var(--Tundora);
-        font-weight: 500;
+        font-weight: var(--fw-regular);
         margin-bottom: 10px;
         width: 200px;
 
         span {
             color: var(--DustyGray);
-            
+
         }
 
         &_isArabic {
@@ -277,7 +278,7 @@
         background-size: 15px;
         width: 15px;
         height: 15px;
-        padding: 0px;
+        padding: 0;
         bottom: -10px;
     }
 
@@ -290,7 +291,7 @@
             border: 0;
             color: var(--cart-item-actions-color);
             height: 28px;
-            font-weight: 400;
+            font-weight: var(--fw-regular);
             text-align: center;
             padding: 0;
             order: 2;

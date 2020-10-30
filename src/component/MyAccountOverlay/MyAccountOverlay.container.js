@@ -47,7 +47,7 @@ export const mapStateToProps = (state) => ({
 export const mapDispatchToProps = (dispatch) => ({
     hideActiveOverlay: () => dispatch(hideActiveOverlay()),
     forgotPassword: (options) => MyAccountDispatcher.then(
-        ({ default: dispatcher }) => dispatcher.forgotPassword(options, dispatch)
+        ({ default: dispatcher }) => dispatcher.forgotPassword(dispatch, options)
     ),
     createAccount: (options) => MyAccountDispatcher.then(
         ({ default: dispatcher }) => dispatcher.createAccount(options, dispatch)

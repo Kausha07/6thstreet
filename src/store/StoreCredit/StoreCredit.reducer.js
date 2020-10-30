@@ -1,21 +1,12 @@
-import { APP_CONFIG_CACHE_KEY } from 'Store/AppConfig/AppConfig.reducer';
-import { APP_STATE_CACHE_KEY } from 'Store/AppState/AppState.reducer';
 import { ONE_MONTH_IN_SECONDS, STORE_CREDIT } from 'Store/StoreCredit/StoreCredit.dispatcher';
+import { getCurrency } from 'Util/App';
 import BrowserDatabase from 'Util/BrowserDatabase';
 
 import {
-    SET_IS_LOADING,
+    SET_IS_STORE_CREDIT_LOADING,
     SET_STORE_CREDIT,
     SET_STORE_CREDIT_STATE
 } from './StoreCredit.action';
-
-export const getCurrency = () => {
-    const { country } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
-    const { config: { countries = {} } = {} } = BrowserDatabase.getItem(APP_CONFIG_CACHE_KEY) || {};
-    const { currency } = countries[country] || {};
-
-    return currency || '';
-};
 
 export const getInitialState = () => ({
     current_balance: `${ getCurrency() } 0`,
@@ -35,7 +26,7 @@ export const StoreCreditReducer = (state = getFallbackState(), action) => {
     const { type } = action;
 
     switch (type) {
-    case SET_IS_LOADING:
+    case SET_IS_STORE_CREDIT_LOADING:
         const { isLoading } = action;
 
         return {

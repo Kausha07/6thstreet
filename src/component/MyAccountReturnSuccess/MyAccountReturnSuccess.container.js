@@ -95,7 +95,7 @@ export class MyAccountReturnSuccessContainer extends PureComponent {
                 items
             });
         }).catch(() => {
-            showErrorMessage('Error appeared while fetching return request information');
+            showErrorMessage(__('Error appeared while fetching return request information'));
             this.setState({ isLoading: false });
         });
     }

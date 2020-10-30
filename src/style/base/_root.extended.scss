@@ -5,11 +5,21 @@
     --primary-light-color: var(--imported_primary_light_color, #{$default-primary-light-color});
 
     // Font declaration
-    --avenir-regular-font: 'Avenir Next Regular', serif;
-    --avenir-medium-font: 'Avenir Next Medium', serif;
-    --avenir-bold-font: 'Avenir Next Bold', serif;
+    --avenir-next-font: 'Avenir Next', sans-serif;
+
+    --fw-ultra-light: #{$fw-ultra-light};
+    --fw-thin: #{$fw-thin};
+    --fw-light: #{$fw-light};
+    --fw-regular: #{$fw-regular};
+    --fw-medium: #{$fw-medium};
+    --fw-demi: #{$fw-demi};
+    --fw-bold: #{$fw-bold};
+    --fw-heavy: #{$fw-heavy};
+
+    --fs-normal: #{$fs-normal};
+    --fs-italic: #{$fs-italic};
 }
 
 body {
-    font-family: 'Avenir Next Medium';
+    font-family: var(--avenir-next-font);
 }

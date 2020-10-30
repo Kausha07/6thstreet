@@ -3,7 +3,7 @@
 
     li {
         padding: 0;
-    
+
         &:before {
             content: none;
         }
@@ -15,15 +15,23 @@
     }
 
     &-Title {
-        font-size: 15px;
-
         @include desktop {
             font-size: 17px;
-            font-weight: 600;
+            font-weight: var(--fw-demi);
         }
     }
 
     &_isAlsoAvailable {
         display: none;
+    }
+}
+
+.PDPSummary {
+    .PDPAlsoAvailableProducts {
+        &-Title {
+            text-align: center;
+            font-size: 15px;
+            margin-bottom: 25px;
+        }
     }
 }

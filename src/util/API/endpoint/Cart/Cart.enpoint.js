@@ -1,6 +1,6 @@
 import MobileAPI from '../../provider/MobileAPI';
 
-export const getCartItems = (cartId) => MobileAPI.get(`/carts2/${cartId}`) || {};
+export const getCart = (cartId) => MobileAPI.get(`/carts2/${cartId}`) || {};
 
 export const createCart = () => MobileAPI.post('/carts2') || {};
 
@@ -34,14 +34,14 @@ export const updateProductInCart = ({ cartId, productId, qty }) => MobileAPI.put
 ) || {};
 
 export const applyCouponCode = ({ cartId, couponCode }) => MobileAPI.post(
-    `/carts2/${cartId}/coupons`,
+    `/carts/${cartId}/coupons`,
     {
         coupon_code: couponCode
     }
 ) || {};
 
 export const removeCouponCode = ({ cartId, couponCode }) => MobileAPI.delete(
-    `/carts2/${cartId}/coupons`,
+    `/carts/${cartId}/coupons`,
     {
         coupon_code: couponCode
     }

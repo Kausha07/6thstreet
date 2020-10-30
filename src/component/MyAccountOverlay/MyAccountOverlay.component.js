@@ -75,7 +75,10 @@ export class MyAccountOverlay extends PureComponent {
         isPopup: false,
         gender: '0',
         isChecked: false,
-        isArabic: isArabic()
+        isArabic: isArabic(),
+        maleId: 0,
+        femaleId: 1,
+        preferNotToSayId: 2
     };
 
     renderMap = {
@@ -294,7 +297,14 @@ export class MyAccountOverlay extends PureComponent {
             onCreateAccountSuccess
         } = this.props;
 
-        const { gender, isChecked, isArabic } = this.state;
+        const {
+            gender,
+            maleId,
+            femaleId,
+            preferNotToSayId,
+            isChecked,
+            isArabic
+        } = this.state;
 
         return (
             <Form
@@ -335,7 +345,7 @@ export class MyAccountOverlay extends PureComponent {
                           id="male"
                           label={ __('Male') }
                           name="gender"
-                          value={ gender }
+                          value={ maleId }
                           onClick={ this.handleGenderChange }
                           defaultChecked={ gender }
                         />
@@ -344,7 +354,7 @@ export class MyAccountOverlay extends PureComponent {
                           id="female"
                           label={ __('Female') }
                           name="gender"
-                          value={ gender }
+                          value={ femaleId }
                           onClick={ this.handleGenderChange }
                           defaultChecked={ gender }
                         />
@@ -353,7 +363,7 @@ export class MyAccountOverlay extends PureComponent {
                           id="preferNot"
                           label={ __('Prefer not to say') }
                           name="gender"
-                          value={ gender }
+                          value={ preferNotToSayId }
                           onClick={ this.handleGenderChange }
                           defaultChecked={ gender }
                         />

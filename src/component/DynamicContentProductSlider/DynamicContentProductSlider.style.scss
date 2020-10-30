@@ -57,7 +57,7 @@
 
     li {
         content: '';
-        padding: 0px;
+        padding: 0;
     }
 
     img {
@@ -87,7 +87,7 @@
 
         p {
             margin-bottom: 0;
-            font-family: 'Avenir Next Regular', serif;
+            font-weight: var(--fw-regular);
         }
 
         del {
@@ -95,7 +95,7 @@
         }
 
         .Price {
-            font-weight: bold;
+            font-weight: var(--fw-bold);
         }
 
         &_isArabic {
@@ -185,8 +185,8 @@
         position: relative;
         left: 35%;
         top: 40%;
-        width: 0.6vw;
-        height: 0.6vw;
+        width: .6vw;
+        height: .6vw;
         transform: rotate(45deg);
         border-top: solid 2px var(--button-text-color);
         border-right: solid 2px var(--button-text-color);

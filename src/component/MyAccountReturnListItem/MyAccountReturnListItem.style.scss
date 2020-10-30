@@ -1,7 +1,7 @@
 .MyAccountReturnListItem {
     border-bottom: 1px solid var(--color-gainsboro);
     display: table;
-    font-family: var(--avenir-regular-font);
+    font-weight: var(--fw-regular);
     padding: 30px 0;
     text-decoration: none;
     width: 100%;
@@ -49,7 +49,7 @@
 
     &-OrderNumber {
         display: table-cell;
-        font-weight: bold;
+        font-weight: var(--fw-bold);
         text-align: center;
         text-decoration: underline;
         vertical-align: middle;

@@ -35,9 +35,13 @@ class MenuBrands extends PureComponent {
             link
         } = item;
 
+        const updatedLink = link.match(/\/men|\/women|\/kids-baby_boy-boy-girl-baby_girl/)
+            ? link.replace('/men', '').replace('/women', '').replace('/kids-baby_boy-boy-girl-baby_girl', '')
+            : link;
+
         return (
             <Link
-              to={ link }
+              to={ updatedLink }
               key={ i }
             >
                 <Image

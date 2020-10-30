@@ -1,10 +1,28 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+import CartCoupon from 'Component/CartCoupon';
 import CheckoutPayment from 'Component/CheckoutPayment';
+import { PAYMENTS_DATA } from 'Component/CheckoutPayment/CheckoutPayment.config';
+import ClubApparel from 'Component/ClubApparel';
 import CreditCard from 'Component/CreditCard';
 import Slider from 'Component/Slider';
 import StoreCredit from 'Component/StoreCredit';
+import TabbyMiniPopup from 'Component/TabbyMiniPopup';
+import {
+    TABBY_TOOLTIP_INSTALLMENTS,
+    TABBY_TOOLTIP_PAY_LATER
+} from 'Component/TabbyMiniPopup/TabbyMiniPopup.config';
 import SourceCheckoutPayments from 'SourceComponent/CheckoutPayments/CheckoutPayments.component';
+import { isSignedIn } from 'Util/Auth';
 
-import { CARD, CASH_ON_DELIVERY } from './CheckoutPayments.config';
+import {
+    CARD,
+    CASH_ON_DELIVERY,
+    TABBY_ISTALLMENTS,
+    TABBY_PAY_LATER,
+    TABBY_PAYMENT_CODES
+} from './CheckoutPayments.config';
+import info from './icons/info.png';
 
 import './CheckoutPayments.extended.style';
 
@@ -12,11 +30,16 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     paymentRenderMap = {
         ...SourceCheckoutPayments.paymentRenderMap,
         [CARD]: this.renderCreditCard.bind(this),
-        [CASH_ON_DELIVERY]: this.renderCashOnDelivery.bind(this)
+        [CASH_ON_DELIVERY]: this.renderCashOnDelivery.bind(this),
+        [TABBY_ISTALLMENTS]: this.renderTabbyPaymentMethods.bind(this),
+        [TABBY_PAY_LATER]: this.renderTabbyPaymentMethods.bind(this)
     };
 
     state = {
-        activeSliderImage: 0
+        activeSliderImage: 0,
+        tabbyPaymentMethods: [],
+        tabbyIsRendered: false,
+        tooltipContent: null
     };
 
     handleChange = (activeImage) => {
@@ -27,11 +50,30 @@ export class CheckoutPayments extends SourceCheckoutPayments {
         const {
             selectPaymentMethod,
             selectedPaymentCode,
-            setCashOnDeliveryFee
+            setCashOnDeliveryFee,
+            isTabbyInstallmentAvailable,
+            isTabbyPayLaterAvailable
         } = this.props;
-
         const { m_code } = method;
         const isSelected = selectedPaymentCode === m_code;
+        const { tabbyPaymentMethods } = this.state;
+        const isTabbySelected = TABBY_PAYMENT_CODES.includes(selectedPaymentCode);
+
+        if (TABBY_PAYMENT_CODES.includes(m_code) && tabbyPaymentMethods.length > 0) {
+            if (!isTabbyInstallmentAvailable && !isTabbyPayLaterAvailable) {
+                return null;
+            }
+
+            return (
+                <CheckoutPayment
+                  key="tabby"
+                  isSelected={ isTabbySelected }
+                  method={ method }
+                  onClick={ selectPaymentMethod }
+                  setCashOnDeliveryFee={ setCashOnDeliveryFee }
+                />
+            );
+        }
 
         return (
             <CheckoutPayment
@@ -66,6 +108,81 @@ export class CheckoutPayments extends SourceCheckoutPayments {
         );
     }
 
+    renderTabbyPaymentMethods() {
+        const { tabbyPaymentMethods } = this.state;
+
+        return (
+            <div block="CheckoutPayments" elem="TabbyPayments">
+                <div block="CheckoutPayments" elem="TabbyPaymentsHeader">
+                    <h2>{ __('Tabby') }</h2>
+                </div>
+                <div block="CheckoutPayments" elem="TabbyPaymentsPromo">
+                    { __('Buy now and pay later in 2, 3 or 6 months.') }
+                </div>
+                <div block="CheckoutPayments" elem="TabbyPaymentsContent">
+                    { tabbyPaymentMethods.map((method) => this.renderTabbyPaymentMethod(method)) }
+                </div>
+            </div>
+        );
+    }
+
+    renderTabbyPaymentMethod(method) {
+        const { title, m_code } = method;
+        const {
+            selectPaymentMethod,
+            selectedPaymentCode,
+            isTabbyInstallmentAvailable,
+            isTabbyPayLaterAvailable,
+            setCashOnDeliveryFee
+        } = this.props;
+        const { img } = PAYMENTS_DATA[m_code];
+
+        const isSelected = m_code === selectedPaymentCode;
+
+        if (
+            (m_code === TABBY_ISTALLMENTS && !isTabbyInstallmentAvailable)
+            || (m_code === TABBY_PAY_LATER && !isTabbyPayLaterAvailable)
+        ) {
+            return null;
+        }
+
+        return (
+            <div block="CheckoutPayments" elem="TabbyPayment">
+                <div block="CheckoutPayments" elem="TabbyPaymentSelect">
+                    <CheckoutPayment
+                      key={ m_code }
+                      isSelected={ isSelected }
+                      method={ method }
+                      onClick={ selectPaymentMethod }
+                      setCashOnDeliveryFee={ setCashOnDeliveryFee }
+                    />
+                    <img src={ img } alt={ m_code } />
+                </div>
+                <div block="CheckoutPayments" elem="TabbyPaymentContent">
+                    <div block="CheckoutPayments" elem="TabbyPaymentContentTitle">
+                        { title }
+                        { m_code === TABBY_ISTALLMENTS
+                            ? (
+                            <button onClick={ this.openTabbyInstallmentsTooltip }>
+                                <img src={ info } alt="info" />
+                            </button>
+                            )
+                            : (
+                            <button onClick={ this.openTabbyPayLaterTooltip }>
+                                <img src={ info } alt="info" />
+                            </button>
+                            ) }
+                    </div>
+                    <div block="CheckoutPayments" elem="TabbyPaymentContentDescription">
+                        { m_code === TABBY_ISTALLMENTS
+                            ? __('2,3 or 6 months')
+                            : __('14 days after product delivery') }
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     renderHeading() {
         return (
             <h2 block="CheckoutPayments" elem="Heading">
@@ -86,21 +203,69 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     }
 
     renderCreditCard() {
-        const { setCreditCardData } = this.props;
+        const {
+            paymentMethods,
+            setCreditCardData,
+            setOrderButtonDisabled,
+            setOrderButtonEnabled
+        } = this.props;
+
+        const cardData = paymentMethods.find(({ m_code }) => m_code === CARD);
 
         return (
             <CreditCard
+              cardData={ cardData }
               setCreditCardData={ setCreditCardData }
+              setOrderButtonDisabled={ setOrderButtonDisabled }
+              setOrderButtonEnabled={ setOrderButtonEnabled }
             />
         );
     }
 
     renderToggleableDiscountOptions() {
+        if (!isSignedIn()) {
+            return null;
+        }
+
         return (
             <div block="CheckoutPayments" elem="DiscountOptionWrapper">
                 <StoreCredit canApply hideIfZero />
+                <ClubApparel hideIfZero />
             </div>
         );
+    }
+
+    renderCartCoupon() {
+        const { totals: { coupon_code } } = this.props;
+
+        return (
+            <div block="CheckoutPayments" elem="CartCouponWrapper">
+                <CartCoupon couponCode={ coupon_code } />
+            </div>
+        );
+    }
+
+    renderPayments() {
+        const { paymentMethods } = this.props;
+        const { tabbyPaymentMethods } = this.state;
+
+        const hasTabby = paymentMethods.some(({ code }) => TABBY_PAYMENT_CODES.includes(code));
+
+        if (hasTabby && tabbyPaymentMethods.length === 0) {
+            const tabbyPaymentMethods = paymentMethods.reduce((acc, method) => {
+                const { code } = method;
+
+                if (TABBY_PAYMENT_CODES.includes(code)) {
+                    acc.push(method);
+                }
+
+                return acc;
+            }, []);
+
+            this.setState({ tabbyPaymentMethods });
+        }
+
+        return paymentMethods.map(this.renderPayment);
     }
 
     renderContent() {
@@ -126,14 +291,45 @@ export class CheckoutPayments extends SourceCheckoutPayments {
                 { this.renderSelectedPayment() }
                 { this.renderPayPal() }
                 { this.renderToggleableDiscountOptions() }
+                { this.renderCartCoupon() }
             </>
         );
     }
+
+    openTabbyPayLaterTooltip = (e) => {
+        e.preventDefault();
+        this.setState({ tooltipContent: TABBY_TOOLTIP_PAY_LATER });
+    };
+
+    openTabbyInstallmentsTooltip = (e) => {
+        e.preventDefault();
+        this.setState({ tooltipContent: TABBY_TOOLTIP_INSTALLMENTS });
+    };
+
+    closeTabbyPopup = (e) => {
+        e.preventDefault();
+        this.setState({ tooltipContent: null });
+    };
+
+    renderTabbyPopup = () => {
+        const { tooltipContent } = this.state;
+
+        if (tooltipContent === TABBY_TOOLTIP_PAY_LATER) {
+            return <TabbyMiniPopup content={ TABBY_TOOLTIP_PAY_LATER } closeTabbyPopup={ this.closeTabbyPopup } />;
+        }
+
+        if (tooltipContent === TABBY_TOOLTIP_INSTALLMENTS) {
+            return <TabbyMiniPopup content={ TABBY_TOOLTIP_INSTALLMENTS } closeTabbyPopup={ this.closeTabbyPopup } />;
+        }
+
+        return null;
+    };
 
     render() {
         return (
             <div block="CheckoutPayments">
                 { this.renderContent() }
+                { this.renderTabbyPopup() }
             </div>
         );
     }

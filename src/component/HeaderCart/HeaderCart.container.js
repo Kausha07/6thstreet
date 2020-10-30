@@ -38,11 +38,15 @@ export class HeaderCartContainer extends PureComponent {
     };
 
     renderItemCount() {
-        const { totals } = this.props;
-        if (totals.items && totals.items.length !== 0) {
+        const { totals: { items = [] } } = this.props;
+
+        const itemQuantityArray = items.map((item) => item.qty);
+        const totalQuantity = itemQuantityArray.reduce((qty, nextQty) => qty + nextQty, 0);
+
+        if (totalQuantity && totalQuantity !== 0) {
             return (
                 <div block="HeaderCart" elem="Count">
-                    { totals.items.length }
+                    { totalQuantity }
                 </div>
             );
         }

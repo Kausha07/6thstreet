@@ -51,7 +51,29 @@
 
         &::before {
             opacity: 0;
+        }  
+    }            
+    }
+
+    &_isArabic {
+        .MyAccountAddressCard {
+            padding-right: 60px;
+            padding-left: 0;
+            text-align: right;
+        
+            &::before {
+                left: auto;
+                right: 21px;
+                width: 10px;
+                height: 10px;
+            }
+        
+            &_isSelected {
+                &::after {
+                    left: auto;
+                    width: 15px;
+                }
+            }            
         }
     }
-}
 }
