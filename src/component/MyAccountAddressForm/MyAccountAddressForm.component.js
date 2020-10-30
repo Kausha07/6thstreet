@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 
+import CountryMiniFlag from 'Component/CountryMiniFlag';
 import {
     MyAccountAddressForm as SourceMyAccountAddressForm
 } from 'SourceComponent/MyAccountAddressForm/MyAccountAddressForm.component';
@@ -173,7 +174,7 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
         return {
             country_id: {
                 type: 'select',
-                label: 'Delivery Country',
+                label: <CountryMiniFlag label={ countryId } />,
                 validation: ['notEmpty'],
                 value: countryId,
                 autocomplete: 'none',
@@ -201,7 +202,8 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
                 type: 'hidden'
             },
             phonecode: {
-                type: countryId,
+                type: 'text',
+                label: <CountryMiniFlag label={ countryId } />,
                 validation: ['notEmpty'],
                 value: this.renderCurrentPhoneCode(),
                 autocomplete: 'none'

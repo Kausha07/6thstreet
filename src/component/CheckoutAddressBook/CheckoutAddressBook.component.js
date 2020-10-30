@@ -28,6 +28,17 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
         isArabic: isArabic()
     };
 
+    renderHeading() {
+        const { isBilling } = this.props;
+        const addressName = isBilling ? null : __('Delivery country');
+
+        return (
+            <h2 block="Checkout" elem="Heading">
+                { addressName }
+            </h2>
+        );
+    }
+
     renderCustomAddress() {
         const { isBilling, onShippingEstimationFieldsChange, isSignedIn } = this.props;
         const formPortalId = isBilling ? BILLING_STEP : SHIPPING_STEP;
