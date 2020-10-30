@@ -1,3 +1,4 @@
+/* eslint-disable no-var */
 /* eslint-disable radix */
 /* eslint-disable no-magic-numbers */
 /* eslint-disable fp/no-let */
@@ -22,6 +23,7 @@ class CreditCard extends PureComponent {
     state = {
         number: '',
         expDate: '',
+        cvv: '',
         validatorMessage: null,
         numberFilled: false,
         expDateFilled: false,
@@ -53,32 +55,53 @@ class CreditCard extends PureComponent {
         return validatorMessage || !numberFilled || !expDateFilled || !cvvFilled;
     }
 
+    format(value) {
+        return value.replace(/[^\dA-Z]/gi, '')
+            .toUpperCase()
+            .replace(/(.{4})/g, '$1 ')
+            .trim();
+    }
+
+    countSpaces(text) {
+        var spaces = text.match(/(\s+)/g);
+        return spaces ? spaces.length : 0;
+    }
+
+    reformatInputField() {
+        const element = document.getElementById('number');
+        var position = element.selectionEnd;
+        var previousValue = element.value;
+        element.value = this.format(element.value);
+
+        if (position !== element.value.length) {
+            const beforeCaret = previousValue.substr(0, position);
+            const countPrevious = this.countSpaces(beforeCaret);
+            const countCurrent = this.countSpaces(this.format(beforeCaret));
+            element.selectionEnd = position + (countCurrent - countPrevious);
+        }
+    }
+
     handleNumberChange = (e) => {
-        const { setCreditCardData, numberValidator } = this.props;
-        let { value } = e.target;
+        const { setCreditCardData, isNumber } = this.props;
+        const { value } = e.target;
 
-        let newValue = '';
-        value = value.replace(/\s/g, '');
+        const onlyNumbers = value.replace(/\s/g, '');
 
-        for (let i = 0; i < value.length; i++) {
-            if (i % 4 === 0 && i > 0) {
-                newValue = newValue.concat('  ');
+        if (isNumber(onlyNumbers)) {
+            setCreditCardData({ number: onlyNumbers });
+            if (onlyNumbers.length === 16) {
+                this.setState({ number: value, numberFilled: true });
+                return;
             }
-            newValue = newValue.concat(value[i]);
-        }
-        const message = numberValidator(value);
-        this.setState({ validatorMessage: message });
 
-        setCreditCardData({ number: newValue });
-        if (newValue.length === 22) {
-            this.setState({ number: newValue, numberFilled: true });
-            return;
+            this.setState({ number: value, numberFilled: false });
         }
-        this.setState({ number: newValue, numberFilled: false });
+
+        // this.reformatInputField();
     };
 
     handleExpDateChange = (e) => {
-        const { setCreditCardData, expDateValidator } = this.props;
+        const { setCreditCardData, expDateValidator, isNumber } = this.props;
         let { value } = e.target;
 
         let newValue = '';
@@ -90,35 +113,39 @@ class CreditCard extends PureComponent {
             }
             newValue = newValue.concat(value[i]);
         }
-        const message = expDateValidator(newValue);
-        this.setState({ validatorMessage: message });
 
-        setCreditCardData({ expDate: newValue });
-        if (newValue.length === 5) {
-            this.setState({ expDate: newValue, expDateFilled: true });
-            return;
+        const onlyNumbers = newValue.length > 2 ? newValue.substr('0', '2') + newValue.substr('3', '5') : newValue;
+
+        if (isNumber(onlyNumbers)) {
+            const message = expDateValidator(newValue);
+            this.setState({ validatorMessage: message });
+
+            setCreditCardData({ expDate: newValue });
+            if (newValue.length === 5) {
+                this.setState({ expDate: newValue, expDateFilled: true });
+                return;
+            }
+            this.setState({ expDate: newValue, expDateFilled: false });
         }
-        this.setState({ expDate: newValue, expDateFilled: false });
     };
 
     handleCvvChange = (e) => {
-        const { setCreditCardData, numberValidator } = this.props;
+        const { setCreditCardData, isNumber } = this.props;
         const { value } = e.target;
 
-        const message = numberValidator(value);
-        this.setState({ validatorMessage: message });
+        if (isNumber(value)) {
+            setCreditCardData({ cvv: value });
+            if (value.length === 3) {
+                this.setState({ cvv: value, cvvFilled: true });
+                return;
+            }
 
-        if (value.length === 3) {
-            this.setState({ cvvFilled: true });
-            return;
+            this.setState({ cvv: value, cvvFilled: false });
         }
-
-        setCreditCardData({ cvv: e.target.value });
-        this.setState({ cvvFilled: false });
     };
 
     renderCreditCardForm() {
-        const { number, expDate } = this.state;
+        const { expDate, cvv, number } = this.state;
         return (
             <div block="CreditCard" elem="Card">
                 <p>card number</p>
@@ -127,9 +154,10 @@ class CreditCard extends PureComponent {
                   placeholder="0000  0000  0000  0000"
                   id="number"
                   name="number"
-                  pattern="\d*"
+                //   pattern="[0-9]*"
+                //   inputMode="numeric"
                   value={ number }
-                  maxLength="22"
+                  maxLength="16"
                   onChange={ this.handleNumberChange }
                   validation={ ['notEmpty'] }
                 />
@@ -143,7 +171,6 @@ class CreditCard extends PureComponent {
                       placeholder={ __('MM/YY') }
                       id="expData"
                       name="expData"
-                      pattern="\d*"
                       maxLength="5"
                       value={ expDate }
                       onChange={ this.handleExpDateChange }
@@ -154,8 +181,9 @@ class CreditCard extends PureComponent {
                       placeholder={ __('CVV') }
                       id="cvv"
                       name="cvv"
-                      pattern="\d*"
+                    //   pattern="\d*"
                       maxLength="3"
+                      value={ cvv }
                       onChange={ this.handleCvvChange }
                       validation={ ['notEmpty'] }
                     />

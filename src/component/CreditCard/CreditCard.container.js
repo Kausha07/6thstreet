@@ -12,8 +12,14 @@ export class CreditCardContainer extends PureComponent {
         setCreditCardData: PropTypes.func.isRequired
     };
 
-    numberValidator(value) {
-        return isNaN(-value) ? __('Please enter a valid card number') : null;
+    isNumber(value) {
+        const stringVal = value.toString();
+        const lastInput = stringVal.charAt(stringVal.length - 1);
+        if (lastInput === '.') {
+            return false;
+        }
+
+        return !isNaN(-value);
     }
 
     expDateValidator(value) {
@@ -61,7 +67,7 @@ export class CreditCardContainer extends PureComponent {
             <CreditCard
               setCreditCardData={ setCreditCardData }
               expDateValidator={ this.expDateValidator }
-              numberValidator={ this.numberValidator }
+              isNumber={ this.isNumber }
               { ...this.props }
             />
         );
