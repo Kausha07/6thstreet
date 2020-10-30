@@ -305,14 +305,20 @@ export class CartPage extends PureComponent {
     renderClubApparel() {
         const { totals: { extension_attributes } } = this.props;
 
-        return extension_attributes ? (
-            <div
-              block="CartPage"
-              elem="ClubApparel"
-            >
-                { this.renderClubApparelContent() }
-            </div>
-        ) : null;
+        if (extension_attributes) {
+            const { club_apparel_estimated_pointsvalue } = extension_attributes;
+
+            return club_apparel_estimated_pointsvalue !== 0 ? (
+                <div
+                  block="CartPage"
+                  elem="ClubApparel"
+                >
+                    { this.renderClubApparelContent() }
+                </div>
+            ) : null;
+        }
+
+        return null;
     }
 
     renderItemSuffix() {
