@@ -1,35 +1,24 @@
-/**
- * ScandiPWA - Progressive Web App for Magento
- *
- * Copyright © Scandiweb, Inc. All rights reserved.
- * See LICENSE for license details.
- *
- * @license OSL-3.0 (Open Software License ("OSL") v. 3.0)
- * @package scandipwa/base-theme
- * @link https://github.com/scandipwa/base-theme
- */
-
 :root {
-    --cart-item-heading-color: #000;
-    --cart-item-subheading-color: #888;
-    --cart-item-option-color: #adadad;
-    --cart-item-background: #fff;
-    --cart-item-actions-background: var(--secondary-base-color);
-    --cart-item-actions-color: #000;
-    --cart-item-divider-color: var(--expandable-content-divider-color);
-    --cart-item-action-border: var(--cart-item-divider-color);
+    --successcheckout-item-heading-color: #000;
+    --successcheckout-item-subheading-color: #888;
+    --successcheckout-item-option-color: #adadad;
+    --successcheckout-item-background: #fff;
+    --successcheckout-item-actions-background: var(--secondary-base-color);
+    --successcheckout-item-actions-color: #000;
+    --successcheckout-item-divider-color: var(--expandable-content-divider-color);
+    --successcheckout-item-action-border: var(--successcheckout-item-divider-color);
 
     --Gallery: #EFEFEF;
     --Cardinal: #D12229;
 }
 
-.CartItem {
-    --header-color: var(--cart-item-actions-color);
+.SuccessCheckoutItem {
+    --header-color: var(--successcheckout-item-actions-color);
 
-    border-top: 1px solid var(--Gallery);
-    margin: 1rem;
+    // border-top: 1px solid var(--Gallery);
+    // margin: 1rem;
     font-weight: var(--fw-regular);
-    height: 200px;
+    // height: 200px;
 
     &-Link {
         color: inherit;
@@ -45,6 +34,10 @@
         padding-left: 0;
         margin-bottom: 30px;
 
+        @include desktop() {
+            margin-bottom: 10px;
+        }
+
         &::before {
             content: none;
         }
@@ -58,7 +51,7 @@
         display: flex;
         flex-wrap: wrap;
         flex-direction: column;
-        height: 150px;
+        // height: 150px;
 
         &_isLikeTable {
             @include after-mobile {
@@ -72,10 +65,14 @@
     &-Wrapper {
         display: grid;
         grid-template-columns: auto auto;
-        background: var(--cart-item-background);
+        background: var(--successcheckout-item-background);
         padding-top: 15px;
-        height: 200px;
+        // height: 200px;
         text-transform: capitalize;
+
+        @include desktop() {
+            border-top: 2px solid var(--lightest-gray);
+        }
     }
 
     &-Options {
@@ -93,8 +90,8 @@
     &-Option {
         font-size: 10px;
         text-transform: uppercase;
-        border: 1px solid var(--cart-item-option-color);
-        color: var(--cart-item-option-color);
+        border: 1px solid var(--successcheckout-item-option-color);
+        color: var(--successcheckout-item-option-color);
         padding: 3px 5px;
         margin-right: 5px;
     }
@@ -122,10 +119,10 @@
     &-Heading {
         font-size: 14px;
         line-height: 1.2;
-        flex-grow: 1;
+        //flex-grow: 1;
         width: 100%;
         margin-bottom: .5rem;
-        color: var(--cart-item-heading-color);
+        color: var(--successcheckout-item-heading-color);
         text-align: left;
         letter-spacing: .75px;
         font-weight: var(--fw-demi);
@@ -147,6 +144,7 @@
     }
 
     &-Price, &-ColSizeQty {
+        margin-top: auto;
         line-height: 30px;
         font-size: 13px;
         text-align: left;
@@ -184,6 +182,7 @@
         width: 200px;
 
         span {
+            margin-left: 5px;
             color: var(--DustyGray);
 
         }
@@ -193,103 +192,14 @@
         }
     }
 
-    &-Actions {
-        opacity: 0;
-        max-height: 0;
-        pointer-events: none;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-direction: row-reverse;
-        will-change: max-height, opacity, padding;
-        transition-property: padding, max-height;
-        transition-duration: 200ms;
-
-        @include mobile {
-            background-color: var(--cart-item-actions-background);
-            border-top: 1px solid var(--cart-item-action-border);
-        }
-
-        @include after-mobile {
-            position: absolute;
-            bottom: 0rem;
-            right: 0;
-            width: calc(100% - 8rem);
-            height: 3rem;
-        }
-
-        &_isArabic {
-            right: unset;
-            left: 0;
-        }
-
-        &_isLikeTable {
-            @include after-mobile {
-                width: 20%;
-                bottom: 0;
-                right: 20%;
-                top: -5px;
-                margin: auto;
-                justify-content: center;
-            }
-
-            > * {
-                margin: 0 5px;
-            }
-        }
-
-        &_isEditing {
-            transition-property: padding, max-height, opacity;
-            padding: .5rem 1rem;
-            opacity: 1;
-            max-height: 5rem;
-            pointer-events: all;
-        }
-
-        &::after,
-        &::before {
-            @include mobile {
-                content: '';
-            }
-
-            position: absolute;
-            left: 0;
-            right: 0;
-            margin: auto;
-            top: -1px;
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 15px 20px 0 20px;
-            border-color: var(--cart-item-background) transparent transparent transparent;
-            z-index: 2;
-        }
-
-        &::before {
-            top: 0;
-            z-index: 1;
-            border-color: var(--cart-item-action-border) transparent transparent transparent;
-        }
-    }
-
-    &-Delete {
-        // @include clear-button;
-        background: url(./trash.png) no-repeat;
-        background-size: 15px;
-        width: 15px;
-        height: 15px;
-        padding: 0;
-        bottom: -10px;
-    }
-
-    & &-Qty { // hack to obtain required specificity
+    & &-Qty {
         margin-top: 10px;
         display: flex;
 
         input {
             background: transparent;
             border: 0;
-            color: var(--cart-item-actions-color);
+            color: var(--successcheckout-item-actions-color);
             height: 28px;
             font-weight: var(--fw-regular);
             text-align: center;
@@ -303,12 +213,12 @@
         button {
             position: relative;
             order: 1;
-            border: 1px solid var(--cart-item-actions-color);
+            border: 1px solid var(--successcheckout-item-actions-color);
             width: 18px;
             height: 18px;
             top: 15px;
             left: 0;
-            color: var(--cart-item-actions-color);
+            color: var(--successcheckout-item-actions-color);
             background: transparent;
 
             &:first-of-type {

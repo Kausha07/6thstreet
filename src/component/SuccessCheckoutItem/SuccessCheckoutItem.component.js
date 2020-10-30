@@ -11,16 +11,11 @@ import { isArabic } from 'Util/App';
 import './SuccessCheckoutItem.style';
 import './SuccessCheckoutItem.extended.style';
 
-/**
- * Cart and CartOverlay item
- * @class CartItem
- */
 export class SuccessCheckoutItem extends PureComponent {
     static propTypes = {
         isLoading: PropTypes.bool.isRequired,
         item: CartItemType.isRequired,
         currency_code: PropTypes.string.isRequired,
-        brand_name: PropTypes.string.isRequired,
         isLikeTable: PropTypes.bool,
         history: PropTypes.object.isRequired,
         thumbnail: PropTypes.string.isRequired
@@ -53,8 +48,8 @@ export class SuccessCheckoutItem extends PureComponent {
 
     renderWrapper() {
         return (
-            <button onClick={ this.routeToProduct } block="CartItem" elem="Link">
-                <figure block="CartItem" elem="Wrapper">
+            <button onClick={ this.routeToProduct } block="SuccessCheckoutItem" elem="Link">
+                <figure block="SuccessCheckoutItem" elem="Wrapper">
                     { this.renderImage() }
                     { this.renderContent() }
                 </figure>
@@ -68,7 +63,7 @@ export class SuccessCheckoutItem extends PureComponent {
 
         return (
             <span
-              block="CartItem"
+              block="SuccessCheckoutItem"
               elem="ItemOptionValue"
               key={ label }
             >
@@ -82,18 +77,18 @@ export class SuccessCheckoutItem extends PureComponent {
 
         return (
             <div
-              block="CartItem"
+              block="SuccessCheckoutItem"
               elem="ItemOption"
               key={ id }
             >
                 <div
-                  block="CartItem"
+                  block="SuccessCheckoutItem"
                   elem="ItemOptionLabel"
                   key={ `label-${ id }` }
                 >
                     { `${ label }:` }
                 </div>
-                <div block="CartItem" elem="ItemOptionValues">
+                <div block="SuccessCheckoutItem" elem="ItemOptionValues">
                     { values.map(this.renderProductOptionValue) }
                 </div>
             </div>
@@ -109,7 +104,7 @@ export class SuccessCheckoutItem extends PureComponent {
 
         return (
             <div
-              block="CartItem"
+              block="SuccessCheckoutItem"
               elem="ItemOptionsWrapper"
               mods={ { isLikeTable } }
             >
@@ -130,28 +125,11 @@ export class SuccessCheckoutItem extends PureComponent {
 
         return (
             <p
-              block="CartItem"
+              block="SuccessCheckoutItem"
               elem="Heading"
               mods={ { isArabic } }
             >
                 { name }
-            </p>
-        );
-    }
-
-    renderBrandName() {
-        const { brand_name } = this.props;
-        const {
-            isArabic
-        } = this.state;
-
-        return (
-            <p
-              block="CartItem"
-              elem="Heading"
-              mods={ { isArabic } }
-            >
-                { brand_name }
             </p>
         );
     }
@@ -176,7 +154,7 @@ export class SuccessCheckoutItem extends PureComponent {
 
         const withDiscount = (
             <div
-              block="CartItem"
+              block="SuccessCheckoutItem"
               elem="DiscountPrice"
             >
                 <div>
@@ -191,7 +169,7 @@ export class SuccessCheckoutItem extends PureComponent {
 
         return (
             <div
-              block="CartItem"
+              block="SuccessCheckoutItem"
               elem="Price"
             >
                 { basePrice === row_total ? withoutDiscount : withDiscount }
@@ -206,7 +184,7 @@ export class SuccessCheckoutItem extends PureComponent {
         if (optionValue) {
             return (
                 <div
-                  block="CartItem"
+                  block="SuccessCheckoutItem"
                   elem="ColSizeQty"
                   mods={ { isArabic } }
                 >
@@ -221,7 +199,7 @@ export class SuccessCheckoutItem extends PureComponent {
 
         return (
             <div
-              block="CartItem"
+              block="SuccessCheckoutItem"
               elem="ColSizeQty"
             >
                 { color }
@@ -242,11 +220,10 @@ export class SuccessCheckoutItem extends PureComponent {
 
         return (
             <figcaption
-              block="CartItem"
+              block="SuccessCheckoutItem"
               elem="Content"
               mods={ { isLikeTable } }
             >
-                { this.renderBrandName() }
                 { this.renderProductName() }
                 { this.renderProductOptions(customizable_options) }
                 { this.renderProductOptions(bundle_options) }
@@ -265,7 +242,7 @@ export class SuccessCheckoutItem extends PureComponent {
                 <Image
                   src={ thumbnail }
                   mix={ {
-                      block: 'CartItem',
+                      block: 'SuccessCheckoutItem',
                       elem: 'Picture',
                       mods: { isArabic }
                   } }
@@ -285,7 +262,7 @@ export class SuccessCheckoutItem extends PureComponent {
         const { isLoading } = this.props;
 
         return (
-            <li block="CartItem">
+            <li block="SuccessCheckoutItem">
                 <Loader isLoading={ isLoading } />
                 { this.renderWrapper() }
             </li>

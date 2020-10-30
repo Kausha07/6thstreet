@@ -17,7 +17,9 @@ export class CheckoutSuccess extends PureComponent {
         changeActiveTab: PropTypes.func.isRequired,
         shippingAddress: PropTypes.object.isRequired,
         billingAddress: PropTypes.object.isRequired,
-        paymentMethod: PropTypes.object.isRequired
+        paymentMethod: PropTypes.object.isRequired,
+        creditCardData: PropTypes.object.isRequired,
+        orderID: PropTypes.number.isRequired
     };
 
     state = {
@@ -25,22 +27,35 @@ export class CheckoutSuccess extends PureComponent {
         shippingPrice: 0
     };
 
-    renderButton() {
-        return (
-            <div block="CheckoutSuccess" elem="ButtonWrapper">
-                <Link
-                  block="Button"
-                  mix={ { block: 'CheckoutSuccess', elem: 'ContinueButton' } }
-                  to="/"
-                >
-                    { __('Continue shopping') }
-                </Link>
+    renderSuccessMessage = () => (
+        <div block="SuccessMessage">
+            <div block="SuccessMessage" elem="Graphic">
+                <section block="svg" elem="container">
+                    <svg block="circle" xmlns="http://www.w3.org/2000/svg">
+                        <g>
+                            <ellipse block="foreground" ry="30" rx="30" cy="62" cx="62" strokeWidth="3" />
+                            <line block="line line2" x1="52" y1="62" x2="74" y2="62" />
+                        </g>
+                    </svg>
+                    <div block="center" />
+                </section>
             </div>
-        );
-    }
+            <div block="SuccessMessage" elem="Text">
+                <div block="SuccessMessage-Text" elem="Title">
+                    { __('Order Placed') }
+                </div>
+                <div block="SuccessMessage-Text" elem="Message">
+                    { __('Order confirmation has been sent to') }
+                </div>
+                <div block="SuccessMessage-Text" elem="Email">
+                    mytest@email.com
+                </div>
+            </div>
+        </div>
+    );
 
     renderTotalsItems() {
-        const { totals: { items, quote_currency_code } } = this.props;
+        const { totals: { items, quote_currency_code }, orderID } = this.props;
 
         if (!items || items.length < 1) {
             return (
@@ -49,11 +64,11 @@ export class CheckoutSuccess extends PureComponent {
         }
 
         return (
-            <div>
-                <div>
-                    a
+            <div block="TotalItems">
+                <div block="TotalItems" elem="OrderId">
+                    { `${__('Order')} #${ orderID }` }
                 </div>
-                <ul block="CartPage" elem="Items" aria-label="List of items in cart">
+                <ul block="TotalItems" elem="Items">
                     { items.map((item) => (
                         <SuccessCheckoutItem
                           key={ item.item_id }
@@ -66,11 +81,6 @@ export class CheckoutSuccess extends PureComponent {
                 </ul>
             </div>
         );
-    }
-
-    renderPriceLine(price) {
-        const { totals: { quote_currency_code } } = this.props;
-        return `${formatCurrency(quote_currency_code)}${roundPrice(price)}`;
     }
 
     renderSubTotalPrice = () => {
@@ -86,16 +96,11 @@ export class CheckoutSuccess extends PureComponent {
         const { subTotalPrice } = this.state;
 
         return (
-            <div>
-                <div>
-                    <div
-                      block="CartPage"
-                      elem="TotalDetails"
-                    >
-                        <span>{ __('Subtotal') }</span>
-                    </div>
+            <div block="Totals">
+                <div block="Totals" elem="Title">
+                    <span>{ __('Subtotal') }</span>
                 </div>
-                <div>
+                <div block="Totals" elem="Price">
                     <div>{ this.renderPriceLine(subTotalPrice) }</div>
                 </div>
             </div>
@@ -115,16 +120,11 @@ export class CheckoutSuccess extends PureComponent {
         const { shippingPrice } = this.state;
 
         return (
-            <div>
-                <div>
-                    <div
-                      block="CartPage"
-                      elem="TotalDetails"
-                    >
-                        <span>{ __('Cash on Delivery Fee') }</span>
-                    </div>
+            <div block="Totals">
+                <div block="Totals" elem="Title">
+                    <span>{ __('Cash on Delivery Fee') }</span>
                 </div>
-                <div>
+                <div block="Totals" elem="Price">
                     <div>{ this.renderPriceLine(shippingPrice) }</div>
                 </div>
             </div>
@@ -136,35 +136,28 @@ export class CheckoutSuccess extends PureComponent {
         const totalPrice = subTotalPrice + shippingPrice;
 
         return (
-            <div>
-                <div>
-                    <div
-                      block="CartPage"
-                      elem="TotalDetails"
-                    >
-                        <span>{ __('Subtotal') }</span>
-                        <span>{ __('(Taxes included)') }</span>
-                    </div>
+            <div block="Totals">
+                <div block="Totals" elem="TotalTitles">
+                    <span block="Title">{ __('Subtotal') }</span>
+                    <span block="SubTitle">{ __('(Taxes included)') }</span>
                 </div>
-                <div>
+                <div block="Totals" elem="TotalPrice">
                     <div>{ this.renderPriceLine(totalPrice) }</div>
                 </div>
             </div>
         );
     }
 
+    renderPriceLine(price) {
+        const { totals: { quote_currency_code } } = this.props;
+        return `${formatCurrency(quote_currency_code)}${roundPrice(price)}`;
+    }
+
     renderTotals = () => (
-        <article block="CartPage" elem="Summary">
+        <div block="PriceTotals">
             { this.renderSubTotalPrice() }
             { this.renderCashOnDeliveryFee() }
             { this.renderTotalPrice() }
-        </article>
-    );
-
-    renderAddresses = () => (
-        <div>
-            { this.renderDeliveringAddress() }
-            { this.renderBillingAddress() }
         </div>
     );
 
@@ -180,17 +173,20 @@ export class CheckoutSuccess extends PureComponent {
         } = this.props;
 
         return (
-          <div>
-              <div>
+          <div block="Address">
+              <div block="Address" elem="Title">
+                  { __('Delivering to') }
+              </div>
+              <div block="Address" elem="FullName">
                   { `${firstname} ${lastname}` }
               </div>
-              <div>
+              <div block="Address" elem="Street">
                   { street }
               </div>
-              <div>
+              <div block="Address" elem="PostCode">
                   { postcode }
               </div>
-              <div>
+              <div block="Address" elem="Phone">
                   { phone }
               </div>
           </div>
@@ -209,29 +205,104 @@ export class CheckoutSuccess extends PureComponent {
         } = this.props;
 
         return (
-            <div>
-                <div>
+            <div block="Address">
+                <div block="Address" elem="Title">
+                    { __('Billing Address') }
+                </div>
+                <div block="Address" elem="FullName">
                     { `${firstname} ${lastname}` }
                 </div>
-                <div>
+                <div block="Address" elem="Street">
                     { street }
                 </div>
-                <div>
+                <div block="Address" elem="PostCode">
                     { postcode }
                 </div>
-                <div>
+                <div block="Address" elem="Phone">
                     { phone }
                 </div>
             </div>
         );
     }
 
-    renderPaymentMethod() {
-        const { paymentMethod } = this.props;
-        console.log(paymentMethod);
-    }
+    renderAddresses = () => (
+        <div block="Addresses">
+            { this.renderDeliveringAddress() }
+            { this.renderBillingAddress() }
+        </div>
+    );
 
-    renderContent = () => {
+    renderDeliveryOption = () => (
+        <div block="DeliveryOptions">
+            <div block="DeliveryOptions" elem="Title">
+                { __('Delivery Options') }
+            </div>
+            <div block="DeliveryOptions" elem="Option">
+                { __('FREE (Standard Delivery)') }
+            </div>
+        </div>
+    );
+
+    renderPaymentType = () => (
+        <div block="PaymentType">
+            <div block="PaymentType" elem="Title">
+                { __('Payment Type') }
+            </div>
+            { this.renderPaymentTypeContent() }
+        </div>
+    );
+
+    renderPaymentTypeContent = () => {
+        const {
+            creditCardData: {
+                number,
+                expDate,
+                cvv
+            },
+            paymentMethod
+        } = this.props;
+
+        console.log(paymentMethod);
+
+        if (number && expDate && cvv) {
+            const displayNumberDigits = 4;
+            const slicedNumber = number.slice(number.length - displayNumberDigits);
+
+            return (
+                <div block="Details">
+                    <div block="Details" elem="TypeLogo">img</div>
+                    <div block="Details" elem="Number">
+                        <div block="Details" elem="Number-Dots">
+                            <div />
+                            <div />
+                            <div />
+                            <div />
+                        </div>
+                        <div block="Details" elem="Number-Value">
+                            { slicedNumber }
+                        </div>
+                    </div>
+                    <div block="Details" elem="Exp">
+                        <span block="Details" elem="Exp-Title">
+                            EXP.
+                        </span>
+                        <div block="Details" elem="Exp-Date">
+                            { expDate }
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        return (
+            <div block="Details">
+                <div block="Details" elem="TypeLogo">img</div>
+                <div block="Details" elem="TypeTitle">paymentMethod</div>
+            </div>
+        );
+    };
+
+    renderTabList = () => {
         const { changeActiveTab } = this.props;
 
         return (
@@ -248,14 +319,34 @@ export class CheckoutSuccess extends PureComponent {
         );
     };
 
+    renderButton() {
+        return (
+            <div block="CheckoutSuccess" elem="ButtonWrapper">
+                <Link
+                  block="CheckoutSuccess"
+                  elem="ContinueButton"
+                  to="/"
+                >
+                    <button block="primary">
+                        { __('Continue shopping') }
+                    </button>
+                </Link>
+            </div>
+        );
+    }
+
     render() {
         return (
             <div block="CheckoutSuccess">
-                { this.renderContent() }
-                { this.renderTotalsItems() }
-                { this.renderTotals() }
-                { this.renderAddresses() }
-                { this.renderPaymentMethod() }
+                { this.renderTabList() }
+                <div block="CheckoutSuccess" elem="Details">
+                    { this.renderSuccessMessage() }
+                    { this.renderTotalsItems() }
+                    { this.renderTotals() }
+                    { this.renderAddresses() }
+                    { this.renderDeliveryOption() }
+                    { this.renderPaymentType() }
+                </div>
                 { this.renderButton() }
             </div>
         );

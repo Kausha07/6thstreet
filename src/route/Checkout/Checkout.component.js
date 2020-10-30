@@ -31,7 +31,8 @@ export class Checkout extends SourceCheckout {
         tabbyPaymentId: '',
         tabbyPaymentStatus: '',
         isTabbyPopupShown: false,
-        paymentInformation: {}
+        paymentInformation: {},
+        creditCardData: {}
     };
 
   callbackFunction = (childData) => {
@@ -180,9 +181,20 @@ export class Checkout extends SourceCheckout {
             setCashOnDeliveryFee={ this.setCashOnDeliveryFee }
             savePaymentInformation={ this.savePaymentInformation }
             setTabbyWebUrl={ this.setTabbyWebUrl }
+            setCheckoutCreditCardData={ this.setCheckoutCreditCardData }
           />
       );
   }
+
+  setCheckoutCreditCardData = (number, expDate, cvv) => {
+      this.setState({
+          creditCardData: {
+              number,
+              expDate,
+              cvv
+          }
+      });
+  };
 
   continueAsGuest = () => {
       const { email } = this.props;
@@ -248,14 +260,13 @@ export class Checkout extends SourceCheckout {
   }
 
   renderDetailsStep() {
-      console.log(this.state);
-      console.log(this.props);
       const { orderID, shippingAddress } = this.props;
       const {
           paymentInformation: {
               billing_address,
               paymentMethod
-          }
+          },
+          creditCardData
       } = this.state;
 
       return (
@@ -264,6 +275,7 @@ export class Checkout extends SourceCheckout {
           shippingAddress={ shippingAddress }
           billingAddress={ billing_address }
           paymentMethod={ paymentMethod }
+          creditCardData={ creditCardData }
         />
       );
   }

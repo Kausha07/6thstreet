@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import { CartItemType } from 'Type/MiniCart';
 
-import CartItem from './SuccessCheckoutItem.component';
+import SuccessCheckoutItem from './SuccessCheckoutItem.component';
 
 export const CartDispatcher = import(
     'Store/Cart/Cart.dispatcher'
@@ -88,7 +88,7 @@ export class SuccessCheckoutItemContainer extends PureComponent {
 
     render() {
         return (
-            <CartItem
+            <SuccessCheckoutItem
               { ...this.props }
               { ...this.state }
               { ...this.containerFunctions }
