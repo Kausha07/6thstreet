@@ -1,10 +1,12 @@
 :root {
     --ca-alto-color: #d8d8d8;
     --ca-red-ribbon-color: #f01136;
+    --ca-thunder-color: #231f20;
+    --overlay-black-color: rgba(0, 0, 0, 0.7);
 }
 
 .MyAccountClubApparelOverlay {
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: var(--overlay-black-color);
 
     .CountryMiniFlag-Container {
         position: absolute;
@@ -26,7 +28,7 @@
     &-LinkAccount{
         
         &Banner {
-            background-color: #231f20;
+            background-color: var(--ca-thunder-color);
             background-image: url(../MyAccountClubApparel/images/bg-ca.png);
             background-size: cover;
             text-align: center;
@@ -148,7 +150,7 @@
 
         &Resend {
             text-transform: unset;
-            font-weight: normal;
+            font-weight: var(--fw-regular);
             width: fit-content;
             height: fit-content;
             color: var(--ca-reward-point-color);
@@ -179,7 +181,7 @@
                     }
 
                     span {
-                        font-weight: 600;
+                        font-weight: var(--fw-demi);
                     }
                 }
 
@@ -188,7 +190,7 @@
                     h3 {
                         color: var(--ca-red-ribbon-color);
                         font-size: 18px;
-                        font-weight: 600;
+                        font-weight: var(--fw-demi);
                     }
                     
                     p {
@@ -196,7 +198,7 @@
                     }
 
                     span {
-                        font-weight: 600;
+                        font-weight: var(--fw-demi);
                     }
 
                     &ParagraphRed {
@@ -270,7 +272,6 @@
 
                     @include tablet {
                         top: calc(75% - 350px);
-
                     }
         
                     .MyAccountClubApparelOverlay {

@@ -34,14 +34,14 @@ export const updateProductInCart = ({ cartId, productId, qty }) => MobileAPI.put
 ) || {};
 
 export const applyCouponCode = ({ cartId, couponCode }) => MobileAPI.post(
-    `/carts2/${cartId}/coupons`,
+    `/carts/${cartId}/coupons`,
     {
         coupon_code: couponCode
     }
 ) || {};
 
 export const removeCouponCode = ({ cartId, couponCode }) => MobileAPI.delete(
-    `/carts2/${cartId}/coupons`,
+    `/carts/${cartId}/coupons`,
     {
         coupon_code: couponCode
     }

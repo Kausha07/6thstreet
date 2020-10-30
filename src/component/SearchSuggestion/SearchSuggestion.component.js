@@ -24,6 +24,28 @@ class SearchSuggestion extends PureComponent {
         isArabic: isArabic()
     };
 
+    componentDidMount() {
+        window.addEventListener('resize', this.setSearchSuggestionWidth);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.setSearchSuggestionWidth);
+    }
+
+    setSearchSuggestionWidth() {
+        const searchSuggestion = document.getElementsByClassName('SearchSuggestion')[0];
+        const bodyWidth = document.body.offsetWidth;
+        const headerWidth = document.getElementsByClassName('HeaderBottomBar-Content')[0].offsetWidth;
+        const headerSearchWidth = document.getElementsByClassName('HeaderSearch')[0].offsetWidth;
+
+        if (searchSuggestion) {
+            // eslint-disable-next-line no-magic-numbers
+            const width = (bodyWidth - headerWidth) / 2 + headerSearchWidth + 20;
+
+            searchSuggestion.style.setProperty('max-width', `${width}px`);
+        }
+    }
+
     renderLoader() {
         const { isLoading } = this.props;
 
@@ -49,7 +71,7 @@ class SearchSuggestion extends PureComponent {
         const { brands } = this.props;
 
         return (
-            <div>
+            <div block="SearchSuggestion" elem="Brands">
                 <h2>{ __('Brands') }</h2>
                 <ul>
                     { brands.map(this.renderBrand) }
@@ -74,7 +96,7 @@ class SearchSuggestion extends PureComponent {
         const { products } = this.props;
 
         return (
-            <div>
+            <div block="SearchSuggestion" elem="Recommended">
                 <h2>{ __('Recommended') }</h2>
                 <ul>
                     { products.map(this.renderProduct) }
@@ -178,8 +200,13 @@ class SearchSuggestion extends PureComponent {
         const { isArabic } = this.state;
         return (
             <div block="SearchSuggestion" mods={ { isArabic } }>
-                { this.renderLoader() }
-                { this.renderContent() }
+                <div block="SearchSuggestion" elem="Content">
+                    { this.renderLoader() }
+                    { this.renderContent() }
+                </div>
+                <div block="SearchSuggestion" elem="ShadeWrapper">
+                    <div block="SearchSuggestion" elem="Shade" />
+                </div>
             </div>
         );
     }

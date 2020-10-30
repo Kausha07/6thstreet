@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 /**
  * @category  6thstreet
  * @author    Alona Zvereva <alona.zvereva@scandiweb.com>
@@ -15,6 +16,7 @@ import ContentWrapper from 'Component/ContentWrapper';
 import ExpandableContent from 'Component/ExpandableContent';
 import Link from 'Component/Link';
 import MyAccountTabList from 'Component/MyAccountTabList';
+import { FIXED_CURRENCIES } from 'Component/Price/Price.config';
 import ProductLinks from 'Component/ProductLinks';
 import { tabMap } from 'Route/MyAccount/MyAccount.container';
 import { CROSS_SELL } from 'Store/LinkedProducts/LinkedProducts.reducer';
@@ -24,7 +26,7 @@ import {
 import { TotalsType } from 'Type/MiniCart';
 import { ClubApparelMember } from 'Util/API/endpoint/ClubApparel/ClubApparel.type';
 import { isArabic } from 'Util/App';
-import { formatCurrency, roundPrice } from 'Util/Price';
+import { roundPrice } from 'Util/Price';
 
 import ClubApparel from './icons/club-apparel.png';
 import Delivery from './icons/delivery-truck.png';
@@ -91,8 +93,10 @@ export class CartPage extends PureComponent {
     }
 
     renderPriceLine(price) {
-        const { totals: { quote_currency_code } } = this.props;
-        return `${formatCurrency(quote_currency_code)}${roundPrice(price)}`;
+        const { totals: { currency_code } } = this.props;
+        const fixedPrice = FIXED_CURRENCIES.includes(currency_code);
+
+        return `${currency_code}${fixedPrice ? price.toFixed(3) : roundPrice(price)}`;
     }
 
     renderTotalDetails(isMobile = false) {
@@ -193,6 +197,7 @@ export class CartPage extends PureComponent {
     renderPromoContent() {
         const { cart_content: { cart_cms } = {} } = window.contentConfiguration;
         const { totals: { currency_code, avail_free_shipping_amount } } = this.props;
+        const { isArabic } = this.state;
 
         if (cart_cms) {
             return <CmsBlock identifier={ cart_cms } />;
@@ -203,10 +208,10 @@ export class CartPage extends PureComponent {
               block="CartPage"
               elem="PromoBlock"
             >
-                <figcaption block="CartPage" elem="PromoText">
+                <figcaption block="CartPage" elem="PromoText" mods={ { isArabic } }>
                     <img src={ Delivery } alt="Delivery icon" />
                     { __('Add ') }
-                    <span>{ `${currency_code } ${avail_free_shipping_amount}` }</span>
+                    <span>{ `${currency_code } ${avail_free_shipping_amount} ` }</span>
                     { __('more to your cart for ') }
                     <span>{ __('Free delivery') }</span>
                 </figcaption>
@@ -305,14 +310,20 @@ export class CartPage extends PureComponent {
     renderClubApparel() {
         const { totals: { extension_attributes } } = this.props;
 
-        return extension_attributes ? (
-            <div
-              block="CartPage"
-              elem="ClubApparel"
-            >
-                { this.renderClubApparelContent() }
-            </div>
-        ) : null;
+        if (extension_attributes) {
+            const { club_apparel_estimated_pointsvalue } = extension_attributes;
+
+            return club_apparel_estimated_pointsvalue !== 0 ? (
+                <div
+                  block="CartPage"
+                  elem="ClubApparel"
+                >
+                    { this.renderClubApparelContent() }
+                </div>
+            ) : null;
+        }
+
+        return null;
     }
 
     renderItemSuffix() {

@@ -7,6 +7,7 @@ import Image from 'Component/Image';
 import Loader from 'Component/Loader';
 import {
     STATUS_CANCELED,
+    STATUS_COMPLETE,
     STATUS_FAILED,
     STATUS_PAYMENT_ABORTED,
     STATUS_SUCCESS
@@ -70,12 +71,13 @@ class MyAccountOrderView extends PureComponent {
 
     renderTitle() {
         const { openOrderCancelation, order: { status, increment_id } } = this.props;
+        const buttonText = status === STATUS_COMPLETE ? __('Return an Item') : __('Cancel an Item');
 
         return (
             <div block="MyAccountOrderView" elem="Heading">
                 <h3>{ __('Order #%s', increment_id) }</h3>
                 { !STATUS_FAILED.includes(status) && (
-                    <button onClick={ openOrderCancelation }>{ __('Cancel an Item') }</button>
+                    <button onClick={ openOrderCancelation }>{ buttonText }</button>
                 ) }
             </div>
         );

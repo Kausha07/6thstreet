@@ -19,7 +19,17 @@
     }
 
     &-DiscountOptionWrapper {
-        padding: 20px 0 0 ;
+        padding: 20px 0 0;
+
+        @include desktop {
+            display: none;
+        }
+    }
+
+    &-CartCouponWrapper {
+        .CartCoupon {
+            margin: 8px 0 0;
+        }
 
         @include desktop {
             display: none;
@@ -50,6 +60,18 @@
                 font-size: 13px;
                 font-weight: var(--fw-bold);
                 margin-bottom: 3px;
+
+                button {
+                    height: 16px;
+                    padding: 0 10px;
+                }
+
+                img {
+                    position: absolute;
+                    top: 2px;
+                    width: 16px;
+                    height: auto;
+                }
             }
 
             &Description {

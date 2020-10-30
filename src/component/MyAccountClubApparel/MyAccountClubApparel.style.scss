@@ -53,7 +53,7 @@
         h3 {
             color: var(--ca-card-heading-color);
             font-size: 12px;
-            font-weight: 600;
+            font-weight: var(--fw-demi);
         }
         
         p {
@@ -62,7 +62,7 @@
         }
 
         strong {
-            font-weight: 600;
+            font-weight: var(--fw-demi);
         }
 
         &_countrySpecific {
@@ -104,9 +104,11 @@
     &-Earn {
         height: 0;
         padding: 0;
-        font-size: 0;
-        color: transparent;
         transition: 100ms;
+        p {
+            font-size: 0;
+            margin: 0;
+        }
 
         &_isAboutExpanded,
         &_isEarnExpanded {
@@ -115,7 +117,12 @@
             color: unset;
             padding-bottom: 30px;
             border-bottom: 1px solid var(--ca-button-border-color);
-            transition: 700ms;
+            transition: 500ms;
+
+            p {
+            font-size: unset;
+            margin-bottom: 1.2rem;
+            }
         }
 
         @include before-desktop {
@@ -172,7 +179,7 @@
             text-align: left;
             text-transform: none;
             font-size: 16px;
-            font-weight: 600;
+            font-weight: var(--fw-demi);
             padding: 0;
             border-bottom: 1px solid var(--ca-button-border-color);
 
@@ -235,7 +242,7 @@
         }
 
         a {
-            font-weight: 600;
+            font-weight: var(--fw-demi);
         }
 
         .MyAccountClubApparel {  
@@ -335,7 +342,7 @@
         p {
             color: var(--ca-reward-point-color);
             font-size: 12px;
-            font-weight: 500;
+            font-weight: var(--fw-medium);
             line-height: 16px;
             text-transform: uppercase;
         }
@@ -346,7 +353,7 @@
 
         &CAP {
             font-size: 21px;
-            font-weight: 600;
+            font-weight: var(--fw-demi);
             line-height: 19px;
             margin-right: 5px;
         }
@@ -389,7 +396,7 @@
 
 
         span {
-            font-weight: 600;
+            font-weight: var(--fw-demi);
         }
     }
 
@@ -399,7 +406,7 @@
         color: var(--white);
 
         span {
-            font-weight: 600;
+            font-weight: var(--fw-demi);
         }
 
         @include before-desktop {

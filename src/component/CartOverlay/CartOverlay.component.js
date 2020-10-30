@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 /**
  * ScandiPWA - Progressive Web App for Magento
  *
@@ -16,6 +17,7 @@ import CartItem from 'Component/CartItem';
 import CmsBlock from 'Component/CmsBlock';
 import { CART_OVERLAY } from 'Component/Header/Header.config';
 import Link from 'Component/Link';
+import { FIXED_CURRENCIES } from 'Component/Price/Price.config';
 import Overlay from 'SourceComponent/Overlay';
 import { TotalsType } from 'Type/MiniCart';
 import { isArabic } from 'Util/App';
@@ -49,12 +51,14 @@ export class CartOverlay extends PureComponent {
     }
 
     renderPriceLine(price) {
-        const { totals: { items } } = this.props;
-        return `${items[0].currency} ${parseFloat(price).toFixed(2)}`;
+        const { totals: { quote_currency_code } } = this.props;
+        const decimals = FIXED_CURRENCIES.includes(quote_currency_code) ? 3 : 2;
+
+        return `${quote_currency_code} ${parseFloat(price).toFixed(decimals)}`;
     }
 
     renderCartItems() {
-        const { totals: { items }, closePopup } = this.props;
+        const { totals: { items, quote_currency_code }, closePopup } = this.props;
 
         if (!items || items.length < 1) {
             return this.renderNoCartItems();
@@ -66,7 +70,7 @@ export class CartOverlay extends PureComponent {
                     <CartItem
                       key={ item.item_id }
                       item={ item }
-                      currency_code={ items[0].currency }
+                      currency_code={ quote_currency_code }
                       brand_name={ item.brand_name }
                       isEditing
                       closePopup={ closePopup }
@@ -85,13 +89,12 @@ export class CartOverlay extends PureComponent {
     }
 
     renderTotals() {
-        const { totals: { items = [] } } = this.props;
+        const { totals: { items = [], subtotal_incl_tax } } = this.props;
         const { isArabic } = this.state;
 
         if (!items || items.length < 1) {
             return null;
         }
-        const totalPrice = items.map((item) => item.row_total * item.qty).reduce((a, b) => a + b);
 
         return (
             <dl
@@ -103,7 +106,7 @@ export class CartOverlay extends PureComponent {
                     { __('Subtotal ') }
                     <span>{ __('(Taxes Included) ') }</span>
                 </dt>
-                <dd>{ this.renderPriceLine(totalPrice) }</dd>
+                <dd>{ this.renderPriceLine(subtotal_incl_tax) }</dd>
             </dl>
         );
     }
@@ -162,6 +165,7 @@ export class CartOverlay extends PureComponent {
     renderPromoContent() {
         const { cart_content: { cart_cms } = {} } = window.contentConfiguration;
         const { totals: { currency_code, avail_free_shipping_amount } } = this.props;
+        const { isArabic } = this.state;
 
         if (cart_cms) {
             return <CmsBlock identifier={ cart_cms } />;
@@ -172,14 +176,14 @@ export class CartOverlay extends PureComponent {
               block="CartOverlay"
               elem="PromoBlock"
             >
-                <figcaption block="CartOverlay" elem="PromoText">
+                <figcaption block="CartOverlay" elem="PromoText" mods={ { isArabic } }>
                     <img src={ Delivery } alt="Delivery icon" />
                     { __('Add ') }
                     <span
                       block="CartOverlay"
                       elem="Currency"
                     >
-                        { `${currency_code } ${avail_free_shipping_amount}` }
+                        { `${currency_code } ${avail_free_shipping_amount} ` }
                     </span>
                     { __('more to your cart for ') }
                     <span

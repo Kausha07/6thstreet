@@ -38,7 +38,6 @@ export class CheckoutShipping extends SourceCheckoutShipping {
 
     renderPriceLine(price, name, mods) {
         const { totals: { currency_code } } = this.props;
-        const roundedPrice = Math.round(price);
 
         return (
             <li block="CheckoutOrderSummary" elem="SummaryItem" mods={ mods }>
@@ -48,7 +47,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
                 { price !== undefined
                     ? (
                 <strong block="CheckoutOrderSummary" elem="Price">
-                    { `${currency_code } ${ roundedPrice}` }
+                    { `${currency_code } ${ price}` }
                 </strong>
                     )
                     : null }
@@ -167,7 +166,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     renderButtonLabel() {
         const { isMobile } = this.state;
 
-        return isMobile ? __('New address') : __('Add new address');
+        return isMobile ? __(' + New address') : __('Add new address');
     }
 
     renderOpenPopupButton() {
