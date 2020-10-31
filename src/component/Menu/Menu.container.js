@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import { setGender } from 'Store/AppState/AppState.action';
 import { getStaticFile } from 'Util/API/endpoint/StaticFiles/StaticFiles.endpoint';
 import Logger from 'Util/Logger';
 
@@ -13,25 +14,22 @@ export const mapStateToProps = (state) => ({
     locale: state.AppState.locale
 });
 
-export const mapDispatchToProps = (_dispatch) => ({
-    // addProduct: options => CartDispatcher.addProductToCart(dispatch, options)
+export const mapDispatchToProps = (dispatch) => ({
+    setGender: (gender) => dispatch(setGender(gender))
 });
 
 export class MenuContainer extends PureComponent {
     static propTypes = {
         gender: PropTypes.string.isRequired,
         locale: PropTypes.string.isRequired,
-        newMenuGender: PropTypes.string.isRequired
+        newMenuGender: PropTypes.string.isRequired,
+        setGender: PropTypes.func.isRequired
     };
 
     state = {
         categories: [],
         isLoading: true,
-        menuGender: ''
-    };
-
-    containerFunctions = {
-        // getData: this.getData.bind(this)
+        menuGender: 'men'
     };
 
     constructor(props) {
@@ -41,16 +39,15 @@ export class MenuContainer extends PureComponent {
     }
 
     componentDidMount() {
-        const { gender } = this.props;
-        this.setState({ menuGender: gender });
+        const { menuGender } = this.state;
+        this.requestCategories(true, menuGender);
     }
 
     componentDidUpdate(prevProps) {
         const { gender: prevGender, locale: prevLocale } = prevProps;
         const { gender, locale, newMenuGender } = this.props;
         const { menuGender } = this.state;
-
-        if (newMenuGender !== menuGender) {
+        if (newMenuGender !== menuGender && newMenuGender !== '') {
             this.changeMenuGender();
             this.requestCategories(true, newMenuGender);
         }
@@ -95,9 +92,16 @@ export class MenuContainer extends PureComponent {
             categories
         } = this.state;
 
+        const {
+            gender,
+            setGender
+        } = this.props;
+
         return {
             isLoading,
-            categories
+            categories,
+            gender,
+            setGender
         };
     };
 

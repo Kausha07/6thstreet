@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import HeaderGenders from 'Component/HeaderGenders';
@@ -13,7 +14,7 @@ class Menu extends PureComponent {
     state = {
         isArabic: isArabic(),
         isDefaultCategoryOpen: true,
-        currentGender: ''
+        currentGender: 'men'
     };
 
     activeCategories = {
@@ -21,11 +22,15 @@ class Menu extends PureComponent {
     };
 
     static propTypes = {
-        categories: Categories.isRequired
+        categories: Categories.isRequired,
+        gender: PropTypes.string.isRequired
     };
 
     componentDidMount() {
-        this.setState({ currentGender: BrowserDatabase.getItem(APP_STATE_CACHE_KEY).gender });
+        const { gender } = this.props;
+        if (gender !== '') {
+            this.setState({ currentGender: gender });
+        }
     }
 
     componentDidUpdate() {
@@ -34,7 +39,7 @@ class Menu extends PureComponent {
 
     setNewGender = (newGender) => {
         const { currentGender } = this.state;
-        if (currentGender !== newGender) {
+        if (currentGender !== newGender && newGender !== '') {
             this.setState({ currentGender: newGender });
             this.setState({ isDefaultCategoryOpen: true });
         }
