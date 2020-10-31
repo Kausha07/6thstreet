@@ -8,15 +8,18 @@
         .Slider {
             &-Wrapper {
                 width: 200px;
+
+                & > * {
+                    width: unset;
+                }
             }
         }
 
         .QuickFilter {
             &-List {
-                display: flex;
+                display: inline;
                 margin-top: -2px;
                 max-width: 1200px;
-                width: 100%;
 
                 .PLPFilterOption {
                     &-List {
