@@ -262,6 +262,10 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
         const { isArabic } = this.state;
         const { customer: { dob } } = this.props;
 
+        if (!dob) {
+            return null;
+        }
+
         return (
             <div block="MyAccountCustomerForm" elem="BirthDay" mods={ { isArabic } }>
                 <Field
