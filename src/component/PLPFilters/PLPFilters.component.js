@@ -77,7 +77,7 @@ class PLPFilters extends PureComponent {
     renderQuickFilters() {
         const { filters } = this.props;
 
-        return Object.entries(filters).map(this.renderQuickFilter);
+        return Object.entries(filters).map(this.renderQuickFilter.bind(this));
     }
 
     renderPlaceholder() {
@@ -118,7 +118,7 @@ class PLPFilters extends PureComponent {
     onShowResultButton = () => {
         const { activeFilters } = this.state;
 
-        Object.keys(activeFilters).map((key) => WebUrlParser.setParam(key, activeFilters[key]));
+        Object.keys(activeFilters || {}).map((key) => WebUrlParser.setParam(key, activeFilters[key]));
         this.hidePopUp();
     };
 
