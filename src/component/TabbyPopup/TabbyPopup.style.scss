@@ -1,0 +1,20 @@
+.TabbyPopup {
+    .Popup {
+        &-Content {
+            padding: 0;
+            overflow: hidden;
+        }
+    }
+
+    &-CloseButtonWrapper {
+        background: $white;
+        position: absolute;
+        text-align: right;
+        z-index: 10;
+        width: 100%;
+
+        img {
+            width: 16px;
+        }
+    }
+}

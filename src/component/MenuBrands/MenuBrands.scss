@@ -7,7 +7,7 @@
         }
 
         a {
-            font-weight: 500;
+            font-weight: var(--fw-medium);
 
             .Image {
                 padding: 35px;
@@ -41,7 +41,7 @@
             a {
                 align-items: center;
                 display: flex;
-                font-family: 'Avenir Next Medium', serif;
+                font-weight: var(--fw-medium);
                 font-size: 9px;
                 flex-direction: column;
                 line-height: 16px;
@@ -61,11 +61,21 @@
             &-Brands {
                 display: flex;
                 text-align: center;
+                padding-right: 2px;
+                margin-left: 5px;
 
                 a {
                     line-height: 25px;
                     margin-left: 0;
                     padding: 0 5px;
+                }
+
+                &_isArabic {
+                    direction: ltr;
+                }
+
+                div {
+                    width: 100%;
                 }
             }
         }

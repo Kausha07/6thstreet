@@ -1,3 +1,5 @@
 .UrlRewrites {
-    
+  @include mobile {
+    padding-top: var(--main-content-padding);
+  }
 }

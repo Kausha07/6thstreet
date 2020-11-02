@@ -1,15 +1,16 @@
 import { getStore } from 'Store';
 import CartDispatcher from 'Store/Cart/Cart.dispatcher';
+import { showNotification } from 'Store/Notification/Notification.action';
 import {
     setIsLoading,
-    setStoreCredit,
-    updateStoreCreditState
+    setStoreCredit
 } from 'Store/StoreCredit/StoreCredit.action';
 import {
     applyStoreCredit,
     getStoreCredit,
     removeStoreCredit
 } from 'Util/API/endpoint/StoreCredit/StoreCredit.enpoint';
+import { isSignedIn } from 'Util/Auth';
 import Logger from 'Util/Logger';
 
 export const STORE_CREDIT = 'store_credit';
@@ -21,7 +22,9 @@ export class StoreCreditDispatcher {
         try {
             dispatch(setIsLoading(true));
 
-            const { data } = await getStoreCredit();
+            const { data } = isSignedIn()
+                ? await getStoreCredit()
+                : {};
 
             dispatch(setStoreCredit(data));
         } catch (e) {
@@ -34,28 +37,25 @@ export class StoreCreditDispatcher {
             dispatch(setIsLoading(true));
 
             const { Cart: { cartId } } = getStore().getState();
-            const data = {};
 
-            try {
-                data.data = apply
-                    ? await applyStoreCredit(cartId)
-                    : await removeStoreCredit(cartId);
-                // @TODO: Implement a way to check if store credit is applied to cart for checkbox state
-            } catch (e) {
-                data.data = true;
-                // Do nothing as requests above will fail due to missing mobile API authorization
+            if (apply) {
+                await applyStoreCredit(cartId);
+
+                dispatch(showNotification('success', __('Store Credits are applied!')));
+            } else {
+                await removeStoreCredit(cartId);
+
+                dispatch(showNotification('success', __('Store Credits are removed!')));
             }
 
             await CartDispatcher.getCartTotals(dispatch, cartId);
             await this.getStoreCredit(dispatch);
 
-            const result = data.data && apply;
-
-            dispatch(updateStoreCreditState(result));
-
-            return result;
+            return true;
         } catch (e) {
             Logger.log(e);
+
+            dispatch(showNotification('error', __('There was an error, please try again later.')));
 
             return false;
         }

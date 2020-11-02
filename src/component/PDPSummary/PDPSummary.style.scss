@@ -5,28 +5,12 @@
 }
 
 .PDPSummary {
-    font-family: "Avenir Next Regular";
+    font-weight: var(--fw-regular);
     margin-top: 20px;
     padding: 0 20px;
 
-    p {
-        font-size: 18px;
-    }
-
     h1 {
         font-size: 24px;
-    }
-
-    &-Header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 30px;
-    }
-
-    &-HeaderNew {
-        display: flex;
-        align-items: center;
     }
 
     .ProductLabel {
@@ -36,13 +20,30 @@
         text-transform: uppercase;
     }
 
+    &-Header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    &-Name {
+        font-size: 18px;
+    }
+
+    &-Dash {
+        bottom: 2px;
+        color: var(--pdp-exclusive-text-color);
+    }
+
     &-Exclusive {
         color: var(--pdp-exclusive-text-color);
         font-size: 16px;
+        text-transform: capitalize;
     }
 
     &-HeaderWardrobeBtn {
-        font-family: 'Avenir Next Medium';
+        font-weight: var(--fw-medium);
         margin: 0 25px;
         width: 30px;
         height: 30px;
@@ -86,45 +87,6 @@
         }
     }
 
-    &-HeaderShare {
-        width: 30px;
-        height: 30px;
-        border-radius: 8px;
-        text-transform: none;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        div {
-            display: inline;
-        }
-
-        div::before {
-            content: ' ';
-            position: absolute;
-            width: 16px;
-            left: -9px;
-            top: -8px;
-            height: 16px;
-            background-image: url(./icons/share.svg);
-            background-size: 16px;
-            background-repeat: no-repeat;
-        }
-
-        &:hover {
-            div::before {
-                background-image: url(./icons/share-white.svg);
-            }
-        }
-
-        @include desktop() {
-            width: 87px;
-
-            div::before {
-                left: -4px;
-            }
-        }
-    }
 
     &-ShareTxt {
         display: none;
@@ -136,13 +98,13 @@
     }
 
     .Price {
-        font-family: 'Avenir Next Bold';
+        font-weight: var(--fw-bold);
         font-size: 20px;
 
         &-Base {
             &_discount {
                 margin-right: 20px;
-                font-family: 'Avenir Next Medium';
+                font-weight: var(--fw-medium);
             }
         }
 
@@ -150,6 +112,56 @@
         &-Special {
             color: $default-primary-dark-color;
         }
+    }
+
+    &-Tabby {
+        display: inline-block;
+        text-transform: none;
+        font-weight: 400;
+        max-width: 366px;
+        width: 100%;
+        height: 100%;
+        box-shadow: 0px 0px 11px rgba(0,0,0,.1);
+        border-radius: 7px;
+        padding: 15px 2px 14px;
+        font-size: 11px;
+        margin-top: 20px;
+        cursor: pointer;
+
+        @include desktop() {
+            padding: 15px 15px 14px 18px;
+            font-size: 14px;
+        }
+
+        strong {
+            padding: 0 4px;
+            font-size: 12px;
+        }
+
+        img {
+            width: 42px;
+            height: auto;
+            margin: 0 3px -6px 0;
+
+            @include desktop() {
+                width: 47px;
+            }
+        }
+
+        span {
+            text-decoration: underline;
+            font-weight: 600;
+            margin: 0;
+
+            @include desktop() {
+                margin: 0 4px;
+            }
+        }
+
+        &:hover {
+            box-shadow: 0px 0px 8px rgba(0,0,0,.5);
+        }
+
     }
 
     &-ProductColorBlock {

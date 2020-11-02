@@ -1,0 +1,39 @@
+.PDPAlsoAvailableProducts {
+    margin-top: 25px;
+
+    li {
+        padding: 0;
+
+        &:before {
+            content: none;
+        }
+    }
+
+    &-List {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    &-Title {
+        @include desktop {
+            font-size: 17px;
+            font-weight: var(--fw-demi);
+        }
+    }
+
+    &_isAlsoAvailable {
+        display: none;
+    }
+}
+
+.PDPSummary {
+    .PDPAlsoAvailableProducts {
+        &-Title {
+            @include before-desktop {
+                text-align: center;
+                font-size: 15px;
+                margin-bottom: 25px;
+            }
+        }
+    }
+}

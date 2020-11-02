@@ -16,15 +16,11 @@
     --color-light-gray: #9B9B9B;
     --color-orange-soda: #F96446;
     --color-white: #fff;
-
-    --font-family-regular: Avenir Next Regular;
-    --font-family-demi-bold: Avenir Next Demi Bold;
-    --font-family-bold: Avenir Next Bold;
 }
 
 .CartPage {
     display: flex;
-    font-family: var(--font-family-regular);
+    font-weight: var(--fw-regular);
     padding: 50px 0;
     height: 100vh;
     max-width: 1440px;
@@ -124,7 +120,7 @@
         text-align: center;
         background-color: var(--color-orange-soda);
         color: var(--color-white);
-        font-family: var(--font-family-bold);
+        font-weight: var(--fw-bold);
         border: none;
 
         @include mobile {
@@ -143,7 +139,7 @@
         border: 2px solid var(--color-black);
         justify-content: center;
         align-items: center;
-        font-family: var(--font-family-bold);
+        font-weight: var(--fw-bold);
 
         @include mobile {
             width: 45%;
@@ -160,6 +156,75 @@
 
         @include mobile {
             min-height: 0;
+        }
+    }
+
+    &-ClubApparel {
+        order: 3;
+        &Text {
+            font-size: 12px;
+            display: inline;
+            align-items: center;
+            flex-wrap: wrap;
+            line-height: 20px;
+            text-align: center;
+
+            @include mobile {
+                font-size: 11px;
+            }
+        }
+
+        &Link {
+            text-decoration: underline;
+        }
+
+        &Block {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 1rem 0 3rem;
+
+            @include mobile {
+                padding: 1rem 1rem 1rem 3rem;
+                border: 0;
+                border-bottom: 1px solid var(--primary-divider-color);
+            }
+
+            span {
+                font-weight: var(--fw-bold);
+            }
+
+            img {
+                position: absolute;
+                top: 1rem;
+                left: 1rem;
+                width: 20px;
+                height: auto;
+            }
+
+            &_isArabic {
+                padding: 1rem 3rem 0 1rem;
+
+                img {
+                    top: 1rem;
+                    right: 1rem;
+                    left: 0;
+                }
+            }
+
+        }
+
+        &Image {
+            width: 46px;
+            margin-right: .5rem;
+
+            @include mobile {
+                width: 36px;
+            }
+        }
+
+        strong {
+            margin: 0 5px;
         }
     }
 
@@ -181,11 +246,11 @@
             }
 
             span:nth-child(2) {
-                font-family: var(--font-family-bold);
+                font-weight: var(--fw-bold);
             }
 
             span:last-child {
-                font-family: var(--font-family-demi-bold);
+                font-weight: var(--fw-demi);
                 color: var(--color-green-cyan);
                 letter-spacing: -0.1px;
                 text-transform: capitalize;
@@ -207,19 +272,31 @@
 
         &Text {
             font-size: 12px;
-            display: flex;
+            display: inline;
+            flex-wrap: wrap;
+            line-height: 20px;
             align-items: center;
-            justify-content: space-between;
             width: 100%;
+            text-align: center;
 
             img {
                 width: 20px;
                 height: auto;
                 margin-right: 5px;
+                float: left;
+                margin-top: 5px;
             }
 
             @include mobile {
                 font-size: 11px;
+            }
+
+            &_isArabic {
+                img {
+                    margin-right: unset;
+                    margin-left: 5px;
+                    float: right;
+                }
             }
         }
     }
@@ -245,10 +322,10 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        font-size: 18px;
-        font-weight: bold;
+        font-size: 17px;
+        font-weight: var(--fw-bold);
         padding: 1rem 0;
-        font-family: var(--font-family-bold);
+        font-weight: var(--fw-bold);
 
         @include mobile {
             padding: 1rem;
@@ -283,7 +360,7 @@
         background-color: var(--cart-page-table-head-background);
         text-transform: uppercase;
         font-size: 12px;
-        font-weight: 600;
+        font-weight: var(--fw-demi);
         padding: .9rem 1rem;
         margin-bottom: 0;
 
@@ -343,12 +420,11 @@
         margin-top: 2rem;
         margin-bottom: 1.5rem;
         font-size: 20px;
-        font-family: var(--font-family-bold);
+        font-weight: var(--fw-bold);
         text-transform: capitalize;
 
         span {
-            font-family: var(--font-family-regular);
-            font-weight: normal;
+            font-weight: var(--fw-regular);
         }
     }
 
@@ -362,7 +438,7 @@
     &-DiscountCoupon {
         &::after {
             content: ':';
-            font-weight: normal;
+            font-weight: var(--fw-regular);
         }
     }
 
@@ -414,8 +490,7 @@
         }
 
         &-Heading {
-            font-family: var(--font-family-regular);
-            font-weight: bold;
+            font-weight: var(--fw-bold);
             font-size: 15px;
             text-transform: capitalize;
         }
@@ -423,7 +498,7 @@
         &-Button {
             border: none;
             transform: none;
-            margin: 0px;
+            margin: 0;
 
             &:before {
                 content: '';
@@ -457,50 +532,6 @@
 
             @include before-desktop {
                 display: none;
-            }
-        }
-
-
-        .CartCoupon {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 50px;
-            margin-bottom: 15px;
-            border: 1px solid var(--color-light-gray);
-
-            &-Input {
-                margin: 0;
-                height: 100%;
-                width: 100%;
-                font-size: 13px;
-                text-transform: capitalize;
-
-                input:focus, textarea:focus, select:focus {
-                    border: 1px solid var(--color-black);
-                }
-
-                @include mobile {
-                    font-size: 11px;
-                }
-            }
-
-            &-Button {
-                margin: 0;
-                background-color: var(--color-white);
-                border: 1px solid var(--color-light-gray);
-                color: var(--color-light-gray);
-
-                &:not([disabled]):hover,
-                &:not([disabled]):focus {
-                    color: var(--color-black);
-                    border: 1px solid var(--color-black);
-                }
-
-                @include mobile {
-                    width: 25%;
-                    font-size: 11px;
-                }
             }
         }
 

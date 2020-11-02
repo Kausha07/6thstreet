@@ -1,16 +1,18 @@
+import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import { Filter } from 'Util/API/endpoint/Product/Product.type';
 import WebUrlParser from 'Util/API/helper/WebUrlParser';
 
-import PLPFilter from './PLPQuickFilter.component';
+import PLPQuickFilter from './PLPQuickFilter.component';
 
 export const mapStateToProps = (_state) => ({});
 
 class PLPQuickFilterContainer extends PureComponent {
     static propTypes = {
-        filter: Filter.isRequired
+        filter: Filter.isRequired,
+        updateFilters: PropTypes.func.isRequired
     };
 
     containerFunctions = {
@@ -38,14 +40,14 @@ class PLPQuickFilterContainer extends PureComponent {
     }
 
     containerProps = () => {
-        const { filter } = this.props;
+        const { filter, updateFilters } = this.props;
 
-        return { filter };
+        return { filter, updateFilters };
     };
 
     render() {
         return (
-            <PLPFilter
+            <PLPQuickFilter
               { ...this.containerFunctions }
               { ...this.containerProps() }
             />

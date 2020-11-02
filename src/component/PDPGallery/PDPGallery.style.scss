@@ -3,7 +3,11 @@
 }
 
 .PDPGallery {
+    --gallery-crumbs-height: auto;
+
+    height: auto;
     display: block;
+
     @include desktop {
         display: grid;
         grid-template-columns: 1fr 6fr;
@@ -12,6 +16,7 @@
 
     &-Crumbs {
         display: none;
+        height: var(--gallery-crumbs-height);
         @include desktop {
             display: block;
         } 
@@ -68,6 +73,16 @@
         padding: 0;
         @include desktop {
             height: auto;
+        }
+    }
+}
+
+.PDP {
+    .PDPMainSection {
+        .PDPGallery {
+            &-OverlayButton {
+                height: fit-content;
+            }
         }
     }
 }

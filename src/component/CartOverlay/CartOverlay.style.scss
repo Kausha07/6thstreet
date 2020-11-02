@@ -15,8 +15,8 @@
     --cart-overlay-promo-background: #fff;
     --cart-overlay-width: 400px;
 
-    --White: #ffffff;
-    --Black: #000000;
+    --White: #fff;
+    --Black: #000;
     --BlackOpacityOf6: #00000099;
     --BlackOpacityOf1: #0000001a;
     --Tundora: #4A4A4A;
@@ -30,14 +30,94 @@
     @include after-mobile {
         position: absolute;
         top: 30px;
-        right: 0px;
+        right: 0;
         padding: 0;
         width: var(--cart-overlay-width);
 
         &_isArabic {
             right: unset;
-            left: 0px;
+            left: 0;
         }
+    }
+
+    &-Promo {
+        &Block {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+            height: 40px;
+            background: var(--cart-page-promo-background);
+
+            @include mobile {
+                padding: 1rem;
+                border: 0;
+                border-bottom: 1px solid var(--primary-divider-color);
+            }
+
+            span:nth-child(2) {
+                font-weight: var(--fw-bold);
+            }
+
+            span:last-child {
+                font-weight: var(--fw-demi);
+                color: var(--color-green-cyan);
+                letter-spacing: -0.1px;
+                text-transform: capitalize;
+            }
+        }
+
+        &Image {
+            width: 46px;
+            margin-right: .5rem;
+
+            @include mobile {
+                width: 36px;
+            }
+        }
+
+        strong {
+            margin: 0 5px;
+        }
+
+        &Text {
+            font-size: 12px;
+            display: inline;
+            flex-wrap: wrap;
+            line-height: 20px;
+            align-items: center;
+            width: 100%;
+            text-align: center;
+
+            img {
+                width: 20px;
+                height: auto;
+                margin-right: 5px;
+                float: left;
+                margin-top: 5px;
+            }
+
+            @include mobile {
+                font-size: 11px;
+            }
+
+            &_isArabic {
+                img {
+                    margin-right: unset;
+                    margin-left: 5px;
+                    float: right;
+                }
+            }
+        }
+    }
+
+    &-Currency {
+        font-weight: var(--fw-bold);
+    }
+
+    &-FreeDelivery {
+        color: var(--color-green-cyan);
+        font-weight: var(--fw-bold);
     }
 
     &::before {
@@ -71,7 +151,7 @@
         opacity: 0;
         overflow: hidden;
     }
-    
+
     &-ItemCount {
         height: 50px;
         background-color: var(--Tundora);
@@ -80,17 +160,17 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        
+
         div {
             display: flex;
             font-size: 15px;
-            font-weight: 600;
+            font-weight: var(--fw-demi);
 
             div {
-                font-weight: lighter;
+                font-weight: var(--fw-light);
                 padding-left: 7px;
                 padding-right: 5px;
-            }          
+            }
         }
 
         span:last-of-type {
@@ -100,11 +180,11 @@
             top: -18px;
         }
     }
-    
+
     &-ItemCount, &-Promo, &-Total dt, &-Empty {
-        font-family: 'Avenir Next Regular';
+        font-weight: var(--fw-regular);
     }
-    
+
     &_isVisible {
         @include after-mobile {
             border: 1px solid var(--overlay-desktop-border-color);
@@ -137,7 +217,7 @@
 
     &-CartButton {
         border: 2px solid var(--Black);
-        color: var(--Black); 
+        color: var(--Black);
 
         @include mobile {
             display: none;
@@ -154,13 +234,13 @@
         align-items: center;
         height: 40px;
         font-size: 12px;
-        font-family: 'Avenir Next Bold';
+        font-weight: var(--fw-bold);
     }
 
     &-Promo,
     &-Total {
         min-height: 4rem;
-       
+
         @include after-mobile {
             min-height: 3rem;
         }
@@ -180,7 +260,7 @@
         }
 
         @include after-mobile {
-            padding: .7rem;
+            padding: 0 1rem 1rem 1rem;
             background: var(--white);
         }
 
@@ -211,17 +291,17 @@
     }
 
     &-Total {
-        font-weight: lighter;
-        padding: 0.5rem 1rem 1rem;
+        font-weight: var(--fw-light);
+        padding: .5rem 1rem 1rem;
 
         dd {
-            font-weight: bold;
+            font-weight: var(--fw-bold);
             font-size: 15px;
         }
 
-        dt {            
+        dt {
             span {
-                color: var(--DustyGray); 
+                color: var(--DustyGray);
             }
         }
 
@@ -236,7 +316,7 @@
 
     &-Empty {
         font-size: 15px;
-        font-weight: lighter;
+        font-weight: var(--fw-light);
         text-align: center;
         letter-spacing: .75px;
         padding: 20px 0;
@@ -245,11 +325,11 @@
     &-DiscountCoupon {
         &::after {
             content: ':';
-            font-weight: normal;
+            font-weight: var(--fw-regular);
         }
     }
 
-    
+
 }
 .Overlay {
     &_isInstant {

@@ -9,21 +9,19 @@ $select-arrow-width: 6px !default;
 }
 
 .PDPAddToCart {
-
     &-SizeInfo {
         margin-bottom: 5px;
         display: flex;
         justify-content: space-between;
-        
+
         @include desktop {
             width: 363px;
         }
     }
-    
+
     &-SizeLabel {
-        font-family: "Avenir Next Demi";
         font-size: 17px;
-        font-weight: 600;
+        font-weight: var(--fw-demi);
         line-height: 30px;
     }
 
@@ -51,7 +49,7 @@ $select-arrow-width: 6px !default;
         height: 50px;
 
         &::after {
-            content: '';
+            content: "";
             display: block;
             width: $select-arrow-width;
             height: $select-arrow-height;
@@ -80,7 +78,7 @@ $select-arrow-width: 6px !default;
         height: 50px;
     }
 
-    &-SizeSelectElement{
+    &-SizeSelectElement {
         height: 50px;
         width: 100%;
 
@@ -92,10 +90,10 @@ $select-arrow-width: 6px !default;
     &-AddToCartButton {
         width: 100%;
         height: 50px;
-        font-family: "Avenir Next Bold";
+        font-weight: var(--fw-bold);
         font-size: 13px;
         line-height: 18px;
-        background:var(--text-color);
+        background: var(--text-color);
         border: 2px solid var(--text-color);
         color: var(--text-color-on-dark-background);
 
@@ -110,9 +108,10 @@ $select-arrow-width: 6px !default;
             transition-property: transform, opacity;
             will-change: transform, opacity;
             transition-timing-function: ease-in;
-            transition-duration: .25s;
+            transition-duration: 0.25s;
 
-            &:nth-child(2), &:last-child {
+            &:nth-child(2),
+            &:last-child {
                 width: 100%;
                 left: 0;
                 opacity: 0;
@@ -145,24 +144,25 @@ $select-arrow-width: 6px !default;
 
         &_isLoading {
             border: 2px solid var(--loading-button-background-color);
-            background:var(--loading-button-background-color);
+            background: var(--loading-button-background-color);
 
             span {
-                &:first-child, &:last-child  {
+                &:first-child,
+                &:last-child {
                     opacity: 0;
                     transform: translateY(-100%);
                 }
 
-                &:nth-child(2) { 
+                &:nth-child(2) {
                     opacity: 1;
                     transform: translateY(-100%);
-                  }
+                }
             }
-    
+
             &:active {
                 span {
                     &:nth-child(2) {
-                        opacity: .9;
+                        opacity: 0.9;
                         transform: translateY(-120%);
                     }
                 }
@@ -174,66 +174,17 @@ $select-arrow-width: 6px !default;
             background: var(--success-color);
 
             span {
-                &:first-child, &:nth-child(2) {
+                &:first-child,
+                &:nth-child(2) {
                     opacity: 0;
                 }
-    
+
                 &:last-child {
                     opacity: 1;
                     transform: translateY(-100%);
                 }
             }
         }
-    }
-
-    &-Bottom {
-        display: flex;
-    }
-
-    &-PickUpButton {
-        display: flex;
-        align-items: center;
-        min-width: 60px;
-        margin-left: 20px;
-        font-size: 13px;
-        font-family: "Avenir Next Bold";
-
-        span {
-            display: none;
-            
-            @include desktop {
-                display: block;
-                padding-right: 20px;
-                white-space: nowrap;
-            }
-        }
-
-        div::before {
-            content: ' ';
-            position: absolute;
-            width: 22px;
-            right: -24px;
-            top: -10px;
-            height: 22px;
-            background-image: url(./icons/shop.svg);
-            background-size: 22px;
-            background-repeat: no-repeat;
-
-            @include desktop {
-                right: -8px;
-                top: -11px;
-            }
-        }
-
-        &:hover {
-            div::before {
-                background-image: url(./icons/shop-white.svg);
-            }
-        }
-
-    }
-    &-shopSvg {
-        display: inline;
     }
 }
 
@@ -243,31 +194,14 @@ $select-arrow-width: 6px !default;
             &-SizeSelector,
             &-SizeTypeSelector {
                 &::after {
-                        left:15px;
-                        right: auto;
+                    left: 15px;
+                    right: auto;
                 }
             }
+
             &-SizeSelector {
                 margin-left: 0;
                 margin-right: 20px;
-            }
-
-            &-PickUpButton {
-                margin: 0 20px 0 0;
-
-                span {
-                    @include desktop {
-                        padding: 0 0 0 20px;
-                    }
-                }
-
-                div::before {
-                    right: 2px;
-
-                    @include desktop {
-                        right: -14px;
-                    }
-                }
             }
         }
     }

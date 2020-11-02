@@ -1,4 +1,4 @@
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import Image from 'Component/Image';
@@ -13,7 +13,12 @@ import './ProductItem.style';
 
 class ProductItem extends PureComponent {
     static propTypes = {
-        product: Product.isRequired
+        product: Product.isRequired,
+        page: PropTypes.string
+    };
+
+    static defaultProps = {
+        page: ''
     };
 
     state = {
@@ -31,11 +36,26 @@ class ProductItem extends PureComponent {
         return <ProductLabel product={ product } />;
     }
 
+    renderExclusive() {
+        const { product: { promotion } } = this.props;
+
+        if (promotion !== undefined) {
+            return promotion !== null
+                ? <span block="PLPSummary" elem="Exclusive">{ promotion }</span>
+                : null;
+        }
+
+        return null;
+    }
+
     renderImage() {
         const { product: { thumbnail_url } } = this.props;
 
         return (
-            <Image src={ thumbnail_url } />
+            <div>
+                <Image src={ thumbnail_url } />
+                { this.renderExclusive() }
+            </div>
         );
     }
 
@@ -56,10 +76,10 @@ class ProductItem extends PureComponent {
     }
 
     renderPrice() {
-        const { product: { price } } = this.props;
+        const { product: { price }, page } = this.props;
 
         return (
-            <Price price={ price } />
+            <Price price={ price } page={ page } />
         );
     }
 

@@ -18,6 +18,7 @@ class PLPPage extends PureComponent {
             <ProductItem
               product={ product }
               key={ sku }
+              page="plp"
             />
         );
     };

@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 /**
  * @category  6thstreet
  * @author    Alona Zvereva <alona.zvereva@scandiweb.com>
@@ -15,6 +16,7 @@ import ContentWrapper from 'Component/ContentWrapper';
 import ExpandableContent from 'Component/ExpandableContent';
 import Link from 'Component/Link';
 import MyAccountTabList from 'Component/MyAccountTabList';
+import { FIXED_CURRENCIES } from 'Component/Price/Price.config';
 import ProductLinks from 'Component/ProductLinks';
 import { tabMap } from 'Route/MyAccount/MyAccount.container';
 import { CROSS_SELL } from 'Store/LinkedProducts/LinkedProducts.reducer';
@@ -22,9 +24,11 @@ import {
     activeTabType
 } from 'Type/Account';
 import { TotalsType } from 'Type/MiniCart';
+import { ClubApparelMember } from 'Util/API/endpoint/ClubApparel/ClubApparel.type';
 import { isArabic } from 'Util/App';
-import { formatCurrency, roundPrice } from 'Util/Price';
+import { roundPrice } from 'Util/Price';
 
+import ClubApparel from './icons/club-apparel.png';
 import Delivery from './icons/delivery-truck.png';
 
 import './CartPage.style';
@@ -34,11 +38,17 @@ export class CartPage extends PureComponent {
         totals: TotalsType.isRequired,
         onCheckoutButtonClick: PropTypes.func.isRequired,
         activeTab: activeTabType.isRequired,
-        changeActiveTab: PropTypes.func.isRequired
+        changeActiveTab: PropTypes.func.isRequired,
+        clubApparel: ClubApparelMember,
+        isSignedIn: PropTypes.bool.isRequired
     };
 
     state = {
         isArabic: isArabic()
+    };
+
+    static defaultProps = {
+        clubApparel: {}
     };
 
     renderCartItems() {
@@ -83,8 +93,10 @@ export class CartPage extends PureComponent {
     }
 
     renderPriceLine(price) {
-        const { totals: { quote_currency_code } } = this.props;
-        return `${formatCurrency(quote_currency_code)}${roundPrice(price)}`;
+        const { totals: { currency_code } } = this.props;
+        const fixedPrice = FIXED_CURRENCIES.includes(currency_code);
+
+        return `${currency_code}${fixedPrice ? price.toFixed(3) : roundPrice(price)}`;
     }
 
     renderTotalDetails(isMobile = false) {
@@ -184,6 +196,8 @@ export class CartPage extends PureComponent {
 
     renderPromoContent() {
         const { cart_content: { cart_cms } = {} } = window.contentConfiguration;
+        const { totals: { currency_code, avail_free_shipping_amount } } = this.props;
+        const { isArabic } = this.state;
 
         if (cart_cms) {
             return <CmsBlock identifier={ cart_cms } />;
@@ -194,10 +208,10 @@ export class CartPage extends PureComponent {
               block="CartPage"
               elem="PromoBlock"
             >
-                <figcaption block="CartPage" elem="PromoText">
+                <figcaption block="CartPage" elem="PromoText" mods={ { isArabic } }>
                     <img src={ Delivery } alt="Delivery icon" />
                     { __('Add ') }
-                    <span>AED 200 </span>
+                    <span>{ `${currency_code } ${avail_free_shipping_amount} ` }</span>
                     { __('more to your cart for ') }
                     <span>{ __('Free delivery') }</span>
                 </figcaption>
@@ -205,8 +219,85 @@ export class CartPage extends PureComponent {
         );
     }
 
-    renderPromo() {
+    renderClubApparelContent() {
+        const { cart_content: { cart_cms } = {} } = window.contentConfiguration;
+        const {
+            totals: {
+                currency_code,
+                extension_attributes: {
+                    club_apparel_estimated_pointsvalue
+                }
+            },
+            clubApparel: {
+                accountLinked
+            },
+            isSignedIn
+        } = this.props;
+        const { isArabic } = this.state;
+
+        if (cart_cms) {
+            return <CmsBlock identifier={ cart_cms } />;
+        }
+
+        if (accountLinked && isSignedIn) {
+            return (
+                <div
+                  block="CartPage"
+                  elem="ClubApparelBlock"
+                  mods={ { isArabic } }
+                >
+                    <img src={ ClubApparel } alt="Delivery icon" />
+                    <div block="CartPage" elem="ClubApparelText">
+                        { __('You may earn ') }
+                        <span>{ `${currency_code } ${club_apparel_estimated_pointsvalue} ` }</span>
+                        { __('worth of Club Apparel points for this purchase.') }
+                    </div>
+                </div>
+            );
+        }
+
+        if (!accountLinked && isSignedIn) {
+            return (
+                <div
+                  block="CartPage"
+                  elem="ClubApparelBlock"
+                >
+                    <img src={ ClubApparel } alt="Delivery icon" />
+                    <div block="CartPage" elem="ClubApparelText">
+                        { __('Link your Club Apparel account to earn ') }
+                        <span>{ `${currency_code } ${club_apparel_estimated_pointsvalue} ` }</span>
+                        { __('worth of points for this purchase. ') }
+                        <Link
+                          block="CartPage"
+                          elem="ClubApparelLink"
+                          to="/clubapparel/account"
+                        >
+                            { __('Link now') }
+                        </Link>
+                    </div>
+                </div>
+            );
+        }
+
         return (
+            <div
+              block="CartPage"
+              elem="ClubApparelBlock"
+            >
+                <img src={ ClubApparel } alt="Delivery icon" />
+                <div block="CartPage" elem="ClubApparelText">
+                    { __('Link your Club Apparel account to earn ') }
+                    <span>{ `${currency_code } ${club_apparel_estimated_pointsvalue} ` }</span>
+                    { __('worth of points for this purchase.') }
+                </div>
+            </div>
+        );
+    }
+
+    renderPromo() {
+        const { totals: { avail_free_shipping_amount } } = this.props;
+
+        return !avail_free_shipping_amount || avail_free_shipping_amount === 0 ? null : (
             <div
               block="CartPage"
               elem="Promo"
@@ -216,12 +307,52 @@ export class CartPage extends PureComponent {
         );
     }
 
+    renderClubApparel() {
+        const { totals: { extension_attributes } } = this.props;
+
+        if (extension_attributes) {
+            const { club_apparel_estimated_pointsvalue } = extension_attributes;
+
+            return club_apparel_estimated_pointsvalue !== 0 ? (
+                <div
+                  block="CartPage"
+                  elem="ClubApparel"
+                >
+                    { this.renderClubApparelContent() }
+                </div>
+            ) : null;
+        }
+
+        return null;
+    }
+
+    renderItemSuffix() {
+        const { totals: { items = [] } } = this.props;
+
+        const itemQuantityArray = items.map((item) => item.qty);
+        const totalQuantity = itemQuantityArray.reduce((qty, nextQty) => qty + nextQty, 0);
+
+        return (totalQuantity === 1)
+            ? __(' Item')
+            : __(' Items');
+    }
+
     renderHeading() {
+        const { totals: { items = [] } } = this.props;
+
+        const itemQuantityArray = items.map((item) => item.qty);
+        const totalQuantity = itemQuantityArray.reduce((qty, nextQty) => qty + nextQty, 0);
+
         return (
             <div>
             <h1 block="CartPage" elem="Heading">
-                { __('My bag') }
-                <span> (# items)</span>
+                { __('My bag ') }
+                <span>
+                    (
+                    { totalQuantity }
+                    { this.renderItemSuffix() }
+                    )
+                </span>
             </h1>
             </div>
         );
@@ -269,6 +400,7 @@ export class CartPage extends PureComponent {
                     <div block="CartPage" elem="Floating" mods={ { isArabic } }>
                         { this.renderDiscountCode() }
                         { this.renderPromo() }
+                        { this.renderClubApparel() }
                         { this.renderTotals() }
                     </div>
                 </ContentWrapper>

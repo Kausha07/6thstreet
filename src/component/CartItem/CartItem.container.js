@@ -30,10 +30,19 @@ export const mapDispatchToProps = (dispatch) => ({
         ({ default: dispatcher }) => dispatcher.addProductToCart(dispatch, options)
     ),
     updateProductInCart: (
-        item_id, quantity, color, optionValue, discount, brand_name, thumbnail_url, url
+        item_id, quantity, color, optionValue, discount, brand_name, thumbnail_url, url, row_total
     ) => CartDispatcher.then(
         ({ default: dispatcher }) => dispatcher.updateProductInCart(
-            dispatch, item_id, quantity, color, optionValue, discount, brand_name, thumbnail_url, url
+            dispatch,
+            item_id,
+            quantity,
+            color,
+            optionValue,
+            discount,
+            brand_name,
+            thumbnail_url,
+            url,
+            row_total
         )
     ),
     removeProduct: (options) => CartDispatcher.then(
@@ -113,12 +122,21 @@ export class CartItemContainer extends PureComponent {
                     optionValue,
                     product: { url, thumbnail },
                     brand_name,
-                    discount_amount
+                    basePrice,
+                    row_total
                 }
             } = this.props;
 
             this.hideLoaderAfterPromise(updateProductInCart(
-                item_id, quantity, color, optionValue, discount_amount, brand_name, thumbnail.url, url
+                item_id,
+                quantity,
+                color,
+                optionValue,
+                basePrice,
+                brand_name,
+                thumbnail.url,
+                url,
+                row_total
             ));
         });
     }

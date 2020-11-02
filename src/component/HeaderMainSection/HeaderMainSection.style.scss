@@ -1,9 +1,25 @@
+:root {
+    --main-content-padding: 150px;
+}
+
+main {
+    @include mobile{
+        padding-top: var(--main-content-padding);
+    }
+}
 .HeaderMainSection {
     align-items: center;
     display: flex;
-    height: 50px;
-    max-width: 1440px;
+    height: 60px;
+    max-width: 1470px;
     margin: 0 auto;
+
+    @include mobile {
+        z-index: 90;
+        position: fixed;
+        width: 100%;
+        background: $white;
+    }
 
     .HeaderGenders {
         display: flex;
@@ -12,6 +28,73 @@
 
     .HeaderLogo {
         order: 1;
+        @include mobile {
+            position: fixed;
+            top: 15px;
+            width: 90%;
+        }
+
+    }
+
+    .CategoryTitle {
+        @include mobile {
+            font-size: 12px;
+            padding-left: 15px;
+            padding-right: 15px;
+            top: 5px;
+            width: 70%;
+            margin-left: 15%;
+            height: 40px;
+            line-height: 40px;
+
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+        }
+        @include after-mobile {
+            display: none;
+        }
+    }
+    .BackArrow {
+        height: 40px;
+        width: 40px;
+        border-radius: 20px;
+
+        position: fixed;
+        top: 15px;
+        left: 15px;
+
+        background: $white;
+
+        &-Button {
+            top: 4px;
+            left: 5px;
+            background-size: 30px;
+            width: 30px;
+            height: 30px;
+            padding: 0;
+            p {
+                display: none;
+            }
+            &::before{
+                content: '';
+                position: absolute;
+                top: 10px;
+                left: 5px;
+                border: solid $black;
+                border-width: 0 2px 2px 0;
+                display: inline-block;
+                padding: 4px;
+                transform: rotate(135deg);
+                -webkit-transform: rotate(135deg);
+            }
+        }
+
+        @include after-mobile {
+            display: none;
+        }
     }
 
     .HeaderWishlist {
@@ -29,10 +112,72 @@
             top: 5px;
             width: 45px;
             margin: 0 auto;
+
+            @include mobile {
+                position: fixed;
+                top: 15px;
+                right: 15px;
+
+                background: $white;
+                height: 40px;
+                width: 40px;
+                border-radius: 20px;
+
+                &-Button {
+                    left: 5px;
+                    top: 3px;
+                    background-size: 30px;
+                    width: 30px;
+                    height: 30px;
+                }
+
+                &-Count {
+                    top: 5px;
+                    right: 5px;
+                }
+            }
         }
     }
 
-    .HeaderGenders,
+    .HeaderSearch {
+
+        @include mobile {
+            background: $white;
+            position: fixed;
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            top: 50px;
+        }
+        @include after-mobile {
+            display: none;
+        }
+    }
+
+    .HeaderGenders {
+        @include mobile {
+            &_isMobile {
+                display: flex;
+                background: $white;
+                width: 100%;
+                top: 100px;
+                position: fixed;
+                justify-content: center;
+            }
+
+            .GenderButton-Container {
+                display: flex;
+                justify-content: center;
+                width: 33.33%;
+
+                .GenderButton-Button {
+                    padding: 0 15px;
+                    height: 30px;
+                }
+            }
+        }
+    }
+
     .HeaderWishlist,
     .HeaderAccount {
         &_isMobile {
@@ -46,6 +191,7 @@
         display: flex;
         height: 84px;
         flex-direction: unset;
+        padding: 0 15px;
 
         &_isMobile {
             display: block;

@@ -35,9 +35,13 @@ class MenuBrands extends PureComponent {
             link
         } = item;
 
+        const updatedLink = link.match(/\/men|\/women|\/kids-baby_boy-boy-girl-baby_girl/)
+            ? link.replace('/men', '').replace('/women', '').replace('/kids-baby_boy-boy-girl-baby_girl', '')
+            : link;
+
         return (
             <Link
-              to={ link }
+              to={ updatedLink }
               key={ i }
             >
                 <Image
@@ -65,6 +69,8 @@ class MenuBrands extends PureComponent {
     }
 
     render() {
+        const { isArabic } = this.state;
+
         return (
             <div block="MenuBrands">
                 <div block="MenuBrands" elem="ContentWrapper">
@@ -77,7 +83,8 @@ class MenuBrands extends PureComponent {
                     <div
                       mix={ {
                           block: 'MenuBrands',
-                          elem: 'ContentWrapper-Brands'
+                          elem: 'ContentWrapper-Brands',
+                          mods: { isArabic }
                       } }
                     >
                         { isMobile.any() ? this.renderBrandsSlider() : this.renderItems() }

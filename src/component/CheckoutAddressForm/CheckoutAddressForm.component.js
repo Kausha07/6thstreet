@@ -1,6 +1,9 @@
+import FormPortal from 'Component/FormPortal';
 import {
     CheckoutAddressForm as SourceCheckoutAddressForm
 } from 'SourceComponent/CheckoutAddressForm/CheckoutAddressForm.component';
+
+import './CheckoutAddressForm.style';
 
 export class CheckoutAddressForm extends SourceCheckoutAddressForm {
     componentDidUpdate(_, prevState) {
@@ -38,7 +41,7 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
     }
 
     get fieldMap() {
-        // telephone, street country_id, region, region_id, city - are used for shipping estimation
+        this.getCitiesAndRegionsData();
 
         const {
             telephone,
@@ -46,14 +49,14 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
             ...fieldMap
         } = super.fieldMap;
 
-        fieldMap.telephone = {
-            ...telephone,
-            onChange: (value) => this.onChange('telephone', value)
-        };
-
         fieldMap.street = {
             ...street,
             onChange: (value) => this.onChange('street', value)
+        };
+
+        fieldMap.telephone = {
+            ...telephone,
+            onChange: (value) => this.onChange('telephone', value)
         };
 
         return fieldMap;
@@ -65,24 +68,41 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
         const {
             countryId,
             regionId,
-            region,
             city,
-            postcode,
             telephone = '',
             street
         } = this.state;
 
         onShippingEstimationFieldsChange({
             country_code: countryId,
-            region_id: regionId,
-            region,
-            area: region,
-            city,
-            postcode,
-            phone: telephone,
             street,
-            telephone: telephone.substring('4')
+            region: regionId,
+            area: regionId,
+            city,
+            postcode: regionId,
+            phone: this.renderCurrentPhoneCode() + telephone,
+            telephone
         });
+    }
+
+    render() {
+        const { id } = this.props;
+        const { isArabic } = this.state;
+
+        return (
+            <FormPortal
+              id={ id }
+              name="CheckoutAddressForm"
+            >
+                    <div
+                      block="FieldForm"
+                      mix={ { block: 'CheckoutAddressForm' } }
+                      mods={ { isArabic } }
+                    >
+                        { this.renderFields() }
+                    </div>
+            </FormPortal>
+        );
     }
 }
 

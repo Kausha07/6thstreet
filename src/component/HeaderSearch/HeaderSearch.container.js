@@ -10,7 +10,6 @@ import HeaderSearch from './HeaderSearch.component';
 export const mapStateToProps = (_state) => ({
     // wishlistItems: state.WishlistReducer.productsInWishlist
 });
-
 export const mapDispatchToProps = (_dispatch) => ({
     // addProduct: options => CartDispatcher.addProductToCart(dispatch, options)
 });
@@ -31,7 +30,8 @@ export class HeaderSearchContainer extends PureComponent {
 
     containerFunctions = {
         onSearchChange: this.onSearchChange.bind(this),
-        onSearchSubmit: this.onSearchSubmit.bind(this)
+        onSearchSubmit: this.onSearchSubmit.bind(this),
+        onSearchClean: this.onSearchClean.bind(this)
     };
 
     containerProps = () => {
@@ -49,6 +49,10 @@ export class HeaderSearchContainer extends PureComponent {
         history.push(`/catalogsearch/result/?q=${ search }`);
     }
 
+    onSearchClean() {
+        this.setState({ search: '' });
+    }
+
     render() {
         return (
             <HeaderSearch
@@ -59,6 +63,4 @@ export class HeaderSearchContainer extends PureComponent {
     }
 }
 
-export default withRouter(
-    connect(mapStateToProps, mapDispatchToProps)(HeaderSearchContainer)
-);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(HeaderSearchContainer));

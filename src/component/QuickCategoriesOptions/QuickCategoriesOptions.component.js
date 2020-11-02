@@ -1,35 +1,59 @@
+import { PropTypes } from 'prop-types';
 import { PureComponent } from 'react';
 
-import PLPFilterOption from 'Component/PLPFilterOption';
+import PLPQuickFilterOption from 'Component/PLPQuickFilterOption';
 import { Slider } from 'SourceComponent/Slider/Slider.component';
 import { Filter } from 'Util/API/endpoint/Product/Product.type';
+import { isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
+
+import { SUBCATEGORIES } from './QuickCategoriesOptions.config';
 
 import './QuickCategoriesOptions.style';
 
 class QuickCategoriesOptions extends PureComponent {
     static propTypes = {
-        filter: Filter.isRequired
+        filter: Filter.isRequired,
+        updateFilters: PropTypes.func.isRequired
     };
 
     state = {
+        isArabic: isArabic(),
         activeSliderImage: 0,
-        showFilterCount: 10
+        showFilterCountForEnglish: 10,
+        showFilterCountForArabic: 8,
+        showFilterCount: 0
     };
+
+    componentDidMount() {
+        const {
+            showFilterCountForEnglish,
+            showFilterCountForArabic,
+            isArabic
+        } = this.state;
+
+        if (!isArabic) {
+            this.setState({ showFilterCount: showFilterCountForEnglish });
+        } else {
+            this.setState({ showFilterCount: showFilterCountForArabic });
+        }
+    }
 
     handleChange = (activeImage) => {
         this.setState({ activeSliderImage: activeImage });
     };
 
     renderOption = ([key, option]) => {
+        const { updateFilters } = this.props;
         if (option.subcategories) {
             return Object.entries(option.subcategories).map(this.renderOption);
         }
 
         return (
-            <PLPFilterOption
+            <PLPQuickFilterOption
               key={ key }
               option={ option }
+              updateFilters={ updateFilters }
             />
         );
     };
@@ -72,7 +96,10 @@ class QuickCategoriesOptions extends PureComponent {
     }
 
     getSubcategories(data) {
-        const haveSubcategories = 'subcategories' in Object.entries(data)[0][1];
+        if (Object.keys(data).length === 0) {
+            return data;
+        }
+        const haveSubcategories = SUBCATEGORIES in Object.entries(data)[0][1];
 
         if (haveSubcategories) {
             const subCategories = Object.entries(data).map((entry) => entry[1]);
@@ -83,12 +110,14 @@ class QuickCategoriesOptions extends PureComponent {
     }
 
     renderOptions() {
+        const { isArabic } = this.state;
         const Options = this.prepareCategoryOptionsList();
 
         return (
             <div
               block="QuickFilter"
               elem="List"
+              mods={ isArabic }
             >
                 { Object.entries(Options).map(this.renderOption) }
             </div>

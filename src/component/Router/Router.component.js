@@ -19,6 +19,7 @@ import {
     withStoreRegex
 } from 'SourceComponent/Router/Router.component';
 import { AFTER_ITEMS_TYPE, BEFORE_ITEMS_TYPE, SWITCH_ITEMS_TYPE } from 'SourceComponent/Router/Router.config';
+import { getCountryFromUrl, getLanguageFromUrl } from 'Util/Url';
 
 import './Router.style';
 
@@ -41,17 +42,20 @@ export {
 export class Router extends SourceRouter {
     static propTypes = {
         ...SourceRouter.propTypes,
-        isAppReady: PropTypes.bool.isRequired
+        isAppReady: PropTypes.bool.isRequired,
+        setLanguage: PropTypes.func.isRequired,
+        setCountry: PropTypes.func.isRequired
     };
 
     state = {
         ...SourceRouter.state,
-        isArabic: false
+        isArabic: false,
+        homepageUrl: '/(|men.html|women.html|kids.html)/'
     };
 
     [SWITCH_ITEMS_TYPE] = [
         {
-            component: <Route path={ withStoreRegex('/') } exact component={ HomePage } />,
+            component: <Route path={ withStoreRegex(this.state.homepageUrl) } exact component={ HomePage } />,
             position: 10
         },
         {
@@ -102,6 +106,20 @@ export class Router extends SourceRouter {
         return {
             isArabic: appStateCacheKey && appStateCacheKey.data.language === 'ar'
         };
+    }
+
+    componentDidMount() {
+        const { setCountry, setLanguage } = this.props;
+        const country = getCountryFromUrl();
+        const language = getLanguageFromUrl();
+
+        if (country) {
+            setCountry(country);
+        }
+
+        if (language) {
+            setLanguage(language);
+        }
     }
 
     renderLocaleWizard() {

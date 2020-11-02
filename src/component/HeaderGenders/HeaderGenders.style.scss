@@ -7,10 +7,10 @@
 
         .GenderButton {
             &-Button {
-                font-family: "Avenir Next Thin", serif;
+                font-weight: var(--fw-thin);
 
                 &_isCurrentGender {
-                    font-family: "Avenir Next Bold", serif;
+                    font-weight: var(--fw-bold);
                 }
             }
         }

@@ -1,17 +1,12 @@
-import PropTypes from 'prop-types';
-import { PureComponent } from 'react';
-
 import Loader from 'Component/Loader';
 import MyAccountOrderListItem from 'Component/MyAccountOrderListItem';
+import {
+    MyAccountReturnCreateList as SourceComponent
+} from 'Component/MyAccountReturnCreateList/MyAccountReturnCreateList.component';
 
 import './MyAccountOrderList.style';
 
-class MyAccountOrderList extends PureComponent {
-    static propTypes = {
-        isLoading: PropTypes.bool.isRequired,
-        orders: PropTypes.array.isRequired
-    };
-
+class MyAccountOrderList extends SourceComponent {
     renderOrder(order) {
         const { increment_id } = order;
 
@@ -34,6 +29,10 @@ class MyAccountOrderList extends PureComponent {
             orders,
             isLoading
         } = this.props;
+
+        if (!orders.length && isLoading) {
+            return null;
+        }
 
         if (!orders.length && !isLoading) {
             return this.renderNoOrders();

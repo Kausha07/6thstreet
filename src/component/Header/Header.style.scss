@@ -11,7 +11,7 @@ main {
         background-color: var(--white);
         height: auto;
         position: fixed;
-        width: 100vw;
+        width: 100%;
         z-index: 5;
         top: 0;
     }
@@ -25,10 +25,36 @@ main {
     margin: 0 auto;
     padding: 20px;
 
-    &-BackToShopping {
-        .BackMobileButton {
-            margin: 17px 20px 0;
+    &-BackToShoppingMobile {
+
+        @include desktop {
+            display: none;
         }
+
+    ::before {
+        content: ' ';
+        position: absolute;
+        width: 16px;
+        height: 22px;
+        left: 20px;
+        top: 30px;
+        background-image: url(./icons/arrow-left-black.svg);
+        background-size: 16px;
+        background-repeat: no-repeat;
+    }
+
+    &_isArabic {
+        ::before {
+            left: 0;
+            transform: rotate(180deg);
+        }
+    }
+}
+
+    &-BackToShoppingDesktop {
+        @include before-desktop {
+            display: none;
+    }
 
         ::before {
             content: ' ';
@@ -42,14 +68,20 @@ main {
             background-repeat: no-repeat;
         }
 
-            &_isArabic {
-                ::before {
-                    transform: rotate(180deg);
-                    right: 6px;
-                    top: 9px;
-                }
+        &_isArabic {
+            ::before {
+                transform: rotate(180deg);
+                right: 6px;
+                top: 9px;
             }
         }
+
+        &_isMobile {
+            @include desktop{
+                display: none;
+            }
+        }
+    }
 
         :hover {
             @include desktop {
@@ -64,7 +96,7 @@ main {
             display: none;
         }
     }
-    
+
     &-SecureShipping {
         padding: 10px;
         text-align: right;
@@ -84,9 +116,8 @@ main {
     }
 
     &-SecureShippingLabel {
-        font-family: "Avenir Next Demi";
         font-size: 20px;
-        font-weight: 500;
+        font-weight: var(--fw-demi);
     }
 }
 

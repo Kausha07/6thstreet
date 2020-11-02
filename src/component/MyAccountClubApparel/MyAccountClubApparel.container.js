@@ -2,28 +2,44 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
-import ClubApparelDispatcher from 'Store/ClubApparel/ClubApparel.dispatcher';
+import ClubApparelDispatcher, { CLUB_APPAREL } from 'Store/ClubApparel/ClubApparel.dispatcher';
 import { showNotification } from 'Store/Notification/Notification.action';
+import { hideActiveOverlay, toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
 import { customerType } from 'Type/Account';
+import { ClubApparelMember } from 'Util/API/endpoint/ClubApparel/ClubApparel.type';
+import BrowserDatabase from 'Util/BrowserDatabase';
 
 import MyAccountClubApparel from './MyAccountClubApparel.component';
 
 export const mapStateToProps = (_state) => ({
-    customer: _state.MyAccountReducer.customer
+    customer: _state.MyAccountReducer.customer,
+    activeOverlay: _state.OverlayReducer.activeOverlay,
+    hideActiveOverlay: _state.OverlayReducer.hideActiveOverlay,
+    country: _state.AppState.country,
+    clubApparel: _state.ClubApparelReducer.clubApparel
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-    getMember: (id) => ClubApparelDispatcher.getMember(dispatch, id),
+    getMember: () => ClubApparelDispatcher.getMember(dispatch),
     linkAccount: (data) => ClubApparelDispatcher.linkAccount(dispatch, data),
-    showNotification: (type, message) => dispatch(showNotification(type, message))
+    verifyOtp: (data) => ClubApparelDispatcher.verifyOtp(dispatch, data),
+    showNotification: (type, message) => dispatch(showNotification(type, message)),
+    showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
+    hideActiveOverlay: () => dispatch(hideActiveOverlay())
 });
 
 export class MyAccountClubApparelContainer extends PureComponent {
     static propTypes = {
         getMember: PropTypes.func.isRequired,
         linkAccount: PropTypes.func.isRequired,
+        verifyOtp: PropTypes.func.isRequired,
         customer: customerType,
-        showNotification: PropTypes.func.isRequired
+        showNotification: PropTypes.func.isRequired,
+        showOverlay: PropTypes.func.isRequired,
+        activeOverlay: PropTypes.string.isRequired,
+        hideActiveOverlay: PropTypes.string.isRequired,
+        country: PropTypes.string.isRequired,
+        clubApparel: ClubApparelMember.isRequired
     };
 
     static defaultProps = {
@@ -31,24 +47,48 @@ export class MyAccountClubApparelContainer extends PureComponent {
     };
 
     containerFunctions = {
-        linkAccount: this.linkAccount.bind(this)
+        linkAccount: this.linkAccount.bind(this),
+        verifyOtp: this.verifyOtp.bind(this)
     };
 
     state = {
-        clubApparelMember: null
+        clubApparel: null
     };
 
-    componentDidUpdate() {
-        const { customer: { id } } = this.props;
-        const { clubApparelMember } = this.state;
+    static getDerivedStateFromProps(props, state) {
+        const { clubApparel } = props;
+        const { clubApparel: currentClubApparel } = state;
 
-        if (id && !clubApparelMember) {
-            this.getClubApparelMember(id);
+        if (clubApparel !== currentClubApparel) {
+            return { clubApparel };
+        }
+
+        return null;
+    }
+
+    componentDidMount() {
+        const storageClubApparel = BrowserDatabase.getItem(CLUB_APPAREL) || null;
+        const { getMember } = this.props;
+
+        if (!storageClubApparel) {
+            getMember();
         }
     }
 
     containerProps = () => {
-        // isDisabled: this._getIsDisabled()
+        const { clubApparel } = this.state;
+        const { activeOverlay, country } = this.props;
+
+        return {
+            activeOverlay,
+            country,
+            clubApparel
+        };
+    };
+
+    containerFunctons = () => {
+        const { showOverlay, hideActiveOverlay } = this.props;
+        return { showOverlay, hideActiveOverlay, ...this.containerFunctions };
     };
 
     linkAccount(fields) {
@@ -56,23 +96,20 @@ export class MyAccountClubApparelContainer extends PureComponent {
         const { phone } = fields;
 
         linkAccount({ customerId: id, mobileNo: phone }).then(
-            (response) => {
-                if (response && response.data) {
-                    this.setState({ clubApparelMember: response.data });
-                }
+            () => {
+                // TODO: Create response processing after Club Apparel will begin work on Client side
             },
             this._handleError
         );
     }
 
-    getClubApparelMember(id) {
-        const { getMember } = this.props;
+    verifyOtp(fields) {
+        const { customer: { id }, verifyOtp } = this.props;
+        const { otp } = fields;
 
-        getMember(id).then(
-            (response) => {
-                if (response && response.data) {
-                    this.setState({ clubApparelMember: response.data });
-                }
+        verifyOtp({ customerId: id, otp }).then(
+            () => {
+                // TODO: Create response processing after Club Apparel will begin work on Client side
             },
             this._handleError
         );
@@ -81,8 +118,8 @@ export class MyAccountClubApparelContainer extends PureComponent {
     render() {
         return (
             <MyAccountClubApparel
-              { ...this.containerFunctions }
               { ...this.containerProps() }
+              { ...this.containerFunctons() }
             />
         );
     }

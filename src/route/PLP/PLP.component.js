@@ -1,4 +1,4 @@
-// import PropTypes from 'prop-types';
+/* eslint-disable fp/no-let */
 import { PureComponent } from 'react';
 
 import ContentWrapper from 'Component/ContentWrapper/ContentWrapper.component';
@@ -9,10 +9,6 @@ import PLPPages from 'Component/PLPPages';
 import './PLP.style';
 
 export class PLP extends PureComponent {
-    static propTypes = {
-        // TODO: implement prop-types
-    };
-
     renderPLPDetails() {
         return (
             <PLPDetails />

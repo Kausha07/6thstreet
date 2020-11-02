@@ -26,7 +26,6 @@ export class HeaderAccountContainer extends PureComponent {
     static propTypes = {
         isBottomBar: PropTypes.bool,
         isAccount: PropTypes.bool,
-        isLoggedIn: PropTypes.bool.isRequired,
         language: PropTypes.string.isRequired,
         customer: customerType,
         requestCustomerData: PropTypes.func.isRequired

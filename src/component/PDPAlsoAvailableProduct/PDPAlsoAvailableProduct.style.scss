@@ -1,0 +1,21 @@
+.PDPAlsoAvailableProduct {
+    height: 100%;
+    width: 120px;
+
+    @include before-desktop {
+        width: 50%;
+    }
+
+    @include tablet {
+        width: 33%;
+    }
+
+    p {
+        text-transform: uppercase;
+        font-size: 12px;
+        font-weight: var(--fw-bold);
+        letter-spacing: .2px;
+        line-height: 16px;
+        text-align: center;
+    }
+}

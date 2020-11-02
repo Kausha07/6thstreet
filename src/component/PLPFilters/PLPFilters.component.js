@@ -92,6 +92,8 @@ class PLPFilters extends PureComponent {
             goToPreviousNavigationState();
         }
 
+        this.setState({ activeFilters: {} });
+
         document.body.style.overflow = 'visible';
     };
 

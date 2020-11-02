@@ -14,16 +14,18 @@ export const mapStateToProps = (state) => ({
 
 export const mapDispatchToProps = (dispatch) => ({
     showNotification: (type, message) => dispatch(showNotification(type, message)),
-    addProductToCart:
-    (productData, color, optionValue, discount, brand_name, thumbnail_url, url) => CartDispatcher.addProductToCart(
+    addProductToCart: (
+        productData, color, optionValue, basePrice, brand_name, thumbnail_url, url, itemPrice
+    ) => CartDispatcher.addProductToCart(
         dispatch,
         productData,
         color,
         optionValue,
-        discount,
+        basePrice,
         brand_name,
         thumbnail_url,
-        url
+        url,
+        itemPrice
     )
 });
 
@@ -88,24 +90,31 @@ export class PDPAddToCartContainer extends PureComponent {
 
     addToCart() {
         const {
-            product, product: {
+            product: {
                 simple_products,
-                discount,
                 thumbnail_url,
                 url,
                 color,
-                brand_name
+                brand_name,
+                price,
+                size_uk,
+                size_eu,
+                size_us
             }, addProductToCart, showNotification
         } = this.props;
         const {
             selectedSizeType, selectedSizeCode, insertedSizeStatus
         } = this.state;
+        const itemPrice = price[0][Object.keys(price[0])[0]]['6s_special_price'];
+        const basePrice = price[0][Object.keys(price[0])[0]]['6s_base_price'];
 
-        if (product.size_uk.length !== 0 && selectedSizeCode === '') {
+        if ((size_uk.length !== 0 || size_eu.length !== 0 || size_us.length !== 0)
+            && selectedSizeCode === '') {
             showNotification('error', __('Please select a size.'));
         }
 
-        if (product.size_uk.length !== 0 && selectedSizeCode !== '') {
+        if ((size_uk.length !== 0 || size_eu.length !== 0 || size_us.length !== 0)
+            && selectedSizeCode !== '') {
             this.setState({ isLoading: true });
             const { size } = simple_products[selectedSizeCode];
             const optionId = selectedSizeType.toLocaleUpperCase();
@@ -116,7 +125,7 @@ export class PDPAddToCartContainer extends PureComponent {
                 qty: 1,
                 optionId,
                 optionValue
-            }, color, optionValue, discount, brand_name, thumbnail_url, url).then(
+            }, color, optionValue, basePrice, brand_name, thumbnail_url, url, itemPrice).then(
                 () => this.afterAddToCart()
             );
         }
@@ -130,7 +139,7 @@ export class PDPAddToCartContainer extends PureComponent {
                 qty: 1,
                 optionId: '',
                 optionValue: ''
-            }, color, null, discount, brand_name, thumbnail_url, url).then(
+            }, color, null, basePrice, brand_name, thumbnail_url, url, itemPrice).then(
                 () => this.afterAddToCart()
             );
         }

@@ -15,7 +15,8 @@
                 height: 27px;
                 padding: 0;
                 cursor: pointer;
-    
+                font-weight: var(--fw-demi);
+
                 &::before{
                     position: absolute;
                     left: -30px;
@@ -28,16 +29,16 @@
                     display: inline-block;
                     font-size: 0;
                 }
-    
+
                 span {
                     display: none;
                     font-size: 14px;
-                    font-weight: 600;
+                    font-weight: var(--fw-demi);
                     letter-spacing: 0;
                     line-height: 19px;
                     height: 27px;
                     color: var(--black);
-    
+
                     @include after-mobile {
                         display: block;
                     }
@@ -56,10 +57,9 @@
         display: block;
         text-transform: none;
         font-size: 10px;
-        font-weight: 500;
+        font-weight: var(--fw-medium);
         letter-spacing: -0.2px;
         line-height: 14px;
-        text-align: center;
         color: var(--inactive-button-header-color);
         height: 40px;
         width: 40px;
@@ -99,10 +99,10 @@
         right: 0;
         bottom: 0;
         left: 0;
-        background: rgba(70, 70, 70, 0.6);
+        background: rgba(70, 70, 70, .6);
         cursor: default;
         pointer-events: all;
-        z-index: 10;
+        z-index: 100;
 
         @include desktop {
             display: block;
