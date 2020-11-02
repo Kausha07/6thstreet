@@ -191,15 +191,12 @@ class PLPFilters extends PureComponent {
 
     renderFilterButton() {
         const { activeFilters } = this.state;
-        console.log('***', activeFilters);
         const { count } = activeFilters ? Object.entries(activeFilters).reduce((prev, [_key, value]) => ({
             count: prev.count + value.length
         }), { count: 0 })
             : (
                 { count: 0 }
             );
-
-        console.log('***', count);
 
         return (
             <button
