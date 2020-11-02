@@ -5,7 +5,7 @@ import { PureComponent } from 'react';
 import CountryMiniFlag from 'Component/CountryMiniFlag';
 import Field from 'Component/Field';
 import Form from 'Component/Form';
-import { PHONE_CODES } from 'Component/MyAccountAddressFieldForm/MyAccountAddressFieldForm.config';
+import { COUNTRY_CODES_FOR_PHONE_VALIDATION, PHONE_CODES } from 'Component/MyAccountAddressForm/MyAccountAddressForm.config';
 import ClubApparelLogoAR from 'Component/MyAccountClubApparel/images/ca-trans-ar-logo.png';
 import ClubApparelLogoEN from 'Component/MyAccountClubApparel/images/ca-trans-logo.png';
 import Loader from 'SourceComponent/Loader';
@@ -41,7 +41,8 @@ class MyAccountClubApparelOverlay extends PureComponent {
 
     state = {
         isArabic: isArabic(),
-        isButtonDisabled: true
+        isButtonDisabled: true,
+        phoneValue: []
     };
 
     renderMap = {
@@ -110,7 +111,7 @@ class MyAccountClubApparelOverlay extends PureComponent {
             return acc;
         }, []);
 
-        this.setState({ selectedCountry: countiresMapped[0] });
+        this.setState({ selectedCountry: countiresMapped[0], phoneValue: [] });
     };
 
     renderOption = (country) => ({
@@ -120,20 +121,22 @@ class MyAccountClubApparelOverlay extends PureComponent {
     });
 
     renderPhone() {
-        const { selectedCountry, isArabic } = this.state;
+        const { selectedCountry, isArabic, phoneValue } = this.state;
         const countries = Object.keys(PHONE_CODES);
+        const maxlength = COUNTRY_CODES_FOR_PHONE_VALIDATION[selectedCountry]
+            ? '9' : '8';
 
-        const phone = {
-            block: 'MyAccountClubApparelOverlay',
-            elem: 'LinkAccountPhoneField',
-            validation: ['notEmpty'],
-            placeholder: 'Phone Number',
-            maxlength: '9',
-            pattern: '[0-9]*',
-            value: '',
-            id: 'phone',
-            name: 'phone'
-        };
+        // const phone = {
+        //     block: 'MyAccountClubApparelOverlay',
+        //     elem: 'LinkAccountPhoneField',
+        //     validation: ['notEmpty'],
+        //     placeholder: 'Phone Number',
+        //     maxlength,
+        //     pattern: '[0-9]*',
+        //     value: '',
+        //     id: 'phone',
+        //     name: 'phone'
+        // };
 
         return (
             <div
@@ -148,7 +151,20 @@ class MyAccountClubApparelOverlay extends PureComponent {
                   onChange={ this.handleSelectChange }
                   selectOptions={ countries.map(this.renderOption) }
                 />
-                { this.renderField(['phone', phone]) }
+                <Field
+                  mix={ {
+                      block: 'MyAccountClubApparelOverlay',
+                      elem: 'LinkAccountPhoneField'
+                  } }
+                  validation={ ['notEmpty'] }
+                  placeholder="Phone Number"
+                  maxlength={ maxlength }
+                  pattern="[0-9]*"
+                  value={ phoneValue }
+                  id="phone"
+                  name="phone"
+                />
+                { /* { this.renderField(['phone', phone]) } */ }
                 <CountryMiniFlag mods={ { isArabic } } label={ selectedCountry } />
             </div>
         );
