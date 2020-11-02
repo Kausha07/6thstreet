@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import { MyAccountDispatcher } from 'Component/CheckoutGuestForm/CheckoutGuestForm.container';
 import {
-    CART, CART_EDITING, CUSTOMER_ACCOUNT, CUSTOMER_ACCOUNT_PAGE
+    CUSTOMER_ACCOUNT, CUSTOMER_ACCOUNT_PAGE
 } from 'Component/Header/Header.config';
-import { MY_ACCOUNT_URL } from 'Route/MyAccount/MyAccount.config';
 import MyAccountContainer, { tabMap } from 'Route/MyAccount/MyAccount.container';
 import ClubApparelDispatcher from 'Store/ClubApparel/ClubApparel.dispatcher';
 import { updateMeta } from 'Store/Meta/Meta.action';
@@ -17,7 +17,6 @@ import { toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
 import { customerType } from 'Type/Account';
 import { HistoryType } from 'Type/Common';
 import { TotalsType } from 'Type/MiniCart';
-import history from 'Util/History';
 
 import CheckoutSuccess from './CheckoutSuccess.component';
 
@@ -41,7 +40,9 @@ export const mapDispatchToProps = (dispatch) => ({
     showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
     showNotification: (type, message) => dispatch(showNotification(type, message)),
     updateMeta: (meta) => dispatch(updateMeta(meta)),
-    getMember: (id) => ClubApparelDispatcher.getMember(dispatch, id)
+    getMember: (id) => ClubApparelDispatcher.getMember(dispatch, id),
+    requestCustomerData: () => MyAccountDispatcher
+        .then(({ default: dispatcher }) => dispatcher.requestCustomerData(dispatch))
 });
 
 export class CheckoutSuccessContainer extends PureComponent {
@@ -57,7 +58,8 @@ export class CheckoutSuccessContainer extends PureComponent {
         tabMap: PropTypes.isRequired,
         customer: customerType,
         getMember: PropTypes.func.isRequired,
-        isSignedIn: PropTypes.bool.isRequired
+        isSignedIn: PropTypes.bool.isRequired,
+        requestCustomerData: PropTypes.func.isRequired
     };
 
     static defaultProps = {
@@ -70,7 +72,6 @@ export class CheckoutSuccessContainer extends PureComponent {
     };
 
     containerFunctions = {
-        changeActiveTab: this.changeActiveTab.bind(this),
         onSignIn: this.onSignIn.bind(this)
     };
 
@@ -100,10 +101,9 @@ export class CheckoutSuccessContainer extends PureComponent {
     componentDidMount() {
         const { updateMeta } = this.props;
 
-        updateMeta({ title: __('Cart') });
+        updateMeta({ title: __('Account') });
 
         this._updateBreadcrumbs();
-        this._changeHeaderState();
     }
 
     containerProps = () => {
@@ -114,56 +114,13 @@ export class CheckoutSuccessContainer extends PureComponent {
         };
     };
 
-    getClubApparelMember(id) {
-        const { getMember } = this.props;
-
-        getMember(id).then(
-            (response) => {
-                if (response && response.data) {
-                    this.setState({ clubApparelMember: response.data });
-                }
-            },
-            this._handleError
-        );
-    }
-
-    // TODO: fix active tab change
-    changeActiveTab(activeTab) {
-        const { history } = this.props;
-        const { [activeTab]: { url } } = tabMap;
-        history.push(`${ MY_ACCOUNT_URL }${ url }`);
-    }
-
     _updateBreadcrumbs() {
         const { updateBreadcrumbs } = this.props;
 
         updateBreadcrumbs([
-            { url: '', name: __('My bag') },
+            { url: '', name: __('Account') },
             { name: __('Home'), url: '/' }
         ]);
-    }
-
-    _changeHeaderState() {
-        const { changeHeaderState, totals: { items_qty } } = this.props;
-        const title = __('%s Items', items_qty || 0);
-
-        changeHeaderState({
-            name: CART,
-            title,
-            onEditClick: () => {
-                this.setState({ isEditing: true });
-                changeHeaderState({
-                    name: CART_EDITING,
-                    title,
-                    onOkClick: () => this.setState({ isEditing: false }),
-                    onCancelClick: () => this.setState({ isEditing: false })
-                });
-            },
-            onCloseClick: () => {
-                this.setState({ isEditing: false });
-                history.goBack();
-            }
-        });
     }
 
     onSignIn() {

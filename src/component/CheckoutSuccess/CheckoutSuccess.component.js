@@ -1,44 +1,46 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-import ContentWrapper from 'Component/ContentWrapper';
 import Link from 'Component/Link';
-import MyAccountTabList from 'Component/MyAccountTabList';
+import MyAccountOverlay from 'Component/MyAccountOverlay';
 import SuccessCheckoutItem from 'Component/SuccessCheckoutItem';
-import { tabMap } from 'Route/MyAccount/MyAccount.container';
 import { TotalsType } from 'Type/MiniCart';
+import { isArabic } from 'Util/App';
 import { formatCurrency, roundPrice } from 'Util/Price';
+
+import Apple from './icons/apple.png';
+import Cash from './icons/cash.png';
+import SuccessCircle from './icons/success-circle.png';
+import TabbyAR from './icons/tabby-ar.png';
+import Tabby from './icons/tabby.png';
+import Visa from './icons/visa.png';
 
 import './CheckoutSuccess.style';
 
 export class CheckoutSuccess extends PureComponent {
     static propTypes = {
         totals: TotalsType.isRequired,
-        changeActiveTab: PropTypes.func.isRequired,
         shippingAddress: PropTypes.object.isRequired,
         billingAddress: PropTypes.object.isRequired,
         paymentMethod: PropTypes.object.isRequired,
         creditCardData: PropTypes.object.isRequired,
-        orderID: PropTypes.number.isRequired
+        orderID: PropTypes.number.isRequired,
+        isSignedIn: PropTypes.bool.isRequired,
+        requestCustomerData: PropTypes.func.isRequired,
+        customer: PropTypes.isRequired
     };
 
     state = {
         subTotalPrice: 0,
-        shippingPrice: 0
+        shippingPrice: 0,
+        paymentTitle: '',
+        isArabic: isArabic()
     };
 
-    renderSuccessMessage = () => (
+    renderSuccessMessage = (email) => (
         <div block="SuccessMessage">
-            <div block="SuccessMessage" elem="Graphic">
-                <section block="svg" elem="container">
-                    <svg block="circle" xmlns="http://www.w3.org/2000/svg">
-                        <g>
-                            <ellipse block="foreground" ry="30" rx="30" cy="62" cx="62" strokeWidth="3" />
-                            <line block="line line2" x1="52" y1="62" x2="74" y2="62" />
-                        </g>
-                    </svg>
-                    <div block="center" />
-                </section>
+            <div block="SuccessMessage" elem="Icon">
+                <img src={ SuccessCircle } alt="success circle" />
             </div>
             <div block="SuccessMessage" elem="Text">
                 <div block="SuccessMessage-Text" elem="Title">
@@ -48,11 +50,71 @@ export class CheckoutSuccess extends PureComponent {
                     { __('Order confirmation has been sent to') }
                 </div>
                 <div block="SuccessMessage-Text" elem="Email">
-                    mytest@email.com
+                    { email }
                 </div>
             </div>
         </div>
     );
+
+    renderTrackOrder() {
+        const { isSignedIn, orderID } = this.props;
+        const { isArabic } = this.state;
+
+        if (isSignedIn) {
+            return (
+                <div mix={ { block: 'TrackOrder', mods: { isArabic, isSignedIn } } }>
+                    <Link to={ `/sales/order/view/order_id/${orderID}/` }>
+                        <button block="primary">
+                            { __('track your order') }
+                        </button>
+                    </Link>
+                </div>
+            );
+        }
+
+        return (
+            <div mix={ { block: 'TrackOrder', mods: { isArabic } } }>
+                <div block="TrackOrder" elem="Text">
+                    <span
+                      block="TrackOrder"
+                      elem="Text-Title"
+                    >
+                        { __('track your order') }
+                    </span>
+                    <span
+                      block="TrackOrder"
+                      elem="Text-SubTitle"
+                    >
+                        { __('sign in to access to your account and tract your order') }
+                    </span>
+                </div>
+                <button block="secondary" onClick={ this.showMyAccountPopup }>
+                    { __('sign in') }
+                </button>
+            </div>
+        );
+    }
+
+    renderMyAccountPopup() {
+        const { showPopup } = this.state;
+
+        if (!showPopup) {
+            return null;
+        }
+
+        return <MyAccountOverlay closePopup={ this.closePopup } onSignIn={ this.onSignIn } isPopup />;
+    }
+
+    onSignIn = () => {
+        const { requestCustomerData } = this.props;
+
+        requestCustomerData();
+        this.closePopup();
+    };
+
+    closePopup = () => {
+        this.setState({ showPopup: false });
+    };
 
     renderTotalsItems() {
         const { totals: { items, quote_currency_code }, orderID } = this.props;
@@ -153,13 +215,16 @@ export class CheckoutSuccess extends PureComponent {
         return `${formatCurrency(quote_currency_code)}${roundPrice(price)}`;
     }
 
-    renderTotals = () => (
-        <div block="PriceTotals">
-            { this.renderSubTotalPrice() }
-            { this.renderCashOnDeliveryFee() }
-            { this.renderTotalPrice() }
-        </div>
-    );
+    renderTotals = () => {
+        const { isArabic } = this.state;
+        return (
+            <div block="PriceTotals" mods={ { isArabic } }>
+                { this.renderSubTotalPrice() }
+                { this.renderCashOnDeliveryFee() }
+                { this.renderTotalPrice() }
+            </div>
+        );
+    };
 
     renderDeliveringAddress() {
         const {
@@ -243,14 +308,17 @@ export class CheckoutSuccess extends PureComponent {
         </div>
     );
 
-    renderPaymentType = () => (
-        <div block="PaymentType">
-            <div block="PaymentType" elem="Title">
-                { __('Payment Type') }
+    renderPaymentType = () => {
+        const { isArabic } = this.state;
+        return (
+            <div block="PaymentType" mods={ { isArabic } }>
+                <div block="PaymentType" elem="Title">
+                    { __('Payment Type') }
+                </div>
+                { this.renderPaymentTypeContent() }
             </div>
-            { this.renderPaymentTypeContent() }
-        </div>
-    );
+        );
+    };
 
     renderPaymentTypeContent = () => {
         const {
@@ -262,15 +330,15 @@ export class CheckoutSuccess extends PureComponent {
             paymentMethod
         } = this.props;
 
-        console.log(paymentMethod);
-
         if (number && expDate && cvv) {
             const displayNumberDigits = 4;
             const slicedNumber = number.slice(number.length - displayNumberDigits);
 
             return (
                 <div block="Details">
-                    <div block="Details" elem="TypeLogo">img</div>
+                    <div block="Details" elem="TypeLogo">
+                        <img src={ Visa } alt="visa icon" />
+                    </div>
                     <div block="Details" elem="Number">
                         <div block="Details" elem="Number-Dots">
                             <div />
@@ -294,34 +362,50 @@ export class CheckoutSuccess extends PureComponent {
             );
         }
 
+        if (paymentMethod.code.match(/tabby/)) {
+            this.setState({ paymentTitle: 'Tabby' });
+        } else if (paymentMethod.code.match(/apple/)) {
+            this.setState({ paymentTitle: 'Apple' });
+        } else if (paymentMethod.code.match(/cash/)) {
+            this.setState({ paymentTitle: 'Cash' });
+        }
+
+        const { paymentTitle } = this.state;
         return (
             <div block="Details">
-                <div block="Details" elem="TypeLogo">img</div>
-                <div block="Details" elem="TypeTitle">paymentMethod</div>
+                <div block="Details" elem="TypeLogo">
+                    { this.renderPaymentMethodIcon(paymentTitle) }
+                </div>
+                <div block="Details" elem="TypeTitle">{ __(paymentTitle) }</div>
             </div>
         );
     };
 
-    renderTabList = () => {
-        const { changeActiveTab } = this.props;
+    renderPaymentMethodIcon(paymentTitle) {
+        const { isArabic } = this.state;
 
-        return (
-            <ContentWrapper
-              label={ __('My Account page') }
-              wrapperMix={ { block: 'MyAccount', elem: 'Wrapper' } }
-            >
-                <MyAccountTabList
-                  tabMap={ tabMap }
-                  activeTab="dashboard"
-                  changeActiveTab={ changeActiveTab }
-                />
-            </ContentWrapper>
-        );
-    };
+        switch (paymentTitle) {
+        case 'Tabby':
+            if (!isArabic) {
+                return <img src={ Tabby } alt={ paymentTitle } />;
+            }
+
+            return <img src={ TabbyAR } alt={ paymentTitle } />;
+        case 'Apple':
+            return <img src={ Apple } alt={ paymentTitle } />;
+        case 'Cash':
+            return <img src={ Cash } alt={ paymentTitle } />;
+
+        default:
+            return '';
+        }
+    }
 
     renderButton() {
+        const { isArabic } = this.state;
+
         return (
-            <div block="CheckoutSuccess" elem="ButtonWrapper">
+            <div block="CheckoutSuccess" elem="ButtonWrapper" mods={ { isArabic } }>
                 <Link
                   block="CheckoutSuccess"
                   elem="ContinueButton"
@@ -336,11 +420,13 @@ export class CheckoutSuccess extends PureComponent {
     }
 
     render() {
+        const { customer } = this.props;
+
         return (
             <div block="CheckoutSuccess">
-                { this.renderTabList() }
                 <div block="CheckoutSuccess" elem="Details">
-                    { this.renderSuccessMessage() }
+                    { this.renderSuccessMessage(customer.email) }
+                    { this.renderTrackOrder() }
                     { this.renderTotalsItems() }
                     { this.renderTotals() }
                     { this.renderAddresses() }
@@ -348,6 +434,7 @@ export class CheckoutSuccess extends PureComponent {
                     { this.renderPaymentType() }
                 </div>
                 { this.renderButton() }
+                { this.renderMyAccountPopup() }
             </div>
         );
     }
