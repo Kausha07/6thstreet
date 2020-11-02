@@ -87,7 +87,7 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
 
     render() {
         const { id } = this.props;
-        const { countryId, isArabic } = this.state;
+        const { isArabic } = this.state;
 
         return (
             <FormPortal
@@ -97,7 +97,7 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
                     <div
                       block="FieldForm"
                       mix={ { block: 'CheckoutAddressForm' } }
-                      mods={ { countryId, isArabic } }
+                      mods={ { isArabic } }
                     >
                         { this.renderFields() }
                     </div>

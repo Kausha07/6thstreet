@@ -535,50 +535,6 @@
             }
         }
 
-
-        .CartCoupon {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 50px;
-            margin-bottom: 15px;
-            border: 1px solid var(--color-light-gray);
-
-            &-Input {
-                margin: 0;
-                height: 100%;
-                width: 100%;
-                font-size: 13px;
-                text-transform: capitalize;
-
-                input:focus, textarea:focus, select:focus {
-                    border: 1px solid var(--color-black);
-                }
-
-                @include mobile {
-                    font-size: 11px;
-                }
-            }
-
-            &-Button {
-                margin: 0;
-                background-color: var(--color-white);
-                border: 1px solid var(--color-light-gray);
-                color: var(--color-light-gray);
-
-                &:not([disabled]):hover,
-                &:not([disabled]):focus {
-                    color: var(--color-black);
-                    border: 1px solid var(--color-black);
-                }
-
-                @include mobile {
-                    width: 25%;
-                    font-size: 11px;
-                }
-            }
-        }
-
         &-Body {
             @include mobile {
                 display: block;

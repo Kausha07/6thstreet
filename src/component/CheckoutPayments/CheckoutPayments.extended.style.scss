@@ -6,11 +6,23 @@
 }
 
 .CheckoutPayments {
+    margin-bottom: 0;
+    padding: 30px;
+
     h2 {
         font-weight: var(--fw-demi);
         font-size: 18px;
         text-transform: none;
         line-height: 25px;
+    }
+
+    &-Heading {
+        margin-top: 0;
+        margin-bottom: 30px;
+    }
+
+    &-Methods {
+        margin-bottom: 10px;
     }
 
     &-MethodDiscription {

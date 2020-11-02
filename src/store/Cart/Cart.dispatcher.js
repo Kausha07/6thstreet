@@ -199,6 +199,7 @@ export class CartDispatcher {
 
         try {
             await applyCouponCode({ cartId, couponCode });
+            await this.getCartTotals(dispatch, cartId);
 
             dispatch(showNotification('success', __('Coupon was applied!')));
         } catch (e) {
@@ -206,8 +207,6 @@ export class CartDispatcher {
 
             Logger.log(e);
         }
-
-        await this.getCartTotals(dispatch, cartId);
     }
 
     async removeCouponCode(dispatch, couponCode) {
@@ -215,6 +214,7 @@ export class CartDispatcher {
 
         try {
             await removeCouponCode({ cartId, couponCode });
+            await this.getCartTotals(dispatch, cartId);
 
             dispatch(showNotification('success', __('Coupon was removed!')));
         } catch (e) {
@@ -222,8 +222,6 @@ export class CartDispatcher {
 
             Logger.log(e);
         }
-
-        await this.getCartTotals(dispatch, cartId);
     }
 }
 

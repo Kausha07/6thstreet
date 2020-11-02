@@ -16,6 +16,7 @@ import {
     TYPE_HOME,
     TYPE_PRODUCT
 } from 'Route/UrlRewrites/UrlRewrites.config';
+import BrowserDatabase from 'Util/BrowserDatabase';
 import isMobile from 'Util/Mobile';
 
 import './HeaderMainSection.style';
@@ -107,11 +108,11 @@ class HeaderMainSection extends NavigationAbstract {
     }
 
     getCategory() {
-        return JSON.parse(localStorage.getItem('CATEGORY_NAME'));
+        return BrowserDatabase.getItem('CATEGORY_NAME') || '';
     }
 
     getProduct() {
-        return JSON.parse(localStorage.getItem('PRODUCT_NAME'));
+        return BrowserDatabase.getItem('PRODUCT_NAME') || '';
     }
 
     setMainContentPadding(px = '0') {

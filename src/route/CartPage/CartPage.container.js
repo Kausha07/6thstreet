@@ -64,7 +64,7 @@ export class CartPageContainer extends PureComponent {
         showOverlay: PropTypes.func.isRequired,
         showNotification: PropTypes.func.isRequired,
         updateMeta: PropTypes.func.isRequired,
-        guest_checkout: PropTypes.bool.isRequired,
+        guest_checkout: PropTypes.bool,
         history: HistoryType.isRequired,
         totals: TotalsType.isRequired,
         tabMap: PropTypes.isRequired,
@@ -75,7 +75,8 @@ export class CartPageContainer extends PureComponent {
 
     static defaultProps = {
         customer: null,
-        clubApparel: {}
+        clubApparel: {},
+        guest_checkout: true
     };
 
     state = {

@@ -1,13 +1,17 @@
+/* eslint-disable no-magic-numbers */
 import PropTypes from 'prop-types';
 
 import Field from 'Component/Field';
 import Loader from 'Component/Loader';
+import { COUNTRY_CODES_FOR_PHONE_VALIDATION } from 'Component/MyAccountAddressForm/MyAccountAddressForm.config';
 import MyAccountPasswordForm from 'Component/MyAccountPasswordForm';
 import PhoneCountryCodeField from 'Component/PhoneCountryCodeField';
 import {
     MyAccountCustomerForm as SourceMyAccountCustomerForm
 } from 'SourceComponent/MyAccountCustomerForm/MyAccountCustomerForm.component';
+import { CUSTOMER } from 'Store/MyAccount/MyAccount.dispatcher';
 import { isArabic } from 'Util/App';
+import BrowserDatabase from 'Util/BrowserDatabase';
 
 import './MyAccountCustomerForm.style';
 
@@ -19,6 +23,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
         showPasswordFrom: PropTypes.func.isRequired,
         hidePasswordFrom: PropTypes.func.isRequired,
         onSave: PropTypes.func.isRequired,
+        setGender: PropTypes.func.isRequired,
         isLoading: PropTypes.bool.isRequired
     };
 
@@ -26,16 +31,36 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
         isArabic: isArabic()
     };
 
+    constructor(props) {
+        super(props);
+        const { customer: { gender } } = props;
+
+        this.state = { gender };
+    }
+
+    componentDidUpdate() {
+        const { gender } = this.state;
+        const { gender: stateGender } = BrowserDatabase.getItem(CUSTOMER) || {};
+
+        if (!gender) {
+            this.setDefaultGender(stateGender);
+        }
+    }
+
+    setDefaultGender(gender) {
+        this.setState({ gender });
+    }
+
     get fieldMap() {
         return {
             fullname: {
                 render: this.renderFullName.bind(this)
             },
             gender: {
-                render: this.renderGernder.bind(this)
+                render: this.renderGender.bind(this)
             },
             email: {
-                isDisabled: true
+                isDisabled: false
             },
             password: {
                 render: this.renderPassword.bind(this)
@@ -48,6 +73,12 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
             }
         };
     }
+
+    handleGenderChange = (e) => {
+        const { setGender } = this.props;
+        this.setState({ gender: Number(e.target.value) });
+        setGender(Number(e.target.value));
+    };
 
     getCustomerFullName() {
         const { customer: { firstname, lastname } = {} } = this.props;
@@ -108,11 +139,20 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
         );
     }
 
-    renderGernder() {
+    renderGender() {
         // gender need to be added to customer data
-        const { isArabic } = this.state;
-        const { customer: { gender } } = this.props;
+        const {
+            isArabic,
+            gender
+        } = this.state;
+
+        if (!gender) {
+            return null;
+        }
+
         const isMale = gender === 1;
+        const isFemale = gender === 2;
+        const isPreferNotToSay = gender === 3;
 
         return (
             <fieldset block="MyAccountCustomerForm" elem="Gender">
@@ -129,7 +169,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
                       value="1"
                       onClick={ this.handleGenderChange }
                       // eslint-disable-next-line
-                      checked={ isMale }
+                      defaultChecked={ isMale }
                     />
                     <Field
                       type="radio"
@@ -139,7 +179,17 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
                       value="2"
                       onClick={ this.handleGenderChange }
                     // eslint-disable-next-line
-                      checked={ !isMale }
+                      defaultChecked={ isFemale }
+                    />
+                    <Field
+                      type="radio"
+                      id="preferNotToSay"
+                      label={ __('Prefer Not To Say') }
+                      name="gender"
+                      value="3"
+                      onClick={ this.handleGenderChange }
+                      // eslint-disable-next-line
+                      defaultChecked={ isPreferNotToSay }
                     />
                 </div>
             </fieldset>
@@ -170,6 +220,20 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
         return [];
     }
 
+    getValidationForTelephone() {
+        const { customerCountry } = this.props;
+
+        return COUNTRY_CODES_FOR_PHONE_VALIDATION[customerCountry]
+            ? 'telephoneAE' : 'telephone';
+    }
+
+    getPhoneNumberMaxLength() {
+        const { customerCountry } = this.getCustomerPhone();
+
+        return COUNTRY_CODES_FOR_PHONE_VALIDATION[customerCountry]
+            ? '9' : '8';
+    }
+
     renderPhone() {
         const { isArabic } = this.state;
         const customerPhoneData = this.getCustomerPhone();
@@ -184,8 +248,10 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
                   type="text"
                   name="phone"
                   id="phone"
+                  maxLength={ this.getPhoneNumberMaxLength() }
                   placeholder={ __('Phone number') }
                   value={ customerPhoneData.customerPhone }
+                  validation={ ['notEmpty', this.getValidationForTelephone()] }
                 />
             </div>
         );

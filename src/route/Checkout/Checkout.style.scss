@@ -8,18 +8,18 @@
     padding-top: 0;
     padding-bottom: 150px;
 
-     @include before-desktop {
-         .Checkout-StickyButtonWrapper {
-             padding-top: 0;
-         }
-     }
+    @include before-desktop {
+        .Checkout-StickyButtonWrapper {
+            padding-top: 0;
+        }
+    }
 
     @include desktop {
         padding: 125px 0;
         background-color: var(--lightest-gray);
     }
 
-    .LoadingOverlay{
+    .LoadingOverlay {
         height: 100%;
         background-color: var(--color-orange-soda);
         opacity: 95%;
@@ -63,7 +63,6 @@
             transform: translate(-50%, -50%);
         }
     }
-
 
     &-StickyButtonWrapper {
         .Checkout {
@@ -129,7 +128,10 @@
 
         @include desktop {
             display: grid;
-            grid-template-columns: minmax(calc(65% - 1rem), 600px) minmax(calc(35% - 1rem), 348px);
+            grid-template-columns: minmax(calc(65% - 1rem), 600px) minmax(
+                    calc(35% - 1rem),
+                    348px
+                );
             column-gap: 1.25rem;
         }
     }
@@ -172,9 +174,9 @@
 
         hr {
             margin-top: 30px;
-            width:100%;
-            height:2px;
-            background-color:var(--unselected-step-color);
+            width: 100%;
+            height: 2px;
+            background-color: var(--unselected-step-color);
         }
 
         &-Payment {
@@ -194,7 +196,7 @@
                     background: url(./icons/payment-gray@3x.png) no-repeat;
                     background-size: 24px 17px;
                     background-position: 50% 50%;
-                    border: 2px solid var(--unselected-step-color);;
+                    border: 2px solid var(--unselected-step-color);
                     border-radius: 50%;
                     width: 50px;
                     height: 50px;
@@ -209,7 +211,6 @@
             font-weight: var(--fw-demi);
             letter-spacing: 1px;
             line-height: 16px;
-
         }
 
         &-PaymentLabel {
@@ -222,11 +223,13 @@
     }
 
     .CheckoutAddressBook {
-        margin-top: -3px;
+        @include desktop {
+            margin-top: -110px;
+        }
 
-        .Checkout {
-            &-Heading{
-                display: none;
+        &_isBilling {
+            @include desktop {
+                margin-top: 0;
             }
         }
     }
@@ -238,13 +241,13 @@
         padding-bottom: 90px;
         margin-top: 80px;
 
-        >button {
+        > button {
             position: absolute;
             top: 0;
             width: 100%;
             border: 2px solid var(--Black);
             box-shadow: 0 0 2px 0 var(--Black);
-            color: var(--Black); 
+            color: var(--Black);
             font-size: 14px;
             font-weight: var(--fw-bold);
             transition: none;
@@ -255,21 +258,21 @@
             }
         }
 
-        >button:hover {
+        > button:hover {
             text-decoration: none;
         }
 
         &_continueAsGuest {
-            padding-bottom: 0px;
-            margin-top: 0px;
+            padding-bottom: 0;
+            margin-top: 0;
             background-color: transparent;
 
-            >button {
+            > button {
                 display: none;
             }
 
             @include desktop {
-                >button {
+                > button {
                     display: block;
                     z-index: 1;
                     width: 100%;
@@ -289,15 +292,15 @@
         }
 
         &_isSignedIn {
-           display: none;
-           padding-bottom: 0px;
+            display: none;
+            padding-bottom: 0;
         }
 
         @include desktop {
-            margin-top: 0px;
+            margin-top: 0;
         }
     }
-    
+
     &-Heading {
         padding: 20px;
         text-transform: unset;
@@ -319,7 +322,7 @@
             hr {
                 display: none;
             }
-            
+
             &_isDisabled {
                 display: block;
                 color: var(--DustyGray);
