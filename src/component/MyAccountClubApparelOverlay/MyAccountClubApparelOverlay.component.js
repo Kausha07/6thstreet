@@ -24,17 +24,12 @@ import './MyAccountClubApparelOverlay.style';
 
 class MyAccountClubApparelOverlay extends PureComponent {
     static propTypes = {
-        showOverlay: PropTypes.func.isRequired,
         hideActiveOverlay: PropTypes.func.isRequired,
-        handleLink: PropTypes.func.isRequired,
         linkAccount: PropTypes.func.isRequired,
-        handleSuccess: PropTypes.func.isRequired,
-        handleNotSucces: PropTypes.func.isRequired,
         state: PropTypes.string.isRequired,
         verifyOtp: PropTypes.func.isRequired,
         phone: PropTypes.string.isRequired,
         countryPhoneCode: PropTypes.string.isRequired,
-        renderAbout: PropTypes.func.isRequired,
         renderEarn: PropTypes.func.isRequired,
         isLoading: PropTypes.bool.isRequired
     };
@@ -60,23 +55,6 @@ class MyAccountClubApparelOverlay extends PureComponent {
         }
     };
 
-    getDefaultValues([key, props]) {
-        const {
-            type = 'text',
-            onChange = () => {},
-            ...otherProps
-        } = props;
-
-        return {
-            ...otherProps,
-            key,
-            name: key,
-            id: key,
-            type,
-            onChange
-        };
-    }
-
     handleVerifyChange = (e) => {
         // eslint-disable-next-line no-magic-numbers
         this.setState({ isButtonDisabled: e.length !== 5 });
@@ -91,10 +69,6 @@ class MyAccountClubApparelOverlay extends PureComponent {
             </div>
         );
     };
-
-    renderField = (fieldEntry) => (
-        <Field { ...this.getDefaultValues(fieldEntry) } />
-    );
 
     renderCurrentPhoneCode(country_id) {
         return PHONE_CODES[country_id];
@@ -126,18 +100,6 @@ class MyAccountClubApparelOverlay extends PureComponent {
         const maxlength = COUNTRY_CODES_FOR_PHONE_VALIDATION[selectedCountry]
             ? '9' : '8';
 
-        // const phone = {
-        //     block: 'MyAccountClubApparelOverlay',
-        //     elem: 'LinkAccountPhoneField',
-        //     validation: ['notEmpty'],
-        //     placeholder: 'Phone Number',
-        //     maxlength,
-        //     pattern: '[0-9]*',
-        //     value: '',
-        //     id: 'phone',
-        //     name: 'phone'
-        // };
-
         return (
             <div
               block="MyAccountClubApparelOverlay"
@@ -164,7 +126,6 @@ class MyAccountClubApparelOverlay extends PureComponent {
                   id="phone"
                   name="phone"
                 />
-                { /* { this.renderField(['phone', phone]) } */ }
                 <CountryMiniFlag mods={ { isArabic } } label={ selectedCountry } />
             </div>
         );
