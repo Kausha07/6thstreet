@@ -32,14 +32,11 @@ class PLPFilters extends PureComponent {
         productsCount: PropTypes.string.isRequired
     };
 
-    activeFilters = {
-        data: null
-    };
-
     state = {
         isOpen: false,
         activeFilter: undefined,
-        isArabic: isArabic()
+        isArabic: isArabic(),
+        activeFilters: {}
     };
 
     static getDerivedStateFromProps(props, state) {
@@ -80,7 +77,7 @@ class PLPFilters extends PureComponent {
     renderQuickFilters() {
         const { filters } = this.props;
 
-        return Object.entries(filters).map(this.renderQuickFilter);
+        return Object.entries(filters).map(this.renderQuickFilter.bind(this));
     }
 
     renderPlaceholder() {
@@ -119,8 +116,13 @@ class PLPFilters extends PureComponent {
     onShowResultButton = () => {
         const { activeFilters } = this.state;
 
-        Object.keys(activeFilters).map((key) => WebUrlParser.setParam(key, activeFilters[key]));
+        Object.keys(activeFilters || {}).map((key) => WebUrlParser.setParam(key, activeFilters[key]));
         this.hidePopUp();
+    };
+
+    updateFilters = () => {
+        const { activeFilters } = this.state;
+        Object.keys(activeFilters).map((key) => WebUrlParser.setParam(key, activeFilters[key]));
     };
 
     renderSeeResultButton() {
@@ -187,12 +189,15 @@ class PLPFilters extends PureComponent {
 
     renderFilterButton() {
         const { activeFilters } = this.state;
+        console.log('***', activeFilters);
         const { count } = activeFilters ? Object.entries(activeFilters).reduce((prev, [_key, value]) => ({
             count: prev.count + value.length
         }), { count: 0 })
             : (
                 { count: 0 }
             );
+
+        console.log('***', count);
 
         return (
             <button
@@ -279,37 +284,41 @@ class PLPFilters extends PureComponent {
         });
     };
 
-    renderQuickFilter([key, filter]) {
+    renderQuickFilter = ([key, filter]) => {
         const genders = [
             __('men'),
             __('women'),
             __('kids')
         ];
-        const brandsLabel = 'Brands';
-        const categoriesLabel = 'Categories';
+        const brandsCategoryName = 'brand_name';
+        const CategoryName = 'categories_without_path';
         const pathname = location.pathname.split('/');
         const isBrandsFilterRequired = genders.includes(pathname[1]);
 
         if (isBrandsFilterRequired) {
-            if (filter.label === brandsLabel) {
+            if (filter.category === brandsCategoryName) {
                 return (
                     <PLPQuickFilter
                       key={ key }
                       filter={ filter }
+                      updateFilters={ this.updateFilters }
+                      onClick={ this.updateFilters }
                     />
                 );
             }
-        } else if (filter.label === categoriesLabel) {
+        } else if (filter.category === CategoryName) {
             return (
                 <PLPQuickFilter
                   key={ key }
                   filter={ filter }
+                  updateFilters={ this.updateFilters }
+                  onClick={ this.updateFilters }
                 />
             );
         }
 
         return null;
-    }
+    };
 
     render() {
         const { productsCount } = this.props;
@@ -343,7 +352,7 @@ class PLPFilters extends PureComponent {
                     </div>
                     <div block="PLPFilters" elem="ProductsCount" mods={ { isArabic } }>
                         <span>{ count }</span>
-                        Products
+                        { count ? __('Products') : null }
                     </div>
                 </div>
             </>
