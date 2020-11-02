@@ -96,8 +96,13 @@ export class MyAccountClubApparelContainer extends PureComponent {
         const { phone } = fields;
 
         linkAccount({ customerId: id, mobileNo: phone }).then(
-            () => {
+            (response) => {
                 // TODO: Create response processing after Club Apparel will begin work on Client side
+                if (!response) {
+                    return false;
+                }
+
+                return response;
             },
             this._handleError
         );

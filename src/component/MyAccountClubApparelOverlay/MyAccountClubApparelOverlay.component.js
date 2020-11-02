@@ -8,6 +8,7 @@ import Form from 'Component/Form';
 import { PHONE_CODES } from 'Component/MyAccountAddressFieldForm/MyAccountAddressFieldForm.config';
 import ClubApparelLogoAR from 'Component/MyAccountClubApparel/images/ca-trans-ar-logo.png';
 import ClubApparelLogoEN from 'Component/MyAccountClubApparel/images/ca-trans-logo.png';
+import Loader from 'SourceComponent/Loader';
 import Popup from 'SourceComponent/Popup';
 import { isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
@@ -26,7 +27,7 @@ class MyAccountClubApparelOverlay extends PureComponent {
         showOverlay: PropTypes.func.isRequired,
         hideActiveOverlay: PropTypes.func.isRequired,
         handleLink: PropTypes.func.isRequired,
-        handleVerify: PropTypes.func.isRequired,
+        linkAccount: PropTypes.func.isRequired,
         handleSuccess: PropTypes.func.isRequired,
         handleNotSucces: PropTypes.func.isRequired,
         state: PropTypes.string.isRequired,
@@ -34,7 +35,8 @@ class MyAccountClubApparelOverlay extends PureComponent {
         phone: PropTypes.string.isRequired,
         countryPhoneCode: PropTypes.string.isRequired,
         renderAbout: PropTypes.func.isRequired,
-        renderEarn: PropTypes.func.isRequired
+        renderEarn: PropTypes.func.isRequired,
+        isLoading: PropTypes.bool.isRequired
     };
 
     state = {
@@ -126,6 +128,8 @@ class MyAccountClubApparelOverlay extends PureComponent {
             elem: 'LinkAccountPhoneField',
             validation: ['notEmpty'],
             placeholder: 'Phone Number',
+            maxlength: '9',
+            pattern: '[0-9]*',
             value: '',
             id: 'phone',
             name: 'phone'
@@ -206,13 +210,13 @@ class MyAccountClubApparelOverlay extends PureComponent {
     }
 
     renderLink() {
-        const { handleVerify } = this.props;
+        const { linkAccount, isLoading } = this.props;
 
         return (
             <>
                 <p>{ __('Link Your Account by entering your mobile number') }</p>
                 <Form
-                  onSubmitSuccess={ handleVerify }
+                  onSubmitSuccess={ linkAccount }
                 >
                     { this.renderPhone() }
                     <button
@@ -220,7 +224,7 @@ class MyAccountClubApparelOverlay extends PureComponent {
                       elem="LinkAccountButton"
                       type="submit"
                     >
-                        { __('Link Account') }
+                        { isLoading ? <Loader isLoading={ isLoading } /> : __('Link Account') }
                     </button>
                 </Form>
             </>
