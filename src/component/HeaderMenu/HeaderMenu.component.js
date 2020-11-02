@@ -12,7 +12,8 @@ class HeaderMenu extends PureComponent {
         location: PropTypes.object.isRequired,
         toggleOverlayByKey: PropTypes.func.isRequired,
         activeOverlay: PropTypes.string.isRequired,
-        newMenuGender: PropTypes.string.isRequired
+        newMenuGender: PropTypes.string.isRequired,
+        toggleActiveMenu: PropTypes.func.isRequired
     };
 
     state = {
@@ -31,8 +32,10 @@ class HeaderMenu extends PureComponent {
     }
 
     onCategoriesClick = () => {
-        const { toggleOverlayByKey } = this.props;
+        const { toggleOverlayByKey, toggleActiveMenu } = this.props;
+
         toggleOverlayByKey(MOBILE_MENU_SIDEBAR_ID);
+        toggleActiveMenu();
     };
 
     renderMenu() {
