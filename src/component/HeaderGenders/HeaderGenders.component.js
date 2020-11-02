@@ -53,6 +53,10 @@ class HeaderGenders extends PureComponent {
 
     isCurrentGender(key) {
         const { currentContentGender } = this.props;
+        if (currentContentGender === '' && key === 'men') {
+            return true;
+        }
+
         return key === currentContentGender;
     }
 
@@ -65,7 +69,6 @@ class HeaderGenders extends PureComponent {
         const { changeMenuGender, currentContentGender } = this.props;
         const { currentGenderButton, isUnsetStyle } = this.state;
         const isCurrentGender = this.isCurrentGender(key);
-
         if (currentGenderButton === '') {
             this.setState({ currentGenderButton: currentContentGender });
         }
