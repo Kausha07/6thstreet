@@ -37,7 +37,8 @@ class PLPFilters extends PureComponent {
         isOpen: false,
         activeFilter: undefined,
         isArabic: isArabic(),
-        activeFilters: {}
+        activeFilters: {},
+        isReset: false
     };
 
     static getDerivedStateFromProps(props, state) {
@@ -100,8 +101,6 @@ class PLPFilters extends PureComponent {
             goToPreviousNavigationState();
         }
 
-        this.setState({ activeFilters: {} });
-
         document.body.style.overflow = 'visible';
     };
 
@@ -118,16 +117,13 @@ class PLPFilters extends PureComponent {
             goToPreviousNavigationState();
         }
 
-        this.setState({ activeFilters: {} });
+        this.setState({ activeFilters: {}, isReset: true });
 
         onReset();
     };
 
     onShowResultButton = () => {
         const { activeFilters } = this.state;
-
-        console.log(activeFilters);
-
         Object.keys(activeFilters || {}).map((key) => WebUrlParser.setParam(key, activeFilters[key]));
         this.hidePopUp();
     };
@@ -149,6 +145,11 @@ class PLPFilters extends PureComponent {
         );
     }
 
+    onClose = () => {
+        this.hidePopUp();
+        this.setState({ activeFilters: {} });
+    };
+
     renderCloseButton() {
         const { isArabic } = this.state;
 
@@ -158,7 +159,7 @@ class PLPFilters extends PureComponent {
               elem="CloseBtn"
               mods={ { isArabic } }
               aria-label={ __('Close') }
-              onClick={ this.hidePopUp }
+              onClick={ this.onClose }
             />
         );
     }
@@ -270,7 +271,7 @@ class PLPFilters extends PureComponent {
     }
 
     renderFilter = ([key, filter]) => {
-        const { activeFilter } = this.state;
+        const { activeFilter, isReset, activeFilters } = this.state;
 
         return (
                 <PLPFilter
@@ -279,21 +280,62 @@ class PLPFilters extends PureComponent {
                   parentCallback={ this.handleCallback }
                   currentActiveFilter={ activeFilter }
                   changeActiveFilter={ this.changeActiveFilter }
+                  isReset={ isReset }
+                  resetParentState={ this.resetParentState }
+                  parentActiveFilters={ activeFilters }
                 />
         );
     };
 
-    handleCallback = (category, values) => {
+    resetParentState = () => {
+        this.setState({ isReset: false });
+    };
+
+    handleCallback = (initialFacetKey, facet_value, checked, isRadio, isQuickFilters) => {
         const { activeFilters } = this.state;
-        this.setState({
-            activeFilters: category === SIZES ? {
-                ...activeFilters,
-                ...values
-            } : {
-                ...activeFilters,
-                [category]: values
+        const filterArray = activeFilters[initialFacetKey];
+
+        if (!isRadio) {
+            if (checked) {
+                this.setState({
+                    activeFilters: {
+                        ...activeFilters,
+                        [initialFacetKey]: filterArray ? [...filterArray, facet_value] : [facet_value]
+                    }
+                }, () => this.select(isQuickFilters));
+            } else if (filterArray) {
+                const index = filterArray.indexOf(facet_value);
+                if (index > -1) {
+                    filterArray.splice(index, 1);
+                }
+                this.setState({
+                    activeFilters: {
+                        [initialFacetKey]: filterArray
+                    }
+                }, () => this.select());
+            } else {
+                this.setState({
+                    activeFilters: {
+                        [initialFacetKey]: []
+                    }
+                }, () => this.select());
             }
-        });
+        } else {
+            this.setState({
+                ...activeFilters,
+                activeFilters: {
+                    [initialFacetKey]: facet_value
+                }
+            }, () => this.select());
+        }
+    };
+
+    select = (isQuickFilters) => {
+        const { activeFilters } = this.state;
+
+        if (!isMobile.any() || isQuickFilters) {
+            Object.keys(activeFilters || {}).map((key) => WebUrlParser.setParam(key, activeFilters[key]));
+        }
     };
 
     renderQuickFilter = ([key, filter]) => {
@@ -315,6 +357,7 @@ class PLPFilters extends PureComponent {
                       filter={ filter }
                       updateFilters={ this.updateFilters }
                       onClick={ this.updateFilters }
+                      parentCallback={ this.handleCallback }
                     />
                 );
             }
@@ -325,6 +368,7 @@ class PLPFilters extends PureComponent {
                   filter={ filter }
                   updateFilters={ this.updateFilters }
                   onClick={ this.updateFilters }
+                  parentCallback={ this.handleCallback }
                 />
             );
         }

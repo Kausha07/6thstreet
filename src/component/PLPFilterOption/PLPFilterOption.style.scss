@@ -11,6 +11,14 @@
         height: 40px;
         width: 100%;
         z-index: 1;
+
+        @include desktop {
+            width: calc(100% - 20px);
+
+            label {
+                top: 11px;
+            }
+        }
     }
     &-List {
         margin: 0;
@@ -78,11 +86,6 @@
         }
 
         .Field_type_radio {
-            @include desktop {
-                width: 18px;
-                height: 18px;
-            }
-            
             label {
                 display: inline-block;
                 max-width: calc(100vw - 2rem - 45px);
@@ -91,6 +94,16 @@
 
                 @include before-desktop {
                     top: unset;
+                }
+
+                .PLPFilterOption {
+                    &-Input {
+                        top: -10px;
+                    }
+                }
+
+                label {
+                    top: 1px;
                 }
             }
 

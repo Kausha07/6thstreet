@@ -12,13 +12,13 @@ import './FieldMultiselect.style';
 class FieldMultiselect extends PureComponent {
     static propTypes = {
         filter: Filter.isRequired,
-        onChange: PropTypes.func.isRequired,
         placeholder: PropTypes.string,
         activeFilter: PropTypes.object,
         isChecked: PropTypes.bool,
         changeActiveFilter: PropTypes.func.isRequired,
         currentActiveFilter: PropTypes.string,
-        isHidden: PropTypes.bool
+        isHidden: PropTypes.bool,
+        parentCallback: PropTypes.func.isRequired
     };
 
     static defaultProps = {
@@ -142,7 +142,7 @@ class FieldMultiselect extends PureComponent {
             filter: { is_radio },
             activeFilter,
             isChecked,
-            onChange
+            parentCallback
         } = this.props;
 
         if (option.subcategories) {
@@ -158,7 +158,7 @@ class FieldMultiselect extends PureComponent {
               isRadio={ is_radio }
               activeFilter={ activeFilter }
               isChecked={ isChecked }
-              onChange={ onChange }
+              parentCallback={ parentCallback }
             />
         );
     };
@@ -203,7 +203,7 @@ class FieldMultiselect extends PureComponent {
 
     renderMultiselectContainer() {
         const { toggleOptionsList, isArabic } = this.state;
-        const { placeholder, onChange, isHidden } = this.props;
+        const { placeholder, isHidden } = this.props;
 
         return (
             <div ref={ this.filterDropdownRef } block="FieldMultiselect" mods={ { isHidden } }>
@@ -235,7 +235,6 @@ class FieldMultiselect extends PureComponent {
                 >
                 <fieldset
                   block="PLPFilter"
-                  onChange={ onChange }
                 >
                         { this.renderOptions() }
                 </fieldset>
