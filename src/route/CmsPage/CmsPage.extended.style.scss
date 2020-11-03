@@ -1,5 +1,40 @@
 .CmsPage {
     &-Content {
         margin-bottom: 50px;
+
+        img {
+            position: static;
+            height: auto;
+            width: 100%;
+            max-width: 275px;
+            margin: 14px 0;
+        }
+    
+        .Image {
+            padding-bottom: 0;
+            height: 100%;
+        }
+
+        .information {
+           &-page {
+                font-size: 16px;
+
+                h1 {
+                    font-size: 30px;
+                }
+
+                ul {
+                    margin: 20px 0;
+                }
+
+                &__label {
+                    margin-top: 20px;
+                    font-weight: 600;
+                    font-size: 16px;
+                }
+
+           } 
+        }
     }
+
 }
