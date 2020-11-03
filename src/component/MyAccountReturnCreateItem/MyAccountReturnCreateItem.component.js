@@ -109,7 +109,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
                 product_options: { info_buyRequest: { qty } }
             }
         } = this.props;
-        const size = typeof sizeField === 'string' ? sizeField : sizeField.value;
+        const size = typeof sizeField === 'string' ? sizeField : (sizeField || {}).value;
 
         return (
             <div block="MyAccountReturnCreateItem" elem="Details">
