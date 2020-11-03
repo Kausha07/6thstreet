@@ -201,14 +201,6 @@ class PLPFilters extends PureComponent {
     }
 
     renderFilterButton() {
-        const { activeFilters } = this.state;
-        const { count } = activeFilters ? Object.entries(activeFilters).reduce((prev, [_key, value]) => ({
-            count: prev.count + value.length
-        }), { count: 0 })
-            : (
-                { count: 0 }
-            );
-
         return (
             <button
               onClick={ this.handleFilterClick }
@@ -219,7 +211,6 @@ class PLPFilters extends PureComponent {
             >
                 <img src={ fitlerImage } alt="fitler" />
                 { __('refine ') }
-                { `(${count})` }
             </button>
         );
     }

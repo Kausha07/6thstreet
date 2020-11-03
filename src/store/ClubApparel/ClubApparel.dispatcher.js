@@ -43,6 +43,8 @@ export class ClubApparelDispatcher {
             return await linkAccount(data);
         } catch (e) {
             Logger.log(e);
+
+            return false;
         }
     }
 

@@ -6,6 +6,7 @@ import { setGender } from 'Store/AppState/AppState.action';
 import { toggleBreadcrumbs } from 'Store/Breadcrumbs/Breadcrumbs.action';
 import { getStaticFile } from 'Util/API/endpoint/StaticFiles/StaticFiles.endpoint';
 import Logger from 'Util/Logger';
+import isMobile from 'Util/Mobile';
 
 import HomePage from './HomePage.component';
 import { HOME_STATIC_FILE_KEY } from './HomePage.config';
@@ -87,8 +88,13 @@ export class HomePageContainer extends PureComponent {
         return urlGender;
     }
 
+    getDevicePrefix() {
+        return isMobile.any() ? 'm/' : 'd/';
+    }
+
     async requestDynamicContent(isUpdate = false) {
         const { gender } = this.props;
+        const devicePrefix = this.getDevicePrefix();
 
         if (isUpdate) {
             // Only set loading if this is an update
@@ -98,7 +104,7 @@ export class HomePageContainer extends PureComponent {
         try {
             const dynamicContent = await getStaticFile(
                 HOME_STATIC_FILE_KEY,
-                { $FILE_NAME: `${gender}.json` }
+                { $FILE_NAME: `${devicePrefix}${gender}.json` }
             );
 
             this.setState({

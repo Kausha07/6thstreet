@@ -22,7 +22,7 @@
         margin: 10px auto 0 auto;
 
         &::before{
-            content: "";
+            content: '';
             right: 0;
             background: url(./icons/categories-gray@2x.png) no-repeat;
             background-size: 27px;
@@ -31,7 +31,6 @@
             display: inline-block;
             font-size: 0;
             filter: invert(26%) sepia(2%) saturate(21%) hue-rotate(43deg) brightness(90%) contrast(80%);
-
         }
 
         &_isExpanded {
