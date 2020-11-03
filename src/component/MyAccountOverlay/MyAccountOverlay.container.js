@@ -172,7 +172,6 @@ export class MyAccountOverlayContainer extends PureComponent {
 
         if (isSignedIn !== prevIsSignedIn) {
             hideActiveOverlay();
-
             if (isCheckout) {
                 goToPreviousHeaderState();
             }
@@ -380,6 +379,15 @@ export class MyAccountOverlayContainer extends PureComponent {
     }
 
     render() {
+        const { state } = this.state;
+        const { hideActiveOverlay } = this.props;
+
+        if (state === 'loggedIn') {
+            hideActiveOverlay();
+
+            return null;
+        }
+
         return (
             <MyAccountOverlay
               { ...this.props }

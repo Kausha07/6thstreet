@@ -7,10 +7,12 @@
 
     height: auto;
     display: block;
+    margin-top: 11px;
 
     @include desktop {
         display: grid;
         grid-template-columns: 1fr 6fr;
+        margin-top: 0;
     }
     
 
