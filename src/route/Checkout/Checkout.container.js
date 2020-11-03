@@ -46,6 +46,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         isSignedIn: PropTypes.bool.isRequired
     };
 
+    state={
+        ...this.state,
+        isLoading: false
+    };
+
     componentDidMount() {
         updateMeta({ title: __('Checkout') });
     }
@@ -78,7 +83,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
         /* eslint-disable */
         delete address.region_id;
-
+        Checkout.setState({ isLoading: true });
         estimateShipping({
             ...address,
             default_shipping: true
@@ -86,9 +91,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             (response) => {
                 if (typeof response !== 'undefined') {
                     Checkout.setState({
-                        shippingMethods: response.data
+                        shippingMethods: response.data,
+                        isLoading: false
                     })
                 }
+                Checkout.setState({ isLoading: false });
             },
             this._handleError
         );
