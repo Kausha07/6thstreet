@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 
 import CheckoutAddressForm from 'Component/CheckoutAddressForm';
 import CheckoutAddressTable from 'Component/CheckoutAddressTable';
-// import MyAccountAddressBook from 'Component/MyAccountAddressBook';
 import Slider from 'Component/Slider';
 import { BILLING_STEP, SHIPPING_STEP } from 'Route/Checkout/Checkout.config';
 import { CheckoutAddressBook as SourceCheckoutAddressBook }
@@ -29,11 +28,6 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
         isMobile: isMobile.any() || isMobile.tablet(),
         isArabic: isArabic()
     };
-
-    renderNoAddresses() {
-        // return <MyAccountAddressBook checkoutNoAddress />;
-        return null;
-    }
 
     renderHeading() {
         const { isBilling } = this.props;

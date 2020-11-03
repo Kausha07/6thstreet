@@ -22,15 +22,17 @@ export class CheckoutDispatcher {
     /* eslint-disable-next-line */
     async estimateShipping(dispatch, address) {
         const { Cart: { cartId } } = getStore().getState();
-        const { area, city, street, telephone } = address;
-
+        const { area, street } = address;
         try {
             const response = await validateShippingAddress({ address });
             const { success: isAddressValid } = response;
+            console.log(area, street, isAddressValid);
 
-            if (!isAddressValid & (area || street)) {
+            if (!isAddressValid & (area !== undefined || street !== undefined)) {
                 const { error: {parameters} } = response;
-                const message = parameters.length > 1 ? `(${parameters}) fields are not valid` : `(${parameters}) field is not valid`;
+                const message = parameters.length > 1 ? 
+                `(${parameters}) ${__('fields are not valid')}` : 
+                `(${parameters}) ${__('field is not valid')}`;
                 
                 dispatch(showNotification('error', message));
             }
@@ -38,7 +40,7 @@ export class CheckoutDispatcher {
                 return await estimateShippingMethods({ cartId, address });
             }
         } catch (e) {
-            dispatch(showNotification('error', 'Some of the fields are not valid'));
+            dispatch(showNotification('error', __('Some of the fields are not valid')));
             Logger.log(e);
         }
     }

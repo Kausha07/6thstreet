@@ -25,7 +25,6 @@ export class MyAccountAddressBook extends PureComponent {
     static propTypes = {
         customer: customerType.isRequired,
         formContent: PropTypes.bool.isRequired,
-        checkoutNoAddress: PropTypes.bool,
         getDefaultPostfix: PropTypes.func.isRequired,
         closeForm: PropTypes.func.isRequired,
         openForm: PropTypes.func.isRequired,
@@ -34,10 +33,6 @@ export class MyAccountAddressBook extends PureComponent {
         payload: PropTypes.shape({
             address: addressType
         }).isRequired
-    };
-
-    static defaultProps = {
-        checkoutNoAddress: false
     };
 
     state = {
@@ -138,11 +133,6 @@ export class MyAccountAddressBook extends PureComponent {
 
     render() {
         const { hideCards } = this.state;
-        const { checkoutNoAddress } = this.props;
-
-        if (checkoutNoAddress) {
-            this.openNewForm();
-        }
 
         if (hideCards) {
             return (

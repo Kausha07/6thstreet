@@ -64,7 +64,7 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
         return fieldMap;
     }
 
-    estimateShipping = () => {
+    estimateShipping() {
         const { onShippingEstimationFieldsChange } = this.props;
 
         const {
