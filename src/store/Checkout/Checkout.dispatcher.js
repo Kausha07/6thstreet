@@ -26,7 +26,6 @@ export class CheckoutDispatcher {
         try {
             const response = await validateShippingAddress({ address });
             const { success: isAddressValid } = response;
-            console.log(area, street, isAddressValid);
 
             if (!isAddressValid & (area !== undefined || street !== undefined)) {
                 const { error: {parameters} } = response;
