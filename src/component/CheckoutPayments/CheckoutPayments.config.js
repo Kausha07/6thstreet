@@ -6,3 +6,4 @@ export const CASH_ON_DELIVERY = 'msp_cashondelivery';
 export const TABBY_ISTALLMENTS = 'tabby_installments';
 export const TABBY_PAY_LATER = 'tabby_checkout';
 export const TABBY_PAYMENT_CODES = [TABBY_ISTALLMENTS, TABBY_PAY_LATER];
+export const HIDDEN_PAYMENTS = ['checkout', 'apple_pay', 'checkout_apple_pay'];
