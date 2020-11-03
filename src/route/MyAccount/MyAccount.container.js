@@ -1,13 +1,15 @@
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import StoreCredit from 'Component/StoreCredit';
 import {
     BreadcrumbsDispatcher,
-    mapDispatchToProps,
-    mapStateToProps,
+    mapDispatchToProps as sourceMapDispatchToProps,
+    mapStateToProps as sourceMapStateToProps,
     MyAccountContainer as SourceMyAccountContainer,
     MyAccountDispatcher
 } from 'SourceRoute/MyAccount/MyAccount.container';
+import { setIsMobileTabActive } from 'Store/MyAccount/MyAccount.action';
 import {
     ADDRESS_BOOK,
     CLUB_APPAREL,
@@ -22,10 +24,18 @@ import { MY_ACCOUNT_URL } from './MyAccount.config';
 
 export {
     BreadcrumbsDispatcher,
-    MyAccountDispatcher,
-    mapStateToProps,
-    mapDispatchToProps
+    MyAccountDispatcher
 };
+
+export const mapStateToProps = (state) => ({
+    ...sourceMapStateToProps(state),
+    mobileTabActive: state.MyAccountReducer.mobileTabActive
+});
+
+export const mapDispatchToProps = (dispatch) => ({
+    ...sourceMapDispatchToProps(dispatch),
+    setMobileTabActive: (value) => dispatch(setIsMobileTabActive(value))
+});
 
 export const tabMap = {
     [STORE_CREDIT]: {
@@ -61,6 +71,12 @@ export const tabMap = {
 };
 
 export class MyAccountContainer extends SourceMyAccountContainer {
+    static propTypes = {
+        ...SourceMyAccountContainer.propTypes,
+        mobileTabActive: PropTypes.bool.isRequired,
+        setMobileTabActive: PropTypes.func.isRequired
+    };
+
     tabMap = tabMap;
 
     updateBreadcrumbs() {

@@ -6,6 +6,7 @@ import BrowserDatabase from 'Util/BrowserDatabase';
 import { ONE_MONTH_IN_SECONDS } from 'Util/Request/QueryDispatcher';
 
 import {
+    SET_IS_MOBILE_TAB_ACTIVE,
     UPDATE_CUSTOMER_DETAILS,
     UPDATE_CUSTOMER_PASSWORD_FORGOT_STATUS,
     UPDATE_CUSTOMER_PASSWORD_RESET_STATUS,
@@ -16,7 +17,8 @@ export const initialState = {
     isSignedIn: isInitiallySignedIn(),
     passwordResetStatus: false,
     isPasswordForgotSend: false,
-    customer: {}
+    customer: {},
+    mobileTabActive: true
 };
 
 export const MyAccountReducer = (state = initialState, action) => {
@@ -56,6 +58,14 @@ export const MyAccountReducer = (state = initialState, action) => {
         return {
             ...state,
             customer: data
+        };
+
+    case SET_IS_MOBILE_TAB_ACTIVE:
+        const { isActive } = action;
+
+        return {
+            ...state,
+            mobileTabActive: isActive
         };
 
     default:
