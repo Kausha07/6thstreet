@@ -38,6 +38,7 @@ class MobileMenuSidebar extends PureComponent {
             <Popup
               mix={ { block: 'MobileMenuSidebar', elem: 'Modal', mods: { isArabic, isOpen } } }
               id={ MOBILE_MENU_SIDEBAR_ID }
+              activeOverlay={ MOBILE_MENU_SIDEBAR_ID }
             >
                 <HeaderBottomBar
                   navigationState="default"

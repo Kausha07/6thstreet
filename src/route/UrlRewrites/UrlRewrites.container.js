@@ -42,14 +42,15 @@ export class UrlRewritesContainer extends PureComponent {
         this.requestUrlRewrite();
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate(prevProps, prevState) {
         const { location: { pathname }, locale, hideActiveOverlay } = this.props;
         const { locale: prevLocale } = prevProps;
         const { prevPathname } = this.state;
+        const { prevPathname: prevStatePathname } = prevState;
 
         if (
             pathname !== prevPathname
-            || locale !== prevLocale
+            || locale !== prevLocale || !prevStatePathname
         ) {
             hideActiveOverlay();
             // Request URL rewrite if pathname or locale changed

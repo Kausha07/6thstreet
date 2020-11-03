@@ -120,29 +120,6 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
         );
     }
 
-    renderCouponTotal() {
-        const {
-            totals: {
-                coupon_code: couponCode,
-                total_segments: totals = []
-            }
-        } = this.props;
-        const discount = getDiscountFromTotals(totals, 'discount');
-
-        if (!couponCode) {
-            return null;
-        }
-
-        return this.renderPriceLine(discount, __('Discount (%s)', couponCode));
-    }
-
-    renderDeliveryTotal() {
-        const { totals: { total_segments: totals = [] } } = this.props;
-        const shipping = getDiscountFromTotals(totals, 'shipping');
-
-        return this.renderPriceLine(shipping || __('FREE'), __('Delivery Cost'));
-    }
-
     renderPromo() {
         const { totals: { avail_free_shipping_amount } } = this.props;
 
@@ -169,17 +146,6 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
         );
     }
 
-    renderToggleableDiscountTotals() {
-        const { totals: { total_segments: totals = [] } } = this.props;
-        const storeCreditDiscount = getDiscountFromTotals(totals, 'customerbalance');
-        const clubApparelDiscount = getDiscountFromTotals(totals, 'clubapparel');
-
-        return [
-            this.renderPriceLine(storeCreditDiscount, __('Store Credit')),
-            this.renderPriceLine(clubApparelDiscount, __('Club Apparel Redemption'))
-        ];
-    }
-
     renderPriceLine(price, name, mods, allowZero = false) {
         if (!price && !allowZero) {
             return null;
@@ -204,17 +170,14 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
             totals: {
                 subtotal = 0,
                 total = 0,
-                tax_amount = 0,
                 shipping_amount = 0,
                 currency_code = getCurrency()
             },
-            checkoutStep,
-            cashOnDeliveryFee
+            checkoutStep
         } = this.props;
         const fixedPrice = FIXED_CURRENCIES.includes(currency_code);
-        const grandTotal = checkoutStep !== SHIPPING_STEP
-            ? total + tax_amount + cashOnDeliveryFee
-            : total + tax_amount;
+        const grandTotal = fixedPrice ? (total).toFixed(3) : total;
+        const { totals: { coupon_code: couponCode, total_segments: totals = [] } } = this.props;
 
         return (
             <div block="CheckoutOrderSummary" elem="OrderTotals">
@@ -223,34 +186,38 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                         { this.renderPriceLine(fixedPrice ? subtotal.toFixed(3) : subtotal, __('Subtotal')) }
                         { checkoutStep !== SHIPPING_STEP
                             && this.renderPriceLine(shipping_amount, __('Shipping'), { divider: true }) }
-                        { this.renderToggleableDiscountTotals() }
-                        { this.renderCouponTotal() }
-                        { this.renderDeliveryTotal() }
-                        { this.renderPriceLine(tax_amount, __('Tax')) }
-                        { this.renderCashOnDeliveryFee() }
+                        { this.renderPriceLine(
+                            getDiscountFromTotals(totals, 'customerbalance'),
+                            __('Store Credit')
+                        ) }
+                        { this.renderPriceLine(
+                            getDiscountFromTotals(totals, 'clubapparel'),
+                            __('Club Apparel Redemption')
+                        ) }
+                        { couponCode && this.renderPriceLine(
+                            getDiscountFromTotals(totals, 'discount'),
+                            __('Discount (%s)', couponCode)
+                        ) }
+                        { this.renderPriceLine(
+                            getDiscountFromTotals(totals, 'shipping') || __('FREE'),
+                            __('Delivery Cost')
+                        ) }
+                        { this.renderPriceLine(
+                            getDiscountFromTotals(totals, 'tax'),
+                            __('Tax')
+                        ) }
+                        { this.renderPriceLine(
+                            getDiscountFromTotals(totals, 'msp_cashondelivery'),
+                            __('Cash on Delivery')
+                        ) }
                     </div>
                     <div block="CheckoutOrderSummary" elem="Totals">
-                        { this.renderPriceLine(
-                            fixedPrice ? (grandTotal).toFixed(3) : grandTotal,
-                            __('Total'),
-                            {},
-                            true
-                        ) }
+                        { this.renderPriceLine(grandTotal, __('Total'), {}, true) }
                         <span>{ __('(Taxes included)') }</span>
                     </div>
                 </ul>
             </div>
         );
-    }
-
-    renderCashOnDeliveryFee() {
-        const { cashOnDeliveryFee } = this.props;
-
-        if (cashOnDeliveryFee) {
-            return this.renderPriceLine(cashOnDeliveryFee, __('Cash on Delivery'));
-        }
-
-        return null;
     }
 
     render() {

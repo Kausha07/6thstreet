@@ -11,28 +11,35 @@ class HeaderMenu extends PureComponent {
     static propTypes = {
         location: PropTypes.object.isRequired,
         toggleOverlayByKey: PropTypes.func.isRequired,
-        activeOverlay: PropTypes.string.isRequired,
-        newMenuGender: PropTypes.string.isRequired
+        newMenuGender: PropTypes.string.isRequired,
+        toggleActiveMenu: PropTypes.func.isRequired
     };
 
     state = {
         prevLocation: '',
-        isExpanded: true
+        expanded: false
+    };
+
+    renderMap = {
+        renderCategoriesButton: this.renderCategoriesButton.bind(this)
     };
 
     static getDerivedStateFromProps(props, state) {
-        const { location, activeOverlay } = props;
+        const { location } = props;
         const { prevLocation } = state;
 
         return location !== prevLocation ? ({
-            isExpanded: false,
+            expanded: false,
             prevLocation: location
-        }) : ({ isExpanded: activeOverlay === MOBILE_MENU_SIDEBAR_ID });
+        }) : null;
     }
 
     onCategoriesClick = () => {
-        const { toggleOverlayByKey } = this.props;
+        const { toggleOverlayByKey, toggleActiveMenu } = this.props;
+
+        this.setState(({ expanded }) => ({ expanded: !expanded }));
         toggleOverlayByKey(MOBILE_MENU_SIDEBAR_ID);
+        toggleActiveMenu();
     };
 
     renderMenu() {
@@ -44,16 +51,18 @@ class HeaderMenu extends PureComponent {
     }
 
     renderCategoriesButton() {
-        const { isExpanded } = this.state;
+        const { expanded } = this.state;
 
         return (
             <button
-              block="HeaderMenu"
-              elem="Button"
-              mods={ { isExpanded } }
+              mix={ {
+                  block: 'HeaderMenu',
+                  elem: 'Button',
+                  mods: { isExpanded: expanded }
+              } }
               onClick={ this.onCategoriesClick }
             >
-               <label htmlFor="Categories">{ __('Categories') }</label>
+                <label htmlFor="Categories">{ __('Categories') }</label>
             </button>
         );
     }

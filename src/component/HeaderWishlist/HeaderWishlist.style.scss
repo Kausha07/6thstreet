@@ -52,7 +52,7 @@
         display: none;
     }
 
-    &_isBottomBar{
+    &_isBottomBar {
         display: block;
         text-transform: none;
         font-size: 10px;
@@ -62,7 +62,7 @@
         color: var(--inactive-button-header-color);
         height: 40px;
         width: 40px;
-        margin: 10px auto 0;
+        margin: 12px auto 0;
         padding: 0;
         text-align: center;
 
@@ -71,10 +71,10 @@
         }
 
         &::before{
-            content: "";
+            content: '';
             right: 0;
-            background: url(./icons/wishlist-gray@2x.png) no-repeat;
-            background-size: 27px;
+            background: url(./icons/wishlist-gray@2x.png) no-repeat center center;
+            background-size: 24px;
             width: 27px;
             height: 29px;
             display: inline-block;
