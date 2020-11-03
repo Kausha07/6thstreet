@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import Field from 'Component/Field';
 import Loader from 'Component/Loader';
+import { PHONE_CODES } from 'Component/MyAccountAddressFieldForm/MyAccountAddressFieldForm.config';
 import { COUNTRY_CODES_FOR_PHONE_VALIDATION } from 'Component/MyAccountAddressForm/MyAccountAddressForm.config';
 import MyAccountPasswordForm from 'Component/MyAccountPasswordForm';
 import PhoneCountryCodeField from 'Component/PhoneCountryCodeField';
@@ -12,6 +13,7 @@ import {
 import { CUSTOMER } from 'Store/MyAccount/MyAccount.dispatcher';
 import { isArabic } from 'Util/App';
 import BrowserDatabase from 'Util/BrowserDatabase';
+import { getCountryFromUrl } from 'Util/Url';
 
 import './MyAccountCustomerForm.style';
 
@@ -33,9 +35,14 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
 
     constructor(props) {
         super(props);
-        const { customer: { gender } } = props;
+        const { customer: { gender, phone } } = props;
 
-        this.state = { gender };
+        this.state = {
+            gender,
+            customerCountry: phone ? Object.keys(PHONE_CODES).find(
+                (key) => PHONE_CODES[key] === phone.substr('0', '4')
+            ) : getCountryFromUrl()
+        };
     }
 
     componentDidUpdate() {
@@ -197,23 +204,14 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
     }
 
     getCustomerPhone() {
-        const { customer } = this.props;
+        const { customer, customer: { phone } = {} } = this.props;
 
         if (Object.keys(customer).length) {
-            if (!customer.addresses.length) {
-                return [];
-            }
-
-            const { phone: customerPhone } = customer;
-            const customerAddressesData = customer.addresses[0];
-            const customerAddressPhone = customerAddressesData.telephone.substr('4');
-            const customerCountry = customerAddressesData.country_id;
-
             return {
-                customerPhone: customerPhone
-                    ? customerPhone.substr('4')
-                    : customerAddressPhone,
-                customerCountry
+                customerPhone: phone ? phone.substr('4') : '',
+                customerCountry: phone ? Object.keys(PHONE_CODES).find(
+                    (key) => PHONE_CODES[key] === phone.substr('0', '4')
+                ) : getCountryFromUrl()
             };
         }
 
@@ -221,7 +219,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
     }
 
     getValidationForTelephone() {
-        const { customerCountry } = this.props;
+        const { customerCountry } = this.state;
 
         return COUNTRY_CODES_FOR_PHONE_VALIDATION[customerCountry]
             ? 'telephoneAE' : 'telephone';
@@ -261,6 +259,10 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
         // birthday need to be added to customer data
         const { isArabic } = this.state;
         const { customer: { dob } } = this.props;
+
+        if (!dob) {
+            return null;
+        }
 
         return (
             <div block="MyAccountCustomerForm" elem="BirthDay" mods={ { isArabic } }>

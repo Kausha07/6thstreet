@@ -110,8 +110,6 @@ export class CheckoutShipping extends SourceCheckoutShipping {
                 <button
                   type="submit"
                   block="Button button primary medium"
-                  // eslint-disable-next-line react/jsx-no-bind
-                  onKeyUp={ console.log('piuu') }
                   disabled={ !selectedShippingMethod }
                 >
                     { __('Deliver to this address') }
@@ -176,8 +174,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         const { customer: { addresses } } = this.props;
 
         if (isSignedIn && addresses.length === 0) {
-            this.openNewForm();
-            return null;
+            return this.openNewForm();
         }
 
         if (isSignedIn) {

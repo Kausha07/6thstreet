@@ -22,15 +22,17 @@ export class CheckoutDispatcher {
     /* eslint-disable-next-line */
     async estimateShipping(dispatch, address) {
         const { Cart: { cartId } } = getStore().getState();
+        const { area, city, street, telephone } = address;
 
         try {
             const response = await validateShippingAddress({ address });
             const { success: isAddressValid } = response;
 
-            if (!isAddressValid) {
+            if (!isAddressValid & (area || street)) {
                 const { error: {parameters} } = response;
                 const message = parameters.length > 1 ? `(${parameters}) fields are not valid` : `(${parameters}) field is not valid`;
-                dispatch(showNotification('info', message));
+                
+                dispatch(showNotification('error', message));
             }
             if (isAddressValid) {
                 return await estimateShippingMethods({ cartId, address });

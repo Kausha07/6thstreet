@@ -47,11 +47,11 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
 
         return executePost(prepareQuery([query])).then(
             ({ customer }) => {
-                const { firstname } = customer;
+                const { firstname, lastname } = customer;
                 const data = {
                     ...customer,
-                    firstname: firstname.substr(0, firstname.indexOf(' ')),
-                    lastname: firstname.substr(firstname.indexOf(' ') + 1)
+                    firstname: firstname.indexOf(' ') > 0 ? firstname.substr(0, firstname.indexOf(' ')) : firstname,
+                    lastname: firstname.indexOf(' ') > 0 ? firstname.substr(firstname.indexOf(' ') + 1) : lastname
                 };
 
                 dispatch(updateCustomerDetails({ ...stateCustomer, ...data }));

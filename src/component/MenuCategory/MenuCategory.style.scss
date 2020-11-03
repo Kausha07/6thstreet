@@ -148,7 +148,7 @@
             z-index: 5;
 
             &-Wrapper {
-                height: 70vh;
+                height: calc(100% - 140px - 83px);;
                 min-height: 500px;
                 width: 66%;
                 top: 140px;
