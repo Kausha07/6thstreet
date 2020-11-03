@@ -11,12 +11,12 @@ import './PLPFilterOption.style';
 class PLPFilterOption extends PureComponent {
     static propTypes = {
         option: FilterOption.isRequired,
-        isRadio: PropTypes.bool.isRequired,
-        activeFilter: PropTypes.object
+        isRadio: PropTypes.bool.isRequired
+        // activeFilter: PropTypes.object
     };
 
     static defaultProps = {
-        activeFilter: {}
+        // activeFilter: {}
     };
 
     fieldRef = createRef();
@@ -39,17 +39,17 @@ class PLPFilterOption extends PureComponent {
                 facet_value,
                 is_selected: checked
             },
-            isRadio,
-            activeFilter
+            isRadio
+            // activeFilter
         } = this.props;
         const { onSelectChecked } = this.state;
 
-        const category = Object.keys(activeFilter)[0];
+        // const category = Object.keys(activeFilter)[0];
 
-        if (category !== undefined) {
-            const { values } = activeFilter[category];
-            this.setState({ onSelectChecked: facet_value === values.find((value) => value === facet_value) });
-        }
+        // if (category !== undefined) {
+        //     const { values } = activeFilter[category];
+        //     this.setState({ onSelectChecked: facet_value === values.find((value) => value === facet_value) });
+        // }
 
         // TODO: fix radio ?
         const type = isRadio ? 'radio' : 'checkbox';

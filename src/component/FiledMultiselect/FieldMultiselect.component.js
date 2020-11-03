@@ -73,11 +73,16 @@ class FieldMultiselect extends PureComponent {
         }
     };
 
-    renderSubcategoryOptions = (option) => {
+    renderSubcategoryOptions = (option, display) => {
         const { isArabic } = this.state;
 
         return (
-            <div block="FieldMultiselect" elem="MobileOptionList" mods={ { isArabic } }>
+            <div
+              block="FieldMultiselect"
+              elem="MobileOptionList"
+              mods={ { isArabic } }
+              style={ { display } }
+            >
                 { Object.entries(option.subcategories).map(this.renderOption) }
             </div>
         );
@@ -85,20 +90,20 @@ class FieldMultiselect extends PureComponent {
 
     handleSubcategoryClick = (option) => {
         const { subcategoryOptions } = this.state;
-        const subcategoryOptionsValues = this.renderSubcategoryOptions(option);
+        // const subcategoryOptionsValues = this.renderSubcategoryOptions(option);
 
-        if (subcategoryOptions[option.label] === '' || subcategoryOptions[option.label] === undefined) {
+        if (!subcategoryOptions[option.label] || subcategoryOptions[option.label] === undefined) {
             this.setState({
                 subcategoryOptions: {
                     ...subcategoryOptions,
-                    [option.label]: subcategoryOptionsValues
+                    [option.label]: true
                 }
             });
         } else {
             this.setState({
                 subcategoryOptions: {
                     ...subcategoryOptions,
-                    [option.label]: ''
+                    [option.label]: false
                 }
             });
         }
@@ -107,14 +112,16 @@ class FieldMultiselect extends PureComponent {
     renderOptionMobile = (option) => {
         const { subcategoryOptions, isArabic } = this.state;
 
+        const isClosed = !subcategoryOptions[option.label] || subcategoryOptions[option.label] === undefined;
+        const display = isClosed ? 'none' : 'block';
+
         return (
             <div block="FieldMultiselect" elem="MobileOptions">
                 <button
                   block="FieldMultiselect"
                   elem="MobileOptionButton"
                   mods={ {
-                      isClosed:
-                    subcategoryOptions[option.label] === '' || subcategoryOptions[option.label] === undefined
+                      isClosed
                   } }
                   mix={ {
                       block: 'FieldMultiselect',
@@ -125,7 +132,7 @@ class FieldMultiselect extends PureComponent {
                 >
                     { option.label }
                 </button>
-                { subcategoryOptions[option.label] }
+                { this.renderSubcategoryOptions(option, display) }
             </div>
         );
     };
@@ -139,7 +146,9 @@ class FieldMultiselect extends PureComponent {
         } = this.props;
 
         if (option.subcategories) {
-            return Object.entries(option.subcategories).map(this.renderOption);
+            return !isMobile.any()
+                ? Object.entries(option.subcategories).map(this.renderOption)
+                : this.renderOptionMobile(option);
         }
 
         return (
@@ -155,11 +164,13 @@ class FieldMultiselect extends PureComponent {
     };
 
     renderOptions() {
-        const { filter: { data } } = this.props;
+        const { filter: { data, subcategories } } = this.props;
 
         return (
             <ul>
-                { Object.entries(data).map(this.renderOption) }
+                { data
+                    ? Object.entries(data).map(this.renderOption)
+                    : Object.entries(subcategories).map(this.renderOption) }
             </ul>
         );
     }
@@ -174,7 +185,7 @@ class FieldMultiselect extends PureComponent {
 
     handleFilterChange = () => {
         const { changeActiveFilter, filter } = this.props;
-        changeActiveFilter(filter.category);
+        changeActiveFilter(filter.category || filter.facet_key);
     };
 
     toggelOptionList() {

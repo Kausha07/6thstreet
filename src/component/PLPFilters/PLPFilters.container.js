@@ -16,6 +16,7 @@ import { Filters } from 'Util/API/endpoint/Product/Product.type';
 import WebUrlParser from 'Util/API/helper/WebUrlParser';
 
 import PLPFilters from './PLPFilters.component';
+import { SIZES } from './PLPFilters.config';
 
 export const mapStateToProps = (_state) => ({
     filters: _state.PLP.filters,
@@ -59,7 +60,14 @@ export class PLPFiltersContainer extends PureComponent {
 
         if (Object.keys(filters).length > Object.keys(initialFilters).length) {
             return {
-                initialFilters: filters
+                initialFilters: filters[SIZES].data ? {
+                    ...initialFilters,
+                    ...filters,
+                    ...filters[SIZES].data
+                } : {
+                    ...initialFilters,
+                    ...filters
+                }
             };
         }
 

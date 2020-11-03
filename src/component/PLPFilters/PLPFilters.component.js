@@ -17,6 +17,7 @@ import { isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
 
 import fitlerImage from './icons/filter-button.png';
+import { SIZES } from './PLPFilters.config';
 
 import './PLPFilters.style';
 
@@ -71,7 +72,14 @@ class PLPFilters extends PureComponent {
 
     renderFilters() {
         const { filters } = this.props;
-        return Object.entries(filters).map(this.renderFilter);
+        return Object.entries(filters).map((filter) => {
+            if (filter[0] === SIZES && !isMobile.any()) {
+                const { data } = filter[1];
+                return Object.keys(data).map((size) => this.renderFilter([size, data[size]]));
+            }
+
+            return this.renderFilter([filter[0], filter[1]]);
+        });
     }
 
     renderQuickFilters() {
@@ -117,6 +125,8 @@ class PLPFilters extends PureComponent {
 
     onShowResultButton = () => {
         const { activeFilters } = this.state;
+
+        console.log(activeFilters);
 
         Object.keys(activeFilters || {}).map((key) => WebUrlParser.setParam(key, activeFilters[key]));
         this.hidePopUp();
@@ -263,20 +273,23 @@ class PLPFilters extends PureComponent {
         const { activeFilter } = this.state;
 
         return (
-            <PLPFilter
-              key={ key }
-              filter={ filter }
-              parentCallback={ this.handleCallback }
-              currentActiveFilter={ activeFilter }
-              changeActiveFilter={ this.changeActiveFilter }
-            />
+                <PLPFilter
+                  key={ key }
+                  filter={ filter }
+                  parentCallback={ this.handleCallback }
+                  currentActiveFilter={ activeFilter }
+                  changeActiveFilter={ this.changeActiveFilter }
+                />
         );
     };
 
     handleCallback = (category, values) => {
         const { activeFilters } = this.state;
         this.setState({
-            activeFilters: {
+            activeFilters: category === SIZES ? {
+                ...activeFilters,
+                ...values
+            } : {
                 ...activeFilters,
                 [category]: values
             }
