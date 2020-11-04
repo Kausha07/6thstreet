@@ -6,7 +6,6 @@ import { Product } from 'Util/API/endpoint/Product/Product.type';
 import PDPSizeGuide from '../PDPSizeGuide';
 
 import './PDPAddToCart.style';
-import './NotificationList.extended.style.scss';
 
 class PDPAddToCart extends PureComponent {
     static propTypes = {
