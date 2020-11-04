@@ -25,6 +25,10 @@
         flex-wrap: wrap;
         margin-bottom: 20px;
 
+        @include desktop() {
+            height: 170px;
+        }
+
         &-Wrapper {
             display: flex;
 
@@ -38,6 +42,7 @@
 
                 &-Image {
                     position: relative;
+                    object-fit: cover;
                 }
             }
         }
