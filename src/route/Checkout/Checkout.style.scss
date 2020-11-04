@@ -15,7 +15,7 @@
     }
 
     @include desktop {
-        padding: 125px 0;
+        padding: 125px 0 300px;
         background-color: var(--lightest-gray);
     }
 
@@ -224,7 +224,7 @@
 
     .CheckoutAddressBook {
         @include desktop {
-            margin-top: -110px;
+            margin-top: -90px;
         }
 
         &_isBilling {
