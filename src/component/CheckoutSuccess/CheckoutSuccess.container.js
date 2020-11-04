@@ -7,7 +7,9 @@ import { MyAccountDispatcher } from 'Component/CheckoutGuestForm/CheckoutGuestFo
 import {
     CUSTOMER_ACCOUNT, CUSTOMER_ACCOUNT_PAGE
 } from 'Component/Header/Header.config';
+import { MY_ACCOUNT_URL } from 'Route/MyAccount/MyAccount.config';
 import MyAccountContainer, { tabMap } from 'Route/MyAccount/MyAccount.container';
+import CheckoutDispatcher from 'Store/Checkout/Checkout.dispatcher';
 import ClubApparelDispatcher from 'Store/ClubApparel/ClubApparel.dispatcher';
 import { updateMeta } from 'Store/Meta/Meta.action';
 import { changeNavigationState } from 'Store/Navigation/Navigation.action';
@@ -15,8 +17,8 @@ import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
 import { customerType } from 'Type/Account';
-import { HistoryType } from 'Type/Common';
 import { TotalsType } from 'Type/MiniCart';
+import history from 'Util/History';
 
 import CheckoutSuccess from './CheckoutSuccess.component';
 
@@ -41,6 +43,7 @@ export const mapDispatchToProps = (dispatch) => ({
     showNotification: (type, message) => dispatch(showNotification(type, message)),
     updateMeta: (meta) => dispatch(updateMeta(meta)),
     getMember: (id) => ClubApparelDispatcher.getMember(dispatch, id),
+    verifyUserPhone: (code) => CheckoutDispatcher.verifyUserPhone(dispatch, code),
     requestCustomerData: () => MyAccountDispatcher
         .then(({ default: dispatcher }) => dispatcher.requestCustomerData(dispatch))
 });
@@ -53,7 +56,7 @@ export class CheckoutSuccessContainer extends PureComponent {
         showNotification: PropTypes.func.isRequired,
         updateMeta: PropTypes.func.isRequired,
         guest_checkout: PropTypes.bool.isRequired,
-        history: HistoryType.isRequired,
+        shippingAddress: PropTypes.object.isRequired,
         totals: TotalsType.isRequired,
         tabMap: PropTypes.isRequired,
         customer: customerType,
@@ -68,11 +71,16 @@ export class CheckoutSuccessContainer extends PureComponent {
 
     state = {
         isEditing: false,
-        clubApparelMember: null
+        clubApparelMember: null,
+        phone: ''
     };
 
     containerFunctions = {
-        onSignIn: this.onSignIn.bind(this)
+        onSignIn: this.onSignIn.bind(this),
+        changeActiveTab: this.changeActiveTab.bind(this),
+        onChangePhone: this.onChangePhone.bind(this),
+        onVerifySuccess: this.onVerifySuccess.bind(this),
+        onResendCode: this.onResendCode.bind(this)
     };
 
     constructor(props) {
@@ -99,7 +107,8 @@ export class CheckoutSuccessContainer extends PureComponent {
     }
 
     componentDidMount() {
-        const { updateMeta } = this.props;
+        const { updateMeta, shippingAddress } = this.props;
+        this.setState({ phone: shippingAddress.phone });
 
         updateMeta({ title: __('Account') });
 
@@ -113,6 +122,37 @@ export class CheckoutSuccessContainer extends PureComponent {
             clubApparelMember
         };
     };
+
+    onChangePhone() {
+        console.log('onChangePhone');
+    }
+
+    onVerifySuccess(fields) {
+        console.log(fields);
+        const { verifyUserPhone } = this.props;
+        const { phone } = this.state;
+
+        if (phone) {
+            const mobile = '7619209397';
+            const countryCode = '61';
+            const otp = '62935';
+            verifyUserPhone({ mobile, country_code: countryCode, otp }).then(
+                (response) => {
+                    console.log(response);
+                },
+                this._handleError
+            );
+        }
+    }
+
+    onResendCode() {
+        console.log('onresendcode');
+    }
+
+    changeActiveTab(activeTab) {
+        const { [activeTab]: { url } } = tabMap;
+        history.push(`${ MY_ACCOUNT_URL }${ url }`);
+    }
 
     _updateBreadcrumbs() {
         const { updateBreadcrumbs } = this.props;

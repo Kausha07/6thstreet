@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import { setGender } from 'Store/AppState/AppState.action';
 import { getStaticFile } from 'Util/API/endpoint/StaticFiles/StaticFiles.endpoint';
 import Logger from 'Util/Logger';
 
@@ -13,23 +14,22 @@ export const mapStateToProps = (state) => ({
     locale: state.AppState.locale
 });
 
-export const mapDispatchToProps = (_dispatch) => ({
-    // addProduct: options => CartDispatcher.addProductToCart(dispatch, options)
+export const mapDispatchToProps = (dispatch) => ({
+    setGender: (gender) => dispatch(setGender(gender))
 });
 
 export class MenuContainer extends PureComponent {
     static propTypes = {
         gender: PropTypes.string.isRequired,
-        locale: PropTypes.string.isRequired
+        locale: PropTypes.string.isRequired,
+        newMenuGender: PropTypes.string.isRequired,
+        setGender: PropTypes.func.isRequired
     };
 
     state = {
         categories: [],
-        isLoading: true
-    };
-
-    containerFunctions = {
-        // getData: this.getData.bind(this)
+        isLoading: true,
+        menuGender: 'men'
     };
 
     constructor(props) {
@@ -38,28 +38,48 @@ export class MenuContainer extends PureComponent {
         this.requestCategories();
     }
 
+    componentDidMount() {
+        const { menuGender } = this.state;
+        this.requestCategories(true, menuGender);
+    }
+
     componentDidUpdate(prevProps) {
         const { gender: prevGender, locale: prevLocale } = prevProps;
-        const { gender, locale } = this.props;
+        const { gender, locale, newMenuGender } = this.props;
+        const { menuGender } = this.state;
+        if (newMenuGender !== menuGender && newMenuGender !== '') {
+            this.changeMenuGender();
+            this.requestCategories(true, newMenuGender);
+        }
 
         if (gender !== prevGender || locale !== prevLocale) {
             this.requestCategories(true);
         }
     }
 
-    async requestCategories(isUpdate = false) {
+    changeMenuGender = () => {
+        const { newMenuGender } = this.props;
+        this.setState({ menuGender: newMenuGender });
+    };
+
+    async requestCategories(isUpdate = false, gender = this.props) {
         if (isUpdate) {
             // Only set loading if this is an update
             this.setState({ isLoading: true });
         }
 
         try {
-            const categories = await getStaticFile(CATEGORIES_STATIC_FILE_KEY);
-
-            this.setState({
-                categories,
-                isLoading: false
-            });
+            if (typeof gender === 'object') {
+                this.setState({
+                    categories: await getStaticFile(CATEGORIES_STATIC_FILE_KEY, { $GENDER: gender.gender }),
+                    isLoading: false
+                });
+            } else {
+                this.setState({
+                    categories: await getStaticFile(CATEGORIES_STATIC_FILE_KEY, { $GENDER: gender }),
+                    isLoading: false
+                });
+            }
         } catch (e) {
             // TODO: handle error
             Logger.log(e);
@@ -72,9 +92,16 @@ export class MenuContainer extends PureComponent {
             categories
         } = this.state;
 
+        const {
+            gender,
+            setGender
+        } = this.props;
+
         return {
             isLoading,
-            categories
+            categories,
+            gender,
+            setGender
         };
     };
 

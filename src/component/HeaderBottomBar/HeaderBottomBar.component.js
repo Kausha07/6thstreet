@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 import HeaderMenu from 'Component/HeaderMenu';
 import HeaderSearch from 'Component/HeaderSearch';
 import NavigationAbstract from 'Component/NavigationAbstract/NavigationAbstract.component';
@@ -8,6 +10,14 @@ import isMobile from 'Util/Mobile';
 import './HeaderBottomBar.style';
 
 class HeaderBottomBar extends NavigationAbstract {
+    static propTypes = {
+        newMenuGender: PropTypes.string
+    };
+
+    static defaultProps = {
+        newMenuGender: 'men'
+    };
+
     state = {
         isArabic: isArabic()
     };
@@ -24,9 +34,19 @@ class HeaderBottomBar extends NavigationAbstract {
     };
 
     renderMenu() {
+        const { newMenuGender } = this.props;
+        if (isMobile.any()) {
+            return (
+                <HeaderMenu
+                  key="menu"
+                />
+            );
+        }
+
         return (
             <HeaderMenu
               key="menu"
+              newMenuGender={ newMenuGender }
             />
         );
     }

@@ -17,7 +17,6 @@ import { CUSTOMER_ACCOUNT_OVERLAY_KEY } from 'Component/MyAccountOverlay/MyAccou
 import { CHECKOUT_URL } from 'Route/Checkout/Checkout.config';
 import { MY_ACCOUNT_URL } from 'Route/MyAccount/MyAccount.config';
 import MyAccountContainer, { tabMap } from 'Route/MyAccount/MyAccount.container';
-import ClubApparelDispatcher from 'Store/ClubApparel/ClubApparel.dispatcher';
 import { updateMeta } from 'Store/Meta/Meta.action';
 import { changeNavigationState } from 'Store/Navigation/Navigation.action';
 import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
@@ -26,6 +25,7 @@ import { toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
 import { customerType } from 'Type/Account';
 import { HistoryType } from 'Type/Common';
 import { TotalsType } from 'Type/MiniCart';
+import { ClubApparelMember } from 'Util/API/endpoint/ClubApparel/ClubApparel.type';
 import { isSignedIn } from 'Util/Auth';
 import history from 'Util/History';
 import isMobile from 'Util/Mobile';
@@ -43,7 +43,8 @@ export const mapStateToProps = (state) => ({
     headerState: state.NavigationReducer[TOP_NAVIGATION_TYPE].navigationState,
     guest_checkout: state.ConfigReducer.guest_checkout,
     customer: state.MyAccountReducer.customer,
-    isSignedIn: state.MyAccountReducer.isSignedIn
+    isSignedIn: state.MyAccountReducer.isSignedIn,
+    clubApparel: state.ClubApparelReducer.clubApparel
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -53,8 +54,7 @@ export const mapDispatchToProps = (dispatch) => ({
     ),
     showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
     showNotification: (type, message) => dispatch(showNotification(type, message)),
-    updateMeta: (meta) => dispatch(updateMeta(meta)),
-    getMember: (id) => ClubApparelDispatcher.getMember(dispatch, id)
+    updateMeta: (meta) => dispatch(updateMeta(meta))
 });
 
 export class CartPageContainer extends PureComponent {
@@ -64,17 +64,19 @@ export class CartPageContainer extends PureComponent {
         showOverlay: PropTypes.func.isRequired,
         showNotification: PropTypes.func.isRequired,
         updateMeta: PropTypes.func.isRequired,
-        guest_checkout: PropTypes.bool.isRequired,
+        guest_checkout: PropTypes.bool,
         history: HistoryType.isRequired,
         totals: TotalsType.isRequired,
         tabMap: PropTypes.isRequired,
         customer: customerType,
-        getMember: PropTypes.func.isRequired,
-        isSignedIn: PropTypes.bool.isRequired
+        isSignedIn: PropTypes.bool.isRequired,
+        clubApparel: ClubApparelMember
     };
 
     static defaultProps = {
-        customer: null
+        customer: null,
+        clubApparel: {},
+        guest_checkout: true
     };
 
     state = {
@@ -125,10 +127,8 @@ export class CartPageContainer extends PureComponent {
             changeHeaderState,
             totals: { items_qty },
             headerState,
-            headerState: { name },
-            customer: { id }
+            headerState: { name }
         } = this.props;
-        const { clubApparelMember } = this.state;
 
         const {
             totals: { items_qty: prevItemsQty },
@@ -148,31 +148,6 @@ export class CartPageContainer extends PureComponent {
                 title
             });
         }
-
-        if (id && !clubApparelMember) {
-            this.getClubApparelMember(id);
-        }
-    }
-
-    containerProps = () => {
-        const { clubApparelMember } = this.state;
-
-        return {
-            clubApparelMember
-        };
-    };
-
-    getClubApparelMember(id) {
-        const { getMember } = this.props;
-
-        getMember(id).then(
-            (response) => {
-                if (response && response.data) {
-                    this.setState({ clubApparelMember: response.data });
-                }
-            },
-            this._handleError
-        );
     }
 
     changeActiveTab(activeTab) {
@@ -271,7 +246,6 @@ export class CartPageContainer extends PureComponent {
               { ...this.props }
               { ...this.state }
               { ...this.containerFunctions }
-              { ...this.containerProps() }
               tabMap={ tabMap }
             />
         );

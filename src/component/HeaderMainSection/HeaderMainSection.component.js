@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { matchPath, withRouter } from 'react-router';
 
 import HeaderAccount from 'Component/HeaderAccount';
@@ -6,6 +8,7 @@ import HeaderGenders from 'Component/HeaderGenders';
 import HeaderLogo from 'Component/HeaderLogo';
 import HeaderSearch from 'Component/HeaderSearch';
 import HeaderWishlist from 'Component/HeaderWishlist';
+import { MOBILE_MENU_SIDEBAR_ID } from 'Component/MobileMenuSideBar/MoblieMenuSideBar.config';
 import NavigationAbstract from 'Component/NavigationAbstract/NavigationAbstract.component';
 import { DEFAULT_STATE_NAME } from 'Component/NavigationAbstract/NavigationAbstract.config';
 import {
@@ -15,11 +18,25 @@ import {
     TYPE_HOME,
     TYPE_PRODUCT
 } from 'Route/UrlRewrites/UrlRewrites.config';
+import BrowserDatabase from 'Util/BrowserDatabase';
 import isMobile from 'Util/Mobile';
 
 import './HeaderMainSection.style';
 
+export const mapStateToProps = (state) => ({
+    activeOverlay: state.OverlayReducer.activeOverlay
+});
+
 class HeaderMainSection extends NavigationAbstract {
+    static propTypes = {
+        activeOverlay: PropTypes.string.isRequired,
+        changeMenuGender: PropTypes.func
+    };
+
+    static defaultProps = {
+        changeMenuGender: () => {}
+    };
+
     stateMap = {
         [DEFAULT_STATE_NAME]: {
             account: true,
@@ -84,7 +101,7 @@ class HeaderMainSection extends NavigationAbstract {
     }
 
     getPageType() {
-        if (location.pathname === '/') {
+        if (location.pathname === '/' || location.pathname === '') {
             return TYPE_HOME;
         }
         if (matchPath(location.pathname, '/brands')) {
@@ -98,11 +115,11 @@ class HeaderMainSection extends NavigationAbstract {
     }
 
     getCategory() {
-        return JSON.parse(localStorage.getItem('CATEGORY_NAME'));
+        return BrowserDatabase.getItem('CATEGORY_NAME') || '';
     }
 
     getProduct() {
-        return JSON.parse(localStorage.getItem('PRODUCT_NAME'));
+        return BrowserDatabase.getItem('PRODUCT_NAME') || '';
     }
 
     setMainContentPadding(px = '0') {
@@ -137,10 +154,17 @@ class HeaderMainSection extends NavigationAbstract {
     }
 
     renderGenderSwitcher() {
+        const { changeMenuGender, activeOverlay } = this.props;
+
+        if (isMobile.any() && activeOverlay === MOBILE_MENU_SIDEBAR_ID) {
+            return null;
+        }
+
         return (this.isPLP() || this.isPDP()) && isMobile.any() ? null : (
             <HeaderGenders
               key="genders"
               isMobile
+              changeMenuGender={ changeMenuGender }
             />
         );
     }
@@ -221,4 +245,4 @@ class HeaderMainSection extends NavigationAbstract {
     }
 }
 
-export default withRouter(HeaderMainSection);
+export default withRouter(connect(mapStateToProps)(HeaderMainSection));

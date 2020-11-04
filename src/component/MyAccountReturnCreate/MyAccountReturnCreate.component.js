@@ -130,6 +130,10 @@ export class MyAccountReturnCreate extends PureComponent {
     renderContent() {
         const { isLoading, incrementId } = this.props;
 
+        if (isLoading) {
+            return null;
+        }
+
         if (!isLoading && !incrementId) {
             return this.renderReturnNotPossible();
         }

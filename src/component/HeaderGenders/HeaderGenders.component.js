@@ -1,21 +1,31 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
+import { connect } from 'react-redux';
 
 import GenderButton from 'Component/GenderButton';
 import { isArabic } from 'Util/App';
 
 import './HeaderGenders.style';
 
+export const mapStateToProps = (state) => ({
+    currentContentGender: state.AppState.gender
+});
+
 class HeaderGenders extends PureComponent {
     state = {
-        isArabic: isArabic()
+        isArabic: isArabic(),
+        currentGenderButton: '',
+        isUnsetStyle: false
     };
 
     static propTypes = {
+        currentContentGender: PropTypes.string.isRequired,
+        changeMenuGender: PropTypes.func,
         isMobile: PropTypes.bool
     };
 
     static defaultProps = {
+        changeMenuGender: () => {},
         isMobile: false
     };
 
@@ -34,8 +44,34 @@ class HeaderGenders extends PureComponent {
         }
     ];
 
+    getNewActiveMenuGender = (key) => {
+        const { currentGenderButton } = this.state;
+        if (currentGenderButton !== key) {
+            this.setState({ currentGenderButton: key });
+        }
+    };
+
+    isCurrentGender(key) {
+        const { currentContentGender } = this.props;
+        if (currentContentGender === '' && key === 'men') {
+            return true;
+        }
+
+        return key === currentContentGender;
+    }
+
+    handleUnsetStyle = (isUnsetStyle) => {
+        this.setState({ isUnsetStyle });
+    };
+
     renderGender = (gender) => {
         const { key } = gender;
+        const { changeMenuGender, currentContentGender } = this.props;
+        const { currentGenderButton, isUnsetStyle } = this.state;
+        const isCurrentGender = this.isCurrentGender(key);
+        if (currentGenderButton === '') {
+            this.setState({ currentGenderButton: currentContentGender });
+        }
 
         return (
             <div
@@ -49,6 +85,11 @@ class HeaderGenders extends PureComponent {
                       block: 'HeaderGenders',
                       elem: 'Button'
                   } }
+                  handleUnsetStyle={ this.handleUnsetStyle }
+                  isUnsetStyle={ isUnsetStyle }
+                  isCurrentGender={ isCurrentGender }
+                  changeMenuGender={ changeMenuGender }
+                  getNewActiveMenuGender={ this.getNewActiveMenuGender }
                 />
             </div>
         );
@@ -72,4 +113,4 @@ class HeaderGenders extends PureComponent {
     }
 }
 
-export default HeaderGenders;
+export default connect(mapStateToProps)(HeaderGenders);

@@ -13,3 +13,8 @@ export const resetPassword = (email) => MobileAPI.post(
     '/buyers/password_reset',
     email
 ) || {};
+
+export const updateCustomerData = (data) => MobileAPI.put(
+    '/customers',
+    data
+) || {};

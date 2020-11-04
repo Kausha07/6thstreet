@@ -15,7 +15,8 @@ export const mapDispatchToProps = (dispatch) => ({
 export class TabbyPopupContainer extends PureComponent {
     static propTypes = {
         tabbyWebUrl: PropTypes.string.isRequired,
-        showOverlay: PropTypes.func.isRequired
+        showOverlay: PropTypes.func.isRequired,
+        hideActiveOverlay: PropTypes.func.isRequired
     };
 
     componentDidMount() {

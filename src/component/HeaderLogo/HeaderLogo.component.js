@@ -11,7 +11,7 @@ import './HeaderLogo.style';
 class HeaderLogo extends PureComponent {
     render() {
         return (
-            <Link to="/" block="HeaderLogo">
+            <Link to="/men.html" block="HeaderLogo">
                 <Image src={ logo } />
             </Link>
         );

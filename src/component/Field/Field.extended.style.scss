@@ -102,4 +102,23 @@
             background: rgba(67,67,67,1);
         }
     }
+
+    input[type="date"] {
+        &::after {
+            content: none;
+        }
+    }
+
+    &_type_radio {
+        label {
+            &:last-of-type {
+                align-items: center;
+                display: flex;
+
+                span {
+                    font-size: 14px;
+                }
+            }
+        }
+    }
 }

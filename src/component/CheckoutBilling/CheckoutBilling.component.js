@@ -2,7 +2,10 @@ import PropTypes from 'prop-types';
 
 import CheckoutAddressBook from 'Component/CheckoutAddressBook';
 import CheckoutPayments from 'Component/CheckoutPayments';
+import CreditCardTooltip from 'Component/CreditCardTooltip';
 import Field from 'Component/Field';
+import Form from 'Component/Form';
+import { BILLING_STEP } from 'Route/Checkout/Checkout.config';
 import {
     CheckoutBilling as SourceCheckoutBilling
 } from 'SourceComponent/CheckoutBilling/CheckoutBilling.component';
@@ -18,7 +21,6 @@ export class CheckoutBilling extends SourceCheckoutBilling {
 
     renderPriceLine(price, name, mods) {
         const { totals: { currency_code } } = this.props;
-        const { roundedPrice } = Math.round(price);
 
         return (
             <li block="CheckoutOrderSummary" elem="SummaryItem" mods={ mods }>
@@ -28,7 +30,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
                     { price !== undefined
                         ? (
                         <strong block="CheckoutOrderSummary" elem="Price">
-                            { `${currency_code } ${ roundedPrice}` }
+                            { `${currency_code } ${ price}` }
                         </strong>
                         )
                         : null }
@@ -43,15 +45,18 @@ export class CheckoutBilling extends SourceCheckoutBilling {
             totals: { is_virtual }
         } = this.props;
 
-        if (!isSameAsShipping && !is_virtual) {
+        if (isSameAsShipping && !is_virtual) {
             return null;
         }
 
         return (
-            <CheckoutAddressBook
-              onAddressSelect={ onAddressSelect }
-              isBilling
-            />
+            <>
+                { this.renderAddressHeading() }
+                <CheckoutAddressBook
+                  onAddressSelect={ onAddressSelect }
+                  isBilling
+                />
+            </>
         );
     }
 
@@ -83,7 +88,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
               label={ this.renderDifferentBillingLabel() }
               value="sameAsShippingAddress"
               mix={ { block: 'CheckoutBilling', elem: 'Checkbox' } }
-              checked={ isSameAsShipping }
+              checked={ !isSameAsShipping }
               onChange={ onSameAsShippingChange }
             />
         );
@@ -117,6 +122,8 @@ export class CheckoutBilling extends SourceCheckoutBilling {
               setOrderButtonEnableStatus={ this.setOrderButtonEnableStatus }
               setTabbyWebUrl={ setTabbyWebUrl }
               setCreditCardData={ setCreditCardData }
+              setOrderButtonDisabled={ this.setOrderButtonDisabled }
+              setOrderButtonEnabled={ this.setOrderButtonEnabled }
             />
         );
     }
@@ -132,6 +139,40 @@ export class CheckoutBilling extends SourceCheckoutBilling {
             </div>
         );
     }
+
+    renderCreditCardTooltipBar() {
+        const {
+            paymentMethods
+        } = this.props;
+
+        const {
+            options: {
+                promo_message: {
+                    collapsed: { text } = {},
+                    expanded
+                } = {}
+            }
+        } = paymentMethods[0];
+
+        return (
+            expanded !== undefined
+            && (
+                <CreditCardTooltip
+                  collapsedPromoMessage={ (text) }
+                  expandedPromoMessage={ (expanded[0].value) }
+                  bankLogos={ (expanded[1].value) }
+                />
+            )
+        );
+    }
+
+    setOrderButtonDisabled = () => {
+        this.setState({ isOrderButtonEnabled: false });
+    };
+
+    setOrderButtonEnabled = () => {
+        this.setState({ isOrderButtonEnabled: true });
+    };
 
     renderActions() {
         const {
@@ -152,17 +193,59 @@ export class CheckoutBilling extends SourceCheckoutBilling {
             : !isOrderButtonEnabled;
 
         return (
-            <div block="Checkout" elem="StickyButtonWrapper">
-                { this.renderTotals() }
-                <button
-                  type="submit"
-                  block="Button"
-                  disabled={ isDisabled }
-                  mix={ { block: 'CheckoutBilling', elem: 'Button' } }
-                >
-                    { __('Place order') }
-                </button>
-            </div>
+            <>
+                { this.renderCreditCardTooltipBar() }
+                <div block="Checkout" elem="StickyButtonWrapper">
+                    { this.renderTotals() }
+                    <button
+                      type="submit"
+                      block="Button"
+                      disabled={ isDisabled }
+                      mix={ { block: 'CheckoutBilling', elem: 'Button' } }
+                    >
+                        { __('Place order') }
+                    </button>
+                </div>
+            </>
+        );
+    }
+
+    renderAddressHeading() {
+        return (
+            <h2 block="CheckoutBilling" elem="AddressHeading">
+                { __('Billing Address') }
+            </h2>
+        );
+    }
+
+    renderAddresses() {
+        return (
+            <>
+                { this.renderSameAsShippingCheckbox() }
+                { this.renderAddressBook() }
+            </>
+        );
+    }
+
+    render() {
+        const { onBillingSuccess, onBillingError } = this.props;
+
+        return (
+            <Form
+              mix={ { block: 'CheckoutBilling' } }
+              id={ BILLING_STEP }
+              onSubmitError={ onBillingError }
+              onSubmitSuccess={ onBillingSuccess }
+            >
+                { this.renderAddresses() }
+                <div block="CheckoutBilling" elem="Line">
+                    <hr />
+                </div>
+                { this.renderPayments() }
+                { this.renderTermsAndConditions() }
+                { this.renderActions() }
+                { this.renderPopup() }
+            </Form>
         );
     }
 }

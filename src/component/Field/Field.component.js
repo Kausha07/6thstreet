@@ -5,7 +5,7 @@ import SourceField from 'SourceComponent/Field/Field.component';
 import FieldInput from 'SourceComponent/FieldInput';
 
 import {
-    CHECKBOX_TYPE,
+    CHECKBOX_TYPE, DATE_TYPE,
     RADIO_TYPE,
     TOGGLE_TYPE
 } from './Field.config';
@@ -17,6 +17,26 @@ import './Field.extended.style';
  * @class Field
  */
 export class Field extends SourceField {
+    renderRadioButton() {
+        const {
+            id,
+            label,
+            onClick
+        } = this.props;
+
+        return (
+            <label htmlFor={ id }>
+                <FieldInput
+                  { ...this.props }
+                  type="radio"
+                  onChange={ onClick }
+                />
+                <label htmlFor={ id } />
+                <span>{ label }</span>
+            </label>
+        );
+    }
+
     renderToggle() {
         const {
             id,
@@ -50,9 +70,22 @@ export class Field extends SourceField {
         return super.renderLabel();
     }
 
+    renderDate() {
+        return (
+            <FieldInput
+              { ...this.props }
+              type="date"
+            />
+        );
+    }
+
     renderInputOfType(type) {
         if (type === TOGGLE_TYPE) {
             return this.renderToggle();
+        }
+
+        if (type === DATE_TYPE) {
+            return this.renderDate();
         }
 
         return super.renderInputOfType(type);

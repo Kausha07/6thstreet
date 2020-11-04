@@ -4,10 +4,17 @@ import PropTypes from 'prop-types';
 import CheckoutBilling from 'Component/CheckoutBilling';
 import CheckoutGuestForm from 'Component/CheckoutGuestForm';
 import CheckoutOrderSummary from 'Component/CheckoutOrderSummary';
+import {
+    TABBY_ISTALLMENTS,
+    TABBY_PAY_LATER,
+    TABBY_PAYMENT_CODES
+} from 'Component/CheckoutPayments/CheckoutPayments.config';
 import CheckoutShipping from 'Component/CheckoutShipping';
 import CheckoutSuccess from 'Component/CheckoutSuccess';
 import ContentWrapper from 'Component/ContentWrapper';
 import TabbyPopup from 'Component/TabbyPopup';
+import { TABBY_POPUP_ID } from 'Component/TabbyPopup/TabbyPopup.config';
+import Loader from 'SourceComponent/Loader';
 import { Checkout as SourceCheckout } from 'SourceRoute/Checkout/Checkout.component';
 import { isArabic } from 'Util/App';
 
@@ -27,32 +34,33 @@ export class Checkout extends SourceCheckout {
         continueAsGuest: false,
         isInvalidEmail: false,
         isArabic: isArabic(),
-        tabbyWebUrl: '',
+        tabbyInstallmentsUrl: '',
+        tabbyPayLaterUrl: '',
         tabbyPaymentId: '',
         tabbyPaymentStatus: '',
         isTabbyPopupShown: false,
         paymentInformation: {},
-        creditCardData: {}
+        creditCardData: {},
+        isSuccess: false
     };
 
-  callbackFunction = (childData) => {
-      this.setState({ isCustomAddressExpanded: childData });
-  };
-
   savePaymentInformation = (paymentInformation) => {
-      const { savePaymentInformation } = this.props;
-      const { tabbyWebUrl } = this.state;
-      this.setState({ paymentInformation });
+      const { savePaymentInformation, showErrorNotification } = this.props;
+      const { selectedPaymentMethod, tabbyInstallmentsUrl, tabbyPayLaterUrl } = this.state;
 
-      if (tabbyWebUrl) {
-          this.setState({ isTabbyPopupShown: true });
+      if (TABBY_PAYMENT_CODES.includes(selectedPaymentMethod)) {
+          if (tabbyInstallmentsUrl || tabbyPayLaterUrl) {
+              this.setState({ isTabbyPopupShown: true });
 
-          // Need to get payment data from Tabby.
-          // Could not get callback of Tabby another way because Tabby is iframe in iframe
-          setTimeout(
-              () => this.processTabbyWithTimeout(3, paymentInformation),
-              10000
-          );
+              // Need to get payment data from Tabby.
+              // Could not get callback of Tabby another way because Tabby is iframe in iframe
+              setTimeout(
+                  () => this.processTabbyWithTimeout(3, paymentInformation),
+                  10000
+              );
+          } else {
+              showErrorNotification(__('Something went wrong with Tabby'));
+          }
       } else {
           savePaymentInformation(paymentInformation);
       }
@@ -61,8 +69,12 @@ export class Checkout extends SourceCheckout {
   };
 
   processTabby(paymentInformation) {
-      const { savePaymentInformation, verifyPayment } = this.props;
+      const { savePaymentInformation, verifyPayment, checkoutStep } = this.props;
       const { tabbyPaymentId } = this.state;
+
+      if (checkoutStep !== BILLING_STEP) {
+          return;
+      }
 
       verifyPayment(tabbyPaymentId).then(
           ({ status }) => {
@@ -77,11 +89,11 @@ export class Checkout extends SourceCheckout {
 
   processTabbyWithTimeout(counter, paymentInformation) {
       const { tabbyPaymentStatus } = this.state;
-      const { showErrorNotification, hideActiveOverlay } = this.props;
+      const { showErrorNotification, hideActiveOverlay, activeOverlay } = this.props;
 
       // Need to get payment data from Tabby.
       // Could not get callback of Tabby another way because Tabby is iframe in iframe
-      if (tabbyPaymentStatus !== AUTHORIZED_STATUS && counter < 60) {
+      if (tabbyPaymentStatus !== AUTHORIZED_STATUS && counter < 60 && activeOverlay === TABBY_POPUP_ID) {
           setTimeout(
               () => {
                   this.processTabby(paymentInformation);
@@ -94,17 +106,53 @@ export class Checkout extends SourceCheckout {
       if (counter === 60) {
           showErrorNotification('Tabby session timeout');
           hideActiveOverlay();
+      }
+
+      if (counter === 60 || activeOverlay !== TABBY_POPUP_ID) {
           this.setState({ isTabbyPopupShown: false });
       }
   }
 
-  setTabbyWebUrl = (url, paymentId) => {
-      this.setState({ tabbyWebUrl: url, tabbyPaymentId: paymentId });
-  };
+    setTabbyWebUrl = (url, paymentId, type) => {
+        this.setState({ tabbyPaymentId: paymentId });
+        switch (type) {
+        case TABBY_ISTALLMENTS:
+            this.setState({ tabbyInstallmentsUrl: url });
+
+            break;
+        case TABBY_PAY_LATER:
+            this.setState({ tabbyPayLaterUrl: url });
+
+            break;
+        default:
+            break;
+        }
+    };
+
+    setPaymentCode = (code) => {
+        this.setState({ selectedPaymentMethod: code });
+    };
 
   setCashOnDeliveryFee = (fee) => {
       this.setState({ cashOnDeliveryFee: fee });
   };
+
+  renderLoader() {
+      const { isLoading, checkoutStep } = this.props;
+      if (checkoutStep === BILLING_STEP && isLoading) {
+          return (
+                <div block="CheckoutSuccess">
+                    <div block="LoadingOverlay">
+                        <p>
+                            { __('Processing Your Order') }
+                        </p>
+                    </div>
+                </div>
+          );
+      }
+
+      return <Loader isLoading={ isLoading } />;
+  }
 
   renderSummary() {
       const { cashOnDeliveryFee } = this.state;
@@ -126,41 +174,43 @@ export class Checkout extends SourceCheckout {
   }
 
   renderTitle() {
-      const { checkoutStep } = this.props;
-      const { isCustomAddressExpanded } = this.state;
+      const { checkoutStep, isSignedIn } = this.props;
+      const { isCustomAddressExpanded, continueAsGuest } = this.state;
 
-      return (
-          <div block="CheckoutNavigation" mods={ { isCustomAddressExpanded } }>
-              <div block="CheckoutNavigation" elem="FirstColumn">
-                  <div
-                    block="CheckoutNavigation"
-                    elem="Delivery"
-                    mods={ { checkoutStep } }
-                  />
-                  <span
-                    block="CheckoutNavigation"
-                    elem="DeliveryLabel"
-                    mods={ { checkoutStep } }
-                  >
-                      { __('Delivery') }
-                  </span>
-              </div>
-              <hr />
-              <div block="CheckoutNavigation" elem="SecondColumn">
-                  <div
-                    block="CheckoutNavigation"
-                    elem="Payment"
-                    mods={ { checkoutStep } }
-                  />
-                  <span
-                    block="CheckoutNavigation"
-                    elem="PaymentLabel"
-                    mods={ { checkoutStep } }
-                  >
-                      { __('Payment') }
-                  </span>
-              </div>
-          </div>
+      return ((isSignedIn || continueAsGuest)
+          && (
+            <div block="CheckoutNavigation" mods={ { isCustomAddressExpanded } }>
+                <div block="CheckoutNavigation" elem="FirstColumn">
+                    <div
+                      block="CheckoutNavigation"
+                      elem="Delivery"
+                      mods={ { checkoutStep } }
+                    />
+                    <span
+                      block="CheckoutNavigation"
+                      elem="DeliveryLabel"
+                      mods={ { checkoutStep } }
+                    >
+                        { __('Delivery') }
+                    </span>
+                </div>
+                <hr />
+                <div block="CheckoutNavigation" elem="SecondColumn">
+                    <div
+                      block="CheckoutNavigation"
+                      elem="Payment"
+                      mods={ { checkoutStep } }
+                    />
+                    <span
+                      block="CheckoutNavigation"
+                      elem="PaymentLabel"
+                      mods={ { checkoutStep } }
+                    >
+                        { __('Payment') }
+                    </span>
+                </div>
+            </div>
+          )
       );
   }
 
@@ -181,6 +231,7 @@ export class Checkout extends SourceCheckout {
             setCashOnDeliveryFee={ this.setCashOnDeliveryFee }
             savePaymentInformation={ this.savePaymentInformation }
             setTabbyWebUrl={ this.setTabbyWebUrl }
+            setPaymentCode={ this.setPaymentCode }
             setCheckoutCreditCardData={ this.setCheckoutCreditCardData }
           />
       );
@@ -226,13 +277,15 @@ export class Checkout extends SourceCheckout {
           onEmailChange,
           onCreateUserChange,
           onPasswordChange,
-          isGuestEmailSaved
+          isGuestEmailSaved,
+          isLoading
       } = this.props;
       const { continueAsGuest, isInvalidEmail } = this.state;
       const isBilling = checkoutStep === BILLING_STEP;
 
       return (
             <CheckoutGuestForm
+              isLoading={ isLoading }
               isBilling={ isBilling }
               isCreateUser={ isCreateUser }
               onEmailChange={ onEmailChange }
@@ -246,7 +299,12 @@ export class Checkout extends SourceCheckout {
   }
 
   renderTabbyIframe() {
-      const { isTabbyPopupShown, tabbyWebUrl } = this.state;
+      const {
+          isTabbyPopupShown,
+          tabbyInstallmentsUrl,
+          tabbyPayLaterUrl,
+          selectedPaymentMethod
+      } = this.state;
 
       if (!isTabbyPopupShown) {
           return null;
@@ -254,7 +312,7 @@ export class Checkout extends SourceCheckout {
 
       return (
           <TabbyPopup
-            tabbyWebUrl={ tabbyWebUrl }
+            tabbyWebUrl={ selectedPaymentMethod === TABBY_ISTALLMENTS ? tabbyInstallmentsUrl : tabbyPayLaterUrl }
           />
       );
   }
@@ -269,6 +327,8 @@ export class Checkout extends SourceCheckout {
           creditCardData
       } = this.state;
 
+      this.setState({ isSuccess: true });
+
       return (
         <CheckoutSuccess
           orderID={ orderID }
@@ -281,8 +341,10 @@ export class Checkout extends SourceCheckout {
   }
 
   render() {
+      const { isSuccess } = this.state;
+
       return (
-          <main block="Checkout">
+          <main block="Checkout" mods={ { isSuccess } }>
               <ContentWrapper
                 wrapperMix={ { block: 'Checkout', elem: 'Wrapper' } }
                 label={ __('Checkout page') }
@@ -313,6 +375,7 @@ export class Checkout extends SourceCheckout {
           checkoutTotals,
           isSignedIn
       } = this.props;
+
       const { continueAsGuest, isArabic } = this.state;
       const renderCheckoutShipping = (
           <div
@@ -328,7 +391,6 @@ export class Checkout extends SourceCheckout {
               onShippingEstimationFieldsChange={ onShippingEstimationFieldsChange }
               guestEmail={ email }
               totals={ checkoutTotals }
-              parentCallback={ this.callbackFunction }
             />
           </div>
       );

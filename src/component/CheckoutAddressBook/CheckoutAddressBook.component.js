@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 
 import CheckoutAddressForm from 'Component/CheckoutAddressForm';
+import CheckoutAddressTable from 'Component/CheckoutAddressTable';
 import Slider from 'Component/Slider';
 import { BILLING_STEP, SHIPPING_STEP } from 'Route/Checkout/Checkout.config';
 import { CheckoutAddressBook as SourceCheckoutAddressBook }
@@ -28,6 +29,19 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
         isArabic: isArabic()
     };
 
+    renderHeading() {
+        const { isBilling } = this.props;
+        const { isArabic } = this.state;
+
+        const addressName = isBilling ? null : __('Delivery country');
+
+        return (
+            <h2 block="Checkout" elem="Heading" mods={ { isArabic } }>
+                { addressName }
+            </h2>
+        );
+    }
+
     renderCustomAddress() {
         const { isBilling, onShippingEstimationFieldsChange, isSignedIn } = this.props;
         const formPortalId = isBilling ? BILLING_STEP : SHIPPING_STEP;
@@ -41,6 +55,25 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
             />
         );
     }
+
+    renderAddress = (address) => {
+        const { onAddressSelect, selectedAddressId } = this.props;
+        const { id, region: { region_code, region } } = address;
+
+        if (!region_code && !region) {
+            return null;
+        }
+
+        return (
+            <CheckoutAddressTable
+              onClick={ onAddressSelect }
+              isSelected={ selectedAddressId === id }
+              title={ __('Address #%s', id) }
+              address={ address }
+              key={ id }
+            />
+        );
+    };
 
     renderSignedInContent() {
         const { currentPage, isArabic, isMobile } = this.state;
@@ -79,8 +112,9 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
     };
 
     render() {
+        const { isBilling } = this.props;
         return (
-            <div block="CheckoutAddressBook">
+            <div block="CheckoutAddressBook" mods={ { isBilling } }>
                 { this.renderHeading() }
                 { this.renderContent() }
             </div>

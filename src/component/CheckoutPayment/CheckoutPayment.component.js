@@ -1,6 +1,10 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import {
+    HIDDEN_PAYMENTS,
+    TABBY_PAYMENT_CODES
+} from 'Component/CheckoutPayments/CheckoutPayments.config';
 import { paymentMethodType } from 'Type/Checkout';
 
 import { PAYMENTS_DATA } from './CheckoutPayment.config';
@@ -61,11 +65,20 @@ export class CheckoutPayment extends PureComponent {
 
     render() {
         const {
-            isSelected
+            isSelected,
+            method: {
+                m_code
+            }
         } = this.props;
 
+        if (HIDDEN_PAYMENTS.includes(m_code)) {
+            return null;
+        }
+
+        const isTabby = TABBY_PAYMENT_CODES.includes(m_code);
+
         return (
-            <li block="CheckoutPayment">
+            <li block="CheckoutPayment" mods={ { isTabby } }>
                 <button
                   block="CheckoutPayment"
                   mods={ { isSelected } }

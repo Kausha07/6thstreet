@@ -52,8 +52,7 @@ export class CartDispatcher {
     async setCartItems(dispatch, data) {
         try {
             const {
-                items = [],
-                currency_code: currency
+                items = []
             } = data || {};
 
             if (items.length) {
@@ -78,8 +77,7 @@ export class CartDispatcher {
                         brandName,
                         thumbnail,
                         '',
-                        price,
-                        currency
+                        price
                     ));
                 });
             }
@@ -95,7 +93,6 @@ export class CartDispatcher {
             } = await getCart(cartId);
 
             await this.setCartItems(dispatch, data);
-
             dispatch(setCartTotals(data));
         } catch (e) {
             Logger.log(e);
@@ -111,8 +108,7 @@ export class CartDispatcher {
         brand_name,
         thumbnail_url,
         url,
-        itemPrice,
-        currency
+        itemPrice
     ) {
         const { Cart: { cartId } } = getStore().getState();
 
@@ -126,8 +122,7 @@ export class CartDispatcher {
                 brand_name,
                 thumbnail_url,
                 url,
-                itemPrice,
-                currency
+                itemPrice
             ));
         } catch (e) {
             Logger.log(e);
@@ -176,8 +171,7 @@ export class CartDispatcher {
         brand_name,
         thumbnail_url,
         url,
-        itemPrice,
-        currency
+        itemPrice
     ) {
         const { Cart: { cartId } } = getStore().getState();
 
@@ -191,8 +185,7 @@ export class CartDispatcher {
                 brand_name,
                 thumbnail_url,
                 url,
-                itemPrice,
-                currency
+                itemPrice
             ));
         } catch (e) {
             Logger.log(e);
@@ -206,11 +199,14 @@ export class CartDispatcher {
 
         try {
             await applyCouponCode({ cartId, couponCode });
+            await this.getCartTotals(dispatch, cartId);
+
+            dispatch(showNotification('success', __('Coupon was applied!')));
         } catch (e) {
+            dispatch(showNotification('error', __('The coupon code isn\'t valid. Verify the code and try again.')));
+
             Logger.log(e);
         }
-
-        await this.getCartTotals(dispatch, cartId);
     }
 
     async removeCouponCode(dispatch, couponCode) {
@@ -218,11 +214,14 @@ export class CartDispatcher {
 
         try {
             await removeCouponCode({ cartId, couponCode });
+            await this.getCartTotals(dispatch, cartId);
+
+            dispatch(showNotification('success', __('Coupon was removed!')));
         } catch (e) {
+            dispatch(showNotification('error', __('The coupon code isn\'t valid. Verify the code and try again.')));
+
             Logger.log(e);
         }
-
-        await this.getCartTotals(dispatch, cartId);
     }
 }
 

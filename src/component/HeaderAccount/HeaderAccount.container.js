@@ -41,12 +41,6 @@ export class HeaderAccountContainer extends PureComponent {
         requestCustomerData: this.requestCustomerData.bind(this)
     };
 
-    componentDidMount() {
-        if (isSignedIn()) {
-            this.requestCustomerData();
-        }
-    }
-
     containerProps = () => ({
         customer: this._getCustomerInformation(),
         isSignedIn: isSignedIn()

@@ -16,10 +16,13 @@ export class MyAccountReturnSuccessItem extends MyAccountReturnCreateItem {
                 color,
                 price,
                 original_price,
-                size,
-                qty_requested: qty
+                size: sizeField,
+                qty: qtyRegular,
+                qty_requested: qtyRequested
             } = {}
         } = this.props;
+        const size = typeof sizeField === 'string' ? sizeField : (sizeField || {}).value;
+        const qty = qtyRegular || qtyRequested;
 
         return (
             <div block="MyAccountReturnSuccessItem" elem="Details">

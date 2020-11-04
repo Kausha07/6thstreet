@@ -2,11 +2,11 @@
 
 export const CONST_TEN = 10;
 
-export const CONXT_HUNDRED = 100;
+export const CONST_HUNDRED = 100;
 
 export const appendOrdinalSuffix = (number) => {
     const mod10x = number % CONST_TEN;
-    const mod100x = number % CONXT_HUNDRED;
+    const mod100x = number % CONST_HUNDRED;
 
     if (mod10x === 1 && mod100x !== 11) {
         return `${ number }st`;

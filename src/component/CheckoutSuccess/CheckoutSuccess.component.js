@@ -1,9 +1,15 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import ContentWrapper from 'Component/ContentWrapper';
+import Field from 'Component/Field';
+import Form from 'Component/Form';
 import Link from 'Component/Link';
 import MyAccountOverlay from 'Component/MyAccountOverlay';
+import MyAccountTabList from 'Component/MyAccountTabList';
 import SuccessCheckoutItem from 'Component/SuccessCheckoutItem';
+import { tabMap } from 'Route/MyAccount/MyAccount.container';
+import { activeTabType } from 'Type/Account';
 import { TotalsType } from 'Type/MiniCart';
 import { isArabic } from 'Util/App';
 import { formatCurrency, roundPrice } from 'Util/Price';
@@ -27,14 +33,68 @@ export class CheckoutSuccess extends PureComponent {
         orderID: PropTypes.number.isRequired,
         isSignedIn: PropTypes.bool.isRequired,
         requestCustomerData: PropTypes.func.isRequired,
-        customer: PropTypes.isRequired
+        customer: PropTypes.isRequired,
+        activeTab: activeTabType.isRequired,
+        changeActiveTab: PropTypes.func.isRequired,
+        onChangePhone: PropTypes.func.isRequired,
+        onVerifySuccess: PropTypes.func.isRequired,
+        onResendCode: PropTypes.func.isRequired
     };
 
     state = {
         subTotalPrice: 0,
         shippingPrice: 0,
         paymentTitle: '',
-        isArabic: isArabic()
+        isArabic: isArabic(),
+        isPhoneVerified: false,
+        isPhoneVerification: true,
+        delay: 1000,
+        successHidden: false,
+        wasLoaded: false
+    };
+
+    componentDidMount() {
+        const { delay } = this.state;
+        this.timer = setInterval(this.tick, delay);
+    }
+
+    componentDidUpdate(prevState) {
+        const { delay } = this.state;
+        if (prevState !== delay) {
+            clearInterval(this.interval);
+            this.interval = setInterval(this.tick, delay);
+        }
+    }
+
+    componentWillUnmount() {
+        this.timer = null;
+    }
+
+    tick = () => {
+        const { wasLoaded, successHidden } = this.state;
+        if (!successHidden) {
+            this.setState({ successHidden: true });
+        }
+        if (!wasLoaded && successHidden) {
+            this.setState({ wasLoaded: true });
+        }
+    };
+
+    renderTabList = () => {
+        const { activeTab, changeActiveTab } = this.props;
+
+        return (
+            <ContentWrapper
+              label={ __('My Account page') }
+              wrapperMix={ { block: 'MyAccount', elem: 'Wrapper' } }
+            >
+                <MyAccountTabList
+                  tabMap={ tabMap }
+                  activeTab={ activeTab }
+                  changeActiveTab={ changeActiveTab }
+                />
+            </ContentWrapper>
+        );
     };
 
     renderSuccessMessage = (email) => (
@@ -57,10 +117,60 @@ export class CheckoutSuccess extends PureComponent {
     );
 
     renderTrackOrder() {
-        const { isSignedIn, orderID } = this.props;
-        const { isArabic } = this.state;
+        const {
+            isSignedIn,
+            orderID,
+            onChangePhone,
+            onVerifySuccess,
+            onResendCode,
+            shippingAddress: {
+                phone
+            }
+        } = this.props;
+        const { isArabic, isPhoneVerified, isPhoneVerification } = this.state;
 
-        if (isSignedIn) {
+        if (!isPhoneVerified && isSignedIn) {
+            return (
+                <div mix={ { block: 'TrackOrder', mods: { isArabic, isPhoneVerification } } }>
+                    <div block="TrackOrder" elem="Text">
+                        <div block="TrackOrder-Text" elem="Title">
+                            { __('Please Verify your Number') }
+                        </div>
+                        <div block="TrackOrder-Text" elem="Message">
+                            { __('Verification code has been sent to') }
+                        </div>
+                        <div block="TrackOrder-Text" elem="Phone">
+                            <button onClick={ onChangePhone }>
+                                { phone }
+                            </button>
+                        </div>
+                    </div>
+                    <Form
+                      onSubmitSuccess={ onVerifySuccess }
+                    >
+                        <div block="TrackOrder" elem="Code">
+                            <Field
+                              maxlength="5"
+                              type="text"
+                              placeholder="_____"
+                              name="otp"
+                              id="otp"
+                            />
+                        </div>
+                        <button block="primary" type="submit">
+                            { __('Verify phone number') }
+                        </button>
+                    </Form>
+                    <div block="TrackOrder" elem="ResendCode">
+                        <button onClick={ onResendCode }>
+                            { __('Resend Verification Code') }
+                        </button>
+                    </div>
+                </div>
+            );
+        }
+
+        if (isPhoneVerified && isSignedIn) {
             return (
                 <div mix={ { block: 'TrackOrder', mods: { isArabic, isSignedIn } } }>
                     <Link to={ `/sales/order/view/order_id/${orderID}/` }>
@@ -238,23 +348,23 @@ export class CheckoutSuccess extends PureComponent {
         } = this.props;
 
         return (
-          <div block="Address">
-              <div block="Address" elem="Title">
-                  { __('Delivering to') }
-              </div>
-              <div block="Address" elem="FullName">
-                  { `${firstname} ${lastname}` }
-              </div>
-              <div block="Address" elem="Street">
-                  { street }
-              </div>
-              <div block="Address" elem="PostCode">
-                  { postcode }
-              </div>
-              <div block="Address" elem="Phone">
-                  { phone }
-              </div>
-          </div>
+            <div block="Address">
+                <div block="Address" elem="Title">
+                    { __('Delivering to') }
+                </div>
+                <div block="Address" elem="FullName">
+                    { `${firstname} ${lastname}` }
+                </div>
+                <div block="Address" elem="Street">
+                    { street }
+                </div>
+                <div block="Address" elem="PostCode">
+                    { postcode }
+                </div>
+                <div block="Address" elem="Phone">
+                    { phone }
+                </div>
+            </div>
         );
     }
 
@@ -419,11 +529,28 @@ export class CheckoutSuccess extends PureComponent {
         );
     }
 
+    renderSuccess() {
+        const { successHidden } = this.state;
+        return (
+            <div block={ `SuccessOverlay ${successHidden ? 'hidden' : ''}` }>
+                <div block="OrderPlacedTextWrapper">
+                    <div block="confirmSimbol" />
+                    <p>
+                        { __('Order Placed') }
+                    </p>
+                </div>
+            </div>
+        );
+    }
+
     render() {
         const { customer } = this.props;
+        const { wasLoaded } = this.state;
 
         return (
             <div block="CheckoutSuccess">
+                { wasLoaded ? '' : this.renderSuccess() }
+                { this.renderTabList() }
                 <div block="CheckoutSuccess" elem="Details">
                     { this.renderSuccessMessage(customer.email) }
                     { this.renderTrackOrder() }

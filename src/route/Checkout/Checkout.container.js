@@ -1,4 +1,4 @@
-import { CART_TAB } from '@scandipwa/scandipwa/src/component/NavigationTabs/NavigationTabs.config';
+// import { CART_TAB } from '@scandipwa/scandipwa/src/component/NavigationTabs/NavigationTabs.config';
 import { DETAILS_STEP, SHIPPING_STEP } from '@scandipwa/scandipwa/src/route/Checkout/Checkout.config';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -28,6 +28,7 @@ export const mapDispatchToProps = (dispatch) => ({
     getTabbyInstallment: (price) => CheckoutDispatcher.getTabbyInstallment(dispatch, price),
     verifyPayment: (paymentId) => CheckoutDispatcher.verifyPayment(dispatch, paymentId),
     getPaymentMethods: () => CheckoutDispatcher.getPaymentMethods(),
+    sendVerificationCode: (phone) => CheckoutDispatcher.sendVerificationCode(dispatch, phone),
     setCartId: (cartId) => dispatch(setCartId(cartId)),
     createEmptyCart: () => CartDispatcher.getCart(dispatch),
     hideActiveOverlay: () => dispatch(hideActiveOverlay()),
@@ -38,7 +39,8 @@ export const mapStateToProps = (state) => ({
     customer: state.MyAccountReducer.customer,
     guest_checkout: state.ConfigReducer.guest_checkout,
     countries: state.ConfigReducer.countries,
-    isSignedIn: state.MyAccountReducer.isSignedIn
+    isSignedIn: state.MyAccountReducer.isSignedIn,
+    activeOverlay: state.OverlayReducer.activeOverlay
 });
 
 export class CheckoutContainer extends SourceCheckoutContainer {
@@ -71,13 +73,16 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             paymentTotals: BrowserDatabase.getItem(PAYMENT_TOTALS) || {},
             email: '',
             isCreateUser: false,
-            isGuestEmailSaved: false
+            isGuestEmailSaved: false,
+            isVerificationCodeSent: false,
+            lastOrder: {}
         };
-
-        if (is_virtual) {
-            this._getPaymentMethods();
-        }
     }
+
+    state={
+        ...this.state,
+        isLoading: false
+    };
 
     componentDidMount() {
         updateMeta({ title: __('Checkout') });
@@ -94,6 +99,18 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             }
         } = this.props;
 
+        /*
+        if (Object.keys(totals).length) {
+            this.saveLastOrder(totals);
+        }
+
+        const currentPath = location.pathname;
+        const { lastOrder } = this.state;
+        if (currentPath.includes('success') && Object.keys(lastOrder).length) {
+            this.setDetailsStep();
+        } else
+         */
+
         if (Object.keys(totals).length && !items.length) {
             showInfoNotification(__('Please add at least one product to cart!'));
             history.push('/cart');
@@ -105,13 +122,21 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         }
     }
 
+    saveLastOrder(totals) {
+        this.setState({ lastOrder: totals });
+    }
+
+    setDetailsStep() {
+        this.setState({ checkoutStep: DETAILS_STEP });
+    }
+
     onShippingEstimationFieldsChange(address) {
         const { estimateShipping } = this.props;
         const Checkout = this;
 
         /* eslint-disable */
         delete address.region_id;
-
+        Checkout.setState({ isLoading: true });
         estimateShipping({
             ...address,
             default_shipping: true
@@ -119,9 +144,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             (response) => {
                 if (typeof response !== 'undefined') {
                     Checkout.setState({
-                        shippingMethods: response.data
+                        shippingMethods: response.data,
+                        isLoading: false
                     })
                 }
+                Checkout.setState({ isLoading: false });
             },
             this._handleError
         );
@@ -269,10 +296,20 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     }
 
     setDetailsStep(orderID) {
-        const { setNavigationState } = this.props;
+        const { setNavigationState, sendVerificationCode } = this.props;
+        const { shippingAddress } = this.state;
 
         if (!isSignedIn()) {
             BrowserDatabase.deleteItem(GUEST_QUOTE_ID);
+        } else {
+            const code = shippingAddress.phone.slice(1, 4);
+            const mobile = shippingAddress.phone.slice(4);
+            sendVerificationCode({ mobile, code }).then(
+                (response) => {
+                    this.setState({ isVerificationCodeSent: response.success });
+                },
+                this._handleError
+            );
         }
 
         // BrowserDatabase.deleteItem(PAYMENT_TOTALS);
@@ -286,7 +323,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         });
 
         setNavigationState({
-            name: CART_TAB
+            name: DETAILS_STEP
         });
     }
 

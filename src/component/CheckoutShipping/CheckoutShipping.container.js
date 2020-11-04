@@ -32,6 +32,10 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
         showCreateNewPopup: this.showCreateNewPopup.bind(this)
     };
 
+    static defaultProps = {
+        guestEmail: ''
+    };
+
     openForm() {
         this.setState({ formContent: true });
     }
@@ -47,10 +51,6 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
         });
     }
 
-    static defaultProps = {
-        guestEmail: ''
-    };
-
     onShippingSuccess(fields) {
         const { saveAddressInformation, customer: { email }, guestEmail } = this.props;
 
@@ -65,6 +65,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
 
         const {
             region_id,
+            region,
             street,
             country_id,
             telephone
@@ -73,11 +74,11 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
         const shippingAddressMapped = {
             ...shippingAddress,
             street: Array.isArray(street) ? street[0] : street,
-            area: region_id,
+            area: region ?? region_id,
             country_code: country_id,
             phone: telephone,
             email: isSignedIn() ? email : guestEmail,
-            region: region_id,
+            region: region ?? region_id,
             region_id: 0
         };
 

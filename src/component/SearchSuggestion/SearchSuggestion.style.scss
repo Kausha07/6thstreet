@@ -1,25 +1,46 @@
 root {
     --black: #000;
     --gray: #f0f0f0;
-    --dark-gray: #4a4a4a;
+    --link-dark-gray: #4a4a4a;
 }
 
 .SearchSuggestion {
-    height: auto;
-    pointer-events: all;
     position: absolute;
-    width: inherit;
-    margin-left: -16px;
-    background-color: var(--white);
-    flex-direction: column;
-    padding: 0 40px 20px;
-    font-weight: var(--fw-regular);
-    vertical-align: middle;
-    display: block;
+    width: 100%;
 
-    @include before-desktop {
-        height: 100vh;
-        margin-left: -20px;
+    &-Content {
+        background-color: var(--white);
+        display: block;
+        flex-direction: column;
+        font-weight: var(--fw-regular);
+        height: auto;
+        margin-left: -16px;
+        padding: 20px 40px;
+        pointer-events: all;
+        right: 4px;
+        position: relative;
+        top: 4px;
+        width: inherit;
+        vertical-align: middle;
+
+        @include before-desktop {
+            height: 100vh;
+            margin-left: 0;
+            padding: 20px 0;
+        }
+    }
+
+    @include desktop() {
+        position: fixed;
+    }
+
+    &-ShadeWrapper {
+        position: relative;
+        top: 4px;
+    }
+
+    &-Recommended {
+        margin-top: 15px;
     }
 
     .TrandingTags,
@@ -32,12 +53,69 @@ root {
             margin-top: 0;
             margin-right: 5px;
         }
+
+        @include before-desktop() {
+            ul {
+                overflow-x: scroll;
+            }
+        }
+
+        @include desktop() {
+            margin-bottom: 30px;
+
+            ul {
+                flex-wrap: wrap;
+            }
+        }
     }
 
     .TrandingTags {
         margin: 0;
+        padding: 0 20px;
+
+        ul {
+            flex-wrap: wrap;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            margin-bottom: 15px;
+        }
+
+        @include desktop() {
+            padding: 0;
+        }
     }
 
+    .TrandingBrands {
+        li {
+            margin-top: 15px;
+            margin-left: 20px;
+            margin-bottom: 50px;
+        }
+
+        h2 {
+            padding: 0 20px;
+        }
+
+        @include desktop() {
+            li {
+                margin-left: 0;
+                margin-right: 20px;
+
+                &:first-of-type {
+                    margin-left: 0;
+                }
+            }
+
+            h2 {
+                padding: 0;
+            }
+        }
+    }
 
     &-TrandingImg {
         width: 70px;
@@ -53,23 +131,23 @@ root {
             margin-bottom: 10px;
             border-radius: 45px;
         }
+
+        @include before-desktop() {
+            margin-bottom: 30px;
+        }
     }
 
     &-TrandingTag {
         margin: 0;
         height: 30px;
         background: var(--gray);
-        color: var(--dark-gray);
+        color: var(--link-dark-gray);
         width: auto;
         padding: 5px 10px;
         border-radius: 15px;
         display: flex;
         justify-content: center;
         align-items: center;
-
-        &:first-letter {
-            font-weight: var(--fw-regular);
-        }
     }
 
     ul {
@@ -85,7 +163,7 @@ root {
         }
 
         a {
-            color: var(--dark-gray);
+            color: var(--link-dark-gray);
             width: 100%;
             display: block;
 
@@ -100,11 +178,6 @@ root {
                 right: 0;
             }
         }
-
-        li:first-letter {
-            font-weight: var(--fw-bold);
-            color: var(--black);
-        }
     }
 
     h2 {
@@ -118,14 +191,19 @@ root {
         }
     }
 
-    div:first-child {
-        margin-bottom: 30px;
-        margin-top: 15px;
-    }
-
     &_isArabic {
-        @include desktop {
-            margin-right: 4px;
+        .SearchSuggestion-Content {
+            @include desktop {
+                right: 0;
+            }
+        }
+
+        .TrandingBrands {
+            li {
+                &:first-of-type {
+                    margin-right: 20px;
+                }
+            }
         }
     }
 }

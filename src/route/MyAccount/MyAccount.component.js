@@ -39,7 +39,9 @@ export class MyAccount extends SourceMyAccount {
         changeActiveTab: PropTypes.func.isRequired,
         onSignIn: PropTypes.func.isRequired,
         onSignOut: PropTypes.func.isRequired,
-        isSignedIn: PropTypes.bool.isRequired
+        isSignedIn: PropTypes.bool.isRequired,
+        mobileTabActive: PropTypes.bool.isRequired,
+        setMobileTabActive: PropTypes.func.isRequired
     };
 
     renderMap = {
@@ -52,18 +54,17 @@ export class MyAccount extends SourceMyAccount {
         [ADDRESS_BOOK]: MyAccountAddressBook
     };
 
-    state = {
-        mobTabActive: true
-    };
-
     handleTabChange(key) {
-        const { changeActiveTab } = this.props;
-        this.setState(({ mobTabActive }) => ({ mobTabActive: !mobTabActive }));
+        const { changeActiveTab, mobileTabActive, setMobileTabActive } = this.props;
+
+        setMobileTabActive(!mobileTabActive);
         changeActiveTab(key);
     }
 
     openTabMenu() {
-        this.setState(({ mobTabActive }) => ({ mobTabActive: !mobTabActive }));
+        const { mobileTabActive, setMobileTabActive } = this.props;
+
+        setMobileTabActive(!mobileTabActive);
     }
 
     handleClick(e) {
@@ -105,7 +106,8 @@ export class MyAccount extends SourceMyAccount {
                   onSignOut={ this.handleSignOut }
                 />
                 <div block="MyAccount" elem="TabContent">
-                    <h1 block="MyAccount" elem="Heading">{ alternativePageName || name }</h1>
+                    { alternativePageName === 'Club Apparel Loyalty' || name === 'Club Apparel Loyalty'
+                        ? null : (<h1 block="MyAccount" elem="Heading">{ alternativePageName || name }</h1>) }
                     <TabContent />
                 </div>
             </ContentWrapper>
@@ -116,13 +118,12 @@ export class MyAccount extends SourceMyAccount {
         const {
             activeTab,
             tabMap,
-            isSignedIn
+            isSignedIn,
+            mobileTabActive
         } = this.props;
 
-        const { mobTabActive } = this.state;
-
-        const hiddenTabContent = mobTabActive ? 'Active' : 'Hidden';
-        const hiddenTabList = mobTabActive ? 'Hidden' : 'Active';
+        const hiddenTabContent = mobileTabActive ? 'Active' : 'Hidden';
+        const hiddenTabList = mobileTabActive ? 'Hidden' : 'Active';
 
         if (!isSignedIn) {
             return this.renderLoginOverlay();

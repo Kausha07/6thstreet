@@ -1,4 +1,57 @@
+:root {
+    --dark-gray: #606060;
+}
+
 .CheckoutSuccess {
+    .SuccessOverlay {
+        height: 100%;
+        background-color: var(--color-green-cyan);
+        position: fixed;
+        z-index: 10;
+        left: 0;
+        opacity: 1;
+        visibility: visible;
+
+        &.hidden {
+            opacity: 0;
+            transition: opacity 500ms linear;
+        }
+
+        @include desktop {
+            width: 100%;
+            padding: 0 52%;
+            z-index: 90;
+            text-align: center;
+            transform: translate(-15px, 0);
+            top: 90px;
+        }
+
+        @include mobile {
+            padding: 50%;
+            top: 0;
+        }
+
+        .OrderPlacedTextWrapper {
+            position: absolute;
+            bottom: 50%;
+            transform: translate(-50%, -50%);
+
+            .confirmSimbol {
+                background: url('./icons/confirm@2x.png');
+                height: 50px;
+                background-size: 50px;
+                width: 50px;
+                margin: auto;
+            }
+
+            p {
+                font-size: 18px;
+                font-weight: var(--fw-demi);
+                color: var(--white);
+            }
+        }
+    }
+
     section {
         display: none;
     }
@@ -34,6 +87,7 @@
         .TrackOrder {
             background-color: var(--lightest-gray);
             height: 190px;
+            margin-top: 40px;
             margin-left: -24px;
             padding: 30px 0;
             text-align: center;
@@ -82,9 +136,62 @@
                 }
             }
 
+            &_isArabic {
+                margin-left: unset;
+                margin-right: -24px;
+            }
+
+            &_isPhoneVerification {
+                height: unset;
+
+                button {
+                    width: 70%;
+
+                    @include desktop() {
+                        padding: 0 50px;
+                    }
+                }
+
+                .TrackOrder {
+                    &-Text {
+                        &-Title {
+                            margin-bottom: 10px;
+                        }
+
+                        &-Message {
+                            color: var(--dark-gray);
+                        }
+
+                        &-Email {
+                            text-decoration: underline;
+                            font-weight: var(--fw-demi);
+                        }
+                    }
+
+                    &-Code {
+                        margin-top: 50px;
+
+                        input {
+                            text-align: center;
+                            width: 50%;
+                            background-color: transparent;
+                            border: 0;
+                            letter-spacing: 15px;
+                            font-size: 27px;
+                        }
+                    }
+
+                    &-ResendCode {
+                        color: var(--dark-gray);
+                        font-size: 14px;
+                        margin-top: 10px;
+                    }
+                }
+            }
+
             @include after-mobile() {
-                width: 100%;
                 margin-left: -10px;
+                width: 100%;
 
                 button {
                     width: unset;
@@ -92,12 +199,7 @@
             }
 
             @include desktop() {
-                width: 400px;
-            }
-
-            &_isArabic {
-                margin-left: unset;
-                margin-right: -24px;
+                width: 415px;
             }
         }
 
@@ -114,6 +216,7 @@
             border-top: 2px solid var(--lightest-gray);
             padding: 20px 0;
             display: grid;
+            font-size: 14px;
 
             .Totals {
                 display: grid;
@@ -124,19 +227,17 @@
                 }
 
                 &-Title {
-                    font-size: 16px;
                     margin-top: 3px;
                 }
 
                 &-Price {
                     margin-left: auto;
-                    font-size: 17px;
                 }
 
                 &-TotalTitles {
                     .Title {
+                        font-size: 16px;
                         margin-right: 5px;
-                        font-size: 18px;
                     }
                     .SubTitle {
                         color: var(--gray-color);
@@ -144,8 +245,8 @@
                 }
 
                 &-TotalPrice {
-                    margin-left: auto;
                     font-size: 18px;
+                    margin-left: auto;
                     font-weight: var(--fw-bold);
                 }
             }
@@ -169,11 +270,12 @@
             .Address {
                 padding: 15px 0;
                 border-top: 2px solid var(--lightest-gray);
-                font-size: 18px;
                 display: grid;
                 grid-gap: 5px;
+                font-size: 14px;
 
                 &-Title {
+                    font-size: 18px;
                     font-weight: var(--fw-demi);
                     margin-bottom: 5px;
                 }
@@ -183,9 +285,10 @@
         .DeliveryOptions {
             border-top: 2px solid var(--lightest-gray);
             padding: 20px 0;
-            font-size: 18px;
+            font-size: 14px;
 
             &-Title {
+                font-size: 18px;
                 font-weight: var(--fw-demi);
                 margin-bottom: 10px;
             }
@@ -194,9 +297,10 @@
         .PaymentType {
             border-top: 2px solid var(--lightest-gray);
             padding: 20px 0;
-            font-size: 18px;
+            font-size: 14px;
 
             &-Title {
+                font-size: 18px;
                 font-weight: var(--fw-demi);
                 margin-bottom: 15px;
             }
@@ -282,6 +386,10 @@
                 }
             }
         }
+
+        @include desktop() {
+            margin: 0 104px;
+        }
     }
 
     &-ButtonWrapper {
@@ -324,7 +432,7 @@
             padding-top: 50px;
             bottom: -100px;
             position: absolute;
-            right: 0;
+            margin-right: -345px;
 
             a {
                 margin-left: -15px;

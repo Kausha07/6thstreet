@@ -103,6 +103,10 @@ export class MyAccountReturnSuccess extends MyAccountReturnCreate {
     renderContent() {
         const { isLoading, returnNumber } = this.props;
 
+        if (isLoading) {
+            return null;
+        }
+
         if (!isLoading && !returnNumber) {
             return this.renderReturnNotPossible();
         }

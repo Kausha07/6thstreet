@@ -7,3 +7,8 @@ export const PHONE_CODES = {
     BH: '+973',
     QA: '+974'
 };
+
+export const COUNTRY_CODES_FOR_PHONE_VALIDATION = {
+    AE: 'AE',
+    SA: 'SA'
+};

@@ -10,7 +10,8 @@
     &-Container {
         display: flex;
         position: fixed;
-        top: 150px;
+        top: 20%;
+        bottom: 20%;
         right: 0;
         left: 0;
         margin-right: auto;
@@ -18,12 +19,13 @@
         z-index: 9;
         background: $white;
         min-height: 10em;
-        width: 770px;
+        width: 790px;
+        height: 60%;
+        max-height: 600px;
     }
 
     &-Image {
         width: 385px;
-        height: auto;
         object-fit: cover;
     }
 }

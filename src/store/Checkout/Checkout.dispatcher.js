@@ -7,27 +7,41 @@ import {
     getPaymentMethods,
     saveShippingInformation,
     selectPaymentMethod,
-    validateShippingAddress
+    validateShippingAddress,
+    sendVerificationCode,
+    verifyUserPhone
 } from 'Util/API/endpoint/Checkout/Checkout.enpoint';
 import {
     createSession,
     getInstallmentForValue,
     verifyPayment
 } from 'Util/API/endpoint/Tabby/Tabby.enpoint';
+import { showNotification } from 'Store/Notification/Notification.action';
 import Logger from 'Util/Logger';
+import { TABBY_PAYMENT_CODES } from "Component/CheckoutPayments/CheckoutPayments.config";
 
 export class CheckoutDispatcher {
     /* eslint-disable-next-line */
     async estimateShipping(dispatch, address) {
         const { Cart: { cartId } } = getStore().getState();
-
+        const { area, street } = address;
         try {
-            const { success: isAddressValid } = await validateShippingAddress({ address });
+            const response = await validateShippingAddress({ address });
+            const { success: isAddressValid } = response;
 
+            if (!isAddressValid & (area !== undefined || street !== undefined)) {
+                const { error: {parameters} } = response;
+                const message = parameters.length > 1 ? 
+                `(${parameters}) ${__('fields are not valid')}` : 
+                `(${parameters}) ${__('field is not valid')}`;
+                
+                dispatch(showNotification('error', message));
+            }
             if (isAddressValid) {
                 return await estimateShippingMethods({ cartId, address });
             }
         } catch (e) {
+            dispatch(showNotification('error', __('Some of the fields are not valid')));
             Logger.log(e);
         }
     }
@@ -51,39 +65,35 @@ export class CheckoutDispatcher {
         return getInstallmentForValue(price);
     }
 
-    async selectPaymentMethod(dispatch, billingData) {
+    async createTabbySession(dispatch, billingData) {
         const { Cart: { cartId } } = getStore().getState();
-        const { code } = billingData;
-        const tabbyPaymentCodes = ['tabby_checkout', 'tabby_installments'];
 
-        const result = selectPaymentMethod({
+        const {
+            email, firstname, lastname, phone, city, street
+        } = billingData;
+
+        return createSession({
+            cart_id: cartId.toString(),
+            buyer: {
+                email,
+                name: `${firstname} ${lastname}`,
+                phone,
+                city,
+                address: street
+            }
+        });
+    }
+
+    async selectPaymentMethod(dispatch, code) {
+        const { Cart: { cartId } } = getStore().getState();
+
+        return selectPaymentMethod({
             cartId,
             data: {
                 method: code,
                 cart_id: cartId
             }
         });
-
-        if (tabbyPaymentCodes.includes(code)) {
-            const {
-                billingAddress: {
-                    email, firstname, lastname, phone, city, street
-                }
-            } = billingData;
-
-            return createSession({
-                cart_id: cartId,
-                buyer: {
-                    email,
-                    name: `${firstname} ${lastname}`,
-                    phone,
-                    city,
-                    address: street
-                }
-            });
-        }
-
-        return result;
     }
 
     async createOrder(dispatch, code, additional_data) {
@@ -102,6 +112,14 @@ export class CheckoutDispatcher {
 
     async verifyPayment(dispatch, paymentId) {
         return verifyPayment(paymentId);
+    }
+
+    async sendVerificationCode(dispatch, data) {
+        return sendVerificationCode({ data });
+    }
+
+    async verifyUserPhone(dispatch, data) {
+        return verifyUserPhone({ data });
     }
 }
 

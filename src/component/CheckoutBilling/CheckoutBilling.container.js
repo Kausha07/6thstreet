@@ -22,8 +22,8 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     static propTypes = {
         ...SourceCheckoutBillingContainer.propTypes,
         setTabbyWebUrl: PropTypes.func.isRequired,
+        setPaymentCode: PropTypes.func.isRequired,
         setCheckoutCreditCardData: PropTypes.func.isRequired
-
     };
 
     containerFunctions = {
@@ -91,6 +91,13 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
                 paymentMethod
             });
         }
+    }
+
+    onPaymentMethodSelect(code) {
+        const { setPaymentCode } = this.props;
+
+        this.setState({ paymentMethod: code });
+        setPaymentCode(code);
     }
 }
 

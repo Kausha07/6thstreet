@@ -1,30 +1,58 @@
+:root {
+    --gray: #efefef;
+}
+
 .CheckoutBilling {
     &-Checkbox {
         display: grid;
         margin-bottom: 2rem;
 
-                    @include before-desktop {
-                        width: 300px;
-                        grid-column: 1 / span 2;
-                        grid-row: 6;
-                    }
+        @include before-desktop {
+            width: 300px;
+            grid-column: 1 / span 2;
+            grid-row: 6;
+        }
 
-                    label {
-                        grid-column: 2 / span 20;
-                        grid-row: 1;
-                        padding-top: 1px;
-                        color: var(--black);
-                        font-size: 14px;
-                        font-weight: var(--fw-regular);
+        label {
+            grid-column: 2 / span 20;
+            grid-row: 1;
+            padding-top: 1px;
+            color: var(--black);
+            font-size: 14px;
+            font-weight: var(--fw-regular);
 
-                        span {
-                            font-weight: var(--fw-demi);
-                        }
-                    }
-
-                    div {
-                        grid-row: 1;
-                        grid-column: 1;
-                    }
-                }
+            span {
+                font-weight: var(--fw-demi);
             }
+        }
+
+        div {
+            grid-row: 1;
+            grid-column: 1;
+        }
+    }
+
+    &-Line {
+        padding: 16px 30px 0;
+
+        hr {
+            border: 1px solid var(--gray);
+        }
+    }
+
+    &-AddressHeading {
+        font-weight: var(--fw-demi);
+        font-size: 18px;
+        line-height: 25px;;
+        margin: 0;
+        text-transform: none;
+        padding: 30px 30px 0;
+    }
+
+    .CheckoutPayments,
+    .CreditCardTooltip,
+    &-AddressHeading,
+    &-Line {
+        background-color: $white;
+    }
+}

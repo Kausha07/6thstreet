@@ -1,8 +1,7 @@
 import MobileAPI from '../../provider/MobileAPI';
 
-// eslint-disable-next-line import/prefer-default-export
-export const getMember = ({ userId }) => MobileAPI.get(
-    `/club-apparel/members/${userId}`
+export const getMember = (customerId) => MobileAPI.get(
+    `/club-apparel/members/${ customerId }`
 ) || {};
 
 export const linkAccount = (data) => MobileAPI.post(
@@ -13,4 +12,13 @@ export const linkAccount = (data) => MobileAPI.post(
 export const verifyOtp = (data) => MobileAPI.post(
     '/club-apparel/verify',
     data
+) || {};
+
+export const applyPoints = (cartId, points, pointValue) => MobileAPI.post(
+    `/carts2/${ cartId }/club-apparel`,
+    { loyaltyPointsValue: points, loyaltyBalanceValue: pointValue }
+) || {};
+
+export const removePoints = (cartId) => MobileAPI.delete(
+    `/carts2/${ cartId }/club-apparel`
 ) || {};

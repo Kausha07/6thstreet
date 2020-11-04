@@ -1,5 +1,6 @@
 :root {
     --dark-gray: #b8b8b8;
+    --middle-gray: #b7b7b7;
     --light-gray: #cacaca
 }
 
@@ -12,12 +13,37 @@
         margin-top: 40px;
     }
 
+    form {
+        .Button {
+            width: 100%;
+
+            @include after-mobile() {
+                margin-top: 30px;
+                width: unset;
+            }
+        }
+
+        @include mobile() {
+            height: 80vh;
+            min-height: 470px;
+
+            .Button {
+                position: absolute;
+                bottom: 0;
+            }
+        }
+    }
+
     .Field-Label {
         font-weight: var(--fw-medium);
     }
 
     .Field {
-        margin-top: 1.8rem;
+        width: 100%;
+
+        @include desktop() {
+            padding-top: .5rem;
+        }
     }
 
     .Button {
@@ -45,10 +71,19 @@
 
         &-Radio {
             display: flex;
+            margin-top: 10px;
 
             .Field {
                 margin-right: 23px;
                 margin-top: 5px;
+                padding-right: 5px;
+                padding-top: 0;
+                width: unset;
+
+                &:last-of-type {
+                    margin-right: 0;
+                }
+
                 label {
                     label {
                         margin-right: 5px;
@@ -98,17 +133,8 @@
                     --primary-base-color: var(--black-color);
                 }
 
-                &:not(:checked) + label {
-                    &:after {
-                        background-color: rgba(255, 255, 255, .5);
-                        border-radius: 0;
-                        content: ' ';
-                        height: 20px;
-                        margin-left: -1px;
-                        transition-duration: 0s;
-                        width: 61px;
-                        z-index: 1;
-                    }
+                &:not(:checked) + label + span {
+                    color: var(--middle-gray);
                 }
 
                 &:focus {
@@ -155,6 +181,8 @@
     }
 
     &-PasswordField {
+        width: 100%;
+
         button {
             width: 100px;
         }
@@ -162,6 +190,19 @@
 
     .MyAccountPasswordForm {
         margin-top: 20px;
+
+        @include mobile() {
+            background: $white;
+            height: 100%;
+            margin-top: 0;
+            position: absolute;
+            width: 100%;
+            z-index: 2;
+        }
+
+        form {
+            height: 75vh;
+        }
 
         &-Title {
             display: inline-flex;
@@ -188,8 +229,14 @@
     &-Phone {
         margin-right: 90px;
 
+        @include mobile() {
+            margin-top: 18px;
+        }
+
         .Field {
-            margin-bottom: -14px;
+            @include desktop() {
+                margin-bottom: -14px;
+            }
         }
 
         &_isArabic {
@@ -213,58 +260,95 @@
     }
 
     &-BirthDay {
-        margin-top: 2.8rem;
+        margin-top: 1rem;
 
         &:after {
             background-color: var(--white);
-            content: ' ';
+            content: '';
             height: 58px;
             margin-bottom: 2px;
             margin-left: -60px;
             pointer-events: none;
             position: absolute;
+            right: 1px;
             top: 1px;
             width: 59px;
+
+            @include mobile() {
+                height: 50px;
+                top: 20px;
+            }
         }
 
-        input {
+        .Field {
             &:after {
                 border: solid var(--light-gray);
                 border-width: 0 2px 2px 0;
-                content: ' ';
+                content: '';
                 height: 6px;
                 margin-bottom: 2px;
                 margin-left: -15px;
                 pointer-events: none;
+                position: absolute;
+                right: 20px;
+                top: 37px;
                 transform: rotate(45deg);
                 width: 6px;
                 z-index: 1;
 
+                @include desktop() {
+                    top: 25px;
+                }
+            }
+
+            @include mobile() {
+                margin-top: 18px;
             }
         }
 
         &_isArabic {
             &:after {
                 margin-left: 0;
-                right: 1px;
+                right: 12px;
             }
+
+            input {
+                @include desktop() {
+                    margin-right: 10px;
+                }
+            }
+        }
+
+        @include desktop() {
+            margin-top: -.5rem;
         }
     }
 
     #change-password-button {
         color: var(--light-gray);
         font-weight: var(--fw-thin);
-        height: 60px;
+        height: 50px;
         position: absolute;
         right: 0;
-        top: -1px;
-        width: 100px;
         text-transform: capitalize;
+        top: 12px;
+        width: 100px;
+
+        @include mobile() {
+            top: 4px;
+        }
     }
 
     &_isArabic {
+        form {
+            @include desktop() {
+                margin-left: 10px;
+                margin-right: -10px;
+            }
+        }
+
         #change-password-button {
-            left: 0;
+            left: -15px;
             right: unset;
         }
 
@@ -290,6 +374,11 @@
 
         .Button {
             width: 50%;
+        }
+
+        &-Gender {
+            margin-bottom: 25px;
+            margin-top: -25px;
         }
 
         .MyAccountPasswordForm {

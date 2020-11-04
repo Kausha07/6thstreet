@@ -1,12 +1,20 @@
+/* eslint-disable no-magic-numbers */
 import CartCoupon from 'Component/CartCoupon';
+import ClubApparel from 'Component/ClubApparel';
 import CmsBlock from 'Component/CmsBlock';
 import Link from 'Component/Link';
+import { FIXED_CURRENCIES } from 'Component/Price/Price.config';
 import StoreCredit from 'Component/StoreCredit';
 import { SHIPPING_STEP } from 'Route/Checkout/Checkout.config';
 import {
     CheckoutOrderSummary as SourceCheckoutOrderSummary
 } from 'SourceComponent/CheckoutOrderSummary/CheckoutOrderSummary.component';
-import { isArabic } from 'Util/App';
+import {
+    getCurrency,
+    getDiscountFromTotals,
+    isArabic
+} from 'Util/App';
+import { isSignedIn } from 'Util/Auth';
 
 import Delivery from './icons/delivery-truck.png';
 
@@ -60,9 +68,9 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
 
         return (
             <div block="CheckoutOrderSummary" elem="OrderItems">
-                    <ul block="CheckoutOrderSummary" elem="CartItemList">
-                        { items.map(this.renderItem) }
-                    </ul>
+                <ul block="CheckoutOrderSummary" elem="CartItemList">
+                    { items.map(this.renderItem) }
+                </ul>
             </div>
         );
     }
@@ -70,6 +78,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     renderPromoContent() {
         const { cart_content: { cart_cms } = {} } = window.contentConfiguration;
         const { totals: { currency_code, avail_free_shipping_amount } } = this.props;
+        const { isArabic } = this.state;
 
         if (cart_cms) {
             return <CmsBlock identifier={ cart_cms } />;
@@ -80,14 +89,14 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
               block="CheckoutOrderSummary"
               elem="PromoBlock"
             >
-                <figcaption block="CheckoutOrderSummary" elem="PromoText">
+                <figcaption block="CheckoutOrderSummary" elem="PromoText" mods={ { isArabic } }>
                     <img src={ Delivery } alt="Delivery icon" />
                     { __('Add ') }
                     <span
                       block="CheckoutOrderSummary"
                       elem="Currency"
                     >
-                        { `${currency_code } ${avail_free_shipping_amount}` }
+                        { `${currency_code } ${avail_free_shipping_amount} ` }
                     </span>
                     { __('more to your cart for ') }
                     <span
@@ -101,7 +110,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
         );
     }
 
-    renderDiscountCode() {
+    renderCartCoupon() {
         const {
             totals: { coupon_code }
         } = this.props;
@@ -125,19 +134,24 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     }
 
     renderToggleableDiscountOptions() {
+        if (!isSignedIn()) {
+            return null;
+        }
+
         return (
             <div block="CheckoutOrderSummary" elem="DiscountOptionWrapper">
                 <StoreCredit canApply hideIfZero />
+                <ClubApparel hideIfZero />
             </div>
         );
     }
 
-    renderPriceLine(price, name, mods) {
-        if (!price) {
+    renderPriceLine(price, name, mods, allowZero = false) {
+        if (!price && !allowZero) {
             return null;
         }
 
-        const { totals: { currency_code } } = this.props;
+        const { totals: { currency_code = getCurrency() } } = this.props;
 
         return (
             <li block="CheckoutOrderSummary" elem="SummaryItem" mods={ mods }>
@@ -145,7 +159,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                     { name }
                 </strong>
                 <strong block="CheckoutOrderSummary" elem="Price">
-                { `${currency_code } ${ price}` }
+                    { `${ parseFloat(price) ? currency_code : '' } ${ price }` }
                 </strong>
             </li>
         );
@@ -154,54 +168,56 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     renderTotals() {
         const {
             totals: {
-                subtotal,
-                total,
-                tax_amount,
-                shipping_amount
+                subtotal = 0,
+                total = 0,
+                shipping_amount = 0,
+                currency_code = getCurrency()
             },
             checkoutStep
         } = this.props;
+        const fixedPrice = FIXED_CURRENCIES.includes(currency_code);
+        const grandTotal = fixedPrice ? (total).toFixed(3) : total;
+        const { totals: { coupon_code: couponCode, total_segments: totals = [] } } = this.props;
 
         return (
             <div block="CheckoutOrderSummary" elem="OrderTotals">
                 <ul>
                     <div block="CheckoutOrderSummary" elem="Subtotals">
-                        { this.renderPriceLine(subtotal, __('Subtotal')) }
+                        { this.renderPriceLine(fixedPrice ? subtotal.toFixed(3) : subtotal, __('Subtotal')) }
                         { checkoutStep !== SHIPPING_STEP
-                            ? this.renderPriceLine(shipping_amount, __('Shipping'), { divider: true })
-                            : null }
-                        { this.renderCouponCode() }
-                        { this.renderPriceLine(tax_amount, __('Tax')) }
-                        { this.renderCashOnDeliveryFee() }
+                            && this.renderPriceLine(shipping_amount, __('Shipping'), { divider: true }) }
+                        { this.renderPriceLine(
+                            getDiscountFromTotals(totals, 'customerbalance'),
+                            __('Store Credit')
+                        ) }
+                        { this.renderPriceLine(
+                            getDiscountFromTotals(totals, 'clubapparel'),
+                            __('Club Apparel Redemption')
+                        ) }
+                        { couponCode && this.renderPriceLine(
+                            getDiscountFromTotals(totals, 'discount'),
+                            __('Discount (%s)', couponCode)
+                        ) }
+                        { this.renderPriceLine(
+                            getDiscountFromTotals(totals, 'shipping') || __('FREE'),
+                            __('Delivery Cost')
+                        ) }
+                        { this.renderPriceLine(
+                            getDiscountFromTotals(totals, 'tax'),
+                            __('Tax')
+                        ) }
+                        { this.renderPriceLine(
+                            getDiscountFromTotals(totals, 'msp_cashondelivery'),
+                            __('Cash on Delivery')
+                        ) }
                     </div>
                     <div block="CheckoutOrderSummary" elem="Totals">
-                        { checkoutStep !== SHIPPING_STEP
-                            ? this.renderPriceLine(total + tax_amount, __('Total'))
-                            : this.renderPriceLine(total + tax_amount, __('Total')) }
-                            <span>{ __('(Taxes included)') }</span>
+                        { this.renderPriceLine(grandTotal, __('Total'), {}, true) }
+                        <span>{ __('(Taxes included)') }</span>
                     </div>
                 </ul>
             </div>
         );
-    }
-
-    renderCashOnDeliveryFee() {
-        const { cashOnDeliveryFee, totals: { currency_code } } = this.props;
-
-        if (cashOnDeliveryFee) {
-            return (
-                <li block="CheckoutOrderSummary" elem="SummaryItem">
-                    <span block="CheckoutOrderSummary" elem="Text">
-                        { __('Cash on Delivery Fee') }
-                    </span>
-                    <span block="CheckoutOrderSummary" elem="Text">
-                    { `${currency_code } ${ cashOnDeliveryFee}` }
-                    </span>
-                </li>
-            );
-        }
-
-        return null;
     }
 
     render() {
@@ -210,7 +226,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                 { this.renderHeading() }
                 { this.renderItems() }
                 { this.renderToggleableDiscountOptions() }
-                { this.renderDiscountCode() }
+                { this.renderCartCoupon() }
                 { this.renderPromo() }
                 { this.renderTotals() }
             </article>

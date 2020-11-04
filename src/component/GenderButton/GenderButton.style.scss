@@ -42,6 +42,12 @@
             transition-duration: unset;
         }
 
+        &_isUnsetStyle
+        {
+            border-bottom: 0;
+            font-weight: var(--fw-regular);
+        }
+
         @include desktop {
             height: 30px;
             margin-top: -30px;
