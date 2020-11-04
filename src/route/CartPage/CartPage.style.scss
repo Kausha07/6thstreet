@@ -30,7 +30,6 @@
         margin-bottom: 0;
         height: auto;
         padding: 17px 20px calc(var(--navigation-tabs-height) + 120px);
-        margin-top: 120px;
     }
 
     &_isArabic {
@@ -48,7 +47,7 @@
         display: flex;
         flex-direction: column;
         margin-left: 100px;
-        width: 340px;
+        width: 440px;
         max-height: 65vh;
 
         @include mobile {
@@ -416,15 +415,22 @@
     }
 
     &-Heading {
-        height: 3rem;
-        margin-top: 2rem;
-        margin-bottom: 1.5rem;
-        font-size: 20px;
-        font-weight: var(--fw-bold);
-        text-transform: capitalize;
+        font-size: 16px;
+        font-weight: var(--fw-demi);
+        text-transform: uppercase;
+        text-align: center;
 
-        span {
-            font-weight: var(--fw-regular);
+        @include desktop() {
+            font-size: 20px;
+            height: 3rem;
+            margin-bottom: 1.5rem;
+            margin-top: 2rem;
+            text-align: left;
+            text-transform: capitalize;
+
+            span {
+                font-weight: var(--fw-regular);
+            }
         }
     }
 
@@ -573,6 +579,24 @@
         }
 
         &-TabContent {
+            display: none;
+        }
+    }
+
+    &-BackArrow {
+        background-image: url(./icons/close-black.png);
+        background-size: cover;
+        height: 14px;
+        position: absolute;
+        width: 14px;
+        top: 3px;
+        z-index: 10;
+
+        button {
+            height: 14px;
+        }
+
+        @include after-mobile {
             display: none;
         }
     }
