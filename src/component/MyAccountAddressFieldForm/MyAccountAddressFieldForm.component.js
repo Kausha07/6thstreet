@@ -102,10 +102,17 @@ export class MyAccountAddressFieldForm extends PureComponent {
                 >
                     { this.renderField(['default_billing', default_billing]) }
                     { this.renderField(['default_shipping', default_shipping]) }
-                    { this.renderField(['firstname', firstname]) }
-                    { this.renderField(['lastname', lastname]) }
                     { this.renderField(['postcode', postcode]) }
                     { this.renderField(['country_id', country_id]) }
+                </div>
+
+                <div
+                  block="MyAccountAddressFieldForm"
+                  elem="FieldWrapper"
+                  mods={ { twoFields: true } }
+                >
+                    { this.renderField(['firstname', firstname]) }
+                    { this.renderField(['lastname', lastname]) }
                 </div>
 
                 <div
