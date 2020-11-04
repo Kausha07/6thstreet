@@ -7,7 +7,8 @@ export class CmsPage extends SourceCmsPage {
     renderContent() {
         const {
             isLoading,
-            page: { content, title }
+            page: { content },
+            location: { pathname }
         } = this.props;
 
         if (isLoading) {
@@ -31,7 +32,20 @@ export class CmsPage extends SourceCmsPage {
         const result = String(textChild.innerHTML)
             .replace(/&lt;/g, '<')
             .replace(/&gt;/g, '>');
-        const cmsBlock = title.replace(/\s/g, '');
+
+        const cmsBlock = pathname.slice(1);
+
+        const toggleArr = document.querySelectorAll('.faq-page-toggle');
+        if (toggleArr) {
+            toggleArr.forEach((toggle) => {
+                toggle.addEventListener('click', (e) => {
+                    const label = e.target.nextSibling;
+                    const fieldsetContainer = e.target.nextSibling.nextSibling;
+                    label.classList.toggle('open');
+                    fieldsetContainer.classList.toggle('open');
+                });
+            });
+        }
 
         return (
             <div block={ cmsBlock }>

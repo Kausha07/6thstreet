@@ -23,6 +23,7 @@
            &-page {
                 font-size: 16px;
                 margin-left: 0;
+                margin-right: 0;
 
                 h1 {
                     font-size: 30px;
@@ -56,7 +57,7 @@
 }
 ////////////////// SEPARATE
 .CmsPage {
-    .ShippingPolicy {
+    .shipping-policy {
         ul:first-child {
             li {
                 padding: 0;
@@ -116,4 +117,69 @@
         }
     }
 }
+.CmsPage {
+    .faq-page {
+        .showHide {
+            input {
+                display: none;
+            }
 
+            label {
+                margin-top: 12px;
+                font-weight: var(--fw-bold);
+                font-size: 16px;
+            }
+
+            .fieldsetContainer {
+                display: none;
+                margin-left: 20px;
+            }
+    
+            .minus-sign {
+                display: none;
+            }
+
+            .open {
+                display: block;
+            }
+        }
+
+        .showHide > .open > .expand > .minus-sign {
+            display: inline;
+        }
+
+        .showHide > .open > .expand > .plus-sign {
+            display: none;
+        }
+    }
+}
+
+.PageWrapper {
+    &_isArabic {
+        .CmsPage {
+            .shipping-policy {
+                .out-of-service-area > ul > li {
+                    ol {
+                        li {
+                            padding-left: 0;
+                            padding-right: 20px;
+
+                            @include desktop {
+                                padding-left: 0;
+                                padding-right: 30px;
+                            }
+
+                            &::before {
+                                right: -0.5em;
+        
+                                @include desktop {
+                                    right: 0;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
