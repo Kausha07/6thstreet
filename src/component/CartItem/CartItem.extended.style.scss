@@ -25,8 +25,8 @@
         flex-wrap: wrap;
         margin-bottom: 20px;
 
-        &-Actions {
-            display: none;
+        @include desktop() {
+            height: 170px;
         }
 
         &-Wrapper {
@@ -39,6 +39,11 @@
             .Image {
                 display: block;
                 width: 100%;
+
+                &-Image {
+                    position: relative;
+                    object-fit: cover;
+                }
             }
         }
 

@@ -354,6 +354,7 @@ export class CartItem extends PureComponent {
                 { this.renderProductConfigurations() }
                 { this.renderColSizeQty() }
                 { this.renderProductPrice() }
+                { this.renderActions() }
             </figcaption>
         );
     }
@@ -433,7 +434,6 @@ export class CartItem extends PureComponent {
             <li block="CartItem">
                 <Loader isLoading={ isLoading } />
                 { this.renderWrapper() }
-                { this.renderActions() }
             </li>
         );
     }

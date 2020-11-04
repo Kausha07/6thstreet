@@ -24,6 +24,7 @@ export const mapStateToProps = (state) => ({
     isLoading: state.PDP.isLoading,
     product: state.PDP.product,
     options: state.PDP.options,
+    nbHits: state.PDP.nbHits,
     country: state.AppState.country,
     config: state.AppConfig.config
 });
@@ -50,6 +51,7 @@ export class PDPContainer extends PureComponent {
         updateBreadcrumbs: PropTypes.func.isRequired,
         changeHeaderState: PropTypes.func.isRequired,
         setGender: PropTypes.func.isRequired,
+        nbHits: PropTypes.number.isRequired,
         setMeta: PropTypes.func.isRequired,
         country: PropTypes.string.isRequired,
         config: PropTypes.object.isRequired
@@ -110,32 +112,36 @@ export class PDPContainer extends PureComponent {
         const {
             updateBreadcrumbs,
             product: { categories, name },
-            setGender
+            setGender,
+            nbHits
         } = this.props;
-        const categoriesLastLevel = categories[Object.keys(categories)[Object.keys(categories).length - 1]][0]
-            .split(' /// ');
 
-        const breadcrumbsMapped = getBreadcrumbs(categoriesLastLevel, setGender);
-        const productBreadcrumbs = breadcrumbsMapped.reduce((acc, item) => {
-            acc.unshift(item);
+        if (nbHits === 1) {
+            const categoriesLastLevel = categories[Object.keys(categories)[Object.keys(categories).length - 1]][0]
+                .split(' /// ');
 
-            return acc;
-        }, []);
+            const breadcrumbsMapped = getBreadcrumbs(categoriesLastLevel, setGender);
+            const productBreadcrumbs = breadcrumbsMapped.reduce((acc, item) => {
+                acc.unshift(item);
 
-        const breadcrumbs = [
-            {
-                url: '',
-                name: __(name)
-            },
-            ...productBreadcrumbs,
-            {
-                url: '/',
-                name: __('Home')
-            }
-        ];
+                return acc;
+            }, []);
 
-        updateBreadcrumbs(breadcrumbs);
-        this.setState({ firstLoad: false });
+            const breadcrumbs = [
+                {
+                    url: '',
+                    name: __(name)
+                },
+                ...productBreadcrumbs,
+                {
+                    url: '/',
+                    name: __('Home')
+                }
+            ];
+
+            updateBreadcrumbs(breadcrumbs);
+            this.setState({ firstLoad: false });
+        }
     }
 
     setMetaData() {
@@ -182,7 +188,9 @@ export class PDPContainer extends PureComponent {
     }
 
     containerProps = () => {
-        // isDisabled: this._getIsDisabled()
+        const { nbHits } = this.props;
+
+        return { nbHits };
     };
 
     render() {

@@ -23,9 +23,11 @@ import { CROSS_SELL } from 'Store/LinkedProducts/LinkedProducts.reducer';
 import {
     activeTabType
 } from 'Type/Account';
+import { HistoryType } from 'Type/Common';
 import { TotalsType } from 'Type/MiniCart';
 import { ClubApparelMember } from 'Util/API/endpoint/ClubApparel/ClubApparel.type';
 import { isArabic } from 'Util/App';
+import isMobile from 'Util/Mobile';
 import { roundPrice } from 'Util/Price';
 
 import ClubApparel from './icons/club-apparel.png';
@@ -40,7 +42,8 @@ export class CartPage extends PureComponent {
         activeTab: activeTabType.isRequired,
         changeActiveTab: PropTypes.func.isRequired,
         clubApparel: ClubApparelMember,
-        isSignedIn: PropTypes.bool.isRequired
+        isSignedIn: PropTypes.bool.isRequired,
+        history: HistoryType.isRequired
     };
 
     state = {
@@ -68,7 +71,6 @@ export class CartPage extends PureComponent {
                       item={ item }
                       currency_code={ quote_currency_code }
                       isEditing
-                      isLikeTable
                     />
                 )) }
             </ul>
@@ -331,10 +333,9 @@ export class CartPage extends PureComponent {
 
         const itemQuantityArray = items.map((item) => item.qty);
         const totalQuantity = itemQuantityArray.reduce((qty, nextQty) => qty + nextQty, 0);
+        const desktopSuffix = totalQuantity === 1 ? __(' Item') : __(' Items');
 
-        return (totalQuantity === 1)
-            ? __(' Item')
-            : __(' Items');
+        return isMobile.any() ? null : desktopSuffix;
     }
 
     renderHeading() {
@@ -345,15 +346,31 @@ export class CartPage extends PureComponent {
 
         return (
             <div>
-            <h1 block="CartPage" elem="Heading">
-                { __('My bag ') }
-                <span>
-                    (
-                    { totalQuantity }
-                    { this.renderItemSuffix() }
-                    )
-                </span>
-            </h1>
+                { this.renderBack() }
+                <h1 block="CartPage" elem="Heading">
+                    { isMobile.any() ? __('My shopping cart ') : __('My bag ') }
+                    <span>
+                        (
+                        { totalQuantity }
+                        { this.renderItemSuffix() }
+                        )
+                    </span>
+                </h1>
+            </div>
+        );
+    }
+
+    renderBack() {
+        const { history } = this.props;
+
+        return (
+            <div block="CartPage" elem="BackArrow">
+                <button
+                  block="BackArrow-Button"
+                  onClick={ history.goBack }
+                >
+                    <span />
+                </button>
             </div>
         );
     }
