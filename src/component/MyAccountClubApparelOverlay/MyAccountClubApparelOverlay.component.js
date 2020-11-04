@@ -187,7 +187,7 @@ class MyAccountClubApparelOverlay extends PureComponent {
     }
 
     renderLink() {
-        const { linkAccount, isLoading } = this.props;
+        const { linkAccount } = this.props;
 
         return (
             <>
@@ -201,7 +201,7 @@ class MyAccountClubApparelOverlay extends PureComponent {
                       elem="LinkAccountButton"
                       type="submit"
                     >
-                        { isLoading ? <Loader isLoading={ isLoading } /> : __('Link Account') }
+                        { __('Link Account') }
                     </button>
                 </Form>
             </>
@@ -252,7 +252,8 @@ class MyAccountClubApparelOverlay extends PureComponent {
     renderOverlay() {
         const { isArabic } = this.state;
         const {
-            state
+            state,
+            isLoading
         } = this.props;
         const { render } = this.renderMap[state];
         const beforeDesktop = isMobile.any() || isMobile.tablet();
@@ -265,6 +266,7 @@ class MyAccountClubApparelOverlay extends PureComponent {
               id="LinkAccount"
               title="Link"
             >
+                { isLoading ? <Loader isLoading={ isLoading } /> : null }
                 { isMessage && beforeDesktop
                     ? null : (
                         <div block="MyAccountClubApparelOverlay" elem="LinkAccountBanner">
