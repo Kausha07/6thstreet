@@ -604,5 +604,9 @@
     "Discount (%s)": null,
     "Store Credit": null,
     "Club Apparel Redemption": null,
-    "Remove": null
+    "Remove": null,
+    "Wishlist": null,
+    "fields are not valid": null,
+    "field is not valid": null,
+    "Some of the fields are not valid": null
 }

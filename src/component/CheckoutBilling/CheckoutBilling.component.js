@@ -45,7 +45,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
             totals: { is_virtual }
         } = this.props;
 
-        if (!isSameAsShipping && !is_virtual) {
+        if (isSameAsShipping && !is_virtual) {
             return null;
         }
 
@@ -88,7 +88,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
               label={ this.renderDifferentBillingLabel() }
               value="sameAsShippingAddress"
               mix={ { block: 'CheckoutBilling', elem: 'Checkbox' } }
-              checked={ isSameAsShipping }
+              checked={ !isSameAsShipping }
               onChange={ onSameAsShippingChange }
             />
         );

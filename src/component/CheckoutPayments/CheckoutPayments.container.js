@@ -12,6 +12,8 @@ import CartDispatcher from 'Store/Cart/Cart.dispatcher';
 import CheckoutDispatcher from 'Store/Checkout/Checkout.dispatcher';
 import { TotalsType } from 'Type/MiniCart';
 
+import { CARD } from './CheckoutPayments.config';
+
 export const mapStateToProps = (state) => ({
     totals: state.CartReducer.cartTotals
 });
@@ -42,6 +44,8 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
             billingAddress,
             setTabbyWebUrl
         } = this.props;
+
+        this.selectPaymentMethod({ m_code: CARD });
 
         if (window.formPortalCollector) {
             window.formPortalCollector.subscribe(BILLING_STEP, this.collectAdditionalData, 'CheckoutPaymentsContainer');

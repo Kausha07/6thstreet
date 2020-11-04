@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 import FormPortal from 'Component/FormPortal';
 import {
     CheckoutAddressForm as SourceCheckoutAddressForm
@@ -28,13 +29,14 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
         } = prevState;
 
         if (
-            countryId !== prevCountryId
+            (countryId !== prevCountryId
             || regionId !== prevRegionId
             || city !== prevCity
             || region !== prevRegion
             || postcode !== prevpostcode
             || street !== prevStreet
-            || telephone !== prevTelephone
+            || telephone !== prevTelephone)
+            && (city, regionId, telephone) && (telephone.length > 7)
         ) {
             this.estimateShipping();
         }

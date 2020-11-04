@@ -1,7 +1,5 @@
-/* eslint-disable no-var */
 /* eslint-disable radix */
 /* eslint-disable no-magic-numbers */
-/* eslint-disable fp/no-let */
 /* eslint-disable react/prop-types */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
@@ -23,6 +21,7 @@ class CreditCard extends PureComponent {
     state = {
         cvv: '',
         validatorMessage: null,
+        cardLogo: null,
         numberFilled: false,
         expDateFilled: false,
         cvvFilled: false
@@ -54,20 +53,25 @@ class CreditCard extends PureComponent {
     }
 
     handleNumberChange = (e) => {
-        const { setCreditCardData, reformatInputField } = this.props;
+        const {
+            setCreditCardData,
+            reformatInputField,
+            getCardLogo
+        } = this.props;
         const { value } = e.target;
         const element = document.getElementById('number');
         const onlyNumbers = value.replace(/\s/g, '');
+        const cardLogo = getCardLogo(onlyNumbers);
 
         reformatInputField(element, 4);
         setCreditCardData({ number: onlyNumbers });
 
         if (onlyNumbers.length === 16) {
-            this.setState({ numberFilled: true });
+            this.setState({ cardLogo, numberFilled: true });
             return;
         }
 
-        this.setState({ numberFilled: false });
+        this.setState({ cardLogo, numberFilled: false });
     };
 
     handleExpDateChange = (e) => {
@@ -106,7 +110,7 @@ class CreditCard extends PureComponent {
     };
 
     renderCreditCardForm() {
-        const { cvv } = this.state;
+        const { cvv, cardLogo } = this.state;
         return (
             <div block="CreditCard" elem="Card">
                 <p>card number</p>
@@ -146,6 +150,12 @@ class CreditCard extends PureComponent {
                       onChange={ this.handleCvvChange }
                       validation={ ['notEmpty'] }
                     />
+                    <div
+                      block="CreditCard"
+                      elem="CardLogo"
+                    >
+                        { cardLogo ? <img src={ cardLogo } alt="logo" /> : null }
+                    </div>
                 </div>
             </div>
         );

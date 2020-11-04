@@ -169,8 +169,13 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         return isMobile ? __('New address') : __('Add new address');
     }
 
-    renderOpenPopupButton() {
+    renderOpenPopupButton = () => {
         const { isSignedIn, formContent, isArabic } = this.state;
+        const { customer: { addresses } } = this.props;
+
+        if (isSignedIn && addresses.length === 0) {
+            return this.openNewForm();
+        }
 
         if (isSignedIn) {
             return (
@@ -194,7 +199,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         }
 
         return null;
-    }
+    };
 
     renderDelivery() {
         const {

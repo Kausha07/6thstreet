@@ -261,13 +261,15 @@ export class Checkout extends SourceCheckout {
           onEmailChange,
           onCreateUserChange,
           onPasswordChange,
-          isGuestEmailSaved
+          isGuestEmailSaved,
+          isLoading
       } = this.props;
       const { continueAsGuest, isInvalidEmail } = this.state;
       const isBilling = checkoutStep === BILLING_STEP;
 
       return (
             <CheckoutGuestForm
+              isLoading={ isLoading }
               isBilling={ isBilling }
               isCreateUser={ isCreateUser }
               onEmailChange={ onEmailChange }
@@ -332,6 +334,7 @@ export class Checkout extends SourceCheckout {
           checkoutTotals,
           isSignedIn
       } = this.props;
+
       const { continueAsGuest, isArabic } = this.state;
       const renderCheckoutShipping = (
           <div

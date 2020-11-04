@@ -300,7 +300,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
         }
 
         return (
-            <div>
+            <div block="MyAccountPasswordForm">
                 <div
                   block="MyAccountPasswordForm"
                   elem="Title"
