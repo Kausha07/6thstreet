@@ -2,6 +2,7 @@ import { getStore } from 'Store';
 import { setSearchSuggestions } from 'Store/SearchSuggestions/SearchSuggestions.action';
 import { formatProductSuggestions } from 'Util/API/endpoint/Suggestions/Suggestions.format';
 import Algolia from 'Util/API/provider/Algolia';
+import { isArabic } from 'Util/App';
 
 const PRODUCT_RESULT_LIMIT = 8;
 
@@ -10,11 +11,18 @@ export class SearchSuggestionsDispatcher {
         const { AppState: { gender } } = getStore().getState();
 
         try {
-            const productData = await new Algolia().searchBy({
-                gender,
-                query: search,
-                limit: PRODUCT_RESULT_LIMIT
-            });
+            const productData = await new Algolia().searchBy(
+                isArabic()
+                    ? {
+                        query: search,
+                        limit: PRODUCT_RESULT_LIMIT
+                    }
+                    : {
+                        gender,
+                        query: search,
+                        limit: PRODUCT_RESULT_LIMIT
+                    }
+            );
 
             // In case anyone needs desktop data (use this!)
             // const lang = language === 'en' ? 'english' : 'arabic';
