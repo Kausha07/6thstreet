@@ -173,7 +173,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         const { isSignedIn, formContent, isArabic } = this.state;
         const { customer: { addresses } } = this.props;
 
-        if (isSignedIn && addresses.length === 0) {
+        if (addresses && (isSignedIn && addresses.length === 0)) {
             return this.openNewForm();
         }
 

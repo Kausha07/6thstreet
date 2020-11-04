@@ -1,5 +1,9 @@
 .CreditCardTooltip {
-    padding: 0 30px 30px;
+    padding-bottom: 30px;
+    
+    @include desktop {
+        padding: 0 30px 30px;         
+    }
 
     &-Background {
         @include before-desktop {
@@ -20,7 +24,7 @@
         background: var(--my-acc-background);
         font-size: 13px;
         font-weight: var(--fw-regular);
-        padding: 10px 30px;
+        padding: 10px 0;
 
         span {
             font-weight: var(--fw-demi);
