@@ -7,7 +7,7 @@ export class CmsPage extends SourceCmsPage {
     renderContent() {
         const {
             isLoading,
-            page: { content }
+            page: { content, title }
         } = this.props;
 
         if (isLoading) {
@@ -31,9 +31,12 @@ export class CmsPage extends SourceCmsPage {
         const result = String(textChild.innerHTML)
             .replace(/&lt;/g, '<')
             .replace(/&gt;/g, '>');
+        const cmsBlock = title.replace(/\s/g, '');
 
         return (
-            <Html content={ result } />
+            <div block={ cmsBlock }>
+                <Html content={ result } />
+            </div>
         );
     }
 }
