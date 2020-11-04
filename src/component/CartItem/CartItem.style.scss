@@ -63,7 +63,7 @@
         height: 50px;
 
         @include desktop() {
-            height: 150px;
+            height: 130px;
         }
 
         &_isLikeTable {
@@ -217,6 +217,7 @@
         }
 
         @include after-mobile {
+            margin-top: -20px;
             height: 3rem;
         }
 

@@ -282,6 +282,16 @@
         max-height: 382px;
         overflow-y: scroll;
         overflow-x: hidden;
+
+        .CartItem {
+            &-Content {
+                height: 150px;
+            }
+
+            .Image-Image {
+                object-fit: cover;
+            }
+        }
     }
 
     &-Total,
