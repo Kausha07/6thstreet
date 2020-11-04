@@ -32,10 +32,9 @@ export class CmsPage extends SourceCmsPage {
         const result = String(textChild.innerHTML)
             .replace(/&lt;/g, '<')
             .replace(/&gt;/g, '>');
-
         const cmsBlock = pathname.slice(1);
-
         const toggleArr = document.querySelectorAll('.faq-page-toggle');
+
         if (toggleArr) {
             toggleArr.forEach((toggle) => {
                 toggle.addEventListener('click', (e) => {
