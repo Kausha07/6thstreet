@@ -113,7 +113,7 @@ export class Router extends SourceRouter {
             position: 20
         },
         {
-            component: <Route component={ Seo } />,
+            component: <Seo />,
             position: 30
         }
     ];
