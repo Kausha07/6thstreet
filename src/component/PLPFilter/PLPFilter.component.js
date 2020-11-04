@@ -16,11 +16,11 @@ import './PLPFilter.style';
 class PLPFilter extends PureComponent {
     static propTypes = {
         filter: Filter.isRequired,
-        onSelect: PropTypes.func.isRequired,
         activeFilter: PropTypes.object,
         isChecked: PropTypes.bool,
         currentActiveFilter: PropTypes.string,
-        changeActiveFilter: PropTypes.func.isRequired
+        changeActiveFilter: PropTypes.func.isRequired,
+        handleCallback: PropTypes.func.isRequired
     };
 
     static defaultProps = {
@@ -35,12 +35,13 @@ class PLPFilter extends PureComponent {
                 label,
                 category,
                 is_radio
-            }, onSelect,
+            },
             filter,
             activeFilter,
             isChecked,
             currentActiveFilter,
-            changeActiveFilter
+            changeActiveFilter,
+            handleCallback
         } = this.props;
 
         if (category === 'categories.level1') {
@@ -50,7 +51,6 @@ class PLPFilter extends PureComponent {
         if (category === 'categories_without_path') {
             return (
                 <FieldMultiselect
-                  onChange={ onSelect }
                   filter={ filter }
                   isHidden
                 />
@@ -62,12 +62,12 @@ class PLPFilter extends PureComponent {
               placeholder={ label }
               showCheckbox
               isRadio={ is_radio }
-              onChange={ onSelect }
               filter={ filter }
               activeFilter={ activeFilter }
               isChecked={ isChecked }
               currentActiveFilter={ currentActiveFilter }
               changeActiveFilter={ changeActiveFilter }
+              parentCallback={ handleCallback }
             />
         );
     }

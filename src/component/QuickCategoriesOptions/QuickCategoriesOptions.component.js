@@ -14,7 +14,8 @@ import './QuickCategoriesOptions.style';
 class QuickCategoriesOptions extends PureComponent {
     static propTypes = {
         filter: Filter.isRequired,
-        updateFilters: PropTypes.func.isRequired
+        updateFilters: PropTypes.func.isRequired,
+        parentCallback: PropTypes.func.isRequired
     };
 
     state = {
@@ -44,7 +45,7 @@ class QuickCategoriesOptions extends PureComponent {
     };
 
     renderOption = ([key, option]) => {
-        const { updateFilters } = this.props;
+        const { updateFilters, parentCallback } = this.props;
         if (option.subcategories) {
             return Object.entries(option.subcategories).map(this.renderOption);
         }
@@ -54,6 +55,7 @@ class QuickCategoriesOptions extends PureComponent {
               key={ key }
               option={ option }
               updateFilters={ updateFilters }
+              parentCallback={ parentCallback }
             />
         );
     };

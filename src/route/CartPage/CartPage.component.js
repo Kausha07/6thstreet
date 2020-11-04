@@ -68,7 +68,6 @@ export class CartPage extends PureComponent {
                       item={ item }
                       currency_code={ quote_currency_code }
                       isEditing
-                      isLikeTable
                     />
                 )) }
             </ul>
