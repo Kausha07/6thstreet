@@ -9,15 +9,13 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-:root {
+ :root {
     --cart-item-heading-color: #000;
     --cart-item-subheading-color: #888;
     --cart-item-option-color: #adadad;
     --cart-item-background: #fff;
-    --cart-item-actions-background: var(--secondary-base-color);
     --cart-item-actions-color: #000;
     --cart-item-divider-color: var(--expandable-content-divider-color);
-    --cart-item-action-border: var(--cart-item-divider-color);
 
     --Gallery: #EFEFEF;
     --Cardinal: #D12229;
@@ -208,15 +206,19 @@
         transition-duration: 200ms;
 
         @include mobile {
-            background-color: var(--cart-item-actions-background);
-            border-top: 1px solid var(--cart-item-action-border);
+            background-color: $white;
+            position: absolute;
+            bottom: 0rem;
+            right: 0;
+            width: calc(100% - 5.5rem);
+            height: 3rem;
         }
 
         @include after-mobile {
             position: absolute;
             bottom: 0rem;
             right: 0;
-            width: calc(100% - 8rem);
+            width: calc(100% - 5.5rem);
             height: 3rem;
         }
 
@@ -246,31 +248,6 @@
             opacity: 1;
             max-height: 5rem;
             pointer-events: all;
-        }
-
-        &::after,
-        &::before {
-            @include mobile {
-                content: '';
-            }
-
-            position: absolute;
-            left: 0;
-            right: 0;
-            margin: auto;
-            top: -1px;
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 15px 20px 0 20px;
-            border-color: var(--cart-item-background) transparent transparent transparent;
-            z-index: 2;
-        }
-
-        &::before {
-            top: 0;
-            z-index: 1;
-            border-color: var(--cart-item-action-border) transparent transparent transparent;
         }
     }
 
@@ -325,7 +302,7 @@
 
             span {
                 @include mobile {
-                    top: -2.2px;
+                    top: -1px;
                 }
             }
         }
