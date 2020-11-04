@@ -270,16 +270,16 @@ class PLPFilters extends PureComponent {
         const { activeFilter, isReset, activeFilters } = this.state;
 
         return (
-                <PLPFilter
-                  key={ key }
-                  filter={ filter }
-                  parentCallback={ this.handleCallback }
-                  currentActiveFilter={ activeFilter }
-                  changeActiveFilter={ this.changeActiveFilter }
-                  isReset={ isReset }
-                  resetParentState={ this.resetParentState }
-                  parentActiveFilters={ activeFilters }
-                />
+            <PLPFilter
+              key={ key }
+              filter={ filter }
+              parentCallback={ this.handleCallback }
+              currentActiveFilter={ activeFilter }
+              changeActiveFilter={ this.changeActiveFilter }
+              isReset={ isReset }
+              resetParentState={ this.resetParentState }
+              parentActiveFilters={ activeFilters }
+            />
         );
     };
 

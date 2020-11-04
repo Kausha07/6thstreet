@@ -1,4 +1,3 @@
-/* eslint-disable */
 /**
  * @category  sixth-street
  * @author    Vladislavs Belavskis <info@scandiweb.com>
@@ -11,8 +10,6 @@ import { connect } from 'react-redux';
 
 import { toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
 import { Filter } from 'Util/API/endpoint/Product/Product.type';
-import WebUrlParser from 'Util/API/helper/WebUrlParser';
-import isMobile from 'Util/Mobile';
 
 import PLPFilter from './PLPFilter.component';
 
@@ -50,24 +47,8 @@ class PLPFilterContainer extends PureComponent {
 
     handleCallback(initialFacetKey, facet_value, checked, isRadio) {
         const { parentCallback } = this.props;
-    
         parentCallback(initialFacetKey, facet_value, checked, isRadio);
     }
-
-    select = () => {
-        const {
-            parentCallback
-        } = this.props;
-        const { activeFilters } = this.state;
-
-        console.log(activeFilters);
-
-        if (!isMobile.any()) {
-            Object.keys(activeFilters || {}).map((key) => WebUrlParser.setParam(key, activeFilters[key]));
-        } else {
-            parentCallback(activeFilters);
-        }
-    };
 
     containerProps = () => {
         const { filter, changeActiveFilter, currentActiveFilter } = this.props;
