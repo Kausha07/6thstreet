@@ -6,10 +6,18 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import CreditCard from './CreditCard.component';
+import { MINI_CARDS } from './CreditCard.config';
 
 export class CreditCardContainer extends PureComponent {
     static propTypes = {
         setCreditCardData: PropTypes.func.isRequired
+    };
+
+    containerFunctions = {
+        expDateValidator: this.expDateValidator,
+        isNumber: this.isNumber,
+        reformatInputField: this.reformatInputField.bind(this),
+        getCardLogo: this.getCardLogo
     };
 
     isNumber(value) {
@@ -47,7 +55,7 @@ export class CreditCardContainer extends PureComponent {
         return spaces ? spaces.length : 0;
     }
 
-    reformatInputField = (element, spacePosition) => {
+    reformatInputField(element, spacePosition) {
         const expInput = spacePosition === 2;
         const onlyNumbers = expInput ? element.value.replace('/', '') : element.value.replace(/\s/g, '');
 
@@ -66,7 +74,7 @@ export class CreditCardContainer extends PureComponent {
             const countCurrent = this.countSpaces(this.format(beforeCaret, spacePosition, expInput), expInput);
             element.selectionEnd = position + (countCurrent - countPrevious);
         }
-    };
+    }
 
     expDateValidator(value) {
         const message = __('Please check the correct card correct card correct card expiration date (MM/YY)');
@@ -106,15 +114,33 @@ export class CreditCardContainer extends PureComponent {
         return null;
     }
 
+    getCardLogo(numbers) {
+        const { visa, mastercard, amex } = MINI_CARDS;
+        const first = parseInt(numbers.charAt(0));
+        const second = parseInt(numbers.charAt(1));
+
+        if (first === 4) {
+            return visa;
+        }
+
+        if (first === 5) {
+            return mastercard;
+        }
+
+        if (first === 3 && (second === 4 || second === 7)) {
+            return amex;
+        }
+
+        return null;
+    }
+
     render() {
         const { setCreditCardData } = this.props;
 
         return (
             <CreditCard
               setCreditCardData={ setCreditCardData }
-              expDateValidator={ this.expDateValidator }
-              isNumber={ this.isNumber }
-              reformatInputField={ this.reformatInputField }
+              { ...this.containerFunctions }
               { ...this.props }
             />
         );
