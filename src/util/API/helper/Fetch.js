@@ -4,8 +4,9 @@ import { getErrorMsg } from './API';
 export const doFetch = async (url, options) => {
     const response = await fetch(url, options);
     const { ok } = response;
+    const regExpUrl = /tokens\/card|\/tabby\/payments/;
 
-    if (!ok && !url.match(/tokens\/card/)) {
+    if (!ok && !url.match(regExpUrl)) {
         throw new Error(getErrorMsg(response));
     }
 
