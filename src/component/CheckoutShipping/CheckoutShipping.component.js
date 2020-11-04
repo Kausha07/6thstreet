@@ -199,7 +199,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         }
 
         return null;
-    }
+    };
 
     renderDelivery() {
         const {
