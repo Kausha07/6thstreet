@@ -117,11 +117,8 @@ export class HomePageContainer extends PureComponent {
                 countryName
             ),
             description: __(
-                [
-                    'Shop for %s fashion brands in %s.',
-                    'Exclusive collection of shoes, clothing, bags, grooming -',
-                    'Online Shopping ✯ Free Delivery ✯ COD ✯ 100% original brands - 6thStreet'
-                ].join(' '),
+                // eslint-disable-next-line max-len
+                'Shop for %s fashion brands in %s. Exclusive collection of shoes, clothing, bags, grooming - Online Shopping ✯ Free Delivery ✯ COD ✯ 100% original brands - 6thStreet',
                 genderName,
                 countryName
             )

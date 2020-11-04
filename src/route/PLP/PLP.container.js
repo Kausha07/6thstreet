@@ -209,18 +209,11 @@ export class PLPContainer extends PureComponent {
         const categoryName = capitalize(breadcrumbs.pop() || '');
 
         setMeta({
-            title: __(
-                '%s %s Online shopping in %s | 6thStreet', genderName, categoryName, countryName
-            ),
-            keywords: __(
-                '%s %s %s online shopping', genderName, categoryName, countryName
-            ),
+            title: __('%s %s Online shopping in %s | 6thStreet', genderName, categoryName, countryName),
+            keywords: __('%s %s %s online shopping', genderName, categoryName, countryName),
             description: __(
-                [
-                    'Shop %s %s Online.',
-                    'Explore your favourite brands',
-                    '✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet.'
-                ].join(' '),
+                // eslint-disable-next-line max-len
+                'Shop %s %s Online. Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet.',
                 genderName,
                 categoryName
             )

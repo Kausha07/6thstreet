@@ -140,27 +140,21 @@ export class PDPContainer extends PureComponent {
 
     setMetaData() {
         const {
-            setMeta, country, config, product
+            setMeta, country, config, product: { brand_name: brandName, name } = {}
         } = this.props;
 
-        console.log(product);
+        if (!name) {
+            return;
+        }
 
         const countryList = getCountriesForSelect(config);
         const { label: countryName = '' } = countryList.find((obj) => obj.id === country) || {};
 
         setMeta({
-            title: __(
-                '%s %s Online shopping in %s | 6thStreet', countryName
-            ),
-            keywords: __(
-                '%s %s %s online shopping', countryName
-            ),
+            title: __('%s | %s | 6thStreet', brandName, name),
+            keywords: __('%s %s %s online shopping', brandName, name, countryName),
             description: __(
-                [
-                    'Shop %s %s Online.',
-                    'Explore your favourite brands',
-                    '✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet.'
-                ].join(' ')
+                'Shop %s Online. Discover the latest collection from %s. Free shipping and returns.', name, brandName
             )
         });
     }
