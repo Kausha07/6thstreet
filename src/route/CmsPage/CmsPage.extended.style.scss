@@ -1,5 +1,5 @@
-@import ".pages/faq.styles.scss";
-@import ".pages/shipping.styles.scss";
+@import "./pages/faq";
+@import "./pages/shipping";
 
 .CmsPage {
     @include mobile {
