@@ -159,7 +159,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                     { name }
                 </strong>
                 <strong block="CheckoutOrderSummary" elem="Price">
-                    { `${ parseFloat(price) ? currency_code : '' } ${ price }` }
+                    { `${ parseFloat(price) || price === 0 ? currency_code : '' } ${ price }` }
                 </strong>
             </li>
         );

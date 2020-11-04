@@ -25,4 +25,6 @@ export const isDiscountApplied = (cartTotals, totalsCode) => {
 
 export const isArabic = () => JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data.language === 'ar';
 
+export const capitalize = (s) => s && s[0].toUpperCase() + s.slice(1);
+
 export default {};

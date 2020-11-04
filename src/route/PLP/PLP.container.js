@@ -5,12 +5,15 @@ import { withRouter } from 'react-router';
 
 import { DEFAULT_STATE_NAME } from 'Component/NavigationAbstract/NavigationAbstract.config';
 import { setGender } from 'Store/AppState/AppState.action';
+import { updateMeta } from 'Store/Meta/Meta.action';
 import { changeNavigationState } from 'Store/Navigation/Navigation.action';
 import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
 import { setPLPLoading } from 'Store/PLP/PLP.action';
 import PLPDispatcher from 'Store/PLP/PLP.dispatcher';
+import { getCountriesForSelect } from 'Util/API/endpoint/Config/Config.format';
 import { Filters, Pages, RequestedOptions } from 'Util/API/endpoint/Product/Product.type';
 import WebUrlParser from 'Util/API/helper/WebUrlParser';
+import { capitalize } from 'Util/App';
 import { getBreadcrumbs } from 'Util/Breadcrumbs/Breadcrubms';
 
 import PLP from './PLP.component';
@@ -27,7 +30,9 @@ export const mapStateToProps = (state) => ({
     isLoading: state.PLP.isLoading,
     pages: state.PLP.pages,
     filters: state.PLP.filters,
-    options: state.PLP.options
+    options: state.PLP.options,
+    country: state.AppState.country,
+    config: state.AppConfig.config
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
@@ -38,7 +43,8 @@ export const mapDispatchToProps = (dispatch, state) => ({
         BreadcrumbsDispatcher.then(({ default: dispatcher }) => dispatcher.update(breadcrumbs, dispatch));
     },
     changeHeaderState: (state) => dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, state)),
-    setGender: (gender) => dispatch(setGender(gender))
+    setGender: (gender) => dispatch(setGender(gender)),
+    setMeta: (meta) => dispatch(updateMeta(meta))
 });
 
 export class PLPContainer extends PureComponent {
@@ -55,7 +61,10 @@ export class PLPContainer extends PureComponent {
         changeHeaderState: PropTypes.func.isRequired,
         setGender: PropTypes.func.isRequired,
         filters: Filters.isRequired,
-        options: PropTypes.object.isRequired
+        options: PropTypes.object.isRequired,
+        setMeta: PropTypes.func.isRequired,
+        country: PropTypes.string.isRequired,
+        config: PropTypes.object.isRequired
     };
 
     static requestProductList = PLPContainer.request.bind({}, false);
@@ -120,6 +129,7 @@ export class PLPContainer extends PureComponent {
             PLPContainer.requestProductList(props);
         }
 
+        this.setMetaData();
         this.updateBreadcrumbs();
         this.updateHeaderState();
     }
@@ -134,6 +144,7 @@ export class PLPContainer extends PureComponent {
             setIsLoading(currentIsLoading);
         }
 
+        this.setMetaData();
         this.updateBreadcrumbs();
         this.updateHeaderState();
     }
@@ -178,6 +189,42 @@ export class PLPContainer extends PureComponent {
 
             updateBreadcrumbs(breadcrumbs);
         }
+    }
+
+    setMetaData() {
+        const {
+            setMeta, country, config, requestedOptions: { q } = {}, gender
+        } = this.props;
+
+        if (!q) {
+            return;
+        }
+
+        const genderName = capitalize(gender);
+        const countryList = getCountriesForSelect(config);
+        const { label: countryName = '' } = countryList.find((obj) => obj.id === country) || {};
+        const breadcrumbs = location.pathname.split('.html')[0]
+            .substring(1)
+            .split('/');
+        const categoryName = capitalize(breadcrumbs.pop() || '');
+
+        setMeta({
+            title: __(
+                '%s %s Online shopping in %s | 6thStreet', genderName, categoryName, countryName
+            ),
+            keywords: __(
+                '%s %s %s online shopping', genderName, categoryName, countryName
+            ),
+            description: __(
+                [
+                    'Shop %s %s Online.',
+                    'Explore your favourite brands',
+                    '✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet.'
+                ].join(' '),
+                genderName,
+                categoryName
+            )
+        });
     }
 
     getIsLoading() {
