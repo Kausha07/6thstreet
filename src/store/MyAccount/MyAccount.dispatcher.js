@@ -116,22 +116,24 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         dispatch(setCartId(null));
 
         setMobileAuthorizationToken(token);
-        this.setPhoneNumber(dispatch, custom_attributes);
+        this.setCustomAttributes(dispatch, custom_attributes);
         this.setGender(dispatch, gender);
 
         // Run async otherwise login gets slow
         CartDispatcher.getCart(dispatch);
     }
 
-    setPhoneNumber(dispatch, custom_attributes) {
+    setCustomAttributes(dispatch, custom_attributes) {
         const customer = BrowserDatabase.getItem(CUSTOMER) || {};
-        const phone = custom_attributes.filter(({ attribute_code }) => attribute_code === 'contact_no');
-
-        if (phone && phone[0]) {
-            const { value } = phone[0];
-
-            dispatch(updateCustomerDetails({ ...customer, phone: value }));
-        }
+        const phoneAttribute = custom_attributes.filter(
+            ({ attribute_code }) => attribute_code === 'contact_no'
+        );
+        const isVerifiedAttribute = custom_attributes.filter(
+            ({ attribute_code }) => attribute_code === 'is_mobile_otp_verified'
+        );
+        const { value: phoneNumber } = phoneAttribute && phoneAttribute[0] ? phoneAttribute[0] : null;
+        const { value: isVerified } = isVerifiedAttribute && isVerifiedAttribute[0] ? isVerifiedAttribute[0] : null;
+        dispatch(updateCustomerDetails({ ...customer, phone: phoneNumber, isVerified }));
     }
 
     setGender(dispatch, gender) {

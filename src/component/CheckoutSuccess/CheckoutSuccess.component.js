@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import ChangePhonePopup from 'Component/ChangePhonePopUp';
 import ContentWrapper from 'Component/ContentWrapper';
 import Field from 'Component/Field';
 import Form from 'Component/Form';
@@ -36,9 +37,9 @@ export class CheckoutSuccess extends PureComponent {
         customer: PropTypes.isRequired,
         activeTab: activeTabType.isRequired,
         changeActiveTab: PropTypes.func.isRequired,
-        onChangePhone: PropTypes.func.isRequired,
         onVerifySuccess: PropTypes.func.isRequired,
-        onResendCode: PropTypes.func.isRequired
+        onResendCode: PropTypes.func.isRequired,
+        isPhoneVerified: PropTypes.bool.isRequired
     };
 
     state = {
@@ -46,11 +47,11 @@ export class CheckoutSuccess extends PureComponent {
         shippingPrice: 0,
         paymentTitle: '',
         isArabic: isArabic(),
-        isPhoneVerified: false,
         isPhoneVerification: true,
         delay: 1000,
         successHidden: false,
-        wasLoaded: false
+        wasLoaded: false,
+        isChangePhonePopupOpen: false,
     };
 
     componentDidMount() {
@@ -120,14 +121,14 @@ export class CheckoutSuccess extends PureComponent {
         const {
             isSignedIn,
             orderID,
-            onChangePhone,
             onVerifySuccess,
             onResendCode,
+            isPhoneVerified,
             shippingAddress: {
                 phone
             }
         } = this.props;
-        const { isArabic, isPhoneVerified, isPhoneVerification } = this.state;
+        const { isArabic, isPhoneVerification } = this.state;
 
         if (!isPhoneVerified && isSignedIn) {
             return (
@@ -140,7 +141,7 @@ export class CheckoutSuccess extends PureComponent {
                             { __('Verification code has been sent to') }
                         </div>
                         <div block="TrackOrder-Text" elem="Phone">
-                            <button onClick={ onChangePhone }>
+                            <button onClick={ this.onChangePhone }>
                                 { phone }
                             </button>
                         </div>
@@ -202,6 +203,20 @@ export class CheckoutSuccess extends PureComponent {
                     { __('sign in') }
                 </button>
             </div>
+        );
+    }
+
+    onChangePhone() {
+        this.setState({ isChangePhonePopupOpen: true });
+    }
+
+    renderChangePhonePopUp() {
+        const { isChangePhonePopupOpen } = this.state;
+
+        return (
+            <ChangePhonePopup
+              isChangePhonePopupOpen={ isChangePhonePopupOpen }
+            />
         );
     }
 
@@ -403,7 +418,6 @@ export class CheckoutSuccess extends PureComponent {
     renderAddresses = () => (
         <div block="Addresses">
             { this.renderDeliveringAddress() }
-            { this.renderBillingAddress() }
         </div>
     );
 
@@ -550,6 +564,7 @@ export class CheckoutSuccess extends PureComponent {
         return (
             <div block="CheckoutSuccess">
                 { wasLoaded ? '' : this.renderSuccess() }
+                { this.renderChangePhonePopUp() }
                 { this.renderTabList() }
                 <div block="CheckoutSuccess" elem="Details">
                     { this.renderSuccessMessage(customer.email) }
@@ -558,7 +573,6 @@ export class CheckoutSuccess extends PureComponent {
                     { this.renderTotals() }
                     { this.renderAddresses() }
                     { this.renderDeliveryOption() }
-                    { this.renderPaymentType() }
                 </div>
                 { this.renderButton() }
                 { this.renderMyAccountPopup() }

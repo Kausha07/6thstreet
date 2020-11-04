@@ -302,8 +302,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         if (!isSignedIn()) {
             BrowserDatabase.deleteItem(GUEST_QUOTE_ID);
         } else {
-            const code = shippingAddress.phone.slice(1, 4);
-            const mobile = shippingAddress.phone.slice(4);
+            // const code = shippingAddress.phone.slice(1, 4);
+            // const mobile = shippingAddress.phone.slice(4);
+            const mobile = '525551536';
+            const code = '971';
             sendVerificationCode({ mobile, code }).then(
                 (response) => {
                     this.setState({ isVerificationCodeSent: response.success });

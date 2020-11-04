@@ -1,20 +1,52 @@
+import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-import Popup from 'Component/Popup';
-
-import { CHANGE_PHONE_POPUP } from './ChangePhonePopup.config';
+import Field from 'Component/Field';
+import Form from 'Component/Form';
 
 import './ChangePhonePopup.style.scss';
 
 class ChangePhonePopup extends PureComponent {
+    static propTypes = {
+        isChangePhonePopupOpen: PropTypes.bool.isRequired
+    };
+
     render() {
+        const { isChangePhonePopupOpen } = this.props;
+        console.log(isChangePhonePopupOpen);
+
         return (
-            <Popup
-              id={ CHANGE_PHONE_POPUP }
-              mix={ { block: 'ChangePhonePopup' } }
+            <div
+              block="ChangePhonePopup"
+              mods={ { isChangePhonePopupOpen } }
             >
-                aaaaa
-            </Popup>
+                <div
+                  block="ChangePhonePopup"
+                  elem="Background"
+                />
+                <div
+                  block="ChangePhonePopup"
+                  elem="Content"
+                >
+                    <div
+                      block="ChangePhonePopup"
+                      elem="Content-Title"
+                    >
+                        { __('Input new phone number and send Verification code again') }
+                    </div>
+                    <Form>
+                        <Field
+                          type="text"
+                        />
+                        <button
+                          block="primary"
+                          type="submit"
+                        >
+                            { __('change phone') }
+                        </button>
+                    </Form>
+                </div>
+            </div>
         );
     }
 }

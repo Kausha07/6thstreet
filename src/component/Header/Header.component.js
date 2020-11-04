@@ -25,7 +25,6 @@ export class Header extends PureComponent {
     state = {
         isArabic: isArabic(),
         isMobile: isMobile.any() || isMobile.tablet(),
-        isCheckout: false,
         newMenuGender: ''
     };
 

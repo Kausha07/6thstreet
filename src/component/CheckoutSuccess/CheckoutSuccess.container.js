@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 import { MyAccountDispatcher } from 'Component/CheckoutGuestForm/CheckoutGuestForm.container';
 import {
-    CUSTOMER_ACCOUNT, CUSTOMER_ACCOUNT_PAGE
+    CUSTOMER_ACCOUNT_PAGE
 } from 'Component/Header/Header.config';
 import { MY_ACCOUNT_URL } from 'Route/MyAccount/MyAccount.config';
 import MyAccountContainer, { tabMap } from 'Route/MyAccount/MyAccount.container';
@@ -50,12 +50,12 @@ export const mapDispatchToProps = (dispatch) => ({
 
 export class CheckoutSuccessContainer extends PureComponent {
     static propTypes = {
+        orderID: PropTypes.number.isRequired,
         updateBreadcrumbs: PropTypes.func.isRequired,
         changeHeaderState: PropTypes.func.isRequired,
         showOverlay: PropTypes.func.isRequired,
         showNotification: PropTypes.func.isRequired,
         updateMeta: PropTypes.func.isRequired,
-        guest_checkout: PropTypes.bool.isRequired,
         shippingAddress: PropTypes.object.isRequired,
         totals: TotalsType.isRequired,
         tabMap: PropTypes.isRequired,
@@ -72,7 +72,8 @@ export class CheckoutSuccessContainer extends PureComponent {
     state = {
         isEditing: false,
         clubApparelMember: null,
-        phone: ''
+        phone: '',
+        isPhoneVerified: false
     };
 
     containerFunctions = {
@@ -87,15 +88,23 @@ export class CheckoutSuccessContainer extends PureComponent {
         super(props);
 
         const {
-            isSignedIn,
-            updateMeta
+            updateMeta,
+            customer
         } = this.props;
+
+        console.log(customer.isVerified);
+        console.log(customer.isVerified === 1);
+        if (customer.isVerified === 1) {
+            this.setState({ isPhoneVerified: true });
+        }
 
         this.state = MyAccountContainer.navigateToSelectedTab(this.props) || {};
 
+        /*
         if (!isSignedIn) {
             toggleOverlayByKey(CUSTOMER_ACCOUNT);
         }
+        */
 
         updateMeta({ title: __('My account') });
 
@@ -116,32 +125,60 @@ export class CheckoutSuccessContainer extends PureComponent {
     }
 
     containerProps = () => {
-        const { clubApparelMember } = this.state;
+        const { clubApparelMember, isPhoneVerified } = this.state;
 
         return {
-            clubApparelMember
+            clubApparelMember,
+            isPhoneVerified
         };
     };
 
-    onChangePhone() {
-        console.log('onChangePhone');
-    }
-
     onVerifySuccess(fields) {
-        console.log(fields);
-        const { verifyUserPhone } = this.props;
+        const {
+            verifyUserPhone,
+            isSignedIn,
+            orderID,
+            customer
+        } = this.props;
+
+        console.log(customer);
         const { phone } = this.state;
 
         if (phone) {
-            const mobile = '7619209397';
-            const countryCode = '61';
-            const otp = '62935';
-            verifyUserPhone({ mobile, country_code: countryCode, otp }).then(
-                (response) => {
-                    console.log(response);
-                },
-                this._handleError
-            );
+            // const countryCode = phone.phone.slice(1, 4);
+            // const mobile = phone.phone.slice(4);
+            console.log(fields.otp);
+            const mobile = '525551536';
+            const countryCode = '971';
+            const { otp } = fields;
+            if (!isSignedIn) {
+                verifyUserPhone({ mobile, country_code: countryCode, otp }).then(
+                    (response) => {
+                        if (response.success) {
+                            this.setState({ isPhoneVerified: response.success });
+                        } else {
+                            console.log('phone verification failed');
+                        }
+                    },
+                    this._handleError
+                );
+            } else {
+                verifyUserPhone({
+                    mobile,
+                    country_code: countryCode,
+                    otp,
+                    order_id: orderID
+                }).then(
+                    (response) => {
+                        if (response.success) {
+                            this.setState({ isPhoneVerified: response.success });
+                        } else {
+                            console.log('phone verification failed');
+                        }
+                    },
+                    this._handleError
+                );
+            }
         }
     }
 
