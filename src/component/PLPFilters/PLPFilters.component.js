@@ -30,7 +30,8 @@ class PLPFilters extends PureComponent {
         hideActiveOverlay: PropTypes.isRequired,
         goToPreviousNavigationState: PropTypes.isRequired,
         onReset: PropTypes.func.isRequired,
-        productsCount: PropTypes.string.isRequired
+        productsCount: PropTypes.string.isRequired,
+        activeFilters: PropTypes.object.isRequired
     };
 
     state = {
@@ -42,7 +43,10 @@ class PLPFilters extends PureComponent {
     };
 
     static getDerivedStateFromProps(props, state) {
-        const { activeOverlay, filters } = props;
+        const {
+            activeOverlay,
+            filters
+        } = props;
         const { activeFilter } = state;
 
         if (isMobile.any()) {
@@ -146,8 +150,9 @@ class PLPFilters extends PureComponent {
     }
 
     onClose = () => {
+        const { activeFilters } = this.props;
         this.hidePopUp();
-        this.setState({ activeFilters: {} });
+        this.setState({ activeFilters });
     };
 
     renderCloseButton() {

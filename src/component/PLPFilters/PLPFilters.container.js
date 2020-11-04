@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /**
  * @category  sixth-street
  * @author    Vladislavs Belavskis <info@scandiweb.com>
@@ -47,7 +48,8 @@ export class PLPFiltersContainer extends PureComponent {
     };
 
     state = {
-        initialFilters: {}
+        initialFilters: {},
+        activeFilters: {}
     };
 
     containerFunction = {
@@ -74,6 +76,73 @@ export class PLPFiltersContainer extends PureComponent {
         return null;
     }
 
+    componentDidUpdate() {
+        const { filters } = this.props;
+        const { activeFilters } = this.state;
+
+        const newActiveFilters = Object.entries(filters).reduce((acc, filter) => {
+            const { selected_filters_count, data } = filter[1];
+
+            if (selected_filters_count !== 0) {
+                if (filter[0] === SIZES) {
+                    const mappedData = Object.entries(data).reduce((acc, size) => {
+                        const { subcategories } = size[1];
+                        const mappedSizeData = this.mapData(subcategories);
+
+                        acc = { ...acc, [ size[0] ]: mappedSizeData };
+
+                        return acc;
+                    }, []);
+
+                    acc = { ...acc, ...mappedData };
+                } else {
+                    acc = { ...acc, [filter[0]]: this.mapData(data) };
+                }
+            }
+
+            return acc;
+        }, {});
+
+        if (!this.compareObjects(activeFilters, newActiveFilters)) {
+            this.setActveFilters(newActiveFilters);
+        }
+    }
+
+    compareObjects(object1, object2) {
+        if (Object.keys(object1).length === Object.keys(object2).length) {
+            const isEqual = Object.entries(object1).reduce((acc, key) => {
+                if (key[1].length !== object2[key[0]].length) {
+                    acc.push(0);
+                } else {
+                    acc.push(1);
+                }
+
+                return acc;
+            }, []);
+
+            return !isEqual.includes(0);
+        }
+
+        return false;
+    }
+
+    setActveFilters = (activeFilters) => {
+        this.setState({ activeFilters });
+    };
+
+    mapData(data) {
+        const mappedData = Object.entries(data).reduce((acc, option) => {
+            const { is_selected } = option[1];
+            if (is_selected) {
+                acc.push(option[0]);
+            }
+
+            return acc;
+        }, []);
+
+        return mappedData;
+    }
+
     containerFunctions = () => {
         const { showOverlay } = this.props;
 
@@ -96,11 +165,13 @@ export class PLPFiltersContainer extends PureComponent {
             isLoading,
             activeOverlay
         } = this.props;
+        const { activeFilters } = this.state;
 
         return {
             filters,
             isLoading,
-            activeOverlay
+            activeOverlay,
+            activeFilters
         };
     };
 
