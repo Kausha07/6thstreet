@@ -153,12 +153,10 @@ export class CartItem extends PureComponent {
         // TODO: implement shared-transition here?
 
         return (
-            <button onClick={ this.routeToProduct } block="CartItem" elem="Link">
-                <figure block="CartItem" elem="Wrapper">
-                    { this.renderImage() }
-                    { this.renderContent() }
-                </figure>
-            </button>
+            <figure block="CartItem" elem="Wrapper">
+                { this.renderImage() }
+                { this.renderContent() }
+            </figure>
         );
     }
 
