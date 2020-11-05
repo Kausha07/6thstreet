@@ -149,6 +149,21 @@
             text-align: center;
         }
 
+        &-FirstColumn {
+            a {
+                text-decoration: none;
+            }
+
+            &_checkoutStep {
+                &_SHIPPING_STEP {
+                    a {
+                        pointer-events: none;
+                        cursor: default;
+                    }
+                }
+            }
+        }
+
         &-Delivery {
             margin: 5px 10px 15px;
             background: url(./icons/address-gray@3x.png) no-repeat;

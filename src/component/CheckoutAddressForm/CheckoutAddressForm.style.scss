@@ -119,11 +119,12 @@
                 }
 
                 &:nth-child(5) {
-                    grid-column: 4 / span 5;
+                    grid-column: 3 / span 4;
                     grid-row: 4;
                     padding-left: 5px;
 
                     @include desktop {
+                        grid-column: 4 / span 5;
                         grid-row: 5;
                     }
 
@@ -148,11 +149,12 @@
                 }
 
                 &:nth-child(6) {
-                    grid-column: 1 / span 3;
+                    grid-column: 1 / span 2;
                     grid-row: 4;
                     padding-right: 5px;
 
                     @include desktop {
+                        grid-column: 1 / span 3;
                         grid-row: 5;
                     }
 
@@ -259,6 +261,7 @@
                     &:nth-child(5) {
                         padding-left: 20px;
                         padding-right: 5px;
+
                         @include desktop {
                             padding-left: 30px;
                             padding-right: 5px;

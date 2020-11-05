@@ -17,7 +17,11 @@ import Loader from 'SourceComponent/Loader';
 import { Checkout as SourceCheckout } from 'SourceRoute/Checkout/Checkout.component';
 import { isArabic } from 'Util/App';
 
-import { AUTHORIZED_STATUS, BILLING_STEP } from './Checkout.config';
+import {
+    AUTHORIZED_STATUS,
+    BILLING_STEP,
+    CHECKOUT_URL
+} from './Checkout.config';
 
 import './Checkout.style';
 
@@ -39,74 +43,74 @@ export class Checkout extends SourceCheckout {
         isTabbyPopupShown: false
     };
 
-  savePaymentInformation = (paymentInformation) => {
-      const { savePaymentInformation, showErrorNotification } = this.props;
-      const { selectedPaymentMethod, tabbyInstallmentsUrl, tabbyPayLaterUrl } = this.state;
+    savePaymentInformation = (paymentInformation) => {
+        const { savePaymentInformation, showErrorNotification } = this.props;
+        const { selectedPaymentMethod, tabbyInstallmentsUrl, tabbyPayLaterUrl } = this.state;
 
-      if (TABBY_PAYMENT_CODES.includes(selectedPaymentMethod)) {
-          if (tabbyInstallmentsUrl || tabbyPayLaterUrl) {
-              this.setState({ isTabbyPopupShown: true });
+        if (TABBY_PAYMENT_CODES.includes(selectedPaymentMethod)) {
+            if (tabbyInstallmentsUrl || tabbyPayLaterUrl) {
+                this.setState({ isTabbyPopupShown: true });
 
-              // Need to get payment data from Tabby.
-              // Could not get callback of Tabby another way because Tabby is iframe in iframe
-              setTimeout(
-                  () => this.processTabbyWithTimeout(3, paymentInformation),
-                  10000
-              );
-          } else {
-              showErrorNotification(__('Something went wrong with Tabby'));
-          }
-      } else {
-          savePaymentInformation(paymentInformation);
-      }
+                // Need to get payment data from Tabby.
+                // Could not get callback of Tabby another way because Tabby is iframe in iframe
+                setTimeout(
+                    () => this.processTabbyWithTimeout(3, paymentInformation),
+                    10000
+                );
+            } else {
+                showErrorNotification(__('Something went wrong with Tabby'));
+            }
+        } else {
+            savePaymentInformation(paymentInformation);
+        }
 
-      return null;
-  };
+        return null;
+    };
 
-  processTabby(paymentInformation) {
-      const { savePaymentInformation, verifyPayment, checkoutStep } = this.props;
-      const { tabbyPaymentId } = this.state;
+    processTabby(paymentInformation) {
+        const { savePaymentInformation, verifyPayment, checkoutStep } = this.props;
+        const { tabbyPaymentId } = this.state;
 
-      if (checkoutStep !== BILLING_STEP) {
-          return;
-      }
+        if (checkoutStep !== BILLING_STEP) {
+            return;
+        }
 
-      verifyPayment(tabbyPaymentId).then(
-          ({ status }) => {
-              if (status === AUTHORIZED_STATUS) {
-                  savePaymentInformation(paymentInformation);
-              }
+        verifyPayment(tabbyPaymentId).then(
+            ({ status }) => {
+                if (status === AUTHORIZED_STATUS) {
+                    savePaymentInformation(paymentInformation);
+                }
 
-              this.setState({ tabbyPaymentStatus: status });
-          }
-      );
-  }
+                this.setState({ tabbyPaymentStatus: status });
+            }
+        );
+    }
 
-  processTabbyWithTimeout(counter, paymentInformation) {
-      const { tabbyPaymentStatus } = this.state;
-      const { showErrorNotification, hideActiveOverlay, activeOverlay } = this.props;
+    processTabbyWithTimeout(counter, paymentInformation) {
+        const { tabbyPaymentStatus } = this.state;
+        const { showErrorNotification, hideActiveOverlay, activeOverlay } = this.props;
 
-      // Need to get payment data from Tabby.
-      // Could not get callback of Tabby another way because Tabby is iframe in iframe
-      if (tabbyPaymentStatus !== AUTHORIZED_STATUS && counter < 60 && activeOverlay === TABBY_POPUP_ID) {
-          setTimeout(
-              () => {
-                  this.processTabby(paymentInformation);
-                  this.processTabbyWithTimeout(counter + 1, paymentInformation);
-              },
-              5000
-          );
-      }
+        // Need to get payment data from Tabby.
+        // Could not get callback of Tabby another way because Tabby is iframe in iframe
+        if (tabbyPaymentStatus !== AUTHORIZED_STATUS && counter < 60 && activeOverlay === TABBY_POPUP_ID) {
+            setTimeout(
+                () => {
+                    this.processTabby(paymentInformation);
+                    this.processTabbyWithTimeout(counter + 1, paymentInformation);
+                },
+                5000
+            );
+        }
 
-      if (counter === 60) {
-          showErrorNotification('Tabby session timeout');
-          hideActiveOverlay();
-      }
+        if (counter === 60) {
+            showErrorNotification('Tabby session timeout');
+            hideActiveOverlay();
+        }
 
-      if (counter === 60 || activeOverlay !== TABBY_POPUP_ID) {
-          this.setState({ isTabbyPopupShown: false });
-      }
-  }
+        if (counter === 60 || activeOverlay !== TABBY_POPUP_ID) {
+            this.setState({ isTabbyPopupShown: false });
+        }
+    }
 
     setTabbyWebUrl = (url, paymentId, type) => {
         this.setState({ tabbyPaymentId: paymentId });
@@ -128,14 +132,14 @@ export class Checkout extends SourceCheckout {
         this.setState({ selectedPaymentMethod: code });
     };
 
-  setCashOnDeliveryFee = (fee) => {
-      this.setState({ cashOnDeliveryFee: fee });
-  };
+    setCashOnDeliveryFee = (fee) => {
+        this.setState({ cashOnDeliveryFee: fee });
+    };
 
-  renderLoader() {
-      const { isLoading, checkoutStep } = this.props;
-      if (checkoutStep === BILLING_STEP && isLoading) {
-          return (
+    renderLoader() {
+        const { isLoading, checkoutStep } = this.props;
+        if (checkoutStep === BILLING_STEP && isLoading) {
+            return (
                 <div block="CheckoutSuccess">
                     <div block="LoadingOverlay">
                         <p>
@@ -143,51 +147,58 @@ export class Checkout extends SourceCheckout {
                         </p>
                     </div>
                 </div>
-          );
-      }
+            );
+        }
 
-      return <Loader isLoading={ isLoading } />;
-  }
+        return <Loader isLoading={ isLoading } />;
+    }
 
-  renderSummary() {
-      const { cashOnDeliveryFee } = this.state;
-      const { checkoutTotals, checkoutStep, paymentTotals } = this.props;
-      const { areTotalsVisible } = this.stepMap[checkoutStep];
+    renderSummary() {
+        const { cashOnDeliveryFee } = this.state;
+        const { checkoutTotals, checkoutStep, paymentTotals } = this.props;
+        const { areTotalsVisible } = this.stepMap[checkoutStep];
 
-      if (!areTotalsVisible) {
-          return null;
-      }
+        if (!areTotalsVisible) {
+            return null;
+        }
 
-      return (
+        return (
           <CheckoutOrderSummary
             checkoutStep={ checkoutStep }
             totals={ checkoutTotals }
             paymentTotals={ paymentTotals }
             cashOnDeliveryFee={ cashOnDeliveryFee }
           />
-      );
-  }
+        );
+    }
 
-  renderTitle() {
-      const { checkoutStep, isSignedIn } = this.props;
-      const { isCustomAddressExpanded, continueAsGuest } = this.state;
+    renderTitle() {
+        const { checkoutStep, isSignedIn } = this.props;
+        const { isCustomAddressExpanded, continueAsGuest } = this.state;
+        const url = `${ CHECKOUT_URL }/shipping`;
 
-      return ((isSignedIn || continueAsGuest)
+        return ((isSignedIn || continueAsGuest)
           && (
             <div block="CheckoutNavigation" mods={ { isCustomAddressExpanded } }>
-                <div block="CheckoutNavigation" elem="FirstColumn">
-                    <div
-                      block="CheckoutNavigation"
-                      elem="Delivery"
-                      mods={ { checkoutStep } }
-                    />
-                    <span
-                      block="CheckoutNavigation"
-                      elem="DeliveryLabel"
-                      mods={ { checkoutStep } }
-                    >
-                        { __('Delivery') }
-                    </span>
+                <div
+                  block="CheckoutNavigation"
+                  elem="FirstColumn"
+                  mods={ { checkoutStep } }
+                >
+                    <a href={ url }>
+                        <div
+                          block="CheckoutNavigation"
+                          elem="Delivery"
+                          mods={ { checkoutStep } }
+                        />
+                        <span
+                          block="CheckoutNavigation"
+                          elem="DeliveryLabel"
+                          mods={ { checkoutStep } }
+                        >
+                            { __('Delivery') }
+                        </span>
+                    </a>
                 </div>
                 <hr />
                 <div block="CheckoutNavigation" elem="SecondColumn">
@@ -206,18 +217,18 @@ export class Checkout extends SourceCheckout {
                 </div>
             </div>
           )
-      );
-  }
+        );
+    }
 
-  renderBillingStep() {
-      const {
-          setLoading,
-          setDetailsStep,
-          shippingAddress,
-          paymentMethods = []
-      } = this.props;
+    renderBillingStep() {
+        const {
+            setLoading,
+            setDetailsStep,
+            shippingAddress,
+            paymentMethods = []
+        } = this.props;
 
-      return (
+        return (
           <CheckoutBilling
             setLoading={ setLoading }
             paymentMethods={ paymentMethods }
@@ -228,46 +239,46 @@ export class Checkout extends SourceCheckout {
             setTabbyWebUrl={ this.setTabbyWebUrl }
             setPaymentCode={ this.setPaymentCode }
           />
-      );
-  }
+        );
+    }
 
-  continueAsGuest = () => {
-      const { email } = this.props;
+    continueAsGuest = () => {
+        const { email } = this.props;
 
-      if (/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
-          this.setState({ isInvalidEmail: false });
-          this.setState({ continueAsGuest: true });
-      } else {
-          this.setState({ isInvalidEmail: true });
-      }
-  };
+        if (/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
+            this.setState({ isInvalidEmail: false });
+            this.setState({ continueAsGuest: true });
+        } else {
+            this.setState({ isInvalidEmail: true });
+        }
+    };
 
-  changeEmail = () => {
-      this.setState({ continueAsGuest: false });
-  };
+    changeEmail = () => {
+        this.setState({ continueAsGuest: false });
+    };
 
-  renderHeading(text, isDisabled) {
-      return (
+    renderHeading(text, isDisabled) {
+        return (
         <h2 block="Checkout" elem="Heading" mods={ { isDisabled } }>
             { __(text) }
         </h2>
-      );
-  }
+        );
+    }
 
-  renderGuestForm() {
-      const {
-          checkoutStep,
-          isCreateUser,
-          onEmailChange,
-          onCreateUserChange,
-          onPasswordChange,
-          isGuestEmailSaved,
-          isLoading
-      } = this.props;
-      const { continueAsGuest, isInvalidEmail } = this.state;
-      const isBilling = checkoutStep === BILLING_STEP;
+    renderGuestForm() {
+        const {
+            checkoutStep,
+            isCreateUser,
+            onEmailChange,
+            onCreateUserChange,
+            onPasswordChange,
+            isGuestEmailSaved,
+            isLoading
+        } = this.props;
+        const { continueAsGuest, isInvalidEmail } = this.state;
+        const isBilling = checkoutStep === BILLING_STEP;
 
-      return (
+        return (
             <CheckoutGuestForm
               isLoading={ isLoading }
               isBilling={ isBilling }
@@ -279,30 +290,30 @@ export class Checkout extends SourceCheckout {
               isEmailAdded={ continueAsGuest }
               isInvalidEmail={ isInvalidEmail }
             />
-      );
-  }
+        );
+    }
 
-  renderTabbyIframe() {
-      const {
-          isTabbyPopupShown,
-          tabbyInstallmentsUrl,
-          tabbyPayLaterUrl,
-          selectedPaymentMethod
-      } = this.state;
+    renderTabbyIframe() {
+        const {
+            isTabbyPopupShown,
+            tabbyInstallmentsUrl,
+            tabbyPayLaterUrl,
+            selectedPaymentMethod
+        } = this.state;
 
-      if (!isTabbyPopupShown) {
-          return null;
-      }
+        if (!isTabbyPopupShown) {
+            return null;
+        }
 
-      return (
+        return (
           <TabbyPopup
             tabbyWebUrl={ selectedPaymentMethod === TABBY_ISTALLMENTS ? tabbyInstallmentsUrl : tabbyPayLaterUrl }
           />
-      );
-  }
+        );
+    }
 
-  render() {
-      return (
+    render() {
+        return (
           <main block="Checkout">
               <ContentWrapper
                 wrapperMix={ { block: 'Checkout', elem: 'Wrapper' } }
@@ -321,22 +332,22 @@ export class Checkout extends SourceCheckout {
                   </div>
               </ContentWrapper>
           </main>
-      );
-  }
+        );
+    }
 
-  renderShippingStep() {
-      const {
-          shippingMethods,
-          onShippingEstimationFieldsChange,
-          saveAddressInformation,
-          isDeliveryOptionsLoading,
-          email,
-          checkoutTotals,
-          isSignedIn
-      } = this.props;
+    renderShippingStep() {
+        const {
+            shippingMethods,
+            onShippingEstimationFieldsChange,
+            saveAddressInformation,
+            isDeliveryOptionsLoading,
+            email,
+            checkoutTotals,
+            isSignedIn
+        } = this.props;
 
-      const { continueAsGuest, isArabic } = this.state;
-      const renderCheckoutShipping = (
+        const { continueAsGuest, isArabic } = this.state;
+        const renderCheckoutShipping = (
           <div
             block="Checkout"
             elem="Shipping"
@@ -352,10 +363,10 @@ export class Checkout extends SourceCheckout {
               totals={ checkoutTotals }
             />
           </div>
-      );
+        );
 
-      return (
-          <>
+        return (
+            <>
               <div
                 block="Checkout"
                 elem="GuestButton"
@@ -370,9 +381,9 @@ export class Checkout extends SourceCheckout {
               { continueAsGuest || isSignedIn ? null : this.renderHeading('Shipping Options', true) }
               { continueAsGuest || isSignedIn ? null : this.renderHeading('Delivery Options', true) }
               { continueAsGuest || isSignedIn ? null : this.renderHeading('Payment Options', true) }
-          </>
-      );
-  }
+            </>
+        );
+    }
 }
 
 export default Checkout;

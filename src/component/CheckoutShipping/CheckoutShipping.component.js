@@ -133,7 +133,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
              <div block="MyAccountAddressBook" elem="ContentWrapper" mods={ { formContent } }>
                 <button
                   block="MyAccountAddressBook"
-                  elem="backBtn"
+                  elem="backButton"
                   mods={ { isArabic } }
                   onClick={ this.showCards }
                 />

@@ -23,7 +23,7 @@
                 .MyAccountAddressBook {
                     &-ContentWrapper {
                         .MyAccountAddressBook {
-                            &-backBtn {
+                            &-backButton {
                                 @include desktop {
                                     display: none;
                                 }
@@ -38,7 +38,7 @@
 
                         &_formContent {
                             .MyAccountAddressBook {
-                                &-backBtn {
+                                &-backButton {
                                     position: absolute;
                                     width: 20px;
                                     height: 30px;
