@@ -61,12 +61,21 @@ export class PLPFiltersContainer extends PureComponent {
         const { initialFilters } = state;
 
         if (Object.keys(filters).length > Object.keys(initialFilters).length) {
+            if (filters[SIZES]) {
+                return {
+                    initialFilters: filters[SIZES].data ? {
+                        ...initialFilters,
+                        ...filters,
+                        ...filters[SIZES].data
+                    } : {
+                        ...initialFilters,
+                        ...filters
+                    }
+                };
+            }
+
             return {
-                initialFilters: filters[SIZES].data ? {
-                    ...initialFilters,
-                    ...filters,
-                    ...filters[SIZES].data
-                } : {
+                initialFilters: {
                     ...initialFilters,
                     ...filters
                 }
