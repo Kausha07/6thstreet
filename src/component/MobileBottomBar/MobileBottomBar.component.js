@@ -2,12 +2,10 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { getStore } from 'store';
 
 import HeaderAccount from 'Component/HeaderAccount';
 import HeaderMenu from 'Component/HeaderMenu';
 import HeaderWishlist from 'Component/HeaderWishlist';
-import { MOBILE_MENU_SIDEBAR_ID } from 'Component/MobileMenuSideBar/MoblieMenuSideBar.config';
 import MyAccountOverlay from 'Component/MyAccountOverlay';
 import NavigationAbstract from 'Component/NavigationAbstract/NavigationAbstract.component';
 import { setIsMobileTabActive } from 'Store/MyAccount/MyAccount.action';
@@ -36,7 +34,6 @@ class MobileBottomBar extends NavigationAbstract {
         isWishlist: false,
         isAccount: false,
         isPopup: true,
-        isCategoryMenu: false,
         accountPopUp: ''
     };
 
@@ -50,8 +47,7 @@ class MobileBottomBar extends NavigationAbstract {
 
     routeChangeHome=() => {
         this.setState({
-            redirectHome: true,
-            isCategoryMenu: false
+            redirectHome: true
         });
     };
 
@@ -154,23 +150,8 @@ class MobileBottomBar extends NavigationAbstract {
         );
     }
 
-    toggleActiveMenu() {
-        const { OverlayReducer: { activeOverlay } = {} } = getStore().getState();
-
-        if (activeOverlay === MOBILE_MENU_SIDEBAR_ID) {
-            this.setState({
-                isCategoryMenu: true
-            });
-        }
-    }
-
     renderMenu() {
-        return (
-            <HeaderMenu
-              key="menu"
-              { ...{ toggleActiveMenu: this.toggleActiveMenu.bind(this) } }
-            />
-        );
+        return <HeaderMenu key="menu" />;
     }
 
     renderWishlist() {

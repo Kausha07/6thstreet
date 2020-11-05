@@ -4,6 +4,7 @@ import { withRouter } from 'react-router';
 
 import Menu from 'Component/Menu';
 import { MOBILE_MENU_SIDEBAR_ID } from 'Component/MobileMenuSideBar/MoblieMenuSideBar.config';
+import browserHistory from 'Util/History';
 
 import './HeaderMenu.style';
 
@@ -12,11 +13,11 @@ class HeaderMenu extends PureComponent {
         location: PropTypes.object.isRequired,
         toggleOverlayByKey: PropTypes.func.isRequired,
         newMenuGender: PropTypes.string.isRequired,
-        toggleActiveMenu: PropTypes.func.isRequired
+        gender: PropTypes.string.isRequired,
+        activeOverlay: PropTypes.string.isRequired
     };
 
     state = {
-        prevLocation: '',
         expanded: false
     };
 
@@ -24,22 +25,20 @@ class HeaderMenu extends PureComponent {
         renderCategoriesButton: this.renderCategoriesButton.bind(this)
     };
 
-    static getDerivedStateFromProps(props, state) {
-        const { location } = props;
-        const { prevLocation } = state;
+    static getDerivedStateFromProps(props) {
+        const { location: { pathname }, gender, activeOverlay } = props;
 
-        return location !== prevLocation ? ({
-            expanded: false,
-            prevLocation: location
-        }) : null;
+        return {
+            expanded: pathname.includes(`/${ gender }.html`) && activeOverlay === MOBILE_MENU_SIDEBAR_ID
+        };
     }
 
     onCategoriesClick = () => {
-        const { toggleOverlayByKey, toggleActiveMenu } = this.props;
+        const { toggleOverlayByKey, gender } = this.props;
 
         this.setState(({ expanded }) => ({ expanded: !expanded }));
         toggleOverlayByKey(MOBILE_MENU_SIDEBAR_ID);
-        toggleActiveMenu();
+        browserHistory.push(`/${ gender }.html`);
     };
 
     renderMenu() {
