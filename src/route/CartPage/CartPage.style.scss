@@ -63,7 +63,7 @@
         overflow-x: hidden;
 
         @include mobile {
-            max-height: 55vh;
+            max-height: calc(100vh - 374px);
         }
     }
 

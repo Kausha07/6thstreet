@@ -60,7 +60,7 @@
         display: flex;
         flex-wrap: wrap;
         flex-direction: column;
-        height: 50px;
+        height: 90px;
 
         @include desktop() {
             height: 130px;
