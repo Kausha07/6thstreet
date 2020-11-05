@@ -22,14 +22,14 @@
     display: flex;
     font-weight: var(--fw-regular);
     padding: 50px 0;
-    height: 100vh;
+    min-height: 100vh;
     max-width: 1440px;
     margin: 0 auto;
 
     @include mobile {
         margin-bottom: 0;
         height: auto;
-        padding: 17px 20px calc(var(--navigation-tabs-height) + 120px);
+        padding: 17px 20px 0;
 
         > section:last-of-type {
             width: 100%;
@@ -52,22 +52,18 @@
         flex-direction: column;
         margin-left: 100px;
         width: 440px;
-        max-height: 65vh;
 
         @include mobile {
             padding: 0;
             margin-left: 0;
+            max-height: calc(100vh - 182px);
             width: 100%;
         }
     }
 
     &-Items {
-        overflow: scroll;
-        max-height: 35vh;
-        overflow-x: hidden;
-
-        @include mobile {
-            max-height: calc(100vh - 374px);
+        @include desktop() {
+            overflow-x: hidden;
         }
     }
 
@@ -389,6 +385,11 @@
     }
 
     &-Static {
+        @include mobile {
+            max-height: calc(100vh - 182px);
+            overflow-y: scroll;
+        }
+
         &_isArabic {
             .CartItem-Wrapper img {
                 margin-right: 0;
@@ -438,10 +439,17 @@
         }
     }
 
-    .CartItem-Actions {
-        @include tablet {
-            flex-direction: column-reverse;
-            justify-content: center;
+    .CartItem {
+        @include desktop {
+            margin-bottom: 0;
+            margin-top: 0;
+        }
+
+        &-Actions {
+            @include tablet {
+                flex-direction: column-reverse;
+                justify-content: center;
+            }
         }
     }
 

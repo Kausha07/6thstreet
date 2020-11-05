@@ -413,11 +413,11 @@ export class CartPage extends PureComponent {
                         { this.renderCartItems() }
                         { this.renderTotalDetails(true) }
                         { this.renderCrossSellProducts() }
-                    </div>
-                    <div block="CartPage" elem="Floating" mods={ { isArabic } }>
                         { this.renderDiscountCode() }
                         { this.renderPromo() }
                         { this.renderClubApparel() }
+                    </div>
+                    <div block="CartPage" elem="Floating" mods={ { isArabic } }>
                         { this.renderTotals() }
                     </div>
                 </ContentWrapper>
