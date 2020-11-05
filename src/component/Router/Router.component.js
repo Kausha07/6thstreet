@@ -2,6 +2,9 @@ import PropTypes from 'prop-types';
 import { lazy } from 'react';
 import { Route } from 'react-router-dom';
 
+import CookiePopup from 'Component/CookiePopup';
+import Footer from 'Component/Footer';
+import Seo from 'Component/Seo';
 import LocaleWizard from 'Route/LocaleWizard';
 import UrlRewrites from 'Route/UrlRewrites';
 import {
@@ -97,6 +100,21 @@ export class Router extends SourceRouter {
         {
             component: <Route component={ UrlRewrites } />,
             position: 1000
+        }
+    ];
+
+    [AFTER_ITEMS_TYPE] = [
+        {
+            component: <Footer />,
+            position: 10
+        },
+        {
+            component: <CookiePopup />,
+            position: 20
+        },
+        {
+            component: <Seo />,
+            position: 30
         }
     ];
 

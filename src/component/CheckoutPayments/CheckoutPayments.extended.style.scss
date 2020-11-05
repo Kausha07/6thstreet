@@ -7,7 +7,10 @@
 
 .CheckoutPayments {
     margin-bottom: 0;
-    padding: 30px;
+
+    @include desktop {
+        padding: 30px;
+    }
 
     h2 {
         font-weight: var(--fw-demi);
@@ -66,8 +69,11 @@
 
         &Content {
             padding: 17px 20px;
+            width: 100%;
 
             &Title {
+                display: flex;
+                justify-content: space-between;
                 text-transform: uppercase;
                 font-size: 13px;
                 font-weight: var(--fw-bold);
@@ -79,8 +85,6 @@
                 }
 
                 img {
-                    position: absolute;
-                    top: 2px;
                     width: 16px;
                     height: auto;
                 }

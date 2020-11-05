@@ -74,10 +74,14 @@ export class MyAccountClubApparelOverlayContainer extends PureComponent {
                     this.setState({
                         state: STATE_VERIFY,
                         countryPhoneCode,
-                        phone
+                        phone,
+                        isLoading: false
                     });
                 } else {
-                    this.setState({ state: STATE_NOT_SUCCESS });
+                    this.setState({
+                        state: STATE_NOT_SUCCESS,
+                        isLoading: false
+                    });
                 }
             },
             this._handleError

@@ -33,7 +33,9 @@
     }
 
     &-Line {
-        padding: 16px 30px 0;
+        @include desktop {
+            padding: 16px 30px 0;
+        }
 
         hr {
             border: 1px solid var(--gray);

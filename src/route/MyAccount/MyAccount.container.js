@@ -9,6 +9,7 @@ import {
     MyAccountContainer as SourceMyAccountContainer,
     MyAccountDispatcher
 } from 'SourceRoute/MyAccount/MyAccount.container';
+import { updateMeta } from 'Store/Meta/Meta.action';
 import { setIsMobileTabActive } from 'Store/MyAccount/MyAccount.action';
 import {
     ADDRESS_BOOK,
@@ -34,7 +35,8 @@ export const mapStateToProps = (state) => ({
 
 export const mapDispatchToProps = (dispatch) => ({
     ...sourceMapDispatchToProps(dispatch),
-    setMobileTabActive: (value) => dispatch(setIsMobileTabActive(value))
+    setMobileTabActive: (value) => dispatch(setIsMobileTabActive(value)),
+    setMeta: (meta) => dispatch(updateMeta(meta))
 });
 
 export const tabMap = {
@@ -74,10 +76,17 @@ export class MyAccountContainer extends SourceMyAccountContainer {
     static propTypes = {
         ...SourceMyAccountContainer.propTypes,
         mobileTabActive: PropTypes.bool.isRequired,
-        setMobileTabActive: PropTypes.func.isRequired
+        setMobileTabActive: PropTypes.func.isRequired,
+        setMeta: PropTypes.func.isRequired
     };
 
     tabMap = tabMap;
+
+    componentDidMount() {
+        const { setMeta } = this.props;
+
+        setMeta({ title: __('My Account') });
+    }
 
     updateBreadcrumbs() {
         const { updateBreadcrumbs } = this.props;
