@@ -312,29 +312,6 @@ export class Checkout extends SourceCheckout {
         );
     }
 
-    render() {
-        return (
-          <main block="Checkout">
-              <ContentWrapper
-                wrapperMix={ { block: 'Checkout', elem: 'Wrapper' } }
-                label={ __('Checkout page') }
-              >
-                  <div block="Checkout" elem="Step">
-                      { this.renderTitle() }
-                      { this.renderGuestForm() }
-                      { this.renderStep() }
-                      { this.renderLoader() }
-                  </div>
-                  <div>
-                      { this.renderSummary() }
-                      { this.renderPromo() }
-                      { this.renderTabbyIframe() }
-                  </div>
-              </ContentWrapper>
-          </main>
-        );
-    }
-
     renderShippingStep() {
         const {
             shippingMethods,
@@ -382,6 +359,29 @@ export class Checkout extends SourceCheckout {
               { continueAsGuest || isSignedIn ? null : this.renderHeading('Delivery Options', true) }
               { continueAsGuest || isSignedIn ? null : this.renderHeading('Payment Options', true) }
             </>
+        );
+    }
+
+    render() {
+        return (
+          <main block="Checkout">
+              <ContentWrapper
+                wrapperMix={ { block: 'Checkout', elem: 'Wrapper' } }
+                label={ __('Checkout page') }
+              >
+                  <div block="Checkout" elem="Step">
+                      { this.renderTitle() }
+                      { this.renderGuestForm() }
+                      { this.renderStep() }
+                      { this.renderLoader() }
+                  </div>
+                  <div>
+                      { this.renderSummary() }
+                      { this.renderPromo() }
+                      { this.renderTabbyIframe() }
+                  </div>
+              </ContentWrapper>
+          </main>
         );
     }
 }
