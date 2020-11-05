@@ -364,24 +364,24 @@ export class Checkout extends SourceCheckout {
 
     render() {
         return (
-          <main block="Checkout">
-              <ContentWrapper
-                wrapperMix={ { block: 'Checkout', elem: 'Wrapper' } }
-                label={ __('Checkout page') }
-              >
-                  <div block="Checkout" elem="Step">
+            <main block="Checkout">
+                <ContentWrapper
+                  wrapperMix={ { block: 'Checkout', elem: 'Wrapper' } }
+                  label={ __('Checkout page') }
+                >
+                    <div block="Checkout" elem="Step">
                       { this.renderTitle() }
                       { this.renderGuestForm() }
                       { this.renderStep() }
                       { this.renderLoader() }
-                  </div>
-                  <div>
+                    </div>
+                    <div>
                       { this.renderSummary() }
                       { this.renderPromo() }
                       { this.renderTabbyIframe() }
-                  </div>
-              </ContentWrapper>
-          </main>
+                    </div>
+                </ContentWrapper>
+            </main>
         );
     }
 }
