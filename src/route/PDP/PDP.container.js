@@ -4,10 +4,12 @@ import { connect } from 'react-redux';
 
 import { DEFAULT_STATE_NAME } from 'Component/NavigationAbstract/NavigationAbstract.config';
 import { setGender } from 'Store/AppState/AppState.action';
+import { updateMeta } from 'Store/Meta/Meta.action';
 import { changeNavigationState } from 'Store/Navigation/Navigation.action';
 import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
 import { setPDPLoading } from 'Store/PDP/PDP.action';
 import PDPDispatcher from 'Store/PDP/PDP.dispatcher';
+import { getCountriesForSelect } from 'Util/API/endpoint/Config/Config.format';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
 import { getBreadcrumbs } from 'Util/Breadcrumbs/Breadcrubms';
 
@@ -22,7 +24,9 @@ export const mapStateToProps = (state) => ({
     isLoading: state.PDP.isLoading,
     product: state.PDP.product,
     options: state.PDP.options,
-    nbHits: state.PDP.nbHits
+    nbHits: state.PDP.nbHits,
+    country: state.AppState.country,
+    config: state.AppConfig.config
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -32,7 +36,8 @@ export const mapDispatchToProps = (dispatch) => ({
         BreadcrumbsDispatcher.then(({ default: dispatcher }) => dispatcher.update(breadcrumbs, dispatch));
     },
     changeHeaderState: (state) => dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, state)),
-    setGender: (gender) => dispatch(setGender(gender))
+    setGender: (gender) => dispatch(setGender(gender)),
+    setMeta: (meta) => dispatch(updateMeta(meta))
 });
 
 export class PDPContainer extends PureComponent {
@@ -46,7 +51,10 @@ export class PDPContainer extends PureComponent {
         updateBreadcrumbs: PropTypes.func.isRequired,
         changeHeaderState: PropTypes.func.isRequired,
         setGender: PropTypes.func.isRequired,
-        nbHits: PropTypes.number.isRequired
+        nbHits: PropTypes.number.isRequired,
+        setMeta: PropTypes.func.isRequired,
+        country: PropTypes.string.isRequired,
+        config: PropTypes.object.isRequired
     };
 
     containerFunctions = {
@@ -86,6 +94,7 @@ export class PDPContainer extends PureComponent {
 
         if (Object.keys(product).length !== 0 && firstLoad) {
             this.updateBreadcrumbs();
+            this.setMetaData();
             this.updateHeaderState();
         }
     }
@@ -133,6 +142,27 @@ export class PDPContainer extends PureComponent {
             updateBreadcrumbs(breadcrumbs);
             this.setState({ firstLoad: false });
         }
+    }
+
+    setMetaData() {
+        const {
+            setMeta, country, config, product: { brand_name: brandName, name } = {}
+        } = this.props;
+
+        if (!name) {
+            return;
+        }
+
+        const countryList = getCountriesForSelect(config);
+        const { label: countryName = '' } = countryList.find((obj) => obj.id === country) || {};
+
+        setMeta({
+            title: __('%s | %s | 6thStreet', brandName, name),
+            keywords: __('%s %s %s online shopping', brandName, name, countryName),
+            description: __(
+                'Shop %s Online. Discover the latest collection from %s. Free shipping and returns.', name, brandName
+            )
+        });
     }
 
     getIsLoading() {

@@ -29,7 +29,8 @@ export const mapDispatchToProps = (dispatch) => ({
     setCartId: (cartId) => dispatch(setCartId(cartId)),
     createEmptyCart: () => CartDispatcher.getCart(dispatch),
     hideActiveOverlay: () => dispatch(hideActiveOverlay()),
-    updateStoreCredit: () => StoreCreditDispatcher.getStoreCredit(dispatch)
+    updateStoreCredit: () => StoreCreditDispatcher.getStoreCredit(dispatch),
+    setMeta: (meta) => dispatch(updateMeta(meta))
 });
 export const mapStateToProps = (state) => ({
     totals: state.CartReducer.cartTotals,
@@ -43,16 +44,19 @@ export const mapStateToProps = (state) => ({
 export class CheckoutContainer extends SourceCheckoutContainer {
     static propTypes = {
         updateStoreCredit: PropTypes.func.isRequired,
-        isSignedIn: PropTypes.bool.isRequired
+        isSignedIn: PropTypes.bool.isRequired,
+        setMeta: PropTypes.func.isRequired
     };
 
-    state={
+    state = {
         ...this.state,
         isLoading: false
     };
 
     componentDidMount() {
-        updateMeta({ title: __('Checkout') });
+        const { setMeta } = this.props;
+
+        setMeta({ title: __('Checkout') });
     }
 
     componentDidUpdate() {
