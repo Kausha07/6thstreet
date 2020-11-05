@@ -43,7 +43,8 @@ export class MyAccountClubApparelOverlayContainer extends PureComponent {
 
     containerFunctions = () => ({
         linkAccount: this.linkAccount.bind(this),
-        handleSuccess: this.handleSuccess.bind(this)
+        handleSuccess: this.q.bind(this),
+        verifyOtp: this.verifyOtp.bind(this)
     });
 
     containerProps = () => {
@@ -65,16 +66,20 @@ export class MyAccountClubApparelOverlayContainer extends PureComponent {
     linkAccount(fields) {
         const { customer: { id }, linkAccount } = this.props;
         const { phone, countryPhoneCode } = fields;
+        const formattedPhone = `00${countryPhoneCode.substr(1)}${phone}`;
         this.setState({ isLoading: true });
 
-        linkAccount({ customerId: id, mobileNo: phone }).then(
+        linkAccount({ customerId: id, mobileNo: formattedPhone }).then(
             (response) => {
                 // TODO: Create response processing after Club Apparel will begin work on Client side
                 if (response) {
+                    const { data: { memberId } } = response;
+
                     this.setState({
                         state: STATE_VERIFY,
                         countryPhoneCode,
-                        phone,
+                        memberId,
+                        phone: formattedPhone,
                         isLoading: false
                     });
                 } else {
@@ -91,10 +96,26 @@ export class MyAccountClubApparelOverlayContainer extends PureComponent {
     verifyOtp(fields) {
         const { customer: { id }, verifyOtp } = this.props;
         const { otp } = fields;
+        const { memberId, phone } = this.state;
 
-        verifyOtp({ customerId: id, otp }).then(
-            () => {
-                // TODO: Create response processing after Club Apparel will begin work on Client side
+        verifyOtp({
+            customerId: id,
+            otp,
+            memberId,
+            mobileNo: phone
+        }).then(
+            (response) => {
+                if (response) {
+                    this.setState({
+                        state: STATE_SUCCESS,
+                        isLoading: false
+                    });
+                } else {
+                    this.setState({
+                        state: STATE_NOT_SUCCESS,
+                        isLoading: false
+                    });
+                }
             },
             this._handleError
         );
