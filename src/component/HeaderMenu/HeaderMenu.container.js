@@ -6,8 +6,9 @@ import { toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
 
 import HeaderMenu from './HeaderMenu.component';
 
-export const mapStateToProps = (_state) => ({
-    activeOverlay: _state.OverlayReducer.activeOverlay
+export const mapStateToProps = (state) => ({
+    activeOverlay: state.OverlayReducer.activeOverlay,
+    gender: state.AppState.gender
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
@@ -18,16 +19,12 @@ export class HeaderMenuContainer extends PureComponent {
     static propTypes = {
         activeOverlay: PropTypes.string.isRequired,
         newMenuGender: PropTypes.string.isRequired,
-        toggleActiveMenu: PropTypes.func
-    };
-
-    static defaultProps = {
-        toggleActiveMenu: () => {}
+        gender: PropTypes.string.isRequired
     };
 
     containerProps = () => {
-        const { activeOverlay, newMenuGender } = this.props;
-        return { activeOverlay, newMenuGender };
+        const { activeOverlay, newMenuGender, gender } = this.props;
+        return { activeOverlay, newMenuGender, gender };
     };
 
     render() {
