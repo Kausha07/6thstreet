@@ -42,18 +42,8 @@
 
                 &-Image {
                     position: relative;
-                    object-fit: cover;
+                    object-fit: contain;
                 }
-            }
-        }
-
-        &-Content {
-            display: flex;
-            flex-wrap: nowrap;
-            flex-direction: column;
-
-            &_isLikeTable {
-                align-self: unset;
             }
         }
 

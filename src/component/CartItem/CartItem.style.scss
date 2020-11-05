@@ -45,7 +45,7 @@
     &-Option,
     & {
         padding-left: 0;
-        margin-bottom: 30px;
+        margin-bottom: 10px;
 
         &::before {
             content: none;
@@ -60,7 +60,7 @@
         display: flex;
         flex-wrap: wrap;
         flex-direction: column;
-        height: 90px;
+        height: auto;
 
         @include desktop() {
             height: 130px;
@@ -80,7 +80,7 @@
         grid-template-columns: auto auto;
         background: var(--cart-item-background);
         padding-top: 15px;
-        height: 200px;
+        height: auto;
         text-transform: capitalize;
     }
 
@@ -213,6 +213,7 @@
         transition-duration: 200ms;
 
         @include mobile {
+            margin-bottom: 10px;
             padding: 0;
         }
 
