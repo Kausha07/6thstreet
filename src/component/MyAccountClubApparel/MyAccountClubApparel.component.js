@@ -40,7 +40,7 @@ class MyAccountClubApparel extends PureComponent {
 
     static getDerivedStateFromProps(props) {
         const { activeOverlay } = props;
-        document.body.style.overflow = activeOverlay !== '' ? 'hidden' : 'visible';
+        document.body.style.overflow = activeOverlay === 'LinkAccount' ? 'hidden' : 'visible';
 
         return ({ isPopupOpen: activeOverlay === 'LinkAccount' });
     }

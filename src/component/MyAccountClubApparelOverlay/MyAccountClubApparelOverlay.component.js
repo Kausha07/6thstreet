@@ -29,7 +29,6 @@ class MyAccountClubApparelOverlay extends PureComponent {
         state: PropTypes.string.isRequired,
         verifyOtp: PropTypes.func.isRequired,
         phone: PropTypes.string.isRequired,
-        countryPhoneCode: PropTypes.string.isRequired,
         renderEarn: PropTypes.func.isRequired,
         isLoading: PropTypes.bool.isRequired
     };
@@ -209,13 +208,13 @@ class MyAccountClubApparelOverlay extends PureComponent {
     }
 
     renderVerify() {
-        const { verifyOtp, countryPhoneCode, phone } = this.props;
+        const { verifyOtp, phone } = this.props;
         const { isButtonDisabled } = this.state;
 
         return (
             <div block="MyAccountClubApparelOverlay" elem="Verify">
                 <p>
-                    { __(`Enter the verification code we sent to ${countryPhoneCode} ${phone}`) }
+                    { __(`Enter the verification code we sent to +${phone.replace('00', '')}`) }
                 </p>
                 <Form
                   onSubmitSuccess={ verifyOtp }

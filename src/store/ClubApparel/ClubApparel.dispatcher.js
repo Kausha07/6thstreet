@@ -20,11 +20,10 @@ export const CLUB_APPAREL = 'club_apparel';
 export const ONE_MONTH_IN_SECONDS = 2628000;
 
 export class ClubApparelDispatcher {
-    async getMember(dispatch) {
+    async getMember(dispatch, id) {
         try {
             dispatch(setIsLoading(true));
 
-            const { MyAccountReducer: { customer: { id } = {} } = {} } = getStore().getState();
             const { data } = isSignedIn()
                 ? await getMember(id)
                 : {};
