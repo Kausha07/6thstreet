@@ -54,6 +54,11 @@ main {
             overflow: hidden;
             text-overflow: ellipsis;
 
+            &_isArabic {
+                margin-right: 15%;
+                margin-left: unset;
+            }
+
         }
         @include after-mobile {
             display: none;
@@ -69,6 +74,25 @@ main {
         left: 15px;
 
         background: $white;
+
+        &_isArabic {
+            right: 15px;
+            left: unset;
+
+            .BackArrow {
+                &-Button {
+                    right: 5px;
+                    left: unset;
+
+                    &::before{
+                        right: 5px;
+                        left: unset;
+                        transform: rotate(-45deg);
+                        -webkit-transform: rotate(-45deg);
+                    }
+                }
+            }
+        }
 
         &-Button {
             top: 0;
@@ -137,6 +161,18 @@ main {
                     top: 5px;
                     right: 5px;
                 }
+
+                &_isArabic {
+                    right: unset;
+                    left: 20px;
+                    .HeaderCart {
+    
+                        &-Button {
+                            right: 5px;
+                            left: unset;
+                        }
+                    }
+                }    
             }
         }
     }

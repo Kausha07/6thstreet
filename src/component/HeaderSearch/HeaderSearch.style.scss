@@ -143,8 +143,8 @@
 
     &_isArabic {
         #search-field {
-            background-position: right;
-            padding-right: 25px;
+            background-position: calc(100% - 10px) 50%;
+            padding-right: 35px;
         }
     }
 }

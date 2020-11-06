@@ -4,6 +4,7 @@ import { PureComponent } from 'react';
 import { withRouter } from 'react-router';
 
 import CartOverlay from 'SourceComponent/CartOverlay';
+import { isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
 
 import './HeaderCart.style';
@@ -17,7 +18,8 @@ class HeaderCart extends PureComponent {
 
     state = {
         cartPopUp: '',
-        isPopup: true
+        isPopup: true,
+        isArabic: isArabic()
     };
 
     closePopup = () => {
@@ -47,10 +49,10 @@ class HeaderCart extends PureComponent {
     };
 
     render() {
-        const { cartPopUp } = this.state;
+        const { cartPopUp, isArabic } = this.state;
         const { renderCountItems } = this.props;
         return (
-            <div block="HeaderCart">
+            <div block="HeaderCart" mods={ { isArabic } }>
                 <button
                   onClick={ isMobile.any()
                       ? this.routeChangeCart
