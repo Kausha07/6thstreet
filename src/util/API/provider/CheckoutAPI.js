@@ -1,3 +1,5 @@
+import { getStore } from 'Store';
+
 import { doFetch } from '../helper/Fetch';
 
 class CheckoutAPI {
@@ -16,9 +18,11 @@ class CheckoutAPI {
     async _fetch(method, relativeURL, body = {}) {
         // TODO: get proper locale
         const url = `/api2/v2${relativeURL}`;
+        const { AppState: { country } } = getStore().getState();
 
         const payload = (value) => (['post', 'put', 'delete'].includes(method) ? value : {});
         const tokenHeader = this.token ? { 'X-API-Token': this.token } : {};
+        const checkoutApiDiffCountries = ['OM', 'BH'];
 
         const options = {
             method,
@@ -31,7 +35,9 @@ class CheckoutAPI {
             ...payload({ body: JSON.stringify(body) })
         };
 
-        options.headers.Authorization = process.env.REACT_APP_CHECKOUT_COM_API_AUTH_KEY;
+        options.headers.Authorization = checkoutApiDiffCountries.includes(country)
+            ? process.env.REACT_APP_CHECKOUT_COM_API_AUTH_KEY_OM_BH
+            : process.env.REACT_APP_CHECKOUT_COM_API_AUTH_KEY_BASE;
 
         return doFetch(url, options);
     }
