@@ -92,9 +92,6 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
             await this.handleMobileAuthorization(dispatch, options);
             await WishlistDispatcher.updateInitialWishlistData(dispatch);
             await StoreCreditDispatcher.getStoreCredit(dispatch);
-            // Run async as Club Apparel is not visible anywhere after login
-
-            ClubApparelDispatcher.getMember(dispatch);
 
             return true;
         } catch ([e]) {
@@ -107,7 +104,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
 
     async handleMobileAuthorization(dispatch, options) {
         const { email: username, password } = options;
-        const { data: { token, user: { custom_attributes, gender } } = {} } = await getMobileApiAuthorizationToken({
+        const { data: { token, user: { custom_attributes, gender, id } } = {} } = await getMobileApiAuthorizationToken({
             username,
             password,
             cart_id: null
@@ -118,6 +115,9 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         setMobileAuthorizationToken(token);
         this.setPhoneNumber(dispatch, custom_attributes);
         this.setGender(dispatch, gender);
+
+        // Run async as Club Apparel is not visible anywhere after login
+        ClubApparelDispatcher.getMember(dispatch, id);
 
         // Run async otherwise login gets slow
         CartDispatcher.getCart(dispatch);
