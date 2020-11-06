@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import CartDispatcher from 'Store/Cart/Cart.dispatcher';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
+import Event, { EVENT_GTM_PRODUCT_ADD_TO_CART } from 'Util/Event';
 
 import PDPAddToCart from './PDPAddToCart.component';
 
@@ -99,9 +100,11 @@ export class PDPAddToCartContainer extends PureComponent {
                 price,
                 size_uk,
                 size_eu,
-                size_us
+                size_us,
+                name
             }, addProductToCart, showNotification
         } = this.props;
+
         const {
             selectedSizeType, selectedSizeCode, insertedSizeStatus
         } = this.state;
@@ -128,6 +131,19 @@ export class PDPAddToCartContainer extends PureComponent {
             }, color, optionValue, basePrice, brand_name, thumbnail_url, url, itemPrice).then(
                 () => this.afterAddToCart()
             );
+
+            Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_CART, {
+                product: {
+                    brand: brand_name,
+                    category: '',
+                    id: selectedSizeCode,
+                    name,
+                    price: itemPrice,
+                    quantity: 1,
+                    size: optionValue,
+                    variant: color
+                }
+            });
         }
 
         if (!insertedSizeStatus) {
@@ -142,6 +158,19 @@ export class PDPAddToCartContainer extends PureComponent {
             }, color, null, basePrice, brand_name, thumbnail_url, url, itemPrice).then(
                 () => this.afterAddToCart()
             );
+
+            Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_CART, {
+                product: {
+                    brand: brand_name,
+                    category: '',
+                    id: code[0],
+                    name,
+                    price: itemPrice,
+                    quantity: 1,
+                    size: '',
+                    variant: ''
+                }
+            });
         }
     }
 
