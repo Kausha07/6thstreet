@@ -43,7 +43,6 @@ export class MyAccountClubApparelOverlayContainer extends PureComponent {
 
     containerFunctions = () => ({
         linkAccount: this.linkAccount.bind(this),
-        handleSuccess: this.q.bind(this),
         verifyOtp: this.verifyOtp.bind(this)
     });
 
@@ -119,18 +118,6 @@ export class MyAccountClubApparelOverlayContainer extends PureComponent {
             },
             this._handleError
         );
-    }
-
-    handleSuccess(e) {
-        e.preventDefault();
-        e.nativeEvent.stopImmediatePropagation();
-        this.setState({ state: STATE_SUCCESS });
-    }
-
-    handleNotSucces(e) {
-        e.preventDefault();
-        e.nativeEvent.stopImmediatePropagation();
-        this.setState({ state: STATE_NOT_SUCCESS });
     }
 
     render() {
