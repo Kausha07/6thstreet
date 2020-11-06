@@ -113,6 +113,10 @@
                 font-weight: var(--fw-demi);
                 font-size: 13px;
 
+                @include mobile {
+                    flex-direction: column;
+                }
+
                 &-Special,
                 &-Discount {
                     display: none;
