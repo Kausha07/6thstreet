@@ -17,6 +17,7 @@ import { formatCurrency, roundPrice } from 'Util/Price';
 
 import Apple from './icons/apple.png';
 import Cash from './icons/cash.png';
+import Confirm from './icons/confirm.png';
 import SuccessCircle from './icons/success-circle.png';
 import TabbyAR from './icons/tabby-ar.png';
 import Tabby from './icons/tabby.png';
@@ -39,7 +40,12 @@ export class CheckoutSuccess extends PureComponent {
         changeActiveTab: PropTypes.func.isRequired,
         onVerifySuccess: PropTypes.func.isRequired,
         onResendCode: PropTypes.func.isRequired,
-        isPhoneVerified: PropTypes.bool.isRequired
+        isPhoneVerified: PropTypes.bool.isRequired,
+        changePhone: PropTypes.func.isRequired,
+        isChangePhonePopupOpen: PropTypes.bool.isRequired,
+        toggleChangePhonePopup: PropTypes.func.isRequired,
+        phone: PropTypes.string.isRequired,
+        isMobileVerification: PropTypes.bool.isRequired
     };
 
     state = {
@@ -50,8 +56,7 @@ export class CheckoutSuccess extends PureComponent {
         isPhoneVerification: true,
         delay: 1000,
         successHidden: false,
-        wasLoaded: false,
-        isChangePhonePopupOpen: false,
+        wasLoaded: false
     };
 
     componentDidMount() {
@@ -82,7 +87,11 @@ export class CheckoutSuccess extends PureComponent {
     };
 
     renderTabList = () => {
-        const { activeTab, changeActiveTab } = this.props;
+        const { activeTab, changeActiveTab, isSignedIn } = this.props;
+
+        if (!isSignedIn) {
+            return null;
+        }
 
         return (
             <ContentWrapper
@@ -117,6 +126,38 @@ export class CheckoutSuccess extends PureComponent {
         </div>
     );
 
+    renderPhoneVerified() {
+        const { isPhoneVerified } = this.props;
+
+        if (!isPhoneVerified) {
+            return null;
+        }
+
+        return (
+            <div
+              block="PhoneVerified"
+            >
+                <div
+                  block="PhoneVerified"
+                  elem="Content"
+                >
+                    <div
+                      block="PhoneVerified"
+                      elem="Image"
+                    >
+                        <img src={ Confirm } alt="Verified" />
+                    </div>
+                    <div
+                      block="PhoneVerified"
+                      elem="Text"
+                    >
+                        { __('Phone Verified') }
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
     renderTrackOrder() {
         const {
             isSignedIn,
@@ -124,13 +165,12 @@ export class CheckoutSuccess extends PureComponent {
             onVerifySuccess,
             onResendCode,
             isPhoneVerified,
-            shippingAddress: {
-                phone
-            }
+            toggleChangePhonePopup,
+            phone
         } = this.props;
         const { isArabic, isPhoneVerification } = this.state;
 
-        if (!isPhoneVerified && isSignedIn) {
+        if (!isPhoneVerified) {
             return (
                 <div mix={ { block: 'TrackOrder', mods: { isArabic, isPhoneVerification } } }>
                     <div block="TrackOrder" elem="Text">
@@ -141,7 +181,7 @@ export class CheckoutSuccess extends PureComponent {
                             { __('Verification code has been sent to') }
                         </div>
                         <div block="TrackOrder-Text" elem="Phone">
-                            <button onClick={ this.onChangePhone }>
+                            <button onClick={ toggleChangePhonePopup }>
                                 { phone }
                             </button>
                         </div>
@@ -206,19 +246,23 @@ export class CheckoutSuccess extends PureComponent {
         );
     }
 
-    onChangePhone() {
-        this.setState({ isChangePhonePopupOpen: true });
-    }
-
-    renderChangePhonePopUp() {
-        const { isChangePhonePopupOpen } = this.state;
+    renderChangePhonePopUp = () => {
+        const {
+            changePhone,
+            shippingAddress,
+            toggleChangePhonePopup,
+            isChangePhonePopupOpen
+        } = this.props;
 
         return (
             <ChangePhonePopup
               isChangePhonePopupOpen={ isChangePhonePopupOpen }
+              closeChangePhonePopup={ toggleChangePhonePopup }
+              changePhone={ changePhone }
+              countryId={ shippingAddress.country_id }
             />
         );
-    }
+    };
 
     renderMyAccountPopup() {
         const { showPopup } = this.state;
@@ -391,8 +435,12 @@ export class CheckoutSuccess extends PureComponent {
                 street,
                 postcode,
                 phone
-            }
+            },
+            billingAddress
         } = this.props;
+
+        console.log('bill addr func');
+        console.log(billingAddress);
 
         return (
             <div block="Address">
@@ -418,6 +466,7 @@ export class CheckoutSuccess extends PureComponent {
     renderAddresses = () => (
         <div block="Addresses">
             { this.renderDeliveringAddress() }
+            { this.renderBillingAddress() }
         </div>
     );
 
@@ -453,6 +502,9 @@ export class CheckoutSuccess extends PureComponent {
             },
             paymentMethod
         } = this.props;
+
+        console.log('paymentmethod:');
+        console.log(paymentMethod);
 
         if (number && expDate && cvv) {
             const displayNumberDigits = 4;
@@ -558,21 +610,31 @@ export class CheckoutSuccess extends PureComponent {
     }
 
     render() {
-        const { customer } = this.props;
-        const { wasLoaded } = this.state;
+        const { customer, isMobileVerification } = this.props;
+        if (isMobileVerification) {
+            return (
+                <div block="CheckoutSuccess">
+                    { this.renderChangePhonePopUp() }
+                    <div block="CheckoutSuccess" elem="Details">
+                        { this.renderTrackOrder() }
+                    </div>
+                </div>
+            );
+        }
 
         return (
             <div block="CheckoutSuccess">
-                { wasLoaded ? '' : this.renderSuccess() }
                 { this.renderChangePhonePopUp() }
                 { this.renderTabList() }
                 <div block="CheckoutSuccess" elem="Details">
                     { this.renderSuccessMessage(customer.email) }
+                    { this.renderPhoneVerified() }
                     { this.renderTrackOrder() }
                     { this.renderTotalsItems() }
                     { this.renderTotals() }
                     { this.renderAddresses() }
                     { this.renderDeliveryOption() }
+                    { this.renderPaymentType() }
                 </div>
                 { this.renderButton() }
                 { this.renderMyAccountPopup() }

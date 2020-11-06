@@ -5,7 +5,10 @@ import ChangePhonePopup from './ChangePhonePopup.component';
 
 export class ChangePhonePopupContainer extends PureComponent {
     static propTypes = {
-        isChangePhonePopupOpen: PropTypes.bool.isRequired
+        isChangePhonePopupOpen: PropTypes.bool.isRequired,
+        closeChangePhonePopup: PropTypes.func.isRequired,
+        changePhone: PropTypes.func.isRequired,
+        countryId: PropTypes.string.isRequired
     };
 
     render() {

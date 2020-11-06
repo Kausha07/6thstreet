@@ -47,6 +47,7 @@ export class Checkout extends SourceCheckout {
   savePaymentInformation = (paymentInformation) => {
       const { savePaymentInformation, showErrorNotification } = this.props;
       const { selectedPaymentMethod, tabbyInstallmentsUrl, tabbyPayLaterUrl } = this.state;
+      this.setState({ paymentInformation });
 
       if (TABBY_PAYMENT_CODES.includes(selectedPaymentMethod)) {
           if (tabbyInstallmentsUrl || tabbyPayLaterUrl) {

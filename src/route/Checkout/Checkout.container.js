@@ -126,10 +126,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         this.setState({ lastOrder: totals });
     }
 
-    setDetailsStep() {
-        this.setState({ checkoutStep: DETAILS_STEP });
-    }
-
     onShippingEstimationFieldsChange(address) {
         const { estimateShipping } = this.props;
         const Checkout = this;
@@ -296,16 +292,29 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     }
 
     setDetailsStep(orderID) {
-        const { setNavigationState, sendVerificationCode } = this.props;
+        const {
+            setNavigationState,
+            sendVerificationCode,
+            isSignedIn,
+            customer
+        } = this.props;
+
         const { shippingAddress } = this.state;
 
-        if (!isSignedIn()) {
-            BrowserDatabase.deleteItem(GUEST_QUOTE_ID);
+        if (isSignedIn) {
+            if (customer.isVerified !== '0') {
+                const code = customer.phone.slice(1, 4);
+                const mobile = customer.phone.slice(4);
+                sendVerificationCode({ mobile, code }).then(
+                    (response) => {
+                        this.setState({ isVerificationCodeSent: response.success });
+                    },
+                    this._handleError
+                );
+            }
         } else {
-            // const code = shippingAddress.phone.slice(1, 4);
-            // const mobile = shippingAddress.phone.slice(4);
-            const mobile = '525551536';
-            const code = '971';
+            const code = shippingAddress.phone.slice(1, 4);
+            const mobile = shippingAddress.phone.slice(4);
             sendVerificationCode({ mobile, code }).then(
                 (response) => {
                     this.setState({ isVerificationCodeSent: response.success });
@@ -314,8 +323,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             );
         }
 
-        // BrowserDatabase.deleteItem(PAYMENT_TOTALS);
-        // resetCart();
+
+        BrowserDatabase.deleteItem(PAYMENT_TOTALS);
+        this.resetCart();
 
         this.setState({
             isLoading: false,

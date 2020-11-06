@@ -3,15 +3,16 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
-import { MyAccountDispatcher } from 'Component/CheckoutGuestForm/CheckoutGuestForm.container';
 import {
     CUSTOMER_ACCOUNT_PAGE
 } from 'Component/Header/Header.config';
+import { PHONE_CODES } from 'Component/MyAccountAddressForm/MyAccountAddressForm.config';
 import { MY_ACCOUNT_URL } from 'Route/MyAccount/MyAccount.config';
 import MyAccountContainer, { tabMap } from 'Route/MyAccount/MyAccount.container';
 import CheckoutDispatcher from 'Store/Checkout/Checkout.dispatcher';
 import ClubApparelDispatcher from 'Store/ClubApparel/ClubApparel.dispatcher';
 import { updateMeta } from 'Store/Meta/Meta.action';
+import MyAccountDispatcher from 'Store/MyAccount/MyAccount.dispatcher';
 import { changeNavigationState } from 'Store/Navigation/Navigation.action';
 import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
 import { showNotification } from 'Store/Notification/Notification.action';
@@ -19,6 +20,7 @@ import { toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
 import { customerType } from 'Type/Account';
 import { TotalsType } from 'Type/MiniCart';
 import history from 'Util/History';
+import isMobile from 'Util/Mobile';
 
 import CheckoutSuccess from './CheckoutSuccess.component';
 
@@ -43,7 +45,9 @@ export const mapDispatchToProps = (dispatch) => ({
     showNotification: (type, message) => dispatch(showNotification(type, message)),
     updateMeta: (meta) => dispatch(updateMeta(meta)),
     getMember: (id) => ClubApparelDispatcher.getMember(dispatch, id),
+    sendVerificationCode: (phone) => CheckoutDispatcher.sendVerificationCode(dispatch, phone),
     verifyUserPhone: (code) => CheckoutDispatcher.verifyUserPhone(dispatch, code),
+    updateCustomer: (customer) => MyAccountDispatcher.updateCustomerData(dispatch, customer),
     requestCustomerData: () => MyAccountDispatcher
         .then(({ default: dispatcher }) => dispatcher.requestCustomerData(dispatch))
 });
@@ -73,30 +77,26 @@ export class CheckoutSuccessContainer extends PureComponent {
         isEditing: false,
         clubApparelMember: null,
         phone: '',
-        isPhoneVerified: false
+        isPhoneVerified: false,
+        isChangePhonePopupOpen: false,
+        isMobileVerification: false
     };
 
     containerFunctions = {
         onSignIn: this.onSignIn.bind(this),
         changeActiveTab: this.changeActiveTab.bind(this),
-        onChangePhone: this.onChangePhone.bind(this),
         onVerifySuccess: this.onVerifySuccess.bind(this),
-        onResendCode: this.onResendCode.bind(this)
+        onResendCode: this.onResendCode.bind(this),
+        changePhone: this.changePhone.bind(this),
+        toggleChangePhonePopup: this.toggleChangePhonePopup.bind(this)
     };
 
     constructor(props) {
         super(props);
 
         const {
-            updateMeta,
-            customer
+            updateMeta
         } = this.props;
-
-        console.log(customer.isVerified);
-        console.log(customer.isVerified === 1);
-        if (customer.isVerified === 1) {
-            this.setState({ isPhoneVerified: true });
-        }
 
         this.state = MyAccountContainer.navigateToSelectedTab(this.props) || {};
 
@@ -116,48 +116,130 @@ export class CheckoutSuccessContainer extends PureComponent {
     }
 
     componentDidMount() {
-        const { updateMeta, shippingAddress } = this.props;
-        this.setState({ phone: shippingAddress.phone });
+        const {
+            updateMeta,
+            customer,
+            isSignedIn
+        } = this.props;
+
+        this.setPhone();
+
+        const testCustomerVerified = '0';
+        // real:
+        console.log(customer.isVerified === '1');
+
+        if (isSignedIn && customer.isVerified === testCustomerVerified) {
+            // this.setState({ isPhoneVerified: true });
+        } else if (isMobile.any()) {
+            this.setState({ isMobileVerification: true });
+        }
 
         updateMeta({ title: __('Account') });
 
         this._updateBreadcrumbs();
     }
 
+    componentDidUpdate() {
+        this.setPhone();
+    }
+
     containerProps = () => {
-        const { clubApparelMember, isPhoneVerified } = this.state;
+        const {
+            clubApparelMember,
+            isPhoneVerified,
+            isChangePhonePopupOpen,
+            phone,
+            isMobileVerification
+        } = this.state;
 
         return {
             clubApparelMember,
-            isPhoneVerified
+            isPhoneVerified,
+            isChangePhonePopupOpen,
+            phone,
+            isMobileVerification
         };
     };
+
+    toggleChangePhonePopup() {
+        const { isChangePhonePopupOpen } = this.state;
+        this.setState({ isChangePhonePopupOpen: !isChangePhonePopupOpen });
+    }
+
+    changePhone(fields) {
+        const {
+            isSignedIn,
+            updateCustomer,
+            customer: oldCustomerData,
+            shippingAddress
+        } = this.props;
+        const { newPhone } = fields;
+
+        console.log('phones');
+        console.log(PHONE_CODES[shippingAddress.country_id]);
+        console.log(newPhone);
+
+        if (isSignedIn) {
+            updateCustomer({
+                ...oldCustomerData,
+                phone: PHONE_CODES[shippingAddress.country_id] + newPhone
+            }).then(
+                (response) => {
+                    if (!response.error) {
+                        this.onResendCode();
+                    } else {
+                        showNotification('error', 'Please enter valid phone number');
+                    }
+                    this.toggleChangePhonePopup();
+                },
+                this._handleError
+            );
+        } else {
+            // Todo implement logic for guest
+            console.log('sign in');
+        }
+    }
+
+    setPhone() {
+        const {
+            isSignedIn,
+            customer,
+            shippingAddress
+        } = this.props;
+
+        console.log('šet phone');
+        console.log(customer);
+
+        if (isSignedIn) {
+            this.setState({ phone: customer.phone });
+        } else {
+            this.setState({ phone: shippingAddress.phone });
+        }
+    }
 
     onVerifySuccess(fields) {
         const {
             verifyUserPhone,
             isSignedIn,
             orderID,
-            customer
+            showNotification
         } = this.props;
 
-        console.log(customer);
         const { phone } = this.state;
-
         if (phone) {
-            // const countryCode = phone.phone.slice(1, 4);
-            // const mobile = phone.phone.slice(4);
-            console.log(fields.otp);
-            const mobile = '525551536';
-            const countryCode = '971';
+            const countryCodeLastChar = 4;
+            const countryCode = phone.slice(1, countryCodeLastChar);
+            const mobile = phone.slice(countryCodeLastChar);
             const { otp } = fields;
-            if (!isSignedIn) {
+            if (isSignedIn) {
                 verifyUserPhone({ mobile, country_code: countryCode, otp }).then(
                     (response) => {
                         if (response.success) {
-                            this.setState({ isPhoneVerified: response.success });
+                            this.setState({ isPhoneVerified: true });
+                            showNotification('success', 'Phone was successfully verified');
+                            this.setState({ isMobileVerification: false });
                         } else {
-                            console.log('phone verification failed');
+                            showNotification('error', 'Wrong Verification Code. Please re-enter');
                         }
                     },
                     this._handleError
@@ -171,9 +253,10 @@ export class CheckoutSuccessContainer extends PureComponent {
                 }).then(
                     (response) => {
                         if (response.success) {
-                            this.setState({ isPhoneVerified: response.success });
+                            this.setState({ isPhoneVerified: true });
+                            this.setState({ isMobileVerification: false });
                         } else {
-                            console.log('phone verification failed');
+                            showNotification('error', 'Verification failed. Please enter valid verification code');
                         }
                     },
                     this._handleError
@@ -183,7 +266,21 @@ export class CheckoutSuccessContainer extends PureComponent {
     }
 
     onResendCode() {
-        console.log('onresendcode');
+        const { sendVerificationCode, showNotification } = this.props;
+        const { phone } = this.state;
+        const countryCodeLastChar = 4;
+        const countryCode = phone.slice(1, countryCodeLastChar);
+        const mobile = phone.slice(countryCodeLastChar);
+        sendVerificationCode({ mobile, countryCode }).then(
+            (response) => {
+                if (!response.error) {
+                    showNotification('success', 'Verification code was successfully re-sended');
+                } else {
+                    showNotification('info', `Please wait ${response.data.timeout} before re-sending the request`);
+                }
+            },
+            this._handleError
+        );
     }
 
     changeActiveTab(activeTab) {

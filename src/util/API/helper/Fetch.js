@@ -5,7 +5,7 @@ export const doFetch = async (url, options) => {
     const response = await fetch(url, options);
     const { ok } = response;
 
-    if (!ok && !url.match(/tokens\/card/)) {
+    if (!ok && !url.match(/tokens\/card|verify|send/)) {
         throw new Error(getErrorMsg(response));
     }
 
