@@ -23,7 +23,7 @@ class PDPSizeGuide extends PureComponent {
 
     static getDerivedStateFromProps(nextProps) {
         const { activeOverlay } = nextProps;
-        document.body.style.overflow = activeOverlay !== '' ? 'hidden' : 'visible';
+        document.body.style.overflow = activeOverlay === 'PDPSizeGuide' ? 'hidden' : 'visible';
         return ({ isOpen: activeOverlay === 'PDPSizeGuide' });
     }
 
