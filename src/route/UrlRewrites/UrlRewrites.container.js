@@ -54,6 +54,7 @@ export class UrlRewritesContainer extends PureComponent {
             || locale !== prevLocale || !prevStatePathname
         ) {
             hideActiveOverlay();
+            document.body.style.overflow = 'visible';
             // Request URL rewrite if pathname or locale changed
             this.requestUrlRewrite(true);
         }
