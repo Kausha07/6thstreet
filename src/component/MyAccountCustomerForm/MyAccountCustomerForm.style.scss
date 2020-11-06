@@ -1,5 +1,6 @@
 :root {
     --dark-gray: #b8b8b8;
+    --middle-gray: #b7b7b7;
     --light-gray: #cacaca
 }
 
@@ -14,7 +15,22 @@
 
     form {
         .Button {
-            margin-top: 30px;
+            width: 100%;
+
+            @include after-mobile() {
+                margin-top: 30px;
+                width: unset;
+            }
+        }
+
+        @include mobile() {
+            height: 80vh;
+            min-height: 470px;
+
+            .Button {
+                position: absolute;
+                bottom: 0;
+            }
         }
     }
 
@@ -55,6 +71,7 @@
 
         &-Radio {
             display: flex;
+            margin-top: 10px;
 
             .Field {
                 margin-right: 23px;
@@ -62,6 +79,10 @@
                 padding-right: 5px;
                 padding-top: 0;
                 width: unset;
+
+                &:last-of-type {
+                    margin-right: 0;
+                }
 
                 label {
                     label {
@@ -112,22 +133,8 @@
                     --primary-base-color: var(--black-color);
                 }
 
-                &:not(:checked) + label {
-                    &:after {
-                        background-color: rgba(255, 255, 255, .5);
-                        border-radius: 0;
-                        content: ' ';
-                        height: 20px;
-                        margin-left: -1px;
-                        transition-duration: 0s;
-                        width: 61px;
-                        z-index: 1;
-
-                        @include mobile() {
-                           margin-right: -10px;
-                            width: 80px;
-                        }
-                    }
+                &:not(:checked) + label + span {
+                    color: var(--middle-gray);
                 }
 
                 &:focus {
@@ -183,6 +190,19 @@
 
     .MyAccountPasswordForm {
         margin-top: 20px;
+
+        @include mobile() {
+            background: $white;
+            height: 100%;
+            margin-top: 0;
+            position: absolute;
+            width: 100%;
+            z-index: 2;
+        }
+
+        form {
+            height: 75vh;
+        }
 
         &-Title {
             display: inline-flex;
@@ -240,16 +260,17 @@
     }
 
     &-BirthDay {
-        margin-top: -.5rem;
+        margin-top: 1rem;
 
         &:after {
             background-color: var(--white);
-            content: ' ';
+            content: '';
             height: 58px;
             margin-bottom: 2px;
             margin-left: -60px;
             pointer-events: none;
             position: absolute;
+            right: 1px;
             top: 1px;
             width: 59px;
 
@@ -259,18 +280,25 @@
             }
         }
 
-        input {
+        .Field {
             &:after {
                 border: solid var(--light-gray);
                 border-width: 0 2px 2px 0;
-                content: ' ';
+                content: '';
                 height: 6px;
                 margin-bottom: 2px;
                 margin-left: -15px;
                 pointer-events: none;
+                position: absolute;
+                right: 20px;
+                top: 37px;
                 transform: rotate(45deg);
                 width: 6px;
                 z-index: 1;
+
+                @include desktop() {
+                    top: 25px;
+                }
             }
 
             @include mobile() {
@@ -279,15 +307,20 @@
         }
 
         &_isArabic {
+            &:after {
+                margin-left: 0;
+                right: 12px;
+            }
+
             input {
                 @include desktop() {
                     margin-right: 10px;
                 }
             }
-            &:after {
-                margin-left: 0;
-                right: 12px;
-            }
+        }
+
+        @include desktop() {
+            margin-top: -.5rem;
         }
     }
 

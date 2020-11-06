@@ -3,7 +3,14 @@
 }
 
 .NotificationList {
-    top: calc(120px + var(--breadcrumbs-height-main));
+    @include mobile {
+        overflow: hidden;
+        max-width: 100vw;
+        width: 100%;
+        position: fixed;
+        top: var(--header-total-height);
+        right: 0;
+    }
     
     .Notification {
         &_type {

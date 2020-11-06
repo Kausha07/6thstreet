@@ -7,7 +7,8 @@ export const validateEmails = ({ value }) => value.split(',').every((email) => v
 export const validatePassword = ({ value }) => value.length >= MIN_PASSWORD_LENGTH;
 export const validateContainNumber = ({ value }) => /\d/.test(value);
 export const validateContainCapitalize = ({ value }) => /[A-Z]/.test(value);
-export const validateTelephone = ({ value }) => value.length > 0 && value.match(/^\+(?:[0-9-] ?){6,14}[0-9]$/);
+export const validateTelephoneAE = ({ value }) => value.length > 0 && value.match(/^[0-9]{9}$/);
+export const validateTelephone = ({ value }) => value.length > 0 && value.match(/^[0-9]{8}$/);
 export const isNotEmpty = ({ value }) => value.trim().length > 0;
 export const validatePasswordMatch = ({ value }, { password }) => {
     const { current: { value: passwordValue } } = password || { current: {} };
@@ -37,7 +38,11 @@ export default {
     },
     telephone: {
         validate: validateTelephone,
-        message: __('Phone number is invalid!')
+        message: __('Please verify if the phone number is correct')
+    },
+    telephoneAE: {
+        validate: validateTelephoneAE,
+        message: __('Please verify if the phone number is correct')
     },
     notEmpty: {
         validate: isNotEmpty,

@@ -17,6 +17,26 @@ import './Field.extended.style';
  * @class Field
  */
 export class Field extends SourceField {
+    renderRadioButton() {
+        const {
+            id,
+            label,
+            onClick
+        } = this.props;
+
+        return (
+            <label htmlFor={ id }>
+                <FieldInput
+                  { ...this.props }
+                  type="radio"
+                  onChange={ onClick }
+                />
+                <label htmlFor={ id } />
+                <span>{ label }</span>
+            </label>
+        );
+    }
+
     renderToggle() {
         const {
             id,

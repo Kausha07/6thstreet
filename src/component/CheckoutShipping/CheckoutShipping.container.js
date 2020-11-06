@@ -32,6 +32,10 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
         showCreateNewPopup: this.showCreateNewPopup.bind(this)
     };
 
+    static defaultProps = {
+        guestEmail: ''
+    };
+
     openForm() {
         this.setState({ formContent: true });
     }
@@ -46,10 +50,6 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
             address: {}
         });
     }
-
-    static defaultProps = {
-        guestEmail: ''
-    };
 
     onShippingSuccess(fields) {
         const { saveAddressInformation, customer: { email }, guestEmail } = this.props;

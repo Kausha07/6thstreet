@@ -62,7 +62,7 @@ class HeaderWishlist extends PureComponent {
                     <div block="HeaderWishlist" elem="Count" mods={ { have: !!itemsCount } }>{ itemsCount }</div>
                     <span block="HeaderWishlist" elem="Heart" mods={ { isBlack: !!itemsCount } } />
                 </button>
-                <label htmlFor="WishList">{ __('WishList') }</label>
+                <label htmlFor="WishList">{ __('Wishlist') }</label>
             </div>
         );
     }

@@ -59,12 +59,17 @@ class SearchSuggestion extends PureComponent {
     }
 
     renderBrand = (brand) => {
-        const { brand_name, count } = brand;
+        const { brand_name: name, count } = brand;
+
+        const urlName = name.replace('&', '')
+            .replace(/(\s+)|--/g, '-')
+            .replace('@', 'at')
+            .toLowerCase();
 
         return (
             <li>
-                <Link to={ `/brands/${ brand_name }` }>
-                    { brand_name }
+                <Link to={ `/${urlName}.html?q=${urlName}` }>
+                    { name }
                     <span>{ count }</span>
                 </Link>
             </li>
@@ -122,16 +127,23 @@ class SearchSuggestion extends PureComponent {
         return 'Nothing found';
     }
 
-    renderTrendingBrand = ({ label, image_url }) => (
-        <li>
-            <Link to={ `/brands/${ label }` }>
-                <div block="SearchSuggestion" elem="TrandingImg">
-                    <img src={ image_url } alt="Trending" />
-                    { label }
-                </div>
-            </Link>
-        </li>
-    );
+    renderTrendingBrand = ({ label, image_url }) => {
+        const urlName = label.replace('&', '')
+            .replace(/(\s+)|--/g, '-')
+            .replace('@', 'at')
+            .toLowerCase();
+
+        return (
+            <li>
+                <Link to={ `/${urlName}.html?q=${urlName}` }>
+                    <div block="SearchSuggestion" elem="TrandingImg">
+                        <img src={ image_url } alt="Trending" />
+                        { label }
+                    </div>
+                </Link>
+            </li>
+        );
+    };
 
     renderTrendingBrands() {
         const { trendingBrands } = this.props;

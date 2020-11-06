@@ -1,9 +1,9 @@
 import { getStore } from 'Store';
 import CartDispatcher from 'Store/Cart/Cart.dispatcher';
+import { showNotification } from 'Store/Notification/Notification.action';
 import {
     setIsLoading,
-    setStoreCredit,
-    updateStoreCreditState
+    setStoreCredit
 } from 'Store/StoreCredit/StoreCredit.action';
 import {
     applyStoreCredit,
@@ -40,20 +40,22 @@ export class StoreCreditDispatcher {
 
             if (apply) {
                 await applyStoreCredit(cartId);
+
+                dispatch(showNotification('success', __('Store Credits are applied!')));
             } else {
                 await removeStoreCredit(cartId);
+
+                dispatch(showNotification('success', __('Store Credits are removed!')));
             }
 
             await CartDispatcher.getCartTotals(dispatch, cartId);
             await this.getStoreCredit(dispatch);
 
-            const result = this.isStoreCreditApplied();
-
-            dispatch(updateStoreCreditState(result));
-
-            return result;
+            return true;
         } catch (e) {
             Logger.log(e);
+
+            dispatch(showNotification('error', __('There was an error, please try again later.')));
 
             return false;
         }

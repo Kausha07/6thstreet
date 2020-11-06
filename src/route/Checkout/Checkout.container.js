@@ -29,7 +29,8 @@ export const mapDispatchToProps = (dispatch) => ({
     setCartId: (cartId) => dispatch(setCartId(cartId)),
     createEmptyCart: () => CartDispatcher.getCart(dispatch),
     hideActiveOverlay: () => dispatch(hideActiveOverlay()),
-    updateStoreCredit: () => StoreCreditDispatcher.getStoreCredit(dispatch)
+    updateStoreCredit: () => StoreCreditDispatcher.getStoreCredit(dispatch),
+    setMeta: (meta) => dispatch(updateMeta(meta))
 });
 export const mapStateToProps = (state) => ({
     totals: state.CartReducer.cartTotals,
@@ -43,11 +44,19 @@ export const mapStateToProps = (state) => ({
 export class CheckoutContainer extends SourceCheckoutContainer {
     static propTypes = {
         updateStoreCredit: PropTypes.func.isRequired,
-        isSignedIn: PropTypes.bool.isRequired
+        isSignedIn: PropTypes.bool.isRequired,
+        setMeta: PropTypes.func.isRequired
+    };
+
+    state = {
+        ...this.state,
+        isLoading: false
     };
 
     componentDidMount() {
-        updateMeta({ title: __('Checkout') });
+        const { setMeta } = this.props;
+
+        setMeta({ title: __('Checkout') });
     }
 
     componentDidUpdate() {
@@ -78,7 +87,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
         /* eslint-disable */
         delete address.region_id;
-
+        Checkout.setState({ isLoading: true });
         estimateShipping({
             ...address,
             default_shipping: true
@@ -86,9 +95,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             (response) => {
                 if (typeof response !== 'undefined') {
                     Checkout.setState({
-                        shippingMethods: response.data
+                        shippingMethods: response.data,
+                        isLoading: false
                     })
                 }
+                Checkout.setState({ isLoading: false });
             },
             this._handleError
         );

@@ -1,5 +1,6 @@
 /* eslint-disable eqeqeq */
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import HeaderAccount from 'Component/HeaderAccount';
@@ -7,14 +8,20 @@ import HeaderMenu from 'Component/HeaderMenu';
 import HeaderWishlist from 'Component/HeaderWishlist';
 import MyAccountOverlay from 'Component/MyAccountOverlay';
 import NavigationAbstract from 'Component/NavigationAbstract/NavigationAbstract.component';
+import { setIsMobileTabActive } from 'Store/MyAccount/MyAccount.action';
 import { isSignedIn } from 'Util/Auth';
 
 import './MobileBottomBar.style.scss';
 
+export const mapDispatchToProps = (dispatch) => ({
+    setMobileTabActive: (value) => dispatch(setIsMobileTabActive(value))
+});
+
 class MobileBottomBar extends NavigationAbstract {
     static propTypes = {
         location: PropTypes.object.isRequired,
-        history: PropTypes.object.isRequired
+        history: PropTypes.object.isRequired,
+        setIsMobileTabActive: PropTypes.func.isRequired
     };
 
     state = {
@@ -46,7 +53,8 @@ class MobileBottomBar extends NavigationAbstract {
 
     routeChangeBrand=() => {
         this.setState({
-            redirectBrand: true
+            redirectBrand: true,
+            isCategoryMenu: false
         });
     };
 
@@ -65,13 +73,17 @@ class MobileBottomBar extends NavigationAbstract {
     };
 
     routeChangeAccount=() => {
-        const { history } = this.props;
+        const { history, setMobileTabActive } = this.props;
+
+        setMobileTabActive(true);
 
         return history.push('/my-account');
     };
 
     routeChangeWishlist=() => {
-        const { history } = this.props;
+        const { history, setMobileTabActive } = this.props;
+
+        setMobileTabActive(true);
 
         return history.push('/my-account/my-wishlist');
     };
@@ -82,14 +94,14 @@ class MobileBottomBar extends NavigationAbstract {
 
     renderHome() {
         const { history } = this.props;
-        const { isHome, redirectHome } = this.state;
+        const { isHome, redirectHome, isCategoryMenu } = this.state;
 
         if (redirectHome) {
             this.setState({ redirectHome: false });
             return history.push('/');
         }
 
-        this.setState({ isHome: window.location.pathname === '/' });
+        this.setState({ isHome: window.location.pathname === '/' && !isCategoryMenu });
 
         return (
             <button
@@ -111,14 +123,14 @@ class MobileBottomBar extends NavigationAbstract {
 
     renderBrand() {
         const { history } = this.props;
-        const { isBrand, redirectBrand } = this.state;
+        const { isBrand, redirectBrand, isCategoryMenu } = this.state;
 
         if (redirectBrand) {
             this.setState({ redirectBrand: false });
             return history.push('/brands');
         }
 
-        this.setState({ isBrand: window.location.pathname === '/brands' });
+        this.setState({ isBrand: window.location.pathname === '/brands' && !isCategoryMenu });
 
         return (
             <button
@@ -139,11 +151,7 @@ class MobileBottomBar extends NavigationAbstract {
     }
 
     renderMenu() {
-        return (
-            <HeaderMenu
-              key="menu"
-            />
-        );
+        return <HeaderMenu key="menu" />;
     }
 
     renderWishlist() {
@@ -151,10 +159,11 @@ class MobileBottomBar extends NavigationAbstract {
             isBottomBar,
             accountPopUp,
             isLoggedIn,
-            isWishlist
+            isWishlist,
+            isCategoryMenu
         } = this.state;
 
-        this.setState({ isWishlist: location.pathname === '/my-account/my-wishlist' });
+        this.setState({ isWishlist: location.pathname === '/my-account/my-wishlist' && !isCategoryMenu });
 
         const onClickHandle = !isLoggedIn ? this.renderAccountPopUp : this.routeChangeWishlist;
 
@@ -220,4 +229,4 @@ class MobileBottomBar extends NavigationAbstract {
     }
 }
 
-export default withRouter(MobileBottomBar);
+export default withRouter(connect(null, mapDispatchToProps)(MobileBottomBar));

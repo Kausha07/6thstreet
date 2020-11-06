@@ -2,9 +2,9 @@ import { getStore } from 'Store';
 import CartDispatcher from 'Store/Cart/Cart.dispatcher';
 import {
     setClubApparel,
-    setIsLoading,
-    updateClubApparelState
+    setIsLoading
 } from 'Store/ClubApparel/ClubApparel.action';
+import { showNotification } from 'Store/Notification/Notification.action';
 import {
     applyPoints,
     getMember,
@@ -31,6 +31,8 @@ export class ClubApparelDispatcher {
 
             dispatch(setClubApparel(data));
         } catch (e) {
+            dispatch(setClubApparel());
+
             Logger.log(e);
         }
     }
@@ -41,6 +43,8 @@ export class ClubApparelDispatcher {
             return await linkAccount(data);
         } catch (e) {
             Logger.log(e);
+
+            return false;
         }
     }
 
@@ -64,20 +68,22 @@ export class ClubApparelDispatcher {
 
             if (apply) {
                 await applyPoints(cartId, caPoints, caPointsValue);
+
+                dispatch(showNotification('success', __('Club Apparel Points are applied!')));
             } else {
                 await removePoints(cartId);
+
+                dispatch(showNotification('success', __('Club Apparel Points are removed!')));
             }
 
             await CartDispatcher.getCartTotals(dispatch, cartId);
             await this.getMember(dispatch);
 
-            const result = await this.areClubApparelPointsApplied();
-
-            dispatch(updateClubApparelState(result));
-
-            return result;
+            return true;
         } catch (e) {
             Logger.log(e);
+
+            dispatch(showNotification('error', __('There was an error, please try again later.')));
 
             return false;
         }

@@ -1,11 +1,12 @@
 import { getErrorMsg } from './API';
 
-// eslint-disable-next-line import/prefer-default-export
+// eslint-disable-next-line
 export const doFetch = async (url, options) => {
     const response = await fetch(url, options);
     const { ok } = response;
+    const regExpUrl = /tokens\/card|\/tabby\/payments/;
 
-    if (!ok) {
+    if (!ok && !url.match(regExpUrl)) {
         throw new Error(getErrorMsg(response));
     }
 

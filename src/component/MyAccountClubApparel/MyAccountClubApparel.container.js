@@ -21,8 +21,6 @@ export const mapStateToProps = (_state) => ({
 
 export const mapDispatchToProps = (dispatch) => ({
     getMember: () => ClubApparelDispatcher.getMember(dispatch),
-    linkAccount: (data) => ClubApparelDispatcher.linkAccount(dispatch, data),
-    verifyOtp: (data) => ClubApparelDispatcher.verifyOtp(dispatch, data),
     showNotification: (type, message) => dispatch(showNotification(type, message)),
     showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
     hideActiveOverlay: () => dispatch(hideActiveOverlay())
@@ -44,11 +42,6 @@ export class MyAccountClubApparelContainer extends PureComponent {
 
     static defaultProps = {
         customer: null
-    };
-
-    containerFunctions = {
-        linkAccount: this.linkAccount.bind(this),
-        verifyOtp: this.verifyOtp.bind(this)
     };
 
     state = {
@@ -90,30 +83,6 @@ export class MyAccountClubApparelContainer extends PureComponent {
         const { showOverlay, hideActiveOverlay } = this.props;
         return { showOverlay, hideActiveOverlay, ...this.containerFunctions };
     };
-
-    linkAccount(fields) {
-        const { customer: { id }, linkAccount } = this.props;
-        const { phone } = fields;
-
-        linkAccount({ customerId: id, mobileNo: phone }).then(
-            () => {
-                // TODO: Create response processing after Club Apparel will begin work on Client side
-            },
-            this._handleError
-        );
-    }
-
-    verifyOtp(fields) {
-        const { customer: { id }, verifyOtp } = this.props;
-        const { otp } = fields;
-
-        verifyOtp({ customerId: id, otp }).then(
-            () => {
-                // TODO: Create response processing after Club Apparel will begin work on Client side
-            },
-            this._handleError
-        );
-    }
 
     render() {
         return (

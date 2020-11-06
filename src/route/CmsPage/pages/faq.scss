@@ -1,0 +1,96 @@
+.CmsPage {
+    .faq-page {
+        margin: 0 8px;
+
+        @include desktop {
+            margin: 0 80px;
+        }
+
+        .showHide {
+            input {
+                display: none;
+            }
+
+            label {
+                margin-top: 12px;
+                font-weight: var(--fw-demi);
+                font-size: 14px;
+                cursor: pointer;
+
+                @include desktop {
+                    font-size: 16px;
+                }
+
+                &::before {
+                    content: '';
+                    position: absolute;
+                    width: 18px;
+                    height: 18px;
+                    border-radius: 50%;
+                    top: 2px;
+                    left: -3px;
+                    border: 1px solid $black;
+
+                    @include desktop {
+                        width: 20px;
+                        height: 20px;
+                    }
+                }
+            }
+
+            .fieldsetContainer {
+                display: none;
+                margin: 5px 0 0 20px;
+                font-size: 14px;
+            }
+    
+            .minus-sign {
+                display: none;
+            }
+
+            .open {
+                display: block;
+            }
+
+            .minus-sign,
+            .plus-sign {
+                margin-right: 5px;
+            }
+        }
+
+        .open > .expand > .minus-sign {
+            display: inline;
+        }
+
+        .open > .expand > .plus-sign {
+            display: none;
+        }
+    }
+}
+
+.PageWrapper {
+    &_isArabic {
+        .CmsPage {
+            .faq-page {      
+                .showHide {        
+                    label {
+                        &::before {
+                            right: -3px;
+                            top: 1px;
+                        }
+                    }
+
+                    .fieldsetContainer {
+                        margin: 5px 20px 0 0;
+                    }
+
+                    .minus-sign,
+                    .plus-sign {
+                        margin-right: 0;
+                        margin-left: 5px;
+                    }
+                }
+            }
+        }
+    }
+}

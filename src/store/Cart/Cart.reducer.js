@@ -1,3 +1,4 @@
+import { isSignedIn, ONE_HOUR } from 'Util/Auth';
 import BrowserDatabase from 'Util/BrowserDatabase';
 
 import {
@@ -10,6 +11,7 @@ import {
 } from './Cart.action';
 
 export const CART_ID_CACHE_KEY = 'CART_ID_CACHE_KEY';
+
 export const CART_ITEMS_CACHE_KEY = 'CART_ITEMS_CACHE_KEY';
 
 export const getInitialState = () => ({
@@ -46,16 +48,17 @@ export const CartReducer = (state = getInitialState(), action) => {
         type, cartId, cartItem, cartTotals
     } = action;
     const { cartItems } = state;
-    const ONE_YEAR_IN_SECONDS = 31536000;
+    const ONE_DAY_IN_SECONDS = 86400;
     const item = { ...cartItem };
     const totals = { ...cartTotals };
+    const expireTime = isSignedIn() ? ONE_HOUR : ONE_DAY_IN_SECONDS;
 
     switch (type) {
     case SET_CART_ID:
         BrowserDatabase.setItem(
             cartId,
             CART_ID_CACHE_KEY,
-            ONE_YEAR_IN_SECONDS // TODO Get info from Backend developers on cart expire time
+            expireTime
         );
 
         return {
@@ -107,7 +110,7 @@ export const CartReducer = (state = getInitialState(), action) => {
         BrowserDatabase.setItem(
             updatedCartItems,
             CART_ITEMS_CACHE_KEY,
-            ONE_YEAR_IN_SECONDS
+            expireTime
         );
 
         return {
@@ -121,7 +124,7 @@ export const CartReducer = (state = getInitialState(), action) => {
         BrowserDatabase.setItem(
             reducedCartItems,
             CART_ITEMS_CACHE_KEY,
-            ONE_YEAR_IN_SECONDS
+            expireTime
         );
 
         return {
@@ -133,7 +136,7 @@ export const CartReducer = (state = getInitialState(), action) => {
         BrowserDatabase.setItem(
             [],
             CART_ITEMS_CACHE_KEY,
-            ONE_YEAR_IN_SECONDS
+            expireTime
         );
 
         return {

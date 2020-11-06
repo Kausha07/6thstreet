@@ -14,6 +14,7 @@ import {
     getInstallmentForValue,
     verifyPayment
 } from 'Util/API/endpoint/Tabby/Tabby.enpoint';
+import { showNotification } from 'Store/Notification/Notification.action';
 import Logger from 'Util/Logger';
 import { TABBY_PAYMENT_CODES } from "Component/CheckoutPayments/CheckoutPayments.config";
 
@@ -21,14 +22,24 @@ export class CheckoutDispatcher {
     /* eslint-disable-next-line */
     async estimateShipping(dispatch, address) {
         const { Cart: { cartId } } = getStore().getState();
-
+        const { area, street } = address;
         try {
-            const { success: isAddressValid } = await validateShippingAddress({ address });
+            const response = await validateShippingAddress({ address });
+            const { success: isAddressValid } = response;
 
+            if (!isAddressValid & (area !== undefined || street !== undefined)) {
+                const { error: {parameters} } = response;
+                const message = parameters.length > 1 ? 
+                `(${parameters}) ${__('fields are not valid')}` : 
+                `(${parameters}) ${__('field is not valid')}`;
+                
+                dispatch(showNotification('error', message));
+            }
             if (isAddressValid) {
                 return await estimateShippingMethods({ cartId, address });
             }
         } catch (e) {
+            dispatch(showNotification('error', __('Some of the fields are not valid')));
             Logger.log(e);
         }
     }

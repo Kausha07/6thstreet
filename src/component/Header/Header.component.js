@@ -58,12 +58,17 @@ export class Header extends PureComponent {
         );
     };
 
+    getRedirectURL() {
+        return location.pathname.match(/checkout\/shipping/)
+            ? '/cart' : '/checkout/shipping';
+    }
+
     renderBackToShoppingButton() {
         const { isArabic } = this.state;
 
         return (
             <>
-                <a href="/">
+                <a href={ this.getRedirectURL() }>
                     <div
                       block="CheckoutHeader"
                       elem="BackToShoppingMobile"

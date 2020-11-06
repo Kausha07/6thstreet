@@ -52,10 +52,6 @@ class FooterMain extends PureComponent {
             {
                 name: "FAQ's",
                 href: '/faq'
-            },
-            {
-                name: 'Feedback',
-                href: '/contact'
             }
         ]
     },

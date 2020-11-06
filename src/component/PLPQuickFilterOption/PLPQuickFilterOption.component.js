@@ -12,12 +12,8 @@ class PLPQuickFilterOption extends PureComponent {
     static propTypes = {
         option: FilterOption.isRequired,
         isRadio: PropTypes.bool.isRequired,
-        activeFilter: PropTypes.object,
-        updateFilters: PropTypes.func.isRequired
-    };
-
-    static defaultProps = {
-        activeFilter: {}
+        updateFilters: PropTypes.func.isRequired,
+        parentCallback: PropTypes.func.isRequired
     };
 
     fieldRef = createRef();
@@ -25,8 +21,7 @@ class PLPQuickFilterOption extends PureComponent {
     optionRef = createRef();
 
     state = {
-        isArabic: isArabic(),
-        onSelectChecked: false
+        isArabic: isArabic()
     };
 
     componentDidUpdate() {
@@ -36,7 +31,17 @@ class PLPQuickFilterOption extends PureComponent {
 
     handleClick = () => {
         this.forceUpdate();
-        this.optionRef.current.children[1].click();
+        const {
+            option: {
+                facet_key,
+                facet_value
+            },
+            parentCallback
+        } = this.props;
+        const inputRef = this.optionRef.current.children[0].children[0];
+        const { checked } = inputRef;
+
+        parentCallback(facet_key, facet_value, checked);
     };
 
     renderField() {
@@ -46,27 +51,19 @@ class PLPQuickFilterOption extends PureComponent {
                 facet_value,
                 is_selected: checked
             },
-            isRadio,
-            activeFilter
+            isRadio
         } = this.props;
-        const { onSelectChecked } = this.state;
-
-        const category = Object.keys(activeFilter)[0];
-
-        if (category !== undefined) {
-            const { values } = activeFilter[category];
-            this.setState({ onSelectChecked: facet_value === values.find((value) => value === facet_value) });
-        }
 
         // TODO: fix radio ?
         const type = isRadio ? 'radio' : 'checkbox';
 
-        if (isMobile.any()) {
-            return this.renderMobileField(facet_value, facet_key, checked, onSelectChecked);
-        }
-
         return (
             <Field
+              onClick={ this.handleClick }
+              mix={ isMobile.any() ? {
+                  block: 'PLPFilterOption',
+                  elem: 'Input'
+              } : null }
               type={ type }
               id={ facet_value }
               name={ facet_key }
@@ -84,10 +81,6 @@ class PLPQuickFilterOption extends PureComponent {
         return (
             <Field
               onClick={ this.handleClick }
-              mix={ {
-                  block: 'PLPFilterOption',
-                  elem: 'Input'
-              } }
               type={ type }
               id={ facet_value }
               name={ facet_key }
