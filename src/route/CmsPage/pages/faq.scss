@@ -11,6 +11,18 @@
                 display: none;
             }
 
+            input:checked + label + .fieldsetContainer{
+                display: block;
+            }
+
+            input:checked + label > .expand > .plus-sign {
+                display: none;
+            }
+
+            input:checked + label > .expand > .minus-sign {
+                display: inline;
+            }
+
             label {
                 margin-top: 12px;
                 font-weight: var(--fw-demi);
@@ -56,14 +68,6 @@
             .plus-sign {
                 margin-right: 5px;
             }
-        }
-
-        .open > .expand > .minus-sign {
-            display: inline;
-        }
-
-        .open > .expand > .plus-sign {
-            display: none;
         }
     }
 }
