@@ -3,7 +3,7 @@
     &-Content {
         min-width: 385px;
         font-weight: var(--fw-regular);
-        overflow-y: scroll;
+        height: 100%;
 
         @include mobile() {
             min-width: 300px;
@@ -17,6 +17,12 @@
     }
 
     &-List {
+
+        &Container {
+            overflow: auto;
+            height: calc(100% - 145px);
+        }
+
         li {
             list-style: none;
             padding: 0;
@@ -36,6 +42,7 @@
 
     &-Options {
         padding: 30px 55px 10px;
+        height: 100%;
 
         @include mobile() {
             padding: 30px 20px 10px;
