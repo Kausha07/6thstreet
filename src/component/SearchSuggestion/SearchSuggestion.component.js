@@ -10,9 +10,9 @@ import './SearchSuggestion.style';
 
 class SearchSuggestion extends PureComponent {
     static propTypes = {
-        // inNothingFound: PropTypes.bool.isRequired,
-        // isEmpty: PropTypes.bool.isRequired,
-        // isActive: PropTypes.bool.isRequired,
+        inNothingFound: PropTypes.bool.isRequired,
+        isEmpty: PropTypes.bool.isRequired,
+        isActive: PropTypes.bool.isRequired,
         isLoading: PropTypes.bool.isRequired,
         products: Products.isRequired,
         brands: PropTypes.array.isRequired,
@@ -191,23 +191,23 @@ class SearchSuggestion extends PureComponent {
     }
 
     renderContent() {
-        // const {
-        //     isActive,
-        //     isEmpty,
-        //     inNothingFound
-        // } = this.props;
+        const {
+            isActive,
+            isEmpty,
+            inNothingFound
+        } = this.props;
 
-        // if (!isActive) {
-        //     return null;
-        // }
+        if (!isActive) {
+            return null;
+        }
 
-        // if (isEmpty && isActive) {
-        //     return this.renderEmptySearch();
-        // }
+        if (isEmpty && isActive) {
+            return this.renderEmptySearch();
+        }
 
-        // if (inNothingFound) {
-        //     return this.renderNothingFound();
-        // }
+        if (inNothingFound) {
+            return this.renderNothingFound();
+        }
 
         return this.renderSuggestions();
     }
