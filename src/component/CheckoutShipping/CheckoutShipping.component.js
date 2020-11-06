@@ -133,7 +133,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
              <div block="MyAccountAddressBook" elem="ContentWrapper" mods={ { formContent } }>
                 <button
                   block="MyAccountAddressBook"
-                  elem="backBtn"
+                  elem="backButton"
                   mods={ { isArabic } }
                   onClick={ this.showCards }
                 />
@@ -166,11 +166,16 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     renderButtonLabel() {
         const { isMobile } = this.state;
 
-        return isMobile ? __(' + New address') : __('Add new address');
+        return isMobile ? __('New address') : __('Add new address');
     }
 
-    renderOpenPopupButton() {
+    renderOpenPopupButton = () => {
         const { isSignedIn, formContent, isArabic } = this.state;
+        const { customer: { addresses } } = this.props;
+
+        if (addresses && (isSignedIn && addresses.length === 0)) {
+            return this.openNewForm();
+        }
 
         if (isSignedIn) {
             return (
@@ -194,7 +199,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         }
 
         return null;
-    }
+    };
 
     renderDelivery() {
         const {

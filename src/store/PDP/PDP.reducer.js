@@ -19,7 +19,8 @@ export const PDPReducer = (state = getInitialState(), action) => {
     case SET_PDP_DATA:
         const {
             response: {
-                data: product = {}
+                data: product = {},
+                nbHits
             },
             options = {}
         } = action;
@@ -28,7 +29,8 @@ export const PDPReducer = (state = getInitialState(), action) => {
             ...state,
             imageIndex: 0,
             product,
-            options
+            options,
+            nbHits
         };
 
     case SET_PDP_GALLERY_IMAGE_INDEX:

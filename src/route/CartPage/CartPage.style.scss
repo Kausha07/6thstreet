@@ -22,15 +22,18 @@
     display: flex;
     font-weight: var(--fw-regular);
     padding: 50px 0;
-    height: 100vh;
+    min-height: 100vh;
     max-width: 1440px;
     margin: 0 auto;
 
     @include mobile {
-        padding-bottom: calc(var(--navigation-tabs-height) + 120px);
         margin-bottom: 0;
         height: auto;
-        padding: 17px 20px;
+        padding: 17px 20px 0;
+
+        > section:last-of-type {
+            width: 100%;
+        }
     }
 
     &_isArabic {
@@ -48,23 +51,19 @@
         display: flex;
         flex-direction: column;
         margin-left: 100px;
-        width: 340px;
-        max-height: 65vh;
+        width: 440px;
 
         @include mobile {
             padding: 0;
             margin-left: 0;
+            max-height: calc(100vh - 182px);
             width: 100%;
         }
     }
 
     &-Items {
-        overflow: scroll;
-        max-height: 35vh;
-        overflow-x: hidden;
-
-        @include mobile {
-            max-height: 55vh;
+        @include desktop() {
+            overflow-x: hidden;
         }
     }
 
@@ -386,6 +385,11 @@
     }
 
     &-Static {
+        @include mobile {
+            max-height: calc(100vh - 182px);
+            overflow-y: scroll;
+        }
+
         &_isArabic {
             .CartItem-Wrapper img {
                 margin-right: 0;
@@ -416,22 +420,36 @@
     }
 
     &-Heading {
-        height: 3rem;
-        margin-top: 2rem;
-        margin-bottom: 1.5rem;
-        font-size: 20px;
-        font-weight: var(--fw-bold);
-        text-transform: capitalize;
+        font-size: 16px;
+        font-weight: var(--fw-demi);
+        text-transform: uppercase;
+        text-align: center;
 
-        span {
-            font-weight: var(--fw-regular);
+        @include desktop() {
+            font-size: 20px;
+            height: 3rem;
+            margin-bottom: 1.5rem;
+            margin-top: 2rem;
+            text-align: left;
+            text-transform: capitalize;
+
+            span {
+                font-weight: var(--fw-regular);
+            }
         }
     }
 
-    .CartItem-Actions {
-        @include tablet {
-            flex-direction: column-reverse;
-            justify-content: center;
+    .CartItem {
+        @include desktop {
+            margin-bottom: 0;
+            margin-top: 0;
+        }
+
+        &-Actions {
+            @include tablet {
+                flex-direction: column-reverse;
+                justify-content: center;
+            }
         }
     }
 
@@ -535,50 +553,6 @@
             }
         }
 
-
-        .CartCoupon {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 50px;
-            margin-bottom: 15px;
-            border: 1px solid var(--color-light-gray);
-
-            &-Input {
-                margin: 0;
-                height: 100%;
-                width: 100%;
-                font-size: 13px;
-                text-transform: capitalize;
-
-                input:focus, textarea:focus, select:focus {
-                    border: 1px solid var(--color-black);
-                }
-
-                @include mobile {
-                    font-size: 11px;
-                }
-            }
-
-            &-Button {
-                margin: 0;
-                background-color: var(--color-white);
-                border: 1px solid var(--color-light-gray);
-                color: var(--color-light-gray);
-
-                &:not([disabled]):hover,
-                &:not([disabled]):focus {
-                    color: var(--color-black);
-                    border: 1px solid var(--color-black);
-                }
-
-                @include mobile {
-                    width: 25%;
-                    font-size: 11px;
-                }
-            }
-        }
-
         &-Body {
             @include mobile {
                 display: block;
@@ -617,6 +591,24 @@
         }
 
         &-TabContent {
+            display: none;
+        }
+    }
+
+    &-BackArrow {
+        background-image: url(./icons/close-black.png);
+        background-size: cover;
+        height: 14px;
+        position: absolute;
+        width: 14px;
+        top: 3px;
+        z-index: 10;
+
+        button {
+            height: 14px;
+        }
+
+        @include after-mobile {
             display: none;
         }
     }

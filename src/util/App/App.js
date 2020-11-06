@@ -10,13 +10,21 @@ export const getCurrency = () => {
     return currency || '';
 };
 
+export const getDiscountFromTotals = (totalSegments, totalsCode) => {
+    const { value } = totalSegments.find(({ code }) => code === totalsCode) || { value: 0 };
+
+    return value;
+};
+
 export const isDiscountApplied = (cartTotals, totalsCode) => {
     const { total_segments: totals = [] } = cartTotals || {};
-    const { value: storeCreditBalance } = totals.find(({ code }) => code === totalsCode) || 0;
+    const value = getDiscountFromTotals(totals, totalsCode);
 
-    return !!(storeCreditBalance && storeCreditBalance !== 0);
+    return !!(value && value !== 0);
 };
 
 export const isArabic = () => JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data.language === 'ar';
+
+export const capitalize = (s) => s && s[0].toUpperCase() + s.slice(1);
 
 export default {};

@@ -17,6 +17,7 @@ import { isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
 
 import fitlerImage from './icons/filter-button.png';
+import { SIZES } from './PLPFilters.config';
 
 import './PLPFilters.style';
 
@@ -29,18 +30,23 @@ class PLPFilters extends PureComponent {
         hideActiveOverlay: PropTypes.isRequired,
         goToPreviousNavigationState: PropTypes.isRequired,
         onReset: PropTypes.func.isRequired,
-        productsCount: PropTypes.string.isRequired
+        productsCount: PropTypes.string.isRequired,
+        activeFilters: PropTypes.object.isRequired
     };
 
     state = {
         isOpen: false,
         activeFilter: undefined,
         isArabic: isArabic(),
-        activeFilters: {}
+        activeFilters: {},
+        isReset: false
     };
 
     static getDerivedStateFromProps(props, state) {
-        const { activeOverlay, filters } = props;
+        const {
+            activeOverlay,
+            filters
+        } = props;
         const { activeFilter } = state;
 
         if (isMobile.any()) {
@@ -71,13 +77,20 @@ class PLPFilters extends PureComponent {
 
     renderFilters() {
         const { filters } = this.props;
-        return Object.entries(filters).map(this.renderFilter);
+        return Object.entries(filters).map((filter) => {
+            if (filter[0] === SIZES && !isMobile.any()) {
+                const { data } = filter[1];
+                return Object.keys(data).map((size) => this.renderFilter([size, data[size]]));
+            }
+
+            return this.renderFilter([filter[0], filter[1]]);
+        });
     }
 
     renderQuickFilters() {
         const { filters } = this.props;
 
-        return Object.entries(filters).map(this.renderQuickFilter);
+        return Object.entries(filters).map(this.renderQuickFilter.bind(this));
     }
 
     renderPlaceholder() {
@@ -91,8 +104,6 @@ class PLPFilters extends PureComponent {
             hideActiveOverlay();
             goToPreviousNavigationState();
         }
-
-        this.setState({ activeFilters: {} });
 
         document.body.style.overflow = 'visible';
     };
@@ -110,15 +121,14 @@ class PLPFilters extends PureComponent {
             goToPreviousNavigationState();
         }
 
-        this.setState({ activeFilters: {} });
+        this.setState({ activeFilters: {}, isReset: true });
 
         onReset();
     };
 
     onShowResultButton = () => {
         const { activeFilters } = this.state;
-
-        Object.keys(activeFilters).map((key) => WebUrlParser.setParam(key, activeFilters[key]));
+        Object.keys(activeFilters || {}).map((key) => WebUrlParser.setParam(key, activeFilters[key]));
         this.hidePopUp();
     };
 
@@ -139,6 +149,12 @@ class PLPFilters extends PureComponent {
         );
     }
 
+    onClose = () => {
+        const { activeFilters } = this.props;
+        this.hidePopUp();
+        this.setState({ activeFilters });
+    };
+
     renderCloseButton() {
         const { isArabic } = this.state;
 
@@ -148,7 +164,7 @@ class PLPFilters extends PureComponent {
               elem="CloseBtn"
               mods={ { isArabic } }
               aria-label={ __('Close') }
-              onClick={ this.hidePopUp }
+              onClick={ this.onClose }
             />
         );
     }
@@ -190,14 +206,6 @@ class PLPFilters extends PureComponent {
     }
 
     renderFilterButton() {
-        const { activeFilters } = this.state;
-        const { count } = activeFilters ? Object.entries(activeFilters).reduce((prev, [_key, value]) => ({
-            count: prev.count + value.length
-        }), { count: 0 })
-            : (
-                { count: 0 }
-            );
-
         return (
             <button
               onClick={ this.handleFilterClick }
@@ -208,7 +216,6 @@ class PLPFilters extends PureComponent {
             >
                 <img src={ fitlerImage } alt="fitler" />
                 { __('refine ') }
-                { `(${count})` }
             </button>
         );
     }
@@ -260,7 +267,7 @@ class PLPFilters extends PureComponent {
     }
 
     renderFilter = ([key, filter]) => {
-        const { activeFilter } = this.state;
+        const { activeFilter, isReset, activeFilters } = this.state;
 
         return (
             <PLPFilter
@@ -269,18 +276,62 @@ class PLPFilters extends PureComponent {
               parentCallback={ this.handleCallback }
               currentActiveFilter={ activeFilter }
               changeActiveFilter={ this.changeActiveFilter }
+              isReset={ isReset }
+              resetParentState={ this.resetParentState }
+              parentActiveFilters={ activeFilters }
             />
         );
     };
 
-    handleCallback = (category, values) => {
+    resetParentState = () => {
+        this.setState({ isReset: false });
+    };
+
+    handleCallback = (initialFacetKey, facet_value, checked, isRadio, isQuickFilters) => {
         const { activeFilters } = this.state;
-        this.setState({
-            activeFilters: {
-                ...activeFilters,
-                [category]: values
+        const filterArray = activeFilters[initialFacetKey];
+
+        if (!isRadio) {
+            if (checked) {
+                this.setState({
+                    activeFilters: {
+                        ...activeFilters,
+                        [initialFacetKey]: filterArray ? [...filterArray, facet_value] : [facet_value]
+                    }
+                }, () => this.select(isQuickFilters));
+            } else if (filterArray) {
+                const index = filterArray.indexOf(facet_value);
+                if (index > -1) {
+                    filterArray.splice(index, 1);
+                }
+                this.setState({
+                    activeFilters: {
+                        [initialFacetKey]: filterArray
+                    }
+                }, () => this.select());
+            } else {
+                this.setState({
+                    activeFilters: {
+                        [initialFacetKey]: []
+                    }
+                }, () => this.select());
             }
-        });
+        } else {
+            this.setState({
+                ...activeFilters,
+                activeFilters: {
+                    [initialFacetKey]: facet_value
+                }
+            }, () => this.select());
+        }
+    };
+
+    select = (isQuickFilters) => {
+        const { activeFilters } = this.state;
+
+        if (!isMobile.any() || isQuickFilters) {
+            Object.keys(activeFilters || {}).map((key) => WebUrlParser.setParam(key, activeFilters[key]));
+        }
     };
 
     renderQuickFilter = ([key, filter]) => {
@@ -302,6 +353,7 @@ class PLPFilters extends PureComponent {
                       filter={ filter }
                       updateFilters={ this.updateFilters }
                       onClick={ this.updateFilters }
+                      parentCallback={ this.handleCallback }
                     />
                 );
             }
@@ -312,6 +364,7 @@ class PLPFilters extends PureComponent {
                   filter={ filter }
                   updateFilters={ this.updateFilters }
                   onClick={ this.updateFilters }
+                  parentCallback={ this.handleCallback }
                 />
             );
         }

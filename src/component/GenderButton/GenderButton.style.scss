@@ -33,13 +33,20 @@
         pointer-events: all;
         z-index: 2;
 
-        &_isCurrentGender
+        &_isCurrentGender,
+        &:hover
         {
             border-bottom: 2px solid var(--black);
             font-weight: var(--fw-bold);
             font-size: 14.4px;
             letter-spacing: 0;
             transition-duration: unset;
+        }
+
+        &_isUnsetStyle
+        {
+            border-bottom: 0;
+            font-weight: var(--fw-regular);
         }
 
         @include desktop {

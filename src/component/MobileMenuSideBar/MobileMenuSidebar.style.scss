@@ -24,6 +24,12 @@
             .GenderButton {
                 display: flex;
             }
+
+            .SearchBackground,
+            .HeaderSearch
+            {
+                display: none;
+            }
         }
 
         @include tablet {

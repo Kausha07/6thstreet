@@ -13,13 +13,11 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
-import { CHECKOUT_URL } from 'Route/Checkout/Checkout.config';
 import { CUSTOMER_ACCOUNT, CUSTOMER_SUB_ACCOUNT } from 'SourceComponent/Header/Header.config';
 import { changeNavigationState, goToPreviousNavigationState } from 'Store/Navigation/Navigation.action';
 import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { hideActiveOverlay, toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
-// import { isSignedIn } from 'Util/Auth';
 import history from 'Util/History';
 import isMobile from 'Util/Mobile';
 
@@ -157,7 +155,6 @@ export class MyAccountOverlayContainer extends PureComponent {
         const { isSignedIn: prevIsSignedIn } = prevProps;
         const { state: oldMyAccountState } = prevState;
         const { state: newMyAccountState } = this.state;
-        const { location: { pathname } } = history;
 
         const {
             isSignedIn,
@@ -172,14 +169,9 @@ export class MyAccountOverlayContainer extends PureComponent {
 
         if (isSignedIn !== prevIsSignedIn) {
             hideActiveOverlay();
-
             if (isCheckout) {
                 goToPreviousHeaderState();
             }
-        }
-
-        if (!pathname.includes(CHECKOUT_URL) && newMyAccountState === STATE_LOGGED_IN) {
-            history.push({ pathname: '/my-account/dashboard' });
         }
     }
 
@@ -194,7 +186,6 @@ export class MyAccountOverlayContainer extends PureComponent {
 
         const state = {
             state: STATE_SIGN_IN,
-            // state: isSignedIn() ? STATE_LOGGED_IN : STATE_SIGN_IN,
             // eslint-disable-next-line react/no-unused-state
             isPasswordForgotSend,
             isLoading: false
@@ -380,6 +371,15 @@ export class MyAccountOverlayContainer extends PureComponent {
     }
 
     render() {
+        const { state } = this.state;
+        const { hideActiveOverlay } = this.props;
+
+        if (state === 'loggedIn') {
+            hideActiveOverlay();
+
+            return null;
+        }
+
         return (
             <MyAccountOverlay
               { ...this.props }

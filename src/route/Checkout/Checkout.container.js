@@ -29,7 +29,8 @@ export const mapDispatchToProps = (dispatch) => ({
     setCartId: (cartId) => dispatch(setCartId(cartId)),
     createEmptyCart: () => CartDispatcher.getCart(dispatch),
     hideActiveOverlay: () => dispatch(hideActiveOverlay()),
-    updateStoreCredit: () => StoreCreditDispatcher.getStoreCredit(dispatch)
+    updateStoreCredit: () => StoreCreditDispatcher.getStoreCredit(dispatch),
+    setMeta: (meta) => dispatch(updateMeta(meta))
 });
 export const mapStateToProps = (state) => ({
     totals: state.CartReducer.cartTotals,
@@ -43,11 +44,19 @@ export const mapStateToProps = (state) => ({
 export class CheckoutContainer extends SourceCheckoutContainer {
     static propTypes = {
         updateStoreCredit: PropTypes.func.isRequired,
-        isSignedIn: PropTypes.bool.isRequired
+        isSignedIn: PropTypes.bool.isRequired,
+        setMeta: PropTypes.func.isRequired
+    };
+
+    state = {
+        ...this.state,
+        isLoading: false
     };
 
     componentDidMount() {
-        updateMeta({ title: __('Checkout') });
+        const { setMeta } = this.props;
+
+        setMeta({ title: __('Checkout') });
     }
 
     componentDidUpdate() {
@@ -78,7 +87,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
         /* eslint-disable */
         delete address.region_id;
-
+        Checkout.setState({ isLoading: true });
         estimateShipping({
             ...address,
             default_shipping: true
@@ -86,9 +95,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             (response) => {
                 if (typeof response !== 'undefined') {
                     Checkout.setState({
-                        shippingMethods: response.data
+                        shippingMethods: response.data,
+                        isLoading: false
                     })
                 }
+                Checkout.setState({ isLoading: false });
             },
             this._handleError
         );
@@ -196,7 +207,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
     async savePaymentMethodAndPlaceOrder(paymentInformation) {
         const { paymentMethod: { code, additional_data } } = paymentInformation;
-        const { createOrder, customer: { email: customerEmail } } = this.props;
+        const { createOrder, customer: { email: customerEmail }, showErrorNotification } = this.props;
         const { shippingAddress: { email } } = this.state;
 
         const data = code === CARD
@@ -220,12 +231,23 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
         try {
             createOrder(code, data).then(
-                ({ data }) => {
-                    const { order_id, success, response_code } = data;
+                (response) => {
+                    if (response && response.data) {
+                        const { data } = response;
 
-                    if (success || response_code === 200) {
-                        this.setDetailsStep(order_id);
-                        this.resetCart();
+                        if (typeof data === 'object') {
+                            const { order_id, success, response_code } = data;
+
+                            if (success || response_code === 200) {
+                                this.setDetailsStep(order_id);
+                                this.resetCart();
+                            }
+                        }
+
+                        if (typeof data === 'string') {
+                            showErrorNotification(__(data));
+                            this.setState({ isLoading: false });
+                        }
                     }
                 },
                 this._handleError

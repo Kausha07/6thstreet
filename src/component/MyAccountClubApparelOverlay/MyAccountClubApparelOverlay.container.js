@@ -2,7 +2,9 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import ClubApparelDispatcher from 'Store/ClubApparel/ClubApparel.dispatcher';
 import { hideActiveOverlay } from 'Store/Overlay/Overlay.action';
+import { customerType } from 'Type/Account';
 
 import MyAccountClubApparelOverlay from './MyAccountClubApparelOverlay.component';
 import {
@@ -12,54 +14,110 @@ import {
     STATE_VERIFY
 } from './MyAccountClubApparelOverlay.config';
 
+export const mapStateToProps = (_state) => ({
+    customer: _state.MyAccountReducer.customer
+});
+
 export const mapDispatchToProps = (dispatch) => ({
-    hideActiveOverlay: () => dispatch(hideActiveOverlay())
+    hideActiveOverlay: () => dispatch(hideActiveOverlay()),
+    linkAccount: (data) => ClubApparelDispatcher.linkAccount(dispatch, data),
+    verifyOtp: (data) => ClubApparelDispatcher.verifyOtp(dispatch, data)
 });
 
 export class MyAccountClubApparelOverlayContainer extends PureComponent {
     static propTypes = {
-        linkAccount: PropTypes.func.isRequired
+        linkAccount: PropTypes.func.isRequired,
+        verifyOtp: PropTypes.func.isRequired,
+        customer: customerType
+    };
+
+    static defaultProps = {
+        customer: null
     };
 
     state = {
         state: STATE_LINK,
-        phone: ''
+        phone: '',
+        isLoading: false
     };
 
     containerFunctions = () => ({
-        handleVerify: this.handleVerify.bind(this),
-        handleSuccess: this.handleSuccess.bind(this)
+        linkAccount: this.linkAccount.bind(this),
+        verifyOtp: this.verifyOtp.bind(this)
     });
 
     containerProps = () => {
-        const { state, phone, countryPhoneCode } = this.state;
+        const {
+            state,
+            phone,
+            countryPhoneCode,
+            isLoading
+        } = this.state;
 
-        return { state, phone, countryPhoneCode };
+        return {
+            state,
+            phone,
+            countryPhoneCode,
+            isLoading
+        };
     };
 
-    handleVerify(fields) {
-        const { linkAccount } = this.props;
+    linkAccount(fields) {
+        const { customer: { id }, linkAccount } = this.props;
         const { phone, countryPhoneCode } = fields;
+        const formattedPhone = `00${countryPhoneCode.substr(1)}${phone}`;
+        this.setState({ isLoading: true });
 
-        this.setState({
-            state: STATE_VERIFY,
-            countryPhoneCode,
-            phone
-        });
+        linkAccount({ customerId: id, mobileNo: formattedPhone }).then(
+            (response) => {
+                // TODO: Create response processing after Club Apparel will begin work on Client side
+                if (response) {
+                    const { data: { memberId } } = response;
 
-        linkAccount(fields);
+                    this.setState({
+                        state: STATE_VERIFY,
+                        countryPhoneCode,
+                        memberId,
+                        phone: formattedPhone,
+                        isLoading: false
+                    });
+                } else {
+                    this.setState({
+                        state: STATE_NOT_SUCCESS,
+                        isLoading: false
+                    });
+                }
+            },
+            this._handleError
+        );
     }
 
-    handleSuccess(e) {
-        e.preventDefault();
-        e.nativeEvent.stopImmediatePropagation();
-        this.setState({ state: STATE_SUCCESS });
-    }
+    verifyOtp(fields) {
+        const { customer: { id }, verifyOtp } = this.props;
+        const { otp } = fields;
+        const { memberId, phone } = this.state;
 
-    handleNotSucces(e) {
-        e.preventDefault();
-        e.nativeEvent.stopImmediatePropagation();
-        this.setState({ state: STATE_NOT_SUCCESS });
+        verifyOtp({
+            customerId: id,
+            otp,
+            memberId,
+            mobileNo: phone
+        }).then(
+            (response) => {
+                if (response) {
+                    this.setState({
+                        state: STATE_SUCCESS,
+                        isLoading: false
+                    });
+                } else {
+                    this.setState({
+                        state: STATE_NOT_SUCCESS,
+                        isLoading: false
+                    });
+                }
+            },
+            this._handleError
+        );
     }
 
     render() {
@@ -73,4 +131,4 @@ export class MyAccountClubApparelOverlayContainer extends PureComponent {
     }
 }
 
-export default connect(null, mapDispatchToProps)(MyAccountClubApparelOverlayContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(MyAccountClubApparelOverlayContainer);

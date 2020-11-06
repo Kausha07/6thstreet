@@ -9,6 +9,7 @@
     },
     "scripts": {
         "start": "scandipwa-scripts start",
+        "start-ar": "scandipwa-scripts start --locale ar_SA",
         "build": "scandipwa-scripts build"
     },
     "browserslist": {

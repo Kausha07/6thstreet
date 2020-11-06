@@ -4,20 +4,27 @@ import { connect } from 'react-redux';
 
 import { setGender } from 'Store/AppState/AppState.action';
 import { toggleBreadcrumbs } from 'Store/Breadcrumbs/Breadcrumbs.action';
+import { updateMeta } from 'Store/Meta/Meta.action';
+import { getCountriesForSelect } from 'Util/API/endpoint/Config/Config.format';
 import { getStaticFile } from 'Util/API/endpoint/StaticFiles/StaticFiles.endpoint';
+import { capitalize } from 'Util/App';
 import Logger from 'Util/Logger';
+import isMobile from 'Util/Mobile';
 
 import HomePage from './HomePage.component';
 import { HOME_STATIC_FILE_KEY } from './HomePage.config';
 
 export const mapStateToProps = (state) => ({
     gender: state.AppState.gender,
-    locale: state.AppState.locale
+    locale: state.AppState.locale,
+    country: state.AppState.country,
+    config: state.AppConfig.config
 });
 
-export const mapDispatchToProps = (_dispatch) => ({
-    toggleBreadcrumbs: (areBreadcrumbsVisible) => _dispatch(toggleBreadcrumbs(areBreadcrumbsVisible)),
-    setGender: (gender) => _dispatch(setGender(gender))
+export const mapDispatchToProps = (dispatch) => ({
+    toggleBreadcrumbs: (areBreadcrumbsVisible) => dispatch(toggleBreadcrumbs(areBreadcrumbsVisible)),
+    setGender: (gender) => dispatch(setGender(gender)),
+    setMeta: (meta) => dispatch(updateMeta(meta))
 });
 
 export class HomePageContainer extends PureComponent {
@@ -25,7 +32,10 @@ export class HomePageContainer extends PureComponent {
         setGender: PropTypes.func.isRequired,
         gender: PropTypes.string.isRequired,
         locale: PropTypes.string.isRequired,
-        toggleBreadcrumbs: PropTypes.func.isRequired
+        toggleBreadcrumbs: PropTypes.func.isRequired,
+        setMeta: PropTypes.func.isRequired,
+        country: PropTypes.string.isRequired,
+        config: PropTypes.object.isRequired
     };
 
     state = {
@@ -44,9 +54,13 @@ export class HomePageContainer extends PureComponent {
     componentDidMount() {
         this.setUrlGender();
         const { gender } = this.props;
-        const { urlGender } = this.state;
-        if (gender === '' && urlGender === '') {
+
+        this.setMetaData(gender);
+
+        if (gender === '') {
             this.setDefaultGender();
+        } else {
+            this.requestDynamicContent(true, gender);
         }
     }
 
@@ -61,14 +75,13 @@ export class HomePageContainer extends PureComponent {
             toggleBreadcrumbs
         } = this.props;
         const { urlGender } = this.state;
-
         if (urlGender !== '') {
             setGender(urlGender);
         }
-
         toggleBreadcrumbs(false);
 
         if (gender !== prevGender || locale !== prevLocale) {
+            this.setMetaData(gender);
             this.requestDynamicContent(true, urlGender);
         }
     }
@@ -78,15 +91,47 @@ export class HomePageContainer extends PureComponent {
         const { defaultGender } = this.state;
         setGender(defaultGender);
         this.setState({ urlGender: defaultGender });
+        this.requestDynamicContent(true, defaultGender);
     }
 
     setUrlGender() {
         const urlWithoutSeparator = location.pathname.split('/');
-        this.setState({ urlGender: urlWithoutSeparator[1].split('.')[0].toLowerCase() });
+        const urlGender = urlWithoutSeparator[1].split('.')[0].toLowerCase();
+        this.setState({ urlGender });
+        return urlGender;
+    }
+
+    setMetaData(gender) {
+        const { setMeta, country, config } = this.props;
+        const countryList = getCountriesForSelect(config);
+        const { label: countryName = '' } = countryList.find((obj) => obj.id === country) || {};
+        const genderName = capitalize(gender);
+
+        setMeta({
+            title: __(
+                '%s Online Shopping - shoes, bags, clothing | 6thStreet %s', genderName, countryName
+            ),
+            keywords: __(
+                'online shopping for %s, %s online shopping, %s',
+                ...Array(2).fill(genderName),
+                countryName
+            ),
+            description: __(
+                // eslint-disable-next-line max-len
+                'Shop for %s fashion brands in %s. Exclusive collection of shoes, clothing, bags, grooming - Online Shopping ✯ Free Delivery ✯ COD ✯ 100% original brands - 6thStreet',
+                genderName,
+                countryName
+            )
+        });
+    }
+
+    getDevicePrefix() {
+        return isMobile.any() ? 'm/' : 'd/';
     }
 
     async requestDynamicContent(isUpdate = false) {
         const { gender } = this.props;
+        const devicePrefix = this.getDevicePrefix();
 
         if (isUpdate) {
             // Only set loading if this is an update
@@ -96,7 +141,7 @@ export class HomePageContainer extends PureComponent {
         try {
             const dynamicContent = await getStaticFile(
                 HOME_STATIC_FILE_KEY,
-                { $FILE_NAME: `${gender}.json` }
+                { $FILE_NAME: `${devicePrefix}${gender}.json` }
             );
 
             this.setState({

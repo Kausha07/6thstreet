@@ -153,12 +153,10 @@ export class CartItem extends PureComponent {
         // TODO: implement shared-transition here?
 
         return (
-            <button onClick={ this.routeToProduct } block="CartItem" elem="Link">
-                <figure block="CartItem" elem="Wrapper">
-                    { this.renderImage() }
-                    { this.renderContent() }
-                </figure>
-            </button>
+            <figure block="CartItem" elem="Wrapper">
+                { this.renderImage() }
+                { this.renderContent() }
+            </figure>
         );
     }
 
@@ -295,7 +293,7 @@ export class CartItem extends PureComponent {
               block="CartItem"
               elem="Price"
             >
-                { basePrice === row_total ? withoutDiscount : withDiscount }
+                { basePrice === row_total || !basePrice ? withoutDiscount : withDiscount }
             </div>
         );
     }
@@ -354,6 +352,7 @@ export class CartItem extends PureComponent {
                 { this.renderProductConfigurations() }
                 { this.renderColSizeQty() }
                 { this.renderProductPrice() }
+                { this.renderActions() }
             </figcaption>
         );
     }
@@ -433,7 +432,6 @@ export class CartItem extends PureComponent {
             <li block="CartItem">
                 <Loader isLoading={ isLoading } />
                 { this.renderWrapper() }
-                { this.renderActions() }
             </li>
         );
     }

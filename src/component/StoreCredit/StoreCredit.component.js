@@ -20,6 +20,15 @@ export class StoreCredit extends PureComponent {
         creditIsApplied: false
     };
 
+    componentDidMount() {
+        const { creditIsApplied } = this.props;
+        const { pathname } = location;
+
+        if (this.hasCredit() && pathname === '/checkout' && !creditIsApplied) {
+            this.handleCheckboxChange();
+        }
+    }
+
     hasCredit() {
         const { storeCreditBalance } = this.props;
 

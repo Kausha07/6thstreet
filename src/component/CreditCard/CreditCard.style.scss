@@ -66,9 +66,18 @@
             width: 61px;
             height: 36px;
             padding: 0 7px;
-            margin-left: 52px;
+            margin: 0 10px;
             letter-spacing: 2px;
             border-radius: 6px;
+        }
+
+        &Logo {
+            margin: 0 10px;
+            
+            img {
+                height: 30px;
+                width: auto;
+            }
         }
     }
 
@@ -90,6 +99,7 @@
     &-Row {
         display: flex;
         align-items: center;
+        justify-content: space-between;
     }
 
     &-Info {
@@ -123,13 +133,6 @@
 .PageWrapper {
     &_isArabic {
         .CreditCard {
-            &-Card {
-                #cvv {
-                    margin-left: 0;
-                    margin-right: 52px;
-                }
-            }
-
             &-Secure {     
                 img {
                     margin:0 0 0 5px;

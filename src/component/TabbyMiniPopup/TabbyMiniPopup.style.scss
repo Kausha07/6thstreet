@@ -63,6 +63,13 @@
         box-sizing: border-box;
         border-radius: 17px;
         color: var(--tabby-popup-text-color-dark);
+        animation-name: tabby_show_up;
+        animation-duration: 1s;
+
+        @keyframes tabby_show_up {
+            from {opacity: 0}
+            to {opacity: 1}
+        }
 
         @include desktop {
             max-width: 710px;

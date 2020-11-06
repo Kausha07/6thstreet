@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 
+import CountryMiniFlag from 'Component/CountryMiniFlag';
 import {
     MyAccountAddressForm as SourceMyAccountAddressForm
 } from 'SourceComponent/MyAccountAddressForm/MyAccountAddressForm.component';
@@ -8,7 +9,10 @@ import { countriesType } from 'Type/Config';
 import { isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
 
-import { PHONE_CODES } from './MyAccountAddressForm.config';
+import {
+    COUNTRY_CODES_FOR_PHONE_VALIDATION,
+    PHONE_CODES
+} from './MyAccountAddressForm.config';
 
 export class MyAccountAddressForm extends SourceMyAccountAddressForm {
     static propTypes = {
@@ -126,6 +130,20 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
         return PHONE_CODES[countryId];
     }
 
+    getValidationForTelephone() {
+        const { default_country } = this.props;
+
+        return COUNTRY_CODES_FOR_PHONE_VALIDATION[default_country]
+            ? 'telephoneAE' : 'telephone';
+    }
+
+    getPhoneNumberMaxLength() {
+        const { default_country } = this.props;
+
+        return COUNTRY_CODES_FOR_PHONE_VALIDATION[default_country]
+            ? '9' : '8';
+    }
+
     renderStreetPlaceholder() {
         return isMobile.any() || isMobile.tablet()
             ? __('Street address')
@@ -156,7 +174,7 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
         return {
             country_id: {
                 type: 'select',
-                label: 'Delivery Country',
+                label: <CountryMiniFlag label={ countryId } />,
                 validation: ['notEmpty'],
                 value: countryId,
                 autocomplete: 'none',
@@ -184,13 +202,15 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
                 type: 'hidden'
             },
             phonecode: {
-                type: countryId,
+                type: 'text',
+                label: <CountryMiniFlag label={ countryId } />,
                 validation: ['notEmpty'],
                 value: this.renderCurrentPhoneCode(),
                 autocomplete: 'none'
             },
             telephone: {
-                validation: ['notEmpty'],
+                validation: ['notEmpty', this.getValidationForTelephone()],
+                maxLength: this.getPhoneNumberMaxLength(),
                 placeholder: __('Phone Number')
             },
             city: {

@@ -3,6 +3,7 @@
     &-Content {
         min-width: 385px;
         font-weight: var(--fw-regular);
+        overflow-y: scroll;
 
         @include mobile() {
             min-width: 300px;

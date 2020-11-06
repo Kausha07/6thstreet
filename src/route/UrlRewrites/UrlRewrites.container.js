@@ -42,16 +42,19 @@ export class UrlRewritesContainer extends PureComponent {
         this.requestUrlRewrite();
     }
 
-    componentDidUpdate(prevProps) {
-        const { location: { pathname }, locale, hideActiveOverlay } = this.props;
+    componentDidUpdate(prevProps, prevState) {
+        const { pathname } = location;
+        const { locale, hideActiveOverlay } = this.props;
         const { locale: prevLocale } = prevProps;
         const { prevPathname } = this.state;
+        const { prevPathname: prevStatePathname } = prevState;
 
         if (
             pathname !== prevPathname
-            || locale !== prevLocale
+            || locale !== prevLocale || !prevStatePathname
         ) {
             hideActiveOverlay();
+            document.body.style.overflow = 'visible';
             // Request URL rewrite if pathname or locale changed
             this.requestUrlRewrite(true);
         }
@@ -59,8 +62,7 @@ export class UrlRewritesContainer extends PureComponent {
 
     async requestUrlRewrite(isUpdate = false) {
         // TODO: rename this to pathname, urlParam is strange
-        const { location: { pathname: urlParam } } = this.props;
-
+        const { pathname: urlParam } = location;
         const slicedUrl = urlParam.slice(urlParam.search('id/'));
         // eslint-disable-next-line no-magic-numbers
         const magentoProductId = Number((slicedUrl.slice('3')).split('/')[0]);
