@@ -157,7 +157,6 @@ class MobileBottomBar extends NavigationAbstract {
     renderWishlist() {
         const {
             isBottomBar,
-            accountPopUp,
             isLoggedIn,
             isWishlist,
             isCategoryMenu
@@ -182,7 +181,6 @@ class MobileBottomBar extends NavigationAbstract {
                       key="wishlist"
                     />
                 </button>
-                { accountPopUp }
             </div>
         );
     }
