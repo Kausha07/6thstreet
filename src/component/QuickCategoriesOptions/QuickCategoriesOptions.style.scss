@@ -25,6 +25,19 @@
                     &-List {
                         border: 0;
                         display: inline-table;
+
+                        .Field {
+                            [type='checkbox'],
+                            [type='radio'] {
+                                + label {
+                                    top: 10px;
+
+                                    @include desktop {
+                                        top: 0;
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
 
