@@ -1,7 +1,7 @@
 :root {
     --dark-gray: #b8b8b8;
-    --middle-gray: #b7b7b7;
-    --light-gray: #cacaca
+    --light-gray: #cacaca;
+    --middle-gray: #b7b7b7
 }
 
 .MyAccountCustomerForm {
@@ -28,8 +28,8 @@
             min-height: 470px;
 
             .Button {
-                position: absolute;
                 bottom: 0;
+                position: absolute;
             }
         }
     }
@@ -104,12 +104,6 @@
                         width: 14px;
                     }
 
-                    &:hover {
-                        &::after {
-                            --checkmark-color: var(--black-color);
-                        }
-                    }
-
                     &::after {
                         border-radius: 50%;
                         bottom: 0;
@@ -131,6 +125,10 @@
 
                 &:checked + label {
                     --primary-base-color: var(--black-color);
+
+                    &:after {
+                        display: none;
+                    }
                 }
 
                 &:not(:checked) + label + span {
@@ -189,7 +187,6 @@
     }
 
     .MyAccountPasswordForm {
-        margin-top: 20px;
 
         @include mobile() {
             background: $white;
@@ -382,8 +379,6 @@
         }
 
         .MyAccountPasswordForm {
-            margin-top: 0;
-
             &-Title {
                 margin: 18px 0 8px;
             }
