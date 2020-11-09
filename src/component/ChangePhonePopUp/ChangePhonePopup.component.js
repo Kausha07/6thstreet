@@ -5,6 +5,7 @@ import CountryMiniFlag from 'Component/CountryMiniFlag';
 import Field from 'Component/Field';
 import Form from 'Component/Form';
 import { PHONE_CODES } from 'Component/MyAccountAddressForm/MyAccountAddressForm.config';
+import { isArabic } from 'Util/App';
 
 import './ChangePhonePopup.style.scss';
 
@@ -17,7 +18,8 @@ class ChangePhonePopup extends PureComponent {
     };
 
     state = {
-        phoneValidation: ['telephone']
+        phoneValidation: ['telephone'],
+        isArabic: isArabic()
     };
 
     componentDidMount() {
@@ -70,7 +72,7 @@ class ChangePhonePopup extends PureComponent {
             changePhone,
             countryId
         } = this.props;
-        const { phoneValidation } = this.state;
+        const { phoneValidation, isArabic } = this.state;
 
         return (
             <div
@@ -96,6 +98,7 @@ class ChangePhonePopup extends PureComponent {
                         <div
                           block="ChangePhonePopup"
                           elem="Fields"
+                          mods={ { isArabic } }
                         >
                             <Field
                               mix={ {
@@ -104,7 +107,6 @@ class ChangePhonePopup extends PureComponent {
                               } }
                               label={ <CountryMiniFlag label={ countryId } /> }
                               value={ this.renderCurrentPhoneCode() }
-                              validation={ phoneValidation }
                             />
                             <Field
                               mix={ {
@@ -114,7 +116,7 @@ class ChangePhonePopup extends PureComponent {
                               type="text"
                               name="newPhone"
                               id="newPhone"
-                              validation={ ['telephone'] }
+                              validation={ phoneValidation }
                             />
                         </div>
                         <button

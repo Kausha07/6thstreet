@@ -107,24 +107,28 @@ export class CheckoutSuccess extends PureComponent {
         );
     };
 
-    renderSuccessMessage = (email) => (
-        <div block="SuccessMessage">
-            <div block="SuccessMessage" elem="Icon">
-                <img src={ SuccessCircle } alt="success circle" />
+    renderSuccessMessage = (email) => {
+        const { isArabic } = this.state;
+
+        return (
+            <div block="SuccessMessage" mods={ { isArabic } }>
+                <div block="SuccessMessage" elem="Icon">
+                    <img src={ SuccessCircle } alt="success circle" />
+                </div>
+                <div block="SuccessMessage" elem="Text">
+                    <div block="SuccessMessage-Text" elem="Title">
+                        { __('Order Placed') }
+                    </div>
+                    <div block="SuccessMessage-Text" elem="Message">
+                        { __('Order confirmation has been sent to') }
+                    </div>
+                    <div block="SuccessMessage-Text" elem="Email">
+                        { email }
+                    </div>
+                </div>
             </div>
-            <div block="SuccessMessage" elem="Text">
-                <div block="SuccessMessage-Text" elem="Title">
-                    { __('Order Placed') }
-                </div>
-                <div block="SuccessMessage-Text" elem="Message">
-                    { __('Order confirmation has been sent to') }
-                </div>
-                <div block="SuccessMessage-Text" elem="Email">
-                    { email }
-                </div>
-            </div>
-        </div>
-    );
+        );
+    };
 
     renderPhoneVerified() {
         const { isPhoneVerified } = this.props;
@@ -435,12 +439,8 @@ export class CheckoutSuccess extends PureComponent {
                 street,
                 postcode,
                 phone
-            },
-            billingAddress
+            }
         } = this.props;
-
-        console.log('bill addr func');
-        console.log(billingAddress);
 
         return (
             <div block="Address">

@@ -187,10 +187,10 @@ export class CheckoutSuccessContainer extends PureComponent {
                 (response) => {
                     if (!response.error) {
                         this.onResendCode();
+                        this.toggleChangePhonePopup();
                     } else {
                         showNotification('error', 'Please enter valid phone number');
                     }
-                    this.toggleChangePhonePopup();
                 },
                 this._handleError
             );
