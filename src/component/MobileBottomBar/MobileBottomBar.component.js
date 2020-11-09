@@ -9,9 +9,12 @@ import HeaderWishlist from 'Component/HeaderWishlist';
 import MyAccountOverlay from 'Component/MyAccountOverlay';
 import NavigationAbstract from 'Component/NavigationAbstract/NavigationAbstract.component';
 import { setIsMobileTabActive } from 'Store/MyAccount/MyAccount.action';
-import { isSignedIn } from 'Util/Auth';
 
 import './MobileBottomBar.style.scss';
+
+export const mapStateToProps = (state) => ({
+    isSignedIn: state.MyAccountReducer.isSignedIn
+});
 
 export const mapDispatchToProps = (dispatch) => ({
     setMobileTabActive: (value) => dispatch(setIsMobileTabActive(value))
@@ -21,7 +24,8 @@ class MobileBottomBar extends NavigationAbstract {
     static propTypes = {
         location: PropTypes.object.isRequired,
         history: PropTypes.object.isRequired,
-        setIsMobileTabActive: PropTypes.func.isRequired
+        setIsMobileTabActive: PropTypes.func.isRequired,
+        isSignedIn: PropTypes.bool.isRequired
     };
 
     state = {
@@ -30,7 +34,6 @@ class MobileBottomBar extends NavigationAbstract {
         redirectBrand: false,
         isBrand: false,
         isBottomBar: true,
-        isLoggedIn: isSignedIn(),
         isWishlist: false,
         isAccount: false,
         isPopup: true,
@@ -76,6 +79,7 @@ class MobileBottomBar extends NavigationAbstract {
         const { history, setMobileTabActive } = this.props;
 
         setMobileTabActive(true);
+        this.closePopup();
 
         return history.push('/my-account');
     };
@@ -84,6 +88,7 @@ class MobileBottomBar extends NavigationAbstract {
         const { history, setMobileTabActive } = this.props;
 
         setMobileTabActive(true);
+        this.closePopup();
 
         return history.push('/my-account/my-wishlist');
     };
@@ -157,14 +162,15 @@ class MobileBottomBar extends NavigationAbstract {
     renderWishlist() {
         const {
             isBottomBar,
-            isLoggedIn,
             isWishlist,
             isCategoryMenu
         } = this.state;
 
+        const { isSignedIn } = this.props;
+
         this.setState({ isWishlist: location.pathname === '/my-account/my-wishlist' && !isCategoryMenu });
 
-        const onClickHandle = !isLoggedIn ? this.renderAccountPopUp : this.routeChangeWishlist;
+        const onClickHandle = !isSignedIn ? this.renderAccountPopUp : this.routeChangeWishlist;
 
         return (
             <div>
@@ -189,14 +195,13 @@ class MobileBottomBar extends NavigationAbstract {
         const {
             isBottomBar,
             isAccount,
-            accountPopUp,
-            isLoggedIn
+            accountPopUp
         } = this.state;
-        const { location } = this.props;
+        const { location, isSignedIn } = this.props;
 
         this.setState({ isAccount: location.pathname === '/my-account' });
 
-        const onClickHandle = !isLoggedIn ? this.renderAccountPopUp : this.routeChangeAccount;
+        const onClickHandle = !isSignedIn ? this.renderAccountPopUp : this.routeChangeAccount;
 
         return (
             <div>
@@ -220,11 +225,10 @@ class MobileBottomBar extends NavigationAbstract {
     render() {
         return (
             <div block="MobileBottomBar">
-                { this.setState({ isLoggedIn: isSignedIn() }) }
                 { this.renderNavigationState() }
             </div>
         );
     }
 }
 
-export default withRouter(connect(null, mapDispatchToProps)(MobileBottomBar));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MobileBottomBar));
