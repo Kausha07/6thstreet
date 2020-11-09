@@ -86,6 +86,12 @@
 
                     .fieldsetContainer {
                         margin: 5px 20px 0 0;
+                        
+                        ul {
+                            li:before {
+                                right: -30px;
+                            }
+                        }
                     }
 
                     .minus-sign,
