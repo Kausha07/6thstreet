@@ -71,6 +71,17 @@ class MenuBrands extends PureComponent {
         );
     }
 
+    renderBrands() {
+        const { items } = this.props;
+        const minSliderBrandsCount = 3;
+
+        if (items.length > minSliderBrandsCount && isMobile.any()) {
+            return this.renderBrandsSlider();
+        }
+
+        return this.renderItems();
+    }
+
     render() {
         const { isArabic } = this.state;
 
@@ -90,7 +101,7 @@ class MenuBrands extends PureComponent {
                           mods: { isArabic }
                       } }
                     >
-                        { isMobile.any() ? this.renderBrandsSlider() : this.renderItems() }
+                        { this.renderBrands() }
                     </div>
                 </div>
             </div>
