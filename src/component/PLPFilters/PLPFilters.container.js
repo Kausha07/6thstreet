@@ -120,8 +120,12 @@ export class PLPFiltersContainer extends PureComponent {
     compareObjects(object1, object2) {
         if (Object.keys(object1).length === Object.keys(object2).length) {
             const isEqual = Object.entries(object1).reduce((acc, key) => {
-                if (key[1].length !== object2[key[0]].length) {
-                    acc.push(0);
+                if (object2[key[0]]) {
+                    if (key[1].length !== object2[key[0]].length) {
+                        acc.push(0);
+                    } else {
+                        acc.push(1);
+                    }
                 } else {
                     acc.push(1);
                 }
