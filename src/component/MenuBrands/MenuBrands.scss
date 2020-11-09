@@ -41,9 +41,9 @@
             a {
                 align-items: center;
                 display: flex;
-                font-weight: var(--fw-medium);
-                font-size: 9px;
                 flex-direction: column;
+                font-size: 9px;
+                font-weight: var(--fw-medium);
                 line-height: 16px;
                 width: 80px;
 
@@ -60,14 +60,20 @@
 
             &-Brands {
                 display: flex;
-                text-align: center;
-                padding-right: 2px;
                 margin-left: 5px;
+                padding-right: 2px;
+                text-align: center;
 
                 a {
-                    line-height: 25px;
+                    align-items: center;
+                    display: flex;
+                    flex-direction: column;
+                    font-size: 9px;
+                    font-weight: var(--fw-medium);
+                    line-height: 16px;
                     margin-left: 0;
                     padding: 0 5px;
+                    width: 80px;
                 }
 
                 &_isArabic {
@@ -82,8 +88,8 @@
     }
 
     @include desktop {
-        width: 23%;
         margin: 20px 0 30px 35px;
+        width: 23%;
 
         &-ContentWrapper {
             &-Brands {
