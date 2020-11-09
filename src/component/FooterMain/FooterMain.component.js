@@ -10,53 +10,53 @@ import './FooterMain.style';
 
 class FooterMain extends PureComponent {
     linksMap = [{
-        title: 'About',
+        title: __('About'),
         items: [
             {
-                name: 'About 6TH STREET',
+                name: __('About 6TH STREET'),
                 href: 'https://www.appareluae.com/6th-street/'
             },
             {
-                name: 'Consumer Rights',
+                name: __('Consumer Rights'),
                 href: 'https://www.consumerrights.ae/en/Pages/default.aspx'
             },
             {
-                name: 'Disclaimer',
+                name: __('Disclaimer'),
                 href: '/disclaimer'
             },
             {
-                name: 'Careers',
+                name: __('Careers'),
                 href: '/careers'
             },
             {
-                name: 'Press',
+                name: __('Press'),
                 href: '/press'
             }
         ]
     },
     {
-        title: 'Customer Service',
+        title: __('Customer Service'),
         items: [
             {
-                name: 'Shipping Information',
+                name: __('Shipping Information'),
                 href: '/shipping-policy'
             },
             {
-                name: 'Returns Information',
+                name: __('Returns Information'),
                 href: '/return-information'
             },
             {
-                name: 'Order Tracking',
+                name: __('Order Tracking'),
                 href: 'https://track.fetchr.us/'
             },
             {
-                name: "FAQ's",
+                name: __("FAQ's"),
                 href: '/faq'
             }
         ]
     },
     {
-        title: 'Download The App',
+        title: __('Download The App'),
         items: [
             {
                 id_app: 'App1',
@@ -65,7 +65,7 @@ class FooterMain extends PureComponent {
                 id_google: 'Google1',
                 google_play: 'https://static.6media.me/static/version1600320042/frontend/6SNEW/6snew/en_US/images/google-play-badge.svg',
                 google_onclick: 'https://play.google.com/store/apps/details?id=com.apparel.app6thstreet',
-                header: 'Follow The Latest Trends',
+                header: __('Follow The Latest Trends'),
                 id_facebook: 'Facebook1',
                 facebook_href: 'https://www.facebook.com/shop6thstreet/',
                 id_insta: 'Insta1',
@@ -78,7 +78,7 @@ class FooterMain extends PureComponent {
     renderFirstTwoCloumns() {
         return (
             this.linksMap
-                .filter((column) => column.title === 'About' || column.title === 'Customer Service')
+                .filter((column) => column.title === __('About') || column.title === __('Customer Service'))
                 .map((column) => (
                     <div block="FooterMain" elem="Column" key={ column.title }>
                     <h4>{ column.title }</h4>
@@ -105,7 +105,7 @@ class FooterMain extends PureComponent {
     renderAppColumn() {
         return (
             this.linksMap
-                .filter((column) => column.title === 'Download The App')
+                .filter((column) => column.title === __('Download The App'))
                 .map((column) => (
                     <div block="FooterMain" elem="LastColumn" key={ column.title }>
                         <h4>{ column.title }</h4>
