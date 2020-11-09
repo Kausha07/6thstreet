@@ -47,7 +47,7 @@ export class MyAccount extends SourceMyAccount {
 
     state = {
         isArabic: isArabic()
-    }
+    };
 
     renderMap = {
         [STORE_CREDIT]: MyAccountStoreCredit,
