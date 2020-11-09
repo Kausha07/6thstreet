@@ -28,7 +28,8 @@ export class HeaderAccountContainer extends PureComponent {
         isAccount: PropTypes.bool,
         language: PropTypes.string.isRequired,
         customer: customerType,
-        requestCustomerData: PropTypes.func.isRequired
+        requestCustomerData: PropTypes.func.isRequired,
+        handleFooterIsAccountOpen: PropTypes.func.isRequired
     };
 
     static defaultProps = {
