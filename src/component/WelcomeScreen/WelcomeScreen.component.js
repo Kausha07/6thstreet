@@ -55,7 +55,11 @@ class WelcomeScreen extends PureComponent {
 
         const list = countrySelectOptions.map((element) => this.renderListItem(element, country));
 
-        return <ul block="WelcomeScreen" elem="List">{ list }</ul>;
+        return (
+            <div block="WelcomeScreen" elem="ListContainer">
+                <ul block="WelcomeScreen" elem="List">{ list }</ul>
+            </div>
+        );
     }
 
     renderLangBtn(lang) {
