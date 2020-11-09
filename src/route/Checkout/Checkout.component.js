@@ -141,7 +141,7 @@ export class Checkout extends SourceCheckout {
         if (checkoutStep === BILLING_STEP && isLoading) {
             return (
                 <div block="CheckoutSuccess">
-                    <div block="LoadingOverlay">
+                    <div block="LoadingOverlay" dir="ltr">
                         <p>
                             { __('Processing Your Order') }
                         </p>
@@ -355,9 +355,9 @@ export class Checkout extends SourceCheckout {
                 { continueAsGuest ? renderCheckoutShipping : null }
               </div>
               { isSignedIn ? renderCheckoutShipping : null }
-              { continueAsGuest || isSignedIn ? null : this.renderHeading('Shipping Options', true) }
-              { continueAsGuest || isSignedIn ? null : this.renderHeading('Delivery Options', true) }
-              { continueAsGuest || isSignedIn ? null : this.renderHeading('Payment Options', true) }
+              { continueAsGuest || isSignedIn ? null : this.renderHeading(__('Shipping Options'), true) }
+              { continueAsGuest || isSignedIn ? null : this.renderHeading(__('Delivery Options'), true) }
+              { continueAsGuest || isSignedIn ? null : this.renderHeading(__('Payment Options'), true) }
             </>
         );
     }

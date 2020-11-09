@@ -113,7 +113,7 @@ export class CheckoutGuestForm extends FieldForm {
               mods={ { isEmailAdded, isInvalidEmail } }
               mix={ { block: 'FieldForm' } }
             >
-                { this.renderHeading('Login / Sign Up') }
+                { this.renderHeading(__('Login / Sign Up')) }
                 <FormPortal
                   id={ formId }
                   name="CheckoutGuestForm"

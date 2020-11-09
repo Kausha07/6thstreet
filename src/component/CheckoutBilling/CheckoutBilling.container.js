@@ -56,14 +56,9 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
         }
     }
 
-    openForm() {
-        this.setState({ formContent: true });
-    }
-
     showCreateNewPopup() {
         const { showPopup } = this.props;
 
-        this.openForm();
         showPopup({
             action: ADD_ADDRESS,
             title: __('Add new address'),

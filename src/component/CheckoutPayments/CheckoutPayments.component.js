@@ -3,6 +3,7 @@
 import CartCoupon from 'Component/CartCoupon';
 import CheckoutPayment from 'Component/CheckoutPayment';
 import { PAYMENTS_DATA } from 'Component/CheckoutPayment/CheckoutPayment.config';
+import tabbyAr from 'Component/CheckoutPayment/icons/tabby-logo-black-ar@2x.png';
 import ClubApparel from 'Component/ClubApparel';
 import CreditCard from 'Component/CreditCard';
 import Slider from 'Component/Slider';
@@ -24,8 +25,6 @@ import {
     TABBY_PAYMENT_CODES
 } from './CheckoutPayments.config';
 import info from './icons/info.png';
-import tabbyAr from './icons/tabby-logo-black-ar@2x.png';
-import tabbyEn from './icons/tabby-logo-black-en@2x.png';
 
 import './CheckoutPayments.extended.style';
 
@@ -161,7 +160,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
                       onClick={ selectPaymentMethod }
                       setCashOnDeliveryFee={ setCashOnDeliveryFee }
                     />
-                    <img src={ isArabic ? tabbyAr : tabbyEn } alt={ m_code } />
+                    <img src={ isArabic ? tabbyAr : img } alt={ m_code } />
                 </div>
                 <div block="CheckoutPayments" elem="TabbyPaymentContent">
                     <div block="CheckoutPayments" elem="TabbyPaymentContentTitle">

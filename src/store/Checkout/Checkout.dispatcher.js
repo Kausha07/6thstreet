@@ -24,10 +24,13 @@ export class CheckoutDispatcher {
         const { Cart: { cartId } } = getStore().getState();
         const { area, street } = address;
         try {
+            console.log(address);
             const response = await validateShippingAddress({ address });
+            console.log(response);
             const { success: isAddressValid } = response;
 
             if (!isAddressValid & (area !== undefined || street !== undefined)) {
+                console.log('here');
                 const { error: {parameters} } = response;
                 const message = parameters.length > 1 ? 
                 `(${parameters}) ${__('fields are not valid')}` : 
@@ -36,10 +39,12 @@ export class CheckoutDispatcher {
                 dispatch(showNotification('error', message));
             }
             if (isAddressValid) {
+                console.log(await estimateShippingMethods({ cartId, address }))
                 return await estimateShippingMethods({ cartId, address });
             }
         } catch (e) {
-            dispatch(showNotification('error', __('Some of the fields are not valid')));
+            console.log('here');
+            dispatch(showNotification('error', __('The address or phone field is incorrect')));
             Logger.log(e);
         }
     }

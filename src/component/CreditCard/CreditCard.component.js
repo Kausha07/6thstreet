@@ -124,7 +124,7 @@ class CreditCard extends PureComponent {
                   onChange={ this.handleNumberChange }
                   validation={ ['notEmpty'] }
                 />
-                <p>exp date</p>
+                <p>{ __('exp date') }</p>
                 <div
                   block="CreditCard"
                   elem="Row"
