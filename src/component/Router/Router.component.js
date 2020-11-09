@@ -1,9 +1,27 @@
+/* eslint-disable react/jsx-no-bind */
 import PropTypes from 'prop-types';
-import { lazy } from 'react';
+import React, { lazy } from 'react';
 import { Route } from 'react-router-dom';
 
+import Breadcrumbs from 'Component/Breadcrumbs';
 import CookiePopup from 'Component/CookiePopup';
+import DemoNotice from 'Component/DemoNotice';
 import Footer from 'Component/Footer';
+import GoogleTagManager from 'Component/GoogleTagManager';
+import GTMRouteWrapper from 'Component/GoogleTagManager/GoogleTagManagerRouteWrapper.component';
+import Header from 'Component/Header';
+import {
+    BRANDS,
+    CART,
+    CHECKOUT,
+    CMS_PAGE,
+    CUSTOMER_ACCOUNT,
+    HOME_PAGE,
+    SEARCH
+} from 'Component/Header/Header.config';
+import NavigationTabs from 'Component/NavigationTabs';
+import NewVersionPopup from 'Component/NewVersionPopup';
+import NotificationList from 'Component/NotificationList';
 import Seo from 'Component/Seo';
 import LocaleWizard from 'Route/LocaleWizard';
 import UrlRewrites from 'Route/UrlRewrites';
@@ -56,45 +74,148 @@ export class Router extends SourceRouter {
         homepageUrl: '/(|men.html|women.html|kids.html)/'
     };
 
-    [SWITCH_ITEMS_TYPE] = [
+    [BEFORE_ITEMS_TYPE] = [
         {
-            component: <Route path={ withStoreRegex(this.state.homepageUrl) } exact component={ HomePage } />,
+            component: <NotificationList />,
             position: 10
         },
         {
-            component: <Route path={ withStoreRegex('/page') } component={ CmsPage } />,
+            component: <DemoNotice />,
+            position: 15
+        },
+        {
+            component: <Header />,
+            position: 20
+        },
+        {
+            component: <NavigationTabs />,
+            position: 25
+        },
+        {
+            component: <Breadcrumbs />,
+            position: 30
+        },
+        {
+            component: <NewVersionPopup />,
+            position: 35
+        },
+        {
+            component: <GoogleTagManager />,
+            position: 40
+        }
+    ];
+
+    [SWITCH_ITEMS_TYPE] = [
+        {
+            component: <Route
+              path={ withStoreRegex(this.state.homepageUrl) }
+              exact
+              render={ (props) => (
+                  <GTMRouteWrapper route={ HOME_PAGE }>
+                      <HomePage { ...props } />
+                  </GTMRouteWrapper>
+              ) }
+            />,
+            position: 10
+        },
+        {
+            component: <Route
+              path={ withStoreRegex('/page') }
+              render={ (props) => (
+                  <GTMRouteWrapper route={ CMS_PAGE }>
+                      <CmsPage { ...props } />
+                  </GTMRouteWrapper>
+              ) }
+            />,
             position: 40
         },
         {
-            component: <Route path={ withStoreRegex('/cart') } exact component={ CartPage } />,
+            component: <Route
+              path={ withStoreRegex('/cart') }
+              exact
+              render={ (props) => (
+                  <GTMRouteWrapper route={ CART }>
+                      <CartPage { ...props } />
+                  </GTMRouteWrapper>
+              ) }
+            />,
             position: 50
         },
         {
-            component: <Route path={ withStoreRegex('/checkout/:step?') } component={ Checkout } />,
+            component: <Route
+              path={ withStoreRegex('/checkout/:step?') }
+              render={ (props) => (
+                  <GTMRouteWrapper route={ CHECKOUT }>
+                      <Checkout { ...props } />
+                  </GTMRouteWrapper>
+              ) }
+            />,
             position: 55
         },
         {
-            component: <Route path={ withStoreRegex('/:account*/createPassword/') } component={ PasswordChangePage } />,
+            component: <Route
+              path={ withStoreRegex('/:account*/createPassword/') }
+              render={ (props) => (
+                  <GTMRouteWrapper route={ CUSTOMER_ACCOUNT }>
+                      <PasswordChangePage { ...props } />
+                  </GTMRouteWrapper>
+              ) }
+            />,
             position: 60
         },
         {
-            component: <Route path={ withStoreRegex('/:account*/confirm') } component={ ConfirmAccountPage } />,
+            component: <Route
+              path={ withStoreRegex('/:account*/confirm') }
+              render={ (props) => (
+                  <GTMRouteWrapper route={ CUSTOMER_ACCOUNT }>
+                      <ConfirmAccountPage { ...props } />
+                  </GTMRouteWrapper>
+              ) }
+            />,
             position: 65
         },
         {
-            component: <Route path={ withStoreRegex('/my-account/:tab?') } component={ MyAccount } />,
+            component: <Route
+              path={ withStoreRegex('/my-account/:tab?') }
+              render={ (props) => (
+                  <GTMRouteWrapper route={ CUSTOMER_ACCOUNT }>
+                      <MyAccount { ...props } />
+                  </GTMRouteWrapper>
+              ) }
+            />,
             position: 70
         },
         {
-            component: <Route path={ withStoreRegex('/forgot-password') } component={ MyAccount } />,
+            component: <Route
+              path={ withStoreRegex('/forgot-password') }
+              render={ (props) => (
+                  <GTMRouteWrapper route={ CUSTOMER_ACCOUNT }>
+                      <MyAccount { ...props } />
+                  </GTMRouteWrapper>
+              ) }
+            />,
             position: 71
         },
         {
-            component: <Route path={ withStoreRegex('/brands') } component={ BrandsPage } />,
+            component: <Route
+              path={ withStoreRegex('/brands') }
+              render={ (props) => (
+                  <GTMRouteWrapper route={ BRANDS }>
+                      <BrandsPage { ...props } />
+                  </GTMRouteWrapper>
+              ) }
+            />,
             position: 90
         },
         {
-            component: <Route path={ withStoreRegex('/catalogsearch/result') } component={ SearchPage } />,
+            component: <Route
+              path={ withStoreRegex('/catalogsearch/result') }
+              render={ (props) => (
+                  <GTMRouteWrapper route={ SEARCH }>
+                      <SearchPage { ...props } />
+                  </GTMRouteWrapper>
+              ) }
+            />,
             position: 90
         },
         {
