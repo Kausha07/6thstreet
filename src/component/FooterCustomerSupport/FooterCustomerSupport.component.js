@@ -59,7 +59,7 @@ class FooterCustomerSupport extends PureComponent {
 
         return (
             <div>
-                <h4>CUSTOMER SUPPORT</h4>
+                <h4>{ __('CUSTOMER SUPPORT') }</h4>
                     { this.renderWorkingHours() }
                     { Phone ? (
                     <div block="FooterCustomerSupport" elem="DisplayPhone">

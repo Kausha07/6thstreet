@@ -59,10 +59,11 @@ class FooterBottom extends PureComponent {
     renderCopyright() {
         return (
         <div block="FooterBottom" elem="Copyright">
-            Copyright &#169;&nbsp;
+            { __('Copyright') }
+            &#169;&nbsp;
             { this.getCurrentYear() }
             &nbsp;
-            6TH STREET. All rights reserved.
+            { __('6TH STREET. All rights reserved.') }
         </div>
         );
     }
@@ -70,11 +71,15 @@ class FooterBottom extends PureComponent {
     renderHyperlinks() {
         return (
         <div block="FooterBottom" elem="Hyperlinks">
-            <a href="cookie">COOKIE POLICY</a>
+            <a href="cookie">{ __('COOKIE POLICY') }</a>
             /
-            <a href="terms">TERMS &amp; CONDITIONS</a>
+            <a href="terms">
+                { __('TERMS ') }
+                &amp;
+                { __(' CONDITIONS') }
+            </a>
             /
-            <a href="privacy-policy">Privacy</a>
+            <a href="privacy-policy">{ __('Privacy') }</a>
         </div>
         );
     }

@@ -6,6 +6,6 @@ export const STATUS_DELIVERED = 2;
 
 export const STATUS_LABEL_MAP = {
     [STATUS_ORDERED]: __('Shipped'),
-    [STATUS_SENT]: __('Our of Delivery'),
+    [STATUS_SENT]: __('Out for Delivery'),
     [STATUS_DELIVERED]: __('Delivered')
 };

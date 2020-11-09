@@ -255,7 +255,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
                     <div>
                         <Loader isLoading={ isLoading } />
                         { this.renderDelivery() }
-                        { this.renderHeading('Payment Options', true) }
+                        { this.renderHeading(__('Payment Options'), true) }
                         { this.renderActions() }
                     </div>
                 </Form>

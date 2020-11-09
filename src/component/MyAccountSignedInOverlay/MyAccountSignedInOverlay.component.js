@@ -62,7 +62,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
         return (
             <button block="MyAccountSignedInOverlay" elem="ButtonDelivery" onClick={ signOut }>
                 <Image src={ LogoutIcon } mix={ { block: 'MyAccountSignedInOverlay', elem: 'Image' } } />
-                <span>{ __('Log out') }</span>
+                <span>{ __('Logout') }</span>
             </button>
         );
     }

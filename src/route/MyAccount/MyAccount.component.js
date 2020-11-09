@@ -22,6 +22,7 @@ import {
     STORE_CREDIT,
     tabMapType
 } from 'Type/Account';
+import { isArabic } from 'Util/App';
 import { deleteAuthorizationToken } from 'Util/Auth';
 import isMobile from 'Util/Mobile';
 
@@ -43,6 +44,10 @@ export class MyAccount extends SourceMyAccount {
         mobileTabActive: PropTypes.bool.isRequired,
         setMobileTabActive: PropTypes.func.isRequired
     };
+
+    state = {
+        isArabic: isArabic()
+    }
 
     renderMap = {
         [STORE_CREDIT]: MyAccountStoreCredit,
@@ -88,6 +93,8 @@ export class MyAccount extends SourceMyAccount {
             isSignedIn
         } = this.props;
 
+        const { isArabic } = this.state;
+
         if (!isSignedIn) {
             return this.renderLoginOverlay();
         }
@@ -97,7 +104,7 @@ export class MyAccount extends SourceMyAccount {
         return (
             <ContentWrapper
               label={ __('My Account page') }
-              wrapperMix={ { block: 'MyAccount', elem: 'Wrapper' } }
+              wrapperMix={ { block: 'MyAccount', elem: 'Wrapper', mods: { isArabic } } }
             >
                 <MyAccountTabList
                   tabMap={ tabMap }
