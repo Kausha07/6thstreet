@@ -19,6 +19,7 @@ import {
     TYPE_HOME,
     TYPE_PRODUCT
 } from 'Route/UrlRewrites/UrlRewrites.config';
+import { isArabic } from 'Util/App';
 import BrowserDatabase from 'Util/BrowserDatabase';
 import isMobile from 'Util/Mobile';
 
@@ -63,7 +64,8 @@ class HeaderMainSection extends NavigationAbstract {
         delay: 150,
         lastProduct: null,
         lastCategory: null,
-        search: ''
+        search: '',
+        isArabic: isArabic()
     };
 
     componentDidMount() {
@@ -174,6 +176,8 @@ class HeaderMainSection extends NavigationAbstract {
     }
 
     renderLogo() {
+        const { isArabic } = this.state;
+
         if (isMobile.any()) {
             if (this.isPLP()) {
                 const pagePLPTitle = this.getCategory() ? (
@@ -185,7 +189,7 @@ class HeaderMainSection extends NavigationAbstract {
                 this.setMainContentPadding();
 
                 return (
-                    <span block="CategoryTitle">
+                    <span block="CategoryTitle" mods={ { isArabic } }>
                       { pagePLPTitle }
                     </span>
                 );
@@ -196,7 +200,7 @@ class HeaderMainSection extends NavigationAbstract {
                 this.setMainContentPadding('50px');
 
                 return (
-                    <span block="CategoryTitle">
+                    <span block="CategoryTitle" mods={ { isArabic } }>
                       { pagePDPTitle }
                     </span>
                 );
@@ -214,8 +218,10 @@ class HeaderMainSection extends NavigationAbstract {
 
     renderBack() {
         const { history } = this.props;
+        const { isArabic } = this.state;
+
         return this.isPLP() || this.isPDP() ? (
-            <div block="BackArrow">
+            <div block="BackArrow" mods={ { isArabic } }>
                 <button
                   block="BackArrow-Button"
                   onClick={ history.goBack }
