@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { CARD } from 'Component/CheckoutPayments/CheckoutPayments.config';
+import { ADD_ADDRESS, ADDRESS_POPUP_ID } from 'Component/MyAccountAddressPopup/MyAccountAddressPopup.config';
 import {
     CheckoutBillingContainer as SourceCheckoutBillingContainer,
     mapDispatchToProps as sourceMapDispatchToProps,
@@ -9,20 +10,23 @@ import {
 } from 'SourceComponent/CheckoutBilling/CheckoutBilling.container';
 import CreditCardDispatcher from 'Store/CreditCard/CreditCard.dispatcher';
 import { showNotification } from 'Store/Notification/Notification.action';
+import { showPopup } from 'Store/Popup/Popup.action';
 import BrowserDatabase from 'Util/BrowserDatabase';
 import { FIVE_MINUTES_IN_SECONDS } from 'Util/Request/QueryDispatcher';
 
 export const mapDispatchToProps = (dispatch) => ({
     ...sourceMapDispatchToProps(dispatch),
     addNewCreditCard: (cardData) => CreditCardDispatcher.addNewCreditCard(dispatch, cardData),
-    showSuccessMessage: (message) => dispatch(showNotification('success', message))
+    showSuccessMessage: (message) => dispatch(showNotification('success', message)),
+    showPopup: (payload) => dispatch(showPopup(ADDRESS_POPUP_ID, payload))
 });
 
 export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     static propTypes = {
         ...SourceCheckoutBillingContainer.propTypes,
         setTabbyWebUrl: PropTypes.func.isRequired,
-        setPaymentCode: PropTypes.func.isRequired
+        setPaymentCode: PropTypes.func.isRequired,
+        showPopup: PropTypes.func.isRequired
     };
 
     containerFunctions = {
@@ -32,6 +36,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
         onSameAsShippingChange: this.onSameAsShippingChange.bind(this),
         onPaymentMethodSelect: this.onPaymentMethodSelect.bind(this),
         showPopup: this.showPopup.bind(this),
+        showCreateNewPopup: this.showCreateNewPopup.bind(this),
         setCreditCardData: this.setCreditCardData.bind(this)
     };
 
@@ -49,6 +54,21 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
         if (cvv) {
             this.setState({ cvv });
         }
+    }
+
+    openForm() {
+        this.setState({ formContent: true });
+    }
+
+    showCreateNewPopup() {
+        const { showPopup } = this.props;
+
+        this.openForm();
+        showPopup({
+            action: ADD_ADDRESS,
+            title: __('Add new address'),
+            address: {}
+        });
     }
 
     onBillingSuccess(fields, asyncData) {
