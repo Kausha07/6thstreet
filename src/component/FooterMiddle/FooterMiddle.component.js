@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { Fragment, PureComponent } from 'react';
 
 import CountrySwitcher from 'Component/CountrySwitcher';
@@ -9,6 +10,10 @@ import { DEFAULT_STATE_NAME } from 'Component/NavigationAbstract/NavigationAbstr
 import './FooterMiddle.style';
 
 class FooterMiddle extends PureComponent {
+    static propTypes = {
+        handleFooterIsAccountOpen: PropTypes.func.isRequired
+    };
+
     state = {
         isCheckout: false
     };
@@ -42,9 +47,14 @@ class FooterMiddle extends PureComponent {
     }
 
     renderAccount() {
+        const { handleFooterIsAccountOpen } = this.props;
+        const isFooter = true;
+
         return (
         <div block="FooterMiddle" elem="FooterAccount">
             <HeaderAccount
+              isFooter={ isFooter }
+              handleFooterIsAccountOpen={ handleFooterIsAccountOpen }
               key="account"
             />
         </div>

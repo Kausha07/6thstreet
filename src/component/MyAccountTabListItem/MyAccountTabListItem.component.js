@@ -4,7 +4,8 @@ import {
 
 export class MyAccountTabListItem extends SourceMyAccountTabListItem {
     render() {
-        const { tabEntry: [, { name, linkClassName }], isActive } = this.props;
+        const { tabEntry: [, { name, linkClassName }], isActive, tabEntry } = this.props;
+        const tabImageId = tabEntry[0];
 
         return (
             <li
@@ -14,6 +15,7 @@ export class MyAccountTabListItem extends SourceMyAccountTabListItem {
                 <button
                   block="MyAccountTabListItem"
                   elem="Button"
+                  mods={ { tabImageId } }
                   onClick={ this.changeActiveTab }
                   role="link"
                 >

@@ -127,9 +127,12 @@ class HeaderMainSection extends NavigationAbstract {
     }
 
     renderAccount() {
+        const isFooter = false;
+
         return (
             <HeaderAccount
               key="account"
+              isFooter={ isFooter }
               isMobile
             />
         );
