@@ -130,10 +130,6 @@
         &List {
             display: flex;
             justify-content: space-between;
-
-            .PageWrapper_isArabic & {
-                flex-direction: row-reverse;
-            }
         }
 
         &Title {

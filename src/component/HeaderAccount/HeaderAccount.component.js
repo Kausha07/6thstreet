@@ -17,7 +17,9 @@ class HeaderAccount extends PureComponent {
         isAccount: PropTypes.bool.isRequired,
         isSignedIn: PropTypes.bool.isRequired,
         customer: customerType,
-        isMobile: PropTypes.bool
+        isMobile: PropTypes.bool,
+        isFooter: PropTypes.bool.isRequired,
+        handleFooterIsAccountOpen: PropTypes.func.isRequired
     };
 
     static defaultProps = {
@@ -33,10 +35,19 @@ class HeaderAccount extends PureComponent {
 
     closePopup = () => {
         this.setState({ showPopup: false });
+        this.handleFooterPopup();
     };
 
     showMyAccountPopup = () => {
         this.setState({ showPopup: true });
+        this.handleFooterPopup();
+    };
+
+    handleFooterPopup = () => {
+        const { handleFooterIsAccountOpen, isFooter } = this.props;
+        if (isFooter) {
+            handleFooterIsAccountOpen();
+        }
     };
 
     onSignIn = () => {
@@ -68,7 +79,12 @@ class HeaderAccount extends PureComponent {
     }
 
     renderAccountButton() {
-        const { isSignedIn, customer, isBottomBar } = this.props;
+        const {
+            isSignedIn,
+            customer,
+            isBottomBar,
+            isFooter
+        } = this.props;
 
         if (isBottomBar) {
             return (
@@ -84,7 +100,7 @@ class HeaderAccount extends PureComponent {
                 <button
                   block="HeaderAccount"
                   elem="Button"
-                  mods={ { isArabic: this._isArabic } }
+                  mods={ { isArabic: this._isArabic, isFooter } }
                   onClick={ this.showMyAccountPopup }
                 >
                     <label htmlFor="Account">{ accountButtonText }</label>

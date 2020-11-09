@@ -14,6 +14,7 @@ import {
 } from 'Component/MyAccountOrderListItem/MyAccountOrderListItem.config';
 import MyAccountOrderViewItem from 'Component/MyAccountOrderViewItem';
 import { ExtendedOrderType } from 'Type/API';
+import { isArabic } from 'Util/App';
 import { appendOrdinalSuffix } from 'Util/Common';
 import { formatDate } from 'Util/Date';
 
@@ -37,6 +38,10 @@ class MyAccountOrderView extends PureComponent {
 
     static defaultProps = {
         order: null
+    };
+
+    state = {
+        isArabic: isArabic()
     };
 
     renderAddress = (title, address) => {
@@ -123,13 +128,14 @@ class MyAccountOrderView extends PureComponent {
 
     renderPackagesMessage() {
         const { order: { status, shipped } } = this.props;
+        const { isArabic } = this.state;
 
         if (shipped.length <= 1 || STATUS_FAILED.includes(status)) {
             return null;
         }
 
         return (
-            <div block="MyAccountOrderView" elem="PackagesMessage">
+            <div block="MyAccountOrderView" elem="PackagesMessage" mods={ { isArabic } }>
                 <Image
                   src={ TruckImage }
                   mix={ { block: 'MyAccountOrderView', elem: 'TruckImage' } }
@@ -253,6 +259,7 @@ class MyAccountOrderView extends PureComponent {
 
     renderAccordions() {
         const { order: { status, shipped } } = this.props;
+        const { isArabic } = this.state;
         const itemNumber = shipped.length;
 
         if (STATUS_FAILED.includes(status)) {
@@ -262,7 +269,12 @@ class MyAccountOrderView extends PureComponent {
         return (
             <div block="MyAccountOrderView" elem="Accordions">
                 { shipped.map((item, index) => (
-                    <div key={ item.shipment_number } block="MyAccountOrderView" elem="AccordionWrapper">
+                    <div
+                      key={ item.shipment_number }
+                      block="MyAccountOrderView"
+                      elem="AccordionWrapper"
+                      mods={ { isArabic } }
+                    >
                         <Accordion
                           mix={ { block: 'MyAccountOrderView', elem: 'Accordion' } }
                           shortDescription={ this.renderAccordionProgress(item.courier_status_code) }

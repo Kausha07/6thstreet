@@ -14,7 +14,6 @@ import { DEFAULT_STATE_NAME } from 'Component/NavigationAbstract/NavigationAbstr
 import {
     TYPE_ACCOUNT,
     TYPE_BRAND,
-    TYPE_CART,
     TYPE_CATEGORY,
     TYPE_HOME,
     TYPE_PRODUCT
@@ -111,9 +110,6 @@ class HeaderMainSection extends NavigationAbstract {
         if (matchPath(location.pathname, '/my-account')) {
             return TYPE_ACCOUNT;
         }
-        if (matchPath(location.pathname, '/cart')) {
-            return TYPE_CART;
-        }
 
         return window.pageType;
     }
@@ -131,9 +127,12 @@ class HeaderMainSection extends NavigationAbstract {
     }
 
     renderAccount() {
+        const isFooter = false;
+
         return (
             <HeaderAccount
               key="account"
+              isFooter={ isFooter }
               isMobile
             />
         );
@@ -239,10 +238,9 @@ class HeaderMainSection extends NavigationAbstract {
     }
 
     render() {
-        const pageWithHiddenHeader = [TYPE_CART, TYPE_ACCOUNT];
-        const isHidden = pageWithHiddenHeader.includes(this.getPageType());
+        const isMyAccount = this.getPageType() === TYPE_ACCOUNT;
 
-        return isHidden && isMobile.any() ? null : (
+        return isMyAccount && isMobile.any() ? null : (
             <div block="HeaderMainSection">
                 { this.renderNavigationState() }
             </div>
