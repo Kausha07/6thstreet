@@ -29,16 +29,13 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
         isLoading: PropTypes.bool.isRequired
     };
 
-    state = {
-        isArabic: isArabic()
-    };
-
     constructor(props) {
         super(props);
         const { customer: { gender, phone } } = props;
 
         this.state = {
             gender,
+            isArabic: isArabic(),
             customerCountry: phone ? Object.keys(PHONE_CODES).find(
                 (key) => PHONE_CODES[key] === phone.substr('0', '4')
             ) : getCountryFromUrl()
