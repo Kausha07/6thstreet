@@ -117,7 +117,7 @@ export class MyAccountAddressBook extends PureComponent {
               elem="NewAddress"
               onClick={ this.openNewForm }
             >
-                { __('new address') }
+                { __('Add new address') }
             </button>
         );
     }

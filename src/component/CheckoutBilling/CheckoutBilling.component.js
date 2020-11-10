@@ -160,7 +160,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
 
     renderDifferentBillingLabel = () => (
         <>
-            { __('Add different ') }
+            { __('Add') }
             <span>
                 { __('Billing address') }
             </span>

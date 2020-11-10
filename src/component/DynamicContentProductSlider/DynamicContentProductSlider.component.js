@@ -201,11 +201,6 @@ class DynamicContentProductSlider extends PureComponent {
                 <hr />
                 <div mix={ { block: 'DynamicContentProductSlider', elem: 'HeaderContainer', mods: { isArabic } } }>
                     { this.renderTitle() }
-                    <span
-                      mix={ { block: 'DynamicContentProductSlider', elem: 'SubHeader', mods: { isArabic } } }
-                    >
-                        Latest trends, new looks, must have... don&apos;t miss it
-                    </span>
                 </div>
                 { isMobile.any() || isMobile.tablet() ? this.renderProductsMobile() : products }
             </div>
