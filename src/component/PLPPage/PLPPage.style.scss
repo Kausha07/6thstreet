@@ -9,12 +9,12 @@
     }
 
     .ProductItem {
-        padding-left: 0;
-        margin: 20px 10px;
         font-weight: var(--fw-regular);
-        text-align: center;
-        position: relative;
+        margin: 20px 5px;
         min-width: 0;
+        padding-left: 0;
+        position: relative;
+        text-align: center;
 
         &::before {
             display: none;
@@ -49,10 +49,6 @@
         font-weight: var(--fw-demi);
         font-size: 16px;
 
-        @include mobile {
-            flex-direction: column;
-        }
-
         &-Special,
         &-Discount {
             display: none;
@@ -66,7 +62,8 @@
         &-Base {
             &_discount {
                 font-size: 11px;
-                margin-right: 20px;
+                font-weight: var(--fw-demi);
+                margin-right: 10px;
             }
         }
     }
