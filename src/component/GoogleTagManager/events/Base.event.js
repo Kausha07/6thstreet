@@ -1,9 +1,6 @@
 import MyAccountDispatcher, { CUSTOMER } from 'Store/MyAccount/MyAccount.dispatcher';
 import { getCurrency } from 'Util/App';
 import BrowserDatabase from 'Util/BrowserDatabase';
-import { roundPrice } from 'Util/Price';
-
-import ProductHelper from '../utils';
 
 export const URL_REWRITE = 'url-rewrite';
 
@@ -320,48 +317,35 @@ class BaseEvent {
     /**
      * Prepare cart data
      *
-     * @return {{quantity: number, price: number, name: string, variant: string, id: string, availability: boolean, category: string, brand: string}[]}
+     * @return array
      */
     prepareCartData() {
-        const {
-            subtotal = 0,
-            items_qty = 0,
-            tax_amount = 0,
-            items = [],
-            quote_currency_code = 'EUR',
-            groupedProducts = {}
-        } = this.getCartProductData();
+        const { items = [] } = this.getCartProductData();
 
-        const itemsData = items
-            .map((item) => ({
-                ...ProductHelper.getItemData(item),
-                quantity: ProductHelper.getQuantity(item)
+        return items
+            .map(({
+                product: { name } = {}, sku, row_total, brand_name, optionValue, qty, color
+            }) => ({
+                name,
+                id: sku,
+                price: row_total,
+                brand: brand_name,
+                category: '',
+                quantity: qty,
+                size: optionValue,
+                variant: color
             }));
-
-        if (items_qty !== 0) {
-            Object.values(groupedProducts || {}).forEach(({ data }) => itemsData.push(data));
-        }
-
-        return {
-            items_qty,
-            total: +roundPrice(subtotal + tax_amount),
-            currency: quote_currency_code,
-            itemsData
-        };
     }
 
     /**
      * Get cart products
      *
-     * @return {initialState.productsInCart|{}}
+     * @return {initialState.cartTotals|{}}
      */
     getCartProductData() {
         const appState = this.getAppState();
-        const cartData = appState.CartReducer.cartTotals;
 
-        const groupedProducts = this.getGroupedProducts();
-
-        return { ...cartData, groupedProducts };
+        return appState.CartReducer.cartTotals || {};
     }
 }
 
