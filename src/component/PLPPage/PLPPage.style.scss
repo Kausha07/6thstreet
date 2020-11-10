@@ -32,6 +32,10 @@
 
         &-Brand {
             margin: 5px 0;
+
+            @include desktop() {
+                font-size: 16px;
+            }
         }
 
         &-Title {
@@ -39,6 +43,10 @@
             overflow: hidden;
             text-overflow: ellipsis;
             margin-bottom: 0;
+
+            @include desktop() {
+                margin: 0 20px;
+            }
         }
     }
 
