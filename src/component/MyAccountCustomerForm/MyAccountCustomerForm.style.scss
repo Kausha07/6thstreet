@@ -224,7 +224,7 @@
     }
 
     &-Phone {
-        margin-right: 90px;
+        margin-right: 115px;
 
         @include mobile() {
             margin-top: 18px;
@@ -242,7 +242,7 @@
     }
 
     &-PhoneField {
-        margin-left: 90px;
+        margin-left: 115px;
         position: absolute;
         top: -71px;
 

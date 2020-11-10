@@ -158,7 +158,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         const mappedData = {
             firstname: fullname,
             email,
-            gender,
+            gender: gender.toString(),
             custom_attributes: {
                 contact_no: phone,
                 dob

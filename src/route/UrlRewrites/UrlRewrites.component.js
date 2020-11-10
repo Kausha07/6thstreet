@@ -8,6 +8,7 @@ import {
     NOT_FOUND,
     PDP as PRODUCT_PAGE
 } from 'Component/Header/Header.config';
+import Loader from 'Component/Loader';
 import CmsPage from 'Route/CmsPage';
 import NoMatch from 'Route/NoMatch';
 import PDP from 'Route/PDP';
@@ -78,7 +79,7 @@ class UrlRewrites extends PureComponent {
         );
 
         if (isLoading) {
-            return 'loading...';
+            return <Loader isLoading={ isLoading } />;
         }
 
         const renderFunction = this.typeMap[type] || this.render404;
