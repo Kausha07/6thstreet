@@ -33,6 +33,18 @@ export class CmsPage extends SourceCmsPage {
             .replace(/&lt;/g, '<')
             .replace(/&gt;/g, '>');
         const cmsBlock = pathname.slice(1);
+        const toggleArr = document.querySelectorAll('.faq-page-toggle');
+
+        if (toggleArr && toggleArr.length > 0) {
+            toggleArr.forEach((toggle) => {
+                toggle.addEventListener('click', (e) => {
+                    const label = e.target.nextSibling;
+                    const fieldsetContainer = e.target.nextSibling.nextSibling;
+                    label.classList.toggle('open');
+                    fieldsetContainer.classList.toggle('open');
+                });
+            });
+        }
 
         return (
             <div block={ cmsBlock }>
