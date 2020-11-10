@@ -110,7 +110,7 @@ class MenuGrid extends PureComponent {
               elem="Button"
             >
                 <Link to={ linkTo } onClick={ this.hideMenu }>
-                    <span>view all</span>
+                    <span>{ __('view all') }</span>
                 </Link>
             </button>
         );
