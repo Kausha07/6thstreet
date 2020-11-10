@@ -234,9 +234,9 @@ class PLPFilters extends PureComponent {
             : (
                 { count: 0 }
             );
-        const displayCount = count - 2;
+        const displayCount = count - 1;
 
-        if (count === 0) {
+        if (displayCount < 0) {
             return '(0)';
         }
 
