@@ -1,4 +1,3 @@
-// import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
@@ -12,19 +11,30 @@ export const mapStateToProps = (state) => ({
     meta: state.PLP.meta
 });
 
-export const mapDispatchToProps = (_dispatch) => ({
-    // addProduct: options => CartDispatcher.addProductToCart(dispatch, options)
-});
-
 export class PLPPagesContainer extends PureComponent {
     static propTypes = {
         pages: Pages.isRequired,
         meta: Meta.isRequired
     };
 
-    containerFunctions = {
-        // getData: this.getData.bind(this)
+    state = {
+        pages: {},
+        impressions: []
     };
+
+    static getDerivedStateFromProps(props, state) {
+        const { pages = {} } = props;
+        const { pages: prevPages = {} } = state;
+
+        if (Object.keys(pages).length !== Object.keys(prevPages).length) {
+            return {
+                pages,
+                impressions: Object.keys(pages).flatMap((key) => pages[key])
+            };
+        }
+
+        return null;
+    }
 
     containerProps = () => ({
         pages: this.getPages()
@@ -59,13 +69,15 @@ export class PLPPagesContainer extends PureComponent {
     }
 
     render() {
+        const { impressions } = this.state;
+
         return (
             <PLPPages
-              { ...this.containerFunctions }
+              impressions={ impressions }
               { ...this.containerProps() }
             />
         );
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PLPPagesContainer);
+export default connect(mapStateToProps)(PLPPagesContainer);

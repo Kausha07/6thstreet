@@ -1,5 +1,6 @@
 /* eslint-disable import/no-cycle */
-import Event, { EVENT_GTM_GENERAL_INIT, EVENT_GTM_PRODUCT_DETAIL } from '../../../util/Event';
+import Event, { EVENT_GTM_GENERAL_INIT, EVENT_GTM_PRODUCT_DETAIL } from 'Util/Event';
+
 import ProductHelper from '../utils';
 import BaseEvent from './Base.event';
 

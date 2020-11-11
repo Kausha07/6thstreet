@@ -1,5 +1,6 @@
 /* eslint-disable import/no-cycle */
-import Event, { EVENT_GTM_PRODUCT_ADD_TO_CART } from '../../../util/Event';
+import Event, { EVENT_GTM_PRODUCT_ADD_TO_CART } from 'Util/Event';
+
 import BaseEvent from './Base.event';
 
 export const SPAM_PROTECTION_DELAY = 200;

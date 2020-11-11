@@ -1,5 +1,6 @@
 /* eslint-disable import/no-cycle */
-import Event, { EVENT_GTM_CHECKOUT_OPTION } from '../../../util/Event';
+import Event, { EVENT_GTM_CHECKOUT_OPTION } from 'Util/Event';
+
 import BaseEvent from './Base.event';
 
 export const CHECKOUT_OPTIONS_EVENT_DELAY = 500;
