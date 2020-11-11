@@ -470,13 +470,18 @@
         .Button{
             --button-background: var(--btn-bg-lite-gray-color);
             --button-border:  var(--btn-bg-lite-gray-color);
-            --button-hover-background: var(--black-color);
-            --button-hover-border: var(--black-color);
+            --button-hover-background: var(--btn-bg-lite-gray-color);
+            --button-hover-border: var(--btn-bg-lite-gray-color);
             --button-color: var(--white-color);
 
             font-size: 12px;
             font-weight: var(--fw-bold);
             line-height: 16px;
+
+            &[disabled] {
+                opacity: unset;
+                background: var(--btn-bg-lite-gray-color);
+            }
         }
 
         &_isMargin {
@@ -515,6 +520,18 @@
                 height: 25px;
                 display: inline-block;
                 font-size: 0;
+            }
+        }
+
+        &_isSignInValidated,
+        &_isCreateValidated,
+        &_isForgotValidated {
+            .Button{
+                --button-background: var(--black-color);
+                --button-border:  var(--black-color);
+                --button-hover-background: var(--black-color);
+                --button-hover-border: var(--black-color);
+                --button-color: var(--white-color);
             }
         }
 

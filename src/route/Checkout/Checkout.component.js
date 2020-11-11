@@ -243,14 +243,16 @@ export class Checkout extends SourceCheckout {
     }
 
     continueAsGuest = () => {
-        const { email } = this.props;
+        // const { email } = this.props;
 
-        if (/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
-            this.setState({ isInvalidEmail: false });
-            this.setState({ continueAsGuest: true });
-        } else {
-            this.setState({ isInvalidEmail: true });
-        }
+        // if (/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
+        //     this.setState({ isInvalidEmail: false });
+        //     this.setState({ continueAsGuest: true });
+        // } else {
+        //     this.setState({ isInvalidEmail: true });
+        // }
+
+        this.setState({ continueAsGuest: true });
     };
 
     changeEmail = () => {
@@ -344,16 +346,20 @@ export class Checkout extends SourceCheckout {
 
         return (
             <>
-              <div
-                block="Checkout"
-                elem="GuestButton"
-                mods={ { continueAsGuest, isSignedIn, isArabic } }
-              >
-                <button onClick={ continueAsGuest ? this.changeEmail : this.continueAsGuest }>
-                  { continueAsGuest ? <span>{ __('Edit') }</span> : <span>{ __('Continue as guest') }</span> }
-                </button>
-                { continueAsGuest ? renderCheckoutShipping : null }
-              </div>
+                { continueAsGuest || isSignedIn ? null : this.renderHeading(__('Login / Sign Up'), false) }
+                <div block="Checkout" elem="GuestCheckout" mods={ { continueAsGuest } }>
+                    { this.renderGuestForm() }
+                    <div
+                      block="Checkout"
+                      elem="GuestButton"
+                      mods={ { continueAsGuest, isSignedIn, isArabic } }
+                    >
+                        <button onClick={ continueAsGuest ? this.changeEmail : this.continueAsGuest }>
+                        { continueAsGuest ? <span>{ __('Edit') }</span> : <span>{ __('Continue as guest') }</span> }
+                        </button>
+                    </div>
+                    { continueAsGuest ? renderCheckoutShipping : null }
+                </div>
               { isSignedIn ? renderCheckoutShipping : null }
               { continueAsGuest || isSignedIn ? null : this.renderHeading(__('Shipping Options'), true) }
               { continueAsGuest || isSignedIn ? null : this.renderHeading(__('Delivery Options'), true) }
@@ -371,7 +377,6 @@ export class Checkout extends SourceCheckout {
                 >
                     <div block="Checkout" elem="Step">
                       { this.renderTitle() }
-                      { this.renderGuestForm() }
                       { this.renderStep() }
                       { this.renderLoader() }
                     </div>
