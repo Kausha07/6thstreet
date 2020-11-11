@@ -273,7 +273,9 @@ export class Router extends SourceRouter {
         return (
             <div block="PageWrapper" mods={ { isArabic } }>
                 { this.renderItemsOfType(BEFORE_ITEMS_TYPE) }
-                { this.renderMainItems() }
+                <div block="PageWrapper" elem="Content">
+                    { this.renderMainItems() }
+                </div>
                 { this.renderItemsOfType(AFTER_ITEMS_TYPE) }
             </div>
         );
