@@ -5,10 +5,7 @@ import { connect } from 'react-redux';
 import { setGender } from 'Store/AppState/AppState.action';
 import MenuDispatcher from 'Store/Menu/Menu.dispatcher';
 
-// import { getStaticFile } from 'Util/API/endpoint/StaticFiles/StaticFiles.endpoint';
-// import Logger from 'Util/Logger';
 import Menu from './Menu.component';
-// import { CATEGORIES_STATIC_FILE_KEY } from './Menu.config';
 
 export const mapStateToProps = (state) => ({
     gender: state.AppState.gender,
