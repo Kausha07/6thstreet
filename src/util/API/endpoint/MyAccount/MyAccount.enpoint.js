@@ -18,3 +18,7 @@ export const updateCustomerData = (data) => MobileAPI.put(
     '/customers',
     data
 ) || {};
+
+export const getOrders = (limit) => MobileAPI.get(
+    `/orders${limit}`,
+) || {};

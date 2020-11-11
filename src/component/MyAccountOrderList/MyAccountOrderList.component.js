@@ -49,11 +49,26 @@ class MyAccountOrderList extends SourceComponent {
         );
     }
 
+    renderMoreItems() {
+        const { requestInProgress } = this.props;
+
+        if (requestInProgress) {
+            return (
+                <div block="MyAccountOrderList" elem="MoreOrders">
+                    Loading more orders...
+                </div>
+            );
+        }
+
+        return null;
+    }
+
     render() {
         return (
             <div block="MyAccountOrderList">
                 { this.renderOrders() }
                 { this.renderLoader() }
+                { this.renderMoreItems() }
             </div>
         );
     }
