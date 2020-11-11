@@ -31,6 +31,7 @@ import {
     setMobileAuthorizationToken
 } from 'Util/Auth';
 import BrowserDatabase from 'Util/BrowserDatabase';
+import Event, { EVENT_GTM_GENERAL_INIT } from 'Util/Event';
 import { prepareQuery } from 'Util/Query';
 import { executePost, fetchMutation } from 'Util/Request';
 
@@ -77,6 +78,8 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         dispatch(updateCustomerDetails({}));
         dispatch(setStoreCredit(getStoreCreditInitialState()));
         dispatch(setClubApparel(getClubApparelInitialState()));
+
+        Event.dispatch(EVENT_GTM_GENERAL_INIT);
     }
 
     async signIn(options = {}, dispatch) {
@@ -92,6 +95,8 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
             await this.handleMobileAuthorization(dispatch, options);
             await WishlistDispatcher.updateInitialWishlistData(dispatch);
             await StoreCreditDispatcher.getStoreCredit(dispatch);
+
+            Event.dispatch(EVENT_GTM_GENERAL_INIT);
 
             return true;
         } catch ([e]) {
@@ -158,7 +163,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         const mappedData = {
             firstname: fullname,
             email,
-            gender,
+            gender: gender.toString(),
             custom_attributes: {
                 contact_no: phone,
                 dob

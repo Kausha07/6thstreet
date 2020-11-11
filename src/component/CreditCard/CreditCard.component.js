@@ -112,8 +112,8 @@ class CreditCard extends PureComponent {
     renderCreditCardForm() {
         const { cvv, cardLogo } = this.state;
         return (
-            <div block="CreditCard" elem="Card">
-                <p>{ __('card number') }</p>
+            <div block="CreditCard" elem="Card" dir="ltr">
+                <p>card number</p>
                 <input
                   type="text"
                   placeholder="0000  0000  0000  0000"

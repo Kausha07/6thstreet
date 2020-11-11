@@ -64,13 +64,9 @@ export class PDPContainer extends PureComponent {
         gender: PropTypes.string.isRequired
     };
 
-    containerFunctions = {
-        // getData: this.getData.bind(this)
-    };
-
     state = {
-        firstLoad: true,
-        menuCategories: null
+        menuCategories: null,
+        productSku: null
     };
 
     constructor(props) {
@@ -85,11 +81,11 @@ export class PDPContainer extends PureComponent {
             id,
             isLoading,
             setIsLoading,
-            product
+            product: { sku } = {}
         } = this.props;
         const currentIsLoading = this.getIsLoading();
         const { id: prevId } = prevProps;
-        const { firstLoad, menuCategories } = this.state;
+        const { menuCategories, productSku } = this.state;
 
         // Request product, if URL rewrite has changed
         if (id !== prevId) {
@@ -101,7 +97,7 @@ export class PDPContainer extends PureComponent {
             setIsLoading(false);
         }
 
-        if (Object.keys(product).length !== 0 && firstLoad && menuCategories) {
+        if (menuCategories && sku && productSku !== sku) {
             this.updateBreadcrumbs();
             this.setMetaData();
             this.updateHeaderState();
@@ -144,7 +140,7 @@ export class PDPContainer extends PureComponent {
     updateBreadcrumbs() {
         const {
             updateBreadcrumbs,
-            product: { categories, name },
+            product: { categories, name, sku },
             setGender,
             nbHits
         } = this.props;
@@ -175,7 +171,7 @@ export class PDPContainer extends PureComponent {
             ];
 
             updateBreadcrumbs(breadcrumbs);
-            this.setState({ firstLoad: false });
+            this.setState({ productSku: sku });
         }
     }
 
@@ -234,7 +230,6 @@ export class PDPContainer extends PureComponent {
         localStorage.setItem('PRODUCT_NAME', JSON.stringify(product.name));
         return (
             <PDP
-              { ...this.containerFunctions }
               { ...this.containerProps() }
             />
         );

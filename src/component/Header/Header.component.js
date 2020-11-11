@@ -19,7 +19,8 @@ export class Header extends PureComponent {
     static propTypes = {
         navigationState: PropTypes.shape({
             name: PropTypes.string
-        }).isRequired
+        }).isRequired,
+        history: PropTypes.object.isRequired
     };
 
     state = {
@@ -58,41 +59,39 @@ export class Header extends PureComponent {
         );
     };
 
-    getRedirectURL() {
-        return location.pathname.match(/checkout\/shipping/)
-            ? '/cart' : '/checkout/shipping';
-    }
+    redirectURL = () => {
+        const { isMobile } = this.state;
+        const { history } = this.props;
+
+        if (isMobile) {
+            const path = location.pathname.match(/checkout\/shipping/);
+
+            if (path) {
+                history.push('/cart');
+            } else {
+                location.reload();
+            }
+        } else {
+            history.push('/');
+        }
+    };
 
     renderBackToShoppingButton() {
-        const { isArabic } = this.state;
+        const { isArabic, isMobile } = this.state;
 
         return (
-            <>
-                <a href={ this.getRedirectURL() }>
-                    <div
-                      block="CheckoutHeader"
-                      elem="BackToShoppingMobile"
-                      mods={ { isArabic } }
-                    >
-                        <button block="BackMobileButton">
-                            { ' ' }
-                        </button>
-                    </div>
-                </a>
-                <a href="/">
-                    <div
-                      block="CheckoutHeader"
-                      elem="BackToShoppingDesktop"
-                      mods={ { isArabic } }
-                    >
-                        <button
-                          block="button secondary medium"
-                        >
-                            { __('Back to shopping') }
-                        </button>
-                    </div>
-                </a>
-            </>
+            <div
+              block="CheckoutHeader"
+              elem={ isMobile ? 'BackToShoppingMobile' : 'BackToShoppingDesktop' }
+              mods={ { isArabic } }
+            >
+                <button
+                  block={ isMobile ? 'BackMobileButton' : 'button secondary medium' }
+                  onClick={ this.redirectURL }
+                >
+                    { isMobile ? ' ' : __('Back to shopping') }
+                </button>
+            </div>
         );
     }
 

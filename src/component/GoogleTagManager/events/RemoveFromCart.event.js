@@ -1,53 +1,41 @@
 /* eslint-disable import/no-cycle */
-import Event, { EVENT_GTM_PRODUCT_REMOVE_FROM_CART } from '../../../util/Event';
-import ProductHelper from '../utils';
+import Event, { EVENT_GTM_PRODUCT_REMOVE_FROM_CART } from 'Util/Event';
+
 import BaseEvent from './Base.event';
 
 export const SPAM_PROTECTION_DELAY = 200;
 /**
- * Product add to cart event
+ * Product remove from cart
  */
 class RemoveFromCartEvent extends BaseEvent {
     /**
-     * Bind add to cart
+     * Bind remove from cart
      */
     bindEvent() {
         Event.observer(EVENT_GTM_PRODUCT_REMOVE_FROM_CART, ({
-            item,
-            quantity
+            product
         }) => {
-            this.handle(item, quantity);
+            this.handle(product);
         });
     }
 
     /**
-     * Handle product add to cart
+     * Handle product remove from cart
      */
-    handler(item, quantity) {
+    handler(product) {
         if (this.spamProtection(SPAM_PROTECTION_DELAY)) {
             return;
         }
-
-        const productData = ProductHelper.getItemData(item);
-        const { id, price } = productData;
-        const removedGroupedProduct = ProductHelper.updateGroupedProduct(id, -price * quantity);
-
-        const removedProducts = removedGroupedProduct
-            ? [
-                { ...productData, quantity },
-                removedGroupedProduct.data
-            ]
-            : [{ ...productData, quantity }];
 
         this.pushEventData({
             ecommerce: {
                 currencyCode: this.getCurrencyCode(),
                 remove: {
-                    products: removedProducts
-                },
-                cart: this.prepareCartData()
+                    products: [product]
+                }
             }
         });
     }
 }
+
 export default RemoveFromCartEvent;

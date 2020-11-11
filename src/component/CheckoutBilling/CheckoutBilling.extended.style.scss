@@ -42,6 +42,12 @@
         }
     }
 
+    &-AddressHeader {
+        display: flex;
+        justify-content: space-between;
+        background: var(--white);
+    }
+
     &-AddressHeading {
         font-weight: var(--fw-demi);
         font-size: 18px;
@@ -56,5 +62,133 @@
     &-AddressHeading,
     &-Line {
         background-color: $white;
+    }
+
+    .MyAccountAddressBook {
+        &-ContentWrapper {
+            .MyAccountAddressBook {
+                &-backButton {
+                    @include desktop {
+                        display: none;
+                    }
+                }
+            }
+        }
+    
+        &-ContentWrapper {
+            @include before-desktop {
+                top: -90px;
+            }
+    
+            &_formContent {
+                .MyAccountAddressBook {
+                    &-backButton {
+                        position: absolute;
+                        width: 20px;
+                        height: 30px;
+                        top: -100px;
+                        left: 0;
+                        z-index: 9;
+    
+                        &::before {
+                            content: "";
+                            position: absolute;
+                            left: 5px;
+                            border: solid $black;
+                            border-width: 0 2px 2px 0;
+                            display: inline-block;
+                            padding: 4px;
+                            transform: rotate(135deg);
+                            -webkit-transform: rotate(135deg);
+                        }
+    
+                        @include desktop() {
+                            height: 0;
+                        }
+    
+                        &_isArabic {
+                            top: -100px;
+                            transform: rotate(180deg);
+                            right: 5px;
+                            -webkit-transform: rotate(180deg);
+                        }
+                    }
+                }
+            }
+        }
+    
+        &-NewAddressWrapper {
+            top: 17px;
+            float: right;
+            z-index: 1;
+    
+            @include before-desktop {
+                top: 0;
+                display: flex;
+                justify-content: center;
+                grid-row: 4;
+            }
+    
+            &_formContent {
+                display: none;
+            }
+    
+            &_isArabic {
+                float: left;
+            }
+        }
+    
+        &-NewAddress {
+            font-weight: var(--fw-regular);
+            font-size: 13px;
+            line-height: 18px;
+            background: transparent;
+            color: var(--black);
+            border: none;
+            margin: 0 20px;
+    
+            &:hover {
+                text-decoration: underline;
+            }
+    
+            @include before-desktop {
+                border-radius: 7px;
+                background: var(--my-acc-background);
+                text-transform: capitalize;
+                min-width: 140px;
+                margin-top: 38px;
+    
+                &:hover {
+                    text-decoration: underline;
+                    background: var(--my-acc-background);
+                }
+            }
+        }
+    }
+
+    &-AddAddressWrapper {
+        .MyAccountAddressBook {
+            &-ContentWrapper {
+                margin-top: 20px;
+                background: var(--white);
+                padding: 20px 60px 30px 60px;
+                
+                h2 {
+                    border: none;
+                }
+        
+                .MyAccountAddressBook {
+                    &-backButton {
+                        @include desktop {
+                            display: none;
+                        }
+                    }
+                }
+
+                .MyAccountAddressPopup {
+                    margin: 0;
+                }
+            }
+        }
     }
 }

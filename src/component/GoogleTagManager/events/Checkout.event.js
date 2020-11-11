@@ -1,5 +1,6 @@
 /* eslint-disable import/no-cycle */
-import Event, { EVENT_GTM_CHECKOUT } from '../../../util/Event';
+import Event, { EVENT_GTM_CHECKOUT } from 'Util/Event';
+
 import ProductHelper from '../utils';
 import BaseEvent from './Base.event';
 

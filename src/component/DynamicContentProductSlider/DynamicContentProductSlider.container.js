@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { PureComponent } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import WebUrlParser from 'Util/API/helper/WebUrlParser';
@@ -9,32 +9,25 @@ import Logger from 'Util/Logger';
 import DynamicContentProductSlider from './DynamicContentProductSlider.component';
 
 export const mapStateToProps = (_state) => ({
-    // wishlistItems: state.WishlistReducer.productsInWishlist
     language: _state.AppState.language
-});
-
-export const mapDispatchToProps = (_dispatch) => ({
-    // addProduct: options => CartDispatcher.addProductToCart(dispatch, options)
 });
 
 export class DynamicContentProductSliderContainer extends PureComponent {
     static propTypes = {
         title: PropTypes.string,
         data_url: PropTypes.string.isRequired,
-        language: PropTypes.string.isRequired
+        language: PropTypes.string.isRequired,
+        setImpressions: PropTypes.func
     };
 
     static defaultProps = {
-        title: ''
+        title: '',
+        setImpressions: () => {}
     };
 
     state = {
         products: [],
         isLoading: true
-    };
-
-    containerFunctions = {
-        // getData: this.getData.bind(this)
     };
 
     constructor(props) {
@@ -65,8 +58,7 @@ export class DynamicContentProductSliderContainer extends PureComponent {
     };
 
     async requestItems() {
-        const { data_url } = this.props;
-
+        const { data_url, setImpressions } = this.props;
         const { params } = WebUrlParser.parsePLP(data_url);
 
         try {
@@ -76,6 +68,7 @@ export class DynamicContentProductSliderContainer extends PureComponent {
                 limit: 10
             });
 
+            setImpressions(products);
             this.setState({
                 products,
                 isLoading: false
@@ -94,11 +87,10 @@ export class DynamicContentProductSliderContainer extends PureComponent {
     render() {
         return (
             <DynamicContentProductSlider
-              { ...this.containerFunctions }
               { ...this.containerProps() }
             />
         );
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(DynamicContentProductSliderContainer);
+export default connect(mapStateToProps)(DynamicContentProductSliderContainer);

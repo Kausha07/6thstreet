@@ -8,6 +8,7 @@ import ProductLabel from 'Component/ProductLabel/ProductLabel.component';
 import WishlistIcon from 'Component/WishlistIcon';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
 import { isArabic } from 'Util/App';
+import Event, { EVENT_GTM_PRODUCT_CLICK } from 'Util/Event';
 
 import './ProductItem.style';
 
@@ -24,6 +25,13 @@ class ProductItem extends PureComponent {
     state = {
         isArabic: isArabic()
     };
+
+    handleClick = this.handleProductClick.bind(this);
+
+    handleProductClick() {
+        const { product } = this.props;
+        Event.dispatch(EVENT_GTM_PRODUCT_CLICK, product);
+    }
 
     renderWishlistIcon() {
         const { product: { sku } } = this.props;
@@ -97,7 +105,7 @@ class ProductItem extends PureComponent {
         };
 
         return (
-            <Link to={ linkTo }>
+            <Link to={ linkTo } onClick={ this.handleClick }>
                 { this.renderImage() }
                 { this.renderBrand() }
                 { this.renderTitle() }
