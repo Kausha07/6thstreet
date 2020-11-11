@@ -21,6 +21,7 @@ import { getInitialState as getStoreCreditInitialState } from 'Store/StoreCredit
 import WishlistDispatcher from 'Store/Wishlist/Wishlist.dispatcher';
 import {
     getMobileApiAuthorizationToken,
+    getOrders,
     resetPassword,
     updateCustomerData
 } from 'Util/API/endpoint/MyAccount/MyAccount.enpoint';
@@ -149,6 +150,10 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         const { email } = options;
 
         return resetPassword({ email });
+    }
+
+    async getOrders(limit) {
+        return getOrders(limit);
     }
 
     updateCustomerData(dispatch, data) {

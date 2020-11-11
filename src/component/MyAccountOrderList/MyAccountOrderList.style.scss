@@ -2,6 +2,10 @@
     margin-bottom: 110px;
     max-width: 500px;
 
+    &-MoreOrders {
+        margin-top: 50px;
+    }
+
     @include desktop {
         margin-bottom: 50px;
     }
