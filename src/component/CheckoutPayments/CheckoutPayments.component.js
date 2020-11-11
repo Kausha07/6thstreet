@@ -3,6 +3,7 @@
 import CartCoupon from 'Component/CartCoupon';
 import CheckoutPayment from 'Component/CheckoutPayment';
 import { PAYMENTS_DATA } from 'Component/CheckoutPayment/CheckoutPayment.config';
+import tabbyAr from 'Component/CheckoutPayment/icons/tabby-logo-black-ar@2x.png';
 import ClubApparel from 'Component/ClubApparel';
 import CreditCard from 'Component/CreditCard';
 import Slider from 'Component/Slider';
@@ -13,6 +14,7 @@ import {
     TABBY_TOOLTIP_PAY_LATER
 } from 'Component/TabbyMiniPopup/TabbyMiniPopup.config';
 import SourceCheckoutPayments from 'SourceComponent/CheckoutPayments/CheckoutPayments.component';
+import { isArabic } from 'Util/App';
 import { isSignedIn } from 'Util/Auth';
 
 import {
@@ -39,7 +41,8 @@ export class CheckoutPayments extends SourceCheckoutPayments {
         activeSliderImage: 0,
         tabbyPaymentMethods: [],
         tabbyIsRendered: false,
-        tooltipContent: null
+        tooltipContent: null,
+        isArabic: isArabic()
     };
 
     handleChange = (activeImage) => {
@@ -136,6 +139,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
             setCashOnDeliveryFee
         } = this.props;
         const { img } = PAYMENTS_DATA[m_code];
+        const { isArabic } = this.state;
 
         const isSelected = m_code === selectedPaymentCode;
 
@@ -156,7 +160,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
                       onClick={ selectPaymentMethod }
                       setCashOnDeliveryFee={ setCashOnDeliveryFee }
                     />
-                    <img src={ img } alt={ m_code } />
+                    <img src={ isArabic ? tabbyAr : img } alt={ m_code } />
                 </div>
                 <div block="CheckoutPayments" elem="TabbyPaymentContent">
                     <div block="CheckoutPayments" elem="TabbyPaymentContentTitle">

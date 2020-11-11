@@ -39,7 +39,7 @@ export class CheckoutSuccess extends SourceCheckoutSuccess {
     renderSuccess() {
         const { successHidden } = this.state;
         return (
-            <div block={ `SuccessOverlay ${successHidden ? 'hidden' : ''}` }>
+            <div block={ `SuccessOverlay ${successHidden ? 'hidden' : ''}` } dir="ltr">
                 <div block="OrderPlacedTextWrapper">
                     <div block="confirmSimbol" />
                     <p>

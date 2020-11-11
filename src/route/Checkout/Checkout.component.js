@@ -141,7 +141,7 @@ export class Checkout extends SourceCheckout {
         if (checkoutStep === BILLING_STEP && isLoading) {
             return (
                 <div block="CheckoutSuccess">
-                    <div block="LoadingOverlay">
+                    <div block="LoadingOverlay" dir="ltr">
                         <p>
                             { __('Processing Your Order') }
                         </p>
