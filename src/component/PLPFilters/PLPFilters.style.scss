@@ -169,13 +169,17 @@
     font-weight: var(--fw-light);
     height: 34px;
     justify-content: space-between;
-    letter-spacing: 0.5px;
-    margin-top: 100px;
+    letter-spacing: .5px;
+    margin-left: 10px;
+    padding: 10px;
+    position: fixed;
     text-transform: capitalize;
+    top: 70px;
     width: 106px;
+    z-index: 4;
 
     img {
-        width: 25%;
+        width: 17%;
     }
 
     @include tablet() {
@@ -233,7 +237,7 @@
     }
 
     &-QuickCategories {
-        width: 100%;
+        width: 100vw;
     }
 
     .Field {
@@ -291,7 +295,21 @@
 
         @include mobile() {
             margin-left: 120px;
-            margin-top: -47px;
+            margin-top: -43px;
+            position: fixed;
+            top: 100px;
+            z-index: 3;
+
+            &:before {
+                background-color: var(--white);
+                content: '';
+                display: inline-block;
+                height: 55px;
+                left: 0;
+                margin-top: -10px;
+                position: fixed;
+                width: 100vw;
+            }
 
             &_isArabic {
                 margin-left: 0;

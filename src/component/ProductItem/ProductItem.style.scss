@@ -6,6 +6,16 @@
  */
 
 .ProductItem {
+    &-Brand {
+        font-size: 12px;
+    }
+
+    &-Title {
+        font-weight: var(--fw-medium);
+        color: var(--gray-color);
+        font-size: 13px;
+    }
+
     .ProductLabel {
         width: 40px;
         height: 25px;
