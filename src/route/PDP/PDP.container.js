@@ -65,7 +65,6 @@ export class PDPContainer extends PureComponent {
     };
 
     state = {
-        firstLoad: true,
         menuCategories: null,
         productSku: null
     };
@@ -86,7 +85,7 @@ export class PDPContainer extends PureComponent {
         } = this.props;
         const currentIsLoading = this.getIsLoading();
         const { id: prevId } = prevProps;
-        const { firstLoad, menuCategories, productSku } = this.state;
+        const { menuCategories, productSku } = this.state;
 
         // Request product, if URL rewrite has changed
         if (id !== prevId) {
@@ -98,10 +97,7 @@ export class PDPContainer extends PureComponent {
             setIsLoading(false);
         }
 
-        if (
-            (Object.keys(product).length !== 0 && firstLoad && menuCategories)
-            || (sku && productSku !== sku)
-        ) {
+        if (menuCategories && sku && productSku !== sku) {
             this.updateBreadcrumbs();
             this.setMetaData();
             this.updateHeaderState();
