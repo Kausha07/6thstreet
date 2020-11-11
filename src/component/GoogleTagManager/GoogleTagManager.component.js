@@ -21,7 +21,7 @@ import Scripts from './Scripts';
  * Event list
  */
 export const EVENT_GENERAL = 'general';
-export const EVENT_IMPRESSION = 'productImpression';
+export const EVENT_IMPRESSION = 'ee.impression';
 export const EVENT_PRODUCT_CLICK = 'productClick';
 export const EVENT_ADD_TO_CART = 'addToCart';
 export const EVENT_REMOVE_FROM_CART = 'removeFromCart';

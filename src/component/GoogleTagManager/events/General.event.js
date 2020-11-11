@@ -1,7 +1,7 @@
 /* eslint-disable import/no-cycle */
 import { isArabic } from 'Util/App';
+import Event, { EVENT_GTM_GENERAL_INIT, EVENT_GTM_META_UPDATE } from 'Util/Event';
 
-import Event, { EVENT_GTM_GENERAL_INIT, EVENT_GTM_META_UPDATE } from '../../../util/Event';
 import BaseEvent from './Base.event';
 
 export const GENERAL_EVENT_DELAY = 500;
@@ -12,13 +12,6 @@ export const GENERAL_EVENT_DELAY = 500;
  * On: page load, page change location
  */
 class GeneralEvent extends BaseEvent {
-    /**
-     * If already loading data, do not do second request
-     *
-     * @type {boolean}
-     */
-    isLoadingData = false;
-
     /**
      * Set base event call delay
      *
@@ -37,6 +30,22 @@ class GeneralEvent extends BaseEvent {
      * Bind PWA event handling
      */
     bindEvent() {
+        this.delayedEvent();
+
+        // Catch custom triggers e.g. login
+        Event.observer(EVENT_GTM_GENERAL_INIT, ({ initial }) => {
+            if (!initial) {
+                this.delayedEvent();
+            }
+        });
+
+        // Receive current meta
+        Event.observer(EVENT_GTM_META_UPDATE, (meta) => {
+            this.currentMeta = meta;
+        });
+    }
+
+    delayedEvent() {
         // Page load, wait a bit for better user performance
         setTimeout(() => {
             this.saveCartDataToStorage();
@@ -65,11 +74,6 @@ class GeneralEvent extends BaseEvent {
                 this.handle();
             }, GENERAL_EVENT_DELAY);
         });
-
-        // Receive current meta
-        Event.observer(EVENT_GTM_META_UPDATE, (meta) => {
-            this.currentMeta = meta;
-        });
     }
 
     saveCartDataToStorage() {
@@ -81,19 +85,26 @@ class GeneralEvent extends BaseEvent {
 
     /**
      * Handler General
+     * Wait for cart to load before firing event as we need cart data
      */
     handler() {
-        Event.dispatch(EVENT_GTM_GENERAL_INIT, {});
+        Event.dispatch(EVENT_GTM_GENERAL_INIT, { initial: true });
 
-        this.pushEventData({
-            country: this.getCountryName(),
-            pageType: this.getPageType(),
-            language: this.getLanguage(),
-            storeView: this.getStoreView(),
-            customerId: this.getCustomerId()
-            // TODO add data from correct sources
-            // cart: this.prepareCartData()
-        });
+        const checkOnCartDataInterval = 500;
+        const interval = setInterval(() => {
+            if (Object.keys(this.getAppState().Cart.cartTotals).length) {
+                clearInterval(interval);
+
+                this.pushEventData({
+                    country: this.getCountryName(),
+                    pageType: this.getPageType(),
+                    language: this.getLanguage(),
+                    storeView: this.getStoreView(),
+                    customerId: this.getCustomerId(),
+                    cart: this.prepareCartData()
+                });
+            }
+        }, checkOnCartDataInterval);
     }
 
     /**
@@ -103,13 +114,6 @@ class GeneralEvent extends BaseEvent {
      */
     getStoreView() {
         return this.getAppState().AppState.locale || '';
-    }
-
-    /**
-     * @param {*} item
-     */
-    getQuantity({ qty }) {
-        return qty;
     }
 
     /**

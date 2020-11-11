@@ -16,6 +16,7 @@ import { connect } from 'react-redux';
 import { DEFAULT_MAX_PRODUCTS } from 'Component/ProductActions/ProductActions.config';
 import { hideActiveOverlay } from 'Store/Overlay/Overlay.action';
 import { CartItemType } from 'Type/MiniCart';
+import Event, { EVENT_GTM_PRODUCT_ADD_TO_CART, EVENT_GTM_PRODUCT_REMOVE_FROM_CART } from 'Util/Event';
 import { makeCancelable } from 'Util/Promise';
 
 import CartItem from './CartItem.component';
@@ -109,7 +110,7 @@ export class CartItemContainer extends PureComponent {
 
     /**
      * Handle item quantity change. Check that value is <1
-     * @param {Number} value new quantity
+     * @param {Number} quantity new quantity
      * @return {void}
      */
     handleChangeQuantity(quantity) {
@@ -120,10 +121,12 @@ export class CartItemContainer extends PureComponent {
                     item_id,
                     color,
                     optionValue,
-                    product: { url, thumbnail },
+                    product: { name, url, thumbnail },
                     brand_name,
                     basePrice,
-                    row_total
+                    row_total,
+                    sku,
+                    qty: oldQuantity
                 }
             } = this.props;
 
@@ -138,6 +141,21 @@ export class CartItemContainer extends PureComponent {
                 url,
                 row_total
             ));
+
+            const event = oldQuantity < quantity ? EVENT_GTM_PRODUCT_ADD_TO_CART : EVENT_GTM_PRODUCT_REMOVE_FROM_CART;
+
+            Event.dispatch(event, {
+                product: {
+                    brand: brand_name,
+                    category: '',
+                    id: sku,
+                    name,
+                    price: row_total,
+                    quantity: 1,
+                    size: optionValue,
+                    variant: color
+                }
+            });
         });
     }
 
@@ -146,13 +164,41 @@ export class CartItemContainer extends PureComponent {
      */
     handleRemoveItem() {
         this.setState({ isLoading: true }, () => {
-            const { removeProduct, item: { item_id } } = this.props;
+            const {
+                removeProduct,
+                item: {
+                    item_id,
+                    brand_name,
+                    sku,
+                    row_total,
+                    optionValue,
+                    color,
+                    qty,
+                    product: {
+                        name
+                    } = {}
+                }
+            } = this.props;
+
             this.hideLoaderAfterPromise(removeProduct(item_id));
+
+            Event.dispatch(EVENT_GTM_PRODUCT_REMOVE_FROM_CART, {
+                product: {
+                    brand: brand_name,
+                    category: '',
+                    id: sku,
+                    name,
+                    price: row_total,
+                    quantity: qty,
+                    size: optionValue,
+                    variant: color
+                }
+            });
         });
     }
 
     /**
-     * @param {Promise}
+     * @param {Promise} promise
      * @returns {cancelablePromise}
      */
     registerCancelablePromise(promise) {
@@ -171,7 +217,7 @@ export class CartItemContainer extends PureComponent {
     }
 
     /**
-     * @returns {Int}
+     * @returns {int}
      */
     _getVariantIndex() {
         const {

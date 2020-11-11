@@ -1,5 +1,6 @@
 /* eslint-disable import/no-cycle */
-import Event, { EVENT_GTM_PRODUCT_CLICK } from '../../../util/Event';
+import Event, { EVENT_GTM_PRODUCT_CLICK } from 'Util/Event';
+
 import { EVENT_IMPRESSION } from '../GoogleTagManager.component';
 import ProductHelper from '../utils';
 import BaseEvent from './Base.event';
@@ -30,22 +31,42 @@ class ProductClickEvent extends BaseEvent {
     handler(product) {
         const {
             position = 1,
-            list = ''
+            list,
+            category,
+            price,
+            id,
+            brand,
+            name,
+            variant,
+            url
         } = this.getProductFromImpression(product) || {};
+
+        if (!id) {
+            return;
+        }
 
         this.pushEventData({
             ecommerce: {
                 click: {
                     actionField: {
-                        list
+                        list,
+                        action: 'click'
                     },
                     products: [
                         {
-                            ...ProductHelper.getProductData(product),
-                            position
+                            category,
+                            price,
+                            id,
+                            brand,
+                            position,
+                            name,
+                            variant
                         }
                     ]
                 }
+            },
+            eventCallback() {
+                document.location = url;
             }
         });
     }
