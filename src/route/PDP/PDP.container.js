@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import { CATEGORIES_STATIC_FILE_KEY } from 'Component/Menu/Menu.config';
 import { DEFAULT_STATE_NAME } from 'Component/NavigationAbstract/NavigationAbstract.config';
 import { setGender } from 'Store/AppState/AppState.action';
 import { updateMeta } from 'Store/Meta/Meta.action';
@@ -11,7 +12,9 @@ import { setPDPLoading } from 'Store/PDP/PDP.action';
 import PDPDispatcher from 'Store/PDP/PDP.dispatcher';
 import { getCountriesForSelect } from 'Util/API/endpoint/Config/Config.format';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
-import { getBreadcrumbs } from 'Util/Breadcrumbs/Breadcrubms';
+import { getStaticFile } from 'Util/API/endpoint/StaticFiles/StaticFiles.endpoint';
+import { getBreadcrumbs, getBreadcrumbsUrl } from 'Util/Breadcrumbs/Breadcrubms';
+import Logger from 'Util/Logger';
 
 import PDP from './PDP.component';
 
@@ -26,7 +29,9 @@ export const mapStateToProps = (state) => ({
     options: state.PDP.options,
     nbHits: state.PDP.nbHits,
     country: state.AppState.country,
-    config: state.AppConfig.config
+    gender: state.AppState.gender,
+    config: state.AppConfig.config,
+    breadcrumbs: state.BreadcrumbsReducer.breadcrumbs
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -54,7 +59,9 @@ export class PDPContainer extends PureComponent {
         nbHits: PropTypes.number.isRequired,
         setMeta: PropTypes.func.isRequired,
         country: PropTypes.string.isRequired,
-        config: PropTypes.object.isRequired
+        config: PropTypes.object.isRequired,
+        breadcrumbs: PropTypes.array.isRequired,
+        gender: PropTypes.string.isRequired
     };
 
     containerFunctions = {
@@ -62,13 +69,15 @@ export class PDPContainer extends PureComponent {
     };
 
     state = {
-        firstLoad: true
+        firstLoad: true,
+        menuCategories: null
     };
 
     constructor(props) {
         super(props);
 
         this.requestProduct();
+        this.requestCategories();
     }
 
     componentDidUpdate(prevProps) {
@@ -80,7 +89,7 @@ export class PDPContainer extends PureComponent {
         } = this.props;
         const currentIsLoading = this.getIsLoading();
         const { id: prevId } = prevProps;
-        const { firstLoad } = this.state;
+        const { firstLoad, menuCategories } = this.state;
 
         // Request product, if URL rewrite has changed
         if (id !== prevId) {
@@ -92,7 +101,7 @@ export class PDPContainer extends PureComponent {
             setIsLoading(false);
         }
 
-        if (Object.keys(product).length !== 0 && firstLoad) {
+        if (Object.keys(product).length !== 0 && firstLoad && menuCategories) {
             this.updateBreadcrumbs();
             this.setMetaData();
             this.updateHeaderState();
@@ -108,6 +117,30 @@ export class PDPContainer extends PureComponent {
         });
     }
 
+    async requestCategories(isUpdate = false, gender = this.props) {
+        if (isUpdate) {
+            // Only set loading if this is an update
+            this.setState({ isLoading: true });
+        }
+
+        try {
+            if (typeof gender === 'object') {
+                this.setState({
+                    menuCategories: await getStaticFile(CATEGORIES_STATIC_FILE_KEY, { $GENDER: gender.gender }),
+                    isLoading: false
+                });
+            } else {
+                this.setState({
+                    menuCategories: await getStaticFile(CATEGORIES_STATIC_FILE_KEY, { $GENDER: gender }),
+                    isLoading: false
+                });
+            }
+        } catch (e) {
+            // TODO: handle error
+            Logger.log(e);
+        }
+    }
+
     updateBreadcrumbs() {
         const {
             updateBreadcrumbs,
@@ -115,12 +148,14 @@ export class PDPContainer extends PureComponent {
             setGender,
             nbHits
         } = this.props;
+        const { menuCategories } = this.state;
 
         if (nbHits === 1) {
             const categoriesLastLevel = categories[Object.keys(categories)[Object.keys(categories).length - 1]][0]
                 .split(' /// ');
 
-            const breadcrumbsMapped = getBreadcrumbs(categoriesLastLevel, setGender);
+            const urlArray = getBreadcrumbsUrl(categoriesLastLevel, menuCategories);
+            const breadcrumbsMapped = getBreadcrumbs(categoriesLastLevel, setGender, urlArray);
             const productBreadcrumbs = breadcrumbsMapped.reduce((acc, item) => {
                 acc.unshift(item);
 
@@ -188,9 +223,10 @@ export class PDPContainer extends PureComponent {
     }
 
     containerProps = () => {
-        const { nbHits } = this.props;
+        const { nbHits, isLoading } = this.props;
+        const { isLoading: isCategoryLoading } = this.state;
 
-        return { nbHits };
+        return { nbHits, isLoading, isCategoryLoading };
     };
 
     render() {

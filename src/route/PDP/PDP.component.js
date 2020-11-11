@@ -11,7 +11,8 @@ import './PDP.style';
 
 class PDP extends PureComponent {
     static propTypes = {
-        nbHits: PropTypes.number.isRequired
+        nbHits: PropTypes.number.isRequired,
+        isLoading: PropTypes.bool.isRequired
     };
 
     renderMainSection() {
@@ -27,14 +28,18 @@ class PDP extends PureComponent {
     }
 
     renderPDP() {
-        const { nbHits } = this.props;
+        const { nbHits, isLoading } = this.props;
 
-        return nbHits === 1 ? (
-            <div block="PDP">
-                { this.renderMainSection() }
-                { this.renderDetailsSection() }
-            </div>
-        ) : <NoMatch />;
+        if (!isLoading) {
+            return nbHits === 1 ? (
+                <div block="PDP">
+                    { this.renderMainSection() }
+                    { this.renderDetailsSection() }
+                </div>
+            ) : <NoMatch />;
+        }
+
+        return <div>loading...</div>;
     }
 
     render() {

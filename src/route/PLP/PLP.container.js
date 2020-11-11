@@ -3,6 +3,7 @@ import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
+import { CATEGORIES_STATIC_FILE_KEY } from 'Component/Menu/Menu.config';
 import { DEFAULT_STATE_NAME } from 'Component/NavigationAbstract/NavigationAbstract.config';
 import { setGender } from 'Store/AppState/AppState.action';
 import { updateMeta } from 'Store/Meta/Meta.action';
@@ -12,9 +13,11 @@ import { setPLPLoading } from 'Store/PLP/PLP.action';
 import PLPDispatcher from 'Store/PLP/PLP.dispatcher';
 import { getCountriesForSelect } from 'Util/API/endpoint/Config/Config.format';
 import { Filters, Pages, RequestedOptions } from 'Util/API/endpoint/Product/Product.type';
+import { getStaticFile } from 'Util/API/endpoint/StaticFiles/StaticFiles.endpoint';
 import WebUrlParser from 'Util/API/helper/WebUrlParser';
 import { capitalize } from 'Util/App';
-import { getBreadcrumbs } from 'Util/Breadcrumbs/Breadcrubms';
+import { getBreadcrumbs, getBreadcrumbsUrl } from 'Util/Breadcrumbs/Breadcrubms';
+import Logger from 'Util/Logger';
 
 import PLP from './PLP.component';
 
@@ -115,7 +118,8 @@ export class PLPContainer extends PureComponent {
     }
 
     state = {
-        prevRequestOptions: PLPContainer.getRequestOptions()
+        prevRequestOptions: PLPContainer.getRequestOptions(),
+        menuCategories: null
     };
 
     containerFunctions = {
@@ -130,23 +134,36 @@ export class PLPContainer extends PureComponent {
         }
 
         this.setMetaData();
-        this.updateBreadcrumbs();
-        this.updateHeaderState();
+        this.requestCategories();
+    }
+
+    componentDidMount() {
+        const { menuCategories } = this.state;
+
+        if (menuCategories) {
+            this.updateBreadcrumbs();
+            this.setMetaData();
+            this.updateHeaderState();
+        }
     }
 
     componentDidUpdate() {
         const { isLoading, setIsLoading } = this.props;
+        // eslint-disable-next-line no-unused-vars
+        const { firstLoad, menuCategories, isLoading: isCategoriesLoading } = this.state;
         const currentIsLoading = this.getIsLoading();
 
         // update loading from here, validate for last
         // options recieved results from
-        if (isLoading !== currentIsLoading) {
+        if (isLoading !== currentIsLoading || isCategoriesLoading !== currentIsLoading) {
             setIsLoading(currentIsLoading);
         }
 
-        this.setMetaData();
-        this.updateBreadcrumbs();
-        this.updateHeaderState();
+        if (menuCategories) {
+            this.updateBreadcrumbs();
+            this.setMetaData();
+            this.updateHeaderState();
+        }
     }
 
     capitalizeFirstLetter(string) {
@@ -162,32 +179,75 @@ export class PLPContainer extends PureComponent {
         });
     }
 
+    async requestCategories(isUpdate = false, gender = this.props) {
+        if (isUpdate) {
+            // Only set loading if this is an update
+            this.setState({ isLoading: true });
+        }
+
+        try {
+            if (typeof gender === 'object') {
+                this.setState({
+                    menuCategories: await getStaticFile(CATEGORIES_STATIC_FILE_KEY, { $GENDER: gender.gender }),
+                    isLoading: false
+                });
+            } else {
+                this.setState({
+                    menuCategories: await getStaticFile(CATEGORIES_STATIC_FILE_KEY, { $GENDER: gender }),
+                    isLoading: false
+                });
+            }
+        } catch (e) {
+            // TODO: handle error
+            Logger.log(e);
+        }
+    }
+
     updateBreadcrumbs() {
-        const { options: { q: query } } = this.props;
-        const breadcrumbLevels = location.pathname.split('.html')[0]
-            .substring(1)
-            .split('/');
+        const { options: { q: query }, options } = this.props;
+        const { menuCategories } = this.state;
 
         if (query) {
             const {
                 updateBreadcrumbs, setGender
             } = this.props;
-            const breadcrumbsMapped = getBreadcrumbs(breadcrumbLevels, setGender);
-            const productListBreadcrumbs = breadcrumbsMapped.reduce((acc, item) => {
-                acc.unshift(item);
+            const breadcrumbLevels = options['categories.level2']
+                ? options['categories.level2']
+                : options['categories.level1'];
 
-                return acc;
-            }, []);
+            if (breadcrumbLevels) {
+                const levelArray = breadcrumbLevels.split(' /// ');
+                const urlArray = getBreadcrumbsUrl(levelArray, menuCategories);
+                const breadcrumbsMapped = getBreadcrumbs(levelArray, setGender, urlArray);
+                const productListBreadcrumbs = breadcrumbsMapped.reduce((acc, item) => {
+                    acc.unshift(item);
 
-            const breadcrumbs = [
-                ...productListBreadcrumbs,
-                {
-                    url: '/',
-                    name: __('Home')
-                }
-            ];
+                    return acc;
+                }, []);
 
-            updateBreadcrumbs(breadcrumbs);
+                const breadcrumbs = [
+                    ...productListBreadcrumbs,
+                    {
+                        url: '/',
+                        name: __('Home')
+                    }
+                ];
+
+                updateBreadcrumbs(breadcrumbs);
+            } else {
+                const breadcrumbs = [
+                    {
+                        url: '/',
+                        name: options['categories.level0']
+                    },
+                    {
+                        url: '/',
+                        name: __('Home')
+                    }
+                ];
+
+                updateBreadcrumbs(breadcrumbs);
+            }
         }
     }
 
