@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
-import { CATEGORIES_STATIC_FILE_KEY } from 'Component/Menu/Menu.config';
 import { DEFAULT_STATE_NAME } from 'Component/NavigationAbstract/NavigationAbstract.config';
 import { setGender } from 'Store/AppState/AppState.action';
 import { updateMeta } from 'Store/Meta/Meta.action';
@@ -12,9 +11,7 @@ import { setPDPLoading } from 'Store/PDP/PDP.action';
 import PDPDispatcher from 'Store/PDP/PDP.dispatcher';
 import { getCountriesForSelect } from 'Util/API/endpoint/Config/Config.format';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
-import { getStaticFile } from 'Util/API/endpoint/StaticFiles/StaticFiles.endpoint';
 import { getBreadcrumbs, getBreadcrumbsUrl } from 'Util/Breadcrumbs/Breadcrubms';
-import Logger from 'Util/Logger';
 
 import PDP from './PDP.component';
 
@@ -31,7 +28,8 @@ export const mapStateToProps = (state) => ({
     country: state.AppState.country,
     gender: state.AppState.gender,
     config: state.AppConfig.config,
-    breadcrumbs: state.BreadcrumbsReducer.breadcrumbs
+    breadcrumbs: state.BreadcrumbsReducer.breadcrumbs,
+    menuCategories: state.MenuReducer.categories
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -61,11 +59,11 @@ export class PDPContainer extends PureComponent {
         country: PropTypes.string.isRequired,
         config: PropTypes.object.isRequired,
         breadcrumbs: PropTypes.array.isRequired,
-        gender: PropTypes.string.isRequired
+        gender: PropTypes.string.isRequired,
+        menuCategories: PropTypes.array.isRequired
     };
 
     state = {
-        menuCategories: null,
         productSku: null
     };
 
@@ -73,7 +71,6 @@ export class PDPContainer extends PureComponent {
         super(props);
 
         this.requestProduct();
-        this.requestCategories();
     }
 
     componentDidUpdate(prevProps) {
@@ -81,11 +78,12 @@ export class PDPContainer extends PureComponent {
             id,
             isLoading,
             setIsLoading,
-            product: { sku } = {}
+            product: { sku } = {},
+            menuCategories
         } = this.props;
         const currentIsLoading = this.getIsLoading();
         const { id: prevId } = prevProps;
-        const { menuCategories, productSku } = this.state;
+        const { productSku } = this.state;
 
         // Request product, if URL rewrite has changed
         if (id !== prevId) {
@@ -97,7 +95,7 @@ export class PDPContainer extends PureComponent {
             setIsLoading(false);
         }
 
-        if (menuCategories && sku && productSku !== sku) {
+        if (menuCategories.length !== 0 && sku && productSku !== sku) {
             this.updateBreadcrumbs();
             this.setMetaData();
             this.updateHeaderState();
@@ -113,38 +111,14 @@ export class PDPContainer extends PureComponent {
         });
     }
 
-    async requestCategories(isUpdate = false, gender = this.props) {
-        if (isUpdate) {
-            // Only set loading if this is an update
-            this.setState({ isLoading: true });
-        }
-
-        try {
-            if (typeof gender === 'object') {
-                this.setState({
-                    menuCategories: await getStaticFile(CATEGORIES_STATIC_FILE_KEY, { $GENDER: gender.gender }),
-                    isLoading: false
-                });
-            } else {
-                this.setState({
-                    menuCategories: await getStaticFile(CATEGORIES_STATIC_FILE_KEY, { $GENDER: gender }),
-                    isLoading: false
-                });
-            }
-        } catch (e) {
-            // TODO: handle error
-            Logger.log(e);
-        }
-    }
-
     updateBreadcrumbs() {
         const {
             updateBreadcrumbs,
             product: { categories, name, sku },
             setGender,
-            nbHits
+            nbHits,
+            menuCategories
         } = this.props;
-        const { menuCategories } = this.state;
 
         if (nbHits === 1) {
             const categoriesLastLevel = categories[Object.keys(categories)[Object.keys(categories).length - 1]][0]
