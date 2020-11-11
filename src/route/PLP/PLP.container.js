@@ -3,7 +3,6 @@ import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { CATEGORIES_STATIC_FILE_KEY } from 'Component/Menu/Menu.config';
 import { DEFAULT_STATE_NAME } from 'Component/NavigationAbstract/NavigationAbstract.config';
 import { setGender } from 'Store/AppState/AppState.action';
 import { updateMeta } from 'Store/Meta/Meta.action';
@@ -13,11 +12,9 @@ import { setPLPLoading } from 'Store/PLP/PLP.action';
 import PLPDispatcher from 'Store/PLP/PLP.dispatcher';
 import { getCountriesForSelect } from 'Util/API/endpoint/Config/Config.format';
 import { Filters, Pages, RequestedOptions } from 'Util/API/endpoint/Product/Product.type';
-import { getStaticFile } from 'Util/API/endpoint/StaticFiles/StaticFiles.endpoint';
 import WebUrlParser from 'Util/API/helper/WebUrlParser';
 import { capitalize } from 'Util/App';
 import { getBreadcrumbs, getBreadcrumbsUrl } from 'Util/Breadcrumbs/Breadcrubms';
-import Logger from 'Util/Logger';
 
 import PLP from './PLP.component';
 
@@ -35,7 +32,8 @@ export const mapStateToProps = (state) => ({
     filters: state.PLP.filters,
     options: state.PLP.options,
     country: state.AppState.country,
-    config: state.AppConfig.config
+    config: state.AppConfig.config,
+    menuCategories: state.MenuReducer.categories
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
@@ -67,7 +65,8 @@ export class PLPContainer extends PureComponent {
         options: PropTypes.object.isRequired,
         setMeta: PropTypes.func.isRequired,
         country: PropTypes.string.isRequired,
-        config: PropTypes.object.isRequired
+        config: PropTypes.object.isRequired,
+        menuCategories: PropTypes.array.isRequired
     };
 
     static requestProductList = PLPContainer.request.bind({}, false);
@@ -118,8 +117,7 @@ export class PLPContainer extends PureComponent {
     }
 
     state = {
-        prevRequestOptions: PLPContainer.getRequestOptions(),
-        menuCategories: null
+        prevRequestOptions: PLPContainer.getRequestOptions()
     };
 
     containerFunctions = {
@@ -134,13 +132,12 @@ export class PLPContainer extends PureComponent {
         }
 
         this.setMetaData();
-        this.requestCategories();
     }
 
     componentDidMount() {
-        const { menuCategories } = this.state;
+        const { menuCategories } = this.props;
 
-        if (menuCategories) {
+        if (menuCategories.length !== 0) {
             this.updateBreadcrumbs();
             this.setMetaData();
             this.updateHeaderState();
@@ -148,9 +145,8 @@ export class PLPContainer extends PureComponent {
     }
 
     componentDidUpdate() {
-        const { isLoading, setIsLoading } = this.props;
-        // eslint-disable-next-line no-unused-vars
-        const { firstLoad, menuCategories, isLoading: isCategoriesLoading } = this.state;
+        const { isLoading, setIsLoading, menuCategories } = this.props;
+        const { isLoading: isCategoriesLoading } = this.state;
         const currentIsLoading = this.getIsLoading();
 
         // update loading from here, validate for last
@@ -159,7 +155,7 @@ export class PLPContainer extends PureComponent {
             setIsLoading(currentIsLoading);
         }
 
-        if (menuCategories) {
+        if (menuCategories.length !== 0) {
             this.updateBreadcrumbs();
             this.setMetaData();
             this.updateHeaderState();
@@ -179,33 +175,8 @@ export class PLPContainer extends PureComponent {
         });
     }
 
-    async requestCategories(isUpdate = false, gender = this.props) {
-        if (isUpdate) {
-            // Only set loading if this is an update
-            this.setState({ isLoading: true });
-        }
-
-        try {
-            if (typeof gender === 'object') {
-                this.setState({
-                    menuCategories: await getStaticFile(CATEGORIES_STATIC_FILE_KEY, { $GENDER: gender.gender }),
-                    isLoading: false
-                });
-            } else {
-                this.setState({
-                    menuCategories: await getStaticFile(CATEGORIES_STATIC_FILE_KEY, { $GENDER: gender }),
-                    isLoading: false
-                });
-            }
-        } catch (e) {
-            // TODO: handle error
-            Logger.log(e);
-        }
-    }
-
     updateBreadcrumbs() {
-        const { options: { q: query }, options } = this.props;
-        const { menuCategories } = this.state;
+        const { options: { q: query }, options, menuCategories } = this.props;
 
         if (query) {
             const {

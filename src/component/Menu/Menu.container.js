@@ -3,19 +3,22 @@ import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import { setGender } from 'Store/AppState/AppState.action';
-import { getStaticFile } from 'Util/API/endpoint/StaticFiles/StaticFiles.endpoint';
-import Logger from 'Util/Logger';
+import MenuDispatcher from 'Store/Menu/Menu.dispatcher';
 
+// import { getStaticFile } from 'Util/API/endpoint/StaticFiles/StaticFiles.endpoint';
+// import Logger from 'Util/Logger';
 import Menu from './Menu.component';
-import { CATEGORIES_STATIC_FILE_KEY } from './Menu.config';
+// import { CATEGORIES_STATIC_FILE_KEY } from './Menu.config';
 
 export const mapStateToProps = (state) => ({
     gender: state.AppState.gender,
-    locale: state.AppState.locale
+    locale: state.AppState.locale,
+    categories: state.MenuReducer.categories
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-    setGender: (gender) => dispatch(setGender(gender))
+    setGender: (gender) => dispatch(setGender(gender)),
+    requestCategories: (gender) => MenuDispatcher.requestCategories(gender, dispatch)
 });
 
 export class MenuContainer extends PureComponent {
@@ -23,11 +26,12 @@ export class MenuContainer extends PureComponent {
         gender: PropTypes.string.isRequired,
         locale: PropTypes.string.isRequired,
         newMenuGender: PropTypes.string.isRequired,
-        setGender: PropTypes.func.isRequired
+        setGender: PropTypes.func.isRequired,
+        requestCategories: PropTypes.func.isRequired,
+        categories: PropTypes.array.isRequired
     };
 
     state = {
-        categories: [],
         isLoading: true,
         menuGender: 'men'
     };
@@ -62,39 +66,26 @@ export class MenuContainer extends PureComponent {
         this.setState({ menuGender: newMenuGender });
     };
 
-    async requestCategories(isUpdate = false, gender = this.props) {
-        if (isUpdate) {
-            // Only set loading if this is an update
-            this.setState({ isLoading: true });
+    requestCategories() {
+        const { requestCategories, gender } = this.props;
+
+        // ignore menu request if there is no gender passed
+        if (!gender) {
+            return;
         }
 
-        try {
-            if (typeof gender === 'object') {
-                this.setState({
-                    categories: await getStaticFile(CATEGORIES_STATIC_FILE_KEY, { $GENDER: gender.gender }),
-                    isLoading: false
-                });
-            } else {
-                this.setState({
-                    categories: await getStaticFile(CATEGORIES_STATIC_FILE_KEY, { $GENDER: gender }),
-                    isLoading: false
-                });
-            }
-        } catch (e) {
-            // TODO: handle error
-            Logger.log(e);
-        }
+        requestCategories(gender);
     }
 
     containerProps = () => {
         const {
-            isLoading,
-            categories
+            isLoading
         } = this.state;
 
         const {
             gender,
-            setGender
+            setGender,
+            categories
         } = this.props;
 
         return {
