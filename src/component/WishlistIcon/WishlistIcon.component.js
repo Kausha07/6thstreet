@@ -12,13 +12,26 @@ class WishlistIcon extends PureComponent {
         items: PropTypes.array.isRequired
     };
 
+    state = {
+        skuFromProps: ''
+    };
+
+    static getDerivedStateFromProps(props) {
+        const { sku } = props;
+
+        return {
+            skuFromProps: sku
+        };
+    }
+
     handleClick = () => {
         const {
             addToWishlist,
             removeFromWishlist,
-            sku: skuFromProps,
             items
         } = this.props;
+        const { skuFromProps } = this.state;
+
         const wishListItem = items.find(({ product: { sku } }) => sku === skuFromProps);
 
         if (wishListItem) {
@@ -31,10 +44,10 @@ class WishlistIcon extends PureComponent {
     };
 
     isBlack = (item) => {
-        const { sku } = this.props;
+        const { skuFromProps } = this.state;
         const { product: { sku: wishlistSku } } = item;
 
-        return sku === wishlistSku;
+        return skuFromProps === wishlistSku;
     };
 
     renderIcon() {
