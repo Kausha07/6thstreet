@@ -93,7 +93,7 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
                 }
             },
             this._handleError
-        );
+        ).catch(() => {});
     }
 
     selectPaymentMethod(item) {
@@ -114,7 +114,11 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
         onPaymentMethodSelect(code);
         setOrderButtonEnableStatus(true);
         updateTotals(cartId);
-        selectPaymentMethod(code);
+        selectPaymentMethod(code).catch(() => {
+            const { showError } = this.props;
+
+            showError(__('Something went wrong'));
+        });
     }
 }
 

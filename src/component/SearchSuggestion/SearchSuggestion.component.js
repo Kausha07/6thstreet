@@ -150,7 +150,7 @@ class SearchSuggestion extends PureComponent {
 
         return (
             <div block="TrandingBrands">
-            <h2>{ __('Tranding brands') }</h2>
+            <h2>{ __('Trending brands') }</h2>
             <ul>
                 { trendingBrands.map(this.renderTrendingBrand) }
             </ul>
@@ -173,7 +173,7 @@ class SearchSuggestion extends PureComponent {
 
         return (
             <div block="TrandingTags">
-                <h2>{ __('Tranding tags') }</h2>
+                <h2>{ __('Trending tags') }</h2>
             <ul>
                 { trendingTags.map(this.renderTrendingTag) }
             </ul>

@@ -87,7 +87,7 @@ export class CreditCardContainer extends PureComponent {
     }
 
     expDateValidator(value) {
-        const message = __('Please check the correct card correct card correct card expiration date (MM/YY)');
+        const message = __('Please check the card expiration date');
         const first = parseInt(value.charAt(0));
         const month = parseInt(value.slice(0, 2));
         const yearFirst = parseInt(value.slice(2, 3));
