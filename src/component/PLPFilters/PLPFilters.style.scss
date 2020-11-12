@@ -238,6 +238,10 @@
 
     &-QuickCategories {
         width: 100vw;
+
+        @include desktop {
+            overflow: hidden;
+        }
     }
 
     .Field {
