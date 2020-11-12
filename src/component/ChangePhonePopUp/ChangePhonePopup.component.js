@@ -123,7 +123,7 @@ class ChangePhonePopup extends PureComponent {
                           block="primary"
                           type="submit"
                         >
-                            { __('change phone') }
+                            { __('Update your Number') }
                         </button>
                     </Form>
                 </div>
