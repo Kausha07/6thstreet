@@ -463,12 +463,12 @@
     "CVV": null,
     "accepted cards:": null,
     "100% secured payments": null,
-    "Linking Succesful!": null,
+    "Linking Successful!": null,
     "You have successfully linked your 6thstreet.com Account with your ": null,
     " Account.": null,
     "Now, start earning Points on every purchase!": null,
     "continue": null,
-    "Linking Unsuccesful!": null,
+    "Linking Unsuccessful!": null,
     "Sorry! We were unable to find a ": null,
     " Account with this number.": null,
     "If you are not already a ": null,
@@ -628,5 +628,11 @@
     "Please enter valid phone number": null,
     "Verification code was successfully re-sended": null,
     "Please wait %s before re-sending the request": null,
-    "Qty:": null
+    "Qty:": null,
+    "Something went wrong.": null,
+    "Trending brands": null,
+    "Trending tags": null,
+    "Your order has been shipped in a single package, please find the package details below.": null,
+    "Please check the correct card expiration date (MM/YY)": null,
+    "Please check the card expiration date": null
 }
