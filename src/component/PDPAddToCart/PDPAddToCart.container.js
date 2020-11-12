@@ -6,12 +6,16 @@ import CartDispatcher from 'Store/Cart/Cart.dispatcher';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
 import Event, { EVENT_GTM_PRODUCT_ADD_TO_CART } from 'Util/Event';
+import history from 'Util/History';
 
 import PDPAddToCart from './PDPAddToCart.component';
 
 export const mapStateToProps = (state) => ({
     product: state.PDP.product
 });
+
+var fullCheckoutHide;
+var startCheckoutHide;
 
 export const mapDispatchToProps = (dispatch) => ({
     showNotification: (type, message) => dispatch(showNotification(type, message)),
@@ -40,7 +44,8 @@ export class PDPAddToCartContainer extends PureComponent {
     containerFunctions = {
         onSizeTypeSelect: this.onSizeTypeSelect.bind(this),
         onSizeSelect: this.onSizeSelect.bind(this),
-        addToCart: this.addToCart.bind(this)
+        addToCart: this.addToCart.bind(this),
+        routeChangeToCart: this.routeChangeToCart.bind(this)
     };
 
     state = {
@@ -50,7 +55,10 @@ export class PDPAddToCartContainer extends PureComponent {
         insertedSizeStatus: true,
         isLoading: false,
         addedToCart: false,
-        buttonRefreshTimeout: 1250
+        buttonRefreshTimeout: 1250,
+        showProceedToCheckout: false,
+        hideCheckoutBlock: false,
+        clearTime: false
     };
 
     static getDerivedStateFromProps(props) {
@@ -74,6 +82,15 @@ export class PDPAddToCartContainer extends PureComponent {
         }
 
         return null;
+    }
+
+    componentDidUpdate(_, prevState) {
+        const { addedToCart } = this.state;
+        const { addedToCart: prevAddedToCart } = prevState;
+
+        if (addedToCart && (prevAddedToCart !== addedToCart)) {
+            this.clearTimeAll();
+        }
     }
 
     containerProps = () => {
@@ -130,6 +147,8 @@ export class PDPAddToCartContainer extends PureComponent {
                 optionValue
             }, color, optionValue, basePrice, brand_name, thumbnail_url, url, itemPrice).then(
                 () => this.afterAddToCart()
+            ).then(
+                () => this.proceedToCheckout()
             );
 
             Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_CART, {
@@ -157,6 +176,8 @@ export class PDPAddToCartContainer extends PureComponent {
                 optionValue: ''
             }, color, null, basePrice, brand_name, thumbnail_url, url, itemPrice).then(
                 () => this.afterAddToCart()
+            ).then(
+                () => this.proceedToCheckout()
             );
 
             Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_CART, {
@@ -177,15 +198,33 @@ export class PDPAddToCartContainer extends PureComponent {
     afterAddToCart() {
         // eslint-disable-next-line no-unused-vars
         const { buttonRefreshTimeout } = this.state;
-
         this.setState({ isLoading: false });
         // TODO props for addedToCart
         const timeout = 1250;
         this.setState({ addedToCart: true });
-        const timer = setTimeout(() => this.setState({ addedToCart: false }), timeout);
-
-        return () => clearTimeout(timer);
+        setTimeout(() => this.setState({ addedToCart: false }), timeout);
     }
+
+    clearTimeAll() {
+        this.setState({ hideCheckoutBlock: false });
+
+        clearTimeout(fullCheckoutHide);
+        clearTimeout(startCheckoutHide);
+    }
+
+    proceedToCheckout() {
+        this.setState({ showProceedToCheckout: true });
+
+        startCheckoutHide = setTimeout(() => this.setState({ hideCheckoutBlock: true }), 5000);
+        fullCheckoutHide = setTimeout(() => this.setState({
+            showProceedToCheckout: false,
+            hideCheckoutBlock: false
+        }), 7000);
+    }
+
+    routeChangeToCart() {
+        history.push('/cart');
+    };
 
     render() {
         return (

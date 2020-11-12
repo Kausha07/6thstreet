@@ -603,5 +603,7 @@
     "Please enter valid phone number": null,
     "Verification code was successfully re-sended": null,
     "Please wait %s before re-sending the request": null,
-    "Qty:": null
+    "Qty:": null,
+    "Added to your shopping bag": null,
+    "Proceed to checkout": null
 }
