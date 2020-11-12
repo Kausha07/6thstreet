@@ -502,90 +502,214 @@
 }
 .PageWrapper {
     &_isArabic {
-        .FieldForm {
-            &-Fields {
-                .Field {
-                    &:first-child {
-                        select {
-                            padding-right: 35px;
+        .CheckoutAddressForm {
+            .FieldForm {
+                &-Fields {
+                    .Field {
+                        &:first-child {
+                            select {
+                                padding-right: 35px;
+                            }
                         }
-                    }
 
-                    &:nth-child(4) {
-                        padding-right: 20px;
-                        padding-left: 5px;
-
-                        @include desktop {
-                            padding-right: 30px;
+                        &:nth-child(4) {
+                            padding-right: 20px;
                             padding-left: 5px;
+
+                            @include desktop {
+                                padding-right: 30px;
+                                padding-left: 5px;
+                            }
+
+                            input {
+                                text-align: left;
+                            }
+
+                            ::-webkit-input-placeholder {
+                                text-align: left;
+                            }
+
+                            :-moz-placeholder {
+                                text-align: left;
+                            }
                         }
 
-                        input {
-                            text-align: left;
-                        }
-
-                        ::-webkit-input-placeholder {
-                            text-align: left;
-                        }
-
-                        :-moz-placeholder {
-                            text-align: left;
-                        }
-                    }
-
-                    &:nth-child(5) {
-                        padding-left: 20px;
-                        padding-right: 5px;
-
-                        @include desktop {
-                            padding-left: 30px;
+                        &:nth-child(5) {
+                            padding-left: 20px;
                             padding-right: 5px;
+
+                            @include desktop {
+                                padding-left: 30px;
+                                padding-right: 5px;
+                            }
+
+                            input {
+                                text-align: left;
+                            }
+
+                            ::-webkit-input-placeholder {
+                                text-align: left;
+                            }
+
+                            :-moz-placeholder {
+                                text-align: left;
+                            }
                         }
 
-                        ::after {
-                            right: unset;
-                            left: 20px;
-                        }
-                    }
-
-                    &:nth-child(6) {
-                        padding-right: 20px;
-                        padding-left: 5px;
-
-                        @include desktop {
-                            padding-right: 30px;
+                        &:nth-child(6) {
+                            padding-right: 20px;
                             padding-left: 5px;
+
+                            @include desktop {
+                                padding-right: 30px;
+                                padding-left: 5px;
+                            }
+
+                            ::after {
+                                right: unset;
+                                left: 20px;
+                            }
                         }
 
-                        ::after {
-                            right: unset;
-                            left: 20px;
-                        }
-                    }
+                        &:nth-child(8) {
+                            &::before {
+                                display: none;
+                            }
 
-                    &:nth-child(8) {
-                        &::before {
-                            display: none;
+                            &:after {
+                                content: "";
+                                position: absolute;
+                                width: 15px;
+                                height: 15px;
+                                background: url(icons/path-address.svg) no-repeat;
+                                top: 33%;
+                                left: 40px;
+                                z-index: 2;
+                            }
                         }
 
-                        &:after {
-                            content: "";
-                            position: absolute;
-                            width: 15px;
-                            height: 15px;
-                            background: url(icons/path-address.svg) no-repeat;
-                            top: 33%;
-                            left: 40px;
-                            z-index: 2;
-                        }
-                    }
-
-                    &:nth-child(9) {
-                        padding-left: 20px;
-                        padding-right: 5px;
-                        @include desktop {
-                            padding-left: 30px;
+                        &:nth-child(10) {
+                            padding-left: 20px;
                             padding-right: 5px;
+                            @include desktop {
+                                padding-left: 30px;
+                                padding-right: 5px;
+                            }
+                        }
+                    }
+                }
+            }
+
+            &_isGuestForm {
+                .FieldForm {
+                    &-Fields {
+                        .Field {
+                            &:nth-child(2) {
+                                select {
+                                    padding-right: 35px;
+                                }
+                            }
+    
+                            &:nth-child(4) {
+                                padding-right: 20px;
+                                padding-left: 20px;
+    
+                                @include desktop {
+                                    padding-right: 30px;
+                                    padding-left: 30px;
+                                }
+    
+                                input {
+                                    text-align: right;
+                                }
+    
+                                ::-webkit-input-placeholder {
+                                    text-align: right;
+                                }
+    
+                                :-moz-placeholder {
+                                    text-align: right;
+                                }
+                            }
+
+                            &:nth-child(5) {
+                                padding-left: 5px;
+                                padding-right: 20px;
+    
+                                @include desktop {
+                                    padding-left: 5px;
+                                    padding-right: 30px;
+                                }
+    
+                                ::after {
+                                    right: unset;
+                                    left: 20px;
+                                }
+                            }
+    
+                            &:nth-child(6) {
+                                padding-left: 20px;
+                                padding-right: 5px;
+    
+                                @include desktop {
+                                    padding-left: 30px;
+                                    padding-right: 5px;
+                                }
+    
+                                ::after {
+                                    right: unset;
+                                    left: 20px;
+                                }
+                            }
+    
+                            &:nth-child(7) {
+                                padding-right: 20px;
+                                padding-left: 5px;
+    
+                                @include desktop {
+                                    padding-right: 30px;
+                                    padding-left: 5px;
+                                }
+    
+                                ::after {
+                                    right: unset;
+                                    left: 20px;
+                                }
+                            }
+    
+                            &:nth-child(8) {
+                                &::before {
+                                    display: none;
+                                }
+    
+                                &:after {
+                                    content: none;
+                                }
+                            }
+    
+                            &:nth-child(9) {
+                                padding-left: 20px;
+                                padding-right: 20px;
+                                @include desktop {
+                                    padding-left: 30px;
+                                    padding-right: 30px;
+                                }
+
+                                &:after {
+                                    content: "";
+                                    position: absolute;
+                                    width: 15px;
+                                    height: 15px;
+                                    background: url(icons/path-address.svg) no-repeat;
+                                    top: 33%;
+                                    left: 40px;
+                                    z-index: 2;
+                                }
+
+                                &:before {
+                                    content: none;
+                                }
+                            }
                         }
                     }
                 }

@@ -13,6 +13,7 @@ import PropTypes from 'prop-types';
 
 import FieldForm from 'Component/FieldForm/FieldForm.component';
 import MyAccountOverlay from 'Component/MyAccountOverlay';
+import { isArabic } from 'Util/App';
 
 import lock from './icons/lock.png';
 
@@ -28,7 +29,8 @@ export class CheckoutGuestForm extends FieldForm {
     };
 
     state = {
-        showPopup: false
+        showPopup: false,
+        isArabic: isArabic()
     };
 
     get fieldMap() {
@@ -104,6 +106,7 @@ export class CheckoutGuestForm extends FieldForm {
 
     render() {
         const { isEmailAdded } = this.props;
+        const { isArabic } = this.state;
 
         return (
             <div
@@ -114,6 +117,7 @@ export class CheckoutGuestForm extends FieldForm {
                 <div
                   block="CheckoutGuestForm"
                   elem="FieldAndSignIn"
+                  mods={ { isArabic } }
                 >
                     <button onClick={ this.showMyAccountPopup }>
                         { __('Sign In') }

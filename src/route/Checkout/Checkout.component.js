@@ -243,10 +243,11 @@ export class Checkout extends SourceCheckout {
             goBack,
             isSignedIn
         } = this.props;
+        const { isArabic } = this.state;
 
         return (
             <>
-                <div block="Checkout" elem="BackButtons" mods={ { isSignedIn } }>
+                <div block="Checkout" elem="BackButtons" mods={ { isSignedIn, isArabic } }>
                     <button onClick={ this.goBackLogin }>
                         { this.renderHeading('Login / Sign Up', true) }
                         <span>{ __('Edit') }</span>
