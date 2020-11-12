@@ -73,14 +73,15 @@ export class CheckoutBilling extends SourceCheckoutBilling {
         const {
             isSameAsShipping,
             onSameAsShippingChange,
-            totals: { is_virtual }
+            totals: { is_virtual },
+            isSignedIn
         } = this.props;
 
         if (is_virtual) {
             return null;
         }
 
-        return (
+        return isSignedIn ? (
             <Field
               id="sameAsShippingAddress"
               name="sameAsShippingAddress"
@@ -91,7 +92,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
               checked={ !isSameAsShipping }
               onChange={ onSameAsShippingChange }
             />
-        );
+        ) : null;
     }
 
     renderPayments() {

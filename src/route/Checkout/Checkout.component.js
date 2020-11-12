@@ -220,38 +220,48 @@ export class Checkout extends SourceCheckout {
         );
     }
 
+    goBackLogin = () => {
+        const { goBack } = this.props;
+        this.setState({ continueAsGuest: false });
+        goBack();
+    };
+
     renderBillingStep() {
         const {
             setLoading,
             setDetailsStep,
             shippingAddress,
-            paymentMethods = []
+            paymentMethods = [],
+            goBack
         } = this.props;
 
         return (
-          <CheckoutBilling
-            setLoading={ setLoading }
-            paymentMethods={ paymentMethods }
-            setDetailsStep={ setDetailsStep }
-            shippingAddress={ shippingAddress }
-            setCashOnDeliveryFee={ this.setCashOnDeliveryFee }
-            savePaymentInformation={ this.savePaymentInformation }
-            setTabbyWebUrl={ this.setTabbyWebUrl }
-            setPaymentCode={ this.setPaymentCode }
-          />
+            <>
+                <div block="Checkout" elem="BackButtons">
+                    <button onClick={ this.goBackLogin }>
+                        { this.renderHeading('Login / Sign Up', true) }
+                        <span>{ __('Edit') }</span>
+                    </button>
+                    <button onClick={ goBack }>
+                        { this.renderHeading(__('Delivery Options'), true) }
+                        <span>{ __('Edit') }</span>
+                    </button>
+                </div>
+                <CheckoutBilling
+                  setLoading={ setLoading }
+                  paymentMethods={ paymentMethods }
+                  setDetailsStep={ setDetailsStep }
+                  shippingAddress={ shippingAddress }
+                  setCashOnDeliveryFee={ this.setCashOnDeliveryFee }
+                  savePaymentInformation={ this.savePaymentInformation }
+                  setTabbyWebUrl={ this.setTabbyWebUrl }
+                  setPaymentCode={ this.setPaymentCode }
+                />
+            </>
         );
     }
 
     continueAsGuest = () => {
-        // const { email } = this.props;
-
-        // if (/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
-        //     this.setState({ isInvalidEmail: false });
-        //     this.setState({ continueAsGuest: true });
-        // } else {
-        //     this.setState({ isInvalidEmail: true });
-        // }
-
         this.setState({ continueAsGuest: true });
     };
 

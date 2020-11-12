@@ -345,6 +345,37 @@
         }
     }
 
+    &-BackButtons {
+        padding-top: 10px;
+
+        button {
+            padding: 0;
+            width: 100%;
+            height: auto;
+            text-align: left;
+
+            span {
+                position: absolute;
+                right: 30px;
+                top: 40%;
+                color: var(--DustyGray);
+                font-size: 15px;
+            }
+        }
+
+        &_isArabic {
+            button {
+                text-align: right;
+    
+                span {
+                    right: unset;
+                    left: 30px;
+                    top: 40%;
+                }
+            }
+        }
+    }
+
     &-Heading {
         padding: 20px;
         width: 100%;
