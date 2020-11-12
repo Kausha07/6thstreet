@@ -1,7 +1,7 @@
 /* eslint-disable import/no-cycle */
+import Event, { EVENT_GTM_PURCHASE } from 'Util/Event';
 import { roundPrice } from 'Util/Price';
 
-import Event, { EVENT_GTM_PURCHASE } from '../../../util/Event';
 import ProductHelper from '../utils';
 import BaseEvent from './Base.event';
 

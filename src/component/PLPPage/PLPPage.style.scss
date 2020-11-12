@@ -9,12 +9,12 @@
     }
 
     .ProductItem {
-        padding-left: 0;
-        margin: 20px 10px;
         font-weight: var(--fw-regular);
-        text-align: center;
-        position: relative;
+        margin: 20px 5px;
         min-width: 0;
+        padding-left: 0;
+        position: relative;
+        text-align: center;
 
         &::before {
             display: none;
@@ -32,6 +32,10 @@
 
         &-Brand {
             margin: 5px 0;
+
+            @include desktop() {
+                font-size: 16px;
+            }
         }
 
         &-Title {
@@ -39,6 +43,10 @@
             overflow: hidden;
             text-overflow: ellipsis;
             margin-bottom: 0;
+
+            @include desktop() {
+                margin: 0 20px;
+            }
         }
     }
 
@@ -48,10 +56,6 @@
         position: relative;
         font-weight: var(--fw-demi);
         font-size: 16px;
-
-        @include mobile {
-            flex-direction: column;
-        }
 
         &-Special,
         &-Discount {
@@ -66,7 +70,8 @@
         &-Base {
             &_discount {
                 font-size: 11px;
-                margin-right: 20px;
+                font-weight: var(--fw-demi);
+                margin-right: 10px;
             }
         }
     }

@@ -65,7 +65,7 @@ export class WishlistDispatcher {
         }
 
         try {
-            await MagentoAPI.post(`/wishlist/add/${sku}`);
+            await MagentoAPI.post(`/wishlist/add/${sku.replace(/\//g, '%2F')}`);
 
             this.updateInitialWishlistData(dispatch);
 

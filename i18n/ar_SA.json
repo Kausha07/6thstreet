@@ -591,5 +591,17 @@
     "TERMS ": null,
     " CONDITIONS": null,
     "Login / Sign Up": "تسجيل الدخول / إنشاء حساب",
-    "view all": "عرض الكل"
+    "view all": "عرض الكل",
+    "The address or phone field is incorrect": null,
+    "Phone Verified": null,
+    "Input new phone number and send Verification code again": null,
+    "change phone": null,
+    "EXP.": null,
+    "Phone was successfully verified": null,
+    "Wrong Verification Code. Please re-enter": null,
+    "Verification failed. Please enter valid verification code": null,
+    "Please enter valid phone number": null,
+    "Verification code was successfully re-sended": null,
+    "Please wait %s before re-sending the request": null,
+    "Qty:": null
 }

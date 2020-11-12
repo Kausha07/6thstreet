@@ -13,11 +13,21 @@ export class CreditCardContainer extends PureComponent {
         setCreditCardData: PropTypes.func.isRequired
     };
 
+    state = {
+        isAmex: false
+    };
+
     containerFunctions = {
         expDateValidator: this.expDateValidator,
         isNumber: this.isNumber,
         reformatInputField: this.reformatInputField.bind(this),
-        getCardLogo: this.getCardLogo
+        getCardLogo: this.getCardLogo.bind(this)
+    };
+
+    containerProps = () => {
+        const { isAmex } = this.state;
+
+        return { isAmex };
     };
 
     isNumber(value) {
@@ -128,8 +138,11 @@ export class CreditCardContainer extends PureComponent {
         }
 
         if (first === 3 && (second === 4 || second === 7)) {
+            this.setState({ isAmex: true });
             return amex;
         }
+
+        this.setState({ isAmex: false });
 
         return null;
     }
@@ -141,6 +154,7 @@ export class CreditCardContainer extends PureComponent {
             <CreditCard
               setCreditCardData={ setCreditCardData }
               { ...this.containerFunctions }
+              { ...this.containerProps() }
               { ...this.props }
             />
         );

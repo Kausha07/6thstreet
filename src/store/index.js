@@ -7,12 +7,14 @@ import {
     staticReducers as sourceStaticReducers
 } from 'SourceStore';
 import ClubApparelReducer from 'Store/ClubApparel/ClubApparel.reducer';
+import MenuReducer from 'Store/Menu/Menu.reducer';
 import StoreCreditReducer from 'Store/StoreCredit/StoreCredit.reducer';
 
 export const staticReducers = {
     ...sourceStaticReducers,
     StoreCreditReducer,
-    ClubApparelReducer
+    ClubApparelReducer,
+    MenuReducer
 };
 
 export function createReducer(asyncReducers) {

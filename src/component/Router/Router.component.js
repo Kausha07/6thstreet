@@ -17,7 +17,8 @@ import {
     CMS_PAGE,
     CUSTOMER_ACCOUNT,
     HOME_PAGE,
-    SEARCH
+    SEARCH,
+    URL_REWRITES
 } from 'Component/Header/Header.config';
 import NavigationTabs from 'Component/NavigationTabs';
 import NewVersionPopup from 'Component/NewVersionPopup';
@@ -219,7 +220,13 @@ export class Router extends SourceRouter {
             position: 90
         },
         {
-            component: <Route component={ UrlRewrites } />,
+            component: <Route
+              render={ (props) => (
+                  <GTMRouteWrapper route={ URL_REWRITES }>
+                      <UrlRewrites { ...props } />
+                  </GTMRouteWrapper>
+              ) }
+            />,
             position: 1000
         }
     ];
@@ -273,7 +280,9 @@ export class Router extends SourceRouter {
         return (
             <div block="PageWrapper" mods={ { isArabic } }>
                 { this.renderItemsOfType(BEFORE_ITEMS_TYPE) }
-                { this.renderMainItems() }
+                <div block="PageWrapper" elem="Content">
+                    { this.renderMainItems() }
+                </div>
                 { this.renderItemsOfType(AFTER_ITEMS_TYPE) }
             </div>
         );

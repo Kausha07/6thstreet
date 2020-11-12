@@ -10,6 +10,7 @@ import AddressIcon from './icons/address.png';
 import ClubIcon from './icons/club-apparel.png';
 import LogoutIcon from './icons/logout.png';
 import OrdersIcon from './icons/orders.png';
+import ReturnIcon from './icons/return.svg';
 import { MY_ACCOUNT_SIGNED_IN_OVERLAY } from './MyAccountSignedInOverlay.config';
 
 import './MyAccountSignedInOverlay.style';
@@ -34,6 +35,15 @@ export class MyAccountSignedInOverlay extends PureComponent {
             <Link block="MyAccountSignedInOverlay" elem="LinkHistory" to="/my-account/my-orders">
                 <Image src={ OrdersIcon } mix={ { block: 'MyAccountSignedInOverlay', elem: 'Image' } } />
                 <span>{ __('Order history') }</span>
+            </Link>
+        );
+    }
+
+    renderReturnAnItemLink() {
+        return (
+            <Link block="MyAccountSignedInOverlay" elem="ReturnAnItem" to="/my-account/return-item">
+                <Image src={ ReturnIcon } mix={ { block: 'MyAccountSignedInOverlay', elem: 'Image' } } />
+                <span>{ __('Return An Item') }</span>
             </Link>
         );
     }
@@ -72,6 +82,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
             <div block="MyAccountSignedInOverlay" elem="Wrapper">
                 { this.renderMyAccountLink() }
                 { this.renderOrderHistoryLink() }
+                { this.renderReturnAnItemLink() }
                 { this.renderClubLink() }
                 { this.renderDeliveryLink() }
                 { this.renderLogoutButton() }

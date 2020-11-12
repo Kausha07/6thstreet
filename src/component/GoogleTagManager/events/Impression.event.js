@@ -6,8 +6,8 @@ import Event, {
     EVENT_GTM_IMPRESSIONS_PLP,
     EVENT_GTM_IMPRESSIONS_SEARCH,
     EVENT_GTM_IMPRESSIONS_WISHLIST
-} from '../../../util/Event';
-import ProductHelper from '../utils';
+} from 'Util/Event';
+
 import BaseEvent from './Base.event';
 
 /**
@@ -27,9 +27,7 @@ export const RECOMMENDED_IMPRESSIONS = 'recommended';
  *
  * @type {number}
  */
-export const SPAM_PROTECTION_DELAY = 2000;
-export const PRODUCT_IMPRESSION_COUNT = 36;
-export const PRODUCT_IMPRESSION_CHUNK_SIZE = 4;
+export const SPAM_PROTECTION_DELAY = 200;
 export const EVENT_HANDLE_DELAY = 700;
 
 /**
@@ -51,33 +49,33 @@ class ImpressionEvent extends BaseEvent {
      */
     bindEvent() {
         // PLP
-        Event.observer(EVENT_GTM_IMPRESSIONS_PLP, ({ items, filters, category }) => {
-            this.handle(PLP_IMPRESSIONS, items, filters, category);
+        Event.observer(EVENT_GTM_IMPRESSIONS_PLP, ({ impressions, category }) => {
+            this.handle(PLP_IMPRESSIONS, impressions, category);
         });
 
         // Home
-        Event.observer(EVENT_GTM_IMPRESSIONS_HOME, ({ items, filters }) => {
-            this.handle(HOME_IMPRESSIONS, items, filters);
+        Event.observer(EVENT_GTM_IMPRESSIONS_HOME, ({ impressions, category }) => {
+            this.handle(HOME_IMPRESSIONS, impressions, category);
         });
 
         // Checkout Cross-sell
-        Event.observer(EVENT_GTM_IMPRESSIONS_CROSS_SELL, ({ items }) => {
-            this.handle(CHECKOUT_CROSS_SELL_IMPRESSIONS, items);
+        Event.observer(EVENT_GTM_IMPRESSIONS_CROSS_SELL, ({ impressions, category }) => {
+            this.handle(CHECKOUT_CROSS_SELL_IMPRESSIONS, impressions, category);
         });
 
         // Wishlist
-        Event.observer(EVENT_GTM_IMPRESSIONS_WISHLIST, ({ items }) => {
-            this.handle(WISHLIST_IMPRESSIONS, items);
+        Event.observer(EVENT_GTM_IMPRESSIONS_WISHLIST, ({ impressions, category }) => {
+            this.handle(WISHLIST_IMPRESSIONS, impressions, category);
         });
 
         // Search
-        Event.observer(EVENT_GTM_IMPRESSIONS_SEARCH, ({ items }) => {
-            this.handle(SEARCH_IMPRESSIONS, items);
+        Event.observer(EVENT_GTM_IMPRESSIONS_SEARCH, ({ impressions, category }) => {
+            this.handle(SEARCH_IMPRESSIONS, impressions, category);
         });
 
         // Recommended
-        Event.observer(EVENT_GTM_IMPRESSIONS_LINKED, ({ items }) => {
-            this.handle(RECOMMENDED_IMPRESSIONS, items);
+        Event.observer(EVENT_GTM_IMPRESSIONS_LINKED, ({ impressions, category }) => {
+            this.handle(RECOMMENDED_IMPRESSIONS, impressions, category);
         });
 
         // General
@@ -89,109 +87,59 @@ class ImpressionEvent extends BaseEvent {
     /**
      * Handle Impressions
      *
-     * @param productCollectionType product event type
-     * @param products Product list
-     * @param filters Category filters
+     * @param eventName Unique event id
+     * @param impressions Product list
+     * @param category Category name
      */
-    handler(productCollectionType = PLP_IMPRESSIONS, products = [], filters = {}, category = {}) {
-        const impressions = this.getImpressions(productCollectionType, products, filters, category);
+    handler(eventName, impressions = [], category) {
         const storage = this.getStorage();
-        const impressionUID = this.getImpressionUID(impressions);
+        const categoryName = (!category || category === '') ? this.getFallbackCategory(eventName) : category;
 
         if (!impressions
-            || Object.values(impressions).length === 0
-            || this.spamProtection(SPAM_PROTECTION_DELAY, `${ productCollectionType }_${ impressionUID }`)
+            || impressions.length === 0
+            || this.spamProtection(SPAM_PROTECTION_DELAY)
         ) {
             return;
         }
 
-        if (!storage.impressions) {
-            storage.impressions = [];
-        }
-        storage.impressions.push(...impressions);
+        const formattedImpressions = impressions.map(({
+            brand_name,
+            sku,
+            name,
+            price,
+            url,
+            colorfamily
+        }, index) => ({
+            brand: brand_name,
+            category: categoryName,
+            id: sku,
+            list: categoryName,
+            name,
+            position: index + 1,
+            price: price[Object.keys(price)[0]].default || 0,
+            url,
+            variant: colorfamily
+        }));
+
+        storage.impressions = formattedImpressions;
+
         this.setStorage(storage);
-
-        // Chunk data to small parts
-        // eslint-disable-next-line fp/no-loops, fp/no-let
-        for (let offset = 0; offset < impressions.length; offset += PRODUCT_IMPRESSION_CHUNK_SIZE) {
-            this.pushEventData({
-                ecommerce: {
-                    currencyCode: this.getCurrencyCode(),
-                    impressions: impressions.slice(offset, offset + PRODUCT_IMPRESSION_CHUNK_SIZE)
-                }
-            });
-        }
-    }
-
-    /**
-     * Get impressions
-     *
-     * @param productCollectionType
-     * @param products
-     * @param filters
-     *
-     * @return {{price: string, name: string, variant: string, id: string, position: number, list: string, category: string, brand: string}[]}
-     */
-    getImpressions(productCollectionType = PLP_IMPRESSIONS, products, filters, category) {
-        // TODO: refactor to make it work with Algolia product data
-        const { name: categoryName = '', url_path = '' } = category;
-        const productCollection = this.getProductCollection(productCollectionType, products);
-        const productCount = Object.values(productCollection || []).length;
-
-        const offset = PRODUCT_IMPRESSION_COUNT - productCount < 0
-            ? Math.abs(PRODUCT_IMPRESSION_COUNT - productCount)
-            : 0;
-
-        return Object.values(productCollection || [])
-            .slice(-PRODUCT_IMPRESSION_COUNT) // Last from list
-            .filter((product) => Object.values(product).length)
-            .map((product, index) => {
-                // const configurableVariantIndex = getCurrentVariantIndexFromFilters(product, filters);
-                const configurableVariantIndex = {};
-
-                const productData = productCollectionType === WISHLIST_IMPRESSIONS
-                    ? ProductHelper.getItemData(product)
-                    : ProductHelper.getProductData({ ...product, configurableVariantIndex, category: url_path });
-
-                return {
-                    ...productData,
-                    position: offset + index + 1,
-                    list: this.getProductCollectionList(productCollectionType, product, categoryName)
-                };
-            });
-    }
-
-    /**
-     * Get collection of products
-     *
-     * @param productCollectionType
-     * @param params
-     *
-     * @return {Array}
-     */
-    getProductCollection(productCollectionType = PLP_IMPRESSIONS, products) {
-        switch (productCollectionType) {
-        case PLP_IMPRESSIONS:
-        case WISHLIST_IMPRESSIONS:
-        case HOME_IMPRESSIONS:
-        case SEARCH_IMPRESSIONS:
-        case RECOMMENDED_IMPRESSIONS:
-        case CHECKOUT_CROSS_SELL_IMPRESSIONS:
-            return products || [];
-        default:
-            return [];
-        }
+        this.pushEventData({
+            ecommerce: {
+                currencyCode: this.getCurrencyCode(),
+                impressions: formattedImpressions
+            }
+        });
     }
 
     /**
      * Get product collection list name
      *
      * @param productCollectionType
-     * @param product
      *
      * @return {string}
      */
-    getProductCollectionList(productCollectionType = PLP_IMPRESSIONS, product, categoryName = '') {
+    getFallbackCategory(productCollectionType) {
         switch (productCollectionType) {
         case HOME_IMPRESSIONS:
             return 'Homepage';
@@ -204,22 +152,9 @@ class ImpressionEvent extends BaseEvent {
         case CHECKOUT_CROSS_SELL_IMPRESSIONS:
             return 'Cross sell impressions';
         case PLP_IMPRESSIONS:
-            return categoryName
-                ? `PLP - ${ categoryName }`
-                : 'PLP';
         default:
-            return ProductHelper.getList(product);
+            return 'Product List';
         }
-    }
-
-    /**
-     * Get provided impression UID
-     *
-     * @param impression
-     * @return {string}
-     */
-    getImpressionUID(impression = []) {
-        return impression.reduce((acc, { id }) => `${ acc }_${ id }`, '');
     }
 }
 

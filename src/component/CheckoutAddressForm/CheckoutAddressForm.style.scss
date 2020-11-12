@@ -31,11 +31,33 @@
                 }
 
                 &:first-child {
-                    grid-column: 1 / span 5;
-                    grid-row: 2;
+                    grid-column: 3 / span 5;
+                    grid-row: 1;
+                    justify-content: space-between;
+                    background: var(--white);
+                    padding: 20px 35px;
+                    margin-bottom: 15px;
+                    pointer-events: none;
+                    text-align-last: 50%;
 
-                    @include desktop {
-                        grid-row: 4;
+                    @include before-desktop {
+                        display: none;
+                    }
+
+                    select {
+                        padding-left: 35px;
+                    }
+
+                    label {
+                        position: absolute;
+                        bottom: 28px;
+                        z-index: 1;
+                    }
+
+                    .FieldSelect {
+                        &::after {
+                            content: none;
+                        }
                     }
                 }
 
@@ -261,6 +283,22 @@
                     &[type="radio"] {
                         width: 0;
                     }
+
+                    &:first-child {
+                        grid-column: 1 / span 5;
+                        grid-row: 3;
+                        justify-content: unset;
+                        padding: 0 20px 10px;
+                        margin-bottom: unset;
+                        pointer-events: all;
+                        text-align-last: unset;
+                        display: unset;
+    
+                        @include desktop {
+                            grid-row: 4;
+                            padding: 0 30px 10px;
+                        }
+                    }
     
                     &:nth-child(2) {
                         grid-column: 3 / span 5;
@@ -335,7 +373,7 @@
                         }
     
                         grid-column: 1;
-                        grid-row: 5;
+                        grid-row: 6;
                         padding-right: 5px;
                         padding-bottom: 20px;
     
@@ -352,7 +390,7 @@
     
                     &:nth-child(6) {
                         grid-column: 3 / span 4;
-                        grid-row: 4;
+                        grid-row: 5;
                         padding-left: 5px;
     
                         @include desktop {
@@ -382,7 +420,7 @@
     
                     &:nth-child(7) {
                         grid-column: 1 / span 2;
-                        grid-row: 4;
+                        grid-row: 5;
                         padding-right: 5px;
     
                         @include desktop {
@@ -408,7 +446,7 @@
     
                     &:nth-child(9) {
                         grid-column: 1 / span 5;
-                        grid-row: 3;
+                        grid-row: 4;
     
                         @include desktop {
                             grid-row: 5;
@@ -432,7 +470,7 @@
     
                     &:nth-child(10) {
                         grid-column: 2 / span 5;
-                        grid-row: 5;
+                        grid-row: 6;
                         padding-left: 5px;
                         padding-bottom: 20px;
     
@@ -503,6 +541,11 @@
                             padding-left: 30px;
                             padding-right: 5px;
                         }
+
+                        ::after {
+                            right: unset;
+                            left: 20px;
+                        }
                     }
 
                     &:nth-child(6) {
@@ -515,7 +558,7 @@
                         }
 
                         ::after {
-                            right: none;
+                            right: unset;
                             left: 20px;
                         }
                     }

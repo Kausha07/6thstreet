@@ -6,8 +6,10 @@ import {
     TABBY_PAYMENT_CODES
 } from 'Component/CheckoutPayments/CheckoutPayments.config';
 import { paymentMethodType } from 'Type/Checkout';
+import { isArabic } from 'Util/App';
 
 import { PAYMENTS_DATA } from './CheckoutPayment.config';
+import tabbyAr from './icons/tabby-logo-black-ar@2x.png';
 
 import './CheckoutPayment.style';
 
@@ -21,6 +23,10 @@ export class CheckoutPayment extends PureComponent {
 
     static defaultProps = {
         isSelected: false
+    };
+
+    state = {
+        isArabic: isArabic()
     };
 
     onClick = () => {
@@ -39,6 +45,7 @@ export class CheckoutPayment extends PureComponent {
         const {
             method: { m_code }
         } = this.props;
+        const { isArabic } = this.state;
 
         const {
             name,
@@ -47,10 +54,14 @@ export class CheckoutPayment extends PureComponent {
             img
         } = PAYMENTS_DATA[m_code];
 
+        const isTabby = TABBY_PAYMENT_CODES.includes(m_code);
+
         if (PAYMENTS_DATA[m_code]) {
             return (
                 <div block="CheckoutPayment" elem="Method" mods={ mod }>
-                    <img src={ img } alt={ name } />
+                    { isTabby
+                        ? <img src={ isArabic ? tabbyAr : img } alt={ name } />
+                        : <img src={ img } alt={ name } /> }
                     <p>{ paragraph }</p>
                 </div>
             );

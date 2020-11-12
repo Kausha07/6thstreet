@@ -11,7 +11,7 @@ import { setPDPLoading } from 'Store/PDP/PDP.action';
 import PDPDispatcher from 'Store/PDP/PDP.dispatcher';
 import { getCountriesForSelect } from 'Util/API/endpoint/Config/Config.format';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
-import { getBreadcrumbs } from 'Util/Breadcrumbs/Breadcrubms';
+import { getBreadcrumbs, getBreadcrumbsUrl } from 'Util/Breadcrumbs/Breadcrubms';
 
 import PDP from './PDP.component';
 
@@ -26,7 +26,10 @@ export const mapStateToProps = (state) => ({
     options: state.PDP.options,
     nbHits: state.PDP.nbHits,
     country: state.AppState.country,
-    config: state.AppConfig.config
+    gender: state.AppState.gender,
+    config: state.AppConfig.config,
+    breadcrumbs: state.BreadcrumbsReducer.breadcrumbs,
+    menuCategories: state.MenuReducer.categories
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -54,15 +57,14 @@ export class PDPContainer extends PureComponent {
         nbHits: PropTypes.number.isRequired,
         setMeta: PropTypes.func.isRequired,
         country: PropTypes.string.isRequired,
-        config: PropTypes.object.isRequired
-    };
-
-    containerFunctions = {
-        // getData: this.getData.bind(this)
+        config: PropTypes.object.isRequired,
+        breadcrumbs: PropTypes.array.isRequired,
+        gender: PropTypes.string.isRequired,
+        menuCategories: PropTypes.array.isRequired
     };
 
     state = {
-        firstLoad: true
+        productSku: null
     };
 
     constructor(props) {
@@ -76,11 +78,12 @@ export class PDPContainer extends PureComponent {
             id,
             isLoading,
             setIsLoading,
-            product
+            product: { sku } = {},
+            menuCategories
         } = this.props;
         const currentIsLoading = this.getIsLoading();
         const { id: prevId } = prevProps;
-        const { firstLoad } = this.state;
+        const { productSku } = this.state;
 
         // Request product, if URL rewrite has changed
         if (id !== prevId) {
@@ -92,7 +95,7 @@ export class PDPContainer extends PureComponent {
             setIsLoading(false);
         }
 
-        if (Object.keys(product).length !== 0 && firstLoad) {
+        if (menuCategories.length !== 0 && sku && productSku !== sku) {
             this.updateBreadcrumbs();
             this.setMetaData();
             this.updateHeaderState();
@@ -111,16 +114,18 @@ export class PDPContainer extends PureComponent {
     updateBreadcrumbs() {
         const {
             updateBreadcrumbs,
-            product: { categories, name },
+            product: { categories, name, sku },
             setGender,
-            nbHits
+            nbHits,
+            menuCategories
         } = this.props;
 
         if (nbHits === 1) {
             const categoriesLastLevel = categories[Object.keys(categories)[Object.keys(categories).length - 1]][0]
                 .split(' /// ');
 
-            const breadcrumbsMapped = getBreadcrumbs(categoriesLastLevel, setGender);
+            const urlArray = getBreadcrumbsUrl(categoriesLastLevel, menuCategories);
+            const breadcrumbsMapped = getBreadcrumbs(categoriesLastLevel, setGender, urlArray);
             const productBreadcrumbs = breadcrumbsMapped.reduce((acc, item) => {
                 acc.unshift(item);
 
@@ -140,7 +145,7 @@ export class PDPContainer extends PureComponent {
             ];
 
             updateBreadcrumbs(breadcrumbs);
-            this.setState({ firstLoad: false });
+            this.setState({ productSku: sku });
         }
     }
 
@@ -188,9 +193,10 @@ export class PDPContainer extends PureComponent {
     }
 
     containerProps = () => {
-        const { nbHits } = this.props;
+        const { nbHits, isLoading } = this.props;
+        const { isLoading: isCategoryLoading } = this.state;
 
-        return { nbHits };
+        return { nbHits, isLoading, isCategoryLoading };
     };
 
     render() {
@@ -198,7 +204,6 @@ export class PDPContainer extends PureComponent {
         localStorage.setItem('PRODUCT_NAME', JSON.stringify(product.name));
         return (
             <PDP
-              { ...this.containerFunctions }
               { ...this.containerProps() }
             />
         );

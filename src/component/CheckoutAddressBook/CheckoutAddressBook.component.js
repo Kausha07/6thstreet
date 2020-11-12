@@ -30,13 +30,13 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
     };
 
     renderHeading() {
-        const { isBilling } = this.props;
+        const { isBilling, isSignedIn } = this.props;
         const { isArabic } = this.state;
 
         const addressName = isBilling ? null : __('Delivery country');
 
         return (
-            <h2 block="Checkout" elem="Heading" mods={ { isArabic } }>
+            <h2 block="Checkout" elem="Heading" mods={ { isArabic, isSignedIn } }>
                 { addressName }
             </h2>
         );

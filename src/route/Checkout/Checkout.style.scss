@@ -64,6 +64,24 @@
         }
     }
 
+    &_isSuccess {
+        background-color: var(--white);
+
+        .CheckoutNavigation {
+            display: none;
+        }
+
+        @include desktop() {
+            padding: 0;
+            margin-top: 58px;
+            margin-bottom: 100px;
+
+            .ContentWrapper {
+                max-width: 1440px;
+            }
+        }
+    }
+
     &-StickyButtonWrapper {
         .Checkout {
             &-OrderTotals {
@@ -251,19 +269,26 @@
 
     &-GuestCheckout {
         &:not(&_continueAsGuest) {
-            display: flex;
+            @include desktop {
+                display: flex;
+            }
 
             .CheckoutGuestForm {
                 padding: unset;
-                width: 50%;
+                width: 100%;
 
                 &-FieldAndSignIn {
                     button {
-                        width: 85%;
-                        margin: 10% 5% 10% 10%;
+                        width: 100%;
+                        margin: 5px 0;
                         color: var(--white-color);
                         background: var(--black-color);
                         border: 1px solid var(--black-color);
+
+                        @include desktop {
+                            width: 85%;
+                            margin: 10% 5% 10% 10%;
+                        }
                     }
 
                     img {
@@ -273,16 +298,19 @@
                         top: 1px;
                     }
                 }
+
+                @include desktop {
+                    width: 50%;
+                }
             }
         }
     }
 
     &-GuestButton {
         position: relative;
-        width: 50%;
+        width: 100%;
         background-color: var(--White);
-        padding-bottom: 90px;
-        margin-top: 80px;
+        margin: 5px 0;
 
         > button {
             position: absolute;
@@ -341,12 +369,25 @@
         }
 
         @include desktop {
-            margin-top: 0;
+            margin: 0;
+
+            &:not(&_continueAsGuest){
+                width: 50%;
+            }
         }
     }
 
     &-BackButtons {
         padding-top: 10px;
+        display: none;
+
+        @include desktop {
+            display: block;
+
+            &_isSignedIn {
+                display: none;
+            }
+        }
 
         button {
             padding: 0;
@@ -407,9 +448,20 @@
             }
 
             &:not(&_isDisabled) {
+                .Checkout {
+                    &-Heading {
+                        &_isSignedIn {
+                            margin-top: 0;
+                        }
+                    }
+                }
                 margin-top: 20px;
                 padding: 20px 0 0 30px;
                 background: var(--white-color);
+            }
+
+            &_isSignedIn {
+                display: none;
             }
         }
     }
@@ -418,5 +470,110 @@
 .Checkout-GuestButton_continueAsGuest.Checkout-GuestButton_isArabic {
     button {
         text-align: left;
+    }
+}
+
+.CheckoutHeader {
+    background-color: var(--white);
+    display: flex;
+    justify-content: space-between;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 20px;
+
+    &-BackToShoppingMobile {
+
+        @include desktop {
+            display: none;
+        }
+
+        ::before {
+            content: ' ';
+            position: absolute;
+            width: 16px;
+            height: 22px;
+            left: 20px;
+            top: 30px;
+            background-image: url(./icons/arrow-left-black.svg);
+            background-size: 16px;
+            background-repeat: no-repeat;
+        }
+
+        &_isArabic {
+            ::before {
+                left: 0;
+                transform: rotate(180deg);
+            }
+        }
+    }
+
+    &-BackToShoppingDesktop {
+        @include before-desktop {
+            display: none;
+        }
+
+        ::before {
+            content: ' ';
+            position: absolute;
+            width: 16px;
+            height: 22px;
+            left: 6px;
+            top: 15px;
+            background-image: url(./icons/arrow-left-black.svg);
+            background-size: 16px;
+            background-repeat: no-repeat;
+        }
+
+        &_isArabic {
+            ::before {
+                transform: rotate(180deg);
+                right: 6px;
+                top: 9px;
+            }
+        }
+
+        &_isMobile {
+            @include desktop{
+                display: none;
+            }
+        }
+        
+
+        :hover {
+            @include desktop {
+                ::before {
+                    background-image: url(./icons/arrow-left-white.svg);
+                }
+            }
+        }
+    }
+
+    .HeaderLogo {
+        @include before-desktop {
+            display: none;
+        }
+    }
+
+    &-SecureShipping {
+        padding: 10px;
+        text-align: right;
+        width: 200px;
+        background: url(./icons/lock.svg) no-repeat;
+        background-size: 26px 30px;
+        background-position: 5% 35%;
+
+        @include before-desktop {
+            display: none;
+        }
+
+        &_isArabic {
+            text-align: left;
+            background-position: 95% 35%;
+        }
+    }
+
+    &-SecureShippingLabel {
+        font-size: 20px;
+        font-weight: var(--fw-demi);
     }
 }

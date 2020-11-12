@@ -15,7 +15,7 @@
 
 .Loader {
     background-color: var(--overlay-black-color);
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
@@ -35,6 +35,6 @@
         position: absolute;
         transform: translate(-50%, -50%) scale(var(--loader-scale));
         left: 50%;
-        top: calc(50% - (3px * var(--loader-scale)));
+        top: calc(100vh/2 - (3px * var(--loader-scale)));
     }
 }
