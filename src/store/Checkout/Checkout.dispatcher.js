@@ -7,7 +7,9 @@ import {
     getPaymentMethods,
     saveShippingInformation,
     selectPaymentMethod,
-    validateShippingAddress
+    sendVerificationCode,
+    validateShippingAddress,
+    verifyUserPhone
 } from 'Util/API/endpoint/Checkout/Checkout.enpoint';
 import {
     createSession,
@@ -108,6 +110,14 @@ export class CheckoutDispatcher {
 
     async verifyPayment(dispatch, paymentId) {
         return verifyPayment(paymentId);
+    }
+
+    async sendVerificationCode(dispatch, data) {
+        return sendVerificationCode({ data });
+    }
+
+    async verifyUserPhone(dispatch, data) {
+        return verifyUserPhone({ data });
     }
 }
 

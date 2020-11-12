@@ -26,7 +26,8 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
         ...SourceCheckoutBillingContainer.propTypes,
         setTabbyWebUrl: PropTypes.func.isRequired,
         setPaymentCode: PropTypes.func.isRequired,
-        showPopup: PropTypes.func.isRequired
+        showPopup: PropTypes.func.isRequired,
+        setCheckoutCreditCardData: PropTypes.func.isRequired
     };
 
     containerFunctions = {
@@ -73,8 +74,15 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
         const { code } = paymentMethod;
 
         if (code === CARD) {
-            const { addNewCreditCard, showErrorNotification, showSuccessMessage } = this.props;
+            const {
+                addNewCreditCard,
+                showErrorNotification,
+                showSuccessMessage,
+                setCheckoutCreditCardData
+            } = this.props;
+
             const { number, expDate, cvv } = this.state;
+            setCheckoutCreditCardData(number, expDate, cvv);
 
             addNewCreditCard({ number, expDate, cvv }).then(
                 (response) => {

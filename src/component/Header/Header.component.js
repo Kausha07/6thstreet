@@ -26,7 +26,6 @@ export class Header extends PureComponent {
     state = {
         isArabic: isArabic(),
         isMobile: isMobile.any() || isMobile.tablet(),
-        isCheckout: false,
         newMenuGender: ''
     };
 
@@ -37,13 +36,13 @@ export class Header extends PureComponent {
         MobileBottomBar
     ];
 
-    static getDerivedStateFromProps() {
-        return location.pathname.match(/checkout/) ? {
-            isCheckout: true
-        } : {
-            isCheckout: false
-        };
-    }
+    getIsCheckout = () => {
+        if (location.pathname.match(/checkout/)) {
+            return !location.pathname.match(/success/);
+        }
+
+        return false;
+    };
 
     renderSection = (Component, i) => {
         const { navigationState } = this.props;
@@ -137,8 +136,7 @@ export class Header extends PureComponent {
 
     render() {
         const { navigationState: { name } } = this.props;
-        const { isCheckout } = this.state;
-
+        const isCheckout = this.getIsCheckout();
         return (
             <>
                 <header block="Header" mods={ { name } }>

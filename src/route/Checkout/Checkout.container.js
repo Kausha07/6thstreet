@@ -1,3 +1,4 @@
+import { DETAILS_STEP, SHIPPING_STEP } from '@scandipwa/scandipwa/src/route/Checkout/Checkout.config';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -26,6 +27,7 @@ export const mapDispatchToProps = (dispatch) => ({
     getTabbyInstallment: (price) => CheckoutDispatcher.getTabbyInstallment(dispatch, price),
     verifyPayment: (paymentId) => CheckoutDispatcher.verifyPayment(dispatch, paymentId),
     getPaymentMethods: () => CheckoutDispatcher.getPaymentMethods(),
+    sendVerificationCode: (phone) => CheckoutDispatcher.sendVerificationCode(dispatch, phone),
     setCartId: (cartId) => dispatch(setCartId(cartId)),
     createEmptyCart: () => CartDispatcher.getCart(dispatch),
     hideActiveOverlay: () => dispatch(hideActiveOverlay()),
@@ -48,10 +50,35 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         setMeta: PropTypes.func.isRequired
     };
 
-    state = {
-        ...this.state,
-        isLoading: false
-    };
+    constructor(props) {
+        super(props);
+
+        const {
+            toggleBreadcrumbs,
+            totals: {
+                is_virtual
+            }
+        } = props;
+
+        toggleBreadcrumbs(false);
+
+        this.state = {
+            isLoading: false,
+            isDeliveryOptionsLoading: false,
+            requestsSent: 0,
+            paymentMethods: [],
+            shippingMethods: [],
+            shippingAddress: {},
+            checkoutStep: is_virtual ? BILLING_STEP : SHIPPING_STEP,
+            orderID: '',
+            paymentTotals: BrowserDatabase.getItem(PAYMENT_TOTALS) || {},
+            email: '',
+            isCreateUser: false,
+            isGuestEmailSaved: false,
+            isVerificationCodeSent: false,
+            lastOrder: {}
+        };
+    }
 
     componentDidMount() {
         const { setMeta } = this.props;
@@ -79,6 +106,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         if (!guest_checkout && !isSignedIn()) {
             history.push('/');
         }
+    }
+
+    saveLastOrder(totals) {
+        this.setState({ lastOrder: totals });
     }
 
     onShippingEstimationFieldsChange(address) {
@@ -255,6 +286,53 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         } catch (e) {
             this._handleError(e);
         }
+    }
+
+    setDetailsStep(orderID) {
+        const {
+            setNavigationState,
+            sendVerificationCode,
+            isSignedIn,
+            customer
+        } = this.props;
+
+        const { shippingAddress } = this.state;
+
+        if (isSignedIn) {
+            if (customer.isVerified !== '0') {
+                const code = customer.phone.slice(1, 4);
+                const mobile = customer.phone.slice(4);
+                sendVerificationCode({ mobile, code }).then(
+                    (response) => {
+                        this.setState({ isVerificationCodeSent: response.success });
+                    },
+                    this._handleError
+                );
+            }
+        } else {
+            const code = shippingAddress.phone.slice(1, 4);
+            const mobile = shippingAddress.phone.slice(4);
+            sendVerificationCode({ mobile, code }).then(
+                (response) => {
+                    this.setState({ isVerificationCodeSent: response.success });
+                },
+                this._handleError
+            );
+        }
+
+
+        BrowserDatabase.deleteItem(PAYMENT_TOTALS);
+        this.resetCart();
+
+        this.setState({
+            isLoading: false,
+            checkoutStep: DETAILS_STEP,
+            orderID
+        });
+
+        setNavigationState({
+            name: DETAILS_STEP
+        });
     }
 
     resetCart() {
