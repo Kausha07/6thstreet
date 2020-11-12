@@ -262,7 +262,7 @@ export class CheckoutSuccessContainer extends PureComponent {
         sendVerificationCode({ mobile, countryCode }).then(
             (response) => {
                 if (!response.error) {
-                    showNotification('success', __('Verification code was successfully re-sended'));
+                    showNotification('success', __('Verification code was successfully re-sent'));
                 } else {
                     showNotification('info', __('Please wait %s before re-sending the request', response.data.timeout));
                 }

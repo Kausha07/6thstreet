@@ -620,7 +620,7 @@
     "Verify phone number": null,
     "Phone Verified": null,
     "Input new phone number and send Verification code again": null,
-    "change phone": null,
+    "Update your Number": null,
     "EXP.": null,
     "Phone was successfully verified": null,
     "Wrong Verification Code. Please re-enter": null,
@@ -634,5 +634,6 @@
     "Trending tags": null,
     "Your order has been shipped in a single package, please find the package details below.": null,
     "Please check the correct card expiration date (MM/YY)": null,
-    "Please check the card expiration date": null
+    "Please check the card expiration date": null,
+    "Verification code was successfully re-sent": null
 }
