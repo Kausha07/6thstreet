@@ -196,7 +196,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                 }
             },
             this._handleError
-        );
+        ).catch(() => {});
     }
 
     async savePaymentInformation(paymentInformation) {
@@ -251,7 +251,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                     }
                 },
                 this._handleError
-            );
+            ).catch(() => {
+                const { showErrorNotification } = this.props;
+                this.setState({ isLoading: false });
+                showErrorNotification(__('Something went wrong.'));
+            });
         } catch (e) {
             this._handleError(e);
         }

@@ -80,7 +80,11 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
                     }
                 },
                 this._handleError
-            );
+            ).catch(() => {
+                const { showErrorNotification } = this.props;
+
+                showErrorNotification(__('Something went wrong'));
+            });
         } else {
             savePaymentInformation({
                 billing_address: address,

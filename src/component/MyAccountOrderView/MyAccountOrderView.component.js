@@ -130,7 +130,7 @@ class MyAccountOrderView extends PureComponent {
         const { order: { status, shipped } } = this.props;
         const { isArabic } = this.state;
 
-        if (shipped.length <= 1 || STATUS_FAILED.includes(status)) {
+        if (STATUS_FAILED.includes(status)) {
             return null;
         }
 
@@ -141,7 +141,11 @@ class MyAccountOrderView extends PureComponent {
                   mix={ { block: 'MyAccountOrderView', elem: 'TruckImage' } }
                 />
                 <p>
-                    { __('Your order has been shipped in multiple packages, please find the package details below.') }
+                    { shipped.length <= 1
+                        ? __('Your order has been shipped in a single package, please find the package details below.')
+                        : __('Your order has been shipped in multiple packages, please find the package details below.')
+                        // eslint-disable-next-line
+                    }
                 </p>
             </div>
         );
