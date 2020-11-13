@@ -268,7 +268,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     }
 
     async savePaymentMethodAndPlaceOrder(paymentInformation) {
-        const { paymentMethod: { code, additional_data } } = paymentInformation;
+        const { paymentMethod: { code, additional_data = {} } } = paymentInformation;
         const { createOrder, customer: { email: customerEmail }, showErrorNotification } = this.props;
         const { shippingAddress: { email } } = this.state;
 
