@@ -87,7 +87,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         setMeta({ title: __('Checkout') });
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps, prevState) {
         const {
             history,
             showInfoNotification,
@@ -95,8 +95,21 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             totals,
             totals: {
                 items = []
-            }
+            },
+            updateStoreCredit
         } = this.props;
+
+        const {
+            checkoutStep
+        } = this.state;
+
+        const {
+            checkoutStep: prevCheckoutStep
+        } = prevState;
+
+        if (checkoutStep !== prevCheckoutStep) {
+            updateStoreCredit();
+        }
 
         if (Object.keys(totals).length && !items.length) {
             showInfoNotification(__('Please add at least one product to cart!'));
