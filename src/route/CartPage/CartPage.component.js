@@ -379,6 +379,10 @@ export class CartPage extends PureComponent {
         const { activeTab, changeActiveTab } = this.props;
         const { name } = tabMap[activeTab];
 
+        if (!isMobile.any()) {
+            return null;
+        }
+
         return (
             <ContentWrapper
               label={ __('My Account page') }

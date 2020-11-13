@@ -15,7 +15,8 @@ import {
 } from './MyAccountClubApparelOverlay.config';
 
 export const mapStateToProps = (_state) => ({
-    customer: _state.MyAccountReducer.customer
+    customer: _state.MyAccountReducer.customer,
+    country: _state.AppState.country
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -28,6 +29,7 @@ export class MyAccountClubApparelOverlayContainer extends PureComponent {
     static propTypes = {
         linkAccount: PropTypes.func.isRequired,
         verifyOtp: PropTypes.func.isRequired,
+        country: PropTypes.string.isRequired,
         customer: customerType
     };
 

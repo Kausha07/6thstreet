@@ -22,6 +22,7 @@ import { changeNavigationState } from 'Store/Navigation/Navigation.action';
 import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
+import StoreCreditDispatcher from 'Store/StoreCredit/StoreCredit.dispatcher';
 import { customerType } from 'Type/Account';
 import { HistoryType } from 'Type/Common';
 import { TotalsType } from 'Type/MiniCart';
@@ -54,12 +55,14 @@ export const mapDispatchToProps = (dispatch) => ({
     ),
     showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
     showNotification: (type, message) => dispatch(showNotification(type, message)),
-    updateMeta: (meta) => dispatch(updateMeta(meta))
+    updateMeta: (meta) => dispatch(updateMeta(meta)),
+    updateStoreCredit: () => StoreCreditDispatcher.getStoreCredit(dispatch)
 });
 
 export class CartPageContainer extends PureComponent {
     static propTypes = {
         updateBreadcrumbs: PropTypes.func.isRequired,
+        updateStoreCredit: PropTypes.func.isRequired,
         changeHeaderState: PropTypes.func.isRequired,
         showOverlay: PropTypes.func.isRequired,
         showNotification: PropTypes.func.isRequired,
@@ -114,10 +117,10 @@ export class CartPageContainer extends PureComponent {
     }
 
     componentDidMount() {
-        const { updateMeta } = this.props;
+        const { updateMeta, updateStoreCredit } = this.props;
 
         updateMeta({ title: __('Cart') });
-
+        updateStoreCredit();
         this._updateBreadcrumbs();
         this._changeHeaderState();
     }

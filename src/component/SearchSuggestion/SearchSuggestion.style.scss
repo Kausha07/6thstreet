@@ -32,6 +32,9 @@ root {
 
     @include desktop() {
         position: fixed;
+        right: -20px;
+        top: 155px;
+        width: 720px;
     }
 
     &-ShadeWrapper {

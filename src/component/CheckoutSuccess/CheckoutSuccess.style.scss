@@ -126,7 +126,7 @@
 
             @include desktop() {
                 margin-left: -10px;
-                width: 415px;
+                width: 640px;
             }
         }
 
@@ -262,7 +262,7 @@
             }
 
             @include desktop() {
-                width: 415px;
+                width: 640px;
             }
         }
 
@@ -448,7 +448,7 @@
         }
 
         @include desktop() {
-            margin: 0 104px;
+            margin: 0 auto;
         }
     }
 
@@ -470,10 +470,8 @@
     }
 
     @include desktop() {
-        width: 415px;
+        width: 640px;
         background-color: var(--white);
-        display: grid;
-        grid-auto-flow: column;
 
         section {
             max-width: 250px;
@@ -481,25 +479,21 @@
         }
 
         &-Details {
-            width: 340px;
+            width: 640px;
 
             .SuccessMessage {
-                width: 415px;
+                width: 640px;
             }
         }
 
         &-ButtonWrapper {
-            padding-top: 50px;
-            bottom: -100px;
-            position: absolute;
-            margin-right: -345px;
+            padding: 50px 0 0;
+            position: static;
 
             a {
-                margin-left: -15px;
-
                 button {
                     border-radius: 0;
-                    width: 340px;
+                    width: 640px;
                 }
             }
         }

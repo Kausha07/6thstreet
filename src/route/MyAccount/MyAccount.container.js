@@ -11,6 +11,7 @@ import {
 } from 'SourceRoute/MyAccount/MyAccount.container';
 import { updateMeta } from 'Store/Meta/Meta.action';
 import { setIsMobileTabActive } from 'Store/MyAccount/MyAccount.action';
+import StoreCreditDispatcher from 'Store/StoreCredit/StoreCredit.dispatcher';
 import {
     ADDRESS_BOOK,
     CLUB_APPAREL,
@@ -36,7 +37,8 @@ export const mapStateToProps = (state) => ({
 export const mapDispatchToProps = (dispatch) => ({
     ...sourceMapDispatchToProps(dispatch),
     setMobileTabActive: (value) => dispatch(setIsMobileTabActive(value)),
-    setMeta: (meta) => dispatch(updateMeta(meta))
+    setMeta: (meta) => dispatch(updateMeta(meta)),
+    updateStoreCredit: () => StoreCreditDispatcher.getStoreCredit(dispatch)
 });
 
 export const tabMap = {
@@ -77,14 +79,16 @@ export class MyAccountContainer extends SourceMyAccountContainer {
         ...SourceMyAccountContainer.propTypes,
         mobileTabActive: PropTypes.bool.isRequired,
         setMobileTabActive: PropTypes.func.isRequired,
-        setMeta: PropTypes.func.isRequired
+        setMeta: PropTypes.func.isRequired,
+        updateStoreCredit: PropTypes.func.isRequired
     };
 
     tabMap = tabMap;
 
     componentDidMount() {
-        const { setMeta } = this.props;
+        const { setMeta, updateStoreCredit } = this.props;
 
+        updateStoreCredit();
         setMeta({ title: __('My Account') });
     }
 
