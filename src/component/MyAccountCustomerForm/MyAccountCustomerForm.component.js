@@ -154,10 +154,6 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
             gender
         } = this.state;
 
-        if (!gender) {
-            return null;
-        }
-
         const isMale = gender === 1;
         const isFemale = gender === 2;
         const isPreferNotToSay = gender === 3;
