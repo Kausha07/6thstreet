@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
@@ -13,9 +14,6 @@ import PDPAddToCart from './PDPAddToCart.component';
 export const mapStateToProps = (state) => ({
     product: state.PDP.product
 });
-
-var fullCheckoutHide;
-var startCheckoutHide;
 
 export const mapDispatchToProps = (dispatch) => ({
     showNotification: (type, message) => dispatch(showNotification(type, message)),
@@ -48,18 +46,25 @@ export class PDPAddToCartContainer extends PureComponent {
         routeChangeToCart: this.routeChangeToCart.bind(this)
     };
 
-    state = {
-        sizeObject: {},
-        selectedSizeType: 'eu',
-        selectedSizeCode: '',
-        insertedSizeStatus: true,
-        isLoading: false,
-        addedToCart: false,
-        buttonRefreshTimeout: 1250,
-        showProceedToCheckout: false,
-        hideCheckoutBlock: false,
-        clearTime: false
-    };
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            sizeObject: {},
+            selectedSizeType: 'eu',
+            selectedSizeCode: '',
+            insertedSizeStatus: true,
+            isLoading: false,
+            addedToCart: false,
+            buttonRefreshTimeout: 1250,
+            showProceedToCheckout: false,
+            hideCheckoutBlock: false,
+            clearTime: false
+        };
+
+        this.fullCheckoutHide = null;
+        this.startCheckoutHide = null;
+    }
 
     static getDerivedStateFromProps(props) {
         const { product } = props;
@@ -208,15 +213,15 @@ export class PDPAddToCartContainer extends PureComponent {
     clearTimeAll() {
         this.setState({ hideCheckoutBlock: false });
 
-        clearTimeout(fullCheckoutHide);
-        clearTimeout(startCheckoutHide);
+        clearTimeout(this.fullCheckoutHide);
+        clearTimeout(this.startCheckoutHide);
     }
 
     proceedToCheckout() {
         this.setState({ showProceedToCheckout: true });
 
-        startCheckoutHide = setTimeout(() => this.setState({ hideCheckoutBlock: true }), 5000);
-        fullCheckoutHide = setTimeout(() => this.setState({
+        this.startCheckoutHide = setTimeout(() => this.setState({ hideCheckoutBlock: true }), 5000);
+        this.fullCheckoutHide = setTimeout(() => this.setState({
             showProceedToCheckout: false,
             hideCheckoutBlock: false
         }), 7000);
@@ -224,7 +229,7 @@ export class PDPAddToCartContainer extends PureComponent {
 
     routeChangeToCart() {
         history.push('/cart');
-    };
+    }
 
     render() {
         return (
