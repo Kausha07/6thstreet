@@ -604,6 +604,6 @@
     "Verification code was successfully re-sended": null,
     "Please wait %s before re-sending the request": null,
     "Qty:": null,
-    "Added to your shopping bag": null,
-    "Proceed to checkout": null
+    "Added to your shopping bag": "تم الإضافه إلى حقيبة التسوق الخاصة بك",
+    "Proceed to checkout": "انتقل لعملية الدفع"
 }
