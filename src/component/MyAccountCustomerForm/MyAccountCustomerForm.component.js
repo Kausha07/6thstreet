@@ -26,11 +26,8 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
         hidePasswordFrom: PropTypes.func.isRequired,
         onSave: PropTypes.func.isRequired,
         setGender: PropTypes.func.isRequired,
+        handleCountryChange: PropTypes.func.isRequired,
         isLoading: PropTypes.bool.isRequired
-    };
-
-    state = {
-        isArabic: isArabic()
     };
 
     constructor(props) {
@@ -39,6 +36,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
 
         this.state = {
             gender,
+            isArabic: isArabic(),
             customerCountry: phone ? Object.keys(PHONE_CODES).find(
                 (key) => PHONE_CODES[key] === phone.substr('0', '4')
             ) : getCountryFromUrl()
@@ -71,6 +69,9 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
             },
             password: {
                 render: this.renderPassword.bind(this)
+            },
+            countryCode: {
+                render: this.renderCountryCode.bind(this)
             },
             phone: {
                 render: this.renderPhone.bind(this)
@@ -226,10 +227,31 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
     }
 
     getPhoneNumberMaxLength() {
-        const { customerCountry } = this.getCustomerPhone();
+        const { customerCountry } = this.state;
 
         return COUNTRY_CODES_FOR_PHONE_VALIDATION[customerCountry]
             ? '9' : '8';
+    }
+
+    setCountryCode = (code) => {
+        const { handleCountryChange } = this.props;
+
+        handleCountryChange(code);
+
+        this.setState({
+            customerCountry: Object.keys(PHONE_CODES).find((key) => PHONE_CODES[key] === code)
+        });
+    };
+
+    renderCountryCode() {
+        const { isArabic } = this.state;
+        const customerPhoneData = this.getCustomerPhone();
+
+        return (
+            <div block="MyAccountCustomerForm" elem="CountryCode" mods={ { isArabic } }>
+                <PhoneCountryCodeField label={ customerPhoneData.customerCountry } onSelect={ this.setCountryCode } />
+            </div>
+        );
     }
 
     renderPhone() {
@@ -238,7 +260,6 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
 
         return (
             <div block="MyAccountCustomerForm" elem="Phone" mods={ { isArabic } }>
-                <PhoneCountryCodeField label={ customerPhoneData.customerCountry } />
                 <Field
                   block="MyAccountCustomerForm"
                   elem="PhoneField"

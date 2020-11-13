@@ -1,7 +1,14 @@
 .PhoneCountryCodeField {
     height: 89px;
     margin-top: -25px;
-    width: 80px;
+    width: 105px;
+
+    .FieldSelect {
+        &-Select {
+            height: 60px;
+            padding-left: 30px;
+        }
+    }
 
     @include desktop() {
         height: 88px;
@@ -26,8 +33,6 @@
     }
 
     &_isArabic {
-        margin-right: -90px;
-
         .CountryMiniFlag-Container {
             margin-left: 0;
             margin-right: 22px;

@@ -63,10 +63,10 @@ class LoginBlock extends PureComponent {
             return (
                 <div>
                     <h3 mix={ { block: 'LoginBlock', elem: 'Header' } }>
-                        { `Welcome, ${name}` }
+                        { __(`Welcome, ${name}`) }
                     </h3>
                     <span mix={ { block: 'LoginBlock', elem: 'SubHeader' } }>
-                        Customize your shopping experience
+                        { __('Customize your shopping experience') }
                     </span>
                 </div>
             );

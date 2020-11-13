@@ -216,8 +216,31 @@ class PLPFilters extends PureComponent {
             >
                 <img src={ fitlerImage } alt="fitler" />
                 { __('refine ') }
+                <div
+                  block="PLPFilterMobile"
+                  elem="Count"
+                >
+                    { this.renderFiltersCount() }
+                </div>
             </button>
         );
+    }
+
+    renderFiltersCount() {
+        const { activeFilters } = this.props;
+        const { count } = activeFilters ? Object.entries(activeFilters).reduce((prev, [_key, value]) => ({
+            count: prev.count + value.length
+        }), { count: 0 })
+            : (
+                { count: 0 }
+            );
+        const displayCount = count - 1;
+
+        if (displayCount < 0) {
+            return '(0)';
+        }
+
+        return `(${displayCount})`;
     }
 
     renderRefine() {

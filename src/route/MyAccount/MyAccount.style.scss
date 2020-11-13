@@ -37,9 +37,80 @@
 }
 
 .MyAccountTabListItem {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--lightest-gray);
+
+    &:first-child {
+        border-bottom: 0;
+    }
+
     &-Button {
         font-weight: var(--fw-demi);
         letter-spacing: .55px;
+        padding-left: 40px;
+
+        &:before {
+            left: 0;
+            top: 14px;
+            background-repeat: no-repeat;
+            position: absolute;
+            background-size: 20px 20px;
+            width: 40px;
+            height: 40px;
+            content: "";
+            display: inline-block;
+        }
+
+        &_tabImageId {
+            &_club-apparel {
+                &:before {
+                    background-image: url(./icons/apparel.png);
+                }
+            }
+
+            &_dashboard {
+                &:before {
+                    background-image: url(./icons/dashboard.png);
+                }
+            }
+
+            &_my-orders {
+                &:before {
+                    background-image: url(./icons/history.svg);
+                }
+            }
+
+            &_return-item {
+                &:before {
+                    background-image: url(./icons/return.svg);
+                }
+            }
+
+            &_my-wishlist {
+                &:before {
+                    background-image: url(./icons/wishlist.png);
+                }
+            }
+
+            &_address-book {
+                &:before {
+                    background-image: url(./icons/address.png);
+                }
+            }
+        }
+    }
+
+    &:first-child {
+        padding-left: 0;
+    }
+
+    &:last-child {
+        button {
+            &:before {
+                background-image: url(./icons/logout.svg);
+            }
+        }
     }
 
     &_isActive,
@@ -51,7 +122,37 @@
             letter-spacing: .3px;
         }
     }
+}
 
+.MyAccount {
+    &-Wrapper {
+        &_isArabic {
+            .MyAccountTabListItem {
+                button {
+                    text-align: right;
+                    padding-right: 50px;
+                    padding-left: 0;
+
+                    &:before {
+                        left: unset;
+                        right: -5px;
+                    }
+
+                    &:after {
+                        transform: rotate(-135deg);
+                        right: unset;
+                        left: 0;
+                    }
+                }
+
+                &:first-child {
+                    button {
+                        padding: 10px;
+                    }
+                }
+            }
+        }
+    }
 }
 
 @include before-desktop {

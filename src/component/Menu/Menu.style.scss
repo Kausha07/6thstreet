@@ -8,8 +8,8 @@
 
     @include before-desktop {
         border-right: 1px solid var(--light-gray);
-        margin-top: 150px;
         height: 100%;
+        margin-top: 150px;
         width: 100%;
 
         &-Container {
@@ -18,12 +18,13 @@
             width: 100%;
 
             .HeaderGenders {
-                display: flex;
                 background: var(--white);
-                width: 100%;
-                top: 94px;
-                position: fixed;
+                display: flex;
                 justify-content: center;
+                padding-top: 14px;
+                position: fixed;
+                top: 80px;
+                width: 100%;
 
                 .GenderButton-Container {
                     display: flex;
@@ -31,9 +32,9 @@
                     width: 33.33%;
 
                     .GenderButton-Button {
+                        height: 30px;
                         margin-top: 6px;
                         padding: 0 15px;
-                        height: 30px;
                     }
                 }
             }

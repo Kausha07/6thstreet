@@ -10,6 +10,7 @@ import {
     TABBY_PAYMENT_CODES
 } from 'Component/CheckoutPayments/CheckoutPayments.config';
 import CheckoutShipping from 'Component/CheckoutShipping';
+import CheckoutSuccess from 'Component/CheckoutSuccess';
 import ContentWrapper from 'Component/ContentWrapper';
 import TabbyPopup from 'Component/TabbyPopup';
 import { TABBY_POPUP_ID } from 'Component/TabbyPopup/TabbyPopup.config';
@@ -27,7 +28,8 @@ import './Checkout.style';
 
 export class Checkout extends SourceCheckout {
     static propTypes = {
-        isSignedIn: PropTypes.bool.isRequired
+        isSignedIn: PropTypes.bool.isRequired,
+        orderID: PropTypes.string.isRequired
     };
 
     state = {
@@ -40,12 +42,16 @@ export class Checkout extends SourceCheckout {
         tabbyPayLaterUrl: '',
         tabbyPaymentId: '',
         tabbyPaymentStatus: '',
-        isTabbyPopupShown: false
+        isTabbyPopupShown: false,
+        paymentInformation: {},
+        creditCardData: {},
+        isSuccess: false
     };
 
     savePaymentInformation = (paymentInformation) => {
         const { savePaymentInformation, showErrorNotification } = this.props;
         const { selectedPaymentMethod, tabbyInstallmentsUrl, tabbyPayLaterUrl } = this.state;
+        this.setState({ paymentInformation });
 
         if (TABBY_PAYMENT_CODES.includes(selectedPaymentMethod)) {
             if (tabbyInstallmentsUrl || tabbyPayLaterUrl) {
@@ -141,7 +147,7 @@ export class Checkout extends SourceCheckout {
         if (checkoutStep === BILLING_STEP && isLoading) {
             return (
                 <div block="CheckoutSuccess">
-                    <div block="LoadingOverlay">
+                    <div block="LoadingOverlay" dir="ltr">
                         <p>
                             { __('Processing Your Order') }
                         </p>
@@ -238,9 +244,20 @@ export class Checkout extends SourceCheckout {
             savePaymentInformation={ this.savePaymentInformation }
             setTabbyWebUrl={ this.setTabbyWebUrl }
             setPaymentCode={ this.setPaymentCode }
+            setCheckoutCreditCardData={ this.setCheckoutCreditCardData }
           />
         );
     }
+
+    setCheckoutCreditCardData = (number, expDate, cvv) => {
+        this.setState({
+            creditCardData: {
+                number,
+                expDate,
+                cvv
+            }
+        });
+    };
 
     continueAsGuest = () => {
         const { email } = this.props;
@@ -312,6 +329,29 @@ export class Checkout extends SourceCheckout {
         );
     }
 
+    renderDetailsStep() {
+        const { orderID, shippingAddress } = this.props;
+        const {
+            paymentInformation: {
+                billing_address,
+                paymentMethod
+            },
+            creditCardData
+        } = this.state;
+
+        this.setState({ isSuccess: true });
+
+        return (
+          <CheckoutSuccess
+            orderID={ orderID }
+            shippingAddress={ shippingAddress }
+            billingAddress={ billing_address }
+            paymentMethod={ paymentMethod }
+            creditCardData={ creditCardData }
+          />
+        );
+    }
+
     renderShippingStep() {
         const {
             shippingMethods,
@@ -325,21 +365,21 @@ export class Checkout extends SourceCheckout {
 
         const { continueAsGuest, isArabic } = this.state;
         const renderCheckoutShipping = (
-          <div
-            block="Checkout"
-            elem="Shipping"
-            mods={ isSignedIn }
-          >
-            { continueAsGuest ? this.renderHeading('Login / Sign Up', true) : null }
-            <CheckoutShipping
-              isLoading={ isDeliveryOptionsLoading }
-              shippingMethods={ shippingMethods }
-              saveAddressInformation={ saveAddressInformation }
-              onShippingEstimationFieldsChange={ onShippingEstimationFieldsChange }
-              guestEmail={ email }
-              totals={ checkoutTotals }
-            />
-          </div>
+            <div
+              block="Checkout"
+              elem="Shipping"
+              mods={ isSignedIn }
+            >
+                { continueAsGuest ? this.renderHeading('Login / Sign Up', true) : null }
+                <CheckoutShipping
+                  isLoading={ isDeliveryOptionsLoading }
+                  shippingMethods={ shippingMethods }
+                  saveAddressInformation={ saveAddressInformation }
+                  onShippingEstimationFieldsChange={ onShippingEstimationFieldsChange }
+                  guestEmail={ email }
+                  totals={ checkoutTotals }
+                />
+            </div>
         );
 
         return (
@@ -355,30 +395,32 @@ export class Checkout extends SourceCheckout {
                 { continueAsGuest ? renderCheckoutShipping : null }
               </div>
               { isSignedIn ? renderCheckoutShipping : null }
-              { continueAsGuest || isSignedIn ? null : this.renderHeading('Shipping Options', true) }
-              { continueAsGuest || isSignedIn ? null : this.renderHeading('Delivery Options', true) }
-              { continueAsGuest || isSignedIn ? null : this.renderHeading('Payment Options', true) }
+              { continueAsGuest || isSignedIn ? null : this.renderHeading(__('Shipping Options'), true) }
+              { continueAsGuest || isSignedIn ? null : this.renderHeading(__('Delivery Options'), true) }
+              { continueAsGuest || isSignedIn ? null : this.renderHeading(__('Payment Options'), true) }
             </>
         );
     }
 
     render() {
+        const { isSuccess } = this.state;
+
         return (
-            <main block="Checkout">
+            <main block="Checkout" mods={ { isSuccess } }>
                 <ContentWrapper
                   wrapperMix={ { block: 'Checkout', elem: 'Wrapper' } }
                   label={ __('Checkout page') }
                 >
                     <div block="Checkout" elem="Step">
-                      { this.renderTitle() }
-                      { this.renderGuestForm() }
-                      { this.renderStep() }
-                      { this.renderLoader() }
+                        { this.renderTitle() }
+                        { this.renderGuestForm() }
+                        { this.renderStep() }
+                        { this.renderLoader() }
                     </div>
                     <div>
-                      { this.renderSummary() }
-                      { this.renderPromo() }
-                      { this.renderTabbyIframe() }
+                        { this.renderSummary() }
+                        { this.renderPromo() }
+                        { this.renderTabbyIframe() }
                     </div>
                 </ContentWrapper>
             </main>

@@ -266,6 +266,11 @@
                             padding-left: 30px;
                             padding-right: 5px;
                         }
+
+                        ::after {
+                            right: unset;
+                            left: 20px;
+                        }
                     }
 
                     &:nth-child(6) {
@@ -278,7 +283,7 @@
                         }
 
                         ::after {
-                            right: none;
+                            right: unset;
                             left: 20px;
                         }
                     }

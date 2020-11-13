@@ -1,6 +1,14 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import GTMRouteWrapper from 'Component/GoogleTagManager/GoogleTagManagerRouteWrapper.component';
+import {
+    CATEGORY,
+    CMS_PAGE,
+    NOT_FOUND,
+    PDP as PRODUCT_PAGE
+} from 'Component/Header/Header.config';
+import Loader from 'Component/Loader';
 import CmsPage from 'Route/CmsPage';
 import NoMatch from 'Route/NoMatch';
 import PDP from 'Route/PDP';
@@ -23,7 +31,7 @@ class UrlRewrites extends PureComponent {
     };
 
     typeMap = {
-        [TYPE_CATEGORY]: () => <PLP />,
+        [TYPE_CATEGORY]: this.renderCategory.bind(this),
         [TYPE_CMS_PAGE]: this.renderCmsPage.bind(this),
         [TYPE_PRODUCT]: this.renderPDP.bind(this)
     };
@@ -34,7 +42,17 @@ class UrlRewrites extends PureComponent {
         const { id } = this.props;
 
         return (
-            <PDP id={ id } />
+            <GTMRouteWrapper route={ PRODUCT_PAGE }>
+                <PDP id={ id } />
+            </GTMRouteWrapper>
+        );
+    }
+
+    renderCategory() {
+        return (
+            <GTMRouteWrapper route={ CATEGORY }>
+                <PLP />
+            </GTMRouteWrapper>
         );
     }
 
@@ -42,21 +60,26 @@ class UrlRewrites extends PureComponent {
         const { id } = this.props;
 
         return (
-            <CmsPage pageIds={ id } />
+            <GTMRouteWrapper route={ CMS_PAGE }>
+                <CmsPage pageIds={ id } />
+            </GTMRouteWrapper>
         );
     }
 
     render() {
-        const { props } = this;
         const {
             type,
             isLoading
         } = this.props;
 
-        this.render404 = () => <NoMatch { ...props } />;
+        this.render404 = () => (
+            <GTMRouteWrapper route={ NOT_FOUND }>
+                <NoMatch { ...this.props } />
+            </GTMRouteWrapper>
+        );
 
         if (isLoading) {
-            return 'loading...';
+            return <Loader isLoading={ isLoading } />;
         }
 
         const renderFunction = this.typeMap[type] || this.render404;

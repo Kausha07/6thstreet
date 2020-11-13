@@ -20,6 +20,11 @@
       padding: 0;
       margin-left: calc(35% + 30px);
       margin-right: calc(35% - 30px);
+
+      &_isArabic {
+        margin-left: calc(35% - 19px);
+        margin-right: calc(35% + 19px);
+      }
     }
     @include desktop {
       height: 40px;

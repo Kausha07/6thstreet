@@ -10,8 +10,8 @@
     &-Container {
         display: flex;
         position: fixed;
-        top: 20%;
-        bottom: 20%;
+        top: 15%;
+        bottom: 15%;
         right: 0;
         left: 0;
         margin-right: auto;
@@ -19,8 +19,8 @@
         z-index: 9;
         background: $white;
         min-height: 10em;
-        width: 790px;
-        height: 60%;
+        width: 770px;
+        height: 70%;
         max-height: 600px;
     }
 

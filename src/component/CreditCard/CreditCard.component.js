@@ -112,7 +112,7 @@ class CreditCard extends PureComponent {
     renderCreditCardForm() {
         const { cvv, cardLogo } = this.state;
         return (
-            <div block="CreditCard" elem="Card">
+            <div block="CreditCard" elem="Card" dir="ltr">
                 <p>card number</p>
                 <input
                   type="text"
@@ -124,7 +124,7 @@ class CreditCard extends PureComponent {
                   onChange={ this.handleNumberChange }
                   validation={ ['notEmpty'] }
                 />
-                <p>exp date</p>
+                <p>{ __('exp date') }</p>
                 <div
                   block="CreditCard"
                   elem="Row"

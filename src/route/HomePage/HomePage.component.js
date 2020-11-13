@@ -13,6 +13,29 @@ class HomePage extends PureComponent {
         isLoading: PropTypes.bool.isRequired
     };
 
+    componentDidUpdate() {
+        const DynamicContent = document.getElementsByClassName('DynamicContent')[0];
+
+        if (DynamicContent) {
+            const { children } = DynamicContent;
+            const { href } = location;
+
+            if (children) {
+                // eslint-disable-next-line
+                for (let i=0; i < children.length; i++) {
+                    if (
+                        children[i + 1]
+                        && children[i].children[0].href !== `${href}#`
+                        && children[i].className === children[i + 1].className
+                    ) {
+                        children[i].style.width = '50%';
+                        children[i].style.display = 'inline-block';
+                    }
+                }
+            }
+        }
+    }
+
     renderDynamicContent() {
         const { dynamicContent } = this.props;
 
