@@ -21,6 +21,7 @@ import { getInitialState as getStoreCreditInitialState } from 'Store/StoreCredit
 import WishlistDispatcher from 'Store/Wishlist/Wishlist.dispatcher';
 import {
     getMobileApiAuthorizationToken,
+    getOrders,
     resetPassword,
     updateCustomerData
 } from 'Util/API/endpoint/MyAccount/MyAccount.enpoint';
@@ -31,6 +32,7 @@ import {
     setMobileAuthorizationToken
 } from 'Util/Auth';
 import BrowserDatabase from 'Util/BrowserDatabase';
+import Event, { EVENT_GTM_GENERAL_INIT } from 'Util/Event';
 import { prepareQuery } from 'Util/Query';
 import { executePost, fetchMutation } from 'Util/Request';
 
@@ -77,6 +79,8 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         dispatch(updateCustomerDetails({}));
         dispatch(setStoreCredit(getStoreCreditInitialState()));
         dispatch(setClubApparel(getClubApparelInitialState()));
+
+        Event.dispatch(EVENT_GTM_GENERAL_INIT);
     }
 
     async signIn(options = {}, dispatch) {
@@ -92,6 +96,8 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
             await this.handleMobileAuthorization(dispatch, options);
             await WishlistDispatcher.updateInitialWishlistData(dispatch);
             await StoreCreditDispatcher.getStoreCredit(dispatch);
+
+            Event.dispatch(EVENT_GTM_GENERAL_INIT);
 
             return true;
         } catch ([e]) {
@@ -113,7 +119,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         dispatch(setCartId(null));
 
         setMobileAuthorizationToken(token);
-        this.setPhoneNumber(dispatch, custom_attributes);
+        this.setCustomAttributes(dispatch, custom_attributes);
         this.setGender(dispatch, gender);
 
         // Run async as Club Apparel is not visible anywhere after login
@@ -123,15 +129,17 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         CartDispatcher.getCart(dispatch);
     }
 
-    setPhoneNumber(dispatch, custom_attributes) {
+    setCustomAttributes(dispatch, custom_attributes) {
         const customer = BrowserDatabase.getItem(CUSTOMER) || {};
-        const phone = custom_attributes.filter(({ attribute_code }) => attribute_code === 'contact_no');
-
-        if (phone && phone[0]) {
-            const { value } = phone[0];
-
-            dispatch(updateCustomerDetails({ ...customer, phone: value }));
-        }
+        const phoneAttribute = custom_attributes.filter(
+            ({ attribute_code }) => attribute_code === 'contact_no'
+        );
+        const isVerifiedAttribute = custom_attributes.filter(
+            ({ attribute_code }) => attribute_code === 'is_mobile_otp_verified'
+        );
+        const { value: phoneNumber } = phoneAttribute && phoneAttribute[0] ? phoneAttribute[0] : null;
+        const { value: isVerified } = isVerifiedAttribute && isVerifiedAttribute[0] ? isVerifiedAttribute[0] : null;
+        dispatch(updateCustomerDetails({ ...customer, phone: phoneNumber, isVerified }));
     }
 
     setGender(dispatch, gender) {
@@ -146,6 +154,10 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         return resetPassword({ email });
     }
 
+    async getOrders(limit) {
+        return getOrders(limit);
+    }
+
     updateCustomerData(dispatch, data) {
         const {
             fullname,
@@ -158,7 +170,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         const mappedData = {
             firstname: fullname,
             email,
-            gender,
+            gender: gender.toString(),
             custom_attributes: {
                 contact_no: phone,
                 dob

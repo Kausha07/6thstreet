@@ -14,11 +14,17 @@ class PLPPages extends PureComponent {
                 products: Products,
                 isPlaceholder: PropTypes.bool
             })
-        ).isRequired
+        ).isRequired,
+        impressions: Products
+    };
+
+    static defaultProps = {
+        impressions: []
     };
 
     renderPage = ([key, page]) => {
         const { products, isPlaceholder } = page;
+        const { impressions } = this.props;
 
         if (isPlaceholder) {
             return (
@@ -33,12 +39,14 @@ class PLPPages extends PureComponent {
             <PLPPage
               key={ key }
               products={ products }
+              impressions={ impressions }
             />
         );
     };
 
     renderPages() {
         const { pages } = this.props;
+
         return Object.entries(pages).map(this.renderPage);
     }
 

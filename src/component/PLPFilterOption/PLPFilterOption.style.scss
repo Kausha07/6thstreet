@@ -58,6 +58,15 @@
                     cursor: pointer;
                 }
             }
+
+            .Field {
+                [type='checkbox'],
+                [type='radio'] {
+                    + label {
+                        top: 11px;
+                    }
+                }
+            }
         }
 
         span {
@@ -240,6 +249,24 @@
         
             .Field {
                 margin: auto 15px auto 5px;
+            }
+        }
+    }
+}
+
+.PLPFilter {
+    .PLPFilterOption {
+        &-List {
+            &_isArabic {
+                .Field {
+                    label {
+                        .PLPFilterOption {
+                            &-Input {
+                                top: 0;
+                            }
+                        }
+                    }
+                }
             }
         }
     }

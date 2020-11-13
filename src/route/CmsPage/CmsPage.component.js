@@ -35,7 +35,7 @@ export class CmsPage extends SourceCmsPage {
         const cmsBlock = pathname.slice(1);
         const toggleArr = document.querySelectorAll('.faq-page-toggle');
 
-        if (toggleArr) {
+        if (toggleArr && toggleArr.length > 0) {
             toggleArr.forEach((toggle) => {
                 toggle.addEventListener('click', (e) => {
                     const label = e.target.nextSibling;

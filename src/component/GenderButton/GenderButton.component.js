@@ -13,6 +13,7 @@ class GenderButton extends PureComponent {
         onGenderLeave: PropTypes.func.isRequired,
         isCurrentGender: PropTypes.bool.isRequired,
         label: PropTypes.string.isRequired,
+        urlKey: PropTypes.string.isRequired,
         isUnsetStyle: PropTypes.bool.isRequired,
         mix: MixType
     };
@@ -29,11 +30,16 @@ class GenderButton extends PureComponent {
             isCurrentGender,
             mix,
             label,
+            urlKey,
             isUnsetStyle
         } = this.props;
 
+        if (!urlKey) {
+            return null;
+        }
+
         return (
-            <Link to={ `/${label.toLowerCase()}.html` }>
+            <Link to={ `/${urlKey.toLowerCase()}.html` }>
                 <button
                   mix={ mix }
                   block="GenderButton"

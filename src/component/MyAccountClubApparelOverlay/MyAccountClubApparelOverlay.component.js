@@ -137,7 +137,7 @@ class MyAccountClubApparelOverlay extends PureComponent {
         return (
             <div block="MyAccountClubApparelOverlay" elem="Success" mods={ { isArabic } }>
                 { isMobile.any() || isMobile.tablet()
-                    ? <h3>{ __('Linking Succesful!') }</h3> : null }
+                    ? <h3>{ __('Linking Successful!') }</h3> : null }
                 <p>
                     { __('You have successfully linked your 6thstreet.com Account with your ') }
                     <span>{ __('Club Apparel') }</span>
@@ -161,7 +161,7 @@ class MyAccountClubApparelOverlay extends PureComponent {
 
         return (
             <div block="MyAccountClubApparelOverlay" elem="NotSuccess" mods={ { isArabic } }>
-                <h3>{ __('Linking Unsuccesful!') }</h3>
+                <h3>{ __('Linking Unsuccessful!') }</h3>
                 <p block="MyAccountClubApparelOverlay" elem="NotSuccessParagraphRed">
                     { __('Sorry! We were unable to find a ') }
                     <span>{ __('Club Apparel') }</span>

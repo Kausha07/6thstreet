@@ -12,8 +12,8 @@
 import PropTypes from 'prop-types';
 
 import FieldForm from 'Component/FieldForm/FieldForm.component';
-import FormPortal from 'Component/FormPortal';
 import MyAccountOverlay from 'Component/MyAccountOverlay';
+import { isArabic } from 'Util/App';
 
 import lock from './icons/lock.png';
 
@@ -25,12 +25,12 @@ export class CheckoutGuestForm extends FieldForm {
         formId: PropTypes.string.isRequired,
         handleEmailInput: PropTypes.func.isRequired,
         handleCreateUser: PropTypes.func.isRequired,
-        isEmailAdded: PropTypes.bool.isRequired,
-        isInvalidEmail: PropTypes.bool.isRequired
+        isEmailAdded: PropTypes.bool.isRequired
     };
 
     state = {
-        showPopup: false
+        showPopup: false,
+        isArabic: isArabic()
     };
 
     get fieldMap() {
@@ -105,32 +105,25 @@ export class CheckoutGuestForm extends FieldForm {
     };
 
     render() {
-        const { formId, isEmailAdded, isInvalidEmail } = this.props;
+        const { isEmailAdded } = this.props;
+        const { isArabic } = this.state;
 
         return (
             <div
               block="CheckoutGuestForm"
-              mods={ { isEmailAdded, isInvalidEmail } }
+              mods={ { isEmailAdded } }
               mix={ { block: 'FieldForm' } }
             >
-                { this.renderHeading('Login / Sign Up') }
-                <FormPortal
-                  id={ formId }
-                  name="CheckoutGuestForm"
+                <div
+                  block="CheckoutGuestForm"
+                  elem="FieldAndSignIn"
+                  mods={ { isArabic } }
                 >
-                    <div
-                      block="CheckoutGuestForm"
-                      elem="FieldAndSignIn"
-                    >
-                        { this.renderFields() }
-                        <button onClick={ this.showMyAccountPopup }>
-                            { __('Sign In') }
-                            <img src={ lock } alt="" />
-                        </button>
-                    </div>
-                    <p>{ __('Email is invalid.') }</p>
-                    <p>{ __('You can create an account after checkout.') }</p>
-                </FormPortal>
+                    <button onClick={ this.showMyAccountPopup }>
+                        { __('Sign In') }
+                        <img src={ lock } alt="" />
+                    </button>
+                </div>
                 { this.renderMyAccountPopup() }
             </div>
         );

@@ -1,3 +1,4 @@
+import { DETAILS_STEP, SHIPPING_STEP } from '@scandipwa/scandipwa/src/route/Checkout/Checkout.config';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -16,6 +17,7 @@ import { hideActiveOverlay } from 'Store/Overlay/Overlay.action';
 import StoreCreditDispatcher from 'Store/StoreCredit/StoreCredit.dispatcher';
 import { isSignedIn } from 'Util/Auth';
 import BrowserDatabase from 'Util/BrowserDatabase';
+import history from 'Util/History';
 import { ONE_MONTH_IN_SECONDS } from 'Util/Request/QueryDispatcher';
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -26,6 +28,7 @@ export const mapDispatchToProps = (dispatch) => ({
     getTabbyInstallment: (price) => CheckoutDispatcher.getTabbyInstallment(dispatch, price),
     verifyPayment: (paymentId) => CheckoutDispatcher.verifyPayment(dispatch, paymentId),
     getPaymentMethods: () => CheckoutDispatcher.getPaymentMethods(),
+    sendVerificationCode: (phone) => CheckoutDispatcher.sendVerificationCode(dispatch, phone),
     setCartId: (cartId) => dispatch(setCartId(cartId)),
     createEmptyCart: () => CartDispatcher.getCart(dispatch),
     hideActiveOverlay: () => dispatch(hideActiveOverlay()),
@@ -48,10 +51,35 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         setMeta: PropTypes.func.isRequired
     };
 
-    state = {
-        ...this.state,
-        isLoading: false
-    };
+    constructor(props) {
+        super(props);
+
+        const {
+            toggleBreadcrumbs,
+            totals: {
+                is_virtual
+            }
+        } = props;
+
+        toggleBreadcrumbs(false);
+
+        this.state = {
+            isLoading: false,
+            isDeliveryOptionsLoading: false,
+            requestsSent: 0,
+            paymentMethods: [],
+            shippingMethods: [],
+            shippingAddress: {},
+            checkoutStep: is_virtual ? BILLING_STEP : SHIPPING_STEP,
+            orderID: '',
+            paymentTotals: BrowserDatabase.getItem(PAYMENT_TOTALS) || {},
+            email: '',
+            isCreateUser: false,
+            isGuestEmailSaved: false,
+            isVerificationCodeSent: false,
+            lastOrder: {}
+        };
+    }
 
     componentDidMount() {
         const { setMeta } = this.props;
@@ -81,6 +109,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         }
     }
 
+    saveLastOrder(totals) {
+        this.setState({ lastOrder: totals });
+    }
+
     onShippingEstimationFieldsChange(address) {
         const { estimateShipping } = this.props;
         const Checkout = this;
@@ -103,6 +135,23 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             },
             this._handleError
         );
+    }
+
+    goBack() {
+        const { checkoutStep } = this.state;
+
+        if (checkoutStep === BILLING_STEP) {
+            this.setState({
+                isLoading: false,
+                checkoutStep: SHIPPING_STEP,
+                shippingAddress: {},
+                shippingMethods: []
+            });
+
+            BrowserDatabase.deleteItem(PAYMENT_TOTALS);
+        }
+
+        history.goBack();
     }
 
     async saveAddressInformation(addressInformation) {
@@ -196,7 +245,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                 }
             },
             this._handleError
-        );
+        ).catch(() => {});
     }
 
     async savePaymentInformation(paymentInformation) {
@@ -251,10 +300,61 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                     }
                 },
                 this._handleError
-            );
+            ).catch(() => {
+                const { showErrorNotification } = this.props;
+                this.setState({ isLoading: false });
+                showErrorNotification(__('Something went wrong.'));
+            });
         } catch (e) {
             this._handleError(e);
         }
+    }
+
+    setDetailsStep(orderID) {
+        const {
+            setNavigationState,
+            sendVerificationCode,
+            isSignedIn,
+            customer
+        } = this.props;
+
+        const { shippingAddress } = this.state;
+
+        if (isSignedIn) {
+            if (customer.isVerified !== '0') {
+                const code = customer.phone.slice(1, 4);
+                const mobile = customer.phone.slice(4);
+                sendVerificationCode({ mobile, code }).then(
+                    (response) => {
+                        this.setState({ isVerificationCodeSent: response.success });
+                    },
+                    this._handleError
+                );
+            }
+        } else {
+            const code = shippingAddress.phone.slice(1, 4);
+            const mobile = shippingAddress.phone.slice(4);
+            sendVerificationCode({ mobile, code }).then(
+                (response) => {
+                    this.setState({ isVerificationCodeSent: response.success });
+                },
+                this._handleError
+            );
+        }
+
+
+        BrowserDatabase.deleteItem(PAYMENT_TOTALS);
+        this.resetCart();
+
+        this.setState({
+            isLoading: false,
+            checkoutStep: DETAILS_STEP,
+            orderID
+        });
+
+        setNavigationState({
+            name: DETAILS_STEP
+        });
     }
 
     resetCart() {

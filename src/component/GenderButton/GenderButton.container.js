@@ -45,13 +45,14 @@ export class GenderButtonContainer extends PureComponent {
 
     containerProps = () => {
         const {
-            gender: { label },
+            gender: { label, key },
             isCurrentGender,
             isUnsetStyle
         } = this.props;
 
         return {
             label,
+            urlKey: key,
             isCurrentGender,
             isUnsetStyle
         };

@@ -21,7 +21,8 @@ export class Footer extends PureComponent {
     };
 
     state = {
-        isCheckout: false
+        isCheckout: false,
+        isFooterAccountOpen: false
     };
 
     static getDerivedStateFromProps() {
@@ -31,6 +32,11 @@ export class Footer extends PureComponent {
             isCheckout: false
         };
     }
+
+    handleFooterIsAccountOpen = () => {
+        const { isFooterAccountOpen } = this.state;
+        this.setState({ isFooterAccountOpen: !isFooterAccountOpen });
+    };
 
     renderSections() {
         const { footer_content: { footer_cms } = {} } = window.contentConfiguration;
@@ -48,7 +54,9 @@ export class Footer extends PureComponent {
         return (
             <>
                 <FooterMain />
-                <FooterMiddle />
+                <FooterMiddle
+                  handleFooterIsAccountOpen={ this.handleFooterIsAccountOpen }
+                />
                 <FooterBottom />
                 <FooterMobile />
             </>
@@ -57,6 +65,7 @@ export class Footer extends PureComponent {
 
     render() {
         const { isVisibleOnMobile } = this.props;
+        const { isFooterAccountOpen } = this.state;
 
         if (!isVisibleOnMobile && (isMobile.any() || isMobile.tablet())) {
             return null;
@@ -67,7 +76,7 @@ export class Footer extends PureComponent {
         }
 
         return (
-            <footer block="Footer" aria-label="Footer">
+            <footer block="Footer" mods={ { isFooterAccountOpen } } aria-label="Footer">
                 { this.renderSections() }
             </footer>
         );

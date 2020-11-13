@@ -30,3 +30,13 @@ export const createOrder = ({ data }) => MobileAPI.post(
 export const getPaymentMethods = () => MobileAPI.get(
     '/payment-methods'
 ) || {};
+
+export const sendVerificationCode = ({ data }) => MobileAPI.post(
+    '/otp/send',
+    data
+) || {};
+
+export const verifyUserPhone = ({ data }) => MobileAPI.put(
+    '/otp/verify',
+    data
+) || {};

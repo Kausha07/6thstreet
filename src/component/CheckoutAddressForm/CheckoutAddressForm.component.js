@@ -45,6 +45,8 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
     get fieldMap() {
         this.getCitiesAndRegionsData();
 
+        const { isSignedIn } = this.props;
+
         const {
             telephone,
             street,
@@ -61,7 +63,13 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
             onChange: (value) => this.onChange('telephone', value)
         };
 
-        return fieldMap;
+        return isSignedIn ? fieldMap : {
+            guest_email: {
+                placeholder: __('Email'),
+                validation: ['notEmpty', 'email']
+            },
+            ...fieldMap
+        };
     }
 
     estimateShipping() {
@@ -88,8 +96,10 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
     }
 
     render() {
-        const { id } = this.props;
+        const { id, isSignedIn } = this.props;
         const { isArabic } = this.state;
+
+        const isGuestForm = !isSignedIn;
 
         return (
             <FormPortal
@@ -98,7 +108,7 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
             >
                     <div
                       block="FieldForm"
-                      mix={ { block: 'CheckoutAddressForm' } }
+                      mix={ { block: 'CheckoutAddressForm', mods: { isGuestForm } } }
                       mods={ { isArabic } }
                     >
                         { this.renderFields() }

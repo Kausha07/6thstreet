@@ -11,7 +11,8 @@ import './CreditCard.style';
 
 class CreditCard extends PureComponent {
     static propTypes = {
-        supported_networks: PropTypes.array
+        supported_networks: PropTypes.array,
+        isAmex: PropTypes.bool.isRequired
     };
 
     static defaultProps = {
@@ -58,6 +59,7 @@ class CreditCard extends PureComponent {
             reformatInputField,
             getCardLogo
         } = this.props;
+        const { cvv } = this.state;
         const { value } = e.target;
         const element = document.getElementById('number');
         const onlyNumbers = value.replace(/\s/g, '');
@@ -71,7 +73,11 @@ class CreditCard extends PureComponent {
             return;
         }
 
-        this.setState({ cardLogo, numberFilled: false });
+        this.setState({
+            cardLogo,
+            numberFilled: false,
+            cvv: onlyNumbers.length === 0 ? '' : cvv
+        });
     };
 
     handleExpDateChange = (e) => {
@@ -110,9 +116,11 @@ class CreditCard extends PureComponent {
     };
 
     renderCreditCardForm() {
+        const { isAmex } = this.props;
         const { cvv, cardLogo } = this.state;
+
         return (
-            <div block="CreditCard" elem="Card">
+            <div block="CreditCard" elem="Card" dir="ltr">
                 <p>card number</p>
                 <input
                   type="text"
@@ -124,7 +132,7 @@ class CreditCard extends PureComponent {
                   onChange={ this.handleNumberChange }
                   validation={ ['notEmpty'] }
                 />
-                <p>exp date</p>
+                <p>{ __('exp date') }</p>
                 <div
                   block="CreditCard"
                   elem="Row"
@@ -145,7 +153,7 @@ class CreditCard extends PureComponent {
                       id="cvv"
                       name="cvv"
                       inputMode="numeric"
-                      maxLength="3"
+                      maxLength={ isAmex ? '4' : '3' }
                       value={ cvv }
                       onChange={ this.handleCvvChange }
                       validation={ ['notEmpty'] }

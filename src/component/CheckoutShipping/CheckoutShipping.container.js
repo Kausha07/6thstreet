@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -52,7 +53,8 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     }
 
     onShippingSuccess(fields) {
-        const { saveAddressInformation, customer: { email }, guestEmail } = this.props;
+        const { saveAddressInformation, customer: { email } } = this.props;
+        const { guest_email: guestEmail } = fields;
 
         const {
             selectedCustomerAddressId,

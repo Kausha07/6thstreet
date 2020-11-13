@@ -14,7 +14,7 @@ import { getCountriesForSelect } from 'Util/API/endpoint/Config/Config.format';
 import { Filters, Pages, RequestedOptions } from 'Util/API/endpoint/Product/Product.type';
 import WebUrlParser from 'Util/API/helper/WebUrlParser';
 import { capitalize } from 'Util/App';
-import { getBreadcrumbs } from 'Util/Breadcrumbs/Breadcrubms';
+import { getBreadcrumbs, getBreadcrumbsUrl } from 'Util/Breadcrumbs/Breadcrubms';
 
 import PLP from './PLP.component';
 
@@ -32,7 +32,8 @@ export const mapStateToProps = (state) => ({
     filters: state.PLP.filters,
     options: state.PLP.options,
     country: state.AppState.country,
-    config: state.AppConfig.config
+    config: state.AppConfig.config,
+    menuCategories: state.MenuReducer.categories
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
@@ -64,7 +65,8 @@ export class PLPContainer extends PureComponent {
         options: PropTypes.object.isRequired,
         setMeta: PropTypes.func.isRequired,
         country: PropTypes.string.isRequired,
-        config: PropTypes.object.isRequired
+        config: PropTypes.object.isRequired,
+        menuCategories: PropTypes.array.isRequired
     };
 
     static requestProductList = PLPContainer.request.bind({}, false);
@@ -130,23 +132,34 @@ export class PLPContainer extends PureComponent {
         }
 
         this.setMetaData();
-        this.updateBreadcrumbs();
-        this.updateHeaderState();
+    }
+
+    componentDidMount() {
+        const { menuCategories } = this.props;
+
+        if (menuCategories.length !== 0) {
+            this.updateBreadcrumbs();
+            this.setMetaData();
+            this.updateHeaderState();
+        }
     }
 
     componentDidUpdate() {
-        const { isLoading, setIsLoading } = this.props;
+        const { isLoading, setIsLoading, menuCategories } = this.props;
+        const { isLoading: isCategoriesLoading } = this.state;
         const currentIsLoading = this.getIsLoading();
 
         // update loading from here, validate for last
         // options recieved results from
-        if (isLoading !== currentIsLoading) {
+        if (isLoading !== currentIsLoading || isCategoriesLoading !== currentIsLoading) {
             setIsLoading(currentIsLoading);
         }
 
-        this.setMetaData();
-        this.updateBreadcrumbs();
-        this.updateHeaderState();
+        if (menuCategories.length !== 0) {
+            this.updateBreadcrumbs();
+            this.setMetaData();
+            this.updateHeaderState();
+        }
     }
 
     capitalizeFirstLetter(string) {
@@ -163,31 +176,52 @@ export class PLPContainer extends PureComponent {
     }
 
     updateBreadcrumbs() {
-        const { options: { q: query } } = this.props;
-        const breadcrumbLevels = location.pathname.split('.html')[0]
-            .substring(1)
-            .split('/');
+        const { options: { q: query }, options, menuCategories } = this.props;
 
         if (query) {
             const {
                 updateBreadcrumbs, setGender
             } = this.props;
-            const breadcrumbsMapped = getBreadcrumbs(breadcrumbLevels, setGender);
-            const productListBreadcrumbs = breadcrumbsMapped.reduce((acc, item) => {
-                acc.unshift(item);
+            const breadcrumbLevels = options['categories.level2']
+                ? options['categories.level2']
+                : options['categories.level1'];
 
-                return acc;
-            }, []);
-
-            const breadcrumbs = [
-                ...productListBreadcrumbs,
-                {
-                    url: '/',
-                    name: __('Home')
+            if (breadcrumbLevels) {
+                const levelArray = breadcrumbLevels.split(' /// ');
+                const urlArray = getBreadcrumbsUrl(levelArray, menuCategories);
+                if (urlArray.length === 0) {
+                    levelArray.map(() => urlArray.push('/'));
                 }
-            ];
+                const breadcrumbsMapped = getBreadcrumbs(levelArray, setGender, urlArray);
+                const productListBreadcrumbs = breadcrumbsMapped.reduce((acc, item) => {
+                    acc.unshift(item);
 
-            updateBreadcrumbs(breadcrumbs);
+                    return acc;
+                }, []);
+
+                const breadcrumbs = [
+                    ...productListBreadcrumbs,
+                    {
+                        url: '/',
+                        name: __('Home')
+                    }
+                ];
+
+                updateBreadcrumbs(breadcrumbs);
+            } else {
+                const breadcrumbs = [
+                    {
+                        url: '/',
+                        name: options['categories.level0']
+                    },
+                    {
+                        url: '/',
+                        name: __('Home')
+                    }
+                ];
+
+                updateBreadcrumbs(breadcrumbs);
+            }
         }
     }
 
