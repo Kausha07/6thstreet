@@ -12,16 +12,17 @@ import {
 import CheckoutShipping from 'Component/CheckoutShipping';
 import CheckoutSuccess from 'Component/CheckoutSuccess';
 import ContentWrapper from 'Component/ContentWrapper';
+import HeaderLogo from 'Component/HeaderLogo';
 import TabbyPopup from 'Component/TabbyPopup';
 import { TABBY_POPUP_ID } from 'Component/TabbyPopup/TabbyPopup.config';
 import Loader from 'SourceComponent/Loader';
 import { Checkout as SourceCheckout } from 'SourceRoute/Checkout/Checkout.component';
 import { isArabic } from 'Util/App';
+import isMobile from 'Util/Mobile';
 
 import {
     AUTHORIZED_STATUS,
-    BILLING_STEP,
-    CHECKOUT_URL
+    BILLING_STEP
 } from './Checkout.config';
 
 import './Checkout.style';
@@ -45,7 +46,8 @@ export class Checkout extends SourceCheckout {
         isTabbyPopupShown: false,
         paymentInformation: {},
         creditCardData: {},
-        isSuccess: false
+        isSuccess: false,
+        isMobile: isMobile.any() || isMobile.tablet()
     };
 
     savePaymentInformation = (paymentInformation) => {
@@ -181,7 +183,7 @@ export class Checkout extends SourceCheckout {
     renderTitle() {
         const { checkoutStep, isSignedIn } = this.props;
         const { isCustomAddressExpanded, continueAsGuest } = this.state;
-        const url = `${ CHECKOUT_URL }/shipping`;
+        const isBilling = checkoutStep === BILLING_STEP;
 
         return ((isSignedIn || continueAsGuest)
           && (
@@ -191,7 +193,7 @@ export class Checkout extends SourceCheckout {
                   elem="FirstColumn"
                   mods={ { checkoutStep } }
                 >
-                    <a href={ url }>
+                    <button onClick={ isBilling ? this.redirectURL : null }>
                         <div
                           block="CheckoutNavigation"
                           elem="Delivery"
@@ -204,7 +206,7 @@ export class Checkout extends SourceCheckout {
                         >
                             { __('Delivery') }
                         </span>
-                    </a>
+                    </button>
                 </div>
                 <hr />
                 <div block="CheckoutNavigation" elem="SecondColumn">
@@ -226,26 +228,46 @@ export class Checkout extends SourceCheckout {
         );
     }
 
+    goBackLogin = () => {
+        const { goBack } = this.props;
+        this.setState({ continueAsGuest: false });
+        goBack();
+    };
+
     renderBillingStep() {
         const {
             setLoading,
             setDetailsStep,
             shippingAddress,
-            paymentMethods = []
+            paymentMethods = [],
+            goBack,
+            isSignedIn
         } = this.props;
+        const { isArabic } = this.state;
 
         return (
-          <CheckoutBilling
-            setLoading={ setLoading }
-            paymentMethods={ paymentMethods }
-            setDetailsStep={ setDetailsStep }
-            shippingAddress={ shippingAddress }
-            setCashOnDeliveryFee={ this.setCashOnDeliveryFee }
-            savePaymentInformation={ this.savePaymentInformation }
-            setTabbyWebUrl={ this.setTabbyWebUrl }
-            setPaymentCode={ this.setPaymentCode }
-            setCheckoutCreditCardData={ this.setCheckoutCreditCardData }
-          />
+            <>
+                <div block="Checkout" elem="BackButtons" mods={ { isSignedIn, isArabic } }>
+                    <button onClick={ this.goBackLogin }>
+                        { this.renderHeading('Login / Sign Up', true) }
+                        <span>{ __('Edit') }</span>
+                    </button>
+                    <button onClick={ goBack }>
+                        { this.renderHeading(__('Delivery Options'), true) }
+                        <span>{ __('Edit') }</span>
+                    </button>
+                </div>
+                <CheckoutBilling
+                  setLoading={ setLoading }
+                  paymentMethods={ paymentMethods }
+                  setDetailsStep={ setDetailsStep }
+                  shippingAddress={ shippingAddress }
+                  setCashOnDeliveryFee={ this.setCashOnDeliveryFee }
+                  savePaymentInformation={ this.savePaymentInformation }
+                  setTabbyWebUrl={ this.setTabbyWebUrl }
+                  setPaymentCode={ this.setPaymentCode }
+                />
+            </>
         );
     }
 
@@ -260,14 +282,7 @@ export class Checkout extends SourceCheckout {
     };
 
     continueAsGuest = () => {
-        const { email } = this.props;
-
-        if (/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
-            this.setState({ isInvalidEmail: false });
-            this.setState({ continueAsGuest: true });
-        } else {
-            this.setState({ isInvalidEmail: true });
-        }
+        this.setState({ continueAsGuest: true });
     };
 
     changeEmail = () => {
@@ -275,8 +290,10 @@ export class Checkout extends SourceCheckout {
     };
 
     renderHeading(text, isDisabled) {
+        const { isSignedIn } = this.props;
+
         return (
-        <h2 block="Checkout" elem="Heading" mods={ { isDisabled } }>
+        <h2 block="Checkout" elem="Heading" mods={ { isDisabled, isSignedIn } }>
             { __(text) }
         </h2>
         );
@@ -384,16 +401,20 @@ export class Checkout extends SourceCheckout {
 
         return (
             <>
-              <div
-                block="Checkout"
-                elem="GuestButton"
-                mods={ { continueAsGuest, isSignedIn, isArabic } }
-              >
-                <button onClick={ continueAsGuest ? this.changeEmail : this.continueAsGuest }>
-                  { continueAsGuest ? <span>{ __('Edit') }</span> : <span>{ __('Continue as guest') }</span> }
-                </button>
-                { continueAsGuest ? renderCheckoutShipping : null }
-              </div>
+                { continueAsGuest || isSignedIn ? null : this.renderHeading(__('Login / Sign Up'), false) }
+                <div block="Checkout" elem="GuestCheckout" mods={ { continueAsGuest } }>
+                    { this.renderGuestForm() }
+                    <div
+                      block="Checkout"
+                      elem="GuestButton"
+                      mods={ { continueAsGuest, isSignedIn, isArabic } }
+                    >
+                        <button onClick={ continueAsGuest ? this.changeEmail : this.continueAsGuest }>
+                        { continueAsGuest ? <span>{ __('Edit') }</span> : <span>{ __('Continue as guest') }</span> }
+                        </button>
+                    </div>
+                    { continueAsGuest ? renderCheckoutShipping : null }
+                </div>
               { isSignedIn ? renderCheckoutShipping : null }
               { continueAsGuest || isSignedIn ? null : this.renderHeading(__('Shipping Options'), true) }
               { continueAsGuest || isSignedIn ? null : this.renderHeading(__('Delivery Options'), true) }
@@ -402,28 +423,106 @@ export class Checkout extends SourceCheckout {
         );
     }
 
+    redirectURL = () => {
+        const { isMobile, continueAsGuest } = this.state;
+        const { history, goBack } = this.props;
+
+        if (isMobile) {
+            const path = location.pathname.match(/checkout\/shipping/);
+
+            if (path) {
+                if (continueAsGuest) {
+                    this.changeEmail();
+                } else {
+                    history.push('/cart');
+                }
+            } else {
+                goBack();
+            }
+        } else {
+            history.push('/');
+        }
+    };
+
+    renderSecureShippingLabel() {
+        const { isArabic } = this.state;
+
+        return (
+            <div
+              block="CheckoutHeader"
+              elem="SecureShipping"
+              mods={ { isArabic } }
+            >
+                <span
+                  block="CheckoutHeader"
+                  elem="SecureShippingLabel"
+                >
+                    { __('Secure checkout') }
+                </span>
+            </div>
+        );
+    }
+
+    renderBackToShoppingButton() {
+        const { isArabic, isMobile } = this.state;
+
+        return (
+            <div
+              block="CheckoutHeader"
+              elem={ isMobile ? 'BackToShoppingMobile' : 'BackToShoppingDesktop' }
+              mods={ { isArabic } }
+            >
+                <button
+                  block={ isMobile ? 'BackMobileButton' : 'button secondary medium' }
+                  onClick={ this.redirectURL }
+                >
+                    { isMobile ? ' ' : __('Back to shopping') }
+                </button>
+            </div>
+        );
+    }
+
+    renderCheckoutHeder() {
+        const { isMobile } = this.state;
+        if (isMobile) {
+            return this.renderBackToShoppingButton();
+        }
+
+        return (
+            <div block="CheckoutHeader">
+                { this.renderBackToShoppingButton() }
+                <HeaderLogo
+                  key="logo"
+                />
+                { this.renderSecureShippingLabel() }
+            </div>
+        );
+    }
+
     render() {
         const { isSuccess } = this.state;
 
         return (
-            <main block="Checkout" mods={ { isSuccess } }>
-                <ContentWrapper
-                  wrapperMix={ { block: 'Checkout', elem: 'Wrapper' } }
-                  label={ __('Checkout page') }
-                >
-                    <div block="Checkout" elem="Step">
+            <>
+                { this.renderCheckoutHeder() }
+                <main block="Checkout" mods={ { isSuccess } }>
+                    <ContentWrapper
+                      wrapperMix={ { block: 'Checkout', elem: 'Wrapper' } }
+                      label={ __('Checkout page') }
+                    >
+                        <div block="Checkout" elem="Step">
                         { this.renderTitle() }
-                        { this.renderGuestForm() }
                         { this.renderStep() }
                         { this.renderLoader() }
-                    </div>
-                    <div>
-                        { this.renderSummary() }
-                        { this.renderPromo() }
-                        { this.renderTabbyIframe() }
-                    </div>
-                </ContentWrapper>
-            </main>
+                        </div>
+                        <div>
+                            { this.renderSummary() }
+                            { this.renderPromo() }
+                            { this.renderTabbyIframe() }
+                        </div>
+                    </ContentWrapper>
+                </main>
+            </>
         );
     }
 }

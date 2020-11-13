@@ -17,6 +17,7 @@ import { hideActiveOverlay } from 'Store/Overlay/Overlay.action';
 import StoreCreditDispatcher from 'Store/StoreCredit/StoreCredit.dispatcher';
 import { isSignedIn } from 'Util/Auth';
 import BrowserDatabase from 'Util/BrowserDatabase';
+import history from 'Util/History';
 import { ONE_MONTH_IN_SECONDS } from 'Util/Request/QueryDispatcher';
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -134,6 +135,23 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             },
             this._handleError
         );
+    }
+
+    goBack() {
+        const { checkoutStep } = this.state;
+
+        if (checkoutStep === BILLING_STEP) {
+            this.setState({
+                isLoading: false,
+                checkoutStep: SHIPPING_STEP,
+                shippingAddress: {},
+                shippingMethods: []
+            });
+
+            BrowserDatabase.deleteItem(PAYMENT_TOTALS);
+        }
+
+        history.goBack();
     }
 
     async saveAddressInformation(addressInformation) {
