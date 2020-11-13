@@ -125,6 +125,9 @@ export class PDPContainer extends PureComponent {
                 .split(' /// ');
 
             const urlArray = getBreadcrumbsUrl(categoriesLastLevel, menuCategories);
+            if (urlArray.length === 0) {
+                categoriesLastLevel.map(() => urlArray.push('/'));
+            }
             const breadcrumbsMapped = getBreadcrumbs(categoriesLastLevel, setGender, urlArray);
             const productBreadcrumbs = breadcrumbsMapped.reduce((acc, item) => {
                 acc.unshift(item);
