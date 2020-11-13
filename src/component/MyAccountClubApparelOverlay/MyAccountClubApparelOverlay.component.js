@@ -30,7 +30,8 @@ class MyAccountClubApparelOverlay extends PureComponent {
         verifyOtp: PropTypes.func.isRequired,
         phone: PropTypes.string.isRequired,
         renderEarn: PropTypes.func.isRequired,
-        isLoading: PropTypes.bool.isRequired
+        isLoading: PropTypes.bool.isRequired,
+        country: PropTypes.string.isRequired
     };
 
     state = {
@@ -53,6 +54,16 @@ class MyAccountClubApparelOverlay extends PureComponent {
             render: () => this.renderNotSuccess()
         }
     };
+
+    constructor(props) {
+        super(props);
+
+        const { country } = props;
+
+        this.state = {
+            selectedCountry: country
+        };
+    }
 
     handleVerifyChange = (e) => {
         // eslint-disable-next-line no-magic-numbers
@@ -111,6 +122,7 @@ class MyAccountClubApparelOverlay extends PureComponent {
                   name="countryPhoneCode"
                   onChange={ this.handleSelectChange }
                   selectOptions={ countries.map(this.renderOption) }
+                  value={ PHONE_CODES[selectedCountry] }
                 />
                 <Field
                   mix={ {
