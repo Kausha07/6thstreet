@@ -72,6 +72,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             shippingAddress: {},
             checkoutStep: is_virtual ? BILLING_STEP : SHIPPING_STEP,
             orderID: '',
+            incrementID: '',
             paymentTotals: BrowserDatabase.getItem(PAYMENT_TOTALS) || {},
             email: '',
             isCreateUser: false,
@@ -298,10 +299,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                         const { data } = response;
 
                         if (typeof data === 'object') {
-                            const { order_id, success, response_code } = data;
+                            const { order_id, success, response_code, increment_id } = data;
 
                             if (success || response_code === 200) {
-                                this.setDetailsStep(order_id);
+                                this.setDetailsStep(order_id, increment_id);
                                 this.resetCart();
                             }
                         }
@@ -323,7 +324,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         }
     }
 
-    setDetailsStep(orderID) {
+    setDetailsStep(orderID, incrementID) {
         const {
             setNavigationState,
             sendVerificationCode,
@@ -362,7 +363,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         this.setState({
             isLoading: false,
             checkoutStep: DETAILS_STEP,
-            orderID
+            orderID,
+            incrementID
         });
 
         setNavigationState({

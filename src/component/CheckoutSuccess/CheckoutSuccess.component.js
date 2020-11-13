@@ -33,6 +33,7 @@ export class CheckoutSuccess extends PureComponent {
         paymentMethod: PropTypes.object.isRequired,
         creditCardData: PropTypes.object.isRequired,
         orderID: PropTypes.number.isRequired,
+        incrementID: PropTypes.number.isRequired,
         isSignedIn: PropTypes.bool.isRequired,
         requestCustomerData: PropTypes.func.isRequired,
         customer: PropTypes.isRequired,
@@ -290,7 +291,7 @@ export class CheckoutSuccess extends PureComponent {
     };
 
     renderTotalsItems() {
-        const { totals: { items, quote_currency_code }, orderID } = this.props;
+        const { totals: { items, quote_currency_code }, incrementID } = this.props;
 
         if (!items || items.length < 1) {
             return (
@@ -301,7 +302,7 @@ export class CheckoutSuccess extends PureComponent {
         return (
             <div block="TotalItems">
                 <div block="TotalItems" elem="OrderId">
-                    { `${__('Order')} #${ orderID }` }
+                    { `${__('Order')} #${ incrementID }` }
                 </div>
                 <ul block="TotalItems" elem="Items">
                     { items.map((item) => (
