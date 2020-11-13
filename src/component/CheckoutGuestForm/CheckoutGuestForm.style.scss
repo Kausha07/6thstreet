@@ -19,41 +19,9 @@
     &-FieldAndSignIn {
         display: flex;
         align-items: flex-end;
-        
-        button {
-            position: absolute;
-            width: 100%;
-            font-size: 1.1rem;
-            font-weight: var(--fw-bold);
-            text-align: center;
-            color: var(--White);
-            background-color: var(--Black);
-            text-transform: uppercase;
-            bottom: -90px;
-            box-shadow: 0 0 2px 0 var(--Black);
-
-
-            img {
-                position: absolute;
-                right: 15px;
-                bottom: 15px;
-                height: 1rem;
-                width: auto;
-            }
-
-            @include desktop {
-                position: relative;
-                bottom: unset;
-                padding: .5rem;
-                width: 25%;
-                height: 40px;
-            }
-
-        }
     }
 
     @include desktop {
-        margin-top: 2rem;
         padding: 20px 30px 20px;
     }
 

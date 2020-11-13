@@ -189,6 +189,9 @@ export class PLPContainer extends PureComponent {
             if (breadcrumbLevels) {
                 const levelArray = breadcrumbLevels.split(' /// ');
                 const urlArray = getBreadcrumbsUrl(levelArray, menuCategories);
+                if (urlArray.length === 0) {
+                    levelArray.map(() => urlArray.push('/'));
+                }
                 const breadcrumbsMapped = getBreadcrumbs(levelArray, setGender, urlArray);
                 const productListBreadcrumbs = breadcrumbsMapped.reduce((acc, item) => {
                     acc.unshift(item);
