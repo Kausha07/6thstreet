@@ -13,6 +13,8 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { withRouter } from 'react-router-dom';
 
+import CountrySwitcher from 'Component/CountrySwitcher';
+import LanguageSwitcher from 'Component/LanguageSwitcher';
 import Field from 'SourceComponent/Field';
 import Form from 'SourceComponent/Form';
 import Loader from 'SourceComponent/Loader';
@@ -504,6 +506,15 @@ export class MyAccountOverlay extends PureComponent {
         );
     }
 
+    renderChangeStore() {
+        return (
+            <div block="MyAccountOverlay" elem="StoreSwitcher">
+                <LanguageSwitcher />
+                <CountrySwitcher />
+            </div>
+        );
+    }
+
     render() {
         const {
             isLoading,
@@ -533,6 +544,7 @@ export class MyAccountOverlay extends PureComponent {
                 >
                     <Loader isLoading={ isLoading } />
                     { this.renderMyAccount() }
+                    { this.renderChangeStore() }
                 </Overlay>
             </div>
         );
