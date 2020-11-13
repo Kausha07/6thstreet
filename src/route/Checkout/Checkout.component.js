@@ -266,6 +266,7 @@ export class Checkout extends SourceCheckout {
                   savePaymentInformation={ this.savePaymentInformation }
                   setTabbyWebUrl={ this.setTabbyWebUrl }
                   setPaymentCode={ this.setPaymentCode }
+                  setCheckoutCreditCardData={ this.setCheckoutCreditCardData }
                 />
             </>
         );

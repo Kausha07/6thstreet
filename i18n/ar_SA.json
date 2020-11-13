@@ -604,5 +604,6 @@
     "Please enter valid phone number": "يرجى التحقق من رقمك",
     "Verification code was successfully re-sent": "تم إعادة إرسال رمز التحقق من جديد",
     "Please wait %s before re-sending the request": "يرجى الانتظار %s قبل إعادة إرسال الطلب",
-    "Something went wrong.": "هنالك خطأ من طرفنا يرجى المحاولة مرة أخرى"
+    "Something went wrong.": "هنالك خطأ من طرفنا يرجى المحاولة مرة أخرى",
+    "EMAIL": "البريد الإلكتروني"
 }

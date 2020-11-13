@@ -66,7 +66,8 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
         return isSignedIn ? fieldMap : {
             guest_email: {
                 placeholder: __('Email'),
-                validation: ['notEmpty', 'email']
+                validation: ['notEmpty', 'email'],
+                type: 'email'
             },
             ...fieldMap
         };

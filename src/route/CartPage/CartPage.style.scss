@@ -20,6 +20,7 @@
 
 .CartPage {
     display: flex;
+    justify-content: center;
     font-weight: var(--fw-regular);
     padding: 50px 0;
     min-height: 100vh;
@@ -48,10 +49,7 @@
     }
 
     &-Wrapper {
-        display: flex;
-        flex-direction: column;
-        margin-left: 100px;
-        width: 440px;
+        width: 640px;
 
         @include mobile {
             padding: 0;
