@@ -6,9 +6,70 @@ $select-arrow-width: 6px !default;
     --text-color-on-dark-background: #fff;
     --loading-button-background-color: #808080;
     --success-color: #00f0a5;
+    --checkout-border-gray: #d6d6d6;
+    --checkout-button-red: #ff0505;
 }
 
 .PDPAddToCart {
+    &-Checkout {
+        position: fixed;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        left: 0;
+        bottom: 0;
+        background: $white;
+        border-top: 1px solid var(--checkout-border-gray);
+        width: 100vw;
+        z-index: 90;
+        animation-name: checkout_show_up;
+        animation-duration: 0.6s;
+
+        &_hide {
+            animation-name: checkout_show_down;
+            animation-duration: 2s;
+            bottom: -300px;
+        }
+
+        @keyframes checkout_show_up {
+            from {bottom: -300px}
+            to {bottom: 0}
+        }
+
+        @keyframes checkout_show_down {
+            from {bottom: 0}
+            to {bottom: -300px}
+        }
+
+        &Title {
+            font-weight: var(--fw-demi);
+            font-size: 12px;
+            color: var(--success-color);
+            margin-top: 10px;
+
+            &:before {
+                content: "";
+                background: url(./icons/basket.svg) no-repeat;
+                padding: 0 6px;
+                background-size: 25px;
+                width: 25px;
+                height: 25px;
+                display: inline-block;
+                position: relative;
+                top: 6px;
+            }
+        }
+
+        &Button {
+            display: block;
+            width: 92%;
+            color: $white;
+            background: var(--checkout-button-red);
+            margin-bottom: 20px;
+        }
+    }
+
     &-SizeInfo {
         margin-bottom: 5px;
         display: flex;
