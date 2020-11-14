@@ -153,6 +153,7 @@ export class MyAccountOverlay extends PureComponent {
                 <p block="MyAccountOverlay" elem="Heading">{ title }</p>
                 { render() }
                 { this.renderCloseBtn() }
+                { this.renderChangeStore() }
             </div>
         );
     }
@@ -544,7 +545,6 @@ export class MyAccountOverlay extends PureComponent {
                 >
                     <Loader isLoading={ isLoading } />
                     { this.renderMyAccount() }
-                    { this.renderChangeStore() }
                 </Overlay>
             </div>
         );
