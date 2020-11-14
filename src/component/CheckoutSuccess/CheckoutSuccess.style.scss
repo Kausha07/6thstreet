@@ -97,6 +97,18 @@
                 padding-left: 20px;
                 display: flex;
                 flex-direction: row;
+
+                &_isArabic {
+                    padding-left: unset;
+                    padding-right: 20px;
+
+                    .PhoneVerified {
+                        &-Text {
+                            margin-left: unset;
+                            margin-right: -33px;
+                        }
+                    }
+                }
             }
 
             &-Image {
@@ -122,10 +134,15 @@
             @include mobile() {
                 margin-left: -24px;
                 width: 100vw;
+
+                &_isArabic {
+                    margin-left: unset;
+                    margin-right: -24px;
+                }
             }
 
             @include desktop() {
-                margin-left: -10px;
+                margin-left: 0;
                 width: 640px;
             }
         }
@@ -139,16 +156,24 @@
             width: 100vw;
 
             button {
-                border-radius: 10px;
                 height: 40px;
                 margin-top: 32px;
                 width: 60vw;
+                border-radius: 10px;
 
                 &.secondary {
                     background-color: var(--white);
 
                     &:hover {
                         background-color: var(--black);
+                    }
+                }
+
+                &.primary {
+                    border-radius: 10px;
+
+                    &:hover {
+                        background-color: var(--white);
                     }
                 }
             }
@@ -190,11 +215,6 @@
                 }
             }
 
-            &_isArabic {
-                margin-left: unset;
-                margin-right: -24px;
-            }
-
             &_isPhoneVerification {
                 height: unset;
                 margin-top: 40px;
@@ -233,6 +253,8 @@
                             border: 0;
                             letter-spacing: 15px;
                             font-size: 27px;
+                            margin-left: 15px;
+                            caret-color: transparent;
                         }
                     }
 
@@ -253,7 +275,7 @@
             }
 
             @include after-mobile() {
-                margin-left: -10px;
+                margin-left: 0;
                 width: 100%;
 
                 button {
@@ -263,6 +285,16 @@
 
             @include desktop() {
                 width: 640px;
+            }
+
+            @include mobile() {
+                margin-left: -24px;
+                width: 100vw;
+
+                &_isArabic {
+                    margin-left: unset;
+                    margin-right: -24px;
+                }
             }
         }
 
@@ -373,8 +405,13 @@
                 background-color: var(--lightest-gray);
                 border-radius: 10px;
                 display: grid;
+                grid-template-columns: 15% 85%;
                 grid-auto-flow: column;
                 height: 70px;
+
+                @include before-desktop {
+                    grid-template-columns: 25% 75%;
+                }
 
                 &-TypeLogo {
                     width: 70px;
@@ -456,7 +493,7 @@
         background-color: var(--white);
         position: fixed;
         z-index: 10;
-        bottom: 70px;
+        bottom: 0;
         width: 100%;
         padding: 15px 25px;
         right: 0;

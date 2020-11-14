@@ -9,6 +9,7 @@ import MobileBottomBar from 'Component/MobileBottomBar';
 import MobileMenuSidebar from 'Component/MobileMenuSideBar/MobileMenuSidebar.component';
 import { MOBILE_MENU_SIDEBAR_ID } from 'Component/MobileMenuSideBar/MoblieMenuSideBar.config';
 import OfflineNotice from 'Component/OfflineNotice';
+import isMobile from 'Util/Mobile';
 
 import './Header.style';
 
@@ -20,7 +21,8 @@ export class Header extends PureComponent {
     };
 
     state = {
-        newMenuGender: ''
+        newMenuGender: '',
+        isMobile: isMobile.any() || isMobile.tablet()
     };
 
     headerSections = [
@@ -31,8 +33,10 @@ export class Header extends PureComponent {
     ];
 
     getIsCheckout = () => {
+        const { isMobile } = this.state;
+
         if (location.pathname.match(/checkout/)) {
-            return !location.pathname.match(/success/);
+            return isMobile ? true : !location.pathname.match(/success/);
         }
 
         return false;
