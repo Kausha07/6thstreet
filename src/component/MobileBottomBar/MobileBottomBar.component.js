@@ -78,7 +78,7 @@ class MobileBottomBar extends NavigationAbstract {
     routeChangeAccount=() => {
         const { history, setMobileTabActive } = this.props;
 
-        setMobileTabActive(true);
+        setMobileTabActive(false);
         this.closePopup();
 
         return history.push('/my-account');

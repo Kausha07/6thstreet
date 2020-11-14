@@ -256,10 +256,10 @@ export class MyAccountOverlay extends PureComponent {
                     { __('Please enter your email and we will send you a link to reset your password') }
                 </p>
                 <Field
-                  type="text"
+                  type="email"
                   id="email"
                   name="email"
-                  placeholder={ __('EMAIL OR PHONE*') }
+                  placeholder={ __('EMAIL') }
                   autocomplete="email"
                   validation={ ['notEmpty', 'email'] }
                 />
@@ -470,8 +470,8 @@ export class MyAccountOverlay extends PureComponent {
             >
                 <fieldset block="MyAccountOverlay" elem="Legend">
                     <Field
-                      type="text"
-                      placeholder={ __('EMAIL OR PHONE*') }
+                      type="email"
+                      placeholder={ __('EMAIL') }
                       id="email"
                       name="email"
                       autocomplete="email"

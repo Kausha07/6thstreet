@@ -38,48 +38,121 @@ export class Form extends SourceForm {
         isValidateOnChange: false
     };
 
+    constructor(props, state) {
+        super(props, state);
+
+        this.state = {
+            ...state,
+            fieldsAreValid: true
+        };
+    }
+
+    collectFieldsInformation = () => {
+        const { refMap } = this.state;
+        const { children: propsChildren } = this.props;
+
+        const {
+            children,
+            fieldsAreValid,
+            invalidFields
+        } = Form.cloneAndValidateChildren(propsChildren, refMap);
+
+        this.setState({ children, fieldsAreValid });
+
+        const inputValues = Object.values(refMap).reduce((inputValues, input) => {
+            const { current } = input;
+            if (current && current.id && current.value) {
+                const { name, value, checked } = current;
+
+                if (current.dataset.skipValue === 'true') {
+                    return inputValues;
+                }
+
+                if (current.type === 'checkbox') {
+                    const boolValue = checked;
+                    return { ...inputValues, [name]: boolValue };
+                }
+
+                return { ...inputValues, [name]: value };
+            }
+
+            return inputValues;
+        }, {});
+
+        if (invalidFields.length) {
+            const { current } = refMap[invalidFields[0]];
+
+            current.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+        }
+
+        return {
+            inputValues,
+            invalidFields
+        };
+    };
+
     onChange = async () => {
         const {
             id,
             isValidateOnChange,
             parentCallback
         } = this.props;
+        const { refMap, ignoreEmptyFieldCollecton } = this.state;
 
         if (isValidateOnChange) {
-            const portalData = id ? await window.formPortalCollector.collect(id) : [];
+            const isAllFieldsFilled = Object.entries(refMap).reduce((acc, field) => {
+                if (!ignoreEmptyFieldCollecton) {
+                    const { current: { value } } = field[1];
 
-            const {
-                invalidFields
-            } = portalData.reduce((acc, portalData) => {
-                const {
-                    invalidFields = [],
-                    inputValues = {}
-                } = portalData;
-
-                const {
-                    invalidFields: initialInvalidFields,
-                    inputValues: initialInputValues
-                } = acc;
-
-                return ({
-                    invalidFields: [...initialInvalidFields, ...invalidFields],
-                    inputValues: { ...initialInputValues, ...inputValues }
-                });
-            }, this.collectFieldsInformation());
-
-            const asyncData = Promise.all(portalData.reduce((acc, { asyncData }) => {
-                if (!asyncData) {
-                    return acc;
+                    if (!value) {
+                        acc.push(value);
+                    }
                 }
 
-                return [...acc, asyncData];
-            }, []));
+                return acc;
+            }, []);
 
-            asyncData.then(
-                () => {
-                    parentCallback(invalidFields);
-                }
-            );
+            if (isAllFieldsFilled.length === 0) {
+                const portalData = id ? await window.formPortalCollector.collect(id) : [];
+
+                const {
+                    invalidFields
+                } = portalData.reduce((acc, portalData) => {
+                    const {
+                        invalidFields = [],
+                        inputValues = {}
+                    } = portalData;
+
+                    const {
+                        invalidFields: initialInvalidFields,
+                        inputValues: initialInputValues
+                    } = acc;
+
+                    return ({
+                        invalidFields: [...initialInvalidFields, ...invalidFields],
+                        inputValues: { ...initialInputValues, ...inputValues }
+                    });
+                }, this.collectFieldsInformation());
+
+                const asyncData = Promise.all(portalData.reduce((acc, { asyncData }) => {
+                    if (!asyncData) {
+                        return acc;
+                    }
+
+                    return [...acc, asyncData];
+                }, []));
+
+                asyncData.then(
+                    () => {
+                        parentCallback(invalidFields);
+                    }
+                );
+
+                this.setState({ ignoreEmptyFieldCollecton: true });
+            }
         }
     };
 

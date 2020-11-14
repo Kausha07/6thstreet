@@ -78,6 +78,11 @@
 
             .ContentWrapper {
                 max-width: 1440px;
+                display: block;
+
+                .Checkout-Step {
+                    margin: 0 auto;
+                }
             }
         }
     }
