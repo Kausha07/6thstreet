@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
-// import { getStore } from 'Store';
 import CartDispatcher from 'Store/Cart/Cart.dispatcher';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
@@ -212,7 +211,6 @@ export class PDPAddToCartContainer extends PureComponent {
     afterAddToCart() {
         // eslint-disable-next-line no-unused-vars
         const { buttonRefreshTimeout } = this.state;
-
         this.setState({ isLoading: false });
         // TODO props for addedToCart
         const timeout = 1250;
