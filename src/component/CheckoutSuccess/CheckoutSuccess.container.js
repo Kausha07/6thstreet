@@ -55,6 +55,7 @@ export const mapDispatchToProps = (dispatch) => ({
 export class CheckoutSuccessContainer extends PureComponent {
     static propTypes = {
         orderID: PropTypes.number.isRequired,
+        incrementID: PropTypes.number.isRequired,
         updateBreadcrumbs: PropTypes.func.isRequired,
         changeHeaderState: PropTypes.func.isRequired,
         showOverlay: PropTypes.func.isRequired,

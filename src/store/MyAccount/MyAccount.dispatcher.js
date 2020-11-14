@@ -59,7 +59,11 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
                 dispatch(updateCustomerDetails({ ...stateCustomer, ...data }));
                 BrowserDatabase.setItem({ ...stateCustomer, ...data }, CUSTOMER, ONE_MONTH_IN_SECONDS);
             },
-            (error) => dispatch(showNotification('error', error[0].message))
+            (error) => {
+                dispatch(showNotification('error', error[0].message));
+
+                window.location.reload();
+            }
         );
     }
 

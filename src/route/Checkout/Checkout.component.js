@@ -30,7 +30,8 @@ import './Checkout.style';
 export class Checkout extends SourceCheckout {
     static propTypes = {
         isSignedIn: PropTypes.bool.isRequired,
-        orderID: PropTypes.string.isRequired
+        orderID: PropTypes.string.isRequired,
+        incrementID: PropTypes.string.isRequired
     };
 
     state = {
@@ -266,6 +267,7 @@ export class Checkout extends SourceCheckout {
                   savePaymentInformation={ this.savePaymentInformation }
                   setTabbyWebUrl={ this.setTabbyWebUrl }
                   setPaymentCode={ this.setPaymentCode }
+                  setCheckoutCreditCardData={ this.setCheckoutCreditCardData }
                 />
             </>
         );
@@ -347,7 +349,7 @@ export class Checkout extends SourceCheckout {
     }
 
     renderDetailsStep() {
-        const { orderID, shippingAddress } = this.props;
+        const { orderID, shippingAddress, incrementID } = this.props;
         const {
             paymentInformation: {
                 billing_address,
@@ -361,6 +363,7 @@ export class Checkout extends SourceCheckout {
         return (
           <CheckoutSuccess
             orderID={ orderID }
+            incrementID={ incrementID }
             shippingAddress={ shippingAddress }
             billingAddress={ billing_address }
             paymentMethod={ paymentMethod }
@@ -515,7 +518,7 @@ export class Checkout extends SourceCheckout {
                         { this.renderStep() }
                         { this.renderLoader() }
                         </div>
-                        <div>
+                        <div block="Checkout" elem="Additional">
                             { this.renderSummary() }
                             { this.renderPromo() }
                             { this.renderTabbyIframe() }

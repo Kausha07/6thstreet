@@ -63,7 +63,7 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
         const { isArabic, cities } = this.state;
 
         if (isArabic) {
-            return cities.map((item) => ({ id: item.city_ar, label: item.city_ar, value: item.city_ar }));
+            return cities.map((item) => ({ id: item.city, label: item.city_ar, value: item.city }));
         }
 
         return cities.map((item) => ({ id: item.city, label: item.city, value: item.city }));
@@ -75,12 +75,21 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
         const CurrentCity = city;
 
         if (isArabic) {
-            const trueCity = cities.find(({ city_ar }) => CurrentCity === city_ar);
-            return trueCity.areas_ar.map((area) => ({ id: area, label: area, value: area }));
+            const trueCity = cities.find(({ city }) => CurrentCity === city);
+
+            if (trueCity) {
+                const { areas_ar, areas } = trueCity;
+
+                // eslint-disable-next-line arrow-body-style
+                return areas_ar.map((area_ar, i) => {
+                    return { id: areas[i], label: area_ar, value: areas[i] };
+                });
+            }
         }
 
         const trueCity = cities.find(({ city }) => CurrentCity === city);
-        return trueCity.areas.map((area) => ({ id: area, label: area, value: area }));
+
+        return trueCity ? trueCity.areas.map((area) => ({ id: area, label: area, value: area })) : null;
     }
 
     getRegionFields() {

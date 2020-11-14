@@ -33,6 +33,8 @@
     }
 
     &_isArabic {
+        text-align: right;
+    
         .CountryMiniFlag-Container {
             margin-left: 0;
             margin-right: 22px;
@@ -41,6 +43,20 @@
         input {
             padding-left: 0;
             padding-right: 35px;
+        }
+
+        .Field {
+            .FieldSelect {
+                &:after {
+                    left: 20px;
+                    right: unset;
+                }
+
+                &-Select {
+                    padding-right: 30px;
+                }
+                
+            }
         }
     }
 }

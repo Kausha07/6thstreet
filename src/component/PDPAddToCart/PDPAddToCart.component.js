@@ -1,7 +1,9 @@
+/* eslint-disable no-magic-numbers */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import { Product } from 'Util/API/endpoint/Product/Product.type';
+import isMobile from 'Util/Mobile';
 
 import PDPSizeGuide from '../PDPSizeGuide';
 
@@ -16,7 +18,10 @@ class PDPAddToCart extends PureComponent {
         sizeObject: PropTypes.object.isRequired,
         selectedSizeType: PropTypes.string.isRequired,
         isLoading: PropTypes.bool.isRequired,
-        addedToCart: PropTypes.bool.isRequired
+        addedToCart: PropTypes.bool.isRequired,
+        showProceedToCheckout: PropTypes.bool.isRequired,
+        hideCheckoutBlock: PropTypes.bool.isRequired,
+        routeChangeToCart: PropTypes.func.isRequired
     };
 
     getSizeTypeSelect() {
@@ -209,6 +214,35 @@ class PDPAddToCart extends PureComponent {
         );
     }
 
+    renderProceedToCheckoutBlock = () => {
+        const {
+            showProceedToCheckout,
+            hideCheckoutBlock,
+            routeChangeToCart
+        } = this.props;
+
+        if (showProceedToCheckout && isMobile.any()) {
+            return (
+                <div
+                  block="PDPAddToCart"
+                  elem="Checkout"
+                  mods={ { hide: hideCheckoutBlock } }
+                >
+                    <h2 block="PDPAddToCart" elem="CheckoutTitle">{ __('Added to your shopping bag') }</h2>
+                    <button
+                      block="PDPAddToCart"
+                      elem="CheckoutButton"
+                      onClick={ routeChangeToCart }
+                    >
+                        { __('Proceed to checkout') }
+                    </button>
+                </div>
+            );
+        }
+
+        return null;
+    };
+
     render() {
         return (
             <div block="PDPAddToCart">
@@ -220,6 +254,7 @@ class PDPAddToCart extends PureComponent {
                 <div block="PDPAddToCart" elem="Bottom">
                     { this.renderAddToCartButton() }
                 </div>
+                { this.renderProceedToCheckoutBlock() }
             </div>
         );
     }

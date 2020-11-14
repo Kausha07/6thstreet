@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
@@ -6,6 +7,7 @@ import CartDispatcher from 'Store/Cart/Cart.dispatcher';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
 import Event, { EVENT_GTM_PRODUCT_ADD_TO_CART } from 'Util/Event';
+import history from 'Util/History';
 
 import PDPAddToCart from './PDPAddToCart.component';
 
@@ -40,18 +42,29 @@ export class PDPAddToCartContainer extends PureComponent {
     containerFunctions = {
         onSizeTypeSelect: this.onSizeTypeSelect.bind(this),
         onSizeSelect: this.onSizeSelect.bind(this),
-        addToCart: this.addToCart.bind(this)
+        addToCart: this.addToCart.bind(this),
+        routeChangeToCart: this.routeChangeToCart.bind(this)
     };
 
-    state = {
-        sizeObject: {},
-        selectedSizeType: 'eu',
-        selectedSizeCode: '',
-        insertedSizeStatus: true,
-        isLoading: false,
-        addedToCart: false,
-        buttonRefreshTimeout: 1250
-    };
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            sizeObject: {},
+            selectedSizeType: 'eu',
+            selectedSizeCode: '',
+            insertedSizeStatus: true,
+            isLoading: false,
+            addedToCart: false,
+            buttonRefreshTimeout: 1250,
+            showProceedToCheckout: false,
+            hideCheckoutBlock: false,
+            clearTime: false
+        };
+
+        this.fullCheckoutHide = null;
+        this.startCheckoutHide = null;
+    }
 
     static getDerivedStateFromProps(props) {
         const { product } = props;
@@ -74,6 +87,15 @@ export class PDPAddToCartContainer extends PureComponent {
         }
 
         return null;
+    }
+
+    componentDidUpdate(_, prevState) {
+        const { addedToCart } = this.state;
+        const { addedToCart: prevAddedToCart } = prevState;
+
+        if (addedToCart && (prevAddedToCart !== addedToCart)) {
+            this.clearTimeAll();
+        }
     }
 
     containerProps = () => {
@@ -130,6 +152,8 @@ export class PDPAddToCartContainer extends PureComponent {
                 optionValue
             }, color, optionValue, basePrice, brand_name, thumbnail_url, url, itemPrice).then(
                 () => this.afterAddToCart()
+            ).then(
+                () => this.proceedToCheckout()
             );
 
             Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_CART, {
@@ -157,6 +181,8 @@ export class PDPAddToCartContainer extends PureComponent {
                 optionValue: ''
             }, color, null, basePrice, brand_name, thumbnail_url, url, itemPrice).then(
                 () => this.afterAddToCart()
+            ).then(
+                () => this.proceedToCheckout()
             );
 
             Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_CART, {
@@ -177,14 +203,32 @@ export class PDPAddToCartContainer extends PureComponent {
     afterAddToCart() {
         // eslint-disable-next-line no-unused-vars
         const { buttonRefreshTimeout } = this.state;
-
         this.setState({ isLoading: false });
         // TODO props for addedToCart
         const timeout = 1250;
         this.setState({ addedToCart: true });
-        const timer = setTimeout(() => this.setState({ addedToCart: false }), timeout);
+        setTimeout(() => this.setState({ addedToCart: false }), timeout);
+    }
 
-        return () => clearTimeout(timer);
+    clearTimeAll() {
+        this.setState({ hideCheckoutBlock: false });
+
+        clearTimeout(this.fullCheckoutHide);
+        clearTimeout(this.startCheckoutHide);
+    }
+
+    proceedToCheckout() {
+        this.setState({ showProceedToCheckout: true });
+
+        this.startCheckoutHide = setTimeout(() => this.setState({ hideCheckoutBlock: true }), 5000);
+        this.fullCheckoutHide = setTimeout(() => this.setState({
+            showProceedToCheckout: false,
+            hideCheckoutBlock: false
+        }), 7000);
+    }
+
+    routeChangeToCart() {
+        history.push('/cart');
     }
 
     render() {

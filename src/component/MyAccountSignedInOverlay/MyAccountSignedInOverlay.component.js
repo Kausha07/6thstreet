@@ -5,6 +5,7 @@ import Image from 'Component/Image';
 import Link from 'Component/Link';
 import Overlay from 'Component/Overlay';
 import { ReactComponent as AccountIcon } from 'Style/account.svg';
+import { isArabic } from 'Util/App';
 
 import AddressIcon from './icons/address.png';
 import ClubIcon from './icons/club-apparel.png';
@@ -19,6 +20,10 @@ export class MyAccountSignedInOverlay extends PureComponent {
     static propTypes = {
         onHide: PropTypes.func.isRequired,
         signOut: PropTypes.func.isRequired
+    };
+
+    state = {
+        isArabic: isArabic()
     };
 
     renderMyAccountLink() {
@@ -92,11 +97,12 @@ export class MyAccountSignedInOverlay extends PureComponent {
 
     render() {
         const { onHide } = this.props;
+        const { isArabic } = this.state;
 
         return (
             <Overlay
               id={ MY_ACCOUNT_SIGNED_IN_OVERLAY }
-              mix={ { block: 'MyAccountSignedInOverlay' } }
+              mix={ { block: 'MyAccountSignedInOverlay', mods: { isArabic } } }
               onHide={ onHide }
             >
                 { this.renderWrapper() }

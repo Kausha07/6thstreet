@@ -72,6 +72,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             shippingAddress: {},
             checkoutStep: is_virtual ? BILLING_STEP : SHIPPING_STEP,
             orderID: '',
+            incrementID: '',
             paymentTotals: BrowserDatabase.getItem(PAYMENT_TOTALS) || {},
             email: '',
             isCreateUser: false,
@@ -87,7 +88,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         setMeta({ title: __('Checkout') });
     }
 
-    componentDidUpdate() {
+    componentDidUpdate(prevProps, prevState) {
         const {
             history,
             showInfoNotification,
@@ -95,8 +96,21 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             totals,
             totals: {
                 items = []
-            }
+            },
+            updateStoreCredit
         } = this.props;
+
+        const {
+            checkoutStep
+        } = this.state;
+
+        const {
+            checkoutStep: prevCheckoutStep
+        } = prevState;
+
+        if (checkoutStep !== prevCheckoutStep) {
+            updateStoreCredit();
+        }
 
         if (Object.keys(totals).length && !items.length) {
             showInfoNotification(__('Please add at least one product to cart!'));
@@ -255,7 +269,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     }
 
     async savePaymentMethodAndPlaceOrder(paymentInformation) {
-        const { paymentMethod: { code, additional_data } } = paymentInformation;
+        const { paymentMethod: { code, additional_data = {} } } = paymentInformation;
         const { createOrder, customer: { email: customerEmail }, showErrorNotification } = this.props;
         const { shippingAddress: { email } } = this.state;
 
@@ -285,10 +299,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                         const { data } = response;
 
                         if (typeof data === 'object') {
-                            const { order_id, success, response_code } = data;
+                            const { order_id, success, response_code, increment_id } = data;
 
                             if (success || response_code === 200) {
-                                this.setDetailsStep(order_id);
+                                this.setDetailsStep(order_id, increment_id);
                                 this.resetCart();
                             }
                         }
@@ -310,7 +324,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         }
     }
 
-    setDetailsStep(orderID) {
+    setDetailsStep(orderID, incrementID) {
         const {
             setNavigationState,
             sendVerificationCode,
@@ -349,7 +363,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         this.setState({
             isLoading: false,
             checkoutStep: DETAILS_STEP,
-            orderID
+            orderID,
+            incrementID
         });
 
         setNavigationState({
