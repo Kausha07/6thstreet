@@ -12,11 +12,13 @@ import history from 'Util/History';
 import PDPAddToCart from './PDPAddToCart.component';
 
 export const mapStateToProps = (state) => ({
-    product: state.PDP.product
+    product: state.PDP.product,
+    totals: state.CartReducer.cartTotals
 });
 
 export const mapDispatchToProps = (dispatch) => ({
     showNotification: (type, message) => dispatch(showNotification(type, message)),
+    getCartTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId),
     addProductToCart: (
         productData, color, optionValue, basePrice, brand_name, thumbnail_url, url, itemPrice
     ) => CartDispatcher.addProductToCart(
@@ -36,7 +38,16 @@ export class PDPAddToCartContainer extends PureComponent {
     static propTypes = {
         product: Product.isRequired,
         addProductToCart: PropTypes.func.isRequired,
-        showNotification: PropTypes.func.isRequired
+        showNotification: PropTypes.func.isRequired,
+        totals: PropTypes.object,
+        PrevTotal: PropTypes.number,
+        total: PropTypes.number
+    };
+
+    static defaultProps = {
+        totals: {},
+        PrevTotal: null,
+        total: null
     };
 
     containerFunctions = {
@@ -89,12 +100,13 @@ export class PDPAddToCartContainer extends PureComponent {
         return null;
     }
 
-    componentDidUpdate(_, prevState) {
-        const { addedToCart } = this.state;
-        const { addedToCart: prevAddedToCart } = prevState;
+    componentDidUpdate(prevProps, _) {
+        const { totals: { total: PrevTotal = null } } = prevProps;
+        const { totals: { total = null } } = this.props;
 
-        if (addedToCart && (prevAddedToCart !== addedToCart)) {
+        if (total && PrevTotal !== total) {
             this.clearTimeAll();
+            this.proceedToCheckout();
         }
     }
 
@@ -152,8 +164,6 @@ export class PDPAddToCartContainer extends PureComponent {
                 optionValue
             }, color, optionValue, basePrice, brand_name, thumbnail_url, url, itemPrice).then(
                 () => this.afterAddToCart()
-            ).then(
-                () => this.proceedToCheckout()
             );
 
             Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_CART, {
@@ -181,8 +191,6 @@ export class PDPAddToCartContainer extends PureComponent {
                 optionValue: ''
             }, color, null, basePrice, brand_name, thumbnail_url, url, itemPrice).then(
                 () => this.afterAddToCart()
-            ).then(
-                () => this.proceedToCheckout()
             );
 
             Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_CART, {
