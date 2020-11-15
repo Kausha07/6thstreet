@@ -39,8 +39,7 @@
 
     &_isArabic {
         .CartPage-Wrapper {
-            margin-left: auto;
-            margin-right: 100px;
+            margin: 0 auto;
 
             @include mobile {
                 margin-right: 0;
