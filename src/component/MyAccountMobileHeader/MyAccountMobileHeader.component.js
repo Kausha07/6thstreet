@@ -2,6 +2,8 @@
 import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 
+import CountrySwitcher from 'Component/CountrySwitcher';
+import LanguageSwitcher from 'Component/LanguageSwitcher';
 import Link from 'Component/Link';
 import StoreCredit from 'Component/StoreCredit';
 import { isArabic } from 'Util/App';
@@ -37,13 +39,16 @@ class MyAccountMobileHeader extends PureComponent {
 
     renderStoreCredits() {
         return (
-            <Link
-              block="MyAccountMobileHeader"
-              elem="StoreCreditLink"
-              to="/my-account/storecredit/info"
-            >
-                <StoreCredit />
-            </Link>
+            <>
+                <Link
+                  block="MyAccountMobileHeader"
+                  elem="StoreCreditLink"
+                  to="/my-account/storecredit/info"
+                >
+                    <StoreCredit />
+                </Link>
+                { this.renderChangeStore() }
+            </>
         );
     }
 
@@ -69,6 +74,15 @@ class MyAccountMobileHeader extends PureComponent {
               onClick={ onClose }
               mods={ { isArabic, isClubApparel } }
             />
+        );
+    }
+
+    renderChangeStore() {
+        return (
+            <div block="MyAccountOverlay" elem="StoreSwitcher">
+                <LanguageSwitcher />
+                <CountrySwitcher />
+            </div>
         );
     }
 
