@@ -2,15 +2,11 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import ChangePhonePopup from 'Component/ChangePhonePopUp';
-import ContentWrapper from 'Component/ContentWrapper';
 import Field from 'Component/Field';
 import Form from 'Component/Form';
 import Link from 'Component/Link';
 import MyAccountOverlay from 'Component/MyAccountOverlay';
-import MyAccountTabList from 'Component/MyAccountTabList';
 import SuccessCheckoutItem from 'Component/SuccessCheckoutItem';
-import { tabMap } from 'Route/MyAccount/MyAccount.container';
-import { activeTabType } from 'Type/Account';
 import { TotalsType } from 'Type/MiniCart';
 import { isArabic } from 'Util/App';
 import { formatCurrency, roundPrice } from 'Util/Price';
@@ -37,8 +33,6 @@ export class CheckoutSuccess extends PureComponent {
         isSignedIn: PropTypes.bool.isRequired,
         requestCustomerData: PropTypes.func.isRequired,
         customer: PropTypes.isRequired,
-        activeTab: activeTabType.isRequired,
-        changeActiveTab: PropTypes.func.isRequired,
         onVerifySuccess: PropTypes.func.isRequired,
         onResendCode: PropTypes.func.isRequired,
         isPhoneVerified: PropTypes.bool.isRequired,
@@ -85,27 +79,6 @@ export class CheckoutSuccess extends PureComponent {
         if (!wasLoaded && successHidden) {
             this.setState({ wasLoaded: true });
         }
-    };
-
-    renderTabList = () => {
-        const { activeTab, changeActiveTab, isSignedIn } = this.props;
-
-        if (!isSignedIn) {
-            return null;
-        }
-
-        return (
-            <ContentWrapper
-              label={ __('My Account page') }
-              wrapperMix={ { block: 'MyAccount', elem: 'Wrapper' } }
-            >
-                <MyAccountTabList
-                  tabMap={ tabMap }
-                  activeTab={ activeTab }
-                  changeActiveTab={ changeActiveTab }
-                />
-            </ContentWrapper>
-        );
     };
 
     renderSuccessMessage = (email) => {
@@ -622,7 +595,6 @@ export class CheckoutSuccess extends PureComponent {
         return (
             <div block="CheckoutSuccess">
                 { this.renderChangePhonePopUp() }
-                { this.renderTabList() }
                 <div block="CheckoutSuccess" elem="Details">
                     { this.renderSuccessMessage(customer.email
                         ? customer.email
