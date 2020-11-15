@@ -133,6 +133,7 @@ export class CheckoutSuccess extends PureComponent {
 
     renderPhoneVerified() {
         const { isPhoneVerified } = this.props;
+        const { isArabic } = this.state;
 
         if (!isPhoneVerified) {
             return null;
@@ -141,10 +142,12 @@ export class CheckoutSuccess extends PureComponent {
         return (
             <div
               block="PhoneVerified"
+              mods={ { isArabic } }
             >
                 <div
                   block="PhoneVerified"
                   elem="Content"
+                  mods={ { isArabic } }
                 >
                     <div
                       block="PhoneVerified"
@@ -174,6 +177,8 @@ export class CheckoutSuccess extends PureComponent {
             phone
         } = this.props;
         const { isArabic, isPhoneVerification } = this.state;
+        const countryCode = phone ? phone.slice(0, '4') : null;
+        const phoneNumber = phone ? phone.slice('4') : null;
 
         if (!isPhoneVerified) {
             return (
@@ -187,14 +192,14 @@ export class CheckoutSuccess extends PureComponent {
                         </div>
                         <div block="TrackOrder-Text" elem="Phone">
                             <button onClick={ toggleChangePhonePopup }>
-                                { phone }
+                                { `${countryCode } ${ phoneNumber}` }
                             </button>
                         </div>
                     </div>
                     <Form
                       onSubmitSuccess={ onVerifySuccess }
                     >
-                        <div block="TrackOrder" elem="Code">
+                        <div block="TrackOrder" elem="Code" mods={ { isArabic } }>
                             <Field
                               maxlength="5"
                               type="text"
@@ -250,6 +255,10 @@ export class CheckoutSuccess extends PureComponent {
             </div>
         );
     }
+
+    showMyAccountPopup = () => {
+        this.setState({ showPopup: true });
+    };
 
     renderChangePhonePopUp = () => {
         const {
@@ -607,25 +616,17 @@ export class CheckoutSuccess extends PureComponent {
         );
     }
 
-    render() {
-        const { customer, isMobileVerification } = this.props;
-        if (isMobileVerification) {
-            return (
-                <div block="CheckoutSuccess">
-                    { this.renderChangePhonePopUp() }
-                    <div block="CheckoutSuccess" elem="Details">
-                        { this.renderTrackOrder() }
-                    </div>
-                </div>
-            );
-        }
+    renderDetails() {
+        const { customer, billingAddress: { guest_email } } = this.props;
 
         return (
             <div block="CheckoutSuccess">
                 { this.renderChangePhonePopUp() }
                 { this.renderTabList() }
                 <div block="CheckoutSuccess" elem="Details">
-                    { this.renderSuccessMessage(customer.email) }
+                    { this.renderSuccessMessage(customer.email
+                        ? customer.email
+                        : guest_email) }
                     { this.renderPhoneVerified() }
                     { this.renderTrackOrder() }
                     { this.renderTotalsItems() }
@@ -638,6 +639,22 @@ export class CheckoutSuccess extends PureComponent {
                 { this.renderMyAccountPopup() }
             </div>
         );
+    }
+
+    render() {
+        const { isMobileVerification } = this.props;
+        if (isMobileVerification) {
+            return (
+                <div block="CheckoutSuccess">
+                    { this.renderChangePhonePopUp() }
+                    <div block="CheckoutSuccess" elem="Details">
+                        { this.renderTrackOrder() }
+                    </div>
+                </div>
+            );
+        }
+
+        return this.renderDetails();
     }
 }
 

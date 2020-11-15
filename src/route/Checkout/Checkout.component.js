@@ -507,14 +507,14 @@ export class Checkout extends SourceCheckout {
 
         return (
             <>
-                { this.renderCheckoutHeder() }
+                { isSuccess ? null : this.renderCheckoutHeder() }
                 <main block="Checkout" mods={ { isSuccess } }>
                     <ContentWrapper
                       wrapperMix={ { block: 'Checkout', elem: 'Wrapper' } }
                       label={ __('Checkout page') }
                     >
                         <div block="Checkout" elem="Step">
-                        { this.renderTitle() }
+                        { isSuccess ? null : this.renderTitle() }
                         { this.renderStep() }
                         { this.renderLoader() }
                         </div>
