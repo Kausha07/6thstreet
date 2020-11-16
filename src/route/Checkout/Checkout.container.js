@@ -128,6 +128,12 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     }
 
     onShippingEstimationFieldsChange(address) {
+        const canEstimate = !Object.values(address).some((item) => item === undefined);
+
+        if (!canEstimate) {
+            return;
+        }
+
         const { estimateShipping } = this.props;
         const Checkout = this;
 
