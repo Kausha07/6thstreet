@@ -8,7 +8,6 @@ import {
     COUNTRY_CODES_FOR_PHONE_VALIDATION,
     PHONE_CODES
 } from 'Component/MyAccountAddressForm/MyAccountAddressForm.config';
-import PhoneInputField from 'Component/PhoneInputField';
 import { isArabic } from 'Util/App';
 
 import './ChangePhonePopup.style.scss';
@@ -151,7 +150,7 @@ class ChangePhonePopup extends PureComponent {
                         { __('Input new phone number and send Verification code again') }
                     </div>
                     <Form onSubmitSuccess={ changePhone }>
-                        <PhoneInputField />
+                        { this.renderPhone() }
                         <button
                           block="primary"
                           type="submit"
