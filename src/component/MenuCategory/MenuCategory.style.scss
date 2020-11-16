@@ -195,6 +195,10 @@
         }
 
         &-CategoryLink {
+            &:hover {
+                text-decoration: none;
+            }
+            
             &-Label {
                 color: var(--white);
             }

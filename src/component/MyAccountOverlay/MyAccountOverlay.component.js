@@ -508,12 +508,16 @@ export class MyAccountOverlay extends PureComponent {
     }
 
     renderChangeStore() {
-        return (
-            <div block="MyAccountOverlay" elem="StoreSwitcher">
-                <LanguageSwitcher />
-                <CountrySwitcher />
-            </div>
-        );
+        if (isMobile.any()) {
+            return (
+                <div block="MyAccountOverlay" elem="StoreSwitcher">
+                    <LanguageSwitcher />
+                    <CountrySwitcher />
+                </div>
+            );
+        }
+
+        return null;
     }
 
     render() {
