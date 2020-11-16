@@ -170,7 +170,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
     async saveAddressInformation(addressInformation) {
         const {
-            getPaymentMethods,
             saveAddressInformation,
             getTabbyInstallment,
             totals: {
@@ -197,29 +196,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                 this.setState({
                     paymentTotals: totals
                 });
-            },
-            this._handleError
-        );
 
-        getPaymentMethods().then(
-            ({ data }) => {
-                const availablePaymentMethods = data.reduce((acc, paymentMethod) => {
-                    const { is_enabled } = paymentMethod;
-
-                    if (is_enabled) {
-                        acc.push(paymentMethod);
-                    }
-
-                    return acc;
-                }, []);
-
-                if (data) {
-                    this.setState({
-                        isLoading: false,
-                        paymentMethods: availablePaymentMethods,
-                        checkoutStep: BILLING_STEP
-                    })
-                }
+                this.getPaymentMethods();
             },
             this._handleError
         );
@@ -269,7 +247,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     }
 
     async savePaymentMethodAndPlaceOrder(paymentInformation) {
-        const { paymentMethod: { code, additional_data = {} } } = paymentInformation;
+        const { paymentMethod: { code, additional_data } } = paymentInformation;
         const { createOrder, customer: { email: customerEmail }, showErrorNotification } = this.props;
         const { shippingAddress: { email } } = this.state;
 
@@ -370,6 +348,33 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         setNavigationState({
             name: DETAILS_STEP
         });
+    }
+
+    getPaymentMethods() {
+        const { getPaymentMethods } = this.props;
+
+        getPaymentMethods().then(
+            ({ data }) => {
+                const availablePaymentMethods = data.reduce((acc, paymentMethod) => {
+                    const { is_enabled } = paymentMethod;
+
+                    if (is_enabled) {
+                        acc.push(paymentMethod);
+                    }
+
+                    return acc;
+                }, []);
+
+                if (data) {
+                    this.setState({
+                        isLoading: false,
+                        paymentMethods: availablePaymentMethods,
+                        checkoutStep: BILLING_STEP
+                    })
+                }
+            },
+            this._handleError
+        );
     }
 
     resetCart() {
