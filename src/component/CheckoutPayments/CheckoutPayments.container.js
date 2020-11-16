@@ -10,6 +10,7 @@ import {
 import { getStore } from 'Store';
 import CartDispatcher from 'Store/Cart/Cart.dispatcher';
 import CheckoutDispatcher from 'Store/Checkout/Checkout.dispatcher';
+import { showNotification } from 'Store/Notification/Notification.action';
 import { TotalsType } from 'Type/MiniCart';
 
 import { CARD } from './CheckoutPayments.config';
@@ -22,7 +23,8 @@ export const mapDispatchToProps = (dispatch) => ({
     ...SourceMapDispatchToProps,
     selectPaymentMethod: (code) => CheckoutDispatcher.selectPaymentMethod(dispatch, code),
     createTabbySession: (code) => CheckoutDispatcher.createTabbySession(dispatch, code),
-    updateTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId)
+    updateTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId),
+    showError: (message) => dispatch(showNotification('error', message))
 });
 
 export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
