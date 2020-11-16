@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import PropTypes from 'prop-types';
 
+import CheckoutAddressBook from 'Component/CheckoutAddressBook';
 import CheckoutDeliveryOptions from 'Component/CheckoutDeliveryOptions';
 import Form from 'Component/Form';
 import Loader from 'Component/Loader';
@@ -20,7 +21,8 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     static propTypes = {
         ...SourceCheckoutShipping.propTypes,
         customer: customerType.isRequired,
-        showCreateNewPopup: PropTypes.func.isRequired
+        showCreateNewPopup: PropTypes.func.isRequired,
+        shippingAddress: PropTypes.object.isRequired
     };
 
     state = {
@@ -225,6 +227,22 @@ export class CheckoutShipping extends SourceCheckoutShipping {
           <h2 block="Checkout" elem="Heading" mods={ { isDisabled } }>
               { __(text) }
           </h2>
+        );
+    }
+
+    renderAddressBook() {
+        const {
+            onAddressSelect,
+            onShippingEstimationFieldsChange,
+            shippingAddress
+        } = this.props;
+
+        return (
+            <CheckoutAddressBook
+              onAddressSelect={ onAddressSelect }
+              onShippingEstimationFieldsChange={ onShippingEstimationFieldsChange }
+              shippingAddress={ shippingAddress }
+            />
         );
     }
 

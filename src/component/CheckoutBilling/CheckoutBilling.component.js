@@ -161,6 +161,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
     renderDifferentBillingLabel = () => (
         <>
             { __('Add') }
+            <span> </span>
             <span>
                 { __('Billing address') }
             </span>
@@ -330,7 +331,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
     }
 
     render() {
-        const { onBillingSuccess, onBillingError } = this.props;
+        const { onBillingSuccess, onBillingError, isSameAsShipping } = this.props;
         const { formContent } = this.state;
 
         return formContent ? this.renderAddAdress() : (
@@ -341,9 +342,12 @@ export class CheckoutBilling extends SourceCheckoutBilling {
               onSubmitSuccess={ onBillingSuccess }
             >
                 { this.renderAddresses() }
-                <div block="CheckoutBilling" elem="Line">
-                    <hr />
-                </div>
+                { isSameAsShipping ? null
+                    : (
+                        <div block="CheckoutBilling" elem="Line">
+                            <hr />
+                        </div>
+                    ) }
                 { this.renderPayments() }
                 { this.renderTermsAndConditions() }
                 { this.renderActions() }

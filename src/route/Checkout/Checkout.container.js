@@ -157,9 +157,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         if (checkoutStep === BILLING_STEP) {
             this.setState({
                 isLoading: false,
-                checkoutStep: SHIPPING_STEP,
-                shippingAddress: {},
-                shippingMethods: []
+                checkoutStep: SHIPPING_STEP
             });
 
             BrowserDatabase.deleteItem(PAYMENT_TOTALS);
@@ -177,6 +175,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             }
         } = this.props;
         const { shipping_address } = addressInformation;
+        console.log(addressInformation);
 
         this.setState({
             isLoading: true,
