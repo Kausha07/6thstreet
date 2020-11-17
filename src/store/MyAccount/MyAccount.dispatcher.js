@@ -177,8 +177,11 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         const isVerifiedAttribute = custom_attributes.filter(
             ({ attribute_code }) => attribute_code === 'is_mobile_otp_verified'
         );
+
         const { value: phoneNumber } = phoneAttribute && phoneAttribute[0] ? phoneAttribute[0] : null;
-        const { value: isVerified } = isVerifiedAttribute && isVerifiedAttribute[0] ? isVerifiedAttribute[0] : null;
+        const { value: isVerified } = isVerifiedAttribute && isVerifiedAttribute[0]
+            ? isVerifiedAttribute[0]
+            : { value: false };
 
         dispatch(updateCustomerDetails({ ...customer, phone: phoneNumber, isVerified }));
     }
