@@ -21,7 +21,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
     static propTypes = {
         ...SourceMyAccountCustomerForm.propTypes,
         isShowPassword: PropTypes.bool.isRequired,
-        customer: PropTypes.isRequired,
+        customer: PropTypes.object.isRequired,
         showPasswordFrom: PropTypes.func.isRequired,
         hidePasswordFrom: PropTypes.func.isRequired,
         onSave: PropTypes.func.isRequired,
@@ -105,6 +105,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
             <div
               block="MyAccountCustomerForm"
               elem="FullNameField"
+              key="fullname"
             >
                 <Field
                   type="text"
@@ -159,7 +160,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
         const isPreferNotToSay = gender === 3;
 
         return (
-            <fieldset block="MyAccountCustomerForm" elem="Gender">
+            <fieldset block="MyAccountCustomerForm" elem="Gender" key="gender">
                 <div
                   block="MyAccountCustomerForm"
                   elem="Gender-Radio"
@@ -244,7 +245,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
         const customerPhoneData = this.getCustomerPhone();
 
         return (
-            <div block="MyAccountCustomerForm" elem="CountryCode" mods={ { isArabic } }>
+            <div block="MyAccountCustomerForm" elem="CountryCode" mods={ { isArabic } } key="countryCode">
                 <PhoneCountryCodeField label={ customerPhoneData.customerCountry } onSelect={ this.setCountryCode } />
             </div>
         );
@@ -255,7 +256,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
         const customerPhoneData = this.getCustomerPhone();
 
         return (
-            <div block="MyAccountCustomerForm" elem="Phone" mods={ { isArabic } }>
+            <div block="MyAccountCustomerForm" elem="Phone" mods={ { isArabic } } key="phone">
                 <Field
                   block="MyAccountCustomerForm"
                   elem="PhoneField"

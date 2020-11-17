@@ -56,7 +56,6 @@ export class CartOverlayContainer extends PureComponent {
         showOverlay: PropTypes.func.isRequired,
         showNotification: PropTypes.func.isRequired,
         setNavigationState: PropTypes.func.isRequired,
-        rednerNoCartPopUp: PropTypes.func.isRequired,
         isPopup: PropTypes.bool.isRequired,
         hideActiveOverlay: PropTypes.func.isRequired
     };

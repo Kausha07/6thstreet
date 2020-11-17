@@ -29,30 +29,9 @@ export class HeaderCartContainer extends PureComponent {
         // getData: this.getData.bind(this)
     };
 
-    componentDidMount() {
-        this.renderItemCount();
-    }
-
     containerProps = () => {
         // isDisabled: this._getIsDisabled()
     };
-
-    renderItemCount() {
-        const { totals: { items = [] } } = this.props;
-
-        const itemQuantityArray = items.map((item) => item.qty);
-        const totalQuantity = itemQuantityArray.reduce((qty, nextQty) => qty + nextQty, 0);
-
-        if (totalQuantity && totalQuantity !== 0) {
-            return (
-                <div block="HeaderCart" elem="Count">
-                    { totalQuantity }
-                </div>
-            );
-        }
-
-        return null;
-    }
 
     render() {
         return (
@@ -61,7 +40,6 @@ export class HeaderCartContainer extends PureComponent {
                   { ...this.containerProps() }
                   { ...this.state }
                   { ...this.props }
-                  renderCountItems={ this.renderItemCount() }
                 />
         );
     }

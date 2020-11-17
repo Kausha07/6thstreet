@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import PropTypes from 'prop-types';
 
+import CartCoupon from 'Component/CartCoupon';
 import CheckoutAddressBook from 'Component/CheckoutAddressBook';
 import CheckoutPayments from 'Component/CheckoutPayments';
 import CreditCardTooltip from 'Component/CreditCardTooltip';
@@ -329,26 +330,39 @@ export class CheckoutBilling extends SourceCheckoutBilling {
         );
     }
 
+    renderCartCoupon() {
+        const { totals: { coupon_code } } = this.props;
+
+        return (
+            <div block="CheckoutPayments" elem="CartCouponWrapper">
+                <CartCoupon couponCode={ coupon_code } />
+            </div>
+        );
+    }
+
     render() {
         const { onBillingSuccess, onBillingError } = this.props;
         const { formContent } = this.state;
 
         return formContent ? this.renderAddAdress() : (
-            <Form
-              mix={ { block: 'CheckoutBilling' } }
-              id={ BILLING_STEP }
-              onSubmitError={ onBillingError }
-              onSubmitSuccess={ onBillingSuccess }
-            >
-                { this.renderAddresses() }
-                <div block="CheckoutBilling" elem="Line">
-                    <hr />
-                </div>
-                { this.renderPayments() }
-                { this.renderTermsAndConditions() }
-                { this.renderActions() }
-                { this.renderPopup() }
-            </Form>
+            <>
+                <Form
+                  mix={ { block: 'CheckoutBilling' } }
+                  id={ BILLING_STEP }
+                  onSubmitError={ onBillingError }
+                  onSubmitSuccess={ onBillingSuccess }
+                >
+                    { this.renderAddresses() }
+                    <div block="CheckoutBilling" elem="Line">
+                        <hr />
+                    </div>
+                    { this.renderPayments() }
+                    { this.renderTermsAndConditions() }
+                    { this.renderActions() }
+                    { this.renderPopup() }
+                </Form>
+                { this.renderCartCoupon() }
+            </>
         );
     }
 }

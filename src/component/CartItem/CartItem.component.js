@@ -34,7 +34,7 @@ export class CartItem extends PureComponent {
         isLoading: PropTypes.bool.isRequired,
         item: CartItemType.isRequired,
         currency_code: PropTypes.string.isRequired,
-        brand_name: PropTypes.string.isRequired,
+        brand_name: PropTypes.string,
         isEditing: PropTypes.bool,
         isLikeTable: PropTypes.bool,
         history: PropTypes.object.isRequired,
@@ -43,11 +43,11 @@ export class CartItem extends PureComponent {
         maxSaleQuantity: PropTypes.number.isRequired,
         handleChangeQuantity: PropTypes.func.isRequired,
         getCurrentProduct: PropTypes.func.isRequired,
-        linkTo: PropTypes.string.isRequired,
+        linkTo: PropTypes.string,
         thumbnail: PropTypes.string.isRequired,
         hideActiveOverlay: PropTypes.func.isRequired,
-        hideLoaderAfterPromise: PropTypes.func.isRequired,
-        closePopup: PropTypes.func.isRequired
+        hideLoaderAfterPromise: PropTypes.func,
+        closePopup: PropTypes.func
     };
 
     state = {
@@ -56,7 +56,11 @@ export class CartItem extends PureComponent {
 
     static defaultProps = {
         isEditing: false,
-        isLikeTable: false
+        isLikeTable: false,
+        linkTo: '',
+        brand_name: '',
+        hideLoaderAfterPromise: () => {},
+        closePopup: () => {}
     };
 
     renderProductConfigurationOption = ([key, attribute]) => {

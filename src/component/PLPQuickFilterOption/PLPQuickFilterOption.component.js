@@ -11,9 +11,13 @@ import './PLPQuickFilterOption.style';
 class PLPQuickFilterOption extends PureComponent {
     static propTypes = {
         option: FilterOption.isRequired,
-        isRadio: PropTypes.bool.isRequired,
+        isRadio: PropTypes.bool,
         updateFilters: PropTypes.func.isRequired,
         parentCallback: PropTypes.func.isRequired
+    };
+
+    static defaultProps = {
+        isRadio: false
     };
 
     fieldRef = createRef();

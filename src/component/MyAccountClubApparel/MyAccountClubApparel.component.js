@@ -18,8 +18,8 @@ import './MyAccountClubApparel.style';
 
 class MyAccountClubApparel extends PureComponent {
     static propTypes = {
-        linkAccount: PropTypes.func.isRequired,
-        verifyOtp: PropTypes.func.isRequired,
+        linkAccount: PropTypes.func,
+        verifyOtp: PropTypes.func,
         activeOverlay: PropTypes.string.isRequired,
         showOverlay: PropTypes.func.isRequired,
         hideActiveOverlay: PropTypes.func.isRequired,
@@ -28,7 +28,9 @@ class MyAccountClubApparel extends PureComponent {
     };
 
     static defaultProps = {
-        clubApparel: {}
+        clubApparel: {},
+        linkAccount: () => {},
+        verifyOtp: () => {}
     };
 
     state = {

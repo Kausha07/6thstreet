@@ -27,11 +27,15 @@ class PLPFilters extends PureComponent {
         filters: Filters.isRequired,
         activeOverlay: PropTypes.string.isRequired,
         showOverlay: PropTypes.func.isRequired,
-        hideActiveOverlay: PropTypes.isRequired,
-        goToPreviousNavigationState: PropTypes.isRequired,
+        hideActiveOverlay: PropTypes.func.isRequired,
+        goToPreviousNavigationState: PropTypes.func.isRequired,
         onReset: PropTypes.func.isRequired,
-        productsCount: PropTypes.string.isRequired,
+        productsCount: PropTypes.number,
         activeFilters: PropTypes.object.isRequired
+    };
+
+    static defaultProps = {
+        productsCount: 0
     };
 
     state = {

@@ -4,6 +4,7 @@ import { PureComponent } from 'react';
 import { withRouter } from 'react-router';
 
 import CartOverlay from 'SourceComponent/CartOverlay';
+import { TotalsType } from 'Type/MiniCart';
 import { isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
 
@@ -12,12 +13,8 @@ import './HeaderCart.style';
 class HeaderCart extends PureComponent {
     static propTypes = {
         history: PropTypes.object.isRequired,
-        renderCountItems: PropTypes.func,
-        hideActiveOverlay: PropTypes.func.isRequired
-    };
-
-    static defaultProps = {
-        renderCountItems: () => {}
+        hideActiveOverlay: PropTypes.func.isRequired,
+        totals: TotalsType.isRequired
     };
 
     state = {
@@ -52,9 +49,25 @@ class HeaderCart extends PureComponent {
         history.push('/cart');
     };
 
+    renderItemCount() {
+        const { totals: { items = [] } } = this.props;
+
+        const itemQuantityArray = items.map((item) => item.qty);
+        const totalQuantity = itemQuantityArray.reduce((qty, nextQty) => qty + nextQty, 0);
+
+        if (totalQuantity && totalQuantity !== 0) {
+            return (
+                <div block="HeaderCart" elem="Count">
+                    { totalQuantity }
+                </div>
+            );
+        }
+
+        return null;
+    }
+
     render() {
         const { cartPopUp, isArabic } = this.state;
-        const { renderCountItems } = this.props;
         return (
             <div block="HeaderCart" mods={ { isArabic } }>
                 <button
@@ -64,7 +77,7 @@ class HeaderCart extends PureComponent {
                   block="HeaderCart"
                   elem="Button"
                 >
-                    { renderCountItems }
+                    { this.renderItemCount() }
                 </button>
                 { cartPopUp }
             </div>

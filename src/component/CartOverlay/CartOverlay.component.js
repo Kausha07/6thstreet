@@ -30,12 +30,17 @@ import './CartOverlay.style';
 export class CartOverlay extends PureComponent {
     static propTypes = {
         totals: TotalsType.isRequired,
-        onVisible: PropTypes.func.isRequired,
+        onVisible: PropTypes.func,
         handleCheckoutClick: PropTypes.func.isRequired,
         showOverlay: PropTypes.func.isRequired,
         hideActiveOverlay: PropTypes.func.isRequired,
         closePopup: PropTypes.func.isRequired,
-        isHidden: PropTypes.bool.isRequired
+        isHidden: PropTypes.bool
+    };
+
+    static defaultProps = {
+        isHidden: false,
+        onVisible: () => {}
     };
 
     state = {

@@ -56,17 +56,20 @@ export class CartItemContainer extends PureComponent {
     static propTypes = {
         item: CartItemType.isRequired,
         currency_code: PropTypes.string.isRequired,
-        brand_name: PropTypes.string.isRequired,
+        brand_name: PropTypes.string,
         updateProductInCart: PropTypes.func.isRequired,
         removeProduct: PropTypes.func.isRequired,
-        closePopup: PropTypes.func.isRequired
+        closePopup: PropTypes.func
+    };
+
+    static defaultProps = {
+        closePopup: () => {},
+        brand_name: ''
     };
 
     state = { isLoading: false };
 
     handlers = [];
-
-    setStateNotLoading = this.setStateNotLoading.bind(this);
 
     containerFunctions = {
         handleChangeQuantity: this.handleChangeQuantity.bind(this),
@@ -98,9 +101,9 @@ export class CartItemContainer extends PureComponent {
         return max_sale_qty || DEFAULT_MAX_PRODUCTS;
     }
 
-    setStateNotLoading() {
+    setStateNotLoading = () => {
         this.setState({ isLoading: false });
-    }
+    };
 
     containerProps = () => ({
         thumbnail: this._getProductThumbnail(),
