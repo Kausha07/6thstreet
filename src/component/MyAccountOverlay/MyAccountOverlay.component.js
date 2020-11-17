@@ -75,12 +75,9 @@ export class MyAccountOverlay extends PureComponent {
 
     state = {
         isPopup: false,
-        gender: '0',
+        gender: 3,
         isChecked: false,
         isArabic: isArabic(),
-        maleId: 0,
-        femaleId: 1,
-        preferNotToSayId: 2,
         isSignInValidated: false,
         isCreateValidated: false,
         isForgotValidated: false
@@ -316,9 +313,6 @@ export class MyAccountOverlay extends PureComponent {
 
         const {
             gender,
-            maleId,
-            femaleId,
-            preferNotToSayId,
             isChecked,
             isArabic,
             isCreateValidated
@@ -362,28 +356,28 @@ export class MyAccountOverlay extends PureComponent {
                     >
                         <Field
                           type="radio"
-                          id="male"
+                          id="1"
                           label={ __('Male') }
                           name="gender"
-                          value={ maleId }
+                          value={ gender }
                           onClick={ this.handleGenderChange }
                           defaultChecked={ gender }
                         />
                         <Field
                           type="radio"
-                          id="female"
+                          id="2"
                           label={ __('Female') }
                           name="gender"
-                          value={ femaleId }
+                          value={ gender }
                           onClick={ this.handleGenderChange }
                           defaultChecked={ gender }
                         />
                         <Field
                           type="radio"
-                          id="preferNot"
+                          id="3"
                           label={ __('Prefer not to say') }
                           name="gender"
-                          value={ preferNotToSayId }
+                          value={ gender }
                           onClick={ this.handleGenderChange }
                           defaultChecked={ gender }
                         />

@@ -27,7 +27,8 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
         onSave: PropTypes.func.isRequired,
         setGender: PropTypes.func.isRequired,
         handleCountryChange: PropTypes.func.isRequired,
-        isLoading: PropTypes.bool.isRequired
+        isLoading: PropTypes.bool.isRequired,
+        country: PropTypes.string.isRequired
     };
 
     constructor(props) {
@@ -41,6 +42,14 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
                 (key) => PHONE_CODES[key] === phone.substr('0', '4')
             ) : getCountryFromUrl()
         };
+    }
+
+    componentDidMount() {
+        const { customer: { phone } = {}, handleCountryChange, country } = this.props;
+
+        const phoneCode = phone ? phone.substr('0', '4') : PHONE_CODES[country];
+
+        handleCountryChange(phoneCode);
     }
 
     componentDidUpdate() {

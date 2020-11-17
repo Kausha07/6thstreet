@@ -11,7 +11,8 @@ import { getCountryFromUrl } from 'Util/Url';
 import MyAccountCustomerForm from './MyAccountCustomerForm.component';
 
 export const mapStateToProps = (state) => ({
-    customer: state.MyAccountReducer.customer
+    customer: state.MyAccountReducer.customer,
+    country: state.AppState.country
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -25,7 +26,8 @@ export class MyAccountCustomerFormContainer extends PureComponent {
         customer: customerType.isRequired,
         updateCustomer: PropTypes.func.isRequired,
         showErrorNotification: PropTypes.func.isRequired,
-        showSuccessNotification: PropTypes.func.isRequired
+        showSuccessNotification: PropTypes.func.isRequired,
+        country: PropTypes.string.isRequired
     };
 
     state = {
@@ -57,7 +59,7 @@ export class MyAccountCustomerFormContainer extends PureComponent {
     }
 
     containerProps = () => {
-        const { customer } = this.props;
+        const { customer, country } = this.props;
 
         const {
             isShowPassword,
@@ -67,7 +69,8 @@ export class MyAccountCustomerFormContainer extends PureComponent {
         return {
             isShowPassword,
             customer,
-            isLoading
+            isLoading,
+            country
         };
     };
 

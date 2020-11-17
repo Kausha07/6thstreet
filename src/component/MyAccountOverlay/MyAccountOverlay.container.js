@@ -251,8 +251,7 @@ export class MyAccountOverlayContainer extends PureComponent {
 
     onCreateAccountSuccess(fields) {
         const {
-            createAccount,
-            onSignIn
+            createAccount
         } = this.props;
 
         const {
@@ -280,8 +279,10 @@ export class MyAccountOverlayContainer extends PureComponent {
                 // if user needs confirmation
                 if (code === 2) {
                     this.setState({ state: STATE_CONFIRM_EMAIL });
-                } else {
-                    onSignIn();
+                }
+
+                if (code === 1) {
+                    this.onSignInSuccess({ email, password });
                 }
 
                 this.stopLoading();
