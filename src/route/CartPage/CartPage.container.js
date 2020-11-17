@@ -45,7 +45,8 @@ export const mapStateToProps = (state) => ({
     guest_checkout: state.ConfigReducer.guest_checkout,
     customer: state.MyAccountReducer.customer,
     isSignedIn: state.MyAccountReducer.isSignedIn,
-    clubApparel: state.ClubApparelReducer.clubApparel
+    clubApparel: state.ClubApparelReducer.clubApparel,
+    isLoading: state.CartReducer.isLoading
 });
 
 export const mapDispatchToProps = (dispatch) => ({

@@ -18,6 +18,7 @@ export const getInitialState = () => ({
     cartId: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
     // TODO set initial data to empty cart structure???
     cartTotals: {},
+    isLoading: true,
     cartItems: BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || []
 });
 
@@ -75,7 +76,8 @@ export const CartReducer = (state = getInitialState(), action) => {
                 subtotal_incl_tax: totals.subtotal || 0,
                 quote_currency_code: totals.currency_code
             },
-            currency: totals.currency_code
+            currency: totals.currency_code,
+            isLoading: false
         };
 
     case UPDATE_CART_ITEM:
