@@ -359,8 +359,8 @@ class PLPFilters extends PureComponent {
 
     renderQuickFilter = ([key, filter]) => {
         const genders = [
-            __('men'),
             __('women'),
+            __('men'),
             __('kids')
         ];
         const brandsCategoryName = 'brand_name';

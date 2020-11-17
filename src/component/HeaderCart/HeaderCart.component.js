@@ -12,8 +12,12 @@ import './HeaderCart.style';
 class HeaderCart extends PureComponent {
     static propTypes = {
         history: PropTypes.object.isRequired,
-        renderCountItems: PropTypes.func.isRequired,
+        renderCountItems: PropTypes.func,
         hideActiveOverlay: PropTypes.func.isRequired
+    };
+
+    static defaultProps = {
+        renderCountItems: () => {}
     };
 
     state = {

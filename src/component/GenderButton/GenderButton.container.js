@@ -20,10 +20,8 @@ export class GenderButtonContainer extends PureComponent {
         setGender: PropTypes.func.isRequired,
         currentContentGender: PropTypes.string.isRequired,
         changeMenuGender: PropTypes.func,
-        isDefaultGenderSetted: PropTypes.bool.isRequired,
         isCurrentGender: PropTypes.bool.isRequired,
         getNewActiveMenuGender: PropTypes.func.isRequired,
-        getGenderCategory: PropTypes.func.isRequired,
         handleUnsetStyle: PropTypes.func.isRequired,
         isUnsetStyle: PropTypes.bool.isRequired,
         gender: PropTypes.shape({

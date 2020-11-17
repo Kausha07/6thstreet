@@ -6,7 +6,7 @@ import { setCountry, setLanguage } from 'Store/AppState/AppState.action';
 import StoreCreditDispatcher from 'Store/StoreCredit/StoreCredit.dispatcher';
 import { getCountriesForSelect, getCountryLocaleForSelect } from 'Util/API/endpoint/Config/Config.format';
 import { Config } from 'Util/API/endpoint/Config/Config.type';
-import { DEV_URLS, URLS } from 'Util/Url/Url.config';
+import { URLS } from 'Util/Url/Url.config';
 
 import WelcomeScreen from './WelcomeScreen.component';
 
@@ -49,12 +49,7 @@ class WelcomeScreenContainer extends PureComponent {
         } else {
             const locale = `${language}-${value.toLowerCase()}`;
 
-            // TODO: logic use hardcoded URLs. Switch URLS to PROD before GO LIVE
-            if (location.href.match('dev')) {
-                window.location.href = DEV_URLS[locale];
-            } else {
-                window.location.href = URLS[locale];
-            }
+            window.location.href = URLS[locale];
         }
     }
 

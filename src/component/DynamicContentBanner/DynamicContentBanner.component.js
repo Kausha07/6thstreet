@@ -12,8 +12,8 @@ class DynamicContentBanner extends PureComponent {
             PropTypes.shape({
                 url: PropTypes.string,
                 link: PropTypes.string,
-                height: PropTypes.number,
-                width: PropTypes.number
+                height: PropTypes.string,
+                width: PropTypes.string
             })
         ).isRequired
     };

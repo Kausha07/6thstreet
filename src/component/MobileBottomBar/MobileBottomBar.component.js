@@ -24,8 +24,14 @@ class MobileBottomBar extends NavigationAbstract {
     static propTypes = {
         location: PropTypes.object.isRequired,
         history: PropTypes.object.isRequired,
-        setIsMobileTabActive: PropTypes.func.isRequired,
-        isSignedIn: PropTypes.bool.isRequired
+        setIsMobileTabActive: PropTypes.func,
+        isSignedIn: PropTypes.bool.isRequired,
+        newMenuGender: PropTypes.string
+    };
+
+    static defaultProps = {
+        setIsMobileTabActive: () => {},
+        newMenuGender: 'women'
     };
 
     state = {
@@ -156,7 +162,14 @@ class MobileBottomBar extends NavigationAbstract {
     }
 
     renderMenu() {
-        return <HeaderMenu key="menu" />;
+        const { newMenuGender } = this.props;
+
+        return (
+            <HeaderMenu
+              key="menu"
+              newMenuGender={ newMenuGender }
+            />
+        );
     }
 
     renderWishlist() {
@@ -173,7 +186,7 @@ class MobileBottomBar extends NavigationAbstract {
         const onClickHandle = !isSignedIn ? this.renderAccountPopUp : this.routeChangeWishlist;
 
         return (
-            <div>
+            <div key="wishlist">
                 <button
                   onClick={ onClickHandle }
                   key="wishlistButton"
@@ -204,7 +217,7 @@ class MobileBottomBar extends NavigationAbstract {
         const onClickHandle = !isSignedIn ? this.renderAccountPopUp : this.routeChangeAccount;
 
         return (
-            <div>
+            <div key="account">
                 <button
                   onClick={ onClickHandle }
                   key="accountButton"

@@ -23,7 +23,7 @@ export class SplashContainer extends PureComponent {
         getConfig: PropTypes.func.isRequired,
         getCart: PropTypes.func.isRequired,
         config: Config.isRequired,
-        locale: Config.isRequired
+        locale: PropTypes.string.isRequired
     };
 
     state = {
