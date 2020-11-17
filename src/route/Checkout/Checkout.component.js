@@ -31,7 +31,8 @@ export class Checkout extends SourceCheckout {
     static propTypes = {
         isSignedIn: PropTypes.bool.isRequired,
         orderID: PropTypes.string.isRequired,
-        incrementID: PropTypes.string.isRequired
+        incrementID: PropTypes.string.isRequired,
+        shippingAddress: PropTypes.object.isRequired
     };
 
     state = {
@@ -248,11 +249,13 @@ export class Checkout extends SourceCheckout {
 
         return (
             <>
-                <div block="Checkout" elem="BackButtons" mods={ { isSignedIn, isArabic } }>
-                    <button onClick={ this.goBackLogin }>
-                        { this.renderHeading('Login / Sign Up', true) }
-                        <span>{ __('Edit') }</span>
-                    </button>
+                <div block="Checkout" elem="BackButtons" mods={ { isArabic } }>
+                    { isSignedIn ? null : (
+                        <button onClick={ this.goBackLogin }>
+                            { this.renderHeading('Login / Sign Up', true) }
+                            <span>{ __('Edit') }</span>
+                        </button>
+                    ) }
                     <button onClick={ goBack }>
                         { this.renderHeading(__('Delivery Options'), true) }
                         <span>{ __('Edit') }</span>
@@ -380,7 +383,8 @@ export class Checkout extends SourceCheckout {
             isDeliveryOptionsLoading,
             email,
             checkoutTotals,
-            isSignedIn
+            isSignedIn,
+            shippingAddress
         } = this.props;
 
         const { continueAsGuest, isArabic } = this.state;
@@ -398,6 +402,7 @@ export class Checkout extends SourceCheckout {
                   onShippingEstimationFieldsChange={ onShippingEstimationFieldsChange }
                   guestEmail={ email }
                   totals={ checkoutTotals }
+                  shippingAddress={ shippingAddress }
                 />
             </div>
         );

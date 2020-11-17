@@ -19,7 +19,8 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
         onShippingEstimationFieldsChange: PropTypes.func.isRequired,
         selectedAddressId: PropTypes.number.isRequired,
         isSignedIn: PropTypes.bool.isRequired,
-        isBilling: PropTypes.bool.isRequired
+        isBilling: PropTypes.bool.isRequired,
+        shippingAddress: PropTypes.object.isRequired
     };
 
     state = {
@@ -36,14 +37,19 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
         const addressName = isBilling ? null : __('Delivery country');
 
         return (
-            <h2 block="Checkout" elem="Heading" mods={ { isArabic, isSignedIn } }>
+            <h2 block="Checkout" elem="Heading" mods={ { isArabic, isDeliveringCountry: isSignedIn } }>
                 { addressName }
             </h2>
         );
     }
 
     renderCustomAddress() {
-        const { isBilling, onShippingEstimationFieldsChange, isSignedIn } = this.props;
+        const {
+            isBilling,
+            onShippingEstimationFieldsChange,
+            isSignedIn,
+            shippingAddress
+        } = this.props;
         const formPortalId = isBilling ? BILLING_STEP : SHIPPING_STEP;
 
         return (
@@ -52,6 +58,7 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
               address={ {} }
               isSignedIn={ isSignedIn }
               id={ formPortalId }
+              shippingAddress={ shippingAddress }
             />
         );
     }

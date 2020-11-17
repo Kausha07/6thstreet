@@ -22,7 +22,8 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     static propTypes = {
         ...SourceCheckoutShippingContainer.propTypes,
         guestEmail: PropTypes.string,
-        showPopup: PropTypes.func.isRequired
+        showPopup: PropTypes.func.isRequired,
+        shippingAddress: PropTypes.object.isRequired
     };
 
     containerFunctions = {

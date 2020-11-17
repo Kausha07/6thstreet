@@ -401,14 +401,16 @@
     }
 
     &-BackButtons {
-        padding-top: 10px;
+        padding: 10px 0;
         display: none;
 
         @include desktop {
             display: block;
 
-            &_isSignedIn {
-                display: none;
+            &Login {
+                &_isSignedIn {
+                    display: none;
+                }
             }
         }
 
@@ -483,7 +485,7 @@
                 background: var(--white-color);
             }
 
-            &_isSignedIn {
+            &_isDeliveringCountry {
                 display: none;
             }
         }
