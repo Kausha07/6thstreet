@@ -59,9 +59,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
                 dispatch(updateCustomerDetails({ ...stateCustomer, ...data }));
                 BrowserDatabase.setItem({ ...stateCustomer, ...data }, CUSTOMER, ONE_MONTH_IN_SECONDS);
             },
-            (error) => {
-                dispatch(showNotification('error', error[0].message));
-
+            () => {
                 window.location.reload();
             }
         );
@@ -85,6 +83,34 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         dispatch(setClubApparel(getClubApparelInitialState()));
 
         Event.dispatch(EVENT_GTM_GENERAL_INIT);
+    }
+
+    /**
+     * Create account action
+     * @param {{customer: Object, password: String}} [options={}]
+     * @memberof MyAccountDispatcher
+     */
+    createAccount(options = {}, dispatch) {
+        const mutation = MyAccountQuery.getCreateAccountMutation(options);
+
+        return fetchMutation(mutation).then(
+            (data) => {
+                const { createCustomer: { customer } } = data;
+                const { confirmation_required } = customer;
+
+                if (confirmation_required) {
+                    return 2;
+                }
+
+                return 1;
+            },
+            (error) => {
+                dispatch(showNotification('error', error[0].message));
+                Promise.reject();
+
+                return false;
+            }
+        );
     }
 
     async signIn(options = {}, dispatch) {
@@ -119,11 +145,21 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
             password,
             cart_id: null
         });
+        const phoneAttribute = custom_attributes.filter(
+            ({ attribute_code }) => attribute_code === 'contact_no'
+        );
+        const isPhone = phoneAttribute[0].value
+            ? phoneAttribute[0].value.search('undefined') < 0
+            : false;
 
         dispatch(setCartId(null));
 
         setMobileAuthorizationToken(token);
-        this.setCustomAttributes(dispatch, custom_attributes);
+
+        if (isPhone) {
+            this.setCustomAttributes(dispatch, custom_attributes);
+        }
+
         this.setGender(dispatch, gender);
 
         // Run async as Club Apparel is not visible anywhere after login
@@ -143,6 +179,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         );
         const { value: phoneNumber } = phoneAttribute && phoneAttribute[0] ? phoneAttribute[0] : null;
         const { value: isVerified } = isVerifiedAttribute && isVerifiedAttribute[0] ? isVerifiedAttribute[0] : null;
+
         dispatch(updateCustomerDetails({ ...customer, phone: phoneNumber, isVerified }));
     }
 
@@ -174,7 +211,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         const mappedData = {
             firstname: fullname,
             email,
-            gender: gender.toString(),
+            gender,
             custom_attributes: {
                 contact_no: phone,
                 dob
