@@ -408,12 +408,16 @@ export class CartPage extends PureComponent {
         return (
             <div block="CartPage" elem="EmptyCart" mods={ { isArabic } }>
                 <div block="CartPage" elem="EmptyCartIcon" />
-                <p>You have no items in your shopping cart.</p>
+                <p>{ __('You have no items in your shopping cart.') }</p>
                 <p>
                 <Link to="/">
-                    <strong> Click Here </strong>
+                    <strong>
+                        { ' ' }
+                        { __('Click Here') }
+                        { ' ' }
+                    </strong>
                 </Link>
-                    to continue shopping.
+                    { __('to continue shopping.') }
                 </p>
             </div>
         );
