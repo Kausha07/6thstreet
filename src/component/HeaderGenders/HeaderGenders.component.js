@@ -1,15 +1,10 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
-import { connect } from 'react-redux';
 
 import GenderButton from 'Component/GenderButton';
 import { isArabic } from 'Util/App';
 
 import './HeaderGenders.style';
-
-export const mapStateToProps = (state) => ({
-    currentContentGender: state.AppState.gender
-});
 
 class HeaderGenders extends PureComponent {
     state = {
@@ -31,12 +26,12 @@ class HeaderGenders extends PureComponent {
 
     genderList = [
         {
-            label: __('Men'),
-            key: 'men'
-        },
-        {
             label: __('Women'),
             key: 'women'
+        },
+        {
+            label: __('Men'),
+            key: 'men'
         },
         {
             label: __('Kids'),
@@ -53,7 +48,7 @@ class HeaderGenders extends PureComponent {
 
     isCurrentGender(key) {
         const { currentContentGender } = this.props;
-        if (currentContentGender === '' && key === 'men') {
+        if (currentContentGender === '' && key === 'women') {
             return true;
         }
 
@@ -113,4 +108,4 @@ class HeaderGenders extends PureComponent {
     }
 }
 
-export default connect(mapStateToProps)(HeaderGenders);
+export default HeaderGenders;

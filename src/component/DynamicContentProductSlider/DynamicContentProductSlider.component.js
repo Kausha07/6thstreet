@@ -24,7 +24,7 @@ class DynamicContentProductSlider extends PureComponent {
         isArabic: isArabic()
     };
 
-    renderProduct = (product) => {
+    renderProduct = (product, i) => {
         const { sku } = product;
         const { isArabic } = this.state;
         const newTag = (
@@ -41,7 +41,10 @@ class DynamicContentProductSlider extends PureComponent {
 
         // TODO: remove if statement and add appropriate query for items with new
         return (
-            <div mix={ { block: 'DynamicContentProductSlider', elem: 'ProductItem', mods: { isArabic } } }>
+            <div
+              mix={ { block: 'DynamicContentProductSlider', elem: 'ProductItem', mods: { isArabic } } }
+              key={ i }
+            >
                 <ProductItem
                   product={ product }
                   key={ sku }

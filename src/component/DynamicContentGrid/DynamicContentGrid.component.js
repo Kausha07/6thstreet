@@ -20,7 +20,7 @@ class DynamicContentGrid extends PureComponent {
         const { link, url } = item;
 
         return (
-            <div block="CategoryItem" elem="Content">
+            <div block="CategoryItem" elem="Content" key={ i }>
                 <Link to={ link } key={ i }>
                     <Image src={ url } ratio="custom" height="auto" />
                 </Link>

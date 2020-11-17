@@ -54,13 +54,17 @@ export class PDPContainer extends PureComponent {
         updateBreadcrumbs: PropTypes.func.isRequired,
         changeHeaderState: PropTypes.func.isRequired,
         setGender: PropTypes.func.isRequired,
-        nbHits: PropTypes.number.isRequired,
+        nbHits: PropTypes.number,
         setMeta: PropTypes.func.isRequired,
         country: PropTypes.string.isRequired,
         config: PropTypes.object.isRequired,
         breadcrumbs: PropTypes.array.isRequired,
         gender: PropTypes.string.isRequired,
         menuCategories: PropTypes.array.isRequired
+    };
+
+    static defaultProps = {
+        nbHits: 0
     };
 
     state = {

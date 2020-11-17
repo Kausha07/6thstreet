@@ -11,7 +11,11 @@ import './FooterMiddle.style';
 
 class FooterMiddle extends PureComponent {
     static propTypes = {
-        handleFooterIsAccountOpen: PropTypes.func.isRequired
+        handleFooterIsAccountOpen: PropTypes.func
+    };
+
+    static defaultProps = {
+        handleFooterIsAccountOpen: () => {}
     };
 
     state = {

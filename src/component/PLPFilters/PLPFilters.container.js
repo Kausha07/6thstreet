@@ -44,7 +44,11 @@ export class PLPFiltersContainer extends PureComponent {
         hideActiveOverlay: PropTypes.func.isRequired,
         goToPreviousNavigationState: PropTypes.func.isRequired,
         changeHeaderState: PropTypes.func.isRequired,
-        productsCount: PropTypes.string.isRequired
+        productsCount: PropTypes.number
+    };
+
+    static defaultProps = {
+        productsCount: 0
     };
 
     state = {

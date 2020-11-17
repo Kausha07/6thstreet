@@ -86,7 +86,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
 
             addNewCreditCard({ number, expDate, cvv }).then(
                 (response) => {
-                    const { id, errors } = response;
+                    const { id } = response;
 
                     if (id) {
                         BrowserDatabase.setItem(id, 'CREDIT_CART_TOKEN', FIVE_MINUTES_IN_SECONDS);
@@ -96,10 +96,8 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
                             billing_address: address,
                             paymentMethod
                         });
-                    } else if (errors) {
-                        showErrorNotification(__(errors[0]));
                     } else {
-                        showErrorNotification(__('Something went wrong'));
+                        showErrorNotification(__(response));
                     }
                 },
                 this._handleError

@@ -30,6 +30,10 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
         isArabic: isArabic()
     };
 
+    openForm() {
+        this.setState({ formContent: true });
+    }
+
     renderHeading() {
         const { isBilling, isSignedIn } = this.props;
         const { isArabic } = this.state;
@@ -78,6 +82,7 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
               title={ __('Address #%s', id) }
               address={ address }
               key={ id }
+              openForm={ this.openForm }
             />
         );
     };

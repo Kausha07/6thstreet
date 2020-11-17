@@ -28,11 +28,14 @@ export class MyAccountAddressBook extends PureComponent {
         getDefaultPostfix: PropTypes.func.isRequired,
         closeForm: PropTypes.func.isRequired,
         openForm: PropTypes.func.isRequired,
-        handleAddress: PropTypes.func.isRequired,
         showCreateNewPopup: PropTypes.func.isRequired,
         payload: PropTypes.shape({
             address: addressType
-        }).isRequired
+        })
+    };
+
+    static defaultProps = {
+        payload: {}
     };
 
     state = {

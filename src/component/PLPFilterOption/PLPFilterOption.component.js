@@ -11,8 +11,13 @@ import './PLPFilterOption.style';
 class PLPFilterOption extends PureComponent {
     static propTypes = {
         option: FilterOption.isRequired,
-        isRadio: PropTypes.bool.isRequired,
-        parentCallback: PropTypes.func.isRequired
+        isRadio: PropTypes.bool,
+        parentCallback: PropTypes.func
+    };
+
+    static defaultProps = {
+        isRadio: false,
+        parentCallback: () => {}
     };
 
     fieldRef = createRef();
