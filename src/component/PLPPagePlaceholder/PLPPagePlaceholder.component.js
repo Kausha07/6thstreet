@@ -18,7 +18,7 @@ class PLPPagePlaceholder extends PureComponent {
     );
 
     renderPlaceholders() {
-        return Array.from({ length: 12 }, this.renderPlaceholder);
+        return Array.from({ length: 8 }, this.renderPlaceholder);
     }
 
     render() {
