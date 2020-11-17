@@ -94,6 +94,15 @@ export class PDPAddToCartContainer extends PureComponent {
                 return { insertedSizeStatus: false, sizeObject: object };
             }
 
+            if (filteredProductKeys.length > 1 && filteredProductSizeKeys.length === 0) {
+                const object = {
+                    sizeCodes: [filteredProductKeys[1]],
+                    sizeTypes: filteredProductSizeKeys
+                };
+
+                return { insertedSizeStatus: false, sizeObject: object };
+            }
+
             return { sizeObject: object };
         }
 
