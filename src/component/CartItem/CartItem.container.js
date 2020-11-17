@@ -14,10 +14,10 @@ import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import { DEFAULT_MAX_PRODUCTS } from 'Component/ProductActions/ProductActions.config';
+import { showNotification } from 'Store/Notification/Notification.action';
 import { hideActiveOverlay } from 'Store/Overlay/Overlay.action';
 import { CartItemType } from 'Type/MiniCart';
 import Event, { EVENT_GTM_PRODUCT_ADD_TO_CART, EVENT_GTM_PRODUCT_REMOVE_FROM_CART } from 'Util/Event';
-import { makeCancelable } from 'Util/Promise';
 
 import CartItem from './CartItem.component';
 
@@ -46,6 +46,7 @@ export const mapDispatchToProps = (dispatch) => ({
             row_total
         )
     ),
+    showNotification: (type, message) => dispatch(showNotification(type, message)),
     removeProduct: (options) => CartDispatcher.then(
         ({ default: dispatcher }) => dispatcher.removeProductFromCart(dispatch, options)
     ),
@@ -59,6 +60,7 @@ export class CartItemContainer extends PureComponent {
         brand_name: PropTypes.string,
         updateProductInCart: PropTypes.func.isRequired,
         removeProduct: PropTypes.func.isRequired,
+        showNotification: PropTypes.func.isRequired,
         closePopup: PropTypes.func
     };
 
@@ -130,10 +132,12 @@ export class CartItemContainer extends PureComponent {
                     row_total,
                     sku,
                     qty: oldQuantity
-                }
+                },
+                showNotification,
+                closePopup
             } = this.props;
 
-            this.hideLoaderAfterPromise(updateProductInCart(
+            updateProductInCart(
                 item_id,
                 quantity,
                 color,
@@ -143,7 +147,17 @@ export class CartItemContainer extends PureComponent {
                 thumbnail.url,
                 url,
                 row_total
-            ));
+            ).then((response) => {
+                // Response exist only if error appear
+                if (response) {
+                    showNotification('error', __(response));
+                } else {
+                    showNotification('success', __('Quantity successfully updated'));
+                    closePopup();
+                }
+
+                this.setStateNotLoading();
+            });
 
             const event = oldQuantity < quantity ? EVENT_GTM_PRODUCT_ADD_TO_CART : EVENT_GTM_PRODUCT_REMOVE_FROM_CART;
 
@@ -183,7 +197,7 @@ export class CartItemContainer extends PureComponent {
                 }
             } = this.props;
 
-            this.hideLoaderAfterPromise(removeProduct(item_id));
+            removeProduct(item_id).then(() => this.setStateNotLoading());
 
             Event.dispatch(EVENT_GTM_PRODUCT_REMOVE_FROM_CART, {
                 product: {
@@ -198,25 +212,6 @@ export class CartItemContainer extends PureComponent {
                 }
             });
         });
-    }
-
-    /**
-     * @param {Promise} promise
-     * @returns {cancelablePromise}
-     */
-    registerCancelablePromise(promise) {
-        const cancelablePromise = makeCancelable(promise);
-        this.handlers.push(cancelablePromise);
-        return cancelablePromise;
-    }
-
-    /**
-     * @param {Promise} promise
-     * @returns {void}
-     */
-    hideLoaderAfterPromise(promise) {
-        this.registerCancelablePromise(promise)
-            .promise.then(this.setStateNotLoading, this.setStateNotLoading);
     }
 
     /**

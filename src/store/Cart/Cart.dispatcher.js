@@ -113,7 +113,8 @@ export class CartDispatcher {
         const { Cart: { cartId } } = getStore().getState();
 
         try {
-            const { data } = await addProductToCart({ ...productData, cartId });
+            const response = await addProductToCart({ ...productData, cartId });
+            const { data } = response;
             dispatch(updateCartItem(
                 data,
                 color,
@@ -124,6 +125,8 @@ export class CartDispatcher {
                 url,
                 itemPrice
             ));
+
+            return !data ? response : null;
         } catch (e) {
             Logger.log(e);
             if (e) {
@@ -176,22 +179,30 @@ export class CartDispatcher {
         const { Cart: { cartId } } = getStore().getState();
 
         try {
-            const { data } = await updateProductInCart({ cartId, productId, qty });
-            dispatch(updateCartItem(
-                data,
-                color,
-                optionValue,
-                basePrice,
-                brand_name,
-                thumbnail_url,
-                url,
-                itemPrice
-            ));
+            const response = await updateProductInCart({ cartId, productId, qty });
+            const { data } = response;
+
+            if (data) {
+                dispatch(updateCartItem(
+                    data,
+                    color,
+                    optionValue,
+                    basePrice,
+                    brand_name,
+                    thumbnail_url,
+                    url,
+                    itemPrice
+                ));
+            } else {
+                return response;
+            }
         } catch (e) {
             Logger.log(e);
         }
 
         await this.getCartTotals(dispatch, cartId);
+
+        return null;
     }
 
     async applyCouponCode(dispatch, couponCode) {

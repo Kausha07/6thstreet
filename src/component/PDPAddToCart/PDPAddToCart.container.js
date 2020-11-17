@@ -172,7 +172,15 @@ export class PDPAddToCartContainer extends PureComponent {
                 optionId,
                 optionValue
             }, color, optionValue, basePrice, brand_name, thumbnail_url, url, itemPrice).then(
-                () => this.afterAddToCart()
+                (response) => {
+                    // Response is sent only if error appear
+                    if (response) {
+                        showNotification('error', __(response));
+                        this.afterAddToCart(false);
+                    } else {
+                        this.afterAddToCart();
+                    }
+                }
             );
 
             Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_CART, {
@@ -199,7 +207,15 @@ export class PDPAddToCartContainer extends PureComponent {
                 optionId: '',
                 optionValue: ''
             }, color, null, basePrice, brand_name, thumbnail_url, url, itemPrice).then(
-                () => this.afterAddToCart()
+                (response) => {
+                    // Response is sent only if error appear
+                    if (response) {
+                        showNotification('error', __(response));
+                        this.afterAddToCart(false);
+                    } else {
+                        this.afterAddToCart();
+                    }
+                }
             );
 
             Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_CART, {
@@ -217,13 +233,17 @@ export class PDPAddToCartContainer extends PureComponent {
         }
     }
 
-    afterAddToCart() {
+    afterAddToCart(isAdded = 'true') {
         // eslint-disable-next-line no-unused-vars
         const { buttonRefreshTimeout } = this.state;
         this.setState({ isLoading: false });
         // TODO props for addedToCart
         const timeout = 1250;
-        this.setState({ addedToCart: true });
+
+        if (isAdded) {
+            this.setState({ addedToCart: true });
+        }
+
         setTimeout(() => this.setState({ addedToCart: false }), timeout);
     }
 

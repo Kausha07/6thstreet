@@ -638,5 +638,7 @@
     "Verification code was successfully re-sent": null,
     "EMAIL": null,
     "Added to your shopping bag": null,
-    "Proceed to checkout": null
+    "Proceed to checkout": null,
+    "is not valid": null,
+    "Quantity successfully updated": null
 }
