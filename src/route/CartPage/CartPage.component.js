@@ -15,6 +15,7 @@ import CmsBlock from 'Component/CmsBlock';
 import ContentWrapper from 'Component/ContentWrapper';
 import ExpandableContent from 'Component/ExpandableContent';
 import Link from 'Component/Link';
+import Loader from 'Component/Loader';
 import MyAccountTabList from 'Component/MyAccountTabList';
 import { FIXED_CURRENCIES } from 'Component/Price/Price.config';
 import ProductLinks from 'Component/ProductLinks';
@@ -43,6 +44,7 @@ export class CartPage extends PureComponent {
         changeActiveTab: PropTypes.func.isRequired,
         clubApparel: ClubApparelMember,
         isSignedIn: PropTypes.bool.isRequired,
+        isLoading: PropTypes.bool.isRequired,
         history: HistoryType.isRequired
     };
 
@@ -400,13 +402,36 @@ export class CartPage extends PureComponent {
         );
     }
 
-    render() {
-        const {
-            isArabic
-        } = this.state;
+    renderEmptyCartPage() {
+        const { isArabic } = this.state;
 
         return (
-            <main block="CartPage" aria-label="Cart Page" mods={ { isArabic } }>
+            <div block="CartPage" elem="EmptyCart" mods={ { isArabic } }>
+                <div block="CartPage" elem="EmptyCartIcon" />
+                <p>You have no items in your shopping cart.</p>
+                <p>
+                <Link to="/">
+                    <strong> Click Here </strong>
+                </Link>
+                    to continue shopping.
+                </p>
+            </div>
+        );
+    }
+
+    renderDynamicContent() {
+        const { totals, totals: { items }, isLoading } = this.props;
+
+        if (isLoading) {
+            return <Loader isLoading={ isLoading } />;
+        }
+
+        if (Object.keys(totals).length === 0 || items.length === 0) {
+            return this.renderEmptyCartPage();
+        }
+
+        return (
+            <>
                 { this.renderContent() }
                 <ContentWrapper
                   wrapperMix={ { block: 'CartPage', elem: 'Wrapper' } }
@@ -425,6 +450,16 @@ export class CartPage extends PureComponent {
                         { this.renderTotals() }
                     </div>
                 </ContentWrapper>
+            </>
+        );
+    }
+
+    render() {
+        const { isArabic } = this.state;
+
+        return (
+            <main block="CartPage" aria-label="Cart Page" mods={ { isArabic } }>
+                { this.renderDynamicContent() }
             </main>
         );
     }
