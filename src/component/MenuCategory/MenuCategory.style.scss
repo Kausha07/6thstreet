@@ -210,7 +210,7 @@
             height: 390px;
             pointer-events: all;
             position: absolute;
-            width: 97vw;
+            width: 98vw;
             max-width: 1440px;
             left: 0;
 
@@ -337,8 +337,8 @@
         &_isArabic {
             .DynamicContent {
                 left: unset;
-                max-width: 1410px;
-                right: 30px;
+                max-width: 1440px;
+                right: -5px;
 
                 & > div {
                     border-left: 1px solid var(--light-gray);

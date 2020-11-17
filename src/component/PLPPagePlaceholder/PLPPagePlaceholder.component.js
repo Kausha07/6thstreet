@@ -11,11 +11,10 @@ class PLPPagePlaceholder extends PureComponent {
 
     renderPlaceholder = (_, index) => (
         <div
+          block="PLPPagePlaceholder"
+          elem="Section"
           key={ index }
-          style={ { height: '400px' } }
-        >
-            product placeholder
-        </div>
+        />
     );
 
     renderPlaceholders() {
