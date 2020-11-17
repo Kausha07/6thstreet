@@ -67,7 +67,6 @@
     }
 
     &-Gender {
-        height: 35px;
 
         &-Radio {
             display: flex;
@@ -76,18 +75,12 @@
             .Field {
                 margin-right: 23px;
                 margin-top: 5px;
-                padding-right: 5px;
                 padding-top: 0;
                 width: unset;
-
-                &:last-of-type {
-                    margin-right: 0;
-                }
 
                 label {
                     label {
                         margin-right: 5px;
-                        margin-top: -2px;
                     }
                 }
             }
@@ -244,7 +237,7 @@
     &-PhoneField {
         margin-left: 115px;
         position: absolute;
-        top: -71px;
+        top: -75px;
 
         @include desktop() {
             top: -67px;
@@ -375,7 +368,7 @@
 
         &-Gender {
             margin-bottom: 25px;
-            margin-top: -25px;
+            margin-top: -20px;
         }
 
         .MyAccountPasswordForm {
