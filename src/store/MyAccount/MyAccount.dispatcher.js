@@ -5,6 +5,7 @@ import {
     MyAccountDispatcher as SourceMyAccountDispatcher,
     ONE_MONTH_IN_SECONDS
 } from 'SourceStore/MyAccount/MyAccount.dispatcher';
+import { getStore } from 'Store';
 import {
     removeCartItems,
     setCartId
@@ -119,9 +120,9 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
             password,
             cart_id: null
         });
+        const { Cart: { cartItems: oldCartItems } } = getStore().getState();
 
         dispatch(setCartId(null));
-
         setMobileAuthorizationToken(token);
         this.setCustomAttributes(dispatch, custom_attributes);
         this.setGender(dispatch, gender);
@@ -129,8 +130,42 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         // Run async as Club Apparel is not visible anywhere after login
         ClubApparelDispatcher.getMember(dispatch, id);
 
+        if (oldCartItems.length !== 0) {
+            await CartDispatcher.getCart(dispatch);
+            this._addProductsFromGuest(dispatch, oldCartItems);
+            return;
+        }
+
         // Run async otherwise login gets slow
         CartDispatcher.getCart(dispatch);
+    }
+
+    _addProductsFromGuest(dispatch, oldCartItems) {
+        oldCartItems.forEach((product) => {
+            const {
+                full_item_info,
+                full_item_info: { size_option },
+                color,
+                optionValue,
+                basePrice,
+                brand_name,
+                thumbnail_url,
+                url,
+                itemPrice
+            } = product;
+
+            CartDispatcher.addProductToCart(
+                dispatch,
+                { ...full_item_info, optionId: size_option, optionValue },
+                color,
+                optionValue,
+                basePrice,
+                brand_name,
+                thumbnail_url,
+                url,
+                itemPrice,
+            );
+        });
     }
 
     setCustomAttributes(dispatch, custom_attributes) {
