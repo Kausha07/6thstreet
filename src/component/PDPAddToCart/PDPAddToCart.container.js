@@ -241,11 +241,12 @@ export class PDPAddToCartContainer extends PureComponent {
     afterAddToCart(isAdded = 'true') {
         // eslint-disable-next-line no-unused-vars
         const { buttonRefreshTimeout } = this.state;
+        this.setState({ isLoading: false });
         // TODO props for addedToCart
         const timeout = 1250;
 
         if (isAdded) {
-            this.setState({ isLoading: false, addedToCart: true });
+            this.setState({ addedToCart: true });
         }
 
         setTimeout(() => this.setState({ productAdded: false, addedToCart: false }), timeout);
