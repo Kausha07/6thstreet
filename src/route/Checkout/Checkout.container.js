@@ -8,6 +8,7 @@ import {
     CheckoutContainer as SourceCheckoutContainer,
     mapDispatchToProps as sourceMapDispatchToProps
 } from 'SourceRoute/Checkout/Checkout.container';
+import { setGender } from 'Store/AppState/AppState.action';
 import { setCartId } from 'Store/Cart/Cart.action';
 import CartDispatcher from 'Store/Cart/Cart.dispatcher';
 import { CART_ITEMS_CACHE_KEY } from 'Store/Cart/Cart.reducer';
@@ -32,7 +33,8 @@ export const mapDispatchToProps = (dispatch) => ({
     createEmptyCart: () => CartDispatcher.getCart(dispatch),
     hideActiveOverlay: () => dispatch(hideActiveOverlay()),
     updateStoreCredit: () => StoreCreditDispatcher.getStoreCredit(dispatch),
-    setMeta: (meta) => dispatch(updateMeta(meta))
+    setMeta: (meta) => dispatch(updateMeta(meta)),
+    setGender: (gender) => dispatch(setGender(gender))
 });
 export const mapStateToProps = (state) => ({
     totals: state.CartReducer.cartTotals,
@@ -47,7 +49,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     static propTypes = {
         updateStoreCredit: PropTypes.func.isRequired,
         isSignedIn: PropTypes.bool.isRequired,
-        setMeta: PropTypes.func.isRequired
+        setMeta: PropTypes.func.isRequired,
+        setGender: PropTypes.func.isRequired
     };
 
     constructor(props) {

@@ -125,6 +125,7 @@ export class CartDispatcher {
                 url,
                 itemPrice
             ));
+            await this.getCartTotals(dispatch, cartId);
 
             return !data ? response : null;
         } catch (e) {
@@ -142,7 +143,6 @@ export class CartDispatcher {
             }
         }
 
-        await this.getCartTotals(dispatch, cartId);
         return null;
     }
 
@@ -182,25 +182,22 @@ export class CartDispatcher {
             const response = await updateProductInCart({ cartId, productId, qty });
             const { data } = response;
 
-            if (data) {
-                dispatch(updateCartItem(
-                    data,
-                    color,
-                    optionValue,
-                    basePrice,
-                    brand_name,
-                    thumbnail_url,
-                    url,
-                    itemPrice
-                ));
-            } else {
-                return response;
-            }
+            dispatch(updateCartItem(
+                data,
+                color,
+                optionValue,
+                basePrice,
+                brand_name,
+                thumbnail_url,
+                url,
+                itemPrice
+            ));
+            await this.getCartTotals(dispatch, cartId);
+
+            return !data ? response : null;
         } catch (e) {
             Logger.log(e);
         }
-
-        await this.getCartTotals(dispatch, cartId);
 
         return null;
     }

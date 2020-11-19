@@ -60,12 +60,10 @@ export class CartItemContainer extends PureComponent {
         brand_name: PropTypes.string,
         updateProductInCart: PropTypes.func.isRequired,
         removeProduct: PropTypes.func.isRequired,
-        showNotification: PropTypes.func.isRequired,
-        closePopup: PropTypes.func
+        showNotification: PropTypes.func.isRequired
     };
 
     static defaultProps = {
-        closePopup: () => {},
         brand_name: ''
     };
 
@@ -133,8 +131,7 @@ export class CartItemContainer extends PureComponent {
                     sku,
                     qty: oldQuantity
                 },
-                showNotification,
-                closePopup
+                showNotification
             } = this.props;
 
             updateProductInCart(
@@ -153,7 +150,6 @@ export class CartItemContainer extends PureComponent {
                     showNotification('error', __(response));
                 } else {
                     showNotification('success', __('Quantity successfully updated'));
-                    closePopup();
                 }
 
                 this.setStateNotLoading();
