@@ -30,14 +30,6 @@ export class MyAccountCustomerFormContainer extends PureComponent {
         country: PropTypes.string.isRequired
     };
 
-    state = {
-        isShowPassword: false,
-        isLoading: false,
-        countryCode: getCountryFromUrl(),
-        gender: '0',
-        phoneCountryCode: ''
-    };
-
     containerFunctions = {
         onSave: this.saveCustomer.bind(this),
         showPasswordFrom: this.togglePasswordForm.bind(this, true),
@@ -45,6 +37,19 @@ export class MyAccountCustomerFormContainer extends PureComponent {
         setGender: this.setGender.bind(this),
         handleCountryChange: this.handleCountryChange.bind(this)
     };
+
+    constructor(props) {
+        super(props);
+        const { customer: { gender } } = props;
+
+        this.state = {
+            isShowPassword: false,
+            isLoading: false,
+            countryCode: getCountryFromUrl(),
+            gender,
+            phoneCountryCode: ''
+        };
+    }
 
     togglePasswordForm(isShowPassword) {
         this.setState({ isShowPassword });
