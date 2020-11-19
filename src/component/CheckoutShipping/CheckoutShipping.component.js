@@ -101,8 +101,6 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     }
 
     renderDeliveryButton() {
-        const { selectedShippingMethod } = this.props;
-
         if (isMobile.any() || isMobile.tablet()) {
             return null;
         }
@@ -112,7 +110,6 @@ export class CheckoutShipping extends SourceCheckoutShipping {
                 <button
                   type="submit"
                   block="Button button primary medium"
-                  disabled={ !selectedShippingMethod }
                 >
                     { __('Deliver to this address') }
                 </button>

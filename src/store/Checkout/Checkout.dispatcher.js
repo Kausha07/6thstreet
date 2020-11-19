@@ -20,6 +20,13 @@ import { capitalize } from 'Util/App';
 import Logger from 'Util/Logger';
 
 export class CheckoutDispatcher {
+    async validateAddress(dispatch, address) {
+        /* eslint-disable */
+        delete address.region_id;
+
+        return validateShippingAddress({ address });
+    }
+
     /* eslint-disable-next-line */
     async estimateShipping(dispatch, address) {
         const { Cart: { cartId } } = getStore().getState();

@@ -6,12 +6,17 @@ import { ADD_ADDRESS, ADDRESS_POPUP_ID } from 'Component/MyAccountAddressPopup/M
 import {
     CheckoutShippingContainer as SourceCheckoutShippingContainer
 } from 'SourceComponent/CheckoutShipping/CheckoutShipping.container';
+import CheckoutDispatcher from 'Store/Checkout/Checkout.dispatcher';
+import { showNotification } from 'Store/Notification/Notification.action';
 import { showPopup } from 'Store/Popup/Popup.action';
 import { trimAddressFields } from 'Util/Address';
+import { capitalize } from 'Util/App';
 import { isSignedIn } from 'Util/Auth';
 
 export const mapDispatchToProps = (dispatch) => ({
-    showPopup: (payload) => dispatch(showPopup(ADDRESS_POPUP_ID, payload))
+    showPopup: (payload) => dispatch(showPopup(ADDRESS_POPUP_ID, payload)),
+    showNotification: (type, message) => dispatch(showNotification(type, message)),
+    validateAddress: (address) => CheckoutDispatcher.validateAddress(dispatch, address)
 });
 
 export const mapStateToProps = (state) => ({
@@ -23,6 +28,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
         ...SourceCheckoutShippingContainer.propTypes,
         guestEmail: PropTypes.string,
         showPopup: PropTypes.func.isRequired,
+        validateAddress: PropTypes.func.isRequired,
         shippingAddress: PropTypes.object.isRequired
     };
 
@@ -53,7 +59,54 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
         });
     }
 
+    validateAddress(address) {
+        const {
+            country_id,
+            region_id,
+            region,
+            city,
+            telephone = '',
+            street,
+            phonecode = ''
+        } = address;
+        const { validateAddress } = this.props;
+
+        return validateAddress({
+            area: region ?? region_id,
+            city,
+            country_code: country_id,
+            phone: phonecode + telephone,
+            postcode: region ?? region_id,
+            region: region ?? region_id,
+            street: Array.isArray(street) ? street[0] : street
+        });
+    }
+
     onShippingSuccess(fields) {
+        const {
+            selectedCustomerAddressId
+        } = this.state;
+        const { showNotification } = this.props;
+        const shippingAddress = selectedCustomerAddressId
+            ? this._getAddressById(selectedCustomerAddressId)
+            : trimAddressFields(fields);
+        const addressForValidation = isSignedIn() ? shippingAddress : fields;
+
+        this.validateAddress(addressForValidation).then((response) => {
+            const { success } = response;
+
+            if (success) {
+                this.processDelivery(fields);
+            } else {
+                const { parameters, message } = response;
+                const formattedParams = capitalize(parameters[0]);
+
+                showNotification('error', `${ formattedParams } ${ __('is not valid') }. ${ message }`);
+            }
+        });
+    }
+
+    processDelivery(fields) {
         const { saveAddressInformation, customer: { email } } = this.props;
         const { guest_email: guestEmail } = fields;
 

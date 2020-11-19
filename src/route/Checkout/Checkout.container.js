@@ -179,7 +179,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             saveAddressInformation
         } = this.props;
         const { shipping_address } = addressInformation;
-        console.log(addressInformation);
 
         this.setState({
             isLoading: true,
@@ -255,6 +254,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                             showErrorNotification(__(data));
                             this.setState({ isLoading: false });
                         }
+                    }
+
+                    if (response && typeof response === 'string') {
+                        showErrorNotification(__(response));
+                        this.setState({ isLoading: false });
                     }
                 },
                 this._handleError
