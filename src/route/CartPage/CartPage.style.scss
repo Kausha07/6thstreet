@@ -144,6 +144,17 @@
             font-size: 12px;
             order: 2;
         }
+
+        &_isDisabled {
+            opacity: 0.5;
+
+            --button-select-color: var(--color-orange-soda);
+
+            &:hover,
+            &:focus {
+                --button-hover-background: var(--color-orange-soda);
+            }
+        }
     }
 
     &-ContinueShopping {
@@ -628,6 +639,20 @@
             display: none;
         }
     }
+
+    &-Summary {
+        .CartPage{
+            &-CheckoutButtons {
+                .CartPage {
+                    &-CheckoutButton {
+                        &_isDisabled {
+                            &:hover {
+                                --button-hover-background: var(--color-orange-soda);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
-
-

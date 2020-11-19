@@ -35,7 +35,9 @@ export class CartOverlay extends PureComponent {
         showOverlay: PropTypes.func.isRequired,
         hideActiveOverlay: PropTypes.func.isRequired,
         closePopup: PropTypes.func.isRequired,
-        isHidden: PropTypes.bool
+        handleViewBagClick: PropTypes.func.isRequired,
+        isHidden: PropTypes.bool,
+        isCheckoutAvailable: PropTypes.bool.isRequired
     };
 
     static defaultProps = {
@@ -139,12 +141,17 @@ export class CartOverlay extends PureComponent {
 
     renderActions() {
         const {
-            totals: { items }, handleCheckoutClick, hideActiveOverlay, closePopup
+            totals: { items },
+            handleCheckoutClick,
+            handleViewBagClick,
+            isCheckoutAvailable
         } = this.props;
 
         if (!items || items.length < 1) {
             return null;
         }
+
+        const isDisabled = !isCheckoutAvailable;
 
         return (
             <div block="CartOverlay" elem="Actions">
@@ -152,13 +159,15 @@ export class CartOverlay extends PureComponent {
                   block="CartOverlay"
                   elem="CartButton"
                   to="/cart"
-                  onClick={ hideActiveOverlay && closePopup }
+                  // eslint-disable-next-line react/jsx-no-bind
+                  onClick={ handleViewBagClick }
                 >
                     { __('View bag') }
                 </Link>
                 <button
                   block="CartOverlay"
                   elem="CheckoutButton"
+                  mods={ { isDisabled } }
                   onClick={ handleCheckoutClick }
                 >
                     { __('Checkout') }

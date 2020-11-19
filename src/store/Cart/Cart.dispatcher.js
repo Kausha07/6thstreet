@@ -66,7 +66,9 @@ export class CartDispatcher {
                         brand_name: brandName,
                         price,
                         original_price: basePrice,
-                        id
+                        id,
+                        availability,
+                        available_qty
                     } = item;
 
                     return dispatch(updateCartItem(
@@ -77,7 +79,9 @@ export class CartDispatcher {
                         brandName,
                         thumbnail,
                         '',
-                        price
+                        price,
+                        availability,
+                        available_qty
                     ));
                 });
             }

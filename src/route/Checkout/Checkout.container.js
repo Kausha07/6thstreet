@@ -18,6 +18,7 @@ import { hideActiveOverlay } from 'Store/Overlay/Overlay.action';
 import StoreCreditDispatcher from 'Store/StoreCredit/StoreCredit.dispatcher';
 import { isSignedIn } from 'Util/Auth';
 import BrowserDatabase from 'Util/BrowserDatabase';
+import { checkProducts } from 'Util/Cart/Cart';
 import history from 'Util/History';
 import { ONE_MONTH_IN_SECONDS } from 'Util/Request/QueryDispatcher';
 
@@ -112,6 +113,14 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
         if (checkoutStep !== prevCheckoutStep) {
             updateStoreCredit();
+        }
+
+        if (items.length !== 0) {
+            const mappedItems = checkProducts(items);
+
+            if (mappedItems.length !== 0) {
+                history.push('/cart');
+            }
         }
 
         if (Object.keys(totals).length && !items.length) {
