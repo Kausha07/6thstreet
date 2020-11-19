@@ -28,13 +28,15 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
         onSave: () => {}
     };
 
-    static getDerivedStateFromProps(props) {
+    static getDerivedStateFromProps(props, state) {
         const { shippingAddress: { city, area } } = props;
+        const { firstload } = state;
 
-        if (city && area) {
+        if (city && area && firstload) {
             return {
                 city,
-                regionId: area
+                regionId: area,
+                firstload: false
             };
         }
 
@@ -76,7 +78,8 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
             regionId,
             cities: [],
             isArabic: isArabic(),
-            defaultChecked: false
+            defaultChecked: false,
+            firstload: true
         };
     }
 
