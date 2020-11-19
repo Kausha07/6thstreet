@@ -1,4 +1,7 @@
 import { getStore } from 'Store';
+import {
+    removeCartItems
+} from 'Store/Cart/Cart.action';
 import { setShipping } from 'Store/Checkout/Checkout.action';
 import { showNotification } from 'Store/Notification/Notification.action';
 import {
@@ -94,6 +97,8 @@ export class CheckoutDispatcher {
 
     async createOrder(dispatch, code, additional_data) {
         const { Cart: { cartId } } = getStore().getState();
+
+        dispatch(removeCartItems());
 
         return createOrder({
             data: {

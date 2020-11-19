@@ -123,7 +123,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             }
         }
 
-        if (Object.keys(totals).length && !items.length) {
+        if (Object.keys(totals).length && !items.length && checkoutStep !== DETAILS_STEP) {
             showInfoNotification(__('Please add at least one product to cart!'));
             history.push('/cart');
         }
