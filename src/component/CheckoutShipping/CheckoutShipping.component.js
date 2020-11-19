@@ -29,7 +29,8 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         isArabic: isArabic(),
         formContent: false,
         isSignedIn: isSignedIn(),
-        isMobile: isMobile.any() || isMobile.tablet()
+        isMobile: isMobile.any() || isMobile.tablet(),
+        openFirstPopup: false
     };
 
     renderButtonsPlaceholder() {
@@ -172,11 +173,12 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     }
 
     renderOpenPopupButton = () => {
-        const { isSignedIn, formContent, isArabic } = this.state;
+        const { openFirstPopup, formContent, isArabic } = this.state;
         const { customer: { addresses } } = this.props;
 
-        if (addresses && (isSignedIn && addresses.length === 0)) {
-            return this.openNewForm();
+        if (!openFirstPopup && addresses && (isSignedIn() && addresses.length === 0)) {
+            this.setState({ openFirstPopup: true });
+            this.openNewForm();
         }
 
         if (isSignedIn) {
@@ -254,21 +256,20 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         } = this.props;
 
         const {
-            isSignedIn,
             formContent
         } = this.state;
 
         return (
-            <div block="ShippingStep" mods={ { isSignedIn, formContent } }>
+            <div block="ShippingStep" mods={ { isSignedIn: isSignedIn(), formContent } }>
                 { this.renderOpenPopupButton() }
-                { isSignedIn ? this.renderAddAdress() : null }
+                { isSignedIn() ? this.renderAddAdress() : null }
                 <Form
                   id={ SHIPPING_STEP }
                   mix={ { block: 'CheckoutShipping' } }
                   onSubmitError={ onShippingError }
                   onSubmitSuccess={ onShippingSuccess }
                 >
-                    { isSignedIn ? <h3>{ __('Delivering to') }</h3> : null }
+                    { isSignedIn() ? <h3>{ __('Delivering to') }</h3> : null }
                     { this.renderAddressBook() }
                     <div>
                         <Loader isLoading={ isLoading } />
