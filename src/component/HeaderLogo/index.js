@@ -1,1 +1,1 @@
-export { default } from './HeaderLogo.component';
+export { default } from './HeaderLogo.container';

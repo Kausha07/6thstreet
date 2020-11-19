@@ -41,7 +41,7 @@ export class HomePageContainer extends PureComponent {
     state = {
         dynamicContent: [],
         isLoading: true,
-        defaultGender: 'men'
+        defaultGender: 'women'
     };
 
     constructor(props) {
@@ -123,7 +123,7 @@ export class HomePageContainer extends PureComponent {
             );
 
             this.setState({
-                dynamicContent,
+                dynamicContent: Array.isArray(dynamicContent) ? dynamicContent : [],
                 isLoading: false
             });
         } catch (e) {

@@ -32,7 +32,8 @@ export class Checkout extends SourceCheckout {
         isSignedIn: PropTypes.bool.isRequired,
         orderID: PropTypes.string.isRequired,
         incrementID: PropTypes.string.isRequired,
-        shippingAddress: PropTypes.object.isRequired
+        shippingAddress: PropTypes.object.isRequired,
+        setGender: PropTypes.func.isRequired
     };
 
     state = {
@@ -433,7 +434,7 @@ export class Checkout extends SourceCheckout {
 
     redirectURL = () => {
         const { isMobile, continueAsGuest } = this.state;
-        const { history, goBack } = this.props;
+        const { history, goBack, setGender } = this.props;
 
         if (isMobile) {
             const path = location.pathname.match(/checkout\/shipping/);
@@ -448,7 +449,8 @@ export class Checkout extends SourceCheckout {
                 goBack();
             }
         } else {
-            history.push('/');
+            setGender('women');
+            history.push('/women.html');
         }
     };
 
