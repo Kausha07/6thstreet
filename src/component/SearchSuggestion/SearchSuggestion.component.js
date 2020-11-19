@@ -101,14 +101,16 @@ class SearchSuggestion extends PureComponent {
         return 'Nothing found';
     }
 
-    renderTrendingBrand = ({ label, image_url }) => {
+    renderTrendingBrand = (brand, i) => {
+        const { label, image_url } = brand;
+
         const urlName = label.replace('&', '')
             .replace(/(\s+)|--/g, '-')
             .replace('@', 'at')
             .toLowerCase();
 
         return (
-            <li>
+            <li key={ i }>
                 <Link to={ `/${urlName}.html?q=${urlName}` }>
                     <div block="SearchSuggestion" elem="TrandingImg">
                         <img src={ image_url } alt="Trending" />
@@ -132,8 +134,8 @@ class SearchSuggestion extends PureComponent {
         );
     }
 
-    renderTrendingTag = ({ link, label }) => (
-        <li>
+    renderTrendingTag = ({ link, label }, i) => (
+        <li key={ i }>
             <Link to={ { pathname: link } }>
                 <div block="SearchSuggestion" elem="TrandingTag">
                 { label }

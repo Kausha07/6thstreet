@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import CartCoupon from 'Component/CartCoupon';
+import PropTypes from 'prop-types';
+
 import CheckoutPayment from 'Component/CheckoutPayment';
 import { PAYMENTS_DATA } from 'Component/CheckoutPayment/CheckoutPayment.config';
 import tabbyAr from 'Component/CheckoutPayment/icons/tabby-logo-black-ar@2x.png';
@@ -29,6 +30,16 @@ import info from './icons/info.png';
 import './CheckoutPayments.extended.style';
 
 export class CheckoutPayments extends SourceCheckoutPayments {
+    static propTypes = {
+        ...SourceCheckoutPayments.propTypes,
+        selectedPaymentCode: PropTypes.string
+    };
+
+    static defaultProps = {
+        ...SourceCheckoutPayments.defaultProps,
+        selectedPaymentCode: ''
+    };
+
     paymentRenderMap = {
         ...SourceCheckoutPayments.paymentRenderMap,
         [CARD]: this.renderCreditCard.bind(this),
@@ -69,7 +80,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
 
             return (
                 <CheckoutPayment
-                  key="tabby"
+                  key={ m_code }
                   isSelected={ isTabbySelected }
                   method={ method }
                   onClick={ selectPaymentMethod }
@@ -151,7 +162,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
         }
 
         return (
-            <div block="CheckoutPayments" elem="TabbyPayment">
+            <div block="CheckoutPayments" elem="TabbyPayment" key={ m_code }>
                 <div block="CheckoutPayments" elem="TabbyPaymentSelect">
                     <CheckoutPayment
                       key={ m_code }
@@ -239,16 +250,6 @@ export class CheckoutPayments extends SourceCheckoutPayments {
         );
     }
 
-    renderCartCoupon() {
-        const { totals: { coupon_code } } = this.props;
-
-        return (
-            <div block="CheckoutPayments" elem="CartCouponWrapper">
-                <CartCoupon couponCode={ coupon_code } />
-            </div>
-        );
-    }
-
     renderPayments() {
         const { paymentMethods } = this.props;
         const { tabbyPaymentMethods } = this.state;
@@ -295,7 +296,6 @@ export class CheckoutPayments extends SourceCheckoutPayments {
                 { this.renderSelectedPayment() }
                 { this.renderPayPal() }
                 { this.renderToggleableDiscountOptions() }
-                { this.renderCartCoupon() }
             </>
         );
     }

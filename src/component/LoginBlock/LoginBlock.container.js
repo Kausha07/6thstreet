@@ -11,8 +11,12 @@ const mapStateToProps = (state) => ({
 
 export class LoginBlockContainer extends PureComponent {
     static propTypes = {
-        isSignedIn: PropTypes.bool.isRequired,
+        isSignedIn: PropTypes.bool,
         language: PropTypes.string.isRequired
+    };
+
+    static defaultProps = {
+        isSignedIn: false
     };
 
     render() {

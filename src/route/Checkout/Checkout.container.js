@@ -8,6 +8,7 @@ import {
     CheckoutContainer as SourceCheckoutContainer,
     mapDispatchToProps as sourceMapDispatchToProps
 } from 'SourceRoute/Checkout/Checkout.container';
+import { setGender } from 'Store/AppState/AppState.action';
 import { setCartId } from 'Store/Cart/Cart.action';
 import CartDispatcher from 'Store/Cart/Cart.dispatcher';
 import { CART_ITEMS_CACHE_KEY } from 'Store/Cart/Cart.reducer';
@@ -25,7 +26,6 @@ export const mapDispatchToProps = (dispatch) => ({
     estimateShipping: (address) => CheckoutDispatcher.estimateShipping(dispatch, address),
     saveAddressInformation: (address) => CheckoutDispatcher.saveAddressInformation(dispatch, address),
     createOrder: (code, additional_data) => CheckoutDispatcher.createOrder(dispatch, code, additional_data),
-    getTabbyInstallment: (price) => CheckoutDispatcher.getTabbyInstallment(dispatch, price),
     verifyPayment: (paymentId) => CheckoutDispatcher.verifyPayment(dispatch, paymentId),
     getPaymentMethods: () => CheckoutDispatcher.getPaymentMethods(),
     sendVerificationCode: (phone) => CheckoutDispatcher.sendVerificationCode(dispatch, phone),
@@ -33,7 +33,8 @@ export const mapDispatchToProps = (dispatch) => ({
     createEmptyCart: () => CartDispatcher.getCart(dispatch),
     hideActiveOverlay: () => dispatch(hideActiveOverlay()),
     updateStoreCredit: () => StoreCreditDispatcher.getStoreCredit(dispatch),
-    setMeta: (meta) => dispatch(updateMeta(meta))
+    setMeta: (meta) => dispatch(updateMeta(meta)),
+    setGender: (gender) => dispatch(setGender(gender))
 });
 export const mapStateToProps = (state) => ({
     totals: state.CartReducer.cartTotals,
@@ -48,7 +49,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     static propTypes = {
         updateStoreCredit: PropTypes.func.isRequired,
         isSignedIn: PropTypes.bool.isRequired,
-        setMeta: PropTypes.func.isRequired
+        setMeta: PropTypes.func.isRequired,
+        setGender: PropTypes.func.isRequired
     };
 
     constructor(props) {
@@ -163,9 +165,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         if (checkoutStep === BILLING_STEP) {
             this.setState({
                 isLoading: false,
-                checkoutStep: SHIPPING_STEP,
-                shippingAddress: {},
-                shippingMethods: []
+                checkoutStep: SHIPPING_STEP
             });
 
             BrowserDatabase.deleteItem(PAYMENT_TOTALS);
@@ -176,13 +176,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
     async saveAddressInformation(addressInformation) {
         const {
-            saveAddressInformation,
-            getTabbyInstallment,
-            totals: {
-                total: totalPrice
-            }
+            saveAddressInformation
         } = this.props;
         const { shipping_address } = addressInformation;
+        console.log(addressInformation);
 
         this.setState({
             isLoading: true,
@@ -207,43 +204,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             },
             this._handleError
         );
-
-        getTabbyInstallment(totalPrice).then(
-            (response) => {
-                if (response) {
-                    const { paymentMethods } = this.state;
-                    const { message, value } = response;
-
-                    if (message && value) {
-                        const updatedPaymentMethods = paymentMethods.reduce((acc, paymentMethod) => {
-                            const { m_code } = paymentMethod;
-
-                            if (m_code !== 'tabby_installments') {
-                                acc.push(paymentMethod)
-                            } else {
-                                const { options } = paymentMethod;
-
-                                acc.push(
-                                    {
-                                        ...paymentMethod,
-                                        options: {
-                                            ...options,
-                                            promo_message: message,
-                                            value
-                                        }
-                                    }
-                                )
-                            }
-
-                            return acc;
-                        }, []);
-
-                        this.setState({ paymentMethods: updatedPaymentMethods });
-                    }
-                }
-            },
-            this._handleError
-        ).catch(() => {});
     }
 
     async savePaymentInformation(paymentInformation) {

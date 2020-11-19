@@ -28,6 +28,29 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
         onSave: () => {}
     };
 
+    static getDerivedStateFromProps(props, state) {
+        const { shippingAddress: { city, area } } = props;
+        const { firstload } = state;
+
+        if (city && area && firstload) {
+            return {
+                city,
+                regionId: area,
+                firstload: false
+            };
+        }
+
+        return null;
+    }
+
+    componentDidUpdate() {
+        const { shippingAddress: { city, area } } = this.props;
+
+        if (city && area) {
+            this.getCitiesBasedOnLanguage();
+        }
+    }
+
     constructor(props) {
         super(props);
 
@@ -55,7 +78,8 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
             regionId,
             cities: [],
             isArabic: isArabic(),
-            defaultChecked: false
+            defaultChecked: false,
+            firstload: true
         };
     }
 
@@ -94,10 +118,10 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
 
     getRegionFields() {
         const {
-            city, regionId
+            city, regionId, cities
         } = this.state;
 
-        if (!city) {
+        if (!city || cities.length === 0) {
             return {
                 region_string: {
                     validation: ['notEmpty'],
@@ -175,10 +199,19 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
 
         const {
             countries,
-            address
+            address,
+            shippingAddress,
+            shippingAddress: {
+                city: shippingCity,
+                firstname,
+                lastname,
+                phone,
+                street: shippingStreet
+            }
         } = this.props;
 
         const { street = [] } = address;
+        const isShippingAddress = Object.keys(shippingAddress).length !== 0;
 
         return {
             country_id: {
@@ -203,12 +236,14 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
                 placeholder: __('First Name'),
                 validation: ['notEmpty'],
                 type: 'hidden',
-                label: __('Delivering to')
+                label: __('Delivering to'),
+                value: isShippingAddress ? firstname : ''
             },
             lastname: {
                 placeholder: __('Last Name'),
                 validation: ['notEmpty'],
-                type: 'hidden'
+                type: 'hidden',
+                value: isShippingAddress ? lastname : ''
             },
             phonecode: {
                 type: 'text',
@@ -220,14 +255,15 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
             telephone: {
                 validation: ['notEmpty', this.getValidationForTelephone()],
                 maxLength: this.getPhoneNumberMaxLength(),
-                placeholder: __('Phone Number')
+                placeholder: __('Phone Number'),
+                value: isShippingAddress ? phone : ''
             },
             city: {
                 validation: ['notEmpty'],
                 placeholder: __('City'),
                 selectOptions: this.getCitiesBasedOnLanguage(),
                 type: 'select',
-                value: city,
+                value: isShippingAddress ? shippingCity : city,
                 onChange: (city) => this.setState({ city })
             },
             ...this.getRegionFields(),
@@ -236,7 +272,7 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
                 value: regionId
             },
             street: {
-                value: street[0],
+                value: isShippingAddress ? shippingStreet : street[0],
                 validation: ['notEmpty'],
                 placeholder: this.renderStreetPlaceholder()
             }

@@ -11,7 +11,8 @@ import { getCountryFromUrl } from 'Util/Url';
 import MyAccountCustomerForm from './MyAccountCustomerForm.component';
 
 export const mapStateToProps = (state) => ({
-    customer: state.MyAccountReducer.customer
+    customer: state.MyAccountReducer.customer,
+    country: state.AppState.country
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -25,15 +26,8 @@ export class MyAccountCustomerFormContainer extends PureComponent {
         customer: customerType.isRequired,
         updateCustomer: PropTypes.func.isRequired,
         showErrorNotification: PropTypes.func.isRequired,
-        showSuccessNotification: PropTypes.func.isRequired
-    };
-
-    state = {
-        isShowPassword: false,
-        isLoading: false,
-        countryCode: getCountryFromUrl(),
-        gender: '0',
-        phoneCountryCode: ''
+        showSuccessNotification: PropTypes.func.isRequired,
+        country: PropTypes.string.isRequired
     };
 
     containerFunctions = {
@@ -43,6 +37,19 @@ export class MyAccountCustomerFormContainer extends PureComponent {
         setGender: this.setGender.bind(this),
         handleCountryChange: this.handleCountryChange.bind(this)
     };
+
+    constructor(props) {
+        super(props);
+        const { customer: { gender } } = props;
+
+        this.state = {
+            isShowPassword: false,
+            isLoading: false,
+            countryCode: getCountryFromUrl(),
+            gender,
+            phoneCountryCode: ''
+        };
+    }
 
     togglePasswordForm(isShowPassword) {
         this.setState({ isShowPassword });
@@ -57,7 +64,7 @@ export class MyAccountCustomerFormContainer extends PureComponent {
     }
 
     containerProps = () => {
-        const { customer } = this.props;
+        const { customer, country } = this.props;
 
         const {
             isShowPassword,
@@ -67,7 +74,8 @@ export class MyAccountCustomerFormContainer extends PureComponent {
         return {
             isShowPassword,
             customer,
-            isLoading
+            isLoading,
+            country
         };
     };
 

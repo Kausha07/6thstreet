@@ -11,13 +11,24 @@ import './PhoneCountryCodeField.style';
 
 class PhoneCountryCodeField extends PureComponent {
     static propTypes = {
-        onSelect: PropTypes.func.isRequired
+        onSelect: PropTypes.func.isRequired,
+        label: PropTypes.string
     };
 
-    state = {
-        isArabic: isArabic(),
-        selectedCountry: ''
+    static defaultProps = {
+        label: ''
     };
+
+    constructor(props) {
+        super(props);
+
+        const { label } = props;
+
+        this.state = {
+            selectedCountry: label,
+            isArabic: isArabic()
+        };
+    }
 
     handleSelectChange = (e) => {
         const { onSelect } = this.props;
@@ -47,12 +58,13 @@ class PhoneCountryCodeField extends PureComponent {
 
     renderCountryPhoneCodeField() {
         const {
-            selectedCountry
+            selectedCountry,
+            isArabic
         } = this.state;
 
-        const countries = Object.keys(PHONE_CODES);
+        const value = this.renderCurrentPhoneCode(selectedCountry);
 
-        const { isArabic } = this.state;
+        const countries = Object.keys(PHONE_CODES);
 
         return (
             <div block="PhoneCountryCodeField" mods={ { isArabic } }>
@@ -63,6 +75,7 @@ class PhoneCountryCodeField extends PureComponent {
                   name="countryPhoneCode"
                   onChange={ this.handleSelectChange }
                   selectOptions={ countries.map(this.renderOption) }
+                  value={ value || '' }
                 />
             </div>
         );

@@ -15,7 +15,7 @@ class HeaderBottomBar extends NavigationAbstract {
     };
 
     static defaultProps = {
-        newMenuGender: 'men'
+        newMenuGender: 'women'
     };
 
     state = {
@@ -39,6 +39,7 @@ class HeaderBottomBar extends NavigationAbstract {
             return (
                 <HeaderMenu
                   key="menu"
+                  newMenuGender={ newMenuGender }
                 />
             );
         }
@@ -56,6 +57,7 @@ class HeaderBottomBar extends NavigationAbstract {
         if (!isMobile.any()) {
             return (
                 <div
+                  key="search"
                   mix={ {
                       block: 'HeaderSearch',
                       elem: 'Container',

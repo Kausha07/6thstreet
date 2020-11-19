@@ -71,7 +71,6 @@ export class CartPageContainer extends PureComponent {
         guest_checkout: PropTypes.bool,
         history: HistoryType.isRequired,
         totals: TotalsType.isRequired,
-        tabMap: PropTypes.isRequired,
         customer: customerType,
         isSignedIn: PropTypes.bool.isRequired,
         clubApparel: ClubApparelMember

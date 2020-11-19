@@ -8,7 +8,7 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-import FieldMultiselect from 'Component/FiledMultiselect';
+import FieldMultiselect from 'Component/FieldMultiselect';
 import { Filter } from 'Util/API/endpoint/Product/Product.type';
 
 import './PLPFilter.style';

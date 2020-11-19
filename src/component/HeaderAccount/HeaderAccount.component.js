@@ -30,16 +30,18 @@ class HeaderAccount extends PureComponent {
     _isArabic = isArabic();
 
     state = {
-        showPopup: false
+        showPopup: false,
+        showPopupSignedIn: false
     };
 
     closePopup = () => {
-        this.setState({ showPopup: false });
+        this.setState({ showPopup: false, showPopupSignedIn: false });
         this.handleFooterPopup();
     };
 
     showMyAccountPopup = () => {
-        this.setState({ showPopup: true });
+        const { isSignedIn } = this.props;
+        this.setState({ showPopup: true, showPopupSignedIn: isSignedIn });
         this.handleFooterPopup();
     };
 
@@ -59,13 +61,13 @@ class HeaderAccount extends PureComponent {
 
     renderMyAccountPopup() {
         const { isSignedIn } = this.props;
-        const { showPopup } = this.state;
+        const { showPopup, showPopupSignedIn } = this.state;
 
         if (!showPopup) {
             return null;
         }
 
-        if (isSignedIn) {
+        if (isSignedIn && showPopupSignedIn) {
             return (
                 <ClickOutside onClick={ this.closePopup }>
                     <div>
@@ -92,7 +94,11 @@ class HeaderAccount extends PureComponent {
             );
         }
 
-        const accountButtonText = isSignedIn && customer ? `${customer.firstname} ${customer.lastname}`
+        const accountButtonText = isSignedIn
+            && customer
+            && customer.firstname
+            && customer.lastname
+            ? `${customer.firstname} ${customer.lastname}`
             : __('Login/Register');
 
         return (

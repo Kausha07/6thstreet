@@ -29,19 +29,21 @@ export const mapDispatchToProps = (dispatch) => ({
 export class MyAccountClubApparelContainer extends PureComponent {
     static propTypes = {
         getMember: PropTypes.func.isRequired,
-        linkAccount: PropTypes.func.isRequired,
-        verifyOtp: PropTypes.func.isRequired,
+        linkAccount: PropTypes.func,
+        verifyOtp: PropTypes.func,
         customer: customerType,
         showNotification: PropTypes.func.isRequired,
         showOverlay: PropTypes.func.isRequired,
         activeOverlay: PropTypes.string.isRequired,
-        hideActiveOverlay: PropTypes.string.isRequired,
+        hideActiveOverlay: PropTypes.func.isRequired,
         country: PropTypes.string.isRequired,
         clubApparel: ClubApparelMember.isRequired
     };
 
     static defaultProps = {
-        customer: null
+        customer: null,
+        linkAccount: () => {},
+        verifyOtp: () => {}
     };
 
     state = {

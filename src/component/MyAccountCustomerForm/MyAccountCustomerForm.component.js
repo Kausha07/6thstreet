@@ -21,13 +21,14 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
     static propTypes = {
         ...SourceMyAccountCustomerForm.propTypes,
         isShowPassword: PropTypes.bool.isRequired,
-        customer: PropTypes.isRequired,
+        customer: PropTypes.object.isRequired,
         showPasswordFrom: PropTypes.func.isRequired,
         hidePasswordFrom: PropTypes.func.isRequired,
         onSave: PropTypes.func.isRequired,
         setGender: PropTypes.func.isRequired,
         handleCountryChange: PropTypes.func.isRequired,
-        isLoading: PropTypes.bool.isRequired
+        isLoading: PropTypes.bool.isRequired,
+        country: PropTypes.string.isRequired
     };
 
     constructor(props) {
@@ -41,6 +42,14 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
                 (key) => PHONE_CODES[key] === phone.substr('0', '4')
             ) : getCountryFromUrl()
         };
+    }
+
+    componentDidMount() {
+        const { customer: { phone } = {}, handleCountryChange, country } = this.props;
+
+        const phoneCode = phone ? phone.substr('0', '4') : PHONE_CODES[country];
+
+        handleCountryChange(phoneCode);
     }
 
     componentDidUpdate() {
@@ -105,6 +114,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
             <div
               block="MyAccountCustomerForm"
               elem="FullNameField"
+              key="fullname"
             >
                 <Field
                   type="text"
@@ -159,7 +169,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
         const isPreferNotToSay = gender === 3;
 
         return (
-            <fieldset block="MyAccountCustomerForm" elem="Gender">
+            <fieldset block="MyAccountCustomerForm" elem="Gender" key="gender">
                 <div
                   block="MyAccountCustomerForm"
                   elem="Gender-Radio"
@@ -244,7 +254,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
         const customerPhoneData = this.getCustomerPhone();
 
         return (
-            <div block="MyAccountCustomerForm" elem="CountryCode" mods={ { isArabic } }>
+            <div block="MyAccountCustomerForm" elem="CountryCode" mods={ { isArabic } } key="countryCode">
                 <PhoneCountryCodeField label={ customerPhoneData.customerCountry } onSelect={ this.setCountryCode } />
             </div>
         );
@@ -255,7 +265,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
         const customerPhoneData = this.getCustomerPhone();
 
         return (
-            <div block="MyAccountCustomerForm" elem="Phone" mods={ { isArabic } }>
+            <div block="MyAccountCustomerForm" elem="Phone" mods={ { isArabic } } key="phone">
                 <Field
                   block="MyAccountCustomerForm"
                   elem="PhoneField"
