@@ -30,6 +30,7 @@ import './Checkout.style';
 export class Checkout extends SourceCheckout {
     static propTypes = {
         isSignedIn: PropTypes.bool.isRequired,
+        processingRequest: PropTypes.bool,
         orderID: PropTypes.string.isRequired,
         incrementID: PropTypes.string.isRequired,
         shippingAddress: PropTypes.object.isRequired,
@@ -38,6 +39,7 @@ export class Checkout extends SourceCheckout {
 
     state = {
         cashOnDeliveryFee: null,
+        processingRequest: false,
         isCustomAddressExpanded: false,
         continueAsGuest: false,
         isInvalidEmail: false,
@@ -166,7 +168,12 @@ export class Checkout extends SourceCheckout {
 
     renderSummary() {
         const { cashOnDeliveryFee } = this.state;
-        const { checkoutTotals, checkoutStep, paymentTotals } = this.props;
+        const {
+            checkoutTotals,
+            checkoutStep,
+            paymentTotals,
+            processingRequest
+        } = this.props;
         const { areTotalsVisible } = this.stepMap[checkoutStep];
 
         if (!areTotalsVisible) {
@@ -179,6 +186,7 @@ export class Checkout extends SourceCheckout {
             totals={ checkoutTotals }
             paymentTotals={ paymentTotals }
             cashOnDeliveryFee={ cashOnDeliveryFee }
+            processingRequest={ processingRequest }
           />
         );
     }
@@ -511,7 +519,6 @@ export class Checkout extends SourceCheckout {
 
     render() {
         const { isSuccess } = this.state;
-
         return (
             <>
                 { isSuccess ? null : this.renderCheckoutHeder() }

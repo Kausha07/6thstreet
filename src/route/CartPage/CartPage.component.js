@@ -45,6 +45,7 @@ export class CartPage extends PureComponent {
         clubApparel: ClubApparelMember,
         isSignedIn: PropTypes.bool.isRequired,
         isLoading: PropTypes.bool.isRequired,
+        processingRequest: PropTypes.bool,
         history: HistoryType.isRequired
     };
 
@@ -53,7 +54,8 @@ export class CartPage extends PureComponent {
     };
 
     static defaultProps = {
-        clubApparel: {}
+        clubApparel: {},
+        processingRequest: false
     };
 
     renderCartItems() {
@@ -424,7 +426,12 @@ export class CartPage extends PureComponent {
     }
 
     renderDynamicContent() {
-        const { totals, totals: { items }, isLoading } = this.props;
+        const {
+            totals,
+            totals: { items },
+            isLoading,
+            processingRequest
+        } = this.props;
 
         if (isLoading) {
             return <Loader isLoading={ isLoading } />;
@@ -441,6 +448,7 @@ export class CartPage extends PureComponent {
                   wrapperMix={ { block: 'CartPage', elem: 'Wrapper' } }
                   label="Cart page details"
                 >
+                    <Loader isLoading={ processingRequest } />
                     <div block="CartPage" elem="Static" mods={ { isArabic } }>
                         { this.renderHeading() }
                         { this.renderCartItems() }

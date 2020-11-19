@@ -46,7 +46,8 @@ export const mapStateToProps = (state) => ({
     customer: state.MyAccountReducer.customer,
     isSignedIn: state.MyAccountReducer.isSignedIn,
     clubApparel: state.ClubApparelReducer.clubApparel,
-    isLoading: state.CartReducer.isLoading
+    isLoading: state.CartReducer.isLoading,
+    processingRequest: state.CartReducer.processingRequest
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -73,13 +74,15 @@ export class CartPageContainer extends PureComponent {
         totals: TotalsType.isRequired,
         customer: customerType,
         isSignedIn: PropTypes.bool.isRequired,
+        processingRequest: PropTypes.bool,
         clubApparel: ClubApparelMember
     };
 
     static defaultProps = {
         customer: null,
         clubApparel: {},
-        guest_checkout: true
+        guest_checkout: true,
+        processingRequest: false
     };
 
     state = {

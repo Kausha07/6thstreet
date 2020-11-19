@@ -1,5 +1,6 @@
 import { getStore } from 'Store';
 import {
+    processingCartRequest,
     removeCartItem,
     removeCartItems,
     setCartId,
@@ -88,6 +89,7 @@ export class CartDispatcher {
 
     async getCartTotals(dispatch, cartId) {
         try {
+            dispatch(processingCartRequest());
             const {
                 data
             } = await getCart(cartId);
@@ -113,6 +115,7 @@ export class CartDispatcher {
         const { Cart: { cartId } } = getStore().getState();
 
         try {
+            dispatch(processingCartRequest());
             const response = await addProductToCart({ ...productData, cartId });
             const { data } = response;
             dispatch(updateCartItem(

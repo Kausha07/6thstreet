@@ -4,6 +4,7 @@ export const UPDATE_CART_ITEM = 'UPDATE_CART_ITEM';
 export const REMOVE_CART_ITEM = 'REMOVE_CART_ITEM';
 export const REMOVE_CART_ITEMS = 'REMOVE_CART_ITEMS';
 export const UPDATE_TOTALS = 'UPDATE_TOTALS';
+export const PROCESSING_CART_REQUEST = 'START_CART_REQUEST';
 
 export const setCartId = (cartId) => ({
     type: SET_CART_ID,
@@ -13,6 +14,10 @@ export const setCartId = (cartId) => ({
 export const setCartTotals = (cartTotals) => ({
     type: SET_CART_TOTALS,
     cartTotals
+});
+
+export const processingCartRequest = () => ({
+    type: PROCESSING_CART_REQUEST
 });
 
 export const updateCartItem = (

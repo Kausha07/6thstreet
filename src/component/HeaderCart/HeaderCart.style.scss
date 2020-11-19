@@ -56,4 +56,12 @@
             right: 0;
         }
     }
+
+    .Loader {
+        position: absolute;
+
+        &-Scale {
+            top: 50%;
+        }
+    }
 }

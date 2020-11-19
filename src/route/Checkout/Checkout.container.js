@@ -38,6 +38,7 @@ export const mapDispatchToProps = (dispatch) => ({
 });
 export const mapStateToProps = (state) => ({
     totals: state.CartReducer.cartTotals,
+    processingRequest: state.CartReducer.processingRequest,
     customer: state.MyAccountReducer.customer,
     guest_checkout: state.ConfigReducer.guest_checkout,
     countries: state.ConfigReducer.countries,
@@ -351,7 +352,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
     resetCart() {
         const { setCartId, createEmptyCart, updateStoreCredit } = this.props;
-
         BrowserDatabase.deleteItem(CART_ITEMS_CACHE_KEY);
         setCartId('');
         createEmptyCart();
