@@ -41,13 +41,15 @@ export class PDPAddToCartContainer extends PureComponent {
         showNotification: PropTypes.func.isRequired,
         totals: PropTypes.object,
         PrevTotal: PropTypes.number,
-        total: PropTypes.number
+        total: PropTypes.number,
+        productAdded: PropTypes.bool
     };
 
     static defaultProps = {
         totals: {},
         PrevTotal: null,
-        total: null
+        total: null,
+        productAdded: false
     };
 
     containerFunctions = {
@@ -112,8 +114,9 @@ export class PDPAddToCartContainer extends PureComponent {
     componentDidUpdate(prevProps, _) {
         const { totals: { total: PrevTotal = null } } = prevProps;
         const { totals: { total = null } } = this.props;
+        const { productAdded } = this.state;
 
-        if (total && PrevTotal !== total) {
+        if (productAdded && total && PrevTotal !== total) {
             this.clearTimeAll();
             this.proceedToCheckout();
         }
@@ -153,6 +156,8 @@ export class PDPAddToCartContainer extends PureComponent {
         } = this.state;
         const itemPrice = price[0][Object.keys(price[0])[0]]['6s_special_price'];
         const basePrice = price[0][Object.keys(price[0])[0]]['6s_base_price'];
+
+        this.setState({ productAdded: true });
 
         if ((size_uk.length !== 0 || size_eu.length !== 0 || size_us.length !== 0)
             && selectedSizeCode === '') {
@@ -220,11 +225,10 @@ export class PDPAddToCartContainer extends PureComponent {
     afterAddToCart() {
         // eslint-disable-next-line no-unused-vars
         const { buttonRefreshTimeout } = this.state;
-        this.setState({ isLoading: false });
         // TODO props for addedToCart
         const timeout = 1250;
-        this.setState({ addedToCart: true });
-        setTimeout(() => this.setState({ addedToCart: false }), timeout);
+        this.setState({ isLoading: false, addedToCart: true });
+        setTimeout(() => this.setState({ productAdded: false, addedToCart: false }), timeout);
     }
 
     clearTimeAll() {
