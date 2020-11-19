@@ -115,6 +115,10 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
             selectedShippingMethod
         } = this.state;
 
+        if (!selectedShippingMethod) {
+            return;
+        }
+
         const shippingAddress = selectedCustomerAddressId
             ? this._getAddressById(selectedCustomerAddressId)
             : trimAddressFields(fields);

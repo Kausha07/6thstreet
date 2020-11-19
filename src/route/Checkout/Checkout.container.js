@@ -267,6 +267,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                 this.setState({ isLoading: false });
                 showErrorNotification(__('Something went wrong.'));
             });
+
+            this.resetCart();
         } catch (e) {
             this._handleError(e);
         }
