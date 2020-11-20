@@ -14,7 +14,7 @@ class Menu extends PureComponent {
     state = {
         isArabic: isArabic(),
         isDefaultCategoryOpen: true,
-        currentGender: 'men'
+        currentGender: 'women'
     };
 
     activeCategories = {

@@ -11,6 +11,8 @@ export const doFetch = async (url, options) => {
 
         if (typeof error !== 'object') {
             throw new Error(error);
+        } else {
+            return error;
         }
     }
 

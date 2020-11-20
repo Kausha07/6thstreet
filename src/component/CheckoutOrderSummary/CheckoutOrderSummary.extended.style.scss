@@ -197,4 +197,12 @@
 	&-DiscountOptionWrapper {
 		padding: 0 18px;
 	}
+
+	.Loader {
+		position: absolute;
+
+		&-Scale {
+			top: 50%;
+		}
+	}
 }

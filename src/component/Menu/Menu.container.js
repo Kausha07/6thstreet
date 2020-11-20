@@ -30,7 +30,7 @@ export class MenuContainer extends PureComponent {
 
     state = {
         isLoading: true,
-        menuGender: 'men'
+        menuGender: 'women'
     };
 
     constructor(props) {

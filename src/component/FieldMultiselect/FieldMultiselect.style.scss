@@ -79,6 +79,7 @@
           letter-spacing: .5px;
           line-height: 18px;
           text-align: left;
+          transition: 0;
 
         &:after {
             position: absolute;
@@ -104,8 +105,6 @@
         }
 
         &_toggleOptionsList {
-            margin-bottom: 0;
-            border-bottom: none;
             max-height: 400px;
         }
 
@@ -158,7 +157,8 @@
         overflow-y: auto;
         border: none;
         left: 10px;
-        transition: 200ms;
+        transition: 0;
+        top: 50px;
 
         &_toggleOptionsList {
             border: 1px solid var(--field-multiselect-border);

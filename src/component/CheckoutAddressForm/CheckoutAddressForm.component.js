@@ -45,7 +45,7 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
     get fieldMap() {
         this.getCitiesAndRegionsData();
 
-        const { isSignedIn } = this.props;
+        const { isSignedIn, shippingAddress: { guest_email } } = this.props;
 
         const {
             telephone,
@@ -66,7 +66,9 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
         return isSignedIn ? fieldMap : {
             guest_email: {
                 placeholder: __('Email'),
-                validation: ['notEmpty', 'email']
+                validation: ['notEmpty', 'email'],
+                type: 'email',
+                value: guest_email || ''
             },
             ...fieldMap
         };

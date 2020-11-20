@@ -1,12 +1,16 @@
 .PhoneCountryCodeField {
     height: 89px;
-    margin-top: -25px;
+    margin-top: -16px;
     width: 105px;
 
     .FieldSelect {
         &-Select {
             height: 60px;
             padding-left: 30px;
+
+            @include mobile {
+                font-size: 12px;
+            }
         }
     }
 
@@ -33,6 +37,8 @@
     }
 
     &_isArabic {
+        text-align: right;
+    
         .CountryMiniFlag-Container {
             margin-left: 0;
             margin-right: 22px;
@@ -41,6 +47,22 @@
         input {
             padding-left: 0;
             padding-right: 35px;
+        }
+
+        .Field {
+            .FieldSelect {
+                &:after {
+                    left: 20px;
+                    right: unset;
+                }
+
+                &-Select {
+                    padding-left: 34px;
+                    padding-right: 30px;
+                    direction: ltr;
+                }
+                
+            }
         }
     }
 }

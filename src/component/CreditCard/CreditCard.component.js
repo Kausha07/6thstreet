@@ -172,7 +172,7 @@ class CreditCard extends PureComponent {
     renderMiniCard(miniCard) {
         const img = MINI_CARDS[miniCard];
 
-        return <img src={ img } alt="method" />;
+        return <img src={ img } alt="method" key={ miniCard } />;
     }
 
     renderAcceptedCardsInfo() {

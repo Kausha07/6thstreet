@@ -24,32 +24,6 @@ class SearchSuggestion extends PureComponent {
         isArabic: isArabic()
     };
 
-    componentDidMount() {
-        window.addEventListener('resize', this.setSearchSuggestionWidth);
-    }
-
-    componentDidUpdate() {
-        this.setSearchSuggestionWidth();
-    }
-
-    componentWillUnmount() {
-        window.removeEventListener('resize', this.setSearchSuggestionWidth);
-    }
-
-    setSearchSuggestionWidth() {
-        const searchSuggestion = document.getElementsByClassName('SearchSuggestion')[0];
-        const bodyWidth = document.body.offsetWidth;
-        const headerWidth = document.getElementsByClassName('HeaderBottomBar-Content')[0].offsetWidth;
-        const headerSearchWidth = document.getElementsByClassName('HeaderSearch')[0].offsetWidth;
-
-        if (searchSuggestion) {
-            // eslint-disable-next-line no-magic-numbers
-            const width = (bodyWidth - headerWidth) / 2 + headerSearchWidth + 20;
-
-            searchSuggestion.style.setProperty('max-width', `${width}px`);
-        }
-    }
-
     renderLoader() {
         const { isLoading } = this.props;
 
@@ -127,14 +101,16 @@ class SearchSuggestion extends PureComponent {
         return 'Nothing found';
     }
 
-    renderTrendingBrand = ({ label, image_url }) => {
+    renderTrendingBrand = (brand, i) => {
+        const { label, image_url } = brand;
+
         const urlName = label.replace('&', '')
             .replace(/(\s+)|--/g, '-')
             .replace('@', 'at')
             .toLowerCase();
 
         return (
-            <li>
+            <li key={ i }>
                 <Link to={ `/${urlName}.html?q=${urlName}` }>
                     <div block="SearchSuggestion" elem="TrandingImg">
                         <img src={ image_url } alt="Trending" />
@@ -158,8 +134,8 @@ class SearchSuggestion extends PureComponent {
         );
     }
 
-    renderTrendingTag = ({ link, label }) => (
-        <li>
+    renderTrendingTag = ({ link, label }, i) => (
+        <li key={ i }>
             <Link to={ { pathname: link } }>
                 <div block="SearchSuggestion" elem="TrandingTag">
                 { label }

@@ -62,4 +62,22 @@
         font-size: 13px;
         vertical-align: middle;
     }
+
+    &_isArabic {
+        .MyAccountSignedInOverlay {
+            &-Link {
+                &Account {
+                    svg {
+                        margin-left: 10px;
+                        margin-right: unset;
+                    }
+                }
+            }
+
+            &-Image {
+                margin-left: 10px;
+                margin-right: unset;
+            }
+        }
+    }
 }

@@ -15,6 +15,10 @@ export class Meta extends SourceMeta {
         ).isRequired
     };
 
+    renderHreflang = ({ hreflang, href }, i) => (
+        <link rel="alternate" hrefLang={ hreflang } href={ href } key={ i } />
+    );
+
     renderHreflangs() {
         const { hreflangs } = this.props;
 
@@ -22,9 +26,7 @@ export class Meta extends SourceMeta {
             return null;
         }
 
-        return hreflangs.map(({ hreflang, href }) => (
-            <link rel="alternate" hrefLang={ hreflang } href={ href } />
-        ));
+        return hreflangs.map(this.renderHreflang);
     }
 
     renderMeta() {

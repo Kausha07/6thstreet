@@ -29,11 +29,11 @@ class MyAccountMyWishlist extends PureComponent {
         );
     }
 
-    renderItem = (item) => {
+    renderItem = (item, i) => {
         const { product, wishlist_item_id } = item;
 
         return (
-            <div block="MyAccountMyWishlist" elem="Item">
+            <div block="MyAccountMyWishlist" elem="Item" key={ i }>
                 <ProductItem
                   key={ wishlist_item_id }
                   product={ product }

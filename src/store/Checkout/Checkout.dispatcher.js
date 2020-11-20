@@ -4,6 +4,7 @@ import { showNotification } from 'Store/Notification/Notification.action';
 import {
     createOrder,
     estimateShippingMethods,
+    getLastOrder,
     getPaymentMethods,
     saveShippingInformation,
     selectPaymentMethod,
@@ -16,24 +17,29 @@ import {
     getInstallmentForValue,
     verifyPayment
 } from 'Util/API/endpoint/Tabby/Tabby.enpoint';
+import { capitalize } from 'Util/App';
 import Logger from 'Util/Logger';
 
 export class CheckoutDispatcher {
+    async validateAddress(dispatch, address) {
+        /* eslint-disable */
+        delete address.region_id;
+
+        return validateShippingAddress({ address });
+    }
+
     /* eslint-disable-next-line */
     async estimateShipping(dispatch, address) {
         const { Cart: { cartId } } = getStore().getState();
-        const { area, street } = address;
         try {
             const response = await validateShippingAddress({ address });
             const { success: isAddressValid } = response;
 
-            if (!isAddressValid && (area !== undefined || street !== undefined)) {
-                const { error: { parameters } } = response;
-                const message = parameters.length > 1
-                    ? `(${parameters}) ${__('fields are not valid')}`
-                    : `(${parameters}) ${__('field is not valid')}`;
+            if (!isAddressValid) {
+                const { parameters, message } = response;
+                const formattedParams = capitalize(parameters[0]);
 
-                dispatch(showNotification('error', message));
+                dispatch(showNotification('error', `${formattedParams} ${__('is not valid')}. ${message}`));
             }
             if (isAddressValid) {
                 return await estimateShippingMethods({ cartId, address });
@@ -118,6 +124,10 @@ export class CheckoutDispatcher {
 
     async verifyUserPhone(dispatch, data) {
         return verifyUserPhone({ data });
+    }
+
+    async getLastOrder(dispatch) {
+        return getLastOrder();
     }
 }
 

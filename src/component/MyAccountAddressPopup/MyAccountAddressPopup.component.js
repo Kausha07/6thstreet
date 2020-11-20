@@ -14,9 +14,7 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import Loader from 'Component/Loader';
-// import MyAccountAddressTable from 'Component/MyAccountAddressTable';
 import MyAccountDeliveryAddressForm from 'Component/MyAccountDeliveryAddressForm';
-// import Popup from 'Component/Popup';
 import { addressType } from 'Type/Account';
 import { isArabic } from 'Util/App';
 
@@ -199,7 +197,6 @@ export class MyAccountAddressPopup extends PureComponent {
         return (
             <div
               id={ ADDRESS_POPUP_ID }
-              clickOutside={ false }
               mix={ { block: 'MyAccountAddressPopup', mods: { isArabic } } }
             >
                 <Loader isLoading={ isLoading } />

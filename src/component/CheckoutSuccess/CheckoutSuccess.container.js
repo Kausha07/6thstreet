@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import {
     CUSTOMER_ACCOUNT_PAGE
 } from 'Component/Header/Header.config';
-import { PHONE_CODES } from 'Component/MyAccountAddressForm/MyAccountAddressForm.config';
 import { MY_ACCOUNT_URL } from 'Route/MyAccount/MyAccount.config';
 import MyAccountContainer, { tabMap } from 'Route/MyAccount/MyAccount.container';
 import CheckoutDispatcher from 'Store/Checkout/Checkout.dispatcher';
@@ -55,6 +54,7 @@ export const mapDispatchToProps = (dispatch) => ({
 export class CheckoutSuccessContainer extends PureComponent {
     static propTypes = {
         orderID: PropTypes.number.isRequired,
+        incrementID: PropTypes.number.isRequired,
         updateBreadcrumbs: PropTypes.func.isRequired,
         changeHeaderState: PropTypes.func.isRequired,
         showOverlay: PropTypes.func.isRequired,
@@ -76,7 +76,7 @@ export class CheckoutSuccessContainer extends PureComponent {
     state = {
         isEditing: false,
         clubApparelMember: null,
-        phone: '',
+        phone: null,
         isPhoneVerified: false,
         isChangePhonePopupOpen: false,
         isMobileVerification: false
@@ -95,10 +95,20 @@ export class CheckoutSuccessContainer extends PureComponent {
         super(props);
 
         const {
-            updateMeta
+            updateMeta,
+            totals
         } = this.props;
 
-        this.state = MyAccountContainer.navigateToSelectedTab(this.props) || {};
+        this.state = {
+            initialTotals: totals,
+            isEditing: false,
+            clubApparelMember: null,
+            phone: null,
+            isPhoneVerified: false,
+            isChangePhonePopupOpen: false,
+            isMobileVerification: false,
+            ...MyAccountContainer.navigateToSelectedTab(this.props)
+        };
 
         /*
         if (!isSignedIn) {
@@ -118,11 +128,22 @@ export class CheckoutSuccessContainer extends PureComponent {
     componentDidMount() {
         const {
             updateMeta,
+            customer: {
+                phone
+            },
             customer,
+            shippingAddress: {
+                phone: guestPhone,
+                phonecode
+            },
             isSignedIn
         } = this.props;
 
-        this.setPhone();
+        if (isSignedIn) {
+            this.setPhone(phone);
+        } else {
+            this.setPhone(guestPhone, phonecode);
+        }
 
         const testCustomerVerified = '0';
 
@@ -133,10 +154,6 @@ export class CheckoutSuccessContainer extends PureComponent {
         updateMeta({ title: __('Account') });
 
         this._updateBreadcrumbs();
-    }
-
-    componentDidUpdate() {
-        this.setPhone();
     }
 
     containerProps = () => {
@@ -166,20 +183,20 @@ export class CheckoutSuccessContainer extends PureComponent {
         const {
             isSignedIn,
             updateCustomer,
-            customer: oldCustomerData,
-            shippingAddress
+            customer: oldCustomerData
         } = this.props;
-        const { newPhone } = fields;
+        const { newPhone, countryPhoneCode } = fields;
 
         if (isSignedIn) {
             updateCustomer({
                 ...oldCustomerData,
-                phone: PHONE_CODES[shippingAddress.country_id] + newPhone
+                phone: countryPhoneCode + newPhone
             }).then(
                 (response) => {
                     if (!response.error) {
                         this.onResendCode();
                         this.toggleChangePhonePopup();
+                        this.setPhone(newPhone, countryPhoneCode);
                     } else {
                         showNotification('error', __('Please enter valid phone number'));
                     }
@@ -187,22 +204,14 @@ export class CheckoutSuccessContainer extends PureComponent {
                 this._handleError
             );
         } else {
-            // TODO: implement logic for guest
+            this.setPhone(newPhone, countryPhoneCode);
+            this.onResendCode();
+            this.toggleChangePhonePopup();
         }
     }
 
-    setPhone() {
-        const {
-            isSignedIn,
-            customer,
-            shippingAddress
-        } = this.props;
-
-        if (isSignedIn) {
-            this.setState({ phone: customer.phone });
-        } else {
-            this.setState({ phone: shippingAddress.phone });
-        }
+    setPhone(phone, phonecode = '') {
+        this.setState({ phone: phonecode + phone });
     }
 
     onVerifySuccess(fields) {
@@ -264,7 +273,11 @@ export class CheckoutSuccessContainer extends PureComponent {
                 if (!response.error) {
                     showNotification('success', __('Verification code was successfully re-sent'));
                 } else {
-                    showNotification('info', __('Please wait %s before re-sending the request', response.data.timeout));
+                    if (response.data) {
+                        // eslint-disable-next-line max-len
+                        showNotification('info', __('Please wait %s before re-sending the request', response.data.timeout));
+                    }
+                    showNotification('error', response.error);
                 }
             },
             this._handleError

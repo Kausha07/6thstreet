@@ -53,7 +53,11 @@ export class MyAccountAddressPopupContainer extends PureComponent {
         closeForm: PropTypes.func.isRequired,
         payload: PropTypes.shape({
             address: addressType
-        }).isRequired
+        })
+    };
+
+    static defaultProps = {
+        payload: {}
     };
 
     state = {

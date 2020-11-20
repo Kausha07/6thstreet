@@ -29,13 +29,16 @@ export class HeaderAccountContainer extends PureComponent {
         language: PropTypes.string.isRequired,
         customer: customerType,
         requestCustomerData: PropTypes.func.isRequired,
-        handleFooterIsAccountOpen: PropTypes.func.isRequired
+        handleFooterIsAccountOpen: PropTypes.func,
+        isFooter: PropTypes.bool
     };
 
     static defaultProps = {
         isBottomBar: false,
         isAccount: false,
-        customer: null
+        isFooter: false,
+        customer: null,
+        handleFooterIsAccountOpen: () => {}
     };
 
     containerFunctions = {

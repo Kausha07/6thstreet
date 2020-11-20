@@ -3,6 +3,7 @@ import CartCoupon from 'Component/CartCoupon';
 import ClubApparel from 'Component/ClubApparel';
 import CmsBlock from 'Component/CmsBlock';
 import Link from 'Component/Link';
+import Loader from 'Component/Loader';
 import { FIXED_CURRENCIES } from 'Component/Price/Price.config';
 import StoreCredit from 'Component/StoreCredit';
 import { SHIPPING_STEP } from 'Route/Checkout/Checkout.config';
@@ -19,6 +20,10 @@ import { isSignedIn } from 'Util/Auth';
 import Delivery from './icons/delivery-truck.png';
 
 import './CheckoutOrderSummary.extended.style';
+
+export const mapStateToProps = (state) => ({
+    processingRequest: state.CartReducer.processingRequest
+});
 
 export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     state = {
@@ -221,8 +226,10 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     }
 
     render() {
+        const { processingRequest } = this.props;
         return (
             <article block="CheckoutOrderSummary" aria-label="Order Summary">
+                <Loader isLoading={ processingRequest } />
                 { this.renderHeading() }
                 { this.renderItems() }
                 { this.renderToggleableDiscountOptions() }

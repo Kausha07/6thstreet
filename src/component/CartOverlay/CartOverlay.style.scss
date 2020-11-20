@@ -221,6 +221,10 @@
             flex-grow: 1;
             text-align: center;
         }
+
+        &_isDisabled {
+            opacity: 0.5;
+        }
     }
 
     &-CartButton {
@@ -346,8 +350,6 @@
             font-weight: var(--fw-regular);
         }
     }
-
-
 }
 .Overlay {
     &_isInstant {

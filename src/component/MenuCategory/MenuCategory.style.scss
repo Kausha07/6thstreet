@@ -195,6 +195,10 @@
         }
 
         &-CategoryLink {
+            &:hover {
+                text-decoration: none;
+            }
+            
             &-Label {
                 color: var(--white);
             }
@@ -255,6 +259,8 @@
 
             .MenuCategory {
                 &-CategoryLink {
+                    text-decoration: none;
+
                     &-Label {
                         &::before {
                             background-color: var(--red);
@@ -333,8 +339,8 @@
         &_isArabic {
             .DynamicContent {
                 left: unset;
-                max-width: 1410px;
-                right: 30px;
+                max-width: 1440px;
+                right: -5px;
 
                 & > div {
                     border-left: 1px solid var(--light-gray);

@@ -30,12 +30,19 @@ import './CartOverlay.style';
 export class CartOverlay extends PureComponent {
     static propTypes = {
         totals: TotalsType.isRequired,
-        onVisible: PropTypes.func.isRequired,
+        onVisible: PropTypes.func,
         handleCheckoutClick: PropTypes.func.isRequired,
         showOverlay: PropTypes.func.isRequired,
         hideActiveOverlay: PropTypes.func.isRequired,
         closePopup: PropTypes.func.isRequired,
-        isHidden: PropTypes.bool.isRequired
+        handleViewBagClick: PropTypes.func.isRequired,
+        isHidden: PropTypes.bool,
+        isCheckoutAvailable: PropTypes.bool.isRequired
+    };
+
+    static defaultProps = {
+        isHidden: false,
+        onVisible: () => {}
     };
 
     state = {
@@ -134,12 +141,17 @@ export class CartOverlay extends PureComponent {
 
     renderActions() {
         const {
-            totals: { items }, handleCheckoutClick, hideActiveOverlay, closePopup
+            totals: { items },
+            handleCheckoutClick,
+            handleViewBagClick,
+            isCheckoutAvailable
         } = this.props;
 
         if (!items || items.length < 1) {
             return null;
         }
+
+        const isDisabled = !isCheckoutAvailable;
 
         return (
             <div block="CartOverlay" elem="Actions">
@@ -147,13 +159,14 @@ export class CartOverlay extends PureComponent {
                   block="CartOverlay"
                   elem="CartButton"
                   to="/cart"
-                  onClick={ hideActiveOverlay && closePopup }
+                  onClick={ handleViewBagClick }
                 >
                     { __('View bag') }
                 </Link>
                 <button
                   block="CartOverlay"
                   elem="CheckoutButton"
+                  mods={ { isDisabled } }
                   onClick={ handleCheckoutClick }
                 >
                     { __('Checkout') }

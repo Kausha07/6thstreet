@@ -283,7 +283,7 @@ class MyAccountOrderView extends PureComponent {
                           mix={ { block: 'MyAccountOrderView', elem: 'Accordion' } }
                           shortDescription={ this.renderAccordionProgress(item.courier_status_code) }
                           title={ this.renderAccordionTitle(
-                              __('%s Package', appendOrdinalSuffix(itemNumber - index)),
+                              __('%s Package') + appendOrdinalSuffix(itemNumber - index),
                               PackageImage,
                               item.courier_status_code
                           ) }
