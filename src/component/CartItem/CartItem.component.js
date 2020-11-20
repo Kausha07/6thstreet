@@ -47,11 +47,15 @@ export class CartItem extends PureComponent {
         thumbnail: PropTypes.string.isRequired,
         hideActiveOverlay: PropTypes.func.isRequired,
         hideLoaderAfterPromise: PropTypes.func,
-        closePopup: PropTypes.func
+        closePopup: PropTypes.func,
+        availability: PropTypes.number.isRequired,
+        available_qty: PropTypes.number.isRequired,
+        isCartPage: PropTypes.bool
     };
 
     state = {
-        isArabic: isArabic()
+        isArabic: isArabic(),
+        isNotAvailble: false
     };
 
     static defaultProps = {
@@ -60,8 +64,17 @@ export class CartItem extends PureComponent {
         linkTo: '',
         brand_name: '',
         hideLoaderAfterPromise: () => {},
-        closePopup: () => {}
+        closePopup: () => {},
+        isCartPage: false
     };
+
+    static getDerivedStateFromProps(props) {
+        const { item: { availability, availableQty, qty } } = props;
+
+        return {
+            isNotAvailble: availability === 0 || availableQty === 0 || qty > availableQty
+        };
+    }
 
     renderProductConfigurationOption = ([key, attribute]) => {
         const {
@@ -342,6 +355,7 @@ export class CartItem extends PureComponent {
                 bundle_options
             }
         } = this.props;
+        const { isNotAvailble } = this.state;
 
         return (
             <figcaption
@@ -355,7 +369,7 @@ export class CartItem extends PureComponent {
                 { this.renderProductOptions(bundle_options) }
                 { this.renderProductConfigurations() }
                 { this.renderColSizeQty() }
-                { this.renderProductPrice() }
+                { isNotAvailble ? null : this.renderProductPrice() }
                 { this.renderActions() }
             </figcaption>
         );
@@ -371,7 +385,7 @@ export class CartItem extends PureComponent {
             handleRemoveItem,
             handleChangeQuantity
         } = this.props;
-        const { isArabic } = this.state;
+        const { isArabic, isNotAvailble } = this.state;
 
         return (
             <div
@@ -389,23 +403,26 @@ export class CartItem extends PureComponent {
                 >
                     <span />
                 </button>
-                <Field
-                  id="item_qty"
-                  name="item_qty"
-                  type="number"
-                  isControlled
-                  min={ minSaleQuantity }
-                  max={ maxSaleQuantity }
-                  mix={ { block: 'CartItem', elem: 'Qty' } }
-                  value={ qty }
-                  onChange={ handleChangeQuantity }
-                />
+                { isNotAvailble
+                    ? <span block="CartItem" elem="NotAvailable">{ __('Not available') }</span> : (
+                        <Field
+                          id="item_qty"
+                          name="item_qty"
+                          type="number"
+                          isControlled
+                          min={ minSaleQuantity }
+                          max={ maxSaleQuantity }
+                          mix={ { block: 'CartItem', elem: 'Qty' } }
+                          value={ qty }
+                          onChange={ handleChangeQuantity }
+                        />
+                    ) }
             </div>
         );
     }
 
     renderImage() {
-        const { item: { product: { name } }, thumbnail } = this.props;
+        const { item: { product: { name } }, thumbnail, isCartPage } = this.props;
         const { isArabic } = this.state;
 
         return (
@@ -415,7 +432,7 @@ export class CartItem extends PureComponent {
                   mix={ {
                       block: 'CartItem',
                       elem: 'Picture',
-                      mods: { isArabic }
+                      mods: { isArabic, isCartPage }
                   } }
                   ratio="custom"
                   alt={ `Product ${name} thumbnail.` }

@@ -14,7 +14,9 @@ class HeaderCart extends PureComponent {
     static propTypes = {
         history: PropTypes.object.isRequired,
         hideActiveOverlay: PropTypes.func.isRequired,
-        totals: TotalsType.isRequired
+        totals: TotalsType.isRequired,
+        isCheckoutAvailable: PropTypes.bool.isRequired,
+        showNotification: PropTypes.func.isRequired
     };
 
     state = {
@@ -22,6 +24,27 @@ class HeaderCart extends PureComponent {
         isPopup: true,
         isArabic: isArabic()
     };
+
+    componentDidUpdate(prevProps) {
+        const { history: { location: { pathname } } } = this.props;
+
+        if (!isMobile.any() && pathname !== '/cart') {
+            const { isCheckoutAvailable, totals: { items } } = this.props;
+            const {
+                isCheckoutAvailable: prevIsCheckoutAvailable,
+                totals: { items: prevItems }
+            } = prevProps;
+
+            const isAddingError = prevItems ? prevItems.length > items.length : false;
+
+            if (
+                (isCheckoutAvailable !== prevIsCheckoutAvailable && prevIsCheckoutAvailable !== '')
+                || (prevItems !== items && prevItems && !isAddingError && items.length !== 0)
+            ) {
+                this.renderCartPopUp();
+            }
+        }
+    }
 
     closePopup = () => {
         const { hideActiveOverlay } = this.props;
@@ -31,11 +54,13 @@ class HeaderCart extends PureComponent {
     };
 
     renderCartPopUp = () => {
+        const { isCheckoutAvailable } = this.props;
         const { isPopup } = this.state;
         const popUpElement = (
             <CartOverlay
               isPopup={ isPopup }
               closePopup={ this.closePopup }
+              isCheckoutAvailable={ isCheckoutAvailable }
             />
         );
 
@@ -43,7 +68,16 @@ class HeaderCart extends PureComponent {
     };
 
     routeChangeCart = () => {
-        const { history, hideActiveOverlay } = this.props;
+        const {
+            history,
+            hideActiveOverlay,
+            isCheckoutAvailable,
+            showNotification
+        } = this.props;
+
+        if (!isCheckoutAvailable) {
+            showNotification('error', __('Some products or selected quantities are no longer available'));
+        }
 
         hideActiveOverlay();
         history.push('/cart');

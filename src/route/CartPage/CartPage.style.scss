@@ -144,6 +144,18 @@
             font-size: 12px;
             order: 2;
         }
+
+        &_isDisabled {
+            opacity: 0.5;
+
+            --button-select-color: var(--color-orange-soda);
+
+            &:hover,
+            &:focus {
+                --button-hover-background: var(--color-orange-soda);
+                background-color: var(--color-orange-soda);
+            }
+        }
     }
 
     &-ContinueShopping {
@@ -629,5 +641,3 @@
         }
     }
 }
-
-

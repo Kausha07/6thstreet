@@ -45,7 +45,8 @@ export class CartPage extends PureComponent {
         clubApparel: ClubApparelMember,
         isSignedIn: PropTypes.bool.isRequired,
         isLoading: PropTypes.bool.isRequired,
-        history: HistoryType.isRequired
+        history: HistoryType.isRequired,
+        isCheckoutAvailable: PropTypes.bool.isRequired
     };
 
     state = {
@@ -73,6 +74,7 @@ export class CartPage extends PureComponent {
                       item={ item }
                       currency_code={ quote_currency_code }
                       isEditing
+                      isCartPage
                     />
                 )) }
             </ul>
@@ -132,13 +134,16 @@ export class CartPage extends PureComponent {
     }
 
     renderButtons() {
-        const { onCheckoutButtonClick } = this.props;
+        const { onCheckoutButtonClick, isCheckoutAvailable } = this.props;
+
+        const isDisabled = !isCheckoutAvailable;
 
         return (
             <div block="CartPage" elem="CheckoutButtons">
                 <button
                   block="CartPage"
                   elem="CheckoutButton"
+                  mods={ { isDisabled } }
                   mix={ { block: 'Button' } }
                   onClick={ onCheckoutButtonClick }
                 >

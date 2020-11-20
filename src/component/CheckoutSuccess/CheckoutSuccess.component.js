@@ -23,7 +23,7 @@ import './CheckoutSuccess.style';
 
 export class CheckoutSuccess extends PureComponent {
     static propTypes = {
-        totals: TotalsType.isRequired,
+        initialTotals: TotalsType.isRequired,
         shippingAddress: PropTypes.object.isRequired,
         billingAddress: PropTypes.object.isRequired,
         paymentMethod: PropTypes.object.isRequired,
@@ -273,7 +273,7 @@ export class CheckoutSuccess extends PureComponent {
     };
 
     renderTotalsItems() {
-        const { totals: { items, quote_currency_code }, incrementID } = this.props;
+        const { initialTotals: { items, quote_currency_code }, incrementID } = this.props;
 
         if (!items || items.length < 1) {
             return (
@@ -303,7 +303,7 @@ export class CheckoutSuccess extends PureComponent {
 
     renderSubTotalPrice = () => {
         const {
-            totals: {
+            initialTotals: {
                 subtotal_incl_tax = 0
             }
         } = this.props;
@@ -327,7 +327,7 @@ export class CheckoutSuccess extends PureComponent {
 
     renderCashOnDeliveryFee = () => {
         const {
-            totals: {
+            initialTotals: {
                 shipping_fee = 0
             }
         } = this.props;
@@ -367,7 +367,7 @@ export class CheckoutSuccess extends PureComponent {
     }
 
     renderPriceLine(price) {
-        const { totals: { quote_currency_code } } = this.props;
+        const { initialTotals: { quote_currency_code } } = this.props;
         return `${formatCurrency(quote_currency_code)}${roundPrice(price)}`;
     }
 

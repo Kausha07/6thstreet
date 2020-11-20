@@ -28,6 +28,7 @@ import { HistoryType } from 'Type/Common';
 import { TotalsType } from 'Type/MiniCart';
 import { ClubApparelMember } from 'Util/API/endpoint/ClubApparel/ClubApparel.type';
 import { isSignedIn } from 'Util/Auth';
+import { checkProducts } from 'Util/Cart/Cart';
 import history from 'Util/History';
 import isMobile from 'Util/Mobile';
 import { appendWithStoreCode } from 'Util/Url';
@@ -113,6 +114,17 @@ export class CartPageContainer extends PureComponent {
     }
 
     static getDerivedStateFromProps(props, state) {
+        const { totals: { items = [] } } = props;
+
+        if (items.length !== 0) {
+            const mappedItems = checkProducts(items);
+
+            return {
+                ...MyAccountContainer.navigateToSelectedTab(props, state),
+                isCheckoutAvailable: mappedItems.length === 0
+            };
+        }
+
         return MyAccountContainer.navigateToSelectedTab(props, state);
     }
 
@@ -166,36 +178,41 @@ export class CartPageContainer extends PureComponent {
             showOverlay,
             showNotification
         } = this.props;
+        const { isCheckoutAvailable } = this.state;
 
+        if (isCheckoutAvailable) {
         // to prevent outside-click handler trigger
-        e.nativeEvent.stopImmediatePropagation();
+            e.nativeEvent.stopImmediatePropagation();
 
-        if (guest_checkout) {
-            history.push({
-                pathname: appendWithStoreCode(CHECKOUT_URL)
-            });
+            if (guest_checkout) {
+                history.push({
+                    pathname: appendWithStoreCode(CHECKOUT_URL)
+                });
 
-            return;
+                return;
+            }
+
+            if (isSignedIn()) {
+                history.push({
+                    pathname: appendWithStoreCode(CHECKOUT_URL)
+                });
+
+                return;
+            }
+
+            // fir notification whatever device that is
+            showNotification('info', __('Please sign-in to complete checkout!'));
+
+            if (isMobile.any()) { // for all mobile devices, simply switch route
+                history.push({ pathname: appendWithStoreCode('/my-account') });
+                return;
+            }
+
+            // for desktop, just open customer overlay
+            showOverlay(CUSTOMER_ACCOUNT_OVERLAY_KEY);
+        } else {
+            showNotification('error', __('Some products or selected quantities are no longer available'));
         }
-
-        if (isSignedIn()) {
-            history.push({
-                pathname: appendWithStoreCode(CHECKOUT_URL)
-            });
-
-            return;
-        }
-
-        // fir notification whatever device that is
-        showNotification('info', __('Please sign-in to complete checkout!'));
-
-        if (isMobile.any()) { // for all mobile devices, simply switch route
-            history.push({ pathname: appendWithStoreCode('/my-account') });
-            return;
-        }
-
-        // for desktop, just open customer overlay
-        showOverlay(CUSTOMER_ACCOUNT_OVERLAY_KEY);
     }
 
     _updateBreadcrumbs() {

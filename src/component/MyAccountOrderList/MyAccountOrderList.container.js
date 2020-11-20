@@ -44,9 +44,9 @@ export class MyAccountOrderListContainer extends SourceComponent {
             this.setState({ orders: data, isLoading: false, requestInProgress: false });
 
             // First request have limit 5 orders to show something to user
-            // After we do second request to get all other orders
-            if (params) {
-                this.getOrderList();
+            // After we do second request to get 100 other orders
+            if (limit !== '100') {
+                this.getOrderList('100');
             }
         }).catch(() => {
             showErrorNotification(__('Error appeared while fetching orders'));

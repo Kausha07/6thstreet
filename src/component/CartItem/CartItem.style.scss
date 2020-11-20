@@ -33,6 +33,13 @@
         border-top: none;
     }
 
+    &-NotAvailable {
+        font-size: 16px;
+        bottom: -10px;
+        font-weight: var(--fw-demi);
+        color: var(--Cardinal);
+    }
+
     &-Link {
         color: inherit;
         padding: 0;
@@ -146,6 +153,10 @@
 
         &_isArabic {
             margin: 0 0 0 24px;
+        }
+
+        &_isCartPage {
+            width: 150px;
         }
     }
 
@@ -302,6 +313,21 @@
             span {
                 @include mobile {
                     top: -1px;
+                }
+            }
+        }
+    }
+}
+
+.CartPage {
+    &-Wrapper { 
+        .CartItem-Wrapper {
+            .CartItem-Picture_isCartPage {
+                width: 130px;
+    
+                @include mobile {
+                    width: 100%;
+                    height: 100%;
                 }
             }
         }

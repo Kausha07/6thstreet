@@ -9,7 +9,11 @@ import {
     mapDispatchToProps as sourceMapDispatchToProps
 } from 'SourceRoute/Checkout/Checkout.container';
 import { setGender } from 'Store/AppState/AppState.action';
+import {
+    removeCartItems
+} from 'Store/Cart/Cart.action';
 import CartDispatcher from 'Store/Cart/Cart.dispatcher';
+// eslint-disable-next-line no-unused-vars
 import { CART_ID_CACHE_KEY, CART_ITEMS_CACHE_KEY } from 'Store/Cart/Cart.reducer';
 import CheckoutDispatcher from 'Store/Checkout/Checkout.dispatcher';
 import { updateMeta } from 'Store/Meta/Meta.action';
@@ -17,6 +21,7 @@ import { hideActiveOverlay } from 'Store/Overlay/Overlay.action';
 import StoreCreditDispatcher from 'Store/StoreCredit/StoreCredit.dispatcher';
 import { isSignedIn } from 'Util/Auth';
 import BrowserDatabase from 'Util/BrowserDatabase';
+import { checkProducts } from 'Util/Cart/Cart';
 import history from 'Util/History';
 import { ONE_MONTH_IN_SECONDS } from 'Util/Request/QueryDispatcher';
 
@@ -32,7 +37,9 @@ export const mapDispatchToProps = (dispatch) => ({
     hideActiveOverlay: () => dispatch(hideActiveOverlay()),
     updateStoreCredit: () => StoreCreditDispatcher.getStoreCredit(dispatch),
     setMeta: (meta) => dispatch(updateMeta(meta)),
-    setGender: (gender) => dispatch(setGender(gender))
+    setGender: (gender) => dispatch(setGender(gender)),
+    removeCartItems: () => dispatch(removeCartItems()),
+    updateTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId)
 });
 export const mapStateToProps = (state) => ({
     totals: state.CartReducer.cartTotals,
@@ -40,7 +47,8 @@ export const mapStateToProps = (state) => ({
     guest_checkout: state.ConfigReducer.guest_checkout,
     countries: state.ConfigReducer.countries,
     isSignedIn: state.MyAccountReducer.isSignedIn,
-    activeOverlay: state.OverlayReducer.activeOverlay
+    activeOverlay: state.OverlayReducer.activeOverlay,
+    cartId: state.CartReducer.cartId
 });
 
 export class CheckoutContainer extends SourceCheckoutContainer {
@@ -48,7 +56,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         updateStoreCredit: PropTypes.func.isRequired,
         isSignedIn: PropTypes.bool.isRequired,
         setMeta: PropTypes.func.isRequired,
-        setGender: PropTypes.func.isRequired
+        setGender: PropTypes.func.isRequired,
+        removeCartItems: PropTypes.func.isRequired,
+        cartId: PropTypes.number.isRequired,
+        updateTotals: PropTypes.func.isRequired
     };
 
     constructor(props) {
@@ -112,7 +123,15 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             updateStoreCredit();
         }
 
-        if (Object.keys(totals).length && !items.length) {
+        if (items.length !== 0) {
+            const mappedItems = checkProducts(items);
+
+            if (mappedItems.length !== 0) {
+                history.push('/cart');
+            }
+        }
+
+        if (Object.keys(totals).length && !items.length && checkoutStep !== DETAILS_STEP) {
             showInfoNotification(__('Please add at least one product to cart!'));
             history.push('/cart');
         }
@@ -359,10 +378,15 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     }
 
     resetCart() {
-        const { updateStoreCredit, createEmptyCart } = this.props;
+        const { 
+            updateStoreCredit,
+            removeCartItems, 
+            cartId,
+            updateTotals
+        } = this.props;
 
-        BrowserDatabase.deleteItem(CART_ITEMS_CACHE_KEY);
-        BrowserDatabase.deleteItem(CART_ID_CACHE_KEY);
+        removeCartItems();
+        updateTotals(cartId);
         updateStoreCredit();
     }
 }

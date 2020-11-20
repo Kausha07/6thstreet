@@ -66,7 +66,9 @@ export class CartDispatcher {
                         brand_name: brandName,
                         price,
                         original_price: basePrice,
-                        id
+                        id,
+                        availability,
+                        available_qty
                     } = item;
 
                     return dispatch(updateCartItem(
@@ -77,7 +79,9 @@ export class CartDispatcher {
                         brandName,
                         thumbnail,
                         '',
-                        price
+                        price,
+                        availability,
+                        available_qty
                     ));
                 });
             }
@@ -92,8 +96,31 @@ export class CartDispatcher {
                 data
             } = await getCart(cartId);
 
-            await this.setCartItems(dispatch, data);
-            dispatch(setCartTotals(data));
+            if (!data) {
+                try {
+                    const { data: requestedCartId = null } = await createCart();
+                    dispatch(removeCartItems());
+
+                    if (!requestedCartId) {
+                        dispatch(
+                            showNotification(
+                                'error',
+                                __('There was an error creating your cart, please refresh the page in a little while')
+                            )
+                        );
+
+                        return;
+                    }
+
+                    dispatch(setCartId(requestedCartId));
+                    await this.getCartTotals(dispatch, requestedCartId);
+                } catch (e) {
+                    Logger.log(e);
+                }
+            } else {
+                await this.setCartItems(dispatch, data);
+                dispatch(setCartTotals(data));
+            }
         } catch (e) {
             Logger.log(e);
         }

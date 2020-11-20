@@ -57,7 +57,9 @@ export class CartOverlayContainer extends PureComponent {
         showNotification: PropTypes.func.isRequired,
         setNavigationState: PropTypes.func.isRequired,
         isPopup: PropTypes.bool.isRequired,
-        hideActiveOverlay: PropTypes.func.isRequired
+        hideActiveOverlay: PropTypes.func.isRequired,
+        isCheckoutAvailable: PropTypes.bool.isRequired,
+        closePopup: PropTypes.func.isRequired
     };
 
     static defaultProps = {
@@ -68,38 +70,62 @@ export class CartOverlayContainer extends PureComponent {
 
     containerFunctions = {
         changeHeaderState: this.changeHeaderState.bind(this),
-        handleCheckoutClick: this.handleCheckoutClick.bind(this)
+        handleCheckoutClick: this.handleCheckoutClick.bind(this),
+        handleViewBagClick: this.handleViewBagClick.bind(this)
     };
+
+    handleViewBagClick() {
+        const {
+            hideActiveOverlay,
+            closePopup,
+            isCheckoutAvailable,
+            showNotification
+        } = this.props;
+
+        hideActiveOverlay();
+        closePopup();
+        if (!isCheckoutAvailable) {
+            showNotification('error', __('Some products or selected quantities are no longer available'));
+        }
+    }
 
     handleCheckoutClick(e) {
         const {
             guest_checkout,
             showOverlay,
             showNotification,
-            setNavigationState
+            setNavigationState,
+            isCheckoutAvailable
         } = this.props;
 
-        // to prevent outside-click handler trigger
-        e.nativeEvent.stopImmediatePropagation();
+        if (isCheckoutAvailable) {
+            // to prevent outside-click handler trigger
+            e.nativeEvent.stopImmediatePropagation();
 
-        if (guest_checkout) {
-            history.push({ pathname: CHECKOUT_URL });
-            return;
+            if (guest_checkout) {
+                history.push({ pathname: CHECKOUT_URL });
+                return;
+            }
+
+            if (isSignedIn()) {
+                history.push({ pathname: CHECKOUT_URL });
+                return;
+            }
+
+            // there is no mobile, as cart overlay is not visible here
+            showOverlay(CUSTOMER_ACCOUNT_OVERLAY_KEY);
+            showNotification('info', __('Please sign-in to complete checkout!'));
+            setNavigationState({ name: CUSTOMER_ACCOUNT_OVERLAY_KEY, title: 'Sign in' });
+        } else {
+            showNotification('error', __('Some products or selected quantities are no longer available'));
         }
-
-        if (isSignedIn()) {
-            history.push({ pathname: CHECKOUT_URL });
-            return;
-        }
-
-        // there is no mobile, as cart overlay is not visible here
-        showOverlay(CUSTOMER_ACCOUNT_OVERLAY_KEY);
-        showNotification('info', __('Please sign-in to complete checkout!'));
-        setNavigationState({ name: CUSTOMER_ACCOUNT_OVERLAY_KEY, title: 'Sign in' });
     }
 
     changeHeaderState() {
-        const { changeHeaderState, totals: { count = 0 } } = this.props;
+        const {
+            changeHeaderState,
+            totals: { count = 0 }
+        } = this.props;
         const title = __('%s Items', count || 0);
 
         changeHeaderState({
