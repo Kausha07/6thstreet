@@ -28,20 +28,24 @@ export class CheckoutDispatcher {
     }
 
     /* eslint-disable-next-line */
-    async estimateShipping(dispatch, address) {
+    async estimateShipping(dispatch, address, isValidated = false) {
         const { Cart: { cartId } } = getStore().getState();
         try {
-            const response = await validateShippingAddress({ address });
-            const { success: isAddressValid } = response;
-
-            if (!isAddressValid) {
-                const { parameters, message } = response;
-                const formattedParams = capitalize(parameters[0]);
-
-                dispatch(showNotification('error', `${formattedParams} ${__('is not valid')}. ${message}`));
-            }
-            if (isAddressValid) {
+            if (isValidated) {
                 return await estimateShippingMethods({ cartId, address });
+            } else {
+                const response = await validateShippingAddress({ address });
+                const { success: isAddressValid } = response;
+
+                if (!isAddressValid) {
+                    const { parameters, message } = response;
+                    const formattedParams = capitalize(parameters[0]);
+
+                    dispatch(showNotification('error', `${formattedParams} ${__('is not valid')}. ${message}`));
+                }
+                if (isAddressValid) {
+                    return await estimateShippingMethods({ cartId, address });
+                }
             }
         } catch (e) {
             dispatch(showNotification('error', __('The address or phone field is incorrect')));

@@ -33,7 +33,8 @@ export class Checkout extends SourceCheckout {
         orderID: PropTypes.string.isRequired,
         incrementID: PropTypes.string.isRequired,
         shippingAddress: PropTypes.object.isRequired,
-        setGender: PropTypes.func.isRequired
+        setGender: PropTypes.func.isRequired,
+        setLoading: PropTypes.func.isRequired
     };
 
     state = {
@@ -385,7 +386,8 @@ export class Checkout extends SourceCheckout {
             email,
             checkoutTotals,
             isSignedIn,
-            shippingAddress
+            shippingAddress,
+            setLoading
         } = this.props;
 
         const { continueAsGuest, isArabic } = this.state;
@@ -404,6 +406,7 @@ export class Checkout extends SourceCheckout {
                   guestEmail={ email }
                   totals={ checkoutTotals }
                   shippingAddress={ shippingAddress }
+                  setLoading={ setLoading }
                 />
             </div>
         );
