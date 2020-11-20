@@ -71,14 +71,8 @@ export class CartItem extends PureComponent {
     static getDerivedStateFromProps(props) {
         const { item: { availability, availableQty, qty } } = props;
 
-        if (availability === 0 || availableQty === 0 || qty > availableQty) {
-            return {
-                isNotAvailble: true
-            };
-        }
-
         return {
-            isNotAvailble: false
+            isNotAvailble: availability === 0 || availableQty === 0 || qty > availableQty
         };
     }
 

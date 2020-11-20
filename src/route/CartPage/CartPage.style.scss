@@ -153,6 +153,7 @@
             &:hover,
             &:focus {
                 --button-hover-background: var(--color-orange-soda);
+                background-color: var(--color-orange-soda);
             }
         }
     }
@@ -637,22 +638,6 @@
 
         @include after-mobile {
             display: none;
-        }
-    }
-
-    &-Summary {
-        .CartPage{
-            &-CheckoutButtons {
-                .CartPage {
-                    &-CheckoutButton {
-                        &_isDisabled {
-                            &:hover {
-                                --button-hover-background: var(--color-orange-soda);
-                            }
-                        }
-                    }
-                }
-            }
         }
     }
 }

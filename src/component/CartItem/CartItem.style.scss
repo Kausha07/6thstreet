@@ -320,24 +320,14 @@
 }
 
 .CartPage {
-    &-Wrapper {
-        .CartPage {
-            &-Static {
-                .CartPage {
-                    &-Items {
-                        .CartItem {
-                            &-Picture {
-                                &_isCartPage {
-                                    width: 130px;
-
-                                    @include mobile {
-                                        width: 100%;
-                                        height: 100%;
-                                    }
-                                }
-                            }
-                        }
-                    }
+    &-Wrapper { 
+        .CartItem-Wrapper {
+            .CartItem-Picture_isCartPage {
+                width: 130px;
+    
+                @include mobile {
+                    width: 100%;
+                    height: 100%;
                 }
             }
         }
