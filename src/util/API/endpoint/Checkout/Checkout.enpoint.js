@@ -31,6 +31,10 @@ export const getPaymentMethods = () => MobileAPI.get(
     '/payment-methods'
 ) || {};
 
+export const getLastOrder = () => MobileAPI.get(
+    '/order/last'
+) || {};
+
 export const sendVerificationCode = ({ data }) => MobileAPI.post(
     '/otp/send',
     data
