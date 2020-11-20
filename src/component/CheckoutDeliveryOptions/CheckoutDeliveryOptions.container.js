@@ -6,8 +6,6 @@ export class CheckoutDeliveryOptionsContainer extends SourceCheckoutDeliveryOpti
     static getDerivedStateFromProps(props, state) {
         const { shippingMethods = [] } = props;
         const { prevShippingMethods = [] } = state;
-        console.log('***', prevShippingMethods);
-        console.log('***', shippingMethods);
         if (shippingMethods.length !== prevShippingMethods.length) {
             const selectedShippingMethodCode = CheckoutDeliveryOptionsContainer._getDefaultMethod(props);
 
