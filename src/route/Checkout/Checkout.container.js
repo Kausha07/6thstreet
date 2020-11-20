@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { CARD } from 'Component/CheckoutPayments/CheckoutPayments.config';
+import { CC_POPUP_ID } from 'Component/CreditCardPopup/CreditCardPopup.config';
+import { AUTHORIZED_STATUS } from 'Route/Checkout/Checkout.config';
 import { BILLING_STEP, PAYMENT_TOTALS } from 'SourceRoute/Checkout/Checkout.config';
 import {
     CheckoutContainer as SourceCheckoutContainer,
@@ -33,6 +35,7 @@ export const mapDispatchToProps = (dispatch) => ({
     verifyPayment: (paymentId) => CheckoutDispatcher.verifyPayment(dispatch, paymentId),
     getPaymentMethods: () => CheckoutDispatcher.getPaymentMethods(),
     sendVerificationCode: (phone) => CheckoutDispatcher.sendVerificationCode(dispatch, phone),
+    getLastOrder: () => CheckoutDispatcher.getLastOrder(dispatch),
     createEmptyCart: () => CartDispatcher.getCart(dispatch),
     hideActiveOverlay: () => dispatch(hideActiveOverlay()),
     updateStoreCredit: () => StoreCreditDispatcher.getStoreCredit(dispatch),
@@ -85,6 +88,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             checkoutStep: is_virtual ? BILLING_STEP : SHIPPING_STEP,
             orderID: '',
             incrementID: '',
+            threeDsUrl: '',
             paymentTotals: BrowserDatabase.getItem(PAYMENT_TOTALS) || {},
             email: '',
             isCreateUser: false,
@@ -245,7 +249,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                     email: customerEmail ? customerEmail : email
                 },
                 '3ds': {
-                    enable: true
+                    enabled: true
                 },
                 metadata: {
                     udf1: null
@@ -260,11 +264,30 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                         const { data } = response;
 
                         if (typeof data === 'object') {
-                            const { order_id, success, response_code, increment_id } = data;
+                            const {
+                                order_id,
+                                success,
+                                response_code,
+                                increment_id,
+                                id = '',
+                                _links: {
+                                    redirect: {
+                                        href = ''
+                                    } = {}
+                                } = {}
+                            } = data;
 
                             if (success || response_code === 200) {
-                                this.setDetailsStep(order_id, increment_id);
-                                this.resetCart();
+                                if (code === CARD && href) {
+                                    this.setState({ threeDsUrl: href, order_id, increment_id, id });
+                                    setTimeout(
+                                        () => this.processThreeDSWithTimeout(3),
+                                        10000
+                                    );
+                                } else {
+                                    this.setDetailsStep(order_id, increment_id);
+                                    this.resetCart();
+                                }
                             }
                         }
 
@@ -272,9 +295,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                             showErrorNotification(__(data));
                             this.setState({ isLoading: false });
                             this.resetCart();
-                            setTimeout(() => {
-                                window.location.href = '/';
-                            }, 3000);
                         }
                     }
 
@@ -282,10 +302,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                         showErrorNotification(__(response));
                         this.setState({ isLoading: false });
                         this.resetCart();
-
-                        setTimeout(() => {
-                            window.location.href = '/';
-                        }, 3000);
                     }
                 },
                 this._handleError
@@ -294,9 +310,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                 this.setState({ isLoading: false });
                 showErrorNotification(__('Something went wrong.'));
                 this.resetCart();
-                setTimeout(() => {
-                    window.location.href = '/';
-                }, 3000);
             });
         } catch (e) {
             this._handleError(e);
@@ -376,6 +389,53 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             },
             this._handleError
         );
+    }
+
+    processThreeDS() {
+        const { getLastOrder } = this.props;
+        const { order_id, increment_id } = this.state;
+
+        getLastOrder().then(
+            (response) => {
+                if (response) {
+                    const { status } = response;
+
+                    if (status === 'payment_success') {
+                        this.setDetailsStep(order_id, increment_id);
+                        this.resetCart();
+                        this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
+                    }
+                }
+            }
+        );
+    }
+
+    processThreeDSWithTimeout(counter) {
+        const { CreditCardPaymentStatus, order_id, increment_id } = this.state;
+        const { showErrorNotification, hideActiveOverlay, activeOverlay } = this.props;
+
+        // Need to get payment data from CreditCard.
+        // Could not get callback of CreditCard another way because CreditCard is iframe in iframe
+        if (CreditCardPaymentStatus !== AUTHORIZED_STATUS && counter < 25 && activeOverlay === CC_POPUP_ID) {
+            setTimeout(
+                () => {
+                    this.processThreeDS();
+                    this.processThreeDSWithTimeout(counter + 1);
+                },
+                5000
+            );
+        }
+
+        if (counter === 25) {
+            showErrorNotification('Credit Card session timeout');
+            hideActiveOverlay();
+        }
+
+        if (counter === 25 || activeOverlay !== CC_POPUP_ID) {
+            this.setState({ isLoading: false, isFailed: true });
+            this.setDetailsStep(order_id, increment_id);
+            this.resetCart();
+        }
     }
 
     resetCart() {

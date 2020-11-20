@@ -4,6 +4,7 @@ import { showNotification } from 'Store/Notification/Notification.action';
 import {
     createOrder,
     estimateShippingMethods,
+    getLastOrder,
     getPaymentMethods,
     saveShippingInformation,
     selectPaymentMethod,
@@ -123,6 +124,10 @@ export class CheckoutDispatcher {
 
     async verifyUserPhone(dispatch, data) {
         return verifyUserPhone({ data });
+    }
+
+    async getLastOrder(dispatch) {
+        return getLastOrder();
     }
 }
 
