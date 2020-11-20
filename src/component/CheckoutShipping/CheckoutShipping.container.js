@@ -29,7 +29,8 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
         guestEmail: PropTypes.string,
         showPopup: PropTypes.func.isRequired,
         validateAddress: PropTypes.func.isRequired,
-        shippingAddress: PropTypes.object.isRequired
+        shippingAddress: PropTypes.object.isRequired,
+        onShippingEstimationFieldsChange: PropTypes.func.isRequired
     };
 
     containerFunctions = {
@@ -82,9 +83,34 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
         });
     }
 
+    estimateShipping() {
+        const { onShippingEstimationFieldsChange } = this.props;
+
+        const {
+            country_id,
+            regionId,
+            city,
+            telephone = '',
+            street,
+            phonecode = ''
+        } = this.state;
+
+        onShippingEstimationFieldsChange({
+            country_code: country_id,
+            street,
+            region: regionId,
+            area: regionId,
+            city,
+            postcode: regionId,
+            phone: phonecode + telephone,
+            telephone
+        });
+    }
+
     onShippingSuccess(fields) {
         const {
-            selectedCustomerAddressId
+            selectedCustomerAddressId,
+            selectedShippingMethod
         } = this.state;
         const { showNotification } = this.props;
         const shippingAddress = selectedCustomerAddressId
@@ -95,11 +121,13 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
         this.validateAddress(addressForValidation).then((response) => {
             const { success } = response;
 
-            if (success) {
+            if (success && !selectedShippingMethod) {
+                console.log('here');
+            } else if (success) {
                 this.processDelivery(fields);
             } else {
                 const { parameters, message } = response;
-                const formattedParams = capitalize(parameters[0]);
+                const formattedParams = parameters ? capitalize(parameters[0]) : 'something';
 
                 showNotification('error', `${ formattedParams } ${ __('is not valid') }. ${ message }`);
             }
