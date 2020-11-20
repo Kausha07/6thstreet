@@ -45,6 +45,10 @@
         color: var(--footer-bottom-hyperlink-color);
         font-weight: var(--fw-demi);
         letter-spacing: .5px;
+
+        &:last-child {
+            text-transform: none;
+        }
     }
 
     &-PaymentIcons {
