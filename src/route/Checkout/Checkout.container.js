@@ -9,9 +9,8 @@ import {
     mapDispatchToProps as sourceMapDispatchToProps
 } from 'SourceRoute/Checkout/Checkout.container';
 import { setGender } from 'Store/AppState/AppState.action';
-import { setCartId } from 'Store/Cart/Cart.action';
 import CartDispatcher from 'Store/Cart/Cart.dispatcher';
-import { CART_ITEMS_CACHE_KEY } from 'Store/Cart/Cart.reducer';
+import { CART_ID_CACHE_KEY, CART_ITEMS_CACHE_KEY } from 'Store/Cart/Cart.reducer';
 import CheckoutDispatcher from 'Store/Checkout/Checkout.dispatcher';
 import { updateMeta } from 'Store/Meta/Meta.action';
 import { hideActiveOverlay } from 'Store/Overlay/Overlay.action';
@@ -29,7 +28,6 @@ export const mapDispatchToProps = (dispatch) => ({
     verifyPayment: (paymentId) => CheckoutDispatcher.verifyPayment(dispatch, paymentId),
     getPaymentMethods: () => CheckoutDispatcher.getPaymentMethods(),
     sendVerificationCode: (phone) => CheckoutDispatcher.sendVerificationCode(dispatch, phone),
-    setCartId: (cartId) => dispatch(setCartId(cartId)),
     createEmptyCart: () => CartDispatcher.getCart(dispatch),
     hideActiveOverlay: () => dispatch(hideActiveOverlay()),
     updateStoreCredit: () => StoreCreditDispatcher.getStoreCredit(dispatch),
@@ -254,12 +252,21 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                         if (typeof data === 'string') {
                             showErrorNotification(__(data));
                             this.setState({ isLoading: false });
+                            this.resetCart();
+                            setTimeout(() => {
+                                window.location.href = '/';
+                            }, 3000);
                         }
                     }
 
                     if (response && typeof response === 'string') {
                         showErrorNotification(__(response));
                         this.setState({ isLoading: false });
+                        this.resetCart();
+
+                        setTimeout(() => {
+                            window.location.href = '/';
+                        }, 3000);
                     }
                 },
                 this._handleError
@@ -267,9 +274,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                 const { showErrorNotification } = this.props;
                 this.setState({ isLoading: false });
                 showErrorNotification(__('Something went wrong.'));
+                this.resetCart();
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 3000);
             });
-
-            this.resetCart();
         } catch (e) {
             this._handleError(e);
         }
@@ -351,10 +360,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     }
 
     resetCart() {
-        const { setCartId, createEmptyCart, updateStoreCredit } = this.props;
+        const { updateStoreCredit, createEmptyCart } = this.props;
+
         BrowserDatabase.deleteItem(CART_ITEMS_CACHE_KEY);
-        setCartId('');
-        createEmptyCart();
+        BrowserDatabase.deleteItem(CART_ID_CACHE_KEY);
         updateStoreCredit();
     }
 }
