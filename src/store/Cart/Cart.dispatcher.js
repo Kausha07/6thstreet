@@ -206,9 +206,13 @@ export class CartDispatcher {
         const { Cart: { cartId } } = getStore().getState();
 
         try {
-            await applyCouponCode({ cartId, couponCode });
-            await this.getCartTotals(dispatch, cartId);
+            const response = await applyCouponCode({ cartId, couponCode });
+            if (typeof response === 'string') {
+                dispatch(showNotification('error', response));
+                return;
+            }
 
+            await this.getCartTotals(dispatch, cartId);
             dispatch(showNotification('success', __('Coupon was applied!')));
         } catch (e) {
             dispatch(showNotification('error', __('The coupon code isn\'t valid. Verify the code and try again.')));
