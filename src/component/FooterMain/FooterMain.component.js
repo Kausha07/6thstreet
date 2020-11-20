@@ -25,12 +25,8 @@ class FooterMain extends PureComponent {
                 href: '/disclaimer'
             },
             {
-                name: __('Careers'),
-                href: '/careers'
-            },
-            {
-                name: __('Press'),
-                href: '/press'
+                name: __('Privacy Policy'),
+                href: '/privacy-policy'
             }
         ]
     },
