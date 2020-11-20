@@ -22,7 +22,6 @@ export class CheckoutFail extends CheckoutSuccess {
             <div block="CheckoutSuccess">
                 <div block="CheckoutSuccess" elem="Details">
                     { this.renderStatus() }
-                    { this.renderTrackOrder() }
                     { this.renderTotalsItems() }
                     { this.renderTotals() }
                     { this.renderAddresses() }

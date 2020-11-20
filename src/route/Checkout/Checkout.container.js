@@ -278,7 +278,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                             } = data;
 
                             if (success || response_code === 200) {
-                                if (code === CARD) {
+                                if (code === CARD && href) {
                                     this.setState({ threeDsUrl: href, order_id, increment_id, id });
                                     setTimeout(
                                         () => this.processThreeDSWithTimeout(3),
