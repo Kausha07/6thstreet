@@ -16,7 +16,9 @@ import { isSignedIn } from 'Util/Auth';
 export const mapDispatchToProps = (dispatch) => ({
     showPopup: (payload) => dispatch(showPopup(ADDRESS_POPUP_ID, payload)),
     showNotification: (type, message) => dispatch(showNotification(type, message)),
-    validateAddress: (address) => CheckoutDispatcher.validateAddress(dispatch, address)
+    validateAddress: (address) => CheckoutDispatcher.validateAddress(dispatch, address),
+    // eslint-disable-next-line max-len
+    estimateShipping: (address, isValidted = false) => CheckoutDispatcher.estimateShipping(dispatch, address, isValidted)
 });
 
 export const mapStateToProps = (state) => ({
@@ -29,7 +31,9 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
         guestEmail: PropTypes.string,
         showPopup: PropTypes.func.isRequired,
         validateAddress: PropTypes.func.isRequired,
-        shippingAddress: PropTypes.object.isRequired
+        shippingAddress: PropTypes.object.isRequired,
+        estimateShipping: PropTypes.func.isRequired,
+        setLoading: PropTypes.func.isRequired
     };
 
     containerFunctions = {
@@ -82,11 +86,46 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
         });
     }
 
+    estimateShipping(address, isValidted) {
+        const { estimateShipping, setLoading } = this.props;
+        const {
+            country_id,
+            region_id,
+            city,
+            telephone = '',
+            street,
+            phonecode = ''
+        } = address;
+
+        setLoading();
+
+        const canEstimate = !Object.values(address).some((item) => item === undefined);
+
+        if (!canEstimate) {
+            return;
+        }
+
+        /* eslint-disable */
+        delete address.region_id;
+
+        return estimateShipping({
+            country_code: country_id,
+            street,
+            region: region_id,
+            area: region_id,
+            city,
+            postcode: region_id,
+            phone: phonecode + telephone,
+            telephone
+        }, isValidted);
+    }
+
     onShippingSuccess(fields) {
         const {
-            selectedCustomerAddressId
+            selectedCustomerAddressId,
+            selectedShippingMethod
         } = this.state;
-        const { showNotification } = this.props;
+        const { setLoading } = this.props;
         const shippingAddress = selectedCustomerAddressId
             ? this._getAddressById(selectedCustomerAddressId)
             : trimAddressFields(fields);
@@ -95,15 +134,40 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
         this.validateAddress(addressForValidation).then((response) => {
             const { success } = response;
 
-            if (success) {
+            if (success && !selectedShippingMethod) {
+                this.estimateShipping(addressForValidation, true).then((response) => {
+                    if (typeof response !== 'undefined') {
+                        const { data } = response;
+                        const { available } = data ? data[0] : { available: false };
+
+                        if (available) {
+                            this.setState({
+                                selectedShippingMethod: response.data[0]
+                            }, () => this.processDelivery(fields));
+                        } else {
+                            const { error } = response;
+                            this.handleError(error);
+                        }
+                    } else {
+                        setLoading(false);
+                    }
+                });
+            } else if (success) {
                 this.processDelivery(fields);
             } else {
-                const { parameters, message } = response;
-                const formattedParams = capitalize(parameters[0]);
-
-                showNotification('error', `${ formattedParams } ${ __('is not valid') }. ${ message }`);
+                this.handleError(response);
             }
         });
+    }
+
+    handleError(response) {
+        const { showNotification, setLoading } = this.props;
+
+        const { parameters, message } = response;
+        const formattedParams = parameters ? capitalize(parameters[0]) : 'something';
+
+        showNotification('error', `${ formattedParams } ${ __('is not valid') }. ${ message }`);
+        setLoading(false);
     }
 
     processDelivery(fields) {
