@@ -264,7 +264,7 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
                 selectOptions: this.getCitiesBasedOnLanguage(),
                 type: 'select',
                 value: isShippingAddress ? shippingCity : city,
-                onChange: (city) => this.setState({ city })
+                onChange: (city) => this.setState({ city, isLoading: true })
             },
             ...this.getRegionFields(),
             postcode: {
