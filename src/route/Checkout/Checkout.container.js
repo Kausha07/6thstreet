@@ -431,7 +431,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             hideActiveOverlay();
         }
 
-        if (counter === 25 || activeOverlay !== CC_POPUP_ID) {
+        if ((counter === 25 || activeOverlay !== CC_POPUP_ID) && CreditCardPaymentStatus !== AUTHORIZED_STATUS) {
             this.setState({ isLoading: false, isFailed: true });
             this.setDetailsStep(order_id, increment_id);
             this.resetCart();
