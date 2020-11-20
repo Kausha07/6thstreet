@@ -57,6 +57,7 @@ export class CartDispatcher {
             } = data || {};
 
             if (items.length) {
+                dispatch(processingCartRequest());
                 dispatch(removeCartItems());
 
                 items.map((item) => {
