@@ -159,7 +159,6 @@ export class CartOverlay extends PureComponent {
                   block="CartOverlay"
                   elem="CartButton"
                   to="/cart"
-                  // eslint-disable-next-line react/jsx-no-bind
                   onClick={ handleViewBagClick }
                 >
                     { __('View bag') }
