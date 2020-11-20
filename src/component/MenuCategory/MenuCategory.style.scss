@@ -259,6 +259,8 @@
 
             .MenuCategory {
                 &-CategoryLink {
+                    text-decoration: none;
+
                     &-Label {
                         &::before {
                             background-color: var(--red);

@@ -72,8 +72,8 @@ class MenuCategory extends PureComponent {
 
     getMenuCategoryLink() {
         const { data } = this.props;
-        if (data[0].button !== undefined) {
-            return data[0].button.link;
+        if (data[2] && data[2].button !== undefined) {
+            return data[2].button.link;
         }
 
         return location.pathname;
@@ -113,6 +113,10 @@ class MenuCategory extends PureComponent {
     render() {
         const { isVisible, isArabic } = this.state;
         const { isDefaultCategoryOpen, categoryKey } = this.props;
+
+        if (!isMobile.any() && categoryKey === 'stories') {
+            return null;
+        }
 
         if (isMobile.any()) {
             if (categoryKey === 'new_in') {
