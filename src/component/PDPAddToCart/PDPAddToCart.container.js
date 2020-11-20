@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
@@ -6,15 +7,18 @@ import CartDispatcher from 'Store/Cart/Cart.dispatcher';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
 import Event, { EVENT_GTM_PRODUCT_ADD_TO_CART } from 'Util/Event';
+import history from 'Util/History';
 
 import PDPAddToCart from './PDPAddToCart.component';
 
 export const mapStateToProps = (state) => ({
-    product: state.PDP.product
+    product: state.PDP.product,
+    totals: state.CartReducer.cartTotals
 });
 
 export const mapDispatchToProps = (dispatch) => ({
     showNotification: (type, message) => dispatch(showNotification(type, message)),
+    getCartTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId),
     addProductToCart: (
         productData, color, optionValue, basePrice, brand_name, thumbnail_url, url, itemPrice
     ) => CartDispatcher.addProductToCart(
@@ -34,24 +38,46 @@ export class PDPAddToCartContainer extends PureComponent {
     static propTypes = {
         product: Product.isRequired,
         addProductToCart: PropTypes.func.isRequired,
-        showNotification: PropTypes.func.isRequired
+        showNotification: PropTypes.func.isRequired,
+        totals: PropTypes.object,
+        PrevTotal: PropTypes.number,
+        total: PropTypes.number,
+        productAdded: PropTypes.bool
+    };
+
+    static defaultProps = {
+        totals: {},
+        PrevTotal: null,
+        total: null,
+        productAdded: false
     };
 
     containerFunctions = {
         onSizeTypeSelect: this.onSizeTypeSelect.bind(this),
         onSizeSelect: this.onSizeSelect.bind(this),
-        addToCart: this.addToCart.bind(this)
+        addToCart: this.addToCart.bind(this),
+        routeChangeToCart: this.routeChangeToCart.bind(this)
     };
 
-    state = {
-        sizeObject: {},
-        selectedSizeType: 'eu',
-        selectedSizeCode: '',
-        insertedSizeStatus: true,
-        isLoading: false,
-        addedToCart: false,
-        buttonRefreshTimeout: 1250
-    };
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            sizeObject: {},
+            selectedSizeType: 'eu',
+            selectedSizeCode: '',
+            insertedSizeStatus: true,
+            isLoading: false,
+            addedToCart: false,
+            buttonRefreshTimeout: 1250,
+            showProceedToCheckout: false,
+            hideCheckoutBlock: false,
+            clearTime: false
+        };
+
+        this.fullCheckoutHide = null;
+        this.startCheckoutHide = null;
+    }
 
     static getDerivedStateFromProps(props) {
         const { product } = props;
@@ -70,10 +96,30 @@ export class PDPAddToCartContainer extends PureComponent {
                 return { insertedSizeStatus: false, sizeObject: object };
             }
 
+            if (filteredProductKeys.length > 1 && filteredProductSizeKeys.length === 0) {
+                const object = {
+                    sizeCodes: [filteredProductKeys[1]],
+                    sizeTypes: filteredProductSizeKeys
+                };
+
+                return { insertedSizeStatus: false, sizeObject: object };
+            }
+
             return { sizeObject: object };
         }
 
         return null;
+    }
+
+    componentDidUpdate(prevProps, _) {
+        const { totals: { total: PrevTotal = null } } = prevProps;
+        const { totals: { total = null } } = this.props;
+        const { productAdded } = this.state;
+
+        if (productAdded && total && PrevTotal !== total) {
+            this.clearTimeAll();
+            this.proceedToCheckout();
+        }
     }
 
     containerProps = () => {
@@ -111,6 +157,8 @@ export class PDPAddToCartContainer extends PureComponent {
         const itemPrice = price[0][Object.keys(price[0])[0]]['6s_special_price'];
         const basePrice = price[0][Object.keys(price[0])[0]]['6s_base_price'];
 
+        this.setState({ productAdded: true });
+
         if ((size_uk.length !== 0 || size_eu.length !== 0 || size_us.length !== 0)
             && selectedSizeCode === '') {
             showNotification('error', __('Please select a size.'));
@@ -129,7 +177,15 @@ export class PDPAddToCartContainer extends PureComponent {
                 optionId,
                 optionValue
             }, color, optionValue, basePrice, brand_name, thumbnail_url, url, itemPrice).then(
-                () => this.afterAddToCart()
+                (response) => {
+                    // Response is sent only if error appear
+                    if (response) {
+                        showNotification('error', __(response));
+                        this.afterAddToCart(false);
+                    } else {
+                        this.afterAddToCart();
+                    }
+                }
             );
 
             Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_CART, {
@@ -156,7 +212,15 @@ export class PDPAddToCartContainer extends PureComponent {
                 optionId: '',
                 optionValue: ''
             }, color, null, basePrice, brand_name, thumbnail_url, url, itemPrice).then(
-                () => this.afterAddToCart()
+                (response) => {
+                    // Response is sent only if error appear
+                    if (response) {
+                        showNotification('error', __(response));
+                        this.afterAddToCart(false);
+                    } else {
+                        this.afterAddToCart();
+                    }
+                }
             );
 
             Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_CART, {
@@ -174,17 +238,39 @@ export class PDPAddToCartContainer extends PureComponent {
         }
     }
 
-    afterAddToCart() {
+    afterAddToCart(isAdded = 'true') {
         // eslint-disable-next-line no-unused-vars
         const { buttonRefreshTimeout } = this.state;
-
         this.setState({ isLoading: false });
         // TODO props for addedToCart
         const timeout = 1250;
-        this.setState({ addedToCart: true });
-        const timer = setTimeout(() => this.setState({ addedToCart: false }), timeout);
 
-        return () => clearTimeout(timer);
+        if (isAdded) {
+            this.setState({ addedToCart: true });
+        }
+
+        setTimeout(() => this.setState({ productAdded: false, addedToCart: false }), timeout);
+    }
+
+    clearTimeAll() {
+        this.setState({ hideCheckoutBlock: false });
+
+        clearTimeout(this.fullCheckoutHide);
+        clearTimeout(this.startCheckoutHide);
+    }
+
+    proceedToCheckout() {
+        this.setState({ showProceedToCheckout: true });
+
+        this.startCheckoutHide = setTimeout(() => this.setState({ hideCheckoutBlock: true }), 5000);
+        this.fullCheckoutHide = setTimeout(() => this.setState({
+            showProceedToCheckout: false,
+            hideCheckoutBlock: false
+        }), 7000);
+    }
+
+    routeChangeToCart() {
+        history.push('/cart');
     }
 
     render() {

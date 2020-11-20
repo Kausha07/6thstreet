@@ -58,6 +58,7 @@ class HeaderWishlist extends PureComponent {
             >
                 <button
                   onClick={ this.routeChangeWishlist }
+                  type="button"
                 >
                     <div block="HeaderWishlist" elem="Count" mods={ { have: !!itemsCount } }>{ itemsCount }</div>
                     <span block="HeaderWishlist" elem="Heart" mods={ { isBlack: !!itemsCount } } />

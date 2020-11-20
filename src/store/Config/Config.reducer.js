@@ -16,7 +16,8 @@ export {
 
 export const initialState = {
     ...SourceInitialState,
-    countries
+    countries,
+    base_link_url: process.env.REACT_APP_HOST
 };
 export const ConfigReducer = (
     state = initialState,

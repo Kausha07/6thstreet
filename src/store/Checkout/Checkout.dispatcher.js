@@ -4,6 +4,7 @@ import { showNotification } from 'Store/Notification/Notification.action';
 import {
     createOrder,
     estimateShippingMethods,
+    getLastOrder,
     getPaymentMethods,
     saveShippingInformation,
     selectPaymentMethod,
@@ -16,27 +17,36 @@ import {
     getInstallmentForValue,
     verifyPayment
 } from 'Util/API/endpoint/Tabby/Tabby.enpoint';
+import { capitalize } from 'Util/App';
 import Logger from 'Util/Logger';
 
 export class CheckoutDispatcher {
+    async validateAddress(dispatch, address) {
+        /* eslint-disable */
+        delete address.region_id;
+
+        return validateShippingAddress({ address });
+    }
+
     /* eslint-disable-next-line */
-    async estimateShipping(dispatch, address) {
+    async estimateShipping(dispatch, address, isValidated = false) {
         const { Cart: { cartId } } = getStore().getState();
-        const { area, street } = address;
         try {
-            const response = await validateShippingAddress({ address });
-            const { success: isAddressValid } = response;
-
-            if (!isAddressValid && (area !== undefined || street !== undefined)) {
-                const { error: { parameters } } = response;
-                const message = parameters.length > 1
-                    ? `(${parameters}) ${__('fields are not valid')}`
-                    : `(${parameters}) ${__('field is not valid')}`;
-
-                dispatch(showNotification('error', message));
-            }
-            if (isAddressValid) {
+            if (isValidated) {
                 return await estimateShippingMethods({ cartId, address });
+            } else {
+                const response = await validateShippingAddress({ address });
+                const { success: isAddressValid } = response;
+
+                if (!isAddressValid) {
+                    const { parameters, message } = response;
+                    const formattedParams = capitalize(parameters[0]);
+
+                    dispatch(showNotification('error', `${formattedParams} ${__('is not valid')}. ${message}`));
+                }
+                if (isAddressValid) {
+                    return await estimateShippingMethods({ cartId, address });
+                }
             }
         } catch (e) {
             dispatch(showNotification('error', __('The address or phone field is incorrect')));
@@ -118,6 +128,10 @@ export class CheckoutDispatcher {
 
     async verifyUserPhone(dispatch, data) {
         return verifyUserPhone({ data });
+    }
+
+    async getLastOrder(dispatch) {
+        return getLastOrder();
     }
 }
 

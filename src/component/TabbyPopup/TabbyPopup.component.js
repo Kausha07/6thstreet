@@ -23,7 +23,7 @@ class TabbyPopup extends PureComponent {
               src={ tabbyWebUrl }
               width="545"
               height="750"
-              id="tabby_popup"
+              id={ TABBY_POPUP_ID }
               display="initial"
               position="relative"
             />

@@ -15,10 +15,10 @@ class FieldMultiselect extends PureComponent {
         placeholder: PropTypes.string,
         activeFilter: PropTypes.object,
         isChecked: PropTypes.bool,
-        changeActiveFilter: PropTypes.func.isRequired,
+        changeActiveFilter: PropTypes.func,
         currentActiveFilter: PropTypes.string,
         isHidden: PropTypes.bool,
-        parentCallback: PropTypes.func.isRequired
+        parentCallback: PropTypes.func
     };
 
     static defaultProps = {
@@ -26,7 +26,9 @@ class FieldMultiselect extends PureComponent {
         activeFilter: {},
         isChecked: false,
         currentActiveFilter: '',
-        isHidden: false
+        isHidden: false,
+        parentCallback: () => {},
+        changeActiveFilter: () => {}
     };
 
     filterDropdownRef = createRef();

@@ -224,7 +224,7 @@ class HeaderMainSection extends NavigationAbstract {
         const { isArabic } = this.state;
 
         return this.isPLP() || this.isPDP() ? (
-            <div block="BackArrow" mods={ { isArabic } }>
+            <div block="BackArrow" mods={ { isArabic } } key="back">
                 <button
                   block="BackArrow-Button"
                   onClick={ history.goBack }

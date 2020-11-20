@@ -9,45 +9,47 @@ import Logger from 'Util/Logger';
 
 export class PLPDispatcher {
     async requestProductList(payload, dispatch, state) {
-        dispatch(setPLPLoading(true));
-
         const { options } = payload;
 
-        // Same as normal options without custom filters, i.e. attributes
-        const initialOptions = this._getInitalOptions(options);
+        if (Object.keys(options).length !== 0) {
+            dispatch(setPLPLoading(true));
 
-        // is inital - assume request is inital, if it matches inital options
-        const isInitial = JSON.stringify(initialOptions) === JSON.stringify(options);
-        const { initialOptions: stateInitialOptions } = state;
+            // Same as normal options without custom filters, i.e. attributes
+            const initialOptions = this._getInitalOptions(options);
 
-        // if this is inital request and the state options differ => load inital options
-        if (!isInitial && initialOptions !== stateInitialOptions) {
-            try {
+            // is inital - assume request is inital, if it matches inital options
+            const isInitial = JSON.stringify(initialOptions) === JSON.stringify(options);
+            const { initialOptions: stateInitialOptions } = state;
+
+            // if this is inital request and the state options differ => load inital options
+            if (!isInitial && initialOptions !== stateInitialOptions) {
+                try {
                 // Load initial filters to combine them with selected filters
-                const { filters: initialFilters } = await new Algolia().getPLP(initialOptions);
+                    const { filters: initialFilters } = await new Algolia().getPLP(initialOptions);
 
-                dispatch(setPLPInitialFilters(
-                    initialFilters,
-                    initialOptions
+                    dispatch(setPLPInitialFilters(
+                        initialFilters,
+                        initialOptions
+                    ));
+                } catch (e) {
+                    Logger.log(e);
+                }
+            }
+
+            try {
+                const response = await new Algolia().getPLP(options);
+
+                dispatch(setPLPData(
+                    response,
+                    options,
+                    isInitial
                 ));
             } catch (e) {
                 Logger.log(e);
+
+                // Needed, so PLP container sets "isLoading" to false
+                dispatch(setPLPData({}, options, isInitial));
             }
-        }
-
-        try {
-            const response = await new Algolia().getPLP(options);
-
-            dispatch(setPLPData(
-                response,
-                options,
-                isInitial
-            ));
-        } catch (e) {
-            Logger.log(e);
-
-            // Needed, so PLP container sets "isLoading" to false
-            dispatch(setPLPData({}, options, isInitial));
         }
     }
 

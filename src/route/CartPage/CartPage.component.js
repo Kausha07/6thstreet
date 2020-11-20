@@ -15,6 +15,7 @@ import CmsBlock from 'Component/CmsBlock';
 import ContentWrapper from 'Component/ContentWrapper';
 import ExpandableContent from 'Component/ExpandableContent';
 import Link from 'Component/Link';
+import Loader from 'Component/Loader';
 import MyAccountTabList from 'Component/MyAccountTabList';
 import { FIXED_CURRENCIES } from 'Component/Price/Price.config';
 import ProductLinks from 'Component/ProductLinks';
@@ -43,6 +44,9 @@ export class CartPage extends PureComponent {
         changeActiveTab: PropTypes.func.isRequired,
         clubApparel: ClubApparelMember,
         isSignedIn: PropTypes.bool.isRequired,
+        isLoading: PropTypes.bool.isRequired,
+        isCheckoutAvailable: PropTypes.bool.isRequired,
+        processingRequest: PropTypes.bool,
         history: HistoryType.isRequired
     };
 
@@ -51,7 +55,8 @@ export class CartPage extends PureComponent {
     };
 
     static defaultProps = {
-        clubApparel: {}
+        clubApparel: {},
+        processingRequest: false
     };
 
     renderCartItems() {
@@ -71,6 +76,7 @@ export class CartPage extends PureComponent {
                       item={ item }
                       currency_code={ quote_currency_code }
                       isEditing
+                      isCartPage
                     />
                 )) }
             </ul>
@@ -130,13 +136,16 @@ export class CartPage extends PureComponent {
     }
 
     renderButtons() {
-        const { onCheckoutButtonClick } = this.props;
+        const { onCheckoutButtonClick, isCheckoutAvailable } = this.props;
+
+        const isDisabled = !isCheckoutAvailable;
 
         return (
             <div block="CartPage" elem="CheckoutButtons">
                 <button
                   block="CartPage"
                   elem="CheckoutButton"
+                  mods={ { isDisabled } }
                   mix={ { block: 'Button' } }
                   onClick={ onCheckoutButtonClick }
                 >
@@ -379,6 +388,10 @@ export class CartPage extends PureComponent {
         const { activeTab, changeActiveTab } = this.props;
         const { name } = tabMap[activeTab];
 
+        if (!isMobile.any()) {
+            return null;
+        }
+
         return (
             <ContentWrapper
               label={ __('My Account page') }
@@ -396,18 +409,51 @@ export class CartPage extends PureComponent {
         );
     }
 
-    render() {
-        const {
-            isArabic
-        } = this.state;
+    renderEmptyCartPage() {
+        const { isArabic } = this.state;
 
         return (
-            <main block="CartPage" aria-label="Cart Page" mods={ { isArabic } }>
+            <div block="CartPage" elem="EmptyCart" mods={ { isArabic } }>
+                <div block="CartPage" elem="EmptyCartIcon" />
+                <p>{ __('You have no items in your shopping cart.') }</p>
+                <p>
+                <Link to="/">
+                    <strong>
+                        { ' ' }
+                        { __('Click Here') }
+                        { ' ' }
+                    </strong>
+                </Link>
+                    { __('to continue shopping.') }
+                </p>
+            </div>
+        );
+    }
+
+    renderDynamicContent() {
+        const {
+            totals,
+            totals: { items },
+            isLoading,
+            processingRequest
+        } = this.props;
+
+        if (isLoading) {
+            return <Loader isLoading={ isLoading } />;
+        }
+
+        if (Object.keys(totals).length === 0 || items.length === 0) {
+            return this.renderEmptyCartPage();
+        }
+
+        return (
+            <>
                 { this.renderContent() }
                 <ContentWrapper
                   wrapperMix={ { block: 'CartPage', elem: 'Wrapper' } }
                   label="Cart page details"
                 >
+                    <Loader isLoading={ processingRequest } />
                     <div block="CartPage" elem="Static" mods={ { isArabic } }>
                         { this.renderHeading() }
                         { this.renderCartItems() }
@@ -421,6 +467,16 @@ export class CartPage extends PureComponent {
                         { this.renderTotals() }
                     </div>
                 </ContentWrapper>
+            </>
+        );
+    }
+
+    render() {
+        const { isArabic } = this.state;
+
+        return (
+            <main block="CartPage" aria-label="Cart Page" mods={ { isArabic } }>
+                { this.renderDynamicContent() }
             </main>
         );
     }

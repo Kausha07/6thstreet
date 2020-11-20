@@ -7,8 +7,11 @@ import SourceField from 'SourceComponent/Field/Field.container';
 
 import {
     CHECKBOX_TYPE,
+    EMAIL_TYPE,
     NUMBER_TYPE,
-    PASSWORD_TYPE, RADIO_TYPE, SELECT_TYPE,
+    PASSWORD_TYPE,
+    RADIO_TYPE,
+    SELECT_TYPE,
     TEXT_TYPE,
     TEXTAREA_TYPE,
     TOGGLE_TYPE
@@ -24,6 +27,7 @@ export class FieldContainer extends SourceField {
     static propTypes = {
         type: PropTypes.oneOf([
             TEXT_TYPE,
+            EMAIL_TYPE,
             NUMBER_TYPE,
             TEXTAREA_TYPE,
             PASSWORD_TYPE,

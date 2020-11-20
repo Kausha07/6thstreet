@@ -4,7 +4,10 @@ import { PureComponent } from 'react';
 import CountryMiniFlag from 'Component/CountryMiniFlag';
 import Field from 'Component/Field';
 import Form from 'Component/Form';
-import { PHONE_CODES } from 'Component/MyAccountAddressForm/MyAccountAddressForm.config';
+import {
+    COUNTRY_CODES_FOR_PHONE_VALIDATION,
+    PHONE_CODES
+} from 'Component/MyAccountAddressForm/MyAccountAddressForm.config';
 import { isArabic } from 'Util/App';
 
 import './ChangePhonePopup.style.scss';
@@ -17,23 +20,15 @@ class ChangePhonePopup extends PureComponent {
         countryId: PropTypes.string.isRequired
     };
 
-    state = {
-        phoneValidation: ['telephone'],
-        isArabic: isArabic()
-    };
+    constructor(props) {
+        super(props);
 
-    componentDidMount() {
-        const { countryId } = this.props;
+        const { countryId } = props;
 
-        if (countryId === 'AE') {
-            this.setState({ phoneValidation: ['telephoneAE'] });
-        }
-    }
-
-    renderCurrentPhoneCode() {
-        const { countryId } = this.props;
-
-        return PHONE_CODES[countryId];
+        this.state = {
+            selectedCountry: countryId,
+            isArabic: isArabic()
+        };
     }
 
     renderCloseBtn() {
@@ -66,13 +61,73 @@ class ChangePhonePopup extends PureComponent {
         );
     }
 
+    renderCurrentPhoneCode(country_id) {
+        return PHONE_CODES[country_id];
+    }
+
+    handleSelectChange = (e) => {
+        const countries = Object.keys(PHONE_CODES);
+
+        const countiresMapped = countries.reduce((acc, country) => {
+            if (e === this.renderCurrentPhoneCode(country)) {
+                acc.push(country);
+            }
+
+            return acc;
+        }, []);
+
+        this.setState({ selectedCountry: countiresMapped[0], phoneValue: [] });
+    };
+
+    renderOption = (country) => ({
+        id: country,
+        label: this.renderCurrentPhoneCode(country),
+        value: this.renderCurrentPhoneCode(country)
+    });
+
+    renderPhone() {
+        const { selectedCountry, isArabic, phoneValue } = this.state;
+        const countries = Object.keys(PHONE_CODES);
+        const maxlength = COUNTRY_CODES_FOR_PHONE_VALIDATION[selectedCountry]
+            ? '9' : '8';
+
+        return (
+            <div
+              block="ChangePhonePopup"
+              elem="Phone"
+              mods={ { isArabic } }
+            >
+                <Field
+                  type="select"
+                  id="countryPhoneCode"
+                  name="countryPhoneCode"
+                  onChange={ this.handleSelectChange }
+                  selectOptions={ countries.map(this.renderOption) }
+                  value={ PHONE_CODES[selectedCountry] }
+                />
+                <Field
+                  mix={ {
+                      block: 'ChangePhonePopup',
+                      elem: 'PhoneField'
+                  } }
+                  validation={ ['notEmpty'] }
+                  placeholder="Phone Number"
+                  maxlength={ maxlength }
+                  pattern="[0-9]*"
+                  value={ phoneValue }
+                  id="newPhone"
+                  name="newPhone"
+                />
+                <CountryMiniFlag mods={ { isArabic } } label={ selectedCountry } />
+            </div>
+        );
+    }
+
     render() {
         const {
             isChangePhonePopupOpen,
-            changePhone,
-            countryId
+            changePhone
         } = this.props;
-        const { phoneValidation, isArabic } = this.state;
 
         return (
             <div
@@ -95,30 +150,7 @@ class ChangePhonePopup extends PureComponent {
                         { __('Input new phone number and send Verification code again') }
                     </div>
                     <Form onSubmitSuccess={ changePhone }>
-                        <div
-                          block="ChangePhonePopup"
-                          elem="Fields"
-                          mods={ { isArabic } }
-                        >
-                            <Field
-                              mix={ {
-                                  block: 'ChangePhonePopup-Fields',
-                                  elem: 'CountryCode'
-                              } }
-                              label={ <CountryMiniFlag label={ countryId } /> }
-                              value={ this.renderCurrentPhoneCode() }
-                            />
-                            <Field
-                              mix={ {
-                                  block: 'ChangePhonePopup-Fields',
-                                  elem: 'Phone'
-                              } }
-                              type="text"
-                              name="newPhone"
-                              id="newPhone"
-                              validation={ phoneValidation }
-                            />
-                        </div>
+                        { this.renderPhone() }
                         <button
                           block="primary"
                           type="submit"

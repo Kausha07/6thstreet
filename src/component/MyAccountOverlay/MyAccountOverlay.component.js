@@ -13,6 +13,8 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { withRouter } from 'react-router-dom';
 
+import CountrySwitcher from 'Component/CountrySwitcher';
+import LanguageSwitcher from 'Component/LanguageSwitcher';
 import Field from 'SourceComponent/Field';
 import Form from 'SourceComponent/Form';
 import Loader from 'SourceComponent/Loader';
@@ -73,12 +75,9 @@ export class MyAccountOverlay extends PureComponent {
 
     state = {
         isPopup: false,
-        gender: '0',
+        gender: 3,
         isChecked: false,
         isArabic: isArabic(),
-        maleId: 0,
-        femaleId: 1,
-        preferNotToSayId: 2,
         isSignInValidated: false,
         isCreateValidated: false,
         isForgotValidated: false
@@ -151,6 +150,7 @@ export class MyAccountOverlay extends PureComponent {
                 <p block="MyAccountOverlay" elem="Heading">{ title }</p>
                 { render() }
                 { this.renderCloseBtn() }
+                { this.renderChangeStore() }
             </div>
         );
     }
@@ -253,10 +253,10 @@ export class MyAccountOverlay extends PureComponent {
                     { __('Please enter your email and we will send you a link to reset your password') }
                 </p>
                 <Field
-                  type="text"
+                  type="email"
                   id="email"
                   name="email"
-                  placeholder={ __('EMAIL OR PHONE*') }
+                  placeholder={ __('EMAIL') }
                   autocomplete="email"
                   validation={ ['notEmpty', 'email'] }
                 />
@@ -313,9 +313,6 @@ export class MyAccountOverlay extends PureComponent {
 
         const {
             gender,
-            maleId,
-            femaleId,
-            preferNotToSayId,
             isChecked,
             isArabic,
             isCreateValidated
@@ -359,28 +356,28 @@ export class MyAccountOverlay extends PureComponent {
                     >
                         <Field
                           type="radio"
-                          id="male"
+                          id="1"
                           label={ __('Male') }
                           name="gender"
-                          value={ maleId }
+                          value={ gender }
                           onClick={ this.handleGenderChange }
                           defaultChecked={ gender }
                         />
                         <Field
                           type="radio"
-                          id="female"
+                          id="2"
                           label={ __('Female') }
                           name="gender"
-                          value={ femaleId }
+                          value={ gender }
                           onClick={ this.handleGenderChange }
                           defaultChecked={ gender }
                         />
                         <Field
                           type="radio"
-                          id="preferNot"
+                          id="3"
                           label={ __('Prefer not to say') }
                           name="gender"
-                          value={ preferNotToSayId }
+                          value={ gender }
                           onClick={ this.handleGenderChange }
                           defaultChecked={ gender }
                         />
@@ -467,8 +464,8 @@ export class MyAccountOverlay extends PureComponent {
             >
                 <fieldset block="MyAccountOverlay" elem="Legend">
                     <Field
-                      type="text"
-                      placeholder={ __('EMAIL OR PHONE*') }
+                      type="email"
+                      placeholder={ __('EMAIL') }
                       id="email"
                       name="email"
                       autocomplete="email"
@@ -502,6 +499,19 @@ export class MyAccountOverlay extends PureComponent {
                 </div>
             </Form>
         );
+    }
+
+    renderChangeStore() {
+        if (isMobile.any()) {
+            return (
+                <div block="MyAccountOverlay" elem="StoreSwitcher">
+                    <LanguageSwitcher />
+                    <CountrySwitcher />
+                </div>
+            );
+        }
+
+        return null;
     }
 
     render() {

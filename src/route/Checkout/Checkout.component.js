@@ -2,6 +2,7 @@
 import PropTypes from 'prop-types';
 
 import CheckoutBilling from 'Component/CheckoutBilling';
+import CheckoutFail from 'Component/CheckoutFail';
 import CheckoutGuestForm from 'Component/CheckoutGuestForm';
 import CheckoutOrderSummary from 'Component/CheckoutOrderSummary';
 import {
@@ -12,6 +13,7 @@ import {
 import CheckoutShipping from 'Component/CheckoutShipping';
 import CheckoutSuccess from 'Component/CheckoutSuccess';
 import ContentWrapper from 'Component/ContentWrapper';
+import CreditCardPopup from 'Component/CreditCardPopup';
 import HeaderLogo from 'Component/HeaderLogo';
 import TabbyPopup from 'Component/TabbyPopup';
 import { TABBY_POPUP_ID } from 'Component/TabbyPopup/TabbyPopup.config';
@@ -30,11 +32,19 @@ import './Checkout.style';
 export class Checkout extends SourceCheckout {
     static propTypes = {
         isSignedIn: PropTypes.bool.isRequired,
-        orderID: PropTypes.string.isRequired
+        processingRequest: PropTypes.bool,
+        orderID: PropTypes.string.isRequired,
+        incrementID: PropTypes.string.isRequired,
+        shippingAddress: PropTypes.object.isRequired,
+        setGender: PropTypes.func.isRequired,
+        setLoading: PropTypes.func.isRequired,
+        threeDsUrl: PropTypes.string.isRequired,
+        isFailed: PropTypes.bool.isRequired
     };
 
     state = {
         cashOnDeliveryFee: null,
+        processingRequest: false,
         isCustomAddressExpanded: false,
         continueAsGuest: false,
         isInvalidEmail: false,
@@ -163,7 +173,12 @@ export class Checkout extends SourceCheckout {
 
     renderSummary() {
         const { cashOnDeliveryFee } = this.state;
-        const { checkoutTotals, checkoutStep, paymentTotals } = this.props;
+        const {
+            checkoutTotals,
+            checkoutStep,
+            paymentTotals,
+            processingRequest
+        } = this.props;
         const { areTotalsVisible } = this.stepMap[checkoutStep];
 
         if (!areTotalsVisible) {
@@ -176,6 +191,7 @@ export class Checkout extends SourceCheckout {
             totals={ checkoutTotals }
             paymentTotals={ paymentTotals }
             cashOnDeliveryFee={ cashOnDeliveryFee }
+            processingRequest={ processingRequest }
           />
         );
     }
@@ -247,11 +263,13 @@ export class Checkout extends SourceCheckout {
 
         return (
             <>
-                <div block="Checkout" elem="BackButtons" mods={ { isSignedIn, isArabic } }>
-                    <button onClick={ this.goBackLogin }>
-                        { this.renderHeading('Login / Sign Up', true) }
-                        <span>{ __('Edit') }</span>
-                    </button>
+                <div block="Checkout" elem="BackButtons" mods={ { isArabic } }>
+                    { isSignedIn ? null : (
+                        <button onClick={ this.goBackLogin }>
+                            { this.renderHeading('Login / Sign Up', true) }
+                            <span>{ __('Edit') }</span>
+                        </button>
+                    ) }
                     <button onClick={ goBack }>
                         { this.renderHeading(__('Delivery Options'), true) }
                         <span>{ __('Edit') }</span>
@@ -266,6 +284,7 @@ export class Checkout extends SourceCheckout {
                   savePaymentInformation={ this.savePaymentInformation }
                   setTabbyWebUrl={ this.setTabbyWebUrl }
                   setPaymentCode={ this.setPaymentCode }
+                  setCheckoutCreditCardData={ this.setCheckoutCreditCardData }
                 />
             </>
         );
@@ -327,6 +346,18 @@ export class Checkout extends SourceCheckout {
         );
     }
 
+    renderCreditCardIframe() {
+        const { threeDsUrl } = this.props;
+
+        if (!threeDsUrl) {
+            return null;
+        }
+
+        return (
+            <CreditCardPopup threeDsUrl={ threeDsUrl } />
+        );
+    }
+
     renderTabbyIframe() {
         const {
             isTabbyPopupShown,
@@ -347,7 +378,12 @@ export class Checkout extends SourceCheckout {
     }
 
     renderDetailsStep() {
-        const { orderID, shippingAddress } = this.props;
+        const {
+            orderID,
+            shippingAddress,
+            incrementID,
+            isFailed
+        } = this.props;
         const {
             paymentInformation: {
                 billing_address,
@@ -358,9 +394,23 @@ export class Checkout extends SourceCheckout {
 
         this.setState({ isSuccess: true });
 
+        if (isFailed) {
+            return (
+                <CheckoutFail
+                  orderID={ orderID }
+                  incrementID={ incrementID }
+                  shippingAddress={ shippingAddress }
+                  billingAddress={ billing_address }
+                  paymentMethod={ paymentMethod }
+                  creditCardData={ creditCardData }
+                />
+            );
+        }
+
         return (
           <CheckoutSuccess
             orderID={ orderID }
+            incrementID={ incrementID }
             shippingAddress={ shippingAddress }
             billingAddress={ billing_address }
             paymentMethod={ paymentMethod }
@@ -377,7 +427,9 @@ export class Checkout extends SourceCheckout {
             isDeliveryOptionsLoading,
             email,
             checkoutTotals,
-            isSignedIn
+            isSignedIn,
+            shippingAddress,
+            setLoading
         } = this.props;
 
         const { continueAsGuest, isArabic } = this.state;
@@ -395,6 +447,8 @@ export class Checkout extends SourceCheckout {
                   onShippingEstimationFieldsChange={ onShippingEstimationFieldsChange }
                   guestEmail={ email }
                   totals={ checkoutTotals }
+                  shippingAddress={ shippingAddress }
+                  setLoading={ setLoading }
                 />
             </div>
         );
@@ -425,7 +479,7 @@ export class Checkout extends SourceCheckout {
 
     redirectURL = () => {
         const { isMobile, continueAsGuest } = this.state;
-        const { history, goBack } = this.props;
+        const { history, goBack, setGender } = this.props;
 
         if (isMobile) {
             const path = location.pathname.match(/checkout\/shipping/);
@@ -440,7 +494,8 @@ export class Checkout extends SourceCheckout {
                 goBack();
             }
         } else {
-            history.push('/');
+            setGender('women');
+            history.push('/women.html');
         }
     };
 
@@ -504,21 +559,22 @@ export class Checkout extends SourceCheckout {
 
         return (
             <>
-                { this.renderCheckoutHeder() }
+                { isSuccess ? null : this.renderCheckoutHeder() }
                 <main block="Checkout" mods={ { isSuccess } }>
                     <ContentWrapper
                       wrapperMix={ { block: 'Checkout', elem: 'Wrapper' } }
                       label={ __('Checkout page') }
                     >
                         <div block="Checkout" elem="Step">
-                        { this.renderTitle() }
+                        { isSuccess ? null : this.renderTitle() }
                         { this.renderStep() }
                         { this.renderLoader() }
                         </div>
-                        <div>
+                        <div block="Checkout" elem="Additional">
                             { this.renderSummary() }
                             { this.renderPromo() }
                             { this.renderTabbyIframe() }
+                            { this.renderCreditCardIframe() }
                         </div>
                     </ContentWrapper>
                 </main>

@@ -2,6 +2,7 @@ import { isSignedIn, ONE_HOUR } from 'Util/Auth';
 import BrowserDatabase from 'Util/BrowserDatabase';
 
 import {
+    PROCESSING_CART_REQUEST,
     REMOVE_CART_ITEM,
     REMOVE_CART_ITEMS,
     SET_CART_ID,
@@ -18,6 +19,7 @@ export const getInitialState = () => ({
     cartId: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
     // TODO set initial data to empty cart structure???
     cartTotals: {},
+    isLoading: true,
     cartItems: BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || []
 });
 
@@ -66,6 +68,12 @@ export const CartReducer = (state = getInitialState(), action) => {
             cartId
         };
 
+    case PROCESSING_CART_REQUEST:
+        return {
+            ...state,
+            processingRequest: true
+        };
+
     case SET_CART_TOTALS:
         return {
             ...state,
@@ -75,7 +83,9 @@ export const CartReducer = (state = getInitialState(), action) => {
                 subtotal_incl_tax: totals.subtotal || 0,
                 quote_currency_code: totals.currency_code
             },
-            currency: totals.currency_code
+            currency: totals.currency_code,
+            isLoading: false,
+            processingRequest: false
         };
 
     case UPDATE_CART_ITEM:
@@ -102,7 +112,11 @@ export const CartReducer = (state = getInitialState(), action) => {
             thumbnail_url: item.thumbnail_url,
             basePrice: item.basePrice,
             brand_name: item.brand_name,
-            currency: totals.currency
+            currency: totals.currency,
+            availability: item.availability,
+            availableQty: item.available_qty,
+            full_item_info: item,
+            processingRequest: false
         };
 
         const updatedCartItems = updateCartItem(cartItems, formattedCartItem);

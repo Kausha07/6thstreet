@@ -148,3 +148,17 @@
         }
     }
 }
+
+.PageWrapper {
+    &_isArabic {
+        .MyAccountMyWishlist {
+            .Price {
+                &-Wrapper {
+                    display: flex;
+                    flex-direction: row-reverse;
+                    margin: 0 auto;
+                }
+            }
+        }
+    }
+}

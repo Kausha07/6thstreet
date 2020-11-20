@@ -67,7 +67,7 @@ class MenuGrid extends PureComponent {
     renderDesktopButton() {
         const {
             button: {
-                label,
+                label = '',
                 link
             }
         } = this.props;

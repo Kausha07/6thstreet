@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import PropTypes from 'prop-types';
 
+import CheckoutAddressBook from 'Component/CheckoutAddressBook';
 import CheckoutDeliveryOptions from 'Component/CheckoutDeliveryOptions';
 import Form from 'Component/Form';
 import Loader from 'Component/Loader';
@@ -20,14 +21,16 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     static propTypes = {
         ...SourceCheckoutShipping.propTypes,
         customer: customerType.isRequired,
-        showCreateNewPopup: PropTypes.func.isRequired
+        showCreateNewPopup: PropTypes.func.isRequired,
+        shippingAddress: PropTypes.object.isRequired
     };
 
     state = {
         isArabic: isArabic(),
         formContent: false,
         isSignedIn: isSignedIn(),
-        isMobile: isMobile.any() || isMobile.tablet()
+        isMobile: isMobile.any() || isMobile.tablet(),
+        openFirstPopup: false
     };
 
     renderButtonsPlaceholder() {
@@ -99,8 +102,6 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     }
 
     renderDeliveryButton() {
-        const { selectedShippingMethod } = this.props;
-
         if (isMobile.any() || isMobile.tablet()) {
             return null;
         }
@@ -110,7 +111,6 @@ export class CheckoutShipping extends SourceCheckoutShipping {
                 <button
                   type="submit"
                   block="Button button primary medium"
-                  disabled={ !selectedShippingMethod }
                 >
                     { __('Deliver to this address') }
                 </button>
@@ -170,11 +170,12 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     }
 
     renderOpenPopupButton = () => {
-        const { isSignedIn, formContent, isArabic } = this.state;
+        const { openFirstPopup, formContent, isArabic } = this.state;
         const { customer: { addresses } } = this.props;
 
-        if (addresses && (isSignedIn && addresses.length === 0)) {
-            return this.openNewForm();
+        if (!openFirstPopup && addresses && (isSignedIn() && addresses.length === 0)) {
+            this.setState({ openFirstPopup: true });
+            this.openNewForm();
         }
 
         if (isSignedIn) {
@@ -228,6 +229,22 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         );
     }
 
+    renderAddressBook() {
+        const {
+            onAddressSelect,
+            onShippingEstimationFieldsChange,
+            shippingAddress
+        } = this.props;
+
+        return (
+            <CheckoutAddressBook
+              onAddressSelect={ onAddressSelect }
+              onShippingEstimationFieldsChange={ onShippingEstimationFieldsChange }
+              shippingAddress={ shippingAddress }
+            />
+        );
+    }
+
     render() {
         const {
             onShippingSuccess,
@@ -236,21 +253,20 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         } = this.props;
 
         const {
-            isSignedIn,
             formContent
         } = this.state;
 
         return (
-            <div block="ShippingStep" mods={ { isSignedIn, formContent } }>
+            <div block="ShippingStep" mods={ { isSignedIn: isSignedIn(), formContent } }>
                 { this.renderOpenPopupButton() }
-                { isSignedIn ? this.renderAddAdress() : null }
+                { isSignedIn() ? this.renderAddAdress() : null }
                 <Form
                   id={ SHIPPING_STEP }
                   mix={ { block: 'CheckoutShipping' } }
                   onSubmitError={ onShippingError }
                   onSubmitSuccess={ onShippingSuccess }
                 >
-                    { isSignedIn ? <h3>{ __('Delivering to') }</h3> : null }
+                    { isSignedIn() ? <h3>{ __('Delivering to') }</h3> : null }
                     { this.renderAddressBook() }
                     <div>
                         <Loader isLoading={ isLoading } />

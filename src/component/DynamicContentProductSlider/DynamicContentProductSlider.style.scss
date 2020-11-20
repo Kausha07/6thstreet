@@ -58,6 +58,10 @@
     li {
         content: '';
         padding: 0;
+
+        &:before {
+            content: none;
+        }
     }
 
     img {

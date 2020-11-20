@@ -5,7 +5,9 @@ import SourceField from 'SourceComponent/Field/Field.component';
 import FieldInput from 'SourceComponent/FieldInput';
 
 import {
-    CHECKBOX_TYPE, DATE_TYPE,
+    CHECKBOX_TYPE,
+    DATE_TYPE,
+    EMAIL_TYPE,
     RADIO_TYPE,
     TOGGLE_TYPE
 } from './Field.config';
@@ -79,6 +81,15 @@ export class Field extends SourceField {
         );
     }
 
+    renderTypeEmail() {
+        return (
+            <FieldInput
+              { ...this.props }
+              type="email"
+            />
+        );
+    }
+
     renderInputOfType(type) {
         if (type === TOGGLE_TYPE) {
             return this.renderToggle();
@@ -86,6 +97,10 @@ export class Field extends SourceField {
 
         if (type === DATE_TYPE) {
             return this.renderDate();
+        }
+
+        if (type === EMAIL_TYPE) {
+            return this.renderTypeEmail();
         }
 
         return super.renderInputOfType(type);

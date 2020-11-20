@@ -41,8 +41,7 @@ export class HomePageContainer extends PureComponent {
     state = {
         dynamicContent: [],
         isLoading: true,
-        urlGender: '',
-        defaultGender: 'men'
+        defaultGender: 'women'
     };
 
     constructor(props) {
@@ -52,37 +51,24 @@ export class HomePageContainer extends PureComponent {
     }
 
     componentDidMount() {
-        this.setUrlGender();
-        const { gender } = this.props;
-
+        const { gender, toggleBreadcrumbs } = this.props;
+        toggleBreadcrumbs(false);
         this.setMetaData(gender);
-
-        if (gender === '') {
-            this.setDefaultGender();
-        } else {
-            this.requestDynamicContent(true, gender);
-        }
+        this.requestDynamicContent(true, gender);
     }
 
     componentDidUpdate(prevProps) {
-        this.setUrlGender();
-
-        const { gender: prevGender, locale: prevLocale } = prevProps;
+        const { gender: prevGender } = prevProps;
         const {
-            locale,
             gender,
-            setGender,
             toggleBreadcrumbs
         } = this.props;
-        const { urlGender } = this.state;
-        if (urlGender !== '') {
-            setGender(urlGender);
-        }
+
         toggleBreadcrumbs(false);
 
-        if (gender !== prevGender || locale !== prevLocale) {
+        if (gender !== prevGender) {
             this.setMetaData(gender);
-            this.requestDynamicContent(true, urlGender);
+            this.requestDynamicContent(true, gender);
         }
     }
 
@@ -90,15 +76,7 @@ export class HomePageContainer extends PureComponent {
         const { setGender } = this.props;
         const { defaultGender } = this.state;
         setGender(defaultGender);
-        this.setState({ urlGender: defaultGender });
         this.requestDynamicContent(true, defaultGender);
-    }
-
-    setUrlGender() {
-        const urlWithoutSeparator = location.pathname.split('/');
-        const urlGender = urlWithoutSeparator[1].split('.')[0].toLowerCase();
-        this.setState({ urlGender });
-        return urlGender;
     }
 
     setMetaData(gender) {
@@ -145,7 +123,7 @@ export class HomePageContainer extends PureComponent {
             );
 
             this.setState({
-                dynamicContent,
+                dynamicContent: Array.isArray(dynamicContent) ? dynamicContent : [],
                 isLoading: false
             });
         } catch (e) {

@@ -7,14 +7,20 @@ export const formatProduct = (product) => {
         price,
         special_price,
         request_path,
-        currency_code
+        currency_code,
+        url_key,
+        entity_id
     } = product;
+
+    const productUrl = request_path
+        ? `${window.location.origin}/${request_path}`
+        : `${window.location.origin}/catalog/product/view/id/${entity_id}/s/${url_key}/`;
 
     return {
         sku,
         name,
         brand_name,
-        url: `${window.location.origin}/${request_path}`,
+        url: productUrl,
         thumbnail_url: thumbnail,
         price: [
             {

@@ -1,6 +1,6 @@
 .MyAccountMobileHeader {
     display: flex;
-    z-index: 7;
+    z-index: 99;
     background: $white;
     height: 60px;
     position: fixed;
@@ -78,6 +78,24 @@
                 border-width: 0 2px 2px 0;
                 padding: 2px 7px 7px 2px;
                 top: 20px;
+            }
+        }
+    }
+
+    .MyAccountOverlay {
+        &-StoreSwitcher {
+            margin: 15px 20px 15px 0;
+        }
+    }
+}
+
+.PageWrapper {
+    &_isArabic {
+        .MyAccountMobileHeader {
+            .MyAccountOverlay {
+                &-StoreSwitcher {
+                    margin: 15px 0 15px 20px;
+                }
             }
         }
     }

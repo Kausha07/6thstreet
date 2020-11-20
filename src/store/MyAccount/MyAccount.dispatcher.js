@@ -5,6 +5,7 @@ import {
     MyAccountDispatcher as SourceMyAccountDispatcher,
     ONE_MONTH_IN_SECONDS
 } from 'SourceStore/MyAccount/MyAccount.dispatcher';
+import { getStore } from 'Store';
 import {
     removeCartItems,
     setCartId
@@ -59,7 +60,9 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
                 dispatch(updateCustomerDetails({ ...stateCustomer, ...data }));
                 BrowserDatabase.setItem({ ...stateCustomer, ...data }, CUSTOMER, ONE_MONTH_IN_SECONDS);
             },
-            (error) => dispatch(showNotification('error', error[0].message))
+            () => {
+                window.location.reload();
+            }
         );
     }
 
@@ -81,6 +84,34 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         dispatch(setClubApparel(getClubApparelInitialState()));
 
         Event.dispatch(EVENT_GTM_GENERAL_INIT);
+    }
+
+    /**
+     * Create account action
+     * @param {{customer: Object, password: String}} [options={}]
+     * @memberof MyAccountDispatcher
+     */
+    createAccount(options = {}, dispatch) {
+        const mutation = MyAccountQuery.getCreateAccountMutation(options);
+
+        return fetchMutation(mutation).then(
+            (data) => {
+                const { createCustomer: { customer } } = data;
+                const { confirmation_required } = customer;
+
+                if (confirmation_required) {
+                    return 2;
+                }
+
+                return 1;
+            },
+            (error) => {
+                dispatch(showNotification('error', error[0].message));
+                Promise.reject();
+
+                return false;
+            }
+        );
     }
 
     async signIn(options = {}, dispatch) {
@@ -115,18 +146,62 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
             password,
             cart_id: null
         });
+        const phoneAttribute = custom_attributes.filter(
+            ({ attribute_code }) => attribute_code === 'contact_no'
+        );
+        const isPhone = phoneAttribute[0].value
+            ? phoneAttribute[0].value.search('undefined') < 0
+            : false;
 
         dispatch(setCartId(null));
-
         setMobileAuthorizationToken(token);
-        this.setCustomAttributes(dispatch, custom_attributes);
+
+        if (isPhone) {
+            this.setCustomAttributes(dispatch, custom_attributes);
+        }
+
         this.setGender(dispatch, gender);
 
         // Run async as Club Apparel is not visible anywhere after login
         ClubApparelDispatcher.getMember(dispatch, id);
 
+        const { Cart: { cartItems: oldCartItems } } = getStore().getState();
+        if (oldCartItems.length !== 0) {
+            await CartDispatcher.getCart(dispatch);
+            this._addProductsFromGuest(dispatch, oldCartItems);
+            return;
+        }
+
         // Run async otherwise login gets slow
         CartDispatcher.getCart(dispatch);
+    }
+
+    _addProductsFromGuest(dispatch, oldCartItems) {
+        oldCartItems.forEach((product) => {
+            const {
+                full_item_info,
+                full_item_info: { size_option },
+                color,
+                optionValue,
+                basePrice,
+                brand_name,
+                thumbnail_url,
+                url,
+                itemPrice
+            } = product;
+
+            CartDispatcher.addProductToCart(
+                dispatch,
+                { ...full_item_info, optionId: size_option, optionValue },
+                color,
+                optionValue,
+                basePrice,
+                brand_name,
+                thumbnail_url,
+                url,
+                itemPrice,
+            );
+        });
     }
 
     setCustomAttributes(dispatch, custom_attributes) {
@@ -137,8 +212,12 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         const isVerifiedAttribute = custom_attributes.filter(
             ({ attribute_code }) => attribute_code === 'is_mobile_otp_verified'
         );
+
         const { value: phoneNumber } = phoneAttribute && phoneAttribute[0] ? phoneAttribute[0] : null;
-        const { value: isVerified } = isVerifiedAttribute && isVerifiedAttribute[0] ? isVerifiedAttribute[0] : null;
+        const { value: isVerified } = isVerifiedAttribute && isVerifiedAttribute[0]
+            ? isVerifiedAttribute[0]
+            : { value: false };
+
         dispatch(updateCustomerDetails({ ...customer, phone: phoneNumber, isVerified }));
     }
 
@@ -170,7 +249,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         const mappedData = {
             firstname: fullname,
             email,
-            gender: gender.toString(),
+            gender,
             custom_attributes: {
                 contact_no: phone,
                 dob

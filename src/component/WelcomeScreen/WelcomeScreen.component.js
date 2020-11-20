@@ -13,9 +13,13 @@ class WelcomeScreen extends PureComponent {
         countrySelectOptions: SelectOptions.isRequired,
         languageSelectOptions: SelectOptions.isRequired,
         onLanguageSelect: PropTypes.func.isRequired,
-        closePopup: PropTypes.func.isRequired,
+        closePopup: PropTypes.func,
         country: PropTypes.string.isRequired,
         language: PropTypes.string.isRequired
+    };
+
+    static defaultProps = {
+        closePopup: () => {}
     };
 
     state = {
