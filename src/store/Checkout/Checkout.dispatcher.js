@@ -1,7 +1,4 @@
 import { getStore } from 'Store';
-import {
-    removeCartItems
-} from 'Store/Cart/Cart.action';
 import { setShipping } from 'Store/Checkout/Checkout.action';
 import { showNotification } from 'Store/Notification/Notification.action';
 import {
@@ -23,6 +20,13 @@ import { capitalize } from 'Util/App';
 import Logger from 'Util/Logger';
 
 export class CheckoutDispatcher {
+    async validateAddress(dispatch, address) {
+        /* eslint-disable */
+        delete address.region_id;
+
+        return validateShippingAddress({ address });
+    }
+
     /* eslint-disable-next-line */
     async estimateShipping(dispatch, address) {
         const { Cart: { cartId } } = getStore().getState();
@@ -97,8 +101,6 @@ export class CheckoutDispatcher {
 
     async createOrder(dispatch, code, additional_data) {
         const { Cart: { cartId } } = getStore().getState();
-
-        dispatch(removeCartItems());
 
         return createOrder({
             data: {

@@ -178,6 +178,10 @@
 
 .CheckoutShipping {
     .CheckoutAddressBook {
+        &-Wrapper {
+            padding: 30px;
+        }
+
         .Checkout {
             &-Heading {
                 background: $white;

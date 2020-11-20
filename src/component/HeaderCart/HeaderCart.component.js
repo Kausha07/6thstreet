@@ -39,7 +39,7 @@ class HeaderCart extends PureComponent {
 
             if (
                 (isCheckoutAvailable !== prevIsCheckoutAvailable && prevIsCheckoutAvailable !== '')
-                || (prevItems !== items && prevItems && !isAddingError)
+                || (prevItems !== items && prevItems && !isAddingError && items.length !== 0)
             ) {
                 this.renderCartPopUp();
             }

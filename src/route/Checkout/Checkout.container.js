@@ -9,9 +9,12 @@ import {
     mapDispatchToProps as sourceMapDispatchToProps
 } from 'SourceRoute/Checkout/Checkout.container';
 import { setGender } from 'Store/AppState/AppState.action';
-import { setCartId } from 'Store/Cart/Cart.action';
+import {
+    removeCartItems
+} from 'Store/Cart/Cart.action';
 import CartDispatcher from 'Store/Cart/Cart.dispatcher';
-import { CART_ITEMS_CACHE_KEY } from 'Store/Cart/Cart.reducer';
+// eslint-disable-next-line no-unused-vars
+import { CART_ID_CACHE_KEY, CART_ITEMS_CACHE_KEY } from 'Store/Cart/Cart.reducer';
 import CheckoutDispatcher from 'Store/Checkout/Checkout.dispatcher';
 import { updateMeta } from 'Store/Meta/Meta.action';
 import { hideActiveOverlay } from 'Store/Overlay/Overlay.action';
@@ -30,12 +33,13 @@ export const mapDispatchToProps = (dispatch) => ({
     verifyPayment: (paymentId) => CheckoutDispatcher.verifyPayment(dispatch, paymentId),
     getPaymentMethods: () => CheckoutDispatcher.getPaymentMethods(),
     sendVerificationCode: (phone) => CheckoutDispatcher.sendVerificationCode(dispatch, phone),
-    setCartId: (cartId) => dispatch(setCartId(cartId)),
     createEmptyCart: () => CartDispatcher.getCart(dispatch),
     hideActiveOverlay: () => dispatch(hideActiveOverlay()),
     updateStoreCredit: () => StoreCreditDispatcher.getStoreCredit(dispatch),
     setMeta: (meta) => dispatch(updateMeta(meta)),
-    setGender: (gender) => dispatch(setGender(gender))
+    setGender: (gender) => dispatch(setGender(gender)),
+    removeCartItems: () => dispatch(removeCartItems()),
+    updateTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId)
 });
 export const mapStateToProps = (state) => ({
     totals: state.CartReducer.cartTotals,
@@ -43,7 +47,8 @@ export const mapStateToProps = (state) => ({
     guest_checkout: state.ConfigReducer.guest_checkout,
     countries: state.ConfigReducer.countries,
     isSignedIn: state.MyAccountReducer.isSignedIn,
-    activeOverlay: state.OverlayReducer.activeOverlay
+    activeOverlay: state.OverlayReducer.activeOverlay,
+    cartId: state.CartReducer.cartId
 });
 
 export class CheckoutContainer extends SourceCheckoutContainer {
@@ -51,7 +56,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         updateStoreCredit: PropTypes.func.isRequired,
         isSignedIn: PropTypes.bool.isRequired,
         setMeta: PropTypes.func.isRequired,
-        setGender: PropTypes.func.isRequired
+        setGender: PropTypes.func.isRequired,
+        removeCartItems: PropTypes.func.isRequired,
+        cartId: PropTypes.number.isRequired,
+        updateTotals: PropTypes.func.isRequired
     };
 
     constructor(props) {
@@ -188,7 +196,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             saveAddressInformation
         } = this.props;
         const { shipping_address } = addressInformation;
-        console.log(addressInformation);
 
         this.setState({
             isLoading: true,
@@ -263,7 +270,21 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                         if (typeof data === 'string') {
                             showErrorNotification(__(data));
                             this.setState({ isLoading: false });
+                            this.resetCart();
+                            setTimeout(() => {
+                                window.location.href = '/';
+                            }, 3000);
                         }
+                    }
+
+                    if (response && typeof response === 'string') {
+                        showErrorNotification(__(response));
+                        this.setState({ isLoading: false });
+                        this.resetCart();
+
+                        setTimeout(() => {
+                            window.location.href = '/';
+                        }, 3000);
                     }
                 },
                 this._handleError
@@ -271,6 +292,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                 const { showErrorNotification } = this.props;
                 this.setState({ isLoading: false });
                 showErrorNotification(__('Something went wrong.'));
+                this.resetCart();
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 3000);
             });
         } catch (e) {
             this._handleError(e);
@@ -353,11 +378,15 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     }
 
     resetCart() {
-        const { setCartId, createEmptyCart, updateStoreCredit } = this.props;
+        const { 
+            updateStoreCredit,
+            removeCartItems, 
+            cartId,
+            updateTotals
+        } = this.props;
 
-        BrowserDatabase.deleteItem(CART_ITEMS_CACHE_KEY);
-        setCartId('');
-        createEmptyCart();
+        removeCartItems();
+        updateTotals(cartId);
         updateStoreCredit();
     }
 }

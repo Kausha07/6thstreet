@@ -22,6 +22,9 @@ export class MyAccountOrderViewItem extends SourceComponent {
             } = {}
         } = this.props;
 
+        // eslint-disable-next-line no-magic-numbers
+        const discountPercentage = Math.round(100 * (1 - (price / original_price)));
+
         return (
             <div block="MyAccountReturnSuccessItem" elem="Details">
                 <h2>{ name }</h2>
@@ -56,7 +59,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
                     { !!(price < original_price) && (
                         <>
                             <span block="MyAccountReturnSuccessItem" elem="PriceDiscountPercent">
-                                { `(-${ (+price / +original_price).toFixed() }%)` }
+                                { `(-${discountPercentage}%)` }
                             </span>
                             <span block="MyAccountReturnSuccessItem" elem="PriceDiscount">
                                 { `${ formatPrice(+price) }` }

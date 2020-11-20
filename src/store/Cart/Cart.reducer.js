@@ -106,7 +106,8 @@ export const CartReducer = (state = getInitialState(), action) => {
             brand_name: item.brand_name,
             currency: totals.currency,
             availability: item.availability,
-            availableQty: item.available_qty
+            availableQty: item.available_qty,
+            full_item_info: item
         };
 
         const updatedCartItems = updateCartItem(cartItems, formattedCartItem);
