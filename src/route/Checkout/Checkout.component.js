@@ -2,6 +2,7 @@
 import PropTypes from 'prop-types';
 
 import CheckoutBilling from 'Component/CheckoutBilling';
+import CheckoutFail from 'Component/CheckoutFail';
 import CheckoutGuestForm from 'Component/CheckoutGuestForm';
 import CheckoutOrderSummary from 'Component/CheckoutOrderSummary';
 import {
@@ -12,6 +13,7 @@ import {
 import CheckoutShipping from 'Component/CheckoutShipping';
 import CheckoutSuccess from 'Component/CheckoutSuccess';
 import ContentWrapper from 'Component/ContentWrapper';
+import CreditCardPopup from 'Component/CreditCardPopup';
 import HeaderLogo from 'Component/HeaderLogo';
 import TabbyPopup from 'Component/TabbyPopup';
 import { TABBY_POPUP_ID } from 'Component/TabbyPopup/TabbyPopup.config';
@@ -30,15 +32,19 @@ import './Checkout.style';
 export class Checkout extends SourceCheckout {
     static propTypes = {
         isSignedIn: PropTypes.bool.isRequired,
+        processingRequest: PropTypes.bool,
         orderID: PropTypes.string.isRequired,
         incrementID: PropTypes.string.isRequired,
         shippingAddress: PropTypes.object.isRequired,
         setGender: PropTypes.func.isRequired,
-        setLoading: PropTypes.func.isRequired
+        setLoading: PropTypes.func.isRequired,
+        threeDsUrl: PropTypes.string.isRequired,
+        isFailed: PropTypes.bool.isRequired
     };
 
     state = {
         cashOnDeliveryFee: null,
+        processingRequest: false,
         isCustomAddressExpanded: false,
         continueAsGuest: false,
         isInvalidEmail: false,
@@ -167,7 +173,12 @@ export class Checkout extends SourceCheckout {
 
     renderSummary() {
         const { cashOnDeliveryFee } = this.state;
-        const { checkoutTotals, checkoutStep, paymentTotals } = this.props;
+        const {
+            checkoutTotals,
+            checkoutStep,
+            paymentTotals,
+            processingRequest
+        } = this.props;
         const { areTotalsVisible } = this.stepMap[checkoutStep];
 
         if (!areTotalsVisible) {
@@ -180,6 +191,7 @@ export class Checkout extends SourceCheckout {
             totals={ checkoutTotals }
             paymentTotals={ paymentTotals }
             cashOnDeliveryFee={ cashOnDeliveryFee }
+            processingRequest={ processingRequest }
           />
         );
     }
@@ -334,6 +346,18 @@ export class Checkout extends SourceCheckout {
         );
     }
 
+    renderCreditCardIframe() {
+        const { threeDsUrl } = this.props;
+
+        if (!threeDsUrl) {
+            return null;
+        }
+
+        return (
+            <CreditCardPopup threeDsUrl={ threeDsUrl } />
+        );
+    }
+
     renderTabbyIframe() {
         const {
             isTabbyPopupShown,
@@ -354,7 +378,12 @@ export class Checkout extends SourceCheckout {
     }
 
     renderDetailsStep() {
-        const { orderID, shippingAddress, incrementID } = this.props;
+        const {
+            orderID,
+            shippingAddress,
+            incrementID,
+            isFailed
+        } = this.props;
         const {
             paymentInformation: {
                 billing_address,
@@ -364,6 +393,19 @@ export class Checkout extends SourceCheckout {
         } = this.state;
 
         this.setState({ isSuccess: true });
+
+        if (isFailed) {
+            return (
+                <CheckoutFail
+                  orderID={ orderID }
+                  incrementID={ incrementID }
+                  shippingAddress={ shippingAddress }
+                  billingAddress={ billing_address }
+                  paymentMethod={ paymentMethod }
+                  creditCardData={ creditCardData }
+                />
+            );
+        }
 
         return (
           <CheckoutSuccess
@@ -532,6 +574,7 @@ export class Checkout extends SourceCheckout {
                             { this.renderSummary() }
                             { this.renderPromo() }
                             { this.renderTabbyIframe() }
+                            { this.renderCreditCardIframe() }
                         </div>
                     </ContentWrapper>
                 </main>

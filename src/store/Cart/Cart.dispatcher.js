@@ -1,5 +1,6 @@
 import { getStore } from 'Store';
 import {
+    processingCartRequest,
     removeCartItem,
     removeCartItems,
     setCartId,
@@ -56,6 +57,7 @@ export class CartDispatcher {
             } = data || {};
 
             if (items.length) {
+                dispatch(processingCartRequest());
                 dispatch(removeCartItems());
 
                 items.map((item) => {
@@ -66,7 +68,9 @@ export class CartDispatcher {
                         brand_name: brandName,
                         price,
                         original_price: basePrice,
-                        id
+                        id,
+                        availability,
+                        available_qty
                     } = item;
 
                     return dispatch(updateCartItem(
@@ -77,7 +81,9 @@ export class CartDispatcher {
                         brandName,
                         thumbnail,
                         '',
-                        price
+                        price,
+                        availability,
+                        available_qty
                     ));
                 });
             }
@@ -88,12 +94,36 @@ export class CartDispatcher {
 
     async getCartTotals(dispatch, cartId) {
         try {
+            dispatch(processingCartRequest());
             const {
                 data
             } = await getCart(cartId);
 
-            await this.setCartItems(dispatch, data);
-            dispatch(setCartTotals(data));
+            if (!data) {
+                try {
+                    const { data: requestedCartId = null } = await createCart();
+                    dispatch(removeCartItems());
+
+                    if (!requestedCartId) {
+                        dispatch(
+                            showNotification(
+                                'error',
+                                __('There was an error creating your cart, please refresh the page in a little while')
+                            )
+                        );
+
+                        return;
+                    }
+
+                    dispatch(setCartId(requestedCartId));
+                    await this.getCartTotals(dispatch, requestedCartId);
+                } catch (e) {
+                    Logger.log(e);
+                }
+            } else {
+                await this.setCartItems(dispatch, data);
+                dispatch(setCartTotals(data));
+            }
         } catch (e) {
             Logger.log(e);
         }
@@ -113,6 +143,7 @@ export class CartDispatcher {
         const { Cart: { cartId } } = getStore().getState();
 
         try {
+            dispatch(processingCartRequest());
             const response = await addProductToCart({ ...productData, cartId });
             const { data } = response;
             dispatch(updateCartItem(
@@ -206,9 +237,13 @@ export class CartDispatcher {
         const { Cart: { cartId } } = getStore().getState();
 
         try {
-            await applyCouponCode({ cartId, couponCode });
-            await this.getCartTotals(dispatch, cartId);
+            const response = await applyCouponCode({ cartId, couponCode });
+            if (typeof response === 'string') {
+                dispatch(showNotification('error', response));
+                return;
+            }
 
+            await this.getCartTotals(dispatch, cartId);
             dispatch(showNotification('success', __('Coupon was applied!')));
         } catch (e) {
             dispatch(showNotification('error', __('The coupon code isn\'t valid. Verify the code and try again.')));

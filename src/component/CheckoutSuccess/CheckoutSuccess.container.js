@@ -95,10 +95,20 @@ export class CheckoutSuccessContainer extends PureComponent {
         super(props);
 
         const {
-            updateMeta
+            updateMeta,
+            totals
         } = this.props;
 
-        this.state = MyAccountContainer.navigateToSelectedTab(this.props) || {};
+        this.state = {
+            initialTotals: totals,
+            isEditing: false,
+            clubApparelMember: null,
+            phone: null,
+            isPhoneVerified: false,
+            isChangePhonePopupOpen: false,
+            isMobileVerification: false,
+            ...MyAccountContainer.navigateToSelectedTab(this.props)
+        };
 
         /*
         if (!isSignedIn) {

@@ -5,27 +5,27 @@ import Iframe from 'react-iframe';
 import Close from 'Component/HeaderSearch/icons/close-black.png';
 import Popup from 'Component/Popup';
 
-import { TABBY_POPUP_ID } from './TabbyPopup.config';
+import { CC_POPUP_ID } from './CreditCardPopup.config';
 
-import './TabbyPopup.style.scss';
+import './CreditCardPopup.style.scss';
 
-class TabbyPopup extends PureComponent {
+class CreditCardPopup extends PureComponent {
     static propTypes = {
-        tabbyWebUrl: PropTypes.string.isRequired,
+        threeDsUrl: PropTypes.string.isRequired,
         hideActiveOverlay: PropTypes.func.isRequired
     };
 
     renderContent() {
-        const { tabbyWebUrl } = this.props;
+        const { threeDsUrl } = this.props;
 
         return (
             <Iframe
-              src={ tabbyWebUrl }
-              width="545"
-              height="750"
-              id={ TABBY_POPUP_ID }
+              src={ threeDsUrl }
+              width="100%"
+              height="100%"
+              id={ CC_POPUP_ID }
               display="initial"
-              position="relative"
+              position="fixed"
             />
         );
     }
@@ -34,11 +34,10 @@ class TabbyPopup extends PureComponent {
         const { hideActiveOverlay } = this.props;
 
         return (
-            <div block="TabbyPopup" elem="CloseButtonWrapper">
+            <div block="CreditCardPopup" elem="CloseButtonWrapper">
                 <button
-                  block="TabbyPopup"
+                  block="CreditCardPopup"
                   elem="Close"
-                  // mods={ { isArabic } }
                   onClick={ hideActiveOverlay }
                 >
                     <img src={ Close } alt="Close button" />
@@ -50,8 +49,8 @@ class TabbyPopup extends PureComponent {
     render() {
         return (
             <Popup
-              id={ TABBY_POPUP_ID }
-              mix={ { block: 'TabbyPopup' } }
+              id={ CC_POPUP_ID }
+              mix={ { block: 'CreditCardPopup' } }
             >
                 { this.renderCloseButton() }
                 { this.renderContent() }
@@ -60,4 +59,4 @@ class TabbyPopup extends PureComponent {
     }
 }
 
-export default TabbyPopup;
+export default CreditCardPopup;

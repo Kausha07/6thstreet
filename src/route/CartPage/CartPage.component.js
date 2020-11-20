@@ -45,6 +45,8 @@ export class CartPage extends PureComponent {
         clubApparel: ClubApparelMember,
         isSignedIn: PropTypes.bool.isRequired,
         isLoading: PropTypes.bool.isRequired,
+        isCheckoutAvailable: PropTypes.bool.isRequired,
+        processingRequest: PropTypes.bool,
         history: HistoryType.isRequired
     };
 
@@ -53,7 +55,8 @@ export class CartPage extends PureComponent {
     };
 
     static defaultProps = {
-        clubApparel: {}
+        clubApparel: {},
+        processingRequest: false
     };
 
     renderCartItems() {
@@ -73,6 +76,7 @@ export class CartPage extends PureComponent {
                       item={ item }
                       currency_code={ quote_currency_code }
                       isEditing
+                      isCartPage
                     />
                 )) }
             </ul>
@@ -132,13 +136,16 @@ export class CartPage extends PureComponent {
     }
 
     renderButtons() {
-        const { onCheckoutButtonClick } = this.props;
+        const { onCheckoutButtonClick, isCheckoutAvailable } = this.props;
+
+        const isDisabled = !isCheckoutAvailable;
 
         return (
             <div block="CartPage" elem="CheckoutButtons">
                 <button
                   block="CartPage"
                   elem="CheckoutButton"
+                  mods={ { isDisabled } }
                   mix={ { block: 'Button' } }
                   onClick={ onCheckoutButtonClick }
                 >
@@ -424,7 +431,12 @@ export class CartPage extends PureComponent {
     }
 
     renderDynamicContent() {
-        const { totals, totals: { items }, isLoading } = this.props;
+        const {
+            totals,
+            totals: { items },
+            isLoading,
+            processingRequest
+        } = this.props;
 
         if (isLoading) {
             return <Loader isLoading={ isLoading } />;
@@ -441,6 +453,7 @@ export class CartPage extends PureComponent {
                   wrapperMix={ { block: 'CartPage', elem: 'Wrapper' } }
                   label="Cart page details"
                 >
+                    <Loader isLoading={ processingRequest } />
                     <div block="CartPage" elem="Static" mods={ { isArabic } }>
                         { this.renderHeading() }
                         { this.renderCartItems() }

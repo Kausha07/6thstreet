@@ -2,6 +2,7 @@ import { isSignedIn, ONE_HOUR } from 'Util/Auth';
 import BrowserDatabase from 'Util/BrowserDatabase';
 
 import {
+    PROCESSING_CART_REQUEST,
     REMOVE_CART_ITEM,
     REMOVE_CART_ITEMS,
     SET_CART_ID,
@@ -67,6 +68,12 @@ export const CartReducer = (state = getInitialState(), action) => {
             cartId
         };
 
+    case PROCESSING_CART_REQUEST:
+        return {
+            ...state,
+            processingRequest: true
+        };
+
     case SET_CART_TOTALS:
         return {
             ...state,
@@ -77,7 +84,8 @@ export const CartReducer = (state = getInitialState(), action) => {
                 quote_currency_code: totals.currency_code
             },
             currency: totals.currency_code,
-            isLoading: false
+            isLoading: false,
+            processingRequest: false
         };
 
     case UPDATE_CART_ITEM:
@@ -105,7 +113,10 @@ export const CartReducer = (state = getInitialState(), action) => {
             basePrice: item.basePrice,
             brand_name: item.brand_name,
             currency: totals.currency,
-            full_item_info: item
+            availability: item.availability,
+            availableQty: item.available_qty,
+            full_item_info: item,
+            processingRequest: false
         };
 
         const updatedCartItems = updateCartItem(cartItems, formattedCartItem);
