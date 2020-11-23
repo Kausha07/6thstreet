@@ -19,6 +19,7 @@ import TabbyPopup from 'Component/TabbyPopup';
 import { TABBY_POPUP_ID } from 'Component/TabbyPopup/TabbyPopup.config';
 import Loader from 'SourceComponent/Loader';
 import { Checkout as SourceCheckout } from 'SourceRoute/Checkout/Checkout.component';
+import { TotalsType } from 'Type/MiniCart';
 import { isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
 
@@ -39,7 +40,9 @@ export class Checkout extends SourceCheckout {
         setGender: PropTypes.func.isRequired,
         setLoading: PropTypes.func.isRequired,
         threeDsUrl: PropTypes.string.isRequired,
-        isFailed: PropTypes.bool.isRequired
+        isFailed: PropTypes.bool.isRequired,
+        resetCart: PropTypes.func.isRequired,
+        initialTotals: TotalsType.isRequired
     };
 
     state = {
@@ -382,7 +385,9 @@ export class Checkout extends SourceCheckout {
             orderID,
             shippingAddress,
             incrementID,
-            isFailed
+            isFailed,
+            resetCart,
+            initialTotals
         } = this.props;
         const {
             paymentInformation: {
@@ -403,6 +408,7 @@ export class Checkout extends SourceCheckout {
                   billingAddress={ billing_address }
                   paymentMethod={ paymentMethod }
                   creditCardData={ creditCardData }
+                  totals={ initialTotals }
                 />
             );
         }
@@ -415,6 +421,8 @@ export class Checkout extends SourceCheckout {
             billingAddress={ billing_address }
             paymentMethod={ paymentMethod }
             creditCardData={ creditCardData }
+            resetCart={ resetCart }
+            totals={ initialTotals }
           />
         );
     }

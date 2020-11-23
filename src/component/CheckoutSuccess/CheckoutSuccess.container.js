@@ -28,7 +28,6 @@ export const BreadcrumbsDispatcher = import(
 );
 
 export const mapStateToProps = (state) => ({
-    totals: state.CartReducer.cartTotals,
     headerState: state.NavigationReducer[TOP_NAVIGATION_TYPE].navigationState,
     guest_checkout: state.ConfigReducer.guest_checkout,
     customer: state.MyAccountReducer.customer,

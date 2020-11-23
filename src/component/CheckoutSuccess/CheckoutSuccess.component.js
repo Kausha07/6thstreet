@@ -40,7 +40,8 @@ export class CheckoutSuccess extends PureComponent {
         isChangePhonePopupOpen: PropTypes.bool.isRequired,
         toggleChangePhonePopup: PropTypes.func.isRequired,
         phone: PropTypes.string.isRequired,
-        isMobileVerification: PropTypes.bool.isRequired
+        isMobileVerification: PropTypes.bool.isRequired,
+        resetCart: PropTypes.func.isRequired
     };
 
     state = {
@@ -68,7 +69,10 @@ export class CheckoutSuccess extends PureComponent {
     }
 
     componentWillUnmount() {
+        const { resetCart } = this.props;
+
         this.timer = null;
+        resetCart();
     }
 
     tick = () => {
