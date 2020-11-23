@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import { setMinicartOpen } from 'Store/Cart/Cart.action';
 import CartDispatcher from 'Store/Cart/Cart.dispatcher';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
@@ -31,7 +32,8 @@ export const mapDispatchToProps = (dispatch) => ({
         thumbnail_url,
         url,
         itemPrice
-    )
+    ),
+    setMinicartOpen: (isMinicartOpen = false) => dispatch(setMinicartOpen(isMinicartOpen))
 });
 
 export class PDPAddToCartContainer extends PureComponent {
@@ -42,7 +44,8 @@ export class PDPAddToCartContainer extends PureComponent {
         totals: PropTypes.object,
         PrevTotal: PropTypes.number,
         total: PropTypes.number,
-        productAdded: PropTypes.bool
+        productAdded: PropTypes.bool,
+        setMinicartOpen: PropTypes.func.isRequired
     };
 
     static defaultProps = {
@@ -239,6 +242,7 @@ export class PDPAddToCartContainer extends PureComponent {
     }
 
     afterAddToCart(isAdded = 'true') {
+        const { setMinicartOpen } = this.props;
         // eslint-disable-next-line no-unused-vars
         const { buttonRefreshTimeout } = this.state;
         this.setState({ isLoading: false });
@@ -246,6 +250,7 @@ export class PDPAddToCartContainer extends PureComponent {
         const timeout = 1250;
 
         if (isAdded) {
+            setMinicartOpen(true);
             this.setState({ addedToCart: true });
         }
 

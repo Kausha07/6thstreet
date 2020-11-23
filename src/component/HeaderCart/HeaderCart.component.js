@@ -16,41 +16,41 @@ class HeaderCart extends PureComponent {
         hideActiveOverlay: PropTypes.func.isRequired,
         totals: TotalsType.isRequired,
         isCheckoutAvailable: PropTypes.bool.isRequired,
-        showNotification: PropTypes.func.isRequired
+        showNotification: PropTypes.func.isRequired,
+        setMinicartOpen: PropTypes.func.isRequired,
+        isMinicartOpen: PropTypes.bool.isRequired
     };
 
     state = {
         cartPopUp: '',
         isPopup: true,
-        isArabic: isArabic()
+        isArabic: isArabic(),
+        isOpen: false
     };
 
-    componentDidUpdate(prevProps) {
-        const { history: { location: { pathname } } } = this.props;
+    componentDidUpdate() {
+        const { isOpen } = this.state;
+        const { history: { location: { pathname } }, isMinicartOpen } = this.props;
 
         if (!isMobile.any() && pathname !== '/cart') {
-            const { isCheckoutAvailable, totals: { items } } = this.props;
-            const {
-                isCheckoutAvailable: prevIsCheckoutAvailable,
-                totals: { items: prevItems }
-            } = prevProps;
-
-            const isAddingError = prevItems ? prevItems.length > items.length : false;
-
-            if (
-                (isCheckoutAvailable !== prevIsCheckoutAvailable && prevIsCheckoutAvailable !== '')
-                || (prevItems !== items && prevItems && !isAddingError && items.length !== 0)
-            ) {
+            if (isMinicartOpen && !isOpen) {
                 this.renderCartPopUp();
             }
         }
     }
 
     closePopup = () => {
-        const { hideActiveOverlay } = this.props;
+        const { hideActiveOverlay, setMinicartOpen } = this.props;
 
+        setMinicartOpen(false);
         hideActiveOverlay();
-        this.setState({ cartPopUp: '' });
+        this.setState({ cartPopUp: '', isOpen: false });
+    };
+
+    openPopup = () => {
+        const { setMinicartOpen } = this.props;
+
+        setMinicartOpen(true);
     };
 
     renderCartPopUp = () => {
@@ -64,7 +64,7 @@ class HeaderCart extends PureComponent {
             />
         );
 
-        this.setState({ cartPopUp: popUpElement });
+        this.setState({ cartPopUp: popUpElement, isOpen: true });
     };
 
     routeChangeCart = () => {
@@ -107,7 +107,7 @@ class HeaderCart extends PureComponent {
                 <button
                   onClick={ isMobile.any()
                       ? this.routeChangeCart
-                      : this.renderCartPopUp }
+                      : this.openPopup }
                   block="HeaderCart"
                   elem="Button"
                 >

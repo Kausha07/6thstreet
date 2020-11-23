@@ -7,6 +7,7 @@ import {
     REMOVE_CART_ITEMS,
     SET_CART_ID,
     SET_CART_TOTALS,
+    SET_MINICART_OPEN,
     UPDATE_CART_ITEM,
     UPDATE_TOTALS
 } from './Cart.action';
@@ -20,7 +21,8 @@ export const getInitialState = () => ({
     // TODO set initial data to empty cart structure???
     cartTotals: {},
     isLoading: true,
-    cartItems: BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || []
+    cartItems: BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [],
+    isMinicartOpen: false
 });
 
 const updateCartItem = (cartItems, newItem) => {
@@ -159,6 +161,13 @@ export const CartReducer = (state = getInitialState(), action) => {
         };
 
     case UPDATE_TOTALS:
+    case SET_MINICART_OPEN:
+        const { isMinicartOpen } = action;
+
+        return {
+            ...state,
+            isMinicartOpen
+        };
     default:
         return state;
     }
