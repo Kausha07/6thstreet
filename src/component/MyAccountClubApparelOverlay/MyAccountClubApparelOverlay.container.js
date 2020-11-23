@@ -72,17 +72,23 @@ export class MyAccountClubApparelOverlayContainer extends PureComponent {
 
         linkAccount({ customerId: id, mobileNo: formattedPhone }).then(
             (response) => {
-                // TODO: Create response processing after Club Apparel will begin work on Client side
                 if (response) {
-                    const { data: { memberId } } = response;
+                    const { data: { memberId } = {} } = response;
 
-                    this.setState({
-                        state: STATE_VERIFY,
-                        countryPhoneCode,
-                        memberId,
-                        phone: formattedPhone,
-                        isLoading: false
-                    });
+                    if (memberId) {
+                        this.setState({
+                            state: STATE_VERIFY,
+                            countryPhoneCode,
+                            memberId,
+                            phone: formattedPhone,
+                            isLoading: false
+                        });
+                    } else {
+                        this.setState({
+                            state: STATE_NOT_SUCCESS,
+                            isLoading: false
+                        });
+                    }
                 } else {
                     this.setState({
                         state: STATE_NOT_SUCCESS,
