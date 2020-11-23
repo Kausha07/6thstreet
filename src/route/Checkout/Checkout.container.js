@@ -249,10 +249,12 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                     email: customerEmail ? customerEmail : email
                 },
                 '3ds': {
-                    enabled: true
+                    enabled: BrowserDatabase.getItem('CREDIT_CART_3DS')
                 },
                 metadata: {
-                    udf1: null
+                    udf1: typeof BrowserDatabase.getItem('CREDIT_CART_TYPE') === 'string'
+                        ? BrowserDatabase.getItem('CREDIT_CART_TYPE')
+                        : null
                 }
             }
             : additional_data;
@@ -286,6 +288,14 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                                     );
                                 } else {
                                     this.setDetailsStep(order_id, increment_id);
+                                    this.resetCart();
+                                }
+                            } else {
+                                const { error } = data;
+
+                                if (error && typeof error === 'string') {
+                                    showErrorNotification(__(error));
+                                    this.setState({ isLoading: false });
                                     this.resetCart();
                                 }
                             }
