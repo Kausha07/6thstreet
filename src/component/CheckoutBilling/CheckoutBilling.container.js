@@ -17,6 +17,7 @@ import { FIVE_MINUTES_IN_SECONDS } from 'Util/Request/QueryDispatcher';
 export const mapDispatchToProps = (dispatch) => ({
     ...sourceMapDispatchToProps(dispatch),
     addNewCreditCard: (cardData) => CreditCardDispatcher.addNewCreditCard(dispatch, cardData),
+    getCardType: (bin) => CreditCardDispatcher.getCardType(dispatch, bin),
     showSuccessMessage: (message) => dispatch(showNotification('success', message)),
     showPopup: (payload) => dispatch(showPopup(ADDRESS_POPUP_ID, payload))
 });
@@ -76,6 +77,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
         if (code === CARD) {
             const {
                 addNewCreditCard,
+                getCardType,
                 showErrorNotification,
                 showSuccessMessage,
                 setCheckoutCreditCardData
@@ -84,12 +86,23 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
             const { number, expDate, cvv } = this.state;
             setCheckoutCreditCardData(number, expDate, cvv);
 
+            getCardType(number.substr('0', '6')).then(
+                (response) => {
+                    if (response) {
+                        const { requires_3ds, type } = response;
+
+                        BrowserDatabase.setItem(type, 'CREDIT_CART_TYPE', FIVE_MINUTES_IN_SECONDS);
+                        BrowserDatabase.setItem(requires_3ds, 'CREDIT_CART_3DS', FIVE_MINUTES_IN_SECONDS);
+                    }
+                }
+            );
+
             addNewCreditCard({ number, expDate, cvv }).then(
                 (response) => {
-                    const { id } = response;
+                    const { id, token } = response;
 
-                    if (id) {
-                        BrowserDatabase.setItem(id, 'CREDIT_CART_TOKEN', FIVE_MINUTES_IN_SECONDS);
+                    if (id || token) {
+                        BrowserDatabase.setItem(id ?? token, 'CREDIT_CART_TOKEN', FIVE_MINUTES_IN_SECONDS);
                         showSuccessMessage(__('Credit card successfully added'));
 
                         savePaymentInformation({
