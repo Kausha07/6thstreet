@@ -26,7 +26,7 @@ export class PLPDispatcher {
                 try {
                 // Load initial filters to combine them with selected filters
                     const { filters: initialFilters } = await new Algolia().getPLP(initialOptions);
-
+                    // console.log('initialFilters', initialFilters);
                     dispatch(setPLPInitialFilters(
                         initialFilters,
                         initialOptions
@@ -38,7 +38,7 @@ export class PLPDispatcher {
 
             try {
                 const response = await new Algolia().getPLP(options);
-
+                // console.log('response', response);
                 dispatch(setPLPData(
                     response,
                     options,

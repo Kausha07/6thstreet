@@ -11,6 +11,7 @@ import { PureComponent } from 'react';
 import PLPFilter from 'Component/PLPFilter';
 import PLPQuickFilter from 'Component/PLPQuickFilter';
 import Popup from 'Component/Popup';
+import { PLPContainer } from 'Route/PLP/PLP.container';
 import { Filters } from 'Util/API/endpoint/Product/Product.type';
 import WebUrlParser from 'Util/API/helper/WebUrlParser';
 import { isArabic } from 'Util/App';
@@ -66,6 +67,22 @@ class PLPFilters extends PureComponent {
         return ({
             isOpen: activeOverlay === 'PLPFilter'
         });
+    }
+
+    componentDidUpdate() {
+        // console.log('UPDATE');
+        // console.log('prevProps', prevProps);
+        this.updateFilters();
+        console.log('props', this.getPLPProps());
+        // console.log('state', this.state);
+        // // eslint-disable-next-line react/destructuring-assignment
+        // if (prevProps.productsCount === this.props.productsCount) {
+        //     this.updateFilters();
+        // }
+    }
+
+    getPLPProps() {
+        return PLPContainer.getRequestOptions();
     }
 
     setDefaultFilters = () => {
@@ -417,7 +434,8 @@ class PLPFilters extends PureComponent {
         const { productsCount } = this.props;
         const { isOpen, isArabic } = this.state;
         const count = productsCount ? productsCount.toLocaleString() : null;
-
+        // eslint-disable-next-line react/destructuring-assignment
+        // console.log(this.props.productsCount);
         return (
             <>
                 { isOpen ? this.renderPopupFilters() : this.renderFilterButton() }
