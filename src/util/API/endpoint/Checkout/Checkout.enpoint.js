@@ -40,6 +40,11 @@ export const sendVerificationCode = ({ data }) => MobileAPI.post(
     data
 ) || {};
 
+export const getCardType = (bin) => MobileAPI.post(
+    '/checkout/card-type',
+    bin
+) || {};
+
 export const verifyUserPhone = ({ data }) => MobileAPI.put(
     '/otp/verify',
     data

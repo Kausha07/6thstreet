@@ -249,10 +249,12 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                     email: customerEmail ? customerEmail : email
                 },
                 '3ds': {
-                    enabled: true
+                    enabled: BrowserDatabase.getItem('CREDIT_CART_3DS')
                 },
                 metadata: {
-                    udf1: null
+                    udf1: typeof BrowserDatabase.getItem('CREDIT_CART_TYPE') === 'string'
+                        ? BrowserDatabase.getItem('CREDIT_CART_TYPE')
+                        : null
                 }
             }
             : additional_data;
