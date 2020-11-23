@@ -9,7 +9,7 @@ import MyAccountOverlay from 'Component/MyAccountOverlay';
 import SuccessCheckoutItem from 'Component/SuccessCheckoutItem';
 import { TotalsType } from 'Type/MiniCart';
 import { isArabic } from 'Util/App';
-import { formatCurrency, roundPrice } from 'Util/Price';
+import { roundPrice } from 'Util/Price';
 
 import Apple from './icons/apple.png';
 import Cash from './icons/cash.png';
@@ -368,7 +368,7 @@ export class CheckoutSuccess extends PureComponent {
 
     renderPriceLine(price) {
         const { initialTotals: { quote_currency_code } } = this.props;
-        return `${formatCurrency(quote_currency_code)}${roundPrice(price)}`;
+        return `${quote_currency_code} ${roundPrice(price)}`;
     }
 
     renderTotals = () => {
