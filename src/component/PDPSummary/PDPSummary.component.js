@@ -10,6 +10,7 @@ import TabbyMiniPopup from 'Component/TabbyMiniPopup';
 import { TABBY_TOOLTIP_PDP } from 'Component/TabbyMiniPopup/TabbyMiniPopup.config';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
 import { isArabic } from 'Util/App';
+import { SPECIAL_COLORS } from 'Util/Common';
 
 import tabby from './icons/tabby.svg';
 
@@ -139,6 +140,7 @@ class PDPSummary extends PureComponent {
 
     renderColor() {
         const { product: { color, stock_qty } } = this.props;
+        const prodColor = SPECIAL_COLORS[color] ? SPECIAL_COLORS[color] : color;
 
         if (stock_qty === 0) {
             return null;
@@ -153,7 +155,7 @@ class PDPSummary extends PureComponent {
                 <span
                   block="PDPSummary"
                   elem="ProductColor"
-                  style={ { backgroundColor: color } }
+                  style={ { backgroundColor: prodColor } }
                 />
                 { color }
             </div>

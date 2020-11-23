@@ -4,6 +4,7 @@ import { createRef, PureComponent } from 'react';
 import Field from 'Component/Field';
 import { FilterOption } from 'Util/API/endpoint/Product/Product.type';
 import { isArabic } from 'Util/App';
+import { SPECIAL_COLORS } from 'Util/Common';
 import isMobile from 'Util/Mobile';
 
 import './PLPFilterOption.style';
@@ -148,9 +149,29 @@ class PLPFilterOption extends PureComponent {
             option: {
                 label,
                 facet_value,
+                facet_key,
                 product_count
             }
         } = this.props;
+
+        if (facet_key === 'colorfamily') {
+            const color = SPECIAL_COLORS[label] ? SPECIAL_COLORS[label] : label;
+
+            return (
+                <label
+                  block="PLPFilterOption"
+                  htmlFor={ facet_value }
+                >
+                    <span
+                      block="PLPFilterOption"
+                      elem="Color"
+                      style={ { backgroundColor: color } }
+                    />
+                    { label }
+                    { product_count && !isMobile.any() ? this.renderCount() : null }
+                </label>
+            );
+        }
 
         return (
             <label

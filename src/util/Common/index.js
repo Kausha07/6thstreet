@@ -22,3 +22,12 @@ export const appendOrdinalSuffix = (number) => {
 
     return `${ number }th`;
 };
+
+export const SPECIAL_COLORS = {
+    Beige: '#f5f5dc',
+    Clear: '#fff',
+    Cream: '#ffe4b5',
+    Metallic: '#cdb5cd',
+    Multi: '#000',
+    Nude: '#faebd7'
+};
