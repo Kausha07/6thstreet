@@ -291,7 +291,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                                     this.resetCart();
                                 }
                             } else {
-                                const { error } = response;
+                                const { error } = data;
 
                                 if (error && typeof error === 'string') {
                                     showErrorNotification(__(error));
