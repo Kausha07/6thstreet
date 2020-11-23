@@ -2,15 +2,18 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import { showNotification } from 'Store/Notification/Notification.action';
+
 import HeaderWishlist from './HeaderWishlist.component';
 
 export const mapStateToProps = (_state) => ({
+    isSignedIn: _state.MyAccountReducer.isSignedIn,
     language: _state.AppState.language,
     wishListItems: _state.WishlistReducer.items
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
-    // addProduct: options => CartDispatcher.addProductToCart(dispatch, options)
+    showNotification: (type, message) => _dispatch(showNotification(type, message))
 });
 
 export class HeaderWishlistContainer extends PureComponent {
