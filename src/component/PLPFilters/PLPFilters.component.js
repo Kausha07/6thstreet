@@ -43,7 +43,8 @@ class PLPFilters extends PureComponent {
         activeFilter: undefined,
         isArabic: isArabic(),
         activeFilters: {},
-        isReset: false
+        isReset: false,
+        defaultFilters: false
     };
 
     static getDerivedStateFromProps(props, state) {
@@ -66,6 +67,10 @@ class PLPFilters extends PureComponent {
             isOpen: activeOverlay === 'PLPFilter'
         });
     }
+
+    setDefaultFilters = () => {
+        this.setState({ defaultFilters: true });
+    };
 
     changeActiveFilter = (newFilter) => {
         this.setState({ activeFilter: newFilter });
@@ -125,7 +130,7 @@ class PLPFilters extends PureComponent {
             goToPreviousNavigationState();
         }
 
-        this.setState({ activeFilters: {}, isReset: true });
+        this.setState({ activeFilters: {}, isReset: true, defaultFilters: false });
 
         onReset();
     };
@@ -195,6 +200,7 @@ class PLPFilters extends PureComponent {
         const { isArabic } = this.state;
 
         if (isLoading) {
+            this.updateFilters();
             return this.renderPlaceholder();
         }
 
@@ -294,7 +300,12 @@ class PLPFilters extends PureComponent {
     }
 
     renderFilter = ([key, filter]) => {
-        const { activeFilter, isReset, activeFilters } = this.state;
+        const {
+            activeFilter,
+            isReset,
+            activeFilters,
+            defaultFilters
+        } = this.state;
 
         return (
             <PLPFilter
@@ -306,6 +317,9 @@ class PLPFilters extends PureComponent {
               isReset={ isReset }
               resetParentState={ this.resetParentState }
               parentActiveFilters={ activeFilters }
+              updateFilters={ this.updateFilters }
+              setDefaultFilters={ this.setDefaultFilters }
+              defaultFilters={ defaultFilters }
             />
         );
     };
