@@ -290,6 +290,14 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                                     this.setDetailsStep(order_id, increment_id);
                                     this.resetCart();
                                 }
+                            } else {
+                                const { error } = response;
+
+                                if (error && typeof error === 'string') {
+                                    showErrorNotification(__(error));
+                                    this.setState({ isLoading: false });
+                                    this.resetCart();
+                                }
                             }
                         }
 
