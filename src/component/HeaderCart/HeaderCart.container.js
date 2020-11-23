@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import { setMinicartOpen } from 'Store/Cart/Cart.action';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { hideActiveOverlay } from 'Store/Overlay/Overlay.action';
 import { TotalsType } from 'Type/MiniCart';
@@ -10,18 +11,23 @@ import { checkProducts } from 'Util/Cart/Cart';
 import HeaderCart from './HeaderCart.component';
 
 export const mapStateToProps = (state) => ({
-    totals: state.CartReducer.cartTotals
+    totals: state.CartReducer.cartTotals,
+    isMinicartOpen: state.CartReducer.isMinicartOpen
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
     hideActiveOverlay: () => _dispatch(hideActiveOverlay()),
-    showNotification: (type, message) => _dispatch(showNotification(type, message))
+    showNotification: (type, message) => _dispatch(showNotification(type, message)),
+    setMinicartOpen: (isMinicartOpen = false) => _dispatch(setMinicartOpen(isMinicartOpen))
 });
 
 export class HeaderCartContainer extends PureComponent {
     static propTypes = {
         totals: TotalsType.isRequired,
-        showNotification: PropTypes.func.isRequired
+        showNotification: PropTypes.func.isRequired,
+        isSignedIn: PropTypes.bool.isRequired,
+        setMinicartOpen: PropTypes.func.isRequired,
+        isMinicartOpen: PropTypes.bool.isRequired
     };
 
     state = {
