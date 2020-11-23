@@ -408,6 +408,7 @@ export class Checkout extends SourceCheckout {
                   billingAddress={ billing_address }
                   paymentMethod={ paymentMethod }
                   creditCardData={ creditCardData }
+                  resetCart={ resetCart }
                   totals={ initialTotals }
                 />
             );
