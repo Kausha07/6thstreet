@@ -59,3 +59,17 @@
         }
     }
 }
+.PageWrapper {
+    &_isArabic {
+        .CmsPage {
+            li {
+                padding-left: 0;
+                padding-right: 3em;
+
+                &:before {
+                    right: 0.6em;
+                }
+            }
+       }
+    }
+}
