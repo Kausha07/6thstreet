@@ -125,8 +125,8 @@ export class PDPContainer extends PureComponent {
         } = this.props;
 
         if (nbHits === 1) {
-            const categoriesLastLevel = categories[Object.keys(categories)[Object.keys(categories).length - 1]][0]
-                .split(' /// ');
+            const rawCategoriesLastLevel = categories[Object.keys(categories)[Object.keys(categories).length - 1]][0];
+            const categoriesLastLevel = rawCategoriesLastLevel ? rawCategoriesLastLevel.split(' /// ') : [];
 
             const urlArray = getBreadcrumbsUrl(categoriesLastLevel, menuCategories);
             if (urlArray.length === 0) {
