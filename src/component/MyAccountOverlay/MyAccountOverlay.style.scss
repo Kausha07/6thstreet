@@ -670,6 +670,10 @@
         .WelcomeScreen {
             &-Content {
                 margin: 0 auto;
+
+                h1, p {
+                    text-align: left;
+                }
             }
 
             &-ButtonsContainer {
@@ -742,7 +746,13 @@
     &_isArabic {
         .MyAccountOverlay {
             &-StoreSwitcher {
-                .WelcomeScreen {        
+                .WelcomeScreen {
+                    &-Content {
+                        h1, p {
+                            text-align: right;
+                        }
+                    }
+
                     &-ButtonsContainer {
                         .primary {
                             margin-right: 0;

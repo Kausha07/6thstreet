@@ -18,7 +18,10 @@ class FieldMultiselect extends PureComponent {
         changeActiveFilter: PropTypes.func,
         currentActiveFilter: PropTypes.string,
         isHidden: PropTypes.bool,
-        parentCallback: PropTypes.func
+        defaultFilters: PropTypes.bool,
+        parentCallback: PropTypes.func,
+        setDefaultFilters: PropTypes.func,
+        updateFilters: PropTypes.func
     };
 
     static defaultProps = {
@@ -27,8 +30,11 @@ class FieldMultiselect extends PureComponent {
         isChecked: false,
         currentActiveFilter: '',
         isHidden: false,
+        defaultFilters: false,
         parentCallback: () => {},
-        changeActiveFilter: () => {}
+        changeActiveFilter: () => {},
+        updateFilters: () => {},
+        setDefaultFilters: () => {}
     };
 
     filterDropdownRef = createRef();
@@ -144,7 +150,10 @@ class FieldMultiselect extends PureComponent {
             filter: { is_radio },
             activeFilter,
             isChecked,
-            parentCallback
+            parentCallback,
+            updateFilters,
+            setDefaultFilters,
+            defaultFilters
         } = this.props;
 
         if (option.subcategories) {
@@ -161,6 +170,9 @@ class FieldMultiselect extends PureComponent {
               activeFilter={ activeFilter }
               isChecked={ isChecked }
               parentCallback={ parentCallback }
+              updateFilters={ updateFilters }
+              setDefaultFilters={ setDefaultFilters }
+              defaultFilters={ defaultFilters }
             />
         );
     };

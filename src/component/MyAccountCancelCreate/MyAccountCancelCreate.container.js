@@ -43,7 +43,12 @@ export class MyAccountCancelCreateContainer extends MyAccountReturnCreateContain
                 return;
             }
 
-            this.setState({ isLoading: false, items, incrementId: order_id });
+            this.setState({
+                isLoading: false,
+                items,
+                incrementId: order_id,
+                orderId
+            });
         }).catch(() => {
             if (!this._isMounted) {
                 return;
@@ -58,7 +63,12 @@ export class MyAccountCancelCreateContainer extends MyAccountReturnCreateContain
 
     onFormSubmit() {
         const { showErrorMessage, history } = this.props;
-        const { selectedItems, items, incrementId } = this.state;
+        const {
+            selectedItems,
+            items,
+            incrementId,
+            orderId
+        } = this.state;
         const payload = {
             order_id: incrementId,
             items: Object.entries(selectedItems).map(([order_item_id, { reasonId }]) => {
@@ -74,8 +84,8 @@ export class MyAccountCancelCreateContainer extends MyAccountReturnCreateContain
 
         this.setState({ isLoading: true });
 
-        MagentoAPI.post('recan/commitRecan', payload).then(({ payload: { cancellation_id } }) => {
-            history.push(`/my-account/return-item/cancel/success/${ cancellation_id }`);
+        MagentoAPI.post('recan/commitRecan', payload).then(() => {
+            history.push(`/my-account/my-orders/${ orderId }`);
         }).catch(() => {
             showErrorMessage(__('Error appeared while requesting a cancelation'));
             this.setState({ isLoading: false });
