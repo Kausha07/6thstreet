@@ -22,7 +22,8 @@ export class CheckoutBilling extends SourceCheckoutBilling {
         ...SourceCheckoutBilling.propTypes,
         setTabbyWebUrl: PropTypes.func.isRequired,
         setCreditCardData: PropTypes.func.isRequired,
-        showCreateNewPopup: PropTypes.func.isRequired
+        showCreateNewPopup: PropTypes.func.isRequired,
+        processingRequest: PropTypes.bool.isRequired
     };
 
     state = {
@@ -282,7 +283,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
             isTermsAndConditionsAccepted
         } = this.state;
 
-        const { termsAreEnabled } = this.props;
+        const { termsAreEnabled, processingRequest } = this.props;
 
         if (!isOrderButtonVisible) {
             return null;
@@ -301,7 +302,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
                     <button
                       type="submit"
                       block="Button"
-                      disabled={ isDisabled }
+                      disabled={ isDisabled || processingRequest }
                       mix={ { block: 'CheckoutBilling', elem: 'Button' } }
                     >
                         { __('Place order') }

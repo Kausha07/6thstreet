@@ -150,11 +150,10 @@ export const CartReducer = (state = getInitialState(), action) => {
         };
 
     case REMOVE_CART_ITEMS:
-        BrowserDatabase.deleteItem(
-            CART_ITEMS_CACHE_KEY
-        );
-        BrowserDatabase.deleteItem(
-            CART_ID_CACHE_KEY
+        BrowserDatabase.setItem(
+            [],
+            CART_ITEMS_CACHE_KEY,
+            expireTime
         );
 
         return {
