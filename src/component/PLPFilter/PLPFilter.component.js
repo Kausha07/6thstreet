@@ -18,14 +18,18 @@ class PLPFilter extends PureComponent {
         filter: Filter.isRequired,
         activeFilter: PropTypes.object,
         isChecked: PropTypes.bool,
+        defaultFilters: PropTypes.bool,
         currentActiveFilter: PropTypes.string,
         changeActiveFilter: PropTypes.func.isRequired,
-        handleCallback: PropTypes.func.isRequired
+        handleCallback: PropTypes.func.isRequired,
+        updateFilters: PropTypes.func.isRequired,
+        setDefaultFilters: PropTypes.func.isRequired
     };
 
     static defaultProps = {
         activeFilter: {},
         isChecked: false,
+        defaultFilters: false,
         currentActiveFilter: ''
     };
 
@@ -41,7 +45,10 @@ class PLPFilter extends PureComponent {
             isChecked,
             currentActiveFilter,
             changeActiveFilter,
-            handleCallback
+            handleCallback,
+            updateFilters,
+            setDefaultFilters,
+            defaultFilters
         } = this.props;
 
         if (category === 'categories.level1') {
@@ -68,6 +75,9 @@ class PLPFilter extends PureComponent {
               currentActiveFilter={ currentActiveFilter }
               changeActiveFilter={ changeActiveFilter }
               parentCallback={ handleCallback }
+              updateFilters={ updateFilters }
+              setDefaultFilters={ setDefaultFilters }
+              defaultFilters={ defaultFilters }
             />
         );
     }
