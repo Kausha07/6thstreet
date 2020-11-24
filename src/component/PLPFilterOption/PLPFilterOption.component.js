@@ -155,7 +155,8 @@ class PLPFilterOption extends PureComponent {
         } = this.props;
 
         if (facet_key === 'colorfamily') {
-            const color = SPECIAL_COLORS[label] ? SPECIAL_COLORS[label] : label;
+            const fixedColor = label.toLowerCase().replace(/ /g, '_');
+            const color = SPECIAL_COLORS[fixedColor] ? SPECIAL_COLORS[fixedColor] : fixedColor;
 
             return (
                 <label

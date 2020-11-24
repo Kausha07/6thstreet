@@ -140,7 +140,8 @@ class PDPSummary extends PureComponent {
 
     renderColor() {
         const { product: { color, stock_qty } } = this.props;
-        const prodColor = SPECIAL_COLORS[color] ? SPECIAL_COLORS[color] : color;
+        const fixedColor = color.toLowerCase().replace(/ /g, '_');
+        const prodColor = SPECIAL_COLORS[fixedColor] ? SPECIAL_COLORS[fixedColor] : fixedColor;
 
         if (stock_qty === 0) {
             return null;

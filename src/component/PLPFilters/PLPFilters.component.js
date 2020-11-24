@@ -15,14 +15,11 @@ import { Filters } from 'Util/API/endpoint/Product/Product.type';
 import WebUrlParser from 'Util/API/helper/WebUrlParser';
 import { isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
-import Loader from 'Component/Loader';
 
 import fitlerImage from './icons/filter-button.png';
 import { SIZES } from './PLPFilters.config';
 
 import './PLPFilters.style';
-
-var timer;
 
 class PLPFilters extends PureComponent {
     static propTypes = {
@@ -41,14 +38,20 @@ class PLPFilters extends PureComponent {
         productsCount: 0
     };
 
-    state = {
-        isOpen: false,
-        activeFilter: undefined,
-        isArabic: isArabic(),
-        activeFilters: {},
-        isReset: false,
-        defaultFilters: false
-    };
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            isOpen: false,
+            activeFilter: undefined,
+            isArabic: isArabic(),
+            activeFilters: {},
+            isReset: false,
+            defaultFilters: false
+        };
+
+        this.timer = null;
+    }
 
     static getDerivedStateFromProps(props, state) {
         const {
@@ -71,11 +74,10 @@ class PLPFilters extends PureComponent {
         });
     }
 
-
     delayFilterUpdate() {
-        clearTimeout(timer);
+        clearTimeout(this.timer);
         // eslint-disable-next-line no-magic-numbers
-        timer = setTimeout(() => this.updateFilters(), 2000);
+        this.timer = setTimeout(() => this.updateFilters(), 2000);
     }
 
     setDefaultFilters = () => {
@@ -96,6 +98,7 @@ class PLPFilters extends PureComponent {
 
     renderFilters() {
         const { filters } = this.props;
+
         return Object.entries(filters).map((filter) => {
             if (filter[0] === SIZES && !isMobile.any()) {
                 const { data } = filter[1];
@@ -110,10 +113,6 @@ class PLPFilters extends PureComponent {
         const { filters } = this.props;
 
         return Object.entries(filters).map(this.renderQuickFilter.bind(this));
-    }
-
-    renderPlaceholder() {
-        return null;
     }
 
     hidePopUp = () => {
@@ -134,7 +133,8 @@ class PLPFilters extends PureComponent {
             onReset,
             activeOverlay
         } = this.props;
-        clearTimeout(timer);
+
+        clearTimeout(this.timer);
 
         if (activeOverlay === 'PLPFilter') {
             hideActiveOverlay();
@@ -159,6 +159,7 @@ class PLPFilters extends PureComponent {
 
     renderSeeResultButton() {
         const { productsCount } = this.props;
+        const count = ` ( ${productsCount} )`;
         return (
             <button
               block="Content"
@@ -166,8 +167,7 @@ class PLPFilters extends PureComponent {
               onClick={ this.onShowResultButton }
             >
                 { __('show result') }
-                {' '}
-                ( { productsCount } )
+                { count }
             </button>
         );
     }
@@ -215,7 +215,6 @@ class PLPFilters extends PureComponent {
 
         if (isLoading) {
             this.updateFilters();
-            return
         }
 
         return (
