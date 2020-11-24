@@ -39,6 +39,10 @@ class HeaderCart extends PureComponent {
         }
     }
 
+    componentWillUnmount() {
+        this.closePopup();
+    }
+
     closePopup = () => {
         const { hideActiveOverlay, setMinicartOpen } = this.props;
 

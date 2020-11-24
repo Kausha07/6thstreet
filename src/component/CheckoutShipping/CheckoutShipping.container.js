@@ -125,7 +125,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
             selectedCustomerAddressId,
             selectedShippingMethod
         } = this.state;
-        const { setLoading } = this.props;
+        const { setLoading, showNotification } = this.props;
         const shippingAddress = selectedCustomerAddressId
             ? this._getAddressById(selectedCustomerAddressId)
             : trimAddressFields(fields);
@@ -138,16 +138,22 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
                 this.estimateShipping(addressForValidation, true).then((response) => {
                     if (typeof response !== 'undefined') {
                         const { data } = response;
-                        const { available } = data ? data[0] : { available: false };
+                        if (data.length !== 0) {
+                            const { available } = data ? data[0] : { available: false };
 
-                        if (available) {
-                            this.setState({
-                                selectedShippingMethod: response.data[0]
-                            }, () => this.processDelivery(fields));
+                            if (available) {
+                                this.setState({
+                                    selectedShippingMethod: response.data[0]
+                                }, () => this.processDelivery(fields));
+                            } else {
+                                const { error } = response;
+                                this.handleError(error);
+                            }
                         } else {
-                            const { error } = response;
-                            this.handleError(error);
+                            setLoading(false);
+                            showNotification('error', __('We can\'t ship products to selected address'))
                         }
+                        
                     } else {
                         setLoading(false);
                     }
@@ -192,19 +198,22 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
             region,
             street,
             country_id,
-            telephone
+            telephone,
+            postcode
         } = shippingAddress;
 
         const shippingAddressMapped = {
             ...shippingAddress,
             street: Array.isArray(street) ? street[0] : street,
-            area: region ?? region_id,
+            area: region ?? region_id ?? postcode,
             country_code: country_id,
             phone: telephone,
             email: isSignedIn() ? email : guestEmail,
-            region: region ?? region_id,
+            region: region ?? region_id ?? postcode,
             region_id: 0
         };
+
+        console.log(shippingAddressMapped);
 
         const {
             carrier_code: shipping_carrier_code,

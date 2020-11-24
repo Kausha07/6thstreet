@@ -35,7 +35,6 @@ export const mapDispatchToProps = (dispatch) => ({
     getPaymentMethods: () => CheckoutDispatcher.getPaymentMethods(),
     sendVerificationCode: (phone) => CheckoutDispatcher.sendVerificationCode(dispatch, phone),
     getLastOrder: () => CheckoutDispatcher.getLastOrder(dispatch),
-    createEmptyCart: () => CartDispatcher.getCart(dispatch),
     hideActiveOverlay: () => dispatch(hideActiveOverlay()),
     updateStoreCredit: () => StoreCreditDispatcher.getStoreCredit(dispatch),
     setMeta: (meta) => dispatch(updateMeta(meta)),
