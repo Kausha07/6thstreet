@@ -6,6 +6,7 @@ export const REMOVE_CART_ITEMS = 'REMOVE_CART_ITEMS';
 export const UPDATE_TOTALS = 'UPDATE_TOTALS';
 export const PROCESSING_CART_REQUEST = 'START_CART_REQUEST';
 export const SET_MINICART_OPEN = 'SET_MINICART_OPEN';
+export const RESET_CART = 'RESET_CART';
 
 export const setCartId = (cartId) => ({
     type: SET_CART_ID,
@@ -55,6 +56,10 @@ export const removeCartItem = (cartItem) => ({
 
 export const removeCartItems = () => ({
     type: REMOVE_CART_ITEMS
+});
+
+export const resetCart = () => ({
+    type: RESET_CART
 });
 
 export const updateTotals = (cartData) => ({

@@ -5,6 +5,7 @@ import {
     PROCESSING_CART_REQUEST,
     REMOVE_CART_ITEM,
     REMOVE_CART_ITEMS,
+    RESET_CART,
     SET_CART_ID,
     SET_CART_TOTALS,
     SET_MINICART_OPEN,
@@ -149,10 +150,11 @@ export const CartReducer = (state = getInitialState(), action) => {
         };
 
     case REMOVE_CART_ITEMS:
-        BrowserDatabase.setItem(
-            [],
-            CART_ITEMS_CACHE_KEY,
-            expireTime
+        BrowserDatabase.deleteItem(
+            CART_ITEMS_CACHE_KEY
+        );
+        BrowserDatabase.deleteItem(
+            CART_ID_CACHE_KEY
         );
 
         return {
@@ -160,6 +162,17 @@ export const CartReducer = (state = getInitialState(), action) => {
             cartItems: []
         };
 
+    case RESET_CART:
+        BrowserDatabase.deleteItem(
+            CART_ITEMS_CACHE_KEY
+        );
+        BrowserDatabase.deleteItem(
+            CART_ID_CACHE_KEY
+        );
+
+        return {
+            ...getInitialState()
+        };
     case UPDATE_TOTALS:
     case SET_MINICART_OPEN:
         const { isMinicartOpen } = action;
