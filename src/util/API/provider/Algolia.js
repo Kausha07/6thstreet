@@ -44,7 +44,6 @@ export class Algolia {
     async getPLP(params = {}) {
         const { AppState: { locale = process.env.REACT_APP_LOCATE } } = getStore().getState();
 
-        console.log('params', params);
         const url = queryString({
             ...params,
             // TODO: get proper locale

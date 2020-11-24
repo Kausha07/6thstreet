@@ -11,16 +11,18 @@ import { PureComponent } from 'react';
 import PLPFilter from 'Component/PLPFilter';
 import PLPQuickFilter from 'Component/PLPQuickFilter';
 import Popup from 'Component/Popup';
-import { PLPContainer } from 'Route/PLP/PLP.container';
 import { Filters } from 'Util/API/endpoint/Product/Product.type';
 import WebUrlParser from 'Util/API/helper/WebUrlParser';
 import { isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
+import Loader from 'Component/Loader';
 
 import fitlerImage from './icons/filter-button.png';
 import { SIZES } from './PLPFilters.config';
 
 import './PLPFilters.style';
+
+var timer;
 
 class PLPFilters extends PureComponent {
     static propTypes = {
@@ -69,20 +71,11 @@ class PLPFilters extends PureComponent {
         });
     }
 
-    componentDidUpdate() {
-        // console.log('UPDATE');
-        // console.log('prevProps', prevProps);
-        this.updateFilters();
-        console.log('props', this.getPLPProps());
-        // console.log('state', this.state);
-        // // eslint-disable-next-line react/destructuring-assignment
-        // if (prevProps.productsCount === this.props.productsCount) {
-        //     this.updateFilters();
-        // }
-    }
 
-    getPLPProps() {
-        return PLPContainer.getRequestOptions();
+    delayFilterUpdate() {
+        clearTimeout(timer);
+        // eslint-disable-next-line no-magic-numbers
+        timer = setTimeout(() => this.updateFilters(), 2000);
     }
 
     setDefaultFilters = () => {
@@ -120,7 +113,7 @@ class PLPFilters extends PureComponent {
     }
 
     renderPlaceholder() {
-        return 'placeholder while loading filters...';
+        return null;
     }
 
     hidePopUp = () => {
@@ -141,6 +134,7 @@ class PLPFilters extends PureComponent {
             onReset,
             activeOverlay
         } = this.props;
+        clearTimeout(timer);
 
         if (activeOverlay === 'PLPFilter') {
             hideActiveOverlay();
@@ -164,6 +158,7 @@ class PLPFilters extends PureComponent {
     };
 
     renderSeeResultButton() {
+        const { productsCount } = this.props;
         return (
             <button
               block="Content"
@@ -171,6 +166,8 @@ class PLPFilters extends PureComponent {
               onClick={ this.onShowResultButton }
             >
                 { __('show result') }
+                {' '}
+                ( { productsCount } )
             </button>
         );
     }
@@ -218,7 +215,7 @@ class PLPFilters extends PureComponent {
 
         if (isLoading) {
             this.updateFilters();
-            return this.renderPlaceholder();
+            return
         }
 
         return (
@@ -349,6 +346,10 @@ class PLPFilters extends PureComponent {
         const { activeFilters } = this.state;
         const filterArray = activeFilters[initialFacetKey];
 
+        if (isMobile.any()) {
+            this.delayFilterUpdate();
+        }
+
         if (!isRadio) {
             if (checked) {
                 this.setState({
@@ -434,8 +435,7 @@ class PLPFilters extends PureComponent {
         const { productsCount } = this.props;
         const { isOpen, isArabic } = this.state;
         const count = productsCount ? productsCount.toLocaleString() : null;
-        // eslint-disable-next-line react/destructuring-assignment
-        // console.log(this.props.productsCount);
+
         return (
             <>
                 { isOpen ? this.renderPopupFilters() : this.renderFilterButton() }
