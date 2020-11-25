@@ -95,7 +95,9 @@ class HeaderMainSection extends NavigationAbstract {
 
     isPLP() {
         const { type } = this.state;
-        return TYPE_CATEGORY === type;
+        const { location: { search } } = this.props;
+
+        return TYPE_CATEGORY === type && search;
     }
 
     isPDP() {
