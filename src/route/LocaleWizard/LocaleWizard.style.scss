@@ -36,9 +36,22 @@
         padding-top: 50px;
         text-align: center;
 
+        .HeaderLogo {
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        &_isArabic {
+            .HeaderLogo {
+                @include mobile {
+                    justify-content: flex-end;
+                }
+            }
+        }
+
         .Image {
             height: 40px;
-            margin: 0 auto;
+            margin: 0 20px;
             width: 190px;
         }
     }
