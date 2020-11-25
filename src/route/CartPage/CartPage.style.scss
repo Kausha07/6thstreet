@@ -416,6 +416,7 @@
         @include mobile {
             max-height: calc(100vh - 182px);
             overflow-y: scroll;
+            overflow-x: hidden;
         }
 
         &_isArabic {
