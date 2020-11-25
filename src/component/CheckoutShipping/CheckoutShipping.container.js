@@ -137,7 +137,8 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
             if (success && !selectedShippingMethod) {
                 this.estimateShipping(addressForValidation, true).then((response) => {
                     if (typeof response !== 'undefined') {
-                        const { data } = response;
+                        const { data = [] } = response;
+
                         if (data.length !== 0) {
                             const { available } = data ? data[0] : { available: false };
 
