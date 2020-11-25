@@ -213,8 +213,6 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
             region_id: 0
         };
 
-        console.log(shippingAddressMapped);
-
         const {
             carrier_code: shipping_carrier_code,
             method_code: shipping_method_code
