@@ -35,24 +35,27 @@ export class HeaderCartContainer extends PureComponent {
 
     state = {
         itemCountDiv: '',
-        isCheckoutAvailable: false
+        isCheckoutAvailable: false,
+        prevIsMinicartOpen: false
     };
 
     containerFunctions = {
         // getData: this.getData.bind(this)
     };
 
-    static getDerivedStateFromProps(props) {
+    static getDerivedStateFromProps(props, state) {
         const {
             totals: { items = [], total, id },
             showNotification,
-            updateTotals
+            updateTotals,
+            isMinicartOpen
         } = props;
+        const { firstload, prevIsMinicartOpen } = state;
 
-        if (items.length !== 0) {
+        if (items.length !== 0 && isMinicartOpen === prevIsMinicartOpen) {
             const mappedItems = checkProducts(items);
 
-            if (total === 0) {
+            if (total === 0 && firstload) {
                 // TODO: Handle problem when total is 0
                 updateTotals(id);
             }
@@ -62,11 +65,14 @@ export class HeaderCartContainer extends PureComponent {
             }
 
             return {
-                isCheckoutAvailable: mappedItems.length === 0
+                isCheckoutAvailable: mappedItems.length === 0,
+                firstload: false
             };
         }
 
-        return null;
+        return {
+            prevIsMinicartOpen: isMinicartOpen
+        };
     }
 
     containerProps = () => {
