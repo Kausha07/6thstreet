@@ -56,7 +56,6 @@ export class HeaderCartContainer extends PureComponent {
             const mappedItems = checkProducts(items);
 
             if (total === 0 && firstload) {
-                // TODO: Handle problem when total is 0
                 updateTotals(id);
             }
 
