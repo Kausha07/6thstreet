@@ -250,7 +250,8 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
                 label: <CountryMiniFlag label={ countryId } />,
                 validation: ['notEmpty'],
                 value: this.renderCurrentPhoneCode(),
-                autocomplete: 'none'
+                autocomplete: 'none',
+                isDisabled: true
             },
             telephone: {
                 validation: ['notEmpty', this.getValidationForTelephone()],
