@@ -351,8 +351,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
         if (isSignedIn) {
             if (customer.isVerified !== '0') {
-                const code = customer.phone.slice(1, 4);
-                const mobile = customer.phone.slice(4);
+                const { phone = '' } = customer;
+                const code = phone.slice(1, 4);
+                const mobile = phone.slice(4);
+                console.log('***', customer, code, mobile);
                 sendVerificationCode({ mobile, code }).then(
                     (response) => {
                         this.setState({ isVerificationCodeSent: response.success });
@@ -361,8 +363,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                 );
             }
         } else {
-            const code = shippingAddress.phone.slice(1, 4);
-            const mobile = shippingAddress.phone.slice(4);
+            const { phone = '' } = shippingAddress;
+            const code = phone.slice(1, 4);
+            const mobile = phone.slice(4);
             sendVerificationCode({ mobile, code }).then(
                 (response) => {
                     this.setState({ isVerificationCodeSent: response.success });
