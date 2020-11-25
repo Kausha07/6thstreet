@@ -41,6 +41,7 @@ import {
     withStoreRegex
 } from 'SourceComponent/Router/Router.component';
 import { AFTER_ITEMS_TYPE, BEFORE_ITEMS_TYPE, SWITCH_ITEMS_TYPE } from 'SourceComponent/Router/Router.config';
+import { isArabic } from 'Util/App';
 import { getCountryFromUrl, getLanguageFromUrl } from 'Util/Url';
 
 import './Router.style';
@@ -247,10 +248,8 @@ export class Router extends SourceRouter {
     ];
 
     static getDerivedStateFromProps() {
-        const appStateCacheKey = JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY'));
-
         return {
-            isArabic: appStateCacheKey && appStateCacheKey.data.language === 'ar'
+            isArabic: isArabic()
         };
     }
 

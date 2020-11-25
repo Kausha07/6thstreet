@@ -2,6 +2,7 @@ import { PureComponent } from 'react';
 
 import HeaderLogo from 'Component/HeaderLogo';
 import WelcomeScreen from 'Component/WelcomeScreen';
+import { isArabic } from 'Util/App';
 
 import './LocaleWizard.style';
 
@@ -11,8 +12,7 @@ class LocaleWizard extends PureComponent {
     };
 
     checkWizardLang = () => {
-        const appStateCacheKey = JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY'));
-        this.setState({ isArabic: appStateCacheKey && appStateCacheKey.data.language === 'ar' });
+        this.setState({ isArabic: isArabic() });
     };
 
     render() {
