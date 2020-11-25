@@ -4,6 +4,7 @@ import { PureComponent } from 'react';
 
 import CountryMiniFlag from 'Component/CountryMiniFlag';
 import { SelectOptions } from 'Type/Field';
+import { isArabic } from 'Util/App';
 
 import './WelcomeScreen.style';
 
@@ -27,10 +28,8 @@ class WelcomeScreen extends PureComponent {
     };
 
     static getDerivedStateFromProps() {
-        const appStateCacheKey = JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY'));
-
         return {
-            isArabic: appStateCacheKey && appStateCacheKey.data.language === 'ar'
+            isArabic: isArabic()
         };
     }
 
