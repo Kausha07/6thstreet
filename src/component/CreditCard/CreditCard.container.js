@@ -31,7 +31,7 @@ export class CreditCardContainer extends PureComponent {
     };
 
     isNumber(value) {
-        const stringVal = value.toString();
+        const stringVal = value.toString() || '';
         const lastInput = stringVal.charAt(stringVal.length - 1);
         if (lastInput === '.') {
             return false;
@@ -56,7 +56,7 @@ export class CreditCardContainer extends PureComponent {
             .trim();
     }
 
-    countSpaces(text, expInput) {
+    countSpaces(text = '', expInput) {
         if (expInput) {
             return text.includes('/') ? 1 : 0;
         }
@@ -75,10 +75,10 @@ export class CreditCardContainer extends PureComponent {
         }
 
         const position = element.selectionEnd;
-        const previousValue = element.value;
+        const previousValue = element.value || '';
         element.value = this.format(element.value, spacePosition, expInput);
 
-        if (position !== element.value.length) {
+        if (position !== previousValue.length) {
             const beforeCaret = previousValue.substr(0, position);
             const countPrevious = this.countSpaces(beforeCaret, expInput);
             const countCurrent = this.countSpaces(this.format(beforeCaret, spacePosition, expInput), expInput);
@@ -86,7 +86,7 @@ export class CreditCardContainer extends PureComponent {
         }
     }
 
-    expDateValidator(value) {
+    expDateValidator(value = '') {
         const message = __('Please check the card expiration date');
         const first = parseInt(value.charAt(0));
         const month = parseInt(value.slice(0, 2));

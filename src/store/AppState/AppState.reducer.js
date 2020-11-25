@@ -41,7 +41,7 @@ export const AppStateReducer = (state = getInitialState(), action) => {
     const {
         type,
         gender,
-        locale,
+        locale = '',
         country: actionCountry,
         language: actionLanguage
     } = action;

@@ -89,7 +89,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
                 setCheckoutCreditCardData
             } = this.props;
 
-            const { number, expDate, cvv } = this.state;
+            const { number = '', expDate, cvv } = this.state;
             setCheckoutCreditCardData(number, expDate, cvv);
 
             getCardType(number.substr('0', '6')).then(

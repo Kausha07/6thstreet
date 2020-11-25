@@ -121,7 +121,7 @@ export class MyAccountAddressTable extends KeyValueTable {
     };
 
     getPhone = () => {
-        const { address: { telephone } } = this.props;
+        const { address: { telephone = '' } } = this.props;
         const numbers = telephone.slice(1);
         const code = numbers.slice(0, 3);
         const phone = numbers.slice(3);
@@ -173,7 +173,7 @@ export class MyAccountAddressTable extends KeyValueTable {
     }
 
     render() {
-        const { countries, mix } = this.props;
+        const { countries = [], mix } = this.props;
 
         return (
             <div block="MyAccountAddressTable" mix={ mix }>

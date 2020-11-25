@@ -70,7 +70,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
         } = this.props;
         const { m_code } = method;
         const isSelected = selectedPaymentCode === m_code;
-        const { tabbyPaymentMethods } = this.state;
+        const { tabbyPaymentMethods = [] } = this.state;
         const isTabbySelected = TABBY_PAYMENT_CODES.includes(selectedPaymentCode);
 
         if (TABBY_PAYMENT_CODES.includes(m_code) && tabbyPaymentMethods.length > 0) {
@@ -123,7 +123,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     }
 
     renderTabbyPaymentMethods() {
-        const { tabbyPaymentMethods } = this.state;
+        const { tabbyPaymentMethods = [] } = this.state;
 
         return (
             <div block="CheckoutPayments" elem="TabbyPayments">
@@ -251,8 +251,8 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     }
 
     renderPayments() {
-        const { paymentMethods } = this.props;
-        const { tabbyPaymentMethods } = this.state;
+        const { paymentMethods = [] } = this.props;
+        const { tabbyPaymentMethods = [] } = this.state;
 
         const hasTabby = paymentMethods.some(({ code }) => TABBY_PAYMENT_CODES.includes(code));
 

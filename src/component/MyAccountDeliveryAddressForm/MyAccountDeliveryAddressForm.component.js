@@ -115,7 +115,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
 
     getRegionFields() {
         const { newForm, address: { city, region: { region } = {} } } = this.props;
-        const { availableAreas, cities } = this.state;
+        const { availableAreas = [], cities = [] } = this.state;
         const clearValue = newForm ? { value: '' } : null;
 
         if (cities.length && city && !availableAreas.length) {
@@ -148,7 +148,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
     }
 
     async getCitiesData() {
-        const { cities } = this.state;
+        const { cities = [] } = this.state;
         const { getCities } = this.props;
 
         if (cities.length === 0) {
@@ -168,7 +168,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         if (isArabic()) {
             const trueArabicCity = cities.find(({ city }) => cityFromProps === city);
             if (trueArabicCity) {
-                const { areas_ar, areas } = trueArabicCity;
+                const { areas_ar = [], areas } = trueArabicCity;
 
                 // eslint-disable-next-line arrow-body-style
                 const result = areas_ar.map((area_ar, i) => {
@@ -185,7 +185,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         const trueCity = cities.find(({ city }) => cityFromProps === city);
 
         if (trueCity) {
-            const { areas } = trueCity;
+            const { areas = [] } = trueCity;
 
             // eslint-disable-next-line arrow-body-style
             const result = areas.map((area) => {
@@ -205,7 +205,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
             const trueArabicCity = cities.find(({ city }) => selectedCity === city);
 
             if (trueArabicCity) {
-                const { areas_ar, areas } = trueArabicCity;
+                const { areas_ar = [], areas } = trueArabicCity;
 
                 // eslint-disable-next-line arrow-body-style
                 const result = areas_ar.map((area_ar, i) => {
@@ -223,7 +223,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         const trueCity = cities.find(({ city }) => selectedCity === city);
 
         if (trueCity) {
-            const { areas } = trueCity;
+            const { areas = [] } = trueCity;
 
             // eslint-disable-next-line arrow-body-style
             const result = areas.map((area) => {
@@ -260,7 +260,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
     }
 
     getCitiesSelectOptions = () => {
-        const { cities } = this.state;
+        const { cities = [] } = this.state;
 
         if (isArabic()) {
             return cities.map((item) => ({ id: item.city, label: item.city_ar, value: item.city }));
@@ -270,7 +270,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
     };
 
     getAreasSelectOptions = () => {
-        const { availableAreas } = this.state;
+        const { availableAreas = [] } = this.state;
 
         if (isArabic()) {
             return availableAreas.map((area) => ({ id: area, label: area, value: area }));

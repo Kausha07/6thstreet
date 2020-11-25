@@ -40,7 +40,7 @@ class HeaderWishlist extends PureComponent {
             isBottomBar,
             isWishlist,
             isMobile,
-            wishListItems
+            wishListItems = []
         } = this.props;
         const { isArabic } = this.state;
         const itemsCount = wishListItems.length;

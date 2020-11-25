@@ -42,7 +42,7 @@ class CreditCardTooltip extends PureComponent {
     }
 
     getImageList() {
-        const { bankLogos } = this.props;
+        const { bankLogos = [] } = this.props;
 
         return bankLogos.map((bankLogo) => (
             <Image

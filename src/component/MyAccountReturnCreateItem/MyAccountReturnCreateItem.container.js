@@ -71,7 +71,7 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
     };
 
     getResolutionOptions() {
-        const { resolutions } = this.props;
+        const { resolutions = [] } = this.props;
 
         return resolutions.map(({ id, label }) => ({
             id,
@@ -81,7 +81,7 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
     }
 
     getReasonOptions() {
-        const { item: { reason_options } } = this.props;
+        const { item: { reason_options = [] } } = this.props;
 
         return reason_options.map(({ id, label }) => {
             const value = id.toString();

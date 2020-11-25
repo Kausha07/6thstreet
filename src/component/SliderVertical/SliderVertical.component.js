@@ -90,7 +90,7 @@ export class SliderVertical extends PureComponent {
         const { activeImage } = props;
         const {
             prevActiveImage,
-            sliderChildren,
+            sliderChildren = [],
             isSlider
         } = state;
 
@@ -187,7 +187,7 @@ export class SliderVertical extends PureComponent {
     handleSliderDown = (
         activeImage,
         count,
-        sliderChildren,
+        sliderChildren = [],
         countPerPage,
         sliderHeightChildren,
         draggableRef,
@@ -274,7 +274,7 @@ export class SliderVertical extends PureComponent {
     };
 
     isSlider() {
-        const { children } = this.props;
+        const { children = [] } = this.props;
         const { countPerPage } = this.state;
 
         this.setState({ isSlider: countPerPage < children.length });
@@ -409,7 +409,7 @@ export class SliderVertical extends PureComponent {
     }
 
     renderCrumbs() {
-        const { children } = this.props;
+        const { children = [] } = this.props;
         if (children.length <= 1) {
             return null;
         }

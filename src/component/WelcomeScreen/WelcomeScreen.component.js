@@ -52,7 +52,7 @@ class WelcomeScreen extends PureComponent {
 
     renderCountryList() {
         const {
-            countrySelectOptions,
+            countrySelectOptions = [],
             country
         } = this.props;
 
@@ -91,7 +91,7 @@ class WelcomeScreen extends PureComponent {
 
     renderLanguageButtons() {
         const {
-            languageSelectOptions
+            languageSelectOptions = []
         } = this.props;
 
         const buttons = languageSelectOptions.map((lang) => this.renderLangBtn(lang));

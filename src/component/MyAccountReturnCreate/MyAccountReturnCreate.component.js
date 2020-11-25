@@ -56,7 +56,7 @@ export class MyAccountReturnCreate extends PureComponent {
     };
 
     renderOrderItems() {
-        const { items, onFormSubmit } = this.props;
+        const { items = [], onFormSubmit } = this.props;
 
         return (
             <Form id="create-return" onSubmitSuccess={ onFormSubmit }>

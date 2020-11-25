@@ -31,7 +31,7 @@ class MyAccountStoreCredit extends PureComponent {
         );
     }
 
-    renderTableHead(headers) {
+    renderTableHead(headers = []) {
         return (
             <thead>
                 { headers.map((header) => (
@@ -41,10 +41,10 @@ class MyAccountStoreCredit extends PureComponent {
         );
     }
 
-    renderTableRows(rows) {
+    renderTableRows(rows = []) {
         return (
             <tbody>
-                { rows.map((cells) => (
+                { rows.map((cells = []) => (
                     <tr>
                         { cells.map((value) => (
                             <td>{ value }</td>
@@ -58,7 +58,7 @@ class MyAccountStoreCredit extends PureComponent {
     renderHistory() {
         const {
             storeCredit: {
-                history
+                history = []
             } = {}
         } = this.props;
 

@@ -32,7 +32,7 @@ class MyAccountReturnList extends PureComponent {
 
     renderReturns() {
         const {
-            returns,
+            returns = [],
             isLoading
         } = this.props;
 

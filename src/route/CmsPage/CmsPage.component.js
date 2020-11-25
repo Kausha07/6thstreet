@@ -8,7 +8,7 @@ export class CmsPage extends SourceCmsPage {
         const {
             isLoading,
             page: { content },
-            location: { pathname }
+            location: { pathname = '' }
         } = this.props;
 
         if (isLoading) {
@@ -33,7 +33,7 @@ export class CmsPage extends SourceCmsPage {
             .replace(/&lt;/g, '<')
             .replace(/&gt;/g, '>');
         const cmsBlock = pathname.slice(1);
-        const toggleArr = document.querySelectorAll('.faq-page-toggle');
+        const toggleArr = document.querySelectorAll('.faq-page-toggle') || [];
 
         if (toggleArr && toggleArr.length > 0) {
             toggleArr.forEach((toggle) => {

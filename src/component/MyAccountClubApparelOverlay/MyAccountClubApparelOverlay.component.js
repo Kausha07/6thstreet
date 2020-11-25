@@ -65,7 +65,7 @@ class MyAccountClubApparelOverlay extends PureComponent {
         };
     }
 
-    handleVerifyChange = (e) => {
+    handleVerifyChange = (e = []) => {
         // eslint-disable-next-line no-magic-numbers
         this.setState({ isButtonDisabled: e.length !== 5 });
     };

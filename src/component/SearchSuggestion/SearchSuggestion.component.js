@@ -51,7 +51,7 @@ class SearchSuggestion extends PureComponent {
     };
 
     renderBrands() {
-        const { brands } = this.props;
+        const { brands = [] } = this.props;
 
         return (
             <div block="SearchSuggestion" elem="Brands">
@@ -76,7 +76,7 @@ class SearchSuggestion extends PureComponent {
     };
 
     renderProducts() {
-        const { products } = this.props;
+        const { products = [] } = this.props;
 
         return (
             <div block="SearchSuggestion" elem="Recommended">
@@ -122,7 +122,7 @@ class SearchSuggestion extends PureComponent {
     };
 
     renderTrendingBrands() {
-        const { trendingBrands } = this.props;
+        const { trendingBrands = [] } = this.props;
 
         return (
             <div block="TrandingBrands">
@@ -145,7 +145,7 @@ class SearchSuggestion extends PureComponent {
     );
 
     renderTrendingTags() {
-        const { trendingTags } = this.props;
+        const { trendingTags = [] } = this.props;
 
         return (
             <div block="TrandingTags">

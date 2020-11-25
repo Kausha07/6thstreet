@@ -269,7 +269,7 @@ export class CheckoutSuccess extends PureComponent {
     };
 
     renderTotalsItems() {
-        const { initialTotals: { items, quote_currency_code }, incrementID } = this.props;
+        const { initialTotals: { items = [], quote_currency_code }, incrementID } = this.props;
 
         if (!items || items.length < 1) {
             return (
@@ -475,7 +475,7 @@ export class CheckoutSuccess extends PureComponent {
     renderPaymentTypeContent = () => {
         const {
             creditCardData: {
-                number,
+                number = '',
                 expDate,
                 cvv
             },

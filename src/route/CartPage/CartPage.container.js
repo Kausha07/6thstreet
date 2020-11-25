@@ -120,7 +120,7 @@ export class CartPageContainer extends PureComponent {
         const { totals: { items = [] } } = props;
 
         if (items.length !== 0) {
-            const mappedItems = checkProducts(items);
+            const mappedItems = checkProducts(items) || [];
 
             return {
                 ...MyAccountContainer.navigateToSelectedTab(props, state),

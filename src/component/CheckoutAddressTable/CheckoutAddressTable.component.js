@@ -57,7 +57,7 @@ export class CheckoutAddressTable extends SourceCheckoutAddressTable {
     }
 
     render() {
-        const { countries, mix } = this.props;
+        const { countries = [], mix } = this.props;
         const { isArabic } = this.state;
 
         return (
