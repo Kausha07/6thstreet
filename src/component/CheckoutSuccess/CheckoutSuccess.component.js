@@ -40,8 +40,7 @@ export class CheckoutSuccess extends PureComponent {
         isChangePhonePopupOpen: PropTypes.bool.isRequired,
         toggleChangePhonePopup: PropTypes.func.isRequired,
         phone: PropTypes.string.isRequired,
-        isMobileVerification: PropTypes.bool.isRequired,
-        resetCart: PropTypes.func.isRequired
+        isMobileVerification: PropTypes.bool.isRequired
     };
 
     state = {
@@ -66,13 +65,6 @@ export class CheckoutSuccess extends PureComponent {
             clearInterval(this.interval);
             this.interval = setInterval(this.tick, delay);
         }
-    }
-
-    componentWillUnmount() {
-        const { resetCart } = this.props;
-
-        this.timer = null;
-        resetCart();
     }
 
     tick = () => {

@@ -376,7 +376,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
 
         BrowserDatabase.deleteItem(PAYMENT_TOTALS);
-        this.resetCart();
 
         this.setState({
             isLoading: false,
