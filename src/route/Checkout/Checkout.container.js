@@ -354,7 +354,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                 const { phone = '' } = customer;
                 const code = phone.slice(1, 4);
                 const mobile = phone.slice(4);
-                console.log('***', customer, code, mobile);
+
                 sendVerificationCode({ mobile, code }).then(
                     (response) => {
                         this.setState({ isVerificationCodeSent: response.success });
