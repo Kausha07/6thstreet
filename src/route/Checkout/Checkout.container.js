@@ -301,7 +301,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                                     );
                                 } else {
                                     this.setDetailsStep(order_id, increment_id);
-                                    console.log('here8')
                                     this.resetCart();
                                 }
                             } else {
@@ -310,7 +309,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                                 if (error && typeof error === 'string') {
                                     showErrorNotification(__(error));
                                     this.setState({ isLoading: false });
-                                    console.log('here7')
                                     this.resetCart();
                                 }
                             }
@@ -319,7 +317,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                         if (typeof data === 'string') {
                             showErrorNotification(__(data));
                             this.setState({ isLoading: false });
-                            console.log('here6')
                             this.resetCart();
                         }
                     }
@@ -327,7 +324,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                     if (response && typeof response === 'string') {
                         showErrorNotification(__(response));
                         this.setState({ isLoading: false });
-                        console.log('here5')
                         this.resetCart();
                     }
                 },
@@ -336,7 +332,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                 const { showErrorNotification } = this.props;
                 this.setState({ isLoading: false });
                 showErrorNotification(__('Something went wrong.'));
-                console.log('here4')
                 this.resetCart();
             });
         } catch (e) {
@@ -432,7 +427,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
                     if (status === 'payment_success') {
                         this.setDetailsStep(order_id, increment_id);
-                        console.log('here2')
                         this.resetCart();
                         this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
                     }
@@ -465,7 +459,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         if ((counter === 25 || activeOverlay !== CC_POPUP_ID) && CreditCardPaymentStatus !== AUTHORIZED_STATUS) {
             this.setState({ isLoading: false, isFailed: true });
             this.setDetailsStep(order_id, increment_id);
-            console.log('here1')
             this.resetCart();
         }
     }
