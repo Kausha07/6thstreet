@@ -41,7 +41,6 @@ export class Checkout extends SourceCheckout {
         setLoading: PropTypes.func.isRequired,
         threeDsUrl: PropTypes.string.isRequired,
         isFailed: PropTypes.bool.isRequired,
-        resetCart: PropTypes.func.isRequired,
         initialTotals: TotalsType.isRequired
     };
 
@@ -386,7 +385,6 @@ export class Checkout extends SourceCheckout {
             shippingAddress,
             incrementID,
             isFailed,
-            resetCart,
             initialTotals
         } = this.props;
         const {
@@ -408,7 +406,6 @@ export class Checkout extends SourceCheckout {
                   billingAddress={ billing_address }
                   paymentMethod={ paymentMethod }
                   creditCardData={ creditCardData }
-                  resetCart={ resetCart }
                   totals={ initialTotals }
                 />
             );
@@ -422,7 +419,6 @@ export class Checkout extends SourceCheckout {
             billingAddress={ billing_address }
             paymentMethod={ paymentMethod }
             creditCardData={ creditCardData }
-            resetCart={ resetCart }
             totals={ initialTotals }
           />
         );
