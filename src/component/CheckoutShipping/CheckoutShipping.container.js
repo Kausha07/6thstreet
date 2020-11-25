@@ -137,7 +137,8 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
             if (success && !selectedShippingMethod) {
                 this.estimateShipping(addressForValidation, true).then((response) => {
                     if (typeof response !== 'undefined') {
-                        const { data } = response;
+                        const { data = [] } = response;
+
                         if (data.length !== 0) {
                             const { available } = data ? data[0] : { available: false };
 
@@ -169,8 +170,8 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     handleError(response) {
         const { showNotification, setLoading } = this.props;
 
-        const { parameters, message } = response;
-        const formattedParams = parameters ? capitalize(parameters[0]) : 'something';
+        const { parameters, message = '' } = response;
+        const formattedParams = parameters ? capitalize(parameters[0]) : 'Address';
 
         showNotification('error', `${ formattedParams } ${ __('is not valid') }. ${ message }`);
         setLoading(false);
