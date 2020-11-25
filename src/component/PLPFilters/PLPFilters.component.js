@@ -60,6 +60,10 @@ class PLPFilters extends PureComponent {
         } = props;
         const { activeFilter } = state;
 
+        if (!activeOverlay) {
+            document.body.style.overflow = 'visible';
+        }
+
         if (isMobile.any()) {
             if (!activeFilter) {
                 return ({
@@ -122,8 +126,6 @@ class PLPFilters extends PureComponent {
             hideActiveOverlay();
             goToPreviousNavigationState();
         }
-
-        document.body.style.overflow = 'visible';
     };
 
     resetFilters = () => {
