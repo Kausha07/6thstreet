@@ -54,7 +54,7 @@
         @include mobile {
             padding: 0;
             margin-left: 0;
-            max-height: calc(100vh - 182px);
+            max-height: calc(100vh - 230px);
             width: 100%;
         }
     }
@@ -414,7 +414,7 @@
 
     &-Static {
         @include mobile {
-            max-height: calc(100vh - 182px);
+            max-height: calc(100vh - 230px);
             overflow-y: scroll;
             overflow-x: hidden;
         }
