@@ -118,8 +118,8 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
 
         onPaymentMethodSelect(code);
         setOrderButtonEnableStatus(true);
-        updateTotals(cartId);
         selectPaymentMethod(code).then(() => {
+            updateTotals(cartId);
             finishPaymentRequest();
         }).catch(() => {
             const { showError } = this.props;
