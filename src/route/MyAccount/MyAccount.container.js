@@ -62,7 +62,8 @@ export const tabMap = {
     },
     [RETURN_ITEM]: {
         url: '/return-item',
-        name: __('Return an item')
+        name: __('Return an item'),
+        alternateName: __('Cancel an item')
     },
     [MY_WISHLIST]: {
         url: '/my-wishlist',

@@ -10,12 +10,7 @@ import './LoginBlock.style';
 
 class LoginBlock extends PureComponent {
     static propTypes = {
-        isSignedIn: PropTypes.bool.isRequired,
-        name: PropTypes.string
-    };
-
-    static defaultProps = {
-        name: 'Guest'
+        isSignedIn: PropTypes.bool.isRequired
     };
 
     state = {
@@ -58,12 +53,13 @@ class LoginBlock extends PureComponent {
     }
 
     renderHeader() {
-        const { isSignedIn, name } = this.props;
+        const { isSignedIn } = this.props;
+
         if (isSignedIn) {
             return (
                 <div>
                     <h3 mix={ { block: 'LoginBlock', elem: 'Header' } }>
-                        { __(`Welcome, ${name}`) }
+                        { __('Welcome') }
                     </h3>
                     <span mix={ { block: 'LoginBlock', elem: 'SubHeader' } }>
                         { __('Customize your shopping experience') }
@@ -76,7 +72,7 @@ class LoginBlock extends PureComponent {
             <div>
                 <h3 mix={ { block: 'LoginBlock', elem: 'Header' } }>Let&apos;s get personal</h3>
                 <span mix={ { block: 'LoginBlock', elem: 'SubHeader' } }>
-                    Sign in for a tailored shopping experience
+                    { __('Sign in for a tailored shopping experience') }
                 </span>
             </div>
         );
@@ -122,8 +118,11 @@ class LoginBlock extends PureComponent {
         if (isSignedIn) {
             return (
                 <div mix={ { block: 'LoginBlock', elem: 'ButtonContainer' } }>
-                    <button mix={ { block: 'LoginBlock', elem: 'Button primary' } }>
-                        My account
+                    <button
+                      mix={ { block: 'LoginBlock', elem: 'Button primary' } }
+                      onClick={ this.routeChangeAccount }
+                    >
+                        { __('My account') }
                     </button>
                 </div>
             );
@@ -135,13 +134,13 @@ class LoginBlock extends PureComponent {
                   onClick={ this.showRegisterPopup }
                   mix={ { block: 'LoginBlock', elem: 'CreateButton secondary', mods: { isArabic } } }
                 >
-                    Create Account
+                    { __('Create Account') }
                 </button>
                 <button
                   onClick={ this.showPopup }
                   mix={ { block: 'LoginBlock', elem: 'LoginButton primary', mods: { isArabic } } }
                 >
-                    Sign in
+                    { __('Sign in') }
                 </button>
                 { this.renderMyAccountPopup() }
             </div>
