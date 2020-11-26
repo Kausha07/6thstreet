@@ -199,6 +199,17 @@ root {
 
     &_isArabic {
         .SearchSuggestion-Content {
+            ul {
+                li {
+                    a {
+                        span {
+                            left: 0;
+                            right: auto;
+                        }
+                    }
+                }
+            }
+
             @include desktop {
                 right: 0;
             }
