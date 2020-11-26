@@ -1,5 +1,4 @@
 import {
-    PROCESSING_PAYMENT_METHOD,
     SET_SHIPPING
 } from './Checkout.action';
 
@@ -17,13 +16,6 @@ export const CheckoutReducer = (state = getInitialState(), action) => {
         return {
             ...state,
             shipping
-        };
-
-    case PROCESSING_PAYMENT_METHOD:
-        const { process } = action;
-        return {
-            ...state,
-            process
         };
 
     default:

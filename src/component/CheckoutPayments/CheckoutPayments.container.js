@@ -37,7 +37,8 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
 
     state = {
         isTabbyInstallmentAvailable: false,
-        isTabbyPayLaterAvailable: false
+        isTabbyPayLaterAvailable: false,
+        isLoading: false
     };
 
     componentDidMount() {
@@ -110,7 +111,8 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
         } = this.props;
 
         this.setState({
-            selectedPaymentCode: code
+            selectedPaymentCode: code,
+            isLoading: true
         });
 
         onPaymentMethodSelect(code);
@@ -120,6 +122,7 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
 
             showError(__('Something went wrong'));
         });
+        this.setState({ isLoading: false });
         await updateTotals(cartId);
     }
 }
