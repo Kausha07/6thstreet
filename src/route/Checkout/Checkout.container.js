@@ -137,6 +137,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             checkoutStep: prevCheckoutStep
         } = prevState;
 
+        if (Object.keys(totals).length !== 0) {
+            this.updateInitTotals();
+        }
+
         if (checkoutStep !== prevCheckoutStep) {
             updateStoreCredit();
         }
@@ -158,6 +162,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         if (!guest_checkout && !isSignedIn()) {
             history.push('/');
         }
+    }
+
+    updateInitTotals() {
+        const { totals } = this.props;
+        this.setState({ initialTotals: totals });
     }
 
     saveLastOrder(totals) {

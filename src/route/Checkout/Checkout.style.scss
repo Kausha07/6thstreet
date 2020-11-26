@@ -15,7 +15,7 @@
     }
 
     @include desktop {
-        padding: 125px 0 300px;
+        padding: 10px 0 30px;
         background-color: var(--lightest-gray);
     }
 
@@ -138,8 +138,6 @@
     }
 
     &-Step {
-        max-width: 600px;
-
         @include before-desktop {
             margin: 0 auto;
             max-width: 700px;

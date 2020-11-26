@@ -506,6 +506,7 @@
     }
 
     @include desktop() {
+        margin: 0 auto;
         width: 640px;
         background-color: var(--white);
 
