@@ -227,7 +227,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
 
     render() {
         const { processingRequest } = this.props;
-        console.log('sc', this.props);
+
         return (
             <article block="CheckoutOrderSummary" aria-label="Order Summary">
                 <Loader isLoading={ processingRequest } />

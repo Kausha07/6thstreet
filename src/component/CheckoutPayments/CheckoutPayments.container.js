@@ -111,19 +111,17 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
         } = this.props;
 
         this.setState({
-            selectedPaymentCode: code,
-            isLoading: true
+            selectedPaymentCode: code
         });
-
+        setOrderButtonEnableStatus(false);
         onPaymentMethodSelect(code);
-        setOrderButtonEnableStatus(true);
         await selectPaymentMethod(code).catch(() => {
             const { showError } = this.props;
 
             showError(__('Something went wrong'));
         });
-        this.setState({ isLoading: false });
         await updateTotals(cartId);
+        await setOrderButtonEnableStatus(true);
     }
 }
 

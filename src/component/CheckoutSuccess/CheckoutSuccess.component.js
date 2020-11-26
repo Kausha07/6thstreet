@@ -596,7 +596,6 @@ export class CheckoutSuccess extends PureComponent {
 
     render() {
         const { isMobileVerification } = this.props;
-        console.log('success', this.props);
         if (isMobileVerification) {
             return (
                 <div block="CheckoutSuccess">

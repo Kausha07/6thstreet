@@ -330,7 +330,6 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     };
 
     render() {
-        console.log('state', this.state);
         return (
             <div block="CheckoutPayments">
                 { this.renderContent() }
