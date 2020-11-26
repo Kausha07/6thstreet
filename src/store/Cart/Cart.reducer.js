@@ -3,6 +3,7 @@ import BrowserDatabase from 'Util/BrowserDatabase';
 
 import {
     PROCESSING_CART_REQUEST,
+    PROCESSING_PAYMENT_SELECT_REQUEST,
     REMOVE_CART_ITEM,
     REMOVE_CART_ITEMS,
     RESET_CART,
@@ -50,7 +51,7 @@ const removeCartItem = (cartItems, itemToRemove) => {
 
 export const CartReducer = (state = getInitialState(), action) => {
     const {
-        type, cartId, cartItem, cartTotals
+        type, cartId, cartItem, cartTotals, requestStatus
     } = action;
     const { cartItems } = state;
     const ONE_DAY_IN_SECONDS = 86400;
@@ -75,6 +76,12 @@ export const CartReducer = (state = getInitialState(), action) => {
         return {
             ...state,
             processingRequest: true
+        };
+
+    case PROCESSING_PAYMENT_SELECT_REQUEST:
+        return {
+            ...state,
+            processingPaymentSelectRequest: requestStatus
         };
 
     case SET_CART_TOTALS:
