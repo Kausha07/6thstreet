@@ -62,7 +62,7 @@ export class UrlRewritesContainer extends PureComponent {
 
     async requestUrlRewrite(isUpdate = false) {
         // TODO: rename this to pathname, urlParam is strange
-        const { pathname: urlParam } = location;
+        const { pathname: urlParam = '' } = location;
         const slicedUrl = urlParam.slice(urlParam.search('id/'));
         // eslint-disable-next-line no-magic-numbers
         const magentoProductId = Number((slicedUrl.slice('3')).split('/')[0]);

@@ -29,7 +29,7 @@ class DynamicContentGrid extends PureComponent {
     }
 
     renderItems() {
-        const { items } = this.props;
+        const { items = [] } = this.props;
         return items.map(this.renderItem);
     }
 

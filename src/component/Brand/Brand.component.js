@@ -14,7 +14,7 @@ class Brand extends PureComponent {
         type: PropTypes.string.isRequired
     };
 
-    capitalizeFirstLetter(string) {
+    capitalizeFirstLetter(string = '') {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 

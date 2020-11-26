@@ -1,6 +1,6 @@
 /* eslint-disable fp/no-let */
 // eslint-disable-next-line import/prefer-default-export
-export const getBreadcrumbs = (data, onClick, urlArray) => data.reduce((acc, categoryLevel, idx) => {
+export const getBreadcrumbs = (data = [], onClick, urlArray) => data.reduce((acc, categoryLevel, idx) => {
     const transformedCategory = categoryLevel.replace(/-/g, ' ');
 
     acc.push({
@@ -13,12 +13,14 @@ export const getBreadcrumbs = (data, onClick, urlArray) => data.reduce((acc, cat
 }, []);
 
 // eslint-disable-next-line max-len
-export const getBreadcrumbsUrl = (categoriesLastLevel, menuCategories) => menuCategories.reduce((acc, category) => {
+export const getBreadcrumbsUrl = (categoriesLastLevel, menuCategories = []) => menuCategories.reduce((acc, category) => {
     if (category.label === categoriesLastLevel[1]) {
-        const currentCategory = category.data[category.data.length - 1];
+        const currentCategory = category.data[category.data.length - 1] || {};
         acc.push('/', currentCategory.button.link);
 
-        const mappedCategoryFirstLevel = currentCategory.items
+        const { items = [] } = currentCategory;
+
+        const mappedCategoryFirstLevel = items
             .reduce((acc, categoryFirst) => {
                 if (categoryFirst.label === categoriesLastLevel[2]) {
                     acc.push(categoryFirst.link);

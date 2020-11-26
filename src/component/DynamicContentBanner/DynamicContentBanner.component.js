@@ -53,7 +53,7 @@ class DynamicContentBanner extends PureComponent {
     }
 
     renderImages() {
-        const { items } = this.props;
+        const { items = [] } = this.props;
         return items.map(this.renderImage);
     }
 

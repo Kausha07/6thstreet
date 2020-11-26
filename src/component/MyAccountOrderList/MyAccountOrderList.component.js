@@ -26,7 +26,7 @@ class MyAccountOrderList extends SourceComponent {
 
     renderOrders() {
         const {
-            orders,
+            orders = [],
             isLoading
         } = this.props;
 

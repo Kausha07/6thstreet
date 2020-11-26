@@ -50,7 +50,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
 
         return executePost(prepareQuery([query])).then(
             ({ customer }) => {
-                const { firstname, lastname } = customer;
+                const { firstname = '', lastname } = customer;
                 const data = {
                     ...customer,
                     firstname: firstname.indexOf(' ') > 0 ? firstname.substr(0, firstname.indexOf(' ')) : firstname,
@@ -165,7 +165,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         // Run async as Club Apparel is not visible anywhere after login
         ClubApparelDispatcher.getMember(dispatch, id);
 
-        const { Cart: { cartItems: oldCartItems } } = getStore().getState();
+        const { Cart: { cartItems: oldCartItems = [] } } = getStore().getState();
         if (oldCartItems.length !== 0) {
             await CartDispatcher.getCart(dispatch);
             this._addProductsFromGuest(dispatch, oldCartItems);

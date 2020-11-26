@@ -64,7 +64,7 @@ export class MyAccountCancelCreateContainer extends MyAccountReturnCreateContain
     onFormSubmit() {
         const { showErrorMessage, history } = this.props;
         const {
-            selectedItems,
+            selectedItems = {},
             items,
             incrementId,
             orderId

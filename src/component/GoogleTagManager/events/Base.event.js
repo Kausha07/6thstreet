@@ -72,7 +72,7 @@ class BaseEvent {
         }
 
         // Wait until config data will be loaded
-        if (Object.entries(this.getAppState().ConfigReducer).length === 0) {
+        if (Object.entries(this.getAppState().ConfigReducer || {}).length === 0) {
             this.isLoadingData = true;
 
             setTimeout(() => {
@@ -143,7 +143,7 @@ class BaseEvent {
      * @return {boolean}
      */
     getElementByClass(className, container = document) {
-        const elements = container.getElementsByClassName(className);
+        const elements = container.getElementsByClassName(className) || [];
 
         if (elements && elements.length) {
             const [element] = elements;

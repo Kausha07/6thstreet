@@ -127,7 +127,7 @@ class MyAccountOrderView extends PureComponent {
     }
 
     renderPackagesMessage() {
-        const { order: { status, shipped } } = this.props;
+        const { order: { status, shipped = [] } } = this.props;
         const { isArabic } = this.state;
 
         if (STATUS_FAILED.includes(status)) {
@@ -203,7 +203,7 @@ class MyAccountOrderView extends PureComponent {
     }
 
     renderProcessingItems() {
-        const { order: { status, unship } } = this.props;
+        const { order: { status, unship = [] } } = this.props;
 
         if (STATUS_FAILED.includes(status) || !unship.length) {
             return null;
@@ -224,7 +224,7 @@ class MyAccountOrderView extends PureComponent {
     }
 
     renderCanceledAccordion() {
-        const { order: { status, shipped, unship } } = this.props;
+        const { order: { status, shipped = [], unship = [] } } = this.props;
         const allItems = [
             ...shipped.reduce((acc, { items }) => [...acc, ...items], []),
             ...unship.reduce((acc, { items }) => [...acc, ...items], [])
@@ -262,7 +262,7 @@ class MyAccountOrderView extends PureComponent {
     }
 
     renderAccordions() {
-        const { order: { status, shipped } } = this.props;
+        const { order: { status, shipped = [] } } = this.props;
         const { isArabic } = this.state;
         const itemNumber = shipped.length;
 
@@ -306,7 +306,7 @@ class MyAccountOrderView extends PureComponent {
     }
 
     renderFailedOrderDetails() {
-        const { order: { status, unship } } = this.props;
+        const { order: { status, unship = [] } } = this.props;
         const itemsArray = unship.reduce((acc, { items }) => [...acc, ...items], []);
 
         if (!STATUS_FAILED.includes(status)) {

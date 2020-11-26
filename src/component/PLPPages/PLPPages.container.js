@@ -41,7 +41,7 @@ export class PLPPagesContainer extends PureComponent {
     });
 
     getPages() {
-        const { pages, meta } = this.props;
+        const { pages = {}, meta } = this.props;
         const { page_count } = meta;
 
         // If lastRequestedPage === -Infinity -> assume it's -1, else use value, i.e. 0

@@ -61,8 +61,8 @@ export class PLPFiltersContainer extends PureComponent {
     };
 
     static getDerivedStateFromProps(props, state) {
-        const { filters } = props;
-        const { initialFilters } = state;
+        const { filters = {} } = props;
+        const { initialFilters = {} } = state;
 
         if (Object.keys(filters).length > Object.keys(initialFilters).length) {
             if (filters[SIZES]) {
@@ -90,11 +90,11 @@ export class PLPFiltersContainer extends PureComponent {
     }
 
     componentDidUpdate() {
-        const { filters } = this.props;
+        const { filters = {} } = this.props;
         const { activeFilters } = this.state;
 
         const newActiveFilters = Object.entries(filters).reduce((acc, filter) => {
-            const { selected_filters_count, data } = filter[1];
+            const { selected_filters_count, data = {} } = filter[1];
 
             if (selected_filters_count !== 0) {
                 if (filter[0] === SIZES) {
@@ -121,7 +121,7 @@ export class PLPFiltersContainer extends PureComponent {
         }
     }
 
-    compareObjects(object1, object2) {
+    compareObjects(object1 = {}, object2 = {}) {
         if (Object.keys(object1).length === Object.keys(object2).length) {
             const isEqual = Object.entries(object1).reduce((acc, key) => {
                 if (object2[key[0]]) {
@@ -147,7 +147,7 @@ export class PLPFiltersContainer extends PureComponent {
         this.setState({ activeFilters });
     };
 
-    mapData(data) {
+    mapData(data = {}) {
         const mappedData = Object.entries(data).reduce((acc, option) => {
             const { is_selected } = option[1];
             if (is_selected) {
@@ -168,7 +168,7 @@ export class PLPFiltersContainer extends PureComponent {
 
     // eslint-disable-next-line consistent-return
     onReset() {
-        const { initialFilters } = this.state;
+        const { initialFilters = {} } = this.state;
 
         // eslint-disable-next-line fp/no-let
         for (let i = 0; i < Object.keys(initialFilters).length; i++) {

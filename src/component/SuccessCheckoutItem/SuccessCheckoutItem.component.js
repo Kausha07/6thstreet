@@ -72,8 +72,8 @@ export class SuccessCheckoutItem extends PureComponent {
         );
     };
 
-    renderProductOption = (option) => {
-        const { label, values, id } = option;
+    renderProductOption = (option = {}) => {
+        const { label, values = [], id } = option;
 
         return (
             <div

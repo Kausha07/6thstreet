@@ -19,9 +19,9 @@ export const getInitialState = () => ({
     initialOptions: {}
 });
 
-export const formatFilters = (filters) => (
+export const formatFilters = (filters = {}) => (
     Object.entries(filters).reduce((acc, [key, filter]) => {
-        const { data } = filter;
+        const { data = [] } = filter;
 
         // skip filters with no options
         if (data.length === 0) {
@@ -35,9 +35,9 @@ export const formatFilters = (filters) => (
     }, {})
 );
 
-export const combineFilters = (filters, _initialFilters) => (
+export const combineFilters = (filters = {}, _initialFilters) => (
     Object.entries(filters).reduce((acc, [key, filter]) => {
-        const { /* selected_filters_count, */ data } = filter;
+        const { /* selected_filters_count, */ data = [] } = filter;
 
         // skip filters with no options
         if (data.length === 0) {

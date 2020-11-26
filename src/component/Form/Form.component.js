@@ -48,13 +48,13 @@ export class Form extends SourceForm {
     }
 
     collectFieldsInformation = () => {
-        const { refMap } = this.state;
+        const { refMap = {} } = this.state;
         const { children: propsChildren } = this.props;
 
         const {
             children,
             fieldsAreValid,
-            invalidFields
+            invalidFields = []
         } = Form.cloneAndValidateChildren(propsChildren, refMap);
 
         this.setState({ children, fieldsAreValid });
@@ -100,7 +100,7 @@ export class Form extends SourceForm {
             isValidateOnChange,
             parentCallback
         } = this.props;
-        const { refMap, ignoreEmptyFieldCollecton } = this.state;
+        const { refMap = {}, ignoreEmptyFieldCollecton } = this.state;
 
         if (isValidateOnChange) {
             const isAllFieldsFilled = Object.entries(refMap).reduce((acc, field) => {

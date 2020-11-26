@@ -74,7 +74,7 @@ class Menu extends PureComponent {
     };
 
     renderCategories() {
-        const { categories } = this.props;
+        const { categories = [] } = this.props;
         return categories.map(this.renderCategory);
     }
 

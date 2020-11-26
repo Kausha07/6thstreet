@@ -74,7 +74,7 @@ class PDPGallery extends PureComponent {
     };
 
     renderCrumbs() {
-        const { crumbs, currentIndex, onSliderChange } = this.props;
+        const { crumbs = [], currentIndex, onSliderChange } = this.props;
 
         return (
             <div ref={ this.crumbsRef } block="PDPGallery" elem="Crumbs">
@@ -100,7 +100,7 @@ class PDPGallery extends PureComponent {
     }
 
     renderGallery() {
-        const { gallery } = this.props;
+        const { gallery = [] } = this.props;
 
         return gallery.map(this.renderGalleryImage);
     }

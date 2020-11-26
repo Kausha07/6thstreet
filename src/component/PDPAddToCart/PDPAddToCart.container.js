@@ -86,13 +86,13 @@ export class PDPAddToCartContainer extends PureComponent {
         const { product } = props;
 
         if (product.simple_products !== undefined) {
-            const filteredProductKeys = Object.keys(product.simple_products);
+            const filteredProductKeys = Object.keys(product.simple_products || {});
 
-            const filteredProductSizeKeys = Object.keys(product.simple_products[filteredProductKeys[0]].size);
+            const filteredProductSizeKeys = Object.keys(product.simple_products[filteredProductKeys[0]].size || {});
 
             const object = {
-                sizeCodes: filteredProductKeys,
-                sizeTypes: filteredProductSizeKeys
+                sizeCodes: filteredProductKeys || [],
+                sizeTypes: filteredProductSizeKeys || []
             };
 
             if (filteredProductKeys.length <= 1 && filteredProductSizeKeys.length === 0) {
@@ -141,15 +141,15 @@ export class PDPAddToCartContainer extends PureComponent {
     addToCart() {
         const {
             product: {
-                simple_products,
+                simple_products = {},
                 thumbnail_url,
                 url,
                 color,
                 brand_name,
-                price,
-                size_uk,
-                size_eu,
-                size_us,
+                price = {},
+                size_uk = [],
+                size_eu = [],
+                size_us = [],
                 name
             }, addProductToCart, showNotification
         } = this.props;

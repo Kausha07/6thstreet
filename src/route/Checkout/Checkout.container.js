@@ -122,7 +122,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             history,
             showInfoNotification,
             guest_checkout = true,
-            totals,
+            totals = {},
             totals: {
                 items = []
             },
@@ -142,7 +142,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         }
 
         if (items.length !== 0) {
-            const mappedItems = checkProducts(items);
+            const mappedItems = checkProducts(items) || [];
 
             if (mappedItems.length !== 0) {
                 history.push('/cart');
@@ -164,7 +164,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         this.setState({ lastOrder: totals });
     }
 
-    onShippingEstimationFieldsChange(address) {
+    onShippingEstimationFieldsChange(address = {}) {
         const canEstimate = !Object.values(address).some((item) => item === undefined);
 
         if (!canEstimate) {
@@ -393,7 +393,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         const { getPaymentMethods } = this.props;
 
         getPaymentMethods().then(
-            ({ data }) => {
+            ({ data = [] }) => {
                 const availablePaymentMethods = data.reduce((acc, paymentMethod) => {
                     const { is_enabled } = paymentMethod;
 

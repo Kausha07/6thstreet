@@ -32,7 +32,7 @@ class BrandGroup extends PureComponent {
     };
 
     renderBrands() {
-        const { brands } = this.props;
+        const { brands = [] } = this.props;
 
         return brands.map(this.renderBrand);
     }

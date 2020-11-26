@@ -47,7 +47,7 @@ export class MyAccountReturnCreateContainer extends PureComponent {
             isLoading,
             incrementId,
             items,
-            selectedItems,
+            selectedItems = {},
             resolutions
         } = this.state;
 
@@ -130,7 +130,7 @@ export class MyAccountReturnCreateContainer extends PureComponent {
 
     onFormSubmit() {
         const { history, showErrorMessage } = this.props;
-        const { selectedItems, items } = this.state;
+        const { selectedItems = {}, items } = this.state;
         const payload = {
             order_id: this.getOrderId(),
             items: Object.entries(selectedItems).map(([order_item_id, { reasonId, resolutionId }]) => {

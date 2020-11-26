@@ -17,7 +17,7 @@ class HomePage extends PureComponent {
         const DynamicContent = document.getElementsByClassName('DynamicContent')[0];
 
         if (DynamicContent) {
-            const { children } = DynamicContent;
+            const { children = [] } = DynamicContent;
             const { href } = location;
 
             if (children) {

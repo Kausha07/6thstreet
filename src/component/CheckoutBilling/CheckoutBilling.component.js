@@ -110,7 +110,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
 
     renderOpenPopupButton = () => {
         const { isSignedIn, formContent, isArabic } = this.state;
-        const { customer: { addresses } } = this.props;
+        const { customer: { addresses = [] } } = this.props;
 
         if (addresses && (isSignedIn && addresses.length === 0)) {
             return this.openNewForm();
@@ -198,7 +198,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
 
     renderPayments() {
         const {
-            paymentMethods,
+            paymentMethods = [],
             onPaymentMethodSelect,
             setLoading,
             setDetailsStep,

@@ -58,14 +58,14 @@ class DynamicContentProductSlider extends PureComponent {
     renderProductsDesktop() {
         const {
             isLoading,
-            products
+            products = []
         } = this.props;
         const { currentPage } = this.state;
 
         if (isLoading) {
             return 'loading...';
         }
-        const productArray = products.map(this.renderProduct);
+        const productArray = products.map(this.renderProduct) || [];
         const lastPage = parseInt(Math.floor(products.length / ITEMS_PER_PAGE), 10); // first page is 0
         const lastPageItemCount = products.length % ITEMS_PER_PAGE; // number of products on last page'
         if (currentPage !== lastPage) {
@@ -93,7 +93,7 @@ class DynamicContentProductSlider extends PureComponent {
     renderButtonNext() {
         const {
             isLoading,
-            products
+            products = []
         } = this.props;
         const { currentPage, isArabic } = this.state;
 
@@ -157,7 +157,7 @@ class DynamicContentProductSlider extends PureComponent {
     renderProductsMobile() {
         const {
             isLoading,
-            products
+            products = []
         } = this.props;
         const {
             currentPage,
@@ -187,7 +187,7 @@ class DynamicContentProductSlider extends PureComponent {
 
     render() {
         const { isArabic } = this.state;
-        const { products: productArray } = this.props;
+        const { products: productArray = [] } = this.props;
         if (productArray.length === 0) {
             return null;
         }
