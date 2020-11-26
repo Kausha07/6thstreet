@@ -38,7 +38,7 @@ class PLPPage extends PureComponent {
     };
 
     renderProducts() {
-        const { products } = this.props;
+        const { products = [] } = this.props;
         return products.map(this.renderProduct);
     }
 

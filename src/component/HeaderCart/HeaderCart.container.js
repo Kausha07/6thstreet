@@ -50,12 +50,12 @@ export class HeaderCartContainer extends PureComponent {
             updateTotals,
             isMinicartOpen
         } = props;
-        const { firstload, prevIsMinicartOpen } = state;
+        const { prevIsMinicartOpen } = state;
 
         if (items.length !== 0 && isMinicartOpen === prevIsMinicartOpen) {
-            const mappedItems = checkProducts(items);
+            const mappedItems = checkProducts(items) || [];
 
-            if (total === 0 && firstload) {
+            if (total === 0) {
                 updateTotals(id);
             }
 
@@ -64,8 +64,7 @@ export class HeaderCartContainer extends PureComponent {
             }
 
             return {
-                isCheckoutAvailable: mappedItems.length === 0,
-                firstload: false
+                isCheckoutAvailable: mappedItems.length === 0
             };
         }
 

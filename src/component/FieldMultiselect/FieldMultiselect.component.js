@@ -81,8 +81,9 @@ class FieldMultiselect extends PureComponent {
         }
     };
 
-    renderSubcategoryOptions = (option, display) => {
+    renderSubcategoryOptions = (option = {}, display) => {
         const { isArabic } = this.state;
+        const { subcategories = {} } = option;
 
         return (
             <div
@@ -91,7 +92,7 @@ class FieldMultiselect extends PureComponent {
               mods={ { isArabic } }
               style={ { display } }
             >
-                { Object.entries(option.subcategories).map(this.renderOption) }
+                { Object.entries(subcategories).map(this.renderOption) }
             </div>
         );
     };
@@ -145,7 +146,7 @@ class FieldMultiselect extends PureComponent {
         );
     };
 
-    renderOption = ([key, option]) => {
+    renderOption = ([key, option = {}]) => {
         const {
             filter: { is_radio },
             activeFilter,
@@ -155,10 +156,11 @@ class FieldMultiselect extends PureComponent {
             setDefaultFilters,
             defaultFilters
         } = this.props;
+        const { subcategories = {} } = option;
 
-        if (option.subcategories) {
+        if (Object.keys(subcategories).length !== 0) {
             return !isMobile.any()
-                ? Object.entries(option.subcategories).map(this.renderOption)
+                ? Object.entries(subcategories).map(this.renderOption)
                 : this.renderOptionMobile(option);
         }
 
@@ -178,7 +180,7 @@ class FieldMultiselect extends PureComponent {
     };
 
     renderOptions() {
-        const { filter: { data, subcategories } } = this.props;
+        const { filter: { data = {}, subcategories = {} } } = this.props;
 
         return (
             <ul>

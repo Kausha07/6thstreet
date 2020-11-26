@@ -84,7 +84,7 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
     }
 
     getCitiesBasedOnLanguage() {
-        const { isArabic, cities } = this.state;
+        const { isArabic, cities = [] } = this.state;
 
         if (isArabic) {
             return cities.map((item) => ({ id: item.city, label: item.city_ar, value: item.city }));
@@ -102,7 +102,7 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
             const trueCity = cities.find(({ city }) => CurrentCity === city);
 
             if (trueCity) {
-                const { areas_ar, areas } = trueCity;
+                const { areas_ar = [], areas } = trueCity;
 
                 // eslint-disable-next-line arrow-body-style
                 return areas_ar.map((area_ar, i) => {
@@ -118,7 +118,7 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
 
     getRegionFields() {
         const {
-            city, regionId, cities
+            city, regionId, cities = []
         } = this.state;
 
         if (!city || cities.length === 0) {
@@ -144,7 +144,7 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
     }
 
     async getCitiesAndRegionsData() {
-        const { cities } = this.state;
+        const { cities = [] } = this.state;
         const { getCities } = this.props;
         if (cities.length === 0) {
             getCities().then(
@@ -198,7 +198,7 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
         } = this.state;
 
         const {
-            countries,
+            countries = [],
             address,
             shippingAddress,
             shippingAddress: {
@@ -206,7 +206,7 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
                 firstname,
                 lastname,
                 phone,
-                street: shippingStreet
+                street: shippingStreet = {}
             }
         } = this.props;
 

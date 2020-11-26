@@ -1,4 +1,4 @@
-export const queryString = (obj) => Object.keys(obj)
+export const queryString = (obj = {}) => Object.keys(obj)
     .map((key) => `${key}=${encodeURIComponent(obj[key])}`)
     .join('&');
 

@@ -20,7 +20,7 @@ class MenuBrands extends PureComponent {
     };
 
     renderItems() {
-        const { items } = this.props;
+        const { items = [] } = this.props;
         return items.map(this.renderItem);
     }
 
@@ -72,7 +72,7 @@ class MenuBrands extends PureComponent {
     }
 
     renderBrands() {
-        const { items } = this.props;
+        const { items = [] } = this.props;
         const minSliderBrandsCount = 3;
 
         if (items.length > minSliderBrandsCount && isMobile.any()) {

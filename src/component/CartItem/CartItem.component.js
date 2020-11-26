@@ -43,13 +43,10 @@ export class CartItem extends PureComponent {
         maxSaleQuantity: PropTypes.number.isRequired,
         handleChangeQuantity: PropTypes.func.isRequired,
         getCurrentProduct: PropTypes.func.isRequired,
-        linkTo: PropTypes.string,
         thumbnail: PropTypes.string.isRequired,
         hideActiveOverlay: PropTypes.func.isRequired,
-        hideLoaderAfterPromise: PropTypes.func,
         closePopup: PropTypes.func,
         availability: PropTypes.number.isRequired,
-        available_qty: PropTypes.number.isRequired,
         isCartPage: PropTypes.bool
     };
 
@@ -61,9 +58,7 @@ export class CartItem extends PureComponent {
     static defaultProps = {
         isEditing: false,
         isLikeTable: false,
-        linkTo: '',
         brand_name: '',
-        hideLoaderAfterPromise: () => {},
         closePopup: () => {},
         isCartPage: false
     };
@@ -80,7 +75,7 @@ export class CartItem extends PureComponent {
         const {
             item: {
                 product: {
-                    configurable_options
+                    configurable_options = {}
                 }
             }
         } = this.props;
@@ -129,7 +124,7 @@ export class CartItem extends PureComponent {
             return null;
         }
 
-        const { attributes = [] } = getCurrentProduct() || {};
+        const { attributes = {} } = getCurrentProduct() || {};
 
         if (!Object.entries(attributes).length) {
             return null;
@@ -193,7 +188,7 @@ export class CartItem extends PureComponent {
     };
 
     renderProductOption = (option) => {
-        const { label, values, id } = option;
+        const { label, values = [], id } = option;
 
         return (
             <div

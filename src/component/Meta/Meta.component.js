@@ -20,7 +20,7 @@ export class Meta extends SourceMeta {
     );
 
     renderHreflangs() {
-        const { hreflangs } = this.props;
+        const { hreflangs = [] } = this.props;
 
         if (!hreflangs.length) {
             return null;
@@ -30,7 +30,7 @@ export class Meta extends SourceMeta {
     }
 
     renderMeta() {
-        const { metadata } = this.props;
+        const { metadata = [] } = this.props;
         return (
             <>
                 { this.renderTitle() }

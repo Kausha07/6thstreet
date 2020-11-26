@@ -25,7 +25,7 @@ export class LanguageSwitcherContainer extends PureComponent {
     };
 
     onLanguageSelect(value) {
-        const { language } = this.props;
+        const { language = '' } = this.props;
 
         window.location.href = location.origin.replace(
             language.toLowerCase(),

@@ -56,7 +56,7 @@ class PLPFilters extends PureComponent {
     static getDerivedStateFromProps(props, state) {
         const {
             activeOverlay,
-            filters
+            filters = {}
         } = props;
         const { activeFilter } = state;
 
@@ -101,11 +101,11 @@ class PLPFilters extends PureComponent {
     };
 
     renderFilters() {
-        const { filters } = this.props;
+        const { filters = {} } = this.props;
 
         return Object.entries(filters).map((filter) => {
             if (filter[0] === SIZES && !isMobile.any()) {
-                const { data } = filter[1];
+                const { data = {} } = filter[1];
                 return Object.keys(data).map((size) => this.renderFilter([size, data[size]]));
             }
 
@@ -114,7 +114,7 @@ class PLPFilters extends PureComponent {
     }
 
     renderQuickFilters() {
-        const { filters } = this.props;
+        const { filters = {} } = this.props;
 
         return Object.entries(filters).map(this.renderQuickFilter.bind(this));
     }
@@ -149,13 +149,13 @@ class PLPFilters extends PureComponent {
     };
 
     onShowResultButton = () => {
-        const { activeFilters } = this.state;
-        Object.keys(activeFilters || {}).map((key) => WebUrlParser.setParam(key, activeFilters[key]));
+        const { activeFilters = {} } = this.state;
+        Object.keys(activeFilters).map((key) => WebUrlParser.setParam(key, activeFilters[key]));
         this.hidePopUp();
     };
 
     updateFilters = () => {
-        const { activeFilters } = this.state;
+        const { activeFilters = {} } = this.state;
         Object.keys(activeFilters).map((key) => WebUrlParser.setParam(key, activeFilters[key]));
     };
 
@@ -252,7 +252,7 @@ class PLPFilters extends PureComponent {
     }
 
     renderFiltersCount() {
-        const { activeFilters } = this.props;
+        const { activeFilters = {} } = this.props;
         const { count } = activeFilters ? Object.entries(activeFilters).reduce((prev, [_key, value]) => ({
             count: prev.count + value.length
         }), { count: 0 })
@@ -387,10 +387,10 @@ class PLPFilters extends PureComponent {
     };
 
     select = (isQuickFilters) => {
-        const { activeFilters } = this.state;
+        const { activeFilters = {} } = this.state;
 
         if (!isMobile.any() || isQuickFilters) {
-            Object.keys(activeFilters || {}).map((key) => WebUrlParser.setParam(key, activeFilters[key]));
+            Object.keys(activeFilters).map((key) => WebUrlParser.setParam(key, activeFilters[key]));
         }
     };
 

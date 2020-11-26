@@ -147,7 +147,7 @@ class PLPFilterOption extends PureComponent {
     renderLabel() {
         const {
             option: {
-                label,
+                label = '',
                 facet_value,
                 facet_key,
                 product_count

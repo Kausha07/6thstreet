@@ -62,7 +62,7 @@ class CreditCard extends PureComponent {
         const { cvv } = this.state;
         const { value } = e.target;
         const element = document.getElementById('number');
-        const onlyNumbers = value.replace(/\s/g, '');
+        const onlyNumbers = value.replace(/\s/g, '') || '';
         const cardLogo = getCardLogo(onlyNumbers);
 
         reformatInputField(element, 4);
@@ -84,7 +84,7 @@ class CreditCard extends PureComponent {
         const { setCreditCardData, expDateValidator, reformatInputField } = this.props;
         const { value } = e.target;
         const element = document.getElementById('expData');
-        const onlyNumbers = value.replace('/', '');
+        const onlyNumbers = value.replace('/', '') || '';
         const message = expDateValidator(onlyNumbers);
 
         reformatInputField(element, 2);
@@ -102,7 +102,7 @@ class CreditCard extends PureComponent {
 
     handleCvvChange = (e) => {
         const { setCreditCardData, isNumber } = this.props;
-        const { value } = e.target;
+        const { value = '' } = e.target;
 
         if (isNumber(value)) {
             setCreditCardData({ cvv: value });
@@ -176,7 +176,7 @@ class CreditCard extends PureComponent {
     }
 
     renderAcceptedCardsInfo() {
-        const { cardData: { options: { supported_networks } } } = this.props;
+        const { cardData: { options: { supported_networks = [] } } } = this.props;
 
         return (
             <div block="CreditCard" elem="Info">

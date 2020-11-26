@@ -23,7 +23,7 @@ class PDPAlsoAvailableProducts extends PureComponent {
     };
 
     renderAvailableProducts() {
-        const { products } = this.props;
+        const { products = [] } = this.props;
 
         return products.map(this.renderAvailableProduct);
     }

@@ -86,7 +86,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
         });
     }
 
-    estimateShipping(address, isValidted) {
+    estimateShipping(address = {}, isValidted) {
         const { estimateShipping, setLoading } = this.props;
         const {
             country_id,
@@ -130,12 +130,23 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
             ? this._getAddressById(selectedCustomerAddressId)
             : trimAddressFields(fields);
         const addressForValidation = isSignedIn() ? shippingAddress : fields;
+        const validationResult = this.validateAddress(addressForValidation);
 
-        this.validateAddress(addressForValidation).then((response) => {
+        if (!validationResult) {
+            showNotification('error', __('Something went wrong.'))
+        }
+
+        validationResult.then((response) => {
             const { success } = response;
 
             if (success && !selectedShippingMethod) {
-                this.estimateShipping(addressForValidation, true).then((response) => {
+                const estimationResult = this.estimateShipping(addressForValidation, true);
+                
+                if (!estimationResult) {
+                    showNotification('error', __('Something went wrong.'))
+                }
+                
+                estimationResult.then((response) => {
                     if (typeof response !== 'undefined') {
                         const { data = [] } = response;
 

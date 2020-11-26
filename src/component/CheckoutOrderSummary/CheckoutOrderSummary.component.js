@@ -205,7 +205,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                         ) }
                         { this.renderPriceLine(
                             getDiscountFromTotals(totals, 'shipping') || __('FREE'),
-                            __('Delivery Cost')
+                            __('Shipping Charges')
                         ) }
                         { this.renderPriceLine(
                             getDiscountFromTotals(totals, 'tax'),

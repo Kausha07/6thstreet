@@ -90,7 +90,7 @@ class MyAccountClubApparel extends PureComponent {
                 currency,
                 memberDetails: {
                     memberTier,
-                    mobileNumber
+                    mobileNumber = ''
                 }
             }
         } = this.props;

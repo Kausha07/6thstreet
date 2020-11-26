@@ -38,4 +38,4 @@ export const formatItemProduct = (item) => ({
     product: formatProduct(item.product)
 });
 
-export const formatItems = (items) => items.map(formatItemProduct);
+export const formatItems = (items = []) => items.map(formatItemProduct);

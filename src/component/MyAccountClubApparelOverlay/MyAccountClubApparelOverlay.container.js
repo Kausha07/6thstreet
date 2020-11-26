@@ -66,7 +66,7 @@ export class MyAccountClubApparelOverlayContainer extends PureComponent {
 
     linkAccount(fields) {
         const { customer: { id }, linkAccount } = this.props;
-        const { phone, countryPhoneCode } = fields;
+        const { phone, countryPhoneCode = '' } = fields;
         const formattedPhone = `00${countryPhoneCode.substr(1)}${phone}`;
         this.setState({ isLoading: true });
 

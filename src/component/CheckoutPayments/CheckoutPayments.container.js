@@ -8,7 +8,7 @@ import {
     mapDispatchToProps as SourceMapDispatchToProps
 } from 'SourceComponent/CheckoutPayments/CheckoutPayments.container';
 import { getStore } from 'Store';
-import { processingCartRequest } from 'Store/Cart/Cart.action';
+import { processingPaymentSelectRequest } from 'Store/Cart/Cart.action';
 import CartDispatcher from 'Store/Cart/Cart.dispatcher';
 import CheckoutDispatcher from 'Store/Checkout/Checkout.dispatcher';
 import { showNotification } from 'Store/Notification/Notification.action';
@@ -26,7 +26,7 @@ export const mapDispatchToProps = (dispatch) => ({
     createTabbySession: (code) => CheckoutDispatcher.createTabbySession(dispatch, code),
     updateTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId),
     showError: (message) => dispatch(showNotification('error', message)),
-    processingCartRequest: () => dispatch(processingCartRequest())
+    finishPaymentRequest: (status) => dispatch(processingPaymentSelectRequest(status))
 });
 
 export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
@@ -39,8 +39,7 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
 
     state = {
         isTabbyInstallmentAvailable: false,
-        isTabbyPayLaterAvailable: false,
-        isLoading: false
+        isTabbyPayLaterAvailable: false
     };
 
     componentDidMount() {
@@ -101,30 +100,32 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
         ).catch(() => {});
     }
 
-    async selectPaymentMethod(item) {
+    selectPaymentMethod(item) {
         const { m_code: code } = item;
         const { Cart: { cartId } } = getStore().getState();
 
         const {
+            finishPaymentRequest,
             onPaymentMethodSelect,
             setOrderButtonEnableStatus,
             selectPaymentMethod,
-            updateTotals,
-            processingCartRequest
+            updateTotals
         } = this.props;
 
         this.setState({
             selectedPaymentCode: code
         });
-        setOrderButtonEnableStatus(true);
+
         onPaymentMethodSelect(code);
-        processingCartRequest();
-        await selectPaymentMethod(code).catch(() => {
+        setOrderButtonEnableStatus(true);
+        selectPaymentMethod(code).then(() => {
+            updateTotals(cartId);
+            finishPaymentRequest();
+        }).catch(() => {
             const { showError } = this.props;
 
             showError(__('Something went wrong'));
         });
-        await updateTotals(cartId);
     }
 }
 

@@ -44,10 +44,12 @@ class QuickCategoriesOptions extends PureComponent {
         this.setState({ activeSliderImage: activeImage });
     };
 
-    renderOption = ([key, option]) => {
+    renderOption = ([key, option = {}]) => {
         const { updateFilters, parentCallback } = this.props;
-        if (option.subcategories) {
-            return Object.entries(option.subcategories).map(this.renderOption);
+        const { subcategories = {} } = option;
+
+        if (Object.keys(subcategories).length !== 0) {
+            return Object.entries(subcategories).map(this.renderOption);
         }
 
         return (
@@ -60,7 +62,7 @@ class QuickCategoriesOptions extends PureComponent {
         );
     };
 
-    concatSubCategories(values) {
+    concatSubCategories(values = []) {
         return values.reduce((acc, {
             subcategories
         }) => {
@@ -76,7 +78,7 @@ class QuickCategoriesOptions extends PureComponent {
         const { showFilterCount } = this.state;
         const { filter: { data } } = this.props;
 
-        const subCategoryList = this.getSubcategories(data);
+        const subCategoryList = this.getSubcategories(data) || {};
         const sortedList = Object.entries(subCategoryList)
             .sort(([, a], [, b]) => b.product_count - a.product_count)
             .reduce((acc,
@@ -92,12 +94,12 @@ class QuickCategoriesOptions extends PureComponent {
     }
 
     getSubCategoryList(values) {
-        const categoryList = this.concatSubCategories(values);
+        const categoryList = this.concatSubCategories(values) || [];
 
         return categoryList.reduce((acc, item) => ({ ...acc, ...item }));
     }
 
-    getSubcategories(data) {
+    getSubcategories(data = {}) {
         if (Object.keys(data).length === 0) {
             return data;
         }
@@ -113,7 +115,7 @@ class QuickCategoriesOptions extends PureComponent {
 
     renderOptions() {
         const { isArabic } = this.state;
-        const Options = this.prepareCategoryOptionsList();
+        const Options = this.prepareCategoryOptionsList() || {};
 
         return (
             <div
@@ -127,7 +129,7 @@ class QuickCategoriesOptions extends PureComponent {
     }
 
     renderMobileOptions() {
-        const Options = this.prepareCategoryOptionsList();
+        const Options = this.prepareCategoryOptionsList() || {};
         const { activeSliderImage } = this.state;
 
         return (

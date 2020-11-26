@@ -46,8 +46,8 @@ export class MyAccountAddressPopup extends PureComponent {
     };
 
     componentDidUpdate(prevProps, _) {
-        const { payload } = this.props;
-        const { payload: prevPayload } = prevProps;
+        const { payload = {} } = this.props;
+        const { payload: prevPayload = {} } = prevProps;
 
         if (Object.keys(payload).length > 0 && Object.keys(prevPayload).length > 0) {
             const { address: { id } } = payload;

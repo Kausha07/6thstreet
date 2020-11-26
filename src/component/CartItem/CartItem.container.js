@@ -216,7 +216,7 @@ export class CartItemContainer extends PureComponent {
     _getVariantIndex() {
         const {
             item: {
-                sku: itemSku,
+                sku: itemSku = '',
                 product: { variants = [] } = {}
             }
         } = this.props;

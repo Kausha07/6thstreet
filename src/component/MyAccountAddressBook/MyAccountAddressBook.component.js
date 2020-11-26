@@ -61,7 +61,7 @@ export class MyAccountAddressBook extends PureComponent {
         showCreateNewPopup();
 
         if (!isMobile.any()) {
-            const elmnts = document.getElementsByClassName('MyAccountAddressBook-NewAddress');
+            const elmnts = document.getElementsByClassName('MyAccountAddressBook-NewAddress') || [];
             if (elmnts.length > 0) {
                 elmnts[0].scrollIntoView();
             }
