@@ -98,7 +98,7 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
         ).catch(() => {});
     }
 
-    selectPaymentMethod(item) {
+    async selectPaymentMethod(item) {
         const { m_code: code } = item;
         const { Cart: { cartId } } = getStore().getState();
 
@@ -115,12 +115,12 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
 
         onPaymentMethodSelect(code);
         setOrderButtonEnableStatus(true);
-        updateTotals(cartId);
-        selectPaymentMethod(code).catch(() => {
+        await selectPaymentMethod(code).catch(() => {
             const { showError } = this.props;
 
             showError(__('Something went wrong'));
         });
+        await updateTotals(cartId);
     }
 }
 
