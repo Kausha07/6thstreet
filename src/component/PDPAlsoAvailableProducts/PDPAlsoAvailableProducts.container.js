@@ -18,7 +18,7 @@ export class PDPAlsoAvailableProductsContainer extends PureComponent {
     };
 
     componentDidMount() {
-        const { firstLoad, products } = this.state;
+        const { firstLoad, products = [] } = this.state;
 
         if (firstLoad && !products.length) {
             this.getAvailableProducts();
@@ -27,11 +27,11 @@ export class PDPAlsoAvailableProductsContainer extends PureComponent {
 
     getAvailableProducts() {
         const {
-            productsAvailable
+            productsAvailable = []
         } = this.props;
 
         productsAvailable.map((productID) => this.getAvailableProduct(productID).then((productData) => {
-            const { products } = this.state;
+            const { products = [] } = this.state;
 
             if (productData.nbHits === 1) {
                 this.setState({ products: [...products, productData.data] });

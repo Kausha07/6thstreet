@@ -19,7 +19,7 @@ export class MyAccountReturnCreateList extends PureComponent {
     };
 
     render() {
-        const { orders, isLoading } = this.props;
+        const { orders = [], isLoading } = this.props;
 
         return (
             <div block="MyAccountReturnCreateList">

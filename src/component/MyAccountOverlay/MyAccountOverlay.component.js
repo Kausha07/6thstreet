@@ -213,7 +213,7 @@ export class MyAccountOverlay extends PureComponent {
         );
     }
 
-    onForgotChange = (invalidFields) => {
+    onForgotChange = (invalidFields = []) => {
         this.setState({ isForgotValidated: invalidFields.length === 0 });
     };
 
@@ -301,7 +301,7 @@ export class MyAccountOverlay extends PureComponent {
         this.setState(({ isChecked }) => ({ isChecked: !isChecked }));
     };
 
-    onCreateChange = (invalidFields) => {
+    onCreateChange = (invalidFields = []) => {
         this.setState({ isCreateValidated: invalidFields.length === 0 });
     };
 
@@ -439,7 +439,7 @@ export class MyAccountOverlay extends PureComponent {
         );
     }
 
-    onSignInChange = (invalidFields) => {
+    onSignInChange = (invalidFields = []) => {
         this.setState({ isSignInValidated: invalidFields.length === 0 });
     };
 

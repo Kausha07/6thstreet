@@ -61,7 +61,7 @@ export class HeaderContainer extends NavigationAbstractContainer {
 
         // TODO: something here breaks /<STORE CODE> from being opened, and / when, the url-based stores are enabled.
 
-        const activeRoute = Object.keys(this.routeMap)
+        const activeRoute = Object.keys(this.routeMap || {})
             .find((route) => (
                 route !== '/'
                 || pathname === appendWithStoreCode('/')

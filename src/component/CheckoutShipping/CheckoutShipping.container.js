@@ -86,7 +86,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
         });
     }
 
-    estimateShipping(address, isValidted) {
+    estimateShipping(address = {}, isValidted) {
         const { estimateShipping, setLoading } = this.props;
         const {
             country_id,

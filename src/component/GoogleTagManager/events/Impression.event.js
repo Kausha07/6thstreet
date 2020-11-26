@@ -106,7 +106,7 @@ class ImpressionEvent extends BaseEvent {
             brand_name,
             sku,
             name,
-            price,
+            price = {},
             url,
             colorfamily
         }, index) => ({

@@ -92,7 +92,7 @@ class GeneralEvent extends BaseEvent {
 
         const checkOnCartDataInterval = 500;
         const interval = setInterval(() => {
-            if (Object.keys(this.getAppState().Cart.cartTotals).length) {
+            if (Object.keys(this.getAppState().Cart.cartTotals || {}).length) {
                 clearInterval(interval);
 
                 this.pushEventData({

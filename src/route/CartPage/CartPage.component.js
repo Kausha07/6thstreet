@@ -60,7 +60,7 @@ export class CartPage extends PureComponent {
     };
 
     renderCartItems() {
-        const { totals: { items, quote_currency_code } } = this.props;
+        const { totals: { items = [], quote_currency_code } } = this.props;
 
         if (!items || items.length < 1) {
             return (
@@ -432,8 +432,8 @@ export class CartPage extends PureComponent {
 
     renderDynamicContent() {
         const {
-            totals,
-            totals: { items },
+            totals = {},
+            totals: { items = [] },
             isLoading,
             processingRequest
         } = this.props;

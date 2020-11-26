@@ -58,7 +58,7 @@ class DynamicContent extends PureComponent {
     };
 
     renderBlocks() {
-        const { content } = this.props;
+        const { content = [] } = this.props;
         return content.map(this.renderBlock);
     }
 

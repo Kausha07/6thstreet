@@ -6,7 +6,7 @@ const getBrandsArrayFromFacets = ({ facets = {} }) => {
             return [];
         }
 
-        return Object.keys(facets.brand_name)
+        return Object.keys(facets.brand_name || {})
             .map((item) => ({ brand_name: item, count: facets.brand_name[item] }))
             .slice(0, BRANDS_RESULT_LIMIT);
     } catch (err) {

@@ -59,7 +59,7 @@ export class SplashContainer extends PureComponent {
     });
 
     getIsReady() {
-        const { config } = this.props;
+        const { config = {} } = this.props;
         // 0 keys in config => we are not ready
         return !!Object.keys(config).length;
     }

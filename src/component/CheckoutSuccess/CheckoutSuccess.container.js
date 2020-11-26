@@ -263,7 +263,7 @@ export class CheckoutSuccessContainer extends PureComponent {
 
     onResendCode() {
         const { sendVerificationCode, showNotification } = this.props;
-        const { phone } = this.state;
+        const { phone = '' } = this.state;
         const countryCodeLastChar = 4;
         const countryCode = phone.slice(1, countryCodeLastChar);
         const mobile = phone.slice(countryCodeLastChar);

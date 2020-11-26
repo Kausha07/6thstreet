@@ -4,7 +4,7 @@ import { addNewCreditCard } from 'Util/API/endpoint/CreditCard/CreditCard.enpoin
 export class CreditCardDispatcher {
     /* eslint-disable-next-line */
     async addNewCreditCard(dispatch, data) {
-        const { number, expDate, cvv } = data;
+        const { number, expDate = '', cvv } = data;
 
         return addNewCreditCard({
             type: 'card',
