@@ -113,7 +113,7 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
         this.setState({
             selectedPaymentCode: code
         });
-        setOrderButtonEnableStatus(false);
+        setOrderButtonEnableStatus(true);
         onPaymentMethodSelect(code);
         await selectPaymentMethod(code).catch(() => {
             const { showError } = this.props;
@@ -121,7 +121,6 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
             showError(__('Something went wrong'));
         });
         await updateTotals(cartId);
-        await setOrderButtonEnableStatus(true);
     }
 }
 
