@@ -33,7 +33,7 @@ class SearchSuggestion extends PureComponent {
     }
 
     renderBrand = (brand) => {
-        const { brand_name: name, count } = brand;
+        const { brand_name: name = '', count } = brand;
 
         const urlName = name.replace('&', '')
             .replace(/(\s+)|--/g, '-')
@@ -102,7 +102,7 @@ class SearchSuggestion extends PureComponent {
     }
 
     renderTrendingBrand = (brand, i) => {
-        const { label, image_url } = brand;
+        const { label = '', image_url } = brand;
 
         const urlName = label.replace('&', '')
             .replace(/(\s+)|--/g, '-')

@@ -40,7 +40,7 @@ export class CreditCardContainer extends PureComponent {
         return !isNaN(-value);
     }
 
-    format(value, spacePosition, expInput) {
+    format(value = '', spacePosition, expInput) {
         const regex = new RegExp(`(.{${spacePosition}})`, 'g');
 
         if (expInput) {
