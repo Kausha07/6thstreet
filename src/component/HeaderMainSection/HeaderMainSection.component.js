@@ -95,9 +95,10 @@ class HeaderMainSection extends NavigationAbstract {
 
     isPLP() {
         const { type } = this.state;
-        const { location: { search } } = this.props;
+        const { location: { search, pathname = '' } } = this.props;
+        const isSearch = pathname.includes('catalogsearch');
 
-        return TYPE_CATEGORY === type && search;
+        return TYPE_CATEGORY === type && search && !isSearch;
     }
 
     isPDP() {
