@@ -31,7 +31,7 @@ class Brand extends PureComponent {
     }
 
     handleBrandRedirect = () => {
-        const { brand: { name }, type } = this.props;
+        const { brand: { name = '' }, type } = this.props;
         const urlName = name.replace('&', '')
             .replace(/(\s+)|--/g, '-')
             .replace('@', 'at')

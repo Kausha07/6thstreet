@@ -28,7 +28,7 @@ class PDPAddToCart extends PureComponent {
         const { sizeObject = {} } = this.props;
 
         if (sizeObject.sizeTypes !== undefined) {
-            const listItems = sizeObject.sizeTypes.map((type) => (
+            const listItems = sizeObject.sizeTypes.map((type = '') => (
                     <option
                       key={ type }
                       block="PDPAddToCart"

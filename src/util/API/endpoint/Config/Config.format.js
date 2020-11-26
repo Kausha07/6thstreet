@@ -13,7 +13,7 @@ export const getCountriesForSelect = (config) => {
     // TODO ask if this has endpoint, take from M2
     // const allowedCountries = ['AE', 'SA', 'KW'];
 
-    return Object.keys(countries).map((value) => ({
+    return Object.keys(countries).map((value = '') => ({
         id: value,
         value,
         label: countryMap[value.toUpperCase()]
