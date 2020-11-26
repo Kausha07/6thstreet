@@ -5,6 +5,7 @@ export const REMOVE_CART_ITEM = 'REMOVE_CART_ITEM';
 export const REMOVE_CART_ITEMS = 'REMOVE_CART_ITEMS';
 export const UPDATE_TOTALS = 'UPDATE_TOTALS';
 export const PROCESSING_CART_REQUEST = 'START_CART_REQUEST';
+export const PROCESSING_PAYMENT_SELECT_REQUEST = 'SET_PAYMENT_SELECT_REQUEST';
 export const SET_MINICART_OPEN = 'SET_MINICART_OPEN';
 export const RESET_CART = 'RESET_CART';
 
@@ -20,6 +21,11 @@ export const setCartTotals = (cartTotals) => ({
 
 export const processingCartRequest = () => ({
     type: PROCESSING_CART_REQUEST
+});
+
+export const processingPaymentSelectRequest = (requestStatus) => ({
+    type: PROCESSING_PAYMENT_SELECT_REQUEST,
+    requestStatus
 });
 
 export const updateCartItem = (

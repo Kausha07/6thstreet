@@ -16,7 +16,8 @@ import { FIVE_MINUTES_IN_SECONDS } from 'Util/Request/QueryDispatcher';
 
 export const mapStateToProps = (state) => ({
     ...sourceMapStateToProps(state),
-    processingRequest: state.CartReducer.processingRequest
+    processingRequest: state.CartReducer.processingRequest,
+    processingPaymentSelectRequest: state.CartReducer.processingPaymentSelectRequest
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -34,7 +35,8 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
         setPaymentCode: PropTypes.func.isRequired,
         showPopup: PropTypes.func.isRequired,
         setCheckoutCreditCardData: PropTypes.func.isRequired,
-        processingRequest: PropTypes.bool.isRequired
+        processingRequest: PropTypes.bool.isRequired,
+        processingPaymentSelectRequest: PropTypes.bool.isRequired
     };
 
     containerFunctions = {
