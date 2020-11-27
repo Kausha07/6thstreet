@@ -154,6 +154,10 @@ class PLPFilterOption extends PureComponent {
             }
         } = this.props;
 
+        if (!label) {
+            return null;
+        }
+
         if (facet_key === 'colorfamily') {
             const engColor = isArabic() ? translateArabicColor(label) : label;
             const fixedColor = engColor.toLowerCase().replace(/ /g, '_');
