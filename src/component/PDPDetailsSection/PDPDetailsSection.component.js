@@ -110,7 +110,7 @@ class PDPDetailsSection extends PureComponent {
         return (
             <li block="PDPDetailsSection" elem="MoreDetailsList" key={ item.key }>
                 <span block="PDPDetailsSection" elem="ListItem" mods={ { mod: 'title' } }>
-                    { __(item.key.toUpperCase()) }
+                    { this.listTitle(__(item.key)) }
                 </span>
                 <span block="PDPDetailsSection" elem="ListItem" mods={ { mod: 'value' } }>{ item.value }</span>
             </li>
@@ -123,7 +123,8 @@ class PDPDetailsSection extends PureComponent {
         if (highlighted_attributes !== undefined && highlighted_attributes !== null) {
             return (
                 <ul block="PDPDetailsSection" elem="MoreDetailsUl">
-                    { highlighted_attributes.map((item) => this.renderMoreDetailsItem(item)) }
+                    { highlighted_attributes.filter(({ key }) => key !== 'alternate_name')
+                        .map((item) => this.renderMoreDetailsItem(item)) }
                 </ul>
             );
         }

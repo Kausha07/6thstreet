@@ -112,5 +112,167 @@ export const SPECIAL_COLORS = {
     brightTurquoise: '#20EFBE',
     lavenderBlush: '#FFF9FA',
     peach: '#FF7355',
-    blush: '#FFC0B2'
+    blush: '#FFC0B2',
+    light_pink: '#F4E3E0'
+};
+
+export const translateArabicColor = (color = '') => {
+    switch (color) {
+    case 'أسود': {
+        return 'black';
+    }
+    case 'أزرق': {
+        return 'blue';
+    }
+    case 'أبيض': {
+        return 'white';
+    }
+    case 'وردي': {
+        return 'pink';
+    }
+    case 'بني': {
+        return 'brown';
+    }
+    case 'أحمر': {
+        return 'red';
+    }
+    case 'متعدد': {
+        return 'multi';
+    }
+    case 'أخضر': {
+        return 'green';
+    }
+    case 'معدني': {
+        return 'metallic';
+    }
+    case 'ذهبي': {
+        return 'gold';
+    }
+    case 'بنفسجي': {
+        return 'purple';
+    }
+    case 'أصفر': {
+        return 'yellow';
+    }
+    case 'برتقالي': {
+        return 'orange';
+    }
+    case 'فضي': {
+        return 'silver';
+    }
+    case 'بيج': {
+        return 'beige';
+    }
+    case 'طبيعي': {
+        return 'natural';
+    }
+    case 'كحلي': {
+        return 'dark_blue';
+    }
+    case 'Cream': {
+        return 'cream';
+    }
+    case 'ذهبي وردي': {
+        return 'rose_gold';
+    }
+    case 'خوخي': {
+        return 'peach';
+    }
+    case 'رمادي داكن': {
+        return 'taupe';
+    }
+    case 'أوف وايت': {
+        return 'off_white';
+    }
+    case 'عنابي': {
+        return 'burgundy';
+    }
+    case 'بني داكن': {
+        return 'dark_brown';
+    }
+    case 'زيتوني': {
+        return 'olive';
+    }
+    case 'وردي فاتح': {
+        return 'light_pink';
+    }
+    case 'عاجي': {
+        return 'ivory';
+    }
+    case 'كاكي': {
+        return 'khaki';
+    }
+    case 'برونزي': {
+        return 'bronze';
+    }
+    case 'رصاصي': {
+        return 'grey';
+    }
+    case 'جلد الجمل': {
+        return 'camel';
+    }
+    case 'جلد الفهد': {
+        return 'leopard';
+    }
+    case 'بني فاتح': {
+        return 'light_brown';
+    }
+    case 'ماروني': {
+        return 'maroon';
+    }
+    case 'فيروزي': {
+        return 'turquoise';
+    }
+    case 'رمادي فاتح': {
+        return 'light_grey';
+    }
+    case 'شفاف': {
+        return 'transparent';
+    }
+    case 'بني محمر': {
+        return 'edocha';
+    }
+    case 'لحمي': {
+        return 'neutral';
+    }
+    case 'حنطي': {
+        return 'tan';
+    }
+    case 'بني مائل للأصفر': {
+        return 'camel';
+    }
+    case 'أزرق مائي':
+    case 'أزرق فاتح': {
+        return 'light_blue';
+    }
+    case 'gray':
+    case 'رمادي': {
+        return 'grey';
+    }
+    case 'Black / White': {
+        return 'black_white';
+    }
+    default: {
+        // eslint-disable-next-line no-undef
+        const color_code = color.toLowerCase().replace(' ', '_');
+
+        if (color_code.includes('beige')) {
+            return 'beige';
+        }
+        if (color_code.includes('mauve')) {
+            return 'mauve';
+        }
+        if (color_code.includes('rum')) {
+            return 'rum';
+        }
+        if (color_code.includes('raspberry')) {
+            return 'raspberry';
+        }
+        if (color_code.includes('honey')) {
+            return 'honey';
+        }
+
+        return color_code;
+    }
+    }
 };

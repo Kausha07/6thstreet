@@ -612,7 +612,6 @@
     "FREE (Standard Delivery)": null,
     "Order confirmation has been sent to": null,
     "track your order": null,
-    "sign in to access to your account and tract your order": null,
     "sign in": null,
     "cash": null,
     "Please Verify your Number": null,
@@ -653,5 +652,7 @@
     "We can't ship products to selected address": null,
     "Sign in for a tailored shopping experience": null,
     "Shipping Charges": null,
-    "Cancel an item": null
+    "Cancel an item": null,
+    "Color:": null,
+    "sign in to access to your account and track your order": null
 }
