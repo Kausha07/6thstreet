@@ -97,6 +97,12 @@
                         width: 14px;
                     }
 
+                    &:hover {
+                        &::after {
+                                --checkmark-color: var(--black-color);
+                        }
+                    }
+
                     &::after {
                         border-radius: 50%;
                         bottom: 0;

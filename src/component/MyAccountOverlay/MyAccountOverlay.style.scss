@@ -580,7 +580,6 @@
                 width: 14px;
                 margin-right: 6px;
 
-
                 &:hover {
                     &::after {
                             --checkmark-color: var(--black-color);
@@ -609,6 +608,10 @@
 
             &:checked + label {
                 --primary-base-color: var(--black-color);
+
+                &::after {
+                    --checkmark-color: var(--black-color);
+                }
             }
 
             &:focus {
