@@ -233,8 +233,8 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         return resetPassword({ email });
     }
 
-    async getOrders(limit) {
-        return getOrders(limit);
+    async getOrders(limit, page) {
+        return getOrders(limit, page);
     }
 
     updateCustomerData(dispatch, data) {

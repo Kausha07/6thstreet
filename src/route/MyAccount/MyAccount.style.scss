@@ -18,12 +18,12 @@
 
     &-TabContent {
         @include after-mobile {
-            padding: 0 105px;
+            padding-left: 105px;
             width: 100%;
         }
 
         @include desktop {
-            width: 70%;
+            width: 100%;
         }
     }
 

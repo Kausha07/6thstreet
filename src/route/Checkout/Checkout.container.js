@@ -121,10 +121,12 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         const {
             history,
             showInfoNotification,
+            showErrorNotification,
             guest_checkout = true,
             totals = {},
             totals: {
-                items = []
+                items = [],
+                total
             },
             updateStoreCredit
         } = this.props;
@@ -156,6 +158,12 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         if (Object.keys(totals).length && !items.length && checkoutStep !== DETAILS_STEP) {
             showInfoNotification(__('Please add at least one product to cart!'));
             history.push('/cart');
+            return;
+        }
+
+        if (Object.keys(totals).length && total === 0 && checkoutStep !== DETAILS_STEP) {
+            showErrorNotification(__('Your cart is invalid'));
+            history.push('/');
         }
 
         // if guest checkout is disabled and user is not logged in => throw him to homepage
