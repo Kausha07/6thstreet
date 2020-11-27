@@ -21,16 +21,6 @@
         width: 770px;
         height: 80%;
         max-height: 550px;
-
-        .WelcomeScreen {
-            &-List {
-                li:not(:first-of-type) {
-                    button {
-                        margin-top: 0;
-                    }
-                }
-            }
-        }
     }
 
     &-Image {
