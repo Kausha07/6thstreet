@@ -118,7 +118,12 @@ class WelcomeScreen extends PureComponent {
         const currentLang = language === 'en' ? 'en' : 'ar';
 
         return (
-            <li key={ id }>
+            <li
+              block="WelcomeScreen"
+              elem="CountryItem"
+              key={ id }
+              mods={ { isCurrent: currentLangBool } }
+            >
                 <button
                   onClick={ () => onCountrySelect(value) }
                   block="WelcomeScreen"
