@@ -119,7 +119,6 @@ class HeaderSearch extends PureComponent {
 
     render() {
         const { isArabic } = this.state;
-        // console.log(this.searchRef.current ? this.searchRef.current.children[0].children : null);
 
         return (
             <>
