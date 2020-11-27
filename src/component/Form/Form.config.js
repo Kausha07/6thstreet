@@ -46,7 +46,7 @@ export default {
     },
     notEmpty: {
         validate: isNotEmpty,
-        message: __('This field is required!')
+        message: __('This is a required field!')
     },
     password_match: {
         validate: validatePasswordMatch,

@@ -343,7 +343,7 @@ class MyAccountClubApparel extends PureComponent {
                       mods={ { isEarnExpanded, isArabicEarn } }
                       onClick={ this.onEarnClick }
                     >
-                        { __('Earn & Burn') }
+                        { __('Reward') }
                     </button>
                     { beforeDesktop && isEarnExpanded ? this.renderEarnMobile() : this.renderEarn() }
                 </div>
