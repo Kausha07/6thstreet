@@ -145,6 +145,10 @@ class PDPSummary extends PureComponent {
             return null;
         }
 
+        if (!color) {
+            return <div block="PDPSummary" elem="ProductColorBlock" />;
+        }
+
         if (Array.isArray(color)) {
             return (
             <div
