@@ -112,7 +112,8 @@ export const SPECIAL_COLORS = {
     brightTurquoise: '#20EFBE',
     lavenderBlush: '#FFF9FA',
     peach: '#FF7355',
-    blush: '#FFC0B2'
+    blush: '#FFC0B2',
+    light_pink: '#F4E3E0'
 };
 
 export const translateArabicColor = (color = '') => {
