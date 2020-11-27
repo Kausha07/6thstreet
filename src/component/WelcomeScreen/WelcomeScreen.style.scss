@@ -17,6 +17,9 @@
     }
 
     &-List {
+        display: flex;
+        flex-direction: column;
+        margin-top: 10px;
 
         &Container {
             overflow: auto;
@@ -37,6 +40,12 @@
             &:last-child {
                 border-bottom: none;
             }
+        }
+    }
+
+    &-CountryItem {
+        &_isCurrent {
+            order: -1;
         }
     }
 
@@ -91,7 +100,7 @@
         width: 100%;
         text-align: start;
         padding: 0;
-        margin-top: 10px;
+        margin-top: 0;
         font-weight: var(--fw-regular);
 
         &_isCurrent {
