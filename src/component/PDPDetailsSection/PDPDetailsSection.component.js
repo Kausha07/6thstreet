@@ -110,7 +110,7 @@ class PDPDetailsSection extends PureComponent {
         return (
             <li block="PDPDetailsSection" elem="MoreDetailsList" key={ item.key }>
                 <span block="PDPDetailsSection" elem="ListItem" mods={ { mod: 'title' } }>
-                    { this.listTitle(__(item.key.toUpperCase())) }
+                    { this.listTitle(__(item.key)) }
                 </span>
                 <span block="PDPDetailsSection" elem="ListItem" mods={ { mod: 'value' } }>{ item.value }</span>
             </li>
