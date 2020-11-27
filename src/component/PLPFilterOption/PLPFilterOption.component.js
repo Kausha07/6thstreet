@@ -4,7 +4,7 @@ import { createRef, PureComponent } from 'react';
 import Field from 'Component/Field';
 import { FilterOption } from 'Util/API/endpoint/Product/Product.type';
 import { isArabic } from 'Util/App';
-import { SPECIAL_COLORS } from 'Util/Common';
+import { SPECIAL_COLORS, translateArabicColor } from 'Util/Common';
 import isMobile from 'Util/Mobile';
 
 import './PLPFilterOption.style';
@@ -154,8 +154,13 @@ class PLPFilterOption extends PureComponent {
             }
         } = this.props;
 
+        if (!label) {
+            return null;
+        }
+
         if (facet_key === 'colorfamily') {
-            const fixedColor = label.toLowerCase().replace(/ /g, '_');
+            const engColor = isArabic() ? translateArabicColor(label) : label;
+            const fixedColor = engColor.toLowerCase().replace(/ /g, '_');
             const color = SPECIAL_COLORS[fixedColor] ? SPECIAL_COLORS[fixedColor] : fixedColor;
 
             return (
@@ -163,12 +168,14 @@ class PLPFilterOption extends PureComponent {
                   block="PLPFilterOption"
                   htmlFor={ facet_value }
                 >
+                    { isArabic() && isMobile.any() ? label : null }
                     <span
                       block="PLPFilterOption"
                       elem="Color"
                       style={ { backgroundColor: color } }
                     />
-                    { label }
+                    { isArabic() && !isMobile.any() ? label : null }
+                    { !isArabic() ? label : null }
                     { product_count && !isMobile.any() ? this.renderCount() : null }
                 </label>
             );
