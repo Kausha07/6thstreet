@@ -60,7 +60,12 @@
                 }
 
                 p {
-                    margin-top: 5px;
+                    margin: 5px 0 0 5px;
+                    text-align: left;
+                }
+
+                &-Message {
+                    margin: 5px 0 0 5px;
                 }
             }
 
@@ -170,6 +175,17 @@
 
             p {
                 margin: 45px 20% 0;
+            }
+
+            .MyAccountClubApparelOverlay {
+                &-LinkAccountPhone { 
+                    .Field {
+                        p {
+                            margin: 5px 0 0 10px;
+                            text-align: left;
+                        }
+                    }
+                }
             }
 
             .Field {

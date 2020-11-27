@@ -133,6 +133,7 @@ class FooterMain extends PureComponent {
                                             <img src={ facebook } alt="facebook icon" />
                                         </Link>
                                     </div>
+                                    <span />
                                     &nbsp;&nbsp;&nbsp;
                                     <div block="FooterMain" elem="SocialIcon">
                                         <Link
