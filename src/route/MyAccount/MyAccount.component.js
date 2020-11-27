@@ -164,10 +164,6 @@ export class MyAccount extends SourceMyAccount {
                       changeActiveTab={ this.handleTabChange }
                       onSignOut={ this.handleSignOut }
                     />
-                    <div block="TermsAndPrivacy">
-                        Terms and conditions and
-                        <a id="privacy-link" href="https://en-ae.6thstreet.com/privacy-policy"> privacy policy</a>
-                    </div>
                 </div>
                 <div block={ hiddenTabContent }>
                     <div block="MyAccount" elem="TabContent">
