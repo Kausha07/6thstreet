@@ -48,6 +48,14 @@
                 margin: 0 20px;
             }
         }
+
+        &:hover {
+            box-shadow: 0 0 7px #d3d3d3;
+        }
+
+        a {
+            text-decoration: none;
+        }
     }
 
     .Price {

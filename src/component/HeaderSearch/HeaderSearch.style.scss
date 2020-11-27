@@ -107,9 +107,12 @@
         width: 45px;
         height: 100%;
         top: 0;
+        display: none;
 
-        @include desktop {
-            display: none;
+        &_isClearVisible {
+            @include mobile {
+                display: block;
+            }
         }
     }
 
