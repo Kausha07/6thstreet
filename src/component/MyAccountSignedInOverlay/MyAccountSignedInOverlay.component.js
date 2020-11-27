@@ -85,10 +85,10 @@ export class MyAccountSignedInOverlay extends PureComponent {
     renderWrapper() {
         return (
             <div block="MyAccountSignedInOverlay" elem="Wrapper">
+                { this.renderClubLink() }
                 { this.renderMyAccountLink() }
                 { this.renderOrderHistoryLink() }
                 { this.renderReturnAnItemLink() }
-                { this.renderClubLink() }
                 { this.renderDeliveryLink() }
                 { this.renderLogoutButton() }
             </div>
