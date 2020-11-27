@@ -213,7 +213,7 @@ export class CheckoutSuccess extends PureComponent {
                       block="TrackOrder"
                       elem="Text-SubTitle"
                     >
-                        { __('sign in to access to your account and tract your order') }
+                        { __('sign in to access to your account and track your order') }
                     </span>
                 </div>
                 <button block="secondary" onClick={ this.showMyAccountPopup }>
