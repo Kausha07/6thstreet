@@ -178,7 +178,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
             this.openNewForm();
         }
 
-        if (isSignedIn) {
+        if (isSignedIn()) {
             return (
                 <div
                   block="MyAccountAddressBook"

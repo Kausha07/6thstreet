@@ -10,7 +10,7 @@ import TabbyMiniPopup from 'Component/TabbyMiniPopup';
 import { TABBY_TOOLTIP_PDP } from 'Component/TabbyMiniPopup/TabbyMiniPopup.config';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
 import { isArabic } from 'Util/App';
-import { SPECIAL_COLORS } from 'Util/Common';
+import { SPECIAL_COLORS, translateArabicColor } from 'Util/Common';
 
 import tabby from './icons/tabby.svg';
 
@@ -138,13 +138,23 @@ class PDPSummary extends PureComponent {
         return <TabbyMiniPopup content={ TABBY_TOOLTIP_PDP } closeTabbyPopup={ this.closeTabbyPopup } />;
     };
 
-    renderColor() {
+    renderColors() {
         const { product: { color = '', stock_qty } } = this.props;
-        const fixedColor = color.toLowerCase().replace(/ /g, '_');
-        const prodColor = SPECIAL_COLORS[fixedColor] ? SPECIAL_COLORS[fixedColor] : fixedColor;
 
         if (stock_qty === 0) {
             return null;
+        }
+
+        if (Array.isArray(color)) {
+            return (
+            <div
+              block="PDPSummary"
+              elem="ProductColorBlock"
+            >
+                <strong>{ __('Color:') }</strong>
+                { color.map((col) => this.renderColor(col)) }
+            </div>
+            );
         }
 
         return (
@@ -152,14 +162,26 @@ class PDPSummary extends PureComponent {
               block="PDPSummary"
               elem="ProductColorBlock"
             >
-                <strong>Color:</strong>
+                <strong>{ __('Color:') }</strong>
+                { this.renderColor(color) }
+            </div>
+        );
+    }
+
+    renderColor(color) {
+        const engColor = isArabic() ? translateArabicColor(color) : color;
+        const fixedColor = engColor.toLowerCase().replace(/ /g, '_');
+        const prodColor = SPECIAL_COLORS[fixedColor] ? SPECIAL_COLORS[fixedColor] : fixedColor;
+
+        return (
+            <>
                 <span
                   block="PDPSummary"
                   elem="ProductColor"
                   style={ { backgroundColor: prodColor } }
                 />
                 { color }
-            </div>
+            </>
         );
     }
 
@@ -192,7 +214,7 @@ class PDPSummary extends PureComponent {
                 { this.renderName() }
                 { this.renderPrice() }
                 { this.renderTabby() }
-                { this.renderColor() }
+                { this.renderColors() }
                 { this.renderAddToCartSection() }
                 { this.renderAvailableItemsSection() }
                 { this.renderTabbyPopup() }

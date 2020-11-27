@@ -93,6 +93,8 @@
 
     &-ListItem {
         &_mod_title {
+            font-weight: var(--fw-bold);
+            
             &::first-letter {
                 text-transform: uppercase;
             }
