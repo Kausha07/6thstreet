@@ -18,4 +18,23 @@
             position: static;
         }
     }
+
+    a {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    button {
+        border: 1px solid var(--black-color);
+        width: 195px;
+        height: 40px;
+        font-size: 12px;
+        font-weight: var(--fw-demi);
+        margin-top: 10px;
+
+        &:hover{
+            text-decoration: underline;
+        }
+    }
 }

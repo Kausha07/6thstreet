@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { PureComponent } from 'react';
+import { createRef, PureComponent } from 'react';
 
 import Field from 'Component/Field';
 import Form from 'Component/Form';
@@ -30,6 +30,8 @@ class HeaderSearch extends PureComponent {
         isClearVisible: false
     };
 
+    searchRef = createRef();
+
     static getDerivedStateFromProps(props) {
         const { search } = props;
 
@@ -38,20 +40,38 @@ class HeaderSearch extends PureComponent {
         };
     }
 
+    onSubmit = () => {
+        const { onSearchSubmit } = this.props;
+        const {
+            current: {
+                form: {
+                    children
+                }
+            }
+        } = this.searchRef;
+
+        const searchInput = children[0].children[0];
+        const submitBtn = children[1];
+
+        submitBtn.blur();
+        searchInput.blur();
+        onSearchSubmit();
+    };
+
     renderField() {
         const {
             search,
             onSearchChange,
-            onSearchSubmit,
             isVisible,
             onSearchClean
         } = this.props;
-        const { isClearVisible } = this.state;
+        const { isClearVisible, isArabic } = this.state;
 
         return (
             <Form
               id="header-search"
-              onSubmit={ onSearchSubmit }
+              onSubmit={ this.onSubmit }
+              ref={ this.searchRef }
             >
                 <Field
                   id="search-field"
@@ -64,6 +84,7 @@ class HeaderSearch extends PureComponent {
                 <button
                   block="HeaderSearch"
                   elem="SubmitBtn"
+                  mods={ { isArabic } }
                   type="submit"
                 >
                     <img src={ searchPng } alt="search" />
@@ -98,6 +119,7 @@ class HeaderSearch extends PureComponent {
 
     render() {
         const { isArabic } = this.state;
+
         return (
             <>
                 <div block="SearchBackground" mods={ { isArabic } } />
