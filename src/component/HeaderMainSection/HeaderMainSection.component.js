@@ -172,7 +172,7 @@ class HeaderMainSection extends NavigationAbstract {
             return null;
         }
 
-        return (this.isPLP() || this.isPDP()) && isMobile.any() ? null : (
+        return (this.isPLP() || this.isPDP() || this.getPageType() === TYPE_BRAND) && isMobile.any() ? null : (
             <HeaderGenders
               key="genders"
               isMobile

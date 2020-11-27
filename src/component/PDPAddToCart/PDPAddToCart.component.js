@@ -64,6 +64,20 @@ class PDPAddToCart extends PureComponent {
         }
     }
 
+    renderSizeOption(simple_products, code, label) {
+        return (
+            <option
+              key={ code }
+              block="PDPAddToCart"
+              elem="SizeOption"
+              value={ code }
+              disabled={ simple_products[code].quantity === '0' }
+            >
+                { label }
+            </option>
+        );
+    }
+
     getSizeSelect() {
         const {
             product: { simple_products }, product, selectedSizeType, sizeObject = {}
@@ -71,20 +85,17 @@ class PDPAddToCart extends PureComponent {
 
         if (sizeObject.sizeCodes !== undefined
             && simple_products !== undefined
-            && product[`size_${selectedSizeType}`].length !== 0) {
-            const listItems = sizeObject.sizeCodes.map((code) => (
-                <option
-                  key={ code }
-                  block="PDPAddToCart"
-                  elem="SizeOption"
-                  value={ code }
-                  disabled={ simple_products[code].quantity === '0' }
-                >
-                    { this.renderSizeAndOnQunatityBasedMessage(code) }
-                </option>
-            ));
+            && product[`size_${selectedSizeType}`].length !== 0
+        ) {
+            return sizeObject.sizeCodes.reduce((acc, code) => {
+                const label = this.renderSizeAndOnQunatityBasedMessage(code);
 
-            return listItems;
+                if (label) {
+                    acc.push(this.renderSizeOption(simple_products, code, label));
+                }
+
+                return acc;
+            }, []);
         }
 
         return null;
