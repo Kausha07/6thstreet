@@ -26,8 +26,17 @@ class HeaderSearch extends PureComponent {
     };
 
     state = {
-        isArabic: isArabic()
+        isArabic: isArabic(),
+        isClearVisible: false
     };
+
+    static getDerivedStateFromProps(props) {
+        const { search } = props;
+
+        return {
+            isClearVisible: search !== ''
+        };
+    }
 
     renderField() {
         const {
@@ -37,6 +46,7 @@ class HeaderSearch extends PureComponent {
             isVisible,
             onSearchClean
         } = this.props;
+        const { isClearVisible } = this.state;
 
         return (
             <Form
@@ -65,7 +75,8 @@ class HeaderSearch extends PureComponent {
                   type="button"
                   mods={ {
                       type: 'searchClear',
-                      isVisible
+                      isVisible,
+                      isClearVisible
                   } }
                   aria-label="Clear search"
                 >
