@@ -14,7 +14,7 @@ class Brand extends PureComponent {
         type: PropTypes.string.isRequired
     };
 
-    capitalizeFirstLetter(string) {
+    capitalizeFirstLetter(string = '') {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
@@ -31,7 +31,7 @@ class Brand extends PureComponent {
     }
 
     handleBrandRedirect = () => {
-        const { brand: { name }, type } = this.props;
+        const { brand: { name = '' }, type } = this.props;
         const urlName = name.replace('&', '')
             .replace(/(\s+)|--/g, '-')
             .replace('@', 'at')

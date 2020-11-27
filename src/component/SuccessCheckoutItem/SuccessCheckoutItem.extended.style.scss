@@ -19,65 +19,67 @@
     --color-nobel: #9B9B9B;
 }
 
-.CartPage {
-    .CartItem {
-        display: flex;
-        flex-wrap: wrap;
-        margin-bottom: 20px;
-
-        &-Actions {
-            display: none;
-        }
-
-        &-Wrapper {
-            display: flex;
-
-            .Image_hasSrc {
-                display: none;
-            }
-
-            .Image {
-                display: block;
-                width: 100%;
-            }
-        }
-
-        &-Content {
-            display: flex;
-            flex-wrap: nowrap;
-            flex-direction: column;
-
-            &_isLikeTable {
-                align-self: unset;
-            }
-        }
-
-        &-Heading {
+.SuccessCheckoutItem {
+    .CartPage {
+        .CartItem {
             display: flex;
             flex-wrap: wrap;
-            justify-content: space-between;
-            font-size: 15px;
-            font-weight: var(--fw-demi);
+            margin-bottom: 20px;
 
-            &:first-child {
+            &-Actions {
                 display: none;
             }
-        }
 
-        &-ColSizeQty {
-            color: var(--color-charcoal);
+            &-Wrapper {
+                display: flex;
 
-            span {
-                color: var(--color-nobel);
+                .Image_hasSrc {
+                    display: none;
+                }
+
+                .Image {
+                    display: block;
+                    width: 100%;
+                }
             }
-        }
 
-        &_isArabic {
-            span {
-                padding-right: 0;
-                padding-left: 15px;
-                border-right: none;
-                border-left: 1px solid var(--color-nobel);
+            &-Content {
+                display: flex;
+                flex-wrap: nowrap;
+                flex-direction: column;
+
+                &_isLikeTable {
+                    align-self: unset;
+                }
+            }
+
+            &-Heading {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                font-size: 15px;
+                font-weight: var(--fw-demi);
+
+                &:first-child {
+                    display: none;
+                }
+            }
+
+            &-ColSizeQty {
+                color: var(--color-charcoal);
+
+                span {
+                    color: var(--color-nobel);
+                }
+            }
+
+            &_isArabic {
+                span {
+                    padding-right: 0;
+                    padding-left: 15px;
+                    border-right: none;
+                    border-left: 1px solid var(--color-nobel);
+                }
             }
         }
     }

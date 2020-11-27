@@ -28,7 +28,6 @@ export const BreadcrumbsDispatcher = import(
 );
 
 export const mapStateToProps = (state) => ({
-    totals: state.CartReducer.cartTotals,
     headerState: state.NavigationReducer[TOP_NAVIGATION_TYPE].navigationState,
     guest_checkout: state.ConfigReducer.guest_checkout,
     customer: state.MyAccountReducer.customer,
@@ -264,7 +263,7 @@ export class CheckoutSuccessContainer extends PureComponent {
 
     onResendCode() {
         const { sendVerificationCode, showNotification } = this.props;
-        const { phone } = this.state;
+        const { phone = '' } = this.state;
         const countryCodeLastChar = 4;
         const countryCode = phone.slice(1, countryCodeLastChar);
         const mobile = phone.slice(countryCodeLastChar);

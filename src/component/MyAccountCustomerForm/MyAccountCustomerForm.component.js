@@ -211,7 +211,7 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
     }
 
     getCustomerPhone() {
-        const { customer, customer: { phone } = {} } = this.props;
+        const { customer = {}, customer: { phone } = {} } = this.props;
 
         if (Object.keys(customer).length) {
             return {

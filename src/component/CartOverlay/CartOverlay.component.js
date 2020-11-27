@@ -65,7 +65,7 @@ export class CartOverlay extends PureComponent {
     }
 
     renderCartItems() {
-        const { totals: { items, quote_currency_code }, closePopup } = this.props;
+        const { totals: { items = [], quote_currency_code }, closePopup } = this.props;
 
         if (!items || items.length < 1) {
             return this.renderNoCartItems();
@@ -141,7 +141,7 @@ export class CartOverlay extends PureComponent {
 
     renderActions() {
         const {
-            totals: { items },
+            totals: { items = [] },
             handleCheckoutClick,
             handleViewBagClick,
             isCheckoutAvailable

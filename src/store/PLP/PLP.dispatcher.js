@@ -9,7 +9,7 @@ import Logger from 'Util/Logger';
 
 export class PLPDispatcher {
     async requestProductList(payload, dispatch, state) {
-        const { options } = payload;
+        const { options = {} } = payload;
 
         if (Object.keys(options).length !== 0) {
             dispatch(setPLPLoading(true));
@@ -76,7 +76,7 @@ export class PLPDispatcher {
         }
     }
 
-    _getInitalOptions(options) {
+    _getInitalOptions(options = {}) {
         // eslint-disable-next-line no-unused-vars
         return Object.entries(options).reduce((acc, [key, value]) => {
             if (

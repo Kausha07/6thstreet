@@ -1,4 +1,5 @@
 import { getStore } from 'Store';
+import { processingPaymentSelectRequest } from 'Store/Cart/Cart.action';
 import { setShipping } from 'Store/Checkout/Checkout.action';
 import { showNotification } from 'Store/Notification/Notification.action';
 import {
@@ -94,6 +95,8 @@ export class CheckoutDispatcher {
 
     async selectPaymentMethod(dispatch, code) {
         const { Cart: { cartId } } = getStore().getState();
+
+        dispatch(processingPaymentSelectRequest(true));
 
         return selectPaymentMethod({
             cartId,

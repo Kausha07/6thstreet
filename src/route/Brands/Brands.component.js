@@ -91,7 +91,7 @@ class Brands extends PureComponent {
     };
 
     renderLetterSelector() {
-        const { brands } = this.props;
+        const { brands = [] } = this.props;
         const { filteredLetter } = this.state;
 
         return (
@@ -120,7 +120,7 @@ class Brands extends PureComponent {
     }
 
     renderBrandGroups() {
-        const { brands } = this.props;
+        const { brands = [] } = this.props;
         const { filteredLetter } = this.state;
 
         if (filteredLetter) {

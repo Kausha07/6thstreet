@@ -283,6 +283,7 @@
 
     &-Items {
         padding-bottom: 20px;
+        height: calc(60vh - 140px);
         max-height: 382px;
         overflow-y: scroll;
         overflow-x: hidden;

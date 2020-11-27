@@ -171,14 +171,14 @@ export class CheckoutShipping extends SourceCheckoutShipping {
 
     renderOpenPopupButton = () => {
         const { openFirstPopup, formContent, isArabic } = this.state;
-        const { customer: { addresses } } = this.props;
+        const { customer: { addresses = [] } } = this.props;
 
         if (!openFirstPopup && addresses && (isSignedIn() && addresses.length === 0)) {
             this.setState({ openFirstPopup: true });
             this.openNewForm();
         }
 
-        if (isSignedIn) {
+        if (isSignedIn()) {
             return (
                 <div
                   block="MyAccountAddressBook"

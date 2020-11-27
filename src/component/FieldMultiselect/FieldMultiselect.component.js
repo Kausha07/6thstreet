@@ -18,7 +18,10 @@ class FieldMultiselect extends PureComponent {
         changeActiveFilter: PropTypes.func,
         currentActiveFilter: PropTypes.string,
         isHidden: PropTypes.bool,
-        parentCallback: PropTypes.func
+        defaultFilters: PropTypes.bool,
+        parentCallback: PropTypes.func,
+        setDefaultFilters: PropTypes.func,
+        updateFilters: PropTypes.func
     };
 
     static defaultProps = {
@@ -27,8 +30,11 @@ class FieldMultiselect extends PureComponent {
         isChecked: false,
         currentActiveFilter: '',
         isHidden: false,
+        defaultFilters: false,
         parentCallback: () => {},
-        changeActiveFilter: () => {}
+        changeActiveFilter: () => {},
+        updateFilters: () => {},
+        setDefaultFilters: () => {}
     };
 
     filterDropdownRef = createRef();
@@ -75,8 +81,9 @@ class FieldMultiselect extends PureComponent {
         }
     };
 
-    renderSubcategoryOptions = (option, display) => {
+    renderSubcategoryOptions = (option = {}, display) => {
         const { isArabic } = this.state;
+        const { subcategories = {} } = option;
 
         return (
             <div
@@ -85,7 +92,7 @@ class FieldMultiselect extends PureComponent {
               mods={ { isArabic } }
               style={ { display } }
             >
-                { Object.entries(option.subcategories).map(this.renderOption) }
+                { Object.entries(subcategories).map(this.renderOption) }
             </div>
         );
     };
@@ -139,17 +146,21 @@ class FieldMultiselect extends PureComponent {
         );
     };
 
-    renderOption = ([key, option]) => {
+    renderOption = ([key, option = {}]) => {
         const {
             filter: { is_radio },
             activeFilter,
             isChecked,
-            parentCallback
+            parentCallback,
+            updateFilters,
+            setDefaultFilters,
+            defaultFilters
         } = this.props;
+        const { subcategories = {} } = option;
 
-        if (option.subcategories) {
+        if (Object.keys(subcategories).length !== 0) {
             return !isMobile.any()
-                ? Object.entries(option.subcategories).map(this.renderOption)
+                ? Object.entries(subcategories).map(this.renderOption)
                 : this.renderOptionMobile(option);
         }
 
@@ -161,12 +172,15 @@ class FieldMultiselect extends PureComponent {
               activeFilter={ activeFilter }
               isChecked={ isChecked }
               parentCallback={ parentCallback }
+              updateFilters={ updateFilters }
+              setDefaultFilters={ setDefaultFilters }
+              defaultFilters={ defaultFilters }
             />
         );
     };
 
     renderOptions() {
-        const { filter: { data, subcategories } } = this.props;
+        const { filter: { data = {}, subcategories = {} } } = this.props;
 
         return (
             <ul>

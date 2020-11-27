@@ -38,20 +38,31 @@ class PLPFilters extends PureComponent {
         productsCount: 0
     };
 
-    state = {
-        isOpen: false,
-        activeFilter: undefined,
-        isArabic: isArabic(),
-        activeFilters: {},
-        isReset: false
-    };
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            isOpen: false,
+            activeFilter: undefined,
+            isArabic: isArabic(),
+            activeFilters: {},
+            isReset: false,
+            defaultFilters: false
+        };
+
+        this.timer = null;
+    }
 
     static getDerivedStateFromProps(props, state) {
         const {
             activeOverlay,
-            filters
+            filters = {}
         } = props;
         const { activeFilter } = state;
+
+        if (!activeOverlay) {
+            document.body.style.overflow = 'visible';
+        }
 
         if (isMobile.any()) {
             if (!activeFilter) {
@@ -67,6 +78,16 @@ class PLPFilters extends PureComponent {
         });
     }
 
+    delayFilterUpdate() {
+        clearTimeout(this.timer);
+        // eslint-disable-next-line no-magic-numbers
+        this.timer = setTimeout(() => this.updateFilters(), 2000);
+    }
+
+    setDefaultFilters = () => {
+        this.setState({ defaultFilters: true });
+    };
+
     changeActiveFilter = (newFilter) => {
         this.setState({ activeFilter: newFilter });
     };
@@ -80,10 +101,11 @@ class PLPFilters extends PureComponent {
     };
 
     renderFilters() {
-        const { filters } = this.props;
+        const { filters = {} } = this.props;
+
         return Object.entries(filters).map((filter) => {
             if (filter[0] === SIZES && !isMobile.any()) {
-                const { data } = filter[1];
+                const { data = {} } = filter[1];
                 return Object.keys(data).map((size) => this.renderFilter([size, data[size]]));
             }
 
@@ -92,13 +114,9 @@ class PLPFilters extends PureComponent {
     }
 
     renderQuickFilters() {
-        const { filters } = this.props;
+        const { filters = {} } = this.props;
 
         return Object.entries(filters).map(this.renderQuickFilter.bind(this));
-    }
-
-    renderPlaceholder() {
-        return 'placeholder while loading filters...';
     }
 
     hidePopUp = () => {
@@ -108,8 +126,6 @@ class PLPFilters extends PureComponent {
             hideActiveOverlay();
             goToPreviousNavigationState();
         }
-
-        document.body.style.overflow = 'visible';
     };
 
     resetFilters = () => {
@@ -120,28 +136,32 @@ class PLPFilters extends PureComponent {
             activeOverlay
         } = this.props;
 
+        clearTimeout(this.timer);
+
         if (activeOverlay === 'PLPFilter') {
             hideActiveOverlay();
             goToPreviousNavigationState();
         }
 
-        this.setState({ activeFilters: {}, isReset: true });
+        this.setState({ activeFilters: {}, isReset: true, defaultFilters: false });
 
         onReset();
     };
 
     onShowResultButton = () => {
-        const { activeFilters } = this.state;
-        Object.keys(activeFilters || {}).map((key) => WebUrlParser.setParam(key, activeFilters[key]));
+        const { activeFilters = {} } = this.state;
+        Object.keys(activeFilters).map((key) => WebUrlParser.setParam(key, activeFilters[key]));
         this.hidePopUp();
     };
 
     updateFilters = () => {
-        const { activeFilters } = this.state;
+        const { activeFilters = {} } = this.state;
         Object.keys(activeFilters).map((key) => WebUrlParser.setParam(key, activeFilters[key]));
     };
 
     renderSeeResultButton() {
+        const { productsCount } = this.props;
+        const count = ` ( ${productsCount} )`;
         return (
             <button
               block="Content"
@@ -149,6 +169,7 @@ class PLPFilters extends PureComponent {
               onClick={ this.onShowResultButton }
             >
                 { __('show result') }
+                { count }
             </button>
         );
     }
@@ -195,7 +216,7 @@ class PLPFilters extends PureComponent {
         const { isArabic } = this.state;
 
         if (isLoading) {
-            return this.renderPlaceholder();
+            this.updateFilters();
         }
 
         return (
@@ -231,7 +252,7 @@ class PLPFilters extends PureComponent {
     }
 
     renderFiltersCount() {
-        const { activeFilters } = this.props;
+        const { activeFilters = {} } = this.props;
         const { count } = activeFilters ? Object.entries(activeFilters).reduce((prev, [_key, value]) => ({
             count: prev.count + value.length
         }), { count: 0 })
@@ -294,7 +315,12 @@ class PLPFilters extends PureComponent {
     }
 
     renderFilter = ([key, filter]) => {
-        const { activeFilter, isReset, activeFilters } = this.state;
+        const {
+            activeFilter,
+            isReset,
+            activeFilters,
+            defaultFilters
+        } = this.state;
 
         return (
             <PLPFilter
@@ -306,6 +332,9 @@ class PLPFilters extends PureComponent {
               isReset={ isReset }
               resetParentState={ this.resetParentState }
               parentActiveFilters={ activeFilters }
+              updateFilters={ this.updateFilters }
+              setDefaultFilters={ this.setDefaultFilters }
+              defaultFilters={ defaultFilters }
             />
         );
     };
@@ -317,6 +346,10 @@ class PLPFilters extends PureComponent {
     handleCallback = (initialFacetKey, facet_value, checked, isRadio, isQuickFilters) => {
         const { activeFilters } = this.state;
         const filterArray = activeFilters[initialFacetKey];
+
+        if (isMobile.any()) {
+            this.delayFilterUpdate();
+        }
 
         if (!isRadio) {
             if (checked) {
@@ -354,10 +387,10 @@ class PLPFilters extends PureComponent {
     };
 
     select = (isQuickFilters) => {
-        const { activeFilters } = this.state;
+        const { activeFilters = {} } = this.state;
 
         if (!isMobile.any() || isQuickFilters) {
-            Object.keys(activeFilters || {}).map((key) => WebUrlParser.setParam(key, activeFilters[key]));
+            Object.keys(activeFilters).map((key) => WebUrlParser.setParam(key, activeFilters[key]));
         }
     };
 

@@ -24,7 +24,7 @@ export const getStaticFile = async (key, TemplateParamsOverride = {}) => {
         $LOCALE: locale,
         $GENDER: gender,
         ...TemplateParamsOverride
-    };
+    } || {};
 
     const template = staticFiles[key];
 

@@ -36,7 +36,7 @@ class MyAccountCancelCreate extends MyAccountReturnCreate {
     }
 
     renderOrderItems() {
-        const { items, onFormSubmit } = this.props;
+        const { items = [], onFormSubmit } = this.props;
 
         return (
             <Form id="create-cancel" onSubmitSuccess={ onFormSubmit }>

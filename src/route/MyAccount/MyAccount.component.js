@@ -92,6 +92,7 @@ export class MyAccount extends SourceMyAccount {
             changeActiveTab,
             isSignedIn
         } = this.props;
+        const { pathname = '' } = location;
 
         const { isArabic } = this.state;
 
@@ -100,7 +101,10 @@ export class MyAccount extends SourceMyAccount {
         }
 
         const TabContent = this.renderMap[activeTab];
-        const { name, alternativePageName } = tabMap[activeTab];
+        // eslint-disable-next-line no-unused-vars
+        const { name, alternativePageName, alternateName } = tabMap[activeTab];
+        const isCancel = pathname.includes('/return-item/cancel');
+
         return (
             <ContentWrapper
               label={ __('My Account page') }
@@ -114,7 +118,11 @@ export class MyAccount extends SourceMyAccount {
                 />
                 <div block="MyAccount" elem="TabContent">
                     { alternativePageName === 'Club Apparel Loyalty' || name === 'Club Apparel Loyalty'
-                        ? null : (<h1 block="MyAccount" elem="Heading">{ alternativePageName || name }</h1>) }
+                        ? null : (
+                            <h1 block="MyAccount" elem="Heading">
+                                { isCancel ? alternateName : alternativePageName || name }
+                            </h1>
+                        ) }
                     <TabContent />
                 </div>
             </ContentWrapper>

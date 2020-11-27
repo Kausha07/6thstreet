@@ -86,7 +86,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
         });
     }
 
-    estimateShipping(address, isValidted) {
+    estimateShipping(address = {}, isValidted) {
         const { estimateShipping, setLoading } = this.props;
         const {
             country_id,
@@ -125,29 +125,47 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
             selectedCustomerAddressId,
             selectedShippingMethod
         } = this.state;
-        const { setLoading } = this.props;
+        const { setLoading, showNotification } = this.props;
         const shippingAddress = selectedCustomerAddressId
             ? this._getAddressById(selectedCustomerAddressId)
             : trimAddressFields(fields);
         const addressForValidation = isSignedIn() ? shippingAddress : fields;
+        const validationResult = this.validateAddress(addressForValidation);
 
-        this.validateAddress(addressForValidation).then((response) => {
+        if (!validationResult) {
+            showNotification('error', __('Something went wrong.'))
+        }
+
+        validationResult.then((response) => {
             const { success } = response;
 
             if (success && !selectedShippingMethod) {
-                this.estimateShipping(addressForValidation, true).then((response) => {
+                const estimationResult = this.estimateShipping(addressForValidation, true);
+                
+                if (!estimationResult) {
+                    showNotification('error', __('Something went wrong.'))
+                }
+                
+                estimationResult.then((response) => {
                     if (typeof response !== 'undefined') {
-                        const { data } = response;
-                        const { available } = data ? data[0] : { available: false };
+                        const { data = [] } = response;
 
-                        if (available) {
-                            this.setState({
-                                selectedShippingMethod: response.data[0]
-                            }, () => this.processDelivery(fields));
+                        if (data.length !== 0) {
+                            const { available } = data ? data[0] : { available: false };
+
+                            if (available) {
+                                this.setState({
+                                    selectedShippingMethod: response.data[0]
+                                }, () => this.processDelivery(fields));
+                            } else {
+                                const { error } = response;
+                                this.handleError(error);
+                            }
                         } else {
-                            const { error } = response;
-                            this.handleError(error);
+                            setLoading(false);
+                            showNotification('error', __('We can\'t ship products to selected address'))
                         }
+                        
                     } else {
                         setLoading(false);
                     }
@@ -163,8 +181,8 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     handleError(response) {
         const { showNotification, setLoading } = this.props;
 
-        const { parameters, message } = response;
-        const formattedParams = parameters ? capitalize(parameters[0]) : 'something';
+        const { parameters, message = '' } = response;
+        const formattedParams = parameters ? capitalize(parameters[0]) : 'Address';
 
         showNotification('error', `${ formattedParams } ${ __('is not valid') }. ${ message }`);
         setLoading(false);
@@ -192,17 +210,18 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
             region,
             street,
             country_id,
-            telephone
+            telephone,
+            postcode
         } = shippingAddress;
 
         const shippingAddressMapped = {
             ...shippingAddress,
             street: Array.isArray(street) ? street[0] : street,
-            area: region ?? region_id,
+            area: region ?? region_id ?? postcode,
             country_code: country_id,
             phone: telephone,
             email: isSignedIn() ? email : guestEmail,
-            region: region ?? region_id,
+            region: region ?? region_id ?? postcode,
             region_id: 0
         };
 

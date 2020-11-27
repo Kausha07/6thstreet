@@ -25,7 +25,7 @@ class SearchPage extends PLP {
 
     render() {
         return (
-            <main block="PLP">
+            <main block="SearchPage">
                 <ContentWrapper
                   label={ __('Product List Page') }
                 >

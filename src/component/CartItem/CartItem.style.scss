@@ -25,9 +25,13 @@
     --header-color: var(--cart-item-actions-color);
 
     border-top: 1px solid var(--Gallery);
-    margin: 1rem;
+    margin: 0;
     font-weight: var(--fw-regular);
     min-height: 140px;
+
+    @include desktop {
+        margin: 1rem;
+    }
 
     &:first-of-type {
         border-top: none;
@@ -65,9 +69,11 @@
 
     &-Content {
         height: auto;
+        width: 60%;
 
         @include desktop() {
             height: 130px;
+            width: 100%;
         }
 
         &_isLikeTable {
@@ -80,6 +86,7 @@
     }
 
     &-Wrapper {
+        width: 100%;
         display: grid;
         grid-template-columns: auto auto;
         background: var(--cart-item-background);
@@ -313,21 +320,6 @@
             span {
                 @include mobile {
                     top: -1px;
-                }
-            }
-        }
-    }
-}
-
-.CartPage {
-    &-Wrapper { 
-        .CartItem-Wrapper {
-            .CartItem-Picture_isCartPage {
-                width: 130px;
-    
-                @include mobile {
-                    width: 100%;
-                    height: 100%;
                 }
             }
         }

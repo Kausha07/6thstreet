@@ -8,8 +8,8 @@ import Link from 'Component/Link';
 import MyAccountOverlay from 'Component/MyAccountOverlay';
 import SuccessCheckoutItem from 'Component/SuccessCheckoutItem';
 import { TotalsType } from 'Type/MiniCart';
-import { isArabic } from 'Util/App';
-import { formatCurrency, roundPrice } from 'Util/Price';
+import { getDiscountFromTotals, isArabic } from 'Util/App';
+import { roundPrice } from 'Util/Price';
 
 import Apple from './icons/apple.png';
 import Cash from './icons/cash.png';
@@ -44,8 +44,6 @@ export class CheckoutSuccess extends PureComponent {
     };
 
     state = {
-        subTotalPrice: 0,
-        shippingPrice: 0,
         paymentTitle: '',
         isArabic: isArabic(),
         isPhoneVerification: true,
@@ -65,10 +63,6 @@ export class CheckoutSuccess extends PureComponent {
             clearInterval(this.interval);
             this.interval = setInterval(this.tick, delay);
         }
-    }
-
-    componentWillUnmount() {
-        this.timer = null;
     }
 
     tick = () => {
@@ -273,7 +267,7 @@ export class CheckoutSuccess extends PureComponent {
     };
 
     renderTotalsItems() {
-        const { initialTotals: { items, quote_currency_code }, incrementID } = this.props;
+        const { initialTotals: { items = [], quote_currency_code }, incrementID } = this.props;
 
         if (!items || items.length < 1) {
             return (
@@ -301,57 +295,9 @@ export class CheckoutSuccess extends PureComponent {
         );
     }
 
-    renderSubTotalPrice = () => {
-        const {
-            initialTotals: {
-                subtotal_incl_tax = 0
-            }
-        } = this.props;
-
-        if (subtotal_incl_tax !== 0) {
-            this.setState({ subTotalPrice: subtotal_incl_tax });
-        }
-        const { subTotalPrice } = this.state;
-
-        return (
-            <div block="Totals">
-                <div block="Totals" elem="Title">
-                    <span>{ __('Subtotal') }</span>
-                </div>
-                <div block="Totals" elem="Price">
-                    <div>{ this.renderPriceLine(subTotalPrice) }</div>
-                </div>
-            </div>
-        );
-    };
-
-    renderCashOnDeliveryFee = () => {
-        const {
-            initialTotals: {
-                shipping_fee = 0
-            }
-        } = this.props;
-
-        if (shipping_fee !== 0) {
-            this.setState({ shippingPrice: shipping_fee });
-        }
-        const { shippingPrice } = this.state;
-
-        return (
-            <div block="Totals">
-                <div block="Totals" elem="Title">
-                    <span>{ __('Cash on Delivery Fee') }</span>
-                </div>
-                <div block="Totals" elem="Price">
-                    <div>{ this.renderPriceLine(shippingPrice) }</div>
-                </div>
-            </div>
-        );
-    };
-
     renderTotalPrice() {
-        const { subTotalPrice, shippingPrice } = this.state;
-        const totalPrice = subTotalPrice + shippingPrice;
+        const { initialTotals: { total, quote_currency_code } } = this.props;
+        const fullPrice = `${quote_currency_code} ${total}`;
 
         return (
             <div block="Totals">
@@ -360,23 +306,58 @@ export class CheckoutSuccess extends PureComponent {
                     <span block="SubTitle">{ __('(Taxes included)') }</span>
                 </div>
                 <div block="Totals" elem="TotalPrice">
-                    <div>{ this.renderPriceLine(totalPrice) }</div>
+                    <div>{ fullPrice }</div>
                 </div>
             </div>
         );
     }
 
-    renderPriceLine(price) {
+    renderPriceLine(price, name) {
+        if (!price) {
+            return null;
+        }
         const { initialTotals: { quote_currency_code } } = this.props;
-        return `${formatCurrency(quote_currency_code)}${roundPrice(price)}`;
+        const fullPrice = `${quote_currency_code} ${roundPrice(price)}`;
+
+        return (
+            <div block="Totals">
+                <div block="Totals" elem="Title">
+                    <span>{ name }</span>
+                </div>
+                <div block="Totals" elem="Price">
+                    <div>{ fullPrice }</div>
+                </div>
+            </div>
+        );
     }
 
     renderTotals = () => {
         const { isArabic } = this.state;
+        const { initialTotals: { total_segments = [] } } = this.props;
+
         return (
             <div block="PriceTotals" mods={ { isArabic } }>
-                { this.renderSubTotalPrice() }
-                { this.renderCashOnDeliveryFee() }
+
+                { this.renderPriceLine(
+                    getDiscountFromTotals(total_segments, 'subtotal'),
+                    __('Subtotal')
+                ) }
+                { this.renderPriceLine(
+                    getDiscountFromTotals(total_segments, 'shipping'),
+                    __('Shipping')
+                ) }
+                { this.renderPriceLine(
+                    getDiscountFromTotals(total_segments, 'msp_cashondelivery'),
+                    __('Cash on Delivery Fee')
+                ) }
+                { this.renderPriceLine(
+                    getDiscountFromTotals(total_segments, 'customerbalance'),
+                    __('Store Credit')
+                ) }
+                { this.renderPriceLine(
+                    getDiscountFromTotals(total_segments, 'clubapparel'),
+                    __('Club Apparel Redemption')
+                ) }
                 { this.renderTotalPrice() }
             </div>
         );
@@ -479,7 +460,7 @@ export class CheckoutSuccess extends PureComponent {
     renderPaymentTypeContent = () => {
         const {
             creditCardData: {
-                number,
+                number = '',
                 expDate,
                 cvv
             },

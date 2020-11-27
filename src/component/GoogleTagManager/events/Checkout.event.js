@@ -65,7 +65,7 @@ class CheckoutEvent extends BaseEvent {
      *
      * @return {{quantity: number, price: number, name: string, variant: string, id: string, category: string, brand: string, url: string}[]}
      */
-    getProducts({ items }) {
+    getProducts({ items = {} }) {
         const products = Object.values(items).reduce((acc, item) => (
             [
                 ...acc,

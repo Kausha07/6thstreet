@@ -51,7 +51,7 @@ class WishlistIcon extends PureComponent {
     };
 
     renderIcon() {
-        const { items } = this.props;
+        const { items = [] } = this.props;
         const blackMod = items.some(this.isBlack);
 
         return (

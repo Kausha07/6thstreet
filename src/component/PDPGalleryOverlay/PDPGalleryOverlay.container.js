@@ -83,7 +83,7 @@ export class PDPGalleryOverlayContainer extends PureComponent {
 
     getCrumbs() {
         // TODO: determine if has video append it here
-        const galleryCrumbs = Object.keys(this.getGallery());
+        const galleryCrumbs = Object.keys(this.getGallery() || {});
 
         return galleryCrumbs;
     }

@@ -60,7 +60,7 @@
 
     &-Wrapper {
         display: grid;
-        grid-template-columns: auto auto;
+        grid-template-columns: 110px calc(87% - 110px);
         background: var(--successcheckout-item-background);
         padding-top: 15px;
         text-transform: capitalize;

@@ -85,7 +85,7 @@ class Product {
      * @param item
      * @param isVariantPassed
      */
-    static getItemData(item, isVariantPassed = false) {
+    static getItemData(item = {}, isVariantPassed = false) {
         if (item && Object.values(item).length) {
             const { product = {}, sku = '' } = item;
             const configurableVariantIndex = this.getSelectedVariantIndex(product, sku);
@@ -146,15 +146,15 @@ class Product {
         GTMInstance.setGroupedProducts(groupedProducts);
     }
 
-    static getArrayOfGroupedProductChildrenSku(items) {
+    static getArrayOfGroupedProductChildrenSku(items = []) {
         return items.reduce((acc, { product: { sku } }) => [...acc, sku], []);
     }
 
     static updateGroupedProduct(childSku, price) {
         const GTMInstance = GoogleTagManager.getInstance();
-        const groupedProducts = GTMInstance.getGroupedProducts();
+        const groupedProducts = GTMInstance.getGroupedProducts() || {};
         const skuOfProductToUpdate = Object.keys(groupedProducts).find((sku) => {
-            const { items } = groupedProducts[sku];
+            const { items = [] } = groupedProducts[sku];
             return items.includes(childSku);
         });
 
@@ -188,7 +188,7 @@ class Product {
 
         const result = { ...groupedProducts2 };
 
-        Object.keys(groupedProducts1).forEach((key) => {
+        Object.keys(groupedProducts1 || {}).forEach((key) => {
             if (groupedProducts2[key]) {
                 result[key].data[GROUPED_PRODUCT_PRICE] += groupedProducts1[key].data[GROUPED_PRODUCT_PRICE];
             } else {
