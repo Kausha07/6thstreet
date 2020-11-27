@@ -83,7 +83,7 @@ export class PDPContainer extends PureComponent {
             isLoading,
             setIsLoading,
             product: { sku } = {},
-            menuCategories
+            menuCategories = []
         } = this.props;
         const currentIsLoading = this.getIsLoading();
         const { id: prevId } = prevProps;
@@ -118,21 +118,21 @@ export class PDPContainer extends PureComponent {
     updateBreadcrumbs() {
         const {
             updateBreadcrumbs,
-            product: { categories, name, sku },
+            product: { categories = {}, name, sku },
             setGender,
             nbHits,
             menuCategories
         } = this.props;
 
         if (nbHits === 1) {
-            const categoriesLastLevel = categories[Object.keys(categories)[Object.keys(categories).length - 1]][0]
-                .split(' /// ');
+            const rawCategoriesLastLevel = categories[Object.keys(categories)[Object.keys(categories).length - 1]][0];
+            const categoriesLastLevel = rawCategoriesLastLevel ? rawCategoriesLastLevel.split(' /// ') : [];
 
-            const urlArray = getBreadcrumbsUrl(categoriesLastLevel, menuCategories);
+            const urlArray = getBreadcrumbsUrl(categoriesLastLevel, menuCategories) || [];
             if (urlArray.length === 0) {
                 categoriesLastLevel.map(() => urlArray.push('/'));
             }
-            const breadcrumbsMapped = getBreadcrumbs(categoriesLastLevel, setGender, urlArray);
+            const breadcrumbsMapped = getBreadcrumbs(categoriesLastLevel, setGender, urlArray) || [];
             const productBreadcrumbs = breadcrumbsMapped.reduce((acc, item) => {
                 acc.unshift(item);
 

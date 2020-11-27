@@ -6,13 +6,19 @@ import { ADD_ADDRESS, ADDRESS_POPUP_ID } from 'Component/MyAccountAddressPopup/M
 import {
     CheckoutBillingContainer as SourceCheckoutBillingContainer,
     mapDispatchToProps as sourceMapDispatchToProps,
-    mapStateToProps
+    mapStateToProps as sourceMapStateToProps
 } from 'SourceComponent/CheckoutBilling/CheckoutBilling.container';
 import CreditCardDispatcher from 'Store/CreditCard/CreditCard.dispatcher';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { showPopup } from 'Store/Popup/Popup.action';
 import BrowserDatabase from 'Util/BrowserDatabase';
 import { FIVE_MINUTES_IN_SECONDS } from 'Util/Request/QueryDispatcher';
+
+export const mapStateToProps = (state) => ({
+    ...sourceMapStateToProps(state),
+    processingRequest: state.CartReducer.processingRequest,
+    processingPaymentSelectRequest: state.CartReducer.processingPaymentSelectRequest
+});
 
 export const mapDispatchToProps = (dispatch) => ({
     ...sourceMapDispatchToProps(dispatch),
@@ -28,7 +34,9 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
         setTabbyWebUrl: PropTypes.func.isRequired,
         setPaymentCode: PropTypes.func.isRequired,
         showPopup: PropTypes.func.isRequired,
-        setCheckoutCreditCardData: PropTypes.func.isRequired
+        setCheckoutCreditCardData: PropTypes.func.isRequired,
+        processingRequest: PropTypes.bool.isRequired,
+        processingPaymentSelectRequest: PropTypes.bool.isRequired
     };
 
     containerFunctions = {
@@ -83,7 +91,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
                 setCheckoutCreditCardData
             } = this.props;
 
-            const { number, expDate, cvv } = this.state;
+            const { number = '', expDate, cvv } = this.state;
             setCheckoutCreditCardData(number, expDate, cvv);
 
             getCardType(number.substr('0', '6')).then(

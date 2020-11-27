@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/prefer-default-export
-export const groupByName = (brands) => {
+export const groupByName = (brands = []) => {
     const numericGroup = '0-9';
 
     return brands.reduce((acc, brand) => {

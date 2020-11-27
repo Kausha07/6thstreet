@@ -73,7 +73,7 @@ class CountrySwitcher extends PureComponent {
             countrySelectOptions
         } = this.props;
 
-        const countryName = countrySelectOptions.filter((obj) => obj.id === country);
+        const countryName = countrySelectOptions.filter((obj) => obj.id === country) || [];
         if (countryName.length > 0) {
             return countryName[0];
         }

@@ -58,7 +58,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
     };
 
     renderCircles() {
-        const { items } = this.props;
+        const { items = [] } = this.props;
         return (
             <Slider showCrumbs>
                 { items.map(this.renderCircle) }

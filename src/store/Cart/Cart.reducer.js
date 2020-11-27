@@ -3,10 +3,13 @@ import BrowserDatabase from 'Util/BrowserDatabase';
 
 import {
     PROCESSING_CART_REQUEST,
+    PROCESSING_PAYMENT_SELECT_REQUEST,
     REMOVE_CART_ITEM,
     REMOVE_CART_ITEMS,
+    RESET_CART,
     SET_CART_ID,
     SET_CART_TOTALS,
+    SET_MINICART_OPEN,
     UPDATE_CART_ITEM,
     UPDATE_TOTALS
 } from './Cart.action';
@@ -20,7 +23,8 @@ export const getInitialState = () => ({
     // TODO set initial data to empty cart structure???
     cartTotals: {},
     isLoading: true,
-    cartItems: BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || []
+    cartItems: BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [],
+    isMinicartOpen: false
 });
 
 const updateCartItem = (cartItems, newItem) => {
@@ -47,7 +51,7 @@ const removeCartItem = (cartItems, itemToRemove) => {
 
 export const CartReducer = (state = getInitialState(), action) => {
     const {
-        type, cartId, cartItem, cartTotals
+        type, cartId, cartItem, cartTotals, requestStatus
     } = action;
     const { cartItems } = state;
     const ONE_DAY_IN_SECONDS = 86400;
@@ -72,6 +76,12 @@ export const CartReducer = (state = getInitialState(), action) => {
         return {
             ...state,
             processingRequest: true
+        };
+
+    case PROCESSING_PAYMENT_SELECT_REQUEST:
+        return {
+            ...state,
+            processingPaymentSelectRequest: requestStatus
         };
 
     case SET_CART_TOTALS:
@@ -158,7 +168,25 @@ export const CartReducer = (state = getInitialState(), action) => {
             cartItems: []
         };
 
+    case RESET_CART:
+        BrowserDatabase.deleteItem(
+            CART_ITEMS_CACHE_KEY
+        );
+        BrowserDatabase.deleteItem(
+            CART_ID_CACHE_KEY
+        );
+
+        return {
+            ...getInitialState()
+        };
     case UPDATE_TOTALS:
+    case SET_MINICART_OPEN:
+        const { isMinicartOpen } = action;
+
+        return {
+            ...state,
+            isMinicartOpen
+        };
     default:
         return state;
     }

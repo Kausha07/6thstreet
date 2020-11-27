@@ -171,6 +171,7 @@
 
                 &.primary {
                     border-radius: 10px;
+                    width: 70%;
 
                     &:hover {
                         background-color: var(--white);
@@ -179,7 +180,6 @@
             }
 
             &-Text {
-                height: 60px;
                 font-family: var(--avenir-demi-font);
                 margin: 0 60px;
                 display: grid;
@@ -196,6 +196,7 @@
                 }
 
                 &-Phone {
+                    width: 100%;
                     button {
                         text-decoration: underline;
                         margin-top: -5px;
@@ -220,7 +221,7 @@
                 margin-top: 40px;
 
                 button {
-                    width: 70%;
+                    width: 100%;
 
                     @include desktop() {
                         padding: 0 50px;
@@ -244,11 +245,9 @@
                     }
 
                     &-Code {
-                        margin-top: 30px;
-
                         input {
                             text-align: center;
-                            width: 50%;
+                            width: calc(100% - 15px);
                             background-color: transparent;
                             border: 0;
                             letter-spacing: 15px;
@@ -405,7 +404,7 @@
                 background-color: var(--lightest-gray);
                 border-radius: 10px;
                 display: grid;
-                grid-template-columns: 15% 85%;
+                grid-template-columns: 15% 70% 15%;
                 grid-auto-flow: column;
                 height: 70px;
 

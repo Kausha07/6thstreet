@@ -80,6 +80,9 @@
           line-height: 18px;
           text-align: left;
           transition: 0;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
 
         &:after {
             position: absolute;

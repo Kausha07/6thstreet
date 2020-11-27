@@ -6,8 +6,13 @@
         padding: 0 5px;
 
         &:last-of-type {
-            display: inline-block;
-            width: 50%;
+            padding-bottom: 30px;
+
+            @include desktop() {
+                display: inline-block;
+                padding-bottom: 0;
+                width: 50%;
+            }
         }
     }
 }

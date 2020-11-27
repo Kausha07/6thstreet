@@ -27,9 +27,14 @@ class WelcomeScreenContainer extends PureComponent {
         setLanguage: PropTypes.func.isRequired,
         setCountry: PropTypes.func.isRequired,
         updateStoreCredits: PropTypes.func.isRequired,
+        checkWizardLang: PropTypes.func,
         config: Config.isRequired,
         language: PropTypes.string.isRequired,
         country: PropTypes.string.isRequired
+    };
+
+    static defaultProps = {
+        checkWizardLang: () => {}
     };
 
     containerFunctions = {
@@ -54,7 +59,12 @@ class WelcomeScreenContainer extends PureComponent {
     }
 
     onLanguageSelect(value) {
-        const { country, language, setLanguage } = this.props;
+        const {
+            country,
+            language,
+            setLanguage,
+            checkWizardLang
+        } = this.props;
 
         if (language && country) {
             window.location.href = location.origin.replace(
@@ -65,6 +75,8 @@ class WelcomeScreenContainer extends PureComponent {
         } else {
             setLanguage(value);
         }
+
+        checkWizardLang();
     }
 
     containerProps = () => {

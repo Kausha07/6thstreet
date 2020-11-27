@@ -159,7 +159,7 @@ class PDPGalleryOverlay extends PureComponent {
 
     renderCrumbs() {
         const {
-            crumbs,
+            crumbs = [],
             currentIndex, onSliderChange,
             isZoomEnabled
         } = this.props;
@@ -189,7 +189,7 @@ class PDPGalleryOverlay extends PureComponent {
     }
 
     renderGallery() {
-        const { gallery, isGalleryEmpty } = this.props;
+        const { gallery = [], isGalleryEmpty } = this.props;
 
         if (gallery[0] !== undefined && !isGalleryEmpty) {
             return gallery.map(this.renderImage);
@@ -200,7 +200,7 @@ class PDPGalleryOverlay extends PureComponent {
 
     renderSlider() {
         const {
-            gallery,
+            gallery = [],
             currentIndex,
             onSliderChange,
             isZoomEnabled

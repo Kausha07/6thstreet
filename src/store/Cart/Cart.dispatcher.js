@@ -22,10 +22,10 @@ import Logger from 'Util/Logger';
 export const GUEST_QUOTE_ID = 'guest_quote_id';
 
 export class CartDispatcher {
-    async getCart(dispatch) {
+    async getCart(dispatch, isNewCart = false) {
         const { Cart: { cartId } } = getStore().getState();
 
-        if (!cartId) {
+        if (!cartId || isNewCart) {
             try {
                 const { data: requestedCartId = null } = await createCart();
 

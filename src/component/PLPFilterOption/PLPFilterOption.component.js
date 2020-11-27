@@ -4,6 +4,7 @@ import { createRef, PureComponent } from 'react';
 import Field from 'Component/Field';
 import { FilterOption } from 'Util/API/endpoint/Product/Product.type';
 import { isArabic } from 'Util/App';
+import { SPECIAL_COLORS } from 'Util/Common';
 import isMobile from 'Util/Mobile';
 
 import './PLPFilterOption.style';
@@ -12,12 +13,18 @@ class PLPFilterOption extends PureComponent {
     static propTypes = {
         option: FilterOption.isRequired,
         isRadio: PropTypes.bool,
-        parentCallback: PropTypes.func
+        defaultFilters: PropTypes.bool,
+        parentCallback: PropTypes.func,
+        updateFilters: PropTypes.func,
+        setDefaultFilters: PropTypes.func
     };
 
     static defaultProps = {
         isRadio: false,
-        parentCallback: () => {}
+        defaultFilters: false,
+        parentCallback: () => {},
+        updateFilters: () => {},
+        setDefaultFilters: () => {}
     };
 
     fieldRef = createRef();
@@ -90,9 +97,21 @@ class PLPFilterOption extends PureComponent {
     }
 
     renderMobileField(facet_value, initialFacetKey, checked, onSelectChecked) {
-        const { isRadio } = this.props;
+        const {
+            isRadio,
+            updateFilters,
+            setDefaultFilters,
+            defaultFilters
+        } = this.props;
 
+        const defaultCheck = !!(facet_value === 'recommended' && initialFacetKey === 'sort');
         const type = isRadio ? 'radio' : 'checkbox';
+
+        if (!defaultFilters && defaultCheck) {
+            this.handleClick();
+            updateFilters();
+            setDefaultFilters();
+        }
 
         return (
             <Field
@@ -106,7 +125,7 @@ class PLPFilterOption extends PureComponent {
               id={ facet_value + initialFacetKey }
               name={ initialFacetKey }
               value={ facet_value }
-              defaultChecked={ checked || onSelectChecked }
+              defaultChecked={ defaultCheck || checked || onSelectChecked }
             />
         );
     }
@@ -128,11 +147,32 @@ class PLPFilterOption extends PureComponent {
     renderLabel() {
         const {
             option: {
-                label,
+                label = '',
                 facet_value,
+                facet_key,
                 product_count
             }
         } = this.props;
+
+        if (facet_key === 'colorfamily') {
+            const fixedColor = label.toLowerCase().replace(/ /g, '_');
+            const color = SPECIAL_COLORS[fixedColor] ? SPECIAL_COLORS[fixedColor] : fixedColor;
+
+            return (
+                <label
+                  block="PLPFilterOption"
+                  htmlFor={ facet_value }
+                >
+                    <span
+                      block="PLPFilterOption"
+                      elem="Color"
+                      style={ { backgroundColor: color } }
+                    />
+                    { label }
+                    { product_count && !isMobile.any() ? this.renderCount() : null }
+                </label>
+            );
+        }
 
         return (
             <label

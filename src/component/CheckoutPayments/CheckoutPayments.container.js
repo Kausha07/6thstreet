@@ -8,6 +8,7 @@ import {
     mapDispatchToProps as SourceMapDispatchToProps
 } from 'SourceComponent/CheckoutPayments/CheckoutPayments.container';
 import { getStore } from 'Store';
+import { processingPaymentSelectRequest } from 'Store/Cart/Cart.action';
 import CartDispatcher from 'Store/Cart/Cart.dispatcher';
 import CheckoutDispatcher from 'Store/Checkout/Checkout.dispatcher';
 import { showNotification } from 'Store/Notification/Notification.action';
@@ -24,7 +25,8 @@ export const mapDispatchToProps = (dispatch) => ({
     selectPaymentMethod: (code) => CheckoutDispatcher.selectPaymentMethod(dispatch, code),
     createTabbySession: (code) => CheckoutDispatcher.createTabbySession(dispatch, code),
     updateTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId),
-    showError: (message) => dispatch(showNotification('error', message))
+    showError: (message) => dispatch(showNotification('error', message)),
+    finishPaymentRequest: (status) => dispatch(processingPaymentSelectRequest(status))
 });
 
 export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
@@ -103,6 +105,7 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
         const { Cart: { cartId } } = getStore().getState();
 
         const {
+            finishPaymentRequest,
             onPaymentMethodSelect,
             setOrderButtonEnableStatus,
             selectPaymentMethod,
@@ -116,7 +119,9 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
         onPaymentMethodSelect(code);
         setOrderButtonEnableStatus(true);
         updateTotals(cartId);
-        selectPaymentMethod(code).catch(() => {
+        selectPaymentMethod(code).then(() => {
+            finishPaymentRequest();
+        }).catch(() => {
             const { showError } = this.props;
 
             showError(__('Something went wrong'));

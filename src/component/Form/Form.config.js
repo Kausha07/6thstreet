@@ -3,7 +3,7 @@
 export const MIN_PASSWORD_LENGTH = 6;
 
 export const validateEmail = ({ value }) => value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
-export const validateEmails = ({ value }) => value.split(',').every((email) => validateEmail({ value: email.trim() }));
+export const validateEmails = ({ value = '' }) => value.split(',').every((email) => validateEmail({ value: email.trim() }));
 export const validatePassword = ({ value }) => value.length >= MIN_PASSWORD_LENGTH;
 export const validateContainNumber = ({ value }) => /\d/.test(value);
 export const validateContainCapitalize = ({ value }) => /[A-Z]/.test(value);

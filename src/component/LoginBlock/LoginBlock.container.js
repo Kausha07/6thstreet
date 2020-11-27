@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import LoginBlock from './LoginBlock.component';
 
 const mapStateToProps = (state) => ({
-    config: state.MyAccountReducer.isSignedIn,
+    isSignedIn: state.MyAccountReducer.isSignedIn,
     language: state.AppState.language
 });
 
@@ -27,7 +27,6 @@ export class LoginBlockContainer extends PureComponent {
             <LoginBlock
               isSignedIn={ isSignedIn }
               language={ language }
-              name="Username"
             />
         );
     }

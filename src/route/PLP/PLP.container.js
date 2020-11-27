@@ -135,7 +135,7 @@ export class PLPContainer extends PureComponent {
     }
 
     componentDidMount() {
-        const { menuCategories } = this.props;
+        const { menuCategories = [] } = this.props;
 
         if (menuCategories.length !== 0) {
             this.updateBreadcrumbs();
@@ -145,7 +145,7 @@ export class PLPContainer extends PureComponent {
     }
 
     componentDidUpdate() {
-        const { isLoading, setIsLoading, menuCategories } = this.props;
+        const { isLoading, setIsLoading, menuCategories = [] } = this.props;
         const { isLoading: isCategoriesLoading } = this.state;
         const currentIsLoading = this.getIsLoading();
 
@@ -162,7 +162,7 @@ export class PLPContainer extends PureComponent {
         }
     }
 
-    capitalizeFirstLetter(string) {
+    capitalizeFirstLetter(string = '') {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
@@ -187,12 +187,12 @@ export class PLPContainer extends PureComponent {
                 : options['categories.level1'];
 
             if (breadcrumbLevels) {
-                const levelArray = breadcrumbLevels.split(' /// ');
-                const urlArray = getBreadcrumbsUrl(levelArray, menuCategories);
+                const levelArray = breadcrumbLevels.split(' /// ') || [];
+                const urlArray = getBreadcrumbsUrl(levelArray, menuCategories) || [];
                 if (urlArray.length === 0) {
                     levelArray.map(() => urlArray.push('/'));
                 }
-                const breadcrumbsMapped = getBreadcrumbs(levelArray, setGender, urlArray);
+                const breadcrumbsMapped = getBreadcrumbs(levelArray, setGender, urlArray) || [];
                 const productListBreadcrumbs = breadcrumbsMapped.reduce((acc, item) => {
                     acc.unshift(item);
 

@@ -278,7 +278,7 @@ class GoogleTagManager extends PureComponent {
      * Register GTM event handlers
      */
     registerEvents() {
-        this.events = Object.entries(GoogleTagManager.eventList).reduce((acc, [name, Event]) => {
+        this.events = Object.entries(GoogleTagManager.eventList || {}).reduce((acc, [name, Event]) => {
             acc[name] = new Event(name, this);
             acc[name].bindEvent();
 

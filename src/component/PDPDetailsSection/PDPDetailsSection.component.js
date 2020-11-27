@@ -54,7 +54,7 @@ class PDPDetailsSection extends PureComponent {
         );
     }
 
-    renderListItems(obj) {
+    renderListItems(obj = {}) {
         return Object.entries(obj).filter((item) => item[1] != null)
             .map((item) => this.renderListItem(item));
     }

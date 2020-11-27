@@ -12,11 +12,10 @@ import {
 } from 'SourceRoute/Checkout/Checkout.container';
 import { setGender } from 'Store/AppState/AppState.action';
 import {
-    removeCartItems
+    resetCart
 } from 'Store/Cart/Cart.action';
-import CartDispatcher from 'Store/Cart/Cart.dispatcher';
 // eslint-disable-next-line no-unused-vars
-import { CART_ID_CACHE_KEY, CART_ITEMS_CACHE_KEY } from 'Store/Cart/Cart.reducer';
+import CartDispatcher from 'Store/Cart/Cart.dispatcher';
 import CheckoutDispatcher from 'Store/Checkout/Checkout.dispatcher';
 import { updateMeta } from 'Store/Meta/Meta.action';
 import { hideActiveOverlay } from 'Store/Overlay/Overlay.action';
@@ -36,13 +35,12 @@ export const mapDispatchToProps = (dispatch) => ({
     getPaymentMethods: () => CheckoutDispatcher.getPaymentMethods(),
     sendVerificationCode: (phone) => CheckoutDispatcher.sendVerificationCode(dispatch, phone),
     getLastOrder: () => CheckoutDispatcher.getLastOrder(dispatch),
-    createEmptyCart: () => CartDispatcher.getCart(dispatch),
     hideActiveOverlay: () => dispatch(hideActiveOverlay()),
     updateStoreCredit: () => StoreCreditDispatcher.getStoreCredit(dispatch),
     setMeta: (meta) => dispatch(updateMeta(meta)),
     setGender: (gender) => dispatch(setGender(gender)),
-    removeCartItems: () => dispatch(removeCartItems()),
-    updateTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId)
+    resetCart: () => dispatch(resetCart()),
+    getCart: () => CartDispatcher.getCart(dispatch)
 });
 export const mapStateToProps = (state) => ({
     totals: state.CartReducer.cartTotals,
@@ -66,6 +64,19 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         updateTotals: PropTypes.func.isRequired
     };
 
+    containerFunctions = {
+        setLoading: this.setLoading.bind(this),
+        setDetailsStep: this.setDetailsStep.bind(this),
+        savePaymentInformation: this.savePaymentInformation.bind(this),
+        saveAddressInformation: this.saveAddressInformation.bind(this),
+        onShippingEstimationFieldsChange: this.onShippingEstimationFieldsChange.bind(this),
+        onEmailChange: this.onEmailChange.bind(this),
+        onCreateUserChange: this.onCreateUserChange.bind(this),
+        onPasswordChange: this.onPasswordChange.bind(this),
+        goBack: this.goBack.bind(this),
+        resetCart: this.resetCart.bind(this)
+    };
+
     constructor(props) {
         super(props);
 
@@ -73,7 +84,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             toggleBreadcrumbs,
             totals: {
                 is_virtual
-            }
+            },
+            totals
         } = props;
 
         toggleBreadcrumbs(false);
@@ -94,7 +106,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             isCreateUser: false,
             isGuestEmailSaved: false,
             isVerificationCodeSent: false,
-            lastOrder: {}
+            lastOrder: {},
+            initialTotals: totals
         };
     }
 
@@ -109,7 +122,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             history,
             showInfoNotification,
             guest_checkout = true,
-            totals,
+            totals = {},
             totals: {
                 items = []
             },
@@ -129,7 +142,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         }
 
         if (items.length !== 0) {
-            const mappedItems = checkProducts(items);
+            const mappedItems = checkProducts(items) || [];
 
             if (mappedItems.length !== 0) {
                 history.push('/cart');
@@ -151,7 +164,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         this.setState({ lastOrder: totals });
     }
 
-    onShippingEstimationFieldsChange(address) {
+    onShippingEstimationFieldsChange(address = {}) {
         const canEstimate = !Object.values(address).some((item) => item === undefined);
 
         if (!canEstimate) {
@@ -338,8 +351,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
         if (isSignedIn) {
             if (customer.isVerified !== '0') {
-                const code = customer.phone.slice(1, 4);
-                const mobile = customer.phone.slice(4);
+                const { phone = '' } = customer;
+                const code = phone.slice(1, 4);
+                const mobile = phone.slice(4);
+
                 sendVerificationCode({ mobile, code }).then(
                     (response) => {
                         this.setState({ isVerificationCodeSent: response.success });
@@ -348,8 +363,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                 );
             }
         } else {
-            const code = shippingAddress.phone.slice(1, 4);
-            const mobile = shippingAddress.phone.slice(4);
+            const { phone = '' } = shippingAddress;
+            const code = phone.slice(1, 4);
+            const mobile = phone.slice(4);
             sendVerificationCode({ mobile, code }).then(
                 (response) => {
                     this.setState({ isVerificationCodeSent: response.success });
@@ -360,7 +376,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
 
         BrowserDatabase.deleteItem(PAYMENT_TOTALS);
-        this.resetCart();
 
         this.setState({
             isLoading: false,
@@ -378,7 +393,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         const { getPaymentMethods } = this.props;
 
         getPaymentMethods().then(
-            ({ data }) => {
+            ({ data = [] }) => {
                 const availablePaymentMethods = data.reduce((acc, paymentMethod) => {
                     const { is_enabled } = paymentMethod;
 
@@ -451,13 +466,12 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     resetCart() {
         const { 
             updateStoreCredit,
-            removeCartItems, 
-            cartId,
-            updateTotals
+            resetCart,
+            getCart
         } = this.props;
 
-        removeCartItems();
-        updateTotals(cartId);
+        resetCart();
+        getCart();
         updateStoreCredit();
     }
 }

@@ -8,6 +8,7 @@
         ul:first-child {
             li {
                 padding: 0;
+                list-style-type: disc;
 
                 &::before {
                     content: none;

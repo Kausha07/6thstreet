@@ -43,7 +43,7 @@ class MyAccountMyWishlist extends PureComponent {
     };
 
     renderItems() {
-        const { items, isLoading } = this.props;
+        const { items = [], isLoading } = this.props;
 
         if (!items.length && !isLoading) {
             return this.renderNoItems();

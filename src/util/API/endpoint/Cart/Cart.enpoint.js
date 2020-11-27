@@ -46,3 +46,7 @@ export const removeCouponCode = ({ cartId, couponCode }) => MobileAPI.delete(
         coupon_code: couponCode
     }
 ) || {};
+
+export const removeCart = ({ cartId }) => MobileAPI.delete(
+    `/carts2/${cartId}`
+) || {};
