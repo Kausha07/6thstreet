@@ -29,7 +29,7 @@ class CountryMiniFlag extends PureComponent {
             'KW': '-70px'
         };
 
-        const left = label === 'SA' ? '-3px' : '-1px';
+        const left = '-1px';
         const flagValue = `${left} ${ flagValues[label]}`;
 
         return (
