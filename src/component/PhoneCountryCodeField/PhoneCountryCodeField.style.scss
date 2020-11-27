@@ -6,7 +6,8 @@
     .FieldSelect {
         &-Select {
             height: 60px;
-            padding-left: 30px;
+            padding-left: 40px;
+            padding-right: 30px;
 
             @include mobile {
                 font-size: 12px;
@@ -57,8 +58,8 @@
                 }
 
                 &-Select {
-                    padding-left: 34px;
-                    padding-right: 30px;
+                    padding-left: 30px;
+                    padding-right: 40px;
                     direction: ltr;
                 }
                 
