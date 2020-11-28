@@ -16,7 +16,12 @@ class DynamicContentBanner extends PureComponent {
                 height: PropTypes.string,
                 width: PropTypes.string
             })
-        ).isRequired
+        ).isRequired,
+        isMenu: PropTypes.bool
+    };
+
+    static defaultProps = {
+        isMenu: false
     };
 
     state = {
@@ -63,8 +68,9 @@ class DynamicContentBanner extends PureComponent {
 
     renderButton() {
         const { isMobile } = this.state;
+        const { isMenu } = this.props;
 
-        return isMobile ? null : (
+        return isMobile || !isMenu ? null : (
             <button>{ __('Shop now') }</button>
         );
     }
