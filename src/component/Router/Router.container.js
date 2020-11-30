@@ -9,7 +9,7 @@ import {
 } from 'SourceComponent/Router/Router.container';
 import { setCountry, setLanguage } from 'Store/AppState/AppState.action';
 import { isSignedIn, setAuthorizationToken, setMobileAuthorizationToken } from 'Util/Auth';
-import { getUrlParams } from 'Util/Url/Url';
+import { getCookie } from 'Util/Url/Url';
 
 export const MyAccountDispatcher = import(
     /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -47,18 +47,23 @@ export class RouterContainer extends SourceRouterContainer {
 
     componentDidMount() {
         const { requestCustomerData } = this.props;
-        const { search } = location;
-        const decodedParams = atob(search.substr(1));
+        const decodedParams = atob(getCookie('authData'));
 
         if (isSignedIn()) {
             requestCustomerData();
         } else if (decodedParams.match('mobileToken') && decodedParams.match('authToken')) {
-            const params = getUrlParams();
+            const params = decodedParams.split('&').reduce((acc, param) => {
+                acc[param.substr(0, param.indexOf('='))] = param.substr(param.indexOf('=') + 1);
+
+                return acc;
+            }, {});
+
             const { mobileToken } = params;
             const { authToken } = params;
 
             setMobileAuthorizationToken(mobileToken);
             setAuthorizationToken(authToken);
+
             requestCustomerData().then(() => {
                 window.location = '/';
             });
