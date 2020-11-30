@@ -36,6 +36,7 @@ import BrowserDatabase from 'Util/BrowserDatabase';
 import Event, { EVENT_GTM_GENERAL_INIT } from 'Util/Event';
 import { prepareQuery } from 'Util/Query';
 import { executePost, fetchMutation } from 'Util/Request';
+import { setCrossSubdomainCookie } from 'Util/Url/Url';
 
 export { CUSTOMER, ONE_MONTH_IN_SECONDS } from 'SourceStore/MyAccount/MyAccount.dispatcher';
 
@@ -82,7 +83,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         dispatch(updateCustomerDetails({}));
         dispatch(setStoreCredit(getStoreCreditInitialState()));
         dispatch(setClubApparel(getClubApparelInitialState()));
-
+        setCrossSubdomainCookie('authData', '', 1, true);
         Event.dispatch(EVENT_GTM_GENERAL_INIT);
     }
 

@@ -56,12 +56,13 @@ export const getUrlParams = (isEncoded = false) => {
     }, {});
 };
 
-export const setCrossSubdomainCookie = (name, value, days) => {
+export const setCrossSubdomainCookie = (name, value, days, isExpired = false) => {
     const assign = `${name}=${escape(value)};`;
     const d = new Date();
     // eslint-disable-next-line no-magic-numbers
     d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
-    const expires = `expires=${d.toUTCString()};`;
+    const time = isExpired ? 'Thu, 01 Jan 1970 00:00:01 GMT' : d.toUTCString();
+    const expires = `expires=${time};`;
     const path = 'path=/;';
     const url = location.host;
     const domain = `domain=${url.substr(url.indexOf('.'))};`;
@@ -69,10 +70,14 @@ export const setCrossSubdomainCookie = (name, value, days) => {
 };
 
 export const getCookie = (name) => {
-    // eslint-disable-next-line no-useless-escape
-    const regex = new RegExp(`(?:(?:^|.*;\s*)${name}\s*\=\s*([^;]*).*$)|^.*$`);
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
 
-    return document.cookie.replace(regex, '$1');
+    if (parts.length === 2) {
+        return parts.pop().split(';').shift();
+    }
+
+    return '';
 };
 
 export const appendWithStoreCode = (pathname) => pathname;
