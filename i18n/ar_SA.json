@@ -638,5 +638,9 @@
     "Shipping Charges": "تكلفة التوصيل",
     "Delivery Cost": "تكلفة التوصيل",
     "Cancel an item": "إلغاء منتج",
-    "null": null
+    "null": null,
+    "Your cart is invalid": "حقيبة التسوق غير صالحة",
+    "This is a required field!": "هذه الخانة مطلوبه!",
+    "Reward": "مكافاة",
+    "Shop now": "تسوق الآن"
 }
