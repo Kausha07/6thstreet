@@ -116,7 +116,7 @@ export class MyAccount extends SourceMyAccount {
                   changeActiveTab={ changeActiveTab }
                   onSignOut={ this.handleSignOut }
                 />
-                <div block="MyAccount" elem="TabContent">
+                <div block="MyAccount" elem="TabContent" mods={ { isArabic } }>
                     { alternativePageName === 'Club Apparel Loyalty' || name === 'Club Apparel Loyalty'
                         ? null : (
                             <h1 block="MyAccount" elem="Heading">
