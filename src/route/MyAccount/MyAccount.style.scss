@@ -25,6 +25,13 @@
         @include desktop {
             width: 100%;
         }
+
+        &_isArabic {
+            @include after-mobile {
+                padding-left: 0;
+                padding-right: 105px;
+            }
+        }
     }
 
     .FieldForm-Fields {
