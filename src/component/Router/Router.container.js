@@ -8,7 +8,8 @@ import {
     WishlistDispatcher
 } from 'SourceComponent/Router/Router.container';
 import { setCountry, setLanguage } from 'Store/AppState/AppState.action';
-import { isSignedIn } from 'Util/Auth';
+import { isSignedIn, setAuthorizationToken, setMobileAuthorizationToken } from 'Util/Auth';
+import { getUrlParams } from 'Util/Url/Url';
 
 export const MyAccountDispatcher = import(
     /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -46,9 +47,21 @@ export class RouterContainer extends SourceRouterContainer {
 
     componentDidMount() {
         const { requestCustomerData } = this.props;
+        const { search } = location;
+        const decodedParams = atob(search.substr(1));
 
         if (isSignedIn()) {
             requestCustomerData();
+        } else if (decodedParams.match('mobileToken') && decodedParams.match('authToken')) {
+            const params = getUrlParams();
+            const { mobileToken } = params;
+            const { authToken } = params;
+
+            setMobileAuthorizationToken(mobileToken);
+            setAuthorizationToken(authToken);
+            requestCustomerData().then(() => {
+                window.location = '/';
+            });
         }
     }
 

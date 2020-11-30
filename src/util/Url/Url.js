@@ -45,4 +45,26 @@ export const getCountryFromUrl = () => {
     return '';
 };
 
+export const getUrlParams = (isEncoded = false) => {
+    const { search } = location;
+    const params = isEncoded ? search.substring(1).split('&') : atob(search.substring(1)).split('&');
+
+    return params.reduce((acc, param) => {
+        acc[param.substr(0, param.indexOf('='))] = param.substr(param.indexOf('=') + 1);
+
+        return acc;
+    }, {});
+};
+
+export const setCrossSubdomainCookie = (name, value, days) => {
+    const assign = `${name}=${escape(value)};`;
+    const d = new Date();
+    // eslint-disable-next-line no-magic-numbers
+    d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+    const expires = `expires=${d.toUTCString()};`;
+    const path = 'path=/;';
+    const domain = 'domain=.indvp.com;';
+    document.cookie = assign + expires + path + domain;
+};
+
 export const appendWithStoreCode = (pathname) => pathname;
