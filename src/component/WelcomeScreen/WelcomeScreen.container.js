@@ -60,15 +60,14 @@ class WelcomeScreenContainer extends PureComponent {
     onCountrySelect(value) {
         const { country, language } = this.props;
 
-        console.log('***', this.getCustomerData());
         if (country) {
             setCrossSubdomainCookie('authData', this.getCustomerData(), '1');
 
-            // window.location.href = location.origin.replace(
-            //     country.toLowerCase(),
-            //     value,
-            //     location.href
-            // );
+            window.location.href = location.origin.replace(
+                country.toLowerCase(),
+                value,
+                location.href
+            );
         } else {
             const locale = `${language}-${value.toLowerCase()}`;
 
