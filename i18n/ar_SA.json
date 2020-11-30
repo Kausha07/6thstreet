@@ -639,5 +639,12 @@
     "Delivery Cost": "تكلفة التوصيل",
     "Cancel an item": "إلغاء منتج",
     "null": null,
-    "Color:": "اللون"
+    "Color:": "اللون",
+    "Your cart is invalid": "حقيبة التسوق غير صالحة",
+    "This is a required field!": "هذه الخانة مطلوبه!",
+    "Reward": "مكافاة",
+    "Shop now": "تسوق الآن",
+    "sign in to access to your account and tract your order": null,
+    "Return Statement": "بيان الإرجاع",
+    "You have placed no returns.": "ليس لديك طلبات إرجاع"
 }

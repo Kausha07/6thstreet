@@ -26,7 +26,7 @@ class MyAccountReturnList extends PureComponent {
 
     renderNoReturns() {
         return (
-            <p>{ __('No returns') }</p>
+            <p>{ __('You have placed no returns.') }</p>
         );
     }
 
@@ -56,7 +56,6 @@ class MyAccountReturnList extends PureComponent {
 
         return (
             <div block="MyAccountReturnList" elem="Header">
-                <h2 block="MyAccountReturnList" elem="Heading">{ __('Return statement') }</h2>
                 <button block="MyAccountReturnList" elem="Button" onClick={ handleCreateClick }>
                     { __('Return an item') }
                 </button>

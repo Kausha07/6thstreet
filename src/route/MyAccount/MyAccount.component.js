@@ -103,6 +103,7 @@ export class MyAccount extends SourceMyAccount {
         const TabContent = this.renderMap[activeTab];
         // eslint-disable-next-line no-unused-vars
         const { name, alternativePageName, alternateName } = tabMap[activeTab];
+        const returnTitle = activeTab === RETURN_ITEM ? __('Return Statement') : null;
         const isCancel = pathname.includes('/return-item/cancel');
 
         return (
@@ -116,11 +117,12 @@ export class MyAccount extends SourceMyAccount {
                   changeActiveTab={ changeActiveTab }
                   onSignOut={ this.handleSignOut }
                 />
-                <div block="MyAccount" elem="TabContent">
+                <div block="MyAccount" elem="TabContent" mods={ { isArabic } }>
                     { alternativePageName === 'Club Apparel Loyalty' || name === 'Club Apparel Loyalty'
                         ? null : (
                             <h1 block="MyAccount" elem="Heading">
-                                { isCancel ? alternateName : alternativePageName || name }
+                                { isCancel ? alternateName : alternativePageName
+                                || (returnTitle || name) }
                             </h1>
                         ) }
                     <TabContent />
