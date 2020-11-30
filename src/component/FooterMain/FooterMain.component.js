@@ -134,7 +134,6 @@ class FooterMain extends PureComponent {
                                         </Link>
                                     </div>
                                     <span />
-                                    &nbsp;&nbsp;&nbsp;
                                     <div block="FooterMain" elem="SocialIcon">
                                         <Link
                                           to={ items.insta_href }
