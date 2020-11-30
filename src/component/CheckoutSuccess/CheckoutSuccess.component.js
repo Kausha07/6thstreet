@@ -504,8 +504,10 @@ export class CheckoutSuccess extends PureComponent {
             );
         }
 
-        if (paymentMethod.code.match(/tabby/)) {
-            this.setState({ paymentTitle: 'Tabby' });
+        if (paymentMethod.code.match(/tabby_installments/)) {
+            this.setState({ paymentTitle: 'Tabby: Pay in installments' });
+        } else if (paymentMethod.code.match(/tabby_checkout/)) {
+            this.setState({ paymentTitle: 'Tabby: Pay later' });
         } else if (paymentMethod.code.match(/apple/)) {
             this.setState({ paymentTitle: 'Apple' });
         } else if (paymentMethod.code.match(/cash/)) {
@@ -523,10 +525,11 @@ export class CheckoutSuccess extends PureComponent {
         );
     };
 
-    renderPaymentMethodIcon(paymentTitle) {
+    renderPaymentMethodIcon(paymentTitle = '') {
         const { isArabic } = this.state;
+        const formatedString = paymentTitle.split(':')[0];
 
-        switch (paymentTitle) {
+        switch (formatedString) {
         case 'Tabby':
             if (!isArabic) {
                 return <img src={ Tabby } alt={ paymentTitle } />;
