@@ -9,6 +9,7 @@ import { isArabic } from 'Util/App';
 
 import AddressIcon from './icons/address.png';
 import ClubIcon from './icons/club-apparel.png';
+import HeartIcon from './icons/heart-regular.svg';
 import LogoutIcon from './icons/logout.png';
 import OrdersIcon from './icons/orders.png';
 import ReturnIcon from './icons/return.svg';
@@ -63,6 +64,15 @@ export class MyAccountSignedInOverlay extends PureComponent {
         );
     }
 
+    renderWishlistLink() {
+        return (
+            <Link block="MyAccountSignedInOverlay" elem="LinkWishlist" to="/my-account/my-wishlist">
+                <Image src={ HeartIcon } mix={ { block: 'MyAccountSignedInOverlay', elem: 'Image' } } />
+                <span block="MyAccountSignedInOverlay" elem="LinkTitle">{ __('My Wishlist') }</span>
+            </Link>
+        );
+    }
+
     renderDeliveryLink() {
         return (
             <Link block="MyAccountSignedInOverlay" elem="LinkDelivery" to="/my-account/address-book">
@@ -90,6 +100,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
                 { this.renderMyAccountLink() }
                 { this.renderOrderHistoryLink() }
                 { this.renderReturnAnItemLink() }
+                { this.renderWishlistLink() }
                 { this.renderDeliveryLink() }
                 { this.renderLogoutButton() }
             </div>

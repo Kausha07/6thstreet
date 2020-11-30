@@ -5,6 +5,10 @@
 		display: flex;
 		margin-top: 20px;
 		padding: 25px 18px 0;
+
+		@include mobile {
+			display: none;
+		}
 	}
 
 	&-ItemCount {
@@ -33,6 +37,10 @@
 			border-top: none;
 			border-bottom: 1.5px solid var(--Gallery);
 		}
+
+		@include mobile {
+			display: none;
+		}
 	}
 
 	&-CartItemList {
@@ -60,7 +68,8 @@
             @include mobile {
                 padding: 1rem;
                 border: 0;
-                border-bottom: 1px solid var(--primary-divider-color);
+				border-bottom: 1px solid var(--primary-divider-color);
+				margin: 21px 0 15px 0;
             }
 
             span:nth-child(2) {
@@ -131,6 +140,10 @@
 	&-OrderTotals {
 		font-weight: var(--fw-regular);
 		padding: 0 18px;
+
+		@include mobile {
+			padding: 0;
+		}
 	}
 
 	&-SummaryItem {
@@ -160,6 +173,10 @@
 		font-size: 15px;
 		border-top: 1.5px solid var(--Gallery);
 		padding-bottom: 13px;
+
+		@include mobile {
+			display: none;
+		}
 
 		li {
 			grid-column: 1 / span 4;
@@ -191,11 +208,15 @@
 	}
 
 	@include before-desktop {
-		display: none;
+		display: block;
 	}
 
 	&-DiscountOptionWrapper {
 		padding: 0 18px;
+
+		@include mobile {
+			padding: 20px 0 0 0;
+		}
 	}
 
 	.Loader {
