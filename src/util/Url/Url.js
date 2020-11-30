@@ -63,8 +63,16 @@ export const setCrossSubdomainCookie = (name, value, days) => {
     d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
     const expires = `expires=${d.toUTCString()};`;
     const path = 'path=/;';
-    const domain = 'domain=.indvp.com;';
+    const url = location.host;
+    const domain = `domain=${url.substr(url.indexOf('.'))};`;
     document.cookie = assign + expires + path + domain;
+};
+
+export const getCookie = (name) => {
+    // eslint-disable-next-line no-useless-escape
+    const regex = new RegExp(`(?:(?:^|.*;\s*)${name}\s*\=\s*([^;]*).*$)|^.*$`);
+
+    return document.cookie.replace(regex, '$1');
 };
 
 export const appendWithStoreCode = (pathname) => pathname;

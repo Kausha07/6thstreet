@@ -51,7 +51,7 @@ class WelcomeScreenContainer extends PureComponent {
         if (mobileToken && authToken) {
             const params = `mobileToken=${mobileToken}&authToken=${authToken}`;
 
-            return `?${btoa(params)}`;
+            return btoa(params);
         }
 
         return '';
@@ -62,12 +62,12 @@ class WelcomeScreenContainer extends PureComponent {
 
         if (country) {
             setCrossSubdomainCookie('authData', this.getCustomerData(), '1');
-            console.log('***', document.cookie);
-            // window.location.href = location.origin.replace(
-            //     country.toLowerCase(),
-            //     value,
-            //     location.href
-            // );
+
+            window.location.href = location.origin.replace(
+                country.toLowerCase(),
+                value,
+                location.href
+            );
         } else {
             const locale = `${language}-${value.toLowerCase()}`;
 
