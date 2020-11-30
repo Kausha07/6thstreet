@@ -8,6 +8,7 @@ import {
     WishlistDispatcher
 } from 'SourceComponent/Router/Router.container';
 import { setCountry, setLanguage } from 'Store/AppState/AppState.action';
+import { updateCustomerDetails } from 'Store/MyAccount/MyAccount.action';
 import {
     deleteAuthorizationToken,
     deleteMobileAuthorizationToken,
@@ -38,7 +39,9 @@ export const mapDispatchToProps = (dispatch) => ({
     setCountry: (value) => dispatch(setCountry(value)),
     setLanguage: (value) => dispatch(setLanguage(value)),
     requestCustomerData: () => MyAccountDispatcher
-        .then(({ default: dispatcher }) => dispatcher.requestCustomerData(dispatch))
+        .then(({ default: dispatcher }) => dispatcher.requestCustomerData(dispatch)),
+    updateCustomerDetails: () => dispatch(updateCustomerDetails({}))
+
 });
 
 export class RouterContainer extends SourceRouterContainer {
@@ -54,7 +57,7 @@ export class RouterContainer extends SourceRouterContainer {
     };
 
     componentDidMount() {
-        const { requestCustomerData } = this.props;
+        const { requestCustomerData, updateCustomerDetails } = this.props;
         const decodedParams = atob(getCookie('authData'));
 
         if (decodedParams.match('mobileToken') && decodedParams.match('authToken')) {
@@ -85,8 +88,7 @@ export class RouterContainer extends SourceRouterContainer {
         } else {
             deleteAuthorizationToken();
             deleteMobileAuthorizationToken();
-
-            window.reload();
+            updateCustomerDetails();
         }
     }
 
