@@ -166,8 +166,8 @@ export class MyAccountOverlay extends PureComponent {
         const svg = (
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
+              width="18"
+              height="18"
               viewBox="0 -1 26 26"
             >
                 <path

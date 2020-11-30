@@ -8,6 +8,7 @@ import CreditCardTooltip from 'Component/CreditCardTooltip';
 import Field from 'Component/Field';
 import Form from 'Component/Form';
 import MyAccountAddressPopup from 'Component/MyAccountAddressPopup';
+import { getFinalPrice } from 'Component/Price/Price.config';
 import { BILLING_STEP } from 'Route/Checkout/Checkout.config';
 import {
     CheckoutBilling as SourceCheckoutBilling
@@ -233,12 +234,13 @@ export class CheckoutBilling extends SourceCheckoutBilling {
 
     renderTotals() {
         const {
-            totals: { total }
+            totals: { total, currency_code }
         } = this.props;
+        const grandTotal = getFinalPrice(total, currency_code);
 
         return (
             <div block="Checkout" elem="OrderTotals">
-                { this.renderPriceLine(total, __('Total Amount')) }
+                { this.renderPriceLine(grandTotal, __('Total Amount')) }
             </div>
         );
     }
