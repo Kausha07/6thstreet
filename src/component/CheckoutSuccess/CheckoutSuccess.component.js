@@ -8,7 +8,7 @@ import Field from 'Component/Field';
 import Form from 'Component/Form';
 import Link from 'Component/Link';
 import MyAccountOverlay from 'Component/MyAccountOverlay';
-import { FIXED_CURRENCIES } from 'Component/Price/Price.config';
+import { getFinalPrice } from 'Component/Price/Price.config';
 import SuccessCheckoutItem from 'Component/SuccessCheckoutItem';
 import { TotalsType } from 'Type/MiniCart';
 import { getDiscountFromTotals, isArabic } from 'Util/App';
@@ -299,8 +299,7 @@ export class CheckoutSuccess extends PureComponent {
 
     renderTotalPrice() {
         const { initialTotals: { total, quote_currency_code } } = this.props;
-        const fixedPrice = FIXED_CURRENCIES.includes(quote_currency_code);
-        const finalPrice = fixedPrice && !isNaN(total) ? Number(total).toFixed(3) : total;
+        const finalPrice = getFinalPrice(total, quote_currency_code);
         const fullPrice = `${quote_currency_code} ${finalPrice}`;
 
         return (
@@ -321,8 +320,8 @@ export class CheckoutSuccess extends PureComponent {
             return null;
         }
         const { initialTotals: { quote_currency_code } } = this.props;
-        const fixedPrice = FIXED_CURRENCIES.includes(quote_currency_code);
-        const finalPrice = fixedPrice && !isNaN(price) ? Number(price).toFixed(3) : price;
+        const finalPrice = getFinalPrice(price, quote_currency_code);
+
         const fullPrice = `${quote_currency_code} ${finalPrice}`;
 
         return (

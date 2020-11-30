@@ -30,7 +30,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
         return (
             <Link block="MyAccountSignedInOverlay" elem="LinkAccount" to="/my-account/dashboard">
                 <AccountIcon />
-                <span>{ __('My account') }</span>
+                <span block="MyAccountSignedInOverlay" elem="LinkTitle">{ __('My account') }</span>
             </Link>
         );
     }
@@ -39,7 +39,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
         return (
             <Link block="MyAccountSignedInOverlay" elem="LinkHistory" to="/my-account/my-orders">
                 <Image src={ OrdersIcon } mix={ { block: 'MyAccountSignedInOverlay', elem: 'Image' } } />
-                <span>{ __('Order history') }</span>
+                <span block="MyAccountSignedInOverlay" elem="LinkTitle">{ __('Order history') }</span>
             </Link>
         );
     }
@@ -48,7 +48,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
         return (
             <Link block="MyAccountSignedInOverlay" elem="ReturnAnItem" to="/my-account/return-item">
                 <Image src={ ReturnIcon } mix={ { block: 'MyAccountSignedInOverlay', elem: 'Image' } } />
-                <span>{ __('Return An Item') }</span>
+                <span block="MyAccountSignedInOverlay" elem="LinkTitle">{ __('Return An Item') }</span>
             </Link>
         );
     }
@@ -57,7 +57,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
         return (
             <Link block="MyAccountSignedInOverlay" elem="LinkClub" to="/my-account/club-apparel">
                 <Image src={ ClubIcon } mix={ { block: 'MyAccountSignedInOverlay', elem: 'Image' } } />
-                <span>{ __('Club apparel') }</span>
+                <span block="MyAccountSignedInOverlay" elem="LinkTitle">{ __('Club apparel') }</span>
                 <span block="MyAccountSignedInOverlay" elem="LinkClubBtn">Link Now</span>
             </Link>
         );
@@ -67,7 +67,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
         return (
             <Link block="MyAccountSignedInOverlay" elem="LinkDelivery" to="/my-account/address-book">
                 <Image src={ AddressIcon } mix={ { block: 'MyAccountSignedInOverlay', elem: 'Image' } } />
-                <span>{ __('Delivery addresses') }</span>
+                <span block="MyAccountSignedInOverlay" elem="LinkTitle">{ __('Delivery addresses') }</span>
             </Link>
         );
     }
@@ -78,7 +78,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
         return (
             <button block="MyAccountSignedInOverlay" elem="ButtonDelivery" onClick={ signOut }>
                 <Image src={ LogoutIcon } mix={ { block: 'MyAccountSignedInOverlay', elem: 'Image' } } />
-                <span>{ __('Logout') }</span>
+                <span block="MyAccountSignedInOverlay" elem="LinkTitle">{ __('Logout') }</span>
             </button>
         );
     }
