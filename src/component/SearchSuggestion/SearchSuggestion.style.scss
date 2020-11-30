@@ -173,12 +173,6 @@ root {
             width: 100%;
             display: block;
 
-            @include before-desktop {
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-
             span {
                 position: absolute;
                 right: 0;
@@ -194,6 +188,17 @@ root {
         @include before-desktop {
             color: black;
             text-transform: uppercase;
+        }
+    }
+
+    &-Recommended,
+    &-Brands {
+        a {
+            @include before-desktop {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
         }
     }
 
