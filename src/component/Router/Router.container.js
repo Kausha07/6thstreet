@@ -85,6 +85,10 @@ export class RouterContainer extends SourceRouterContainer {
         } else {
             deleteAuthorizationToken();
             deleteMobileAuthorizationToken();
+
+            requestCustomerData().then(() => {
+                window.location = '/';
+            });
         }
     }
 
