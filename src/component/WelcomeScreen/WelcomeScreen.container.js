@@ -6,6 +6,8 @@ import { setCountry, setLanguage } from 'Store/AppState/AppState.action';
 import StoreCreditDispatcher from 'Store/StoreCredit/StoreCredit.dispatcher';
 import { getCountriesForSelect, getCountryLocaleForSelect } from 'Util/API/endpoint/Config/Config.format';
 import { Config } from 'Util/API/endpoint/Config/Config.type';
+import { getAuthorizationToken, getMobileAuthorizationToken } from 'Util/Auth';
+import { setCrossSubdomainCookie } from 'Util/Url/Url';
 import { URLS } from 'Util/Url/Url.config';
 
 import WelcomeScreen from './WelcomeScreen.component';
@@ -42,10 +44,25 @@ class WelcomeScreenContainer extends PureComponent {
         onLanguageSelect: this.onLanguageSelect.bind(this)
     };
 
+    getCustomerData() {
+        const mobileToken = getMobileAuthorizationToken();
+        const authToken = getAuthorizationToken();
+
+        if (mobileToken && authToken) {
+            const params = `mobileToken=${mobileToken}&authToken=${authToken}`;
+
+            return btoa(params);
+        }
+
+        return '';
+    }
+
     onCountrySelect(value) {
         const { country, language } = this.props;
 
         if (country) {
+            setCrossSubdomainCookie('authData', this.getCustomerData(), '1');
+
             window.location.href = location.origin.replace(
                 country.toLowerCase(),
                 value,
