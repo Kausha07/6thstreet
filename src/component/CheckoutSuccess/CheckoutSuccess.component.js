@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-globals */
+/* eslint-disable no-magic-numbers */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
@@ -6,10 +8,10 @@ import Field from 'Component/Field';
 import Form from 'Component/Form';
 import Link from 'Component/Link';
 import MyAccountOverlay from 'Component/MyAccountOverlay';
+import { getFinalPrice } from 'Component/Price/Price.config';
 import SuccessCheckoutItem from 'Component/SuccessCheckoutItem';
 import { TotalsType } from 'Type/MiniCart';
 import { getDiscountFromTotals, isArabic } from 'Util/App';
-import { roundPrice } from 'Util/Price';
 
 import Apple from './icons/apple.png';
 import Cash from './icons/cash.png';
@@ -297,7 +299,8 @@ export class CheckoutSuccess extends PureComponent {
 
     renderTotalPrice() {
         const { initialTotals: { total, quote_currency_code } } = this.props;
-        const fullPrice = `${quote_currency_code} ${total}`;
+        const finalPrice = getFinalPrice(total, quote_currency_code);
+        const fullPrice = `${quote_currency_code} ${finalPrice}`;
 
         return (
             <div block="Totals">
@@ -317,7 +320,9 @@ export class CheckoutSuccess extends PureComponent {
             return null;
         }
         const { initialTotals: { quote_currency_code } } = this.props;
-        const fullPrice = `${quote_currency_code} ${roundPrice(price)}`;
+        const finalPrice = getFinalPrice(price, quote_currency_code);
+
+        const fullPrice = `${quote_currency_code} ${finalPrice}`;
 
         return (
             <div block="Totals">
