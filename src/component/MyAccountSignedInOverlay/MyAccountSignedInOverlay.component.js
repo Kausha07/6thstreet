@@ -58,6 +58,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
             <Link block="MyAccountSignedInOverlay" elem="LinkClub" to="/my-account/club-apparel">
                 <Image src={ ClubIcon } mix={ { block: 'MyAccountSignedInOverlay', elem: 'Image' } } />
                 <span>{ __('Club apparel') }</span>
+                <span block="MyAccountSignedInOverlay" elem="LinkClubBtn">Link Now</span>
             </Link>
         );
     }

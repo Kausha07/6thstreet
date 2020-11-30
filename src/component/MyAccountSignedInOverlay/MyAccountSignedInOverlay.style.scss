@@ -7,6 +7,16 @@
     top: 20px;
     transform: translateX(-50%);
 
+    span {
+        font-size: 13px;
+        vertical-align: middle;
+        font-weight: var(--fw-medium);
+
+        &:hover {
+            font-weight: var(--fw-demi);
+        }
+    }
+
     &::before {
         background: var(--white);
         border-top: 1px solid var(--color-gainsboro);
@@ -26,6 +36,19 @@
                 margin-right: 10px;
                 vertical-align: middle;
             }
+        }
+
+        &ClubBtn {
+            font-size: 10px !important;
+            background: #333;
+            line-height: initial;
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 2px;
         }
     }
 
@@ -58,11 +81,6 @@
         text-transform: none;
     }
 
-    span {
-        font-size: 13px;
-        vertical-align: middle;
-    }
-
     &_isArabic {
         .MyAccountSignedInOverlay {
             &-Link {
@@ -71,6 +89,11 @@
                         margin-left: 10px;
                         margin-right: unset;
                     }
+                }
+
+                &ClubBtn {
+                    right: unset;
+                    left: 0;
                 }
             }
 

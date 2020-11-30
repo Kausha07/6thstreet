@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import PropTypes from 'prop-types';
 
@@ -6,6 +7,7 @@ import CheckoutDeliveryOptions from 'Component/CheckoutDeliveryOptions';
 import Form from 'Component/Form';
 import Loader from 'Component/Loader';
 import MyAccountAddressPopup from 'Component/MyAccountAddressPopup';
+import { FIXED_CURRENCIES } from 'Component/Price/Price.config';
 import { SHIPPING_STEP } from 'Route/Checkout/Checkout.config';
 import {
     CheckoutShipping as SourceCheckoutShipping
@@ -60,13 +62,17 @@ export class CheckoutShipping extends SourceCheckoutShipping {
 
     renderTotals() {
         const {
-            totals: { subtotal }
+            totals: { subtotal, currency_code }
         } = this.props;
 
         if (subtotal !== {}) {
+            const fixedPrice = FIXED_CURRENCIES.includes(currency_code);
+            // eslint-disable-next-line no-restricted-globals
+            const finalPrice = fixedPrice && !isNaN(subtotal) ? Number(subtotal).toFixed(3) : subtotal;
+
             return (
                 <div block="Checkout" elem="OrderTotals">
-                    { this.renderPriceLine(subtotal, __('Subtotal')) }
+                    { this.renderPriceLine(finalPrice, __('Subtotal')) }
                 </div>
             );
         }

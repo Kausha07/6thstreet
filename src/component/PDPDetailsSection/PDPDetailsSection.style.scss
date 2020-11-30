@@ -138,6 +138,8 @@
 
     &-MoreDetailsList {
         display: flex;
+        // justify-content: space-between;
+        text-align: start;
         padding-left: 0;
         font-size: 16px;
 
@@ -148,6 +150,8 @@
         .PDPDetailsSection {
             &-ListItem {
                 &_mod_title {
+                    max-width: 100px;
+                    width: 100%;
                     margin-right: 20px;
                 }
             }

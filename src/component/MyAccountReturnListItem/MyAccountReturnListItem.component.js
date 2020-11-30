@@ -12,6 +12,16 @@ class MyAccountReturnListItem extends PureComponent {
         linkTo: PropTypes.string.isRequired
     };
 
+    renderIncrementId() {
+        const { return: { return_increment_id } } = this.props;
+
+        return (
+            <span block="MyAccountReturnListItem" elem="OrderIncrement">
+                { return_increment_id }
+            </span>
+        );
+    }
+
     renderDate() {
         const { return: { date } } = this.props;
 
@@ -48,12 +58,12 @@ class MyAccountReturnListItem extends PureComponent {
 
     render() {
         const { linkTo } = this.props;
-
         return (
             <Link
               block="MyAccountReturnListItem"
               to={ linkTo }
             >
+                { this.renderIncrementId() }
                 { this.renderDate() }
                 { this.renderOrder() }
                 { this.renderStatus() }

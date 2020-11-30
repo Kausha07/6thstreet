@@ -20,7 +20,7 @@
         padding-right: 20px;
         text-align: right;
         vertical-align: middle;
-        width: calc(100% / 3);
+        width: calc(100% / 4);
 
         &::after {
             border-bottom: 1px solid var(--black);
@@ -53,12 +53,29 @@
         text-align: center;
         text-decoration: underline;
         vertical-align: middle;
-        width: calc(100% / 3);
+        width: calc(100% / 4);
+    }
+
+    &-OrderIncrement {
+        display: table-cell;
+        font-weight: var(--fw-bold);
+        text-align: left;
+        text-decoration: underline;
+        vertical-align: middle;
+        width: calc(100% / 4); 
+
+        .PageWrapper_isArabic & {
+            text-align: right;
+        }
+
+        @include mobile {
+            display: none;
+        }
     }
 
     &-Date {
         display: table-cell;
         vertical-align: middle;
-        width: calc(100% / 3);
+        width: calc(100% / 4);
     }
 }
