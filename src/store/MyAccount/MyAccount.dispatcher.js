@@ -131,6 +131,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
             await WishlistDispatcher.updateInitialWishlistData(dispatch);
             await StoreCreditDispatcher.getStoreCredit(dispatch);
             setCrossSubdomainCookie('authData', this.getCustomerData(), '1');
+            this.requestCustomerData(dispatch);
 
             Event.dispatch(EVENT_GTM_GENERAL_INIT);
 

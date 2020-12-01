@@ -56,11 +56,21 @@ class DynamicContentProductSlider extends PureComponent {
         const productArray = products.map(this.renderProduct) || [];
         const lastPage = parseInt(Math.floor(products.length / ITEMS_PER_PAGE), 10); // first page is 0
         const lastPageItemCount = products.length % ITEMS_PER_PAGE; // number of products on last page'
-        if (currentPage !== lastPage) {
-            return productArray.slice(currentPage * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE + ITEMS_PER_PAGE);
+
+        if (currentPage === lastPage) {
+            if (lastPageItemCount === ITEMS_PER_PAGE) {
+                return productArray
+                    .slice(currentPage * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE + lastPageItemCount);
+            }
+
+            return productArray
+                .slice(
+                    (currentPage * ITEMS_PER_PAGE) - (ITEMS_PER_PAGE - lastPageItemCount),
+                    currentPage * ITEMS_PER_PAGE + lastPageItemCount
+                );
         }
 
-        return productArray.slice(currentPage * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE + lastPageItemCount);
+        return productArray.slice(currentPage * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE + ITEMS_PER_PAGE);
     }
 
     renderTitle() {
