@@ -20,7 +20,9 @@ import './MyAccountSignedInOverlay.style';
 export class MyAccountSignedInOverlay extends PureComponent {
     static propTypes = {
         onHide: PropTypes.func.isRequired,
-        signOut: PropTypes.func.isRequired
+        signOut: PropTypes.func.isRequired,
+        accountLinked: PropTypes.bool.isRequired,
+        clubApparel: PropTypes.object.isRequired
     };
 
     state = {
@@ -55,11 +57,14 @@ export class MyAccountSignedInOverlay extends PureComponent {
     }
 
     renderClubLink() {
+        const { clubApparel: { accountLinked } } = this.props;
+        const linkNowBtn = <span block="MyAccountSignedInOverlay" elem="LinkClubBtn">Link Now</span>;
+
         return (
             <Link block="MyAccountSignedInOverlay" elem="LinkClub" to="/my-account/club-apparel">
                 <Image src={ ClubIcon } mix={ { block: 'MyAccountSignedInOverlay', elem: 'Image' } } />
                 <span block="MyAccountSignedInOverlay" elem="LinkTitle">{ __('Club apparel') }</span>
-                <span block="MyAccountSignedInOverlay" elem="LinkClubBtn">Link Now</span>
+                { !accountLinked ? linkNowBtn : null }
             </Link>
         );
     }
