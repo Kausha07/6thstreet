@@ -58,12 +58,12 @@ export class MyAccountSignedInOverlay extends PureComponent {
 
     renderClubLink() {
         const { clubApparel: { accountLinked } } = this.props;
-        const linkNowBtn = <span block="MyAccountSignedInOverlay" elem="LinkClubBtn">Link Now</span>;
+        const linkNowBtn = <span block="MyAccountSignedInOverlay" elem="LinkClubBtn">{ __('Link Now') }</span>;
 
         return (
             <Link block="MyAccountSignedInOverlay" elem="LinkClub" to="/my-account/club-apparel">
                 <Image src={ ClubIcon } mix={ { block: 'MyAccountSignedInOverlay', elem: 'Image' } } />
-                <span block="MyAccountSignedInOverlay" elem="LinkTitle">{ __('Club apparel') }</span>
+                <span block="MyAccountSignedInOverlay" elem="LinkTitle">{ __('Club apparel loyalty') }</span>
                 { !accountLinked ? linkNowBtn : null }
             </Link>
         );
