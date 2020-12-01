@@ -188,6 +188,11 @@
             background-position: calc(100% - 10px) 50%;
             padding-right: 35px;
             padding-left: 10px;
+
+            @include desktop {
+                padding-left: 35px;
+                padding-right: 10px;
+            }
         }
 
         right: unset;

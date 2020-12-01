@@ -195,9 +195,11 @@ class PLPFilters extends PureComponent {
     }
 
     renderResetFilterButton() {
-        const { isArabic } = this.state;
+        const { isArabic, activeFilters = {} } = this.state;
 
-        return (
+        const isClear = Object.keys(activeFilters).length !== 0;
+
+        return isClear || isMobile.any() ? (
             <button
               block="FilterPopup"
               elem="Reset"
@@ -208,7 +210,7 @@ class PLPFilters extends PureComponent {
             >
                 { __('clear') }
             </button>
-        );
+        ) : null;
     }
 
     renderContent() {

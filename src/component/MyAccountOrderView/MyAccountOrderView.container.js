@@ -44,10 +44,12 @@ export class MyAccountOrderViewContainer extends PureComponent {
             isLoading,
             order
         } = this.state;
+        const { history } = this.props;
 
         return {
             isLoading,
-            order
+            order,
+            history
         };
     };
 
