@@ -648,9 +648,9 @@
     "Return Statement": "بيان الإرجاع",
     "You have placed no returns.": "ليس لديك طلبات إرجاع",
     "My Wishlist": "قائمة الأمنيات",
-    "Link Now": null,
-    "Club apparel loyalty": null,
-    "Out of stock": null,
-    "1 left in stock": null,
-    "low stock": null
+    "Link Now": "اربط الآن",
+    "Club apparel loyalty": "الولاء لكلوب أباريل",
+    "Out of stock": "إنتهى من المخزن",
+    "1 left in stock": "باقي منتج واحد",
+    "low stock": "الكمية قليلة"
 }
