@@ -25,8 +25,8 @@ export const formatProduct = (product) => {
         price: [
             {
                 [currency_code]: {
-                    '6s_base_price': parseFloat(special_price),
-                    '6s_special_price': parseFloat(price)
+                    '6s_base_price': parseFloat(price) || parseFloat(special_price),
+                    '6s_special_price': null
                 }
             }
         ]
