@@ -12,7 +12,9 @@ export const MyAccountDispatcher = import(
     'Store/MyAccount/MyAccount.dispatcher'
 );
 
-export const mapStateToProps = () => ({});
+export const mapStateToProps = (_state) => ({
+    clubApparel: _state.ClubApparelReducer.clubApparel
+});
 
 export const mapDispatchToProps = (dispatch) => ({
     showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
@@ -53,10 +55,10 @@ export class MyAccountSignedInOverlayContainer extends PureComponent {
 
     render() {
         const { onHide } = this.props;
-
         return (
             <MyAccountSignedInOverlay
               onHide={ onHide }
+              { ...this.props }
               { ...this.containerFunctions }
             />
         );
