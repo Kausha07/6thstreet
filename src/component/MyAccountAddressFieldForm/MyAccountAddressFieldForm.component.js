@@ -15,6 +15,7 @@ import { PureComponent } from 'react';
 import CountryMiniFlag from 'Component/CountryMiniFlag';
 import Field from 'Component/Field';
 import Form from 'Component/Form';
+import { isArabic } from 'Util/App';
 
 import { PHONE_CODES } from './MyAccountAddressFieldForm.config';
 
@@ -51,7 +52,9 @@ export class MyAccountAddressFieldForm extends PureComponent {
     );
 
     renderCurrentPhoneCode(country_id) {
-        return PHONE_CODES[country_id];
+        const code = PHONE_CODES[country_id] || '';
+        const arabicCode = `${code.slice(1)}+`;
+        return isArabic() ? arabicCode : code;
     }
 
     renderFields() {
