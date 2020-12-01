@@ -21,8 +21,13 @@ export class MyAccountSignedInOverlay extends PureComponent {
     static propTypes = {
         onHide: PropTypes.func.isRequired,
         signOut: PropTypes.func.isRequired,
-        accountLinked: PropTypes.bool.isRequired,
-        clubApparel: PropTypes.object.isRequired
+        accountLinked: PropTypes.bool,
+        clubApparel: PropTypes.object
+    };
+
+    static defaultProps = {
+        clubApparel: {},
+        accountLinked: false
     };
 
     state = {
