@@ -2,15 +2,17 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import MyAccountOverlay from 'Component/MyAccountOverlay';
+import { customerType } from 'Type/Account';
 import { isArabic } from 'Util/App';
-import { isSignedIn } from 'Util/Auth';
+// import { isSignedIn } from 'Util/Auth';
 import history from 'Util/History';
 
 import './LoginBlock.style';
 
 class LoginBlock extends PureComponent {
     static propTypes = {
-        isSignedIn: PropTypes.bool.isRequired
+        isSignedIn: PropTypes.bool.isRequired,
+        customer: customerType.isRequired
     };
 
     state = {
@@ -19,6 +21,14 @@ class LoginBlock extends PureComponent {
         showPopup: false,
         registerField: false
     };
+
+    componentDidMount() {
+        const { customer = {} } = this.props;
+
+        if (Object.keys(customer).length !== 0) {
+            this.handleDismiss();
+        }
+    }
 
     handleDismiss = () => {
         this.setState({
@@ -31,7 +41,7 @@ class LoginBlock extends PureComponent {
     renderBlock() {
         const { isOpen } = this.state;
 
-        if (!isOpen || isSignedIn()) {
+        if (!isOpen) {
             return null;
         }
 
@@ -53,13 +63,15 @@ class LoginBlock extends PureComponent {
     }
 
     renderHeader() {
-        const { isSignedIn } = this.props;
+        const { isSignedIn, customer: { firstname, lastname } } = this.props;
 
         if (isSignedIn) {
             return (
                 <div>
                     <h3 mix={ { block: 'LoginBlock', elem: 'Header' } }>
-                        { __('Welcome') }
+                        { firstname && lastname
+                            ? `${__('Welcome') } ${ firstname } ${ lastname}`
+                            : __('Welcome') }
                     </h3>
                     <span mix={ { block: 'LoginBlock', elem: 'SubHeader' } }>
                         { __('Customize your shopping experience') }

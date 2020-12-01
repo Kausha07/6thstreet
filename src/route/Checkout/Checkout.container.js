@@ -125,7 +125,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             totals = {},
             totals: {
                 items = [],
-                total
+                total,
+                total_segments = []
             },
             updateStoreCredit
         } = this.props;
@@ -161,8 +162,12 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         }
 
         if (Object.keys(totals).length && total === 0 && checkoutStep !== DETAILS_STEP) {
-            showErrorNotification(__('Your cart is invalid'));
-            history.push('/');
+            const totalSum = total_segments.reduce((acc, item) => acc + item.value, 0);
+
+            if (totalSum !== 0) {
+                showErrorNotification(__('Your cart is invalid'));
+                history.push('/');
+            }
         }
 
         // if guest checkout is disabled and user is not logged in => throw him to homepage
