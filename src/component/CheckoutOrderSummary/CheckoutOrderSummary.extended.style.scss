@@ -209,6 +209,7 @@
 
 	@include before-desktop {
 		display: block;
+		z-index: 0;
 	}
 
 	&-DiscountOptionWrapper {
