@@ -322,9 +322,9 @@ export class CartItem extends PureComponent {
                   mods={ { isArabic } }
                 >
                     { color }
-                    <span>| Size:    </span>
+                    <span>| { __('Size:') }    </span>
                     { optionValue }
-                    <span>| Qty: </span>
+                    <span>| { __('Qty:') } </span>
                     { qty }
                 </div>
             );
@@ -336,7 +336,7 @@ export class CartItem extends PureComponent {
               elem="ColSizeQty"
             >
                 { color }
-                <span>| Qty: </span>
+                <span>| { __('Qty:') } </span>
                 { qty }
             </div>
         );

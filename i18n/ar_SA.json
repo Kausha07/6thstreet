@@ -466,6 +466,8 @@
     "Color: ": "اللون: ",
     "Qty: ": "الكمية: ",
     "Size: ": "المقاس: ",
+    "Color:": "اللون:",
+    "Qty:": "الكمية",
     "Item details": "تفاصيل المنتج",
     "Split your purchase into equal monthly installments": "قسم مشترياتك إلى أقساط شهرية متساوية",
     "Sounds good? Just select Tabby at checkout.": "ما رأيك؟ كل ما عليك هو اختيار تابي عند صفحة الدفع",
@@ -616,7 +618,6 @@
     "There are no products in totals.": "لا توجد منتجات في المجاميع",
     "Order": "طلب",
     "Return An Item": "إرجاع منتج",
-    "Qty:": "الكمية",
     "Total: ": "المجموع",
     "EMAIL": "البريد الإلكتروني",
     "Added to your shopping bag": "تم الإضافة إلى حقيبة التسوق الخاصة بك",
@@ -647,6 +648,9 @@
     "Return Statement": "بيان الإرجاع",
     "You have placed no returns.": "ليس لديك طلبات إرجاع",
     "My Wishlist": "قائمة الأمنيات",
-    "Link Now": "اربط الآن",
-    "Club apparel loyalty": "الولاء لكلوب أباريل"
+    "Link Now": null,
+    "Club apparel loyalty": null,
+    "Out of stock": null,
+    "1 left in stock": null,
+    "low stock": null
 }
