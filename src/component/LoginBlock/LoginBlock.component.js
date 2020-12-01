@@ -4,7 +4,6 @@ import { PureComponent } from 'react';
 import MyAccountOverlay from 'Component/MyAccountOverlay';
 import { customerType } from 'Type/Account';
 import { isArabic } from 'Util/App';
-// import { isSignedIn } from 'Util/Auth';
 import history from 'Util/History';
 
 import './LoginBlock.style';
