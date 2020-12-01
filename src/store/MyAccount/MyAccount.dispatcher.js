@@ -29,6 +29,8 @@ import {
 import {
     deleteAuthorizationToken,
     deleteMobileAuthorizationToken,
+    getAuthorizationToken,
+    getMobileAuthorizationToken,
     setAuthorizationToken,
     setMobileAuthorizationToken
 } from 'Util/Auth';
@@ -128,6 +130,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
             await this.handleMobileAuthorization(dispatch, options);
             await WishlistDispatcher.updateInitialWishlistData(dispatch);
             await StoreCreditDispatcher.getStoreCredit(dispatch);
+            setCrossSubdomainCookie('authData', this.getCustomerData(), '1');
 
             Event.dispatch(EVENT_GTM_GENERAL_INIT);
 
@@ -138,6 +141,19 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
 
             throw e;
         }
+    }
+
+    getCustomerData() {
+        const mobileToken = getMobileAuthorizationToken();
+        const authToken = getAuthorizationToken();
+
+        if (mobileToken && authToken) {
+            const params = `mobileToken=${mobileToken}&authToken=${authToken}`;
+
+            return btoa(params);
+        }
+
+        return '';
     }
 
     async handleMobileAuthorization(dispatch, options) {

@@ -82,7 +82,7 @@ export class RouterContainer extends SourceRouterContainer {
                 setAuthorizationToken(authToken);
 
                 requestCustomerData().then(() => {
-                    updateCustomerDetails();
+                    window.location.reload();
                 });
             }
         } else {
