@@ -84,6 +84,8 @@ class WelcomeScreenContainer extends PureComponent {
         } = this.props;
 
         if (language && country) {
+            setCrossSubdomainCookie('authData', this.getCustomerData(), '1');
+
             window.location.href = location.origin.replace(
                 language.toLowerCase(),
                 value,
