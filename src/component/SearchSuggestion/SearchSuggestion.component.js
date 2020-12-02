@@ -101,7 +101,7 @@ class SearchSuggestion extends PureComponent {
     }
 
     renderNothingFound() {
-        return 'Nothing found';
+        return __('Nothing found');
     }
 
     renderTrendingBrand = (brand, i) => {

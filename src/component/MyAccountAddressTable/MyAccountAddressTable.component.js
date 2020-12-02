@@ -148,7 +148,7 @@ export class MyAccountAddressTable extends KeyValueTable {
             }
         } = this.props;
 
-        const def = default_billing === true ? 'default' : ' ';
+        const def = default_billing === true ? __('default') : ' ';
         const countryId = `(${country_id})`;
 
         return (
