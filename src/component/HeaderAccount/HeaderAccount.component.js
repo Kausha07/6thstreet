@@ -12,7 +12,6 @@ import './HeaderAccount.style';
 
 class HeaderAccount extends PureComponent {
     static propTypes = {
-        requestCustomerData: PropTypes.func.isRequired,
         isBottomBar: PropTypes.bool.isRequired,
         isAccount: PropTypes.bool.isRequired,
         isSignedIn: PropTypes.bool.isRequired,
@@ -53,9 +52,6 @@ class HeaderAccount extends PureComponent {
     };
 
     onSignIn = () => {
-        const { requestCustomerData } = this.props;
-
-        requestCustomerData();
         this.closePopup();
     };
 
