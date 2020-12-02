@@ -8,7 +8,7 @@ import isMobile from 'SourceUtil/Mobile/isMobile';
 import { Products } from 'Util/API/endpoint/Product/Product.type';
 import { isArabic } from 'Util/App';
 
-import { ITEMS_PER_PAGE } from './DynamicContentProductSlider.config';
+import { HOME_PAGE_TRANSLATIONS, ITEMS_PER_PAGE } from './DynamicContentProductSlider.config';
 
 import './DynamicContentProductSlider.style';
 
@@ -75,9 +75,9 @@ class DynamicContentProductSlider extends PureComponent {
 
     renderTitle() {
         const { title } = this.props;
-
+        const finalTitle = isArabic() ? HOME_PAGE_TRANSLATIONS[title] : title;
         return (
-            <h2 mix={ { block: 'DynamicContentProductSlider', elem: 'Header' } }>{ title }</h2>
+            <h2 mix={ { block: 'DynamicContentProductSlider', elem: 'Header' } }>{ finalTitle }</h2>
         );
     }
 
