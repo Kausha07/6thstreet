@@ -644,7 +644,7 @@
     "This is a required field!": "هذه الخانة مطلوبه!",
     "Reward": "مكافاة",
     "Shop now": "تسوق الآن",
-    "Discount": null,
+    "Discount": "خصم",
     "sign in to access to your account and tract your order": null,
     "Return Statement": "بيان الإرجاع",
     "You have placed no returns.": "ليس لديك طلبات إرجاع",
@@ -653,5 +653,13 @@
     "Club apparel loyalty": "الولاء لكلوب أباريل",
     "Out of stock": "إنتهى من المخزن",
     "1 left in stock": "باقي منتج واحد",
-    "low stock": "الكمية قليلة"
+    "low stock": "الكمية قليلة",
+    "Tabby: Pay in installments": "دفع على أقساط تابي",
+    "Tabby: Pay later": "ادفع لاحقا تابي",
+    "Apple": "Apple",
+    "Cash": "الاستلام",
+    "default": "إفتراضي",
+    "card": "بطاقة",
+    "checkout": "الدفع",
+    "Nothing found": "لم يتم العثور على شيء"
 }

@@ -2,6 +2,9 @@
 import { PureComponent } from 'react';
 
 import { Product } from 'Util/API/endpoint/Product/Product.type';
+import { isArabic } from 'Util/App';
+
+import { PDP_ARABIC_VALUES_TRANSLATIONS } from './PDPDetailsSection.config';
 
 import './PDPDetailsSection.style';
 
@@ -13,6 +16,14 @@ class PDPDetailsSection extends PureComponent {
     state = {
         isHidden: true
     };
+
+    _translateValue(value) {
+        if (typeof PDP_ARABIC_VALUES_TRANSLATIONS[value] === 'undefined') {
+            return value;
+        }
+
+        return PDP_ARABIC_VALUES_TRANSLATIONS[value];
+    }
 
     openFullInfo = () => {
         this.setState({ isHidden: false });
@@ -47,7 +58,7 @@ class PDPDetailsSection extends PureComponent {
         return (
             <li block="PDPDetailsSection" elem="HighlightsList" key={ arr[0] }>
                 <span block="PDPDetailsSection" elem="ListItem" mods={ { mod: 'title' } }>
-                    { this.listTitle(arr[0]) }
+                    { isArabic() ? this._translateValue(arr[0]) : this.listTitle(arr[0]) }
                 </span>
                 <span block="PDPDetailsSection" elem="ListItem" mods={ { mod: 'value' } }>{ arr[1] }</span>
             </li>
@@ -75,8 +86,6 @@ class PDPDetailsSection extends PureComponent {
         } = this.props;
 
         const { isHidden } = this.state;
-
-        // got this info from API at this moment, should be changed when new DATA will be implemented.
 
         const productInfo = {
             material,
@@ -110,7 +119,7 @@ class PDPDetailsSection extends PureComponent {
         return (
             <li block="PDPDetailsSection" elem="MoreDetailsList" key={ item.key }>
                 <span block="PDPDetailsSection" elem="ListItem" mods={ { mod: 'title' } }>
-                    { this.listTitle(__(item.key)) }
+                    { isArabic() ? this._translateValue(item.key) : this.listTitle(__(item.key)) }
                 </span>
                 <span block="PDPDetailsSection" elem="ListItem" mods={ { mod: 'value' } }>{ item.value }</span>
             </li>
