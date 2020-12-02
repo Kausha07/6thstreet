@@ -505,13 +505,13 @@ export class CheckoutSuccess extends PureComponent {
         }
 
         if (paymentMethod.code.match(/tabby_installments/)) {
-            this.setState({ paymentTitle: 'Tabby: Pay in installments' });
+            this.setState({ paymentTitle: __('Tabby: Pay in installments') });
         } else if (paymentMethod.code.match(/tabby_checkout/)) {
-            this.setState({ paymentTitle: 'Tabby: Pay later' });
+            this.setState({ paymentTitle: __('Tabby: Pay later') });
         } else if (paymentMethod.code.match(/apple/)) {
-            this.setState({ paymentTitle: 'Apple' });
+            this.setState({ paymentTitle: __('Apple') });
         } else if (paymentMethod.code.match(/cash/)) {
-            this.setState({ paymentTitle: 'Cash' });
+            this.setState({ paymentTitle: __('Cash') });
         }
 
         const { paymentTitle } = this.state;
