@@ -210,15 +210,31 @@ export class CartOverlay extends PureComponent {
         );
     }
 
+    renderFreeShippingContent() {
+        return (
+            <div
+              block="CartOverlay"
+              elem="PromoFreeShipping"
+            >
+                <span>{ __('Free delivery*. More info ') }</span>
+                <Link to="/shipping-policy">{ __('here.') }</Link>
+            </div>
+        );
+    }
+
     renderPromo() {
         const { totals: { avail_free_shipping_amount } } = this.props;
 
-        return !avail_free_shipping_amount || avail_free_shipping_amount === 0 ? null : (
+        if (!avail_free_shipping_amount && avail_free_shipping_amount !== 0) {
+            return null;
+        }
+
+        return (
             <div
               block="CartOverlay"
               elem="Promo"
             >
-                { this.renderPromoContent() }
+                { avail_free_shipping_amount === 0 ? this.renderFreeShippingContent() : this.renderPromoContent() }
             </div>
         );
     }

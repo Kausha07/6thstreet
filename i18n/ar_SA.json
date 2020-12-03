@@ -662,5 +662,9 @@
     "card": "بطاقة",
     "checkout": "الدفع",
     "Nothing found": "لم يتم العثور على شيء",
-    "cash": "الاستلام"
+    "cash": "الاستلام",
+    "Please add at least one delivery address!": "الرجاء إضافة عنوان تسليم واحد على الأقل!",
+    "Free delivery*. More info": "التوصيل مجاني. معلومات اضافية",
+    "here": "هنا",
+    "Free delivery*. More info ": "التوصيل مجاني. معلومات اضافية"
 }
