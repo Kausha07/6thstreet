@@ -68,11 +68,8 @@ export class MyAccountAddressTable extends KeyValueTable {
     renderActions() {
         const {
             onDeleteClick,
-            showActions,
-            address: { default_billing, default_shipping }
+            showActions
         } = this.props;
-
-        const isDeleteAllowed = default_shipping || default_billing;
 
         if (!showActions) {
             return null;
@@ -97,8 +94,6 @@ export class MyAccountAddressTable extends KeyValueTable {
                   block="MyAccountAddressTable"
                   elem="ActionBtn"
                   onClick={ onDeleteClick }
-                  disabled={ isDeleteAllowed }
-                  title={ isDeleteAllowed ? __('Can not delete - address is set as default.') : 'Delete this address' }
                 >
                     <img
                       block="MyAccountAddressTable"

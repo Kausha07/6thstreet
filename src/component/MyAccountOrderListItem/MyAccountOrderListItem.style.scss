@@ -83,12 +83,6 @@
 
         &Price {
             margin-bottom: 10px;
-
-            &_isFailed {
-                span {
-                    text-decoration: line-through;
-                }
-            }
         }
 
         &Packages {
