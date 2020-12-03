@@ -10,6 +10,7 @@ import { formatDate } from 'Util/Date';
 
 import PackageIcon from './icons/box.png';
 import {
+    ARABIC_MONTHS,
     STATUS_BEING_PROCESSED,
     STATUS_FAILED,
     STATUS_HIDE_BAR,
@@ -63,12 +64,8 @@ class MyAccountOrderListItem extends SourceComponent {
             }
         } = this.props;
 
-        console.log(this.props);
         const date = new Date(created_at);
-        const months = ['يناير', 'فبراير', 'مارس', 'إبريل', 'مايو', 'يونيو',
-            'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'
-        ];
-        const arabicDate = `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+        const arabicDate = `${date.getDate()} ${ARABIC_MONTHS[date.getMonth()]} ${date.getFullYear()}`;
 
         return (
             <div block="MyAccountReturnCreateListItem" elem="Content">

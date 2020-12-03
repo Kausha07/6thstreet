@@ -44,3 +44,6 @@ export const translateArabicStatus = (status) => {
 
     return ARABIC_STATUS_TRANSLATE[status];
 };
+
+export const ARABIC_MONTHS = ['يناير', 'فبراير', 'مارس', 'إبريل', 'مايو', 'يونيو',
+    'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
