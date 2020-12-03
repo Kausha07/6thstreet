@@ -19,6 +19,7 @@
     input {
         width: 100%;
         font-size: 14px;
+        text-transform: none;
 
         &[type='checkbox'],
         &[type='radio'] {
@@ -27,6 +28,10 @@
 
         + label {
             min-width: auto;
+        }
+
+        &::placeholder {  
+            text-transform: uppercase;
         }
     }
 

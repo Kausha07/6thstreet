@@ -5,6 +5,7 @@ import Image from 'Component/Image';
 import {
     MyAccountReturnCreateListItem as SourceComponent
 } from 'Component/MyAccountReturnCreateListItem/MyAccountReturnCreateListItem.component';
+import { isArabic } from 'Util/App';
 import { formatDate } from 'Util/Date';
 
 import PackageIcon from './icons/box.png';
@@ -12,7 +13,8 @@ import {
     STATUS_BEING_PROCESSED,
     STATUS_FAILED,
     STATUS_HIDE_BAR,
-    STATUS_SUCCESS
+    STATUS_SUCCESS,
+    translateArabicStatus
 } from './MyAccountOrderListItem.config';
 
 import './MyAccountOrderListItem.style';
@@ -30,6 +32,7 @@ class MyAccountOrderListItem extends SourceComponent {
             isSuccess: STATUS_SUCCESS.includes(status),
             isFailed: STATUS_FAILED.includes(status)
         };
+        const finalStatus = isArabic() ? translateArabicStatus(status) : status.split('_').join(' ');
 
         return (
             <p
@@ -41,7 +44,7 @@ class MyAccountOrderListItem extends SourceComponent {
                 { __('Order #%s ', increment_id) }
                 <span>
                     { /* Some statuses are written with _ so they need to be splitted and joined */ }
-                    { `- ${ status.split('_').join(' ') }` }
+                    { `- ${ finalStatus }` }
                 </span>
             </p>
         );
@@ -59,6 +62,13 @@ class MyAccountOrderListItem extends SourceComponent {
                 status
             }
         } = this.props;
+
+        console.log(this.props);
+        const date = new Date(created_at);
+        const months = ['يناير', 'فبراير', 'مارس', 'إبريل', 'مايو', 'يونيو',
+            'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'
+        ];
+        const arabicDate = `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
 
         return (
             <div block="MyAccountReturnCreateListItem" elem="Content">
@@ -114,8 +124,8 @@ class MyAccountOrderListItem extends SourceComponent {
                       block="MyAccountReturnCreateListItem"
                       elem="DetailsDate"
                     >
-                        { __('Order placed: ') }
-                        <span>{ formatDate('DD MMM YYYY', new Date(created_at)) }</span>
+                        <span>{ __('Order placed: ') }</span>
+                        <span>{ isArabic() ? arabicDate : formatDate('DD MMM YYYY', new Date(created_at)) }</span>
                     </p>
                 </div>
             </div>
