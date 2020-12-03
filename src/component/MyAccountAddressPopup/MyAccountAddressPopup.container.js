@@ -14,11 +14,13 @@ import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import MyAccountQuery from 'Query/MyAccount.query';
+import CheckoutDispatcher from 'Store/Checkout/Checkout.dispatcher';
 import { goToPreviousNavigationState } from 'Store/Navigation/Navigation.action';
 import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { hideActiveOverlay } from 'Store/Overlay/Overlay.action';
 import { addressType } from 'Type/Account';
+import { capitalize } from 'Util/App';
 import { fetchMutation } from 'Util/Request';
 
 import MyAccountAddressPopup from './MyAccountAddressPopup.component';
@@ -40,12 +42,16 @@ export const mapDispatchToProps = (dispatch) => ({
     updateCustomerDetails: () => MyAccountDispatcher.then(
         ({ default: dispatcher }) => dispatcher.requestCustomerData(dispatch)
     ),
-    goToPreviousHeaderState: () => dispatch(goToPreviousNavigationState(TOP_NAVIGATION_TYPE))
+    goToPreviousHeaderState: () => dispatch(goToPreviousNavigationState(TOP_NAVIGATION_TYPE)),
+    // eslint-disable-next-line max-len
+    validateAddress: (address) => CheckoutDispatcher.validateAddress(dispatch, address),
+    showNotification: (type, message) => dispatch(showNotification(type, message))
 });
 
 export class MyAccountAddressPopupContainer extends PureComponent {
     static propTypes = {
         showErrorNotification: PropTypes.func.isRequired,
+        showNotification: PropTypes.func.isRequired,
         updateCustomerDetails: PropTypes.func.isRequired,
         showCards: PropTypes.func.isRequired,
         hideActiveOverlay: PropTypes.func.isRequired,
@@ -53,7 +59,8 @@ export class MyAccountAddressPopupContainer extends PureComponent {
         closeForm: PropTypes.func.isRequired,
         payload: PropTypes.shape({
             address: addressType
-        })
+        }),
+        validateAddress: PropTypes.func.isRequired
     };
 
     static defaultProps = {
@@ -93,15 +100,63 @@ export class MyAccountAddressPopupContainer extends PureComponent {
         this.setState({ isLoading: false });
     };
 
+    validateAddress(address) {
+        const {
+            country_id,
+            region: {
+                region,
+                region_id
+            },
+            city,
+            telephone = '',
+            street,
+            phonecode = ''
+        } = address;
+        const { validateAddress } = this.props;
+
+        return validateAddress({
+            area: region ?? region_id,
+            city,
+            country_code: country_id,
+            phone: phonecode + telephone,
+            postcode: region ?? region_id,
+            region: region ?? region_id,
+            street: Array.isArray(street) ? street[0] : street
+        });
+    }
+
+    handleValidationError(response) {
+        const { showNotification } = this.props;
+
+        const { parameters, message = '' } = response;
+        const formattedParams = parameters ? capitalize(parameters[0]) : 'Address';
+
+        showNotification('error', `${ formattedParams } ${ __('is not valid') }. ${ message }`);
+    }
+
     handleAddress(address) {
         const { payload: { address: { id } } } = this.props;
+        const { showNotification } = this.props;
 
-        this.setState({ isLoading: true });
-        if (id) {
-            return this.handleEditAddress(address);
+        const validationResult = this.validateAddress(address);
+
+        if (!validationResult) {
+            showNotification('error', __('Something went wrong.'));
         }
 
-        return this.handleCreateAddress(address);
+        validationResult.then((response) => {
+            const { success } = response;
+
+            if (success) {
+                if (id) {
+                    return this.handleEditAddress(address);
+                }
+
+                return this.handleCreateAddress(address);
+            }
+
+            return this.handleValidationError(response);
+        });
     }
 
     handleEditAddress(address) {
