@@ -165,8 +165,51 @@ export class MyAccountAddressPopupContainer extends PureComponent {
         fetchMutation(query).then(this.handleAfterAction, this.handleError).then(showCards);
     }
 
-    handleDeleteAddress() {
-        const { showCards, payload: { address: { id } } } = this.props;
+    async handleDeleteAddress() {
+        const {
+            showCards,
+            payload: {
+                address: {
+                    id,
+                    default_billing,
+                    default_shipping,
+                    city,
+                    country_id,
+                    firstname,
+                    lastname,
+                    postcode,
+                    region,
+                    street,
+                    telephone
+                }
+            }
+        } = this.props;
+
+        if (default_shipping || default_billing) {
+            const clearAddress = {
+                city,
+                country_id,
+                default_shipping: false,
+                default_billing: false,
+                firstname,
+                lastname,
+                postcode,
+                region,
+                street,
+                telephone
+            };
+
+            this.setState({ isLoading: true });
+            const editQuery = MyAccountQuery.getUpdateAddressMutation(id, clearAddress);
+            await fetchMutation(editQuery);
+
+            const deleteQuery = MyAccountQuery.getDeleteAddressMutation(id);
+            await fetchMutation(deleteQuery)
+                .then(this.handleAfterAction, this.handleError)
+                .then(showCards);
+
+            return;
+        }
 
         this.setState({ isLoading: true });
         const query = MyAccountQuery.getDeleteAddressMutation(id);
