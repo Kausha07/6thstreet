@@ -29,6 +29,8 @@ import {
 import {
     deleteAuthorizationToken,
     deleteMobileAuthorizationToken,
+    getAuthorizationToken,
+    getMobileAuthorizationToken,
     setAuthorizationToken,
     setMobileAuthorizationToken
 } from 'Util/Auth';
@@ -36,6 +38,7 @@ import BrowserDatabase from 'Util/BrowserDatabase';
 import Event, { EVENT_GTM_GENERAL_INIT } from 'Util/Event';
 import { prepareQuery } from 'Util/Query';
 import { executePost, fetchMutation } from 'Util/Request';
+import { setCrossSubdomainCookie } from 'Util/Url/Url';
 
 export { CUSTOMER, ONE_MONTH_IN_SECONDS } from 'SourceStore/MyAccount/MyAccount.dispatcher';
 
@@ -82,7 +85,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         dispatch(updateCustomerDetails({}));
         dispatch(setStoreCredit(getStoreCreditInitialState()));
         dispatch(setClubApparel(getClubApparelInitialState()));
-
+        setCrossSubdomainCookie('authData', '', 1, true);
         Event.dispatch(EVENT_GTM_GENERAL_INIT);
     }
 
@@ -127,6 +130,8 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
             await this.handleMobileAuthorization(dispatch, options);
             await WishlistDispatcher.updateInitialWishlistData(dispatch);
             await StoreCreditDispatcher.getStoreCredit(dispatch);
+            setCrossSubdomainCookie('authData', this.getCustomerData(), '1');
+            this.requestCustomerData(dispatch);
 
             Event.dispatch(EVENT_GTM_GENERAL_INIT);
 
@@ -137,6 +142,19 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
 
             throw e;
         }
+    }
+
+    getCustomerData() {
+        const mobileToken = getMobileAuthorizationToken();
+        const authToken = getAuthorizationToken();
+
+        if (mobileToken && authToken) {
+            const params = `mobileToken=${mobileToken}&authToken=${authToken}`;
+
+            return btoa(params);
+        }
+
+        return '';
     }
 
     async handleMobileAuthorization(dispatch, options) {
@@ -233,8 +251,8 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         return resetPassword({ email });
     }
 
-    async getOrders(limit) {
-        return getOrders(limit);
+    async getOrders(limit, page) {
+        return getOrders(limit, page);
     }
 
     updateCustomerData(dispatch, data) {

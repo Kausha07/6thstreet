@@ -67,6 +67,12 @@
             }
         }
 
+        &FreeShipping {
+            a {
+                text-decoration: underline;
+            }
+        }
+
         &Image {
             width: 46px;
             margin-right: .5rem;
@@ -283,9 +289,8 @@
 
     &-Items {
         padding-bottom: 20px;
-        height: calc(60vh - 140px);
-        max-height: 382px;
-        overflow-y: scroll;
+        max-height: calc(60vh - 150px);
+        overflow-y: auto;
         overflow-x: hidden;
 
         .CartItem {

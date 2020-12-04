@@ -20,7 +20,7 @@
         display: grid;
         grid-template-columns: 48% 48%;
         grid-column-gap: 1.8%;
-        width: 102.5%;
+        width: 98%;
 
         @include after-mobile {
             grid-template-columns: 32.66% 32.66% 32.66%;
@@ -123,6 +123,7 @@
 
                     &_discount {
                         display: inline;
+                        padding: 0 2px;
                         color: var(--Cardinal);
                     }
                 }
@@ -153,10 +154,12 @@
     &_isArabic {
         .MyAccountMyWishlist {
             .Price {
+                flex-direction: row-reverse;
+                
                 &-Wrapper {
                     display: flex;
                     flex-direction: row-reverse;
-                    margin: 0 auto;
+                    margin: 0;
                 }
             }
         }

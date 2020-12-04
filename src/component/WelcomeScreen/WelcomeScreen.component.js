@@ -118,7 +118,12 @@ class WelcomeScreen extends PureComponent {
         const currentLang = language === 'en' ? 'en' : 'ar';
 
         return (
-            <li key={ id }>
+            <li
+              block="WelcomeScreen"
+              elem="CountryItem"
+              key={ id }
+              mods={ { isCurrent: currentLangBool } }
+            >
                 <button
                   onClick={ () => onCountrySelect(value) }
                   block="WelcomeScreen"
@@ -143,7 +148,10 @@ class WelcomeScreen extends PureComponent {
             <div block="WelcomeScreen" elem="Content" mods={ { isArabic } }>
                 { this.renderCloseBtn() }
                 <div block="WelcomeScreen" elem="Options">
-                    <h1>{ __('Welcome') }</h1>
+                    <h1>
+                        { __('Welcome') }
+                        ,
+                    </h1>
                     <p>{ __('you are shopping in') }</p>
                     { this.renderLanguageButtons() }
                     { this.renderCountryList() }

@@ -28,3 +28,22 @@ export const STATUS_BEING_PROCESSED = [
     STATUS_PROCESSING,
     STATUS_PAYMENT_SUCCESS
 ];
+
+export const ARABIC_STATUS_TRANSLATE = {
+    complete: 'مكتمل',
+    canceled: 'ملغى',
+    processing: 'معالجة',
+    payment_aborted: 'تم إلغاء الدفع',
+    payment_success: 'تم الدفع بنجاح'
+};
+
+export const translateArabicStatus = (status) => {
+    if (typeof ARABIC_STATUS_TRANSLATE[status] === 'undefined') {
+        return status.split('_').join(' ');
+    }
+
+    return ARABIC_STATUS_TRANSLATE[status];
+};
+
+export const ARABIC_MONTHS = ['يناير', 'فبراير', 'مارس', 'إبريل', 'مايو', 'يونيو',
+    'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];

@@ -8,7 +8,7 @@ import isMobile from 'SourceUtil/Mobile/isMobile';
 import { Products } from 'Util/API/endpoint/Product/Product.type';
 import { isArabic } from 'Util/App';
 
-import { ITEMS_PER_PAGE } from './DynamicContentProductSlider.config';
+import { HOME_PAGE_TRANSLATIONS, ITEMS_PER_PAGE } from './DynamicContentProductSlider.config';
 
 import './DynamicContentProductSlider.style';
 
@@ -27,17 +27,6 @@ class DynamicContentProductSlider extends PureComponent {
     renderProduct = (product, i) => {
         const { sku } = product;
         const { isArabic } = this.state;
-        const newTag = (
-        <div
-          mix={ {
-              block: 'DynamicContentProductSlider',
-              elem: 'TagOverlay',
-              mods: { isArabic }
-          } }
-        >
-            New
-        </div>
-        );
 
         // TODO: remove if statement and add appropriate query for items with new
         return (
@@ -49,7 +38,6 @@ class DynamicContentProductSlider extends PureComponent {
                   product={ product }
                   key={ sku }
                 />
-                { 1 ? newTag : null }
                 { this.renderCTA() }
             </div>
         );
@@ -68,18 +56,28 @@ class DynamicContentProductSlider extends PureComponent {
         const productArray = products.map(this.renderProduct) || [];
         const lastPage = parseInt(Math.floor(products.length / ITEMS_PER_PAGE), 10); // first page is 0
         const lastPageItemCount = products.length % ITEMS_PER_PAGE; // number of products on last page'
-        if (currentPage !== lastPage) {
-            return productArray.slice(currentPage * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE + ITEMS_PER_PAGE);
+
+        if (currentPage === lastPage) {
+            if (lastPageItemCount === ITEMS_PER_PAGE) {
+                return productArray
+                    .slice(currentPage * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE + lastPageItemCount);
+            }
+
+            return productArray
+                .slice(
+                    (currentPage * ITEMS_PER_PAGE) - (ITEMS_PER_PAGE - lastPageItemCount),
+                    currentPage * ITEMS_PER_PAGE + lastPageItemCount
+                );
         }
 
-        return productArray.slice(currentPage * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE + lastPageItemCount);
+        return productArray.slice(currentPage * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE + ITEMS_PER_PAGE);
     }
 
     renderTitle() {
         const { title } = this.props;
-
+        const finalTitle = isArabic() ? HOME_PAGE_TRANSLATIONS[title] : title;
         return (
-            <h2 mix={ { block: 'DynamicContentProductSlider', elem: 'Header' } }>{ title }</h2>
+            <h2 mix={ { block: 'DynamicContentProductSlider', elem: 'Header' } }>{ finalTitle }</h2>
         );
     }
 

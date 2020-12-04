@@ -17,11 +17,6 @@ export const mapStateToProps = (state) => ({
     customer: state.MyAccountReducer.customer
 });
 
-export const mapDispatchToProps = (dispatch) => ({
-    requestCustomerData: () => MyAccountDispatcher
-        .then(({ default: dispatcher }) => dispatcher.requestCustomerData(dispatch))
-});
-
 export class HeaderAccountContainer extends PureComponent {
     static propTypes = {
         isBottomBar: PropTypes.bool,
@@ -77,4 +72,4 @@ export class HeaderAccountContainer extends PureComponent {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(HeaderAccountContainer);
+export default connect(mapStateToProps, null)(HeaderAccountContainer);

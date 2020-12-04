@@ -32,7 +32,7 @@
         text-transform: none;
 
         @include desktop {
-            display: inline-block;
+            display: none;
         }
     }
 

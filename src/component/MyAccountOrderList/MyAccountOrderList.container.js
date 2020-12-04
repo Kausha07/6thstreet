@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -13,7 +14,7 @@ export const mapStateToProps = () => ({});
 
 export const mapDispatchToProps = (dispatch) => ({
     showErrorNotification: (error) => dispatch(showNotification('error', error)),
-    getOrders: (limit) => MyAccountDispatcher.getOrders(limit)
+    getOrders: (limit, page) => MyAccountDispatcher.getOrders(limit, page)
 });
 
 export class MyAccountOrderListContainer extends SourceComponent {
@@ -22,10 +23,45 @@ export class MyAccountOrderListContainer extends SourceComponent {
         getOrders: PropTypes.func.isRequired
     };
 
+    state = {
+        limit: 15,
+        page: 0,
+        orders: [],
+        isGetNewOrders: true
+    };
+
     componentDidMount() {
+        const { limit, page } = this.state;
         this.setState({ isLoading: true });
 
-        this.getOrderList('5');
+        this.getOrderList(limit, page);
+
+        window.addEventListener('scroll', this.handleScroll);
+    }
+
+    handleScroll = () => {
+        const {
+            isMobile,
+            limit,
+            page,
+            isLoading,
+            isGetNewOrders
+        } = this.state;
+        const windowHeight = 'innerHeight' in window ? window.innerHeight : document.documentElement.offsetHeight;
+        const { body } = document;
+        const html = document.documentElement;
+        const footerHeight = !isMobile ? 300 : 0;
+        const docHeight = Math
+            .max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
+        const windowBottom = windowHeight + window.pageYOffset;
+
+        if (windowBottom + footerHeight >= docHeight && !isLoading && isGetNewOrders) {
+            this.setState({ isLoading: true }, () => this.getOrderList(limit, page));
+        }
+    };
+
+    componentWillUnmount() {
+        window.removeEventListener('scroll', this.handleScroll);
     }
 
     containerProps = () => {
@@ -34,23 +70,24 @@ export class MyAccountOrderListContainer extends SourceComponent {
         return { orders, isLoading, requestInProgress };
     };
 
-    getOrderList(limit = 0) {
+    getOrderList(limit = 0, page = 0) {
         const { getOrders, showErrorNotification } = this.props;
+        const { orders } = this.state;
 
         this.setState({ requestInProgress: true });
 
-        const params = limit ? `?limit=${limit}` : '';
-        getOrders(params).then(({ data }) => {
-            this.setState({ orders: data, isLoading: false, requestInProgress: false });
-
-            // First request have limit 5 orders to show something to user
-            // After we do second request to get 100 other orders
-            if (limit !== '100') {
-                this.getOrderList('100');
-            }
+        getOrders(limit, page).then(({ data }) => {
+            this.setState({
+                orders: data || orders,
+                isLoading: false,
+                requestInProgress: false,
+                limit: limit + 15,
+                page: page + 1,
+                isGetNewOrders: data.length > orders.length
+            });
         }).catch(() => {
             showErrorNotification(__('Error appeared while fetching orders'));
-            this.setState({ isLoading: false, requestInProgress: false });
+            this.setState({ isLoading: false, requestInProgress: false, isGetNewOrders: false });
         });
     }
 

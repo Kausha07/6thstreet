@@ -51,8 +51,9 @@ class MyAccountCancelCreate extends MyAccountReturnCreate {
 
     renderActions() {
         const { handleDiscardClick, selectedNumber } = this.props;
+        const itemString = selectedNumber === 1 ? __('item') : __('items');
         const submitText = selectedNumber <= 0
-            ? __('Cancel') : __('Cancel %s %s', selectedNumber, selectedNumber === 1 ? __('item') : __('items'));
+            ? __('Cancel') : `${__('Cancel')} ${selectedNumber} ${itemString}`;
 
         return (
             <div block="MyAccountReturnCreate" elem="Actions">

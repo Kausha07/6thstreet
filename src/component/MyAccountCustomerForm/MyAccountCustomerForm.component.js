@@ -74,7 +74,8 @@ export class MyAccountCustomerForm extends SourceMyAccountCustomerForm {
                 render: this.renderGender.bind(this)
             },
             email: {
-                isDisabled: false
+                isDisabled: false,
+                validation: ['notEmpty', 'email']
             },
             password: {
                 render: this.renderPassword.bind(this)

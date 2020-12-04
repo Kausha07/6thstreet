@@ -12,7 +12,6 @@ import './HeaderAccount.style';
 
 class HeaderAccount extends PureComponent {
     static propTypes = {
-        requestCustomerData: PropTypes.func.isRequired,
         isBottomBar: PropTypes.bool.isRequired,
         isAccount: PropTypes.bool.isRequired,
         isSignedIn: PropTypes.bool.isRequired,
@@ -53,9 +52,6 @@ class HeaderAccount extends PureComponent {
     };
 
     onSignIn = () => {
-        const { requestCustomerData } = this.props;
-
-        requestCustomerData();
         this.closePopup();
     };
 
@@ -107,13 +103,17 @@ class HeaderAccount extends PureComponent {
                   block="HeaderAccount"
                   elem="Button"
                   mods={ { isArabic: this._isArabic, isFooter } }
-                  onClick={ this.showMyAccountPopup }
+                  onClick={ isFooter ? this.redirectToAccount : this.showMyAccountPopup }
                 >
                     <label htmlFor="Account">{ accountButtonText }</label>
                 </button>
                 { this.renderMyAccountPopup() }
             </div>
         );
+    }
+
+    redirectToAccount() {
+        window.location = ('/my-account/dashboard');
     }
 
     render() {

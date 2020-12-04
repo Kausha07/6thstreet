@@ -26,7 +26,8 @@ class MenuBannerContainer extends PureComponent {
                     url: image_url,
                     link
                 }
-            ]
+            ],
+            isMenu: true
         };
     };
 

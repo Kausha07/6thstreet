@@ -5,6 +5,7 @@ import { withRouter } from 'react-router';
 
 import Image from 'Component/Image';
 import Loader from 'Component/Loader';
+import { getFinalPrice } from 'Component/Price/Price.config';
 import { CartItemType } from 'Type/MiniCart';
 import { isArabic } from 'Util/App';
 
@@ -142,15 +143,17 @@ export class SuccessCheckoutItem extends PureComponent {
                 basePrice
             }
         } = this.props;
+        const rowPrice = getFinalPrice(row_total, currency_code);
 
         const withoutDiscount = (
             <>
                 { currency_code }
                 <span>
-                    { `${parseFloat(row_total).toFixed(2)}` }
+                    { `${ rowPrice }` }
                 </span>
             </>
         );
+        const finalBasePrice = getFinalPrice(basePrice, currency_code);
 
         const withDiscount = (
             <div
@@ -160,7 +163,7 @@ export class SuccessCheckoutItem extends PureComponent {
                 <div>
                     { currency_code }
                     <span>
-                        { `${parseFloat(basePrice).toFixed(2)}` }
+                        { `${ finalBasePrice }` }
                     </span>
                 </div>
                 { withoutDiscount }
@@ -172,7 +175,7 @@ export class SuccessCheckoutItem extends PureComponent {
               block="SuccessCheckoutItem"
               elem="Price"
             >
-                { basePrice === row_total ? withoutDiscount : withDiscount }
+                { basePrice === row_total || !basePrice ? withoutDiscount : withDiscount }
             </div>
         );
     }

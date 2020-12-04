@@ -66,11 +66,7 @@ class PDPSummary extends PureComponent {
     }
 
     renderName() {
-        const { product: { name, alternate_name } } = this.props;
-
-        if (isArabic()) {
-            return <p>{ alternate_name }</p>;
-        }
+        const { product: { name } } = this.props;
 
         return (
             <p block="PDPSummary" elem="Name">{ name }</p>
@@ -139,24 +135,24 @@ class PDPSummary extends PureComponent {
     };
 
     renderColors() {
-        const { product: { color = '', stock_qty } } = this.props;
+        const { product: { colorfamily = '', stock_qty } } = this.props;
 
         if (stock_qty === 0) {
             return null;
         }
 
-        if (!color) {
+        if (!colorfamily) {
             return <div block="PDPSummary" elem="ProductColorBlock" />;
         }
 
-        if (Array.isArray(color)) {
+        if (Array.isArray(colorfamily)) {
             return (
             <div
               block="PDPSummary"
               elem="ProductColorBlock"
             >
                 <strong>{ __('Color:') }</strong>
-                { color.map((col) => this.renderColor(col)) }
+                { colorfamily.map((col) => this.renderColor(col)) }
             </div>
             );
         }
@@ -167,7 +163,7 @@ class PDPSummary extends PureComponent {
               elem="ProductColorBlock"
             >
                 <strong>{ __('Color:') }</strong>
-                { this.renderColor(color) }
+                { this.renderColor(colorfamily) }
             </div>
         );
     }

@@ -26,7 +26,8 @@ import isMobile from 'Util/Mobile';
 import './HeaderMainSection.style';
 
 export const mapStateToProps = (state) => ({
-    activeOverlay: state.OverlayReducer.activeOverlay
+    activeOverlay: state.OverlayReducer.activeOverlay,
+    chosenGender: state.AppState.gender
 });
 
 class HeaderMainSection extends NavigationAbstract {
@@ -172,7 +173,7 @@ class HeaderMainSection extends NavigationAbstract {
             return null;
         }
 
-        return (this.isPLP() || this.isPDP()) && isMobile.any() ? null : (
+        return (this.isPLP() || this.isPDP() || this.getPageType() === TYPE_BRAND) && isMobile.any() ? null : (
             <HeaderGenders
               key="genders"
               isMobile
@@ -222,6 +223,24 @@ class HeaderMainSection extends NavigationAbstract {
         );
     }
 
+    backFromPLP = () => {
+        const { history, chosenGender } = this.props;
+
+        switch (chosenGender) {
+        case 'women':
+            history.push('/women.html');
+            break;
+        case 'men':
+            history.push('/men.html');
+            break;
+        case 'kids':
+            history.push('/kids.html');
+            break;
+        default:
+            history.push('/');
+        }
+    };
+
     renderBack() {
         const { history } = this.props;
         const { isArabic } = this.state;
@@ -230,7 +249,7 @@ class HeaderMainSection extends NavigationAbstract {
             <div block="BackArrow" mods={ { isArabic } } key="back">
                 <button
                   block="BackArrow-Button"
-                  onClick={ history.goBack }
+                  onClick={ this.isPLP() ? this.backFromPLP : history.goBack }
                 >
                     <p>{ __('Back') }</p>
                 </button>

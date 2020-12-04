@@ -8,7 +8,17 @@ import {
     WishlistDispatcher
 } from 'SourceComponent/Router/Router.container';
 import { setCountry, setLanguage } from 'Store/AppState/AppState.action';
-import { isSignedIn } from 'Util/Auth';
+import { updateCustomerDetails } from 'Store/MyAccount/MyAccount.action';
+import {
+    deleteAuthorizationToken,
+    deleteMobileAuthorizationToken,
+    getAuthorizationToken,
+    getMobileAuthorizationToken,
+    isSignedIn,
+    setAuthorizationToken,
+    setMobileAuthorizationToken
+} from 'Util/Auth';
+import { getCookie } from 'Util/Url/Url';
 
 export const MyAccountDispatcher = import(
     /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -29,7 +39,9 @@ export const mapDispatchToProps = (dispatch) => ({
     setCountry: (value) => dispatch(setCountry(value)),
     setLanguage: (value) => dispatch(setLanguage(value)),
     requestCustomerData: () => MyAccountDispatcher
-        .then(({ default: dispatcher }) => dispatcher.requestCustomerData(dispatch))
+        .then(({ default: dispatcher }) => dispatcher.requestCustomerData(dispatch)),
+    updateCustomerDetails: () => dispatch(updateCustomerDetails({}))
+
 });
 
 export class RouterContainer extends SourceRouterContainer {
@@ -45,10 +57,38 @@ export class RouterContainer extends SourceRouterContainer {
     };
 
     componentDidMount() {
-        const { requestCustomerData } = this.props;
+        const { requestCustomerData, updateCustomerDetails } = this.props;
+        const decodedParams = atob(getCookie('authData'));
 
-        if (isSignedIn()) {
-            requestCustomerData();
+        if (decodedParams.match('mobileToken') && decodedParams.match('authToken')) {
+            const params = decodedParams.split('&').reduce((acc, param) => {
+                acc[param.substr(0, param.indexOf('='))] = param.substr(param.indexOf('=') + 1);
+
+                return acc;
+            }, {});
+
+            const { mobileToken } = params;
+            const { authToken } = params;
+
+            if (isSignedIn()) {
+                if (getMobileAuthorizationToken() === mobileToken && getAuthorizationToken() === authToken) {
+                    requestCustomerData();
+                } else {
+                    deleteAuthorizationToken();
+                    deleteMobileAuthorizationToken();
+                }
+            } else {
+                setMobileAuthorizationToken(mobileToken);
+                setAuthorizationToken(authToken);
+
+                requestCustomerData().then(() => {
+                    window.location.reload();
+                });
+            }
+        } else {
+            deleteAuthorizationToken();
+            deleteMobileAuthorizationToken();
+            updateCustomerDetails();
         }
     }
 
