@@ -57,7 +57,12 @@ export class MyAccountAddressTableContainer extends PureComponent {
     }
 
     onDeleteClick() {
-        const { showEditPopup, address, openForm } = this.props;
+        const {
+            showEditPopup,
+            address,
+            openForm
+        } = this.props;
+
         openForm();
         showEditPopup({
             action: DELETE_ADDRESS,
