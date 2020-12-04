@@ -324,7 +324,8 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
             },
             firstname: {
                 validation: ['notEmpty'],
-                value: firstname
+                value: firstname,
+                autocomplete: 'on'
             },
             lastname: {
                 validation: ['notEmpty'],
@@ -350,7 +351,8 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
             },
             country_id: {
                 validation: ['notEmpty'],
-                value: default_country
+                value: default_country,
+                autocomplete: 'none'
             },
             ...this.getRegionFields(),
             postcode: {

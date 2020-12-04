@@ -676,5 +676,9 @@
     "default": null,
     "card": null,
     "checkout": null,
-    "Nothing found": null
+    "Nothing found": null,
+    "Please add at least one delivery address!": null,
+    "Free delivery*. More info": null,
+    "here": null,
+    "Free delivery*. More info ": null
 }

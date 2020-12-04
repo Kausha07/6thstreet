@@ -19,7 +19,6 @@ import CheckoutDispatcher from 'Store/Checkout/Checkout.dispatcher';
 import { updateMeta } from 'Store/Meta/Meta.action';
 import { hideActiveOverlay } from 'Store/Overlay/Overlay.action';
 import StoreCreditDispatcher from 'Store/StoreCredit/StoreCredit.dispatcher';
-import { isSignedIn } from 'Util/Auth';
 import BrowserDatabase from 'Util/BrowserDatabase';
 import { checkProducts } from 'Util/Cart/Cart';
 import history from 'Util/History';
@@ -128,7 +127,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                 total,
                 total_segments = []
             },
-            updateStoreCredit
+            updateStoreCredit,
+            isSignedIn,
+            customer: {
+                addresses = []
+            }
         } = this.props;
 
         const {
@@ -168,6 +171,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                 showErrorNotification(__('Your cart is invalid'));
                 history.push('/');
             }
+        }
+
+        if (isSignedIn && addresses.length === 0) {
+            showInfoNotification(__('Please add at least one delivery address!'));
+            history.push('/my-account/address-book');
         }
 
         // if guest checkout is disabled and user is not logged in => throw him to homepage
