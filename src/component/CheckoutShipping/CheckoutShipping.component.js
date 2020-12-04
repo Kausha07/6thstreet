@@ -209,14 +209,17 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     renderDelivery() {
         const {
             shippingMethods,
-            onShippingMethodSelect
+            onShippingMethodSelect,
+            customer: {
+                addresses = []
+            }
         } = this.props;
 
-        const { isArabic } = this.state;
+        const { isArabic, isSignedIn } = this.state;
 
         return (
             <div block="CheckoutShippingStep" mods={ { isArabic } }>
-                { this.renderDeliveryButton() }
+                { isSignedIn && addresses.length !== 0 ? this.renderDeliveryButton() : null }
                 <CheckoutDeliveryOptions
                   shippingMethods={ shippingMethods }
                   onShippingMethodSelect={ onShippingMethodSelect }
