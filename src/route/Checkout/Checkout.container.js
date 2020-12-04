@@ -128,10 +128,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                 total_segments = []
             },
             updateStoreCredit,
-            isSignedIn,
-            customer: {
-                addresses = []
-            }
+            isSignedIn
         } = this.props;
 
         const {
@@ -171,11 +168,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                 showErrorNotification(__('Your cart is invalid'));
                 history.push('/');
             }
-        }
-
-        if (isSignedIn && addresses.length === 0) {
-            showInfoNotification(__('Please add at least one delivery address!'));
-            history.push('/my-account/address-book');
         }
 
         // if guest checkout is disabled and user is not logged in => throw him to homepage
