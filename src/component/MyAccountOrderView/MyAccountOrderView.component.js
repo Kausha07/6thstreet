@@ -13,8 +13,13 @@ import {
     STATUS_SUCCESS
 } from 'Component/MyAccountOrderListItem/MyAccountOrderListItem.config';
 import MyAccountOrderViewItem from 'Component/MyAccountOrderViewItem';
+import { getFinalPrice } from 'Component/Price/Price.config';
 import { ExtendedOrderType } from 'Type/API';
-import { isArabic } from 'Util/App';
+import { HistoryType } from 'Type/Common';
+import {
+    getCurrency,
+    isArabic
+} from 'Util/App';
 import { appendOrdinalSuffix } from 'Util/Common';
 import { formatDate } from 'Util/Date';
 
@@ -33,7 +38,8 @@ class MyAccountOrderView extends PureComponent {
         order: ExtendedOrderType,
         isLoading: PropTypes.bool.isRequired,
         getCountryNameById: PropTypes.func.isRequired,
-        openOrderCancelation: PropTypes.func.isRequired
+        openOrderCancelation: PropTypes.func.isRequired,
+        history: HistoryType.isRequired
     };
 
     static defaultProps = {
@@ -75,11 +81,12 @@ class MyAccountOrderView extends PureComponent {
     }
 
     renderTitle() {
+        const { isArabic } = this.state;
         const { openOrderCancelation, order: { status, increment_id } } = this.props;
         const buttonText = status === STATUS_COMPLETE ? __('Return an Item') : __('Cancel an Item');
 
         return (
-            <div block="MyAccountOrderView" elem="Heading">
+            <div block="MyAccountOrderView" elem="Heading" mods={ { isArabic } }>
                 <h3>{ __('Order #%s', increment_id) }</h3>
                 { !STATUS_FAILED.includes(status) && (
                     <button onClick={ openOrderCancelation }>{ buttonText }</button>
@@ -373,6 +380,99 @@ class MyAccountOrderView extends PureComponent {
         );
     }
 
+    renderPriceLine(price, name, mods = {}, allowZero = false) {
+        if (!price && !allowZero) {
+            return null;
+        }
+
+        const { isTotal, isStoreCredit, isClubApparel } = mods;
+        const formatPrice = isStoreCredit || isClubApparel ? parseFloat(-price) : parseFloat(price);
+
+        const { order: { order_currency_code: currency_code = getCurrency() } } = this.props;
+        const finalPrice = getFinalPrice(formatPrice, currency_code);
+
+        return (
+            <li block="MyAccountOrderView" elem="SummaryItem" mods={ mods }>
+                <strong block="MyAccountOrderView" elem="Text">
+                    { name }
+                    { isTotal && (
+                        <>
+                        { ' ' }
+                        <span>{ __('(Taxes included)') }</span>
+                        </>
+                    ) }
+                </strong>
+                <strong block="MyAccountOrderView" elem="Price">
+                    { currency_code }
+                    { ' ' }
+                    { finalPrice }
+                </strong>
+            </li>
+        );
+    }
+
+    renderPaymentSummary() {
+        const {
+            order: {
+                subtotal = 0,
+                total_due: total = 0,
+                shipping_amount = 0,
+                discount_amount = 0,
+                msp_cod_amount = 0,
+                tax_amount = 0,
+                customer_balance_amount = 0,
+                club_apparel_amount = 0,
+                currency_code = getCurrency()
+            }
+        } = this.props;
+        const grandTotal = getFinalPrice(total, currency_code);
+        const subTotal = getFinalPrice(subtotal, currency_code);
+
+        return (
+            <div block="MyAccountOrderView" elem="OrderTotals">
+                <ul>
+                    <div block="MyAccountOrderView" elem="Subtotals">
+                        { this.renderPriceLine(subTotal, __('Subtotal')) }
+                        { this.renderPriceLine(shipping_amount, __('Shipping'), { divider: true }) }
+                        { customer_balance_amount !== 0
+                            ? this.renderPriceLine(customer_balance_amount, __('Store Credit'), { isStoreCredit: true })
+                            : null }
+                        { parseFloat(club_apparel_amount) !== 0
+                            ? this.renderPriceLine(
+                                club_apparel_amount,
+                                __('Club Apparel Redemption'),
+                                { isClubApparel: true }
+                            )
+                            : null }
+                        { parseFloat(discount_amount) !== 0
+                            ? this.renderPriceLine(discount_amount, __('Discount'))
+                            : null }
+                        { parseFloat(tax_amount) !== 0
+                            ? this.renderPriceLine(tax_amount, __('Tax'))
+                            : null }
+                        { parseFloat(msp_cod_amount) !== 0
+                            ? this.renderPriceLine(msp_cod_amount, __('Cash on Delivery'))
+                            : null }
+                        { this.renderPriceLine(grandTotal, __('Total'), { isTotal: true }, true) }
+                    </div>
+                </ul>
+            </div>
+        );
+    }
+
+    goBack = () => {
+        const { history } = this.props;
+
+        history.goBack();
+    };
+
+    renderBackButton() {
+        const { isArabic } = this.state;
+
+        // eslint-disable-next-line jsx-a11y/control-has-associated-label
+        return <button block="MyAccountOrderView" elem="BackButton" mods={ { isArabic } } onClick={ this.goBack } />;
+    }
+
     render() {
         const { isLoading, order } = this.props;
 
@@ -389,7 +489,10 @@ class MyAccountOrderView extends PureComponent {
         return (
             <div block="MyAccountOrderView">
                 <Loader isLoading={ isLoading } />
-                { this.renderTitle() }
+                <div block="MyAccountOrderView" elem="Header">
+                    { this.renderBackButton() }
+                    { this.renderTitle() }
+                </div>
                 { this.renderStatus() }
                 { this.renderPackagesMessage() }
                 { this.renderAccordions() }
@@ -398,6 +501,7 @@ class MyAccountOrderView extends PureComponent {
                 { this.renderAddress(__('Delivering to'), billing_address) }
                 { this.renderAddress(__('Billing Address'), billing_address) }
                 { this.renderPaymentType() }
+                { this.renderPaymentSummary() }
             </div>
         );
     }

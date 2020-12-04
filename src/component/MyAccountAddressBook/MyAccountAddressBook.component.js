@@ -127,11 +127,16 @@ export class MyAccountAddressBook extends PureComponent {
 
     renderAddressList() {
         const { customer: { addresses = [] } } = this.props;
+
         if (!addresses.length) {
             return this.renderNoAddresses();
         }
 
-        return addresses.map(this.renderAddress);
+        const defaultAddress = addresses.filter(({ default_billing }) => default_billing);
+        const simpleAddresses = addresses.filter(({ default_billing }) => !default_billing);
+        const sortedAddresses = [...defaultAddress, ...simpleAddresses];
+
+        return sortedAddresses.map(this.renderAddress);
     }
 
     render() {

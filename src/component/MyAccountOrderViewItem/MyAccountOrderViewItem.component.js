@@ -9,6 +9,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
     renderDetails() {
         const {
             item: {
+                brand_name,
                 name,
                 color,
                 price,
@@ -27,7 +28,8 @@ export class MyAccountOrderViewItem extends SourceComponent {
 
         return (
             <div block="MyAccountReturnSuccessItem" elem="Details">
-                <h2>{ name }</h2>
+                <h2>{ brand_name }</h2>
+                <div block="MyAccountOrderViewItem" elem="Name">{ name }</div>
                 <div block="MyAccountReturnSuccessItem" elem="DetailsOptions">
                     { !!color && (
                         <p>

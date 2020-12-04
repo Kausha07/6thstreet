@@ -1,10 +1,9 @@
-import { DETAILS_STEP, SHIPPING_STEP } from '@scandipwa/scandipwa/src/route/Checkout/Checkout.config';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { CARD } from 'Component/CheckoutPayments/CheckoutPayments.config';
 import { CC_POPUP_ID } from 'Component/CreditCardPopup/CreditCardPopup.config';
-import { AUTHORIZED_STATUS } from 'Route/Checkout/Checkout.config';
+import { AUTHORIZED_STATUS, DETAILS_STEP, SHIPPING_STEP } from 'Route/Checkout/Checkout.config';
 import { BILLING_STEP, PAYMENT_TOTALS } from 'SourceRoute/Checkout/Checkout.config';
 import {
     CheckoutContainer as SourceCheckoutContainer,
@@ -20,7 +19,6 @@ import CheckoutDispatcher from 'Store/Checkout/Checkout.dispatcher';
 import { updateMeta } from 'Store/Meta/Meta.action';
 import { hideActiveOverlay } from 'Store/Overlay/Overlay.action';
 import StoreCreditDispatcher from 'Store/StoreCredit/StoreCredit.dispatcher';
-import { isSignedIn } from 'Util/Auth';
 import BrowserDatabase from 'Util/BrowserDatabase';
 import { checkProducts } from 'Util/Cart/Cart';
 import history from 'Util/History';
@@ -121,12 +119,16 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         const {
             history,
             showInfoNotification,
+            showErrorNotification,
             guest_checkout = true,
             totals = {},
             totals: {
-                items = []
+                items = [],
+                total,
+                total_segments = []
             },
-            updateStoreCredit
+            updateStoreCredit,
+            isSignedIn
         } = this.props;
 
         const {
@@ -156,6 +158,16 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         if (Object.keys(totals).length && !items.length && checkoutStep !== DETAILS_STEP) {
             showInfoNotification(__('Please add at least one product to cart!'));
             history.push('/cart');
+            return;
+        }
+
+        if (Object.keys(totals).length && total === 0 && checkoutStep !== DETAILS_STEP) {
+            const totalSum = total_segments.reduce((acc, item) => acc + item.value, 0);
+
+            if (totalSum !== 0) {
+                showErrorNotification(__('Your cart is invalid'));
+                history.push('/');
+            }
         }
 
         // if guest checkout is disabled and user is not logged in => throw him to homepage

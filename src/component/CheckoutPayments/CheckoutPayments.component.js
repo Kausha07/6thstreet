@@ -5,10 +5,8 @@ import PropTypes from 'prop-types';
 import CheckoutPayment from 'Component/CheckoutPayment';
 import { PAYMENTS_DATA } from 'Component/CheckoutPayment/CheckoutPayment.config';
 import tabbyAr from 'Component/CheckoutPayment/icons/tabby-logo-black-ar@2x.png';
-import ClubApparel from 'Component/ClubApparel';
 import CreditCard from 'Component/CreditCard';
 import Slider from 'Component/Slider';
-import StoreCredit from 'Component/StoreCredit';
 import TabbyMiniPopup from 'Component/TabbyMiniPopup';
 import {
     TABBY_TOOLTIP_INSTALLMENTS,
@@ -16,7 +14,6 @@ import {
 } from 'Component/TabbyMiniPopup/TabbyMiniPopup.config';
 import SourceCheckoutPayments from 'SourceComponent/CheckoutPayments/CheckoutPayments.component';
 import { isArabic } from 'Util/App';
-import { isSignedIn } from 'Util/Auth';
 
 import {
     CARD,
@@ -237,19 +234,6 @@ export class CheckoutPayments extends SourceCheckoutPayments {
         );
     }
 
-    renderToggleableDiscountOptions() {
-        if (!isSignedIn()) {
-            return null;
-        }
-
-        return (
-            <div block="CheckoutPayments" elem="DiscountOptionWrapper">
-                <StoreCredit canApply hideIfZero />
-                <ClubApparel hideIfZero />
-            </div>
-        );
-    }
-
     renderPayments() {
         const { paymentMethods = [] } = this.props;
         const { tabbyPaymentMethods = [] } = this.state;
@@ -295,7 +279,6 @@ export class CheckoutPayments extends SourceCheckoutPayments {
                 </ul>
                 { this.renderSelectedPayment() }
                 { this.renderPayPal() }
-                { this.renderToggleableDiscountOptions() }
             </>
         );
     }

@@ -4,7 +4,7 @@ import ClubApparel from 'Component/ClubApparel';
 import CmsBlock from 'Component/CmsBlock';
 import Link from 'Component/Link';
 import Loader from 'Component/Loader';
-import { FIXED_CURRENCIES } from 'Component/Price/Price.config';
+import { getFinalPrice } from 'Component/Price/Price.config';
 import StoreCredit from 'Component/StoreCredit';
 import { SHIPPING_STEP } from 'Route/Checkout/Checkout.config';
 import {
@@ -157,6 +157,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
         }
 
         const { totals: { currency_code = getCurrency() } } = this.props;
+        const finalPrice = getFinalPrice(price, currency_code);
 
         return (
             <li block="CheckoutOrderSummary" elem="SummaryItem" mods={ mods }>
@@ -164,7 +165,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                     { name }
                 </strong>
                 <strong block="CheckoutOrderSummary" elem="Price">
-                    { `${ parseFloat(price) || price === 0 ? currency_code : '' } ${ price }` }
+                    { `${ parseFloat(price) || price === 0 ? currency_code : '' } ${ finalPrice }` }
                 </strong>
             </li>
         );
@@ -180,15 +181,15 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
             },
             checkoutStep
         } = this.props;
-        const fixedPrice = FIXED_CURRENCIES.includes(currency_code);
-        const grandTotal = fixedPrice ? (total).toFixed(3) : total;
+        const grandTotal = getFinalPrice(total, currency_code);
+        const subTotal = getFinalPrice(subtotal, currency_code);
         const { totals: { coupon_code: couponCode, total_segments: totals = [] } } = this.props;
 
         return (
             <div block="CheckoutOrderSummary" elem="OrderTotals">
                 <ul>
                     <div block="CheckoutOrderSummary" elem="Subtotals">
-                        { this.renderPriceLine(fixedPrice ? subtotal.toFixed(3) : subtotal, __('Subtotal')) }
+                        { this.renderPriceLine(subTotal, __('Subtotal')) }
                         { checkoutStep !== SHIPPING_STEP
                             && this.renderPriceLine(shipping_amount, __('Shipping'), { divider: true }) }
                         { this.renderPriceLine(

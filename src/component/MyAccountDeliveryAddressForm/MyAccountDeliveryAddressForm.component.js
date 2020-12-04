@@ -12,6 +12,7 @@
 import PropTypes from 'prop-types';
 
 import MyAccountAddressFieldForm from 'Component/MyAccountAddressFieldForm';
+import { PHONE_CODES } from 'Component/MyAccountAddressFieldForm/MyAccountAddressFieldForm.config';
 import { COUNTRY_CODES_FOR_PHONE_VALIDATION } from 'Component/MyAccountAddressForm/MyAccountAddressForm.config';
 import { addressType } from 'Type/Account';
 import { countriesType } from 'Type/Config';
@@ -246,7 +247,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
 
     addPhoneCode = () => {
         const { default_country } = this.props;
-        const code = this.renderCurrentPhoneCode(default_country);
+        const code = PHONE_CODES[default_country] || '';
         return code;
     };
 
@@ -323,7 +324,8 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
             },
             firstname: {
                 validation: ['notEmpty'],
-                value: firstname
+                value: firstname,
+                autocomplete: 'on'
             },
             lastname: {
                 validation: ['notEmpty'],
@@ -349,7 +351,8 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
             },
             country_id: {
                 validation: ['notEmpty'],
-                value: default_country
+                value: default_country,
+                autocomplete: 'none'
             },
             ...this.getRegionFields(),
             postcode: {

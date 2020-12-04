@@ -100,16 +100,46 @@
     }
 
     &-SubmitBtn {
-        display: none;
+        height: 25px;
+        width: 25px;
+        padding: 0;
+        background-color: transparent;
+        position: absolute;
+        top: 7px;
+        left: 5px;
+
+        img {
+            width: 15px;
+            height: 15px;
+        }
+
+        @include desktop {
+            top: 5px;
+            left: unset;
+            right: 5px;
+        }
+
+        &_isArabic {
+            left: unset;
+            right: 5px;
+
+            @include desktop {
+                left: 5px;
+                right: unset;
+            }
+        }
     }
 
     &-Clear {
         width: 45px;
         height: 100%;
         top: 0;
+        display: none;
 
-        @include desktop {
-            display: none;
+        &_isClearVisible {
+            @include mobile {
+                display: block;
+            }
         }
     }
 
@@ -130,10 +160,7 @@
         width: 100%;
 
         input {
-            background-image: url('./icons/search-black.png');
-            background-size: 13px;
             background-color: transparent;
-            background-position: 10px 50%;
             border: none;
             border-radius: 5px;
             font-weight: var(--fw-regular);
@@ -156,15 +183,16 @@
         }
     }
 
-    &-SubmitBtn {
-        display: none;
-    }
-
     &_isArabic {
         #search-field {
             background-position: calc(100% - 10px) 50%;
             padding-right: 35px;
             padding-left: 10px;
+
+            @include desktop {
+                padding-left: 35px;
+                padding-right: 10px;
+            }
         }
 
         right: unset;

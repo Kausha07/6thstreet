@@ -54,14 +54,28 @@ class PDPAddToCart extends PureComponent {
 
         switch (simple_products[code].quantity) {
         case '0':
-            return (`${size} - Out of stock`);
+            return (`${size} - ${__('Out of stock')}`);
         case '1':
-            return (`${size} - 1 left in stock`);
+            return (`${size} - ${__('1 left in stock')}`);
         case '2' || '3':
-            return (`${size} - low stock`);
+            return (`${size} - ${__('low stock')}`);
         default:
             return size;
         }
+    }
+
+    renderSizeOption(simple_products, code, label) {
+        return (
+            <option
+              key={ code }
+              block="PDPAddToCart"
+              elem="SizeOption"
+              value={ code }
+              disabled={ simple_products[code].quantity === '0' }
+            >
+                { label }
+            </option>
+        );
     }
 
     getSizeSelect() {
@@ -71,20 +85,17 @@ class PDPAddToCart extends PureComponent {
 
         if (sizeObject.sizeCodes !== undefined
             && simple_products !== undefined
-            && product[`size_${selectedSizeType}`].length !== 0) {
-            const listItems = sizeObject.sizeCodes.map((code) => (
-                <option
-                  key={ code }
-                  block="PDPAddToCart"
-                  elem="SizeOption"
-                  value={ code }
-                  disabled={ simple_products[code].quantity === '0' }
-                >
-                    { this.renderSizeAndOnQunatityBasedMessage(code) }
-                </option>
-            ));
+            && product[`size_${selectedSizeType}`].length !== 0
+        ) {
+            return sizeObject.sizeCodes.reduce((acc, code) => {
+                const label = this.renderSizeAndOnQunatityBasedMessage(code);
 
-            return listItems;
+                if (label) {
+                    acc.push(this.renderSizeOption(simple_products, code, label));
+                }
+
+                return acc;
+            }, []);
         }
 
         return null;

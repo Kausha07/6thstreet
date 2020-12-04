@@ -18,12 +18,19 @@
 
     &-TabContent {
         @include after-mobile {
-            padding: 0 105px;
+            padding-left: 105px;
             width: 100%;
         }
 
         @include desktop {
-            width: 70%;
+            width: 100%;
+        }
+
+        &_isArabic {
+            @include after-mobile {
+                padding-left: 0;
+                padding-right: 105px;
+            }
         }
     }
 

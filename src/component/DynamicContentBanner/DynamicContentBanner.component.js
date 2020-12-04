@@ -3,6 +3,7 @@ import { PureComponent } from 'react';
 
 import Image from 'Component/Image';
 import Link from 'Component/Link';
+import isMobile from 'Util/Mobile';
 
 import './DynamicContentBanner.style';
 
@@ -15,10 +16,19 @@ class DynamicContentBanner extends PureComponent {
                 height: PropTypes.string,
                 width: PropTypes.string
             })
-        ).isRequired
+        ).isRequired,
+        isMenu: PropTypes.bool
     };
 
-    renderImage(item, i) {
+    static defaultProps = {
+        isMenu: false
+    };
+
+    state = {
+        isMobile: isMobile.any() || isMobile.tablet()
+    };
+
+    renderImage = (item, i) => {
         const {
             url,
             link
@@ -29,12 +39,15 @@ class DynamicContentBanner extends PureComponent {
         // TODO: calculate aspect ratio to ensure images not jumping.
         if (!link) {
             return (
-                <Image
-                  key={ i }
-                  src={ url }
-                  ratio="custom"
-                  height="auto"
-                />
+                <>
+                    <Image
+                      key={ i }
+                      src={ url }
+                      ratio="custom"
+                      height="auto"
+                    />
+                    { this.renderButton() }
+                </>
             );
         }
 
@@ -48,7 +61,17 @@ class DynamicContentBanner extends PureComponent {
                   ratio="custom"
                   height="auto"
                 />
+                { this.renderButton() }
             </Link>
+        );
+    };
+
+    renderButton() {
+        const { isMobile } = this.state;
+        const { isMenu } = this.props;
+
+        return isMobile || !isMenu ? null : (
+            <button>{ __('Shop now') }</button>
         );
     }
 

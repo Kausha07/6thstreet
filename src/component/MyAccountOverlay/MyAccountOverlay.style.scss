@@ -377,10 +377,10 @@
         padding: 5px;
         display: flex;
         align-items: center;
+        justify-content: center;
 
         svg {
             fill: $white;
-            margin: 0 auto;
         }
 
         &_isArabic {
@@ -580,10 +580,9 @@
                 width: 14px;
                 margin-right: 6px;
 
-
                 &:hover {
                     &::after {
-                            --checkmark-color: var(--black-color);
+                        --checkmark-color: var(--black-color);
                     }
                 }
 
@@ -609,6 +608,10 @@
 
             &:checked + label {
                 --primary-base-color: var(--black-color);
+
+                &::after {
+                    --checkmark-color: var(--black-color);
+                }
             }
 
             &:focus {

@@ -8,13 +8,13 @@ export const PAYMENTS_DATA = {
     checkoutcom_card_payment: {
         name: 'card',
         mod: { card: true },
-        paragraph: 'card',
+        paragraph: __('card'),
         img: card
     },
     checkout: {
         name: 'card',
         mod: { card: true },
-        paragraph: 'checkout',
+        paragraph: __('checkout'),
         img: card
     },
     apple_pay: {
@@ -26,7 +26,7 @@ export const PAYMENTS_DATA = {
     checkout_apple_pay: {
         name: 'apple',
         mod: { apple: true },
-        paragraph: 'checkout',
+        paragraph: __('checkout'),
         img: apple
     },
     tabby_checkout: {
@@ -44,7 +44,7 @@ export const PAYMENTS_DATA = {
     msp_cashondelivery: {
         name: 'cash',
         mod: { cash: true },
-        paragraph: 'cash',
+        paragraph: __('cash'),
         img: cash
     }
 };

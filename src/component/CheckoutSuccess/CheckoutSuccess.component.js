@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-globals */
+/* eslint-disable no-magic-numbers */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
@@ -6,10 +8,10 @@ import Field from 'Component/Field';
 import Form from 'Component/Form';
 import Link from 'Component/Link';
 import MyAccountOverlay from 'Component/MyAccountOverlay';
+import { getFinalPrice } from 'Component/Price/Price.config';
 import SuccessCheckoutItem from 'Component/SuccessCheckoutItem';
 import { TotalsType } from 'Type/MiniCart';
 import { getDiscountFromTotals, isArabic } from 'Util/App';
-import { roundPrice } from 'Util/Price';
 
 import Apple from './icons/apple.png';
 import Cash from './icons/cash.png';
@@ -213,7 +215,7 @@ export class CheckoutSuccess extends PureComponent {
                       block="TrackOrder"
                       elem="Text-SubTitle"
                     >
-                        { __('sign in to access to your account and tract your order') }
+                        { __('sign in to access to your account and track your order') }
                     </span>
                 </div>
                 <button block="secondary" onClick={ this.showMyAccountPopup }>
@@ -297,7 +299,8 @@ export class CheckoutSuccess extends PureComponent {
 
     renderTotalPrice() {
         const { initialTotals: { total, quote_currency_code } } = this.props;
-        const fullPrice = `${quote_currency_code} ${total}`;
+        const finalPrice = getFinalPrice(total, quote_currency_code);
+        const fullPrice = `${quote_currency_code} ${finalPrice}`;
 
         return (
             <div block="Totals">
@@ -317,7 +320,9 @@ export class CheckoutSuccess extends PureComponent {
             return null;
         }
         const { initialTotals: { quote_currency_code } } = this.props;
-        const fullPrice = `${quote_currency_code} ${roundPrice(price)}`;
+        const finalPrice = getFinalPrice(price, quote_currency_code);
+
+        const fullPrice = `${quote_currency_code} ${finalPrice}`;
 
         return (
             <div block="Totals">
@@ -499,12 +504,14 @@ export class CheckoutSuccess extends PureComponent {
             );
         }
 
-        if (paymentMethod.code.match(/tabby/)) {
-            this.setState({ paymentTitle: 'Tabby' });
+        if (paymentMethod.code.match(/tabby_installments/)) {
+            this.setState({ paymentTitle: __('Tabby: Pay in installments') });
+        } else if (paymentMethod.code.match(/tabby_checkout/)) {
+            this.setState({ paymentTitle: __('Tabby: Pay later') });
         } else if (paymentMethod.code.match(/apple/)) {
-            this.setState({ paymentTitle: 'Apple' });
+            this.setState({ paymentTitle: __('Apple') });
         } else if (paymentMethod.code.match(/cash/)) {
-            this.setState({ paymentTitle: 'Cash' });
+            this.setState({ paymentTitle: __('Cash') });
         }
 
         const { paymentTitle } = this.state;
@@ -518,10 +525,11 @@ export class CheckoutSuccess extends PureComponent {
         );
     };
 
-    renderPaymentMethodIcon(paymentTitle) {
+    renderPaymentMethodIcon(paymentTitle = '') {
         const { isArabic } = this.state;
+        const formatedString = paymentTitle.split(':')[0];
 
-        switch (paymentTitle) {
+        switch (formatedString) {
         case 'Tabby':
             if (!isArabic) {
                 return <img src={ Tabby } alt={ paymentTitle } />;

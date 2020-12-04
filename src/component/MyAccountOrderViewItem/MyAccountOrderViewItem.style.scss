@@ -1,4 +1,8 @@
 .MyAccountOrderViewItem {
     border-bottom: 2px solid var(--divider-color);
     padding: 10px 0;
+
+    &-Name {
+        margin: 0 0 10px 0;
+    }
 }

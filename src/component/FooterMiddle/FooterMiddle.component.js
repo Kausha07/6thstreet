@@ -79,9 +79,13 @@ class FooterMiddle extends PureComponent {
     render() {
         const { isCheckout } = this.state;
 
+        if (isCheckout) {
+            return null;
+        }
+
         return (
-            <div block="FooterMiddle" mods={ { isCheckout } }>
-                <div block="FooterMiddle" elem="Layout" mods={ { isCheckout } }>
+            <div block="FooterMiddle">
+                <div block="FooterMiddle" elem="Layout">
                     { this.renderCustomerSupport() }
                     { this.renderAccount() }
                     { this.renderStoreSwitcher() }

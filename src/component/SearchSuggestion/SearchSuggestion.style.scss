@@ -173,12 +173,6 @@ root {
             width: 100%;
             display: block;
 
-            @include before-desktop {
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-
             span {
                 position: absolute;
                 right: 0;
@@ -197,6 +191,17 @@ root {
         }
     }
 
+    &-Recommended,
+    &-Brands {
+        a {
+            @include before-desktop {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+    }
+
     &_isArabic {
         .SearchSuggestion-Content {
             ul {
@@ -209,10 +214,10 @@ root {
                     }
                 }
             }
+        }
 
-            @include desktop {
-                right: 0;
-            }
+        @include desktop {
+            left: -20px;
         }
 
         .TrandingBrands {

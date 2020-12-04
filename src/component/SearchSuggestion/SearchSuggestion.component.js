@@ -5,6 +5,7 @@ import Link from 'Component/Link';
 import Loader from 'Component/Loader';
 import { Products } from 'Util/API/endpoint/Product/Product.type';
 import { isArabic } from 'Util/App';
+import isMobile from 'Util/Mobile';
 
 import './SearchSuggestion.style';
 
@@ -21,13 +22,15 @@ class SearchSuggestion extends PureComponent {
     };
 
     state = {
-        isArabic: isArabic()
+        isArabic: isArabic(),
+        isMobile: isMobile.any() || isMobile.tablet()
     };
 
     renderLoader() {
         const { isLoading } = this.props;
+        const { isMobile } = this.state;
 
-        return (
+        return isMobile ? null : (
             <Loader isLoading={ isLoading } />
         );
     }
@@ -98,7 +101,7 @@ class SearchSuggestion extends PureComponent {
     }
 
     renderNothingFound() {
-        return 'Nothing found';
+        return __('Nothing found');
     }
 
     renderTrendingBrand = (brand, i) => {
