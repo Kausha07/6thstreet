@@ -156,7 +156,8 @@ const config = {
       'url',
       'news_from_date',
       'news_to_date',
-      'promotion'
+      'promotion',
+      'also_available_color'
     ],
     facets: FACET_FILTERS,
     facetFilters: [],
