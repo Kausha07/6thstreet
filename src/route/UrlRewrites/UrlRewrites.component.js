@@ -22,12 +22,14 @@ class UrlRewrites extends PureComponent {
     static propTypes = {
         type: PropTypes.string,
         id: PropTypes.number,
+        sku: PropTypes.string,
         isLoading: PropTypes.bool.isRequired
     };
 
     static defaultProps = {
         type: '',
-        id: -1
+        id: -1,
+        sku: ''
     };
 
     typeMap = {
@@ -39,11 +41,11 @@ class UrlRewrites extends PureComponent {
     render404;
 
     renderPDP() {
-        const { id } = this.props;
+        const { id, sku } = this.props;
 
         return (
             <GTMRouteWrapper route={ PRODUCT_PAGE }>
-                <PDP id={ id } />
+                <PDP id={ id } sku={ sku } />
             </GTMRouteWrapper>
         );
     }
