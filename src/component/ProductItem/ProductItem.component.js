@@ -45,9 +45,9 @@ class ProductItem extends PureComponent {
     }
 
     renderColors() {
-        const { product: { also_available_color } } = this.props;
+        const { product: { also_available_color, promotion } } = this.props;
 
-        if (also_available_color !== undefined) {
+        if (also_available_color !== undefined && !promotion) {
             const count = also_available_color.split(',').length - 2;
 
             return count > 0

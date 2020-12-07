@@ -42,7 +42,7 @@ export const mapDispatchToProps = (dispatch) => ({
     requestCustomerData: () => MyAccountDispatcher
         .then(({ default: dispatcher }) => dispatcher.requestCustomerData(dispatch)),
     updateCustomerDetails: () => dispatch(updateCustomerDetails({})),
-    getCart: () => CartDispatcher.getCart(dispatch)
+    getCart: (isNew = false) => CartDispatcher.getCart(dispatch, isNew)
 });
 
 export class RouterContainer extends SourceRouterContainer {
@@ -88,7 +88,7 @@ export class RouterContainer extends SourceRouterContainer {
                 });
             }
 
-            getCart();
+            getCart(true);
         } else {
             deleteAuthorizationToken();
             deleteMobileAuthorizationToken();
