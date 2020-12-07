@@ -34,6 +34,7 @@ export const mapStateToProps = (state) => ({
 
 export const mapDispatchToProps = (dispatch) => ({
     requestProduct: (options) => PDPDispatcher.requestProduct(options, dispatch),
+    requestProductBySku: (options) => PDPDispatcher.requestProductBySku(options, dispatch),
     setIsLoading: (isLoading) => dispatch(setPDPLoading(isLoading)),
     updateBreadcrumbs: (breadcrumbs) => {
         BreadcrumbsDispatcher.then(({ default: dispatcher }) => dispatcher.update(breadcrumbs, dispatch));
@@ -47,10 +48,12 @@ export class PDPContainer extends PureComponent {
     static propTypes = {
         options: PropTypes.shape({ id: PropTypes.number }).isRequired,
         requestProduct: PropTypes.func.isRequired,
+        requestProductBySku: PropTypes.func.isRequired,
         setIsLoading: PropTypes.func.isRequired,
         isLoading: PropTypes.bool.isRequired,
         product: Product.isRequired,
         id: PropTypes.number.isRequired,
+        sku: PropTypes.string,
         updateBreadcrumbs: PropTypes.func.isRequired,
         changeHeaderState: PropTypes.func.isRequired,
         setGender: PropTypes.func.isRequired,
@@ -64,7 +67,8 @@ export class PDPContainer extends PureComponent {
     };
 
     static defaultProps = {
-        nbHits: 0
+        nbHits: 0,
+        sku: ''
     };
 
     state = {
@@ -189,10 +193,22 @@ export class PDPContainer extends PureComponent {
     }
 
     requestProduct() {
-        const { requestProduct, id } = this.props;
+        const {
+            requestProduct,
+            requestProductBySku,
+            id,
+            setIsLoading,
+            sku
+        } = this.props;
 
         // ignore product request if there is no ID passed
         if (!id) {
+            if (sku) {
+                requestProductBySku({ options: { sku } });
+
+                setIsLoading(false);
+            }
+
             return;
         }
 

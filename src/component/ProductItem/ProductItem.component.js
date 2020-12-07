@@ -44,6 +44,25 @@ class ProductItem extends PureComponent {
         return <ProductLabel product={ product } />;
     }
 
+    renderColors() {
+        const { product: { also_available_color } } = this.props;
+
+        if (also_available_color !== undefined) {
+            const count = also_available_color.split(',').length - 2;
+
+            return count > 0
+                ? (
+                    <span block="PLPSummary" elem="Colors">
+                        { `+${count} ` }
+                        { __('Colors') }
+                    </span>
+                )
+                : null;
+        }
+
+        return null;
+    }
+
     renderExclusive() {
         const { product: { promotion } } = this.props;
 
@@ -63,6 +82,7 @@ class ProductItem extends PureComponent {
             <div>
                 <Image src={ thumbnail_url } />
                 { this.renderExclusive() }
+                { this.renderColors() }
             </div>
         );
     }

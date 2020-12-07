@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import CheckoutAddressBook from 'Component/CheckoutAddressBook';
 import CheckoutPayments from 'Component/CheckoutPayments';
 import CreditCardTooltip from 'Component/CreditCardTooltip';
-import Field from 'Component/Field';
 import Form from 'Component/Form';
 import MyAccountAddressPopup from 'Component/MyAccountAddressPopup';
 import { getFinalPrice } from 'Component/Price/Price.config';
@@ -161,42 +160,6 @@ export class CheckoutBilling extends SourceCheckoutBilling {
         );
     }
 
-    renderDifferentBillingLabel = () => (
-        <>
-            { __('Add') }
-            <span> </span>
-            <span>
-                { __('Billing address') }
-            </span>
-        </>
-    );
-
-    renderSameAsShippingCheckbox() {
-        const {
-            isSameAsShipping,
-            onSameAsShippingChange,
-            totals: { is_virtual }
-        } = this.props;
-        const { isSignedIn } = this.state;
-
-        if (is_virtual) {
-            return null;
-        }
-
-        return isSignedIn ? (
-            <Field
-              id="sameAsShippingAddress"
-              name="sameAsShippingAddress"
-              type="toggle"
-              label={ this.renderDifferentBillingLabel() }
-              value="sameAsShippingAddress"
-              mix={ { block: 'CheckoutBilling', elem: 'Checkbox' } }
-              checked={ !isSameAsShipping }
-              onChange={ onSameAsShippingChange }
-            />
-        ) : null;
-    }
-
     renderPayments() {
         const {
             paymentMethods = [],
@@ -326,12 +289,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
     }
 
     renderAddresses() {
-        return (
-            <>
-                { this.renderSameAsShippingCheckbox() }
-                { this.renderAddressBook() }
-            </>
-        );
+        return this.renderAddressBook();
     }
 
     render() {
