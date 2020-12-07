@@ -2,6 +2,8 @@ export const STATUS_COMPLETE = 'complete';
 
 export const STATUS_CANCELED = 'canceled';
 
+export const STATUS_CLOSED = 'closed';
+
 export const STATUS_PROCESSING = 'processing';
 
 export const STATUS_PAYMENT_ABORTED = 'payment_aborted';
@@ -11,7 +13,8 @@ export const STATUS_PAYMENT_SUCCESS = 'payment_success';
 export const STATUS_HIDE_BAR = [
     STATUS_COMPLETE,
     STATUS_CANCELED,
-    STATUS_PAYMENT_ABORTED
+    STATUS_PAYMENT_ABORTED,
+    STATUS_CLOSED
 ];
 
 export const STATUS_FAILED = [

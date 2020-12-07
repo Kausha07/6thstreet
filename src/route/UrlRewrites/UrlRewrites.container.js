@@ -33,7 +33,8 @@ export class UrlRewritesContainer extends PureComponent {
         prevPathname: '',
         isLoading: true,
         type: '',
-        id: -1
+        id: -1,
+        sku: ''
     };
 
     constructor(props) {
@@ -66,6 +67,7 @@ export class UrlRewritesContainer extends PureComponent {
         const slicedUrl = urlParam.slice(urlParam.search('id/'));
         // eslint-disable-next-line no-magic-numbers
         const magentoProductId = Number((slicedUrl.slice('3')).split('/')[0]);
+        const possibleSku = this.getPossibleSku();
 
         if (isUpdate) {
             this.setState({
@@ -76,7 +78,7 @@ export class UrlRewritesContainer extends PureComponent {
 
         // TODO: switch to "executeGet" afterwards
         const { urlResolver } = await fetchQuery(UrlRewritesQuery.getQuery({ urlParam }));
-        const { type = magentoProductId ? TYPE_PRODUCT : TYPE_NOTFOUND, id } = urlResolver || {};
+        const { type = magentoProductId || possibleSku ? TYPE_PRODUCT : TYPE_NOTFOUND, id } = urlResolver || {};
 
         window.pageType = type;
 
@@ -84,21 +86,40 @@ export class UrlRewritesContainer extends PureComponent {
             prevPathname: urlParam,
             isLoading: false,
             type,
-            id: id === undefined ? magentoProductId : id
+            id: id === undefined ? magentoProductId : id,
+            sku: possibleSku
         });
+    }
+
+    getPossibleSku() {
+        const { pathname } = location;
+
+        const uriElements = pathname.substr(0, pathname.indexOf('.html')).substr(1).split('-');
+
+        const result = uriElements.reduce((acc, element) => {
+            if (/\d/.test(element) || acc.length !== 0) {
+                acc.push(element);
+            }
+
+            return acc;
+        }, []).join('-');
+
+        return result.length ? result : false;
     }
 
     containerProps = () => {
         const {
             isLoading,
             type,
-            id
+            id,
+            sku
         } = this.state;
 
         return {
             isLoading,
             type,
-            id
+            id,
+            sku
         };
     };
 
