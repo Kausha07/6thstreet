@@ -281,7 +281,7 @@ export class CartPage extends PureComponent {
                         <Link
                           block="CartPage"
                           elem="ClubApparelLink"
-                          to="/clubapparel/account"
+                          to="/my-account/club-apparel"
                         >
                             { __('Link now') }
                         </Link>
