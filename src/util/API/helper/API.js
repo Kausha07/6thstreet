@@ -25,10 +25,19 @@ export const getErrorMsg = async (res) => {
             return data;
         }
 
-        const { error, message, errors } = data;
+        const {
+            error,
+            message,
+            errors,
+            error_codes
+        } = data;
 
-        if (!error && !message && !errors) {
+        if (!error && !message && !errors && !error_codes) {
             return __('Something Went Wrong');
+        }
+
+        if (error_codes) {
+            return error_codes;
         }
 
         if (typeof errors === 'object') {

@@ -668,5 +668,9 @@
     "Free delivery*. More info": "التوصيل مجاني. معلومات اضافية",
     "here": "هنا",
     "Free delivery*. More info ": "التوصيل مجاني. معلومات اضافية",
-    "Colors": "الألوان"
+    "Colors": "الألوان",
+    "Card number is not valid": "رقم البطاقة غير صالح",
+    "Card exp month is not valid": "شهر انتهاء البطاقة غير صالح",
+    "Card exp year is not valid": "سنة انتهاء البطاقة غير صالحة",
+    "Card cvv is not valid": "ز cvv غير صالح"
 }

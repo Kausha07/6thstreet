@@ -4,6 +4,7 @@ import React, { lazy } from 'react';
 import { Route } from 'react-router-dom';
 
 import Breadcrumbs from 'Component/Breadcrumbs';
+import ChatPopup from 'Component/ChatPopup';
 import CookiePopup from 'Component/CookiePopup';
 import DemoNotice from 'Component/DemoNotice';
 import Footer from 'Component/Footer';
@@ -281,6 +282,7 @@ export class Router extends SourceRouter {
                 { this.renderItemsOfType(BEFORE_ITEMS_TYPE) }
                 <div block="PageWrapper" elem="Content">
                     { this.renderMainItems() }
+                    <ChatPopup />
                 </div>
                 { this.renderItemsOfType(AFTER_ITEMS_TYPE) }
             </div>

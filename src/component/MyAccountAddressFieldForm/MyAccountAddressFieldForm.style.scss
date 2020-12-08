@@ -43,6 +43,10 @@
     }
 
     .FieldSelect {
+        &-Options {
+            overflow-y: auto;
+        }
+
         &-Select {
             &_isExpanded {
                 border: 1px solid var(--my-acc-input-border);

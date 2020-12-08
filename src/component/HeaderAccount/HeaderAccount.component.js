@@ -103,7 +103,7 @@ class HeaderAccount extends PureComponent {
                   block="HeaderAccount"
                   elem="Button"
                   mods={ { isArabic: this._isArabic, isFooter } }
-                  onClick={ isFooter ? this.redirectToAccount : this.showMyAccountPopup }
+                  onClick={ isFooter && isSignedIn ? this.redirectToAccount : this.showMyAccountPopup }
                 >
                     <label htmlFor="Account">{ accountButtonText }</label>
                 </button>

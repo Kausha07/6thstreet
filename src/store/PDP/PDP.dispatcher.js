@@ -1,4 +1,5 @@
 import { setPDPData, setPDPLoading } from 'Store/PDP/PDP.action';
+import { getProductStock } from 'Util/API/endpoint/Product/Product.enpoint';
 import Algolia from 'Util/API/provider/Algolia';
 import Logger from 'Util/Logger';
 
@@ -41,6 +42,10 @@ export class PDPDispatcher {
             // Needed, so PDP container sets "isLoading" to false
             dispatch(setPDPData({}, options));
         }
+    }
+
+    async getProductStock(dispatch, sku) {
+        return getProductStock(sku);
     }
 }
 
