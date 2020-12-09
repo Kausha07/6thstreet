@@ -1,0 +1,11 @@
+#ori-chatbot-root {
+    .ori-fixed {
+        @include mobile {
+            bottom: 100px;
+        }
+
+        .ori-full-parent-height {
+            width: 70px;
+        }
+    }
+}
