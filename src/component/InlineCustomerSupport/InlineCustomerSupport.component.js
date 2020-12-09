@@ -31,7 +31,7 @@ class InlineCustomerSupport extends PureComponent {
         if (isExpanded) {
             this.setState(({ isExpanded }) => ({ isExpanded: !isExpanded }));
         }
-    }
+    };
 
     renderEmail = () => {
         const { isEmailSupported, email } = this.props;

@@ -3,6 +3,7 @@ import { PureComponent } from 'react';
 
 import Field from 'Component/Field';
 import Loader from 'Component/Loader';
+import { customerType } from 'Type/Account';
 
 import './ClubApparel.style';
 
@@ -13,7 +14,8 @@ export class ClubApparel extends PureComponent {
         pointsAreApplied: PropTypes.bool,
         clubApparelPoints: PropTypes.number.isRequired,
         currency: PropTypes.string.isRequired,
-        toggleClubApparelPoints: PropTypes.func.isRequired
+        toggleClubApparelPoints: PropTypes.func.isRequired,
+        customer: customerType.isRequired
     };
 
     static defaultProps = {
@@ -27,9 +29,13 @@ export class ClubApparel extends PureComponent {
     }
 
     handleCheckboxChange = () => {
-        const { toggleClubApparelPoints, pointsAreApplied } = this.props;
+        const {
+            toggleClubApparelPoints,
+            pointsAreApplied,
+            customer: { id }
+        } = this.props;
 
-        toggleClubApparelPoints(!pointsAreApplied);
+        toggleClubApparelPoints(!pointsAreApplied, id);
     };
 
     renderLabel() {

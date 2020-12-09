@@ -32,7 +32,7 @@ class CreditCardTooltip extends PureComponent {
         if (isExpanded) {
             this.setState(({ isExpanded }) => ({ isExpanded: !isExpanded }));
         }
-    }
+    };
 
     renderContent() {
         const { collapsedPromoMessage } = this.props;
