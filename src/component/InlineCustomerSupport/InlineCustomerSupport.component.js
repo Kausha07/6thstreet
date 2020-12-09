@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import ClickOutside from 'Component/ClickOutside';
 import { isArabic } from 'Util/App';
 
 import './InlineCustomerSupport.style';
@@ -23,6 +24,14 @@ class InlineCustomerSupport extends PureComponent {
         // Toggle dropdown
         this.setState(({ isExpanded }) => ({ isExpanded: !isExpanded }));
     };
+
+    onClickOutside = () => {
+        const { isExpanded } = this.state;
+
+        if (isExpanded) {
+            this.setState(({ isExpanded }) => ({ isExpanded: !isExpanded }));
+        }
+    }
 
     renderEmail = () => {
         const { isEmailSupported, email } = this.props;
@@ -132,8 +141,10 @@ class InlineCustomerSupport extends PureComponent {
     render() {
         return (
             <div block="InlineCustomerSupport">
-                { this.renderDropdown() }
-                { this.renderQuickAccess() }
+                <ClickOutside onClick={ this.onClickOutside }>
+                    { this.renderDropdown() }
+                    { this.renderQuickAccess() }
+                </ClickOutside>
             </div>
         );
     }

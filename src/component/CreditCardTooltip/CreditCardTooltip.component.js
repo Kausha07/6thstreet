@@ -3,6 +3,7 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import ClickOutside from 'Component/ClickOutside';
 import Html from 'Component/Html';
 import Image from 'Component/Image';
 import { isArabic } from 'Util/App';
@@ -24,6 +25,14 @@ class CreditCardTooltip extends PureComponent {
     onDropdownClick = () => {
         this.setState(({ isExpanded }) => ({ isExpanded: !isExpanded }));
     };
+
+    onClickOutside = () => {
+        const { isExpanded } = this.state;
+
+        if (isExpanded) {
+            this.setState(({ isExpanded }) => ({ isExpanded: !isExpanded }));
+        }
+    }
 
     renderContent() {
         const { collapsedPromoMessage } = this.props;
@@ -73,10 +82,12 @@ class CreditCardTooltip extends PureComponent {
 
     render() {
         return (
-            <div block="CreditCardTooltip">
-                { this.renderPopup() }
-                { this.renderContent() }
-            </div>
+            <ClickOutside onClick={ this.onClickOutside }>
+                <div block="CreditCardTooltip">
+                        { this.renderPopup() }
+                        { this.renderContent() }
+                </div>
+            </ClickOutside>
         );
     }
 }
