@@ -1,5 +1,7 @@
 import { PureComponent } from 'react';
 
+import './ChatPopup.style';
+
 class ChatPopup extends PureComponent {
     render() {
         const script = document.createElement('script');
