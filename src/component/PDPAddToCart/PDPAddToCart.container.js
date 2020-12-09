@@ -90,7 +90,33 @@ export class PDPAddToCartContainer extends PureComponent {
         const { product } = props;
 
         if (product.simple_products !== undefined) {
-            const filteredProductKeys = Object.keys(product.simple_products || {});
+            const { simple_products, size_eu } = product;
+
+            const filteredProductKeys = Object.keys(simple_products).reduce(
+                (acc, key) => {
+                    const { size: { eu: productSize } } = simple_products[key];
+
+                    acc.push([size_eu.indexOf(productSize), key]);
+
+                    return acc;
+                }, []
+            ).sort((a, b) => {
+                if (a[0] < b[0]) {
+                    return -1;
+                }
+
+                if (a[0] > b[0]) {
+                    return 1;
+                }
+
+                return 0;
+            }).reduce(
+                (acc, item) => {
+                    acc.push(item[1]);
+
+                    return acc;
+                }, []
+            );
 
             const filteredProductSizeKeys = Object.keys(product.simple_products[filteredProductKeys[0]].size || {});
 

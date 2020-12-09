@@ -109,8 +109,6 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
                 (response) => {
                     const { id, token } = response;
 
-                    console.log('***', response);
-
                     if (id || token) {
                         BrowserDatabase.setItem(id ?? token, 'CREDIT_CART_TOKEN', FIVE_MINUTES_IN_SECONDS);
                         showSuccessMessage(__('Credit card successfully added'));
