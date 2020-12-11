@@ -8,6 +8,7 @@ import {
     WishlistDispatcher
 } from 'SourceComponent/Router/Router.container';
 import { setCountry, setLanguage } from 'Store/AppState/AppState.action';
+import CartDispatcher from 'Store/Cart/Cart.dispatcher';
 import { updateCustomerDetails } from 'Store/MyAccount/MyAccount.action';
 import {
     deleteAuthorizationToken,
@@ -40,15 +41,16 @@ export const mapDispatchToProps = (dispatch) => ({
     setLanguage: (value) => dispatch(setLanguage(value)),
     requestCustomerData: () => MyAccountDispatcher
         .then(({ default: dispatcher }) => dispatcher.requestCustomerData(dispatch)),
-    updateCustomerDetails: () => dispatch(updateCustomerDetails({}))
-
+    updateCustomerDetails: () => dispatch(updateCustomerDetails({})),
+    getCart: (isNew = false) => CartDispatcher.getCart(dispatch, isNew)
 });
 
 export class RouterContainer extends SourceRouterContainer {
     static propTypes = {
         ...SourceRouterContainer.propTypes,
         locale: PropTypes.string,
-        requestCustomerData: PropTypes.func.isRequired
+        requestCustomerData: PropTypes.func.isRequired,
+        getCart: PropTypes.func.isRequired
     };
 
     static defaultProps = {
@@ -57,7 +59,7 @@ export class RouterContainer extends SourceRouterContainer {
     };
 
     componentDidMount() {
-        const { requestCustomerData, updateCustomerDetails } = this.props;
+        const { getCart, requestCustomerData, updateCustomerDetails } = this.props;
         const decodedParams = atob(getCookie('authData'));
 
         if (decodedParams.match('mobileToken') && decodedParams.match('authToken')) {
@@ -85,6 +87,8 @@ export class RouterContainer extends SourceRouterContainer {
                     window.location.reload();
                 });
             }
+
+            getCart(true);
         } else {
             deleteAuthorizationToken();
             deleteMobileAuthorizationToken();

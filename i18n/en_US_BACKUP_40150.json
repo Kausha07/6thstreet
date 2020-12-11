@@ -680,5 +680,11 @@
     "Please add at least one delivery address!": null,
     "Free delivery*. More info": null,
     "here": null,
-    "Free delivery*. More info ": null
+    "Free delivery*. More info ": null,
+    "Colors": null,
+    "": null,
+    "Card number is not valid": null,
+    "Card exp month is not valid": null,
+    "Card exp year is not valid": null,
+    "Card cvv is not valid": null
 }

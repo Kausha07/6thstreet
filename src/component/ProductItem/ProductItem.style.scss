@@ -50,7 +50,8 @@
     }
 
     .PLPSummary {
-        &-Exclusive {
+        &-Exclusive,
+        &-Colors {
             color: var(--Tundora);
             font-size: 17px;
             position: absolute;

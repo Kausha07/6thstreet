@@ -106,7 +106,14 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     }
 
     renderDeliveryButton() {
-        if (isMobile.any() || isMobile.tablet()) {
+        const {
+            customer: {
+                addresses = []
+            }
+        } = this.props;
+        const { isSignedIn } = this.state;
+
+        if (isMobile.any() || isMobile.tablet() || (isSignedIn && addresses.length === 0)) {
             return null;
         }
 
@@ -209,17 +216,14 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     renderDelivery() {
         const {
             shippingMethods,
-            onShippingMethodSelect,
-            customer: {
-                addresses = []
-            }
+            onShippingMethodSelect
         } = this.props;
 
-        const { isArabic, isSignedIn } = this.state;
+        const { isArabic } = this.state;
 
         return (
             <div block="CheckoutShippingStep" mods={ { isArabic } }>
-                { isSignedIn && addresses.length !== 0 ? this.renderDeliveryButton() : null }
+                { this.renderDeliveryButton() }
                 <CheckoutDeliveryOptions
                   shippingMethods={ shippingMethods }
                   onShippingMethodSelect={ onShippingMethodSelect }

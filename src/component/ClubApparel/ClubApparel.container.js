@@ -18,15 +18,23 @@ export const mapStateToProps = ({
     },
     Cart: {
         cartTotals
+    },
+    MyAccountReducer: {
+        customer
     }
 }) => ({
     clubApparel,
     isLoading,
-    cartTotals
+    cartTotals,
+    customer
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-    toggleClubApparelPoints: (apply) => ClubApparelDispatcher.toggleClubApparelPoints(dispatch, apply),
+    toggleClubApparelPoints: (apply, customerId) => ClubApparelDispatcher.toggleClubApparelPoints(
+        dispatch,
+        apply,
+        customerId
+    ),
     fetchClubApparelPoints: () => ClubApparelDispatcher.getMember(dispatch)
 });
 
