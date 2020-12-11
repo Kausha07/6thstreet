@@ -125,7 +125,7 @@ class CheckoutComApplePayContainer extends PureComponent {
         console.log('***', 'handle button click');
         const {
             cartTotals: {
-                grand_total,
+                total,
                 quote_currency_code
             },
             default_title,
@@ -140,7 +140,7 @@ class CheckoutComApplePayContainer extends PureComponent {
             currencyCode: quote_currency_code,
             supportedNetworks: supported_networks,
             merchantCapabilities: ['supports3DS'],
-            total: { label: default_title, amount: grand_total }
+            total: { label: default_title, amount: total }
         };
 
         console.log('***', paymentRequest);
