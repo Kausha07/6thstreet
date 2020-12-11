@@ -30,12 +30,15 @@ import './CheckoutPayments.extended.style';
 export class CheckoutPayments extends SourceCheckoutPayments {
     static propTypes = {
         ...SourceCheckoutPayments.propTypes,
-        selectedPaymentCode: PropTypes.string
+        selectedPaymentCode: PropTypes.string,
+        processApplePay: PropTypes.bool,
+        placeOrder: PropTypes.func.isRequired
     };
 
     static defaultProps = {
         ...SourceCheckoutPayments.defaultProps,
-        selectedPaymentCode: ''
+        selectedPaymentCode: '',
+        processApplePay: false
     };
 
     paymentRenderMap = {
@@ -141,13 +144,15 @@ export class CheckoutPayments extends SourceCheckoutPayments {
 
     renderApplePayMethods() {
         const { options: { supported_networks } } = this.getSelectedMethodData();
-        const { billingAddress } = this.props;
+        const { billingAddress, processApplePay, placeOrder } = this.props;
 
         return (
             <CheckoutComApplePay
               billingAddress={ billingAddress }
               merchant_id={ process.env.REACT_APP_APPLE_MERCHANT_ID }
               supported_networks={ supported_networks }
+              processApplePay={ processApplePay }
+              placeorder={ placeOrder }
             />
         );
     }

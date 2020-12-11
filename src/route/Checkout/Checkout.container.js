@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { CARD } from 'Component/CheckoutPayments/CheckoutPayments.config';
+import { CARD, CHECKOUT_APPLE_PAY } from 'Component/CheckoutPayments/CheckoutPayments.config';
 import { CC_POPUP_ID } from 'Component/CreditCardPopup/CreditCardPopup.config';
 import { AUTHORIZED_STATUS, DETAILS_STEP, SHIPPING_STEP } from 'Route/Checkout/Checkout.config';
 import { BILLING_STEP, PAYMENT_TOTALS } from 'SourceRoute/Checkout/Checkout.config';
@@ -105,7 +105,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             isGuestEmailSaved: false,
             isVerificationCodeSent: false,
             lastOrder: {},
-            initialTotals: totals
+            initialTotals: totals,
+            processApplePay: false
         };
     }
 
@@ -269,7 +270,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
     async savePaymentMethodAndPlaceOrder(paymentInformation) {
         const { paymentMethod: { code, additional_data } } = paymentInformation;
-        const { createOrder, customer: { email: customerEmail }, showErrorNotification } = this.props;
+        const { customer: { email: customerEmail } } = this.props;
         const { shippingAddress: { email } } = this.state;
 
         const data = code === CARD
@@ -292,6 +293,16 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                 }
             }
             : additional_data;
+
+        if (code === CHECKOUT_APPLE_PAY) {
+            this.setState({ processApplePay: true });
+        } else {
+            this.placeOrder(code, data)
+        }
+    }
+
+    placeOrder(code, data) {
+        const {createOrder, showErrorNotification} = this.props;
 
         try {
             createOrder(code, data).then(
@@ -323,6 +334,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                                 } else {
                                     this.setDetailsStep(order_id, increment_id);
                                     this.resetCart();
+
+                                    return true;
                                 }
                             } else {
                                 const { error } = data;

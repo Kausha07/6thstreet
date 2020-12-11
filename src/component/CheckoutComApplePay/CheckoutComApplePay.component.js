@@ -10,10 +10,12 @@ export class CheckoutComApplePay extends PureComponent {
      */
     static propTypes = {
         launchPaymentMethod: PropTypes.func.isRequired,
+        handleApplePayButtonClick: PropTypes.func.isRequired,
         cartTotals: PropTypes.shape({
             grand_total: PropTypes.number,
             quote_currency_code: PropTypes.string
-        }).isRequired
+        }).isRequired,
+        processApplePay: PropTypes.bool.isRequired
     };
 
     /**
@@ -23,6 +25,14 @@ export class CheckoutComApplePay extends PureComponent {
         const { launchPaymentMethod } = this.props;
 
         launchPaymentMethod();
+    }
+
+    componentDidUpdate() {
+        const { processApplePay, handleApplePayButtonClick } = this.props;
+
+        if (processApplePay) {
+            handleApplePayButtonClick();
+        }
     }
 
     /**
