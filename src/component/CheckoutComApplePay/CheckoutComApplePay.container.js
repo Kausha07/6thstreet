@@ -256,7 +256,7 @@ class CheckoutComApplePayContainer extends PureComponent {
      * @return {array}
      */
     _getMerchantCapabilities = () => {
-        const { merchant_capabilities } = this.state;
+        const { merchant_capabilities = '' } = this.state;
         const output = ['supports3DS'];
         const capabilities = merchant_capabilities.split(',');
 
