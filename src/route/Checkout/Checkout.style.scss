@@ -323,11 +323,9 @@
         position: relative;
         width: 100%;
         background-color: var(--White);
-        margin: 5px 0;
+        margin: 5px 0 15px;
 
         > button {
-            position: absolute;
-            top: 0;
             width: 100%;
             border: 2px solid var(--Black);
             box-shadow: 0 0 2px 0 var(--Black);
@@ -339,6 +337,8 @@
             @include desktop {
                 width: 85%;
                 margin: 10% 10% 10% 5%;
+                position: absolute;
+                top: 0;
             }
         }
 

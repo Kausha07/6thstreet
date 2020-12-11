@@ -56,7 +56,7 @@ export class ClubApparelDispatcher {
         }
     }
 
-    async toggleClubApparelPoints(dispatch, apply) {
+    async toggleClubApparelPoints(dispatch, apply, id) {
         try {
             dispatch(setIsLoading(true));
 
@@ -76,7 +76,7 @@ export class ClubApparelDispatcher {
             }
 
             await CartDispatcher.getCartTotals(dispatch, cartId);
-            await this.getMember(dispatch);
+            await this.getMember(dispatch, id);
 
             return true;
         } catch (e) {

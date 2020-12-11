@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { setMinicartOpen } from 'Store/Cart/Cart.action';
 import CartDispatcher from 'Store/Cart/Cart.dispatcher';
 import { showNotification } from 'Store/Notification/Notification.action';
+import PDPDispatcher from 'Store/PDP/PDP.dispatcher';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
 import Event, { EVENT_GTM_PRODUCT_ADD_TO_CART } from 'Util/Event';
 import history from 'Util/History';
@@ -33,7 +34,8 @@ export const mapDispatchToProps = (dispatch) => ({
         url,
         itemPrice
     ),
-    setMinicartOpen: (isMinicartOpen = false) => dispatch(setMinicartOpen(isMinicartOpen))
+    setMinicartOpen: (isMinicartOpen = false) => dispatch(setMinicartOpen(isMinicartOpen)),
+    getProductStock: (sku) => PDPDispatcher.getProductStock(dispatch, sku)
 });
 
 export class PDPAddToCartContainer extends PureComponent {
@@ -45,7 +47,8 @@ export class PDPAddToCartContainer extends PureComponent {
         PrevTotal: PropTypes.number,
         total: PropTypes.number,
         productAdded: PropTypes.bool,
-        setMinicartOpen: PropTypes.func.isRequired
+        setMinicartOpen: PropTypes.func.isRequired,
+        getProductStock: PropTypes.func.isRequired
     };
 
     static defaultProps = {
@@ -67,6 +70,7 @@ export class PDPAddToCartContainer extends PureComponent {
 
         this.state = {
             sizeObject: {},
+            mappedSizeObject: {},
             selectedSizeType: 'eu',
             selectedSizeCode: '',
             insertedSizeStatus: true,
@@ -86,7 +90,33 @@ export class PDPAddToCartContainer extends PureComponent {
         const { product } = props;
 
         if (product.simple_products !== undefined) {
-            const filteredProductKeys = Object.keys(product.simple_products || {});
+            const { simple_products, size_eu } = product;
+
+            const filteredProductKeys = Object.keys(simple_products).reduce(
+                (acc, key) => {
+                    const { size: { eu: productSize } } = simple_products[key];
+
+                    acc.push([size_eu.indexOf(productSize), key]);
+
+                    return acc;
+                }, []
+            ).sort((a, b) => {
+                if (a[0] < b[0]) {
+                    return -1;
+                }
+
+                if (a[0] > b[0]) {
+                    return 1;
+                }
+
+                return 0;
+            }).reduce(
+                (acc, item) => {
+                    acc.push(item[1]);
+
+                    return acc;
+                }, []
+            );
 
             const filteredProductSizeKeys = Object.keys(product.simple_products[filteredProductKeys[0]].size || {});
 
@@ -114,6 +144,46 @@ export class PDPAddToCartContainer extends PureComponent {
         return null;
     }
 
+    componentDidMount() {
+        const { product: { sku }, getProductStock } = this.props;
+
+        const { sizeObject: { sizeCodes, sizeTypes } } = this.state;
+
+        getProductStock(sku).then(
+            (response) => {
+                const emptyStockSizes = Object.entries(response).reduce(
+                    (acc, size) => {
+                        const sizeCode = size[0];
+                        const { quantity } = size[1];
+
+                        if (parseInt(quantity, 0) === 0) {
+                            acc.push(sizeCode);
+                        }
+
+                        return acc;
+                    }, []
+                );
+
+                const mappedSizes = sizeCodes.reduce(
+                    (acc, sizeCode) => {
+                        if (!emptyStockSizes.includes(sizeCode)) {
+                            acc.push(sizeCode);
+                        }
+
+                        return acc;
+                    }, []
+                );
+
+                const object = {
+                    sizeTypes,
+                    sizeCodes: mappedSizes
+                };
+
+                this.setState({ mappedSizeObject: object });
+            }
+        );
+    }
+
     componentDidUpdate(prevProps, _) {
         const { totals: { total: PrevTotal = null } } = prevProps;
         const { totals: { total = null } } = this.props;
@@ -127,7 +197,8 @@ export class PDPAddToCartContainer extends PureComponent {
 
     containerProps = () => {
         const { product } = this.props;
-        return { ...this.state, product };
+        const { mappedSizeObject } = this.state;
+        return { ...this.state, sizeObject: mappedSizeObject, product };
     };
 
     onSizeTypeSelect(type) {

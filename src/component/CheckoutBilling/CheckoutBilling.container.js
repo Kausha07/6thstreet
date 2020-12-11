@@ -117,8 +117,14 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
                             billing_address: address,
                             paymentMethod
                         });
-                    } else {
-                        showErrorNotification(__(response));
+                    } else if (Array.isArray(response)) {
+                        const message = response[0];
+
+                        if (typeof message === 'string') {
+                            showErrorNotification(this.getCartError(message));
+                        } else {
+                            showErrorNotification(__('Something went wrong'));
+                        }
                     }
                 },
                 this._handleError
@@ -132,6 +138,21 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
                 billing_address: address,
                 paymentMethod
             });
+        }
+    }
+
+    getCartError(message) {
+        switch (message) {
+        case 'card_number_invalid':
+            return __('Card number is not valid');
+        case 'card_expiry_month_invalid':
+            return __('Card exp month is not valid');
+        case 'card_expiry_year_invalid':
+            return __('Card exp year is not valid');
+        case 'cvv_invalid':
+            return __('Card cvv is not valid');
+        default:
+            return __('Something went wrong');
         }
     }
 

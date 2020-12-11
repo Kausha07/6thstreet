@@ -53,8 +53,11 @@ class HeaderCart extends PureComponent {
 
     openPopup = () => {
         const { setMinicartOpen } = this.props;
+        const { pathname } = location;
 
-        setMinicartOpen(true);
+        if (pathname !== '/cart') {
+            setMinicartOpen(true);
+        }
     };
 
     renderCartPopUp = () => {
