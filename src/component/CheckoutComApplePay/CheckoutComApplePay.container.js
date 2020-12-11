@@ -139,6 +139,7 @@ class CheckoutComApplePayContainer extends PureComponent {
             countryCode,
             currencyCode: quote_currency_code,
             supportedNetworks: supported_networks,
+            merchantCapabilities: ['supports3DS'],
             total: { label: default_title, amount: grand_total }
         };
 
