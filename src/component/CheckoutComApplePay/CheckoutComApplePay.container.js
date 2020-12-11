@@ -73,8 +73,7 @@ class CheckoutComApplePayContainer extends PureComponent {
             applePayDisabled: true,
             isLoading: true,
             merchant_id: null,
-            supported_networks: null,
-            merchant_capabilities: null
+            supported_networks: null
         };
     }
 
@@ -249,18 +248,6 @@ class CheckoutComApplePayContainer extends PureComponent {
         };
 
         applePaySession.oncancel = () => Logger.log('Apple Pay session was cancelled.');
-    };
-
-    /**
-     * Get merchant capabilities
-     * @return {array}
-     */
-    _getMerchantCapabilities = () => {
-        const { merchant_capabilities = '' } = this.state;
-        const output = ['supports3DS'];
-        const capabilities = merchant_capabilities.split(',');
-
-        return output.concat(capabilities);
     };
 
     /**
