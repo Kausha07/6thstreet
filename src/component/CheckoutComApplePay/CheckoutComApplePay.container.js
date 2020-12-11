@@ -123,6 +123,7 @@ class CheckoutComApplePayContainer extends PureComponent {
      * Handle apple pay click
      */
     handleApplePayButtonClick() {
+        console.log('***', 'handle button click');
         const {
             cartTotals: {
                 grand_total,
@@ -143,7 +144,11 @@ class CheckoutComApplePayContainer extends PureComponent {
             total: { label: default_title, amount: grand_total }
         };
 
+        console.log('***', paymentRequest);
+
         const applePaySession = new window.ApplePaySession(1, paymentRequest);
+
+        console.log('***', applePaySession);
 
         this._addApplePayEvents(applePaySession);
 
