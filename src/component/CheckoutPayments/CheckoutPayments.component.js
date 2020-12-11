@@ -2,6 +2,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import PropTypes from 'prop-types';
 
+import CheckoutComApplePay from 'Component/CheckoutComApplePay';
 import CheckoutPayment from 'Component/CheckoutPayment';
 import { PAYMENTS_DATA } from 'Component/CheckoutPayment/CheckoutPayment.config';
 import tabbyAr from 'Component/CheckoutPayment/icons/tabby-logo-black-ar@2x.png';
@@ -17,7 +18,7 @@ import { isArabic } from 'Util/App';
 
 import {
     CARD,
-    CASH_ON_DELIVERY,
+    CASH_ON_DELIVERY, CHECKOUT_APPLE_PAY,
     TABBY_ISTALLMENTS,
     TABBY_PAY_LATER,
     TABBY_PAYMENT_CODES
@@ -42,7 +43,8 @@ export class CheckoutPayments extends SourceCheckoutPayments {
         [CARD]: this.renderCreditCard.bind(this),
         [CASH_ON_DELIVERY]: this.renderCashOnDelivery.bind(this),
         [TABBY_ISTALLMENTS]: this.renderTabbyPaymentMethods.bind(this),
-        [TABBY_PAY_LATER]: this.renderTabbyPaymentMethods.bind(this)
+        [TABBY_PAY_LATER]: this.renderTabbyPaymentMethods.bind(this),
+        [CHECKOUT_APPLE_PAY]: this.renderApplePayMethods.bind(this)
     };
 
     state = {
@@ -134,6 +136,19 @@ export class CheckoutPayments extends SourceCheckoutPayments {
                     { tabbyPaymentMethods.map((method) => this.renderTabbyPaymentMethod(method)) }
                 </div>
             </div>
+        );
+    }
+
+    renderApplePayMethods() {
+        const { options: { supported_networks } } = this.getSelectedMethodData();
+        const { billingAddress } = this.props;
+
+        return (
+            <CheckoutComApplePay
+              billingAddress={ billingAddress }
+              merchant_id={ process.env.REACT_APP_APPLE_MERCHANT_ID }
+              supported_networks={ supported_networks }
+            />
         );
     }
 
