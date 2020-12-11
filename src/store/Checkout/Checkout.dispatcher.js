@@ -3,6 +3,9 @@ import { processingPaymentSelectRequest } from 'Store/Cart/Cart.action';
 import { setShipping } from 'Store/Checkout/Checkout.action';
 import { showNotification } from 'Store/Notification/Notification.action';
 import {
+    validateApplePay
+} from 'Util/API/endpoint/ApplePay/ApplePay.endpoint';
+import {
     createOrder,
     estimateShippingMethods,
     getLastOrder,
@@ -12,7 +15,7 @@ import {
     sendVerificationCode,
     validateShippingAddress,
     verifyUserPhone
-} from 'Util/API/endpoint/Checkout/Checkout.enpoint';
+} from 'Util/API/endpoint/Checkout/Checkout.endpoint';
 import {
     createSession,
     getInstallmentForValue,
@@ -135,6 +138,10 @@ export class CheckoutDispatcher {
 
     async getLastOrder(dispatch) {
         return getLastOrder();
+    }
+
+    async validateApplePay(dispatch, url, data) {
+        return validateApplePay(url, data);
     }
 }
 
