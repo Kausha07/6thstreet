@@ -41,6 +41,7 @@ export class Checkout extends SourceCheckout {
         setLoading: PropTypes.func.isRequired,
         threeDsUrl: PropTypes.string.isRequired,
         isFailed: PropTypes.bool.isRequired,
+        processApplePay: PropTypes.bool.isRequired,
         initialTotals: TotalsType.isRequired
     };
 
@@ -259,7 +260,9 @@ export class Checkout extends SourceCheckout {
             shippingAddress,
             paymentMethods = [],
             goBack,
-            isSignedIn
+            isSignedIn,
+            processApplePay,
+            placeOrder
         } = this.props;
         const { isArabic } = this.state;
 
@@ -287,6 +290,8 @@ export class Checkout extends SourceCheckout {
                   setTabbyWebUrl={ this.setTabbyWebUrl }
                   setPaymentCode={ this.setPaymentCode }
                   setCheckoutCreditCardData={ this.setCheckoutCreditCardData }
+                  processApplePay={ processApplePay }
+                  placeOrder={ placeOrder }
                 />
             </>
         );

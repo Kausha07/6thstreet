@@ -3,9 +3,11 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import { CHECKOUT_APPLE_PAY } from 'Component/CheckoutPayments/CheckoutPayments.config';
 import CartDispatcher from 'Store/Cart/Cart.dispatcher';
 import CheckoutDispatcher from 'Store/Checkout/Checkout.dispatcher';
 import { showNotification } from 'Store/Notification/Notification.action';
+import { customerType } from 'Type/Account';
 import { TotalsType } from 'Type/MiniCart';
 import { isSignedIn } from 'Util/Auth';
 import Logger from 'Util/Logger';
@@ -14,7 +16,8 @@ import CheckoutComApplePay from './CheckoutComApplePay.component';
 
 export const mapStateToProps = (state) => ({
     cartTotals: state.CartReducer.cartTotals,
-    default_title: state.ConfigReducer.default_title
+    default_title: state.ConfigReducer.default_title,
+    customer: state.MyAccountReducer.customer
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -32,9 +35,16 @@ class CheckoutComApplePayContainer extends PureComponent {
         merchant_id: PropTypes.string.isRequired,
         showError: PropTypes.func.isRequired,
         validateApplePay: PropTypes.func.isRequired,
+        placeOrder: PropTypes.func.isRequired,
         supported_networks: PropTypes.arrayOf(PropTypes.string).isRequired,
         cartTotals: TotalsType.isRequired,
-        default_title: PropTypes.string
+        default_title: PropTypes.string,
+        processApplePay: PropTypes.bool.isRequired,
+        customer: customerType
+    };
+
+    static defaultProps = {
+        customer: null
     };
 
     static defaultProps = {
@@ -146,12 +156,18 @@ class CheckoutComApplePayContainer extends PureComponent {
      */
     _addApplePayEvents = (applePaySession) => {
         const {
+            billingAddress: { email },
             cartTotals: { grand_total },
+            customer: { email: customerEmail },
             showError,
-            default_title
+            default_title,
+            placeOrder
         } = this.props;
 
+        console.log('***', 'events added');
+
         applePaySession.onvalidatemerchant = (event) => {
+            console.log('***', 'event trigerred');
             const promise = this._performValidation(event.validationURL);
 
             promise.then((response) => {
@@ -204,22 +220,27 @@ class CheckoutComApplePayContainer extends PureComponent {
         };
 
         applePaySession.onpaymentauthorized = (event) => {
-            this._placeOrder(event.payment.token).then((orderId) => {
-                const status = orderId ? window.ApplePaySession.STATUS_SUCCESS : window.ApplePaySession.STATUS_FAILURE;
-
-                applePaySession.completePayment(status);
-
-                if (orderId) {
-                    console.log('***', 'SUCCESS');
+            const data = {
+                source: {
+                    type: 'token',
+                    token: event.payment.token
+                },
+                customer: {
+                    email: customerEmail ?? email
+                },
+                '3ds': {
+                    enabled: false
+                },
+                metadata: {
+                    udf1: null
                 }
-            }).catch((errors) => {
-                applePaySession.completePayment(window.ApplePaySession.STATUS_FAILURE);
+            };
 
-                if (Array.isArray(errors) && errors.length) {
-                    const [error] = errors;
-                    showError(__(error.message));
-                }
-            });
+            const status = placeOrder(CHECKOUT_APPLE_PAY, data)
+                ? window.ApplePaySession.STATUS_SUCCESS
+                : window.ApplePaySession.STATUS_FAILURE;
+
+            applePaySession.completePayment(status);
         };
 
         applePaySession.oncancel = () => Logger.log('Apple Pay session was cancelled.');
@@ -251,6 +272,8 @@ class CheckoutComApplePayContainer extends PureComponent {
     _performValidation = (validationUrl) => {
         const { validateApplePay } = this.props;
         this.setState({ isLoading: true });
+
+        console.log('***', 'Try to validate');
 
         validateApplePay(validationUrl).then(
             (response) => {
