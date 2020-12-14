@@ -1,7 +1,5 @@
 import { doFetch } from '../helper/Fetch';
 
-const fs = require('fs');
-
 class ApplePay {
     setToken(token) {
         this.token = token;
@@ -19,8 +17,6 @@ class ApplePay {
         const payload = (value) => (['post', 'put', 'delete'].includes(method) ? value : {});
         const options = {
             method,
-            cert: fs.readFileSync('../cert/merchant.cer'),
-            key: fs.readFileSync('../cert/processing.pem'),
             ...payload({ body: JSON.stringify(body) })
         };
 

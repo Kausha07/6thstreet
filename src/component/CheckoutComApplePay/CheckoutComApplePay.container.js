@@ -122,7 +122,6 @@ class CheckoutComApplePayContainer extends PureComponent {
      * Handle apple pay click
      */
     handleApplePayButtonClick() {
-        console.log('***', 'handle button click');
         const {
             cartTotals: {
                 total,
@@ -134,7 +133,6 @@ class CheckoutComApplePayContainer extends PureComponent {
             },
             supported_networks
         } = this.props;
-
         const paymentRequest = {
             countryCode,
             currencyCode: quote_currency_code,
@@ -142,12 +140,7 @@ class CheckoutComApplePayContainer extends PureComponent {
             merchantCapabilities: ['supports3DS'],
             total: { label: default_title, amount: total }
         };
-
-        console.log('***', paymentRequest);
-
         const applePaySession = new window.ApplePaySession(1, paymentRequest);
-
-        console.log('***', applePaySession);
 
         this._addApplePayEvents(applePaySession);
 
@@ -168,10 +161,7 @@ class CheckoutComApplePayContainer extends PureComponent {
             placeOrder
         } = this.props;
 
-        console.log('***', 'events added');
-
         applePaySession.onvalidatemerchant = (event) => {
-            console.log('***', 'event trigerred');
             const promise = this._performValidation(event.validationURL);
 
             promise.then((response) => {
