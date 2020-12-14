@@ -149,7 +149,6 @@ export class CheckoutPayments extends SourceCheckoutPayments {
         return (
             <CheckoutComApplePay
               billingAddress={ billingAddress }
-              merchant_id={ process.env.REACT_APP_APPLE_MERCHANT_ID }
               supported_networks={ supported_networks }
               processApplePay={ processApplePay }
               placeorder={ placeOrder }

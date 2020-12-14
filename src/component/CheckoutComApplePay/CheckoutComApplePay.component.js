@@ -10,6 +10,7 @@ export class CheckoutComApplePay extends PureComponent {
      */
     static propTypes = {
         launchPaymentMethod: PropTypes.func.isRequired,
+        requestConfig: PropTypes.func.isRequired,
         handleApplePayButtonClick: PropTypes.func.isRequired,
         cartTotals: PropTypes.shape({
             grand_total: PropTypes.number,
@@ -22,9 +23,9 @@ export class CheckoutComApplePay extends PureComponent {
      * Component did mount
      */
     componentDidMount() {
-        const { launchPaymentMethod } = this.props;
+        const { requestConfig, launchPaymentMethod } = this.props;
 
-        launchPaymentMethod();
+        requestConfig().then(launchPaymentMethod);
     }
 
     componentDidUpdate() {

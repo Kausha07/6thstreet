@@ -4,13 +4,14 @@ import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
 import { CHECKOUT_APPLE_PAY } from 'Component/CheckoutPayments/CheckoutPayments.config';
+import CheckoutComQuery from 'Query/CheckoutCom.query';
 import CartDispatcher from 'Store/Cart/Cart.dispatcher';
-import CheckoutDispatcher from 'Store/Checkout/Checkout.dispatcher';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { customerType } from 'Type/Account';
 import { TotalsType } from 'Type/MiniCart';
 import { isSignedIn } from 'Util/Auth';
 import Logger from 'Util/Logger';
+import { fetchMutation, fetchQuery } from 'Util/Request';
 
 import CheckoutComApplePay from './CheckoutComApplePay.component';
 
@@ -21,8 +22,7 @@ export const mapStateToProps = (state) => ({
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-    showError: (message) => dispatch(showNotification('error', message)),
-    validateApplePay: (url, data) => CheckoutDispatcher.validateApplePay(dispatch, url, data)
+    showError: (message) => dispatch(showNotification('error', message))
 });
 
 class CheckoutComApplePayContainer extends PureComponent {
@@ -44,10 +44,7 @@ class CheckoutComApplePayContainer extends PureComponent {
     };
 
     static defaultProps = {
-        customer: null
-    };
-
-    static defaultProps = {
+        customer: null,
         default_title: '6th Street'
     };
 
@@ -56,6 +53,7 @@ class CheckoutComApplePayContainer extends PureComponent {
      * @type {*}
      */
     containerMethods = {
+        requestConfig: this.requestConfig.bind(this),
         launchPaymentMethod: this.launchPaymentMethod.bind(this),
         handleApplePayButtonClick: this.handleApplePayButtonClick.bind(this)
     };
@@ -85,12 +83,31 @@ class CheckoutComApplePayContainer extends PureComponent {
     _getGuestQuoteId = () => (isSignedIn() ? '' : CartDispatcher._getGuestQuoteId());
 
     /**
+     * Load configuration
+     * @return {Promise<Request>}
+     */
+    requestConfig() {
+        const promise = fetchQuery(CheckoutComQuery.getApplePayConfigQuery());
+
+        promise.then(
+            ({ storeConfig: { checkout_com: { apple_pay } } }) => {
+                this.setState({
+                    isLoading: false,
+                    ...apple_pay
+                });
+            },
+            () => this.setState({ isLoading: false })
+        );
+
+        return promise;
+    }
+
+    /**
      * Launch payment method
      */
     launchPaymentMethod() {
         const { showError } = this.props;
-        const { merchant_id } = this.props;
-        const { isApplePayAvailable } = this.state;
+        const { isApplePayAvailable, merchant_id } = this.state;
 
         if (!isApplePayAvailable) {
             const missingApplePayMessage = 'Apple Pay is not available for this browser.';
@@ -252,17 +269,10 @@ class CheckoutComApplePayContainer extends PureComponent {
      * @returns {Promise<Request>}
      */
     _performValidation = (validationUrl) => {
-        const { validateApplePay } = this.props;
         this.setState({ isLoading: true });
+        const mutation = CheckoutComQuery.getVerifyCheckoutComApplePayQuery(validationUrl);
 
-        console.log('***', 'Try to validate');
-
-        validateApplePay(validationUrl).then(
-            (response) => {
-                console.log('***', response);
-                this.setState({ isLoading: false });
-            }
-        );
+        return fetchMutation(mutation).finally(() => this.setState({ isLoading: false }));
     };
 
     /**
