@@ -1,7 +1,4 @@
 :root {
-    --dynamic-content-grid-column-count-mobile: 2;
-    --dynamic-content-grid-column-count-tablet: 2;
-    --dynamic-content-grid-column-count-desktop: 4;
     --subtitle-font-size: 17px;
     --title-font-size: 25px;
     --light-gray: #efefef;
@@ -13,7 +10,19 @@
     &-Grid {
         display: grid;
         grid-gap: 0 0;
-        grid-template-columns: repeat(var(--dynamic-content-grid-column-count-mobile), 1fr);
+
+        &_items_per_row_1 {
+            grid-template-columns: repeat(1, 1fr);
+        }
+        &_items_per_row_2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        &_items_per_row_3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        &_items_per_row_4 {
+            grid-template-columns: repeat(4, 1fr);
+        }
 
         a {
             margin: 0;
@@ -60,15 +69,8 @@
 
     @include desktop {
         &-Grid {
-            grid-template-columns: repeat(var(--dynamic-content-grid-column-count-desktop), 1fr);
             margin-left: 70px;
             margin-right: 70px;
-        }
-    }
-
-    @include  tablet {
-        &-Grid {
-            grid-template-columns: repeat(var(--dynamic-content-grid-column-count-tablet), 1fr);
         }
     }
 }
