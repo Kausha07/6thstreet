@@ -1,0 +1,40 @@
+/**
+ * ScandiPWA - Progressive Web App for Magento
+ *
+ * Copyright © Scandiweb, Inc. All rights reserved.
+ * See LICENSE for license details.
+ *
+ * @license OSL-3.0 (Open Software License ("OSL") v. 3.0)
+ * @package scandipwa/base-theme
+ * @link https://github.com/scandipwa/base-theme
+ * @author Deniss Dubinins <denissd@scandiweb.com | info@scandiweb.com>
+ */
+
+.CheckoutComApplePayPayment-Wrapper {
+    margin-top: 20px;
+
+    .CheckoutComApplePayPayment-Button {
+        @supports (-webkit-appearance: -apple-pay-button) {
+            display: inline-block;
+            height: 50px !important;
+            width: 100% !important;
+            -webkit-appearance: -apple-pay-button;
+        }
+
+        &:disabled {
+            opacity: .5;
+        }
+
+        &.ApplePayButton-black {
+            -apple-pay-button-style: black;
+        }
+
+        &.ApplePayButton-white {
+            -apple-pay-button-style: white;
+        }
+
+        &.apple-pay-button-white-with-line {
+            -apple-pay-button-style: white-outline;
+        }
+    }
+}

@@ -23,7 +23,14 @@ export class CheckoutBilling extends SourceCheckoutBilling {
         setCreditCardData: PropTypes.func.isRequired,
         showCreateNewPopup: PropTypes.func.isRequired,
         processingRequest: PropTypes.bool.isRequired,
-        processingPaymentSelectRequest: PropTypes.bool.isRequired
+        processingPaymentSelectRequest: PropTypes.bool.isRequired,
+        processApplePay: PropTypes.bool,
+        placeOrder: PropTypes.func.isRequired
+    };
+
+    static defaultProps = {
+        ...SourceCheckoutBilling.defaultProps,
+        processApplePay: false
     };
 
     state = {
@@ -169,7 +176,9 @@ export class CheckoutBilling extends SourceCheckoutBilling {
             shippingAddress,
             setTabbyWebUrl,
             setCashOnDeliveryFee,
-            setCreditCardData
+            setCreditCardData,
+            processApplePay,
+            placeOrder
         } = this.props;
 
         if (!paymentMethods.length) {
@@ -190,6 +199,8 @@ export class CheckoutBilling extends SourceCheckoutBilling {
               setCreditCardData={ setCreditCardData }
               setOrderButtonDisabled={ this.setOrderButtonDisabled }
               setOrderButtonEnabled={ this.setOrderButtonEnabled }
+              processApplePay={ processApplePay }
+              placeOrder={ placeOrder }
             />
         );
     }

@@ -12,7 +12,7 @@ import {
     sendVerificationCode,
     validateShippingAddress,
     verifyUserPhone
-} from 'Util/API/endpoint/Checkout/Checkout.enpoint';
+} from 'Util/API/endpoint/Checkout/Checkout.endpoint';
 import {
     createSession,
     getInstallmentForValue,

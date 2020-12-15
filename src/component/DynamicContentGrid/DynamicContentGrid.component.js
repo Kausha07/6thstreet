@@ -13,7 +13,12 @@ class DynamicContentGrid extends PureComponent {
                 link: PropTypes.string,
                 url: PropTypes.string
             })
-        ).isRequired
+        ).isRequired,
+        items_per_row: PropTypes.number
+    };
+
+    static defaultProps = {
+        items_per_row: 4
     };
 
     renderItem(item, i) {
@@ -34,13 +39,13 @@ class DynamicContentGrid extends PureComponent {
     }
 
     renderGrid() {
-        const { items_per_row } = 3;
+        const { items_per_row } = this.props;
 
         return (
             <div
               block="DynamicContentGrid"
               elem="Grid"
-              style={ { '--dynamic-content-grid-column-count': items_per_row } }
+              mods={ { items_per_row } }
             >
             { this.renderItems() }
             </div>

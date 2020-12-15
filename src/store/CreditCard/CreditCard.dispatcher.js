@@ -1,4 +1,4 @@
-import { getCardType } from 'Util/API/endpoint/Checkout/Checkout.enpoint';
+import { getCardType } from 'Util/API/endpoint/Checkout/Checkout.endpoint';
 import { addNewCreditCard } from 'Util/API/endpoint/CreditCard/CreditCard.enpoint';
 
 export class CreditCardDispatcher {
