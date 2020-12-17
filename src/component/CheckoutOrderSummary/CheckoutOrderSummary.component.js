@@ -173,6 +173,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
 
     renderTotals() {
         const {
+            cashOnDeliveryFee,
             totals: {
                 subtotal = 0,
                 total = 0,
@@ -213,7 +214,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                             __('Tax')
                         ) }
                         { this.renderPriceLine(
-                            getDiscountFromTotals(totals, 'msp_cashondelivery'),
+                            cashOnDeliveryFee ?? getDiscountFromTotals(totals, 'msp_cashondelivery'),
                             __('Cash on Delivery')
                         ) }
                     </div>
