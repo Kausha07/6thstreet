@@ -18,7 +18,9 @@ import { isArabic } from 'Util/App';
 
 import {
     CARD,
-    CASH_ON_DELIVERY, CHECKOUT_APPLE_PAY,
+    CASH_ON_DELIVERY,
+    CHECKOUT_APPLE_PAY,
+    FREE,
     TABBY_ISTALLMENTS,
     TABBY_PAY_LATER,
     TABBY_PAYMENT_CODES
@@ -47,7 +49,8 @@ export class CheckoutPayments extends SourceCheckoutPayments {
         [CASH_ON_DELIVERY]: this.renderCashOnDelivery.bind(this),
         [TABBY_ISTALLMENTS]: this.renderTabbyPaymentMethods.bind(this),
         [TABBY_PAY_LATER]: this.renderTabbyPaymentMethods.bind(this),
-        [CHECKOUT_APPLE_PAY]: this.renderApplePayMethods.bind(this)
+        [CHECKOUT_APPLE_PAY]: this.renderApplePayMethods.bind(this),
+        [FREE]: this.renderFree.bind(this)
     };
 
     state = {
@@ -119,6 +122,19 @@ export class CheckoutPayments extends SourceCheckoutPayments {
                 </h2>
                 <p block="CheckoutPayments" elem="MethodDiscription">
                     { method_description }
+                </p>
+            </div>
+        );
+    }
+
+    renderFree() {
+        return (
+            <div block="CheckoutPayments" elem="SelectedInfo">
+                <h2 block="CheckoutPayments" elem="MethodTitle">
+                    { __('Free') }
+                </h2>
+                <p block="CheckoutPayments" elem="MethodDiscription">
+                    { __('No Payment Information Required') }
                 </p>
             </div>
         );
@@ -254,8 +270,12 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     }
 
     renderPayments() {
-        const { paymentMethods = [] } = this.props;
+        const { paymentMethods = [], totals: { total } } = this.props;
         const { tabbyPaymentMethods = [] } = this.state;
+
+        if (total === 0) {
+            return this.renderPayment({ m_code: FREE });
+        }
 
         const hasTabby = paymentMethods.some(({ code }) => TABBY_PAYMENT_CODES.includes(code));
 

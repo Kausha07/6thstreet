@@ -14,7 +14,7 @@ import CheckoutDispatcher from 'Store/Checkout/Checkout.dispatcher';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { TotalsType } from 'Type/MiniCart';
 
-import { CARD } from './CheckoutPayments.config';
+import { CARD, FREE } from './CheckoutPayments.config';
 
 export const mapStateToProps = (state) => ({
     totals: state.CartReducer.cartTotals
@@ -46,10 +46,11 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
         const { createTabbySession } = this.props;
         const {
             billingAddress,
-            setTabbyWebUrl
+            setTabbyWebUrl,
+            totals: { total }
         } = this.props;
 
-        this.selectPaymentMethod({ m_code: CARD });
+        this.selectPaymentMethod({ m_code: total ? CARD : FREE });
 
         if (window.formPortalCollector) {
             window.formPortalCollector.subscribe(BILLING_STEP, this.collectAdditionalData, 'CheckoutPaymentsContainer');
@@ -98,6 +99,15 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
             },
             this._handleError
         ).catch(() => {});
+    }
+
+    componentDidUpdate() {
+        const { totals: { total } } = this.props;
+        const { selectedPaymentCode } = this.state;
+
+        if ((selectedPaymentCode === FREE && total > 0) || (selectedPaymentCode !== FREE && total === 0)) {
+            this.selectPaymentMethod({ m_code: total ? CARD : FREE });
+        }
     }
 
     selectPaymentMethod(item) {

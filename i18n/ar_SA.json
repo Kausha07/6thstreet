@@ -672,5 +672,8 @@
     "Card number is not valid": "رقم البطاقة غير صالح",
     "Card exp month is not valid": "شهر انتهاء البطاقة غير صالح",
     "Card exp year is not valid": "سنة انتهاء البطاقة غير صالحة",
-    "Card cvv is not valid": "ز cvv غير صالح"
+    "Card cvv is not valid": "ز cvv غير صالح",
+    "free": "مجاني",
+    "No Payment Information Required": "لا يلزم الدفع",
+    "Free": "مجاني"
 }

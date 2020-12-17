@@ -173,17 +173,20 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
 
     renderTotals() {
         const {
+            cashOnDeliveryFee,
             totals: {
+                coupon_code: couponCode,
+                discount,
                 subtotal = 0,
                 total = 0,
                 shipping_amount = 0,
-                currency_code = getCurrency()
+                currency_code = getCurrency(),
+                total_segments: totals = []
             },
             checkoutStep
         } = this.props;
         const grandTotal = getFinalPrice(total, currency_code);
         const subTotal = getFinalPrice(subtotal, currency_code);
-        const { totals: { coupon_code: couponCode, total_segments: totals = [] } } = this.props;
 
         return (
             <div block="CheckoutOrderSummary" elem="OrderTotals">
@@ -201,7 +204,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                             __('Club Apparel Redemption')
                         ) }
                         { couponCode && this.renderPriceLine(
-                            getDiscountFromTotals(totals, 'discount'),
+                            discount,
                             __('Discount (%s)', couponCode)
                         ) }
                         { this.renderPriceLine(
@@ -213,7 +216,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                             __('Tax')
                         ) }
                         { this.renderPriceLine(
-                            getDiscountFromTotals(totals, 'msp_cashondelivery'),
+                            cashOnDeliveryFee ?? getDiscountFromTotals(totals, 'msp_cashondelivery'),
                             __('Cash on Delivery')
                         ) }
                     </div>

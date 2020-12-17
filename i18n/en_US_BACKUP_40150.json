@@ -687,5 +687,8 @@
     "Card number is not valid": null,
     "Card exp month is not valid": null,
     "Card exp year is not valid": null,
-    "Card cvv is not valid": null
+    "Card cvv is not valid": null,
+    "free": null,
+    "No Payment Information Required": null,
+    "Free": null
 }
