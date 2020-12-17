@@ -33,7 +33,8 @@ export class StoreCredit extends PureComponent {
         const { storeCreditBalance } = this.props;
 
         if (storeCreditBalance && storeCreditBalance.length) {
-            const [, amount] = storeCreditBalance.split(' ');
+            const formattedStoreCreditBalance = storeCreditBalance.replace('  ', ' ');
+            const [, amount] = formattedStoreCreditBalance.split(' ');
 
             return parseFloat(amount) > 0;
         }
