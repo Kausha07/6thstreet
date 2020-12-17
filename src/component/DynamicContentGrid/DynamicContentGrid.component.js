@@ -14,11 +14,15 @@ class DynamicContentGrid extends PureComponent {
                 url: PropTypes.string
             })
         ).isRequired,
+        header: PropTypes.shape({
+            title: PropTypes.string
+        }),
         items_per_row: PropTypes.number
     };
 
     static defaultProps = {
-        items_per_row: 4
+        items_per_row: 4,
+        header: {}
     };
 
     renderItem(item, i) {
@@ -39,16 +43,19 @@ class DynamicContentGrid extends PureComponent {
     }
 
     renderGrid() {
-        const { items_per_row } = this.props;
+        const { items_per_row, header: { title } = {} } = this.props;
 
         return (
-            <div
-              block="DynamicContentGrid"
-              elem="Grid"
-              mods={ { items_per_row } }
-            >
-            { this.renderItems() }
-            </div>
+            <>
+                <h4>{ title }</h4>
+                <div
+                  block="DynamicContentGrid"
+                  elem="Grid"
+                  mods={ { items_per_row } }
+                >
+                    { this.renderItems() }
+                </div>
+            </>
         );
     }
 
