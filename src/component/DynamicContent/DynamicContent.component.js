@@ -3,6 +3,7 @@ import { PureComponent } from 'react';
 
 import { PRODUCT_SLIDER_TYPE } from 'Component/DynamicContent/DynamicContent.config';
 import DynamicContentBanner from 'Component/DynamicContentBanner';
+import DynamicContentFullWidthBannerSlider from 'Component/DynamicContentFullWidthBannerSlider';
 import DynamicContentGrid from 'Component/DynamicContentGrid';
 import DynamicContentMainBanner from 'Component/DynamicContentMainBanner';
 import DynamicContentProductSlider from 'Component/DynamicContentProductSlider';
@@ -26,7 +27,8 @@ class DynamicContent extends PureComponent {
         banner: DynamicContentBanner,
         mainBanner: DynamicContentMainBanner,
         grid: DynamicContentGrid,
-        productSlider: DynamicContentProductSlider
+        productSlider: DynamicContentProductSlider,
+        fullWidthBannerSlider: DynamicContentFullWidthBannerSlider
     };
 
     renderBlock = (block, i) => {
