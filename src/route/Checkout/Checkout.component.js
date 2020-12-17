@@ -392,6 +392,7 @@ export class Checkout extends SourceCheckout {
             isFailed,
             initialTotals
         } = this.props;
+        const { cashOnDeliveryFee } = this.state;
         const {
             paymentInformation: {
                 billing_address,
@@ -425,6 +426,7 @@ export class Checkout extends SourceCheckout {
             paymentMethod={ paymentMethod }
             creditCardData={ creditCardData }
             totals={ initialTotals }
+            cashOnDeliveryFee={ cashOnDeliveryFee }
           />
         );
     }

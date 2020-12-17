@@ -184,7 +184,7 @@ class FieldMultiselect extends PureComponent {
 
         return (
             <ul>
-                { data
+                { Object.keys(data).length
                     ? Object.entries(data).map(this.renderOption)
                     : Object.entries(subcategories).map(this.renderOption) }
             </ul>
