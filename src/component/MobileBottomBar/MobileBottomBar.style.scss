@@ -64,6 +64,11 @@
     bottom: 0;
     width: 100%;
     border-top: 1px solid var(--light-gray);
+    transition: .1s ease;
+
+    &_isIPhoneNavigationHidden {
+        height: 113px;
+    }
 
     @include desktop {
         display: none;
