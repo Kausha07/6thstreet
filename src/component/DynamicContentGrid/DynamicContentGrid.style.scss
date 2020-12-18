@@ -31,6 +31,7 @@
 
     .Image {
         height: auto;
+        max-width: 220px; // Tempo before JSON will be updated
         padding-bottom: 0;
 
         &-Image {
