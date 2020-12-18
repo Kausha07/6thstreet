@@ -9,11 +9,7 @@ class MobileAPI {
         const token = getMobileAuthorizationToken();
         const { AppState: { locale } } = getStore().getState();
         const localePrefix = relativeURL.indexOf('?') >= 0 ? '&' : '?';
-        // TODO Restore proper redirect
-        // TODO Restore proper redirect
-        // TODO Restore proper redirect
-        // const url = `/api/${relativeURL}${localePrefix}locale=${locale}`
-        const url = `https://mobileapi.dev.6thstreet.com/v2/${relativeURL}${localePrefix}locale=${locale}`
+        const url = `/api/${relativeURL}${localePrefix}locale=${locale}`
             .replace(/([^:]\/)\/+/g, '$1'); // this replaces // to /
 
         const payload = (value) => (['post', 'put', 'delete'].includes(method) ? value : {});
