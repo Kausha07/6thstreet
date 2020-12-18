@@ -641,4 +641,40 @@
             display: none;
         }
     }
+
+    &-OrderTotals {
+        font-weight: var(--fw-regular);
+        width: 100%;
+        padding: 0 12px;
+
+        @include desktop {
+            padding: 0;
+        }
+    }
+
+    &-Subtotals {
+        margin: 20px auto 11px;
+    }
+
+    &-SummaryItem {
+        display: flex;
+        justify-content: space-between;
+        padding: 5px 0;
+
+        .CartPage {
+            &-Text {
+                font-size: 13px;
+                font-weight: var(--fw-regular);
+            }
+
+            &-Price {
+                font-size: 13px;
+                font-weight: var(--fw-medium);
+            }
+        }
+
+        &::before {
+            content: none;
+        }
+    }
 }
