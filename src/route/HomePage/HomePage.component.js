@@ -67,7 +67,6 @@ class HomePage extends PureComponent {
     render() {
         return (
             <main block="HomePage">
-                { this.renderLoginBlock() }
                 { this.renderContent() }
             </main>
         );
