@@ -2,17 +2,20 @@
     .DynamicContentBanner {
         box-sizing: border-box;
         margin: 0;
-
         padding: 0 5px;
 
         &:last-of-type {
             padding-bottom: 30px;
 
             @include desktop() {
-                display: inline-block;
                 padding-bottom: 0;
-                width: 50%;
             }
         }
+    }
+
+    @include desktop {
+        margin: 0 auto;
+        max-width: 1366px;
+        text-align: center;
     }
 }

@@ -24,6 +24,29 @@ class PDPAddToCart extends PureComponent {
         routeChangeToCart: PropTypes.func.isRequired
     };
 
+    state = {
+        isIPhoneNavigationHidden: false,
+        pageYOffset: window.innerHeight,
+        isRoundedIphone: this.isRoundedIphoneScreen() ?? false
+    };
+
+    componentDidMount() {
+        window.addEventListener('scroll', this.handleResize);
+    }
+
+    isRoundedIphoneScreen() {
+        return window.navigator.userAgent.match(/iPhone/) && window.outerHeight > '800';
+    }
+
+    handleResize = () => {
+        const { pageYOffset, isRoundedIphone } = this.state;
+
+        this.setState({
+            isIPhoneNavigationHidden: isRoundedIphone && window.pageYOffset > pageYOffset,
+            pageYOffset: window.pageYOffset
+        });
+    };
+
     getSizeTypeSelect() {
         const { sizeObject = {} } = this.props;
 
@@ -231,13 +254,14 @@ class PDPAddToCart extends PureComponent {
             hideCheckoutBlock,
             routeChangeToCart
         } = this.props;
+        const { isIPhoneNavigationHidden } = this.state;
 
         if (showProceedToCheckout && isMobile.any()) {
             return (
                 <div
                   block="PDPAddToCart"
                   elem="Checkout"
-                  mods={ { hide: hideCheckoutBlock } }
+                  mods={ { hide: hideCheckoutBlock, isIPhoneNavigationHidden } }
                 >
                     <h2 block="PDPAddToCart" elem="CheckoutTitle">{ __('Added to your shopping bag') }</h2>
                     <button

@@ -81,8 +81,15 @@ class DynamicContentBanner extends PureComponent {
     }
 
     render() {
+        const { items } = this.props;
+        const { height, width } = items[0];
+
         return (
-            <div block="DynamicContentBanner">
+            <div
+              block="DynamicContentBanner"
+              data-max-height={ height }
+              data-max-width={ width }
+            >
                  { this.renderImages() }
             </div>
         );
