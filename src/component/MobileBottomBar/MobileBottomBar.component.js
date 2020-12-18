@@ -43,7 +43,10 @@ class MobileBottomBar extends NavigationAbstract {
         isWishlist: false,
         isAccount: false,
         isPopup: true,
-        accountPopUp: ''
+        accountPopUp: '',
+        isRoundedIphone: this.isRoundedIphoneScreen() ?? false,
+        isIPhoneNavigationHidden: false,
+        pageYOffset: window.innerHeight
     };
 
     renderMap = {
@@ -54,13 +57,30 @@ class MobileBottomBar extends NavigationAbstract {
         account: this.renderAccount.bind(this)
     };
 
-    routeChangeHome=() => {
+    componentDidMount() {
+        window.addEventListener('scroll', this.handleResize);
+    }
+
+    closePopup = () => {
+        this.setState({ accountPopUp: '' });
+    };
+
+    handleResize = () => {
+        const { pageYOffset, isRoundedIphone } = this.state;
+
+        this.setState({
+            isIPhoneNavigationHidden: isRoundedIphone && window.pageYOffset > pageYOffset,
+            pageYOffset: window.pageYOffset
+        });
+    };
+
+    routeChangeHome = () => {
         this.setState({
             redirectHome: true
         });
     };
 
-    routeChangeBrand=() => {
+    routeChangeBrand = () => {
         this.setState({
             redirectBrand: true,
             isCategoryMenu: false
@@ -77,11 +97,7 @@ class MobileBottomBar extends NavigationAbstract {
         return popUpElement;
     };
 
-    closePopup = () => {
-        this.setState({ accountPopUp: '' });
-    };
-
-    routeChangeAccount=() => {
+    routeChangeAccount = () => {
         const { history, setMobileTabActive } = this.props;
 
         setMobileTabActive(false);
@@ -90,7 +106,7 @@ class MobileBottomBar extends NavigationAbstract {
         return history.push('/my-account');
     };
 
-    routeChangeWishlist=() => {
+    routeChangeWishlist = () => {
         const { history, setMobileTabActive } = this.props;
 
         setMobileTabActive(true);
@@ -99,9 +115,13 @@ class MobileBottomBar extends NavigationAbstract {
         return history.push('/my-account/my-wishlist');
     };
 
-    routeChangeLogin=() => {
+    routeChangeLogin = () => {
         this.setState({ redirectLogin: true });
     };
+
+    isRoundedIphoneScreen() {
+        return window.navigator.userAgent.match(/iPhone/) && window.outerHeight > '800';
+    }
 
     renderHome() {
         const { history } = this.props;
@@ -236,8 +256,10 @@ class MobileBottomBar extends NavigationAbstract {
     }
 
     render() {
+        const { isIPhoneNavigationHidden } = this.state;
+
         return (
-            <div block="MobileBottomBar">
+            <div block="MobileBottomBar" mods={ { isIPhoneNavigationHidden } }>
                 { this.renderNavigationState() }
             </div>
         );
