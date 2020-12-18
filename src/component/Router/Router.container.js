@@ -90,8 +90,8 @@ export class RouterContainer extends SourceRouterContainer {
 
             getCart(true);
         } else {
-            // deleteAuthorizationToken();
-            // deleteMobileAuthorizationToken();
+            deleteAuthorizationToken();
+            deleteMobileAuthorizationToken();
             updateCustomerDetails();
         }
     }

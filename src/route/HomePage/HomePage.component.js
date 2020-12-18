@@ -24,11 +24,11 @@ class HomePage extends PureComponent {
                 // eslint-disable-next-line
                 for (let i=0; i < children.length; i++) {
                     if (
-                        children[i + 1]
-                        && children[i].children[0].href !== `${href}#`
-                        && children[i].className === children[i + 1].className
+                        children[i].children[0].href !== `${href}#`
+                        && children[i].className === 'DynamicContentBanner'
                     ) {
-                        children[i].style.width = '50%';
+                        children[i].style.maxHeight = `${children[i].dataset.maxHeight}px`;
+                        children[i].style.maxWidth = `${children[i].dataset.maxWidth}px`;
                         children[i].style.display = 'inline-block';
                     }
                 }
@@ -67,7 +67,6 @@ class HomePage extends PureComponent {
     render() {
         return (
             <main block="HomePage">
-                { this.renderLoginBlock() }
                 { this.renderContent() }
             </main>
         );
