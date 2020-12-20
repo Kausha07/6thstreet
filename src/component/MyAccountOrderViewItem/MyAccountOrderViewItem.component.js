@@ -1,4 +1,4 @@
-import { formatPrice } from '@6thstreetdotcom/algolia-sdk/app/utils/filters';
+import { formatPrice } from '@6thstreetdotcom/algolia-sdk/dist/app/utils/filters';
 import {
     MyAccountReturnSuccessItem as SourceComponent
 } from 'Component/MyAccountReturnSuccessItem/MyAccountReturnSuccessItem.component';

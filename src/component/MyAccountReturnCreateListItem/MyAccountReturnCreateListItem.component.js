@@ -1,7 +1,7 @@
 import { PureComponent } from 'react';
 import { withRouter } from 'react-router';
 
-import { formatPrice } from '@6thstreetdotcom/algolia-sdk/app/utils/filters';
+import { formatPrice } from '@6thstreetdotcom/algolia-sdk/dist/app/utils/filters';
 import Image from 'Component/Image';
 import { OrderType } from 'Type/API';
 import { HistoryType } from 'Type/Common';
