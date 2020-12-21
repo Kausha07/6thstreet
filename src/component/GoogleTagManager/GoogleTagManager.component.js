@@ -301,14 +301,10 @@ class GoogleTagManager extends PureComponent {
                 console.log(event, data);
             }
 
-            // addToCart event is broken on GTM side (same as on 6th-street LIVE).
-            // Disabled until will not be fixed on GTM side
-            if (event !== 'addToCart') {
-                window[this.currentDataLayerName].push({
-                    event,
-                    ...this.currentDataLayer
-                });
-            }
+            window[this.currentDataLayerName].push({
+                event,
+                ...this.currentDataLayer
+            });
 
             this.currentDataLayer = {};
         }
