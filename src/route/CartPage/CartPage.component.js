@@ -17,7 +17,7 @@ import ExpandableContent from 'Component/ExpandableContent';
 import Link from 'Component/Link';
 import Loader from 'Component/Loader';
 import MyAccountTabList from 'Component/MyAccountTabList';
-import { FIXED_CURRENCIES } from 'Component/Price/Price.config';
+import { getFinalPrice } from 'Component/Price/Price.config';
 import ProductLinks from 'Component/ProductLinks';
 import { tabMap } from 'Route/MyAccount/MyAccount.container';
 import { CROSS_SELL } from 'Store/LinkedProducts/LinkedProducts.reducer';
@@ -27,9 +27,8 @@ import {
 import { HistoryType } from 'Type/Common';
 import { TotalsType } from 'Type/MiniCart';
 import { ClubApparelMember } from 'Util/API/endpoint/ClubApparel/ClubApparel.type';
-import { isArabic } from 'Util/App';
+import { getCurrency, getDiscountFromTotals, isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
-import { roundPrice } from 'Util/Price';
 
 import ClubApparel from './icons/club-apparel.png';
 import Delivery from './icons/delivery-truck.png';
@@ -100,38 +99,59 @@ export class CartPage extends PureComponent {
         );
     }
 
-    renderPriceLine(price) {
-        const { totals: { currency_code } } = this.props;
-        const fixedPrice = FIXED_CURRENCIES.includes(currency_code);
+    renderPriceLine(price, name, mods, allowZero = false) {
+        if (!price && !allowZero) {
+            return null;
+        }
 
-        return `${currency_code}${fixedPrice ? price.toFixed(3) : roundPrice(price)}`;
-    }
+        const { totals: { currency_code = getCurrency() } } = this.props;
+        const finalPrice = getFinalPrice(price, currency_code);
 
-    renderTotalDetails(isMobile = false) {
         return (
-            <dl
-              block="CartPage"
-              elem="TotalDetails"
-              aria-label={ __('Order total details') }
-              mods={ { isMobile } }
-            >
-                <dt>{ __('Subtotal') }</dt>
-                <dt>{ __('(Taxes included)') }</dt>
-            </dl>
+            <li block="CartPage" elem="SummaryItem" mods={ mods }>
+                <strong block="CartPage" elem="Text">
+                    { name }
+                </strong>
+                <strong block="CartPage" elem="Price">
+                    { `${ parseFloat(price) || price === 0 ? currency_code : '' } ${ finalPrice }` }
+                </strong>
+            </li>
         );
     }
 
     renderTotal() {
         const {
             totals: {
-                subtotal_incl_tax = 0
+                coupon_code: couponCode,
+                discount,
+                subtotal = 0,
+                total = 0,
+                currency_code = getCurrency(),
+                total_segments: totals = []
             }
         } = this.props;
+        const grandTotal = getFinalPrice(total, currency_code);
+        const subTotal = getFinalPrice(subtotal, currency_code);
 
         return (
-            <dl block="CartPage" elem="Total" aria-label="Complete order total">
-                <dd>{ this.renderPriceLine(subtotal_incl_tax) }</dd>
-            </dl>
+            <div block="CartPage" elem="OrderTotals">
+                <ul>
+                    <div block="CartPage" elem="Subtotals">
+                        { this.renderPriceLine(subTotal, __('Subtotal')) }
+                        { couponCode && this.renderPriceLine(
+                            discount,
+                            __('Discount (%s)', couponCode)
+                        ) }
+                        { this.renderPriceLine(
+                            getDiscountFromTotals(totals, 'tax'),
+                            __('Tax')
+                        ) }
+                    </div>
+                    <div block="CartPage" elem="Totals">
+                        { this.renderPriceLine(grandTotal, __('Total'), {}, true) }
+                    </div>
+                </ul>
+            </div>
         );
     }
 
@@ -166,7 +186,6 @@ export class CartPage extends PureComponent {
     renderTotals() {
         return (
             <article block="CartPage" elem="Summary">
-                { this.renderTotalDetails() }
                 { this.renderTotal() }
                 { this.renderButtons() }
             </article>
@@ -457,7 +476,6 @@ export class CartPage extends PureComponent {
                     <div block="CartPage" elem="Static" mods={ { isArabic } }>
                         { this.renderHeading() }
                         { this.renderCartItems() }
-                        { this.renderTotalDetails(true) }
                         { this.renderCrossSellProducts() }
                         { this.renderDiscountCode() }
                         { this.renderPromo() }

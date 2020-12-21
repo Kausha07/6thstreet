@@ -42,6 +42,18 @@ export class Header extends PureComponent {
         return false;
     };
 
+    shouldChatBeHidden() {
+        const chatElem = document.getElementById('ori-chatbot-root');
+
+        if (chatElem) {
+            if (location.pathname.match(/checkout|cart/)) {
+                chatElem.classList.add('hidden');
+            } else {
+                chatElem.classList.remove('hidden');
+            }
+        }
+    }
+
     renderSection = (Component, i) => {
         const { navigationState } = this.props;
         const { newMenuGender } = this.state;
@@ -63,6 +75,7 @@ export class Header extends PureComponent {
     render() {
         const { navigationState: { name } } = this.props;
         const isCheckout = this.getIsCheckout();
+        this.shouldChatBeHidden();
         return (
             <>
                 <header block="Header" mods={ { name } }>

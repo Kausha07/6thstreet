@@ -641,4 +641,57 @@
             display: none;
         }
     }
+
+    &-OrderTotals {
+        font-weight: var(--fw-regular);
+        width: 100%;
+        padding: 0 12px;
+
+        @include desktop {
+            padding: 0;
+        }
+    }
+
+    &-Totals {
+        border-top: 1px solid var(--color-soft-gray);
+        padding: 11px 0;
+
+        .CartPage {
+            &-SummaryItem {
+                strong:last-child {
+                    font-weight: var(--fw-bold);
+                }
+            }
+        }
+    }
+
+    &-Subtotals {
+        margin: 20px auto 11px;
+    }
+
+    &-SummaryItem {
+        display: flex;
+        justify-content: space-between;
+        padding: 5px 0;
+
+        .CartPage {
+            &-Text {
+                font-size: 13px;
+                font-weight: var(--fw-regular);
+            }
+
+            &-Price {
+                font-size: 13px;
+                font-weight: var(--fw-medium);
+            }
+        }
+
+        &::before {
+            content: none;
+        }
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
 }

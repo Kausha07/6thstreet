@@ -42,7 +42,8 @@ export class CheckoutSuccess extends PureComponent {
         isChangePhonePopupOpen: PropTypes.bool.isRequired,
         toggleChangePhonePopup: PropTypes.func.isRequired,
         phone: PropTypes.string.isRequired,
-        isMobileVerification: PropTypes.bool.isRequired
+        isMobileVerification: PropTypes.bool.isRequired,
+        cashOnDeliveryFee: PropTypes.number.isRequired
     };
 
     state = {
@@ -338,11 +339,17 @@ export class CheckoutSuccess extends PureComponent {
 
     renderTotals = () => {
         const { isArabic } = this.state;
-        const { initialTotals: { total_segments = [] } } = this.props;
+        const {
+            cashOnDeliveryFee,
+            initialTotals: {
+                coupon_code: couponCode,
+                discount,
+                total_segments = []
+            }
+        } = this.props;
 
         return (
             <div block="PriceTotals" mods={ { isArabic } }>
-
                 { this.renderPriceLine(
                     getDiscountFromTotals(total_segments, 'subtotal'),
                     __('Subtotal')
@@ -352,7 +359,7 @@ export class CheckoutSuccess extends PureComponent {
                     __('Shipping')
                 ) }
                 { this.renderPriceLine(
-                    getDiscountFromTotals(total_segments, 'msp_cashondelivery'),
+                    cashOnDeliveryFee ?? getDiscountFromTotals(total_segments, 'msp_cashondelivery'),
                     __('Cash on Delivery Fee')
                 ) }
                 { this.renderPriceLine(
@@ -362,6 +369,10 @@ export class CheckoutSuccess extends PureComponent {
                 { this.renderPriceLine(
                     getDiscountFromTotals(total_segments, 'clubapparel'),
                     __('Club Apparel Redemption')
+                ) }
+                { couponCode && this.renderPriceLine(
+                    discount,
+                    __('Discount (%s)', couponCode)
                 ) }
                 { this.renderTotalPrice() }
             </div>

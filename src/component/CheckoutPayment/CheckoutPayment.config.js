@@ -46,5 +46,11 @@ export const PAYMENTS_DATA = {
         mod: { cash: true },
         paragraph: __('cash'),
         img: cash
+    },
+    free: {
+        name: 'free',
+        mod: { free: true },
+        paragraph: __('free'),
+        img: cash
     }
 };

@@ -147,14 +147,13 @@ class CheckoutComApplePayContainer extends PureComponent {
             default_title,
             billingAddress: {
                 country_id: countryCode
-            },
-            supported_networks
+            }
         } = this.props;
         const paymentRequest = {
             countryCode,
             currencyCode: quote_currency_code,
-            supportedNetworks: supported_networks,
-            merchantCapabilities: ['supports3DS'],
+            supportedNetworks: this._getSupportedNetworks(),
+            merchantCapabilities: this._getMerchantCapabilities(),
             total: { label: default_title, amount: total }
         };
         const applePaySession = new window.ApplePaySession(1, paymentRequest);
@@ -255,6 +254,28 @@ class CheckoutComApplePayContainer extends PureComponent {
         };
 
         applePaySession.oncancel = () => Logger.log('Apple Pay session was cancelled.');
+    };
+
+    /**
+     * Get supported networks
+     * @return {array}
+     */
+    _getSupportedNetworks = () => {
+        const { supported_networks = '' } = this.state;
+
+        return supported_networks.split(',');
+    };
+
+    /**
+     * Get merchant capabilities
+     * @return {array}
+     */
+    _getMerchantCapabilities = () => {
+        const { merchant_capabilities } = this.state;
+        const output = ['supports3DS'];
+        const capabilities = merchant_capabilities.split(',');
+
+        return output.concat(capabilities);
     };
 
     /**

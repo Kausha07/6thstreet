@@ -54,6 +54,7 @@ export class Field extends SourceField {
                 />
                 <div>
                     <label htmlFor={ id } />
+                    <label block="Field" elem="FakeLabel" htmlFor={ id } />
                 </div>
             </div>
         );

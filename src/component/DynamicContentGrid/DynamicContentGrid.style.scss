@@ -31,6 +31,7 @@
 
     .Image {
         height: auto;
+        max-width: 220px; // Tempo before JSON will be updated
         padding-bottom: 0;
 
         &-Image {
@@ -65,6 +66,14 @@
                 font-size: 1.2rem;
             }
         }
+    }
+
+    h4 {
+        border-top: 1px solid var(--light-gray);
+        margin-top: 30px;
+        padding: 20px;
+        text-align: center;
+        text-transform: uppercase;
     }
 
     @include desktop {
