@@ -60,15 +60,15 @@ class PurchaseEvent extends BaseEvent {
      * @return {{revenue: number, coupon_discount_abs: string, coupon: string, shipping: number, affiliation: string, coupon_discount_amount: string, tax: number, id: *}}
      */
     getActionFields(orderId = '', {
-        tax_amount, grand_total, shipping_amount, discount_amount, coupon_code = ''
+        tax_amount, total, shipping_fee, coupon_code = ''
     }) {
         return {
             id: orderId,
+            affiliation: 'Online Store',
+            revenue: +roundPrice(total),
             tax: +roundPrice(tax_amount),
-            coupon: coupon_code,
-            revenue: +roundPrice(grand_total),
-            shipping: +roundPrice(shipping_amount),
-            coupon_discount_amount: +roundPrice(discount_amount)
+            shipping: +roundPrice(shipping_fee),
+            coupon: coupon_code
         };
     }
 
