@@ -3,6 +3,7 @@ import { PureComponent } from 'react';
 
 import Image from 'Component/Image';
 import Link from 'Component/Link';
+import { formatCDNLink } from 'Util/Url';
 
 import './DynamicContentMainBanner.style';
 
@@ -40,7 +41,7 @@ class DynamicContentMainBanner extends PureComponent {
 
         return (
             <Link
-              to={ link }
+              to={ formatCDNLink(link) }
               key={ i }
             >
                 <Image

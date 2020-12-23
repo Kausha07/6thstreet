@@ -4,6 +4,7 @@ import { PureComponent } from 'react';
 import Image from 'Component/Image';
 import Link from 'Component/Link';
 import Slider from 'Component/Slider';
+import { formatCDNLink } from 'Util/Url';
 
 import './DynamicContentCircleItemSlider.style';
 
@@ -28,7 +29,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
         } = item;
 
         const linkTo = {
-            pathname: link,
+            pathname: formatCDNLink(link),
             state: { plp_config }
         };
 
