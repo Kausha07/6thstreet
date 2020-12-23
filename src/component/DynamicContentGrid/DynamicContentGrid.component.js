@@ -48,7 +48,7 @@ class DynamicContentGrid extends PureComponent {
 
         return (
             <>
-                <h4>{ title }</h4>
+                <h2>{ title }</h2>
                 <div
                   block="DynamicContentGrid"
                   elem="Grid"
