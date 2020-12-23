@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-boolean-value */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
@@ -75,6 +76,11 @@ class Menu extends PureComponent {
 
     renderCategories() {
         const { categories = [] } = this.props;
+
+        if (!Array.isArray(categories)) {
+            return null;
+        }
+
         return categories.map(this.renderCategory);
     }
 
@@ -97,7 +103,7 @@ class Menu extends PureComponent {
                           mods: { isArabic }
                       } }
                     >
-                        <HeaderGenders />
+                        <HeaderGenders isMenu={ true } />
                     </div>
                 </div>
                 <div
