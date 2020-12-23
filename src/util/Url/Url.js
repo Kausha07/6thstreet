@@ -81,3 +81,30 @@ export const getCookie = (name) => {
 };
 
 export const appendWithStoreCode = (pathname) => pathname;
+
+export const formatCDNLink = (url) => {
+    const urlParts = url.match(/\?/) ? decodeURI(url).split('?') : decodeURI(url).split('#');
+    const parts = decodeURI(url).split('&');
+    const rebuildUri = parts.reduce(
+        (acc, part) => {
+            if (!acc.length && part.match(/categories.level0/)) {
+                acc.push(
+                    `/${part.substr(part.indexOf('=') + 1)
+                        .replaceAll(' %2F%2F%2F ', '/')
+                        .replaceAll(' %26 ', '-')
+                        .replace(' ', '-')
+                        .toLowerCase()
+                    }`
+                );
+            }
+
+            return acc;
+        }, []
+    ).join('');
+
+    return `${rebuildUri}.html?${urlParts[1].match(/^q=/) ? '' : 'q='}${urlParts[1]}`
+        .replace('/men.html', '.html')
+        .replace('/women.html', '.html')
+        .replace('/kids-baby_boy-boy-girl-baby_girl.html', '.html')
+        .replace('/kids.html', '.html');
+};

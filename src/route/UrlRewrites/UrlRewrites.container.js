@@ -8,7 +8,7 @@ import { LocationType } from 'Type/Common';
 import { fetchQuery } from 'Util/Request';
 
 import UrlRewrites from './UrlRewrites.component';
-import { TYPE_NOTFOUND, TYPE_PRODUCT } from './UrlRewrites.config';
+import { TYPE_CATEGORY, TYPE_NOTFOUND, TYPE_PRODUCT } from './UrlRewrites.config';
 
 export const mapStateToProps = (state) => ({
     locale: state.AppState.locale
@@ -79,13 +79,16 @@ export class UrlRewritesContainer extends PureComponent {
         // TODO: switch to "executeGet" afterwards
         const { urlResolver } = await fetchQuery(UrlRewritesQuery.getQuery({ urlParam }));
         const { type = magentoProductId || possibleSku ? TYPE_PRODUCT : TYPE_NOTFOUND, id } = urlResolver || {};
+        const finalType = type === TYPE_NOTFOUND && decodeURI(location.search).match(/idx=/)
+            ? TYPE_CATEGORY
+            : type;
 
-        window.pageType = type;
+        window.pageType = finalType;
 
         this.setState({
             prevPathname: urlParam,
             isLoading: false,
-            type,
+            type: finalType,
             id: id === undefined ? magentoProductId : id,
             sku: possibleSku
         });
