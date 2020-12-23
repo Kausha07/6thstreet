@@ -102,7 +102,8 @@ export const formatCDNLink = (url) => {
         }, []
     ).join('');
 
-    return `${rebuildUri}.html?${urlParts[1]}`.replace('/men.html', '.html')
+    return `${rebuildUri}.html?${urlParts[1].match(/^q=/) ? '' : 'q='}${urlParts[1]}`
+        .replace('/men.html', '.html')
         .replace('/women.html', '.html')
         .replace('/kids-baby_boy-boy-girl-baby_girl.html', '.html')
         .replace('/kids.html', '.html');
