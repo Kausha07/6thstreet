@@ -3,6 +3,7 @@ import { PureComponent } from 'react';
 
 import Image from 'Component/Image';
 import Link from 'Component/Link';
+import { formatCDNLink } from 'Util/Url';
 
 import './DynamicContentGrid.style';
 
@@ -30,7 +31,7 @@ class DynamicContentGrid extends PureComponent {
 
         return (
             <div block="CategoryItem" elem="Content" key={ i }>
-                <Link to={ link } key={ i }>
+                <Link to={ formatCDNLink(link) } key={ i }>
                     <Image src={ url } ratio="custom" height="auto" />
                 </Link>
             </div>
