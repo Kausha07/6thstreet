@@ -3,7 +3,8 @@ import { PureComponent } from 'react';
 
 import Image from 'Component/Image';
 import Link from 'Component/Link';
-import Slider from 'Component/Slider';
+import SliderHomepage from 'Component/SliderHomepage';
+import { formatCDNLink } from 'Util/Url';
 
 import './DynamicContentFullWidthBannerSlider.style';
 
@@ -36,7 +37,7 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
         } = item;
 
         const linkTo = {
-            pathname: link,
+            pathname: formatCDNLink(link),
             state: { plp_config }
         };
 
@@ -50,7 +51,6 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
                   alt={ label }
                   mix={ { block: 'DynamicContentFullWidthBannerSlider', elem: 'Image' } }
                   ratio="custom"
-                  height="480px"
                 />
             </Link>
         );
@@ -61,9 +61,9 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
         const { activeSlide } = this.state;
 
         return (
-            <Slider activeImage={ activeSlide } onActiveImageChange={ this.onSliderChange }>
+            <SliderHomepage activeImage={ activeSlide } onActiveImageChange={ this.onSliderChange }>
                 { items.map(this.renderSlide) }
-            </Slider>
+            </SliderHomepage>
         );
     }
 

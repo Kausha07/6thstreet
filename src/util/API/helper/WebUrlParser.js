@@ -86,7 +86,7 @@ const buildQuery = (query = {}) => Object.keys(query).reduce((acc, key) => {
         return acc;
     }
 
-    if (acc[facetKey]) {
+    if (acc[facetKey] && facetKey !== 'categories.level2') {
         acc[facetKey] += `,${facetValue}`;
     } else {
         acc[facetKey] = `${facetValue}`;

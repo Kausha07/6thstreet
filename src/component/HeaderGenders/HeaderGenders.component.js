@@ -3,6 +3,7 @@ import { PureComponent } from 'react';
 
 import GenderButton from 'Component/GenderButton';
 import { isArabic } from 'Util/App';
+import isMobile from 'Util/Mobile';
 
 import './HeaderGenders.style';
 
@@ -16,12 +17,14 @@ class HeaderGenders extends PureComponent {
     static propTypes = {
         currentContentGender: PropTypes.string.isRequired,
         changeMenuGender: PropTypes.func,
-        isMobile: PropTypes.bool
+        isMobile: PropTypes.bool,
+        isMenu: PropTypes.bool
     };
 
     static defaultProps = {
         changeMenuGender: () => {},
-        isMobile: false
+        isMobile: false,
+        isMenu: false
     };
 
     genderList = [
@@ -61,7 +64,17 @@ class HeaderGenders extends PureComponent {
 
     renderGender = (gender) => {
         const { key } = gender;
-        const { changeMenuGender, currentContentGender } = this.props;
+        const {
+            changeMenuGender,
+            currentContentGender,
+            isMenu
+        } = this.props;
+
+        if (key === 'home_beauty_women' && (!isMobile.any() || (isMobile.any() && isMenu))
+        ) {
+            return null;
+        }
+
         const { currentGenderButton, isUnsetStyle } = this.state;
         const isCurrentGender = this.isCurrentGender(key);
         if (currentGenderButton === '') {

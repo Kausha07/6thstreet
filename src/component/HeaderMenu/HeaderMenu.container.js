@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
+import { setGender } from 'Store/AppState/AppState.action';
 import { toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
 
 import HeaderMenu from './HeaderMenu.component';
@@ -12,7 +13,8 @@ export const mapStateToProps = (state) => ({
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
-    toggleOverlayByKey: (key) => _dispatch(toggleOverlayByKey(key))
+    toggleOverlayByKey: (key) => _dispatch(toggleOverlayByKey(key)),
+    setGender: (gender) => _dispatch(setGender(gender))
 });
 
 export class HeaderMenuContainer extends PureComponent {
