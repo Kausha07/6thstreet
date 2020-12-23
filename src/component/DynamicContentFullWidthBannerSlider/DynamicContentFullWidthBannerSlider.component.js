@@ -51,7 +51,6 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
                   alt={ label }
                   mix={ { block: 'DynamicContentFullWidthBannerSlider', elem: 'Image' } }
                   ratio="custom"
-                  height="480px"
                 />
             </Link>
         );

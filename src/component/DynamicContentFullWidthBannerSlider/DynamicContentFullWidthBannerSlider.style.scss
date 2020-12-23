@@ -9,4 +9,16 @@
             }
         }
     }
+
+    .Image {
+        height: auto;
+
+        &-Image {
+            position: static;
+
+            @include desktop {
+                margin-top: 50px;
+            }
+        }
+    }
 }
