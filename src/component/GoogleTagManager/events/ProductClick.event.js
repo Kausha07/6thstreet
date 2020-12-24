@@ -37,8 +37,7 @@ class ProductClickEvent extends BaseEvent {
             id,
             brand,
             name,
-            variant,
-            url
+            variant
         } = this.getProductFromImpression(product) || {};
 
         if (!id) {
@@ -64,9 +63,6 @@ class ProductClickEvent extends BaseEvent {
                         }
                     ]
                 }
-            },
-            eventCallback() {
-                document.location = url;
             }
         });
     }

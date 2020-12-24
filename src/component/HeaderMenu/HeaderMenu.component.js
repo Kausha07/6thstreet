@@ -14,7 +14,8 @@ class HeaderMenu extends PureComponent {
         toggleOverlayByKey: PropTypes.func.isRequired,
         newMenuGender: PropTypes.string.isRequired,
         gender: PropTypes.string.isRequired,
-        activeOverlay: PropTypes.string.isRequired
+        activeOverlay: PropTypes.string.isRequired,
+        setGender: PropTypes.func.isRequired
     };
 
     state = {
@@ -34,11 +35,15 @@ class HeaderMenu extends PureComponent {
     }
 
     onCategoriesClick = () => {
-        const { toggleOverlayByKey, gender } = this.props;
+        const { toggleOverlayByKey, gender, setGender } = this.props;
+
+        if (gender === 'home_beauty_women') {
+            setGender('women');
+        }
 
         this.setState(({ expanded }) => ({ expanded: !expanded }));
         toggleOverlayByKey(MOBILE_MENU_SIDEBAR_ID);
-        browserHistory.push(`/${ gender }.html`);
+        browserHistory.push(`/${ gender === 'home_beauty_women' ? 'women' : gender }.html`);
     };
 
     renderMenu() {

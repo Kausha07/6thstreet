@@ -21,6 +21,7 @@ import { hideActiveOverlay } from 'Store/Overlay/Overlay.action';
 import StoreCreditDispatcher from 'Store/StoreCredit/StoreCredit.dispatcher';
 import BrowserDatabase from 'Util/BrowserDatabase';
 import { checkProducts } from 'Util/Cart/Cart';
+import Event, { EVENT_GTM_CHECKOUT, EVENT_GTM_PURCHASE } from 'Util/Event';
 import history from 'Util/History';
 import { ONE_MONTH_IN_SECONDS } from 'Util/Request/QueryDispatcher';
 
@@ -106,7 +107,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             isVerificationCodeSent: false,
             lastOrder: {},
             initialTotals: totals,
-            processApplePay: false
+            processApplePay: false,
+            initialGTMSent: false
         };
     }
 
@@ -133,7 +135,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         } = this.props;
 
         const {
-            checkoutStep
+            checkoutStep,
+            initialGTMSent
         } = this.state;
 
         const {
@@ -144,8 +147,13 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             this.updateInitTotals();
         }
 
+        if (checkoutStep === SHIPPING_STEP && !initialGTMSent && Object.keys(totals).length) {
+            this.handleCheckoutGTM(true);
+        }
+
         if (checkoutStep !== prevCheckoutStep) {
             updateStoreCredit();
+            this.handleCheckoutGTM();
         }
 
         if (items.length !== 0) {
@@ -174,6 +182,41 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         // if guest checkout is disabled and user is not logged in => throw him to homepage
         if (!guest_checkout && !isSignedIn()) {
             history.push('/');
+        }
+    }
+
+    handleCheckoutGTM(isInitial = false) {
+        const { totals } = this.props;
+        const {
+            checkoutStep,
+            orderID,
+            initialTotals
+        } = this.state;
+
+        if (checkoutStep !== DETAILS_STEP) {
+            Event.dispatch(EVENT_GTM_CHECKOUT, { totals, step: this.getCheckoutStepNumber() });
+        } else {
+            Event.dispatch(EVENT_GTM_PURCHASE, { orderID, totals: initialTotals });
+        }
+
+        if (isInitial) {
+            this.setState({ initialGTMSent: true });
+        }
+    }
+
+    /* eslint-disable no-magic-numbers */
+    getCheckoutStepNumber() {
+        const { checkoutStep } = this.state;
+
+        switch (checkoutStep) {
+        case SHIPPING_STEP:
+            return 1;
+        case BILLING_STEP:
+            return 2;
+        case DETAILS_STEP:
+            return 3;
+        default:
+            return 0;
         }
     }
 

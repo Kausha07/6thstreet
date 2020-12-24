@@ -85,12 +85,12 @@ class Product {
      * @param item
      * @param isVariantPassed
      */
-    static getItemData(item = {}, isVariantPassed = false) {
+    static getItemData(item = {}) {
         if (item && Object.values(item).length) {
             const { product = {}, sku = '' } = item;
             const configurableVariantIndex = this.getSelectedVariantIndex(product, sku);
 
-            return this.getProductData({ ...product, configurableVariantIndex }, isVariantPassed);
+            return this.getProductData({ ...item, configurableVariantIndex });
         }
 
         return {};
@@ -219,46 +219,42 @@ class Product {
     }
 
     static getAttribute(variant, parentAttributes, attributeName) {
-        const { attribute_value = '' } = variant.attributes[attributeName] || {};
+        const { attribute_value = '' } = variant.attributes ? variant.attributes[attributeName] : {};
         const { attribute_options = {} } = parentAttributes[attributeName] || {};
-        const { label = NOT_APPLICABLE } = attribute_options[attribute_value] || {};
+        const { label } = attribute_options[attribute_value] || {};
 
-        return label || NOT_APPLICABLE;
+        return label;
     }
 
     /**
      * Get product data as object
      *
-     * @param product
+     * @param item
      *
-     * @param isVariantPassed
      * @return {{quantity: number, price: number, name: string, variant: string, id: string, availability: boolean, list: string, category: string, brand: string}}
      */
-    static getProductData(product, isVariantPassed = false) {
+    static getProductData(item) {
         const {
-            sku,
-            name,
-            type_id,
-            category = NOT_APPLICABLE,
-            variants = [],
-            categories = [],
-            attributes = {},
-            configurableVariantIndex = this.getSelectedVariantIndex(product, sku)
-        } = product;
-        const selectedVariant = variants[configurableVariantIndex] || product;
-        const { sku: variantSku } = selectedVariant;
+            brand_name,
+            color,
+            full_item_info: {
+                category
+            },
+            sku: parentSku,
+            optionValue,
+            row_total,
+            product
+        } = item;
+        const { sku, name } = product;
 
         return {
-            id: sku,
+            id: sku || parentSku,
             name,
-            price: this.getPrice(selectedVariant, type_id),
-            brand: this.getBrand(selectedVariant) || this.DEFAULT_BRAND,
-            category: this.getCategory(categories) || category,
-            [PRODUCT_COLOR]: this.getAttribute(selectedVariant, attributes, 'color'),
-            [PRODUCT_SIZE]: this.getAttribute(selectedVariant, attributes, 'size'),
-            [PRODUCT_TYPE]: type_id,
-            [PRODUCT_VARIANT_SKU]: this.getVariantSku(sku, variantSku, isVariantPassed),
-            [GROUPED_PRODUCT_PRICE]: this.getGroupedProductPrice(product)
+            price: row_total,
+            brand: brand_name,
+            category,
+            size: optionValue,
+            [PRODUCT_COLOR]: color
         };
     }
 }
