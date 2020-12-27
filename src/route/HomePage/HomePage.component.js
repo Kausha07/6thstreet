@@ -19,13 +19,17 @@ class HomePage extends PureComponent {
         if (DynamicContent) {
             const { children = [] } = DynamicContent;
             const { href } = location;
-
+            console.log(href);
             if (children) {
                 // eslint-disable-next-line
                 for (let i=0; i < children.length; i++) {
-                    if (
-                        children[i].children[0].href !== `${href}#`
-                        && children[i].className === 'DynamicContentBanner'
+                    if (children[i].nodeName === 'HR') {
+                        children[i].style.backgroundColor = '#EFEFEF';
+                        children[i].style.height = '1px';
+                    } else if (
+                        children[i].className === 'DynamicContentBanner'
+                        && children[i].children[0]
+                        && children[i].children[0].href !== `${href}#`
                     ) {
                         children[i].style.maxHeight = `${children[i].dataset.maxHeight}px`;
                         children[i].style.maxWidth = `${children[i].dataset.maxWidth}px`;
