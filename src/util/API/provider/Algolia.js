@@ -1,4 +1,4 @@
-import AlgoliaSDK from '@6thstreetdotcom/algolia-sdk';
+import AlgoliaSDK from '../../../../packages/algolia-sdk';
 import { getStore } from 'Store';
 
 import { queryString } from '../helper/Object';

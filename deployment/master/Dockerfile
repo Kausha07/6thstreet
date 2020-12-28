@@ -1,6 +1,6 @@
-FROM node:lts-alpine
+FROM node:lts-alpine as build
 
-ENV NODE_ENV=development \
+ENV NODE_ENV=production \
     SERVER_PORT=80
 
 RUN apk add libsass --update-cache; \
@@ -10,12 +10,22 @@ COPY . /app
 
 WORKDIR /app
 
-RUN npm install --g lerna
-
 RUN npm i npm -g; \
     npm install; \
     npm install --g lerna; \
     lerna bootstrap; \
-    npm rebuild node-sass
+    npm rebuild node-sass; \
+    npm run build
 
-CMD ["npm", "run", "start"]
+
+FROM nginx:1.17.8-alpine
+
+COPY --from=build /app/build /usr/share/nginx/html
+
+RUN rm /etc/nginx/conf.d/default.conf
+
+COPY ./nginx.conf /etc/nginx/conf.d
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
