@@ -30,6 +30,8 @@ class DynamicContentBanner extends PureComponent {
     };
 
     renderImage = (item, i) => {
+        // const { items } = this.props;
+        // const { height, width } = items[0];
         const {
             url,
             link
@@ -45,7 +47,8 @@ class DynamicContentBanner extends PureComponent {
                       key={ i }
                       src={ url }
                       ratio="custom"
-                      height="auto"
+                    //   height={ height }
+                    //   width={ width }
                     />
                     { this.renderButton() }
                 </>
@@ -60,7 +63,8 @@ class DynamicContentBanner extends PureComponent {
                 <Image
                   src={ url }
                   ratio="custom"
-                  height="auto"
+                //   height={ height }
+                //   width={ width }
                 />
                 { this.renderButton() }
             </Link>
@@ -82,14 +86,9 @@ class DynamicContentBanner extends PureComponent {
     }
 
     render() {
-        const { items } = this.props;
-        const { height, width } = items[0];
-
         return (
             <div
               block="DynamicContentBanner"
-              data-max-height={ height }
-              data-max-width={ width }
             >
                  { this.renderImages() }
             </div>
