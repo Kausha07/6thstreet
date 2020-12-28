@@ -1,10 +1,11 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-import { formatPrice } from '@6thstreetdotcom/algolia-sdk/dist/app/utils/filters';
 import Field from 'Component/Field';
 import Image from 'Component/Image';
 import { ReturnItemType, ReturnResolutionType } from 'Type/API';
+
+import { formatPrice } from '../../../packages/algolia-sdk/app/utils/filters';
 
 import './MyAccountReturnCreateItem.style';
 

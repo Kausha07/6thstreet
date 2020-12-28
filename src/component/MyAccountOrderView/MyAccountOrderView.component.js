@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-import { formatPrice } from '@6thstreetdotcom/algolia-sdk/dist/app/utils/filters';
 import Accordion from 'Component/Accordion';
 import Image from 'Component/Image';
 import Loader from 'Component/Loader';
@@ -23,6 +22,7 @@ import {
 import { appendOrdinalSuffix } from 'Util/Common';
 import { formatDate } from 'Util/Date';
 
+import { formatPrice } from '../../../packages/algolia-sdk/app/utils/filters';
 import CancelledImage from './icons/cancelled.png';
 import CloseImage from './icons/close.png';
 import PackageImage from './icons/package.png';
