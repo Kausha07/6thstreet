@@ -5,7 +5,8 @@
         "@6thstreetdotcom/algolia-sdk": "^1.6.0",
         "@scandipwa/scandipwa": "0.0.1",
         "@scandipwa/scandipwa-scripts": "0.0.8",
-        "react-iframe": "^1.8.0"
+        "react-iframe": "^1.8.0",
+        "lerna": "^3.22.1"
     },
     "scripts": {
         "start": "scandipwa-scripts start",
