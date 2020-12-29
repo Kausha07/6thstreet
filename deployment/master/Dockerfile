@@ -13,6 +13,7 @@ WORKDIR /app
 RUN npm i npm -g; \
     npm install; \
     npm install --g lerna; \
+    npm install --g forever; \
     lerna bootstrap; \
     npm rebuild node-sass; \
     npm run build
@@ -28,4 +29,4 @@ COPY ./nginx.conf /etc/nginx/conf.d
 
 EXPOSE 80
 
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["forever", "start", "app.js"]
