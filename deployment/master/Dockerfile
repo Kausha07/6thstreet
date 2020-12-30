@@ -8,9 +8,8 @@ WORKDIR /app
 RUN npm i npm -g; \
  npm install; \
  npm install --g lerna; \
- npm install --g forever; \
  lerna bootstrap; \
  npm rebuild node-sass; \
  npm run build
 EXPOSE 3000
-CMD ["forever", "start", "app.js"]
+CMD ["node", "app.js"]
