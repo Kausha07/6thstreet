@@ -92,12 +92,12 @@ export const formatCDNLink = (url) => {
                     `/${part.substr(part.indexOf('=') + 1)
                         .replaceAll(' %2F%2F%2F ', '/')
                         .replaceAll(' %26 ', '-')
-                        .replace(' ', '-')
+                        .replaceAll(' ', '-')
                         .toLowerCase()
                     }`
                 );
             }
-
+            console.log(acc);
             return acc;
         }, []
     ).join('');

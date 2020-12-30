@@ -28,7 +28,8 @@ class DynamicContent extends PureComponent {
         mainBanner: DynamicContentMainBanner,
         grid: DynamicContentGrid,
         productSlider: DynamicContentProductSlider,
-        fullWidthBannerSlider: DynamicContentFullWidthBannerSlider
+        fullWidthBannerSlider: DynamicContentFullWidthBannerSlider,
+        line_separator: 'hr'
     };
 
     renderBlock = (block, i) => {
