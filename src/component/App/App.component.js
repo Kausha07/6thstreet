@@ -18,20 +18,6 @@ class App extends SourceApp {
         this.renderSplash.bind(this)
     ];
 
-    componentDidMount() {
-        if (navigator.serviceWorker) {
-            window.addEventListener('load', function () {
-                navigator.serviceWorker.register('service-worker.js').then(function (registration) {
-                    console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                }, function (err) {
-                    console.error('ServiceWorker registration failed: ', err);
-                }).catch(function (err) {
-                    console.error(err);
-                });
-            });
-        }
-    }
-
     getStore() {
         const store = configureStore();
 
