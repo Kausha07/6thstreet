@@ -1,6 +1,6 @@
-import AlgoliaSDK from '@6thstreetdotcom/algolia-sdk';
 import { getStore } from 'Store';
 
+import AlgoliaSDK from '../../../../packages/algolia-sdk';
 import { queryString } from '../helper/Object';
 
 export const PRODUCT_HIGHLIGHTS = [

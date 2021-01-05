@@ -1,8 +1,9 @@
-import { formatPrice } from '@6thstreetdotcom/algolia-sdk/app/utils/filters';
 import {
     MyAccountReturnCreateItem as SourceComponent
 } from 'Component/MyAccountReturnCreateItem/MyAccountReturnCreateItem.component';
 import { CONST_HUNDRED } from 'Util/Common';
+
+import { formatPrice } from '../../../packages/algolia-sdk/app/utils/filters';
 
 export class MyAccountCancelCreateItem extends SourceComponent {
     renderDetails() {
