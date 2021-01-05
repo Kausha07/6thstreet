@@ -13,7 +13,8 @@
     "scripts": {
         "start": "scandipwa-scripts start",
         "start-ar": "scandipwa-scripts start --locale ar_SA",
-        "build": "scandipwa-scripts build -l 3000"
+        "build": "scandipwa-scripts build",
+        "prod": "serve -s build -l 3000"
     },
     "browserslist": {
         "production": [
