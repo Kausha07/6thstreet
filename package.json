@@ -4,12 +4,12 @@
     "dependencies": {
         "@6thstreetdotcom/algolia-sdk": "^1.6.0",
         "@scandipwa/scandipwa": "0.0.1",
-        "@scandipwa/scandipwa-scripts": "^2.1.2",
-        "@scandipwa/service-worker": "^0.0.2",
+        "@scandipwa/scandipwa-scripts": "0.0.8",
         "dotenv-flow": "^3.2.0",
         "express": "^4.17.1",
         "lerna": "^3.22.1",
-        "react-iframe": "^1.8.0"
+        "react-iframe": "^1.8.0",
+        "workbox-webpack-plugin": "^6.0.2"
     },
     "scripts": {
         "start": "scandipwa-scripts start",
@@ -34,13 +34,5 @@
     },
     "devDependencies": {
         "lerna": "^3.22.1"
-    },
-    "scandipwa": {
-        "extensions": {
-            "@scandipwa/service-worker": true
-        },
-        "preference": {
-            "SourceComponent/*": "node_modules/@scandipwa/scandipwa/src/style/*"
-        }
     }
 }

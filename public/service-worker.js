@@ -1,0 +1,1 @@
+/var/www/html/6thstreet/src/service-worker.js
