@@ -10,12 +10,12 @@ COPY . /app
 
 WORKDIR /app
 
-RUN npm install --g lerna
-
 RUN npm i npm -g; \
     npm install; \
     npm install --g lerna; \
+    npm install --g serve; \
     lerna bootstrap; \
-    npm rebuild node-sass
+    npm rebuild node-sass; \
+    npm run build
 
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "prod"]

@@ -8,12 +8,14 @@
         "dotenv-flow": "^3.2.0",
         "express": "^4.17.1",
         "lerna": "^3.22.1",
-        "react-iframe": "^1.8.0"
+        "react-iframe": "^1.8.0",
+        "workbox-webpack-plugin": "^6.0.2"
     },
     "scripts": {
         "start": "scandipwa-scripts start",
         "start-ar": "scandipwa-scripts start --locale ar_SA",
-        "build": "scandipwa-scripts build"
+        "build": "scandipwa-scripts build",
+        "prod": "serve -s build -l 3000"
     },
     "browserslist": {
         "production": [
