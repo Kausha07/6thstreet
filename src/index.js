@@ -22,8 +22,9 @@ window.__DEV__ = process.env.NODE_ENV === 'development';
 // let's register service-worker
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
+        const swUrl = `${ process.env.REACT_APP_HOST }/service-worker.js`
         navigator.serviceWorker
-            .register('./service-worker.js')
+            .register(swUrl)
             .then(
                 (reg) => {
                     const newVersionPopupEvent = new Event('showNewVersionPopup');
