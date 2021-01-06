@@ -13,9 +13,8 @@ WORKDIR /app
 RUN npm i npm -g; \
     npm install; \
     npm install --g lerna; \
-    npm install --g serve; \
     lerna bootstrap; \
-    npm rebuild node-sass; \
-    npm run build
+    npm rebuild node-sass
 
-CMD ["npm", "run", "prod"]
+CMD ["npm", "run", "start"]
+

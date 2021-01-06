@@ -24,6 +24,7 @@ import {
     getMobileApiAuthorizationToken,
     getOrders,
     resetPassword,
+    resetPasswordWithToken,
     updateCustomerData
 } from 'Util/API/endpoint/MyAccount/MyAccount.enpoint';
 import {
@@ -41,6 +42,7 @@ import { executePost, fetchMutation } from 'Util/Request';
 import { setCrossSubdomainCookie } from 'Util/Url/Url';
 
 export { CUSTOMER, ONE_MONTH_IN_SECONDS } from 'SourceStore/MyAccount/MyAccount.dispatcher';
+export const RESET_EMAIL = 'RESET_EMAIL';
 
 export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     requestCustomerData(dispatch) {
@@ -248,7 +250,13 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     forgotPassword(dispatch, options = {}) {
         const { email } = options;
 
+        BrowserDatabase.setItem(email, RESET_EMAIL, ONE_MONTH_IN_SECONDS);
+
         return resetPassword({ email });
+    }
+
+    resetPassword(data) {
+        return resetPasswordWithToken({ ...data, email: BrowserDatabase.getItem(RESET_EMAIL) });
     }
 
     async getOrders(limit, page) {
