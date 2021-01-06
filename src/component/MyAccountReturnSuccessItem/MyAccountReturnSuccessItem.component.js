@@ -1,6 +1,7 @@
-import { formatPrice } from '@6thstreetdotcom/algolia-sdk/app/utils/filters';
 import { MyAccountReturnCreateItem } from 'Component/MyAccountReturnCreateItem/MyAccountReturnCreateItem.component';
 import { ReturnSuccessItemType } from 'Type/API';
+
+import { formatPrice } from '../../../packages/algolia-sdk/app/utils/filters';
 
 import './MyAccountReturnSuccessItem.style';
 

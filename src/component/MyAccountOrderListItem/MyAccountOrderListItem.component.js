@@ -1,6 +1,5 @@
 import { withRouter } from 'react-router';
 
-import { formatPrice } from '@6thstreetdotcom/algolia-sdk/app/utils/filters';
 import Image from 'Component/Image';
 import {
     MyAccountReturnCreateListItem as SourceComponent
@@ -8,6 +7,7 @@ import {
 import { isArabic } from 'Util/App';
 import { formatDate } from 'Util/Date';
 
+import { formatPrice } from '../../../packages/algolia-sdk/app/utils/filters';
 import PackageIcon from './icons/box.png';
 import {
     ARABIC_MONTHS,
