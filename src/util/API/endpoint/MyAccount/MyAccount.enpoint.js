@@ -1,4 +1,5 @@
-import MobileAPI from '../../provider/MobileAPI';
+import MagentoAPI from 'Util/API/provider/MagentoAPI';
+import MobileAPI from 'Util/API/provider/MobileAPI';
 
 /**
  * Authorize user for mobile API
@@ -12,6 +13,11 @@ export const getMobileApiAuthorizationToken = (data) => MobileAPI.post('/login',
 export const resetPassword = (email) => MobileAPI.post(
     '/buyers/password_reset',
     email
+) || {};
+
+export const resetPasswordWithToken = (data) => MagentoAPI.post(
+    '/customers/resetPassword',
+    data
 ) || {};
 
 export const updateCustomerData = (data) => MobileAPI.put(
