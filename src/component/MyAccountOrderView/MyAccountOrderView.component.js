@@ -74,9 +74,11 @@ class MyAccountOrderView extends PureComponent {
         );
     };
 
-    renderItem(item) {
+    renderItem = (item) => {
+        const { order: { base_currency_code: currency } } = this.props;
+
         return (
-            <MyAccountOrderViewItem item={ item } />
+            <MyAccountOrderViewItem item={ item } currency={ currency } />
         );
     }
 

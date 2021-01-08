@@ -9,6 +9,7 @@ import './MyAccountOrderViewItem.style';
 export class MyAccountOrderViewItem extends SourceComponent {
     renderDetails() {
         const {
+            currency,
             item: {
                 brand_name,
                 name,
@@ -57,7 +58,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
                       elem="PriceRegular"
                       mods={ { isDiscount: !!(price < original_price) } }
                     >
-                        { `${ formatPrice(+original_price) }` }
+                        { `${ formatPrice(+original_price, currency) }` }
                     </span>
                     { !!(price < original_price) && (
                         <>
@@ -65,7 +66,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
                                 { `(-${discountPercentage}%)` }
                             </span>
                             <span block="MyAccountReturnSuccessItem" elem="PriceDiscount">
-                                { `${ formatPrice(+price) }` }
+                                { `${ formatPrice(+price, currency) }` }
                             </span>
                         </>
                     ) }
