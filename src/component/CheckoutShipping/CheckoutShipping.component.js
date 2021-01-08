@@ -16,6 +16,7 @@ import { customerType } from 'Type/Account';
 import { isArabic } from 'Util/App';
 import { isSignedIn } from 'Util/Auth';
 import isMobile from 'Util/Mobile';
+import { getCountryFromUrl } from 'Util/Url/Url';
 
 import './CheckoutShipping.style';
 
@@ -109,11 +110,18 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         const {
             customer: {
                 addresses = []
-            }
+            },
+            selectedCustomerAddressId
         } = this.props;
         const { isSignedIn } = this.state;
+        const selectedAddress = addresses.filter(({ id }) => id === selectedCustomerAddressId);
+        const { country_id: selectedAddressCountry = '' } = selectedAddress.length ? selectedAddress[0] : {};
 
-        if (isMobile.any() || isMobile.tablet() || (isSignedIn && addresses.length === 0)) {
+        if (isMobile.any()
+            || isMobile.tablet()
+            || (isSignedIn && addresses.length === 0)
+            || selectedAddressCountry !== getCountryFromUrl()
+        ) {
             return null;
         }
 
