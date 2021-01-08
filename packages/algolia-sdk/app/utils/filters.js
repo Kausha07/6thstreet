@@ -2,6 +2,7 @@ import { getIndex } from './index';
 import { translate } from '../config/translations';
 import { CURRENCY_STRIP_INSIGNIFICANT_ZEROS } from '../config';
 import i18n from 'i18n-js';
+import { getCountryCurrencyCode } from 'Util/Url/Url';
 
 const getLabel = (facetKey, lang) => {
   switch (facetKey) {
@@ -61,7 +62,7 @@ const getIndexBySort = (sortName, env = 'production', locale = 'en-ae') => {
   }
 };
 
-const formatPrice = (value = 0, currency = 'AED') => {
+const formatPrice = (value = 0, currency = getCountryCurrencyCode()) => {
   try {
     const priceStrip = CURRENCY_STRIP_INSIGNIFICANT_ZEROS.includes(currency);
 

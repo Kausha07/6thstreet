@@ -1,3 +1,5 @@
+import BrowserDatabase from 'Util/BrowserDatabase';
+
 import { LOCALES } from './Url.config';
 
 export {
@@ -107,4 +109,11 @@ export const formatCDNLink = (url) => {
         .replace('/women.html', '.html')
         .replace('/kids-baby_boy-boy-girl-baby_girl.html', '.html')
         .replace('/kids.html', '.html');
+};
+
+export const getCountryCurrencyCode = () => {
+    const { config: { countries } } = BrowserDatabase.getItem('APP_CONFIG_CACHE_KEY');
+    const { currency } = countries[getCountryFromUrl()];
+
+    return currency;
 };
