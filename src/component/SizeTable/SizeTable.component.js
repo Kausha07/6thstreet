@@ -28,8 +28,12 @@ export class SizeTable extends PureComponent {
             return (
                 <tr key={ i }>
                     <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>{ size }</td>
-                    <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>{ bust }</td>
-                    <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>{ waist }</td>
+                    <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>
+                        { (bust * CM_TO_INCH).toFixed(2) }
+                    </td>
+                    <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>
+                        { (waist * CM_TO_INCH).toFixed(2) }
+                    </td>
                 </tr>
             );
         }
@@ -37,8 +41,8 @@ export class SizeTable extends PureComponent {
         return (
             <tr>
                 <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>{ size }</td>
-                <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>{ (bust * CM_TO_INCH).toFixed(2) }</td>
-                <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>{ (waist * CM_TO_INCH).toFixed(2) }</td>
+                <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>{ bust }</td>
+                <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>{ waist }</td>
             </tr>
         );
     };
