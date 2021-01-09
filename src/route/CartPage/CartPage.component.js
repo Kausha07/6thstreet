@@ -462,7 +462,12 @@ export class CartPage extends PureComponent {
         }
 
         if (Object.keys(totals).length === 0 || items.length === 0) {
-            return this.renderEmptyCartPage();
+            return (
+                <div block="CartPage" elem="Static" mods={ { isArabic } }>
+                    { this.renderHeading() }
+                    { this.renderEmptyCartPage() }
+                </div>
+            );
         }
 
         return (
