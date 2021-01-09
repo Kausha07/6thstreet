@@ -29,6 +29,7 @@
 
         &-CategoryButton {
             font-size: calc(9px + 1vw);
+            font-weight: var(--fw-normal);
             margin-left: -20px;
             padding: 0 3vw;
             text-align: left;
@@ -149,7 +150,6 @@
 
             &-Wrapper {
                 height: calc(100% - 140px - 83px);;
-                min-height: 500px;
                 width: 66%;
                 top: 140px;
                 left: 33%;
@@ -198,7 +198,7 @@
             &:hover {
                 text-decoration: none;
             }
-            
+
             &-Label {
                 color: var(--white);
             }

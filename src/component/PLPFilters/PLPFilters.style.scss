@@ -174,7 +174,7 @@
     padding: 10px;
     position: fixed;
     text-transform: capitalize;
-    top: 70px;
+    top: 61px;
     width: 106px;
     z-index: 4;
 
@@ -295,11 +295,11 @@
     &-ToolBar {
         display: flex;
         height: 60px;
-        padding: 7px 0 20px;
+        padding: 0 0 20px;
 
         @include mobile() {
             margin-left: 120px;
-            margin-top: -43px;
+            margin-top: -45px;
             position: fixed;
             top: 100px;
             z-index: 3;

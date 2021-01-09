@@ -146,7 +146,7 @@ main {
 
                 background: $white;
                 height: 40px;
-                width: 40px;
+                width: 30px;
                 border-radius: 20px;
 
                 &-Button {
@@ -166,13 +166,13 @@ main {
                     right: unset;
                     left: 20px;
                     .HeaderCart {
-    
+
                         &-Button {
                             right: 5px;
                             left: unset;
                         }
                     }
-                }    
+                }
             }
         }
     }
@@ -210,7 +210,7 @@ main {
 
                 .GenderButton-Button {
                     padding: 0 15px;
-                    height: 30px;
+                    height: 25px;
                 }
             }
         }

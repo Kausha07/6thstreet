@@ -85,8 +85,6 @@ class PDPDetailsSection extends PureComponent {
             }
         } = this.props;
 
-        const { isHidden } = this.state;
-
         const productInfo = {
             material,
             dress_length,
@@ -101,16 +99,9 @@ class PDPDetailsSection extends PureComponent {
 
         return (
             <div block="PDPDetailsSection" elem="Highlights">
+                <h3>{ __('Highlights') }</h3>
                 <ul>{ this.renderListItems(productInfo) }</ul>
-                <button
-                  block="PDPDetailsSection"
-                  elem="MoreDetailsBtn"
-                  mods={ { isHidden } }
-                  mix={ { block: 'button secondary' } }
-                  onClick={ this.openFullInfo }
-                >
-                    { __('view more details') }
-                </button>
+                { this.renderMoreDetailsList() }
             </div>
         );
     }
@@ -158,7 +149,6 @@ class PDPDetailsSection extends PureComponent {
                 { this.renderIconsSection() }
                 { this.renderDescription() }
                 { this.renderHighlights() }
-                { this.renderMoreDetailsSection() }
             </div>
         );
     }

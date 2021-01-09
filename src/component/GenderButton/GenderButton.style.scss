@@ -29,6 +29,7 @@
     &-Button {
         font-weight: var(--fw-regular);
         letter-spacing: .8px;
+        font-size: 12px;
         padding: 0;
         pointer-events: all;
         z-index: 2;
@@ -38,9 +39,13 @@
         {
             border-bottom: 2px solid var(--black);
             font-weight: var(--fw-bold);
-            font-size: 14.4px;
+            font-size: 12px;
             letter-spacing: 0;
             transition-duration: unset;
+
+            @include desktop {
+                font-size: 14.4px;
+            }
         }
 
         &_isUnsetStyle

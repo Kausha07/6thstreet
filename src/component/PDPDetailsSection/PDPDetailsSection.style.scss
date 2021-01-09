@@ -25,19 +25,19 @@
     &-IconContainer {
         display: flex;
         align-items: center;
-        margin-right: 60px;
+        justify-content: space-between;
         font-size: 15px;
         color: var(--pdp-icon-text-color);
         font-weight: var(--fw-regular);
+
+        @include desktop {
+            justify-content: normal;
+            margin-right: 60px;
+        }
     }
 
     &-IconsSection {
-        flex-direction: column;
         align-items: start;
-
-        @include desktop() {
-            flex-direction: row;
-        }
     }
 
     &-IconContainer {
@@ -75,26 +75,43 @@
     &-Highlights {
         font-size: 16px;
         margin-top: 20px;
+        margin-bottom: 120px;
         font-weight: var(--fw-demi);
+
+        h3 {
+            font-weight: var(--fw-demi);
+            margin-bottom: 1rem;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
     }
 
     &-HighlightsList {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 10px;
+        margin-top: 4px;
         padding-left: 0;
         width: 250px;
         font-size: 16px;
+        list-style-type: disc;
+        text-transform: capitalize;
+        margin-bottom: 4px;
 
         &::before {
             display: none;
         }
+
+        &:last-child {
+            margin-bottom: 4px;
+        }
     }
 
     &-ListItem {
+        margin-right: 10px;
+
         &_mod_title {
-            font-weight: var(--fw-bold);
-            
+            font-weight: var(--fw-regular);
+
             &::first-letter {
                 text-transform: uppercase;
             }
@@ -137,10 +154,11 @@
     }
 
     &-MoreDetailsList {
-        display: flex;
         text-align: start;
         padding-left: 0;
         font-size: 16px;
+        list-style-type: disc;
+        text-transform: capitalize;
 
         &::before {
             display: none;
@@ -151,7 +169,7 @@
                 &_mod_title {
                     max-width: 100px;
                     width: 100%;
-                    margin-right: 20px;
+                    margin-right: 10px;
                 }
             }
         }
