@@ -21,6 +21,8 @@
         }
 
         .Image {
+            min-height: 190px;
+
             &-Image {
                 object-fit: cover;
             }
