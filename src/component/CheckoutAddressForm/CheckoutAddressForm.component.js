@@ -57,10 +57,10 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
             ...street,
             onChange: (value) => this.onChange('street', value)
         };
-
         fieldMap.telephone = {
             ...telephone,
-            onChange: (value) => this.onChange('telephone', value)
+            onChange: (value) => this.onChange('telephone', value),
+            type: 'phone'
         };
 
         return isSignedIn ? fieldMap : {

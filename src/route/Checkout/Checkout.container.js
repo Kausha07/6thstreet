@@ -440,10 +440,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                 );
             }
         } else {
-            const { phone = '' } = shippingAddress;
-            const code = phone.slice(1, 4);
-            const mobile = phone.slice(4);
-            sendVerificationCode({ mobile, code }).then(
+            const { phone = '', phonecode = '' } = shippingAddress;
+            sendVerificationCode({ mobile: phone, countryCode: phonecode }).then(
                 (response) => {
                     this.setState({ isVerificationCodeSent: response.success });
                 },
@@ -541,7 +539,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     }
 
     resetCart() {
-        const { 
+        const {
             updateStoreCredit,
             resetCart,
             getCart
