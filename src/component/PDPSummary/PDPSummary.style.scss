@@ -11,6 +11,12 @@
 
     h1 {
         font-size: 24px;
+
+        @include before-desktop {
+            font-size: 20px;
+            text-align: center;
+            text-transform: uppercase;
+        }
     }
 
     .ProductLabel {
@@ -24,11 +30,20 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 30px;
+
+        @include desktop {
+            margin-bottom: 30px;
+        }
     }
 
     &-Name {
         font-size: 18px;
+
+        @include before-desktop {
+            font-size: 16px;
+            margin-bottom: 0;
+            text-align: center;
+        }
     }
 
     &-Dash {
@@ -100,6 +115,11 @@
     .Price {
         font-weight: var(--fw-bold);
         font-size: 20px;
+
+        @include before-desktop {
+            font-size: 16px;
+            text-align: center;
+        }
 
         &-Base {
             &_discount {

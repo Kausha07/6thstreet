@@ -16,6 +16,7 @@ import {
     isArabic
 } from 'Util/App';
 import { isSignedIn } from 'Util/Auth';
+import isMobile from 'Util/Mobile';
 
 import Delivery from './icons/delivery-truck.png';
 
@@ -119,6 +120,10 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
         const {
             totals: { coupon_code }
         } = this.props;
+
+        if (isMobile.any()) {
+            return null;
+        }
 
         return (
             <CartCoupon couponCode={ coupon_code } />

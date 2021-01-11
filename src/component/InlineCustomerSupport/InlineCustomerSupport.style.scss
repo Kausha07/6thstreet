@@ -120,10 +120,10 @@
         }
 
         &::after{
-            width: 80px;
+            width: 120px;
             position: absolute;
             left: 35px;
-            content: "TAP TO CALL";
+            content: "TAP TO WHATSAPP";
             font-weight: var(--fw-medium);
         }
 
@@ -200,7 +200,7 @@
         align-items: center;
         justify-content: center;
         width: 100%;
-        margin: 10px 0;
+        margin: 5px 0;
         color: var(--white-color);
         font-weight: var(--fw-demi);
         text-align: center;
@@ -215,16 +215,16 @@
             margin-top: 7px;
             margin-bottom: 7px;
             border-left: 1px solid var(--border-color);
-            align-items: left;
             justify-content: left;
+            min-height: 25px;
         }
 
         p {
-            text-transform: lowercase;
+            text-transform: uppercase;
             font-weight: var(--fw-medium);
             letter-spacing: 0;
             padding-right: 3px;
-            font-size: 13px;
+            font-size: 12px;
 
             &::first-letter{
                 text-transform: uppercase;
@@ -232,13 +232,18 @@
 
             @include desktop {
                 width: auto;
+                font-size: 13px;
             }
         }
 
         a {
-            font-size: 13px;
+            font-size: 12px;
             line-height: 16px;
             font-weight: var(--fw-bold);
+
+            @include desktop {
+                font-size: 13px;
+            }
         }
 
         &_isArabic {

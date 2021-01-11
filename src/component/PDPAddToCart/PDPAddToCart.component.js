@@ -269,7 +269,7 @@ class PDPAddToCart extends PureComponent {
                       elem="CheckoutButton"
                       onClick={ routeChangeToCart }
                     >
-                        { __('Proceed to checkout') }
+                        { __('View Bag') }
                     </button>
                 </div>
             );
