@@ -42,7 +42,6 @@ export class CheckoutSuccess extends PureComponent {
         isChangePhonePopupOpen: PropTypes.bool.isRequired,
         toggleChangePhonePopup: PropTypes.func.isRequired,
         phone: PropTypes.string.isRequired,
-        isMobileVerification: PropTypes.bool.isRequired,
         cashOnDeliveryFee: PropTypes.number.isRequired
     };
 
@@ -614,18 +613,6 @@ export class CheckoutSuccess extends PureComponent {
     }
 
     render() {
-        const { isMobileVerification } = this.props;
-        if (isMobileVerification) {
-            return (
-                <div block="CheckoutSuccess">
-                    { this.renderChangePhonePopUp() }
-                    <div block="CheckoutSuccess" elem="Details">
-                        { this.renderTrackOrder() }
-                    </div>
-                </div>
-            );
-        }
-
         return this.renderDetails();
     }
 }

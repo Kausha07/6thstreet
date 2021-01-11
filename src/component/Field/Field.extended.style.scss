@@ -133,4 +133,10 @@
             }
         }
     }
+
+    &_type_phone {
+        input {
+            font-weight: var(--fw-regular);
+        }
+    }
 }
