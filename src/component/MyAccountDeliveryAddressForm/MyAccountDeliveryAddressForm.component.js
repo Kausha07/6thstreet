@@ -339,6 +339,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
                 maxLength: this.getPhoneNumberMaxLength(),
                 placeholder: __('Phone Number'),
                 value: this.cutPhoneCode(telephone),
+                type: 'phone',
                 ...clearValue
             },
             city: {
