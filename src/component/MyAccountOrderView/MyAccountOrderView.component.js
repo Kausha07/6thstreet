@@ -80,7 +80,7 @@ class MyAccountOrderView extends PureComponent {
         return (
             <MyAccountOrderViewItem item={ item } currency={ currency } />
         );
-    }
+    };
 
     renderTitle() {
         const { isArabic } = this.state;
