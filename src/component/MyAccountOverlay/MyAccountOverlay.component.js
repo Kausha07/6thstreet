@@ -63,14 +63,16 @@ export class MyAccountOverlay extends PureComponent {
         isCheckout: PropTypes.bool,
         registerField: PropTypes.bool,
         closePopup: PropTypes.func.isRequired,
-        isHidden: PropTypes.bool
+        isHidden: PropTypes.bool,
+        email: PropTypes.string
     };
 
     static defaultProps = {
         isCheckout: false,
         registerField: false,
         setRegisterFieldFalse: null,
-        isHidden: false
+        isHidden: false,
+        email: ''
     };
 
     state = {
@@ -445,6 +447,7 @@ export class MyAccountOverlay extends PureComponent {
 
     renderSignIn() {
         const {
+            email,
             onSignInAttempt,
             onSignInSuccess,
             onFormError,
@@ -468,6 +471,7 @@ export class MyAccountOverlay extends PureComponent {
                       placeholder={ __('EMAIL') }
                       id="email"
                       name="email"
+                      value={ email }
                       autocomplete="email"
                       validation={ ['notEmpty', 'email'] }
                     />
