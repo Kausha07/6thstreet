@@ -390,7 +390,8 @@ export class Checkout extends SourceCheckout {
             shippingAddress,
             incrementID,
             isFailed,
-            initialTotals
+            initialTotals,
+            isVerificationCodeSent
         } = this.props;
         const { cashOnDeliveryFee } = this.state;
         const {
@@ -413,6 +414,7 @@ export class Checkout extends SourceCheckout {
                   paymentMethod={ paymentMethod }
                   creditCardData={ creditCardData }
                   totals={ initialTotals }
+                  isVerificationCodeSent={ isVerificationCodeSent }
                 />
             );
         }
@@ -427,6 +429,7 @@ export class Checkout extends SourceCheckout {
             creditCardData={ creditCardData }
             totals={ initialTotals }
             cashOnDeliveryFee={ cashOnDeliveryFee }
+            isVerificationCodeSent={ isVerificationCodeSent }
           />
         );
     }
