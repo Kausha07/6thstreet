@@ -19,7 +19,7 @@ class HomePage extends PureComponent {
         if (DynamicContent) {
             const { children = [] } = DynamicContent;
             const { href } = location;
-            console.log(href);
+
             if (children) {
                 // eslint-disable-next-line
                 for (let i=0; i < children.length; i++) {
