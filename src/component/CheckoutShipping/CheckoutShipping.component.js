@@ -120,7 +120,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         if (isMobile.any()
             || isMobile.tablet()
             || (isSignedIn && addresses.length === 0)
-            || selectedAddressCountry !== getCountryFromUrl()
+            || (isSignedIn && selectedAddressCountry !== getCountryFromUrl())
         ) {
             return null;
         }

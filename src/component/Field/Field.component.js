@@ -97,6 +97,7 @@ export class Field extends SourceField {
             <FieldInput
               { ...this.props }
               type="number"
+              max="none"
             />
         );
     }

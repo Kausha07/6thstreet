@@ -10,6 +10,8 @@
  */
 
 /* eslint-disable simple-import-sort/sort */
+/* eslint-disable func-names */
+/* eslint-disable no-console */
 import 'SourceUtil/Polyfill';
 import 'Style/main';
 
