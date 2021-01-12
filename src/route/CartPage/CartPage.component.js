@@ -390,12 +390,15 @@ export class CartPage extends PureComponent {
 
     renderBack() {
         const { history } = this.props;
+        function goHome() {
+            history.push('/');
+        }
 
         return (
             <div block="CartPage" elem="BackArrow">
                 <button
                   block="BackArrow-Button"
-                  onClick={ history.goBack }
+                  onClick={ goHome }
                 >
                     <span />
                 </button>
