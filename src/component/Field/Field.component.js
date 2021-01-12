@@ -8,6 +8,7 @@ import {
     CHECKBOX_TYPE,
     DATE_TYPE,
     EMAIL_TYPE,
+    PHONE_TYPE,
     RADIO_TYPE,
     TOGGLE_TYPE
 } from './Field.config';
@@ -91,6 +92,15 @@ export class Field extends SourceField {
         );
     }
 
+    renderPhone() {
+        return (
+            <FieldInput
+              { ...this.props }
+              type="number"
+            />
+        );
+    }
+
     renderInputOfType(type) {
         if (type === TOGGLE_TYPE) {
             return this.renderToggle();
@@ -102,6 +112,10 @@ export class Field extends SourceField {
 
         if (type === EMAIL_TYPE) {
             return this.renderTypeEmail();
+        }
+
+        if (type === PHONE_TYPE) {
+            return this.renderPhone();
         }
 
         return super.renderInputOfType(type);
