@@ -99,7 +99,7 @@ export const formatCDNLink = (url) => {
                     }`
                 );
             }
-            console.log(acc);
+
             return acc;
         }, []
     ).join('');
