@@ -33,6 +33,7 @@ export class CheckoutSuccess extends PureComponent {
         orderID: PropTypes.number.isRequired,
         incrementID: PropTypes.number.isRequired,
         isSignedIn: PropTypes.bool.isRequired,
+        isVerificationCodeSent: PropTypes.bool.isRequired,
         requestCustomerData: PropTypes.func.isRequired,
         customer: PropTypes.isRequired,
         onVerifySuccess: PropTypes.func.isRequired,
@@ -143,13 +144,14 @@ export class CheckoutSuccess extends PureComponent {
             onResendCode,
             isPhoneVerified,
             toggleChangePhonePopup,
-            phone
+            phone,
+            isVerificationCodeSent
         } = this.props;
         const { isArabic, isPhoneVerification } = this.state;
         const countryCode = phone ? phone.slice(0, '4') : null;
         const phoneNumber = phone ? phone.slice('4') : null;
 
-        if (!isPhoneVerified) {
+        if (!isPhoneVerified && isVerificationCodeSent) {
             return (
                 <div mix={ { block: 'TrackOrder', mods: { isArabic, isPhoneVerification } } }>
                     <div block="TrackOrder" elem="Text">
@@ -188,6 +190,10 @@ export class CheckoutSuccess extends PureComponent {
                     </div>
                 </div>
             );
+        }
+
+        if (!isPhoneVerified && !isVerificationCodeSent && isSignedIn) {
+            return null;
         }
 
         if (isPhoneVerified && isSignedIn) {
@@ -249,12 +255,13 @@ export class CheckoutSuccess extends PureComponent {
 
     renderMyAccountPopup() {
         const { showPopup } = this.state;
+        const { billingAddress: { guest_email: email } } = this.props;
 
         if (!showPopup) {
             return null;
         }
 
-        return <MyAccountOverlay closePopup={ this.closePopup } onSignIn={ this.onSignIn } isPopup />;
+        return <MyAccountOverlay closePopup={ this.closePopup } onSignIn={ this.onSignIn } email={ email } isPopup />;
     }
 
     onSignIn = () => {
