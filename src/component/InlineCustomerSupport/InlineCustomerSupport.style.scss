@@ -7,10 +7,12 @@
 
 .InlineCustomerSupport {
     width: 100%;
+    transform: translateX(-25px);
 
     @include desktop {
         display: flex;
         width: 50%;
+        transform: none;
     }
 
     &-Button {
@@ -122,7 +124,7 @@
         &::after{
             width: 120px;
             position: absolute;
-            left: 35px;
+            left: 32px;
             content: "TAP TO WHATSAPP";
             font-weight: var(--fw-medium);
         }
