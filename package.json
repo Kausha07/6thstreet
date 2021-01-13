@@ -15,6 +15,7 @@
         "start": "scandipwa-scripts start",
         "start-ar": "scandipwa-scripts start --locale ar_SA",
         "build": "scandipwa-scripts build",
+        "build-ar": "scandipwa-scripts build --locale ar_SA",
         "prod": "serve -s build -l 3000"
     },
     "browserslist": {
