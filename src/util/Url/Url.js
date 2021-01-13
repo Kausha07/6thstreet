@@ -84,7 +84,13 @@ export const getCookie = (name) => {
 
 export const appendWithStoreCode = (pathname) => pathname;
 
-export const formatCDNLink = (url) => {
+// isFormatEnabled - param is added to disabled function as CDN team decided to fix all link manually
+// TO DO: Remove the method when all link will be fixed
+export const formatCDNLink = (url, isFormatEnabled = false) => {
+    if (!isFormatEnabled) {
+        return url;
+    }
+
     const urlParts = url.match(/\?/) ? decodeURI(url).split('?') : decodeURI(url).split('#');
     const parts = decodeURI(url).split('&');
     const rebuildUri = parts.reduce(
