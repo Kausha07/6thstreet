@@ -60,7 +60,7 @@ export class MyAccountReturnListContainer extends PureComponent {
         const { showErrorNotification } = this.props;
 
         try {
-            const { data: returns } = await MagentoAPI.get('/returns/list');
+            const { data: returns } = await MagentoAPI.get('returns/list');
             this.setState({ returns, isLoading: false });
         } catch (e) {
             showErrorNotification(e);
