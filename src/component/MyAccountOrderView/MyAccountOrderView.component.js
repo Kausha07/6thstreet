@@ -85,12 +85,12 @@ class MyAccountOrderView extends PureComponent {
     renderTitle() {
         const { isArabic } = this.state;
         const { openOrderCancelation, order: { status, increment_id } } = this.props;
-        const buttonText = status === STATUS_COMPLETE ? __('Return an Item') : __('Cancel an Item');
+        const buttonText = __('Return an Item');
 
         return (
             <div block="MyAccountOrderView" elem="Heading" mods={ { isArabic } }>
                 <h3>{ __('Order #%s', increment_id) }</h3>
-                { !STATUS_FAILED.includes(status) && (
+                { status === STATUS_COMPLETE && (
                     <button onClick={ openOrderCancelation }>{ buttonText }</button>
                 ) }
             </div>

@@ -76,12 +76,11 @@ export class MyAccountOrderViewContainer extends PureComponent {
         const { history } = this.props;
         const { order: { entity_id, status } = {} } = this.state;
 
-        if (!entity_id) {
+        if (!entity_id || status !== STATUS_COMPLETE) {
             return;
         }
 
-        const url = status === STATUS_COMPLETE ? `/my-account/return-item/create/${ entity_id }`
-            : `/my-account/return-item/cancel/${ entity_id }`;
+        const url = `/my-account/return-item/create/${ entity_id }`;
 
         history.push(url);
     }
