@@ -147,7 +147,7 @@ export class PDPAddToCartContainer extends PureComponent {
     componentDidMount() {
         const { product: { sku }, getProductStock } = this.props;
 
-        const { sizeObject: { sizeCodes, sizeTypes } } = this.state;
+        const { sizeObject: { sizeCodes = [], sizeTypes } } = this.state;
 
         getProductStock(sku).then(
             (response) => {
