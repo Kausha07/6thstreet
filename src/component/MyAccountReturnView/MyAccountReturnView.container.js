@@ -85,7 +85,7 @@ export class MyAccountReturnViewContainer extends PureComponent {
                     items,
                     status
                 }
-            } = await MagentoAPI.get(`/returns/${ returnId }`);
+            } = await MagentoAPI.get(`returns/${ returnId }`);
 
             this.setState({
                 order_id,

@@ -4,7 +4,11 @@ const proxy = require('http-proxy-middleware');
 const magentoGraphQLLocaleRouter = (request) => {
     const { originalUrl } = request;
     const locale = /\/graphql\/([a-z]{2}-[a-z]{2})/.exec(originalUrl)[1];
-    return `https://${ locale }.${ process.env.REACT_APP_MAGENTO_HOST }/`;
+    if (process.env.REACT_APP_MAGENTO_HOST === '6thstreet.com') {
+        return `https://${ locale }.${ process.env.REACT_APP_MAGENTO_HOST }/`;
+    }
+
+    return `https://${ locale }-${ process.env.REACT_APP_MAGENTO_HOST }/`;
 };
 
 // Redirect from /graphql/en-us to a /graphql
@@ -16,7 +20,11 @@ const magentoGraphQLPathRewrite = (path) => (
 const magentoRestLocaleRouter = (request) => {
     const { originalUrl } = request;
     const locale = /\/rest\/([a-z]{2}-[a-z]{2})/.exec(originalUrl)[1];
-    return `https://${ locale }.${ process.env.REACT_APP_MAGENTO_HOST }/`;
+    if (process.env.REACT_APP_MAGENTO_HOST === '6thstreet.com') {
+        return `https://${ locale }.${ process.env.REACT_APP_MAGENTO_HOST }/`;
+    }
+
+    return `https://${ locale }-${ process.env.REACT_APP_MAGENTO_HOST }/`;
 };
 
 // Redirect from /rest/en-us to a /rest
@@ -56,7 +64,8 @@ module.exports = (app) => {
             target: `https://${ process.env.REACT_APP_MAGENTO_HOST }/`,
             router: magentoGraphQLLocaleRouter,
             pathRewrite: magentoGraphQLPathRewrite,
-            changeOrigin: true
+            changeOrigin: true,
+            logLevel: 'debug'
         })
     );
 
