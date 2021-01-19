@@ -22,7 +22,8 @@ import App from 'Component/App';
 window.__DEV__ = process.env.NODE_ENV === 'development';
 
 // let's register service-worker
-if ('serviceWorker' in navigator) {
+// but not in development mode, the cache can destroy the DX
+if (process.env.NODE_ENV !== 'development' && 'serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         const swUrl = `${ process.env.REACT_APP_HOST }/service-worker.js`;
         navigator.serviceWorker
