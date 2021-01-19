@@ -2,7 +2,7 @@ import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { STATUS_COMPLETE } from 'Component/MyAccountOrderListItem/MyAccountOrderListItem.config';
+import { STATUS_ABLE_TO_RETURN, STATUS_COMPLETE } from 'Component/MyAccountOrderListItem/MyAccountOrderListItem.config';
 import { HistoryType, MatchType } from 'Type/Common';
 import { getCountriesForSelect } from 'Util/API/endpoint/Config/Config.format';
 import { Config } from 'Util/API/endpoint/Config/Config.type';
@@ -76,11 +76,12 @@ export class MyAccountOrderViewContainer extends PureComponent {
         const { history } = this.props;
         const { order: { entity_id, status } = {} } = this.state;
 
-        if (!entity_id || status !== STATUS_COMPLETE) {
+        if (!entity_id || !STATUS_ABLE_TO_RETURN.includes(status)) {
             return;
         }
 
-        const url = `/my-account/return-item/create/${ entity_id }`;
+        const url = status === STATUS_COMPLETE ? `/my-account/return-item/create/${ entity_id }`
+            : `/my-account/return-item/cancel/${ entity_id }`;
 
         history.push(url);
     }
