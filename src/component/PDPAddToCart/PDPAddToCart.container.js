@@ -141,7 +141,13 @@ export class PDPAddToCartContainer extends PureComponent {
             return { sizeObject: object };
         }
 
-        return null;
+        return {
+            insertedSizeStatus: false,
+            sizeObject: {
+                sizeCodes: [],
+                sizeTypes: []
+            }
+        };
     }
 
     componentDidMount() {
@@ -224,6 +230,12 @@ export class PDPAddToCartContainer extends PureComponent {
                 name
             }, addProductToCart, showNotification
         } = this.props;
+
+        if (!price[0]) {
+            showNotification('error', __('Unable to add product to cart.'));
+
+            return;
+        }
 
         const {
             selectedSizeType, selectedSizeCode, insertedSizeStatus

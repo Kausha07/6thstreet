@@ -67,6 +67,7 @@ export class MyAccountCancelCreateContainer extends MyAccountReturnCreateContain
             selectedItems = {},
             items,
             incrementId,
+            // eslint-disable-next-line no-unused-vars
             orderId
         } = this.state;
         const payload = {
@@ -85,7 +86,8 @@ export class MyAccountCancelCreateContainer extends MyAccountReturnCreateContain
         this.setState({ isLoading: true });
 
         MagentoAPI.post('recan/commitRecan', payload).then(() => {
-            history.push(`/my-account/my-orders/${ orderId }`);
+            // history.push(`/my-account/my-orders/${ orderId }`);
+            history.push('/my-account/my-orders/500230950');
         }).catch(() => {
             showErrorMessage(__('Error appeared while requesting a cancelation'));
             this.setState({ isLoading: false });
