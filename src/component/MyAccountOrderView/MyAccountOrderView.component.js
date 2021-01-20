@@ -85,7 +85,6 @@ class MyAccountOrderView extends PureComponent {
 
     renderTitle() {
         const { isArabic } = this.state;
-        // eslint-disable-next-line no-unused-vars
         const { openOrderCancelation, order: { status, increment_id, is_returnable } } = this.props;
         const buttonText = status === STATUS_COMPLETE ? __('Return an Item') : __('Cancel an Item');
 
