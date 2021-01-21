@@ -32,12 +32,6 @@ export const STATUS_BEING_PROCESSED = [
     STATUS_PAYMENT_SUCCESS
 ];
 
-export const STATUS_ABLE_TO_RETURN = [
-    STATUS_PROCESSING,
-    STATUS_PAYMENT_SUCCESS,
-    STATUS_COMPLETE
-];
-
 export const ARABIC_STATUS_TRANSLATE = {
     complete: 'مكتمل',
     canceled: 'ملغى',
