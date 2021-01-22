@@ -278,9 +278,22 @@ class PDPAddToCart extends PureComponent {
         return null;
     };
 
-    render() {
+    renderContent() {
+        const {
+            product: { simple_products }, product, selectedSizeType, sizeObject = {}
+        } = this.props;
+
+        // check for sizes availability in configurable products
+        if (sizeObject.sizeCodes !== undefined
+            && simple_products !== undefined
+            && product[`size_${selectedSizeType}`].length !== 0
+            && sizeObject.sizeCodes.length === 0
+        ) {
+            return null;
+        }
+
         return (
-            <div block="PDPAddToCart">
+            <>
                 { this.renderSizeInfo() }
                 <div block="PDPAddToCart" elem="SizeSelect">
                     { this.renderSizeTypeSelect() }
@@ -290,6 +303,14 @@ class PDPAddToCart extends PureComponent {
                     { this.renderAddToCartButton() }
                 </div>
                 { this.renderProceedToCheckoutBlock() }
+            </>
+        );
+    }
+
+    render() {
+        return (
+            <div block="PDPAddToCart">
+                { this.renderContent() }
             </div>
         );
     }
