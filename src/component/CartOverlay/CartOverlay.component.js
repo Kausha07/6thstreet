@@ -119,8 +119,9 @@ export class CartOverlay extends PureComponent {
     }
 
     renderDiscount() {
-        const { totals: { coupon_code, discount_amount = 0 } } = this.props;
-
+        const { totals, totals: { coupon_code, discount, discount_amount } } = this.props;
+        const finalDiscount = discount_amount || discount || 0;
+        console.log('totals', totals);
         if (!coupon_code) {
             return null;
         }
@@ -134,7 +135,7 @@ export class CartOverlay extends PureComponent {
                     { __('Coupon ') }
                     <strong block="CartOverlay" elem="DiscountCoupon">{ coupon_code.toUpperCase() }</strong>
                 </dt>
-                <dd>{ `-${this.renderPriceLine(Math.abs(discount_amount))}` }</dd>
+                <dd>{ `-${this.renderPriceLine(Math.abs(finalDiscount))}` }</dd>
             </dl>
         );
     }
@@ -196,7 +197,7 @@ export class CartOverlay extends PureComponent {
                       block="CartOverlay"
                       elem="Currency"
                     >
-                        { `${currency_code } ${avail_free_shipping_amount} ` }
+                        { `${currency_code } ${avail_free_shipping_amount.toFixed(3)} ` }
                     </span>
                     { __('more to your cart for ') }
                     <span
