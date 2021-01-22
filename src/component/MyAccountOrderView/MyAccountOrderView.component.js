@@ -5,7 +5,7 @@ import Accordion from 'Component/Accordion';
 import Image from 'Component/Image';
 import Loader from 'Component/Loader';
 import {
-    STATUS_ABLE_TO_RETURN,
+    STATUS_BEING_PROCESSED,
     STATUS_CANCELED,
     STATUS_COMPLETE,
     STATUS_FAILED,
@@ -85,13 +85,13 @@ class MyAccountOrderView extends PureComponent {
 
     renderTitle() {
         const { isArabic } = this.state;
-        const { openOrderCancelation, order: { status, increment_id } } = this.props;
+        const { openOrderCancelation, order: { status, increment_id, is_returnable } } = this.props;
         const buttonText = status === STATUS_COMPLETE ? __('Return an Item') : __('Cancel an Item');
 
         return (
             <div block="MyAccountOrderView" elem="Heading" mods={ { isArabic } }>
                 <h3>{ __('Order #%s', increment_id) }</h3>
-                { STATUS_ABLE_TO_RETURN.includes(status) && (
+                { (STATUS_BEING_PROCESSED.includes(status) || (status === STATUS_COMPLETE && is_returnable)) && (
                     <button onClick={ openOrderCancelation }>{ buttonText }</button>
                 ) }
             </div>

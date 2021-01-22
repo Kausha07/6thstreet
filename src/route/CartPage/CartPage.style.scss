@@ -419,7 +419,7 @@
     &-Static {
         @include mobile {
             max-height: calc(100vh - 230px);
-            overflow-y: scroll;
+            overflow-y: auto;
             overflow-x: hidden;
             width: 100%;
         }
