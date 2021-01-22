@@ -6,7 +6,8 @@
     font-weight: var(--fw-demi);
     padding: 0;
     position: unset;
-    letter-spacing: 1.3px;
+    letter-spacing: 0;
+    font-size: 14px;
 
     &:before {
         content: none;
@@ -333,7 +334,7 @@
             cursor: default;
             font-weight: var(--fw-bold);
             height: 40px;
-            letter-spacing: 1px;
+            letter-spacing: 0;
         }
 
         &_isArabic {
