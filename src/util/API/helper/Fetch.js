@@ -1,12 +1,19 @@
 import { getErrorMsg } from './API';
 
-// eslint-disable-next-line import/prefer-default-export
+// eslint-disable-next-line
 export const doFetch = async (url, options) => {
     const response = await fetch(url, options);
     const { ok } = response;
+    const regExpUrl = /verify|send/;
 
-    if (!ok) {
-        throw new Error(getErrorMsg(response));
+    if (!ok && !url.match(regExpUrl)) {
+        const error = getErrorMsg(response);
+
+        if (typeof error !== 'object') {
+            throw new Error(error);
+        } else {
+            return error;
+        }
     }
 
     try {

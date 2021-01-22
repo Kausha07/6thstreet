@@ -28,11 +28,14 @@ export class MyAccountAddressBook extends PureComponent {
         getDefaultPostfix: PropTypes.func.isRequired,
         closeForm: PropTypes.func.isRequired,
         openForm: PropTypes.func.isRequired,
-        handleAddress: PropTypes.func.isRequired,
         showCreateNewPopup: PropTypes.func.isRequired,
         payload: PropTypes.shape({
             address: addressType
-        }).isRequired
+        })
+    };
+
+    static defaultProps = {
+        payload: {}
     };
 
     state = {
@@ -58,8 +61,10 @@ export class MyAccountAddressBook extends PureComponent {
         showCreateNewPopup();
 
         if (!isMobile.any()) {
-            const elmnts = document.getElementsByClassName('MyAccountAddressBook-NewAddress');
-            elmnts[0].scrollIntoView();
+            const elmnts = document.getElementsByClassName('MyAccountAddressBook-NewAddress') || [];
+            if (elmnts.length > 0) {
+                elmnts[0].scrollIntoView();
+            }
         }
     };
 
@@ -115,18 +120,23 @@ export class MyAccountAddressBook extends PureComponent {
               elem="NewAddress"
               onClick={ this.openNewForm }
             >
-                { __('new address') }
+                { __('Add new address') }
             </button>
         );
     }
 
     renderAddressList() {
         const { customer: { addresses = [] } } = this.props;
+
         if (!addresses.length) {
             return this.renderNoAddresses();
         }
 
-        return addresses.map(this.renderAddress);
+        const defaultAddress = addresses.filter(({ default_billing }) => default_billing);
+        const simpleAddresses = addresses.filter(({ default_billing }) => !default_billing);
+        const sortedAddresses = [...defaultAddress, ...simpleAddresses];
+
+        return sortedAddresses.map(this.renderAddress);
     }
 
     render() {

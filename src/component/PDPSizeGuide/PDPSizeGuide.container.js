@@ -21,7 +21,7 @@ export class PDPSizeGuideContainer extends PureComponent {
         language: PropTypes.string.isRequired,
         showOverlay: PropTypes.func.isRequired,
         activeOverlay: PropTypes.string.isRequired,
-        hideActiveOverlay: PropTypes.string.isRequired
+        hideActiveOverlay: PropTypes.func.isRequired
     };
 
     containerProps = () => {

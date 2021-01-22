@@ -86,7 +86,7 @@ const buildQuery = (query = {}) => Object.keys(query).reduce((acc, key) => {
         return acc;
     }
 
-    if (acc[facetKey]) {
+    if (acc[facetKey] && facetKey !== 'categories.level2') {
         acc[facetKey] += `,${facetValue}`;
     } else {
         acc[facetKey] = `${facetValue}`;
@@ -136,7 +136,6 @@ const Parser = {
 
     setParam(key, values = []) {
         const url = new URL(location.href);
-
         // remove all matchign search params
         url.searchParams.forEach((_, sKey) => {
             if (sKey.includes(key)) {
@@ -155,6 +154,7 @@ const Parser = {
 
         // update the URL, preserve the state
         const { pathname, search } = url;
+
         browserHistory.push(pathname + search);
     }
 };

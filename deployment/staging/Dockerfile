@@ -10,8 +10,6 @@ COPY . /app
 
 WORKDIR /app
 
-RUN npm install --g lerna
-
 RUN npm i npm -g; \
     npm install; \
     npm install --g lerna; \
@@ -19,3 +17,4 @@ RUN npm i npm -g; \
     npm rebuild node-sass
 
 CMD ["npm", "run", "start"]
+

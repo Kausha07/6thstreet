@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 /* eslint-disable react/jsx-one-expression-per-line */
 /**
  * ScandiPWA - Progressive Web App for Magento
@@ -17,6 +18,7 @@ import { withRouter } from 'react-router';
 import Field from 'Component/Field';
 import Image from 'Component/Image';
 import Loader from 'Component/Loader';
+import { FIXED_CURRENCIES } from 'Component/Price/Price.config';
 import { CartItemType } from 'Type/MiniCart';
 import { isArabic } from 'Util/App';
 
@@ -32,7 +34,7 @@ export class CartItem extends PureComponent {
         isLoading: PropTypes.bool.isRequired,
         item: CartItemType.isRequired,
         currency_code: PropTypes.string.isRequired,
-        brand_name: PropTypes.string.isRequired,
+        brand_name: PropTypes.string,
         isEditing: PropTypes.bool,
         isLikeTable: PropTypes.bool,
         history: PropTypes.object.isRequired,
@@ -41,31 +43,39 @@ export class CartItem extends PureComponent {
         maxSaleQuantity: PropTypes.number.isRequired,
         handleChangeQuantity: PropTypes.func.isRequired,
         getCurrentProduct: PropTypes.func.isRequired,
-        linkTo: PropTypes.string.isRequired,
         thumbnail: PropTypes.string.isRequired,
         hideActiveOverlay: PropTypes.func.isRequired,
-        hideLoaderAfterPromise: PropTypes.func.isRequired,
-        closePopup: PropTypes.func.isRequired
+        closePopup: PropTypes.func,
+        availability: PropTypes.number.isRequired,
+        isCartPage: PropTypes.bool
     };
 
     state = {
-        isArabic: isArabic()
+        isArabic: isArabic(),
+        isNotAvailble: false
     };
 
     static defaultProps = {
         isEditing: false,
-        isLikeTable: false
+        isLikeTable: false,
+        brand_name: '',
+        closePopup: () => {},
+        isCartPage: false
     };
 
-    state = {
-        isArabic: isArabic()
-    };
+    static getDerivedStateFromProps(props) {
+        const { item: { availability, availableQty, qty } } = props;
+
+        return {
+            isNotAvailble: availability === 0 || availableQty === 0 || qty > availableQty
+        };
+    }
 
     renderProductConfigurationOption = ([key, attribute]) => {
         const {
             item: {
                 product: {
-                    configurable_options
+                    configurable_options = {}
                 }
             }
         } = this.props;
@@ -114,7 +124,7 @@ export class CartItem extends PureComponent {
             return null;
         }
 
-        const { attributes = [] } = getCurrentProduct() || {};
+        const { attributes = {} } = getCurrentProduct() || {};
 
         if (!Object.entries(attributes).length) {
             return null;
@@ -143,8 +153,11 @@ export class CartItem extends PureComponent {
             }
         } = this.props;
 
-        hideActiveOverlay();
-        closePopup();
+        if (window.location.pathname !== '/cart' && window.location.pathname !== '/checkout/shipping') {
+            hideActiveOverlay();
+            closePopup();
+        }
+
         history.push(url.split('.com')[1]);
     };
 
@@ -152,12 +165,10 @@ export class CartItem extends PureComponent {
         // TODO: implement shared-transition here?
 
         return (
-            <button onClick={ this.routeToProduct } block="CartItem" elem="Link">
-                <figure block="CartItem" elem="Wrapper">
-                    { this.renderImage() }
-                    { this.renderContent() }
-                </figure>
-            </button>
+            <figure block="CartItem" elem="Wrapper">
+                { this.renderImage() }
+                { this.renderContent() }
+            </figure>
         );
     }
 
@@ -177,7 +188,7 @@ export class CartItem extends PureComponent {
     };
 
     renderProductOption = (option) => {
-        const { label, values, id } = option;
+        const { label, values = [], id } = option;
 
         return (
             <div
@@ -260,15 +271,16 @@ export class CartItem extends PureComponent {
             currency_code,
             item: {
                 row_total,
-                discount_amount
+                basePrice
             }
         } = this.props;
+        const decimals = FIXED_CURRENCIES.includes(currency_code) ? 3 : 2;
 
         const withoutDiscount = (
             <>
                 { currency_code }
                 <span>
-                    { `${parseFloat(row_total).toFixed(2)}` }
+                    { `${parseFloat(row_total).toFixed(decimals)}` }
                 </span>
             </>
         );
@@ -281,7 +293,7 @@ export class CartItem extends PureComponent {
                 <div>
                     { currency_code }
                     <span>
-                        { `${parseFloat(discount_amount).toFixed(2)}` }
+                        { `${parseFloat(basePrice).toFixed(decimals)}` }
                     </span>
                 </div>
                 { withoutDiscount }
@@ -293,7 +305,7 @@ export class CartItem extends PureComponent {
               block="CartItem"
               elem="Price"
             >
-                { discount_amount ? withDiscount : withoutDiscount }
+                { basePrice === row_total || !basePrice ? withoutDiscount : withDiscount }
             </div>
         );
     }
@@ -310,9 +322,9 @@ export class CartItem extends PureComponent {
                   mods={ { isArabic } }
                 >
                     { color }
-                    <span>| Size:    </span>
+                    <span>| { __('Size:') }    </span>
                     { optionValue }
-                    <span>| Qty: </span>
+                    <span>| { __('Qty:') } </span>
                     { qty }
                 </div>
             );
@@ -324,7 +336,7 @@ export class CartItem extends PureComponent {
               elem="ColSizeQty"
             >
                 { color }
-                <span>| Qty: </span>
+                <span>| { __('Qty:') } </span>
                 { qty }
             </div>
         );
@@ -338,6 +350,7 @@ export class CartItem extends PureComponent {
                 bundle_options
             }
         } = this.props;
+        const { isNotAvailble } = this.state;
 
         return (
             <figcaption
@@ -351,7 +364,8 @@ export class CartItem extends PureComponent {
                 { this.renderProductOptions(bundle_options) }
                 { this.renderProductConfigurations() }
                 { this.renderColSizeQty() }
-                { this.renderProductPrice() }
+                { isNotAvailble ? null : this.renderProductPrice() }
+                { this.renderActions() }
             </figcaption>
         );
     }
@@ -366,7 +380,7 @@ export class CartItem extends PureComponent {
             handleRemoveItem,
             handleChangeQuantity
         } = this.props;
-        const { isArabic } = this.state;
+        const { isArabic, isNotAvailble } = this.state;
 
         return (
             <div
@@ -384,23 +398,26 @@ export class CartItem extends PureComponent {
                 >
                     <span />
                 </button>
-                <Field
-                  id="item_qty"
-                  name="item_qty"
-                  type="number"
-                  isControlled
-                  min={ minSaleQuantity }
-                  max={ maxSaleQuantity }
-                  mix={ { block: 'CartItem', elem: 'Qty' } }
-                  value={ qty }
-                  onChange={ handleChangeQuantity }
-                />
+                { isNotAvailble
+                    ? <span block="CartItem" elem="NotAvailable">{ __('Not available') }</span> : (
+                        <Field
+                          id="item_qty"
+                          name="item_qty"
+                          type="number"
+                          isControlled
+                          min={ minSaleQuantity }
+                          max={ maxSaleQuantity }
+                          mix={ { block: 'CartItem', elem: 'Qty' } }
+                          value={ qty }
+                          onChange={ handleChangeQuantity }
+                        />
+                    ) }
             </div>
         );
     }
 
     renderImage() {
-        const { item: { product: { name } }, thumbnail } = this.props;
+        const { item: { product: { name } }, thumbnail, isCartPage } = this.props;
         const { isArabic } = this.state;
 
         return (
@@ -410,7 +427,7 @@ export class CartItem extends PureComponent {
                   mix={ {
                       block: 'CartItem',
                       elem: 'Picture',
-                      mods: { isArabic }
+                      mods: { isArabic, isCartPage }
                   } }
                   ratio="custom"
                   alt={ `Product ${name} thumbnail.` }
@@ -431,7 +448,6 @@ export class CartItem extends PureComponent {
             <li block="CartItem">
                 <Loader isLoading={ isLoading } />
                 { this.renderWrapper() }
-                { this.renderActions() }
             </li>
         );
     }

@@ -4,13 +4,13 @@
     }
 
     &-BalanceText {
-        font-family: 'Avenir Next Regular', serif;
+        font-weight: var(--fw-regular);
         font-size: 16px;
         margin-right: 5px;
     }
 
     &-BalanceAmount {
-        font-family: 'Avenir Next Bold', serif;
+        font-weight: var(--fw-bold);
         font-size: 16px;
     }
 
@@ -25,8 +25,7 @@
         margin-bottom: 25px;
 
         th {
-            font-family: 'Avenir Next Medium', serif;
-            font-weight: normal;
+            font-weight: var(--fw-medium);
         }
 
         th,
@@ -37,7 +36,7 @@
         }
 
         td {
-            font-family: 'Avenir Next Regular', serif;
+            font-weight: var(--fw-regular);
         }
 
         tr {

@@ -4,11 +4,19 @@
     "dependencies": {
         "@6thstreetdotcom/algolia-sdk": "^1.6.0",
         "@scandipwa/scandipwa": "0.0.1",
-        "@scandipwa/scandipwa-scripts": "0.0.8"
+        "@scandipwa/scandipwa-scripts": "0.0.8",
+        "dotenv-flow": "^3.2.0",
+        "express": "^4.17.1",
+        "lerna": "^3.22.1",
+        "react-iframe": "^1.8.0",
+        "workbox-webpack-plugin": "^6.0.2"
     },
     "scripts": {
         "start": "scandipwa-scripts start",
-        "build": "scandipwa-scripts build"
+        "start-ar": "scandipwa-scripts start --locale ar_SA",
+        "build": "scandipwa-scripts build",
+        "build-ar": "scandipwa-scripts build --locale ar_SA",
+        "prod": "serve -s build -l 3000"
     },
     "browserslist": {
         "production": [

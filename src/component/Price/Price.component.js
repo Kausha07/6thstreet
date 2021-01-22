@@ -12,7 +12,12 @@ class Price extends PureComponent {
     static propTypes = {
         basePrice: PropTypes.number.isRequired,
         specialPrice: PropTypes.number.isRequired,
-        currency: PropTypes.string.isRequired
+        currency: PropTypes.string.isRequired,
+        fixedPrice: PropTypes.bool
+    };
+
+    static defaultProps = {
+        fixedPrice: false
     };
 
     state = {
@@ -22,29 +27,29 @@ class Price extends PureComponent {
     haveDiscount() {
         const { basePrice, specialPrice } = this.props;
 
-        return specialPrice !== 'undefined' && basePrice !== specialPrice;
+        return specialPrice !== 'undefined' && specialPrice && basePrice !== specialPrice;
     }
 
     renderBasePrice() {
-        const { basePrice } = this.props;
+        const { basePrice, fixedPrice } = this.props;
 
         return (
             <span block="Price" elem="Base" mods={ { discount: this.haveDiscount() } }>
                 { this.renderCurrency() }
                 <span> </span>
-                { basePrice }
+                { fixedPrice ? (1 * basePrice).toFixed(3) : basePrice }
             </span>
         );
     }
 
     renderSpecialPrice() {
-        const { specialPrice } = this.props;
+        const { specialPrice, fixedPrice } = this.props;
 
         return (
             <span block="Price" elem="Special" mods={ { discount: this.haveDiscount() } }>
                 { this.renderCurrency() }
                 <span> </span>
-                { specialPrice }
+                { fixedPrice ? (1 * specialPrice).toFixed(3) : specialPrice }
             </span>
         );
     }
@@ -86,7 +91,7 @@ class Price extends PureComponent {
             specialPrice
         } = this.props;
 
-        if (basePrice === specialPrice) {
+        if (basePrice === specialPrice || !specialPrice) {
             return this.renderBasePrice();
         }
 

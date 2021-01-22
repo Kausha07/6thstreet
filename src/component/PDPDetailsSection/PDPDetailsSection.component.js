@@ -2,6 +2,9 @@
 import { PureComponent } from 'react';
 
 import { Product } from 'Util/API/endpoint/Product/Product.type';
+import { isArabic } from 'Util/App';
+
+import { PDP_ARABIC_VALUES_TRANSLATIONS } from './PDPDetailsSection.config';
 
 import './PDPDetailsSection.style';
 
@@ -13,6 +16,14 @@ class PDPDetailsSection extends PureComponent {
     state = {
         isHidden: true
     };
+
+    _translateValue(value) {
+        if (typeof PDP_ARABIC_VALUES_TRANSLATIONS[value] === 'undefined') {
+            return value;
+        }
+
+        return PDP_ARABIC_VALUES_TRANSLATIONS[value];
+    }
 
     openFullInfo = () => {
         this.setState({ isHidden: false });
@@ -47,14 +58,14 @@ class PDPDetailsSection extends PureComponent {
         return (
             <li block="PDPDetailsSection" elem="HighlightsList" key={ arr[0] }>
                 <span block="PDPDetailsSection" elem="ListItem" mods={ { mod: 'title' } }>
-                    { this.listTitle(arr[0]) }
+                    { isArabic() ? this._translateValue(arr[0]) : this.listTitle(arr[0]) }
                 </span>
                 <span block="PDPDetailsSection" elem="ListItem" mods={ { mod: 'value' } }>{ arr[1] }</span>
             </li>
         );
     }
 
-    renderListItems(obj) {
+    renderListItems(obj = {}) {
         return Object.entries(obj).filter((item) => item[1] != null)
             .map((item) => this.renderListItem(item));
     }
@@ -74,10 +85,6 @@ class PDPDetailsSection extends PureComponent {
             }
         } = this.props;
 
-        const { isHidden } = this.state;
-
-        // got this info from API at this moment, should be changed when new DATA will be implemented.
-
         const productInfo = {
             material,
             dress_length,
@@ -92,16 +99,9 @@ class PDPDetailsSection extends PureComponent {
 
         return (
             <div block="PDPDetailsSection" elem="Highlights">
+                <h3>{ __('Highlights') }</h3>
                 <ul>{ this.renderListItems(productInfo) }</ul>
-                <button
-                  block="PDPDetailsSection"
-                  elem="MoreDetailsBtn"
-                  mods={ { isHidden } }
-                  mix={ { block: 'button secondary' } }
-                  onClick={ this.openFullInfo }
-                >
-                    { __('view more details') }
-                </button>
+                { this.renderMoreDetailsList() }
             </div>
         );
     }
@@ -110,7 +110,7 @@ class PDPDetailsSection extends PureComponent {
         return (
             <li block="PDPDetailsSection" elem="MoreDetailsList" key={ item.key }>
                 <span block="PDPDetailsSection" elem="ListItem" mods={ { mod: 'title' } }>
-                    { item.key.toUpperCase() }
+                    { isArabic() ? this._translateValue(item.key) : this.listTitle(__(item.key)) }
                 </span>
                 <span block="PDPDetailsSection" elem="ListItem" mods={ { mod: 'value' } }>{ item.value }</span>
             </li>
@@ -123,7 +123,8 @@ class PDPDetailsSection extends PureComponent {
         if (highlighted_attributes !== undefined && highlighted_attributes !== null) {
             return (
                 <ul block="PDPDetailsSection" elem="MoreDetailsUl">
-                    { highlighted_attributes.map((item) => this.renderMoreDetailsItem(item)) }
+                    { highlighted_attributes.filter(({ key }) => key !== 'alternate_name')
+                        .map((item) => this.renderMoreDetailsItem(item)) }
                 </ul>
             );
         }
@@ -144,11 +145,10 @@ class PDPDetailsSection extends PureComponent {
     render() {
         return (
             <div block="PDPDetailsSection">
-                <h2>Product details:</h2>
+                <h2>{ __('Product details:') }</h2>
                 { this.renderIconsSection() }
                 { this.renderDescription() }
                 { this.renderHighlights() }
-                { this.renderMoreDetailsSection() }
             </div>
         );
     }

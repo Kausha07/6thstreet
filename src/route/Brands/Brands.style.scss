@@ -1,10 +1,10 @@
 .Brands {
-    margin: 0 auto 110px;
+    margin: 90px auto 110px;
     max-width: 1440px;
     padding: 5px 0;
 
     @include desktop {
-        margin: 110px auto 0;
+        margin: 0 auto 110px;
     }
 
     &-Heading {
@@ -51,10 +51,10 @@
     }
 
     &-LetterButton {
-        font-weight: normal;
+        font-weight: var(--fw-regular);
 
         &_isSelected {
-            font-weight: bold;
+            font-weight: var(--fw-bold);
 
             &::after {
                 content: unset;

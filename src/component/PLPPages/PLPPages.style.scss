@@ -1,3 +1,5 @@
 .PLPPages {
-
+    @include mobile() {
+        margin-top: 40px;
+    }
 }

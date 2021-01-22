@@ -13,6 +13,33 @@ class HomePage extends PureComponent {
         isLoading: PropTypes.bool.isRequired
     };
 
+    componentDidUpdate() {
+        const DynamicContent = document.getElementsByClassName('DynamicContent')[0];
+
+        if (DynamicContent) {
+            const { children = [] } = DynamicContent;
+            const { href } = location;
+
+            if (children) {
+                // eslint-disable-next-line
+                for (let i=0; i < children.length; i++) {
+                    if (children[i].nodeName === 'HR') {
+                        children[i].style.backgroundColor = '#EFEFEF';
+                        children[i].style.height = '1px';
+                    } else if (
+                        children[i].className === 'DynamicContentBanner'
+                        && children[i].children[0]
+                        && children[i].children[0].href !== `${href}#`
+                    ) {
+                        children[i].style.maxHeight = `${children[i].dataset.maxHeight}px`;
+                        children[i].style.maxWidth = `${children[i].dataset.maxWidth}px`;
+                        children[i].style.display = 'inline-block';
+                    }
+                }
+            }
+        }
+    }
+
     renderDynamicContent() {
         const { dynamicContent } = this.props;
 
@@ -44,7 +71,6 @@ class HomePage extends PureComponent {
     render() {
         return (
             <main block="HomePage">
-                { this.renderLoginBlock() }
                 { this.renderContent() }
             </main>
         );

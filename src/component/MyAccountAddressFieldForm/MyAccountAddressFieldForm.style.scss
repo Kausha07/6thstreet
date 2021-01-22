@@ -5,18 +5,21 @@
 }
 
 .MyAccountAddressFieldForm {
-    top: -120px;
+    top: -90px;
     background: $white;
+    z-index: 8;
 
     @include desktop() {
         max-width: 540px;
         top: 0;
         background: none;
+        z-index: 1;
     }
 
     input {
         width: 100%;
         font-size: 14px;
+        text-transform: none;
 
         &[type='checkbox'],
         &[type='radio'] {
@@ -25,6 +28,10 @@
 
         + label {
             min-width: auto;
+        }
+
+        &::placeholder {  
+            text-transform: uppercase;
         }
     }
 
@@ -36,6 +43,10 @@
     }
 
     .FieldSelect {
+        &-Options {
+            overflow-y: auto;
+        }
+
         &-Select {
             &_isExpanded {
                 border: 1px solid var(--my-acc-input-border);
@@ -72,7 +83,7 @@
     &-Title {
         text-transform: none;
         font-size: 18px;
-        font-family: 'Avenir Next Demi Regular', sans-serif;
+        font-weight: var(--fw-demi);
         display: inline-block;
         margin: 20px;
 
@@ -104,7 +115,7 @@
         &_twoFields {
             display: flex;
             justify-content: space-between;
-            
+
             .Field {
                 width: 48%;
             }
@@ -131,7 +142,7 @@
                 right: 10px;
             }
         }
-        
+
 
         &_toggle {
             display: flex;
@@ -139,7 +150,6 @@
             margin-top: 20px;
 
             div {
-                display: flex;
                 flex-direction: row-reverse;
                 align-items: center;
                 margin-top: 0;
@@ -147,9 +157,8 @@
             }
 
             label {
-                font-family: 'Avenir Next Regular';
                 font-size: 14px;
-                font-weight: 400;
+                font-weight: var(--fw-regular);
                 padding-bottom: 0;
                 padding-left: 15px;
                 cursor: pointer;
@@ -174,8 +183,7 @@
                 padding: 0;
                 margin-left: 50px;
                 font-size: 15px;
-                font-family: 'Avenir Next Medium';
-                font-weight: 400;
+                font-weight: var(--fw-regular);
             }
         }
     }
@@ -188,6 +196,7 @@
 
             &-PhoneCode {
                 right: 10px;
+                left: unset;
             }
 
             &-FieldWrapper {
@@ -200,7 +209,7 @@
                 }
 
                 &_toggle {
-        
+
                     label {
                         padding-left: 0;
                         padding-right: 15px;

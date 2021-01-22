@@ -1,31 +1,36 @@
-// import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 
-import { MatchType } from 'Type/Common';
+import { STATUS_ABLE_TO_RETURN, STATUS_COMPLETE } from 'Component/MyAccountOrderListItem/MyAccountOrderListItem.config';
+import { HistoryType, MatchType } from 'Type/Common';
+import { getCountriesForSelect } from 'Util/API/endpoint/Config/Config.format';
+import { Config } from 'Util/API/endpoint/Config/Config.type';
 import MagentoAPI from 'Util/API/provider/MagentoAPI';
 
 import MyAccountOrderView from './MyAccountOrderView.component';
 
-export const mapStateToProps = (_state) => ({
-    // wishlistItems: state.WishlistReducer.productsInWishlist
+export const mapStateToProps = (state) => ({
+    config: state.AppConfig.config
 });
 
-export const mapDispatchToProps = (_dispatch) => ({
-});
+export const mapDispatchToProps = () => ({});
 
 export class MyAccountOrderViewContainer extends PureComponent {
     static propTypes = {
-        match: MatchType.isRequired
+        match: MatchType.isRequired,
+        config: Config.isRequired,
+        history: HistoryType.isRequired
     };
 
     containerFunctions = {
-        // getData: this.getData.bind(this)
+        getCountryNameById: this.getCountryNameById.bind(this),
+        openOrderCancelation: this.openOrderCancelation.bind(this)
     };
 
     state = {
         isLoading: true,
-        order: {}
+        order: null
     };
 
     constructor(props) {
@@ -39,12 +44,21 @@ export class MyAccountOrderViewContainer extends PureComponent {
             isLoading,
             order
         } = this.state;
+        const { history } = this.props;
 
         return {
             isLoading,
-            order
+            order,
+            history
         };
     };
+
+    getCountryNameById(countryId) {
+        const { config } = this.props;
+        const countries = getCountriesForSelect(config);
+
+        return (countries.find(({ id }) => id === countryId) || {}).label || '';
+    }
 
     getOrderId() {
         const {
@@ -56,6 +70,20 @@ export class MyAccountOrderViewContainer extends PureComponent {
         } = this.props;
 
         return order;
+    }
+
+    openOrderCancelation() {
+        const { history } = this.props;
+        const { order: { entity_id, status } = {} } = this.state;
+
+        if (!entity_id || !STATUS_ABLE_TO_RETURN.includes(status)) {
+            return;
+        }
+
+        const url = status === STATUS_COMPLETE ? `/my-account/return-item/create/${ entity_id }`
+            : `/my-account/return-item/cancel/${ entity_id }`;
+
+        history.push(url);
     }
 
     async getOrder() {
@@ -78,4 +106,4 @@ export class MyAccountOrderViewContainer extends PureComponent {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MyAccountOrderViewContainer);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MyAccountOrderViewContainer));

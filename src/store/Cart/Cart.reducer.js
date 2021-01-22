@@ -1,21 +1,30 @@
+import { isSignedIn, ONE_HOUR } from 'Util/Auth';
 import BrowserDatabase from 'Util/BrowserDatabase';
 
 import {
+    PROCESSING_CART_REQUEST,
+    PROCESSING_PAYMENT_SELECT_REQUEST,
     REMOVE_CART_ITEM,
+    REMOVE_CART_ITEMS,
+    RESET_CART,
     SET_CART_ID,
     SET_CART_TOTALS,
+    SET_MINICART_OPEN,
     UPDATE_CART_ITEM,
     UPDATE_TOTALS
 } from './Cart.action';
 
 export const CART_ID_CACHE_KEY = 'CART_ID_CACHE_KEY';
+
 export const CART_ITEMS_CACHE_KEY = 'CART_ITEMS_CACHE_KEY';
 
 export const getInitialState = () => ({
     cartId: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
     // TODO set initial data to empty cart structure???
     cartTotals: {},
-    cartItems: BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || []
+    isLoading: true,
+    cartItems: BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [],
+    isMinicartOpen: false
 });
 
 const updateCartItem = (cartItems, newItem) => {
@@ -42,25 +51,37 @@ const removeCartItem = (cartItems, itemToRemove) => {
 
 export const CartReducer = (state = getInitialState(), action) => {
     const {
-        type, cartId, cartItem, cartTotals
+        type, cartId, cartItem, cartTotals, requestStatus
     } = action;
     const { cartItems } = state;
-    const ONE_YEAR_IN_SECONDS = 31536000;
+    const ONE_DAY_IN_SECONDS = 86400;
     const item = { ...cartItem };
     const totals = { ...cartTotals };
-    const currency = { ...cartTotals };
+    const expireTime = isSignedIn() ? ONE_HOUR : ONE_DAY_IN_SECONDS;
 
     switch (type) {
     case SET_CART_ID:
         BrowserDatabase.setItem(
             cartId,
             CART_ID_CACHE_KEY,
-            ONE_YEAR_IN_SECONDS // TODO Get info from Backend developers on cart expire time
+            expireTime
         );
 
         return {
             ...state,
             cartId
+        };
+
+    case PROCESSING_CART_REQUEST:
+        return {
+            ...state,
+            processingRequest: true
+        };
+
+    case PROCESSING_PAYMENT_SELECT_REQUEST:
+        return {
+            ...state,
+            processingPaymentSelectRequest: requestStatus
         };
 
     case SET_CART_TOTALS:
@@ -70,9 +91,11 @@ export const CartReducer = (state = getInitialState(), action) => {
                 ...cartTotals,
                 items: cartItems,
                 subtotal_incl_tax: totals.subtotal || 0,
-                quote_currency_code: currency.currency_code
+                quote_currency_code: totals.currency_code
             },
-            currency: currency.currency_code
+            currency: totals.currency_code,
+            isLoading: false,
+            processingRequest: false
         };
 
     case UPDATE_CART_ITEM:
@@ -80,7 +103,6 @@ export const CartReducer = (state = getInitialState(), action) => {
             customizable_options: [],
             bundle_options: [],
             item_id: item.item_id,
-            price: item.price || 0,
             product: {
                 name: item.name,
                 type_id: item.product_type,
@@ -92,14 +114,19 @@ export const CartReducer = (state = getInitialState(), action) => {
                 url: item.url,
                 variants: []
             },
-            row_total: item.price || 0,
+            row_total: item.itemPrice || 0,
             sku: item.sku,
             qty: item.qty,
             color: item.color,
             optionValue: item.optionValue,
             thumbnail_url: item.thumbnail_url,
-            discount_amount: item.discount,
-            brand_name: item.brand_name
+            basePrice: item.basePrice,
+            brand_name: item.brand_name,
+            currency: totals.currency,
+            availability: item.availability,
+            availableQty: item.available_qty,
+            full_item_info: item,
+            processingRequest: false
         };
 
         const updatedCartItems = updateCartItem(cartItems, formattedCartItem);
@@ -107,7 +134,7 @@ export const CartReducer = (state = getInitialState(), action) => {
         BrowserDatabase.setItem(
             updatedCartItems,
             CART_ITEMS_CACHE_KEY,
-            ONE_YEAR_IN_SECONDS
+            expireTime
         );
 
         return {
@@ -121,7 +148,7 @@ export const CartReducer = (state = getInitialState(), action) => {
         BrowserDatabase.setItem(
             reducedCartItems,
             CART_ITEMS_CACHE_KEY,
-            ONE_YEAR_IN_SECONDS
+            expireTime
         );
 
         return {
@@ -129,7 +156,37 @@ export const CartReducer = (state = getInitialState(), action) => {
             cartItems: reducedCartItems
         };
 
+    case REMOVE_CART_ITEMS:
+        BrowserDatabase.setItem(
+            [],
+            CART_ITEMS_CACHE_KEY,
+            expireTime
+        );
+
+        return {
+            ...state,
+            cartItems: []
+        };
+
+    case RESET_CART:
+        BrowserDatabase.deleteItem(
+            CART_ITEMS_CACHE_KEY
+        );
+        BrowserDatabase.deleteItem(
+            CART_ID_CACHE_KEY
+        );
+
+        return {
+            ...getInitialState()
+        };
     case UPDATE_TOTALS:
+    case SET_MINICART_OPEN:
+        const { isMinicartOpen } = action;
+
+        return {
+            ...state,
+            isMinicartOpen
+        };
     default:
         return state;
     }

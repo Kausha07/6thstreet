@@ -6,12 +6,18 @@ import './CountryMiniFlag.style';
 
 class CountryMiniFlag extends PureComponent {
     static propTypes = {
-        label: PropTypes.string.isRequired
+        label: PropTypes.string.isRequired,
+        mods: PropTypes.object
+    };
+
+    static defaultProps = {
+        mods: {}
     };
 
     renderFlag() {
         const {
-            label
+            label,
+            mods
         } = this.props;
 
         const flagValues = {
@@ -23,13 +29,14 @@ class CountryMiniFlag extends PureComponent {
             'KW': '-70px'
         };
 
-        const left = label === 'SA' ? '-3px' : '-1px';
+        const left = '-1px';
         const flagValue = `${left} ${ flagValues[label]}`;
 
         return (
         <div
           block="CountryMiniFlag"
           elem="Container"
+          mods={ mods }
           style={ { backgroundPosition: flagValue } }
         >
             <span block="CountryMiniFlag" elem="top" />

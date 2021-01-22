@@ -11,19 +11,71 @@
         height: 40px;
         width: 100%;
         z-index: 1;
+
+        @include desktop {
+            width: calc(100% - 20px);
+
+            cursor: pointer;
+
+            label {
+                top: 11px;
+            }
+        }
     }
+
+    &-Color {
+        width: 16px;
+        height: 16px;
+        display: inline-block;
+        margin: 0 8px;
+        border-radius: 50%;
+        border: 1px solid var(--option-list-bottom-border-color);
+    }
+
     &-List {
+        margin: 0;
         display: flex;
 
         label {
             display: flex;
             align-items: center;
             width: 100%;
+
             @include desktop {
                 position: absolute;
                 height: 42px;
                 padding-left: 42px;
                 cursor: pointer;
+            }
+        }
+
+        &_isArabic {
+            label {
+                display: unset;
+                align-items: unset;
+                text-align: right;
+                overflow: hidden;
+                justify-content: right;
+                top: 12px;
+
+                @include desktop {
+                    display: flex;
+                    align-items: center;
+                    width: 100%;
+                    top: unset;
+                    padding-right: 42px;
+                    padding-left: 0;
+                    cursor: pointer;
+                }
+            }
+
+            .Field {
+                [type='checkbox'],
+                [type='radio'] {
+                    + label {
+                        top: 11px;
+                    }
+                }
             }
         }
 
@@ -45,7 +97,7 @@
                     [type='checkbox']{
                         + label{
                             @include before-desktop {
-                                left: 5px;
+                                left: 5%;
                                 right: unset;
                             }
                         }
@@ -60,7 +112,20 @@
                 max-width: calc(100vw - 2rem - 45px);
                 vertical-align: middle;
                 padding: 0;
-                top: -5px;
+
+                @include before-desktop {
+                    top: unset;
+                }
+
+                .PLPFilterOption {
+                    &-Input {
+                        top: -10px;
+                    }
+                }
+
+                label {
+                    top: 1px;
+                }
             }
 
             @include before-desktop {
@@ -79,6 +144,11 @@
             }
 
             [type='radio']{
+
+                @include before-desktop {
+                    left: 5%;
+                }
+
                 + label{
                     @include before-desktop {
                         position: absolute;
@@ -163,31 +233,6 @@
                         --checkmark-color: var(--check-mark-mobile-filter-color);
                     }
                 }
-    
-                &:hover + label {
-                    --primary-base-color: transparent;
-
-                    &::after {
-                        --checkmark-color: transparent;
-
-                        @include desktop {
-                            --checkmark-color:  var(--check-mark-mobile-filter-color);
-                        }
-                    }
-                }
-
-                &:focus {
-
-                    &::after {
-                        --checkmark-color: var(--black-color);
-                    }
-                    
-                    + label {
-                        &::after {
-                            --checkmark-color:  var(--check-mark-mobile-filter-color);
-                        }
-                    }
-                }
 
                 @include before-desktop {
                     + label {
@@ -208,12 +253,29 @@
 
         &_isArabic {
             span {
-                margin-left: 0;
                 margin-right: 5px;
             }
         
             .Field {
                 margin: auto 15px auto 5px;
+            }
+        }
+    }
+}
+
+.PLPFilter {
+    .PLPFilterOption {
+        &-List {
+            &_isArabic {
+                .Field {
+                    label {
+                        .PLPFilterOption {
+                            &-Input {
+                                top: 0;
+                            }
+                        }
+                    }
+                }
             }
         }
     }

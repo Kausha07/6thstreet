@@ -1,1 +1,1 @@
-export { default } from './HeaderGenders.component';
+export { default } from './HeaderGenders.container';

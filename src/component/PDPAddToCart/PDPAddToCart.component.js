@@ -1,12 +1,13 @@
+/* eslint-disable no-magic-numbers */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import { Product } from 'Util/API/endpoint/Product/Product.type';
+import isMobile from 'Util/Mobile';
 
 import PDPSizeGuide from '../PDPSizeGuide';
 
 import './PDPAddToCart.style';
-import './NotificationList.extended.style.scss';
 
 class PDPAddToCart extends PureComponent {
     static propTypes = {
@@ -17,14 +18,40 @@ class PDPAddToCart extends PureComponent {
         sizeObject: PropTypes.object.isRequired,
         selectedSizeType: PropTypes.string.isRequired,
         isLoading: PropTypes.bool.isRequired,
-        addedToCart: PropTypes.bool.isRequired
+        addedToCart: PropTypes.bool.isRequired,
+        showProceedToCheckout: PropTypes.bool.isRequired,
+        hideCheckoutBlock: PropTypes.bool.isRequired,
+        routeChangeToCart: PropTypes.func.isRequired
+    };
+
+    state = {
+        isIPhoneNavigationHidden: false,
+        pageYOffset: window.innerHeight,
+        isRoundedIphone: this.isRoundedIphoneScreen() ?? false
+    };
+
+    componentDidMount() {
+        window.addEventListener('scroll', this.handleResize);
+    }
+
+    isRoundedIphoneScreen() {
+        return window.navigator.userAgent.match(/iPhone/) && window.outerHeight > '800';
+    }
+
+    handleResize = () => {
+        const { pageYOffset, isRoundedIphone } = this.state;
+
+        this.setState({
+            isIPhoneNavigationHidden: isRoundedIphone && window.pageYOffset > pageYOffset,
+            pageYOffset: window.pageYOffset
+        });
     };
 
     getSizeTypeSelect() {
-        const { sizeObject } = this.props;
+        const { sizeObject = {} } = this.props;
 
         if (sizeObject.sizeTypes !== undefined) {
-            const listItems = sizeObject.sizeTypes.map((type) => (
+            const listItems = sizeObject.sizeTypes.map((type = '') => (
                     <option
                       key={ type }
                       block="PDPAddToCart"
@@ -50,37 +77,48 @@ class PDPAddToCart extends PureComponent {
 
         switch (simple_products[code].quantity) {
         case '0':
-            return (`${size} - Out of stock`);
+            return (`${size} - ${__('Out of stock')}`);
         case '1':
-            return (`${size} - 1 left in stock`);
+            return (`${size} - ${__('1 left in stock')}`);
         case '2' || '3':
-            return (`${size} - low stock`);
+            return (`${size} - ${__('low stock')}`);
         default:
             return size;
         }
     }
 
+    renderSizeOption(simple_products, code, label) {
+        return (
+            <option
+              key={ code }
+              block="PDPAddToCart"
+              elem="SizeOption"
+              value={ code }
+              disabled={ simple_products[code].quantity === '0' }
+            >
+                { label }
+            </option>
+        );
+    }
+
     getSizeSelect() {
         const {
-            product: { simple_products }, product, selectedSizeType, sizeObject
+            product: { simple_products }, product, selectedSizeType, sizeObject = {}
         } = this.props;
 
         if (sizeObject.sizeCodes !== undefined
             && simple_products !== undefined
-            && product[`size_${selectedSizeType}`].length !== 0) {
-            const listItems = sizeObject.sizeCodes.map((code) => (
-                <option
-                  key={ code }
-                  block="PDPAddToCart"
-                  elem="SizeOption"
-                  value={ code }
-                  disabled={ simple_products[code].quantity === '0' }
-                >
-                    { this.renderSizeAndOnQunatityBasedMessage(code) }
-                </option>
-            ));
+            && product[`size_${selectedSizeType}`].length !== 0
+        ) {
+            return sizeObject.sizeCodes.reduce((acc, code) => {
+                const label = this.renderSizeAndOnQunatityBasedMessage(code);
 
-            return listItems;
+                if (label) {
+                    acc.push(this.renderSizeOption(simple_products, code, label));
+                }
+
+                return acc;
+            }, []);
         }
 
         return null;
@@ -159,7 +197,7 @@ class PDPAddToCart extends PureComponent {
             isLoading,
             addedToCart,
             product: { stock_qty, highlighted_attributes },
-            product
+            product = {}
         } = this.props;
 
         if (isLoading
@@ -176,41 +214,69 @@ class PDPAddToCart extends PureComponent {
 
     renderAddToCartButton() {
         const {
-            addToCart, isLoading, addedToCart
+            addToCart,
+            isLoading,
+            addedToCart,
+            product: { stock_qty, highlighted_attributes },
+            product = {}
         } = this.props;
 
         return (
-            <button
-              onClick={ addToCart }
-              block="PDPAddToCart"
-              elem="AddToCartButton"
-              mods={ { isLoading } }
-              mix={ {
-                  block: 'PDPAddToCart',
-                  elem: 'AddToCartButton',
-                  mods: { addedToCart }
-              } }
-              disabled={ this.checkStateForButtonDisabling() }
-            >
-                <span>{ __('Add to bag') }</span>
-                <span>{ __('Adding...') }</span>
-                <span>{ __('Added to bag') }</span>
-            </button>
+            <div>
+                { (stock_qty !== 0 || highlighted_attributes === null
+                    || (Object.keys(product).length !== 0
+                    && product.constructor !== Object))
+                    && (
+                        <button
+                          onClick={ addToCart }
+                          block="PDPAddToCart"
+                          elem="AddToCartButton"
+                          mods={ { isLoading } }
+                          mix={ {
+                              block: 'PDPAddToCart',
+                              elem: 'AddToCartButton',
+                              mods: { addedToCart }
+                          } }
+                          disabled={ this.checkStateForButtonDisabling() }
+                        >
+                            <span>{ __('Add to bag') }</span>
+                            <span>{ __('Adding...') }</span>
+                            <span>{ __('Added to bag') }</span>
+                        </button>
+                    ) }
+            </div>
         );
     }
 
-    renderPickUpButton() {
-        return (
-            <button
-              block="PDPAddToCart"
-              elem="PickUpButton"
-              mix={ { block: 'button secondary' } }
-            >
-                <span>{ __('pick up in store') }</span>
-                <div block="PDPSummary" elem="shopSvg" />
-            </button>
-        );
-    }
+    renderProceedToCheckoutBlock = () => {
+        const {
+            showProceedToCheckout,
+            hideCheckoutBlock,
+            routeChangeToCart
+        } = this.props;
+        const { isIPhoneNavigationHidden } = this.state;
+
+        if (showProceedToCheckout && isMobile.any()) {
+            return (
+                <div
+                  block="PDPAddToCart"
+                  elem="Checkout"
+                  mods={ { hide: hideCheckoutBlock, isIPhoneNavigationHidden } }
+                >
+                    <h2 block="PDPAddToCart" elem="CheckoutTitle">{ __('Added to your shopping bag') }</h2>
+                    <button
+                      block="PDPAddToCart"
+                      elem="CheckoutButton"
+                      onClick={ routeChangeToCart }
+                    >
+                        { __('View Bag') }
+                    </button>
+                </div>
+            );
+        }
+
+        return null;
+    };
 
     render() {
         return (
@@ -222,8 +288,8 @@ class PDPAddToCart extends PureComponent {
                 </div>
                 <div block="PDPAddToCart" elem="Bottom">
                     { this.renderAddToCartButton() }
-                    { this.renderPickUpButton() }
                 </div>
+                { this.renderProceedToCheckoutBlock() }
             </div>
         );
     }

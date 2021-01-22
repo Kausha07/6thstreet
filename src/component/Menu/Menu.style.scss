@@ -1,5 +1,6 @@
 .Menu {
     list-style-type: square;
+    --pink: #e35467;
 
     &-Container {
         display: flex;
@@ -7,8 +8,8 @@
 
     @include before-desktop {
         border-right: 1px solid var(--light-gray);
-        margin-top: 120px;
         height: 100%;
+        margin-top: 150px;
         width: 100%;
 
         &-Container {
@@ -17,13 +18,23 @@
             width: 100%;
 
             .HeaderGenders {
-                display: grid;
-                grid-auto-flow: column;
-                max-width: calc(100% - 60px);
+                background: var(--white);
+                display: flex;
+                justify-content: center;
+                padding-top: 14px;
+                position: fixed;
+                top: 80px;
+                width: 100%;
 
-                .GenderButton {
-                    &-Button {
-                        width: 100%;
+                .GenderButton-Container {
+                    display: flex;
+                    justify-content: center;
+                    width: 33.33%;
+
+                    .GenderButton-Button {
+                        height: 30px;
+                        margin-top: 6px;
+                        padding: 0 15px;
                     }
                 }
             }
@@ -31,14 +42,12 @@
 
         &-Header {
             &-Mobile {
-                background-color: var(--white);
+                background-color: var(--pink);
                 position: fixed;
                 width: 100%;
                 z-index: 10;
 
                 &-Top {
-                    border-bottom: 1px solid var(--grey);
-
                     .HeaderCart {
                         &-Button {
                             float: right;
@@ -54,21 +63,6 @@
                                 margin-left: 20px;
                                 margin-right: 0;
                             }
-                        }
-                    }
-                }
-
-                .HeaderSearch {
-                    height: 50px;
-                    margin-top: 15px;
-
-                    .Field {
-                        margin: 10px 0;
-                        padding: 0 20px;
-                        width: 100%;
-
-                        #search-field {
-                            width: 100%;
                         }
                     }
                 }
@@ -95,6 +89,5 @@
                 display: none;
             }
         }
-
     }
 }

@@ -1,5 +1,7 @@
 import { PureComponent } from 'react';
 
+import { isArabic } from 'Util/App';
+
 import { CM_TO_INCH, UK_SIZE_CM } from './SizeTable.config';
 
 import './SizeTable.style';
@@ -7,7 +9,10 @@ import './SizeTable.style';
 export class SizeTable extends PureComponent {
     constructor() {
         super();
-        this.state = { isCm: true };
+        this.state = {
+            isCm: true,
+            isArabic: isArabic()
+        };
     }
 
     handleClick = () => {
@@ -15,16 +20,20 @@ export class SizeTable extends PureComponent {
         this.setState({ isOpen: !isOpen });
     };
 
-    renderTableRow = (row) => {
+    renderTableRow = (row, i) => {
         const { size, bust, waist } = row;
         const { isCm } = this.state;
 
         if (isCm) {
             return (
-                <tr>
+                <tr key={ i }>
                     <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>{ size }</td>
-                    <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>{ bust }</td>
-                    <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>{ waist }</td>
+                    <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>
+                        { (bust * CM_TO_INCH).toFixed(2) }
+                    </td>
+                    <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>
+                        { (waist * CM_TO_INCH).toFixed(2) }
+                    </td>
                 </tr>
             );
         }
@@ -32,8 +41,8 @@ export class SizeTable extends PureComponent {
         return (
             <tr>
                 <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>{ size }</td>
-                <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>{ (bust * CM_TO_INCH).toFixed(2) }</td>
-                <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>{ (waist * CM_TO_INCH).toFixed(2) }</td>
+                <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>{ bust }</td>
+                <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>{ waist }</td>
             </tr>
         );
     };
@@ -52,10 +61,10 @@ export class SizeTable extends PureComponent {
     };
 
     render() {
-        const { isCm } = this.state;
+        const { isCm, isArabic } = this.state;
 
         return (
-            <div block="SizeTable">
+            <div block="SizeTable" mods={ { isArabic } }>
                 <div mix={ { block: 'SizeTable', elem: 'ButtonContainer' } }>
                     <button
                       onClick={ this.SwitchToCm }
@@ -71,12 +80,16 @@ export class SizeTable extends PureComponent {
                     </button>
                 </div>
                 <table mix={ { block: 'SizeTable', elem: 'Table' } }>
-                    <tr mix={ { block: 'SizeTable', elem: 'TopRow' } }>
-                        <td mix={ { block: 'SizeTable', elem: 'TableCellTop' } }>{ __('Size') }</td>
-                        <td mix={ { block: 'SizeTable', elem: 'TableCellTop' } }>{ __('Bust') }</td>
-                        <td mix={ { block: 'SizeTable', elem: 'TableCellTop' } }>{ __('Waist') }</td>
-                    </tr>
-                    { this.renderTableRows() }
+                    <thead>
+                        <tr mix={ { block: 'SizeTable', elem: 'TopRow' } }>
+                            <td mix={ { block: 'SizeTable', elem: 'TableCellTop' } }>{ __('Size') }</td>
+                            <td mix={ { block: 'SizeTable', elem: 'TableCellTop' } }>{ __('Bust') }</td>
+                            <td mix={ { block: 'SizeTable', elem: 'TableCellTop' } }>{ __('Waist') }</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        { this.renderTableRows() }
+                    </tbody>
                 </table>
             </div>
         );

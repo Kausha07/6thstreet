@@ -38,7 +38,7 @@ export class FooterCustomerSupportContainer extends PureComponent {
             contactLabel,
             isContactEmail,
             openHoursLabel,
-            phone
+            phone: phone.indexOf('00') === 0 ? phone.replace('00', '+') : phone
         };
     };
 
@@ -59,7 +59,7 @@ export class FooterCustomerSupportContainer extends PureComponent {
                     [language]: contactLabel
                 } = {},
                 type: contactType
-            },
+            } = {},
             opening_hours: {
                 [language]: openHoursLabel
             },

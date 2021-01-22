@@ -4,6 +4,8 @@ import { PureComponent } from 'react';
 import { withRouter } from 'react-router';
 
 import CartOverlay from 'SourceComponent/CartOverlay';
+import { TotalsType } from 'Type/MiniCart';
+import { isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
 
 import './HeaderCart.style';
@@ -11,52 +13,112 @@ import './HeaderCart.style';
 class HeaderCart extends PureComponent {
     static propTypes = {
         history: PropTypes.object.isRequired,
-        renderCountItems: PropTypes.func.isRequired,
-        hideActiveOverlay: PropTypes.func.isRequired
+        hideActiveOverlay: PropTypes.func.isRequired,
+        totals: TotalsType.isRequired,
+        isCheckoutAvailable: PropTypes.bool.isRequired,
+        showNotification: PropTypes.func.isRequired,
+        setMinicartOpen: PropTypes.func.isRequired,
+        isMinicartOpen: PropTypes.bool.isRequired
     };
 
     state = {
         cartPopUp: '',
-        isPopup: true
+        isPopup: true,
+        isArabic: isArabic(),
+        isOpen: false
     };
 
+    componentDidUpdate() {
+        const { isOpen } = this.state;
+        const { history: { location: { pathname } }, isMinicartOpen } = this.props;
+
+        if (!isMobile.any() && pathname !== '/cart') {
+            if (isMinicartOpen && !isOpen) {
+                this.renderCartPopUp();
+            }
+        }
+    }
+
+    componentWillUnmount() {
+        this.closePopup();
+    }
+
     closePopup = () => {
-        this.setState({ cartPopUp: '' });
+        const { hideActiveOverlay, setMinicartOpen } = this.props;
+
+        setMinicartOpen(false);
+        hideActiveOverlay();
+        this.setState({ cartPopUp: '', isOpen: false });
+    };
+
+    openPopup = () => {
+        const { setMinicartOpen } = this.props;
+        const { pathname } = location;
+
+        if (pathname !== '/cart') {
+            setMinicartOpen(true);
+        }
     };
 
     renderCartPopUp = () => {
+        const { isCheckoutAvailable } = this.props;
         const { isPopup } = this.state;
         const popUpElement = (
             <CartOverlay
               isPopup={ isPopup }
               closePopup={ this.closePopup }
+              isCheckoutAvailable={ isCheckoutAvailable }
             />
         );
 
-        this.setState({ cartPopUp: popUpElement });
+        this.setState({ cartPopUp: popUpElement, isOpen: true });
     };
 
     routeChangeCart = () => {
-        const { history, hideActiveOverlay } = this.props;
+        const {
+            history,
+            hideActiveOverlay,
+            isCheckoutAvailable,
+            showNotification
+        } = this.props;
+
+        if (!isCheckoutAvailable) {
+            showNotification('error', __('Some products or selected quantities are no longer available'));
+        }
 
         hideActiveOverlay();
         history.push('/cart');
     };
 
-    render() {
-        const { cartPopUp } = this.state;
-        const { renderCountItems } = this.props;
+    renderItemCount() {
+        const { totals: { items = [] } } = this.props;
 
+        const itemQuantityArray = items.map((item) => item.qty);
+        const totalQuantity = itemQuantityArray.reduce((qty, nextQty) => qty + nextQty, 0);
+
+        if (totalQuantity && totalQuantity !== 0) {
+            return (
+                <div block="HeaderCart" elem="Count">
+                    { totalQuantity }
+                </div>
+            );
+        }
+
+        return null;
+    }
+
+    render() {
+        const { cartPopUp, isArabic } = this.state;
         return (
-            <div block="HeaderCart">
+            <div block="HeaderCart" mods={ { isArabic } }>
                 <button
                   onClick={ isMobile.any()
                       ? this.routeChangeCart
-                      : this.renderCartPopUp }
+                      : this.openPopup }
                   block="HeaderCart"
                   elem="Button"
                 >
-                    { renderCountItems }
+                    { this.renderItemCount() }
                 </button>
                 { cartPopUp }
             </div>

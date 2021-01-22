@@ -32,7 +32,6 @@
     pointer-events: all;
     cursor: auto;
 
-
     &_isPopup {
         opacity: 0;
         overflow: hidden;
@@ -92,8 +91,8 @@
         &::placeholder {
             text-transform: uppercase;
             color: var(--gray-color);
-            font-weight: 500;
-            letter-spacing: 0.5px;
+            font-weight: var(--fw-medium);
+            letter-spacing: .5px;
             line-height: 16px;
         }
     }
@@ -101,7 +100,7 @@
     &-Heading {
         text-transform: none;
         font-size: 18px;
-        font-weight: 600;
+        font-weight: var(--fw-demi);
         text-align: center;
 
         @include before-desktop {
@@ -113,7 +112,7 @@
         font-size: 13px;
         text-align: center;
         text-transform: none;
-        font-weight: 300;
+        font-weight: var(--fw-regular);
     }
 
     &-Notification {
@@ -177,9 +176,13 @@
     &-Action {
         display: grid;
         grid-template-rows: max-content 1fr;
+        overflow-y: auto;
 
         &_state {
             &_createAccount {
+                height: 100vh;
+                max-height: 830px;
+
                 h4 {
                     padding-right: 1rem;
                     display: inline;
@@ -195,16 +198,27 @@
             }
 
             &_forgotPassword {
+                height: 100vh;
+                max-height: 745px;
+
                 h4 {
                     width: initial;
                 }
 
                 button {
-                    font-weight: bold;
+                    font-weight: var(--fw-bold);
                 }
             }
 
+            &_forgotPasswordSuccess {
+                height: 100vh;
+                max-height: 522px;
+            }
+
             &_signIn {
+                height: 100vh;
+                max-height: 626px;
+
                 h4 {
                     text-align: center;
                 }
@@ -225,7 +239,7 @@
 
         h4 {
             font-size: 1.15rem;
-            font-weight: bold;
+            font-weight: var(--fw-bold);
             margin-bottom: .5rem;
         }
 
@@ -297,7 +311,7 @@
                         width: initial;
                         margin-top: 0;
                         padding-left: 5px;
-                        font-weight: 600;
+                        font-weight: var(--fw-demi);
                     }
 
                     h4 {
@@ -318,7 +332,7 @@
                     font-size: 1rem;
                     line-height: 1.5;
                     padding-bottom: 1.4rem;
-                    font-weight: normal;
+                    font-weight: var(--fw-regular);
                     letter-spacing: normal;
                 }
             }
@@ -363,10 +377,10 @@
         padding: 5px;
         display: flex;
         align-items: center;
+        justify-content: center;
 
         svg {
             fill: $white;
-            margin: 0 auto;
         }
 
         &_isArabic {
@@ -382,7 +396,7 @@
     }
 
     &-ForgotPasswordSubheading {
-        font-weight: 600;
+        font-weight: var(--fw-demi);
         font-size: 14px;
         text-transform: none;
         padding-bottom: 10px;
@@ -433,6 +447,7 @@
                 --button-border: var(--black-color);
                 --button-color: var(--black-color);
                 border: 2px solid var(--button-border);
+                padding: 0 15px;
             }
         }
     }
@@ -447,21 +462,26 @@
                     }
                 }
             }
-        }   
+        }
     }
 
     &-Button {
-        
+
         .Button{
             --button-background: var(--btn-bg-lite-gray-color);
             --button-border:  var(--btn-bg-lite-gray-color);
-            --button-hover-background: var(--black-color);
-            --button-hover-border: var(--black-color);
+            --button-hover-background: var(--btn-bg-lite-gray-color);
+            --button-hover-border: var(--btn-bg-lite-gray-color);
             --button-color: var(--white-color);
 
             font-size: 12px;
-            font-weight: bold;
+            font-weight: var(--fw-bold);
             line-height: 16px;
+
+            &[disabled] {
+                opacity: unset;
+                background: var(--btn-bg-lite-gray-color);
+            }
         }
 
         &_isMargin {
@@ -477,10 +497,9 @@
             vertical-align: bottom;
             padding: 0;
             margin-bottom: 20px;
-            font-size: .95rem;
             color: var(--likelink-button-color);
             font-size: 12px;
-            font-weight: 500;
+            font-weight: var(--fw-medium);
             line-height: 16px;
             text-decoration: underline;
         }
@@ -501,6 +520,18 @@
                 height: 25px;
                 display: inline-block;
                 font-size: 0;
+            }
+        }
+
+        &_isSignInValidated,
+        &_isCreateValidated,
+        &_isForgotValidated {
+            .Button{
+                --button-background: var(--black-color);
+                --button-border:  var(--black-color);
+                --button-hover-background: var(--black-color);
+                --button-hover-border: var(--black-color);
+                --button-color: var(--white-color);
             }
         }
 
@@ -540,24 +571,23 @@
     &-Radio{
         display: flex;
         margin-top: 10px;
-        
+
         .Field [type='radio']{
-            
+
             +label {
                 position: relative;
                 height: 14px;
                 width: 14px;
                 margin-right: 6px;
-                
-                
+
                 &:hover {
                     &::after {
-                            --checkmark-color: var(--black-color);
+                        --checkmark-color: var(--black-color);
                     }
                 }
 
                 border-radius: 50%;
-    
+
                 &::after {
                     left: 0;
                     right: 0;
@@ -578,10 +608,14 @@
 
             &:checked + label {
                 --primary-base-color: var(--black-color);
+
+                &::after {
+                    --checkmark-color: var(--black-color);
+                }
             }
 
             &:focus {
-                
+
                 + label {
                     &::after {
                         --checkmark-color: var(--black-color);
@@ -595,7 +629,7 @@
             color: var(--radio-label-color);
             text-transform: none;
             margin-right: 12px;
-            font-weight: 300;
+            font-weight: var(--fw-light);
             font-size: 13px;
         }
 
@@ -619,10 +653,80 @@
         align-items: center;
         margin: 0 42% 40px;
     }
+
+    &-StoreSwitcher {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        margin: 40px auto;
+        z-index: 12;
+
+        .LanguageSwitcher {
+            margin: 0;
+
+            button {
+                padding: 0 10px;
+            }
+        }
+
+        .WelcomeScreen {
+            &-Content {
+                margin: 0 auto;
+
+                h1, p {
+                    text-align: left;
+                }
+            }
+
+            &-ButtonsContainer {
+                .primary {
+                    margin-right: 10px;
+                }
+            }
+
+            &-Close {
+                top: 10px;
+                right: 0;
+                width: 30px;
+            }
+        }
+
+        .CountrySwitcher {
+            margin: 0;
+
+            &-CountryBtn {
+                margin: 0;
+                padding: 0;
+
+                &:after,
+                &:before {
+                    content: none;
+                }
+            }
+
+            .StoreSwitcherPopup {
+                &-Image {
+                    display: none;
+                }
+
+                &-Container {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    width: 100%;
+                    max-height: 100%;
+                    height: 100vh;
+                    z-index: 999;
+                }
+            }
+        }
+    }
 }
 
 .HeaderAccount {
-    &-PopUp { 
+    &-PopUp {
         .MyAccountOverlay {
             .MyAccountOverlay-Action {
                 .Form{
@@ -634,6 +738,34 @@
                                 }
                             }
                         }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.PageWrapper {
+    &_isArabic {
+        .MyAccountOverlay {
+            &-StoreSwitcher {
+                .WelcomeScreen {
+                    &-Content {
+                        h1, p {
+                            text-align: right;
+                        }
+                    }
+
+                    &-ButtonsContainer {
+                        .primary {
+                            margin-right: 0;
+                            margin-left: 10px;
+                        }
+                    }
+
+                    &-Close {
+                        right: auto;
+                        left: 0;
                     }
                 }
             }

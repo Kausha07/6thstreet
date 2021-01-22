@@ -27,7 +27,7 @@
             padding-left: 0;
             color: var(--black-color);
             font-size: 14px;
-            font-weight: 200;
+            font-weight: var(--fw-thin);
             letter-spacing: 0;
             line-height: 19px;
             text-align: right;
@@ -124,9 +124,8 @@
             .FieldSelect-Select {
                 border: none;
                 border-bottom: 1px solid var(--color-light-grey);
-                font-family: "Avenir Next Ultra Light";
                 font-size: 12px;
-                font-weight: bold;
+                font-weight: var(--fw-thin);
                 padding: 0 0 15px;
                 text-transform: capitalize;
             }
@@ -149,8 +148,7 @@
             background-color: var(--color-button-red);
             color: var(--color-white);
             font-size: 12px;
-            font-family: "Avenir Next Bold";
-            font-weight: bold;
+            font-weight: var(--fw-bold);
             letter-spacing: 0;
             line-height: 16px;
             text-align: center;
@@ -167,17 +165,21 @@
     border: 1px solid black;
     border-radius: 5px;
     display: flex;
-    font-family: "Avenir Next Regular";
     font-size: 14px;
-    font-weight: 100;
+    font-weight: var(--fw-light);
     height: 34px;
     justify-content: space-between;
-    letter-spacing: 0.5px;
+    letter-spacing: .5px;
+    margin-left: 10px;
+    padding: 10px;
+    position: fixed;
     text-transform: capitalize;
+    top: 61px;
     width: 106px;
+    z-index: 4;
 
     img {
-        width: 25%;
+        width: 17%;
     }
 
     @include tablet() {
@@ -199,7 +201,7 @@
         display: flex;
         align-items: center;
         font-size: 12px;
-        font-weight: 600;
+        font-weight: var(--fw-demi);
         letter-spacing: 1px;
         line-height: 16px;
     }
@@ -216,7 +218,7 @@
         &-Button {
             color: var(--primary-dark-color);
             font-size: 13px;
-            font-weight: bold;
+            font-weight: var(--fw-bold);
             height: auto;
             margin-left: 10px;
             padding: 0;
@@ -226,7 +228,7 @@
         &_isOpen {
             color: var(--primary-dark-color);
             font-size: 12px;
-            font-weight: bold;
+            font-weight: var(--fw-bold);
             position: absolute;
             right: 5px;
             text-transform: capitalize;
@@ -235,7 +237,11 @@
     }
 
     &-QuickCategories {
-        width: 100%;
+        width: 100vw;
+
+        @include desktop {
+            overflow: hidden;
+        }
     }
 
     .Field {
@@ -249,7 +255,7 @@
             width: 205px;
 
             &-Options {
-                font-family: 'Avenir Next Regular';
+                font-weight: var(--fw-regular);
                 font-size: 13px;
 
                 &::-webkit-scrollbar {
@@ -279,7 +285,7 @@
             }
 
             &-Select {
-                font-family: 'Avenir Next Regular';
+                font-weight: var(--fw-regular);
                 font-size: 13px;
                 padding-right: 15px;
             }
@@ -289,11 +295,25 @@
     &-ToolBar {
         display: flex;
         height: 60px;
-        padding: 7px 0 20px;
+        padding: 0 0 20px;
 
         @include mobile() {
             margin-left: 120px;
-            margin-top: -47px;
+            margin-top: -45px;
+            position: fixed;
+            top: 100px;
+            z-index: 3;
+
+            &:before {
+                background-color: var(--white);
+                content: '';
+                display: inline-block;
+                height: 55px;
+                left: 0;
+                margin-top: -10px;
+                position: fixed;
+                width: 100vw;
+            }
 
             &_isArabic {
                 margin-left: 0;
@@ -322,11 +342,11 @@
         font-size: 16px;
         margin-left: auto;
         margin-right: 0;
-        margin-top: 16px;
+        margin-top: 8px;
 
         span {
             font-size: 16px;
-            font-weight: 600;
+            font-weight: var(--fw-demi);
             margin-right: 5px;
         }
 

@@ -6,6 +6,7 @@ import { setCountry, setLanguage } from 'Store/AppState/AppState.action';
 import StoreCreditDispatcher from 'Store/StoreCredit/StoreCredit.dispatcher';
 import { getCountriesForSelect, getCountryLocaleForSelect } from 'Util/API/endpoint/Config/Config.format';
 import { Config } from 'Util/API/endpoint/Config/Config.type';
+import { URLS } from 'Util/Url/Url.config';
 
 import WelcomeScreen from './WelcomeScreen.component';
 
@@ -26,9 +27,14 @@ class WelcomeScreenContainer extends PureComponent {
         setLanguage: PropTypes.func.isRequired,
         setCountry: PropTypes.func.isRequired,
         updateStoreCredits: PropTypes.func.isRequired,
+        checkWizardLang: PropTypes.func,
         config: Config.isRequired,
         language: PropTypes.string.isRequired,
         country: PropTypes.string.isRequired
+    };
+
+    static defaultProps = {
+        checkWizardLang: () => {}
     };
 
     containerFunctions = {
@@ -37,16 +43,40 @@ class WelcomeScreenContainer extends PureComponent {
     };
 
     onCountrySelect(value) {
-        const { setCountry, updateStoreCredits } = this.props;
+        const { country, language } = this.props;
 
-        setCountry(value);
-        updateStoreCredits();
+        if (country) {
+            window.location.href = location.origin.replace(
+                country.toLowerCase(),
+                value,
+                location.href
+            );
+        } else {
+            const locale = `${language}-${value.toLowerCase()}`;
+
+            window.location.href = URLS[locale];
+        }
     }
 
     onLanguageSelect(value) {
-        const { setLanguage } = this.props;
+        const {
+            country,
+            language,
+            setLanguage,
+            checkWizardLang
+        } = this.props;
 
-        setLanguage(value);
+        if (language && country) {
+            window.location.href = location.origin.replace(
+                language.toLowerCase(),
+                value,
+                location.href
+            );
+        } else {
+            setLanguage(value);
+        }
+
+        checkWizardLang();
     }
 
     containerProps = () => {

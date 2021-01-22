@@ -8,25 +8,28 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
-import FieldMultiselect from 'Component/FiledMultiselect';
+import FieldMultiselect from 'Component/FieldMultiselect';
 import { Filter } from 'Util/API/endpoint/Product/Product.type';
-import isMobile from 'Util/Mobile';
 
 import './PLPFilter.style';
 
 class PLPFilter extends PureComponent {
     static propTypes = {
         filter: Filter.isRequired,
-        onSelect: PropTypes.func.isRequired,
         activeFilter: PropTypes.object,
         isChecked: PropTypes.bool,
+        defaultFilters: PropTypes.bool,
         currentActiveFilter: PropTypes.string,
-        changeActiveFilter: PropTypes.func.isRequired
+        changeActiveFilter: PropTypes.func.isRequired,
+        handleCallback: PropTypes.func.isRequired,
+        updateFilters: PropTypes.func.isRequired,
+        setDefaultFilters: PropTypes.func.isRequired
     };
 
     static defaultProps = {
         activeFilter: {},
         isChecked: false,
+        defaultFilters: false,
         currentActiveFilter: ''
     };
 
@@ -36,20 +39,29 @@ class PLPFilter extends PureComponent {
                 label,
                 category,
                 is_radio
-            }, onSelect,
+            },
             filter,
             activeFilter,
             isChecked,
             currentActiveFilter,
-            changeActiveFilter
+            changeActiveFilter,
+            handleCallback,
+            updateFilters,
+            setDefaultFilters,
+            defaultFilters
         } = this.props;
 
-        if (isMobile.any()) {
-            if (category === 'categories.level1') {
-                return null;
-            }
-        } else if (category === 'categories_without_path' || category === 'categories.level1') {
+        if (category === 'categories.level1') {
             return null;
+        }
+
+        if (category === 'categories_without_path') {
+            return (
+                <FieldMultiselect
+                  filter={ filter }
+                  isHidden
+                />
+            );
         }
 
         return (
@@ -57,12 +69,15 @@ class PLPFilter extends PureComponent {
               placeholder={ label }
               showCheckbox
               isRadio={ is_radio }
-              onChange={ onSelect }
               filter={ filter }
               activeFilter={ activeFilter }
               isChecked={ isChecked }
               currentActiveFilter={ currentActiveFilter }
               changeActiveFilter={ changeActiveFilter }
+              parentCallback={ handleCallback }
+              updateFilters={ updateFilters }
+              setDefaultFilters={ setDefaultFilters }
+              defaultFilters={ defaultFilters }
             />
         );
     }

@@ -22,10 +22,13 @@ import { changeNavigationState } from 'Store/Navigation/Navigation.action';
 import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
-import { DASHBOARD } from 'Type/Account';
+import StoreCreditDispatcher from 'Store/StoreCredit/StoreCredit.dispatcher';
+import { customerType } from 'Type/Account';
 import { HistoryType } from 'Type/Common';
 import { TotalsType } from 'Type/MiniCart';
+import { ClubApparelMember } from 'Util/API/endpoint/ClubApparel/ClubApparel.type';
 import { isSignedIn } from 'Util/Auth';
+import { checkProducts } from 'Util/Cart/Cart';
 import history from 'Util/History';
 import isMobile from 'Util/Mobile';
 import { appendWithStoreCode } from 'Util/Url';
@@ -41,7 +44,11 @@ export const mapStateToProps = (state) => ({
     totals: state.CartReducer.cartTotals,
     headerState: state.NavigationReducer[TOP_NAVIGATION_TYPE].navigationState,
     guest_checkout: state.ConfigReducer.guest_checkout,
-    isSignedIn: state.MyAccountReducer.isSignedIn
+    customer: state.MyAccountReducer.customer,
+    isSignedIn: state.MyAccountReducer.isSignedIn,
+    clubApparel: state.ClubApparelReducer.clubApparel,
+    isLoading: state.CartReducer.isLoading,
+    processingRequest: state.CartReducer.processingRequest
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -51,23 +58,38 @@ export const mapDispatchToProps = (dispatch) => ({
     ),
     showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
     showNotification: (type, message) => dispatch(showNotification(type, message)),
-    updateMeta: (meta) => dispatch(updateMeta(meta))
+    updateMeta: (meta) => dispatch(updateMeta(meta)),
+    updateStoreCredit: () => StoreCreditDispatcher.getStoreCredit(dispatch)
 });
 
 export class CartPageContainer extends PureComponent {
     static propTypes = {
         updateBreadcrumbs: PropTypes.func.isRequired,
+        updateStoreCredit: PropTypes.func.isRequired,
         changeHeaderState: PropTypes.func.isRequired,
         showOverlay: PropTypes.func.isRequired,
         showNotification: PropTypes.func.isRequired,
         updateMeta: PropTypes.func.isRequired,
-        guest_checkout: PropTypes.bool.isRequired,
+        guest_checkout: PropTypes.bool,
         history: HistoryType.isRequired,
         totals: TotalsType.isRequired,
-        tabMap: PropTypes.isRequired
+        customer: customerType,
+        isSignedIn: PropTypes.bool.isRequired,
+        processingRequest: PropTypes.bool,
+        clubApparel: ClubApparelMember
     };
 
-    state = { isEditing: false };
+    static defaultProps = {
+        customer: null,
+        clubApparel: {},
+        guest_checkout: true,
+        processingRequest: false
+    };
+
+    state = {
+        isEditing: false,
+        clubApparelMember: null
+    };
 
     containerFunctions = {
         onCheckoutButtonClick: this.onCheckoutButtonClick.bind(this),
@@ -95,14 +117,25 @@ export class CartPageContainer extends PureComponent {
     }
 
     static getDerivedStateFromProps(props, state) {
+        const { totals: { items = [] } } = props;
+
+        if (items.length !== 0) {
+            const mappedItems = checkProducts(items) || [];
+
+            return {
+                ...MyAccountContainer.navigateToSelectedTab(props, state),
+                isCheckoutAvailable: mappedItems.length === 0
+            };
+        }
+
         return MyAccountContainer.navigateToSelectedTab(props, state);
     }
 
     componentDidMount() {
-        const { updateMeta } = this.props;
+        const { updateMeta, updateStoreCredit } = this.props;
 
         updateMeta({ title: __('Cart') });
-
+        updateStoreCredit();
         this._updateBreadcrumbs();
         this._changeHeaderState();
     }
@@ -148,46 +181,49 @@ export class CartPageContainer extends PureComponent {
             showOverlay,
             showNotification
         } = this.props;
+        const { isCheckoutAvailable } = this.state;
 
+        if (isCheckoutAvailable) {
         // to prevent outside-click handler trigger
-        e.nativeEvent.stopImmediatePropagation();
+            e.nativeEvent.stopImmediatePropagation();
 
-        if (guest_checkout) {
-            history.push({
-                pathname: appendWithStoreCode(CHECKOUT_URL)
-            });
+            if (guest_checkout) {
+                history.push({
+                    pathname: appendWithStoreCode(CHECKOUT_URL)
+                });
 
-            return;
+                return;
+            }
+
+            if (isSignedIn()) {
+                history.push({
+                    pathname: appendWithStoreCode(CHECKOUT_URL)
+                });
+
+                return;
+            }
+
+            // fir notification whatever device that is
+            showNotification('info', __('Please sign-in to complete checkout!'));
+
+            if (isMobile.any()) { // for all mobile devices, simply switch route
+                history.push({ pathname: appendWithStoreCode('/my-account') });
+                return;
+            }
+
+            // for desktop, just open customer overlay
+            showOverlay(CUSTOMER_ACCOUNT_OVERLAY_KEY);
+        } else {
+            showNotification('error', __('Some products or selected quantities are no longer available'));
         }
-
-        if (isSignedIn()) {
-            history.push({
-                pathname: appendWithStoreCode(CHECKOUT_URL)
-            });
-
-            return;
-        }
-
-        // fir notification whatever device that is
-        showNotification('info', __('Please sign-in to complete checkout!'));
-
-        if (isMobile.any()) { // for all mobile devices, simply switch route
-            history.push({ pathname: appendWithStoreCode('/my-account') });
-            return;
-        }
-
-        // for desktop, just open customer overlay
-        showOverlay(CUSTOMER_ACCOUNT_OVERLAY_KEY);
     }
 
     _updateBreadcrumbs() {
         const { updateBreadcrumbs } = this.props;
-        const { activeTab } = this.state;
-        const { url, name } = tabMap[activeTab];
 
         updateBreadcrumbs([
-            { url: `${ MY_ACCOUNT_URL }${ url }`, name },
-            { name: __('My Account'), url: `${ MY_ACCOUNT_URL }/${ DASHBOARD }` }
+            { url: '', name: __('My bag') },
+            { name: __('Home'), url: '/' }
         ]);
     }
 

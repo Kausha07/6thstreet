@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import MyAccountOverlay from 'Component/MyAccountOverlay';
+import { customerType } from 'Type/Account';
 import { isArabic } from 'Util/App';
-import { isSignedIn } from 'Util/Auth';
 import history from 'Util/History';
 
 import './LoginBlock.style';
@@ -10,17 +11,23 @@ import './LoginBlock.style';
 class LoginBlock extends PureComponent {
     static propTypes = {
         isSignedIn: PropTypes.bool.isRequired,
-        name: PropTypes.string
-    };
-
-    static defaultProps = {
-        name: 'Guest'
+        customer: customerType.isRequired
     };
 
     state = {
         isOpen: true,
-        isArabic: isArabic()
+        isArabic: isArabic(),
+        showPopup: false,
+        registerField: false
     };
+
+    componentDidMount() {
+        const { customer = {} } = this.props;
+
+        if (Object.keys(customer).length !== 0) {
+            this.handleDismiss();
+        }
+    }
 
     handleDismiss = () => {
         this.setState({
@@ -33,7 +40,7 @@ class LoginBlock extends PureComponent {
     renderBlock() {
         const { isOpen } = this.state;
 
-        if (!isOpen || isSignedIn()) {
+        if (!isOpen) {
             return null;
         }
 
@@ -55,15 +62,18 @@ class LoginBlock extends PureComponent {
     }
 
     renderHeader() {
-        const { isSignedIn, name } = this.props;
+        const { isSignedIn, customer: { firstname, lastname } } = this.props;
+
         if (isSignedIn) {
             return (
                 <div>
                     <h3 mix={ { block: 'LoginBlock', elem: 'Header' } }>
-                        { `Welcome, ${name}` }
+                        { firstname && lastname
+                            ? `${__('Welcome') }, ${ firstname } ${ lastname}`
+                            : __('Welcome') }
                     </h3>
                     <span mix={ { block: 'LoginBlock', elem: 'SubHeader' } }>
-                        Customize your shopping experience
+                        { __('Customize your shopping experience') }
                     </span>
                 </div>
             );
@@ -73,9 +83,42 @@ class LoginBlock extends PureComponent {
             <div>
                 <h3 mix={ { block: 'LoginBlock', elem: 'Header' } }>Let&apos;s get personal</h3>
                 <span mix={ { block: 'LoginBlock', elem: 'SubHeader' } }>
-                    Sign in for a tailored shopping experience
+                    { __('Sign in for a tailored shopping experience') }
                 </span>
             </div>
+        );
+    }
+
+    closePopup = () => {
+        this.setState({ showPopup: false, registerField: false });
+    };
+
+    showPopup = () => {
+        this.setState({ showPopup: true, registerField: false });
+    };
+
+    showRegisterPopup = () => {
+        this.setState({ showPopup: true, registerField: true });
+    };
+
+    setRegisterFieldFalse = () => {
+        this.setState({ registerField: false });
+    };
+
+    renderMyAccountPopup() {
+        const { showPopup, registerField } = this.state;
+
+        if (!showPopup) {
+            return null;
+        }
+
+        return (
+            <MyAccountOverlay
+              setRegisterFieldFalse={ this.setRegisterFieldFalse }
+              registerField={ registerField }
+              closePopup={ this.closePopup }
+              isPopup
+            />
         );
     }
 
@@ -86,8 +129,11 @@ class LoginBlock extends PureComponent {
         if (isSignedIn) {
             return (
                 <div mix={ { block: 'LoginBlock', elem: 'ButtonContainer' } }>
-                    <button mix={ { block: 'LoginBlock', elem: 'Button primary' } }>
-                        My account
+                    <button
+                      mix={ { block: 'LoginBlock', elem: 'Button primary' } }
+                      onClick={ this.routeChangeAccount }
+                    >
+                        { __('My account') }
                     </button>
                 </div>
             );
@@ -96,17 +142,18 @@ class LoginBlock extends PureComponent {
         return (
             <div mix={ { block: 'LoginBlock', elem: 'ButtonContainer' } }>
                 <button
-                  onClick={ this.routeChangeAccount }
+                  onClick={ this.showRegisterPopup }
                   mix={ { block: 'LoginBlock', elem: 'CreateButton secondary', mods: { isArabic } } }
                 >
-                    Create Account
+                    { __('Create Account') }
                 </button>
                 <button
-                  onClick={ this.routeChangeAccount }
+                  onClick={ this.showPopup }
                   mix={ { block: 'LoginBlock', elem: 'LoginButton primary', mods: { isArabic } } }
                 >
-                    Sign in
+                    { __('Sign in') }
                 </button>
+                { this.renderMyAccountPopup() }
             </div>
         );
     }

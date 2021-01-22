@@ -3,14 +3,13 @@ import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { HistoryType } from 'Type/Common';
+import { HistoryType, LocationType } from 'Type/Common';
 
 import HeaderSearch from './HeaderSearch.component';
 
 export const mapStateToProps = (_state) => ({
     // wishlistItems: state.WishlistReducer.productsInWishlist
 });
-
 export const mapDispatchToProps = (_dispatch) => ({
     // addProduct: options => CartDispatcher.addProductToCart(dispatch, options)
 });
@@ -18,7 +17,8 @@ export const mapDispatchToProps = (_dispatch) => ({
 export class HeaderSearchContainer extends PureComponent {
     static propTypes = {
         search: PropTypes.string,
-        history: HistoryType.isRequired
+        history: HistoryType.isRequired,
+        location: LocationType.isRequired
     };
 
     static defaultProps = {
@@ -31,8 +31,18 @@ export class HeaderSearchContainer extends PureComponent {
 
     containerFunctions = {
         onSearchChange: this.onSearchChange.bind(this),
-        onSearchSubmit: this.onSearchSubmit.bind(this)
+        onSearchSubmit: this.onSearchSubmit.bind(this),
+        onSearchClean: this.onSearchClean.bind(this)
     };
+
+    componentDidUpdate(prevProps) {
+        const { location: { pathname: prevPathname } } = prevProps;
+        const { pathname } = location;
+
+        if (pathname !== prevPathname && pathname !== '/catalogsearch/result/') {
+            this.onSearchChange('');
+        }
+    }
 
     containerProps = () => {
         const { search } = this.state;
@@ -49,6 +59,10 @@ export class HeaderSearchContainer extends PureComponent {
         history.push(`/catalogsearch/result/?q=${ search }`);
     }
 
+    onSearchClean() {
+        this.setState({ search: '' });
+    }
+
     render() {
         return (
             <HeaderSearch
@@ -59,6 +73,4 @@ export class HeaderSearchContainer extends PureComponent {
     }
 }
 
-export default withRouter(
-    connect(mapStateToProps, mapDispatchToProps)(HeaderSearchContainer)
-);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(HeaderSearchContainer));

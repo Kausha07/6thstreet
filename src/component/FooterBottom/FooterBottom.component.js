@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { withRouter } from 'react-router';
 
+import Link from 'Component/Link';
 import { TYPE_CATEGORY, TYPE_CMS_PAGE, TYPE_PRODUCT } from 'Route/UrlRewrites/UrlRewrites.config';
 
 import './FooterBottom.style';
@@ -59,10 +60,11 @@ class FooterBottom extends PureComponent {
     renderCopyright() {
         return (
         <div block="FooterBottom" elem="Copyright">
-            Copyright &#169;&nbsp;
+            { __('Copyright') }
+            &#169;&nbsp;
             { this.getCurrentYear() }
             &nbsp;
-            6TH STREET. All rights reserved.
+            { __('6TH STREET. All rights reserved.') }
         </div>
         );
     }
@@ -70,11 +72,11 @@ class FooterBottom extends PureComponent {
     renderHyperlinks() {
         return (
         <div block="FooterBottom" elem="Hyperlinks">
-            <a href="cookie">COOKIE POLICY</a>
+            <Link to="/shipping-policy">{ __('shipping') }</Link>
             /
-            <a href="terms">TERMS &amp; CONDITIONS</a>
+            <Link to="/return-information">{ __('returns') }</Link>
             /
-            <a href="privacy-policy">Privacy</a>
+            <Link to="/faq">{ __('FAQs') }</Link>
         </div>
         );
     }

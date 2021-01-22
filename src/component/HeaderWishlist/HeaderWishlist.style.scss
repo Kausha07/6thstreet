@@ -32,7 +32,7 @@
 
             &-Count {
                 display: none;
-                
+
                 &_have {
                     color: $white;
                     display: inline-block;
@@ -52,19 +52,17 @@
         display: none;
     }
 
-    &_isBottomBar{
-        width: 20%;
+    &_isBottomBar {
         display: block;
         text-transform: none;
         font-size: 10px;
-        font-weight: 500;
+        font-weight: var(--fw-medium);
         letter-spacing: -0.2px;
         line-height: 14px;
-        text-align: center;
         color: var(--inactive-button-header-color);
         height: 40px;
         width: 40px;
-        margin: 10px auto 0;
+        margin: 12px auto 0;
         padding: 0;
         text-align: center;
 
@@ -73,10 +71,10 @@
         }
 
         &::before{
-            content: "";
+            content: '';
             right: 0;
-            background: url(./icons/wishlist-gray@2x.png) no-repeat;
-            background-size: 27px;
+            background: url(./icons/wishlist-gray@2x.png) no-repeat center center;
+            background-size: 24px;
             width: 27px;
             height: 29px;
             display: inline-block;

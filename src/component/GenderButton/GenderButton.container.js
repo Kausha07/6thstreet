@@ -7,7 +7,7 @@ import { setGender } from 'Store/AppState/AppState.action';
 import GenderButton from './GenderButton.component';
 
 export const mapStateToProps = (state) => ({
-    currentGender: state.AppState.gender
+    currentContentGender: state.AppState.gender
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -18,7 +18,12 @@ export class GenderButtonContainer extends PureComponent {
     static propTypes = {
         onClick: PropTypes.func,
         setGender: PropTypes.func.isRequired,
-        currentGender: PropTypes.string.isRequired,
+        currentContentGender: PropTypes.string.isRequired,
+        changeMenuGender: PropTypes.func,
+        isCurrentGender: PropTypes.bool.isRequired,
+        getNewActiveMenuGender: PropTypes.func.isRequired,
+        handleUnsetStyle: PropTypes.func.isRequired,
+        isUnsetStyle: PropTypes.bool.isRequired,
         gender: PropTypes.shape({
             label: PropTypes.string,
             key: PropTypes.string
@@ -26,32 +31,30 @@ export class GenderButtonContainer extends PureComponent {
     };
 
     static defaultProps = {
-        onClick: () => {}
+        onClick: () => {},
+        changeMenuGender: () => {}
     };
 
     containerFunctions = {
-        onGenderClick: this.onGenderClick.bind(this)
+        onGenderClick: this.onGenderClick.bind(this),
+        onGenderEnter: this.onGenderEnter.bind(this),
+        onGenderLeave: this.onGenderLeave.bind(this)
     };
 
     containerProps = () => {
         const {
-            gender: { label }
+            gender: { label, key },
+            isCurrentGender,
+            isUnsetStyle
         } = this.props;
 
         return {
-            isCurrentGender: this.getIsCurrentGender(),
-            label
+            label,
+            urlKey: key,
+            isCurrentGender,
+            isUnsetStyle
         };
     };
-
-    getIsCurrentGender() {
-        const {
-            currentGender,
-            gender: { key }
-        } = this.props;
-
-        return currentGender === key;
-    }
 
     onGenderClick() {
         const {
@@ -62,6 +65,25 @@ export class GenderButtonContainer extends PureComponent {
 
         setGender(key);
         onClick(key);
+    }
+
+    onGenderEnter() {
+        const {
+            gender: { key },
+            changeMenuGender,
+            getNewActiveMenuGender,
+            handleUnsetStyle
+        } = this.props;
+
+        getNewActiveMenuGender(key);
+        changeMenuGender(key);
+        handleUnsetStyle(true);
+    }
+
+    onGenderLeave() {
+        const { handleUnsetStyle, changeMenuGender, currentContentGender } = this.props;
+        changeMenuGender(currentContentGender);
+        handleUnsetStyle(false);
     }
 
     render() {

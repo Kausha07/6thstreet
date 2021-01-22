@@ -1,0 +1,123 @@
+.CheckoutAddressBook {
+    &-Wrapper {
+        @include desktop {
+            background: var(--white);
+            padding-top: 20px;
+        }
+    }
+
+    .MyAccountAddressTable {
+        @include desktop {
+            width: 60%;
+            padding: 14px 30px;
+        }
+
+        .MyAccountAddressCard {
+            height: 122px;
+        }
+    }
+
+    &-CustomAddressWrapper {
+        background: var(--white);
+
+        .FieldForm {
+            margin-top: 20px;
+
+            .Field {
+                &:first-child {
+                    display: none;
+                }
+            }
+        }
+
+        @include before-desktop {
+            display: flex;
+            justify-content: center;
+        }
+
+        .button {
+            font-size: 13px;
+            font-weight: var(--fw-bold);
+            margin: 20px 30px 30px;
+
+            @include before-desktop {
+                border: none;
+                border-radius: 7px;
+                background: var(--my-acc-background);
+                color: var(--black);
+                font-weight: var(--fw-regular);
+                text-transform: capitalize;
+                min-width: 140px;
+                margin-top: 38px;
+
+                &:hover {
+                    background: var(--my-acc-background);
+                }
+            }
+        }
+    }
+
+    .CheckoutAddressBookSlider {
+        @include before-desktop {
+            transform: translateX(-50%);
+            position: relative;
+            left: 45%;
+            width: 80%;
+            margin-top: 2%;
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+            margin-bottom: 2%;
+        }
+
+        &-Wrapper {
+            overflow: hidden;
+            width: 92.6vw;
+
+            &_isCustomAddressExpanded {
+                display: none;
+            }
+        }
+
+        &-MobileSlider {
+            width: 80%;
+            overflow: visible;
+
+            &_isArabic {
+                direction: ltr;
+            }
+        }
+    }
+
+    .Slider {
+        .MyAccountAddressTable {
+            margin-right: 6%;
+            width: 95%;
+            height: 122px;
+            text-align: center;
+            overflow: hidden;
+            white-space: normal;
+
+            .MyAccountAddressCard {
+                height: 122px;
+
+                &::after {
+                    border: none;
+                }
+            }
+        }
+    }
+
+    &_isBilling {
+        .CheckoutAddressForm {
+            .FieldForm {
+                &-Fields {
+                    .Field {
+                        &:first-child {
+                            display: none;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

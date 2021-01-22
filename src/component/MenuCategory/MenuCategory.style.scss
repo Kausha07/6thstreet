@@ -3,71 +3,124 @@
 }
 
 .MenuCategory {
-    font-weight: 200;
+    font-weight: var(--fw-demi);
     padding: 0;
     position: unset;
+    letter-spacing: 1.3px;
 
     &:before {
         content: none;
     }
 
-    &:nth-child(n+8) {
-        display: none;
-    }
-
     @include before-desktop {
+        border: solid var(--white);
+        border-width: 7px 0;
         color: var(--black);
-        font-family: "Avenir Next Thin", serif;
         font-size: 13px;
-        font-weight: 600;
+        font-weight: var(--fw-demi);
         line-height: 45px;
-        margin: 15px 0;
         text-indent: 20px;
         text-transform: uppercase;
-        width: 100%;
-        overflow-y: scroll;
+        width: 34%;
+
+        button {
+            transition-duration: 0s;
+        }
+
+        &-CategoryButton {
+            font-size: calc(9px + 1vw);
+            font-weight: var(--fw-normal);
+            margin-left: -20px;
+            padding: 0 3vw;
+            text-align: left;
+            width: 100%;
+        }
 
         &:first-child {
-            margin-top: 0;
-            color: var(--gold);
-
-            &:hover {
-                background-color: var(--gold);
-                color: var(--white);
-
-                .MenuCategory-CategoryLabel {
-                    background: none;
+            .MenuCategory {
+                &-CategoryButton {
+                    color: var(--gold);
+                    margin-top: 0;
                 }
             }
         }
 
-        &:nth-last-child(2) {
-            color: var(--red);
-
-            &:hover {
-                background: none;
-                color: var(--white);
-
-                .MenuCategory-CategoryLabel {
-                    background-color: var(--red);
+        &:last-child {
+            .MenuCategory {
+                &-CategoryButton {
+                    color: var(--red);
                 }
             }
         }
 
-        &:hover {
-            color: var(--white);
-            font-family: 'Avenir Next Semi Bold', sans-serif;
-            font-weight: 1000;
+        &_isDefaultCategoryOpen {
+            &:first-child {
+                .MenuCategory {
+                    &-CategoryButton {
+                        background-color: var(--gold);
+                        color: var(--white);
+                        font-weight: var(--fw-bold);
+                    }
+                }
+            }
 
-            .MenuCategory-CategoryLabel {
-                background-color: var(--black);
-                width: 38%;
+            .MenuCategory {
+                &-CategoryButton {
+                    color: var(--white);
+                    font-size: 15px;
+                }
+            }
+
+            .DynamicContent {
+                font-weight: var(--fw-regular);
+            }
+
+            .ViewAll-Button {
+                font-weight: var(--fw-bold);
+            }
+        }
+
+        &_isVisible {
+            .MenuCategory {
+                &-CategoryButton {
+                    background-color: var(--black);
+                    color: var(--white);
+                    font-weight: var(--fw-bold);
+                    font-size: 15px;
+                    transition-duration: 0s;
+                }
+            }
+
+            .DynamicContent {
+                font-weight: var(--fw-regular);
+            }
+
+            &:first-child {
+                .MenuCategory {
+                    &-CategoryButton {
+                        color: var(--white);
+                        background-color: var(--gold);
+                    }
+                }
+            }
+
+            &:last-child {
+                .MenuCategory {
+                    &-CategoryButton {
+                        background-color: var(--red);
+                        color: var(--white);
+                    }
+                }
+            }
+
+            .ViewAll-Button {
+                font-weight: var(--fw-bold);
             }
         }
 
         .DynamicContentBanner {
             background-color: transparent;
-            margin: 0;
+            margin: 10px;
 
             a {
                 display: flex;
@@ -86,21 +139,49 @@
         }
 
         .DynamicContent {
+            background-color: var(--white);
             border-left: 1px solid var(--light-gray);
-            background-color: $white;
-            left: 38%;
+            height: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
             position: absolute;
-            top: 0;
-            width: 63%;
+            width: 100%;
             z-index: 5;
-            height: 100vh;
-            padding: 0 20px 0 10px;
+
+            &-Wrapper {
+                height: calc(100% - 140px - 83px);;
+                width: 66%;
+                top: 140px;
+                left: 33%;
+                position: fixed;
+            }
+
+            .MenuBrands {
+                &-ContentWrapper {
+                    font-weight: var(--fw-bold);
+                }
+            }
         }
 
         &_isArabic {
+            .MenuCategory-CategoryButton {
+                text-align: right;
+                margin-right: -20px;
+            }
+
             .DynamicContent {
-                left: 10px;
-                top: 130px;
+                border-left: 0;
+                border-right: 1px solid var(--light-gray);
+
+                &-Wrapper {
+                    left: 0;
+                }
+            }
+
+            .ViewAll {
+                &-Button {
+                    padding-left: 20px;
+                }
             }
         }
     }
@@ -109,8 +190,18 @@
         padding: 0 15px;
         z-index: 3;
 
-        &:first-child {
-            padding-left: 30px;
+        &:nth-child(1) {
+            padding-left: 0;
+        }
+
+        &-CategoryLink {
+            &:hover {
+                text-decoration: none;
+            }
+
+            &-Label {
+                color: var(--white);
+            }
         }
 
         .DynamicContent {
@@ -119,20 +210,19 @@
             height: 390px;
             pointer-events: all;
             position: absolute;
-            width: 100vw;
-            max-width: 1410px;
-            left: 30px;
+            width: 97vw;
+            max-width: 1440px;
+            left: 0;
 
             &:after {
-                width: 100%;
+                background: rgba(0, 0, 0, .7);
+                content: ' ';
                 height: 100%;
-                background: rgba(0, 0, 0, 0.7);
-                position: fixed;
                 left: 0;
-                content: ".";
-                color: transparent;
-                z-index: -1;
                 pointer-events: none;
+                position: fixed;
+                width: 100%;
+                z-index: -1;
             }
 
             & > div {
@@ -140,14 +230,14 @@
             }
 
             .DynamicContentBanner {
-                display: block;
-                order: 2;
                 background-color: transparent;
                 border-right: 0;
+                display: block;
+                order: 2;
 
                 .Image {
-                    height: 300px;
-                    width: 300px;
+                    height: 290px;
+                    width: auto;
                 }
             }
 
@@ -164,8 +254,35 @@
             }
         }
 
-        &:nth-last-child(2) {
+        &:last-child {
             text-transform: uppercase;
+
+            .MenuCategory {
+                &-CategoryLink {
+                    text-decoration: none;
+
+                    &-Label {
+                        &::before {
+                            background-color: var(--red);
+                            color: transparent;
+                            transform: skew(-15deg, 0deg) translate(-10px, 0px);
+                            content: '';
+                            width: calc(100% + 20px);
+                            height: 100%;
+                            position: absolute;
+                            z-index: -1;
+                        }
+                    }
+                }
+
+                &_isArabic {
+                    .MenuCategory {
+                        &::before {
+                            transform: skew(-15deg, 0deg) translate(10px, 0px);
+                        }
+                    }
+                }
+            }
 
             .DynamicContent {
                 background-color: var(--red);
@@ -177,6 +294,7 @@
                                 color: var(--white);
                             }
                         }
+
                         span {
                             color: var(--white);
                         }
@@ -203,27 +321,26 @@
             width: 70px;
 
             &_isArabic {
-                background-color: var(--red);
                 color: transparent;
                 margin-right: -90px;
                 transform: skew(-15deg, 0deg);
                 width: 85px;
+                margin-left: 0;
             }
         }
 
         &:hover {
             cursor: default;
-            font-weight: bold;
+            font-weight: var(--fw-bold);
             height: 40px;
+            letter-spacing: 1px;
         }
 
         &_isArabic {
-            padding: 0 10px;
-
             .DynamicContent {
                 left: unset;
-                max-width: 1410px;
-                right: 30px;
+                max-width: 1440px;
+                right: -5px;
 
                 & > div {
                     border-left: 1px solid var(--light-gray);
@@ -242,7 +359,26 @@
 
             &:first-child {
                 padding-left: 10px;
-                padding-right: 30px;
+            }
+        }
+    }
+}
+
+.PageWrapper {
+    &_isArabic {
+        .MenuCategory {
+            @include desktop {
+                &:last-child {
+                    .MenuCategory {
+                        &-CategoryLink {
+                            &-Label {
+                                &::before {
+                                    transform: skew(-15deg, 0deg) translate(10px, 0px);
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }

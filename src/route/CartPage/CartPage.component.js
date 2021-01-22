@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 /**
  * @category  6thstreet
  * @author    Alona Zvereva <alona.zvereva@scandiweb.com>
@@ -14,17 +15,22 @@ import CmsBlock from 'Component/CmsBlock';
 import ContentWrapper from 'Component/ContentWrapper';
 import ExpandableContent from 'Component/ExpandableContent';
 import Link from 'Component/Link';
+import Loader from 'Component/Loader';
 import MyAccountTabList from 'Component/MyAccountTabList';
+import { getFinalPrice } from 'Component/Price/Price.config';
 import ProductLinks from 'Component/ProductLinks';
 import { tabMap } from 'Route/MyAccount/MyAccount.container';
 import { CROSS_SELL } from 'Store/LinkedProducts/LinkedProducts.reducer';
 import {
     activeTabType
 } from 'Type/Account';
+import { HistoryType } from 'Type/Common';
 import { TotalsType } from 'Type/MiniCart';
-import { isArabic } from 'Util/App';
-import { formatCurrency, roundPrice } from 'Util/Price';
+import { ClubApparelMember } from 'Util/API/endpoint/ClubApparel/ClubApparel.type';
+import { getCurrency, getDiscountFromTotals, isArabic } from 'Util/App';
+import isMobile from 'Util/Mobile';
 
+import ClubApparel from './icons/club-apparel.png';
 import Delivery from './icons/delivery-truck.png';
 
 import './CartPage.style';
@@ -34,15 +40,26 @@ export class CartPage extends PureComponent {
         totals: TotalsType.isRequired,
         onCheckoutButtonClick: PropTypes.func.isRequired,
         activeTab: activeTabType.isRequired,
-        changeActiveTab: PropTypes.func.isRequired
+        changeActiveTab: PropTypes.func.isRequired,
+        clubApparel: ClubApparelMember,
+        isSignedIn: PropTypes.bool.isRequired,
+        isLoading: PropTypes.bool.isRequired,
+        isCheckoutAvailable: PropTypes.bool.isRequired,
+        processingRequest: PropTypes.bool,
+        history: HistoryType.isRequired
     };
 
     state = {
         isArabic: isArabic()
     };
 
+    static defaultProps = {
+        clubApparel: {},
+        processingRequest: false
+    };
+
     renderCartItems() {
-        const { totals: { items, quote_currency_code } } = this.props;
+        const { totals: { items = [], quote_currency_code } } = this.props;
 
         if (!items || items.length < 1) {
             return (
@@ -58,7 +75,7 @@ export class CartPage extends PureComponent {
                       item={ item }
                       currency_code={ quote_currency_code }
                       isEditing
-                      isLikeTable
+                      isCartPage
                     />
                 )) }
             </ul>
@@ -82,47 +99,73 @@ export class CartPage extends PureComponent {
         );
     }
 
-    renderPriceLine(price) {
-        const { totals: { quote_currency_code } } = this.props;
-        return `${formatCurrency(quote_currency_code)}${roundPrice(price)}`;
-    }
+    renderPriceLine(price, name, mods, allowZero = false) {
+        if (!price && !allowZero) {
+            return null;
+        }
 
-    renderTotalDetails(isMobile = false) {
+        const { totals: { currency_code = getCurrency() } } = this.props;
+        const finalPrice = getFinalPrice(price, currency_code);
+
         return (
-            <dl
-              block="CartPage"
-              elem="TotalDetails"
-              aria-label={ __('Order total details') }
-              mods={ { isMobile } }
-            >
-                <dt>{ __('Subtotal') }</dt>
-                <dt>{ __('(Taxes included)') }</dt>
-            </dl>
+            <li block="CartPage" elem="SummaryItem" mods={ mods }>
+                <strong block="CartPage" elem="Text">
+                    { name }
+                </strong>
+                <strong block="CartPage" elem="Price">
+                    { `${ parseFloat(price) || price === 0 ? currency_code : '' } ${ finalPrice }` }
+                </strong>
+            </li>
         );
     }
 
     renderTotal() {
         const {
             totals: {
-                subtotal_incl_tax = 0
+                coupon_code: couponCode,
+                discount,
+                subtotal = 0,
+                total = 0,
+                currency_code = getCurrency(),
+                total_segments: totals = []
             }
         } = this.props;
+        const grandTotal = getFinalPrice(total, currency_code);
+        const subTotal = getFinalPrice(subtotal, currency_code);
 
         return (
-            <dl block="CartPage" elem="Total" aria-label="Complete order total">
-                <dd>{ this.renderPriceLine(subtotal_incl_tax) }</dd>
-            </dl>
+            <div block="CartPage" elem="OrderTotals">
+                <ul>
+                    <div block="CartPage" elem="Subtotals">
+                        { this.renderPriceLine(subTotal, __('Subtotal')) }
+                        { couponCode && this.renderPriceLine(
+                            discount,
+                            __('Discount (%s)', couponCode)
+                        ) }
+                        { this.renderPriceLine(
+                            getDiscountFromTotals(totals, 'tax'),
+                            __('Tax')
+                        ) }
+                    </div>
+                    <div block="CartPage" elem="Totals">
+                        { this.renderPriceLine(grandTotal, __('Total'), {}, true) }
+                    </div>
+                </ul>
+            </div>
         );
     }
 
     renderButtons() {
-        const { onCheckoutButtonClick } = this.props;
+        const { onCheckoutButtonClick, isCheckoutAvailable } = this.props;
+
+        const isDisabled = !isCheckoutAvailable;
 
         return (
             <div block="CartPage" elem="CheckoutButtons">
                 <button
                   block="CartPage"
                   elem="CheckoutButton"
+                  mods={ { isDisabled } }
                   mix={ { block: 'Button' } }
                   onClick={ onCheckoutButtonClick }
                 >
@@ -143,7 +186,6 @@ export class CartPage extends PureComponent {
     renderTotals() {
         return (
             <article block="CartPage" elem="Summary">
-                { this.renderTotalDetails() }
                 { this.renderTotal() }
                 { this.renderButtons() }
             </article>
@@ -184,6 +226,8 @@ export class CartPage extends PureComponent {
 
     renderPromoContent() {
         const { cart_content: { cart_cms } = {} } = window.contentConfiguration;
+        const { totals: { currency_code, avail_free_shipping_amount } } = this.props;
+        const { isArabic } = this.state;
 
         if (cart_cms) {
             return <CmsBlock identifier={ cart_cms } />;
@@ -194,10 +238,10 @@ export class CartPage extends PureComponent {
               block="CartPage"
               elem="PromoBlock"
             >
-                <figcaption block="CartPage" elem="PromoText">
+                <figcaption block="CartPage" elem="PromoText" mods={ { isArabic } }>
                     <img src={ Delivery } alt="Delivery icon" />
                     { __('Add ') }
-                    <span>AED 200 </span>
+                    <span>{ `${currency_code } ${avail_free_shipping_amount} ` }</span>
                     { __('more to your cart for ') }
                     <span>{ __('Free delivery') }</span>
                 </figcaption>
@@ -205,8 +249,85 @@ export class CartPage extends PureComponent {
         );
     }
 
-    renderPromo() {
+    renderClubApparelContent() {
+        const { cart_content: { cart_cms } = {} } = window.contentConfiguration;
+        const {
+            totals: {
+                currency_code,
+                extension_attributes: {
+                    club_apparel_estimated_pointsvalue
+                }
+            },
+            clubApparel: {
+                accountLinked
+            },
+            isSignedIn
+        } = this.props;
+        const { isArabic } = this.state;
+
+        if (cart_cms) {
+            return <CmsBlock identifier={ cart_cms } />;
+        }
+
+        if (accountLinked && isSignedIn) {
+            return (
+                <div
+                  block="CartPage"
+                  elem="ClubApparelBlock"
+                  mods={ { isArabic } }
+                >
+                    <img src={ ClubApparel } alt="Delivery icon" />
+                    <div block="CartPage" elem="ClubApparelText">
+                        { __('You may earn ') }
+                        <span>{ `${currency_code } ${club_apparel_estimated_pointsvalue} ` }</span>
+                        { __('worth of Club Apparel points for this purchase.') }
+                    </div>
+                </div>
+            );
+        }
+
+        if (!accountLinked && isSignedIn) {
+            return (
+                <div
+                  block="CartPage"
+                  elem="ClubApparelBlock"
+                >
+                    <img src={ ClubApparel } alt="Delivery icon" />
+                    <div block="CartPage" elem="ClubApparelText">
+                        { __('Link your Club Apparel account to earn ') }
+                        <span>{ `${currency_code } ${club_apparel_estimated_pointsvalue} ` }</span>
+                        { __('worth of points for this purchase. ') }
+                        <Link
+                          block="CartPage"
+                          elem="ClubApparelLink"
+                          to="/my-account/club-apparel"
+                        >
+                            { __('Link now') }
+                        </Link>
+                    </div>
+                </div>
+            );
+        }
+
         return (
+            <div
+              block="CartPage"
+              elem="ClubApparelBlock"
+            >
+                <img src={ ClubApparel } alt="Delivery icon" />
+                <div block="CartPage" elem="ClubApparelText">
+                    { __('Link your Club Apparel account to earn ') }
+                    <span>{ `${currency_code } ${club_apparel_estimated_pointsvalue} ` }</span>
+                    { __('worth of points for this purchase.') }
+                </div>
+            </div>
+        );
+    }
+
+    renderPromo() {
+        const { totals: { avail_free_shipping_amount } } = this.props;
+
+        return !avail_free_shipping_amount || avail_free_shipping_amount === 0 ? null : (
             <div
               block="CartPage"
               elem="Promo"
@@ -216,13 +337,71 @@ export class CartPage extends PureComponent {
         );
     }
 
+    renderClubApparel() {
+        const { totals: { extension_attributes } } = this.props;
+
+        if (extension_attributes) {
+            const { club_apparel_estimated_pointsvalue } = extension_attributes;
+
+            return club_apparel_estimated_pointsvalue !== 0 ? (
+                <div
+                  block="CartPage"
+                  elem="ClubApparel"
+                >
+                    { this.renderClubApparelContent() }
+                </div>
+            ) : null;
+        }
+
+        return null;
+    }
+
+    renderItemSuffix() {
+        const { totals: { items = [] } } = this.props;
+
+        const itemQuantityArray = items.map((item) => item.qty);
+        const totalQuantity = itemQuantityArray.reduce((qty, nextQty) => qty + nextQty, 0);
+        const desktopSuffix = totalQuantity === 1 ? __(' Item') : __(' Items');
+
+        return isMobile.any() ? null : desktopSuffix;
+    }
+
     renderHeading() {
+        const { totals: { items = [] } } = this.props;
+
+        const itemQuantityArray = items.map((item) => item.qty);
+        const totalQuantity = itemQuantityArray.reduce((qty, nextQty) => qty + nextQty, 0);
+
         return (
             <div>
-            <h1 block="CartPage" elem="Heading">
-                { __('My bag') }
-                <span> (# items)</span>
-            </h1>
+                { this.renderBack() }
+                <h1 block="CartPage" elem="Heading">
+                    { isMobile.any() ? __('My shopping cart ') : __('My bag ') }
+                    <span>
+                        (
+                        { totalQuantity }
+                        { this.renderItemSuffix() }
+                        )
+                    </span>
+                </h1>
+            </div>
+        );
+    }
+
+    renderBack() {
+        const { history } = this.props;
+        function goHome() {
+            history.push('/');
+        }
+
+        return (
+            <div block="CartPage" elem="BackArrow">
+                <button
+                  block="BackArrow-Button"
+                  onClick={ goHome }
+                >
+                    <span />
+                </button>
             </div>
         );
     }
@@ -230,6 +409,10 @@ export class CartPage extends PureComponent {
     renderContent() {
         const { activeTab, changeActiveTab } = this.props;
         const { name } = tabMap[activeTab];
+
+        if (!isMobile.any()) {
+            return null;
+        }
 
         return (
             <ContentWrapper
@@ -248,30 +431,78 @@ export class CartPage extends PureComponent {
         );
     }
 
-    render() {
-        const {
-            isArabic
-        } = this.state;
+    renderEmptyCartPage() {
+        const { isArabic } = this.state;
 
         return (
-            <main block="CartPage" aria-label="Cart Page" mods={ { isArabic } }>
+            <div block="CartPage" elem="EmptyCart" mods={ { isArabic } }>
+                <div block="CartPage" elem="EmptyCartIcon" />
+                <p>{ __('You have no items in your shopping cart.') }</p>
+                <p>
+                <Link to="/">
+                    <strong>
+                        { ' ' }
+                        { __('Click Here') }
+                        { ' ' }
+                    </strong>
+                </Link>
+                    { __('to continue shopping.') }
+                </p>
+            </div>
+        );
+    }
+
+    renderDynamicContent() {
+        const {
+            totals = {},
+            totals: { items = [] },
+            isLoading,
+            processingRequest
+        } = this.props;
+
+        if (isLoading) {
+            return <Loader isLoading={ isLoading } />;
+        }
+
+        if (Object.keys(totals).length === 0 || items.length === 0) {
+            return (
+                <div block="CartPage" elem="Static" mods={ { isArabic } }>
+                    { this.renderHeading() }
+                    { this.renderEmptyCartPage() }
+                </div>
+            );
+        }
+
+        return (
+            <>
                 { this.renderContent() }
                 <ContentWrapper
                   wrapperMix={ { block: 'CartPage', elem: 'Wrapper' } }
                   label="Cart page details"
                 >
+                    <Loader isLoading={ processingRequest } />
                     <div block="CartPage" elem="Static" mods={ { isArabic } }>
                         { this.renderHeading() }
                         { this.renderCartItems() }
-                        { this.renderTotalDetails(true) }
                         { this.renderCrossSellProducts() }
-                    </div>
-                    <div block="CartPage" elem="Floating" mods={ { isArabic } }>
                         { this.renderDiscountCode() }
                         { this.renderPromo() }
+                        { this.renderClubApparel() }
+                    </div>
+                    <div block="CartPage" elem="Floating" mods={ { isArabic } }>
                         { this.renderTotals() }
                     </div>
                 </ContentWrapper>
+            </>
+        );
+    }
+
+    render() {
+        const { isArabic } = this.state;
+
+        return (
+            <main block="CartPage" aria-label="Cart Page" mods={ { isArabic } }>
+                { this.renderDynamicContent() }
             </main>
         );
     }

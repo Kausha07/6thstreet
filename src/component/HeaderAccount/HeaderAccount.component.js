@@ -12,12 +12,13 @@ import './HeaderAccount.style';
 
 class HeaderAccount extends PureComponent {
     static propTypes = {
-        requestCustomerData: PropTypes.func.isRequired,
         isBottomBar: PropTypes.bool.isRequired,
         isAccount: PropTypes.bool.isRequired,
         isSignedIn: PropTypes.bool.isRequired,
         customer: customerType,
-        isMobile: PropTypes.bool
+        isMobile: PropTypes.bool,
+        isFooter: PropTypes.bool.isRequired,
+        handleFooterIsAccountOpen: PropTypes.func.isRequired
     };
 
     static defaultProps = {
@@ -28,33 +29,41 @@ class HeaderAccount extends PureComponent {
     _isArabic = isArabic();
 
     state = {
-        showPopup: false
+        showPopup: false,
+        showPopupSignedIn: false
     };
 
     closePopup = () => {
-        this.setState({ showPopup: false });
+        this.setState({ showPopup: false, showPopupSignedIn: false });
+        this.handleFooterPopup();
     };
 
     showMyAccountPopup = () => {
-        this.setState({ showPopup: true });
+        const { isSignedIn } = this.props;
+        this.setState({ showPopup: true, showPopupSignedIn: isSignedIn });
+        this.handleFooterPopup();
+    };
+
+    handleFooterPopup = () => {
+        const { handleFooterIsAccountOpen, isFooter } = this.props;
+        if (isFooter) {
+            handleFooterIsAccountOpen();
+        }
     };
 
     onSignIn = () => {
-        const { requestCustomerData } = this.props;
-
-        requestCustomerData();
         this.closePopup();
     };
 
     renderMyAccountPopup() {
         const { isSignedIn } = this.props;
-        const { showPopup } = this.state;
+        const { showPopup, showPopupSignedIn } = this.state;
 
         if (!showPopup) {
             return null;
         }
 
-        if (isSignedIn) {
+        if (isSignedIn && showPopupSignedIn) {
             return (
                 <ClickOutside onClick={ this.closePopup }>
                     <div>
@@ -68,7 +77,12 @@ class HeaderAccount extends PureComponent {
     }
 
     renderAccountButton() {
-        const { isSignedIn, customer, isBottomBar } = this.props;
+        const {
+            isSignedIn,
+            customer,
+            isBottomBar,
+            isFooter
+        } = this.props;
 
         if (isBottomBar) {
             return (
@@ -76,7 +90,11 @@ class HeaderAccount extends PureComponent {
             );
         }
 
-        const accountButtonText = isSignedIn && customer ? `${customer.firstname} ${customer.lastname}`
+        const accountButtonText = isSignedIn
+            && customer
+            && customer.firstname
+            && customer.lastname
+            ? `${customer.firstname} ${customer.lastname}`
             : __('Login/Register');
 
         return (
@@ -84,14 +102,18 @@ class HeaderAccount extends PureComponent {
                 <button
                   block="HeaderAccount"
                   elem="Button"
-                  mods={ { isArabic: this._isArabic } }
-                  onClick={ this.showMyAccountPopup }
+                  mods={ { isArabic: this._isArabic, isFooter } }
+                  onClick={ isFooter && isSignedIn ? this.redirectToAccount : this.showMyAccountPopup }
                 >
                     <label htmlFor="Account">{ accountButtonText }</label>
                 </button>
                 { this.renderMyAccountPopup() }
             </div>
         );
+    }
+
+    redirectToAccount() {
+        window.location = ('/my-account/dashboard');
     }
 
     render() {

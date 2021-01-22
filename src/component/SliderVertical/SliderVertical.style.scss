@@ -29,7 +29,7 @@
 
     &-Wrapper {
         display: flex;
-        height: 50px;
+        height: 100%;
 
         will-change: transform;
         transition: transform var(--animation-speed);

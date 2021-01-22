@@ -6,7 +6,7 @@
 
 .PDPDetailsSection {
     padding: 0 20px;
-    font-family: 'Avenir Next Regular';
+    font-weight: var(--fw-regular);
 
     @include desktop() {
         padding: 0 20px;
@@ -14,7 +14,7 @@
 
     h2 {
         text-transform: none;
-        font-family: 'Avenir Next Demi Bold', sans-serif;
+        font-weight: var(--fw-demi);
         font-size: 24px;
         border-top: 1px solid var(--pdp-split-line);
         margin-top: 0;
@@ -25,25 +25,24 @@
     &-IconContainer {
         display: flex;
         align-items: center;
-        margin-right: 60px;
-        font-family: 'Avenir Next Demi Bold', sans-serif;
+        justify-content: space-between;
         font-size: 15px;
         color: var(--pdp-icon-text-color);
-        font-weight: 400;
+        font-weight: var(--fw-regular);
+
+        @include desktop {
+            justify-content: normal;
+            margin-right: 60px;
+        }
     }
 
     &-IconsSection {
-        flex-direction: column;
         align-items: start;
-
-        @include desktop() {
-            flex-direction: row;
-        }
     }
 
     &-IconContainer {
         margin-top: 10px;
-        font-weight: 600;
+        font-weight: var(--fw-demi);
     }
 
     &-Icon {
@@ -76,24 +75,43 @@
     &-Highlights {
         font-size: 16px;
         margin-top: 20px;
-        font-weight: 600;
+        margin-bottom: 120px;
+        font-weight: var(--fw-demi);
+
+        h3 {
+            font-weight: var(--fw-demi);
+            margin-bottom: 1rem;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
     }
 
     &-HighlightsList {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 10px;
+        margin-top: 4px;
         padding-left: 0;
         width: 250px;
         font-size: 16px;
+        list-style-type: disc;
+        text-transform: capitalize;
+        margin-bottom: 4px;
 
         &::before {
             display: none;
         }
+
+        &:last-child {
+            margin-bottom: 4px;
+        }
     }
 
     &-ListItem {
+        margin-right: 10px;
+
         &_mod_title {
+            font-weight: var(--fw-regular);
+
             &::first-letter {
                 text-transform: uppercase;
             }
@@ -104,7 +122,7 @@
         }
 
         &_mod_value {
-            font-weight: 400;
+            font-weight: var(--fw-regular);
         }
     }
 
@@ -126,7 +144,7 @@
                 right: 0;
                 bottom: 0;
                 left: 0;
-                background: rgba(255, 255, 255, 0.8);
+                background: rgba(255, 255, 255, .8);
             }
         }
 
@@ -136,9 +154,11 @@
     }
 
     &-MoreDetailsList {
-        display: flex;
+        text-align: start;
         padding-left: 0;
         font-size: 16px;
+        list-style-type: disc;
+        text-transform: capitalize;
 
         &::before {
             display: none;
@@ -147,7 +167,9 @@
         .PDPDetailsSection {
             &-ListItem {
                 &_mod_title {
-                    margin-right: 20px;
+                    max-width: 100px;
+                    width: 100%;
+                    margin-right: 10px;
                 }
             }
         }
@@ -159,10 +181,9 @@
         &_isHidden {
             display: block;
             position: absolute;
-            font-family: 'Avenir Next Bold';
             font-size: 12px;
             height: 40px;
-            font-weight: 600;
+            font-weight: var(--fw-bold);
             padding: 0 30px;
             z-index: 3;
             bottom: -180px;
@@ -174,7 +195,7 @@
 
             @include desktop() {
                 bottom: -120px;
-            }   
+            }
         }
     }
 }

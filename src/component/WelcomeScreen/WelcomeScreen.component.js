@@ -4,6 +4,7 @@ import { PureComponent } from 'react';
 
 import CountryMiniFlag from 'Component/CountryMiniFlag';
 import { SelectOptions } from 'Type/Field';
+import { isArabic } from 'Util/App';
 
 import './WelcomeScreen.style';
 
@@ -13,9 +14,13 @@ class WelcomeScreen extends PureComponent {
         countrySelectOptions: SelectOptions.isRequired,
         languageSelectOptions: SelectOptions.isRequired,
         onLanguageSelect: PropTypes.func.isRequired,
-        closePopup: PropTypes.func.isRequired,
+        closePopup: PropTypes.func,
         country: PropTypes.string.isRequired,
         language: PropTypes.string.isRequired
+    };
+
+    static defaultProps = {
+        closePopup: () => {}
     };
 
     state = {
@@ -23,10 +28,8 @@ class WelcomeScreen extends PureComponent {
     };
 
     static getDerivedStateFromProps() {
-        const appStateCacheKey = JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY'));
-
         return {
-            isArabic: appStateCacheKey && appStateCacheKey.data.language === 'ar'
+            isArabic: isArabic()
         };
     }
 
@@ -49,13 +52,17 @@ class WelcomeScreen extends PureComponent {
 
     renderCountryList() {
         const {
-            countrySelectOptions,
+            countrySelectOptions = [],
             country
         } = this.props;
 
         const list = countrySelectOptions.map((element) => this.renderListItem(element, country));
 
-        return <ul block="WelcomeScreen" elem="List">{ list }</ul>;
+        return (
+            <div block="WelcomeScreen" elem="ListContainer">
+                <ul block="WelcomeScreen" elem="List">{ list }</ul>
+            </div>
+        );
     }
 
     renderLangBtn(lang) {
@@ -84,7 +91,7 @@ class WelcomeScreen extends PureComponent {
 
     renderLanguageButtons() {
         const {
-            languageSelectOptions
+            languageSelectOptions = []
         } = this.props;
 
         const buttons = languageSelectOptions.map((lang) => this.renderLangBtn(lang));
@@ -111,7 +118,12 @@ class WelcomeScreen extends PureComponent {
         const currentLang = language === 'en' ? 'en' : 'ar';
 
         return (
-            <li key={ id }>
+            <li
+              block="WelcomeScreen"
+              elem="CountryItem"
+              key={ id }
+              mods={ { isCurrent: currentLangBool } }
+            >
                 <button
                   onClick={ () => onCountrySelect(value) }
                   block="WelcomeScreen"
@@ -136,8 +148,11 @@ class WelcomeScreen extends PureComponent {
             <div block="WelcomeScreen" elem="Content" mods={ { isArabic } }>
                 { this.renderCloseBtn() }
                 <div block="WelcomeScreen" elem="Options">
-                    <h1>Welcome</h1>
-                    <p>you are shopping in</p>
+                    <h1>
+                        { __('Welcome') }
+                        ,
+                    </h1>
+                    <p>{ __('you are shopping in') }</p>
                     { this.renderLanguageButtons() }
                     { this.renderCountryList() }
                 </div>

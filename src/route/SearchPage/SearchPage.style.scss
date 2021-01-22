@@ -1,3 +1,15 @@
 .SearchPage {
+    @include mobile {
+        padding-top: 160px;
+    }
     
+    .PLPFilters-ToolBar {
+        @include mobile {
+            top: 190px;
+        }
+    }
+
+    .PLPFilterMobile {
+        top: 160px;
+    }
 }

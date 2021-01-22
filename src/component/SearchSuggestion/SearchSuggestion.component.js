@@ -4,6 +4,8 @@ import { PureComponent } from 'react';
 import Link from 'Component/Link';
 import Loader from 'Component/Loader';
 import { Products } from 'Util/API/endpoint/Product/Product.type';
+import { isArabic } from 'Util/App';
+import isMobile from 'Util/Mobile';
 
 import './SearchSuggestion.style';
 
@@ -19,21 +21,32 @@ class SearchSuggestion extends PureComponent {
         trendingTags: PropTypes.array.isRequired
     };
 
+    state = {
+        isArabic: isArabic(),
+        isMobile: isMobile.any() || isMobile.tablet()
+    };
+
     renderLoader() {
         const { isLoading } = this.props;
+        const { isMobile } = this.state;
 
-        return (
+        return isMobile ? null : (
             <Loader isLoading={ isLoading } />
         );
     }
 
     renderBrand = (brand) => {
-        const { brand_name, count } = brand;
+        const { brand_name: name = '', count } = brand;
+
+        const urlName = name.replace('&', '')
+            .replace(/(\s+)|--/g, '-')
+            .replace('@', 'at')
+            .toLowerCase();
 
         return (
             <li>
-                <Link to={ `/brands/${ brand_name }` }>
-                    { brand_name }
+                <Link to={ `/${urlName}.html?q=${urlName}` }>
+                    { name }
                     <span>{ count }</span>
                 </Link>
             </li>
@@ -41,10 +54,10 @@ class SearchSuggestion extends PureComponent {
     };
 
     renderBrands() {
-        const { brands } = this.props;
+        const { brands = [] } = this.props;
 
         return (
-            <div>
+            <div block="SearchSuggestion" elem="Brands">
                 <h2>{ __('Brands') }</h2>
                 <ul>
                     { brands.map(this.renderBrand) }
@@ -66,10 +79,10 @@ class SearchSuggestion extends PureComponent {
     };
 
     renderProducts() {
-        const { products } = this.props;
+        const { products = [] } = this.props;
 
         return (
-            <div>
+            <div block="SearchSuggestion" elem="Recommended">
                 <h2>{ __('Recommended') }</h2>
                 <ul>
                     { products.map(this.renderProduct) }
@@ -88,43 +101,62 @@ class SearchSuggestion extends PureComponent {
     }
 
     renderNothingFound() {
-        return 'nothing found';
+        return __('Nothing found');
     }
 
-    // eslint-disable-next-line no-unused-vars
-    renderTrendingBrand = ({ label, image_url }) => (
-        <li>
-            <Link to={ `/brands/${ label }` }>
-                { label }
-            </Link>
-        </li>
-    );
+    renderTrendingBrand = (brand, i) => {
+        const { label = '', image_url } = brand;
 
-    renderTrendingBrands() {
-        const { trendingBrands } = this.props;
+        const urlName = label.replace('&', '')
+            .replace(/(\s+)|--/g, '-')
+            .replace('@', 'at')
+            .toLowerCase();
 
         return (
+            <li key={ i }>
+                <Link to={ `/${urlName}.html?q=${urlName}` }>
+                    <div block="SearchSuggestion" elem="TrandingImg">
+                        <img src={ image_url } alt="Trending" />
+                        { label }
+                    </div>
+                </Link>
+            </li>
+        );
+    };
+
+    renderTrendingBrands() {
+        const { trendingBrands = [] } = this.props;
+
+        return (
+            <div block="TrandingBrands">
+            <h2>{ __('Trending brands') }</h2>
             <ul>
                 { trendingBrands.map(this.renderTrendingBrand) }
             </ul>
+            </div>
         );
     }
 
-    renderTrendingTag = ({ link, label }) => (
-        <li>
+    renderTrendingTag = ({ link, label }, i) => (
+        <li key={ i }>
             <Link to={ { pathname: link } }>
+                <div block="SearchSuggestion" elem="TrandingTag">
                 { label }
+                </div>
             </Link>
         </li>
     );
 
     renderTrendingTags() {
-        const { trendingTags } = this.props;
+        const { trendingTags = [] } = this.props;
 
         return (
+            <div block="TrandingTags">
+                <h2>{ __('Trending tags') }</h2>
             <ul>
                 { trendingTags.map(this.renderTrendingTag) }
             </ul>
+            </div>
         );
     }
 
@@ -148,7 +180,7 @@ class SearchSuggestion extends PureComponent {
             return null;
         }
 
-        if (isEmpty) {
+        if (isEmpty && isActive) {
             return this.renderEmptySearch();
         }
 
@@ -160,10 +192,16 @@ class SearchSuggestion extends PureComponent {
     }
 
     render() {
+        const { isArabic } = this.state;
         return (
-            <div block="SearchSuggestion">
-                { this.renderLoader() }
-                { this.renderContent() }
+            <div block="SearchSuggestion" mods={ { isArabic } }>
+                <div block="SearchSuggestion" elem="Content">
+                    { this.renderLoader() }
+                    { this.renderContent() }
+                </div>
+                <div block="SearchSuggestion" elem="ShadeWrapper">
+                    <div block="SearchSuggestion" elem="Shade" />
+                </div>
             </div>
         );
     }

@@ -1,12 +1,23 @@
+import PropTypes from 'prop-types';
+
 import HeaderMenu from 'Component/HeaderMenu';
 import HeaderSearch from 'Component/HeaderSearch';
 import NavigationAbstract from 'Component/NavigationAbstract/NavigationAbstract.component';
 import { DEFAULT_STATE_NAME } from 'Component/NavigationAbstract/NavigationAbstract.config';
 import { isArabic } from 'Util/App';
+import isMobile from 'Util/Mobile';
 
 import './HeaderBottomBar.style';
 
 class HeaderBottomBar extends NavigationAbstract {
+    static propTypes = {
+        newMenuGender: PropTypes.string
+    };
+
+    static defaultProps = {
+        newMenuGender: 'women'
+    };
+
     state = {
         isArabic: isArabic()
     };
@@ -23,24 +34,47 @@ class HeaderBottomBar extends NavigationAbstract {
     };
 
     renderMenu() {
+        const { newMenuGender } = this.props;
+        if (isMobile.any()) {
+            return (
+                <HeaderMenu
+                  key="menu"
+                  newMenuGender={ newMenuGender }
+                />
+            );
+        }
+
         return (
             <HeaderMenu
               key="menu"
+              newMenuGender={ newMenuGender }
             />
         );
     }
 
     renderSearch() {
         const { isArabic } = this.state;
+        if (!isMobile.any()) {
+            return (
+                <div
+                  key="search"
+                  mix={ {
+                      block: 'HeaderSearch',
+                      elem: 'Container',
+                      mods: { isArabic }
+                  } }
+                >
+                    <HeaderSearch
+                      key="search"
+                    />
+                </div>
+            );
+        }
 
         return (
-            <div
-              mix={ { block: 'HeaderSearch', elem: 'Container', mods: { isArabic } } }
-            >
-                <HeaderSearch
-                  key="search"
-                />
-            </div>
+            <HeaderSearch
+              key="search"
+            />
         );
     }
 

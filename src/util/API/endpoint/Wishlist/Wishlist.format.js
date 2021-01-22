@@ -7,20 +7,26 @@ export const formatProduct = (product) => {
         price,
         special_price,
         request_path,
-        currency_code
+        currency_code,
+        url_key,
+        entity_id
     } = product;
+
+    const productUrl = request_path
+        ? `${window.location.origin}/${request_path}`
+        : `${window.location.origin}/catalog/product/view/id/${entity_id}/s/${url_key}/`;
 
     return {
         sku,
         name,
         brand_name,
-        url: `${window.location.origin}/${request_path}`,
+        url: productUrl,
         thumbnail_url: thumbnail,
         price: [
             {
                 [currency_code]: {
-                    '6s_base_price': parseFloat(price),
-                    '6s_special_price': parseFloat(special_price)
+                    '6s_base_price': parseFloat(price) || parseFloat(special_price),
+                    '6s_special_price': null
                 }
             }
         ]
@@ -32,4 +38,4 @@ export const formatItemProduct = (item) => ({
     product: formatProduct(item.product)
 });
 
-export const formatItems = (items) => items.map(formatItemProduct);
+export const formatItems = (items = []) => items.map(formatItemProduct);

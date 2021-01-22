@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 
-import { setLanguage } from 'Store/AppState/AppState.action';
 import { getCountryLocaleForSelect } from 'Util/API/endpoint/Config/Config.format';
 import { Config } from 'Util/API/endpoint/Config/Config.type';
 
@@ -14,13 +13,8 @@ export const mapStateToProps = (state) => ({
     country: state.AppState.country
 });
 
-export const mapDispatchToProps = (dispatch) => ({
-    setLanguage: (value) => dispatch(setLanguage(value))
-});
-
 export class LanguageSwitcherContainer extends PureComponent {
     static propTypes = {
-        setLanguage: PropTypes.func.isRequired,
         config: Config.isRequired,
         language: PropTypes.string.isRequired,
         country: PropTypes.string.isRequired
@@ -31,10 +25,13 @@ export class LanguageSwitcherContainer extends PureComponent {
     };
 
     onLanguageSelect(value) {
-        const { setLanguage } = this.props;
+        const { language = '' } = this.props;
 
-        setLanguage(value);
-        window.location.reload();
+        window.location.href = location.origin.replace(
+            language.toLowerCase(),
+            value,
+            location.href
+        );
     }
 
     containerProps = () => {
@@ -60,4 +57,4 @@ export class LanguageSwitcherContainer extends PureComponent {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(LanguageSwitcherContainer);
+export default connect(mapStateToProps, null)(LanguageSwitcherContainer);

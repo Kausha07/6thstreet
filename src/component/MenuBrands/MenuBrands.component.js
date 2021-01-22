@@ -20,7 +20,7 @@ class MenuBrands extends PureComponent {
     };
 
     renderItems() {
-        const { items } = this.props;
+        const { items = [] } = this.props;
         return items.map(this.renderItem);
     }
 
@@ -35,9 +35,16 @@ class MenuBrands extends PureComponent {
             link
         } = item;
 
+        const updatedLink = link.match(/\/men|\/women|\/kids-baby_boy-boy-girl-baby_girl|\/kids/)
+            ? link.replace('/men.html', '.html')
+                .replace('/women.html', '.html')
+                .replace('/kids-baby_boy-boy-girl-baby_girl.html', '.html')
+                .replace('/kids.html', '.html')
+            : link;
+
         return (
             <Link
-              to={ link }
+              to={ updatedLink }
               key={ i }
             >
                 <Image
@@ -64,7 +71,20 @@ class MenuBrands extends PureComponent {
         );
     }
 
+    renderBrands() {
+        const { items = [] } = this.props;
+        const minSliderBrandsCount = 3;
+
+        if (items.length > minSliderBrandsCount && isMobile.any()) {
+            return this.renderBrandsSlider();
+        }
+
+        return this.renderItems();
+    }
+
     render() {
+        const { isArabic } = this.state;
+
         return (
             <div block="MenuBrands">
                 <div block="MenuBrands" elem="ContentWrapper">
@@ -77,10 +97,11 @@ class MenuBrands extends PureComponent {
                     <div
                       mix={ {
                           block: 'MenuBrands',
-                          elem: 'ContentWrapper-Brands'
+                          elem: 'ContentWrapper-Brands',
+                          mods: { isArabic }
                       } }
                     >
-                        { isMobile.any() ? this.renderBrandsSlider() : this.renderItems() }
+                        { this.renderBrands() }
                     </div>
                 </div>
             </div>

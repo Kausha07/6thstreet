@@ -6,11 +6,21 @@
  */
 
 .ProductItem {
+    &-Brand {
+        font-size: 12px;
+    }
+
+    &-Title {
+        font-weight: var(--fw-medium);
+        color: var(--gray-color);
+        font-size: 13px;
+    }
+
     .ProductLabel {
         width: 40px;
         height: 25px;
         background-color: #C8B581;
-        z-index: 10;
+        z-index: 1;
         display: flex;
         font-size: 13px;
         color: white;
@@ -19,10 +29,39 @@
         position: absolute;
         top: 20px;
         border-radius: 0 10px 10px 0;
+    }
 
-        &_isArabic {
-            right: 0;
+    &_isArabic {
+        .ProductLabel {
             border-radius: 10px 0 0 10px;
+            right: 0;
+        }
+
+        .WishlistIcon {
+            left: 0.8rem;
+            right: auto;
+        }
+    }
+
+    .PDPSummary {
+        &-Dash, &-Exclusive {
+            display: none;
+        }
+    }
+
+    .PLPSummary {
+        &-Exclusive,
+        &-Colors {
+            color: var(--Tundora);
+            font-size: 12px;
+            position: absolute;
+            padding: 7px 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.6);
+            z-index: 1;
+            right: 0;
+            grid-row: 3;
+            bottom: 0;
         }
     }
 }

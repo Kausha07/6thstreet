@@ -3,6 +3,7 @@ import { PureComponent } from 'react';
 
 import Image from 'Component/Image';
 import Link from 'Component/Link';
+import { formatCDNLink } from 'Util/Url';
 
 import './DynamicContentGrid.style';
 
@@ -13,15 +14,24 @@ class DynamicContentGrid extends PureComponent {
                 link: PropTypes.string,
                 url: PropTypes.string
             })
-        ).isRequired
+        ).isRequired,
+        header: PropTypes.shape({
+            title: PropTypes.string
+        }),
+        items_per_row: PropTypes.number
+    };
+
+    static defaultProps = {
+        items_per_row: 4,
+        header: {}
     };
 
     renderItem(item, i) {
         const { link, url } = item;
 
         return (
-            <div block="CategoryItem" elem="Content">
-                <Link to={ link } key={ i }>
+            <div block="CategoryItem" elem="Content" key={ i }>
+                <Link to={ formatCDNLink(link) } key={ i }>
                     <Image src={ url } ratio="custom" height="auto" />
                 </Link>
             </div>
@@ -29,21 +39,24 @@ class DynamicContentGrid extends PureComponent {
     }
 
     renderItems() {
-        const { items } = this.props;
+        const { items = [] } = this.props;
         return items.map(this.renderItem);
     }
 
     renderGrid() {
-        const { items_per_row } = 3;
+        const { items_per_row, header: { title } = {} } = this.props;
 
         return (
-            <div
-              block="DynamicContentGrid"
-              elem="Grid"
-              style={ { '--dynamic-content-grid-column-count': items_per_row } }
-            >
-            { this.renderItems() }
-            </div>
+            <>
+                <h2>{ title }</h2>
+                <div
+                  block="DynamicContentGrid"
+                  elem="Grid"
+                  mods={ { items_per_row } }
+                >
+                    { this.renderItems() }
+                </div>
+            </>
         );
     }
 

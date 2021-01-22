@@ -5,15 +5,6 @@ function getProduct(id, highlights, options) {
     const { index } = options;
 
     return new Promise((resolve, reject) => {
-        if (!index || !id) {
-            return reject('No index or id provided');
-        }
-
-        // const newSearchParams = Object.assign({}, searchParams);
-        // newSearchParams.hitsPerPage = 1;
-        // newSearchParams.attributesToHighlight = highlights;
-        // newSearchParams.attributesToRetrieve = '*';
-
         index.search(
             '',
             { filters: `objectID:${id}` },
@@ -82,22 +73,5 @@ export default async function getPDP(
     { id = '', highlights = '*' },
     options = {}
 ) {
-    const product = await getProduct(id, highlights, options);
-    const { sku } = product;
-
-    let variantSKUs =
-        product.data && product.data['6s_also_available']
-            ? product.data['6s_also_available']
-            : [];
-
-    if (variantSKUs.length > 0) {
-        variantSKUs = [...variantSKUs, sku];
-        product.data['variants'] = await getProductVariants(
-            variantSKUs,
-            highlights,
-            options
-        );
-    }
-
-    return product;
+    return await getProduct(id, highlights, options);
 }

@@ -9,29 +9,35 @@
     }
 
     .ProductItem {
-        padding-left: 0;
-        margin: 20px 10px;
-        font-family: "Avenir Next Regular";
-        text-align: center;
-        position: relative;
+        font-weight: var(--fw-regular);
+        margin: 20px 5px;
         min-width: 0;
-    
+        padding-left: 0;
+        position: relative;
+        text-align: center;
+
         &::before {
             display: none;
         }
-    
+
         .Image {
+            min-height: 190px;
+
             &-Image {
                 object-fit: cover;
             }
         }
-    
+
         p {
             font-size: 14px;
         }
-    
+
         &-Brand {
             margin: 5px 0;
+
+            @include desktop() {
+                font-size: 16px;
+            }
         }
 
         &-Title {
@@ -39,20 +45,35 @@
             overflow: hidden;
             text-overflow: ellipsis;
             margin-bottom: 0;
+
+            @include desktop() {
+                margin: 0 20px;
+            }
+        }
+
+        &:hover {
+            @include desktop {
+                box-shadow: 0 0 7px #d3d3d3;
+            }
+        }
+
+        a {
+            text-decoration: none;
         }
     }
 
     .Price {
-        display: flex;
-        justify-content: center;
         position: relative;
-        font-weight: 600;
+        font-weight: var(--fw-demi);
         font-size: 16px;
-    
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+
         &-Special,
         &-Discount {
             display: none;
-            
+
             &_discount {
                 display: inline;
                 color: $default-primary-dark-color;
@@ -62,7 +83,8 @@
         &-Base {
             &_discount {
                 font-size: 11px;
-                margin-right: 20px;
+                font-weight: var(--fw-demi);
+                margin-right: 10px;
             }
         }
     }
@@ -76,13 +98,13 @@
 
                 &-Wrapper {
                     display: flex;
-                    flex-direction: row-reverse;                   
+                    flex-direction: row-reverse;
                 }
 
                 &-Discount {
                     margin-right: 4px;
                 }
-            }  
+            }
         }
     }
-} 
+}

@@ -1,6 +1,8 @@
 import { getStore } from 'Store';
 import {
+    processingCartRequest,
     removeCartItem,
+    removeCartItems,
     setCartId,
     setCartTotals,
     updateCartItem
@@ -10,7 +12,7 @@ import {
     addProductToCart,
     applyCouponCode,
     createCart,
-    getCartTotals,
+    getCart,
     removeCouponCode,
     removeProductFromCart,
     updateProductInCart
@@ -20,13 +22,14 @@ import Logger from 'Util/Logger';
 export const GUEST_QUOTE_ID = 'guest_quote_id';
 
 export class CartDispatcher {
-    async getCart(dispatch) {
+    async getCart(dispatch, isNewCart = false) {
         const { Cart: { cartId } } = getStore().getState();
 
-        if (!cartId) {
+        if (!cartId || isNewCart) {
             try {
-                const { data: cartId = null } = await createCart();
-                if (!cartId) {
+                const { data: requestedCartId = null } = await createCart();
+
+                if (!requestedCartId) {
                     dispatch(
                         showNotification(
                             'error',
@@ -36,31 +39,126 @@ export class CartDispatcher {
 
                     return;
                 }
-                dispatch(setCartId(cartId));
+
+                dispatch(setCartId(requestedCartId));
+                await this.getCartTotals(dispatch, requestedCartId);
             } catch (e) {
                 Logger.log(e);
             }
+        } else {
+            await this.getCartTotals(dispatch, cartId);
         }
-
-        await this.getCartTotals(dispatch, cartId);
     }
 
-    async getCartTotals(dispatch, cartId) {
+    async setCartItems(dispatch, data) {
         try {
-            const { data } = await getCartTotals(cartId);
+            const {
+                items = []
+            } = data || {};
 
-            dispatch(setCartTotals(data));
+            if (items.length) {
+                dispatch(processingCartRequest());
+                dispatch(removeCartItems());
+
+                items.map((item) => {
+                    const {
+                        thumbnail,
+                        color,
+                        size_value: optionValue,
+                        brand_name: brandName,
+                        price,
+                        original_price: basePrice,
+                        id,
+                        availability,
+                        available_qty
+                    } = item;
+
+                    return dispatch(updateCartItem(
+                        { ...item, item_id: id },
+                        color,
+                        optionValue,
+                        basePrice,
+                        brandName,
+                        thumbnail,
+                        '',
+                        price,
+                        availability,
+                        available_qty
+                    ));
+                });
+            }
         } catch (e) {
             Logger.log(e);
         }
     }
 
-    async addProductToCart(dispatch, productData, color, optionValue, discount = null, brand_name, thumbnail_url, url) {
+    async getCartTotals(dispatch, cartId) {
+        try {
+            dispatch(processingCartRequest());
+            const {
+                data
+            } = await getCart(cartId);
+
+            if (!data) {
+                try {
+                    const { data: requestedCartId = null } = await createCart();
+                    dispatch(removeCartItems());
+
+                    if (!requestedCartId) {
+                        dispatch(
+                            showNotification(
+                                'error',
+                                __('There was an error creating your cart, please refresh the page in a little while')
+                            )
+                        );
+
+                        return;
+                    }
+
+                    dispatch(setCartId(requestedCartId));
+                    await this.getCartTotals(dispatch, requestedCartId);
+                } catch (e) {
+                    Logger.log(e);
+                }
+            } else {
+                await this.setCartItems(dispatch, data);
+                dispatch(setCartTotals(data));
+            }
+        } catch (e) {
+            Logger.log(e);
+        }
+    }
+
+    async addProductToCart(
+        dispatch,
+        productData,
+        color,
+        optionValue,
+        basePrice = null,
+        brand_name,
+        thumbnail_url,
+        url,
+        itemPrice
+    ) {
         const { Cart: { cartId } } = getStore().getState();
 
         try {
-            const { data } = await addProductToCart({ ...productData, cartId });
-            dispatch(updateCartItem(data, color, optionValue, discount, brand_name, thumbnail_url, url));
+            dispatch(processingCartRequest());
+            const response = await addProductToCart({ ...productData, cartId });
+            const { data } = response;
+            dispatch(updateCartItem(
+                data,
+                color,
+                optionValue,
+                basePrice,
+                brand_name,
+                thumbnail_url,
+                url,
+                itemPrice
+            ));
+            await this.getCartTotals(dispatch, cartId);
+
+            return !data ? response : null;
         } catch (e) {
             Logger.log(e);
             if (e) {
@@ -76,7 +174,6 @@ export class CartDispatcher {
             }
         }
 
-        await this.getCartTotals(dispatch, cartId);
         return null;
     }
 
@@ -99,30 +196,60 @@ export class CartDispatcher {
     }
 
     async updateProductInCart(
-        dispatch, productId, qty, color, optionValue, discount = null, brand_name, thumbnail_url, url
+        dispatch,
+        productId,
+        qty,
+        color,
+        optionValue,
+        basePrice = null,
+        brand_name,
+        thumbnail_url,
+        url,
+        itemPrice
     ) {
         const { Cart: { cartId } } = getStore().getState();
 
         try {
-            const { data } = await updateProductInCart({ cartId, productId, qty });
-            dispatch(updateCartItem(data, color, optionValue, discount, brand_name, thumbnail_url, url));
+            const response = await updateProductInCart({ cartId, productId, qty });
+            const { data } = response;
+
+            dispatch(updateCartItem(
+                data,
+                color,
+                optionValue,
+                basePrice,
+                brand_name,
+                thumbnail_url,
+                url,
+                itemPrice
+            ));
+            await this.getCartTotals(dispatch, cartId);
+
+            return !data ? response : null;
         } catch (e) {
             Logger.log(e);
         }
 
-        await this.getCartTotals(dispatch, cartId);
+        return null;
     }
 
     async applyCouponCode(dispatch, couponCode) {
         const { Cart: { cartId } } = getStore().getState();
 
         try {
-            await applyCouponCode({ cartId, couponCode });
+            const response = await applyCouponCode({ cartId, couponCode });
+            if (typeof response === 'string') {
+                dispatch(showNotification('error', response));
+                return;
+            }
+
+            await this.getCartTotals(dispatch, cartId);
+            dispatch(showNotification('success', __('Coupon was applied!')));
         } catch (e) {
+            dispatch(showNotification('error', __('The coupon code isn\'t valid. Verify the code and try again.')));
+
             Logger.log(e);
         }
-
-        await this.getCartTotals(dispatch, cartId);
     }
 
     async removeCouponCode(dispatch, couponCode) {
@@ -130,11 +257,14 @@ export class CartDispatcher {
 
         try {
             await removeCouponCode({ cartId, couponCode });
+            await this.getCartTotals(dispatch, cartId);
+
+            dispatch(showNotification('success', __('Coupon was removed!')));
         } catch (e) {
+            dispatch(showNotification('error', __('The coupon code isn\'t valid. Verify the code and try again.')));
+
             Logger.log(e);
         }
-
-        await this.getCartTotals(dispatch, cartId);
     }
 }
 

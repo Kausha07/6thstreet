@@ -3,9 +3,12 @@
 export const MIN_PASSWORD_LENGTH = 6;
 
 export const validateEmail = ({ value }) => value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
-export const validateEmails = ({ value }) => value.split(',').every((email) => validateEmail({ value: email.trim() }));
+export const validateEmails = ({ value = '' }) => value.split(',').every((email) => validateEmail({ value: email.trim() }));
 export const validatePassword = ({ value }) => value.length >= MIN_PASSWORD_LENGTH;
-export const validateTelephone = ({ value }) => value.length > 0 && value.match(/^\+(?:[0-9-] ?){6,14}[0-9]$/);
+export const validateContainNumber = ({ value }) => /\d/.test(value);
+export const validateContainCapitalize = ({ value }) => /[A-Z]/.test(value);
+export const validateTelephoneAE = ({ value }) => value.length > 0 && value.match(/^[0-9]{9}$/);
+export const validateTelephone = ({ value }) => value.length > 0 && value.match(/^[0-9]{8}$/);
 export const isNotEmpty = ({ value }) => value.trim().length > 0;
 export const validatePasswordMatch = ({ value }, { password }) => {
     const { current: { value: passwordValue } } = password || { current: {} };
@@ -25,13 +28,25 @@ export default {
         validate: validatePassword,
         message: __('Password should be at least 6 characters long')
     },
+    containNumber: {
+        validate: validateContainNumber,
+        message: __('This field should contain at least 1 number character')
+    },
+    containCapitalize: {
+        validate: validateContainCapitalize,
+        message: __('This field should contain at least 1 capitalized character')
+    },
     telephone: {
         validate: validateTelephone,
-        message: __('Phone number is invalid!')
+        message: __('Please verify if the phone number is correct')
+    },
+    telephoneAE: {
+        validate: validateTelephoneAE,
+        message: __('Please verify if the phone number is correct')
     },
     notEmpty: {
         validate: isNotEmpty,
-        message: __('This field is required!')
+        message: __('This is a required field!')
     },
     password_match: {
         validate: validatePasswordMatch,

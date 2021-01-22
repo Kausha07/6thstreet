@@ -4,43 +4,78 @@ import { PureComponent } from 'react';
 
 import CountryMiniFlag from 'Component/CountryMiniFlag';
 import Field from 'Component/Field';
+import { PHONE_CODES } from 'Component/MyAccountAddressForm/MyAccountAddressForm.config';
 import { isArabic } from 'Util/App';
 
 import './PhoneCountryCodeField.style';
 
 class PhoneCountryCodeField extends PureComponent {
     static propTypes = {
-        label: PropTypes.string.isRequired
+        onSelect: PropTypes.func.isRequired,
+        label: PropTypes.string
     };
 
-    state = {
-        isArabic: isArabic()
+    static defaultProps = {
+        label: ''
     };
+
+    constructor(props) {
+        super(props);
+
+        const { label } = props;
+
+        this.state = {
+            selectedCountry: label,
+            isArabic: isArabic()
+        };
+    }
+
+    handleSelectChange = (e) => {
+        const { onSelect } = this.props;
+        const countries = Object.keys(PHONE_CODES);
+
+        const countiresMapped = countries.reduce((acc, country) => {
+            if (e === this.renderCurrentPhoneCode(country)) {
+                acc.push(country);
+            }
+
+            return acc;
+        }, []);
+
+        this.setState({ selectedCountry: countiresMapped[0] });
+        onSelect(e);
+    };
+
+    renderCurrentPhoneCode(country_id) {
+        return PHONE_CODES[country_id];
+    }
+
+    renderOption = (country) => ({
+        id: country,
+        label: this.renderCurrentPhoneCode(country),
+        value: this.renderCurrentPhoneCode(country)
+    });
 
     renderCountryPhoneCodeField() {
         const {
-            label
-        } = this.props;
+            selectedCountry,
+            isArabic
+        } = this.state;
 
-        const { isArabic } = this.state;
+        const value = this.renderCurrentPhoneCode(selectedCountry);
 
-        const countryPhoneCodeValues = {
-            'AE': '+971',
-            'SA': '+966',
-            'QA': '+974',
-            'OM': '+968',
-            'BH': '+973',
-            'KW': '+965'
-        };
+        const countries = Object.keys(PHONE_CODES);
 
         return (
             <div block="PhoneCountryCodeField" mods={ { isArabic } }>
-                <CountryMiniFlag label={ label } />
+                <CountryMiniFlag mods={ { isArabic } } label={ selectedCountry } />
                 <Field
-                  type="text"
-                  id="phoneCountryCode"
-                  isDisabled
-                  placeholder={ countryPhoneCodeValues[label] }
+                  type="select"
+                  id="countryPhoneCode"
+                  name="countryPhoneCode"
+                  onChange={ this.handleSelectChange }
+                  selectOptions={ countries.map(this.renderOption) }
+                  value={ value || '' }
                 />
             </div>
         );

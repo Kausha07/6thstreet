@@ -1,7 +1,7 @@
 .CountryMiniFlag {
     &-Container {
         background: url(flags.png);
-        width: 14px;
+        width: 19px;
         height: 14px;
         position: relative;
         display: inline-block;
@@ -20,13 +20,13 @@
 
     &-top {
         top: 0;
-        border-top: 0px solid transparent;
-        border-bottom: 3px solid transparent;
+        border-top: 0 solid transparent;
+        border-bottom: 0 solid transparent;
     }
-    
+
     &-bottom{
-        bottom: 0px;
-        border-bottom: 0px solid transparent;
-        border-top: 3px solid transparent;
+        bottom: 0;
+        border-bottom: 0 solid transparent;
+        border-top: 0 solid transparent;
     }
 }

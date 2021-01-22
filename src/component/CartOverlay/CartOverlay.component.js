@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 /**
  * ScandiPWA - Progressive Web App for Magento
  *
@@ -16,22 +17,32 @@ import CartItem from 'Component/CartItem';
 import CmsBlock from 'Component/CmsBlock';
 import { CART_OVERLAY } from 'Component/Header/Header.config';
 import Link from 'Component/Link';
+import { FIXED_CURRENCIES } from 'Component/Price/Price.config';
 import Overlay from 'SourceComponent/Overlay';
 import { TotalsType } from 'Type/MiniCart';
 import { isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
+
+import Delivery from './icons/delivery-truck.png';
 
 import './CartOverlay.style';
 
 export class CartOverlay extends PureComponent {
     static propTypes = {
         totals: TotalsType.isRequired,
-        onVisible: PropTypes.func.isRequired,
+        onVisible: PropTypes.func,
         handleCheckoutClick: PropTypes.func.isRequired,
         showOverlay: PropTypes.func.isRequired,
         hideActiveOverlay: PropTypes.func.isRequired,
         closePopup: PropTypes.func.isRequired,
-        isHidden: PropTypes.bool.isRequired
+        handleViewBagClick: PropTypes.func.isRequired,
+        isHidden: PropTypes.bool,
+        isCheckoutAvailable: PropTypes.bool.isRequired
+    };
+
+    static defaultProps = {
+        isHidden: false,
+        onVisible: () => {}
     };
 
     state = {
@@ -48,11 +59,13 @@ export class CartOverlay extends PureComponent {
 
     renderPriceLine(price) {
         const { totals: { quote_currency_code } } = this.props;
-        return `${quote_currency_code} ${parseFloat(price).toFixed(2)}`;
+        const decimals = FIXED_CURRENCIES.includes(quote_currency_code) ? 3 : 2;
+
+        return `${quote_currency_code} ${parseFloat(price).toFixed(decimals)}`;
     }
 
     renderCartItems() {
-        const { totals: { items, quote_currency_code }, closePopup } = this.props;
+        const { totals: { items = [], quote_currency_code }, closePopup } = this.props;
 
         if (!items || items.length < 1) {
             return this.renderNoCartItems();
@@ -83,7 +96,7 @@ export class CartOverlay extends PureComponent {
     }
 
     renderTotals() {
-        const { totals: { items, subtotal_incl_tax = 0 } } = this.props;
+        const { totals: { items = [], subtotal_incl_tax } } = this.props;
         const { isArabic } = this.state;
 
         if (!items || items.length < 1) {
@@ -127,11 +140,18 @@ export class CartOverlay extends PureComponent {
     }
 
     renderActions() {
-        const { totals: { items }, handleCheckoutClick } = this.props;
+        const {
+            totals: { items = [] },
+            handleCheckoutClick,
+            handleViewBagClick,
+            isCheckoutAvailable
+        } = this.props;
 
         if (!items || items.length < 1) {
             return null;
         }
+
+        const isDisabled = !isCheckoutAvailable;
 
         return (
             <div block="CartOverlay" elem="Actions">
@@ -139,12 +159,14 @@ export class CartOverlay extends PureComponent {
                   block="CartOverlay"
                   elem="CartButton"
                   to="/cart"
+                  onClick={ handleViewBagClick }
                 >
                     { __('View bag') }
                 </Link>
                 <button
                   block="CartOverlay"
                   elem="CheckoutButton"
+                  mods={ { isDisabled } }
                   onClick={ handleCheckoutClick }
                 >
                     { __('Checkout') }
@@ -153,25 +175,67 @@ export class CartOverlay extends PureComponent {
         );
     }
 
-    renderPromo() {
-        const { minicart_content: { minicart_cms } = {} } = window.contentConfiguration;
-        const { totals: { items } } = this.props;
+    renderPromoContent() {
+        const { cart_content: { cart_cms } = {} } = window.contentConfiguration;
+        const { totals: { currency_code, avail_free_shipping_amount } } = this.props;
+        const { isArabic } = this.state;
 
-        if (!items || items.length < 1) {
-            return null;
-        }
-
-        if (minicart_cms) {
-            return <CmsBlock identifier={ minicart_cms } />;
+        if (cart_cms) {
+            return <CmsBlock identifier={ cart_cms } />;
         }
 
         return (
-            <p
+            <div
+              block="CartOverlay"
+              elem="PromoBlock"
+            >
+                <figcaption block="CartOverlay" elem="PromoText" mods={ { isArabic } }>
+                    <img src={ Delivery } alt="Delivery icon" />
+                    { __('Add ') }
+                    <span
+                      block="CartOverlay"
+                      elem="Currency"
+                    >
+                        { `${currency_code } ${avail_free_shipping_amount} ` }
+                    </span>
+                    { __('more to your cart for ') }
+                    <span
+                      block="CartOverlay"
+                      elem="FreeDelivery"
+                    >
+                        { __('Free delivery') }
+                    </span>
+                </figcaption>
+            </div>
+        );
+    }
+
+    renderFreeShippingContent() {
+        return (
+            <div
+              block="CartOverlay"
+              elem="PromoFreeShipping"
+            >
+                <span>{ __('Free delivery*. More info ') }</span>
+                <Link to="/shipping-policy">{ __('here.') }</Link>
+            </div>
+        );
+    }
+
+    renderPromo() {
+        const { totals: { avail_free_shipping_amount } } = this.props;
+
+        if (!avail_free_shipping_amount && avail_free_shipping_amount !== 0) {
+            return null;
+        }
+
+        return (
+            <div
               block="CartOverlay"
               elem="Promo"
             >
-                { __('Free shipping on order 49$ and more.') }
-            </p>
+                { avail_free_shipping_amount === 0 ? this.renderFreeShippingContent() : this.renderPromoContent() }
+            </div>
         );
     }
 
@@ -179,8 +243,23 @@ export class CartOverlay extends PureComponent {
         this.setState({ isPopup: true });
     };
 
+    renderItemSuffix() {
+        const { totals: { items = [] } } = this.props;
+
+        const itemQuantityArray = items.map((item) => item.qty);
+        const totalQuantity = itemQuantityArray.reduce((qty, nextQty) => qty + nextQty, 0);
+
+        return (totalQuantity === 1)
+            ? __(' item')
+            : __(' items');
+    }
+
     renderItemCount() {
         const { hideActiveOverlay, closePopup, totals: { items = [] } } = this.props;
+
+        const itemQuantityArray = items.map((item) => item.qty);
+        const totalQuantity = itemQuantityArray.reduce((qty, nextQty) => qty + nextQty, 0);
+
         const svg = (
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -201,8 +280,8 @@ export class CartOverlay extends PureComponent {
                 <div>
                     { __('My Bag') }
                     <div>
-                        { items.length }
-                        { __(' item(s)') }
+                        { totalQuantity }
+                        { this.renderItemSuffix() }
                     </div>
                 </div>
                 <button onClick={ hideActiveOverlay && closePopup }>

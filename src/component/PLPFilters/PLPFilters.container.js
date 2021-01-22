@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /**
  * @category  sixth-street
  * @author    Vladislavs Belavskis <info@scandiweb.com>
@@ -16,6 +17,7 @@ import { Filters } from 'Util/API/endpoint/Product/Product.type';
 import WebUrlParser from 'Util/API/helper/WebUrlParser';
 
 import PLPFilters from './PLPFilters.component';
+import { SIZES } from './PLPFilters.config';
 
 export const mapStateToProps = (_state) => ({
     filters: _state.PLP.filters,
@@ -42,12 +44,121 @@ export class PLPFiltersContainer extends PureComponent {
         hideActiveOverlay: PropTypes.func.isRequired,
         goToPreviousNavigationState: PropTypes.func.isRequired,
         changeHeaderState: PropTypes.func.isRequired,
-        productsCount: PropTypes.string.isRequired
+        productsCount: PropTypes.number
+    };
+
+    static defaultProps = {
+        productsCount: 0
+    };
+
+    state = {
+        initialFilters: {},
+        activeFilters: {}
     };
 
     containerFunction = {
         onReset: this.onReset.bind(this)
     };
+
+    static getDerivedStateFromProps(props, state) {
+        const { filters = {} } = props;
+        const { initialFilters = {} } = state;
+
+        if (Object.keys(filters).length > Object.keys(initialFilters).length) {
+            if (filters[SIZES]) {
+                return {
+                    initialFilters: filters[SIZES].data ? {
+                        ...initialFilters,
+                        ...filters,
+                        ...filters[SIZES].data
+                    } : {
+                        ...initialFilters,
+                        ...filters
+                    }
+                };
+            }
+
+            return {
+                initialFilters: {
+                    ...initialFilters,
+                    ...filters
+                }
+            };
+        }
+
+        return null;
+    }
+
+    componentDidUpdate() {
+        const { filters = {} } = this.props;
+        const { activeFilters } = this.state;
+
+        const newActiveFilters = Object.entries(filters).reduce((acc, filter) => {
+            const { selected_filters_count, data = {} } = filter[1];
+
+            if (selected_filters_count !== 0) {
+                if (filter[0] === SIZES) {
+                    const mappedData = Object.entries(data).reduce((acc, size) => {
+                        const { subcategories } = size[1];
+                        const mappedSizeData = this.mapData(subcategories);
+
+                        acc = { ...acc, [ size[0] ]: mappedSizeData };
+
+                        return acc;
+                    }, []);
+
+                    acc = { ...acc, ...mappedData };
+                } else {
+                    acc = { ...acc, [filter[0]]: this.mapData(data) };
+                }
+            }
+
+            return acc;
+        }, {});
+
+        if (!this.compareObjects(activeFilters, newActiveFilters)) {
+            this.setActveFilters(newActiveFilters);
+        }
+    }
+
+    compareObjects(object1 = {}, object2 = {}) {
+        if (Object.keys(object1).length === Object.keys(object2).length) {
+            const isEqual = Object.entries(object1).reduce((acc, key) => {
+                if (object2[key[0]]) {
+                    if (key[1].length !== object2[key[0]].length) {
+                        acc.push(0);
+                    } else {
+                        acc.push(1);
+                    }
+                } else {
+                    acc.push(1);
+                }
+
+                return acc;
+            }, []);
+
+            return !isEqual.includes(0);
+        }
+
+        return false;
+    }
+
+    setActveFilters = (activeFilters) => {
+        this.setState({ activeFilters });
+    };
+
+    mapData(data = {}) {
+        const mappedData = Object.entries(data).reduce((acc, option) => {
+            const { is_selected } = option[1];
+            if (is_selected) {
+                acc.push(option[0]);
+            }
+
+            return acc;
+        }, []);
+
+        return mappedData;
+    }
 
     containerFunctions = () => {
         const { showOverlay } = this.props;
@@ -57,11 +168,11 @@ export class PLPFiltersContainer extends PureComponent {
 
     // eslint-disable-next-line consistent-return
     onReset() {
-        const { filters } = this.props;
+        const { initialFilters = {} } = this.state;
 
         // eslint-disable-next-line fp/no-let
-        for (let i = 0; i < Object.keys(filters).length; i++) {
-            WebUrlParser.setParam(Object.keys(filters)[i], '');
+        for (let i = 0; i < Object.keys(initialFilters).length; i++) {
+            WebUrlParser.setParam(Object.keys(initialFilters)[i], '');
         }
     }
 
@@ -71,11 +182,13 @@ export class PLPFiltersContainer extends PureComponent {
             isLoading,
             activeOverlay
         } = this.props;
+        const { activeFilters } = this.state;
 
         return {
             filters,
             isLoading,
-            activeOverlay
+            activeOverlay,
+            activeFilters
         };
     };
 

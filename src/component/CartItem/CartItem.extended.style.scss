@@ -17,10 +17,6 @@
     --color-white: #fff;
     --color-charcoal: #4a4a4a;
     --color-nobel: #9B9B9B;
-
-    --font-family-regular: Avenir Next Regular;
-    --font-family-demi-bold: Avenir Next Demi Bold;
-    --font-family-bold: Avenir Next Bold;
 }
 
 .CartPage {
@@ -29,8 +25,8 @@
         flex-wrap: wrap;
         margin-bottom: 20px;
 
-        &-Actions {
-            display: none;
+        @include desktop() {
+            height: 170px;
         }
 
         &-Wrapper {
@@ -42,17 +38,12 @@
 
             .Image {
                 display: block;
-                width: 100%;
-            }
-        }
+                width: 130px;
 
-        &-Content {
-            display: flex;
-            flex-wrap: nowrap;
-            flex-direction: column;
-
-            &_isLikeTable {
-                align-self: unset;
+                &-Image {
+                    position: relative;
+                    object-fit: contain;
+                }
             }
         }
 
@@ -61,7 +52,7 @@
             flex-wrap: wrap;
             justify-content: space-between;
             font-size: 15px;
-            font-weight: bold;
+            font-weight: var(--fw-demi);
 
             &:first-child{
                 display: none;

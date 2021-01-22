@@ -7,18 +7,22 @@
 
 .InlineCustomerSupport {
     width: 100%;
+    transform: translateX(-25px);
 
     @include desktop {
         display: flex;
         width: 50%;
+        transform: none;
     }
 
     &-Button {
-        padding-left: 27px;
+        padding-left: 0;
+        text-align: left;
         width: 160px;
         height: 30px;
         font-size: 12px;
         display: none;
+        font-weight: var(--fw-demi);
 
         @include desktop {
             display: block;
@@ -27,13 +31,13 @@
         &::after {
             content:"";
             position:absolute;
-            width: 0px;
-            height: 0px;
+            width: 0;
+            height: 0;
             border-left: 5px solid transparent;
             border-right: 5px solid transparent;
             border-top: 5px solid var(--black-color);
             top: 11px;
-            right: -1px;
+            right: 10px;
         }
 
         &_isExpanded {
@@ -41,14 +45,14 @@
                 border-left: 5px solid transparent;
                 border-right: 5px solid transparent;
                 border-bottom: 5px solid var(--black-color);
-                border-top: 0px;
+                border-top: 0;
             }
         }
 
         &_isArabic {
             padding-left: 5px;
             &::after {
-                right: 150px;
+                right: 140px;
             }
         }
     }
@@ -91,7 +95,7 @@
     }
 
     &-OpenHours {
-        font-weight: bold;
+        font-weight: var(--fw-bold);
         padding-bottom: 12px;
     }
 
@@ -118,11 +122,11 @@
         }
 
         &::after{
-            width: 80px;
+            width: 120px;
             position: absolute;
-            left: 35px;
-            content: "TAP TO CALL";
-            font-weight: 500;
+            left: 32px;
+            content: "TAP TO WHATSAPP";
+            font-weight: var(--fw-medium);
         }
 
         @include desktop {
@@ -198,9 +202,9 @@
         align-items: center;
         justify-content: center;
         width: 100%;
-        margin: 10px 0;
+        margin: 5px 0;
         color: var(--white-color);
-        font-weight: 600;
+        font-weight: var(--fw-demi);
         text-align: center;
         padding: 0;
         border: none;
@@ -213,16 +217,16 @@
             margin-top: 7px;
             margin-bottom: 7px;
             border-left: 1px solid var(--border-color);
-            align-items: left;
             justify-content: left;
+            min-height: 25px;
         }
 
         p {
-            text-transform: lowercase;
-            font-weight: 500;
+            text-transform: uppercase;
+            font-weight: var(--fw-medium);
             letter-spacing: 0;
             padding-right: 3px;
-            font-size: 13px;
+            font-size: 12px;
 
             &::first-letter{
                 text-transform: uppercase;
@@ -230,12 +234,18 @@
 
             @include desktop {
                 width: auto;
+                font-size: 13px;
             }
         }
 
         a {
-            font-size: 13px;
+            font-size: 12px;
             line-height: 16px;
+            font-weight: var(--fw-bold);
+
+            @include desktop {
+                font-size: 13px;
+            }
         }
 
         &_isArabic {
@@ -252,6 +262,16 @@
                 border-left: none;
             }
         }
+    }
+}
 
+.PageWrapper {
+    &_isArabic {
+        .InlineCustomerSupport {
+            &-Button {
+                padding-right: 0;
+                text-align: right;
+            }
+        }
     }
 }

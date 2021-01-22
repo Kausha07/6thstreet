@@ -3,30 +3,38 @@ import { PureComponent } from 'react';
 
 import GenderButton from 'Component/GenderButton';
 import { isArabic } from 'Util/App';
+import isMobile from 'Util/Mobile';
 
 import './HeaderGenders.style';
 
 class HeaderGenders extends PureComponent {
     state = {
-        isArabic: isArabic()
+        isArabic: isArabic(),
+        currentGenderButton: '',
+        isUnsetStyle: false
     };
 
     static propTypes = {
-        isMobile: PropTypes.bool
+        currentContentGender: PropTypes.string.isRequired,
+        changeMenuGender: PropTypes.func,
+        isMobile: PropTypes.bool,
+        isMenu: PropTypes.bool
     };
 
     static defaultProps = {
-        isMobile: false
+        changeMenuGender: () => {},
+        isMobile: false,
+        isMenu: false
     };
 
     genderList = [
         {
-            label: __('Men'),
-            key: 'men'
-        },
-        {
             label: __('Women'),
             key: 'women'
+        },
+        {
+            label: __('Men'),
+            key: 'men'
         },
         {
             label: __('Kids'),
@@ -34,8 +42,44 @@ class HeaderGenders extends PureComponent {
         }
     ];
 
+    getNewActiveMenuGender = (key) => {
+        const { currentGenderButton } = this.state;
+        if (currentGenderButton !== key) {
+            this.setState({ currentGenderButton: key });
+        }
+    };
+
+    isCurrentGender(key) {
+        const { currentContentGender } = this.props;
+        if (currentContentGender === '' && key === 'women') {
+            return true;
+        }
+
+        return key === currentContentGender;
+    }
+
+    handleUnsetStyle = (isUnsetStyle) => {
+        this.setState({ isUnsetStyle });
+    };
+
     renderGender = (gender) => {
         const { key } = gender;
+        const {
+            changeMenuGender,
+            currentContentGender,
+            isMenu
+        } = this.props;
+
+        if (key === 'home_beauty_women' && (!isMobile.any() || (isMobile.any() && isMenu))
+        ) {
+            return null;
+        }
+
+        const { currentGenderButton, isUnsetStyle } = this.state;
+        const isCurrentGender = this.isCurrentGender(key);
+        if (currentGenderButton === '') {
+            this.setState({ currentGenderButton: currentContentGender });
+        }
 
         return (
             <div
@@ -49,6 +93,11 @@ class HeaderGenders extends PureComponent {
                       block: 'HeaderGenders',
                       elem: 'Button'
                   } }
+                  handleUnsetStyle={ this.handleUnsetStyle }
+                  isUnsetStyle={ isUnsetStyle }
+                  isCurrentGender={ isCurrentGender }
+                  changeMenuGender={ changeMenuGender }
+                  getNewActiveMenuGender={ this.getNewActiveMenuGender }
                 />
             </div>
         );

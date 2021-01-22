@@ -2,6 +2,12 @@
     top: 0;
     z-index: 50;
 
+    .Menu-Header-Mobile {
+        @include mobile {
+            display: unset;
+        }
+    }
+
     .Popup-Content {
         background-color: rgba(0,0,0,0.1);
         height: 100%;
@@ -17,6 +23,12 @@
 
             .GenderButton {
                 display: flex;
+            }
+
+            .SearchBackground,
+            .HeaderSearch
+            {
+                display: none;
             }
         }
 
@@ -34,7 +46,7 @@
             .HeaderBottomBar {
                 direction: rtl;
                 left: unset;
-                right: 0px;
+                right: 0;
             }
         }
     }
@@ -46,4 +58,3 @@
         }
     }
 }
-

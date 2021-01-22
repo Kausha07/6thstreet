@@ -17,25 +17,23 @@ export const mapStateToProps = (state) => ({
     customer: state.MyAccountReducer.customer
 });
 
-export const mapDispatchToProps = (dispatch) => ({
-    requestCustomerData: () => MyAccountDispatcher
-        .then(({ default: dispatcher }) => dispatcher.requestCustomerData(dispatch))
-});
-
 export class HeaderAccountContainer extends PureComponent {
     static propTypes = {
         isBottomBar: PropTypes.bool,
         isAccount: PropTypes.bool,
-        isLoggedIn: PropTypes.bool.isRequired,
         language: PropTypes.string.isRequired,
         customer: customerType,
-        requestCustomerData: PropTypes.func.isRequired
+        requestCustomerData: PropTypes.func.isRequired,
+        handleFooterIsAccountOpen: PropTypes.func,
+        isFooter: PropTypes.bool
     };
 
     static defaultProps = {
         isBottomBar: false,
         isAccount: false,
-        customer: null
+        isFooter: false,
+        customer: null,
+        handleFooterIsAccountOpen: () => {}
     };
 
     containerFunctions = {
@@ -74,4 +72,4 @@ export class HeaderAccountContainer extends PureComponent {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(HeaderAccountContainer);
+export default connect(mapStateToProps, null)(HeaderAccountContainer);

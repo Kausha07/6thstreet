@@ -4,6 +4,7 @@ import ContentWrapper from 'Component/ContentWrapper';
 import MyAccountAddressBook from 'Component/MyAccountAddressBook';
 import MyAccountClubApparel from 'Component/MyAccountClubApparel';
 import MyAccountDashboard from 'Component/MyAccountDashboard';
+import MyAccountMobileHeader from 'Component/MyAccountMobileHeader';
 import MyAccountMyOrders from 'Component/MyAccountMyOrders';
 import MyAccountMyWishlist from 'Component/MyAccountMyWishlist';
 import MyAccountReturns from 'Component/MyAccountReturns';
@@ -21,14 +22,16 @@ import {
     STORE_CREDIT,
     tabMapType
 } from 'Type/Account';
+import { isArabic } from 'Util/App';
+import { deleteAuthorizationToken } from 'Util/Auth';
 import isMobile from 'Util/Mobile';
-
-import { ReactComponent as Close } from './icons/x-close.svg';
 
 export class MyAccount extends SourceMyAccount {
     constructor(props) {
         super(props);
         this.handleClick = this.handleClick.bind(this);
+        this.handleTabChange = this.handleTabChange.bind(this);
+        this.handleSignOut = this.handleSignOut.bind(this);
     }
 
     static propTypes = {
@@ -37,7 +40,13 @@ export class MyAccount extends SourceMyAccount {
         changeActiveTab: PropTypes.func.isRequired,
         onSignIn: PropTypes.func.isRequired,
         onSignOut: PropTypes.func.isRequired,
-        isSignedIn: PropTypes.bool.isRequired
+        isSignedIn: PropTypes.bool.isRequired,
+        mobileTabActive: PropTypes.bool.isRequired,
+        setMobileTabActive: PropTypes.func.isRequired
+    };
+
+    state = {
+        isArabic: isArabic()
     };
 
     renderMap = {
@@ -50,23 +59,17 @@ export class MyAccount extends SourceMyAccount {
         [ADDRESS_BOOK]: MyAccountAddressBook
     };
 
-    state = {
-        mobTabActive: false
-    };
+    handleTabChange(key) {
+        const { changeActiveTab, mobileTabActive, setMobileTabActive } = this.props;
 
-    componentDidUpdate(prevProps) {
-        const { activeTab } = this.props;
-        if (isMobile.any() !== null && prevProps.activeTab !== activeTab) {
-            this.openTabContent(this);
-        }
-    }
-
-    openTabContent() {
-        this.setState({ mobTabActive: true });
+        setMobileTabActive(!mobileTabActive);
+        changeActiveTab(key);
     }
 
     openTabMenu() {
-        this.setState({ mobTabActive: false });
+        const { mobileTabActive, setMobileTabActive } = this.props;
+
+        setMobileTabActive(!mobileTabActive);
     }
 
     handleClick(e) {
@@ -74,34 +77,54 @@ export class MyAccount extends SourceMyAccount {
         this.openTabMenu();
     }
 
+    handleSignOut() {
+        const { onSignOut } = this.props;
+        onSignOut();
+        deleteAuthorizationToken();
+        const { history } = this.props;
+        history.push('/');
+    }
+
     renderDesktop() {
         const {
             activeTab,
             tabMap,
             changeActiveTab,
-            isSignedIn,
-            onSignOut
+            isSignedIn
         } = this.props;
+        const { pathname = '' } = location;
+
+        const { isArabic } = this.state;
 
         if (!isSignedIn) {
             return this.renderLoginOverlay();
         }
 
         const TabContent = this.renderMap[activeTab];
-        const { name, alternativePageName } = tabMap[activeTab];
+        // eslint-disable-next-line no-unused-vars
+        const { name, alternativePageName, alternateName } = tabMap[activeTab];
+        const returnTitle = activeTab === RETURN_ITEM ? __('Return Statement') : null;
+        const isCancel = pathname.includes('/return-item/cancel');
+
         return (
             <ContentWrapper
               label={ __('My Account page') }
-              wrapperMix={ { block: 'MyAccount', elem: 'Wrapper' } }
+              wrapperMix={ { block: 'MyAccount', elem: 'Wrapper', mods: { isArabic } } }
             >
                 <MyAccountTabList
                   tabMap={ tabMap }
                   activeTab={ activeTab }
                   changeActiveTab={ changeActiveTab }
-                  onSignOut={ onSignOut }
+                  onSignOut={ this.handleSignOut }
                 />
-                <div block="MyAccount" elem="TabContent">
-                    <h1 block="MyAccount" elem="Heading">{ alternativePageName || name }</h1>
+                <div block="MyAccount" elem="TabContent" mods={ { isArabic } }>
+                    { alternativePageName === 'Club Apparel Loyalty' || name === 'Club Apparel Loyalty'
+                        ? null : (
+                            <h1 block="MyAccount" elem="Heading">
+                                { isCancel ? alternateName : alternativePageName
+                                || (returnTitle || name) }
+                            </h1>
+                        ) }
                     <TabContent />
                 </div>
             </ContentWrapper>
@@ -112,51 +135,40 @@ export class MyAccount extends SourceMyAccount {
         const {
             activeTab,
             tabMap,
-            changeActiveTab,
             isSignedIn,
-            onSignOut
+            mobileTabActive
         } = this.props;
 
-        const { mobTabActive } = this.state;
-
-        const hiddenTabContent = mobTabActive ? 'Active' : 'Hidden';
-        const hiddenTabList = mobTabActive ? 'Hidden' : 'Active';
+        const hiddenTabContent = mobileTabActive ? 'Active' : 'Hidden';
+        const hiddenTabList = mobileTabActive ? 'Hidden' : 'Active';
 
         if (!isSignedIn) {
             return this.renderLoginOverlay();
         }
 
         const TabContent = this.renderMap[activeTab];
-        const { name } = tabMap[activeTab];
+        const { alternativePageName, name } = tabMap[activeTab];
         return (
             <ContentWrapper
               label={ __('My Account page') }
               wrapperMix={ { block: 'MyAccount', elem: 'Wrapper' } }
             >
+                <MyAccountMobileHeader
+                  onClose={ this.handleClick }
+                  isHiddenTabContent={ hiddenTabContent === 'Active' }
+                  alternativePageName={ alternativePageName }
+                  name={ name }
+                />
                 <div block={ hiddenTabList }>
                     <MyAccountTabList
                       tabMap={ tabMap }
                       activeTab={ activeTab }
-                      changeActiveTab={ changeActiveTab }
-                      onSignOut={ onSignOut }
+                      changeActiveTab={ this.handleTabChange }
+                      onSignOut={ this.handleSignOut }
                     />
-                    <div block="TermsAndPrivacy">
-                        Terms and conditions and
-                        <a id="privacy-link" href="https://en-ae.6thstreet.com/privacy-policy"> privacy policy</a>
-                    </div>
                 </div>
-                { hiddenTabContent === 'Active' ? (
-                    <button
-                      elem="Button"
-                      block="Cross-button"
-                      onClick={ this.handleClick }
-                    >
-                        <Close />
-                    </button>
-                ) : ('') }
                 <div block={ hiddenTabContent }>
                     <div block="MyAccount" elem="TabContent">
-                        <h1 block="MyAccount" elem="Heading">{ name }</h1>
                         <TabContent />
                     </div>
                 </div>

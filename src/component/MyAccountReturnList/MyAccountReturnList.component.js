@@ -9,7 +9,8 @@ import './MyAccountReturnList.style';
 class MyAccountReturnList extends PureComponent {
     static propTypes = {
         isLoading: PropTypes.bool.isRequired,
-        returns: PropTypes.array.isRequired
+        returns: PropTypes.array.isRequired,
+        handleCreateClick: PropTypes.func.isRequired
     };
 
     renderReturn(returnItem) {
@@ -25,13 +26,13 @@ class MyAccountReturnList extends PureComponent {
 
     renderNoReturns() {
         return (
-            <p>{ __('No returns') }</p>
+            <p>{ __('You have placed no returns.') }</p>
         );
     }
 
     renderReturns() {
         const {
-            returns,
+            returns = [],
             isLoading
         } = this.props;
 
@@ -51,10 +52,11 @@ class MyAccountReturnList extends PureComponent {
     }
 
     renderHeading() {
+        const { handleCreateClick } = this.props;
+
         return (
             <div block="MyAccountReturnList" elem="Header">
-                <h2 block="MyAccountReturnList" elem="Heading">{ __('Return statement') }</h2>
-                <button block="MyAccountReturnList" elem="Button">
+                <button block="MyAccountReturnList" elem="Button" onClick={ handleCreateClick }>
                     { __('Return an item') }
                 </button>
             </div>

@@ -10,8 +10,6 @@ import { connect } from 'react-redux';
 
 import { toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
 import { Filter } from 'Util/API/endpoint/Product/Product.type';
-import WebUrlParser from 'Util/API/helper/WebUrlParser';
-import isMobile from 'Util/Mobile';
 
 import PLPFilter from './PLPFilter.component';
 
@@ -25,9 +23,15 @@ class PLPFilterContainer extends PureComponent {
     static propTypes = {
         filter: Filter.isRequired,
         toggleOverlayByKey: PropTypes.func.isRequired,
+        updateFilters: PropTypes.func.isRequired,
         parentCallback: PropTypes.func.isRequired,
         currentActiveFilter: PropTypes.string,
-        changeActiveFilter: PropTypes.func.isRequired
+        changeActiveFilter: PropTypes.func.isRequired,
+        isReset: PropTypes.bool.isRequired,
+        defaultFilters: PropTypes.bool.isRequired,
+        resetParentState: PropTypes.func.isRequired,
+        setDefaultFilters: PropTypes.func.isRequired,
+        parentActiveFilters: PropTypes.object.isRequired
     };
 
     static defaultProps = {
@@ -35,51 +39,38 @@ class PLPFilterContainer extends PureComponent {
     };
 
     state = {
-        activeFilter: {},
-        isChecked: false
+        activeFilters: {},
+        isChecked: false,
+        prevActiveFilters: {}
     };
 
     containerFunctions = {
-        onSelect: this.onSelect.bind(this)
+        handleCallback: this.handleCallback.bind(this)
     };
 
-    onSelect() {
-        const {
-            filter: { category },
-            parentCallback
-        } = this.props;
-
-        // This syntax gets form with name "filters" from document
-        // then it extracts all inputs from form
-        const inputs = Array.from(document.forms.filters[category] || []);
-
-        const values = inputs.reduce((acc, node) => {
-            const { checked, value } = node;
-
-            if (checked) {
-                acc.push(value);
-            }
-
-            return acc;
-        }, []);
-
-        if (!isMobile.any()) {
-            WebUrlParser.setParam(category, values);
-        } else {
-            parentCallback(category, values);
-            this.setState({
-                activeFilter: {
-                    [ category ]: { values }
-                },
-                isChecked: true
-            });
-        }
+    handleCallback(initialFacetKey, facet_value, checked, isRadio) {
+        const { parentCallback } = this.props;
+        parentCallback(initialFacetKey, facet_value, checked, isRadio);
     }
 
     containerProps = () => {
-        const { filter, changeActiveFilter, currentActiveFilter } = this.props;
+        const {
+            filter,
+            changeActiveFilter,
+            currentActiveFilter,
+            updateFilters,
+            setDefaultFilters,
+            defaultFilters
+        } = this.props;
 
-        return { filter, changeActiveFilter, currentActiveFilter };
+        return {
+            filter,
+            changeActiveFilter,
+            currentActiveFilter,
+            updateFilters,
+            setDefaultFilters,
+            defaultFilters
+        };
     };
 
     render() {

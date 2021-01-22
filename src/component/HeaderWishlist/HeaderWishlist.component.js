@@ -12,7 +12,9 @@ class HeaderWishlist extends PureComponent {
         isBottomBar: PropTypes.bool.isRequired,
         isWishlist: PropTypes.bool.isRequired,
         wishListItems: PropTypes.array.isRequired,
-        isMobile: PropTypes.bool
+        isMobile: PropTypes.bool,
+        isSignedIn: PropTypes.bool.isRequired,
+        showNotification: PropTypes.func.isRequired
     };
 
     static defaultProps = {
@@ -24,9 +26,13 @@ class HeaderWishlist extends PureComponent {
     };
 
     routeChangeWishlist = () => {
-        const { history } = this.props;
+        const { history, isSignedIn, showNotification } = this.props;
 
-        history.push('/my-account/my-wishlist');
+        if (isSignedIn) {
+            history.push('/my-account/my-wishlist');
+        } else {
+            showNotification('error', __('You should be logged in to have a wishlist'));
+        }
     };
 
     render() {
@@ -34,7 +40,7 @@ class HeaderWishlist extends PureComponent {
             isBottomBar,
             isWishlist,
             isMobile,
-            wishListItems
+            wishListItems = []
         } = this.props;
         const { isArabic } = this.state;
         const itemsCount = wishListItems.length;
@@ -58,11 +64,12 @@ class HeaderWishlist extends PureComponent {
             >
                 <button
                   onClick={ this.routeChangeWishlist }
+                  type="button"
                 >
                     <div block="HeaderWishlist" elem="Count" mods={ { have: !!itemsCount } }>{ itemsCount }</div>
                     <span block="HeaderWishlist" elem="Heart" mods={ { isBlack: !!itemsCount } } />
                 </button>
-                <label htmlFor="WishList">{ __('WishList') }</label>
+                <label htmlFor="WishList">{ __('Wishlist') }</label>
             </div>
         );
     }

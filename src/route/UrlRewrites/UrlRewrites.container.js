@@ -8,7 +8,7 @@ import { LocationType } from 'Type/Common';
 import { fetchQuery } from 'Util/Request';
 
 import UrlRewrites from './UrlRewrites.component';
-import { TYPE_NOTFOUND } from './UrlRewrites.config';
+import { TYPE_CATEGORY, TYPE_NOTFOUND, TYPE_PRODUCT } from './UrlRewrites.config';
 
 export const mapStateToProps = (state) => ({
     locale: state.AppState.locale
@@ -33,7 +33,8 @@ export class UrlRewritesContainer extends PureComponent {
         prevPathname: '',
         isLoading: true,
         type: '',
-        id: -1
+        id: -1,
+        sku: ''
     };
 
     constructor(props) {
@@ -42,16 +43,19 @@ export class UrlRewritesContainer extends PureComponent {
         this.requestUrlRewrite();
     }
 
-    componentDidUpdate(prevProps) {
-        const { location: { pathname }, locale, hideActiveOverlay } = this.props;
+    componentDidUpdate(prevProps, prevState) {
+        const { pathname } = location;
+        const { locale, hideActiveOverlay } = this.props;
         const { locale: prevLocale } = prevProps;
         const { prevPathname } = this.state;
+        const { prevPathname: prevStatePathname } = prevState;
 
         if (
             pathname !== prevPathname
-            || locale !== prevLocale
+            || locale !== prevLocale || !prevStatePathname
         ) {
             hideActiveOverlay();
+            document.body.style.overflow = 'visible';
             // Request URL rewrite if pathname or locale changed
             this.requestUrlRewrite(true);
         }
@@ -59,7 +63,11 @@ export class UrlRewritesContainer extends PureComponent {
 
     async requestUrlRewrite(isUpdate = false) {
         // TODO: rename this to pathname, urlParam is strange
-        const { location: { pathname: urlParam } } = this.props;
+        const { pathname: urlParam = '' } = location;
+        const slicedUrl = urlParam.slice(urlParam.search('id/'));
+        // eslint-disable-next-line no-magic-numbers
+        const magentoProductId = Number((slicedUrl.slice('3')).split('/')[0]);
+        const possibleSku = this.getPossibleSku();
 
         if (isUpdate) {
             this.setState({
@@ -70,29 +78,51 @@ export class UrlRewritesContainer extends PureComponent {
 
         // TODO: switch to "executeGet" afterwards
         const { urlResolver } = await fetchQuery(UrlRewritesQuery.getQuery({ urlParam }));
-        const { type = TYPE_NOTFOUND, id } = urlResolver || {};
+        const { type = magentoProductId || possibleSku ? TYPE_PRODUCT : TYPE_NOTFOUND, id } = urlResolver || {};
+        const finalType = type === TYPE_NOTFOUND && decodeURI(location.search).match(/idx=/)
+            ? TYPE_CATEGORY
+            : type;
 
-        window.pageType = type;
+        window.pageType = finalType;
 
         this.setState({
             prevPathname: urlParam,
             isLoading: false,
-            type,
-            id
+            type: finalType,
+            id: id === undefined ? magentoProductId : id,
+            sku: possibleSku
         });
+    }
+
+    getPossibleSku() {
+        const { pathname } = location;
+
+        const uriElements = pathname.substr(0, pathname.indexOf('.html')).substr(1).split('-');
+
+        const result = uriElements.reduce((acc, element) => {
+            if (/\d/.test(element) || acc.length !== 0) {
+                acc.push(element);
+            }
+
+            return acc;
+        }, []).join('-');
+
+        return result.length ? result : false;
     }
 
     containerProps = () => {
         const {
             isLoading,
             type,
-            id
+            id,
+            sku
         } = this.state;
 
         return {
             isLoading,
             type,
-            id
+            id,
+            sku
         };
     };
 

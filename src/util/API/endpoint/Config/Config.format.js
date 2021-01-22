@@ -1,8 +1,8 @@
 export const getCountriesForSelect = (config) => {
-    const { countries } = config;
+    const { countries = {} } = config;
 
     const countryMap = {
-        AE: __('United Arab Emirates'),
+        AE: __('UAE'),
         SA: __('Saudi Arabia'),
         KW: __('Kuwait'),
         OM: __('Oman'),
@@ -13,7 +13,7 @@ export const getCountriesForSelect = (config) => {
     // TODO ask if this has endpoint, take from M2
     // const allowedCountries = ['AE', 'SA', 'KW'];
 
-    return Object.keys(countries).map((value) => ({
+    return Object.keys(countries).map((value = '') => ({
         id: value,
         value,
         label: countryMap[value.toUpperCase()]
@@ -30,9 +30,9 @@ export const getCountryLocaleForSelect = (config, country) => {
     const defaultValue = { locales: Object.keys(languageMap) };
 
     // Return all keys, if language is not yet defined
-    const { locales } = countries[country] || defaultValue;
+    const { locales = [] } = countries[country] || defaultValue;
 
-    return locales.map((locale) => {
+    return locales.map((locale = '') => {
         const language = locale.slice(0, 2).toLowerCase();
 
         return {
@@ -44,7 +44,7 @@ export const getCountryLocaleForSelect = (config, country) => {
 };
 
 export const indexConfig = async (config) => {
-    const { countries } = await config;
+    const { countries = [] } = await config;
 
     return {
         ...await config,

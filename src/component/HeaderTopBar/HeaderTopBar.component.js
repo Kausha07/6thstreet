@@ -25,7 +25,9 @@ class HeaderTopBar extends NavigationAbstract {
     };
 
     state = {
-        isOnMobile: false
+        isOnMobile: false,
+        pageYOffset: 0,
+        isHidden: false
     };
 
     renderMap = {
@@ -44,6 +46,19 @@ class HeaderTopBar extends NavigationAbstract {
         };
     }
 
+    componentDidMount() {
+        window.addEventListener('scroll', this.handleScroll);
+    }
+
+    handleScroll = () => {
+        const { pageYOffset } = this.state;
+
+        this.setState({
+            isHidden: window.pageYOffset > pageYOffset,
+            pageYOffset: window.pageYOffset
+        });
+    };
+
     renderCmsBlock() {
         // TODO: find out what is this, render here
         return (
@@ -52,7 +67,7 @@ class HeaderTopBar extends NavigationAbstract {
               block="HeaderTopBar"
               elem="CmsBlock"
             >
-                ALL PRICES ARE INCLUSIVE OF VAT
+                { __('ALL PRICES ARE INCLUSIVE OF VAT') }
             </div>
         );
     }
@@ -73,10 +88,10 @@ class HeaderTopBar extends NavigationAbstract {
     }
 
     render() {
-        const { isOnMobile } = this.state;
+        const { isHidden, isOnMobile } = this.state;
 
         return (
-            <div block="HeaderTopBar" mods={ { isOnMobile } }>
+            <div block="HeaderTopBar" mods={ { isHidden, isOnMobile } }>
                 <div block="HeaderTopBar" elem="ContentWrapper">
                     { this.renderNavigationState() }
                 </div>

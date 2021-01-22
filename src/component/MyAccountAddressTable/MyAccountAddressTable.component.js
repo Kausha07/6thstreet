@@ -68,11 +68,8 @@ export class MyAccountAddressTable extends KeyValueTable {
     renderActions() {
         const {
             onDeleteClick,
-            showActions,
-            address: { default_billing, default_shipping }
+            showActions
         } = this.props;
-
-        const isDeleteAllowed = default_shipping || default_billing;
 
         if (!showActions) {
             return null;
@@ -97,8 +94,6 @@ export class MyAccountAddressTable extends KeyValueTable {
                   block="MyAccountAddressTable"
                   elem="ActionBtn"
                   onClick={ onDeleteClick }
-                  disabled={ isDeleteAllowed }
-                  title={ isDeleteAllowed ? __('Can not delete - address is set as default.') : 'Delete this address' }
                 >
                     <img
                       block="MyAccountAddressTable"
@@ -121,7 +116,7 @@ export class MyAccountAddressTable extends KeyValueTable {
     };
 
     getPhone = () => {
-        const { address: { telephone } } = this.props;
+        const { address: { telephone = '' } } = this.props;
         const numbers = telephone.slice(1);
         const code = numbers.slice(0, 3);
         const phone = numbers.slice(3);
@@ -148,7 +143,7 @@ export class MyAccountAddressTable extends KeyValueTable {
             }
         } = this.props;
 
-        const def = default_billing === true ? 'default' : ' ';
+        const def = default_billing === true ? __('default') : ' ';
         const countryId = `(${country_id})`;
 
         return (
@@ -173,7 +168,7 @@ export class MyAccountAddressTable extends KeyValueTable {
     }
 
     render() {
-        const { countries, mix } = this.props;
+        const { countries = [], mix } = this.props;
 
         return (
             <div block="MyAccountAddressTable" mix={ mix }>

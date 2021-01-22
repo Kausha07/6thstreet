@@ -6,10 +6,22 @@ export class AppConfigDispatcher {
     async getAppConfig(dispatch) {
         try {
             const config = await getConfig();
-            dispatch(setAppConfig(config));
+            const gtmConfig = this.getGtmConfig();
+            const appConfig = { ...config, ...gtmConfig };
+
+            dispatch(setAppConfig(appConfig));
         } catch (e) {
             Logger.log(e);
         }
+    }
+
+    getGtmConfig() {
+        return {
+            gtm: {
+                gtm_id: process.env.REACT_APP_GTM_ID,
+                enabled: process.env.REACT_APP_GTM_ENABLED === 'true'
+            }
+        };
     }
 
     /* eslint-disable-next-line */

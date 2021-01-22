@@ -23,7 +23,11 @@ export class PDPGalleryContainer extends PureComponent {
         isLoading: PropTypes.bool.isRequired,
         product: Product.isRequired,
         setImageIndex: PropTypes.func.isRequired,
-        index: PropTypes.number.isRequired
+        index: PropTypes.number
+    };
+
+    static defaultProps = {
+        index: 0
     };
 
     containerFunctions = {
@@ -48,7 +52,7 @@ export class PDPGalleryContainer extends PureComponent {
 
     getCrumbs() {
         // TODO: determine if has video append it here
-        const galleryCrumbs = Object.keys(this.getGallery());
+        const galleryCrumbs = Object.keys(this.getGallery() || {});
         return galleryCrumbs;
     }
 

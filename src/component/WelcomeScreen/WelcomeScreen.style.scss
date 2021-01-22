@@ -2,7 +2,8 @@
 
     &-Content {
         min-width: 385px;
-        font-family: "Avenir Next Regular";
+        font-weight: var(--fw-regular);
+        height: 100%;
 
         @include mobile() {
             min-width: 300px;
@@ -16,6 +17,15 @@
     }
 
     &-List {
+        display: flex;
+        flex-direction: column;
+        margin-top: 10px;
+
+        &Container {
+            overflow: auto;
+            height: calc(100% - 145px);
+        }
+
         li {
             list-style: none;
             padding: 0;
@@ -28,13 +38,24 @@
             }
 
             &:last-child {
-                border-bottom: none;
+                margin-bottom: 0;
             }
+        }
+    }
+
+    &-CountryItem {
+        &_isCurrent {
+            order: -1;
         }
     }
 
     &-Options {
         padding: 30px 55px 10px;
+        height: 100%;
+
+        h1, p {
+            text-align: left;
+        }
 
         @include mobile() {
             padding: 30px 20px 10px;
@@ -79,11 +100,11 @@
         width: 100%;
         text-align: start;
         padding: 0;
-        margin-top: 10px;
-        font-weight: 400;
+        margin-top: 0;
+        font-weight: var(--fw-regular);
 
         &_isCurrent {
-            font-weight: 600;
+            font-weight: var(--fw-demi);
         }
     }
 }

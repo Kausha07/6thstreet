@@ -16,7 +16,7 @@ class MyAccountStoreCredit extends PureComponent {
         const {
             storeCredit: {
                 current_balance: balance
-            }
+            } = {}
         } = this.props;
 
         return (
@@ -25,13 +25,13 @@ class MyAccountStoreCredit extends PureComponent {
                     { __('Current Store Credit:') }
                 </span>
                 <span block={ this.blockClass } elem="BalanceAmount">
-                    { balance }
+                    { balance || '' }
                 </span>
             </div>
         );
     }
 
-    renderTableHead(headers) {
+    renderTableHead(headers = []) {
         return (
             <thead>
                 { headers.map((header) => (
@@ -41,10 +41,10 @@ class MyAccountStoreCredit extends PureComponent {
         );
     }
 
-    renderTableRows(rows) {
+    renderTableRows(rows = []) {
         return (
             <tbody>
-                { rows.map((cells) => (
+                { rows.map((cells = []) => (
                     <tr>
                         { cells.map((value) => (
                             <td>{ value }</td>
@@ -58,9 +58,14 @@ class MyAccountStoreCredit extends PureComponent {
     renderHistory() {
         const {
             storeCredit: {
-                history
-            }
+                history = []
+            } = {}
         } = this.props;
+
+        if (!history || !history.length) {
+            return null;
+        }
+
         const headers = [
             __('Action'),
             __('Balance Change'),

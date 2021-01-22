@@ -35,8 +35,12 @@ export class Breadcrumbs extends PureComponent {
         isArabic: isArabic()
     };
 
-    renderBreadcrumb({ url, name }, i) {
-        const { breadcrumbs } = this.props;
+    renderBreadcrumb({
+        url,
+        name,
+        onClick
+    }, i) {
+        const { breadcrumbs = [] } = this.props;
         const { isArabic } = this.state;
         const isDisabled = !url || breadcrumbs.length - 1 === i;
 
@@ -48,18 +52,19 @@ export class Breadcrumbs extends PureComponent {
               key={ i }
               isDisabled={ isDisabled }
               isArabic={ isArabic }
+              onClick={ onClick }
             />
         );
     }
 
-    renderBreadcrumbList(breadcrumbs) {
+    renderBreadcrumbList(breadcrumbs = []) {
         return breadcrumbs.map((_, i) => this.renderBreadcrumb(
             breadcrumbs[breadcrumbs.length - 1 - i], i
         ));
     }
 
     render() {
-        const { breadcrumbs, areBreadcrumbsVisible } = this.props;
+        const { breadcrumbs = [], areBreadcrumbsVisible } = this.props;
 
         if (
             !areBreadcrumbsVisible

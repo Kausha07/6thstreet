@@ -1,10 +1,6 @@
 :root {
-    --dynamic-content-grid-column-count-mobile: 2;
-    --dynamic-content-grid-column-count-tablet: 2;
-    --dynamic-content-grid-column-count-desktop: 3;
     --subtitle-font-size: 17px;
     --title-font-size: 25px;
-    --title-font-family: "Avenir Next Bold";
     --light-gray: #efefef;
 }
 
@@ -14,7 +10,19 @@
     &-Grid {
         display: grid;
         grid-gap: 0 0;
-        grid-template-columns: repeat(var(--dynamic-content-grid-column-count-mobile), 1fr);
+
+        &_items_per_row_1 {
+            grid-template-columns: repeat(1, 1fr);
+        }
+        &_items_per_row_2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        &_items_per_row_3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        &_items_per_row_4 {
+            grid-template-columns: repeat(4, 1fr);
+        }
 
         a {
             margin: 0;
@@ -23,6 +31,7 @@
 
     .Image {
         height: auto;
+        max-width: 220px; // Tempo before JSON will be updated
         padding-bottom: 0;
 
         &-Image {
@@ -31,45 +40,19 @@
         }
     }
 
-    &-Heading {
-        margin: 4rem auto;
+    h2 {
+        // border-top: 1px solid var(--light-gray);
+        font-size: 20px;
+        margin-top: 30px;
+        padding: 20px;
         text-align: center;
-
-        h2, span {
-            line-height: 1.5rem;
-            margin: 0;
-            width: 100%;
-        }
-
-        h2 {
-            font-family: 'Avenir Next Bold', serif;
-            margin-bottom: 5px;
-
-            @include desktop {
-                font-size: large;
-            }
-        }
-
-        span {
-            font-family: 'Avenir Next Regular', serif;
-
-            @include desktop {
-                font-size: 1.2rem;
-            }
-        }
+        text-transform: uppercase;
     }
 
     @include desktop {
         &-Grid {
-            grid-template-columns: repeat(var(--dynamic-content-grid-column-count-desktop), 1fr);
             margin-left: 70px;
             margin-right: 70px;
-        }
-    }
-
-    @include  tablet {
-        &-Grid {
-            grid-template-columns: repeat(var(--dynamic-content-grid-column-count-tablet), 1fr);
         }
     }
 }
@@ -87,7 +70,7 @@
 
     &-Title {
         display: block;
-        font-family: var(--title-font-family);
+        font-weight: var(--fw-bold);
         font-size: var(--title-font-size);
         margin-bottom: 10px;
         text-transform: uppercase;

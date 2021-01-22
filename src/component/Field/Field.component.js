@@ -6,6 +6,9 @@ import FieldInput from 'SourceComponent/FieldInput';
 
 import {
     CHECKBOX_TYPE,
+    DATE_TYPE,
+    EMAIL_TYPE,
+    PHONE_TYPE,
     RADIO_TYPE,
     TOGGLE_TYPE
 } from './Field.config';
@@ -17,6 +20,26 @@ import './Field.extended.style';
  * @class Field
  */
 export class Field extends SourceField {
+    renderRadioButton() {
+        const {
+            id,
+            label,
+            onClick
+        } = this.props;
+
+        return (
+            <label htmlFor={ id }>
+                <FieldInput
+                  { ...this.props }
+                  type="radio"
+                  onChange={ onClick }
+                />
+                <label htmlFor={ id } />
+                <span>{ label }</span>
+            </label>
+        );
+    }
+
     renderToggle() {
         const {
             id,
@@ -32,6 +55,7 @@ export class Field extends SourceField {
                 />
                 <div>
                     <label htmlFor={ id } />
+                    <label block="Field" elem="FakeLabel" htmlFor={ id } />
                 </div>
             </div>
         );
@@ -50,9 +74,49 @@ export class Field extends SourceField {
         return super.renderLabel();
     }
 
+    renderDate() {
+        return (
+            <FieldInput
+              { ...this.props }
+              type="date"
+            />
+        );
+    }
+
+    renderTypeEmail() {
+        return (
+            <FieldInput
+              { ...this.props }
+              type="email"
+            />
+        );
+    }
+
+    renderPhone() {
+        return (
+            <FieldInput
+              { ...this.props }
+              type="number"
+              max="none"
+            />
+        );
+    }
+
     renderInputOfType(type) {
         if (type === TOGGLE_TYPE) {
             return this.renderToggle();
+        }
+
+        if (type === DATE_TYPE) {
+            return this.renderDate();
+        }
+
+        if (type === EMAIL_TYPE) {
+            return this.renderTypeEmail();
+        }
+
+        if (type === PHONE_TYPE) {
+            return this.renderPhone();
         }
 
         return super.renderInputOfType(type);

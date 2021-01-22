@@ -12,6 +12,8 @@
 import PropTypes from 'prop-types';
 
 import MyAccountAddressFieldForm from 'Component/MyAccountAddressFieldForm';
+import { PHONE_CODES } from 'Component/MyAccountAddressFieldForm/MyAccountAddressFieldForm.config';
+import { COUNTRY_CODES_FOR_PHONE_VALIDATION } from 'Component/MyAccountAddressForm/MyAccountAddressForm.config';
 import { addressType } from 'Type/Account';
 import { countriesType } from 'Type/Config';
 import { isArabic } from 'Util/App';
@@ -114,7 +116,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
 
     getRegionFields() {
         const { newForm, address: { city, region: { region } = {} } } = this.props;
-        const { availableAreas, cities } = this.state;
+        const { availableAreas = [], cities = [] } = this.state;
         const clearValue = newForm ? { value: '' } : null;
 
         if (cities.length && city && !availableAreas.length) {
@@ -137,7 +139,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
             region_id: {
                 validation: ['notEmpty'],
                 type: 'select',
-                selectOptions: availableAreas.map((area) => ({ id: area, label: area, value: area })),
+                selectOptions: availableAreas.map(({ key, label }) => ({ id: key, label, value: key })),
                 value: region,
                 placeholder: __('City area'),
                 ...clearValue,
@@ -147,7 +149,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
     }
 
     async getCitiesData() {
-        const { cities } = this.state;
+        const { cities = [] } = this.state;
         const { getCities } = this.props;
 
         if (cities.length === 0) {
@@ -165,12 +167,17 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         const { cities } = this.state;
 
         if (isArabic()) {
-            const trueArabicCity = cities.find(({ city_ar }) => cityFromProps === city_ar);
-
+            const trueArabicCity = cities.find(({ city }) => cityFromProps === city);
             if (trueArabicCity) {
-                const { areas_ar } = trueArabicCity;
+                const { areas_ar = [], areas } = trueArabicCity;
+
+                // eslint-disable-next-line arrow-body-style
+                const result = areas_ar.map((area_ar, i) => {
+                    return { label: area_ar, key: areas[i] };
+                });
+
                 this.setState({
-                    availableAreas: areas_ar || []
+                    availableAreas: result || []
                 });
             }
 
@@ -179,10 +186,15 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         const trueCity = cities.find(({ city }) => cityFromProps === city);
 
         if (trueCity) {
-            const { areas } = trueCity;
+            const { areas = [] } = trueCity;
+
+            // eslint-disable-next-line arrow-body-style
+            const result = areas.map((area) => {
+                return { label: area, key: area };
+            });
 
             this.setState({
-                availableAreas: areas || []
+                availableAreas: result || []
             });
         }
     };
@@ -191,13 +203,19 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         const { cities } = this.state;
 
         if (isArabic()) {
-            const trueArabicCity = cities.find(({ city_ar }) => selectedCity === city_ar);
+            const trueArabicCity = cities.find(({ city }) => selectedCity === city);
 
             if (trueArabicCity) {
-                const { areas_ar } = trueArabicCity;
+                const { areas_ar = [], areas } = trueArabicCity;
+
+                // eslint-disable-next-line arrow-body-style
+                const result = areas_ar.map((area_ar, i) => {
+                    return { label: area_ar, key: areas[i] };
+                });
+
                 this.setState({
                     city: trueArabicCity,
-                    availableAreas: areas_ar || []
+                    availableAreas: result || []
                 });
             }
 
@@ -206,11 +224,16 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         const trueCity = cities.find(({ city }) => selectedCity === city);
 
         if (trueCity) {
-            const { areas } = trueCity;
+            const { areas = [] } = trueCity;
+
+            // eslint-disable-next-line arrow-body-style
+            const result = areas.map((area) => {
+                return { label: area, key: area };
+            });
 
             this.setState({
                 city: trueCity,
-                availableAreas: areas || []
+                availableAreas: result || []
             });
         }
     };
@@ -224,7 +247,7 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
 
     addPhoneCode = () => {
         const { default_country } = this.props;
-        const code = this.renderCurrentPhoneCode(default_country);
+        const code = PHONE_CODES[default_country] || '';
         return code;
     };
 
@@ -238,17 +261,17 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
     }
 
     getCitiesSelectOptions = () => {
-        const { cities } = this.state;
+        const { cities = [] } = this.state;
 
         if (isArabic()) {
-            return cities.map((item) => ({ id: item.city_ar, label: item.city_ar, value: item.city_ar }));
+            return cities.map((item) => ({ id: item.city, label: item.city_ar, value: item.city }));
         }
 
         return cities.map((item) => ({ id: item.city, label: item.city, value: item.city }));
     };
 
     getAreasSelectOptions = () => {
-        const { availableAreas } = this.state;
+        const { availableAreas = [] } = this.state;
 
         if (isArabic()) {
             return availableAreas.map((area) => ({ id: area, label: area, value: area }));
@@ -256,6 +279,20 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
 
         return availableAreas.map((area) => ({ id: area, label: area, value: area }));
     };
+
+    getValidationForTelephone() {
+        const { default_country } = this.props;
+
+        return COUNTRY_CODES_FOR_PHONE_VALIDATION[default_country]
+            ? 'telephoneAE' : 'telephone';
+    }
+
+    getPhoneNumberMaxLength() {
+        const { default_country } = this.props;
+
+        return COUNTRY_CODES_FOR_PHONE_VALIDATION[default_country]
+            ? '9' : '8';
+    }
 
     get fieldMap() {
         const {
@@ -287,16 +324,22 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
             },
             firstname: {
                 validation: ['notEmpty'],
-                value: firstname
+                value: firstname,
+                autocomplete: 'on'
             },
             lastname: {
                 validation: ['notEmpty'],
                 value: lastname
             },
+            phoneCode: {
+
+            },
             telephone: {
-                validation: ['notEmpty'],
+                validation: ['notEmpty', this.getValidationForTelephone()],
+                maxLength: this.getPhoneNumberMaxLength(),
                 placeholder: __('Phone Number'),
                 value: this.cutPhoneCode(telephone),
+                type: 'phone',
                 ...clearValue
             },
             city: {
@@ -309,7 +352,8 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
             },
             country_id: {
                 validation: ['notEmpty'],
-                value: default_country
+                value: default_country,
+                autocomplete: 'none'
             },
             ...this.getRegionFields(),
             postcode: {

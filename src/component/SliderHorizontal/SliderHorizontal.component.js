@@ -79,7 +79,7 @@ export class SliderHorizontal extends SliderVertical {
     }
 
     isSlider() {
-        const { children, isZoomEnabled } = this.props;
+        const { children = [], isZoomEnabled } = this.props;
         const { countPerPage } = this.state;
 
         if (!isZoomEnabled) {
@@ -90,7 +90,7 @@ export class SliderHorizontal extends SliderVertical {
     }
 
     renderCrumbs() {
-        const { children } = this.props;
+        const { children = [] } = this.props;
         if (children.length <= 1) {
             return null;
         }

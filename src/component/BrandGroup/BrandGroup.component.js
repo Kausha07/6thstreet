@@ -10,26 +10,29 @@ class BrandGroup extends PureComponent {
     static propTypes = {
         letter: PropTypes.string.isRequired,
         isFiltered: PropTypes.bool,
-        brands: Brands.isRequired
+        brands: Brands.isRequired,
+        type: PropTypes.string.isRequired
     };
 
     static defaultProps = {
         isFiltered: false
     };
 
-    renderBrand(brand) {
+    renderBrand = (brand) => {
+        const { type } = this.props;
         const { name } = brand;
 
         return (
             <Brand
               key={ name }
               brand={ brand }
+              type={ type }
             />
         );
-    }
+    };
 
     renderBrands() {
-        const { brands } = this.props;
+        const { brands = [] } = this.props;
 
         return brands.map(this.renderBrand);
     }

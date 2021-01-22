@@ -12,12 +12,17 @@
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
+import { connect } from 'react-redux';
 
 import Link from 'Component/Link';
 import TextPlaceholder from 'Component/TextPlaceholder';
 
 import './Breadcrumb.extended.style';
 import './Breadcrumb.style';
+
+export const mapStateToProps = (state) => ({
+    gender: state.AppState.gender
+});
 
 export class Breadcrumb extends PureComponent {
     static propTypes = {
@@ -28,12 +33,24 @@ export class Breadcrumb extends PureComponent {
             PropTypes.string,
             PropTypes.shape({})
         ]),
-        name: PropTypes.string
+        name: PropTypes.string,
+        onClick: PropTypes.func,
+        gender: PropTypes.string.isRequired
     };
 
     static defaultProps = {
         url: '',
-        name: ''
+        name: '',
+        onClick: () => {}
+    };
+
+    handleBradcrumbClick = () => {
+        const {
+            onClick,
+            gender
+        } = this.props;
+
+        onClick(gender);
     };
 
     renderLink() {
@@ -49,6 +66,7 @@ export class Breadcrumb extends PureComponent {
               elem="Link"
               to={ url || '' }
               tabIndex={ isDisabled ? '-1' : '0' }
+              onClick={ this.handleBradcrumbClick }
             >
                 <meta itemProp="item" content={ window.location.origin + (url || '') } />
                 <span itemProp="name">
@@ -63,7 +81,7 @@ export class Breadcrumb extends PureComponent {
         const { name } = this.props;
 
         return (
-            <TextPlaceholder content={ name } />
+            <TextPlaceholder content={ __(name) } />
         );
     }
 
@@ -85,4 +103,4 @@ export class Breadcrumb extends PureComponent {
     }
 }
 
-export default Breadcrumb;
+export default connect(mapStateToProps, null)(Breadcrumb);

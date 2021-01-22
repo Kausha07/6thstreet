@@ -1,4 +1,4 @@
-:root { 
+:root {
     --white: #ffffff;
     --burning-orange: #ff742f;
 }
@@ -8,7 +8,7 @@
     color: var(--white);
     text-align: center;
     text-transform: uppercase;
-    font-weight: 400;
+    font-weight: var(--fw-regular);
     font-size: 16px;
 
     .Image {
@@ -16,6 +16,25 @@
 
         &-Image {
             position: static;
+        }
+    }
+
+    a {
+        display: inline-flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    button {
+        border: 1px solid var(--black-color);
+        width: 195px;
+        height: 40px;
+        font-size: 12px;
+        font-weight: var(--fw-demi);
+        margin-top: 10px;
+
+        &:hover{
+            text-decoration: underline;
         }
     }
 }

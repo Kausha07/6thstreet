@@ -4,7 +4,6 @@
 }
 
 @include before-desktop {
-
     .HeaderAccount-PopUp,
     .HeaderAccount-PopUp_isHidden_undefined {
         display: block;
@@ -36,7 +35,6 @@
 }
 
 @include mobile {
-
     .MyAccountOverlay-Action {
         display: block;
     }
@@ -48,7 +46,6 @@
 
 .MyAccountOverlay-Button,
 .Button {
-
     &:hover {
         background-color: var(--black-color);
     }
@@ -62,10 +59,16 @@
     display: flex;
     z-index: 90;
     background: $white;
-    height: 83px;
+    height: 70px;
     position: fixed;
     bottom: 0;
     width: 100%;
+    border-top: 1px solid var(--light-gray);
+    transition: .1s ease;
+
+    &_isIPhoneNavigationHidden {
+        height: 113px;
+    }
 
     @include desktop {
         display: none;
@@ -79,16 +82,15 @@
         display: block;
         text-transform: none;
         font-size: 10px;
-        font-weight: 500;
+        font-weight: var(--fw-medium);
         letter-spacing: -0.2px;
         line-height: 14px;
-        text-align: center;
         color: var(--inactive-button-header-color);
         height: 40px;
-        width: 40px;
-        padding: 0;
+        width: 20%;
+        padding: 10px 0 0;
         text-align: center;
-        margin: 10px auto 0;
+        margin: 0;
 
         &::before {
             content: "";
@@ -103,14 +105,14 @@
 
         &_isHomeButton {
             &::before{
-                background: url(./icons/home-gray@2x.png) no-repeat;
-                background-size: 27px;
+                background: url(./icons/home-gray@2x.png) no-repeat center center;
+                background-size: 24px;
             }
         }
 
         &_isBrandButton {
             &::before{
-                background: url(./icons/brands-gray@2x.png) no-repeat;
+                background: url(./icons/brands-gray@2x.png) no-repeat center center;
                 background-size: 27px;
             }
         }
@@ -129,14 +131,32 @@
         }
     }
 
-    &-WishListAndAccount {
+    > div {
         width: 20%;
     }
 
+    &-WishListAndAccount {
+        width: 100%;
+    }
+
     .HeaderMenu {
+        width: 20%;
+        padding: 12px 0 0;
+
         .Menu {
             &-Container {
                 display: none;
+            }
+        }
+
+        &-Button {
+            width: 100%;
+            margin: 0;
+
+            &::before{
+                background-position: center;
+                background-size: 28px;
+                height: 29px;
             }
         }
     }

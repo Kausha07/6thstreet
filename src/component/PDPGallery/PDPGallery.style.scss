@@ -3,22 +3,29 @@
 }
 
 .PDPGallery {
+    --gallery-crumbs-height: auto;
+
+    height: auto;
     display: block;
+    margin-top: 11px;
+
     @include desktop {
         display: grid;
         grid-template-columns: 1fr 6fr;
+        margin-top: 0;
     }
-    
+
 
     &-Crumbs {
         display: none;
+        height: var(--gallery-crumbs-height);
         @include desktop {
             display: block;
-        } 
+        }
     }
 
     .Slider-Wrapper > * {
-       
+       min-height: 400px;
     }
 
     .Slider-Wrapper {
@@ -53,7 +60,7 @@
         &-Crumbs {
             height: 7px;
             grid-gap: 5px;
-        }        
+        }
     }
 
     .Image {
@@ -68,6 +75,16 @@
         padding: 0;
         @include desktop {
             height: auto;
+        }
+    }
+}
+
+.PDP {
+    .PDPMainSection {
+        .PDPGallery {
+            &-OverlayButton {
+                height: fit-content;
+            }
         }
     }
 }

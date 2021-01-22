@@ -1,9 +1,8 @@
-import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import Image from 'Component/Image';
 import Link from 'Component/Link';
-import { MOBILE_MENU_SIDEBAR_ID } from 'Component/MobileMenuSideBar/MoblieMenuSideBar.config';
+import { hideActiveOverlay } from 'SourceStore/Overlay/Overlay.action';
 import { CategoryButton, CategoryItems } from 'Util/API/endpoint/Categories/Categories.type';
 import { isArabic } from 'Util/App';
 
@@ -17,8 +16,7 @@ class MenuGrid extends PureComponent {
 
     static propTypes = {
         button: CategoryButton,
-        items: CategoryItems.isRequired,
-        toggleOverlayByKey: PropTypes.func.isRequired
+        items: CategoryItems.isRequired
     };
 
     static defaultProps = {
@@ -41,28 +39,38 @@ class MenuGrid extends PureComponent {
             return null;
         }
 
+        const updatedLink = link.match(/\/men|\/women|\/kids-baby_boy-boy-girl-baby_girl|\/kids/)
+            ? link.replace('/men.html', '.html')
+                .replace('/women.html', '.html')
+                .replace('/kids-baby_boy-boy-girl-baby_girl.html', '.html')
+                .replace('/kids.html', '.html')
+            : link;
+
         return (
             <Link
-              to={ link }
+              to={ updatedLink }
               key={ i }
             >
                 <Image
                   src={ image_url }
+                  width="80px"
+                  height="80px"
+                  ratio="custom"
                 />
-                { label }
+                <div block="MenuGrid" elem="ItemLabel">{ label }</div>
             </Link>
         );
     };
 
     renderItems() {
-        const { items } = this.props;
+        const { items = [] } = this.props;
         return items.map(this.renderItem);
     }
 
     renderDesktopButton() {
         const {
             button: {
-                label,
+                label = '',
                 link
             }
         } = this.props;
@@ -80,8 +88,7 @@ class MenuGrid extends PureComponent {
     }
 
     hideMenu = () => {
-        const { toggleOverlayByKey } = this.props;
-        toggleOverlayByKey(MOBILE_MENU_SIDEBAR_ID);
+        hideActiveOverlay();
     };
 
     showAllCategories() {
@@ -106,7 +113,7 @@ class MenuGrid extends PureComponent {
               elem="Button"
             >
                 <Link to={ linkTo } onClick={ this.hideMenu }>
-                    <span>view all</span>
+                    <span>{ __('view all') }</span>
                 </Link>
             </button>
         );

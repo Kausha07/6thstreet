@@ -38,6 +38,10 @@
         input[type="checkbox"]:checked ~ div label {
             left: 15px;
             transform: rotate(360deg);
+
+            &.Field-FakeLabel {
+                left: 0;
+            }
         }
 
         div,
@@ -60,6 +64,11 @@
             top: 1px;
             left: 1px;
             cursor: pointer;
+
+            &.Field-FakeLabel {
+                opacity: 0;
+                width: 31px;
+            }
         }
 
         label::before {
@@ -100,6 +109,34 @@
             top: 10px;
             left: 5.5px;
             background: rgba(67,67,67,1);
+        }
+    }
+
+    input[type="date"] {
+        &::after {
+            content: none;
+        }
+    }
+
+    &_type_radio {
+        label {
+            &:last-of-type {
+                display: flex;
+
+                span {
+                    font-size: 14px;
+                }
+            }
+
+            label{
+                width: 15px;
+            }
+        }
+    }
+
+    &_type_phone {
+        input {
+            font-weight: var(--fw-regular);
         }
     }
 }
