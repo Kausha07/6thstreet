@@ -140,7 +140,7 @@ class MyAccountOrderView extends PureComponent {
         const { order: { status, shipped = [] } } = this.props;
         const { isArabic } = this.state;
 
-        if (STATUS_FAILED.includes(status)) {
+        if (STATUS_FAILED.includes(status) || shipped.length < 1) {
             return null;
         }
 

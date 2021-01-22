@@ -89,7 +89,7 @@ export class MyAccountOrderViewContainer extends PureComponent {
     async getOrder() {
         try {
             const orderId = this.getOrderId();
-            const { data: order } = await MagentoAPI.get(`/orders/${ orderId }`);
+            const { data: order } = await MagentoAPI.get(`orders/${ orderId }`);
             this.setState({ order, isLoading: false });
         } catch (e) {
             this.setState({ isLoading: false });
