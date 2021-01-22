@@ -224,6 +224,7 @@ class MyAccountOrderView extends PureComponent {
                 <Accordion
                   mix={ { block: 'MyAccountOrderView', elem: 'Accordion' } }
                   title={ this.renderAccordionTitle(__('Items under processing'), TimerImage) }
+                  is_expanded
                 >
                     { unship.reduce((acc, { items }) => [...acc, ...items], [])
                         .filter(({ qty_canceled, qty_ordered }) => +qty_canceled < +qty_ordered)
