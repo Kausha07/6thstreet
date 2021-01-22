@@ -46,13 +46,12 @@ class MyAccountReturnListItem extends PureComponent {
         const { return: { order_id } } = this.props;
 
         return (
-            <Link
+            <div
               block="MyAccountReturnListItem"
               elem="OrderNumber"
-              to={ `/my-account/my-orders/${ order_id }` }
             >
                 { order_id }
-            </Link>
+            </div>
         );
     }
 

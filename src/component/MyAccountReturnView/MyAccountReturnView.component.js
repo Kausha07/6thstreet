@@ -51,16 +51,15 @@ export class MyAccountReturnView extends SourceComponent {
         return (
             <div block="MyAccountReturnView" elem="Items" mix={ { block: 'MyAccountReturnSuccess', elem: 'Items' } }>
                 { items.map((item) => (
-                    <>
+                    <div key={ item.id }>
                         <MyAccountReturnSuccessItem
-                          key={ item.id }
                           item={ item }
                         />
                         <div block="MyAccountReturnView" elem="Reason">
                             <h3>{ __('Reason') }</h3>
                             { !!(item.reason || []).length && <p>{ item.reason[0].value }</p> }
                         </div>
-                    </>
+                    </div>
                 )) }
             </div>
         );
