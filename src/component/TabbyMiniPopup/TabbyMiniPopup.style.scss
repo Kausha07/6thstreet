@@ -19,7 +19,7 @@
         z-index: 90;
 
         @include mobile {
-            overflow-y: scroll;
+            overflow-y: auto;
         }
     }
 

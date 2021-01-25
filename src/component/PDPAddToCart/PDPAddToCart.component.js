@@ -217,15 +217,16 @@ class PDPAddToCart extends PureComponent {
             addToCart,
             isLoading,
             addedToCart,
-            product: { stock_qty, highlighted_attributes },
+            product: { stock_qty, highlighted_attributes, simple_products = {} },
             product = {}
         } = this.props;
 
         return (
             <div>
-                { (stock_qty !== 0 || highlighted_attributes === null
+                { ((stock_qty !== 0 || highlighted_attributes === null
                     || (Object.keys(product).length !== 0
                     && product.constructor !== Object))
+                    && Object.keys(simple_products).length !== 0)
                     && (
                         <button
                           onClick={ addToCart }

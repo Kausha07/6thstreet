@@ -62,7 +62,7 @@ root {
 
         @include before-desktop() {
             ul {
-                overflow-x: scroll;
+                overflow-x: auto;
             }
         }
 

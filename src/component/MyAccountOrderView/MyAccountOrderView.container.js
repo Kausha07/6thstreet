@@ -2,7 +2,10 @@ import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
-import { STATUS_ABLE_TO_RETURN, STATUS_COMPLETE } from 'Component/MyAccountOrderListItem/MyAccountOrderListItem.config';
+import {
+    STATUS_BEING_PROCESSED,
+    STATUS_COMPLETE
+} from 'Component/MyAccountOrderListItem/MyAccountOrderListItem.config';
 import { HistoryType, MatchType } from 'Type/Common';
 import { getCountriesForSelect } from 'Util/API/endpoint/Config/Config.format';
 import { Config } from 'Util/API/endpoint/Config/Config.type';
@@ -74,9 +77,9 @@ export class MyAccountOrderViewContainer extends PureComponent {
 
     openOrderCancelation() {
         const { history } = this.props;
-        const { order: { entity_id, status } = {} } = this.state;
+        const { order: { entity_id, status, is_returnable } = {} } = this.state;
 
-        if (!entity_id || !STATUS_ABLE_TO_RETURN.includes(status)) {
+        if (!entity_id || !(STATUS_BEING_PROCESSED.includes(status) || (status === STATUS_COMPLETE && is_returnable))) {
             return;
         }
 
