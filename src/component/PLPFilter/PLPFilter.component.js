@@ -55,15 +55,6 @@ class PLPFilter extends PureComponent {
             return null;
         }
 
-        if (category === 'categories_without_path') {
-            return (
-                <FieldMultiselect
-                  filter={ filter }
-                  isHidden
-                />
-            );
-        }
-
         return (
             <FieldMultiselect
               placeholder={ label }
