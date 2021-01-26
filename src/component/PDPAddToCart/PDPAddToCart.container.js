@@ -188,8 +188,6 @@ export class PDPAddToCartContainer extends PureComponent {
                     sizeCodes: mappedSizes
                 };
 
-                console.log('object', object);
-
                 this.setState({ processingRequest: false, mappedSizeObject: object });
             }
         );
