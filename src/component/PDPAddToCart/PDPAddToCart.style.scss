@@ -258,6 +258,19 @@ $select-arrow-width: 6px !default;
             }
         }
     }
+
+    &-Placeholder {
+        height: 50px;
+        width: 360px;
+        background-image: var(--placeholder-image);
+        background-size: var(--placeholder-size);
+        animation: var(--placeholder-animation);
+        margin-top: 35px;
+
+        @include mobile() {
+            width: 100%;
+        }
+    }
 }
 
 .PageWrapper {
