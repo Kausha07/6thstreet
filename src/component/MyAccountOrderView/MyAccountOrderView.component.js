@@ -503,7 +503,6 @@ class MyAccountOrderView extends PureComponent {
                 { this.renderFailedOrderDetails() }
                 { this.renderSummary() }
                 { this.renderAddress(__('Delivering to'), billing_address) }
-                { this.renderAddress(__('Billing Address'), billing_address) }
                 { this.renderPaymentType() }
                 { this.renderPaymentSummary() }
             </div>
