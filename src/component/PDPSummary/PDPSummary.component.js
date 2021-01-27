@@ -25,7 +25,8 @@ class PDPSummary extends PureComponent {
     state = {
         alsoAvailable: [],
         prevAlsoAvailable: [],
-        showPopup: false
+        showPopup: false,
+        stockAvailibility: true
     };
 
     static getDerivedStateFromProps(props, state) {
@@ -42,6 +43,10 @@ class PDPSummary extends PureComponent {
 
         return null;
     }
+
+    setStockAvailability = (status) => {
+        this.setState({ stockAvailibility: status });
+    };
 
     renderSummaryHeader() {
         const { product } = this.props;
@@ -75,8 +80,9 @@ class PDPSummary extends PureComponent {
 
     renderPrice() {
         const { product: { price, stock_qty } } = this.props;
+        const { stockAvailibility } = this.state;
 
-        if (!price || stock_qty === 0) {
+        if (!price || stock_qty === 0 || !stockAvailibility) {
             return null;
         }
 
@@ -187,7 +193,7 @@ class PDPSummary extends PureComponent {
 
     renderAddToCartSection() {
         return (
-            <PDPAddToCart />
+            <PDPAddToCart setStockAvailability={ this.setStockAvailability } />
         );
     }
 

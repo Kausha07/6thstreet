@@ -100,15 +100,13 @@
             background: transparent;
         }
 
-        &:focus {
+        &_toggleOptionsList {
+            max-height: 400px;
+
             &::after {
                 top: 17px;
                 transform: rotate(-135deg);
             }
-        }
-
-        &_toggleOptionsList {
-            max-height: 400px;
         }
 
         &_isArabic {

@@ -507,6 +507,14 @@
             }
         }
     }
+
+    .Field {
+        &_type_select {
+            ul {
+                overflow-y: auto;
+            }
+        }
+    }
 }
 .PageWrapper {
     &_isArabic {
