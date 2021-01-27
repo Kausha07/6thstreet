@@ -16,17 +16,27 @@ export class Accordion extends PureComponent {
             PropTypes.string,
             PropTypes.element
         ]),
-        mix: MixType
+        mix: MixType,
+        is_expanded: PropTypes.bool
     };
 
     static defaultProps = {
         shortDescription: null,
-        mix: null
+        mix: null,
+        is_expanded: false
     };
 
     state = {
         isExpanded: false
     };
+
+    componentDidMount() {
+        const { is_expanded } = this.props;
+
+        if (is_expanded) {
+            this.setState({ isExpanded: true });
+        }
+    }
 
     toggleAccordion = () => this.setState(({ isExpanded }) => ({ isExpanded: !isExpanded }));
 

@@ -127,7 +127,8 @@ export class CartPage extends PureComponent {
                 subtotal = 0,
                 total = 0,
                 currency_code = getCurrency(),
-                total_segments: totals = []
+                total_segments: totals = [],
+                shipping_fee = 0
             }
         } = this.props;
         const grandTotal = getFinalPrice(total, currency_code);
@@ -138,6 +139,7 @@ export class CartPage extends PureComponent {
                 <ul>
                     <div block="CartPage" elem="Subtotals">
                         { this.renderPriceLine(subTotal, __('Subtotal')) }
+                        { this.renderPriceLine(shipping_fee, __('Shipping fee')) }
                         { couponCode && this.renderPriceLine(
                             discount,
                             __('Discount (%s)', couponCode)
@@ -241,7 +243,7 @@ export class CartPage extends PureComponent {
                 <figcaption block="CartPage" elem="PromoText" mods={ { isArabic } }>
                     <img src={ Delivery } alt="Delivery icon" />
                     { __('Add ') }
-                    <span>{ `${currency_code } ${avail_free_shipping_amount} ` }</span>
+                    <span>{ `${currency_code } ${avail_free_shipping_amount.toFixed(3)} ` }</span>
                     { __('more to your cart for ') }
                     <span>{ __('Free delivery') }</span>
                 </figcaption>
