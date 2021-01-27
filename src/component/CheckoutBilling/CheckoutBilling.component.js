@@ -24,14 +24,16 @@ export class CheckoutBilling extends SourceCheckoutBilling {
         setCreditCardData: PropTypes.func.isRequired,
         showCreateNewPopup: PropTypes.func.isRequired,
         processingRequest: PropTypes.bool.isRequired,
-        processingPaymentSelectRequest: PropTypes.bool.isRequired,
+        processingPaymentSelectRequest: PropTypes.bool,
         processApplePay: PropTypes.bool,
-        placeOrder: PropTypes.func.isRequired
+        placeOrder: PropTypes.func
     };
 
     static defaultProps = {
         ...SourceCheckoutBilling.defaultProps,
-        processApplePay: false
+        processApplePay: false,
+        processingPaymentSelectRequest: false,
+        placeOrder: () => {}
     };
 
     state = {

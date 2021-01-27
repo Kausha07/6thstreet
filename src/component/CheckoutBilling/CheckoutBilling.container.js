@@ -36,7 +36,12 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
         showPopup: PropTypes.func.isRequired,
         setCheckoutCreditCardData: PropTypes.func.isRequired,
         processingRequest: PropTypes.bool.isRequired,
-        processingPaymentSelectRequest: PropTypes.bool.isRequired
+        processingPaymentSelectRequest: PropTypes.bool
+    };
+
+    static defaultProps = {
+        ...SourceCheckoutBillingContainer.defaultProps,
+        processingPaymentSelectRequest: false
     };
 
     containerFunctions = {

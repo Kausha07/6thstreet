@@ -32,20 +32,22 @@ class CheckoutComApplePayContainer extends PureComponent {
      */
     static propTypes = {
         billingAddress: PropTypes.object.isRequired,
-        merchant_id: PropTypes.string.isRequired,
+        merchant_id: PropTypes.string,
         showError: PropTypes.func.isRequired,
-        validateApplePay: PropTypes.func.isRequired,
-        placeOrder: PropTypes.func.isRequired,
+        validateApplePay: PropTypes.func,
+        placeOrder: PropTypes.func,
         supported_networks: PropTypes.arrayOf(PropTypes.string).isRequired,
         cartTotals: TotalsType.isRequired,
         default_title: PropTypes.string,
-        processApplePay: PropTypes.bool.isRequired,
         customer: customerType
     };
 
     static defaultProps = {
         customer: null,
-        default_title: '6th Street'
+        default_title: '6th Street',
+        merchant_id: '',
+        validateApplePay: () => {},
+        placeOrder: () => {}
     };
 
     /**

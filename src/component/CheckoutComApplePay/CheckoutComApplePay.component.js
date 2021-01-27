@@ -20,7 +20,6 @@ export class CheckoutComApplePay extends PureComponent {
             grand_total: PropTypes.number,
             quote_currency_code: PropTypes.string
         }).isRequired,
-        processApplePay: PropTypes.bool.isRequired,
         button_style: PropTypes.string
     };
 
@@ -37,14 +36,6 @@ export class CheckoutComApplePay extends PureComponent {
         const { requestConfig, launchPaymentMethod } = this.props;
 
         requestConfig().then(launchPaymentMethod);
-    }
-
-    componentDidUpdate() {
-        const { processApplePay, handleApplePayButtonClick } = this.props;
-
-        if (processApplePay) {
-            handleApplePayButtonClick();
-        }
     }
 
     /**
