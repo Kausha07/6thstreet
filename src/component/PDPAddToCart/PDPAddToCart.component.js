@@ -21,7 +21,9 @@ class PDPAddToCart extends PureComponent {
         addedToCart: PropTypes.bool.isRequired,
         showProceedToCheckout: PropTypes.bool.isRequired,
         hideCheckoutBlock: PropTypes.bool.isRequired,
-        routeChangeToCart: PropTypes.func.isRequired
+        processingRequest: PropTypes.bool.isRequired,
+        routeChangeToCart: PropTypes.func.isRequired,
+        setStockAvailability: PropTypes.func.isRequired
     };
 
     state = {
@@ -281,15 +283,22 @@ class PDPAddToCart extends PureComponent {
 
     renderContent() {
         const {
-            product: { simple_products }, product, selectedSizeType, sizeObject = {}
+            product: { simple_products },
+            sizeObject = {},
+            processingRequest,
+            setStockAvailability
         } = this.props;
+
+        if (processingRequest) {
+            return <div block="PDPAddToCart" elem="Placeholder" />;
+        }
 
         // check for sizes availability in configurable products
         if (sizeObject.sizeCodes !== undefined
             && simple_products !== undefined
-            && product[`size_${selectedSizeType}`].length !== 0
             && sizeObject.sizeCodes.length === 0
         ) {
+            setStockAvailability(false);
             return null;
         }
 

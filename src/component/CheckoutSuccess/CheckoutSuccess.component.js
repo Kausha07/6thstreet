@@ -452,7 +452,6 @@ export class CheckoutSuccess extends PureComponent {
     renderAddresses = () => (
         <div block="Addresses">
             { this.renderDeliveringAddress() }
-            { this.renderBillingAddress() }
         </div>
     );
 

@@ -234,8 +234,7 @@ class FieldMultiselect extends PureComponent {
                   elem: 'FilterButton',
                   mods: { isArabic }
               } }
-              onClick={ isMobile.any() ? this.handleFilterChange : null }
-              onFocus={ !isMobile.any() ? this.toggelOptionList : null }
+              onClick={ isMobile.any() ? this.handleFilterChange : this.toggelOptionList }
             >
                 { placeholder }
             </button>

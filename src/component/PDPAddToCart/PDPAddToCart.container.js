@@ -48,7 +48,8 @@ export class PDPAddToCartContainer extends PureComponent {
         total: PropTypes.number,
         productAdded: PropTypes.bool,
         setMinicartOpen: PropTypes.func.isRequired,
-        getProductStock: PropTypes.func.isRequired
+        getProductStock: PropTypes.func.isRequired,
+        setStockAvailability: PropTypes.func.isRequired
     };
 
     static defaultProps = {
@@ -79,7 +80,8 @@ export class PDPAddToCartContainer extends PureComponent {
             buttonRefreshTimeout: 1250,
             showProceedToCheckout: false,
             hideCheckoutBlock: false,
-            clearTime: false
+            clearTime: false,
+            processingRequest: false
         };
 
         this.fullCheckoutHide = null;
@@ -152,8 +154,9 @@ export class PDPAddToCartContainer extends PureComponent {
 
     componentDidMount() {
         const { product: { sku }, getProductStock } = this.props;
-
         const { sizeObject: { sizeCodes = [], sizeTypes } } = this.state;
+
+        this.setState({ processingRequest: true });
 
         getProductStock(sku).then(
             (response) => {
@@ -185,7 +188,7 @@ export class PDPAddToCartContainer extends PureComponent {
                     sizeCodes: mappedSizes
                 };
 
-                this.setState({ mappedSizeObject: object });
+                this.setState({ processingRequest: false, mappedSizeObject: object });
             }
         );
     }
@@ -202,9 +205,15 @@ export class PDPAddToCartContainer extends PureComponent {
     }
 
     containerProps = () => {
-        const { product } = this.props;
+        const { product, setStockAvailability } = this.props;
         const { mappedSizeObject } = this.state;
-        return { ...this.state, sizeObject: mappedSizeObject, product };
+        return {
+            ...this.state,
+            sizeObject:
+            mappedSizeObject,
+            product,
+            setStockAvailability
+        };
     };
 
     onSizeTypeSelect(type) {
