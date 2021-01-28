@@ -96,7 +96,7 @@ export class CartOverlay extends PureComponent {
     }
 
     renderTotals() {
-        const { totals: { items = [], subtotal_incl_tax } } = this.props;
+        const { totals: { items = [], total } } = this.props;
         const { isArabic } = this.state;
 
         if (!items || items.length < 1) {
@@ -113,13 +113,14 @@ export class CartOverlay extends PureComponent {
                     { __('Subtotal ') }
                     <span>{ __('(Taxes Included) ') }</span>
                 </dt>
-                <dd>{ this.renderPriceLine(subtotal_incl_tax) }</dd>
+                <dd>{ this.renderPriceLine(total) }</dd>
             </dl>
         );
     }
 
     renderDiscount() {
-        const { totals: { coupon_code, discount_amount = 0 } } = this.props;
+        const { totals: { coupon_code, discount, discount_amount } } = this.props;
+        const finalDiscount = discount_amount || discount || 0;
 
         if (!coupon_code) {
             return null;
@@ -134,7 +135,25 @@ export class CartOverlay extends PureComponent {
                     { __('Coupon ') }
                     <strong block="CartOverlay" elem="DiscountCoupon">{ coupon_code.toUpperCase() }</strong>
                 </dt>
-                <dd>{ `-${this.renderPriceLine(Math.abs(discount_amount))}` }</dd>
+                <dd>{ `-${this.renderPriceLine(Math.abs(finalDiscount))}` }</dd>
+            </dl>
+        );
+    }
+
+    renderShipping() {
+        const { totals: { shipping_fee } } = this.props;
+
+        if (!shipping_fee || shipping_fee === 0) {
+            return null;
+        }
+
+        return (
+            <dl
+              block="CartOverlay"
+              elem="Discount"
+            >
+                <dt>{ __('Shipping fee') }</dt>
+                <dd>{ this.renderPriceLine(shipping_fee) }</dd>
             </dl>
         );
     }
@@ -196,7 +215,7 @@ export class CartOverlay extends PureComponent {
                       block="CartOverlay"
                       elem="Currency"
                     >
-                        { `${currency_code } ${avail_free_shipping_amount} ` }
+                        { `${currency_code } ${avail_free_shipping_amount.toFixed(3)} ` }
                     </span>
                     { __('more to your cart for ') }
                     <span
@@ -318,6 +337,7 @@ export class CartOverlay extends PureComponent {
                     { this.renderItemCount() }
                     { this.renderCartItems() }
                     { this.renderDiscount() }
+                    { this.renderShipping() }
                     { this.renderTotals() }
                     { this.renderActions() }
                     { this.renderPromo() }
