@@ -9,4 +9,4 @@ export const TABBY_ISTALLMENTS = 'tabby_installments';
 export const TABBY_PAY_LATER = 'tabby_checkout';
 export const FREE = 'free';
 export const TABBY_PAYMENT_CODES = [TABBY_ISTALLMENTS, TABBY_PAY_LATER];
-export const HIDDEN_PAYMENTS = ['checkout', APPLE_PAY, CHECKOUT_APPLE_PAY];
+export const HIDDEN_PAYMENTS = ['checkout', APPLE_PAY];

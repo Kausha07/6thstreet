@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import CheckoutAddressBook from 'Component/CheckoutAddressBook';
 import CheckoutPayments from 'Component/CheckoutPayments';
+import { CHECKOUT_APPLE_PAY } from 'Component/CheckoutPayments/CheckoutPayments.config';
 import CreditCardTooltip from 'Component/CreditCardTooltip';
 import Form from 'Component/Form';
 import MyAccountAddressPopup from 'Component/MyAccountAddressPopup';
@@ -23,14 +24,16 @@ export class CheckoutBilling extends SourceCheckoutBilling {
         setCreditCardData: PropTypes.func.isRequired,
         showCreateNewPopup: PropTypes.func.isRequired,
         processingRequest: PropTypes.bool.isRequired,
-        processingPaymentSelectRequest: PropTypes.bool.isRequired,
+        processingPaymentSelectRequest: PropTypes.bool,
         processApplePay: PropTypes.bool,
-        placeOrder: PropTypes.func.isRequired
+        placeOrder: PropTypes.func
     };
 
     static defaultProps = {
         ...SourceCheckoutBilling.defaultProps,
-        processApplePay: false
+        processApplePay: false,
+        processingPaymentSelectRequest: false,
+        placeOrder: () => {}
     };
 
     state = {
@@ -259,7 +262,12 @@ export class CheckoutBilling extends SourceCheckoutBilling {
             isTermsAndConditionsAccepted
         } = this.state;
 
-        const { termsAreEnabled, processingRequest, processingPaymentSelectRequest } = this.props;
+        const {
+            termsAreEnabled,
+            processingRequest,
+            processingPaymentSelectRequest,
+            paymentMethod
+        } = this.props;
 
         if (!isOrderButtonVisible) {
             return null;
@@ -270,6 +278,8 @@ export class CheckoutBilling extends SourceCheckoutBilling {
             ? !isOrderButtonEnabled || !isTermsAndConditionsAccepted
             : !isOrderButtonEnabled;
 
+        const isApplePay = paymentMethod === CHECKOUT_APPLE_PAY;
+
         return (
             <>
                 { this.renderCreditCardTooltipBar() }
@@ -278,7 +288,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
                     <button
                       type="submit"
                       block="Button"
-                      disabled={ isDisabled || processingRequest || processingPaymentSelectRequest }
+                      disabled={ isDisabled || processingRequest || processingPaymentSelectRequest || isApplePay }
                       mix={ { block: 'CheckoutBilling', elem: 'Button' } }
                     >
                         { __('Place order') }

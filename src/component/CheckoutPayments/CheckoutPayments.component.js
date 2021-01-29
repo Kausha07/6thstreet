@@ -34,13 +34,14 @@ export class CheckoutPayments extends SourceCheckoutPayments {
         ...SourceCheckoutPayments.propTypes,
         selectedPaymentCode: PropTypes.string,
         processApplePay: PropTypes.bool,
-        placeOrder: PropTypes.func.isRequired
+        placeOrder: PropTypes.func
     };
 
     static defaultProps = {
         ...SourceCheckoutPayments.defaultProps,
         selectedPaymentCode: '',
-        processApplePay: false
+        processApplePay: false,
+        placeOrder: () => {}
     };
 
     paymentRenderMap = {

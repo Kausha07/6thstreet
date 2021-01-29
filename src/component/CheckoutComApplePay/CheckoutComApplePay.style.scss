@@ -14,23 +14,28 @@
     margin-top: 20px;
 
     .CheckoutComApplePayPayment-Button {
-        @supports (-webkit-appearance: -apple-pay-button) {
-            display: inline-block;
-            height: 50px !important;
-            width: 100% !important;
-            -webkit-appearance: -apple-pay-button;
+        height: 50px;
+        margin-bottom: 20px;
+        min-width: 100%;
+
+        @include desktop {
+            min-width: 250px;
         }
 
         &:disabled {
             opacity: .5;
         }
 
-        &.ApplePayButton-black {
-            -apple-pay-button-style: black;
-        }
+        &_button_style {
+            &_black {
+                color: white;
+                background-color: black;
+            }
 
-        &.ApplePayButton-white {
-            -apple-pay-button-style: white;
+            &_white {
+                color: black;
+                background-color: white;
+            }
         }
 
         &.apple-pay-button-white-with-line {

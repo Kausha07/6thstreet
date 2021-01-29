@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import Loader from 'Component/Loader';
+
 import './CheckoutComApplePay.style';
 
 export class CheckoutComApplePay extends PureComponent {
@@ -9,6 +11,8 @@ export class CheckoutComApplePay extends PureComponent {
      * @type {*}
      */
     static propTypes = {
+        isLoading: PropTypes.bool,
+        applePayDisabled: PropTypes.bool,
         launchPaymentMethod: PropTypes.func.isRequired,
         requestConfig: PropTypes.func.isRequired,
         handleApplePayButtonClick: PropTypes.func.isRequired,
@@ -16,7 +20,13 @@ export class CheckoutComApplePay extends PureComponent {
             grand_total: PropTypes.number,
             quote_currency_code: PropTypes.string
         }).isRequired,
-        processApplePay: PropTypes.bool.isRequired
+        button_style: PropTypes.string
+    };
+
+    static defaultProps = {
+        isLoading: false,
+        applePayDisabled: false,
+        button_style: ''
     };
 
     /**
@@ -28,20 +38,34 @@ export class CheckoutComApplePay extends PureComponent {
         requestConfig().then(launchPaymentMethod);
     }
 
-    componentDidUpdate() {
-        const { processApplePay, handleApplePayButtonClick } = this.props;
-
-        if (processApplePay) {
-            handleApplePayButtonClick();
-        }
-    }
-
     /**
      * Render
      * @returns {null|*}
      */
     render() {
-        return null;
+        const {
+            isLoading,
+            applePayDisabled,
+            handleApplePayButtonClick,
+            button_style
+        } = this.props;
+
+        return (
+            <div block="CheckoutComApplePayPayment" elem="Wrapper">
+                <Loader isLoading={ isLoading } />
+                <button
+                  type="button"
+                  block="CheckoutComApplePayPayment"
+                  elem="Button"
+                  label="Pay with ApplePay"
+                  onClick={ handleApplePayButtonClick }
+                  disabled={ applePayDisabled }
+                  mods={ { button_style } }
+                >
+                    { __('Pay with ApplePay') }
+                </button>
+            </div>
+        );
     }
 }
 
