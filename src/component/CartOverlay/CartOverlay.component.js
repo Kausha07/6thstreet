@@ -96,7 +96,7 @@ export class CartOverlay extends PureComponent {
     }
 
     renderTotals() {
-        const { totals: { items = [], total } } = this.props;
+        const { totals: { items = [], subtotal } } = this.props;
         const { isArabic } = this.state;
 
         if (!items || items.length < 1) {
@@ -113,7 +113,7 @@ export class CartOverlay extends PureComponent {
                     { __('Subtotal ') }
                     <span>{ __('(Taxes Included) ') }</span>
                 </dt>
-                <dd>{ this.renderPriceLine(total) }</dd>
+                <dd>{ this.renderPriceLine(subtotal) }</dd>
             </dl>
         );
     }

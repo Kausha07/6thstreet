@@ -102,7 +102,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
                       block="CheckoutOrderSummary"
                       elem="Currency"
                     >
-                        { `${currency_code } ${avail_free_shipping_amount} ` }
+                        { `${currency_code } ${avail_free_shipping_amount.toFixed(3)} ` }
                     </span>
                     { __('more to your cart for ') }
                     <span

@@ -92,7 +92,7 @@ export class CartDispatcher {
         }
     }
 
-    async getCartTotals(dispatch, cartId) {
+    async getCartTotals(dispatch, cartId, isSecondTry = false) {
         try {
             dispatch(processingCartRequest());
             const {
@@ -116,7 +116,10 @@ export class CartDispatcher {
                     }
 
                     dispatch(setCartId(requestedCartId));
-                    await this.getCartTotals(dispatch, requestedCartId);
+
+                    if (!isSecondTry) {
+                        await this.getCartTotals(dispatch, requestedCartId, true);
+                    }
                 } catch (e) {
                     Logger.log(e);
                 }

@@ -140,6 +140,14 @@ export class CartPage extends PureComponent {
                     <div block="CartPage" elem="Subtotals">
                         { this.renderPriceLine(subTotal, __('Subtotal')) }
                         { this.renderPriceLine(shipping_fee, __('Shipping fee')) }
+                        { this.renderPriceLine(
+                            getDiscountFromTotals(totals, 'customerbalance'),
+                            __('Store Credit')
+                        ) }
+                        { this.renderPriceLine(
+                            getDiscountFromTotals(totals, 'clubapparel'),
+                            __('Club Apparel Redemption')
+                        ) }
                         { couponCode && this.renderPriceLine(
                             discount,
                             __('Discount (%s)', couponCode)

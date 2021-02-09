@@ -45,7 +45,9 @@ export class HeaderCartContainer extends PureComponent {
 
     static getDerivedStateFromProps(props, state) {
         const {
-            totals: { items = [], total, id },
+            totals: {
+                items = [], subtotal, total, id, total_segments
+            },
             showNotification,
             updateTotals,
             isMinicartOpen
@@ -56,7 +58,12 @@ export class HeaderCartContainer extends PureComponent {
             const mappedItems = checkProducts(items) || [];
 
             if (total === 0) {
-                updateTotals(id);
+                const storeCredits = total_segments.find(({ code }) => code === 'customerbalance');
+                const { value: appliedStoreCredit = 0 } = storeCredits || {};
+
+                if (subtotal > Math.abs(appliedStoreCredit)) {
+                    updateTotals(id);
+                }
             }
 
             if (mappedItems.length !== 0) {
