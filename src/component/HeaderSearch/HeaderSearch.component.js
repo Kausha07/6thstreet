@@ -124,9 +124,7 @@ class HeaderSearch extends PureComponent {
             <>
                 <div block="SearchBackground" mods={ { isArabic } } />
                 <div block="HeaderSearch" mods={ { isArabic } }>
-                    <div block="HeaderSearch" elem="FormWrapper">
-                        { this.renderField() }
-                    </div>
+                    { this.renderField() }
                     { this.renderSuggestion() }
                 </div>
             </>
