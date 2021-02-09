@@ -38,6 +38,8 @@ export class MyAccountCancelCreateContainer extends MyAccountReturnCreateContain
     getReturnableItems() {
         const orderId = this.getOrderId();
 
+        this.setState({ isLoading: true });
+
         MagentoAPI.get(`order/${ orderId }/cancelable-items`).then(({ items, order_id }) => {
             if (!this._isMounted) {
                 return;
