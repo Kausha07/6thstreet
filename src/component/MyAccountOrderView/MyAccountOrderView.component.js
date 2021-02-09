@@ -272,10 +272,43 @@ class MyAccountOrderView extends PureComponent {
         );
     }
 
-    renderAccordions() {
-        const { order: { status, shipped = [] } } = this.props;
+    renderAccordion(item, index) {
+        const { order: { shipped = [] } } = this.props;
         const { isArabic } = this.state;
         const itemNumber = shipped.length;
+
+        return (
+          <div
+            key={ item.shipment_number }
+            block="MyAccountOrderView"
+            elem="AccordionWrapper"
+            mods={ { isArabic } }
+          >
+              <Accordion
+                mix={ { block: 'MyAccountOrderView', elem: 'Accordion' } }
+                is_expanded={ index === 0 }
+                shortDescription={ this.renderAccordionProgress(item.courier_status_code) }
+                title={ this.renderAccordionTitle(
+                    __('%s Package', appendOrdinalSuffix(itemNumber - index)),
+                    PackageImage,
+                    item.courier_status_code
+                ) }
+              >
+                  <p>
+                      { __(
+                          'Package contains %s %s',
+                          item.items.length,
+                          item.items.length === 1 ? __('item') : __('items')
+                      ) }
+                  </p>
+                  { item.items.map(this.renderItem) }
+              </Accordion>
+          </div>
+        );
+    }
+
+    renderAccordions() {
+        const { order: { status, shipped = [] } } = this.props;
 
         if (STATUS_FAILED.includes(status)) {
             return null;
@@ -283,33 +316,7 @@ class MyAccountOrderView extends PureComponent {
 
         return (
             <div block="MyAccountOrderView" elem="Accordions">
-                { shipped.map((item, index) => (
-                    <div
-                      key={ item.shipment_number }
-                      block="MyAccountOrderView"
-                      elem="AccordionWrapper"
-                      mods={ { isArabic } }
-                    >
-                        <Accordion
-                          mix={ { block: 'MyAccountOrderView', elem: 'Accordion' } }
-                          shortDescription={ this.renderAccordionProgress(item.courier_status_code) }
-                          title={ this.renderAccordionTitle(
-                              __('%s Package', appendOrdinalSuffix(itemNumber - index)),
-                              PackageImage,
-                              item.courier_status_code
-                          ) }
-                        >
-                            <p>
-                                { __(
-                                    'Package contains %s %s',
-                                    item.items.length,
-                                    item.items.length === 1 ? __('item') : __('items')
-                                ) }
-                            </p>
-                            { item.items.map(this.renderItem) }
-                        </Accordion>
-                    </div>
-                )) }
+                { shipped.map((item, index) => this.renderAccordion(item, index)) }
                 { this.renderProcessingItems() }
                 { this.renderCanceledAccordion() }
             </div>

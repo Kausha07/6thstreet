@@ -117,7 +117,7 @@ class FooterMain extends PureComponent {
                                     </Link>
                                     &nbsp;
                                     <Link
-                                      to={ items.app_onclick }
+                                      to={ items.google_onclick }
                                       key={ items.id_google }
                                     >
                                         <img src={ items.google_play } alt="google play download" />
