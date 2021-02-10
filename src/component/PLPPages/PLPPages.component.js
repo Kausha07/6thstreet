@@ -25,6 +25,7 @@ class PLPPages extends PureComponent {
     renderPage = ([key, page]) => {
         const { products, isPlaceholder } = page;
         const { impressions } = this.props;
+        // console.log('page', page);
 
         if (isPlaceholder) {
             return (
@@ -46,6 +47,7 @@ class PLPPages extends PureComponent {
 
     renderPages() {
         const { pages = {} } = this.props;
+        // console.log('pages', pages);
 
         return Object.entries(pages).map(this.renderPage);
     }

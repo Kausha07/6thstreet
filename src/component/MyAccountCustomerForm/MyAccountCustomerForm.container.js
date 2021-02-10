@@ -105,7 +105,10 @@ export class MyAccountCustomerFormContainer extends PureComponent {
         }
 
         this.setState({ isLoading: false });
-        elmnts[0].scrollIntoView({ behavior: 'smooth', block: 'end' });
+
+        if (elmnts && elmnts.length > 0) {
+            elmnts[0].scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }
     }
 
     render() {

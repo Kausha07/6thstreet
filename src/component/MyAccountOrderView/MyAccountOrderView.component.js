@@ -426,7 +426,7 @@ class MyAccountOrderView extends PureComponent {
         const {
             order: {
                 subtotal = 0,
-                total_due: total = 0,
+                grand_total = 0,
                 shipping_amount = 0,
                 discount_amount = 0,
                 msp_cod_amount = 0,
@@ -436,7 +436,7 @@ class MyAccountOrderView extends PureComponent {
                 currency_code = getCurrency()
             }
         } = this.props;
-        const grandTotal = getFinalPrice(total, currency_code);
+        const grandTotal = getFinalPrice(grand_total, currency_code);
         const subTotal = getFinalPrice(subtotal, currency_code);
 
         return (
@@ -486,6 +486,8 @@ class MyAccountOrderView extends PureComponent {
 
     render() {
         const { isLoading, order } = this.props;
+
+        console.log(this.props);
 
         if (isLoading || !order) {
             return (

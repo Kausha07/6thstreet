@@ -148,6 +148,11 @@ class QuickCategoriesOptions extends PureComponent {
         );
     }
 
+    isSearch() {
+        const { pathname } = window.location;
+        return pathname === '/catalogsearch/result/';
+    }
+
     renderMultiSelectContainer() {
         return (
             <div
@@ -155,6 +160,7 @@ class QuickCategoriesOptions extends PureComponent {
             >
                 <fieldset
                   block="PLPQuickFilter"
+                  mods={ { isSearch: this.isSearch() } }
                 >
                     { isMobile.any() ? this.renderMobileOptions() : this.renderOptions() }
                 </fieldset>

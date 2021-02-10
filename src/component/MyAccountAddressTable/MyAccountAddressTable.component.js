@@ -61,7 +61,10 @@ export class MyAccountAddressTable extends KeyValueTable {
         onEditClick();
         if (!isMobile.any()) {
             const elmnts = document.getElementsByClassName('MyAccountAddressBook-NewAddress');
-            elmnts[0].scrollIntoView();
+
+            if (elmnts && elmnts.length > 0) {
+                elmnts[0].scrollIntoView();
+            }
         }
     };
 
