@@ -148,7 +148,7 @@ class QuickCategoriesOptions extends PureComponent {
         );
     }
 
-    isSearch() {
+    inSearch() {
         const { pathname } = window.location;
         return pathname === '/catalogsearch/result/';
     }
@@ -160,7 +160,7 @@ class QuickCategoriesOptions extends PureComponent {
             >
                 <fieldset
                   block="PLPQuickFilter"
-                  mods={ { isSearch: this.isSearch() } }
+                  mods={ { inSearch: this.inSearch() } }
                 >
                     { isMobile.any() ? this.renderMobileOptions() : this.renderOptions() }
                 </fieldset>
