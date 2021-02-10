@@ -90,6 +90,7 @@ export class MyAccountCustomerFormContainer extends PureComponent {
         } = this.props;
         const { countryCode, gender, phoneCountryCode = PHONE_CODES[countryCode] } = this.state;
         const { phone } = customer;
+        const elmnts = document.getElementsByClassName('MyAccount-Heading');
 
         try {
             updateCustomer({
@@ -104,6 +105,7 @@ export class MyAccountCustomerFormContainer extends PureComponent {
         }
 
         this.setState({ isLoading: false });
+        elmnts[0].scrollIntoView({ behavior: 'smooth', block: 'end' });
     }
 
     render() {
