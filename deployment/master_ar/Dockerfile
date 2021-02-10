@@ -1,19 +1,19 @@
-FROM node:lts-alpine as build
+FROM node:lts-alpine
 
-ENV NODE_ENV=production \
-    SERVER_PORT=3000
+ENV NODE_ENV=development \
+    SERVER_PORT=80
 
 RUN apk add libsass --update-cache; \
     mkdir -p /app
 
 COPY . /app
+
 WORKDIR /app
+
 RUN npm i npm -g; \
     npm install; \
     npm install --g lerna; \
     lerna bootstrap; \
-    npm rebuild node-sass; \
-    npm run build
+    npm rebuild node-sass
 
-EXPOSE 3000
-CMD ["node", "app.js"]
+CMD ["npm", "run", "start"]
