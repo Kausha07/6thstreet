@@ -609,7 +609,6 @@ export class CheckoutSuccess extends PureComponent {
                     { this.renderTotalsItems() }
                     { this.renderTotals() }
                     { this.renderAddresses() }
-                    { this.renderDeliveryOption() }
                     { this.renderPaymentType() }
                 </div>
                 { this.renderButton() }
