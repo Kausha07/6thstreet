@@ -487,8 +487,6 @@ class MyAccountOrderView extends PureComponent {
     render() {
         const { isLoading, order } = this.props;
 
-        console.log(this.props);
-
         if (isLoading || !order) {
             return (
                 <div block="MyAccountOrderView">

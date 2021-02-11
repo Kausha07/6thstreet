@@ -7,7 +7,7 @@ import { Filter } from 'Util/API/endpoint/Product/Product.type';
 import { isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
 
-import { SUBCATEGORIES } from './QuickCategoriesOptions.config';
+import { SEARCH_PATH, SUBCATEGORIES } from './QuickCategoriesOptions.config';
 
 import './QuickCategoriesOptions.style';
 
@@ -150,7 +150,8 @@ class QuickCategoriesOptions extends PureComponent {
 
     inSearch() {
         const { pathname } = window.location;
-        return pathname === '/catalogsearch/result/';
+
+        return pathname === SEARCH_PATH;
     }
 
     renderMultiSelectContainer() {
