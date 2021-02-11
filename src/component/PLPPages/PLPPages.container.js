@@ -45,7 +45,8 @@ export class PLPPagesContainer extends PureComponent {
         const { page_count } = meta;
 
         // If lastRequestedPage === -Infinity -> assume it's -1, else use value, i.e. 0
-        const lastRequestedPage = Math.max(...Object.keys(pages));
+        const filteredPages = Object.keys(pages).filter((page) => page !== 'undefined');
+        const lastRequestedPage = Math.max(...Object.keys(filteredPages));
         const page = lastRequestedPage < 0 ? -1 : lastRequestedPage;
         const pagesToShow = page + 2;
         const maxPage = page_count + 1;

@@ -120,6 +120,12 @@
                 }
             }
         }
+
+        &_inSearch {
+            .QuickFilter-List {
+                margin-top: 7px;
+            }
+        }
     }
 
     @include before-desktop() {
