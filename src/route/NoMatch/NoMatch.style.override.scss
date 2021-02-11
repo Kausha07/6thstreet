@@ -14,6 +14,10 @@
 .NoMatch {
     margin: auto;
 
+    @include mobile {
+        padding-top: 0;
+    }
+
     &-PageNotFound {
         align-items: center;
         display: flex;
@@ -31,7 +35,7 @@
         @include mobile {
             font-size: 1rem;
             margin: 0 0 20px;
-            padding: 85px 0 80px;
+            padding: 25px 0 80px;
         }
     }
 

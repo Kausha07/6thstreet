@@ -55,6 +55,15 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
         setCreditCardData: this.setCreditCardData.bind(this)
     };
 
+    onBillingError(fields, invalidFields, error) {
+        const { showErrorNotification } = this.props;
+
+        if (error) {
+            const { message = __('Something went wrong!') } = error;
+            showErrorNotification(message);
+        }
+    }
+
     setCreditCardData(data) {
         const { number, expDate, cvv } = data;
 
@@ -130,6 +139,8 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
                         } else {
                             showErrorNotification(__('Something went wrong'));
                         }
+                    } else if (typeof response === 'string') {
+                        showErrorNotification(response);
                     }
                 },
                 this._handleError
