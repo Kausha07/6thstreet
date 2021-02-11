@@ -3,6 +3,12 @@
 }
 
 .CheckoutBilling {
+    button {
+        &:disabled {
+            opacity: .25;
+        }
+    }
+    
     &-Checkbox {
         display: grid;
         margin-bottom: 2rem;
