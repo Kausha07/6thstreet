@@ -77,6 +77,10 @@ class MenuCategory extends PureComponent {
             return data[0].link;
         }
 
+        if (data[0] && data[0].button !== undefined) {
+            return data[0].button.link;
+        }
+
         return location.pathname;
     }
 
