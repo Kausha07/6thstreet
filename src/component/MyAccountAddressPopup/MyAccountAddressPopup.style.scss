@@ -67,9 +67,9 @@
     }
 
     &-DeleteBtn{
-        position: absolute;
-        top: -86px;
-        right: 0;
+        position: fixed;
+        top: 5px;
+        right: 14px;
         z-index: 99;
         text-transform: none;
         font-weight: var(--fw-regular);
@@ -101,6 +101,11 @@
             &-xBtn {
                 right: auto;
                 left: 20px;
+            }
+
+            &-DeleteBtn {
+                right: unset;
+                left: 14px;
             }
         }
     }

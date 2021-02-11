@@ -63,11 +63,11 @@ export class CheckoutShipping extends SourceCheckoutShipping {
 
     renderTotals() {
         const {
-            totals: { subtotal, currency_code }
+            totals: { total, currency_code }
         } = this.props;
 
-        if (subtotal !== {}) {
-            const finalPrice = getFinalPrice(subtotal, currency_code);
+        if (total !== {}) {
+            const finalPrice = getFinalPrice(total, currency_code);
 
             return (
                 <div block="Checkout" elem="OrderTotals">

@@ -148,6 +148,12 @@ export class MyAccountAddressPopupContainer extends PureComponent {
             const { success } = response;
 
             if (success) {
+                const elmnts = document.getElementsByClassName('MyAccount-Heading');
+
+                if (elmnts && elmnts.length > 0) {
+                    elmnts[0].scrollIntoView({ behavior: 'smooth', block: 'end' });
+                }
+
                 if (id) {
                     return this.handleEditAddress(address);
                 }
