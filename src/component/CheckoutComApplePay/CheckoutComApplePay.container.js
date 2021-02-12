@@ -1,4 +1,5 @@
 /* eslint-disable no-param-reassign */
+/* eslint-disable new-cap */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
@@ -172,7 +173,7 @@ class CheckoutComApplePayContainer extends PureComponent {
     _addApplePayEvents = (applePaySession) => {
         const {
             billingAddress: { email },
-            cartTotals: { grand_total },
+            cartTotals: { total: grand_total },
             customer: { email: customerEmail },
             showError,
             default_title,

@@ -168,7 +168,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
               billingAddress={ billingAddress }
               supported_networks={ supported_networks }
               processApplePay={ processApplePay }
-              placeorder={ placeOrder }
+              placeOrder={ placeOrder }
             />
         );
     }
