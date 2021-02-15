@@ -277,6 +277,7 @@ class CheckoutComApplePayContainer extends PureComponent {
 
             applePaySession.completePayment(status);
 
+            console.log('***', status);
             console.log('***', 'shipping payment authorize completed');
         };
 
