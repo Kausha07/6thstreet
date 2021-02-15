@@ -408,10 +408,6 @@
                 grid-auto-flow: column;
                 height: 70px;
 
-                @include before-desktop {
-                    grid-template-columns: 25% 75%;
-                }
-
                 &-TypeLogo {
                     width: 70px;
                     display: block;

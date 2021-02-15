@@ -469,6 +469,7 @@ export class CartPage extends PureComponent {
             isLoading,
             processingRequest
         } = this.props;
+        const { isArabic } = this.state;
 
         if (isLoading) {
             return <Loader isLoading={ isLoading } />;
