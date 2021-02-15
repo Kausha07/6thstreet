@@ -10,6 +10,7 @@ import CartDispatcher from 'Store/Cart/Cart.dispatcher';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { customerType } from 'Type/Account';
 import { TotalsType } from 'Type/MiniCart';
+import { tokenize } from 'Util/API/endpoint/ApplePay/ApplePay.enpoint';
 import { isSignedIn } from 'Util/Auth';
 import Logger from 'Util/Logger';
 import { fetchMutation, fetchQuery } from 'Util/Request';
@@ -196,17 +197,11 @@ class CheckoutComApplePayContainer extends PureComponent {
                     return;
                 }
 
-                console.log('***', 'validate merchant...');
-
                 applePaySession.completeMerchantValidation(merchantSession);
-
-                console.log('***', 'validate merchant completed');
             }).catch((error) => Logger.log(error));
         };
 
         applePaySession.onshippingcontactselected = () => {
-            console.log('***', 'shipping contact selected');
-
             const status = window.ApplePaySession.STATUS_SUCCESS;
             const newTotal = {
                 type: 'final',
@@ -215,13 +210,9 @@ class CheckoutComApplePayContainer extends PureComponent {
             };
 
             applePaySession.completeShippingContactSelection(status, [], newTotal, this._getLineItems());
-
-            console.log('***', 'shipping contact selected completed');
         };
 
         applePaySession.onshippingmethodselected = () => {
-            console.log('***', 'shipping method selected');
-
             const status = window.ApplePaySession.STATUS_SUCCESS;
             const newTotal = {
                 type: 'final',
@@ -230,13 +221,9 @@ class CheckoutComApplePayContainer extends PureComponent {
             };
 
             applePaySession.completeShippingMethodSelection(status, newTotal, this._getLineItems());
-
-            console.log('***', 'shipping method selected completed');
         };
 
         applePaySession.onpaymentmethodselected = () => {
-            console.log('***', 'shipping payment method selected');
-
             const newTotal = {
                 type: 'final',
                 label: default_title,
@@ -244,41 +231,42 @@ class CheckoutComApplePayContainer extends PureComponent {
             };
 
             applePaySession.completePaymentMethodSelection(newTotal, this._getLineItems());
-
-            console.log('***', 'shipping payment method selected completed');
         };
 
         applePaySession.onpaymentauthorized = (event) => {
-            console.log('***', 'shipping payment authorize 1');
-
-            const data = {
-                source: {
-                    type: 'token',
-                    token: event.payment.token
-                },
-                customer: {
-                    email: customerEmail ?? email
-                },
-                '3ds': {
-                    enabled: false
-                },
-                metadata: {
-                    udf1: null
+            tokenize(
+                {
+                    type: 'applepay',
+                    token_data: event.payment.token.paymentData
                 }
-            };
+            ).then((response) => {
+                if (response && response.token) {
+                    const data = {
+                        source: {
+                            type: 'token',
+                            token: response.token
+                        },
+                        customer: {
+                            email: customerEmail ?? email
+                        },
+                        '3ds': {
+                            enabled: false
+                        },
+                        metadata: {
+                            udf1: null
+                        }
+                    };
 
-            console.log('***', 'shipping payment authorize 2');
+                    const status = placeOrder(CHECKOUT_APPLE_PAY, data)
+                        ? window.ApplePaySession.STATUS_SUCCESS
+                        : window.ApplePaySession.STATUS_FAILURE;
 
-            const status = placeOrder(CHECKOUT_APPLE_PAY, data)
-                ? window.ApplePaySession.STATUS_SUCCESS
-                : window.ApplePaySession.STATUS_FAILURE;
+                    console.log('***', status);
+                    applePaySession.completePayment(status);
 
-            console.log('***', 'shipping payment authorize 3');
-
-            applePaySession.completePayment(status);
-
-            console.log('***', status);
-            console.log('***', 'shipping payment authorize completed');
+                    console.log('***', 'Payment authorize completed');
+                }
+            });
         };
 
         applePaySession.oncancel = () => Logger.log('Apple Pay session was cancelled.');
