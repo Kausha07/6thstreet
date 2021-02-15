@@ -242,7 +242,12 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
         e.preventDefault();
 
         const { closeForm } = this.props;
+        const elemnts = document.getElementsByClassName('MyAccount-Heading');
         closeForm();
+
+        if (elemnts && elemnts.length > 0) {
+            elemnts[0].scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }
     };
 
     addPhoneCode = () => {
