@@ -1,3 +1,4 @@
+/* eslint-disable no-magic-numbers */
 /* eslint-disable max-len */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
@@ -7,6 +8,7 @@ import MyAccountOverlay from 'Component/MyAccountOverlay';
 import MyAccountSignedInOverlay from 'Component/MyAccountSignedInOverlay';
 import { customerType } from 'Type/Account';
 import { isArabic } from 'Util/App';
+import history from 'Util/History';
 
 import './HeaderAccount.style';
 
@@ -32,6 +34,26 @@ class HeaderAccount extends PureComponent {
         showPopup: false,
         showPopupSignedIn: false
     };
+
+    componentDidMount() {
+        this.orderRedirect();
+    }
+
+    orderRedirect() {
+        const { pathname = '' } = window.location;
+        const { isSignedIn } = this.props;
+        const orderId = pathname.slice(27);
+
+        if (pathname.includes('/sales/order/view/order_id/') && isSignedIn) {
+            history.push(`/my-account/my-orders/${orderId}`);
+        }
+
+        if (pathname.includes('/sales/order/view/order_id/') && !isSignedIn) {
+            history.push('/');
+            localStorage.setItem('ORDER_ID', orderId);
+            this.showMyAccountPopup();
+        }
+    }
 
     closePopup = () => {
         this.setState({ showPopup: false, showPopupSignedIn: false });
