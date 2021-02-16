@@ -459,6 +459,8 @@
 
             &_isArabic {
                 .Details {
+                    grid-template-columns: 20% 60% 20%;
+
                     &-TypeLogo {
                         img {
                             margin-right: 15px;
@@ -467,13 +469,12 @@
                     }
 
                     &-Number {
-                        margin-right: -20px;
+                        margin: auto;
                     }
 
                     &-Exp {
                         text-align: left;
-                        margin-right: 15px;
-                        margin-left: 15px;
+                        margin: auto;
                     }
                 }
             }
