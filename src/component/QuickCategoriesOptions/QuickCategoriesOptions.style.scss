@@ -17,14 +17,24 @@
 
         .QuickFilter {
             &-List {
-                display: inline;
+                display: flex;
                 margin-top: -2px;
                 max-width: 1200px;
+
+                @include desktop {
+                    display: inline;
+                }
 
                 .PLPFilterOption {
                     &-List {
                         border: 0;
                         display: inline-table;
+
+                        @include mobile {
+                            display: flex;
+                            flex-wrap: nowrap;
+                            white-space: nowrap;
+                        }
 
                         .Field {
                             [type='checkbox'],
@@ -46,6 +56,10 @@
                     height: 60px;
                     margin: 5px;
                     max-width: 200px;
+
+                    @include mobile {
+                        height: unset;
+                    }
 
                     label {
                         color: var(--field-gray-text-color);
