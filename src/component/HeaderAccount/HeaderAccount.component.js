@@ -1,4 +1,3 @@
-/* eslint-disable no-magic-numbers */
 /* eslint-disable max-len */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
@@ -9,6 +8,8 @@ import MyAccountSignedInOverlay from 'Component/MyAccountSignedInOverlay';
 import { customerType } from 'Type/Account';
 import { isArabic } from 'Util/App';
 import history from 'Util/History';
+
+import { SMS_LINK } from './HeaderAccount.config';
 
 import './HeaderAccount.style';
 
@@ -42,13 +43,13 @@ class HeaderAccount extends PureComponent {
     orderRedirect() {
         const { pathname = '' } = window.location;
         const { isSignedIn } = this.props;
-        const orderId = pathname.slice(27);
+        const orderId = pathname.split(SMS_LINK)[1] || null;
 
-        if (pathname.includes('/sales/order/view/order_id/') && isSignedIn) {
+        if (orderId && pathname.includes(SMS_LINK) && isSignedIn) {
             history.push(`/my-account/my-orders/${orderId}`);
         }
 
-        if (pathname.includes('/sales/order/view/order_id/') && !isSignedIn) {
+        if (orderId && pathname.includes(SMS_LINK) && !isSignedIn) {
             history.push('/');
             localStorage.setItem('ORDER_ID', orderId);
             this.showMyAccountPopup();
