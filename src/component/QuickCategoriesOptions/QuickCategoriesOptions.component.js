@@ -2,7 +2,6 @@ import { PropTypes } from 'prop-types';
 import { PureComponent } from 'react';
 
 import PLPQuickFilterOption from 'Component/PLPQuickFilterOption';
-// import { Slider } from 'SourceComponent/Slider/Slider.component';
 import { Filter } from 'Util/API/endpoint/Product/Product.type';
 import { isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
