@@ -387,7 +387,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                                 if (error && typeof error === 'string') {
                                     showErrorNotification(__(error));
                                     this.setState({ isLoading: false });
-                                    this.resetCart();
                                 }
                             }
                         }
@@ -395,14 +394,12 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                         if (typeof data === 'string') {
                             showErrorNotification(__(data));
                             this.setState({ isLoading: false });
-                            this.resetCart();
                         }
                     }
 
                     if (response && typeof response === 'string') {
                         showErrorNotification(__(response));
                         this.setState({ isLoading: false });
-                        this.resetCart();
                     }
                 },
                 this._handleError
@@ -410,7 +407,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                 const { showErrorNotification } = this.props;
                 this.setState({ isLoading: false });
                 showErrorNotification(__('Something went wrong.'));
-                this.resetCart();
             });
         } catch (e) {
             this._handleError(e);
