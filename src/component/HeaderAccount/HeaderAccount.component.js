@@ -8,6 +8,7 @@ import MyAccountSignedInOverlay from 'Component/MyAccountSignedInOverlay';
 import { customerType } from 'Type/Account';
 import { isArabic } from 'Util/App';
 import history from 'Util/History';
+import isMobile from 'Util/Mobile';
 
 import { SMS_LINK } from './HeaderAccount.config';
 
@@ -49,7 +50,7 @@ class HeaderAccount extends PureComponent {
             history.push(`/my-account/my-orders/${orderId}`);
         }
 
-        if (orderId && pathname.includes(SMS_LINK) && !isSignedIn) {
+        if (orderId && pathname.includes(SMS_LINK) && !isSignedIn && !isMobile.any()) {
             history.push('/');
             localStorage.setItem('ORDER_ID', orderId);
             this.showMyAccountPopup();
