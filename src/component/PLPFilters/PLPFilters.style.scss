@@ -238,6 +238,7 @@
 
     &-QuickCategories {
         width: 100vw;
+        overflow-x: auto;
 
         @include desktop {
             overflow: hidden;
@@ -299,10 +300,13 @@
 
         @include mobile() {
             margin-left: 120px;
+            padding-right: 150px;
             margin-top: -45px;
             position: fixed;
             top: 100px;
             z-index: 3;
+            width: 100%;
+            padding-bottom: 0;
 
             &:before {
                 background-color: var(--white);
@@ -317,7 +321,13 @@
 
             &_isArabic {
                 margin-left: 0;
-                margin-right: 120px;
+                margin-right: 110px;
+                padding-right: 0;
+                padding-left: 140px;
+
+                .FieldMultiselect {
+                    direction: unset;
+                }
             }
         }
 

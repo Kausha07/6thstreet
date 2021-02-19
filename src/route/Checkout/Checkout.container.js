@@ -73,7 +73,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         onCreateUserChange: this.onCreateUserChange.bind(this),
         onPasswordChange: this.onPasswordChange.bind(this),
         goBack: this.goBack.bind(this),
-        resetCart: this.resetCart.bind(this)
+        resetCart: this.resetCart.bind(this),
+        placeOrder: this.placeOrder.bind(this)
     };
 
     constructor(props) {

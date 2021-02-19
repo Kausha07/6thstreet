@@ -1,4 +1,5 @@
 /* eslint-disable no-param-reassign */
+/* eslint-disable new-cap */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
@@ -9,6 +10,7 @@ import CartDispatcher from 'Store/Cart/Cart.dispatcher';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { customerType } from 'Type/Account';
 import { TotalsType } from 'Type/MiniCart';
+import { tokenize } from 'Util/API/endpoint/ApplePay/ApplePay.enpoint';
 import { isSignedIn } from 'Util/Auth';
 import Logger from 'Util/Logger';
 import { fetchMutation, fetchQuery } from 'Util/Request';
@@ -172,7 +174,7 @@ class CheckoutComApplePayContainer extends PureComponent {
     _addApplePayEvents = (applePaySession) => {
         const {
             billingAddress: { email },
-            cartTotals: { grand_total },
+            cartTotals: { total: grand_total },
             customer: { email: customerEmail },
             showError,
             default_title,
@@ -232,27 +234,39 @@ class CheckoutComApplePayContainer extends PureComponent {
         };
 
         applePaySession.onpaymentauthorized = (event) => {
-            const data = {
-                source: {
-                    type: 'token',
-                    token: event.payment.token
-                },
-                customer: {
-                    email: customerEmail ?? email
-                },
-                '3ds': {
-                    enabled: false
-                },
-                metadata: {
-                    udf1: null
+            tokenize(
+                {
+                    type: 'applepay',
+                    token_data: event.payment.token.paymentData
                 }
-            };
+            ).then((response) => {
+                if (response && response.token) {
+                    const data = {
+                        source: {
+                            type: 'token',
+                            token: response.token
+                        },
+                        customer: {
+                            email: customerEmail ?? email
+                        },
+                        '3ds': {
+                            enabled: false
+                        },
+                        metadata: {
+                            udf1: null
+                        }
+                    };
 
-            const status = placeOrder(CHECKOUT_APPLE_PAY, data)
-                ? window.ApplePaySession.STATUS_SUCCESS
-                : window.ApplePaySession.STATUS_FAILURE;
+                    const status = placeOrder(CHECKOUT_APPLE_PAY, data)
+                        ? window.ApplePaySession.STATUS_SUCCESS
+                        : window.ApplePaySession.STATUS_FAILURE;
 
-            applePaySession.completePayment(status);
+                    console.log('***', status);
+                    applePaySession.completePayment(status);
+
+                    console.log('***', 'Payment authorize completed');
+                }
+            });
         };
 
         applePaySession.oncancel = () => Logger.log('Apple Pay session was cancelled.');

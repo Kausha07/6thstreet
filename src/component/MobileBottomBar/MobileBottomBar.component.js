@@ -4,11 +4,14 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import HeaderAccount from 'Component/HeaderAccount';
+import { SMS_LINK } from 'Component/HeaderAccount/HeaderAccount.config';
 import HeaderMenu from 'Component/HeaderMenu';
 import HeaderWishlist from 'Component/HeaderWishlist';
 import MyAccountOverlay from 'Component/MyAccountOverlay';
 import NavigationAbstract from 'Component/NavigationAbstract/NavigationAbstract.component';
 import { setIsMobileTabActive } from 'Store/MyAccount/MyAccount.action';
+import history from 'Util/History';
+import isMobile from 'Util/Mobile';
 
 import './MobileBottomBar.style.scss';
 
@@ -59,6 +62,7 @@ class MobileBottomBar extends NavigationAbstract {
 
     componentDidMount() {
         window.addEventListener('scroll', this.handleResize);
+        this.orderRedirect();
     }
 
     closePopup = () => {
@@ -73,6 +77,17 @@ class MobileBottomBar extends NavigationAbstract {
             pageYOffset: window.pageYOffset
         });
     };
+
+    orderRedirect() {
+        const { isSignedIn, pathname } = this.props;
+        const orderId = pathname.split(SMS_LINK)[1] || null;
+
+        if (orderId && pathname.includes(SMS_LINK) && !isSignedIn && isMobile.any()) {
+            history.push('/');
+            localStorage.setItem('ORDER_ID', orderId);
+            this.renderAccountPopUp();
+        }
+    }
 
     routeChangeHome = () => {
         this.setState({
