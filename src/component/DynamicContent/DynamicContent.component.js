@@ -3,10 +3,12 @@ import { PureComponent } from 'react';
 
 import { PRODUCT_SLIDER_TYPE } from 'Component/DynamicContent/DynamicContent.config';
 import DynamicContentBanner from 'Component/DynamicContentBanner';
+import DynamicContentCircleItemSlider from 'Component/DynamicContentCircleItemSlider';
 import DynamicContentFullWidthBannerSlider from 'Component/DynamicContentFullWidthBannerSlider';
 import DynamicContentGrid from 'Component/DynamicContentGrid';
 import DynamicContentMainBanner from 'Component/DynamicContentMainBanner';
 import DynamicContentProductSlider from 'Component/DynamicContentProductSlider';
+import DynamicContentSliderWithLabel from 'Component/DynamicContentSliderWithLabel';
 import { DynamicContent as DynamicContentType } from 'Util/API/endpoint/StaticFiles/StaticFiles.type';
 import Event, { EVENT_GTM_IMPRESSIONS_HOME } from 'Util/Event';
 import Logger from 'Util/Logger';
@@ -29,13 +31,15 @@ class DynamicContent extends PureComponent {
         grid: DynamicContentGrid,
         productSlider: DynamicContentProductSlider,
         fullWidthBannerSlider: DynamicContentFullWidthBannerSlider,
+        circleItemSlider: DynamicContentCircleItemSlider,
+        bannerSliderWithLabel: DynamicContentSliderWithLabel,
         line_separator: 'hr'
+
     };
 
     renderBlock = (block, i) => {
         const { type, ...restProps } = block;
         const Component = this.renderMap[type];
-
         if (!Component) {
             // TODO: implement all types
             Logger.log(type, restProps);
@@ -62,6 +66,7 @@ class DynamicContent extends PureComponent {
 
     renderBlocks() {
         const { content = [] } = this.props;
+        console.log('xyz:', this.props)
         return content.map(this.renderBlock);
     }
 

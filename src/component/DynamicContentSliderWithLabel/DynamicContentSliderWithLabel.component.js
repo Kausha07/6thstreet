@@ -5,9 +5,7 @@ import TinySlider from 'tiny-slider-react';
 import Image from 'Component/Image';
 import Link from 'Component/Link';
 import { formatCDNLink } from 'Util/Url';
-
-import 'react-circular-carousel/dist/index.css';
-import './DynamicContentCircleItemSlider.style';
+import './DynamicContentSliderWithLabel.style';
 
 const settings = {
     lazyload: true,
@@ -19,16 +17,16 @@ const settings = {
             items: 8
         },
         420: {
-            items: 4
+            items: 3
         }
     }
 };
 
-class DynamicContentCircleItemSlider extends PureComponent {
+class DynamicContentSliderWithLabel extends PureComponent {
     static propTypes = {
         items: PropTypes.arrayOf(
             PropTypes.shape({
-                image_url: PropTypes.string,
+                url: PropTypes.string,
                 label: PropTypes.string,
                 link: PropTypes.string,
                 plp_config: PropTypes.shape({}) // TODO: describe
@@ -37,24 +35,26 @@ class DynamicContentCircleItemSlider extends PureComponent {
     };
 
     clickLink = (a) => {
-        console.log('abc:', a);
-        let link = '/' + a.link.split("?")[0]
         localStorage.setItem("bannerData", JSON.stringify(a));
-        localStorage.setItem("CircleBannerUrl", link);
     };
 
     renderCircle = (item, i) => {
         const {
             link,
-            label,
-            image_url,
-            plp_config
+            text,
+            url,
+            plp_config,
+            height,
+            width
         } = item;
 
         const linkTo = {
             pathname: formatCDNLink(link),
             state: { plp_config }
         };
+
+        let ht = height.toString() + "px";
+        let wd = width.toString() + "px";
 
         // TODO: move to new component
 
@@ -70,12 +70,12 @@ class DynamicContentCircleItemSlider extends PureComponent {
 
                 >
                     <Image
-                      src={ image_url }
-                      alt={ label }
+                      src={ url }
+                      alt={ text }
                       mix={ { block: 'DynamicContentCircleItemSlider', elem: 'Image' } }
                       ratio="custom"
-                      height="80px"
-                      width="80px"
+                      height={ ht }
+                      width={ wd }
                     />
                     { /* <button
                   block="DynamicContentCircleItemSlider"
@@ -85,14 +85,13 @@ class DynamicContentCircleItemSlider extends PureComponent {
                     { label }
                 </button> */ }
                 </Link>
-                <div block="CircleSliderLabel">{ label }</div>
+                <div block="CircleSliderLabel">{ text }</div>
             </div>
         );
     };
 
     renderCircles() {
         const { items = [] } = this.props;
-        console.log(this.props);
         return (
             <TinySlider settings={ settings } block="CircleSliderWrapper">
                 { items.map(this.renderCircle) }
@@ -102,11 +101,11 @@ class DynamicContentCircleItemSlider extends PureComponent {
 
     render() {
         return (
-            <div block="DynamicContentCircleItemSlider">
+            <div block="DynamicContentSliderWithLabel">
                 { this.renderCircles() }
             </div>
         );
     }
 }
 
-export default DynamicContentCircleItemSlider;
+export default DynamicContentSliderWithLabel;
