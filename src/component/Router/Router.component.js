@@ -2,7 +2,6 @@
 import PropTypes from 'prop-types';
 import React, { lazy } from 'react';
 import { Route } from 'react-router-dom';
-
 import Breadcrumbs from 'Component/Breadcrumbs';
 import ChatPopup from 'Component/ChatPopup';
 import CookiePopup from 'Component/CookiePopup';

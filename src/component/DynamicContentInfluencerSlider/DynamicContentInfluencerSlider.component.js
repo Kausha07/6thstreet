@@ -7,7 +7,7 @@ import Link from 'Component/Link';
 import { formatCDNLink } from 'Util/Url';
 
 import 'react-circular-carousel/dist/index.css';
-import './DynamicContentCircleItemSlider.style';
+import './DynamicContentCircleInfluencerSlider.style';
 
 const settings = {
     lazyload: true,
@@ -24,7 +24,7 @@ const settings = {
     }
 };
 
-class DynamicContentCircleItemSlider extends PureComponent {
+class DynamicContentCircleInfluencerSlider extends PureComponent {
     static propTypes = {
         items: PropTypes.arrayOf(
             PropTypes.shape({
@@ -36,11 +36,43 @@ class DynamicContentCircleItemSlider extends PureComponent {
         ).isRequired
     };
 
-    clickLink = (a) => {
-        let link = '/' + a.link.split("?")[0]
-        localStorage.setItem("bannerData", JSON.stringify(a));
-        localStorage.setItem("CircleBannerUrl", link);
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            influencerContent: [],
+            isLoading: true
+        };
+    }
+
+    async requestDynamicContent(isUpdate = false) {
+
+
+        if (isUpdate) {
+            // Only set loading if this is an update
+            this.setState({ isLoading: true });
+        }
+
+        try {
+            const dynamicContent = await getStaticFile(
+                'influencer',
+                { $FILE_NAME: `/collections/influencer.json` }
+                // { $FILE_NAME: `http://mobilecdn.6thstreet.com/resources/20190121/en-ae/women.json` }
+
+            );
+
+            this.setState({
+                influencerContent: Array.isArray(dynamicContent) ? dynamicContent : [],
+                isLoading: false
+            });
+        } catch (e) {
+            // TODO: handle error
+            Logger.log(e);
+        }
+    }
+
+    componentDidMount(){
+
+    }
 
     renderCircle = (item, i) => {
         const {
@@ -107,4 +139,4 @@ class DynamicContentCircleItemSlider extends PureComponent {
     }
 }
 
-export default DynamicContentCircleItemSlider;
+export default DynamicContentCircleInfluencerSlider;

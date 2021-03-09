@@ -5,7 +5,6 @@ import ContentWrapper from 'Component/ContentWrapper/ContentWrapper.component';
 import PLPDetails from 'Component/PLPDetails';
 import PLPFilters from 'Component/PLPFilters';
 import PLPPages from 'Component/PLPPages';
-
 import CircleItemSliderSubPage from '../../component/DynamicContentCircleItemSlider/CircleItemSliderSubPage';
 
 // import DynamicContentCircleItemSlider from '../../component/DynamicContentCircleItemSlider';
@@ -24,7 +23,6 @@ export class PLP extends PureComponent {
     componentDidMount(){
         let bannerData = localStorage.getItem("bannerData");
         let bannerUrl = localStorage.getItem("CircleBannerUrl");
-        console.log(bannerUrl)
         if(bannerData ){
             let banner = JSON.parse(bannerData);
             this.setState({
@@ -58,9 +56,6 @@ export class PLP extends PureComponent {
     renderBanner() {
         let urlPath = window.location.pathname
         let bannerUrl = localStorage.getItem("CircleBannerUrl");
-        console.log((bannerUrl ===  urlPath))
-        debugger
-
         if(this.state.bannerData && (bannerUrl ===  urlPath))
         return (
             <div><CircleItemSliderSubPage bannerData={this.state.bannerData} /></div>

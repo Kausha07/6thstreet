@@ -42,6 +42,7 @@ class HomePage extends PureComponent {
 
     renderDynamicContent() {
         const { dynamicContent } = this.props;
+        console.log(this.props)
 
         return (
             <DynamicContent

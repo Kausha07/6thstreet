@@ -66,7 +66,6 @@ class DynamicContent extends PureComponent {
 
     renderBlocks() {
         const { content = [] } = this.props;
-        console.log('xyz:', this.props)
         return content.map(this.renderBlock);
     }
 

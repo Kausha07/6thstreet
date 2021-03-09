@@ -1,7 +1,18 @@
 .CircleItemSliderSubPage{
     margin-bottom: 40px;
-    display: flex;
     video{
         margin: 0 auto;
     }
+    &-Video{
+        display: flex;
+    }
+    h2{
+        font-size: 18px;
+        text-align: center;
+    }
+    p{
+        text-align: center;
+        font-size: 15px;
+    }
+
 }

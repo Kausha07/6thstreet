@@ -4,6 +4,7 @@ import { PureComponent } from 'react';
 import Image from 'Component/Image';
 import Link from 'Component/Link';
 import { formatCDNLink } from 'Util/Url';
+import DynamicContentHeader from '../DynamicContentHeader/DynamicContentHeader.component'
 
 import './DynamicContentGrid.style';
 
@@ -49,6 +50,10 @@ class DynamicContentGrid extends PureComponent {
         return (
             <>
                 <h2>{ title }</h2>
+                {this.props.header &&
+                    <DynamicContentHeader header={this.props.header}/>
+                }
+
                 <div
                   block="DynamicContentGrid"
                   elem="Grid"
