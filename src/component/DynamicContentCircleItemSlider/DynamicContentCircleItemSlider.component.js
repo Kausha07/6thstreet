@@ -13,12 +13,16 @@ const settings = {
     lazyload: true,
     nav: false,
     mouseDrag: true,
+    touch: true,
     controlsText: ["&#60", "&#62"],
     responsive: {
         1024:{
             items: 8
         },
         420: {
+            items: 6
+        },
+        300: {
             items: 4
         }
     }
@@ -58,7 +62,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
         // TODO: move to new component
 
         return (
-            <div block="CircleSlider">
+            <div block="CircleSlider" key={i}>
 
                 <Link
                   to={ linkTo }
@@ -73,8 +77,8 @@ class DynamicContentCircleItemSlider extends PureComponent {
                       alt={ label }
                       mix={ { block: 'DynamicContentCircleItemSlider', elem: 'Image' } }
                       ratio="custom"
-                      height="80px"
-                      width="80px"
+                      height="60px"
+                      width="60px"
                     />
                     { /* <button
                   block="DynamicContentCircleItemSlider"

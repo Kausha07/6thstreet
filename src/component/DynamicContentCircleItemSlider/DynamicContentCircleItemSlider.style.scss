@@ -70,6 +70,7 @@
         margin-top: 10px;
         text-align: center;
         margin-bottom: 10px;
+        text-transform: uppercase;
     }
 
 
@@ -97,3 +98,43 @@
         }
     }
 }
+@media  (max-width: 1024px) {
+    .DynamicContentCircleItemSlider {
+        .tns-controls {
+            display: none
+        }
+        .Image {
+            margin-top: 60px;
+            &-Image {
+                object-fit: cover;
+            }
+            img{
+                margin-left: 30px;
+            }
+        }
+    }
+  }
+
+  @media  (max-width: 760px) {
+    .DynamicContentCircleItemSlider {
+        .tns-controls {
+            display: none
+        }
+        .Image {
+            margin-top: 60px;
+            &-Image {
+                object-fit: cover;
+            }
+            img{
+                margin-left: 15px;
+            }
+        }
+        .tns-ovh{
+            margin: 0;
+        }
+        .CircleSliderLabel{
+            margin-top: 4px;
+            font-size: 8px;
+        }
+    }
+  }

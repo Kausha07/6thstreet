@@ -34,6 +34,14 @@ class DynamicContentGrid extends PureComponent {
             <div block="CategoryItem" elem="Content" key={ i }>
                 <Link to={ formatCDNLink(link) } key={ i }>
                     <Image src={ url } ratio="custom" height="auto" />
+                    {
+                        item.footer &&
+                        <div block="Footer">
+                            {item.footer.title && <p block="Footer-Title">{item.footer.title}</p>}
+                            {item.footer.subtitle && <p block="Footer-SubTitle">{item.footer.subtitle}</p>}
+                            {item.footer.button_label && <a block="Footer-Button">{item.footer.button_label}</a>}
+                        </div>
+                    }
                 </Link>
             </div>
         );
@@ -49,7 +57,6 @@ class DynamicContentGrid extends PureComponent {
 
         return (
             <>
-                <h2>{ title }</h2>
                 {this.props.header &&
                     <DynamicContentHeader header={this.props.header}/>
                 }

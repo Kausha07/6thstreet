@@ -17,7 +17,10 @@ const settings = {
             items: 8
         },
         420: {
-            items: 3
+            items: 5
+        },
+        300: {
+            items: 2
         }
     }
 };
@@ -32,10 +35,6 @@ class DynamicContentSliderWithLabel extends PureComponent {
                 plp_config: PropTypes.shape({}) // TODO: describe
             })
         ).isRequired
-    };
-
-    clickLink = (a) => {
-        localStorage.setItem("bannerData", JSON.stringify(a));
     };
 
     renderCircle = (item, i) => {
@@ -59,11 +58,11 @@ class DynamicContentSliderWithLabel extends PureComponent {
         // TODO: move to new component
 
         return (
-            <div block="CircleSlider">
+            <div block="SliderWithLabel" key={i*10}>
 
                 <Link
                   to={ linkTo }
-                  key={ i }
+                  key={ i*10 }
                   onClick={ () => {
                       this.clickLink(item);
                   } }
@@ -72,18 +71,12 @@ class DynamicContentSliderWithLabel extends PureComponent {
                     <Image
                       src={ url }
                       alt={ text }
-                      mix={ { block: 'DynamicContentCircleItemSlider', elem: 'Image' } }
+                      mix={ { block: 'DynamicContentSliderWithLabel', elem: 'Image' } }
                       ratio="custom"
                       height={ ht }
                       width={ wd }
                     />
-                    { /* <button
-                  block="DynamicContentCircleItemSlider"
-                  elem="Label"
-                  mix={ { block: 'button primary' } }
-                >
-                    { label }
-                </button> */ }
+
                 </Link>
                 <div block="CircleSliderLabel">{ text }</div>
             </div>
@@ -93,7 +86,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
     renderCircles() {
         const { items = [] } = this.props;
         return (
-            <TinySlider settings={ settings } block="CircleSliderWrapper">
+            <TinySlider settings={ settings } block="SliderWithLabelWrapper">
                 { items.map(this.renderCircle) }
             </TinySlider>
         );
