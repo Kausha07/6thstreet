@@ -57,6 +57,7 @@ export class Header extends PureComponent {
     renderSection = (Component, i) => {
         const { navigationState } = this.props;
         const { newMenuGender } = this.state;
+        const { pathname = '' } = window.location;
 
         return (
             <Component
@@ -64,6 +65,7 @@ export class Header extends PureComponent {
               navigationState={ navigationState }
               changeMenuGender={ this.changeMenuGender }
               newMenuGender={ newMenuGender }
+              pathname={ pathname }
             />
         );
     };

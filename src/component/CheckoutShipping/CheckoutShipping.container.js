@@ -12,6 +12,7 @@ import { showPopup } from 'Store/Popup/Popup.action';
 import { trimAddressFields } from 'Util/Address';
 import { capitalize } from 'Util/App';
 import { isSignedIn } from 'Util/Auth';
+import { getCountryFromUrl } from 'Util/Url/Url';
 
 export const mapDispatchToProps = (dispatch) => ({
     showPopup: (payload) => dispatch(showPopup(ADDRESS_POPUP_ID, payload)),
@@ -41,7 +42,8 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
         onShippingError: this.onShippingError.bind(this),
         onAddressSelect: this.onAddressSelect.bind(this),
         onShippingMethodSelect: this.onShippingMethodSelect.bind(this),
-        showCreateNewPopup: this.showCreateNewPopup.bind(this)
+        showCreateNewPopup: this.showCreateNewPopup.bind(this),
+        notSavedAddress: this.notSavedAddress.bind(this)
     };
 
     static defaultProps = {
@@ -61,6 +63,16 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
             title: __('Add new address'),
             address: {}
         });
+    }
+
+    notSavedAddress() {
+        const { customer: { addresses = [] } } = this.props;
+
+        if (addresses.length === 0) {
+            return true;
+        }
+
+        return !addresses.find(({ country_id = null }) => country_id === getCountryFromUrl());
     }
 
     validateAddress(address) {

@@ -18,6 +18,7 @@ import { changeNavigationState, goToPreviousNavigationState } from 'Store/Naviga
 import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { hideActiveOverlay, toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
+import BrowserDatabase from 'Util/BrowserDatabase';
 import history from 'Util/History';
 import isMobile from 'Util/Mobile';
 
@@ -227,9 +228,19 @@ export class MyAccountOverlayContainer extends PureComponent {
         try {
             await signIn(fields);
             onSignIn();
+            this.checkForOrder();
         } catch (e) {
             this.setState({ isLoading: false });
             showNotification('error', e.message);
+        }
+    }
+
+    checkForOrder() {
+        const orderId = BrowserDatabase.getItem('ORDER_ID') || null;
+
+        if (orderId) {
+            localStorage.removeItem('ORDER_ID');
+            history.push(`/my-account/my-orders/${orderId}`);
         }
     }
 

@@ -1,9 +1,11 @@
+/* eslint-disable radix */
 /* eslint-disable no-restricted-globals */
 /* eslint-disable no-magic-numbers */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import ChangePhonePopup from 'Component/ChangePhonePopUp';
+import { MINI_CARDS } from 'Component/CreditCard/CreditCard.config';
 import Field from 'Component/Field';
 import Form from 'Component/Form';
 import Link from 'Component/Link';
@@ -19,7 +21,6 @@ import Confirm from './icons/confirm.png';
 import SuccessCircle from './icons/success-circle.png';
 import TabbyAR from './icons/tabby-ar.png';
 import Tabby from './icons/tabby.png';
-import Visa from './icons/visa.png';
 
 import './CheckoutSuccess.style';
 
@@ -478,6 +479,29 @@ export class CheckoutSuccess extends PureComponent {
         );
     };
 
+    renderCardLogo() {
+        const {
+            creditCardData: { number = '' }
+        } = this.props;
+        const { visa, mastercard, amex } = MINI_CARDS;
+        const first = parseInt(number.charAt(0));
+        const second = parseInt(number.charAt(1));
+
+        if (first === 4) {
+            return visa;
+        }
+
+        if (first === 5) {
+            return mastercard;
+        }
+
+        if (first === 3 && (second === 4 || second === 7)) {
+            return amex;
+        }
+
+        return null;
+    }
+
     renderPaymentTypeContent = () => {
         const {
             creditCardData: {
@@ -495,7 +519,7 @@ export class CheckoutSuccess extends PureComponent {
             return (
                 <div block="Details">
                     <div block="Details" elem="TypeLogo">
-                        <img src={ Visa } alt="visa icon" />
+                        <img src={ this.renderCardLogo() } alt="card icon" />
                     </div>
                     <div block="Details" elem="Number">
                         <div block="Details" elem="Number-Dots">
