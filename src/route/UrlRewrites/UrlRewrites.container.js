@@ -52,7 +52,7 @@ export class UrlRewritesContainer extends PureComponent {
         const { prevPathname, query } = this.state;
         const { prevPathname: prevStatePathname } = prevState;
 
-        if (!location.search && query) {
+        if (!location.search && query && window.pageType === TYPE_CATEGORY) {
             history.push(`${pathname}?${query}`);
         }
 
