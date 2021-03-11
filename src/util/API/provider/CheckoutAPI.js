@@ -17,7 +17,7 @@ class CheckoutAPI {
 
     async _fetch(method, relativeURL, body = {}) {
         // TODO: get proper locale
-        const url = `/api2/v2${relativeURL}`;
+        const url = `${body.type === 'applepay' ? '/applepay' : '/api2/v2'}${relativeURL}`;
         const { AppState: { country } } = getStore().getState();
 
         const payload = (value) => (['post', 'put', 'delete'].includes(method) ? value : {});
@@ -28,7 +28,7 @@ class CheckoutAPI {
             method,
             headers: {
                 'Content-Type': 'application/json',
-                'X-App-Version': '2.20.0',
+                'X-App-Version': '2.23.0',
                 'Cache-Control': 'no-cache',
                 ...tokenHeader
             },
