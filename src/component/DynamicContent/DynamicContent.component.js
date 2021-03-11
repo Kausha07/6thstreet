@@ -9,6 +9,7 @@ import DynamicContentGrid from 'Component/DynamicContentGrid';
 import DynamicContentMainBanner from 'Component/DynamicContentMainBanner';
 import DynamicContentProductSlider from 'Component/DynamicContentProductSlider';
 import DynamicContentSliderWithLabel from 'Component/DynamicContentSliderWithLabel';
+import DynamicContentRichContentBanner from 'Component/DynamicContentRichContentBanner';
 import { DynamicContent as DynamicContentType } from 'Util/API/endpoint/StaticFiles/StaticFiles.type';
 import Event, { EVENT_GTM_IMPRESSIONS_HOME } from 'Util/Event';
 import Logger from 'Util/Logger';
@@ -33,6 +34,7 @@ class DynamicContent extends PureComponent {
         fullWidthBannerSlider: DynamicContentFullWidthBannerSlider,
         circleItemSlider: DynamicContentCircleItemSlider,
         bannerSliderWithLabel: DynamicContentSliderWithLabel,
+        rich_content_banner: DynamicContentRichContentBanner,
         line_separator: 'hr'
 
     };

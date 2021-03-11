@@ -1,29 +1,11 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import TinySlider from 'tiny-slider-react';
-
 import Image from 'Component/Image';
 import Link from 'Component/Link';
 import { formatCDNLink } from 'Util/Url';
+import DynamicContentHeader from '../DynamicContentHeader/DynamicContentHeader.component'
 import './DynamicContentSliderWithLabel.style';
-
-const settings = {
-    lazyload: true,
-    nav: false,
-    mouseDrag: true,
-    controlsText: ["&#60", "&#62"],
-    responsive: {
-        1024:{
-            items: 8
-        },
-        420: {
-            items: 5
-        },
-        300: {
-            items: 2
-        }
-    }
-};
 
 class DynamicContentSliderWithLabel extends PureComponent {
     static propTypes = {
@@ -36,6 +18,42 @@ class DynamicContentSliderWithLabel extends PureComponent {
             })
         ).isRequired
     };
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            settings: {
+                lazyload: true,
+                nav: false,
+                mouseDrag: true,
+                touch: true,
+                controlsText: ["&#60", "&#62"],
+                gutter: 8,
+                responsive: {
+                    1024:{
+                        items: 8
+                    },
+                    420: {
+                        items: 5
+                    },
+                    300: {
+                        items: 2
+                    }
+                }
+            },
+        };
+    }
+
+    // componentDidMount(){
+    //     if(this.props.items.length < 8){
+    //         let setting = JSON.parse(JSON.stringify(this.state.settings))
+    //         setting.responsive[1024].items = this.props.items.length
+    //         this.setState({
+    //             settings: setting
+    //         })
+
+    //     }
+    // }
 
     renderCircle = (item, i) => {
         const {
@@ -66,7 +84,6 @@ class DynamicContentSliderWithLabel extends PureComponent {
                   onClick={ () => {
                       this.clickLink(item);
                   } }
-
                 >
                     <Image
                       src={ url }
@@ -78,7 +95,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
                     />
 
                 </Link>
-                <div block="CircleSliderLabel">{ text }</div>
+                <div block="CircleSliderLabel" style={{width: wd}}>{ text }</div>
             </div>
         );
     };
@@ -86,7 +103,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
     renderCircles() {
         const { items = [] } = this.props;
         return (
-            <TinySlider settings={ settings } block="SliderWithLabelWrapper">
+            <TinySlider settings={ this.state.settings } block="SliderWithLabelWrapper">
                 { items.map(this.renderCircle) }
             </TinySlider>
         );
@@ -95,6 +112,12 @@ class DynamicContentSliderWithLabel extends PureComponent {
     render() {
         return (
             <div block="DynamicContentSliderWithLabel">
+                {this.props.header &&
+                    <DynamicContentHeader header={this.props.header}/>
+                }
+                {this.props.title &&
+                    <h1 block="Title">{this.props.title}</h1>
+                }
                 { this.renderCircles() }
             </div>
         );

@@ -5,7 +5,8 @@ import Image from 'Component/Image';
 import Link from 'Component/Link';
 import isMobile from 'Util/Mobile';
 import { formatCDNLink } from 'Util/Url';
-
+import DynamicContentHeader from '../DynamicContentHeader/DynamicContentHeader.component'
+import DynamicContentFooter from '../DynamicContentFooter/DynamicContentFooter.component'
 import './DynamicContentBanner.style';
 
 class DynamicContentBanner extends PureComponent {
@@ -90,7 +91,13 @@ class DynamicContentBanner extends PureComponent {
             <div
               block="DynamicContentBanner"
             >
-                 { this.renderImages() }
+                {this.props.header &&
+                    <DynamicContentHeader header={this.props.header}/>
+                }
+                { this.renderImages() }
+                {this.props.footer &&
+                    <DynamicContentFooter footer={this.props.footer}/>
+                }
             </div>
         );
     }

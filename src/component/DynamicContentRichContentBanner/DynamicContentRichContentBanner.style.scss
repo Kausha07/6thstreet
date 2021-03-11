@@ -1,8 +1,6 @@
-.DynamicContentSliderWithLabel {
+.DynamicContentRichContentBanner {
     // max-height: 500px;
     // overflow: hidden;
-    margin-right: 8px;
-    margin-left: 8px;
     .SliderWithLabelWrapper{
         display: flex;
         .CircleSlider{
@@ -67,12 +65,81 @@
     .tns-slider{
         margin: 0 auto;
     }
-    .CircleSliderLabel{
-        margin-top: 10px;
-        font-size: 14px;
-        margin-bottom: 40px;
+    .tns-nav{
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+        margin-top: 8px;
+        margin-bottom: 25px;
+        button{
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background-color: #BFBFBF;
+            padding: 0;
+        }
+        &-active {
+            background-color: #3D4447 !important;
+        }
+    }
+    .Label{
+        position: absolute;
+        bottom: 0%;
         text-align: center;
-
+        width: 100%;
+        background-image: linear-gradient(to top, #616161 , transparent);
+        height: 30%;
+        &-Title{
+            font-size: 18px;
+            color: white;
+            font-weight: 600;
+            margin-bottom: 0px;
+            line-height: 1;
+            margin-top: 15px;
+        }
+        &-SubTitle{
+            font-size: 12px;
+            color: white;
+            line-height: 1;
+            margin-top: 3px;
+            margin-bottom: 12px;
+        }
+        &-Button{
+            color: white;
+            text-decoration: underline;
+            font-size: 13px;
+        }
+    }
+    .Tag{
+        position: absolute;
+        &-TopRight{
+            top: 25px;
+            right: 15px;
+            color: white;
+        }
+        &-TopCenter{
+            top: 25px;
+            color: white;
+        }
+        &-TopLeft{
+            top: 25px;
+            left: 15px;
+            color: white;
+        }
+        &-BottomRight{
+            bottom: 25px;
+            right: 15px;
+            color: white;
+        }
+        &-BottomLeft{
+            bottom: 25px;
+            left: 15px;
+            color: white;
+        }
+        &-BottomCenter{
+            bottom: 25px;
+            color: white;
+        }
     }
 
     .Title{
@@ -111,7 +178,7 @@
 
 
 @media  (max-width: 760px) {
-    .DynamicContentSliderWithLabel {
+    .DynamicContentRichContentBanner {
         .tns-controls {
             display: none
         }

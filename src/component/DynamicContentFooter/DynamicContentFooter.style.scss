@@ -1,0 +1,36 @@
+.DynamicContentFooter{
+    // color: red;
+    &-Title {
+        display: block;
+        font-weight: var(--fw-bold);
+        font-size: var(--title-font-size);
+        margin-bottom: 10px;
+    }
+
+    &-SubTitle {
+        font-size: var(--subtitle-font-size);
+    }
+}
+
+@media  (max-width: 760px) {
+    .DynamicContentFooter {
+        &-Title {
+            display: block;
+            font-weight: 600;
+            font-size: 12px;
+            margin-bottom: 0px;
+            text-align: center;
+        }
+
+        &-SubTitle {
+            font-size: 11px;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+        &-Button{
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: underline;
+        }
+    }
+}
