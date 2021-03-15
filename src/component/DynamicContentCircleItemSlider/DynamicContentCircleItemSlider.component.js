@@ -15,6 +15,7 @@ const settings = {
     mouseDrag: true,
     touch: true,
     controlsText: ["&#60", "&#62"],
+    loop:false,
     responsive: {
         1024:{
             items: 8

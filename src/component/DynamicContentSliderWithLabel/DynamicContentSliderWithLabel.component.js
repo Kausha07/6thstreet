@@ -44,16 +44,25 @@ class DynamicContentSliderWithLabel extends PureComponent {
         };
     }
 
-    // componentDidMount(){
-    //     if(this.props.items.length < 8){
-    //         let setting = JSON.parse(JSON.stringify(this.state.settings))
-    //         setting.responsive[1024].items = this.props.items.length
-    //         this.setState({
-    //             settings: setting
-    //         })
-
-    //     }
-    // }
+    componentDidMount(){
+        if(this.props.items.length < 8){
+            let setting = JSON.parse(JSON.stringify(this.state.settings))
+            setting.responsive[1024].items = this.props.items.length
+            this.setState(prevState => ({
+                ...prevState,
+                settings: {
+                    ...prevState.settings,
+                    responsive: {
+                        ...prevState.settings.responsive,
+                        1024: {
+                           ...prevState.settings.responsive[1024],
+                           items: this.props.items.length
+                        }
+                    }
+                }
+            }))
+        }
+    }
 
     renderCircle = (item, i) => {
         const {
@@ -69,9 +78,15 @@ class DynamicContentSliderWithLabel extends PureComponent {
             pathname: formatCDNLink(link),
             state: { plp_config }
         };
-
+        let wd;
+        if(this.state.settings.responsive[300].items === 1){
+            wd = (screen.width - 16).toString()  + "px";
+        }
+        else{
+            wd = width.toString() + "px";
+        }
         let ht = height.toString() + "px";
-        let wd = width.toString() + "px";
+
 
         // TODO: move to new component
 
@@ -102,6 +117,10 @@ class DynamicContentSliderWithLabel extends PureComponent {
 
     renderCircles() {
         const { items = [] } = this.props;
+        let { settings } = this.state;
+        if(items[0] && items[0].height === 300 && items[0].width === 300) {
+        settings.responsive[300] = 1;
+ }
         return (
             <TinySlider settings={ this.state.settings } block="SliderWithLabelWrapper">
                 { items.map(this.renderCircle) }
