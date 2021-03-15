@@ -14,6 +14,7 @@ const settings = {
     touch: true,
     controlsText: ["&#60", "&#62"],
     nav: true,
+    loop: false,
     navPosition: "bottom",
     responsive: {
         1024:{

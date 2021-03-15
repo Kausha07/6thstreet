@@ -29,6 +29,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
                 touch: true,
                 controlsText: ["&#60", "&#62"],
                 gutter: 8,
+                loop: false,
                 responsive: {
                     1024:{
                         items: 8
