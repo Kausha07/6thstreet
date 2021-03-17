@@ -11,6 +11,9 @@
         }
 
     }
+    .CircleSlider{
+        text-align: center;
+    }
     &-Label {
         display: flex;
         position: absolute;
@@ -44,15 +47,15 @@
 
     .Image {
         margin-top: 60px;
+        border: 1px solid red;
+        padding: 2px;
+        border-radius: 50%;
+        height: 70px;
+        width: 70px;
         &-Image {
             object-fit: cover;
         }
-        img{
-            border: 1px solid red;
-            padding: 2px;
-            border-radius: 50%;
-            margin-left: 45px;
-        }
+
     }
     .tns-controls {
         display: flex;
@@ -142,7 +145,7 @@
         }
         .CircleSliderLabel{
             margin-top: 4px;
-            font-size: 8px;
+            font-size: 9px;
             width: 75px;
         }
     }
