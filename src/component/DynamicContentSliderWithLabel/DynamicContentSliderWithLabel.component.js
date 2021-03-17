@@ -27,7 +27,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
                 nav: false,
                 mouseDrag: true,
                 touch: true,
-                controlsText: ["&#60", "&#62"],
+                controlsText: ["&#10094", "&#10095"],
                 gutter: 8,
                 loop: false,
                 responsive: {
