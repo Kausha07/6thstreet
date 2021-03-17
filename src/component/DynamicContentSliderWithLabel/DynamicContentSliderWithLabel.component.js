@@ -32,7 +32,8 @@ class DynamicContentSliderWithLabel extends PureComponent {
                 loop: false,
                 responsive: {
                     1024:{
-                        items: 8
+                        items: 8,
+                        gutter: 25
                     },
                     420: {
                         items: 5
@@ -101,14 +102,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
                       this.clickLink(item);
                   } }
                 >
-                    <Image
-                      src={ url }
-                      alt={ text }
-                      mix={ { block: 'DynamicContentSliderWithLabel', elem: 'Image' } }
-                      ratio="custom"
-                      height={ ht }
-                      width={ wd }
-                    />
+                <img src={ url } alt={ text } block= 'Image'/>
 
                 </Link>
                 <div block="CircleSliderLabel" style={{width: wd}}>{ text }</div>

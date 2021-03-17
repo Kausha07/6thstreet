@@ -14,7 +14,7 @@ const settings = {
     touch: true,
     controlsText: ["&#60", "&#62"],
     nav: true,
-    loop: false,
+    loop: true,
     navPosition: "bottom",
     responsive: {
         1024:{
@@ -74,7 +74,6 @@ class DynamicContentRichContentBanner extends PureComponent {
                   onClick={ () => {
                       this.clickLink(item);
                   } }
-
                 >
                     <Image
                       src={ image_url }
