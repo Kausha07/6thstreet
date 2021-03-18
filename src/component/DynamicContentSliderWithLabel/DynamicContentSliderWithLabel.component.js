@@ -32,7 +32,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
                 loop: false,
                 responsive: {
                     1024:{
-                        items: 8,
+                        items: 5,
                         gutter: 25
                     },
                     420: {

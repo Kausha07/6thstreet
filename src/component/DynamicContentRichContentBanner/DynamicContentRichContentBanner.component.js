@@ -12,10 +12,11 @@ const settings = {
     lazyload: true,
     mouseDrag: true,
     touch: true,
-    controlsText: ["&#60", "&#62"],
+    controlsText: ["&#10094", "&#10095"],
     nav: true,
     loop: true,
     navPosition: "bottom",
+    autoplay: true,
     responsive: {
         1024:{
             items: 1

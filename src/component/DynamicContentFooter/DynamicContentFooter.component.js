@@ -18,7 +18,7 @@ class DynamicContentFooter extends PureComponent {
             <div block="DynamicContentFooter">
                 {this.props.footer.title && <p block="DynamicContentFooter-Title">{this.props.footer.title}</p>}
                 {this.props.footer.subtitle && <p block="DynamicContentFooter-SubTitle">{this.props.footer.subtitle}</p>}
-                {this.props.footer.button_label && <a block="DynamicContentFooter-Button">{this.props.footer.button_label}</a>}
+                {this.props.footer.button_label && <a href={this.props.footer.button_link} block="DynamicContentFooter-Button">{this.props.footer.button_label}</a>}
             </div>
 
         );

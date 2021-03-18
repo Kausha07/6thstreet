@@ -4,6 +4,7 @@
     margin-right: 8px;
     margin-left: 8px;
     margin-bottom: 40px;
+    max-width: 1440px;
     .SliderWithLabelWrapper{
         display: flex;
         .CircleSlider{
@@ -52,21 +53,44 @@
         }
     }
     .tns-controls {
-        display: flex;
-        justify-content: space-between;
-        top: 100px;
-        button {
-            font-size: 26px;
+        button:first-child {
+            left: 0;
+            position: absolute;
+            font-size: 30px;
             font-weight: 500;
             color: #888;
+            top: 100px;
+            &:hover{
+                color: #000
+            }
+        }
+        button:last-child {
+            right: 0;
+            position: absolute;
+            font-size: 30px;
+            font-weight: 500;
+            color: #888;
+            top: 100px;
             &:hover{
                 color: #000
             }
         }
     }
+
     .tns-ovh{
         margin-right: 40px;
         margin-left: 40px;
+        .tns-inner{
+            .tns-outer{
+                .tns-controls{
+                    display: none;
+
+                }
+                .tns-ovh{
+                    margin: 0;
+                }
+            }
+        }
     }
     .tns-slider{
         margin: 0 auto;
@@ -80,10 +104,10 @@
     }
 
     .Title{
-        font-size: 15px;
+        font-size: 22px;
         text-align: center;
         text-transform: uppercase;
-        margin-bottom: 0px;
+        margin-bottom: 30px;
         margin-top: 30px;
     }
 
@@ -136,6 +160,9 @@
         .CircleSliderLabel{
             margin-top: 4px;
             font-size: 12px;
+        }
+        .Title{
+            font-size: 15px;
         }
     }
   }
