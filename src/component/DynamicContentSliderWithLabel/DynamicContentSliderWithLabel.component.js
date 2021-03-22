@@ -39,7 +39,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
                         items: 5
                     },
                     300: {
-                        items: 2
+                        items: 2.3
                     }
                 }
             },
@@ -114,7 +114,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
         const { items = [] } = this.props;
         let { settings } = this.state;
         if(items[0] && items[0].height === 300 && items[0].width === 300) {
-        settings.responsive[300] = 1;
+        settings.responsive[300] = 1.3;
  }
         return (
             <TinySlider settings={ this.state.settings } block="SliderWithLabelWrapper">

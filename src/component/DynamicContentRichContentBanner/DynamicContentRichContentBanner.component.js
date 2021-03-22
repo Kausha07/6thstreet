@@ -18,8 +18,8 @@ const settings = {
     navPosition: "bottom",
     autoplay: true,
     responsive: {
-        1024:{
-            items: 1
+        1024: {
+            items: 2
         },
         420: {
             items: 6
@@ -55,14 +55,16 @@ class DynamicContentRichContentBanner extends PureComponent {
             pathname: formatCDNLink(link),
             state: { plp_config }
         };
-        let ht;
-        if(screen.width > 900){
-            ht = item.height.toString() + "px";
+        let ht, wd;
+        if (screen.width > 900) {
+            let ht1 = (item.height / item.width) * 600
+            ht = ht1.toString() + "px";
+            wd = "600px";
         }
-        else{
+        else {
             ht = screen.width.toString() + "px";
+            wd = screen.width.toString() + "px";
         }
-        let wd = screen.width.toString() + "px";
 
         // TODO: move to new component
 
@@ -70,19 +72,19 @@ class DynamicContentRichContentBanner extends PureComponent {
             <div block="CircleSlider" key={i}>
 
                 <Link
-                  to={ linkTo }
-                  key={ i }
-                  onClick={ () => {
-                      this.clickLink(item);
-                  } }
+                    to={linkTo}
+                    key={i}
+                    onClick={() => {
+                        this.clickLink(item);
+                    }}
                 >
                     <Image
-                      src={ image_url }
-                      alt={ title }
-                      mix={ { block: 'DynamicContentRichContentBanner', elem: 'Image' } }
-                      ratio="custom"
-                      height={ ht }
-                      width={ wd }
+                        src={image_url}
+                        alt={title}
+                        mix={{ block: 'DynamicContentRichContentBanner', elem: 'Image' }}
+                        ratio="custom"
+                        height={ht}
+                        width={wd}
                     />
                     { /* <button
                   block="DynamicContentCircleItemSlider"
@@ -97,14 +99,19 @@ class DynamicContentRichContentBanner extends PureComponent {
                     {item.subtitle && <p block="Label-SubTitle">{item.subtitle}</p>}
                     {item.button && <a href={item.button.link} block="Label-Button">{item.button.label}</a>}
                 </div>
-                <div block={cx("Tag", {
+                {
+                    item.tag &&
+                    <div block={cx("Tag", {
                         "Tag-TopLeft": item.tag.position === "top_left",
                         "Tag-TopRight": item.tag.position === "top_right",
                         "Tag-TopCenter": item.tag.position === "top_center",
                         "Tag-BottomLeft": item.tag.position === "bottom_left",
                         "Tag-BottomRight": item.tag.position === "bottom_right",
                         "Tag-BottomCenter": item.tag.position === "bottom_center"
-                    })}>{item.tag.label}</div>
+                    })}>{item.tag.label}
+                    </div>
+                }
+
             </div>
         );
     };
@@ -112,8 +119,8 @@ class DynamicContentRichContentBanner extends PureComponent {
     renderCircles() {
         const { items = [] } = this.props;
         return (
-            <TinySlider settings={ settings } block="CircleSliderWrapper">
-                { items.map(this.renderCircle) }
+            <TinySlider settings={settings} block="CircleSliderWrapper">
+                { items.map(this.renderCircle)}
             </TinySlider>
         );
     }
@@ -121,7 +128,7 @@ class DynamicContentRichContentBanner extends PureComponent {
     render() {
         return (
             <div block="DynamicContentRichContentBanner">
-                { this.renderCircles() }
+                { this.renderCircles()}
             </div>
         );
     }

@@ -46,12 +46,7 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
               to={ linkTo }
               key={ i }
             >
-                <Image
-                  src={ image_url }
-                  alt={ label }
-                  mix={ { block: 'DynamicContentFullWidthBannerSlider', elem: 'Image' } }
-                  ratio="custom"
-                />
+                <img src={ image_url } alt={ label } />
             </Link>
         );
     };
@@ -61,9 +56,9 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
         const { activeSlide } = this.state;
 
         return (
-            <SliderHomepage activeImage={ activeSlide } onActiveImageChange={ this.onSliderChange }>
+            <div>
                 { items.map(this.renderSlide) }
-            </SliderHomepage>
+            </div>
         );
     }
 

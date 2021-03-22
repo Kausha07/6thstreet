@@ -1,4 +1,14 @@
 .DynamicContentFullWidthBannerSlider {
+    a + a{
+        margin-left: 0px;
+    }
+    a{
+
+        img{
+            margin-bottom: 40px;
+        }
+    }
+
     @include mobile {
         a {
             margin-left: -30px;
@@ -9,6 +19,7 @@
             }
         }
     }
+
 
     .Image {
         height: auto;

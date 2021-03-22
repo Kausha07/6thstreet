@@ -1,7 +1,7 @@
 .DynamicContentRichContentBanner {
     // max-height: 500px;
     // overflow: hidden;
-    max-width: 1440px;
+    width: 1316px;
     .SliderWithLabelWrapper{
         display: flex;
         .CircleSlider{
@@ -43,7 +43,6 @@
 
         &-Image {
             object-fit: cover;
-            position: inherit;
         }
         img{
             // margin-left: 25px;
@@ -110,59 +109,59 @@
         position: absolute;
         bottom: 0%;
         text-align: center;
-        width: 100%;
+        width: 600px;
         background-image: linear-gradient(to top, #616161 , transparent);
-        height: 35%;
+        height: 120px;
         &-Title{
-            font-size: 30px;
+            font-size: 22px;
             color: white;
             font-weight: 600;
             margin-bottom: 0px;
-            line-height: 1.3;
+            line-height: 1;
             margin-top: 15px;
         }
         &-SubTitle{
-            font-size: 20px;
+            font-size: 16px;
             color: white;
             line-height: 1;
             margin-top: 3px;
-            margin-bottom: 12px;
+            margin-bottom: 5px;
         }
         &-Button{
             color: white;
             text-decoration: underline;
-            font-size: 30px;
+            font-size: 20px;
         }
     }
     .Tag{
         position: absolute;
-        font-size: 25px;
+        font-size:18px;
         &-TopRight{
-            top: 70px;
-            right: 40px;
+            top: 10%;
+            right: 5%;
             color: white;
         }
         &-TopCenter{
-            top: 70px;
+            top: 10%;
             color: white;
         }
         &-TopLeft{
-            top: 70px;
-            left: 40px;
+            top: 10%;
+            left: 5%;
             color: white;
         }
         &-BottomRight{
-            bottom: 70px;
-            right: 40px;
+            bottom: 10%;
+            right: 5%;
             color: white;
         }
         &-BottomLeft{
-            bottom: 70px;
-            left: 40px;
+            bottom: 10%;
+            left: 5%;
             color: white;
         }
         &-BottomCenter{
-            bottom: 70px;
+            bottom: 10%;
             color: white;
         }
     }
@@ -204,6 +203,7 @@
 
 @media  (max-width: 760px) {
     .DynamicContentRichContentBanner {
+        width: 100%;
         .tns-controls {
             display: none
         }
@@ -234,6 +234,7 @@
         }
         .Label{
             height: 30%;
+            width: 100%;
             &-Title{
                 font-size: 18px;
                 line-height: 1;
