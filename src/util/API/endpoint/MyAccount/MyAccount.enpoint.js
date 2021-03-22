@@ -25,6 +25,6 @@ export const updateCustomerData = (data) => MobileAPI.put(
     data
 ) || {};
 
-export const getOrders = (limit, page) => MobileAPI.get(
-    `/orders?page=${page}&limit=${limit}`,
+export const getOrders = (limit, offset = 0) => MobileAPI.get(
+    `/orders?offset=${offset}&limit=${limit}`,
 ) || {};
