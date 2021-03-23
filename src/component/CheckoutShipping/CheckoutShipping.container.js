@@ -153,11 +153,11 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
 
             if (success && !selectedShippingMethod) {
                 const estimationResult = this.estimateShipping(addressForValidation, true);
-                
+
                 if (!estimationResult) {
                     showNotification('error', __('Something went wrong.'))
                 }
-                
+
                 estimationResult.then((response) => {
                     if (typeof response !== 'undefined') {
                         const { data = [] } = response;
@@ -177,7 +177,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
                             setLoading(false);
                             showNotification('error', __('We can\'t ship products to selected address'))
                         }
-                        
+
                     } else {
                         setLoading(false);
                     }

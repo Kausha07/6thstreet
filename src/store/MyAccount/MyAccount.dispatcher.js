@@ -259,8 +259,8 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         return resetPasswordWithToken({ ...data, email: BrowserDatabase.getItem(RESET_EMAIL) });
     }
 
-    async getOrders(limit, page) {
-        return getOrders(limit, page);
+    async getOrders(limit, offset) {
+        return getOrders(limit, offset);
     }
 
     updateCustomerData(dispatch, data) {
