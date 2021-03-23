@@ -53,13 +53,15 @@
         }
     }
     .tns-controls {
+        margin-left: 10px;
+        margin-right: 10px;
         button:first-child {
             left: 0;
             position: absolute;
-            font-size: 30px;
+            font-size: 75px;
             font-weight: 500;
             color: #888;
-            top: 100px;
+            top: 70px;
             &:hover{
                 color: #000
             }
@@ -67,10 +69,10 @@
         button:last-child {
             right: 0;
             position: absolute;
-            font-size: 30px;
+            font-size: 75px;
             font-weight: 500;
             color: #888;
-            top: 100px;
+            top: 70px;
             &:hover{
                 color: #000
             }
@@ -78,8 +80,8 @@
     }
 
     .tns-ovh{
-        margin-right: 40px;
-        margin-left: 40px;
+        margin-right: 80px;
+        margin-left: 80px;
         .tns-inner{
             .tns-outer{
                 .tns-controls{

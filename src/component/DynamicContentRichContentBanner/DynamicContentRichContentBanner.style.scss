@@ -1,7 +1,7 @@
 .DynamicContentRichContentBanner {
     // max-height: 500px;
     // overflow: hidden;
-    width: 1316px;
+    width: 1396px;
     .SliderWithLabelWrapper{
         display: flex;
         .CircleSlider{
@@ -61,10 +61,12 @@
         button:first-child {
             left: 0;
             position: absolute;
-            font-size: 26px;
+            font-size: 75px;
             font-weight: 500;
             color: #888;
             top: 40%;
+            height: auto;
+            margin-left: 15px;
             &:hover{
                 color: #000
             }
@@ -72,18 +74,20 @@
         button:last-child {
             right: 0;
             position: absolute;
-            font-size: 26px;
+            font-size: 75px;
             font-weight: 500;
             color: #888;
             top: 40%;
+            height: auto;
+            margin-right: 15px;
             &:hover{
                 color: #000
             }
         }
     }
     .tns-ovh{
-        margin-right: 40px;
-        margin-left: 40px;
+        margin-right: 80px;
+        margin-left: 80px;
     }
     .tns-slider{
         margin: 0 auto;

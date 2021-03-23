@@ -5,7 +5,8 @@ import Image from 'Component/Image';
 import Link from 'Component/Link';
 import SliderHomepage from 'Component/SliderHomepage';
 import { formatCDNLink } from 'Util/Url';
-
+import DynamicContentHeader from '../DynamicContentHeader/DynamicContentHeader.component'
+import DynamicContentFooter from '../DynamicContentFooter/DynamicContentFooter.component'
 import './DynamicContentFullWidthBannerSlider.style';
 
 class DynamicContentFullWidthBannerSlider extends PureComponent {
@@ -65,7 +66,13 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
     render() {
         return (
             <div block="DynamicContentFullWidthBannerSlider">
+                {this.props.header &&
+                    <DynamicContentHeader header={this.props.header}/>
+                }
                 { this.renderSlider() }
+                {this.props.footer &&
+                    <DynamicContentFooter footer={this.props.footer}/>
+                }
             </div>
         );
     }
