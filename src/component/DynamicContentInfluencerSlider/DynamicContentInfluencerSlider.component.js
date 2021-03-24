@@ -13,7 +13,7 @@ const settings = {
     lazyload: true,
     nav: false,
     mouseDrag: true,
-    controlsText: ["&#60", "&#62"],
+    controlsText: ["&#x27E8", "&#x27E9"],
     responsive: {
         1024:{
             items: 8

@@ -6,20 +6,23 @@ import Link from 'Component/Link';
 import { formatCDNLink } from 'Util/Url';
 import cx from "classnames";
 import 'react-circular-carousel/dist/index.css';
+import DynamicContentHeader from '../DynamicContentHeader/DynamicContentHeader.component'
+import DynamicContentFooter from '../DynamicContentFooter/DynamicContentFooter.component'
 import './DynamicContentRichContentBanner.style';
 
 const settings = {
     lazyload: true,
     mouseDrag: true,
     touch: true,
-    controlsText: ["&#10094", "&#10095"],
+    controlsText: ["&#x27E8", "&#x27E9"],
     nav: true,
     loop: true,
     navPosition: "bottom",
     autoplay: true,
     responsive: {
         1024: {
-            items: 2
+            items: 2,
+            gutter: 36
         },
         420: {
             items: 6
@@ -128,7 +131,13 @@ class DynamicContentRichContentBanner extends PureComponent {
     render() {
         return (
             <div block="DynamicContentRichContentBanner">
+                {this.props.header &&
+                    <DynamicContentHeader header={this.props.header}/>
+                }
                 { this.renderCircles()}
+                {this.props.footer &&
+                    <DynamicContentFooter footer={this.props.footer}/>
+                }
             </div>
         );
     }

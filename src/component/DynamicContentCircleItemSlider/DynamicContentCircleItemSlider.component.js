@@ -7,6 +7,8 @@ import Link from 'Component/Link';
 import { formatCDNLink } from 'Util/Url';
 
 import 'react-circular-carousel/dist/index.css';
+import DynamicContentHeader from '../DynamicContentHeader/DynamicContentHeader.component'
+import DynamicContentFooter from '../DynamicContentFooter/DynamicContentFooter.component'
 import './DynamicContentCircleItemSlider.style';
 
 const settings = {
@@ -14,7 +16,7 @@ const settings = {
     nav: false,
     mouseDrag: true,
     touch: true,
-    controlsText: ["&#60", "&#62"],
+    controlsText: ["&#x27E8", "&#x27E9"],
     loop:false,
     responsive: {
         1024:{
@@ -107,7 +109,13 @@ class DynamicContentCircleItemSlider extends PureComponent {
     render() {
         return (
             <div block="DynamicContentCircleItemSlider">
+                {this.props.header &&
+                    <DynamicContentHeader header={this.props.header}/>
+                }
                 { this.renderCircles() }
+                {this.props.footer &&
+                    <DynamicContentFooter footer={this.props.footer}/>
+                }
             </div>
         );
     }

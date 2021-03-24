@@ -5,6 +5,7 @@ import Image from 'Component/Image';
 import Link from 'Component/Link';
 import { formatCDNLink } from 'Util/Url';
 import DynamicContentHeader from '../DynamicContentHeader/DynamicContentHeader.component'
+import DynamicContentFooter from '../DynamicContentFooter/DynamicContentFooter.component'
 import './DynamicContentSliderWithLabel.style';
 
 class DynamicContentSliderWithLabel extends PureComponent {
@@ -27,7 +28,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
                 nav: false,
                 mouseDrag: true,
                 touch: true,
-                controlsText: ["&#10094", "&#10095"],
+                controlsText: ["&#x27E8", "&#x27E9"],
                 gutter: 8,
                 loop: false,
                 responsive: {
@@ -133,6 +134,9 @@ class DynamicContentSliderWithLabel extends PureComponent {
                     <h1 block="Title">{this.props.title}</h1>
                 }
                 { this.renderCircles() }
+                {this.props.footer &&
+                    <DynamicContentFooter footer={this.props.footer}/>
+                }
             </div>
         );
     }
