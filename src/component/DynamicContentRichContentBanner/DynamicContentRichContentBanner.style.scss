@@ -92,6 +92,9 @@
     .tns-slider{
         margin: 0 auto;
     }
+    .tns-outer{
+        direction: ltr!important;
+    }
     .tns-nav{
         display: flex;
         justify-content: center;
