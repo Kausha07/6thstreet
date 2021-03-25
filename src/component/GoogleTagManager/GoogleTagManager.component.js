@@ -25,8 +25,8 @@ export const EVENT_IMPRESSION = 'ee.impression';
 export const EVENT_PRODUCT_CLICK = 'productClick';
 export const EVENT_ADD_TO_CART = 'addToCart';
 export const EVENT_REMOVE_FROM_CART = 'removeFromCart';
-export const EVENT_PRODUCT_DETAIL = 'productDetail';
-export const EVENT_PURCHASE = 'purchase';
+export const EVENT_PRODUCT_DETAIL = 'ee.detail';
+export const EVENT_PURCHASE = 'ee.purchase';
 export const EVENT_CHECKOUT = 'checkout';
 export const EVENT_CHECKOUT_OPTION = 'checkoutOption';
 
