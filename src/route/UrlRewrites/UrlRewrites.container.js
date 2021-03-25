@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import UrlRewritesQuery from 'Query/UrlRewrites.query';
 import { hideActiveOverlay } from 'Store/Overlay/Overlay.action';
 import { LocationType } from 'Type/Common';
-import history from 'Util/History';
 import { fetchQuery } from 'Util/Request';
 
 import UrlRewrites from './UrlRewrites.component';
@@ -35,8 +34,7 @@ export class UrlRewritesContainer extends PureComponent {
         isLoading: true,
         type: '',
         id: -1,
-        sku: '',
-        query: ''
+        sku: ''
     };
 
     constructor(props) {
@@ -49,12 +47,8 @@ export class UrlRewritesContainer extends PureComponent {
         const { pathname } = location;
         const { locale, hideActiveOverlay } = this.props;
         const { locale: prevLocale } = prevProps;
-        const { prevPathname, query } = this.state;
+        const { prevPathname } = this.state;
         const { prevPathname: prevStatePathname } = prevState;
-
-        if (!location.search && query && window.pageType === TYPE_CATEGORY) {
-            history.push(`${pathname}?${query}`);
-        }
 
         if (
             pathname !== prevPathname
@@ -84,11 +78,7 @@ export class UrlRewritesContainer extends PureComponent {
 
         // TODO: switch to "executeGet" afterwards
         const { urlResolver } = await fetchQuery(UrlRewritesQuery.getQuery({ urlParam }));
-        const {
-            type = magentoProductId || possibleSku ? TYPE_PRODUCT : TYPE_NOTFOUND,
-            id,
-            data: { url: query } = {}
-        } = urlResolver || {};
+        const { type = magentoProductId || possibleSku ? TYPE_PRODUCT : TYPE_NOTFOUND, id } = urlResolver || {};
         const finalType = type === TYPE_NOTFOUND && decodeURI(location.search).match(/idx=/)
             ? TYPE_CATEGORY
             : type;
@@ -100,8 +90,7 @@ export class UrlRewritesContainer extends PureComponent {
             isLoading: false,
             type: finalType,
             id: id === undefined ? magentoProductId : id,
-            sku: possibleSku,
-            query
+            sku: possibleSku
         });
     }
 
