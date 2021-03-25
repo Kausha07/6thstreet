@@ -238,19 +238,24 @@ class Product {
             brand_name,
             color,
             full_item_info: {
-                category
-            },
+                category = ''
+            } = {},
             sku: parentSku,
+            name: parentName,
             optionValue,
             row_total,
+            price = {},
             product
         } = item;
-        const { sku, name } = product;
+
+        const { sku = '', name = '' } = product || {};
+        const priceObject = price[0];
+        const itemPrice = priceObject ? priceObject[Object.keys(priceObject)[0]]['6s_special_price'] : '';
 
         return {
-            id: sku || parentSku,
-            name,
-            price: row_total,
+            name: name || parentName,
+            id:  sku || parentSku,
+            price: row_total || itemPrice.toString(),
             brand: brand_name,
             category,
             size: optionValue,

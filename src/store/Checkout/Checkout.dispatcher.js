@@ -110,10 +110,6 @@ export class CheckoutDispatcher {
     async createOrder(dispatch, code, additional_data) {
         const { Cart: { cartId } } = getStore().getState();
 
-        console.log('***', cartId);
-        console.log('***', code);
-        console.log('***', additional_data);
-
         return createOrder({
             data: {
                 cart_id: cartId,

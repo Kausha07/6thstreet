@@ -4,7 +4,7 @@ import Event, { EVENT_GTM_GENERAL_INIT, EVENT_GTM_PRODUCT_DETAIL } from 'Util/Ev
 import ProductHelper from '../utils';
 import BaseEvent from './Base.event';
 
-export const SPAM_PROTECTION_TIMEOUT = 2000;
+export const SPAM_PROTECTION_TIMEOUT = 0;
 export const EVENT_EXECUTION_DELAY = 500;
 
 /**
@@ -56,6 +56,10 @@ class ProductDetailEvent extends BaseEvent {
         this.pushEventData({
             ecommerce: {
                 detail: {
+                    actionField: {
+                        list: '',
+                        action: 'detail'
+                    },
                     products: [productToPass]
                 }
             }
