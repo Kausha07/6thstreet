@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { withRouter } from 'react-router';
-
 import HeaderBottomBar from 'Component/HeaderBottomBar';
 import HeaderMainSection from 'Component/HeaderMainSection';
 import HeaderTopBar from 'Component/HeaderTopBar';
@@ -34,17 +33,14 @@ export class Header extends PureComponent {
 
     getIsCheckout = () => {
         const { isMobile } = this.state;
-
         if (location.pathname.match(/checkout/)) {
             return isMobile ? true : !location.pathname.match(/success/);
         }
-
         return false;
     };
 
     shouldChatBeHidden() {
         const chatElem = document.getElementById('ori-chatbot-root');
-
         if (chatElem) {
             if (location.pathname.match(/checkout|cart/)) {
                 chatElem.classList.add('hidden');

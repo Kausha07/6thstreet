@@ -60,6 +60,7 @@ export class DynamicContentProductSliderContainer extends PureComponent {
     async requestItems() {
         const { data_url, setImpressions } = this.props;
         const { params } = WebUrlParser.parsePLP(data_url);
+        // console.log("vnv:", this.props)
 
         try {
             // request first 10 items from algolia

@@ -1,13 +1,37 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
-
+import TinySlider from 'tiny-slider-react';
 import Image from 'Component/Image';
 import Link from 'Component/Link';
 import SliderHomepage from 'Component/SliderHomepage';
 import { formatCDNLink } from 'Util/Url';
-
+import DynamicContentHeader from '../DynamicContentHeader/DynamicContentHeader.component'
+import DynamicContentFooter from '../DynamicContentFooter/DynamicContentFooter.component'
 import './DynamicContentFullWidthBannerSlider.style';
 
+
+
+const settings = {
+    lazyload: true,
+    mouseDrag: true,
+    touch: true,
+    controlsText: ["&#x27E8", "&#x27E9"],
+    nav: true,
+    loop: true,
+    navPosition: "bottom",
+    autoplay: true,
+    responsive: {
+        1024: {
+            items: 1
+        },
+        420: {
+            items: 1
+        },
+        300: {
+            items: 1.2
+        }
+    }
+};
 class DynamicContentFullWidthBannerSlider extends PureComponent {
     static propTypes = {
         items: PropTypes.arrayOf(
@@ -41,17 +65,13 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
             state: { plp_config }
         };
 
+
         return (
             <Link
               to={ linkTo }
               key={ i }
             >
-                <Image
-                  src={ image_url }
-                  alt={ label }
-                  mix={ { block: 'DynamicContentFullWidthBannerSlider', elem: 'Image' } }
-                  ratio="custom"
-                />
+                <img src={ image_url } alt={ label }/>
             </Link>
         );
     };
@@ -61,16 +81,20 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
         const { activeSlide } = this.state;
 
         return (
-            <SliderHomepage activeImage={ activeSlide } onActiveImageChange={ this.onSliderChange }>
+            <TinySlider settings={settings} block="">
                 { items.map(this.renderSlide) }
-            </SliderHomepage>
+            </TinySlider>
         );
     }
 
     render() {
         return (
             <div block="DynamicContentFullWidthBannerSlider">
+                {this.props.header &&
+                    <DynamicContentHeader header={this.props.header}/>
+                }
                 { this.renderSlider() }
+
             </div>
         );
     }

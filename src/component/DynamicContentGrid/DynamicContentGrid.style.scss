@@ -5,7 +5,7 @@
 }
 
 .DynamicContentGrid {
-    padding: 0 10px;
+    max-width: 1440px;
 
     &-Grid {
         display: grid;
@@ -61,22 +61,61 @@
     &-Content {
         text-align: center;
         margin-bottom: 20px;
+        padding: 8px;
+        .Footer{
+            // color: red;
+            &-Title {
+                display: block;
+                font-weight: var(--fw-bold);
+                font-size: var(--title-font-size);
+                margin-bottom: 10px;
+            }
+
+            &-SubTitle {
+                font-size: var(--subtitle-font-size);
+            }
+        }
+
     }
 
     &-Text {
         margin-top: 20px;
         margin-bottom: 30px;
     }
-
-    &-Title {
-        display: block;
-        font-weight: var(--fw-bold);
-        font-size: var(--title-font-size);
-        margin-bottom: 10px;
-        text-transform: uppercase;
-    }
-
-    &-SubTitle {
-        font-size: var(--subtitle-font-size);
-    }
 }
+@media  (max-width: 760px) {
+    .DynamicContentGrid {
+        .CategoryItem {
+            &-Content {
+                margin-bottom: 5px;
+                .Footer{
+                    // color: red;
+                    &-Title {
+                        display: block;
+                        font-weight: 600;
+                        font-size: 12px;
+                        margin-bottom: 0px;
+                        text-align: center;
+                    }
+
+                    &-SubTitle {
+                        font-size: 11px;
+                        line-height: 1;
+                        margin-bottom: 6px;
+                    }
+                    &-Button{
+                        font-size: 12px;
+                        font-weight: 600;
+                        text-decoration: underline;
+                    }
+                }
+
+            }
+
+            &-Text {
+                margin-top: 20px;
+                margin-bottom: 30px;
+            }
+        }
+    }
+  }

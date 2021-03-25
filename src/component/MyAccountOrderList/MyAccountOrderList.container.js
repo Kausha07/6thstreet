@@ -14,7 +14,7 @@ export const mapStateToProps = () => ({});
 
 export const mapDispatchToProps = (dispatch) => ({
     showErrorNotification: (error) => dispatch(showNotification('error', error)),
-    getOrders: (limit, page) => MyAccountDispatcher.getOrders(limit, page)
+    getOrders: (limit, offset) => MyAccountDispatcher.getOrders(limit, offset)
 });
 
 export class MyAccountOrderListContainer extends SourceComponent {
@@ -25,16 +25,16 @@ export class MyAccountOrderListContainer extends SourceComponent {
 
     state = {
         limit: 15,
-        page: 0,
+        nextOffset: 0,
         orders: [],
         isGetNewOrders: true
     };
 
     componentDidMount() {
-        const { limit, page } = this.state;
+        const { limit } = this.state;
         this.setState({ isLoading: true });
 
-        this.getOrderList(limit, page);
+        this.getOrderList(limit);
 
         window.addEventListener('scroll', this.handleScroll);
     }
@@ -43,7 +43,6 @@ export class MyAccountOrderListContainer extends SourceComponent {
         const {
             isMobile,
             limit,
-            page,
             isLoading,
             isGetNewOrders
         } = this.state;
@@ -56,7 +55,7 @@ export class MyAccountOrderListContainer extends SourceComponent {
         const windowBottom = windowHeight + window.pageYOffset;
 
         if (windowBottom + footerHeight >= docHeight && !isLoading && isGetNewOrders) {
-            this.setState({ isLoading: true }, () => this.getOrderList(limit, page));
+            this.setState({ isLoading: true }, () => this.getOrderList(limit));
         }
     };
 
@@ -70,20 +69,21 @@ export class MyAccountOrderListContainer extends SourceComponent {
         return { orders, isLoading, requestInProgress };
     };
 
-    getOrderList(limit = 0, page = 0) {
+    getOrderList(limit = 15) {
         const { getOrders, showErrorNotification } = this.props;
-        const { orders } = this.state;
+        const { orders, nextOffset } = this.state;
 
         this.setState({ requestInProgress: true });
 
-        getOrders(limit, page).then(({ data }) => {
+        getOrders(limit, nextOffset).then(({ data, meta }) => {
+            console.log(meta);
             this.setState({
-                orders: data || orders,
+                orders: data ? [...orders, ...data] : orders,
+                nextOffset: (meta && meta.next_offset) || 0,
                 isLoading: false,
                 requestInProgress: false,
-                limit: limit + 15,
-                page: page + 1,
-                isGetNewOrders: data.length > orders.length
+                limit,
+                isGetNewOrders: !!meta.next_offset
             });
         }).catch(() => {
             showErrorNotification(__('Error appeared while fetching orders'));

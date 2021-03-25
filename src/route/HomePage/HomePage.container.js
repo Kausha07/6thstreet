@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
-
 import { setGender } from 'Store/AppState/AppState.action';
 import { toggleBreadcrumbs } from 'Store/Breadcrumbs/Breadcrumbs.action';
 import { updateMeta } from 'Store/Meta/Meta.action';
@@ -10,7 +9,6 @@ import { getStaticFile } from 'Util/API/endpoint/StaticFiles/StaticFiles.endpoin
 import { capitalize } from 'Util/App';
 import Logger from 'Util/Logger';
 import isMobile from 'Util/Mobile';
-
 import HomePage from './HomePage.component';
 import { HOME_STATIC_FILE_KEY } from './HomePage.config';
 
@@ -52,6 +50,7 @@ export class HomePageContainer extends PureComponent {
 
     componentDidMount() {
         const { gender, toggleBreadcrumbs } = this.props;
+        console.log("abc:", this.props)
         toggleBreadcrumbs(false);
         this.setMetaData(gender);
         this.requestDynamicContent(true, gender);
@@ -110,7 +109,6 @@ export class HomePageContainer extends PureComponent {
     async requestDynamicContent(isUpdate = false) {
         const { gender } = this.props;
         const devicePrefix = this.getDevicePrefix();
-
         if (isUpdate) {
             // Only set loading if this is an update
             this.setState({ isLoading: true });
@@ -120,6 +118,8 @@ export class HomePageContainer extends PureComponent {
             const dynamicContent = await getStaticFile(
                 HOME_STATIC_FILE_KEY,
                 { $FILE_NAME: `${devicePrefix}${gender}.json` }
+                // { $FILE_NAME: `http://mobilecdn.6thstreet.com/resources/20190121/en-ae/women.json` }
+
             );
 
             this.setState({
@@ -149,6 +149,7 @@ export class HomePageContainer extends PureComponent {
             <HomePage
               { ...this.containerFunctions }
               { ...this.containerProps() }
+              abc = {this.props}
             />
         );
     }

@@ -2,7 +2,7 @@
     .DynamicContentBanner {
         box-sizing: border-box;
         margin: 0;
-        padding: 0 5px;
+        padding: 0 8px;
 
         &:last-of-type {
             padding-bottom: 30px;
@@ -19,7 +19,6 @@
         .DynamicContent {
             > div:not(.DynamicContentFullWidthBannerSlider) {
                 margin: 0 auto;
-                max-width: 1366px;
             }
         }
     }

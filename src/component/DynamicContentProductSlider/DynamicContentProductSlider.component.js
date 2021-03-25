@@ -199,7 +199,6 @@ class DynamicContentProductSlider extends PureComponent {
 
         return (
             <div mix={ { block: 'DynamicContentProductSlider', mods: { isArabic } } }>
-                <hr />
                 <div mix={ { block: 'DynamicContentProductSlider', elem: 'HeaderContainer', mods: { isArabic } } }>
                     { this.renderTitle() }
                 </div>

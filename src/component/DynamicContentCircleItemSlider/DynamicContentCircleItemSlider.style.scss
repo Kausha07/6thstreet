@@ -1,6 +1,20 @@
 .DynamicContentCircleItemSlider {
     // max-height: 500px;
     // overflow: hidden;
+    margin-bottom: 30px;
+    display: none;
+
+    .CircleSliderWrapper{
+        display: flex;
+        .CircleSlider{
+            margin: 40px;
+            width: 100%;
+        }
+
+    }
+    .CircleSlider{
+        text-align: center;
+    }
     &-Label {
         display: flex;
         position: absolute;
@@ -33,10 +47,47 @@
     }
 
     .Image {
+        margin-top: 60px;
+        border: 1px solid red;
+        padding: 2px;
+        border-radius: 50%;
+        height: 70px;
+        width: 70px;
         &-Image {
             object-fit: cover;
         }
+
     }
+    .tns-controls {
+        display: flex;
+        justify-content: space-between;
+        top: 110px;
+        button {
+            font-size: 38px;
+            font-weight: 400;
+            color: #515151;
+        }
+    }
+    .tns-ovh{
+        margin-right: 40px;
+        margin-left: 40px;
+    }
+    .tns-outer{
+        direction: ltr!important;
+    }
+    .CircleSliderLabel{
+        text-align: center;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+        width: 100px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin: 0 auto;
+        margin-top: 10px;
+    }
+
+
 
     @include mobile {
         max-height: 700px;
@@ -61,3 +112,45 @@
         }
     }
 }
+@media  (max-width: 1024px) {
+    .DynamicContentCircleItemSlider {
+        .tns-controls {
+            display: none
+        }
+        .Image {
+            margin-top: 60px;
+            &-Image {
+                object-fit: cover;
+            }
+            img{
+                margin-left: 30px;
+            }
+        }
+    }
+  }
+
+  @media  (max-width: 760px) {
+    .DynamicContentCircleItemSlider {
+        display: block;
+        .tns-controls {
+            display: none
+        }
+        .Image {
+            margin-top: 20px;
+            &-Image {
+                object-fit: cover;
+            }
+            img{
+                margin-left: 15px;
+            }
+        }
+        .tns-ovh{
+            margin: 0;
+        }
+        .CircleSliderLabel{
+            margin-top: 4px;
+            font-size: 9px;
+            width: 75px;
+        }
+    }
+  }
