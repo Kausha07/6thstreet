@@ -91,16 +91,4 @@ module.exports = (app) => {
             }
         })
     );
-
-    // Proxy Checkout API (bypass CORS)
-    app.use(
-        '/applepay',
-        proxy({
-            target: process.env.REACT_APP_CHECKOUT_COM_APPLE_PAY_API_URL,
-            changeOrigin: true,
-            pathRewrite: {
-                '/applepay/': '/'
-            }
-        })
-    );
 };
