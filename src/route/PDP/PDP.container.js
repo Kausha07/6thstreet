@@ -12,6 +12,7 @@ import PDPDispatcher from 'Store/PDP/PDP.dispatcher';
 import { getCountriesForSelect } from 'Util/API/endpoint/Config/Config.format';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
 import { getBreadcrumbs, getBreadcrumbsUrl } from 'Util/Breadcrumbs/Breadcrubms';
+import Event, { EVENT_GTM_PRODUCT_DETAIL } from 'Util/Event';
 
 import PDP from './PDP.component';
 
@@ -87,6 +88,7 @@ export class PDPContainer extends PureComponent {
             isLoading,
             setIsLoading,
             product: { sku } = {},
+            product,
             menuCategories = []
         } = this.props;
         const currentIsLoading = this.getIsLoading();
@@ -108,6 +110,10 @@ export class PDPContainer extends PureComponent {
             this.setMetaData();
             this.updateHeaderState();
         }
+
+        Event.dispatch(EVENT_GTM_PRODUCT_DETAIL, {
+            product: product
+        });
     }
 
     updateHeaderState() {
