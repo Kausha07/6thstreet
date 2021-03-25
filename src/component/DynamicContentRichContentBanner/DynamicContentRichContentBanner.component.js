@@ -77,9 +77,6 @@ class DynamicContentRichContentBanner extends PureComponent {
                 <Link
                     to={linkTo}
                     key={i}
-                    onClick={() => {
-                        this.clickLink(item);
-                    }}
                 >
                     <Image
                         src={image_url}

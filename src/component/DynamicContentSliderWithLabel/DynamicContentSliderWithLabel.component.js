@@ -99,9 +99,6 @@ class DynamicContentSliderWithLabel extends PureComponent {
                 <Link
                   to={ linkTo }
                   key={ i*10 }
-                  onClick={ () => {
-                      this.clickLink(item);
-                  } }
                 >
                 <img src={ url } alt={ text } block= 'Image'/>
 
