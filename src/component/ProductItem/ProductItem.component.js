@@ -135,6 +135,7 @@ class ProductItem extends PureComponent {
     }
 
     render() {
+
         const {
             isArabic
         } = this.state;

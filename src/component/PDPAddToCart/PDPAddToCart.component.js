@@ -199,13 +199,14 @@ class PDPAddToCart extends PureComponent {
             isLoading,
             addedToCart,
             product: { stock_qty, highlighted_attributes },
-            product = {}
+            product = {},
+            basePrice
         } = this.props;
-
         if (isLoading
             || addedToCart
             || stock_qty === 0
             || highlighted_attributes === null
+            || !parseInt(basePrice)
             || (Object.keys(product).length === 0
             && product.constructor === Object)) {
             return true;
@@ -222,6 +223,8 @@ class PDPAddToCart extends PureComponent {
             product: { stock_qty, highlighted_attributes, simple_products = {} },
             product = {}
         } = this.props;
+
+        const disabled = this.checkStateForButtonDisabling();
 
         return (
             <div>
@@ -240,7 +243,7 @@ class PDPAddToCart extends PureComponent {
                               elem: 'AddToCartButton',
                               mods: { addedToCart }
                           } }
-                          disabled={ this.checkStateForButtonDisabling() }
+                          disabled={ disabled }
                         >
                             <span>{ __('Add to bag') }</span>
                             <span>{ __('Adding...') }</span>

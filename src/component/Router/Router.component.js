@@ -18,6 +18,7 @@ import {
     CUSTOMER_ACCOUNT,
     HOME_PAGE,
     SEARCH,
+    FEEDBACK,
     URL_REWRITES
 } from 'Component/Header/Header.config';
 import NavigationTabs from 'Component/NavigationTabs';
@@ -40,6 +41,7 @@ import {
     WishlistShared,
     withStoreRegex
 } from 'SourceComponent/Router/Router.component';
+import Feedback from '../../route/Feedback/Feedback.component';
 import { AFTER_ITEMS_TYPE, BEFORE_ITEMS_TYPE, SWITCH_ITEMS_TYPE } from 'SourceComponent/Router/Router.config';
 import { isArabic } from 'Util/App';
 import { getCountryFromUrl, getLanguageFromUrl } from 'Util/Url';
@@ -219,6 +221,17 @@ export class Router extends SourceRouter {
               ) }
             />,
             position: 90
+        },
+        {
+            component: <Route
+              path={ withStoreRegex('feedback') }
+              render={ (props) => (
+                  <GTMRouteWrapper route={ FEEDBACK }>
+                      <Feedback />
+                  </GTMRouteWrapper>
+              ) }
+            />,
+            position: 95
         },
         {
             component: <Route
