@@ -27,18 +27,13 @@ class PLPPage extends PureComponent {
 
     renderProduct = (product) => {
         const { sku, price } = product;
-        const basePrice = price[0] && price[0][Object.keys(price[0])[0]]['6s_base_price'];
 
         return (
-            !!parseInt(basePrice)
-            ?
             <ProductItem
               product={ product }
               key={ sku }
               page="plp"
             />
-            :
-            null
         );
     };
 
