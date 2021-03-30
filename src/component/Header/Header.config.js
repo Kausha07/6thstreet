@@ -17,3 +17,4 @@ export const URL_REWRITES = 'url_rewrites';
 export const MENU = 'menu';
 export const MY_ACCOUNT = 'my_account';
 export const POPUP = 'popup';
+export const FEEDBACK = 'feedback';

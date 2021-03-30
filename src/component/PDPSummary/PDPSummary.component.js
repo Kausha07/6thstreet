@@ -45,7 +45,7 @@ class PDPSummary extends PureComponent {
     }
 
     setStockAvailability = (status) => {
-        this.setState({ stockAvailibility: status });
+        this.setState({ stockAvailibility: !!price && status });
     };
 
     renderSummaryHeader() {

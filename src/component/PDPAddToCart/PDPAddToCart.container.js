@@ -212,6 +212,7 @@ export class PDPAddToCartContainer extends PureComponent {
             sizeObject:
             mappedSizeObject,
             product,
+            basePrice: product.price[0][Object.keys(product.price[0])[0]]['6s_base_price'],
             setStockAvailability
         };
     };
