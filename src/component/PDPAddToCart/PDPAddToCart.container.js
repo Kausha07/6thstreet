@@ -207,12 +207,14 @@ export class PDPAddToCartContainer extends PureComponent {
     containerProps = () => {
         const { product, setStockAvailability } = this.props;
         const { mappedSizeObject } = this.state;
+        const basePrice = product.price[0] && product.price[0][Object.keys(product.price[0])[0]]['6s_base_price'];
+
         return {
             ...this.state,
             sizeObject:
             mappedSizeObject,
             product,
-            basePrice: product.price[0][Object.keys(product.price[0])[0]]['6s_base_price'],
+            basePrice,
             setStockAvailability
         };
     };

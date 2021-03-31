@@ -34,6 +34,7 @@
         }
     }
     .tns-outer {
+        direction: ltr!important;
         button[data-action="stop"]{
             display: none;
         }

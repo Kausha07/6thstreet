@@ -190,14 +190,14 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         const { totals } = this.props;
         const {
             checkoutStep,
-            orderID,
+            incrementID,
             initialTotals
         } = this.state;
 
         if (checkoutStep !== DETAILS_STEP) {
             Event.dispatch(EVENT_GTM_CHECKOUT, { totals, step: this.getCheckoutStepNumber() });
         } else {
-            Event.dispatch(EVENT_GTM_PURCHASE, { orderID, totals: initialTotals });
+            Event.dispatch(EVENT_GTM_PURCHASE, { orderID: incrementID, totals: initialTotals });
         }
 
         if (isInitial) {
