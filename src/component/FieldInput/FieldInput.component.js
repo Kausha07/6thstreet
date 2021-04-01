@@ -15,6 +15,10 @@ import {
     FieldInput as SourceFieldInput
 } from 'SourceComponent/FieldInput/FieldInput.component';
 
+import {
+    TEXTAREA_TYPE,
+} from '../Field/Field.config';
+
 export class FieldInput extends SourceFieldInput {
     static propTypes = {
         formRef: PropTypes.oneOfType([
@@ -29,10 +33,19 @@ export class FieldInput extends SourceFieldInput {
 
     render() {
         const {
+            type,
             formRef,
             ...validProps
         } = this.props;
 
+        if(type===TEXTAREA_TYPE){
+            return (
+                <textarea
+                    ref={ formRef }
+                    { ...validProps }
+                />
+            )
+        }
         return (
             <input
               ref={ formRef }

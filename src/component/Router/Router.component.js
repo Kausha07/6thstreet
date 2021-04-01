@@ -41,7 +41,7 @@ import {
     WishlistShared,
     withStoreRegex
 } from 'SourceComponent/Router/Router.component';
-import Feedback from '../../route/Feedback/Feedback.component';
+import Feedback from '../../route/Feedback/Feedback.container';
 import { AFTER_ITEMS_TYPE, BEFORE_ITEMS_TYPE, SWITCH_ITEMS_TYPE } from 'SourceComponent/Router/Router.config';
 import { isArabic } from 'Util/App';
 import { getCountryFromUrl, getLanguageFromUrl } from 'Util/Url';

@@ -9,6 +9,7 @@ import {
     DATE_TYPE,
     EMAIL_TYPE,
     PHONE_TYPE,
+    TEXTAREA_TYPE,
     RADIO_TYPE,
     TOGGLE_TYPE
 } from './Field.config';
@@ -102,6 +103,15 @@ export class Field extends SourceField {
         );
     }
 
+    renderTypeTextArea() {
+        return (
+            <FieldInput
+              { ...this.props }
+              type="textarea"
+            />
+        );
+    }
+
     renderInputOfType(type) {
         if (type === TOGGLE_TYPE) {
             return this.renderToggle();
@@ -117,6 +127,10 @@ export class Field extends SourceField {
 
         if (type === PHONE_TYPE) {
             return this.renderPhone();
+        }
+        
+        if (type === TEXTAREA_TYPE) {
+            return this.renderTypeTextArea();
         }
 
         return super.renderInputOfType(type);

@@ -8,10 +8,10 @@ export const getCartTotals = (cartId) => MobileAPI.get(`/carts2/${cartId}/totals
 
 export const addProductToCart = (
     {
-        sku, qty, optionId = null, optionValue = null, cartId
+        sku, configSKU, qty, optionId = null, optionValue = null, cartId
     }
 ) => MobileAPI.post(
-    `/carts2/${cartId}/items`,
+    `/carts2/${cartId}/items?csku=${configSKU}`,
     {
         quote_id: cartId,
         sku,

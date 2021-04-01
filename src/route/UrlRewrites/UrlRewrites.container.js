@@ -78,7 +78,10 @@ export class UrlRewritesContainer extends PureComponent {
 
         // TODO: switch to "executeGet" afterwards
         const { urlResolver } = await fetchQuery(UrlRewritesQuery.getQuery({ urlParam }));
-        const { type = magentoProductId || possibleSku ? TYPE_PRODUCT : TYPE_NOTFOUND, id } = urlResolver || {};
+        const {
+            type = magentoProductId || possibleSku ? TYPE_PRODUCT : TYPE_NOTFOUND,
+            id,
+        } = urlResolver || {};
         const finalType = type === TYPE_NOTFOUND && decodeURI(location.search).match(/idx=/)
             ? TYPE_CATEGORY
             : type;
