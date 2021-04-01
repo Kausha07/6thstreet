@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { DEFAULT_STATE_NAME } from 'Component/NavigationAbstract/NavigationAbstract.config';
 import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
 import { changeNavigationState } from 'Store/Navigation/Navigation.action';
-import { postFeedback } from 'Util/API/endpoint/Feedback/Feedback.enpoint';
+import { postFeedback } from 'Util/API/endpoint/Feedback/Feedback.endpoint';
 
 import Feedback from './Feedback.component';
 
