@@ -82,7 +82,7 @@ class PDPSummary extends PureComponent {
         const { product: { price, stock_qty } } = this.props;
         const { stockAvailibility } = this.state;
 
-        if (!parseFloat(price) || stock_qty === 0 || !stockAvailibility) {
+        if (!price || stock_qty === 0 || !stockAvailibility) {
             return null;
         }
 

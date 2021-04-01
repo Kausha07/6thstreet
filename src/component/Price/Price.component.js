@@ -91,6 +91,10 @@ class Price extends PureComponent {
             specialPrice
         } = this.props;
 
+        if(!parseFloat(basePrice)){
+            return null;
+        }
+
         if (basePrice === specialPrice || !specialPrice) {
             return this.renderBasePrice();
         }
