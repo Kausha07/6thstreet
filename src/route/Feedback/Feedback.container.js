@@ -75,10 +75,10 @@ export class FeedbackContainer extends PureComponent {
         } = data;
 
         postFeedback({
-            name: `${firstname} ${lastname}`,
-            email,
-            telephone,
-            comment
+            'contactForm[name]': `${firstname} ${lastname}`,
+            'contactForm[email]': email,
+            'contactForm[telephonel]': telephone,
+            'contactForm[comment]': comment
         });
     }
 
