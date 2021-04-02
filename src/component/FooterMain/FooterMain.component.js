@@ -61,6 +61,9 @@ class FooterMain extends PureComponent {
                 id_google: 'Google1',
                 google_play: 'https://static.6media.me/static/version1600320042/frontend/6SNEW/6snew/en_US/images/google-play-badge.svg',
                 google_onclick: 'https://play.google.com/store/apps/details?id=com.apparel.app6thstreet',
+                id_gallery: 'Gallery1',
+                app_gallery: 'https://6thstreetmobileapp-eu-c.s3.eu-central-1.amazonaws.com/resources/20190121/en-ae/d/icon_huaweiappgallery.svg',
+                gallery_onclick: 'https://appgallery.huawei.com/#/app/C102324663',
                 header: __('Follow The Latest Trends'),
                 id_facebook: 'Facebook1',
                 facebook_href: 'https://www.facebook.com/shop6thstreet/',
@@ -115,12 +118,19 @@ class FooterMain extends PureComponent {
                                     >
                                         <img src={ items.app_store } alt="app store download" />
                                     </Link>
-                                    &nbsp;
+                                    <br />
                                     <Link
                                       to={ items.google_onclick }
                                       key={ items.id_google }
                                     >
                                         <img src={ items.google_play } alt="google play download" />
+                                    </Link>
+                                    <br />
+                                    <Link
+                                      to={ items.gallery_onclick }
+                                      key={ items.id_gallery }
+                                    >
+                                        <img src={ items.app_gallery } alt="app gallery download" />
                                     </Link>
                                 </div>
                                 <h4>{ items.header }</h4>
