@@ -70,17 +70,13 @@ class MenuCategory extends PureComponent {
         );
     }
 
-    getMenuCategoryLink() {
-        const { data = [] } = this.props;
+    getMenuCategoryLink() {        
+        const {link} = this.props;
 
-        if (data[0] && data[0].link !== undefined) {
-            return data[0].link;
+        if (link && link !== undefined) {
+            return link;
         }
-
-        if (data[0] && data[0].button !== undefined) {
-            return data[0].button.link;
-        }
-
+        
         return location.pathname;
     }
 
