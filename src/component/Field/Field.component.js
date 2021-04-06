@@ -3,6 +3,7 @@
 
 import SourceField from 'SourceComponent/Field/Field.component';
 import FieldInput from 'SourceComponent/FieldInput';
+import FieldTextarea from 'SourceComponent/FieldTextarea/FieldTextarea.component';
 
 import {
     CHECKBOX_TYPE,
@@ -105,9 +106,9 @@ export class Field extends SourceField {
 
     renderTypeTextArea() {
         return (
-            <FieldInput
+            <FieldTextarea
+              placeholder="helo"
               { ...this.props }
-              type="textarea"
             />
         );
     }
