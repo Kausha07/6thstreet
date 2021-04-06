@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import UrlRewritesQuery from 'Query/UrlRewrites.query';
 import { hideActiveOverlay } from 'Store/Overlay/Overlay.action';
 import { LocationType } from 'Type/Common';
+import history from 'Util/History';
 import { fetchQuery } from 'Util/Request';
 
 import UrlRewrites from './UrlRewrites.component';
@@ -34,7 +35,8 @@ export class UrlRewritesContainer extends PureComponent {
         isLoading: true,
         type: '',
         id: -1,
-        sku: ''
+        sku: '',
+        query: ''
     };
 
     constructor(props) {
@@ -47,8 +49,12 @@ export class UrlRewritesContainer extends PureComponent {
         const { pathname } = location;
         const { locale, hideActiveOverlay } = this.props;
         const { locale: prevLocale } = prevProps;
-        const { prevPathname } = this.state;
+        const { prevPathname, query } = this.state;
         const { prevPathname: prevStatePathname } = prevState;
+
+        if (!location.search && query) {
+            history.push(`${pathname}?${query}`);
+        }
 
         if (
             pathname !== prevPathname
@@ -81,7 +87,8 @@ export class UrlRewritesContainer extends PureComponent {
         const {
             type = magentoProductId || possibleSku ? TYPE_PRODUCT : TYPE_NOTFOUND,
             id,
-        } = urlResolver || {};
+            data: { url: query }
+        } = urlResolver || {data: {}};
         const finalType = type === TYPE_NOTFOUND && decodeURI(location.search).match(/idx=/)
             ? TYPE_CATEGORY
             : type;
@@ -93,7 +100,8 @@ export class UrlRewritesContainer extends PureComponent {
             isLoading: false,
             type: finalType,
             id: id === undefined ? magentoProductId : id,
-            sku: possibleSku
+            sku: possibleSku,
+            query
         });
     }
 
