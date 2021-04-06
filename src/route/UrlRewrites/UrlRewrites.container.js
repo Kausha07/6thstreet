@@ -88,7 +88,7 @@ export class UrlRewritesContainer extends PureComponent {
             type = magentoProductId || possibleSku ? TYPE_PRODUCT : TYPE_NOTFOUND,
             id,
             data: { url: query }
-        } = urlResolver || {};
+        } = urlResolver || {data: {}};
         const finalType = type === TYPE_NOTFOUND && decodeURI(location.search).match(/idx=/)
             ? TYPE_CATEGORY
             : type;
