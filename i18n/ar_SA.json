@@ -681,6 +681,12 @@
     "Unable to add product to cart.": "غير قادر على اضافة المنتج في السله.",
     "Pay with ApplePay": null,
     "Please login to open your order": null,
+    "Jot us a note and well get back to you as quickly as possible": "الرجاء إرسال ملاحظاتكم وسنتواصل معكم في أقرب وقت ممكن",
+    "Provide your feedback": "تفضل بإضافة رأيك",
     "Feedback": null,
-    "Feedback Form": null
+    "Feedback Form": null,
+    "Submit": null,
+    "Phone code": null,
+    "Categori": null,
+    "$label}": null
 }

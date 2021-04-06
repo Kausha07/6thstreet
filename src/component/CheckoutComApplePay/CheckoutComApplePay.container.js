@@ -122,6 +122,10 @@ class CheckoutComApplePayContainer extends PureComponent {
             return;
         }
 
+        console.log('***', merchant_id);
+        console.log('***', this.state);
+        console.log('***', this.props);
+
         new Promise((resolve) => {
             resolve(window.ApplePaySession.canMakePaymentsWithActiveCard(merchant_id));
         }).then((canMakePayments) => {

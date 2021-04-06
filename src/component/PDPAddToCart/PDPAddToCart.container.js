@@ -239,7 +239,8 @@ export class PDPAddToCartContainer extends PureComponent {
                 size_uk = [],
                 size_eu = [],
                 size_us = [],
-                name
+                name,
+                sku: configSKU
             }, addProductToCart, showNotification
         } = this.props;
 
@@ -268,9 +269,9 @@ export class PDPAddToCartContainer extends PureComponent {
             const { size } = simple_products[selectedSizeCode];
             const optionId = selectedSizeType.toLocaleUpperCase();
             const optionValue = size[selectedSizeType];
-
             addProductToCart({
                 sku: selectedSizeCode,
+                configSKU,
                 qty: 1,
                 optionId,
                 optionValue
@@ -306,6 +307,7 @@ export class PDPAddToCartContainer extends PureComponent {
 
             addProductToCart({
                 sku: code[0],
+                configSKU,
                 qty: 1,
                 optionId: '',
                 optionValue: ''
