@@ -50,11 +50,17 @@ export class UrlRewritesContainer extends PureComponent {
         const { locale, hideActiveOverlay } = this.props;
         const { locale: prevLocale } = prevProps;
         const { prevPathname, query } = this.state;
-        const { prevPathname: prevStatePathname } = prevState;
+        const {
+            prevPathname: prevStatePathname,
+            query: prevQuery
+        } = prevState;
 
-        if (!location.search && query) {
+        if(!location.search && query && query !== prevQuery){
             history.push(`${pathname}?${query}`);
         }
+        // if (!location.search && query) {
+        //     history.push(`${pathname}?${query}`);
+        // }
 
         if (
             pathname !== prevPathname
@@ -84,11 +90,12 @@ export class UrlRewritesContainer extends PureComponent {
 
         // TODO: switch to "executeGet" afterwards
         const { urlResolver } = await fetchQuery(UrlRewritesQuery.getQuery({ urlParam }));
+
         const {
             type = magentoProductId || possibleSku ? TYPE_PRODUCT : TYPE_NOTFOUND,
             id,
             data: { url: query }
-        } = urlResolver || {data: {}};
+        } = urlResolver || { data: {} };
         const finalType = type === TYPE_NOTFOUND && decodeURI(location.search).match(/idx=/)
             ? TYPE_CATEGORY
             : type;
@@ -101,7 +108,7 @@ export class UrlRewritesContainer extends PureComponent {
             type: finalType,
             id: id === undefined ? magentoProductId : id,
             sku: possibleSku,
-            query
+            query: finalType === TYPE_PRODUCT ? '' : query
         });
     }
 
