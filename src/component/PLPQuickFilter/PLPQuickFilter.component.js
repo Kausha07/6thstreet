@@ -22,7 +22,7 @@ class PLPQuickFilter extends PureComponent {
             updateFilters,
             handleCallback
         } = this.props;
-
+        window.alert(label)
         return (
             <QuickCategoriesOptions
               placeholder={ label }

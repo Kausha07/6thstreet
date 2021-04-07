@@ -53,8 +53,12 @@ export class Feedback extends PureComponent {
              } }
              label={ __('Feedback') }
            >
-               <h2>CONTACT US</h2>
-               Jot us a note and well get back to you as quickly as possible.
+               <h2>
+                  {
+                    __('CONTACT US')
+                  }
+                </h2>
+               { __('Jot us a note and well get back to you as quickly as possible.')}
                <Form block="Feedback-form">
                   <fieldset block="Feedback-form-fieldset" mods={ { isArabic } }>
                       <Field
