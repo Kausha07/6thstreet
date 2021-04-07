@@ -10,7 +10,7 @@ class MagentoAPI {
             method: type,
             headers: {
                 'Content-Type': 'application/json',
-                'X-App-Version': '2.20.0',
+                'X-App-Version': '2.23.0',
                 'Request-Source': 'PWA'
             }
         };

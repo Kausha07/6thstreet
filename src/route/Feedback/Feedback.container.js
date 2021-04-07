@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { DEFAULT_STATE_NAME } from 'Component/NavigationAbstract/NavigationAbstract.config';
 import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
 import { changeNavigationState } from 'Store/Navigation/Navigation.action';
+import { showNotification } from 'Store/Notification/Notification.action';
 import { postFeedback } from 'Util/API/endpoint/Feedback/Feedback.endpoint';
 
 import Feedback from './Feedback.component';
@@ -22,13 +23,15 @@ export const mapDispatchToProps = (dispatch) => ({
     updateBreadcrumbs: (breadcrumbs) => BreadcrumbsDispatcher.then(
         ({ default: dispatcher }) => dispatcher.update(breadcrumbs, dispatch)
     ),
+    showNotification: (type, message) => dispatch(showNotification(type, message))
 });
 
 export class FeedbackContainer extends PureComponent {
 
     static propTypes = {
         updateBreadcrumbs: PropTypes.func.isRequired,
-        changeHeaderState: PropTypes.func.isRequired
+        changeHeaderState: PropTypes.func.isRequired,
+        showNotification: PropTypes.func.isRequired
     };
     
     constructor(props) {
@@ -65,7 +68,7 @@ export class FeedbackContainer extends PureComponent {
         updateBreadcrumbs(breadcrumbs);
     }
 
-    onSubmit(data) {
+    async onSubmit(data) {
         const {
             firstname,
             lastname,
@@ -74,18 +77,31 @@ export class FeedbackContainer extends PureComponent {
             comment
         } = data;
 
-        postFeedback({
-            'contactForm[name]': `${firstname} ${lastname}`,
-            'contactForm[email]': email,
-            'contactForm[telephonel]': telephone,
-            'contactForm[comment]': comment
-        });
+        const { showNotification } = this.props;
+
+        try {
+            const response = await postFeedback({
+                'contactForm[name]': `${firstname} ${lastname}`,
+                'contactForm[email]': email,
+                'contactForm[telephone]': telephone,
+                'contactForm[comment]': comment
+            });
+            if(response){
+                showNotification(
+                    response.type?'success':'error',
+                    response.message
+                );
+            }
+        }
+        catch(err){
+            console.error(err);
+        }
     }
 
     render() {
         return (
             <Feedback
-                onSubmit={this.onSubmit}
+                onSubmit={this.onSubmit.bind(this)}
             />
         )
     }
