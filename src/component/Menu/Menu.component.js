@@ -57,7 +57,8 @@ class Menu extends PureComponent {
             data,
             label,
             design,
-            key
+            key,
+            link
         } = category;
 
         return (
@@ -66,6 +67,7 @@ class Menu extends PureComponent {
               categoryKey={ key }
               data={ data }
               label={ label }
+              link = {link}
               design={ design }
               currentActiveCategory={ activeCategory }
               closeDefaultCategory={ this.closeDefaultCategory }
