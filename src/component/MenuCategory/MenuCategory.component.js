@@ -72,12 +72,10 @@ class MenuCategory extends PureComponent {
 
     getMenuCategoryLink() {        
         const {link} = this.props;
-        if (link && link !== undefined) {
+        const { data = [] } = this.props;
+        if(typeof(link) === 'string') {
             return link;
         } 
-
-        const { data = [] } = this.props;
-        
         if (data[0] && data[0].link !== undefined) {
             return data[0].link;
         }
