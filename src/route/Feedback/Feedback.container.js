@@ -8,6 +8,7 @@ import { changeNavigationState } from 'Store/Navigation/Navigation.action';
 import { showNotification } from 'Store/Notification/Notification.action';
 import { postFeedback } from 'Util/API/endpoint/Feedback/Feedback.endpoint';
 
+import Logger from 'Util/Logger';
 import Feedback from './Feedback.component';
 
 export const BreadcrumbsDispatcher = import(
@@ -94,7 +95,7 @@ export class FeedbackContainer extends PureComponent {
             }
         }
         catch(err){
-            console.error(err);
+            Logger.error(err);
         }
     }
 

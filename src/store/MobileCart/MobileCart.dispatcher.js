@@ -108,7 +108,7 @@ export class MobileCartDispatcher {
 
             // TODO Validate response and update UI,
             //  by adding option to remove coupon code or show error
-            console.log('*** RESP', resp);
+
         } catch (e) {
             Logger.log(e);
         }
@@ -124,7 +124,7 @@ export class MobileCartDispatcher {
 
             // TODO Validate response and update UI,
             //  by removing option to remove coupon code or show error
-            console.log('*** RESP', resp);
+
         } catch (e) {
             Logger.log(e);
         }

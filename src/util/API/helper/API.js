@@ -63,7 +63,7 @@ export const getErrorMsg = async (res) => {
         return __('Something Went Wrong');
     } catch (e) {
         // eslint-disable-next-line no-console
-        console.log(e);
+        console.error(e);
         return __('Something Went Wrong');
     }
 };
