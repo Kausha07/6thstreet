@@ -35,6 +35,17 @@ export const getLastOrder = () => MobileAPI.get(
     '/order/last'
 ) || {};
 
+export const getPaymentAuthorization = ({ paymentId }) => MobileAPI.get(
+    `/checkout/payments/${paymentId}`
+) || {};
+
+export const capturePayment = ({ paymentId, orderId }) => MobileAPI.post(
+    `/checkout/payments/${paymentId}/captures`,
+    {
+        order_id: orderId
+    }
+) || {};
+
 export const sendVerificationCode = ({ data }) => MobileAPI.post(
     '/otp/send',
     data
