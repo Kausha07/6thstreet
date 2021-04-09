@@ -356,7 +356,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                         const { data } = response;
 
                         if (typeof data === 'object') {
-                            console.log(data);
                             const {
                                 order_id,
                                 success,
