@@ -206,7 +206,7 @@ class PDPAddToCart extends PureComponent {
             || addedToCart
             || stock_qty === 0
             || highlighted_attributes === null
-            || !parseInt(basePrice)
+            || !parseFloat(basePrice)
             || (Object.keys(product).length === 0
             && product.constructor === Object)) {
             return true;

@@ -261,10 +261,8 @@ class CheckoutComApplePayContainer extends PureComponent {
                         ? window.ApplePaySession.STATUS_SUCCESS
                         : window.ApplePaySession.STATUS_FAILURE;
 
-                    console.log('***', status);
                     applePaySession.completePayment(status);
 
-                    console.log('***', 'Payment authorize completed');
                 }
             });
         };

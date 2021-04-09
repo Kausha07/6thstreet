@@ -21,7 +21,7 @@ export class WishlistDispatcher {
             dispatch(setWishlistItems(items));
         } catch (e) {
             // eslint-disable-next-line no-console
-            console.log(e);
+            console.error(e);
         }
     }
 
@@ -44,7 +44,7 @@ export class WishlistDispatcher {
             dispatch(showNotification('success', __('Product has been removed from your Wish List!')));
         } catch (e) {
             // eslint-disable-next-line no-console
-            console.log(e);
+            console.error(e);
 
             dispatch(showNotification(
                 'info',
@@ -72,7 +72,7 @@ export class WishlistDispatcher {
             dispatch(showNotification('success', __('Product added to wish-list!')));
         } catch (e) {
             // eslint-disable-next-line no-console
-            console.log(e);
+            console.error(e);
 
             dispatch(showNotification(
                 'info',

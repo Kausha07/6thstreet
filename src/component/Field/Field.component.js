@@ -3,12 +3,14 @@
 
 import SourceField from 'SourceComponent/Field/Field.component';
 import FieldInput from 'SourceComponent/FieldInput';
+import FieldTextarea from 'SourceComponent/FieldTextarea/FieldTextarea.component';
 
 import {
     CHECKBOX_TYPE,
     DATE_TYPE,
     EMAIL_TYPE,
     PHONE_TYPE,
+    TEXTAREA_TYPE,
     RADIO_TYPE,
     TOGGLE_TYPE
 } from './Field.config';
@@ -102,6 +104,15 @@ export class Field extends SourceField {
         );
     }
 
+    renderTypeTextArea() {
+        return (
+            <FieldTextarea
+              placeholder="helo"
+              { ...this.props }
+            />
+        );
+    }
+
     renderInputOfType(type) {
         if (type === TOGGLE_TYPE) {
             return this.renderToggle();
@@ -117,6 +128,10 @@ export class Field extends SourceField {
 
         if (type === PHONE_TYPE) {
             return this.renderPhone();
+        }
+        
+        if (type === TEXTAREA_TYPE) {
+            return this.renderTypeTextArea();
         }
 
         return super.renderInputOfType(type);

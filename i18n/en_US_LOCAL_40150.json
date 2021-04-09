@@ -661,7 +661,6 @@
     "Reward": null,
     "Shop now": null,
     "Discount": null,
-    "sign in to access to your account and tract your order": null,
     "Return Statement": null,
     "You have placed no returns.": null,
     "My Wishlist": null,
@@ -697,5 +696,12 @@
     "Pay with ApplePay": null,
     "Please login to open your order": null,
     "Feedback": null,
-    "Feedback Form": null
+    "Feedback Form": null,
+    "Submit": null,
+    "Phone code": null,
+    "Provide Your Feedback": null,
+    "Categori": null,
+    "$label}": null,
+    "Jot us a note and well get back to you as quickly as possible.": null,
+    "CONTACT US": null
 }

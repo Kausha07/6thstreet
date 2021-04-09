@@ -50,7 +50,6 @@ export class HomePageContainer extends PureComponent {
 
     componentDidMount() {
         const { gender, toggleBreadcrumbs } = this.props;
-        console.log("abc:", this.props)
         toggleBreadcrumbs(false);
         this.setMetaData(gender);
         this.requestDynamicContent(true, gender);

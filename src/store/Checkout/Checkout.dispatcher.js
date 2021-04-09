@@ -11,7 +11,9 @@ import {
     selectPaymentMethod,
     sendVerificationCode,
     validateShippingAddress,
-    verifyUserPhone
+    verifyUserPhone,
+    getPaymentAuthorization,
+    capturePayment
 } from 'Util/API/endpoint/Checkout/Checkout.endpoint';
 import {
     createSession,
@@ -135,6 +137,14 @@ export class CheckoutDispatcher {
 
     async getLastOrder(dispatch) {
         return getLastOrder();
+    }
+
+    async getPaymentAuthorization(dispatch, paymentId) {
+        return getPaymentAuthorization({ paymentId });
+    }
+
+    async capturePayment(dispatch, paymentId, orderId) {
+        return capturePayment({ paymentId, orderId });
     }
 }
 

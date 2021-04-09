@@ -31,8 +31,6 @@ export default function getBrands(gender = '', options = {}) {
         ];
       });
 
-      console.log(data);
-
       return resolve({ data: brands });
     });
   });
