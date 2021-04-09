@@ -45,6 +45,8 @@ class PDPSummary extends PureComponent {
     }
 
     setStockAvailability = (status) => {
+        const { product: { price } } = this.props;
+
         this.setState({ stockAvailibility: !!price && status });
     };
 

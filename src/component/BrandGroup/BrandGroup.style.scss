@@ -5,13 +5,11 @@
 
     &-Letter {
         align-items: center;
-        border: 1px solid var(--black);
         display: flex;
-        font-weight: var(--fw-regular);
+        font-weight: var(--fw-medium);
         height: 25px;
-        justify-content: center;
-        margin-bottom: 5px;
         width: 25px;
+        font-size: 24px;
     }
 
     &-Group {
