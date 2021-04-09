@@ -121,14 +121,14 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
 
     async signIn(options = {}, dispatch) {
         const mutation = MyAccountQuery.getSignInMutation(options);
-
+        
         try {
             const result = await fetchMutation(mutation);
             const { generateCustomerToken: { token } } = result;
 
             setAuthorizationToken(token);
             dispatch(updateCustomerSignInStatus(true));
-
+            
             await this.handleMobileAuthorization(dispatch, options);
             await WishlistDispatcher.updateInitialWishlistData(dispatch);
             await StoreCreditDispatcher.getStoreCredit(dispatch);
@@ -185,13 +185,15 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         // Run async as Club Apparel is not visible anywhere after login
         ClubApparelDispatcher.getMember(dispatch, id);
 
-        const { Cart: { cartItems: oldCartItems = [] } } = getStore().getState();
-        if (oldCartItems.length !== 0) {
-            await CartDispatcher.getCart(dispatch);
-            this._addProductsFromGuest(dispatch, oldCartItems);
-            return;
-        }
-
+        // Temporarily disabled art merge logic
+        // const { Cart: { cartItems: oldCartItems = [] } } = getStore().getState();
+        // if (oldCartItems.length !== 0) {
+        //     await CartDispatcher.getCart(dispatch);
+        //     this._addProductsFromGuest(dispatch, oldCartItems);
+        //     return;
+        // }
+        dispatch(removeCartItems());
+        
         // Run async otherwise login gets slow
         CartDispatcher.getCart(dispatch);
     }
