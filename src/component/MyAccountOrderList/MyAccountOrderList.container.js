@@ -76,7 +76,6 @@ export class MyAccountOrderListContainer extends SourceComponent {
         this.setState({ requestInProgress: true });
 
         getOrders(limit, nextOffset).then(({ data, meta }) => {
-            console.log(meta);
             this.setState({
                 orders: data ? [...orders, ...data] : orders,
                 nextOffset: (meta && meta.next_offset) || 0,

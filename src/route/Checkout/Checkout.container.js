@@ -33,7 +33,8 @@ export const mapDispatchToProps = (dispatch) => ({
     verifyPayment: (paymentId) => CheckoutDispatcher.verifyPayment(dispatch, paymentId),
     getPaymentMethods: () => CheckoutDispatcher.getPaymentMethods(),
     sendVerificationCode: (phone) => CheckoutDispatcher.sendVerificationCode(dispatch, phone),
-    getLastOrder: () => CheckoutDispatcher.getLastOrder(dispatch),
+    getPaymentAuthorization: (paymentId) => CheckoutDispatcher.getPaymentAuthorization(dispatch, paymentId),
+    capturePayment: (paymentId, orderId) => CheckoutDispatcher.capturePayment(dispatch, paymentId, orderId),
     hideActiveOverlay: () => dispatch(hideActiveOverlay()),
     updateStoreCredit: () => StoreCreditDispatcher.getStoreCredit(dispatch),
     setMeta: (meta) => dispatch(updateMeta(meta)),
@@ -493,18 +494,25 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     }
 
     processThreeDS() {
-        const { getLastOrder } = this.props;
-        const { order_id, increment_id } = this.state;
+        const { getPaymentAuthorization, capturePayment } = this.props;
+        const { order_id, increment_id, id = '' } = this.state;
 
-        getLastOrder().then(
+        getPaymentAuthorization(id).then(
             (response) => {
                 if (response) {
-                    const { status } = response;
+                    const { status, id: paymentId = '' } = response;
 
-                    if (status === 'payment_success') {
+                    if (status === 'Authorized') {
                         this.setDetailsStep(order_id, increment_id);
                         this.resetCart();
                         this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
+                        capturePayment(paymentId, order_id);
+                    }
+
+                    if (status === 'Declined') {
+                        this.setState({ isLoading: false, isFailed: true });
+                        this.setDetailsStep(order_id, increment_id);
+                        this.resetCart();
                     }
                 }
             }

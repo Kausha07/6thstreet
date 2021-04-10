@@ -48,6 +48,10 @@ class FooterMain extends PureComponent {
             {
                 name: __("FAQ's"),
                 href: '/faq'
+            },
+            {
+                name: __('Feedback'),
+                href: '/feedback'
             }
         ]
     },

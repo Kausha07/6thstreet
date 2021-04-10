@@ -2,17 +2,20 @@ import { getStore } from 'Store';
 import { getAuthorizationToken } from 'Util/Auth';
 
 import { doFetch } from '../helper/Fetch';
+import { merge } from '../helper/Object';
 
 class MagentoAPI {
-    makeRequest(type, pathname, body) {
-        const options = {
+    makeRequest(type, pathname, body, userOptions={}) {
+        const defaults = {
             method: type,
             headers: {
                 'Content-Type': 'application/json',
-                'X-App-Version': '2.20.0',
+                'X-App-Version': '2.23.0',
                 'Request-Source': 'PWA'
             }
         };
+
+        const options = merge(defaults, userOptions);
 
         const token = getAuthorizationToken();
 
@@ -40,8 +43,8 @@ class MagentoAPI {
         return this.makeRequest('delete', url, body);
     }
 
-    post(url, body) {
-        return this.makeRequest('post', url, body);
+    post(url, body, options) {
+        return this.makeRequest('post', url, body, options);
     }
 }
 

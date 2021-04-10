@@ -15,6 +15,7 @@ import {
     FieldInput as SourceFieldInput
 } from 'SourceComponent/FieldInput/FieldInput.component';
 
+
 export class FieldInput extends SourceFieldInput {
     static propTypes = {
         formRef: PropTypes.oneOfType([
@@ -29,12 +30,14 @@ export class FieldInput extends SourceFieldInput {
 
     render() {
         const {
+            type,
             formRef,
             ...validProps
         } = this.props;
 
         return (
             <input
+              type={ type }
               ref={ formRef }
               { ...validProps }
             />

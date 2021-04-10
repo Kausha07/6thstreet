@@ -181,7 +181,7 @@ const makeCategoriesWithoutPathFilter = ({ facets, query }) => {
   });
 
   return {
-    label: 'Categories',
+    label: __('Categories'),
     category: facetKey,
     is_radio: false,
     is_nested: true,
