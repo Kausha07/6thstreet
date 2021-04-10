@@ -11,16 +11,18 @@ import { isArabic } from 'Util/App';
 import { getCountryFromUrl } from 'Util/Url';
 
 import './Feedback.style';
- 
+
 export class Feedback extends PureComponent {
   static propTypes = {
     onSubmit: PropTypes.func.isRequired
   };
-   
+
   constructor(props) {
     super(props);
 
     const countryCode = getCountryFromUrl();
+
+
     this.state = {
       customerCountry: countryCode,
       firstname: '',
@@ -28,6 +30,32 @@ export class Feedback extends PureComponent {
       email: '',
       phoneNumber:``,
       comment: ''
+    }
+  }
+  componentDidMount(){
+    var data = localStorage.getItem('customer');
+    let userData = JSON.parse(data);
+    if(userData.data){
+      if(userData.data.firstname){
+        this.setState({
+          firstname: userData.data.firstname,
+          lastname: userData.data.lastname,
+          email: userData.data.email,
+        })
+      }
+    }
+  }
+  componentDidUpdate(){
+    var data = localStorage.getItem('customer');
+    let userData = JSON.parse(data);
+    if(userData.data){
+      if(userData.data.firstname){
+        this.setState({
+          firstname: userData.data.firstname,
+          lastname: userData.data.lastname,
+          email: userData.data.email,
+        })
+      }
     }
   }
 
@@ -41,7 +69,7 @@ export class Feedback extends PureComponent {
   handleChange(value) {
     this.setState({...value});
   }
- 
+
    render() {
        return (
          <main block="Feedback" aria-label={ __('Feedback Form') }>
@@ -175,6 +203,5 @@ export class Feedback extends PureComponent {
    }
  }
 
- 
+
  export default Feedback;
- 

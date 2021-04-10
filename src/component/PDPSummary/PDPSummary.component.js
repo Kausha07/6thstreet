@@ -101,7 +101,7 @@ class PDPSummary extends PureComponent {
             const { country } = JSON.parse(localStorage.getItem('APP_STATE_CACHE_KEY')).data;
             const { default: defPrice } = priceData;
 
-            if (country === 'AE' && defPrice >= 150) {
+            if ((country === 'AE' || country === 'SA') && defPrice >= 150) {
                 const monthPrice = (defPrice / 4).toFixed(2);
                 return (
                     <button
