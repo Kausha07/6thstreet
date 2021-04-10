@@ -323,6 +323,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
               id={ BILLING_STEP }
               onSubmitError={ onBillingError }
               onSubmitSuccess={ onBillingSuccess }
+              onSubmit={this.setOrderButtonDisabled}
             >
                     { this.renderAddresses() }
                     { isSameAsShipping ? null
