@@ -29,7 +29,6 @@ export class CheckoutAddressTable extends SourceCheckoutAddressTable {
             isSelected
         } = this.props;
 
-
         const def = default_billing === true ? __('default') : ' ';
         const countryId = `(${country_id})`;
 
