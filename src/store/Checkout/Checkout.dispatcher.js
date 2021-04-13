@@ -18,7 +18,8 @@ import {
 import {
     createSession,
     getInstallmentForValue,
-    verifyPayment
+    verifyPayment,
+    updateTabbyPayment
 } from 'Util/API/endpoint/Tabby/Tabby.enpoint';
 import { capitalize } from 'Util/App';
 import Logger from 'Util/Logger';
@@ -127,6 +128,10 @@ export class CheckoutDispatcher {
         return verifyPayment(paymentId);
     }
 
+    async updateTabbyPayment(dispatch, paymentId, order_id) {
+        //console.log('here4:'+paymentId);
+        return updateTabbyPayment(paymentId, order_id);
+    }
     async sendVerificationCode(dispatch, data) {
         return sendVerificationCode({ data });
     }

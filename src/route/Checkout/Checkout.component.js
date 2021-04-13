@@ -99,6 +99,9 @@ export class Checkout extends SourceCheckout {
         verifyPayment(tabbyPaymentId).then(
             ({ status }) => {
                 if (status === AUTHORIZED_STATUS) {
+                    const { tabbyPaymentId } = this.state;
+                    console.log('tabbyPaymentId:'+tabbyPaymentId);
+                    paymentInformation = {...paymentInformation,'tabbyPaymentId':tabbyPaymentId}
                     savePaymentInformation(paymentInformation);
                 }
 

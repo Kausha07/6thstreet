@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { CARD, CHECKOUT_APPLE_PAY } from 'Component/CheckoutPayments/CheckoutPayments.config';
+import { CARD, CHECKOUT_APPLE_PAY, TABBY_ISTALLMENTS, TABBY_PAY_LATER } from 'Component/CheckoutPayments/CheckoutPayments.config';
 import { CC_POPUP_ID } from 'Component/CreditCardPopup/CreditCardPopup.config';
 import { AUTHORIZED_STATUS, DETAILS_STEP, SHIPPING_STEP } from 'Route/Checkout/Checkout.config';
 import { BILLING_STEP, PAYMENT_TOTALS } from 'SourceRoute/Checkout/Checkout.config';
@@ -24,6 +24,7 @@ import { checkProducts } from 'Util/Cart/Cart';
 import Event, { EVENT_GTM_CHECKOUT, EVENT_GTM_PURCHASE } from 'Util/Event';
 import history from 'Util/History';
 import { ONE_MONTH_IN_SECONDS } from 'Util/Request/QueryDispatcher';
+import parseJson from 'parse-json';
 
 export const mapDispatchToProps = (dispatch) => ({
     ...sourceMapDispatchToProps(dispatch),
@@ -31,6 +32,7 @@ export const mapDispatchToProps = (dispatch) => ({
     saveAddressInformation: (address) => CheckoutDispatcher.saveAddressInformation(dispatch, address),
     createOrder: (code, additional_data) => CheckoutDispatcher.createOrder(dispatch, code, additional_data),
     verifyPayment: (paymentId) => CheckoutDispatcher.verifyPayment(dispatch, paymentId),
+    updateTabbyPayment: (paymentId, orderId) => CheckoutDispatcher.updateTabbyPayment(dispatch, paymentId, orderId),
     getPaymentMethods: () => CheckoutDispatcher.getPaymentMethods(),
     sendVerificationCode: (phone) => CheckoutDispatcher.sendVerificationCode(dispatch, phone),
     getPaymentAuthorization: (paymentId) => CheckoutDispatcher.getPaymentAuthorization(dispatch, paymentId),
@@ -314,10 +316,12 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     }
 
     async savePaymentMethodAndPlaceOrder(paymentInformation) {
-        const { paymentMethod: { code, additional_data } } = paymentInformation;
+        //console.log('Tabby123:');
+        console.table(paymentInformation);
+        const { paymentMethod: { code, additional_data }, tabbyPaymentId } = paymentInformation;
         const { customer: { email: customerEmail } } = this.props;
         const { shippingAddress: { email } } = this.state;
-
+        //console.log("here1"+tabbyPaymentId)
         const data = code === CARD
             ? {
                 ...additional_data,
@@ -341,13 +345,17 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
         if (code === CHECKOUT_APPLE_PAY) {
             this.setState({ processApplePay: true });
-        } else {
-            this.placeOrder(code, data)
+        } else  if(code === TABBY_ISTALLMENTS || code===TABBY_PAY_LATER) {
+            this.placeOrder(code, data, tabbyPaymentId)
+        }
+         else {
+            this.placeOrder(code, data, null)
         }
     }
 
-    placeOrder(code, data) {
-        const {createOrder, showErrorNotification} = this.props;
+    placeOrder(code, data, tabbyPaymentId) {
+        //console.log("here2"+tabbyPaymentId)
+        const {createOrder, showErrorNotification, updateTabbyPayment} = this.props;
 
         try {
             createOrder(code, data).then(
@@ -376,6 +384,12 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                                         () => this.processThreeDSWithTimeout(3),
                                         10000
                                     );
+                                } else  if(code === TABBY_ISTALLMENTS || code===TABBY_PAY_LATER){
+                                    //console.log("here3"+tabbyPaymentId)
+                                    updateTabbyPayment(tabbyPaymentId,order_id);
+                                    this.setDetailsStep(order_id, increment_id);
+                                    this.resetCart();
+                                    return true;
                                 } else {
                                     this.setDetailsStep(order_id, increment_id);
                                     this.resetCart();
