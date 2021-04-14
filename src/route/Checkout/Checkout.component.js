@@ -117,7 +117,7 @@ export class Checkout extends SourceCheckout {
 
         // Need to get payment data from Tabby.
         // Could not get callback of Tabby another way because Tabby is iframe in iframe
-        if ((tabbyPaymentStatus !== AUTHORIZED_STATUS || tabbyPaymentStatus !== CAPTURED_STATUS) && counter < 60 && activeOverlay === TABBY_POPUP_ID) {
+        if ((tabbyPaymentStatus !== AUTHORIZED_STATUS && tabbyPaymentStatus !== CAPTURED_STATUS) && counter < 60 && activeOverlay === TABBY_POPUP_ID) {
             setTimeout(
                 () => {
                     this.processTabby(paymentInformation);
