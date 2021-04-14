@@ -35,8 +35,10 @@ class Brands extends PureComponent {
     };
 
     renderCategorySelector() {
-        const { type } = this.props;
-
+        let { type } = this.props;
+        if(type){
+            type = decodeURIComponent(type);
+        }
         return (
             <div block="Brands" elem="Categories">
                 <button
