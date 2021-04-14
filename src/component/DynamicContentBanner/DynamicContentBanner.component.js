@@ -7,6 +7,7 @@ import isMobile from 'Util/Mobile';
 import { formatCDNLink } from 'Util/Url';
 import DynamicContentHeader from '../DynamicContentHeader/DynamicContentHeader.component'
 import DynamicContentFooter from '../DynamicContentFooter/DynamicContentFooter.component'
+import Event, { EVENT_GTM_BANNER_CLICK } from 'Util/Event';
 import './DynamicContentBanner.style';
 
 class DynamicContentBanner extends PureComponent {
@@ -29,6 +30,15 @@ class DynamicContentBanner extends PureComponent {
     state = {
         isMobile: isMobile.any() || isMobile.tablet()
     };
+
+    onclick = (item) => {
+        let banner = {
+            "link": item.link,
+            "promotion_name": item.promotion_name
+        }
+        Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
+
+    }
 
     renderImage = (item, i) => {
         // const { items } = this.props;
@@ -60,6 +70,7 @@ class DynamicContentBanner extends PureComponent {
             <Link
               to={ formatCDNLink(link) }
               key={ i }
+              onClick={() => {this.onclick(item)}}
             >
                 <Image
                   src={ url }
