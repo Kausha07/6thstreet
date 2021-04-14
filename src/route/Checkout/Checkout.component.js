@@ -25,7 +25,8 @@ import isMobile from 'Util/Mobile';
 
 import {
     AUTHORIZED_STATUS,
-    BILLING_STEP
+    BILLING_STEP,
+    CAPTURED_STATUS
 } from './Checkout.config';
 
 import './Checkout.style';
@@ -98,7 +99,7 @@ export class Checkout extends SourceCheckout {
 
         verifyPayment(tabbyPaymentId).then(
             ({ status }) => {
-                if (status === AUTHORIZED_STATUS) {
+                if (status === AUTHORIZED_STATUS || status === CAPTURED_STATUS) {
                     const { tabbyPaymentId } = this.state;
                     console.log('tabbyPaymentId:'+tabbyPaymentId);
                     paymentInformation = {...paymentInformation,'tabbyPaymentId':tabbyPaymentId}
@@ -116,7 +117,7 @@ export class Checkout extends SourceCheckout {
 
         // Need to get payment data from Tabby.
         // Could not get callback of Tabby another way because Tabby is iframe in iframe
-        if (tabbyPaymentStatus !== AUTHORIZED_STATUS && counter < 60 && activeOverlay === TABBY_POPUP_ID) {
+        if ((tabbyPaymentStatus !== AUTHORIZED_STATUS && tabbyPaymentStatus !== CAPTURED_STATUS) && counter < 60 && activeOverlay === TABBY_POPUP_ID) {
             setTimeout(
                 () => {
                     this.processTabby(paymentInformation);
