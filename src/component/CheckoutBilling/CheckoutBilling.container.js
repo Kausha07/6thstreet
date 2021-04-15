@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { CARD } from 'Component/CheckoutPayments/CheckoutPayments.config';
+import { CARD,TABBY_ISTALLMENTS, TABBY_PAY_LATER } from 'Component/CheckoutPayments/CheckoutPayments.config';
 import { ADD_ADDRESS, ADDRESS_POPUP_ID } from 'Component/MyAccountAddressPopup/MyAccountAddressPopup.config';
 import {
     CheckoutBillingContainer as SourceCheckoutBillingContainer,
@@ -13,7 +13,7 @@ import { showNotification } from 'Store/Notification/Notification.action';
 import { showPopup } from 'Store/Popup/Popup.action';
 import BrowserDatabase from 'Util/BrowserDatabase';
 import { FIVE_MINUTES_IN_SECONDS } from 'Util/Request/QueryDispatcher';
-
+import CheckoutDispatcher from 'Store/Checkout/Checkout.dispatcher';
 export const mapStateToProps = (state) => ({
     ...sourceMapStateToProps(state),
     processingRequest: state.CartReducer.processingRequest,
@@ -25,7 +25,8 @@ export const mapDispatchToProps = (dispatch) => ({
     addNewCreditCard: (cardData) => CreditCardDispatcher.addNewCreditCard(dispatch, cardData),
     getCardType: (bin) => CreditCardDispatcher.getCardType(dispatch, bin),
     showSuccessMessage: (message) => dispatch(showNotification('success', message)),
-    showPopup: (payload) => dispatch(showPopup(ADDRESS_POPUP_ID, payload))
+    showPopup: (payload) => dispatch(showPopup(ADDRESS_POPUP_ID, payload)),
+    createTabbySession: (code) => CheckoutDispatcher.createTabbySession(dispatch, code)
 });
 
 export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
@@ -149,12 +150,58 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
 
                 showErrorNotification(__('Something went wrong'));
             });
+        } else if(code === TABBY_PAY_LATER || code===TABBY_ISTALLMENTS){
+            this.createTabbySessionAndSavePaymentInformation(asyncData,fields);
         } else {
             savePaymentInformation({
                 billing_address: address,
                 paymentMethod
             });
         }
+    }
+
+    createTabbySessionAndSavePaymentInformation(asyncData,fields){
+        const paymentMethod = this._getPaymentData(asyncData);
+        const address = this._getAddress(fields);
+        const { savePaymentInformation,createTabbySession,shippingAddress,setTabbyWebUrl } = this.props;
+        createTabbySession(shippingAddress).then(
+            (response) => {
+                if (response && response.configuration) {
+                    const {
+                        configuration: {
+                            available_products: {
+                                installments, pay_later
+                            }
+                        },
+                        payment: {
+                            id
+                        }
+                    } = response;
+                    if (installments || pay_later) {
+                        if (installments) {
+                            setTabbyWebUrl(
+                                installments[0].web_url,
+                                id,
+                                TABBY_ISTALLMENTS
+                            );
+                        }
+
+                        if (pay_later) {
+                            setTabbyWebUrl(
+                                pay_later[0].web_url,
+                                id,
+                                TABBY_PAY_LATER
+                            );
+                        }
+                        savePaymentInformation({
+                            billing_address: address,
+                            paymentMethod
+                        });
+                    }
+                }
+            },
+            this._handleError
+        ).catch(() => {});
     }
 
     getCartError(message) {
