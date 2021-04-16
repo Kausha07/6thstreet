@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { CARD, CHECKOUT_APPLE_PAY, TABBY_ISTALLMENTS, TABBY_PAY_LATER } from 'Component/CheckoutPayments/CheckoutPayments.config';
 import { CC_POPUP_ID } from 'Component/CreditCardPopup/CreditCardPopup.config';
-import { AUTHORIZED_STATUS, DETAILS_STEP, SHIPPING_STEP } from 'Route/Checkout/Checkout.config';
+import { AUTHORIZED_STATUS, CAPTURED_STATUS, DETAILS_STEP, SHIPPING_STEP } from 'Route/Checkout/Checkout.config';
 import { BILLING_STEP, PAYMENT_TOTALS } from 'SourceRoute/Checkout/Checkout.config';
 import {
     CheckoutContainer as SourceCheckoutContainer,
@@ -25,6 +25,7 @@ import Event, { EVENT_GTM_CHECKOUT, EVENT_GTM_PURCHASE } from 'Util/Event';
 import history from 'Util/History';
 import { ONE_MONTH_IN_SECONDS } from 'Util/Request/QueryDispatcher';
 import parseJson from 'parse-json';
+import { TABBY_POPUP_ID } from 'Component/TabbyPopup/TabbyPopup.config';
 
 export const mapDispatchToProps = (dispatch) => ({
     ...sourceMapDispatchToProps(dispatch),
@@ -112,7 +113,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             lastOrder: {},
             initialTotals: totals,
             processApplePay: false,
-            initialGTMSent: false
+            initialGTMSent: false,
+            tabbyPaymentId:null,
+            isTabbyPopupShown:false,
+            tabbyPaymentStatus:''
         };
     }
 
@@ -309,10 +313,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         );
     }
 
-    async savePaymentInformation(paymentInformation) {
+    /*async*/ savePaymentInformation(paymentInformation) {
         this.setState({ isLoading: true });
 
-        await this.savePaymentMethodAndPlaceOrder(paymentInformation)
+        /*await*/ this.savePaymentMethodAndPlaceOrder(paymentInformation)
     }
 
     /*async*/ savePaymentMethodAndPlaceOrder(paymentInformation) {
@@ -346,16 +350,16 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         if (code === CHECKOUT_APPLE_PAY) {
             this.setState({ processApplePay: true });
         } else  if(code === TABBY_ISTALLMENTS || code===TABBY_PAY_LATER) {
-            this.placeOrder(code, data, tabbyPaymentId)
+            this.placeOrder(code, data, paymentInformation)
         }
          else {
             this.placeOrder(code, data, null)
         }
     }
 
-    placeOrder(code, data, tabbyPaymentId) {
+    placeOrder(code, data, paymentInformation) {
         //console.log("here2"+tabbyPaymentId)
-        const {createOrder, showErrorNotification, updateTabbyPayment} = this.props;
+        const {createOrder, showErrorNotification} = this.props;
 
         try {
             createOrder(code, data).then(
@@ -386,10 +390,13 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                                     );
                                 } else  if(code === TABBY_ISTALLMENTS || code===TABBY_PAY_LATER){
                                     //console.log("here3"+tabbyPaymentId)
-                                    updateTabbyPayment(tabbyPaymentId,order_id);
-                                    this.setDetailsStep(order_id, increment_id);
-                                    this.resetCart();
-                                    return true;
+                                    this.setState({ isTabbyPopupShown: true, order_id, increment_id });
+                                    setTimeout(
+                                        () => this.processTabbyWithTimeout(3, paymentInformation),
+                                        10000
+                                    );
+
+                                    //return true;
                                 } else {
                                     this.setDetailsStep(order_id, increment_id);
                                     this.resetCart();
@@ -556,6 +563,58 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
         if ((counter === 25 || activeOverlay !== CC_POPUP_ID) && CreditCardPaymentStatus !== AUTHORIZED_STATUS) {
             this.setState({ isLoading: false, isFailed: true });
+            this.setDetailsStep(order_id, increment_id);
+            this.resetCart();
+        }
+    }
+
+    processTabby(paymentInformation) {
+        const { verifyPayment,updateTabbyPayment } = this.props;
+        const { checkoutStep } = this.state;
+        const {tabbyPaymentId} = paymentInformation;
+        const { order_id, increment_id } = this.state;
+
+        if (checkoutStep !== BILLING_STEP) {
+            return;
+        }
+
+        verifyPayment(tabbyPaymentId).then(
+            ({ status }) => {
+                if (status === AUTHORIZED_STATUS || status === CAPTURED_STATUS) {
+                    this.setState({ tabbyPaymentStatus: status });
+                    updateTabbyPayment(tabbyPaymentId,order_id);
+                    this.setDetailsStep(order_id, increment_id);
+                    this.resetCart();
+                }
+                //this.setState({ tabbyPaymentStatus: status });
+            }
+        );
+    }
+
+    processTabbyWithTimeout(counter, paymentInformation) {
+        const { tabbyPaymentStatus } = this.state;
+        const { showErrorNotification, hideActiveOverlay, activeOverlay } = this.props;
+        const { order_id, increment_id } = this.state;
+
+        // Need to get payment data from Tabby.
+        // Could not get callback of Tabby another way because Tabby is iframe in iframe
+        if ((tabbyPaymentStatus !== AUTHORIZED_STATUS && tabbyPaymentStatus !== CAPTURED_STATUS) && counter < 60 && activeOverlay === TABBY_POPUP_ID) {
+            setTimeout(
+                () => {
+                    this.processTabby(paymentInformation);
+                    this.processTabbyWithTimeout(counter + 1, paymentInformation);
+                },
+                5000
+            );
+        }
+
+        if (counter === 60) {
+            showErrorNotification('Tabby session timeout');
+            hideActiveOverlay();
+        }
+
+        if ((counter === 60 || activeOverlay !== TABBY_POPUP_ID) && (tabbyPaymentStatus !== AUTHORIZED_STATUS && tabbyPaymentStatus !== CAPTURED_STATUS)) {
+            this.setState({ isTabbyPopupShown: false, isLoading: false, isFailed: true});
             this.setDetailsStep(order_id, increment_id);
             this.resetCart();
         }
