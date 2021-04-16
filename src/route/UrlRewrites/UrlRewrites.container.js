@@ -55,8 +55,22 @@ export class UrlRewritesContainer extends PureComponent {
             query: prevQuery
         } = prevState;
 
-        if(!location.search && query && query !== prevQuery){
-            history.push(`${pathname}?${query}`);
+        if( query && query !== prevQuery){
+            let partialQuery = location.search;
+            if(location.search){
+                if(partialQuery.indexOf("idx") !== -1){
+                    return;
+                }
+                else{
+                    partialQuery = partialQuery.substring(1)
+                    history.push(`${pathname}?${query}&${partialQuery}`);
+                }
+
+            }
+            else{
+                history.push(`${pathname}?${query}`);
+            }
+
         }
         // if (!location.search && query) {
         //     history.push(`${pathname}?${query}`);
@@ -101,7 +115,6 @@ export class UrlRewritesContainer extends PureComponent {
             : type;
 
         window.pageType = finalType;
-
         this.setState({
             prevPathname: urlParam,
             isLoading: false,
