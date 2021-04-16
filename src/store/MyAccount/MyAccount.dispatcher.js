@@ -43,7 +43,7 @@ import { setCrossSubdomainCookie } from 'Util/Url/Url';
 
 export { CUSTOMER, ONE_MONTH_IN_SECONDS } from 'SourceStore/MyAccount/MyAccount.dispatcher';
 export const RESET_EMAIL = 'RESET_EMAIL';
-
+export const CART_ID_CACHE_KEY = 'CART_ID_CACHE_KEY';
 export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     requestCustomerData(dispatch) {
         const query = MyAccountQuery.getCustomerQuery();
@@ -121,14 +121,14 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
 
     async signIn(options = {}, dispatch) {
         const mutation = MyAccountQuery.getSignInMutation(options);
-        
+
         try {
             const result = await fetchMutation(mutation);
             const { generateCustomerToken: { token } } = result;
 
             setAuthorizationToken(token);
             dispatch(updateCustomerSignInStatus(true));
-            
+
             await this.handleMobileAuthorization(dispatch, options);
             await WishlistDispatcher.updateInitialWishlistData(dispatch);
             await StoreCreditDispatcher.getStoreCredit(dispatch);
@@ -164,7 +164,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         const { data: { token, user: { custom_attributes, gender, id } } = {} } = await getMobileApiAuthorizationToken({
             username,
             password,
-            cart_id: null
+            cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY)
         });
         const phoneAttribute = custom_attributes.filter(
             ({ attribute_code }) => attribute_code === 'contact_no'
@@ -193,7 +193,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         //     return;
         // }
         dispatch(removeCartItems());
-        
+
         // Run async otherwise login gets slow
         CartDispatcher.getCart(dispatch);
     }
