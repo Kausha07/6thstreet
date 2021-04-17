@@ -18,16 +18,17 @@ import {
     updateProductInCart
 } from 'Util/API/endpoint/Cart/Cart.enpoint';
 import Logger from 'Util/Logger';
-
+import { LAST_CART_ID_CACHE_KEY } from '../MobileCart/MobileCart.reducer';
+import BrowserDatabase from 'Util/BrowserDatabase';
 export const GUEST_QUOTE_ID = 'guest_quote_id';
 
 export class CartDispatcher {
     async getCart(dispatch, isNewCart = false) {
         const { Cart: { cartId } } = getStore().getState();
-
+        const  cart_id = BrowserDatabase.getItem(LAST_CART_ID_CACHE_KEY);
         if (!cartId || isNewCart) {
             try {
-                const { data: requestedCartId = null } = await createCart();
+                const { data: requestedCartId = null } = await createCart(cart_id);
 
                 if (!requestedCartId) {
                     dispatch(
@@ -39,7 +40,7 @@ export class CartDispatcher {
 
                     return;
                 }
-
+                BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
                 dispatch(setCartId(requestedCartId));
                 await this.getCartTotals(dispatch, requestedCartId);
             } catch (e) {
@@ -98,10 +99,10 @@ export class CartDispatcher {
             const {
                 data
             } = await getCart(cartId);
-
+            const  cart_id = BrowserDatabase.getItem(LAST_CART_ID_CACHE_KEY);
             if (!data) {
                 try {
-                    const { data: requestedCartId = null } = await createCart();
+                    const { data: requestedCartId = null } = await createCart(cart_id);
                     dispatch(removeCartItems());
 
                     if (!requestedCartId) {
@@ -114,7 +115,7 @@ export class CartDispatcher {
 
                         return;
                     }
-
+                    BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
                     dispatch(setCartId(requestedCartId));
 
                     if (!isSecondTry) {
