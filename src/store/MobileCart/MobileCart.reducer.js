@@ -9,6 +9,7 @@ import {
 
 export const CART_ID_CACHE_KEY = 'CART_ID_CACHE_KEY';
 export const CART_ITEMS_CACHE_KEY = 'CART_ITEMS_CACHE_KEY';
+export const LAST_CART_ID_CACHE_KEY = 'LAST_CART_ID_CACHE_KEY';
 
 export const getInitialState = () => ({
     cartId: BrowserDatabase.getItem(CART_ID_CACHE_KEY),

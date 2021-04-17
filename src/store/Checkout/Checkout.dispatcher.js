@@ -13,7 +13,8 @@ import {
     validateShippingAddress,
     verifyUserPhone,
     getPaymentAuthorization,
-    capturePayment
+    capturePayment,
+    cancelOrder
 } from 'Util/API/endpoint/Checkout/Checkout.endpoint';
 import {
     createSession,
@@ -120,6 +121,15 @@ export class CheckoutDispatcher {
                     method: code,
                     data: additional_data
                 }
+            }
+        });
+    }
+
+    async cancelOrder(dispatch, orderId, cancelReason) {
+        return cancelOrder({
+            data: {
+                order_id: orderId,
+                cancel_reason: cancelReason
             }
         });
     }

@@ -16,14 +16,16 @@ import {
     updateProductInCart
 } from 'Util/API/endpoint/Cart/Cart.enpoint';
 import Logger from 'Util/Logger';
+import BrowserDatabase from 'Util/BrowserDatabase';
+import { LAST_CART_ID_CACHE_KEY } from 'MobileCart.reducer';
 
 export class MobileCartDispatcher {
     async getCart(dispatch) {
         const { MobileCart: { cartId } } = getStore().getState();
-
+        const  cart_id = BrowserDatabase.getItem(LAST_CART_ID_CACHE_KEY);
         if (!cartId) {
             try {
-                const { data: cartId = null } = await createCart();
+                const { data: cartId = null } = await createCart(cart_id);
 
                 if (!cartId) {
                     dispatch(
