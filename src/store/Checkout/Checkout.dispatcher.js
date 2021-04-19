@@ -13,12 +13,14 @@ import {
     validateShippingAddress,
     verifyUserPhone,
     getPaymentAuthorization,
-    capturePayment
+    capturePayment,
+    cancelOrder
 } from 'Util/API/endpoint/Checkout/Checkout.endpoint';
 import {
     createSession,
     getInstallmentForValue,
-    verifyPayment
+    verifyPayment,
+    updateTabbyPayment
 } from 'Util/API/endpoint/Tabby/Tabby.enpoint';
 import { capitalize } from 'Util/App';
 import Logger from 'Util/Logger';
@@ -123,10 +125,23 @@ export class CheckoutDispatcher {
         });
     }
 
+    async cancelOrder(dispatch, orderId, cancelReason) {
+        return cancelOrder({
+            data: {
+                order_id: orderId,
+                cancel_reason: cancelReason
+            }
+        });
+    }
+
     async verifyPayment(dispatch, paymentId) {
         return verifyPayment(paymentId);
     }
 
+    async updateTabbyPayment(dispatch, paymentId, order_id) {
+        //console.log('here4:'+paymentId);
+        return updateTabbyPayment(paymentId, order_id);
+    }
     async sendVerificationCode(dispatch, data) {
         return sendVerificationCode({ data });
     }

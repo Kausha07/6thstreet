@@ -4,6 +4,7 @@ import TinySlider from 'tiny-slider-react';
 import Image from 'Component/Image';
 import Link from 'Component/Link';
 import { formatCDNLink } from 'Util/Url';
+import Event, { EVENT_GTM_BANNER_CLICK } from 'Util/Event';
 import DynamicContentHeader from '../DynamicContentHeader/DynamicContentHeader.component'
 import DynamicContentFooter from '../DynamicContentFooter/DynamicContentFooter.component'
 import './DynamicContentSliderWithLabel.style';
@@ -67,6 +68,14 @@ class DynamicContentSliderWithLabel extends PureComponent {
         }
     }
 
+    onclick = (item) => {
+        let banner = {
+            "link": item.link,
+            "promotion_name": item.promotion_name
+        }
+        Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
+    }
+
     renderCircle = (item, i) => {
         const {
             link,
@@ -99,8 +108,9 @@ class DynamicContentSliderWithLabel extends PureComponent {
                 <Link
                   to={ linkTo }
                   key={ i*10 }
+                  onClick={() => {this.onclick(item)}}
                 >
-                <img src={ url } alt={ text } block= 'Image'/>
+                <img src={ url } alt={ text } block= 'Image' style={{width: wd, height: ht}}/>
 
                 </Link>
                 <div block="CircleSliderLabel" style={{width: wd}}>{ text }</div>

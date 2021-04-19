@@ -13,13 +13,11 @@
     transform: translateX(-50%);
     width: 95%;
     margin: 0 !important;
-
     &_isArabic {
         right: 50%;
         left: 0;
         transform: translateX(50%);
     }
-
     &-HeaderContainer {
         position: relative;
         left: 50%;
@@ -35,13 +33,12 @@
             transform: translateX(50%);
         }
     }
-
-    &-Header, &-SubHeader {
+    &-Header,
+    &-SubHeader {
         width: 100%;
         margin: 0;
         line-height: 1.5rem;
     }
-
     &-Header {
         font-size: 18px;
         @include desktop {
@@ -54,26 +51,21 @@
             font-size: 1.2rem;
         }
     }
-
     li {
         content: '';
         padding: 0;
-
         &:before {
             content: none;
         }
     }
-
     img {
         object-fit: cover;
     }
-
     &-ProductContainer {
         @include desktop {
             position: relative;
         }
     }
-
     &-ProductItem {
         display: block;
         margin-right: 11%;
@@ -83,31 +75,25 @@
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
-
         h2 {
             margin-top: 1rem;
             margin-bottom: 0rem;
         }
-
         p {
             margin-bottom: 0;
             font-weight: var(--fw-regular);
         }
-
         del {
             display: none;
         }
-
         .Price {
             font-weight: var(--fw-bold);
         }
-
         &_isArabic {
             margin-right: auto;
             margin-left: 10%;
             overflow: hidden;
         }
-
         @include desktop {
             vertical-align: top;
             display: inline-block;
@@ -116,12 +102,10 @@
             margin-right: 2%;
         }
     }
-
-    &-MobileSliderWrapper{
+    &-MobileSliderWrapper {
         overflow: hidden;
         width: 92.6vw;
     }
-
     &-MobileSlider {
         width: 80%;
         overflow: visible;
@@ -129,7 +113,6 @@
             direction: ltr;
         }
     }
-
     &-TagOverlay {
         position: absolute;
         top: 1.5rem;
@@ -141,13 +124,11 @@
         width: 3.5rem;
         height: 2rem;
         padding: 3px;
-
         &_isArabic {
             border-radius: 1rem 0rem 0rem 1rem;
             right: 0;
         }
     }
-
     &-FavoriteOverlay {
         position: absolute;
         background: url(../../style/icons/heart.svg) 5px no-repeat;
@@ -159,33 +140,29 @@
         border-radius: 2rem;
         background-color: var(--heart-background);
         &_isArabic {
-                right: auto;
-                left: 1rem;
+            right: auto;
+            left: 1rem;
         }
     }
-
-    &-ButtonNext{
+    &-ButtonNext {
         @include desktop {
             right: 0;
         }
-
         &_isArabic {
             right: auto;
             left: 0;
         }
     }
-
     &-ButtonPrev {
         @include desktop {
             left: 0;
         }
-
         &_isArabic {
             right: 0;
         }
     }
-
-    &-ArrowNext, &-ArrowPrev {
+    &-ArrowNext,
+    &-ArrowPrev {
         position: relative;
         left: 35%;
         top: 40%;
@@ -195,28 +172,23 @@
         border-top: solid 2px var(--button-text-color);
         border-right: solid 2px var(--button-text-color);
     }
-
     &-ArrowPrev {
         transform: rotate(225deg);
         left: 40%;
-
         &_isArabic {
             transform: rotate(45deg);
             right: 45%;
         }
     }
-
     &-ArrowNext {
         &_isArabic {
             transform: rotate(225deg);
             right: 40%;
         }
     }
-
-
-    &-ButtonPrev, &-ButtonNext {
+    &-ButtonPrev,
+    &-ButtonNext {
         display: none;
-
         @include desktop {
             display: block;
             background-color: var(--button-color);

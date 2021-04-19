@@ -7,6 +7,7 @@ import isMobile from 'Util/Mobile';
 import { formatCDNLink } from 'Util/Url';
 import DynamicContentHeader from '../DynamicContentHeader/DynamicContentHeader.component'
 import DynamicContentFooter from '../DynamicContentFooter/DynamicContentFooter.component'
+import Event, { EVENT_GTM_BANNER_CLICK } from 'Util/Event';
 import './DynamicContentBanner.style';
 
 class DynamicContentBanner extends PureComponent {
@@ -30,16 +31,27 @@ class DynamicContentBanner extends PureComponent {
         isMobile: isMobile.any() || isMobile.tablet()
     };
 
+    onclick = (item) => {
+        let banner = {
+            "link": item.link,
+            "promotion_name": item.promotion_name
+        }
+        Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
+
+    }
+
     renderImage = (item, i) => {
         // const { items } = this.props;
         // const { height, width } = items[0];
         const {
             url,
-            link
-            // height,
-            // width
+            link,
+            height = "",
+            width = ""
         } = item;
-
+        let ht, wd;
+        wd = width.toString() + "px";
+        ht = height.toString() + "px";  
         // TODO: calculate aspect ratio to ensure images not jumping.
         if (!link) {
             return (
@@ -48,8 +60,8 @@ class DynamicContentBanner extends PureComponent {
                       key={ i }
                       src={ url }
                       ratio="custom"
-                    //   height={ height }
-                    //   width={ width }
+                      height={ ht }
+                      width={ wd }
                     />
                     { this.renderButton() }
                 </>
@@ -60,12 +72,13 @@ class DynamicContentBanner extends PureComponent {
             <Link
               to={ formatCDNLink(link) }
               key={ i }
+              onClick={() => {this.onclick(item)}}
             >
                 <Image
                   src={ url }
                   ratio="custom"
-                //   height={ height }
-                //   width={ width }
+                  height={ ht }
+                  width={ wd }
                 />
                 { this.renderButton() }
             </Link>

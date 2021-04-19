@@ -4,6 +4,7 @@ import { PureComponent } from 'react';
 import Image from 'Component/Image';
 import Link from 'Component/Link';
 import { formatCDNLink } from 'Util/Url';
+import Event, { EVENT_GTM_BANNER_CLICK } from 'Util/Event';
 import DynamicContentHeader from '../DynamicContentHeader/DynamicContentHeader.component'
 
 import './DynamicContentGrid.style';
@@ -27,13 +28,23 @@ class DynamicContentGrid extends PureComponent {
         header: {}
     };
 
-    renderItem(item, i) {
-        const { link, url } = item;
 
+
+    onclick = (item) => {
+        let banner = {
+            "link": item.link,
+            "promotion_name": item.promotion_name
+        }
+        Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
+    }
+
+    renderItem = (item, i) => {
+        const { link, url } = item;        
+        let ht = this.props.item_height.toString() + "px";
         return (
             <div block="CategoryItem" elem="Content" key={ i }>
-                <Link to={ formatCDNLink(link) } key={ i }>
-                    <Image src={ url } ratio="custom" height="auto" />
+                <Link to={ formatCDNLink(link) } key={ i } onClick={() => {this.onclick(item)}}>
+                    <Image src={ url } ratio="custom"  height={ht}/>
                     {
                         item.footer &&
                         <div block="Footer">

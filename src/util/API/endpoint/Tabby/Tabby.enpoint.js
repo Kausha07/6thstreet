@@ -13,7 +13,9 @@ export const verifyPayment = (paymentID) => MobileAPI.get(
     `/tabby/payments/${paymentID}`
 ) || {};
 
-export const updateTabbyPayment = ({ paymentID, order_id }) => MobileAPI.put(
+export const updateTabbyPayment = ( paymentID, order_id ) => MobileAPI.put(
     `/tabby/payments/${paymentID}`,
-    order_id
+    {
+        order_id: order_id
+    }
 ) || {};

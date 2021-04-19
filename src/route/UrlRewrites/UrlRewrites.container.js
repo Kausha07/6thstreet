@@ -115,7 +115,6 @@ export class UrlRewritesContainer extends PureComponent {
             : type;
 
         window.pageType = finalType;
-
         this.setState({
             prevPathname: urlParam,
             isLoading: false,

@@ -3,13 +3,11 @@
     // overflow: hidden;
     margin-right: 8px;
     margin-left: 8px;
-    margin-bottom: 40px;
+    margin-bottom: 30px !important;
     max-width: 1440px;
-    .SliderWithLabelWrapper{
+    .SliderWithLabelWrapper {
         display: flex;
-        .CircleSlider{
-
-        }
+        .CircleSlider {}
     }
     &-Label {
         display: flex;
@@ -20,18 +18,15 @@
         align-items: center;
         vertical-align: center;
     }
-
     .Slider {
         &-Crumbs {
             position: static;
         }
-
         &-Crumb {
             width: 9px;
             height: 9px;
             border: 1px solid $black;
             background: $white;
-
             &_isActive {
                 width: 11px;
                 height: 11px;
@@ -41,14 +36,13 @@
             }
         }
     }
-
     .Image {
         height: 100%;
         &-Image {
             object-fit: cover;
             position: inherit;
         }
-        img{
+        img {
             // margin-left: 25px;
         }
     }
@@ -62,7 +56,7 @@
             font-weight: 500;
             color: #888;
             top: 70px;
-            &:hover{
+            &:hover {
                 color: #000
             }
         }
@@ -73,68 +67,58 @@
             font-weight: 500;
             color: #888;
             top: 70px;
-            &:hover{
+            &:hover {
                 color: #000
             }
         }
     }
-
-    .tns-ovh{
+    .tns-ovh {
         margin-right: 80px;
         margin-left: 80px;
-        .tns-inner{
-            .tns-outer{
-                .tns-controls{
+        .tns-inner {
+            .tns-outer {
+                .tns-controls {
                     display: none;
-
                 }
-                .tns-ovh{
+                .tns-ovh {
                     margin: 0;
                 }
             }
         }
     }
-    .tns-outer{
+    .tns-outer {
         direction: ltr!important;
     }
-    .tns-slider{
+    .tns-slider {
         margin: 0 auto;
     }
-    .CircleSliderLabel{
+    .CircleSliderLabel {
         margin: 0 auto;
         margin-top: 10px;
         font-size: 14px;
         text-align: center;
-
     }
-
-    .Title{
+    .Title {
         font-size: 22px;
         text-align: center;
         text-transform: uppercase;
-        margin-bottom: 30px;
-        margin-top: 30px;
+        margin-bottom: 20px;
+        margin-top: 0;
     }
-
-
-
     @include mobile {
         max-height: 700px;
         overflow: none;
-
         &-Label {
             right: 2rem;
             bottom: 2rem;
             text-decoration: underline;
             background: none !important;
         }
-
         .Slider {
             &-Wrapper {
                 width: 80%;
                 margin: 10px;
             }
-
             &-Crumbs {
                 display: none;
             }
@@ -142,8 +126,7 @@
     }
 }
 
-
-@media  (max-width: 760px) {
+@media (max-width: 760px) {
     .DynamicContentSliderWithLabel {
         margin-bottom: 15px;
         .tns-controls {
@@ -155,20 +138,19 @@
             &-Image {
                 object-fit: cover;
             }
-            img{
+            img {
                 // margin-left: 30px;
             }
         }
-        .tns-ovh{
+        .tns-ovh {
             margin: 0;
         }
-        .CircleSliderLabel{
+        .CircleSliderLabel {
             margin-top: 4px;
             font-size: 12px;
         }
-        .Title{
+        .Title {
             font-size: 15px;
         }
     }
-  }
-
+}

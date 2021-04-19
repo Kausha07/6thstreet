@@ -1,8 +1,8 @@
-export const MEN_TYPE = 'men';
+export const MEN_TYPE = __('men');
 
-export const WOMEN_TYPE = 'women';
+export const WOMEN_TYPE = __('women');
 
-export const KIDS_TYPE = 'kids';
+export const KIDS_TYPE = __('kids');
 
 export const TYPES_ARRAY = [
     WOMEN_TYPE,

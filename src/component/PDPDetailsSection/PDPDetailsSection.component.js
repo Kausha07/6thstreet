@@ -47,7 +47,7 @@ class PDPDetailsSection extends PureComponent {
     renderDescription() {
         const { product: { description } } = this.props;
 
-        return <p block="PDPDetailsSection" elem="Description">{ description }</p>;
+        return <p block="PDPDetailsSection" elem="Description" dangerouslySetInnerHTML={{__html: description}}/>;
     }
 
     listTitle(str) {
