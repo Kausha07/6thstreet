@@ -7,6 +7,8 @@ import SliderHomepage from 'Component/SliderHomepage';
 import { formatCDNLink } from 'Util/Url';
 import DynamicContentHeader from '../DynamicContentHeader/DynamicContentHeader.component'
 import DynamicContentFooter from '../DynamicContentFooter/DynamicContentFooter.component'
+import Event, { EVENT_GTM_BANNER_CLICK } from 'Util/Event';
+import GoogleTagManager from "../GoogleTagManager/GoogleTagManager.component"
 import './DynamicContentFullWidthBannerSlider.style';
 
 
@@ -51,6 +53,14 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
     onSliderChange = (activeSlide) => {
         this.setState({ activeSlide });
     };
+    onclick = (item) => {
+        let banner = {
+            "link": item.link,
+            "promotion_name": item.promotion_name
+        }
+        Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
+
+    }
 
     renderSlide = (item, i) => {
         const {
@@ -70,6 +80,7 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
             <Link
               to={ linkTo }
               key={ i }
+              onClick={() => {this.onclick(item)}}
             >
                 <img src={ image_url } alt={ label }/>
             </Link>

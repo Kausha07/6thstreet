@@ -39,6 +39,7 @@ class SearchSuggestion extends PureComponent {
         const { brand_name: name = '', count } = brand;
 
         const urlName = name.replace('&', '')
+            .replace(/'/g, '')
             .replace(/(\s+)|--/g, '-')
             .replace('@', 'at')
             .toLowerCase();
@@ -108,6 +109,7 @@ class SearchSuggestion extends PureComponent {
         const { label = '', image_url } = brand;
 
         const urlName = label.replace('&', '')
+            .replace(/'/g, '')
             .replace(/(\s+)|--/g, '-')
             .replace('@', 'at')
             .toLowerCase();

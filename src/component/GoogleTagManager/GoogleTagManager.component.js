@@ -1,12 +1,11 @@
 /* eslint-disable import/no-cycle, @scandipwa/scandipwa-guidelines/create-config-files */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
-
 import { CUSTOMER } from 'Store/MyAccount/MyAccount.dispatcher';
 import BrowserDatabase from 'Util/BrowserDatabase';
 import { ONE_MONTH_IN_SECONDS } from 'Util/Request/QueryDispatcher';
-
 import AddToCartEvent from './events/AddToCart.event';
+import BannerClickEvent from './events/BannerClickEvent.event';
 import CheckoutEvent from './events/Checkout.event';
 import CheckoutOptionEvent from './events/CheckoutOption.event';
 import General from './events/General.event';
@@ -29,6 +28,7 @@ export const EVENT_PRODUCT_DETAIL = 'ee.detail';
 export const EVENT_PURCHASE = 'ee.purchase';
 export const EVENT_CHECKOUT = 'checkout';
 export const EVENT_CHECKOUT_OPTION = 'checkoutOption';
+export const EVENT_BANNER_CLICK = 'bannerClick';
 
 /**
  * Const
@@ -75,6 +75,7 @@ class GoogleTagManager extends PureComponent {
         [EVENT_IMPRESSION]: Impression,
         [EVENT_ADD_TO_CART]: AddToCartEvent,
         [EVENT_PRODUCT_CLICK]: ProductClickEvent,
+        [EVENT_BANNER_CLICK]: BannerClickEvent,
         [EVENT_PRODUCT_DETAIL]: ProductDetailEvent,
         [EVENT_REMOVE_FROM_CART]: RemoveFromCartEvent
     };

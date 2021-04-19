@@ -25,7 +25,8 @@ import isMobile from 'Util/Mobile';
 
 import {
     AUTHORIZED_STATUS,
-    BILLING_STEP
+    BILLING_STEP,
+    CAPTURED_STATUS
 } from './Checkout.config';
 
 import './Checkout.style';
@@ -42,7 +43,8 @@ export class Checkout extends SourceCheckout {
         threeDsUrl: PropTypes.string.isRequired,
         isFailed: PropTypes.bool.isRequired,
         processApplePay: PropTypes.bool.isRequired,
-        initialTotals: TotalsType.isRequired
+        initialTotals: TotalsType.isRequired,
+        isTabbyPopupShown: PropTypes.bool
     };
 
     state = {
@@ -56,7 +58,6 @@ export class Checkout extends SourceCheckout {
         tabbyPayLaterUrl: '',
         tabbyPaymentId: '',
         tabbyPaymentStatus: '',
-        isTabbyPopupShown: false,
         paymentInformation: {},
         creditCardData: {},
         isSuccess: false,
@@ -65,11 +66,12 @@ export class Checkout extends SourceCheckout {
 
     savePaymentInformation = (paymentInformation) => {
         const { savePaymentInformation, showErrorNotification } = this.props;
-        const { selectedPaymentMethod, tabbyInstallmentsUrl, tabbyPayLaterUrl } = this.state;
+        //const { selectedPaymentMethod, tabbyInstallmentsUrl, tabbyPayLaterUrl } = this.state;
         this.setState({ paymentInformation });
 
-        if (TABBY_PAYMENT_CODES.includes(selectedPaymentMethod)) {
-            if (tabbyInstallmentsUrl || tabbyPayLaterUrl) {
+       /* if (TABBY_PAYMENT_CODES.includes(selectedPaymentMethod)) {
+            if (tabbyInstallmentsUrl || tabbyPayLaterUrl) {\
+
                 this.setState({ isTabbyPopupShown: true });
 
                 // Need to get payment data from Tabby.
@@ -82,9 +84,13 @@ export class Checkout extends SourceCheckout {
                 showErrorNotification(__('Something went wrong with Tabby'));
             }
         } else {
+            const { tabbyPaymentId } = this.state;
+            paymentInformation = {...paymentInformation,'tabbyPaymentId':tabbyPaymentId}
             savePaymentInformation(paymentInformation);
-        }
-
+        }*/
+        const { tabbyPaymentId } = this.state;
+        paymentInformation = {...paymentInformation,'tabbyPaymentId':tabbyPaymentId}
+        savePaymentInformation(paymentInformation);
         return null;
     };
 
@@ -98,7 +104,7 @@ export class Checkout extends SourceCheckout {
 
         verifyPayment(tabbyPaymentId).then(
             ({ status }) => {
-                if (status === AUTHORIZED_STATUS) {
+                if (status === AUTHORIZED_STATUS || status === CAPTURED_STATUS) {
                     const { tabbyPaymentId } = this.state;
                     console.log('tabbyPaymentId:'+tabbyPaymentId);
                     paymentInformation = {...paymentInformation,'tabbyPaymentId':tabbyPaymentId}
@@ -116,7 +122,7 @@ export class Checkout extends SourceCheckout {
 
         // Need to get payment data from Tabby.
         // Could not get callback of Tabby another way because Tabby is iframe in iframe
-        if (tabbyPaymentStatus !== AUTHORIZED_STATUS && counter < 60 && activeOverlay === TABBY_POPUP_ID) {
+        if ((tabbyPaymentStatus !== AUTHORIZED_STATUS && tabbyPaymentStatus !== CAPTURED_STATUS) && counter < 60 && activeOverlay === TABBY_POPUP_ID) {
             setTimeout(
                 () => {
                     this.processTabby(paymentInformation);
@@ -132,7 +138,7 @@ export class Checkout extends SourceCheckout {
         }
 
         if (counter === 60 || activeOverlay !== TABBY_POPUP_ID) {
-            this.setState({ isTabbyPopupShown: false });
+            //this.setState({ isTabbyPopupShown: false });
         }
     }
 
@@ -370,12 +376,11 @@ export class Checkout extends SourceCheckout {
 
     renderTabbyIframe() {
         const {
-            isTabbyPopupShown,
             tabbyInstallmentsUrl,
             tabbyPayLaterUrl,
             selectedPaymentMethod
         } = this.state;
-
+        const {isTabbyPopupShown}=this.props;
         if (!isTabbyPopupShown) {
             return null;
         }

@@ -7,6 +7,7 @@ import Link from 'Component/Link';
 import { formatCDNLink } from 'Util/Url';
 
 import 'react-circular-carousel/dist/index.css';
+import Event, { EVENT_GTM_BANNER_CLICK } from 'Util/Event';
 import DynamicContentHeader from '../DynamicContentHeader/DynamicContentHeader.component'
 import DynamicContentFooter from '../DynamicContentFooter/DynamicContentFooter.component'
 import './DynamicContentCircleItemSlider.style';
@@ -47,6 +48,11 @@ class DynamicContentCircleItemSlider extends PureComponent {
         let link = '/' + a.link.split("?")[0]
         localStorage.setItem("bannerData", JSON.stringify(a));
         localStorage.setItem("CircleBannerUrl", link);
+        let banner = {
+            "link": a.link,
+            "promotion_name": a.promotion_name
+        }
+        Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
     };
 
     renderCircle = (item, i) => {

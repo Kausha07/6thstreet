@@ -3,3 +3,4 @@
 export * from 'SourceRoute/Checkout/Checkout.config';
 
 export const AUTHORIZED_STATUS = 'AUTHORIZED';
+export const CAPTURED_STATUS = 'CLOSED';

@@ -8,6 +8,7 @@ import cx from "classnames";
 import 'react-circular-carousel/dist/index.css';
 import DynamicContentHeader from '../DynamicContentHeader/DynamicContentHeader.component'
 import DynamicContentFooter from '../DynamicContentFooter/DynamicContentFooter.component'
+import Event, { EVENT_GTM_BANNER_CLICK } from 'Util/Event';
 import './DynamicContentRichContentBanner.style';
 
 const settings = {
@@ -18,7 +19,7 @@ const settings = {
     nav: true,
     loop: true,
     navPosition: "bottom",
-    autoplay: true,
+    autoplay: false,
     responsive: {
         1024: {
             items: 2,
@@ -44,6 +45,13 @@ class DynamicContentRichContentBanner extends PureComponent {
             })
         ).isRequired
     };
+    onclick = (item) => {
+        let banner = {
+            "link": item.link,
+            "promotion_name": item.promotion_name
+        }
+        Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
+    }
 
 
     renderCircle = (item, i) => {
@@ -77,6 +85,7 @@ class DynamicContentRichContentBanner extends PureComponent {
                 <Link
                     to={linkTo}
                     key={i}
+                    onClick={() => {this.onclick(item)}}
                 >
                     <Image
                         src={image_url}

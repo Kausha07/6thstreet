@@ -27,6 +27,11 @@ export const createOrder = ({ data }) => MobileAPI.post(
     data
 ) || {};
 
+export const cancelOrder = ({ data }) => MobileAPI.post(
+    '/cancel-order',
+    data
+) || {};
+
 export const getPaymentMethods = () => MobileAPI.get(
     '/payment-methods'
 ) || {};
