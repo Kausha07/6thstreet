@@ -5,23 +5,21 @@
 
 .DynamicContentBanner {
     margin: 20px 10px;
+    margin-bottom: 30px !important;
     text-align: center;
     font-weight: var(--fw-regular);
-
     .Image {
-        height: auto;
-
+        //height: auto;
         &-Image {
             position: static;
+            max-width: 100%;
         }
     }
-
     a {
         display: inline-flex;
         flex-direction: column;
         align-items: center;
     }
-
     button {
         border: 1px solid var(--black-color);
         width: 195px;
@@ -29,14 +27,14 @@
         font-size: 12px;
         font-weight: var(--fw-demi);
         margin-top: 10px;
-
-        &:hover{
+        &:hover {
             text-decoration: underline;
         }
     }
 }
-@media  (max-width: 860px) {
+
+@media (max-width: 860px) {
     .DynamicContentBanner {
         width: 100%;
     }
-  }
+}

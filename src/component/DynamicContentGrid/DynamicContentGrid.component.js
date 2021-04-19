@@ -38,13 +38,13 @@ class DynamicContentGrid extends PureComponent {
         Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
     }
 
-    renderItem(item, i) {
-        const { link, url } = item;
-
+    renderItem = (item, i) => {
+        const { link, url } = item;        
+        let ht = this.props.item_height.toString() + "px";
         return (
             <div block="CategoryItem" elem="Content" key={ i }>
                 <Link to={ formatCDNLink(link) } key={ i } onClick={() => {this.onclick(item)}}>
-                    <Image src={ url } ratio="custom" height = "auto"/>
+                    <Image src={ url } ratio="custom"  height={ht}/>
                     {
                         item.footer &&
                         <div block="Footer">

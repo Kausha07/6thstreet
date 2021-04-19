@@ -1,4 +1,4 @@
-.DynamicContentFooter{
+.DynamicContentFooter {
     // color: red;
     &-Title {
         display: block;
@@ -6,21 +6,19 @@
         font-size: var(--title-font-size);
         margin-bottom: 10px;
     }
-
     &-SubTitle {
         font-size: var(--subtitle-font-size);
     }
-    &-Button{
+    &-Button {
         margin-top: 10px;
         font-size: 18px;
         margin-bottom: 10px;
         text-decoration: underline;
         font-weight: 600;
     }
-
 }
 
-@media  (max-width: 760px) {
+@media (max-width: 760px) {
     .DynamicContentFooter {
         &-Title {
             display: block;
@@ -29,13 +27,12 @@
             margin-bottom: 0px;
             text-align: center;
         }
-
         &-SubTitle {
             font-size: 11px;
             line-height: 1;
             margin-bottom: 6px;
         }
-        &-Button{
+        &-Button {
             font-size: 12px;
             font-weight: 600;
             text-decoration: underline;
