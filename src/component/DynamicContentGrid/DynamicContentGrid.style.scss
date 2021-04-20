@@ -1,16 +1,15 @@
 :root {
     --subtitle-font-size: 17px;
-    --title-font-size: 25px;
+    --title-font-size: 22px;
     --light-gray: #efefef;
 }
 
 .DynamicContentGrid {
     max-width: 1440px;
-
+    margin-bottom: 14px !important;
     &-Grid {
         display: grid;
         grid-gap: 0 0;
-
         &_items_per_row_1 {
             grid-template-columns: repeat(1, 1fr);
         }
@@ -23,32 +22,37 @@
         &_items_per_row_4 {
             grid-template-columns: repeat(4, 1fr);
         }
-
+        &_items_per_row_5 {
+            grid-template-columns: repeat(5, 1fr);
+        }
+        &_items_per_row_6 {
+            grid-template-columns: repeat(6, 1fr);
+        }
         a {
             margin: 0;
+            display: block;
+            line-height: 1;
         }
     }
-
     .Image {
-        height: auto;
-        max-width: 220px; // Tempo before JSON will be updated
+        //height: auto;
+        //max-width: 220px; // Tempo before JSON will be updated
         padding-bottom: 0;
-
+        display: block;
         &-Image {
             position: static;
             height: auto;
+            max-width: 100%;
         }
     }
-
     h2 {
         // border-top: 1px solid var(--light-gray);
         font-size: 20px;
-        margin-top: 30px;
+        margin-top: 0;
         padding: 20px;
         text-align: center;
         text-transform: uppercase;
     }
-
     @include desktop {
         &-Grid {
             margin-left: 70px;
@@ -60,35 +64,34 @@
 .CategoryItem {
     &-Content {
         text-align: center;
-        margin-bottom: 20px;
         padding: 8px;
-        .Footer{
+        .Footer {
             // color: red;
             &-Title {
                 display: block;
-                font-weight: var(--fw-bold);
+                font-weight: var(--fw-medium);
                 font-size: var(--title-font-size);
-                margin-bottom: 10px;
+                margin-bottom: 0px;
+                line-height: 1.2;
             }
-
             &-SubTitle {
                 font-size: var(--subtitle-font-size);
+                line-height: 1.2;
             }
         }
-
     }
-
     &-Text {
         margin-top: 20px;
         margin-bottom: 30px;
     }
 }
-@media  (max-width: 760px) {
+
+@media (max-width: 760px) {
     .DynamicContentGrid {
         .CategoryItem {
             &-Content {
                 margin-bottom: 5px;
-                .Footer{
+                .Footer {
                     // color: red;
                     &-Title {
                         display: block;
@@ -97,25 +100,22 @@
                         margin-bottom: 0px;
                         text-align: center;
                     }
-
                     &-SubTitle {
                         font-size: 11px;
                         line-height: 1;
                         margin-bottom: 6px;
                     }
-                    &-Button{
+                    &-Button {
                         font-size: 12px;
                         font-weight: 600;
                         text-decoration: underline;
                     }
                 }
-
             }
-
             &-Text {
                 margin-top: 20px;
                 margin-bottom: 30px;
             }
         }
     }
-  }
+}

@@ -110,7 +110,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
                   key={ i*10 }
                   onClick={() => {this.onclick(item)}}
                 >
-                <img src={ url } alt={ text } block= 'Image'/>
+                <img src={ url } alt={ text } block= 'Image' style={{width: wd, height: ht}}/>
 
                 </Link>
                 <div block="CircleSliderLabel" style={{width: wd}}>{ text }</div>

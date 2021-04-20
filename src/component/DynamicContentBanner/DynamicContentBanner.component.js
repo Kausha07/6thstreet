@@ -45,11 +45,13 @@ class DynamicContentBanner extends PureComponent {
         // const { height, width } = items[0];
         const {
             url,
-            link
-            // height,
-            // width
+            link,
+            height = "",
+            width = ""
         } = item;
-
+        let ht, wd;
+        wd = width.toString() + "px";
+        ht = height.toString() + "px";  
         // TODO: calculate aspect ratio to ensure images not jumping.
         if (!link) {
             return (
@@ -58,8 +60,8 @@ class DynamicContentBanner extends PureComponent {
                       key={ i }
                       src={ url }
                       ratio="custom"
-                    //   height={ height }
-                    //   width={ width }
+                      height={ ht }
+                      width={ wd }
                     />
                     { this.renderButton() }
                 </>
@@ -75,8 +77,8 @@ class DynamicContentBanner extends PureComponent {
                 <Image
                   src={ url }
                   ratio="custom"
-                //   height={ height }
-                //   width={ width }
+                  height={ ht }
+                  width={ wd }
                 />
                 { this.renderButton() }
             </Link>
