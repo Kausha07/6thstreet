@@ -1,11 +1,13 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
+import Image from 'Component/Image';
 
 import SizeTable from 'Component/SizeTable';
 import ExpandableContent from 'SourceComponent/ExpandableContent';
 import Popup from 'SourceComponent/Popup';
 import isMobile from 'SourceUtil/Mobile/isMobile';
 import { isArabic } from 'Util/App';
+import chart from './sizeChart/sizechart.jpg';
 
 import './PDPSizeGuide.style';
 
@@ -86,24 +88,32 @@ class PDPSizeGuide extends PureComponent {
                 <div mix={ { block: 'PDPSizeGuide', elem: 'HeaderContainer', mods: { isArabic } } }>
                     { isMobile.any() || isMobile.tablet() ? closeBtn : null }
                     <h1 mix={ { block: 'PDPSizeGuide', elem: 'Header', mods: { isArabic } } }>
-                       { isMobile.any() || isMobile.tablet() ? __('SIZE GUIDE') : __('Sizing Guide') }
+                       { isMobile.any() || isMobile.tablet() ? __('SIZE GUIDE') : null }
                     </h1>
                     <hr mix={ { block: 'PDPSizeGuide', elem: 'Line', mods: { isArabic } } } />
                 </div>
-                <span
+                {/* <span
                   mix={ { block: 'PDPSizeGuide', elem: 'SubHeader', mods: { isArabic } } }
                 >
                     { __('Fitting Information - Items fits true to size') }
-                </span>
+                </span> */}
                 <div mix={ { block: 'PDPSizeGuide', elem: 'TableContainer', mods: { isArabic } } }>
-                    { this.renderTableUK() }
+                    {this.renderSizeChart()}
+                    {/* { this.renderTableUK() }
                     <hr mix={ { block: 'PDPSizeGuide', elem: 'Divider', mods: { isArabic } } } />
                     { this.renderTableInt() }
                     <hr mix={ { block: 'PDPSizeGuide', elem: 'Divider', mods: { isArabic } } } />
-                    { this.renderTableEu() }
+                    { this.renderTableEu() } */}
                 </div>
             </div>
         );
+    }
+
+    renderSizeChart(){
+        return (
+            <img src={ chart }  />
+            // <Image mix={ { block: 'Image', mods: { isArabic } } } src={ chart } />
+        )
     }
 
     renderTableUK() {
