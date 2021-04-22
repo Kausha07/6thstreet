@@ -376,6 +376,7 @@ export class PDPAddToCartContainer extends PureComponent {
     }
 
     render() {
+        
         return (
             <PDPAddToCart
               { ...this.containerFunctions }

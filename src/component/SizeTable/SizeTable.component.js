@@ -9,7 +9,13 @@ import { CM_TO_INCH,
 import {
     MENS_CLOTHING_SIZE,
     MENS_JEANS_SIZE,
-    MENS_SHOES_SIZE
+    MENS_SHOES_SIZE,
+    MENS_SHOES_BRNANDS,
+    MENS_ALDO_SHOES_SIZE,
+    MENS_DUNE_SHOES_SIZE,
+    MENS_LEVIS_SHOES_SIZE,
+    MENS_CLOTHING_BRNANDS,
+    MENS_LEVIS_CLOTHING_SIZE
 } from './MenSizeTable.config'
 import {
     WOMENS_CLOTHING_SIZE,
@@ -25,18 +31,35 @@ import {
 import './SizeTable.style';
 
 export class SizeTable extends PureComponent {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             isCm: true,
             isArabic: isArabic()
         };
+        this.renderGenderWise = this.renderGenderWise.bind(this);
+        this.renderTable = this.renderTable.bind(this);
+        this.renderMensClothingRows = this.renderMensClothingRows.bind(this)
+        this.multipleGenderSize = this.multipleGenderSize.bind(this)
     }
 
     handleClick = () => {
         const { isOpen } = this.state;
         this.setState({ isOpen: !isOpen });
     };
+
+    getKeyByValue(object, value) {
+        return Object.keys(object).find(key => object[key] === value);
+    }
+    mensShoesByBrands={
+        [MENS_SHOES_BRNANDS.aldo]:MENS_ALDO_SHOES_SIZE,
+        [MENS_SHOES_BRNANDS.dune]:MENS_DUNE_SHOES_SIZE,
+        [MENS_SHOES_BRNANDS.levis]:MENS_LEVIS_SHOES_SIZE
+    }
+
+    mensClothByBrands = {
+        [MENS_CLOTHING_BRNANDS.levis] : MENS_LEVIS_CLOTHING_SIZE
+    }
 
     renderTableRow = (row, i) => {
         const { size, bust, waist } = row;
@@ -88,6 +111,7 @@ export class SizeTable extends PureComponent {
         )
     }
     renderMensClothingRows(){
+        // const CLOTH_SIZE_LIST = this.mensClothByBrands[this.props.brand] || MENS_CLOTHING_SIZE
         const rows = MENS_CLOTHING_SIZE.map(this.renderMensClothingRow);
         return rows;
     }
@@ -159,6 +183,8 @@ export class SizeTable extends PureComponent {
     }
 
     renderMensShoesRows(){
+        // const brand = this.getKeyByValue(this.mensShoesByBrands,this.props.brand)
+        // const SHOES_SIZE_LIST = this.mensShoesByBrands[this.props.brand] || MENS_SHOES_SIZE
         const rows = MENS_SHOES_SIZE.map(this.renderMensShoesRow);
         return rows;
     }
@@ -513,32 +539,94 @@ export class SizeTable extends PureComponent {
         this.setState({ isCm: false });
     };
 
+    genderToSizeMap = {
+        men:[
+            this.renderMensClothing(),
+            this.renderMensJeans(),
+            this.renderMensShoes()
+        ],
+        women:[
+            this.renderWomensClothing(),
+            this.renderWomensJeans(),
+            this.renderWomensShoes()
+        ],
+        kids:[
+            this.renderKidsClothing(),
+            this.renderKidsShoes(),
+            this.renderKidsAdultShoes()
+
+        ]
+    }
+
+    renderGenderWise(funcArray){
+        
+        console.log(funcArray[0]);
+        const [a,b,c] = funcArray
+        console.log(a);
+        
+        return (
+            <>
+                {a}
+                {b}
+                {c}
+            </>
+        )
+    }
+
+    multipleGenderSize(gender,i){
+        gender = gender.toLowerCase();
+            return (
+                <div key={i}>
+                    {this.renderGenderWise(this.genderToSizeMap[gender])}
+                </div>
+                
+                )
+    }
+    multipleGenderSizes(data){
+        
+        const rows = data.map(this.multipleGenderSize);
+        return rows;
+    }
     renderTable(){
-        if(this.props.currentContentGender == 'men'){
+
+        let gender = this.props.gender
+        console.log(this.genderToSizeMap[gender]);
+        if(Array.isArray(gender)){
+            return (<>{this.multipleGenderSizes(gender)}</>);
+
+        }else{
+            gender = gender.toLowerCase();
             return (
                 <>
-                {this.renderMensClothing()}
-                {this.renderMensShoes()}
-                {this.renderMensJeans()}
+                {this.renderGenderWise(this.genderToSizeMap[gender])}
                 </>
-            )
-        }else if(this.props.currentContentGender == 'women'){
-            return (
-                <>
-                {this.renderWomensClothing()}
-                {this.renderWomensJeans()}
-                {this.renderWomensShoes()}
-                </>
-            )
-        }else if(this.props.currentContentGender == 'kids'){
-            return (
-                <>
-                  {this.renderKidsClothing()}
-                  {this.renderKidsShoes()}
-                  {this.renderKidsAdultShoes()}
-                </>
-            )
+                )
         }
+        // if(this.props.currentContentGender == 'men'){
+        //     return (
+        //         <>
+        //         {this.renderMensClothing()}
+        //         {this.renderMensShoes()}
+        //         {this.renderMensJeans()}
+        //         </>
+        //     )
+        // }else if(this.props.currentContentGender == 'women'){
+        //     return (
+        //         <>
+        //         {this.renderWomensClothing()}
+        //         {this.renderWomensJeans()}
+        //         {this.renderWomensShoes()}
+        //         </>
+        //     )
+        // }else if(this.props.currentContentGender == 'kids'){
+        //     return (
+        //         <>
+        //           {this.renderKidsClothing()}
+        //           {this.renderKidsShoes()}
+        //           {this.renderKidsAdultShoes()}
+        //         </>
+        //     )
+        // }
        
     }
 

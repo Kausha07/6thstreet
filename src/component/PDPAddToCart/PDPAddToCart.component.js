@@ -127,14 +127,14 @@ class PDPAddToCart extends PureComponent {
     }
 
     renderSizeInfo() {
-        const { sizeObject } = this.props;
+        const { sizeObject,product } = this.props;
 
         if ((sizeObject.sizeTypes !== undefined)
         && (sizeObject.sizeTypes.length !== 0)) {
             return (
                 <div block="PDPAddToCart" elem="SizeInfo">
                     <span block="PDPAddToCart" elem="SizeLabel">{ __('Size:') }</span>
-                    <PDPSizeGuide />
+                    <PDPSizeGuide product={product} />
                 </div>
             );
         }

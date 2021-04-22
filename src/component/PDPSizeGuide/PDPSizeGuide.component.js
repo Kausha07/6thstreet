@@ -7,6 +7,7 @@ import ExpandableContent from 'SourceComponent/ExpandableContent';
 import Popup from 'SourceComponent/Popup';
 import isMobile from 'SourceUtil/Mobile/isMobile';
 import { isArabic } from 'Util/App';
+import { Product } from 'Util/API/endpoint/Product/Product.type';
 import chart from './sizeChart/sizechart.jpg';
 
 import './PDPSizeGuide.style';
@@ -16,7 +17,8 @@ class PDPSizeGuide extends PureComponent {
         activeOverlay: PropTypes.string.isRequired,
         showOverlay: PropTypes.func.isRequired,
         hideActiveOverlay: PropTypes.func.isRequired,
-        currentContentGender:PropTypes.string.isRequired
+        currentContentGender:PropTypes.string.isRequired,
+        product:Product.isRequired
     };
 
     state = {
@@ -113,10 +115,10 @@ class PDPSizeGuide extends PureComponent {
     renderSizeChart(){
 
         const { isArabic } = this.state;
-        const {currentContentGender} = this.props
+        const {currentContentGender,product:{brand_name,gender}} = this.props
         const isOpen = true;
         return (
-            <SizeTable currentContentGender={currentContentGender} />
+            <SizeTable brand={brand_name} gender =  {gender} currentContentGender={currentContentGender} />
         );
         // return (
         //     <img src={ chart }  />
