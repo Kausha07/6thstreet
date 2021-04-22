@@ -15,7 +15,8 @@ class PDPSizeGuide extends PureComponent {
     static propTypes = {
         activeOverlay: PropTypes.string.isRequired,
         showOverlay: PropTypes.func.isRequired,
-        hideActiveOverlay: PropTypes.func.isRequired
+        hideActiveOverlay: PropTypes.func.isRequired,
+        currentContentGender:PropTypes.string.isRequired
     };
 
     state = {
@@ -88,7 +89,7 @@ class PDPSizeGuide extends PureComponent {
                 <div mix={ { block: 'PDPSizeGuide', elem: 'HeaderContainer', mods: { isArabic } } }>
                     { isMobile.any() || isMobile.tablet() ? closeBtn : null }
                     <h1 mix={ { block: 'PDPSizeGuide', elem: 'Header', mods: { isArabic } } }>
-                       { isMobile.any() || isMobile.tablet() ? __('SIZE GUIDE') : null }
+                       { isMobile.any() || isMobile.tablet() ? __('SIZE GUIDE') : __('SIZE GUIDE') }
                     </h1>
                     <hr mix={ { block: 'PDPSizeGuide', elem: 'Line', mods: { isArabic } } } />
                 </div>
@@ -110,10 +111,17 @@ class PDPSizeGuide extends PureComponent {
     }
 
     renderSizeChart(){
+
+        const { isArabic } = this.state;
+        const {currentContentGender} = this.props
+        const isOpen = true;
         return (
-            <img src={ chart }  />
-            // <Image mix={ { block: 'Image', mods: { isArabic } } } src={ chart } />
-        )
+            <SizeTable currentContentGender={currentContentGender} />
+        );
+        // return (
+        //     <img src={ chart }  />
+        //     // <Image mix={ { block: 'Image', mods: { isArabic } } } src={ chart } />
+        // )
     }
 
     renderTableUK() {
