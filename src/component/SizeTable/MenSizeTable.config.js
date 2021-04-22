@@ -1,6 +1,51 @@
+export const MENS_CLOTHING_BRNANDS =   {
+    levis:"levi's"
+}
+
+export const MENS_JEANS_BRNANDS =   {
+    
+}
+
+export const MENS_SHOES_BRNANDS =   {
+    aldo:'aldo',
+    dune:'dune',
+    levis:"levi's"
+}
+
 export const MENS_CLOTHING_SIZE = [
     {
         international:'Shirt Size',
+        s:'14 1⁄2',
+        m:['15' ,'15 1⁄2'],
+        l:['16', '16 1⁄2'],
+        xl:['17' ,'17 1⁄2']
+    },
+    {
+        international:'Neck',
+        s:'38',
+        m:['39' ,'40'],
+        l:['41', '42'],
+        xl:['43' ,'44']
+    },
+    {
+        international:'Chest (CM)',
+        s:'100',
+        m:['104' ,'108'],
+        l:['114', '118'],
+        xl:['122' ,'128']
+    },
+    {
+        international:'Waist (CM)',
+        s:'86',
+        m:['90' ,'96'],
+        l:['100', '108'],
+        xl:['110' ,'116']
+    }
+]
+
+export const MENS_LEVIS_CLOTHING_SIZE = [
+    {
+        international:'Levis Shirt Size',
         s:'14 1⁄2',
         m:['15' ,'15 1⁄2'],
         l:['16', '16 1⁄2'],
@@ -177,4 +222,29 @@ export const MENS_SHOES_SIZE = [
         US:'14',
         UK:'13'
     }
+]
+
+
+export const MENS_DUNE_SHOES_SIZE = [
+    {
+        EU:'39',
+        US:'7',
+        UK:'6'
+    },
+]
+
+export const MENS_ALDO_SHOES_SIZE = [
+    {
+        EU:'39',
+        US:'7',
+        UK:'6'
+    },
+]
+
+export const MENS_LEVIS_SHOES_SIZE = [
+    {
+        EU:'levis 39',
+        US:'7',
+        UK:'6'
+    },
 ]
