@@ -291,7 +291,7 @@ export class PDPAddToCartContainer extends PureComponent {
                 product: {
                     brand: brand_name,
                     category: '',
-                    id: selectedSizeCode,
+                    id: configSKU,
                     name,
                     price: itemPrice,
                     quantity: 1,
@@ -327,7 +327,7 @@ export class PDPAddToCartContainer extends PureComponent {
                 product: {
                     brand: brand_name,
                     category: '',
-                    id: code[0],
+                    id: configSKU,
                     name,
                     price: itemPrice,
                     quantity: 1,

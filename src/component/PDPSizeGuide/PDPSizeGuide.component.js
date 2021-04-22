@@ -93,11 +93,11 @@ class PDPSizeGuide extends PureComponent {
                     </h1>
                     <hr mix={ { block: 'PDPSizeGuide', elem: 'Line', mods: { isArabic } } } />
                 </div>
-                <span
+                {/* <span
                   mix={ { block: 'PDPSizeGuide', elem: 'SubHeader', mods: { isArabic } } }
                 >
                     { __('Fitting Information - Items fits true to size') }
-                </span>
+                </span> */}
                 <div mix={ { block: 'PDPSizeGuide', elem: 'TableContainer', mods: { isArabic } } }>
                     {this.renderSizeChart()}
                     {/* { this.renderTableUK() }
