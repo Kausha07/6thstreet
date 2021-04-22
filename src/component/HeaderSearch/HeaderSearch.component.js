@@ -72,11 +72,15 @@ class HeaderSearch extends PureComponent {
               id="header-search"
               onSubmit={ this.onSubmit }
               ref={ this.searchRef }
+              autocomplete="off"
             >
                 <Field
                   id="search-field"
                   name="search"
                   type="text"
+                  autocomplete="false"
+                  autocorrect="off"
+                  spellcheck="false"
                   placeholder={ __('What are you looking for?') }
                   onChange={ onSearchChange }
                   value={ search }
