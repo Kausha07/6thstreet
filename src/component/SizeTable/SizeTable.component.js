@@ -645,7 +645,6 @@ export class SizeTable extends PureComponent {
     }
 
     validateGenderSizeAvailable(gender){
-        debugger
         if(Array.isArray(gender)){
             // check for all genders
             let matched = true;
