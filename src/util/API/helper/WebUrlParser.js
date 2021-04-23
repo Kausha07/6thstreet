@@ -101,7 +101,6 @@ const Parser = {
             transformParams,
             parseURL
         )(URL);
-
         const { query, pathname } = parsedURL;
 
         return {
@@ -111,6 +110,7 @@ const Parser = {
     },
 
     parsePLP(URL = '') {
+        URL = URL.replace(/%20&%20/gi,"%20%26%20");
         const { query } = this.parse(URL);
         const { q, p: page } = query;
         const queryParams = buildQuery(query);
@@ -127,7 +127,7 @@ const Parser = {
     },
 
     setPage(number) {
-        const url = new URL(location.href);
+        const url = new URL(location.href.replace(/%20&%20/gi,"%20%26%20"));
         url.searchParams.set('p', number);
         // update the URL, preserve the state
         const { pathname, search } = url;
@@ -135,7 +135,7 @@ const Parser = {
     },
 
     setParam(key, values = []) {
-        const url = new URL(location.href);
+        const url = new URL(location.href.replace(/%20&%20/gi,"%20%26%20"));
         // remove all matchign search params
         url.searchParams.forEach((_, sKey) => {
             if (sKey.includes(key)) {
