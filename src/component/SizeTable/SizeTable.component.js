@@ -4,6 +4,7 @@ import { isArabic } from 'Util/App';
 
 import { CM_TO_INCH,
      UK_SIZE_CM,
+     GENDERS
      } from './SizeTable.config';
 
 import {
@@ -540,17 +541,65 @@ export class SizeTable extends PureComponent {
     };
 
     genderToSizeMap = {
-        men:[
+        [GENDERS.men]:[
             this.renderMensClothing(),
             this.renderMensJeans(),
             this.renderMensShoes()
         ],
-        women:[
+        [GENDERS.mens]:[
+            this.renderMensClothing(),
+            this.renderMensJeans(),
+            this.renderMensShoes()
+        ],
+        [GENDERS.women]:[
             this.renderWomensClothing(),
             this.renderWomensJeans(),
             this.renderWomensShoes()
         ],
-        kids:[
+        [GENDERS.ladies]:[
+            this.renderWomensClothing(),
+            this.renderWomensJeans(),
+            this.renderWomensShoes()
+        ],
+        [GENDERS.unisex]:[
+            this.renderMensClothing(),
+            this.renderMensJeans(),
+            this.renderMensShoes(),
+            this.renderWomensClothing(),
+            this.renderWomensJeans(),
+            this.renderWomensShoes()
+        ],
+        [GENDERS.kids]:[
+            this.renderKidsClothing(),
+            this.renderKidsShoes(),
+            this.renderKidsAdultShoes()
+
+        ],
+        [GENDERS.babyBoy]:[
+            this.renderKidsClothing(),
+            this.renderKidsShoes(),
+            this.renderKidsAdultShoes()
+
+        ],
+        [GENDERS.boy]:[
+            this.renderKidsClothing(),
+            this.renderKidsShoes(),
+            this.renderKidsAdultShoes()
+
+        ],
+        [GENDERS.babyGirl]:[
+            this.renderKidsClothing(),
+            this.renderKidsShoes(),
+            this.renderKidsAdultShoes()
+
+        ],
+        [GENDERS.girl]:[
+            this.renderKidsClothing(),
+            this.renderKidsShoes(),
+            this.renderKidsAdultShoes()
+
+        ],
+        [GENDERS.infant]:[
             this.renderKidsClothing(),
             this.renderKidsShoes(),
             this.renderKidsAdultShoes()
