@@ -129,10 +129,10 @@ export const KIDS_CLOTHING_SIZE = [
             },
             {
                 type:'11-12 Year',
-                HEIGHT_INCH:'55-57',
-                HEIGHT_CM:'140-146',
-                WEIGHT_LB:'74',
-                WEIGHT_KG:'34'
+                HEIGHT_INCH:'57-60',
+                HEIGHT_CM:'146-152',
+                WEIGHT_LB:'79',
+                WEIGHT_KG:'36'
             },
             {
                 type:'12-13 Year',

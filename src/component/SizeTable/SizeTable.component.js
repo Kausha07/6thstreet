@@ -404,10 +404,12 @@ export class SizeTable extends PureComponent {
             <tr key={ i }>
                 <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>{ type }</td>
                 <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>
-                    { HEIGHT_CM }
+                    { HEIGHT_INCH }
+
                 </td>
                 <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>
-                    { HEIGHT_INCH }
+                { HEIGHT_CM }
+
                 </td>
                 <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>
                     { WEIGHT_LB }
