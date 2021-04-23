@@ -64,7 +64,7 @@ export const WOMENS_JEANS_SIZE = [
     {
         JEANS:'25',
         WAIST_CM:'66',
-        WAIST_INCH:'26.5'
+        WAIST_INCH:'26.25'
     },
     {
         JEANS:'26',

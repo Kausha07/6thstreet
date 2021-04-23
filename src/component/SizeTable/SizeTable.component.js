@@ -379,7 +379,7 @@ export class SizeTable extends PureComponent {
     renderKidsClothing(){
         return(
             <>
-            <h1 mix={ { block: 'SizeTable', elem: 'Title' } }>{__('KID’S CLOTHING SIZE GUIDE')}</h1>
+            <h1 mix={ { block: 'SizeTable', elem: 'Title' } }>{__('KIDS’ CLOTHING SIZE GUIDE')}</h1>
             <table mix={ { block: 'SizeTable', elem: 'Table' } }>
                 <thead>
                         <tr mix={ { block: 'SizeTable', elem: 'TopRow' } }>
@@ -404,10 +404,12 @@ export class SizeTable extends PureComponent {
             <tr key={ i }>
                 <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>{ type }</td>
                 <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>
-                    { HEIGHT_CM }
+                    { HEIGHT_INCH }
+
                 </td>
                 <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>
-                    { HEIGHT_INCH }
+                { HEIGHT_CM }
+
                 </td>
                 <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>
                     { WEIGHT_LB }
@@ -448,7 +450,7 @@ export class SizeTable extends PureComponent {
     renderKidsShoes(){
         return(
             <>
-            <h1 mix={ { block: 'SizeTable', elem: 'Title' } }>{__('KID’S SHOES SIZE GUIDE')}</h1>
+            <h1 mix={ { block: 'SizeTable', elem: 'Title' } }>{__('KIDS’ SHOES SIZE GUIDE')}</h1>
             <table mix={ { block: 'SizeTable', elem: 'Table' } }>
                 <thead>
                         <tr mix={ { block: 'SizeTable', elem: 'TopRow' } }>
@@ -645,6 +647,7 @@ export class SizeTable extends PureComponent {
     }
 
     validateGenderSizeAvailable(gender){
+        
         if(Array.isArray(gender)){
             // check for all genders
             let matched = true;
