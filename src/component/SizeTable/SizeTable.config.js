@@ -11,6 +11,21 @@ export const CM_TO_INCH = 2.54;
 export default UK_SIZE_CM;
 
 
+export const GENDERS = {
+    men:'men',
+    mens:'mens',
+    women:'women',
+    ladies:'ladies',
+    unisex:'unisex',
+    kids:'kids',
+    girl:'girl',
+    boy:'boy',
+    babyBoy:'baby boy',
+    babyGirl:'baby girl',
+    infant:'infant'
+}
+
+
 
 
 
