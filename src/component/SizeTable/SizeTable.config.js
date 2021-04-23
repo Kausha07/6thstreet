@@ -20,6 +20,7 @@ export const GENDERS = {
     kids:'kids',
     girl:'girl',
     boy:'boy',
+    boys:'boys',
     babyBoy:'baby boy',
     babyGirl:'baby girl',
     infant:'infant'
