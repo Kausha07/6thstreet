@@ -713,7 +713,6 @@
     "Chest (CM)": null,
     "West (CM)": null,
     "Hip (CM)": null,
-    "WOMENS CLOTHING SIZE GUIDE": null,
     "MEN’S SHOES SIZE GUIDE": null,
     "MEN’S JEANS SIZE GUIDE": null,
     "JEANS": null,
@@ -722,15 +721,15 @@
     "WOMEN’S JEANS SIZE GUIDE": null,
     "WAIST (Cm)": null,
     "Waist (Inch)": null,
-    "KIDS CLOTHING SIZE GUIDE": null,
     "International Sizes": null,
     "Height (in)": null,
     "Height (cm)": null,
     "Weight (lb)": null,
     "Weight (kg)": null,
-    "KIDS’ SHOES SIZE GUIDE": null,
     "WOMEN’S SHOES SIZE GUIDE": null,
-    "KIDS SHOES SIZE GUIDE": null,
-    "MENS CLOTHING SIZE GUIDE": null,
-    "ADULT SIZES": null
+    "ADULT SIZES": null,
+    "MEN’S CLOTHING SIZE GUIDE": null,
+    "WOMEN’S CLOTHING SIZE GUIDE": null,
+    "KID’S CLOTHING SIZE GUIDE": null,
+    "KID’S SHOES SIZE GUIDE": null
 }

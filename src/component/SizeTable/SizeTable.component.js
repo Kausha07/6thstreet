@@ -42,6 +42,7 @@ export class SizeTable extends PureComponent {
         this.renderTable = this.renderTable.bind(this);
         this.renderMensClothingRows = this.renderMensClothingRows.bind(this)
         this.multipleGenderSize = this.multipleGenderSize.bind(this)
+        this.validateGenderSizeAvailable = this.validateGenderSizeAvailable.bind(this)
     }
 
     handleClick = () => {
@@ -92,7 +93,7 @@ export class SizeTable extends PureComponent {
     renderMensClothing(){
         return(
             <>
-            <h1 mix={ { block: 'SizeTable', elem: 'Title' } }>{__('MENS CLOTHING SIZE GUIDE')}</h1>
+            <h1 mix={ { block: 'SizeTable', elem: 'Title' } }>{__('MEN’S CLOTHING SIZE GUIDE')}</h1>
             
             <table mix={ { block: 'SizeTable', elem: 'Table' } }>
                 <thead>
@@ -237,7 +238,7 @@ export class SizeTable extends PureComponent {
     renderWomensClothing(){
         return(
             <>
-            <h1 mix={ { block: 'SizeTable', elem: 'Title' } }>{__('WOMENS CLOTHING SIZE GUIDE')}</h1>
+            <h1 mix={ { block: 'SizeTable', elem: 'Title' } }>{__('WOMEN’S CLOTHING SIZE GUIDE')}</h1>
             <table mix={ { block: 'SizeTable', elem: 'Table' } }>
                 <thead>
                         <tr mix={ { block: 'SizeTable', elem: 'TopRow' } }>
@@ -378,7 +379,7 @@ export class SizeTable extends PureComponent {
     renderKidsClothing(){
         return(
             <>
-            <h1 mix={ { block: 'SizeTable', elem: 'Title' } }>{__('KIDS CLOTHING SIZE GUIDE')}</h1>
+            <h1 mix={ { block: 'SizeTable', elem: 'Title' } }>{__('KID’S CLOTHING SIZE GUIDE')}</h1>
             <table mix={ { block: 'SizeTable', elem: 'Table' } }>
                 <thead>
                         <tr mix={ { block: 'SizeTable', elem: 'TopRow' } }>
@@ -447,7 +448,7 @@ export class SizeTable extends PureComponent {
     renderKidsShoes(){
         return(
             <>
-            <h1 mix={ { block: 'SizeTable', elem: 'Title' } }>{__('KIDS SHOES SIZE GUIDE')}</h1>
+            <h1 mix={ { block: 'SizeTable', elem: 'Title' } }>{__('KID’S SHOES SIZE GUIDE')}</h1>
             <table mix={ { block: 'SizeTable', elem: 'Table' } }>
                 <thead>
                         <tr mix={ { block: 'SizeTable', elem: 'TopRow' } }>
@@ -587,6 +588,12 @@ export class SizeTable extends PureComponent {
             this.renderKidsAdultShoes()
 
         ],
+        [GENDERS.boys]:[
+            this.renderKidsClothing(),
+            this.renderKidsShoes(),
+            this.renderKidsAdultShoes()
+
+        ],
         [GENDERS.babyGirl]:[
             this.renderKidsClothing(),
             this.renderKidsShoes(),
@@ -636,14 +643,46 @@ export class SizeTable extends PureComponent {
         const rows = data.map(this.multipleGenderSize);
         return rows;
     }
-    renderTable(){
 
-        let gender = this.props.gender
-        console.log(this.genderToSizeMap[gender]);
+    validateGenderSizeAvailable(gender){
+        if(Array.isArray(gender)){
+            // check for all genders
+            let matched = true;
+            for(let i = 0; i<gender.length;i++){
+                
+                if(!this.genderToSizeMap[gender[i].toLowerCase()]){
+                    matched = false
+                    break
+                    
+                }
+            }
+            if(!matched){
+                return [GENDERS.men,GENDERS.women,GENDERS.kids]
+            }else{
+                return gender;
+            }
+
+            
+
+        }else if(gender){
+            // check for specific gender
+            if(this.genderToSizeMap[gender.toLowerCase()]){
+                return gender;
+            }else{
+                return [GENDERS.men,GENDERS.women,GENDERS.kids]
+            }
+        }else{
+            return [GENDERS.men,GENDERS.women,GENDERS.kids]
+        }
+    }
+    renderTable(){
+        let gender = this.props.gender;
+        gender = this.validateGenderSizeAvailable(gender);
+        
         if(Array.isArray(gender)){
             return (<>{this.multipleGenderSizes(gender)}</>);
-
         }else{
+            
             gender = gender.toLowerCase();
             return (
                 <>
