@@ -10,8 +10,7 @@
 
 @include before-desktop {
     .HeaderSearch:focus-within .SearchSuggestion {
-        /*display: flex;*/
-        display: block;
+        display: flex;
         top: 50px;
         position: absolute;
     }
@@ -19,8 +18,7 @@
 
 @include desktop() {
     .HeaderSearch:hover .SearchSuggestion {
-        /*display: flex;*/
-        display: block;
+        display: flex;
 
         &-Shade {
             width: 100%;
