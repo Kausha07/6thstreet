@@ -18,7 +18,7 @@ export class HeaderSearchContainer extends PureComponent {
     static propTypes = {
         search: PropTypes.string,
         history: HistoryType.isRequired,
-        location: LocationType.isRequired
+        location: LocationType.isRequired,
     };
 
     static defaultProps = {
@@ -46,6 +46,7 @@ export class HeaderSearchContainer extends PureComponent {
 
     containerProps = () => {
         const { search } = this.state;
+        
         return { search };
     };
 

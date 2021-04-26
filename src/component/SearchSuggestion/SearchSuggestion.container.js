@@ -4,19 +4,19 @@ import { connect } from 'react-redux';
 
 import SearchSuggestionDispatcher from 'Store/SearchSuggestions/SearchSuggestions.dispatcher';
 import { getStaticFile } from 'Util/API/endpoint/StaticFiles/StaticFiles.endpoint';
-
 import SearchSuggestion from './SearchSuggestion.component';
 
 export const mapStateToProps = (state) => ({
     requestedSearch: state.SearchSuggestions.search,
     data: state.SearchSuggestions.data,
-    gender: state.AppState.gender
+    gender: state.AppState.gender,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
     requestSearchSuggestions: (search) => {
         SearchSuggestionDispatcher.requestSearchSuggestions(search, dispatch);
-    }
+        
+    },
 });
 
 export class SearchSuggestionContainer extends PureComponent {
@@ -28,7 +28,8 @@ export class SearchSuggestionContainer extends PureComponent {
         data: PropTypes.shape({
             brands: PropTypes.array,
             products: PropTypes.array
-        }).isRequired
+        }).isRequired,
+        closeSearch: PropTypes.func.isRequired,
     };
 
     static getDerivedStateFromProps(props, state) {
@@ -42,6 +43,8 @@ export class SearchSuggestionContainer extends PureComponent {
 
         return null;
     }
+    
+
 
     static requestSearchSuggestions(props) {
         const { search, requestSearchSuggestions } = props;
@@ -89,7 +92,7 @@ export class SearchSuggestionContainer extends PureComponent {
 
     containerProps = () => {
         const { trendingBrands, trendingTags } = this.state;
-        const { search, data } = this.props;
+        const { search, data,closeSearch } = this.props;
         const { brands = [], products = [] } = data;
 
         const isEmpty = search === '';
@@ -103,9 +106,14 @@ export class SearchSuggestionContainer extends PureComponent {
             isActive: true, // TODO: implement
             isLoading: this.getIsLoading(),
             trendingBrands,
-            trendingTags
+            trendingTags,
+            closeSearch
         };
     };
+    containerFunctions = {
+        hideActiveOverlay: this.props.hideActiveOverlay
+    };
+    
 
     getIsLoading() {
         const { requestedSearch, search } = this.props;
