@@ -1,13 +1,14 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
-
+import { Product } from 'Util/API/endpoint/Product/Product.type';
 import { hideActiveOverlay, toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
 
 import PDPSizeGuide from './PDPSizeGuide.component';
 
 export const mapStateToProps = (_state) => ({
     language: _state.AppState.language,
+    currentContentGender: _state.AppState.gender,
     activeOverlay: _state.OverlayReducer.activeOverlay,
     hideActiveOverlay: _state.OverlayReducer.hideActiveOverlay
 });
@@ -21,12 +22,14 @@ export class PDPSizeGuideContainer extends PureComponent {
         language: PropTypes.string.isRequired,
         showOverlay: PropTypes.func.isRequired,
         activeOverlay: PropTypes.string.isRequired,
-        hideActiveOverlay: PropTypes.func.isRequired
+        hideActiveOverlay: PropTypes.func.isRequired,
+        currentContentGender:PropTypes.string.isRequired,
+        product:Product.isRequired
     };
 
     containerProps = () => {
-        const { language, activeOverlay } = this.props;
-        return { language, activeOverlay };
+        const { language, activeOverlay,currentContentGender,product } = this.props;
+        return { language, activeOverlay,currentContentGender,product };
     };
 
     containerFunctons = () => {

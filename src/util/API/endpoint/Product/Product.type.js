@@ -25,7 +25,8 @@ export const Product = PropTypes.shape({
     name: PropTypes.string,
     sku: PropTypes.string,
     thumbnail_url: PropTypes.string,
-    price: Price
+    price: Price,
+    product:PropTypes.any
 });
 
 export const Products = PropTypes.arrayOf(Product);
