@@ -6,6 +6,19 @@ import {
 
 import './CheckoutAddressForm.style';
 
+const objTabIndex = 
+{
+    "city" : "6",
+    "telephone" : "9",
+    "street" : "5",
+    "postcode" : "11",
+    "phonecode" : "8",
+    "firstname" : "2",
+    "guest_email" : "4",
+    "lastname" : "3",
+    "country_id" : "10",
+    "region_string" : "7"
+};
 export class CheckoutAddressForm extends SourceCheckoutAddressForm {
     componentDidUpdate(_, prevState) {
         const {
@@ -63,7 +76,7 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
             type: 'phone'
         };
 
-        return isSignedIn ? fieldMap : {
+        const fFieldMap = isSignedIn ? fieldMap : {
             guest_email: {
                 placeholder: __('Email'),
                 validation: ['notEmpty', 'email'],
@@ -72,6 +85,19 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
             },
             ...fieldMap
         };
+        if(this.props.isSignedIn === false) {
+            let result = {};
+            for (const [key, value] of Object.entries(fFieldMap)) {
+                if(!fFieldMap[key].tabIndex) {
+                    let o = Object.assign({}, value);
+                    o.tabIndex= objTabIndex[key];
+                    result[key] = o;
+                }
+            }
+            //console.info("result",result);
+            return result;
+        }
+        return fFieldMap;
     }
 
     estimateShipping() {
@@ -93,7 +119,7 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
             city,
             postcode: regionId,
             phone: this.renderCurrentPhoneCode() + telephone,
-            telephone
+            telephone :  this.renderCurrentPhoneCode() + telephone
         });
     }
 
