@@ -20,17 +20,18 @@ renderer.get('*', async (req, res) => {
         host = `${result[0]}.${host}`;
     }
 
+    const url = `http://${host}${req.originalUrl}`;
     // Try to get the rendered HTML of the requested URL from cache
-    let { html, ttRenderMs } = await cache.get(req.originalUrl);
+    let { html, ttRenderMs } = await cache.get(url);
 
     // If not in cache than, render the page in a headless instance of Google Chrome
     if (!html) {
-        const renderResponse = await chrome.instance(`http://${host}${req.originalUrl}`, browserWSEndpoint);
+        const renderResponse = await chrome.instance(url, browserWSEndpoint);
         html = renderResponse.html;
         ttRenderMs = renderResponse.ttRenderMs;
         browserWSEndpoint = renderResponse.browserWSEndpoint;
         // Save the rendered HTML page in cache
-        cache.set(req.originalUrl, html);
+        cache.set(url, html);
     }
 
     // Add Server-Timing HTTP header! See https://w3c.github.io/server-timing/.
