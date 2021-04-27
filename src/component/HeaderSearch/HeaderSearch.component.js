@@ -4,6 +4,7 @@ import { createRef, PureComponent } from 'react';
 import Field from 'Component/Field';
 import Form from 'Component/Form';
 import SearchSuggestion from 'Component/SearchSuggestion';
+import ClickOutside from 'Component/ClickOutside';
 import { isArabic } from 'Util/App';
 
 import Clear from './icons/close-black.png';
@@ -17,7 +18,7 @@ class HeaderSearch extends PureComponent {
         onSearchChange: PropTypes.func.isRequired,
         onSearchSubmit: PropTypes.func.isRequired,
         onSearchClean: PropTypes.func.isRequired,
-        isVisible: PropTypes.bool
+        isVisible: PropTypes.bool,
     };
 
     static defaultProps = {
@@ -27,7 +28,8 @@ class HeaderSearch extends PureComponent {
 
     state = {
         isArabic: isArabic(),
-        isClearVisible: false
+        isClearVisible: false,
+        showSearch: false
     };
 
     searchRef = createRef();
@@ -57,6 +59,12 @@ class HeaderSearch extends PureComponent {
         searchInput.blur();
         onSearchSubmit();
     };
+    onFocus = ()=>{
+        this.setState({ showSearch: true });
+    }
+    closeSearch = () =>{
+        this.setState({ showSearch: false });
+    }
 
     renderField() {
         const {
@@ -83,6 +91,7 @@ class HeaderSearch extends PureComponent {
                   spellcheck="false"
                   placeholder={ __('What are you looking for?') }
                   onChange={ onSearchChange }
+                  onFocus={this.onFocus}
                   value={ search }
                 />
                 <button
@@ -112,12 +121,22 @@ class HeaderSearch extends PureComponent {
     }
 
     renderSuggestion() {
+
         const { search } = this.props;
+        const { showSearch } = this.state;
+
+        if (!showSearch) {
+            return null;
+        }
 
         return (
-            <SearchSuggestion
-              search={ search }
-            />
+            <>
+
+                <SearchSuggestion
+                closeSearch={this.closeSearch}
+                  search={ search }
+                />
+            </>
         );
     }
 
@@ -127,10 +146,12 @@ class HeaderSearch extends PureComponent {
         return (
             <>
                 <div block="SearchBackground" mods={ { isArabic } } />
+                <ClickOutside onClick={ this.closeSearch }>
                 <div block="HeaderSearch" mods={ { isArabic } }>
                     { this.renderField() }
                     { this.renderSuggestion() }
                 </div>
+                </ClickOutside>
             </>
         );
     }

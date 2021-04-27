@@ -18,8 +18,14 @@ class SearchSuggestion extends PureComponent {
         products: Products.isRequired,
         brands: PropTypes.array.isRequired,
         trendingBrands: PropTypes.array.isRequired,
-        trendingTags: PropTypes.array.isRequired
+        trendingTags: PropTypes.array.isRequired,
+        hideActiveOverlay: PropTypes.func
     };
+
+    static defaultProps = {
+        hideActiveOverlay: () => {}
+    };
+
 
     state = {
         isArabic: isArabic(),
@@ -46,7 +52,7 @@ class SearchSuggestion extends PureComponent {
 
         return (
             <li>
-                <Link to={ `/${urlName}.html?q=${urlName}` }>
+                <Link to={ `/${urlName}.html?q=${urlName}` } onClick={this.closeSearchPopup}>
                     { name }
                     <span>{ count }</span>
                 </Link>
@@ -72,12 +78,13 @@ class SearchSuggestion extends PureComponent {
 
         return (
             <li>
-                <Link to={ url }>
+                <Link to={ url } onClick={this.closeSearchPopup}>
                     { name }
                 </Link>
             </li>
         );
     };
+    
 
     renderProducts() {
         const { products = [] } = this.props;
@@ -104,6 +111,10 @@ class SearchSuggestion extends PureComponent {
     renderNothingFound() {
         return __('Nothing found');
     }
+    closeSearchPopup = () =>{
+        console.log('On Link Click ');
+        this.props.closeSearch()
+    }
 
     renderTrendingBrand = (brand, i) => {
         const { label = '', image_url } = brand;
@@ -116,7 +127,7 @@ class SearchSuggestion extends PureComponent {
 
         return (
             <li key={ i }>
-                <Link to={ `/${urlName}.html?q=${urlName}` }>
+                <Link to={ `/${urlName}.html?q=${urlName}` } onClick={this.closeSearchPopup}>
                     <div block="SearchSuggestion" elem="TrandingImg">
                         <img src={ image_url } alt="Trending" />
                         { label }
@@ -141,7 +152,7 @@ class SearchSuggestion extends PureComponent {
 
     renderTrendingTag = ({ link, label }, i) => (
         <li key={ i }>
-            <Link to={ { pathname: link } }>
+            <Link to={ { pathname: link } } onClick={this.closeSearchPopup}>
                 <div block="SearchSuggestion" elem="TrandingTag">
                 { label }
                 </div>
@@ -193,11 +204,50 @@ class SearchSuggestion extends PureComponent {
         return this.renderSuggestions();
     }
 
+    renderCloseButton(){
+        const { closeSearch } = this.props;
+        const { isArabic,isMobile } = this.state;
+        if(!isMobile){
+            return null
+        }
+        const svg = (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              viewBox="0 -1 26 26"
+            >
+                <path
+                  d="M23.954 21.03l-9.184-9.095 9.092-9.174-1.832-1.807-9.09 9.179-9.176-9.088-1.81
+                  1.81 9.186 9.105-9.095 9.184 1.81 1.81 9.112-9.192 9.18 9.1z"
+                />
+            </svg>
+        );
+
+        return (
+            <div 
+            block="SearchSuggestion"
+            elem="CloseContainer"
+            mods={ { isArabic } }>
+                <button
+              block="CloseContainer"
+              elem="Close"
+              mods={ { isArabic } }
+              onClick={ closeSearch}
+            >
+                { svg }
+            </button>
+            </div>
+        );
+    }
     render() {
         const { isArabic } = this.state;
+
         return (
             <div block="SearchSuggestion" mods={ { isArabic } }>
+                
                 <div block="SearchSuggestion" elem="Content">
+                    {this.renderCloseButton()}
                     { this.renderLoader() }
                     { this.renderContent() }
                 </div>
