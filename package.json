@@ -9,6 +9,7 @@
         "classnames": "^2.2.6",
         "dotenv-flow": "^3.2.0",
         "express": "^4.17.1",
+        "forever": "^3.0.4",
         "html-minifier": "^4.0.0",
         "lerna": "^3.22.1",
         "node-cache": "^5.1.2",
@@ -24,7 +25,7 @@
         "start-ar": "scandipwa-scripts start --locale ar_SA",
         "build": "scandipwa-scripts build",
         "build-ar": "scandipwa-scripts build --locale ar_SA",
-        "prod": "serve -s build -l 3000"
+        "start-renderer": "forever stopall && forever start renderer/index.js"
     },
     "browserslist": {
         "production": [

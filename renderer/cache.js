@@ -54,8 +54,7 @@ const cache = {
         }
         CACHE_ACCESS_RECORD.push(key);
         return {
-            value,
-            ttRenderMs: 0
+            value
         };
     },
 

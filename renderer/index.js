@@ -15,7 +15,7 @@ renderer.use(express.static('build', {
     index: false
 }));
 
-renderer.get('*', async (req, res) => {
+renderer.get('*', async (req, res, next) => {
     let host = `${config.APP_HOSTNAME}:${config.APP_PORT}`;
     const result = req.hostname.match(/(en|ar)-(ae|sa|kw|om|bh|qa)/);
     if (result) {
@@ -25,8 +25,8 @@ renderer.get('*', async (req, res) => {
     const url = `http://${host}${req.originalUrl}`;
 
     try {
-        // Try to get the rendered HTML of the requested URL from cache
-        let { value: html, ttRenderMs } = await cache.get(url);
+        // Try to get the rendered HTML of the requested URL from Cache
+        let { value: html, ttRenderMs = 0 } = await cache.get(url);
 
         // If not in cache than, render the page in a headless instance of Google Chrome
         if (!html) {
@@ -35,7 +35,7 @@ renderer.get('*', async (req, res) => {
             ttRenderMs = renderResponse.ttRenderMs;
             browserWSEndpoint = renderResponse.browserWSEndpoint;
 
-            // Save the rendered HTML page in cache
+            // Save the rendered HTML page in Cache
             cache.set(url, html);
         }
 
@@ -47,10 +47,9 @@ renderer.get('*', async (req, res) => {
 
         // Serve the rendered HTML
         res.status(200).send(html); // Serve prerendered page as response.
-    }
-    catch(err){
+    } catch (err) {
         console.error(err);
-        res.status(500).send(err);
+        next(err);
     }
 });
 
@@ -64,8 +63,7 @@ renderer.get('*', async (req, res) => {
         await cache.init(CACHE_OPTIONS);
         renderer.listen(PORT);
         console.log('Renderer started. Press Ctrl+C to quit');
-    }
-    catch (err) {
+    } catch (err) {
         console.error(err);
     }
 })();
