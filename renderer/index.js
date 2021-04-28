@@ -57,12 +57,14 @@ renderer.get('*', async (req, res, next) => {
 
         // Serve the rendered HTML
         res.status(200).send(html); // Serve prerendered page as response.
+
     } catch (err) {
         console.error(err);
         next(err);
     }
 });
 
+// Initialise the Cache and start the Renderer
 (async () => {
     const CACHE_OPTIONS = {
         MEMORY_CACHE_MAX_SIZE,
