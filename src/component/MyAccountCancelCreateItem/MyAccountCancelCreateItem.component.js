@@ -75,6 +75,7 @@ export class MyAccountCancelCreateItem extends SourceComponent {
                 </div>
                 <div block="MyAccountReturnCreateItem" elem="Resolution">
                     { this.renderReasons() }
+                    { this.renderResolutions() }
                 </div>
             </div>
         );
