@@ -22,7 +22,8 @@ export class MyAccountCancelCreateContainer extends MyAccountReturnCreateContain
         selectedItems: {},
         isLoading: false,
         incrementId: null,
-        items: []
+        items: [],
+        resolutions : []
     };
 
     componentDidMount() {
@@ -40,7 +41,7 @@ export class MyAccountCancelCreateContainer extends MyAccountReturnCreateContain
 
         this.setState({ isLoading: true });
 
-        MagentoAPI.get(`order/${ orderId }/cancelable-items`).then(({ items, order_id }) => {
+        MagentoAPI.get(`order/${ orderId }/cancelable-items`).then(({ items, order_id, resolution_options}) => {
             if (!this._isMounted) {
                 return;
             }
@@ -49,7 +50,8 @@ export class MyAccountCancelCreateContainer extends MyAccountReturnCreateContain
                 isLoading: false,
                 items,
                 incrementId: order_id,
-                orderId
+                orderId,
+                resolutions: resolution_options
             });
         }).catch(() => {
             if (!this._isMounted) {
@@ -71,6 +73,9 @@ export class MyAccountCancelCreateContainer extends MyAccountReturnCreateContain
             incrementId,
             orderId
         } = this.state;
+        const resolutionId =  Object.entries(selectedItems).map(([order_item_id, { resolutionId }]) => {
+            return resolutionId;
+        })
         const payload = {
             order_id: incrementId,
             items: Object.entries(selectedItems).map(([order_item_id, { reasonId }]) => {
@@ -81,7 +86,8 @@ export class MyAccountCancelCreateContainer extends MyAccountReturnCreateContain
                     qty: qty_to_cancel,
                     reason: reasonId
                 };
-            })
+            }),
+            return_to_store_credit : resolutionId[0]
         };
 
         this.setState({ isLoading: true });
