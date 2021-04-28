@@ -68,10 +68,10 @@ renderer.get('*', async (req, res, next) => {
         MEMORY_CACHE_MAX_SIZE,
         DISK_CACHE_DIRECTORY
     };
-    const PORT = PORT || 5000;
+
     try {
         await cache.init(CACHE_OPTIONS);
-        renderer.listen(PORT);
+        renderer.listen(PORT || 5000);
         console.log('Renderer started. Press Ctrl+C to quit');
     } catch (err) {
         console.error(err);
