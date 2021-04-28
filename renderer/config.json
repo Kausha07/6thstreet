@@ -1,0 +1,7 @@
+{
+    "PORT": 5000,
+    "MEMORY_CACHE_MAX_SIZE": 50000000,
+    "DISK_CACHE_DIRECTORY": "6thstreet",
+    "APP_HOSTNAME": "localhost",
+    "APP_PORT": 3000
+}
