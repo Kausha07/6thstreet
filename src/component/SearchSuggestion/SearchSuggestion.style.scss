@@ -1,244 +1,250 @@
 :root {
-    --black: #000;
-    --gray: #f0f0f0;
-    --link-dark-gray: #4a4a4a;
+  --black: #000;
+  --gray: #f0f0f0;
+  --link-dark-gray: #4a4a4a;
 }
 
 .SearchSuggestion {
-    position: absolute;
-    width: 100%;
+  position: absolute;
+  width: 100%;
+
+  @include before-desktop {
+    height: 100%;
+    min-height: 100vh;
+    overflow-y: scroll;
+    top: 75px;
+  }
+
+  &-CloseContainer {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  &-Content {
+    background-color: var(--white);
+    display: block;
+    flex-direction: column;
+    font-weight: var(--fw-regular);
+    height: auto;
+    margin-left: 4px;
+    padding: 20px 40px;
+    pointer-events: all;
+    position: relative;
+    top: 4px;
+    width: inherit;
+    vertical-align: middle;
 
     @include before-desktop {
-        height: 100%;
-        min-height: 100vh;
-        overflow-y: scroll;
-        top: 75px;
+      height: 100%;
+      margin-left: 0;
+      min-height: 100vh;
+      overflow-y: scroll;
+      padding: 20px;
+      padding-top: 0;
     }
 
-    &-Content {
-        background-color: var(--white);
-        display: block;
-        flex-direction: column;
-        font-weight: var(--fw-regular);
-        height: auto;
-        margin-left: 4px;
-        padding: 20px 40px;
-        pointer-events: all;
-        position: relative;
-        top: 4px;
-        width: inherit;
-        vertical-align: middle;
+    @include desktop {
+      right: 4px;
+    }
+  }
 
-        @include before-desktop {
-            height: 100%;
-            margin-left: 0;
-            min-height: 100vh;
-            overflow-y: scroll;
-            padding: 20px;
-        }
+  @include desktop() {
+    position: fixed;
+    right: -20px;
+    top: 155px;
+    width: 720px;
+  }
 
-        @include desktop {
-            right: 4px;
-        }
+  &-ShadeWrapper {
+    position: relative;
+    top: 4px;
+  }
+
+  &-Recommended {
+    margin-top: 15px;
+
+    @include before-desktop {
+      margin-bottom: 155px;
+    }
+  }
+
+  .TrandingTags,
+  .TrandingBrands {
+    ul {
+      display: flex;
+    }
+
+    li {
+      margin-top: 0;
+      margin-right: 5px;
+    }
+
+    @include before-desktop() {
+      ul {
+        overflow-x: auto;
+      }
     }
 
     @include desktop() {
-        position: fixed;
-        right: -20px;
-        top: 155px;
-        width: 720px;
+      margin-bottom: 30px;
+
+      ul {
+        flex-wrap: wrap;
+      }
     }
+  }
 
-    &-ShadeWrapper {
-        position: relative;
-        top: 4px;
-    }
-
-    &-Recommended {
-        margin-top: 15px;
-
-        @include before-desktop {
-            margin-bottom: 155px;
-        }
-    }
-
-    .TrandingTags,
-    .TrandingBrands {
-        ul {
-            display: flex;
-        }
-
-        li {
-            margin-top: 0;
-            margin-right: 5px;
-        }
-
-        @include before-desktop() {
-            ul {
-                overflow-x: auto;
-            }
-        }
-
-        @include desktop() {
-            margin-bottom: 30px;
-
-            ul {
-                flex-wrap: wrap;
-            }
-        }
-    }
-
-    .TrandingTags {
-        margin: 0;
-        padding: 0 20px;
-
-        ul {
-            flex-wrap: wrap;
-        }
-
-        li {
-            margin-bottom: 10px;
-        }
-
-        h2 {
-            margin-bottom: 15px;
-        }
-
-        @include desktop() {
-            padding: 0;
-        }
-    }
-
-    .TrandingBrands {
-        li {
-            margin-top: 15px;
-            margin-left: 20px;
-            margin-bottom: 50px;
-        }
-
-        h2 {
-            padding: 0 20px;
-        }
-
-        @include desktop() {
-            li {
-                margin-left: 0;
-                margin-right: 20px;
-
-                &:first-of-type {
-                    margin-left: 0;
-                }
-            }
-
-            h2 {
-                padding: 0;
-            }
-        }
-    }
-
-    &-TrandingImg {
-        width: 70px;
-        height: 70px;
-        border: 2px solid rgba(249, 100, 70, 0.3);
-        border-radius: 45px;
-        margin: 0;
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-
-        img {
-            margin-bottom: 10px;
-            border-radius: 45px;
-        }
-
-        @include before-desktop() {
-            margin-bottom: 30px;
-        }
-    }
-
-    &-TrandingTag {
-        margin: 0;
-        height: 30px;
-        background: var(--gray);
-        color: var(--link-dark-gray);
-        width: auto;
-        padding: 5px 10px;
-        border-radius: 15px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+  .TrandingTags {
+    margin: 0;
+    padding: 0 20px;
 
     ul {
-        :before {
-            content: unset;
-        }
+      flex-wrap: wrap;
+    }
 
-        li {
-            padding: 0;
-            margin-top: 15px;
-            font-size: 15px;
-            margin-bottom: 0;
-        }
-
-        a {
-            color: var(--link-dark-gray);
-            width: 100%;
-            display: block;
-
-            span {
-                position: absolute;
-                right: 0;
-            }
-        }
+    li {
+      margin-bottom: 10px;
     }
 
     h2 {
-        font-size: 17px;
-        text-transform: none;
-        margin: 0;
-
-        @include before-desktop {
-            color: black;
-            text-transform: uppercase;
-        }
+      margin-bottom: 15px;
     }
 
-    &-Recommended,
-    &-Brands {
-        a {
-            @include before-desktop {
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-        }
+    @include desktop() {
+      padding: 0;
+    }
+  }
+
+  .TrandingBrands {
+    li {
+      margin-top: 15px;
+      margin-left: 20px;
+      margin-bottom: 50px;
     }
 
-    &_isArabic {
-        .SearchSuggestion-Content {
-            ul {
-                li {
-                    a {
-                        span {
-                            left: 0;
-                            right: auto;
-                        }
-                    }
-                }
-            }
-        }
-
-        @include desktop {
-            left: -20px;
-        }
-
-        .TrandingBrands {
-            li {
-                &:first-of-type {
-                    margin-right: 20px;
-                }
-            }
-        }
+    h2 {
+      padding: 0 20px;
     }
+
+    @include desktop() {
+      li {
+        margin-left: 0;
+        margin-right: 20px;
+
+        &:first-of-type {
+          margin-left: 0;
+        }
+      }
+
+      h2 {
+        padding: 0;
+      }
+    }
+  }
+
+  &-TrandingImg {
+    width: 70px;
+    height: 70px;
+    border: 2px solid rgba(249, 100, 70, 0.3);
+    border-radius: 45px;
+    margin: 0;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+
+    img {
+      margin-bottom: 10px;
+      border-radius: 45px;
+    }
+
+    @include before-desktop() {
+      margin-bottom: 30px;
+    }
+  }
+
+  &-TrandingTag {
+    margin: 0;
+    height: 30px;
+    background: var(--gray);
+    color: var(--link-dark-gray);
+    width: auto;
+    padding: 5px 10px;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  ul {
+    :before {
+      content: unset;
+    }
+
+    li {
+      padding: 0;
+      margin-top: 15px;
+      font-size: 15px;
+      margin-bottom: 0;
+    }
+
+    a {
+      color: var(--link-dark-gray);
+      width: 100%;
+      display: block;
+
+      span {
+        position: absolute;
+        right: 0;
+      }
+    }
+  }
+
+  h2 {
+    font-size: 17px;
+    text-transform: none;
+    margin: 0;
+
+    @include before-desktop {
+      color: black;
+      text-transform: uppercase;
+    }
+  }
+
+  &-Recommended,
+  &-Brands {
+    a {
+      @include before-desktop {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+
+  &_isArabic {
+    .SearchSuggestion-Content {
+      ul {
+        li {
+          a {
+            span {
+              left: 0;
+              right: auto;
+            }
+          }
+        }
+      }
+    }
+
+    @include desktop {
+      left: -20px;
+    }
+
+    .TrandingBrands {
+      li {
+        &:first-of-type {
+          margin-right: 20px;
+        }
+      }
+    }
+  }
 }

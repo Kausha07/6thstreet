@@ -128,7 +128,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
             city,
             postcode: region_id,
             phone: phonecode + telephone,
-            telephone
+            telephone : phonecode + telephone
         }, isValidted);
     }
 
@@ -241,7 +241,12 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
             carrier_code: shipping_carrier_code,
             method_code: shipping_method_code
         } = selectedShippingMethod;
-
+        if(shippingAddressMapped.phone && shippingAddressMapped.phonecode && !shippingAddressMapped.phone.includes("+")) {
+            shippingAddressMapped.phone = shippingAddressMapped.phonecode + shippingAddressMapped.phone;
+        }
+        if(shippingAddressMapped.telephone && shippingAddressMapped.phonecode && !shippingAddressMapped.telephone.includes("+")) {
+            shippingAddressMapped.telephone = shippingAddressMapped.phonecode + shippingAddressMapped.telephone;
+        }
         const data = {
             billing_address: shippingAddressMapped,
             shipping_address: shippingAddressMapped,
