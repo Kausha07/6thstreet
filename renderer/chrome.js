@@ -1,24 +1,7 @@
 const puppeteer = require('puppeteer');
 const { minify } = require('html-minifier');
 
-// For Bots render as if on Google Pixel 2 for mobile first approach
-const pixel2 = puppeteer.devices['Pixel 2'];
-
-const instance = async (url, browserWSEndpoint) => {
-    // Don't load Analytics libraries.
-    const blacklist = [
-        'www.google-analytics.com',
-        '/gtag/js',
-        'ga.js',
-        'gtm.js',
-        'analytics.js',
-        'fonts.googleapis.com',
-        'fonts.gstatic.com',
-        'apparel.oriserve.com',
-        'sentry.io',
-        /\.(ttf|tiff|woff|woff2)$/i
-    ];
-
+const instance = async (url, browserWSEndpoint, options) => {
     // Take a note of the current time
     const start = Date.now();
 
@@ -49,13 +32,13 @@ const instance = async (url, browserWSEndpoint) => {
     const page = await browser.newPage();
 
     // Emulate Google's Pixel 2 device, we will be showing mobile version of our website to crawlers
-    await page.emulate(pixel2);
+    await page.emulate(puppeteer.devices['Pixel 2']);
 
     // 3. Intercept network requests and abort the blacklisted requests.
     await page.setRequestInterception(true);
 
     page.on('request', (req) => {
-        if (blacklist.find((regex) => req.url().match(regex))) {
+        if (options.APP_URL_BLACKLIST.find((regex) => req.url().match(regex))) {
             return req.abort();
         }
 
@@ -72,10 +55,11 @@ const instance = async (url, browserWSEndpoint) => {
         throw new Error(`page.goto/waitForSelector for url ${url} timed out.`);
     }
 
-    // 5. Execute the following JavaScript in the opened tab and save the output in the constant'html'. The output is a string which contains the rendered website's HTML code
+    // 5. Execute the following JavaScript in the opened tab and save the output in the constant'html'.
+    // The output is a string which contains the rendered website's HTML code
     const html = (await page.evaluate(() => document.documentElement.outerHTML));
 
-    // Subtract the time noted at the earlier with the current time in order to compute the time taken to render the URL
+    // Subtract the time noted at the beginning with the current time in order to compute the time taken to render the URL
     const ttRenderMs = Date.now() - start;
     console.info(`Headless rendered page in: ${ttRenderMs}ms`);
 

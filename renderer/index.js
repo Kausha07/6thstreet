@@ -1,22 +1,29 @@
 /* eslint-disable fp/no-let */
-const os = require('os');
 const express = require('express');
-const path = require('path');
 
-const chrome = require('./chrome.js');
 const cache = require('./cache.js');
+const chrome = require('./chrome.js');
 
-const config = require('./config.json');
+const {
+    PORT,
+    MEMORY_CACHE_MAX_SIZE,
+    DISK_CACHE_DIRECTORY,
+    APP_URL_BLACKLIST,
+    APP_HOSTNAME,
+    APP_PORT
+} = require('./renderer.config');
 
 let browserWSEndpoint = null;
 
 const renderer = express();
+
+// Serve static files directly from the 'build' directory
 renderer.use(express.static('build', {
     index: false
 }));
 
 renderer.get('*', async (req, res, next) => {
-    let host = `${config.APP_HOSTNAME}:${config.APP_PORT}`;
+    let host = `${APP_HOSTNAME}:${APP_PORT}`;
     const result = req.hostname.match(/(en|ar)-(ae|sa|kw|om|bh|qa)/);
     if (result) {
         host = `${result[0]}.${host}`;
@@ -28,9 +35,12 @@ renderer.get('*', async (req, res, next) => {
         // Try to get the rendered HTML of the requested URL from Cache
         let { value: html, ttRenderMs = 0 } = await cache.get(url);
 
-        // If not in cache than, render the page in a headless instance of Google Chrome
+        // If not in Cache than, render the page in a headless instance of Google Chrome
         if (!html) {
-            const renderResponse = await chrome.instance(url, browserWSEndpoint);
+            const CHROME_OPTIONS = {
+                APP_URL_BLACKLIST
+            }
+            const renderResponse = await chrome.instance(url, browserWSEndpoint, CHROME_OPTIONS);
             html = renderResponse.html;
             ttRenderMs = renderResponse.ttRenderMs;
             browserWSEndpoint = renderResponse.browserWSEndpoint;
@@ -55,10 +65,10 @@ renderer.get('*', async (req, res, next) => {
 
 (async () => {
     const CACHE_OPTIONS = {
-        MEMORY_CACHE_MAX_SIZE: config.MEMORY_CACHE_MAX_SIZE,
-        DISK_CACHE_DIRECTORY: config.DISK_CACHE_DIRECTORY
+        MEMORY_CACHE_MAX_SIZE,
+        DISK_CACHE_DIRECTORY
     };
-    const PORT = config.PORT || 5000;
+    const PORT = PORT || 5000;
     try {
         await cache.init(CACHE_OPTIONS);
         renderer.listen(PORT);
