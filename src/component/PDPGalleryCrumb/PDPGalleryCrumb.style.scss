@@ -4,17 +4,15 @@
     height: auto;
     padding: 0;
     padding-bottom: 10px;
-
-    &:last-of-type{
+    margin-bottom: 1px;
+    &:last-of-type {
         padding-bottom: 10px;
     }
-
     &_isActive {
         img {
             border: 1px solid $black;
         }
     }
-
     .Image {
         height: 100%;
     }
