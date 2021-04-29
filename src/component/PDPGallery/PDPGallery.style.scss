@@ -4,18 +4,14 @@
 
 .PDPGallery {
     --gallery-crumbs-height: auto;
-
     height: auto;
     display: block;
     margin-top: 11px;
-
     @include desktop {
         display: grid;
         grid-template-columns: 1fr 6fr;
         margin-top: 0;
     }
-
-
     &-Crumbs {
         display: none;
         height: var(--gallery-crumbs-height);
@@ -23,52 +19,41 @@
             display: block;
         }
     }
-
-    .Slider-Wrapper > * {
-       min-height: 400px;
+    .Slider-Wrapper>* {
+        min-height: 400px;
     }
-
     .Slider-Wrapper {
         align-items: unset;
     }
-
-
     .Crumbs {
         margin-left: 10px;
     }
-
     .Slider {
         position: relative;
         min-width: 0;
         margin: 0 10px;
-
         direction: ltr;
-
         &-Crumb {
             background: var(--crumb-background-color);
             border: none;
             width: 5px;
             height: 5px;
-
             &_isActive {
                 background: $black;
                 width: 7px;
                 height: 7px;
             }
         }
-
         &-Crumbs {
             height: 7px;
             grid-gap: 5px;
         }
     }
-
-    .Image {
-        &-Image {
-            object-fit: cover;
-        }
-    }
-
+    // .Image {
+    //     &-Image {
+    //         object-fit: cover;
+    //     }
+    // }
     button {
         height: 100%;
         width: 100%;
