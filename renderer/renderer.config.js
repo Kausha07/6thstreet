@@ -3,7 +3,7 @@ module.exports = {
     MEMORY_CACHE_MAX_SIZE: 50000000,
     DISK_CACHE_DIRECTORY: '6thstreet',
     APP_HOSTNAME: 'localhost',
-    APP_PORT: 3000,
+    APP_PORT: 8081,
     APP_URL_BLACKLIST: [
         'www.google-analytics.com',
         '/gtag/js',
