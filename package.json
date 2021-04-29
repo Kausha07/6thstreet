@@ -25,7 +25,7 @@
         "start-ar": "scandipwa-scripts start --locale ar_SA",
         "build": "scandipwa-scripts build",
         "build-ar": "scandipwa-scripts build --locale ar_SA",
-        "start-ssr": "forever stopall && forever start app.js && forever start renderer/index.js"
+        "start-ssr": "forever stopall && forever cleanlogs && forever start -l pwa.log app.js && forever start -l renderer.log renderer/index.js"
     },
     "browserslist": {
         "production": [
