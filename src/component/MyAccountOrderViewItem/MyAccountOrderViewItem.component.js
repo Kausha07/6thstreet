@@ -55,7 +55,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
                     <span
                       block="MyAccountReturnSuccessItem"
                       elem="PriceRegular"
-                      mods={ { isDiscount: !!(price < original_price) } }
+                      mods={ { isDiscount: !!(parseFloat(price) < parseFloat(original_price)) } }
                     >
                         { `${ formatPrice(+original_price, currency) }` }
                     </span>
