@@ -23,6 +23,9 @@ class FooterBottom extends PureComponent {
         const { type } = state;
 
         return location.pathname === '/'
+                || location.pathname === '/women.html'
+                || location.pathname === '/men.html'
+                || location.pathname === '/kids.html'
                 || TYPE_CMS_PAGE === type
                 || TYPE_CATEGORY === type
                 || TYPE_PRODUCT === type ? {
