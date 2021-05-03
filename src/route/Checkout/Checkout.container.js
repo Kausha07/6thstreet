@@ -370,6 +370,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             LAST_CART_ID_CACHE_KEY,
             ONE_YEAR_IN_SECONDS // TODO Get info from Backend developers on cart expire time
         );
+        this.setState({isLoading: true});
         try {
             createOrder(code, data).then(
                 (response) => {
@@ -391,6 +392,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                             } = data;
 
                             if (success || response_code === 200) {
+                                this.setState({isLoading: false});
                                 if (code === CARD && href) {
                                     this.setState({ threeDsUrl: href, order_id, increment_id, id });
                                     setTimeout(
