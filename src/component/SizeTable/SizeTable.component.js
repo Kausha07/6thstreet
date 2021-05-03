@@ -14,14 +14,18 @@ import {
     MENS_SHOES_BRNANDS,
     MENS_ALDO_SHOES_SIZE,
     MENS_DUNE_SHOES_SIZE,
-    MENS_LEVIS_SHOES_SIZE,
+    MENS_NINEWEST_SHOES_SIZE,
     MENS_CLOTHING_BRNANDS,
     MENS_LEVIS_CLOTHING_SIZE
 } from './MenSizeTable.config'
 import {
+    WOMENS_SHOES_BRNANDS,
+    WOMENS_ALDO_SHOES_SIZE,
+    WOMENS_DUNE_SHOES_SIZE,
+    WOMENS_NINEWEST_SHOES_SIZE,
     WOMENS_CLOTHING_SIZE,
-     WOMENS_JEANS_SIZE,
-     WOMENS_SHOES_SIZE,
+    WOMENS_JEANS_SIZE,
+    WOMENS_SHOES_SIZE,
 } from './WomenSizeTable.config'
 
 import {
@@ -56,7 +60,12 @@ export class SizeTable extends PureComponent {
     mensShoesByBrands={
         [MENS_SHOES_BRNANDS.aldo]:MENS_ALDO_SHOES_SIZE,
         [MENS_SHOES_BRNANDS.dune]:MENS_DUNE_SHOES_SIZE,
-        [MENS_SHOES_BRNANDS.levis]:MENS_LEVIS_SHOES_SIZE
+        [MENS_SHOES_BRNANDS.ninewest]:MENS_NINEWEST_SHOES_SIZE
+    }
+    wommensShoesByBrands={
+        [WOMENS_SHOES_BRNANDS.aldo]:WOMENS_ALDO_SHOES_SIZE,
+        [WOMENS_SHOES_BRNANDS.dune]:WOMENS_DUNE_SHOES_SIZE,
+        [WOMENS_SHOES_BRNANDS.ninewest]:WOMENS_NINEWEST_SHOES_SIZE
     }
 
     mensClothByBrands = {
@@ -148,9 +157,14 @@ export class SizeTable extends PureComponent {
 
     }
     renderMensShoes(){
+        const { brand } = this.props;
+        let shoeTitle = 'MEN’S SHOES SIZE GUIDE';
+        if(this.mensShoesByBrands[brand] && this.mensShoesByBrands[brand].length > 0) {
+            shoeTitle = brand.toUpperCase() + " " + shoeTitle;
+        }
         return(
             <>
-            <h1 mix={ { block: 'SizeTable', elem: 'Title' } }>{__('MEN’S SHOES SIZE GUIDE')}</h1>
+            <h1 mix={ { block: 'SizeTable', elem: 'Title' } }>{__(shoeTitle)}</h1>
             <table mix={ { block: 'SizeTable', elem: 'Table' } }>
                 <thead>
                         <tr mix={ { block: 'SizeTable', elem: 'TopRow' } }>
@@ -185,9 +199,9 @@ export class SizeTable extends PureComponent {
     }
 
     renderMensShoesRows(){
-        // const brand = this.getKeyByValue(this.mensShoesByBrands,this.props.brand)
-        // const SHOES_SIZE_LIST = this.mensShoesByBrands[this.props.brand] || MENS_SHOES_SIZE
-        const rows = MENS_SHOES_SIZE.map(this.renderMensShoesRow);
+        const { brand } = this.props;
+        const SHOES_SIZE_LIST = this.mensShoesByBrands[brand] || MENS_SHOES_SIZE;
+        const rows = SHOES_SIZE_LIST && SHOES_SIZE_LIST.map(this.renderMensShoesRow);
         return rows;
     }
     renderMensJeans(){
@@ -334,15 +348,44 @@ export class SizeTable extends PureComponent {
     }
 
     renderWomensShoes(){
+        const { brand } = this.props;
+        let shoeTitle = 'WOMEN’S SHOES SIZE GUIDE';
+        const selectBrand = this.wommensShoesByBrands[brand];
+        let extraTh = false;
+        if(selectBrand && selectBrand.length > 0) {
+            shoeTitle = brand.toUpperCase() + " " + shoeTitle;
+            let { EUR, USA} = selectBrand;
+            extraTh = (EUR && USA) ? true : extraTh;
+        }
+        if(extraTh) {
+            return(
+                <>
+                <h1 mix={ { block: 'SizeTable', elem: 'Title' } }>{__(shoeTitle)}</h1>
+                <table mix={ { block: 'SizeTable', elem: 'Table' } }>
+                    <thead>
+                            <tr mix={ { block: 'SizeTable', elem: 'TopRow' } }>
+                                <td mix={ { block: 'SizeTable', elem: 'TableCellTop' } }>{ __('EU') }</td>
+                                <td  mix={ { block: 'SizeTable', elem: 'TableCellTop' } }>{ __('US') }</td>
+                                <td  mix={ { block: 'SizeTable', elem: 'TableCellTop' } }>{ __('UK') }</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            { this.renderWomensShoesRows() }
+                        </tbody>
+                        </table>
+                </>
+            )
+        }
         return(
             <>
-            <h1 mix={ { block: 'SizeTable', elem: 'Title' } }>{__('WOMEN’S SHOES SIZE GUIDE')}</h1>
+            <h1 mix={ { block: 'SizeTable', elem: 'Title' } }>{__(shoeTitle)}</h1>
             <table mix={ { block: 'SizeTable', elem: 'Table' } }>
                 <thead>
                         <tr mix={ { block: 'SizeTable', elem: 'TopRow' } }>
-                            <td mix={ { block: 'SizeTable', elem: 'TableCellTop' } }>{ __('EU') }</td>
-                            <td  mix={ { block: 'SizeTable', elem: 'TableCellTop' } }>{ __('US') }</td>
+                            <td mix={ { block: 'SizeTable', elem: 'TableCellTop' } }>{ __('EUR') }</td>
+                            <td  mix={ { block: 'SizeTable', elem: 'TableCellTop' } }>{ __('USA') }</td>
                             <td  mix={ { block: 'SizeTable', elem: 'TableCellTop' } }>{ __('UK') }</td>
+                            <td  mix={ { block: 'SizeTable', elem: 'TableCellTop' } }>{ __('CM') }</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -354,7 +397,24 @@ export class SizeTable extends PureComponent {
     }
 
     renderWomensShoesRow(row,i){
-        const {EU,US,UK,} = row;
+        const {EU, US, UK, EUR, USA, CM } = row;
+
+        if( EUR && USA) {
+            return (
+                <tr key={ i }>
+                    <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>{ EUR }</td>
+                    <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>
+                        { USA }
+                    </td>
+                    <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>
+                        { UK }
+                    </td>
+                    <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>
+                        { CM }
+                    </td>
+                </tr>
+            );
+        }
         return (
             <tr key={ i }>
                 <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>{ EU }</td>
@@ -371,7 +431,9 @@ export class SizeTable extends PureComponent {
     }
 
     renderWomensShoesRows(){
-        const rows = WOMENS_SHOES_SIZE.map(this.renderWomensShoesRow);
+        const { brand } = this.props;
+        const SHOES_SIZE_LIST = this.wommensShoesByBrands[brand] || WOMENS_SHOES_SIZE;
+        const rows = SHOES_SIZE_LIST && SHOES_SIZE_LIST.map(this.renderWomensShoesRow);
         return rows;
     }
 
