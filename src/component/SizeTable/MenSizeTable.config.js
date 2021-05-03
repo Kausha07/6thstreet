@@ -166,6 +166,7 @@ export const MENS_JEANS_SIZE = [
         WAIST_INCH:'50.5-51.5'
     }
 ]
+
 export const MENS_SHOES_SIZE = [
     {
         EU:'39',
