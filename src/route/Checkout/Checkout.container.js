@@ -560,7 +560,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
         // Need to get payment data from CreditCard.
         // Could not get callback of CreditCard another way because CreditCard is iframe in iframe
-        if (CreditCardPaymentStatus !== AUTHORIZED_STATUS && counter < 25 && activeOverlay === CC_POPUP_ID) {
+        if (CreditCardPaymentStatus !== AUTHORIZED_STATUS && counter < 100 && activeOverlay === CC_POPUP_ID) {
             setTimeout(
                 () => {
                     this.processThreeDS();
@@ -570,12 +570,12 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             );
         }
 
-        if (counter === 25) {
+        if (counter === 100) {
             showErrorNotification('Credit Card session timeout');
             hideActiveOverlay();
         }
 
-        if ((counter === 25 || activeOverlay !== CC_POPUP_ID) && CreditCardPaymentStatus !== AUTHORIZED_STATUS) {
+        if ((counter === 100 || activeOverlay !== CC_POPUP_ID) && CreditCardPaymentStatus !== AUTHORIZED_STATUS) {
             cancelOrder(order_id,PAYMENT_ABORTED);
             this.setState({ isLoading: false, isFailed: true });
             this.setDetailsStep(order_id, increment_id);
@@ -615,7 +615,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
         // Need to get payment data from Tabby.
         // Could not get callback of Tabby another way because Tabby is iframe in iframe
-        if ((tabbyPaymentStatus !== AUTHORIZED_STATUS && tabbyPaymentStatus !== CAPTURED_STATUS) && counter < 60 && activeOverlay === TABBY_POPUP_ID) {
+        if ((tabbyPaymentStatus !== AUTHORIZED_STATUS && tabbyPaymentStatus !== CAPTURED_STATUS) && counter < 100 && activeOverlay === TABBY_POPUP_ID) {
             setTimeout(
                 () => {
                     this.processTabby(paymentInformation);
@@ -625,12 +625,12 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             );
         }
 
-        if (counter === 60) {
+        if (counter === 100) {
             showErrorNotification('Tabby session timeout');
             hideActiveOverlay();
         }
 
-        if ((counter === 60 || activeOverlay !== TABBY_POPUP_ID) && (tabbyPaymentStatus !== AUTHORIZED_STATUS && tabbyPaymentStatus !== CAPTURED_STATUS)) {
+        if ((counter === 100 || activeOverlay !== TABBY_POPUP_ID) && (tabbyPaymentStatus !== AUTHORIZED_STATUS && tabbyPaymentStatus !== CAPTURED_STATUS)) {
             cancelOrder(order_id,PAYMENT_ABORTED);
             this.setState({ isTabbyPopupShown: false, isLoading: false, isFailed: true});
             this.setDetailsStep(order_id, increment_id);
