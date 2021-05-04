@@ -9,7 +9,10 @@ export const MENS_JEANS_BRNANDS =   {
 export const MENS_SHOES_BRNANDS =   {
     aldo:'Aldo',
     dune:'Dune London',
-    ninewest:"Nine West"
+    ninewest:"Nine West",
+    aldo_ar:'ألدو',
+    dune_ar:'ديون لندن',
+    ninewest_ar:"ناين وست"
 }
 
 export const MENS_CLOTHING_SIZE = [

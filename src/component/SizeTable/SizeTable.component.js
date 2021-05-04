@@ -59,9 +59,12 @@ export class SizeTable extends PureComponent {
         return Object.keys(object).find(key => object[key] === value);
     }
     isBrandCheck = () => {
-        const { brand } = this.props;
+        const { brand, gender } = this.props;
         let isCheck = false;
-        if((this.womensShoesByBrands[brand] && this.womensShoesByBrands[brand].length > 0) || (this.mensShoesByBrands[brand] && this.mensShoesByBrands[brand].length > 0)) {
+        if((this.womensShoesByBrands[brand] && this.womensShoesByBrands[brand].length > 0) && (gender === "Women" || gender === "نساء")) {
+            isCheck = true;
+        }
+        if((this.mensShoesByBrands[brand] && this.mensShoesByBrands[brand].length > 0) && (gender === "Men" || gender === "رجال")) {
             isCheck = true;
         }
         return isCheck;
@@ -69,12 +72,18 @@ export class SizeTable extends PureComponent {
     mensShoesByBrands={
         [MENS_SHOES_BRNANDS.aldo]:MENS_ALDO_SHOES_SIZE,
         [MENS_SHOES_BRNANDS.dune]:MENS_DUNE_SHOES_SIZE,
-        [MENS_SHOES_BRNANDS.ninewest]:MENS_NINEWEST_SHOES_SIZE
+        [MENS_SHOES_BRNANDS.ninewest]:MENS_NINEWEST_SHOES_SIZE,
+        [MENS_SHOES_BRNANDS.aldo_ar]:MENS_ALDO_SHOES_SIZE,
+        [MENS_SHOES_BRNANDS.dune_ar]:MENS_DUNE_SHOES_SIZE,
+        [MENS_SHOES_BRNANDS.ninewest_ar]:MENS_NINEWEST_SHOES_SIZE
     }
     womensShoesByBrands={
         [WOMENS_SHOES_BRNANDS.aldo]:WOMENS_ALDO_SHOES_SIZE,
         [WOMENS_SHOES_BRNANDS.dune]:WOMENS_DUNE_SHOES_SIZE,
-        [WOMENS_SHOES_BRNANDS.ninewest]:WOMENS_NINEWEST_SHOES_SIZE
+        [WOMENS_SHOES_BRNANDS.ninewest]:WOMENS_NINEWEST_SHOES_SIZE,
+        [WOMENS_SHOES_BRNANDS.aldo_ar]:WOMENS_ALDO_SHOES_SIZE,
+        [WOMENS_SHOES_BRNANDS.dune_ar]:WOMENS_DUNE_SHOES_SIZE,
+        [WOMENS_SHOES_BRNANDS.ninewest_ar]:WOMENS_NINEWEST_SHOES_SIZE
     }
 
     mensClothByBrands = {
@@ -169,14 +178,13 @@ export class SizeTable extends PureComponent {
 
     }
     renderMensShoes(){
-        const { brand } = this.props;
-        let shoeTitle = 'MEN’S SHOES SIZE GUIDE';
-        if(this.mensShoesByBrands[brand] && this.mensShoesByBrands[brand].length > 0) {
-            shoeTitle = brand.toUpperCase() + " " + shoeTitle;
+        let { gender } = this.props;
+        if(this.isBrandCheck() === true && (gender === "Women" || gender === "نساء")) {
+            return '';
         }
         return(
             <>
-            <h1 mix={ { block: 'SizeTable', elem: 'Title' } }>{__(shoeTitle)}</h1>
+            <h1 mix={ { block: 'SizeTable', elem: 'Title' } }>{__('MEN’S SHOES SIZE GUIDE')}</h1>
             <table mix={ { block: 'SizeTable', elem: 'Table' } }>
                 <thead>
                         <tr mix={ { block: 'SizeTable', elem: 'TopRow' } }>
@@ -368,18 +376,21 @@ export class SizeTable extends PureComponent {
         return rows;
     }
     renderWomensShoes(){
-        const { brand } = this.props;
-        let shoeTitle = 'WOMEN’S SHOES SIZE GUIDE';
+        const { brand, gender } = this.props;
+        if(this.isBrandCheck() === true && (gender === "Men" || gender === "رجال")) {
+            return '';
+        }
+        // let shoeTitle = 'WOMEN’S SHOES SIZE GUIDE';
         const selectBrand = this.womensShoesByBrands[brand];
         let extraTh = false;
         if(selectBrand && selectBrand.length > 0) {
-            shoeTitle = brand.toUpperCase() + " " + shoeTitle;
+            // shoeTitle = brand.toUpperCase() + " " + shoeTitle;
             let { CM } = selectBrand[0];
             extraTh = ( CM ) ? true : extraTh;
         }
         return(
             <>
-            <h1 mix={ { block: 'SizeTable', elem: 'Title' } }>{__(shoeTitle)}</h1>
+            <h1 mix={ { block: 'SizeTable', elem: 'Title' } }>{__('WOMEN’S SHOES SIZE GUIDE')}</h1>
             <table mix={ { block: 'SizeTable', elem: 'Table' } }>
                 <thead>
                         <tr mix={ { block: 'SizeTable', elem: 'TopRow' } }>
@@ -425,6 +436,9 @@ export class SizeTable extends PureComponent {
 
 
     renderKidsClothing(){
+        if(this.isBrandCheck() === true) {
+            return '';
+        }
         return(
             <>
             <h1 mix={ { block: 'SizeTable', elem: 'Title' } }>{__('KID’S CLOTHING SIZE GUIDE')}</h1>
@@ -496,6 +510,9 @@ export class SizeTable extends PureComponent {
     }
 
     renderKidsShoes(){
+        if(this.isBrandCheck() === true) {
+            return '';
+        }
         return(
             <>
             <h1 mix={ { block: 'SizeTable', elem: 'Title' } }>{__('KID’S SHOES SIZE GUIDE')}</h1>
@@ -539,6 +556,9 @@ export class SizeTable extends PureComponent {
 
 
     renderKidsAdultShoes(){
+        if(this.isBrandCheck() === true) {
+            return '';
+        }
         return(
             <>
             <h1 mix={ { block: 'SizeTable', elem: 'Title' } }>{__('ADULT SIZES')}</h1>
