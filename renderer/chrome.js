@@ -34,6 +34,8 @@ const instance = async (url, browserWSEndpoint, options) => {
     // Emulate Google's Pixel 2 device, we will be showing mobile version of our website to crawlers
     await page.emulate(puppeteer.devices['Pixel 2']);
 
+    await page.setDefaultNavigationTimeout(options.CHROME_TIMEOUT); 
+
     // 3. Intercept network requests and abort the blacklisted requests.
     await page.setRequestInterception(true);
 

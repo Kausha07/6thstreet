@@ -26,6 +26,15 @@ export const GENDERS = {
     infant:'infant'
 }
 
+export const BRANDTITLE = {
+    "Aldo": 'ALDO ',
+    "ألدو": 'ALDO ',
+    "Dune London" : "DUNE LONDON ",
+    "ديون لندن" : "DUNE LONDON ",
+    "Nine West" : "NINE WEST ",
+    "ناين وست" : "NINE WEST "
+}
+
 
 
 

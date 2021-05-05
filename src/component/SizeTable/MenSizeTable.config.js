@@ -7,9 +7,12 @@ export const MENS_JEANS_BRNANDS =   {
 }
 
 export const MENS_SHOES_BRNANDS =   {
-    aldo:'aldo',
-    dune:'dune',
-    levis:"levi's"
+    aldo:'Aldo',
+    dune:'Dune London',
+    ninewest:"Nine West",
+    aldo_ar:'ألدو',
+    dune_ar:'ديون لندن',
+    ninewest_ar:"ناين وست"
 }
 
 export const MENS_CLOTHING_SIZE = [
@@ -166,6 +169,7 @@ export const MENS_JEANS_SIZE = [
         WAIST_INCH:'50.5-51.5'
     }
 ]
+
 export const MENS_SHOES_SIZE = [
     {
         EU:'39',
@@ -227,10 +231,40 @@ export const MENS_SHOES_SIZE = [
 
 export const MENS_DUNE_SHOES_SIZE = [
     {
-        EU:'39',
+        EU:'40',
         US:'7',
         UK:'6'
     },
+    {
+        EU:'41',
+        US:'8',
+        UK:'7'
+    },
+    {
+        EU:'42',
+        US:'9',
+        UK:'8'
+    },
+    {
+        EU:'43',
+        US:'10',
+        UK:'9'
+    },
+    {
+        EU:'44',
+        US:'11',
+        UK:'10'
+    },
+    {
+        EU:'45',
+        US:'12',
+        UK:'11'
+    },
+    {
+        EU:'46',
+        US:'13',
+        UK:'12'
+    }
 ]
 
 export const MENS_ALDO_SHOES_SIZE = [
@@ -239,12 +273,58 @@ export const MENS_ALDO_SHOES_SIZE = [
         US:'7',
         UK:'6'
     },
+    {
+        EU:'40',
+        US:'7.5',
+        UK:'6.5'
+    },
+    {
+        EU:'41',
+        US:'8',
+        UK:'7'
+    },
+    {
+        EU:'42',
+        US:'9',
+        UK:'8'
+    },
+    {
+        EU:'42.5',
+        US:'9.5',
+        UK:'8.5'
+    },
+    {
+        EU:'43',
+        US:'10',
+        UK:'9'
+    },
+    {
+        EU:'43.5',
+        US:'10.5',
+        UK:'9.5'
+    },
+    {
+        EU:'44',
+        US:'11',
+        UK:'10'
+    },
+    {
+        EU:'45',
+        US:'12',
+        UK:'11'
+    },
+    {
+        EU:'46',
+        US:'13',
+        UK:'12'
+    },
+    {
+        EU:'47',
+        US:'14',
+        UK:'13'
+    }
 ]
 
-export const MENS_LEVIS_SHOES_SIZE = [
-    {
-        EU:'levis 39',
-        US:'7',
-        UK:'6'
-    },
+export const MENS_NINEWEST_SHOES_SIZE = [
+    
 ]

@@ -2,6 +2,7 @@ module.exports = {
     PORT: 5000,
     MEMORY_CACHE_MAX_SIZE: 50000000,
     DISK_CACHE_DIRECTORY: '6thstreet',
+    CHROME_TIMEOUT: 60000,
     APP_HOSTNAME: 'localhost',
     APP_PORT: 3000,
     APP_URL_BLACKLIST: [

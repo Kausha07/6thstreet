@@ -8,6 +8,7 @@ const {
     PORT,
     MEMORY_CACHE_MAX_SIZE,
     DISK_CACHE_DIRECTORY,
+    CHROME_TIMEOUT,
     APP_URL_BLACKLIST,
     APP_HOSTNAME,
     APP_PORT
@@ -38,7 +39,8 @@ renderer.get('*', async (req, res, next) => {
         // If not in Cache than, render the page in a headless instance of Google Chrome
         if (!html) {
             const CHROME_OPTIONS = {
-                APP_URL_BLACKLIST
+                CHROME_TIMEOUT: CHROME_TIMEOUT || 60000,
+                APP_URL_BLACKLIST: APP_URL_BLACKLIST || []
             }
             const renderResponse = await chrome.instance(url, browserWSEndpoint, CHROME_OPTIONS);
             html = renderResponse.html;

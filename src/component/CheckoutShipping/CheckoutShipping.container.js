@@ -13,13 +13,18 @@ import { trimAddressFields } from 'Util/Address';
 import { capitalize } from 'Util/App';
 import { isSignedIn } from 'Util/Auth';
 import { getCountryFromUrl } from 'Util/Url/Url';
+import {
+    resetCart
+} from 'Store/Cart/Cart.action';
+import CartDispatcher from 'Store/Cart/Cart.dispatcher';
 
 export const mapDispatchToProps = (dispatch) => ({
     showPopup: (payload) => dispatch(showPopup(ADDRESS_POPUP_ID, payload)),
     showNotification: (type, message) => dispatch(showNotification(type, message)),
     validateAddress: (address) => CheckoutDispatcher.validateAddress(dispatch, address),
     // eslint-disable-next-line max-len
-    estimateShipping: (address, isValidted = false) => CheckoutDispatcher.estimateShipping(dispatch, address, isValidted)
+    estimateShipping: (address, isValidted = false) => CheckoutDispatcher.estimateShipping(dispatch, address, isValidted),
+    dispatch
 });
 
 export const mapStateToProps = (state) => ({
@@ -137,7 +142,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
             selectedCustomerAddressId,
             selectedShippingMethod
         } = this.state;
-        const { setLoading, showNotification } = this.props;
+        const { setLoading, showNotification, dispatch } = this.props;
         const shippingAddress = selectedCustomerAddressId
             ? this._getAddressById(selectedCustomerAddressId)
             : trimAddressFields(fields);
@@ -155,7 +160,11 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
                 const estimationResult = this.estimateShipping(addressForValidation, true);
 
                 if (!estimationResult) {
-                    showNotification('error', __('Something went wrong.'))
+                    setLoading(false);
+                    showNotification('error', __('Something went wrong.'));
+                    dispatch(resetCart());
+                    CartDispatcher.getCart(dispatch)
+                    return true;
                 }
 
                 estimationResult.then((response) => {
