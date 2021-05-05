@@ -11,6 +11,7 @@ import { Product } from 'Util/API/endpoint/Product/Product.type';
 import chart from './sizeChart/sizechart.jpg';
 
 import './PDPSizeGuide.style';
+import { BRANDTITLE } from 'Component/SizeTable/SizeTable.config.js';
 
 class PDPSizeGuide extends PureComponent {
     static propTypes = {
@@ -72,7 +73,14 @@ class PDPSizeGuide extends PureComponent {
         const { hideActiveOverlay } = this.props;
         hideActiveOverlay();
     };
-
+    isBrandPro = () => {
+        const {currentContentGender,product:{brand_name,gender}} = this.props;
+        let checkingBrand = false;
+        if(BRANDTITLE[brand_name] && (gender === "Women" || gender === "Men" || gender === "رجال" || gender === "نساء")) {
+            checkingBrand = true;
+        }
+        return checkingBrand;
+    }
     renderModalContents() {
         const { isArabic } = this.state;
         const closeBtn = (
@@ -90,9 +98,9 @@ class PDPSizeGuide extends PureComponent {
             <div mix={ { block: 'PDPSizeGuide', elem: 'GuideContainer', mods: { isArabic } } }>
                 <div mix={ { block: 'PDPSizeGuide', elem: 'HeaderContainer', mods: { isArabic } } }>
                     { isMobile.any() || isMobile.tablet() ? closeBtn : null }
-                    <h1 mix={ { block: 'PDPSizeGuide', elem: 'Header', mods: { isArabic } } }>
+                    {this.isBrandPro() ? '' : <h1 mix={ { block: 'PDPSizeGuide', elem: 'Header', mods: { isArabic } } }>
                        { isMobile.any() || isMobile.tablet() ? __('SIZE GUIDE') : __('SIZE GUIDE') }
-                    </h1>
+                    </h1>}
                     <hr mix={ { block: 'PDPSizeGuide', elem: 'Line', mods: { isArabic } } } />
                 </div>
                 {/* <span

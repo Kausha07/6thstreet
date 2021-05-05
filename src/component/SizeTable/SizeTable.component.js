@@ -4,8 +4,9 @@ import { isArabic } from 'Util/App';
 
 import { CM_TO_INCH,
      UK_SIZE_CM,
-     GENDERS
-     } from './SizeTable.config';
+     GENDERS,
+     BRANDTITLE
+} from './SizeTable.config';
 
 import {
     MENS_CLOTHING_SIZE,
@@ -178,13 +179,17 @@ export class SizeTable extends PureComponent {
 
     }
     renderMensShoes(){
-        let { gender } = this.props;
+        let { gender, brand } = this.props;
         if(this.isBrandCheck() === true && (gender === "Women" || gender === "نساء")) {
             return '';
         }
+        let title = 'MEN’S SHOES SIZE GUIDE'
+        if(this.isBrandCheck() === true) {
+            title = BRANDTITLE[brand] + title;
+        }
         return(
             <>
-            <h1 mix={ { block: 'SizeTable', elem: 'Title' } }>{__('MEN’S SHOES SIZE GUIDE')}</h1>
+            <h1 mix={ { block: 'SizeTable', elem: 'Title' } }>{title}</h1>
             <table mix={ { block: 'SizeTable', elem: 'Table' } }>
                 <thead>
                         <tr mix={ { block: 'SizeTable', elem: 'TopRow' } }>
@@ -379,17 +384,19 @@ export class SizeTable extends PureComponent {
         if(this.isBrandCheck() === true && (gender === "Men" || gender === "رجال")) {
             return '';
         }
-        // let shoeTitle = 'WOMEN’S SHOES SIZE GUIDE';
         const selectBrand = this.womensShoesByBrands[brand];
         let extraTh = false;
         if(selectBrand && selectBrand.length > 0) {
-            // shoeTitle = brand.toUpperCase() + " " + shoeTitle;
             let { CM } = selectBrand[0];
             extraTh = ( CM ) ? true : extraTh;
         }
+        let title = 'WOMEN’S SHOES SIZE GUIDE'
+        if(this.isBrandCheck() === true) {
+            title = BRANDTITLE[brand] + title;
+        }
         return(
             <>
-            <h1 mix={ { block: 'SizeTable', elem: 'Title' } }>{__('WOMEN’S SHOES SIZE GUIDE')}</h1>
+            <h1 mix={ { block: 'SizeTable', elem: 'Title' } }>{title}</h1>
             <table mix={ { block: 'SizeTable', elem: 'Table' } }>
                 <thead>
                         <tr mix={ { block: 'SizeTable', elem: 'TopRow' } }>
