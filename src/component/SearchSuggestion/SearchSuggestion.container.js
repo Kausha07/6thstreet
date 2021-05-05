@@ -15,7 +15,7 @@ export const mapStateToProps = (state) => ({
 export const mapDispatchToProps = (dispatch) => ({
     requestSearchSuggestions: (search) => {
         SearchSuggestionDispatcher.requestSearchSuggestions(search, dispatch);
-        
+
     },
 });
 
@@ -43,7 +43,7 @@ export class SearchSuggestionContainer extends PureComponent {
 
         return null;
     }
-    
+
 
 
     static requestSearchSuggestions(props) {
@@ -72,7 +72,7 @@ export class SearchSuggestionContainer extends PureComponent {
     }
 
     async requestTrendingInformation() {
-        const { gender } = this.props;
+        const { gender } = ""
 
         try {
             const data = await Promise.all([
@@ -113,7 +113,7 @@ export class SearchSuggestionContainer extends PureComponent {
     containerFunctions = {
         hideActiveOverlay: this.props.hideActiveOverlay
     };
-    
+
 
     getIsLoading() {
         const { requestedSearch, search } = this.props;
