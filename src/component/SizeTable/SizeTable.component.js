@@ -189,8 +189,8 @@ export class SizeTable extends PureComponent {
                 <thead>
                         <tr mix={ { block: 'SizeTable', elem: 'TopRow' } }>
                             <td mix={ { block: 'SizeTable', elem: 'TableCellTop' } }>{ __('EU') }</td>
-                            <td  mix={ { block: 'SizeTable', elem: 'TableCellTop' } }>{ __('US') }</td>
                             <td  mix={ { block: 'SizeTable', elem: 'TableCellTop' } }>{ __('UK') }</td>
+                            <td  mix={ { block: 'SizeTable', elem: 'TableCellTop' } }>{ __('US') }</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -207,12 +207,11 @@ export class SizeTable extends PureComponent {
             <tr key={ i }>
                 <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>{ EU }</td>
                 <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>
-                    { US }
-                </td>
-                <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>
                     { UK }
                 </td>
-                
+                <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>
+                    { US }
+                </td>
             </tr>
         );
 
@@ -395,8 +394,8 @@ export class SizeTable extends PureComponent {
                 <thead>
                         <tr mix={ { block: 'SizeTable', elem: 'TopRow' } }>
                             <td mix={ { block: 'SizeTable', elem: 'TableCellTop' } }>{ __('EU') }</td>
-                            <td  mix={ { block: 'SizeTable', elem: 'TableCellTop' } }>{ __('US') }</td>
                             <td  mix={ { block: 'SizeTable', elem: 'TableCellTop' } }>{ __('UK') }</td>
+                            <td  mix={ { block: 'SizeTable', elem: 'TableCellTop' } }>{ __('US') }</td>
                             {(extraTh) ? <td  mix={ { block: 'SizeTable', elem: 'TableCellTop' } }>{ __('CM') }</td> : ''}
                         </tr>
                     </thead>
@@ -414,10 +413,10 @@ export class SizeTable extends PureComponent {
             <tr key={ i }>
                 <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>{ EU }</td>
                 <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>
-                    { US }
+                    { UK }
                 </td>
                 <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>
-                    { UK }
+                    { US }
                 </td>
                 {(CM) ? <td mix={ { block: 'SizeTable', elem: 'TableCell' } }>
                     { CM }
