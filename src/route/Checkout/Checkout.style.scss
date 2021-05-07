@@ -22,7 +22,7 @@
     .LoadingOverlay {
         height: 100%;
         background-color: var(--color-orange-soda);
-        opacity: 95%;
+        opacity: 0.95;
         position: fixed;
         left: 0;
         top: 0;
@@ -38,7 +38,7 @@
                 opacity: 0;
             }
             95% {
-                opacity: 95%;
+                opacity: 0.95;
             }
         }
 
