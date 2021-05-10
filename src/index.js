@@ -50,7 +50,6 @@ if (process.env.NODE_ENV !== 'development' && 'serviceWorker' in navigator) {
             );
     });
 }
-debugger
 Sentry.init({
     dsn: "https://671fd339e36241f49933df22efe04af9@o580707.ingest.sentry.io/5735638",
     integrations: [new Integrations.BrowserTracing()],
