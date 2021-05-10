@@ -18,6 +18,9 @@ import 'Style/main';
 import { render } from 'react-dom';
 
 import App from 'Component/App';
+import * as Sentry from "@sentry/react";
+import { Integrations } from "@sentry/tracing";
+
 
 window.__DEV__ = process.env.NODE_ENV === 'development';
 
@@ -47,5 +50,14 @@ if (process.env.NODE_ENV !== 'development' && 'serviceWorker' in navigator) {
             );
     });
 }
-
+debugger
+Sentry.init({
+    dsn: "https://671fd339e36241f49933df22efe04af9@o580707.ingest.sentry.io/5735638",
+    integrations: [new Integrations.BrowserTracing()],
+    // Set tracesSampleRate to 1.0 to capture 100%
+    // of transactions for performance monitoring.
+    // We recommend adjusting this value in production
+    tracesSampleRate: 1.0,
+  });
+  
 render(<App />, document.getElementById('root'));
