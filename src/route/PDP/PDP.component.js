@@ -36,7 +36,7 @@ class PDP extends PureComponent {
         <div block="PDP">
           {this.renderMainSection()}
           {this.renderDetailsSection()}
-          {this.renderDetail()}
+          {/* {this.renderDetail()} */}
         </div>
       ) : (
         <NoMatch />

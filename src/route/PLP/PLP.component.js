@@ -35,7 +35,6 @@ export class PLP extends PureComponent {
   // }
 
   renderPLPDetails() {
-    console.log(this.props);
     return <PLPDetails {...this.props} />;
   }
 

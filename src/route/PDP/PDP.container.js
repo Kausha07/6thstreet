@@ -75,6 +75,8 @@ export class PDPContainer extends PureComponent {
     brandDeascription: PropTypes.string,
     brandImg: PropTypes.string,
     brandName: PropTypes.string,
+    categories_without_path: PropTypes.array,
+    description: PropTypes.string,
   };
 
   static defaultProps = {
@@ -188,7 +190,12 @@ export class PDPContainer extends PureComponent {
       setMeta,
       country,
       config,
-      product: { brand_name: brandName, name } = {},
+      product: {
+        brand_name: brandName,
+        name,
+        description,
+        categories_without_path = [],
+      } = {},
     } = this.props;
 
     if (!name) {
@@ -200,13 +207,19 @@ export class PDPContainer extends PureComponent {
       countryList.find((obj) => obj.id === country) || {};
 
     setMeta({
-      title: __("%s | %s | 6thStreet", brandName, name),
-      keywords: __("%s %s %s online shopping", brandName, name, countryName),
-      description: __(
+      title: __("%s %s | 6thStreet.com", brandName, name),
+      keywords: __(
+        "%s, %s, %s, %s, online shopping",
+        brandName,
+        name,
+        countryName,
+        categories_without_path.join(" ")
+      ),
+      description: `${description} | ${__(
         "Shop %s Online. Discover the latest collection from %s. Free shipping and returns.",
         name,
         brandName
-      ),
+      )}`,
     });
   }
 
