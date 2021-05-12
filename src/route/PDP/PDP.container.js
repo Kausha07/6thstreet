@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
-
 import { DEFAULT_STATE_NAME } from "Component/NavigationAbstract/NavigationAbstract.config";
 import { setGender } from "Store/AppState/AppState.action";
 import { updateMeta } from "Store/Meta/Meta.action";
