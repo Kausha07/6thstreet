@@ -1,38 +1,47 @@
 // import PropTypes from 'prop-types';
-import { PureComponent } from 'react';
-import { connect } from 'react-redux';
+import { PureComponent } from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
 
-import PLPDetails from './PLPDetails.component';
+import PLPDetails from "./PLPDetails.component";
 
 export const mapStateToProps = (_state) => ({
-    // wishlistItems: state.WishlistReducer.productsInWishlist
+  // wishlistItems: state.WishlistReducer.productsInWishlist
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
-    // addProduct: options => CartDispatcher.addProductToCart(dispatch, options)
+  // addProduct: options => CartDispatcher.addProductToCart(dispatch, options)
 });
 
 export class PLPDetailsContainer extends PureComponent {
-    static propTypes = {
-        // TODO: implement prop-types
-    };
+  static propTypes = {
+    brandDeascription: PropTypes.string,
+    brandImg: PropTypes.string,
+    brandName: PropTypes.string,
+  };
 
-    containerFunctions = {
-        // getData: this.getData.bind(this)
-    };
+  containerFunctions = {
+    // getData: this.getData.bind(this)
+  };
 
-    containerProps = () => {
-        // isDisabled: this._getIsDisabled()
+  containerProps = () => {
+    // isDisabled: this._getIsDisabled()
+    const { brandDescription, brandImg, brandName } = this.props;
+    return {
+      brandDescription,
+      brandImg,
+      brandName,
     };
+  };
 
-    render() {
-        return (
-            <PLPDetails
-              { ...this.containerFunctions }
-              { ...this.containerProps() }
-            />
-        );
-    }
+  render() {
+    return (
+      <PLPDetails {...this.containerFunctions} {...this.containerProps()} />
+    );
+  }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PLPDetailsContainer);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PLPDetailsContainer);
