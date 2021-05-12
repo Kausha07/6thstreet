@@ -1,21 +1,33 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
-
+import { connect } from 'react-redux';
 import GenderButton from 'Component/GenderButton';
 import { isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
 
 import './HeaderGenders.style';
 
+
+export const mapStateToProps = (state) => ({
+    currContentGender: state.AppState.gender
+});
+
 class HeaderGenders extends PureComponent {
-    state = {
-        isArabic: isArabic(),
-        currentGenderButton: '',
-        isUnsetStyle: false
-    };
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            isArabic: isArabic(),
+            currentGenderButton: '',
+            isUnsetStyle: false,
+            curContGender: this.props.currentContentGender
+
+        };
+      }
 
     static propTypes = {
         currentContentGender: PropTypes.string.isRequired,
+        currContentGender: PropTypes.string.isRequired,
         changeMenuGender: PropTypes.func,
         isMobile: PropTypes.bool,
         isMenu: PropTypes.bool
@@ -26,6 +38,7 @@ class HeaderGenders extends PureComponent {
         isMobile: false,
         isMenu: false
     };
+
 
     genderList = [
         {
@@ -50,10 +63,13 @@ class HeaderGenders extends PureComponent {
     };
 
     isCurrentGender(key) {
-        const { currentContentGender } = this.props;
+
+        let { currentContentGender } = this.props;
+
         if (currentContentGender === '' && key === 'women') {
             return true;
         }
+
 
         return key === currentContentGender;
     }
@@ -76,7 +92,10 @@ class HeaderGenders extends PureComponent {
         }
 
         const { currentGenderButton, isUnsetStyle } = this.state;
+
         const isCurrentGender = this.isCurrentGender(key);
+
+
         if (currentGenderButton === '') {
             this.setState({ currentGenderButton: currentContentGender });
         }
@@ -120,5 +139,4 @@ class HeaderGenders extends PureComponent {
         );
     }
 }
-
-export default HeaderGenders;
+export default connect(mapStateToProps, null)(HeaderGenders)
