@@ -28,7 +28,6 @@ class HeaderGendersContainer extends PureComponent {
     };
     componentDidMount(){
         if(window.location.pathname.includes("women")){
-            debugger
             this.props.setGender("women")
         }
         else if(window.location.pathname.includes("men")){
