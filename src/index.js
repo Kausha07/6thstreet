@@ -50,8 +50,9 @@ if (process.env.NODE_ENV !== 'development' && 'serviceWorker' in navigator) {
             );
     });
 }
+
 Sentry.init({
-    dsn: "https://671fd339e36241f49933df22efe04af9@o580707.ingest.sentry.io/5735638",
+    dsn: `${ process.env.REACT_APP_SENTRY_ENDPOINT }`,
     integrations: [new Integrations.BrowserTracing()],
     // Set tracesSampleRate to 1.0 to capture 100%
     // of transactions for performance monitoring.
