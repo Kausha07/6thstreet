@@ -27,7 +27,7 @@ class PLPDetails extends PureComponent {
 
   renderBrandHtml = () => {
     const { brandDescription } = this.props;
-    return <p>{brandDescription} </p>;
+    return <p dangerouslySetInnerHTML={{ __html: brandDescription }} />;
   };
 
   renderContent = () => {
