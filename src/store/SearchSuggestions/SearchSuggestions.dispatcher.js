@@ -7,8 +7,10 @@ import { isArabic } from 'Util/App';
 const PRODUCT_RESULT_LIMIT = 8;
 
 export class SearchSuggestionsDispatcher {
+
     async requestSearchSuggestions(search, dispatch) {
         const { AppState: { gender } } = getStore().getState();
+
 
         try {
             const productData = await new Algolia().searchBy(
@@ -18,7 +20,6 @@ export class SearchSuggestionsDispatcher {
                         limit: PRODUCT_RESULT_LIMIT
                     }
                     : {
-                        gender,
                         query: search,
                         limit: PRODUCT_RESULT_LIMIT
                     }

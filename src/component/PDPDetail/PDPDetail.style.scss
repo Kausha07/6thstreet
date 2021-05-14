@@ -1,0 +1,35 @@
+.PDPDetail {
+  display: flex;
+  align-items: center;
+  &-BrandImage {
+    flex: 1;
+    padding: 1rem;
+  }
+  &-Image {
+    max-height: 300px;
+    width: auto;
+  }
+
+  &-BrandDescription {
+    flex: 1;
+    padding: 1rem;
+  }
+}
+
+.BrandDescription {
+  &-MoreButton {
+    text-decoration: none;
+    border: 1px solid #000;
+    border-radius: 12px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    padding: 7px 14px;
+    display: inline-block;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 18px;
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}

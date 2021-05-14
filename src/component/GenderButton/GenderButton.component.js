@@ -1,9 +1,7 @@
 import Link from '@scandipwa/scandipwa/src/component/Link/Link.component';
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
-
 import { MixType } from 'Type/Common';
-
 import './GenderButton.style';
 
 class GenderButton extends PureComponent {
