@@ -7,9 +7,16 @@ export class LiveExperience extends PureComponent {
   }
 
   componentDidMount() {
-    this.renderLiveParty();
+    if (this.props.broadcastId) {
+      this.renderLiveParty();
+    }
     this.renderUpcomingParty();
     this.renderArchivedParty();
+  }
+  componentDidUpdate() {
+    if (this.props.broadcastId) {
+      this.renderLiveParty();
+    }
   }
 
   renderLiveParty = () => {

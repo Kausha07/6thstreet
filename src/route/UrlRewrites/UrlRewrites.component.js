@@ -74,6 +74,7 @@ class UrlRewrites extends PureComponent {
 
   renderCmsPage() {
     const { id } = this.props;
+    alert(id);
 
     return (
       <GTMRouteWrapper route={CMS_PAGE}>
