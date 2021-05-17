@@ -72,7 +72,7 @@ export class SearchSuggestionContainer extends PureComponent {
     }
 
     async requestTrendingInformation() {
-        const { gender } = ""
+        const { gender } = this.props
 
         try {
             const data = await Promise.all([

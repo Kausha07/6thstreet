@@ -1,262 +1,267 @@
-import PropTypes from 'prop-types';
-import { PureComponent } from 'react';
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
 
-import Link from 'Component/Link';
-import Loader from 'Component/Loader';
-import { Products } from 'Util/API/endpoint/Product/Product.type';
-import { isArabic } from 'Util/App';
-import isMobile from 'Util/Mobile';
+import Link from "Component/Link";
+import Loader from "Component/Loader";
+import { Products } from "Util/API/endpoint/Product/Product.type";
+import { isArabic } from "Util/App";
+import isMobile from "Util/Mobile";
+import BRAND_MAPPING from "./SearchSiggestion.config";
 
-import './SearchSuggestion.style';
+import "./SearchSuggestion.style";
 
 class SearchSuggestion extends PureComponent {
-    static propTypes = {
-        inNothingFound: PropTypes.bool.isRequired,
-        isEmpty: PropTypes.bool.isRequired,
-        isActive: PropTypes.bool.isRequired,
-        isLoading: PropTypes.bool.isRequired,
-        products: Products.isRequired,
-        brands: PropTypes.array.isRequired,
-        trendingBrands: PropTypes.array.isRequired,
-        trendingTags: PropTypes.array.isRequired,
-        hideActiveOverlay: PropTypes.func
-    };
+  static propTypes = {
+    inNothingFound: PropTypes.bool.isRequired,
+    isEmpty: PropTypes.bool.isRequired,
+    isActive: PropTypes.bool.isRequired,
+    isLoading: PropTypes.bool.isRequired,
+    products: Products.isRequired,
+    brands: PropTypes.array.isRequired,
+    trendingBrands: PropTypes.array.isRequired,
+    trendingTags: PropTypes.array.isRequired,
+    hideActiveOverlay: PropTypes.func,
+  };
 
-    static defaultProps = {
-        hideActiveOverlay: () => {}
-    };
+  static defaultProps = {
+    hideActiveOverlay: () => {},
+  };
 
+  state = {
+    isArabic: isArabic(),
+    isMobile: isMobile.any() || isMobile.tablet(),
+  };
 
-    state = {
-        isArabic: isArabic(),
-        isMobile: isMobile.any() || isMobile.tablet()
-    };
+  renderLoader() {
+    const { isLoading } = this.props;
+    const { isMobile } = this.state;
 
-    renderLoader() {
-        const { isLoading } = this.props;
-        const { isMobile } = this.state;
+    return isMobile ? null : <Loader isLoading={isLoading} />;
+  }
 
-        return isMobile ? null : (
-            <Loader isLoading={ isLoading } />
-        );
+  getKeyByValue = (object, value) => {
+    return Object.keys(object).find((key) => object[key] === value);
+  };
+
+  getBrandUrl = (brandName) => {
+    const { isArabic } = this.state;
+    let name = brandName;
+    if (isArabic) {
+      name = this.getKeyByValue(BRAND_MAPPING, brandName);
     }
 
-    renderBrand = (brand) => {
-        const { brand_name: name = '', count } = brand;
+    name = name ? name : brandName;
+    const urlName = name
+      .replace("&", "")
+      .replace(/'/g, "")
+      .replace(/(\s+)|--/g, "-")
+      .replace("@", "at")
+      .toLowerCase();
 
-        const urlName = name.replace('&', '')
-            .replace(/'/g, '')
-            .replace(/(\s+)|--/g, '-')
-            .replace('@', 'at')
-            .toLowerCase();
+    return urlName;
+  };
 
-        return (
-            <li>
-                <Link to={ `/${urlName}.html?q=${urlName}` } onClick={this.closeSearchPopup}>
-                    { name }
-                    <span>{ count }</span>
-                </Link>
-            </li>
-        );
-    };
+  renderBrand = (brand) => {
+    const { brand_name: name = "", count } = brand;
 
-    renderBrands() {
-        const { brands = [] } = this.props;
+    const urlName = this.getBrandUrl(name);
 
-        return (
-            <div block="SearchSuggestion" elem="Brands">
-                <h2>{ __('Brands') }</h2>
-                <ul>
-                    { brands.map(this.renderBrand) }
-                </ul>
-            </div>
-        );
+    return (
+      <li>
+        <Link
+          to={`/${urlName}.html?q=${urlName}`}
+          onClick={this.closeSearchPopup}
+        >
+          {name}
+          <span>{count}</span>
+        </Link>
+      </li>
+    );
+  };
+
+  renderBrands() {
+    const { brands = [] } = this.props;
+
+    return (
+      <div block="SearchSuggestion" elem="Brands">
+        <h2>{__("Brands")}</h2>
+        <ul>{brands.map(this.renderBrand)}</ul>
+      </div>
+    );
+  }
+
+  renderProduct = (product) => {
+    const { url, name } = product;
+
+    return (
+      <li>
+        <Link to={url} onClick={this.closeSearchPopup}>
+          {name}
+        </Link>
+      </li>
+    );
+  };
+
+  renderProducts() {
+    const { products = [] } = this.props;
+
+    return (
+      <div block="SearchSuggestion" elem="Recommended">
+        <h2>{__("Recommended")}</h2>
+        <ul>{products.map(this.renderProduct)}</ul>
+      </div>
+    );
+  }
+
+  renderSuggestions() {
+    return (
+      <>
+        {this.renderBrands()}
+        {this.renderProducts()}
+      </>
+    );
+  }
+
+  renderNothingFound() {
+    return __("Nothing found");
+  }
+  closeSearchPopup = () => {
+    this.props.closeSearch();
+  };
+
+  renderTrendingBrand = (brand, i) => {
+    const { label = "", image_url } = brand;
+
+    const urlName = label
+      .replace("&", "")
+      .replace(/'/g, "")
+      .replace(/(\s+)|--/g, "-")
+      .replace("@", "at")
+      .toLowerCase();
+
+    return (
+      <li key={i}>
+        <Link
+          to={`/${urlName}.html?q=${urlName}`}
+          onClick={this.closeSearchPopup}
+        >
+          <div block="SearchSuggestion" elem="TrandingImg">
+            <img src={image_url} alt="Trending" />
+            {label}
+          </div>
+        </Link>
+      </li>
+    );
+  };
+
+  renderTrendingBrands() {
+    const { trendingBrands = [] } = this.props;
+
+    return (
+      <div block="TrandingBrands">
+        <h2>{__("Trending brands")}</h2>
+        <ul>{trendingBrands.map(this.renderTrendingBrand)}</ul>
+      </div>
+    );
+  }
+
+  renderTrendingTag = ({ link, label }, i) => (
+    <li key={i}>
+      <Link to={{ pathname: link }} onClick={this.closeSearchPopup}>
+        <div block="SearchSuggestion" elem="TrandingTag">
+          {label}
+        </div>
+      </Link>
+    </li>
+  );
+
+  renderTrendingTags() {
+    const { trendingTags = [] } = this.props;
+
+    return (
+      <div block="TrandingTags">
+        <h2>{__("Trending tags")}</h2>
+        <ul>{trendingTags.map(this.renderTrendingTag)}</ul>
+      </div>
+    );
+  }
+
+  renderEmptySearch() {
+    return (
+      <>
+        {this.renderTrendingBrands()}
+        {this.renderTrendingTags()}
+      </>
+    );
+  }
+
+  renderContent() {
+    const { isActive, isEmpty, inNothingFound } = this.props;
+
+    if (!isActive) {
+      return null;
     }
 
-    renderProduct = (product) => {
-        const { url, name } = product;
-
-        return (
-            <li>
-                <Link to={ url } onClick={this.closeSearchPopup}>
-                    { name }
-                </Link>
-            </li>
-        );
-    };
-    
-
-    renderProducts() {
-        const { products = [] } = this.props;
-
-        return (
-            <div block="SearchSuggestion" elem="Recommended">
-                <h2>{ __('Recommended') }</h2>
-                <ul>
-                    { products.map(this.renderProduct) }
-                </ul>
-            </div>
-        );
+    if (isEmpty && isActive) {
+      return this.renderEmptySearch();
     }
 
-    renderSuggestions() {
-        return (
-            <>
-                { this.renderBrands() }
-                { this.renderProducts() }
-            </>
-        );
+    if (inNothingFound) {
+      return this.renderNothingFound();
     }
 
-    renderNothingFound() {
-        return __('Nothing found');
+    return this.renderSuggestions();
+  }
+
+  renderCloseButton() {
+    const { closeSearch } = this.props;
+    const { isArabic, isMobile } = this.state;
+    if (!isMobile) {
+      return null;
     }
-    closeSearchPopup = () =>{
-        console.log('On Link Click ');
-        this.props.closeSearch()
-    }
-
-    renderTrendingBrand = (brand, i) => {
-        const { label = '', image_url } = brand;
-
-        const urlName = label.replace('&', '')
-            .replace(/'/g, '')
-            .replace(/(\s+)|--/g, '-')
-            .replace('@', 'at')
-            .toLowerCase();
-
-        return (
-            <li key={ i }>
-                <Link to={ `/${urlName}.html?q=${urlName}` } onClick={this.closeSearchPopup}>
-                    <div block="SearchSuggestion" elem="TrandingImg">
-                        <img src={ image_url } alt="Trending" />
-                        { label }
-                    </div>
-                </Link>
-            </li>
-        );
-    };
-
-    renderTrendingBrands() {
-        const { trendingBrands = [] } = this.props;
-
-        return (
-            <div block="TrandingBrands">
-            <h2>{ __('Trending brands') }</h2>
-            <ul>
-                { trendingBrands.map(this.renderTrendingBrand) }
-            </ul>
-            </div>
-        );
-    }
-
-    renderTrendingTag = ({ link, label }, i) => (
-        <li key={ i }>
-            <Link to={ { pathname: link } } onClick={this.closeSearchPopup}>
-                <div block="SearchSuggestion" elem="TrandingTag">
-                { label }
-                </div>
-            </Link>
-        </li>
+    const svg = (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="18"
+        height="18"
+        viewBox="0 -1 26 26"
+      >
+        <path
+          d="M23.954 21.03l-9.184-9.095 9.092-9.174-1.832-1.807-9.09 9.179-9.176-9.088-1.81
+                  1.81 9.186 9.105-9.095 9.184 1.81 1.81 9.112-9.192 9.18 9.1z"
+        />
+      </svg>
     );
 
-    renderTrendingTags() {
-        const { trendingTags = [] } = this.props;
+    return (
+      <div block="SearchSuggestion" elem="CloseContainer" mods={{ isArabic }}>
+        <button
+          block="CloseContainer"
+          elem="Close"
+          mods={{ isArabic }}
+          onClick={closeSearch}
+        >
+          {svg}
+        </button>
+      </div>
+    );
+  }
+  render() {
+    const { isArabic } = this.state;
 
-        return (
-            <div block="TrandingTags">
-                <h2>{ __('Trending tags') }</h2>
-            <ul>
-                { trendingTags.map(this.renderTrendingTag) }
-            </ul>
-            </div>
-        );
-    }
-
-    renderEmptySearch() {
-        return (
-            <>
-                { this.renderTrendingBrands() }
-                { this.renderTrendingTags() }
-            </>
-        );
-    }
-
-    renderContent() {
-        const {
-            isActive,
-            isEmpty,
-            inNothingFound
-        } = this.props;
-
-        if (!isActive) {
-            return null;
-        }
-
-        if (isEmpty && isActive) {
-            return this.renderEmptySearch();
-        }
-
-        if (inNothingFound) {
-            return this.renderNothingFound();
-        }
-
-        return this.renderSuggestions();
-    }
-
-    renderCloseButton(){
-        const { closeSearch } = this.props;
-        const { isArabic,isMobile } = this.state;
-        if(!isMobile){
-            return null
-        }
-        const svg = (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              viewBox="0 -1 26 26"
-            >
-                <path
-                  d="M23.954 21.03l-9.184-9.095 9.092-9.174-1.832-1.807-9.09 9.179-9.176-9.088-1.81
-                  1.81 9.186 9.105-9.095 9.184 1.81 1.81 9.112-9.192 9.18 9.1z"
-                />
-            </svg>
-        );
-
-        return (
-            <div 
-            block="SearchSuggestion"
-            elem="CloseContainer"
-            mods={ { isArabic } }>
-                <button
-              block="CloseContainer"
-              elem="Close"
-              mods={ { isArabic } }
-              onClick={ closeSearch}
-            >
-                { svg }
-            </button>
-            </div>
-        );
-    }
-    render() {
-        const { isArabic } = this.state;
-
-        return (
-            <div block="SearchSuggestion" mods={ { isArabic } }>
-                
-                <div block="SearchSuggestion" elem="Content">
-                    {this.renderCloseButton()}
-                    { this.renderLoader() }
-                    { this.renderContent() }
-                </div>
-                <div block="SearchSuggestion" elem="ShadeWrapper">
-                    <div block="SearchSuggestion" elem="Shade" />
-                </div>
-            </div>
-        );
-    }
+    return (
+      <div block="SearchSuggestion" mods={{ isArabic }}>
+        <div block="SearchSuggestion" elem="Content">
+          {this.renderCloseButton()}
+          {this.renderLoader()}
+          {this.renderContent()}
+        </div>
+        <div block="SearchSuggestion" elem="ShadeWrapper">
+          <div block="SearchSuggestion" elem="Shade" />
+        </div>
+      </div>
+    );
+  }
 }
 
 export default SearchSuggestion;

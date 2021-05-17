@@ -18,6 +18,9 @@ import 'Style/main';
 import { render } from 'react-dom';
 
 import App from 'Component/App';
+import * as Sentry from "@sentry/react";
+import { Integrations } from "@sentry/tracing";
+
 
 window.__DEV__ = process.env.NODE_ENV === 'development';
 
@@ -47,5 +50,4 @@ if (process.env.NODE_ENV !== 'development' && 'serviceWorker' in navigator) {
             );
     });
 }
-
 render(<App />, document.getElementById('root'));

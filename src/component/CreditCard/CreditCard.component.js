@@ -57,7 +57,8 @@ class CreditCard extends PureComponent {
         const {
             setCreditCardData,
             reformatInputField,
-            getCardLogo
+            getCardLogo,
+            isAmex
         } = this.props;
         const { cvv } = this.state;
         const { value } = e.target;
@@ -68,7 +69,7 @@ class CreditCard extends PureComponent {
         reformatInputField(element, 4);
         setCreditCardData({ number: onlyNumbers });
 
-        if (onlyNumbers.length === 16) {
+        if (onlyNumbers.length === 16 || (isAmex && onlyNumbers.length === 15)) {
             this.setState({ cardLogo, numberFilled: true });
             return;
         }
@@ -101,18 +102,22 @@ class CreditCard extends PureComponent {
     };
 
     handleCvvChange = (e) => {
-        const { setCreditCardData, isNumber } = this.props;
+        const { setCreditCardData, isNumber, isAmex } = this.props;
         const { value = '' } = e.target;
 
         if (isNumber(value)) {
             setCreditCardData({ cvv: value });
-            if (value.length === 3) {
+            if (value.length === 3 || (isAmex && value.length === 4)) {
                 this.setState({ cvv: value, cvvFilled: true });
                 return;
             }
 
             this.setState({ cvv: value, cvvFilled: false });
         }
+    };
+
+    handlePaste = (e) => {
+        e.preventDefault();
     };
 
     renderCreditCardForm() {
@@ -131,6 +136,7 @@ class CreditCard extends PureComponent {
                   maxLength="19"
                   onChange={ this.handleNumberChange }
                   validation={ ['notEmpty'] }
+                  onPaste={this.handlePaste}
                 />
                 <p>{ __('exp date') }</p>
                 <div
@@ -146,6 +152,7 @@ class CreditCard extends PureComponent {
                       maxLength="5"
                       onChange={ this.handleExpDateChange }
                       validation={ ['notEmpty'] }
+                      onPaste={this.handlePaste}
                     />
                     <input
                       type="text"
@@ -157,6 +164,7 @@ class CreditCard extends PureComponent {
                       value={ cvv }
                       onChange={ this.handleCvvChange }
                       validation={ ['notEmpty'] }
+                      onPaste={this.handlePaste}
                     />
                     <div
                       block="CreditCard"
