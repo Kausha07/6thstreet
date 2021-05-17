@@ -116,6 +116,10 @@ class CreditCard extends PureComponent {
         }
     };
 
+    handlePaste = (e) => {
+        e.preventDefault();
+    };
+
     renderCreditCardForm() {
         const { isAmex } = this.props;
         const { cvv, cardLogo } = this.state;
@@ -132,6 +136,7 @@ class CreditCard extends PureComponent {
                   maxLength="19"
                   onChange={ this.handleNumberChange }
                   validation={ ['notEmpty'] }
+                  onPaste={this.handlePaste}
                 />
                 <p>{ __('exp date') }</p>
                 <div
@@ -147,6 +152,7 @@ class CreditCard extends PureComponent {
                       maxLength="5"
                       onChange={ this.handleExpDateChange }
                       validation={ ['notEmpty'] }
+                      onPaste={this.handlePaste}
                     />
                     <input
                       type="text"
@@ -158,6 +164,7 @@ class CreditCard extends PureComponent {
                       value={ cvv }
                       onChange={ this.handleCvvChange }
                       validation={ ['notEmpty'] }
+                      onPaste={this.handlePaste}
                     />
                     <div
                       block="CreditCard"
