@@ -44,27 +44,35 @@ export class LiveExperienceContainer extends PureComponent {
   constructor(props) {
     super(props);
     this.setMetaData();
+    const showHeaderFooter = getQueryParam("showHeaderFooter", location);
   }
 
   parseBool = (b) => {
     return !/^(false|0)$/i.test(b) && !!b;
   };
 
+  getParameterByName = (name, url = window.location.href) => {
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+      results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return "";
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+  };
+
   componentDidMount() {
-    const showHeaderFooter = this.parseBool(
-      getQueryParam("showHeaderFooter", location)
-    );
-    const { changeHeaderState } = this.props;
-    changeHeaderState({
-      isHiddenOnDesktop: !Boolean(showHeaderFooter),
-    });
-    // alert("broadcastId" + broadcastId);
+    const showHeaderFooter = getQueryParam("showHeaderFooter", location);
+
+    const isShowHeaderFooter = this.getParameterByName("showHeaderFooter");
+
+    if (isShowHeaderFooter !== null) {
+      const { changeHeaderState } = this.props;
+      changeHeaderState({
+        isHiddenOnDesktop: !this.parseBool(showHeaderFooter),
+      });
+    }
     this.updateBreadcrumbs();
     this.setMetaData();
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.timerID);
   }
 
   componentDidUpdate() {
