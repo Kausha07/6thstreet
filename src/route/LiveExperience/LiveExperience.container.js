@@ -63,7 +63,6 @@ export class LiveExperienceContainer extends PureComponent {
     const showHeaderFooter = getQueryParam("showHeaderFooter", location);
 
     const isShowHeaderFooter = this.getParameterByName("showHeaderFooter");
-    alert(isShowHeaderFooter);
 
     if (isShowHeaderFooter) {
       const { changeHeaderState } = this.props;
