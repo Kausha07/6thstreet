@@ -28,5 +28,21 @@ main {
     .Footer {
       display: none;
     }
+    #ori-chatbot-root {
+      display: none;
+    }
+    #branch-banner-iframe {
+      display: none !important;
+    }
+    @include mobile {
+      .Container {
+        margin-top: 0;
+      }
+      #single {
+        .spck-box-one {
+          margin-top: 0;
+        }
+      }
+    }
   }
 }
