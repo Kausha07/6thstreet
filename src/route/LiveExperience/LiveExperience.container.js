@@ -4,6 +4,9 @@ import { connect } from "react-redux";
 import { updateMeta } from "Store/Meta/Meta.action";
 import { getCountriesForSelect } from "Util/API/endpoint/Config/Config.format";
 import { capitalize } from "Util/App";
+import { getQueryParam } from "Util/Url";
+import { changeNavigationState } from "Store/Navigation/Navigation.action";
+import { TOP_NAVIGATION_TYPE } from "Store/Navigation/Navigation.reducer";
 
 import LiveExperience from "./LiveExperience.component";
 
@@ -24,6 +27,8 @@ export const mapDispatchToProps = (dispatch) => ({
       dispatcher.update(breadcrumbs, dispatch)
     );
   },
+  changeHeaderState: (state) =>
+    dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, state)),
   setMeta: (meta) => dispatch(updateMeta(meta)),
 });
 
@@ -33,6 +38,7 @@ export class LiveExperienceContainer extends PureComponent {
     locale: PropTypes.string.isRequired,
     updateBreadcrumbs: PropTypes.func.isRequired,
     setMeta: PropTypes.func.isRequired,
+    broadcastId: PropTypes.number,
   };
 
   constructor(props) {
@@ -40,9 +46,25 @@ export class LiveExperienceContainer extends PureComponent {
     this.setMetaData();
   }
 
+  parseBool = (b) => {
+    return !/^(false|0)$/i.test(b) && !!b;
+  };
+
   componentDidMount() {
+    const showHeaderFooter = this.parseBool(
+      getQueryParam("showHeaderFooter", location)
+    );
+    const { changeHeaderState } = this.props;
+    changeHeaderState({
+      isHiddenOnDesktop: !Boolean(showHeaderFooter),
+    });
+    // alert("broadcastId" + broadcastId);
     this.updateBreadcrumbs();
     this.setMetaData();
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timerID);
   }
 
   componentDidUpdate() {
@@ -108,9 +130,15 @@ export class LiveExperienceContainer extends PureComponent {
       ),
     });
   }
+  containerProps = () => {
+    const broadcastId = getQueryParam("broadcastId", location);
+    return {
+      broadcastId,
+    };
+  };
 
   render() {
-    return <LiveExperience />;
+    return <LiveExperience {...this.containerProps()} />;
   }
 }
 
