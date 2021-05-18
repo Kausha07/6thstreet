@@ -26,7 +26,7 @@ export class LiveExperience extends PureComponent {
       customColor: "#000000",
       containerId: "single",
       displayType: "one",
-      broadcastId: 2411,
+      broadcastId: this.props.broadcastId,
       staging: true,
     };
 
