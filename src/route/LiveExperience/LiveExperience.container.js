@@ -44,7 +44,6 @@ export class LiveExperienceContainer extends PureComponent {
   constructor(props) {
     super(props);
     this.setMetaData();
-    const showHeaderFooter = getQueryParam("showHeaderFooter", location);
   }
 
   parseBool = (b) => {
@@ -64,8 +63,9 @@ export class LiveExperienceContainer extends PureComponent {
     const showHeaderFooter = getQueryParam("showHeaderFooter", location);
 
     const isShowHeaderFooter = this.getParameterByName("showHeaderFooter");
+    alert(isShowHeaderFooter);
 
-    if (isShowHeaderFooter !== null) {
+    if (isShowHeaderFooter) {
       const { changeHeaderState } = this.props;
       changeHeaderState({
         isHiddenOnDesktop: !this.parseBool(showHeaderFooter),
