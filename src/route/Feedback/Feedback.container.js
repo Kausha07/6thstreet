@@ -6,6 +6,8 @@ import { DEFAULT_STATE_NAME } from 'Component/NavigationAbstract/NavigationAbstr
 import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
 import { changeNavigationState } from 'Store/Navigation/Navigation.action';
 import { showNotification } from 'Store/Notification/Notification.action';
+import { updateMeta } from "Store/Meta/Meta.action";
+import { getCountriesForSelect } from "Util/API/endpoint/Config/Config.format";
 import { postFeedback } from 'Util/API/endpoint/Feedback/Feedback.endpoint';
 
 import Logger from 'Util/Logger';
@@ -17,6 +19,8 @@ export const BreadcrumbsDispatcher = import(
 
 export const mapStateToProps = (state) => ({
     headerState: state.NavigationReducer[TOP_NAVIGATION_TYPE].navigationState,
+    config: state.AppConfig.config,
+    country: state.AppState.country
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -24,14 +28,18 @@ export const mapDispatchToProps = (dispatch) => ({
     updateBreadcrumbs: (breadcrumbs) => BreadcrumbsDispatcher.then(
         ({ default: dispatcher }) => dispatcher.update(breadcrumbs, dispatch)
     ),
+    setMeta: (meta) => dispatch(updateMeta(meta)),
     showNotification: (type, message) => dispatch(showNotification(type, message))
 });
 
 export class FeedbackContainer extends PureComponent {
 
     static propTypes = {
+        config: PropTypes.object.isRequired,
+        country: PropTypes.string.isRequired,
         updateBreadcrumbs: PropTypes.func.isRequired,
         changeHeaderState: PropTypes.func.isRequired,
+        setMeta: PropTypes.func.isRequired,
         showNotification: PropTypes.func.isRequired
     };
     
@@ -42,6 +50,7 @@ export class FeedbackContainer extends PureComponent {
     componentDidMount() {
         this.updateBreadcrumbs();
         this.updateHeaderState();
+        this.setMetaData();
     }
 
     updateHeaderState() {
@@ -67,6 +76,27 @@ export class FeedbackContainer extends PureComponent {
         ];
   
         updateBreadcrumbs(breadcrumbs);
+    }
+
+    setMetaData() {    
+
+        const {
+            config,
+            country,
+            setMeta,
+        } = this.props;
+
+        const countryList = getCountriesForSelect(config);
+        const { label: countryName = "" } = countryList.find((obj) => obj.id === country) || {};
+    
+        setMeta({
+          title: __("Feedback | 6thStreet.com %s", countryName),
+          keywords: __(
+            "Feedback, Contact Us, Suggestions Online Shopping, %s",
+            countryName,
+          ),
+          description: __("Jot us a note and well get back to you as quickly as possible."),
+        });
     }
 
     async onSubmit(data) {

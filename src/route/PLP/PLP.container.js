@@ -268,22 +268,24 @@ export class PLPContainer extends PureComponent {
 
     setMeta({
       title: __(
-        "%s %s Online shopping in %s | 6thStreet",
-        genderName,
+        "%s for %s | 6thStreet.com %s",
         categoryName,
+        genderName,
         countryName
       ),
       keywords: __(
-        "%s %s %s online shopping",
-        genderName,
+        "%s, %s, online shopping, %s, free shipping, returns",
         categoryName,
+        genderName,
         countryName
       ),
       description: __(
-        // eslint-disable-next-line max-len
-        "Shop %s %s Online. Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet.",
+        "Shop %s for %s Online in %s | Free shipping and returns | 6thStreet.com %s",
+        categoryName,
         genderName,
-        categoryName
+        countryName,
+        countryName
+        
       ),
     });
   }
