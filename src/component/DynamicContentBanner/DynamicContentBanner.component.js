@@ -50,8 +50,15 @@ class DynamicContentBanner extends PureComponent {
             width = ""
         } = item;
         let ht, wd;
-        wd = width.toString() + "px";
-        ht = height.toString() + "px";  
+        if (screen.width < 900) {
+            wd = (screen.width-16).toString() + "px";
+            ht = (height / width)*(screen.width)
+        }
+        else{
+            wd = width.toString() + "px";
+            ht = height.toString() + "px";
+        }
+
         // TODO: calculate aspect ratio to ensure images not jumping.
         if (!link) {
             return (
@@ -74,12 +81,9 @@ class DynamicContentBanner extends PureComponent {
               key={ i }
               onClick={() => {this.onclick(item)}}
             >
-                <Image
-                  src={ url }
-                  ratio="custom"
-                  height={ ht }
-                  width={ wd }
-                />
+
+                <img src={ url }  block= 'Image' style={{width: wd, height: ht}}/>
+
                 { this.renderButton() }
             </Link>
         );

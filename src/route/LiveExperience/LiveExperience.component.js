@@ -7,9 +7,16 @@ export class LiveExperience extends PureComponent {
   }
 
   componentDidMount() {
-    this.renderLiveParty();
+    if (this.props.broadcastId) {
+      this.renderLiveParty();
+    }
     this.renderUpcomingParty();
     this.renderArchivedParty();
+  }
+  componentDidUpdate() {
+    if (this.props.broadcastId) {
+      this.renderLiveParty();
+    }
   }
 
   renderLiveParty = () => {
@@ -19,7 +26,7 @@ export class LiveExperience extends PureComponent {
       customColor: "#000000",
       containerId: "single",
       displayType: "one",
-      broadcastId: 2411,
+      broadcastId: this.props.broadcastId,
       staging: true,
     };
 
