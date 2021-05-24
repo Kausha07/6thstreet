@@ -249,7 +249,7 @@
     "Please select a size.": "الرجاء إختيار مقاس",
     "New Products": "منتجات جديدة",
     "You have no items in your shopping cart.": "لا يوجد لديك منتجات في سلة التسوق الخاصة بك.",
-    "Subtotal ": "الإجمالي ",
+    "Subtotal ": null,
     "(Taxes Included) ": "(يشمل الضريبة) ",
     "Coupon ": "قسيمة الخصم ",
     "View bag": "عرض الحقيبة",
@@ -748,5 +748,9 @@
     "%s for %s | 6thStreet %s": null,
     "%s for %s | 6thStreet.com %s": null,
     "Shop %s for %s Online in %s.| Free shipping and returns | 6thStreet.com %s": null,
-    "Shop %s for %s Online in %s | Free shipping and returns | 6thStreet.com %s": null
+    "Shop %s for %s Online in %s | Free shipping and returns | 6thStreet.com %s": null,
+    "You have received (%s)% off!": null,
+    "Congrats!": null,
+    "Continue": null,
+    "You have received %s% off!": null
 }

@@ -1,603 +1,659 @@
 :root {
-    --unselected-step-color: #dbdddd;
-    --selected-step-color: #f96446;
-    --checkout-max-width: 1100px;
+  --unselected-step-color: #dbdddd;
+  --selected-step-color: #f96446;
+  --checkout-max-width: 1100px;
 }
 
 .Checkout {
-    padding-top: 0;
-    padding-bottom: 100px;
+  padding-top: 0;
+  padding-bottom: 100px;
 
-    @include before-desktop {
-        .Checkout-StickyButtonWrapper {
-            padding-top: 0;
-        }
+  @include before-desktop {
+    .Checkout-StickyButtonWrapper {
+      padding-top: 0;
+    }
+  }
+
+  @include desktop {
+    padding: 10px 0 30px;
+    background-color: var(--lightest-gray);
+  }
+
+  .LoadingOverlay {
+    height: 100%;
+    background-color: var(--color-orange-soda);
+    opacity: 0.95;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1;
+
+    animation-name: fadeInOpacity;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in;
+    animation-duration: 1s;
+
+    @keyframes fadeInOpacity {
+      0% {
+        opacity: 0;
+      }
+      95% {
+        opacity: 0.95;
+      }
     }
 
     @include desktop {
-        padding: 10px 0 30px;
-        background-color: var(--lightest-gray);
+      width: 100%;
+      padding: 0 52%;
+      z-index: 90;
+      text-align: center;
+      transform: translate(-15px, 0);
     }
 
-    .LoadingOverlay {
-        height: 100%;
-        background-color: var(--color-orange-soda);
-        opacity: 0.95;
-        position: fixed;
-        left: 0;
-        top: 0;
-        z-index: 1;
-
-        animation-name: fadeInOpacity;
-        animation-iteration-count: 1;
-        animation-timing-function: ease-in;
-        animation-duration: 1s;
-
-        @keyframes fadeInOpacity {
-            0% {
-                opacity: 0;
-            }
-            95% {
-                opacity: 0.95;
-            }
-        }
-
-        @include desktop {
-            width: 100%;
-            padding: 0 52%;
-            z-index: 90;
-            text-align: center;
-            transform: translate(-15px, 0);
-        }
-
-        @include mobile {
-            padding: 50%;
-            top: 0;
-        }
-
-        p {
-            font-size: 18px;
-            font-weight: var(--fw-demi);
-            color: var(--white);
-            position: absolute;
-            bottom: 50%;
-            transform: translate(-50%, -50%);
-        }
+    @include mobile {
+      padding: 50%;
+      top: 0;
     }
 
-    &_isSuccess {
-        background-color: var(--white);
-
-        .CheckoutNavigation {
-            display: none;
-        }
-
-        @include desktop() {
-            padding: 0;
-            margin-top: 58px;
-            margin-bottom: 100px;
-
-            .ContentWrapper {
-                max-width: 1440px;
-                display: block;
-
-                .Checkout-Step {
-                    margin: 0 auto;
-                }
-            }
-        }
+    p {
+      font-size: 18px;
+      font-weight: var(--fw-demi);
+      color: var(--white);
+      position: absolute;
+      bottom: 50%;
+      transform: translate(-50%, -50%);
     }
+  }
 
-    &-StickyButtonWrapper {
-        .Checkout {
-            &-OrderTotals {
-                .CheckoutOrderSummary {
-                    &-Text {
-                        font-weight: var(--fw-regular);
-                        font-size: 15px;
-                        line-height: 20px;
-                    }
-
-                    &-Price {
-                        font-weight: var(--fw-bold);
-                        font-size: 18px;
-                        line-height: 25px;
-                    }
-                }
-                @include desktop {
-                    display: none;
-                }
-            }
-        }
-
-        @include before-desktop {
-            border-top: 1px solid var(--primary-divider-color);
-            background-color: var(--white);
-            position: fixed;
-            padding: 1rem 1rem calc(env(safe-area-inset-bottom) + 1rem);
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            z-index: 85;
-        }
-
-        .Button {
-            width: 100%;
-            color: var(--white);
-            background-color: var(--selected-step-color);
-            font-weight: var(--fw-bold);
-
-            @include before-desktop {
-                opacity: 1;
-                border-radius: 7px;
-            }
-
-            @include desktop {
-                margin-top: 25px;
-            }
-        }
-    }
-
-    &-Step {
-        @include before-desktop {
-            margin: 0 auto;
-            max-width: 700px;
-        }
-    }
-
-    &-Wrapper {
-        max-width: var(--checkout-max-width);
-
-        @include desktop {
-            display: grid;
-            grid-template-columns: minmax(calc(65% - 1rem), 600px) minmax(
-                    calc(35% - 1rem),
-                    348px
-                );
-            column-gap: 1.25rem;
-        }
-    }
+  &_isSuccess {
+    background-color: var(--white);
 
     .CheckoutNavigation {
-        padding: 19px 60px 45px;
-        display: flex;
-
-        @include desktop {
-            display: none;
-        }
-
-        &-FirstColumn,
-        &-SecondColumn {
-            text-align: center;
-        }
-
-        &-FirstColumn {
-            a {
-                text-decoration: none;
-            }
-
-            &_checkoutStep {
-                &_SHIPPING_STEP {
-                    a {
-                        pointer-events: none;
-                        cursor: default;
-                    }
-                }
-            }
-        }
-
-        &-Delivery {
-            margin: 5px 10px 15px;
-            background: url(./icons/address-gray@3x.png) no-repeat;
-            background-size: 24px 24px;
-            background-position: 50% 50%;
-            border: 2px solid var(--unselected-step-color);
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-
-            &_checkoutStep {
-                &_SHIPPING_STEP {
-                    margin: 0 10px 10px;
-                    background: url(./icons/address-orange@3x.png) no-repeat;
-                    background-position: 50% 50%;
-                    background-size: 28px 28px;
-                    border: 2px solid var(--selected-step-color);
-                    width: 60px;
-                    height: 60px;
-                }
-            }
-        }
-
-        hr {
-            margin-top: 30px;
-            width: 100%;
-            height: 2px;
-            background-color: var(--unselected-step-color);
-        }
-
-        &-Payment {
-            background: url(./icons/payment-orange@3x.png) no-repeat;
-            background-size: 24px 17px;
-            background-position: 50% 50%;
-            border: 2px solid var(--selected-step-color);
-            border-radius: 50%;
-            margin: 0 10px 10px;
-            width: 60px;
-            height: 60px;
-
-            &_checkoutStep {
-                &_SHIPPING_STEP {
-                    margin: 5px 10px 15px;
-                    height: 18px;
-                    background: url(./icons/payment-gray@3x.png) no-repeat;
-                    background-size: 24px 17px;
-                    background-position: 50% 50%;
-                    border: 2px solid var(--unselected-step-color);
-                    border-radius: 50%;
-                    width: 50px;
-                    height: 50px;
-                }
-            }
-        }
-
-        &-PaymentLabel,
-        &-DeliveryLabel {
-            text-transform: uppercase;
-            font-size: 14px;
-            font-weight: var(--fw-demi);
-            letter-spacing: 1px;
-            line-height: 16px;
-        }
-
-        &-PaymentLabel {
-            &_checkoutStep {
-                &_SHIPPING_STEP {
-                    color: var(--unselected-step-color);
-                }
-            }
-        }
+      display: none;
     }
 
-    .CheckoutAddressBook {
-        @include desktop {
-            margin-top: -90px;
-        }
+    @include desktop() {
+      padding: 0;
+      margin-top: 58px;
+      margin-bottom: 100px;
 
-        &_isBilling {
-            @include desktop {
-                margin-top: 0;
-            }
+      .ContentWrapper {
+        max-width: 1440px;
+        display: block;
+
+        .Checkout-Step {
+          margin: 0 auto;
         }
+      }
     }
+  }
 
-    &-GuestCheckout {
-        &:not(&_continueAsGuest) {
-            @include desktop {
-                display: flex;
-            }
+  &-StickyButtonWrapper {
+    .Checkout {
+      &-OrderTotals {
+        .CheckoutOrderSummary {
+          &-Text {
+            font-weight: var(--fw-regular);
+            font-size: 15px;
+            line-height: 20px;
+          }
 
-            .CheckoutGuestForm {
-                padding: unset;
-                width: 100%;
-
-                &-FieldAndSignIn {
-                    button {
-                        width: 100%;
-                        margin: 5px 0;
-                        color: var(--white-color);
-                        background: var(--black-color);
-                        border: 1px solid var(--black-color);
-
-                        @include desktop {
-                            width: 85%;
-                            margin: 10% 5% 10% 10%;
-                        }
-                    }
-
-                    img {
-                        width: 11px;
-                        height: auto;
-                        float: right;
-                        top: 1px;
-                    }
-
-                    &_isArabic {
-                        button {
-                            @include desktop {
-                                width: 85%;
-                                margin: 10% 10% 10% 5%;
-                            }
-                        }
-                    }
-                }
-
-                @include desktop {
-                    width: 50%;
-                }
-            }
-        }
-    }
-
-    &-GuestButton {
-        position: relative;
-        width: 100%;
-        background-color: var(--White);
-        margin: 5px 0 15px;
-
-        > button {
-            width: 100%;
-            border: 2px solid var(--Black);
-            box-shadow: 0 0 2px 0 var(--Black);
-            color: var(--Black);
-            font-size: 14px;
+          &-Price {
             font-weight: var(--fw-bold);
-            transition: none;
+            font-size: 18px;
+            line-height: 25px;
+          }
+        }
+        @include desktop {
+          display: none;
+        }
+      }
+    }
+
+    @include before-desktop {
+      border-top: 1px solid var(--primary-divider-color);
+      background-color: var(--white);
+      position: fixed;
+      padding: 1rem 1rem calc(env(safe-area-inset-bottom) + 1rem);
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      z-index: 85;
+    }
+
+    .Button {
+      width: 100%;
+      color: var(--white);
+      background-color: var(--selected-step-color);
+      font-weight: var(--fw-bold);
+
+      @include before-desktop {
+        opacity: 1;
+        border-radius: 7px;
+      }
+
+      @include desktop {
+        margin-top: 25px;
+      }
+    }
+  }
+
+  &-Step {
+    @include before-desktop {
+      margin: 0 auto;
+      max-width: 700px;
+    }
+  }
+
+  &-Wrapper {
+    max-width: var(--checkout-max-width);
+
+    @include desktop {
+      display: grid;
+      grid-template-columns: minmax(calc(65% - 1rem), 600px) minmax(
+          calc(35% - 1rem),
+          348px
+        );
+      column-gap: 1.25rem;
+    }
+  }
+
+  .CheckoutNavigation {
+    padding: 19px 60px 45px;
+    display: flex;
+
+    @include desktop {
+      display: none;
+    }
+
+    &-FirstColumn,
+    &-SecondColumn {
+      text-align: center;
+    }
+
+    &-FirstColumn {
+      a {
+        text-decoration: none;
+      }
+
+      &_checkoutStep {
+        &_SHIPPING_STEP {
+          a {
+            pointer-events: none;
+            cursor: default;
+          }
+        }
+      }
+    }
+
+    &-Delivery {
+      margin: 5px 10px 15px;
+      background: url(./icons/address-gray@3x.png) no-repeat;
+      background-size: 24px 24px;
+      background-position: 50% 50%;
+      border: 2px solid var(--unselected-step-color);
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+
+      &_checkoutStep {
+        &_SHIPPING_STEP {
+          margin: 0 10px 10px;
+          background: url(./icons/address-orange@3x.png) no-repeat;
+          background-position: 50% 50%;
+          background-size: 28px 28px;
+          border: 2px solid var(--selected-step-color);
+          width: 60px;
+          height: 60px;
+        }
+      }
+    }
+
+    hr {
+      margin-top: 30px;
+      width: 100%;
+      height: 2px;
+      background-color: var(--unselected-step-color);
+    }
+
+    &-Payment {
+      background: url(./icons/payment-orange@3x.png) no-repeat;
+      background-size: 24px 17px;
+      background-position: 50% 50%;
+      border: 2px solid var(--selected-step-color);
+      border-radius: 50%;
+      margin: 0 10px 10px;
+      width: 60px;
+      height: 60px;
+
+      &_checkoutStep {
+        &_SHIPPING_STEP {
+          margin: 5px 10px 15px;
+          height: 18px;
+          background: url(./icons/payment-gray@3x.png) no-repeat;
+          background-size: 24px 17px;
+          background-position: 50% 50%;
+          border: 2px solid var(--unselected-step-color);
+          border-radius: 50%;
+          width: 50px;
+          height: 50px;
+        }
+      }
+    }
+
+    &-PaymentLabel,
+    &-DeliveryLabel {
+      text-transform: uppercase;
+      font-size: 14px;
+      font-weight: var(--fw-demi);
+      letter-spacing: 1px;
+      line-height: 16px;
+    }
+
+    &-PaymentLabel {
+      &_checkoutStep {
+        &_SHIPPING_STEP {
+          color: var(--unselected-step-color);
+        }
+      }
+    }
+  }
+
+  .CheckoutAddressBook {
+    @include desktop {
+      margin-top: -90px;
+    }
+
+    &_isBilling {
+      @include desktop {
+        margin-top: 0;
+      }
+    }
+  }
+
+  &-GuestCheckout {
+    &:not(&_continueAsGuest) {
+      @include desktop {
+        display: flex;
+      }
+
+      .CheckoutGuestForm {
+        padding: unset;
+        width: 100%;
+
+        &-FieldAndSignIn {
+          button {
+            width: 100%;
+            margin: 5px 0;
+            color: var(--white-color);
+            background: var(--black-color);
+            border: 1px solid var(--black-color);
 
             @include desktop {
+              width: 85%;
+              margin: 10% 5% 10% 10%;
+            }
+          }
+
+          img {
+            width: 11px;
+            height: auto;
+            float: right;
+            top: 1px;
+          }
+
+          &_isArabic {
+            button {
+              @include desktop {
                 width: 85%;
                 margin: 10% 10% 10% 5%;
-                position: absolute;
-                top: 0;
+              }
             }
-        }
-
-        > button:hover {
-            text-decoration: none;
-        }
-
-        &_isArabic {
-            > button {
-                @include desktop {
-                    width: 85%;
-                    margin: 10% 5% 10% 10%;
-                }
-            }
-        }
-
-        &_continueAsGuest {
-            padding-bottom: 0;
-            margin-top: 0;
-            background-color: transparent;
-            width: 100%;
-
-            > button {
-                display: none;
-            }
-
-            @include desktop {
-                > button {
-                    display: block;
-                    z-index: 1;
-                    width: 100%;
-                    height: 64px;
-                    margin: 0;
-                    top: 1px;
-                    left: 0;
-                    border: 2px solid var(--input-border-color);
-                    box-shadow: none;
-                    color: var(--DustyGray);
-                    text-transform: uppercase;
-                    font-size: 15px;
-                    text-align: right;
-                    padding-right: 30px;
-                }
-            }
-        }
-
-        &_isSignedIn {
-            display: none;
-            padding-bottom: 0;
+          }
         }
 
         @include desktop {
-            margin: 0;
-
-            &:not(&_continueAsGuest){
-                width: 50%;
-            }
+          width: 50%;
         }
+      }
+    }
+  }
+
+  &-GuestButton {
+    position: relative;
+    width: 100%;
+    background-color: var(--White);
+    margin: 5px 0 15px;
+
+    > button {
+      width: 100%;
+      border: 2px solid var(--Black);
+      box-shadow: 0 0 2px 0 var(--Black);
+      color: var(--Black);
+      font-size: 14px;
+      font-weight: var(--fw-bold);
+      transition: none;
+
+      @include desktop {
+        width: 85%;
+        margin: 10% 10% 10% 5%;
+        position: absolute;
+        top: 0;
+      }
     }
 
-    &-BackButtons {
-        padding: 10px 0;
+    > button:hover {
+      text-decoration: none;
+    }
+
+    &_isArabic {
+      > button {
+        @include desktop {
+          width: 85%;
+          margin: 10% 5% 10% 10%;
+        }
+      }
+    }
+
+    &_continueAsGuest {
+      padding-bottom: 0;
+      margin-top: 0;
+      background-color: transparent;
+      width: 100%;
+
+      > button {
         display: none;
+      }
 
-        @include desktop {
-            display: block;
-
-            &Login {
-                &_isSignedIn {
-                    display: none;
-                }
-            }
+      @include desktop {
+        > button {
+          display: block;
+          z-index: 1;
+          width: 100%;
+          height: 64px;
+          margin: 0;
+          top: 1px;
+          left: 0;
+          border: 2px solid var(--input-border-color);
+          box-shadow: none;
+          color: var(--DustyGray);
+          text-transform: uppercase;
+          font-size: 15px;
+          text-align: right;
+          padding-right: 30px;
         }
-
-        button {
-            padding: 0;
-            width: 100%;
-            height: auto;
-            text-align: left;
-
-            span {
-                position: absolute;
-                right: 30px;
-                top: 40%;
-                color: var(--DustyGray);
-                font-size: 15px;
-            }
-        }
-
-        &_isArabic {
-            button {
-                text-align: right;
-    
-                span {
-                    right: unset;
-                    left: 30px;
-                    top: 40%;
-                }
-            }
-        }
+      }
     }
 
-    &-Heading {
-        padding: 20px;
+    &_isSignedIn {
+      display: none;
+      padding-bottom: 0;
+    }
+
+    @include desktop {
+      margin: 0;
+
+      &:not(&_continueAsGuest) {
+        width: 50%;
+      }
+    }
+  }
+
+  &-BackButtons {
+    padding: 10px 0;
+    display: none;
+
+    @include desktop {
+      display: block;
+
+      &Login {
+        &_isSignedIn {
+          display: none;
+        }
+      }
+    }
+
+    button {
+      padding: 0;
+      width: 100%;
+      height: auto;
+      text-align: left;
+
+      span {
+        position: absolute;
+        right: 30px;
+        top: 40%;
+        color: var(--DustyGray);
+        font-size: 15px;
+      }
+    }
+
+    &_isArabic {
+      button {
+        text-align: right;
+
+        span {
+          right: unset;
+          left: 30px;
+          top: 40%;
+        }
+      }
+    }
+  }
+
+  &-Heading {
+    padding: 20px;
+    width: 100%;
+    text-transform: capitalize;
+    font-size: 18px;
+    font-weight: var(--fw-demi);
+    margin: 0;
+    letter-spacing: 0.1px;
+
+    &_isDisabled {
+      display: none;
+    }
+
+    @include desktop {
+      padding: unset;
+
+      hr {
+        display: none;
+      }
+
+      &_isDisabled {
+        display: block;
+        color: var(--DustyGray);
+        background-color: var(--White);
+        border: 2px solid var(--input-border-color);
         width: 100%;
-        text-transform: capitalize;
-        font-size: 18px;
-        font-weight: var(--fw-demi);
-        margin: 0;
-        letter-spacing: 0.1px;
+        padding: 20px;
+        margin: 10px 0;
+      }
 
-        &_isDisabled {
-            display: none;
+      &:not(&_isDisabled) {
+        .Checkout {
+          &-Heading {
+            &_isSignedIn {
+              margin-top: 0;
+            }
+          }
         }
+        margin-top: 20px;
+        padding: 20px 30px 0 30px;
+        background: var(--white-color);
+      }
 
-        @include desktop {
-            padding: unset;
-
-            hr {
-                display: none;
-            }
-
-            &_isDisabled {
-                display: block;
-                color: var(--DustyGray);
-                background-color: var(--White);
-                border: 2px solid var(--input-border-color);
-                width: 100%;
-                padding: 20px;
-                margin: 10px 0;
-            }
-
-            &:not(&_isDisabled) {
-                .Checkout {
-                    &-Heading {
-                        &_isSignedIn {
-                            margin-top: 0;
-                        }
-                    }
-                }
-                margin-top: 20px;
-                padding: 20px 30px 0 30px;
-                background: var(--white-color);
-            }
-
-            &_isDeliveringCountry {
-                display: none;
-            }
-        }
+      &_isDeliveringCountry {
+        display: none;
+      }
     }
+  }
 }
 
 .Checkout-GuestButton_continueAsGuest.Checkout-GuestButton_isArabic {
-    button {
-        text-align: left;
-    }
+  button {
+    text-align: left;
+  }
 }
 
 .CheckoutHeader {
-    background-color: var(--white);
+  background-color: var(--white);
+  display: flex;
+  justify-content: space-between;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 20px;
+
+  &-BackToShoppingMobile {
+    @include desktop {
+      display: none;
+    }
+
+    ::before {
+      content: " ";
+      position: absolute;
+      width: 16px;
+      height: 22px;
+      left: 20px;
+      top: 30px;
+      background-image: url(./icons/arrow-left-black.svg);
+      background-size: 16px;
+      background-repeat: no-repeat;
+    }
+
+    &_isArabic {
+      ::before {
+        left: 0;
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  &-BackToShoppingDesktop {
+    @include before-desktop {
+      display: none;
+    }
+
+    ::before {
+      content: " ";
+      position: absolute;
+      width: 16px;
+      height: 22px;
+      left: 6px;
+      top: 15px;
+      background-image: url(./icons/arrow-left-black.svg);
+      background-size: 16px;
+      background-repeat: no-repeat;
+    }
+
+    &_isArabic {
+      ::before {
+        transform: rotate(180deg);
+        right: 6px;
+        top: 9px;
+      }
+    }
+
+    &_isMobile {
+      @include desktop {
+        display: none;
+      }
+    }
+
+    :hover {
+      @include desktop {
+        ::before {
+          background-image: url(./icons/arrow-left-white.svg);
+        }
+      }
+    }
+  }
+
+  .HeaderLogo {
+    @include before-desktop {
+      display: none;
+    }
+  }
+
+  &-SecureShipping {
+    padding: 10px;
+    text-align: right;
+    width: 200px;
+    background: url(./icons/lock.svg) no-repeat;
+    background-size: 26px 30px;
+    background-position: 5% 35%;
+
+    @include before-desktop {
+      display: none;
+    }
+
+    &_isArabic {
+      text-align: left;
+      background-position: 95% 35%;
+    }
+  }
+
+  &-SecureShippingLabel {
+    font-size: 20px;
+    font-weight: var(--fw-demi);
+  }
+}
+.Popup {
+  background-color: #4241419e;
+  @include mobile {
+    align-items: flex-end;
+  }
+
+  &-Content {
+    overflow-y: auto;
+  }
+  &_isVisible {
+    @include mobile {
+      height: 100vh !important;
+    }
+  }
+  .BinContent {
     display: flex;
-    justify-content: space-between;
-    max-width: 1120px;
-    margin: 0 auto;
-    padding: 20px;
+    flex-direction: column;
+    text-align: center;
 
-    &-BackToShoppingMobile {
-
-        @include desktop {
-            display: none;
+    &-Icon {
+      img {
+        width: 65px;
+        margin: 0 auto 30px auto;
+        @include mobile {
+          margin: 45px auto 30px auto;
         }
-
-        ::before {
-            content: ' ';
-            position: absolute;
-            width: 16px;
-            height: 22px;
-            left: 20px;
-            top: 30px;
-            background-image: url(./icons/arrow-left-black.svg);
-            background-size: 16px;
-            background-repeat: no-repeat;
-        }
-
-        &_isArabic {
-            ::before {
-                left: 0;
-                transform: rotate(180deg);
-            }
-        }
+      }
+    }
+    &-Close {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      @include mobile {
+        display: none;
+        opacity: 0;
+      }
     }
 
-    &-BackToShoppingDesktop {
-        @include before-desktop {
-            display: none;
-        }
-
-        ::before {
-            content: ' ';
-            position: absolute;
-            width: 16px;
-            height: 22px;
-            left: 6px;
-            top: 15px;
-            background-image: url(./icons/arrow-left-black.svg);
-            background-size: 16px;
-            background-repeat: no-repeat;
-        }
-
-        &_isArabic {
-            ::before {
-                transform: rotate(180deg);
-                right: 6px;
-                top: 9px;
-            }
-        }
-
-        &_isMobile {
-            @include desktop{
-                display: none;
-            }
-        }
-        
-
-        :hover {
-            @include desktop {
-                ::before {
-                    background-image: url(./icons/arrow-left-white.svg);
-                }
-            }
-        }
+    &-Title1 {
+      margin-bottom: 0;
+    }
+    &-Title2 {
+    }
+    &-Description {
+      padding-top: 5px;
+      line-height: 17px;
+      margin-bottom: 50px;
     }
 
-    .HeaderLogo {
-        @include before-desktop {
-            display: none;
-        }
+    &-Button {
+      width: 100%;
+      color: var(--white);
+      background-color: var(--color-black);
+      font-weight: var(--fw-bold);
+      border-radius: 7px;
     }
-
-    &-SecureShipping {
-        padding: 10px;
-        text-align: right;
-        width: 200px;
-        background: url(./icons/lock.svg) no-repeat;
-        background-size: 26px 30px;
-        background-position: 5% 35%;
-
-        @include before-desktop {
-            display: none;
-        }
-
-        &_isArabic {
-            text-align: left;
-            background-position: 95% 35%;
-        }
-    }
-
-    &-SecureShippingLabel {
-        font-size: 20px;
-        font-weight: var(--fw-demi);
-    }
+  }
 }
