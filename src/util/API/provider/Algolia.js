@@ -1,7 +1,7 @@
 import { getStore } from 'Store';
-
 import AlgoliaSDK from '../../../../packages/algolia-sdk';
 import { queryString } from '../helper/Object';
+
 
 export const PRODUCT_HIGHLIGHTS = [
     'color',
@@ -87,6 +87,12 @@ export class Algolia {
     async getPopularBrands(limit) {
         // TODO: validate data, possible cache
         const { data = [] } = await AlgoliaSDK.getPopularBrands(limit) || {};
+        return data;
+    }
+    
+    async createAnalyticsAPI(params) {
+        const { data = [] } = await AlgoliaSDK.createAnalyticsAPI(params) || {};
+        console.log('all well');
         return data;
     }
 }

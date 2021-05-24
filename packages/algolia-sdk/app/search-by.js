@@ -1,5 +1,5 @@
 import { searchParams } from './config';
-import { formatResult, formatNewInTag } from './utils';
+import { formatNewInTag, formatResult } from './utils';
 
 export default function searchBy(
   { query = '', gender = '', limit = 4 },
@@ -29,7 +29,7 @@ export default function searchBy(
         result.data = result.data.map((item) => {
           return formatNewInTag(item);
         });
-
+        console.log('result', result);
         return resolve(result);
       }
     );
