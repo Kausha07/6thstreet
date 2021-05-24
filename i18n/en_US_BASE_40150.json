@@ -763,5 +763,11 @@
     "%s for %s | 6thStreet %s": null,
     "%s for %s | 6thStreet.com %s": null,
     "Shop %s for %s Online in %s.| Free shipping and returns | 6thStreet.com %s": null,
-    "Shop %s for %s Online in %s | Free shipping and returns | 6thStreet.com %s": null
+    "Shop %s for %s Online in %s | Free shipping and returns | 6thStreet.com %s": null,
+    "+ New address": null,
+    "Placing Your Order": null,
+    "Where can we send your order": null,
+    "Where can we send your order?": null,
+    "Where can we send Your order": null,
+    "Where can we send Your order?": null
 }
