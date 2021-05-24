@@ -174,8 +174,9 @@ export class LiveExperienceContainer extends PureComponent {
   }
   containerProps = () => {
     const broadcastId = getQueryParam("broadcastId", location);
+    const {live, upcoming, archived} = this.props;
     return {
-      broadcastId,
+      broadcastId, live, upcoming, archived
     };
   };
 
