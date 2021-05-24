@@ -1,5 +1,7 @@
 import { PureComponent } from "react";
 import Config from "./LiveExperience.config";
+import ThirdPartyAPI from "Util/API/provider/ThirdPartyAPI";
+// import {} from ''
 
 export class LiveExperience extends PureComponent {
   constructor(props) {
@@ -19,81 +21,9 @@ export class LiveExperience extends PureComponent {
     }
   }
 
-  renderLiveParty = () => {
-    const spck = {
-      storeId: Config.storeId,
-      storeType: "sixthstreet",
-      customColor: "#000000",
-      containerId: "single",
-      displayType: "one",
-      broadcastId: this.props.broadcastId,
-      staging: true,
-    };
-
-    const el = document.createElement("script");
-
-    el.setAttribute("src", "https://party.spockee.io/builder/" + spck.storeId);
-
-    el.setAttribute("data-spck", JSON.stringify(spck));
-
-    document.body.appendChild(el);
-    setTimeout(() => {
-      import("./LiveExperience.style");
-    }, 2000);
-  };
-  renderUpcomingParty = () => {
-    const spck = {
-      storeId: Config.storeId,
-
-      storeType: "sixthstreet",
-
-      customColor: "#000000",
-
-      containerId: "live",
-
-      displayType: "upcoming",
-
-      staging: true,
-    };
-
-    const el = document.createElement("script");
-
-    el.setAttribute("src", "https://party.spockee.io/builder/" + spck.storeId);
-
-    el.setAttribute("data-spck", JSON.stringify(spck));
-
-    document.body.appendChild(el);
-    setTimeout(() => {
-      import("./LiveExperience.style");
-    }, 2000);
-  };
-
-  renderArchivedParty = () => {
-    const spck = {
-      storeId: Config.storeId,
-
-      storeType: "sixthstreet",
-
-      customColor: "#000000",
-
-      containerId: "archived",
-
-      displayType: "vod",
-
-      staging: true,
-    };
-
-    const el = document.createElement("script");
-
-    el.setAttribute("src", "https://party.spockee.io/builder/" + spck.storeId);
-
-    el.setAttribute("data-spck", JSON.stringify(spck));
-
-    document.body.appendChild(el);
-    setTimeout(() => {
-      import("./LiveExperience.style");
-    }, 2000);
-  };
+  renderLiveParty = async () => {};
+  renderUpcomingParty = () => {};
+  renderArchivedParty = () => {};
 
   render() {
     return (
