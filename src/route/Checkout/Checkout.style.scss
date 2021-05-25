@@ -601,11 +601,19 @@
 }
 .Popup {
   background-color: #4241419e;
+
   @include mobile {
     align-items: flex-end;
+    -webkit-transition: height 0.2s;
+    -moz-transition: height 0.2s;
+    -ms-transition: height 0.2s;
+    -o-transition: height 0.2s;
+    transition: height 0.2s;
+    height: 0;
   }
 
   &-Content {
+    // height: 0;
     overflow-y: auto;
   }
   &_isVisible {
@@ -657,3 +665,11 @@
     }
   }
 }
+
+// .BinPrmotion {
+//   &-Modal {
+//     &_isVisible {
+//       padding: 20px;
+//     }
+//   }
+// }

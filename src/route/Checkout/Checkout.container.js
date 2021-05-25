@@ -524,6 +524,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         .catch(() => {
           const { showErrorNotification } = this.props;
           this.setState({ isLoading: false });
+
           showErrorNotification(__("Something went wrong."));
           this.resetCart();
         });
