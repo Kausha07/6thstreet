@@ -58,7 +58,6 @@ export class LiveExperience extends PureComponent {
         <a block="eventPlayBtn"><img src={playbtn} alt="event-playbtn"/></a>
         <div block="eventInfo">
           <h3 block="eventTitle">{name}</h3>
-          <a block="playButton">Button</a>
         </div>
       </div>
     )}
