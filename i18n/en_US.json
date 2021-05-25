@@ -673,5 +673,10 @@
     "Free delivery*. More info ": null,
     " item": null,
     " items": null,
-    "My Bag": null
+    "My Bag": null,
+    "Subtotal ": null,
+    "You have received (%s)% off!": null,
+    "Congrats!": null,
+    "Continue": null,
+    "You have received %s% off!": null
 }
