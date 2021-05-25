@@ -614,12 +614,9 @@ export class Checkout extends SourceCheckout {
     const {
       isArabic,
       isMobile,
+      isOpen,
       binInfo: { discount, details },
     } = this.state;
-
-    // if(!discount || discount<0){
-    //   return null;
-    // }
 
     const svg = (
       <svg
@@ -639,7 +636,7 @@ export class Checkout extends SourceCheckout {
 
     return (
       <>
-        <div block="BinContent">
+        <div block="BinContent" mods={{ isOpen }}>
           <button
             block="BinContent"
             elem="Close"
@@ -668,7 +665,15 @@ export class Checkout extends SourceCheckout {
     );
   }
   renderBinPromotion() {
-    const { isArabic, isOpen } = this.state;
+    const {
+      isArabic,
+      isOpen,
+      binInfo: { discount },
+    } = this.state;
+
+    if (!discount || discount < 0) {
+      return null;
+    }
 
     return (
       <Popup
