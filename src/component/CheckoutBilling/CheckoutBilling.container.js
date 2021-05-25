@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import { CARD,TABBY_ISTALLMENTS, TABBY_PAY_LATER } from 'Component/CheckoutPayments/CheckoutPayments.config';
+import { CARD, TABBY_ISTALLMENTS, TABBY_PAY_LATER } from 'Component/CheckoutPayments/CheckoutPayments.config';
 import { ADD_ADDRESS, ADDRESS_POPUP_ID } from 'Component/MyAccountAddressPopup/MyAccountAddressPopup.config';
 import {
     CheckoutBillingContainer as SourceCheckoutBillingContainer,
@@ -66,7 +66,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     }
 
     setCreditCardData(data) {
-        const { number, expDate, cvv } = data;
+        const { number, expDate, cvv, saveCard } = data;
 
         if (number) {
             this.setState({ number });
@@ -78,6 +78,10 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
 
         if (cvv) {
             this.setState({ cvv });
+        }
+
+        if (saveCard !== undefined && saveCard !== null) {
+            this.setState({ saveCard });
         }
     }
 
@@ -150,8 +154,8 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
 
                 showErrorNotification(__('Something went wrong'));
             });
-        } else if(code === TABBY_PAY_LATER || code===TABBY_ISTALLMENTS){
-            this.createTabbySessionAndSavePaymentInformation(asyncData,fields);
+        } else if (code === TABBY_PAY_LATER || code === TABBY_ISTALLMENTS) {
+            this.createTabbySessionAndSavePaymentInformation(asyncData, fields);
         } else {
             savePaymentInformation({
                 billing_address: address,
@@ -160,10 +164,10 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
         }
     }
 
-    createTabbySessionAndSavePaymentInformation(asyncData,fields){
+    createTabbySessionAndSavePaymentInformation(asyncData, fields) {
         const paymentMethod = this._getPaymentData(asyncData);
         const address = this._getAddress(fields);
-        const { savePaymentInformation,createTabbySession,shippingAddress,setTabbyWebUrl } = this.props;
+        const { savePaymentInformation, createTabbySession, shippingAddress, setTabbyWebUrl } = this.props;
         createTabbySession(shippingAddress).then(
             (response) => {
                 if (response && response.configuration) {
@@ -201,21 +205,21 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
                 }
             },
             this._handleError
-        ).catch(() => {});
+        ).catch(() => { });
     }
 
     getCartError(message) {
         switch (message) {
-        case 'card_number_invalid':
-            return __('Card number is not valid');
-        case 'card_expiry_month_invalid':
-            return __('Card exp month is not valid');
-        case 'card_expiry_year_invalid':
-            return __('Card exp year is not valid');
-        case 'cvv_invalid':
-            return __('Card cvv is not valid');
-        default:
-            return __('Something went wrong');
+            case 'card_number_invalid':
+                return __('Card number is not valid');
+            case 'card_expiry_month_invalid':
+                return __('Card exp month is not valid');
+            case 'card_expiry_year_invalid':
+                return __('Card exp year is not valid');
+            case 'cvv_invalid':
+                return __('Card cvv is not valid');
+            default:
+                return __('Something went wrong');
         }
     }
 

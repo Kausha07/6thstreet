@@ -31,8 +31,9 @@ class CreditCard extends PureComponent {
     };
 
     componentDidMount() {
-        const { setOrderButtonDisabled } = this.props;
+        const { setOrderButtonDisabled, setCreditCardData } = this.props;
         setOrderButtonDisabled();
+        setCreditCardData({ saveCard: true });
     }
 
     componentDidUpdate() {
@@ -123,7 +124,10 @@ class CreditCard extends PureComponent {
     };
 
     handleCheckboxChange = () => {
-        this.setState((prevState) => ({ saveCard: !prevState.saveCard }));
+        const { setCreditCardData } = this.props;
+        let value = !this.state.saveCard;
+        this.setState({ saveCard: value });
+        setCreditCardData({ saveCard: value });
     }
 
     renderCreditCardForm() {
