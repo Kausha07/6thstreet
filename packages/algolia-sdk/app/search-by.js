@@ -29,7 +29,6 @@ export default function searchBy(
         result.data = result.data.map((item) => {
           return formatNewInTag(item);
         });
-        console.log('result', result);
         return resolve(result);
       }
     );

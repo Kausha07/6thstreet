@@ -55,8 +55,9 @@ export class SearchSuggestionsDispatcher {
       //     categorySuggestions,
       //     productSuggestions
       // );
-        if (productData.data.length > 0) {
-            const objectIDs = productData.data.map(item => item.objectID);
+
+      const objectIDs = productData.data.map(item => item.objectID);
+      console.log('objectIDs',objectIDs)
         const analyticsAPI = await new Algolia().createAnalyticsAPI(
           VIEW_SEARCH_RESULTS_ALGOLIA,
           {
@@ -64,21 +65,9 @@ export class SearchSuggestionsDispatcher {
             items: productData.data,
             list: "Search Results",
           },
-          { objectIDs, queryID: search }
+          { objectIDs, queryID: productData.query }
         );
         console.log("analyticsAPI", analyticsAPI);
-      } else {
-        const analyticsAPI = await new Algolia().createAnalyticsAPI(
-          VIEW_SEARCH_RESULTS_ALGOLIA,
-          {
-            search_item: search,
-            items: productData.data,
-            list: "Search Results",
-          },
-          { objectIDs, queryID: search }
-        );
-        console.log("analyticsAPI", analyticsAPI);
-      }
       const results = formatProductSuggestions(productData);
 
       dispatch(setSearchSuggestions(search, results));

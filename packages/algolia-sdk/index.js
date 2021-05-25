@@ -35,8 +35,8 @@ const AlgoliaSDK = {
   getBrands: (gender) => getBrands(gender, { index: AlgoliaSDK.index }),
   getProductBySku: (params) =>
     getProductBySku(params, { index: AlgoliaSDK.index }),
-  createAnalyticsAPI: (params) =>
-    createAnalyticsAPI(params,{ index: AlgoliaSDK.index }),
+  createAnalyticsAPI: (event_name,objectIDs,queryID, search_term) =>
+    createAnalyticsAPI(event_name,objectIDs,queryID,search_term,{ index: AlgoliaSDK.index }),
 };
 
 export default AlgoliaSDK;
