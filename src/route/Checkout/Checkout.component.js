@@ -71,20 +71,22 @@ export class Checkout extends SourceCheckout {
     binInfo: {},
   };
 
-  static getDerivedStateFromProps(nextProps) {
-    const { activeOverlay } = nextProps;
-
-    document.body.style.overflow =
-      activeOverlay === "BinPromotion" ? "hidden" : "visible";
-    return { isOpen: activeOverlay === "BinPromotion" };
-  }
+  hideModalListener = () => {
+    // Will hide bin promotion popup after 5 sec
+    setTimeout(() => {
+      this.hideOverlay();
+    }, 5000);
+  };
 
   showModal = (binInfo) => {
     const { isOpen } = this.state;
     const { showOverlay } = this.props;
-
-    showOverlay("BinPromotion");
-    this.setState({ isOpen: true, binInfo: binInfo });
+    const { discount } = binInfo;
+    if (discount && discount > 0) {
+      showOverlay("BinPromotion");
+      this.setState({ isOpen: true, binInfo: binInfo });
+      // this.hideModalListener();
+    }
   };
 
   savePaymentInformation = (paymentInformation) => {
@@ -607,7 +609,10 @@ export class Checkout extends SourceCheckout {
 
   hideOverlay = () => {
     const { hideActiveOverlay } = this.props;
-    hideActiveOverlay();
+    this.setState({ isOpen: false, binInfo: {} });
+    setTimeout(() => {
+      hideActiveOverlay();
+    }, 2000);
   };
 
   renderContent() {
@@ -645,6 +650,9 @@ export class Checkout extends SourceCheckout {
           >
             {svg}
           </button>
+          <div block="Placeholder" onClick={this.hideOverlay}>
+            <div block="Placeholder" elem="Line"></div>
+          </div>
           <div block="BinContent" elem="Icon">
             <img src={giftImgUrl} alt="__('Gift Icon')" />
           </div>
@@ -671,22 +679,22 @@ export class Checkout extends SourceCheckout {
       binInfo: { discount },
     } = this.state;
 
-    if (!discount || discount < 0) {
-      return null;
-    }
-
     return (
       <Popup
         clickOutside={false}
         mix={{
           block: "BinPromotion",
           elem: "Modal",
-          mods: { isOpen, isArabic },
+          mods: {
+            isOpen,
+            isArabic,
+            isClosed: !isOpen,
+          },
         }}
         id="BinPromotion"
         title="Bin Promotion"
       >
-        {this.renderContent()}
+        {discount && discount > 0 ? this.renderContent() : null}
       </Popup>
     );
   }
