@@ -79,6 +79,9 @@ class DynamicContentBanner extends PureComponent {
             <Link
               to={ formatCDNLink(link) }
               key={ i }
+              data-banner-type="banner"
+              data-promotion-name= {item.promotion_name}
+              data-tag={item.tag}
               onClick={() => {this.onclick(item)}}
             >
 

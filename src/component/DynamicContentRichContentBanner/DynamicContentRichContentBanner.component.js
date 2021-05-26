@@ -85,6 +85,9 @@ class DynamicContentRichContentBanner extends PureComponent {
                 <Link
                     to={linkTo}
                     key={i}
+                    data-banner-type="richContentBanner"
+                    data-promotion-name= {item.promotion_name}
+                    data-tag={item.tag}
                     onClick={() => {this.onclick(item)}}
                 >
                     <Image

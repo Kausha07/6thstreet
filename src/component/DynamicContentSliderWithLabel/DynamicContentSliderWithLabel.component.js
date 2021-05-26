@@ -108,6 +108,9 @@ class DynamicContentSliderWithLabel extends PureComponent {
                 <Link
                   to={ linkTo }
                   key={ i*10 }
+                  data-banner-type="sliderWithLabel"
+                  data-promotion-name= {item.promotion_name}
+                  data-tag={item.tag}
                   onClick={() => {this.onclick(item)}}
                 >
                 <img src={ url } alt={ text } block= 'Image' style={{width: wd, height: ht}}/>

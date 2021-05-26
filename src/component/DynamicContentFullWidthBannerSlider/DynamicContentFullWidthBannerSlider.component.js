@@ -80,7 +80,11 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
             <Link
               to={ linkTo }
               key={ i }
+              data-banner-type="fullWidthBanner"
+              data-promotion-name= {item.promotion_name}
+              data-tag={item.tag}
               onClick={() => {this.onclick(item)}}
+
             >
                 <img src={ image_url } alt={ label }/>
             </Link>
