@@ -26,6 +26,8 @@ export const mapStateToProps = (state) => ({
   processingRequest: state.CartReducer.processingRequest,
   processingPaymentSelectRequest:
     state.CartReducer.processingPaymentSelectRequest,
+  totals: state.CartReducer.cartTotals,
+  cartId: state.CartReducer.cartId,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -38,6 +40,7 @@ export const mapDispatchToProps = (dispatch) => ({
   showPopup: (payload) => dispatch(showPopup(ADDRESS_POPUP_ID, payload)),
   createTabbySession: (code) =>
     CheckoutDispatcher.createTabbySession(dispatch, code),
+  removeBinPromotion: () => CheckoutDispatcher.removeBinPromotion(dispatch),
 });
 
 export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
@@ -108,8 +111,19 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     }
   }
 
+  removeBinPromotion = async () => {
+    const { updateTotals, removeBinPromotion } = this.props;
+    this.resetBinApply();
+    await removeBinPromotion();
+    await updateTotals();
+  };
+
   setCreditCardData(data) {
     const { number, expDate, cvv } = data;
+    const { binApplied } = this.state;
+    const {
+      totals: { discount },
+    } = this.props;
 
     if (number) {
       this.setState({ number });
@@ -121,6 +135,12 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
 
     if (cvv) {
       this.setState({ cvv });
+    }
+    if (discount !== 0) {
+      this.removeBinPromotion();
+    }
+    if (binApplied) {
+      this.setState({ binApplied: false });
     }
   }
 
