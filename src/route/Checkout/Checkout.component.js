@@ -85,7 +85,7 @@ export class Checkout extends SourceCheckout {
     if (discount && discount > 0) {
       showOverlay("BinPromotion");
       this.setState({ isOpen: true, binInfo: binInfo });
-      // this.hideModalListener();
+      this.hideModalListener();
     }
   };
 
@@ -610,9 +610,15 @@ export class Checkout extends SourceCheckout {
   hideOverlay = () => {
     const { hideActiveOverlay } = this.props;
     this.setState({ isOpen: false, binInfo: {} });
-    setTimeout(() => {
+    const { isMobile } = this.state;
+    debugger;
+    if (isMobile) {
+      setTimeout(() => {
+        hideActiveOverlay();
+      }, 500);
+    } else {
       hideActiveOverlay();
-    }, 2000);
+    }
   };
 
   renderContent() {
