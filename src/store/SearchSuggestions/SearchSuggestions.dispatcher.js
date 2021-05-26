@@ -1,3 +1,4 @@
+import publicIp from "public-ip";
 import { getStore } from "Store";
 import { setSearchSuggestions } from "Store/SearchSuggestions/SearchSuggestions.action";
 import { formatProductSuggestions } from "Util/API/endpoint/Suggestions/Suggestions.format";
@@ -25,6 +26,8 @@ export class SearchSuggestionsDispatcher {
               limit: PRODUCT_RESULT_LIMIT,
             }
       );
+
+      console.log('search data',productData)
 
       // In case anyone needs desktop data (use this!)
       // const lang = language === 'en' ? 'english' : 'arabic';
@@ -57,17 +60,16 @@ export class SearchSuggestionsDispatcher {
       // );
 
       const objectIDs = productData.data.map(item => item.objectID);
-      console.log('objectIDs',objectIDs)
-        const analyticsAPI = await new Algolia().createAnalyticsAPI(
-          VIEW_SEARCH_RESULTS_ALGOLIA,
-          {
-            search_item: search,
-            items: productData.data,
-            list: "Search Results",
-          },
-          { objectIDs, queryID: productData.query }
+      const getClientIp = await publicIp.v4();
+      await new Algolia().logSearchResults(
+        VIEW_SEARCH_RESULTS_ALGOLIA,
+        {
+          search_item: search,
+          items: productData.data,
+          list: "Search Results",
+        },
+        { objectIDs, queryID: productData.query,userToken: `user-${getClientIp.replace(/\./g,'-')}`  },
         );
-        console.log("analyticsAPI", analyticsAPI);
       const results = formatProductSuggestions(productData);
 
       dispatch(setSearchSuggestions(search, results));

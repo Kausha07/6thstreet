@@ -80,31 +80,29 @@ export class Algolia {
     return data;
   }
 
-    async createAnalyticsAPI(name, params, algoliaParams) {
-      console.log('name',name)
-      console.log('params',params)
-      console.log('algoliaParams',algoliaParams)
-      console.log('algoliaParams.objectIDs',algoliaParams.objectIDs)
+  async logSearchResults(name, params, algoliaParams, userToken) {
     switch (name) {
       case VIEW_SEARCH_RESULTS_ALGOLIA: {
         if (params.items.length > 0) {
           const { data = [] } =
-            (await AlgoliaSDK.createAnalyticsAPI(
+            (await AlgoliaSDK.logSearchResults(
               name,
               algoliaParams.objectIDs,
               algoliaParams.queryID,
+              algoliaParams.userToken,
               []
-                )) || {};
-            return data;
+            )) || {};
+          return data;
         } else {
           const { data = [] } =
-            (await AlgoliaSDK.createAnalyticsAPI(
+            (await AlgoliaSDK.logSearchResults(
               "No_Search_Result",
-              algoliaParams.objecIDs,
+              algoliaParams.objecIDs ? algoliaParams.objecIDs : [],
               algoliaParams.queryID,
-              [`search:${params.search_term}`]
-                )) || {};
-            return data;
+              algoliaParams.userToken,
+              [`search:${algoliaParams.queryID}`]
+            )) || {};
+          return data;
         }
       }
     }

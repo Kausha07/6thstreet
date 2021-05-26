@@ -18,13 +18,14 @@ export default function searchBy(
     index.search(
       {
         query,
-        ...newSearchParams
+        ...newSearchParams,
+        clickAnalytics: true,
       },
       (err, data = {}) => {
         if (err) {
           return reject(err);
         }
-
+        console.log('search data', data);
         const result = formatResult(data);
         result.data = result.data.map((item) => {
           return formatNewInTag(item);

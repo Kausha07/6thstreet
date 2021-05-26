@@ -1,11 +1,11 @@
 import {
-  createAnalyticsAPI,
   getBrands,
   getPDP,
   getPLP,
   getPopularBrands,
   getProductBySku,
   init,
+  logSearchResults,
   searchBy
 } from "./app";
 import { getIndex } from "./app/utils";
@@ -35,8 +35,14 @@ const AlgoliaSDK = {
   getBrands: (gender) => getBrands(gender, { index: AlgoliaSDK.index }),
   getProductBySku: (params) =>
     getProductBySku(params, { index: AlgoliaSDK.index }),
-  createAnalyticsAPI: (event_name,objectIDs,queryID, search_term) =>
-    createAnalyticsAPI(event_name,objectIDs,queryID,search_term,{ index: AlgoliaSDK.index }),
+  logSearchResults: (event_name, objectIDs, queryID, userToken, search_term) =>
+    logSearchResults(event_name, objectIDs, queryID, userToken, search_term, {
+      index: AlgoliaSDK.index,
+    }),
+  logProductClicked: (event_name, objectIDs, queryID, userToken, search_term) =>
+    logProductClicked(event_name, objectIDs, queryID, userToken, search_term, {
+      index: AlgoliaSDK.index,
+    }),
 };
 
 export default AlgoliaSDK;

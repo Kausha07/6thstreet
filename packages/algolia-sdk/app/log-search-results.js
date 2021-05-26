@@ -1,9 +1,17 @@
 const fetch = require('node-fetch');
-export default function createAnalyticsAPI(event_name, objectIDs, queryID,search_term,options = {}) {
+export default function logSearchResults(event_name, objectIDs, queryID,userToken,search_term,options = {}) {
   const { index } = options;
   const apiKey = index.as.apiKey;
+  const indexName = index.indexName;
   const applicationID = index.as.applicationID;
-  console.log('algolia params',{event_name, objectIDs, queryID,search_term})
+  let payload = {events:[{
+    eventType: "view",
+    eventName: event_name,
+    index: indexName,
+    userToken: userToken,
+    objectIDs: objectIDs,
+    // queryID: queryID,
+  }]}
   return new Promise((resolve, reject) => {
     fetch(
       `https://insights.algolia.io/1/events`,
@@ -14,23 +22,15 @@ export default function createAnalyticsAPI(event_name, objectIDs, queryID,search
           'X-Algolia-API-Key': apiKey,
           'X-Algolia-Application-Id': applicationID
         },
-        body: event_name, objectIDs, queryID,search_term,
+        body: JSON.stringify(payload),
       }
     )
       .then((response) => {
-        console.log('response.status',response.status)
         if (response.status !==200) {
           // throw Error(response.message);
           console.log('Error',response.message)
         }
-
         return response.json();
-      })
-      .then((result) => {
-        const data = result;
-        if (!data) {
-          resolve({ data: [] });
-        }
       })
       .catch((error) => reject(error));
   });
