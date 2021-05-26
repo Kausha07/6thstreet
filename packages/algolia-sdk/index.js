@@ -5,6 +5,7 @@ import {
   getPopularBrands,
   getProductBySku,
   init,
+  logProductClicked,
   logSearchResults,
   searchBy
 } from "./app";
@@ -39,8 +40,8 @@ const AlgoliaSDK = {
     logSearchResults(event_name, objectIDs, queryID, userToken, search_term, {
       index: AlgoliaSDK.index,
     }),
-  logProductClicked: (event_name, objectIDs, queryID, userToken, search_term) =>
-    logProductClicked(event_name, objectIDs, queryID, userToken, search_term, {
+  logProductClicked: (event_name, objectIDs, queryID,position, userToken) =>
+    logProductClicked(event_name, objectIDs, queryID, position, userToken, {
       index: AlgoliaSDK.index,
     }),
 };

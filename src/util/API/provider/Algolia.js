@@ -80,7 +80,7 @@ export class Algolia {
     return data;
   }
 
-  async logSearchResults(name, params, algoliaParams, userToken) {
+  async logSearchResults(name, params, algoliaParams) {
     switch (name) {
       case VIEW_SEARCH_RESULTS_ALGOLIA: {
         if (params.items.length > 0) {
@@ -106,6 +106,18 @@ export class Algolia {
         }
       }
     }
+  }
+
+  async logProductClicked(name, algoliaParams) {
+    const { data = [] } =
+          (await AlgoliaSDK.logProductClicked(
+            name,
+            algoliaParams.objectIDs,
+            algoliaParams.queryID,
+            algoliaParams.userToken,
+            algoliaParams.position,
+          )) || {};
+        return data;
   }
 }
 

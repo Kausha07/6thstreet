@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
-
 import { Product } from 'Util/API/endpoint/Product/Product.type';
-
 import ProductItem from './ProductItem.component';
+
+
 
 export const mapStateToProps = (_state) => ({
     // wishlistItems: state.WishlistReducer.productsInWishlist
@@ -17,7 +17,8 @@ export const mapDispatchToProps = (_dispatch) => ({
 export class ProductItemContainer extends PureComponent {
     static propTypes = {
         product: Product.isRequired,
-        page: PropTypes.string
+        page: PropTypes.string,
+        position: PropTypes.number
     };
 
     static defaultProps = {
@@ -25,8 +26,9 @@ export class ProductItemContainer extends PureComponent {
     };
 
     containerProps = () => {
-        const { product, page } = this.props;
-        return { product, page };
+        const { product, page, position } = this.props;
+        console.log('position product item',position)
+        return { product, page,position };
     };
 
     render() {
