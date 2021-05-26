@@ -1,10 +1,10 @@
-import publicIp from "public-ip";
+// import publicIp from "public-ip";
 import { getStore } from "Store";
 import { setSearchSuggestions } from "Store/SearchSuggestions/SearchSuggestions.action";
 import { formatProductSuggestions } from "Util/API/endpoint/Suggestions/Suggestions.format";
 import Algolia from "Util/API/provider/Algolia";
 import { isArabic } from "Util/App";
-import { VIEW_SEARCH_RESULTS_ALGOLIA } from 'Util/Event';
+// import { VIEW_SEARCH_RESULTS_ALGOLIA } from 'Util/Event';
 
 const PRODUCT_RESULT_LIMIT = 8;
 
@@ -59,17 +59,19 @@ export class SearchSuggestionsDispatcher {
       //     productSuggestions
       // );
 
-      const objectIDs = productData.data.map(item => item.objectID);
-      const getClientIp = await publicIp.v4();
-      await new Algolia().logSearchResults(
-        VIEW_SEARCH_RESULTS_ALGOLIA,
-        {
-          search_item: search,
-          items: productData.data,
-          list: "Search Results",
-        },
-        { objectIDs, queryID: productData.query,userToken: `user-${getClientIp.replace(/\./g,'-')}`  },
-        );
+      // if you need search analytics then uncomment it.
+
+      // const objectIDs = productData.data.map(item => item.objectID);
+      // const getClientIp = await publicIp.v4();
+      // await new Algolia().logSearchResults(
+      //   VIEW_SEARCH_RESULTS_ALGOLIA,
+      //   {
+      //     search_item: search,
+      //     items: productData.data,
+      //     list: "Search Results",
+      //   },
+      //   { objectIDs, queryID: productData.query,userToken: `user-${getClientIp.replace(/\./g,'-')}`  },
+      //   );
       const results = formatProductSuggestions(productData);
 
       dispatch(setSearchSuggestions(search, results));

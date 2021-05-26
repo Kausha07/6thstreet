@@ -1,15 +1,16 @@
 const fetch = require('node-fetch');
-export default function logProductClicked(event_name, objectIDs, queryID,userToken,search_term,options = {}) {
+export default function logProductClicked(event_name, objectIDs, queryID,userToken,options = {}) {
   const { index } = options;
   const apiKey = index.as.apiKey;
+  const indexName = index.indexName;
   const applicationID = index.as.applicationID;
   let payload = {events:[{
-    eventType: "click",
+    eventType: "conversion",
     eventName: event_name,
-    index: 'products',
+    index: indexName,
     userToken: userToken,
     objectIDs: objectIDs,
-    // queryID: queryID,
+    queryID: queryID,
   }]}
   return new Promise((resolve, reject) => {
     fetch(
