@@ -24,9 +24,9 @@ class PDPAlsoAvailableProduct extends PureComponent {
         const { product: { color } } = this.props;
 
         return (
-            <p block="ProductItem" elem="Title">
+            <h5 block="ProductItem" elem="Title">
                 { color }
-            </p>
+            </h5>
         );
     }
 

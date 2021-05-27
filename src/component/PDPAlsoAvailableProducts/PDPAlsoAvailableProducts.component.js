@@ -33,9 +33,9 @@ class PDPAlsoAvailableProducts extends PureComponent {
         return (
             <div block="PDPAlsoAvailableProducts" mods={ { isAlsoAvailable } }>
                 <h1 block="PDPAlsoAvailableProducts" elem="Title">{ __('Also available in:') }</h1>
-                <div block="PDPAlsoAvailableProducts" elem="List">
+                <ul block="PDPAlsoAvailableProducts" elem="List">
                     { this.renderAvailableProducts() }
-                </div>
+                </ul>
             </div>
         );
     }

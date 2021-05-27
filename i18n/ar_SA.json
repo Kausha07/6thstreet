@@ -249,7 +249,7 @@
     "Please select a size.": "الرجاء إختيار مقاس",
     "New Products": "منتجات جديدة",
     "You have no items in your shopping cart.": "لا يوجد لديك منتجات في سلة التسوق الخاصة بك.",
-    "Subtotal ": "الإجمالي ",
+    "Subtotal ": null,
     "(Taxes Included) ": "(يشمل الضريبة) ",
     "Coupon ": "قسيمة الخصم ",
     "View bag": "عرض الحقيبة",
@@ -302,7 +302,7 @@
     "Size guide": "دليل المقاسات",
     "SIZE GUIDE": "دليل المقاسات",
     "Sizing Guide": "دليل المقاسات",
-    "Fitting Information - Items fits true to size": "معلومات القياس - القطعة ملائمة للمقاس",
+    "Fitting Information - Items fits true to size": null,
     "UK": "المملكة المتحدة",
     "International": "دولي",
     "European": "الأوروبي",
@@ -748,5 +748,12 @@
     "%s for %s | 6thStreet %s": null,
     "%s for %s | 6thStreet.com %s": null,
     "Shop %s for %s Online in %s.| Free shipping and returns | 6thStreet.com %s": null,
-    "Shop %s for %s Online in %s | Free shipping and returns | 6thStreet.com %s": null
+    "Shop %s for %s Online in %s | Free shipping and returns | 6thStreet.com %s": null,
+    "Description": null,
+    "Size & Fit": null,
+    "Model Measurements": null,
+    "Click & Collect": null,
+    "Shipping & Free Returns": null,
+    "Contact Us": null,
+    "Size Help": null
 }

@@ -9,9 +9,11 @@ import { showNotification } from 'Store/Notification/Notification.action';
 import PDPDispatcher from 'Store/PDP/PDP.dispatcher';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
 import Event, { EVENT_GTM_PRODUCT_ADD_TO_CART } from 'Util/Event';
+import isMobile from 'Util/Mobile';
 import history from 'Util/History';
 
 import PDPAddToCart from './PDPAddToCart.component';
+import PDPAddToCartDesktop from './PDPAddToCartDesktop.component';
 
 export const mapStateToProps = (state) => ({
     product: state.PDP.product,
@@ -220,7 +222,7 @@ export class PDPAddToCartContainer extends PureComponent {
     };
 
     onSizeTypeSelect(type) {
-        this.setState({ selectedSizeType: type.target.value });
+        this.setState({ selectedSizeType: type.target.value, selectedSizeCode: '' });
     }
 
     onSizeSelect(size) {
@@ -376,7 +378,15 @@ export class PDPAddToCartContainer extends PureComponent {
     }
 
     render() {
-        
+        if(!isMobile.any()){
+            return (
+                <PDPAddToCartDesktop
+                    { ...this.containerFunctions }
+                    { ...this.containerProps() }
+                />
+            );
+        }
+
         return (
             <PDPAddToCart
               { ...this.containerFunctions }

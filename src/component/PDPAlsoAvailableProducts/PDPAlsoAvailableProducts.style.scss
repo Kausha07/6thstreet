@@ -1,8 +1,9 @@
 .PDPAlsoAvailableProducts {
-    margin-top: 25px;
+    margin-top: 12px;
 
     li {
-        padding: 0;
+        padding: 0 3px;
+        flex: 0 0 auto; 
 
         &:before {
             content: none;
@@ -11,7 +12,15 @@
 
     &-List {
         display: flex;
-        flex-wrap: wrap;
+        flex-direction: row;
+        overflow-x: scroll;
+        flex-wrap: nowrap;
+        -webkit-overflow-scrolling: touch;
+        -ms-overflow-style: -ms-autohiding-scrollbar; 
+    }
+
+    &-List::-webkit-scrollbar {
+        display: none;
     }
 
     &-Title {
@@ -30,9 +39,11 @@
     .PDPAlsoAvailableProducts {
         &-Title {
             @include before-desktop {
+                font-size: 17px;
+                font-weight: 600;
+                letter-spacing: 0;
+                line-height: 30px;
                 text-align: center;
-                font-size: 15px;
-                margin-bottom: 25px;
             }
         }
     }
