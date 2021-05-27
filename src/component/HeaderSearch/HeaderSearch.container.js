@@ -2,10 +2,10 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-
 import { HistoryType, LocationType } from 'Type/Common';
-
 import HeaderSearch from './HeaderSearch.component';
+
+
 
 export const mapStateToProps = (_state) => ({
     // wishlistItems: state.WishlistReducer.productsInWishlist
@@ -57,6 +57,7 @@ export class HeaderSearchContainer extends PureComponent {
     onSearchSubmit() {
         const { history } = this.props;
         const { search } = this.state;
+        console.log('search submit',search);
         history.push(`/catalogsearch/result/?q=${ search }`);
     }
 

@@ -10,6 +10,7 @@ export const mapStateToProps = (state) => ({
     requestedSearch: state.SearchSuggestions.search,
     data: state.SearchSuggestions.data,
     gender: state.AppState.gender,
+    queryID: state.SearchSuggestions.queryID,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -30,6 +31,7 @@ export class SearchSuggestionContainer extends PureComponent {
             products: PropTypes.array
         }).isRequired,
         closeSearch: PropTypes.func.isRequired,
+        queryID: PropTypes.string,
     };
 
     static getDerivedStateFromProps(props, state) {
@@ -91,7 +93,7 @@ export class SearchSuggestionContainer extends PureComponent {
 
     containerProps = () => {
         const { trendingBrands, trendingTags } = this.state;
-        const { search, data,closeSearch } = this.props;
+        const { search, data,closeSearch,queryID } = this.props;
         const { brands = [], products = [] } = data;
 
         const isEmpty = search === '';
@@ -106,7 +108,8 @@ export class SearchSuggestionContainer extends PureComponent {
             isLoading: this.getIsLoading(),
             trendingBrands,
             trendingTags,
-            closeSearch
+            closeSearch,
+            queryID
         };
     };
     containerFunctions = {

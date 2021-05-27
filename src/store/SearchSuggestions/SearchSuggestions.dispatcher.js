@@ -1,9 +1,10 @@
-// import publicIp from "public-ip";
+
 import { getStore } from "Store";
 import { setSearchSuggestions } from "Store/SearchSuggestions/SearchSuggestions.action";
 import { formatProductSuggestions } from "Util/API/endpoint/Suggestions/Suggestions.format";
 import Algolia from "Util/API/provider/Algolia";
 import { isArabic } from "Util/App";
+// import { getUUIDToken } from 'Util/Auth';
 // import { VIEW_SEARCH_RESULTS_ALGOLIA } from 'Util/Event';
 
 const PRODUCT_RESULT_LIMIT = 8;
@@ -61,8 +62,13 @@ export class SearchSuggestionsDispatcher {
 
       // if you need search analytics then uncomment it.
 
+      // var data = localStorage.getItem("customer");
+      // let userData = JSON.parse(data);
+      // let userToken;
+      //   if (userData?.data?.id) {
+      //   userToken = userData.data.id;
+      // }
       // const objectIDs = productData.data.map(item => item.objectID);
-      // const getClientIp = await publicIp.v4();
       // await new Algolia().logSearchResults(
       //   VIEW_SEARCH_RESULTS_ALGOLIA,
       //   {
@@ -70,11 +76,12 @@ export class SearchSuggestionsDispatcher {
       //     items: productData.data,
       //     list: "Search Results",
       //   },
-      //   { objectIDs, queryID: productData.query,userToken: `user-${getClientIp.replace(/\./g,'-')}`  },
+      //   { objectIDs, queryID: productData.queryID,userToken: userToken ? `user-${userToken}`: getUUIDToken(),  },
       //   );
+      const queryID = productData?.queryID ? productData?.queryID : null;
       const results = formatProductSuggestions(productData);
 
-      dispatch(setSearchSuggestions(search, results));
+      dispatch(setSearchSuggestions(search, results,queryID));
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e);

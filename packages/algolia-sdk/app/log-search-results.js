@@ -10,7 +10,6 @@ export default function logSearchResults(event_name, objectIDs, queryID,userToke
     index: indexName,
     userToken: userToken,
     objectIDs: objectIDs,
-    // queryID: queryID,
   }]}
   return new Promise((resolve, reject) => {
     fetch(

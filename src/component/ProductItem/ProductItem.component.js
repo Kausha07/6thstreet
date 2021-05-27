@@ -5,13 +5,18 @@ import ProductLabel from "Component/ProductLabel/ProductLabel.component";
 import WishlistIcon from "Component/WishlistIcon";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
+import { getStore } from "Store";
 import { Product } from "Util/API/endpoint/Product/Product.type";
 import Algolia from "Util/API/provider/Algolia";
 import { isArabic } from "Util/App";
-import { getMobileAuthorizationToken } from 'Util/Auth';
-import Event, { EVENT_GTM_PRODUCT_CLICK, SELECT_ITEM_ALGOLIA } from "Util/Event";
+import {
+  getUUIDToken
+} from 'Util/Auth';
+import Event, {
+  EVENT_GTM_PRODUCT_CLICK,
+  SELECT_ITEM_ALGOLIA
+} from "Util/Event";
 import "./ProductItem.style";
-// const getClientIp = publicIp.v4();
 
 class ProductItem extends PureComponent {
   static propTypes = {
@@ -30,21 +35,24 @@ class ProductItem extends PureComponent {
 
   handleClick = this.handleProductClick.bind(this);
 
-    handleProductClick() {
-        const token = getMobileAuthorizationToken();
-        console.log('token',token)
-      const { product,position } = this.props;
+ handleProductClick() {
+    var data = localStorage.getItem("customer");
+    let userData = JSON.parse(data);
+    let userToken;
+   const queryID = getStore().getState().SearchSuggestions.queryID;
+    if (userData?.data) {
+      userToken = userData.data.id;
+    }
+    const { product, position } = this.props;
     Event.dispatch(EVENT_GTM_PRODUCT_CLICK, product);
-      new Algolia().logProductClicked(
-      SELECT_ITEM_ALGOLIA,
-      {
-        objectIDs: [product.objectID],
-        queryID: '43b15df305339e827f0ac0bdc5ebcaa7',
-        // userToken: `user-${getClientIp.replace(/\./g, "-")}`,
-          userToken: token,
-        position: [position]
-      }
-    );
+    if (queryID) {
+      new Algolia().logProductClicked(SELECT_ITEM_ALGOLIA, {
+      objectIDs: [product.objectID],
+      queryID,
+      userToken: userToken ? `user-${userToken}`: getUUIDToken(),
+      position: [position],
+    });
+    }
   }
 
   renderWishlistIcon() {
@@ -70,8 +78,8 @@ class ProductItem extends PureComponent {
 
       return count > 0 ? (
         <span block="PLPSummary" elem="Colors">
-          {`+${count} `}
-          {__("Colors")}
+          {" "}
+          {`+${count} `} {__("Colors")}{" "}
         </span>
       ) : null;
     }
@@ -87,7 +95,8 @@ class ProductItem extends PureComponent {
     if (promotion !== undefined) {
       return promotion !== null ? (
         <span block="PLPSummary" elem="Exclusive">
-          {promotion}
+          {" "}
+          {promotion}{" "}
         </span>
       ) : null;
     }
@@ -102,9 +111,8 @@ class ProductItem extends PureComponent {
 
     return (
       <div>
-        <Image src={thumbnail_url} />
-        {this.renderExclusive()}
-        {this.renderColors()}
+        <Image src={thumbnail_url} /> {this.renderExclusive()}{" "}
+        {this.renderColors()}{" "}
       </div>
     );
   }
@@ -116,7 +124,8 @@ class ProductItem extends PureComponent {
 
     return (
       <h2 block="ProductItem" elem="Brand">
-        {brand_name}
+        {" "}
+        {brand_name}{" "}
       </h2>
     );
   }
@@ -128,7 +137,8 @@ class ProductItem extends PureComponent {
 
     return (
       <p block="ProductItem" elem="Title">
-        {name}
+        {" "}
+        {name}{" "}
       </p>
     );
   }
@@ -152,15 +162,16 @@ class ProductItem extends PureComponent {
 
     const linkTo = {
       pathname,
-      state: { product },
+      state: {
+        product,
+      },
     };
 
     return (
       <Link to={linkTo} onClick={this.handleClick}>
-        {this.renderImage()}
-        {this.renderBrand()}
-        {this.renderTitle()}
-        {this.renderPrice()}
+        {" "}
+        {this.renderImage()} {this.renderBrand()} {this.renderTitle()}{" "}
+        {this.renderPrice()}{" "}
       </Link>
     );
   }
@@ -169,10 +180,14 @@ class ProductItem extends PureComponent {
     const { isArabic } = this.state;
 
     return (
-      <li block="ProductItem" mods={{ isArabic }}>
-        {this.renderLabel()}
-        {this.renderWishlistIcon()}
-        {this.renderLink()}
+      <li
+        block="ProductItem"
+        mods={{
+          isArabic,
+        }}
+      >
+        {" "}
+        {this.renderLabel()} {this.renderWishlistIcon()} {this.renderLink()}{" "}
       </li>
     );
   }

@@ -5,6 +5,7 @@ import getPopularBrands from './get-popular-brands';
 import getProductBySku from './get-product-by-sku';
 import init from './init';
 import logProductClicked from './log-product-clicked';
+import logProductConversion from './log-product-conversion';
 import logSearchResults from './log-search-results';
 import searchBy from './search-by';
 import getSuggestions from './suggestions';
@@ -19,6 +20,7 @@ export {
     getProductBySku,
     getSuggestions,
     logSearchResults,
-    logProductClicked
+    logProductClicked,
+    logProductConversion
 };
 

@@ -119,6 +119,17 @@ export class Algolia {
           )) || {};
         return data;
   }
+  
+  async logProductConversion(name, algoliaParams) {
+    const { data = [] } =
+          (await AlgoliaSDK.logProductConversion(
+            name,
+            algoliaParams.objectIDs,
+            algoliaParams.queryID,
+            algoliaParams.userToken,
+          )) || {};
+        return data;
+  }
 }
 
 export default Algolia;

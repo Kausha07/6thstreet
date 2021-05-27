@@ -1,5 +1,5 @@
 const fetch = require('node-fetch');
-export default function logProductClicked(event_name, objectIDs, queryID,userToken,options = {}) {
+export default function logProductConversion(event_name, objectIDs, queryID,userToken,options = {}) {
   const { index } = options;
   const apiKey = index.as.apiKey;
   const indexName = index.indexName;

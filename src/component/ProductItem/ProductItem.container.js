@@ -18,7 +18,8 @@ export class ProductItemContainer extends PureComponent {
     static propTypes = {
         product: Product.isRequired,
         page: PropTypes.string,
-        position: PropTypes.number
+        position: PropTypes.number,
+        queryID: PropTypes.string
     };
 
     static defaultProps = {
@@ -27,7 +28,6 @@ export class ProductItemContainer extends PureComponent {
 
     containerProps = () => {
         const { product, page, position } = this.props;
-        console.log('position product item',position)
         return { product, page,position };
     };
 

@@ -15,12 +15,12 @@
         "html-minifier": "^4.0.0",
         "lerna": "^3.22.1",
         "node-cache": "^5.1.2",
-        "public-ip": "^4.0.3",
         "puppeteer": "^9.0.0",
         "react-circular-carousel": "^1.0.4-0",
         "react-iframe": "^1.8.0",
         "tiny-slider": "^2.9.3",
         "tiny-slider-react": "^0.5.3",
+        "uuid": "^8.3.2",
         "workbox-webpack-plugin": "^6.0.2"
     },
     "scripts": {
