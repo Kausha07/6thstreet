@@ -671,8 +671,8 @@
     "Coupon ": null,
     "View bag": null,
     "Free delivery*. More info ": null,
-    " item": null,
-    " items": null,
+    "item": null,
+    "items": null,
     "My Bag": null,
     "Subtotal ": null,
     "Description": null,
@@ -683,4 +683,8 @@
     "Shipping & Free Returns": null,
     "Contact Us": null,
     "Size Help": null
+    "You have received (%s)% off!": null,
+    "Congrats!": null,
+    "Continue": null,
+    "You have received %s% off!": null
 }

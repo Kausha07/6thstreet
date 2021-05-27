@@ -770,4 +770,8 @@
     "Shipping & Free Returns": null,
     "Contact Us": null,
     "Size Help": null
+    "You have received (%s)% off!": null,
+    "Congrats!": null,
+    "Continue": null,
+    "You have received %s% off!": null
 }
