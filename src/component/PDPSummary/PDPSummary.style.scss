@@ -6,16 +6,24 @@
 
 .PDPSummary {
     font-weight: var(--fw-regular);
-    margin-top: 20px;
+    margin-top: 6px;
     padding: 0 20px;
+    overflow-x: hidden;
+
+    @include desktop {
+        padding: 0 40px;
+    }
 
     h1 {
         font-size: 24px;
 
         @include before-desktop {
-            font-size: 20px;
-            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 0;
+            line-height: 32px;
             text-transform: uppercase;
+            margin: 0.4px 0 0 0;
         }
     }
 
@@ -29,7 +37,10 @@
     &-Header {
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-end;
+        letter-spacing: 0;
+        line-height: 30px;
+        text-align: right;
 
         @include desktop {
             margin-bottom: 30px;
@@ -41,8 +52,11 @@
 
         @include before-desktop {
             font-size: 16px;
+            font-weight: 500;
+            letter-spacing: 0;
+            line-height: 19px;
             margin-bottom: 0;
-            text-align: center;
+            color: #000000;
         }
     }
 
@@ -112,13 +126,22 @@
         }
     }
 
+    .PriceAndPDPSummaryHeader {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
     .Price {
         font-weight: var(--fw-bold);
         font-size: 20px;
+        margin: .36rem 0 0 0;
 
         @include before-desktop {
-            font-size: 16px;
-            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 0;
+            line-height: 30px;
         }
 
         &-Base {
@@ -134,19 +157,28 @@
         }
     }
 
+    hr {
+        @include desktop {
+            display: none;
+        }
+        border: 1px solid #EFEFEF;
+        margin: 15px 0 0 0;
+        height: 2px;
+    }
+
     &-Tabby {
         display: inline-block;
         text-transform: none;
         font-weight: 400;
         max-width: 366px;
         width: 100%;
-        height: auto;
         box-shadow: 0px 0px 11px rgba(0,0,0,.1);
         border-radius: 7px;
-        padding: 15px 2px 14px;
-        font-size: 11px;
+        padding: 15px 2px 16px 2px;
+        font-size: 12px;
         margin-top: 20px;
         cursor: pointer;
+        justify-content: center;
 
         @include desktop() {
             padding: 15px 15px 14px 18px;

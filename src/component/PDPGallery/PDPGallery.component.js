@@ -2,12 +2,14 @@ import PropTypes from 'prop-types';
 import { createRef, PureComponent } from 'react';
 
 import Image from 'Component/Image';
+import Link from 'Component/Link';
 import PDPGalleryCrumb from 'Component/PDPGalleryCrumb';
 import PDPGalleryOverlay from 'Component/PDPGalleryOverlay';
 import Slider from 'Component/Slider';
 import SliderVertical from 'Component/SliderVertical';
 import WishlistIcon from 'Component/WishlistIcon';
 import CSS from 'Util/CSS';
+import { isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
 
 import { MAX_ZOOM_SCALE } from './PDPGallery.config';
@@ -40,10 +42,30 @@ class PDPGallery extends PureComponent {
         CSS.setVariable(this.crumbsRef, 'gallery-crumbs-height', `${this.overlaybuttonRef.current.offsetHeight}px`);
     }
 
+    renderBackButton() {
+        return (
+            <div block="BackArrow" mods={ { isArabic } } key="back">
+                <button
+                    block="BackArrow-Button"
+                    // onClick={ this.isPLP() ? this.backFromPLP : history.goBack }
+                >
+            </button>
+        </div>
+        );
+    }
+
+    renderCartIcon() {
+        return (
+            <Link block='CartIcon' to='/cart'>
+                <div block='CartIcon' elem='Icon' />
+            </Link>
+        )
+    }
     renderWishlistIcon() {
         const { sku } = this.props;
-
-        return <WishlistIcon sku={ sku } />;
+        return (
+                <WishlistIcon sku={ sku } />
+        );
     }
 
     renderCrumb = (index, i) => (
@@ -131,8 +153,12 @@ class PDPGallery extends PureComponent {
         return (
             <div block="PDPGallery">
                 { galleryOverlay }
+                { this.renderBackButton() }
                 { this.renderCrumbs() }
-                { this.renderWishlistIcon() }
+                <div block="OverlayIcons">
+                    { this.renderCartIcon() }
+                    { this.renderWishlistIcon() }
+                </div>
                 <button
                   ref={ this.overlaybuttonRef }
                   block="PDPGallery"
