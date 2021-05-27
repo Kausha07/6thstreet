@@ -119,7 +119,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
   };
 
   setCreditCardData(data) {
-    const { number, expDate, cvv } = data;
+    const { number, expDate, cvv, saveCard } = data;
     const { binApplied } = this.state;
     const {
       totals: { discount },
@@ -141,6 +141,9 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     }
     if (binApplied) {
       this.setState({ binApplied: false });
+    }
+    if (saveCard !== undefined && saveCard !== null) {
+      this.setState({ saveCard });
     }
   }
 
@@ -179,14 +182,14 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
         setCheckoutCreditCardData,
       } = this.props;
 
-      const { number = "", expDate, cvv, binApplied } = this.state;
+      const { number = "", expDate, cvv, binApplied, saveCard } = this.state;
 
       if (!binApplied) {
         await this.applyBinPromotion();
         return;
       }
 
-      setCheckoutCreditCardData(number, expDate, cvv);
+      setCheckoutCreditCardData(number, expDate, cvv, saveCard, address.email);
 
       getCardType(number.substr("0", "6")).then((response) => {
         if (response) {
@@ -281,7 +284,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
           }
         }
       }, this._handleError)
-      .catch(() => {});
+      .catch(() => { });
   }
 
   getCartError(message) {

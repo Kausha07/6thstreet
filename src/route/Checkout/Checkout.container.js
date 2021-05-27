@@ -46,6 +46,8 @@ import {
 } from "../../store/MobileCart/MobileCart.reducer";
 const PAYMENT_ABORTED = "payment_aborted";
 const PAYMENT_FAILED = "payment_failed";
+import CreditCardDispatcher from 'Store/CreditCard/CreditCard.dispatcher';
+
 export const mapDispatchToProps = (dispatch) => ({
   ...sourceMapDispatchToProps(dispatch),
   estimateShipping: (address) =>
@@ -77,6 +79,7 @@ export const mapDispatchToProps = (dispatch) => ({
   resetCart: () => dispatch(resetCart()),
   getCart: () => CartDispatcher.getCart(dispatch),
   updateTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId),
+  saveCreditCard: (cardData) => CreditCardDispatcher.saveCreditCard(dispatch, cardData),
 });
 export const mapStateToProps = (state) => ({
   totals: state.CartReducer.cartTotals,
@@ -120,6 +123,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     showOverlay: this.props.showOverlay.bind(this),
     hideActiveOverlay: this.props.hideActiveOverlay.bind(this),
     updateTotals: this.updateTotals.bind(this),
+    updateCreditCardData: this.updateCreditCardData.bind(this),
   };
 
   //   showOverlay() {
@@ -385,6 +389,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     return getBinPromotion(bin);
   }
 
+  updateCreditCardData(creditCardData) {
+    this.setState({ creditCardData });
+  }
+
   /*async*/ savePaymentInformation(paymentInformation) {
     this.setState({ isLoading: true });
 
@@ -408,24 +416,24 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const data =
       code === CARD
         ? {
-            ...additional_data,
-            source: {
-              type: "token",
-              token: BrowserDatabase.getItem("CREDIT_CART_TOKEN"),
-            },
-            customer: {
-              email: customerEmail ? customerEmail : email,
-            },
-            "3ds": {
-              enabled: BrowserDatabase.getItem("CREDIT_CART_3DS"),
-            },
-            metadata: {
-              udf1:
-                typeof BrowserDatabase.getItem("CREDIT_CART_TYPE") === "string"
-                  ? BrowserDatabase.getItem("CREDIT_CART_TYPE")
-                  : null,
-            },
-          }
+          ...additional_data,
+          source: {
+            type: "token",
+            token: BrowserDatabase.getItem("CREDIT_CART_TOKEN"),
+          },
+          customer: {
+            email: customerEmail ? customerEmail : email,
+          },
+          "3ds": {
+            enabled: BrowserDatabase.getItem("CREDIT_CART_3DS"),
+          },
+          metadata: {
+            udf1:
+              typeof BrowserDatabase.getItem("CREDIT_CART_TYPE") === "string"
+                ? BrowserDatabase.getItem("CREDIT_CART_TYPE")
+                : null,
+          },
+        }
         : additional_data;
 
     if (code === CHECKOUT_APPLE_PAY) {
@@ -598,8 +606,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   }
 
   processThreeDS() {
-    const { getPaymentAuthorization, capturePayment, cancelOrder } = this.props;
-    const { order_id, increment_id, id = "" } = this.state;
+    const { getPaymentAuthorization, capturePayment, cancelOrder, saveCreditCard } = this.props;
+    const { order_id, increment_id, id = "", creditCardData } = this.state;
 
     getPaymentAuthorization(id).then((response) => {
       if (response) {
@@ -611,6 +619,23 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           this.resetCart();
           this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
           capturePayment(paymentId, order_id);
+          if (creditCardData.saveCard) {
+            // saveCreditCard({ email: creditCardData.email, paymentId })
+            console.log("saveCreditCard", creditCardData.saveCard)
+            saveCreditCard({
+              type: "token",
+              token: BrowserDatabase.getItem("CREDIT_CART_TOKEN"),
+              customer: {
+                email: creditCardData.email
+              }
+            })
+              .then((response) => {
+                console.log("saveCreditCard resp", response);
+              })
+              .catch((err) => {
+                console.log("saveCreditCard err", err);
+              })
+          }
         }
 
         if (status === "Declined") {

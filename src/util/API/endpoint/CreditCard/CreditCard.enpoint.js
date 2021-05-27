@@ -5,3 +5,8 @@ export const addNewCreditCard = (data) => CheckoutAPI.post(
     process.env.REACT_APP_CHECKOUT_COM_API_IS_LIVE === 'true' ? '/tokens' : '/tokens/card',
     data
 ) || {};
+
+export const saveCreditCard = (data) => CheckoutAPI.post(
+    '/instruments',
+    data
+) || {};

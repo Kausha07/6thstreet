@@ -337,14 +337,16 @@ export class Checkout extends SourceCheckout {
     );
   }
 
-  setCheckoutCreditCardData = (number, expDate, cvv) => {
-    this.setState({
-      creditCardData: {
-        number,
-        expDate,
-        cvv,
-      },
-    });
+  setCheckoutCreditCardData = (number, expDate, cvv, saveCard, email) => {
+    let creditCardData = {
+      cvv,
+      email,
+      number,
+      expDate,
+      saveCard,
+    }
+    this.setState({ creditCardData });
+    this.props.updateCreditCardData(creditCardData);
   };
 
   continueAsGuest = () => {
