@@ -19,8 +19,64 @@
             display: block;
         }
     }
+
+    .BackArrow {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        height: 60px;
+        width: 60px;
+        z-index: 1;
+        background: transparent;
+
+        &_isArabic {
+            right: 1rem;
+            left: 1rem;
+
+            .BackArrow {
+                &-Button {
+                    right: 5px;
+                    left: unset;
+
+                    &::before{
+                        right: 5px;
+                        left: unset;
+                        transform: rotate(-45deg);
+                        -webkit-transform: rotate(-45deg);
+                    }
+                }
+            }
+        }
+
+        &-Button {
+            top: 0;
+            left: 5px;
+            background-size: 30px;
+            width: 30px;
+            height: 30px;
+            padding: 0;
+            p {
+                display: none;
+            }
+            &::before{
+                content: '';
+                position: absolute;
+                left: 5px;
+                border: solid #000000;
+                border-width: 0 2px 2px 0;
+                display: inline-block;
+                padding: 4px;
+                transform: rotate(135deg);
+                -webkit-transform: rotate(135deg);
+            }
+        }
+
+        @include after-mobile {
+            display: none;
+        }
+    }
     .Slider-Wrapper>* {
-        min-height: 400px;
+        min-height: 534px;
     }
     .Slider-Wrapper {
         align-items: unset;
@@ -31,7 +87,7 @@
     .Slider {
         position: relative;
         min-width: 0;
-        margin: 0 10px;
+        margin: 0px;
         direction: ltr;
         &-Crumb {
             background: var(--crumb-background-color);
@@ -47,13 +103,58 @@
         &-Crumbs {
             height: 7px;
             grid-gap: 5px;
+            justify-content: left;
+            padding: 0px 20px;
         }
     }
-    // .Image {
-    //     &-Image {
-    //         object-fit: cover;
-    //     }
-    // }
+    .Image {
+        &-Image {
+            object-fit: cover;
+            object-position: center;
+        }
+    }
+
+    .OverlayIcons {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        width: 3rem;
+        height: 6rem;
+        background-color: #ffffff;
+        z-index: 1;
+        opacity: 0.7;
+        border-radius: 19.5px;
+        padding: 1px 0 1px 0px;
+
+        @include desktop() {
+            right: 2.8rem;
+        }
+
+        .CartIcon {
+            width: 3rem;
+            height: 3rem;
+            display: flex;
+            align-items: center;
+            background: #fff;
+            border-radius: 50%;
+            justify-content: center;
+            &-Icon {
+                position: absolute;
+                width: 2.1rem;
+                height: 2.1rem;
+                background-image: url('../../style/basket.svg');
+                background-size: 2.1rem;
+                background-repeat: no-repeat
+            }
+        }
+    
+        .WishlistIcon {
+            top: initial;
+            right: initial;
+            margin-top: 8px;
+        }
+    }
+
     button {
         height: 100%;
         width: 100%;

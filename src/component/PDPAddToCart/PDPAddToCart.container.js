@@ -1,5 +1,6 @@
 /* eslint-disable no-magic-numbers */
 import PropTypes from "prop-types";
+import queryString from "query-string";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
 import { getStore } from "Store";
@@ -9,12 +10,15 @@ import { showNotification } from "Store/Notification/Notification.action";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import { Product } from "Util/API/endpoint/Product/Product.type";
 import Algolia from "Util/API/provider/Algolia";
-import { getUUIDToken } from 'Util/Auth';
+import { getUUIDToken } from "Util/Auth";
 import Event, {
-  ADD_TO_CART_ALGOLIA, EVENT_GTM_PRODUCT_ADD_TO_CART
+  ADD_TO_CART_ALGOLIA,
+  EVENT_GTM_PRODUCT_ADD_TO_CART
 } from "Util/Event";
 import history from "Util/History";
+import isMobile from "Util/Mobile";
 import PDPAddToCart from "./PDPAddToCart.component";
+import PDPAddToCartDesktop from "./PDPAddToCartDesktop.component";
 
 export const mapStateToProps = (state) => ({
   product: state.PDP.product,
@@ -182,7 +186,6 @@ export class PDPAddToCartContainer extends PureComponent {
     const {
       sizeObject: { sizeCodes = [], sizeTypes },
     } = this.state;
-
     this.setState({ processingRequest: true });
 
     getProductStock(sku).then((response) => {
@@ -246,14 +249,17 @@ export class PDPAddToCartContainer extends PureComponent {
   };
 
   onSizeTypeSelect(type) {
-    this.setState({ selectedSizeType: type.target.value });
+    this.setState({
+      selectedSizeType: type.target.value,
+      selectedSizeCode: "",
+    });
   }
 
   onSizeSelect(size) {
     this.setState({ selectedSizeCode: size.target.value });
   }
 
-  async addToCart() {
+  addToCart() {
     const {
       product: {
         simple_products = {},
@@ -267,7 +273,6 @@ export class PDPAddToCartContainer extends PureComponent {
         size_us = [],
         name,
         sku: configSKU,
-        objectID
       },
       addProductToCart,
       showNotification,
@@ -341,15 +346,23 @@ export class PDPAddToCartContainer extends PureComponent {
       var data = localStorage.getItem("customer");
       let userData = JSON.parse(data);
       let userToken;
-      const queryID = getStore().getState().SearchSuggestions.queryID;
-        if (userData?.data?.id) {
+      var qid = queryString.parse(window.location.search)?.qid
+        ? queryString.parse(window.location.search)?.qid
+        : null;
+      let queryID;
+      if (!qid) {
+        queryID = getStore().getState().SearchSuggestions.queryID;
+      } else {
+        queryID = qid;
+      }
+      if (userData?.data?.id) {
         userToken = userData.data.id;
       }
       if (queryID) {
         new Algolia().logProductConversion(ADD_TO_CART_ALGOLIA, {
           objectIDs: [objectID],
           queryID,
-          userToken: userToken ? `user-${userToken}`: getUUIDToken(),
+          userToken: userToken ? `user-${userToken}` : getUUIDToken(),
         });
       }
     }
@@ -395,18 +408,18 @@ export class PDPAddToCartContainer extends PureComponent {
           variant: "",
         },
       });
-        var data = localStorage.getItem("customer");
+      var data = localStorage.getItem("customer");
       let userData = JSON.parse(data);
       let userToken;
       const queryID = getStore().getState().SearchSuggestions.queryID;
-        if (userData?.data?.id) {
+      if (userData?.data?.id) {
         userToken = userData.data.id;
       }
       if (queryID) {
         new Algolia().logProductConversion(ADD_TO_CART_ALGOLIA, {
           objectIDs: [objectID],
           queryID,
-          userToken: userToken ? `user-${userToken}`: getUUIDToken(),
+          userToken: userToken ? `user-${userToken}` : getUUIDToken(),
         });
       }
     }
@@ -460,6 +473,15 @@ export class PDPAddToCartContainer extends PureComponent {
   }
 
   render() {
+    if (!isMobile.any()) {
+      return (
+        <PDPAddToCartDesktop
+          {...this.containerFunctions}
+          {...this.containerProps()}
+        />
+      );
+    }
+
     return (
       <PDPAddToCart {...this.containerFunctions} {...this.containerProps()} />
     );

@@ -10,7 +10,13 @@ $select-arrow-width: 6px !default;
     --checkout-button-red: #ff0505;
 }
 
+
 .PDPAddToCart {
+    @include mobile {
+        display: flex;
+        flex-direction: column;
+        padding: 12px 0 12px 0;
+    }
     &-Checkout {
         position: fixed;
         overflow: hidden;
@@ -25,6 +31,7 @@ $select-arrow-width: 6px !default;
         z-index: 90;
         animation-name: checkout_show_up;
         animation-duration: 0.6s;
+        padding: 0px;
 
         &_isIPhoneNavigationHidden {
             bottom: 30px;
@@ -81,70 +88,181 @@ $select-arrow-width: 6px !default;
     &-SizeInfo {
         margin-bottom: 5px;
         display: flex;
-        justify-content: space-between;
+        width: 100%;
+        justify-content: flex-end;
 
         @include desktop {
+            width: auto; //
+            justify-content: space-between;
             width: 363px;
         }
     }
 
-    &-SizeLabel {
-        font-size: 17px;
-        font-weight: var(--fw-demi);
-        line-height: 30px;
+    @include desktop {
+        &-SizeLabel {
+            font-size: 17px;
+            font-weight: var(--fw-demi);
+            line-height: 30px;
+        }
     }
 
     &-SizeSelect {
         position: relative;
         display: flex;
-        justify-content: space-between;
-        padding-bottom: 35px;
+        width: 100%;
+        flex-direction: row;
 
         @include desktop {
             width: 363px;
+            padding-bottom: 35px;
+            width: auto;
         }
     }
 
-    select {
-        position: relative;
-        overflow: hidden;
-        cursor: pointer;
-        font-size: 13px;
-        letter-spacing: 0.5px;
-        line-height: 18px;
-    }
+    @include desktop {
+        select {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+            line-height: 18px;
+        }
 
-    &-SizeTypeSelector {
-        height: 50px;
-
-        &::after {
-            content: "";
-            display: block;
-            width: $select-arrow-width;
-            height: $select-arrow-height;
-            transform: translateY(-2px) rotate(44deg);
-            position: absolute;
-            right: 14px;
-            bottom: 0;
-            top: 0;
-            margin-top: 22px;
-            border: solid var(--text-color);
-            border-width: 0 1px 1px 0;
+        &-SizeTypeSelectElement {
+            width: 70px;
+            height: 50px;
         }
     }
+
+    .PDPAddToCart-SizeTypeSelector {
+        @include desktop {
+            height: 50px;
+    
+            &::after {
+                content: "";
+                display: block;
+                width: $select-arrow-width;
+                height: $select-arrow-height;
+                transform: translateY(-2px) rotate(44deg);
+                position: absolute;
+                right: 14px;
+                bottom: 0;
+                top: 0;
+                margin-top: 22px;
+                border: solid var(--text-color);
+                border-width: 0 1px 1px 0;
+            }
+        }
+
+        @include mobile {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            margin: -20px;
+            width: 15%
+        }
+    }
+
+    .PDPAddToCart-SizeTypeOptionContainer {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        padding: 0 12px;
+        will-change: transform;
+        input {
+            display: none;
+            &:checked + label {
+                width: 18px;
+                color: #4A4A4A;
+                font-size: 13px;
+                font-weight: 600;
+                text-decoration: underline;
+            }
+        }
+        label {
+            height: 30px;
+            width: 15px;
+            color: #9B9B9B;
+            font-size: 11px;
+            letter-spacing: 0;
+            line-height: 30px;
+        }
+    }
+
 
     &-SizeSelector {
-        width: 75%;
-        margin-left: 20px;
+        @include desktop {
+            margin-left: 20px;
+        }
+
+        @include mobile {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            align-self: center;
+            padding: 16px 0 16px 0;
+            overflow: scroll;
+            white-space: nowrap;
+            width: 85%;
+            margin-left: 16px;
+            -webkit-overflow-scrolling: touch;
+            -ms-overflow-style: -ms-autohiding-scrollbar; 
+
+            &-AvailableSizes {
+                display: flex;
+                flex-direction: row;            
+                overflow-x: scroll;
+                white-space: nowrap;
+                justify-content: center;
+                margin: auto;
+                -webkit-overflow-scrolling: touch;
+                -ms-overflow-style: -ms-autohiding-scrollbar; 
+
+            }
+            &-QuantityBasedMessage {
+                margin-top: 8px
+            }
+
+            &-SizeOptionContainer {
+                margin: auto;
+                padding: 0 6px 0 0;
+
+                input {
+                    display: none;
+                    &:checked + label {
+                        background-color: #000000;
+                        color: #FFFFFF;
+                        font-weight: 600;
+                        font-size: 14px;
+                        letter-spacing: 0;
+                    }
+                }
+
+                label {
+                    box-sizing: border-box;
+                    height: 40px;
+                    width: 40px;
+                    border: 1px solid #000000;
+                    border-radius: 6px;
+                    background-color: #ffffff;
+                    color: #000000;
+                    font-size: 14px;
+                    font-weight: 500;
+                    letter-spacing: 0;
+                    line-height: 30px;
+                    text-align: center;
+                    padding: 5px;          
+                }
+            }
+        }
 
         &::after {
             @extend .PDPAddToCart-SizeTypeSelector::after;
         }
-    }
-
-    &-SizeTypeSelectElement {
-        width: 70px;
-        height: 50px;
     }
 
     &-SizeSelectElement {
@@ -153,6 +271,21 @@ $select-arrow-width: 6px !default;
 
         @include desktop {
             width: 271px;
+        }
+    }
+
+    @include mobile {
+        &-Bottom {
+            height: 85px;  
+            top: calc(100% - 85px);
+            background-color: #FFFFFF;
+            left: 0%;
+            position: fixed;
+            width: calc(100vw + 1px);
+            z-index: 90;
+            padding: 16px;
+            box-shadow: inset 0 0.5px 0 0 rgba(0,0,0,0.2);
+            box-sizing: border-box;
         }
     }
 

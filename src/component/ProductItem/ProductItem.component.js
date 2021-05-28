@@ -9,22 +9,19 @@ import { getStore } from "Store";
 import { Product } from "Util/API/endpoint/Product/Product.type";
 import Algolia from "Util/API/provider/Algolia";
 import { isArabic } from "Util/App";
-import {
-  getUUIDToken
-} from 'Util/Auth';
+import { getUUIDToken } from "Util/Auth";
 import Event, {
   EVENT_GTM_PRODUCT_CLICK,
   SELECT_ITEM_ALGOLIA
 } from "Util/Event";
 import "./ProductItem.style";
 
-
 class ProductItem extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
     page: PropTypes.string,
     position: PropTypes.number,
-    qid: PropTypes.string
+    qid: PropTypes.string,
   };
 
   static defaultProps = {
@@ -37,29 +34,28 @@ class ProductItem extends PureComponent {
 
   handleClick = this.handleProductClick.bind(this);
 
-
   handleProductClick() {
-   const { product, position, qid } = this.props;
+    const { product, position, qid } = this.props;
     var data = localStorage.getItem("customer");
     let userData = JSON.parse(data);
-   let userToken;
+    let userToken;
     let queryID;
     if (!qid) {
-    queryID = getStore().getState().SearchSuggestions.queryID;  
+      queryID = getStore().getState().SearchSuggestions.queryID;
     } else {
       queryID = qid;
-   }
+    }
     if (userData?.data) {
       userToken = userData.data.id;
     }
     Event.dispatch(EVENT_GTM_PRODUCT_CLICK, product);
     if (queryID) {
       new Algolia().logProductClicked(SELECT_ITEM_ALGOLIA, {
-      objectIDs: [product.objectID],
-      queryID,
-      userToken: userToken ? `user-${userToken}`: getUUIDToken(),
-      position: [position],
-    });
+        objectIDs: [product.objectID],
+        queryID,
+        userToken: userToken ? `user-${userToken}` : getUUIDToken(),
+        position: [position],
+      });
     }
   }
 
@@ -164,12 +160,23 @@ class ProductItem extends PureComponent {
     const {
       product,
       product: { url },
+      qid
     } = this.props;
-
+    let queryID;
+    if (!qid) {
+      queryID = getStore().getState().SearchSuggestions.queryID;
+    } else {
+      queryID = qid;
+    }
     const { pathname } = new URL(url);
-
+    let urlWithQueryID;
+    if (queryID) {
+     urlWithQueryID = `${pathname}?qid=${queryID}`; 
+    } else {
+      urlWithQueryID = pathname;
+    }
     const linkTo = {
-      pathname,
+      pathname:urlWithQueryID,
       state: {
         product,
       },

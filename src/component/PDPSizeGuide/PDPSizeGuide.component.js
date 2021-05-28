@@ -50,7 +50,7 @@ class PDPSizeGuide extends PureComponent {
               tabIndex={ 0 }
               mix={ { block: 'PDPSizeGuide', elem: 'Button' } }
             >
-                { isMobile.any() ? __('View Size Guide') : __('Size guide') }
+                { __('Size Help') }
             </span>
         );
     }

@@ -604,23 +604,16 @@
 
   @include mobile {
     align-items: flex-end;
-    -webkit-transition: height 0.2s;
-    -moz-transition: height 0.2s;
-    -ms-transition: height 0.2s;
-    -o-transition: height 0.2s;
-    transition: height 0.2s;
-    height: 0;
   }
 
   &-Content {
     // height: 0;
     overflow-y: auto;
-  }
-  &_isVisible {
     @include mobile {
-      height: 100vh !important;
+      padding-top: 0;
     }
   }
+
   .BinContent {
     display: flex;
     flex-direction: column;
@@ -631,7 +624,7 @@
         width: 65px;
         margin: 0 auto 30px auto;
         @include mobile {
-          margin: 45px auto 30px auto;
+          margin: 75px auto 30px auto;
         }
       }
     }
@@ -666,10 +659,70 @@
   }
 }
 
-// .BinPrmotion {
-//   &-Modal {
-//     &_isVisible {
-//       padding: 20px;
-//     }
-//   }
-// }
+.Placeholder {
+  display: none;
+  @include mobile {
+    display: block;
+    padding: 14px;
+    &-Line {
+      width: 80px;
+      height: 4px;
+      background: #cacaca;
+      display: flex;
+      justify-content: center;
+      margin: 0 auto;
+      border-radius: 12px;
+    }
+  }
+}
+
+@keyframes moveUp {
+  0% {
+    height: 0vh;
+  }
+  25% {
+    height: 25vh;
+  }
+  50% {
+    height: 50vh;
+  }
+  75% {
+    height: 75vh;
+  }
+  100% {
+    height: 100vh;
+  }
+}
+.BinPromotion-Modal_isOpen {
+  @include mobile {
+    height: 100vh;
+    animation-name: moveUp;
+    animation-duration: 0.3s;
+  }
+}
+
+@keyframes moveDown {
+  100% {
+    height: 0vh;
+  }
+  75% {
+    height: 25vh;
+  }
+  50% {
+    height: 50vh;
+  }
+  25% {
+    height: 75vh;
+  }
+  0% {
+    height: 100vh;
+  }
+}
+
+.BinPromotion-Modal_isClosed {
+  @include mobile {
+    height: 0vh;
+    animation-name: moveDown;
+    animation-duration: 0.3s;
+  }
+}

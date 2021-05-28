@@ -13,14 +13,14 @@ import { DEFAULT_MAX_PRODUCTS } from "Component/ProductActions/ProductActions.co
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
-import { getStore } from "Store";
+// import { getStore } from "Store";
 import { showNotification } from "Store/Notification/Notification.action";
 import { hideActiveOverlay } from "Store/Overlay/Overlay.action";
 import { CartItemType } from "Type/MiniCart";
-import Algolia from "Util/API/provider/Algolia";
-import { getUUIDToken } from 'Util/Auth';
+// import Algolia from "Util/API/provider/Algolia";
+// import { getUUIDToken } from 'Util/Auth';
 import Event, {
-  ADD_TO_CART_ALGOLIA, EVENT_GTM_PRODUCT_ADD_TO_CART,
+  EVENT_GTM_PRODUCT_ADD_TO_CART,
   EVENT_GTM_PRODUCT_REMOVE_FROM_CART
 } from "Util/Event";
 import CartItem from "./CartItem.component";
@@ -196,22 +196,22 @@ export class CartItemContainer extends PureComponent {
           variant: color,
         },
       });
-      if (oldQuantity < quantity) {
-        var data = localStorage.getItem("customer");
-        let userData = JSON.parse(data);
-        let userToken;
-        const queryID = getStore().getState().SearchSuggestions.queryID;
-        if (userData?.data?.id) {
-          userToken = userData.data.id;
-        }
-        if (queryID) {
-          new Algolia().logProductConversion(ADD_TO_CART_ALGOLIA, {
-            objectIDs: [item_id.toString()],
-            queryID,
-            userToken: userToken ? `user-${userToken}`: getUUIDToken(),
-          });
-        }
-      }
+      // if (oldQuantity < quantity) {
+      //   var data = localStorage.getItem("customer");
+      //   let userData = JSON.parse(data);
+      //   let userToken;
+      //   const queryID = getStore().getState().SearchSuggestions.queryID;
+      //   if (userData?.data?.id) {
+      //     userToken = userData.data.id;
+      //   }
+      //   if (queryID) {
+      //     new Algolia().logProductConversion(ADD_TO_CART_ALGOLIA, {
+      //       objectIDs: [item_id.toString()],
+      //       queryID,
+      //       userToken: userToken ? `user-${userToken}`: getUUIDToken(),
+      //     });
+      //   }
+      // }
     });
   }
 
