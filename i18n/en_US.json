@@ -675,5 +675,6 @@
     "This is default Billing Address": null,
     "This is default Shipping Address": null,
     "Country": null,
-    "Zip/Postal code": null
+    "Zip/Postal code": null,
+    "LiveShopping": null
 }
