@@ -620,7 +620,14 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
           capturePayment(paymentId, order_id);
           if (creditCardData.saveCard) {
-            saveCreditCard({ email: creditCardData.email, paymentId });
+            saveCreditCard({ email: creditCardData.email, paymentId })
+              .then(() => {
+                // console.log("saveCreditCard resp", response);
+              })
+              .catch(() => {
+                // console.log("saveCreditCard err", err);
+                showErrorNotification(__("Something went wrong! Please, try again!"));
+              })
           }
         }
 
