@@ -3,11 +3,21 @@
 /* eslint-disable no-magic-numbers */
 /* eslint-disable radix */
 import PropTypes from 'prop-types';
+import { connect } from "react-redux";
 import { PureComponent } from 'react';
 
 import CreditCard from './CreditCard.component';
 import { MINI_CARDS } from './CreditCard.config';
+import CreditCardDispatcher from "Store/CreditCard/CreditCard.dispatcher";
 
+export const mapStateToProps = (state) => ({
+    savedCards: state.CreditCardReducer.savedCards,
+    loadingSavedCards: state.CreditCardReducer.loadingSavedCards,
+});
+
+export const mapDispatchToProps = (dispatch) => ({
+    getSavedCards: () => CreditCardDispatcher.getSavedCards(dispatch),
+});
 export class CreditCardContainer extends PureComponent {
     static propTypes = {
         setCreditCardData: PropTypes.func.isRequired
@@ -29,6 +39,17 @@ export class CreditCardContainer extends PureComponent {
 
         return { isAmex };
     };
+
+    componentDidMount() {
+        const { getSavedCards } = this.props;
+        console.log("here i am componentDidMount");
+        getSavedCards().then((resp) => {
+            console.log("cards data", resp);
+        })
+            .catch((err) => {
+                console.log("cards error", err)
+            })
+    }
 
     isNumber(value) {
         const stringVal = value.toString() || '';
@@ -148,17 +169,20 @@ export class CreditCardContainer extends PureComponent {
     }
 
     render() {
-        const { setCreditCardData } = this.props;
+        const { setCreditCardData, savedCards, loadingSavedCards } = this.props;
 
         return (
             <CreditCard
-              setCreditCardData={ setCreditCardData }
-              { ...this.containerFunctions }
-              { ...this.containerProps() }
-              { ...this.props }
+                setCreditCardData={setCreditCardData}
+                {...this.containerFunctions}
+                {...this.containerProps()}
+                {...this.props}
             />
         );
     }
 }
 
-export default CreditCardContainer;
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(CreditCardContainer);

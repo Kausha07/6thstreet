@@ -11,3 +11,7 @@ export const saveCreditCard = (data) => MagentoAPI.post(
     'checkout/instruments',
     data
 ) || {};
+
+export const getSavedCards = () => MagentoAPI.get(
+    'customers/me/instruments'
+) || {};
