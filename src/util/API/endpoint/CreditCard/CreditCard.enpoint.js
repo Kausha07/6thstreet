@@ -1,4 +1,5 @@
 import CheckoutAPI from '../../provider/CheckoutAPI';
+import MagentoAPI from '../../provider/MagentoAPI';
 
 // eslint-disable-next-line import/prefer-default-export
 export const addNewCreditCard = (data) => CheckoutAPI.post(
@@ -6,7 +7,7 @@ export const addNewCreditCard = (data) => CheckoutAPI.post(
     data
 ) || {};
 
-export const saveCreditCard = (data) => CheckoutAPI.post(
-    '/instruments',
+export const saveCreditCard = (data) => MagentoAPI.post(
+    'checkout/instruments',
     data
 ) || {};

@@ -22,7 +22,6 @@ export class CreditCardDispatcher {
     }
 
     async saveCreditCard(_, data) {
-        console.log("saveCreditCard", data);
         return saveCreditCard(data);
     }
 }

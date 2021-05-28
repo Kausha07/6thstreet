@@ -620,21 +620,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
           capturePayment(paymentId, order_id);
           if (creditCardData.saveCard) {
-            // saveCreditCard({ email: creditCardData.email, paymentId })
-            console.log("saveCreditCard", creditCardData.saveCard)
-            saveCreditCard({
-              type: "token",
-              token: BrowserDatabase.getItem("CREDIT_CART_TOKEN"),
-              customer: {
-                email: creditCardData.email
-              }
-            })
-              .then((response) => {
-                console.log("saveCreditCard resp", response);
-              })
-              .catch((err) => {
-                console.log("saveCreditCard err", err);
-              })
+            saveCreditCard({ email: creditCardData.email, paymentId });
           }
         }
 
