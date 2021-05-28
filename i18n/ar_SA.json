@@ -755,8 +755,8 @@
     "Shipping & Free Returns": null,
     "Contact Us": null,
     "Size Help": null,
-    "You have received (%s)% off!": null,
-    "Congrats!": null,
-    "Continue": null,
+    "Congrats!": "مبروك!",
+    "Continue": "متابعة",
+    "You have received %s% off!": "لقد حصلت على خصم %s%!",
     "Subtotal ": null
 }
