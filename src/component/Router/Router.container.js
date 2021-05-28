@@ -91,7 +91,6 @@ export class RouterContainer extends SourceRouterContainer {
 
             getCart(true);
         } else {
-            console.log('global else')
             deleteAuthorizationToken();
             deleteMobileAuthorizationToken();
             updateCustomerDetails();

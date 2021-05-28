@@ -11,7 +11,6 @@ export const SearchSuggestionsReducer = (state = getInitialState(), action) => {
     switch (type) {
     case SET_SEARCH_SUGGESTIONS:
             const { search, data,queryID } = action;
-            console.log('queryID',queryID);
         return {
             ...state,
             search,

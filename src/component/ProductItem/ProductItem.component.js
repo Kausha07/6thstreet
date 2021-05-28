@@ -18,11 +18,13 @@ import Event, {
 } from "Util/Event";
 import "./ProductItem.style";
 
+
 class ProductItem extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
     page: PropTypes.string,
     position: PropTypes.number,
+    qid: PropTypes.string
   };
 
   static defaultProps = {
@@ -35,15 +37,21 @@ class ProductItem extends PureComponent {
 
   handleClick = this.handleProductClick.bind(this);
 
- handleProductClick() {
+
+  handleProductClick() {
+   const { product, position, qid } = this.props;
     var data = localStorage.getItem("customer");
     let userData = JSON.parse(data);
-    let userToken;
-   const queryID = getStore().getState().SearchSuggestions.queryID;
+   let userToken;
+    let queryID;
+    if (!qid) {
+    queryID = getStore().getState().SearchSuggestions.queryID;  
+    } else {
+      queryID = qid;
+   }
     if (userData?.data) {
       userToken = userData.data.id;
     }
-    const { product, position } = this.props;
     Event.dispatch(EVENT_GTM_PRODUCT_CLICK, product);
     if (queryID) {
       new Algolia().logProductClicked(SELECT_ITEM_ALGOLIA, {

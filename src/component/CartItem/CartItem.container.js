@@ -157,7 +157,6 @@ export class CartItemContainer extends PureComponent {
         },
         showNotification,
       } = this.props;
-      console.log('objectID', this.props);
 
       updateProductInCart(
         item_id,
@@ -207,7 +206,7 @@ export class CartItemContainer extends PureComponent {
         }
         if (queryID) {
           new Algolia().logProductConversion(ADD_TO_CART_ALGOLIA, {
-            objectIDs: [objectID],
+            objectIDs: [item_id.toString()],
             queryID,
             userToken: userToken ? `user-${userToken}`: getUUIDToken(),
           });

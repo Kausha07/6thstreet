@@ -1,5 +1,6 @@
 // import PropTypes from 'prop-types';
 import ProductItem from "Component/ProductItem";
+import queryString from 'query-string';
 import { PureComponent } from "react";
 import { Products } from "Util/API/endpoint/Product/Product.type";
 import BrowserDatabase from "Util/BrowserDatabase";
@@ -23,14 +24,15 @@ class PLPPage extends PureComponent {
     return BrowserDatabase.getItem("CATEGORY_NAME") || "";
   }
 
-  renderProduct = (product, index) => {
+  renderProduct = (product, index, qid) => {
     const { sku, price } = product;
-    return <ProductItem position={index} product={product} key={sku} page="plp" />;
+    return <ProductItem position={index} product={product} key={sku} page="plp" qid={qid} />;
   };
 
   renderProducts() {
     const { products = [] } = this.props;
-      return products.map((i,index) => this.renderProduct(i,index+1));
+    var qid = queryString.parse(window.location.search)?.qid ? queryString.parse(window.location.search)?.qid: null;
+      return products.map((i,index) => this.renderProduct(i,index+1, qid));
   }
 
   render() {

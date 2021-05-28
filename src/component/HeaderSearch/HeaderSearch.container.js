@@ -2,9 +2,9 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import { getStore } from "Store";
 import { HistoryType, LocationType } from 'Type/Common';
 import HeaderSearch from './HeaderSearch.component';
-
 
 
 export const mapStateToProps = (_state) => ({
@@ -57,8 +57,8 @@ export class HeaderSearchContainer extends PureComponent {
     onSearchSubmit() {
         const { history } = this.props;
         const { search } = this.state;
-        console.log('search submit',search);
-        history.push(`/catalogsearch/result/?q=${ search }`);
+        const queryID = getStore().getState().SearchSuggestions.queryID ? getStore().getState().SearchSuggestions.queryID : '';
+        history.push(`/catalogsearch/result/?q=${ search }&qid=${queryID}`);
     }
 
     onSearchClean() {

@@ -20,13 +20,12 @@ export default function searchBy(
         query,
         ...newSearchParams,
         clickAnalytics: true,
-        analyticsTags: ["searchbar"],
+        analyticsTags: ["PWA_Search"],
       },
       (err, data = {}) => {
         if (err) {
           return reject(err);
         }
-        console.log("search data", data);
         const result = formatResult(data);
         result.data = result.data.map((item) => {
           return formatNewInTag(item);

@@ -28,8 +28,6 @@ export class SearchSuggestionsDispatcher {
             }
       );
 
-      console.log('search data',productData)
-
       // In case anyone needs desktop data (use this!)
       // const lang = language === 'en' ? 'english' : 'arabic';
 
