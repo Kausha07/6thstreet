@@ -7,7 +7,8 @@ import { capitalize } from "Util/App";
 import { getQueryParam } from "Util/Url";
 import { changeNavigationState } from "Store/Navigation/Navigation.action";
 import { TOP_NAVIGATION_TYPE } from "Store/Navigation/Navigation.reducer";
-
+import LivePartyDispatcher from "Store/LiveParty/LiveParty.dispatcher";
+import Config from "./LiveExperience.config";
 import LiveExperience from "./LiveExperience.component";
 
 export const BreadcrumbsDispatcher = import(
@@ -19,9 +20,21 @@ export const mapStateToProps = (state) => ({
   gender: state.AppState.gender,
   locale: state.AppState.locale,
   country: state.AppState.country,
+  live: state.LiveParty.live,
+  upcoming: state.LiveParty.upcoming,
+  archived: state.LiveParty.archived,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
+  requestLiveParty: (options) =>
+    LivePartyDispatcher.requestLiveParty(options, dispatch),
+
+  requestUpcomingParty: (options) =>
+    LivePartyDispatcher.requestUpcomingParty(options, dispatch),
+
+  requestArchivedParty: (options) =>
+    LivePartyDispatcher.requestArchivedParty(options, dispatch),
+
   updateBreadcrumbs: (breadcrumbs) => {
     BreadcrumbsDispatcher.then(({ default: dispatcher }) =>
       dispatcher.update(breadcrumbs, dispatch)
@@ -46,6 +59,21 @@ export class LiveExperienceContainer extends PureComponent {
     this.setMetaData();
   }
 
+  requestLiveParty() {
+    const broadcastId = getQueryParam("broadcastId", location);
+    const { requestLiveParty } = this.props;
+    requestLiveParty({ broadcastId });
+  }
+
+  requestUpcomingParty() {
+    const { requestUpcomingParty } = this.props;
+    requestUpcomingParty({ storeId: Config.storeId, isStaging: true });
+  }
+
+  requestArchivedParty() {
+    const { requestArchivedParty } = this.props;
+    requestArchivedParty({ storeId: Config.storeId, isStaging: true });
+  }
   parseBool = (b) => {
     return !/^(false|0)$/i.test(b) && !!b;
   };
@@ -59,7 +87,14 @@ export class LiveExperienceContainer extends PureComponent {
     return decodeURIComponent(results[2].replace(/\+/g, " "));
   };
 
+  static getDerivedStateFromProps(props) {
+    const { live, upcoming, archived } = props;
+  }
+
   componentDidMount() {
+    this.requestLiveParty();
+    this.requestUpcomingParty();
+    this.requestArchivedParty();
     const showHeaderFooter = getQueryParam("showHeaderFooter", location);
 
     const isShowHeaderFooter = this.getParameterByName("showHeaderFooter");
@@ -139,8 +174,9 @@ export class LiveExperienceContainer extends PureComponent {
   }
   containerProps = () => {
     const broadcastId = getQueryParam("broadcastId", location);
+    const {live, upcoming, archived} = this.props;
     return {
-      broadcastId,
+      broadcastId, live, upcoming, archived
     };
   };
 

@@ -10,6 +10,7 @@ import HeaderWishlist from 'Component/HeaderWishlist';
 import MyAccountOverlay from 'Component/MyAccountOverlay';
 import NavigationAbstract from 'Component/NavigationAbstract/NavigationAbstract.component';
 import { setIsMobileTabActive } from 'Store/MyAccount/MyAccount.action';
+import { TYPE_PRODUCT } from 'Route/UrlRewrites/UrlRewrites.config';
 import history from 'Util/History';
 import isMobile from 'Util/Mobile';
 
@@ -67,6 +68,10 @@ class MobileBottomBar extends NavigationAbstract {
 
     closePopup = () => {
         this.setState({ accountPopUp: '' });
+    };
+
+    isPDP = () => {
+        return window.pageType === TYPE_PRODUCT;
     };
 
     handleResize = () => {
@@ -272,6 +277,10 @@ class MobileBottomBar extends NavigationAbstract {
 
     render() {
         const { isIPhoneNavigationHidden } = this.state;
+
+        if(this.isPDP()){
+            return null;
+        }
 
         return (
             <div block="MobileBottomBar" mods={ { isIPhoneNavigationHidden } }>
