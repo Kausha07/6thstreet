@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import PDPAddToCart from 'Component/PDPAddToCart/PDPAddToCart.container';
+import PDPTags from 'Component/PDPTags';
 import PDPAlsoAvailableProducts from 'Component/PDPAlsoAvailableProducts';
 import Price from 'Component/Price';
 import ProductLabel from 'Component/ProductLabel/ProductLabel.component';
@@ -55,11 +56,7 @@ class PDPSummary extends PureComponent {
 
         return (
             <div block="PDPSummary" elem="Header">
-                <div block="PDPSummary" elem="HeaderNew">
-                    <ProductLabel
-                      product={ product }
-                    />
-                </div>
+                <ProductLabel product={ product } />
             </div>
         );
     }
@@ -89,7 +86,9 @@ class PDPSummary extends PureComponent {
         }
 
         return (
-            <Price price={ price } />
+            <div block="PriceContainer">
+                <Price price={ price } />
+            </div>
         );
     }
 
@@ -104,17 +103,20 @@ class PDPSummary extends PureComponent {
             if ((country === 'AE' || country === 'SA') && defPrice >= 150) {
                 const monthPrice = (defPrice / 4).toFixed(2);
                 return (
-                    <button
-                      block="PDPSummary"
-                      elem="Tabby"
-                      onClick={ this.openTabbyPopup }
-                    >
-                        { __('From') }
-                        <strong block="PDPSummary" elem="TabbyPrice">{ `${monthPrice} ${currency}` }</strong>
-                        { __(' a month with ') }
-                        <img src={ tabby } alt="tabby" />
-                        <span block="PDPSummary" elem="LearnMore">{ __('Learn more') }</span>
-                    </button>
+                    <>
+                        <button
+                        block="PDPSummary"
+                        elem="Tabby"
+                        onClick={ this.openTabbyPopup }
+                        >
+                            { __('From') }
+                            <strong block="PDPSummary" elem="TabbyPrice">{ `${monthPrice} ${currency}` }</strong>
+                            { __(' a month with ') }
+                            <img src={ tabby } alt="tabby" />
+                            <span block="PDPSummary" elem="LearnMore">{ __('Learn more') }</span>
+                        </button>
+                        <hr />
+                    </>
                 );
             }
 
@@ -195,8 +197,29 @@ class PDPSummary extends PureComponent {
 
     renderAddToCartSection() {
         return (
-            <PDPAddToCart setStockAvailability={ this.setStockAvailability } />
+            <>
+                <PDPAddToCart setStockAvailability={ this.setStockAvailability } />
+                <hr />
+            </>
         );
+    }
+
+    renderPDPTags() {
+        const { product: { prod_tag_1, prod_tag_2 } } = this.props;
+        
+        const tags= [ prod_tag_1, prod_tag_2 ].filter(Boolean);
+
+        if(tags && tags.length){
+            return (
+                <>
+                    <PDPTags tags={ tags } />
+                    <hr />
+                </>
+            );
+        }
+
+        return null;
+
     }
 
     renderAvailableItemsSection() {
@@ -216,14 +239,18 @@ class PDPSummary extends PureComponent {
 
     render() {
         return (
-            <div block="PDPSummary">
-                { this.renderSummaryHeader() }
+            <div block="PDPSummary">   
                 { this.renderBrand() }
                 { this.renderName() }
-                { this.renderPrice() }
+                <div block="PriceAndPDPSummaryHeader">
+                    { this.renderPrice() }
+                    { this.renderSummaryHeader() }
+                </div>
+                <hr />
                 { this.renderTabby() }
-                { this.renderColors() }
+                {/* { this.renderColors() } */}
                 { this.renderAddToCartSection() }
+                { this.renderPDPTags() }
                 { this.renderAvailableItemsSection() }
                 { this.renderTabbyPopup() }
             </div>
