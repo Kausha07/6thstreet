@@ -40,6 +40,15 @@ class HeaderMainSection extends NavigationAbstract {
         changeMenuGender: () => {}
     };
 
+    constructor(props) {
+        super(props);
+    
+        this.state = {
+          prevScrollpos: window.pageYOffset,
+          visible: false
+        };
+    }
+
     stateMap = {
         [DEFAULT_STATE_NAME]: {
             account: true,
@@ -69,7 +78,24 @@ class HeaderMainSection extends NavigationAbstract {
         isArabic: isArabic()
     };
 
+    handleScroll = () => {
+        if(!this.isPDP()){
+            return;
+        }
+
+        const { prevScrollpos } = this.state;
+      
+        const currentScrollPos = window.pageYOffset;
+        const visible = prevScrollpos < currentScrollPos;
+      
+        this.setState({
+          prevScrollpos: currentScrollPos,
+          visible
+        });
+    };
+
     componentDidMount() {
+        window.addEventListener("scroll", this.handleScroll);
         const { delay } = this.state;
         this.timer = setInterval(this.tick, delay);
     }
@@ -84,6 +110,7 @@ class HeaderMainSection extends NavigationAbstract {
 
     componentWillUnmount() {
         this.timer = null;
+        window.removeEventListener("scroll", this.handleScroll);
     }
 
     tick = () => {
@@ -273,7 +300,7 @@ class HeaderMainSection extends NavigationAbstract {
         const pageWithHiddenHeader = [TYPE_CART, TYPE_ACCOUNT];
 
         return pageWithHiddenHeader.includes(this.getPageType()) && isMobile.any() ? null : (
-            <div block="HeaderMainSection">
+            <div block="HeaderMainSection" data-visible={this.isPDP()?this.state.visible:true}>
                 { this.renderNavigationState() }
             </div>
         );

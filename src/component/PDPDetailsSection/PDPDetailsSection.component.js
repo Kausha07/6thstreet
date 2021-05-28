@@ -1,6 +1,7 @@
 // import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import Accordion from 'Component/Accordion';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
 import { isArabic } from 'Util/App';
 
@@ -14,7 +15,15 @@ class PDPDetailsSection extends PureComponent {
     };
 
     state = {
-        isHidden: true
+        isHidden: true,
+        isExpanded: {
+            "0": true,
+            "1": true,
+            "2": true,
+            "3": true,
+            "4": true,
+            "5": true
+        }
     };
 
     _translateValue(value) {
@@ -46,8 +55,14 @@ class PDPDetailsSection extends PureComponent {
 
     renderDescription() {
         const { product: { description } } = this.props;
-
-        return <p block="PDPDetailsSection" elem="Description" dangerouslySetInnerHTML={{__html: description}}/>;
+        return (
+            <>
+                <p block="PDPDetailsSection" elem="Description">
+                    { description }
+                </p>
+                { this.renderHighlights() }
+            </>
+        )
     }
 
     listTitle(str) {
@@ -99,11 +114,26 @@ class PDPDetailsSection extends PureComponent {
 
         return (
             <div block="PDPDetailsSection" elem="Highlights">
-                <h3>{ __('Highlights') }</h3>
+                <h4>{ __('Highlights') }</h4>
                 <ul>{ this.renderListItems(productInfo) }</ul>
                 { this.renderMoreDetailsList() }
             </div>
         );
+    }
+
+    
+    renderSizeAndFit() {
+        const { product: { description } } = this.props;
+        return (
+            <>
+                <p block="PDPDetailsSection" elem="SizeFit">
+                    {__('Fitting Information - Items fits true to size')}
+                </p>
+                <div block="PDPDetailsSection" elem="ModelMeasurements">
+                    <h4>{ __('Model Measurements') }</h4>
+                </div>
+            </>
+        )
     }
 
     renderMoreDetailsItem(item) {
@@ -142,13 +172,60 @@ class PDPDetailsSection extends PureComponent {
         );
     }
 
+    renderAccordionTitle(title) {
+        return (
+            <div block="'PDPDetailsSection-Description" elem="AccordionTitle">
+                <h3>
+                    { title }
+                </h3>
+            </div>
+        );
+    }
+
     render() {
+        const { product: { brand_name }} = this.props
         return (
             <div block="PDPDetailsSection">
-                <h2>{ __('Product details:') }</h2>
-                { this.renderIconsSection() }
-                { this.renderDescription() }
-                { this.renderHighlights() }
+                <Accordion
+                  mix={ { block: 'PDPDetailsSection', elem: 'Accordion' } }
+                  title={ __('Description') }
+                  is_expanded={this.state.isExpanded["0"]}
+                >
+                    {this.renderIconsSection() }
+                    { this.renderDescription() }
+                </Accordion>
+                {/* <Accordion
+                  mix={ { block: 'PDPDetailsSection', elem: 'Accordion' } }
+                  title={ __('Size & Fit') }
+                  is_expanded={this.state.isExpanded["1"]}
+                >
+                    { this.renderSizeAndFit() }
+                </Accordion>
+                <Accordion
+                  mix={ { block: 'PDPDetailsSection', elem: 'Accordion' } }
+                  title={ __('Click & Collect') }
+                  is_expanded={this.state.isExpanded["2"]}
+                >
+                </Accordion>
+                <Accordion
+                  mix={ { block: 'PDPDetailsSection', elem: 'Accordion' } }
+                  title={ __('Shipping & Free Returns') }
+                  is_expanded={this.state.isExpanded["3"]}
+                >
+                </Accordion>
+                <Accordion
+                  mix={ { block: 'PDPDetailsSection', elem: 'Accordion' } }
+                  title={ `${__('About')} ${brand_name}` }
+                  is_expanded={this.state.isExpanded["4"]}
+                >
+                </Accordion>
+                <Accordion
+                  mix={ { block: 'PDPDetailsSection', elem: 'Accordion' } }
+                  title={ __('Contact Us') }
+                  is_expanded={this.state.isExpanded["5"]}
+                >
+                </Accordion> */}
+
             </div>
         );
     }
