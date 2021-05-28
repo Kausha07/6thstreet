@@ -277,7 +277,7 @@ $select-arrow-width: 6px !default;
     @include mobile {
         &-Bottom {
             height: 85px;  
-            top: calc(100% - 85px);
+            bottom: 0;
             background-color: #FFFFFF;
             left: 0%;
             position: fixed;
