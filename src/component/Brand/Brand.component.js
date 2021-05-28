@@ -52,9 +52,11 @@ class Brand extends PureComponent {
 
     name = name ? name : brandName;
     const urlName = name
-      .replace("&", "")
+      // .replace("&", "")
       .replace(/'/g, "")
-      .replace(/(\s+)|--/g, "-")
+      .replace(/[(\s+).&]/g, "-")
+      .replace(/-{2,}/g, "-")
+      .replace(/\-$/, "")
       .replace("@", "at")
       .toLowerCase();
 

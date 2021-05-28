@@ -52,11 +52,17 @@ class SearchSuggestion extends PureComponent {
 
     name = name ? name : brandName;
     const urlName = name
-      .replace("&", "")
       .replace(/'/g, "")
-      .replace(/(\s+)|--/g, "-")
+      .replace(/[(\s+).&]/g, "-")
+      .replace(/-{2,}/g, "-")
+      .replace(/\-$/, "")
       .replace("@", "at")
       .toLowerCase();
+    // .replace("&", "")
+    // .replace(/'/g, "")
+    // .replace(/(\s+)|--/g, "-")
+    // .replace("@", "at")
+    // .toLowerCase();
 
     return urlName;
   };

@@ -76,6 +76,9 @@ class DynamicContentCircleItemSlider extends PureComponent {
                 <Link
                   to={ linkTo }
                   key={ i }
+                  data-banner-type="circleItemSlider"
+                  data-promotion-name= {item.promotion_name ? item.promotion_name : ""}
+                  data-tag={item.tag ? item.tag : ""}
                   onClick={ () => {
                       this.clickLink(item);
                   } }
