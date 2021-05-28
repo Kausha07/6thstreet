@@ -750,7 +750,7 @@
     "Shop %s for %s Online in %s | Free shipping and returns | 6thStreet.com %s": null,
     "You have received (%s)% off!": null,
     "Congrats!": null,
-    "Continue": null,
-    "You have received %s% off!": null,
+    "Continue": "متابعة",
+    "You have received %s% off!": "لقد حصلت على خصم %s%!",
     "Subtotal ": null
 }
