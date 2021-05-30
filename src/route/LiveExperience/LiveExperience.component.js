@@ -100,7 +100,7 @@ export class LiveExperience extends PureComponent {
             <h1 block="Container" elem="Title">
               {__("RECENTLY PLAYED")}
             </h1>
-            <div id="archived" style={{marginLeft:'5px'}}></div>
+            <div id="archived"></div>
           </div>
         </div>
       </div>
