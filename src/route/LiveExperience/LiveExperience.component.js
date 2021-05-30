@@ -27,7 +27,7 @@ export class LiveExperience extends PureComponent {
       containerId: "single",
       displayType: "one",
       broadcastId: this.props.broadcastId,
-      staging: true,
+      staging: false,
     };
 
     const el = document.createElement("script");
@@ -44,16 +44,11 @@ export class LiveExperience extends PureComponent {
   renderUpcomingParty = () => {
     const spck = {
       storeId: Config.storeId,
-
       storeType: "sixthstreet",
-
       customColor: "#000000",
-
       containerId: "live",
-
       displayType: "upcoming",
-
-      staging: true,
+      staging: false,
     };
 
     const el = document.createElement("script");
@@ -71,16 +66,11 @@ export class LiveExperience extends PureComponent {
   renderArchivedParty = () => {
     const spck = {
       storeId: Config.storeId,
-
       storeType: "sixthstreet",
-
       customColor: "#000000",
-
       containerId: "archived",
-
       displayType: "vod",
-
-      staging: true,
+      staging: false,
     };
 
     const el = document.createElement("script");
