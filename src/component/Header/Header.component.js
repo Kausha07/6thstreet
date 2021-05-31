@@ -79,7 +79,6 @@ export class Header extends PureComponent {
     return (
       <>
         <header block="Header" mods={{ name }}>
-          {__("You have received %s% off!", 15)}
           {isCheckout ? null : this.headerSections.map(this.renderSection)}
           <MobileMenuSidebar activeOverlay={MOBILE_MENU_SIDEBAR_ID} />
         </header>
