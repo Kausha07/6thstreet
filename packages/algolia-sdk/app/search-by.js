@@ -6,7 +6,7 @@ export default function searchBy(
   options = {}
 ) {
   const { index } = options;
-
+  const tags = ["Desktop","PWA_Search"]
   return new Promise((resolve, reject) => {
     const newSearchParams = Object.assign({}, searchParams);
     newSearchParams.hitsPerPage = limit;
@@ -19,8 +19,8 @@ export default function searchBy(
       {
         query,
         ...newSearchParams,
+        tags,
         clickAnalytics: true,
-        analyticsTags: ["PWA_Search"],
       },
       (err, data = {}) => {
         if (err) {
