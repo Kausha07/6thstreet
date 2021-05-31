@@ -280,7 +280,9 @@ class CreditCard extends PureComponent {
                             );
                         }
                         return (
-                            <div block="SavedCard" elem="Item" key={entity_id}>
+                            <div block="SavedCard" elem="Item" key={entity_id} onClick={() => {
+                                this.props.selectSavedCard(entity_id)
+                            }}>
                                 <span block="SavedCard" elem="CardNumber">{`${bin.substr(0, 4)} **** **** ${maskedCC}`}</span>
                                 <div block="SavedCard" elem="CvvImgCon">
                                     <span>{`${expirationDate.substr(0, 3)}${expirationDate.substr(5, 2)}`}</span>

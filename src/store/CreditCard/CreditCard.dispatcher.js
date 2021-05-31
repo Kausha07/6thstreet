@@ -1,3 +1,4 @@
+import { getStore } from "Store";
 import { showNotification } from 'Store/Notification/Notification.action';
 import { getCardType } from 'Util/API/endpoint/Checkout/Checkout.endpoint';
 import { setSavedCards, setSavedCardsLoading, setNewCardVisible } from './CreditCard.action';
@@ -29,6 +30,15 @@ export class CreditCardDispatcher {
 
     async toggleNewCardVisible(dispatch, data) {
         dispatch(setNewCardVisible(data));
+    }
+
+    async selectSavedCard(dispatch, entity_id) {
+        const { CreditCardReducer: { savedCards } } = getStore().getState();
+        let newData = [...savedCards];
+        newData.forEach(element => {
+            element.selected = element.entity_id === entity_id
+        });
+        dispatch(setSavedCards([...newData]));
     }
 
     async getSavedCards(dispatch) {

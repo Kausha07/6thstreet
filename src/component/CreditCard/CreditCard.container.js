@@ -18,6 +18,7 @@ export const mapStateToProps = (state) => ({
 
 export const mapDispatchToProps = (dispatch) => ({
     getSavedCards: () => CreditCardDispatcher.getSavedCards(dispatch),
+    selectSavedCard: (entity_id) => CreditCardDispatcher.selectSavedCard(dispatch, entity_id),
     toggleNewCardVisible: (value) => CreditCardDispatcher.toggleNewCardVisible(dispatch, value)
 });
 export class CreditCardContainer extends PureComponent {
@@ -35,6 +36,7 @@ export class CreditCardContainer extends PureComponent {
         reformatInputField: this.reformatInputField.bind(this),
         getCardLogo: this.getCardLogo.bind(this),
         toggleNewCardVisible: this.toggleNewCardVisible.bind(this),
+        selectSavedCard: this.selectSavedCard.bind(this),
     };
 
     containerProps = () => {
@@ -166,8 +168,11 @@ export class CreditCardContainer extends PureComponent {
     }
 
     toggleNewCardVisible(value) {
-        console.log("toggleNewCardVisible value", value)
-        this.props.toggleNewCardVisible(true);
+        this.props.toggleNewCardVisible(value);
+    }
+
+    selectSavedCard(entity_id) {
+        this.props.selectSavedCard(entity_id);
     }
 
     render() {
