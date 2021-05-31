@@ -12,11 +12,13 @@ import CreditCardDispatcher from "Store/CreditCard/CreditCard.dispatcher";
 
 export const mapStateToProps = (state) => ({
     savedCards: state.CreditCardReducer.savedCards,
+    newCardVisible: state.CreditCardReducer.newCardVisible,
     loadingSavedCards: state.CreditCardReducer.loadingSavedCards,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
     getSavedCards: () => CreditCardDispatcher.getSavedCards(dispatch),
+    toggleNewCardVisible: (value) => CreditCardDispatcher.toggleNewCardVisible(dispatch, value)
 });
 export class CreditCardContainer extends PureComponent {
     static propTypes = {
@@ -31,7 +33,8 @@ export class CreditCardContainer extends PureComponent {
         expDateValidator: this.expDateValidator,
         isNumber: this.isNumber,
         reformatInputField: this.reformatInputField.bind(this),
-        getCardLogo: this.getCardLogo.bind(this)
+        getCardLogo: this.getCardLogo.bind(this),
+        toggleNewCardVisible: this.toggleNewCardVisible.bind(this),
     };
 
     containerProps = () => {
@@ -42,13 +45,7 @@ export class CreditCardContainer extends PureComponent {
 
     componentDidMount() {
         const { getSavedCards } = this.props;
-        console.log("here i am componentDidMount");
-        getSavedCards().then((resp) => {
-            console.log("cards data", resp);
-        })
-            .catch((err) => {
-                console.log("cards error", err)
-            })
+        getSavedCards();
     }
 
     isNumber(value) {
@@ -168,9 +165,13 @@ export class CreditCardContainer extends PureComponent {
         return null;
     }
 
-    render() {
-        const { setCreditCardData, savedCards, loadingSavedCards } = this.props;
+    toggleNewCardVisible(value) {
+        console.log("toggleNewCardVisible value", value)
+        this.props.toggleNewCardVisible(true);
+    }
 
+    render() {
+        const { setCreditCardData } = this.props;
         return (
             <CreditCard
                 setCreditCardData={setCreditCardData}

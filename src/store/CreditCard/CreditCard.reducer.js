@@ -1,10 +1,12 @@
 import {
     SET_SAVED_CARDS,
-    SET_SAVED_CARDS_LOADING
+    SET_NEW_CARD_VISIBLE,
+    SET_SAVED_CARDS_LOADING,
 } from './CreditCard.action';
 
 export const getInitialState = () => ({
     savedCards: [],
+    newCardVisible: false,
     loadingSavedCards: false
 });
 
@@ -25,6 +27,13 @@ export const CreditCardReducer = (state = getInitialState(), action) => {
             return {
                 ...state,
                 loadingSavedCards
+            };
+        case SET_NEW_CARD_VISIBLE:
+            const { newCardVisible } = action;
+
+            return {
+                ...state,
+                newCardVisible
             };
 
         default:

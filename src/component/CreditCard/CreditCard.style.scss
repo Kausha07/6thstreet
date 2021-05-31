@@ -158,3 +158,46 @@
 .CreditCard-Label {
   margin: 0.9rem 0 0 1rem;
 }
+
+.SavedCards-Container {
+  display: flex;
+}
+
+.SavedCard-Item {
+  width: 220px;
+  height: 120px;
+  margin-right: 10px;
+  border-radius: 12px;
+  // border: 1px solid #042295;
+  background-color: #f6f6f6;
+}
+
+.MyCards-Label {
+  font-size: 13px;
+  color: #000000;
+  line-height: 22px;
+  margin-bottom: 9px;
+}
+
+.NewCard-btn {
+  height: 40px;
+  width: 130px;
+  display: flex;
+  cursor: pointer;
+  margin-top: 27px;
+  border-radius: 8px;
+  align-items: center;
+  background-color: #f6f6f6;
+  padding: 0px 23px 0px 17px;
+  label {
+    font-size: 14px;
+    color: #000000;
+    margin-left: 5px;
+    line-height: 19px;
+    pointer-events: none;
+  }
+  img {
+    width: 20px;
+    height: 20px;
+  }
+}

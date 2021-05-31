@@ -9,6 +9,7 @@ import secure from './icons/secure.png';
 import Field from 'Component/Field';
 
 import './CreditCard.style';
+import PlusIcon from "./icons/plus.png";
 
 class CreditCard extends PureComponent {
     static propTypes = {
@@ -20,15 +21,18 @@ class CreditCard extends PureComponent {
         supported_networks: []
     };
 
-    state = {
-        cvv: '',
-        validatorMessage: null,
-        cardLogo: null,
-        numberFilled: false,
-        expDateFilled: false,
-        cvvFilled: false,
-        saveCard: true
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            cvv: '',
+            cardLogo: null,
+            saveCard: true,
+            cvvFilled: false,
+            numberFilled: false,
+            expDateFilled: false,
+            validatorMessage: null,
+        };
+    }
 
     componentDidMount() {
         const { setOrderButtonDisabled, setCreditCardData } = this.props;
@@ -128,6 +132,10 @@ class CreditCard extends PureComponent {
         let value = !this.state.saveCard;
         this.setState({ saveCard: value });
         setCreditCardData({ saveCard: value });
+    }
+
+    handleNewCardClick = () => {
+        this.props.toggleNewCardVisible(true);
     }
 
     renderCreditCardForm() {
@@ -246,13 +254,73 @@ class CreditCard extends PureComponent {
         );
     }
 
+    newCardBtn() {
+        return (
+            <div block="NewCard" elem="btn" onClick={this.handleNewCardClick}>
+                <img src={PlusIcon} alt="plus" />
+                <label>
+                    {"New Card"}
+                </label>
+            </div>
+        );
+    }
+
+    renderSavedCards(savedCards) {
+        return (
+            <div block="SavedCards" elem="Container">
+                {
+                    savedCards.map((item) => {
+                        const { entity_id } = item;
+                        return (
+                            <div block="SavedCard" elem="Item" key={entity_id}>
+
+                            </div>
+                            // <React.Fragment key={entity_id}>
+                            //     {/* <div block="SavedCard" elem="Item" key={entity_id}>
+
+                            //     </div> */}
+                            // </React.Fragment>
+                        );
+                    })
+                }
+            </div>
+        );
+    }
+
+    renderSavedCardsBlock(savedCards) {
+        return (
+            <React.Fragment>
+                <label block="MyCards" elem="Label">
+                    {"My Cards"}
+                </label>
+                {this.renderSavedCards(savedCards)}
+                {this.newCardBtn()}
+            </React.Fragment>
+        );
+    }
+
+    renderCardsBlock() {
+        const { savedCards, newCardVisible } = this.props;
+        const isSavedCardsAvailable = savedCards.length > 0;
+        if (newCardVisible) {
+            return this.renderCreditCardForm();
+        } else if (isSavedCardsAvailable) {
+            return this.renderSavedCardsBlock(savedCards);
+        }
+        return null;
+    }
+
     render() {
+        const { loadingSavedCards, newCardVisible } = this.props;
+        if (loadingSavedCards) {
+            return null;
+        }
         return (
             <div block="CreditCard">
-                { this.renderValidatorInfo()}
-                { this.renderCreditCardForm()}
-                {this.renderSaveCardToggle('save_card_info')}
-                { this.renderAcceptedCardsInfo()}
+                {this.renderValidatorInfo()}
+                {this.renderCardsBlock()}
+                {newCardVisible && this.renderSaveCardToggle('save_card_info')}
+                {this.renderAcceptedCardsInfo()}
             </div>
         );
     }
