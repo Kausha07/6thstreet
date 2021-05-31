@@ -36,9 +36,7 @@ export class CreditCardDispatcher {
         getSavedCards().then((resp) => {
             dispatch(setSavedCards([...resp]));
             dispatch(setSavedCardsLoading(false));
-            if (resp && resp.length === 0) {
-                dispatch(setNewCardVisible(true));
-            }
+            dispatch(setNewCardVisible(resp && resp.length === 0));
         })
             .catch((err) => {
                 dispatch(setNewCardVisible(true));

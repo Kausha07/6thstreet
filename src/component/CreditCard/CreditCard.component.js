@@ -270,16 +270,23 @@ class CreditCard extends PureComponent {
             <div block="SavedCards" elem="Container">
                 {
                     savedCards.map((item) => {
-                        const { entity_id } = item;
+                        const { entity_id, selected, details } = item;
+                        const { maskedCC, bin, expirationDate, scheme } = details;
+                        if (selected) {
+                            return (
+                                <div block="SelectedSavedCard" elem="Item" key={entity_id}>
+
+                                </div>
+                            );
+                        }
                         return (
                             <div block="SavedCard" elem="Item" key={entity_id}>
-
+                                <span block="SavedCard" elem="CardNumber">{`${bin.substr(0, 4)} **** **** ${maskedCC}`}</span>
+                                <div block="SavedCard" elem="CvvImgCon">
+                                    <span>{`${expirationDate.substr(0, 3)}${expirationDate.substr(5, 2)}`}</span>
+                                    {this.renderMiniCard(scheme.toLowerCase())}
+                                </div>
                             </div>
-                            // <React.Fragment key={entity_id}>
-                            //     {/* <div block="SavedCard" elem="Item" key={entity_id}>
-
-                            //     </div> */}
-                            // </React.Fragment>
                         );
                     })
                 }

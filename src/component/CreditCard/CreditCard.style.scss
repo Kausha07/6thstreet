@@ -166,10 +166,21 @@
 .SavedCard-Item {
   width: 220px;
   height: 120px;
+  display: flex;
+  cursor: pointer;
   margin-right: 10px;
   border-radius: 12px;
-  // border: 1px solid #042295;
+  flex-direction: column;
   background-color: #f6f6f6;
+}
+
+.SelectedSavedCard-Item {
+  width: 220px;
+  height: 120px;
+  margin-right: 10px;
+  border-radius: 12px;
+  border: 1px solid #042295;
+  background-color: #ffffff;
 }
 
 .MyCards-Label {
@@ -199,5 +210,26 @@
   img {
     width: 20px;
     height: 20px;
+  }
+}
+
+.SavedCard-CardNumber {
+  font-size: 16px;
+  color: #9b9b9b;
+  line-height: 22px;
+  margin: 39px 17px 26px 45px;
+}
+
+.SavedCard-CvvImgCon {
+  display: flex;
+  padding: 0px 15px;
+  align-items: center;
+  justify-content: space-between;
+  img {
+    width: 40.27px;
+  }
+  span {
+    font-size: 13px;
+    color: #9b9b9b;
   }
 }
