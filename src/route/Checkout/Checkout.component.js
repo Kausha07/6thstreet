@@ -611,7 +611,6 @@ export class Checkout extends SourceCheckout {
     const { hideActiveOverlay } = this.props;
     this.setState({ isOpen: false, binInfo: {} });
     const { isMobile } = this.state;
-    debugger;
     if (isMobile) {
       setTimeout(() => {
         hideActiveOverlay();
@@ -698,7 +697,6 @@ export class Checkout extends SourceCheckout {
           },
         }}
         id="BinPromotion"
-        title="Bin Promotion"
       >
         {discount && discount > 0 ? this.renderContent() : null}
       </Popup>

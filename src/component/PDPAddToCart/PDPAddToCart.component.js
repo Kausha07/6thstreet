@@ -90,14 +90,27 @@ class PDPAddToCart extends PureComponent {
     renderQuantityBasedMessage(qty) {
         switch (qty) {
             case '0':
-                return  __('Out of stock')
+                return  (
+                    <div block="PDPAddToCart-SizeSelector" elem="QuantityBasedMessage">
+                        __('Out of stock')
+                    </div>
+                );
             case '1':
-                return __('1 left in stock')
+                return  (
+                    <div block="PDPAddToCart-SizeSelector" elem="QuantityBasedMessage">
+                        __('1 left in stock')
+                    </div>
+                );
             case '2' || '3':
-                return __('low stock')
+                return  (
+                    <div block="PDPAddToCart-SizeSelector" elem="QuantityBasedMessage">
+                        __('Low stock')
+                    </div>
+                );
             default:
-                return ""
+                return null;
         }
+
     }
 
     renderSizeOption(simple_products, code, label) {
@@ -203,13 +216,7 @@ class PDPAddToCart extends PureComponent {
             return (
                 <div block="PDPAddToCart" elem="SizeSelector">
                     { this.getSizeSelect() }
-                    {   selectedSizeCode &&
-                        <div block="PDPAddToCart-SizeSelector" elem="QuantityBasedMessage">
-                            {
-                                this.renderQuantityBasedMessage(simple_products[selectedSizeCode].quantity)
-                            }
-                        </div>
-                    }
+                    { selectedSizeCode && this.renderQuantityBasedMessage(simple_products[selectedSizeCode].quantity) }
                 </div>
             );
         }
