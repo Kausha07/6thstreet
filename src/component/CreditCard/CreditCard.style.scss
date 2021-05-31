@@ -177,8 +177,11 @@
 .SelectedSavedCard-Item {
   width: 220px;
   height: 120px;
+  display: flex;
+  cursor: pointer;
   margin-right: 10px;
   border-radius: 12px;
+  flex-direction: column;
   border: 1px solid #042295;
   background-color: #ffffff;
 }
@@ -231,5 +234,32 @@
   span {
     font-size: 13px;
     color: #9b9b9b;
+  }
+}
+
+.SavedCard-Tick {
+  width: 18px;
+  border-radius: 9px;
+  margin: 11px 0px 0px 12px;
+}
+
+.SelectedSavedCard-CardNumber {
+  font-size: 16px;
+  color: #000000;
+  line-height: 22px;
+  margin: 15px 16px 16px 46px;
+}
+
+.SelectedSavedCard-CvvImgCon {
+  display: flex;
+  padding: 0px 15px;
+  align-items: center;
+  justify-content: space-between;
+  img {
+    width: 40.27px;
+  }
+  span {
+    font-size: 13px;
+    color: #747474;
   }
 }

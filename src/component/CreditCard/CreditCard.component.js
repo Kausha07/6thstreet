@@ -10,6 +10,7 @@ import Field from 'Component/Field';
 
 import './CreditCard.style';
 import PlusIcon from "./icons/plus.png";
+import SelectedIcon from './icons/selected.png';
 
 class CreditCard extends PureComponent {
     static propTypes = {
@@ -272,10 +273,16 @@ class CreditCard extends PureComponent {
                     savedCards.map((item) => {
                         const { entity_id, selected, details } = item;
                         const { maskedCC, bin, expirationDate, scheme } = details;
+                        const cardNum = `${bin.substr(0, 4)} **** **** ${maskedCC}`;
                         if (selected) {
                             return (
                                 <div block="SelectedSavedCard" elem="Item" key={entity_id}>
-
+                                    <img src={SelectedIcon} alt={"selected"} block="SavedCard" elem="Tick" />
+                                    <span block="SelectedSavedCard" elem="CardNumber">{cardNum}</span>
+                                    <div block="SelectedSavedCard" elem="CvvImgCon">
+                                        <span>{`${expirationDate.substr(0, 3)}${expirationDate.substr(5, 2)}`}</span>
+                                        {this.renderMiniCard(scheme.toLowerCase())}
+                                    </div>
                                 </div>
                             );
                         }
@@ -283,7 +290,7 @@ class CreditCard extends PureComponent {
                             <div block="SavedCard" elem="Item" key={entity_id} onClick={() => {
                                 this.props.selectSavedCard(entity_id)
                             }}>
-                                <span block="SavedCard" elem="CardNumber">{`${bin.substr(0, 4)} **** **** ${maskedCC}`}</span>
+                                <span block="SavedCard" elem="CardNumber">{cardNum}</span>
                                 <div block="SavedCard" elem="CvvImgCon">
                                     <span>{`${expirationDate.substr(0, 3)}${expirationDate.substr(5, 2)}`}</span>
                                     {this.renderMiniCard(scheme.toLowerCase())}
