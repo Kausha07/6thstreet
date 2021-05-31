@@ -275,12 +275,26 @@ class CreditCard extends PureComponent {
                         const { maskedCC, bin, expirationDate, scheme } = details;
                         const cardNum = `${bin.substr(0, 4)} **** **** ${maskedCC}`;
                         if (selected) {
+                            const { cvv } = this.state;
+                            const { isAmex } = this.props;
                             return (
                                 <div block="SelectedSavedCard" elem="Item" key={entity_id}>
                                     <img src={SelectedIcon} alt={"selected"} block="SavedCard" elem="Tick" />
                                     <span block="SelectedSavedCard" elem="CardNumber">{cardNum}</span>
                                     <div block="SelectedSavedCard" elem="CvvImgCon">
                                         <span>{`${expirationDate.substr(0, 3)}${expirationDate.substr(5, 2)}`}</span>
+                                        <input
+                                            id="cvv"
+                                            type="text"
+                                            name="cvv"
+                                            value={cvv}
+                                            inputMode="numeric"
+                                            placeholder={__('CVV')}
+                                            validation={['notEmpty']}
+                                            onPaste={this.handlePaste}
+                                            onChange={this.handleCvvChange}
+                                            maxLength={isAmex ? '4' : '3'}
+                                        />
                                         {this.renderMiniCard(scheme.toLowerCase())}
                                     </div>
                                 </div>
