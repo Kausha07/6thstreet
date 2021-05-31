@@ -9,9 +9,13 @@ export class LiveExperience extends PureComponent {
   componentDidMount() {
     if (this.props.broadcastId) {
       this.renderLiveParty();
+    } else {
+      this.renderUpcomingParty();
+      this.renderArchivedParty();
     }
-    this.renderUpcomingParty();
-    this.renderArchivedParty();
+
+    // this.renderUpcomingParty();
+    // this.renderArchivedParty();
   }
   componentDidUpdate() {
     if (this.props.broadcastId) {
@@ -82,26 +86,32 @@ export class LiveExperience extends PureComponent {
     document.body.appendChild(el);
     setTimeout(() => {
       import("./LiveExperience.style");
-    }, 2000);
+    }, 1000);
   };
 
   render() {
+    const { broadcastId } = this.props;
+
     return (
       <div>
         <div block="Container">
           <div id="single"></div>
-          <div>
-            <h1 block="Container" elem="Title">
-              {__("COMING NEXT")}
-            </h1>
-            <div id="live"></div>
-          </div>
-          <div>
-            <h1 block="Container" elem="Title">
-              {__("RECENTLY PLAYED")}
-            </h1>
-            <div id="archived"></div>
-          </div>
+          {!broadcastId ? (
+            <>
+              <div>
+                <h1 block="Container" elem="Title">
+                  {__("COMING NEXT")}
+                </h1>
+                <div id="live"></div>
+              </div>
+              <div>
+                <h1 block="Container" elem="Title">
+                  {__("RECENTLY PLAYED")}
+                </h1>
+                <div id="archived"></div>
+              </div>
+            </>
+          ) : null}
         </div>
       </div>
     );
