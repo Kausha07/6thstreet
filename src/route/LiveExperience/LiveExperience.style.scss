@@ -17,6 +17,12 @@
   .spck-watch-button {
     background: #f96446 !important;
   }
+  .spck-list:empty::before{
+    content: 'No Upcoming Videos';
+    font-size: 16px;
+    padding-left:5px;
+
+  }
 }
 #live,
 #archived {
@@ -158,6 +164,7 @@
   }
   .spck-watch-button {
     font-family: inherit;
+
     @include mobile {
       margin: 0;
       width: 100% !important;
@@ -167,11 +174,38 @@
       width: 100% !important;
     }
   }
+  .spck-ical-button {
+    right: 0;
+    bottom: 0;
+    @include mobile {
+      margin: 0 !important;
+      width: 100% !important;
+      background: #f96446 !important;
+    }
+    @include tablet {
+      margin: 0 !important;
+      width: 100% !important;
+      background: #f96446 !important;
+    }
+  }
+  .spck-timer-block {
+    height: 40px !important;
+    width: calc(100% - 40px) !important;
+    color: #fff;
+    background: #f96446;
+    border-color: #f96446 !important;
+    border-radius: 3px 0px 0px 3px !important;
+  }
 }
 
 #archived {
   @include tablet {
     margin-bottom: 80px;
+  }
+  .spck-list:empty::before{
+    content: 'No Recorded Videos';
+    font-size: 16px;
+    padding-left:5px;
   }
 }
 
@@ -307,3 +341,4 @@
     }
   }
 }
+

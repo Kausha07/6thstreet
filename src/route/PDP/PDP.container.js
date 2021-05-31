@@ -45,8 +45,7 @@ export const mapDispatchToProps = (dispatch) => ({
       dispatcher.update(breadcrumbs, dispatch)
     );
   },
-  changeHeaderState: (state) =>
-    dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, state)),
+  changeHeaderState: (state) => dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, state)),
   setGender: (gender) => dispatch(setGender(gender)),
   setMeta: (meta) => dispatch(updateMeta(meta)),
 });
@@ -202,21 +201,22 @@ export class PDPContainer extends PureComponent {
     }
 
     const countryList = getCountriesForSelect(config);
-    const { label: countryName = "" } =
-      countryList.find((obj) => obj.id === country) || {};
+    const { label: countryName = "" } = countryList.find((obj) => obj.id === country) || {};
 
     setMeta({
-      title: __("%s %s | 6thStreet.com", brandName, name),
+      title: __("%s %s | 6thStreet.com %s", brandName, name, countryName),
       keywords: __(
-        "%s, %s, %s, %s, online shopping",
+        "%s, %s, %s, Online Shopping %s",
+        brandName,
+        name,
+        categories_without_path.join(" "),
+        countryName
+      ),
+      description: `${description} | ${__(
+        "Shop %s %s Online in %s. Discover the latest collection from %s. Free shipping and returns.",
         brandName,
         name,
         countryName,
-        categories_without_path.join(" ")
-      ),
-      description: `${description} | ${__(
-        "Shop %s Online. Discover the latest collection from %s. Free shipping and returns.",
-        name,
         brandName
       )}`,
     });
@@ -262,6 +262,7 @@ export class PDPContainer extends PureComponent {
       brandImg,
       brandName,
     } = this.props;
+    
     const { isLoading: isCategoryLoading } = this.state;
 
     return {

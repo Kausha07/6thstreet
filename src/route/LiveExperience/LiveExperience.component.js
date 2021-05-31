@@ -7,9 +7,16 @@ export class LiveExperience extends PureComponent {
   }
 
   componentDidMount() {
-    this.renderLiveParty();
+    if (this.props.broadcastId) {
+      this.renderLiveParty();
+    }
     this.renderUpcomingParty();
     this.renderArchivedParty();
+  }
+  componentDidUpdate() {
+    if (this.props.broadcastId) {
+      this.renderLiveParty();
+    }
   }
 
   renderLiveParty = () => {
@@ -19,8 +26,8 @@ export class LiveExperience extends PureComponent {
       customColor: "#000000",
       containerId: "single",
       displayType: "one",
-      broadcastId: 2411,
-      staging: true,
+      broadcastId: this.props.broadcastId,
+      staging: false,
     };
 
     const el = document.createElement("script");
@@ -37,16 +44,11 @@ export class LiveExperience extends PureComponent {
   renderUpcomingParty = () => {
     const spck = {
       storeId: Config.storeId,
-
       storeType: "sixthstreet",
-
       customColor: "#000000",
-
       containerId: "live",
-
       displayType: "upcoming",
-
-      staging: true,
+      staging: false,
     };
 
     const el = document.createElement("script");
@@ -64,16 +66,11 @@ export class LiveExperience extends PureComponent {
   renderArchivedParty = () => {
     const spck = {
       storeId: Config.storeId,
-
       storeType: "sixthstreet",
-
       customColor: "#000000",
-
       containerId: "archived",
-
       displayType: "vod",
-
-      staging: true,
+      staging: false,
     };
 
     const el = document.createElement("script");
