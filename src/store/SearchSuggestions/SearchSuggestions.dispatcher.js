@@ -58,7 +58,7 @@ export class SearchSuggestionsDispatcher {
       //     productSuggestions
       // );
 
-      // if you need search analytics then uncomment it.
+      // if you need search analytics then uncomment it (default automatically tracks it).
 
       // var data = localStorage.getItem("customer");
       // let userData = JSON.parse(data);
