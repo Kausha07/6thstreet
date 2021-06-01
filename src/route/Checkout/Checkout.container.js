@@ -92,6 +92,8 @@ export const mapStateToProps = (state) => ({
   activeOverlay: state.OverlayReducer.activeOverlay,
   hideActiveOverlay: state.OverlayReducer.hideActiveOverlay,
   cartId: state.CartReducer.cartId,
+  savedCards: state.CreditCardReducer.savedCards,
+  newCardVisible: state.CreditCardReducer.newCardVisible,
 });
 
 export class CheckoutContainer extends SourceCheckoutContainer {
@@ -407,34 +409,47 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       tabbyPaymentId,
     } = paymentInformation;
     const {
+      savedCards,
+      newCardVisible,
       customer: { email: customerEmail },
     } = this.props;
     const {
       shippingAddress: { email },
     } = this.state;
     //console.log("here1"+tabbyPaymentId)
-    const data =
-      code === CARD
-        ? {
-          ...additional_data,
-          source: {
-            type: "token",
-            token: BrowserDatabase.getItem("CREDIT_CART_TOKEN"),
-          },
-          customer: {
-            email: customerEmail ? customerEmail : email,
-          },
-          "3ds": {
-            enabled: BrowserDatabase.getItem("CREDIT_CART_3DS"),
-          },
-          metadata: {
-            udf1:
-              typeof BrowserDatabase.getItem("CREDIT_CART_TYPE") === "string"
-                ? BrowserDatabase.getItem("CREDIT_CART_TYPE")
-                : null,
-          },
+    let data = {};
+    if (code === CARD) {
+      data = {
+        ...additional_data,
+        customer: {
+          email: customerEmail ? customerEmail : email,
+        },
+        "3ds": {
+          enabled: newCardVisible ? BrowserDatabase.getItem("CREDIT_CART_3DS") : true,
+        },
+        metadata: {
+          udf1:
+            typeof BrowserDatabase.getItem("CREDIT_CART_TYPE") === "string"
+              ? BrowserDatabase.getItem("CREDIT_CART_TYPE")
+              : null,
+        },
+      }
+      if (newCardVisible) {
+        data['source'] = {
+          type: "token",
+          token: BrowserDatabase.getItem("CREDIT_CART_TOKEN"),
         }
-        : additional_data;
+      } else {
+        const { selectedCard: { cvv, gateway_token } } = paymentInformation;
+        data['source'] = {
+          cvv,
+          type: "id",
+          id: gateway_token,
+        }
+      }
+    } else {
+      data = additional_data;
+    }
 
     if (code === CHECKOUT_APPLE_PAY) {
       this.setState({ processApplePay: true });
@@ -606,7 +621,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   }
 
   processThreeDS() {
-    const { getPaymentAuthorization, capturePayment, cancelOrder, saveCreditCard } = this.props;
+    const { getPaymentAuthorization, capturePayment, cancelOrder, saveCreditCard, newCardVisible } = this.props;
     const { order_id, increment_id, id = "", creditCardData } = this.state;
 
     getPaymentAuthorization(id).then((response) => {
@@ -619,7 +634,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           this.resetCart();
           this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
           capturePayment(paymentId, order_id);
-          if (creditCardData.saveCard) {
+          if (newCardVisible && creditCardData.saveCard) {
             saveCreditCard({ email: creditCardData.email, paymentId })
               .then(() => {
                 // console.log("saveCreditCard resp", response);
