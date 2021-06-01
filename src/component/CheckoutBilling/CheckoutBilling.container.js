@@ -74,6 +74,8 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     setOrderButtonEnabled: this.setOrderButtonEnabled.bind(this),
     resetBinApply: this.resetBinApply.bind(this),
     setOrderButtonEnableStatus: this.setOrderButtonEnableStatus.bind(this),
+    applyPromotionSavedCard: this.applyPromotionSavedCard.bind(this),
+    removePromotionSavedCard: this.removePromotionSavedCard.bind(this),
   };
 
   conatinerProps = () => {
@@ -167,6 +169,33 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     await updateTotals();
     this.setState({ binApplied: true });
     this.setOrderButtonEnabled();
+  }
+
+  async applyBinPromotionOnSavedCard() {
+    const { getBinPromotion, updateTotals, binModal, savedCards } = this.props;
+    let selectedCard = savedCards.find(a => a.selected === true);
+    if (selectedCard) {//if saved card is selected
+      const { bin } = selectedCard;
+      const response = await getBinPromotion(bin);
+      binModal(response);
+      await updateTotals();
+      this.setState({ binApplied: true });
+      this.setOrderButtonEnabled();
+    }
+  }
+
+  async applyPromotionSavedCard() {
+    if (this.state.binApplied) {//if promotion already applied
+      await this.removeBinPromotion();
+      await this.applyBinPromotionOnSavedCard();
+    } else {
+      await this.applyBinPromotionOnSavedCard();
+    }
+  }
+
+  async removePromotionSavedCard() {
+    await this.removeBinPromotion();
+    this.resetBinApply();
   }
 
   async onBillingSuccess(fields, asyncData) {

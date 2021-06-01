@@ -191,6 +191,8 @@ export class CheckoutBilling extends SourceCheckoutBilling {
       setOrderButtonEnabled,
       setOrderButtonDisabled,
       resetBinApply,
+      applyPromotionSavedCard,
+      removePromotionSavedCard
     } = this.props;
 
     if (!paymentMethods.length) {
@@ -215,6 +217,8 @@ export class CheckoutBilling extends SourceCheckoutBilling {
         resetBinApply={resetBinApply}
         processApplePay={processApplePay}
         placeOrder={placeOrder}
+        applyPromotionSavedCard={applyPromotionSavedCard}
+        removePromotionSavedCard={removePromotionSavedCard}
       />
     );
   }

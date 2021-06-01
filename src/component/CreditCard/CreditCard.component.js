@@ -147,6 +147,7 @@ class CreditCard extends PureComponent {
 
     handleNewCardClick = () => {
         this.props.toggleNewCardVisible(true);
+        this.props.removePromotionSavedCard();
     }
 
     renderCreditCardForm() {
@@ -316,6 +317,7 @@ class CreditCard extends PureComponent {
                                 if (this.state.cvv.length > 0) {//remove cvv if filled on another card
                                     this.setState({ cvv: '' });
                                 }
+                                this.props.applyPromotionSavedCard();
                             }}>
                                 <span block="SavedCard" elem="CardNumber">{cardNum}</span>
                                 <div block="SavedCard" elem="CvvImgCon">
