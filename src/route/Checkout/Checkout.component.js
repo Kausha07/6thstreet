@@ -432,10 +432,11 @@ export class Checkout extends SourceCheckout {
       isFailed,
       initialTotals,
       isVerificationCodeSent,
+      newCardVisible
     } = this.props;
     const { cashOnDeliveryFee } = this.state;
     const {
-      paymentInformation: { billing_address, paymentMethod },
+      paymentInformation: { billing_address, paymentMethod, selectedCard },
       creditCardData,
     } = this.state;
 
@@ -467,6 +468,7 @@ export class Checkout extends SourceCheckout {
         totals={initialTotals}
         cashOnDeliveryFee={cashOnDeliveryFee}
         isVerificationCodeSent={isVerificationCodeSent}
+        selectedCard={newCardVisible ? {} : selectedCard}
       />
     );
   }
