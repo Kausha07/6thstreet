@@ -229,10 +229,6 @@
     @include desktop {
       height: 60px;
     }
-    @include mobile {
-      background-color: $black !important;
-      border: $black !important;
-    }
   }
 }
 

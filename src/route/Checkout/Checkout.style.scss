@@ -165,6 +165,9 @@
     @include desktop {
       display: none;
     }
+    &-NavButton {
+      padding: 0 !important;
+    }
 
     &-FirstColumn,
     &-SecondColumn {
@@ -490,11 +493,12 @@
     }
   }
   &-DeliveryMessageGuest {
-    margin: 0 auto 48px !important;
+    margin: 0 auto 24px !important;
     text-align: center !important;
     font-size: 18px;
     font-weight: 600;
-    width: 80vw;
+    width: 60vw;
+    min-width: 240px;
     display: block !important;
     @include desktop {
       display: none !important;

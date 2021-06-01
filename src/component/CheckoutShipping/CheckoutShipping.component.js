@@ -268,7 +268,8 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     const { onShippingSuccess, onShippingError, isLoading } = this.props;
 
     const { formContent } = this.state;
-
+    console.log("is mobile check", isMobile);
+    console.log("loading", isLoading);
     return (
       <div
         block="ShippingStep"
@@ -292,7 +293,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
           ) : null}
           {this.renderAddressBook()}
           <div>
-            <Loader isLoading={isLoading} />
+            {<Loader isLoading={isLoading} />}
             {this.renderDelivery()}
             {this.renderHeading(__("Payment Options"), true)}
             {this.renderActions()}

@@ -8,12 +8,7 @@
       opacity: 0.25;
     }
   }
-  &-Button {
-    @include mobile {
-      background-color: $black !important;
-      border: $black !important;
-    }
-  }
+
   &-Checkbox {
     display: grid;
     margin-bottom: 2rem;

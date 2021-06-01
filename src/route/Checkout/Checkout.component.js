@@ -222,7 +222,8 @@ export class Checkout extends SourceCheckout {
             elem="FirstColumn"
             mods={{ checkoutStep }}
           >
-            <button onClick={isBilling ? this.redirectURL : null}>
+            <button block="CheckoutNavigation"
+            elem="NavButton" onClick={isBilling ? this.redirectURL : null}>
               <div
                 block="CheckoutNavigation"
                 elem="Delivery"
