@@ -160,7 +160,9 @@
 }
 
 .SavedCards-Container {
-  display: flex;
+  display: grid;
+  overflow-x: scroll;
+  grid-column-gap: 10px;
 }
 
 .SavedCard-Item {

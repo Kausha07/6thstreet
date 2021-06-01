@@ -278,7 +278,7 @@ class CreditCard extends PureComponent {
 
     renderSavedCards(savedCards) {
         return (
-            <div block="SavedCards" elem="Container">
+            <div block="SavedCards" elem="Container" style={{ gridTemplateColumns: `repeat(${savedCards.length}, 220px)` }}>
                 {
                     savedCards.map((item) => {
                         const { entity_id, selected, details } = item;
