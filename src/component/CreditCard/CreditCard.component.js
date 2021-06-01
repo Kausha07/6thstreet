@@ -57,8 +57,18 @@ class CreditCard extends PureComponent {
             expDateFilled,
             cvvFilled
         } = this.state;
+        const { newCardVisible, savedCards } = this.props;
+        if (newCardVisible) {//this case is for add new card
+            return validatorMessage || !numberFilled || !expDateFilled || !cvvFilled;
+        }
 
-        return validatorMessage || !numberFilled || !expDateFilled || !cvvFilled;
+        //below code is for saved cards.
+        let isSelected = savedCards.find(a => a.selected === true);
+        if (isSelected) {
+            return !cvvFilled;
+        } else {
+            return true;
+        }
     }
 
     handleNumberChange = (e) => {
@@ -302,7 +312,10 @@ class CreditCard extends PureComponent {
                         }
                         return (
                             <div block="SavedCard" elem="Item" key={entity_id} onClick={() => {
-                                this.props.selectSavedCard(entity_id)
+                                this.props.selectSavedCard(entity_id);
+                                if (this.state.cvv.length > 0) {//remove cvv if filled on another card
+                                    this.setState({ cvv: '' });
+                                }
                             }}>
                                 <span block="SavedCard" elem="CardNumber">{cardNum}</span>
                                 <div block="SavedCard" elem="CvvImgCon">
