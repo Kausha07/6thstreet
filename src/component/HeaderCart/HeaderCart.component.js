@@ -18,7 +18,8 @@ class HeaderCart extends PureComponent {
         isCheckoutAvailable: PropTypes.bool.isRequired,
         showNotification: PropTypes.func.isRequired,
         setMinicartOpen: PropTypes.func.isRequired,
-        isMinicartOpen: PropTypes.bool.isRequired
+        isMinicartOpen: PropTypes.bool.isRequired,
+        showCartPopUp: PropTypes.bool.isRequired
     };
 
     state = {
@@ -61,8 +62,13 @@ class HeaderCart extends PureComponent {
     };
 
     renderCartPopUp = () => {
-        const { isCheckoutAvailable } = this.props;
+        const { isCheckoutAvailable, showCartPopUp } = this.props;
         const { isPopup } = this.state;
+
+        if(!showCartPopUp){
+            return null
+        }
+
         const popUpElement = (
             <CartOverlay
               isPopup={ isPopup }
