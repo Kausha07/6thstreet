@@ -180,6 +180,7 @@ class HeaderMainSection extends NavigationAbstract {
             <HeaderCart
               key="cart"
               CartButton="CartButton"
+              showCartPopUp={ true }
             />
         );
     }

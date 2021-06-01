@@ -8,9 +8,11 @@ import PDPGalleryOverlay from 'Component/PDPGalleryOverlay';
 import Slider from 'Component/Slider';
 import SliderVertical from 'Component/SliderVertical';
 import WishlistIcon from 'Component/WishlistIcon';
+import HeaderCart from 'Component/HeaderCart'
 import CSS from 'Util/CSS';
-import { isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
+import browserHistory from "Util/History";
+import { isArabic } from 'Util/App';
 
 import { MAX_ZOOM_SCALE } from './PDPGallery.config';
 
@@ -35,7 +37,8 @@ class PDPGallery extends PureComponent {
     maxScale = MAX_ZOOM_SCALE;
 
     state = {
-        galleryOverlay: ''
+        galleryOverlay: '',
+        isArabic: isArabic()
     };
 
     componentDidMount() {
@@ -43,22 +46,37 @@ class PDPGallery extends PureComponent {
     }
 
     renderBackButton() {
+        const { isArabic } = this.state;
         return (
             <div block="BackArrow" mods={ { isArabic } } key="back">
                 <button
                     block="BackArrow-Button"
-                    // onClick={ this.isPLP() ? this.backFromPLP : history.goBack }
-                >
-            </button>
-        </div>
+                    onClick={browserHistory.goBack}
+                />
+            </div>
         );
+    }
+
+    renderItemCount() {
+        const { totals: { items = [] } } = this.props;
+
+        const itemQuantityArray = items.map((item) => item.qty);
+        const totalQuantity = itemQuantityArray.reduce((qty, nextQty) => qty + nextQty, 0);
+
+        if (totalQuantity && totalQuantity !== 0) {
+            return (
+                <div block="HeaderCart" elem="Count">
+                    { totalQuantity }
+                </div>
+            );
+        }
+
+        return null;
     }
 
     renderCartIcon() {
         return (
-            <Link block='CartIcon' to='/cart'>
-                <div block='CartIcon' elem='Icon' />
-            </Link>
+            <HeaderCart showCartPopUp={false} />
         )
     }
     renderWishlistIcon() {
