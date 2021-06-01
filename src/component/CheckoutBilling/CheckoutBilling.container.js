@@ -28,6 +28,7 @@ export const mapStateToProps = (state) => ({
     state.CartReducer.processingPaymentSelectRequest,
   totals: state.CartReducer.cartTotals,
   cartId: state.CartReducer.cartId,
+  newCardVisible: state.CreditCardReducer.newCardVisible,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
