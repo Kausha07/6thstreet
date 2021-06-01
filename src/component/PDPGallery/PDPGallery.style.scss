@@ -126,8 +126,9 @@
         border-radius: 19.5px;
         padding: 1px 0 1px 0px;
 
-        @include desktop() {
-            right: 1rem;
+        &_isArabic {
+            right: auto;
+            left: 1rem;
         }
 
         .HeaderCart {

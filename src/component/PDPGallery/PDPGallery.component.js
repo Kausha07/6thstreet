@@ -75,14 +75,16 @@ class PDPGallery extends PureComponent {
     }
 
     renderCartIcon() {
+        const { isArabic } = this.state;
         return (
-            <HeaderCart showCartPopUp={false} />
+            <HeaderCart showCartPopUp={false}  mods={ { isArabic } } />
         )
     }
     renderWishlistIcon() {
+        const { isArabic } = this.state;
         const { sku } = this.props;
         return (
-                <WishlistIcon sku={ sku } />
+                <WishlistIcon sku={ sku }  mods={ { isArabic } } />
         );
     }
 
@@ -166,14 +168,14 @@ class PDPGallery extends PureComponent {
     }
 
     render() {
-        const { galleryOverlay } = this.state;
+        const { galleryOverlay, isArabic } = this.state;
 
         return (
             <div block="PDPGallery">
                 { galleryOverlay }
                 { this.renderBackButton() }
                 { this.renderCrumbs() }
-                <div block="OverlayIcons">
+                <div block="OverlayIcons"  mods={ { isArabic } }>
                     { this.renderCartIcon() }
                     { this.renderWishlistIcon() }
                 </div>
