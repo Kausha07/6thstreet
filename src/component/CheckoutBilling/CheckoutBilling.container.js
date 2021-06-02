@@ -180,7 +180,6 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       binModal(response);
       await updateTotals();
       this.setState({ binApplied: true });
-      this.setOrderButtonEnabled();
     }
   }
 

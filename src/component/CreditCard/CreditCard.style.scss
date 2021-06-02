@@ -161,7 +161,7 @@
 
 .SavedCards-Container {
   display: grid;
-  overflow-x: scroll;
+  overflow-x: auto;
   grid-column-gap: 10px;
 }
 
