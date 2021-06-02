@@ -1,156 +1,199 @@
 .DynamicContentSliderWithLabel {
-    // max-height: 500px;
-    // overflow: hidden;
-    margin-right: 8px;
-    margin-left: 8px;
-    margin-bottom: 30px !important;
-    max-width: 1440px;
-    .SliderWithLabelWrapper {
-        display: flex;
-        .CircleSlider {}
+  // max-height: 500px;
+  // overflow: hidden;
+  margin-right: 8px;
+  margin-left: 8px;
+  margin-bottom: 30px !important;
+  max-width: 1440px;
+  .SliderWithLabelWrapper {
+    // display: flex;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding: 20px 0 50px 0;
+    &::-webkit-scrollbar {
+      //   width: 6px;
+      //   height: 6px;
+      height: 4px;
+      width: 4px;
+      scrollbar-width: 100px;
+      border: 1px solid #d5d5d5;
     }
+    &::-webkit-scrollbar-thumb {
+      background: #585757;
+    }
+    &::-webkit-scrollbar-track {
+      background: #dcdcdc;
+      //   width: 100px;
+    }
+  }
+  .SliderWithLabel {
+    // min-width: 18%;
+    // min-width: 238px;
+    margin-right: 7px;
+    &-Link {
+      width: 100%;
+      display: block;
+    }
+  }
+  .Image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .SliderText {
+    font-size: 18px;
+    line-height: 25px;
+    margin-top: 10px;
+  }
+  &-Label {
+    display: flex;
+    position: absolute;
+    bottom: 15rem;
+    right: 70%;
+    text-transform: uppercase;
+    align-items: center;
+    vertical-align: center;
+  }
+  .Slider {
+    &-Crumbs {
+      position: static;
+    }
+    &-Crumb {
+      width: 9px;
+      height: 9px;
+      border: 1px solid $black;
+      background: $white;
+      &_isActive {
+        width: 11px;
+        height: 11px;
+        border: 2px solid $white;
+        box-shadow: 0 0 0 1px $black;
+        background: $black;
+      }
+    }
+  }
+  .Image {
+    height: 100%;
+    &-Image {
+      object-fit: cover;
+      position: inherit;
+    }
+    img {
+      // margin-left: 25px;
+    }
+  }
+  .tns-controls {
+    margin-left: 10px;
+    margin-right: 10px;
+    button:first-child {
+      left: 0;
+      position: absolute;
+      font-size: 75px;
+      font-weight: 500;
+      color: #888;
+      top: 70px;
+      &:hover {
+        color: #000;
+      }
+    }
+    button:last-child {
+      right: 0;
+      position: absolute;
+      font-size: 75px;
+      font-weight: 500;
+      color: #888;
+      top: 70px;
+      &:hover {
+        color: #000;
+      }
+    }
+  }
+  .tns-ovh {
+    margin-right: 80px;
+    margin-left: 80px;
+    .tns-inner {
+      .tns-outer {
+        .tns-controls {
+          display: none;
+        }
+        .tns-ovh {
+          margin: 0;
+        }
+      }
+    }
+  }
+  .tns-outer {
+    direction: ltr !important;
+  }
+  .tns-slider {
+    margin: 0 auto;
+  }
+  .CircleSliderLabel {
+    margin: 0 auto;
+    margin-top: 10px;
+    font-size: 14px;
+    text-align: center;
+  }
+  .Title {
+    // font-size: 22px;
+    // text-align: center;
+    // text-transform: uppercase;
+    // margin-bottom: 20px;
+    // margin-top: 0;
+    font-size: 18px;
+    line-height: 25px;
+    text-align: left;
+    letter-spacing: 2px;
+    margin-bottom: 0;
+    font-weight: 500;
+  }
+  @include mobile {
+    max-height: 700px;
+    overflow: none;
     &-Label {
-        display: flex;
-        position: absolute;
-        bottom: 15rem;
-        right: 70%;
-        text-transform: uppercase;
-        align-items: center;
-        vertical-align: center;
+      right: 2rem;
+      bottom: 2rem;
+      text-decoration: underline;
+      background: none !important;
     }
     .Slider {
-        &-Crumbs {
-            position: static;
-        }
-        &-Crumb {
-            width: 9px;
-            height: 9px;
-            border: 1px solid $black;
-            background: $white;
-            &_isActive {
-                width: 11px;
-                height: 11px;
-                border: 2px solid $white;
-                box-shadow: 0 0 0 1px $black;
-                background: $black;
-            }
-        }
+      &-Wrapper {
+        width: 80%;
+        margin: 10px;
+      }
+      &-Crumbs {
+        display: none;
+      }
     }
-    .Image {
-        height: 100%;
-        &-Image {
-            object-fit: cover;
-            position: inherit;
-        }
-        img {
-            // margin-left: 25px;
-        }
-    }
-    .tns-controls {
-        margin-left: 10px;
-        margin-right: 10px;
-        button:first-child {
-            left: 0;
-            position: absolute;
-            font-size: 75px;
-            font-weight: 500;
-            color: #888;
-            top: 70px;
-            &:hover {
-                color: #000
-            }
-        }
-        button:last-child {
-            right: 0;
-            position: absolute;
-            font-size: 75px;
-            font-weight: 500;
-            color: #888;
-            top: 70px;
-            &:hover {
-                color: #000
-            }
-        }
-    }
-    .tns-ovh {
-        margin-right: 80px;
-        margin-left: 80px;
-        .tns-inner {
-            .tns-outer {
-                .tns-controls {
-                    display: none;
-                }
-                .tns-ovh {
-                    margin: 0;
-                }
-            }
-        }
-    }
-    .tns-outer {
-        direction: ltr!important;
-    }
-    .tns-slider {
-        margin: 0 auto;
-    }
-    .CircleSliderLabel {
-        margin: 0 auto;
-        margin-top: 10px;
-        font-size: 14px;
-        text-align: center;
-    }
-    .Title {
-        font-size: 22px;
-        text-align: center;
-        text-transform: uppercase;
-        margin-bottom: 20px;
-        margin-top: 0;
-    }
-    @include mobile {
-        max-height: 700px;
-        overflow: none;
-        &-Label {
-            right: 2rem;
-            bottom: 2rem;
-            text-decoration: underline;
-            background: none !important;
-        }
-        .Slider {
-            &-Wrapper {
-                width: 80%;
-                margin: 10px;
-            }
-            &-Crumbs {
-                display: none;
-            }
-        }
-    }
+  }
 }
 
 @media (max-width: 760px) {
-    .DynamicContentSliderWithLabel {
-        margin-bottom: 15px;
-        .tns-controls {
-            display: none
-        }
-        .Image {
-            margin-top: 12px;
-            height: 100%;
-            &-Image {
-                object-fit: cover;
-            }
-            img {
-                // margin-left: 30px;
-            }
-        }
-        .tns-ovh {
-            margin: 0;
-        }
-        .CircleSliderLabel {
-            margin-top: 4px;
-            font-size: 12px;
-        }
-        .Title {
-            font-size: 15px;
-        }
+  .DynamicContentSliderWithLabel {
+    margin-bottom: 15px;
+    .tns-controls {
+      display: none;
     }
+    .Image {
+      margin-top: 12px;
+      height: 100%;
+      &-Image {
+        object-fit: cover;
+      }
+      img {
+        // margin-left: 30px;
+      }
+    }
+    .tns-ovh {
+      margin: 0;
+    }
+    .CircleSliderLabel {
+      margin-top: 4px;
+      font-size: 12px;
+    }
+    .Title {
+      font-size: 15px;
+    }
+  }
 }

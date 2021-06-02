@@ -1,25 +1,30 @@
 .HomePage {
-    .DynamicContentBanner {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0 8px;
+  .DynamicContentBanner {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0 8px;
 
-        &:last-of-type {
-            padding-bottom: 30px;
+    &:last-of-type {
+      padding-bottom: 30px;
 
-            @include desktop() {
-                padding-bottom: 0;
-            }
-        }
+      @include desktop() {
+        padding-bottom: 0;
+      }
+    }
+  }
+
+  @include desktop {
+    text-align: center;
+
+    .DynamicContent {
+      > div:not(.DynamicContentFullWidthBannerSlider) {
+        margin: 0 auto;
+      }
     }
 
-    @include desktop {
-        text-align: center;
-
-        .DynamicContent {
-            > div:not(.DynamicContentFullWidthBannerSlider) {
-                margin: 0 auto;
-            }
-        }
+    .HomePageContainer {
+      //   max-width: 1100px;
+      max-width: 76.389vw;
     }
+  }
 }
