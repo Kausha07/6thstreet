@@ -50,7 +50,7 @@ class ProductItem extends PureComponent {
     }
     Event.dispatch(EVENT_GTM_PRODUCT_CLICK, product);
     if (queryID) {
-      new Algolia().logProductClicked(SELECT_ITEM_ALGOLIA, {
+      new Algolia().logAlgoliaAnalytics('click',SELECT_ITEM_ALGOLIA, [],{
         objectIDs: [product.objectID],
         queryID,
         userToken: userToken ? `user-${userToken}` : getUUIDToken(),

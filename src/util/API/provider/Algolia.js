@@ -80,55 +80,63 @@ export class Algolia {
     return data;
   }
 
-  async logSearchResults(name, params, algoliaParams) {
-    switch (name) {
-      case VIEW_SEARCH_RESULTS_ALGOLIA: {
-        if (params.items.length > 0) {
-          const { data = [] } =
-            (await AlgoliaSDK.logSearchResults(
-              name,
-              algoliaParams.objectIDs,
-              algoliaParams.queryID,
-              algoliaParams.userToken,
-              []
-            )) || {};
-          return data;
-        } else {
-          const { data = [] } =
-            (await AlgoliaSDK.logSearchResults(
-              "No_Search_Result",
-              algoliaParams.objecIDs ? algoliaParams.objecIDs : [],
-              algoliaParams.queryID,
-              algoliaParams.userToken,
-              [`search:${algoliaParams.queryID}`]
-            )) || {};
-          return data;
+  async logAlgoliaAnalytics(event_type, name, params, algoliaParams) {
+    console.log('events',{event_type,name,params,algoliaParams  })
+    switch (event_type) {
+      case "view": {
+        switch (name) {
+          case VIEW_SEARCH_RESULTS_ALGOLIA: {
+            if (params.items.length > 0) {
+              const { data = [] } =
+                (await AlgoliaSDK.logAlgoliaAnalytics(
+                  event_type,
+                  name,
+                  algoliaParams.objectIDs,
+                  algoliaParams.queryID,
+                  algoliaParams.userToken,
+                  []
+                )) || {};
+              return data;
+            } else {
+              const { data = [] } =
+                (await AlgoliaSDK.logSearchResults(
+                  event_type,
+                  "No_Search_Result",
+                  algoliaParams.objecIDs ? algoliaParams.objecIDs : [],
+                  algoliaParams.queryID,
+                  algoliaParams.userToken,
+                  [`search:${algoliaParams.queryID}`]
+                )) || {};
+              return data;
+            }
+          }
         }
       }
-    }
-  }
+      case "click": {
+        const { data = [] } =
+          (await AlgoliaSDK.logAlgoliaAnalytics(
+            event_type,
+            name,
+            algoliaParams.objectIDs,
+            algoliaParams.queryID,
+            algoliaParams.userToken,
+            algoliaParams.position
+          )) || {};
+        return data;
+      }
 
-  async logProductClicked(name, algoliaParams) {
-    const { data = [] } =
-          (await AlgoliaSDK.logProductClicked(
+      case "conversion": {
+        const { data = [] } =
+          (await AlgoliaSDK.logAlgoliaAnalytics(
+            event_type,
             name,
             algoliaParams.objectIDs,
             algoliaParams.queryID,
-            algoliaParams.userToken,
-            algoliaParams.position,
+            algoliaParams.userToken
           )) || {};
         return data;
-  }
-  
-  async logProductConversion(name, algoliaParams) {
-    const { data = [] } =
-          (await AlgoliaSDK.logProductConversion(
-            name,
-            algoliaParams.objectIDs,
-            algoliaParams.queryID,
-            algoliaParams.userToken,
-          )) || {};
-        return data;
+      }
+    }
   }
 }
 

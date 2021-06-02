@@ -67,7 +67,8 @@ export class SearchSuggestionsDispatcher {
       //   userToken = userData.data.id;
       // }
       // const objectIDs = productData.data.map(item => item.objectID);
-      // await new Algolia().logSearchResults(
+      // await new Algolia().logAlgoliaAnalytics(
+      //   'view',
       //   VIEW_SEARCH_RESULTS_ALGOLIA,
       //   {
       //     search_item: search,

@@ -273,11 +273,12 @@ export class PDPAddToCartContainer extends PureComponent {
         size_us = [],
         name,
         sku: configSKU,
+        objectID,
       },
       addProductToCart,
       showNotification,
     } = this.props;
-
+    
     if (!price[0]) {
       showNotification("error", __("Unable to add product to cart."));
 
@@ -359,7 +360,7 @@ export class PDPAddToCartContainer extends PureComponent {
         userToken = userData.data.id;
       }
       if (queryID) {
-        new Algolia().logProductConversion(ADD_TO_CART_ALGOLIA, {
+        new Algolia().logAlgoliaAnalytics('conversion',ADD_TO_CART_ALGOLIA, [], {
           objectIDs: [objectID],
           queryID,
           userToken: userToken ? `user-${userToken}` : getUUIDToken(),
@@ -416,7 +417,7 @@ export class PDPAddToCartContainer extends PureComponent {
         userToken = userData.data.id;
       }
       if (queryID) {
-        new Algolia().logProductConversion(ADD_TO_CART_ALGOLIA, {
+        new Algolia().logAlgoliaAnalytics('conversion',ADD_TO_CART_ALGOLIA, [], {
           objectIDs: [objectID],
           queryID,
           userToken: userToken ? `user-${userToken}` : getUUIDToken(),
