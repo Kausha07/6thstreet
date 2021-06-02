@@ -22,4 +22,7 @@ export const EVENT_GTM_BANNER_CLICK = 'gtm_banner_widget_click';
 export const VIEW_SEARCH_RESULTS_ALGOLIA = 'view_search_results_algolia';
 export const SELECT_ITEM_ALGOLIA=  'select_item_algolia';
 export const ADD_TO_CART_ALGOLIA=  'add_to_cart_algolia';
-
+export const VUE_CAROUSEL_SHOW= 'carousel_show';
+export const VUE_CAROUSEL_CLICK= 'carousel_click';
+export const VUE_CAROUSEL_SWIPE= 'carousel_swipe';
+export const VUE_PDP_VIEW= 'vue_pdp_view';

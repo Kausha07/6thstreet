@@ -1,10 +1,11 @@
 // import PropTypes from 'prop-types';
 import Link from "Component/Link";
 import PropTypes from "prop-types";
+import VueIntegrationQueries from 'Query/vueIntegration.query';
 import { PureComponent } from "react";
+import { VUE_PDP_VIEW } from "Util/Event";
 import isMobile from "Util/Mobile";
 import "./PDPDetail.style";
-
 class PDPDetail extends PureComponent {
   static propTypes = {
     brandDescription: PropTypes.string,
@@ -15,6 +16,24 @@ class PDPDetail extends PureComponent {
   state = {
     isMobile: isMobile.any() || isMobile.tablet(),
   };
+
+  componentDidMount() {
+    console.log("all well", VUE_PDP_VIEW);
+    VueIntegrationQueries.vuePDPView({
+      event_name: "addToCart",
+      params: {
+        event: "addToCart",
+        pageType: "pdp",
+        currency: "en_AED",
+        clicked: 1620117056981,
+        uuid: "e8bd3fb9-ac6c-4a74-ace8-a53d77944b74",
+        referrer: "app",
+        sourceProdID: "CK1-60050866-Silver",
+        sourceCatgID: "Sandals",
+        prodPrice: 279,
+      },
+    });
+  }
 
   renderBrandImage = () => {
     const { brandImg } = this.props;
