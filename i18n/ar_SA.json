@@ -297,8 +297,8 @@
     "Carrier method: ": "طريقة الشحن: ",
     "Rate: ": "السعر: ",
     "This payment method is not supported yet.": "طريقة الدفع غير معتمدة حالياً",
-    "View Size Guide": " عرض دليل المقاسات",
-    "Size guide": "دليل المقاسات",
+    "View Size Guide": null,
+    "Size guide": null,
     "SIZE GUIDE": "دليل المقاسات",
     "Sizing Guide": "دليل المقاسات",
     "Fitting Information - Items fits true to size": null,
@@ -564,7 +564,7 @@
     "Customize your shopping experience": "أضف طابعك الشخصي حول تجربتك في التسوق ",
     "Welcome": "أهلا بك،",
     "you are shopping in": "أنت تتسوق في",
-    "Product details:": "تفاصيل المنتج",
+    "Product details:": null,
     "card number": "رقم البطاقة",
     "exp date": "تاريخ انتهاء الصلاحية",
     "Shipping Options": "الشحن",
@@ -759,5 +759,8 @@
     "Continue": "متابعة",
     "You have received %s% off!": "!٪%s لقد حصلت على خصم",
     "Subtotal ": "الإجمالي",
-    "LiveShopping": null
+    "LiveShopping": null,
+    "Where can we send your order?": null,
+    "+ New address": null,
+    "Low stock": null
 }

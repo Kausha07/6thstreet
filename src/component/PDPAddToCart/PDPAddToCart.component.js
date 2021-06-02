@@ -92,19 +92,19 @@ class PDPAddToCart extends PureComponent {
             case '0':
                 return  (
                     <div block="PDPAddToCart-SizeSelector" elem="QuantityBasedMessage">
-                        __('Out of stock')
+                        { __('Out of stock') }
                     </div>
                 );
             case '1':
                 return  (
                     <div block="PDPAddToCart-SizeSelector" elem="QuantityBasedMessage">
-                        __('1 left in stock')
+                        { __('1 left in stock') }
                     </div>
                 );
             case '2' || '3':
                 return  (
                     <div block="PDPAddToCart-SizeSelector" elem="QuantityBasedMessage">
-                        __('Low stock')
+                        { __('Low stock') }
                     </div>
                 );
             default:
