@@ -81,7 +81,6 @@ export class Algolia {
   }
 
   async logAlgoliaAnalytics(event_type, name, params, algoliaParams) {
-    console.log('events',{event_type,name,params,algoliaParams  })
     switch (event_type) {
       case "view": {
         switch (name) {
