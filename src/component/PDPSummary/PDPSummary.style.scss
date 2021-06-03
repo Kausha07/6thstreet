@@ -42,9 +42,6 @@
         line-height: 30px;
         text-align: right;
 
-        @include desktop {
-            margin-bottom: 30px;
-        }
     }
 
     &-Name {
@@ -183,6 +180,7 @@
         @include desktop() {
             padding: 15px 15px 14px 18px;
             font-size: 14px;
+            margin-bottom: 30px;
         }
 
         strong {
