@@ -8,15 +8,22 @@
   padding: 0 20px;
   font-weight: var(--fw-regular);
 
+  &-Accordion {
+    @include mobile() {
+      padding-bottom: 75px;
+    }
+  }
   @include desktop() {
     padding: 0 20px;
   }
 
-  h2 {
+  h3 {
     text-transform: none;
-    font-weight: var(--fw-demi);
-    font-size: 24px;
-    border-top: 1px solid var(--pdp-split-line);
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: 50px;
+    // border-top: 1px solid var(--pdp-split-line);
     margin-top: 0;
     padding-top: 28px;
   }
@@ -24,8 +31,8 @@
   &-IconsSection,
   &-IconContainer {
     display: flex;
+    width: 103px;
     align-items: center;
-    justify-content: space-between;
     font-size: 15px;
     color: var(--pdp-icon-text-color);
     font-weight: var(--fw-regular);
@@ -38,11 +45,13 @@
 
   &-IconsSection {
     align-items: start;
+    padding-bottom: 28px;
   }
 
   &-IconContainer {
     margin-top: 10px;
     font-weight: var(--fw-demi);
+    margin: 0 32px 0 0;
   }
 
   &-Icon {
@@ -66,25 +75,27 @@
     }
   }
 
-  &-Description {
-    margin-top: 40px;
+  &-Description, &-SizeFit {
     font-size: 16px;
     line-height: 24px;
   }
 
-  &-Highlights {
+  &-Highlights, &-ModelMeasurements {
     font-size: 16px;
-    margin-top: 20px;
-    // margin-bottom: 120px;
+    margin-top: 32px;
     font-weight: var(--fw-demi);
 
-    h3 {
-      font-weight: var(--fw-demi);
+    h4 {
+      font-weight: 600;
+      font-size: 16px;
       margin-bottom: 1rem;
     }
 
     ul {
-      padding-left: 20px;
+      padding-left: 30px;
+    }
+    li {
+      list-style-position: outside;
     }
   }
 

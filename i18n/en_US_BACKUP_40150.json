@@ -762,5 +762,21 @@
     "%s for %s | 6thStreet %s": null,
     "%s for %s | 6thStreet.com %s": null,
     "Shop %s for %s Online in %s.| Free shipping and returns | 6thStreet.com %s": null,
-    "Shop %s for %s Online in %s | Free shipping and returns | 6thStreet.com %s": null
+    "Shop %s for %s Online in %s | Free shipping and returns | 6thStreet.com %s": null,
+    "Description": null,
+    "Size & Fit": null,
+    "Model Measurements": null,
+    "Click & Collect": null,
+    "Shipping & Free Returns": null,
+    "Contact Us": null,
+    "Size Help": null,
+    "You have received (%s)% off!": null,
+    "Congrats!": null,
+    "Continue": null,
+    "You have received %s% off!": null,
+    "LiveShopping": null,
+    "Where can we send your order?": null,
+    "+ New address": null,
+    "Low stock": null,
+    "Also available in": null
 }

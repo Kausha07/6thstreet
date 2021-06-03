@@ -40,6 +40,15 @@ class HeaderMainSection extends NavigationAbstract {
         changeMenuGender: () => {}
     };
 
+    constructor(props) {
+        super(props);
+    
+        this.state = {
+          prevScrollpos: window.pageYOffset,
+          visible: false
+        };
+    }
+
     stateMap = {
         [DEFAULT_STATE_NAME]: {
             account: true,
@@ -65,11 +74,27 @@ class HeaderMainSection extends NavigationAbstract {
         delay: 150,
         lastProduct: null,
         lastCategory: null,
-        search: '',
-        isArabic: isArabic()
+        search: ''
+    };
+
+    handleScroll = () => {
+        if(!this.isPDP()){
+            return;
+        }
+
+        const { prevScrollpos } = this.state;
+      
+        const currentScrollPos = window.pageYOffset;
+        const visible = prevScrollpos < currentScrollPos;
+      
+        this.setState({
+          prevScrollpos: currentScrollPos,
+          visible
+        });
     };
 
     componentDidMount() {
+        window.addEventListener("scroll", this.handleScroll);
         const { delay } = this.state;
         this.timer = setInterval(this.tick, delay);
     }
@@ -84,6 +109,7 @@ class HeaderMainSection extends NavigationAbstract {
 
     componentWillUnmount() {
         this.timer = null;
+        window.removeEventListener("scroll", this.handleScroll);
     }
 
     tick = () => {
@@ -153,6 +179,7 @@ class HeaderMainSection extends NavigationAbstract {
             <HeaderCart
               key="cart"
               CartButton="CartButton"
+              showCartPopUp={ true }
             />
         );
     }
@@ -183,7 +210,7 @@ class HeaderMainSection extends NavigationAbstract {
     }
 
     renderLogo() {
-        const { isArabic } = this.state;
+        
 
         if (isMobile.any()) {
             if (this.isPLP()) {
@@ -196,7 +223,7 @@ class HeaderMainSection extends NavigationAbstract {
                 this.setMainContentPadding();
 
                 return (
-                    <span block="CategoryTitle" mods={ { isArabic } }>
+                    <span block="CategoryTitle" mods={ { isArabic: isArabic() } }>
                       { pagePLPTitle }
                     </span>
                 );
@@ -207,7 +234,7 @@ class HeaderMainSection extends NavigationAbstract {
                 this.setMainContentPadding('50px');
 
                 return (
-                    <span block="CategoryTitle" mods={ { isArabic } }>
+                    <span block="CategoryTitle" mods={ { isArabic: isArabic() } }>
                       { pagePDPTitle }
                     </span>
                 );
@@ -243,10 +270,9 @@ class HeaderMainSection extends NavigationAbstract {
 
     renderBack() {
         const { history } = this.props;
-        const { isArabic } = this.state;
-
+        
         return this.isPLP() || this.isPDP() ? (
-            <div block="BackArrow" mods={ { isArabic } } key="back">
+            <div block="BackArrow" mods={ { isArabic: isArabic() } } key="back">
                 <button
                   block="BackArrow-Button"
                   onClick={ this.isPLP() ? this.backFromPLP : history.goBack }
@@ -273,7 +299,7 @@ class HeaderMainSection extends NavigationAbstract {
         const pageWithHiddenHeader = [TYPE_CART, TYPE_ACCOUNT];
 
         return pageWithHiddenHeader.includes(this.getPageType()) && isMobile.any() ? null : (
-            <div block="HeaderMainSection">
+            <div block="HeaderMainSection" data-visible={this.isPDP()?this.state.visible:true}>
                 { this.renderNavigationState() }
             </div>
         );

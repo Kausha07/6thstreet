@@ -34,10 +34,12 @@ class PDPDetail extends PureComponent {
   getBrandUrl = () => {
     const { brandName } = this.props;
     const url = brandName
-      .toLowerCase()
-      .replaceAll(" ", "-")
-      .replaceAll("'", "")
-      .replaceAll("`", "");
+      .replace(/'/g, "")
+      .replace(/[(\s+).&]/g, "-")
+      .replace(/-{2,}/g, "-")
+      .replace(/\-$/, "")
+      .replace("@", "at")
+      .toLowerCase();
     return `${url}.html`;
   };
 

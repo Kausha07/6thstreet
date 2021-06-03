@@ -32,10 +32,10 @@ class PDPAlsoAvailableProducts extends PureComponent {
         const { isAlsoAvailable } = this.props;
         return (
             <div block="PDPAlsoAvailableProducts" mods={ { isAlsoAvailable } }>
-                <h1 block="PDPAlsoAvailableProducts" elem="Title">{ __('Also available in:') }</h1>
-                <div block="PDPAlsoAvailableProducts" elem="List">
+                <h1 block="PDPAlsoAvailableProducts" elem="Title">{ __('Also available in') }</h1>
+                <ul block="PDPAlsoAvailableProducts" elem="List">
                     { this.renderAvailableProducts() }
-                </div>
+                </ul>
             </div>
         );
     }

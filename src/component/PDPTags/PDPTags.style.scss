@@ -1,0 +1,20 @@
+.PDPTags {
+    &-Container {
+        display: flex;
+        flex-direction: row;
+        flex-flow: wrap;
+        justify-content: space-between;
+        @include desktop {
+            padding: 16px 0 16px 0;
+        }
+    }
+
+    &-Tags {
+        display: flex;
+        padding: 8px 12px 8px 12px;
+        background-color: #F3F4F6;
+        border-radius: 8px;
+        letter-spacing: 0;
+        line-height: 20px;
+    }
+}
