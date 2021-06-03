@@ -8,6 +8,9 @@ import { isArabic } from 'Util/App';
 import { PDP_ARABIC_VALUES_TRANSLATIONS } from './PDPDetailsSection.config';
 
 import './PDPDetailsSection.style';
+import BrowserDatabase from "Util/BrowserDatabase";
+import VueQuery from '../../query/Vue.query';
+import { fetchVueData } from 'Util/API/endpoint/Vue/Vue.endpoint';
 
 class PDPDetailsSection extends PureComponent {
     static propTypes = {
@@ -23,11 +26,45 @@ class PDPDetailsSection extends PureComponent {
             "3": true,
             "4": true,
             "5": true
-        }
+        },
+        pdpWidgetsAPIData: []
     };
 
     componentDidMount() {
-        console.log("this.props.pdpWidgetsData didmount", this.props.pdpWidgetsData)
+        this.getPdpWidgetsVueData();
+    }
+
+    getPdpWidgetsVueData() {
+        const { gender, pdpWidgetsData } = this.props;
+        if (pdpWidgetsData && pdpWidgetsData.length > 0) {//load vue data for widgets only if widgets data available
+            const { USER_DATA: { deviceUuid } } = BrowserDatabase.getItem("MOE_DATA");
+            const customer = BrowserDatabase.getItem("customer");
+            const userID = customer && customer.id ? customer.id : null;
+            const query = {
+                filters: [],
+                num_results: 10,
+                mad_uuid: deviceUuid,
+            };
+
+            let promisesArray = [];
+            pdpWidgetsData.forEach(element => {
+                const { type } = element;
+                const payload = VueQuery.buildQuery(type, query, {
+                    gender,
+                    userID,
+                });
+                promisesArray.push(fetchVueData(payload));
+            });
+            console.log("pdpWidgetsData", pdpWidgetsData)
+            Promise.all(promisesArray)
+                .then((resp) => {
+                    this.setState({ pdpWidgetsAPIData: resp });
+                    console.log("resolvedPromises then", resp)
+                })
+                .catch((err) => {
+                    console.log("resolvedPromises catch", err)
+                });
+        }
     }
 
     _translateValue(value) {

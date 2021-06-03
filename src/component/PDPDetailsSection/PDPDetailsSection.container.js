@@ -8,6 +8,7 @@ import PDPDetailsSection from './PDPDetailsSection.component';
 
 export const mapStateToProps = (state) => ({
     product: state.PDP.product,
+    gender: state.AppState.gender,
     pdpWidgetsData: state.AppState.pdpWidgetsData
 });
 
@@ -17,8 +18,8 @@ export class PDPDetailsSectionContainer extends PureComponent {
     };
 
     containerProps = () => {
-        const { product, pdpWidgetsData } = this.props;
-        return { product, pdpWidgetsData };
+        const { product, pdpWidgetsData, gender } = this.props;
+        return { product, pdpWidgetsData, gender };
     };
 
     render() {
