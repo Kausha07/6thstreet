@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-
 import {
     mapDispatchToProps as sourceMapDispatchToProps,
     mapStateToProps as sourceMapStateToProps,
@@ -17,9 +16,12 @@ import {
     getMobileAuthorizationToken,
     isSignedIn,
     setAuthorizationToken,
-    setMobileAuthorizationToken
+    setMobileAuthorizationToken,
+    setUUIDToken
 } from 'Util/Auth';
 import { getCookie } from 'Util/Url/Url';
+import { v4 as uuidv4 } from 'uuid';
+
 
 export const MyAccountDispatcher = import(
     /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -61,7 +63,7 @@ export class RouterContainer extends SourceRouterContainer {
     componentDidMount() {
         const { getCart, requestCustomerData, updateCustomerDetails } = this.props;
         const decodedParams = atob(getCookie('authData'));
-
+        setUUIDToken(uuidv4())
         if (decodedParams.match('mobileToken') && decodedParams.match('authToken')) {
             const params = decodedParams.split('&').reduce((acc, param) => {
                 acc[param.substr(0, param.indexOf('='))] = param.substr(param.indexOf('=') + 1);
@@ -71,7 +73,6 @@ export class RouterContainer extends SourceRouterContainer {
 
             const { mobileToken } = params;
             const { authToken } = params;
-
             if (isSignedIn()) {
                 if (getMobileAuthorizationToken() === mobileToken && getAuthorizationToken() === authToken) {
                     requestCustomerData();
