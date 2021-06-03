@@ -4,17 +4,21 @@ import {
     SET_COUNTRY,
     SET_GENDER,
     SET_LANGUAGE,
-    SET_LOCALE
+    SET_LOCALE,
+    SET_PDP_WIDGET_DATA
 } from './AppState.action';
 
 export const APP_STATE_CACHE_KEY = 'APP_STATE_CACHE_KEY';
 
 export const getInitialState = () => (
-    BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {
-        locale: '', // en-ae, ar-ae, en-sa, ar-sa, en-kw, ar-kw ...
-        country: '', // one of AE, SA, KW, OM, BH, QA
-        language: 'en', // one of en, ar
-        gender: 'women' // one of 'men', 'women', 'kids'
+    {
+        ...(BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {
+            locale: '', // en-ae, ar-ae, en-sa, ar-sa, en-kw, ar-kw ...
+            country: '', // one of AE, SA, KW, OM, BH, QA
+            language: 'en', // one of en, ar
+            gender: 'women' // one of 'men', 'women', 'kids'
+        }),
+        pdpWidgetsData: {}
     }
 );
 
@@ -29,7 +33,7 @@ export const buildLocale = (language, country) => {
         return '';
     }
 
-    return `${ language }-${ country }`.toLowerCase();
+    return `${language}-${country}`.toLowerCase();
 };
 
 export const AppStateReducer = (state = getInitialState(), action) => {
@@ -42,41 +46,46 @@ export const AppStateReducer = (state = getInitialState(), action) => {
         type,
         gender,
         locale = '',
+        pdpWidgetsData,
         country: actionCountry,
-        language: actionLanguage
+        language: actionLanguage,
     } = action;
 
     switch (type) {
-    case SET_COUNTRY:
-        return updateCacheAndReturn({
-            ...state,
-            country: actionCountry,
-            locale: buildLocale(language, actionCountry)
-        });
+        case SET_COUNTRY:
+            return updateCacheAndReturn({
+                ...state,
+                country: actionCountry,
+                locale: buildLocale(language, actionCountry)
+            });
 
-    case SET_LANGUAGE:
-        return updateCacheAndReturn({
-            ...state,
-            language: actionLanguage,
-            locale: buildLocale(actionLanguage, country)
-        });
+        case SET_LANGUAGE:
+            return updateCacheAndReturn({
+                ...state,
+                language: actionLanguage,
+                locale: buildLocale(actionLanguage, country)
+            });
 
-    case SET_GENDER:
-        return updateCacheAndReturn({
-            ...state,
-            gender
-        });
+        case SET_GENDER:
+            return updateCacheAndReturn({
+                ...state,
+                gender
+            });
 
-    case SET_LOCALE:
-        return updateCacheAndReturn({
-            locale,
-            country: locale.slice(0, 2).toUpperCase(),
-            // eslint-disable-next-line no-magic-numbers
-            language: locale.slice(3, 5)
-        });
-
-    default:
-        return state;
+        case SET_LOCALE:
+            return updateCacheAndReturn({
+                locale,
+                country: locale.slice(0, 2).toUpperCase(),
+                // eslint-disable-next-line no-magic-numbers
+                language: locale.slice(3, 5)
+            });
+        case SET_PDP_WIDGET_DATA:
+            return {
+                ...state,
+                pdpWidgetsData
+            };
+        default:
+            return state;
     }
 };
 
