@@ -1,9 +1,8 @@
 // import PropTypes from 'prop-types';
 import Link from "Component/Link";
 import PropTypes from "prop-types";
-import VueIntegrationQueries from 'Query/vueIntegration.query';
+import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
-import { VUE_PDP_VIEW } from "Util/Event";
 import isMobile from "Util/Mobile";
 import "./PDPDetail.style";
 class PDPDetail extends PureComponent {
@@ -18,19 +17,15 @@ class PDPDetail extends PureComponent {
   };
 
   componentDidMount() {
-    console.log("all well", VUE_PDP_VIEW);
-    VueIntegrationQueries.vuePDPView({
-      event_name: "addToCart",
+    VueIntegrationQueries.vueAnalayticsLogger({
+      event_name: "pageView",
       params: {
-        event: "addToCart",
-        pageType: "pdp",
+        event: "pageView",
+        pageType: "plp",
         currency: "en_AED",
-        clicked: 1620117056981,
-        uuid: "e8bd3fb9-ac6c-4a74-ace8-a53d77944b74",
+        clicked: 1622626071901,
+        uuid: "cc5b78fd-fbd7-4e78-a6e9-e95431af4571",
         referrer: "app",
-        sourceProdID: "CK1-60050866-Silver",
-        sourceCatgID: "Sandals",
-        prodPrice: 279,
       },
     });
   }
