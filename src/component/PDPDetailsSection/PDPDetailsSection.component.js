@@ -26,6 +26,10 @@ class PDPDetailsSection extends PureComponent {
         }
     };
 
+    componentDidMount() {
+        console.log("this.props.pdpWidgetsData didmount", this.props.pdpWidgetsData)
+    }
+
     _translateValue(value) {
         if (typeof PDP_ARABIC_VALUES_TRANSLATIONS[value] === 'undefined') {
             return value;
@@ -42,12 +46,12 @@ class PDPDetailsSection extends PureComponent {
         return (
             <div block="PDPDetailsSection" elem="IconsSection">
                 <div block="PDPDetailsSection" elem="IconContainer">
-                    <div block="PDPDetailsSection" elem="Icon" mods={ { isGenuine: true } } />
-                    { __('100% Genuine') }
+                    <div block="PDPDetailsSection" elem="Icon" mods={{ isGenuine: true }} />
+                    {__('100% Genuine')}
                 </div>
                 <div block="PDPDetailsSection" elem="IconContainer">
-                    <div block="PDPDetailsSection" elem="Icon" mods={ { freeReturn: true } } />
-                    { __('Free Returns') }
+                    <div block="PDPDetailsSection" elem="Icon" mods={{ freeReturn: true }} />
+                    {__('Free Returns')}
                 </div>
             </div>
         );
@@ -58,9 +62,9 @@ class PDPDetailsSection extends PureComponent {
         return (
             <>
                 <p block="PDPDetailsSection" elem="Description">
-                    { description }
+                    {description}
                 </p>
-                { this.renderHighlights() }
+                { this.renderHighlights()}
             </>
         )
     }
@@ -71,11 +75,11 @@ class PDPDetailsSection extends PureComponent {
 
     renderListItem(arr) {
         return (
-            <li block="PDPDetailsSection" elem="HighlightsList" key={ arr[0] }>
-                <span block="PDPDetailsSection" elem="ListItem" mods={ { mod: 'title' } }>
-                    { isArabic() ? this._translateValue(arr[0]) : this.listTitle(arr[0]) }
+            <li block="PDPDetailsSection" elem="HighlightsList" key={arr[0]}>
+                <span block="PDPDetailsSection" elem="ListItem" mods={{ mod: 'title' }}>
+                    {isArabic() ? this._translateValue(arr[0]) : this.listTitle(arr[0])}
                 </span>
-                <span block="PDPDetailsSection" elem="ListItem" mods={ { mod: 'value' } }>{ arr[1] }</span>
+                <span block="PDPDetailsSection" elem="ListItem" mods={{ mod: 'value' }}>{arr[1]}</span>
             </li>
         );
     }
@@ -114,14 +118,14 @@ class PDPDetailsSection extends PureComponent {
 
         return (
             <div block="PDPDetailsSection" elem="Highlights">
-                <h4>{ __('Highlights') }</h4>
-                <ul>{ this.renderListItems(productInfo) }</ul>
-                { this.renderMoreDetailsList() }
+                <h4>{__('Highlights')}</h4>
+                <ul>{this.renderListItems(productInfo)}</ul>
+                { this.renderMoreDetailsList()}
             </div>
         );
     }
 
-    
+
     renderSizeAndFit() {
         const { product: { description } } = this.props;
         return (
@@ -130,7 +134,7 @@ class PDPDetailsSection extends PureComponent {
                     {__('Fitting Information - Items fits true to size')}
                 </p>
                 <div block="PDPDetailsSection" elem="ModelMeasurements">
-                    <h4>{ __('Model Measurements') }</h4>
+                    <h4>{__('Model Measurements')}</h4>
                 </div>
             </>
         )
@@ -138,11 +142,11 @@ class PDPDetailsSection extends PureComponent {
 
     renderMoreDetailsItem(item) {
         return (
-            <li block="PDPDetailsSection" elem="MoreDetailsList" key={ item.key }>
-                <span block="PDPDetailsSection" elem="ListItem" mods={ { mod: 'title' } }>
-                    { isArabic() ? this._translateValue(item.key) : this.listTitle(__(item.key)) }
+            <li block="PDPDetailsSection" elem="MoreDetailsList" key={item.key}>
+                <span block="PDPDetailsSection" elem="ListItem" mods={{ mod: 'title' }}>
+                    {isArabic() ? this._translateValue(item.key) : this.listTitle(__(item.key))}
                 </span>
-                <span block="PDPDetailsSection" elem="ListItem" mods={ { mod: 'value' } }>{ item.value }</span>
+                <span block="PDPDetailsSection" elem="ListItem" mods={{ mod: 'value' }}>{item.value}</span>
             </li>
         );
     }
@@ -154,7 +158,7 @@ class PDPDetailsSection extends PureComponent {
             return (
                 <ul block="PDPDetailsSection" elem="MoreDetailsUl">
                     { highlighted_attributes.filter(({ key }) => key !== 'alternate_name')
-                        .map((item) => this.renderMoreDetailsItem(item)) }
+                        .map((item) => this.renderMoreDetailsItem(item))}
                 </ul>
             );
         }
@@ -166,8 +170,8 @@ class PDPDetailsSection extends PureComponent {
         const { isHidden } = this.state;
 
         return (
-            <div block="PDPDetailsSection" elem="MoreDetails" mods={ { isHidden } }>
-                { this.renderMoreDetailsList() }
+            <div block="PDPDetailsSection" elem="MoreDetails" mods={{ isHidden }}>
+                { this.renderMoreDetailsList()}
             </div>
         );
     }
@@ -176,24 +180,33 @@ class PDPDetailsSection extends PureComponent {
         return (
             <div block="'PDPDetailsSection-Description" elem="AccordionTitle">
                 <h3>
-                    { title }
+                    {title}
                 </h3>
             </div>
         );
     }
 
+    renderPdpWidgets() {
+        return (
+            <div block="PDPDetailsSection" elem="Highlights">
+                <h4>{__('Highlights')}</h4>
+            </div>
+        );
+    }
+
     render() {
-        const { product: { brand_name }} = this.props
+        const { product: { brand_name } } = this.props
         return (
             <div block="PDPDetailsSection">
                 <Accordion
-                  mix={ { block: 'PDPDetailsSection', elem: 'Accordion' } }
-                  title={ __('Description') }
-                  is_expanded={this.state.isExpanded["0"]}
+                    mix={{ block: 'PDPDetailsSection', elem: 'Accordion' }}
+                    title={__('Description')}
+                    is_expanded={this.state.isExpanded["0"]}
                 >
-                    {this.renderIconsSection() }
-                    { this.renderDescription() }
+                    {this.renderIconsSection()}
+                    {this.renderDescription()}
                 </Accordion>
+                {this.renderPdpWidgets()}
                 {/* <Accordion
                   mix={ { block: 'PDPDetailsSection', elem: 'Accordion' } }
                   title={ __('Size & Fit') }

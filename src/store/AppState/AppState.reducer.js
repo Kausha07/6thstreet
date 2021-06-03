@@ -18,7 +18,7 @@ export const getInitialState = () => (
             language: 'en', // one of en, ar
             gender: 'women' // one of 'men', 'women', 'kids'
         }),
-        pdpWidgetsData: {}
+        pdpWidgetsData: []
     }
 );
 

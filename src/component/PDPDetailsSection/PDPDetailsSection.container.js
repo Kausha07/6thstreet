@@ -7,23 +7,24 @@ import { Product } from 'Util/API/endpoint/Product/Product.type';
 import PDPDetailsSection from './PDPDetailsSection.component';
 
 export const mapStateToProps = (state) => ({
-    product: state.PDP.product
+    product: state.PDP.product,
+    pdpWidgetsData: state.AppState.pdpWidgetsData
 });
 
 export class PDPDetailsSectionContainer extends PureComponent {
     static propTypes = {
-        product: Product.isRequired
+        product: Product.isRequired,
     };
 
     containerProps = () => {
-        const { product } = this.props;
-        return { product };
+        const { product, pdpWidgetsData } = this.props;
+        return { product, pdpWidgetsData };
     };
 
     render() {
         return (
             <PDPDetailsSection
-              { ...this.containerProps() }
+                {...this.containerProps()}
             />
         );
     }
