@@ -1,5 +1,8 @@
+import { getStore } from "Store";
+import { showNotification } from 'Store/Notification/Notification.action';
 import { getCardType } from 'Util/API/endpoint/Checkout/Checkout.endpoint';
-import { addNewCreditCard } from 'Util/API/endpoint/CreditCard/CreditCard.enpoint';
+import { setSavedCards, setSavedCardsLoading, setNewCardVisible } from './CreditCard.action';
+import { addNewCreditCard, saveCreditCard, getSavedCards } from 'Util/API/endpoint/CreditCard/CreditCard.enpoint';
 
 export class CreditCardDispatcher {
     /* eslint-disable-next-line */
@@ -19,6 +22,37 @@ export class CreditCardDispatcher {
 
     async getCardType(dispatch, bin) {
         return getCardType({ bin });
+    }
+
+    async saveCreditCard(_, data) {
+        return saveCreditCard(data);
+    }
+
+    async toggleNewCardVisible(dispatch, data) {
+        dispatch(setNewCardVisible(data));
+    }
+
+    async selectSavedCard(dispatch, entity_id) {
+        const { CreditCardReducer: { savedCards } } = getStore().getState();
+        let newData = [...savedCards];
+        newData.forEach(element => {
+            element.selected = element.entity_id === entity_id
+        });
+        dispatch(setSavedCards([...newData]));
+    }
+
+    async getSavedCards(dispatch) {
+        dispatch(setSavedCardsLoading(true));
+        getSavedCards().then((resp) => {
+            dispatch(setSavedCards([...resp]));
+            dispatch(setSavedCardsLoading(false));
+            dispatch(setNewCardVisible(resp && resp.length === 0));
+        })
+            .catch((err) => {
+                dispatch(setNewCardVisible(true));
+                dispatch(setSavedCardsLoading(false));
+                dispatch(showNotification('error', __('Something went wrong! Please, try again!')));
+            })
     }
 }
 

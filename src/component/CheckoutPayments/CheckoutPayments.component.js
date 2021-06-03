@@ -41,7 +41,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     ...SourceCheckoutPayments.defaultProps,
     selectedPaymentCode: "",
     processApplePay: false,
-    placeOrder: () => {},
+    placeOrder: () => { },
   };
 
   paymentRenderMap = {
@@ -265,6 +265,8 @@ export class CheckoutPayments extends SourceCheckoutPayments {
       setCreditCardData,
       setOrderButtonDisabled,
       setOrderButtonEnabled,
+      applyPromotionSavedCard,
+      removePromotionSavedCard,
     } = this.props;
 
     const cardData = paymentMethods.find(({ m_code }) => m_code === CARD);
@@ -275,6 +277,8 @@ export class CheckoutPayments extends SourceCheckoutPayments {
         setCreditCardData={setCreditCardData}
         setOrderButtonDisabled={setOrderButtonDisabled}
         setOrderButtonEnabled={setOrderButtonEnabled}
+        applyPromotionSavedCard={applyPromotionSavedCard}
+        removePromotionSavedCard={removePromotionSavedCard}
       />
     );
   }
