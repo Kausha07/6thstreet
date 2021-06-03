@@ -22,6 +22,9 @@ main {
         background: $white;
         top: 0;
         transition: all .5s ease-in-out;
+        -webkit-transition-property: all;
+        -webkit-transition-duration: .5s;
+        -webkit-transition-timing-function: ease-in-out;
         &[data-visible="false"] {
             display: none;
             top: -50px
@@ -77,6 +80,7 @@ main {
         position: fixed;
         top: 15px;
         left: 15px;
+        right: unset;
 
         background: $white;
 

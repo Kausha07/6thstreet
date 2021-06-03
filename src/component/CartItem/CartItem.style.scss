@@ -181,7 +181,7 @@
 
     &-Price {
         font-weight: var(--fw-demi);
-
+        text-align: justify;
         div {
             display: flex;
         }
@@ -192,7 +192,14 @@
         text-decoration: unset;
         font-weight: var(--fw-demi);
 
-        div {
+        &_isArabic {
+            div {
+                text-align: left;
+                direction: ltr;
+            }
+        }
+
+        &-BasePrice {
             color: var(--Black);
             text-decoration: line-through;
             padding-right: 5px;

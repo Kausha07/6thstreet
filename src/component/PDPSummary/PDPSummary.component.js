@@ -105,9 +105,9 @@ class PDPSummary extends PureComponent {
                 return (
                     <>
                         <button
-                        block="PDPSummary"
-                        elem="Tabby"
-                        onClick={ this.openTabbyPopup }
+                            block="PDPSummary"
+                            elem="Tabby"
+                            onClick={ this.openTabbyPopup }
                         >
                             { __('From') }
                             <strong block="PDPSummary" elem="TabbyPrice">{ `${monthPrice} ${currency}` }</strong>
@@ -199,7 +199,6 @@ class PDPSummary extends PureComponent {
         return (
             <>
                 <PDPAddToCart setStockAvailability={ this.setStockAvailability } />
-                <div block="Seperator" />
             </>
         );
     }
