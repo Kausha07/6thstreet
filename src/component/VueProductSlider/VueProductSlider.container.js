@@ -3,7 +3,8 @@ import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import VueProductSlider from './VueProductSlider.component';
 
-export const mapDispatchToProps = (dispatch) => ({});
+export const mapStateToProps = (state) => ({
+});
 
 export class VueProductSliderContainer extends PureComponent {
     static propTypes = {
@@ -26,4 +27,4 @@ export class VueProductSliderContainer extends PureComponent {
 }
 
 
-export default connect(null, mapDispatchToProps)(VueProductSliderContainer);
+export default connect(mapStateToProps, null)(VueProductSliderContainer);

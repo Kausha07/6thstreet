@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import './VueProductSlider.style.scss';
+import VueProductSliderItem from './VueProductSlider.Item';
 
 class VueProductSlider extends PureComponent {
     static propTypes = {
@@ -50,11 +51,8 @@ class VueProductSlider extends PureComponent {
                 {
                     productsToRender.map((item) => {
                         const { sku } = item;
-                        console.log("renderSliderContainer", item)
                         return (
-                            <div key={sku} block="VueProductSlider" elem="VueProductContainer">
-
-                            </div>
+                            <VueProductSliderItem key={sku} data={item} />
                         );
                     })
                 }
