@@ -44,9 +44,15 @@ export class CreditCardDispatcher {
     async getSavedCards(dispatch) {
         dispatch(setSavedCardsLoading(true));
         getSavedCards().then((resp) => {
-            dispatch(setSavedCards([...resp]));
+            let cardsData = [];
+            resp.forEach(element => {
+                if (element.details && element.details.bin && element.details.scheme) {
+                    cardsData.push(element);
+                }
+            });
+            dispatch(setSavedCards([...cardsData]));
             dispatch(setSavedCardsLoading(false));
-            dispatch(setNewCardVisible(resp && resp.length === 0));
+            dispatch(setNewCardVisible(cardsData && cardsData.length === 0));
         })
             .catch((err) => {
                 dispatch(setNewCardVisible(true));
