@@ -10,6 +10,7 @@ import { PDP_ARABIC_VALUES_TRANSLATIONS } from './PDPDetailsSection.config';
 import './PDPDetailsSection.style';
 import VueQuery from '../../query/Vue.query';
 import BrowserDatabase from "Util/BrowserDatabase";
+import VueProductSliderContainer from '../VueProductSlider';
 import { fetchVueData } from 'Util/API/endpoint/Vue/Vue.endpoint';
 
 class PDPDetailsSection extends PureComponent {
@@ -227,9 +228,23 @@ class PDPDetailsSection extends PureComponent {
         const { pdpWidgetsAPIData } = this.state;
         if (pdpWidgetsData.length > 0 && pdpWidgetsAPIData.length > 0) {
             return (
-                <div block="PDPDetailsSection" elem="Highlights">
-                    <h4>{__('Highlights')}</h4>
-                </div>
+                <React.Fragment>
+                    {
+                        pdpWidgetsAPIData.map((item, index) => {
+                            if (typeof (item) === 'object' && Object.keys(item).length > 0) {
+                                const { title: heading } = pdpWidgetsData[index]['layout'];
+                                const { data } = item;
+                                return (
+                                    <VueProductSliderContainer
+                                        products={data}
+                                        heading={heading}
+                                    />
+                                );
+                            }
+                            return null;
+                        })
+                    }
+                </React.Fragment>
             );
         }
         return null;

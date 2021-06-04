@@ -1,0 +1,16 @@
+.VueProductSlider {
+  padding: 0 20px;
+  font-weight: var(--fw-regular);
+
+  &-Container {
+    font-size: 16px;
+    margin-top: 32px;
+    font-weight: var(--fw-demi);
+
+    h4 {
+      font-weight: 600;
+      font-size: 16px;
+      margin-bottom: 1rem;
+    }
+  }
+}
