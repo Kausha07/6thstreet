@@ -774,5 +774,6 @@
     "You have received (%s)% off!": null,
     "Congrats!": null,
     "Continue": null,
-    "You have received %s% off!": null
+    "You have received %s% off!": null,
+    "LiveShopping": null
 }

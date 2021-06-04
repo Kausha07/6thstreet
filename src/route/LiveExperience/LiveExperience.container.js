@@ -67,12 +67,12 @@ export class LiveExperienceContainer extends PureComponent {
 
   requestUpcomingParty() {
     const { requestUpcomingParty } = this.props;
-    requestUpcomingParty({ storeId: Config.storeId, isStaging: true });
+    requestUpcomingParty({ storeId: Config.storeId, isStaging: false });
   }
 
   requestArchivedParty() {
     const { requestArchivedParty } = this.props;
-    requestArchivedParty({ storeId: Config.storeId, isStaging: true });
+    requestArchivedParty({ storeId: Config.storeId, isStaging: false });
   }
   parseBool = (b) => {
     return !/^(false|0)$/i.test(b) && !!b;
