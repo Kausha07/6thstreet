@@ -8,8 +8,8 @@ import { isArabic } from 'Util/App';
 import { PDP_ARABIC_VALUES_TRANSLATIONS } from './PDPDetailsSection.config';
 
 import './PDPDetailsSection.style';
-import BrowserDatabase from "Util/BrowserDatabase";
 import VueQuery from '../../query/Vue.query';
+import BrowserDatabase from "Util/BrowserDatabase";
 import { fetchVueData } from 'Util/API/endpoint/Vue/Vue.endpoint';
 
 class PDPDetailsSection extends PureComponent {
@@ -35,7 +35,7 @@ class PDPDetailsSection extends PureComponent {
     }
 
     getPdpWidgetsVueData() {
-        const { gender, pdpWidgetsData } = this.props;
+        const { gender, pdpWidgetsData, product: sourceProduct } = this.props;
         if (pdpWidgetsData && pdpWidgetsData.length > 0) {//load vue data for widgets only if widgets data available
             const { USER_DATA: { deviceUuid } } = BrowserDatabase.getItem("MOE_DATA");
             const customer = BrowserDatabase.getItem("customer");
@@ -52,17 +52,16 @@ class PDPDetailsSection extends PureComponent {
                 const payload = VueQuery.buildQuery(type, query, {
                     gender,
                     userID,
+                    sourceProduct
                 });
                 promisesArray.push(fetchVueData(payload));
             });
-            console.log("pdpWidgetsData", pdpWidgetsData)
             Promise.all(promisesArray)
                 .then((resp) => {
                     this.setState({ pdpWidgetsAPIData: resp });
-                    console.log("resolvedPromises then", resp)
                 })
                 .catch((err) => {
-                    console.log("resolvedPromises catch", err)
+                    console.log("pdp widget vue query catch", err)
                 });
         }
     }
@@ -224,11 +223,16 @@ class PDPDetailsSection extends PureComponent {
     }
 
     renderPdpWidgets() {
-        return (
-            <div block="PDPDetailsSection" elem="Highlights">
-                <h4>{__('Highlights')}</h4>
-            </div>
-        );
+        const { pdpWidgetsData } = this.props;
+        const { pdpWidgetsAPIData } = this.state;
+        if (pdpWidgetsData.length > 0 && pdpWidgetsAPIData.length > 0) {
+            return (
+                <div block="PDPDetailsSection" elem="Highlights">
+                    <h4>{__('Highlights')}</h4>
+                </div>
+            );
+        }
+        return null;
     }
 
     render() {
