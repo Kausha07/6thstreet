@@ -19,12 +19,13 @@
     .DynamicContent {
       > div:not(.DynamicContentFullWidthBannerSlider) {
         margin: 0 auto;
+        max-width: 76.389vw;
       }
     }
 
     .HomePageContainer {
       //   max-width: 1100px;
-      max-width: 76.389vw;
+      // max-width: 76.389vw;
     }
   }
 }

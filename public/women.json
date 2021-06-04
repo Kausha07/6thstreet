@@ -1,0 +1,696 @@
+{
+    "data": [
+        {
+            "type": "fullWidthBannerSlider",
+            "index": 1,
+            "promotion_name": "Women-EN",
+            "tag": "Hero Carousel",
+            "items": [
+            {
+                "promotion_name": "home-HeroCarousel-World-Environment-Day",
+                "tag": "World-Environment-Day",
+                "width": 2000,
+                "height": 550,
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/New-Folder/Cat+brands/Shoes/Top+Banner/women/women_hero_running_web_EN.jpg",
+                "link": "/newrunningwomen.html?q=newrunningwomen&p=0&hFR%5Bcategories.level0%5D%5B0%5D=newrunningwomen&nR%5Bvisibility_catalog%5D%5B=%5D%5B0%5D%3D1&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products"
+            },
+            {
+                "promotion_name": "home-HeroCarousel-Summer sandals",
+                "tag": "Summer sandals",
+                "width": 2000,
+                "height": 550,
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/Summer/Hero+Banner/women_hero_ss21_web_Ar.jpg",
+                "link": "/women/shoes/sandals.html?q=Women+Shoes+Sandals&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women+%2F%2F%2F+Shoes+%2F%2F%2F+Sandals&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products"
+            },
+            {
+                "promotion_name": "home-HeroCarousel-Beach body-Sportswear",
+                "tag": "Sportswear",
+                "width": 2000,
+                "height": 550,
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/Summer/Hero+Banner/Beach_Body_Ready_women_hero_ss21_app_Ar+copy.jpg",
+                "link": "/sportswear.html?q=Sportswear&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Sportswear&nR%5Bvisibility_catalog%5D%5B=%5D%5B0%5D%3D1&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products"
+            },
+            {
+                "promotion_name": "home-HeroCarousel-Tees & Tops",
+                "tag": "Tees & Tops",
+                "width": 2000,
+                "height": 550,
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/EID+Stores/women_hero_tops%26tees_web_en.jpg",
+                "link": "/women/clothing.html?q=Women+Clothing&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women+%2F%2F%2F+Clothing&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1&dFR%5Bcategories_without_path%5D%5B0%5D=Tops+%26+Tshirts&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products"
+            }]
+        },
+        {
+            "type": "bannerSliderWithLabel",
+            "index": 4,
+            "promotion_name": "Women-En",
+            "tag": "Summer Essentials",
+            "title": "SHOEDROBE Must-Haves",
+            "items": [
+            {
+                "promotion_name": "Women-En - home-Summer-Essentials-Maxi Dress",
+                "tag": "Maxi Dress",
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/Summer/Summer+Essentials/Maxi+Dress.jpg",
+                "link": "/catalogsearch/result/?q=Maxi&p=0&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+                "text": "Maxi Dresses",
+                "width": 238,
+                "height": 250
+            },
+{
+                "promotion_name": "Women-En - home-Summer-Essentials-Maxi Dress",
+                "tag": "Maxi Dress",
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/Summer/Summer+Essentials/Maxi+Dress.jpg",
+                "link": "/catalogsearch/result/?q=Maxi&p=0&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+                "text": "Maxi Dresses",
+                "width": 238,
+                "height": 250
+            },
+{
+                "promotion_name": "Women-En - home-Summer-Essentials-Maxi Dress",
+                "tag": "Maxi Dress",
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/Summer/Summer+Essentials/Maxi+Dress.jpg",
+                "link": "/catalogsearch/result/?q=Maxi&p=0&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+                "text": "Maxi Dresses",
+                "width": 238,
+                "height": 250
+            },
+{
+                "promotion_name": "Women-En - home-Summer-Essentials-Maxi Dress",
+                "tag": "Maxi Dress",
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/Summer/Summer+Essentials/Maxi+Dress.jpg",
+                "link": "/catalogsearch/result/?q=Maxi&p=0&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+                "text": "Maxi Dresses",
+                "width": 238,
+                "height": 250
+            },
+{
+                "promotion_name": "Women-En - home-Summer-Essentials-Maxi Dress",
+                "tag": "Maxi Dress",
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/Summer/Summer+Essentials/Maxi+Dress.jpg",
+                "link": "/catalogsearch/result/?q=Maxi&p=0&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+                "text": "Maxi Dresses",
+                "width": 238,
+                "height": 250
+            },
+{
+                "promotion_name": "Women-En - home-Summer-Essentials-Maxi Dress",
+                "tag": "Maxi Dress",
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/Summer/Summer+Essentials/Maxi+Dress.jpg",
+                "link": "/catalogsearch/result/?q=Maxi&p=0&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+                "text": "Maxi Dresses",
+                "width": 238,
+                "height": 250
+            },
+            {
+                "promotion_name": "Women-En - home-Summer-Essentials-Sunglasses",
+                "tag": "Sunglasses",
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/Summer/Summer+Essentials/Sunglasses.jpg",
+                "link": "/women/accessories/sunglasses.html?q=Women+Accessories+Sunglasses&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women+%2F%2F%2F+Accessories+%2F%2F%2F+Sunglasses&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+                "text": "Sungalsses",
+                "width": 238,
+                "height": 250
+            },
+            {
+                "promotion_name": "Women-En - home-Summer-Essentials-skincare",
+                "tag": "Skincare",
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/Summer/Summer+Essentials/skincare.jpg",
+                "link": "/women/beauty/skincare.html?q=Women+Beauty+Skincare&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women+%2F%2F%2F+Beauty+%2F%2F%2F+Skincare&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+                "text": "Skincare",
+                "width": 238,
+                "height": 250
+            },
+            {
+                "promotion_name": "Women-En - home-Summer-Essentials-hair acc",
+                "tag": "Hair acc",
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/Summer/Summer+Essentials/hair+acc.jpg",
+                "link": "/women/accessories/hair-accessories.html?q=Women%20Accessories%20Hair%20accessories&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women%20%2F%2F%2F%20Accessories%20%2F%2F%2F%20Hair%20accessories&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1&idx=enterprise_magento_english_products",
+                "text": "Hair Accessories",
+                "width": 238,
+                "height": 250
+            },
+            {
+                "promotion_name": "Women-En - home-Summer-Essentials-swimwear",
+                "tag": "Swimwear",
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/Summer/Summer+Essentials/swimwear.jpg",
+                "link": "/catalogsearch/result/?q=Swimwear&p=0&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+                "text": "Swimwear",
+                "width": 238,
+                "height": 250
+            },
+            {
+                "promotion_name": "Women-En - home-Summer-Essentials-Caps",
+                "tag": "Caps",
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/Summer/Summer+Essentials/cap.jpg",
+                "link": "/women/accessories.html?q=Women+Accessories&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women+%2F%2F%2F+Accessories+%2F%2F%2F+Caps+%26+Hats&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1&dFR%5Bgender%5D%5B0%5D=Women&dFR%5Bcategories_without_path%5D%5B0%5D=Caps+%26+Hats&idx=enterprise_magento_english_products",
+                "text": "Caps",
+                "width": 238,
+                "height": 250
+            }]
+        },
+        {
+            "type": "grid",
+            "index": 3,
+            "promotion_name": "Women-EN",
+            "tag": "Shoe Trends",
+            "background_color": "#000000",
+            "items_per_row": 2,
+            "item_height": 668,
+
+            "items": [
+            {
+                "promotion_name": "home-shoetrends-Clogs",
+                "footer":
+                {
+                    "title": "Comfy Clogs",
+                    "subtitle": "Wear all year round",
+                    "button_label": "View all styles"
+                },
+                "link": "/clogs.html?q=Clogs&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Clogs&nR%5Bvisibility_catalog%5D%5B=%5D%5B0%5D%3D1&dFR%5Bgender%5D%5B0%5D=Women%2CMen%2CGirl%2CBoy&idx=enterprise_magento_english_products",
+                "url": "https://6thstreetmobileapp-eu-c.s3.eu-central-1.amazonaws.com/AllBanners/EID+Stores/Clogs.jpg",
+                "tag": "Clogs"
+            },
+            {
+                "promotion_name": "home-shoetrends-PUFFY",
+                "footer":
+                {
+                    "title": "All Puffed Up",
+                    "subtitle": "Pillowy eye-catching styles",
+                    "button_label": "View all styles"
+                },
+                "link": "/puffy-shoes-and-bags.html?q=Puffy+Shoes+And+Bags&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Puffy+Shoes+And+Bags&nR%5Bvisibility_catalog%5D%5B=%5D%5B0%5D%3D1&dFR%5Bcategories_without_path%5D%5B0%5D=Sandals%2CPumps%2CMules%2CFlip+Flops%2CFlats%2CBallerinas%2CSlippers%2CTrainers&idx=enterprise_magento_english_products",
+                "url": "https://6thstreetmobileapp-eu-c.s3.eu-central-1.amazonaws.com/AllBanners/bmt/Summer/Shoe-Trends/PUFFY.jpg",
+                "tag": "PUFFY"
+            }]
+        },
+        {
+            "type": "line_separator",
+            "color": "#efefef"
+        },
+        {
+            "type": "productSlider",
+            "index": 8,
+            "promotion_name": "Women-EN",
+            "tag": "Best-Seller",
+            "data_url": "/women/bags.html?q=Women+Bags&idx=enterprise_magento_english&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women+%2F%2F%2F+Bags&nR%5Bvisibility_catalog%5D%5B=%5D%5B0%5D%3D1&_ga=2.125749194.1904113297.1622614939-1400043590.1596698647",
+            "title": "You May Like"
+        },
+        {
+            "type": "banner",
+            "header":
+            {
+                "title": "Practice Self Love",
+                "subtitle": "Sportswear to keep you on track",
+                "button_label": "Shop Now",
+                "button_link": "/sports-women.html?q=SPORTS%20WOMEN&idx=enterprise_magento_english_products&p=0&hFR%5Bcategories.level0%5D%5B0%5D=SPORTS%20WOMEN&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1"
+            },
+            "items": [
+            {
+                "width": 520,
+                "height": 475,
+                "link": "/sports-women.html?q=SPORTS%20WOMEN&idx=enterprise_magento_english_products&p=0&hFR%5Bcategories.level0%5D%5B0%5D=SPORTS%20WOMEN&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1",
+                "url": "https://6thstreetmobileapp-eu-c.s3.eu-central-1.amazonaws.com/AllBanners/bmt/2-14+feb/women/Women_LooksWeLove_+SelfLove.jpg",
+                "promotion_name": "home-women-Looks-SelfLove"
+            }],
+            "index": 24
+        },
+        {
+            "type": "bannerSliderWithLabel",
+            "index": 4,
+            "promotion_name": "Women-En",
+            "tag": "Summer Essentials",
+            "title": "RAMADAN Essentials",
+            "items": [
+            {
+                "promotion_name": "Women-En - home-Summer-Essentials-Maxi Dress",
+                "tag": "Maxi Dress",
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/Summer/Summer+Essentials/Maxi+Dress.jpg",
+                "link": "/catalogsearch/result/?q=Maxi&p=0&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+                "text": "Maxi Dresses",
+                "width": 308,
+                "height": 370
+            },
+            {
+                "promotion_name": "Women-En - home-Summer-Essentials-Sunglasses",
+                "tag": "Sunglasses",
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/Summer/Summer+Essentials/Sunglasses.jpg",
+                "link": "/women/accessories/sunglasses.html?q=Women+Accessories+Sunglasses&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women+%2F%2F%2F+Accessories+%2F%2F%2F+Sunglasses&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+                "text": "Sungalsses",
+                "width": 308,
+                "height": 370
+            },
+            {
+                "promotion_name": "Women-En - home-Summer-Essentials-skincare",
+                "tag": "Skincare",
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/Summer/Summer+Essentials/skincare.jpg",
+                "link": "/women/beauty/skincare.html?q=Women+Beauty+Skincare&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women+%2F%2F%2F+Beauty+%2F%2F%2F+Skincare&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+                "text": "Skincare",
+                "width": 308,
+                "height": 370
+            },
+            {
+                "promotion_name": "Women-En - home-Summer-Essentials-hair acc",
+                "tag": "Hair acc",
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/Summer/Summer+Essentials/hair+acc.jpg",
+                "link": "/women/accessories/hair-accessories.html?q=Women%20Accessories%20Hair%20accessories&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women%20%2F%2F%2F%20Accessories%20%2F%2F%2F%20Hair%20accessories&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1&idx=enterprise_magento_english_products",
+                "text": "Hair Accessories",
+                "width": 308,
+                "height": 370
+            },
+            {
+                "promotion_name": "Women-En - home-Summer-Essentials-swimwear",
+                "tag": "Swimwear",
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/Summer/Summer+Essentials/swimwear.jpg",
+                "link": "/catalogsearch/result/?q=Swimwear&p=0&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+                "text": "Swimwear",
+                "width": 308,
+                "height": 370
+            },
+            {
+                "promotion_name": "Women-En - home-Summer-Essentials-Caps",
+                "tag": "Caps",
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/Summer/Summer+Essentials/cap.jpg",
+                "link": "/women/accessories.html?q=Women+Accessories&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women+%2F%2F%2F+Accessories+%2F%2F%2F+Caps+%26+Hats&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1&dFR%5Bgender%5D%5B0%5D=Women&dFR%5Bcategories_without_path%5D%5B0%5D=Caps+%26+Hats&idx=enterprise_magento_english_products",
+                "text": "Caps",
+                "width": 308,
+                "height": 370
+            }]
+        },
+        {
+            "type": "bannerSliderWithLabel",
+            "index": 4,
+            "promotion_name": "Women-En",
+            "tag": "Summer Essentials",
+            "title": "BRANDS to GET your RAMADAN Ready",
+            "items": [
+            {
+                "promotion_name": "Women-En - home-Summer-Essentials-Maxi Dress",
+                "tag": "Maxi Dress",
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/Summer/Summer+Essentials/Maxi+Dress.jpg",
+                "link": "/catalogsearch/result/?q=Maxi&p=0&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+                "width": 435,
+                "height": 504
+            },
+            {
+                "promotion_name": "Women-En - home-Summer-Essentials-Sunglasses",
+                "tag": "Sunglasses",
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/Summer/Summer+Essentials/Sunglasses.jpg",
+                "link": "/women/accessories/sunglasses.html?q=Women+Accessories+Sunglasses&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women+%2F%2F%2F+Accessories+%2F%2F%2F+Sunglasses&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+                "width": 435,
+                "height": 504
+            },
+            {
+                "promotion_name": "Women-En - home-Summer-Essentials-skincare",
+                "tag": "Skincare",
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/Summer/Summer+Essentials/skincare.jpg",
+                "link": "/women/beauty/skincare.html?q=Women+Beauty+Skincare&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women+%2F%2F%2F+Beauty+%2F%2F%2F+Skincare&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+                "width": 435,
+                "height": 504
+            },
+            {
+                "promotion_name": "Women-En - home-Summer-Essentials-hair acc",
+                "tag": "Hair acc",
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/Summer/Summer+Essentials/hair+acc.jpg",
+                "link": "/women/accessories/hair-accessories.html?q=Women%20Accessories%20Hair%20accessories&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women%20%2F%2F%2F%20Accessories%20%2F%2F%2F%20Hair%20accessories&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1&idx=enterprise_magento_english_products",
+                "width": 435,
+                "height": 504
+            },
+            {
+                "promotion_name": "Women-En - home-Summer-Essentials-swimwear",
+                "tag": "Swimwear",
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/Summer/Summer+Essentials/swimwear.jpg",
+                "link": "/catalogsearch/result/?q=Swimwear&p=0&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+                "width": 435,
+                "height": 504
+            },
+            {
+                "promotion_name": "Women-En - home-Summer-Essentials-Caps",
+                "tag": "Caps",
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/Summer/Summer+Essentials/cap.jpg",
+                "link": "/women/accessories.html?q=Women+Accessories&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women+%2F%2F%2F+Accessories+%2F%2F%2F+Caps+%26+Hats&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1&dFR%5Bgender%5D%5B0%5D=Women&dFR%5Bcategories_without_path%5D%5B0%5D=Caps+%26+Hats&idx=enterprise_magento_english_products",
+                "width": 435,
+                "height": 504
+            }]
+        },
+        {
+            "type": "banner",
+            "footer":
+            {
+                "title": "Practice Self Love",
+                "subtitle": "Sportswear to keep you on track",
+                "button_label": "Shop Now",
+                "button_link": "/sports-women.html?q=SPORTS%20WOMEN&idx=enterprise_magento_english_products&p=0&hFR%5Bcategories.level0%5D%5B0%5D=SPORTS%20WOMEN&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1"
+            },
+            "items": [
+            {
+                "width": 520,
+                "height": 475,
+                "link": "/sports-women.html?q=SPORTS%20WOMEN&idx=enterprise_magento_english_products&p=0&hFR%5Bcategories.level0%5D%5B0%5D=SPORTS%20WOMEN&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1",
+                "url": "https://6thstreetmobileapp-eu-c.s3.eu-central-1.amazonaws.com/AllBanners/bmt/2-14+feb/women/Women_LooksWeLove_+SelfLove.jpg",
+                "promotion_name": "home-women-Looks-SelfLove"
+            }],
+            "index": 24
+        },
+        {
+            "type": "grid",
+            "index": 2,
+            "promotion_name": "Women-EN",
+            "tag": "Complete Your Shoedrobe",
+            "background_color": "#000000",
+            "items_per_row": 3,
+            "item_height": 475,
+            "header":
+            {
+                "title": "BRANDS we Love"
+            },
+            "items": [
+            {
+                "promotion_name": "home-SBC-Shoes-Sandals",
+
+                "link": "/women/shoes.html?q=Women+Shoes&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women+%2F%2F%2F+Shoes&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1&dFR%5Bcategories_without_path%5D%5B0%5D=Sandals&idx=enterprise_magento_english_products",
+                "url": "https://6thstreetmobileapp-eu-c.s3.eu-central-1.amazonaws.com/AllBanners/bmt/Summer/Shoe+SBC/SBC_WOMEN_sandals.jpg",
+                "tag": "Sandals"
+            },
+            {
+                "promotion_name": "home-SBC-Shoes-Flats & Slides",
+
+                "link": "/women/shoes/flats.html?q=Women+Shoes+Flats&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women+%2F%2F%2F+Shoes+%2F%2F%2F+Flats&nR%5Bvisibility_catalog%5D%5B=%5D%5B0%5D%3D1&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+                "url": "https://6thstreetmobileapp-eu-c.s3.eu-central-1.amazonaws.com/AllBanners/bmt/Summer/Shoe+SBC/SBC_WOMEN_flats+%26slides.jpg",
+                "tag": "Flats & Slides"
+            },
+            {
+                "promotion_name": "home-SBC-Shoes-Comfort Shoes",
+
+                "link": "/women/shoes.html?q=Women+Shoes&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women+%2F%2F%2F+Shoes&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1&dFR%5Bbrand_name%5D%5B0%5D=Birkenstock%2CClarks%2CHavaianas%2CFitFlop%2CToms%2CVans%2CCrocs&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+                "url": "https://6thstreetmobileapp-eu-c.s3.eu-central-1.amazonaws.com/AllBanners/bmt/Summer/Shoe+SBC/SBC_WOMEN_comfort+shoes.jpg",
+                "tag": "Comfort Shoes"
+            },
+            {
+                "promotion_name": "home-SBC-Shoes-Sports Shoes",
+
+                "link": "/sportswear.html?q=Sportswear&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Sportswear&nR%5Bvisibility_catalog%5D%5B=%5D%5B0%5D%3D1&dFR%5Bcategories_without_path%5D%5B0%5D=Trainers%2CAthletic%2CLace-up+Shoes%2CLace+up+Shoes&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+                "url": "https://6thstreetmobileapp-eu-c.s3.eu-central-1.amazonaws.com/AllBanners/bmt/Summer/Shoe+SBC/SBC_WOMEN_sports+shoes.jpg",
+                "tag": "Sports Shoes"
+            },
+            {
+                "promotion_name": "home-SBC-Shoes-Pumps",
+
+                "link": "/women/shoes/pumps.html?q=Women+Shoes+Pumps&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women+%2F%2F%2F+Shoes+%2F%2F%2F+Pumps&nR%5Bvisibility_catalog%5D%5B=%5D%5B0%5D%3D1&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+                "url": "https://6thstreetmobileapp-eu-c.s3.eu-central-1.amazonaws.com/AllBanners/bmt/Summer/Shoe+SBC/SBC_WOMEN_pumps.jpg",
+                "tag": "Pumps"
+            },
+            {
+                "promotion_name": "home-SBC-Shoes-Sneakers",
+
+                "link": "/women/shoes/trainers.html?q=Women+Shoes+Trainers&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women+%2F%2F%2F+Shoes+%2F%2F%2F+Trainers&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+                "url": "https://6thstreetmobileapp-eu-c.s3.eu-central-1.amazonaws.com/AllBanners/bmt/Summer/Shoe+SBC/SBC_WOMEN_sneakers.jpg",
+                "tag": "Sneakers"
+            },
+            {
+                "promotion_name": "home-SBC-Shoes-Ballerinas & Loafers",
+
+                "link": "/women/shoes/ballerinas.html?q=Women+Shoes+Ballerinas&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women+%2F%2F%2F+Shoes+%2F%2F%2F+Ballerinas&nR%5Bvisibility_catalog%5D%5B=%5D%5B0%5D%3D1&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+                "url": "https://6thstreetmobileapp-eu-c.s3.eu-central-1.amazonaws.com/AllBanners/bmt/Summer/Shoe+SBC/SBC_WOMEN_ballerinas.jpg",
+                "tag": "Ballerinas & Loafers"
+            },
+            {
+                "promotion_name": "home-SBC-Shoes-Premium Shoes",
+
+                "link": "/women/shoes.html?q=Women+Shoes&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women+%2F%2F%2F+Shoes&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1&dFR%5Bbrand_name%5D%5B0%5D=Calvin+Klein%2CGuess%2CLacoste%2CCole+Haan%2CTommy+Hilfiger&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+                "url": "https://6thstreetmobileapp-eu-c.s3.eu-central-1.amazonaws.com/AllBanners/bmt/Summer/Shoe+SBC/SBC_WOMEN_premium+shoes.jpg",
+                "tag": "Premium Shoes"
+            },
+            {
+                "promotion_name": "home-SBC-Shoes-Shoecare",
+
+                "link": "/catalogsearch/result/?q=shoe-care&p=0&dFR%5Bgender%5D%5B0%5D=Men%2CWomen&idx=enterprise_magento_english_products",
+                "url": "https://6thstreetmobileapp-eu-c.s3.eu-central-1.amazonaws.com/AllBanners/bmt/Summer/Shoe+SBC/SBC_WOMEN_shoecare.jpg",
+                "tag": "Shoecare"
+            }]
+        },
+        {
+            "type": "grid",
+            "index": 2,
+            "promotion_name": "Women-EN",
+            "tag": "Complete Your Shoedrobe",
+            "background_color": "#000000",
+            "items_per_row": 4,
+            "item_height": 416,
+            "header":
+            {
+                "title": "RAMADAN Essentials"
+            },
+            "items": [
+            {
+                "promotion_name": "home-SBC-Shoes-Sandals",
+                "footer":
+                {
+                    "title": "Modern Modesty",
+                    "subtitle": "On Trand conservative styles"
+                },
+                "link": "/women/shoes.html?q=Women+Shoes&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women+%2F%2F%2F+Shoes&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1&dFR%5Bcategories_without_path%5D%5B0%5D=Sandals&idx=enterprise_magento_english_products",
+                "url": "https://6thstreetmobileapp-eu-c.s3.eu-central-1.amazonaws.com/AllBanners/bmt/Summer/Shoe+SBC/SBC_WOMEN_sandals.jpg",
+                "tag": "Sandals"
+            },
+            {
+                "promotion_name": "home-SBC-Shoes-Flats & Slides",
+                "footer":
+                {
+                    "title": "Modern Modesty",
+                    "subtitle": "On Trand conservative styles"
+                },
+                "link": "/women/shoes/flats.html?q=Women+Shoes+Flats&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women+%2F%2F%2F+Shoes+%2F%2F%2F+Flats&nR%5Bvisibility_catalog%5D%5B=%5D%5B0%5D%3D1&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+                "url": "https://6thstreetmobileapp-eu-c.s3.eu-central-1.amazonaws.com/AllBanners/bmt/Summer/Shoe+SBC/SBC_WOMEN_flats+%26slides.jpg",
+                "tag": "Flats & Slides"
+            },
+            {
+                "promotion_name": "home-SBC-Shoes-Comfort Shoes",
+                "footer":
+                {
+                    "title": "Modern Modesty",
+                    "subtitle": "On Trand conservative styles"
+                },
+                "link": "/women/shoes.html?q=Women+Shoes&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women+%2F%2F%2F+Shoes&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1&dFR%5Bbrand_name%5D%5B0%5D=Birkenstock%2CClarks%2CHavaianas%2CFitFlop%2CToms%2CVans%2CCrocs&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+                "url": "https://6thstreetmobileapp-eu-c.s3.eu-central-1.amazonaws.com/AllBanners/bmt/Summer/Shoe+SBC/SBC_WOMEN_comfort+shoes.jpg",
+                "tag": "Comfort Shoes"
+            },
+            {
+                "promotion_name": "home-SBC-Shoes-Sports Shoes",
+                "footer":
+                {
+                    "title": "Modern Modesty",
+                    "subtitle": "On Trand conservative styles"
+                },
+                "link": "/sportswear.html?q=Sportswear&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Sportswear&nR%5Bvisibility_catalog%5D%5B=%5D%5B0%5D%3D1&dFR%5Bcategories_without_path%5D%5B0%5D=Trainers%2CAthletic%2CLace-up+Shoes%2CLace+up+Shoes&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+                "url": "https://6thstreetmobileapp-eu-c.s3.eu-central-1.amazonaws.com/AllBanners/bmt/Summer/Shoe+SBC/SBC_WOMEN_sports+shoes.jpg",
+                "tag": "Sports Shoes"
+            },
+            {
+                "promotion_name": "home-SBC-Shoes-Pumps",
+                "footer":
+                {
+                    "title": "Modern Modesty",
+                    "subtitle": "On Trand conservative styles"
+                },
+                "link": "/women/shoes/pumps.html?q=Women+Shoes+Pumps&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women+%2F%2F%2F+Shoes+%2F%2F%2F+Pumps&nR%5Bvisibility_catalog%5D%5B=%5D%5B0%5D%3D1&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+                "url": "https://6thstreetmobileapp-eu-c.s3.eu-central-1.amazonaws.com/AllBanners/bmt/Summer/Shoe+SBC/SBC_WOMEN_pumps.jpg",
+                "tag": "Pumps"
+            },
+            {
+                "promotion_name": "home-SBC-Shoes-Sneakers",
+                "footer":
+                {
+                    "title": "Modern Modesty",
+                    "subtitle": "On Trand conservative styles"
+                },
+                "link": "/women/shoes/trainers.html?q=Women+Shoes+Trainers&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women+%2F%2F%2F+Shoes+%2F%2F%2F+Trainers&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+                "url": "https://6thstreetmobileapp-eu-c.s3.eu-central-1.amazonaws.com/AllBanners/bmt/Summer/Shoe+SBC/SBC_WOMEN_sneakers.jpg",
+                "tag": "Sneakers"
+            },
+            {
+                "promotion_name": "home-SBC-Shoes-Ballerinas & Loafers",
+                "footer":
+                {
+                    "subtitle": "Ballerinas & Loafers"
+                },
+                "link": "/women/shoes/ballerinas.html?q=Women+Shoes+Ballerinas&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women+%2F%2F%2F+Shoes+%2F%2F%2F+Ballerinas&nR%5Bvisibility_catalog%5D%5B=%5D%5B0%5D%3D1&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+                "url": "https://6thstreetmobileapp-eu-c.s3.eu-central-1.amazonaws.com/AllBanners/bmt/Summer/Shoe+SBC/SBC_WOMEN_ballerinas.jpg",
+                "tag": "Ballerinas & Loafers"
+            },
+            {
+                "promotion_name": "home-SBC-Shoes-Premium Shoes",
+                "footer":
+                {
+                    "subtitle": "Premium Footwear"
+                },
+                "link": "/women/shoes.html?q=Women+Shoes&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women+%2F%2F%2F+Shoes&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1&dFR%5Bbrand_name%5D%5B0%5D=Calvin+Klein%2CGuess%2CLacoste%2CCole+Haan%2CTommy+Hilfiger&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+                "url": "https://6thstreetmobileapp-eu-c.s3.eu-central-1.amazonaws.com/AllBanners/bmt/Summer/Shoe+SBC/SBC_WOMEN_premium+shoes.jpg",
+                "tag": "Premium Shoes"
+            }]
+        },
+        {
+            "type": "line_separator",
+            "color": "#efefef"
+        },
+        {
+            "type": "bannerSliderWithLabel",
+            "index": 4,
+            "promotion_name": "Women-En",
+            "tag": "Summer Essentials",
+            "title": "COMPLETE your WARDROBE",
+            "items": [
+            {
+                "promotion_name": "Women-En - home-Summer-Essentials-Maxi Dress",
+                "tag": "Maxi Dress",
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/Summer/Summer+Essentials/Maxi+Dress.jpg",
+                "link": "/catalogsearch/result/?q=Maxi&p=0&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+                "text": "Maxi Dresses",
+                "width": 238,
+                "height": 250
+            },
+            {
+                "promotion_name": "Women-En - home-Summer-Essentials-Sunglasses",
+                "tag": "Sunglasses",
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/Summer/Summer+Essentials/Sunglasses.jpg",
+                "link": "/women/accessories/sunglasses.html?q=Women+Accessories+Sunglasses&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women+%2F%2F%2F+Accessories+%2F%2F%2F+Sunglasses&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+                "text": "Sungalsses",
+                "width": 238,
+                "height": 250
+            },
+            {
+                "promotion_name": "Women-En - home-Summer-Essentials-skincare",
+                "tag": "Skincare",
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/Summer/Summer+Essentials/skincare.jpg",
+                "link": "/women/beauty/skincare.html?q=Women+Beauty+Skincare&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women+%2F%2F%2F+Beauty+%2F%2F%2F+Skincare&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+                "text": "Skincare",
+                "width": 238,
+                "height": 250
+            },
+            {
+                "promotion_name": "Women-En - home-Summer-Essentials-hair acc",
+                "tag": "Hair acc",
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/Summer/Summer+Essentials/hair+acc.jpg",
+                "link": "/women/accessories/hair-accessories.html?q=Women%20Accessories%20Hair%20accessories&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women%20%2F%2F%2F%20Accessories%20%2F%2F%2F%20Hair%20accessories&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1&idx=enterprise_magento_english_products",
+                "text": "Hair Accessories",
+                "width": 238,
+                "height": 250
+            },
+            {
+                "promotion_name": "Women-En - home-Summer-Essentials-swimwear",
+                "tag": "Swimwear",
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/Summer/Summer+Essentials/swimwear.jpg",
+                "link": "/catalogsearch/result/?q=Swimwear&p=0&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+                "text": "Swimwear",
+                "width": 238,
+                "height": 250
+            },
+            {
+                "promotion_name": "Women-En - home-Summer-Essentials-Caps",
+                "tag": "Caps",
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/Summer/Summer+Essentials/cap.jpg",
+                "link": "/women/accessories.html?q=Women+Accessories&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Women+%2F%2F%2F+Accessories+%2F%2F%2F+Caps+%26+Hats&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1&dFR%5Bgender%5D%5B0%5D=Women&dFR%5Bcategories_without_path%5D%5B0%5D=Caps+%26+Hats&idx=enterprise_magento_english_products",
+                "text": "Caps",
+                "width": 238,
+                "height": 250
+            }]
+        },
+        {
+
+            "type": "rich_content_banner",
+            "items": [
+                {
+
+                    "promotion_name": "home-women-premium-All-TommyHilfiger",
+                    "image_url": "https://6thstreetmobileapp-eu-c.s3.eu-central-1.amazonaws.com/AllBanners/bmt/spring+2021/women/premium+edit/Premium_Tommy_1+(1).jpg",
+                    "height": 668,
+                    "width": 535,
+                    "title": "Tommy Hilfiger",
+                    "subtitle": "Classic American cool styles",
+                    "button":
+                    {
+                        "label": "Shop Now",
+                        "link": "/tommy-hilfiger/women.html#q=Tommy%20Hilfiger%20Women&idx=enterprise_magento_english_products&p=0&dFR%5Bgender%5D%5B0%5D=Women&hFR%5Bcategories.level0%5D%5B0%5D=Tommy%20Hilfiger&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1"
+                    },
+                    "tag":
+                    {
+                        "label": "",
+                        "position": "top_left"
+                    }
+                },
+                {
+                    "promotion_name": "home-women-premium-All-CalvinKlein",
+                    "image_url": "https://6thstreetmobileapp-eu-c.s3.eu-central-1.amazonaws.com/AllBanners/bmt/spring+2021/women/premium+edit/Premium_Calvin_2+(1).jpg",
+                    "height": 668,
+                    "width": 535,
+                    "title": "Calvin Klein",
+                    "subtitle": "Bold progressive ideals",
+                    "button":
+                    {
+                        "label": "Shop Now",
+                        "link": "/calvin-klein/women.html#q=Calvin%20Klein%20Women&idx=enterprise_magento_english_products&p=0&dFR%5Bgender%5D%5B0%5D=Women&hFR%5Bcategories.level0%5D%5B0%5D=Calvin%20Klein&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1"
+                    },
+                    "tag":
+                    {
+                        "label": "",
+                        "position": "top_left"
+                    }
+                },
+                {
+                    "promotion_name": "home-women-premium-All-Lacoste",
+                    "image_url": "https://6thstreetmobileapp-eu-c.s3.eu-central-1.amazonaws.com/AllBanners/bmt/spring+2021/women/premium+edit/Premium_Lacoste_3+(1).jpg",
+                    "height": 668,
+                    "width": 535,
+                    "title": "Lacoste",
+                    "subtitle": "Inspired by French elegance",
+                    "button":
+                    {
+                        "label": "Shop Now",
+                        "link": "/lacoste/women.html#q=Lacoste%20Women&idx=enterprise_magento_english_products&p=0&dFR%5Bgender%5D%5B0%5D=Women&hFR%5Bcategories.level0%5D%5B0%5D=Lacoste&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1"
+                    },
+                    "tag":
+                    {
+                        "label": "",
+                        "position": "top_left"
+                    }
+                },
+                {
+                    "promotion_name": "home-women-premium-All-ColeHaan",
+                    "image_url": "https://6thstreetmobileapp-eu-c.s3.eu-central-1.amazonaws.com/AllBanners/bmt/spring+2021/women/premium+edit/Premium_ColeHaan_4+(1).jpg",
+                    "height": 668,
+                    "width": 535,
+                    "title": "Cole Haan",
+                    "subtitle": "Impeccable craftsmanship",
+                    "button":
+                    {
+                        "label": "Shop Now",
+                        "link": "/cole-haan/women.html#q=Cole%20Haan%20Women&idx=enterprise_magento_english_products&p=0&dFR%5Bgender%5D%5B0%5D=Women&hFR%5Bcategories.level0%5D%5B0%5D=Cole%20Haan&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1"
+                    },
+                    "tag":
+                    {
+                        "label": "",
+                        "position": "top_left"
+                    }
+                }
+
+            ],
+            "index": 30
+        },
+        {
+        	"type": "grid",
+            "background_color": "#FFF",
+            "items_per_row": 2,            
+            "item_height": 122,
+            "items": [
+            {
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/1st%20dec%20/Shop%20Men.jpg",
+                "link": "/exclusive-march.html?q=Exclusive+March&p=0&hFR%5Bcategories.level0%5D%5B0%5D=Exclusive+March&nR%5Bvisibility_catalog%5D%5B=%5D%5B0%5D%3D1&dFR%5Bgender%5D%5B0%5D=Women&idx=enterprise_magento_english_products",
+
+                "promotion_name": "home-women-ShoeTrends-WhiteRedPink"
+            },
+            {
+                "url": "https://mobilecdn.6thstreet.com/AllBanners/bmt/1st%20dec%20/Shop%20Men.jpg",
+                "link": "/catalogsearch/result/?q=+&p=0&dFR%5Bgender%5D%5B0%5D=Baby+Girl%2CMen&idx=enterprise_magento_english_products",
+                "promotion_name": "home-women-ShoeTrends-PlanetLoveVegan"
+            }],
+            "index": 4
+        }
+    ]
+}

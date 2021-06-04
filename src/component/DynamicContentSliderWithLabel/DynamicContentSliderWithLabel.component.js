@@ -26,6 +26,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
     super(props);
     this.cmpRef = React.createRef();
     this.scrollerRef = React.createRef();
+    this.itemRef = React.createRef();
     this.state = {
       // settings: {
       //     lazyload: true,
@@ -52,9 +53,6 @@ class DynamicContentSliderWithLabel extends PureComponent {
   }
 
   componentDidMount() {
-    setTimeout(() => {
-      this.executeScroll();
-    }, 6000);
     // if(this.props.items.length < 8){
     //     let setting = JSON.parse(JSON.stringify(this.state.settings))
     //     setting.responsive[1024].items = this.props.items.length
@@ -82,10 +80,10 @@ class DynamicContentSliderWithLabel extends PureComponent {
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
   };
 
-  executeScroll = () => {
-    console.log("this.cmpRef.current", this.cmpRef.current.scrollLeft);
-    this.cmpRef.current.scrollLeft = 50;
-  };
+  // executeScroll = () => {
+  //   console.log("this.cmpRef.current", this.cmpRef.current.scrollLeft);
+  //   this.cmpRef.current.scrollLeft = 50;
+  // };
 
   renderSliderWithLabel = (item, i) => {
     const { link, text, url, plp_config, height, width, text_align } = item;
@@ -94,7 +92,6 @@ class DynamicContentSliderWithLabel extends PureComponent {
       pathname: formatCDNLink(link),
       state: { plp_config },
     };
-    let wd;
     // if(this.state.settings.responsive[300].items === 1){
     //     wd = (screen.width - 16).toString()  + "px";
     // }
@@ -102,13 +99,13 @@ class DynamicContentSliderWithLabel extends PureComponent {
     //     wd = width.toString() + "px";
     // }
 
-    wd = width.toString() + "px";
-    let ht = height.toString() + "px";
+    const wd = `${width.toString()}px`;
+    const ht = `${height.toString()}px`;
 
     // TODO: move to new component
 
     return (
-      <div block="SliderWithLabel" key={i * 10}>
+      <div block="SliderWithLabel" ref={this.itemRef} key={i * 10}>
         <Link
           to={linkTo}
           key={i * 10}
@@ -125,7 +122,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
             src={url}
             alt={text}
             block="Image"
-            style={{ width: wd, height: ht }}
+            style={{ maxWidth: wd, maxHeight: ht }}
           />
         </Link>
         <div block="SliderText" style={{ textAlign: text_align }}>
@@ -136,20 +133,67 @@ class DynamicContentSliderWithLabel extends PureComponent {
     );
   };
 
+  handleContainerScroll = (event) => {
+    const target = event.nativeEvent.target;
+    console.log("container target", target.scrollLeft);
+    this.scrollerRef.current.scrollLeft = target.scrollLeft;
+    console.log(
+      "this.cmpRef.scrollWidtht",
+      this.scrollerRef.current.scrollWidth
+    );
+  };
+
+  handleScroll = (event) => {
+    const target = event.nativeEvent.target;
+    console.log("child target", target.scrollLeft);
+    this.cmpRef.current.scrollLeft = target.scrollLeft;
+    console.log(
+      "this.scrollerRef.scrollWidtht",
+      this.scrollerRef.current.scrollWidth
+    );
+  };
+  renderScrollbar = () => {
+    console.log(
+      "renderScrollbar",
+      this.itemRef.current && this.itemRef.current.clientWidth,
+      this.itemRef.current && this.itemRef.current.offsetWidth
+    );
+    const { items = [] } = this.props;
+    const width = `${
+      (this.itemRef.current && this.itemRef.current.clientWidth) *
+        items.length +
+      items.length * 7 * 2 -
+      690
+    }px`;
+    return (
+      <div block="Outer" ref={this.scrollerRef} onScroll={this.handleScroll}>
+        <div block="Outer" style={{ width: width }} elem="Inner"></div>
+      </div>
+    );
+  };
+
   renderSliderWithLabels() {
     const { items = [] } = this.props;
+    const width = `${
+      items[0] && items[0].width
+        ? items[0].width * items.length + items.length * 7 * 2 - 690
+        : 0
+    }px`;
+    console.log("slider width", width, items[0].width, items.length);
     // let { settings } = this.state;
     //         if(items[0] && items[0].height === 300 && items[0].width === 300) {
     //         settings.responsive[300] = 1.3;
     //  }
     return (
       <>
-        <div block="SliderWithLabelWrapper" ref={this.cmpRef}>
+        <div
+          block="SliderWithLabelWrapper"
+          ref={this.cmpRef}
+          onScroll={this.handleContainerScroll}
+        >
           {items.map(this.renderSliderWithLabel)}
         </div>
-        <div id="Outer">
-          <div className="Inner"></div>
-        </div>
+        {this.renderScrollbar()}
       </>
     );
   }

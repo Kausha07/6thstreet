@@ -1,250 +1,248 @@
 :root {
-    --main-content-padding: 150px;
+  --main-content-padding: 150px;
 }
 
 main {
-    @include mobile {
-        padding-top: var(--main-content-padding);
-    }
+  @include mobile {
+    padding-top: var(--main-content-padding);
+  }
 }
 
 .HeaderMainSection {
-    align-items: center;
+  align-items: center;
+  display: flex;
+  height: 60px;
+  max-width: 1470px;
+  margin: 0 auto;
+
+  @include mobile {
+    z-index: 90;
+    position: fixed;
+    width: 100%;
+    background: $white;
+    top: 0;
+    transition: all 0.5s ease-in-out;
+    -webkit-transition-property: all;
+    -webkit-transition-duration: 0.5s;
+    -webkit-transition-timing-function: ease-in-out;
+    &[data-visible="false"] {
+      display: none;
+      top: -50px;
+    }
+  }
+
+  .HeaderGenders {
     display: flex;
-    height: 60px;
-    max-width: 1470px;
-    margin: 0 auto;
+    order: 0;
+  }
 
+  .HeaderLogo {
+    order: 1;
     @include mobile {
-        z-index: 90;
+      position: fixed;
+      top: 15px;
+      width: 90%;
+    }
+  }
+
+  .CategoryTitle {
+    @include mobile {
+      font-size: 12px;
+      padding-left: 15px;
+      padding-right: 15px;
+      top: 0;
+      width: 70%;
+      margin-left: 15%;
+      height: 40px;
+      line-height: 40px;
+
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      &_isArabic {
+        margin-right: 15%;
+        margin-left: unset;
+      }
+    }
+    @include after-mobile {
+      display: none;
+    }
+  }
+  .BackArrow {
+    height: 40px;
+    width: 40px;
+    border-radius: 20px;
+
+    position: fixed;
+    top: 15px;
+    left: 15px;
+
+    background: $white;
+
+    &_isArabic {
+      right: 15px;
+      left: unset;
+
+      .BackArrow {
+        &-Button {
+          right: 5px;
+          left: unset;
+
+          &::before {
+            right: 5px;
+            left: unset;
+            transform: rotate(-45deg);
+            -webkit-transform: rotate(-45deg);
+          }
+        }
+      }
+    }
+
+    &-Button {
+      top: 0;
+      left: 5px;
+      background-size: 30px;
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      p {
+        display: none;
+      }
+      &::before {
+        content: "";
+        position: absolute;
+        top: 10px;
+        left: 5px;
+        border: solid $black;
+        border-width: 0 2px 2px 0;
+        display: inline-block;
+        padding: 4px;
+        transform: rotate(135deg);
+        -webkit-transform: rotate(135deg);
+      }
+    }
+
+    @include after-mobile {
+      display: none;
+    }
+  }
+
+  .HeaderWishlist {
+    order: 2;
+  }
+
+  .HeaderAccount {
+    order: 3;
+  }
+
+  .HeaderCart {
+    order: 4;
+
+    @include before-desktop {
+      top: 5px;
+      width: 45px;
+      margin: 0 auto;
+
+      @include mobile {
         position: fixed;
-        width: 100%;
+        top: 10px;
+        right: 20px;
+
         background: $white;
-        top: 0;
-        transition: all .5s ease-in-out;
-        -webkit-transition-property: all;
-        -webkit-transition-duration: .5s;
-        -webkit-transition-timing-function: ease-in-out;
-        &[data-visible="false"] {
-            display: none;
-            top: -50px
-        }
-    }
-
-    .HeaderGenders {
-        display: flex;
-        order: 0;
-    }
-
-    .HeaderLogo {
-        order: 1;
-        @include mobile {
-            position: fixed;
-            top: 15px;
-            width: 90%;
-        }
-
-    }
-
-    .CategoryTitle {
-        @include mobile {
-            font-size: 12px;
-            padding-left: 15px;
-            padding-right: 15px;
-            top: 0;
-            width: 70%;
-            margin-left: 15%;
-            height: 40px;
-            line-height: 40px;
-
-            text-align: center;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-
-            &_isArabic {
-                margin-right: 15%;
-                margin-left: unset;
-            }
-
-        }
-        @include after-mobile {
-            display: none;
-        }
-    }
-    .BackArrow {
         height: 40px;
-        width: 40px;
+        width: 30px;
         border-radius: 20px;
 
-        position: fixed;
-        top: 15px;
-        left: 15px;
+        &-Button {
+          left: 5px;
+          top: 3px;
+          background-size: 30px;
+          width: 30px;
+          height: 30px;
+        }
 
-        background: $white;
+        &-Count {
+          top: 5px;
+          right: 5px;
+        }
 
         &_isArabic {
-            right: 15px;
-            left: unset;
-
-            .BackArrow {
-                &-Button {
-                    right: 5px;
-                    left: unset;
-
-                    &::before{
-                        right: 5px;
-                        left: unset;
-                        transform: rotate(-45deg);
-                        -webkit-transform: rotate(-45deg);
-                    }
-                }
+          right: unset;
+          left: 20px;
+          .HeaderCart {
+            &-Button {
+              right: 5px;
+              left: unset;
             }
+          }
         }
-
-        &-Button {
-            top: 0;
-            left: 5px;
-            background-size: 30px;
-            width: 30px;
-            height: 30px;
-            padding: 0;
-            p {
-                display: none;
-            }
-            &::before{
-                content: '';
-                position: absolute;
-                top: 10px;
-                left: 5px;
-                border: solid $black;
-                border-width: 0 2px 2px 0;
-                display: inline-block;
-                padding: 4px;
-                transform: rotate(135deg);
-                -webkit-transform: rotate(135deg);
-            }
-        }
-
-        @include after-mobile {
-            display: none;
-        }
+      }
     }
+  }
 
-    .HeaderWishlist {
-        order: 2;
+  .HeaderSearch {
+    @include mobile {
+      background: $white;
+      position: fixed;
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      top: 50px;
     }
-
-    .HeaderAccount {
-        order: 3;
+    @include after-mobile {
+      display: none;
     }
+  }
 
-    .HeaderCart {
-        order: 4;
-
-        @include before-desktop {
-            top: 5px;
-            width: 45px;
-            margin: 0 auto;
-
-            @include mobile {
-                position: fixed;
-                top: 10px;
-                right: 20px;
-
-                background: $white;
-                height: 40px;
-                width: 30px;
-                border-radius: 20px;
-
-                &-Button {
-                    left: 5px;
-                    top: 3px;
-                    background-size: 30px;
-                    width: 30px;
-                    height: 30px;
-                }
-
-                &-Count {
-                    top: 5px;
-                    right: 5px;
-                }
-
-                &_isArabic {
-                    right: unset;
-                    left: 20px;
-                    .HeaderCart {
-
-                        &-Button {
-                            right: 5px;
-                            left: unset;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    .HeaderSearch {
-
-        @include mobile {
-            background: $white;
-            position: fixed;
-            display: flex;
-            width: 100%;
-            justify-content: center;
-            top: 50px;
-        }
-        @include after-mobile {
-            display: none;
-        }
-    }
-
-    .HeaderGenders {
-        @include mobile {
-            &_isMobile {
-                display: flex;
-                background: $white;
-                width: 100%;
-                top: 100px;
-                position: fixed;
-                justify-content: center;
-            }
-
-            .GenderButton-Container {
-                display: flex;
-                justify-content: center;
-                width: 33.33%;
-
-                .GenderButton-Button {
-                    padding: 0 15px;
-                    height: 25px;
-                }
-            }
-        }
-    }
-
-    .HeaderWishlist,
-    .HeaderAccount {
-        &_isMobile {
-            @include before-desktop{
-                display: none;
-            }
-        }
-    }
-
-    @include desktop() {
+  .HeaderGenders {
+    @include mobile {
+      &_isMobile {
         display: flex;
-        height: 84px;
-        flex-direction: unset;
-        padding: 0 15px;
+        background: $white;
+        width: 100%;
+        top: 100px;
+        position: fixed;
+        justify-content: center;
+      }
 
-        &_isMobile {
-            display: block;
-        }
-    }
-
-    @include desktop() {
+      .GenderButton-Container {
         display: flex;
+        justify-content: center;
+        width: 33.33%;
+
+        .GenderButton-Button {
+          padding: 0 15px;
+          height: 25px;
+        }
+      }
     }
+  }
+
+  .HeaderWishlist,
+  .HeaderAccount {
+    &_isMobile {
+      @include before-desktop {
+        display: none;
+      }
+    }
+  }
+
+  @include desktop() {
+    display: flex;
+    height: 84px;
+    flex-direction: unset;
+    // padding: 0 15px;
+    padding: 0;
+    width: 76.389vw;
+
+    &_isMobile {
+      display: block;
+    }
+  }
+
+  @include desktop() {
+    display: flex;
+  }
 }
