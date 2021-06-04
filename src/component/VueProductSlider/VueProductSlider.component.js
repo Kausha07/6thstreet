@@ -10,12 +10,63 @@ class VueProductSlider extends PureComponent {
         products: PropTypes.array.isRequired,
     };
 
-    render() {
-        console.log("VueProductSlider this.props", this.props);
+    getProducts = () => {
+        const { products: data, sliderLength } = this.props;
+        let products = [...data];
+        if (products.length > sliderLength) {
+            products.length = sliderLength;
+        }
+        return [...products];
+    }
+
+    viewAllBtn() {
+        const { withViewAll } = this.props;
+        if (withViewAll) {
+            return (
+                <div block="VueProductSlider" elem="ViewAllBtn">
+                    <span>{"View All"}</span>
+                </div>
+            );
+        }
+        return null;
+    }
+
+    renderHeader() {
         const { heading } = this.props;
         return (
-            <div block="VueProductSlider" elem="Container">
+            <div block="VueProductSlider" elem="HeaderContainer">
                 <h4>{heading}</h4>
+                {this.viewAllBtn()}
+            </div>
+        );
+    }
+
+    renderSliderContainer() {
+        const productsToRender = this.getProducts(),
+            pLength = productsToRender.length,
+            containerStyle = { gridTemplateColumns: `repeat(${pLength}, 17.041vw)` };
+        return (
+            <div block="VueProductSlider" elem="SliderContainer" style={containerStyle}>
+                {
+                    productsToRender.map((item) => {
+                        const { sku } = item;
+                        console.log("renderSliderContainer", item)
+                        return (
+                            <div key={sku} block="VueProductSlider" elem="VueProductContainer">
+
+                            </div>
+                        );
+                    })
+                }
+            </div>
+        );
+    }
+
+    render() {
+        return (
+            <div block="VueProductSlider" elem="Container">
+                {this.renderHeader()}
+                {this.renderSliderContainer()}
             </div>
         );
     }

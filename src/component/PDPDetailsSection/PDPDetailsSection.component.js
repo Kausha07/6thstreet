@@ -238,6 +238,7 @@ class PDPDetailsSection extends PureComponent {
                                     <VueProductSliderContainer
                                         products={data}
                                         heading={heading}
+                                        key={`VueProductSliderContainer${index}`}
                                     />
                                 );
                             }
