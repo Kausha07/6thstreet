@@ -38,6 +38,7 @@
 .PDPSummary {
     .PDPAlsoAvailableProducts {
         &-Title {
+            text-transform: none;
             @include before-desktop {
                 font-size: 17px;
                 font-weight: 600;

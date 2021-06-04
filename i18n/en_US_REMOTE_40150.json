@@ -775,5 +775,9 @@
     "Congrats!": null,
     "Continue": null,
     "You have received %s% off!": null,
-    "LiveShopping": null
+    "LiveShopping": null,
+    "Where can we send your order?": null,
+    "+ New address": null,
+    "Low stock": null,
+    "Also available in": null
 }

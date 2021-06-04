@@ -92,19 +92,19 @@ class PDPAddToCart extends PureComponent {
             case '0':
                 return  (
                     <div block="PDPAddToCart-SizeSelector" elem="QuantityBasedMessage">
-                        __('Out of stock')
+                        { __('Out of stock') }
                     </div>
                 );
             case '1':
                 return  (
                     <div block="PDPAddToCart-SizeSelector" elem="QuantityBasedMessage">
-                        __('1 left in stock')
+                        { __('1 left in stock') }
                     </div>
                 );
             case '2' || '3':
                 return  (
                     <div block="PDPAddToCart-SizeSelector" elem="QuantityBasedMessage">
-                        __('Low stock')
+                        { __('Low stock') }
                     </div>
                 );
             default:
@@ -189,39 +189,27 @@ class PDPAddToCart extends PureComponent {
     }
 
     renderSizeTypeSelect() {
-        const {
-            sizeObject
-        } = this.props;
-
-        if ((sizeObject.sizeTypes !== undefined)
-        && (sizeObject.sizeTypes.length !== 0)) {
-            return (
-                <div block="PDPAddToCart" elem="SizeTypeSelector">
-                    { this.getSizeTypeSelect() }
-                </div>
-            );
-        }
-
-        return null;
+        return (
+            <div block="PDPAddToCart" elem="SizeTypeSelector">
+                { this.getSizeTypeSelect() }
+            </div>
+        );
     }
 
     renderSizeSelect() {
         const {
             product: { simple_products },
-            sizeObject, selectedSizeCode
+            selectedSizeCode
         } = this.props;
 
-        if ((sizeObject.sizeTypes !== undefined)
-        && (sizeObject.sizeTypes.length !== 0)) {
-            return (
+        return (
+            <>
                 <div block="PDPAddToCart" elem="SizeSelector">
                     { this.getSizeSelect() }
                     { selectedSizeCode && this.renderQuantityBasedMessage(simple_products[selectedSizeCode].quantity) }
                 </div>
-            );
-        }
-
-        return null;
+            </>
+        );
     }
 
     checkStateForButtonDisabling() {
@@ -326,6 +314,7 @@ class PDPAddToCart extends PureComponent {
             return <div block="PDPAddToCart" elem="Placeholder" />;
         }
 
+        //console.log(sizeObject)
         // check for sizes availability in configurable products
         if (sizeObject.sizeCodes !== undefined
             && simple_products !== undefined
@@ -337,11 +326,20 @@ class PDPAddToCart extends PureComponent {
 
         return (
             <>
-                { this.renderSizeInfo() }
-                <div block="PDPAddToCart" elem="SizeSelect">
-                    { this.renderSizeTypeSelect() }
-                    { this.renderSizeSelect() }
-                </div>
+                {
+                    (sizeObject.sizeTypes !== undefined) && (sizeObject.sizeTypes.length !== 0)
+                    ?
+                    <>
+                        { this.renderSizeInfo() }
+                        <div block="PDPAddToCart" elem="SizeSelect">
+                            { this.renderSizeTypeSelect() }
+                            { this.renderSizeSelect() }
+                        </div>
+                        <div block="Seperator" />
+                    </>
+                    :
+                    null
+                }
                 <div block="PDPAddToCart" elem="Bottom">
                     { this.renderAddToCartButton() }
                 </div>

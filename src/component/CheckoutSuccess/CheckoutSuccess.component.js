@@ -45,6 +45,7 @@ export class CheckoutSuccess extends PureComponent {
     toggleChangePhonePopup: PropTypes.func.isRequired,
     phone: PropTypes.string.isRequired,
     cashOnDeliveryFee: PropTypes.number.isRequired,
+    selectedCard: PropTypes.object.isRequired,
   };
 
   state = {
@@ -356,7 +357,7 @@ export class CheckoutSuccess extends PureComponent {
         )}
         {this.renderPriceLine(
           cashOnDeliveryFee ??
-            getDiscountFromTotals(total_segments, "msp_cashondelivery"),
+          getDiscountFromTotals(total_segments, "msp_cashondelivery"),
           __("Cash on Delivery Fee")
         )}
         {this.renderPriceLine(
@@ -482,6 +483,7 @@ export class CheckoutSuccess extends PureComponent {
     const {
       creditCardData: { number = "", expDate, cvv },
       paymentMethod,
+      selectedCard
     } = this.props;
 
     if (number && expDate && cvv) {
@@ -510,6 +512,34 @@ export class CheckoutSuccess extends PureComponent {
             </span>
             <div block="Details" elem="Exp-Date">
               {expDate}
+            </div>
+          </div>
+        </div>
+      );
+    } else if (selectedCard && Object.keys(selectedCard).length > 0) {//payment done from saved cards
+      const { details: { scheme, expirationDate, maskedCC } } = selectedCard;
+      return (
+        <div block="Details">
+          <div block="Details" elem="TypeLogo">
+            <img src={MINI_CARDS[scheme.toLowerCase()]} alt="card icon" />
+          </div>
+          <div block="Details" elem="Number">
+            <div block="Details" elem="Number-Dots">
+              <div />
+              <div />
+              <div />
+              <div />
+            </div>
+            <div block="Details" elem="Number-Value">
+              {maskedCC}
+            </div>
+          </div>
+          <div block="Details" elem="Exp">
+            <span block="Details" elem="Exp-Title">
+              {__("EXP.")}
+            </span>
+            <div block="Details" elem="Exp-Date">
+              {`${expirationDate.substr(0, 2)}${expirationDate.substr(5, 2)}`}
             </div>
           </div>
         </div>
