@@ -283,7 +283,7 @@ class CreditCard extends PureComponent {
                 {
                     savedCards.map((item) => {
                         const { entity_id, selected, details } = item;
-                        const { maskedCC, bin, expirationDate, scheme } = details;
+                        const { maskedCC, bin = "000000", expirationDate, scheme } = details;
                         const cardNum = `${bin.substr(0, 4)} **** **** ${maskedCC}`;
                         if (selected) {
                             const { cvv } = this.state;
