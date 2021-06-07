@@ -33,7 +33,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
 
   static defaultProps = {
     ...SourceCheckoutBilling.defaultProps,
-    processApplePay: false,
+    processApplePay: true,
     processingPaymentSelectRequest: false,
     placeOrder: () => { },
   };
