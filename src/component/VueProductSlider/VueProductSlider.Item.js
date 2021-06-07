@@ -18,15 +18,27 @@ class VueProductSliderItem extends PureComponent {
         return null;
     }
 
+    renderIsNew(is_new_in) {
+        if (is_new_in) {
+            return (
+                <div block="VueProductSlider" elem="VueIsNewTag">
+                    <span>{__('New')}</span>
+                </div>
+            );
+        }
+        return null;
+    }
+
     render() {
         console.log("VueProductSliderItem", this.props.data)
-        const { data: { thumbnail_url, name, brand_name, price } } = this.props;
+        const { data: { thumbnail_url, name, brand_name, price, is_new_in = false } } = this.props;
         return (
             <div block="VueProductSlider" elem="VueProductContainer">
                 <img block="VueProductSlider" elem="VueProductImage" src={thumbnail_url} alt={name} />
                 <h6 id="brandName">{brand_name}</h6>
                 <span id="productName">{name}</span>
                 {this.renderPrice(price)}
+                {this.renderIsNew(is_new_in)}
             </div>
         );
     }

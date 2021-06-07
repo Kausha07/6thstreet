@@ -53,19 +53,19 @@
   }
 
   &-VueProductContainer {
-    width: 17.041vw;
+    width: 245.39px;
     height: 362.66px;
     position: relative;
     margin-right: 7.92px;
     display: inline-block;
 
     @media (max-width: 1024px) {
-      width: 29.801vw;
+      width: 220.08px;
     }
 
     @media (max-width: 411px) {
       height: auto;
-      width: 41.149vw;
+      width: 154.31px;
     }
 
     #brandName {
@@ -97,5 +97,26 @@
   &-VueProductImage {
     width: 100%;
     height: 80.33%;
+  }
+
+  &-VueIsNewTag {
+    width: 35px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #c8b581;
+    border-radius: 0 10px 10px 0;
+
+    left: 0;
+    top: 12px;
+    position: absolute;
+
+    span {
+      font-size: 11px;
+      color: #ffffff;
+      line-height: 13px;
+      font-weight: var(--fw-medium);
+    }
   }
 }
