@@ -7,6 +7,11 @@
     font-size: 16px;
     margin: 50px 0px;
     font-weight: var(--fw-demi);
+
+    @media (max-width: 1024px) {
+      width: 96.005vw;
+      margin: 50px 0px 100px 0px;
+    }
   }
 
   &-HeaderContainer {
@@ -39,19 +44,32 @@
 
   &-SliderContainer {
     width: 100%;
-    gap: 0.55vw;
-    display: grid;
-    overflow-x: auto;
+    overflow: auto;
+    white-space: nowrap;
+
+    @media (max-width: 1024px) {
+      width: 99vw;
+    }
   }
 
   &-VueProductContainer {
-    width: 100%;
-    display: flex;
+    width: 17.041vw;
     height: 362.66px;
     position: relative;
-    flex-direction: column;
+    margin-right: 7.92px;
+    display: inline-block;
+
+    @media (max-width: 1024px) {
+      width: 29.801vw;
+    }
+
+    @media (max-width: 411px) {
+      height: auto;
+      width: 41.149vw;
+    }
 
     #brandName {
+      display: block;
       font-size: 14px;
       font-weight: var(--fw-demi);
       margin: 8.23px 0px 5.58px 0px;
@@ -59,8 +77,9 @@
 
     #productName {
       width: 80%;
-      color: #4a4a4a;
+      display: block;
       font-size: 13px;
+      color: #4a4a4a;
       overflow: hidden;
       white-space: nowrap;
       margin-bottom: 4.5px;
@@ -69,6 +88,7 @@
     }
 
     #price {
+      display: block;
       font-size: 14px;
       font-weight: var(--fw-bold);
     }

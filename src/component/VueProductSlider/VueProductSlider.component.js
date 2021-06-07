@@ -43,11 +43,9 @@ class VueProductSlider extends PureComponent {
     }
 
     renderSliderContainer() {
-        const productsToRender = this.getProducts(),
-            pLength = productsToRender.length,
-            containerStyle = { gridTemplateColumns: `repeat(${pLength}, 17.041vw)` };
+        const productsToRender = this.getProducts();
         return (
-            <div block="VueProductSlider" elem="SliderContainer" style={containerStyle}>
+            <div block="VueProductSlider" elem="SliderContainer">
                 {
                     productsToRender.map((item) => {
                         const { sku } = item;
