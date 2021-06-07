@@ -173,13 +173,20 @@ class DynamicContentSliderWithLabel extends PureComponent {
   };
 
   renderSliderWithLabels() {
-    const { items = [] } = this.props;
+    const { items = [], title } = this.props;
+
     const width = `${
       items[0] && items[0].width
         ? items[0].width * items.length + items.length * 7 * 2 - 690
         : 0
     }px`;
     console.log("slider width", width, items[0].width, items.length);
+    console.log(
+      "parent slider width",
+      title,
+      "==>",
+      this.cmpRef.current && this.cmpRef.current.scrollWidth
+    );
     // let { settings } = this.state;
     //         if(items[0] && items[0].height === 300 && items[0].width === 300) {
     //         settings.responsive[300] = 1.3;

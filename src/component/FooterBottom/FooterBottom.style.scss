@@ -1,69 +1,69 @@
-:root{
-    --footer-bottom-background-color: #333;
-    --footer-bottom-text-color: $white;
-    --footer-bottom-hyperlink-color: #9b9b9b;
+:root {
+  --footer-bottom-background-color: #333;
+  --footer-bottom-text-color: $white;
+  --footer-bottom-hyperlink-color: #9b9b9b;
 }
 
 .FooterBottom {
-        background: var(--footer-bottom-background-color);
-        padding: 26px 0;
-        height: 90px;
+  background: var(--footer-bottom-background-color);
+  padding: 26px 0;
+  height: 90px;
 
-    @include before-desktop {
-        display: none;
+  @include before-desktop {
+    display: none;
+  }
+
+  &-Layout {
+    display: flex;
+    justify-content: space-between;
+    margin: auto;
+    max-width: 1470px;
+    padding: 0;
+    width: 76.389vw;
+  }
+
+  &_FooterBottomHidden {
+    display: none;
+  }
+
+  &-Copyright {
+    padding-top: 12px;
+    color: var(--footer-bottom-text-color);
+    font-size: 13px;
+    font-weight: var(--fw-medium);
+    letter-spacing: 0;
+    line-height: 18px;
+    width: auto;
+  }
+
+  &-Hyperlinks,
+  a {
+    margin: 0 5px;
+    text-decoration: none;
+    padding-top: 16px;
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 11px;
+    color: var(--footer-bottom-hyperlink-color);
+    font-weight: var(--fw-demi);
+    letter-spacing: 0.5px;
+
+    &:last-child {
+      text-transform: none;
     }
+  }
 
-    &-Layout {
-        display: flex;
-        justify-content: space-between;
-        margin: auto;
-        max-width: 1470px;
-        padding: 0 15px;
-    }
-
-    &_FooterBottomHidden {
-        display: none;
-    }
-
-    &-Copyright {
-        padding-top: 12px;
-        color: var(--footer-bottom-text-color);
-        font-size: 13px;
-        font-weight: var(--fw-medium);
-        letter-spacing: .5px;
-        line-height: 18px;
-        width:auto;
-    }
-
-    &-Hyperlinks, a {
-        margin: 0 5px;
-        text-decoration: none;
-        padding-top: 16px;
-        text-transform: uppercase;
-        text-align: center;
-        font-size: 11px;
-        color: var(--footer-bottom-hyperlink-color);
-        font-weight: var(--fw-demi);
-        letter-spacing: .5px;
-
-        &:last-child {
-            text-transform: none;
-        }
-    }
-
-    &-PaymentIcons {
-        background: url(../../style/icons/icons.png) -620px -953px no-repeat;
-        width: 377px;
-        height: 37px;
-    }
+  &-PaymentIcons {
+    background: url(../../style/icons/icons.png) -620px -953px no-repeat;
+    width: 377px;
+    height: 37px;
+  }
 }
 
 .PageWrapper {
-
-    &_isArabic {
-
-        .FooterBottom {
-            padding: 20px 50px 20px 50px;
-        }
+  &_isArabic {
+    .FooterBottom {
+      padding: 20px 50px 20px 50px;
     }
+  }
 }

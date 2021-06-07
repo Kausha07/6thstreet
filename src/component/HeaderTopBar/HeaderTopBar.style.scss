@@ -29,6 +29,7 @@
     max-width: 1440px;
     margin: 0 auto;
     width: 76.389vw;
+    justify-content: space-between;
   }
 
   &-CmsBlock {
@@ -61,6 +62,10 @@
     @include mobile {
       bottom: 0;
     }
+  }
+  .Switcher {
+    display: flex;
+    align-items: center;
   }
 
   .LanguageSwitcher {
