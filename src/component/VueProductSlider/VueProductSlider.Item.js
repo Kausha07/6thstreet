@@ -1,3 +1,4 @@
+import Link from 'Component/Link';
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { getCurrency } from 'Util/App/App';
@@ -31,11 +32,14 @@ class VueProductSliderItem extends PureComponent {
     }
 
     render() {
-        console.log("VueProductSliderItem", this.props.data)
-        const { data: { thumbnail_url, name, brand_name, price, is_new_in = false, sku } } = this.props;
+        const { data: { thumbnail_url, name, brand_name, price, is_new_in = false, sku, link } } = this.props;
         return (
             <div block="VueProductSlider" elem="VueProductContainer">
-                <img block="VueProductSlider" elem="VueProductImage" src={thumbnail_url} alt={name} />
+                <Link
+                    to={link}
+                    data-banner-type="vueSlider">
+                    <img block="VueProductSlider" elem="VueProductImage" src={thumbnail_url} alt={name} />
+                </Link>
                 <h6 id="brandName">{brand_name}</h6>
                 <span id="productName">{name}</span>
                 {this.renderPrice(price)}
