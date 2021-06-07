@@ -41,6 +41,9 @@ class DynamicContentCircleItemSlider extends PureComponent {
     ).isRequired,
   };
 
+  componentDidMount() {
+    console.log("all well");
+  }
   clickLink = (a) => {
     console.log("banner click", a);
     let link = "/" + a.link.split("?")[0];

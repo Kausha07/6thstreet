@@ -30,7 +30,12 @@ class DynamicContentBanner extends PureComponent {
     isMobile: isMobile.any() || isMobile.tablet(),
   };
 
+  componentDidMount() {
+    console.log("all well");
+  }
+
   onclick = (item) => {
+    console.log("item1");
     let banner = {
       link: item.link,
       promotion_name: item.promotion_name,

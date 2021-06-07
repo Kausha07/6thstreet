@@ -1,12 +1,10 @@
-import PropTypes from "prop-types";
-import { PureComponent } from "react";
-
 import Image from "Component/Image";
 import Link from "Component/Link";
-import { formatCDNLink } from "Util/Url";
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
 import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
+import { formatCDNLink } from "Util/Url";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
-
 import "./DynamicContentGrid.style";
 
 class DynamicContentGrid extends PureComponent {
@@ -45,7 +43,7 @@ class DynamicContentGrid extends PureComponent {
           to={formatCDNLink(link)}
           key={i}
           data-banner-type="grid"
-          data-promotion-name= {item.promotion_name ? item.promotion_name : ""}
+          data-promotion-name={item.promotion_name ? item.promotion_name : ""}
           data-tag={item.tag ? item.tag : ""}
           onClick={() => {
             this.onclick(item);

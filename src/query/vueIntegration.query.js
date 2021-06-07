@@ -5,7 +5,7 @@ export class VueIntegrationQueries {
    * log vue analytics query
    * @return {Field}
    */
-    vueAnalayticsLogger(payload) {
+  vueAnalayticsLogger(payload) {
     return new Promise((resolve, reject) => {
       fetch(`/api/vue/analytics?locale=en-ae'`, {
         method: "POST",
@@ -16,7 +16,7 @@ export class VueIntegrationQueries {
         body: JSON.stringify(payload),
       })
         .then((response) => {
-          console.log('response',response)
+          console.log("response", response);
           if (response.status !== 200) {
             // throw Error(response.message);
             console.log("Error", response.statusText);

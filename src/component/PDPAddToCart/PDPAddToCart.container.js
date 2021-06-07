@@ -369,7 +369,7 @@ export class PDPAddToCartContainer extends PureComponent {
         });
       }
       // vue analytics
-      VueIntegrationQueries.vueAna85layticsLogger({
+      VueIntegrationQueries.vueAnalayticsLogger({
         event_name: VUE_ADD_TO_CART,
         params: {
           event: VUE_ADD_TO_CART,
@@ -446,7 +446,7 @@ export class PDPAddToCartContainer extends PureComponent {
         );
       }
       // vue analytics
-      VueIntegrationQueries.vueAna85layticsLogger({
+      VueIntegrationQueries.vueAnalayticsLogger({
         event_name: VUE_ADD_TO_CART,
         params: {
           event: VUE_ADD_TO_CART,
