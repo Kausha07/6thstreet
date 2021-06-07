@@ -1,6 +1,7 @@
 /* eslint-disable no-magic-numbers */
 import PropTypes from "prop-types";
 import queryString from "query-string";
+import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
 import { getStore } from "Store";
@@ -13,7 +14,8 @@ import Algolia from "Util/API/provider/Algolia";
 import { getUUIDToken } from "Util/Auth";
 import Event, {
   ADD_TO_CART_ALGOLIA,
-  EVENT_GTM_PRODUCT_ADD_TO_CART
+  EVENT_GTM_PRODUCT_ADD_TO_CART,
+  VUE_ADD_TO_CART,
 } from "Util/Event";
 import history from "Util/History";
 import isMobile from "Util/Mobile";
@@ -278,7 +280,7 @@ export class PDPAddToCartContainer extends PureComponent {
       addProductToCart,
       showNotification,
     } = this.props;
-    
+
     if (!price[0]) {
       showNotification("error", __("Unable to add product to cart."));
 
@@ -360,12 +362,27 @@ export class PDPAddToCartContainer extends PureComponent {
         userToken = userData.data.id;
       }
       if (queryID) {
-        new Algolia().logAlgoliaAnalytics('conversion',ADD_TO_CART_ALGOLIA, [], {
+        new Algolia().logAlgoliaAnalytics("conversion", 8, [], {
           objectIDs: [objectID],
           queryID,
           userToken: userToken ? `user-${userToken}` : getUUIDToken(),
         });
       }
+      // vue analytics
+      VueIntegrationQueries.vueAna85layticsLogger({
+        event_name: VUE_ADD_TO_CART,
+        params: {
+          event: VUE_ADD_TO_CART,
+          pageType: "pdp",
+          currency: "en_AED",
+          clicked: Date.now(),
+          uuid: getUUID(),
+          referrer: "desktop",
+          sourceProdID: configSKU,
+          sourceCatgID: objectID, // TODO: replace with category id
+          prodPrice: basePrice,
+        },
+      });
     }
 
     if (!insertedSizeStatus) {
@@ -417,12 +434,32 @@ export class PDPAddToCartContainer extends PureComponent {
         userToken = userData.data.id;
       }
       if (queryID) {
-        new Algolia().logAlgoliaAnalytics('conversion',ADD_TO_CART_ALGOLIA, [], {
-          objectIDs: [objectID],
-          queryID,
-          userToken: userToken ? `user-${userToken}` : getUUIDToken(),
-        });
+        new Algolia().logAlgoliaAnalytics(
+          "conversion",
+          ADD_TO_CART_ALGOLIA,
+          [],
+          {
+            objectIDs: [objectID],
+            queryID,
+            userToken: userToken ? `user-${userToken}` : getUUIDToken(),
+          }
+        );
       }
+      // vue analytics
+      VueIntegrationQueries.vueAna85layticsLogger({
+        event_name: VUE_ADD_TO_CART,
+        params: {
+          event: VUE_ADD_TO_CART,
+          pageType: "pdp",
+          currency: "en_AED",
+          clicked: Date.now(),
+          uuid: getUUID(),
+          referrer: "desktop",
+          sourceProdID: configSKU,
+          sourceCatgID: objectID, // TODO: replace with category id
+          prodPrice: basePrice,
+        },
+      });
     }
   }
 

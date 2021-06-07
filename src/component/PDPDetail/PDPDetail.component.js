@@ -3,8 +3,12 @@ import Link from "Component/Link";
 import PropTypes from "prop-types";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
+import { getCurrency } from "Util/App";
+import { getUUID } from "Util/Auth";
+import { VUE_PDP_VIEW } from "Util/Event";
 import isMobile from "Util/Mobile";
 import "./PDPDetail.style";
+
 class PDPDetail extends PureComponent {
   static propTypes = {
     brandDescription: PropTypes.string,
@@ -17,15 +21,16 @@ class PDPDetail extends PureComponent {
   };
 
   componentDidMount() {
+    console.log("getCurrency", getCurrency());
     VueIntegrationQueries.vueAnalayticsLogger({
-      event_name: "pageView",
+      event_name: VUE_PDP_VIEW,
       params: {
-        event: "pageView",
-        pageType: "plp",
+        event: VUE_PDP_VIEW,
+        pageType: "pdp",
         currency: "en_AED",
-        clicked: 1622626071901,
-        uuid: "cc5b78fd-fbd7-4e78-a6e9-e95431af4571",
-        referrer: "app",
+        clicked: Date.now(),
+        uuid: getUUID(),
+        referrer: "desktop",
       },
     });
   }

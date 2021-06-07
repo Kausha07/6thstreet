@@ -4,15 +4,17 @@ import Price from "Component/Price";
 import ProductLabel from "Component/ProductLabel/ProductLabel.component";
 import WishlistIcon from "Component/WishlistIcon";
 import PropTypes from "prop-types";
+import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
 import { getStore } from "Store";
 import { Product } from "Util/API/endpoint/Product/Product.type";
 import Algolia from "Util/API/provider/Algolia";
 import { isArabic } from "Util/App";
-import { getUUIDToken } from "Util/Auth";
+import { getUUID, getUUIDToken } from "Util/Auth";
 import Event, {
   EVENT_GTM_PRODUCT_CLICK,
-  SELECT_ITEM_ALGOLIA
+  SELECT_ITEM_ALGOLIA,
+  VUE_PLP_VIEW,
 } from "Util/Event";
 import "./ProductItem.style";
 
@@ -34,6 +36,20 @@ class ProductItem extends PureComponent {
 
   handleClick = this.handleProductClick.bind(this);
 
+  componentDidMount() {
+    VueIntegrationQueries.vueAnalayticsLogger({
+      event_name: VUE_PLP_VIEW,
+      params: {
+        event: VUE_PLP_VIEW,
+        pageType: "plp",
+        currency: "en_AED",
+        clicked: Date.now(),
+        uuid: getUUID(),
+        referrer: "desktop",
+      },
+    });
+  }
+
   handleProductClick() {
     const { product, position, qid } = this.props;
     var data = localStorage.getItem("customer");
@@ -50,7 +66,7 @@ class ProductItem extends PureComponent {
     }
     Event.dispatch(EVENT_GTM_PRODUCT_CLICK, product);
     if (queryID) {
-      new Algolia().logAlgoliaAnalytics('click',SELECT_ITEM_ALGOLIA, [],{
+      new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {
         objectIDs: [product.objectID],
         queryID,
         userToken: userToken ? `user-${userToken}` : getUUIDToken(),
@@ -160,7 +176,7 @@ class ProductItem extends PureComponent {
     const {
       product,
       product: { url },
-      qid
+      qid,
     } = this.props;
     let queryID;
     if (!qid) {
@@ -171,12 +187,12 @@ class ProductItem extends PureComponent {
     const { pathname } = new URL(url);
     let urlWithQueryID;
     if (queryID) {
-     urlWithQueryID = `${pathname}?qid=${queryID}`; 
+      urlWithQueryID = `${pathname}?qid=${queryID}`;
     } else {
       urlWithQueryID = pathname;
     }
     const linkTo = {
-      pathname:urlWithQueryID,
+      pathname: urlWithQueryID,
       state: {
         product,
       },
