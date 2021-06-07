@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { getCurrency } from 'Util/App/App';
+import WishlistIcon from "Component/WishlistIcon";
 
 class VueProductSliderItem extends PureComponent {
     static propTypes = {
@@ -31,7 +32,7 @@ class VueProductSliderItem extends PureComponent {
 
     render() {
         console.log("VueProductSliderItem", this.props.data)
-        const { data: { thumbnail_url, name, brand_name, price, is_new_in = false } } = this.props;
+        const { data: { thumbnail_url, name, brand_name, price, is_new_in = false, sku } } = this.props;
         return (
             <div block="VueProductSlider" elem="VueProductContainer">
                 <img block="VueProductSlider" elem="VueProductImage" src={thumbnail_url} alt={name} />
@@ -39,6 +40,7 @@ class VueProductSliderItem extends PureComponent {
                 <span id="productName">{name}</span>
                 {this.renderPrice(price)}
                 {this.renderIsNew(is_new_in)}
+                <WishlistIcon sku={sku} />
             </div>
         );
     }
