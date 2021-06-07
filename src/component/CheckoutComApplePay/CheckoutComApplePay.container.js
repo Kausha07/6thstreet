@@ -47,7 +47,7 @@ class CheckoutComApplePayContainer extends PureComponent {
   static defaultProps = {
     customer: null,
     default_title: "6th Street",
-    merchant_id: "",
+    merchant_id: process.env.REACT_APP_CHECKOUT_COM_APPLE_MERCHANT_ID,
     validateApplePay: () => {},
     placeOrder: () => {},
   };
