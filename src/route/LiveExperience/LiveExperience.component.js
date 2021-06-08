@@ -1,4 +1,5 @@
 import { PureComponent } from "react";
+import { Helmet } from 'react-helmet';
 import Config from "./LiveExperience.config";
 import ThirdPartyAPI from "Util/API/provider/ThirdPartyAPI";
 // import {} from ''
@@ -26,10 +27,10 @@ export class LiveExperience extends PureComponent {
   };
 
   componentDidMount() {
-    //   const script = document.createElement("script");
-    //   script.src = "https://d1tinli1tzriht.cloudfront.net/party.js";
-    //   script.async = true;
-    //   document.body.appendChild(script);
+      // const script = document.createElement("script");
+      // script.src = "./Party.js";
+      // script.async = true;
+      // document.body.appendChild(script);
     //   script.onload = () => {
     //     // script has loaded, you can now use it safely
     //     // alert('thank me later')
@@ -37,6 +38,20 @@ export class LiveExperience extends PureComponent {
     //     // let a = window.getScheduleToken('_spckUserToken');
     //     debugger
     // }
+    (function() {
+      var spck = {
+           storeId: "13207961",
+           storeType: "sixthstreet",
+           customColor:'#000000',
+           containerId : 'container',
+           displayType:'all',
+           staging: false
+       };
+       var el = document.createElement('script');
+       el.setAttribute('src', 'https://party.spockee.io/builder/' + spck.storeId);
+       el.setAttribute('data-spck', JSON.stringify(spck));
+       document.body.appendChild(el);
+   })();
     let _spckUserToken;
     _spckUserToken = `customer_${Math.random().toString(36).substring(2, 10)}${Math.random().toString(36).substring(2, 10)}`;
     let b = window.localStorage.getItem("_spckUserToken")
@@ -63,6 +78,7 @@ export class LiveExperience extends PureComponent {
   }
 
   playHandler = async (type, id) => {
+    // debugger
     const cutomer_id = window.localStorage.getItem("_spckUserToken");
     const url = `https://d14xmqtgwld57m.cloudfront.net/${type}/${id}?customColor=%23000000&partyIframeId=68qyVT546HtifHOyXhjWg&customerId=${cutomer_id}"`;
     // try {
@@ -120,8 +136,8 @@ export class LiveExperience extends PureComponent {
     this.setState({ url: null });
   };
   renderPopup = () => {
-    // debugger
     const { url } = this.state;
+    // debugger
     const svg = (
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -190,8 +206,10 @@ export class LiveExperience extends PureComponent {
   };
 
   render() {
+
     return (
       <main block="LiveShopping">
+        <div id= "container" ></div>
         <ContentWrapper
           mix={{ block: 'LiveShopping' }}
           wrapperMix={{
