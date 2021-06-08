@@ -11,6 +11,7 @@ import DynamicContentProductSlider from 'Component/DynamicContentProductSlider';
 import DynamicContentSliderWithLabel from 'Component/DynamicContentSliderWithLabel';
 import DynamicContentRichContentBanner from 'Component/DynamicContentRichContentBanner';
 import { DynamicContent as DynamicContentType } from 'Util/API/endpoint/StaticFiles/StaticFiles.type';
+import DynamicContentTwiceBanner from 'Component/DynamicContentTwiceBanner';
 import Event, { EVENT_GTM_IMPRESSIONS_HOME } from 'Util/Event';
 import Logger from 'Util/Logger';
 
@@ -35,13 +36,29 @@ class DynamicContent extends PureComponent {
         circleItemSlider: DynamicContentCircleItemSlider,
         bannerSliderWithLabel: DynamicContentSliderWithLabel,
         rich_content_banner: DynamicContentRichContentBanner,
+        twiceBanner : DynamicContentTwiceBanner,
         line_separator: 'hr'
 
     };
-
+    isCheckTwiceBanner = (block) => {
+        let isValid = false;
+        if(block.header) {
+            isValid = "header";
+        } else if(block.footer) {
+            isValid = "footer";
+        }
+        return isValid;
+    }
     renderBlock = (block, i) => {
         const { type, ...restProps } = block;
-        const Component = this.renderMap[type];
+        let Component = '';
+        if(type === "banner") {
+            const typeofBanner = this.isCheckTwiceBanner(block);
+            restProps.typeOfBanner = typeofBanner;
+            Component = this.renderMap['twiceBanner'];
+        } else {
+            Component = this.renderMap[type];
+        }
         if (!Component) {
             // TODO: implement all types
             Logger.log(type, restProps);
