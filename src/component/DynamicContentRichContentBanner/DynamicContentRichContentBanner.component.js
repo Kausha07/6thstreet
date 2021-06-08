@@ -2,10 +2,16 @@ import cx from "classnames";
 import Image from "Component/Image";
 import Link from "Component/Link";
 import PropTypes from "prop-types";
+import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
 import "react-circular-carousel/dist/index.css";
 import TinySlider from "tiny-slider-react";
-import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
+import { getUUID } from "Util/Auth";
+import Event, {
+  EVENT_GTM_BANNER_CLICK,
+  VUE_CAROUSEL_CLICK,
+  VUE_CAROUSEL_SWIPE,
+} from "Util/Event";
 import { formatCDNLink } from "Util/Url";
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
@@ -51,7 +57,36 @@ class DynamicContentRichContentBanner extends PureComponent {
       link: item.link,
       promotion_name: item.promotion_name,
     };
+    VueIntegrationQueries.vueAnalayticsLogger({
+      event_name: VUE_CAROUSEL_CLICK,
+      params: {
+        event: VUE_CAROUSEL_CLICK,
+        pageType: "plp",
+        currency: "en_AED",
+        clicked: Date.now(),
+        uuid: getUUID(),
+        referrer: "desktop",
+        widgetID: "vue_visually_similar_slider", // TODO: Find widget id and replace with it.
+      },
+    });
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
+  };
+
+  onSwipe = () => {
+    VueIntegrationQueries.vueAnalayticsLogger({
+      event_name: VUE_CAROUSEL_SWIPE,
+      params: {
+        event: VUE_CAROUSEL_SWIPE,
+        pageType: "plp",
+        currency: "en_AED",
+        clicked: Date.now(),
+        uuid: getUUID(),
+        referrer: "desktop",
+        sourceProdID: "",
+        sourceCatgID: "",
+        widgetID: "vue_visually_similar_slider", // TODO: Find widget id and replace with it.
+      },
+    });
   };
 
   renderCircle = (item, i) => {
@@ -131,7 +166,13 @@ class DynamicContentRichContentBanner extends PureComponent {
   renderCircles() {
     const { items = [] } = this.props;
     return (
-      <TinySlider settings={settings} block="CircleSliderWrapper">
+      <TinySlider
+        settings={settings}
+        block="CircleSliderWrapper"
+        onIndexChanged={() => {
+          this.onSwipe;
+        }}
+      >
         {items.map(this.renderCircle)}
       </TinySlider>
     );

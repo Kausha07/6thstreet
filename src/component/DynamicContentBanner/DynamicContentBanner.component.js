@@ -1,14 +1,15 @@
 import Image from "Component/Image";
 import Link from "Component/Link";
 import PropTypes from "prop-types";
+import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
-import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
+import { getUUID } from "Util/Auth";
+import Event, { EVENT_GTM_BANNER_CLICK, VUE_CAROUSEL_CLICK } from "Util/Event";
 import isMobile from "Util/Mobile";
 import { formatCDNLink } from "Util/Url";
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import "./DynamicContentBanner.style";
-
 class DynamicContentBanner extends PureComponent {
   static propTypes = {
     items: PropTypes.arrayOf(
@@ -30,12 +31,21 @@ class DynamicContentBanner extends PureComponent {
     isMobile: isMobile.any() || isMobile.tablet(),
   };
 
-  componentDidMount() {
-    console.log("all well");
-  }
-
   onclick = (item) => {
     console.log("item1");
+    // vue analytics
+    VueIntegrationQueries.vueAnalayticsLogger({
+      event_name: VUE_CAROUSEL_CLICK,
+      params: {
+        event: VUE_CAROUSEL_CLICK,
+        pageType: "plp",
+        currency: "en_AED",
+        clicked: Date.now(),
+        uuid: getUUID(),
+        referrer: "desktop",
+        widgetID: "vue_visually_similar_slider", // TODO: Find widget id and replace with it.
+      },
+    });
     let banner = {
       link: item.link,
       promotion_name: item.promotion_name,

@@ -1,9 +1,11 @@
 import Link from "Component/Link";
 import PropTypes from "prop-types";
+import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
 import "react-circular-carousel/dist/index.css";
 import TinySlider from "tiny-slider-react";
-import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
+import { getUUID } from "Util/Auth";
+import Event, { EVENT_GTM_BANNER_CLICK, VUE_CAROUSEL_CLICK } from "Util/Event";
 import { formatCDNLink } from "Util/Url";
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
@@ -41,9 +43,6 @@ class DynamicContentCircleItemSlider extends PureComponent {
     ).isRequired,
   };
 
-  componentDidMount() {
-    console.log("all well");
-  }
   clickLink = (a) => {
     console.log("banner click", a);
     let link = "/" + a.link.split("?")[0];
@@ -53,6 +52,18 @@ class DynamicContentCircleItemSlider extends PureComponent {
       link: a.link,
       promotion_name: a.promotion_name,
     };
+    VueIntegrationQueries.vueAnalayticsLogger({
+      event_name: VUE_CAROUSEL_CLICK,
+      params: {
+        event: VUE_CAROUSEL_CLICK,
+        pageType: "plp",
+        currency: "en_AED",
+        clicked: Date.now(),
+        uuid: getUUID(),
+        referrer: "desktop",
+        widgetID: "vue_visually_similar_slider", // TODO: Find widget id and replace with it.
+      },
+    });
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
   };
 
