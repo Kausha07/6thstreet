@@ -33,12 +33,20 @@
 
   &-CmsBlock {
     display: none;
-    font-size: 12px;
-    font-weight: var(--fw-demi);
-    letter-spacing: 0.5px;
-    line-height: 16px;
+    // font-size: 12px;
+    // font-weight: var(--fw-demi);
+    // letter-spacing: 0.5px;
+    // line-height: 16px;
     margin: 7px 0;
     text-transform: uppercase;
+
+    color: #4a4a4a;
+    font-family: "Avenir Next";
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    line-height: 16px;
+    text-align: center;
 
     @include desktop {
       display: block;

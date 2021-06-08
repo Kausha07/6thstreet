@@ -191,7 +191,9 @@ class DynamicContentSliderWithLabel extends PureComponent {
           ref={this.cmpRef}
           onScroll={this.handleContainerScroll}
         >
+          <div className="SliderHelper"></div>
           {items.map(this.renderSliderWithLabel)}
+          <div className="SliderHelper"></div>
         </div>
         {this.renderScrollbar()}
       </>
