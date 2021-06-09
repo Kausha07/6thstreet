@@ -10,7 +10,7 @@
 
   @include before-desktop {
     .Checkout-StickyButtonWrapper {
-      padding-top: 0;
+      padding-top: 0.5rem;
     }
   }
 
@@ -114,7 +114,7 @@
       border-top: 1px solid var(--primary-divider-color);
       background-color: var(--white);
       position: fixed;
-      padding: 1rem 1rem calc(env(safe-area-inset-bottom) + 1rem);
+      padding: 1.5rem 1.5rem calc(env(safe-area-inset-bottom) + 1rem);
       bottom: 0;
       left: 0;
       width: 100%;
@@ -144,6 +144,17 @@
       max-width: 700px;
     }
   }
+  &-MobileDisplay {
+    @include before-desktop {
+      display: block;
+    }
+  }
+
+  &-WebDisplay {
+    @include before-desktop {
+      display: none;
+    }
+  }
 
   &-Wrapper {
     max-width: var(--checkout-max-width);
@@ -165,6 +176,7 @@
     @include desktop {
       display: none;
     }
+
     &-NavButton {
       padding: 0 !important;
     }
@@ -249,7 +261,7 @@
       text-transform: uppercase;
       font-size: 14px;
       font-weight: var(--fw-demi);
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
       line-height: 16px;
     }
 
@@ -276,6 +288,9 @@
 
   &-GuestCheckout {
     &:not(&_continueAsGuest) {
+      @include before-desktop {
+        padding: 0 20px;
+      }
       @include desktop {
         display: flex;
       }
@@ -502,6 +517,11 @@
     display: block !important;
     @include desktop {
       display: none !important;
+    }
+  }
+  .LoadingBlock {
+    @include before-desktop {
+      display: none;
     }
   }
 }

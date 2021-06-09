@@ -15,7 +15,7 @@ import { isArabic } from "Util/App";
 import { isSignedIn } from "Util/Auth";
 import isMobile from "Util/Mobile";
 import { getCountryFromUrl } from "Util/Url/Url";
-
+import Spinner from "react-spinkit";
 import "./CheckoutShipping.style";
 
 export class CheckoutShipping extends SourceCheckoutShipping {
@@ -97,6 +97,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
           mix={{ block: "CheckoutShipping", elem: "Button" }}
         >
           {this.renderButtonsPlaceholder()}
+          {/* <Spinner name="three-bounce" /> */}
         </button>
       </div>
     );
@@ -185,7 +186,13 @@ export class CheckoutShipping extends SourceCheckoutShipping {
   renderButtonLabel() {
     const { isMobile } = this.state;
 
-    return isMobile ? __("+ New address") : __("Add new address");
+    return isMobile ? (
+      <>
+        <span style={{ paddingRight: "10px" , fontWeight:"bold", fontSize:"16px"}}>+</span> {__("New address")}
+      </>
+    ) : (
+      __("Add new address")
+    );
   }
 
   renderOpenPopupButton = () => {
@@ -265,11 +272,8 @@ export class CheckoutShipping extends SourceCheckoutShipping {
   }
 
   render() {
-    const { onShippingSuccess, onShippingError, isLoading } = this.props;
-
+    const { onShippingSuccess, onShippingError } = this.props;
     const { formContent } = this.state;
-    console.log("is mobile check", isMobile);
-    console.log("loading", isLoading);
     return (
       <div
         block="ShippingStep"
@@ -293,7 +297,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
           ) : null}
           {this.renderAddressBook()}
           <div>
-            {<Loader isLoading={isLoading} />}
+            {/* {<Loader isLoading={isLoading} />} */}
             {this.renderDelivery()}
             {this.renderHeading(__("Payment Options"), true)}
             {this.renderActions()}

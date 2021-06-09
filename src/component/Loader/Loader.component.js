@@ -32,7 +32,7 @@ export class Loader extends PureComponent {
 
   render() {
     const { isLoading } = this.props;
-    console.log("loading in loader",isLoading)
+    console.log("loading in loader", isLoading);
     if (!isLoading) {
       return null;
     }

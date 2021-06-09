@@ -143,6 +143,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
             selectedShippingMethod
         } = this.state;
         const { setLoading, showNotification, dispatch } = this.props;
+        console.log("hey selected customer address id",selectedCustomerAddressId , "Selected shipping methiod", selectedShippingMethod)
         const shippingAddress = selectedCustomerAddressId
             ? this._getAddressById(selectedCustomerAddressId)
             : trimAddressFields(fields);

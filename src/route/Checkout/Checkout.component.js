@@ -122,8 +122,11 @@ export class Checkout extends SourceCheckout {
 
   processTabbyWithTimeout(counter, paymentInformation) {
     const { tabbyPaymentStatus } = this.state;
-    const { showErrorNotification, hideActiveOverlay, activeOverlay } =
-      this.props;
+    const {
+      showErrorNotification,
+      hideActiveOverlay,
+      activeOverlay,
+    } = this.props;
 
     // Need to get payment data from Tabby.
     // Could not get callback of Tabby another way because Tabby is iframe in iframe
@@ -184,14 +187,21 @@ export class Checkout extends SourceCheckout {
         </div>
       );
     }
-
-    return <Loader isLoading={isLoading} />;
+    return (
+      <div block="LoadingBlock">
+        <Loader isLoading={isLoading} />;
+      </div>
+    );
   }
 
   renderSummary() {
     const { cashOnDeliveryFee } = this.state;
-    const { checkoutTotals, checkoutStep, paymentTotals, processingRequest } =
-      this.props;
+    const {
+      checkoutTotals,
+      checkoutStep,
+      paymentTotals,
+      processingRequest,
+    } = this.props;
     const { areTotalsVisible } = this.stepMap[checkoutStep];
 
     if (!areTotalsVisible) {
@@ -222,8 +232,11 @@ export class Checkout extends SourceCheckout {
             elem="FirstColumn"
             mods={{ checkoutStep }}
           >
-            <button block="CheckoutNavigation"
-            elem="NavButton" onClick={isBilling ? this.redirectURL : null}>
+            <button
+              block="CheckoutNavigation"
+              elem="NavButton"
+              onClick={isBilling ? this.redirectURL : null}
+            >
               <div
                 block="CheckoutNavigation"
                 elem="Delivery"
@@ -379,8 +392,11 @@ export class Checkout extends SourceCheckout {
   }
 
   renderTabbyIframe() {
-    const { tabbyInstallmentsUrl, tabbyPayLaterUrl, selectedPaymentMethod } =
-      this.state;
+    const {
+      tabbyInstallmentsUrl,
+      tabbyPayLaterUrl,
+      selectedPaymentMethod,
+    } = this.state;
     const { isTabbyPopupShown } = this.props;
     if (!isTabbyPopupShown) {
       return null;
@@ -458,6 +474,7 @@ export class Checkout extends SourceCheckout {
     } = this.props;
 
     const { continueAsGuest, isArabic } = this.state;
+    console.log("is delivery options loading", isDeliveryOptionsLoading);
     const renderCheckoutShipping = (
       <div block="Checkout" elem="Shipping" mods={isSignedIn}>
         {continueAsGuest ? this.renderHeading("Login / Sign Up", true) : null}
@@ -589,7 +606,11 @@ export class Checkout extends SourceCheckout {
 
   render() {
     const { isSuccess } = this.state;
+    const { checkoutStep } = this.props;
 
+
+    console.log("checkout step", checkoutStep)
+const additionalDisplay = checkoutStep === BILLING_STEP
     return (
       <>
         {isSuccess ? null : this.renderCheckoutHeder()}
@@ -603,11 +624,13 @@ export class Checkout extends SourceCheckout {
               {this.renderStep()}
               {this.renderLoader()}
             </div>
+            <div block="Checkout" elem={additionalDisplay ? "MobileDisplay": "WebDisplay"}>
             <div block="Checkout" elem="Additional">
               {this.renderSummary()}
               {this.renderPromo()}
               {this.renderTabbyIframe()}
               {this.renderCreditCardIframe()}
+            </div>
             </div>
           </ContentWrapper>
         </main>

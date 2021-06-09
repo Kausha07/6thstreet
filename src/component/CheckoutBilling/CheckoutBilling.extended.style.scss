@@ -1,12 +1,32 @@
 :root {
   --gray: #efefef;
 }
-
+.sk-three-bounce > div {
+  height: 6px;
+  width: 6px;
+  margin: 2px;
+}
 .CheckoutBilling {
+  padding: 0 0.5rem;
   button {
+    font-size: 14px !important;
     &:disabled {
-      opacity: 0.25;
+      // opacity: 0.25;
+      background-color: #a9a9a9 !important;
+      border: #a9a9a9 !important;
     }
+  }
+
+  &-spinningButton {
+    background-color: #a9a9a9 !important;
+    border: #a9a9a9;
+    opacity: 1 !important;
+  }
+
+  &-tabbyButton {
+    background-color: #20efbe !important;
+    border: #20efbe !important;
+    color: black !important;
   }
 
   &-Checkbox {
