@@ -15,6 +15,7 @@ class DynamicContentGrid extends PureComponent {
       PropTypes.shape({
         link: PropTypes.string,
         url: PropTypes.string,
+        title: PropTypes.string
       })
     ).isRequired,
     header: PropTypes.shape({
@@ -51,7 +52,8 @@ class DynamicContentGrid extends PureComponent {
             this.onclick(item);
           }}
         >
-          <Image src={url} ratio="custom" height={ht} />
+          {/* <Image src={url} height={ht} /> */}
+          <img src={ url } className='GridImage' style={{ maxHeight: ht }}/>
           {item.footer && (
             <div block="Footer">
               {item.footer.title && (
@@ -61,7 +63,7 @@ class DynamicContentGrid extends PureComponent {
                 <p block="Footer-SubTitle">{item.footer.subtitle}</p>
               )}
               {item.footer.button_label && (
-                <a block="Footer-Button">{item.footer.button_label}</a>
+                <p><a block="Footer-Button">{item.footer.button_label}</a></p>
               )}
             </div>
           )}
@@ -77,10 +79,9 @@ class DynamicContentGrid extends PureComponent {
 
   renderGrid() {
     const { items_per_row, header: { title } = {} } = this.props;
-
     return (
       <>
-        {this.props.header && (
+        {this.props.header && title && (
           <DynamicContentHeader header={this.props.header} />
         )}
 
