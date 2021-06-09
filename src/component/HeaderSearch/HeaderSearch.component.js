@@ -32,6 +32,25 @@ class HeaderSearch extends PureComponent {
     showSearch: false,
   };
 
+  constructor(props) {
+    super(props);
+    this.inputRef = createRef();
+  }
+  componentDidMount() {
+    const { focusInput } = this.props;
+    console.log("inpute ref", this.inputRef.current);
+    const {
+      current: {
+        form: { children },
+      },
+    } = this.searchRef;
+    const searchInput = children[0].children[0];
+    console.log({ searchInput });
+    // debugger;
+    if (focusInput && searchInput) {
+      searchInput.focus();
+    }
+  }
   searchRef = createRef();
 
   static getDerivedStateFromProps(props) {
@@ -62,6 +81,10 @@ class HeaderSearch extends PureComponent {
     this.setState({ showSearch: true });
   };
   closeSearch = () => {
+    const { hideSearchBar } = this.props;
+    if (hideSearchBar) {
+      hideSearchBar();
+    }
     this.setState({ showSearch: false });
   };
 
@@ -78,6 +101,7 @@ class HeaderSearch extends PureComponent {
       >
         <Field
           id="search-field"
+          ref={this.inputRef}
           name="search"
           type="text"
           autocomplete="false"

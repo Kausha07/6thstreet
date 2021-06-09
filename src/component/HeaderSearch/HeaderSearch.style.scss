@@ -148,6 +148,9 @@
 
   .Form {
     width: 100%;
+    @include tablet {
+      width: 53.906vw;
+    }
 
     @include before-desktop {
       border-radius: 10px;

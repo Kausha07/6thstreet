@@ -39,7 +39,6 @@
 
     &::after {
       content: "";
-      position: absolute;
       // width: 0;
       // height: 0;
       // border-left: 5px solid transparent;
@@ -50,13 +49,13 @@
       display: block;
       box-sizing: border-box;
       position: absolute;
-      width: 9px;
-      height: 9px;
+      width: 7px;
+      height: 7px;
       border-bottom: 1px solid;
       border-right: 1px solid;
       transform: rotate(45deg);
-      right: 4px;
-      top: 7px;
+      right: 15px;
+      top: 9px;
     }
 
     &_isExpanded {
@@ -242,8 +241,10 @@
 
     @include desktop {
       color: var(--black-color);
-      margin-left: 20px;
-      padding-left: 15px;
+      // margin-left: 20px;
+      // padding-left: 15px;
+      margin-left: 0;
+      padding-left: 10px;
       // margin-top: 7px;
       // margin-bottom: 7px;
       border-left: 1px solid var(--border-color);

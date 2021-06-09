@@ -1,114 +1,119 @@
 .HeaderAccount {
-    width: auto;
+  width: auto;
 
-    &-Button {
-        height: 30px;
-        left: -30px;
-        z-index: 10;
+  &-Button {
+    // height: 30px;
+    // left: -30px;
+    padding: 0;
+    z-index: 10;
+    height: auto;
 
-        &:not(&_isBottomBar) {
-            margin-left: 60px;
+    &:not(&_isBottomBar) {
+      // margin-left: 60px;
 
-            label {
-                text-transform: none;
-                position: relative;
-                height: 27px;
-                padding: 0;
-                cursor: pointer;
-                font-weight: var(--fw-demi);
-
-                &::before{
-                    position: absolute;
-                    left: -30px;
-                    top: -6px;
-                    content: '';
-                    background: url(./icons/account.svg) no-repeat;
-                    background-size: 27px;
-                    width: 30px;
-                    height: 27px;
-                    display: inline-block;
-                    font-size: 0;
-                }
-
-                span {
-                    display: none;
-                    font-size: 14px;
-                    font-weight: var(--fw-demi);
-                    letter-spacing: 0;
-                    line-height: 19px;
-                    height: 27px;
-                    color: var(--black);
-
-                    @include after-mobile {
-                        display: block;
-                    }
-                }
-            }
-        }
-
-        &_isArabic {
-            &:not(&_isBottomBar) {
-                margin-left: 90px;
-            }
-        }
-    }
-
-    &_isBottomBar {
-        display: block;
+      label {
         text-transform: none;
-        font-size: 10px;
-        font-weight: var(--fw-medium);
-        letter-spacing: -.2px;
-        line-height: 14px;
-        color: var(--inactive-button-header-color);
-        height: 40px;
-        width: 40px;
-        margin: 12px auto 0;
+        position: relative;
+        height: 27px;
         padding: 0;
-        text-align: center;
+        cursor: pointer;
+        font-weight: var(--fw-demi);
 
-        &::before{
-            content: '';
-            right: 0;
-            background: url(./icons/account-gray@2x.png) no-repeat center center;
-            background-size: 29px;
-            width: 27px;
-            height: 29px;
-            display: inline-block;
-            font-size: 0;
-            filter: invert(26%) sepia(2%) saturate(21%) hue-rotate(43deg) brightness(90%) contrast(80%);
+        &::before {
+          // position: absolute;
+          // left: -30px;
+          // top: -6px;
+          content: "";
+          background: url(./icons/account.png) no-repeat;
+          background-size: 27px;
+          width: 30px;
+          height: 27px;
+          display: flex;
+          font-size: 0;
+          //   margin-top: -8px;
         }
 
-        @include desktop {
-            display: none;
-        }
-    }
+        span {
+          display: none;
+          font-size: 14px;
+          font-weight: var(--fw-demi);
+          letter-spacing: 0;
+          line-height: 19px;
+          height: 27px;
+          color: var(--black);
 
-    &_isAccount {
-        color: var(--active-button-header-color);
-
-        &::before{
-            filter: invert(43%) sepia(60%) saturate(1535%) hue-rotate(335deg) brightness(107%) contrast(95%);
-        }
-    }
-
-    &-PopUp {
-        position: fixed;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        background: rgba(70, 70, 70, .6);
-        cursor: default;
-        pointer-events: all;
-        z-index: 100;
-
-        @include desktop {
+          @include after-mobile {
             display: block;
+          }
         }
-
-        &_isHidden {
-            display: none;
-        }
+      }
     }
+
+    &_isArabic {
+      &:not(&_isBottomBar) {
+        margin-left: 90px;
+      }
+    }
+  }
+
+  &_isBottomBar {
+    display: block;
+    text-transform: none;
+    font-size: 10px;
+    font-weight: var(--fw-medium);
+    letter-spacing: -0.2px;
+    line-height: 14px;
+    color: var(--inactive-button-header-color);
+    height: 40px;
+    width: 40px;
+    margin: 12px auto 0;
+    padding: 0;
+    text-align: center;
+
+    &::before {
+      content: "";
+      right: 0;
+      background: url(./icons/account-gray@2x.png) no-repeat center center;
+      background-size: 29px;
+      width: 27px;
+      height: 29px;
+      display: inline-block;
+      font-size: 0;
+      filter: invert(26%) sepia(2%) saturate(21%) hue-rotate(43deg)
+        brightness(90%) contrast(80%);
+    }
+
+    @include desktop {
+      display: none;
+    }
+  }
+
+  &_isAccount {
+    color: var(--active-button-header-color);
+
+    &::before {
+      filter: invert(43%) sepia(60%) saturate(1535%) hue-rotate(335deg)
+        brightness(107%) contrast(95%);
+    }
+  }
+
+  &-PopUp {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(70, 70, 70, 0.6);
+    cursor: default;
+    pointer-events: all;
+    z-index: 100;
+
+    @include desktop {
+      display: block;
+    }
+
+    &_isHidden {
+      display: none;
+    }
+  }
 }

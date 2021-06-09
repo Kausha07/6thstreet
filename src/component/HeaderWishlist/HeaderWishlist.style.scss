@@ -1,108 +1,114 @@
 .HeaderWishlist {
-    &:not(&_isBottomBar) {
-        margin-left: auto;
+  &:not(&_isBottomBar) {
+    margin-left: auto;
 
-        label {
-            display: none;
-        }
-
-        .HeaderWishlist {
-            &-Heart {
-                display: inline-block;
-
-                &::before {
-                    background: url(./icons/heart-regular.svg) no-repeat;
-                    background-size: 23px;
-                    content: '';
-                    width: 27px;
-                    height: 27px;
-                    display: inline-block;
-                    position: absolute;
-                    left: -30px;
-                    top: -22px;
-                }
-
-                &_isBlack {
-                    &::before {
-                        background: url(./icons/heart-solid.svg) no-repeat;
-                        background-size: 23px;
-                    }
-                }
-            }
-
-            &-Count {
-                display: none;
-
-                &_have {
-                    color: $white;
-                    display: inline-block;
-                    position: absolute;
-                    font-size: 10px;
-                    left: -15px;
-                    text-align: center;
-                    top: 12px;
-                    width: 23px;
-                    z-index: 99;
-                }
-            }
-        }
+    label {
+      display: none;
     }
 
-    &-Count {
-        display: none;
-    }
-
-    &_isBottomBar {
-        display: block;
-        text-transform: none;
-        font-size: 10px;
-        font-weight: var(--fw-medium);
-        letter-spacing: -0.2px;
-        line-height: 14px;
-        color: var(--inactive-button-header-color);
-        height: 40px;
-        width: 40px;
-        margin: 12px auto 0;
+    .HeaderWishlist {
+      &-Button {
+        height: auto;
         padding: 0;
-        text-align: center;
+      }
+      &-Heart {
+        display: inline-block;
 
-        button {
-            display: none;
+        &::before {
+          background: url(./icons/heart-regular.svg) no-repeat;
+          background-size: 23px;
+          content: "";
+          width: 27px;
+          height: 27px;
+          display: inline-block;
+          // position: absolute;
+          // left: -30px;
+          //   top: 0;
+          margin-top: 7px;
         }
 
-        &::before{
-            content: '';
-            right: 0;
-            background: url(./icons/wishlist-gray@2x.png) no-repeat center center;
-            background-size: 24px;
-            width: 27px;
-            height: 29px;
-            display: inline-block;
-            font-size: 0;
-            filter: invert(26%) sepia(2%) saturate(21%) hue-rotate(43deg) brightness(90%) contrast(80%);
-
+        &_isBlack {
+          &::before {
+            background: url(./icons/heart-solid.svg) no-repeat;
+            background-size: 23px;
+          }
         }
+      }
 
-        @include desktop {
-            display: none;
+      &-Count {
+        display: none;
+
+        &_have {
+          color: $white;
+          display: inline-block;
+          position: absolute;
+          font-size: 10px;
+          left: -15px;
+          text-align: center;
+          top: 12px;
+          width: 23px;
+          z-index: 99;
         }
+      }
+    }
+  }
+
+  &-Count {
+    display: none;
+  }
+
+  &_isBottomBar {
+    display: block;
+    text-transform: none;
+    font-size: 10px;
+    font-weight: var(--fw-medium);
+    letter-spacing: -0.2px;
+    line-height: 14px;
+    color: var(--inactive-button-header-color);
+    height: 40px;
+    width: 40px;
+    margin: 12px auto 0;
+    padding: 0;
+    text-align: center;
+
+    button {
+      display: none;
     }
 
-    &_isWishlist {
-        color: var(--active-button-header-color);
-
-        &::before{
-            filter: invert(43%) sepia(60%) saturate(1535%) hue-rotate(335deg) brightness(107%) contrast(95%);
-        }
+    &::before {
+      content: "";
+      right: 0;
+      background: url(./icons/wishlist-gray@2x.png) no-repeat center center;
+      background-size: 24px;
+      width: 27px;
+      height: 29px;
+      display: inline-block;
+      font-size: 0;
+      filter: invert(26%) sepia(2%) saturate(21%) hue-rotate(43deg)
+        brightness(90%) contrast(80%);
     }
 
-    &_isArabic {
-        &:not(&_isBottomBar) {
-            div {
-                &::before {
-                    left: 0;
-                }
-            }
-        }
+    @include desktop {
+      display: none;
     }
+  }
+
+  &_isWishlist {
+    color: var(--active-button-header-color);
+
+    &::before {
+      filter: invert(43%) sepia(60%) saturate(1535%) hue-rotate(335deg)
+        brightness(107%) contrast(95%);
+    }
+  }
+
+  &_isArabic {
+    &:not(&_isBottomBar) {
+      div {
+        &::before {
+          left: 0;
+        }
+      }
+    }
+  }
 }

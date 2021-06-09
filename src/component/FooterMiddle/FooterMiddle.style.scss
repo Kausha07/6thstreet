@@ -65,6 +65,13 @@
       z-index: 1;
       padding-top: 5px;
       margin: 0;
+      label {
+        display: flex;
+        span {
+          display: flex;
+          align-items: center;
+        }
+      }
     }
   }
 
@@ -75,7 +82,7 @@
     .CountrySwitcher {
       &-CountryBtn {
         &::after {
-          transform: none;
+          // transform: none;
         }
       }
     }

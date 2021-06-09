@@ -6,16 +6,36 @@ main {
   @include mobile {
     padding-top: var(--main-content-padding);
   }
+  @include tablet {
+    padding-top: var(--main-content-padding);
+  }
 }
 
 .HeaderMainSection {
   align-items: center;
   display: flex;
+  flex-direction: row;
+  align-items: center;
   height: 60px;
   max-width: 1470px;
   margin: 0 auto;
 
   @include mobile {
+    z-index: 90;
+    position: fixed;
+    width: 100%;
+    background: $white;
+    top: 0;
+    transition: all 0.5s ease-in-out;
+    -webkit-transition-property: all;
+    -webkit-transition-duration: 0.5s;
+    -webkit-transition-timing-function: ease-in-out;
+    &[data-visible="false"] {
+      display: none;
+      top: -50px;
+    }
+  }
+  @include tablet {
     z-index: 90;
     position: fixed;
     width: 100%;
@@ -43,10 +63,52 @@ main {
       top: 15px;
       width: 90%;
     }
+    @include tablet {
+      position: fixed;
+      top: 15px;
+      width: 90%;
+    }
+  }
+  .SearchIcon {
+    order: 2;
+    // padding-right: 47px;
+    img {
+      cursor: pointer;
+    }
+    &-Button {
+      content: "";
+      background: url(./icons/search-black.png) no-repeat;
+      background-size: 24px;
+      width: 24px;
+      height: 24px;
+      display: inline-block;
+      position: relative;
+      // top: -4px;
+    }
   }
 
   .CategoryTitle {
     @include mobile {
+      font-size: 12px;
+      padding-left: 15px;
+      padding-right: 15px;
+      top: 0;
+      width: 70%;
+      margin-left: 15%;
+      height: 40px;
+      line-height: 40px;
+
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      &_isArabic {
+        margin-right: 15%;
+        margin-left: unset;
+      }
+    }
+    @include tablet {
       font-size: 12px;
       padding-left: 15px;
       padding-right: 15px;
@@ -130,15 +192,15 @@ main {
   }
 
   .HeaderWishlist {
-    order: 2;
-  }
-
-  .HeaderAccount {
     order: 3;
   }
 
-  .HeaderCart {
+  .HeaderAccount {
     order: 4;
+  }
+
+  .HeaderCart {
+    order: 5;
 
     @include before-desktop {
       top: 5px;
@@ -180,6 +242,40 @@ main {
         }
       }
     }
+    @include tablet {
+      position: fixed;
+      top: 10px;
+      right: 20px;
+
+      background: $white;
+      height: 40px;
+      width: 30px;
+      border-radius: 20px;
+
+      &-Button {
+        left: 5px;
+        top: 3px;
+        background-size: 30px;
+        width: 30px;
+        height: 30px;
+      }
+
+      &-Count {
+        top: 5px;
+        right: 5px;
+      }
+
+      &_isArabic {
+        right: unset;
+        left: 20px;
+        .HeaderCart {
+          &-Button {
+            right: 5px;
+            left: unset;
+          }
+        }
+      }
+    }
   }
 
   .HeaderSearch {
@@ -191,8 +287,16 @@ main {
       justify-content: center;
       top: 50px;
     }
+    @include tablet {
+      background: $white;
+      position: fixed;
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      top: 50px;
+    }
     @include after-mobile {
-      display: none;
+      // display: none;
     }
   }
 
@@ -218,10 +322,38 @@ main {
         }
       }
     }
+    @include tablet {
+      &_isMobile {
+        display: flex;
+        background: $white;
+        width: 100%;
+        top: 100px;
+        position: fixed;
+        justify-content: center;
+      }
+
+      .GenderButton-Container {
+        display: flex;
+        justify-content: center;
+        padding-left: 15px;
+        padding-right: 15px;
+        // width: 33.33%;
+
+        .GenderButton-Button {
+          padding: 0;
+          height: 25px;
+        }
+      }
+    }
   }
 
   .HeaderWishlist,
   .HeaderAccount {
+    label {
+      span {
+        display: none;
+      }
+    }
     &_isMobile {
       @include before-desktop {
         display: none;
@@ -245,4 +377,84 @@ main {
   @include desktop() {
     display: flex;
   }
+
+  .DesktopSearch {
+    position: fixed;
+    top: 119px;
+    background: #f6f6f6;
+    width: 100%;
+    height: 40px;
+    left: 0;
+    z-index: 10;
+    .HeaderSearch {
+      position: relative;
+      width: 76.389vw;
+      max-width: 100%;
+      height: 40px;
+      top: 0;
+      border-radius: 0;
+      margin-left: auto;
+      margin-right: auto;
+      background: #f6f6f6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .Form {
+        width: 100%;
+        display: flex;
+        align-items: center;
+      }
+      .Field {
+        input {
+          padding-left: 35px !important;
+        }
+      }
+      &-Clear {
+        display: flex;
+      }
+      &-SubmitBtn {
+        left: 0;
+        right: 0;
+      }
+      .SearchSuggestion {
+        width: 100%;
+        left: 0;
+        right: 0;
+        &-Shade {
+          background: transparent;
+        }
+        &-Content {
+          margin-left: 0;
+          opacity: 0.97;
+          max-height: 400px;
+          overflow-y: auto;
+          right: 0;
+          & > div {
+            width: 76.389vw;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 35px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.SearchIcon {
+  // margin-left: 10px !important;
+  margin-right: 15px !important;
+}
+.HeaderWishlist {
+  margin-left: 15px !important;
+  margin-right: 15px !important;
+}
+.HeaderAccount {
+  margin-left: 15px !important;
+  margin-right: 15px !important;
+}
+.HeaderCart {
+  margin-left: 15px !important;
+  // margin-right: 10px !important;
 }

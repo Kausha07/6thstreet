@@ -1,77 +1,74 @@
-
 .GenderButton {
-    &-Container {
-        display: inline-block;
-        height: 14px;
-        margin: 20px 0;
+  &-Container {
+    display: inline-block;
+    height: 14px;
+    margin: 20px 0;
 
-        @include before-desktop {
-            border-left: 0;
-            border-right: 0;
-            margin-bottom: 0;
-            padding-bottom: 49px;
-            padding-top: 15px;
-            pointer-events: none;
-        }
-
-        @include desktop {
-            padding: 0 30px;
-
-            &:first-child {
-                padding-left: 0;
-            }
-            &:not(:last-child) {
-                border-right: 1px solid var(--black);
-            }
-        }
+    @include before-desktop {
+      border-left: 0;
+      border-right: 0;
+      margin-bottom: 0;
+      padding-bottom: 49px;
+      padding-top: 15px;
+      pointer-events: none;
     }
 
-    &-Button {
-        font-weight: var(--fw-regular);
-        letter-spacing: .8px;
-        font-size: 12px;
-        padding: 0;
-        pointer-events: all;
-        z-index: 2;
+    @include desktop {
+      padding: 0 30px;
 
-        &_isCurrentGender,
-        &:hover
-        {
-            border-bottom: 2px solid var(--black);
-            font-weight: var(--fw-bold);
-            font-size: 12px;
-            letter-spacing: 0;
-            transition-duration: unset;
-
-            @include desktop {
-                font-size: 14.4px;
-            }
-        }
-
-        &_isUnsetStyle
-        {
-            border-bottom: 0;
-            font-weight: var(--fw-regular);
-        }
-
-        @include desktop {
-            height: 30px;
-            margin-top: -30px;
-        }
+      &:first-child {
+        padding-left: 0;
+      }
+      &:not(:last-child) {
+        border-right: 1px solid var(--black);
+      }
     }
+  }
+
+  &-Button {
+    font-weight: var(--fw-regular);
+    letter-spacing: 1px;
+    font-size: 12px;
+    padding: 0;
+    pointer-events: all;
+    z-index: 2;
+
+    &_isCurrentGender,
+    &:hover {
+      //   border-bottom: 2px solid var(--black);
+      font-weight: var(--fw-bold);
+      font-size: 12px;
+      // letter-spacing: 0;
+      transition-duration: unset;
+
+      @include desktop {
+        font-size: 14px;
+      }
+    }
+
+    &_isUnsetStyle {
+      border-bottom: 0;
+      font-weight: var(--fw-regular);
+    }
+
+    @include desktop {
+      height: 30px;
+      margin-top: -30px;
+    }
+  }
 }
 
 .PageWrapper {
-    &_isArabic {
-        .GenderButton {
-            &-Container {
-                @include desktop {
-                    &:first-child {
-                        padding-left: 30px;
-                        padding-right: 0;
-                    }
-                }
-            }
+  &_isArabic {
+    .GenderButton {
+      &-Container {
+        @include desktop {
+          &:first-child {
+            padding-left: 30px;
+            padding-right: 0;
+          }
         }
+      }
     }
+  }
 }

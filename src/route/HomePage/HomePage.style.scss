@@ -1,4 +1,6 @@
 .HomePage {
+  // min-height: 500px;
+
   .DynamicContentBanner {
     box-sizing: border-box;
     margin: 0;
@@ -32,4 +34,59 @@
   }
 
   // }
+}
+
+@keyframes move {
+  to {
+    transform: translateX(calc(50% + 100px));
+  }
+}
+
+.AnimationWrapper {
+  width: 100%;
+  min-height: 300px;
+  // background-image: var(--placeholder-image);
+  // background-size: var(--placeholder-size);
+  // animation: var(--placeholder-animation);
+  background-image: linear-gradient(
+    to right,
+    #e2e2e2 calc(50%),
+    #dcdcdc 50%,
+    #e6e6e6 calc(50%)
+  );
+  background-size: 0;
+  position: relative;
+  overflow: hidden;
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: calc(200% + 200px);
+    bottom: 0;
+    background-image: inherit;
+    animation: move 1s linear infinite;
+  }
+}
+
+.Wrapper {
+  display: flex;
+  justify-content: flex-start;
+  overflow: hidden;
+  width: 76.389vw;
+  margin: 30px auto;
+  &-Card {
+    min-width: 16.528vw;
+    height: 285px;
+    margin-right: 7px;
+    background-image: var(--placeholder-image);
+    background-size: var(--placeholder-size);
+    animation: var(--placeholder-animation);
+    @include tablet {
+      min-width: 21.224vw;
+    }
+    @include mobile {
+      min-width: 41vw;
+    }
+  }
 }
