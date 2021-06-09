@@ -1,9 +1,13 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import PropTypes from "prop-types";
 
+import Popup from "SourceComponent/Popup";
 import CheckoutAddressBook from "Component/CheckoutAddressBook";
 import CheckoutPayments from "Component/CheckoutPayments";
-import { CHECKOUT_APPLE_PAY } from "Component/CheckoutPayments/CheckoutPayments.config";
+import {
+  CHECKOUT_APPLE_PAY,
+  CARD,
+} from "Component/CheckoutPayments/CheckoutPayments.config";
 import CreditCardTooltip from "Component/CreditCardTooltip";
 import Form from "Component/Form";
 import MyAccountAddressPopup from "Component/MyAccountAddressPopup";
@@ -35,8 +39,8 @@ export class CheckoutBilling extends SourceCheckoutBilling {
   };
 
   state = {
-    isOrderButtonVisible: true,
-    isOrderButtonEnabled: true,
+    // isOrderButtonVisible: true,
+    // isOrderButtonEnabled: true,
     isTermsAndConditionsAccepted: false,
     isArabic: isArabic(),
     formContent: false,
@@ -183,6 +187,10 @@ export class CheckoutBilling extends SourceCheckoutBilling {
       setCreditCardData,
       processApplePay,
       placeOrder,
+      setOrderButtonEnableStatus,
+      setOrderButtonEnabled,
+      setOrderButtonDisabled,
+      resetBinApply,
     } = this.props;
 
     if (!paymentMethods.length) {
@@ -198,11 +206,13 @@ export class CheckoutBilling extends SourceCheckoutBilling {
         onPaymentMethodSelect={onPaymentMethodSelect}
         setOrderButtonVisibility={this.setOrderButtonVisibility}
         billingAddress={shippingAddress}
-        setOrderButtonEnableStatus={this.setOrderButtonEnableStatus}
+        setOrderButtonEnableStatus={setOrderButtonEnableStatus}
+        // setOrderButtonEnableStatus={setOrderButtonEnabled}
         setTabbyWebUrl={setTabbyWebUrl}
         setCreditCardData={setCreditCardData}
-        setOrderButtonDisabled={this.setOrderButtonDisabled}
-        setOrderButtonEnabled={this.setOrderButtonEnabled}
+        setOrderButtonDisabled={setOrderButtonDisabled}
+        setOrderButtonEnabled={setOrderButtonEnabled}
+        resetBinApply={resetBinApply}
         processApplePay={processApplePay}
         placeOrder={placeOrder}
       />
@@ -240,32 +250,39 @@ export class CheckoutBilling extends SourceCheckoutBilling {
     );
   }
 
-  setOrderButtonDisabled = () => {
-    this.setState({ isOrderButtonEnabled: false });
-  };
+  // setOrderButtonDisabled = () => {
+  //   this.setState({ isOrderButtonEnabled: false });
+  // };
 
-  setOrderButtonEnabled = () => {
-    this.setState({ isOrderButtonEnabled: true });
-  };
+  // setOrderButtonEnabled = () => {
+  //   this.setState({ isOrderButtonEnabled: true });
+  // };
+
+  renderButtonPlaceholder() {
+    const { paymentMethod, binApplied } = this.props;
+    const isCardPayment = CARD === paymentMethod;
+    return (
+      <>
+        {!binApplied && isCardPayment ? "Add Credit Card" : __("Place order")}
+      </>
+    );
+  }
 
   renderActions() {
-    const {
-      isOrderButtonVisible,
-      isOrderButtonEnabled,
-      isTermsAndConditionsAccepted,
-    } = this.state;
-
+    const { isTermsAndConditionsAccepted } = this.state;
+    const { isOrderButtonVisible, isOrderButtonEnabled } = this.props;
     const {
       termsAreEnabled,
       processingRequest,
       processingPaymentSelectRequest,
       paymentMethod,
+      binApplied,
     } = this.props;
 
     if (!isOrderButtonVisible) {
       return null;
     }
-console.log("payment method", paymentMethod)
+
     // if terms and conditions are enabled, validate for acceptance
     const isDisabled = termsAreEnabled
       ? !isOrderButtonEnabled || !isTermsAndConditionsAccepted
@@ -302,7 +319,7 @@ console.log("payment method", paymentMethod)
                 color="white"
               />
             ) : isTabbyPay ? __("Place tabby order"):(
-              __("Place order")
+              this.renderButtonPlaceholder()
             )}
           </button>
         </div>
@@ -326,7 +343,12 @@ console.log("payment method", paymentMethod)
   }
 
   render() {
-    const { onBillingSuccess, onBillingError, isSameAsShipping } = this.props;
+    const {
+      onBillingSuccess,
+      onBillingError,
+      isSameAsShipping,
+      setOrderButtonDisabled,
+    } = this.props;
     const { formContent } = this.state;
 
     return formContent ? (
@@ -337,9 +359,10 @@ console.log("payment method", paymentMethod)
         id={BILLING_STEP}
         onSubmitError={onBillingError}
         onSubmitSuccess={onBillingSuccess}
-        onSubmit={this.setOrderButtonDisabled}
+        onSubmit={setOrderButtonDisabled}
       >
         {this.renderAddresses()}
+        <div block="CheckoutBilling" elem="Bin"></div>
         {isSameAsShipping ? null : (
           <div block="CheckoutBilling" elem="Line">
             <hr />

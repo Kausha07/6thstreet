@@ -3,19 +3,37 @@
     width: 120px;
 
     @include before-desktop {
-        width: 50%;
+        width: 47%;
+    }
+
+    .Image {
+        height: 150px;
+        &-Image {
+            object-position: 0% 50%;
+            object-fit: contain;
+        }
+        @include before-desktop {
+            height: 229.5px;
+            margin: 16px 0 8px 0;
+            &-Image {
+                object-position: 0% 50%;
+                object-fit: contain;
+            }
+        }
     }
 
     @include tablet {
         width: 33%;
     }
 
-    p {
+    h5 {
         text-transform: uppercase;
-        font-size: 12px;
-        font-weight: var(--fw-bold);
-        letter-spacing: .2px;
-        line-height: 16px;
-        text-align: center;
+
+        color: #000000;
+        font-family: "Avenir Next";
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.18px;
+        line-height: 15px;
     }
 }

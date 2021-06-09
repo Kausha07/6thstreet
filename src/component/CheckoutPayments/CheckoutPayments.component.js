@@ -326,7 +326,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
 
     return (
       <>
-        {/* { this.renderHeading() } */}
+        {this.renderHeading()}
         <ul block="CheckoutPayments" elem="Methods">
           <Slider
             activeImage={activeSliderImage}

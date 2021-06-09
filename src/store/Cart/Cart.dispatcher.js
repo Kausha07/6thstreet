@@ -1,275 +1,298 @@
-import { getStore } from 'Store';
+import { getStore } from "Store";
 import {
-    processingCartRequest,
-    removeCartItem,
-    removeCartItems,
-    setCartId,
-    setCartTotals,
-    updateCartItem
-} from 'Store/Cart/Cart.action';
-import { showNotification } from 'Store/Notification/Notification.action';
+  processingCartRequest,
+  removeCartItem,
+  removeCartItems,
+  setCartId,
+  setCartTotals,
+  updateCartItem,
+} from "Store/Cart/Cart.action";
+import { showNotification } from "Store/Notification/Notification.action";
 import {
-    addProductToCart,
-    applyCouponCode,
-    createCart,
-    getCart,
-    removeCouponCode,
-    removeProductFromCart,
-    updateProductInCart
-} from 'Util/API/endpoint/Cart/Cart.enpoint';
-import Logger from 'Util/Logger';
-import { LAST_CART_ID_CACHE_KEY } from '../MobileCart/MobileCart.reducer';
-import BrowserDatabase from 'Util/BrowserDatabase';
-export const GUEST_QUOTE_ID = 'guest_quote_id';
+  addProductToCart,
+  applyCouponCode,
+  createCart,
+  getCart,
+  removeCouponCode,
+  removeProductFromCart,
+  updateProductInCart,
+} from "Util/API/endpoint/Cart/Cart.enpoint";
+import Logger from "Util/Logger";
+import { LAST_CART_ID_CACHE_KEY } from "../MobileCart/MobileCart.reducer";
+import BrowserDatabase from "Util/BrowserDatabase";
+export const GUEST_QUOTE_ID = "guest_quote_id";
 
 export class CartDispatcher {
-    async getCart(dispatch, isNewCart = false) {
-        const { Cart: { cartId } } = getStore().getState();
-        const  cart_id = BrowserDatabase.getItem(LAST_CART_ID_CACHE_KEY);
-        if (!cartId || isNewCart) {
-            try {
-                const { data: requestedCartId = null } = await createCart(cart_id);
+  async getCart(dispatch, isNewCart = false) {
+    const {
+      Cart: { cartId },
+    } = getStore().getState();
+    const cart_id = BrowserDatabase.getItem(LAST_CART_ID_CACHE_KEY);
+    if (!cartId || isNewCart) {
+      try {
+        const { data: requestedCartId = null } = await createCart(cart_id);
 
-                if (!requestedCartId) {
-                    dispatch(
-                        showNotification(
-                            'error',
-                            __('There was an error creating your cart, please refresh the page in a little while')
-                        )
-                    );
+        if (!requestedCartId) {
+          dispatch(
+            showNotification(
+              "error",
+              __(
+                "There was an error creating your cart, please refresh the page in a little while"
+              )
+            )
+          );
 
-                    return;
-                }
-                BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
-                dispatch(setCartId(requestedCartId));
-                await this.getCartTotals(dispatch, requestedCartId);
-            } catch (e) {
-                Logger.log(e);
-            }
-        } else {
-            await this.getCartTotals(dispatch, cartId);
+          return;
         }
+        BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
+        dispatch(setCartId(requestedCartId));
+        await this.getCartTotals(dispatch, requestedCartId);
+      } catch (e) {
+        Logger.log(e);
+      }
+    } else {
+      await this.getCartTotals(dispatch, cartId);
     }
+  }
 
-    async setCartItems(dispatch, data) {
+  async setCartItems(dispatch, data) {
+    try {
+      const { items = [] } = data || {};
+
+      if (items.length) {
+        dispatch(processingCartRequest());
+        dispatch(removeCartItems());
+
+        items.map((item) => {
+          const {
+            thumbnail,
+            color,
+            size_value: optionValue,
+            brand_name: brandName,
+            price,
+            original_price: basePrice,
+            id,
+            availability,
+            available_qty,
+          } = item;
+
+          return dispatch(
+            updateCartItem(
+              { ...item, item_id: id },
+              color,
+              optionValue,
+              basePrice,
+              brandName,
+              thumbnail,
+              "",
+              price,
+              availability,
+              available_qty
+            )
+          );
+        });
+      }
+    } catch (e) {
+      Logger.log(e);
+    }
+  }
+
+  async getCartTotals(dispatch, cartId, isSecondTry = false) {
+    try {
+      dispatch(processingCartRequest());
+      const { data } = await getCart(cartId);
+      const cart_id = BrowserDatabase.getItem(LAST_CART_ID_CACHE_KEY);
+      if (!data) {
         try {
-            const {
-                items = []
-            } = data || {};
+          const { data: requestedCartId = null } = await createCart(cart_id);
+          dispatch(removeCartItems());
 
-            if (items.length) {
-                dispatch(processingCartRequest());
-                dispatch(removeCartItems());
+          if (!requestedCartId) {
+            dispatch(
+              showNotification(
+                "error",
+                __(
+                  "There was an error creating your cart, please refresh the page in a little while"
+                )
+              )
+            );
 
-                items.map((item) => {
-                    const {
-                        thumbnail,
-                        color,
-                        size_value: optionValue,
-                        brand_name: brandName,
-                        price,
-                        original_price: basePrice,
-                        id,
-                        availability,
-                        available_qty
-                    } = item;
+            return;
+          }
+          BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
+          dispatch(setCartId(requestedCartId));
 
-                    return dispatch(updateCartItem(
-                        { ...item, item_id: id },
-                        color,
-                        optionValue,
-                        basePrice,
-                        brandName,
-                        thumbnail,
-                        '',
-                        price,
-                        availability,
-                        available_qty
-                    ));
-                });
-            }
+          if (!isSecondTry) {
+            await this.getCartTotals(dispatch, requestedCartId, true);
+          }
         } catch (e) {
-            Logger.log(e);
+          Logger.log(e);
         }
+      } else {
+        await this.setCartItems(dispatch, data);
+        dispatch(setCartTotals(data));
+      }
+    } catch (e) {
+      Logger.log(e);
+    }
+  }
+
+  async addProductToCart(
+    dispatch,
+    productData,
+    color,
+    optionValue,
+    basePrice = null,
+    brand_name,
+    thumbnail_url,
+    url,
+    itemPrice
+  ) {
+    const {
+      Cart: { cartId },
+    } = getStore().getState();
+
+    try {
+      dispatch(processingCartRequest());
+      const response = await addProductToCart({ ...productData, cartId });
+      const { data } = response;
+      dispatch(
+        updateCartItem(
+          data,
+          color,
+          optionValue,
+          basePrice,
+          brand_name,
+          thumbnail_url,
+          url,
+          itemPrice
+        )
+      );
+      await this.getCartTotals(dispatch, cartId);
+
+      return !data ? response : null;
+    } catch (e) {
+      Logger.log(e);
+      if (e) {
+        const err = false;
+        dispatch(showNotification("error", __("There was an error")));
+
+        return err;
+      }
     }
 
-    async getCartTotals(dispatch, cartId, isSecondTry = false) {
-        try {
-            dispatch(processingCartRequest());
-            const {
-                data
-            } = await getCart(cartId);
-            const  cart_id = BrowserDatabase.getItem(LAST_CART_ID_CACHE_KEY);
-            if (!data) {
-                try {
-                    const { data: requestedCartId = null } = await createCart(cart_id);
-                    dispatch(removeCartItems());
+    return null;
+  }
 
-                    if (!requestedCartId) {
-                        dispatch(
-                            showNotification(
-                                'error',
-                                __('There was an error creating your cart, please refresh the page in a little while')
-                            )
-                        );
+  async removeProductFromCart(dispatch, productId) {
+    const {
+      Cart: { cartId },
+    } = getStore().getState();
 
-                        return;
-                    }
-                    BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
-                    dispatch(setCartId(requestedCartId));
+    try {
+      const { data } = await removeProductFromCart({ cartId, productId });
 
-                    if (!isSecondTry) {
-                        await this.getCartTotals(dispatch, requestedCartId, true);
-                    }
-                } catch (e) {
-                    Logger.log(e);
-                }
-            } else {
-                await this.setCartItems(dispatch, data);
-                dispatch(setCartTotals(data));
-            }
-        } catch (e) {
-            Logger.log(e);
-        }
+      // if 'data' in response was not true there was some error
+      // catch will process that
+      if (data) {
+        dispatch(removeCartItem({ item_id: productId }));
+      }
+    } catch (e) {
+      Logger.log(e);
     }
 
-    async addProductToCart(
-        dispatch,
-        productData,
-        color,
-        optionValue,
-        basePrice = null,
-        brand_name,
-        thumbnail_url,
-        url,
-        itemPrice
-    ) {
-        const { Cart: { cartId } } = getStore().getState();
+    await this.getCartTotals(dispatch, cartId);
+  }
 
-        try {
-            dispatch(processingCartRequest());
-            const response = await addProductToCart({ ...productData, cartId });
-            const { data } = response;
-            dispatch(updateCartItem(
-                data,
-                color,
-                optionValue,
-                basePrice,
-                brand_name,
-                thumbnail_url,
-                url,
-                itemPrice
-            ));
-            await this.getCartTotals(dispatch, cartId);
+  async updateProductInCart(
+    dispatch,
+    productId,
+    qty,
+    color,
+    optionValue,
+    basePrice = null,
+    brand_name,
+    thumbnail_url,
+    url,
+    itemPrice
+  ) {
+    const {
+      Cart: { cartId },
+    } = getStore().getState();
 
-            return !data ? response : null;
-        } catch (e) {
-            Logger.log(e);
-            if (e) {
-                const err = false;
-                dispatch(
-                    showNotification(
-                        'error',
-                        __('There was an error')
-                    )
-                );
+    try {
+      const response = await updateProductInCart({ cartId, productId, qty });
+      const { data } = response;
 
-                return err;
-            }
-        }
+      dispatch(
+        updateCartItem(
+          data,
+          color,
+          optionValue,
+          basePrice,
+          brand_name,
+          thumbnail_url,
+          url,
+          itemPrice
+        )
+      );
+      await this.getCartTotals(dispatch, cartId);
 
-        return null;
+      return !data ? response : null;
+    } catch (e) {
+      Logger.log(e);
     }
 
-    async removeProductFromCart(dispatch, productId) {
-        const { Cart: { cartId } } = getStore().getState();
+    return null;
+  }
 
-        try {
-            const { data } = await removeProductFromCart({ cartId, productId });
+  async applyCouponCode(dispatch, couponCode) {
+    const {
+      Cart: { cartId },
+    } = getStore().getState();
 
-            // if 'data' in response was not true there was some error
-            // catch will process that
-            if (data) {
-                dispatch(removeCartItem({ item_id: productId }));
-            }
-        } catch (e) {
-            Logger.log(e);
-        }
+    try {
+      const response = await applyCouponCode({ cartId, couponCode });
+      if (typeof response === "string") {
+        dispatch(showNotification("error", response));
+        return;
+      }
 
-        await this.getCartTotals(dispatch, cartId);
+      await this.getCartTotals(dispatch, cartId);
+      dispatch(showNotification("success", __("Coupon was applied!")));
+    } catch (e) {
+      dispatch(
+        showNotification(
+          "error",
+          __("The coupon code isn't valid. Verify the code and try again.")
+        )
+      );
+
+      Logger.log(e);
     }
+  }
 
-    async updateProductInCart(
-        dispatch,
-        productId,
-        qty,
-        color,
-        optionValue,
-        basePrice = null,
-        brand_name,
-        thumbnail_url,
-        url,
-        itemPrice
-    ) {
-        const { Cart: { cartId } } = getStore().getState();
+  async removeCouponCode(dispatch, couponCode) {
+    const {
+      Cart: { cartId },
+    } = getStore().getState();
 
-        try {
-            const response = await updateProductInCart({ cartId, productId, qty });
-            const { data } = response;
+    try {
+      await removeCouponCode({ cartId, couponCode });
+      await this.getCartTotals(dispatch, cartId);
 
-            dispatch(updateCartItem(
-                data,
-                color,
-                optionValue,
-                basePrice,
-                brand_name,
-                thumbnail_url,
-                url,
-                itemPrice
-            ));
-            await this.getCartTotals(dispatch, cartId);
+      dispatch(showNotification("success", __("Coupon was removed!")));
+    } catch (e) {
+      dispatch(
+        showNotification(
+          "error",
+          __("The coupon code isn't valid. Verify the code and try again.")
+        )
+      );
 
-            return !data ? response : null;
-        } catch (e) {
-            Logger.log(e);
-        }
-
-        return null;
+      Logger.log(e);
     }
-
-    async applyCouponCode(dispatch, couponCode) {
-        const { Cart: { cartId } } = getStore().getState();
-
-        try {
-            const response = await applyCouponCode({ cartId, couponCode });
-            if (typeof response === 'string') {
-                dispatch(showNotification('error', response));
-                return;
-            }
-
-            await this.getCartTotals(dispatch, cartId);
-            dispatch(showNotification('success', __('Coupon was applied!')));
-        } catch (e) {
-            dispatch(showNotification('error', __('The coupon code isn\'t valid. Verify the code and try again.')));
-
-            Logger.log(e);
-        }
-    }
-
-    async removeCouponCode(dispatch, couponCode) {
-        const { Cart: { cartId } } = getStore().getState();
-
-        try {
-            await removeCouponCode({ cartId, couponCode });
-            await this.getCartTotals(dispatch, cartId);
-
-            dispatch(showNotification('success', __('Coupon was removed!')));
-        } catch (e) {
-            dispatch(showNotification('error', __('The coupon code isn\'t valid. Verify the code and try again.')));
-
-            Logger.log(e);
-        }
-    }
+  }
 }
 
 export default new CartDispatcher();

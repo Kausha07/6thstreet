@@ -1,6 +1,7 @@
 /* eslint-disable no-magic-numbers */
 import PropTypes from "prop-types";
 
+import Popup from "SourceComponent/Popup";
 import CheckoutBilling from "Component/CheckoutBilling";
 import CheckoutFail from "Component/CheckoutFail";
 import CheckoutGuestForm from "Component/CheckoutGuestForm";
@@ -22,6 +23,8 @@ import { Checkout as SourceCheckout } from "SourceRoute/Checkout/Checkout.compon
 import { TotalsType } from "Type/MiniCart";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
+import GiftIconSmall from "./icons/gift-heart.png";
+import GiftIconLarge from "./icons/gift-heart@3x.png";
 
 import {
   AUTHORIZED_STATUS,
@@ -45,6 +48,8 @@ export class Checkout extends SourceCheckout {
     processApplePay: PropTypes.bool.isRequired,
     initialTotals: TotalsType.isRequired,
     isTabbyPopupShown: PropTypes.bool,
+    showOverlay: PropTypes.func.isRequired,
+    hideActiveOverlay: PropTypes.func.isRequired,
   };
 
   state = {
@@ -61,7 +66,27 @@ export class Checkout extends SourceCheckout {
     paymentInformation: {},
     creditCardData: {},
     isSuccess: false,
+    isOpen: false,
     isMobile: isMobile.any() || isMobile.tablet(),
+    binInfo: {},
+  };
+
+  hideModalListener = () => {
+    // Will hide bin promotion popup after 5 sec
+    setTimeout(() => {
+      this.hideOverlay();
+    }, 5000);
+  };
+
+  showModal = (binInfo) => {
+    const { isOpen } = this.state;
+    const { showOverlay } = this.props;
+    const { discount } = binInfo;
+    if (discount && discount > 0) {
+      showOverlay("BinPromotion");
+      this.setState({ isOpen: true, binInfo: binInfo });
+      this.hideModalListener();
+    }
   };
 
   savePaymentInformation = (paymentInformation) => {
@@ -122,11 +147,8 @@ export class Checkout extends SourceCheckout {
 
   processTabbyWithTimeout(counter, paymentInformation) {
     const { tabbyPaymentStatus } = this.state;
-    const {
-      showErrorNotification,
-      hideActiveOverlay,
-      activeOverlay,
-    } = this.props;
+    const { showErrorNotification, hideActiveOverlay, activeOverlay } =
+      this.props;
 
     // Need to get payment data from Tabby.
     // Could not get callback of Tabby another way because Tabby is iframe in iframe
@@ -287,6 +309,8 @@ export class Checkout extends SourceCheckout {
       isSignedIn,
       processApplePay,
       placeOrder,
+      getBinPromotion,
+      updateTotals,
     } = this.props;
     const { isArabic } = this.state;
 
@@ -311,8 +335,11 @@ export class Checkout extends SourceCheckout {
           shippingAddress={shippingAddress}
           setCashOnDeliveryFee={this.setCashOnDeliveryFee}
           savePaymentInformation={this.savePaymentInformation}
+          getBinPromotion={getBinPromotion}
+          updateTotals={updateTotals}
           setTabbyWebUrl={this.setTabbyWebUrl}
           setPaymentCode={this.setPaymentCode}
+          binModal={this.showModal}
           setCheckoutCreditCardData={this.setCheckoutCreditCardData}
           processApplePay={processApplePay}
           placeOrder={placeOrder}
@@ -343,11 +370,9 @@ export class Checkout extends SourceCheckout {
     const { isSignedIn } = this.props;
 
     return (
-      <>
-        <h2 block="Checkout" elem="Heading" mods={{ isDisabled, isSignedIn }}>
-          {__(text)}
-        </h2>
-      </>
+      <h2 block="Checkout" elem="Heading" mods={{ isDisabled, isSignedIn }}>
+        {__(text)}
+      </h2>
     );
   }
 
@@ -365,19 +390,17 @@ export class Checkout extends SourceCheckout {
     const isBilling = checkoutStep === BILLING_STEP;
 
     return (
-      <>
-        <CheckoutGuestForm
-          isLoading={isLoading}
-          isBilling={isBilling}
-          isCreateUser={isCreateUser}
-          onEmailChange={onEmailChange}
-          onCreateUserChange={onCreateUserChange}
-          onPasswordChange={onPasswordChange}
-          isGuestEmailSaved={isGuestEmailSaved}
-          isEmailAdded={continueAsGuest}
-          isInvalidEmail={isInvalidEmail}
-        />
-      </>
+      <CheckoutGuestForm
+        isLoading={isLoading}
+        isBilling={isBilling}
+        isCreateUser={isCreateUser}
+        onEmailChange={onEmailChange}
+        onCreateUserChange={onCreateUserChange}
+        onPasswordChange={onPasswordChange}
+        isGuestEmailSaved={isGuestEmailSaved}
+        isEmailAdded={continueAsGuest}
+        isInvalidEmail={isInvalidEmail}
+      />
     );
   }
 
@@ -392,11 +415,8 @@ export class Checkout extends SourceCheckout {
   }
 
   renderTabbyIframe() {
-    const {
-      tabbyInstallmentsUrl,
-      tabbyPayLaterUrl,
-      selectedPaymentMethod,
-    } = this.state;
+    const { tabbyInstallmentsUrl, tabbyPayLaterUrl, selectedPaymentMethod } =
+      this.state;
     const { isTabbyPopupShown } = this.props;
     if (!isTabbyPopupShown) {
       return null;
@@ -474,7 +494,6 @@ export class Checkout extends SourceCheckout {
     } = this.props;
 
     const { continueAsGuest, isArabic } = this.state;
-    console.log("is delivery options loading", isDeliveryOptionsLoading);
     const renderCheckoutShipping = (
       <div block="Checkout" elem="Shipping" mods={isSignedIn}>
         {continueAsGuest ? this.renderHeading("Login / Sign Up", true) : null}
@@ -604,15 +623,109 @@ export class Checkout extends SourceCheckout {
     );
   }
 
+  hideOverlay = () => {
+    const { hideActiveOverlay } = this.props;
+    this.setState({ isOpen: false, binInfo: {} });
+    const { isMobile } = this.state;
+    if (isMobile) {
+      setTimeout(() => {
+        hideActiveOverlay();
+      }, 500);
+    } else {
+      hideActiveOverlay();
+    }
+  };
+
+  renderContent() {
+    const {
+      isArabic,
+      isMobile,
+      isOpen,
+      binInfo: { discount, details },
+    } = this.state;
+
+    const svg = (
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="18"
+        height="18"
+        viewBox="0 -1 26 26"
+      >
+        <path
+          d="M23.954 21.03l-9.184-9.095 9.092-9.174-1.832-1.807-9.09 9.179-9.176-9.088-1.81
+                  1.81 9.186 9.105-9.095 9.184 1.81 1.81 9.112-9.192 9.18 9.1z"
+        />
+      </svg>
+    );
+
+    const giftImgUrl = isMobile ? GiftIconSmall : GiftIconLarge;
+
+    return (
+      <>
+        <div block="BinContent" mods={{ isOpen }}>
+          <button
+            block="BinContent"
+            elem="Close"
+            mods={{ isArabic }}
+            onClick={this.hideOverlay}
+          >
+            {svg}
+          </button>
+          <div block="Placeholder" onClick={this.hideOverlay}>
+            <div block="Placeholder" elem="Line"></div>
+          </div>
+          <div block="BinContent" elem="Icon">
+            <img src={giftImgUrl} alt="__('Gift Icon')" />
+          </div>
+          <h1 block="BinContent" elem="Title1">
+            {__("Congrats!")}
+          </h1>
+          <h3 block="BinContent" elem="Title2">
+            {__("You have received %s% off!", discount)}
+          </h3>
+          <p block="BinContent" elem="Description">
+            {details}
+          </p>
+          <button block="BinContent" elem="Button" onClick={this.hideOverlay}>
+            {__("Continue")}
+          </button>
+        </div>
+      </>
+    );
+  }
+  renderBinPromotion() {
+    const {
+      isArabic,
+      isOpen,
+      binInfo: { discount },
+    } = this.state;
+
+    return (
+      <Popup
+        clickOutside={false}
+        mix={{
+          block: "BinPromotion",
+          elem: "Modal",
+          mods: {
+            isOpen,
+            isArabic,
+            isClosed: !isOpen,
+          },
+        }}
+        id="BinPromotion"
+      >
+        {discount && discount > 0 ? this.renderContent() : null}
+      </Popup>
+    );
+  }
   render() {
     const { isSuccess } = this.state;
     const { checkoutStep } = this.props;
 
-
-    console.log("checkout step", checkoutStep)
-const additionalDisplay = checkoutStep === BILLING_STEP
+    const additionalDisplay = checkoutStep === BILLING_STEP
     return (
       <>
+        {this.renderBinPromotion()}
         {isSuccess ? null : this.renderCheckoutHeder()}
         <main block="Checkout" mods={{ isSuccess }}>
           <ContentWrapper
