@@ -3,6 +3,17 @@
   margin-left: 30px;
   margin-bottom: 30px !important;
   max-width: 1440px;
+  .SliderWithLabelWrapper.active {
+    cursor: grabbing;
+    cursor: -webkit-grabbing;
+    transform: scale(1);
+    .SliderWithLabel {
+      a {
+        cursor: grabbing;
+        cursor: -webkit-grabbing;
+      }
+    }
+  }
   .SliderWithLabelWrapper {
     display: block;
     white-space: nowrap;
@@ -28,6 +39,7 @@
       background: #dcdcdc;
       //   width: 100px;
     }
+
     @include mobile {
       padding: 10px 0;
     }
@@ -113,8 +125,11 @@
     overflow-x: auto;
     scroll-behavior: auto;
     margin: 0 auto 20px auto;
+    cursor: grabbing;
+    cursor: -webkit-grabbing;
     &::-webkit-scrollbar {
       height: 3px;
+
       &:hover {
         cursor: pointer;
       }

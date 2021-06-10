@@ -9,6 +9,7 @@ import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
 import "./DynamicContentSliderWithLabel.style";
+import DragScroll from "Component/DragScroll/DragScroll.component";
 
 class DynamicContentSliderWithLabel extends PureComponent {
   static propTypes = {
@@ -28,49 +29,14 @@ class DynamicContentSliderWithLabel extends PureComponent {
     this.scrollerRef = React.createRef();
     this.itemRef = React.createRef();
     this.state = {
-      // settings: {
-      //     lazyload: true,
-      //     nav: false,
-      //     mouseDrag: true,
-      //     touch: true,
-      //     controlsText: ["&#x27E8", "&#x27E9"],
-      //     gutter: 8,
-      //     loop: false,
-      //     responsive: {
-      //         1024:{
-      //             items: 5,
-      //             gutter: 25
-      //         },
-      //         420: {
-      //             items: 5
-      //         },
-      //         300: {
-      //             items: 2.3
-      //         }
-      //     }
-      // },
+      activeClass: false,
+      isDown: false,
+      startX: 0,
+      scrollLeft: 0,
     };
   }
 
-  componentDidMount() {
-    // if(this.props.items.length < 8){
-    //     let setting = JSON.parse(JSON.stringify(this.state.settings))
-    //     setting.responsive[1024].items = this.props.items.length
-    //     this.setState(prevState => ({
-    //         ...prevState,
-    //         settings: {
-    //             ...prevState.settings,
-    //             responsive: {
-    //                 ...prevState.settings.responsive,
-    //                 1024: {
-    //                    ...prevState.settings.responsive[1024],
-    //                    items: this.props.items.length
-    //                 }
-    //             }
-    //         }
-    //     }))
-    // }
-  }
+  componentDidMount() {}
 
   onclick = (item) => {
     let banner = {
@@ -80,11 +46,6 @@ class DynamicContentSliderWithLabel extends PureComponent {
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
   };
 
-  // executeScroll = () => {
-  //   console.log("this.cmpRef.current", this.cmpRef.current.scrollLeft);
-  //   this.cmpRef.current.scrollLeft = 50;
-  // };
-
   renderSliderWithLabel = (item, i) => {
     const { link, text, url, plp_config, height, width, text_align } = item;
 
@@ -92,17 +53,9 @@ class DynamicContentSliderWithLabel extends PureComponent {
       pathname: formatCDNLink(link),
       state: { plp_config },
     };
-    // if(this.state.settings.responsive[300].items === 1){
-    //     wd = (screen.width - 16).toString()  + "px";
-    // }
-    // else{
-    //     wd = width.toString() + "px";
-    // }
 
     const wd = `${width.toString()}px`;
     const ht = `${height.toString()}px`;
-
-    // TODO: move to new component
 
     return (
       <div block="SliderWithLabel" ref={this.itemRef} key={i * 10}>
@@ -135,29 +88,17 @@ class DynamicContentSliderWithLabel extends PureComponent {
 
   handleContainerScroll = (event) => {
     const target = event.nativeEvent.target;
-    console.log("container target", target.scrollLeft);
     this.scrollerRef.current.scrollLeft = target.scrollLeft;
-    console.log(
-      "this.cmpRef.scrollWidtht",
-      this.scrollerRef.current.scrollWidth
-    );
   };
 
   handleScroll = (event) => {
     const target = event.nativeEvent.target;
-    console.log("child target", target.scrollLeft);
-    this.cmpRef.current.scrollLeft = target.scrollLeft;
-    console.log(
-      "this.scrollerRef.scrollWidtht",
-      this.scrollerRef.current.scrollWidth
-    );
+    const prentComponent = [...this.cmpRef.current.childNodes].filter(
+      (node) => node.className == "SliderWithLabelWrapper"
+    )[0];
+    prentComponent.scrollLeft = target.scrollLeft;
   };
   renderScrollbar = () => {
-    console.log(
-      "renderScrollbar",
-      this.itemRef.current && this.itemRef.current.clientWidth,
-      this.itemRef.current && this.itemRef.current.offsetWidth
-    );
     const { items = [] } = this.props;
     const width = `${
       (this.itemRef.current && this.itemRef.current.clientWidth) *
@@ -187,15 +128,15 @@ class DynamicContentSliderWithLabel extends PureComponent {
       "==>",
       this.cmpRef.current && this.cmpRef.current.scrollWidth
     );
-    // let { settings } = this.state;
-    //         if(items[0] && items[0].height === 300 && items[0].width === 300) {
-    //         settings.responsive[300] = 1.3;
-    //  }
+
     return (
-      <>
+      <DragScroll
+        data={{ rootClass: "SliderWithLabelWrapper", ref: this.cmpRef }}
+      >
         <div
           block="SliderWithLabelWrapper"
           ref={this.cmpRef}
+          // ref="newRef"
           onScroll={this.handleContainerScroll}
         >
           <div className="SliderHelper"></div>
@@ -203,7 +144,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
           <div className="SliderHelper"></div>
         </div>
         {this.renderScrollbar()}
-      </>
+      </DragScroll>
     );
   }
 
