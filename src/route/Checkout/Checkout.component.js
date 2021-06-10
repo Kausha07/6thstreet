@@ -147,8 +147,11 @@ export class Checkout extends SourceCheckout {
 
   processTabbyWithTimeout(counter, paymentInformation) {
     const { tabbyPaymentStatus } = this.state;
-    const { showErrorNotification, hideActiveOverlay, activeOverlay } =
-      this.props;
+    const {
+      showErrorNotification,
+      hideActiveOverlay,
+      activeOverlay,
+    } = this.props;
 
     // Need to get payment data from Tabby.
     // Could not get callback of Tabby another way because Tabby is iframe in iframe
@@ -348,14 +351,16 @@ export class Checkout extends SourceCheckout {
     );
   }
 
-  setCheckoutCreditCardData = (number, expDate, cvv) => {
-    this.setState({
-      creditCardData: {
-        number,
-        expDate,
-        cvv,
-      },
-    });
+  setCheckoutCreditCardData = (number, expDate, cvv, saveCard, email) => {
+    let creditCardData = {
+      cvv,
+      email,
+      number,
+      expDate,
+      saveCard,
+    }
+    this.setState({ creditCardData });
+    this.props.updateCreditCardData(creditCardData);
   };
 
   continueAsGuest = () => {
@@ -415,8 +420,11 @@ export class Checkout extends SourceCheckout {
   }
 
   renderTabbyIframe() {
-    const { tabbyInstallmentsUrl, tabbyPayLaterUrl, selectedPaymentMethod } =
-      this.state;
+    const {
+      tabbyInstallmentsUrl,
+      tabbyPayLaterUrl,
+      selectedPaymentMethod,
+    } = this.state;
     const { isTabbyPopupShown } = this.props;
     if (!isTabbyPopupShown) {
       return null;
@@ -441,10 +449,11 @@ export class Checkout extends SourceCheckout {
       isFailed,
       initialTotals,
       isVerificationCodeSent,
+      newCardVisible
     } = this.props;
     const { cashOnDeliveryFee } = this.state;
     const {
-      paymentInformation: { billing_address, paymentMethod },
+      paymentInformation: { billing_address, paymentMethod, selectedCard },
       creditCardData,
     } = this.state;
 
@@ -476,6 +485,7 @@ export class Checkout extends SourceCheckout {
         totals={initialTotals}
         cashOnDeliveryFee={cashOnDeliveryFee}
         isVerificationCodeSent={isVerificationCodeSent}
+        selectedCard={newCardVisible ? {} : selectedCard}
       />
     );
   }
@@ -491,7 +501,9 @@ export class Checkout extends SourceCheckout {
       isSignedIn,
       shippingAddress,
       setLoading,
+      isLoading,
     } = this.props;
+
 
     const { continueAsGuest, isArabic } = this.state;
     const renderCheckoutShipping = (
@@ -499,6 +511,7 @@ export class Checkout extends SourceCheckout {
         {continueAsGuest ? this.renderHeading("Login / Sign Up", true) : null}
         <CheckoutShipping
           isLoading={isDeliveryOptionsLoading}
+          isPaymentLoading={isLoading}
           shippingMethods={shippingMethods}
           saveAddressInformation={saveAddressInformation}
           onShippingEstimationFieldsChange={onShippingEstimationFieldsChange}
@@ -722,7 +735,7 @@ export class Checkout extends SourceCheckout {
     const { isSuccess } = this.state;
     const { checkoutStep } = this.props;
 
-    const additionalDisplay = checkoutStep === BILLING_STEP
+    const additionalDisplay = checkoutStep === BILLING_STEP;
     return (
       <>
         {this.renderBinPromotion()}
@@ -737,13 +750,16 @@ export class Checkout extends SourceCheckout {
               {this.renderStep()}
               {this.renderLoader()}
             </div>
-            <div block="Checkout" elem={additionalDisplay ? "MobileDisplay": "WebDisplay"}>
-            <div block="Checkout" elem="Additional">
-              {this.renderSummary()}
-              {this.renderPromo()}
-              {this.renderTabbyIframe()}
-              {this.renderCreditCardIframe()}
-            </div>
+            <div
+              block="Checkout"
+              elem={additionalDisplay ? "MobileDisplay" : "WebDisplay"}
+            >
+              <div block="Checkout" elem="Additional">
+                {this.renderSummary()}
+                {this.renderPromo()}
+                {this.renderTabbyIframe()}
+                {this.renderCreditCardIframe()}
+              </div>
             </div>
           </ContentWrapper>
         </main>

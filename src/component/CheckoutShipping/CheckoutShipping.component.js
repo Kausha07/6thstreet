@@ -32,6 +32,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     isSignedIn: isSignedIn(),
     isMobile: isMobile.any() || isMobile.tablet(),
     openFirstPopup: false,
+    renderLoading: false,
   };
 
   renderButtonsPlaceholder() {
@@ -87,16 +88,21 @@ export class CheckoutShipping extends SourceCheckoutShipping {
   }
 
   renderActions() {
+    const { isPaymentLoading } = this.props;
     return (
       <div block="Checkout" elem="StickyButtonWrapper">
         {this.renderTotals()}
         <button
           type="submit"
-          block="Button"
+          block={"Button"}
           disabled={this.checkForDisabling()}
-          mix={{ block: "CheckoutShipping", elem: "Button" }}
+          mix={{ block: "CheckoutShipping", elem:isPaymentLoading? "LoadingButton": "Button" }}
         >
-          {this.renderButtonsPlaceholder()}
+          {!isPaymentLoading ? (
+            this.renderButtonsPlaceholder()
+          ) : (
+            <Spinner name="three-bounce" color="white" />
+          )}
           {/* <Spinner name="three-bounce" /> */}
         </button>
       </div>
@@ -188,7 +194,12 @@ export class CheckoutShipping extends SourceCheckoutShipping {
 
     return isMobile ? (
       <>
-        <span style={{ paddingRight: "10px" , fontWeight:"bold", fontSize:"16px"}}>+</span> {__("New address")}
+        <span
+          style={{ paddingRight: "10px", fontWeight: "bold", fontSize: "16px" }}
+        >
+          +
+        </span>{" "}
+        {__("New address")}
       </>
     ) : (
       __("Add new address")
@@ -272,7 +283,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
   }
 
   render() {
-    const { onShippingSuccess, onShippingError } = this.props;
+    const { onShippingSuccess, onShippingError} = this.props;
     const { formContent } = this.state;
     return (
       <div
@@ -290,9 +301,9 @@ export class CheckoutShipping extends SourceCheckoutShipping {
           {isSignedIn() ? (
             <>
               <h3>{__("Delivering to")}</h3>
-              <h3 block="CheckoutShipping" elem="DeliveryMessage">
+              <h4 block="CheckoutShipping" elem="DeliveryMessage">
                 {__("Where can we send your order?")}
-              </h3>
+              </h4>
             </>
           ) : null}
           {this.renderAddressBook()}

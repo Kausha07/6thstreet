@@ -243,7 +243,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     const { processingRequest } = this.props;
     return (
       <article block="CheckoutOrderSummary" aria-label="Order Summary">
-        <Loader isLoading={processingRequest} />
+        {/* <Loader isLoading={processingRequest} /> */}
         {this.renderHeading()}
         {this.renderItems()}
         {this.renderToggleableDiscountOptions()}

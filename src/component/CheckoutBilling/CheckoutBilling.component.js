@@ -33,7 +33,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
 
   static defaultProps = {
     ...SourceCheckoutBilling.defaultProps,
-    processApplePay: false,
+    processApplePay: true,
     processingPaymentSelectRequest: false,
     placeOrder: () => {},
   };
@@ -191,6 +191,8 @@ export class CheckoutBilling extends SourceCheckoutBilling {
       setOrderButtonEnabled,
       setOrderButtonDisabled,
       resetBinApply,
+      applyPromotionSavedCard,
+      removePromotionSavedCard,
     } = this.props;
 
     if (!paymentMethods.length) {
@@ -215,6 +217,8 @@ export class CheckoutBilling extends SourceCheckoutBilling {
         resetBinApply={resetBinApply}
         processApplePay={processApplePay}
         placeOrder={placeOrder}
+        applyPromotionSavedCard={applyPromotionSavedCard}
+        removePromotionSavedCard={removePromotionSavedCard}
       />
     );
   }
@@ -259,13 +263,17 @@ export class CheckoutBilling extends SourceCheckoutBilling {
   // };
 
   renderButtonPlaceholder() {
-    const { paymentMethod, binApplied } = this.props;
+    const { paymentMethod, binApplied, newCardVisible } = this.props;
     const isCardPayment = CARD === paymentMethod;
-    return (
-      <>
-        {!binApplied && isCardPayment ? "Add Credit Card" : __("Place order")}
-      </>
-    );
+    let placeholder = __("Place order");
+    if (isCardPayment) {
+      //if payment is from card.
+      if (newCardVisible && !binApplied) {
+        //if there is new card to add and bin is not applied
+        placeholder = "Add Credit Card";
+      }
+    }
+    return <>{placeholder}</>;
   }
 
   renderActions() {
@@ -289,7 +297,9 @@ export class CheckoutBilling extends SourceCheckoutBilling {
       : !isOrderButtonEnabled;
 
     const isApplePay = paymentMethod === CHECKOUT_APPLE_PAY;
-    const isTabbyPay = paymentMethod === "tabby_installments"
+    const isTabbyPay =
+      paymentMethod === "tabby_installments" ||
+      paymentMethod === "tabby_checkout";
     return (
       <>
         {this.renderCreditCardTooltipBar()}
@@ -309,7 +319,9 @@ export class CheckoutBilling extends SourceCheckoutBilling {
               elem:
                 processingRequest || processingPaymentSelectRequest
                   ? "spinningButton"
-                  : isTabbyPay ? "tabbyButton":"Button",
+                  : isTabbyPay
+                  ? "tabbyButton"
+                  : "Button",
             }}
           >
             {processingRequest || processingPaymentSelectRequest ? (
@@ -318,7 +330,9 @@ export class CheckoutBilling extends SourceCheckoutBilling {
                 name="three-bounce"
                 color="white"
               />
-            ) : isTabbyPay ? __("Place tabby order"):(
+            ) : isTabbyPay ? (
+              __("Place tabby order")
+            ) : (
               this.renderButtonPlaceholder()
             )}
           </button>

@@ -74,7 +74,7 @@
           }
 
           &-NewAddressWrapper {
-            top: 17px;
+            top: 10px;
             float: right;
             z-index: 1;
 
@@ -82,6 +82,7 @@
               top: 0;
               display: flex;
               justify-content: center;
+              align-items: center;
               grid-row: 4;
             }
 
@@ -112,7 +113,7 @@
               background: var(--my-acc-background);
               text-transform: capitalize;
               min-width: 140px;
-              margin-top: 38px;
+              margin-top: 28px;
 
               &:hover {
                 text-decoration: underline;
@@ -216,8 +217,9 @@
   }
   &-DeliveryMessage {
     font-weight: 600;
-    padding: 0 30px !important; 
-    margin: -45px auto 48px !important;
+    width: 60vw;
+    padding: 0 !important; 
+    margin: -45px auto 24px !important;
     font-size: 18px;
     text-align: center;
     display: block !important;
@@ -225,7 +227,14 @@
       display: none !important;
     }
   }
+  &-LoadingButton{
+    background-color: #a9a9a9  !important;
+    border: #a9a9a9 !important;
+  }
   &-Button {
+    @include before-desktop{
+      font-size: 14px;
+    }
     @include desktop {
       height: 60px;
     }

@@ -9,7 +9,9 @@
 .CheckoutBilling {
   padding: 0 0.5rem;
   button {
-    font-size: 14px !important;
+    @include before-desktop {
+      font-size: 14px !important;
+    }
     &:disabled {
       // opacity: 0.25;
       background-color: #a9a9a9 !important;

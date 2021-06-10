@@ -1,10 +1,10 @@
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
-
 import { PLPContainer } from 'Route/PLP/PLP.container';
 import { Meta, Pages } from 'Util/API/endpoint/Product/Product.type';
-
 import PLPPages from './PLPPages.component';
+
+
 
 export const mapStateToProps = (state) => ({
     pages: state.PLP.pages,
@@ -71,7 +71,6 @@ export class PLPPagesContainer extends PureComponent {
 
     render() {
         const { impressions } = this.state;
-
         return (
             <PLPPages
               impressions={ impressions }
