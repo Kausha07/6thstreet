@@ -28,11 +28,11 @@
         &_items_per_row_6 {
             grid-template-columns: repeat(6, 1fr);
         }
-        a {
-            margin: 0;
-            display: block;
-            line-height: 1;
-        }
+        // a {
+        //     margin: 0;
+        //     display: block;
+        //     line-height: 1;
+        // }
     }
     .Image {
         //height: auto;
@@ -65,18 +65,45 @@
     &-Content {
         text-align: center;
         padding: 8px;
+        text-decoration: none;
         .Footer {
             // color: red;
+            margin-top: 15px;
             &-Title {
-                display: block;
-                font-weight: var(--fw-medium);
-                font-size: var(--title-font-size);
-                margin-bottom: 0px;
-                line-height: 1.2;
+                // display: block;
+                // font-weight: var(--fw-medium);
+                // font-size: var(--title-font-size);
+                // margin-bottom: 0px;
+                // line-height: 1.2;
+                text-decoration: none !important;
+                color: #000000;
+                font-family: "Avenir Next";
+                font-size: 18px;
+                font-weight: 500;
+                letter-spacing: 2px;
+                line-height: 25px;
+                text-align: center;
             }
             &-SubTitle {
-                font-size: var(--subtitle-font-size);
-                line-height: 1.2;
+                // font-size: var(--subtitle-font-size);
+                // line-height: 1.2;
+                text-decoration: none;
+                color: #4A4A4A;
+                font-family: "Avenir Next";
+                font-size: 16px;
+                letter-spacing: 0;
+                line-height: 22px;
+                text-align: center;
+            }
+            &-Footer-Button {
+                color: #000000;
+                font-family: "Avenir Next";
+                font-size: 16px;
+                font-weight: 500;
+                letter-spacing: 0;
+                line-height: 22px;
+                text-align: center;
+                border-bottom: 1px solid black !important;
             }
         }
     }
@@ -94,16 +121,38 @@
                 .Footer {
                     // color: red;
                     &-Title {
-                        display: block;
-                        font-weight: 600;
-                        font-size: 12px;
-                        margin-bottom: 0px;
+                        // display: block;
+                        // font-weight: 600;
+                        // font-size: 12px;
+                        // margin-bottom: 0px;
+                        // text-align: center;
+                        color: #000000;
+                        font-family: "Avenir Next";
+                        font-size: 18px;
+                        font-weight: 500;
+                        letter-spacing: 2px;
+                        line-height: 25px;
                         text-align: center;
                     }
                     &-SubTitle {
-                        font-size: 11px;
-                        line-height: 1;
-                        margin-bottom: 6px;
+                        // font-size: 11px;
+                        // line-height: 1;
+                        // margin-bottom: 6px;
+                        color: #4A4A4A;
+                        font-family: "Avenir Next";
+                        font-size: 16px;
+                        letter-spacing: 0;
+                        line-height: 22px;
+                        text-align: center;
+                    }
+                    &-Footer-Button {
+                        color: #000000;
+                        font-family: "Avenir Next";
+                        font-size: 16px;
+                        font-weight: 500;
+                        letter-spacing: 0;
+                        line-height: 22px;
+                        text-align: center;
                     }
                     &-Button {
                         font-size: 12px;
