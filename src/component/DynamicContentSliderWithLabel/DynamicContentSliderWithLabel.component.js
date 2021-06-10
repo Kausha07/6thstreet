@@ -78,10 +78,11 @@ class DynamicContentSliderWithLabel extends PureComponent {
             style={{ maxWidth: wd, maxHeight: ht }}
           />
         </Link>
-        <div block="SliderText" style={{ textAlign: text_align }}>
-          {/* style={{ width: wd }} */}
-          {text}
-        </div>
+        {text ? (
+          <div block="SliderText" style={{ textAlign: text_align }}>
+            {text}
+          </div>
+        ) : null}
       </div>
     );
   };
@@ -118,7 +119,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
 
     const width = `${
       items[0] && items[0].width
-        ? items[0].width * items.length + items.length * 7 * 2 - 690
+        ? items[0].width * items.length + items.length * 10 * 2 - 690
         : 0
     }px`;
     console.log("slider width", width, items[0].width, items.length);

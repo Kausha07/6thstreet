@@ -32,6 +32,11 @@
       }
     }
   }
+  .DynamicContent {
+    > div {
+      margin-bottom: 60px !important;
+    }
+  }
 
   // }
 }

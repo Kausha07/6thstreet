@@ -1,209 +1,210 @@
 .DynamicContentTwiceBanner {
-    &-Content {
-        background-color: white;
-        text-align: center;
-        margin: 0 auto !important;
-        padding: 0;
-        display: flex;
+  &-Content {
+    background-color: white;
+    text-align: center;
+    margin: 0 auto !important;
+    padding: 0;
+    display: flex;
+  }
+  &-Figure {
+    @include desktop {
+      // background:#f3f3f3;
+      margin-top: 44px;
+      margin-bottom: 41px;
     }
-    &-Figure {
-        @include desktop {
-            // background:#f3f3f3;
-            margin-top: 44px;
-            margin-bottom: 41px;
-        }
-        @include tablet {
-            // background:#f3f3f3;
-            margin-top: 44px;
-            margin-bottom: 41px;
-        }
+    @include tablet {
+      // background:#f3f3f3;
+      margin-top: 44px;
+      margin-bottom: 41px;
     }
-    &-BannerImg{
-        @include desktop {
-            width: 50%;
-            left: 43px;
-        }
-        @include tablet{
-            width: 50%;
-            left: 43px;
-        }
-        .BannerImage{
-            @include tablet {
-                min-height: 475px;
-                min-width: 408.91px;
-            }
-            @include desktop {
-                min-height: 475px;
-                min-width: 520px;
-            }
-        }
+  }
+  &-BannerImg {
+    @include desktop {
+      width: 50%;
+      left: 43px;
     }
-    &-BannerImgRight{
-        .BannerImage{
-            @include tablet {
-                min-height: 334px;
-                min-width: 408.91px;
-            }
-            @include desktop {
-                min-height: 459px;
-                min-width: 520px;
-            }
-        }
+    @include tablet {
+      width: 50%;
+      left: 43px;
     }
-    &-FigureRight {
-        @include desktop {
-            // background: #f3f3f3;
-            margin-top: 44px;
-            margin-bottom: 41px;
-            left: 43px;
-            z-index: 3;
-        }
-        @include tablet {
-            // background: #f3f3f3;
-            margin-top: 44px;
-            margin-bottom: 41px;
-            left: 43px;
-            z-index: 3;
-        }
+    .BannerImage {
+      object-fit: cover;
+      @include tablet {
+        min-height: 475px;
+        min-width: 408.91px;
+      }
+      @include desktop {
+        min-height: 475px;
+        min-width: 520px;
+      }
     }
-    &-FigureRight{
-        .TwiceBanner {
-            align-items: center;
-            background-color: #FAFAFA;
-            @include tablet {
-                min-height: 261.07px;
-                min-width: 334.99px;
-            }
-            @include desktop {
-                min-height: 376.6px;
-                min-width: 426px;;
-            }
-        }
-        .TwiceBannerBlock{
-            @include desktop {
-                left: 25%;
-                top: 40%;
-                position: absolute;
-            }
-            @include tablet {
-                left: 15%;
-                top: 30%;
-                position: absolute;
-            }
-        }
-        .TwiceBannerBlockChild a{
-            border-bottom: 1px solid;
-            border-width: thin;
-            height: 22px;
-            // width: 102px;
-            color: #000000;
-            font-family: "Avenir Next";
-            font-size: 16px;
-            font-weight: 500;
-            letter-spacing: 0;
-            line-height: 22px;
-            text-align: center;
-        }
-        .TwiceBannerBlockChild a button{
-            padding: 0px !important;
-        }
-        .TwiceBannerBlockChildTitle {
-            text-transform: uppercase;
-            color: #000000;
-            font-family: "Avenir Next";
-            font-size: 18px;
-            font-weight: 500;
-            letter-spacing: 2px;
-            line-height: 25px;
-            text-align: center;
-            @include desktop {
-                height: 25px; // 40px;
-                // width: 426px;
-            }
-            @include tablet {
-                height: 40px;
-                // width: 334.99px;
-            }
-        }
-        .TwiceBannerBlockChildSub {
-            height: 25px; // 22px;
-            // width: 405.55px;
-            color: #4A4A4A;
-            font-family: "Avenir Next";
-            font-size: 16px;
-            letter-spacing: 0;
-            line-height: 22px;
-            text-align: center;
-        }
+  }
+  &-BannerImgRight {
+    .BannerImage {
+      @include tablet {
+        min-height: 334px;
+        min-width: 408.91px;
+      }
+      @include desktop {
+        min-height: 459px;
+        min-width: 520px;
+      }
     }
-    &-Figure{
-        .TwiceBanner {
-            align-items: center;
-            background-color: #FAFAFA;
-            @include tablet {
-                min-height: 388px;
-                min-width: 334.99px;
-            }
-            @include desktop {
-                min-height: 388px;
-                min-width: 426px;;
-            }
-        }
-        .TwiceBannerBlock{
-            @include desktop {
-                left: 25%;
-                top: 40%;
-                position: absolute;
-            }
-            @include tablet {
-                left: 15%;
-                top: 30%;
-                position: absolute;
-            }
-        }
-        .TwiceBannerBlockChild a{
-            border-bottom: 1px solid;
-            border-width: thin;
-            height: 22px;
-            // width: 102px;
-            color: #000000;
-            font-family: "Avenir Next";
-            font-size: 16px;
-            font-weight: 500;
-            letter-spacing: 0;
-            line-height: 22px;
-            text-align: center;
-        }
-        .TwiceBannerBlockChild a button{
-            padding: 0px !important;
-        }
-        .TwiceBannerBlockChildTitle {
-            text-transform: uppercase;
-            color: #000000;
-            font-family: "Avenir Next";
-            font-size: 18px;
-            font-weight: 500;
-            letter-spacing: 2px;
-            line-height: 25px;
-            text-align: center;
-            @include desktop {
-                height: 25px; // 40px;
-                // width: 426px;
-            }
-            @include tablet {
-                height: 40px;
-                // width: 334.99px;
-            }
-        }
-        .TwiceBannerBlockChildSub {
-            height: 25px; // 22px;
-            // width: 405.55px;
-            color: #4A4A4A;
-            font-family: "Avenir Next";
-            font-size: 16px;
-            letter-spacing: 0;
-            line-height: 22px;
-            text-align: center;
-        }
+  }
+  &-FigureRight {
+    @include desktop {
+      // background: #f3f3f3;
+      margin-top: 44px;
+      margin-bottom: 41px;
+      left: 43px;
+      z-index: 3;
     }
+    @include tablet {
+      // background: #f3f3f3;
+      margin-top: 44px;
+      margin-bottom: 41px;
+      left: 43px;
+      z-index: 3;
+    }
+  }
+  &-FigureRight {
+    .TwiceBanner {
+      align-items: center;
+      background-color: #fafafa;
+      @include tablet {
+        min-height: 261.07px;
+        min-width: 334.99px;
+      }
+      @include desktop {
+        min-height: 376.6px;
+        min-width: 426px;
+      }
+    }
+    .TwiceBannerBlock {
+      @include desktop {
+        left: 25%;
+        top: 40%;
+        position: absolute;
+      }
+      @include tablet {
+        left: 15%;
+        top: 30%;
+        position: absolute;
+      }
+    }
+    .TwiceBannerBlockChild a {
+      border-bottom: 1px solid;
+      border-width: thin;
+      height: 22px;
+      // width: 102px;
+      color: #000000;
+      font-family: "Avenir Next";
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: 0;
+      line-height: 22px;
+      text-align: center;
+    }
+    .TwiceBannerBlockChild a button {
+      padding: 0px !important;
+    }
+    .TwiceBannerBlockChildTitle {
+      text-transform: uppercase;
+      color: #000000;
+      font-family: "Avenir Next";
+      font-size: 18px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      line-height: 25px;
+      text-align: center;
+      @include desktop {
+        height: 25px; // 40px;
+        // width: 426px;
+      }
+      @include tablet {
+        height: 40px;
+        // width: 334.99px;
+      }
+    }
+    .TwiceBannerBlockChildSub {
+      height: 25px; // 22px;
+      // width: 405.55px;
+      color: #4a4a4a;
+      font-family: "Avenir Next";
+      font-size: 16px;
+      letter-spacing: 0;
+      line-height: 22px;
+      text-align: center;
+    }
+  }
+  &-Figure {
+    .TwiceBanner {
+      align-items: center;
+      background-color: #fafafa;
+      @include tablet {
+        min-height: 388px;
+        min-width: 334.99px;
+      }
+      @include desktop {
+        min-height: 388px;
+        min-width: 426px;
+      }
+    }
+    .TwiceBannerBlock {
+      @include desktop {
+        left: 25%;
+        top: 40%;
+        position: absolute;
+      }
+      @include tablet {
+        left: 15%;
+        top: 30%;
+        position: absolute;
+      }
+    }
+    .TwiceBannerBlockChild a {
+      border-bottom: 1px solid;
+      border-width: thin;
+      height: 22px;
+      // width: 102px;
+      color: #000000;
+      font-family: "Avenir Next";
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: 0;
+      line-height: 22px;
+      text-align: center;
+    }
+    .TwiceBannerBlockChild a button {
+      padding: 0px !important;
+    }
+    .TwiceBannerBlockChildTitle {
+      text-transform: uppercase;
+      color: #000000;
+      font-family: "Avenir Next";
+      font-size: 18px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      line-height: 25px;
+      text-align: center;
+      @include desktop {
+        height: 25px; // 40px;
+        // width: 426px;
+      }
+      @include tablet {
+        height: 40px;
+        // width: 334.99px;
+      }
+    }
+    .TwiceBannerBlockChildSub {
+      height: 25px; // 22px;
+      // width: 405.55px;
+      color: #4a4a4a;
+      font-family: "Avenir Next";
+      font-size: 16px;
+      letter-spacing: 0;
+      line-height: 22px;
+      text-align: center;
+    }
+  }
 }
