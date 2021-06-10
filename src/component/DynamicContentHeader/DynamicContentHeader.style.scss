@@ -2,11 +2,18 @@
     margin-top: 10px;
     margin-bottom: 15px;
     h1 {
-        font-size: 22px;
-        text-align: center;
+        text-align: start;
         text-transform: uppercase;
         margin-bottom: 0px;
         //margin-top: 10px;
+        left: 7px;
+        color: #000000;
+        font-family: "Avenir Next";
+        font-size: 18px;
+        font-weight: 500;
+        letter-spacing: 2px;
+        line-height: 25px;
+        margin-top: 50px;
     }
     p {
         text-align: center;
@@ -20,6 +27,7 @@
             font-size: 15px;
             margin-bottom: 0px;
             margin-top: 10px;
+            text-align: start;
         }
         p {
             text-align: center;
