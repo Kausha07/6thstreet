@@ -114,7 +114,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
             phonecode = ''
         } = address;
 
-        setLoading();
+        setLoading(true);
 
         const canEstimate = !Object.values(address).some((item) => item === undefined);
 
@@ -143,6 +143,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
             selectedShippingMethod
         } = this.state;
         const { setLoading, showNotification, dispatch } = this.props;
+        setLoading(true)
         console.log("hey selected customer address id",selectedCustomerAddressId , "Selected shipping methiod", selectedShippingMethod)
         const shippingAddress = selectedCustomerAddressId
             ? this._getAddressById(selectedCustomerAddressId)
