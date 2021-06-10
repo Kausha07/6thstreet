@@ -6,7 +6,6 @@ export default function searchBy(
   options = {}
 ) {
   const { index } = options;
-  console.log("index", index);
   const tags = ["PWA_search"];
   return new Promise((resolve, reject) => {
     const newSearchParams = Object.assign({}, searchParams);

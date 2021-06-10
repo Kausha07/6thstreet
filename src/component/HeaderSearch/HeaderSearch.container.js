@@ -75,7 +75,6 @@ export class HeaderSearchContainer extends PureComponent {
             limit: PRODUCT_RESULT_LIMIT,
           }
     );
-    console.log("productData", productData);
     const queryID = productData?.queryID ? productData?.queryID : null;
     history.push(`/catalogsearch/result/?q=${search}&qid=${queryID}`);
   }
