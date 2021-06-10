@@ -351,14 +351,16 @@ export class Checkout extends SourceCheckout {
     );
   }
 
-  setCheckoutCreditCardData = (number, expDate, cvv) => {
-    this.setState({
-      creditCardData: {
-        number,
-        expDate,
-        cvv,
-      },
-    });
+  setCheckoutCreditCardData = (number, expDate, cvv, saveCard, email) => {
+    let creditCardData = {
+      cvv,
+      email,
+      number,
+      expDate,
+      saveCard,
+    }
+    this.setState({ creditCardData });
+    this.props.updateCreditCardData(creditCardData);
   };
 
   continueAsGuest = () => {
@@ -447,10 +449,11 @@ export class Checkout extends SourceCheckout {
       isFailed,
       initialTotals,
       isVerificationCodeSent,
+      newCardVisible
     } = this.props;
     const { cashOnDeliveryFee } = this.state;
     const {
-      paymentInformation: { billing_address, paymentMethod },
+      paymentInformation: { billing_address, paymentMethod, selectedCard },
       creditCardData,
     } = this.state;
 
@@ -482,6 +485,7 @@ export class Checkout extends SourceCheckout {
         totals={initialTotals}
         cashOnDeliveryFee={cashOnDeliveryFee}
         isVerificationCodeSent={isVerificationCodeSent}
+        selectedCard={newCardVisible ? {} : selectedCard}
       />
     );
   }

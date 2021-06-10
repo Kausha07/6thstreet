@@ -1,15 +1,16 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
-
 import SearchSuggestionDispatcher from 'Store/SearchSuggestions/SearchSuggestions.dispatcher';
 import { getStaticFile } from 'Util/API/endpoint/StaticFiles/StaticFiles.endpoint';
 import SearchSuggestion from './SearchSuggestion.component';
+
 
 export const mapStateToProps = (state) => ({
     requestedSearch: state.SearchSuggestions.search,
     data: state.SearchSuggestions.data,
     gender: state.AppState.gender,
+    queryID: state.SearchSuggestions.queryID,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -30,6 +31,7 @@ export class SearchSuggestionContainer extends PureComponent {
             products: PropTypes.array
         }).isRequired,
         closeSearch: PropTypes.func.isRequired,
+        queryID: PropTypes.string,
     };
 
     static getDerivedStateFromProps(props, state) {
@@ -79,7 +81,6 @@ export class SearchSuggestionContainer extends PureComponent {
                 getStaticFile('search_trending_brands'),
                 getStaticFile('search_trending_tags')
             ]);
-
             this.setState({
                 trendingBrands: data[0][gender],
                 trendingTags: data[1][gender]
@@ -92,7 +93,7 @@ export class SearchSuggestionContainer extends PureComponent {
 
     containerProps = () => {
         const { trendingBrands, trendingTags } = this.state;
-        const { search, data,closeSearch } = this.props;
+        const { search, data,closeSearch,queryID } = this.props;
         const { brands = [], products = [] } = data;
 
         const isEmpty = search === '';
@@ -107,7 +108,8 @@ export class SearchSuggestionContainer extends PureComponent {
             isLoading: this.getIsLoading(),
             trendingBrands,
             trendingTags,
-            closeSearch
+            closeSearch,
+            queryID
         };
     };
     containerFunctions = {

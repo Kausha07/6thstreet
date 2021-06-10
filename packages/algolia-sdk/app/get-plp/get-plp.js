@@ -1,5 +1,4 @@
 import Url from 'url-parse';
-
 import {
     CURRENCY_STRIP_INSIGNIFICANT_ZEROS,
     NUMERIC_FILTERS,
@@ -29,6 +28,7 @@ import {
     makeCategoriesLevel1Filter,
     makeCategoriesWithoutPathFilter
 } from './categories';
+
 
 const getPriceRangeData = ({ currency, lang }) => {
     const priceRangeData = {};
@@ -465,3 +465,4 @@ function getPLP(URL, options = {}) {
 }
 
 export { getPLP };
+
