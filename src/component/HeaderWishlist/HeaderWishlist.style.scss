@@ -15,8 +15,8 @@
         display: inline-block;
 
         &::before {
-          background: url(./icons/heart-regular.svg) no-repeat;
-          background-size: 23px;
+          background: url(./icons/favorites.svg) no-repeat;
+          background-size: 27px;
           content: "";
           width: 27px;
           height: 27px;
@@ -29,7 +29,7 @@
 
         &_isBlack {
           &::before {
-            background: url(./icons/heart-solid.svg) no-repeat;
+            background: url(./icons/favorites-active.svg) no-repeat;
             background-size: 23px;
           }
         }

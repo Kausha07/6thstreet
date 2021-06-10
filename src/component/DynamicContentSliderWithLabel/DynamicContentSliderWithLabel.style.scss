@@ -4,9 +4,10 @@
   margin-bottom: 30px !important;
   max-width: 1440px;
   .SliderWithLabelWrapper {
+    display: block;
+    white-space: nowrap;
     // display: flex;
-    display: flex;
-    flex-wrap: nowrap;
+    // flex-wrap: nowrap;
     overflow-x: auto;
     padding: 20px 0 50px 0;
     // -ms-overflow-style: none;
@@ -34,7 +35,8 @@
   .SliderWithLabel {
     // min-width: 18%;
     // min-width: 238px;
-    width: 100%;
+    display: inline-block;
+    // width: 100%;
     margin-right: 7px;
     &:nth-last-child(2) {
       margin-right: 0;
@@ -177,14 +179,14 @@
     }
   }
   .SliderHelper {
-    display: block;
+    display: inline-block;
     min-width: 30px;
     background: transparent;
     @include mobile {
       min-width: 8px;
     }
     @include tablet {
-      display: block;
+      display: inline-block;
     }
     @include desktop {
       display: none;

@@ -36,10 +36,9 @@
   }
 
   &-PhoneIcon {
-    background: url(../../style/icons/icons.png) -10px -36px no-repeat;
+    background: url(../../style/icons/call.svg) no-repeat;
     width: 28px;
-    height: 21px;
-    top: -3px;
+    height: 28px;
   }
 
   &-DisplayEmail {
@@ -56,10 +55,9 @@
   }
 
   &-EmailIcon {
-    background: url(../../style/icons/icons.png) -41px -36px no-repeat;
+    background: url(../../style/icons/mail.svg) no-repeat;
     width: 28px;
-    height: 20px;
-    top: -3px;
+    height: 28px;
   }
   p {
     display: flex;

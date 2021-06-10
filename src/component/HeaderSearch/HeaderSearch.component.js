@@ -8,7 +8,7 @@ import ClickOutside from "Component/ClickOutside";
 import { isArabic } from "Util/App";
 
 import Clear from "./icons/close-black.png";
-import searchPng from "./icons/search-black.png";
+import searchPng from "./icons/search-black.svg";
 
 import "./HeaderSearch.style";
 

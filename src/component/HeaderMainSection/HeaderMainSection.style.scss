@@ -71,19 +71,23 @@ main {
   }
   .SearchIcon {
     order: 2;
+    display: none;
     // padding-right: 47px;
     img {
       cursor: pointer;
     }
     &-Button {
       content: "";
-      background: url(./icons/search-black.png) no-repeat;
+      background: url(./icons/search-black.svg) no-repeat;
       background-size: 24px;
       width: 24px;
       height: 24px;
       display: inline-block;
       position: relative;
       // top: -4px;
+    }
+    @include desktop {
+      display: block;
     }
   }
 
@@ -255,9 +259,9 @@ main {
       &-Button {
         left: 5px;
         top: 3px;
-        background-size: 30px;
-        width: 30px;
-        height: 30px;
+        background-size: 24px;
+        width: 24px;
+        height: 24px;
       }
 
       &-Count {
@@ -272,6 +276,7 @@ main {
           &-Button {
             right: 5px;
             left: unset;
+            // background-size: 24px;
           }
         }
       }
