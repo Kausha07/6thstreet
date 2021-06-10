@@ -28,6 +28,8 @@ export const mapStateToProps = (state) => ({
     state.CartReducer.processingPaymentSelectRequest,
   totals: state.CartReducer.cartTotals,
   cartId: state.CartReducer.cartId,
+  savedCards: state.CreditCardReducer.savedCards,
+  newCardVisible: state.CreditCardReducer.newCardVisible,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -72,6 +74,8 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     setOrderButtonEnabled: this.setOrderButtonEnabled.bind(this),
     resetBinApply: this.resetBinApply.bind(this),
     setOrderButtonEnableStatus: this.setOrderButtonEnableStatus.bind(this),
+    applyPromotionSavedCard: this.applyPromotionSavedCard.bind(this),
+    removePromotionSavedCard: this.removePromotionSavedCard.bind(this),
   };
 
   conatinerProps = () => {
@@ -119,7 +123,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
   };
 
   setCreditCardData(data) {
-    const { number, expDate, cvv } = data;
+    const { number, expDate, cvv, saveCard } = data;
     const { binApplied } = this.state;
     const {
       totals: { discount },
@@ -141,6 +145,9 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     }
     if (binApplied) {
       this.setState({ binApplied: false });
+    }
+    if (saveCard !== undefined && saveCard !== null) {
+      this.setState({ saveCard });
     }
   }
 
@@ -164,80 +171,119 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     this.setOrderButtonEnabled();
   }
 
+  async applyBinPromotionOnSavedCard() {
+    const { getBinPromotion, updateTotals, binModal, savedCards } = this.props;
+    let selectedCard = savedCards.find(a => a.selected === true);
+    if (selectedCard) {//if saved card is selected
+      const { bin } = selectedCard;
+      const response = await getBinPromotion(bin);
+      binModal(response);
+      await updateTotals();
+      this.setState({ binApplied: true });
+    }
+  }
+
+  async applyPromotionSavedCard() {
+    if (this.state.binApplied) {//if promotion already applied
+      await this.removeBinPromotion();
+      await this.applyBinPromotionOnSavedCard();
+    } else {
+      await this.applyBinPromotionOnSavedCard();
+    }
+  }
+
+  async removePromotionSavedCard() {
+    await this.removeBinPromotion();
+    this.resetBinApply();
+  }
+
   async onBillingSuccess(fields, asyncData) {
     const paymentMethod = this._getPaymentData(asyncData);
-    const { savePaymentInformation } = this.props;
+    const { savePaymentInformation, savedCards, newCardVisible } = this.props;
     const address = this._getAddress(fields);
     const { code } = paymentMethod;
 
     if (code === CARD) {
-      const {
-        addNewCreditCard,
-        getCardType,
-        showErrorNotification,
-        showSuccessMessage,
-        setCheckoutCreditCardData,
-      } = this.props;
+      if (newCardVisible) {//if payment is via new card.
+        const {
+          addNewCreditCard,
+          getCardType,
+          showErrorNotification,
+          showSuccessMessage,
+          setCheckoutCreditCardData,
+        } = this.props;
 
-      const { number = "", expDate, cvv, binApplied } = this.state;
-
-      if (!binApplied) {
-        await this.applyBinPromotion();
-        return;
-      }
-
-      setCheckoutCreditCardData(number, expDate, cvv);
-
-      getCardType(number.substr("0", "6")).then((response) => {
-        if (response) {
-          const { requires_3ds, type } = response;
-
-          BrowserDatabase.setItem(
-            type,
-            "CREDIT_CART_TYPE",
-            FIVE_MINUTES_IN_SECONDS
-          );
-          BrowserDatabase.setItem(
-            requires_3ds,
-            "CREDIT_CART_3DS",
-            FIVE_MINUTES_IN_SECONDS
-          );
+        const { number = "", expDate, cvv, binApplied, saveCard } = this.state;
+        if (!binApplied) {
+          await this.applyBinPromotion();
+          return;
         }
-      });
 
-      addNewCreditCard({ number, expDate, cvv })
-        .then((response) => {
-          const { id, token } = response;
+        setCheckoutCreditCardData(number, expDate, cvv, saveCard, address.email);
 
-          if (id || token) {
+        getCardType(number.substr("0", "6")).then((response) => {
+          if (response) {
+            const { requires_3ds, type } = response;
+
             BrowserDatabase.setItem(
-              id ?? token,
-              "CREDIT_CART_TOKEN",
+              type,
+              "CREDIT_CART_TYPE",
               FIVE_MINUTES_IN_SECONDS
             );
-            showSuccessMessage(__("Credit card successfully added"));
-
-            savePaymentInformation({
-              billing_address: address,
-              paymentMethod,
-            });
-          } else if (Array.isArray(response)) {
-            const message = response[0];
-
-            if (typeof message === "string") {
-              showErrorNotification(this.getCartError(message));
-            } else {
-              showErrorNotification(__("Something went wrong"));
-            }
-          } else if (typeof response === "string") {
-            showErrorNotification(response);
+            BrowserDatabase.setItem(
+              requires_3ds,
+              "CREDIT_CART_3DS",
+              FIVE_MINUTES_IN_SECONDS
+            );
           }
-        }, this._handleError)
-        .catch(() => {
-          const { showErrorNotification } = this.props;
-
-          showErrorNotification(__("Something went wrong"));
         });
+
+        addNewCreditCard({ number, expDate, cvv })
+          .then((response) => {
+            const { id, token } = response;
+
+            if (id || token) {
+              BrowserDatabase.setItem(
+                id ?? token,
+                "CREDIT_CART_TOKEN",
+                FIVE_MINUTES_IN_SECONDS
+              );
+              showSuccessMessage(__("Credit card successfully added"));
+
+              savePaymentInformation({
+                billing_address: address,
+                paymentMethod,
+              });
+            } else if (Array.isArray(response)) {
+              const message = response[0];
+
+              if (typeof message === "string") {
+                showErrorNotification(this.getCartError(message));
+              } else {
+                showErrorNotification(__("Something went wrong"));
+              }
+            } else if (typeof response === "string") {
+              showErrorNotification(response);
+            }
+          }, this._handleError)
+          .catch(() => {
+            const { showErrorNotification } = this.props;
+
+            showErrorNotification(__("Something went wrong"));
+          });
+      } else {//if payment is via saved card.
+        let selectedCard = savedCards.find(a => a.selected === true);
+        if (selectedCard) {//if card is selected
+          selectedCard['cvv'] = this.state.cvv;
+          savePaymentInformation({
+            billing_address: address,
+            paymentMethod,
+            selectedCard
+          });
+        } else {//if saved card is not selected
+          showErrorNotification("Please select an card first.");
+        }
+      }
     } else if (code === TABBY_PAY_LATER || code === TABBY_ISTALLMENTS) {
       this.createTabbySessionAndSavePaymentInformation(asyncData, fields);
     } else {
@@ -281,7 +327,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
           }
         }
       }, this._handleError)
-      .catch(() => {});
+      .catch(() => { });
   }
 
   getCartError(message) {

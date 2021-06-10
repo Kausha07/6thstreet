@@ -3,8 +3,8 @@
 import ContentWrapper from 'Component/ContentWrapper/ContentWrapper.component';
 import EmptySearch from 'Component/EmptySearch';
 import { PLP } from 'Route/PLP/PLP.component';
-
 import './SearchPage.style';
+
 
 class SearchPage extends PLP {
     renderSearchNotFound() {

@@ -5,6 +5,7 @@ import { withRouter } from "react-router";
 
 import { HistoryType, LocationType } from "Type/Common";
 
+import { getStore } from "Store";
 import HeaderSearch from "./HeaderSearch.component";
 
 export const mapStateToProps = (_state) => ({
@@ -39,6 +40,14 @@ export class HeaderSearchContainer extends PureComponent {
     onSearchClean: this.onSearchClean.bind(this),
     hideSearchBar: this.hideSearchBar.bind(this),
   };
+  onSearchSubmit() {
+    const { history } = this.props;
+    const { search } = this.state;
+    const queryID = getStore().getState().SearchSuggestions.queryID
+      ? getStore().getState().SearchSuggestions.queryID
+      : "";
+    history.push(`/catalogsearch/result/?q=${search}&qid=${queryID}`);
+  }
 
   hideSearchBar() {
     const { hideSearchBar } = this.props;
@@ -67,12 +76,6 @@ export class HeaderSearchContainer extends PureComponent {
 
   onSearchChange(search) {
     this.setState({ search });
-  }
-
-  onSearchSubmit() {
-    const { history } = this.props;
-    const { search } = this.state;
-    history.push(`/catalogsearch/result/?q=${search}`);
   }
 
   onSearchClean() {

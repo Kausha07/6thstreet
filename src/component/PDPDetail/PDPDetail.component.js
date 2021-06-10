@@ -1,8 +1,8 @@
 // import PropTypes from 'prop-types';
-import { PureComponent } from "react";
-import PropTypes from "prop-types";
-import isMobile from "Util/Mobile";
 import Link from "Component/Link";
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
+import isMobile from "Util/Mobile";
 import "./PDPDetail.style";
 
 class PDPDetail extends PureComponent {
