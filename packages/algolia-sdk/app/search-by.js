@@ -6,7 +6,7 @@ export default function searchBy(
   options = {}
 ) {
   const { index } = options;
-  const tags = ["PWA_Search"]
+  const tags = ["PWA_Search"];
   return new Promise((resolve, reject) => {
     const newSearchParams = Object.assign({}, searchParams);
     newSearchParams.hitsPerPage = limit;
