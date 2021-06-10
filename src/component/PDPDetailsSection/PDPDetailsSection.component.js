@@ -234,13 +234,16 @@ class PDPDetailsSection extends PureComponent {
                             if (typeof (item) === 'object' && Object.keys(item).length > 0) {
                                 const { title: heading } = pdpWidgetsData[index]['layout'];
                                 const { data } = item;
-                                return (
-                                    <VueProductSliderContainer
-                                        products={data}
-                                        heading={heading}
-                                        key={`VueProductSliderContainer${index}`}
-                                    />
-                                );
+                                if (data && data.length > 0) {
+                                    return (
+                                        <VueProductSliderContainer
+                                            products={data}
+                                            heading={heading}
+                                            key={`VueProductSliderContainer${index}`}
+                                        />
+                                    );
+                                }
+                                return null;
                             }
                             return null;
                         })
