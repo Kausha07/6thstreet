@@ -2,6 +2,7 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
+import HeartIcon from './icons/heart.svg'
 import './WishlistIcon.style';
 
 class WishlistIcon extends PureComponent {

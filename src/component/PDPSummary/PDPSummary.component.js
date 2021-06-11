@@ -4,7 +4,7 @@ import { PureComponent } from 'react';
 
 import PDPAddToCart from 'Component/PDPAddToCart/PDPAddToCart.container';
 import PDPTags from 'Component/PDPTags';
-import PDPAlsoAvailableProducts from 'Component/PDPAlsoAvailableProducts';
+import PDPAlsoAvailable from 'Component/PDPAlsoAvailable';
 import Price from 'Component/Price';
 import ProductLabel from 'Component/ProductLabel/ProductLabel.component';
 import TabbyMiniPopup from 'Component/TabbyMiniPopup';
@@ -35,14 +35,16 @@ class PDPSummary extends PureComponent {
 
         const { alsoAvailable, prevAlsoAvailable } = state;
 
+        const derivedState = {};
+
         if (prevAlsoAvailable !== product['6s_also_available']) {
-            return {
+            Object.assign(derivedState, {
                 alsoAvailable: product['6s_also_available'],
                 prevAlsoAvailable: alsoAvailable !== undefined ? alsoAvailable : null
-            };
+            });
         }
 
-        return null;
+        return Object.keys(derivedState).length ? derivedState : null;
     }
 
     setStockAvailability = (status) => {
@@ -221,6 +223,7 @@ class PDPSummary extends PureComponent {
 
     }
 
+
     renderAvailableItemsSection() {
         const { product: { sku }, isLoading } = this.props;
         const { alsoAvailable } = this.state;
@@ -228,7 +231,7 @@ class PDPSummary extends PureComponent {
         if (alsoAvailable) {
             if (alsoAvailable.length > 0 && !isLoading) {
                 return (
-                    <PDPAlsoAvailableProducts productsAvailable={ alsoAvailable } productSku={ sku } />
+                    <PDPAlsoAvailable productsAvailable={ alsoAvailable } productSku={ sku } />
                 );
             }
         }
