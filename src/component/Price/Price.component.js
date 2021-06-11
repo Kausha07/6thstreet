@@ -11,11 +11,13 @@ class Price extends PureComponent {
         basePrice: PropTypes.number.isRequired,
         specialPrice: PropTypes.number.isRequired,
         currency: PropTypes.string.isRequired,
-        fixedPrice: PropTypes.bool
+        fixedPrice: PropTypes.bool,
+        displayDiscountPercentage: PropTypes.bool.isRequired
     };
 
     static defaultProps = {
-        fixedPrice: false
+        fixedPrice: false,
+        displayDiscountPercentage: true
     };
 
     state = {
@@ -55,8 +57,13 @@ class Price extends PureComponent {
     discountPercentage() {
         const {
             basePrice,
-            specialPrice
+            specialPrice,
+            displayDiscountPercentage
         } = this.props;
+
+        if(!displayDiscountPercentage){
+            return null;
+        }
         const { isArabic } = this.state;
 
         let discountPercentage = Math.round(100 * (1 - (specialPrice / basePrice)));
