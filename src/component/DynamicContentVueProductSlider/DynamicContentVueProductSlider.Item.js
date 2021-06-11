@@ -4,7 +4,7 @@ import { PureComponent } from 'react';
 import { getCurrency } from 'Util/App/App';
 import WishlistIcon from "Component/WishlistIcon";
 
-class VueProductSliderItem extends PureComponent {
+class DynamicContentVueProductSliderItem extends PureComponent {
     static propTypes = {
         data: PropTypes.object.isRequired,
     };
@@ -50,4 +50,4 @@ class VueProductSliderItem extends PureComponent {
     }
 }
 
-export default VueProductSliderItem;
+export default DynamicContentVueProductSliderItem;
