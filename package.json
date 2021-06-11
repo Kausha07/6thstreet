@@ -14,7 +14,6 @@
         "forever": "^3.0.4",
         "html-minifier": "^4.0.0",
         "lerna": "^3.22.1",
-        "nanoid": "^3.1.23",
         "node-cache": "^5.1.2",
         "puppeteer": "^9.0.0",
         "react-circular-carousel": "^1.0.4-0",
