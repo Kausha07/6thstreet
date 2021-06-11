@@ -2,6 +2,7 @@ import { PureComponent } from "react";
 import { Helmet } from 'react-helmet';
 import Config from "./LiveExperience.config";
 import ThirdPartyAPI from "Util/API/provider/ThirdPartyAPI";
+import { nanoid } from 'nanoid'
 // import {} from ''
 import ContentWrapper from 'Component/ContentWrapper';
 import BrowserDatabase from "Util/BrowserDatabase";
@@ -16,7 +17,8 @@ export class LiveExperience extends PureComponent {
     super(props);
     this.state = {
       url: null,
-      hideOnBroadcast: false
+      hideOnBroadcast: false,
+      iframeId: nanoid()
     };
   }
 
@@ -43,15 +45,16 @@ export class LiveExperience extends PureComponent {
            storeId: "13207961",
            storeType: "sixthstreet",
            customColor:'#000000',
-           containerId : 'container',
+           containerId : 'all',
            displayType:'all',
-           staging: false
+           staging: true
        };
        var el = document.createElement('script');
        el.setAttribute('src', 'https://party.spockee.io/builder/' + spck.storeId);
        el.setAttribute('data-spck', JSON.stringify(spck));
        document.body.appendChild(el);
    })();
+
     let _spckUserToken;
     _spckUserToken = `customer_${Math.random().toString(36).substring(2, 10)}${Math.random().toString(36).substring(2, 10)}`;
     let b = window.localStorage.getItem("_spckUserToken")
@@ -59,6 +62,7 @@ export class LiveExperience extends PureComponent {
     if(!window.localStorage.getItem("_spckUserToken")){
       window.localStorage.setItem("_spckUserToken", _spckUserToken )
     }
+
 
     // debugger
 
@@ -80,7 +84,8 @@ export class LiveExperience extends PureComponent {
   playHandler = async (type, id) => {
     // debugger
     const cutomer_id = window.localStorage.getItem("_spckUserToken");
-    const url = `https://d14xmqtgwld57m.cloudfront.net/${type}/${id}?customColor=%23000000&partyIframeId=68qyVT546HtifHOyXhjWg&customerId=${cutomer_id}"`;
+    let iframeId = nanoid();
+    const url = `https://d14xmqtgwld57m.cloudfront.net/${type}/${id}?customColor=%23000000&partyIframeId=${this.state.iframeId}&customerId=${cutomer_id}"`;
     // try {
     //   const resp = await ThirdPartyAPI.put("https://api.spockee.io/t", {
     //     action: "openSP",
@@ -107,11 +112,12 @@ export class LiveExperience extends PureComponent {
   renderSpckUpcomingEvent() {
     const content = this.props.upcoming;
     console.log(this.props.upcoming);
+    // return
     return content.map(this.renderUpcomingGridBlock);
   }
   renderSpckarchivedEvent() {
     //const content = this.props.archived;
-    const content = this.props.archived;
+    const content = this.props.upcoming;
     // debugger
     return content.map(this.renderArchivedGridBlock);
   }
@@ -123,11 +129,15 @@ export class LiveExperience extends PureComponent {
       <div block="spck-live-event">
         <div block="mainImage">
           <img src={mainImageURI} alt={name} />
+          <div block="liveNow">
+          <p block="liveNow-text">LIVE NOW</p>
         </div>
-        <a block="eventPlayBtn" onClick={() => this.playHandler(this.ITEM_TYPE.upcoming, block.id)}><img src={playbtn} alt="event-playbtn"/></a>
+        </div>
+        <a block="eventPlayBtn" onClick={() => this.onClickButton(block.id)}><img src={playbtn} alt="event-playbtn"/></a>
         <div block="eventInfo">
           <h3 block="eventTitle">{name}</h3>
         </div>
+
       </div>
     )}
   };
@@ -155,13 +165,13 @@ export class LiveExperience extends PureComponent {
       return null;
     }
     return (
-      <div className="spck-popup-iframe">
-        <button className="spkBtn" onClick={this.hidePopup}>
+      <div className="spck-popup-iframe" >
+        <button className="spkBtn" onClick={this.hidePopup} >
           {svg}
         </button>
         <iframe
           contentDidMount={this.contentMounted}
-          id="68qyVT546HtifHOyXhjWg"
+          id={this.state.iframeId}
           className="spck-popup-iframe"
           src={url}
         ></iframe>
@@ -180,6 +190,8 @@ export class LiveExperience extends PureComponent {
           <img src={mainImageURI} alt={name}  />
         </div>
         <p block="eventStart"><img src={timerIcon} alt="timerIcon" /> {d.getUTCHours()}: {d.getUTCMinutes()} : {d.getUTCSeconds()}</p>
+        <a block="eventPlayBtn"   onClick={() => this.onClickButton(block.id)}name={`${this.state.iframeId}-watch-button`} ><img src={playbtn} alt="event-playbtn" /></a>
+
         <div block="eventInfo">
           <h3 block="eventTitle">{name}</h3>
           <p block="eventDesc">{description}</p>
@@ -187,6 +199,7 @@ export class LiveExperience extends PureComponent {
       </li>
     )}
   };
+
   renderArchivedGridBlock = (block, i) => {
     const { mainImageURI, name, description, products } = block;
     if (mainImageURI) {
@@ -196,7 +209,7 @@ export class LiveExperience extends PureComponent {
           <img src={mainImageURI} alt={name}  />
         </div>
         <p block="eventProduct"><img src={cartIcon} alt="cartIcon"/> {products.length}</p>
-        <a block="eventPlayBtn" onClick={() => this.playHandler(this.ITEM_TYPE.archived, block.id)}><img src={playbtn} alt="event-playbtn"/></a>
+        <a block="eventPlayBtn"   onClick={() => this.onClickButton(block.id)}name={`${this.state.iframeId}-watch-button`} ><img src={playbtn} alt="event-playbtn" /></a>
         <div block="eventInfo">
           <h3 block="eventTitle">{name}</h3>
           <p block="eventDesc">{description}</p>
@@ -204,12 +217,25 @@ export class LiveExperience extends PureComponent {
       </li>
     )}
   };
+  onClickButton = (id) => {
+    let newId = id.toString();
+    let a = document.getElementsByTagName("button")
+    for(let i = 0 ; i < a.length; i++){
+      console.log(a[i].getAttribute("data-spck-id"))
+      // debugger
+      if(a[i].getAttribute("data-spck-id") === newId){
+        a[i].click();
+      }
+    }
+
+  }
+
 
   render() {
 
     return (
       <main block="LiveShopping">
-        <div id= "container" ></div>
+
         <ContentWrapper
           mix={{ block: 'LiveShopping' }}
           wrapperMix={{
@@ -226,19 +252,23 @@ export class LiveExperience extends PureComponent {
 
           <div block="upComing-Grid">
             <h3 block="sectionTitle">{__("COMING NEXT")}</h3>
+            <div id="live"></div>
             <ul block="spckItems">
               {this.renderSpckUpcomingEvent()}
             </ul>
+
           </div>
 
           <div block="archived-Grid">
             <h3 block="sectionTitle">{__("RECENTLY PLAYED")}</h3>
+            <div id="archived"></div>
             <ul block="spckItems">
               {this.renderSpckarchivedEvent()}
             </ul>
           </div>
           {this.renderPopup()}
           </ContentWrapper>
+          <div id="all"></div>
       </main>
     );
   }
