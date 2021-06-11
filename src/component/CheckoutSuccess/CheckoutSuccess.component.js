@@ -357,7 +357,7 @@ export class CheckoutSuccess extends PureComponent {
         )}
         {this.renderPriceLine(
           cashOnDeliveryFee ??
-            getDiscountFromTotals(total_segments, "msp_cashondelivery"),
+          getDiscountFromTotals(total_segments, "msp_cashondelivery"),
           __("Cash on Delivery Fee")
         )}
         {this.renderPriceLine(
@@ -484,7 +484,7 @@ export class CheckoutSuccess extends PureComponent {
     const {
       creditCardData: { number = "", expDate, cvv },
       paymentMethod,
-      selectedCard,
+      selectedCard
     } = this.props;
 
     if (number && expDate && cvv) {
@@ -517,11 +517,8 @@ export class CheckoutSuccess extends PureComponent {
           </div>
         </div>
       );
-    } else if (selectedCard && Object.keys(selectedCard).length > 0) {
-      //payment done from saved cards
-      const {
-        details: { scheme, expirationDate, maskedCC },
-      } = selectedCard;
+    } else if (selectedCard && Object.keys(selectedCard).length > 0) {//payment done from saved cards
+      const { details: { scheme, expirationDate, maskedCC } } = selectedCard;
       return (
         <div block="Details">
           <div block="Details" elem="TypeLogo">

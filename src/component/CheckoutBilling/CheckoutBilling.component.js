@@ -35,7 +35,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
     ...SourceCheckoutBilling.defaultProps,
     processApplePay: true,
     processingPaymentSelectRequest: false,
-    placeOrder: () => {},
+    placeOrder: () => { },
   };
 
   state = {
@@ -266,14 +266,16 @@ export class CheckoutBilling extends SourceCheckoutBilling {
     const { paymentMethod, binApplied, newCardVisible } = this.props;
     const isCardPayment = CARD === paymentMethod;
     let placeholder = __("Place order");
-    if (isCardPayment) {
-      //if payment is from card.
-      if (newCardVisible && !binApplied) {
-        //if there is new card to add and bin is not applied
+    if (isCardPayment) {//if payment is from card.
+      if (newCardVisible && !binApplied) {//if there is new card to add and bin is not applied
         placeholder = "Add Credit Card";
       }
     }
-    return <>{placeholder}</>;
+    return (
+      <>
+        {placeholder}
+      </>
+    );
   }
 
   renderActions() {
