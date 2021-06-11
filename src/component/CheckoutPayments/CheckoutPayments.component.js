@@ -40,8 +40,8 @@ export class CheckoutPayments extends SourceCheckoutPayments {
   static defaultProps = {
     ...SourceCheckoutPayments.defaultProps,
     selectedPaymentCode: "",
-    processApplePay: false,
-    placeOrder: () => { },
+    processApplePay: true,
+    placeOrder: () => {},
   };
 
   paymentRenderMap = {
