@@ -669,5 +669,7 @@
     "100% secured payments": null,
     "Pay with ApplePay": null,
     "This payment method is not supported yet.": null,
-    "Error loading Stripe! No API-key specified.": null
+    "Error loading Stripe! No API-key specified.": null,
+    "Cash on delivery": null,
+    "Details": null
 }
