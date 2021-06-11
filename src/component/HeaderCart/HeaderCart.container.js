@@ -30,7 +30,8 @@ export class HeaderCartContainer extends PureComponent {
         isSignedIn: PropTypes.bool.isRequired,
         setMinicartOpen: PropTypes.func.isRequired,
         isMinicartOpen: PropTypes.bool.isRequired,
-        updateTotals: PropTypes.func.isRequired
+        updateTotals: PropTypes.func.isRequired,
+        showCartPopUp: PropTypes.bool.isRequired
     };
 
     state = {

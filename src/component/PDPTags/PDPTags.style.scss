@@ -4,8 +4,9 @@
         flex-direction: row;
         flex-flow: wrap;
         justify-content: space-between;
-        padding: 16px 0 16px 0;
-        margin-bottom: -15px;
+        @include desktop {
+            padding: 16px 0 16px 0;
+        }
     }
 
     &-Tags {

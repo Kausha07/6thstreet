@@ -12,7 +12,6 @@ import Config from "./LiveExperience.config";
 import LiveExperience from "./LiveExperience.component";
 
 export const BreadcrumbsDispatcher = import(
-  /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
 );
 
@@ -67,12 +66,12 @@ export class LiveExperienceContainer extends PureComponent {
 
   requestUpcomingParty() {
     const { requestUpcomingParty } = this.props;
-    requestUpcomingParty({ storeId: Config.storeId, isStaging: true });
+    requestUpcomingParty({ storeId: Config.storeId, isStaging: process.env.REACT_APP_SPOCKEE_STAGING });
   }
 
   requestArchivedParty() {
     const { requestArchivedParty } = this.props;
-    requestArchivedParty({ storeId: Config.storeId, isStaging: true });
+    requestArchivedParty({ storeId: Config.storeId, isStaging: process.env.REACT_APP_SPOCKEE_STAGING });
   }
   parseBool = (b) => {
     return !/^(false|0)$/i.test(b) && !!b;

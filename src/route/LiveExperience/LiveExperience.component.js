@@ -23,7 +23,7 @@ export class LiveExperience extends PureComponent {
            customColor:'#000000',
            containerId : 'all',
            displayType:'all',
-           staging: true
+           staging: process.env.REACT_APP_SPOCKEE_STAGING
        };
        var el = document.createElement('script');
        el.setAttribute('src', 'https://party.spockee.io/builder/' + spck.storeId);
