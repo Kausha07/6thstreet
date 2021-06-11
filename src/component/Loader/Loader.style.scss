@@ -37,4 +37,7 @@
         left: 50%;
         top: calc(100vh/2 - (3px * var(--loader-scale)));
     }
+    // @include before-desktop {
+    //     display: none;
+    // }
 }
