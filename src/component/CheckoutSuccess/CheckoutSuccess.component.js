@@ -278,7 +278,7 @@ export class CheckoutSuccess extends PureComponent {
     return (
       <div block="TotalItems">
         <div block="TotalItems" elem="OrderId">
-          {`${__("Order")} #${incrementID}`}
+          {`${__("Order")} #${incrementID} ${__("Details")}`}
         </div>
         <ul block="TotalItems" elem="Items">
           {items.map((item) => (
@@ -396,9 +396,9 @@ export class CheckoutSuccess extends PureComponent {
         <div block="Address" elem="PostCode">
           {postcode}
         </div>
-        <div block="Address" elem="Phone">
+        {/* <div block="Address" elem="Phone">
           {phone}
-        </div>
+        </div> */}
       </div>
     );
   }
@@ -449,9 +449,10 @@ export class CheckoutSuccess extends PureComponent {
     return (
       <div block="PaymentType" mods={{ isArabic }}>
         <div block="PaymentType" elem="Title">
-          {__("Payment Type")}
+          {__("Payment")}
         </div>
         {this.renderPaymentTypeContent()}
+        <p></p>
       </div>
     );
   };
@@ -553,15 +554,15 @@ export class CheckoutSuccess extends PureComponent {
     } else if (paymentMethod.code.match(/apple/)) {
       this.setState({ paymentTitle: __("Apple") });
     } else if (paymentMethod.code.match(/cash/)) {
-      this.setState({ paymentTitle: __("Cash") });
+      this.setState({ paymentTitle: __("Cash on delivery") });
     }
 
     const { paymentTitle } = this.state;
     return (
       <div block="Details">
-        <div block="Details" elem="TypeLogo">
+        {/* <div block="Details" elem="TypeLogo">
           {this.renderPaymentMethodIcon(paymentTitle)}
-        </div>
+        </div> */}
         <div block="Details" elem="TypeTitle">
           {__(paymentTitle)}
         </div>
@@ -630,9 +631,9 @@ export class CheckoutSuccess extends PureComponent {
           {this.renderPhoneVerified()}
           {this.renderTrackOrder()}
           {this.renderTotalsItems()}
-          {this.renderTotals()}
           {this.renderAddresses()}
           {this.renderPaymentType()}
+          {this.renderTotals()}
         </div>
         {this.renderButton()}
         {this.renderMyAccountPopup()}
