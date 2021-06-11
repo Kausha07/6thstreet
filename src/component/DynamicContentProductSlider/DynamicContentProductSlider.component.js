@@ -7,7 +7,7 @@ import Slider from 'SourceComponent/Slider';
 import isMobile from 'SourceUtil/Mobile/isMobile';
 import { Products } from 'Util/API/endpoint/Product/Product.type';
 import { isArabic } from 'Util/App';
-
+import VueProductSliderContainer from './../VueProductSlider'
 import { HOME_PAGE_TRANSLATIONS, ITEMS_PER_PAGE } from './DynamicContentProductSlider.config';
 
 import './DynamicContentProductSlider.style';
@@ -21,7 +21,8 @@ class DynamicContentProductSlider extends PureComponent {
 
     state = {
         currentPage: 0,
-        isArabic: isArabic()
+        isArabic: isArabic(),
+        withViewAll : true
     };
 
     renderProduct = (product, i) => {
@@ -44,33 +45,33 @@ class DynamicContentProductSlider extends PureComponent {
     };
 
     renderProductsDesktop() {
-        const {
-            isLoading,
-            products = []
-        } = this.props;
-        const { currentPage } = this.state;
+        // const {
+        //     isLoading,
+        //     products = []
+        // } = this.props;
+        // // const { currentPage } = this.state;
 
-        if (isLoading) {
-            return 'loading...';
-        }
-        const productArray = products.map(this.renderProduct) || [];
-        const lastPage = parseInt(Math.floor(products.length / ITEMS_PER_PAGE), 10); // first page is 0
-        const lastPageItemCount = products.length % ITEMS_PER_PAGE; // number of products on last page'
+        // if (isLoading) {
+        //     return 'loading...';
+        // }
+        // const productArray = products.map(this.renderProduct) || [];
+        // const lastPage = parseInt(Math.floor(products.length / ITEMS_PER_PAGE), 10); // first page is 0
+        // const lastPageItemCount = products.length % ITEMS_PER_PAGE; // number of products on last page'
 
-        if (currentPage === lastPage) {
-            if (lastPageItemCount === ITEMS_PER_PAGE) {
-                return productArray
-                    .slice(currentPage * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE + lastPageItemCount);
-            }
+        // if (currentPage === lastPage) {
+        //     if (lastPageItemCount === ITEMS_PER_PAGE) {
+        //         return productArray
+        //             .slice(currentPage * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE + lastPageItemCount);
+        //     }
 
-            return productArray
-                .slice(
-                    (currentPage * ITEMS_PER_PAGE) - (ITEMS_PER_PAGE - lastPageItemCount),
-                    currentPage * ITEMS_PER_PAGE + lastPageItemCount
-                );
-        }
+        //     return productArray
+        //         .slice(
+        //             (currentPage * ITEMS_PER_PAGE) - (ITEMS_PER_PAGE - lastPageItemCount),
+        //             currentPage * ITEMS_PER_PAGE + lastPageItemCount
+        //         );
+        // }
 
-        return productArray.slice(currentPage * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE + ITEMS_PER_PAGE);
+        // return productArray.slice(currentPage * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE + ITEMS_PER_PAGE);
     }
 
     renderTitle() {
@@ -184,25 +185,42 @@ class DynamicContentProductSlider extends PureComponent {
     };
 
     render() {
-        const { isArabic } = this.state;
-        const { products: productArray = [] } = this.props;
-        if (productArray.length === 0) {
+        const { isArabic, withViewAll } = this.state;
+        // const { products: productArray = [] } = this.props;
+        const { products } = this.props;
+        if (products.length === 0) {
             return null;
         }
-        const products = (
-            <div mix={ { block: 'DynamicContentProductSlider', elem: 'ProductContainer', mods: { isArabic } } }>
-                { this.renderButtonPrev() }
-                { this.renderProductsDesktop() }
-                { this.renderButtonNext() }
-            </div>
-        );
-
+        // const products = (
+        //     <div mix={ { block: 'DynamicContentProductSlider', elem: 'ProductContainer', mods: { isArabic } } }>
+        //         {/* { this.renderButtonPrev() } */}
+        //         { this.renderProductsDesktop() }
+        //         {/* { this.renderButtonNext() } */}
+        //     </div>
+        // );
+        const { title } = this.props;
+        const finalTitle = isArabic ? HOME_PAGE_TRANSLATIONS[title] : title;
+        const productsDesktop =
+                (<React.Fragment>
+                    {/* {
+                        products.map((item, index) => {
+                            return ( */}
+                                <VueProductSliderContainer
+                                    products={products}
+                                    heading={finalTitle}
+                                    withViewAll
+                                    key={`VueProductSliderContainer`}
+                                />
+                            {/* );
+                        })
+                    } */}
+                </React.Fragment>);
         return (
             <div mix={ { block: 'DynamicContentProductSlider', mods: { isArabic } } }>
-                <div mix={ { block: 'DynamicContentProductSlider', elem: 'HeaderContainer', mods: { isArabic } } }>
+                {(isMobile.any() ) && <div mix={ { block: 'DynamicContentProductSlider', elem: 'HeaderContainer', mods: { isArabic } } }>
                     { this.renderTitle() }
-                </div>
-                { isMobile.any() || isMobile.tablet() ? this.renderProductsMobile() : products }
+                </div>}
+                { isMobile.any() ? this.renderProductsMobile() : productsDesktop }
             </div>
         );
     }

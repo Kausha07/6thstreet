@@ -32,11 +32,15 @@ class VueProductSliderItem extends PureComponent {
     }
 
     render() {
-        const { data: { thumbnail_url, name, brand_name, price, is_new_in = false, sku, link } } = this.props;
+        const { data: { thumbnail_url, name, brand_name, price, is_new_in = false, sku, link, url } } = this.props;
+        let productURL = url;
+        if(link) {
+            productURL = link;
+        }
         return (
             <div block="VueProductSlider" elem="VueProductContainer">
                 <Link
-                    to={link}
+                    to={productURL}
                     data-banner-type="vueSlider">
                     <img block="VueProductSlider" elem="VueProductImage" src={thumbnail_url} alt={name} />
                 </Link>
