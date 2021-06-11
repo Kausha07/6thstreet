@@ -191,7 +191,6 @@ class DynamicContentProductSlider extends PureComponent {
         if (products.length === 0) {
             return null;
         }
-        console.info("prod-----ucts",products);
         // const products = (
         //     <div mix={ { block: 'DynamicContentProductSlider', elem: 'ProductContainer', mods: { isArabic } } }>
         //         {/* { this.renderButtonPrev() } */}
