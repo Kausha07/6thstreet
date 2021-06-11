@@ -156,7 +156,7 @@ class CreditCard extends PureComponent {
 
         return (
             <div block="CreditCard" elem="Card" dir="ltr">
-                <p>card number</p>
+                <p>{__("card number")}</p>
                 <input
                     type="text"
                     placeholder="0000  0000  0000  0000"
@@ -236,7 +236,7 @@ class CreditCard extends PureComponent {
         if (validatorMessage) {
             return (
                 <div block="CreditCard" elem="Validator">
-                    { validatorMessage}
+                    {validatorMessage}
                 </div>
             );
         }
@@ -260,7 +260,7 @@ class CreditCard extends PureComponent {
                     onClick={this.handleCheckboxChange}
                 />
                 <label block="CreditCard" elem="Label" htmlFor={checkboxId}>
-                    {"Save Card"}
+                    {__("Save Card")}
                 </label>
             </div>
         );
@@ -271,7 +271,7 @@ class CreditCard extends PureComponent {
             <div block="NewCard" elem="btn" onClick={this.handleNewCardClick}>
                 <img src={PlusIcon} alt="plus" />
                 <label>
-                    {"New Card"}
+                    {__("New Card")}
                 </label>
             </div>
         );
@@ -336,7 +336,7 @@ class CreditCard extends PureComponent {
         return (
             <React.Fragment>
                 <label block="MyCards" elem="Label">
-                    {"My Cards"}
+                    {__("My Cards")}
                 </label>
                 {this.renderSavedCards(savedCards)}
                 {this.newCardBtn()}

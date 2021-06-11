@@ -672,5 +672,8 @@
     "Error loading Stripe! No API-key specified.": null,
     "Cash on delivery": null,
     "Details": null,
-    "Add Credit Card": null
+    "Add Credit Card": null,
+    "Save Card": null,
+    "New Card": null,
+    "My Cards": null
 }
