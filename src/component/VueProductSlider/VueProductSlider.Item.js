@@ -31,7 +31,6 @@ class VueProductSliderItem extends PureComponent {
   }
 
   render() {
-    return null;
     const {
       data: {
         thumbnail_url,
@@ -41,11 +40,16 @@ class VueProductSliderItem extends PureComponent {
         is_new_in = false,
         sku,
         link,
+        url,
       },
     } = this.props;
+    let productURL = url;
+    if (link) {
+      productURL = link;
+    }
     return (
       <div block="VueProductSlider" elem="VueProductContainer">
-        <Link to={link} data-banner-type="vueSlider">
+        <Link to={productURL} data-banner-type="vueSlider">
           <img
             block="VueProductSlider"
             elem="VueProductImage"
