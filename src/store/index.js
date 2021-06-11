@@ -9,12 +9,14 @@ import {
 import ClubApparelReducer from 'Store/ClubApparel/ClubApparel.reducer';
 import MenuReducer from 'Store/Menu/Menu.reducer';
 import StoreCreditReducer from 'Store/StoreCredit/StoreCredit.reducer';
+import CreditCardReducer from 'Store/CreditCard/CreditCard.reducer';
 
 export const staticReducers = {
     ...sourceStaticReducers,
     StoreCreditReducer,
     ClubApparelReducer,
-    MenuReducer
+    MenuReducer,
+    CreditCardReducer
 };
 
 export function createReducer(asyncReducers) {

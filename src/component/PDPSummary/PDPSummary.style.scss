@@ -42,9 +42,6 @@
         line-height: 30px;
         text-align: right;
 
-        @include desktop {
-            margin-bottom: 30px;
-        }
     }
 
     &-Name {
@@ -52,7 +49,7 @@
 
         @include before-desktop {
             font-size: 16px;
-            font-weight: 500;
+            font-weight: 400;
             letter-spacing: 0;
             line-height: 19px;
             margin-bottom: 0;
@@ -157,13 +154,13 @@
         }
     }
 
-    hr {
+    .Seperator {
         @include desktop {
             display: none;
         }
-        border: 1px solid #EFEFEF;
+        background-color: #EFEFEF;
         margin: 15px 0 0 0;
-        height: 2px;
+        height: 1.5px;
     }
 
     &-Tabby {
@@ -176,13 +173,14 @@
         border-radius: 7px;
         padding: 15px 2px 16px 2px;
         font-size: 12px;
-        margin-top: 20px;
+        margin-top: 15px;
         cursor: pointer;
         justify-content: center;
 
         @include desktop() {
             padding: 15px 15px 14px 18px;
             font-size: 14px;
+            margin-bottom: 30px;
         }
 
         strong {

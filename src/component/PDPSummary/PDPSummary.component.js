@@ -105,9 +105,9 @@ class PDPSummary extends PureComponent {
                 return (
                     <>
                         <button
-                        block="PDPSummary"
-                        elem="Tabby"
-                        onClick={ this.openTabbyPopup }
+                            block="PDPSummary"
+                            elem="Tabby"
+                            onClick={ this.openTabbyPopup }
                         >
                             { __('From') }
                             <strong block="PDPSummary" elem="TabbyPrice">{ `${monthPrice} ${currency}` }</strong>
@@ -115,7 +115,7 @@ class PDPSummary extends PureComponent {
                             <img src={ tabby } alt="tabby" />
                             <span block="PDPSummary" elem="LearnMore">{ __('Learn more') }</span>
                         </button>
-                        <hr />
+                        <div block="Seperator" />
                     </>
                 );
             }
@@ -199,7 +199,6 @@ class PDPSummary extends PureComponent {
         return (
             <>
                 <PDPAddToCart setStockAvailability={ this.setStockAvailability } />
-                <hr />
             </>
         );
     }
@@ -213,7 +212,7 @@ class PDPSummary extends PureComponent {
             return (
                 <>
                     <PDPTags tags={ tags } />
-                    <hr />
+                    <div block="Seperator" />
                 </>
             );
         }
@@ -246,7 +245,7 @@ class PDPSummary extends PureComponent {
                     { this.renderPrice() }
                     { this.renderSummaryHeader() }
                 </div>
-                <hr />
+                <div block="Seperator" />
                 { this.renderTabby() }
                 {/* { this.renderColors() } */}
                 { this.renderAddToCartSection() }

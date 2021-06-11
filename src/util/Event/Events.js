@@ -19,3 +19,7 @@ export const EVENT_GTM_PRODUCT_DETAIL = 'gtm_product_detail';
 export const EVENT_GTM_PRODUCT_REMOVE_FROM_CART = 'gtm_product_remove_from_cart';
 export const EVENT_GTM_PURCHASE = 'gtm_purchase';
 export const EVENT_GTM_BANNER_CLICK = 'gtm_banner_widget_click';
+export const VIEW_SEARCH_RESULTS_ALGOLIA = 'view_search_results_algolia';
+export const SELECT_ITEM_ALGOLIA=  'select_item_algolia';
+export const ADD_TO_CART_ALGOLIA=  'add_to_cart_algolia';
+

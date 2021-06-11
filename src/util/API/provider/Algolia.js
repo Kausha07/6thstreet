@@ -1,94 +1,142 @@
-import { getStore } from 'Store';
-
-import AlgoliaSDK from '../../../../packages/algolia-sdk';
-import { queryString } from '../helper/Object';
+import { getStore } from "Store";
+import { VIEW_SEARCH_RESULTS_ALGOLIA } from "Util/Event";
+import AlgoliaSDK from "../../../../packages/algolia-sdk";
+import { queryString } from "../helper/Object";
 
 export const PRODUCT_HIGHLIGHTS = [
-    'color',
-    'gender',
-    'material',
-    'leg_length',
-    'skirt_length',
-    'sleeve_length',
-    'dress_length',
-    'neck_line',
-    'heel_height',
-    'toe_shape'
+  "color",
+  "gender",
+  "material",
+  "leg_length",
+  "skirt_length",
+  "sleeve_length",
+  "dress_length",
+  "neck_line",
+  "heel_height",
+  "toe_shape",
 ];
 
 export class Algolia {
-    constructor(options = {}) {
-        const { AppState: { locale: appLocale } } = getStore().getState();
+  constructor(options = {}) {
+    const {
+      AppState: { locale: appLocale },
+    } = getStore().getState();
 
-        const {
-            locale = appLocale || process.env.REACT_APP_LOCATE,
-            env = process.env.REACT_APP_ALGOLIA_ENV,
-            appId = process.env.REACT_APP_ALGOLIA_APP_ID,
-            adminKey = process.env.REACT_APP_ALGOLIA_KEY,
-            index = ''
-        } = options;
+    const {
+      locale = appLocale || process.env.REACT_APP_LOCATE,
+      env = process.env.REACT_APP_ALGOLIA_ENV,
+      appId = process.env.REACT_APP_ALGOLIA_APP_ID,
+      adminKey = process.env.REACT_APP_ALGOLIA_KEY,
+      index = "",
+    } = options;
 
-        AlgoliaSDK.init(
-            appId,
-            adminKey,
-        );
+    AlgoliaSDK.init(appId, adminKey);
 
-        AlgoliaSDK.setIndex.call(
-            AlgoliaSDK,
-            locale,
-            env,
-            index
-        );
-    }
+    AlgoliaSDK.setIndex.call(AlgoliaSDK, locale, env, index);
+  }
 
-    async getPLP(params = {}) {
-        const { AppState: { locale = process.env.REACT_APP_LOCATE } } = getStore().getState();
+  async getPLP(params = {}) {
+    const {
+      AppState: { locale = process.env.REACT_APP_LOCATE },
+    } = getStore().getState();
 
-        const url = queryString({
-            ...params,
-            // TODO: get proper locale
-            locale
-        });
+    const url = queryString({
+      ...params,
+      // TODO: get proper locale
+      locale,
+    });
 
-        // TODO: add validation
-        return AlgoliaSDK.getPLP(`/?${url}`);
-    }
+    // TODO: add validation
+    return AlgoliaSDK.getPLP(`/?${url}`);
+  }
 
-    async getPDP(params = {}) {
-        const {
-            id = '',
-            highlights = PRODUCT_HIGHLIGHTS
-        } = params;
+  async getPDP(params = {}) {
+    const { id = "", highlights = PRODUCT_HIGHLIGHTS } = params;
 
-        // TODO: add validation
-        return AlgoliaSDK.getPDP({ id, highlights });
-    }
+    // TODO: add validation
+    return AlgoliaSDK.getPDP({ id, highlights });
+  }
 
-    async getProductBySku(params = {}) {
-        const {
-            sku = '',
-            highlights = PRODUCT_HIGHLIGHTS
-        } = params;
+  async getProductBySku(params = {}) {
+    const { sku = "", highlights = PRODUCT_HIGHLIGHTS } = params;
 
-        // TODO: add validation
-        return AlgoliaSDK.getProductBySku({ sku, highlights });
-    }
+    // TODO: add validation
+    return AlgoliaSDK.getProductBySku({ sku, highlights });
+  }
 
-    searchBy(params) {
-        return AlgoliaSDK.searchBy(params);
-    }
+  searchBy(params) {
+    return AlgoliaSDK.searchBy(params);
+  }
 
-    async getBrands(gender) {
-        // TODO: validate data, possible cache
-        const { data = [] } = await AlgoliaSDK.getBrands(gender) || {};
+  async getBrands(gender) {
+    // TODO: validate data, possible cache
+    const { data = [] } = (await AlgoliaSDK.getBrands(gender)) || {};
+    return data;
+  }
+
+  async getPopularBrands(limit) {
+    // TODO: validate data, possible cache
+    const { data = [] } = (await AlgoliaSDK.getPopularBrands(limit)) || {};
+    return data;
+  }
+
+  async logAlgoliaAnalytics(event_type, name, params, algoliaParams) {
+    switch (event_type) {
+      case "view": {
+        switch (name) {
+          case VIEW_SEARCH_RESULTS_ALGOLIA: {
+            if (params.items.length > 0) {
+              const { data = [] } =
+                (await AlgoliaSDK.logAlgoliaAnalytics(
+                  event_type,
+                  name,
+                  algoliaParams.objectIDs,
+                  algoliaParams.queryID,
+                  algoliaParams.userToken,
+                  []
+                )) || {};
+              return data;
+            } else {
+              const { data = [] } =
+                (await AlgoliaSDK.logSearchResults(
+                  event_type,
+                  "No_Search_Result",
+                  algoliaParams.objecIDs ? algoliaParams.objecIDs : [],
+                  algoliaParams.queryID,
+                  algoliaParams.userToken,
+                  [`search:${algoliaParams.queryID}`]
+                )) || {};
+              return data;
+            }
+          }
+        }
+      }
+      case "click": {
+        const { data = [] } =
+          (await AlgoliaSDK.logAlgoliaAnalytics(
+            event_type,
+            name,
+            algoliaParams.objectIDs,
+            algoliaParams.queryID,
+            algoliaParams.userToken,
+            algoliaParams.position
+          )) || {};
         return data;
-    }
+      }
 
-    async getPopularBrands(limit) {
-        // TODO: validate data, possible cache
-        const { data = [] } = await AlgoliaSDK.getPopularBrands(limit) || {};
+      case "conversion": {
+        const { data = [] } =
+          (await AlgoliaSDK.logAlgoliaAnalytics(
+            event_type,
+            name,
+            algoliaParams.objectIDs,
+            algoliaParams.queryID,
+            algoliaParams.userToken
+          )) || {};
         return data;
+      }
     }
+  }
 }
 
 export default Algolia;

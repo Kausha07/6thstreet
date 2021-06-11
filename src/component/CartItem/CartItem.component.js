@@ -274,11 +274,12 @@ export class CartItem extends PureComponent {
                 basePrice
             }
         } = this.props;
+        const { isArabic } = this.state;
         const decimals = FIXED_CURRENCIES.includes(currency_code) ? 3 : 2;
 
         const withoutDiscount = (
             <>
-                { currency_code }
+                <span>{ currency_code }</span>
                 <span>
                     { `${parseFloat(row_total).toFixed(decimals)}` }
                 </span>
@@ -289,14 +290,22 @@ export class CartItem extends PureComponent {
             <div
               block="CartItem"
               elem="DiscountPrice"
+              mods={ { isArabic } }
             >
-                <div>
-                    { currency_code }
+                <div
+                    block="CartItem-DiscountPrice"
+                    elem="BasePrice"
+                    mods={ { isArabic } }
+                >
+                    <span>{ currency_code }</span>
                     <span>
                         { `${parseFloat(basePrice).toFixed(decimals)}` }
                     </span>
                 </div>
-                { withoutDiscount }
+                <div
+                >
+                    { withoutDiscount }
+                </div>
             </div>
         );
 
@@ -304,6 +313,7 @@ export class CartItem extends PureComponent {
             <div
               block="CartItem"
               elem="Price"
+              mods={ { isArabic } }
             >
                 { basePrice === row_total || !basePrice ? withoutDiscount : withDiscount }
             </div>

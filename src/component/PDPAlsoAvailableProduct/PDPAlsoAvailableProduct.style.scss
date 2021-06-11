@@ -10,15 +10,14 @@
         height: 150px;
         &-Image {
             object-position: 0% 50%;
-            object-fit: cover;
+            object-fit: contain;
         }
         @include before-desktop {
             height: 229.5px;
             margin: 16px 0 8px 0;
             &-Image {
                 object-position: 0% 50%;
-                object-fit: cover;
-
+                object-fit: contain;
             }
         }
     }

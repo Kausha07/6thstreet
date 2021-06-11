@@ -2,10 +2,10 @@
     "name": "6th-street",
     "private": true,
     "dependencies": {
-        "@6thstreetdotcom/algolia-sdk": "^1.6.0",
+        "@6thstreetdotcom/algolia-sdk": "^1.8.3-beta.1",
         "@scandipwa/scandipwa": "0.0.1",
         "@scandipwa/scandipwa-scripts": "0.0.8",
-        "@sentry/react": "^6.3.5",
+        "@sentry/react": "^6.5.1",
         "@sentry/tracing": "^6.3.5",
         "cacache": "^15.0.6",
         "classnames": "^2.2.6",
@@ -16,11 +16,14 @@
         "lerna": "^3.22.1",
         "node-cache": "^5.1.2",
         "puppeteer": "^9.0.0",
+        "query-string": "^7.0.0",
         "react-circular-carousel": "^1.0.4-0",
         "react-helmet": "^6.1.0",
         "react-iframe": "^1.8.0",
+        "react-spinkit": "^3.0.0",
         "tiny-slider": "^2.9.3",
         "tiny-slider-react": "^0.5.3",
+        "uuid": "^8.3.2",
         "workbox-webpack-plugin": "^6.0.2"
     },
     "scripts": {

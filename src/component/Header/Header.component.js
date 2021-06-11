@@ -1,91 +1,91 @@
-import PropTypes from 'prop-types';
-import { PureComponent } from 'react';
-import { withRouter } from 'react-router';
-import HeaderBottomBar from 'Component/HeaderBottomBar';
-import HeaderMainSection from 'Component/HeaderMainSection';
-import HeaderTopBar from 'Component/HeaderTopBar';
-import MobileBottomBar from 'Component/MobileBottomBar';
-import MobileMenuSidebar from 'Component/MobileMenuSideBar/MobileMenuSidebar.component';
-import { MOBILE_MENU_SIDEBAR_ID } from 'Component/MobileMenuSideBar/MoblieMenuSideBar.config';
-import OfflineNotice from 'Component/OfflineNotice';
-import isMobile from 'Util/Mobile';
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
+import { withRouter } from "react-router";
+import HeaderBottomBar from "Component/HeaderBottomBar";
+import HeaderMainSection from "Component/HeaderMainSection";
+import HeaderTopBar from "Component/HeaderTopBar";
+import MobileBottomBar from "Component/MobileBottomBar";
+import MobileMenuSidebar from "Component/MobileMenuSideBar/MobileMenuSidebar.component";
+import { MOBILE_MENU_SIDEBAR_ID } from "Component/MobileMenuSideBar/MoblieMenuSideBar.config";
+import OfflineNotice from "Component/OfflineNotice";
+import isMobile from "Util/Mobile";
 
-import './Header.style';
+import "./Header.style";
 
 export class Header extends PureComponent {
-    static propTypes = {
-        navigationState: PropTypes.shape({
-            name: PropTypes.string
-        }).isRequired
-    };
+  static propTypes = {
+    navigationState: PropTypes.shape({
+      name: PropTypes.string,
+    }).isRequired,
+  };
 
-    state = {
-        newMenuGender: '',
-        isMobile: isMobile.any() || isMobile.tablet()
-    };
+  state = {
+    newMenuGender: "",
+    isMobile: isMobile.any() || isMobile.tablet(),
+  };
 
-    headerSections = [
-        HeaderTopBar,
-        HeaderMainSection,
-        HeaderBottomBar,
-        MobileBottomBar
-    ];
+  headerSections = [
+    HeaderTopBar,
+    HeaderMainSection,
+    HeaderBottomBar,
+    MobileBottomBar,
+  ];
 
-    getIsCheckout = () => {
-        const { isMobile } = this.state;
-        if (location.pathname.match(/checkout/)) {
-            return isMobile ? true : !location.pathname.match(/success/);
-        }
-        return false;
-    };
-
-    shouldChatBeHidden() {
-        const chatElem = document.getElementById('ori-chatbot-root');
-        if (chatElem) {
-            if (location.pathname.match(/checkout|cart/)) {
-                chatElem.classList.add('hidden');
-            } else {
-                chatElem.classList.remove('hidden');
-            }
-        }
+  getIsCheckout = () => {
+    const { isMobile } = this.state;
+    if (location.pathname.match(/checkout/)) {
+      return isMobile ? true : !location.pathname.match(/success/);
     }
+    return false;
+  };
 
-    renderSection = (Component, i) => {
-        const { navigationState } = this.props;
-        const { newMenuGender } = this.state;
-        const { pathname = '' } = window.location;
-
-        return (
-            <Component
-              key={ i }
-              navigationState={ navigationState }
-              changeMenuGender={ this.changeMenuGender }
-              newMenuGender={ newMenuGender }
-              pathname={ pathname }
-            />
-        );
-    };
-
-    changeMenuGender = (gender) => {
-        this.setState({ newMenuGender: gender });
-    };
-
-    render() {
-        const { navigationState: { name } } = this.props;
-        const isCheckout = this.getIsCheckout();
-        this.shouldChatBeHidden();
-        return (
-            <>
-                <header block="Header" mods={ { name } }>
-                    { isCheckout
-                        ? null
-                        : this.headerSections.map(this.renderSection) }
-                    <MobileMenuSidebar activeOverlay={ MOBILE_MENU_SIDEBAR_ID } />
-                </header>
-                <OfflineNotice />
-            </>
-        );
+  shouldChatBeHidden() {
+    const chatElem = document.getElementById("ori-chatbot-root");
+    if (chatElem) {
+      if (location.pathname.match(/checkout|cart/)) {
+        chatElem.classList.add("hidden");
+      } else {
+        chatElem.classList.remove("hidden");
+      }
     }
+  }
+
+  renderSection = (Component, i) => {
+    const { navigationState } = this.props;
+    const { newMenuGender } = this.state;
+    const { pathname = "" } = window.location;
+
+    return (
+      <Component
+        key={i}
+        navigationState={navigationState}
+        changeMenuGender={this.changeMenuGender}
+        newMenuGender={newMenuGender}
+        pathname={pathname}
+      />
+    );
+  };
+
+  changeMenuGender = (gender) => {
+    this.setState({ newMenuGender: gender });
+  };
+
+  render() {
+    const {
+      navigationState: { name },
+    } = this.props;
+    const isCheckout = this.getIsCheckout();
+    this.shouldChatBeHidden();
+    return (
+      <>
+        <header block="Header" mods={{ name }}>
+          {isCheckout ? null : this.headerSections.map(this.renderSection)}
+          <MobileMenuSidebar activeOverlay={MOBILE_MENU_SIDEBAR_ID} />
+        </header>
+        <OfflineNotice />
+      </>
+    );
+  }
 }
 
 export default withRouter(Header);

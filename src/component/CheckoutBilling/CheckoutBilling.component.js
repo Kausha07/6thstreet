@@ -16,7 +16,7 @@ import { BILLING_STEP } from "Route/Checkout/Checkout.config";
 import { CheckoutBilling as SourceCheckoutBilling } from "SourceComponent/CheckoutBilling/CheckoutBilling.component";
 import { isArabic } from "Util/App";
 import { isSignedIn } from "Util/Auth";
-
+import Spinner from "react-spinkit";
 import "./CheckoutBilling.extended.style";
 
 export class CheckoutBilling extends SourceCheckoutBilling {
@@ -33,9 +33,9 @@ export class CheckoutBilling extends SourceCheckoutBilling {
 
   static defaultProps = {
     ...SourceCheckoutBilling.defaultProps,
-    processApplePay: false,
+    processApplePay: true,
     processingPaymentSelectRequest: false,
-    placeOrder: () => {},
+    placeOrder: () => { },
   };
 
   state = {
@@ -191,6 +191,8 @@ export class CheckoutBilling extends SourceCheckoutBilling {
       setOrderButtonEnabled,
       setOrderButtonDisabled,
       resetBinApply,
+      applyPromotionSavedCard,
+      removePromotionSavedCard,
     } = this.props;
 
     if (!paymentMethods.length) {
@@ -215,6 +217,8 @@ export class CheckoutBilling extends SourceCheckoutBilling {
         resetBinApply={resetBinApply}
         processApplePay={processApplePay}
         placeOrder={placeOrder}
+        applyPromotionSavedCard={applyPromotionSavedCard}
+        removePromotionSavedCard={removePromotionSavedCard}
       />
     );
   }
@@ -259,11 +263,17 @@ export class CheckoutBilling extends SourceCheckoutBilling {
   // };
 
   renderButtonPlaceholder() {
-    const { paymentMethod, binApplied } = this.props;
+    const { paymentMethod, binApplied, newCardVisible } = this.props;
     const isCardPayment = CARD === paymentMethod;
+    let placeholder = __("Place order");
+    if (isCardPayment) {//if payment is from card.
+      if (newCardVisible && !binApplied) {//if there is new card to add and bin is not applied
+        placeholder = "Add Credit Card";
+      }
+    }
     return (
       <>
-        {!binApplied && isCardPayment ? "Add Credit Card" : __("Place order")}
+        {placeholder}
       </>
     );
   }
@@ -289,7 +299,9 @@ export class CheckoutBilling extends SourceCheckoutBilling {
       : !isOrderButtonEnabled;
 
     const isApplePay = paymentMethod === CHECKOUT_APPLE_PAY;
-
+    const isTabbyPay =
+      paymentMethod === "tabby_installments" ||
+      paymentMethod === "tabby_checkout";
     return (
       <>
         {this.renderCreditCardTooltipBar()}
@@ -304,10 +316,27 @@ export class CheckoutBilling extends SourceCheckoutBilling {
               processingPaymentSelectRequest ||
               isApplePay
             }
-            mix={{ block: "CheckoutBilling", elem: "Button" }}
+            mix={{
+              block: "CheckoutBilling",
+              elem:
+                processingRequest || processingPaymentSelectRequest
+                  ? "spinningButton"
+                  : isTabbyPay
+                  ? "tabbyButton"
+                  : "Button",
+            }}
           >
-            {/* {__("Place order")} */}
-            {this.renderButtonPlaceholder()}
+            {processingRequest || processingPaymentSelectRequest ? (
+              <Spinner
+                className="loadingSpinner"
+                name="three-bounce"
+                color="white"
+              />
+            ) : isTabbyPay ? (
+              __("Place tabby order")
+            ) : (
+              this.renderButtonPlaceholder()
+            )}
           </button>
         </div>
       </>

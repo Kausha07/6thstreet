@@ -74,8 +74,7 @@ class HeaderMainSection extends NavigationAbstract {
         delay: 150,
         lastProduct: null,
         lastCategory: null,
-        search: '',
-        isArabic: isArabic()
+        search: ''
     };
 
     handleScroll = () => {
@@ -180,6 +179,7 @@ class HeaderMainSection extends NavigationAbstract {
             <HeaderCart
               key="cart"
               CartButton="CartButton"
+              showCartPopUp={ true }
             />
         );
     }
@@ -210,7 +210,7 @@ class HeaderMainSection extends NavigationAbstract {
     }
 
     renderLogo() {
-        const { isArabic } = this.state;
+        
 
         if (isMobile.any()) {
             if (this.isPLP()) {
@@ -223,7 +223,7 @@ class HeaderMainSection extends NavigationAbstract {
                 this.setMainContentPadding();
 
                 return (
-                    <span block="CategoryTitle" mods={ { isArabic } }>
+                    <span block="CategoryTitle" mods={ { isArabic: isArabic() } }>
                       { pagePLPTitle }
                     </span>
                 );
@@ -234,7 +234,7 @@ class HeaderMainSection extends NavigationAbstract {
                 this.setMainContentPadding('50px');
 
                 return (
-                    <span block="CategoryTitle" mods={ { isArabic } }>
+                    <span block="CategoryTitle" mods={ { isArabic: isArabic() } }>
                       { pagePDPTitle }
                     </span>
                 );
@@ -270,10 +270,9 @@ class HeaderMainSection extends NavigationAbstract {
 
     renderBack() {
         const { history } = this.props;
-        const { isArabic } = this.state;
-
+        
         return this.isPLP() || this.isPDP() ? (
-            <div block="BackArrow" mods={ { isArabic } } key="back">
+            <div block="BackArrow" mods={ { isArabic: isArabic() } } key="back">
                 <button
                   block="BackArrow-Button"
                   onClick={ this.isPLP() ? this.backFromPLP : history.goBack }

@@ -1,11 +1,12 @@
-import init from './init';
-import getPLP from './get-plp';
+import getBrands from './get-brands';
 import getPDP from './get-pdp';
+import getPLP from './get-plp';
+import getPopularBrands from './get-popular-brands';
+import getProductBySku from './get-product-by-sku';
+import init from './init';
+import logAlgoliaAnalytics from './logger';
 import searchBy from './search-by';
 import getSuggestions from './suggestions';
-import getPopularBrands from './get-popular-brands';
-import getBrands from './get-brands';
-import getProductBySku from './get-product-by-sku';
 
 export {
     init,
@@ -15,5 +16,7 @@ export {
     getPopularBrands,
     getBrands,
     getProductBySku,
-    getSuggestions
+    getSuggestions,
+    logAlgoliaAnalytics,
 };
+
