@@ -129,7 +129,7 @@ class SearchSuggestion extends PureComponent {
   }
 
   renderNothingFound() {
-    return __("Nothing found");
+    return <div block="NothingFound">{__("No result found")}</div>;
   }
   closeSearchPopup = () => {
     this.props.closeSearch();

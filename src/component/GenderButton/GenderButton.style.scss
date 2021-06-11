@@ -1,4 +1,9 @@
 .GenderButton {
+  &-Link {
+    &:hover {
+      text-shadow: 0 0 0.01px black;
+    }
+  }
   &-Container {
     display: inline-block;
     height: 14px;
@@ -35,12 +40,10 @@
 
     &_isCurrentGender,
     &:hover {
-      //   border-bottom: 2px solid var(--black);
       font-weight: var(--fw-bold);
+      letter-spacing: 0;
       font-size: 12px;
-      // letter-spacing: 0;
       transition-duration: unset;
-
       @include desktop {
         font-size: 14px;
       }

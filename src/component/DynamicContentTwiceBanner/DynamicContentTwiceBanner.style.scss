@@ -41,6 +41,7 @@
   }
   &-BannerImgRight {
     .BannerImage {
+      object-fit: cover;
       @include tablet {
         min-height: 334px;
         min-width: 408.91px;

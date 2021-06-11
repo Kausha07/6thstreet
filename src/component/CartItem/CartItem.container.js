@@ -21,10 +21,9 @@ import { CartItemType } from "Type/MiniCart";
 // import { getUUIDToken } from 'Util/Auth';
 import Event, {
   EVENT_GTM_PRODUCT_ADD_TO_CART,
-  EVENT_GTM_PRODUCT_REMOVE_FROM_CART
+  EVENT_GTM_PRODUCT_REMOVE_FROM_CART,
 } from "Util/Event";
 import CartItem from "./CartItem.component";
-
 
 export const CartDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -140,6 +139,7 @@ export class CartItemContainer extends PureComponent {
    * @return {void}
    */
   handleChangeQuantity(quantity) {
+    debugger;
     this.setState({ isLoading: true }, () => {
       const {
         updateProductInCart,
@@ -153,7 +153,7 @@ export class CartItemContainer extends PureComponent {
           row_total,
           sku,
           qty: oldQuantity,
-          objectID
+          objectID,
         },
         showNotification,
       } = this.props;

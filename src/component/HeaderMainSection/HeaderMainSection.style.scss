@@ -79,9 +79,9 @@ main {
     &-Button {
       content: "";
       background: url(./icons/search-black.svg) no-repeat;
-      background-size: 24px;
-      width: 24px;
-      height: 24px;
+      background-size: 26px;
+      width: 26px;
+      height: 26px;
       display: inline-block;
       position: relative;
       // top: -4px;
@@ -224,14 +224,14 @@ main {
         &-Button {
           left: 5px;
           top: 3px;
-          background-size: 30px;
-          width: 30px;
-          height: 30px;
+          background-size: 24px;
+          width: 24px;
+          height: 24px;
         }
 
         &-Count {
-          top: 5px;
-          right: 5px;
+          top: 2px;
+          right: -2px;
         }
 
         &_isArabic {
@@ -265,8 +265,8 @@ main {
       }
 
       &-Count {
-        top: 5px;
-        right: 5px;
+        top: 0px;
+        right: -5px;
       }
 
       &_isArabic {

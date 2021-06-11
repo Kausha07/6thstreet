@@ -155,11 +155,13 @@ export class HomePageContainer extends PureComponent {
   }
 
   containerProps = () => {
+    const { gender } = this.props;
     const { dynamicContent, isLoading } = this.state;
 
     return {
       dynamicContent,
       isLoading,
+      gender,
     };
   };
 

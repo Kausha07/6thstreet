@@ -41,9 +41,9 @@ class HomePage extends PureComponent {
   }
 
   renderDynamicContent() {
-    const { dynamicContent } = this.props;
+    const { dynamicContent, gender } = this.props;
 
-    return <DynamicContent content={dynamicContent} />;
+    return <DynamicContent gender={gender} content={dynamicContent} />;
   }
 
   renderLoginBlock() {

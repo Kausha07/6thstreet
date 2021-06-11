@@ -207,8 +207,12 @@
     }
   }
   .tns-item {
+    padding-right: 20px !important;
     @include tablet {
       padding-right: 20px !important;
+    }
+    @include mobile {
+      padding-right: 0 !important;
     }
   }
 }

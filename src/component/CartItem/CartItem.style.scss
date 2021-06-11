@@ -9,326 +9,372 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
- :root {
-    --cart-item-heading-color: #000;
-    --cart-item-subheading-color: #888;
-    --cart-item-option-color: #adadad;
-    --cart-item-background: #fff;
-    --cart-item-actions-color: #000;
-    --cart-item-divider-color: var(--expandable-content-divider-color);
+:root {
+  --cart-item-heading-color: #000;
+  --cart-item-subheading-color: #888;
+  --cart-item-option-color: #adadad;
+  --cart-item-background: #fff;
+  --cart-item-actions-color: #000;
+  --cart-item-divider-color: var(--expandable-content-divider-color);
 
-    --Gallery: #EFEFEF;
-    --Cardinal: #D12229;
+  --Gallery: #efefef;
+  --Cardinal: #d12229;
 }
 
 .CartItem {
-    --header-color: var(--cart-item-actions-color);
+  --header-color: var(--cart-item-actions-color);
 
-    border-top: 1px solid var(--Gallery);
-    margin: 0;
-    font-weight: var(--fw-regular);
-    min-height: 140px;
+  border-top: 1px solid var(--Gallery);
+  margin: 0;
+  font-weight: var(--fw-regular);
+  min-height: 140px;
 
-    @include desktop {
-        margin: 1rem;
+  @include desktop {
+    margin: 20px;
+  }
+
+  &:first-of-type {
+    border-top: none;
+  }
+
+  &-Quantity {
+    display: inline-block;
+    margin-left: 12px;
+    select {
+      padding: 7px;
+      height: 30px;
+      width: 55px;
+      border: 1px solid #d1d1d1;
+      border-radius: 6px;
+      background-color: #ffffff;
+    }
+    &::after {
+      content: "";
+      display: block;
+      width: 6px;
+      height: 6px;
+      transform: translateY(-2px) rotate(44deg);
+      position: absolute;
+      right: 14px;
+      bottom: 0;
+      top: 0;
+      margin-top: 12px;
+      border: solid var(--text-color);
+      border-width: 0 1px 1px 0;
+    }
+  }
+
+  &-NotAvailable {
+    font-size: 16px;
+    bottom: -10px;
+    font-weight: var(--fw-demi);
+    color: var(--Cardinal);
+  }
+
+  &-Link {
+    color: inherit;
+    padding: 0;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  &-Option,
+  & {
+    padding-left: 0;
+    margin-bottom: 10px;
+
+    &::before {
+      content: none;
     }
 
-    &:first-of-type {
-        border-top: none;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &-Content {
+    height: auto;
+    width: 60%;
+
+    @include desktop() {
+      height: 130px;
+      width: 100%;
     }
 
-    &-NotAvailable {
-        font-size: 16px;
-        bottom: -10px;
-        font-weight: var(--fw-demi);
-        color: var(--Cardinal);
-    }
-
-    &-Link {
-        color: inherit;
-        padding: 0;
-
-        &:hover {
-            text-decoration: none;
-        }
-    }
-
-    &-Option,
-    & {
-        padding-left: 0;
-        margin-bottom: 10px;
-
-        &::before {
-            content: none;
-        }
-
-        &:last-child {
-            margin-bottom: 0;
-        }
-    }
-
-    &-Content {
-        height: auto;
-        width: 60%;
-
-        @include desktop() {
-            height: 130px;
-            width: 100%;
-        }
-
-        &_isLikeTable {
-            @include after-mobile {
-                padding-bottom: 0;
-                min-height: 5rem;
-                align-self: center;
-            }
-        }
-    }
-
-    &-Wrapper {
-        width: 100%;
-        display: grid;
-        grid-template-columns: auto auto;
-        background: var(--cart-item-background);
-        padding-top: 15px;
-        height: auto;
-        text-transform: capitalize;
-    }
-
-    &-Options {
-        display: flex;
-        justify-content: flex-start;
-        align-items: flex-start;
-
-        &_isLikeTable {
-            @include after-mobile {
-                flex-grow: 1;
-            }
-        }
-    }
-
-    &-Option {
-        font-size: 10px;
-        text-transform: uppercase;
-        border: 1px solid var(--cart-item-option-color);
-        color: var(--cart-item-option-color);
-        padding: 3px 5px;
-        margin-right: 5px;
-    }
-
-    &-ItemOptionsWrapper {
-        &_isLikeTable {
-            @include desktop {
-                max-width: 45%;
-            }
-        }
-    }
-
-    &-ItemOption {
-        display: flex;
-        margin-bottom: .5rem;
-        margin-right: .5rem;
-    }
-
-    &-ItemOptionLabel {
+    &_isLikeTable {
+      @include after-mobile {
+        padding-bottom: 0;
+        min-height: 5rem;
         align-self: center;
-        font-weight: var(--fw-bold);
-        margin-right: .5rem;
+      }
     }
+  }
 
-    &-Heading {
-        font-size: 14px;
-        line-height: 1.2;
+  &-Wrapper {
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto auto;
+    background: var(--cart-item-background);
+    padding-top: 15px;
+    height: auto;
+    text-transform: capitalize;
+  }
+
+  &-Options {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+
+    &_isLikeTable {
+      @include after-mobile {
         flex-grow: 1;
-        width: 100%;
-        margin-bottom: .5rem;
-        color: var(--cart-item-heading-color);
+      }
+    }
+  }
+
+  &-Option {
+    font-size: 10px;
+    text-transform: uppercase;
+    border: 1px solid var(--cart-item-option-color);
+    color: var(--cart-item-option-color);
+    padding: 3px 5px;
+    margin-right: 5px;
+  }
+
+  &-ItemOptionsWrapper {
+    &_isLikeTable {
+      @include desktop {
+        max-width: 45%;
+      }
+    }
+  }
+
+  &-ItemOption {
+    display: flex;
+    margin-bottom: 0.5rem;
+    margin-right: 0.5rem;
+  }
+
+  &-ItemOptionLabel {
+    align-self: center;
+    font-weight: var(--fw-bold);
+    margin-right: 0.5rem;
+  }
+
+  &-Heading {
+    flex-grow: 1;
+    width: 100%;
+    margin-bottom: 0;
+    color: var(--cart-item-heading-color);
+    text-align: left;
+    font-weight: var(--fw-demi);
+    font-family: "Avenir Next";
+    font-size: 13px;
+    letter-spacing: 0;
+    line-height: 30px;
+
+    &_isArabic {
+      text-align: right;
+    }
+  }
+
+  &-Picture {
+    height: 121px;
+    width: 90px;
+    object-fit: cover;
+    // margin-right: 18px;
+
+    &_isArabic {
+      margin: 0 0 0 24px;
+    }
+
+    &_isCartPage {
+      width: 150px;
+    }
+  }
+
+  &-Price,
+  &-ColSizeQty {
+    line-height: 30px;
+    font-size: 13px;
+    text-align: left;
+    color: var(--Black);
+    letter-spacing: 0.75px;
+
+    span {
+      margin-left: 5px;
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+  }
+
+  &-Price {
+    font-weight: var(--fw-demi);
+    text-align: justify;
+    color: #000000;
+    font-family: "Avenir Next";
+    font-size: 13px;
+    letter-spacing: 0;
+    line-height: 30px;
+    div {
+      display: flex;
+    }
+  }
+
+  &-DiscountPrice {
+    color: var(--Cardinal);
+    text-decoration: unset;
+    font-weight: var(--fw-demi);
+
+    &_isArabic {
+      div {
         text-align: left;
-        letter-spacing: .75px;
-        font-weight: var(--fw-demi);
-
-        &_isArabic {
-            text-align: right;
-        }
+        direction: ltr;
+      }
     }
 
-    &-Picture {
-        height: 130px;
-        width: 95px;
-        object-fit: cover;
-        margin-right: 24px;
+    &-BasePrice {
+      color: var(--Black);
+      text-decoration: line-through;
+      padding-right: 5px;
+      font-weight: var(--fw-regular);
+    }
+  }
 
-        &_isArabic {
-            margin: 0 0 0 24px;
-        }
+  &-ColSizeQty {
+    // color: var(--Tundora);
+    font-weight: var(--fw-regular);
+    width: 200px;
+    color: #4a4a4a;
+    font-family: "Avenir Next";
+    font-size: 13px;
+    letter-spacing: 0;
+    line-height: 18px;
 
-        &_isCartPage {
-            width: 150px;
-        }
+    span {
+      font-family: "Avenir Next";
+      font-size: 13px;
+      letter-spacing: 0;
+      line-height: 18px;
+      color: #9b9b9b;
     }
 
-    &-Price, &-ColSizeQty {
-        line-height: 30px;
-        font-size: 13px;
-        text-align: left;
-        color: var(--Black);
-        letter-spacing: .75px;
+    &_isArabic {
+      text-align: right;
+    }
+  }
 
-        span {
-            margin-left: 5px;
-        }
+  &-Actions {
+    opacity: 0;
+    max-height: 0;
+    pointer-events: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: row-reverse;
+    will-change: max-height, opacity, padding;
+    transition-property: padding, max-height;
+    transition-duration: 200ms;
+
+    @include mobile {
+      margin-bottom: 10px;
+      padding: 0;
     }
 
-    &-Price {
-        font-weight: var(--fw-demi);
-        text-align: justify;
-        div {
-            display: flex;
-        }
+    @include after-mobile {
+      margin-top: -20px;
+      height: 3rem;
     }
 
-    &-DiscountPrice {
-        color: var(--Cardinal);
-        text-decoration: unset;
-        font-weight: var(--fw-demi);
-
-        &_isArabic {
-            div {
-                text-align: left;
-                direction: ltr;
-            }
-        }
-
-        &-BasePrice {
-            color: var(--Black);
-            text-decoration: line-through;
-            padding-right: 5px;
-            font-weight: var(--fw-regular);
-        }
+    &_isArabic {
+      right: unset;
+      left: 0;
     }
 
-    &-ColSizeQty {
-        color: var(--Tundora);
-        font-weight: var(--fw-regular);
-        width: 200px;
+    &_isLikeTable {
+      @include after-mobile {
+        width: 20%;
+        bottom: 0;
+        right: 20%;
+        top: -5px;
+        margin: auto;
+        justify-content: center;
+      }
 
-        span {
-            color: var(--DustyGray);
-
-        }
-
-        &_isArabic {
-            text-align: right;
-        }
+      > * {
+        margin: 0 5px;
+      }
     }
 
-    &-Actions {
-        opacity: 0;
-        max-height: 0;
-        pointer-events: none;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-direction: row-reverse;
-        will-change: max-height, opacity, padding;
-        transition-property: padding, max-height;
-        transition-duration: 200ms;
+    &_isEditing {
+      transition-property: padding, max-height, opacity;
+      opacity: 1;
+      pointer-events: all;
 
+      @include desktop() {
+        max-height: 3rem;
+      }
+    }
+  }
+
+  &-Delete {
+    // @include clear-button;
+    background: url(./trash.png) no-repeat;
+    background-size: 15px;
+    width: 15px;
+    height: 15px;
+    padding: 0;
+    bottom: -10px;
+  }
+
+  & &-Qty {
+    // hack to obtain required specificity
+    margin-top: 10px;
+    display: flex;
+
+    input {
+      background: transparent;
+      border: 0;
+      color: var(--cart-item-actions-color);
+      height: 28px;
+      font-weight: var(--fw-regular);
+      text-align: center;
+      padding: 0;
+      order: 2;
+      width: 44px;
+      min-width: 44px;
+      font-size: 15px;
+    }
+
+    button {
+      position: relative;
+      order: 1;
+      border: 1px solid var(--cart-item-actions-color);
+      width: 18px;
+      height: 18px;
+      top: 15px;
+      left: 0;
+      color: var(--cart-item-actions-color);
+      background: transparent;
+
+      &:first-of-type {
+        left: 0;
+        order: 3;
+      }
+
+      &:last-of-type {
+        right: 0;
+        order: 1;
+      }
+
+      span {
         @include mobile {
-            margin-bottom: 10px;
-            padding: 0;
+          top: -1px;
         }
-
-        @include after-mobile {
-            margin-top: -20px;
-            height: 3rem;
-        }
-
-        &_isArabic {
-            right: unset;
-            left: 0;
-        }
-
-        &_isLikeTable {
-            @include after-mobile {
-                width: 20%;
-                bottom: 0;
-                right: 20%;
-                top: -5px;
-                margin: auto;
-                justify-content: center;
-            }
-
-            > * {
-                margin: 0 5px;
-            }
-        }
-
-        &_isEditing {
-            transition-property: padding, max-height, opacity;
-            opacity: 1;
-            pointer-events: all;
-
-            @include desktop() {
-                max-height: 3rem;
-            }
-        }
+      }
     }
-
-    &-Delete {
-        // @include clear-button;
-        background: url(./trash.png) no-repeat;
-        background-size: 15px;
-        width: 15px;
-        height: 15px;
-        padding: 0;
-        bottom: -10px;
-    }
-
-    & &-Qty { // hack to obtain required specificity
-        margin-top: 10px;
-        display: flex;
-
-        input {
-            background: transparent;
-            border: 0;
-            color: var(--cart-item-actions-color);
-            height: 28px;
-            font-weight: var(--fw-regular);
-            text-align: center;
-            padding: 0;
-            order: 2;
-            width: 44px;
-            min-width: 44px;
-            font-size: 15px;
-        }
-
-        button {
-            position: relative;
-            order: 1;
-            border: 1px solid var(--cart-item-actions-color);
-            width: 18px;
-            height: 18px;
-            top: 15px;
-            left: 0;
-            color: var(--cart-item-actions-color);
-            background: transparent;
-
-            &:first-of-type {
-                left: 0;
-                order: 3;
-            }
-
-            &:last-of-type {
-                right: 0;
-                order: 1;
-            }
-
-            span {
-                @include mobile {
-                    top: -1px;
-                }
-            }
-        }
-    }
+  }
 }
