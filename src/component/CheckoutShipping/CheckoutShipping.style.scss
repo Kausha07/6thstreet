@@ -1,279 +1,300 @@
 .Checkout {
-    &-Step {
-        .ShippingStep {
-            &_isSignedIn {
-                @include before-desktop {
-                    display: grid;
+  &-Step {
+    .ShippingStep {
+      &_isSignedIn {
+        @include before-desktop {
+          display: grid;
+        }
+
+        .CheckoutShipping {
+          .CheckoutAddressBook {
+            @include desktop {
+              margin-top: 0;
+            }
+
+            .Checkout {
+              &-Heading {
+                display: none;
+              }
+            }
+          }
+        }
+
+        .MyAccountAddressBook {
+          &-ContentWrapper {
+            .MyAccountAddressBook {
+              &-backButton {
+                @include desktop {
+                  display: none;
                 }
+              }
+            }
+          }
 
-                .CheckoutShipping {
-                    .CheckoutAddressBook {
-                        @include desktop {
-                            margin-top: 0;
-                        }
-
-                        .Checkout {
-                            &-Heading {
-                                display: none;
-                            }
-                        }
-                    }
-                }
-
-                .MyAccountAddressBook {
-                    &-ContentWrapper {
-                        .MyAccountAddressBook {
-                            &-backButton {
-                                @include desktop {
-                                    display: none;
-                                }
-                            }
-                        }
-                    }
-
-                    &-ContentWrapper {
-                        @include before-desktop {
-                            top: -90px;
-                        }
-
-                        &_formContent {
-                            .MyAccountAddressBook {
-                                &-backButton {
-                                    position: absolute;
-                                    width: 20px;
-                                    height: 30px;
-                                    top: -100px;
-                                    left: 0;
-                                    z-index: 9;
-
-                                    &::before {
-                                        content: "";
-                                        position: absolute;
-                                        left: 5px;
-                                        border: solid $black;
-                                        border-width: 0 2px 2px 0;
-                                        display: inline-block;
-                                        padding: 4px;
-                                        transform: rotate(135deg);
-                                        -webkit-transform: rotate(135deg);
-                                    }
-
-                                    @include desktop() {
-                                        height: 0;
-                                    }
-
-                                    &_isArabic {
-                                        top: -100px;
-                                        transform: rotate(180deg);
-                                        right: 5px;
-                                        -webkit-transform: rotate(180deg);
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    &-NewAddressWrapper {
-                        top: 17px;
-                        float: right;
-                        z-index: 1;
-
-                        @include before-desktop {
-                            top: 0;
-                            display: flex;
-                            justify-content: center;
-                            grid-row: 4;
-                        }
-
-                        &_formContent {
-                            display: none;
-                        }
-
-                        &_isArabic {
-                            float: left;
-                        }
-                    }
-
-                    &-NewAddress {
-                        font-weight: var(--fw-regular);
-                        font-size: 13px;
-                        line-height: 18px;
-                        background: transparent;
-                        color: var(--black);
-                        border: none;
-                        margin: 0 20px;
-
-                        &:hover {
-                            text-decoration: underline;
-                        }
-
-                        @include before-desktop {
-                            border-radius: 7px;
-                            background: var(--my-acc-background);
-                            text-transform: capitalize;
-                            min-width: 140px;
-                            margin-top: 38px;
-
-                            &:hover {
-                                text-decoration: underline;
-                                background: var(--my-acc-background);
-                            }
-                        }
-                    }
-                }
-
-                .MyAccountAddressPopup {
-                    margin: 20px auto;
-                    background: var(--white);
-
-                    .Form {
-                        top: -130px;
-
-                        @include desktop {
-                            top: 0;
-                            padding: 20px 0 30px 60px;
-                        }
-
-                        .MyAccountAddressFieldForm {
-                            &-Header {
-                                h2 {
-                                    border-top: none;
-                                    margin-left: 0;
-                                }
-                            }
-                        }
-                    }
-
-                    &_isArabic {
-                        .Form {
-                            @include desktop {
-                                padding: 20px 60px 30px 0;
-                            }
-
-                            .MyAccountAddressFieldForm {
-                                &-Header {
-                                    h2 {
-                                        border-top: none;
-                                        margin-left: 0;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                .Form .CheckoutShipping {
-                    grid-row: 3;
-                }
+          &-ContentWrapper {
+            @include before-desktop {
+              top: -90px;
             }
 
             &_formContent {
-                .CheckoutShipping {
-                    display: none;
+              .MyAccountAddressBook {
+                &-backButton {
+                  position: absolute;
+                  width: 20px;
+                  height: 30px;
+                  top: -100px;
+                  left: 0;
+                  z-index: 9;
+
+                  &::before {
+                    content: "";
+                    position: absolute;
+                    left: 5px;
+                    border: solid $black;
+                    border-width: 0 2px 2px 0;
+                    display: inline-block;
+                    padding: 4px;
+                    transform: rotate(135deg);
+                    -webkit-transform: rotate(135deg);
+                  }
+
+                  @include desktop() {
+                    height: 0;
+                  }
+
+                  &_isArabic {
+                    top: -100px;
+                    transform: rotate(180deg);
+                    right: 5px;
+                    -webkit-transform: rotate(180deg);
+                  }
                 }
+              }
             }
+          }
+
+          &-NewAddressWrapper {
+            top: 10px;
+            float: right;
+            z-index: 1;
+
+            @include before-desktop {
+              top: 0;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              grid-row: 4;
+            }
+
+            &_formContent {
+              display: none;
+            }
+
+            &_isArabic {
+              float: left;
+            }
+          }
+
+          &-NewAddress {
+            font-weight: var(--fw-regular);
+            font-size: 13px;
+            line-height: 18px;
+            background: transparent;
+            color: var(--black);
+            border: none;
+            margin: 0 20px;
+
+            &:hover {
+              text-decoration: underline;
+            }
+
+            @include before-desktop {
+              border-radius: 7px;
+              background: var(--my-acc-background);
+              text-transform: capitalize;
+              min-width: 140px;
+              margin-top: 28px;
+
+              &:hover {
+                text-decoration: underline;
+                background: var(--my-acc-background);
+              }
+            }
+          }
         }
+
+        .MyAccountAddressPopup {
+          margin: 20px auto;
+          background: var(--white);
+          height: 100% !important;
+          position: absolute;
+
+          .Form {
+            top: -130px;
+
+            @include desktop {
+              top: 0;
+              padding: 20px 0 30px 60px;
+            }
+
+            .MyAccountAddressFieldForm {
+              &-Header {
+                h2 {
+                  border-top: none;
+                  margin-left: 0;
+                }
+              }
+            }
+          }
+
+          &_isArabic {
+            .Form {
+              @include desktop {
+                padding: 20px 60px 30px 0;
+              }
+
+              .MyAccountAddressFieldForm {
+                &-Header {
+                  h2 {
+                    border-top: none;
+                    margin-left: 0;
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        .Form .CheckoutShipping {
+          grid-row: 3;
+        }
+      }
+
+      &_formContent {
+        .CheckoutShipping {
+          display: none;
+        }
+      }
     }
+  }
 }
 
 .CheckoutShipping {
-    .CheckoutAddressBook {
-        &-Wrapper {
-            padding: 30px;
-        }
-
-        .Checkout {
-            &-Heading {
-                background: $white;
-                padding: 34px 8px 34px 30px;
-                top: 90px;
-                width: 30%;
-
-                &_isArabic {
-                    padding: 34px 30px 34px 0;
-                }
-            }
-        }
+  .CheckoutAddressBook {
+    &-Wrapper {
+      padding: 30px;
     }
 
-    h2 {
-        @include before-desktop {
-            display: none;
-        }
-    }
+    .Checkout {
+      &-Heading {
+        background: $white;
+        padding: 34px 8px 34px 30px;
+        top: 90px;
+        width: 30%;
 
-    h3 {
-        background: var(--white);
-        font-size: 21px;
-        margin: 0;
-        padding: 30px 30px 3px;
-
-        @include before-desktop {
-            display: none;
+        &_isArabic {
+          padding: 34px 30px 34px 0;
         }
+      }
     }
+  }
 
-    &-Button {
-        @include desktop {
-            height: 60px;
-        }
+  h2 {
+    @include before-desktop {
+      display: none;
     }
+  }
+
+  h3 {
+    background: var(--white);
+    font-size: 21px;
+    margin: 0;
+    padding: 30px 30px 3px;
+
+    @include before-desktop {
+      display: none;
+    }
+  }
+  &-DeliveryMessage {
+    font-weight: 600;
+    width: 60vw;
+    padding: 0 !important; 
+    margin: -45px auto 24px !important;
+    font-size: 18px;
+    text-align: center;
+    display: block !important;
+    @include desktop {
+      display: none !important;
+    }
+  }
+  &-LoadingButton{
+    background-color: #a9a9a9  !important;
+    border: #a9a9a9 !important;
+  }
+  &-Button {
+    @include before-desktop{
+      font-size: 14px;
+    }
+    @include desktop {
+      height: 60px;
+    }
+  }
 }
 
 .CheckoutShippingStep {
+  background: var(--white);
+
+  &-DeliveryButton {
+    padding: 30px;
     background: var(--white);
 
-    &-DeliveryButton {
-        padding: 30px;
-        background: var(--white);
+    button.primary {
+      height: 50px;
+      width: 250px;
+      font-size: 13px;
+      font-weight: var(--fw-bold);
+      letter-spacing: 0;
+      line-height: 18px;
+      text-align: center;
 
-        button.primary {
-            height: 50px;
-            width: 250px;
-            font-size: 13px;
-            font-weight: var(--fw-bold);
-            letter-spacing: 0;
-            line-height: 18px;
-            text-align: center;
-
-            &:hover {
-                border: 2px solid var(--black);
-            }
-        }
-
-        @include before-desktop {
-            display: none;
-        }
+      &:hover {
+        border: 2px solid var(--black);
+      }
     }
 
-    &_isArabic {
-        .Field {
-            &_type {
-                &_toggle {
-                    padding-right: 20px;
-
-                    label {
-                        padding-right: 10px;
-                    }
-
-                    @include desktop {
-                        padding-right: 30px;
-                    }
-                }
-            }
-        }
+    @include before-desktop {
+      display: none;
     }
+  }
+
+  &_isArabic {
+    .Field {
+      &_type {
+        &_toggle {
+          padding-right: 20px;
+
+          label {
+            padding-right: 10px;
+          }
+
+          @include desktop {
+            padding-right: 30px;
+          }
+        }
+      }
+    }
+  }
 }
 
 .CheckoutAddressBook {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 .CheckoutDeliveryOptions {
-    display: none;
+  display: none;
 
-    .Checkout {
-        &-Heading {
-            display: none;
-        }
+  .Checkout {
+    &-Heading {
+      display: none;
     }
+  }
 }
