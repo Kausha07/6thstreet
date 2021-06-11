@@ -92,7 +92,6 @@ export class LiveExperience extends PureComponent {
   renderUpcomingGridBlock = (block, i) => {
     const { mainImageURI, squareImageURI, name, description, starts, products } = block;
     let d = new Date(starts);
-    let s = "2021-06-12T09:30:00.000Z"
     if (mainImageURI) {
     return (
       <li block="spckItem">
@@ -102,8 +101,6 @@ export class LiveExperience extends PureComponent {
         <p block="eventStart"><img src={timerIcon} alt="timerIcon" />
         <Countdown
           date={d}
-          daysInHours="true"
-
           />,
         </p>
         <div block="eventInfo">
