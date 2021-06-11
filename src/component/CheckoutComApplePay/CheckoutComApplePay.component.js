@@ -52,7 +52,7 @@ export class CheckoutComApplePay extends PureComponent {
 
         return (
             <div block="CheckoutComApplePayPayment" elem="Wrapper">
-                <Loader isLoading={ isLoading } />
+                {/* <Loader isLoading={ isLoading } /> */}
                 <button
                   type="button"
                   block="CheckoutComApplePayPayment"

@@ -16,7 +16,6 @@ import Event, { EVENT_GTM_IMPRESSIONS_HOME } from "Util/Event";
 import Logger from "Util/Logger";
 import VueQuery from "../../query/Vue.query";
 import BrowserDatabase from "Util/BrowserDatabase";
-import VueProductSliderContainer from "../VueProductSlider";
 import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
 
 import "./DynamicContent.style";
@@ -63,24 +62,7 @@ class DynamicContent extends PureComponent {
     try {
       const pdpWidgetsData = await fetchVueData(payload);
       if (pdpWidgetsData.length > 0 && pdpWidgetsAPIData.length > 0) {
-        return (
-          <React.Fragment>
-            {pdpWidgetsAPIData.map((item, index) => {
-              if (typeof item === "object" && Object.keys(item).length > 0) {
-                const { title: heading } = pdpWidgetsData[index]["layout"];
-                const { data } = item;
-                return (
-                  <VueProductSliderContainer
-                    products={data}
-                    heading={heading}
-                    key={`VueProductSliderContainer${index}`}
-                  />
-                );
-              }
-              return null;
-            })}
-          </React.Fragment>
-        );
+        return "vue slider";
       }
     } catch (error) {
       onsole.log("Home widget vue query catch", err);
@@ -105,6 +87,8 @@ class DynamicContent extends PureComponent {
     } else {
       Component = this.renderMap[type];
     }
+    // Component = this.renderMap[type];
+
     if (!Component) {
       // TODO: implement all types
       Logger.log(type, restProps);

@@ -44,7 +44,6 @@ class HeaderSearch extends PureComponent {
     } = this.searchRef;
     const searchInput = children[0].children[0];
     console.log({ searchInput });
-    // debugger;
     if (focusInput && searchInput) {
       searchInput.focus();
     }

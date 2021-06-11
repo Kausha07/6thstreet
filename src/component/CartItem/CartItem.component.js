@@ -293,7 +293,6 @@ export class CartItem extends PureComponent {
       { length: maxSaleQuantity - minSaleQuantity + 1 },
       (v, k) => k + minSaleQuantity
     );
-    debugger;
 
     return (
       <div block="CartItem" elem="Quantity">

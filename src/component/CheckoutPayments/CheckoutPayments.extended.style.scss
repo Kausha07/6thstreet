@@ -1,136 +1,140 @@
 :root {
-    --gray: #d6d6d6;
-    --charcoal: #4a4a4a;
-    --light-green: #20efbe;
-    --light-gray: #d1d3d4;
+  --gray: #d6d6d6;
+  --charcoal: #4a4a4a;
+  --light-green: #20efbe;
+  --light-gray: #d1d3d4;
 }
 
 .CheckoutPayments {
-    margin-bottom: 0;
+  margin-bottom: 0;
+
+  @include desktop {
+    padding: 30px;
+  }
+
+  h2 {
+    font-weight: var(--fw-demi);
+    font-size: 18px;
+    text-transform: none;
+    line-height: 25px;
+  }
+
+  &-Heading {
+    margin-top: 0;
+    margin-bottom: 30px;
+
+    @include before-desktop {
+      display: none;
+    }
+  }
+
+  &-Methods {
+    margin-bottom: 10px;
+  }
+
+  &-MethodDiscription {
+    font-weight: var(--fw-regular);
+    font-size: 15px;
+  }
+
+  &-DiscountOptionWrapper {
+    padding: 20px 0 0;
 
     @include desktop {
-        padding: 30px;
+      display: none;
+    }
+  }
+
+  &-CartCouponWrapper {
+    .CartCoupon {
+      margin: 8px 0 0;
     }
 
-    h2 {
-        font-weight: var(--fw-demi);
-        font-size: 18px;
-        text-transform: none;
-        line-height: 25px;
+    @include desktop {
+      display: none;
     }
+  }
 
-    &-Heading {
-        margin-top: 0;
-        margin-bottom: 30px;
+  &-TabbyPayments {
+    &Promo {
+      color: var(--charcoal);
+      font-size: 15px;
+      margin-bottom: 30px;
     }
+  }
 
-    &-Methods {
-        margin-bottom: 10px;
-    }
+  &-TabbyPayment {
+    align-items: center;
+    border: 1px solid var(--gray);
+    border-radius: 4px;
+    display: flex;
+    margin-bottom: 9px;
+    max-width: 350px;
 
-    &-MethodDiscription {
-        font-weight: var(--fw-regular);
-        font-size: 15px;
-    }
+    &Content {
+      padding: 17px 20px;
+      width: 100%;
 
-    &-DiscountOptionWrapper {
-        padding: 20px 0 0;
-
-        @include desktop {
-            display: none;
-        }
-    }
-
-    &-CartCouponWrapper {
-        .CartCoupon {
-            margin: 8px 0 0;
-        }
-
-        @include desktop {
-            display: none;
-        }
-    }
-
-    &-TabbyPayments {
-        &Promo {
-            color: var(--charcoal);
-            font-size: 15px;
-            margin-bottom: 30px;
-        }
-    }
-
-    &-TabbyPayment {
-        align-items: center;
-        border: 1px solid var(--gray);
-        border-radius: 4px;
+      &Title {
         display: flex;
-        margin-bottom: 9px;
-        max-width: 350px;
+        justify-content: space-between;
+        text-transform: uppercase;
+        font-size: 13px;
+        font-weight: var(--fw-bold);
+        margin-bottom: 3px;
 
-        &Content {
-            padding: 17px 20px;
-            width: 100%;
-
-            &Title {
-                display: flex;
-                justify-content: space-between;
-                text-transform: uppercase;
-                font-size: 13px;
-                font-weight: var(--fw-bold);
-                margin-bottom: 3px;
-
-                button {
-                    height: 16px;
-                    padding: 0 10px;
-                }
-
-                img {
-                    width: 16px;
-                    height: auto;
-                }
-            }
-
-            &Description {
-                color: var(--charcoal);
-            }
+        button {
+          height: 16px;
+          padding: 0 10px;
         }
 
-        &Select {
-            align-items: center;
-            background-color: var(--light-green);
-            border-radius: 4px 0 0 4px;
-            display: flex;
-            justify-content: space-between;
-            height: 70px;
-            padding: 0 12px;
-            width: 110px;
-
-            img {
-                width: auto;
-                height: 23px;
-            }
-
-            .CheckoutPayment {
-                align-items: center;
-                background-color: $white;
-                border-color: var(--light-gray);
-                border-radius: 50%;
-                display: flex;
-                height: 17px;
-                justify-content: center;
-                margin-bottom: 0;
-                width: 17px;
-
-                button {
-                    border-radius: 50%;
-                    height: 9px;
-                    width: 9px;
-                }
-
-                &-Method {
-                    display: none;
-                }
-            }
+        img {
+          width: 16px;
+          height: auto;
         }
+      }
+
+      &Description {
+        color: var(--charcoal);
+      }
     }
+
+    &Select {
+      align-items: center;
+      background-color: var(--light-green);
+      border-radius: 4px 0 0 4px;
+      display: flex;
+      justify-content: space-between;
+      height: 70px;
+      padding: 0 12px;
+      width: 110px;
+
+      img {
+        width: auto;
+        height: 23px;
+      }
+
+      .CheckoutPayment {
+        align-items: center;
+        background-color: $white;
+        border-color: var(--light-gray);
+        border-radius: 50%;
+        display: flex;
+        height: 17px;
+        justify-content: center;
+        margin-bottom: 0;
+        width: 17px;
+
+        button {
+          border-radius: 50%;
+          height: 9px;
+          width: 9px;
+        }
+
+        &-Method {
+          display: none;
+        }
+      }
+    }
+  }
 }

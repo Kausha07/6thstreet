@@ -1,4 +1,3 @@
-
 import { getStore } from "Store";
 import { setSearchSuggestions } from "Store/SearchSuggestions/SearchSuggestions.action";
 import { formatProductSuggestions } from "Util/API/endpoint/Suggestions/Suggestions.format";
@@ -58,7 +57,7 @@ export class SearchSuggestionsDispatcher {
       //     productSuggestions
       // );
 
-      // if you need search analytics then uncomment it (default automatically tracks it).
+      // if you need search analytics then uncomment it (default automatically tracks it) UPDATE: causing wrong data.
 
       // var data = localStorage.getItem("customer");
       // let userData = JSON.parse(data);
@@ -80,7 +79,7 @@ export class SearchSuggestionsDispatcher {
       const queryID = productData?.queryID ? productData?.queryID : null;
       const results = formatProductSuggestions(productData);
 
-      dispatch(setSearchSuggestions(search, results,queryID));
+      dispatch(setSearchSuggestions(search, results, queryID));
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e);

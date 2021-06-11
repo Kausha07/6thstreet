@@ -83,6 +83,9 @@
     &-active {
       background-color: #3d4447 !important;
     }
+    @include mobile {
+      display: none;
+    }
   }
   .tns-nav {
     // display: none;

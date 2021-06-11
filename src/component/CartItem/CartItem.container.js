@@ -139,7 +139,6 @@ export class CartItemContainer extends PureComponent {
    * @return {void}
    */
   handleChangeQuantity(quantity) {
-    debugger;
     this.setState({ isLoading: true }, () => {
       const {
         updateProductInCart,

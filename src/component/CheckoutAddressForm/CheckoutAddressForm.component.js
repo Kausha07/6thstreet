@@ -65,7 +65,6 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
             street,
             ...fieldMap
         } = super.fieldMap;
-
         fieldMap.street = {
             ...street,
             onChange: (value) => this.onChange('street', value)

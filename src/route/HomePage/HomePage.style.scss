@@ -35,6 +35,12 @@
   .DynamicContent {
     > div {
       margin-bottom: 60px !important;
+      @include tablet {
+        margin-bottom: 30px !important;
+      }
+      @include mobile {
+        margin-bottom: 30px !important;
+      }
     }
   }
 

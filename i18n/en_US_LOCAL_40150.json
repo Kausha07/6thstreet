@@ -764,6 +764,10 @@
     "%s for %s | 6thStreet.com %s": null,
     "Shop %s for %s Online in %s.| Free shipping and returns | 6thStreet.com %s": null,
     "Shop %s for %s Online in %s | Free shipping and returns | 6thStreet.com %s": null,
+    "Placing Your Order": null,
+    "Where can we send your order": null,
+    "+  New address": null,
+    "Place tabby order": null,
     "Description": null,
     "Size & Fit": null,
     "Model Measurements": null,
@@ -781,5 +785,6 @@
     "Low stock": null,
     "Also available in": null,
     "My Basket": null,
-    "No result found": null
+    "No result found": null,
+    "Cash on delivery": null
 }

@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
-import './VueProductSlider.style.scss';
-import VueProductSliderItem from './VueProductSlider.Item';
+import './DynamicContentVueProductSlider.style.scss';
+import DynamicContentVueProductSliderItem from './DynamicContentVueProductSlider.Item';
 
-class VueProductSlider extends PureComponent {
+class DynamicContentVueProductSlider extends PureComponent {
     static propTypes = {
         withViewAll: PropTypes.bool,
         sliderLength: PropTypes.number,
@@ -50,7 +50,7 @@ class VueProductSlider extends PureComponent {
                     productsToRender.map((item) => {
                         const { sku } = item;
                         return (
-                            <VueProductSliderItem key={sku} data={item} />
+                            <DynamicContentVueProductSliderItem key={sku} data={item} />
                         );
                     })
                 }
@@ -68,4 +68,4 @@ class VueProductSlider extends PureComponent {
     }
 }
 
-export default VueProductSlider;
+export default DynamicContentVueProductSlider;
