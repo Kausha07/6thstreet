@@ -6,7 +6,7 @@ import { Config } from 'Util/API/endpoint/Config/Config.type';
 import { Price as PriceType } from 'Util/API/endpoint/Product/Product.type';
 
 import Price from './Price.component';
-import { FIXED_CURRENCIES } from './Price.config';
+import { DISPLAY_DISCOUNT_PERCENTAGE, FIXED_CURRENCIES } from './Price.config';
 
 export const mapStateToProps = (state) => ({
     config: state.AppConfig.config,
@@ -30,7 +30,7 @@ export class PriceContainer extends PureComponent {
     };
 
     containerProps = () => {
-        const { price, page } = this.props;
+        const { country, price, page } = this.props;
         const priceObj = Array.isArray(price) ? price[0] : price;
         const [currency, priceData] = Object.entries(priceObj)[0];
         const {
@@ -39,12 +39,14 @@ export class PriceContainer extends PureComponent {
             '6s_special_price': specialPrice = defaultPrice
         } = priceData;
         const fixedPrice = FIXED_CURRENCIES.includes(currency) && page !== 'plp';
+        const displayDiscountPercentage = DISPLAY_DISCOUNT_PERCENTAGE[country];
 
         return {
             basePrice,
             specialPrice,
             currency,
-            fixedPrice
+            fixedPrice,
+            displayDiscountPercentage
         };
     };
 
