@@ -10,8 +10,8 @@ import { PDP_ARABIC_VALUES_TRANSLATIONS } from './PDPDetailsSection.config';
 import './PDPDetailsSection.style';
 import VueQuery from '../../query/Vue.query';
 import BrowserDatabase from "Util/BrowserDatabase";
-import VueProductSliderContainer from '../VueProductSlider';
 import { fetchVueData } from 'Util/API/endpoint/Vue/Vue.endpoint';
+import DynamicContentVueProductSliderContainer from '../DynamicContentVueProductSlider';
 
 class PDPDetailsSection extends PureComponent {
     static propTypes = {
@@ -234,13 +234,16 @@ class PDPDetailsSection extends PureComponent {
                             if (typeof (item) === 'object' && Object.keys(item).length > 0) {
                                 const { title: heading } = pdpWidgetsData[index]['layout'];
                                 const { data } = item;
-                                return (
-                                    <VueProductSliderContainer
-                                        products={data}
-                                        heading={heading}
-                                        key={`VueProductSliderContainer${index}`}
-                                    />
-                                );
+                                if (data && data.length > 0) {
+                                    return (
+                                        <DynamicContentVueProductSliderContainer
+                                            products={data}
+                                            heading={heading}
+                                            key={`DynamicContentVueProductSliderContainer${index}`}
+                                        />
+                                    );
+                                }
+                                return null;
                             }
                             return null;
                         })
