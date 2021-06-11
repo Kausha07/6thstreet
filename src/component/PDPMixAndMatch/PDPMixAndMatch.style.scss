@@ -1,0 +1,49 @@
+.PDPMixAndMatch {
+    margin-top: 12px;
+    padding: 0 20px;
+    overflow-x: hidden;
+    @include desktop {
+        overflow-x: scroll;
+        overflow-y: hidden;
+    }
+    li {
+        flex: 0 0 auto;
+        padding-left: 0;
+        margin-bottom: 24px;
+        &:before {
+            content: none;
+        }
+    }
+
+    &-List {
+        display: flex;
+        flex-direction: column;
+        @include desktop {
+            flex-direction: row;
+            justify-content: space-between;
+        }
+    }
+
+    &-List::-webkit-scrollbar {
+        display: none;
+    }
+
+    &-Title {
+        @include desktop {
+            font-size: 17px;
+            font-weight: var(--fw-demi);
+        }
+    }
+
+    &_isAlsoAvailable {
+        display: none;
+    }
+    h2 {
+        text-transform: none;
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: 0;
+        line-height: 25px;
+        margin-top: 0;
+    }
+}
