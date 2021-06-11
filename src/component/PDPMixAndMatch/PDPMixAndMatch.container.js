@@ -30,7 +30,7 @@ export class PDPMixAndMatchContainer extends PureComponent {
 
     getAvailableProducts() {
         const { product: { mix_and_match } } = this.props;
-        const mixAndMatchSKUs = mix_and_match?.split(',') || [ "FY0396_Multi", "FY0396_Multi", "FY0396_Multi" ];
+        const mixAndMatchSKUs = mix_and_match?.split(',') || [];
         mixAndMatchSKUs.map((productID) => this.getAvailableProduct(productID).then((productData) => {
             const { products = [] } = this.state;
             if (productData.nbHits === 1) {

@@ -23,6 +23,11 @@ class PDPMixAndMatch extends PureComponent {
 
     render() {
         const { products = [] } = this.props;
+        console.log(products)
+        if(!products || !products.length){
+            return null;
+        }
+
         return (
             <div block="PDPMixAndMatch">
                 <h2 block="PDPMixAndMatch" elem="title">{__( "Mix n Match" )}</h2>
