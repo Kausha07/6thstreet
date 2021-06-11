@@ -20,7 +20,6 @@ export default function searchBy(
         query,
         ...newSearchParams,
         clickAnalytics: true,
-        tags,
       },
       {
         analyticsTags: tags,
