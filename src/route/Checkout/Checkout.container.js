@@ -165,7 +165,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       isVerificationCodeSent: false,
       lastOrder: {},
       initialTotals: totals,
-      processApplePay: false,
+      processApplePay: true,
       initialGTMSent: false,
       tabbyPaymentId: null,
       isTabbyPopupShown: false,

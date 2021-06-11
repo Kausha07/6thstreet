@@ -48,17 +48,16 @@ export class CheckoutPayment extends PureComponent {
             method: { m_code }
         } = this.props;
         const { isArabic } = this.state;
-
-        const {
-            name,
-            mod,
-            paragraph,
-            img
-        } = PAYMENTS_DATA[m_code];
-
-        const isTabby = TABBY_PAYMENT_CODES.includes(m_code);
-
+        
         if (PAYMENTS_DATA[m_code]) {
+            const {
+                name,
+                mod,
+                paragraph,
+                img
+            } = PAYMENTS_DATA[m_code];
+    
+            const isTabby = TABBY_PAYMENT_CODES.includes(m_code);
             return (
                 <div block="CheckoutPayment" elem="Method" mods={ mod }>
                     { isTabby
@@ -86,8 +85,8 @@ export class CheckoutPayment extends PureComponent {
 
         if (
             HIDDEN_PAYMENTS.includes(m_code)
-            || (m_code === CHECKOUT_APPLE_PAY
-            && (!['AE', 'SA'].includes(getCountryFromUrl()) || !window.ApplePaySession))
+            // || (m_code === CHECKOUT_APPLE_PAY
+            && ((!['AE', 'SA'].includes(getCountryFromUrl()) || !window.ApplePaySession))
         ) {
             return null;
         }
