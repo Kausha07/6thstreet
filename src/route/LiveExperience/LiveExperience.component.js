@@ -57,7 +57,6 @@ export class LiveExperience extends PureComponent {
   }
   renderSpckUpcomingEvent() {
     const content = this.props.upcoming;
-    console.log(this.props.upcoming);
     // return
     return content.map(this.renderUpcomingGridBlock);
   }
