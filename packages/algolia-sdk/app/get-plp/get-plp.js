@@ -422,45 +422,38 @@ function getPLP(URL, options = {}) {
       query: q,
       page,
       hitsPerPage: limit,
-      clickAnalytics: true,
     };
 
-    index.search(
-      query,
-      {
-        analyticsTags: ["PWA_Search"],
-      },
-      (err, res = {}) => {
-        if (err) {
-          return reject(err);
-        }
-
-        const { hits, facets, nbHits, nbPages, hitsPerPage } = res;
-
-        const { filters, _filtersUnselected } = getFilters({
-          locale,
-          facets: _formatFacets({ facets, queryParams }),
-          raw_facets: facets,
-          query: queryParams,
-        });
-
-        const output = {
-          facets,
-          data: hits.map(formatNewInTag),
-          filters,
-          meta: {
-            page: res.page,
-            limit: hitsPerPage,
-            hits_count: nbHits,
-            page_count: nbPages,
-            query: queryParams,
-          },
-          _filters_unselected: _filtersUnselected,
-        };
-
-        return resolve(output);
+    index.search(query, (err, res = {}) => {
+      if (err) {
+        return reject(err);
       }
-    );
+
+      const { hits, facets, nbHits, nbPages, hitsPerPage } = res;
+
+      const { filters, _filtersUnselected } = getFilters({
+        locale,
+        facets: _formatFacets({ facets, queryParams }),
+        raw_facets: facets,
+        query: queryParams,
+      });
+
+      const output = {
+        facets,
+        data: hits.map(formatNewInTag),
+        filters,
+        meta: {
+          page: res.page,
+          limit: hitsPerPage,
+          hits_count: nbHits,
+          page_count: nbPages,
+          query: queryParams,
+        },
+        _filters_unselected: _filtersUnselected,
+      };
+
+      return resolve(output);
+    });
   });
 }
 
