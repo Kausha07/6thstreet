@@ -565,7 +565,7 @@
     "Welcome": "أهلا بك،",
     "you are shopping in": "أنت تتسوق في",
     "Product details:": "تفاصيل المنتج",
-    "card number": "رقم البطاقة",
+    "card number": null,
     "exp date": "تاريخ انتهاء الصلاحية",
     "Shipping Options": "الشحن",
     "Delivery Options": "خيارات التوصيل",
