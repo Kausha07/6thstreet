@@ -1,12 +1,9 @@
 .DynamicContentCircleItemSlider {
-  // max-height: 500px;
-  // overflow: hidden;
   margin-bottom: 30px !important;
-  // display: none;
   margin-top: 30px !important;
   @include tablet {
-    margin-left: 30px;
-    margin-right: 30px;
+    margin-left: 0px;
+    margin-right: 0px;
     margin-top: 0 !important;
     margin-bottom: 30px !important;
   }
@@ -28,6 +25,14 @@
   .CircleSliderWrapper {
     display: flex;
     overflow-x: auto;
+    .CircleItemHelper {
+      display: none;
+      min-width: 30px;
+      height: 78px;
+      @include tablet {
+        display: block;
+      }
+    }
 
     &::-webkit-scrollbar {
       display: none;
@@ -36,6 +41,12 @@
     .CircleSlider {
       margin-right: 15px;
       width: 100%;
+      &:nth-last-child(2) {
+        margin-right: 0;
+      }
+      @include tablet {
+        margin-right: 10px;
+      }
     }
   }
   .CircleSlider {
@@ -77,10 +88,14 @@
     border: 1px solid red;
     padding: 2px;
     border-radius: 50%;
-    height: 70px;
-    width: 70px;
+    height: 78px;
+    width: 78px;
     &-Image {
       object-fit: cover;
+    }
+    @include tablet {
+      width: 64px;
+      height: 64px;
     }
   }
   .tns-controls {
@@ -104,12 +119,21 @@
     text-align: center;
     margin-bottom: 10px;
     text-transform: uppercase;
-    width: 100px;
+    width: 78px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     margin: 0 auto;
     margin-top: 10px;
+
+    font-size: 9px;
+    font-weight: var(--fw-medium);
+    letter-spacing: 0.2px;
+    line-height: 12px;
+
+    @include tablet {
+      width: 64px;
+    }
   }
 
   @include mobile {

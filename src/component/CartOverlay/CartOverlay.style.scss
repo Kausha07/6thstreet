@@ -165,7 +165,8 @@
   &_isArabic {
     &::before {
       @include after-mobile {
-        right: 327px;
+        // right: 327px;
+        left: -33px;
       }
     }
   }

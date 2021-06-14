@@ -28,7 +28,7 @@
     justify-content: space-between;
     max-width: 1440px;
     margin: auto;
-    width: 76.389vw;
+    width: var(--main-container-width-dsk);
 
     &_isCheckout {
       max-width: 1150px;

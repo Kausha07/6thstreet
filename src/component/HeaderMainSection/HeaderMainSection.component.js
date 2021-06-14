@@ -51,6 +51,13 @@ class HeaderMainSection extends NavigationAbstract {
     this.state = {
       prevScrollpos: window.pageYOffset,
       visible: false,
+      type: null,
+      delay: 150,
+      lastProduct: null,
+      lastCategory: null,
+      search: "",
+      showSearch: false,
+      isArabic: isArabic(),
     };
     this.headerSearchRef = createRef();
   }
@@ -75,15 +82,9 @@ class HeaderMainSection extends NavigationAbstract {
     back: this.renderBack.bind(this),
   };
 
-  state = {
-    type: null,
-    delay: 150,
-    lastProduct: null,
-    lastCategory: null,
-    search: "",
-    showSearch: false,
-    isArabic: isArabic(),
-  };
+  // state = {
+
+  // };
 
   handleScroll = () => {
     if (!this.isPDP()) {
@@ -289,11 +290,12 @@ class HeaderMainSection extends NavigationAbstract {
   };
 
   renderSearchIcon() {
+    const { isArabic } = this.state;
     if (isMobile.any()) {
       return null;
     }
     return (
-      <div block="SearchIcon">
+      <div block="SearchIcon" mods={{ isArabic: isArabic }}>
         <button
           block="SearchIcon"
           onClick={this.handleSearchClick.bind(this)}

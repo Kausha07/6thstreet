@@ -3,7 +3,7 @@
   font-weight: var(--fw-regular);
 
   &-Container {
-    width: 76.389vw;
+    width: var(--main-container-width-dsk);
     font-size: 16px;
     margin: 50px 0px;
     font-weight: var(--fw-demi);

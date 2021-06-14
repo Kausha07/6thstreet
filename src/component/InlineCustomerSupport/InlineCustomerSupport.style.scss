@@ -39,13 +39,6 @@
 
     &::after {
       content: "";
-      // width: 0;
-      // height: 0;
-      // border-left: 5px solid transparent;
-      // border-right: 5px solid transparent;
-      // border-top: 5px solid var(--black-color);
-      // top: 11px;
-      // right: 10px;
       display: block;
       box-sizing: border-box;
       position: absolute;
@@ -72,7 +65,7 @@
     &_isArabic {
       padding-left: 5px;
       &::after {
-        right: 140px;
+        right: 126px;
       }
     }
   }
@@ -293,8 +286,8 @@
       @include desktop {
         margin-left: 0;
         padding-left: 0;
-        margin-right: 20px;
-        padding-right: 15px;
+        // margin-right: 20px;
+        // padding-right: 15px;
         border-right: 1px solid var(--border-color);
         border-left: none;
       }
@@ -305,7 +298,7 @@
 .PageWrapper {
   &_isArabic {
     .InlineCustomerSupport {
-      transform: translateX(25px);
+      transform: translateX(0);
 
       &-Button {
         padding-right: 0;

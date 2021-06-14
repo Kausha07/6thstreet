@@ -71,8 +71,8 @@
     display: flex;
     justify-content: center;
     gap: 12px;
-    margin-top: 25px;
-    margin-bottom: 25px;
+    margin-top: 20px;
+    // margin-bottom: 25px;
     button {
       width: 8px;
       height: 8px;
@@ -85,6 +85,10 @@
     }
     @include mobile {
       display: none;
+    }
+    @include tablet {
+      margin-top: 10px;
+      // margin-bottom: 10px;
     }
   }
   .tns-nav {

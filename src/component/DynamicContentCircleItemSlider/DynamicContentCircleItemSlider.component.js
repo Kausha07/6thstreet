@@ -86,21 +86,6 @@ class DynamicContentCircleItemSlider extends PureComponent {
             width="70px"
             height="70px"
           />
-          {/* <Image
-                      src={ image_url }
-                      alt={ label }
-                      mix={ { block: 'DynamicContentCircleItemSlider', elem: 'Image' } }
-                      ratio="custom"
-                      height="70px"
-                      width="70px"
-                    /> */}
-          {/* <button
-                  block="DynamicContentCircleItemSlider"
-                  elem="Label"
-                  mix={ { block: 'button primary' } }
-                >
-                    { label }
-                </button> */}
         </Link>
         <div block="CircleSliderLabel">{label}</div>
       </div>
@@ -112,7 +97,9 @@ class DynamicContentCircleItemSlider extends PureComponent {
     return (
       <DragScroll data={{ rootClass: "CircleSliderWrapper", ref: this.ref }}>
         <div ref={this.ref} block="CircleSliderWrapper">
+          <div className="CircleItemHelper"></div>
           {items.map(this.renderCircle)}
+          <div className="CircleItemHelper"></div>
         </div>
       </DragScroll>
     );

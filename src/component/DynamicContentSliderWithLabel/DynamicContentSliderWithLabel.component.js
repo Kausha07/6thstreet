@@ -10,6 +10,7 @@ import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.c
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
 import "./DynamicContentSliderWithLabel.style";
 import DragScroll from "Component/DragScroll/DragScroll.component";
+import { isArabic } from "Util/App";
 
 class DynamicContentSliderWithLabel extends PureComponent {
   static propTypes = {
@@ -33,6 +34,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
       isDown: false,
       startX: 0,
       scrollLeft: 0,
+      isArabic: isArabic(),
     };
   }
 
@@ -150,12 +152,17 @@ class DynamicContentSliderWithLabel extends PureComponent {
   }
 
   render() {
+    const { isArabic } = this.state;
     return (
       <div block="DynamicContentSliderWithLabel HomePageContainer">
         {this.props.header && (
           <DynamicContentHeader header={this.props.header} />
         )}
-        {this.props.title && <h1 block="Title">{this.props.title}</h1>}
+        {this.props.title && (
+          <h1 block="Title" mods={{ isArabic }}>
+            {this.props.title}
+          </h1>
+        )}
         {this.renderSliderWithLabels()}
         {this.props.footer && (
           <DynamicContentFooter footer={this.props.footer} />

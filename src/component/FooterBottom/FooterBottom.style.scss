@@ -19,7 +19,7 @@
     margin: auto;
     max-width: 1470px;
     padding: 0;
-    width: 76.389vw;
+    width: var(--main-container-width-dsk);
   }
 
   &_FooterBottomHidden {
