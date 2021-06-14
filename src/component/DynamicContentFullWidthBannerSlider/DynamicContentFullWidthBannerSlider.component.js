@@ -55,17 +55,18 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
   };
 
   async onSwipeChange() {
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_CAROUSEL_SWIPE,
       params: {
         event: VUE_CAROUSEL_SWIPE,
         pageType: "plp",
-        currency: "en_AED",
+        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),
         referrer: "desktop",
-        sourceProdID: "",
-        sourceCatgID: "",
+        sourceProdID: "", // TODO: Need to find it
+        sourceCatgID: "", // TODO: Need to find it
         widgetID: "vue_visually_similar_slider", // TODO: Find widget id and replace with it.
       },
     });
@@ -73,16 +74,17 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
 
   onclick = (item) => {
     // vue analytics
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_CAROUSEL_CLICK,
       params: {
         event: VUE_CAROUSEL_CLICK,
         pageType: "plp",
-        currency: "en_AED",
+        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),
         referrer: "desktop",
-        widgetID: "vue_visually_similar_slider", // TODO: Find widget id and replace with it.
+        widgetID: "vue_visually_similar_slider", // // TODO: will be added after vue product slider.
       },
     });
     let banner = {

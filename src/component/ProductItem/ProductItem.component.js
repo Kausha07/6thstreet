@@ -4,17 +4,15 @@ import Price from "Component/Price";
 import ProductLabel from "Component/ProductLabel/ProductLabel.component";
 import WishlistIcon from "Component/WishlistIcon";
 import PropTypes from "prop-types";
-import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
 import { getStore } from "Store";
 import { Product } from "Util/API/endpoint/Product/Product.type";
 import Algolia from "Util/API/provider/Algolia";
 import { isArabic } from "Util/App";
-import { getUUID, getUUIDToken } from "Util/Auth";
+import { getUUIDToken } from "Util/Auth";
 import Event, {
   EVENT_GTM_PRODUCT_CLICK,
   SELECT_ITEM_ALGOLIA,
-  VUE_PLP_VIEW,
 } from "Util/Event";
 import "./ProductItem.style";
 
@@ -35,20 +33,6 @@ class ProductItem extends PureComponent {
   };
 
   handleClick = this.handleProductClick.bind(this);
-
-  componentDidMount() {
-    VueIntegrationQueries.vueAnalayticsLogger({
-      event_name: VUE_PLP_VIEW,
-      params: {
-        event: VUE_PLP_VIEW,
-        pageType: "plp",
-        currency: "en_AED",
-        clicked: Date.now(),
-        uuid: getUUID(),
-        referrer: "desktop",
-      },
-    });
-  }
 
   handleProductClick() {
     const { product, position, qid } = this.props;

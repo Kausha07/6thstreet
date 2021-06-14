@@ -33,17 +33,18 @@ class DynamicContentBanner extends PureComponent {
 
   onclick = (item) => {
     console.log("item1");
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
     // vue analytics
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_CAROUSEL_CLICK,
       params: {
         event: VUE_CAROUSEL_CLICK,
         pageType: "plp",
-        currency: "en_AED",
+        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),
         referrer: "desktop",
-        widgetID: "vue_visually_similar_slider", // TODO: Find widget id and replace with it.
+        widgetID: "vue_visually_similar_slider", // TODO: will be added after vue product slider.
       },
     });
     let banner = {

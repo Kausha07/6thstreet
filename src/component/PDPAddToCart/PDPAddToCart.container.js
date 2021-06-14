@@ -11,7 +11,7 @@ import { showNotification } from "Store/Notification/Notification.action";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import { Product } from "Util/API/endpoint/Product/Product.type";
 import Algolia from "Util/API/provider/Algolia";
-import { getUUIDToken } from "Util/Auth";
+import { getUUID, getUUIDToken } from "Util/Auth";
 import Event, {
   ADD_TO_CART_ALGOLIA,
   EVENT_GTM_PRODUCT_ADD_TO_CART,
@@ -369,12 +369,13 @@ export class PDPAddToCartContainer extends PureComponent {
         });
       }
       // vue analytics
+      const locale = VueIntegrationQueries.getLocaleFromUrl();
       VueIntegrationQueries.vueAnalayticsLogger({
         event_name: VUE_ADD_TO_CART,
         params: {
           event: VUE_ADD_TO_CART,
           pageType: "pdp",
-          currency: "en_AED",
+          currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
           clicked: Date.now(),
           uuid: getUUID(),
           referrer: "desktop",
@@ -446,12 +447,13 @@ export class PDPAddToCartContainer extends PureComponent {
         );
       }
       // vue analytics
+      const locale = VueIntegrationQueries.getLocaleFromUrl();
       VueIntegrationQueries.vueAnalayticsLogger({
         event_name: VUE_ADD_TO_CART,
         params: {
           event: VUE_ADD_TO_CART,
           pageType: "pdp",
-          currency: "en_AED",
+          currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
           clicked: Date.now(),
           uuid: getUUID(),
           referrer: "desktop",

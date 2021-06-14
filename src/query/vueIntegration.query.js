@@ -8,8 +8,6 @@ export class VueIntegrationQueries {
    */
   async vueAnalayticsLogger(payload) {
     const locale = this.getLocaleFromUrl();
-    const currencyCode = this.getCurrencyCodeFromLocale(locale);
-    console.log("currency code", currencyCode);
     return new Promise((resolve, reject) => {
       fetch(`/api/vue/analytics?locale=${locale}`, {
         method: "POST",
@@ -66,25 +64,25 @@ export class VueIntegrationQueries {
       case "ar-ae":
         return "ar_AED";
       case "en-sa":
-        return "en_AED";
+        return "en_SAR";
       case "ar-sa":
-        return "en_AED";
+        return "ar_SAR";
       case "en-kw":
-        return "en_AED";
+        return "en_KWD";
       case "ar-kw":
-        return "en_AED";
+        return "ar_KWD";
       case "en-qa":
-        return "en_AED";
+        return "en_QAR";
       case "ar-qa":
-        return "en_AED";
+        return "ar_QAR";
       case "en-om":
-        return "en_AED";
+        return "en_OMR";
       case "ar-om":
-        return "en_AED";
+        return "ar_OMR";
       case "en-bh":
-        return "en_AED";
+        return "en_BHD";
       case "ar-bh":
-        return "en_AED";
+        return "ar_BHD";
     }
   }
 }

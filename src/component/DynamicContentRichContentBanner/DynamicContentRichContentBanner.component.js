@@ -57,34 +57,36 @@ class DynamicContentRichContentBanner extends PureComponent {
       link: item.link,
       promotion_name: item.promotion_name,
     };
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_CAROUSEL_CLICK,
       params: {
         event: VUE_CAROUSEL_CLICK,
         pageType: "plp",
-        currency: "en_AED",
+        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),
         referrer: "desktop",
-        widgetID: "vue_visually_similar_slider", // TODO: Find widget id and replace with it.
+        widgetID: "vue_visually_similar_slider", // TODO: will be added after vue product slider.
       },
     });
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
   };
 
   async onSwipe() {
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_CAROUSEL_SWIPE,
       params: {
         event: VUE_CAROUSEL_SWIPE,
         pageType: "plp",
-        currency: "en_AED",
+        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),
         referrer: "desktop",
-        sourceProdID: "",
-        sourceCatgID: "",
-        widgetID: "vue_visually_similar_slider", // TODO: Find widget id and replace with it.
+        sourceProdID: "", // TODO: Need to find it
+        sourceCatgID: "", // TODO: Need to find it
+        widgetID: "vue_visually_similar_slider", // TODO: will be added after vue product slider.
       },
     });
   }
