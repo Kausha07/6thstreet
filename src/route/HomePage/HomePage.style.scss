@@ -22,7 +22,7 @@
     > div:not(.DynamicContentFullWidthBannerSlider) {
       @include desktop {
         margin: 0 auto;
-        max-width: 76.389vw;
+        max-width: var(--main-container-width-dsk);
       }
     }
     .DynamicContentGrid {
@@ -33,13 +33,13 @@
     }
   }
   .DynamicContent {
-    > div {
+    > div:not(.DynamicContentCircleItemSlider) {
       margin-bottom: 60px !important;
       @include tablet {
-        margin-bottom: 30px !important;
+        margin-bottom: 40px !important;
       }
       @include mobile {
-        margin-bottom: 30px !important;
+        margin-bottom: 20px !important;
       }
     }
   }
@@ -84,7 +84,7 @@
   display: flex;
   justify-content: flex-start;
   overflow: hidden;
-  width: 76.389vw;
+  width: var(--main-container-width-dsk);
   margin: 30px auto;
   &-Card {
     min-width: 16.528vw;

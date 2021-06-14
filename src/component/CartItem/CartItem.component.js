@@ -365,7 +365,7 @@ export class CartItem extends PureComponent {
         {this.renderProductConfigurations()}
         {this.renderColSizeQty()}
         {isNotAvailble ? null : this.renderProductPrice()}
-        {/* {this.renderActions()} */}
+        {this.renderActions()}
       </figcaption>
     );
   }
@@ -398,7 +398,7 @@ export class CartItem extends PureComponent {
         >
           <span />
         </button>
-        {isNotAvailble ? (
+        {/* {isNotAvailble ? (
           <span block="CartItem" elem="NotAvailable">
             {__("Not available")}
           </span>
@@ -414,7 +414,7 @@ export class CartItem extends PureComponent {
             value={qty}
             onChange={handleChangeQuantity}
           />
-        )}
+        )} */}
       </div>
     );
   }

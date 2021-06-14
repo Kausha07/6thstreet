@@ -107,7 +107,7 @@ export class HomePageContainer extends PureComponent {
   }
 
   async fetchDataFromLocal() {
-    return fetch("women.json", {
+    return fetch("women_mobile.json", {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
