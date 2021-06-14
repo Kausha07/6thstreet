@@ -7,6 +7,7 @@ import { PureComponent } from 'react';
 import { MINI_CARDS } from './CreditCard.config';
 import secure from './icons/secure.png';
 import Field from 'Component/Field';
+import { isArabic } from "Util/App";
 
 import './CreditCard.style';
 import PlusIcon from "./icons/plus.png";
@@ -294,7 +295,8 @@ class CreditCard extends PureComponent {
                             const { isAmex } = this.props;
                             return (
                                 <div block="SelectedSavedCard" elem="Item" key={entity_id}>
-                                    <img src={SelectedIcon} alt={"selected"} block="SavedCard" elem="Tick" />
+                                    <img src={SelectedIcon} alt={"selected"} block="SavedCard" elem="Tick"
+                                        style={{ marginRight: isArabic ? '12px' : '0px' }} />
                                     <span block="SelectedSavedCard" elem="CardNumber">{cardNum}</span>
                                     <div block="SelectedSavedCard" elem="CvvImgCon">
                                         <span>{`${expirationDate.substr(0, 3)}${expirationDate.substr(5, 2)}`}</span>
@@ -323,7 +325,7 @@ class CreditCard extends PureComponent {
                                 }
                                 this.props.applyPromotionSavedCard();
                             }}>
-                                <span block="SavedCard" elem="CardNumber">{cardNum}</span>
+                                <span block="SavedCard" elem="CardNumber" dir="ltr">{cardNum}</span>
                                 <div block="SavedCard" elem="CvvImgCon">
                                     <span>{`${expirationDate.substr(0, 3)}${expirationDate.substr(5, 2)}`}</span>
                                     {this.renderMiniCard(scheme.toLowerCase())}
