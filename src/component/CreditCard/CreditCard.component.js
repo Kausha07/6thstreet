@@ -76,16 +76,20 @@ class CreditCard extends PureComponent {
             setCreditCardData,
             reformatInputField,
             getCardLogo,
-            isAmex
+            isAmex,
+            cardNumberValidator
         } = this.props;
         const { cvv } = this.state;
         const { value } = e.target;
         const element = document.getElementById('number');
         const onlyNumbers = value.replace(/\s/g, '') || '';
         const cardLogo = getCardLogo(onlyNumbers);
+        const message = cardNumberValidator(onlyNumbers);
 
         reformatInputField(element, 4);
         setCreditCardData({ number: onlyNumbers });
+
+        this.setState({ validatorMessage: message });
 
         if (onlyNumbers.length === 16 || (isAmex && onlyNumbers.length === 15)) {
             this.setState({ cardLogo, numberFilled: true });

@@ -38,6 +38,7 @@ export class CreditCardContainer extends PureComponent {
         getCardLogo: this.getCardLogo.bind(this),
         toggleNewCardVisible: this.toggleNewCardVisible.bind(this),
         selectSavedCard: this.selectSavedCard.bind(this),
+        cardNumberValidator: this.cardNumberValidator
     };
 
     containerProps = () => {
@@ -118,6 +119,16 @@ export class CreditCardContainer extends PureComponent {
         if (!cardValidator.expirationYear(expYear).isValid) {
             return __("Card exp year is not valid");
         }
+        return null;
+    }
+
+    cardNumberValidator(value = '') {
+        if (value && value.length >= 15) {
+            if (!cardValidator.number(value.replace(/\D+/g, '')).isValid) {
+                return __("Card number is not valid");
+            }
+        }
+
         return null;
     }
 
