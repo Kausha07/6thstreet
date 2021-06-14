@@ -63,6 +63,28 @@ export class VueIntegrationQueries {
     switch (locale) {
       case "en-ae":
         return "en_AED";
+      case "ar-ae":
+        return "ar_AED";
+      case "en-sa":
+        return "en_AED";
+      case "ar-sa":
+        return "en_AED";
+      case "en-kw":
+        return "en_AED";
+      case "ar-kw":
+        return "en_AED";
+      case "en-qa":
+        return "en_AED";
+      case "ar-qa":
+        return "en_AED";
+      case "en-om":
+        return "en_AED";
+      case "ar-om":
+        return "en_AED";
+      case "en-bh":
+        return "en_AED";
+      case "ar-bh":
+        return "en_AED";
     }
   }
 }
