@@ -5,6 +5,7 @@
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { PureComponent } from 'react';
+import cardValidator from 'card-validator';
 
 import CreditCard from './CreditCard.component';
 import { MINI_CARDS } from './CreditCard.config';
@@ -107,40 +108,16 @@ export class CreditCardContainer extends PureComponent {
     }
 
     expDateValidator(value = '') {
-        const message = __('Please check the card expiration date');
-        const first = parseInt(value.charAt(0));
-        const month = parseInt(value.slice(0, 2));
-        const yearFirst = parseInt(value.slice(2, 3));
-        const year = parseInt(value.slice(2, 4));
+        const expMonth = value.slice(0, 2);
+        const expYear = value.slice(2, 4);
 
-        // month validation
-        if (first > 1 || first < 0) {
-            return message;
-        }
-        if (value.length > 1) {
-            if (month === 0 || ((month > 12 || month < 1) && first !== 0)) {
-                return message;
-            }
-        }
-        if (value.length > 2) {
-            const date = new Date();
-            const thisYearFirst = date.getFullYear().toString().slice(2, 3);
-            // year gap
-            if ((yearFirst > parseInt(thisYearFirst) + 1) || yearFirst < parseInt(thisYearFirst)) {
-                return message;
-            }
+        if (!cardValidator.expirationMonth(expMonth).isValid) {
+            return __("Card exp month is not valid");
         }
 
-        // check if card expire
-        if (value.length > 3) {
-            const today = new Date();
-            const expDay = new Date(parseInt(`20${year}`), month, 1);
-
-            if (today > expDay) {
-                return message;
-            }
+        if (!cardValidator.expirationYear(expYear).isValid) {
+            return __("Card exp year is not valid");
         }
-
         return null;
     }
 
