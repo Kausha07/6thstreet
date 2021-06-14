@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -12,9 +13,11 @@ import { Config } from 'Util/API/endpoint/Config/Config.type';
 import MagentoAPI from 'Util/API/provider/MagentoAPI';
 
 import MyAccountOrderView from './MyAccountOrderView.component';
+import { DISPLAY_DISCOUNT_PERCENTAGE } from '../Price/Price.config';
 
 export const mapStateToProps = (state) => ({
-    config: state.AppConfig.config
+    config: state.AppConfig.config,
+    country: state.AppState.country
 });
 
 export const mapDispatchToProps = () => ({});
@@ -23,7 +26,8 @@ export class MyAccountOrderViewContainer extends PureComponent {
     static propTypes = {
         match: MatchType.isRequired,
         config: Config.isRequired,
-        history: HistoryType.isRequired
+        history: HistoryType.isRequired,
+        country: PropTypes.string.isRequired
     };
 
     containerFunctions = {
@@ -47,12 +51,14 @@ export class MyAccountOrderViewContainer extends PureComponent {
             isLoading,
             order
         } = this.state;
-        const { history } = this.props;
+        const { history, country } = this.props;
 
+        const displayDiscountPercentage = DISPLAY_DISCOUNT_PERCENTAGE[country];
         return {
             isLoading,
             order,
-            history
+            history,
+            displayDiscountPercentage
         };
     };
 
