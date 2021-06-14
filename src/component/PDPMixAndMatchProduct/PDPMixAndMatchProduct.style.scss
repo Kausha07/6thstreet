@@ -19,9 +19,10 @@ $select-arrow-width: 6px !default;
         min-width: 50%;
         padding: 0 16px 0 0;
         .WishlistIcon {
-            background: transparent;
-            top: .4rem;
-            right: .4rem;
+            background: white;
+            top: 0.25rem;
+            right: 0.25rem;
+            margin: 4px 4px 4px 4px;
         }
     }
 
@@ -30,7 +31,7 @@ $select-arrow-width: 6px !default;
         height: 100%;
         &-Image {
             object-position: 0% 50%;
-            object-fit: contain;
+            object-fit: cover;
         }
         @include before-desktop {
             &-Image {
@@ -78,6 +79,9 @@ $select-arrow-width: 6px !default;
             font-weight: bold;
             letter-spacing: 0;
             line-height: 50px;
+            del {
+                padding-right: 8px;
+            }
         }
         @include desktop {
             width: 40%

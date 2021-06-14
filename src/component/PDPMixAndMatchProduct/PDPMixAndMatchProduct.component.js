@@ -5,7 +5,8 @@ import WishlistIcon from 'Component/WishlistIcon';
 import Image from 'Component/Image';
 import Price from "Component/Price";
 
-import { isArabic } from 'Util/App';
+import { isArabic, truncate } from 'Util/App';
+import isMobile from 'Util/Mobile';
 
 import './PDPMixAndMatchProduct.style';
 
@@ -71,7 +72,7 @@ class PDPMixAndMatchProduct extends PureComponent {
                     { brand_name }
                 </h3>
                 <h6>
-                    { name }
+                    { isMobile.any()?name:truncate(name, 20) }
                 </h6>
             </div>
         );
