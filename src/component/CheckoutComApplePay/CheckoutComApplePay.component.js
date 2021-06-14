@@ -25,7 +25,7 @@ export class CheckoutComApplePay extends PureComponent {
 
     static defaultProps = {
         isLoading: false,
-        applePayDisabled: false,
+        applePayDisabled: true,
         button_style: ''
     };
 
@@ -52,7 +52,7 @@ export class CheckoutComApplePay extends PureComponent {
 
         return (
             <div block="CheckoutComApplePayPayment" elem="Wrapper">
-                <Loader isLoading={ isLoading } />
+                {/* <Loader isLoading={ isLoading } /> */}
                 <button
                   type="button"
                   block="CheckoutComApplePayPayment"

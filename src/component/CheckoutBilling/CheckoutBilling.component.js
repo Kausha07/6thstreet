@@ -16,7 +16,7 @@ import { BILLING_STEP } from "Route/Checkout/Checkout.config";
 import { CheckoutBilling as SourceCheckoutBilling } from "SourceComponent/CheckoutBilling/CheckoutBilling.component";
 import { isArabic } from "Util/App";
 import { isSignedIn } from "Util/Auth";
-
+import Spinner from "react-spinkit";
 import "./CheckoutBilling.extended.style";
 
 export class CheckoutBilling extends SourceCheckoutBilling {
@@ -33,7 +33,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
 
   static defaultProps = {
     ...SourceCheckoutBilling.defaultProps,
-    processApplePay: false,
+    processApplePay: true,
     processingPaymentSelectRequest: false,
     placeOrder: () => { },
   };
@@ -192,7 +192,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
       setOrderButtonDisabled,
       resetBinApply,
       applyPromotionSavedCard,
-      removePromotionSavedCard
+      removePromotionSavedCard,
     } = this.props;
 
     if (!paymentMethods.length) {
@@ -299,7 +299,9 @@ export class CheckoutBilling extends SourceCheckoutBilling {
       : !isOrderButtonEnabled;
 
     const isApplePay = paymentMethod === CHECKOUT_APPLE_PAY;
-
+    const isTabbyPay =
+      paymentMethod === "tabby_installments" ||
+      paymentMethod === "tabby_checkout";
     return (
       <>
         {this.renderCreditCardTooltipBar()}
@@ -314,10 +316,27 @@ export class CheckoutBilling extends SourceCheckoutBilling {
               processingPaymentSelectRequest ||
               isApplePay
             }
-            mix={{ block: "CheckoutBilling", elem: "Button" }}
+            mix={{
+              block: "CheckoutBilling",
+              elem:
+                processingRequest || processingPaymentSelectRequest
+                  ? "spinningButton"
+                  : isTabbyPay
+                  ? "tabbyButton"
+                  : "Button",
+            }}
           >
-            {/* {__("Place order")} */}
-            {this.renderButtonPlaceholder()}
+            {processingRequest || processingPaymentSelectRequest ? (
+              <Spinner
+                className="loadingSpinner"
+                name="three-bounce"
+                color="white"
+              />
+            ) : isTabbyPay ? (
+              __("Place tabby order")
+            ) : (
+              this.renderButtonPlaceholder()
+            )}
           </button>
         </div>
       </>
