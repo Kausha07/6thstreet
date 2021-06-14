@@ -26,16 +26,6 @@ class DynamicContentTwiceBanner extends PureComponent {
     const { title, subtitle, button_label, button_link } =
       typeOfBanner && this.props[typeOfBanner];
     const { url, link, height = "", width = "" } = item;
-    // let ht, wd;
-    // if (screen.width > 900) {
-    //     wd = (isTwiceBanner) ? "334px" : "408px"; // (screen.width - 20 ).toString() + "px";
-    //     ht = (isTwiceBanner) ? "201px" : "334px";
-    //     // ht = (ht / width)*(screen.width)
-    // }
-    // else{
-    //     wd = (isTwiceBanner) ? (width - 25 ).toString() + "px" : width.toString() + "px";
-    //     ht = (isTwiceBanner) ? (height - 85 ).toString() + "px" : height.toString() + "px";
-    // }
 
     // TODO: calculate aspect ratio to ensure images not jumping.
     // if (!link) {
@@ -93,12 +83,12 @@ class DynamicContentTwiceBanner extends PureComponent {
   }
 
   render() {
-    // const { isArabic } = this.state;
+    const { isArabic } = this.state;
     // const { isAllShowing } = this.state;
     const { typeOfBanner } = this.props;
     const BannerPosition = typeOfBanner === "header" ? "Right" : "Left";
     return (
-      <div block="DynamicContentTwiceBanner" className="row" elem="Content">
+      <div block="DynamicContentTwiceBanner" className="row" elem="Content" mods={{ isArabic }}>
         {BannerPosition === "Left" ? (
           <>
             <div
