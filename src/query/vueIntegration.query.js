@@ -1,13 +1,15 @@
+import BrowserDatabase from "Util/BrowserDatabase";
 import { Field } from "Util/Query";
-
+import { LOCALES } from "Util/Url/Url.config";
 export class VueIntegrationQueries {
   /**
    * log vue analytics query
    * @return {Field}
    */
-  vueAnalayticsLogger(payload) {
+  async vueAnalayticsLogger(payload) {
+    const locale = this.getLocaleFromUrl();
     return new Promise((resolve, reject) => {
-      fetch(`/api/vue/analytics?locale=en-ae'`, {
+      fetch(`/api/vue/analytics?locale=${locale}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -26,6 +28,33 @@ export class VueIntegrationQueries {
         .catch((error) => reject(error));
     });
   }
-}
 
+  getCountryCurrencyCode() {
+    const {
+      config: { countries },
+    } = BrowserDatabase.getItem("APP_CONFIG_CACHE_KEY");
+    const { currency } = countries[this.getCountryFromUrl()];
+    return currency;
+  }
+
+  getCountryFromUrl() {
+    const locale = this.getLocaleFromUrl();
+    console.log("locale", locale);
+    if (locale) {
+      return locale.substring("3", "5").toUpperCase();
+    }
+
+    return "";
+  }
+
+  getLocaleFromUrl() {
+    return LOCALES.reduce((acc, locale) => {
+      if (location.host.includes(locale)) {
+        acc.push(locale);
+      }
+
+      return acc;
+    }, []).toString();
+  }
+}
 export default new VueIntegrationQueries();

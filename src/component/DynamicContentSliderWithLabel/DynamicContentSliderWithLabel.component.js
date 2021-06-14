@@ -94,7 +94,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
   };
 
-  onSwipe = () => {
+  async onSwipe() {
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_CAROUSEL_SWIPE,
       params: {
@@ -109,7 +109,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
         widgetID: "vue_visually_similar_slider", // TODO: Find widget id and replace with it.
       },
     });
-  };
+  }
 
   renderCircle = (item, i) => {
     const { link, text, url, plp_config, height, width } = item;

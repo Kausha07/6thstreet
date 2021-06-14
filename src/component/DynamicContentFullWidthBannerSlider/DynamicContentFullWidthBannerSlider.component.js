@@ -54,7 +54,7 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
     this.setState({ activeSlide });
   };
 
-  onSwipeChange = () => {
+  async onSwipeChange() {
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_CAROUSEL_SWIPE,
       params: {
@@ -69,7 +69,7 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
         widgetID: "vue_visually_similar_slider", // TODO: Find widget id and replace with it.
       },
     });
-  };
+  }
 
   onclick = (item) => {
     // vue analytics
