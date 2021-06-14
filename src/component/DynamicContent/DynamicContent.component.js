@@ -13,6 +13,7 @@ import DynamicContentRichContentBanner from "Component/DynamicContentRichContent
 import { DynamicContent as DynamicContentType } from "Util/API/endpoint/StaticFiles/StaticFiles.type";
 import DynamicContentTwiceBanner from "Component/DynamicContentTwiceBanner";
 import Event, { EVENT_GTM_IMPRESSIONS_HOME } from "Util/Event";
+import isMobile from 'Util/Mobile';
 import Logger from "Util/Logger";
 import VueQuery from "../../query/Vue.query";
 import BrowserDatabase from "Util/BrowserDatabase";
@@ -80,7 +81,7 @@ class DynamicContent extends PureComponent {
   renderBlock = (block, i) => {
     const { type, ...restProps } = block;
     let Component = "";
-    if (type === "banner") {
+    if (type === "banner" && !isMobile.any()) {
       const typeofBanner = this.isCheckTwiceBanner(block);
       restProps.typeOfBanner = typeofBanner;
       Component = this.renderMap["twiceBanner"];
