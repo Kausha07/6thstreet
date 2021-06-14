@@ -79,8 +79,11 @@ $select-arrow-width: 6px !default;
             font-weight: bold;
             letter-spacing: 0;
             line-height: 50px;
-            del {
-                padding-right: 8px;
+            .Price-Wrapper {
+                margin-left: 4px;
+            }
+            .Price-Discount, .Price-Special {
+                color: #d1490c;
             }
         }
         @include desktop {
