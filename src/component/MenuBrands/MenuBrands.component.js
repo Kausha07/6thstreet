@@ -42,7 +42,7 @@ class MenuBrands extends PureComponent {
       : link;
 
     return (
-      <Link to={updatedLink} key={i}>
+      <Link to={updatedLink} title={label} key={i}>
         <Image src={image_url} />
         {label}
       </Link>
