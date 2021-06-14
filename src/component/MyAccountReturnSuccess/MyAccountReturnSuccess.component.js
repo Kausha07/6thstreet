@@ -15,6 +15,7 @@ export class MyAccountReturnSuccess extends MyAccountReturnCreate {
         orderNumber: PropTypes.string,
         customer: customerType.isRequired,
         date: PropTypes.string,
+        displayDiscountPercentage: PropTypes.bool.isRequired,
         item: PropTypes.any // TODO: Should be some specific type
     };
 
@@ -22,7 +23,8 @@ export class MyAccountReturnSuccess extends MyAccountReturnCreate {
         orderId: null,
         returnNumber: null,
         orderNumber: null,
-        date: null
+        date: null,
+        displayDiscountPercentage: true
     };
 
     renderHeading() {
@@ -44,7 +46,7 @@ export class MyAccountReturnSuccess extends MyAccountReturnCreate {
     }
 
     renderItems() {
-        const { items = [] } = this.props;
+        const { items = [], displayDiscountPercentage } = this.props;
 
         return (
             <div block="MyAccountReturnSuccess" elem="Items">
@@ -52,6 +54,7 @@ export class MyAccountReturnSuccess extends MyAccountReturnCreate {
                     <MyAccountReturnSuccessItem
                       key={ item.id }
                       item={ item }
+                      displayDiscountPercentage={  displayDiscountPercentage }
                     />
                 )) }
             </div>

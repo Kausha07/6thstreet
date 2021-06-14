@@ -42,10 +42,12 @@ class MyAccountOrderView extends PureComponent {
     getCountryNameById: PropTypes.func.isRequired,
     openOrderCancelation: PropTypes.func.isRequired,
     history: HistoryType.isRequired,
+    displayDiscountPercentage: PropTypes.bool.isRequired
   };
 
   static defaultProps = {
     order: null,
+    displayDiscountPercentage: true
   };
 
   state = {
@@ -79,9 +81,10 @@ class MyAccountOrderView extends PureComponent {
   renderItem = (item) => {
     const {
       order: { base_currency_code: currency },
+      displayDiscountPercentage
     } = this.props;
 
-    return <MyAccountOrderViewItem item={item} currency={currency} />;
+    return <MyAccountOrderViewItem item={item} currency={currency}  displayDiscountPercentage={ displayDiscountPercentage } />;
   };
 
   renderTitle() {
