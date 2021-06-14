@@ -8,6 +8,8 @@ export class VueIntegrationQueries {
    */
   async vueAnalayticsLogger(payload) {
     const locale = this.getLocaleFromUrl();
+    const currencyCode = this.getCurrencyCodeFromLocale(locale);
+    console.log("currency code", currencyCode);
     return new Promise((resolve, reject) => {
       fetch(`/api/vue/analytics?locale=${locale}`, {
         method: "POST",
@@ -55,6 +57,13 @@ export class VueIntegrationQueries {
 
       return acc;
     }, []).toString();
+  }
+
+  getCurrencyCodeFromLocale(locale) {
+    switch (locale) {
+      case "en-ae":
+        return "en_AED";
+    }
   }
 }
 export default new VueIntegrationQueries();

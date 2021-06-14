@@ -72,7 +72,7 @@ class DynamicContentRichContentBanner extends PureComponent {
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
   };
 
-  async conSwipe() {
+  async onSwipe() {
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_CAROUSEL_SWIPE,
       params: {
