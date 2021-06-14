@@ -6,8 +6,6 @@ import { PureComponent } from 'react';
 
 import { isArabic } from 'Util/App';
 
-import './Price.style';
-
 class Price extends PureComponent {
     static propTypes = {
         basePrice: PropTypes.number.isRequired,

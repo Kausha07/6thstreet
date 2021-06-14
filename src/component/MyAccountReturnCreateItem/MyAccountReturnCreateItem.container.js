@@ -5,8 +5,11 @@ import { connect } from 'react-redux';
 import { ReturnResolutionType } from 'Type/API';
 
 import MyAccountReturnCreateItem from './MyAccountReturnCreateItem.component';
+import { DISPLAY_DISCOUNT_PERCENTAGE } from '../Price/Price.config';
 
-export const mapStateToProps = () => ({});
+export const mapStateToProps = (state) => ({
+    country: state.AppState.country
+});
 
 export const mapDispatchToProps = () => ({});
 
@@ -19,7 +22,8 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
         onClick: PropTypes.func.isRequired,
         onResolutionChange: PropTypes.func.isRequired,
         onReasonChange: PropTypes.func.isRequired,
-        resolutions: PropTypes.arrayOf(ReturnResolutionType)
+        resolutions: PropTypes.arrayOf(ReturnResolutionType),
+        country: PropTypes.string.isRequired
     };
 
     static defaultProps = {
@@ -59,14 +63,18 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
     }
 
     containerProps = () => {
-        const { item } = this.props;
+        const { item, country } = this.props;
         const { isSelected } = this.state;
+
+        const displayDiscountPercentage = DISPLAY_DISCOUNT_PERCENTAGE[country];
 
         return {
             item,
             isSelected,
+            displayDiscountPercentage,
             resolutions: this.getResolutionOptions(),
-            reasonOptions: this.getReasonOptions()
+            reasonOptions: this.getReasonOptions(),
+            
         };
     };
 
