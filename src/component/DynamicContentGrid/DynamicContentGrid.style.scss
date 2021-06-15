@@ -10,6 +10,12 @@
     &-Grid {
         display: grid;
         grid-gap: 0 0;
+        @include desktop {
+            grid-gap: 15px;
+        }
+        @include tablet {
+            grid-gap: 15px;
+        }
         &_items_per_row_1 {
             grid-template-columns: repeat(1, 1fr);
         }
@@ -76,7 +82,7 @@
     padding-left: 0px;
 }
 .contentAll{
-    padding-right: 15px;
+    //padding-right: 15px;
     padding-bottom: 15px;
 }
 @include desktop {
