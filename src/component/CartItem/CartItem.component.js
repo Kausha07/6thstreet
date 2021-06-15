@@ -273,7 +273,6 @@ export class CartItem extends PureComponent {
   }
 
   onQuantityChange = (quantity) => {
-    console.log("quantity change", quantity);
     const {
       handleChangeQuantity,
       item: { qty },

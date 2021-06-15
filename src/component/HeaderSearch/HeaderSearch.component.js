@@ -36,14 +36,12 @@ class HeaderSearch extends PureComponent {
   }
   componentDidMount() {
     const { focusInput } = this.props;
-    console.log("inpute ref", this.inputRef.current);
     const {
       current: {
         form: { children },
       },
     } = this.searchRef;
     const searchInput = children[0].children[0];
-    console.log({ searchInput });
     if (focusInput && searchInput) {
       searchInput.focus();
     }

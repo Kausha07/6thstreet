@@ -279,10 +279,7 @@ class HeaderMainSection extends NavigationAbstract {
 
   handleSearchClick = () => {
     const { showSearch } = this.state;
-    this.setState({ showSearch: !showSearch }, () => {
-      console.log(this.state.showSearch);
-      console.log(this.refs.child);
-    });
+    this.setState({ showSearch: !showSearch });
   };
 
   hideSearchBar = () => {

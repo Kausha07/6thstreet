@@ -12,6 +12,7 @@ import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.c
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
 import "./DynamicContentCircleItemSlider.style";
 import DragScroll from "Component/DragScroll/DragScroll.component";
+import { isArabic } from "Util/App";
 
 const settings = {
   lazyload: true,
@@ -45,6 +46,9 @@ class DynamicContentCircleItemSlider extends PureComponent {
     ).isRequired,
   };
   ref = React.createRef();
+  state = {
+    isArabic: isArabic(),
+  };
 
   clickLink = (a) => {
     let link = "/" + a.link.split("?")[0];
@@ -59,7 +63,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
 
   renderCircle = (item, i) => {
     const { link, label, image_url, plp_config } = item;
-
+    const { isArabic } = this.state;
     const linkTo = {
       pathname: formatCDNLink(link),
       state: { plp_config },
@@ -68,7 +72,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
     // TODO: move to new component
 
     return (
-      <div block="CircleSlider" key={i}>
+      <div block="CircleSlider" mods={{ isArabic }} key={i}>
         <Link
           to={linkTo}
           key={i}
@@ -79,13 +83,16 @@ class DynamicContentCircleItemSlider extends PureComponent {
             this.clickLink(item);
           }}
         >
-          <img
-            src={image_url}
-            alt={label}
-            block="Image"
-            width="70px"
-            height="70px"
-          />
+          <div block="OuterCircle">
+            <div block="OuterCircle" elem="InnerCircle"></div>
+            <img
+              src={image_url}
+              alt={label}
+              block="Image"
+              width="70px"
+              height="70px"
+            />
+          </div>
         </Link>
         <div block="CircleSliderLabel">{label}</div>
       </div>

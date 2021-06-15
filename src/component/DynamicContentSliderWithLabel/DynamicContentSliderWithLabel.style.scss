@@ -17,16 +17,10 @@
   .SliderWithLabelWrapper {
     display: block;
     white-space: nowrap;
-    // display: flex;
-    // flex-wrap: nowrap;
     overflow-x: auto;
-    // padding: 20px 0 50px 0;
-    // -ms-overflow-style: none;
     scroll-behavior: auto;
     scrollbar-width: none; /* Firefox */
-    // &:hover {
-    //   overflow-x: auto;
-    // }
+
     &::-webkit-scrollbar {
       height: 4px;
       border: 1px solid #d5d5d5;
@@ -37,7 +31,6 @@
     }
     &::-webkit-scrollbar-track {
       background: #dcdcdc;
-      //   width: 100px;
     }
 
     @include mobile {
@@ -45,10 +38,7 @@
     }
   }
   .SliderWithLabel {
-    // min-width: 18%;
-    // min-width: 238px;
     display: inline-block;
-    // width: 100%;
     margin-right: 10px;
     &:nth-last-child(2) {
       margin-right: 0;
@@ -56,6 +46,10 @@
     &-Link {
       width: 100%;
       display: block;
+    }
+    &_isArabic {
+      margin-right: 0;
+      margin-left: 10px;
     }
     @include mobile {
       margin-right: 8px;
@@ -116,13 +110,7 @@
       }
     }
   }
-  .Image {
-    // height: 100%;
-    // &-Image {
-    //   object-fit: cover;
-    //   position: inherit;
-    // }
-  }
+
   .Outer {
     width: 29.444vw;
     overflow-x: auto;
@@ -227,37 +215,5 @@
   @include tablet {
     margin-left: 0;
     margin-right: 0;
-    // margin-left: auto;
-    // margin-right: 0;
   }
 }
-
-// @media (max-width: 760px) {
-//   .DynamicContentSliderWithLabel {
-//     margin-bottom: 15px;
-
-//     .tns-controls {
-//       display: none;
-//     }
-//     .Image {
-//       margin-top: 12px;
-//       height: 100%;
-//       &-Image {
-//         object-fit: cover;
-//       }
-//       img {
-//         // margin-left: 30px;
-//       }
-//     }
-//     .tns-ovh {
-//       margin: 0;
-//     }
-//     .CircleSliderLabel {
-//       margin-top: 4px;
-//       font-size: 12px;
-//     }
-//     .Title {
-//       font-size: 15px;
-//     }
-//   }
-// }

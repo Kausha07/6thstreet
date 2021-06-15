@@ -64,7 +64,6 @@ class DragScroll extends PureComponent {
       const x = e.pageX - slider.offsetLeft;
       const walk = (x - this.state.startX) * 3; //scroll-fast
       slider.scrollLeft = this.state.scrollLeft - walk;
-      console.log(walk);
     });
   };
   render() {

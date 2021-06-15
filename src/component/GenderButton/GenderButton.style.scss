@@ -19,7 +19,7 @@
     }
 
     @include desktop {
-      padding: 0 30px;
+      padding: 0 20px;
 
       &:first-child {
         padding-left: 0;
@@ -37,6 +37,15 @@
     padding: 0;
     pointer-events: all;
     z-index: 2;
+    &::before {
+      display: block;
+      content: attr(name);
+      font-weight: bold;
+      height: 0;
+      overflow: hidden;
+      visibility: hidden;
+      width: 60px;
+    }
 
     &_isCurrentGender,
     &:hover {

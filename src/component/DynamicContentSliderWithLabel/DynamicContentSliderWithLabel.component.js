@@ -50,7 +50,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
 
   renderSliderWithLabel = (item, i) => {
     const { link, text, url, plp_config, height, width, text_align } = item;
-
+    const { isArabic } = this.state;
     const linkTo = {
       pathname: formatCDNLink(link),
       state: { plp_config },
@@ -60,7 +60,12 @@ class DynamicContentSliderWithLabel extends PureComponent {
     const ht = `${height.toString()}px`;
 
     return (
-      <div block="SliderWithLabel" ref={this.itemRef} key={i * 10}>
+      <div
+        block="SliderWithLabel"
+        mods={{ isArabic }}
+        ref={this.itemRef}
+        key={i * 10}
+      >
         <Link
           to={linkTo}
           key={i * 10}
@@ -124,13 +129,6 @@ class DynamicContentSliderWithLabel extends PureComponent {
         ? items[0].width * items.length + items.length * 10 * 2 - 690
         : 0
     }px`;
-    console.log("slider width", width, items[0].width, items.length);
-    console.log(
-      "parent slider width",
-      title,
-      "==>",
-      this.cmpRef.current && this.cmpRef.current.scrollWidth
-    );
 
     return (
       <DragScroll
@@ -139,7 +137,6 @@ class DynamicContentSliderWithLabel extends PureComponent {
         <div
           block="SliderWithLabelWrapper"
           ref={this.cmpRef}
-          // ref="newRef"
           onScroll={this.handleContainerScroll}
         >
           <div className="SliderHelper"></div>
