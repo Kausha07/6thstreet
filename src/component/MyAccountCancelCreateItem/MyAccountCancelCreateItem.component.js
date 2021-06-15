@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import {
     MyAccountReturnCreateItem as SourceComponent
 } from 'Component/MyAccountReturnCreateItem/MyAccountReturnCreateItem.component';
@@ -6,8 +7,17 @@ import { CONST_HUNDRED } from 'Util/Common';
 import { formatPrice } from '../../../packages/algolia-sdk/app/utils/filters';
 
 export class MyAccountCancelCreateItem extends SourceComponent {
+    static propTypes = {
+        displayDiscountPercentage: PropTypes.bool.isRequired
+    };
+
+    static defaultProps = {
+        displayDiscountPercentage: true
+    };
+
     renderDetails() {
         const {
+            displayDiscountPercentage,
             item: {
                 name,
                 color,
@@ -52,9 +62,12 @@ export class MyAccountCancelCreateItem extends SourceComponent {
                     </span>
                     { (+price < +original_price) && (
                         <>
-                            <span block="MyAccountReturnCreateItem" elem="PriceDiscountPercent">
-                                { `(-${ ((+price / +original_price) * CONST_HUNDRED).toFixed() }%)` }
-                            </span>
+                            {
+                                displayDiscountPercentage &&
+                                <span block="MyAccountReturnCreateItem" elem="PriceDiscountPercent">
+                                    { `(-${ ((+price / +original_price) * CONST_HUNDRED).toFixed() }%)` }
+                                </span>
+                            }
                             <span block="MyAccountReturnCreateItem" elem="PriceDiscount">
                                 { `${ formatPrice(+price) }` }
                             </span>
