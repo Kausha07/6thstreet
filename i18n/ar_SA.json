@@ -762,10 +762,15 @@
     "Where can we send your order?": null,
     "+ New address": null,
     "Low stock": null,
-    "Please select": null,
-    "Select Size": null,
-    "Mix n Match": null,
     "Cash on delivery": null,
     "Details": null,
-    "Place tabby order": null
+    "Place tabby order": null,
+    "Subtotal ": null,
+    "Add Credit Card": "إضافة بطاقة ائتمان",
+    "Save Card": "احفظ البطاقة",
+    "New Card": "بطاقة جديدة",
+    "My Cards": "بطاقاتي",
+    "Please select": null,
+    "Select Size": null,
+    "Mix n Match": null
 }
