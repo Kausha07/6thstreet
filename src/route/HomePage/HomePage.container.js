@@ -41,6 +41,7 @@ export class HomePageContainer extends PureComponent {
     dynamicContent: [],
     isLoading: true,
     defaultGender: "women",
+    isMobile: isMobile.any(),
   };
 
   constructor(props) {
@@ -107,7 +108,12 @@ export class HomePageContainer extends PureComponent {
   }
 
   async fetchDataFromLocal() {
-    return fetch("women.json", {
+    const { isMobile } = this.state;
+    let fileName = "women.json";
+    if (isMobile) {
+      fileName = "women_mobile.json";
+    }
+    return fetch(fileName, {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
