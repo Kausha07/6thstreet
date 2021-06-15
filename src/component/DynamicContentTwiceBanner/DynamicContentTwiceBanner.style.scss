@@ -4,7 +4,7 @@
     text-align: center;
     margin: 0 auto !important;
     padding: 0;
-    display: flex;
+    display: inline-flex;
   }
   &-Figure {
     @include desktop {
@@ -70,6 +70,7 @@
     }
   }
   &-FigureRight {
+    display: inline-flex;
     .TwiceBanner {
       align-items: center;
       background-color: #fafafa;
