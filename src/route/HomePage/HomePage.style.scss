@@ -22,7 +22,7 @@
     > div:not(.DynamicContentFullWidthBannerSlider) {
       @include desktop {
         margin: 0 auto;
-        max-width: var(--main-container-width-dsk);
+        width: var(--main-container-width-dsk);
       }
     }
     .DynamicContentGrid {

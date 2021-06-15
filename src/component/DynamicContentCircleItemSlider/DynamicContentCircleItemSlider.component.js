@@ -14,26 +14,6 @@ import "./DynamicContentCircleItemSlider.style";
 import DragScroll from "Component/DragScroll/DragScroll.component";
 import { isArabic } from "Util/App";
 
-const settings = {
-  lazyload: true,
-  nav: false,
-  mouseDrag: true,
-  touch: true,
-  controlsText: ["&#x27E8", "&#x27E9"],
-  loop: false,
-  responsive: {
-    1024: {
-      items: 8,
-    },
-    420: {
-      items: 6,
-    },
-    300: {
-      items: 4,
-    },
-  },
-};
-
 class DynamicContentCircleItemSlider extends PureComponent {
   static propTypes = {
     items: PropTypes.arrayOf(
