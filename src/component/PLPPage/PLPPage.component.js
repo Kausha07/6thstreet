@@ -18,7 +18,6 @@ class PLPPage extends PureComponent {
   componentDidMount() {
     const { impressions } = this.props;
     const category = this.getCategory();
-    console.log("plp page rendered");
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_PLP_VIEW,

@@ -44,7 +44,6 @@ class DynamicContentCircleItemSlider extends PureComponent {
   };
 
   clickLink = (a) => {
-    console.log("banner click", a);
     let link = "/" + a.link.split("?")[0];
     localStorage.setItem("bannerData", JSON.stringify(a));
     localStorage.setItem("CircleBannerUrl", link);

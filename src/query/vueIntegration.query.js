@@ -1,4 +1,3 @@
-import BrowserDatabase from "Util/BrowserDatabase";
 import { Field } from "Util/Query";
 import { LOCALES } from "Util/Url/Url.config";
 export class VueIntegrationQueries {
@@ -18,33 +17,14 @@ export class VueIntegrationQueries {
         body: JSON.stringify(payload),
       })
         .then((response) => {
-          console.log("response", response);
           if (response.status !== 200) {
-            // throw Error(response.message);
-            console.log("Error", response.statusText);
+            throw Error(response.statusText);
+            // console.log("Error", response.statusText);
           }
           return response.json();
         })
         .catch((error) => reject(error));
     });
-  }
-
-  getCountryCurrencyCode() {
-    const {
-      config: { countries },
-    } = BrowserDatabase.getItem("APP_CONFIG_CACHE_KEY");
-    const { currency } = countries[this.getCountryFromUrl()];
-    return currency;
-  }
-
-  getCountryFromUrl() {
-    const locale = this.getLocaleFromUrl();
-    console.log("locale", locale);
-    if (locale) {
-      return locale.substring("3", "5").toUpperCase();
-    }
-
-    return "";
   }
 
   getLocaleFromUrl() {

@@ -32,7 +32,6 @@ class DynamicContentBanner extends PureComponent {
   };
 
   onclick = (item) => {
-    console.log("item1");
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     // vue analytics
     VueIntegrationQueries.vueAnalayticsLogger({
