@@ -7,6 +7,7 @@ import { showNotification } from 'Store/Notification/Notification.action';
 import { hideActiveOverlay, toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
 import { customerType } from 'Type/Account';
 import { ClubApparelMember } from 'Util/API/endpoint/ClubApparel/ClubApparel.type';
+import Loader from '../Loader';
 import BrowserDatabase from 'Util/BrowserDatabase';
 
 import MyAccountClubApparel from './MyAccountClubApparel.component';
@@ -61,14 +62,24 @@ export class MyAccountClubApparelContainer extends PureComponent {
         return null;
     }
 
-    componentDidMount() {
-        // const storageClubApparel = BrowserDatabase.getItem(CLUB_APPAREL) || null;
-        const { customer: {id}, getMember } = this.props;
+    // componentDidMount() {
+    //     // const storageClubApparel = BrowserDatabase.getItem(CLUB_APPAREL) || null;
+    //     const { customer: {id}, getMember } = this.props;
 
-        // if (!storageClubApparel) {
-        //     getMember();
-        // }
-        getMember(id);
+    //     // if (!storageClubApparel) {
+    //     //     getMember();
+    //     // }
+    //     getMember(id);
+    // }
+
+    componentDidUpdate(prevProps) {
+        const { customer: { id }, getMember, country } = this.props;
+
+        const { customer: {id: prevId}, country: prevCountry } = prevProps;
+
+        if(prevId !== id || prevCountry !== country){
+            getMember(id);
+        }
     }
 
     containerProps = () => {
@@ -88,7 +99,13 @@ export class MyAccountClubApparelContainer extends PureComponent {
     };
 
     render() {
+        const { clubApparel } = this.state;
+        console.log(clubApparel)
         return (
+            !clubApparel
+            ?
+            <Loader isLoading={ true }/>
+            :
             <MyAccountClubApparel
               { ...this.containerProps() }
               { ...this.containerFunctons() }
