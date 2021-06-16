@@ -17,6 +17,7 @@ export const mapStateToProps = (_state) => ({
     activeOverlay: _state.OverlayReducer.activeOverlay,
     hideActiveOverlay: _state.OverlayReducer.hideActiveOverlay,
     country: _state.AppState.country,
+    language: _state.AppState.language,
     clubApparel: _state.ClubApparelReducer.clubApparel
 });
 
@@ -38,6 +39,7 @@ export class MyAccountClubApparelContainer extends PureComponent {
         activeOverlay: PropTypes.string.isRequired,
         hideActiveOverlay: PropTypes.func.isRequired,
         country: PropTypes.string.isRequired,
+        language: PropTypes.string.isRequired,
         clubApparel: ClubApparelMember.isRequired
     };
 
@@ -74,11 +76,20 @@ export class MyAccountClubApparelContainer extends PureComponent {
     }
 
     componentDidUpdate(prevProps) {
-        const { customer: { id }, getMember, country } = this.props;
+        const {
+            customer: { id },
+            country,
+            language,
+            getMember
+        } = this.props;
 
-        const { customer: {id: prevId}, country: prevCountry } = prevProps;
+        const { 
+            customer: { id: prevId },
+            country: prevCountry,
+            language: prevLanguage
+        } = prevProps;
 
-        if(prevId !== id || prevCountry !== country){
+        if(prevId !== id || prevCountry !== country || prevLanguage !== language){
             getMember(id);
         }
     }
