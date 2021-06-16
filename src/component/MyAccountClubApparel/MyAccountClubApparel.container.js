@@ -62,12 +62,13 @@ export class MyAccountClubApparelContainer extends PureComponent {
     }
 
     componentDidMount() {
-        const storageClubApparel = BrowserDatabase.getItem(CLUB_APPAREL) || null;
+        // const storageClubApparel = BrowserDatabase.getItem(CLUB_APPAREL) || null;
         const { getMember } = this.props;
 
-        if (!storageClubApparel) {
-            getMember();
-        }
+        // if (!storageClubApparel) {
+        //     getMember();
+        // }
+        getMember();
     }
 
     containerProps = () => {

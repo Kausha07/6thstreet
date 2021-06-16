@@ -40,7 +40,6 @@ export class ClubApparel extends PureComponent {
 
     renderLabel() {
         const { clubApparelPoints, currency } = this.props;
-
         return (
             <>
                 { __('Use') }

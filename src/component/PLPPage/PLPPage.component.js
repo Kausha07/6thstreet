@@ -1,6 +1,6 @@
 // import PropTypes from 'prop-types';
 import ProductItem from "Component/ProductItem";
-import queryString from 'query-string';
+import queryString from 'queryString';
 import { PureComponent } from "react";
 import { Products } from "Util/API/endpoint/Product/Product.type";
 import BrowserDatabase from "Util/BrowserDatabase";

@@ -1,24 +1,24 @@
 /* eslint-disable no-magic-numbers */
-import PropTypes from "prop-types";
-import queryString from "query-string";
-import { PureComponent } from "react";
-import { connect } from "react-redux";
-import { getStore } from "Store";
-import { setMinicartOpen } from "Store/Cart/Cart.action";
-import CartDispatcher from "Store/Cart/Cart.dispatcher";
-import { showNotification } from "Store/Notification/Notification.action";
-import PDPDispatcher from "Store/PDP/PDP.dispatcher";
-import { Product } from "Util/API/endpoint/Product/Product.type";
-import Algolia from "Util/API/provider/Algolia";
-import { getUUIDToken } from "Util/Auth";
+import PropTypes from 'prop-types';
+import queryString from 'queryString';
+import { PureComponent } from 'react';
+import { connect } from 'react-redux';
+import { getStore } from 'Store';
+import { setMinicartOpen } from 'Store/Cart/Cart.action';
+import CartDispatcher from 'Store/Cart/Cart.dispatcher';
+import { showNotification } from 'Store/Notification/Notification.action';
+import PDPDispatcher from 'Store/PDP/PDP.dispatcher';
+import { Product } from 'Util/API/endpoint/Product/Product.type';
+import Algolia from 'Util/API/provider/Algolia';
+import { getUUIDToken } from 'Util/Auth';
 import Event, {
   ADD_TO_CART_ALGOLIA,
   EVENT_GTM_PRODUCT_ADD_TO_CART
-} from "Util/Event";
-import history from "Util/History";
-import isMobile from "Util/Mobile";
-import PDPAddToCart from "./PDPAddToCart.component";
-import PDPAddToCartDesktop from "./PDPAddToCartDesktop.component";
+} from 'Util/Event';
+import history from 'Util/History';
+import isMobile from 'Util/Mobile';
+import PDPAddToCart from './PDPAddToCart.component';
+import PDPAddToCartDesktop from './PDPAddToCartDesktop.component';
 
 export const mapStateToProps = (state) => ({
   product: state.PDP.product,
