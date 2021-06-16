@@ -13,7 +13,7 @@ import { getIndex } from "./app/utils";
 const AlgoliaSDK = {
   client: null,
   index: null,
-  env: "production",
+  env: process.env.REACT_APP_ALGOLIA_ENV,
 
   init: (appID, adminKey) => {
     AlgoliaSDK.client = init(appID, adminKey);
