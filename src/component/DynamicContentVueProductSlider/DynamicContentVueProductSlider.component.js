@@ -57,7 +57,6 @@ class DynamicContentVueProductSlider extends PureComponent {
         return (
             <div block="VueProductSlider" elem="HeaderContainer">
                 <h1>{heading}</h1>
-                {this.viewAllBtn()}
             </div>
         );
     }

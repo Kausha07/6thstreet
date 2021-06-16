@@ -157,6 +157,10 @@ export class HomePageContainer extends PureComponent {
     } catch (error) {
       Logger.log(e);
     }
+
+
+
+
   }
 
   containerProps = () => {

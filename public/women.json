@@ -647,9 +647,27 @@
       ]
     },
     {
-      "type": "vue_recently_viewed_slider",
+      "type": "vue_browsing_history_slider",
+      "layout": {
+        "title": "Browsed History Product"
+      }
+    },
+    {
+      "type": "vue_trending_slider",
       "layout": {
         "title": "Trending Products"
+      }
+    },
+    {
+      "type": "vue_recently_viewed_slider",
+      "layout": {
+        "title": "Recently Viewed Products"
+      }
+    },
+    {
+      "type": "vue_top_picks_slider",
+      "layout": {
+        "title": "Top Picks Products"
       }
     },
     {
