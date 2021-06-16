@@ -40,6 +40,7 @@
     }
   }
   &-BannerImgRight {
+    right : 20px;
     .BannerImage {
       object-fit: cover;
       @include tablet {
@@ -57,14 +58,14 @@
       // background: #f3f3f3;
       margin-top: 44px;
       margin-bottom: 41px;
-      left: 43px;
+      left: 20px;
       z-index: 3;
     }
     @include tablet {
       // background: #f3f3f3;
       margin-top: 44px;
       margin-bottom: 41px;
-      left: 43px;
+      left: 20px;
       z-index: 3;
     }
   }
@@ -207,5 +208,19 @@
       line-height: 22px;
       text-align: center;
     }
+  }
+}
+
+.DynamicContentTwiceBanner-Content_isArabic {
+  .DynamicContentTwiceBanner-FigureRight{
+    right : 40px !important;
+  }
+  .DynamicContentTwiceBanner-BannerImg{
+    right: 10px !important;
+    left: 0px !important;
+  }
+  .DynamicContentTwiceBanner-BannerImgRight{
+    right: 0px !important;
+    padding-left: 40px;
   }
 }

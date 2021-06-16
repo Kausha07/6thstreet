@@ -10,6 +10,7 @@ import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.c
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
 import "./DynamicContentSliderWithLabel.style";
 import DragScroll from "Component/DragScroll/DragScroll.component";
+import { isArabic } from "Util/App";
 
 class DynamicContentSliderWithLabel extends PureComponent {
   static propTypes = {
@@ -33,6 +34,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
       isDown: false,
       startX: 0,
       scrollLeft: 0,
+      isArabic: isArabic(),
     };
   }
 
@@ -48,7 +50,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
 
   renderSliderWithLabel = (item, i) => {
     const { link, text, url, plp_config, height, width, text_align } = item;
-
+    const { isArabic } = this.state;
     const linkTo = {
       pathname: formatCDNLink(link),
       state: { plp_config },
@@ -58,7 +60,12 @@ class DynamicContentSliderWithLabel extends PureComponent {
     const ht = `${height.toString()}px`;
 
     return (
-      <div block="SliderWithLabel" ref={this.itemRef} key={i * 10}>
+      <div
+        block="SliderWithLabel"
+        mods={{ isArabic }}
+        ref={this.itemRef}
+        key={i * 10}
+      >
         <Link
           to={linkTo}
           key={i * 10}
@@ -123,13 +130,6 @@ class DynamicContentSliderWithLabel extends PureComponent {
         ? items[0].width * items.length + items.length * 10 * 2 - 690
         : 0
     }px`;
-    console.log("slider width", width, items[0].width, items.length);
-    console.log(
-      "cparent slider width",
-      title,
-      "==>",
-      this.cmpRef.current && this.cmpRef.current.scrollWidth
-    );
 
     return (
       <DragScroll
@@ -138,7 +138,6 @@ class DynamicContentSliderWithLabel extends PureComponent {
         <div
           block="SliderWithLabelWrapper"
           ref={this.cmpRef}
-          // ref="newRef"
           onScroll={this.handleContainerScroll}
         >
           <div className="SliderHelper"></div>
@@ -151,12 +150,17 @@ class DynamicContentSliderWithLabel extends PureComponent {
   }
 
   render() {
+    const { isArabic } = this.state;
     return (
       <div block="DynamicContentSliderWithLabel HomePageContainer">
         {this.props.header && (
           <DynamicContentHeader header={this.props.header} />
         )}
-        {this.props.title && <h1 block="Title">{this.props.title}</h1>}
+        {this.props.title && (
+          <h1 block="Title" mods={{ isArabic }}>
+            {this.props.title}
+          </h1>
+        )}
         {this.renderSliderWithLabels()}
         {this.props.footer && (
           <DynamicContentFooter footer={this.props.footer} />

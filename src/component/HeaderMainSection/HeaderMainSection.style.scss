@@ -17,7 +17,7 @@ main {
   flex-direction: row;
   align-items: center;
   height: 60px;
-  max-width: 1470px;
+  max-width: 1440px;
   margin: 0 auto;
 
   @include mobile {
@@ -197,14 +197,26 @@ main {
 
   .HeaderWishlist {
     order: 3;
+    margin-left: 15px;
+    margin-right: 15px;
   }
 
   .HeaderAccount {
     order: 4;
+    margin-left: 15px;
+    margin-right: 15px;
+    &_isArabic {
+      // margin-left: 0;
+    }
   }
 
   .HeaderCart {
     order: 5;
+    margin-left: 15px;
+    &_isArabic {
+      margin-right: 15px;
+      margin-left: 0;
+    }
 
     @include before-desktop {
       top: 5px;
@@ -238,6 +250,7 @@ main {
           right: unset;
           left: 20px;
           .HeaderCart {
+            margin-left: 0 !important;
             &-Button {
               right: 5px;
               left: unset;
@@ -257,7 +270,7 @@ main {
       border-radius: 20px;
 
       &-Button {
-        left: 5px;
+        right: 5px;
         top: 3px;
         background-size: 24px;
         width: 24px;
@@ -372,7 +385,7 @@ main {
     flex-direction: unset;
     // padding: 0 15px;
     padding: 0;
-    width: 76.389vw;
+    width: var(--main-container-width-dsk);
 
     &_isMobile {
       display: block;
@@ -393,7 +406,7 @@ main {
     z-index: 10;
     .HeaderSearch {
       position: relative;
-      width: 76.389vw;
+      width: var(--main-container-width-dsk);
       max-width: 100%;
       height: 40px;
       top: 0;
@@ -436,7 +449,7 @@ main {
           overflow-y: auto;
           right: 0;
           & > div {
-            width: 76.389vw;
+            width: var(--main-container-width-dsk);
             margin-left: auto;
             margin-right: auto;
             padding: 0 35px;
@@ -448,18 +461,20 @@ main {
 }
 
 .SearchIcon {
-  // margin-left: 10px !important;
-  margin-right: 15px !important;
+  margin-right: 15px;
+  &_isArabic {
+    margin-right: 0;
+    margin-left: 15px;
+  }
 }
-.HeaderWishlist {
-  margin-left: 15px !important;
-  margin-right: 15px !important;
-}
-.HeaderAccount {
-  margin-left: 15px !important;
-  margin-right: 15px !important;
-}
-.HeaderCart {
-  margin-left: 15px !important;
-  // margin-right: 10px !important;
-}
+// .HeaderWishlist {
+//   margin-left: 15px !important;
+//   margin-right: 15px !important;
+// }
+// .HeaderAccount {
+//   margin-left: 15px !important;
+//   margin-right: 15px !important;
+// }
+// .HeaderCart {
+//   margin-left: 15px !important;
+// }

@@ -1,177 +1,254 @@
 :root {
-    --subtitle-font-size: 17px;
-    --title-font-size: 22px;
-    --light-gray: #efefef;
+  --subtitle-font-size: 17px;
+  --title-font-size: 22px;
+  --light-gray: #efefef;
 }
 
 .DynamicContentGrid {
-    max-width: 1440px;
-    margin-bottom: 14px !important;
-    &-Grid {
-        display: grid;
-        grid-gap: 0 0;
-        &_items_per_row_1 {
-            grid-template-columns: repeat(1, 1fr);
-        }
-        &_items_per_row_2 {
-            grid-template-columns: repeat(2, 1fr);
-        }
-        &_items_per_row_3 {
-            grid-template-columns: repeat(3, 1fr);
-        }
-        &_items_per_row_4 {
-            grid-template-columns: repeat(4, 1fr);
-        }
-        &_items_per_row_5 {
-            grid-template-columns: repeat(5, 1fr);
-        }
-        &_items_per_row_6 {
-            grid-template-columns: repeat(6, 1fr);
-        }
-        // a {
-        //     margin: 0;
-        //     display: block;
-        //     line-height: 1;
-        // }
+  max-width: 1440px;
+  margin-bottom: 14px !important;
+  &-Grid {
+    display: grid;
+    grid-gap: 0 0;
+    @include desktop {
+      grid-gap: 15px;
     }
-    .Image {
-        //height: auto;
-        //max-width: 220px; // Tempo before JSON will be updated
-        padding-bottom: 0;
-        display: block;
-        &-Image {
-            position: static;
-            height: auto;
-            max-width: 100%;
-        }
+    @include tablet {
+      grid-gap: 15px;
     }
-    h2 {
-        // border-top: 1px solid var(--light-gray);
-        font-size: 20px;
-        margin-top: 0;
-        padding: 20px;
-        text-align: center;
-        text-transform: uppercase;
+    &_items_per_row_1 {
+      grid-template-columns: repeat(1, 1fr);
     }
-    // @include desktop {
-    //     &-Grid {
-    //         margin-left: 70px;
-    //         margin-right: 70px;
-    //     }
+    &_items_per_row_2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    &_items_per_row_3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    &_items_per_row_4 {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    &_items_per_row_5 {
+      grid-template-columns: repeat(5, 1fr);
+    }
+    &_items_per_row_6 {
+      grid-template-columns: repeat(6, 1fr);
+    }
+    // a {
+    //     margin: 0;
+    //     display: block;
+    //     line-height: 1;
     // }
+  }
+  .Image {
+    //height: auto;
+    //max-width: 220px; // Tempo before JSON will be updated
+    padding-bottom: 0;
+    display: block;
+    &-Image {
+      position: static;
+      height: auto;
+      max-width: 100%;
+    }
+  }
+  h2 {
+    // border-top: 1px solid var(--light-gray);
+    font-size: 20px;
+    margin-top: 0;
+    padding: 20px;
+    text-align: center;
+    text-transform: uppercase;
+  }
+  // @include desktop {
+  //     &-Grid {
+  //         margin-left: 70px;
+  //         margin-right: 70px;
+  //     }
+  // }
 }
 
-.CategoryItem {
+.CategoryItem-Content.Content_0 {
+  padding-right: 20px;
+}
+.CategoryItem-Content.Content_1 {
+  padding-left: 20px;
+}
+.CategoryItem-Content_isArabic.Content_0 {
+  padding-left: 20px;
+  padding-right: 0px;
+}
+.CategoryItem-Content_isArabic.Content_1 {
+  padding-right: 20px;
+  padding-left: 0px;
+}
+.contentAll {
+  //padding-right: 15px;
+  padding-bottom: 15px;
+}
+@include desktop {
+  .CategoryItem {
     &-Content {
-        text-align: center;
-        padding-right: 15px;
+      text-align: center;
+      text-decoration: none;
+      a {
         text-decoration: none;
-        a {
-            text-decoration: none;  
+      }
+      .Footer {
+        margin-top: 15px;
+        &-Title {
+          text-transform: uppercase;
+          margin-bottom: 0px;
+          text-decoration: none !important;
+          color: #000000;
+          font-family: "Avenir Next";
+          font-size: 18px;
+          font-weight: 500;
+          letter-spacing: 2px;
+          line-height: 25px;
+          text-align: center;
         }
-        .Footer {
-            // color: red;
-            margin-top: 15px;
-            &-Title {
-                // display: block;
-                // font-weight: var(--fw-medium);
-                // font-size: var(--title-font-size);
-                // margin-bottom: 0px;
-                // line-height: 1.2;
-                text-transform: uppercase;
-                margin-bottom: 0px;
-                text-decoration: none !important;
-                color: #000000;
-                font-family: "Avenir Next";
-                font-size: 18px;
-                font-weight: 500;
-                letter-spacing: 2px;
-                line-height: 25px;
-                text-align: center;
-            }
-            &-SubTitle {
-                // font-size: var(--subtitle-font-size);
-                // line-height: 1.2;
-                text-decoration: none;
-                color: #4A4A4A;
-                font-family: "Avenir Next";
-                font-size: 16px;
-                letter-spacing: 0;
-                line-height: 22px;
-                text-align: center;
-            }
-            .Footer-Button {
-                color: #000000;
-                font-family: "Avenir Next";
-                font-size: 16px;
-                font-weight: 500;
-                letter-spacing: 0;
-                line-height: 22px;
-                text-align: center;
-                border-bottom: 1px solid black !important;
-            }
+        &-SubTitle {
+          // font-size: var(--subtitle-font-size);
+          // line-height: 1.2;
+          text-decoration: none;
+          color: #4a4a4a;
+          font-family: "Avenir Next";
+          font-size: 16px;
+          letter-spacing: 0;
+          line-height: 22px;
+          text-align: center;
         }
+        .Footer-Button {
+          color: #000000;
+          font-family: "Avenir Next";
+          font-size: 16px;
+          font-weight: 500;
+          letter-spacing: 0;
+          line-height: 22px;
+          text-align: center;
+          border-bottom: 1px solid black !important;
+        }
+      }
     }
     &-Text {
+      margin-top: 20px;
+      margin-bottom: 30px;
+    }
+  }
+}
+@include tablet {
+  .CategoryItem {
+    &-Content {
+      text-align: center;
+      text-decoration: none;
+      a {
+        text-decoration: none;
+      }
+      .Footer {
+        margin-top: 15px;
+        &-Title {
+          text-transform: uppercase;
+          margin-bottom: 0px;
+          text-decoration: none !important;
+          color: #000000;
+          font-family: "Avenir Next";
+          font-size: 18px;
+          font-weight: 500;
+          letter-spacing: 2px;
+          line-height: 25px;
+          text-align: center;
+        }
+        &-SubTitle {
+          // font-size: var(--subtitle-font-size);
+          // line-height: 1.2;
+          text-decoration: none;
+          color: #4a4a4a;
+          font-family: "Avenir Next";
+          font-size: 16px;
+          letter-spacing: 0;
+          line-height: 22px;
+          text-align: center;
+        }
+        .Footer-Button {
+          color: #000000;
+          font-family: "Avenir Next";
+          font-size: 16px;
+          font-weight: 500;
+          letter-spacing: 0;
+          line-height: 22px;
+          text-align: center;
+          border-bottom: 1px solid black !important;
+        }
+      }
+    }
+    &-Text {
+      margin-top: 20px;
+      margin-bottom: 30px;
+    }
+  }
+}
+@include mobile {
+  .CategoryItem {
+    &-Content {
+      text-align: center;
+      padding: 8px;
+      .Footer {
+        // color: red;
+        &-Title {
+          display: block;
+          font-weight: var(--fw-medium);
+          font-size: var(--title-font-size);
+          margin-bottom: 0px;
+          line-height: 1.2;
+        }
+        &-SubTitle {
+          font-size: var(--subtitle-font-size);
+          line-height: 1.2;
+        }
+      }
+    }
+    &-Text {
+      margin-top: 20px;
+      margin-bottom: 30px;
+    }
+  }
+  .Content_0 {
+    padding: 10px;
+  }
+  .Content_1 {
+    padding: 10px;
+  }
+}
+@media (max-width: 760px) {
+  .DynamicContentGrid {
+    .CategoryItem {
+      &-Content {
+        margin-bottom: 5px;
+        .Footer {
+          // color: red;
+          &-Title {
+            display: block;
+            font-weight: 600;
+            font-size: 12px;
+            margin-bottom: 0px;
+            text-align: center;
+          }
+          &-SubTitle {
+            font-size: 11px;
+            line-height: 1;
+            margin-bottom: 6px;
+          }
+          &-Button {
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: underline;
+          }
+        }
+      }
+      &-Text {
         margin-top: 20px;
         margin-bottom: 30px;
+      }
     }
-}
-
-@media (max-width: 760px) {
-    .DynamicContentGrid {
-        .CategoryItem {
-            &-Content {
-                margin-bottom: 5px;
-                .Footer {
-                    // color: red;
-                    &-Title {
-                        // display: block;
-                        // font-weight: 600;
-                        // font-size: 12px;
-                        // margin-bottom: 0px;
-                        // text-align: center;
-                        text-transform: uppercase;
-                        margin-bottom: 0px;
-                        color: #000000;
-                        font-family: "Avenir Next";
-                        font-size: 18px;
-                        font-weight: 500;
-                        letter-spacing: 2px;
-                        line-height: 25px;
-                        text-align: center;
-                    }
-                    &-SubTitle {
-                        // font-size: 11px;
-                        // line-height: 1;
-                        // margin-bottom: 6px;
-                        color: #4A4A4A;
-                        font-family: "Avenir Next";
-                        font-size: 16px;
-                        letter-spacing: 0;
-                        line-height: 22px;
-                        text-align: center;
-                    }
-                    .Footer-Button {
-                        color: #000000;
-                        font-family: "Avenir Next";
-                        font-size: 16px;
-                        font-weight: 500;
-                        letter-spacing: 0;
-                        line-height: 22px;
-                        text-align: center;
-                    }
-                    &-Button {
-                        font-size: 12px;
-                        font-weight: 600;
-                        text-decoration: underline;
-                    }
-                }
-            }
-            &-Text {
-                margin-top: 20px;
-                margin-bottom: 30px;
-            }
-        }
-    }
+  }
 }

@@ -12,26 +12,7 @@ import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.c
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
 import "./DynamicContentCircleItemSlider.style";
 import DragScroll from "Component/DragScroll/DragScroll.component";
-
-const settings = {
-  lazyload: true,
-  nav: false,
-  mouseDrag: true,
-  touch: true,
-  controlsText: ["&#x27E8", "&#x27E9"],
-  loop: false,
-  responsive: {
-    1024: {
-      items: 8,
-    },
-    420: {
-      items: 6,
-    },
-    300: {
-      items: 4,
-    },
-  },
-};
+import { isArabic } from "Util/App";
 
 class DynamicContentCircleItemSlider extends PureComponent {
   static propTypes = {
@@ -45,6 +26,9 @@ class DynamicContentCircleItemSlider extends PureComponent {
     ).isRequired,
   };
   ref = React.createRef();
+  state = {
+    isArabic: isArabic(),
+  };
 
   clickLink = (a) => {
     let link = "/" + a.link.split("?")[0];
@@ -59,7 +43,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
 
   renderCircle = (item, i) => {
     const { link, label, image_url, plp_config } = item;
-
+    const { isArabic } = this.state;
     const linkTo = {
       pathname: formatCDNLink(link),
       state: { plp_config },
@@ -68,7 +52,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
     // TODO: move to new component
 
     return (
-      <div block="CircleSlider" key={i}>
+      <div block="CircleSlider" mods={{ isArabic }} key={i}>
         <Link
           to={linkTo}
           key={i}
@@ -79,28 +63,16 @@ class DynamicContentCircleItemSlider extends PureComponent {
             this.clickLink(item);
           }}
         >
-          <img
-            src={image_url}
-            alt={label}
-            block="Image"
-            width="70px"
-            height="70px"
-          />
-          {/* <Image
-                      src={ image_url }
-                      alt={ label }
-                      mix={ { block: 'DynamicContentCircleItemSlider', elem: 'Image' } }
-                      ratio="custom"
-                      height="70px"
-                      width="70px"
-                    /> */}
-          {/* <button
-                  block="DynamicContentCircleItemSlider"
-                  elem="Label"
-                  mix={ { block: 'button primary' } }
-                >
-                    { label }
-                </button> */}
+          <div block="OuterCircle">
+            <div block="OuterCircle" elem="InnerCircle"></div>
+            <img
+              src={image_url}
+              alt={label}
+              block="Image"
+              width="70px"
+              height="70px"
+            />
+          </div>
         </Link>
         <div block="CircleSliderLabel">{label}</div>
       </div>
@@ -112,7 +84,9 @@ class DynamicContentCircleItemSlider extends PureComponent {
     return (
       <DragScroll data={{ rootClass: "CircleSliderWrapper", ref: this.ref }}>
         <div ref={this.ref} block="CircleSliderWrapper">
+          <div className="CircleItemHelper"></div>
           {items.map(this.renderCircle)}
+          <div className="CircleItemHelper"></div>
         </div>
       </DragScroll>
     );

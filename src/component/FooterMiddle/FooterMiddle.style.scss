@@ -26,10 +26,10 @@
   &-Layout {
     display: flex;
     justify-content: space-between;
-    max-width: 1440px;
-    margin: auto;
-    width: 76.389vw;
 
+    margin: auto;
+    width: var(--main-container-width-dsk);
+    max-width: 1440px;
     &_isCheckout {
       max-width: 1150px;
     }

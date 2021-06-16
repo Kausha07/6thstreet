@@ -45,6 +45,7 @@ class GenderButton extends PureComponent {
       >
         <button
           mix={mix}
+          name={label}
           block="GenderButton"
           elem="Button"
           mods={{ isCurrentGender, isUnsetStyle }}
