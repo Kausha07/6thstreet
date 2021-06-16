@@ -2,11 +2,12 @@
 import Link from "Component/Link";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
+// import { Product } from "Util/API/endpoint/Product/Product.type";
 import isMobile from "Util/Mobile";
 import "./PDPDetail.style";
-
 class PDPDetail extends PureComponent {
   static propTypes = {
+    // product: Product.isRequired,
     brandDescription: PropTypes.string,
     brandImg: PropTypes.string,
     brandName: PropTypes.string,
@@ -17,7 +18,7 @@ class PDPDetail extends PureComponent {
   };
 
   componentDidMount() {
-    console.log("props", this.props);
+    // console.log("product", product);
     // const locale = VueIntegrationQueries.getLocaleFromUrl();
     // VueIntegrationQueries.vueAnalayticsLogger({
     //   event_name: VUE_PDP_VIEW,

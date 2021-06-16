@@ -86,7 +86,7 @@ class MyAccountClubApparel extends PureComponent {
     renderLinkedMember() {
         const {
             clubApparel: {
-                caPoints,
+                caPointsValue,
                 currency,
                 memberDetails: {
                     memberTier,
@@ -105,7 +105,7 @@ class MyAccountClubApparel extends PureComponent {
                 <div block="MyAccountClubApparel" elem="Reward">
                     <div block="MyAccountClubApparel" elem="Points" mods={ { isArabic } }>
                         <p>Rewards Worth</p>
-                        <span block="MyAccountClubApparel" elem="PointsCAP">{ caPoints }</span>
+                        <span block="MyAccountClubApparel" elem="PointsCAP">{ caPointsValue }</span>
                         <span block="MyAccountClubApparel" elem="PointsCurrency">{ currency }</span>
                     </div>
                     <div block="MyAccountClubApparel" elem="Tier" mods={ { isArabic } }>
