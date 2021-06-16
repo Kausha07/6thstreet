@@ -1,10 +1,14 @@
 .DynamicContentTwiceBanner {
   &-Content {
+    width: auto !important;
     background-color: white;
     text-align: center;
     margin: 0 auto !important;
     padding: 0;
     display: inline-flex;
+    // @include tablet{
+    //   padding-left: 30px;
+    // }
   }
   &-Figure {
     @include desktop {
@@ -21,11 +25,12 @@
   &-BannerImg {
     @include desktop {
       width: 50%;
-      left: 43px;
+      // left: 43px;
     }
     @include tablet {
       width: 50%;
-      left: 43px;
+      // left: 43px;
+      margin-left: 30px;
     }
     .BannerImage {
       object-fit: cover;
@@ -91,7 +96,7 @@
       }
       @include tablet {
         left: 15%;
-        top: 30%;
+        top: 40%;
         position: absolute;
       }
     }
@@ -110,6 +115,7 @@
     }
     .TwiceBannerBlockChild a button {
       padding: 0px !important;
+      text-transform: capitalize;
     }
     .TwiceBannerBlockChildTitle {
       text-transform: uppercase;
@@ -125,7 +131,7 @@
         // width: 426px;
       }
       @include tablet {
-        height: 40px;
+        // height: 40px;
         // width: 334.99px;
       }
     }
@@ -161,7 +167,7 @@
       }
       @include tablet {
         left: 15%;
-        top: 30%;
+        top: 40%;
         position: absolute;
       }
     }
@@ -180,6 +186,7 @@
     }
     .TwiceBannerBlockChild a button {
       padding: 0px !important;
+      text-transform: capitalize;
     }
     .TwiceBannerBlockChildTitle {
       text-transform: uppercase;
@@ -195,7 +202,7 @@
         // width: 426px;
       }
       @include tablet {
-        height: 40px;
+        // height: 40px;
         // width: 334.99px;
       }
     }
@@ -213,15 +220,20 @@
 }
 
 .DynamicContentTwiceBanner-Content_isArabic {
+  width: auto !important;
   .DynamicContentTwiceBanner-FigureRight{
     right : 40px !important;
   }
   .DynamicContentTwiceBanner-BannerImg{
-    right: 10px !important;
+    right: 30px !important;
     left: 0px !important;
+    margin-left: 0px !important;
   }
   .DynamicContentTwiceBanner-BannerImgRight{
     right: 0px !important;
     padding-left: 40px;
+  }
+  .DynamicContentTwiceBanner-Figure{
+    right: 20px;
   }
 }
