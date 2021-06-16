@@ -21,12 +21,12 @@ const settings = {
   navPosition: "bottom",
   autoplay: false,
   responsive: {
-    1024: {
+    768: {
       items: 2,
       gutter: 36,
     },
     420: {
-      items: 6,
+      items: 1,
     },
     300: {
       items: 1,
@@ -87,7 +87,7 @@ class DynamicContentRichContentBanner extends PureComponent {
             alt={title}
             mix={{ block: "DynamicContentRichContentBanner", elem: "Image" }}
             ratio="custom"
-            style={{ maxWidth: width, maxHeight: height }}
+            // style={{ maxWidth: width, maxHeight: height }}
           />
           {/* <Image
             src={image_url}

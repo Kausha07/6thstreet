@@ -1,10 +1,14 @@
 .DynamicContentTwiceBanner {
   &-Content {
+    width: auto !important;
     background-color: white;
     text-align: center;
     margin: 0 auto !important;
     padding: 0;
     display: inline-flex;
+    // @include tablet{
+    //   padding-left: 30px;
+    // }
   }
   &-Figure {
     @include desktop {
@@ -21,11 +25,12 @@
   &-BannerImg {
     @include desktop {
       width: 50%;
-      left: 43px;
+      // left: 43px;
     }
     @include tablet {
       width: 50%;
-      left: 43px;
+      // left: 43px;
+      margin-left: 30px;
     }
     .BannerImage {
       object-fit: cover;
@@ -45,7 +50,7 @@
       object-fit: cover;
       @include tablet {
         min-height: 334px;
-        min-width: 408.91px;
+        min-width: 390px; // 408.91px;
       }
       @include desktop {
         min-height: 459px;
@@ -91,15 +96,26 @@
       }
       @include tablet {
         left: 15%;
-        top: 30%;
+        top: 40%;
         position: absolute;
       }
     }
     .TwiceBannerBlockChild a {
       border-bottom: 1px solid;
       border-width: thin;
-      height: 22px;
+      // height: 22px;
       // width: 102px;
+      // color: #000000;
+      // font-family: "Avenir Next";
+      // font-size: 16px;
+      // font-weight: 500;
+      // letter-spacing: 0;
+      // line-height: 22px;
+      // text-align: center;
+    }
+    .TwiceBannerBlockChild a button {
+      padding: 0px !important;
+      text-transform: capitalize;
       color: #000000;
       font-family: "Avenir Next";
       font-size: 16px;
@@ -107,9 +123,6 @@
       letter-spacing: 0;
       line-height: 22px;
       text-align: center;
-    }
-    .TwiceBannerBlockChild a button {
-      padding: 0px !important;
     }
     .TwiceBannerBlockChildTitle {
       text-transform: uppercase;
@@ -125,7 +138,7 @@
         // width: 426px;
       }
       @include tablet {
-        height: 40px;
+        // height: 40px;
         // width: 334.99px;
       }
     }
@@ -161,15 +174,26 @@
       }
       @include tablet {
         left: 15%;
-        top: 30%;
+        top: 40%;
         position: absolute;
       }
     }
     .TwiceBannerBlockChild a {
       border-bottom: 1px solid;
       border-width: thin;
-      height: 22px;
+      // height: 22px;
       // width: 102px;
+      // color: #000000;
+      // font-family: "Avenir Next";
+      // font-size: 16px;
+      // font-weight: 500;
+      // letter-spacing: 0;
+      // line-height: 22px;
+      // text-align: center;
+    }
+    .TwiceBannerBlockChild a button {
+      padding: 0px !important;
+      text-transform: capitalize;
       color: #000000;
       font-family: "Avenir Next";
       font-size: 16px;
@@ -177,9 +201,6 @@
       letter-spacing: 0;
       line-height: 22px;
       text-align: center;
-    }
-    .TwiceBannerBlockChild a button {
-      padding: 0px !important;
     }
     .TwiceBannerBlockChildTitle {
       text-transform: uppercase;
@@ -195,7 +216,7 @@
         // width: 426px;
       }
       @include tablet {
-        height: 40px;
+        // height: 40px;
         // width: 334.99px;
       }
     }
@@ -213,15 +234,20 @@
 }
 
 .DynamicContentTwiceBanner-Content_isArabic {
+  width: auto !important;
   .DynamicContentTwiceBanner-FigureRight{
     right : 40px !important;
   }
   .DynamicContentTwiceBanner-BannerImg{
-    right: 10px !important;
+    right: 30px !important;
     left: 0px !important;
+    margin-left: 0px !important;
   }
   .DynamicContentTwiceBanner-BannerImgRight{
     right: 0px !important;
     padding-left: 40px;
+  }
+  .DynamicContentTwiceBanner-Figure{
+    right: 20px;
   }
 }

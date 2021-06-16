@@ -327,7 +327,7 @@ class HeaderMainSection extends NavigationAbstract {
     );
   }
   renderSearch() {
-    if (isMobile.any()) {
+    if (isMobile.any() || isMobile.tablet()) {
       return this.isPLP() || this.isPDP() ? null : (
         <HeaderSearch key="search" />
       );
