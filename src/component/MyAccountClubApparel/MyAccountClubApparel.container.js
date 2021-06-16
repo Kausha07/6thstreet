@@ -68,7 +68,6 @@ export class MyAccountClubApparelContainer extends PureComponent {
         // if (!storageClubApparel) {
         //     getMember();
         // }
-        window.alert(id)
         getMember(id);
     }
 
