@@ -108,6 +108,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
   };
   renderScrollbar = () => {
     const { items = [] } = this.props;
+
     const width = `${
       (this.itemRef.current && this.itemRef.current.clientWidth) *
         items.length +

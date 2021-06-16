@@ -10,6 +10,7 @@ import DynamicContentMainBanner from "Component/DynamicContentMainBanner";
 import DynamicContentProductSlider from "Component/DynamicContentProductSlider";
 import DynamicContentSliderWithLabel from "Component/DynamicContentSliderWithLabel";
 import DynamicContentRichContentBanner from "Component/DynamicContentRichContentBanner";
+import DynamicContentVueSlider from "Component/DynamicContentVueSlider";
 import { DynamicContent as DynamicContentType } from "Util/API/endpoint/StaticFiles/StaticFiles.type";
 import DynamicContentTwiceBanner from "Component/DynamicContentTwiceBanner";
 import Event, { EVENT_GTM_IMPRESSIONS_HOME } from "Util/Event";
@@ -42,6 +43,7 @@ class DynamicContent extends PureComponent {
     rich_content_banner: DynamicContentRichContentBanner,
     twiceBanner: DynamicContentTwiceBanner,
     line_separator: "hr",
+    vue_slider: DynamicContentVueSlider
   };
   async getHomeWidgetsVueData(type) {
     const { gender } = this.props;
@@ -80,12 +82,18 @@ class DynamicContent extends PureComponent {
   };
   renderBlock = (block, i) => {
     const { type, ...restProps } = block;
+    let vueSliderType = ["vue_browsing_history_slider", "vue_trending_slider", "vue_recently_viewed_slider", "vue_top_picks_slider", "vue_visually_similar_slider"]
     let Component = "";
     if (type === "banner" && !isMobile.any()) {
       const typeofBanner = this.isCheckTwiceBanner(block);
       restProps.typeOfBanner = typeofBanner;
       Component = this.renderMap["twiceBanner"];
-    } else {
+    }
+    else if(vueSliderType.includes(type)){
+        Component = this.renderMap["vue_slider"];
+        return <Component {...restProps} type={type} key={i} />
+    }
+    else {
       Component = this.renderMap[type];
     }
     // Component = this.renderMap[type];
