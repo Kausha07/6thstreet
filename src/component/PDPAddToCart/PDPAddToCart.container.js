@@ -1,6 +1,6 @@
 /* eslint-disable no-magic-numbers */
 import PropTypes from 'prop-types';
-import queryString from 'queryString';
+import queryString from 'query-string';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { getStore } from 'Store';

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
-import queryString from 'queryString';
+import queryString from 'query-string';
 import { getStore } from 'Store';
 import { connect } from 'react-redux';
 
