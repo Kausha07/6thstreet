@@ -36,7 +36,7 @@
       }
       @include mobile {
         display: block;
-        min-width: 8px;
+        min-width: 20px;
       }
     }
 
@@ -80,7 +80,7 @@
     }
 
     .CircleSlider {
-      margin-right: 15px;
+      margin-right: 10px;
       // width: 100%;
 
       &_isArabic {
@@ -150,7 +150,7 @@
   .Image {
     // margin-top: 60px;
     // border: 1px solid red;
-    padding: 4px;
+    padding: 3px;
     border-radius: 50%;
     height: 78px;
     width: 78px;
@@ -201,6 +201,10 @@
 
     @include tablet {
       width: 64px;
+    }
+    @include mobile{
+      margin-top: 10px;
+      font-weight: 400;
     }
   }
 
@@ -263,7 +267,7 @@
       margin: 0;
     }
     .CircleSliderLabel {
-      margin-top: 4px;
+      // margin-top: 4px;
       font-size: 9px;
       width: 75px;
     }
