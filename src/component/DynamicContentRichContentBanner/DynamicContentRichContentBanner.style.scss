@@ -49,9 +49,6 @@
     button[data-action="start"] {
       display: none;
     }
-    @include mobile {
-      padding: 0 8px !important;
-    }
   }
   .tns-controls {
     position: initial;
