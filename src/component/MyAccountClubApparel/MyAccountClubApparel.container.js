@@ -20,7 +20,7 @@ export const mapStateToProps = (_state) => ({
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-    getMember: () => ClubApparelDispatcher.getMember(dispatch),
+    getMember: (id) => ClubApparelDispatcher.getMember(dispatch, id),
     showNotification: (type, message) => dispatch(showNotification(type, message)),
     showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
     hideActiveOverlay: () => dispatch(hideActiveOverlay())
@@ -63,12 +63,13 @@ export class MyAccountClubApparelContainer extends PureComponent {
 
     componentDidMount() {
         // const storageClubApparel = BrowserDatabase.getItem(CLUB_APPAREL) || null;
-        const { getMember } = this.props;
+        const { customer: {id}, getMember } = this.props;
 
         // if (!storageClubApparel) {
         //     getMember();
         // }
-        getMember();
+        window.alert(id)
+        getMember(id);
     }
 
     containerProps = () => {
