@@ -647,7 +647,7 @@
       ]
     },
     {
-      "type": "vue_trending_slider",
+      "type": "vue_recently_viewed_slider",
       "layout": {
         "title": "Trending Products"
       }

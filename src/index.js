@@ -22,7 +22,7 @@ import * as Sentry from "@sentry/react";
 import { Integrations } from "@sentry/tracing";
 
 window.__DEV__ = process.env.NODE_ENV === "development";
-Sentry.init({ dsn: process.env.REACT_APP_SENTRY_ENDPOINT });
+// Sentry.init({ dsn: process.env.REACT_APP_SENTRY_ENDPOINT });
 // let's register service-worker
 // but not in development mode, the cache can destroy the DX
 if (process.env.NODE_ENV !== "development" && "serviceWorker" in navigator) {
