@@ -1,11 +1,11 @@
 import Link from "Component/Link";
 import PropTypes from "prop-types";
-import VueIntegrationQueries from "Query/vueIntegration.query";
+// import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
 import "react-circular-carousel/dist/index.css";
 import TinySlider from "tiny-slider-react";
-import { getUUID } from "Util/Auth";
-import Event, { EVENT_GTM_BANNER_CLICK, VUE_CAROUSEL_CLICK } from "Util/Event";
+// import { getUUID } from "Util/Auth";
+import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
 import { formatCDNLink } from "Util/Url";
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
@@ -51,19 +51,19 @@ class DynamicContentCircleItemSlider extends PureComponent {
       link: a.link,
       promotion_name: a.promotion_name,
     };
-    const locale = VueIntegrationQueries.getLocaleFromUrl();
-    VueIntegrationQueries.vueAnalayticsLogger({
-      event_name: VUE_CAROUSEL_CLICK,
-      params: {
-        event: VUE_CAROUSEL_CLICK,
-        pageType: "plp",
-        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-        clicked: Date.now(),
-        uuid: getUUID(),
-        referrer: "desktop",
-        widgetID: "vue_visually_similar_slider", // TODO: will be added after vue product slider.
-      },
-    });
+    // const locale = VueIntegrationQueries.getLocaleFromUrl();
+    // VueIntegrationQueries.vueAnalayticsLogger({
+    //   event_name: VUE_CAROUSEL_CLICK,
+    //   params: {
+    //     event: VUE_CAROUSEL_CLICK,
+    //     pageType: "plp",
+    //     currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+    //     clicked: Date.now(),
+    //     uuid: getUUID(),
+    //     referrer: "desktop",
+    //     widgetID: "vue_visually_similar_slider", // TODO: will be added after vue product slider.
+    //   },
+    // });
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
   };
 

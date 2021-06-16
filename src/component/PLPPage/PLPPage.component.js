@@ -6,7 +6,7 @@ import { PureComponent } from "react";
 import { Products } from "Util/API/endpoint/Product/Product.type";
 import { getUUID } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
-import Event, { EVENT_GTM_IMPRESSIONS_PLP, VUE_PLP_VIEW } from "Util/Event";
+import Event, { EVENT_GTM_IMPRESSIONS_PLP, VUE_PAGE_VIEW } from "Util/Event";
 import "./PLPPage.style";
 
 class PLPPage extends PureComponent {
@@ -20,9 +20,9 @@ class PLPPage extends PureComponent {
     const category = this.getCategory();
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
-      event_name: VUE_PLP_VIEW,
+      event_name: VUE_PAGE_VIEW,
       params: {
-        event: VUE_PLP_VIEW,
+        event: VUE_PAGE_VIEW,
         pageType: "plp",
         currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),

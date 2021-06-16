@@ -1,14 +1,10 @@
 import Link from "Component/Link";
 import PropTypes from "prop-types";
-import VueIntegrationQueries from "Query/vueIntegration.query";
+// import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
 import TinySlider from "tiny-slider-react";
-import { getUUID } from "Util/Auth";
-import Event, {
-  EVENT_GTM_BANNER_CLICK,
-  VUE_CAROUSEL_CLICK,
-  VUE_CAROUSEL_SWIPE,
-} from "Util/Event";
+// import { getUUID } from "Util/Auth";
+import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
 import { formatCDNLink } from "Util/Url";
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
@@ -75,19 +71,19 @@ class DynamicContentSliderWithLabel extends PureComponent {
 
   onclick = (item) => {
     // vue analytics
-    const locale = VueIntegrationQueries.getLocaleFromUrl();
-    VueIntegrationQueries.vueAnalayticsLogger({
-      event_name: VUE_CAROUSEL_CLICK,
-      params: {
-        event: VUE_CAROUSEL_CLICK,
-        pageType: "plp",
-        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-        clicked: Date.now(),
-        uuid: getUUID(),
-        referrer: "desktop",
-        widgetID: "vue_visually_similar_slider", // TODO: will be added after vue product slider.
-      },
-    });
+    // const locale = VueIntegrationQueries.getLocaleFromUrl();
+    // VueIntegrationQueries.vueAnalayticsLogger({
+    //   event_name: VUE_CAROUSEL_CLICK,
+    //   params: {
+    //     event: VUE_CAROUSEL_CLICK,
+    //     pageType: "plp",
+    //     currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+    //     clicked: Date.now(),
+    //     uuid: getUUID(),
+    //     referrer: "desktop",
+    //     widgetID: "vue_visually_similar_slider", // TODO: will be added after vue product slider.
+    //   },
+    // });
     let banner = {
       link: item.link,
       promotion_name: item.promotion_name,
@@ -95,23 +91,23 @@ class DynamicContentSliderWithLabel extends PureComponent {
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
   };
 
-  async onSwipe() {
-    const locale = VueIntegrationQueries.getLocaleFromUrl();
-    VueIntegrationQueries.vueAnalayticsLogger({
-      event_name: VUE_CAROUSEL_SWIPE,
-      params: {
-        event: VUE_CAROUSEL_SWIPE,
-        pageType: "plp",
-        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-        clicked: Date.now(),
-        uuid: getUUID(),
-        referrer: "desktop",
-        sourceProdID: "", // TODO: Need to find it.
-        sourceCatgID: "", // TODO: Need to find it.
-        widgetID: "vue_visually_similar_slider", // TODO: will be added after vue product slider.
-      },
-    });
-  }
+  // async onSwipe() {
+  //   const locale = VueIntegrationQueries.getLocaleFromUrl();
+  //   VueIntegrationQueries.vueAnalayticsLogger({
+  //     event_name: VUE_CAROUSEL_SWIPE,
+  //     params: {
+  //       event: VUE_CAROUSEL_SWIPE,
+  //       pageType: "plp",
+  //       currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+  //       clicked: Date.now(),
+  //       uuid: getUUID(),
+  //       referrer: "desktop",
+  //       sourceProdID: "", // TODO: Need to find it.
+  //       sourceCatgID: "", // TODO: Need to find it.
+  //       widgetID: "vue_visually_similar_slider", // TODO: will be added after vue product slider.
+  //     },
+  //   });
+  // }
 
   renderCircle = (item, i) => {
     const { link, text, url, plp_config, height, width } = item;
@@ -166,9 +162,9 @@ class DynamicContentSliderWithLabel extends PureComponent {
       <TinySlider
         settings={this.state.settings}
         block="SliderWithLabelWrapper"
-        onIndexChanged={() => {
-          this.onSwipe;
-        }}
+        // onIndexChanged={() => {
+        //   this.onSwipe;
+        // }}
       >
         {items.map(this.renderCircle)}
       </TinySlider>

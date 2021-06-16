@@ -18,8 +18,8 @@ export class VueIntegrationQueries {
       })
         .then((response) => {
           if (response.status !== 200) {
-            throw Error(response.statusText);
-            // console.log("Error", response.statusText);
+            // throw Error(response.statusText);
+            console.log("Error", response.statusText);
           }
           return response.json();
         })

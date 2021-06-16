@@ -1,10 +1,7 @@
 // import PropTypes from 'prop-types';
 import Link from "Component/Link";
 import PropTypes from "prop-types";
-// import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
-// import { getUUID } from "Util/Auth";
-// import { VUE_PDP_VIEW } from "Util/Event";
 import isMobile from "Util/Mobile";
 import "./PDPDetail.style";
 
@@ -20,17 +17,20 @@ class PDPDetail extends PureComponent {
   };
 
   componentDidMount() {
-    // 404
+    console.log("props", this.props);
     // const locale = VueIntegrationQueries.getLocaleFromUrl();
     // VueIntegrationQueries.vueAnalayticsLogger({
     //   event_name: VUE_PDP_VIEW,
     //   params: {
-    //     event: VUE_PDP_VIEW,
+    //     event: VUE_PAGE_VIEW,
     //     pageType: "pdp",
     //     currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
     //     clicked: Date.now(),
     //     uuid: getUUID(),
     //     referrer: "desktop",
+    //     sourceProdID: configSKU,
+    //     sourceCatgID: objectID, // TODO: replace with category id
+    //     prodPrice: basePrice,
     //   },
     // });
   }
