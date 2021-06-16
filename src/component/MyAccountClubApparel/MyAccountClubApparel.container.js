@@ -62,15 +62,16 @@ export class MyAccountClubApparelContainer extends PureComponent {
         return null;
     }
 
-    // componentDidMount() {
-    //     // const storageClubApparel = BrowserDatabase.getItem(CLUB_APPAREL) || null;
-    //     const { customer: {id}, getMember } = this.props;
-
-    //     // if (!storageClubApparel) {
-    //     //     getMember();
-    //     // }
-    //     getMember(id);
-    // }
+    componentDidMount() {
+        // const storageClubApparel = BrowserDatabase.getItem(CLUB_APPAREL) || null;
+        // if (!storageClubApparel) {
+        //     getMember();
+        // }
+        const { customer: { id }, getMember } = this.props;
+        if(id){
+            getMember(id);
+        }
+    }
 
     componentDidUpdate(prevProps) {
         const { customer: { id }, getMember, country } = this.props;
@@ -100,7 +101,6 @@ export class MyAccountClubApparelContainer extends PureComponent {
 
     render() {
         const { clubApparel } = this.state;
-        console.log(clubApparel)
         return (
             !clubApparel
             ?
