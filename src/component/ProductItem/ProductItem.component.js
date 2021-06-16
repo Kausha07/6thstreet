@@ -5,6 +5,7 @@ import ProductLabel from "Component/ProductLabel/ProductLabel.component";
 import WishlistIcon from "Component/WishlistIcon";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
+import { getStore } from "Store";
 import { Product } from "Util/API/endpoint/Product/Product.type";
 import Algolia from "Util/API/provider/Algolia";
 import { isArabic } from "Util/App";
