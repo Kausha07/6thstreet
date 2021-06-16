@@ -7,6 +7,7 @@ import { PureComponent } from 'react';
 import { MINI_CARDS } from './CreditCard.config';
 import secure from './icons/secure.png';
 import Field from 'Component/Field';
+import { isArabic } from "Util/App";
 
 import './CreditCard.style';
 import PlusIcon from "./icons/plus.png";
@@ -76,16 +77,20 @@ class CreditCard extends PureComponent {
             setCreditCardData,
             reformatInputField,
             getCardLogo,
-            isAmex
+            isAmex,
+            cardNumberValidator
         } = this.props;
         const { cvv } = this.state;
         const { value } = e.target;
         const element = document.getElementById('number');
         const onlyNumbers = value.replace(/\s/g, '') || '';
         const cardLogo = getCardLogo(onlyNumbers);
+        const message = cardNumberValidator(onlyNumbers);
 
         reformatInputField(element, 4);
         setCreditCardData({ number: onlyNumbers });
+
+        this.setState({ validatorMessage: message });
 
         if (onlyNumbers.length === 16 || (isAmex && onlyNumbers.length === 15)) {
             this.setState({ cardLogo, numberFilled: true });
@@ -156,7 +161,7 @@ class CreditCard extends PureComponent {
 
         return (
             <div block="CreditCard" elem="Card" dir="ltr">
-                <p>card number</p>
+                <p>{__("card number")}</p>
                 <input
                     type="text"
                     placeholder="0000  0000  0000  0000"
@@ -209,8 +214,10 @@ class CreditCard extends PureComponent {
 
     renderMiniCard(miniCard) {
         const img = MINI_CARDS[miniCard];
-
-        return <img src={img} alt="method" key={miniCard} />;
+        if (img) {
+            return <img src={img} alt="method" key={miniCard} />;
+        }
+        return null;
     }
 
     renderAcceptedCardsInfo() {
@@ -236,7 +243,7 @@ class CreditCard extends PureComponent {
         if (validatorMessage) {
             return (
                 <div block="CreditCard" elem="Validator">
-                    { validatorMessage}
+                    {validatorMessage}
                 </div>
             );
         }
@@ -260,7 +267,7 @@ class CreditCard extends PureComponent {
                     onClick={this.handleCheckboxChange}
                 />
                 <label block="CreditCard" elem="Label" htmlFor={checkboxId}>
-                    {"Save Card"}
+                    {__("Save Card")}
                 </label>
             </div>
         );
@@ -271,7 +278,7 @@ class CreditCard extends PureComponent {
             <div block="NewCard" elem="btn" onClick={this.handleNewCardClick}>
                 <img src={PlusIcon} alt="plus" />
                 <label>
-                    {"New Card"}
+                    {__("New Card")}
                 </label>
             </div>
         );
@@ -290,7 +297,8 @@ class CreditCard extends PureComponent {
                             const { isAmex } = this.props;
                             return (
                                 <div block="SelectedSavedCard" elem="Item" key={entity_id}>
-                                    <img src={SelectedIcon} alt={"selected"} block="SavedCard" elem="Tick" />
+                                    <img src={SelectedIcon} alt={"selected"} block="SavedCard" elem="Tick"
+                                        style={{ marginRight: isArabic ? '12px' : '0px' }} />
                                     <span block="SelectedSavedCard" elem="CardNumber">{cardNum}</span>
                                     <div block="SelectedSavedCard" elem="CvvImgCon">
                                         <span>{`${expirationDate.substr(0, 3)}${expirationDate.substr(5, 2)}`}</span>
@@ -319,7 +327,7 @@ class CreditCard extends PureComponent {
                                 }
                                 this.props.applyPromotionSavedCard();
                             }}>
-                                <span block="SavedCard" elem="CardNumber">{cardNum}</span>
+                                <span block="SavedCard" elem="CardNumber" dir="ltr">{cardNum}</span>
                                 <div block="SavedCard" elem="CvvImgCon">
                                     <span>{`${expirationDate.substr(0, 3)}${expirationDate.substr(5, 2)}`}</span>
                                     {this.renderMiniCard(scheme.toLowerCase())}
@@ -336,7 +344,7 @@ class CreditCard extends PureComponent {
         return (
             <React.Fragment>
                 <label block="MyCards" elem="Label">
-                    {"My Cards"}
+                    {__("My Cards")}
                 </label>
                 {this.renderSavedCards(savedCards)}
                 {this.newCardBtn()}

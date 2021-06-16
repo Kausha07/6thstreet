@@ -466,17 +466,25 @@ export class CheckoutSuccess extends PureComponent {
     const second = parseInt(number.charAt(1));
 
     if (first === 4) {
-      return visa;
+      return <img src={visa} alt="card icon" />
     }
 
     if (first === 5) {
-      return mastercard;
+      return <img src={mastercard} alt="card icon" />
     }
 
     if (first === 3 && (second === 4 || second === 7)) {
-      return amex;
+      return <img src={amex} alt="card icon" />
     }
 
+    return null;
+  }
+
+  renderMiniCard(miniCard) {
+    const img = MINI_CARDS[miniCard];
+    if (img) {
+      return <img src={img} alt="card icon" />;
+    }
     return null;
   }
 
@@ -494,7 +502,7 @@ export class CheckoutSuccess extends PureComponent {
       return (
         <div block="Details">
           <div block="Details" elem="TypeLogo">
-            <img src={this.renderCardLogo()} alt="card icon" />
+            {this.renderCardLogo()}
           </div>
           <div block="Details" elem="Number">
             <div block="Details" elem="Number-Dots">
@@ -522,7 +530,7 @@ export class CheckoutSuccess extends PureComponent {
       return (
         <div block="Details">
           <div block="Details" elem="TypeLogo">
-            <img src={MINI_CARDS[scheme.toLowerCase()]} alt="card icon" />
+            {this.renderMiniCard(scheme.toLowerCase())}
           </div>
           <div block="Details" elem="Number">
             <div block="Details" elem="Number-Dots">
