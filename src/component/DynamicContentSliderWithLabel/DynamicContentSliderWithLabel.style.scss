@@ -20,7 +20,7 @@
     overflow-x: auto;
     scroll-behavior: auto;
     scrollbar-width: none; /* Firefox */
-    text-align-last: start;
+    // text-align-last: start;
     &::-webkit-scrollbar {
       height: 4px;
       border: 1px solid #d5d5d5;

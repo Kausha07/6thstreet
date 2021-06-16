@@ -82,7 +82,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
             src={url}
             alt={text}
             block="Image"
-            style={{ maxWidth: wd, maxHeight: ht }}
+            // style={{ maxWidth: wd, maxHeight: ht }}
           />
         </Link>
         {text ? (

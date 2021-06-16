@@ -40,8 +40,10 @@
       }
     }
 
+    scrollbar-width: none; /* Firefox */
+    scrollbar-color: red #c2d2e4;
     &::-webkit-scrollbar {
-      // display: none;
+      display: none;
     }
 
     .OuterCircle {
