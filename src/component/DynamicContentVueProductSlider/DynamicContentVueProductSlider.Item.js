@@ -1,4 +1,5 @@
 import Link from "Component/Link";
+import React from "react";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { getCurrency } from "Util/App/App";
@@ -8,6 +9,12 @@ class DynamicContentVueProductSliderItem extends PureComponent {
   static propTypes = {
     data: PropTypes.object.isRequired,
   };
+
+  constructor(props) {
+    super(props);
+    this.childRef = React.createRef();
+  }
+
 
   renderPrice(price) {
     if (price && price.length > 0) {
@@ -48,7 +55,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
       productURL = link;
     }
     return (
-      <div block="VueProductSlider" elem="VueProductContainer">
+      <div block="VueProductSlider" elem="VueProductContainer" ref={this.childRef}>
         <Link to={productURL} data-banner-type="vueSlider">
           <img
             block="VueProductSlider"
