@@ -39,7 +39,6 @@ class ProductItem extends PureComponent {
     let userData = JSON.parse(data);
     let userToken;
     let queryID;
-    console.log("qid in click", qid);
     if (!qid) {
       queryID = getStore().getState().SearchSuggestions.queryID;
     } else {

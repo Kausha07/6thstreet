@@ -39,7 +39,6 @@ class PLPPage extends PureComponent {
   renderProducts() {
     const { products = [] } = this.props;
     var qid = new URLSearchParams(window.location.search).get("qid");
-    console.log("qid", qid);
     return products.map((i, index) => this.renderProduct(i, index + 1, qid));
   }
 
