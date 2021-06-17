@@ -39,6 +39,7 @@ class ProductItem extends PureComponent {
     let userData = JSON.parse(data);
     let userToken;
     let queryID;
+    console.log("qid in click", qid);
     if (!qid) {
       queryID = getStore().getState().SearchSuggestions.queryID;
     } else {
@@ -156,21 +157,33 @@ class ProductItem extends PureComponent {
     const {
       product,
       product: { url },
+      qid,
     } = this.props;
-
+    let queryID;
+    if (!qid) {
+      queryID = getStore().getState().SearchSuggestions.queryID;
+    } else {
+      queryID = qid;
+    }
     const { pathname } = new URL(url);
-
+    let urlWithQueryID;
+    if (queryID) {
+      urlWithQueryID = `${pathname}?qid=${queryID}`;
+    } else {
+      urlWithQueryID = pathname;
+    }
     const linkTo = {
-      pathname,
-      state: { product },
+      pathname: urlWithQueryID,
+      state: {
+        product,
+      },
     };
 
     return (
       <Link to={linkTo} onClick={this.handleClick}>
-        {this.renderImage()}
-        {this.renderBrand()}
-        {this.renderTitle()}
-        {this.renderPrice()}
+        {" "}
+        {this.renderImage()} {this.renderBrand()} {this.renderTitle()}{" "}
+        {this.renderPrice()}{" "}
       </Link>
     );
   }

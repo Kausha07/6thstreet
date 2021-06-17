@@ -1,6 +1,5 @@
 // import PropTypes from 'prop-types';
 import ProductItem from "Component/ProductItem";
-import queryString from "query-string";
 import { PureComponent } from "react";
 import { Products } from "Util/API/endpoint/Product/Product.type";
 import BrowserDatabase from "Util/BrowserDatabase";
@@ -39,9 +38,8 @@ class PLPPage extends PureComponent {
 
   renderProducts() {
     const { products = [] } = this.props;
-    var qid = queryString.parse(window.location.search)?.qid
-      ? queryString.parse(window.location.search)?.qid
-      : null;
+    var qid = new URLSearchParams(window.location.search).get("qid");
+    console.log("qid", qid);
     return products.map((i, index) => this.renderProduct(i, index + 1, qid));
   }
 
