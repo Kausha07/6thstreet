@@ -34,6 +34,7 @@
       // background:#f3f3f3;
       margin-top: 44px;
       margin-bottom: 41px;
+      left: 23px;
     }
     @include tablet {
       // background:#f3f3f3;
@@ -45,6 +46,7 @@
     @include desktop {
       width: 50%;
       // left: 43px;
+      left: 20px;
     }
     @include tablet {
       width: 50%;
@@ -281,6 +283,11 @@
     padding-left: 40px;
   }
   .DynamicContentTwiceBanner-Figure{
-    right: 20px;
+    @include desktop {
+      right: 30px;
+    }
+    // @include tablet {
+    //   right: 20px;
+    // }
   }
 }
