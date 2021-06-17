@@ -430,7 +430,7 @@ export class CartItem extends PureComponent {
 
     return (
       <>
-        <Image
+        <img
           src={thumbnail}
           mix={{
             block: "CartItem",

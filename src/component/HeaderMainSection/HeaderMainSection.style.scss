@@ -417,6 +417,11 @@ main {
       display: flex;
       justify-content: center;
       align-items: center;
+      &-Clear{
+        padding-right: 0px;
+        padding-left: 0px;
+        width: 15px;
+      }
 
       .Form {
         width: 100%;
