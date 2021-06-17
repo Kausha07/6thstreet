@@ -68,7 +68,7 @@ class FooterMain extends PureComponent {
                 id_gallery: 'Gallery1',
                 app_gallery: 'https://6thstreetmobileapp-eu-c.s3.eu-central-1.amazonaws.com/resources/20190121/en-ae/d/icon_huaweiappgallery.svg',
                 gallery_onclick: 'https://appgallery.huawei.com/#/app/C102324663',
-                header: __('Follow The Latest Trends'),
+                header: __('Follow the latest trends'),
                 id_facebook: 'Facebook1',
                 facebook_href: 'https://www.facebook.com/shop6thstreet/',
                 id_insta: 'Insta1',

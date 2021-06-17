@@ -239,6 +239,7 @@ class DynamicContentProductSlider extends PureComponent {
           heading={finalTitle}
           withViewAll
           key={`VueProductSliderContainer`}
+          isHome={true}
         />
         {/* );
                         })

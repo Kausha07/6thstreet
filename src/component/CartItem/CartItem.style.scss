@@ -117,7 +117,8 @@
 
   &-Wrapper {
     width: 100%;
-    display: grid;
+    display: flex;
+    grid-gap: 20px;
     grid-template-columns: auto auto;
     background: var(--cart-item-background);
     padding-top: 15px;

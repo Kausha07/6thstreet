@@ -181,7 +181,7 @@ class HeaderMainSection extends NavigationAbstract {
 
   renderCart() {
     return (
-      <HeaderCart key="cart" CartButton="CartButton" showCartPopUp={true} />
+      <HeaderCart key="cart" CartButton="CartButton" showCartPopUp={!(isMobile.any() || isMobile.tablet())} />
     );
   }
 
