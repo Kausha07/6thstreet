@@ -411,11 +411,11 @@ font-size: 12px;
       }
 
       .Details {
-        background-color: var(--lightest-gray);  
+        // background-color: var(--lightest-gray);  
         text-transform: uppercase;
         border-radius: 10px;
         display: grid;
-        grid-template-columns: 15% 70% 15%;
+        // grid-template-columns: 15% 70% 15%;
         grid-auto-flow: column;
         height: auto;
 

@@ -212,11 +212,12 @@ export class Checkout extends SourceCheckout {
         </div>
       );
     }
-    return (
-      <div block="LoadingBlock">
-        <Loader isLoading={isLoading} />;
-      </div>
-    );
+    return null
+    //  (
+    //   <div block="LoadingBlock">
+    //     <Loader isLoading={isLoading} />;
+    //   </div>
+    // );
   }
 
   renderSummary() {
