@@ -673,5 +673,6 @@
     "This payment method is not supported yet.": null,
     "Error loading Stripe! No API-key specified.": null,
     "Cash on delivery": null,
-    "Details": null
+    "Details": null,
+    "Follow the latest trends": null
 }
