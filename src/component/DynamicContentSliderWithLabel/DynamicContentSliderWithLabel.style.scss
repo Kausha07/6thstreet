@@ -50,6 +50,9 @@
     &_isArabic {
       margin-right: 0;
       margin-left: 10px;
+      &:nth-last-child(2) {
+        margin-left: 0;
+      }
     }
     @include mobile {
       margin-right: 15px;
