@@ -7,6 +7,7 @@ import { showNotification } from 'Store/Notification/Notification.action';
 import { hideActiveOverlay, toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
 import { customerType } from 'Type/Account';
 import { ClubApparelMember } from 'Util/API/endpoint/ClubApparel/ClubApparel.type';
+import Loader from '../Loader';
 import BrowserDatabase from 'Util/BrowserDatabase';
 
 import MyAccountClubApparel from './MyAccountClubApparel.component';
@@ -16,11 +17,12 @@ export const mapStateToProps = (_state) => ({
     activeOverlay: _state.OverlayReducer.activeOverlay,
     hideActiveOverlay: _state.OverlayReducer.hideActiveOverlay,
     country: _state.AppState.country,
+    language: _state.AppState.language,
     clubApparel: _state.ClubApparelReducer.clubApparel
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-    getMember: () => ClubApparelDispatcher.getMember(dispatch),
+    getMember: (id) => ClubApparelDispatcher.getMember(dispatch, id),
     showNotification: (type, message) => dispatch(showNotification(type, message)),
     showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
     hideActiveOverlay: () => dispatch(hideActiveOverlay())
@@ -37,6 +39,7 @@ export class MyAccountClubApparelContainer extends PureComponent {
         activeOverlay: PropTypes.string.isRequired,
         hideActiveOverlay: PropTypes.func.isRequired,
         country: PropTypes.string.isRequired,
+        language: PropTypes.string.isRequired,
         clubApparel: ClubApparelMember.isRequired
     };
 
@@ -63,12 +66,32 @@ export class MyAccountClubApparelContainer extends PureComponent {
 
     componentDidMount() {
         // const storageClubApparel = BrowserDatabase.getItem(CLUB_APPAREL) || null;
-        const { getMember } = this.props;
-
         // if (!storageClubApparel) {
         //     getMember();
         // }
-        getMember();
+        const { customer: { id }, getMember } = this.props;
+        if(id){
+            getMember(id);
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        const {
+            customer: { id },
+            country,
+            language,
+            getMember
+        } = this.props;
+
+        const { 
+            customer: { id: prevId },
+            country: prevCountry,
+            language: prevLanguage
+        } = prevProps;
+
+        if(prevId !== id || prevCountry !== country || prevLanguage !== language){
+            getMember(id);
+        }
     }
 
     containerProps = () => {
@@ -88,7 +111,12 @@ export class MyAccountClubApparelContainer extends PureComponent {
     };
 
     render() {
+        const { clubApparel } = this.state;
         return (
+            !clubApparel
+            ?
+            <Loader isLoading={ true }/>
+            :
             <MyAccountClubApparel
               { ...this.containerProps() }
               { ...this.containerFunctons() }
