@@ -1,4 +1,7 @@
 .DynamicContentRichContentBanner {
+  .DynamicContentHeader{
+    margin-bottom: 20px;
+  }
   max-width: 1396px;
   .SliderWithLabelWrapper {
     display: flex;
@@ -49,9 +52,6 @@
     button[data-action="start"] {
       display: none;
     }
-    @include mobile {
-      padding: 0 8px !important;
-    }
   }
   .tns-controls {
     position: initial;
@@ -100,14 +100,16 @@
     margin-top: 25px;
     margin-bottom: 25px;
     button {
-      width: 8px;
-      height: 8px;
+      width: 5px;
+      height: 5px;
       border-radius: 50%;
       background-color: #bfbfbf;
       padding: 0;
     }
     &-active {
       background-color: #3d4447 !important;
+      width: 7px !important;
+      height: 7px !important;
     }
   }
   .Label {
@@ -141,34 +143,36 @@
   }
   .Tag {
     position: absolute;
-    font-size: 18px;
+    color: #000000;
+    font-size: 14px;
+    letter-spacing: 0;
+    line-height: 21px;
+    text-transform: capitalize;
     &-TopRight {
-      top: 10%;
-      right: 5%;
-      color: white;
+      top: 22px;
+      right: 25px;
     }
     &-TopCenter {
-      top: 10%;
-      color: white;
+      top: 22px;
+      left: 50%;
+      transform: translateX(-50%);
     }
     &-TopLeft {
-      top: 10%;
-      left: 5%;
-      color: white;
+      top: 22px;
+      left: 25px;
     }
     &-BottomRight {
-      bottom: 10%;
-      right: 5%;
-      color: white;
+      bottom: 22px;
+      right: 25px;
     }
     &-BottomLeft {
-      bottom: 10%;
-      left: 5%;
-      color: white;
+      bottom: 22px;
+      left: 25px;
     }
     &-BottomCenter {
-      bottom: 10%;
-      color: white;
+      bottom: 22px;
+      left: 50%;
+      transform: translateX(-50%);
     }
   }
 
@@ -185,32 +189,32 @@
     margin-right: 30px;
   }
 
-  @include mobile {
-    max-height: 700px;
-    overflow: none;
+  // @include mobile {
+  //   max-height: 700px;
+  //   overflow: none;
 
-    &-Label {
-      right: 2rem;
-      bottom: 2rem;
-      text-decoration: underline;
-      background: none !important;
-    }
+  //   &-Label {
+  //     right: 2rem;
+  //     bottom: 2rem;
+  //     text-decoration: underline;
+  //     background: none !important;
+  //   }
 
-    .Slider {
-      &-Wrapper {
-        width: 80%;
-        margin: 10px;
-      }
+  //   .Slider {
+  //     &-Wrapper {
+  //       width: 80%;
+  //       margin: 10px;
+  //     }
 
-      &-Crumbs {
-        display: none;
-      }
-    }
-  }
+  //     &-Crumbs {
+  //       display: none;
+  //     }
+  //   }
+  // }
   .tns-item {
-    padding-right: 20px !important;
+    // padding-right: 20px !important;
     @include tablet {
-      padding-right: 20px !important;
+      // padding-right: 20px !important;
     }
     @include mobile {
       padding-right: 0 !important;
@@ -250,13 +254,20 @@
       }
     }
     .Label {
-      height: 30%;
+      height: 35%;
       width: 100%;
+      position: absolute;
+      bottom: 0%;
+      text-align: center;
+      background-image: linear-gradient(to top, rgba(0, 0, 0, .7), transparent);
+      color: white;
       &-Title {
-        text-transform: uppercase;
-        font-size: 18px;
+        text-transform: capitalize;
+        font-size: 20px;
         line-height: 1;
         margin-top: 15px;
+        letter-spacing: normal;
+        font-weight: 600;
       }
       &-SubTitle {
         font-size: 12px;
@@ -264,17 +275,21 @@
         margin-bottom: 12px;
       }
       &-Button {
-        font-size: 13px;
+        font-size: 15px;
+        color: white;
       }
     }
     .Tag {
       font-size: 14px;
+      color: white;
       &-TopRight {
         top: 25px;
         right: 15px;
       }
       &-TopCenter {
         top: 25px;
+        left: 50%;
+        transform: translateX(-50%);
       }
       &-TopLeft {
         top: 25px;
@@ -290,6 +305,8 @@
       }
       &-BottomCenter {
         bottom: 25px;
+        left: 50%;
+        transform: translateX(-50%);
       }
     }
   }

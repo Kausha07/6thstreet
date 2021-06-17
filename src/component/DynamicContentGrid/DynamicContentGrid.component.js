@@ -98,7 +98,7 @@ class DynamicContentGrid extends PureComponent {
             this.onclick(item);
           }}
         >
-          <Image src={url} ratio="custom" height={ht} />
+          <img src={url}  />
           {item.footer && (
             <div block="Footer">
               {item.footer.title && (
@@ -127,13 +127,15 @@ class DynamicContentGrid extends PureComponent {
 
   renderGrid() {
     const { items_per_row, header: { title } = {} } = this.props;
+
+    const style = { gridTemplateColumns: `repeat(${items_per_row}, 1fr)`}
     return (
       <>
         {this.props.header && title && (
           <DynamicContentHeader header={this.props.header} />
         )}
 
-        <div block="DynamicContentGrid" elem="Grid" mods={{ items_per_row }}>
+        <div block="DynamicContentGrid" elem="Grid" style={style }>
           {this.renderItems()}
         </div>
       </>

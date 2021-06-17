@@ -5,11 +5,15 @@
 }
 
 .DynamicContentGrid {
+
   max-width: 1440px;
   margin-bottom: 14px !important;
   &-Grid {
     display: grid;
     grid-gap: 0 0;
+    img{
+      display: block;
+    }
     @include desktop {
       grid-gap: 15px;
     }
@@ -187,7 +191,7 @@
   .CategoryItem {
     &-Content {
       text-align: center;
-      padding: 8px;
+      padding: 0px;
       .Footer {
         // color: red;
         &-Title {
@@ -215,11 +219,15 @@
     padding: 10px;
   }
 }
-@media (max-width: 760px) {
+@include mobile {
   .DynamicContentGrid {
+    &-Grid{
+      grid-gap: 15px;
+    }
+    margin: 0 10px;
     .CategoryItem {
       &-Content {
-        margin-bottom: 5px;
+        margin-bottom: 0px;
         .Footer {
           // color: red;
           &-Title {
@@ -231,8 +239,8 @@
           }
           &-SubTitle {
             font-size: 11px;
-            line-height: 1;
-            margin-bottom: 6px;
+            line-height: 24px;
+            // margin-bottom: 6px;
           }
           &-Button {
             font-size: 12px;

@@ -105,18 +105,22 @@ class DynamicContentVueProductSlider extends PureComponent {
 
     renderSliderContainer() {
         const items = this.getProducts();
+        const { isHome } = this.props
 
         return (
             <>
             <div block="VueProductSlider" elem="SliderContainer" ref={this.cmpRef} onScroll={this.handleContainerScroll}>
+                    {isHome && <div block="SliderHelper" mods={{isHome}}></div>}
                     {
                         items.map((item) => {
                             const { sku } = item;
                             return (
+
                                 <DynamicContentVueProductSliderItem key={sku} data={item} ref={this.itemRef} />
                             );
                         })
                     }
+                    {isHome && <div block="SliderHelper" mods={{isHome}}></div>}
 
             </div>
             {this.renderScrollbar()}

@@ -11,7 +11,7 @@
   @include mobile {
     a {
       margin-left: -30px;
-      padding: 0 2px 0 8px;
+      padding: 0 2px 0 10px;
       &:first-of-type {
         margin-left: 0;
       }
@@ -72,16 +72,20 @@
     justify-content: center;
     gap: 12px;
     margin-top: 20px;
+    align-items: center;
     // margin-bottom: 25px;
     button {
-      width: 8px;
-      height: 8px;
+      width: 5px;
+      height: 5px;
       border-radius: 50%;
       background-color: #bfbfbf;
       padding: 0;
     }
     &-active {
       background-color: #3d4447 !important;
+      width: 7px !important;
+      height: 7px !important;
+
     }
     @include mobile {
       display: none;
@@ -89,6 +93,7 @@
     @include tablet {
       margin-top: 10px;
       // margin-bottom: 10px;
+
     }
   }
   .tns-nav {
