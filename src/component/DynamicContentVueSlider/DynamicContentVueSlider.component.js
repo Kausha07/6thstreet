@@ -78,11 +78,12 @@ class DynamicContentVueSlider extends PureComponent {
     console.log(this.state.data.length)
     // debugger
     return (
-    <div>
+    <div block="VeuSliderWrapper">
     { this.state.data.length > 0 &&
     <DynamicContentVueProductSliderContainer
       products={this.state.data}
       heading={this.props.layout.title}
+      isHome={true}
     />
     }
     </div>

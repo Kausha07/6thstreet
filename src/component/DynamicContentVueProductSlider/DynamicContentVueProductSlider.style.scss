@@ -207,3 +207,17 @@
     height: 1px;
   }
 }
+
+.SliderHelper{
+  &_isHome{
+    display: none;
+    @include tablet{
+      width: 30px;
+      display: inline-block;
+    }
+    @include mobile{
+      width: 10px;
+      display: inline-block;
+    }
+  }
+}

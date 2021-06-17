@@ -21,14 +21,15 @@ const settings = {
   navPosition: "bottom",
   autoplay: false,
   responsive: {
+    1025: {
+      items: 2,
+      gutter: 30,
+    },
     768: {
       items: 2,
-      gutter: 36,
+      gutter: 20,
     },
-    420: {
-      items: 1,
-    },
-    300: {
+    767: {
       items: 1,
     },
   },
@@ -82,22 +83,29 @@ class DynamicContentRichContentBanner extends PureComponent {
             this.onclick(item);
           }}
         >
-          <img
-            src={image_url}
-            alt={title}
-            mix={{ block: "DynamicContentRichContentBanner", elem: "Image" }}
-            ratio="custom"
-            // style={{ maxWidth: width, maxHeight: height }}
-          />
-          {/* <Image
-            src={image_url}
-            alt={title}
-            mix={{ block: "DynamicContentRichContentBanner", elem: "Image" }}
-            ratio="custom"
-            style={{ maxWidth: width, maxHeight: height }}
-            // height={ht}
-            // width={wd}
-          /> */}
+          <div block="ImageContainer">
+            <img
+              src={image_url}
+              alt={title}
+              mix={{ block: "DynamicContentRichContentBanner", elem: "Image" }}
+              // style={{ maxWidth: width, maxHeight: height }}
+            />
+            {item.tag && (
+              <div
+                block={cx("Tag", {
+                  "Tag-TopLeft": item.tag.position === "top_left",
+                  "Tag-TopRight": item.tag.position === "top_right",
+                  "Tag-TopCenter": item.tag.position === "top_center",
+                  "Tag-BottomLeft": item.tag.position === "bottom_left",
+                  "Tag-BottomRight": item.tag.position === "bottom_right",
+                  "Tag-BottomCenter": item.tag.position === "bottom_center",
+                })}
+              >
+                {item.tag.label}
+              </div>
+            )
+          }
+          </div>
         </Link>
         <div block="Label">
           {item.title && <p block="Label-Title">{item.title}</p>}
@@ -108,20 +116,7 @@ class DynamicContentRichContentBanner extends PureComponent {
             </a>
           )}
         </div>
-        {item.tag && (
-          <div
-            block={cx("Tag", {
-              "Tag-TopLeft": item.tag.position === "top_left",
-              "Tag-TopRight": item.tag.position === "top_right",
-              "Tag-TopCenter": item.tag.position === "top_center",
-              "Tag-BottomLeft": item.tag.position === "bottom_left",
-              "Tag-BottomRight": item.tag.position === "bottom_right",
-              "Tag-BottomCenter": item.tag.position === "bottom_center",
-            })}
-          >
-            {item.tag.label}
-          </div>
-        )}
+
       </div>
     );
   };

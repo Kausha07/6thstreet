@@ -844,8 +844,8 @@
             "link": "/tommy-hilfiger/women.html#q=Tommy%20Hilfiger%20Women&idx=enterprise_magento_english_products&p=0&dFR%5Bgender%5D%5B0%5D=Women&hFR%5Bcategories.level0%5D%5B0%5D=Tommy%20Hilfiger&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1"
           },
           "tag": {
-            "label": "",
-            "position": "top_left"
+            "label": "new in",
+            "position": "bottom_center"
           }
         },
         {
@@ -860,8 +860,8 @@
             "link": "/calvin-klein/women.html#q=Calvin%20Klein%20Women&idx=enterprise_magento_english_products&p=0&dFR%5Bgender%5D%5B0%5D=Women&hFR%5Bcategories.level0%5D%5B0%5D=Calvin%20Klein&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1"
           },
           "tag": {
-            "label": "",
-            "position": "top_left"
+            "label": "new in",
+            "position": "bottom_right"
           }
         },
         {
@@ -876,8 +876,8 @@
             "link": "/lacoste/women.html#q=Lacoste%20Women&idx=enterprise_magento_english_products&p=0&dFR%5Bgender%5D%5B0%5D=Women&hFR%5Bcategories.level0%5D%5B0%5D=Lacoste&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1"
           },
           "tag": {
-            "label": "",
-            "position": "top_left"
+            "label": " new in",
+            "position": "bottom_left"
           }
         },
         {

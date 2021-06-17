@@ -1,0 +1,38 @@
+.VeuSliderWrapper{
+    .VueProductSlider{
+        &-VueProductContainer{
+            height: auto;
+        }
+    }
+    @include tablet{
+        .VueProductSlider{
+            &-Container{
+
+                padding-left: 0px;
+                width: 100%;
+            }
+            &-SliderContainer{
+                width: 100%;
+            }
+            &-HeaderContainer{
+                margin-left: 30px;
+            }
+        }
+    }
+    @include mobile{
+        .VueProductSlider{
+            &-Container{
+
+                padding-left: 0px;
+                width: 100%;
+            }
+            &-SliderContainer{
+                width: 100%;
+            }
+            &-HeaderContainer{
+                margin-left: 10px;
+            }
+        }
+    }
+}
+
