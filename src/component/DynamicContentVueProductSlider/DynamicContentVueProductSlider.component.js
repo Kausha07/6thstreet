@@ -63,13 +63,11 @@ class DynamicContentVueProductSlider extends PureComponent {
   };
 
   handleScroll = (event) => {
-    // debugger
     const target = event.nativeEvent.target;
     const prentComponent = [...this.cmpRef.current.childNodes].filter(
       (node) => node.className == "VueSliderWrapper"
     )[0];
     this.cmpRef.current.scrollLeft = target.scrollLeft;
-    console.log();
   };
 
   renderScrollbar = () => {
@@ -84,11 +82,7 @@ class DynamicContentVueProductSlider extends PureComponent {
     this.setState({
       customScrollWidth: width,
     });
-    console.log(this.state.width);
-    // setTimeout(()=>{console.log(this); debugger}, 5000);
-    // this.setState({
-    //     hi:"hi"
-    // })
+
     return (
       <div
         block="Outer"

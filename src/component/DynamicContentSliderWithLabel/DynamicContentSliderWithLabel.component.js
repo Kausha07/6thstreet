@@ -161,7 +161,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
   render() {
     const { isArabic } = this.state;
     return (
-      <div block="DynamicContentSliderWithLabel HomePageContainer">
+      <div block="DynamicContentSliderWithLabel" mods={{ isArabic }}>
         {this.props.header && (
           <DynamicContentHeader header={this.props.header} />
         )}
