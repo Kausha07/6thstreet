@@ -2,7 +2,6 @@
   padding: 0 20px;
   font-weight: var(--fw-regular);
 
-
   &-Container {
     width: 100%;
     font-size: 16px;
@@ -89,8 +88,8 @@
     margin-right: 7.92px;
     display: inline-block;
     vertical-align: top;
-    &_isArabic{
-      &:nth-child(2){
+    &_isArabic {
+      &:nth-child(2) {
         margin-right: 0;
       }
     }
@@ -148,7 +147,7 @@
           top: 5px;
         }
       }
-      @include mobile{
+      @include mobile {
         width: 28px;
         height: 28px;
         &-Icon {
@@ -188,6 +187,26 @@
     }
   }
 }
+#ScrollWrapper.active {
+  cursor: grabbing;
+  cursor: -webkit-grabbing;
+  .VueProductSlider {
+    cursor: grabbing;
+    cursor: -webkit-grabbing;
+    &-VueProductContainer {
+      cursor: grabbing;
+      cursor: -webkit-grabbing;
+      &-a {
+        cursor: grabbing;
+        cursor: -webkit-grabbing;
+      }
+    }
+    &-VueProductImage {
+      cursor: grabbing;
+      cursor: -webkit-grabbing;
+    }
+  }
+}
 
 .Outer {
   width: 29.444vw;
@@ -196,7 +215,7 @@
   margin: 60px auto 0 auto;
   cursor: grabbing;
   cursor: -webkit-grabbing;
-  @include mobile{
+  @include mobile {
     display: none;
   }
   &_Hidden {
@@ -222,7 +241,6 @@
   &-Inner {
     height: 1px;
   }
-
 }
 
 .SliderHelper {

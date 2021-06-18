@@ -3,7 +3,7 @@ import React, { PureComponent } from "react";
 import DragScroll from "Component/DragScroll/DragScroll.component";
 import "./DynamicContentVueProductSlider.style.scss";
 import DynamicContentVueProductSliderItem from "./DynamicContentVueProductSlider.Item";
-import {isArabic} from "Util/App";
+import { isArabic } from "Util/App";
 
 class DynamicContentVueProductSlider extends PureComponent {
   static propTypes = {
@@ -20,7 +20,7 @@ class DynamicContentVueProductSlider extends PureComponent {
     this.scrollerRef = React.createRef();
     this.state = {
       customScrollWidth: null,
-      isArabic: isArabic()
+      isArabic: isArabic(),
     };
   }
 
@@ -67,9 +67,9 @@ class DynamicContentVueProductSlider extends PureComponent {
   handleScroll = (event) => {
     const target = event.nativeEvent.target;
     const prentComponent = [...this.cmpRef.current.childNodes].filter(
-      (node) => node.className == "VueSliderWrapper"
+      (node) => node.id == "ScrollWrapper"
     )[0];
-    this.cmpRef.current.scrollLeft = target.scrollLeft;
+    prentComponent.scrollLeft = target.scrollLeft;
   };
 
   renderScrollbar = () => {
@@ -112,14 +112,11 @@ class DynamicContentVueProductSlider extends PureComponent {
     const { isArabic } = this.state;
 
     return (
-      <DragScroll
-        data={{ rootClass: "ScrollWrapper", ref: this.cmpRef }}
-      >
+      <DragScroll data={{ rootClass: "ScrollWrapper", ref: this.cmpRef }}>
         <div
           block="VueProductSlider"
           elem="SliderContainer"
           id="ScrollWrapper"
-
           ref={this.cmpRef}
           onScroll={this.handleContainerScroll}
         >
