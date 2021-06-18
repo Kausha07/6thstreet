@@ -91,6 +91,9 @@ class DynamicContent extends PureComponent {
     }
     else if(vueSliderType.includes(type)){
         Component = this.renderMap["vue_slider"];
+        if (!Component) {
+          return null;
+        }
 
         return <Component {...restProps} type={type} key={i} />
     }
