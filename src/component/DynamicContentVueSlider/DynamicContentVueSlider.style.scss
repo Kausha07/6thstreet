@@ -8,6 +8,7 @@
       height: auto;
     }
   }
+
   @include tablet {
     .VueProductSlider {
       &-Container {
@@ -28,6 +29,8 @@
       &-Container {
         padding-left: 0px;
         width: 100%;
+        margin: 0px;
+
       }
       &-SliderContainer {
         width: 100%;
@@ -35,6 +38,12 @@
       &-HeaderContainer {
         margin-left: 10px;
         margin-left: 10px;
+      }
+      &-VueProductContainer{
+        width: calc(50vw - 10px) !important;
+        &:nth-last-child(2){
+          margin-right: 0px;
+        }
       }
     }
   }

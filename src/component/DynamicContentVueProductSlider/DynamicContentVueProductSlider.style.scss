@@ -2,6 +2,7 @@
   padding: 0 20px;
   font-weight: var(--fw-regular);
 
+
   &-Container {
     width: 100%;
     font-size: 16px;
@@ -88,6 +89,11 @@
     margin-right: 7.92px;
     display: inline-block;
     vertical-align: top;
+    &_isArabic{
+      &:nth-child(2){
+        margin-right: 0;
+      }
+    }
 
     @media (max-width: 1024px) {
       width: 220.08px;
@@ -131,7 +137,18 @@
         top: 8px;
       }
 
-      @media (min-width: 1024px) {
+      @include tablet {
+        width: 28px;
+        height: 28px;
+        &-Icon {
+          width: 20px;
+          height: 20px;
+          background-size: 20px;
+          left: 4px;
+          top: 5px;
+        }
+      }
+      @include mobile{
         width: 28px;
         height: 28px;
         &-Icon {
@@ -179,6 +196,9 @@
   margin: 60px auto 0 auto;
   cursor: grabbing;
   cursor: -webkit-grabbing;
+  @include mobile{
+    display: none;
+  }
   &_Hidden {
     display: none;
   }
@@ -202,6 +222,7 @@
   &-Inner {
     height: 1px;
   }
+
 }
 
 .SliderHelper {
