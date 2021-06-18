@@ -7,6 +7,23 @@
   // a {
   //     img {}
   // }
+  .DynamicContentHeader{
+    padding-left: 15px;
+    padding-right: 15px;
+    p{
+      text-align: left;
+    }
+    @include mobile{
+      padding-left: 0px;
+      padding-right: 0px;
+      p{
+        text-align: center;
+      }
+      .title{
+        text-align: center;
+      }
+    }
+  }
 
   @include mobile {
     a {
