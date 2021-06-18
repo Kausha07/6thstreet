@@ -116,7 +116,16 @@ class DynamicContentSliderWithLabel extends PureComponent {
       690
     }px`;
     return (
-      <div block="Outer" ref={this.scrollerRef} onScroll={this.handleScroll}>
+      <div
+        block="Outer"
+        mods={{
+          Hidden:
+            this.scrollerRef.current &&
+            this.scrollerRef.current.clientWidth >= width,
+        }}
+        ref={this.scrollerRef}
+        onScroll={this.handleScroll}
+      >
         <div block="Outer" style={{ width: width }} elem="Inner"></div>
       </div>
     );

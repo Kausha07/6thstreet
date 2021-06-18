@@ -122,9 +122,13 @@
     margin: 60px auto 0 auto;
     cursor: grabbing;
     cursor: -webkit-grabbing;
-    display: none;
-    @include desktop {
-      display: block;
+    // display: none;
+
+    &_Hidden {
+      display: none;
+    }
+    @include mobile {
+      display: none;
     }
 
     &::-webkit-scrollbar {
