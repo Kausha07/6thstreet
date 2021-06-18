@@ -22,6 +22,10 @@ class DynamicContentProductSlider extends PureComponent {
     products: Products.isRequired,
   };
 
+  constructor(props) {
+    super(props);
+  }
+
   state = {
     currentPage: 0,
     isArabic: isArabic(),
@@ -48,31 +52,7 @@ class DynamicContentProductSlider extends PureComponent {
     );
   };
 
-  renderProductsDesktop() {
-    // const {
-    //     isLoading,
-    //     products = []
-    // } = this.props;
-    // // const { currentPage } = this.state;
-    // if (isLoading) {
-    //     return 'loading...';
-    // }
-    // const productArray = products.map(this.renderProduct) || [];
-    // const lastPage = parseInt(Math.floor(products.length / ITEMS_PER_PAGE), 10); // first page is 0
-    // const lastPageItemCount = products.length % ITEMS_PER_PAGE; // number of products on last page'
-    // if (currentPage === lastPage) {
-    //     if (lastPageItemCount === ITEMS_PER_PAGE) {
-    //         return productArray
-    //             .slice(currentPage * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE + lastPageItemCount);
-    //     }
-    //     return productArray
-    //         .slice(
-    //             (currentPage * ITEMS_PER_PAGE) - (ITEMS_PER_PAGE - lastPageItemCount),
-    //             currentPage * ITEMS_PER_PAGE + lastPageItemCount
-    //         );
-    // }
-    // return productArray.slice(currentPage * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE + ITEMS_PER_PAGE);
-  }
+  renderProductsDesktop() {}
 
   renderTitle() {
     const { title } = this.props;
@@ -215,25 +195,16 @@ class DynamicContentProductSlider extends PureComponent {
 
   render() {
     const { isArabic, withViewAll } = this.state;
-    // const { products: productArray = [] } = this.props;
     const { products } = this.props;
+
     if (products.length === 0) {
       return null;
     }
-    // const products = (
-    //     <div mix={ { block: 'DynamicContentProductSlider', elem: 'ProductContainer', mods: { isArabic } } }>
-    //         {/* { this.renderButtonPrev() } */}
-    //         { this.renderProductsDesktop() }
-    //         {/* { this.renderButtonNext() } */}
-    //     </div>
-    // );
+
     const { title } = this.props;
     const finalTitle = isArabic ? HOME_PAGE_TRANSLATIONS[title] : title;
     const productsDesktop = (
       <React.Fragment>
-        {/* {
-                        products.map((item, index) => {
-                            return ( */}
         <DynamicContentVueProductSliderContainer
           products={products}
           heading={finalTitle}

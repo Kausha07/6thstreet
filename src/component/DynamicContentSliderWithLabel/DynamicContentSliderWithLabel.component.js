@@ -116,7 +116,16 @@ class DynamicContentSliderWithLabel extends PureComponent {
       690
     }px`;
     return (
-      <div block="Outer" ref={this.scrollerRef} onScroll={this.handleScroll}>
+      <div
+        block="Outer"
+        mods={{
+          Hidden:
+            this.scrollerRef.current &&
+            this.scrollerRef.current.clientWidth >= width,
+        }}
+        ref={this.scrollerRef}
+        onScroll={this.handleScroll}
+      >
         <div block="Outer" style={{ width: width }} elem="Inner"></div>
       </div>
     );
@@ -152,7 +161,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
   render() {
     const { isArabic } = this.state;
     return (
-      <div block="DynamicContentSliderWithLabel HomePageContainer">
+      <div block="DynamicContentSliderWithLabel" mods={{ isArabic }}>
         {this.props.header && (
           <DynamicContentHeader header={this.props.header} />
         )}

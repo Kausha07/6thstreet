@@ -12,10 +12,10 @@
       width: 96.005vw;
       margin: 50px 0px 100px 0px;
     }
-    @media (max-width: 760px){
+    @media (max-width: 760px) {
       padding-left: 8px;
     }
-    @media (max-width: 1024px) and (min-width: 768px){
+    @media (max-width: 1024px) and (min-width: 768px) {
       padding-left: 30px;
     }
   }
@@ -28,26 +28,25 @@
     h1 {
       text-transform: uppercase;
     }
-    @media (min-width: 1025px){
-      h1{
+    @media (min-width: 1025px) {
+      h1 {
         font-size: 18px;
         font-weight: 500;
         letter-spacing: 2px;
         line-height: 25px;
       }
-
     }
-    @media (max-width: 760px){
+    @media (max-width: 760px) {
       display: block;
-      h1{
+      h1 {
         font-size: 15px;
         margin-bottom: 0px;
         margin-top: 10px;
       }
     }
 
-    @media (max-width: 1024px) and (min-width: 768px){
-      h1{
+    @media (max-width: 1024px) and (min-width: 768px) {
+      h1 {
         font-size: 18px;
         font-weight: 500;
         letter-spacing: 2px;
@@ -123,28 +122,26 @@
       font-size: 14px;
       font-weight: var(--fw-bold);
     }
-    .WishlistIcon{
-      &-Icon{
-        width: 2.0rem;
-        height: 2.0rem;
-        background-size: 2.0rem;
+    .WishlistIcon {
+      &-Icon {
+        width: 2rem;
+        height: 2rem;
+        background-size: 2rem;
         left: 7px;
         top: 8px;
       }
 
-      @media (min-width: 1024px){
+      @media (min-width: 1024px) {
         width: 28px;
         height: 28px;
-        &-Icon{
+        &-Icon {
           width: 20px;
           height: 20px;
           background-size: 20px;
           left: 4px;
           top: 5px;
-
         }
       }
-
     }
   }
 
@@ -173,10 +170,6 @@
       font-weight: var(--fw-medium);
     }
   }
-
-
-
-
 }
 
 .Outer {
@@ -186,6 +179,9 @@
   margin: 60px auto 0 auto;
   cursor: grabbing;
   cursor: -webkit-grabbing;
+  &_Hidden {
+    display: none;
+  }
   &::-webkit-scrollbar {
     height: 3px;
 
@@ -208,14 +204,14 @@
   }
 }
 
-.SliderHelper{
-  &_isHome{
+.SliderHelper {
+  &_isHome {
     display: none;
-    @include tablet{
+    @include tablet {
       width: 30px;
       display: inline-block;
     }
-    @include mobile{
+    @include mobile {
       width: 10px;
       display: inline-block;
     }
