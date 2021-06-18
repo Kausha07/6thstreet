@@ -87,7 +87,13 @@ class DynamicContent extends PureComponent {
     if (type === "banner" && !isMobile.any()) {
       const typeofBanner = this.isCheckTwiceBanner(block);
       restProps.typeOfBanner = typeofBanner;
-      Component = this.renderMap["twiceBanner"];
+      if(this.isCheckTwiceBanner(block)){
+        Component = this.renderMap["twiceBanner"];
+      }
+      else{
+        Component = this.renderMap["banner"];
+      }
+
     }
     else if(vueSliderType.includes(type)){
         Component = this.renderMap["vue_slider"];
