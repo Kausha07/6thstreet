@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { getCurrency } from "Util/App/App";
 import WishlistIcon from "Component/WishlistIcon";
+import {isArabic} from "Util/App";
 
 class DynamicContentVueProductSliderItem extends PureComponent {
   static propTypes = {
@@ -13,6 +14,9 @@ class DynamicContentVueProductSliderItem extends PureComponent {
   constructor(props) {
     super(props);
     this.childRef = React.createRef();
+    this.state = {
+      isArabic: isArabic()
+    }
   }
 
 
@@ -54,8 +58,9 @@ class DynamicContentVueProductSliderItem extends PureComponent {
     if (link) {
       productURL = link;
     }
+    const { isArabic } = this.state
     return (
-      <div block="VueProductSlider" elem="VueProductContainer" ref={this.childRef}>
+      <div block="VueProductSlider" elem="VueProductContainer" mods={{isArabic}} ref={this.childRef}>
         <Link to={productURL} data-banner-type="vueSlider">
           <img
             block="VueProductSlider"

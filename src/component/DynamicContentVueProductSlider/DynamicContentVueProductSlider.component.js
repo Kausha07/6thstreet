@@ -3,6 +3,7 @@ import React, { PureComponent } from "react";
 import DragScroll from "Component/DragScroll/DragScroll.component";
 import "./DynamicContentVueProductSlider.style.scss";
 import DynamicContentVueProductSliderItem from "./DynamicContentVueProductSlider.Item";
+import {isArabic} from "Util/App";
 
 class DynamicContentVueProductSlider extends PureComponent {
   static propTypes = {
@@ -19,6 +20,7 @@ class DynamicContentVueProductSlider extends PureComponent {
     this.scrollerRef = React.createRef();
     this.state = {
       customScrollWidth: null,
+      isArabic: isArabic()
     };
   }
 
@@ -107,12 +109,17 @@ class DynamicContentVueProductSlider extends PureComponent {
   renderSliderContainer() {
     const items = this.getProducts();
     const { isHome } = this.props;
+    const { isArabic } = this.state;
 
     return (
-      <>
+      <DragScroll
+        data={{ rootClass: "ScrollWrapper", ref: this.cmpRef }}
+      >
         <div
           block="VueProductSlider"
           elem="SliderContainer"
+          id="ScrollWrapper"
+
           ref={this.cmpRef}
           onScroll={this.handleContainerScroll}
         >
@@ -130,7 +137,7 @@ class DynamicContentVueProductSlider extends PureComponent {
           {isHome && <div block="SliderHelper" mods={{ isHome }}></div>}
         </div>
         {this.renderScrollbar()}
-      </>
+      </DragScroll>
     );
   }
 

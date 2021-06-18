@@ -35,7 +35,7 @@ class DragScroll extends PureComponent {
     }
     // const slider = dragWrapper.childNodes[0];
     const scrollableNode = [...dragWrapper.childNodes].filter(
-      (node) => node.className == rootClass
+      (node) => node.id == rootClass
     );
     const slider = scrollableNode && scrollableNode[0] ? scrollableNode[0] : [];
     if (slider && slider.length == 0) {
