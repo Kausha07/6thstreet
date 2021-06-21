@@ -5,6 +5,7 @@
 import PropTypes from 'prop-types';
 import { connect } from "react-redux";
 import { PureComponent } from 'react';
+import { getCardType } from 'Util/Common';
 import cardValidator from 'card-validator';
 
 import CreditCard from './CreditCard.component';
@@ -70,6 +71,14 @@ export class CreditCardContainer extends PureComponent {
                 .toUpperCase()
                 .replace(regex, '$1/')
                 .replace(/^\|+|\/+$/g, '');
+        }
+
+        if (getCardType(value).type === 'american-express') {
+            return value.replace(/[^\dA-Z]/gi, '')
+                .toUpperCase()
+                .replace(/^(\d{4})/, '$1 ')
+                .replace(/(\s\d{6})/, '$1 ')
+                .trim();
         }
 
         return value.replace(/[^\dA-Z]/gi, '')
