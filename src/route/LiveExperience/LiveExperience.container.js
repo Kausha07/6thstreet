@@ -173,9 +173,16 @@ export class LiveExperienceContainer extends PureComponent {
   }
   containerProps = () => {
     const broadcastId = getQueryParam("broadcastId", location);
-    const {live, upcoming, archived} = this.props;
+    let { live, upcoming, archived } = this.props;
+    // Updating upcoming data to remove current broadCastId from it.
+    let updatedUpcoming = upcoming.filter((val) => {
+      return ( val.id.toString() !== broadcastId)
+    })
+    let updatedArchived = archived.filter((val) => {
+      return ( val.id.toString() !== broadcastId)
+    })
     return {
-      broadcastId, live, upcoming, archived
+      broadcastId, live, updatedUpcoming, updatedArchived
     };
   };
 
