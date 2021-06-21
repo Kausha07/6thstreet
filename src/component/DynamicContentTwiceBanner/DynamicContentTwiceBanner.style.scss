@@ -20,6 +20,7 @@
     //     }
     // }
     // width: auto !important;
+    justify-content: center;
     background-color: white;
     text-align: center;
     margin: 0 auto !important;
@@ -34,7 +35,8 @@
       // background:#f3f3f3;
       margin-top: 44px;
       margin-bottom: 41px;
-      left: 23px;
+      // left: 23px;
+      right: 20px;
     }
     @include tablet {
       // background:#f3f3f3;
@@ -44,7 +46,7 @@
   }
   &-BannerImg {
     @include desktop {
-      width: 50%;
+      // width: 50%;
       // left: 43px;
       left: 20px;
     }
@@ -66,7 +68,7 @@
     }
   }
   &-BannerImgRight {
-    right : 20px;
+    right : 23px;
     .BannerImage {
       object-fit: cover;
       @include tablet {
@@ -264,13 +266,14 @@
   }
 }
 .DynamicContentTwiceBanner-Content_isArabic {
-  width: auto !important;
+  // width: auto !important;
+  justify-content: center;
   .DynamicContentTwiceBanner-FigureRight{
     right : 40px !important;
   }
   .DynamicContentTwiceBanner-BannerImg{
     @include desktop {
-      right: 20px !important;
+      right: 40px !important;
     }
     @include tablet {
       right: 30px !important;
@@ -284,7 +287,9 @@
   }
   .DynamicContentTwiceBanner-Figure{
     @include desktop {
-      right: 30px;
+      // right: 30px;
+      right: 0px;
+      margin-left: 4%;
     }
     // @include tablet {
     //   right: 20px;
