@@ -56,15 +56,21 @@ export class LiveExperience extends PureComponent {
     return this.renderLiveBlock(content);
   }
   renderSpckUpcomingEvent() {
-    const content = this.props.upcoming;
+    let content = this.props.upcoming;
+    let contentWithoutLive = content.filter((val) => {
+      return ( val.id.toString() !== this.props.broadcastId)
+    })
     // return
-    return content.map(this.renderUpcomingGridBlock);
+    return contentWithoutLive.map(this.renderUpcomingGridBlock);
   }
   renderSpckarchivedEvent() {
     //const content = this.props.archived;
     const content = this.props.archived;
+    let contentWithoutLive = content.filter((val) => {
+      return ( val.id.toString() !== this.props.broadcastId)
+    })
     // debugger
-    return content.map(this.renderArchivedGridBlock);
+    return contentWithoutLive.map(this.renderArchivedGridBlock);
   }
 
   renderLiveBlock = (block, i) => {
@@ -100,7 +106,7 @@ export class LiveExperience extends PureComponent {
         <p block="eventStart"><img src={timerIcon} alt="timerIcon" />
         <Countdown
           date={d}
-          />,
+          />
         </p>
         <div block="eventInfo">
           <h3 block="eventTitle">{name}</h3>
@@ -118,7 +124,10 @@ export class LiveExperience extends PureComponent {
         <div block="eventImage">
           <img src={mainImageURI} alt={name}  />
         </div>
-        <p block="eventProduct"><img src={cartIcon} alt="cartIcon"/> {products.length}</p>
+        <p block="eventProduct">
+          <img src={cartIcon} alt="cartIcon"/>
+          <div>{products.length}</div>
+        </p>
         <a block="eventPlayBtn"   onClick={() => this.onClickPartyPlay(block.id)} ><img src={playbtn} alt="event-playbtn" /></a>
         <div block="eventInfo">
           <h3 block="eventTitle">{name}</h3>

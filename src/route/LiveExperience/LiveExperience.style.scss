@@ -49,7 +49,7 @@
           position: absolute;
           width: 80%;
           height: auto;
-          background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
+          background: linear-gradient(to top, rgba(0, 0, 0, .7), transparent);
           padding: 45px;
           @include mobile {
               width: 100%;
@@ -65,12 +65,12 @@
           }
       }
       .liveNow {
-          right: 12%;
-          top: 10%;
+          right: calc(10% + 24px);
+          top: 60px;
           position: absolute;
           width: fit-content;
           height: auto;
-          background-color: #27DAAA;
+          background-color: #28D9AA;
           border-radius: 30px;
           @include mobile {
               right: 5%;
@@ -79,11 +79,11 @@
           &-text {
               color: #FFFFFF;
               font-family: inherit;
-              font-size: 14px;
+              font-size: 12px;
               font-weight: 600;
               letter-spacing: 0;
-              padding: 5px 10px;
-              line-height: 1;
+              line-height: 16px;
+              padding: 4px 12px;
           }
       }
   }
@@ -98,14 +98,16 @@
       width: 100%;
       justify-content: flex-start;
       &::-webkit-scrollbar {
-          width: 6px;
-          height: 6px;
+          width: 60%;
+          height: 3px;
       }
       &::-webkit-scrollbar-thumb {
-          background: #585757;
+          background: black;
       }
       &::-webkit-scrollbar-track {
           background: #dcdcdc;
+          margin-left: 450px;
+          margin-right: 450px;
       }
       // For Internet Explorer
       & {
@@ -144,9 +146,12 @@
               top: 14px;
               left: 14px;
               padding-left: 6px;
-              padding-right: 6px;
+              padding-right: 10px;
+              display: flex;
+              align-items: center;
               img {
-                  width: 18px;
+                  width: 16px;
+                  height: 16px;
                   display: inline-block;
                   vertical-align: middle;
                   margin-right: 3px;
@@ -179,8 +184,8 @@
                   font-size: 16px;
                   font-weight: 600;
                   letter-spacing: 0;
-                  line-height: 1.4;
-                  margin: 0 0 5px;
+                  line-height: 30px;
+                  margin: 0;
                   padding: 0;
               }
               .eventDesc {
@@ -206,32 +211,22 @@
 .archived-Grid {
   margin-bottom: 64px;
   .spckItems {
-      display: flex;
-      flex-wrap: wrap;
-      width: 100%;
-      justify-content: flex-start;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 20px;
+    @include mobile{
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 10px;
+    }
       .spckItem {
-          position: relative;
-          width: calc(33.3333% - 15px);
           box-sizing: border-box;
           margin: 0;
           list-style: none;
           padding: 0;
-          margin-right: 15px;
-          margin-bottom: 15px;
           &::before {
               display: none;
           }
           @include mobile {
-              width: calc(50% - 8px);
-              &:nth-child(even) {
-                  margin-right: 0;
-                  margin-left: 8px;
-              }
-              &:nth-child(odd) {
-                  margin-right: 8px;
-                  margin-left: 0;
-              }
           }
           .eventImage {
               img {
@@ -242,23 +237,25 @@
           }
           .eventProduct {
               height: 24px;
-              min-width: 48px;
               border-radius: 15px;
               background-color: #000000;
               color: #FFFFFF;
-              font-size: 12px;
+              font-size: 11px;
               letter-spacing: 0;
               line-height: 24px;
               position: absolute;
               top: 14px;
               left: 14px;
               padding-left: 6px;
-              padding-right: 6px;
+              padding-right: 12px;
+              display: flex;
+              align-items: center;
               img {
-                  width: 18px;
+                  width: 16px;
+                  width: 16px;
                   display: inline-block;
                   vertical-align: middle;
-                  margin-right: 3px;
+                  margin-right: 5px;
               }
           }
           .eventPlayBtn {
@@ -302,7 +299,7 @@
                   @include mobile {
                       text-overflow: ellipsis;
                       overflow: hidden;
-                      width: 160px;
+                      width: 125px;
                       height: 1.2em;
                       white-space: nowrap;
                   }
