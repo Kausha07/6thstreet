@@ -1,6 +1,5 @@
 /* eslint-disable no-magic-numbers */
 import PropTypes from "prop-types";
-import queryString from "query-string";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
@@ -350,9 +349,7 @@ export class PDPAddToCartContainer extends PureComponent {
       var data = localStorage.getItem("customer");
       let userData = JSON.parse(data);
       let userToken;
-      var qid = queryString.parse(window.location.search)?.qid
-        ? queryString.parse(window.location.search)?.qid
-        : null;
+      var qid = new URLSearchParams(window.location.search).get("qid");
       let queryID;
       if (!qid) {
         queryID = getStore().getState().SearchSuggestions.queryID;
