@@ -38,6 +38,7 @@ import {
   CARD, TABBY_ISTALLMENTS, TABBY_PAY_LATER, CHECK_MONEY, APPLE_PAY,
   CHECKOUT_APPLE_PAY, CASH_ON_DELIVERY, FREE,
 } from '../CheckoutPayments/CheckoutPayments.config';
+import { MINI_CARDS } from "Component/CreditCard/CreditCard.config";
 
 class MyAccountOrderView extends PureComponent {
   static propTypes = {
@@ -441,19 +442,54 @@ class MyAccountOrderView extends PureComponent {
     );
   }
 
-  renderOrderPaymentType() {
+  renderMiniCard(miniCard) {
+    const img = MINI_CARDS[miniCard];
+    if (img) {
+      return <img src={img} alt="card icon" />;
+    }
+    return null;
+  }
+
+  renderCardPaymentType() {
     const {
       order: {
         payment: {
-          method,
           cc_type,
           cc_last_4,
         },
       },
     } = this.props;
+    return (
+      <div block="MyAccountOrderView" elem="CardPaymentType">
+        <div block="MyAccountOrderView" elem="TypeLogo">
+          {this.renderMiniCard(cc_type.toLowerCase())}
+        </div>
+        <div block="MyAccountOrderView" elem="Number">
+          <div block="MyAccountOrderView" elem="Number-Dots">
+            <div />
+            <div />
+            <div />
+            <div />
+          </div>
+          <div block="MyAccountOrderView" elem="Number-Value">
+            {cc_last_4}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  renderOrderPaymentType() {
+    const {
+      order: {
+        payment: {
+          method,
+        },
+      },
+    } = this.props;
     switch (method) {
       case CARD:
-        return <span>{"CARD"}</span>;
+        return this.renderCardPaymentType();
       case TABBY_ISTALLMENTS:
       case TABBY_PAY_LATER:
         return <span>{"TABBBY"}</span>;
