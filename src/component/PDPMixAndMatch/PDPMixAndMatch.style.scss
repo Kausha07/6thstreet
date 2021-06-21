@@ -9,7 +9,11 @@
     li {
         flex: 0 0 auto;
         padding-left: 0;
-        margin-bottom: 24px;
+        @include mobile {
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: solid 1.5px #EFEFEF;
+        }    
         &:before {
             content: none;
         }

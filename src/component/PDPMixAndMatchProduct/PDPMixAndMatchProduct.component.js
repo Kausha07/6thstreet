@@ -4,9 +4,11 @@ import { PureComponent } from 'react';
 import WishlistIcon from 'Component/WishlistIcon';
 import Image from 'Component/Image';
 import Price from "Component/Price";
+import Link from "Component/Link";
 
 import { isArabic, truncate } from 'Util/App';
 import isMobile from 'Util/Mobile';
+import Event, { EVENT_GTM_PRODUCT_CLICK } from "Util/Event";
 
 import './PDPMixAndMatchProduct.style';
 
@@ -43,6 +45,10 @@ class PDPMixAndMatchProduct extends PureComponent {
         return false;
     }
 
+    handleClick() {
+        Event.dispatch(EVENT_GTM_PRODUCT_CLICK, product);
+    }
+
     renderWishlistIcon() {
         const { product: { sku } } = this.props;
         return (
@@ -51,30 +57,35 @@ class PDPMixAndMatchProduct extends PureComponent {
     }
 
     renderImage() {
-        const { product: { thumbnail_url, } } = this.props;
+        const { product: { thumbnail_url, url } } = this.props;
 
         return (
-            <>
+            <Link to={ url } onClick={ this.handleClick }>
                 <div block="OverlayIcons"  mods={ { isArabic: isArabic() } }>
                     { this.renderWishlistIcon() }
                 </div>
                 <Image src={ thumbnail_url } />
-            </>
+            </Link>
         );
     }
 
     renderName() {
-        const { product: { brand_name, name } } = this.props;
+        const { product: { brand_name, name, url } } = this.props;
 
         return (
-            <div block="PDPMixAndMatchProduct-SummaryAndAddToCartContainer" elem="NameContainer">
+            <Link
+                block="PDPMixAndMatchProduct-SummaryAndAddToCartContainer"
+                elem="NameContainer"
+                to={ url }
+                onClick={ this.handleClick }
+            >
                 <h3>
                     { brand_name }
                 </h3>
                 <h6>
                     { isMobile.any()?name:truncate(name, 20) }
                 </h6>
-            </div>
+            </Link>
         );
     }
 
