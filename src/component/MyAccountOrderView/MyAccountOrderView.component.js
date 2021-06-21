@@ -34,6 +34,10 @@ import {
 } from "./MyAccountOrderView.config";
 
 import "./MyAccountOrderView.style";
+import {
+  CARD, TABBY_ISTALLMENTS, TABBY_PAY_LATER, CHECK_MONEY, APPLE_PAY,
+  CHECKOUT_APPLE_PAY, CASH_ON_DELIVERY, FREE,
+} from '../CheckoutPayments/CheckoutPayments.config';
 
 class MyAccountOrderView extends PureComponent {
   static propTypes = {
@@ -84,7 +88,7 @@ class MyAccountOrderView extends PureComponent {
       displayDiscountPercentage
     } = this.props;
 
-    return <MyAccountOrderViewItem item={item} currency={currency}  displayDiscountPercentage={ displayDiscountPercentage } />;
+    return <MyAccountOrderViewItem item={item} currency={currency} displayDiscountPercentage={displayDiscountPercentage} />;
   };
 
   renderTitle() {
@@ -101,8 +105,8 @@ class MyAccountOrderView extends PureComponent {
         <h3>{__("Order #%s", increment_id)}</h3>
         {(STATUS_BEING_PROCESSED.includes(status) ||
           (status === STATUS_COMPLETE && is_returnable)) && (
-          <button onClick={openOrderCancelation}>{buttonText}</button>
-        )}
+            <button onClick={openOrderCancelation}>{buttonText}</button>
+          )}
       </div>
     );
   }
@@ -173,11 +177,11 @@ class MyAccountOrderView extends PureComponent {
           {
             shipped.length <= 1
               ? __(
-                  "Your order has been shipped in a single package, please find the package details below."
-                )
+                "Your order has been shipped in a single package, please find the package details below."
+              )
               : __(
-                  "Your order has been shipped in multiple packages, please find the package details below."
-                )
+                "Your order has been shipped in multiple packages, please find the package details below."
+              )
             // eslint-disable-next-line
           }
         </p>
@@ -437,19 +441,39 @@ class MyAccountOrderView extends PureComponent {
     );
   }
 
-  renderPaymentType() {
+  renderOrderPaymentType() {
     const {
       order: {
         payment: {
-          additional_information: { method_title },
+          method,
+          cc_type,
+          cc_last_4,
         },
       },
     } = this.props;
+    switch (method) {
+      case CARD:
+        return <span>{"CARD"}</span>;
+      case TABBY_ISTALLMENTS:
+      case TABBY_PAY_LATER:
+        return <span>{"TABBBY"}</span>;
 
+      case CHECK_MONEY:
+      case APPLE_PAY:
+      case CHECKOUT_APPLE_PAY:
+      case CASH_ON_DELIVERY:
+      case FREE:
+        return <span>{"OTHER PAYMENT TYPE"}</span>
+      default:
+        return null;
+    }
+  }
+
+  renderPaymentType() {
     return (
       <div block="MyAccountOrderView" elem="PaymentType">
-        <h3>{__("Payment Type")}</h3>
-        <p>{method_title}</p>
+        <h3>{__("Payment")}</h3>
+        {this.renderOrderPaymentType()}
       </div>
     );
   }
@@ -513,17 +537,17 @@ class MyAccountOrderView extends PureComponent {
             })}
             {customer_balance_amount !== 0
               ? this.renderPriceLine(
-                  customer_balance_amount,
-                  __("Store Credit"),
-                  { isStoreCredit: true }
-                )
+                customer_balance_amount,
+                __("Store Credit"),
+                { isStoreCredit: true }
+              )
               : null}
             {parseFloat(club_apparel_amount) !== 0
               ? this.renderPriceLine(
-                  club_apparel_amount,
-                  __("Club Apparel Redemption"),
-                  { isClubApparel: true }
-                )
+                club_apparel_amount,
+                __("Club Apparel Redemption"),
+                { isClubApparel: true }
+              )
               : null}
             {parseFloat(discount_amount) !== 0
               ? this.renderPriceLine(discount_amount, __("Discount"))
