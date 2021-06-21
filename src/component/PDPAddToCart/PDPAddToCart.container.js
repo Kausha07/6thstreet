@@ -360,11 +360,16 @@ export class PDPAddToCartContainer extends PureComponent {
         userToken = userData.data.id;
       }
       if (queryID) {
-        new Algolia().logAlgoliaAnalytics("conversion", 8, [], {
-          objectIDs: [objectID],
-          queryID,
-          userToken: userToken ? `user-${userToken}` : getUUIDToken(),
-        });
+        new Algolia().logAlgoliaAnalytics(
+          "conversion",
+          ADD_TO_CART_ALGOLIA,
+          [],
+          {
+            objectIDs: [objectID],
+            queryID,
+            userToken: userToken ? `user-${userToken}` : getUUIDToken(),
+          }
+        );
       }
       // vue analytics
       const locale = VueIntegrationQueries.getLocaleFromUrl();
