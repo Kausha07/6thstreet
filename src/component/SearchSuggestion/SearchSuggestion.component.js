@@ -7,6 +7,7 @@ import { Products } from "Util/API/endpoint/Product/Product.type";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 import BRAND_MAPPING from "./SearchSiggestion.config";
+import { getCurrency } from "Util/App/App";
 
 import "./SearchSuggestion.style";
 
@@ -96,13 +97,44 @@ class SearchSuggestion extends PureComponent {
     );
   }
 
+  renderPrice = (price) => {
+    if (price && price.length > 0) {
+      const priceObj = price[0],
+        currency = getCurrency();
+      const priceToShow = priceObj[currency]["6s_base_price"];
+      return (
+        <span
+          block="SearchProduct"
+          elem="Price"
+        >{`${currency} ${priceToShow}`}</span>
+      );
+    }
+    return null;
+  };
+
   renderProduct = (product) => {
-    const { url, name } = product;
+    const { url, name, thumbnail_url, brand_name, price } = product;
 
     return (
       <li>
         <Link to={url} onClick={this.closeSearchPopup}>
-          {name}
+          <div block="SearchProduct">
+            <img
+              src={thumbnail_url}
+              alt="Product Image"
+              block="SearchProduct"
+              elem="Image"
+            />
+            <div block="SearchProduct" elem="Info">
+              <h6 block="SearchProduct" elem="Brand">
+                {brand_name}
+              </h6>
+              <span block="SearchProduct" title={name} elem="ProductName">
+                {name}
+              </span>
+              {this.renderPrice(price)}
+            </div>
+          </div>
         </Link>
       </li>
     );

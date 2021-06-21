@@ -88,6 +88,9 @@
     margin-right: 7.92px;
     display: inline-block;
     vertical-align: top;
+    &:nth-last-child(2) {
+      margin-right: 0;
+    }
     &_isArabic {
       &:nth-child(2) {
         margin-right: 0;
