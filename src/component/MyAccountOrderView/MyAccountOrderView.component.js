@@ -479,6 +479,14 @@ class MyAccountOrderView extends PureComponent {
     );
   }
 
+  renderPaymentTypeText(paymentTitle) {
+    return (
+      <div block="MyAccountOrderView" elem="TypeTitle">
+        {__(paymentTitle)}
+      </div>
+    );
+  }
+
   renderOrderPaymentType() {
     const {
       order: {
@@ -491,15 +499,15 @@ class MyAccountOrderView extends PureComponent {
       case CARD:
         return this.renderCardPaymentType();
       case TABBY_ISTALLMENTS:
+        return this.renderPaymentTypeText(__("Tabby: Pay in installments"));
       case TABBY_PAY_LATER:
-        return <span>{"TABBBY"}</span>;
-
+        return this.renderPaymentTypeText(__("Tabby: Pay later"));
       case CHECK_MONEY:
+      case CASH_ON_DELIVERY:
+        return this.renderPaymentTypeText(__("Cash on delivery"));
       case APPLE_PAY:
       case CHECKOUT_APPLE_PAY:
-      case CASH_ON_DELIVERY:
-      case FREE:
-        return <span>{"OTHER PAYMENT TYPE"}</span>
+        return this.renderPaymentTypeText(__("Apple"));
       default:
         return null;
     }
