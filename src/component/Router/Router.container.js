@@ -8,6 +8,7 @@ import {
 } from 'SourceComponent/Router/Router.container';
 import { setCountry, setLanguage } from 'Store/AppState/AppState.action';
 import CartDispatcher from 'Store/Cart/Cart.dispatcher';
+import ClubApparelDispatcher from 'Store/ClubApparel/ClubApparel.dispatcher';
 import { updateCustomerDetails } from 'Store/MyAccount/MyAccount.action';
 import {
     deleteAuthorizationToken,

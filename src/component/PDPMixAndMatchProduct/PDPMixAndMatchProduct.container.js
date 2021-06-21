@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
-import queryString from "query-string";
-import { getStore } from "Store";
+import queryString from 'query-string';
+import { getStore } from 'Store';
 import { connect } from 'react-redux';
 
-import PDPDispatcher from "Store/PDP/PDP.dispatcher";
-import CartDispatcher from "Store/Cart/Cart.dispatcher";
-import { setMinicartOpen } from "Store/Cart/Cart.action";
+import PDPDispatcher from 'Store/PDP/PDP.dispatcher';
+import CartDispatcher from 'Store/Cart/Cart.dispatcher';
+import { setMinicartOpen } from 'Store/Cart/Cart.action';
 import { showNotification } from "Store/Notification/Notification.action";
 import Event, {
   ADD_TO_CART_ALGOLIA,
