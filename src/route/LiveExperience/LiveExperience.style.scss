@@ -54,6 +54,7 @@
             @include mobile {
                 width: 100%;
                 left: 0;
+                padding: 15px;
             }
             .eventTitle {
                 color: #FFFFFF;
@@ -62,6 +63,10 @@
                 font-weight: 600;
                 letter-spacing: 0;
                 line-height: 55px;
+                @include mobile{
+                    font-size: 22px;
+                    line-height: 30px;
+                }
             }
         }
         .liveNow {
