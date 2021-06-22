@@ -10,12 +10,15 @@ import Event, {
   ADD_TO_CART_ALGOLIA,
   EVENT_GTM_PRODUCT_ADD_TO_CART,
 } from "Util/Event";
-import PDPMixAndMatchProductSizePopup from "../PDPMixAndMatchProductSizePopup";
 import PDPMixAndMatchProduct from "./PDPMixAndMatchProduct.component";
+import PDPMixAndMatchProductSizePopup from "../PDPMixAndMatchProductSizePopup";
+
+import { PDP_MIX_AND_MATCH_POPUP_ID } from '../PDPMixAndMatchProductSizePopup/PDPMixAndMatchProductSizePopup.config';
+import { hideActiveOverlay, toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
 
 export const mapDispatchToProps = (dispatch) => ({
   showNotification: (type, message) =>
-    dispatch(showNotification(type, message)),
+  dispatch(showNotification(type, message)),
   getCartTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId),
   addProductToCart: (
     productData,
@@ -38,9 +41,10 @@ export const mapDispatchToProps = (dispatch) => ({
       url,
       itemPrice
     ),
-  setMinicartOpen: (isMinicartOpen = false) =>
-    dispatch(setMinicartOpen(isMinicartOpen)),
+  setMinicartOpen: (isMinicartOpen = false) => dispatch(setMinicartOpen(isMinicartOpen)),
   getProductStock: (sku) => PDPDispatcher.getProductStock(dispatch, sku),
+  showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
+  hideActiveOverlay: () => dispatch(hideActiveOverlay())
 });
 
 export class PDPMixAndMatchProductContainer extends PureComponent {
@@ -54,6 +58,8 @@ export class PDPMixAndMatchProductContainer extends PureComponent {
     productAdded: PropTypes.bool,
     setMinicartOpen: PropTypes.func.isRequired,
     getProductStock: PropTypes.func.isRequired,
+    showOverlay: PropTypes.func.isRequired,
+    hideActiveOverlay: PropTypes.func.isRequired
   };
 
   state = {
@@ -348,9 +354,22 @@ export class PDPMixAndMatchProductContainer extends PureComponent {
   }
 
   togglePDPMixAndMatchProductSizePopup() {
+    const { isSizePopupOpen } = this.state;
+    const { showOverlay, hideActiveOverlay } = this.props;
+
+    if(!isSizePopupOpen){
+      showOverlay(PDP_MIX_AND_MATCH_POPUP_ID);
+    }
+
+    if(isSizePopupOpen){
+      hideActiveOverlay(PDP_MIX_AND_MATCH_POPUP_ID);
+    }
+  
     this.setState(
-      { isSizePopupOpen: !this.state.isSizePopupOpen },
-      this.toggleRootElementsOpacity
+      { isSizePopupOpen: !isSizePopupOpen },
+      () => {
+        this.toggleRootElementsOpacity();
+      }
     );
   }
 
@@ -391,8 +410,7 @@ export class PDPMixAndMatchProductContainer extends PureComponent {
     onSizeSelect: this.onSizeSelect.bind(this),
     addToCart: this.addToCart.bind(this),
     routeChangeToCart: this.routeChangeToCart.bind(this),
-    togglePDPMixAndMatchProductSizePopup:
-      this.togglePDPMixAndMatchProductSizePopup.bind(this),
+    togglePDPMixAndMatchProductSizePopup: this.togglePDPMixAndMatchProductSizePopup.bind(this),
   };
 
   componentDidMount() {
