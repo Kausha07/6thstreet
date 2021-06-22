@@ -189,6 +189,19 @@
                         vertical-align: middle;
                         margin-right: 3px;
                     }
+                    &-calender{
+                        display: flex;
+                        align-items: center;
+                        font-weight: 600;
+                        img{
+                            width: 14px;
+                            height: 14px;
+                        }
+                    }
+                    &-timer{
+                        display: flex;
+                        align-items: center;
+                    }
                 }
                 .eventPlayBtn {
                     position: absolute;
