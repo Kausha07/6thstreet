@@ -241,6 +241,9 @@ $select-arrow-width: 6px !default;
                     &:last-child {
                         opacity: 1;
                         transform: translateY(-100%);
+                        background: none;
+                        left: 0;
+                        width: 100%;
                     }
                 }
             }

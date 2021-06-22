@@ -16,8 +16,6 @@ class PDPMixAndMatchProductSizePopup extends PureComponent {
         selectedSizeType: PropTypes.string.isRequired,
         addToCart: PropTypes.func.isRequired,
         routeChangeToCart: PropTypes.func.isRequired,
-        showOverlay: PropTypes.func.isRequired,
-        hideActiveOverlay: PropTypes.func.isRequired,
         togglePDPMixAndMatchProductSizePopup: PropTypes.func.isRequired
     };
 
