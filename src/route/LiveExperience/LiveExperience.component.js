@@ -4,13 +4,15 @@ import ContentWrapper from 'Component/ContentWrapper';
 import './LiveExperience.style.scss';
 import cartIcon from './icons/cart-icon.png';
 import timerIcon from './icons/timer.png';
+import calenderIcon from './icons/calendar.svg'
 import playbtn from './icons/player.svg';
 
 export class LiveExperience extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      url: null
+      url: null,
+      day: [ "Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"]
     };
   }
 
@@ -91,17 +93,34 @@ export class LiveExperience extends PureComponent {
   renderUpcomingGridBlock = (block, i) => {
     const { mainImageURI, squareImageURI, name, description, starts, products } = block;
     let d = new Date(starts);
+    let diffInTime = d - Date.now();
+    var diffInDay = diffInTime / (1000 * 3600 * 24);
+    // debugger
+
     if (mainImageURI) {
     return (
       <li block="spckItem">
         <div block="eventImage">
           <img src={mainImageURI} alt={name}  />
         </div>
-        <p block="eventStart"><img src={timerIcon} alt="timerIcon" />
-        <Countdown
-          date={d}
-          />
-        </p>
+          <p block="eventStart">
+          {
+            diffInDay < 1 ?
+            <div block="eventStart-timer">
+              <img src={timerIcon} alt="timerIcon" />
+              <Countdown
+                date={d}
+                daysInHours={true}
+              />
+            </div>
+            :
+            <div block="eventStart-calender">
+              <img  src={calenderIcon} alt="calenderIcon" />
+              <div>{`${this.state.day[d.getDay()]}, ${d.getDate()} at ${d.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}`}</div>
+            </div>
+          }
+          </p>
+
         <div block="eventInfo">
           <h3 block="eventTitle">{name}</h3>
           <p block="eventDesc">{description}</p>
@@ -186,7 +205,7 @@ export class LiveExperience extends PureComponent {
           </ContentWrapper>
           <div id="all"></div>
       </main>
-    );
+        );
   }
 }
 
