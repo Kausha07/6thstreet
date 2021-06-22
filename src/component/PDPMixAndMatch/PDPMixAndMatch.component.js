@@ -29,7 +29,7 @@ class PDPMixAndMatch extends PureComponent {
 
         return (
             <div block="PDPMixAndMatch">
-                <h2 block="PDPMixAndMatch" elem="title">{__( "Mix &amp; Match" )}</h2>
+                <h2 block="PDPMixAndMatch" elem="title">{__( "Mix & Match" )}</h2>
                 <ul block="PDPMixAndMatch" elem="List">
                     { products.map(this.renderAvailableProduct) }
                 </ul>
