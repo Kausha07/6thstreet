@@ -64,7 +64,7 @@ export class LiveExperience extends PureComponent {
   }
   renderSpckarchivedEvent() {
     //const content = this.props.archived;
-    const content = this.props.updatedUpcoming;
+    const content = this.props.updatedArchived;
     // debugger
     return content.map(this.renderArchivedGridBlock);
   }
@@ -192,7 +192,7 @@ export class LiveExperience extends PureComponent {
           }
 
 
-          { this.props.updatedUpcoming.length > 0 &&
+          { this.props.updatedArchived.length > 0 &&
             <div block="archived-Grid">
               <h3 block="sectionTitle">{__("RECENTLY PLAYED")}</h3>
               <div id="archived"></div>
