@@ -1,6 +1,33 @@
 .PLPDetails {
   display: flex;
   align-items: center;
+  &-ShareIcon {
+    display: flex;
+    justify-content: flex-end;
+    grid-gap: 25px;
+    margin-bottom: 20px;
+    img {
+      width: 25px;
+      margin-left: 15px;
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+  &-BrandName {
+    font-size: 40px;
+    font-weight: 600;
+    letter-spacing: -1px;
+    line-height: 55px;
+  }
+  &-BrandHTML {
+    * {
+      font-size: 18px;
+      letter-spacing: 0;
+      line-height: 25px;
+    }
+  }
   &-BrandImage {
     flex: 1;
     padding: 1rem 1rem 1rem 0;

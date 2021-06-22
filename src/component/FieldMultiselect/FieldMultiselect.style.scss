@@ -70,12 +70,14 @@
 
   &-FilterButton {
     display: inline-block;
-    height: 42px;
-    width: 200px;
+    height: 40px;
+    font-weight: var(--fw-demi);
+    // width: 200px;
+    width: 100%;
     border: solid 1px var(--field-multiselect-border);
     position: relative;
-    margin: 10px;
-    font-size: 13px;
+    // margin: 10px;
+    font-size: 12px;
     letter-spacing: 0.5px;
     line-height: 18px;
     text-align: left;
@@ -150,16 +152,16 @@
   &-OptionListContainer {
     position: absolute;
     display: block;
-    width: 200px;
+    width: 100%;
     max-height: 0;
     background: var(--white-color);
     margin-top: 1px;
     z-index: 2;
     overflow-y: auto;
     border: none;
-    left: 10px;
+    // left: 10px;
     transition: 0;
-    top: 50px;
+    top: 40px;
 
     &_toggleOptionsList {
       border: 1px solid var(--field-multiselect-border);
@@ -193,7 +195,7 @@
       background-color: var(--scrollbar-thumb-color);
     }
 
-    @include before-desktop {
+    @include mobile {
       position: fixed;
       top: 50px;
       right: 0;

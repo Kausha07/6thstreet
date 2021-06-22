@@ -3,6 +3,8 @@ import { PureComponent } from "react";
 import PropTypes from "prop-types";
 import isMobile from "Util/Mobile";
 import "./PLPDetails.style";
+import shareIcon from "Style/icons/share.svg";
+import favIcon from "Style/icons/favorites.svg";
 
 class PLPDetails extends PureComponent {
   static propTypes = {
@@ -22,12 +24,31 @@ class PLPDetails extends PureComponent {
 
   renderBrandName = () => {
     const { brandName } = this.props;
-    return <h1>{brandName}</h1>;
+    return (
+      <h1 block="PLPDetails" elem="BrandName">
+        {brandName}
+      </h1>
+    );
   };
 
   renderBrandHtml = () => {
     const { brandDescription } = this.props;
-    return <p dangerouslySetInnerHTML={{ __html: brandDescription }} />;
+
+    return (
+      <p
+        block="PLPDetails"
+        elem="BrandHTML"
+        dangerouslySetInnerHTML={{ __html: brandDescription }}
+      />
+    );
+  };
+  renderActionButtons = () => {
+    return (
+      <div block="PLPDetails" elem="ShareIcon">
+        <img src={shareIcon} alt={__("Share Icon")} />
+        <img src={favIcon} alt={__("Favorite Icon")} />
+      </div>
+    );
   };
 
   renderContent = () => {
@@ -45,6 +66,7 @@ class PLPDetails extends PureComponent {
           {isMobile ? "" : this.renderBrandImage()}
         </div>
         <div block="PLPDetails" elem="BrandDescription">
+          {this.renderActionButtons()}
           {isMobile ? "" : this.renderBrandName()}
           {isMobile ? "" : this.renderBrandHtml()}
         </div>

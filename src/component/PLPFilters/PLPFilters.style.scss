@@ -193,8 +193,13 @@
 
 .PLPFilters {
   // margin: 0 20px;
-  display: flex;
-  flex-wrap: wrap;
+  // display: flex;
+  // flex-wrap: wrap;
+  display: grid;
+  // flex-wrap: wrap;
+  grid-template-columns: repeat(5, 1fr);
+  grid-gap: 10px;
+  margin-block: 10px;
 
   &-Refine {
     text-transform: uppercase;
@@ -295,8 +300,9 @@
 
   &-ToolBar {
     display: flex;
-    height: 60px;
-    padding: 0 0 20px;
+    margin-bottom: 10px;
+    // height: 60px;
+    // padding: 0 0 20px;
 
     @include mobile() {
       margin-left: 120px;

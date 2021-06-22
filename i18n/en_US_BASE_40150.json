@@ -674,5 +674,7 @@
     "Error loading Stripe! No API-key specified.": null,
     "Cash on delivery": null,
     "Details": null,
-    "Follow the latest trends": null
+    "Follow the latest trends": null,
+    "Share Icon": null,
+    "Favorite Icon": null
 }

@@ -18,7 +18,7 @@
     .QuickFilter {
       &-List {
         display: flex;
-        margin-top: -2px;
+        margin-top: 0;
         max-width: 1200px;
 
         @include desktop {
@@ -53,9 +53,15 @@
 
         li {
           display: block;
-          height: 60px;
+          // height: 60px;
           margin: 5px;
           max-width: 200px;
+          &:first-child {
+            margin-left: 0;
+          }
+          &:last-child {
+            margin-right: 0;
+          }
 
           @include mobile {
             height: unset;
@@ -139,7 +145,7 @@
 
     &_inSearch {
       .QuickFilter-List {
-        margin-top: 7px;
+        margin-top: 0;
       }
     }
   }
