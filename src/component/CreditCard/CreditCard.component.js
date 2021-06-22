@@ -246,7 +246,6 @@ class CreditCard extends PureComponent {
 
     renderSaveCardToggle(checkboxId) {
         const { saveCard } = this.state;
-
         return (
             <div block="SaveCard">
                 <Field
@@ -356,7 +355,7 @@ class CreditCard extends PureComponent {
     }
 
     render() {
-        const { loadingSavedCards, newCardVisible } = this.props;
+        const { loadingSavedCards, newCardVisible ,isSignedIn} = this.props;
         if (loadingSavedCards) {
             return null;
         }
@@ -364,7 +363,7 @@ class CreditCard extends PureComponent {
             <div block="CreditCard">
                 {this.renderValidatorInfo()}
                 {this.renderCardsBlock()}
-                {newCardVisible && this.renderSaveCardToggle('save_card_info')}
+                {newCardVisible && isSignedIn && this.renderSaveCardToggle('save_card_info')}
                 {this.renderAcceptedCardsInfo()}
             </div>
         );

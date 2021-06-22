@@ -202,7 +202,11 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     const { savePaymentInformation, savedCards, newCardVisible } = this.props;
     const address = this._getAddress(fields);
     const { code } = paymentMethod;
-
+    console.log("payment method", paymentMethod)
+    console.log("save payment info", savePaymentInformation)
+    console.timeLog("saved cards", savedCards)
+    console.log("newcard visible", newCardVisible)
+    console.log("address", address)
     if (code === CARD) {
       if (newCardVisible) {//if payment is via new card.
         const {

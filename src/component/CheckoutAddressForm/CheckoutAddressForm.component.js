@@ -13,9 +13,9 @@ const objTabIndex =
     "street" : "5",
     "postcode" : "11",
     "phonecode" : "8",
-    "firstname" : "2",
-    "guest_email" : "4",
-    "lastname" : "3",
+    "firstname" : "3",
+    "guest_email" : "2",
+    "lastname" : "4",
     "country_id" : "10",
     "region_string" : "7"
 };
@@ -59,12 +59,13 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
         this.getCitiesAndRegionsData();
 
         const { isSignedIn, shippingAddress: { guest_email } } = this.props;
-
         const {
             telephone,
             street,
             ...fieldMap
         } = super.fieldMap;
+        console.log("field map", fieldMap)
+        console.log("signed in", isSignedIn)
         fieldMap.street = {
             ...street,
             onChange: (value) => this.onChange('street', value)
@@ -93,7 +94,7 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
                     result[key] = o;
                 }
             }
-            //console.info("result",result);
+            console.info("result",result);
             return result;
         }
         return fFieldMap;

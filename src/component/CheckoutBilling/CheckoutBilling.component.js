@@ -193,12 +193,13 @@ export class CheckoutBilling extends SourceCheckoutBilling {
       resetBinApply,
       applyPromotionSavedCard,
       removePromotionSavedCard,
+      isSignedIn
     } = this.props;
 
     if (!paymentMethods.length) {
       return null;
     }
-
+    console.log("billing props", this.props)
     return (
       <CheckoutPayments
         setCashOnDeliveryFee={setCashOnDeliveryFee}
@@ -217,6 +218,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
         resetBinApply={resetBinApply}
         processApplePay={processApplePay}
         placeOrder={placeOrder}
+        isSignedIn={isSignedIn}
         applyPromotionSavedCard={applyPromotionSavedCard}
         removePromotionSavedCard={removePromotionSavedCard}
       />

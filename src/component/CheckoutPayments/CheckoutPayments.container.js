@@ -114,6 +114,7 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
   }
 
   selectPaymentMethod(item) {
+    console.log("item", item);
     const { m_code: code } = item;
     const {
       Cart: { cartId },

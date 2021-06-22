@@ -35,7 +35,7 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
     }
 
     renderHeading() {
-        const { isBilling, isSignedIn } = this.props;
+        const { isBilling, isSignedIn } = this.props;      
         const { isArabic } = this.state;
 
         const addressName = isBilling ? null : __('Delivery country');

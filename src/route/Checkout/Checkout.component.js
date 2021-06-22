@@ -212,7 +212,7 @@ export class Checkout extends SourceCheckout {
         </div>
       );
     }
-    return null
+    return null;
     //  (
     //   <div block="LoadingBlock">
     //     <Loader isLoading={isLoading} />;
@@ -316,6 +316,7 @@ export class Checkout extends SourceCheckout {
       getBinPromotion,
       updateTotals,
     } = this.props;
+    console.log("checkout props", this.props);
     const { isArabic } = this.state;
 
     return (
@@ -344,6 +345,7 @@ export class Checkout extends SourceCheckout {
           setTabbyWebUrl={this.setTabbyWebUrl}
           setPaymentCode={this.setPaymentCode}
           binModal={this.showModal}
+          isSignedIn={isSignedIn}
           setCheckoutCreditCardData={this.setCheckoutCreditCardData}
           processApplePay={processApplePay}
           placeOrder={placeOrder}
@@ -359,7 +361,7 @@ export class Checkout extends SourceCheckout {
       number,
       expDate,
       saveCard,
-    }
+    };
     this.setState({ creditCardData });
     this.props.updateCreditCardData(creditCardData);
   };
@@ -450,7 +452,7 @@ export class Checkout extends SourceCheckout {
       isFailed,
       initialTotals,
       isVerificationCodeSent,
-      newCardVisible
+      newCardVisible,
     } = this.props;
     const { cashOnDeliveryFee } = this.state;
     const {
@@ -504,7 +506,6 @@ export class Checkout extends SourceCheckout {
       setLoading,
       isLoading,
     } = this.props;
-
 
     const { continueAsGuest, isArabic } = this.state;
     const renderCheckoutShipping = (

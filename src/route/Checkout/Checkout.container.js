@@ -404,6 +404,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   /*async*/ savePaymentMethodAndPlaceOrder(paymentInformation) {
     //console.log('Tabby123:');
     console.table(paymentInformation);
+    console.log("payment info", paymentInformation)
     const {
       paymentMethod: { code, additional_data },
       tabbyPaymentId,
