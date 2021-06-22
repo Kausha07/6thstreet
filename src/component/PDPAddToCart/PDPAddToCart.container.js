@@ -1,24 +1,25 @@
 /* eslint-disable no-magic-numbers */
-import PropTypes from 'prop-types';
-import queryString from 'query-string';
-import { PureComponent } from 'react';
-import { connect } from 'react-redux';
-import { getStore } from 'Store';
-import { setMinicartOpen } from 'Store/Cart/Cart.action';
-import CartDispatcher from 'Store/Cart/Cart.dispatcher';
-import { showNotification } from 'Store/Notification/Notification.action';
-import PDPDispatcher from 'Store/PDP/PDP.dispatcher';
-import { Product } from 'Util/API/endpoint/Product/Product.type';
-import Algolia from 'Util/API/provider/Algolia';
-import { getUUIDToken } from 'Util/Auth';
+import PropTypes from "prop-types";
+import VueIntegrationQueries from "Query/vueIntegration.query";
+import { PureComponent } from "react";
+import { connect } from "react-redux";
+import { getStore } from "Store";
+import { setMinicartOpen } from "Store/Cart/Cart.action";
+import CartDispatcher from "Store/Cart/Cart.dispatcher";
+import { showNotification } from "Store/Notification/Notification.action";
+import PDPDispatcher from "Store/PDP/PDP.dispatcher";
+import { Product } from "Util/API/endpoint/Product/Product.type";
+import Algolia from "Util/API/provider/Algolia";
+import { getUUID, getUUIDToken } from "Util/Auth";
 import Event, {
   ADD_TO_CART_ALGOLIA,
-  EVENT_GTM_PRODUCT_ADD_TO_CART
-} from 'Util/Event';
-import history from 'Util/History';
-import isMobile from 'Util/Mobile';
-import PDPAddToCart from './PDPAddToCart.component';
-import PDPAddToCartDesktop from './PDPAddToCartDesktop.component';
+  EVENT_GTM_PRODUCT_ADD_TO_CART,
+  VUE_ADD_TO_CART,
+} from "Util/Event";
+import history from "Util/History";
+import isMobile from "Util/Mobile";
+import PDPAddToCart from "./PDPAddToCart.component";
+import PDPAddToCartDesktop from "./PDPAddToCartDesktop.component";
 
 export const mapStateToProps = (state) => ({
   product: state.PDP.product,
@@ -26,7 +27,8 @@ export const mapStateToProps = (state) => ({
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-  showNotification: (type, message) => dispatch(showNotification(type, message)),
+  showNotification: (type, message) =>
+    dispatch(showNotification(type, message)),
   getCartTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId),
   addProductToCart: (
     productData,
@@ -49,7 +51,8 @@ export const mapDispatchToProps = (dispatch) => ({
       url,
       itemPrice
     ),
-  setMinicartOpen: (isMinicartOpen = false) => dispatch(setMinicartOpen(isMinicartOpen)),
+  setMinicartOpen: (isMinicartOpen = false) =>
+    dispatch(setMinicartOpen(isMinicartOpen)),
   getProductStock: (sku) => PDPDispatcher.getProductStock(dispatch, sku),
 });
 
@@ -272,11 +275,12 @@ export class PDPAddToCartContainer extends PureComponent {
         name,
         sku: configSKU,
         objectID,
+        product_type_6s,
       },
       addProductToCart,
       showNotification,
     } = this.props;
-    
+
     if (!price[0]) {
       showNotification("error", __("Unable to add product to cart."));
 
@@ -345,9 +349,7 @@ export class PDPAddToCartContainer extends PureComponent {
       var data = localStorage.getItem("customer");
       let userData = JSON.parse(data);
       let userToken;
-      var qid = queryString.parse(window.location.search)?.qid
-        ? queryString.parse(window.location.search)?.qid
-        : null;
+      var qid = new URLSearchParams(window.location.search).get("qid");
       let queryID;
       if (!qid) {
         queryID = getStore().getState().SearchSuggestions.queryID;
@@ -358,12 +360,33 @@ export class PDPAddToCartContainer extends PureComponent {
         userToken = userData.data.id;
       }
       if (queryID) {
-        new Algolia().logAlgoliaAnalytics('conversion',ADD_TO_CART_ALGOLIA, [], {
-          objectIDs: [objectID],
-          queryID,
-          userToken: userToken ? `user-${userToken}` : getUUIDToken(),
-        });
+        new Algolia().logAlgoliaAnalytics(
+          "conversion",
+          ADD_TO_CART_ALGOLIA,
+          [],
+          {
+            objectIDs: [objectID],
+            queryID,
+            userToken: userToken ? `user-${userToken}` : getUUIDToken(),
+          }
+        );
       }
+      // vue analytics
+      const locale = VueIntegrationQueries.getLocaleFromUrl();
+      VueIntegrationQueries.vueAnalayticsLogger({
+        event_name: VUE_ADD_TO_CART,
+        params: {
+          event: VUE_ADD_TO_CART,
+          pageType: "pdp",
+          currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+          clicked: Date.now(),
+          uuid: getUUID(),
+          referrer: "desktop",
+          sourceProdID: configSKU,
+          sourceCatgID: product_type_6s, // TODO: replace with category id
+          prodPrice: basePrice,
+        },
+      });
     }
 
     if (!insertedSizeStatus) {
@@ -415,12 +438,33 @@ export class PDPAddToCartContainer extends PureComponent {
         userToken = userData.data.id;
       }
       if (queryID) {
-        new Algolia().logAlgoliaAnalytics('conversion',ADD_TO_CART_ALGOLIA, [], {
-          objectIDs: [objectID],
-          queryID,
-          userToken: userToken ? `user-${userToken}` : getUUIDToken(),
-        });
+        new Algolia().logAlgoliaAnalytics(
+          "conversion",
+          ADD_TO_CART_ALGOLIA,
+          [],
+          {
+            objectIDs: [objectID],
+            queryID,
+            userToken: userToken ? `user-${userToken}` : getUUIDToken(),
+          }
+        );
       }
+      // vue analytics
+      const locale = VueIntegrationQueries.getLocaleFromUrl();
+      VueIntegrationQueries.vueAnalayticsLogger({
+        event_name: VUE_ADD_TO_CART,
+        params: {
+          event: VUE_ADD_TO_CART,
+          pageType: "pdp",
+          currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+          clicked: Date.now(),
+          uuid: getUUID(),
+          referrer: "desktop",
+          sourceProdID: configSKU,
+          sourceCatgID: product_type_6s, // TODO: replace with category id
+          prodPrice: basePrice,
+        },
+      });
     }
   }
 

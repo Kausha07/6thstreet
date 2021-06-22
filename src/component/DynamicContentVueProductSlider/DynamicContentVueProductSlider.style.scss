@@ -48,10 +48,24 @@
     width: 100%;
     overflow: auto;
     white-space: nowrap;
+    padding-bottom: 40px;
 
     @media (max-width: 1024px) {
       width: 99vw;
     }
+  }
+
+  &-SliderContainer::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  &-SliderContainer::-webkit-scrollbar-thumb {
+    background: #585757;
+  }
+
+  &-SliderContainer::-webkit-scrollbar-track {
+    background: #dcdcdc;
   }
 
   &-VueProductContainer {
