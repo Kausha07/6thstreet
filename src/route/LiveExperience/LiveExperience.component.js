@@ -1,6 +1,5 @@
 import { PureComponent } from "react";
 import Countdown from "react-countdown";
-// import {} from ''
 import ContentWrapper from 'Component/ContentWrapper';
 import './LiveExperience.style.scss';
 import cartIcon from './icons/cart-icon.png';
@@ -56,13 +55,14 @@ export class LiveExperience extends PureComponent {
     return this.renderLiveBlock(content);
   }
   renderSpckUpcomingEvent() {
-    const content = this.props.upcoming;
+    let content = this.props.updatedUpcoming;
+
     // return
     return content.map(this.renderUpcomingGridBlock);
   }
   renderSpckarchivedEvent() {
     //const content = this.props.archived;
-    const content = this.props.archived;
+    const content = this.props.updatedArchived;
     // debugger
     return content.map(this.renderArchivedGridBlock);
   }
@@ -100,7 +100,7 @@ export class LiveExperience extends PureComponent {
         <p block="eventStart"><img src={timerIcon} alt="timerIcon" />
         <Countdown
           date={d}
-          />,
+          />
         </p>
         <div block="eventInfo">
           <h3 block="eventTitle">{name}</h3>
@@ -118,7 +118,10 @@ export class LiveExperience extends PureComponent {
         <div block="eventImage">
           <img src={mainImageURI} alt={name}  />
         </div>
-        <p block="eventProduct"><img src={cartIcon} alt="cartIcon"/> {products.length}</p>
+        <p block="eventProduct">
+          <img src={cartIcon} alt="cartIcon"/>
+          <div>{products.length}</div>
+        </p>
         <a block="eventPlayBtn"   onClick={() => this.onClickPartyPlay(block.id)} ><img src={playbtn} alt="event-playbtn" /></a>
         <div block="eventInfo">
           <h3 block="eventTitle">{name}</h3>
@@ -158,23 +161,28 @@ export class LiveExperience extends PureComponent {
             {this.renderSpckLiveEvent()}
           </div>
 
+          {
+            this.props.updatedUpcoming.length > 0 &&
+            <div block="upComing-Grid">
+              <h3 block="sectionTitle">{__("COMING NEXT")}</h3>
+              <div id="live"></div>
+              <ul block="spckItems">
+                {this.renderSpckUpcomingEvent()}
+              </ul>
+            </div>
+          }
 
-          <div block="upComing-Grid">
-            <h3 block="sectionTitle">{__("COMING NEXT")}</h3>
-            <div id="live"></div>
-            <ul block="spckItems">
-              {this.renderSpckUpcomingEvent()}
-            </ul>
 
-          </div>
+          { this.props.updatedArchived.length > 0 &&
+            <div block="archived-Grid">
+              <h3 block="sectionTitle">{__("RECENTLY PLAYED")}</h3>
+              <div id="archived"></div>
+              <ul block="spckItems">
+                {this.renderSpckarchivedEvent()}
+              </ul>
+            </div>
+          }
 
-          <div block="archived-Grid">
-            <h3 block="sectionTitle">{__("RECENTLY PLAYED")}</h3>
-            <div id="archived"></div>
-            <ul block="spckItems">
-              {this.renderSpckarchivedEvent()}
-            </ul>
-          </div>
           </ContentWrapper>
           <div id="all"></div>
       </main>
