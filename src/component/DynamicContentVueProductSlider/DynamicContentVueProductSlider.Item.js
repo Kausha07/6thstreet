@@ -9,12 +9,56 @@ class DynamicContentVueProductSliderItem extends PureComponent {
         data: PropTypes.object.isRequired,
     };
 
+    discountPercentage(basePrice, specialPrice, haveDiscount) {
+        let discountPercentage = Math.round(100 * (1 - (specialPrice / basePrice)));
+        if (discountPercentage === 0) {
+            discountPercentage = 1;
+        }
+
+        return (
+            <span block="VueProductSlider" elem="Discount" mods={{ discount: haveDiscount }}>
+                -
+                {discountPercentage}
+                %
+                <span> </span>
+            </span>
+        );
+    }
+
+    renderSpecialPrice(specialPrice, haveDiscount) {
+        const currency = getCurrency();
+        return (
+            <span block="VueProductSlider" elem="SpecialPrice" mods={{ discount: haveDiscount }}>
+                {currency}
+                <span> </span>
+                {specialPrice}
+            </span>
+        );
+    }
+
     renderPrice(price) {
         if (price && price.length > 0) {
             const priceObj = price[0], currency = getCurrency();
-            const priceToShow = priceObj[currency]['6s_base_price'];
+            const basePrice = priceObj[currency]['6s_base_price'];
+            const specialPrice = priceObj[currency]['6s_special_price'];
+            const haveDiscount = specialPrice !== 'undefined' && specialPrice && basePrice !== specialPrice;
+
+            if (basePrice === specialPrice || !specialPrice) {
+                return (
+                    <span id="price">{`${currency} ${basePrice}`}</span>
+                );
+            }
+
             return (
-                <span id="price">{`${currency} ${priceToShow}`}</span>
+                <div block="VueProductSlider" elem="SpecialPriceCon">
+                    <del block="VueProductSlider" elem="Del">
+                        <span id="price">{`${currency} ${basePrice}`}</span>
+                    </del>
+                    <span block="VueProductSlider" elem="PriceWrapper">
+                        {this.discountPercentage(basePrice, specialPrice, haveDiscount)}
+                        {this.renderSpecialPrice(specialPrice, haveDiscount)}
+                    </span>
+                </div>
             );
         }
         return null;

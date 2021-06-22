@@ -135,4 +135,26 @@
       font-weight: var(--fw-medium);
     }
   }
+
+  &-SpecialPriceCon {
+    display: block;
+  }
+
+  &-Del {
+    display: inline-block;
+
+    #price {
+      margin-right: 10px;
+      font-weight: var(--fw-medium);
+    }
+  }
+
+  &-PriceWrapper {
+    display: inline-block;
+
+    span {
+      color: #d1490c;
+      font-weight: var(--fw-bold);
+    }
+  }
 }
