@@ -33,6 +33,7 @@ class CreditCard extends PureComponent {
             numberFilled: false,
             expDateFilled: false,
             validatorMessage: null,
+            isArabic: isArabic(),
         };
     }
 
@@ -157,10 +158,10 @@ class CreditCard extends PureComponent {
 
     renderCreditCardForm() {
         const { isAmex } = this.props;
-        const { cvv, cardLogo } = this.state;
+        const { cvv, cardLogo, isArabic } = this.state;
 
         return (
-            <div block="CreditCard" elem="Card" dir="ltr">
+            <div block="CreditCard" elem="Card" dir={isArabic ? "rtl" : "ltr"}>
                 <p>{__("card number")}</p>
                 <input
                     type="text"
@@ -172,6 +173,8 @@ class CreditCard extends PureComponent {
                     onChange={this.handleNumberChange}
                     validation={['notEmpty']}
                     onPaste={this.handlePaste}
+                    dir="ltr"
+                    style={{ textAlign: isArabic ? 'right' : 'left' }}
                 />
                 <p>{__('exp date')}</p>
                 <div
@@ -285,6 +288,7 @@ class CreditCard extends PureComponent {
     }
 
     renderSavedCards(savedCards) {
+        const { isArabic } = this.state;
         return (
             <div block="SavedCards" elem="Container" style={{ gridTemplateColumns: `repeat(${savedCards.length}, 220px)` }}>
                 {
@@ -327,7 +331,7 @@ class CreditCard extends PureComponent {
                                 }
                                 this.props.applyPromotionSavedCard();
                             }}>
-                                <span block="SavedCard" elem="CardNumber" dir="ltr">{cardNum}</span>
+                                <span block="SavedCard" elem="CardNumber" dir={isArabic ? "rtl" : "ltr"}>{cardNum}</span>
                                 <div block="SavedCard" elem="CvvImgCon">
                                     <span>{`${expirationDate.substr(0, 3)}${expirationDate.substr(5, 2)}`}</span>
                                     {this.renderMiniCard(scheme.toLowerCase())}
