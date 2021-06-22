@@ -153,7 +153,6 @@ export class CheckoutPayments extends SourceCheckoutPayments {
   renderTabbyPaymentMethods() {
     const { tabbyPaymentMethods = [] } = this.state;
     const { selectPaymentMethod } = this.props;
-    console.log("tabby methods", tabbyPaymentMethods);
     if (tabbyPaymentMethods.length === 1) {
       selectPaymentMethod(tabbyPaymentMethods?.[0]?.code);
     }
@@ -292,7 +291,6 @@ export class CheckoutPayments extends SourceCheckoutPayments {
       removePromotionSavedCard,
       isSignedIn,
     } = this.props;
-    console.log("billing props", this.props);
     const cardData = paymentMethods.find(({ m_code }) => m_code === CARD);
 
     return (

@@ -199,7 +199,6 @@ export class CheckoutBilling extends SourceCheckoutBilling {
     if (!paymentMethods.length) {
       return null;
     }
-    console.log("billing props", this.props)
     return (
       <CheckoutPayments
         setCashOnDeliveryFee={setCashOnDeliveryFee}
@@ -333,6 +332,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
                 className="loadingSpinner"
                 name="three-bounce"
                 color="white"
+                fadeIn="none"
               />
             ) : isTabbyPay ? (
               __("Place tabby order")

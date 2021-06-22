@@ -101,7 +101,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
           {!isPaymentLoading ? (
             this.renderButtonsPlaceholder()
           ) : (
-            <Spinner name="three-bounce" color="white" />
+            <Spinner name="three-bounce" color="white" fadeIn="none"/>
           )}
           {/* <Spinner name="three-bounce" /> */}
         </button>

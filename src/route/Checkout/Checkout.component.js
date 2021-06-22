@@ -133,7 +133,6 @@ export class Checkout extends SourceCheckout {
     verifyPayment(tabbyPaymentId).then(({ status }) => {
       if (status === AUTHORIZED_STATUS || status === CAPTURED_STATUS) {
         const { tabbyPaymentId } = this.state;
-        console.log("tabbyPaymentId:" + tabbyPaymentId);
         paymentInformation = {
           ...paymentInformation,
           tabbyPaymentId: tabbyPaymentId,
@@ -316,7 +315,6 @@ export class Checkout extends SourceCheckout {
       getBinPromotion,
       updateTotals,
     } = this.props;
-    console.log("checkout props", this.props);
     const { isArabic } = this.state;
 
     return (

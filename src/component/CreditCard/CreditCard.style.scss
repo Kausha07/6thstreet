@@ -162,6 +162,7 @@
 .SavedCards-Container {
   display: grid;
   overflow-x: auto;
+  height: 130px;
   grid-column-gap: 10px;
 }
 
@@ -232,6 +233,8 @@
   justify-content: space-between;
   img {
     width: 40.27px;
+    height: 22px !important;
+    object-fit: contain !important;
   }
   span {
     font-size: 13px;
@@ -259,6 +262,8 @@
   justify-content: space-between;
   img {
     width: 40.27px;
+    height: 22px !important;
+    object-fit: contain !important;
   }
   span {
     font-size: 13px;
