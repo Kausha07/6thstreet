@@ -36,6 +36,9 @@ class PLPDetails extends PureComponent {
     if (!brandDescription || !brandImg || !brandName) {
       return null;
     }
+    if (isMobile) {
+      return null;
+    }
     return (
       <>
         <div block="PLPDetails" elem="BrandImage">
