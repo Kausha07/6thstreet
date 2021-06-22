@@ -76,7 +76,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
     }
 
     render() {
-        const { data: { thumbnail_url, name, brand_name, price, is_new_in = false, sku, link } } = this.props;
+        const { data: { thumbnail_url, name, brand_name, price, is_new_in = false, sku, link = "" } } = this.props;
         return (
             <div block="VueProductSlider" elem="VueProductContainer">
                 <Link
