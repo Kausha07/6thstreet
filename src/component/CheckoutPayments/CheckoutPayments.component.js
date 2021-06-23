@@ -41,7 +41,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     ...SourceCheckoutPayments.defaultProps,
     selectedPaymentCode: "",
     processApplePay: true,
-    placeOrder: () => {},
+    placeOrder: () => { },
   };
 
   paymentRenderMap = {
@@ -386,7 +386,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
 
   render() {
     return (
-      <div block="CheckoutPayments">
+      <div block="CheckoutPayments" dir={this.state.isArabic ? "rtl" : "ltr"}>
         {this.renderContent()}
         {this.renderTabbyPopup()}
       </div>
