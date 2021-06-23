@@ -66,7 +66,7 @@ class PLPDetails extends PureComponent {
           {isMobile ? "" : this.renderBrandImage()}
         </div>
         <div block="PLPDetails" elem="BrandDescription">
-          {this.renderActionButtons()}
+          {/* {this.renderActionButtons()} */}
           {isMobile ? "" : this.renderBrandName()}
           {isMobile ? "" : this.renderBrandHtml()}
         </div>
