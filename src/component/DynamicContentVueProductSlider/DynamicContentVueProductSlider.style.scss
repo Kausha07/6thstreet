@@ -3,7 +3,7 @@
   font-weight: var(--fw-regular);
 
   &-Container {
-    width: 76.389vw;
+    width: 100%;
     font-size: 16px;
     margin: 50px 0px;
     font-weight: var(--fw-demi);
@@ -133,6 +133,28 @@
       color: #ffffff;
       line-height: 13px;
       font-weight: var(--fw-medium);
+    }
+  }
+
+  &-SpecialPriceCon {
+    display: block;
+  }
+
+  &-Del {
+    display: inline-block;
+
+    #price {
+      margin-right: 10px;
+      font-weight: var(--fw-medium);
+    }
+  }
+
+  &-PriceWrapper {
+    display: inline-block;
+
+    span {
+      color: #d1490c;
+      font-weight: var(--fw-bold);
     }
   }
 }
