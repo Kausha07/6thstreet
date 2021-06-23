@@ -58,6 +58,7 @@ class HeaderMainSection extends NavigationAbstract {
       search: "",
       showSearch: false,
       isArabic: isArabic(),
+      isMobile: isMobile.any(),
     };
     this.headerSearchRef = createRef();
   }
@@ -91,14 +92,14 @@ class HeaderMainSection extends NavigationAbstract {
       return;
     }
 
-    const { prevScrollpos } = this.state;
+    const { prevScrollpos, isMobile } = this.state;
 
     const currentScrollPos = window.pageYOffset;
     const visible = prevScrollpos < currentScrollPos;
 
     this.setState({
       prevScrollpos: currentScrollPos,
-      visible,
+      visible: isMobile && visible,
     });
   };
 
@@ -181,7 +182,11 @@ class HeaderMainSection extends NavigationAbstract {
 
   renderCart() {
     return (
-      <HeaderCart key="cart" CartButton="CartButton" showCartPopUp={!(isMobile.any() || isMobile.tablet())} />
+      <HeaderCart
+        key="cart"
+        CartButton="CartButton"
+        showCartPopUp={!(isMobile.any() || isMobile.tablet())}
+      />
     );
   }
 
@@ -343,7 +348,9 @@ class HeaderMainSection extends NavigationAbstract {
       isMobile.any() ? null : (
       <div
         block="HeaderMainSection"
-        data-visible={this.isPDP() ? this.state.visible : true}
+        data-visible={
+          this.isPDP() && isMobile.any() ? this.state.visible : true
+        }
       >
         {this.renderNavigationState()}
         {this.renderSearchIcon()}

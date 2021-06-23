@@ -1,266 +1,270 @@
 :root {
-    --pdp-new-text-color: #C8B581;
-    --pdp-exclusive-text-color: #9B9B9B;
-    --pdp-line-color: #EFEFEF;
+  --pdp-new-text-color: #c8b581;
+  --pdp-exclusive-text-color: #9b9b9b;
+  --pdp-line-color: #efefef;
 }
 
 .PDPSummary {
-    font-weight: var(--fw-regular);
-    margin-top: 6px;
-    padding: 0 20px;
-    overflow-x: hidden;
+  font-weight: var(--fw-regular);
+  margin-top: 6px;
+  padding: 0 20px;
+  overflow-x: hidden;
+  @include tablet {
+    padding-inline: 0;
+    // margin-bottom: 20px;
+  }
 
-    @include desktop {
-        padding: 0 40px;
+  @include desktop {
+    padding: 0 40px;
+  }
+  @include mobile {
+    padding: 0 10px;
+  }
+
+  h1 {
+    font-size: 24px;
+
+    @include before-desktop {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0;
+      line-height: 32px;
+      text-transform: uppercase;
+      margin: 0.4px 0 0 0;
+    }
+  }
+
+  .ProductLabel {
+    color: var(--pdp-new-text-color);
+    font-size: 16px;
+    margin-right: 4px;
+    text-transform: uppercase;
+  }
+
+  &-Header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    letter-spacing: 0;
+    line-height: 30px;
+    text-align: right;
+  }
+
+  &-Name {
+    font-size: 18px;
+
+    @include before-desktop {
+      font-size: 16px;
+      font-weight: 400;
+      letter-spacing: 0;
+      line-height: 19px;
+      margin-bottom: 0;
+      color: #000000;
+    }
+  }
+
+  &-Dash {
+    bottom: 2px;
+    color: var(--pdp-exclusive-text-color);
+  }
+
+  &-Exclusive {
+    color: var(--pdp-exclusive-text-color);
+    font-size: 16px;
+    text-transform: capitalize;
+  }
+
+  &-HeaderWardrobeBtn {
+    font-weight: var(--fw-medium);
+    margin: 0 25px;
+    width: 30px;
+    height: 30px;
+    font-size: 10px;
+    border-radius: 15px;
+    padding: 0;
+
+    div::before {
+      content: " ";
+      position: absolute;
+      width: 20px;
+      left: 4px;
+      top: -12px;
+      height: 20px;
+      background-image: url(./icons/hanger.svg);
+      background-size: 20px;
     }
 
-    h1 {
-        font-size: 24px;
-
-        @include before-desktop {
-            font-size: 18px;
-            font-weight: 600;
-            letter-spacing: 0;
-            line-height: 32px;
-            text-transform: uppercase;
-            margin: 0.4px 0 0 0;
-        }
+    &:hover {
+      div::before {
+        background-image: url(./icons/hanger-white.svg);
+      }
     }
 
-    .ProductLabel {
-        color: var(--pdp-new-text-color);
-        font-size: 16px;
-        margin-right: 4px;
-        text-transform: uppercase;
+    @include desktop() {
+      width: 147px;
+
+      div:before {
+        top: -4px;
+        left: 10px;
+      }
+    }
+  }
+
+  &-WardrobeTxt {
+    display: none;
+
+    @include desktop() {
+      display: inline-block;
+      margin-left: 20px;
+    }
+  }
+
+  &-ShareTxt {
+    display: none;
+
+    @include desktop() {
+      margin-left: 20px;
+      display: inline-block;
+    }
+  }
+
+  .PriceAndPDPSummaryHeader {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .Price {
+    font-weight: var(--fw-bold);
+    font-size: 20px;
+    margin: 0.36rem 0 0 0;
+
+    @include before-desktop {
+      font-size: 18px;
+      font-weight: bold;
+      letter-spacing: 0;
+      line-height: 30px;
     }
 
-    &-Header {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
-        letter-spacing: 0;
-        line-height: 30px;
-        text-align: right;
-
-    }
-
-    &-Name {
-        font-size: 18px;
-
-        @include before-desktop {
-            font-size: 16px;
-            font-weight: 400;
-            letter-spacing: 0;
-            line-height: 19px;
-            margin-bottom: 0;
-            color: #000000;
-        }
-    }
-
-    &-Dash {
-        bottom: 2px;
-        color: var(--pdp-exclusive-text-color);
-    }
-
-    &-Exclusive {
-        color: var(--pdp-exclusive-text-color);
-        font-size: 16px;
-        text-transform: capitalize;
-    }
-
-    &-HeaderWardrobeBtn {
+    &-Base {
+      &_discount {
+        margin-right: 20px;
         font-weight: var(--fw-medium);
-        margin: 0 25px;
-        width: 30px;
-        height: 30px;
-        font-size: 10px;
-        border-radius: 15px;
-        padding: 0;
-
-        div::before {
-            content: ' ';
-            position: absolute;
-            width: 20px;
-            left: 4px;
-            top: -12px;
-            height: 20px;
-            background-image: url(./icons/hanger.svg);
-            background-size: 20px;
-        }
-
-        &:hover {
-            div::before {
-                background-image: url(./icons/hanger-white.svg);
-            }
-        }
-
-        @include desktop() {
-            width: 147px;
-
-            div:before {
-                top: -4px;
-                left: 10px;
-            }
-        }
+      }
     }
 
-    &-WardrobeTxt {
-        display: none;
+    &-Discount,
+    &-Special {
+      color: $default-primary-dark-color;
+    }
+  }
 
-        @include desktop() {
-            display: inline-block;
-            margin-left: 20px;
-        }
+  .Seperator {
+    @include desktop {
+      display: none;
+    }
+    background-color: #efefef;
+    margin: 15px 0 0 0;
+    height: 1.5px;
+  }
+
+  &-Tabby {
+    display: inline-block;
+    text-transform: none;
+    font-weight: 400;
+    max-width: 366px;
+    width: 100%;
+    box-shadow: 0px 0px 11px rgba(0, 0, 0, 0.1);
+    border-radius: 7px;
+    padding: 15px 2px 16px 2px;
+    font-size: 12px;
+    margin-top: 15px;
+    cursor: pointer;
+    justify-content: center;
+
+    @include desktop() {
+      padding: 15px 15px 14px 18px;
+      font-size: 14px;
+      margin-bottom: 30px;
     }
 
-
-    &-ShareTxt {
-        display: none;
-
-        @include desktop() {
-            margin-left: 20px;
-            display: inline-block;
-        }
+    strong {
+      padding: 0 4px;
+      font-size: 12px;
     }
 
-    .PriceAndPDPSummaryHeader {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
+    img {
+      width: 42px;
+      height: auto;
+      margin: 0 3px -8px 0;
+
+      @include desktop() {
+        width: 47px;
+      }
     }
 
-    .Price {
-        font-weight: var(--fw-bold);
-        font-size: 20px;
-        margin: .36rem 0 0 0;
+    span {
+      text-decoration: underline;
+      font-weight: 600;
+      margin: 0;
 
-        @include before-desktop {
-            font-size: 18px;
-            font-weight: bold;
-            letter-spacing: 0;
-            line-height: 30px;
-        }
-
-        &-Base {
-            &_discount {
-                margin-right: 20px;
-                font-weight: var(--fw-medium);
-            }
-        }
-
-        &-Discount,
-        &-Special {
-            color: $default-primary-dark-color;
-        }
+      @include desktop() {
+        margin: 0 4px;
+      }
     }
 
-    .Seperator {
-        @include desktop {
-            display: none;
-        }
-        background-color: #EFEFEF;
-        margin: 15px 0 0 0;
-        height: 1.5px;
+    &:hover {
+      box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.5);
     }
+  }
 
-    &-Tabby {
-        display: inline-block;
-        text-transform: none;
-        font-weight: 400;
-        max-width: 366px;
-        width: 100%;
-        box-shadow: 0px 0px 11px rgba(0,0,0,.1);
-        border-radius: 7px;
-        padding: 15px 2px 16px 2px;
-        font-size: 12px;
-        margin-top: 15px;
-        cursor: pointer;
-        justify-content: center;
+  &-ProductColorBlock {
+    display: flex;
+    align-items: center;
+    border-top: 1px solid var(--pdp-line-color);
+    margin-top: 20px;
+    padding: 20px 0;
+    font-size: 17px;
 
-        @include desktop() {
-            padding: 15px 15px 14px 18px;
-            font-size: 14px;
-            margin-bottom: 30px;
-        }
-
-        strong {
-            padding: 0 4px;
-            font-size: 12px;
-        }
-
-        img {
-            width: 42px;
-            height: auto;
-            margin: 0 3px -8px 0;
-
-            @include desktop() {
-                width: 47px;
-            }
-        }
-
-        span {
-            text-decoration: underline;
-            font-weight: 600;
-            margin: 0;
-
-            @include desktop() {
-                margin: 0 4px;
-            }
-        }
-
-        &:hover {
-            box-shadow: 0px 0px 8px rgba(0,0,0,.5);
-        }
-
+    @include desktop() {
+      max-width: 550px;
     }
+  }
 
-    &-ProductColorBlock {
-        display: flex;
-        align-items: center;
-        border-top: 1px solid var(--pdp-line-color);
-        margin-top: 20px;
-        padding: 20px 0;
-        font-size: 17px;
+  &-ProductColor {
+    width: 22px;
+    height: 22px;
+    display: inline-block;
+    margin: 0 8px;
+  }
 
-        @include desktop() {
-            max-width: 550px;
-        }
-    }
-
-    &-ProductColor {
-        width: 22px;
-        height: 22px;
-        display: inline-block;
-        margin: 0 8px;
-    }
-
-    &-AvailableItems {
-        margin-top: 20px;
-        font-size: 17px;
-    }
+  &-AvailableItems {
+    margin-top: 20px;
+    font-size: 17px;
+  }
 }
 
 .PageWrapper {
-    &_isArabic {
-        .PDPSummary {
-            &-HeaderShare {
-                @include desktop() {
-                    div::before {
-                        left: -60px
-                    }
-                }
-            }
-
-            &-New {
-                margin: 0 0 0 4px;
-            }
-
-            .Price {
-                &-Discount {
-                    display: inline-block;
-                    margin-right: 4px;
-                }
-            }
+  &_isArabic {
+    .PDPSummary {
+      &-HeaderShare {
+        @include desktop() {
+          div::before {
+            left: -60px;
+          }
         }
+      }
+
+      &-New {
+        margin: 0 0 0 4px;
+      }
+
+      .Price {
+        &-Discount {
+          display: inline-block;
+          margin-right: 4px;
+        }
+      }
     }
+  }
 }

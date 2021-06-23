@@ -8,9 +8,35 @@
   // padding: 0 20px;
   font-weight: var(--fw-regular);
 
+  .VueProductSlider {
+    &-HeaderContainer {
+      h1 {
+        @include tablet {
+          padding-inline: 30px;
+        }
+        @include mobile {
+          padding-inline: 10px;
+        }
+      }
+    }
+    &-SliderContainer {
+      @include mobile {
+        width: 100vw;
+      }
+    }
+    &-Container {
+      padding: 0;
+      margin: 0;
+      width: 100vw;
+    }
+  }
   &-Accordion {
     @include mobile() {
       padding-bottom: 75px;
+      padding-inline: 10px;
+    }
+    @include tablet {
+      padding-inline: 30px;
     }
   }
   @include desktop() {
