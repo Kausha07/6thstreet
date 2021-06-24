@@ -25,12 +25,14 @@ class PLPPage extends PureComponent {
   }
 
   renderProduct = (product, index, qid) => {
+    // debugger
     const { sku, price } = product;
     return <ProductItem position={index} product={product} key={sku} page="plp" qid={qid} />;
   };
 
   renderProducts() {
     const { products = [] } = this.props;
+    // debugger
     var qid = queryString.parse(window.location.search)?.qid ? queryString.parse(window.location.search)?.qid: null;
       return products.map((i,index) => this.renderProduct(i,index+1, qid));
   }
