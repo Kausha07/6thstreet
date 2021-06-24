@@ -34,17 +34,13 @@ export class MyAccountReturnCreate extends PureComponent {
     };
 
     renderOrderItem = (item) => {
-        const { item_id, is_returnable } = item;
+        const { item_id } = item;
         const {
             onItemClick,
             onResolutionChange,
             onReasonChange,
             resolutions
         } = this.props;
-
-        if(!is_returnable){
-            return null;
-        }
 
         return (
             <li block="MyAccountReturnCreate" elem="Item" key={ item_id }>

@@ -88,9 +88,8 @@ export class MyAccountReturnCreateItem extends PureComponent {
     }
 
     renderField() {
-        const { item: { item_id } } = this.props;
+        const { item: { item_id, is_returnable } } = this.props;
         const { onClick } = this.props;
-
         return (
             <Field
               id={ item_id }
@@ -100,6 +99,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
               type="checkbox"
               onClick={ onClick }
               defaultChecked={ false }
+              disabled={ !is_returnable }
             />
         );
     }
