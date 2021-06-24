@@ -15,6 +15,7 @@
     }
   }
   @include mobile {
+    padding-bottom: 120px;
     .Checkout-StickyButtonWrapper {
       padding: 1.5rem 10px calc(env(safe-area-inset-bottom) + 1rem);
     }
@@ -582,8 +583,10 @@
       position: absolute;
       width: 16px;
       height: 22px;
-      left: 20px;
-      top: 30px;
+      // left: 20px;
+      // top: 30px;
+      left: 10px;
+      top: 20px;
       background-image: url(./icons/arrow-left-black.svg);
       background-size: 16px;
       background-repeat: no-repeat;

@@ -3,7 +3,7 @@
 }
 
 .CheckoutSuccess {
-    margin-bottom: -var(navi);
+  margin-bottom: -var(navi);
   .SuccessOverlay {
     height: 100%;
     background-color: var(--color-green-cyan);
@@ -59,6 +59,9 @@
 
   &-Details {
     margin: 0 10px;
+    @include mobile {
+      margin: 0;
+    }
 
     .SuccessMessage {
       &-Icon {
@@ -164,9 +167,9 @@
         border-radius: 5px;
 
         &.secondary {
-            margin-top: 12px !important;
+          margin-top: 12px !important;
           background-color: var(--white);
-font-size: 12px;
+          font-size: 12px;
           &:hover {
             background-color: var(--black);
           }
@@ -291,12 +294,14 @@ font-size: 12px;
       }
 
       @include mobile() {
-        margin-left: -24px;
-        width: 100vw;
+        // margin-left: -24px;
+        // width: 100vw;
+        width: auto;
+        margin-inline: 0;
 
         &_isArabic {
-          margin-left: unset;
-          margin-right: -24px;
+          // margin-left: unset;
+          // margin-right: -24px;
         }
       }
     }
@@ -379,11 +384,11 @@ font-size: 12px;
           margin-bottom: 5px;
         }
         &-FullName {
-            font-weight: var(--fw-demi);
-          }
-          &-PostCode {
-            font-weight: var(--fw-demi);
-          }
+          font-weight: var(--fw-demi);
+        }
+        &-PostCode {
+          font-weight: var(--fw-demi);
+        }
       }
     }
 
@@ -411,7 +416,7 @@ font-size: 12px;
       }
 
       .Details {
-        background-color: var(--lightest-gray);  
+        background-color: var(--lightest-gray);
         text-transform: uppercase;
         border-radius: 10px;
         display: grid;
@@ -433,9 +438,9 @@ font-size: 12px;
 
         &-TypeTitle {
           display: block;
-        //   margin: auto 0;
+          //   margin: auto 0;
           font-size: 14px;
-        //   font-weight: var(--fw-demi);
+          //   font-weight: var(--fw-demi);
           text-align: left;
         }
 

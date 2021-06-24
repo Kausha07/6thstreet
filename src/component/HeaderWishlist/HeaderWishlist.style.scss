@@ -30,7 +30,9 @@
         &_isBlack {
           &::before {
             background: url(./icons/favorites-active.svg) no-repeat;
-            background-size: 23px;
+            background-size: 29px;
+            width: 29px;
+            height: 29px;
           }
         }
       }
