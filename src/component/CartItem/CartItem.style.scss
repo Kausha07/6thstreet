@@ -105,6 +105,9 @@
       height: 130px;
       width: 100%;
     }
+    @include tablet {
+      width: 100%;
+    }
 
     &_isLikeTable {
       @include after-mobile {

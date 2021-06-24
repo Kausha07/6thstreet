@@ -3,13 +3,21 @@
   @include before-desktop {
     padding: 0 0.5rem;
   }
+  @include mobile {
+    padding-inline: 0;
+  }
+
   &-HeaderWrapper {
     display: flex;
     margin-top: 20px;
     padding: 25px 18px 0;
 
+    @include tablet {
+      padding-inline: 0;
+    }
     @include mobile {
       display: none;
+      padding: 0;
     }
   }
 
@@ -50,6 +58,9 @@
 
     .CartItem {
       margin: 1rem 18px 0;
+      @include tablet {
+        margin: 1rem 0px 0;
+      }
 
       &-Wrapper {
         height: auto;
@@ -72,6 +83,9 @@
         border: 0;
         border-bottom: 1px solid var(--primary-divider-color);
         margin: 21px 0 15px 0;
+      }
+      @include tablet {
+        margin: 21px 0 15px;
       }
 
       span:nth-child(2) {
@@ -143,6 +157,9 @@
     font-weight: var(--fw-regular);
     padding: 0 18px;
 
+    @include tablet {
+      padding: 0;
+    }
     @include mobile {
       padding: 0;
     }

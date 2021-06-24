@@ -11,6 +11,12 @@
   @include before-desktop {
     .Checkout-StickyButtonWrapper {
       padding-top: 0.5rem;
+      padding: 1.5rem 30px calc(env(safe-area-inset-bottom) + 1rem);
+    }
+  }
+  @include mobile {
+    .Checkout-StickyButtonWrapper {
+      padding: 1.5rem 10px calc(env(safe-area-inset-bottom) + 1rem);
     }
   }
 
@@ -86,7 +92,7 @@
         }
       }
     }
-    @include before-desktop{
+    @include before-desktop {
       margin-bottom: 0 !important;
     }
   }
@@ -144,7 +150,7 @@
   &-Step {
     @include before-desktop {
       margin: 0 auto;
-      max-width: 700px;
+      // max-width: 700px;
     }
   }
   &-MobileDisplay {
@@ -160,8 +166,17 @@
   }
 
   &-Wrapper {
-    max-width: var(--checkout-max-width);
-
+    // max-width: var(--checkout-max-width);
+    max-width: 1440px;
+    width: var(--main-container-width-dsk);
+    @include tablet {
+      width: auto;
+      margin: 0 30px;
+    }
+    @include mobile {
+      width: auto;
+      margin: 0 10px;
+    }
     @include desktop {
       display: grid;
       grid-template-columns: minmax(calc(65% - 1rem), 600px) minmax(
@@ -173,7 +188,7 @@
   }
 
   .CheckoutNavigation {
-    padding: 19px 60px 45px;
+    padding: 19px 0 45px;
     display: flex;
 
     @include desktop {
@@ -268,12 +283,12 @@
       line-height: 16px;
     }
     &-DeliveryLabel {
-      color:var(--unselected-step-color);
+      color: var(--unselected-step-color);
     }
     &-DeliveryLabel {
       &_checkoutStep {
         &_SHIPPING_STEP {
-          color: black
+          color: black;
         }
       }
     }
@@ -301,7 +316,7 @@
   &-GuestCheckout {
     &:not(&_continueAsGuest) {
       @include before-desktop {
-        padding: 0 20px;
+        padding: 0 0;
       }
       @include desktop {
         display: flex;
@@ -472,7 +487,7 @@
   }
 
   &-Heading {
-    padding: 20px;
+    padding: 20px 0;
     width: 100%;
     text-transform: capitalize;
     font-size: 18px;
@@ -530,6 +545,10 @@
     @include desktop {
       display: none !important;
     }
+    @include tablet {
+      width: 100%;
+      margin: 0 0 24px !important;
+    }
   }
   .LoadingBlock {
     @include before-desktop {
@@ -548,9 +567,10 @@
   background-color: var(--white);
   display: flex;
   justify-content: space-between;
-  max-width: 1120px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 20px 0;
+  max-width: 1440px;
+  width: var(--main-container-width-dsk);
 
   &-BackToShoppingMobile {
     @include desktop {
