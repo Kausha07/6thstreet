@@ -17,7 +17,8 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
     static propTypes = {
         item: PropTypes.shape({
             reason_options: PropTypes.array,
-            item_id: PropTypes.string
+            item_id: PropTypes.string,
+            is_returnable: PropTypes.bool.isRequired
         }).isRequired,
         onClick: PropTypes.func.isRequired,
         onResolutionChange: PropTypes.func.isRequired,
@@ -73,8 +74,7 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
             isSelected,
             displayDiscountPercentage,
             resolutions: this.getResolutionOptions(),
-            reasonOptions: this.getReasonOptions(),
-            
+            reasonOptions: this.getReasonOptions()
         };
     };
 
