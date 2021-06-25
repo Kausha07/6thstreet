@@ -2,6 +2,10 @@
   padding-top: 30px;
   width: var(--main-container-width-dsk);
   margin-inline: auto;
+  @include mobile {
+    width: 100%;
+    padding-top: 60px;
+  }
 
   &-Wrapper {
     @include desktop {
@@ -203,6 +207,9 @@
   .ExpandableContent-Content {
     opacity: 1;
     overflow: visible;
+    @include before-desktop {
+      padding: 0;
+    }
   }
 
   .ExpandableContent-Button {

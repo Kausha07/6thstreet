@@ -101,7 +101,7 @@ $select-arrow-width: 6px !default;
     @include desktop {
       width: auto; //
       justify-content: space-between;
-      width: 363px;
+      // width: 363px;
     }
     @include tablet {
       width: auto; //
@@ -253,6 +253,7 @@ $select-arrow-width: 6px !default;
   &-SizeSelector {
     @include desktop {
       margin-left: 20px;
+      width: 100%;
     }
     @include tablet {
       margin-left: 20px;
@@ -331,7 +332,7 @@ $select-arrow-width: 6px !default;
     width: 100%;
 
     @include desktop {
-      width: 271px;
+      // width: 271px;
     }
     @include tablet {
       width: 100%;
@@ -367,7 +368,7 @@ $select-arrow-width: 6px !default;
     @include desktop {
       border-radius: 0;
       font-size: 13px;
-      width: 363px;
+      // width: 363px;
     }
     @include tablet {
       border-radius: 0;

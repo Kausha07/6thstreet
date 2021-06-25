@@ -35,6 +35,14 @@
   $crumb-padding: 20px;
   $arrow-size: 5px;
 
+  .Breadcrumb {
+    &_isArabic {
+      &:first-child {
+        padding-right: 0;
+      }
+    }
+  }
+
   .ContentWrapper {
     width: var(--main-container-width-dsk);
     max-width: 1440px;
