@@ -78,13 +78,11 @@ export class SearchSuggestionContainer extends PureComponent {
         getStaticFile("search_trending_tags"),
         // getStaticFile("search_trending_products"),
       ]);
-      debugger;
       this.setState({
         trendingBrands: data[0][gender],
         trendingTags: data[1][gender],
       });
     } catch (e) {
-      debugger;
       // eslint-disable-next-line no-console
       console.error(e);
     }

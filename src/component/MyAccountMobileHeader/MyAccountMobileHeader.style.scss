@@ -15,8 +15,8 @@
 
   .ExpandableContent {
     &-Content {
-      @include mobile {
-        padding: 0;
+      @include before-desktop {
+        padding: 0 !important;
       }
     }
   }
