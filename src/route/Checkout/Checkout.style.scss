@@ -447,6 +447,7 @@
 
   &-BackButtons {
     padding: 10px 0;
+    padding-top: 0;
     display: none;
 
     @include desktop {
@@ -514,7 +515,7 @@
         border: 2px solid var(--input-border-color);
         width: 100%;
         padding: 20px;
-        margin: 10px 0;
+        margin: 0 0 10px 0;
       }
 
       &:not(&_isDisabled) {
@@ -525,7 +526,7 @@
             }
           }
         }
-        margin-top: 20px;
+        // margin-top: 20px;
         padding: 20px 30px 0 30px;
         background: var(--white-color);
       }

@@ -11,8 +11,8 @@
     width: 100%;
 
     @include desktop {
-      width: 60%;
-      padding: 14px 30px;
+      // width: 60%;
+      padding: 14px 0;
     }
 
     .MyAccountAddressCard {

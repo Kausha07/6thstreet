@@ -32,10 +32,12 @@
   }
 
   @include after-mobile {
-    // position: absolute;
-    position: fixed;
-    top: 95px;
-    right: 0;
+    // position: fixed;
+    // top: 95px;
+    // right: 0;
+    position: absolute;
+    top: 30px;
+    right: -150px;
     padding: 0;
     width: var(--cart-overlay-width);
 
