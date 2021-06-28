@@ -171,7 +171,7 @@ class ProductItem extends PureComponent {
     const { pathname } = new URL(url);
     let urlWithQueryID;
     if (queryID) {
-     urlWithQueryID = `${pathname}?qid=${queryID}`; 
+     urlWithQueryID = `${pathname}?qid=${queryID}`;
     } else {
       urlWithQueryID = pathname;
     }
@@ -181,12 +181,14 @@ class ProductItem extends PureComponent {
         product,
       },
     };
+    const isNew = product.is_new_in
 
     return (
       <Link to={linkTo} onClick={this.handleClick}>
         {" "}
         {this.renderImage()} {this.renderBrand()} {this.renderTitle()}{" "}
         {this.renderPrice()}{" "}
+        {!isNew && <div block="ProductItem-isNew">New</div>}
       </Link>
     );
   }

@@ -651,7 +651,9 @@
         justify-content: center;
         text-align: center;
         align-items: center;
-        margin: 0 42% 40px;
+        margin: 0 auto;
+        display: block;
+        margin-bottom: 40px;
     }
 
     &-StoreSwitcher {
