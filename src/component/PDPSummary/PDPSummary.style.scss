@@ -9,6 +9,7 @@
   margin-top: 6px;
   padding: 0 20px;
   overflow-x: hidden;
+
   @include tablet {
     padding-inline: 0;
     // margin-bottom: 20px;
@@ -16,6 +17,9 @@
 
   @include desktop {
     padding: 0 0 0 40px;
+    &_isArabic {
+      padding: 0 40px 0 0px;
+    }
   }
   @include mobile {
     padding: 0 10px;

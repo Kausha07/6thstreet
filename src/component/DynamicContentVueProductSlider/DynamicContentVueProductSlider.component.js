@@ -118,6 +118,7 @@ class DynamicContentVueProductSlider extends PureComponent {
           elem="SliderContainer"
           id="ScrollWrapper"
           ref={this.cmpRef}
+          mods={{ isHome }}
           onScroll={this.handleContainerScroll}
         >
           {isHome && <div block="SliderHelper" mods={{ isHome }}></div>}

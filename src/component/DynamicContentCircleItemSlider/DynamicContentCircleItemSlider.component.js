@@ -83,7 +83,11 @@ class DynamicContentCircleItemSlider extends PureComponent {
     const { items = [] } = this.props;
     return (
       <DragScroll data={{ rootClass: "CircleSliderWrapper", ref: this.ref }}>
-        <div ref={this.ref} block="CircleSliderWrapper">
+        <div
+          ref={this.ref}
+          id="CircleSliderWrapper"
+          block="CircleSliderWrapper"
+        >
           <div className="CircleItemHelper"></div>
           {items.map(this.renderCircle)}
           <div className="CircleItemHelper"></div>

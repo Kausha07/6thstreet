@@ -126,6 +126,14 @@
       list-style-position: outside;
     }
   }
+  &-Highlights {
+    &_isArabic {
+      ul {
+        padding-left: 0;
+        padding-right: 30px;
+      }
+    }
+  }
 
   &-HighlightsList {
     margin-top: 4px;

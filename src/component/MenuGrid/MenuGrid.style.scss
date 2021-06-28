@@ -193,6 +193,8 @@
     &-Column {
       &-Content {
         display: flex;
+        // display: grid;
+        // grid-template-columns: repeat(2, 1fr);
         flex-direction: column;
         flex-wrap: wrap;
         height: 290px;

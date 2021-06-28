@@ -29,6 +29,7 @@ class PDPDetailsSection extends PureComponent {
       5: true,
     },
     pdpWidgetsAPIData: [],
+    isArabic: isArabic(),
   };
 
   componentDidMount() {
@@ -169,8 +170,9 @@ class PDPDetailsSection extends PureComponent {
       sleeve_length,
     };
 
+    const { isArabic } = this.state;
     return (
-      <div block="PDPDetailsSection" elem="Highlights">
+      <div block="PDPDetailsSection" elem="Highlights" mods={{ isArabic }}>
         <h4>{__("Highlights")}</h4>
         <ul>{this.renderListItems(productInfo)}</ul>
         {this.renderMoreDetailsList()}
