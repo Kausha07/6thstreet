@@ -205,6 +205,11 @@
         margin-top: 20px;
         background: var(--white);
         padding: 20px 60px 30px 60px;
+        &_formContent {
+          .MyAccountAddressPopup {
+            position: relative;
+          }
+        }
 
         h2 {
           border: none;

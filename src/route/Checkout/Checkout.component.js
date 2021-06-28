@@ -147,11 +147,8 @@ export class Checkout extends SourceCheckout {
 
   processTabbyWithTimeout(counter, paymentInformation) {
     const { tabbyPaymentStatus } = this.state;
-    const {
-      showErrorNotification,
-      hideActiveOverlay,
-      activeOverlay,
-    } = this.props;
+    const { showErrorNotification, hideActiveOverlay, activeOverlay } =
+      this.props;
 
     // Need to get payment data from Tabby.
     // Could not get callback of Tabby another way because Tabby is iframe in iframe
@@ -214,19 +211,15 @@ export class Checkout extends SourceCheckout {
     }
     return (
       <div block="LoadingBlock">
-        <Loader isLoading={isLoading} />;
+        <Loader isLoading={isLoading} />
       </div>
     );
   }
 
   renderSummary() {
     const { cashOnDeliveryFee } = this.state;
-    const {
-      checkoutTotals,
-      checkoutStep,
-      paymentTotals,
-      processingRequest,
-    } = this.props;
+    const { checkoutTotals, checkoutStep, paymentTotals, processingRequest } =
+      this.props;
     const { areTotalsVisible } = this.stepMap[checkoutStep];
 
     if (!areTotalsVisible) {
@@ -358,7 +351,7 @@ export class Checkout extends SourceCheckout {
       number,
       expDate,
       saveCard,
-    }
+    };
     this.setState({ creditCardData });
     this.props.updateCreditCardData(creditCardData);
   };
@@ -420,11 +413,8 @@ export class Checkout extends SourceCheckout {
   }
 
   renderTabbyIframe() {
-    const {
-      tabbyInstallmentsUrl,
-      tabbyPayLaterUrl,
-      selectedPaymentMethod,
-    } = this.state;
+    const { tabbyInstallmentsUrl, tabbyPayLaterUrl, selectedPaymentMethod } =
+      this.state;
     const { isTabbyPopupShown } = this.props;
     if (!isTabbyPopupShown) {
       return null;
@@ -449,7 +439,7 @@ export class Checkout extends SourceCheckout {
       isFailed,
       initialTotals,
       isVerificationCodeSent,
-      newCardVisible
+      newCardVisible,
     } = this.props;
     const { cashOnDeliveryFee } = this.state;
     const {
@@ -503,7 +493,6 @@ export class Checkout extends SourceCheckout {
       setLoading,
       isLoading,
     } = this.props;
-
 
     const { continueAsGuest, isArabic } = this.state;
     const renderCheckoutShipping = (
