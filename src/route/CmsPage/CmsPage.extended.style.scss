@@ -6,6 +6,10 @@
         padding-top: 0;
         margin-bottom: 150px;
     }
+    &-Wrapper{
+        padding-right: 0;
+        padding-left: 0;
+    }
 
     &-Content {
         margin-bottom: 50px;
@@ -16,7 +20,7 @@
             width: 100%;
             margin: 14px 0;
         }
-    
+
         .Image {
             padding-bottom: 0;
             height: 100%;
@@ -54,7 +58,7 @@
                     font-weight: var(--fw-bold);
                     font-size: 16px;
                 }
-           } 
+           }
         }
     }
 }
