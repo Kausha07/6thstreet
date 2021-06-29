@@ -66,7 +66,6 @@ export class LiveExperience extends PureComponent {
   renderSpckarchivedEvent() {
     //const content = this.props.archived;
     const content = this.props.updatedArchived;
-    // debugger
     return content.map(this.renderArchivedGridBlock);
   }
 
@@ -133,7 +132,6 @@ export class LiveExperience extends PureComponent {
     let d = new Date(starts);
     let diffInTime = d - Date.now();
     var diffInDay = diffInTime / (1000 * 3600 * 24);
-    // debugger
 
     if (mainImageURI) {
       return (
