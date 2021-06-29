@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import { ChildrenType, MixType } from 'Type/Common';
+import { ChevronRight } from '../Icons';
 
 import './Accordion.style';
 
@@ -54,7 +55,7 @@ export class Accordion extends PureComponent {
                   mods={ { isExpanded } }
                   onClick={ this.toggleAccordion }
                 >
-                    .
+                    <ChevronRight alt={ `Expand ${title}` } />
                 </button>
             </div>
         );

@@ -3,6 +3,7 @@ import { PureComponent } from 'react';
 
 import Image from 'Component/Image';
 import Link from 'Component/Link';
+import WishlistIcon from 'Component/WishlistIcon';
 
 import './PDPAlsoAvailableProduct.style';
 
@@ -16,7 +17,7 @@ class PDPAlsoAvailableProduct extends PureComponent {
         const { product: { thumbnail_url } } = this.props;
 
         return (
-            <Image src={ thumbnail_url } />
+            <Image src={ thumbnail_url } elem="Image" />
         );
     }
 
@@ -58,8 +59,13 @@ class PDPAlsoAvailableProduct extends PureComponent {
     }
 
     render() {
-        return (
+        const {
+            product: { sku }
+        } = this.props;
+
+        return (     
             <li block="PDPAlsoAvailableProduct">
+                <WishlistIcon sku={ sku } />
                 { this.renderLink() }
             </li>
         );

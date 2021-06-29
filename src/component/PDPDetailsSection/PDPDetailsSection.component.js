@@ -6,7 +6,7 @@ import { Product } from 'Util/API/endpoint/Product/Product.type';
 import { isArabic } from 'Util/App';
 
 import { PDP_ARABIC_VALUES_TRANSLATIONS } from './PDPDetailsSection.config';
-
+import { Share } from '../Icons';
 import './PDPDetailsSection.style';
 
 class PDPDetailsSection extends PureComponent {
@@ -25,6 +25,17 @@ class PDPDetailsSection extends PureComponent {
             "5": true
         }
     };
+
+    async _initiateShare() {
+        const url = new URL(window.location.href);
+        const data = {
+            title: document.title,
+            text: `Hey check this out: ${document.title}`,
+            url: url.searchParams.append('utm_source', 'pdp_share')
+        }
+
+        await window.navigator.share(data);
+    }
 
     _translateValue(value) {
         if (typeof PDP_ARABIC_VALUES_TRANSLATIONS[value] === 'undefined') {
@@ -121,7 +132,25 @@ class PDPDetailsSection extends PureComponent {
         );
     }
 
-    
+    renderShareButton() {
+        if(!window.navigator.share){
+            return null;
+        }
+
+        return (
+            <div block="PDPDetailsSection" elem="ShareButtonContainer">
+                <button
+                    block="PDPDetailsSection-ShareButtonContainer"
+                    elem="ShareButton"
+                    onClick={ this._initiateShare }
+                >
+                    <Share />
+                    <span>{ __('Share') }</span>
+                </button>
+            </div>
+        );
+    }
+
     renderSizeAndFit() {
         const { product: { description } } = this.props;
         return (
@@ -193,6 +222,8 @@ class PDPDetailsSection extends PureComponent {
                 >
                     {this.renderIconsSection() }
                     { this.renderDescription() }
+                    <div block="Seperator" />
+                    { this.renderShareButton() }
                 </Accordion>
                 {/* <Accordion
                   mix={ { block: 'PDPDetailsSection', elem: 'Accordion' } }

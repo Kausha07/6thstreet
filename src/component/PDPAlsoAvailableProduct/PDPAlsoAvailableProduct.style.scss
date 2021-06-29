@@ -6,6 +6,23 @@
         width: 47%;
     }
 
+    .WishlistIcon {
+        width: 100%;
+        height: 32px;
+        display: flex;
+        justify-content: flex-end;
+        position: absolute;
+        top: 48px;
+        left: 0rem;
+        border: none;
+        background: none;
+        &-Icon {
+            display: flex;
+            justify-content: center;
+            width: auto;
+            height: auto;            
+        }
+    }        
     .Image {
         height: 150px;
         &-Image {
@@ -14,7 +31,7 @@
         }
         @include before-desktop {
             height: 229.5px;
-            margin: 16px 0 8px 0;
+            margin: 16px 0 -16px 0;
             &-Image {
                 object-position: 0% 50%;
                 object-fit: contain;
