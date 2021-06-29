@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { MyAccountReturnCreateItem } from 'Component/MyAccountReturnCreateItem/MyAccountReturnCreateItem.component';
 import { ReturnSuccessItemType } from 'Type/API';
 
@@ -7,11 +8,13 @@ import './MyAccountReturnSuccessItem.style';
 
 export class MyAccountReturnSuccessItem extends MyAccountReturnCreateItem {
     static propTypes = {
-        item: ReturnSuccessItemType.isRequired
+        item: ReturnSuccessItemType.isRequired,
+        displayDiscountPercentage: PropTypes.bool.isRequired
     };
 
     renderDetails() {
         const {
+            displayDiscountPercentage,
             item: {
                 name,
                 color,
@@ -58,9 +61,12 @@ export class MyAccountReturnSuccessItem extends MyAccountReturnCreateItem {
                     </span>
                     { !!(price < original_price) && (
                         <>
-                            <span block="MyAccountReturnSuccessItem" elem="PriceDiscountPercent">
-                                { `(-${ (+price / +original_price).toFixed() }%)` }
-                            </span>
+                            {
+                                displayDiscountPercentage &&
+                                <span block="MyAccountReturnSuccessItem" elem="PriceDiscountPercent">
+                                    { `(-${ (+price / +original_price).toFixed() }%)` }
+                                </span>
+                            }
                             <span block="MyAccountReturnSuccessItem" elem="PriceDiscount">
                                 { `${ formatPrice(+price) }` }
                             </span>

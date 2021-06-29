@@ -269,7 +269,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
     let placeholder = __("Place order");
     if (isCardPayment) {//if payment is from card.
       if (newCardVisible && !binApplied) {//if there is new card to add and bin is not applied
-        placeholder = "Add Credit Card";
+        placeholder = __("Add Credit Card");
       }
     }
     return (

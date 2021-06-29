@@ -29,4 +29,6 @@ export const isArabic = () => (BrowserDatabase.getItem(APP_STATE_CACHE_KEY)
 
 export const capitalize = (s = '') => s && s[0].toUpperCase() + s.slice(1);
 
+export const truncate = (input, max) => input.length > max ? `${input.substring(0, max)}...` : input;
+
 export default {};

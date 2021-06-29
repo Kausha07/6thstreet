@@ -304,4 +304,42 @@
     &-Header {
         display: flex;
     }
+
+    &-CardPaymentType{
+        display: flex;
+        width: fit-content;
+    }
+
+    &-TypeLogo {
+        width: 70px;
+        display: block;
+        margin: auto 0;
+
+        img {
+          max-width: 50px;
+          max-height: 50px;
+        }
+      }
+
+      &-Number {
+        display: grid;
+        grid-auto-flow: column;
+        margin: auto;
+        letter-spacing: 3px;
+
+        &-Dots {
+          margin-right: 10px;
+          width: 60px;
+          display: grid;
+          grid-auto-flow: column;
+
+          & > div {
+            background-color: black;
+            margin: auto;
+            width: 5px;
+            height: 5px;
+            border-radius: 50px;
+          }
+        }
+      }
 }

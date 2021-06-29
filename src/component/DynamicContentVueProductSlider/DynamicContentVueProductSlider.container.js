@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import VueProductSlider from './VueProductSlider.component';
+import DynamicContentVueProductSlider from './DynamicContentVueProductSlider.component';
 
 export const mapStateToProps = (state) => ({
 });
 
-export class VueProductSliderContainer extends PureComponent {
+export class DynamicContentVueProductSliderContainer extends PureComponent {
     static propTypes = {
         withViewAll: PropTypes.bool,
         sliderLength: PropTypes.number,
@@ -21,10 +21,10 @@ export class VueProductSliderContainer extends PureComponent {
 
     render() {
         return (
-            <VueProductSlider {...this.props} />
+            <DynamicContentVueProductSlider {...this.props} />
         );
     }
 }
 
 
-export default connect(mapStateToProps, null)(VueProductSliderContainer);
+export default connect(mapStateToProps, null)(DynamicContentVueProductSliderContainer);

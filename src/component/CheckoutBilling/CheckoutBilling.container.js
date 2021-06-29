@@ -176,10 +176,9 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
 
   async applyBinPromotionOnSavedCard() {
     const { getBinPromotion, updateTotals, binModal, savedCards } = this.props;
-    let selectedCard = savedCards.find((a) => a.selected === true);
-    if (selectedCard) {
-      //if saved card is selected
-      const { bin } = selectedCard;
+    let selectedCard = savedCards.find(a => a.selected === true);
+    if (selectedCard && selectedCard.details) {//if saved card is selected
+      const { details: { bin } } = selectedCard;
       const response = await getBinPromotion(bin);
       binModal(response);
       await updateTotals();

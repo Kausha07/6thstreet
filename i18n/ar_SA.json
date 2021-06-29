@@ -761,5 +761,20 @@
     "LiveShopping": null,
     "Where can we send your order?": null,
     "+ New address": null,
-    "Low stock": null
+    "Low stock": null,
+    "Cash on delivery": null,
+    "Details": null,
+    "Place tabby order": null,
+    "Subtotal ": null,
+    "Add Credit Card": "إضافة بطاقة ائتمان",
+    "Save Card": "احفظ البطاقة",
+    "New Card": "بطاقة جديدة",
+    "My Cards": "بطاقاتي",
+    "Please select": null,
+    "Select Size": null,
+    "Mix n Match": null,
+    "Mix &amp; Match": null,
+    "Mix & Match": null,
+    "Added": null,
+    "Success": null
 }
