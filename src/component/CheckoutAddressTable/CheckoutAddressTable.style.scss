@@ -9,6 +9,10 @@
     padding: 4px;
     transform: rotate(-45deg);
     -webkit-transform: rotate(-45deg);
+    &_isArabic{
+      transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+    }
   }
   &-Container {
     width: 40px !important;

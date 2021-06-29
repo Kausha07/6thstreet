@@ -16,7 +16,6 @@ export class CheckoutAddressTable extends SourceCheckoutAddressTable {
 
   mobileEditAddress = () => {
     const { hideCards, onEditClick } = this.props;
-    console.log("hey");
     // this.onAddressClick();
     if (isMobile.any()) {
       onEditClick();
@@ -40,10 +39,11 @@ export class CheckoutAddressTable extends SourceCheckoutAddressTable {
 
     const def = default_billing === true ? __("default") : " ";
     const countryId = `(${country_id})`;
-    isMobile.any();
+    const { isArabic } = this.state;
+
     return (
       <div block="MyAccountAddressCard" mods={{ isSelected }}>
-        <div block="MyAccountAddressCard" elem="EditButton">
+        <div block="MyAccountAddressCard" elem="EditButton" mods={{ isArabic }}>
           <div onClick={this.onAddressClick}>
             <div block="MyAccountAddressCard" elem="Default">
               {def}
@@ -71,7 +71,7 @@ export class CheckoutAddressTable extends SourceCheckoutAddressTable {
               elem="Container"
               onClick={this.mobileEditAddress}
             >
-              <div block="EditAddress" elem="Logo"></div>
+              <div block="EditAddress" elem="Logo" mods={{ isArabic }}></div>
             </div>
           ) : null}
         </div>

@@ -126,6 +126,18 @@
         }
     }
 
+    &-Details{
+        font-size: 12px;
+        line-height: 1.2;
+
+        text-align: left !important;
+        font-weight: normal;
+        display: block;
+        &_isArabic {
+            text-align: right;
+        }
+    }
+
     &-Picture {
         height: 130px;
         width: 85px;
@@ -140,13 +152,14 @@
     &-Price, &-ColSizeQty {
         margin-top: auto;
         line-height: 30px;
-        font-size: 13px;
+        font-size: 12px;
         text-align: left;
         color: var(--Black);
         letter-spacing: .75px;
 
         span {
             margin-left: 5px;
+           
         }
     }
 
@@ -163,22 +176,25 @@
 
         div {
             color: var(--Black);
-            text-decoration: line-through;
+            text-decoration-line: line-through;
+            -webkit-text-decoration-line: line-through; 
             padding-right: 5px;
             font-weight: var(--fw-regular);
         }
     }
 
     &-ColSizeQty {
-        color: var(--Tundora);
+        // color: var(--Tundora);
         font-weight: var(--fw-regular);
-        margin-bottom: 10px;
+        // margin-bottom: 5px;
         width: 200px;
 
         span {
             margin-left: 5px;
             color: var(--DustyGray);
-
+            &:first-child{
+                margin-left: 0 !important;
+            }
         }
 
         &_isArabic {

@@ -32,7 +32,11 @@
 
       &-EditButton{
         display: flex;
+        flex-direction: row;
         justify-content: space-between;
+        &_isArabic {
+          flex-direction: row-reverse;
+        }
       }
 
       &::before,
@@ -147,7 +151,7 @@
       transform: translateX(-50%);
       position: relative;
       left: 45%;
-      width: 80%;
+      width: 90%;
       margin-top: 2%;
       padding-top: 2rem;
       padding-bottom: 2rem;
@@ -168,7 +172,7 @@
     }
 
     &-MobileSlider {
-      width: 80%;
+      width: 90%;
       overflow: visible;
 
       &_isArabic {
@@ -181,13 +185,13 @@
     .MyAccountAddressTable {
       margin-right: 6%;
       width: 95%;
-      height: 122px;
+      height: 130px;
       text-align: center;
       overflow: hidden;
       white-space: normal;
 
       .MyAccountAddressCard {
-        height: 122px;
+        height: 130px;
 
         &::after {
           border: none;
