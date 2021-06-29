@@ -13,7 +13,7 @@ export class LiveExperience extends PureComponent {
     this.state = {
       url: null,
       day: ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"],
-      isLive: false
+      isLive: false,
     };
   }
 
@@ -116,7 +116,7 @@ export class LiveExperience extends PureComponent {
             }
 
           </div>
-          <a block="eventPlayBtn" onClick={() => this.onClickPartyPlay(block.id)}><img src={playbtn} alt="event-playbtn" /></a>
+          <a block="eventPlayBtn" disabled={!this.state.isLive} onClick={() => this.state.isLive && this.onClickPartyPlay(block.id)}><img src={playbtn} alt="event-playbtn" /></a>
           <div block="eventInfo">
             <h3 block="eventTitle">{name}</h3>
           </div>
