@@ -61,6 +61,9 @@
                     }
                 }
             }
+            .eventPlayBtn[disabled]{
+                opacity: 0.4;
+            }
             .eventInfo {
                 left: 10%;
                 bottom: 0;
