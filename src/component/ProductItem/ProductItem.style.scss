@@ -99,6 +99,11 @@
         letter-spacing: -0.5px;
         text-align: start;
         margin-top: 5px;
+        display: flex;
+        grid-gap: 7px;
+        @include mobile{
+            font-size: 11px;
+        }
 
         &-Special,
         &-Discount {
@@ -114,7 +119,7 @@
           &_discount {
             // font-size: 11px;
             // font-weight: var(--fw-demi);
-            margin-right: 10px;
+            // margin-right: 10px;
           }
         }
 

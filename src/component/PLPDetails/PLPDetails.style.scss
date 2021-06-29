@@ -1,6 +1,7 @@
 .PLPDetails {
   display: flex;
   align-items: center;
+  grid-gap: 20px;
   &-ShareIcon {
     display: flex;
     justify-content: flex-end;
@@ -30,11 +31,11 @@
   }
   &-BrandImage {
     flex: 1;
-    padding: 1rem 1rem 1rem 0;
+    padding-block: 1rem;
   }
 
   &-BrandDescription {
     flex: 1;
-    padding: 1rem 0 1rem 1rem;
+    padding-block: 1rem;
   }
 }
