@@ -181,14 +181,13 @@ class ProductItem extends PureComponent {
         product,
       },
     };
-    const isNew = product.is_new_in
 
     return (
       <Link to={linkTo} onClick={this.handleClick}>
         {" "}
         {this.renderImage()} {this.renderBrand()} {this.renderTitle()}{" "}
         {this.renderPrice()}{" "}
-        {!isNew && <div block="ProductItem-isNew">New</div>}
+
       </Link>
     );
   }

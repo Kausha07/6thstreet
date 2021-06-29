@@ -5,63 +5,124 @@
  * @copyright Copyright (c) 2020 Scandiweb, Inc (https://scandiweb.com)
  */
 
-.ProductItem {
+ .ProductItem {
+    font-weight: var(--fw-regular);
+    // margin: 20px 5px;
+    min-width: 0;
+    padding-left: 0;
+    position: relative;
+    text-align: center;
+
+    &_isArabic{
+        .Price{
+            display: flex;
+            flex-direction: none;
+            grid-gap: 10px;
+        }
+    }
+
+    &::before {
+      display: none;
+    }
+
+    .Image {
+      min-height: 190px;
+
+      &-Image {
+        object-fit: cover;
+      }
+    }
+
+    &:hover {
+      @include desktop {
+        box-shadow: 0 0 7px #d3d3d3;
+      }
+    }
+    a {
+      text-decoration: none;
+    }
+
     &-Brand {
-        font-size: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 19px;
+    text-align: start;
+    margin: 8.23px 0px 5.58px 0px;
     }
 
     &-Title {
-        font-weight: var(--fw-medium);
-        color: var(--gray-color);
-        font-size: 13px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 80%;
+      margin-bottom: 0;
+      font-size: 13px;
+      letter-spacing: 0;
+      line-height: 15px;
+      text-align: left;
+
+
+    }
+    .ProductLabel{
+      width: 35px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #c8b581;
+      border-radius: 0 10px 10px 0;
+      top: 12px;
+      position: absolute;
+      font-size: 11px;
+      color: #ffffff;
+      line-height: 13px;
+      font-weight: var(--fw-medium);
     }
 
-    .ProductLabel {
-        width: 40px;
-        height: 25px;
-        background-color: #C8B581;
-        z-index: 1;
+
+    .WishlistIcon {
+      width: 28px;
+      height: 28px;
+      &-Icon {
+        width: 20px;
+        height: 20px;
+        background-size: 20px;
+        left: 4px;
+        top: 5px;
+      }
+    }
+
+    .Price {
+        font-size: 14px;
+        font-weight: bold;
+        letter-spacing: -0.5px;
+        text-align: start;
+        margin-top: 5px;
         display: flex;
-        font-size: 13px;
-        color: white;
-        justify-content: center;
-        align-items: center;
-        position: absolute;
-        top: 20px;
-        border-radius: 0 10px 10px 0;
-    }
-
-    &_isArabic {
-        .ProductLabel {
-            border-radius: 10px 0 0 10px;
-            right: 0;
+        grid-gap: 7px;
+        @include mobile{
+            font-size: 11px;
         }
 
-        .WishlistIcon {
-            left: 0.8rem;
-            right: auto;
-        }
-    }
+        &-Special,
+        &-Discount {
+          display: none;
 
-    .PDPSummary {
-        &-Dash, &-Exclusive {
-            display: none;
+          &_discount {
+            display: inline;
+            color: $default-primary-dark-color;
+          }
         }
-    }
 
-    .PLPSummary {
-        &-Exclusive,
-        &-Colors {
-            color: var(--Tundora);
-            font-size: 12px;
-            position: absolute;
-            padding: 7px 0;
-            width: 100%;
-            background-color: rgba(255, 255, 255, 0.6);
-            z-index: 1;
-            right: 0;
-            grid-row: 3;
-            bottom: 0;
+        &-Base {
+          &_discount {
+            // font-size: 11px;
+            // font-weight: var(--fw-demi);
+            // margin-right: 10px;
+          }
         }
-    }
-}
+
+      }
+
+  }
