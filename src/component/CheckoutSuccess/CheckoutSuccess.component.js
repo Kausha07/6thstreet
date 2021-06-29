@@ -305,7 +305,7 @@ export class CheckoutSuccess extends PureComponent {
     return (
       <div block="Totals">
         <div block="Totals" elem="TotalTitles">
-          <span block="Title">{__("Subtotal")}</span>
+          <span block="Title">{__("Total Amount")}</span>
           <span block="SubTitle">{__("(Taxes included)")}</span>
         </div>
         <div block="Totals" elem="TotalPrice">

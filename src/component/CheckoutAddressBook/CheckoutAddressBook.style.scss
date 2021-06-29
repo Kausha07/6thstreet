@@ -1,4 +1,10 @@
 .CheckoutAddressBook {
+  &-backBtn {
+    @include before-desktop {
+      position: fixed;
+      top: 10px;
+    }
+  }  
   &-Wrapper {
     @include desktop {
       background: var(--white);
@@ -23,6 +29,11 @@
       height: 100%;
       padding-left: 60px;
       text-align: left;
+
+      &-EditButton{
+        display: flex;
+        justify-content: space-between;
+      }
 
       &::before,
       &::after {
@@ -196,6 +207,19 @@
           }
         }
       }
+    }
+  }
+}
+.EditAddress{
+  &-PopUp{
+    @include before-desktop{
+      position: fixed;
+      top: 170px;
+      // padding:0  20px;
+      height: 100vh !important;
+      width: 95vw;
+      max-width: 100vw !important;
+      z-index: 20000;
     }
   }
 }

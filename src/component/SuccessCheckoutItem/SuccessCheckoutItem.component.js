@@ -190,7 +190,8 @@ export class SuccessCheckoutItem extends PureComponent {
                   block="SuccessCheckoutItem"
                   elem="ColSizeQty"
                   mods={ { isArabic } }
-                >
+                >                   
+                    <span> { __('Color:') }    </span>
                     { color }
                     <span>| { __('Size:') }    </span>
                     { optionValue }
