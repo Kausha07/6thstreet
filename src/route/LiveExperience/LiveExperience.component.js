@@ -189,10 +189,10 @@ export class LiveExperience extends PureComponent {
   };
   onClickPartyPlay = (id) => {
     let newId = id.toString();
-    let ele = document.getElementsByTagName("button")
+    let ele = document.getElementsByClassName("spck-watch-button")
     for (let i = 0; i < ele.length; i++) {
-      // debugger
-      if (ele[i].getAttribute("data-spck-id") === newId) {
+      let dataInfo = JSON.parse(ele[i].getAttribute("data-info"));
+      if (dataInfo["spckId"] === newId )  {
         ele[i].click();
       }
     }
