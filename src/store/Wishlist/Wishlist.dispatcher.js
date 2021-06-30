@@ -37,7 +37,7 @@ export class WishlistDispatcher {
         }
 
         try {
-            await MagentoAPI.delete(`/wishlist/delete/${ id }`);
+            await MagentoAPI.delete(`/wishlist/delete/${id}`);
 
             this.updateInitialWishlistData(dispatch);
 
@@ -65,11 +65,17 @@ export class WishlistDispatcher {
         }
 
         try {
-            await MagentoAPI.post(`/wishlist/add/${sku.replace(/\//g, '%2F')}`);
-
+            const response = await MagentoAPI.post(`/wishlist/add/${sku.replace(/\//g, '%2F')}`);
             this.updateInitialWishlistData(dispatch);
 
-            dispatch(showNotification('success', __('Product added to wish-list!')));
+            if (response === true) {
+                dispatch(showNotification('success', __('Product added to wish-list!')));
+            } else {
+                dispatch(showNotification(
+                    'info',
+                    __('Failed to add item to wishlist')
+                ));
+            }
         } catch (e) {
             // eslint-disable-next-line no-console
             console.error(e);
