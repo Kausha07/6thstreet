@@ -20,6 +20,7 @@ import { customerType } from 'Type/Account';
 import { TotalsType } from 'Type/MiniCart';
 import history from 'Util/History';
 import isMobile from 'Util/Mobile';
+import { getCountriesForSelect } from 'Util/API/endpoint/Config/Config.format';
 
 import CheckoutSuccess from './CheckoutSuccess.component';
 
@@ -31,7 +32,8 @@ export const mapStateToProps = (state) => ({
     headerState: state.NavigationReducer[TOP_NAVIGATION_TYPE].navigationState,
     guest_checkout: state.ConfigReducer.guest_checkout,
     customer: state.MyAccountReducer.customer,
-    isSignedIn: state.MyAccountReducer.isSignedIn
+    isSignedIn: state.MyAccountReducer.isSignedIn,
+    config: state.AppConfig.config,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -87,8 +89,11 @@ export class CheckoutSuccessContainer extends PureComponent {
         onVerifySuccess: this.onVerifySuccess.bind(this),
         onResendCode: this.onResendCode.bind(this),
         changePhone: this.changePhone.bind(this),
-        toggleChangePhonePopup: this.toggleChangePhonePopup.bind(this)
+        toggleChangePhonePopup: this.toggleChangePhonePopup.bind(this),
+        getCountryNameById:this.getCountryNameById.bind(this)
     };
+
+
 
     constructor(props) {
         super(props);
@@ -172,6 +177,13 @@ export class CheckoutSuccessContainer extends PureComponent {
             isMobileVerification
         };
     };
+
+    getCountryNameById(countryId) {
+        const { config } = this.props;
+        const countries = getCountriesForSelect(config);
+
+        return (countries.find(({ id }) => id === countryId) || {}).label || '';
+    }
 
     toggleChangePhonePopup() {
         const { isChangePhonePopupOpen } = this.state;

@@ -18,5 +18,8 @@
     width: 40px !important;
     z-index: 900;
     padding-left: 30px;
+    &_isArabic{
+      padding-left: 0;
+    }
   }
 }

@@ -16,6 +16,9 @@ import { TotalsType } from "Type/MiniCart";
 import { getDiscountFromTotals, isArabic } from "Util/App";
 
 import Apple from "./icons/apple.png";
+import Call from "./icons/call.svg";
+import Mail from "./icons/mail.svg";
+import Whatsapp from "./icons/whatsapp.svg";
 import Cash from "./icons/cash.png";
 import Confirm from "./icons/confirm.png";
 import SuccessCircle from "./icons/success-circle.png";
@@ -85,7 +88,7 @@ export class CheckoutSuccess extends PureComponent {
 
     return (
       <div block="SuccessMessage" mods={{ isArabic }}>
-        <div block="SuccessMessage" elem="Icon">
+        <div block="SuccessMessage" elem="Icon" mods={{ isArabic }}>
           <img src={SuccessCircle} alt="success circle" />
         </div>
         <div block="SuccessMessage" elem="Text">
@@ -137,10 +140,12 @@ export class CheckoutSuccess extends PureComponent {
       isVerificationCodeSent,
     } = this.props;
     const { isArabic, isPhoneVerification } = this.state;
-    console.log("props check", this.props)
+    console.log("props check", this.props);
     const countryCode = phone ? phone.slice(0, "4") : null;
     const phoneNumber = phone ? phone.slice("4") : null;
-
+    if (!isVerificationCodeSent) {
+      console.log("hello");
+    }
     if (!isPhoneVerified && isVerificationCodeSent) {
       return (
         <div
@@ -183,7 +188,14 @@ export class CheckoutSuccess extends PureComponent {
     }
 
     if (!isPhoneVerified && !isVerificationCodeSent && isSignedIn) {
-      return null;
+      console.log("CHECK THIS");
+      return (
+        <div mix={{ block: "TrackOrder", mods: { isArabic, isSignedIn } }}>
+          <Link to={`/sales/order/view/order_id/${orderID}/`}>
+            <button block="primary">{__("track your order")}</button>
+          </Link>
+        </div>
+      );
     }
 
     if (isPhoneVerified && isSignedIn) {
@@ -358,7 +370,7 @@ export class CheckoutSuccess extends PureComponent {
         )}
         {this.renderPriceLine(
           cashOnDeliveryFee ??
-          getDiscountFromTotals(total_segments, "msp_cashondelivery"),
+            getDiscountFromTotals(total_segments, "msp_cashondelivery"),
           __("Cash on Delivery Fee")
         )}
         {this.renderPriceLine(
@@ -378,11 +390,74 @@ export class CheckoutSuccess extends PureComponent {
     );
   };
 
+  renderContact = () => {
+    const { isArabic } = this.state;
+    const {
+      cashOnDeliveryFee,
+      initialTotals: { coupon_code: couponCode, discount, total_segments = [] },
+    } = this.props;
+
+    return (
+      <div block="ContactInfo" mods={{ isArabic }}>
+        <div block="ContactInfo" elem="Links">
+          <a href="tel:+9718003852633" target="_blank" rel="noreferrer">
+            <div block="ContactInfo" elem="Link">
+              <span>
+                <img src={Call} alt="Call" />
+              </span>
+              <span block="ContactInfo" elem="LinkName">
+                {__("Phone")}
+              </span>
+            </div>
+          </a>
+          <a href="mailto:customercare@6thstreet.com" target="_blank" rel="noreferrer">
+            <div block="ContactInfo" elem="LinkMiddle">
+              <span>
+                <img src={Mail} alt="e-mail" />
+              </span>
+              <span block="ContactInfo" elem="LinkName">
+                {__("Email")}
+              </span>
+            </div>
+          </a>
+          <a href="https://wa.me/9718003852633" target="_blank" rel="noreferrer">
+            <div block="ContactInfo" elem="Link">
+              <span>
+                <img src={Whatsapp} alt="whatsapp" />
+              </span>
+              <span block="ContactInfo" elem="LinkName">
+                {__("Whatsapp")}
+              </span>
+            </div>
+          </a>
+        </div>
+        <div block="ContactInfo" elem="Timing">
+          <span>{__("Customer service is available all days")}</span>
+          <span>
+            {__("from: ")}
+            <span block="ContactInfo" elem="Time">
+              {__("9am - 9pm")}
+            </span>
+          </span>
+        </div>
+      </div>
+    );
+  };
+
   renderDeliveringAddress() {
     const {
-      shippingAddress: { firstname, lastname, street, postcode, phone , city},
+      shippingAddress: {
+        firstname,
+        lastname,
+        street,
+        postcode,
+        phone,
+        city,
+        country_id,
+      },
+      getCountryNameById,
     } = this.props;
-    console.log("address", this.props)
+    console.log("address", this.props);
     return (
       <div block="Address">
         <div block="Address" elem="Title">
@@ -392,14 +467,11 @@ export class CheckoutSuccess extends PureComponent {
           {`${firstname} ${lastname}`}
         </div>
         <div block="Address" elem="Street">
-          {street}
+          {street}, {postcode}
         </div>
         <div block="Address" elem="PostCode">
-          {postcode} , {city}
+          {city} - {getCountryNameById(country_id)}
         </div>
-        {/* <div block="Address" elem="Phone">
-          {phone}
-        </div> */}
       </div>
     );
   }
@@ -467,15 +539,15 @@ export class CheckoutSuccess extends PureComponent {
     const second = parseInt(number.charAt(1));
 
     if (first === 4) {
-      return <img src={visa} alt="card icon" />
+      return <img src={visa} alt="card icon" />;
     }
 
     if (first === 5) {
-      return <img src={mastercard} alt="card icon" />
+      return <img src={mastercard} alt="card icon" />;
     }
 
     if (first === 3 && (second === 4 || second === 7)) {
-      return <img src={amex} alt="card icon" />
+      return <img src={amex} alt="card icon" />;
     }
 
     return null;
@@ -493,7 +565,7 @@ export class CheckoutSuccess extends PureComponent {
     const {
       creditCardData: { number = "", expDate, cvv },
       paymentMethod,
-      selectedCard
+      selectedCard,
     } = this.props;
 
     if (number && expDate && cvv) {
@@ -526,8 +598,11 @@ export class CheckoutSuccess extends PureComponent {
           </div>
         </div>
       );
-    } else if (selectedCard && Object.keys(selectedCard).length > 0) {//payment done from saved cards
-      const { details: { scheme, expirationDate, maskedCC } } = selectedCard;
+    } else if (selectedCard && Object.keys(selectedCard).length > 0) {
+      //payment done from saved cards
+      const {
+        details: { scheme, expirationDate, maskedCC },
+      } = selectedCard;
       return (
         <div block="Details">
           <div block="Details" elem="TypeLogo">
@@ -569,9 +644,6 @@ export class CheckoutSuccess extends PureComponent {
     const { paymentTitle } = this.state;
     return (
       <div block="Details">
-        {/* <div block="Details" elem="TypeLogo">
-          {this.renderPaymentMethodIcon(paymentTitle)}
-        </div> */}
         <div block="Details" elem="TypeTitle">
           {__(paymentTitle)}
         </div>
@@ -643,6 +715,7 @@ export class CheckoutSuccess extends PureComponent {
           {this.renderAddresses()}
           {this.renderPaymentType()}
           {this.renderTotals()}
+          {this.renderContact()}
         </div>
         {this.renderButton()}
         {this.renderMyAccountPopup()}

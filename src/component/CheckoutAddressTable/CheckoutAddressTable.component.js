@@ -69,6 +69,7 @@ export class CheckoutAddressTable extends SourceCheckoutAddressTable {
             <div
               block="EditAddress"
               elem="Container"
+              mods={{ isArabic }}
               onClick={this.mobileEditAddress}
             >
               <div block="EditAddress" elem="Logo" mods={{ isArabic }}></div>

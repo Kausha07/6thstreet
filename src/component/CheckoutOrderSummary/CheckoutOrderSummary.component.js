@@ -191,6 +191,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
       },
       checkoutStep,
     } = this.props;
+    console.log("total payments",  this.props.totals)
     const grandTotal = getFinalPrice(total, currency_code);
     const subTotal = getFinalPrice(subtotal, currency_code);
 

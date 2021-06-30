@@ -134,7 +134,7 @@
         font-weight: normal;
         display: block;
         &_isArabic {
-            text-align: right;
+            text-align: right !important;
         }
     }
 
@@ -157,9 +157,8 @@
         color: var(--Black);
         letter-spacing: .75px;
 
-        span {
-            margin-left: 5px;
-           
+        &_isArabic {
+            text-align: right;
         }
     }
 
@@ -175,19 +174,37 @@
         font-weight: var(--fw-demi);
 
         div {
-            color: var(--Black);
-            text-decoration-line: line-through;
-            -webkit-text-decoration-line: line-through; 
-            padding-right: 5px;
-            font-weight: var(--fw-regular);
+
+                color: var(--Black);
+                text-decoration-line: line-through;
+                -webkit-text-decoration-line: line-through; 
+                padding-right: 5px;
+                font-weight: var(--fw-regular);
+            }
+    }
+    &-DiscountPercentage{
+        color:inherit;
+        margin-right: 5px;
+        &_isArabic{
+            text-align: right;
+            display: inline !important;
+        }
+    }
+    &-WithoutDiscount{
+        display: flex;
+        flex-direction: row-reverse;
+
+        &_isArabic{ 
+            flex-direction: row;
+            margin-right: 5px;
         }
     }
 
     &-ColSizeQty {
-        // color: var(--Tundora);
         font-weight: var(--fw-regular);
-        // margin-bottom: 5px;
         width: 200px;
+        display: flex;
+        align-self: center;
 
         span {
             margin-left: 5px;

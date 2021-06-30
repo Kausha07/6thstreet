@@ -113,7 +113,6 @@ export class SuccessCheckoutItem extends PureComponent {
     const {
       item: {
         full_item_info: { brand_name, name },
-        // product
       },
     } = this.props;
     const { isArabic } = this.state;
@@ -134,13 +133,15 @@ export class SuccessCheckoutItem extends PureComponent {
       currency_code,
       item: { row_total, basePrice },
     } = this.props;
+    const { isArabic } = this.state;
+
     const rowPrice = getFinalPrice(row_total, currency_code);
-    let discountPercentage = Math.round(100 * (1 - (row_total / basePrice)));
+    console.log("props check", this.props);
+    let discountPercentage = Math.round(100 * (1 - row_total / basePrice));
     const withoutDiscount = (
       <>
-      { `-${ discountPercentage.toFixed() }% ` }
-        {currency_code}
-        <span>{`${rowPrice}`}</span>
+        {`${currency_code} `}
+        <span>{`${rowPrice} `}</span>
       </>
     );
     const finalBasePrice = getFinalPrice(basePrice, currency_code);
@@ -150,12 +151,29 @@ export class SuccessCheckoutItem extends PureComponent {
         <div>
           {currency_code} {`${finalBasePrice}`}
         </div>
-        {withoutDiscount}
+        <span
+          block="SuccessCheckoutItem"
+          elem="WithoutDiscount"
+          mods={{ isArabic }}
+        ><span>
+          {withoutDiscount}
+        </span>
+        {isArabic ? (
+          <span block="SuccessCheckoutItem" elem="DiscountPercentage">
+            {discountPercentage}
+            %-
+          </span>
+        ) : (
+          <span block="SuccessCheckoutItem" elem="DiscountPercentage">
+            -{discountPercentage}%<span> </span>
+          </span>
+        )}
+        </span>
       </div>
     );
 
     return (
-      <div block="SuccessCheckoutItem" elem="Price">
+      <div block="SuccessCheckoutItem" elem="Price" mods={{ isArabic }}>
         {basePrice === row_total || !basePrice ? withoutDiscount : withDiscount}
       </div>
     );

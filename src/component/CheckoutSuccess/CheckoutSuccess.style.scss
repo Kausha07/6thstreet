@@ -3,7 +3,7 @@
 }
 
 .CheckoutSuccess {
-    margin-bottom: -var(navi);
+  margin-bottom: -var(navi);
   .SuccessOverlay {
     height: 100%;
     background-color: var(--color-green-cyan);
@@ -66,6 +66,10 @@
         margin: 0 auto;
         margin-top: 20px;
         width: 50px;
+
+        &_isArabic {
+          transform: rotateY(180deg);
+        }
       }
 
       &-Text {
@@ -80,7 +84,7 @@
         }
 
         &-Email {
-          font-weight: var(--fw-medium);
+          font-weight: var(--fw-bold);
         }
       }
     }
@@ -164,9 +168,9 @@
         border-radius: 5px;
 
         &.secondary {
-            margin-top: 12px !important;
+          margin-top: 12px !important;
           background-color: var(--white);
-font-size: 12px;
+          font-size: 12px;
           &:hover {
             background-color: var(--black);
           }
@@ -310,6 +314,47 @@ font-size: 12px;
       }
     }
 
+    .ContactInfo {
+      text-align: center;
+      a + a {
+        margin: 0 !important;
+      }
+      &-Timing {
+        font-size: 13px;
+        display: flex;
+        flex-direction: column;
+        margin: 30px 0;
+      }
+      &-Time {
+        font-weight: var(--fw-bold);
+      }
+      &-Links {
+        display: grid;
+        grid-auto-flow: column;
+        margin: 30px 0;
+        text-decoration: none !important;
+      }
+      &-LinkName {
+        margin-top: 5px;
+      }
+      &-Link,
+      &-LinkMiddle {
+        padding: 0px 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        img {
+          width: 25px;
+          height: 25px;
+        }
+      }
+      &-LinkMiddle {
+        border-right: 2px solid var(--lightest-gray);
+        border-left: 2px solid var(--lightest-gray);
+      }
+    }
+
     .PriceTotals {
       border-top: 2px solid var(--lightest-gray);
       padding: 20px 0;
@@ -331,7 +376,6 @@ font-size: 12px;
         &-Price {
           margin-left: auto;
           font-weight: var(--fw-bold);
-
         }
 
         &-TotalTitles {
@@ -381,11 +425,11 @@ font-size: 12px;
           margin-bottom: 5px;
         }
         &-FullName {
-            font-weight: var(--fw-demi);
-          }
-          &-PostCode {
-            font-weight: var(--fw-demi);
-          }
+          font-weight: var(--fw-demi);
+        }
+        &-PostCode {
+          font-weight: var(--fw-demi);
+        }
       }
     }
 
@@ -414,12 +458,9 @@ font-size: 12px;
 
       .Details {
         width: 50%;
-        // background-color: var(--lightest-gray);  
         text-transform: uppercase;
         border-radius: 10px;
         display: flex;
-        // grid-template-columns: 15% 70% 15%;
-        // grid-auto-flow: column;
         height: auto;
 
         &-TypeLogo {
@@ -427,7 +468,7 @@ font-size: 12px;
           display: flex;
           margin: auto 0;
           justify-content: center;
-          align-items:center;
+          align-items: center;
           img {
             max-width: 40px;
             max-height: 40px;
@@ -437,9 +478,7 @@ font-size: 12px;
 
         &-TypeTitle {
           display: block;
-        //   margin: auto 0;
           font-size: 14px;
-        //   font-weight: var(--fw-demi);
           text-align: left;
         }
 
@@ -487,7 +526,8 @@ font-size: 12px;
           }
 
           &-Number {
-            margin: auto;
+            margin-left: auto;
+            margin-right: 30px;
           }
 
           &-Exp {

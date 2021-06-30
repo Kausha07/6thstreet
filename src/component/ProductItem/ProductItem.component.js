@@ -152,7 +152,7 @@ class ProductItem extends PureComponent {
       product: { price },
       page,
     } = this.props;
-
+    console.log("price", price)
     return <Price price={price} page={page} />;
   }
 
