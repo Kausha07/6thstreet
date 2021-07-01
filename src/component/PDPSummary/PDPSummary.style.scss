@@ -123,54 +123,56 @@
         }
     }
 
-    .PriceAndPDPSummaryHeader {
+    .PriceContainer {
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
-    }
-
-    .Price {
-        display: flex;
-        justify-content: space-between;
-        font-weight: var(--fw-bold);
-        font-size: 20px;
-        margin: .36rem 0 0 0;
-
-        @include before-desktop {
-            font-size: 18px;
-            font-weight: bold;
-            letter-spacing: 0;
-            line-height: 30px;
+        @include mobile {
+            justify-content: space-between;
         }
 
-        &-Base {
-            &_discount {
-                margin-right: 20px;
-                font-weight: var(--fw-medium);
-            }
-        }
-
-        &-Special {
-            color: $default-primary-dark-color;
+        .Price {
+            display: flex;
+            justify-content: space-between;
+            font-weight: var(--fw-bold);
             font-size: 20px;
-            font-weight: bold;
-            letter-spacing: 0;
-            line-height: 30px;
-            padding: 0 8px 0 0;
-        }
+            margin: .36rem 0 0 0;
 
-        &-Del {
-            font-size: 16px;
-            letter-spacing: 0;
-            line-height: 30px;
-        }
-        &-Discount {
-            color: $default-primary-dark-color;
-            font-size: 15px;
-            font-weight: 600;
-            letter-spacing: 0;
-            line-height: 30px;
-            text-align: right;
+            @include before-desktop {
+                font-size: 18px;
+                font-weight: bold;
+                letter-spacing: 0;
+                line-height: 30px;
+            }
+
+            &-Base {
+                &_discount {
+                    margin-right: 20px;
+                    font-weight: var(--fw-medium);
+                }
+            }
+
+            &-Special {
+                color: $default-primary-dark-color;
+                font-size: 20px;
+                font-weight: bold;
+                letter-spacing: 0;
+                line-height: 30px;
+                padding: 0 8px 0 0;
+            }
+
+            &-Del {
+                font-size: 16px;
+                letter-spacing: 0;
+                line-height: 30px;
+            }
+            &-Discount {
+                color: $default-primary-dark-color;
+                font-size: 15px;
+                font-weight: 600;
+                letter-spacing: 0;
+                line-height: 30px;
+                text-align: right;
+            }
         }
     }
 

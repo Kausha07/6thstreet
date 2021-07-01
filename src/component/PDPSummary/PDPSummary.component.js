@@ -51,16 +51,6 @@ class PDPSummary extends PureComponent {
         this.setState({ stockAvailibility: !!price && status });
     };
 
-    renderSummaryHeader() {
-        const { product } = this.props;
-
-        return (
-            <div block="PDPSummary" elem="Header">
-                <ProductLabel product={ product } />
-            </div>
-        );
-    }
-
     renderBrand() {
         const { product: { brand_name } } = this.props;
 
@@ -77,8 +67,8 @@ class PDPSummary extends PureComponent {
         );
     }
 
-    renderPrice() {
-        const { product: { price, stock_qty } } = this.props;
+    renderPriceAndPDPSummaryHeader() {
+        const { product, product: { price, stock_qty } } = this.props;
         const { stockAvailibility } = this.state;
 
         if (!price || stock_qty === 0 || !stockAvailibility) {
@@ -88,6 +78,9 @@ class PDPSummary extends PureComponent {
         return (
             <div block="PriceContainer">
                 <Price price={ price } />
+                <div block="PDPSummary" elem="Header">
+                    <ProductLabel product={ product } />
+                </div>
             </div>
         );
     }
@@ -242,8 +235,7 @@ class PDPSummary extends PureComponent {
                 { this.renderBrand() }
                 { this.renderName() }
                 <div block="PriceAndPDPSummaryHeader">
-                    { this.renderPrice() }
-                    { this.renderSummaryHeader() }
+                    { this.renderPriceAndPDPSummaryHeader() }
                 </div>
                 <div block="Seperator" />
                 { this.renderTabby() }
