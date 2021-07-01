@@ -182,7 +182,7 @@ export class LiveExperienceContainer extends PureComponent {
       return ( val.id.toString() !== broadcastId)
     })
     return {
-      broadcastId, live, updatedUpcoming, updatedArchived
+      broadcastId
     };
   };
 
