@@ -17,6 +17,12 @@
     .spck-watch-button {
       background: #f96446 !important;
     }
+    .spck-list:empty::before{
+      content: 'No Upcoming Videos';
+      font-size: 16px;
+      padding-left:5px;
+
+    }
   }
   #live,
   #archived {
@@ -170,7 +176,10 @@
     }
     .spck-ical-button {
       right: 0;
-      bottom: 0;
+      @include desktop{
+        bottom: 0 !important;
+      }
+
       @include mobile {
         margin: 0 !important;
         width: 100% !important;
@@ -196,6 +205,11 @@
     @include tablet {
       margin-bottom: 80px;
     }
+    .spck-list:empty::before{
+      content: 'No Recorded Videos';
+      font-size: 16px;
+      padding-left:5px;
+    }
   }
 
   #single {
@@ -204,6 +218,15 @@
       font-family: inherit;
       font-size: 16px;
       font-weight: 500;
+    }
+    .spck-list{
+        justify-content: center;
+    }
+    .spck-ical-button {
+        right: 0;
+        @include desktop{
+          bottom: 0 !important;
+        }
     }
     .spck-event-title {
       font-family: inherit;
@@ -327,4 +350,6 @@
       .spck-watch-button {
         margin: 0;
         width: 100% !important;
-      }}}
+      }
+    }
+  }
