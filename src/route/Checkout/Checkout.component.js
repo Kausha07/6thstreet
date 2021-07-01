@@ -228,7 +228,6 @@ export class Checkout extends SourceCheckout {
       processingRequest,
     } = this.props;
     const { areTotalsVisible } = this.stepMap[checkoutStep];
-
     if (!areTotalsVisible) {
       return null;
     }
@@ -315,7 +314,7 @@ export class Checkout extends SourceCheckout {
       getBinPromotion,
       updateTotals,
     } = this.props;
-    const { isArabic } = this.state;
+    const { isArabic , cashOnDeliveryFee} = this.state;
 
     return (
       <>
@@ -332,6 +331,7 @@ export class Checkout extends SourceCheckout {
           </button>
         </div>
         <CheckoutBilling
+        cashOnDeliveryFee={cashOnDeliveryFee}
           setLoading={setLoading}
           paymentMethods={paymentMethods}
           setDetailsStep={setDetailsStep}
@@ -735,7 +735,7 @@ export class Checkout extends SourceCheckout {
     const { isSuccess } = this.state;
     const { checkoutStep } = this.props;
 
-    const additionalDisplay = checkoutStep === BILLING_STEP;
+    // const additionalDisplay = checkoutStep === BILLING_STEP;
     return (
       <>
         {this.renderBinPromotion()}
@@ -752,7 +752,7 @@ export class Checkout extends SourceCheckout {
             </div>
             <div
               block="Checkout"
-              elem={additionalDisplay ? "MobileDisplay" : "WebDisplay"}
+              elem="WebDisplay"
             >
               <div block="Checkout" elem="Additional">
                 {this.renderSummary()}

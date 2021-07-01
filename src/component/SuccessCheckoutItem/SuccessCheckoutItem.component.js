@@ -136,7 +136,6 @@ export class SuccessCheckoutItem extends PureComponent {
     const { isArabic } = this.state;
 
     const rowPrice = getFinalPrice(row_total, currency_code);
-    console.log("props check", this.props);
     let discountPercentage = Math.round(100 * (1 - row_total / basePrice));
     const withoutDiscount = (
       <>

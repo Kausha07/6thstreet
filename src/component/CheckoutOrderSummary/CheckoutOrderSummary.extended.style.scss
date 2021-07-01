@@ -150,6 +150,9 @@
 
   &-SummaryItem {
     padding: 5px 0;
+    &_isDropdownOpen {
+     border-top: 2px solid var(--lightest-gray);
+    }
   }
 
   &-Subtotals {

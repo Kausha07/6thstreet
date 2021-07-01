@@ -140,12 +140,9 @@ export class CheckoutSuccess extends PureComponent {
       isVerificationCodeSent,
     } = this.props;
     const { isArabic, isPhoneVerification } = this.state;
-    console.log("props check", this.props);
     const countryCode = phone ? phone.slice(0, "4") : null;
     const phoneNumber = phone ? phone.slice("4") : null;
-    if (!isVerificationCodeSent) {
-      console.log("hello");
-    }
+   
     if (!isPhoneVerified && isVerificationCodeSent) {
       return (
         <div
@@ -188,7 +185,6 @@ export class CheckoutSuccess extends PureComponent {
     }
 
     if (!isPhoneVerified && !isVerificationCodeSent && isSignedIn) {
-      console.log("CHECK THIS");
       return (
         <div mix={{ block: "TrackOrder", mods: { isArabic, isSignedIn } }}>
           <Link to={`/sales/order/view/order_id/${orderID}/`}>
@@ -457,7 +453,6 @@ export class CheckoutSuccess extends PureComponent {
       },
       getCountryNameById,
     } = this.props;
-    console.log("address", this.props);
     return (
       <div block="Address">
         <div block="Address" elem="Title">
