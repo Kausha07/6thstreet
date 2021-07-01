@@ -45,7 +45,11 @@ class DynamicContentVueProductSliderItem extends PureComponent {
 
             if (basePrice === specialPrice || !specialPrice) {
                 return (
-                    <span id="price">{`${currency} ${basePrice}`}</span>
+                    <div block="VueProductSlider" elem="SpecialPriceCon">
+                        <span block="VueProductSlider" elem="PriceWrapper">
+                            <span id="price" style={{ color: '#000000' }}>{`${currency} ${basePrice}`}</span>
+                        </span>
+                    </div>
                 );
             }
 

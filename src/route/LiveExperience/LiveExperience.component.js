@@ -12,30 +12,31 @@ export class LiveExperience extends PureComponent {
     super(props);
     this.state = {
       url: null,
-      day: [ "Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"]
+      day: ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"],
+      isLive: false,
     };
   }
 
   componentDidMount() {
-    (function() {
+    (function () {
       var spck = {
-           storeId: "13207961",
-           storeType: "sixthstreet",
-           customColor:'#000000',
-           containerId : 'all',
-           displayType:'all',
-           staging: process.env.REACT_APP_SPOCKEE_STAGING
-       };
-       var el = document.createElement('script');
-       el.setAttribute('src', 'https://party.spockee.io/builder/' + spck.storeId);
-       el.setAttribute('data-spck', JSON.stringify(spck));
-       document.body.appendChild(el);
-   })();
+        storeId: "13207961",
+        storeType: "sixthstreet",
+        customColor: '#000000',
+        containerId: 'all',
+        displayType: 'all',
+        staging: process.env.REACT_APP_SPOCKEE_STAGING
+      };
+      var el = document.createElement('script');
+      el.setAttribute('src', 'https://party.spockee.io/builder/' + spck.storeId);
+      el.setAttribute('data-spck', JSON.stringify(spck));
+      document.body.appendChild(el);
+    })();
 
     if (this.props.broadcastId) {
       this.renderLiveParty();
     }
-    else{
+    else {
       this.renderUpcomingParty();
       this.renderArchivedParty();
     }
@@ -47,9 +48,9 @@ export class LiveExperience extends PureComponent {
     }
   }
 
-  renderLiveParty = async () => {};
-  renderUpcomingParty = () => {};
-  renderArchivedParty = () => {};
+  renderLiveParty = async () => { };
+  renderUpcomingParty = () => { };
+  renderArchivedParty = () => { };
 
 
   renderSpckLiveEvent() {
@@ -65,28 +66,64 @@ export class LiveExperience extends PureComponent {
   renderSpckarchivedEvent() {
     //const content = this.props.archived;
     const content = this.props.updatedArchived;
-    // debugger
     return content.map(this.renderArchivedGridBlock);
+  }
+
+  onBroadcastIdLive = () => {
+    this.setState({
+      isLive: true
+    })
   }
 
   renderLiveBlock = (block, i) => {
     const { mainImageURI, squareImageURI, name, description, starts } = block;
-    if (mainImageURI) {
-    return (
-      <div block="spck-live-event">
-        <div block="mainImage">
-          <img src={mainImageURI} alt={name} />
-          <div block="liveNow">
-          <p block="liveNow-text">LIVE NOW</p>
-        </div>
-        </div>
-        <a block="eventPlayBtn" onClick={() => this.onClickPartyPlay(block.id)}><img src={playbtn} alt="event-playbtn"/></a>
-        <div block="eventInfo">
-          <h3 block="eventTitle">{name}</h3>
-        </div>
+    let d = new Date(starts);
+    let diffInTime = d - Date.now();
+    var diffInDay = diffInTime / (1000 * 3600 * 24);
 
-      </div>
-    )}
+    if(diffInTime < 0){
+      this.onBroadcastIdLive();
+    }
+    if (mainImageURI) {
+      return (
+        <div block="spck-live-event">
+          <div block="mainImage">
+            <img src={mainImageURI} alt={name} />
+            {this.state.isLive ?
+              <div block="liveNow">
+                <p block="liveNow-text">LIVE NOW</p>
+              </div>
+              :
+              <p block="eventStart">
+                {
+                  diffInDay < 1 ?
+                    <div block="eventStart-timer">
+                      <img src={timerIcon} alt="timerIcon" />
+                      <Countdown
+                        date={d}
+                        daysInHours={true}
+                        onComplete={this.onBroadcastIdLive}
+                      />
+                    </div>
+                    :
+                    <div block="eventStart-calender">
+                      <img src={calenderIcon} alt="calenderIcon" />
+                      <div>{`${this.state.day[d.getDay()]}, ${d.getDate()} at ${d.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}`}</div>
+                    </div>
+                }
+              </p>
+
+            }
+
+          </div>
+          <a block="eventPlayBtn" disabled={!this.state.isLive} onClick={() => this.state.isLive && this.onClickPartyPlay(block.id)}><img src={playbtn} alt="event-playbtn" /></a>
+          <div block="eventInfo">
+            <h3 block="eventTitle">{name}</h3>
+          </div>
+
+        </div>
+      )
+    }
   };
 
 
@@ -95,66 +132,67 @@ export class LiveExperience extends PureComponent {
     let d = new Date(starts);
     let diffInTime = d - Date.now();
     var diffInDay = diffInTime / (1000 * 3600 * 24);
-    // debugger
 
     if (mainImageURI) {
-    return (
-      <li block="spckItem">
-        <div block="eventImage">
-          <img src={mainImageURI} alt={name}  />
-        </div>
+      return (
+        <li block="spckItem">
+          <div block="eventImage">
+            <img src={mainImageURI} alt={name} />
+          </div>
           <p block="eventStart">
-          {
-            diffInDay < 1 ?
-            <div block="eventStart-timer">
-              <img src={timerIcon} alt="timerIcon" />
-              <Countdown
-                date={d}
-                daysInHours={true}
-              />
-            </div>
-            :
-            <div block="eventStart-calender">
-              <img  src={calenderIcon} alt="calenderIcon" />
-              <div>{`${this.state.day[d.getDay()]}, ${d.getDate()} at ${d.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}`}</div>
-            </div>
-          }
+            {
+              diffInDay < 1 ?
+                <div block="eventStart-timer">
+                  <img src={timerIcon} alt="timerIcon" />
+                  <Countdown
+                    date={d}
+                    daysInHours={true}
+                  />
+                </div>
+                :
+                <div block="eventStart-calender">
+                  <img src={calenderIcon} alt="calenderIcon" />
+                  <div>{`${this.state.day[d.getDay()]}, ${d.getDate()} at ${d.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })}`}</div>
+                </div>
+            }
           </p>
 
-        <div block="eventInfo">
-          <h3 block="eventTitle">{name}</h3>
-          <p block="eventDesc">{description}</p>
-        </div>
-      </li>
-    )}
+          <div block="eventInfo">
+            <h3 block="eventTitle">{name}</h3>
+            <p block="eventDesc">{description}</p>
+          </div>
+        </li>
+      )
+    }
   };
 
   renderArchivedGridBlock = (block, i) => {
     const { mainImageURI, name, description, products } = block;
     if (mainImageURI) {
-    return (
-      <li block="spckItem">
-        <div block="eventImage">
-          <img src={mainImageURI} alt={name}  />
-        </div>
-        <p block="eventProduct">
-          <img src={cartIcon} alt="cartIcon"/>
-          <div>{products.length}</div>
-        </p>
-        <a block="eventPlayBtn"   onClick={() => this.onClickPartyPlay(block.id)} ><img src={playbtn} alt="event-playbtn" /></a>
-        <div block="eventInfo">
-          <h3 block="eventTitle">{name}</h3>
-          <p block="eventDesc">{description}</p>
-        </div>
-      </li>
-    )}
+      return (
+        <li block="spckItem">
+          <div block="eventImage">
+            <img src={mainImageURI} alt={name} />
+          </div>
+          <p block="eventProduct">
+            <img src={cartIcon} alt="cartIcon" />
+            <div>{products.length}</div>
+          </p>
+          <a block="eventPlayBtn" onClick={() => this.onClickPartyPlay(block.id)} ><img src={playbtn} alt="event-playbtn" /></a>
+          <div block="eventInfo">
+            <h3 block="eventTitle">{name}</h3>
+            <p block="eventDesc">{description}</p>
+          </div>
+        </li>
+      )
+    }
   };
   onClickPartyPlay = (id) => {
     let newId = id.toString();
-    let ele = document.getElementsByTagName("button")
-    for(let i = 0 ; i < ele.length; i++){
-      // debugger
-      if(ele[i].getAttribute("data-spck-id") === newId){
+    let ele = document.getElementsByClassName("spck-watch-button")
+    for (let i = 0; i < ele.length; i++) {
+      let dataInfo = JSON.parse(ele[i].getAttribute("data-info"));
+      if (dataInfo["spckId"] === newId )  {
         ele[i].click();
       }
     }
@@ -192,7 +230,7 @@ export class LiveExperience extends PureComponent {
           }
 
 
-          { this.props.updatedArchived.length > 0 &&
+          {this.props.updatedArchived.length > 0 &&
             <div block="archived-Grid">
               <h3 block="sectionTitle">{__("RECENTLY PLAYED")}</h3>
               <div id="archived"></div>
@@ -202,10 +240,10 @@ export class LiveExperience extends PureComponent {
             </div>
           }
 
-          </ContentWrapper>
-          <div id="all"></div>
+        </ContentWrapper>
+        <div id="all"></div>
       </main>
-        );
+    );
   }
 }
 
