@@ -263,6 +263,40 @@
     grid-template-columns: auto 1fr 1fr;
     grid-auto-flow: row dense;
     grid-gap: 10px;
+    &-SpecialPriceCon {
+      display: block;
+      right: unset;
+      font-size: 14px;
+      font-weight: var(--fw-demi);
+      color: var(--color-pure-black);
+      letter-spacing: 0;
+      line-height: 19px;
+    }
+
+    &-Del {
+      display: inline-block;
+
+      span {
+        position: relative;
+        right: unset;
+      }
+      #price {
+        margin-right: 10px;
+        font-weight: var(--fw-medium);
+      }
+    }
+
+    &-PriceWrapper {
+      display: inline-block;
+      position: relative;
+      right: unset;
+      span {
+        color: #d1490c;
+        font-weight: var(--fw-bold);
+        position: relative;
+        right: unset;
+      }
+    }
     &-Info {
       grid-column: 2;
       grid-row: auto;

@@ -8,6 +8,7 @@ import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 import BRAND_MAPPING from "./SearchSiggestion.config";
 import { getCurrency } from "Util/App/App";
+import Price from "Component/Price/Price.component";
 
 import "./SearchSuggestion.style";
 
@@ -97,16 +98,76 @@ class SearchSuggestion extends PureComponent {
     );
   }
 
+  discountPercentage(basePrice, specialPrice, haveDiscount) {
+    let discountPercentage = Math.round(100 * (1 - specialPrice / basePrice));
+    if (discountPercentage === 0) {
+      discountPercentage = 1;
+    }
+
+    return (
+      <span
+        block="SearchProduct"
+        elem="Discount"
+        mods={{ discount: haveDiscount }}
+      >
+        -{discountPercentage}%<span> </span>
+      </span>
+    );
+  }
+
+  renderSpecialPrice(specialPrice, haveDiscount) {
+    const currency = getCurrency();
+    return (
+      <span
+        block="SearchProduct"
+        elem="SpecialPrice"
+        mods={{ discount: haveDiscount }}
+      >
+        {currency}
+        <span> </span>
+        {specialPrice}
+      </span>
+    );
+  }
+
   renderPrice = (price) => {
+    // if (price && price.length > 0) {
+    //   const priceObj = price[0],
+    //     currency = getCurrency();
+    //   const priceToShow = priceObj[currency]["6s_base_price"];
+    //   return (
+    //     <span
+    //       block="SearchProduct"
+    //       elem="Price"
+    //     >{`${currency} ${priceToShow}`}</span>
+    //   );
+    // }
+    // return null;
+
     if (price && price.length > 0) {
       const priceObj = price[0],
         currency = getCurrency();
-      const priceToShow = priceObj[currency]["6s_base_price"];
+      const basePrice = priceObj[currency]["6s_base_price"];
+      const specialPrice = priceObj[currency]["6s_special_price"];
+      const haveDiscount =
+        specialPrice !== "undefined" &&
+        specialPrice &&
+        basePrice !== specialPrice;
+
+      if (basePrice === specialPrice || !specialPrice) {
+        return <span id="price">{`${currency} ${basePrice}`}</span>;
+      }
+
       return (
-        <span
-          block="SearchProduct"
-          elem="Price"
-        >{`${currency} ${priceToShow}`}</span>
+        <div block="SearchProduct" elem="SpecialPriceCon">
+          <del block="SearchProduct" elem="Del">
+            <span id="price">{`${currency} ${basePrice}`}</span>
+          </del>
+          <span block="SearchProduct" elem="PriceWrapper">
+            {this.discountPercentage(basePrice, specialPrice, haveDiscount)}
+            {this.renderSpecialPrice(specialPrice, haveDiscount)}
+          </span>
+        </div>
       );
     }
     return null;

@@ -328,12 +328,15 @@ export class CartItem extends PureComponent {
     if (optionValue) {
       return (
         <div block="CartItem" elem="ColSizeQty" mods={{ isArabic }}>
-          <div>
+          <div block="CartItem" elem="Color">
             <span> {__("Color:")}</span>
             {color}
           </div>
-          <div>
-            <span>| {__("Size:")} </span>
+          <div block="CartItem" elem="Size">
+            <span block="CartItem" elem="Pipe">
+              |
+            </span>
+            <span> {__("Size:")} </span>
             {optionValue}
           </div>
           {/* <span>| {__("Qty:")} </span>
