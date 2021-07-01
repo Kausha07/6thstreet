@@ -76,7 +76,7 @@ class DynamicContentVueProductSlider extends PureComponent {
     console.log(this.state);
     let items = this.getProducts();
 
-    debugger;
+    // debugger;
     const width =
       (this.itemRef &&
         this.itemRef.current &&
