@@ -9,6 +9,8 @@ import "react-circular-carousel/dist/index.css";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
 import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
+// import VueIntegrationQueries from "Query/vueIntegration.query";
+// import { getUUID } from "Util/Auth";
 import "./DynamicContentRichContentBanner.style";
 
 const settings = {
@@ -103,8 +105,7 @@ class DynamicContentRichContentBanner extends PureComponent {
               >
                 {item.tag.label}
               </div>
-            )
-          }
+            )}
           </div>
         </Link>
         <div block="Label">
@@ -116,7 +117,6 @@ class DynamicContentRichContentBanner extends PureComponent {
             </a>
           )}
         </div>
-
       </div>
     );
   };

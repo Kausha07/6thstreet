@@ -1,13 +1,13 @@
 /* eslint-disable no-magic-numbers */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
-
 import { Product } from 'Util/API/endpoint/Product/Product.type';
 import isMobile from 'Util/Mobile';
-
 import PDPSizeGuide from '../PDPSizeGuide';
-
 import './PDPAddToCart.style';
+
+
+
 
 class PDPAddToCart extends PureComponent {
     static propTypes = {

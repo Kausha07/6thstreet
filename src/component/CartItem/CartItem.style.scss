@@ -24,13 +24,14 @@
 .CartItem {
   --header-color: var(--cart-item-actions-color);
 
-  border-top: 1px solid var(--Gallery);
+  // border-top: 1px solid var(--Gallery);
+  border-top: none;
   margin: 0;
   font-weight: var(--fw-regular);
   min-height: 140px;
 
   @include desktop {
-    margin: 20px;
+    margin-inline: 20px;
   }
 
   &:first-of-type {
@@ -86,7 +87,7 @@
   &-Option,
   & {
     padding-left: 0;
-    margin-bottom: 10px;
+    // margin-bottom: 10px;
 
     &::before {
       content: none;

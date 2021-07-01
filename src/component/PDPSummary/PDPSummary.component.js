@@ -4,7 +4,7 @@ import { PureComponent } from "react";
 
 import PDPAddToCart from "Component/PDPAddToCart/PDPAddToCart.container";
 import PDPTags from "Component/PDPTags";
-import PDPAlsoAvailableProducts from "Component/PDPAlsoAvailableProducts";
+// import PDPAlsoAvailableProducts from "Component/PDPAlsoAvailableProducts";
 import Price from "Component/Price";
 import ProductLabel from "Component/ProductLabel/ProductLabel.component";
 import TabbyMiniPopup from "Component/TabbyMiniPopup";
@@ -12,6 +12,7 @@ import { TABBY_TOOLTIP_PDP } from "Component/TabbyMiniPopup/TabbyMiniPopup.confi
 import { Product } from "Util/API/endpoint/Product/Product.type";
 import { isArabic } from "Util/App";
 import { SPECIAL_COLORS, translateArabicColor } from "Util/Common";
+import PDPAlsoAvailable from "Component/PDPAlsoAvailable";
 
 import tabby from "./icons/tabby.svg";
 
@@ -36,14 +37,16 @@ class PDPSummary extends PureComponent {
 
     const { alsoAvailable, prevAlsoAvailable } = state;
 
+    const derivedState = {};
+
     if (prevAlsoAvailable !== product["6s_also_available"]) {
-      return {
+      Object.assign(derivedState, {
         alsoAvailable: product["6s_also_available"],
         prevAlsoAvailable: alsoAvailable !== undefined ? alsoAvailable : null,
-      };
+      });
     }
 
-    return null;
+    return Object.keys(derivedState).length ? derivedState : null;
   }
 
   setStockAvailability = (status) => {
@@ -239,7 +242,6 @@ class PDPSummary extends PureComponent {
         </>
       );
     }
-
     return null;
   }
 
@@ -253,7 +255,7 @@ class PDPSummary extends PureComponent {
     if (alsoAvailable) {
       if (alsoAvailable.length > 0 && !isLoading) {
         return (
-          <PDPAlsoAvailableProducts
+          <PDPAlsoAvailable
             productsAvailable={alsoAvailable}
             productSku={sku}
           />

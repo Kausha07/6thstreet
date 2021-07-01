@@ -1,14 +1,12 @@
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import TinySlider from "tiny-slider-react";
-import Image from "Component/Image";
 import Link from "Component/Link";
-import SliderHomepage from "Component/SliderHomepage";
 import { formatCDNLink } from "Util/Url";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
-import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
 import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
-import GoogleTagManager from "../GoogleTagManager/GoogleTagManager.component";
+// import VueIntegrationQueries from "Query/vueIntegration.query";
+// import { getUUID } from "Util/Auth";
 import "./DynamicContentFullWidthBannerSlider.style";
 
 const settings = {

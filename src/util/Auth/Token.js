@@ -6,6 +6,8 @@ export const MOBILE_AUTH_TOKEN = 'mobile_auth_token';
 
 export const UUID_TOKEN = 'uuid_token';
 
+export const UUID = 'uuid';
+
 export const ONE_HOUR = 3600;
 
 export const setAuthorizationToken = (token) => BrowserDatabase.setItem(token, AUTH_TOKEN, ONE_HOUR);
@@ -25,3 +27,7 @@ export const isSignedIn = () => !!getAuthorizationToken() && !!getMobileAuthoriz
 export const setUUIDToken = (token) => BrowserDatabase.setItem(token,UUID_TOKEN);
 
 export const getUUIDToken = () => BrowserDatabase.getItem(UUID_TOKEN);
+
+export const setUUID = (token) => BrowserDatabase.setItem(token, UUID);
+
+export const getUUID = () => BrowserDatabase.getItem(UUID);

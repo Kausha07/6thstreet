@@ -1,8 +1,5 @@
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
-import TinySlider from "tiny-slider-react";
-
-import Image from "Component/Image";
 import Link from "Component/Link";
 import { formatCDNLink } from "Util/Url";
 
@@ -13,6 +10,26 @@ import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.c
 import "./DynamicContentCircleItemSlider.style";
 import DragScroll from "Component/DragScroll/DragScroll.component";
 import { isArabic } from "Util/App";
+
+const settings = {
+  lazyload: true,
+  nav: false,
+  mouseDrag: true,
+  touch: true,
+  controlsText: ["&#x27E8", "&#x27E9"],
+  loop: false,
+  responsive: {
+    1024: {
+      items: 8,
+    },
+    420: {
+      items: 6,
+    },
+    300: {
+      items: 4,
+    },
+  },
+};
 
 class DynamicContentCircleItemSlider extends PureComponent {
   static propTypes = {
@@ -38,12 +55,26 @@ class DynamicContentCircleItemSlider extends PureComponent {
       link: a.link,
       promotion_name: a.promotion_name,
     };
+    // const locale = VueIntegrationQueries.getLocaleFromUrl();
+    // VueIntegrationQueries.vueAnalayticsLogger({
+    //   event_name: VUE_CAROUSEL_CLICK,
+    //   params: {
+    //     event: VUE_CAROUSEL_CLICK,
+    //     pageType: "plp",
+    //     currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+    //     clicked: Date.now(),
+    //     uuid: getUUID(),
+    //     referrer: "desktop",
+    //     widgetID: "vue_visually_similar_slider", // TODO: will be added after vue product slider.
+    //   },
+    // });
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
   };
 
   renderCircle = (item, i) => {
     const { link, label, image_url, plp_config } = item;
     const { isArabic } = this.state;
+
     const linkTo = {
       pathname: formatCDNLink(link),
       state: { plp_config },

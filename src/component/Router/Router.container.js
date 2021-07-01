@@ -8,6 +8,7 @@ import {
 } from 'SourceComponent/Router/Router.container';
 import { setCountry, setLanguage } from 'Store/AppState/AppState.action';
 import CartDispatcher from 'Store/Cart/Cart.dispatcher';
+import ClubApparelDispatcher from 'Store/ClubApparel/ClubApparel.dispatcher';
 import { updateCustomerDetails } from 'Store/MyAccount/MyAccount.action';
 import {
     deleteAuthorizationToken,
@@ -17,7 +18,8 @@ import {
     isSignedIn,
     setAuthorizationToken,
     setMobileAuthorizationToken,
-    setUUIDToken
+
+    setUUID, setUUIDToken
 } from 'Util/Auth';
 import { getCookie } from 'Util/Url/Url';
 import { v4 as uuidv4 } from 'uuid';
@@ -67,6 +69,7 @@ export class RouterContainer extends SourceRouterContainer {
         const { getCart, requestCustomerData, updateCustomerDetails, requestPdpWidgetData, pdpWidgetsData } = this.props;
         const decodedParams = atob(getCookie('authData'));
         setUUIDToken(uuidv4())
+        setUUID(uuidv4())
         if (decodedParams.match('mobileToken') && decodedParams.match('authToken')) {
             const params = decodedParams.split('&').reduce((acc, param) => {
                 acc[param.substr(0, param.indexOf('='))] = param.substr(param.indexOf('=') + 1);

@@ -11,6 +11,7 @@ import WishlistIcon from "Component/WishlistIcon";
 import HeaderCart from "Component/HeaderCart";
 import CSS from "Util/CSS";
 import isMobile from "Util/Mobile";
+
 import browserHistory from "Util/History";
 import { isArabic } from "Util/App";
 

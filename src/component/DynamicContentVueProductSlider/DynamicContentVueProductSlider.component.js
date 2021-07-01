@@ -73,10 +73,13 @@ class DynamicContentVueProductSlider extends PureComponent {
   };
 
   renderScrollbar = () => {
+    console.log(this.state);
     let items = this.getProducts();
 
+    debugger;
     const width =
-      (this.itemRef.current &&
+      (this.itemRef &&
+        this.itemRef.current &&
         this.itemRef.current.childRef.current.clientWidth) *
         items.length +
       items.length * 7 * 2 -
@@ -84,6 +87,8 @@ class DynamicContentVueProductSlider extends PureComponent {
     this.setState({
       customScrollWidth: width,
     });
+
+    // return null;
 
     return (
       <div
@@ -106,40 +111,43 @@ class DynamicContentVueProductSlider extends PureComponent {
     );
   };
 
-  renderSliderContainer() {
+  renderSliderContainer = () => {
     const items = this.getProducts();
     const { isHome } = this.props;
-    const { isArabic } = this.state;
+    // const { isArabic } = this.state;
 
     return (
       <DragScroll data={{ rootClass: "ScrollWrapper", ref: this.cmpRef }}>
-        <div
-          block="VueProductSlider"
-          elem="SliderContainer"
-          id="ScrollWrapper"
-          ref={this.cmpRef}
-          mods={{ isHome }}
-          onScroll={this.handleContainerScroll}
-        >
-          {isHome && <div block="SliderHelper" mods={{ isHome }}></div>}
-          {items.map((item) => {
-            const { sku } = item;
-            return (
-              <DynamicContentVueProductSliderItem
-                key={sku}
-                data={item}
-                ref={this.itemRef}
-              />
-            );
-          })}
-          {isHome && <div block="SliderHelper" mods={{ isHome }}></div>}
-        </div>
-        {this.renderScrollbar()}
+        <>
+          <div
+            block="VueProductSlider"
+            elem="SliderContainer"
+            id="ScrollWrapper"
+            ref={this.cmpRef}
+            mods={{ isHome }}
+            onScroll={this.handleContainerScroll}
+          >
+            {isHome && <div block="SliderHelper" mods={{ isHome }}></div>}
+            {items.map((item) => {
+              const { sku } = item;
+              return (
+                <DynamicContentVueProductSliderItem
+                  key={sku}
+                  data={item}
+                  ref={this.itemRef}
+                />
+              );
+            })}
+            {isHome && <div block="SliderHelper" mods={{ isHome }}></div>}
+          </div>
+          {this.renderScrollbar()}
+        </>
       </DragScroll>
     );
-  }
+  };
 
   render() {
+    // return null;
     return (
       <div block="VueProductSlider" elem="Container">
         {this.renderHeader()}

@@ -1,8 +1,7 @@
 // import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
-import PropTypes from "prop-types";
-
 import PDPDetail from "./PDPDetail.component";
 
 export const mapStateToProps = (_state) => ({
