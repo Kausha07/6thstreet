@@ -288,13 +288,15 @@ export class CartItem extends PureComponent {
       item: { qty },
     } = this.props;
 
+    const { isArabic } = this.state;
+
     const qtyList = Array.from(
       { length: maxSaleQuantity - minSaleQuantity + 1 },
       (v, k) => k + minSaleQuantity
     );
 
     return (
-      <div block="CartItem" elem="Quantity">
+      <div block="CartItem" elem="Quantity" mods={{ isArabic }}>
         <select
           value={qty}
           onChange={(e) => this.onQuantityChange(e.target.value)}
@@ -328,16 +330,19 @@ export class CartItem extends PureComponent {
     if (optionValue) {
       return (
         <div block="CartItem" elem="ColSizeQty" mods={{ isArabic }}>
-          <div block="CartItem" elem="Color">
+          <div block="CartItem" elem="Color" mods={{ isArabic }}>
             <span> {__("Color:")}</span>
             {color}
           </div>
-          <div block="CartItem" elem="Size">
-            <span block="CartItem" elem="Pipe">
+          <div block="CartItem" elem="Size" mods={{ isArabic }}>
+            <span block="CartItem" elem="Pipe" mods={{ isArabic }}>
               |
             </span>
             <span> {__("Size:")} </span>
             {optionValue}
+            {/* <span block="CartItem" elem="PipeAR" mods={{ isArabic }}>
+              |
+            </span> */}
           </div>
           {/* <span>| {__("Qty:")} </span>
           {qty} */}
