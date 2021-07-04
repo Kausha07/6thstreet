@@ -754,6 +754,7 @@ const BRAND_MAPPING = {
   beardo: "BEARDO",
   alboom: "Alboom",
   "amal ibrahim": "أمل إبراهيم",
+  souna:"سونا",
 };
 
 export default BRAND_MAPPING;
