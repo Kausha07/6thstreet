@@ -7,15 +7,15 @@ import { addNewCreditCard, saveCreditCard, getSavedCards } from 'Util/API/endpoi
 export class CreditCardDispatcher {
     /* eslint-disable-next-line */
     async addNewCreditCard(dispatch, data) {
-        const { number, expDate = '', cvv } = data;
+        const { number, expMonth, expYear, cvv } = data;
 
         return addNewCreditCard({
             type: 'card',
             number,
-            expiryMonth: expDate.substr('0', '2'),
-            expiry_month: expDate.substr('0', '2'),
-            expiryyear: expDate.substr('2', '4'),
-            expiry_year: expDate.substr('2', '4'),
+            expiryMonth: expMonth,
+            expiry_month: expMonth,
+            expiryyear: expYear,
+            expiry_year: expYear,
             cvv
         });
     }

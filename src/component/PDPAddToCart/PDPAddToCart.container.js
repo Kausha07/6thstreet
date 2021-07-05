@@ -23,6 +23,7 @@ import PDPAddToCartDesktop from "./PDPAddToCartDesktop.component";
 
 export const mapStateToProps = (state) => ({
   product: state.PDP.product,
+  locale: state.AppState.locale,
   totals: state.CartReducer.cartTotals,
 });
 
@@ -54,6 +55,7 @@ export const mapDispatchToProps = (dispatch) => ({
   setMinicartOpen: (isMinicartOpen = false) =>
     dispatch(setMinicartOpen(isMinicartOpen)),
   getProductStock: (sku) => PDPDispatcher.getProductStock(dispatch, sku),
+  sendNotifyMeEmail: (data) => PDPDispatcher.sendNotifyMeEmail(data)
 });
 
 export class PDPAddToCartContainer extends PureComponent {
@@ -82,6 +84,8 @@ export class PDPAddToCartContainer extends PureComponent {
     onSizeSelect: this.onSizeSelect.bind(this),
     addToCart: this.addToCart.bind(this),
     routeChangeToCart: this.routeChangeToCart.bind(this),
+    showAlertNotification: this.showAlertNotification.bind(this),
+    sendNotifyMeEmail: this.sendNotifyMeEmail.bind(this)
   };
 
   constructor(props) {
@@ -100,6 +104,10 @@ export class PDPAddToCartContainer extends PureComponent {
       hideCheckoutBlock: false,
       clearTime: false,
       processingRequest: false,
+      productStock: {},
+      isOutOfStock: false,
+      notifyMeLoading: false,
+      notifyMeSuccess: false
     };
 
     this.fullCheckoutHide = null;
@@ -185,24 +193,16 @@ export class PDPAddToCartContainer extends PureComponent {
       getProductStock,
     } = this.props;
     const {
-      sizeObject: { sizeCodes = [], sizeTypes },
+      sizeObject: { sizeTypes },
     } = this.state;
     this.setState({ processingRequest: true });
 
     getProductStock(sku).then((response) => {
-      const emptyStockSizes = Object.entries(response).reduce((acc, size) => {
+      const allSizes = Object.entries(response).reduce((acc, size) => {
         const sizeCode = size[0];
         const { quantity } = size[1];
 
-        if (parseInt(quantity, 0) === 0) {
-          acc.push(sizeCode);
-        }
-
-        return acc;
-      }, []);
-
-      const mappedSizes = sizeCodes.reduce((acc, sizeCode) => {
-        if (!emptyStockSizes.includes(sizeCode)) {
+        if (quantity) {
           acc.push(sizeCode);
         }
 
@@ -211,10 +211,31 @@ export class PDPAddToCartContainer extends PureComponent {
 
       const object = {
         sizeTypes,
-        sizeCodes: mappedSizes,
+        sizeCodes: allSizes,
       };
 
-      this.setState({ processingRequest: false, mappedSizeObject: object });
+      this.setState({ processingRequest: false, mappedSizeObject: object, productStock: response });
+    });
+  }
+
+  sendNotifyMeEmail(email) {
+    const {
+      locale,
+      product: { sku },
+      sendNotifyMeEmail,
+      showNotification
+    } = this.props;
+    let data = { email, sku, locale };
+
+    this.setState({ notifyMeLoading: true });
+
+    sendNotifyMeEmail(data).then((response) => {
+      if (response && response.success) {//if success
+        this.setState({ notifyMeSuccess: true, isOutOfStock: false });
+      } else {//if error
+        showNotification("error", __('Something went wrong.'));
+      }
+      this.setState({ notifyMeLoading: false });
     });
   }
 
@@ -256,8 +277,19 @@ export class PDPAddToCartContainer extends PureComponent {
     });
   }
 
-  onSizeSelect(size) {
-    this.setState({ selectedSizeCode: size.target.value });
+  onSizeSelect({ target }) {
+    const { value } = target;
+    const { productStock, isOutOfStock } = this.state;
+    let outOfStockVal = isOutOfStock;
+    if (productStock && productStock[value]) {
+      const selectedSize = productStock[value];
+      if (selectedSize['quantity'] && parseInt(selectedSize['quantity'], 0) === 0) {
+        outOfStockVal = true;
+      } else {
+        outOfStockVal = false;
+      }
+    }
+    this.setState({ selectedSizeCode: value, isOutOfStock: outOfStockVal, notifyMeSuccess: false });
   }
 
   addToCart() {
@@ -360,16 +392,11 @@ export class PDPAddToCartContainer extends PureComponent {
         userToken = userData.data.id;
       }
       if (queryID) {
-        new Algolia().logAlgoliaAnalytics(
-          "conversion",
-          ADD_TO_CART_ALGOLIA,
-          [],
-          {
-            objectIDs: [objectID],
-            queryID,
-            userToken: userToken ? `user-${userToken}` : getUUIDToken(),
-          }
-        );
+        new Algolia().logAlgoliaAnalytics('conversion', ADD_TO_CART_ALGOLIA, [], {
+          objectIDs: [objectID],
+          queryID,
+          userToken: userToken ? `user-${userToken}` : getUUIDToken(),
+        });
       }
       // vue analytics
       const locale = VueIntegrationQueries.getLocaleFromUrl();
@@ -438,16 +465,11 @@ export class PDPAddToCartContainer extends PureComponent {
         userToken = userData.data.id;
       }
       if (queryID) {
-        new Algolia().logAlgoliaAnalytics(
-          "conversion",
-          ADD_TO_CART_ALGOLIA,
-          [],
-          {
-            objectIDs: [objectID],
-            queryID,
-            userToken: userToken ? `user-${userToken}` : getUUIDToken(),
-          }
-        );
+        new Algolia().logAlgoliaAnalytics('conversion', ADD_TO_CART_ALGOLIA, [], {
+          objectIDs: [objectID],
+          queryID,
+          userToken: userToken ? `user-${userToken}` : getUUIDToken(),
+        });
       }
       // vue analytics
       const locale = VueIntegrationQueries.getLocaleFromUrl();
@@ -515,6 +537,10 @@ export class PDPAddToCartContainer extends PureComponent {
     history.push("/cart");
   }
 
+  showAlertNotification(message) {
+    this.props.showNotification("error", message);
+  }
+
   render() {
     if (!isMobile.any()) {
       return (
@@ -524,7 +550,6 @@ export class PDPAddToCartContainer extends PureComponent {
         />
       );
     }
-
     return (
       <PDPAddToCart {...this.containerFunctions} {...this.containerProps()} />
     );

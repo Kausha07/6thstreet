@@ -44,7 +44,6 @@
 
     @include desktop {
       width: 100% !important;
-      // padding: 0 52%;
       z-index: 90;
       text-align: center;
       transform: translate(-15px, 0);
@@ -719,7 +718,6 @@
   }
 
   &-Content {
-    // height: 0;
     overflow-y: auto;
     @include mobile {
       padding-top: 0;

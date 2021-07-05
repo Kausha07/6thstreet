@@ -557,12 +557,12 @@ export class CheckoutSuccess extends PureComponent {
 
   renderPaymentTypeContent = () => {
     const {
-      creditCardData: { number = "", expDate, cvv },
+      creditCardData: { number = "", expMonth, expYear, cvv },
       paymentMethod,
       selectedCard,
     } = this.props;
 
-    if (number && expDate && cvv) {
+    if (number && expMonth && expYear && cvv) {
       const displayNumberDigits = 4;
       const slicedNumber = number.slice(number.length - displayNumberDigits);
 
@@ -580,14 +580,6 @@ export class CheckoutSuccess extends PureComponent {
             </div>
             <div block="Details" elem="Number-Value">
               {slicedNumber}
-            </div>
-          </div>
-          <div block="Details" elem="Exp">
-            <span block="Details" elem="Exp-Title">
-              {__("EXP.")}
-            </span>
-            <div block="Details" elem="Exp-Date">
-              {expDate}
             </div>
           </div>
         </div>
@@ -611,14 +603,6 @@ export class CheckoutSuccess extends PureComponent {
             </div>
             <div block="Details" elem="Number-Value">
               {maskedCC}
-            </div>
-          </div>
-          <div block="Details" elem="Exp">
-            <span block="Details" elem="Exp-Title">
-              {__("EXP.")}
-            </span>
-            <div block="Details" elem="Exp-Date">
-              {`${expirationDate.substr(0, 2)}${expirationDate.substr(5, 2)}`}
             </div>
           </div>
         </div>

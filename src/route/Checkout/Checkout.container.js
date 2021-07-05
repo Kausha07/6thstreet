@@ -514,6 +514,18 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
                   //return true;
                 } else {
+                  if (code === CARD) {
+                    const { saveCreditCard, newCardVisible } = this.props;
+                    const { creditCardData } = this.state;
+                    if (newCardVisible && creditCardData.saveCard) {
+                      saveCreditCard({ email: creditCardData.email, paymentId: id })
+                        .then(() => {
+                        })
+                        .catch(() => {
+                          showErrorNotification(__("Something went wrong! Please, try again!"));
+                        })
+                    }
+                  }
                   BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
                   this.setDetailsStep(order_id, increment_id);
                   this.resetCart();
@@ -637,10 +649,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           if (newCardVisible && creditCardData.saveCard) {
             saveCreditCard({ email: creditCardData.email, paymentId })
               .then(() => {
-                // console.log("saveCreditCard resp", response);
               })
               .catch(() => {
-                // console.log("saveCreditCard err", err);
                 showErrorNotification(__("Something went wrong! Please, try again!"));
               })
           }

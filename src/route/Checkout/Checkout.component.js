@@ -212,11 +212,6 @@ export class Checkout extends SourceCheckout {
       );
     }
     return null;
-    //  (
-    //   <div block="LoadingBlock">
-    //     <Loader isLoading={isLoading} />;
-    //   </div>
-    // );
   }
 
   renderSummary() {
@@ -352,12 +347,13 @@ export class Checkout extends SourceCheckout {
     );
   }
 
-  setCheckoutCreditCardData = (number, expDate, cvv, saveCard, email) => {
+  setCheckoutCreditCardData = (number, expMonth, expYear, cvv, saveCard, email) => {
     let creditCardData = {
       cvv,
       email,
       number,
-      expDate,
+      expMonth,
+      expYear,
       saveCard,
     };
     this.setState({ creditCardData });
@@ -735,7 +731,6 @@ export class Checkout extends SourceCheckout {
     const { isSuccess } = this.state;
     const { checkoutStep } = this.props;
 
-    // const additionalDisplay = checkoutStep === BILLING_STEP;
     return (
       <>
         {this.renderBinPromotion()}
