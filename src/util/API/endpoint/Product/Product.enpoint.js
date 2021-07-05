@@ -4,3 +4,8 @@ import MobileAPI from '../../provider/MobileAPI';
 export const getProductStock = (configSku) => MobileAPI.get(
     `/product/${configSku}/stock`
 ) || {};
+
+export const sendNotifyMeEmail = (data) => MobileAPI.post(
+    `/product-alert`,
+    data
+) || {};

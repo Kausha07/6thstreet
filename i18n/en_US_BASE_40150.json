@@ -685,5 +685,10 @@
     "Added": null,
     "Success": null,
     "MM": null,
-    "YY": null
+    "YY": null,
+    "out of stock": null,
+    "Notify me when it’s available": null,
+    "Sending..": null,
+    "That looks like an invalid email address": null,
+    "We’ll let you know as soon as the product becomes available": null
 }
