@@ -730,7 +730,6 @@ export class Checkout extends SourceCheckout {
     const { isSuccess } = this.state;
     const { checkoutStep } = this.props;
 
-    // const additionalDisplay = checkoutStep === BILLING_STEP;
     return (
       <>
         {this.renderBinPromotion()}
