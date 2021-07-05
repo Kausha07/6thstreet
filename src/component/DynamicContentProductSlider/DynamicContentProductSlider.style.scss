@@ -30,6 +30,9 @@
       line-height: 19px;
       text-align: start;
       text-transform: uppercase;
+      @include mobile{
+        text-align: center;
+      }
     }
     #productName {
       color: #4a4a4a;
@@ -38,6 +41,10 @@
       letter-spacing: 0;
       line-height: 15px;
       text-align: start;
+      @include mobile{
+        text-align: center;
+        width: 100%;
+      }
     }
     #price {
       color: #000000;
@@ -47,6 +54,9 @@
       letter-spacing: -0.5px;
       line-height: 19px;
       text-align: start;
+      @include mobile{
+        text-align: center;
+      }
     }
   }
 }
