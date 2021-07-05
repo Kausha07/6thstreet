@@ -38,7 +38,6 @@
     border-top: none;
   }
   &-Color {
-    // padding-right: 10px;
     &_isArabic {
     }
   }
@@ -47,22 +46,11 @@
     }
   }
   &-Pipe {
-    padding-right: 10px;
-    padding-left: 10px;
-  }
-
-  &-PipeAR {
-    padding-right: 10px;
-    padding-left: 10px;
-    display: none;
-    &_isArabic {
-      // display: inline-block;
-    }
+    padding-right: 5px;
+    padding-left: 5px;
   }
 
   &-Quantity {
-    // display: inline-block;
-    // margin-left: 12px;
     display: flex;
     margin-left: auto;
     margin-right: 0;

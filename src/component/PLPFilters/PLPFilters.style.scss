@@ -244,6 +244,7 @@
   &-QuickCategories {
     width: 100vw;
     overflow-x: auto;
+    overflow-y: hidden;
 
     @include desktop {
       overflow: hidden;
