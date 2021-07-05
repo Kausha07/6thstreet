@@ -5,6 +5,8 @@ import { Product } from 'Util/API/endpoint/Product/Product.type';
 import isMobile from 'Util/Mobile';
 import PDPSizeGuide from '../PDPSizeGuide';
 import './PDPAddToCart.style';
+import Spinner from "react-spinkit";
+import NotifySuccessImg from "./icons/success-circle.png";
 
 
 
@@ -28,6 +30,7 @@ class PDPAddToCart extends PureComponent {
     };
 
     state = {
+        notifyMeEmail: "",
         isIPhoneNavigationHidden: false,
         pageYOffset: window.innerHeight,
         isRoundedIphone: this.isRoundedIphoneScreen() ?? false
@@ -35,6 +38,13 @@ class PDPAddToCart extends PureComponent {
 
     componentDidMount() {
         window.addEventListener('scroll', this.handleResize);
+        var data = localStorage.getItem("customer");
+        if (data) {
+            let userData = JSON.parse(data);
+            if (userData?.data?.email && !!this.state.notifyMeEmail.length) {
+                this.setState({ notifyMeEmail: userData.data.email })
+            }
+        }
     }
 
     isRoundedIphoneScreen() {
@@ -59,26 +69,26 @@ class PDPAddToCart extends PureComponent {
 
         if (sizeObject.sizeTypes !== undefined) {
             const listItems = sizeObject.sizeTypes.map((type = '') => (
-                    <div
+                <div
+                    block="PDPAddToCart"
+                    elem="SizeTypeOptionContainer"
+                >
+                    <input
+                        type="radio"
+                        key={type}
                         block="PDPAddToCart"
-                        elem="SizeTypeOptionContainer"
+                        elem="SizeTypeOption"
+                        value={type}
+                        name="sizeType"
+                        id={type}
+                        checked={selectedSizeType === type}
+                        onChange={onSizeTypeSelect}
                     >
-                        <input
-                            type="radio"
-                            key={ type }
-                            block="PDPAddToCart"
-                            elem="SizeTypeOption"
-                            value={ type }
-                            name="sizeType"
-                            id={ type }
-                            checked={ selectedSizeType===type }
-                            onChange={ onSizeTypeSelect }
-                        >
-                        </input>
-                        <label for={ type }>
-                            { type.toUpperCase() }
-                        </label>
-                    </div>
+                    </input>
+                    <label for={type}>
+                        {type.toUpperCase()}
+                    </label>
+                </div>
             ));
 
             return listItems;
@@ -87,56 +97,31 @@ class PDPAddToCart extends PureComponent {
         return null;
     }
 
-    renderQuantityBasedMessage(qty) {
-        switch (qty) {
-            case '0':
-                return  (
-                    <div block="PDPAddToCart-SizeSelector" elem="QuantityBasedMessage">
-                        { __('Out of stock') }
-                    </div>
-                );
-            case '1':
-                return  (
-                    <div block="PDPAddToCart-SizeSelector" elem="QuantityBasedMessage">
-                        { __('1 left in stock') }
-                    </div>
-                );
-            case '2' || '3':
-                return  (
-                    <div block="PDPAddToCart-SizeSelector" elem="QuantityBasedMessage">
-                        { __('Low stock') }
-                    </div>
-                );
-            default:
-                return null;
-        }
-
-    }
-
     renderSizeOption(simple_products, code, label) {
         const {
             selectedSizeCode,
             onSizeSelect
         } = this.props;
+        const isNotAvailable = simple_products[code].quantity === 0;
 
         return (
-            <div block="PDPAddToCart-SizeSelector" elem="SizeOptionContainer">
+            <div block="PDPAddToCart-SizeSelector" elem={isNotAvailable ? "SizeOptionContainerOOS" : "SizeOptionContainer"}>
                 <input
+                    id={code}
+                    key={code}
                     type="radio"
-                    id={ code }
-                    key={ code }
-                    block="PDPAddToCart"
                     elem="SizeOption"
-                    value={ code }
                     name="size"
-                    disabled={ simple_products[code].quantity === '0' }
-                    checked={ selectedSizeCode === code }
-                    onChange={ onSizeSelect }
+                    block="PDPAddToCart"
+                    value={code}
+                    onChange={onSizeSelect}
+                    checked={selectedSizeCode === code}
                 />
-                <label for={ code }>
+                <label for={code}>
                     {label}
                 </label>
                 <div />
+                {isNotAvailable && <div className="line" />}
             </div>
         );
     }
@@ -174,10 +159,10 @@ class PDPAddToCart extends PureComponent {
     }
 
     renderSizeInfo() {
-        const { sizeObject,product } = this.props;
+        const { sizeObject, product } = this.props;
 
         if ((sizeObject.sizeTypes !== undefined)
-        && (sizeObject.sizeTypes.length !== 0)) {
+            && (sizeObject.sizeTypes.length !== 0)) {
             return (
                 <div block="PDPAddToCart" elem="SizeInfo">
                     <PDPSizeGuide product={product} />
@@ -191,7 +176,7 @@ class PDPAddToCart extends PureComponent {
     renderSizeTypeSelect() {
         return (
             <div block="PDPAddToCart" elem="SizeTypeSelector">
-                { this.getSizeTypeSelect() }
+                {this.getSizeTypeSelect()}
             </div>
         );
     }
@@ -205,8 +190,7 @@ class PDPAddToCart extends PureComponent {
         return (
             <>
                 <div block="PDPAddToCart" elem="SizeSelector">
-                    { this.getSizeSelect() }
-                    { selectedSizeCode && this.renderQuantityBasedMessage(simple_products[selectedSizeCode].quantity) }
+                    {this.getSizeSelect()}
                 </div>
             </>
         );
@@ -226,7 +210,7 @@ class PDPAddToCart extends PureComponent {
             || highlighted_attributes === null
             || !parseFloat(basePrice)
             || (Object.keys(product).length === 0
-            && product.constructor === Object)) {
+                && product.constructor === Object)) {
             return true;
         }
 
@@ -246,28 +230,28 @@ class PDPAddToCart extends PureComponent {
 
         return (
             <>
-                { ((stock_qty !== 0 || highlighted_attributes === null
+                {((stock_qty !== 0 || highlighted_attributes === null
                     || (Object.keys(product).length !== 0
-                    && product.constructor !== Object))
+                        && product.constructor !== Object))
                     && Object.keys(simple_products).length !== 0)
                     && (
                         <button
-                          onClick={ addToCart }
-                          block="PDPAddToCart"
-                          elem="AddToCartButton"
-                          mods={ { isLoading } }
-                          mix={ {
-                              block: 'PDPAddToCart',
-                              elem: 'AddToCartButton',
-                              mods: { addedToCart }
-                          } }
-                          disabled={ disabled }
+                            onClick={addToCart}
+                            block="PDPAddToCart"
+                            elem="AddToCartButton"
+                            mods={{ isLoading }}
+                            mix={{
+                                block: 'PDPAddToCart',
+                                elem: 'AddToCartButton',
+                                mods: { addedToCart }
+                            }}
+                            disabled={disabled}
                         >
-                            <span>{ __('Add to bag') }</span>
-                            <span>{ __('Adding...') }</span>
-                            <span>{ __('Added to bag') }</span>
+                            <span>{__('Add to bag')}</span>
+                            <span>{__('Adding...')}</span>
+                            <span>{__('Added to bag')}</span>
                         </button>
-                    ) }
+                    )}
             </>
         );
     }
@@ -283,17 +267,17 @@ class PDPAddToCart extends PureComponent {
         if (showProceedToCheckout && isMobile.any()) {
             return (
                 <div
-                  block="PDPAddToCart"
-                  elem="Checkout"
-                  mods={ { hide: hideCheckoutBlock, isIPhoneNavigationHidden } }
+                    block="PDPAddToCart"
+                    elem="Checkout"
+                    mods={{ hide: hideCheckoutBlock, isIPhoneNavigationHidden }}
                 >
-                    <h2 block="PDPAddToCart" elem="CheckoutTitle">{ __('Added to your shopping bag') }</h2>
+                    <h2 block="PDPAddToCart" elem="CheckoutTitle">{__('Added to your shopping bag')}</h2>
                     <button
-                      block="PDPAddToCart"
-                      elem="CheckoutButton"
-                      onClick={ routeChangeToCart }
+                        block="PDPAddToCart"
+                        elem="CheckoutButton"
+                        onClick={routeChangeToCart}
                     >
-                        { __('View Bag') }
+                        {__('View Bag')}
                     </button>
                 </div>
             );
@@ -301,6 +285,69 @@ class PDPAddToCart extends PureComponent {
 
         return null;
     };
+
+
+
+    onNotifyMeSendClick = () => {
+        const { showAlertNotification, sendNotifyMeEmail, notifyMeLoading } = this.props;
+        if (notifyMeLoading) {
+            return;
+        }
+        const { notifyMeEmail } = this.state;
+        const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+        if (notifyMeEmail.length === 0 || !emailRegex.test(notifyMeEmail)) {
+            showAlertNotification(__("That looks like an invalid email address"));
+            return;
+        }
+        sendNotifyMeEmail(notifyMeEmail);
+    }
+
+    renderOutOfStock() {
+        const { isOutOfStock, notifyMeLoading } = this.props;
+        const { notifyMeEmail } = this.state;
+        if (!isOutOfStock) {
+            return null;
+        }
+
+        return (
+            <div block="PDPAddToCart" elem="OutOfStockContainer">
+                <span block="PDPAddToCart" elem="OutOfStockHeading">{__("out of stock")}</span>
+                <span block="PDPAddToCart" elem="NotifyWhenAvailable">{__("Notify me when it’s available")}</span>
+                <div block="PDPAddToCart" elem="EmailSendContainer">
+                    <input block="PDPAddToCart" elem="EmailInput" placeholder="ALITA@GMAIL.COM" value={notifyMeEmail}
+                        disabled={notifyMeLoading}
+                        onChange={({ target }) => {
+                            this.setState({ notifyMeEmail: target.value })
+                        }} />
+                    <span block="PDPAddToCart" elem="EmailSendBtn" onClick={this.onNotifyMeSendClick}>{notifyMeLoading ? __("Sending..") : __("Send")}</span>
+                </div>
+                {
+                    notifyMeLoading &&
+                    <div block="PDPAddToCart" elem="LoadingContainer">
+                        <Spinner
+                            color="white"
+                            name="ball-scale-multiple"
+                        />
+                    </div>
+                }
+            </div>
+        );
+    }
+
+    renderNotifyMeSuccess() {
+        const { notifyMeSuccess } = this.props;
+        if (!notifyMeSuccess) {
+            return null;
+        }
+
+        return (
+            <div block="PDPAddToCart" elem="NotifyMeSuccessContainer">
+                <img src={NotifySuccessImg} alt="success circle" />
+                <span>{__("We’ll let you know as soon as the product becomes available")}</span>
+            </div>
+        );
+    }
 
     renderContent() {
         const {
@@ -328,22 +375,24 @@ class PDPAddToCart extends PureComponent {
             <>
                 {
                     (sizeObject.sizeTypes !== undefined) && (sizeObject.sizeTypes.length !== 0)
-                    ?
-                    <>
-                        { this.renderSizeInfo() }
-                        <div block="PDPAddToCart" elem="SizeSelect">
-                            { this.renderSizeTypeSelect() }
-                            { this.renderSizeSelect() }
-                        </div>
-                        <div block="Seperator" />
-                    </>
-                    :
-                    null
+                        ?
+                        <>
+                            {this.renderOutOfStock()}
+                            {this.renderNotifyMeSuccess()}
+                            {this.renderSizeInfo()}
+                            <div block="PDPAddToCart" elem="SizeSelect">
+                                {this.renderSizeTypeSelect()}
+                                {this.renderSizeSelect()}
+                            </div>
+                            <div block="Seperator" />
+                        </>
+                        :
+                        null
                 }
                 <div block="PDPAddToCart" elem="Bottom">
-                    { this.renderAddToCartButton() }
+                    {this.renderAddToCartButton()}
                 </div>
-                { this.renderProceedToCheckoutBlock() }
+                {this.renderProceedToCheckoutBlock()}
             </>
         );
     }
@@ -351,7 +400,7 @@ class PDPAddToCart extends PureComponent {
     render() {
         return (
             <div block="PDPAddToCart">
-                { this.renderContent() }
+                {this.renderContent()}
             </div>
         );
     }

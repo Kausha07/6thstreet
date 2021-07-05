@@ -347,12 +347,13 @@ export class Checkout extends SourceCheckout {
     );
   }
 
-  setCheckoutCreditCardData = (number, expDate, cvv, saveCard, email) => {
+  setCheckoutCreditCardData = (number, expMonth, expYear, cvv, saveCard, email) => {
     let creditCardData = {
       cvv,
       email,
       number,
-      expDate,
+      expMonth,
+      expYear,
       saveCard,
     };
     this.setState({ creditCardData });

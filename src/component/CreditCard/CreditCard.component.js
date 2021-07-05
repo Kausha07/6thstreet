@@ -34,6 +34,8 @@ class CreditCard extends PureComponent {
             expDateFilled: false,
             validatorMessage: null,
             isArabic: isArabic(),
+            expMonth: '',
+            expYear: '',
         };
     }
 
@@ -105,21 +107,27 @@ class CreditCard extends PureComponent {
         });
     };
 
-    handleExpDateChange = (e) => {
-        const { setCreditCardData, expDateValidator, reformatInputField } = this.props;
-        const { value } = e.target;
-        const element = document.getElementById('expData');
-        const onlyNumbers = value.replace('/', '') || '';
-        const message = expDateValidator(onlyNumbers);
+    handleExpDateChange = (value, isMonth) => {
+        const { setCreditCardData, expDateValidator } = this.props;
+        const { expMonth, expYear, expDateFilled } = this.state;
+        const message = expDateValidator(isMonth, value);
+        const key = isMonth ? 'expMonth' : 'expYear';
 
-        reformatInputField(element, 2);
-        setCreditCardData({ expDate: onlyNumbers });
+        setCreditCardData({ [key]: value });
 
-        this.setState({ validatorMessage: message });
+        this.setState({ validatorMessage: message, [key]: value });
 
-        if (onlyNumbers.length === 4) {
+        if (isMonth) {
+            if (value.length === 2 && expYear.length === 2) {
+                this.setState({ expDateFilled: true });
+            } else if (value.length === 2) {
+                let yearInput = document.getElementById("expDataYY");
+                if (yearInput) {
+                    yearInput.focus();
+                }
+            }
+        } else if (expMonth.length === 2 && value.length === 2) {
             this.setState({ expDateFilled: true });
-            return;
         }
 
         this.setState({ expDateFilled: false });
@@ -181,17 +189,31 @@ class CreditCard extends PureComponent {
                     block="CreditCard"
                     elem="Row"
                 >
-                    <input
-                        type="text"
-                        placeholder={__('MM/YY')}
-                        id="expData"
-                        name="expData"
-                        inputMode="numeric"
-                        maxLength="5"
-                        onChange={this.handleExpDateChange}
-                        validation={['notEmpty']}
-                        onPaste={this.handlePaste}
-                    />
+                    <div block="CreditCard" elem="ExpDateRow">
+                        <input
+                            type="text"
+                            placeholder={__('MM')}
+                            id="expDataMM"
+                            name="expDataMM"
+                            inputMode="numeric"
+                            maxLength="2"
+                            onChange={({ target }) => this.handleExpDateChange(target.value.toString(), true)}
+                            validation={['notEmpty']}
+                            onPaste={this.handlePaste}
+                        />
+                        <span>{"/"}</span>
+                        <input
+                            type="text"
+                            placeholder={__('YY')}
+                            id="expDataYY"
+                            name="expDataYY"
+                            inputMode="numeric"
+                            maxLength="2"
+                            onChange={({ target }) => this.handleExpDateChange(target.value.toString(), false)}
+                            validation={['notEmpty']}
+                            onPaste={this.handlePaste}
+                        />
+                    </div>
                     <input
                         type="text"
                         placeholder={__('CVV')}
@@ -217,8 +239,9 @@ class CreditCard extends PureComponent {
 
     renderMiniCard(miniCard) {
         const img = MINI_CARDS[miniCard];
+        const isAmex = miniCard === MINI_CARDS.amex;
         if (img) {
-            return <img src={img} alt="method" key={miniCard} />;
+            return <img src={img} alt="method" key={miniCard} style={{ width: isAmex ? '30px' : '40px' }} />;
         }
         return null;
     }
@@ -293,11 +316,11 @@ class CreditCard extends PureComponent {
                 {
                     savedCards.map((item) => {
                         const { entity_id, selected, details } = item;
-                        const { maskedCC, bin = "000000", expirationDate, scheme } = details;
+                        const { maskedCC, bin = "000000", expirationDate, scheme = "" } = details;
                         const cardNum = `${bin.substr(0, 4)} **** **** ${maskedCC}`;
                         if (selected) {
                             const { cvv } = this.state;
-                            const { isAmex } = this.props;
+                            const isAmex = scheme.toLowerCase() === MINI_CARDS.amex;
                             return (
                                 <div block="SelectedSavedCard" elem="Item" key={entity_id}>
                                     <img src={SelectedIcon} alt={"selected"} block="SavedCard" elem="Tick"
@@ -307,15 +330,16 @@ class CreditCard extends PureComponent {
                                         <span>{`${expirationDate.substr(0, 3)}${expirationDate.substr(5, 2)}`}</span>
                                         <input
                                             id="cvv"
-                                            type="text"
                                             name="cvv"
                                             value={cvv}
+                                            type="password"
                                             inputMode="numeric"
                                             placeholder={__('CVV')}
                                             validation={['notEmpty']}
                                             onPaste={this.handlePaste}
-                                            onChange={this.handleCvvChange}
                                             maxLength={isAmex ? '4' : '3'}
+                                            onChange={this.handleCvvChange}
+                                            style={{ width: isAmex ? '56px' : '50px' }}
                                         />
                                         {this.renderMiniCard(scheme.toLowerCase())}
                                     </div>

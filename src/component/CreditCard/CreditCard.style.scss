@@ -52,15 +52,6 @@
       border: none;
     }
 
-    #expData {
-      font-size: 18px;
-      padding: 3px 0;
-      height: 25px;
-      width: 72px;
-      letter-spacing: 1px;
-      border: none;
-    }
-
     #cvv {
       font-size: 18px;
       width: 67px;
@@ -126,6 +117,33 @@
 
     img {
       margin: 0 5px 0 0;
+    }
+  }
+
+  &-ExpDateRow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    #expDataMM,
+    #expDataYY {
+      width: 35px;
+      height: 25px;
+      border: none;
+      padding: 3px 0;
+      font-size: 18px;
+      min-width: 35px;
+      letter-spacing: 1px;
+    }
+
+    span {
+      color: gray;
+      font-size: 20px;
+      margin-right: 1px;
+    }
+
+    #expDataMM {
+      text-align: center;
     }
   }
 }
