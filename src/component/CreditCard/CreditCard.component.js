@@ -120,6 +120,7 @@ class CreditCard extends PureComponent {
         if (isMonth) {
             if (value.length === 2 && expYear.length === 2) {
                 this.setState({ expDateFilled: true });
+                return;
             } else if (value.length === 2) {
                 let yearInput = document.getElementById("expDataYY");
                 if (yearInput) {
@@ -128,6 +129,7 @@ class CreditCard extends PureComponent {
             }
         } else if (expMonth.length === 2 && value.length === 2) {
             this.setState({ expDateFilled: true });
+            return;
         }
 
         this.setState({ expDateFilled: false });
