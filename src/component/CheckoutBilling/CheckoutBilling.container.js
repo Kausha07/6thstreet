@@ -123,9 +123,10 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
   };
 
   setCreditCardData(data) {
-    const { number, expDate, cvv, saveCard } = data;
+    const { number, expMonth, expYear, cvv, saveCard } = data;
     const { binApplied } = this.state;
     const {
+      newCardVisible,
       totals: { discount },
     } = this.props;
 
@@ -133,14 +134,18 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       this.setState({ number });
     }
 
-    if (expDate) {
-      this.setState({ expDate });
+    if (expMonth) {
+      this.setState({ expMonth });
+    }
+
+    if (expYear) {
+      this.setState({ expYear });
     }
 
     if (cvv) {
       this.setState({ cvv });
     }
-    if (discount !== 0) {
+    if (newCardVisible && discount !== 0) {
       this.removeBinPromotion();
     }
     if (binApplied) {
@@ -213,13 +218,13 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
           setCheckoutCreditCardData,
         } = this.props;
 
-        const { number = "", expDate, cvv, binApplied, saveCard } = this.state;
+        const { number = "", expYear, expMonth, cvv, binApplied, saveCard } = this.state;
         if (!binApplied) {
           await this.applyBinPromotion();
           return;
         }
 
-        setCheckoutCreditCardData(number, expDate, cvv, saveCard, address.email);
+        setCheckoutCreditCardData(number, expMonth, expYear, cvv, saveCard, address.email);
 
         getCardType(number.substr("0", "6")).then((response) => {
           if (response) {
@@ -238,7 +243,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
           }
         });
 
-        addNewCreditCard({ number, expDate, cvv })
+        addNewCreditCard({ number, expMonth, expYear, cvv })
           .then((response) => {
             const { id, token } = response;
 

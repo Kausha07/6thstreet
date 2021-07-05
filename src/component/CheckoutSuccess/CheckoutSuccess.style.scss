@@ -411,7 +411,6 @@ font-size: 12px;
       }
 
       .Details {
-        background-color: var(--lightest-gray);  
         text-transform: uppercase;
         border-radius: 10px;
         display: grid;
@@ -427,7 +426,7 @@ font-size: 12px;
           img {
             max-width: 50px;
             max-height: 50px;
-            margin-left: 15px;
+            margin-left: 5px;
           }
         }
 
@@ -440,9 +439,8 @@ font-size: 12px;
         }
 
         &-Number {
-          display: grid;
-          grid-auto-flow: column;
-          margin: auto;
+          display: flex;
+          align-items: center;
           letter-spacing: 3px;
 
           &-Dots {
