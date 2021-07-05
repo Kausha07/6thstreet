@@ -14,12 +14,13 @@ export class CheckoutAddressTable extends SourceCheckoutAddressTable {
     isArabic: isArabic(),
   };
 
-  mobileEditAddress = () => {
+  mobileEditAddress = (e) => {
     const { hideCards, onEditClick } = this.props;
     // this.onAddressClick();
     if (isMobile.any()) {
       onEditClick();
       hideCards();
+      e.stopPropagation();
     }
   };
 
@@ -42,9 +43,9 @@ export class CheckoutAddressTable extends SourceCheckoutAddressTable {
     const { isArabic } = this.state;
 
     return (
-      <div block="MyAccountAddressCard" mods={{ isSelected }}>
+      <div block="MyAccountAddressCard" onClick={this.onAddressClick} mods={{ isSelected }}>
         <div block="MyAccountAddressCard" elem="EditButton" mods={{ isArabic }}>
-          <div onClick={this.onAddressClick}>
+          <div >
             <div block="MyAccountAddressCard" elem="Default">
               {def}
             </div>
