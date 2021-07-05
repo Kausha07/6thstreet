@@ -176,7 +176,10 @@
     }
     .spck-ical-button {
       right: 0;
-      bottom: 0;
+      @include desktop{
+        bottom: 0 !important;
+      }
+
       @include mobile {
         margin: 0 !important;
         width: 100% !important;
@@ -215,6 +218,15 @@
       font-family: inherit;
       font-size: 16px;
       font-weight: 500;
+    }
+    .spck-list{
+        justify-content: center;
+    }
+    .spck-ical-button {
+        right: 0;
+        @include desktop{
+          bottom: 0 !important;
+        }
     }
     .spck-event-title {
       font-family: inherit;

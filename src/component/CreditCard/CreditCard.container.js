@@ -117,15 +117,10 @@ export class CreditCardContainer extends PureComponent {
         }
     }
 
-    expDateValidator(value = '') {
-        const expMonth = value.slice(0, 2);
-        const expYear = value.slice(2, 4);
-
-        if (!cardValidator.expirationMonth(expMonth).isValid) {
+    expDateValidator(isMonth, value = '') {
+        if (isMonth && !cardValidator.expirationMonth(value).isValid) {
             return __("Card exp month is not valid");
-        }
-
-        if (!cardValidator.expirationYear(expYear).isValid) {
+        } else if (!cardValidator.expirationYear(value).isValid) {
             return __("Card exp year is not valid");
         }
         return null;

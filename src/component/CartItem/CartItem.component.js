@@ -340,9 +340,6 @@ export class CartItem extends PureComponent {
             </span>
             <span> {__("Size:")} </span>
             {optionValue}
-            {/* <span block="CartItem" elem="PipeAR" mods={{ isArabic }}>
-              |
-            </span> */}
           </div>
           {/* <span>| {__("Qty:")} </span>
           {qty} */}
@@ -409,23 +406,6 @@ export class CartItem extends PureComponent {
         >
           <span />
         </button>
-        {/* {isNotAvailble ? (
-          <span block="CartItem" elem="NotAvailable">
-            {__("Not available")}
-          </span>
-        ) : (
-          <Field
-            id="item_qty"
-            name="item_qty"
-            type="number"
-            isControlled
-            min={minSaleQuantity}
-            max={maxSaleQuantity}
-            mix={{ block: "CartItem", elem: "Qty" }}
-            value={qty}
-            onChange={handleChangeQuantity}
-          />
-        )} */}
       </div>
     );
   }
