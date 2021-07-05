@@ -1,5 +1,5 @@
 import { setPDPData, setPDPLoading } from 'Store/PDP/PDP.action';
-import { getProductStock } from 'Util/API/endpoint/Product/Product.enpoint';
+import { getProductStock, sendNotifyMeEmail } from 'Util/API/endpoint/Product/Product.enpoint';
 import Algolia from 'Util/API/provider/Algolia';
 import Logger from 'Util/Logger';
 import { getStaticFile } from 'Util/API/endpoint/StaticFiles/StaticFiles.endpoint';
@@ -55,6 +55,10 @@ export class PDPDispatcher {
         if (pdpWidgetData && pdpWidgetData.widgets) {
             dispatch(setPdpWidgetsData(pdpWidgetData.widgets));
         }
+    }
+
+    async sendNotifyMeEmail(data) {
+        return sendNotifyMeEmail(data);
     }
 }
 

@@ -63,7 +63,7 @@ export class CheckoutPayment extends PureComponent {
                     { isTabby
                         ? <img src={ isArabic ? tabbyAr : img } alt={ name } />
                         : <img src={ img } alt={ name } /> }
-                    <p>{ paragraph }</p>
+                    {paragraph ? <p>{ paragraph }</p>: null}
                 </div>
             );
         }
@@ -85,8 +85,8 @@ export class CheckoutPayment extends PureComponent {
 
         if (
             HIDDEN_PAYMENTS.includes(m_code)
-            // || (m_code === CHECKOUT_APPLE_PAY
-            && ((!['AE', 'SA'].includes(getCountryFromUrl()) || !window.ApplePaySession))
+            || (m_code === CHECKOUT_APPLE_PAY
+            && (!['AE', 'SA'].includes(getCountryFromUrl()) || !window.ApplePaySession))
         ) {
             return null;
         }

@@ -43,7 +43,7 @@
 
     &_isArabic {
       right: unset;
-      left: 0;
+      left: -150px;
     }
   }
 
@@ -168,7 +168,7 @@
     &::before {
       @include after-mobile {
         // right: 327px;
-        left: -33px;
+        left: -50px;
       }
     }
   }

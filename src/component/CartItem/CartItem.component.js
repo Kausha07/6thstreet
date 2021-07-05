@@ -288,13 +288,15 @@ export class CartItem extends PureComponent {
       item: { qty },
     } = this.props;
 
+    const { isArabic } = this.state;
+
     const qtyList = Array.from(
       { length: maxSaleQuantity - minSaleQuantity + 1 },
       (v, k) => k + minSaleQuantity
     );
 
     return (
-      <div block="CartItem" elem="Quantity">
+      <div block="CartItem" elem="Quantity" mods={{ isArabic }}>
         <select
           value={qty}
           onChange={(e) => this.onQuantityChange(e.target.value)}
@@ -328,12 +330,15 @@ export class CartItem extends PureComponent {
     if (optionValue) {
       return (
         <div block="CartItem" elem="ColSizeQty" mods={{ isArabic }}>
-          <div>
+          <div block="CartItem" elem="Color" mods={{ isArabic }}>
             <span> {__("Color:")}</span>
             {color}
           </div>
-          <div>
-            <span>| {__("Size:")} </span>
+          <div block="CartItem" elem="Size" mods={{ isArabic }}>
+            <span block="CartItem" elem="Pipe" mods={{ isArabic }}>
+              |
+            </span>
+            <span> {__("Size:")} </span>
             {optionValue}
           </div>
           {/* <span>| {__("Qty:")} </span>
@@ -401,23 +406,6 @@ export class CartItem extends PureComponent {
         >
           <span />
         </button>
-        {/* {isNotAvailble ? (
-          <span block="CartItem" elem="NotAvailable">
-            {__("Not available")}
-          </span>
-        ) : (
-          <Field
-            id="item_qty"
-            name="item_qty"
-            type="number"
-            isControlled
-            min={minSaleQuantity}
-            max={maxSaleQuantity}
-            mix={{ block: "CartItem", elem: "Qty" }}
-            value={qty}
-            onChange={handleChangeQuantity}
-          />
-        )} */}
       </div>
     );
   }

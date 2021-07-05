@@ -1,15 +1,15 @@
 #ori-chatbot-root {
-    .ori-fixed {
-        @include mobile {
-            bottom: 100px;
-        }
-
-        .ori-full-parent-height {
-            width: 70px;
-        }
+  .ori-fixed {
+    @include mobile {
+      bottom: 100px !important;
     }
 
-    &.hidden {
-        display: none;
+    .ori-full-parent-height {
+      width: 70px;
     }
+  }
+
+  &.hidden {
+    display: none;
+  }
 }
