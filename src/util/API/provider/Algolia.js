@@ -137,6 +137,11 @@ export class Algolia {
       }
     }
   }
+
+  async getSuggestions(query, limit) {
+    const data = (await AlgoliaSDK.getSuggestions(query, limit)) || {};
+    return data;
+  }
 }
 
 export default Algolia;

@@ -1,5 +1,6 @@
 import { getStore } from "Store";
 import { setSearchSuggestions } from "Store/SearchSuggestions/SearchSuggestions.action";
+import { createSuggestions } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import { formatProductSuggestions } from "Util/API/endpoint/Suggestions/Suggestions.format";
 import Algolia from "Util/API/provider/Algolia";
 import { isArabic } from "Util/App";
@@ -30,12 +31,14 @@ export class SearchSuggestionsDispatcher {
       // In case anyone needs desktop data (use this!)
       // const lang = language === 'en' ? 'english' : 'arabic';
 
-      // const { hits: searchSuggestions } = await new Algolia({
-      //     index: `enterprise_magento_${ lang }_suggestions`
-      // }).getSuggestions({
-      //     query: search,
-      //     limit: SEARCH_RESULT_LIMIT
-      // });
+      const lang = "english";
+
+      const { hits } = await new Algolia({
+        index: `stage_magento_${lang}_products_query_suggestions`,
+      }).getSuggestions({
+        query: search,
+        limit: 5,
+      });
 
       // const { hits: categorySuggestions } = await new Algolia({
       //     index: `enterprise_magento_${ lang }_categories`
@@ -50,12 +53,14 @@ export class SearchSuggestionsDispatcher {
       //     query: search,
       //     limit: PRODUCT_RESULT_LIMIT
       // });
-
-      // console.log(
-      //     searchSuggestions,
-      //     categorySuggestions,
-      //     productSuggestions
-      // );
+      console.log("hits.length", hits.length);
+      const newHits = hits.length > 0 ? createSuggestions(hits) : [];
+      console.log(
+        "suggestions",
+        newHits
+        // categorySuggestions,
+        // productSuggestions
+      );
 
       // if you need search analytics then uncomment it (default automatically tracks it) UPDATE: causing wrong data.
 
