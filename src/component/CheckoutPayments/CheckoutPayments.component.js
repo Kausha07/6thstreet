@@ -24,6 +24,7 @@ import {
   TABBY_ISTALLMENTS,
   TABBY_PAY_LATER,
   TABBY_PAYMENT_CODES,
+  CHECKOUT_QPAY,
 } from "./CheckoutPayments.config";
 import info from "./icons/info.png";
 
@@ -52,6 +53,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     [TABBY_PAY_LATER]: this.renderTabbyPaymentMethods.bind(this),
     [CHECKOUT_APPLE_PAY]: this.renderApplePayMethods.bind(this),
     [FREE]: this.renderFree.bind(this),
+    [CHECKOUT_QPAY]: this.renderQPay.bind(this),
   };
 
   state = {
@@ -150,7 +152,10 @@ export class CheckoutPayments extends SourceCheckoutPayments {
 
   renderTabbyPaymentMethods() {
     const { tabbyPaymentMethods = [] } = this.state;
-
+    const { selectPaymentMethod } = this.props;
+    if (tabbyPaymentMethods.length === 1) {
+      selectPaymentMethod(tabbyPaymentMethods?.[0]?.code);
+    }
     return (
       <div block="CheckoutPayments" elem="TabbyPayments">
         <div block="CheckoutPayments" elem="TabbyPaymentsHeader">
@@ -164,6 +169,23 @@ export class CheckoutPayments extends SourceCheckoutPayments {
             this.renderTabbyPaymentMethod(method)
           )}
         </div>
+      </div>
+    );
+  }
+
+  renderQPay() {
+    const { tabbyPaymentMethods = [] } = this.state;
+    const {
+      options: { method_description, method_title },
+    } = this.getSelectedMethodData();
+    return (
+      <div block="CheckoutPayments" elem="SelectedInfo">
+        <h2 block="CheckoutPayments" elem="MethodTitle">
+          {method_title}
+        </h2>
+        <p block="CheckoutPayments" elem="MethodDiscription">
+          {method_description}
+        </p>
       </div>
     );
   }
@@ -267,13 +289,14 @@ export class CheckoutPayments extends SourceCheckoutPayments {
       setOrderButtonEnabled,
       applyPromotionSavedCard,
       removePromotionSavedCard,
+      isSignedIn,
     } = this.props;
-
     const cardData = paymentMethods.find(({ m_code }) => m_code === CARD);
 
     return (
       <CreditCard
         cardData={cardData}
+        isSignedIn={isSignedIn}
         setCreditCardData={setCreditCardData}
         setOrderButtonDisabled={setOrderButtonDisabled}
         setOrderButtonEnabled={setOrderButtonEnabled}

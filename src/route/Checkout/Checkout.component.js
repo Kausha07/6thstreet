@@ -133,7 +133,6 @@ export class Checkout extends SourceCheckout {
     verifyPayment(tabbyPaymentId).then(({ status }) => {
       if (status === AUTHORIZED_STATUS || status === CAPTURED_STATUS) {
         const { tabbyPaymentId } = this.state;
-        console.log("tabbyPaymentId:" + tabbyPaymentId);
         paymentInformation = {
           ...paymentInformation,
           tabbyPaymentId: tabbyPaymentId,
@@ -212,11 +211,7 @@ export class Checkout extends SourceCheckout {
         </div>
       );
     }
-    return (
-      <div block="LoadingBlock">
-        <Loader isLoading={isLoading} />;
-      </div>
-    );
+    return null;
   }
 
   renderSummary() {
@@ -228,7 +223,6 @@ export class Checkout extends SourceCheckout {
       processingRequest,
     } = this.props;
     const { areTotalsVisible } = this.stepMap[checkoutStep];
-
     if (!areTotalsVisible) {
       return null;
     }
@@ -315,7 +309,7 @@ export class Checkout extends SourceCheckout {
       getBinPromotion,
       updateTotals,
     } = this.props;
-    const { isArabic } = this.state;
+    const { isArabic , cashOnDeliveryFee} = this.state;
 
     return (
       <>
@@ -332,6 +326,7 @@ export class Checkout extends SourceCheckout {
           </button>
         </div>
         <CheckoutBilling
+        cashOnDeliveryFee={cashOnDeliveryFee}
           setLoading={setLoading}
           paymentMethods={paymentMethods}
           setDetailsStep={setDetailsStep}
@@ -343,6 +338,7 @@ export class Checkout extends SourceCheckout {
           setTabbyWebUrl={this.setTabbyWebUrl}
           setPaymentCode={this.setPaymentCode}
           binModal={this.showModal}
+          isSignedIn={isSignedIn}
           setCheckoutCreditCardData={this.setCheckoutCreditCardData}
           processApplePay={processApplePay}
           placeOrder={placeOrder}
@@ -359,7 +355,7 @@ export class Checkout extends SourceCheckout {
       expMonth,
       expYear,
       saveCard,
-    }
+    };
     this.setState({ creditCardData });
     this.props.updateCreditCardData(creditCardData);
   };
@@ -450,7 +446,7 @@ export class Checkout extends SourceCheckout {
       isFailed,
       initialTotals,
       isVerificationCodeSent,
-      newCardVisible
+      newCardVisible,
     } = this.props;
     const { cashOnDeliveryFee } = this.state;
     const {
@@ -504,7 +500,6 @@ export class Checkout extends SourceCheckout {
       setLoading,
       isLoading,
     } = this.props;
-
 
     const { continueAsGuest, isArabic } = this.state;
     const renderCheckoutShipping = (
@@ -736,7 +731,6 @@ export class Checkout extends SourceCheckout {
     const { isSuccess } = this.state;
     const { checkoutStep } = this.props;
 
-    const additionalDisplay = checkoutStep === BILLING_STEP;
     return (
       <>
         {this.renderBinPromotion()}
@@ -753,7 +747,7 @@ export class Checkout extends SourceCheckout {
             </div>
             <div
               block="Checkout"
-              elem={additionalDisplay ? "MobileDisplay" : "WebDisplay"}
+              elem="WebDisplay"
             >
               <div block="Checkout" elem="Additional">
                 {this.renderSummary()}

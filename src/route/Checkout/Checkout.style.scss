@@ -43,15 +43,15 @@
     }
 
     @include desktop {
-      width: 100%;
-      padding: 0 52%;
+      width: 100% !important;
       z-index: 90;
       text-align: center;
       transform: translate(-15px, 0);
     }
 
     @include mobile {
-      padding: 50%;
+      width: 100% !important;
+      text-align: center;
       top: 0;
     }
 
@@ -61,7 +61,9 @@
       color: var(--white);
       position: absolute;
       bottom: 50%;
-      transform: translate(-50%, -50%);
+      width: 100% !important  ;
+      text-align: center;
+      transform: translate(0%, -50%);
     }
   }
 
@@ -86,7 +88,7 @@
         }
       }
     }
-    @include before-desktop{
+    @include before-desktop {
       margin-bottom: 0 !important;
     }
   }
@@ -94,6 +96,10 @@
   &-StickyButtonWrapper {
     .Checkout {
       &-OrderTotals {
+        .ReactCollapse--collapse {
+          transition: height 500ms;
+        }
+
         .CheckoutOrderSummary {
           &-Text {
             font-weight: var(--fw-regular);
@@ -106,6 +112,64 @@
             font-size: 18px;
             line-height: 25px;
           }
+        }
+        @include desktop {
+          display: none;
+        }
+      }
+      &-OrderSummaryTotalsContainer {
+        @include desktop {
+          display: none;
+        }
+        .CheckoutOrderSummary {
+          padding: 0;
+
+          &-Text {
+            font-weight: var(--fw-regular);
+            font-size: 13px;
+            line-height: 20px;
+          }
+
+          &-Price {
+            font-weight: var(--fw-bold);
+            font-size: 13px;
+            line-height: 25px;
+          }
+
+          &-SummaryItem,
+          &-DiscountOptionWrapper {
+            padding: 0;
+          }
+          &-PromoBlock {
+            margin: 10px 0 0;
+          }
+          &-DiscountOptionWrapper {
+            padding: 10px 0 0;
+          }
+        }
+      }
+      &-OrderSummaryTriggerContainer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 5px 0;
+        @include desktop {
+          display: none;
+        }
+      }
+      &-OrderSummaryTrigger {
+        content: "";
+        max-width: 30px;
+        top: 47%;
+        border: solid #0a0a0a;
+        border-width: 0 2px 2px 0;
+        display: inline-block;
+        padding: 4px;
+        transform: rotate(-135deg);
+        -webkit-transform: rotate(-135deg);
+        &_dropdownToggleIcon {
+          transform: rotate(45deg);
+          -webkit-transform: rotate(45deg);
         }
         @include desktop {
           display: none;
@@ -268,12 +332,12 @@
       line-height: 16px;
     }
     &-DeliveryLabel {
-      color:var(--unselected-step-color);
+      color: var(--unselected-step-color);
     }
     &-DeliveryLabel {
       &_checkoutStep {
         &_SHIPPING_STEP {
-          color: black
+          color: black;
         }
       }
     }
@@ -654,7 +718,6 @@
   }
 
   &-Content {
-    // height: 0;
     overflow-y: auto;
     @include mobile {
       padding-top: 0;

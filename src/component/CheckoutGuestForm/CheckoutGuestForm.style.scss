@@ -47,6 +47,8 @@
 
         input {
             height: 40px;
+            background-color: red !important;
+            border-radius: 40px !important;
             --input-color: var(--Black);
             caret-color: var(--Black);
             text-transform: none;

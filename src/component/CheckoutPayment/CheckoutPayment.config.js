@@ -3,6 +3,7 @@ import apple from './icons/apple.png';
 import card from './icons/card.png';
 import cash from './icons/cash.png';
 import tabby from './icons/tabby.png';
+import qpay from './icons/qpay.png';
 
 export const PAYMENTS_DATA = {
     checkoutcom_card_payment: {
@@ -16,6 +17,12 @@ export const PAYMENTS_DATA = {
         mod: { card: true },
         paragraph: __('checkout'),
         img: card
+    },  
+    checkout_qpay: {
+        name: 'card',
+        mod: { qpay: true },
+        paragraph:null,
+        img: qpay
     },
     apple_pay: {
         name: 'apple',

@@ -80,8 +80,11 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
 
   conatinerProps = () => {
     const { binModal } = this.props;
-    const { isOrderButtonEnabled, isOrderButtonVisible, binApplied } =
-      this.state;
+    const {
+      isOrderButtonEnabled,
+      isOrderButtonVisible,
+      binApplied,
+    } = this.state;
     return { binModal, isOrderButtonEnabled, isOrderButtonVisible, binApplied };
   };
 
@@ -189,7 +192,8 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
   }
 
   async applyPromotionSavedCard() {
-    if (this.state.binApplied) {//if promotion already applied
+    if (this.state.binApplied) {
+      //if promotion already applied
       await this.removeBinPromotion();
       await this.applyBinPromotionOnSavedCard();
     } else {
@@ -204,12 +208,13 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
 
   async onBillingSuccess(fields, asyncData) {
     const paymentMethod = this._getPaymentData(asyncData);
-    const { savePaymentInformation, savedCards, newCardVisible } = this.props;
+    const { savePaymentInformation, savedCards, newCardVisible ,showErrorNotification} = this.props;
     const address = this._getAddress(fields);
     const { code } = paymentMethod;
 
     if (code === CARD) {
-      if (newCardVisible) {//if payment is via new card.
+      if (newCardVisible) {
+        //if payment is via new card.
         const {
           addNewCreditCard,
           getCardType,
@@ -276,16 +281,19 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
 
             showErrorNotification(__("Something went wrong"));
           });
-      } else {//if payment is via saved card.
-        let selectedCard = savedCards.find(a => a.selected === true);
-        if (selectedCard) {//if card is selected
-          selectedCard['cvv'] = this.state.cvv;
+      } else {
+        //if payment is via saved card.
+        let selectedCard = savedCards.find((a) => a.selected === true);
+        if (selectedCard) {
+          //if card is selected
+          selectedCard["cvv"] = this.state.cvv;
           savePaymentInformation({
             billing_address: address,
             paymentMethod,
-            selectedCard
+            selectedCard,
           });
-        } else {//if saved card is not selected
+        } else {
+          //if saved card is not selected
           showErrorNotification("Please select an card first.");
         }
       }
@@ -332,7 +340,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
           }
         }
       }, this._handleError)
-      .catch(() => { });
+      .catch(() => {});
   }
 
   getCartError(message) {
