@@ -16,7 +16,6 @@ export class CheckoutAddressTable extends SourceCheckoutAddressTable {
 
   mobileEditAddress = () => {
     const { hideCards, onEditClick } = this.props;
-    // this.onAddressClick();
     if (isMobile.any()) {
       onEditClick();
       hideCards();
