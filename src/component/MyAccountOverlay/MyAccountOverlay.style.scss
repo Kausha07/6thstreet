@@ -87,6 +87,8 @@
         --input-color: var(--black-color);
         caret-color: var(--black-color);
         text-transform: none;
+        border: 0.5px solid #D1D3D4;
+        border-radius: 6px;
 
         &::placeholder {
             text-transform: uppercase;
@@ -100,7 +102,9 @@
     &-Heading {
         text-transform: none;
         font-size: 18px;
-        font-weight: var(--fw-demi);
+        font-weight: 600;
+        letter-spacing: 0;
+        line-height: 25px;
         text-align: center;
 
         @include before-desktop {
@@ -407,8 +411,8 @@
         display: flex;
         margin: 30px 90px;
 
-        @include before-desktop() {
-            margin: 30px auto;
+        @include mobile() {
+            margin: 30px 72px 39px 72px!important
         }
 
         .Button {
@@ -421,6 +425,9 @@
             white-space: nowrap;
             padding: 0 5%;
             font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 0.46px;
+            line-height: 15px;
             height: 30px;
             border-radius: 20px;
             margin: 0 10px;
@@ -473,10 +480,11 @@
             --button-hover-background: var(--btn-bg-lite-gray-color);
             --button-hover-border: var(--btn-bg-lite-gray-color);
             --button-color: var(--white-color);
-
             font-size: 12px;
-            font-weight: var(--fw-bold);
+            font-weight: bold;
+            letter-spacing: 0;
             line-height: 16px;
+            border-radius: 6px;
 
             &[disabled] {
                 opacity: unset;
@@ -491,6 +499,7 @@
         &_likeLink {
             top: 4px;
             height: 20px;
+            margin-top: 8px;
             --button-color: var(--gray-color);
             text-transform: none;
             text-align: left;
@@ -498,8 +507,9 @@
             padding: 0;
             margin-bottom: 20px;
             color: var(--likelink-button-color);
-            font-size: 12px;
-            font-weight: var(--fw-medium);
+            font-size: 14px;
+            font-weight: 500;
+            letter-spacing: 0;
             line-height: 16px;
             text-decoration: underline;
         }
@@ -512,12 +522,18 @@
             &::after {
                 position: absolute;
                 content: "";
-                top: 17px;
+                top: 50%;
                 right: 10px;
-                background: url(./icons/lock.svg) no-repeat;
-                background-size: 25px;
-                width: 20px;
-                height: 25px;
+                transform: translateY(-50%);
+                mask-image: url(../Icons/Lock/icon.svg);
+                mask-position: center;
+                mask-repeat: no-repeat;
+                -webkit-mask-image: url(../Icons/Lock/icon.svg);
+                -webkit-mask-position: center;
+                -webkit-mask-repeat: no-repeat;
+                background-color: #ffffff!important;
+                width: 54px;
+                height: 54px;
                 display: inline-block;
                 font-size: 0;
             }

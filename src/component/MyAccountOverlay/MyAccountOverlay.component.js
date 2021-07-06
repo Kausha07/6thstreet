@@ -468,7 +468,7 @@ export class MyAccountOverlay extends PureComponent {
                 <fieldset block="MyAccountOverlay" elem="Legend">
                     <Field
                       type="email"
-                      placeholder={ __('EMAIL') }
+                      placeholder={ __('EMAIL OR PHONE*') }
                       id="email"
                       name="email"
                       value={ email }
@@ -492,7 +492,7 @@ export class MyAccountOverlay extends PureComponent {
                   mix={ { block: 'MyAccountOverlay', elem: 'Button', mods: { isArabic } } }
                   onClick={ handleForgotPassword }
                 >
-                    { __('Forgot password?') }
+                    { __('Forgot Password?') }
                 </button>
                 <div
                   block="MyAccountOverlay"
