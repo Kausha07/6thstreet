@@ -12,7 +12,7 @@ import { isArabic } from "Util/App";
 import './CreditCard.style';
 import PlusIcon from "./icons/plus.png";
 import SelectedIcon from './icons/selected.png';
-
+const AMEX = 'amex';
 class CreditCard extends PureComponent {
     static propTypes = {
         supported_networks: PropTypes.array,
@@ -120,6 +120,7 @@ class CreditCard extends PureComponent {
         if (isMonth) {
             if (value.length === 2 && expYear.length === 2) {
                 this.setState({ expDateFilled: true });
+                return;
             } else if (value.length === 2) {
                 let yearInput = document.getElementById("expDataYY");
                 if (yearInput) {
@@ -128,6 +129,7 @@ class CreditCard extends PureComponent {
             }
         } else if (expMonth.length === 2 && value.length === 2) {
             this.setState({ expDateFilled: true });
+            return;
         }
 
         this.setState({ expDateFilled: false });
@@ -239,7 +241,7 @@ class CreditCard extends PureComponent {
 
     renderMiniCard(miniCard) {
         const img = MINI_CARDS[miniCard];
-        const isAmex = miniCard === MINI_CARDS.amex;
+        const isAmex = miniCard === AMEX;
         if (img) {
             return <img src={img} alt="method" key={miniCard} style={{ width: isAmex ? '30px' : '40px' }} />;
         }
@@ -320,7 +322,7 @@ class CreditCard extends PureComponent {
                         const cardNum = `${bin.substr(0, 4)} **** **** ${maskedCC}`;
                         if (selected) {
                             const { cvv } = this.state;
-                            const isAmex = scheme.toLowerCase() === MINI_CARDS.amex;
+                            const isAmex = scheme.toLowerCase() === AMEX;
                             return (
                                 <div block="SelectedSavedCard" elem="Item" key={entity_id}>
                                     <img src={SelectedIcon} alt={"selected"} block="SavedCard" elem="Tick"
@@ -391,7 +393,7 @@ class CreditCard extends PureComponent {
     }
 
     render() {
-        const { loadingSavedCards, newCardVisible ,isSignedIn} = this.props;
+        const { loadingSavedCards, newCardVisible, isSignedIn } = this.props;
         if (loadingSavedCards) {
             return null;
         }

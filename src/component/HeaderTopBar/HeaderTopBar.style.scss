@@ -29,7 +29,10 @@
     max-width: 1440px;
     margin: 0 auto;
     width: var(--main-container-width-dsk);
-    justify-content: center;
+    justify-content: space-between;
+    @include tablet {
+      justify-content: center;
+    }
   }
 
   &-CmsBlock {
