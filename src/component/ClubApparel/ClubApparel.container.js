@@ -35,7 +35,7 @@ export const mapDispatchToProps = (dispatch) => ({
         apply,
         customerId
     ),
-    fetchClubApparelPoints: () => ClubApparelDispatcher.getMember(dispatch)
+    fetchClubApparelPoints: (id) => ClubApparelDispatcher.getMember(dispatch, id)
 });
 
 export class ClubApparelContainer extends PureComponent {
@@ -88,12 +88,8 @@ export class ClubApparelContainer extends PureComponent {
     }
 
     componentDidMount() {
-        const storageClubApparel = BrowserDatabase.getItem(CLUB_APPAREL) || null;
-        const { fetchClubApparelPoints } = this.props;
-
-        if (!storageClubApparel) {
-            fetchClubApparelPoints();
-        }
+        const { fetchClubApparelPoints, customer: { id } } = this.props;
+        fetchClubApparelPoints(id);
     }
 
     render() {
@@ -103,7 +99,7 @@ export class ClubApparelContainer extends PureComponent {
         };
 
         return (
-            <ClubApparel { ...props } />
+            <ClubApparel {...props} />
         );
     }
 }

@@ -1,9 +1,10 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import PropTypes from "prop-types";
-
+import { Collapse } from "react-collapse";
 import Popup from "SourceComponent/Popup";
 import CheckoutAddressBook from "Component/CheckoutAddressBook";
 import CheckoutPayments from "Component/CheckoutPayments";
+import CheckoutOrderSummary from "Component/CheckoutOrderSummary";
 import {
   CHECKOUT_APPLE_PAY,
   CARD,
@@ -16,7 +17,7 @@ import { BILLING_STEP } from "Route/Checkout/Checkout.config";
 import { CheckoutBilling as SourceCheckoutBilling } from "SourceComponent/CheckoutBilling/CheckoutBilling.component";
 import { isArabic } from "Util/App";
 import { isSignedIn } from "Util/Auth";
-
+import Spinner from "react-spinkit";
 import "./CheckoutBilling.extended.style";
 
 export class CheckoutBilling extends SourceCheckoutBilling {
@@ -33,7 +34,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
 
   static defaultProps = {
     ...SourceCheckoutBilling.defaultProps,
-    processApplePay: false,
+    processApplePay: true,
     processingPaymentSelectRequest: false,
     placeOrder: () => {},
   };
@@ -45,6 +46,8 @@ export class CheckoutBilling extends SourceCheckoutBilling {
     isArabic: isArabic(),
     formContent: false,
     isSignedIn: isSignedIn(),
+    isDropdownOpen: false,
+    dropdownToggleIcon: false,
   };
 
   renderPriceLine(price, name, mods) {
@@ -191,12 +194,14 @@ export class CheckoutBilling extends SourceCheckoutBilling {
       setOrderButtonEnabled,
       setOrderButtonDisabled,
       resetBinApply,
+      applyPromotionSavedCard,
+      removePromotionSavedCard,
+      isSignedIn,
     } = this.props;
 
     if (!paymentMethods.length) {
       return null;
     }
-
     return (
       <CheckoutPayments
         setCashOnDeliveryFee={setCashOnDeliveryFee}
@@ -215,19 +220,50 @@ export class CheckoutBilling extends SourceCheckoutBilling {
         resetBinApply={resetBinApply}
         processApplePay={processApplePay}
         placeOrder={placeOrder}
+        isSignedIn={isSignedIn}
+        applyPromotionSavedCard={applyPromotionSavedCard}
+        removePromotionSavedCard={removePromotionSavedCard}
       />
     );
   }
-
+  onDropdownClicked = () => {
+    this.setState((prevState) => ({
+      isDropdownOpen: !prevState.isDropdownOpen,
+      dropdownToggleIcon: !prevState.dropdownToggleIcon,
+    }));
+  };
   renderTotals() {
     const {
+      totals,
       totals: { total, currency_code },
+      cashOnDeliveryFee,
     } = this.props;
     const grandTotal = getFinalPrice(total, currency_code);
+    const { dropdownToggleIcon, isDropdownOpen } = this.state;
 
     return (
       <div block="Checkout" elem="OrderTotals">
-        {this.renderPriceLine(grandTotal, __("Total Amount"))}
+        <div block="Checkout" elem="OrderSummaryTriggerContainer">
+          <div
+            onClick={this.onDropdownClicked}
+            block="Checkout"
+            elem="OrderSummaryTrigger"
+            type="button"
+            mods={{ dropdownToggleIcon }}
+          ></div>
+        </div>
+        <div block="Checkout" elem="OrderSummaryTotalsContainer">
+        <Collapse isOpened={isDropdownOpen}>
+          <CheckoutOrderSummary
+            checkoutStep="BILLING_STEP"
+            totals={totals}
+            cashOnDeliveryFee={cashOnDeliveryFee}
+          />
+        </Collapse>
+        </div>
+        {this.renderPriceLine(grandTotal, __("Total Amount"), {
+          isDropdownOpen,
+        })}
       </div>
     );
   }
@@ -259,13 +295,17 @@ export class CheckoutBilling extends SourceCheckoutBilling {
   // };
 
   renderButtonPlaceholder() {
-    const { paymentMethod, binApplied } = this.props;
+    const { paymentMethod, binApplied, newCardVisible } = this.props;
     const isCardPayment = CARD === paymentMethod;
-    return (
-      <>
-        {!binApplied && isCardPayment ? "Add Credit Card" : __("Place order")}
-      </>
-    );
+    let placeholder = __("Place order");
+    if (isCardPayment) {
+      //if payment is from card.
+      if (newCardVisible && !binApplied) {
+        //if there is new card to add and bin is not applied
+        placeholder = __("Add Credit Card");
+      }
+    }
+    return <>{placeholder}</>;
   }
 
   renderActions() {
@@ -289,7 +329,9 @@ export class CheckoutBilling extends SourceCheckoutBilling {
       : !isOrderButtonEnabled;
 
     const isApplePay = paymentMethod === CHECKOUT_APPLE_PAY;
-
+    const isTabbyPay =
+      paymentMethod === "tabby_installments" ||
+      paymentMethod === "tabby_checkout";
     return (
       <>
         {this.renderCreditCardTooltipBar()}
@@ -304,10 +346,28 @@ export class CheckoutBilling extends SourceCheckoutBilling {
               processingPaymentSelectRequest ||
               isApplePay
             }
-            mix={{ block: "CheckoutBilling", elem: "Button" }}
+            mix={{
+              block: "CheckoutBilling",
+              elem:
+                processingRequest || processingPaymentSelectRequest
+                  ? "spinningButton"
+                  : isTabbyPay
+                  ? "tabbyButton"
+                  : "Button",
+            }}
           >
-            {/* {__("Place order")} */}
-            {this.renderButtonPlaceholder()}
+            {processingRequest || processingPaymentSelectRequest ? (
+              <Spinner
+                className="loadingSpinner"
+                name="three-bounce"
+                color="white"
+                fadeIn="none"
+              />
+            ) : isTabbyPay ? (
+              __("Place tabby order")
+            ) : (
+              this.renderButtonPlaceholder()
+            )}
           </button>
         </div>
       </>

@@ -26,12 +26,10 @@ export default function searchBy(
         if (err) {
           return reject(err);
         }
-
         const result = formatResult(data);
         result.data = result.data.map((item) => {
           return formatNewInTag(item);
         });
-
         return resolve(result);
       }
     );

@@ -1,12 +1,13 @@
 // import PropTypes from 'prop-types';
-import { PureComponent } from "react";
-import PropTypes from "prop-types";
-import isMobile from "Util/Mobile";
 import Link from "Component/Link";
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
+// import { Product } from "Util/API/endpoint/Product/Product.type";
+import isMobile from "Util/Mobile";
 import "./PDPDetail.style";
-
 class PDPDetail extends PureComponent {
   static propTypes = {
+    // product: Product.isRequired,
     brandDescription: PropTypes.string,
     brandImg: PropTypes.string,
     brandName: PropTypes.string,
@@ -15,6 +16,25 @@ class PDPDetail extends PureComponent {
   state = {
     isMobile: isMobile.any() || isMobile.tablet(),
   };
+
+  componentDidMount() {
+    // console.log("product", product);
+    // const locale = VueIntegrationQueries.getLocaleFromUrl();
+    // VueIntegrationQueries.vueAnalayticsLogger({
+    //   event_name: VUE_PDP_VIEW,
+    //   params: {
+    //     event: VUE_PAGE_VIEW,
+    //     pageType: "pdp",
+    //     currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+    //     clicked: Date.now(),
+    //     uuid: getUUID(),
+    //     referrer: "desktop",
+    //     sourceProdID: configSKU,
+    //     sourceCatgID: objectID, // TODO: replace with category id
+    //     prodPrice: basePrice,
+    //   },
+    // });
+  }
 
   renderBrandImage = () => {
     const { brandImg } = this.props;

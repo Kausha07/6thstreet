@@ -294,7 +294,7 @@
 
                     &:first-child {
                         grid-column: 1 / span 5;
-                        grid-row: 3;
+                        grid-row: 1;
                         justify-content: unset;
                         padding: 0 20px 10px;
                         margin-bottom: unset;
@@ -341,7 +341,7 @@
     
                     &:nth-child(3) {
                         grid-column: 1 / span 5;
-                        grid-row: 1;
+                        grid-row: 2;
     
                         @include desktop {
                             padding-top: 20px;
@@ -359,7 +359,7 @@
     
                     &:nth-child(4) {
                         grid-column: 1 / span 5;
-                        grid-row: 2;
+                        grid-row: 3;
     
                         @include desktop {
                             grid-row: 3;

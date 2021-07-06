@@ -9,6 +9,7 @@ import PDPSizeGuide from '../PDPSizeGuide';
 
 import './PDPAddToCart.style';
 
+
 class PDPAddToCart extends PureComponent {
     static propTypes = {
         product: Product.isRequired,

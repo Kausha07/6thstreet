@@ -8,9 +8,11 @@ import { MatchType } from 'Type/Common';
 import MagentoAPI from 'Util/API/provider/MagentoAPI';
 
 import MyAccountReturnSuccess from './MyAccountReturnSuccess.component';
+import { DISPLAY_DISCOUNT_PERCENTAGE } from '../Price/Price.config';
 
 export const mapStateToProps = (state) => ({
-    customer: state.MyAccountReducer.customer
+    customer: state.MyAccountReducer.customer,
+    country: state.AppState.country
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -21,7 +23,8 @@ export class MyAccountReturnSuccessContainer extends PureComponent {
     static propTypes = {
         match: MatchType.isRequired,
         customer: customerType.isRequired,
-        showErrorMessage: PropTypes.func.isRequired
+        showErrorMessage: PropTypes.func.isRequired,
+        country: PropTypes.string.isRequired
     };
 
     state = {
@@ -38,7 +41,7 @@ export class MyAccountReturnSuccessContainer extends PureComponent {
     }
 
     containerProps = () => {
-        const { customer } = this.props;
+        const { country, customer } = this.props;
         const {
             order_id,
             order_increment_id,
@@ -48,6 +51,8 @@ export class MyAccountReturnSuccessContainer extends PureComponent {
             isLoading
         } = this.state;
 
+
+        const displayDiscountPercentage = DISPLAY_DISCOUNT_PERCENTAGE[country];
         return {
             orderId: order_id,
             orderNumber: order_increment_id,
@@ -55,7 +60,8 @@ export class MyAccountReturnSuccessContainer extends PureComponent {
             date,
             items,
             isLoading,
-            customer
+            customer,
+            displayDiscountPercentage
         };
     };
 

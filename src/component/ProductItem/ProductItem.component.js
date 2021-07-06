@@ -20,6 +20,8 @@ class ProductItem extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
     page: PropTypes.string,
+    position: PropTypes.number,
+    qid: PropTypes.string,
   };
 
   static defaultProps = {
@@ -34,7 +36,6 @@ class ProductItem extends PureComponent {
 
   handleProductClick() {
     const { product, position, qid } = this.props;
-    Event.dispatch(EVENT_GTM_PRODUCT_CLICK, product);
     var data = localStorage.getItem("customer");
     let userData = JSON.parse(data);
     let userToken;
@@ -47,6 +48,7 @@ class ProductItem extends PureComponent {
     if (userData?.data) {
       userToken = userData.data.id;
     }
+    Event.dispatch(EVENT_GTM_PRODUCT_CLICK, product);
     if (queryID) {
       new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {
         objectIDs: [product.objectID],
@@ -80,8 +82,8 @@ class ProductItem extends PureComponent {
 
       return count > 0 ? (
         <span block="PLPSummary" elem="Colors">
-          {`+${count} `}
-          {__("Colors")}
+          {" "}
+          {`+${count} `} {__("Colors")}{" "}
         </span>
       ) : null;
     }
@@ -97,7 +99,8 @@ class ProductItem extends PureComponent {
     if (promotion !== undefined) {
       return promotion !== null ? (
         <span block="PLPSummary" elem="Exclusive">
-          {promotion}
+          {" "}
+          {promotion}{" "}
         </span>
       ) : null;
     }
@@ -112,9 +115,8 @@ class ProductItem extends PureComponent {
 
     return (
       <div>
-        <Image src={thumbnail_url} />
-        {this.renderExclusive()}
-        {this.renderColors()}
+        <Image src={thumbnail_url} /> {this.renderExclusive()}{" "}
+        {this.renderColors()}{" "}
       </div>
     );
   }
@@ -126,7 +128,8 @@ class ProductItem extends PureComponent {
 
     return (
       <h2 block="ProductItem" elem="Brand">
-        {brand_name}
+        {" "}
+        {brand_name}{" "}
       </h2>
     );
   }
@@ -138,7 +141,8 @@ class ProductItem extends PureComponent {
 
     return (
       <p block="ProductItem" elem="Title">
-        {name}
+        {" "}
+        {name}{" "}
       </p>
     );
   }
@@ -148,7 +152,6 @@ class ProductItem extends PureComponent {
       product: { price },
       page,
     } = this.props;
-
     return <Price price={price} page={page} />;
   }
 
@@ -191,10 +194,14 @@ class ProductItem extends PureComponent {
     const { isArabic } = this.state;
 
     return (
-      <li block="ProductItem" mods={{ isArabic }}>
-        {this.renderLabel()}
-        {this.renderWishlistIcon()}
-        {this.renderLink()}
+      <li
+        block="ProductItem"
+        mods={{
+          isArabic,
+        }}
+      >
+        {" "}
+        {this.renderLabel()} {this.renderWishlistIcon()} {this.renderLink()}{" "}
       </li>
     );
   }

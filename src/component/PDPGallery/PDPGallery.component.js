@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import { createRef, PureComponent } from 'react';
 
 import Image from 'Component/Image';
-import Link from 'Component/Link';
 import PDPGalleryCrumb from 'Component/PDPGalleryCrumb';
 import PDPGalleryOverlay from 'Component/PDPGalleryOverlay';
 import Slider from 'Component/Slider';

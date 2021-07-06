@@ -4,10 +4,9 @@ export const getMember = (customerId) => MobileAPI.get(
     `/club-apparel/members/${ customerId }`
 ) || {};
 
-export const linkAccount = (data) => MobileAPI.post(
-    '/club-apparel/link',
-    data
-) || {};
+export const linkAccount = (data) => {
+    return MobileAPI.post( '/club-apparel/link', data) || {}
+}
 
 export const verifyOtp = (data) => MobileAPI.post(
     '/club-apparel/verify',
