@@ -364,9 +364,11 @@
       .Totals {
         display: grid;
         grid-auto-flow: column;
-
+        
         &:last-child {
-          margin: 20px 0 0 0;
+          border-top: 2px solid var(--lightest-gray);
+          margin: 10px 0 0 0;
+          padding: 10px 0 0 0;
         }
 
         &-Title {
@@ -375,7 +377,7 @@
 
         &-Price {
           margin-left: auto;
-          font-weight: var(--fw-bold);
+          font-weight: var(--fw-demi);
         }
 
         &-TotalTitles {
