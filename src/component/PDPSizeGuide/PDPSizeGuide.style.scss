@@ -112,6 +112,9 @@
     letter-spacing: 0;
     text-align: right;
     text-decoration: underline;
+    &_isArabic {
+      padding-left: 0;
+    }
   }
 
   &-Modal {

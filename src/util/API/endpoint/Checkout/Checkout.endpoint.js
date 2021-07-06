@@ -25,7 +25,6 @@ export const selectPaymentMethod = ({ cartId, data }) =>
 
 export const createOrder = ({ data }) =>
   MobileAPI.post("/create-order2", data) || {};
-
 export const cancelOrder = ({ data }) =>
   MobileAPI.post("/cancel-order", data) || {};
 

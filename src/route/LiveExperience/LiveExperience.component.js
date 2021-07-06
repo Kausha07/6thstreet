@@ -99,12 +99,12 @@ export class LiveExperience extends PureComponent {
       <div>
         <div block="Container">
           <div id="single"></div>
-          {/* <div>
+          { !this.props.broadcastId && <div>
             <h1 block="Container" elem="Title">
               {__("COMING NEXT")}
             </h1>
             <div id="live"></div>
-          </div> */}
+          </div> }
           <div>
             <h1 block="Container" elem="Title">
               {__("RECENTLY PLAYED")}
