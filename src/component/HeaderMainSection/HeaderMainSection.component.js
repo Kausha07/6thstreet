@@ -88,19 +88,20 @@ class HeaderMainSection extends NavigationAbstract {
   // };
 
   handleScroll = () => {
-    if (!this.isPDP()) {
-      return;
-    }
+    // return
+    // if (!this.isPDP()) {
+    //   return;
+    // }
 
-    const { prevScrollpos, isMobile } = this.state;
+    // const { prevScrollpos, isMobile } = this.state;
 
-    const currentScrollPos = window.pageYOffset;
-    const visible = prevScrollpos < currentScrollPos;
+    // const currentScrollPos = window.pageYOffset;
+    // const visible = prevScrollpos < currentScrollPos;
 
-    this.setState({
-      prevScrollpos: currentScrollPos,
-      visible: isMobile && visible,
-    });
+    // this.setState({
+    //   prevScrollpos: currentScrollPos,
+    //   visible: isMobile && visible,
+    // });
   };
 
   componentDidMount() {
