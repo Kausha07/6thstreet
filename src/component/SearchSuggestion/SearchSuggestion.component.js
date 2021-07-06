@@ -1,14 +1,12 @@
-import PropTypes from "prop-types";
-import { PureComponent } from "react";
-
 import Link from "Component/Link";
 import Loader from "Component/Loader";
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
 import { Products } from "Util/API/endpoint/Product/Product.type";
 import { isArabic } from "Util/App";
+import { getCurrency } from "Util/App/App";
 import isMobile from "Util/Mobile";
 import BRAND_MAPPING from "./SearchSiggestion.config";
-import { getCurrency } from "Util/App/App";
-
 import "./SearchSuggestion.style";
 
 class SearchSuggestion extends PureComponent {
@@ -22,6 +20,8 @@ class SearchSuggestion extends PureComponent {
     trendingBrands: PropTypes.array.isRequired,
     trendingTags: PropTypes.array.isRequired,
     hideActiveOverlay: PropTypes.func,
+    newHits: PropTypes.array,
+    topSearches: PropTypes.array,
   };
 
   static defaultProps = {
@@ -97,6 +97,34 @@ class SearchSuggestion extends PureComponent {
     );
   }
 
+  renderQuerySuggestion = (newHit) => {
+    const { query, count } = newHit;
+
+    const urlName = this.getBrandUrl(query);
+
+    return (
+      <li>
+        <Link
+          to={`/${urlName}.html?q=${urlName}`}
+          onClick={this.closeSearchPopup}
+        >
+          {query}
+          <span>{count}</span>
+        </Link>
+      </li>
+    );
+  };
+
+  renderQuerySuggestions() {
+    const { newHits = [] } = this.props;
+
+    return (
+      <div block="SearchSuggestion" elem="Item">
+        <ul>{newHits.map(this.renderQuerySuggestion)}</ul>
+      </div>
+    );
+  }
+
   renderPrice = (price) => {
     if (price && price.length > 0) {
       const priceObj = price[0],
@@ -154,6 +182,7 @@ class SearchSuggestion extends PureComponent {
   renderSuggestions() {
     return (
       <>
+        {this.renderQuerySuggestions()}
         {this.renderBrands()}
         {this.renderProducts()}
       </>
@@ -224,9 +253,31 @@ class SearchSuggestion extends PureComponent {
     );
   }
 
+  renderTopSearch = ({ search }, i) => (
+    <li key={i}>
+      <Link to={{ pathname: search }} onClick={this.closeSearchPopup}>
+        <div block="SearchSuggestion" elem="TrandingTag">
+          {search}
+        </div>
+      </Link>
+    </li>
+  );
+
+  renderTopSearches() {
+    const { topSearches = [] } = this.props;
+    console.log("topSearches", topSearches);
+    return (
+      <div block="TrandingTags">
+        <h2>{__("Top searches")}</h2>
+        <ul>{topSearches.map(this.renderTopSearch)}</ul>
+      </div>
+    );
+  }
+
   renderEmptySearch() {
     return (
       <>
+        {this.renderTopSearches()}
         {this.renderTrendingBrands()}
         {this.renderTrendingTags()}
       </>
@@ -286,7 +337,8 @@ class SearchSuggestion extends PureComponent {
   }
   render() {
     const { isArabic } = this.state;
-
+    const { newHits } = this.props;
+    console.log("newHits", newHits);
     return (
       <div block="SearchSuggestion" mods={{ isArabic }}>
         <div block="SearchSuggestion" elem="Content">

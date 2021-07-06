@@ -77,6 +77,24 @@
       margin-bottom: 155px;
     }
   }
+  &-Item {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    ul {
+      li {
+        margin-top: 20px !important;
+        a {
+          &:hover {
+            text-decoration: none;
+          }
+        }
+      }
+    }
+
+    @include before-desktop {
+      margin-bottom: 155px;
+    }
+  }
 
   .TrandingTags,
   .TrandingBrands {

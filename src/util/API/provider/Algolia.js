@@ -142,6 +142,13 @@ export class Algolia {
     const data = (await AlgoliaSDK.getSuggestions(query, limit)) || {};
     return data;
   }
+
+  async getTopSearches() {
+    console.log("algolia provider");
+    const data = (await AlgoliaSDK.getTopSearches()) || [];
+    console.log("data in provider", data);
+    return data;
+  }
 }
 
 export default Algolia;

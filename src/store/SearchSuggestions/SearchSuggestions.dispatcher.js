@@ -55,12 +55,7 @@ export class SearchSuggestionsDispatcher {
       // });
       console.log("hits.length", hits.length);
       const newHits = hits.length > 0 ? createSuggestions(hits) : [];
-      console.log(
-        "suggestions",
-        newHits
-        // categorySuggestions,
-        // productSuggestions
-      );
+      // newHits.map((item) => console.log("item", formatQuery(item.query)));
 
       // if you need search analytics then uncomment it (default automatically tracks it) UPDATE: causing wrong data.
 
@@ -84,7 +79,7 @@ export class SearchSuggestionsDispatcher {
       const queryID = productData?.queryID ? productData?.queryID : null;
       const results = formatProductSuggestions(productData);
 
-      dispatch(setSearchSuggestions(search, results, queryID));
+      dispatch(setSearchSuggestions(search, results, queryID, newHits));
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e);

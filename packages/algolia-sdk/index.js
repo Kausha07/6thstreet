@@ -5,6 +5,7 @@ import {
   getPopularBrands,
   getProductBySku,
   getSuggestions,
+  getTopSearches,
   init,
   logAlgoliaAnalytics,
   searchBy,
@@ -32,6 +33,7 @@ const AlgoliaSDK = {
   searchBy: (params) => searchBy(params, { index: AlgoliaSDK.index }),
   getSuggestions: (params) =>
     getSuggestions(params, { index: AlgoliaSDK.index }),
+  getTopSearches: () => getTopSearches({ index: AlgoliaSDK.index }),
   getPopularBrands: (limit) =>
     getPopularBrands(limit, { index: AlgoliaSDK.index }),
   getBrands: (gender) => getBrands(gender, { index: AlgoliaSDK.index }),

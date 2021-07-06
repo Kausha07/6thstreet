@@ -3,6 +3,7 @@ import { PureComponent } from "react";
 import { connect } from "react-redux";
 import SearchSuggestionDispatcher from "Store/SearchSuggestions/SearchSuggestions.dispatcher";
 import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
+import Algolia from "Util/API/provider/Algolia";
 import SearchSuggestion from "./SearchSuggestion.component";
 
 export const mapStateToProps = (state) => ({
@@ -10,6 +11,7 @@ export const mapStateToProps = (state) => ({
   data: state.SearchSuggestions.data,
   gender: state.AppState.gender,
   queryID: state.SearchSuggestions.queryID,
+  newHits: state.SearchSuggestions.newHits,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -30,6 +32,7 @@ export class SearchSuggestionContainer extends PureComponent {
     }).isRequired,
     closeSearch: PropTypes.func.isRequired,
     queryID: PropTypes.string,
+    newHits: PropTypes.array,
   };
 
   static getDerivedStateFromProps(props, state) {
@@ -61,12 +64,14 @@ export class SearchSuggestionContainer extends PureComponent {
       prevSearch: props.search,
       trendingBrands: [],
       trendingTags: [],
+      topSearches: [],
     };
 
     // TODO: please render this component only once. Otherwise it is x3 times the request
 
     SearchSuggestionContainer.requestSearchSuggestions(props);
     this.requestTrendingInformation();
+    this.requestTopSearches();
   }
 
   async requestTrendingInformation() {
@@ -88,9 +93,16 @@ export class SearchSuggestionContainer extends PureComponent {
     }
   }
 
+  async requestTopSearches() {
+    const topSearches = await new Algolia().getTopSearches();
+    this.setState({
+      topSearches: topSearches?.data?.filter((ele) => ele !== "") || [],
+    });
+  }
+
   containerProps = () => {
-    const { trendingBrands, trendingTags } = this.state;
-    const { search, data, closeSearch, queryID } = this.props;
+    const { trendingBrands, trendingTags, topSearches } = this.state;
+    const { search, data, closeSearch, queryID, newHits } = this.props;
     const { brands = [], products = [] } = data;
 
     const isEmpty = search === "";
@@ -107,6 +119,8 @@ export class SearchSuggestionContainer extends PureComponent {
       trendingTags,
       closeSearch,
       queryID,
+      newHits,
+      topSearches,
     };
   };
   containerFunctions = {

@@ -1,26 +1,27 @@
-import { SET_SEARCH_SUGGESTIONS } from './SearchSuggestions.action';
+import { SET_SEARCH_SUGGESTIONS } from "./SearchSuggestions.action";
 
 export const getInitialState = () => ({
-    search: '',
-    data: {}
+  search: "",
+  data: {},
 });
 
 export const SearchSuggestionsReducer = (state = getInitialState(), action) => {
-    const { type } = action;
+  const { type } = action;
 
-    switch (type) {
+  switch (type) {
     case SET_SEARCH_SUGGESTIONS:
-            const { search, data,queryID } = action;
-        return {
-            ...state,
-            search,
-            data,
-            queryID
-        };
+      const { search, data, queryID, newHits } = action;
+      return {
+        ...state,
+        search,
+        data,
+        queryID,
+        newHits,
+      };
 
     default:
-        return state;
-    }
+      return state;
+  }
 };
 
 export default SearchSuggestionsReducer;
