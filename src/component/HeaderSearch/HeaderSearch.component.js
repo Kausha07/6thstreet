@@ -80,7 +80,7 @@ class HeaderSearch extends PureComponent {
           id="search-field"
           name="search"
           type="text"
-          autocomplete="false"
+          autocomplete="off"
           autocorrect="off"
           spellcheck="false"
           placeholder={__("What are you looking for?")}
