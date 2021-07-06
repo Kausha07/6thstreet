@@ -241,13 +241,15 @@ export class CartItem extends PureComponent {
       currency_code,
       item: { row_total, basePrice },
     } = this.props;
+    // debugger
     const { isArabic } = this.state;
     const decimals = FIXED_CURRENCIES.includes(currency_code) ? 3 : 2;
+    let percentDiscount = ((basePrice-row_total)*100)/basePrice;
 
     const withoutDiscount = (
       <>
         <span>{currency_code}</span>
-        <span>{`${parseFloat(row_total).toFixed(decimals)}`}</span>
+        <span>{` (-${parseFloat(percentDiscount).toFixed(1)}%) ${parseFloat(row_total).toFixed(decimals)}`}</span>
       </>
     );
 
