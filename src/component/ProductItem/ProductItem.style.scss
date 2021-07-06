@@ -30,7 +30,14 @@
         top: 20px;
         border-radius: 0 10px 10px 0;
     }
-
+    .WishlistIcon {
+        &-Icon{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: initial
+        }
+    }
     &_isArabic {
         .ProductLabel {
             border-radius: 10px 0 0 10px;
@@ -40,6 +47,12 @@
         .WishlistIcon {
             left: 0.8rem;
             right: auto;
+            &-Icon{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: initial
+            }
         }
     }
 

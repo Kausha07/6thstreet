@@ -191,7 +191,7 @@ export class PDPAddToCartContainer extends PureComponent {
       getProductStock,
     } = this.props;
     const {
-      sizeObject: { sizeCodes = [], sizeTypes },
+      sizeObject: { sizeTypes },
     } = this.state;
 
     this.setState({ processingRequest: true });
@@ -213,7 +213,28 @@ export class PDPAddToCartContainer extends PureComponent {
         sizeCodes: allSizes,
       };
 
-      this.setState({ processingRequest: false, mappedSizeObject: object });
+      this.setState({ processingRequest: false, mappedSizeObject: object, productStock: response });
+    });
+  }
+
+  sendNotifyMeEmail(email) {
+    const {
+      locale,
+      product: { sku },
+      sendNotifyMeEmail,
+      showNotification
+    } = this.props;
+    let data = { email, sku, locale };
+
+    this.setState({ notifyMeLoading: true });
+
+    sendNotifyMeEmail(data).then((response) => {
+      if (response && response.success) {//if success
+        this.setState({ notifyMeSuccess: true, isOutOfStock: false });
+      } else {//if error
+        showNotification("error", __('Something went wrong.'));
+      }
+      this.setState({ notifyMeLoading: false });
     });
   }
   
@@ -397,9 +418,8 @@ export class PDPAddToCartContainer extends PureComponent {
           objectIDs: [objectID],
           queryID,
           userToken: userToken ? `user-${userToken}` : getUUIDToken(),
-        })
-      };
-
+        });
+      }
       // vue analytics
       const locale = VueIntegrationQueries.getLocaleFromUrl();
       VueIntegrationQueries.vueAnalayticsLogger({
