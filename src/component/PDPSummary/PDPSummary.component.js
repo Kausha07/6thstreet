@@ -6,11 +6,14 @@ import PDPAddToCart from 'Component/PDPAddToCart/PDPAddToCart.container';
 import PDPTags from 'Component/PDPTags';
 import PDPAlsoAvailableProducts from 'Component/PDPAlsoAvailableProducts';
 import Price from 'Component/Price';
+import ShareButton from 'Component/ShareButton';
+import WishlistIcon from 'Component/WishlistIcon';
 import ProductLabel from 'Component/ProductLabel/ProductLabel.component';
 import TabbyMiniPopup from 'Component/TabbyMiniPopup';
 import { TABBY_TOOLTIP_PDP } from 'Component/TabbyMiniPopup/TabbyMiniPopup.config';
 import { Product } from 'Util/API/endpoint/Product/Product.type';
 import { isArabic } from 'Util/App';
+import isMobile from 'Util/Mobile';
 import { SPECIAL_COLORS, translateArabicColor } from 'Util/Common';
 
 import tabby from './icons/tabby.svg';
@@ -67,8 +70,40 @@ class PDPSummary extends PureComponent {
         );
     }
 
+    renderPDPSummaryHeader() {
+        const { product } = this.props;
+        return (
+            <div block="PDPSummary" elem="Header">
+                <ProductLabel product={ product } />
+            </div>
+        )
+    }
+
+    renderPDPSummaryHeaderAndShareAndWishlistButton() {
+        const { product: { sku } } = this.props; 
+        const url = new URL(window.location.href);
+
+        if (isMobile.any()) {
+            return null;
+        }
+
+        return (
+            <>
+                { this.renderPDPSummaryHeader() }
+                <div block="ShareAndWishlistButtonContainer">
+                    <ShareButton
+                        title = { document.title }
+                        text =  {`Hey check this out: ${document.title}`}
+                        url = { url.searchParams.append('utm_source', 'pdp_share') }
+                    />
+                    <WishlistIcon sku={ sku } />
+                </div>
+            </>
+        )
+    }
+
     renderPriceAndPDPSummaryHeader() {
-        const { product, product: { price, stock_qty } } = this.props;
+        const { product: { price, stock_qty } } = this.props;
         const { stockAvailibility } = this.state;
 
         if (!price || stock_qty === 0 || !stockAvailibility) {
@@ -78,9 +113,7 @@ class PDPSummary extends PureComponent {
         return (
             <div block="PriceContainer">
                 <Price price={ price } />
-                <div block="PDPSummary" elem="Header">
-                    <ProductLabel product={ product } />
-                </div>
+                { isMobile.any() && this.renderPDPSummaryHeader() }
             </div>
         );
     }
@@ -231,7 +264,10 @@ class PDPSummary extends PureComponent {
 
     render() {
         return (
-            <div block="PDPSummary">   
+            <div block="PDPSummary">
+                <div block="PDPSummaryHeaderAndShareAndWishlistButtonContainer">
+                    { this.renderPDPSummaryHeaderAndShareAndWishlistButton() }
+                </div>
                 { this.renderBrand() }
                 { this.renderName() }
                 <div block="PriceAndPDPSummaryHeader">

@@ -50,7 +50,7 @@ class PDPAddToCart extends PureComponent {
         });
     };
 
-    getSizeTypeSelect() {
+    getSizeTypeRadio() {
         const {
             sizeObject = {},
             selectedSizeType,
@@ -82,6 +82,36 @@ class PDPAddToCart extends PureComponent {
             ));
 
             return listItems;
+        }
+
+        return null;
+    }
+
+    getSizeTypeSelect() {
+        const { sizeObject = {}, onSizeTypeSelect } = this.props;
+
+        if (sizeObject.sizeTypes !== undefined) {
+            return (
+                <select
+                    key="SizeTypeSelect"
+                    block="PDPAddToCart"
+                    elem="SizeTypeSelectElement"
+                    onChange={ onSizeTypeSelect }
+                >
+                    {
+                        sizeObject.sizeTypes.map((type = '') => (
+                            <option
+                                key={ type }
+                                block="PDPAddToCart"
+                                elem="SizeTypeOption"
+                                value={ type }
+                            >
+                                { type.toUpperCase() }
+                            </option>
+                        ))
+                    }
+                </select>
+            )
         }
 
         return null;
@@ -180,7 +210,7 @@ class PDPAddToCart extends PureComponent {
         && (sizeObject.sizeTypes.length !== 0)
         && !!fit_size_url) {
             return (
-                <div block="PDPAddToCart" elem="SizeInfo">
+                <div block="PDPAddToCart-SizeInfoContainer" elem="SizeInfo">
                     <PDPSizeGuide product={ product } />
                 </div>
             );
@@ -192,7 +222,13 @@ class PDPAddToCart extends PureComponent {
     renderSizeTypeSelect() {
         return (
             <div block="PDPAddToCart" elem="SizeTypeSelector">
-                { this.getSizeTypeSelect() }
+                {
+                    isMobile.any()
+                    ?
+                    this.getSizeTypeRadio()
+                    :
+                    this.getSizeTypeSelect()
+                }
             </div>
         );
     }
@@ -330,14 +366,19 @@ class PDPAddToCart extends PureComponent {
                 {
                     (sizeObject.sizeTypes !== undefined) && (sizeObject.sizeTypes.length !== 0)
                     ?
-                    <>
-                        { this.renderSizeInfo() }
-                        <div block="PDPAddToCart" elem="SizeSelect">
-                            { this.renderSizeTypeSelect() }
-                            { this.renderSizeSelect() }
-                        </div>
-                        <div block="Seperator" />
-                    </>
+                    (
+                        <>
+                            <div block="PDPAddToCart" elem="SizeInfoContainer">
+                                <span block="PDPAddToCart-SizeInfoContainer" elem="title">{ __("Size:") }</span>
+                                { this.renderSizeInfo() }
+                            </div>
+                            <div block="PDPAddToCart" elem="SizeSelect">
+                                { this.renderSizeTypeSelect() }
+                                { this.renderSizeSelect() }
+                            </div>
+                            { isMobile.any() && <div block="Seperator" /> }
+                        </>
+                    )
                     :
                     null
                 }

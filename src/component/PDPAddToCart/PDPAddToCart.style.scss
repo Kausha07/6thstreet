@@ -12,11 +12,9 @@ $select-arrow-width: 6px !default;
 
 
 .PDPAddToCart {
-    @include mobile {
-        display: flex;
-        flex-direction: column;
-        padding: 12px 0 12px 0;
-    }
+    display: flex;
+    flex-direction: column;
+    padding: 12px 0 12px 0;
     &-Checkout {
         position: fixed;
         overflow: hidden;
@@ -85,24 +83,22 @@ $select-arrow-width: 6px !default;
         }
     }
 
-    &-SizeInfo {
-        margin-bottom: 5px;
+    &-SizeInfoContainer{
         display: flex;
-        width: 100%;
-        justify-content: flex-end;
-
-        @include desktop {
-            width: auto; //
-            justify-content: space-between;
-            width: 363px;
+        &-title {
+            @include mobile {
+                display: none;
+            }
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0;
+            line-height: 22px;
         }
-    }
-
-    @include desktop {
-        &-SizeLabel {
-            font-size: 17px;
-            font-weight: var(--fw-demi);
-            line-height: 30px;
+        &-SizeInfo {
+            margin-bottom: 5px;
+            display: flex;
+            width: 100%;
+            justify-content: flex-end;
         }
     }
 
@@ -114,30 +110,30 @@ $select-arrow-width: 6px !default;
 
         @include desktop {
             width: 363px;
-            padding-bottom: 35px;
+            padding-bottom: 16px;
             width: auto;
-        }
-    }
-
-    @include desktop {
-        select {
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-            font-size: 13px;
-            letter-spacing: 0.5px;
-            line-height: 18px;
-        }
-
-        &-SizeTypeSelectElement {
-            width: 70px;
-            height: 50px;
+            align-items: center;
         }
     }
 
     .PDPAddToCart-SizeTypeSelector {
         @include desktop {
-            height: 50px;
+            select { 
+                position: relative; 
+                overflow: hidden; 
+                cursor: pointer; 
+                font-size: 13px; 
+                letter-spacing: 0.5px; 
+                line-height: 18px; 
+                border: 0.5px solid #D1D3D4;
+                border-radius: 6px;
+                width: 70px;
+            } 
+     
+            &-SizeTypeSelectElement { 
+                width: 70px; 
+                height: 50px; 
+            } 
     
             &::after {
                 content: "";
@@ -149,7 +145,7 @@ $select-arrow-width: 6px !default;
                 right: 14px;
                 bottom: 0;
                 top: 0;
-                margin-top: 22px;
+                margin-top: 18px;
                 border: solid var(--text-color);
                 border-width: 0 1px 1px 0;
             }
@@ -195,73 +191,72 @@ $select-arrow-width: 6px !default;
     &-SizeSelector {
         @include desktop {
             margin-left: 20px;
+            width: calc(100% - 150px);
         }
 
+        position: relative;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        align-self: center;
+        padding: 16px 0 16px 0;
         @include mobile {
-            position: relative;
-            display: flex;
-            justify-content: center;
-            flex-direction: column;
-            align-items: center;
-            align-self: center;
-            padding: 16px 0 16px 0;
             overflow: scroll;
             white-space: nowrap;
             width: 85%;
-            margin-left: 16px;
+        }
+        margin-left: 16px;
+        -webkit-overflow-scrolling: touch;
+        -ms-overflow-style: -ms-autohiding-scrollbar; 
+
+        &-AvailableSizes {
+            display: flex;
+            flex-direction: row;
+            @include mobile {    
+                overflow-x: scroll;
+                white-space: nowrap;
+            }
+            justify-content: center;
+            margin: auto;
             -webkit-overflow-scrolling: touch;
             -ms-overflow-style: -ms-autohiding-scrollbar; 
 
-            &-AvailableSizes {
-                display: flex;
-                flex-direction: row;            
-                overflow-x: scroll;
-                white-space: nowrap;
-                justify-content: center;
-                margin: auto;
-                -webkit-overflow-scrolling: touch;
-                -ms-overflow-style: -ms-autohiding-scrollbar; 
-
-            }
-            &-QuantityBasedMessage {
-                margin-top: 8px
-            }
-
-            &-SizeOptionContainer {
-                margin: auto;
-                padding: 0 6px 0 0;
-
-                input {
-                    display: none;
-                    &:checked + label {
-                        background-color: #000000;
-                        color: #FFFFFF;
-                        font-weight: 600;
-                        font-size: 14px;
-                        letter-spacing: 0;
-                    }
-                }
-
-                label {
-                    box-sizing: border-box;
-                    height: 40px;
-                    min-width: 40px;
-                    border: 1px solid #000000;
-                    border-radius: 6px;
-                    background-color: #ffffff;
-                    color: #000000;
-                    font-size: 14px;
-                    font-weight: 500;
-                    letter-spacing: 0;
-                    line-height: 30px;
-                    text-align: center;
-                    padding: 5px;          
-                }
-            }
+        }
+        &-QuantityBasedMessage {
+            margin-top: 8px
         }
 
-        &::after {
-            @extend .PDPAddToCart-SizeTypeSelector::after;
+        &-SizeOptionContainer {
+            margin: auto;
+            padding: 0 6px 0 0;
+
+            input {
+                display: none;
+                &:checked + label {
+                    background-color: #000000;
+                    color: #FFFFFF;
+                    font-weight: 600;
+                    font-size: 14px;
+                    letter-spacing: 0;
+                }
+            }
+
+            label {
+                box-sizing: border-box;
+                height: 40px;
+                min-width: 40px;
+                border: 1px solid #000000;
+                border-radius: 6px;
+                background-color: #ffffff;
+                color: #000000;
+                font-size: 14px;
+                font-weight: 500;
+                letter-spacing: 0;
+                line-height: 30px;
+                text-align: center;
+                padding: 5px;          
+            }
         }
     }
 
@@ -269,9 +264,6 @@ $select-arrow-width: 6px !default;
         height: 50px;
         width: 100%;
 
-        @include desktop {
-            width: 271px;
-        }
     }
 
     @include mobile {
@@ -299,13 +291,12 @@ $select-arrow-width: 6px !default;
         border: 2px solid var(--text-color);
         border-radius: 5px;
         color: var(--text-color-on-dark-background);
-
-        @include desktop {
-            border-radius: 0;
-            font-size: 13px;
-            width: 363px;
-        }
-
+        @include desktop { 
+            border-radius: 0; 
+            font-size: 13px; 
+            width: 270px;
+            border-radius: 6px;
+        } 
         span {
             display: block;
             opacity: 1;

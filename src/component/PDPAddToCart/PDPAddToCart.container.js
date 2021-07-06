@@ -17,7 +17,6 @@ import Event, {
 import history from "Util/History";
 import isMobile from "Util/Mobile";
 import PDPAddToCart from "./PDPAddToCart.component";
-import PDPAddToCartDesktop from "./PDPAddToCartDesktop.component";
 
 export const mapStateToProps = (state) => ({
   product: state.PDP.product,
@@ -482,15 +481,6 @@ export class PDPAddToCartContainer extends PureComponent {
   }
 
   render() {
-    if (!isMobile.any()) {
-      return (
-        <PDPAddToCartDesktop
-          {...this.containerFunctions}
-          {...this.containerProps()}
-        />
-      );
-    }
-
     return (
       <PDPAddToCart {...this.containerFunctions} {...this.containerProps()} />
     );
