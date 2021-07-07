@@ -121,9 +121,9 @@ export class SuccessCheckoutItem extends PureComponent {
         <p block="SuccessCheckoutItem" elem="Heading" mods={{ isArabic }}>
           {brand_name}
         </p>
-        <p block="SuccessCheckoutItem" elem="Details" mods={{ isArabic }}>
+        <div block="SuccessCheckoutItem" elem="Details" mods={{ isArabic }}>
           {name}
-        </p>
+        </div>
       </>
     );
   }
@@ -150,13 +150,6 @@ export class SuccessCheckoutItem extends PureComponent {
         <div>
           {currency_code} {`${finalBasePrice}`}
         </div>
-        <span
-          block="SuccessCheckoutItem"
-          elem="WithoutDiscount"
-          mods={{ isArabic }}
-        ><span>
-          {withoutDiscount}
-        </span>
         {isArabic ? (
           <span block="SuccessCheckoutItem" elem="DiscountPercentage">
             {discountPercentage}
@@ -167,6 +160,13 @@ export class SuccessCheckoutItem extends PureComponent {
             -{discountPercentage}%<span> </span>
           </span>
         )}
+        <span
+          block="SuccessCheckoutItem"
+          elem="WithoutDiscount"
+          mods={{ isArabic }}
+        ><span>
+          {withoutDiscount}
+        </span>
         </span>
       </div>
     );
@@ -187,20 +187,20 @@ export class SuccessCheckoutItem extends PureComponent {
     if (optionValue) {
       return (
         <div block="SuccessCheckoutItem" elem="ColSizeQty" mods={{ isArabic }}>
-          <span> {__("Color:")} </span>
-          {color}
-          <span>| {__("Size:")} </span>
-          {optionValue}
-          <span>| {__("Qty:")} </span>
-          {qty}
+          <span> {__("Color:")} {color}</span>
+          
+          <span>| {__("Size:")} {optionValue}</span>
+          
+          <span>| {__("Qty:")} {qty}</span>
+          
         </div>
       );
     }
 
     return (
       <div block="SuccessCheckoutItem" elem="ColSizeQty">
-        {color ? <span> {__("Color:")} </span> : null}
-        {color}
+        {color ? <span> {__("Color:")} {color}</span> : null}
+        
         <span>
           {color ? "|" : null} {__("Qty:")}{" "}
         </span>

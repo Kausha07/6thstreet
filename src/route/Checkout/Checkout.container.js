@@ -6,6 +6,7 @@ import {
   CHECKOUT_APPLE_PAY,
   TABBY_ISTALLMENTS,
   TABBY_PAY_LATER,
+  CHECKOUT_QPAY,
 } from "Component/CheckoutPayments/CheckoutPayments.config";
 import { CC_POPUP_ID } from "Component/CreditCardPopup/CreditCardPopup.config";
 import {
@@ -447,7 +448,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           id: gateway_token,
         }
       }
-    } else {
+    }else if(code === CHECKOUT_QPAY){
+      data = {};
+    }
+ else {
       data = additional_data;
     }
 
@@ -474,12 +478,14 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     try {
       createOrder(code, data)
         .then((response) => {
+          console.log("response", response)
           if (response && response.data) {
             const { data } = response;
 
             if (typeof data === "object") {
               const {
                 order_id,
+                http_response_code,
                 success,
                 response_code,
                 increment_id,
@@ -487,7 +493,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                 _links: { redirect: { href = "" } = {} } = {},
               } = data;
 
-              if (success || response_code === 200) {
+              if (success || response_code === 200 || http_response_code === 202) {
                 this.setState({ isLoading: false });
                 if (code === CARD && href) {
                   this.setState({
@@ -513,7 +519,18 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                   );
 
                   //return true;
-                } else {
+                }else if (
+                  code === CHECKOUT_QPAY
+                ) {
+                  this.setState({
+                    order_id,
+                    increment_id,
+                    id,
+                  });
+                  window.open(`${href}`,"_self")
+
+                  //return true;
+                }  else {
                   if (code === CARD) {
                     const { saveCreditCard, newCardVisible } = this.props;
                     const { creditCardData } = this.state;

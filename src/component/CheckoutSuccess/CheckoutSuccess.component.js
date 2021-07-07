@@ -6,6 +6,8 @@ import { PureComponent } from "react";
 
 import ChangePhonePopup from "Component/ChangePhonePopUp";
 import { MINI_CARDS } from "Component/CreditCard/CreditCard.config";
+import { EMAIL_LINK, TEL_LINK, WHATSAPP_LINK } from "./CheckoutSuccess.config";
+
 import Field from "Component/Field";
 import Form from "Component/Form";
 import Link from "Component/Link";
@@ -142,7 +144,7 @@ export class CheckoutSuccess extends PureComponent {
     const { isArabic, isPhoneVerification } = this.state;
     const countryCode = phone ? phone.slice(0, "4") : null;
     const phoneNumber = phone ? phone.slice("4") : null;
-   
+
     if (!isPhoneVerified && isVerificationCodeSent) {
       return (
         <div
@@ -377,8 +379,9 @@ export class CheckoutSuccess extends PureComponent {
           getDiscountFromTotals(total_segments, "clubapparel"),
           __("Club Apparel Redemption")
         )}
-          {couponCode ? 
-              this.renderPriceLine(discount, __("Discount (%s)", couponCode)) :this.renderPriceLine(discount, __("Discount")) }
+        {couponCode
+          ? this.renderPriceLine(discount, __("Discount (%s)", couponCode))
+          : this.renderPriceLine(discount, __("Discount"))}
 
         {this.renderTotalPrice()}
       </div>
@@ -395,7 +398,7 @@ export class CheckoutSuccess extends PureComponent {
     return (
       <div block="ContactInfo" mods={{ isArabic }}>
         <div block="ContactInfo" elem="Links">
-          <a href="tel:+9718003852633" target="_blank" rel="noreferrer">
+          <a href={`tel:${TEL_LINK}`} target="_blank" rel="noreferrer">
             <div block="ContactInfo" elem="Link">
               <span>
                 <img src={Call} alt="Call" />
@@ -405,7 +408,7 @@ export class CheckoutSuccess extends PureComponent {
               </span>
             </div>
           </a>
-          <a href="mailto:customercare@6thstreet.com" target="_blank" rel="noreferrer">
+          <a href={`mailto:${EMAIL_LINK}`} target="_blank" rel="noreferrer">
             <div block="ContactInfo" elem="LinkMiddle">
               <span>
                 <img src={Mail} alt="e-mail" />
@@ -415,7 +418,7 @@ export class CheckoutSuccess extends PureComponent {
               </span>
             </div>
           </a>
-          <a href="https://wa.me/9718003852633" target="_blank" rel="noreferrer">
+          <a href={`${WHATSAPP_LINK}`} target="_blank" rel="noreferrer">
             <div block="ContactInfo" elem="Link">
               <span>
                 <img src={Whatsapp} alt="whatsapp" />
@@ -450,7 +453,6 @@ export class CheckoutSuccess extends PureComponent {
         city,
         country_id,
       },
-      getCountryNameById,
     } = this.props;
     return (
       <div block="Address">
@@ -464,7 +466,7 @@ export class CheckoutSuccess extends PureComponent {
           {street}, {postcode}
         </div>
         <div block="Address" elem="PostCode">
-          {city} - {getCountryNameById(country_id)}
+          {city} - {country_id}
         </div>
       </div>
     );
@@ -561,7 +563,7 @@ export class CheckoutSuccess extends PureComponent {
       paymentMethod,
       selectedCard,
     } = this.props;
-
+    console.log("payment method check", paymentMethod)
     if (number && expMonth && expYear && cvv) {
       const displayNumberDigits = 4;
       const slicedNumber = number.slice(number.length - displayNumberDigits);
@@ -617,6 +619,8 @@ export class CheckoutSuccess extends PureComponent {
       this.setState({ paymentTitle: __("Apple") });
     } else if (paymentMethod.code.match(/cash/)) {
       this.setState({ paymentTitle: __("Cash on delivery") });
+    }else if (paymentMethod.code.match(/free/)) {
+      this.setState({ paymentTitle: __("Store Credit") });
     }
 
     const { paymentTitle } = this.state;
