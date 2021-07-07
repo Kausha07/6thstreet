@@ -39,11 +39,12 @@
             &_formContent {
               .MyAccountAddressBook {
                 &-backButton {
-                  position: absolute;
+                  position: fixed;
                   width: 20px;
                   height: 30px;
-                  top: -100px;
-                  left: 0;
+                  top: 20px;
+                  right: unset;
+                  left:10px;
                   z-index: 9;
 
                   &::before {
@@ -63,9 +64,10 @@
                   }
 
                   &_isArabic {
-                    top: -100px;
+                    top: 20px;
+                  left: unset;
+                  right:10px;
                     transform: rotate(180deg);
-                    right: 5px;
                     -webkit-transform: rotate(180deg);
                   }
                 }
@@ -130,11 +132,11 @@
           position: absolute;
 
           .Form {
-            top: -130px;
-
+            
             @include desktop {
               top: 0;
-              padding: 20px 0 30px 60px;
+              padding: 20px 30px 30px 30px;
+              background: var(--white);
             }
 
             .MyAccountAddressFieldForm {
@@ -150,7 +152,9 @@
           &_isArabic {
             .Form {
               @include desktop {
-                padding:  0 20px;
+                padding: 20px 30px 30px 30px;
+                background: var(--white);
+
               }
 
               .MyAccountAddressFieldForm {
