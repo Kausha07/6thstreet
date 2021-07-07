@@ -3,6 +3,9 @@
     @include mobile {
       bottom: 100px !important;
     }
+    @include tablet {
+      bottom: 100px !important;
+    }
 
     .ori-full-parent-height {
       width: 70px;
