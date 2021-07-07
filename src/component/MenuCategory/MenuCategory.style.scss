@@ -252,10 +252,10 @@
           width: 100%;
         }
         .Image {
-          // height: 290px;
           height: 100%;
           width: 100%;
-          // width: auto;
+          max-height: 303px;
+          object-fit: cover;
         }
       }
 
