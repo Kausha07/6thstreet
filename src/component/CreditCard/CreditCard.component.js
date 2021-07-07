@@ -12,7 +12,7 @@ import { isArabic } from "Util/App";
 import './CreditCard.style';
 import PlusIcon from "./icons/plus.png";
 import SelectedIcon from './icons/selected.png';
-
+const AMEX = 'amex';
 class CreditCard extends PureComponent {
     static propTypes = {
         supported_networks: PropTypes.array,
@@ -120,6 +120,7 @@ class CreditCard extends PureComponent {
         if (isMonth) {
             if (value.length === 2 && expYear.length === 2) {
                 this.setState({ expDateFilled: true });
+                return;
             } else if (value.length === 2) {
                 let yearInput = document.getElementById("expDataYY");
                 if (yearInput) {
@@ -128,13 +129,14 @@ class CreditCard extends PureComponent {
             }
         } else if (expMonth.length === 2 && value.length === 2) {
             this.setState({ expDateFilled: true });
+            return;
         }
 
         this.setState({ expDateFilled: false });
     };
 
-    handleCvvChange = (e) => {
-        const { setCreditCardData, isNumber, isAmex } = this.props;
+    handleCvvChange = (e, isAmex) => {
+        const { setCreditCardData, isNumber } = this.props;
         const { value = '' } = e.target;
 
         if (isNumber(value)) {
@@ -222,7 +224,7 @@ class CreditCard extends PureComponent {
                         inputMode="numeric"
                         maxLength={isAmex ? '4' : '3'}
                         value={cvv}
-                        onChange={this.handleCvvChange}
+                        onChange={(e) => this.handleCvvChange(e, isAmex)}
                         validation={['notEmpty']}
                         onPaste={this.handlePaste}
                     />
@@ -239,7 +241,7 @@ class CreditCard extends PureComponent {
 
     renderMiniCard(miniCard) {
         const img = MINI_CARDS[miniCard];
-        const isAmex = miniCard === MINI_CARDS.amex;
+        const isAmex = miniCard === AMEX;
         if (img) {
             return <img src={img} alt="method" key={miniCard} style={{ width: isAmex ? '30px' : '40px' }} />;
         }
@@ -320,7 +322,7 @@ class CreditCard extends PureComponent {
                         const cardNum = `${bin.substr(0, 4)} **** **** ${maskedCC}`;
                         if (selected) {
                             const { cvv } = this.state;
-                            const isAmex = scheme.toLowerCase() === MINI_CARDS.amex;
+                            const isAmex = scheme.toLowerCase() === AMEX;
                             return (
                                 <div block="SelectedSavedCard" elem="Item" key={entity_id}>
                                     <img src={SelectedIcon} alt={"selected"} block="SavedCard" elem="Tick"
@@ -338,7 +340,7 @@ class CreditCard extends PureComponent {
                                             validation={['notEmpty']}
                                             onPaste={this.handlePaste}
                                             maxLength={isAmex ? '4' : '3'}
-                                            onChange={this.handleCvvChange}
+                                            onChange={(e) => this.handleCvvChange(e, isAmex)}
                                             style={{ width: isAmex ? '56px' : '50px' }}
                                         />
                                         {this.renderMiniCard(scheme.toLowerCase())}
@@ -391,7 +393,7 @@ class CreditCard extends PureComponent {
     }
 
     render() {
-        const { loadingSavedCards, newCardVisible ,isSignedIn} = this.props;
+        const { loadingSavedCards, newCardVisible, isSignedIn } = this.props;
         if (loadingSavedCards) {
             return null;
         }

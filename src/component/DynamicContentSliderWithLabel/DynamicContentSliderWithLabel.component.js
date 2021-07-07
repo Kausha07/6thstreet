@@ -91,7 +91,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
   };
 
-  // async onSwipe() {
+  // async onSwipe(e) {
   //   const locale = VueIntegrationQueries.getLocaleFromUrl();
   //   VueIntegrationQueries.vueAnalayticsLogger({
   //     event_name: VUE_CAROUSEL_SWIPE,
@@ -162,8 +162,8 @@ class DynamicContentSliderWithLabel extends PureComponent {
       <TinySlider
         settings={this.state.settings}
         block="SliderWithLabelWrapper"
-        // onIndexChanged={() => {
-        //   this.onSwipe;
+        // onIndexChanged={(e) => {
+        //   this.onSwipe(e);
         // }}
       >
         {items.map(this.renderCircle)}
