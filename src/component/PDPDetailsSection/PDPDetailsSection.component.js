@@ -325,6 +325,8 @@ class PDPDetailsSection extends PureComponent {
         >
           {this.renderIconsSection()}
           {this.renderDescription()}
+          <div block="Seperator" />
+          { this.renderShareButton() }
         </Accordion>
         {this.renderPdpWidgets()}
         {/* <Accordion

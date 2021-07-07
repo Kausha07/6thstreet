@@ -151,7 +151,7 @@ export class PDPAddToCartContainer extends PureComponent {
 
       const object = {
         sizeCodes: filteredProductKeys || [],
-        sizeTypes: filteredProductSizeKeys ? ["uk", "eu", "us"] : [],
+        sizeTypes: filteredProductSizeKeys?.length ? ["uk", "eu", "us"] : [],
       };
 
       if (
