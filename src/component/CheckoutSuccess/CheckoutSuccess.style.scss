@@ -67,9 +67,6 @@
         margin-top: 20px;
         width: 50px;
 
-        &_isArabic {
-          transform: rotateY(180deg);
-        }
       }
 
       &-Text {
@@ -459,7 +456,6 @@
       }
 
       .Details {
-        // width: 50%;
         text-transform: uppercase;
         border-radius: 10px;
         display: flex;
@@ -475,7 +471,6 @@
           img {
             max-width: 30px;
             max-height: 30px;
-            // margin-left: 15px;
           }
         }
 
@@ -518,25 +513,10 @@
             margin-left: 15px;
           }
         }
-
-        &-Exp {
-          display: none;
-          font-size: 14px;
-          color: var(--gray-color);
-          margin: auto 15px auto auto;
-          text-align: right;
-        }
       }
 
       &_isArabic {
         .Details {
-
-          &-TypeLogo {
-            img {
-              // margin-right: 15px;
-              // margin-left: 0;
-            }
-          }
 
           &-Number {
             margin-left: auto;
