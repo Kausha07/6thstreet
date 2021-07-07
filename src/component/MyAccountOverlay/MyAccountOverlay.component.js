@@ -19,6 +19,8 @@ import Field from 'SourceComponent/Field';
 import Form from 'SourceComponent/Form';
 import Loader from 'SourceComponent/Loader';
 import Overlay from 'SourceComponent/Overlay';
+import PhoneCountryCodeField from 'Component/PhoneCountryCodeField';
+import { ChevronLeft } from 'Component/Icons';
 import { isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
 
@@ -133,12 +135,17 @@ export class MyAccountOverlay extends PureComponent {
               elem="Action"
               mods={ { state } }
             >
-                <img
+                <div
                   block="MyAccountOverlay"
                   elem="Image"
                   src="https://static.6media.me/static/version1600859154/frontend/6SNEW/6snew/en_US/images/6street-login-banner.png"
                   alt=""
-                />
+                >
+                    <span>6</span>
+                    TH
+                    <span>S</span>
+                    TREET
+                </div>
                 <div block="MyAccountOverlay" elem="Buttons">
                     <button block="Button" mods={ { isSignIn } } onClick={ handleSignIn }>{ __('Sign in') }</button>
                     <button
@@ -152,7 +159,6 @@ export class MyAccountOverlay extends PureComponent {
                 <p block="MyAccountOverlay" elem="Heading">{ title }</p>
                 { render() }
                 { this.renderCloseBtn() }
-                { this.renderChangeStore() }
             </div>
         );
     }
@@ -163,21 +169,7 @@ export class MyAccountOverlay extends PureComponent {
 
     renderCloseBtn() {
         const { closePopup } = this.props;
-        const { isArabic } = this.state;
-
-        const svg = (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              viewBox="0 -1 26 26"
-            >
-                <path
-                  d="M23.954 21.03l-9.184-9.095 9.092-9.174-1.832-1.807-9.09 9.179-9.176-9.088-1.81
-                  1.81 9.186 9.105-9.095 9.184 1.81 1.81 9.112-9.192 9.18 9.1z"
-                />
-            </svg>
-        );
+        const { isArabic } = this.state
 
         return (
             <button
@@ -186,7 +178,7 @@ export class MyAccountOverlay extends PureComponent {
               mods={ { isArabic } }
               onClick={ closePopup }
             >
-                { svg }
+                <ChevronLeft />
             </button>
         );
     }
@@ -466,15 +458,18 @@ export class MyAccountOverlay extends PureComponent {
               parentCallback={ this.onSignInChange }
             >
                 <fieldset block="MyAccountOverlay" elem="Legend">
-                    <Field
-                      type="email"
-                      placeholder={ __('EMAIL OR PHONE*') }
-                      id="email"
-                      name="email"
-                      value={ email }
-                      autocomplete="email"
-                      validation={ ['notEmpty', 'email'] }
-                    />
+                    <div block="UserIdentifierFieldsContainer">
+                        <PhoneCountryCodeField />
+                        <Field
+                            type="email"
+                            placeholder={ __('EMAIL OR PHONE*') }
+                            id="email"
+                            name="email"
+                            value={ email }
+                            autocomplete="email"
+                            validation={ ['notEmpty', 'email'] }
+                        />
+                    </div>
                     <Field
                       type="password"
                       placeholder={ __('PASSWORD*') }
@@ -500,6 +495,31 @@ export class MyAccountOverlay extends PureComponent {
                   mods={ { isSignIn: true, isSignInValidated } }
                 >
                     <button block="Button" disabled={ !isSignInValidated }>{ __('Sign in') }</button>
+                </div>
+                <div
+                    block="MyAccountOverlay"
+                    elem="SSO"
+                >
+                    <div block="MyAccountOverlay-SSO" elem="title">
+                        { __('OR SIGN IN WITH') }
+                    </div>
+                    <div
+                        block="MyAccountOverlay-SSO"
+                        elem="Buttons"
+                    >
+                        <button
+                            block="MyAccountOverlay-SSO-Buttons"
+                            elem="Facebook"
+                        >
+                            { __('FACEBOOK') }
+                        </button>
+                        <button
+                            block="MyAccountOverlay-SSO-Buttons"
+                            elem="Google"
+                        >
+                            { __('GOOGLE') }
+                        </button>
+                    </div>
                 </div>
             </Form>
         );
