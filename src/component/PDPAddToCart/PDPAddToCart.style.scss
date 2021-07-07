@@ -213,10 +213,6 @@ $select-arrow-width: 6px !default;
         &-AvailableSizes {
             display: flex;
             flex-direction: row;
-            @include mobile {    
-                overflow-x: scroll;
-                white-space: nowrap;
-            }
             justify-content: center;
             margin: auto;
             @include desktop {
@@ -462,5 +458,11 @@ $select-arrow-width: 6px !default;
                 margin-right: 20px;
             }
         }
+    }
+}
+
+@include mobile {
+    .PDPAddToCart-SizeSelector::-webkit-scrollbar-thumb {
+        display: none;
     }
 }
