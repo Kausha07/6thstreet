@@ -211,10 +211,14 @@
         color: var(--Tundora);
         font-weight: var(--fw-regular);
         width: 200px;
-
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
         span {
             color: var(--DustyGray);
-
+            &:first-child{
+                margin-left: 0 !important;
+            }
         }
 
         &_isArabic {

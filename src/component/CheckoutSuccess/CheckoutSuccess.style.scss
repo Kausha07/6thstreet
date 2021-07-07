@@ -459,22 +459,23 @@
       }
 
       .Details {
-        width: 50%;
+        // width: 50%;
         text-transform: uppercase;
         border-radius: 10px;
         display: flex;
         height: auto;
+        align-items: center;
 
         &-TypeLogo {
-          width: 70px;
+          width: 40px;
           display: flex;
           margin: auto 0;
-          justify-content: center;
+          justify-content: flex-start;
           align-items: center;
           img {
-            max-width: 40px;
-            max-height: 40px;
-            margin-left: 15px;
+            max-width: 30px;
+            max-height: 30px;
+            // margin-left: 15px;
           }
         }
 
@@ -487,24 +488,34 @@
         &-Number {
           display: grid;
           grid-auto-flow: column;
+          grid-column-gap: 5px;
           margin-right: auto;
-          margin-left: 30px;
-
+          margin-left: 5px;
           letter-spacing: 3px;
 
           &-Dots {
             margin-right: 10px;
-            width: 40px;
+            width: 30px;
             display: grid;
             grid-auto-flow: column;
 
             & > div {
               background-color: black;
               margin: auto;
-              width: 5px;
-              height: 5px;
+              width: 3px;
+              height: 3px;
               border-radius: 50px;
+              @include desktop() {
+                width: 5px;
+                height: 5px;
+              }
             }
+            @include desktop() {
+              width: 40px;
+            }
+          }
+          @include desktop() {
+            margin-left: 15px;
           }
         }
 
@@ -519,23 +530,24 @@
 
       &_isArabic {
         .Details {
-          grid-template-columns: 20% 60% 20%;
 
           &-TypeLogo {
             img {
-              margin-right: 15px;
-              margin-left: 0;
+              // margin-right: 15px;
+              // margin-left: 0;
             }
           }
 
           &-Number {
             margin-left: auto;
-            margin-right: 30px;
+            margin-right: 5px;
+            @include desktop() {
+              margin-right: 15px;
+            }
           }
 
-          &-Exp {
-            text-align: left;
-            margin: auto;
+          &-TypeTitle {
+            text-align: right;
           }
         }
       }
