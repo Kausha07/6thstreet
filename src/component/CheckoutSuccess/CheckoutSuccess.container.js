@@ -135,14 +135,14 @@ export class CheckoutSuccessContainer extends PureComponent {
       updateMeta,
       customer: { phone },
       customer,
-      shippingAddress: { phone: guestPhone, phonecode },
+      shippingAddress: { phone: guestPhone },
       isSignedIn,
     } = this.props;
-
+    console.log("guest phone", this.props.shippingAddress)
     if (isSignedIn) {
       this.setPhone(phone);
     } else {
-      this.setPhone(guestPhone, phonecode);
+      this.setPhone(guestPhone);
     }
 
     const testCustomerVerified = "0";
