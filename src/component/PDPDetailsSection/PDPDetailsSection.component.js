@@ -77,6 +77,7 @@ class PDPDetailsSection extends PureComponent {
 
   renderShareButton() {
       const url = new URL(window.location.href);
+      url.searchParams.append('utm_source', 'pdp_share')
       return (
           <div block="PDPDetailsSection" elem="ShareButtonContainer">
               <ShareButton
@@ -84,7 +85,7 @@ class PDPDetailsSection extends PureComponent {
                   elem="ShareButton"
                   title = { document.title }
                   text =  {`Hey check this out: ${document.title}`}
-                  url = { url.searchParams.append('utm_source', 'pdp_share') }
+                  url = { url.toString() }
               >
                   <span>{ __('Share') }</span>
               </ShareButton>

@@ -17,7 +17,7 @@ class ShareButtonContainer extends PureComponent {
     }
 
     async _initiateShare() {
-        const { title, text, url} = this.props
+        const { title, text, url } = this.props;
 
         await window.navigator.share({
             title,
@@ -33,7 +33,7 @@ class ShareButtonContainer extends PureComponent {
         
         const { children, ...rest } = this.props;
         return (
-            <ShareButton initiateShare = { this._initiateShare } { ...rest }>
+            <ShareButton initiateShare = { this._initiateShare.bind(this) } { ...rest }>
                 { children }
             </ShareButton>
         );
