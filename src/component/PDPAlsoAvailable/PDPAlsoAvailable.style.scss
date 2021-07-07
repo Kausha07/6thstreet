@@ -15,9 +15,6 @@
         flex-direction: row;
         overflow-x: scroll;
         flex-wrap: nowrap;
-        @include mobile {
-            justify-content: center;
-        }
         -webkit-overflow-scrolling: touch;
         margin-top: 16px;
         -ms-overflow-style: -ms-autohiding-scrollbar; 
