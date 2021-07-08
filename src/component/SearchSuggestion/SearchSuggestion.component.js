@@ -103,28 +103,42 @@ class SearchSuggestion extends PureComponent {
   }
 
   renderQuerySuggestion = (querySuggestions) => {
-    const { query, count } = querySuggestions;
+    const { query, count, isBrand } = querySuggestions;
     const { searchString } = this.props;
     const urlName = this.getBrandUrl(query);
 
     return (
       <li>
-        <Link
-          to={`/catalogsearch/result/?q=${urlName}`}
-          onClick={this.closeSearchPopup}
-        >
-          <div className="suggestion-details-box">
-            {getHighlightedText(formatQuerySuggestions(query), searchString)}
-            <div>{count}</div>
-          </div>
-        </Link>
+        {isBrand ? (
+          <Link
+            to={`${this.getBrandUrl(
+              formatQuerySuggestions(query)
+            )}.html?q=${this.getBrandUrl(formatQuerySuggestions(query))}`}
+            onClick={this.closeSearchPopup}
+          >
+            <div className="suggestion-details-box">
+              {getHighlightedText(formatQuerySuggestions(query), searchString)}
+              <div>{count}</div>
+            </div>
+          </Link>
+        ) : (
+          <Link
+            to={`/catalogsearch/result/?q=${urlName}`}
+            onClick={this.closeSearchPopup}
+          >
+            <div className="suggestion-details-box">
+              {getHighlightedText(formatQuerySuggestions(query), searchString)}
+              <div>{count}</div>
+            </div>
+          </Link>
+        )}
       </li>
     );
   };
 
   renderQuerySuggestions() {
-    const { querySuggestions = [], searchString } = this.props;
-    console.log("search query", searchString);
+    const { querySuggestions = [] } = this.props;
+    console.log("querysuggestion", querySuggestions);
     return (
       <div block="SearchSuggestion" elem="Item">
         <ul>{querySuggestions.map(this.renderQuerySuggestion)}</ul>

@@ -42,6 +42,7 @@ const addSuggestion = (
   query,
   filter,
   count,
+  isBrand,
   arr,
   operation = "push"
 ) => {
@@ -50,6 +51,7 @@ const addSuggestion = (
       label,
       query,
       filter,
+      isBrand,
       count,
     });
   } else if (operation === "unshift") {
@@ -57,6 +59,7 @@ const addSuggestion = (
       label,
       query,
       filter,
+      isBrand,
       count,
     });
   }
@@ -120,6 +123,7 @@ const createCustomQuerySuggestions = (hit, resArray) => {
           },
         ],
         brand_name[0].count,
+        true,
         arr
       );
     }
@@ -144,6 +148,7 @@ const createCustomQuerySuggestions = (hit, resArray) => {
             },
           ],
           ele.count,
+          false,
           arr
         );
       }
@@ -171,6 +176,7 @@ const createCustomQuerySuggestions = (hit, resArray) => {
             },
           ],
           ele.count,
+          false,
           arr
         );
       }
@@ -197,6 +203,7 @@ const createCustomQuerySuggestions = (hit, resArray) => {
             },
           ],
           ele.count,
+          false,
           arr
         );
       }
@@ -218,6 +225,7 @@ const createCustomQuerySuggestions = (hit, resArray) => {
             },
           ],
           ele.count,
+          false,
           arr
         );
       }
@@ -241,6 +249,7 @@ const createCustomQuerySuggestions = (hit, resArray) => {
             },
           ],
           ele.count,
+          false,
           arr
         );
       }
@@ -267,6 +276,7 @@ const createCustomQuerySuggestions = (hit, resArray) => {
             },
           ],
           ele.count,
+          false,
           arr
         );
       }
@@ -287,6 +297,7 @@ const createCustomQuerySuggestions = (hit, resArray) => {
           },
         ],
         brand_name[0].count,
+        true,
         arr
       );
     }
@@ -299,6 +310,7 @@ const createCustomQuerySuggestions = (hit, resArray) => {
       `${genderModifiedQuery}`,
       undefined,
       exact_nb_hits,
+      undefined,
       arr,
       "unshift"
     );

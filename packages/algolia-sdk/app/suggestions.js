@@ -7,6 +7,7 @@ export default async function getSuggestions(
     const res = await index.search(query, {
       hitsPerPage: limit,
     });
+    console.log("result", res.hits);
     return res.hits;
   } catch (e) {
     console.log(e);
