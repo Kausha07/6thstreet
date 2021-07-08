@@ -6,6 +6,7 @@ import {
   CHECKOUT_APPLE_PAY,
   TABBY_ISTALLMENTS,
   TABBY_PAY_LATER,
+  CHECKOUT_QPAY,
 } from "Component/CheckoutPayments/CheckoutPayments.config";
 import { CC_POPUP_ID } from "Component/CreditCardPopup/CreditCardPopup.config";
 import {
@@ -46,6 +47,8 @@ import {
 } from "../../store/MobileCart/MobileCart.reducer";
 const PAYMENT_ABORTED = "payment_aborted";
 const PAYMENT_FAILED = "payment_failed";
+import CreditCardDispatcher from 'Store/CreditCard/CreditCard.dispatcher';
+
 export const mapDispatchToProps = (dispatch) => ({
   ...sourceMapDispatchToProps(dispatch),
   estimateShipping: (address) =>
@@ -77,6 +80,7 @@ export const mapDispatchToProps = (dispatch) => ({
   resetCart: () => dispatch(resetCart()),
   getCart: () => CartDispatcher.getCart(dispatch),
   updateTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId),
+  saveCreditCard: (cardData) => CreditCardDispatcher.saveCreditCard(dispatch, cardData),
 });
 export const mapStateToProps = (state) => ({
   totals: state.CartReducer.cartTotals,
@@ -89,6 +93,8 @@ export const mapStateToProps = (state) => ({
   activeOverlay: state.OverlayReducer.activeOverlay,
   hideActiveOverlay: state.OverlayReducer.hideActiveOverlay,
   cartId: state.CartReducer.cartId,
+  savedCards: state.CreditCardReducer.savedCards,
+  newCardVisible: state.CreditCardReducer.newCardVisible,
 });
 
 export class CheckoutContainer extends SourceCheckoutContainer {
@@ -120,6 +126,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     showOverlay: this.props.showOverlay.bind(this),
     hideActiveOverlay: this.props.hideActiveOverlay.bind(this),
     updateTotals: this.updateTotals.bind(this),
+    updateCreditCardData: this.updateCreditCardData.bind(this),
   };
 
   //   showOverlay() {
@@ -159,7 +166,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       isVerificationCodeSent: false,
       lastOrder: {},
       initialTotals: totals,
-      processApplePay: false,
+      processApplePay: true,
       initialGTMSent: false,
       tabbyPaymentId: null,
       isTabbyPopupShown: false,
@@ -385,6 +392,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     return getBinPromotion(bin);
   }
 
+  updateCreditCardData(creditCardData) {
+    this.setState({ creditCardData });
+  }
+
   /*async*/ savePaymentInformation(paymentInformation) {
     this.setState({ isLoading: true });
 
@@ -399,34 +410,50 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       tabbyPaymentId,
     } = paymentInformation;
     const {
+      savedCards,
+      newCardVisible,
       customer: { email: customerEmail },
     } = this.props;
     const {
       shippingAddress: { email },
     } = this.state;
     //console.log("here1"+tabbyPaymentId)
-    const data =
-      code === CARD
-        ? {
-            ...additional_data,
-            source: {
-              type: "token",
-              token: BrowserDatabase.getItem("CREDIT_CART_TOKEN"),
-            },
-            customer: {
-              email: customerEmail ? customerEmail : email,
-            },
-            "3ds": {
-              enabled: BrowserDatabase.getItem("CREDIT_CART_3DS"),
-            },
-            metadata: {
-              udf1:
-                typeof BrowserDatabase.getItem("CREDIT_CART_TYPE") === "string"
-                  ? BrowserDatabase.getItem("CREDIT_CART_TYPE")
-                  : null,
-            },
-          }
-        : additional_data;
+    let data = {};
+    if (code === CARD) {
+      data = {
+        ...additional_data,
+        customer: {
+          email: customerEmail ? customerEmail : email,
+        },
+        "3ds": {
+          enabled: newCardVisible ? BrowserDatabase.getItem("CREDIT_CART_3DS") : true,
+        },
+        metadata: {
+          udf1:
+            typeof BrowserDatabase.getItem("CREDIT_CART_TYPE") === "string"
+              ? BrowserDatabase.getItem("CREDIT_CART_TYPE")
+              : null,
+        },
+      }
+      if (newCardVisible) {
+        data['source'] = {
+          type: "token",
+          token: BrowserDatabase.getItem("CREDIT_CART_TOKEN"),
+        }
+      } else {
+        const { selectedCard: { cvv, gateway_token } } = paymentInformation;
+        data['source'] = {
+          cvv,
+          type: "id",
+          id: gateway_token,
+        }
+      }
+    }else if(code === CHECKOUT_QPAY){
+      data = {};
+    }
+ else {
+      data = additional_data;
+    }
 
     if (code === CHECKOUT_APPLE_PAY) {
       this.setState({ processApplePay: true });
@@ -451,12 +478,14 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     try {
       createOrder(code, data)
         .then((response) => {
+          console.log("response", response)
           if (response && response.data) {
             const { data } = response;
 
             if (typeof data === "object") {
               const {
                 order_id,
+                http_response_code,
                 success,
                 response_code,
                 increment_id,
@@ -464,7 +493,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                 _links: { redirect: { href = "" } = {} } = {},
               } = data;
 
-              if (success || response_code === 200) {
+              if (success || response_code === 200 || http_response_code === 202) {
                 this.setState({ isLoading: false });
                 if (code === CARD && href) {
                   this.setState({
@@ -490,7 +519,30 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                   );
 
                   //return true;
-                } else {
+                }else if (
+                  code === CHECKOUT_QPAY
+                ) {
+                  this.setState({
+                    order_id,
+                    increment_id,
+                    id,
+                  });
+                  window.open(`${href}`,"_self")
+
+                  //return true;
+                }  else {
+                  if (code === CARD) {
+                    const { saveCreditCard, newCardVisible } = this.props;
+                    const { creditCardData } = this.state;
+                    if (newCardVisible && creditCardData.saveCard) {
+                      saveCreditCard({ email: creditCardData.email, paymentId: id })
+                        .then(() => {
+                        })
+                        .catch(() => {
+                          showErrorNotification(__("Something went wrong! Please, try again!"));
+                        })
+                    }
+                  }
                   BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
                   this.setDetailsStep(order_id, increment_id);
                   this.resetCart();
@@ -598,8 +650,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   }
 
   processThreeDS() {
-    const { getPaymentAuthorization, capturePayment, cancelOrder } = this.props;
-    const { order_id, increment_id, id = "" } = this.state;
+    const { getPaymentAuthorization, capturePayment, cancelOrder, saveCreditCard, newCardVisible } = this.props;
+    const { order_id, increment_id, id = "", creditCardData } = this.state;
 
     getPaymentAuthorization(id).then((response) => {
       if (response) {
@@ -611,6 +663,14 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           this.resetCart();
           this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
           capturePayment(paymentId, order_id);
+          if (newCardVisible && creditCardData.saveCard) {
+            saveCreditCard({ email: creditCardData.email, paymentId })
+              .then(() => {
+              })
+              .catch(() => {
+                showErrorNotification(__("Something went wrong! Please, try again!"));
+              })
+          }
         }
 
         if (status === "Declined") {

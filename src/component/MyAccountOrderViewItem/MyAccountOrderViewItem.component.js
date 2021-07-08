@@ -10,6 +10,7 @@ export class MyAccountOrderViewItem extends SourceComponent {
     renderDetails() {
         const {
             currency,
+            displayDiscountPercentage,
             item: {
                 brand_name,
                 name,
@@ -61,9 +62,12 @@ export class MyAccountOrderViewItem extends SourceComponent {
                     </span>
                     { !!(parseFloat(price) < parseFloat(original_price)) && (
                         <>
-                            <span block="MyAccountReturnSuccessItem" elem="PriceDiscountPercent">
-                                { `(-${discountPercentage}%)` }
-                            </span>
+                            {
+                                displayDiscountPercentage &&
+                                <span block="MyAccountReturnSuccessItem" elem="PriceDiscountPercent">
+                                    { `(-${discountPercentage}%)` }
+                                </span>
+                            }
                             <span block="MyAccountReturnSuccessItem" elem="PriceDiscount">
                                 { `${ formatPrice(+price, currency) }` }
                             </span>

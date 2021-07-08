@@ -3,11 +3,26 @@
 /* eslint-disable no-magic-numbers */
 /* eslint-disable radix */
 import PropTypes from 'prop-types';
+import { connect } from "react-redux";
 import { PureComponent } from 'react';
+import { getCardType } from 'Util/Common';
+import cardValidator from 'card-validator';
 
 import CreditCard from './CreditCard.component';
 import { MINI_CARDS } from './CreditCard.config';
+import CreditCardDispatcher from "Store/CreditCard/CreditCard.dispatcher";
 
+export const mapStateToProps = (state) => ({
+    savedCards: state.CreditCardReducer.savedCards,
+    newCardVisible: state.CreditCardReducer.newCardVisible,
+    loadingSavedCards: state.CreditCardReducer.loadingSavedCards,
+});
+
+export const mapDispatchToProps = (dispatch) => ({
+    getSavedCards: () => CreditCardDispatcher.getSavedCards(dispatch),
+    selectSavedCard: (entity_id) => CreditCardDispatcher.selectSavedCard(dispatch, entity_id),
+    toggleNewCardVisible: (value) => CreditCardDispatcher.toggleNewCardVisible(dispatch, value)
+});
 export class CreditCardContainer extends PureComponent {
     static propTypes = {
         setCreditCardData: PropTypes.func.isRequired
@@ -21,7 +36,10 @@ export class CreditCardContainer extends PureComponent {
         expDateValidator: this.expDateValidator,
         isNumber: this.isNumber,
         reformatInputField: this.reformatInputField.bind(this),
-        getCardLogo: this.getCardLogo.bind(this)
+        getCardLogo: this.getCardLogo.bind(this),
+        toggleNewCardVisible: this.toggleNewCardVisible.bind(this),
+        selectSavedCard: this.selectSavedCard.bind(this),
+        cardNumberValidator: this.cardNumberValidator
     };
 
     containerProps = () => {
@@ -29,6 +47,11 @@ export class CreditCardContainer extends PureComponent {
 
         return { isAmex };
     };
+
+    componentDidMount() {
+        const { getSavedCards } = this.props;
+        getSavedCards();
+    }
 
     isNumber(value) {
         const stringVal = value.toString() || '';
@@ -48,6 +71,14 @@ export class CreditCardContainer extends PureComponent {
                 .toUpperCase()
                 .replace(regex, '$1/')
                 .replace(/^\|+|\/+$/g, '');
+        }
+
+        if (getCardType(value).type === 'american-express') {
+            return value.replace(/[^\dA-Z]/gi, '')
+                .toUpperCase()
+                .replace(/^(\d{4})/, '$1 ')
+                .replace(/(\s\d{6})/, '$1 ')
+                .trim();
         }
 
         return value.replace(/[^\dA-Z]/gi, '')
@@ -86,38 +117,19 @@ export class CreditCardContainer extends PureComponent {
         }
     }
 
-    expDateValidator(value = '') {
-        const message = __('Please check the card expiration date');
-        const first = parseInt(value.charAt(0));
-        const month = parseInt(value.slice(0, 2));
-        const yearFirst = parseInt(value.slice(2, 3));
-        const year = parseInt(value.slice(2, 4));
-
-        // month validation
-        if (first > 1 || first < 0) {
-            return message;
+    expDateValidator(isMonth, value = '') {
+        if (isMonth && !cardValidator.expirationMonth(value).isValid) {
+            return __("Card exp month is not valid");
+        } else if (!cardValidator.expirationYear(value).isValid) {
+            return __("Card exp year is not valid");
         }
-        if (value.length > 1) {
-            if (month === 0 || ((month > 12 || month < 1) && first !== 0)) {
-                return message;
-            }
-        }
-        if (value.length > 2) {
-            const date = new Date();
-            const thisYearFirst = date.getFullYear().toString().slice(2, 3);
-            // year gap
-            if ((yearFirst > parseInt(thisYearFirst) + 1) || yearFirst < parseInt(thisYearFirst)) {
-                return message;
-            }
-        }
+        return null;
+    }
 
-        // check if card expire
-        if (value.length > 3) {
-            const today = new Date();
-            const expDay = new Date(parseInt(`20${year}`), month, 1);
-
-            if (today > expDay) {
-                return message;
+    cardNumberValidator(value = '') {
+        if (value && value.length >= 15) {
+            if (!cardValidator.number(value.replace(/\D+/g, '')).isValid) {
+                return __("Card number is not valid");
             }
         }
 
@@ -147,18 +159,28 @@ export class CreditCardContainer extends PureComponent {
         return null;
     }
 
+    toggleNewCardVisible(value) {
+        this.props.toggleNewCardVisible(value);
+    }
+
+    selectSavedCard(entity_id) {
+        this.props.selectSavedCard(entity_id);
+    }
+
     render() {
         const { setCreditCardData } = this.props;
-
         return (
             <CreditCard
-              setCreditCardData={ setCreditCardData }
-              { ...this.containerFunctions }
-              { ...this.containerProps() }
-              { ...this.props }
+                setCreditCardData={setCreditCardData}
+                {...this.containerFunctions}
+                {...this.containerProps()}
+                {...this.props}
             />
         );
     }
 }
 
-export default CreditCardContainer;
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(CreditCardContainer);

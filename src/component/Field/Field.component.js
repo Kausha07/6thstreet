@@ -16,6 +16,7 @@ import {
 } from './Field.config';
 
 import './Field.extended.style';
+import { isArabic } from "Util/App";
 
 /**
  * Input fields component
@@ -47,15 +48,16 @@ export class Field extends SourceField {
             id,
             onChangeCheckbox
         } = this.props;
+        const lang = isArabic() ? "ar" : '';
 
         return (
-            <div block="Field" elem="Toggle">
+            <div block="Field" elem={`Toggle${lang}`}>
                 <FieldInput
                   { ...this.props }
                   type="checkbox"
                   onChange={ onChangeCheckbox }
                 />
-                <div>
+                <div lang={lang}>
                     <label htmlFor={ id } />
                     <label block="Field" elem="FakeLabel" htmlFor={ id } />
                 </div>

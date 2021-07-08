@@ -9,12 +9,12 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import PropTypes from 'prop-types';
-import { PureComponent } from 'react';
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
 
-import LoaderImg from './images/loader-1.gif';
+import LoaderImg from "./images/loader-1.gif";
 
-import './Loader.style';
+import "./Loader.style";
 
 /**
  * Loader component
@@ -22,31 +22,28 @@ import './Loader.style';
  * @class Loader
  */
 export class Loader extends PureComponent {
-    static propTypes = {
-        isLoading: PropTypes.bool.isRequired
-    };
+  static propTypes = {
+    isLoading: PropTypes.bool.isRequired,
+  };
 
-    renderMain() {
-        return (
-            <img block="Loader" elem="Main" src={ LoaderImg } alt="Loader" />
-        );
+  renderMain() {
+    return <img block="Loader" elem="Main" src={LoaderImg} alt="Loader" />;
+  }
+
+  render() {
+    const { isLoading } = this.props;
+    if (!isLoading) {
+      return null;
     }
 
-    render() {
-        const { isLoading } = this.props;
-
-        if (!isLoading) {
-            return null;
-        }
-
-        return (
-            <div block="Loader">
-                <div block="Loader" elem="Scale">
-                    { this.renderMain() }
-                </div>
-            </div>
-        );
-    }
+    return (
+      <div block="Loader">
+        <div block="Loader" elem="Scale">
+          {this.renderMain()}
+        </div>
+      </div>
+    );
+  }
 }
 
 export default Loader;

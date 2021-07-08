@@ -50,6 +50,8 @@ class MenuGrid extends PureComponent {
             <Link
               to={ updatedLink }
               key={ i }
+              block="MenuGrid"
+              elem="ItemLink"
             >
                 <Image
                   src={ image_url }

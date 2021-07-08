@@ -17,7 +17,13 @@ export class MyAccountReturnCreateItem extends PureComponent {
         reasonOptions: PropTypes.array.isRequired,
         onClick: PropTypes.func.isRequired,
         resolutions: PropTypes.arrayOf(ReturnResolutionType).isRequired,
-        item: ReturnItemType.isRequired
+        item: ReturnItemType.isRequired,
+        displayDiscountPercentage: PropTypes.bool.isRequired
+    };
+
+    static defaultProps = {
+        fixedPrice: false,
+        displayDiscountPercentage: true
     };
 
     renderResolutions() {
@@ -82,9 +88,8 @@ export class MyAccountReturnCreateItem extends PureComponent {
     }
 
     renderField() {
-        const { item: { item_id } } = this.props;
+        const { item: { item_id, is_returnable } } = this.props;
         const { onClick } = this.props;
-
         return (
             <Field
               id={ item_id }
@@ -94,12 +99,14 @@ export class MyAccountReturnCreateItem extends PureComponent {
               type="checkbox"
               onClick={ onClick }
               defaultChecked={ false }
+              disabled={ !is_returnable }
             />
         );
     }
 
     renderDetails() {
         const {
+            displayDiscountPercentage,
             item: {
                 name,
                 color,
@@ -145,9 +152,12 @@ export class MyAccountReturnCreateItem extends PureComponent {
                     </span>
                     { (!!(+discount_amount) && !!(+discount_percent)) && (
                         <>
-                            <span block="MyAccountReturnCreateItem" elem="PriceDiscountPercent">
-                                { `(-${ +discount_percent }%)` }
-                            </span>
+                            {
+                                displayDiscountPercentage && 
+                                <span block="MyAccountReturnCreateItem" elem="PriceDiscountPercent">
+                                    { `(-${ +discount_percent }%)` }
+                                </span>
+                            }
                             <span block="MyAccountReturnCreateItem" elem="PriceDiscount">
                                 { `${ formatPrice(+row_total - +discount_amount) }` }
                             </span>
@@ -160,7 +170,6 @@ export class MyAccountReturnCreateItem extends PureComponent {
 
     render() {
         const { isSelected } = this.props;
-
         return (
             <div block="MyAccountReturnCreateItem">
                 <div block="MyAccountReturnCreateItem" elem="Content">

@@ -1,16 +1,16 @@
-import PropTypes from "prop-types";
-import { createRef, PureComponent } from "react";
+import ClickOutside from 'Component/ClickOutside';
+import Field from 'Component/Field';
+import Form from 'Component/Form';
+import SearchSuggestion from 'Component/SearchSuggestion';
+import PropTypes from 'prop-types';
+import { createRef, PureComponent } from 'react';
+import { isArabic } from 'Util/App';
+import './HeaderSearch.style';
+import Clear from './icons/close-black.png';
+import searchPng from './icons/search-black.png';
 
-import Field from "Component/Field";
-import Form from "Component/Form";
-import SearchSuggestion from "Component/SearchSuggestion";
-import ClickOutside from "Component/ClickOutside";
-import { isArabic } from "Util/App";
 
-import Clear from "./icons/close-black.png";
-import searchPng from "./icons/search-black.png";
 
-import "./HeaderSearch.style";
 
 class HeaderSearch extends PureComponent {
   static propTypes = {
@@ -80,7 +80,7 @@ class HeaderSearch extends PureComponent {
           id="search-field"
           name="search"
           type="text"
-          autocomplete="false"
+          autocomplete="off"
           autocorrect="off"
           spellcheck="false"
           placeholder={__("What are you looking for?")}
