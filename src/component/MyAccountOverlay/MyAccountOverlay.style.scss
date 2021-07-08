@@ -113,11 +113,11 @@
     }
 
     &-Heading {
-        text-transform: none;
-        font-size: 18px;
+        text-transform: uppercase;
+        font-size: 16px;
         font-weight: 600;
         letter-spacing: 0;
-        line-height: 25px;
+        line-height: 30px;
         text-align: center;
 
         @include before-desktop {
@@ -420,9 +420,9 @@
         display: flex;
         margin: 30px 90px;
 
-        @include mobile() {
-            margin: 30px 72px 39px 72px!important
-        }
+        // @include mobile() {
+        //     margin: 30px 72px 39px 72px!important
+        // }
 
         .Button {
             --button-color: var(--gray-color);
@@ -502,7 +502,7 @@
         }
 
         &_isMargin {
-            margin-top: 40px;
+            margin-top: 20px;
         }
 
         &_likeLink {
@@ -561,11 +561,32 @@
         }
 
         &_isCreateAccountButton {
-            margin-top: 40px;
+            margin-top: 24px;
+            &::after {
+                position: absolute;
+                content: "";
+                top: 50%;
+                right: 10px;
+                transform: translateY(-50%);
+                mask-image: url(../Icons/Lock/icon.svg);
+                mask-position: center;
+                mask-repeat: no-repeat;
+                -webkit-mask-image: url(../Icons/Lock/icon.svg);
+                -webkit-mask-position: center;
+                -webkit-mask-repeat: no-repeat;
+                background-color: #ffffff!important;
+                width: 54px;
+                height: 54px;
+                display: inline-block;
+                font-size: 0;
+            }
         }
     }
 
     &-SSO {
+        &_disabled {
+            display: none;
+        }
         display: flex;
         justify-content: center;
         margin-top: 56px;
@@ -598,9 +619,15 @@
                 width: 160px!important;
             }
             &-Facebook {
+                &_disabled {
+                    display: none;
+                }
                 background-color: #3B5998;
             }
             &-Google {
+                &_disabled {
+                    display: none;
+                }
                 background-color: #DC4139;
             }
         }
@@ -674,6 +701,7 @@
 
             &:checked + label {
                 --primary-base-color: var(--black-color);
+                background: none;
 
                 &::after {
                     --checkmark-color: var(--black-color);
@@ -712,39 +740,109 @@
         .UserIdentifierFieldsContainer {
             display: flex;
             align-items: center;
-            height: 60px;
+            width: 100%;
             margin-top: 1rem;
+            &_isOTP {
+                height: 48px;
+                border-top: 0.5px solid #D1D3D4;
+                border-right: 0.5px solid #D1D3D4;
+                border-bottom: 0.5px solid #D1D3D4;
+                border-left: 0.5px solid #D1D3D4;
+                border-radius: 6px;
+            }
             .PhoneCountryCodeField {
-                height: 60px;
+                height: 40px;
                 margin-bottom: 32px;
                 margin-top: 0px;
-                width: 30%;
-                select {
-                    height: 60px;
+                width: 104px;
+                border-top: none;
+                border-right: none;
+                border-bottom: none;
+                border-left: none;
+                .CountryMiniFlag{
+                    &-Container {
+                        margin-bottom: -36px;
+                    }
+                }
+                .Field {
+                    border-top: none;
                     border-right: none;
-                    border-left: 0.5px solid #D1D3D4;
-                    border-top: 0.5px solid #D1D3D4;
-                    border-bottom: 0.5px solid #D1D3D4;
-                    border-radius: 6px;
-                    border-top-right-radius: 0px;
-                    border-bottom-right-radius: 0px;
+                    border-bottom: none;
+                    border-left: none;
+                    &_type_select{
+                        height: 40px;
+                        .FieldSelect-Select {
+                            border-top: none;
+                            border-right: none;
+                            border-bottom: none;
+                            border-left: none;
+                            height: 40px;
+                        }
+                    }
                 }
             }
             .Field {
-                height: 60px;
-                margin-top:0;
-                &_type_email {
-                    width: 70%;
+                min-height: 40px;
+                margin-top: 0;
+                width: 100%;
+                border-top: none;
+                border-right: none;
+                border-bottom: none;
+                border-left: none;
+                &_type_text {
+                    height: 40px;
+                    width: calc(100% - 104px);
                     input {
-                        height: 60px;
-                        border-right: 0.5px solid #D1D3D4;
+                        border-top: none;
+                        border-right: none;
+                        border-bottom: none;
                         border-left: none;
-                        border-top: 0.5px solid #D1D3D4;
-                        border-bottom: 0.5px solid #D1D3D4;
-                        border-radius: 6px;
-                        border-top-left-radius: 0px;
-                        border-bottom-left-radius: 0px;
+                        height: 40px;
                     }
+                }
+            }
+        }
+        .Password {
+            width: 100%;
+            &_isOTP {
+                margin-top: 0;
+            }
+        }
+    }
+
+    &-PhoneNumber {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        height: 40px;
+        margin-top: 10px;
+        .PhoneCountryCodeField {
+            height: 40px;
+            margin-bottom: 32px;
+            margin-top: 0px;
+            width: 104px;
+            .CountryMiniFlag{
+                &-Container {
+                    margin-bottom: -36px;
+                }
+            }
+            select {
+                height: 40px;
+                border: 0.5px solid #D1D3D4;
+                border-radius: 6px;
+            }
+        }
+        .Field {
+            height: 40px;
+            margin-top: 0;
+            &_type_text {
+                width: calc(100% - 112px);
+                margin-left: 8px;
+                input {
+                    height: 40px;
+                    border: 0.5px solid #D1D3D4;
+                    border-radius: 6px;
                 }
             }
         }
@@ -834,6 +932,22 @@
     &-PopUp {
         .MyAccountOverlay {
             .MyAccountOverlay-Action {
+                &_state {
+                    &_forgotPassword {
+                        .MyAccountOverlay-Image, .MyAccountOverlay-Buttons {
+                            display: none;
+                        }
+                        .MyAccountOverlay-Heading {
+                            top: 10px;
+                            margin-top: 10px;
+                            font-size: 14px;
+                            line-height: 30px;
+                        }
+                        .Form {
+                            padding-top: 25%;
+                        }
+                    }
+                }
                 .Form{
                     .MyAccountOverlay {
                         &-Button {
