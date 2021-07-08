@@ -10,7 +10,7 @@ import { isArabic } from "Util/App";
 const PRODUCT_RESULT_LIMIT = 8;
 
 export class SearchSuggestionsDispatcher {
-  async requestSearchSuggestions(search, dispatch) {
+  async requestSearchSuggestions(search, sourceIndexName, dispatch) {
     const {
       AppState: { gender },
     } = getStore().getState();
@@ -27,33 +27,6 @@ export class SearchSuggestionsDispatcher {
               limit: PRODUCT_RESULT_LIMIT,
             }
       );
-
-      // In case anyone needs desktop data (use this!)
-      // const lang = language === 'en' ? 'english' : 'arabic';
-
-      const lang = "english";
-
-      const hits = await new Algolia({
-        index: `stage_magento_${lang}_products_query_suggestions`,
-      }).getSuggestions({
-        query: search,
-        limit: 5,
-      });
-      // const { hits: categorySuggestions } = await new Algolia({
-      //     index: `enterprise_magento_${ lang }_categories`
-      // }).getSuggestions({
-      //     query: search,
-      //     limit: CATEGORY_RESULT_LIMIT
-      // });
-
-      // const { hits: productSuggestions } = await new Algolia({
-      //     index: `enterprise_magento_${ lang }_products`
-      // }).getSuggestions({
-      //     query: search,
-      //     limit: PRODUCT_RESULT_LIMIT
-      // });
-      const querySuggestions =
-        hits?.length > 0 ? getCustomQuerySuggestions(hits) : [];
 
       // if you need search analytics then uncomment it (default automatically tracks it) UPDATE: causing wrong data.
 
@@ -74,9 +47,37 @@ export class SearchSuggestionsDispatcher {
       //   },
       //   { objectIDs, queryID: productData.queryID,userToken: userToken ? `user-${userToken}`: getUUIDToken(),  },
       //   );
+
+      // const { hits: categorySuggestions } = await new Algolia({
+      //     index: `enterprise_magento_${ lang }_categories`
+      // }).getSuggestions({
+      //     query: search,
+      //     limit: CATEGORY_RESULT_LIMIT
+      // });
+
+      // const { hits: productSuggestions } = await new Algolia({
+      //     index: `enterprise_magento_${ lang }_products`
+      // }).getSuggestions({
+      //     query: search,
+      //     limit: PRODUCT_RESULT_LIMIT
+      // });
+
+      // In case anyone needs desktop data (use this!)
+      // const lang = language === 'en' ? 'english' : 'arabic';
+      const lang = isArabic() ? "arabic" : "english";
+
+      const hits = await new Algolia({
+        index: `stage_magento_${lang}_products_query_suggestions`,
+      }).getSuggestions({
+        query: search,
+        limit: 5,
+      });
+      const querySuggestions =
+        hits?.length > 0
+          ? getCustomQuerySuggestions(hits, sourceIndexName)
+          : [];
       const queryID = productData?.queryID ? productData?.queryID : null;
       const results = formatProductSuggestions(productData);
-      console.log("search query in dispatcher", search);
 
       dispatch(
         setSearchSuggestions(search, results, queryID, querySuggestions)

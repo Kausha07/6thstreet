@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import SearchSuggestionDispatcher from "Store/SearchSuggestions/SearchSuggestions.dispatcher";
 import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
 import Algolia from "Util/API/provider/Algolia";
+import AlgoliaSDK from "../../../packages/algolia-sdk";
 import SearchSuggestion from "./SearchSuggestion.component";
 
 export const mapStateToProps = (state) => ({
@@ -16,10 +17,14 @@ export const mapStateToProps = (state) => ({
 
 export const mapDispatchToProps = (dispatch) => ({
   requestSearchSuggestions: (search) => {
-    SearchSuggestionDispatcher.requestSearchSuggestions(search, dispatch);
+    SearchSuggestionDispatcher.requestSearchSuggestions(
+      search,
+      sourceIndexName,
+      dispatch
+    );
   },
 });
-
+let sourceIndexName;
 export class SearchSuggestionContainer extends PureComponent {
   static propTypes = {
     requestSearchSuggestions: PropTypes.func.isRequired,
@@ -71,7 +76,11 @@ export class SearchSuggestionContainer extends PureComponent {
 
     SearchSuggestionContainer.requestSearchSuggestions(props);
     this.requestTrendingInformation();
-    // this.requestTopSearches();
+    this.requestTopSearches();
+  }
+
+  componentDidMount() {
+    sourceIndexName = AlgoliaSDK.index.indexName;
   }
 
   async requestTrendingInformation() {

@@ -3,8 +3,6 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import { capitalizeFirstLetters } from "../../../../../packages/algolia-sdk/app/utils";
 
 const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
-// temp
-const sourceIndexName = "stage_magento_english_products";
 
 const genders = {
   all: {
@@ -87,7 +85,7 @@ const checkForQueryWithGender = (query) => {
   return regex.test(query);
 };
 
-const createCustomQuerySuggestions = (hit, resArray) => {
+const createCustomQuerySuggestions = (hit, resArray, sourceIndexName) => {
   let arr = [];
   const {
     query,
@@ -368,7 +366,7 @@ const checkForValidSuggestion = (value, arr) => {
   return valid;
 };
 
-export const getCustomQuerySuggestions = (hits) => {
+export const getCustomQuerySuggestions = (hits, sourceIndexName) => {
   let arr = [];
   let i = 0;
   while (arr.length < 5 && i < hits.length) {

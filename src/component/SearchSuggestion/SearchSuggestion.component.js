@@ -138,7 +138,6 @@ class SearchSuggestion extends PureComponent {
 
   renderQuerySuggestions() {
     const { querySuggestions = [] } = this.props;
-    console.log("querysuggestion", querySuggestions);
     return (
       <div block="SearchSuggestion" elem="Item">
         <ul>{querySuggestions.map(this.renderQuerySuggestion)}</ul>
