@@ -144,9 +144,7 @@ export class Algolia {
   }
 
   async getTopSearches() {
-    console.log("algolia provider");
     const data = (await AlgoliaSDK.getTopSearches()) || [];
-    console.log("data in provider", data);
     return data;
   }
 }

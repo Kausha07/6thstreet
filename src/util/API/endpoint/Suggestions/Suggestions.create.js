@@ -1,12 +1,91 @@
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import BrowserDatabase from "Util/BrowserDatabase";
+import { capitalizeFirstLetters } from "../../../../../packages/algolia-sdk/app/utils";
 
 const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
-
-console.log("gender", gender);
 // temp
 const sourceIndexName = "stage_magento_english_products";
-const getHits = (hit, resArray) => {
+
+const genders = {
+  all: {
+    label: "All",
+    value: "all",
+  },
+  women: {
+    label: "Women",
+    value: "women",
+  },
+  men: {
+    label: "Men",
+    value: "men",
+  },
+  kids: {
+    label: "Kids",
+    value: "kids",
+  },
+};
+
+const checkForKidsFilterQuery = (query) => {
+  return (
+    query.toUpperCase().includes("KIDS") ||
+    query.toUpperCase().includes("GIRL") ||
+    query.toUpperCase().includes("GIRLS") ||
+    query.toUpperCase().includes("BOY") ||
+    query.toUpperCase().includes("BOYS") ||
+    query.toUpperCase().includes("BABY GIRL") ||
+    query.toUpperCase().includes("BABY BOY")
+  );
+};
+
+const addSuggestion = (
+  label,
+  query,
+  filter,
+  count,
+  arr,
+  operation = "push"
+) => {
+  if (operation === "push") {
+    arr.push({
+      label,
+      query,
+      filter,
+      count,
+    });
+  } else if (operation === "unshift") {
+    arr.unshift({
+      label,
+      query,
+      filter,
+      count,
+    });
+  }
+};
+
+const checkForQueryWithGender = (query) => {
+  if (gender === "all") return true;
+  let regexStr;
+  switch (gender) {
+    case "women":
+      regexStr = "women";
+      break;
+
+    case "men":
+      regexStr = "men";
+      break;
+
+    case "kids":
+      regexStr = "KIDS|GIRL|BOY|BABY BOY|BABY GIRL";
+      break;
+    default:
+      break;
+  }
+  console.log("regex str", regexStr);
+  let regex = new RegExp(`\\b${regexStr}\\b`, "i");
+  return regex.test(query);
+};
+
+const createCustomQuerySuggestions = (hit, resArray) => {
   let arr = [];
   const {
     query,
@@ -22,154 +101,209 @@ const getHits = (hit, resArray) => {
       },
     },
   } = hit;
-  let category;
-  let subCategory;
-  if (
-    query.toUpperCase().includes("KIDS") ||
-    query.toUpperCase().includes("GIRL") ||
-    query.toUpperCase().includes("GIRLS") ||
-    query.toUpperCase().includes("BOY") ||
-    query.toUpperCase().includes("BOYS") ||
-    query.toUpperCase().includes("BABY GIRL") ||
-    query.toUpperCase().includes("BABY BOY")
-  ) {
-    category = categories_level2;
-    subCategory = categories_level3;
+  console.log("single hit", hit);
+  let genderModifiedQuery;
+
+  if (checkForQueryWithGender(query)) {
+    genderModifiedQuery = query;
   } else {
-    category = categories_level1;
-    subCategory = categories_level2;
+    genderModifiedQuery = `${gender} ${query}`;
   }
   // if query does include brands
-  if (hit.query.toUpperCase().includes(brand_name[0].value.toUpperCase())) {
-    if (checkForValidSuggestion(query, [...resArray, ...arr])) {
-      arr.push({
-        query,
-        filter: [
+  if (query.toUpperCase().includes(brand_name[0].value.toUpperCase())) {
+    if (checkForValidSuggestion(genderModifiedQuery, [...resArray, ...arr])) {
+      addSuggestion(
+        genderModifiedQuery,
+        genderModifiedQuery,
+        [
           {
             type: "brand",
             value: brand_name[0].value,
           },
         ],
-        count: brand_name[0].count,
-      });
+        brand_name[0].count,
+        arr
+      );
     }
-    category.forEach((ele) => {
-      if (
-        checkForValidSuggestion(
-          brand_name[0].value + " " + ele.value.replaceAll("/// ", ""),
-          [...resArray, ...arr]
-        )
-      ) {
-        arr.push({
-          query: brand_name[0].value + " " + ele.value.replaceAll("/// ", ""),
-          filter: [
+    categories_level1.forEach((ele) => {
+      const suggestionLabel = `${brand_name[0].value} ${ele.value.replaceAll(
+        "/// ",
+        ""
+      )}`;
+
+      if (checkForValidSuggestion(suggestionLabel, [...resArray, ...arr])) {
+        addSuggestion(
+          suggestionLabel,
+          suggestionLabel,
+          [
             {
               type: "brand",
               value: brand_name[0].value,
             },
             {
-              type: "category_level1",
+              type: "categories_level1",
               value: ele.value,
             },
           ],
-          count: ele.count,
-        });
+          ele.count,
+          arr
+        );
       }
     });
-    subCategory.forEach((ele) => {
-      if (
-        checkForValidSuggestion(
-          brand_name[0].value + " " + ele.value.replaceAll("/// ", ""),
-          [...resArray, ...arr]
-        )
-      ) {
-        let val = ele.value.split(" /// ").reverse();
-        arr.push({
-          query: brand_name[0].value + " " + val[0],
-          filter: [
+
+    categories_level2.forEach((ele) => {
+      const val = ele.value.split(" /// ");
+      const testQuery = `${brand_name[0].value} ${[
+        ...val.slice(0, val.length - 2),
+        ...val.slice(val.length - 1),
+      ].join(" ")}`;
+
+      if (checkForValidSuggestion(testQuery, [...resArray, ...arr])) {
+        addSuggestion(
+          testQuery,
+          testQuery,
+          [
             {
               type: "brand",
               value: brand_name[0].value,
             },
             {
-              type: "category_level2",
+              type: "categories_level2",
               value: ele.value,
             },
           ],
-          count: ele.count,
-        });
+          ele.count,
+          arr
+        );
+      }
+    });
+
+    categories_level3.forEach((ele) => {
+      const val = ele.value.split(" /// ");
+      const formattedQuery = ele.value.replaceAll("/// ", "");
+      const testQuery = `${brand_name[0].value} ${[
+        ...val.slice(
+          0,
+          checkForKidsFilterQuery(formattedQuery) ? val.length - 2 : 1
+        ),
+        ...val.slice(val.length - 1),
+      ].join(" ")}`;
+      if (checkForValidSuggestion(testQuery, [...resArray, ...arr])) {
+        addSuggestion(
+          testQuery,
+          testQuery,
+          [
+            {
+              type: "categories_level3",
+              value: ele.value,
+            },
+          ],
+          ele.count,
+          arr
+        );
       }
     });
   }
   // if query does not include brands
   else {
-    console.log("category if not brands", category);
-    console.log("subcategory if not brands", subCategory);
-    category.forEach((ele) => {
-      if (
-        checkForValidSuggestion(ele.value.replaceAll("/// ", ""), [
-          ...resArray,
-          ...arr,
-        ])
-      ) {
-        arr.push({
-          query: ele.value.replaceAll("/// ", ""),
-          filter: [
+    categories_level1.forEach((ele) => {
+      const suggestionLabel = ele.value.replaceAll("/// ", "");
+
+      if (checkForValidSuggestion(suggestionLabel, [...resArray, ...arr])) {
+        addSuggestion(
+          suggestionLabel,
+          suggestionLabel,
+          [
             {
-              type: "category_level1",
+              type: "categories_level1",
               value: ele.value,
             },
           ],
-          count: ele.count,
-        });
+          ele.count,
+          arr
+        );
       }
     });
-    subCategory.forEach((item) => {
-      if (
-        checkForValidSuggestion(item.value.replaceAll("/// ", ""), [
-          ...resArray,
-          ...arr,
-        ])
-      ) {
-        let val = item.value.split(" /// ").reverse();
-        console.log("val", val);
-        arr.push({
-          query: val[0],
-          filter: [
+
+    categories_level2.forEach((ele) => {
+      const val = ele.value.split(" /// ");
+      const testQuery = `${[
+        ...val.slice(0, val.length - 2),
+        ...val.slice(val.length - 1),
+      ].join(" ")}`;
+
+      if (checkForValidSuggestion(testQuery, [...resArray, ...arr])) {
+        addSuggestion(
+          testQuery,
+          testQuery,
+          [
             {
-              type: "category_level2",
-              value: item.value,
+              type: "categories_level2",
+              value: ele.value,
             },
           ],
-          count: item.count,
-        });
+          ele.count,
+          arr
+        );
+      }
+    });
+
+    categories_level3.forEach((ele) => {
+      const val = ele.value.split(" /// ");
+      const formattedQuery = ele.value.replaceAll("/// ", "");
+      const testQuery = `${[
+        ...val.slice(
+          0,
+          checkForKidsFilterQuery(formattedQuery) ? val.length - 2 : 1
+        ),
+        ...val.slice(val.length - 1),
+      ].join(" ")}`;
+      if (checkForValidSuggestion(testQuery, [...resArray, ...arr])) {
+        addSuggestion(
+          testQuery,
+          testQuery,
+          [
+            {
+              type: "categories_level3",
+              value: ele.value,
+            },
+          ],
+          ele.count,
+          arr
+        );
       }
     });
     if (
-      checkForValidSuggestion(brand_name[0].value + " " + query, [
+      checkForValidSuggestion(`${brand_name[0].value} ${genderModifiedQuery}`, [
         ...resArray,
         ...arr,
       ])
     ) {
-      console.log("value", brand_name);
-      console.log("query", query);
-      arr.push({
-        query: brand_name[0].value + " " + query,
-        filter: [
+      addSuggestion(
+        `${brand_name[0].value} ${genderModifiedQuery}`,
+        `${brand_name[0].value} ${genderModifiedQuery}`,
+        [
           {
             type: "brand",
             value: brand_name[0].value,
           },
         ],
-        count: brand_name[0].count,
-      });
+        brand_name[0].count,
+        arr
+      );
     }
   }
-  if (checkForValidSuggestion(query, [...resArray, ...arr])) {
-    arr.unshift({
-      query,
-      count: exact_nb_hits,
-    });
+  if (
+    checkForValidSuggestion(`${genderModifiedQuery}`, [...resArray, ...arr])
+  ) {
+    addSuggestion(
+      `${genderModifiedQuery}`,
+      `${genderModifiedQuery}`,
+      undefined,
+      exact_nb_hits,
+      arr,
+      "unshift"
+    );
   }
   return arr;
 };
@@ -177,7 +311,8 @@ const getHits = (hit, resArray) => {
 const checkForValidSuggestion = (value, arr) => {
   let valid = true;
 
-  if (/\b(?:OUTLET|INFLUENCER|INFLUENCERS)\b/i.test(value)) return false;
+  if (/\b(?:OUTLET|INFLUENCER|INFLUENCERS|NEW IN|BLACK FRIDAY)\b/i.test(value))
+    return false;
 
   if (
     value.toUpperCase() === gender.toUpperCase() ||
@@ -189,11 +324,16 @@ const checkForValidSuggestion = (value, arr) => {
     return false;
 
   if (gender !== "all") {
-    let regex = new RegExp("\\b" + gender + "\\b", "i");
-    console.log("regex", regex);
-    if (regex.test(value)) {
-      valid = false;
-    }
+    let { all, [gender]: selectedGender, ...filters } = genders;
+
+    Object.keys(filters).forEach((filter) => {
+      if (filter !== "all" && filter !== gender) {
+        let regex = new RegExp("\\b" + filter + "\\b", "i");
+        if (regex.test(value)) {
+          valid = false;
+        }
+      }
+    });
   }
   let hit = arr.find(
     (ele) =>
@@ -218,13 +358,27 @@ const checkForValidSuggestion = (value, arr) => {
   return valid;
 };
 
-export const createSuggestions = (hits) => {
+export const getCustomQuerySuggestions = (hits) => {
   let arr = [];
   let i = 0;
-  console.log("hits", hits);
   while (arr.length < 5 && i < hits.length) {
-    arr.push(...getHits(hits[i], arr));
+    console.log("i", i);
+    arr.push(...createCustomQuerySuggestions(hits[i], arr, sourceIndexName));
     i++;
   }
+  console.log("final array", arr);
   return arr;
+};
+
+export const formatQuerySuggestions = (query) => {
+  const capitalizedQuery = capitalizeFirstLetters(query);
+  let avoidFilter = gender;
+  if (checkForKidsFilterQuery(capitalizedQuery)) avoidFilter = "kids";
+  else if (gender === "all") return query;
+
+  let regex = new RegExp("\\b" + avoidFilter + "\\b", "i");
+  return query
+    .replace(regex, "")
+    .replace(/^\s+|\s+$/g, "")
+    .replace(/\s+/g, " ");
 };

@@ -30,23 +30,3 @@ export const formatProductSuggestions = (rawData) => {
 
   return data;
 };
-
-export const formatQuery = (query) => {
-  let avoidFilter = gender;
-  if (
-    query.toUpperCase().includes("GIRL") ||
-    query.toUpperCase().includes("BOY") ||
-    query.toUpperCase().includes("GIRLS") ||
-    query.toUpperCase().includes("BOYS") ||
-    query.toUpperCase().includes("BABY BOY") ||
-    query.toUpperCase().includes("BABY GIRL")
-  )
-    avoidFilter = "kids";
-  else if (gender === "all") return query;
-
-  let regex = new RegExp("\\b" + gender + "\\b", "i");
-  return query
-    .replace(regex, "")
-    .replace(/^\s+|\s+$/g, "")
-    .replace(/\s+/g, " ");
-};

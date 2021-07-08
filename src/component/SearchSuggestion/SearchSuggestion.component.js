@@ -3,6 +3,7 @@ import Loader from "Component/Loader";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { Products } from "Util/API/endpoint/Product/Product.type";
+import { formatQuerySuggestions } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
 import isMobile from "Util/Mobile";
@@ -20,7 +21,7 @@ class SearchSuggestion extends PureComponent {
     trendingBrands: PropTypes.array.isRequired,
     trendingTags: PropTypes.array.isRequired,
     hideActiveOverlay: PropTypes.func,
-    newHits: PropTypes.array,
+    querySuggestions: PropTypes.array,
     topSearches: PropTypes.array,
   };
 
@@ -97,18 +98,17 @@ class SearchSuggestion extends PureComponent {
     );
   }
 
-  renderQuerySuggestion = (newHit) => {
-    const { query, count } = newHit;
-
+  renderQuerySuggestion = (querySuggestions) => {
+    const { query, count } = querySuggestions;
     const urlName = this.getBrandUrl(query);
 
     return (
       <li>
         <Link
-          to={`/${urlName}.html?q=${urlName}`}
+          to={`/catalogsearch/result/?q=${urlName}`}
           onClick={this.closeSearchPopup}
         >
-          {query}
+          {formatQuerySuggestions(query)}
           <span>{count}</span>
         </Link>
       </li>
@@ -116,11 +116,11 @@ class SearchSuggestion extends PureComponent {
   };
 
   renderQuerySuggestions() {
-    const { newHits = [] } = this.props;
+    const { querySuggestions = [] } = this.props;
 
     return (
       <div block="SearchSuggestion" elem="Item">
-        <ul>{newHits.map(this.renderQuerySuggestion)}</ul>
+        <ul>{querySuggestions.map(this.renderQuerySuggestion)}</ul>
       </div>
     );
   }
@@ -265,7 +265,6 @@ class SearchSuggestion extends PureComponent {
 
   renderTopSearches() {
     const { topSearches = [] } = this.props;
-    console.log("topSearches", topSearches);
     return (
       <div block="TrandingTags">
         <h2>{__("Top searches")}</h2>
@@ -337,8 +336,7 @@ class SearchSuggestion extends PureComponent {
   }
   render() {
     const { isArabic } = this.state;
-    const { newHits } = this.props;
-    console.log("newHits", newHits);
+    const { querySuggestions } = this.props;
     return (
       <div block="SearchSuggestion" mods={{ isArabic }}>
         <div block="SearchSuggestion" elem="Content">

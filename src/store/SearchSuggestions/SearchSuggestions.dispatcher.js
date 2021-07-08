@@ -1,6 +1,9 @@
 import { getStore } from "Store";
 import { setSearchSuggestions } from "Store/SearchSuggestions/SearchSuggestions.action";
-import { createSuggestions } from "Util/API/endpoint/Suggestions/Suggestions.create";
+import {
+  formatQuerySuggestions,
+  getCustomQuerySuggestions,
+} from "Util/API/endpoint/Suggestions/Suggestions.create";
 import { formatProductSuggestions } from "Util/API/endpoint/Suggestions/Suggestions.format";
 import Algolia from "Util/API/provider/Algolia";
 import { isArabic } from "Util/App";
@@ -33,13 +36,12 @@ export class SearchSuggestionsDispatcher {
 
       const lang = "english";
 
-      const { hits } = await new Algolia({
+      const hits = await new Algolia({
         index: `stage_magento_${lang}_products_query_suggestions`,
       }).getSuggestions({
         query: search,
         limit: 5,
       });
-
       // const { hits: categorySuggestions } = await new Algolia({
       //     index: `enterprise_magento_${ lang }_categories`
       // }).getSuggestions({
@@ -53,9 +55,11 @@ export class SearchSuggestionsDispatcher {
       //     query: search,
       //     limit: PRODUCT_RESULT_LIMIT
       // });
-      console.log("hits.length", hits.length);
-      const newHits = hits.length > 0 ? createSuggestions(hits) : [];
-      // newHits.map((item) => console.log("item", formatQuery(item.query)));
+      const querySuggestions =
+        hits?.length > 0 ? getCustomQuerySuggestions(hits) : [];
+      querySuggestions.map((item) =>
+        console.log("item", formatQuerySuggestions(item.query))
+      );
 
       // if you need search analytics then uncomment it (default automatically tracks it) UPDATE: causing wrong data.
 
@@ -79,7 +83,9 @@ export class SearchSuggestionsDispatcher {
       const queryID = productData?.queryID ? productData?.queryID : null;
       const results = formatProductSuggestions(productData);
 
-      dispatch(setSearchSuggestions(search, results, queryID, newHits));
+      dispatch(
+        setSearchSuggestions(search, results, queryID, querySuggestions)
+      );
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e);

@@ -1,16 +1,13 @@
-import PropTypes from "prop-types";
-import React from "react";
-import { PureComponent } from "react";
-import TinySlider from "tiny-slider-react";
-import Image from "Component/Image";
-import Link from "Component/Link";
-import { formatCDNLink } from "Util/Url";
-import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
-import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
-import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
-import "./DynamicContentSliderWithLabel.style";
 import DragScroll from "Component/DragScroll/DragScroll.component";
+import Link from "Component/Link";
+import PropTypes from "prop-types";
+import React, { PureComponent } from "react";
 import { isArabic } from "Util/App";
+import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
+import { formatCDNLink } from "Util/Url";
+import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
+import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
+import "./DynamicContentSliderWithLabel.style";
 
 class DynamicContentSliderWithLabel extends PureComponent {
   static propTypes = {

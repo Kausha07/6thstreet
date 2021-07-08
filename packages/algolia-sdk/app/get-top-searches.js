@@ -25,7 +25,6 @@ export default async function getTopSearches(options = {}) {
           return response.json();
         })
         .then((result) => {
-          console.log("top searches in package", result);
           const data = result.searches;
           if (!data) {
             resolve({ data: [] });

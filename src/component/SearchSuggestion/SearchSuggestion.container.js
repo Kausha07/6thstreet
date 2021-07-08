@@ -11,7 +11,7 @@ export const mapStateToProps = (state) => ({
   data: state.SearchSuggestions.data,
   gender: state.AppState.gender,
   queryID: state.SearchSuggestions.queryID,
-  newHits: state.SearchSuggestions.newHits,
+  querySuggestions: state.SearchSuggestions.querySuggestions,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -32,7 +32,7 @@ export class SearchSuggestionContainer extends PureComponent {
     }).isRequired,
     closeSearch: PropTypes.func.isRequired,
     queryID: PropTypes.string,
-    newHits: PropTypes.array,
+    querySuggestions: PropTypes.array,
   };
 
   static getDerivedStateFromProps(props, state) {
@@ -71,7 +71,7 @@ export class SearchSuggestionContainer extends PureComponent {
 
     SearchSuggestionContainer.requestSearchSuggestions(props);
     this.requestTrendingInformation();
-    this.requestTopSearches();
+    // this.requestTopSearches();
   }
 
   async requestTrendingInformation() {
@@ -83,6 +83,7 @@ export class SearchSuggestionContainer extends PureComponent {
         getStaticFile("search_trending_tags"),
         // getStaticFile("search_trending_products"),
       ]);
+      console.log("data", data);
       this.setState({
         trendingBrands: data[0][gender],
         trendingTags: data[1][gender],
@@ -102,7 +103,7 @@ export class SearchSuggestionContainer extends PureComponent {
 
   containerProps = () => {
     const { trendingBrands, trendingTags, topSearches } = this.state;
-    const { search, data, closeSearch, queryID, newHits } = this.props;
+    const { search, data, closeSearch, queryID, querySuggestions } = this.props;
     const { brands = [], products = [] } = data;
 
     const isEmpty = search === "";
@@ -119,7 +120,7 @@ export class SearchSuggestionContainer extends PureComponent {
       trendingTags,
       closeSearch,
       queryID,
-      newHits,
+      querySuggestions,
       topSearches,
     };
   };
