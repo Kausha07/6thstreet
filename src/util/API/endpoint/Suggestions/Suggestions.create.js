@@ -80,7 +80,6 @@ const checkForQueryWithGender = (query) => {
     default:
       break;
   }
-  console.log("regex str", regexStr);
   let regex = new RegExp(`\\b${regexStr}\\b`, "i");
   return regex.test(query);
 };
@@ -101,7 +100,6 @@ const createCustomQuerySuggestions = (hit, resArray) => {
       },
     },
   } = hit;
-  console.log("single hit", hit);
   let genderModifiedQuery;
 
   if (checkForQueryWithGender(query)) {
@@ -362,11 +360,9 @@ export const getCustomQuerySuggestions = (hits) => {
   let arr = [];
   let i = 0;
   while (arr.length < 5 && i < hits.length) {
-    console.log("i", i);
     arr.push(...createCustomQuerySuggestions(hits[i], arr, sourceIndexName));
     i++;
   }
-  console.log("final array", arr);
   return arr;
 };
 

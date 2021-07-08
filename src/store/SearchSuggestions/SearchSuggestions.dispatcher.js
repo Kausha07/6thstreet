@@ -1,9 +1,6 @@
 import { getStore } from "Store";
 import { setSearchSuggestions } from "Store/SearchSuggestions/SearchSuggestions.action";
-import {
-  formatQuerySuggestions,
-  getCustomQuerySuggestions,
-} from "Util/API/endpoint/Suggestions/Suggestions.create";
+import { getCustomQuerySuggestions } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import { formatProductSuggestions } from "Util/API/endpoint/Suggestions/Suggestions.format";
 import Algolia from "Util/API/provider/Algolia";
 import { isArabic } from "Util/App";
@@ -57,9 +54,6 @@ export class SearchSuggestionsDispatcher {
       // });
       const querySuggestions =
         hits?.length > 0 ? getCustomQuerySuggestions(hits) : [];
-      querySuggestions.map((item) =>
-        console.log("item", formatQuerySuggestions(item.query))
-      );
 
       // if you need search analytics then uncomment it (default automatically tracks it) UPDATE: causing wrong data.
 
