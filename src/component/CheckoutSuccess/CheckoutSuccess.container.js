@@ -138,7 +138,7 @@ export class CheckoutSuccessContainer extends PureComponent {
       shippingAddress: { phone: guestPhone },
       isSignedIn,
     } = this.props;
-    console.log("guest phone", this.props.shippingAddress)
+    console.log("props in checkout success", this.props)
     if (isSignedIn) {
       this.setPhone(phone);
     } else {
