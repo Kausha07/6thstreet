@@ -7,6 +7,8 @@
     overflow: hidden;
     text-overflow: ellipsis;
     width: 88%;
+    line-height: 1;
+    margin-bottom: 28px;
   }
 
   &-Content {
@@ -197,7 +199,7 @@
         // grid-template-columns: repeat(2, 1fr);
         flex-direction: column;
         flex-wrap: wrap;
-        height: 290px;
+        height: 344px;
         justify-content: flex-start;
         margin-top: 10px;
 

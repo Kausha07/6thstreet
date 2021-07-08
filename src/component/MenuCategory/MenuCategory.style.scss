@@ -245,7 +245,7 @@
         border-right: 0;
         display: block;
         order: 2;
-        margin: 0;
+        margin: 0 !important;
         padding: 20px 15px;
 
         a {
@@ -275,6 +275,7 @@
         }
         &-Title {
           line-height: 16px;
+          margin-bottom: 15px;
         }
       }
       .MenuGrid {
@@ -287,6 +288,7 @@
         }
         &-Title {
           line-height: 16px;
+          margin-bottom: 15px;
         }
       }
     }
