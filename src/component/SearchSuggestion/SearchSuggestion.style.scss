@@ -224,6 +224,13 @@
         position: absolute;
         right: 0;
       }
+      .suggestion-details-box {
+        display: flex;
+        justify-content: space-between;
+        span {
+          position: relative;
+        }
+      }
     }
   }
 

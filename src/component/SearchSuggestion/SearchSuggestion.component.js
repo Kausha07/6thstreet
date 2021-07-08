@@ -3,7 +3,10 @@ import Loader from "Component/Loader";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { Products } from "Util/API/endpoint/Product/Product.type";
-import { formatQuerySuggestions } from "Util/API/endpoint/Suggestions/Suggestions.create";
+import {
+  formatQuerySuggestions,
+  getHighlightedText,
+} from "Util/API/endpoint/Suggestions/Suggestions.create";
 import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
 import isMobile from "Util/Mobile";
@@ -23,6 +26,7 @@ class SearchSuggestion extends PureComponent {
     hideActiveOverlay: PropTypes.func,
     querySuggestions: PropTypes.array,
     topSearches: PropTypes.array,
+    searchString: PropTypes.string,
   };
 
   static defaultProps = {
@@ -100,6 +104,7 @@ class SearchSuggestion extends PureComponent {
 
   renderQuerySuggestion = (querySuggestions) => {
     const { query, count } = querySuggestions;
+    const { searchString } = this.props;
     const urlName = this.getBrandUrl(query);
 
     return (
@@ -108,16 +113,18 @@ class SearchSuggestion extends PureComponent {
           to={`/catalogsearch/result/?q=${urlName}`}
           onClick={this.closeSearchPopup}
         >
-          {formatQuerySuggestions(query)}
-          <span>{count}</span>
+          <div className="suggestion-details-box">
+            {getHighlightedText(formatQuerySuggestions(query), searchString)}
+            <div>{count}</div>
+          </div>
         </Link>
       </li>
     );
   };
 
   renderQuerySuggestions() {
-    const { querySuggestions = [] } = this.props;
-
+    const { querySuggestions = [], searchString } = this.props;
+    console.log("search query", searchString);
     return (
       <div block="SearchSuggestion" elem="Item">
         <ul>{querySuggestions.map(this.renderQuerySuggestion)}</ul>

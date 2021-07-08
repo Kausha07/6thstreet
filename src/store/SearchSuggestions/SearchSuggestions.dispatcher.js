@@ -76,6 +76,7 @@ export class SearchSuggestionsDispatcher {
       //   );
       const queryID = productData?.queryID ? productData?.queryID : null;
       const results = formatProductSuggestions(productData);
+      console.log("search query in dispatcher", search);
 
       dispatch(
         setSearchSuggestions(search, results, queryID, querySuggestions)

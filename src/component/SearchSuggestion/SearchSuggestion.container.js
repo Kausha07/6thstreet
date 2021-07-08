@@ -109,6 +109,7 @@ export class SearchSuggestionContainer extends PureComponent {
     const inNothingFound = brands.length + products.length === 0;
 
     return {
+      searchString: search,
       brands,
       products,
       inNothingFound,
