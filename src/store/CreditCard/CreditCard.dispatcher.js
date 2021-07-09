@@ -50,6 +50,10 @@ export class CreditCardDispatcher {
                     cardsData.push(element);
                 }
             });
+            // If length is 1 card is selected by default
+            if(cardsData.length === 1){
+                cardsData[0].selected = true;
+            }
             dispatch(setSavedCards([...cardsData]));
             dispatch(setSavedCardsLoading(false));
             dispatch(setNewCardVisible(cardsData && cardsData.length === 0));
