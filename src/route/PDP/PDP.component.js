@@ -20,7 +20,7 @@ class PDP extends PureComponent {
   }
 
   renderDetailsSection() {
-    return <PDPDetailsSection />;
+    return <PDPDetailsSection {...this.props} />;
   }
 
   renderMixAndMatchSection() {

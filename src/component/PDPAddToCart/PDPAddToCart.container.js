@@ -19,7 +19,6 @@ import Event, {
 import history from "Util/History";
 import isMobile from "Util/Mobile";
 import PDPAddToCart from "./PDPAddToCart.component";
-import PDPAddToCartDesktop from "./PDPAddToCartDesktop.component";
 
 export const mapStateToProps = (state) => ({
   product: state.PDP.product,
@@ -52,8 +51,7 @@ export const mapDispatchToProps = (dispatch) => ({
       url,
       itemPrice
     ),
-  setMinicartOpen: (isMinicartOpen = false) =>
-    dispatch(setMinicartOpen(isMinicartOpen)),
+  setMinicartOpen: (isMinicartOpen = false) => dispatch(setMinicartOpen(isMinicartOpen)),
   getProductStock: (sku) => PDPDispatcher.getProductStock(dispatch, sku),
   sendNotifyMeEmail: (data) => PDPDispatcher.sendNotifyMeEmail(data)
 });
@@ -153,7 +151,7 @@ export class PDPAddToCartContainer extends PureComponent {
 
       const object = {
         sizeCodes: filteredProductKeys || [],
-        sizeTypes: filteredProductSizeKeys || [],
+        sizeTypes: filteredProductSizeKeys?.length ? ["uk", "eu", "us"] : [],
       };
 
       if (
@@ -195,6 +193,7 @@ export class PDPAddToCartContainer extends PureComponent {
     const {
       sizeObject: { sizeTypes },
     } = this.state;
+
     this.setState({ processingRequest: true });
 
     getProductStock(sku).then((response) => {
@@ -238,6 +237,7 @@ export class PDPAddToCartContainer extends PureComponent {
       this.setState({ notifyMeLoading: false });
     });
   }
+  
 
   componentDidUpdate(prevProps, _) {
     const {
@@ -252,6 +252,28 @@ export class PDPAddToCartContainer extends PureComponent {
       this.clearTimeAll();
       this.proceedToCheckout();
     }
+  }
+
+  sendNotifyMeEmail(email) {
+    const {
+      locale,
+      product: { sku },
+      sendNotifyMeEmail,
+      showNotification
+    } = this.props;
+    let data = { email, sku, locale };
+
+    this.setState({ notifyMeLoading: true });
+
+    sendNotifyMeEmail(data).then((response) => {
+      if (response && response.success) {//if success
+        this.setState({ notifyMeSuccess: true, isOutOfStock: false });
+      } else {
+        // if error
+        showNotification("error", __('Something went wrong.'));
+      }
+      this.setState({ notifyMeLoading: false });
+    });
   }
 
   containerProps = () => {
@@ -307,7 +329,7 @@ export class PDPAddToCartContainer extends PureComponent {
         name,
         sku: configSKU,
         objectID,
-        product_type_6s,
+        product_type_6s
       },
       addProductToCart,
       showNotification,
@@ -471,6 +493,7 @@ export class PDPAddToCartContainer extends PureComponent {
           userToken: userToken ? `user-${userToken}` : getUUIDToken(),
         });
       }
+
       // vue analytics
       const locale = VueIntegrationQueries.getLocaleFromUrl();
       VueIntegrationQueries.vueAnalayticsLogger({
@@ -542,14 +565,6 @@ export class PDPAddToCartContainer extends PureComponent {
   }
 
   render() {
-    if (!isMobile.any()) {
-      return (
-        <PDPAddToCartDesktop
-          {...this.containerFunctions}
-          {...this.containerProps()}
-        />
-      );
-    }
     return (
       <PDPAddToCart {...this.containerFunctions} {...this.containerProps()} />
     );

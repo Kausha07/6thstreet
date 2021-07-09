@@ -1,6 +1,7 @@
 /* eslint-disable no-magic-numbers */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
+
 import { Product } from 'Util/API/endpoint/Product/Product.type';
 import isMobile from 'Util/Mobile';
 import PDPSizeGuide from '../PDPSizeGuide';
@@ -8,7 +9,7 @@ import './PDPAddToCart.style';
 import Spinner from "react-spinkit";
 import NotifySuccessImg from "./icons/success-circle.png";
 
-
+import './PDPAddToCart.style';
 
 
 class PDPAddToCart extends PureComponent {
@@ -60,7 +61,7 @@ class PDPAddToCart extends PureComponent {
         });
     };
 
-    getSizeTypeSelect() {
+    getSizeTypeRadio() {
         const {
             sizeObject = {},
             selectedSizeType,
@@ -97,6 +98,36 @@ class PDPAddToCart extends PureComponent {
         return null;
     }
 
+    getSizeTypeSelect() {
+        const { sizeObject = {}, onSizeTypeSelect } = this.props;
+
+        if (sizeObject.sizeTypes !== undefined) {
+            return (
+                <select
+                    key="SizeTypeSelect"
+                    block="PDPAddToCart"
+                    elem="SizeTypeSelectElement"
+                    onChange={ onSizeTypeSelect }
+                >
+                    {
+                        sizeObject.sizeTypes.map((type = '') => (
+                            <option
+                                key={ type }
+                                block="PDPAddToCart"
+                                elem="SizeTypeOption"
+                                value={ type }
+                            >
+                                { type.toUpperCase() }
+                            </option>
+                        ))
+                    }
+                </select>
+            )
+        }
+
+        return null;
+    }
+
     renderSizeOption(simple_products, code, label) {
         const {
             selectedSizeCode,
@@ -105,7 +136,10 @@ class PDPAddToCart extends PureComponent {
         const isNotAvailable = simple_products[code].quantity === 0;
 
         return (
-            <div block="PDPAddToCart-SizeSelector" elem={isNotAvailable ? "SizeOptionContainerOOS" : "SizeOptionContainer"}>
+            <div
+                block="PDPAddToCart-SizeSelector"
+                elem={isNotAvailable ? "SizeOptionContainerOOS" : "SizeOptionContainer"}
+            >
                 <input
                     id={code}
                     key={code}
@@ -159,13 +193,14 @@ class PDPAddToCart extends PureComponent {
     }
 
     renderSizeInfo() {
-        const { sizeObject, product } = this.props;
+        const { sizeObject, product, product: { fit_size_url } } = this.props;
 
         if ((sizeObject.sizeTypes !== undefined)
-            && (sizeObject.sizeTypes.length !== 0)) {
+        && (sizeObject.sizeTypes.length !== 0)
+        && !!fit_size_url) {
             return (
-                <div block="PDPAddToCart" elem="SizeInfo">
-                    <PDPSizeGuide product={product} />
+                <div block="PDPAddToCart-SizeInfoContainer" elem="SizeInfo">
+                    <PDPSizeGuide product={ product } />
                 </div>
             );
         }
@@ -176,7 +211,13 @@ class PDPAddToCart extends PureComponent {
     renderSizeTypeSelect() {
         return (
             <div block="PDPAddToCart" elem="SizeTypeSelector">
-                {this.getSizeTypeSelect()}
+                {
+                    isMobile.any()
+                    ?
+                    this.getSizeTypeRadio()
+                    :
+                    this.getSizeTypeSelect()
+                }
             </div>
         );
     }
@@ -375,19 +416,24 @@ class PDPAddToCart extends PureComponent {
             <>
                 {
                     (sizeObject.sizeTypes !== undefined) && (sizeObject.sizeTypes.length !== 0)
-                        ?
+                    ?
+                    (
                         <>
                             {this.renderOutOfStock()}
                             {this.renderNotifyMeSuccess()}
-                            {this.renderSizeInfo()}
-                            <div block="PDPAddToCart" elem="SizeSelect">
-                                {this.renderSizeTypeSelect()}
-                                {this.renderSizeSelect()}
+                            <div block="PDPAddToCart" elem="SizeInfoContainer">
+                                <span block="PDPAddToCart-SizeInfoContainer" elem="title">{ __("Size:") }</span>
+                                { this.renderSizeInfo() }
                             </div>
-                            <div block="Seperator" />
+                            <div block="PDPAddToCart" elem="SizeSelect">
+                                { this.renderSizeTypeSelect() }
+                                { this.renderSizeSelect() }
+                            </div>
+                            { isMobile.any() && <div block="Seperator" /> }
                         </>
-                        :
-                        null
+                    )
+                    :
+                    null
                 }
                 <div block="PDPAddToCart" elem="Bottom">
                     {this.renderAddToCartButton()}

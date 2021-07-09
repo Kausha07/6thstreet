@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import './WishlistIcon.style';
+import { Favourite, FavouriteFilled } from '../Icons';
 
 class WishlistIcon extends PureComponent {
     static propTypes = {
@@ -55,16 +56,21 @@ class WishlistIcon extends PureComponent {
         const blackMod = items.some(this.isBlack);
 
         return (
-            <div
-              role="button"
-              block="WishlistIcon"
-              elem="Icon"
-              mods={ { black: blackMod } }
-              tabIndex={ 0 }
-              aria-label="Wishlist"
-              onClick={ this.handleClick }
-              onKeyDown={ this.handleClick }
-            />
+            <button
+                block="WishlistIcon"
+                elem="Icon"
+                aria-label="Wishlist"
+                onClick={ this.handleClick }
+                onKeyDown={ this.handleClick }
+            >
+                {
+                    blackMod
+                    ?
+                    <FavouriteFilled />
+                    :
+                    <Favourite /> 
+                }
+            </button>
         );
     }
 

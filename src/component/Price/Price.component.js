@@ -12,12 +12,10 @@ class Price extends PureComponent {
         specialPrice: PropTypes.number.isRequired,
         currency: PropTypes.string.isRequired,
         fixedPrice: PropTypes.bool,
-        displayDiscountPercentage: PropTypes.bool.isRequired
     };
 
     static defaultProps = {
         fixedPrice: false,
-        displayDiscountPercentage: true
     };
 
     state = {
@@ -36,7 +34,7 @@ class Price extends PureComponent {
         return (
             <span block="Price" elem="Base" mods={ { discount: this.haveDiscount() } }>
                 { this.renderCurrency() }
-                <span> </span>
+                &nbsp;
                 { fixedPrice ? (1 * basePrice).toFixed(3) : basePrice }
             </span>
         );
@@ -48,7 +46,7 @@ class Price extends PureComponent {
         return (
             <span block="Price" elem="Special" mods={ { discount: this.haveDiscount() } }>
                 { this.renderCurrency() }
-                <span> </span>
+                &nbsp;
                 { fixedPrice ? (1 * specialPrice).toFixed(3) : specialPrice }
             </span>
         );
@@ -58,12 +56,8 @@ class Price extends PureComponent {
         const {
             basePrice,
             specialPrice,
-            displayDiscountPercentage
         } = this.props;
 
-        if(!displayDiscountPercentage){
-            return null;
-        }
         const { isArabic } = this.state;
 
         let discountPercentage = Math.round(100 * (1 - (specialPrice / basePrice)));
@@ -71,23 +65,7 @@ class Price extends PureComponent {
             discountPercentage = 1;
         }
 
-        if (isArabic) {
-            return (
-                <span block="Price" elem="Discount" mods={ { discount: this.haveDiscount() } }>
-                { discountPercentage }
-                %-
-                </span>
-            );
-        }
-
-        return (
-            <span block="Price" elem="Discount" mods={ { discount: this.haveDiscount() } }>
-            -
-            { discountPercentage }
-            %
-            <span> </span>
-            </span>
-        );
+        return `-${discountPercentage}%`;
     }
 
     renderPrice() {
@@ -106,10 +84,13 @@ class Price extends PureComponent {
 
         return (
             <>
-                <del block="Price" elem="Del">{ this.renderBasePrice() }</del>
                 <span block="Price" elem="Wrapper">
-                    { this.discountPercentage() }
                     { this.renderSpecialPrice() }
+                    &nbsp;
+                    <del block="Price" elem="Del">{ this.renderBasePrice() }</del>
+                </span>
+                <span block="Price" elem="Discount" mods={ { discount: this.haveDiscount() } }>
+                    { `On Sale ${ this.discountPercentage() } Off`}
                 </span>
             </>
         );
