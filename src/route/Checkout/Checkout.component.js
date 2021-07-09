@@ -440,7 +440,6 @@ componentWillUnmount(){
     if (!isTabbyPopupShown) {
       return null;
     }
-console.log("tabby url check", tabbyInstallmentsUrl , "or this one", tabbyPayLaterUrl)
     return (
       <TabbyPopup
         tabbyWebUrl={
@@ -467,8 +466,6 @@ console.log("tabby url check", tabbyInstallmentsUrl , "or this one", tabbyPayLat
       paymentInformation: { billing_address, paymentMethod, selectedCard },
       creditCardData,
     } = this.state;
-    console.log("props", this.props)
-    console.log("state", this.state)
     this.setState({ isSuccess: true });
 
     if (isFailed) {

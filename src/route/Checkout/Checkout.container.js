@@ -185,7 +185,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   };
   componentDidMount() {
     const { setMeta } = this.props;
-    console.log("props in checkout container", this.props)
     const { checkoutStep, initialGTMSent } = this.state;
     this.refreshCart();
     setMeta({ title: __("Checkout") });
@@ -217,10 +216,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       } = this.props;
       localStorage.removeItem("QPAY_ORDER_DETAILS");
       const { id, order_id, increment_id } = QPAY_CHECK;
-      console.log("qpay was stored successfully", QPAY_CHECK);
       getPaymentAuthorization(id).then((response) => {
         if (response) {
-          console.log("response", response)
           const { status, id: paymentId = "" } = response;
 
           if (status === "Authorized") {
@@ -239,7 +236,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           }
         }
       }).catch(rejected => {
-        console.log("rejected", rejected)
       });
       return;
     }
@@ -523,8 +519,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     try {
       createOrder(code, data)
         .then((response) => {
-          console.log("response", response);
-          console.log("payment info", paymentInformation)
           if (response && response.data) {
             const { data } = response;
 
@@ -727,7 +721,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       newCardVisible,
     } = this.props;
     const { order_id, increment_id, id = "", creditCardData } = this.state;
-    console.log("card id", id);
     getPaymentAuthorization(id).then((response) => {
       if (response) {
         const { status, id: paymentId = "" } = response;
