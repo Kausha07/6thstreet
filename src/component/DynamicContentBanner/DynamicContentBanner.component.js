@@ -21,7 +21,13 @@ class DynamicContentBanner extends PureComponent {
       })
     ).isRequired,
     isMenu: PropTypes.bool,
+    toggleMobileMenuSideBar: PropTypes.any,
   };
+  constructor(props) {
+    super(props);
+    console.log("--------------------- props", this.props);
+    this.onclick = this.onclick.bind(this);
+  }
 
   static defaultProps = {
     isMenu: false,
@@ -32,6 +38,12 @@ class DynamicContentBanner extends PureComponent {
   };
 
   onclick = (item) => {
+    console.log(this.props);
+    const { toggleMobileMenuSideBar } = this.props;
+    if (toggleMobileMenuSideBar) {
+      toggleMobileMenuSideBar();
+    }
+    setTimeout(() => {});
     // vue analytics
     // const locale = VueIntegrationQueries.getLocaleFromUrl();
     // VueIntegrationQueries.vueAnalayticsLogger({
