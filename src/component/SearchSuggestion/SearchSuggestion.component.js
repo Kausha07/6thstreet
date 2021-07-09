@@ -110,7 +110,7 @@ class SearchSuggestion extends PureComponent {
         elem="Discount"
         mods={{ discount: haveDiscount }}
       >
-        -{discountPercentage}%<span> </span>
+        -({discountPercentage}%)<span> </span>
       </span>
     );
   }
