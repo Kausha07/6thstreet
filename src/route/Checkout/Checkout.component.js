@@ -71,6 +71,20 @@ export class Checkout extends SourceCheckout {
     binInfo: {},
   };
 
+
+  componentDidMount() {
+
+    const paymentInformation = JSON.parse(localStorage.getItem("PAYMENT_INFO"))
+    if(paymentInformation){
+      this.setState({paymentInformation})
+    }
+}
+
+componentWillUnmount(){
+  localStorage.removeItem("PAYMENT_INFO")
+}
+
+
   hideModalListener = () => {
     // Will hide bin promotion popup after 5 sec
     setTimeout(() => {
@@ -426,7 +440,6 @@ export class Checkout extends SourceCheckout {
     if (!isTabbyPopupShown) {
       return null;
     }
-
     return (
       <TabbyPopup
         tabbyWebUrl={
@@ -453,7 +466,6 @@ export class Checkout extends SourceCheckout {
       paymentInformation: { billing_address, paymentMethod, selectedCard },
       creditCardData,
     } = this.state;
-
     this.setState({ isSuccess: true });
 
     if (isFailed) {

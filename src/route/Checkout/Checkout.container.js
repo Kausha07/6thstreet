@@ -48,6 +48,7 @@ import {
 const PAYMENT_ABORTED = "payment_aborted";
 const PAYMENT_FAILED = "payment_failed";
 import CreditCardDispatcher from 'Store/CreditCard/CreditCard.dispatcher';
+import isMobile from 'Util/Mobile';
 
 export const mapDispatchToProps = (dispatch) => ({
   ...sourceMapDispatchToProps(dispatch),
@@ -80,7 +81,8 @@ export const mapDispatchToProps = (dispatch) => ({
   resetCart: () => dispatch(resetCart()),
   getCart: () => CartDispatcher.getCart(dispatch),
   updateTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId),
-  saveCreditCard: (cardData) => CreditCardDispatcher.saveCreditCard(dispatch, cardData),
+  saveCreditCard: (cardData) =>
+    CreditCardDispatcher.saveCreditCard(dispatch, cardData),
 });
 export const mapStateToProps = (state) => ({
   totals: state.CartReducer.cartTotals,
@@ -115,8 +117,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     savePaymentInformation: this.savePaymentInformation.bind(this),
     getBinPromotion: this.getBinPromotion.bind(this),
     saveAddressInformation: this.saveAddressInformation.bind(this),
-    onShippingEstimationFieldsChange:
-      this.onShippingEstimationFieldsChange.bind(this),
+    onShippingEstimationFieldsChange: this.onShippingEstimationFieldsChange.bind(
+      this
+    ),
     onEmailChange: this.onEmailChange.bind(this),
     onCreateUserChange: this.onCreateUserChange.bind(this),
     onPasswordChange: this.onPasswordChange.bind(this),
@@ -147,6 +150,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     } = props;
 
     toggleBreadcrumbs(false);
+
+
 
     this.state = {
       isLoading: false,
@@ -181,7 +186,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   };
   componentDidMount() {
     const { setMeta } = this.props;
-
+    const { checkoutStep, initialGTMSent } = this.state;
     this.refreshCart();
     setMeta({ title: __("Checkout") });
   }
@@ -201,6 +206,40 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const { checkoutStep, initialGTMSent } = this.state;
 
     const { checkoutStep: prevCheckoutStep } = prevState;
+
+    const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
+
+    if (QPAY_CHECK) {
+      const {
+        getPaymentAuthorization,
+        capturePayment,
+        cancelOrder,
+      } = this.props;
+      localStorage.removeItem("QPAY_ORDER_DETAILS");
+      const { id, order_id, increment_id } = QPAY_CHECK;
+      getPaymentAuthorization(id).then((response) => {
+        if (response) {
+          const { status, id: paymentId = "" } = response;
+
+          if (status === "Authorized") {
+            BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
+            this.setDetailsStep(order_id, increment_id);
+            this.resetCart();
+            this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
+            capturePayment(paymentId, order_id);
+          }
+
+          if (status === "Declined" ||status === "Canceled"  ) {
+            cancelOrder(order_id, PAYMENT_FAILED);
+            this.setState({ isLoading: false, isFailed: true });
+            this.setDetailsStep(order_id, increment_id);
+            this.resetCart();
+          }
+        }
+      }).catch(rejected => {
+      });
+      return;
+    }
 
     if (Object.keys(totals).length !== 0) {
       this.updateInitTotals();
@@ -426,7 +465,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           email: customerEmail ? customerEmail : email,
         },
         "3ds": {
-          enabled: newCardVisible ? BrowserDatabase.getItem("CREDIT_CART_3DS") : true,
+          enabled: newCardVisible
+            ? BrowserDatabase.getItem("CREDIT_CART_3DS")
+            : true,
         },
         metadata: {
           udf1:
@@ -434,32 +475,33 @@ export class CheckoutContainer extends SourceCheckoutContainer {
               ? BrowserDatabase.getItem("CREDIT_CART_TYPE")
               : null,
         },
-      }
+      };
       if (newCardVisible) {
-        data['source'] = {
+        data["source"] = {
           type: "token",
           token: BrowserDatabase.getItem("CREDIT_CART_TOKEN"),
-        }
+        };
       } else {
-        const { selectedCard: { cvv, gateway_token } } = paymentInformation;
-        data['source'] = {
+        const {
+          selectedCard: { cvv, gateway_token },
+        } = paymentInformation;
+        data["source"] = {
           cvv,
           type: "id",
           id: gateway_token,
-        }
+        };
       }
-    }else if(code === CHECKOUT_QPAY){
+    } else if (code === CHECKOUT_QPAY) {
       data = {};
-    }
- else {
+    } else {
       data = additional_data;
     }
 
     if (code === CHECKOUT_APPLE_PAY) {
       this.setState({ processApplePay: true });
-    } else if (code === TABBY_ISTALLMENTS || code === TABBY_PAY_LATER) {
+    } else if (code === TABBY_ISTALLMENTS || code === TABBY_PAY_LATER || code === CHECKOUT_QPAY) {
       this.placeOrder(code, data, paymentInformation);
-    } else {
+    }else {
       this.placeOrder(code, data, null);
     }
   }
@@ -478,7 +520,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     try {
       createOrder(code, data)
         .then((response) => {
-          console.log("response", response)
           if (response && response.data) {
             const { data } = response;
 
@@ -493,7 +534,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                 _links: { redirect: { href = "" } = {} } = {},
               } = data;
 
-              if (success || response_code === 200 || http_response_code === 202) {
+              if (
+                success ||
+                response_code === 200 ||
+                http_response_code === 202
+              ) {
                 this.setState({ isLoading: false });
                 if (code === CARD && href) {
                   this.setState({
@@ -519,28 +564,43 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                   );
 
                   //return true;
-                }else if (
-                  code === CHECKOUT_QPAY
-                ) {
+                } else if (code === CHECKOUT_QPAY) {
                   this.setState({
                     order_id,
                     increment_id,
                     id,
                   });
-                  window.open(`${href}`,"_self")
+                  const obj = {
+                    order_id,
+                    id,
+                    increment_id,
+                  };
+                  localStorage.setItem(
+                    "QPAY_ORDER_DETAILS",
+                    JSON.stringify(obj)
+                  );
+                  localStorage.setItem(
+                    "PAYMENT_INFO",
+                    JSON.stringify(paymentInformation)
+                  );
+                  window.open(`${href}`, "_self");
 
                   //return true;
-                }  else {
+                } else {
                   if (code === CARD) {
                     const { saveCreditCard, newCardVisible } = this.props;
                     const { creditCardData } = this.state;
                     if (newCardVisible && creditCardData.saveCard) {
-                      saveCreditCard({ email: creditCardData.email, paymentId: id })
-                        .then(() => {
-                        })
+                      saveCreditCard({
+                        email: creditCardData.email,
+                        paymentId: id,
+                      })
+                        .then(() => {})
                         .catch(() => {
-                          showErrorNotification(__("Something went wrong! Please, try again!"));
-                        })
+                          showErrorNotification(
+                            __("Something went wrong! Please, try again!")
+                          );
+                        });
                     }
                   }
                   BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
@@ -586,8 +646,12 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   }
 
   setDetailsStep(orderID, incrementID) {
-    const { setNavigationState, sendVerificationCode, isSignedIn, customer } =
-      this.props;
+    const {
+      setNavigationState,
+      sendVerificationCode,
+      isSignedIn,
+      customer,
+    } = this.props;
 
     const { shippingAddress } = this.state;
 
@@ -650,9 +714,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   }
 
   processThreeDS() {
-    const { getPaymentAuthorization, capturePayment, cancelOrder, saveCreditCard, newCardVisible } = this.props;
+    const { getPaymentAuthorization, capturePayment, cancelOrder, saveCreditCard, newCardVisible, showOverlay } = this.props;
     const { order_id, increment_id, id = "", creditCardData } = this.state;
-
     getPaymentAuthorization(id).then((response) => {
       if (response) {
         const { status, id: paymentId = "" } = response;
@@ -663,13 +726,17 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           this.resetCart();
           this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
           capturePayment(paymentId, order_id);
+          if (isMobile.any()) {
+            showOverlay(CC_POPUP_ID);
+          }
           if (newCardVisible && creditCardData.saveCard) {
             saveCreditCard({ email: creditCardData.email, paymentId })
-              .then(() => {
-              })
+              .then(() => {})
               .catch(() => {
-                showErrorNotification(__("Something went wrong! Please, try again!"));
-              })
+                showErrorNotification(
+                  __("Something went wrong! Please, try again!")
+                );
+              });
           }
         }
 
@@ -700,6 +767,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       activeOverlay === CC_POPUP_ID
     ) {
       setTimeout(() => {
+        console.log("processThreeDS");
         this.processThreeDS();
         this.processThreeDSWithTimeout(counter + 1);
       }, 5000);
