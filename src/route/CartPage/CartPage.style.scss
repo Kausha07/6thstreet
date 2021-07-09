@@ -31,7 +31,7 @@
     @include mobile {
         margin-bottom: 0;
         height: auto;
-        padding: 17px 20px 0;
+        padding: 17px 0;
 
         > section:last-of-type {
             width: 100%;
@@ -56,12 +56,16 @@
             margin-left: 0;
             max-height: calc(100vh - 230px);
             width: 100%;
+            overflow-y: auto;
         }
     }
 
     &-Items {
         @include desktop() {
             overflow-x: hidden;
+        }
+        @include mobile() {
+            padding: 0 16px;
         }
     }
 
@@ -102,10 +106,11 @@
 
         @include mobile {
             position: sticky;
-            bottom: 80px;
             left: 0;
             width: 100%;
             padding-bottom: 10px;
+            padding: 0 12px;
+            box-shadow: 0 -4px 6px 0 rgba(0, 0, 0, 0.03);
         }
     }
 
@@ -129,7 +134,9 @@
             flex-wrap: nowrap;
             justify-content: space-around;
             align-items: center;
-            height: 40px;
+            padding: 0 12px;
+            line-height: 24px;
+            // height: 40px;
         }
     }
 
@@ -143,10 +150,13 @@
         border: none;
 
         @include mobile {
-            width: 45%;
+            // width: 45%;
             height: 40px;
-            font-size: 12px;
+            font-size: 14px;
             order: 2;
+            border-radius: 6px;
+            line-height: 24px;
+            height: 48px;
         }
 
         &_isDisabled {
@@ -198,10 +208,9 @@
             align-items: center;
             flex-wrap: wrap;
             line-height: 20px;
-            text-align: center;
 
             @include mobile {
-                font-size: 11px;
+                font-size: 13px;
             }
         }
 
@@ -212,13 +221,14 @@
         &Block {
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
             padding: 1rem 1rem 0 3rem;
 
             @include mobile {
-                padding: 1rem 1rem 1rem 3rem;
+                padding: 0.75rem 2.5rem;
                 border: 0;
-                border-bottom: 1px solid var(--primary-divider-color);
+                background-color: #F6F6F6;
+                border-bottom: none;
             }
 
             span {
@@ -226,11 +236,9 @@
             }
 
             img {
-                position: absolute;
-                top: 1rem;
-                left: 1rem;
                 width: 20px;
                 height: auto;
+                margin: 0 12px 0 0;
             }
 
             &_isArabic {
@@ -414,14 +422,18 @@
 
     &-Discount {
         margin: 1rem 0;
+        border-bottom: none!important;
     }
 
     &-Static {
         @include mobile {
-            max-height: calc(100vh - 275px);
+            // max-height: calc(100vh - 275px);
             overflow-y: auto;
             overflow-x: hidden;
             width: 100%;
+            &:first-child {
+                padding: 0 16px;
+            }
         }
 
         &_isArabic {
@@ -443,7 +455,7 @@
             width: 100%;
             left: 0;
             background-color: var(--color-white);
-            bottom: 80px;
+            bottom: 12px
         }
 
         &_isArabic {
@@ -477,6 +489,12 @@
         @include desktop {
             margin-bottom: 0;
             margin-top: 0;
+        }
+
+        @include mobile {
+            &-Qty {
+                display: none
+            }
         }
 
         &-Actions {
@@ -630,12 +648,11 @@
     }
 
     &-BackArrow {
-        background-image: url(./icons/close-black.png);
+        background-image: url(../../component/Icons/Close/icon.svg);
         background-size: cover;
-        height: 14px;
+        height: 19px;
         position: absolute;
-        width: 14px;
-        top: 3px;
+        width: 19px;
         z-index: 10;
 
         button {
@@ -658,7 +675,7 @@
     }
 
     &-Totals {
-        border-top: 1px solid var(--color-soft-gray);
+        // border-top: 1px solid var(--color-soft-gray);
         padding: 11px 0;
 
         .CartPage {
@@ -681,12 +698,12 @@
 
         .CartPage {
             &-Text {
-                font-size: 13px;
+                font-size: 15px;
                 font-weight: var(--fw-regular);
             }
 
             &-Price {
-                font-size: 13px;
+                font-size: 16px;
                 font-weight: var(--fw-medium);
             }
         }
@@ -699,4 +716,7 @@
             margin-bottom: 0;
         }
     }
+}
+.MobileBottomBar {
+    display: none;
 }
