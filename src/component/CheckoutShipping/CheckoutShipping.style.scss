@@ -130,7 +130,7 @@
           background: var(--white);
           height: 100% !important;
           position: absolute;
-
+          width: 100%;
           .Form {
             
             @include desktop {
@@ -145,6 +145,9 @@
                   border-top: none;
                   margin-left: 0;
                 }
+              }
+              @include desktop {
+                max-width: unset !important;
               }
             }
           }
@@ -164,8 +167,14 @@
                     margin-left: 0;
                   }
                 }
+                @include desktop {
+                  max-width: unset !important;
+                }
               }
             }
+          }
+          @include desktop {
+            width: 100%;
           }
         }
 

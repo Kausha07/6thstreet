@@ -182,7 +182,6 @@ export class CartPageContainer extends PureComponent {
             showNotification
         } = this.props;
         const { isCheckoutAvailable } = this.state;
-
         if (isCheckoutAvailable) {
         // to prevent outside-click handler trigger
             e.nativeEvent.stopImmediatePropagation();
