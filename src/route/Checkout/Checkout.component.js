@@ -440,7 +440,7 @@ componentWillUnmount(){
     if (!isTabbyPopupShown) {
       return null;
     }
-
+console.log("tabby url check", tabbyInstallmentsUrl , "or this one", tabbyPayLaterUrl)
     return (
       <TabbyPopup
         tabbyWebUrl={
