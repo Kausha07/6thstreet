@@ -47,7 +47,8 @@ import {
 } from "../../store/MobileCart/MobileCart.reducer";
 const PAYMENT_ABORTED = "payment_aborted";
 const PAYMENT_FAILED = "payment_failed";
-import CreditCardDispatcher from "Store/CreditCard/CreditCard.dispatcher";
+import CreditCardDispatcher from 'Store/CreditCard/CreditCard.dispatcher';
+import isMobile from 'Util/Mobile';
 
 export const mapDispatchToProps = (dispatch) => ({
   ...sourceMapDispatchToProps(dispatch),
@@ -713,13 +714,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   }
 
   processThreeDS() {
-    const {
-      getPaymentAuthorization,
-      capturePayment,
-      cancelOrder,
-      saveCreditCard,
-      newCardVisible,
-    } = this.props;
+    const { getPaymentAuthorization, capturePayment, cancelOrder, saveCreditCard, newCardVisible, showOverlay } = this.props;
     const { order_id, increment_id, id = "", creditCardData } = this.state;
     getPaymentAuthorization(id).then((response) => {
       if (response) {
@@ -731,6 +726,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           this.resetCart();
           this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
           capturePayment(paymentId, order_id);
+          if (isMobile.any()) {
+            showOverlay(CC_POPUP_ID);
+          }
           if (newCardVisible && creditCardData.saveCard) {
             saveCreditCard({ email: creditCardData.email, paymentId })
               .then(() => {})
@@ -769,6 +767,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       activeOverlay === CC_POPUP_ID
     ) {
       setTimeout(() => {
+        console.log("processThreeDS");
         this.processThreeDS();
         this.processThreeDSWithTimeout(counter + 1);
       }, 5000);
