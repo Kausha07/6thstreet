@@ -108,6 +108,7 @@ const createCustomQuerySuggestions = (hit, resArray, sourceIndexName) => {
   } else {
     genderModifiedQuery = `${gender} ${query}`;
   }
+  console.log("gender query", genderModifiedQuery);
   // if query does include brands
   if (query.toUpperCase().includes(brand_name[0].value.toUpperCase())) {
     if (checkForValidSuggestion(genderModifiedQuery, [...resArray, ...arr])) {
@@ -308,7 +309,7 @@ const createCustomQuerySuggestions = (hit, resArray, sourceIndexName) => {
       `${genderModifiedQuery}`,
       undefined,
       exact_nb_hits,
-      undefined,
+      false,
       arr,
       "unshift"
     );

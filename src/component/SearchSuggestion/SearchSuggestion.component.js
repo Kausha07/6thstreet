@@ -2,6 +2,7 @@ import Link from "Component/Link";
 import Loader from "Component/Loader";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
+import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { Products } from "Util/API/endpoint/Product/Product.type";
 import {
   formatQuerySuggestions,
@@ -9,6 +10,7 @@ import {
 } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
+import BrowserDatabase from "Util/BrowserDatabase";
 import isMobile from "Util/Mobile";
 import BRAND_MAPPING from "./SearchSiggestion.config";
 import "./SearchSuggestion.style";
@@ -58,7 +60,7 @@ class SearchSuggestion extends PureComponent {
 
     name = name ? name : brandName;
     const urlName = name
-      .replace(/'/g, "")
+      ?.replace(/'/g, "")
       .replace(/[(\s+).&]/g, "-")
       .replace(/-{2,}/g, "-")
       .replace(/\-$/, "")
@@ -69,13 +71,21 @@ class SearchSuggestion extends PureComponent {
     // .replace(/(\s+)|--/g, "-")
     // .replace("@", "at")
     // .toLowerCase();
-
     return urlName;
   };
 
+  getEncodedBrandString = (brandString) => {
+    return brandString
+      ?.replace(/'/g, "")
+      .replace(/[(\s+).&]/g, "-")
+      .replace(/-{2,}/g, "-")
+      .replace(/\-$/, "")
+      .replace("@", "at")
+      .toLowerCase();
+  };
   renderBrand = (brand) => {
     const { brand_name: name = "", count } = brand;
-
+    console.log("brand", brand);
     const urlName = this.getBrandUrl(name);
 
     return (
@@ -102,18 +112,91 @@ class SearchSuggestion extends PureComponent {
     );
   }
 
+  formatEnglishArabicString = (avoidString, brandName) => {
+    let regex = new RegExp("\\b" + avoidString + "\\b", "i");
+    return brandName
+      .replace(regex, "")
+      .replace(/^\s+|\s+$/g, "")
+      .replace(/\s+/g, " ");
+  };
+
+  getBrandSuggestionUrl = (brandName) => {
+    const { isArabic } = this.state;
+    const { searchString } = this.props;
+    let sourceIndexName = "stage_magento_english";
+    const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
+    let english = /^[A-Za-z0-9]*$/;
+    let formattedBrandName;
+    let requestedGender = gender;
+    let brandUrl;
+    if (isArabic) {
+      if (brandName.includes(searchString) && english.test(searchString)) {
+        formattedBrandName = this.formatEnglishArabicString(
+          searchString,
+          brandName
+        );
+      } else {
+        formattedBrandName = brandName;
+      }
+      sourceIndexName = "stage_magento_arabic";
+      requestedGender = this.getGenderInArabic(gender);
+      console.log("formattedstring", formattedBrandName);
+      const urlName = this.getKeyByValue(BRAND_MAPPING, brandName);
+      console.log("urlName", urlName);
+    } else {
+      formattedBrandName = brandName;
+      // name = name ? name : brandName;
+      brandUrl = `${this.getBrandUrl(
+        formattedBrandName
+      )}.html?q=${formattedBrandName}&idx=${sourceIndexName}&p=0&hFR[categories.level0][0]=${formattedBrandName}&nR[visibility_catalog][=][0]=1&q=${formattedBrandName}&dFR[gender][0]=${gender}`;
+    }
+    console.log("formattedstring", formattedBrandName);
+    // if query is on arabic index.
+    // if (isArabic) {
+    //   //
+    // } else {
+    //   // name = name ? name : brandName;
+    //   brandUrl = `${this.getBrandUrl(
+    //     name
+    //   )}.html?q=${brandName}&idx=${sourceIndexName}&p=0&hFR[categories.level0][0]=${brandName}&nR[visibility_catalog][=][0]=1&q=${brandName}&dFR[gender][0]=${gender}`;
+    // }
+    return brandUrl;
+  };
+
+  getCatalogUrl = (query, gender) => {
+    const { isArabic } = this.state;
+    let requestedGender = gender;
+    if (isArabic) {
+      requestedGender = this.getGenderInArabic(gender);
+    }
+    const catalogUrl = `/catalogsearch/result/?q=${formatQuerySuggestions(
+      query
+    )}&&p=0&dFR[gender][0]=${requestedGender}`;
+    return catalogUrl;
+  };
+
+  getGenderInArabic = (gender) => {
+    switch (gender) {
+      case "men":
+        return "رجال";
+      case "women":
+        return "نساء";
+      case "kids":
+        return "طفلة";
+    }
+  };
+
   renderQuerySuggestion = (querySuggestions) => {
     const { query, count, isBrand } = querySuggestions;
     const { searchString } = this.props;
-    const urlName = this.getBrandUrl(query);
-
+    const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
     return (
       <li>
         {isBrand ? (
           <Link
-            to={`${this.getBrandUrl(
-              formatQuerySuggestions(query)
-            )}.html?q=${this.getBrandUrl(formatQuerySuggestions(query))}`}
+            to={encodeURI(
+              this.getBrandSuggestionUrl(formatQuerySuggestions(query))
+            )}
             onClick={this.closeSearchPopup}
           >
             <div className="suggestion-details-box">
@@ -123,7 +206,7 @@ class SearchSuggestion extends PureComponent {
           </Link>
         ) : (
           <Link
-            to={`/catalogsearch/result/?q=${urlName}`}
+            to={encodeURI(this.getCatalogUrl(query, gender))}
             onClick={this.closeSearchPopup}
           >
             <div className="suggestion-details-box">
@@ -275,7 +358,10 @@ class SearchSuggestion extends PureComponent {
 
   renderTopSearch = ({ search }, i) => (
     <li key={i}>
-      <Link to={{ pathname: search }} onClick={this.closeSearchPopup}>
+      <Link
+        to={`/catalogsearch/result/?q=${search}`}
+        onClick={this.closeSearchPopup}
+      >
         <div block="SearchSuggestion" elem="TrandingTag">
           {search}
         </div>
@@ -356,7 +442,6 @@ class SearchSuggestion extends PureComponent {
   }
   render() {
     const { isArabic } = this.state;
-    const { querySuggestions } = this.props;
     return (
       <div block="SearchSuggestion" mods={{ isArabic }}>
         <div block="SearchSuggestion" elem="Content">

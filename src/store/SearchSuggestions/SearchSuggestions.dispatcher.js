@@ -68,14 +68,23 @@ export class SearchSuggestionsDispatcher {
 
       const hits = await new Algolia({
         index: `stage_magento_${lang}_products_query_suggestions`,
-      }).getSuggestions({
-        query: search,
-        limit: 5,
-      });
+      }).getSuggestions(
+        isArabic()
+          ? {
+              query: search,
+              limit: 5,
+            }
+          : {
+              query: search,
+              limit: 5,
+            }
+      );
+      console.log("hits", hits);
       const querySuggestions =
         hits?.length > 0
           ? getCustomQuerySuggestions(hits, sourceIndexName)
           : [];
+      console.log("processed results", querySuggestions);
       const queryID = productData?.queryID ? productData?.queryID : null;
       const results = formatProductSuggestions(productData);
 
