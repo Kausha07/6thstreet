@@ -79,12 +79,10 @@ export class SearchSuggestionsDispatcher {
               limit: 5,
             }
       );
-      console.log("hits", hits);
       const querySuggestions =
         hits?.length > 0
           ? getCustomQuerySuggestions(hits, sourceIndexName)
           : [];
-      console.log("processed results", querySuggestions);
       const queryID = productData?.queryID ? productData?.queryID : null;
       const results = formatProductSuggestions(productData);
 

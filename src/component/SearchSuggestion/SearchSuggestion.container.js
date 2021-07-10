@@ -81,7 +81,6 @@ export class SearchSuggestionContainer extends PureComponent {
 
   componentDidMount() {
     sourceIndexName = AlgoliaSDK.index.indexName;
-    console.log("sourceIndexName", sourceIndexName);
   }
 
   async requestTrendingInformation() {

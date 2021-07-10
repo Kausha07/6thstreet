@@ -74,18 +74,8 @@ class SearchSuggestion extends PureComponent {
     return urlName;
   };
 
-  getEncodedBrandString = (brandString) => {
-    return brandString
-      ?.replace(/'/g, "")
-      .replace(/[(\s+).&]/g, "-")
-      .replace(/-{2,}/g, "-")
-      .replace(/\-$/, "")
-      .replace("@", "at")
-      .toLowerCase();
-  };
   renderBrand = (brand) => {
     const { brand_name: name = "", count } = brand;
-    console.log("brand", brand);
     const urlName = this.getBrandUrl(name);
 
     return (
@@ -112,54 +102,35 @@ class SearchSuggestion extends PureComponent {
     );
   }
 
-  formatEnglishArabicString = (avoidString, brandName) => {
-    let regex = new RegExp("\\b" + avoidString + "\\b", "i");
-    return brandName
-      .replace(regex, "")
-      .replace(/^\s+|\s+$/g, "")
-      .replace(/\s+/g, " ");
-  };
-
   getBrandSuggestionUrl = (brandName) => {
     const { isArabic } = this.state;
-    const { searchString } = this.props;
-    let sourceIndexName = "stage_magento_english";
-    const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
-    let english = /^[A-Za-z0-9]*$/;
-    let formattedBrandName;
-    let requestedGender = gender;
     let brandUrl;
+    let formattedBrandName;
+    const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
     if (isArabic) {
-      if (brandName.includes(searchString) && english.test(searchString)) {
-        formattedBrandName = this.formatEnglishArabicString(
-          searchString,
-          brandName
-        );
-      } else {
-        formattedBrandName = brandName;
+      let requestedGender = this.getGenderInArabic(gender);
+      let arabicAlphabetDigits =
+        /[\u0600-\u06ff]|[\u0750-\u077f]|[\ufb50-\ufc3f]|[\ufe70-\ufefc]|[\u0200]|[\u00A0]/g;
+      if (arabicAlphabetDigits.test(brandName)) {
+        formattedBrandName = brandName.match("\\s*[^a-zA-Z]+\\s*");
+        brandName = formattedBrandName[0].trim();
       }
-      sourceIndexName = "stage_magento_arabic";
-      requestedGender = this.getGenderInArabic(gender);
-      console.log("formattedstring", formattedBrandName);
-      const urlName = this.getKeyByValue(BRAND_MAPPING, brandName);
-      console.log("urlName", urlName);
+      brandUrl = `${this.getBrandUrl(
+        brandName
+      )}.html?q=${brandName}&dFR[gender][0]=${requestedGender}`;
     } else {
-      formattedBrandName = brandName;
-      // name = name ? name : brandName;
+      formattedBrandName = brandName
+        .toUpperCase()
+        .split(" ")
+        .filter(function (allItems, i, a) {
+          return i == a.indexOf(allItems.toUpperCase());
+        })
+        .join(" ")
+        .toLowerCase();
       brandUrl = `${this.getBrandUrl(
         formattedBrandName
-      )}.html?q=${formattedBrandName}&idx=${sourceIndexName}&p=0&hFR[categories.level0][0]=${formattedBrandName}&nR[visibility_catalog][=][0]=1&q=${formattedBrandName}&dFR[gender][0]=${gender}`;
+      )}.html?q=${formattedBrandName}&dFR[gender][0]=${gender}`;
     }
-    console.log("formattedstring", formattedBrandName);
-    // if query is on arabic index.
-    // if (isArabic) {
-    //   //
-    // } else {
-    //   // name = name ? name : brandName;
-    //   brandUrl = `${this.getBrandUrl(
-    //     name
-    //   )}.html?q=${brandName}&idx=${sourceIndexName}&p=0&hFR[categories.level0][0]=${brandName}&nR[visibility_catalog][=][0]=1&q=${brandName}&dFR[gender][0]=${gender}`;
-    // }
     return brandUrl;
   };
 
@@ -171,7 +142,7 @@ class SearchSuggestion extends PureComponent {
     }
     const catalogUrl = `/catalogsearch/result/?q=${formatQuerySuggestions(
       query
-    )}&&p=0&dFR[gender][0]=${requestedGender}`;
+    )}&p=0&dFR[gender][0]=${requestedGender}`;
     return catalogUrl;
   };
 
@@ -182,7 +153,7 @@ class SearchSuggestion extends PureComponent {
       case "women":
         return "نساء";
       case "kids":
-        return "طفلة";
+        return "أطفال";
     }
   };
 
