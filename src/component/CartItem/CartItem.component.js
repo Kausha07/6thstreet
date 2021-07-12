@@ -331,7 +331,7 @@ export class CartItem extends PureComponent {
                   elem="ColSizeQty"
                   mods={ { isArabic } }
                 >
-                    <span> {__("Color:")} {color}</span>
+                    <span> {__("Color: ")} {color}</span>
                     
                     <span>| { __('Size:') } { optionValue }</span>
                     
@@ -346,7 +346,7 @@ export class CartItem extends PureComponent {
               block="CartItem"
               elem="ColSizeQty"
             >
-                {color ? <span> {__("Color:")} {color}</span> : null}
+                {color ? <span> {__("Color: ")} {color}</span> : null}
                 <span>{ color ? "|": null} { __('Qty:') } </span>
                 { qty }
             </div>
