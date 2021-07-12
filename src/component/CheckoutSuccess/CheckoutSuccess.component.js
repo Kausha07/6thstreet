@@ -617,7 +617,7 @@ export class CheckoutSuccess extends PureComponent {
     } else if (paymentMethod.code.match(/apple/)) {
       this.setState({ paymentTitle: __("Apple") });
     } else if (paymentMethod.code.match(/cash/)) {
-      this.setState({ paymentTitle: __("Cash on delivery") });
+      this.setState({ paymentTitle: __("Cash on Delivery") });
     }else if (paymentMethod.code.match(/free/)) {
       this.setState({ paymentTitle: __("Store Credit") });
     }
