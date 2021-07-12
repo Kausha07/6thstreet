@@ -16,7 +16,7 @@ export class CartCoupon extends SourceCartCoupon {
                   id="couponCode"
                   name="couponCode"
                   value={ enteredCouponCode }
-                  placeholder={ __('Enter a coupon or Discount code') }
+                  placeholder={ __('Enter a Coupon or Discount Code') }
                   onChange={ this.handleCouponCodeChange }
                   mix={ { block: 'CartCoupon', elem: 'Input' } }
                 />
