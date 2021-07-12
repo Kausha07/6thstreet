@@ -462,6 +462,7 @@ componentWillUnmount(){
       newCardVisible,
     } = this.props;
     const { cashOnDeliveryFee } = this.state;
+    console.log("props passed in details section (in checkout component)", this.props)
     const {
       paymentInformation: { billing_address, paymentMethod, selectedCard },
       creditCardData,

@@ -208,7 +208,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const { checkoutStep: prevCheckoutStep } = prevState;
 
     const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
-
+    console.log("checkout step (in checkout container)",checkoutStep )
+    console.log("QPAY check (in checkout container)", QPAY_CHECK)
     if (QPAY_CHECK) {
       const {
         getPaymentAuthorization,
@@ -217,8 +218,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       } = this.props;
       localStorage.removeItem("QPAY_ORDER_DETAILS");
       const { id, order_id, increment_id } = QPAY_CHECK;
+      console.log("payment with Qpay")
       getPaymentAuthorization(id).then((response) => {
         if (response) {
+          console.log("QPAY auth response (checkout container)", response)
           const { status, id: paymentId = "" } = response;
 
           if (status === "Authorized") {
@@ -237,10 +240,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           }
         }
       }).catch(rejected => {
+        console.log("request rejected(in checkout container)", rejected)
       });
       return;
     }
-
+    console.log("checking if rest conditions are checked")
     if (Object.keys(totals).length !== 0) {
       this.updateInitTotals();
     }
@@ -652,7 +656,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       isSignedIn,
       customer,
     } = this.props;
-
+    console.log("props in setting details step", this.props)
+    console.log("order id and increment id", orderID , ",", incrementID)
     const { shippingAddress } = this.state;
 
     if (isSignedIn) {
