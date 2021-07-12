@@ -178,6 +178,9 @@
         color: var(--Black);
         letter-spacing: .75px;
         &-Qty {
+            text-decoration: underline;
+            text-decoration-color: #e5e5e5;
+            text-underline-position: under;
             cursor: pointer;
         }
     }
@@ -343,4 +346,8 @@
             }
         }
     }
+}
+
+.pipe {
+    color: #4b4b4b!important;
 }
