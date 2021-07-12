@@ -17,8 +17,10 @@ import Event, {
   VUE_ADD_TO_CART,
 } from "Util/Event";
 import history from "Util/History";
-import isMobile from "Util/Mobile";
 import PDPAddToCart from "./PDPAddToCart.component";
+import BrowserDatabase from "Util/BrowserDatabase";
+import { ONE_MONTH_IN_SECONDS } from 'Util/Request/QueryDispatcher';
+import { NOTIFY_EMAIL } from './PDPAddToCard.config';
 
 export const mapStateToProps = (state) => ({
   product: state.PDP.product,
@@ -27,8 +29,7 @@ export const mapStateToProps = (state) => ({
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-  showNotification: (type, message) =>
-    dispatch(showNotification(type, message)),
+  showNotification: (type, message) => dispatch(showNotification(type, message)),
   getCartTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId),
   addProductToCart: (
     productData,
@@ -230,7 +231,16 @@ export class PDPAddToCartContainer extends PureComponent {
 
     sendNotifyMeEmail(data).then((response) => {
       if (response && response.success) {//if success
-        this.setState({ notifyMeSuccess: true, isOutOfStock: false });
+        if (response.message) {
+          showNotification("error", response.message);
+          this.setState({ notifyMeSuccess: false, isOutOfStock: false });
+        } else {
+          this.setState({ notifyMeSuccess: true, isOutOfStock: false });
+          BrowserDatabase.setItem(email, NOTIFY_EMAIL, ONE_MONTH_IN_SECONDS);
+          setTimeout(() => {
+            this.setState({ notifyMeSuccess: false, isOutOfStock: false });
+          }, 4000);
+        }
       } else {//if error
         showNotification("error", __('Something went wrong.'));
       }
