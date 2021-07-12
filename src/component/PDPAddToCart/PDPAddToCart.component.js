@@ -7,6 +7,8 @@ import PDPSizeGuide from '../PDPSizeGuide';
 import './PDPAddToCart.style';
 import Spinner from "react-spinkit";
 import NotifySuccessImg from "./icons/success-circle.png";
+import { NOTIFY_EMAIL } from './PDPAddToCard.config';
+import BrowserDatabase from "Util/BrowserDatabase";
 
 
 
@@ -30,7 +32,7 @@ class PDPAddToCart extends PureComponent {
     };
 
     state = {
-        notifyMeEmail: "",
+        notifyMeEmail: BrowserDatabase.getItem(NOTIFY_EMAIL) || "",
         isIPhoneNavigationHidden: false,
         pageYOffset: window.innerHeight,
         isRoundedIphone: this.isRoundedIphoneScreen() ?? false
@@ -102,7 +104,7 @@ class PDPAddToCart extends PureComponent {
             selectedSizeCode,
             onSizeSelect
         } = this.props;
-        const isNotAvailable = simple_products[code].quantity === 0;
+        const isNotAvailable = parseInt(simple_products[code].quantity) === 0;
 
         return (
             <div block="PDPAddToCart-SizeSelector" elem={isNotAvailable ? "SizeOptionContainerOOS" : "SizeOptionContainer"}>
@@ -315,7 +317,7 @@ class PDPAddToCart extends PureComponent {
                 <span block="PDPAddToCart" elem="OutOfStockHeading">{__("out of stock")}</span>
                 <span block="PDPAddToCart" elem="NotifyWhenAvailable">{__("Notify me when it’s available")}</span>
                 <div block="PDPAddToCart" elem="EmailSendContainer">
-                    <input block="PDPAddToCart" elem="EmailInput" placeholder="ALITA@GMAIL.COM" value={notifyMeEmail}
+                    <input block="PDPAddToCart" elem="EmailInput" placeholder={`${__("Email")}*`} value={notifyMeEmail}
                         disabled={notifyMeLoading}
                         onChange={({ target }) => {
                             this.setState({ notifyMeEmail: target.value })
