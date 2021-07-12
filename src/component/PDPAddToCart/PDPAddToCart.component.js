@@ -107,7 +107,10 @@ class PDPAddToCart extends PureComponent {
         const isNotAvailable = parseInt(simple_products[code].quantity) === 0;
 
         return (
-            <div block="PDPAddToCart-SizeSelector" elem={isNotAvailable ? "SizeOptionContainerOOS" : "SizeOptionContainer"}>
+            <div block="PDPAddToCart-SizeSelector" elem={isNotAvailable ? "SizeOptionContainerOOS" : "SizeOptionContainer"}
+                onClick={() => {
+                    onSizeSelect({ target: { value: code } })
+                }}>
                 <input
                     id={code}
                     key={code}
@@ -116,7 +119,6 @@ class PDPAddToCart extends PureComponent {
                     name="size"
                     block="PDPAddToCart"
                     value={code}
-                    onChange={onSizeSelect}
                     checked={selectedSizeCode === code}
                 />
                 <label for={code}>
