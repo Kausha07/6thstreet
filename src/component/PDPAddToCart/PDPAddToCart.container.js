@@ -242,7 +242,6 @@ export class PDPAddToCartContainer extends PureComponent {
         }
       } else {//if error
         showNotification("error", __('Something went wrong.'));
-        this.setState({ notifyMeSuccess: false, isOutOfStock: false });
       }
       this.setState({ notifyMeLoading: false });
     });
