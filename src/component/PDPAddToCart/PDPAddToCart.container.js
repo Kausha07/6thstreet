@@ -93,7 +93,7 @@ export class PDPAddToCartContainer extends PureComponent {
     this.state = {
       sizeObject: {},
       mappedSizeObject: {},
-      selectedSizeType: "eu",
+      selectedSizeType: "uk",
       selectedSizeCode: "",
       insertedSizeStatus: true,
       isLoading: false,
@@ -188,7 +188,7 @@ export class PDPAddToCartContainer extends PureComponent {
 
   componentDidMount() {
     const {
-      product: { sku, in_stock },
+      product: { sku, in_stock, size_uk },
       getProductStock,
     } = this.props;
     const {
@@ -197,6 +197,8 @@ export class PDPAddToCartContainer extends PureComponent {
 
     this.setState({ processingRequest: true });
     getProductStock(sku).then((response) => {
+      console.log("getProductStock", response)
+      console.log("this.props.product", this.props.product)
       const allSizes = Object.entries(response).reduce((acc, size) => {
         const sizeCode = size[0];
         const { quantity } = size[1];
@@ -213,7 +215,7 @@ export class PDPAddToCartContainer extends PureComponent {
         sizeCodes: allSizes,
       };
 
-      this.setState({ processingRequest: false, mappedSizeObject: object, productStock: response, isOutOfStock: in_stock === 0 });
+      this.setState({ processingRequest: false, mappedSizeObject: object, productStock: response, isOutOfStock: in_stock === 0 && size_uk.length === 0 });
     });
   }
 
@@ -246,7 +248,7 @@ export class PDPAddToCartContainer extends PureComponent {
       this.setState({ notifyMeLoading: false });
     });
   }
-  
+
 
   componentDidUpdate(prevProps, _) {
     const {
@@ -261,28 +263,6 @@ export class PDPAddToCartContainer extends PureComponent {
       this.clearTimeAll();
       this.proceedToCheckout();
     }
-  }
-
-  sendNotifyMeEmail(email) {
-    const {
-      locale,
-      product: { sku },
-      sendNotifyMeEmail,
-      showNotification
-    } = this.props;
-    let data = { email, sku, locale };
-
-    this.setState({ notifyMeLoading: true });
-
-    sendNotifyMeEmail(data).then((response) => {
-      if (response && response.success) {//if success
-        this.setState({ notifyMeSuccess: true, isOutOfStock: false });
-      } else {
-        // if error
-        showNotification("error", __('Something went wrong.'));
-      }
-      this.setState({ notifyMeLoading: false });
-    });
   }
 
   containerProps = () => {
@@ -310,11 +290,12 @@ export class PDPAddToCartContainer extends PureComponent {
 
   onSizeSelect({ target }) {
     const { value } = target;
-    const { productStock, isOutOfStock } = this.state;
+    const { isOutOfStock } = this.state;
+    const { product: { simple_products } } = this.props;
     let outOfStockVal = isOutOfStock;
-    if (productStock && productStock[value]) {
-      const selectedSize = productStock[value];
-      if (selectedSize['quantity'] && parseInt(selectedSize['quantity'], 0) === 0) {
+    if (simple_products && simple_products[value]) {
+      const selectedSize = simple_products[value];
+      if (selectedSize['quantity'] == 0) {
         outOfStockVal = true;
       } else {
         outOfStockVal = false;

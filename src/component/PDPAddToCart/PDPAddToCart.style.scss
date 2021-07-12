@@ -533,16 +533,28 @@ $select-arrow-width: 6px !default;
     animation: fadeIn 2s;
     box-shadow: 0px 0px 11px rgba(0, 0, 0, 0.1);
 
-    img {
-      width: 40px;
-      height: 40px;
-      display: block;
-      margin: 20px auto;
+        img {
+        width: 40px;
+        height: 40px;
+        display: block;
+        margin: 20px auto;
+        }
+
+        span {
+            width: 70%;
+            display: block;
+            margin: 0 auto;
+            font-size: 14px;
+            color: #000000;
+            line-height: 19px;
+            text-align: center;
+        }
     }
 
-        @include mobile() {
-            width: 100%;
-        }
+    #notavailable{
+        width: 100%;
+        max-width: 366px;
+        text-align: center;
     }
 }
 
