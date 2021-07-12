@@ -109,7 +109,7 @@ const createCustomQuerySuggestions = (hit, resArray, sourceIndexName) => {
     genderModifiedQuery = `${gender} ${query}`;
   }
   // if query does include brands
-  if (query.toUpperCase().includes(brand_name[0].value.toUpperCase())) {
+  if (query?.toUpperCase().includes(brand_name[0]?.value.toUpperCase())) {
     if (checkForValidSuggestion(genderModifiedQuery, [...resArray, ...arr])) {
       addSuggestion(
         genderModifiedQuery,
@@ -117,15 +117,15 @@ const createCustomQuerySuggestions = (hit, resArray, sourceIndexName) => {
         [
           {
             type: "brand",
-            value: brand_name[0].value,
+            value: brand_name[0]?.value,
           },
         ],
-        brand_name[0].count,
+        brand_name[0]?.count,
         true,
         arr
       );
     }
-    categories_level1.forEach((ele) => {
+    categories_level1?.forEach((ele) => {
       const suggestionLabel = `${brand_name[0].value} ${ele.value.replaceAll(
         "/// ",
         ""
@@ -152,7 +152,7 @@ const createCustomQuerySuggestions = (hit, resArray, sourceIndexName) => {
       }
     });
 
-    categories_level2.forEach((ele) => {
+    categories_level2?.forEach((ele) => {
       const val = ele.value.split(" /// ");
       const testQuery = `${brand_name[0].value} ${[
         ...val.slice(0, val.length - 2),
@@ -180,7 +180,7 @@ const createCustomQuerySuggestions = (hit, resArray, sourceIndexName) => {
       }
     });
 
-    categories_level3.forEach((ele) => {
+    categories_level3?.forEach((ele) => {
       const val = ele.value.split(" /// ");
       const formattedQuery = ele.value.replaceAll("/// ", "");
       const testQuery = `${brand_name[0].value} ${[
@@ -209,7 +209,7 @@ const createCustomQuerySuggestions = (hit, resArray, sourceIndexName) => {
   }
   // if query does not include brands
   else {
-    categories_level1.forEach((ele) => {
+    categories_level1?.forEach((ele) => {
       const suggestionLabel = ele.value.replaceAll("/// ", "");
 
       if (checkForValidSuggestion(suggestionLabel, [...resArray, ...arr])) {
@@ -229,7 +229,7 @@ const createCustomQuerySuggestions = (hit, resArray, sourceIndexName) => {
       }
     });
 
-    categories_level2.forEach((ele) => {
+    categories_level2?.forEach((ele) => {
       const val = ele.value.split(" /// ");
       const testQuery = `${[
         ...val.slice(0, val.length - 2),
@@ -253,7 +253,7 @@ const createCustomQuerySuggestions = (hit, resArray, sourceIndexName) => {
       }
     });
 
-    categories_level3.forEach((ele) => {
+    categories_level3?.forEach((ele) => {
       const val = ele.value.split(" /// ");
       const formattedQuery = ele.value.replaceAll("/// ", "");
       const testQuery = `${[
@@ -286,15 +286,15 @@ const createCustomQuerySuggestions = (hit, resArray, sourceIndexName) => {
       ])
     ) {
       addSuggestion(
-        `${brand_name[0].value} ${genderModifiedQuery}`,
-        `${brand_name[0].value} ${genderModifiedQuery}`,
+        `${brand_name[0]?.value} ${genderModifiedQuery}`,
+        `${brand_name[0]?.value} ${genderModifiedQuery}`,
         [
           {
             type: "brand",
             value: brand_name[0].value,
           },
         ],
-        brand_name[0].count,
+        brand_name[0]?.count,
         true,
         arr
       );
@@ -323,11 +323,11 @@ const checkForValidSuggestion = (value, arr) => {
     return false;
 
   if (
-    value.toUpperCase() === gender.toUpperCase() ||
-    value.toUpperCase() === "KIDS BABY GIRL" ||
-    value.toUpperCase() === "KIDS GIRL" ||
-    value.toUpperCase() === "KIDS BOY" ||
-    value.toUpperCase() === "KIDS BABY BOY"
+    value?.toUpperCase() === gender.toUpperCase() ||
+    value?.toUpperCase() === "KIDS BABY GIRL" ||
+    value?.toUpperCase() === "KIDS GIRL" ||
+    value?.toUpperCase() === "KIDS BOY" ||
+    value?.toUpperCase() === "KIDS BABY BOY"
   )
     return false;
 
@@ -354,7 +354,7 @@ const checkForValidSuggestion = (value, arr) => {
         .sort()
         .join(" ") ===
       value
-        .replace(/[&-]/g, "")
+        ?.replace(/[&-]/g, "")
         .replace(/^\s+|\s+$/g, "")
         .replace(/\s+/g, " ")
         .toUpperCase()
@@ -384,18 +384,18 @@ export const formatQuerySuggestions = (query) => {
 
   let regex = new RegExp("\\b" + avoidFilter + "\\b", "i");
   return query
-    .replace(regex, "")
+    ?.replace(regex, "")
     .replace(/^\s+|\s+$/g, "")
     .replace(/\s+/g, " ");
 };
 
 export const getHighlightedText = (text, highlight) => {
   // Split on highlight term and include term into parts, ignore case
-  const parts = text.split(new RegExp(`(${highlight})`, "gi"));
+  const parts = text?.split(new RegExp(`(${highlight})`, "gi"));
   return (
     <span>
       {" "}
-      {parts.map((part, i) => (
+      {parts?.map((part, i) => (
         <span
           key={i}
           style={

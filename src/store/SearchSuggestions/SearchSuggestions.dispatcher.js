@@ -4,13 +4,17 @@ import { getCustomQuerySuggestions } from "Util/API/endpoint/Suggestions/Suggest
 import { formatProductSuggestions } from "Util/API/endpoint/Suggestions/Suggestions.format";
 import Algolia from "Util/API/provider/Algolia";
 import { isArabic } from "Util/App";
-// import { getUUIDToken } from 'Util/Auth';
-// import { VIEW_SEARCH_RESULTS_ALGOLIA } from 'Util/Event';
 
 const PRODUCT_RESULT_LIMIT = 8;
+const QUERY_SUGGESTION_LIMIT = 5;
 
 export class SearchSuggestionsDispatcher {
-  async requestSearchSuggestions(search, sourceIndexName, dispatch) {
+  async requestSearchSuggestions(
+    search,
+    sourceIndexName,
+    sourceQuerySuggestionIndex,
+    dispatch
+  ) {
     const {
       AppState: { gender },
     } = getStore().getState();
@@ -64,19 +68,18 @@ export class SearchSuggestionsDispatcher {
 
       // In case anyone needs desktop data (use this!)
       // const lang = language === 'en' ? 'english' : 'arabic';
-      const lang = isArabic() ? "arabic" : "english";
-
+      // console.log("sourceQuerySuggestionIndex", sourceQuerySuggestionIndex);
       const hits = await new Algolia({
-        index: `stage_magento_${lang}_products_query_suggestions`,
+        index: sourceQuerySuggestionIndex,
       }).getSuggestions(
         isArabic()
           ? {
               query: search,
-              limit: 5,
+              limit: QUERY_SUGGESTION_LIMIT,
             }
           : {
               query: search,
-              limit: 5,
+              limit: QUERY_SUGGESTION_LIMIT,
             }
       );
       const querySuggestions =
