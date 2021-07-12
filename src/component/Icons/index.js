@@ -7,5 +7,6 @@ import Favourite from './Favourite';
 import ShareFilled from './ShareFilled';
 import Select from './Select';
 import Share from './Share';
+import Shipping from './Shipping';
 
-export { ChevronDown, ChevronRight, ChevronUp, Close, FavouriteFilled, Favourite, ShareFilled, Select, Share }
+export { ChevronDown, ChevronRight, ChevronUp, Close, FavouriteFilled, Favourite, ShareFilled, Select, Share, Shipping }

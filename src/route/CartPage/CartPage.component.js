@@ -8,7 +8,6 @@
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
-
 import CartCoupon from 'Component/CartCoupon';
 import CartItem from 'Component/CartItem';
 import CmsBlock from 'Component/CmsBlock';
@@ -30,8 +29,9 @@ import { ClubApparelMember } from 'Util/API/endpoint/ClubApparel/ClubApparel.typ
 import { getCurrency, getDiscountFromTotals, isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
 
+import { Shipping } from 'Component/Icons'
+
 import ClubApparel from './icons/club-apparel.png';
-import Delivery from './icons/delivery-truck.png';
 
 import './CartPage.style';
 
@@ -249,10 +249,14 @@ export class CartPage extends PureComponent {
               elem="PromoBlock"
             >
                 <figcaption block="CartPage" elem="PromoText" mods={ { isArabic } }>
-                    <img src={ Delivery } alt="Delivery icon" />
-                    { __('Add ') }
+                    <Shipping />
+                    &nbsp;
+                    { __('Add') }
+                    &nbsp;
                     <span>{ `${currency_code } ${avail_free_shipping_amount.toFixed(3)} ` }</span>
+                    &nbsp;
                     { __('more to your cart for ') }
+                    &nbsp;
                     <span>{ __('Free delivery') }</span>
                 </figcaption>
             </figure>
