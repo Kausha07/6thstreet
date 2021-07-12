@@ -20,12 +20,12 @@
         position: absolute;
         width: 2.1rem;
         height: 2.1rem;
-        background-image: url(./icons/heart.png);
+        background-image: url(./icons/favorites.png);
         background-size: 2.1rem;
         background-repeat: no-repeat;
 
         &_black {
-            background-image: url(./icons/heart-black.png);
+            background-image: url(./icons/favorites-active.png);
         }
 
         @include desktop() {

@@ -1,303 +1,57 @@
 .Container {
-  padding: 30px;
-  @include mobile {
-    padding: 10px;
-    margin-top: 165px;
-  }
-  &-Title {
-    font-weight: 400;
-    padding: 0 5px;
+    padding: 30px;
     @include mobile {
-      text-align: center;
+      padding: 10px;
+      margin-top: 165px;
     }
-  }
-}
-
-#live {
-  .spck-watch-button {
-    background: #f96446 !important;
-  }
-  .spck-list:empty::before{
-    content: 'No Upcoming Videos';
-    font-size: 16px;
-    padding-left:5px;
-
-  }
-}
-#live,
-#archived {
-  margin-bottom: 30px;
-  .spck-list {
-    display: flex !important;
-    flex-wrap: nowrap !important;
-    overflow-x: auto !important;
-    width: 100% !important;
-    justify-content: flex-start;
-    // @include scrollbar(10px, pink, red);
-    &::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: #585757;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: #dcdcdc;
-    }
-
-    // For Internet Explorer
-    & {
-      scrollbar-face-color: #585757;
-      scrollbar-track-color: #dcdcdc;
-    }
-  }
-
-  .spck-wrapper {
-    flex-direction: column !important;
-    max-height: 1000px !important;
-    padding: 5px !important;
-  }
-  // .spck-shop-info {
-  //   padding: 5px;
-  // }
-  .spck-shop-info {
-    left: 5px;
-    bottom: 0;
-    position: absolute;
-    // width: 100%;
-    width: calc(100% - 10px);
-    height: auto;
-    background: rgba(255, 255, 255, 0.7);
-    padding: unset;
-    @include tablet {
-      left: 5px;
-      bottom: 0;
-      position: absolute;
-      // width: 100%;
-      width: calc(100% - 10px);
-      height: auto;
-      background: rgba(255, 255, 255, 0.7);
-      padding: unset;
-    }
-
-    @include mobile {
-      left: 5px;
-      bottom: 0;
-      position: absolute;
-      // width: 100%;
-      width: calc(100% - 10px);
-      height: auto;
-      background: rgba(255, 255, 255, 0.7);
-      padding: unset;
-    }
-  }
-  .spck-event-date {
-    font-family: inherit;
-    color: #ea0c0f;
-    font-weight: 500;
-    margin: unset !important;
-    text-align: left !important;
-    // padding: 0 !important;
-    padding: 0 10px 0 10px !important;
-    @include tablet {
-      padding: 0 10px 0 10px !important;
-    }
-  }
-  .spck-event-title {
-    margin: 0 !important;
-    font-size: 14px;
-    font-family: inherit;
-    font-weight: bold;
-    line-height: 23px;
-    padding: 0 10px 0 10px !important;
-    @include tablet {
-      padding: 0 10px 0 10px !important;
-    }
-  }
-  .spck-event-description {
-    margin: 0 0 10px 0 !important;
-    font-family: inherit;
-    padding: 0 10px 0 10px !important;
-  }
-  .spck-party-image {
-    max-width: 100% !important;
-  }
-  .spck-box {
-    height: auto !important;
-    min-width: 25%;
-    max-width: 25%;
-    margin-bottom: 30px;
-    margin-top: 0;
-    box-shadow: none;
-
-    @include mobile {
-      min-width: 80%;
-      min-height: auto;
-    }
-    @include tablet {
-      min-width: 30%;
-      max-width: 30%;
-      height: auto !important;
-      min-height: auto;
-    }
-    &:only-child {
+    &-Title {
+      font-weight: 400;
+      padding: 0 5px;
       @include mobile {
-        min-width: 100% !important;
+        text-align: center;
       }
     }
-    // &:last-child {
-    //   @include mobile {
-    //     min-width: 100% !important;
-    //   }
-    // }
   }
-  // .spck-box:first-child:nth-last-child(n + 1) ~ .spck-box {
-  //   @include mobile {
-  //     min-width: 80% !important;
-  //   }
-  // }
 
-  li.spck-wrapper::before {
-    content: "";
-  }
-  .spck-watch-button {
-    font-family: inherit;
-
-    @include mobile {
-      margin: 0;
-      width: 100% !important;
-    }
-    @include tablet {
-      margin: 0;
-      width: 100% !important;
-    }
-  }
-  .spck-ical-button {
-    right: 0;
-    bottom: 0;
-    @include mobile {
-      margin: 0 !important;
-      width: 100% !important;
+  #live {
+    .spck-watch-button {
       background: #f96446 !important;
     }
-    @include tablet {
-      margin: 0 !important;
-      width: 100% !important;
-      background: #f96446 !important;
-    }
-  }
-  .spck-timer-block {
-    height: 40px !important;
-    width: calc(100% - 40px) !important;
-    color: #fff;
-    background: #f96446;
-    border-color: #f96446 !important;
-    border-radius: 3px 0px 0px 3px !important;
-  }
-}
+    .spck-list:empty::before{
+      content: 'No Upcoming Videos';
+      font-size: 16px;
+      padding-left:5px;
 
-#archived {
-  @include tablet {
-    margin-bottom: 80px;
-  }
-  .spck-list:empty::before{
-    content: 'No Recorded Videos';
-    font-size: 16px;
-    padding-left:5px;
-  }
-}
-
-#single {
-  margin-bottom: 30px;
-  .spck-event-date {
-    font-family: inherit;
-    font-size: 16px;
-    font-weight: 500;
-  }
-  .spck-event-title {
-    font-family: inherit;
-    font-weight: 600;
-    font-size: 20px;
-  }
-
-  .spck-event-description {
-    font-family: inherit;
-  }
-  .spck-box-one {
-    padding: 0;
-    box-shadow: none;
-  }
-  .spck-watch-button {
-    font-family: inherit;
-    margin: 0 !important;
-    @include mobile {
-      margin: 0 !important;
-    }
-    @include tablet {
-      margin: 0 !important;
-      width: 100% !important;
     }
   }
-  .spck-wrapper {
-    box-shadow: 0 0 6px #ccc;
-  }
-  li {
-    @include desktop {
-      padding-left: 0;
-    }
-    @include tablet {
-      padding-left: 0;
-    }
-  }
-  li::before {
-    content: "";
-  }
-
-  .spck-shop-info {
-    @include mobile {
-      left: 5px;
-      bottom: 0;
-      position: absolute;
-      // width: 100%;
-      width: calc(100% - 10px);
-      height: auto;
-      background: rgba(255, 255, 255, 0.7);
-      padding: unset;
-    }
-    @include tablet {
-      left: 0;
-      bottom: 0;
-      position: absolute;
-      // width: 100%;
-      width: 100%;
-      height: auto;
-      background: rgba(255, 255, 255, 0.7);
-      padding: unset;
-    }
-  }
-  .spck-box {
-    @include mobile {
-      height: auto !important;
-      margin-bottom: 30px;
-      margin-top: 0;
-      box-shadow: none;
-      min-width: 100%;
-      min-height: auto;
-    }
-    @include tablet {
-      height: auto !important;
-      min-height: auto;
-    }
-  }
-  @include mobile {
+  #live,
+  #archived {
+    margin-bottom: 30px;
     .spck-list {
       display: flex !important;
       flex-wrap: nowrap !important;
       overflow-x: auto !important;
       width: 100% !important;
       justify-content: flex-start;
+      // @include scrollbar(10px, pink, red);
+      &::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background: #585757;
+      }
+
+      &::-webkit-scrollbar-track {
+        background: #dcdcdc;
+      }
+
+      // For Internet Explorer
+      & {
+        scrollbar-face-color: #585757;
+        scrollbar-track-color: #dcdcdc;
+      }
     }
 
     .spck-wrapper {
@@ -305,7 +59,40 @@
       max-height: 1000px !important;
       padding: 5px !important;
     }
+    // .spck-shop-info {
+    //   padding: 5px;
+    // }
+    .spck-shop-info {
+      left: 5px;
+      bottom: 0;
+      position: absolute;
+      // width: 100%;
+      width: calc(100% - 10px);
+      height: auto;
+      background: rgba(255, 255, 255, 0.7);
+      padding: unset;
+      @include tablet {
+        left: 5px;
+        bottom: 0;
+        position: absolute;
+        // width: 100%;
+        width: calc(100% - 10px);
+        height: auto;
+        background: rgba(255, 255, 255, 0.7);
+        padding: unset;
+      }
 
+      @include mobile {
+        left: 5px;
+        bottom: 0;
+        position: absolute;
+        // width: 100%;
+        width: calc(100% - 10px);
+        height: auto;
+        background: rgba(255, 255, 255, 0.7);
+        padding: unset;
+      }
+    }
     .spck-event-date {
       font-family: inherit;
       color: #ea0c0f;
@@ -314,6 +101,9 @@
       text-align: left !important;
       // padding: 0 !important;
       padding: 0 10px 0 10px !important;
+      @include tablet {
+        padding: 0 10px 0 10px !important;
+      }
     }
     .spck-event-title {
       margin: 0 !important;
@@ -322,6 +112,9 @@
       font-weight: bold;
       line-height: 23px;
       padding: 0 10px 0 10px !important;
+      @include tablet {
+        padding: 0 10px 0 10px !important;
+      }
     }
     .spck-event-description {
       margin: 0 0 10px 0 !important;
@@ -331,14 +124,237 @@
     .spck-party-image {
       max-width: 100% !important;
     }
+    .spck-box {
+      height: auto !important;
+      min-width: 25%;
+      max-width: 25%;
+      margin-bottom: 30px;
+      margin-top: 0;
+      box-shadow: none;
+
+      @include mobile {
+        min-width: 80%;
+        min-height: auto;
+      }
+      @include tablet {
+        min-width: 30%;
+        max-width: 30%;
+        height: auto !important;
+        min-height: auto;
+      }
+      &:only-child {
+        @include mobile {
+          min-width: 100% !important;
+        }
+      }
+      // &:last-child {
+      //   @include mobile {
+      //     min-width: 100% !important;
+      //   }
+      // }
+    }
+    // .spck-box:first-child:nth-last-child(n + 1) ~ .spck-box {
+    //   @include mobile {
+    //     min-width: 80% !important;
+    //   }
+    // }
 
     li.spck-wrapper::before {
       content: "";
     }
     .spck-watch-button {
-      margin: 0;
-      width: 100% !important;
+      font-family: inherit;
+
+      @include mobile {
+        margin: 0;
+        width: 100% !important;
+      }
+      @include tablet {
+        margin: 0;
+        width: 100% !important;
+      }
+    }
+    .spck-ical-button {
+      right: 0;
+      @include desktop{
+        bottom: 0 !important;
+      }
+
+      @include mobile {
+        margin: 0 !important;
+        width: 100% !important;
+        background: #f96446 !important;
+      }
+      @include tablet {
+        margin: 0 !important;
+        width: 100% !important;
+        background: #f96446 !important;
+      }
+    }
+    .spck-timer-block {
+      height: 40px !important;
+      width: calc(100% - 40px) !important;
+      color: #fff;
+      background: #f96446;
+      border-color: #f96446 !important;
+      border-radius: 3px 0px 0px 3px !important;
     }
   }
-}
 
+  #archived {
+    @include tablet {
+      margin-bottom: 80px;
+    }
+    .spck-list:empty::before{
+      content: 'No Recorded Videos';
+      font-size: 16px;
+      padding-left:5px;
+    }
+  }
+
+  #single {
+    margin-bottom: 30px;
+    .spck-event-date {
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 500;
+    }
+    .spck-list{
+        justify-content: center;
+    }
+    .spck-ical-button {
+        right: 0;
+        @include desktop{
+          bottom: 0 !important;
+        }
+    }
+    .spck-event-title {
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 20px;
+    }
+    .spck-list{
+        @include desktop{
+            justify-content: center;
+        }
+    }
+
+    .spck-event-description {
+      font-family: inherit;
+    }
+    .spck-box-one {
+      padding: 0;
+      box-shadow: none;
+    }
+    .spck-watch-button {
+      font-family: inherit;
+      margin: 0 !important;
+      @include mobile {
+        margin: 0 !important;
+      }
+      @include tablet {
+        margin: 0 !important;
+        width: 100% !important;
+      }
+    }
+    .spck-wrapper {
+      box-shadow: 0 0 6px #ccc;
+    }
+    li {
+      @include desktop {
+        padding-left: 0;
+      }
+      @include tablet {
+        padding-left: 0;
+      }
+    }
+    li::before {
+      content: "";
+    }
+
+    .spck-shop-info {
+      @include mobile {
+        left: 5px;
+        bottom: 0;
+        position: absolute;
+        // width: 100%;
+        width: calc(100% - 10px);
+        height: auto;
+        background: rgba(255, 255, 255, 0.7);
+        padding: unset;
+      }
+      @include tablet {
+        left: 0;
+        bottom: 0;
+        position: absolute;
+        // width: 100%;
+        width: 100%;
+        height: auto;
+        background: rgba(255, 255, 255, 0.7);
+        padding: unset;
+      }
+    }
+    .spck-box {
+      @include mobile {
+        height: auto !important;
+        margin-bottom: 30px;
+        margin-top: 0;
+        box-shadow: none;
+        min-width: 100%;
+        min-height: auto;
+      }
+      @include tablet {
+        height: auto !important;
+        min-height: auto;
+      }
+    }
+    @include mobile {
+      .spck-list {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        width: 100% !important;
+        justify-content: flex-start;
+      }
+
+      .spck-wrapper {
+        flex-direction: column !important;
+        max-height: 1000px !important;
+        padding: 5px !important;
+      }
+
+      .spck-event-date {
+        font-family: inherit;
+        color: #ea0c0f;
+        font-weight: 500;
+        margin: unset !important;
+        text-align: left !important;
+        // padding: 0 !important;
+        padding: 0 10px 0 10px !important;
+      }
+      .spck-event-title {
+        margin: 0 !important;
+        font-size: 14px;
+        font-family: inherit;
+        font-weight: bold;
+        line-height: 23px;
+        padding: 0 10px 0 10px !important;
+      }
+      .spck-event-description {
+        margin: 0 0 10px 0 !important;
+        font-family: inherit;
+        padding: 0 10px 0 10px !important;
+      }
+      .spck-party-image {
+        max-width: 100% !important;
+      }
+
+      li.spck-wrapper::before {
+        content: "";
+      }
+      .spck-watch-button {
+        margin: 0;
+        width: 100% !important;
+      }
+    }
+  }

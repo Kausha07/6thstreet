@@ -96,16 +96,17 @@
       .Footer {
         margin-top: 15px;
         &-Title {
-          text-transform: uppercase;
+          text-transform: capitalize;
           margin-bottom: 0px;
           text-decoration: none !important;
           color: #000000;
           font-family: "Avenir Next";
           font-size: 18px;
-          font-weight: 500;
-          letter-spacing: 2px;
+          font-weight: 600;
+          letter-spacing: 0;
           line-height: 25px;
           text-align: center;
+
         }
         &-SubTitle {
           // font-size: var(--subtitle-font-size);
@@ -194,12 +195,12 @@
       padding: 0px;
       .Footer {
         // color: red;
+        margin-top: 5px;
         &-Title {
           display: block;
           font-weight: var(--fw-medium);
           font-size: var(--title-font-size);
           margin-bottom: 0px;
-          line-height: 1.2;
         }
         &-SubTitle {
           font-size: var(--subtitle-font-size);

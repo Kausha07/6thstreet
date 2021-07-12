@@ -1,15 +1,20 @@
 /* eslint-disable react/jsx-no-bind */
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
-
+import { connect } from "react-redux";
 import Link from "Component/Link";
 import MenuDynamicContent from "Component/MenuDynamicContent";
 import { CategoryData } from "Util/API/endpoint/Categories/Categories.type";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
+import { MOBILE_MENU_SIDEBAR_ID } from "Component/MobileMenuSideBar/MoblieMenuSideBar.config";
+import { toggleOverlayByKey } from "Store/Overlay/Overlay.action";
 
 import "./MenuCategory.style";
 
+export const mapDispatchToProps = (_dispatch) => ({
+  toggleOverlayByKey: (key) => _dispatch(toggleOverlayByKey(key)),
+});
 class MenuCategory extends PureComponent {
   static propTypes = {
     data: PropTypes.arrayOf(CategoryData).isRequired,
@@ -31,6 +36,11 @@ class MenuCategory extends PureComponent {
   handleHover(isVisible) {
     this.setState({ isVisible });
   }
+  toggleMobileMenuSideBar = () => {
+    const { toggleOverlayByKey } = this.props;
+
+    toggleOverlayByKey(MOBILE_MENU_SIDEBAR_ID);
+  };
 
   renderDynamicContent() {
     const { isVisible } = this.state;
@@ -40,7 +50,10 @@ class MenuCategory extends PureComponent {
       if (categoryKey === "new_in" && isDefaultCategoryOpen && isMobile.any()) {
         return (
           <div block="DynamicContent" elem="Wrapper">
-            <MenuDynamicContent content={data} />
+            <MenuDynamicContent
+              toggleMobileMenuSideBar={this.toggleMobileMenuSideBar}
+              content={data}
+            />
           </div>
         );
       }
@@ -50,12 +63,20 @@ class MenuCategory extends PureComponent {
     if (isMobile.any()) {
       return (
         <div block="DynamicContent" elem="Wrapper">
-          <MenuDynamicContent content={data} />
+          <MenuDynamicContent
+            toggleMobileMenuSideBar={this.toggleMobileMenuSideBar}
+            content={data}
+          />
         </div>
       );
     }
 
-    return <MenuDynamicContent content={data} />;
+    return (
+      <MenuDynamicContent
+        toggleMobileMenuSideBar={this.toggleMobileMenuSideBar}
+        content={data}
+      />
+    );
   }
 
   getMenuCategoryLink() {
@@ -154,4 +175,4 @@ class MenuCategory extends PureComponent {
   }
 }
 
-export default MenuCategory;
+export default connect(null, mapDispatchToProps)(MenuCategory);

@@ -435,12 +435,15 @@
       overflow-y: auto;
       overflow-x: hidden;
       width: 100%;
+      &::-webkit-scrollbar {
+        width: 5px;
+      }
     }
 
     &_isArabic {
       .CartItem-Wrapper img {
         margin-right: 0;
-        margin-left: 15px;
+        margin-left: 0px;
       }
     }
   }

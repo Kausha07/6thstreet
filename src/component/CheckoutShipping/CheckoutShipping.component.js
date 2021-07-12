@@ -95,13 +95,17 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         <button
           type="submit"
           block={"Button"}
+          form={SHIPPING_STEP}
           disabled={this.checkForDisabling()}
-          mix={{ block: "CheckoutShipping", elem:isPaymentLoading? "LoadingButton": "Button" }}
+          mix={{
+            block: "CheckoutShipping",
+            elem: isPaymentLoading ? "LoadingButton" : "Button",
+          }}
         >
           {!isPaymentLoading ? (
             this.renderButtonsPlaceholder()
           ) : (
-            <Spinner name="three-bounce" color="white" />
+            <Spinner name="three-bounce" color="white" fadeIn="none" />
           )}
           {/* <Spinner name="three-bounce" /> */}
         </button>
@@ -265,25 +269,32 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       </h2>
     );
   }
-
+  onEditSelect() {
+    this.setState({ editAddress: true });
+  }
   renderAddressBook() {
     const {
       onAddressSelect,
       onShippingEstimationFieldsChange,
       shippingAddress,
     } = this.props;
-
+    const { formContent } = this.state;
     return (
       <CheckoutAddressBook
         onAddressSelect={onAddressSelect}
         onShippingEstimationFieldsChange={onShippingEstimationFieldsChange}
         shippingAddress={shippingAddress}
+        formContent={formContent}
+        closeForm={this.closeForm.bind(this)}
+        openForm={this.openForm.bind(this)}
+        showCards={this.showCards}
+        hideCards={this.hideCards}
       />
     );
   }
 
   render() {
-    const { onShippingSuccess, onShippingError} = this.props;
+    const { onShippingSuccess, onShippingError } = this.props;
     const { formContent } = this.state;
     return (
       <div

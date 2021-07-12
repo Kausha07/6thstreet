@@ -15,7 +15,6 @@ class MyAccountReturnList extends PureComponent {
 
     renderReturn(returnItem) {
         const { return_id } = returnItem;
-
         return (
             <MyAccountReturnListItem
               return={ returnItem }

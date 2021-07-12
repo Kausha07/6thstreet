@@ -16,7 +16,7 @@ export class FieldInputContainer extends SourceFieldInputContainer {
             /* eslint-enable react/prop-types, no-unused-vars */
 
             // Props to be transformed
-            isDisabled: disabled,
+            disabled,
             skipValue,
 
             // Props to be chosen on-of

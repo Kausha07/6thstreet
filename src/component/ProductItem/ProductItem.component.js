@@ -12,7 +12,7 @@ import { isArabic } from "Util/App";
 import { getUUIDToken } from "Util/Auth";
 import Event, {
   EVENT_GTM_PRODUCT_CLICK,
-  SELECT_ITEM_ALGOLIA
+  SELECT_ITEM_ALGOLIA,
 } from "Util/Event";
 import "./ProductItem.style";
 
@@ -50,7 +50,7 @@ class ProductItem extends PureComponent {
     }
     Event.dispatch(EVENT_GTM_PRODUCT_CLICK, product);
     if (queryID) {
-      new Algolia().logAlgoliaAnalytics('click',SELECT_ITEM_ALGOLIA, [],{
+      new Algolia().logAlgoliaAnalytics("click", SELECT_ITEM_ALGOLIA, [], {
         objectIDs: [product.objectID],
         queryID,
         userToken: userToken ? `user-${userToken}` : getUUIDToken(),
@@ -152,7 +152,6 @@ class ProductItem extends PureComponent {
       product: { price },
       page,
     } = this.props;
-
     return <Price price={price} page={page} />;
   }
 
@@ -160,7 +159,7 @@ class ProductItem extends PureComponent {
     const {
       product,
       product: { url },
-      qid
+      qid,
     } = this.props;
     let queryID;
     if (!qid) {
@@ -171,12 +170,12 @@ class ProductItem extends PureComponent {
     const { pathname } = new URL(url);
     let urlWithQueryID;
     if (queryID) {
-     urlWithQueryID = `${pathname}?qid=${queryID}`;
+      urlWithQueryID = `${pathname}?qid=${queryID}`;
     } else {
       urlWithQueryID = pathname;
     }
     const linkTo = {
-      pathname:urlWithQueryID,
+      pathname: urlWithQueryID,
       state: {
         product,
       },
@@ -187,7 +186,6 @@ class ProductItem extends PureComponent {
         {" "}
         {this.renderImage()} {this.renderBrand()} {this.renderTitle()}{" "}
         {this.renderPrice()}{" "}
-
       </Link>
     );
   }

@@ -3,6 +3,7 @@ import { PureComponent } from "react";
 import Image from "Component/Image";
 import Link from "Component/Link";
 import { hideActiveOverlay } from "SourceStore/Overlay/Overlay.action";
+import { MOBILE_MENU_SIDEBAR_ID } from "Component/MobileMenuSideBar/MoblieMenuSideBar.config";
 import {
   CategoryButton,
   CategoryItems,
@@ -31,6 +32,12 @@ class MenuGrid extends PureComponent {
     this.showAllCategories = this.showAllCategories.bind(this);
   }
 
+  onItemClick = () => {
+    const { toggleOverlayByKey } = this.props;
+
+    toggleOverlayByKey(MOBILE_MENU_SIDEBAR_ID);
+  };
+
   renderItem = (item, i) => {
     const { image_url, label, link } = item;
 
@@ -49,7 +56,7 @@ class MenuGrid extends PureComponent {
       : link;
 
     return (
-      <Link to={updatedLink} key={i} title={label}>
+      <Link to={updatedLink} key={i} title={label} onClick={this.onItemClick}>
         <Image src={image_url} width="80px" height="80px" ratio="custom" />
         <div block="MenuGrid" elem="ItemLabel">
           {label}

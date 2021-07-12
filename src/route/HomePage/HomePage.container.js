@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
 import { setGender } from "Store/AppState/AppState.action";
@@ -7,6 +8,8 @@ import { updateMeta } from "Store/Meta/Meta.action";
 import { getCountriesForSelect } from "Util/API/endpoint/Config/Config.format";
 import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
 import { capitalize } from "Util/App";
+import { getUUID } from "Util/Auth";
+import { VUE_PAGE_VIEW } from "Util/Event";
 import Logger from "Util/Logger";
 import isMobile from "Util/Mobile";
 import HomePage from "./HomePage.component";
@@ -51,6 +54,18 @@ export class HomePageContainer extends PureComponent {
   }
 
   componentDidMount() {
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
+    VueIntegrationQueries.vueAnalayticsLogger({
+      event_name: VUE_PAGE_VIEW,
+      params: {
+        event: VUE_PAGE_VIEW,
+        pageType: "home",
+        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+        clicked: Date.now(),
+        uuid: getUUID(),
+        referrer: "desktop",
+      },
+    });
     const { gender, toggleBreadcrumbs } = this.props;
     toggleBreadcrumbs(false);
     this.setMetaData(gender);

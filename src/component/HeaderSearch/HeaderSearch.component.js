@@ -101,7 +101,7 @@ class HeaderSearch extends PureComponent {
           autocomplete="off"
           autocorrect="off"
           spellcheck="false"
-          placeholder={__("What are you looking for?")}
+          placeholder={__("Search for items, brands, inspiration and styles")}
           onChange={onSearchChange}
           onFocus={this.onFocus}
           value={search}

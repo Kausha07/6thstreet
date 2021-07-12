@@ -91,7 +91,7 @@ class HeaderTopBar extends NavigationAbstract {
     // debugger;
 
     return (
-      <div block="HeaderTopBar" mods={{ isHidden, isOnMobile }}>
+      <div block="HeaderTopBar" mods={{  isOnMobile }}>
         <div block="HeaderTopBar" elem="ContentWrapper">
           {this.renderNavigationState()}
         </div>

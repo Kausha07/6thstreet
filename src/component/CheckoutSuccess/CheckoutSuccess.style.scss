@@ -62,13 +62,16 @@
     @include mobile {
       margin: 0;
     }
-
     .SuccessMessage {
       &-Icon {
         height: 50px;
         margin: 0 auto;
         margin-top: 20px;
         width: 50px;
+
+        &_isArabic {
+          transform: rotateY(180deg);
+        }
       }
 
       &-Text {
@@ -294,8 +297,6 @@
       }
 
       @include mobile() {
-        // margin-left: -24px;
-        // width: 100vw;
         width: auto;
         margin-inline: 0;
 
@@ -312,6 +313,47 @@
       &-OrderId {
         font-weight: var(--fw-demi);
         font-size: 16px;
+      }
+    }
+
+    .ContactInfo {
+      text-align: center;
+      a + a {
+        margin: 0 !important;
+      }
+      &-Timing {
+        font-size: 13px;
+        display: flex;
+        flex-direction: column;
+        margin: 30px 0;
+      }
+      &-Time {
+        font-weight: var(--fw-bold);
+      }
+      &-Links {
+        display: grid;
+        grid-auto-flow: column;
+        margin: 30px 0;
+        text-decoration: none !important;
+      }
+      &-LinkName {
+        margin-top: 5px;
+      }
+      &-Link,
+      &-LinkMiddle {
+        padding: 0px 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        img {
+          width: 25px;
+          height: 25px;
+        }
+      }
+      &-LinkMiddle {
+        border-right: 2px solid var(--lightest-gray);
+        border-left: 2px solid var(--lightest-gray);
       }
     }
 
@@ -335,6 +377,7 @@
 
         &-Price {
           margin-left: auto;
+          font-weight: var(--fw-bold);
         }
 
         &-TotalTitles {
@@ -416,43 +459,42 @@
       }
 
       .Details {
-        background-color: var(--lightest-gray);
+        width: 50%;
         text-transform: uppercase;
         border-radius: 10px;
-        display: grid;
-        grid-template-columns: 15% 70% 15%;
-        grid-auto-flow: column;
+        display: flex;
         height: auto;
 
         &-TypeLogo {
           width: 70px;
-          display: block;
+          display: flex;
           margin: auto 0;
-
+          justify-content: center;
+          align-items: center;
           img {
-            max-width: 50px;
-            max-height: 50px;
+            max-width: 40px;
+            max-height: 40px;
             margin-left: 15px;
           }
         }
 
         &-TypeTitle {
           display: block;
-          //   margin: auto 0;
           font-size: 14px;
-          //   font-weight: var(--fw-demi);
           text-align: left;
         }
 
         &-Number {
           display: grid;
           grid-auto-flow: column;
-          margin: auto;
+          margin-right: auto;
+          margin-left: 30px;
+
           letter-spacing: 3px;
 
           &-Dots {
             margin-right: 10px;
-            width: 60px;
+            width: 40px;
             display: grid;
             grid-auto-flow: column;
 
@@ -467,6 +509,7 @@
         }
 
         &-Exp {
+          display: none;
           font-size: 14px;
           color: var(--gray-color);
           margin: auto 15px auto auto;
@@ -486,7 +529,8 @@
           }
 
           &-Number {
-            margin: auto;
+            margin-left: auto;
+            margin-right: 30px;
           }
 
           &-Exp {

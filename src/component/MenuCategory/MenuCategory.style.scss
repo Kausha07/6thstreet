@@ -212,8 +212,9 @@
 
     .DynamicContent {
       background-color: var(--white);
-      display: flex;
+      // display: flex;
       height: 390px;
+      overflow: hidden;
       pointer-events: all;
       position: absolute;
       width: var(--main-container-width-dsk);
@@ -221,6 +222,8 @@
       margin-left: auto;
       margin-right: auto;
       left: 0;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
 
       &:after {
         background: rgba(0, 0, 0, 0.7);
@@ -242,22 +245,50 @@
         border-right: 0;
         display: block;
         order: 2;
+        margin: 0 !important;
+        padding: 20px 15px;
 
+        a {
+          width: 100%;
+        }
         .Image {
-          height: 290px;
-          width: auto;
+          height: 100%;
+          width: 100%;
+          max-height: 303px;
+          object-fit: cover;
         }
       }
 
       .MenuBrands {
         order: 1;
-
+        width: 100%;
+        margin: 0;
+        padding: 20px 15px;
         &-ContentWrapper {
+          display: flex;
+          flex-direction: column;
           a {
             .Image {
               display: none;
             }
           }
+        }
+        &-Title {
+          line-height: 16px;
+          margin-bottom: 15px;
+        }
+      }
+      .MenuGrid {
+        width: 100%;
+        margin: 0;
+        padding: 20px 15px;
+        &-Column {
+          display: flex;
+          flex-direction: column;
+        }
+        &-Title {
+          line-height: 16px;
+          margin-bottom: 15px;
         }
       }
     }

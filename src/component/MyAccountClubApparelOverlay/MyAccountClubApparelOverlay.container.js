@@ -22,7 +22,8 @@ export const mapStateToProps = (_state) => ({
 export const mapDispatchToProps = (dispatch) => ({
     hideActiveOverlay: () => dispatch(hideActiveOverlay()),
     linkAccount: (data) => ClubApparelDispatcher.linkAccount(dispatch, data),
-    verifyOtp: (data) => ClubApparelDispatcher.verifyOtp(dispatch, data)
+    verifyOtp: (data) => ClubApparelDispatcher.verifyOtp(dispatch, data),
+    getMember: (id) => ClubApparelDispatcher.getMember(dispatch, id)
 });
 
 export class MyAccountClubApparelOverlayContainer extends PureComponent {
@@ -101,7 +102,7 @@ export class MyAccountClubApparelOverlayContainer extends PureComponent {
     }
 
     verifyOtp(fields) {
-        const { customer: { id }, verifyOtp } = this.props;
+        const { customer: { id }, verifyOtp, getMember } = this.props;
         const { otp } = fields;
         const { memberId, phone } = this.state;
 
@@ -116,7 +117,7 @@ export class MyAccountClubApparelOverlayContainer extends PureComponent {
                     this.setState({
                         state: STATE_SUCCESS,
                         isLoading: false
-                    });
+                    }, ()=>getMember(id));
                 } else {
                     this.setState({
                         state: STATE_NOT_SUCCESS,

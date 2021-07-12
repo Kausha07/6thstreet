@@ -7,9 +7,9 @@ import isMobile from "Util/Mobile";
 import { formatCDNLink } from "Util/Url";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
-import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
 import "./DynamicContentBanner.style";
 
+import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
 class DynamicContentBanner extends PureComponent {
   static propTypes = {
     items: PropTypes.arrayOf(
@@ -21,7 +21,13 @@ class DynamicContentBanner extends PureComponent {
       })
     ).isRequired,
     isMenu: PropTypes.bool,
+    toggleMobileMenuSideBar: PropTypes.any,
   };
+  constructor(props) {
+    super(props);
+    console.log("--------------------- props", this.props);
+    this.onclick = this.onclick.bind(this);
+  }
 
   static defaultProps = {
     isMenu: false,
@@ -32,6 +38,26 @@ class DynamicContentBanner extends PureComponent {
   };
 
   onclick = (item) => {
+    console.log(this.props);
+    const { toggleMobileMenuSideBar } = this.props;
+    if (toggleMobileMenuSideBar) {
+      toggleMobileMenuSideBar();
+    }
+    setTimeout(() => {});
+    // vue analytics
+    // const locale = VueIntegrationQueries.getLocaleFromUrl();
+    // VueIntegrationQueries.vueAnalayticsLogger({
+    //   event_name: VUE_CAROUSEL_CLICK,
+    //   params: {
+    //     event: VUE_CAROUSEL_CLICK,
+    //     pageType: "plp",
+    //     currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+    //     clicked: Date.now(),
+    //     uuid: getUUID(),
+    //     referrer: "desktop",
+    //     widgetID: "vue_visually_similar_slider", // TODO: will be added after vue product slider.
+    //   },
+    // });
     let banner = {
       link: item.link,
       promotion_name: item.promotion_name,

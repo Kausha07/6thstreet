@@ -1,7 +1,8 @@
+import { DEFAULT_STATE_NAME } from "Component/NavigationAbstract/NavigationAbstract.config";
 import PropTypes from "prop-types";
+import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
-import { DEFAULT_STATE_NAME } from "Component/NavigationAbstract/NavigationAbstract.config";
 import { setGender } from "Store/AppState/AppState.action";
 import { updateMeta } from "Store/Meta/Meta.action";
 import { changeNavigationState } from "Store/Navigation/Navigation.action";
@@ -10,12 +11,12 @@ import { setPDPLoading } from "Store/PDP/PDP.action";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
 import { getCountriesForSelect } from "Util/API/endpoint/Config/Config.format";
 import { Product } from "Util/API/endpoint/Product/Product.type";
+import { getUUID } from "Util/Auth";
 import {
   getBreadcrumbs,
   getBreadcrumbsUrl,
 } from "Util/Breadcrumbs/Breadcrubms";
-import Event, { EVENT_GTM_PRODUCT_DETAIL } from "Util/Event";
-
+import Event, { EVENT_GTM_PRODUCT_DETAIL, VUE_PAGE_VIEW } from "Util/Event";
 import PDP from "./PDP.component";
 
 export const BreadcrumbsDispatcher = import(
@@ -45,7 +46,8 @@ export const mapDispatchToProps = (dispatch) => ({
       dispatcher.update(breadcrumbs, dispatch)
     );
   },
-  changeHeaderState: (state) => dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, state)),
+  changeHeaderState: (state) =>
+    dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, state)),
   setGender: (gender) => dispatch(setGender(gender)),
   setMeta: (meta) => dispatch(updateMeta(meta)),
 });
@@ -90,6 +92,26 @@ export class PDPContainer extends PureComponent {
     super(props);
 
     this.requestProduct();
+  }
+
+  componentDidMount() {
+    const {
+      product: { product_type_6s, sku },
+    } = this.props;
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
+    VueIntegrationQueries.vueAnalayticsLogger({
+      event_name: VUE_PAGE_VIEW,
+      params: {
+        event: VUE_PAGE_VIEW,
+        pageType: "pdp",
+        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+        clicked: Date.now(),
+        uuid: getUUID(),
+        referrer: "desktop",
+        sourceProdID: sku,
+        sourceCatgID: product_type_6s, // TODO: replace with category id
+      },
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -201,7 +223,8 @@ export class PDPContainer extends PureComponent {
     }
 
     const countryList = getCountriesForSelect(config);
-    const { label: countryName = "" } = countryList.find((obj) => obj.id === country) || {};
+    const { label: countryName = "" } =
+      countryList.find((obj) => obj.id === country) || {};
 
     setMeta({
       title: __("%s %s | 6thStreet.com %s", brandName, name, countryName),
@@ -232,13 +255,8 @@ export class PDPContainer extends PureComponent {
   }
 
   requestProduct() {
-    const {
-      requestProduct,
-      requestProductBySku,
-      id,
-      setIsLoading,
-      sku,
-    } = this.props;
+    const { requestProduct, requestProductBySku, id, setIsLoading, sku } =
+      this.props;
 
     // ignore product request if there is no ID passed
     if (!id) {
@@ -255,14 +273,9 @@ export class PDPContainer extends PureComponent {
   }
 
   containerProps = () => {
-    const {
-      nbHits,
-      isLoading,
-      brandDescription,
-      brandImg,
-      brandName,
-    } = this.props;
-    
+    const { nbHits, isLoading, brandDescription, brandImg, brandName } =
+      this.props;
+
     const { isLoading: isCategoryLoading } = this.state;
 
     return {

@@ -20,7 +20,7 @@
     padding-left: 0;
     text-align: left;
     // width: 160px;
-    width: 145px;
+    width: 150px;
     height: 30px;
     // font-size: 12px;
     display: none;
@@ -63,7 +63,9 @@
     }
 
     &_isArabic {
-      padding-left: 5px;
+      padding-left: 30px !important;
+      text-align: left !important;
+
       &::after {
         right: 126px;
       }

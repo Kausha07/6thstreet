@@ -1,13 +1,15 @@
 import DragScroll from "Component/DragScroll/DragScroll.component";
 import Link from "Component/Link";
 import PropTypes from "prop-types";
-import React, { PureComponent } from "react";
+import { PureComponent } from "react";
 import { isArabic } from "Util/App";
 import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
 import { formatCDNLink } from "Util/Url";
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import "./DynamicContentSliderWithLabel.style";
+// import VueIntegrationQueries from "Query/vueIntegration.query";
+// import { getUUID } from "Util/Auth";
 
 class DynamicContentSliderWithLabel extends PureComponent {
   static propTypes = {

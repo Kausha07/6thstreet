@@ -30,6 +30,8 @@ class MenuDynamicContent extends PureComponent {
   renderBlock = (block, i) => {
     const { type, ...restProps } = block;
     const Component = this.renderMap[type];
+    const { toggleMobileMenuSideBar } = this.props;
+
     if (!Component) {
       // TODO: implement all types
       Logger.log(type, restProps);
@@ -46,7 +48,13 @@ class MenuDynamicContent extends PureComponent {
       };
     }
 
-    return <Component {...restProps} key={i} />;
+    return (
+      <Component
+        toggleMobileMenuSideBar={toggleMobileMenuSideBar}
+        {...restProps}
+        key={i}
+      />
+    );
   };
 
   renderBlocks = () => {

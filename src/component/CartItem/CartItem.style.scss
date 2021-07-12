@@ -24,32 +24,47 @@
 .CartItem {
   --header-color: var(--cart-item-actions-color);
 
-  border-top: 1px solid var(--Gallery);
+  // border-top: 1px solid var(--Gallery);
+  border-top: none;
   margin: 0;
   font-weight: var(--fw-regular);
   min-height: 140px;
 
   @include desktop {
-    margin: 20px;
+    margin-inline: 20px;
   }
 
   &:first-of-type {
     border-top: none;
   }
+  &-Color {
+    &_isArabic {
+    }
+  }
+  &-Size {
+    &_isArabic {
+    }
+  }
+  &-Pipe {
+    padding-right: 5px;
+    padding-left: 5px;
+  }
 
   &-Quantity {
-    // display: inline-block;
-    // margin-left: 12px;
     display: flex;
     margin-left: auto;
     margin-right: 0;
+
     select {
+      -webkit-appearance: none;
       padding: 7px;
       height: 30px;
       width: 55px;
       border: 1px solid #d1d1d1;
       border-radius: 6px;
       background-color: #ffffff;
+      font-size: 14px;
+      line-height: 14px;
     }
     &::after {
       content: "";
@@ -64,6 +79,14 @@
       margin-top: 12px;
       border: solid var(--text-color);
       border-width: 0 1px 1px 0;
+    }
+    &_isArabic {
+      margin-left: 0;
+      margin-right: auto;
+      &::after {
+        right: unset;
+        left: 14px;
+      }
     }
   }
 
@@ -86,7 +109,7 @@
   &-Option,
   & {
     padding-left: 0;
-    margin-bottom: 10px;
+    // margin-bottom: 10px;
 
     &::before {
       content: none;
@@ -108,6 +131,9 @@
     @include tablet {
       width: 100%;
     }
+    @include mobile {
+      width: 100%;
+    }
 
     &_isLikeTable {
       @include after-mobile {
@@ -120,7 +146,8 @@
 
   &-Wrapper {
     width: 100%;
-    display: flex;
+    // display: flex;
+    display: grid;
     grid-gap: 20px;
     grid-template-columns: auto auto;
     background: var(--cart-item-background);
@@ -198,7 +225,7 @@
     }
 
     &_isCartPage {
-      width: 150px;
+      width: 100px;
     }
   }
 
@@ -216,6 +243,14 @@
 
     span {
       margin-left: 5px;
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+  }
+  &-ColSizeQty {
+    span {
+      margin-left: 0;
       &:first-child {
         margin-left: 0;
       }
@@ -244,6 +279,8 @@
       div {
         text-align: left;
         direction: ltr;
+        padding-right: 0;
+        padding-left: 5px;
       }
     }
 

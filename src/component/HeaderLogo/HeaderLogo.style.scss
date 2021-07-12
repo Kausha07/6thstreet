@@ -14,6 +14,7 @@
   .Image {
     height: 22px;
     width: 30%;
+    // background-color: #fff;
 
     @include before-desktop {
       display: block;
@@ -21,6 +22,7 @@
       margin-left: calc(35% + 30px);
       margin-right: calc(35% - 30px);
 
+      height: 25px;
       &_isArabic {
         margin-left: calc(35% - 19px);
         margin-right: calc(35% + 19px);

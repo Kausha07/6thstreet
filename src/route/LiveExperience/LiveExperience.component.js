@@ -5,17 +5,12 @@ export class LiveExperience extends PureComponent {
   constructor(props) {
     super(props);
   }
-
   componentDidMount() {
     if (this.props.broadcastId) {
       this.renderLiveParty();
-    } else {
-      this.renderUpcomingParty();
-      this.renderArchivedParty();
     }
-
-    // this.renderUpcomingParty();
-    // this.renderArchivedParty();
+    this.renderUpcomingParty();
+    this.renderArchivedParty();
   }
   componentDidUpdate() {
     if (this.props.broadcastId) {
@@ -31,7 +26,7 @@ export class LiveExperience extends PureComponent {
       containerId: "single",
       displayType: "one",
       broadcastId: this.props.broadcastId,
-      staging: false,
+      staging: true,
     };
 
     const el = document.createElement("script");
@@ -48,11 +43,16 @@ export class LiveExperience extends PureComponent {
   renderUpcomingParty = () => {
     const spck = {
       storeId: Config.storeId,
+
       storeType: "sixthstreet",
+
       customColor: "#000000",
+
       containerId: "live",
+
       displayType: "upcoming",
-      staging: false,
+
+      staging: true,
     };
 
     const el = document.createElement("script");
@@ -70,11 +70,16 @@ export class LiveExperience extends PureComponent {
   renderArchivedParty = () => {
     const spck = {
       storeId: Config.storeId,
+
       storeType: "sixthstreet",
+
       customColor: "#000000",
+
       containerId: "archived",
+
       displayType: "vod",
-      staging: false,
+
+      staging: true,
     };
 
     const el = document.createElement("script");
@@ -86,36 +91,31 @@ export class LiveExperience extends PureComponent {
     document.body.appendChild(el);
     setTimeout(() => {
       import("./LiveExperience.style");
-    }, 1000);
+    }, 2000);
   };
 
   render() {
-    const { broadcastId } = this.props;
-
     return (
       <div>
         <div block="Container">
           <div id="single"></div>
-          {!broadcastId ? (
-            <>
-              <div>
-                <h1 block="Container" elem="Title">
-                  {__("COMING NEXT")}
-                </h1>
-                <div id="live"></div>
-              </div>
-              <div>
-                <h1 block="Container" elem="Title">
-                  {__("RECENTLY PLAYED")}
-                </h1>
-                <div id="archived"></div>
-              </div>
-            </>
-          ) : null}
+          { !this.props.broadcastId && <div>
+            <h1 block="Container" elem="Title">
+              {__("COMING NEXT")}
+            </h1>
+            <div id="live"></div>
+          </div> }
+          <div>
+            <h1 block="Container" elem="Title">
+              {__("RECENTLY PLAYED")}
+            </h1>
+            <div id="archived"></div>
+          </div>
         </div>
       </div>
     );
   }
 }
+
 
 export default LiveExperience;
