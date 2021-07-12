@@ -341,7 +341,7 @@ export class MyAccountOverlay extends PureComponent {
               isValidateOnChange
               parentCallback={ this.onCreateChange }
             >
-                <fieldset block="MyAccountOverlay" elem="PhoneNumber">
+                {/* <fieldset block="MyAccountOverlay" elem="PhoneNumber">
                     <PhoneCountryCodeField
                         onSelect={(value) => this.setState({
                             countryCode: value
@@ -357,14 +357,14 @@ export class MyAccountOverlay extends PureComponent {
                         validation={ ['notEmpty', this.getValidationForUserIdentifier()] }
                         onChange={ this.setUserIdentifierType.bind(this) }
                     />
-                </fieldset>
+                </fieldset> */}
                 <fieldset block="MyAccountOverlay" elem="FullName">
                     <Field
                       type="text"
                       placeholder={ __('TYPE YOUR FULL NAME*') }
-                      id="name"
-                      name="name"
-                      autocomplete="name"
+                      id="fullname"
+                      name="fullname"
+                      autocomplete="fullname"
                       validation={ ['notEmpty'] }
                     />
                 </fieldset>
