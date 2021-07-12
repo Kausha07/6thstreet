@@ -244,9 +244,15 @@ class PDPAddToCart extends PureComponent {
             addedToCart,
             product: { stock_qty, highlighted_attributes },
             product = {},
-            basePrice
+            basePrice,
+            isOutOfStock,
+            notifyMeLoading,
+            notifyMeSuccess,
         } = this.props;
         if (isLoading
+            || isOutOfStock
+            || notifyMeLoading
+            || notifyMeSuccess
             || addedToCart
             || stock_qty === 0
             || highlighted_attributes === null
