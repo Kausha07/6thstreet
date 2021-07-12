@@ -2,13 +2,18 @@ import { PureComponent } from "react";
 
 import Image from "Component/Image";
 import Link from "Component/Link";
+import { connect } from "react-redux";
 import MobileMenuSlider from "Component/MobileMenuSlider";
 import { CategorySliderItems } from "Util/API/endpoint/Categories/Categories.type";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
-
+import { MOBILE_MENU_SIDEBAR_ID } from "Component/MobileMenuSideBar/MoblieMenuSideBar.config";
+import { toggleOverlayByKey } from "Store/Overlay/Overlay.action";
 import "./MenuBrands.scss";
 
+export const mapDispatchToProps = (_dispatch) => ({
+  toggleOverlayByKey: (key) => _dispatch(toggleOverlayByKey(key)),
+});
 class MenuBrands extends PureComponent {
   static propTypes = {
     items: CategorySliderItems.isRequired,
@@ -28,6 +33,11 @@ class MenuBrands extends PureComponent {
     this.setState({ activeSliderImage: activeImage });
   };
 
+  onItemClick = () => {
+    const { toggleOverlayByKey } = this.props;
+
+    toggleOverlayByKey(MOBILE_MENU_SIDEBAR_ID);
+  };
   renderItem = (item, i) => {
     const { image_url, label, link } = item;
 
@@ -42,7 +52,7 @@ class MenuBrands extends PureComponent {
       : link;
 
     return (
-      <Link to={updatedLink} key={i}>
+      <Link to={updatedLink} title={label} key={i} onClick={this.onItemClick}>
         <Image src={image_url} />
         {label}
       </Link>
@@ -110,4 +120,4 @@ class MenuBrands extends PureComponent {
   }
 }
 
-export default MenuBrands;
+export default connect(null, mapDispatchToProps)(MenuBrands);

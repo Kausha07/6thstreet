@@ -5,14 +5,20 @@
 
     &-CountryBtn {
         display: flex;
+        align-items: center;
         margin-top: 0;
         font-weight: var(--fw-regular);
         font-size: 12px;
         height: auto;
         letter-spacing: 1px;
         text-transform: capitalize;
-        margin-left: -20px;
+        margin-left: -24px;
         margin-right: 10px;
+        .CountryMiniFlag {
+            &-Container {
+                margin-right: 2px;
+            }
+        }
 
         &::after {
             content: "";
@@ -23,7 +29,7 @@
             border-right: 5px solid transparent;
             border-top: 5px solid black;
             border-width: 5px 5px 0 5px;
-            top: 5px;
+            top: 8.5px;
             right: -1px;
             transform: rotate(-90deg);
         }
