@@ -219,6 +219,7 @@ export class MyAccountOverlayContainer extends PureComponent {
     };
 
     async onSignInSuccess(fields) {
+        console.log(fields)
         const {
             signIn,
             showNotification,
