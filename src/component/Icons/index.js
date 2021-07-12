@@ -11,4 +11,4 @@ import Select from './Select';
 import Share from './Share';
 import Shipping from './Shipping';
 
-export { ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Close, FavouriteFilled, Favourite, Lock, ShareFilled, Select, Share Shipping }
+export { ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Close, FavouriteFilled, Favourite, Lock, ShareFilled, Select, Share, Shipping }
