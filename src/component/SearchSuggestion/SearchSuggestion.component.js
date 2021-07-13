@@ -84,8 +84,10 @@ class SearchSuggestion extends PureComponent {
           to={`/${urlName}.html?q=${urlName}`}
           onClick={this.closeSearchPopup}
         >
-          {name}
-          <span>{count}</span>
+          <div className="suggestion-details-box">
+            {name}
+            <div>{count}</div>
+          </div>
         </Link>
       </li>
     );

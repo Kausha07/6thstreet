@@ -86,6 +86,7 @@ export class SearchSuggestionContainer extends PureComponent {
   getAlgoliaIndex(countryCodeFromUrl, lang) {
     const algoliaENV =
       process.env.REACT_APP_ALGOLIA_ENV === "staging" ? "stage" : "enterprise";
+    // production will work after resolving index issue.
     if (lang === "english") {
       switch (countryCodeFromUrl) {
         case "en-ae":
