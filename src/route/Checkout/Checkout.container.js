@@ -224,7 +224,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           console.log("QPAY auth response (checkout container)", response)
           const { status, id: paymentId = "" } = response;
 
-          if (status === "Authorized") {
+          if (status === "Authorized" || status === "Captured") {
             BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
             this.setDetailsStep(order_id, increment_id);
             this.resetCart();
