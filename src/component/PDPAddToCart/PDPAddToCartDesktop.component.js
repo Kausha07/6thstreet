@@ -11,6 +11,8 @@ import PDPSizeGuide from "../PDPSizeGuide";
 import "./PDPAddToCart.style";
 import Spinner from "react-spinkit";
 import NotifySuccessImg from "./icons/success-circle.png";
+import { NOTIFY_EMAIL } from "./PDPAddToCard.config";
+import BrowserDatabase from "Util/BrowserDatabase";
 
 class PDPAddToCart extends PureComponent {
   static propTypes = {
@@ -30,7 +32,7 @@ class PDPAddToCart extends PureComponent {
   };
 
   state = {
-    notifyMeEmail: "",
+    notifyMeEmail: BrowserDatabase.getItem(NOTIFY_EMAIL) || "",
     isIPhoneNavigationHidden: false,
     pageYOffset: window.innerHeight,
     isRoundedIphone: this.isRoundedIphoneScreen() ?? false,
@@ -110,41 +112,6 @@ class PDPAddToCart extends PureComponent {
     }
   }
 
-  renderSizeOption(code, label) {
-    return (
-      <option key={code} value={code} block="PDPAddToCart" elem="SizeOption">
-        {label}
-      </option>
-    );
-  }
-
-  getSizeSelect() {
-    const {
-      product: { simple_products },
-      product,
-      selectedSizeType,
-      sizeObject = {},
-    } = this.props;
-
-    if (
-      sizeObject.sizeCodes !== undefined &&
-      simple_products !== undefined &&
-      product[`size_${selectedSizeType}`].length !== 0
-    ) {
-      return sizeObject.sizeCodes.reduce((acc, code) => {
-        const label = this.renderSizeAndOnQunatityBasedMessage(code);
-
-        if (label) {
-          acc.push(this.renderSizeOption(code, label));
-        }
-
-        return acc;
-      }, []);
-    }
-
-    return null;
-  }
-
   renderSizeInfo() {
     const { sizeObject, product } = this.props;
 
@@ -191,6 +158,40 @@ class PDPAddToCart extends PureComponent {
     return null;
   }
 
+  renderSizeOption(code, label) {
+    return (
+      <option key={code} value={code} block="PDPAddToCart" elem="SizeOption">
+        {label}
+      </option>
+    );
+  }
+
+  getSizeSelect() {
+    const {
+      product: { simple_products },
+      product,
+      selectedSizeType,
+      sizeObject = {},
+    } = this.props;
+
+    if (
+      sizeObject.sizeCodes !== undefined &&
+      simple_products !== undefined &&
+      product[`size_${selectedSizeType}`].length !== 0
+    ) {
+      return sizeObject.sizeCodes.reduce((acc, code) => {
+        const label = this.renderSizeAndOnQunatityBasedMessage(code);
+
+        if (label) {
+          acc.push(this.renderSizeOption(code, label));
+        }
+
+        return acc;
+      }, []);
+    }
+
+    return null;
+  }
   renderSizeSelect() {
     const { onSizeSelect, sizeObject } = this.props;
     const { isArabic } = this.state;
@@ -352,7 +353,7 @@ class PDPAddToCart extends PureComponent {
           <input
             block="PDPAddToCart"
             elem="EmailInput"
-            placeholder="ALITA@GMAIL.COM"
+            placeholder={`${__("Email")}*`}
             value={notifyMeEmail}
             disabled={notifyMeLoading}
             onChange={({ target }) => {
@@ -381,7 +382,6 @@ class PDPAddToCart extends PureComponent {
     if (!notifyMeSuccess) {
       return null;
     }
-
     return (
       <div block="PDPAddToCart" elem="NotifyMeSuccessContainer">
         <img src={NotifySuccessImg} alt="success circle" />

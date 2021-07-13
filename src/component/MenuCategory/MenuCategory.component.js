@@ -72,10 +72,12 @@ class MenuCategory extends PureComponent {
     }
 
     return (
-      <MenuDynamicContent
-        toggleMobileMenuSideBar={this.toggleMobileMenuSideBar}
-        content={data}
-      />
+      <div block="DynamicContent" elem="Wrapper">
+        <MenuDynamicContent
+          toggleMobileMenuSideBar={this.toggleMobileMenuSideBar}
+          content={data}
+        />
+      </div>
     );
   }
 

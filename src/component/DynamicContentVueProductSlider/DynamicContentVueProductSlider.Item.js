@@ -6,6 +6,9 @@ import { getCurrency } from "Util/App/App";
 import WishlistIcon from "Component/WishlistIcon";
 import { isArabic } from "Util/App";
 
+import VueIntegrationQueries from "Query/vueIntegration.query";
+import { getUUID } from "Util/Auth";
+import { VUE_CAROUSEL_CLICK } from "Util/Event";
 class DynamicContentVueProductSliderItem extends PureComponent {
   static propTypes = {
     data: PropTypes.object.isRequired,
@@ -17,6 +20,24 @@ class DynamicContentVueProductSliderItem extends PureComponent {
       isArabic: isArabic(),
     };
   }
+
+  onclick = (widgetID) => {
+    // vue analytics
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
+    VueIntegrationQueries.vueAnalayticsLogger({
+      event_name: VUE_CAROUSEL_CLICK,
+      params: {
+        event: VUE_CAROUSEL_CLICK,
+        pageType: "plp",
+        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+        clicked: Date.now(),
+        uuid: getUUID(),
+        referrer: "desktop",
+        widgetID: widgetID,
+      },
+    });
+  };
+
   discountPercentage(basePrice, specialPrice, haveDiscount) {
     let discountPercentage = Math.round(100 * (1 - specialPrice / basePrice));
     if (discountPercentage === 0) {
@@ -61,7 +82,16 @@ class DynamicContentVueProductSliderItem extends PureComponent {
         basePrice !== specialPrice;
 
       if (basePrice === specialPrice || !specialPrice) {
-        return <span id="price">{`${currency} ${basePrice}`}</span>;
+        return (
+          <div block="VueProductSlider" elem="SpecialPriceCon">
+            <span block="VueProductSlider" elem="PriceWrapper">
+              <span
+                id="price"
+                style={{ color: "#000000" }}
+              >{`${currency} ${basePrice}`}</span>
+            </span>
+          </div>
+        );
       }
 
       return (
@@ -79,16 +109,6 @@ class DynamicContentVueProductSliderItem extends PureComponent {
     return null;
   }
 
-  renderPrice(price) {
-    if (price && price.length > 0) {
-      const priceObj = price[0],
-        currency = getCurrency();
-      const priceToShow = priceObj[currency]["6s_base_price"];
-      return <span id="price">{`${currency} ${priceToShow}`}</span>;
-    }
-    return null;
-  }
-
   renderIsNew(is_new_in) {
     if (is_new_in) {
       return (
@@ -101,10 +121,9 @@ class DynamicContentVueProductSliderItem extends PureComponent {
   }
 
   render() {
-    // return null;
-    const { isArabic } = this.state;
     const {
       data: {
+        category,
         thumbnail_url,
         name,
         brand_name,
@@ -113,15 +132,24 @@ class DynamicContentVueProductSliderItem extends PureComponent {
         sku,
         link = "",
       },
+      widgetID,
     } = this.props;
     return (
       <div
         block="VueProductSlider"
         elem="VueProductContainer"
+        data-sku={sku}
+        data-category={category}
         mods={{ isArabic }}
         ref={this.childRef}
       >
-        <Link to={link} data-banner-type="vueSlider">
+        <Link
+          to={link}
+          data-banner-type="vueSlider"
+          onClick={() => {
+            this.onclick(widgetID);
+          }}
+        >
           <img
             block="VueProductSlider"
             elem="VueProductImage"

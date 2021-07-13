@@ -5,28 +5,64 @@ import "./DynamicContentVueProductSlider.style.scss";
 import DynamicContentVueProductSliderItem from "./DynamicContentVueProductSlider.Item";
 import { isArabic } from "Util/App";
 
+import VueIntegrationQueries from "Query/vueIntegration.query";
+import { getUUID } from "Util/Auth";
+import { VUE_CAROUSEL_SWIPE } from "Util/Event";
 class DynamicContentVueProductSlider extends PureComponent {
   static propTypes = {
     withViewAll: PropTypes.bool,
     sliderLength: PropTypes.number,
     heading: PropTypes.string.isRequired,
     products: PropTypes.array.isRequired,
+    widgetID: PropTypes.string.isRequired,
   };
 
   constructor(props) {
     super(props);
     this.itemRef = React.createRef();
     this.cmpRef = React.createRef();
+    this.indexRef = React.createRef(0);
     this.scrollerRef = React.createRef();
     this.state = {
       customScrollWidth: null,
       isArabic: isArabic(),
     };
   }
-
   componentDidMount() {
     if (this.state.customScrollWidth < 0) {
       this.renderScrollbar();
+    }
+  }
+  async handleContainerScroll(widgetID, event) {
+    const target = event.nativeEvent.target;
+    this.scrollerRef.current.scrollLeft = target.scrollLeft;
+    let width = 0;
+    if (screen.width > 1024) {
+      width = 245;
+    } else {
+      width = 220;
+    }
+    let index = Math.floor(this.cmpRef.current.scrollLeft / width);
+    if (this.indexRef.current !== index) {
+      this.indexRef.current = index;
+      const productsToRender = this.getProducts();
+      let sourceProdID = productsToRender[index].sku;
+      let sourceCatgID = productsToRender[index].category;
+      const locale = VueIntegrationQueries.getLocaleFromUrl();
+      VueIntegrationQueries.vueAnalayticsLogger({
+        event_name: VUE_CAROUSEL_SWIPE,
+        params: {
+          event: VUE_CAROUSEL_SWIPE,
+          pageType: "plp",
+          currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+          clicked: Date.now(),
+          uuid: getUUID(),
+          referrer: "desktop",
+          sourceProdID: sourceProdID,
+          sourceCatgID: sourceCatgID,
+          widgetID: widgetID,
+        },
+      });
     }
   }
 
@@ -55,14 +91,11 @@ class DynamicContentVueProductSlider extends PureComponent {
     const { heading } = this.props;
     return (
       <div block="VueProductSlider" elem="HeaderContainer">
-        <h1>{heading}</h1>
+        <h4>{heading}</h4>
+        {/* {this.viewAllBtn()} */}
       </div>
     );
   }
-  handleContainerScroll = (event) => {
-    const target = event.nativeEvent.target;
-    this.scrollerRef.current.scrollLeft = target.scrollLeft;
-  };
 
   handleScroll = (event) => {
     const target = event.nativeEvent.target;
@@ -109,12 +142,10 @@ class DynamicContentVueProductSlider extends PureComponent {
       </div>
     );
   };
-
-  renderSliderContainer = () => {
+  renderSliderContainer() {
     const items = this.getProducts();
     const { isHome } = this.props;
-    // const { isArabic } = this.state;
-
+    const { widgetID } = this.props;
     return (
       <DragScroll data={{ rootClass: "ScrollWrapper", ref: this.cmpRef }}>
         <>
@@ -124,7 +155,9 @@ class DynamicContentVueProductSlider extends PureComponent {
             id="ScrollWrapper"
             ref={this.cmpRef}
             mods={{ isHome }}
-            onScroll={this.handleContainerScroll}
+            onScroll={(e) => {
+              this.handleContainerScroll(widgetID, e);
+            }}
           >
             {isHome && <div block="SliderHelper" mods={{ isHome }}></div>}
             {items.map((item) => {
@@ -134,6 +167,7 @@ class DynamicContentVueProductSlider extends PureComponent {
                   key={sku}
                   data={item}
                   ref={this.itemRef}
+                  widgetID={widgetID}
                 />
               );
             })}
@@ -143,10 +177,9 @@ class DynamicContentVueProductSlider extends PureComponent {
         </>
       </DragScroll>
     );
-  };
+  }
 
   render() {
-    // return null;
     return (
       <div block="VueProductSlider" elem="Container">
         {this.renderHeader()}

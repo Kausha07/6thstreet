@@ -135,8 +135,8 @@ class CreditCard extends PureComponent {
         this.setState({ expDateFilled: false });
     };
 
-    handleCvvChange = (e) => {
-        const { setCreditCardData, isNumber, isAmex } = this.props;
+    handleCvvChange = (e, isAmex) => {
+        const { setCreditCardData, isNumber } = this.props;
         const { value = '' } = e.target;
 
         if (isNumber(value)) {
@@ -224,7 +224,7 @@ class CreditCard extends PureComponent {
                         inputMode="numeric"
                         maxLength={isAmex ? '4' : '3'}
                         value={cvv}
-                        onChange={this.handleCvvChange}
+                        onChange={(e) => this.handleCvvChange(e, isAmex)}
                         validation={['notEmpty']}
                         onPaste={this.handlePaste}
                     />
@@ -340,7 +340,7 @@ class CreditCard extends PureComponent {
                                             validation={['notEmpty']}
                                             onPaste={this.handlePaste}
                                             maxLength={isAmex ? '4' : '3'}
-                                            onChange={this.handleCvvChange}
+                                            onChange={(e) => this.handleCvvChange(e, isAmex)}
                                             style={{ width: isAmex ? '56px' : '50px' }}
                                         />
                                         {this.renderMiniCard(scheme.toLowerCase())}
