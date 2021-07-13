@@ -215,13 +215,21 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         capturePayment,
         cancelOrder,
       } = this.props;
+
       localStorage.removeItem("QPAY_ORDER_DETAILS");
-      const paymentInformation = JSON.parse(localStorage.getItem("PAYMENT_INFO"));
+      
+      const ShippingAddress = JSON.parse(localStorage.getItem("Shipping_Address"));
+      
+      this.setState({shippingAddress: ShippingAddress})
+      
       const { id, order_id, increment_id } = QPAY_CHECK;
+      
       console.log("payment with Qpay")
       getPaymentAuthorization(id).then((response) => {
         if (response) {
           this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
+          
+          localStorage.removeItem("Shipping_Address");
 
           console.log("QPAY auth response (checkout container)", response)
           const { status, id: paymentId = "" } = response;
@@ -230,7 +238,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
             this.setDetailsStep(order_id, increment_id);
             this.resetCart();
-            this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
             capturePayment(paymentId, order_id);
           }
 
@@ -571,6 +578,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
                   //return true;
                 } else if (code === CHECKOUT_QPAY) {
+                  const {shippingAddress} = this.state
                   this.setState({
                     order_id,
                     increment_id,
@@ -589,6 +597,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                   localStorage.setItem(
                     "PAYMENT_INFO",
                     JSON.stringify(paymentInformation)
+                  );
+                  localStorage.setItem(
+                    "Shipping_Address",
+                    JSON.stringify(shippingAddress)
                   );
                   window.open(`${href}`, "_self");
 

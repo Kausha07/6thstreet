@@ -72,7 +72,7 @@ export class Checkout extends SourceCheckout {
   };
 
 
-  componentDidUpdate() {
+  componentDidMount() {
 
     const paymentInformation = JSON.parse(localStorage.getItem("PAYMENT_INFO"))
     if(paymentInformation){
@@ -80,11 +80,14 @@ export class Checkout extends SourceCheckout {
     }
 }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps, prevState) {
 
-    const paymentInformation = JSON.parse(localStorage.getItem("PAYMENT_INFO"))
-    if(paymentInformation){
-      this.setState({paymentInformation})
+    const {paymentInformation} = this.state
+
+    const paymentInformationUpdated = JSON.parse(localStorage.getItem("PAYMENT_INFO"))
+
+    if(prevState?.paymentInformation?.paymentMethod?.code !== paymentInformation?.paymentMethod?.code){
+      this.setState({paymentInformation :paymentInformationUpdated})
     }
 }
 
