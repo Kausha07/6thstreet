@@ -92,7 +92,7 @@
                 display: inline-block;
                 text-align: center;
                 margin-bottom: 20px;
-                background-image: url(../../style/icons/icons.png);
+                background-image: url();
                 background-position: -447px -31px;
             }
         }
@@ -198,6 +198,12 @@
         @include mobile {
             min-height: 0;
         }
+    }
+
+    &-PromoText {
+        display: flex!important;
+        align-items: center!important;
+        justify-content: center!important;
     }
 
     &-ClubApparel {

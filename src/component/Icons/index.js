@@ -9,5 +9,6 @@ import Lock from './Lock';
 import ShareFilled from './ShareFilled';
 import Select from './Select';
 import Share from './Share';
+import Shipping from './Shipping';
 
-export { ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Close, FavouriteFilled, Favourite, Lock, ShareFilled, Select, Share }
+export { ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Close, FavouriteFilled, Favourite, Lock, ShareFilled, Select, Share, Shipping }

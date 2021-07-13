@@ -341,11 +341,13 @@ export class CartItem extends PureComponent {
             >
                 {
                     color &&
-                    <span block="CartItem-ColSizeQty" elem="Col">
-                        <span>{__("Color:")}</span>
-                        <span>{ color }</span>
-                        &nbsp;|&nbsp;
-                    </span>
+                    <>
+                        <span block="CartItem-ColSizeQty" elem="Col">
+                            <span>{__("Color:")}</span>
+                            <span>{ color }</span>
+                        </span>
+                        <span block="pipe">&nbsp;|&nbsp;</span>
+                    </>
                 }
                 <span
                     block="CartItem-ColSizeQty"
@@ -357,11 +359,13 @@ export class CartItem extends PureComponent {
                 </span>
                 {
                     optionValue &&
-                    <span>
-                        &nbsp;|&nbsp;
-                        <span>{ __('Size:') }</span>
-                        <span>{ optionValue }</span>
-                    </span>
+                    <>
+                        <span block="pipe">&nbsp;|&nbsp;</span>
+                        <span>
+                            <span>{ __('Size:') }</span>
+                            <span>{ optionValue }</span>
+                        </span>
+                    </>
                 }
             </div>
         );
