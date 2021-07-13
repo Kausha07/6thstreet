@@ -148,10 +148,37 @@ export class SearchSuggestionContainer extends PureComponent {
 
   async requestTopSearches() {
     const topSearches = await new Algolia().getTopSearches();
+    let refinedTopSearches = [];
+    const item = await Promise.all(
+      topSearches?.data
+        ?.filter((ele) => ele !== "")
+        .map(async (item) => {
+          const filteredItem = await this.checkForSKU(item.search);
+          if (filteredItem) {
+            refinedTopSearches.push({ link: filteredItem.url, ...item });
+            console.log("has sku", filteredItem);
+          } else {
+            refinedTopSearches.push({ link: null, ...item });
+          }
+        })
+    );
     this.setState({
-      topSearches: topSearches?.data?.filter((ele) => ele !== "") || [],
+      topSearches: refinedTopSearches || [],
     });
   }
+
+  checkForSKU = async (search) => {
+    const config = {
+      q: search,
+      page: 0,
+      limit: 2,
+    };
+    const { data } = await new Algolia().getPLP(config);
+    if (data && data.length === 1) {
+      return data[0];
+    }
+    return null;
+  };
 
   containerProps = () => {
     const { trendingBrands, trendingTags, topSearches } = this.state;

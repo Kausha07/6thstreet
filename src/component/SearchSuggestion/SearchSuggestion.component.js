@@ -313,7 +313,7 @@ class SearchSuggestion extends PureComponent {
 
     return (
       <div block="SearchSuggestion" elem="Recommended">
-        <h2>{__("Recommended")}</h2>
+        <h2>{__("Trending Products")}</h2>
         <ul>{products.map(this.renderProduct)}</ul>
       </div>
     );
@@ -323,7 +323,7 @@ class SearchSuggestion extends PureComponent {
     return (
       <>
         {this.renderQuerySuggestions()}
-        {this.renderBrands()}
+        {/* {this.renderBrands()} */}
         {this.renderProducts()}
       </>
     );
@@ -393,18 +393,21 @@ class SearchSuggestion extends PureComponent {
     );
   }
 
-  renderTopSearch = ({ search }, i) => (
-    <li key={i}>
-      <Link
-        to={`/catalogsearch/result/?q=${search}`}
-        onClick={this.closeSearchPopup}
-      >
-        <div block="SearchSuggestion" elem="TrandingTag">
-          {search}
-        </div>
-      </Link>
-    </li>
-  );
+  renderTopSearch = ({ search, link }, i) => {
+    console.log("link", link);
+    return (
+      <li key={i}>
+        <Link
+          to={link ? link : `/catalogsearch/result/?q=${search}`}
+          onClick={this.closeSearchPopup}
+        >
+          <div block="SearchSuggestion" elem="TopSearches">
+            {search}
+          </div>
+        </Link>
+      </li>
+    );
+  };
 
   renderTopSearches() {
     const { topSearches = [] } = this.props;

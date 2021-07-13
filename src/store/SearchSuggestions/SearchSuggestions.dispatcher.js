@@ -25,10 +25,14 @@ export class SearchSuggestionsDispatcher {
           ? {
               query: search,
               limit: PRODUCT_RESULT_LIMIT,
+              gender: gender,
+              addAnalytics: false,
             }
           : {
               query: search,
               limit: PRODUCT_RESULT_LIMIT,
+              gender: gender,
+              addAnalytics: false,
             }
       );
 

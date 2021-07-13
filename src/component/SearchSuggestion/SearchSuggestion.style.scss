@@ -142,6 +142,9 @@
       padding: 0;
     }
   }
+  .TopSearches {
+    text-transform: capitalize;
+  }
 
   .TrandingBrands {
     li {
@@ -201,6 +204,20 @@
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+
+  &-TopSearches {
+    margin: 0;
+    height: 30px;
+    background: var(--gray);
+    color: var(--link-dark-gray);
+    width: auto;
+    padding: 5px 10px;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-transform: capitalize;
   }
 
   ul {
