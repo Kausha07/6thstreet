@@ -146,6 +146,21 @@ class PDPAddToCart extends PureComponent {
         } = this.props;
         const isNotAvailable = parseInt(productStock[code].quantity) === 0;
 
+        const selectedLabelStyle = {
+            fontSize: '14px',
+            color: '#ffffff',
+            fontWeight: 600,
+            letterSpacing: 0,
+            backgroundColor: '#000000'
+        }
+
+        const selectedStrikeThruLineStyle = {
+            opacity: 0.6,
+            filter: 'none'
+        }
+
+        const isCurrentSizeSelected = selectedSizeCode === code;
+
         return (
             <div block="PDPAddToCart-SizeSelector" elem={isNotAvailable ? "SizeOptionContainerOOS" : "SizeOptionContainer"}
                 onClick={() => {
@@ -160,13 +175,13 @@ class PDPAddToCart extends PureComponent {
                     name="size"
                     block="PDPAddToCart"
                     value={code}
-                    checked={selectedSizeCode === code}
+                    checked={isCurrentSizeSelected}
                 />
                 <div>
-                    <label for={code}>
+                    <label for={code} style={isCurrentSizeSelected ? selectedLabelStyle : {}}>
                         {label}
                     </label>
-                    {isNotAvailable && <img src={StrikeThrough} className='lineImg' />}
+                    {isNotAvailable && <img src={StrikeThrough} className='lineImg' style={isCurrentSizeSelected ? selectedStrikeThruLineStyle : {}} />}
                 </div>
                 <div />
             </div>
