@@ -188,13 +188,12 @@ export class PDPAddToCartContainer extends PureComponent {
 
   componentDidMount() {
     const {
-      product: { sku, in_stock, size_uk },
+      product: { sku, in_stock },
       getProductStock,
     } = this.props;
     const {
       sizeObject: { sizeTypes },
     } = this.state;
-
     this.setState({ processingRequest: true });
     getProductStock(sku).then((response) => {
       console.log("getProductStock", response)
@@ -215,7 +214,7 @@ export class PDPAddToCartContainer extends PureComponent {
         sizeCodes: allSizes,
       };
 
-      this.setState({ processingRequest: false, mappedSizeObject: object, productStock: response, isOutOfStock: in_stock === 0 && size_uk.length === 0 });
+      this.setState({ processingRequest: false, mappedSizeObject: object, productStock: response, isOutOfStock: in_stock === 0 });
     });
   }
 
