@@ -151,6 +151,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
     toggleBreadcrumbs(false);
 
+    const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
 
 
     this.state = {
@@ -160,7 +161,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       paymentMethods: [],
       shippingMethods: [],
       shippingAddress: {},
-      checkoutStep: is_virtual ? BILLING_STEP : SHIPPING_STEP,
+      checkoutStep:QPAY_CHECK? DETAILS_STEP : is_virtual ? BILLING_STEP : SHIPPING_STEP,
       orderID: "",
       incrementID: "",
       threeDsUrl: "",
@@ -217,10 +218,13 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         cancelOrder,
       } = this.props;
       localStorage.removeItem("QPAY_ORDER_DETAILS");
+      const paymentInformation = JSON.parse(localStorage.getItem("PAYMENT_INFO"));
       const { id, order_id, increment_id } = QPAY_CHECK;
       console.log("payment with Qpay")
       getPaymentAuthorization(id).then((response) => {
         if (response) {
+          this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
+
           console.log("QPAY auth response (checkout container)", response)
           const { status, id: paymentId = "" } = response;
 
