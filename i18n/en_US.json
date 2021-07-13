@@ -704,5 +704,7 @@
     "RESET YOUR PASSWORD": null,
     "Forgot Password": null,
     "FORGOT PASSWORD": null,
-    "EMAIL ADDRESS*": null
+    "EMAIL ADDRESS*": null,
+    "Show": null,
+    "Mask": null
 }

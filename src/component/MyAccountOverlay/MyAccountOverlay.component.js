@@ -163,10 +163,23 @@ export class MyAccountOverlay extends PureComponent {
                   src="https://static.6media.me/static/version1600859154/frontend/6SNEW/6snew/en_US/images/6street-login-banner.png"
                   alt=""
                 >
-                    <span>6</span>
-                    TH
-                    <span>S</span>
-                    TREET
+                    {
+                        isArabic()
+                        ?
+                        <>
+                        <span>6
+                            <sup>TH</sup>
+                        </span>
+                        <span>ستريت</span>
+                        </>
+                        :
+                        <>
+                            <span>6</span>
+                            TH
+                            <span>S</span>
+                            TREET
+                        </>
+                    }
                 </div>
                 <div block="MyAccountOverlay" elem="Buttons">
                     <button block="Button" mods={ { isSignIn } } onClick={ handleSignIn }>{ __('Sign in') }</button>
@@ -189,8 +202,16 @@ export class MyAccountOverlay extends PureComponent {
         this.setState({ isPopup: true });
     };
 
+    closePopup(e) {
+        const { state, handleSignIn, closePopup } = this.props;
+        if (state === STATE_FORGOT_PASSWORD) {
+            handleSignIn(e);
+        }
+        else {
+            closePopup();
+        }
+    }
     renderCloseBtn() {
-        const { closePopup } = this.props;
         const { isArabic } = this.state
 
         return (
@@ -198,7 +219,7 @@ export class MyAccountOverlay extends PureComponent {
               block="MyAccountOverlay"
               elem="Close"
               mods={ { isArabic } }
-              onClick={ closePopup }
+              onClick={ this.closePopup.bind(this) }
             >
                 <Close />
             </button>
@@ -272,7 +293,7 @@ export class MyAccountOverlay extends PureComponent {
                   type="email"
                   id="email"
                   name="email"
-                  placeholder={ __('EMAIL') }
+                  placeholder={ __('EMAIL*') }
                   autocomplete="email"
                   validation={ ['notEmpty', 'email'] }
                 />
@@ -416,9 +437,13 @@ export class MyAccountOverlay extends PureComponent {
                     />
                     <span
                         block="Mask"
+                        mods={{
+                            isArabic: isArabic,
+                        }}
+                        role="button"
                         onClick={ this.toggleMask.bind(this) }
                     >
-                        Show
+                        { __("Show") }
                     </span>
                 </fieldset>
                 <div
@@ -509,11 +534,11 @@ export class MyAccountOverlay extends PureComponent {
         try {
             if(ref?.current?.props?.formRef?.current?.type === "password"){
                 ref.current.props.formRef.current.type = "text";
-                e.target.innerText = "Mask";
+                e.target.innerText = __("Mask");
             }
             else if(ref?.current?.props?.formRef?.current?.type === "text"){
                 ref.current.props.formRef.current.type = "password";
-                e.target.innerText = "Show";
+                e.target.innerText = __("Show");
             }
         }
         catch(err) {
@@ -585,9 +610,13 @@ export class MyAccountOverlay extends PureComponent {
                             />
                             <span
                                 block="Mask"
+                                mods={{
+                                    isArabic: isArabic,
+                                }}
+                                role="button"
                                 onClick={ this.toggleMask.bind(this) }
                             >
-                                Show
+                                { __("Show") }
                             </span>
                         </>
                     }
@@ -600,7 +629,7 @@ export class MyAccountOverlay extends PureComponent {
                   mix={ { block: 'MyAccountOverlay', elem: 'Button', mods: { isArabic } } }
                   onClick={ handleForgotPassword }
                 >
-                    { __('Forgot Password?') }
+                    { __('Forgot password?') }
                 </button>
                 <div
                   block="MyAccountOverlay"

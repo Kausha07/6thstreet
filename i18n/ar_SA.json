@@ -797,6 +797,9 @@
     "TYPE YOUR FULL NAME*": null,
     "RESET YOUR PASSWORD": null,
     "Forgot Password": null,
-    "FORGOT PASSWORD": null,
-    "EMAIL ADDRESS*": null
+    "FORGOT PASSWORD": "هل نسيت كلمة المرور",
+    "EMAIL ADDRESS*": "البريد الإلكتروني",
+    "Forgot password?": "هل نسيت كلمة المرور؟",
+    "Show": null,
+    "Mask": null
 }
