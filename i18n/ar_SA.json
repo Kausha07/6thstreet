@@ -201,7 +201,7 @@
     "Click here": "اضغط هنا",
     " to view privacy policy": "   للاطلاع على سياسة الخصوصية",
     "Create Account": "إنشاء حساب",
-    "Forgot password?": "هل نسيت كلمة المرور؟",
+    "Forgot Password?": "هل نسيت كلمة المرور؟",
     "100% Genuine": "100% أصلي",
     "Free Returns": "ارجاع المنتجات مجانا",
     "view more details": "عرض المزيد من التفاصيل",
@@ -798,12 +798,12 @@
     "from: ": "من ",
     "9am - 9pm": "9 صباحا- 9 مساءا",
     "Share": null,
-    "Forgot Password?": null,
     "OR SIGN IN WITH": null,
     "FACEBOOK": null,
     "GOOGLE": null,
     "TYPE YOUR FULL NAME*": null,
     "RESET YOUR PASSWORD": null,
     "Forgot Password": null,
-    "FORGOT PASSWORD": null
+    "FORGOT PASSWORD": null,
+    "EMAIL ADDRESS*": null
 }

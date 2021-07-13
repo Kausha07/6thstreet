@@ -10,7 +10,7 @@
  */
 
 import PropTypes from 'prop-types';
-import { PureComponent } from 'react';
+import { PureComponent, createRef } from 'react';
 import { withRouter } from 'react-router-dom';
 
 import CountrySwitcher from 'Component/CountrySwitcher';
@@ -92,6 +92,8 @@ export class MyAccountOverlay extends PureComponent {
         isOTP: ENABLE_OTP_LOGIN,
         countryCode: ''
     };
+
+    ref = [ createRef(), createRef() ];
 
     renderMap = {
         [STATE_SIGN_IN]: {
@@ -392,15 +394,6 @@ export class MyAccountOverlay extends PureComponent {
                           onClick={ this.handleGenderChange }
                           defaultChecked={ gender }
                         />
-                        <Field
-                          type="radio"
-                          id="3"
-                          label={ __('Prefer not to say') }
-                          name="gender"
-                          value={ gender }
-                          onClick={ this.handleGenderChange }
-                          defaultChecked={ gender }
-                        />
                     </div>
                 </fieldset>
                 <fieldset block="MyAccountOverlay" elem="Legend">
@@ -419,7 +412,14 @@ export class MyAccountOverlay extends PureComponent {
                       name="password"
                       autocomplete="new-password"
                       validation={ ['notEmpty', 'password', 'containNumber', 'containCapitalize'] }
+                      ref={ this.ref[1] }
                     />
+                    <span
+                        block="Mask"
+                        onClick={ this.toggleMask.bind(this) }
+                    >
+                        Show
+                    </span>
                 </fieldset>
                 <div
                   block="MyAccountOverlay"
@@ -501,6 +501,26 @@ export class MyAccountOverlay extends PureComponent {
             ? '9' : '8';
     }
 
+    toggleMask(e) {
+        e.persist();
+        const { state } = this.props;
+        const index = state === STATE_SIGN_IN ? 0 : 1;
+        const ref = this.ref[index];
+        try {
+            if(ref?.current?.props?.formRef?.current?.type === "password"){
+                ref.current.props.formRef.current.type = "text";
+                e.target.innerText = "Mask";
+            }
+            else if(ref?.current?.props?.formRef?.current?.type === "text"){
+                ref.current.props.formRef.current.type = "password";
+                e.target.innerText = "Show";
+            }
+        }
+        catch(err) {
+            console.error(err);
+        }
+    }
+
     renderSignIn() {
         const {
             email,
@@ -536,7 +556,7 @@ export class MyAccountOverlay extends PureComponent {
                         }
                         <Field
                             type={ ENABLE_OTP_LOGIN && isOTP ? "text" : "email" }
-                            placeholder={ ENABLE_OTP_LOGIN ? __('EMAIL OR PHONE*') : __('EMAIL*') }
+                            placeholder={ ENABLE_OTP_LOGIN ? __('EMAIL OR PHONE*') : __('EMAIL ADDRESS*') }
                             id="email"
                             name="email"
                             value={ email }
@@ -547,20 +567,29 @@ export class MyAccountOverlay extends PureComponent {
                         />
                     </div>
                     { ( !isOTP || !ENABLE_OTP_LOGIN ) &&
-                        <Field
-                            type="password"
-                            placeholder={ __('PASSWORD*') }
-                            id="password"
-                            name="password"
-                            autocomplete="current-password"
-                            validation={ this.getValidationForPassword() }
-                            mix={{
-                                block: "Password",
-                                mods: {
-                                    isOTP
-                                }
-                            }}
-                        />
+                        <>
+                            <Field
+                                type="password"
+                                placeholder={ __('PASSWORD*') }
+                                id="password"
+                                name="password"
+                                autocomplete="current-password"
+                                validation={ this.getValidationForPassword() }
+                                mix={{
+                                    block: "Password",
+                                    mods: {
+                                        isOTP
+                                    }
+                                }}
+                                ref={ this.ref[0] }
+                            />
+                            <span
+                                block="Mask"
+                                onClick={ this.toggleMask.bind(this) }
+                            >
+                                Show
+                            </span>
+                        </>
                     }
                 </fieldset>
                 <button
