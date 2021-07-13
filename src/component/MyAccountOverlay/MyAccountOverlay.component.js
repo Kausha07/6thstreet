@@ -394,6 +394,15 @@ export class MyAccountOverlay extends PureComponent {
                           onClick={ this.handleGenderChange }
                           defaultChecked={ gender }
                         />
+                        <Field
+                          type="radio"
+                          id="3"
+                          label={ __('Prefer not to say') }
+                          name="gender"
+                          value={ gender }
+                          onClick={ this.handleGenderChange }
+                          defaultChecked={ gender }
+                        />
                     </div>
                 </fieldset>
                 <fieldset block="MyAccountOverlay" elem="Legend">
