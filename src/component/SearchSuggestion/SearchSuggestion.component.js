@@ -196,7 +196,7 @@ class SearchSuggestion extends PureComponent {
     const { querySuggestions = [] } = this.props;
     return (
       <div block="SearchSuggestion" elem="Item">
-        <ul>{querySuggestions.map(this.renderQuerySuggestion)}</ul>
+        <ul>{querySuggestions.slice(0, 5).map(this.renderQuerySuggestion)}</ul>
       </div>
     );
   }
