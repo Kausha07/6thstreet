@@ -84,35 +84,38 @@ export class SearchSuggestionContainer extends PureComponent {
   }
 
   getAlgoliaIndex(countryCodeFromUrl, lang) {
+    const algoliaENV =
+      process.env.REACT_APP_ALGOLIA_ENV === "staging" ? "stage" : "enterprise";
+    // production will work after resolving index issue.
     if (lang === "english") {
       switch (countryCodeFromUrl) {
         case "en-ae":
-          return "stage_magento_english_products_query_suggestions";
+          return `${algoliaENV}_magento_english_products_query_suggestions`;
         case "en-bh":
-          return "stage_magento_en_bh_products_query_suggestions";
+          return `${algoliaENV}_magento_en_bh_products_query_suggestions`;
         case "en-kw":
-          return "stage_magento_en_kw_products_query_suggestions";
+          return `${algoliaENV}_magento_en_kw_products_query_suggestions`;
         case "en-om":
-          return "stage_magento_en_om_products_query_suggestions";
+          return `${algoliaENV}_magento_en_om_products_query_suggestions`;
         case "en-qa":
-          return "stage_magento_en_qa_products_query_suggestions";
+          return `${algoliaENV}_magento_en_qa_products_query_suggestions`;
         case "en-sa":
-          return "stage_magento_en_sa_products_query_suggestions";
+          return `${algoliaENV}_magento_en_sa_products_query_suggestions`;
       }
     } else {
       switch (countryCodeFromUrl) {
         case "ar-ae":
-          return "stage_magento_arabic_products_query_suggestions";
+          return `${algoliaENV}_magento_arabic_products_query_suggestions`;
         case "ar-bh":
-          return "stage_magento_ar_bh_products_query_suggestions";
+          return `${algoliaENV}_magento_ar_bh_products_query_suggestions`;
         case "ar-kw":
-          return "stage_magento_ar_kw_products_query_suggestions";
+          return `${algoliaENV}_magento_ar_kw_products_query_suggestions`;
         case "ar-om":
-          return "stage_magento_ar_om_products_query_suggestions";
+          return `${algoliaENV}_magento_ar_om_products_query_suggestions`;
         case "ar-qa":
-          return "stage_magento_ar_qa_products_query_suggestions";
+          return `${algoliaENV}_magento_ar_qa_products_query_suggestions`;
         case "ar-sa":
-          return "stage_magento_ar_sa_products_query_suggestions";
+          return `${algoliaENV}_magento_ar_sa_products_query_suggestions`;
       }
     }
   }

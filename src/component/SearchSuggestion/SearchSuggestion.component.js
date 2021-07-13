@@ -84,8 +84,10 @@ class SearchSuggestion extends PureComponent {
           to={`/${urlName}.html?q=${urlName}`}
           onClick={this.closeSearchPopup}
         >
-          {name}
-          <span>{count}</span>
+          <div className="suggestion-details-box">
+            {name}
+            <div>{count}</div>
+          </div>
         </Link>
       </li>
     );
@@ -196,7 +198,7 @@ class SearchSuggestion extends PureComponent {
     const { querySuggestions = [] } = this.props;
     return (
       <div block="SearchSuggestion" elem="Item">
-        <ul>{querySuggestions.map(this.renderQuerySuggestion)}</ul>
+        <ul>{querySuggestions.slice(0, 5).map(this.renderQuerySuggestion)}</ul>
       </div>
     );
   }
