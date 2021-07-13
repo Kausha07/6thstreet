@@ -611,16 +611,18 @@ export class CheckoutSuccess extends PureComponent {
       );
     }
 
-    if (paymentMethod.code.match(/tabby_installments/)) {
+    if (paymentMethod?.code?.match(/tabby_installments/)) {
       this.setState({ paymentTitle: __("Tabby: Pay in installments") });
-    } else if (paymentMethod.code.match(/tabby_checkout/)) {
+    } else if (paymentMethod?.code?.match(/tabby_checkout/)) {
       this.setState({ paymentTitle: __("Tabby: Pay later") });
-    } else if (paymentMethod.code.match(/apple/)) {
+    } else if (paymentMethod?.code?.match(/apple/)) {
       this.setState({ paymentTitle: __("Apple") });
-    } else if (paymentMethod.code.match(/cash/)) {
+    } else if (paymentMethod?.code?.match(/cash/)) {
       this.setState({ paymentTitle: __("Cash on Delivery") });
-    }else if (paymentMethod.code.match(/free/)) {
+    }else if (paymentMethod?.code?.match(/free/)) {
       this.setState({ paymentTitle: __("Store Credit") });
+    }else if (paymentMethod?.code?.match(/qpay/)) {
+      this.setState({ paymentTitle: __("QPAY") });
     }
     else if (paymentMethod.code.match(/qpay/)) {
       this.setState({ paymentTitle: __("QPAY") });
@@ -686,7 +688,7 @@ export class CheckoutSuccess extends PureComponent {
       customer,
       billingAddress: { guest_email },
     } = this.props;
-
+    console.log("props in checkout success component", this.props)
     return (
       <div block="CheckoutSuccess">
         {this.renderChangePhonePopUp()}

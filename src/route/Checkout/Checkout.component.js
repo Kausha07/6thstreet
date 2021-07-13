@@ -80,6 +80,14 @@ export class Checkout extends SourceCheckout {
     }
 }
 
+  componentDidUpdate() {
+
+    const paymentInformation = JSON.parse(localStorage.getItem("PAYMENT_INFO"))
+    if(paymentInformation){
+      this.setState({paymentInformation})
+    }
+}
+
 componentWillUnmount(){
   localStorage.removeItem("PAYMENT_INFO")
 }

@@ -151,9 +151,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
     toggleBreadcrumbs(false);
 
-    const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
-
-
     this.state = {
       isLoading: false,
       isDeliveryOptionsLoading: false,
@@ -161,7 +158,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       paymentMethods: [],
       shippingMethods: [],
       shippingAddress: {},
-      checkoutStep:QPAY_CHECK? DETAILS_STEP : is_virtual ? BILLING_STEP : SHIPPING_STEP,
+      checkoutStep:is_virtual ? BILLING_STEP : SHIPPING_STEP,
       orderID: "",
       incrementID: "",
       threeDsUrl: "",
@@ -190,6 +187,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const { checkoutStep, initialGTMSent } = this.state;
     this.refreshCart();
     setMeta({ title: __("Checkout") });
+   
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -587,6 +585,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                     "QPAY_ORDER_DETAILS",
                     JSON.stringify(obj)
                   );
+                  console.log("payment information", paymentInformation)
                   localStorage.setItem(
                     "PAYMENT_INFO",
                     JSON.stringify(paymentInformation)
