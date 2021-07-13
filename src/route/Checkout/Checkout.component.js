@@ -72,7 +72,7 @@ export class Checkout extends SourceCheckout {
   };
 
 
-  componentDidMount() {
+  componentDidUpdate() {
 
     const paymentInformation = JSON.parse(localStorage.getItem("PAYMENT_INFO"))
     if(paymentInformation){

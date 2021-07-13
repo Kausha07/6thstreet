@@ -624,6 +624,9 @@ export class CheckoutSuccess extends PureComponent {
     }else if (paymentMethod?.code?.match(/qpay/)) {
       this.setState({ paymentTitle: __("QPAY") });
     }
+    else if (paymentMethod.code.match(/qpay/)) {
+      this.setState({ paymentTitle: __("QPAY") });
+    }
 
     const { paymentTitle } = this.state;
     return (

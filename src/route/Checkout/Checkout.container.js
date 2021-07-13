@@ -158,7 +158,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       paymentMethods: [],
       shippingMethods: [],
       shippingAddress: {},
-      checkoutStep: is_virtual ? BILLING_STEP : SHIPPING_STEP,
+      checkoutStep:is_virtual ? BILLING_STEP : SHIPPING_STEP,
       orderID: "",
       incrementID: "",
       threeDsUrl: "",
