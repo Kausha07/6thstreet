@@ -712,5 +712,6 @@
     "SELECT QUANTITY": null,
     "My Bag ": null,
     "EMAIL ADDRESS*": null,
-    "QPAY": null
+    "Show": null,
+    "Mask": null
 }
