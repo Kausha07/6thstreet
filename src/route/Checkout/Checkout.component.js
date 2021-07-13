@@ -85,8 +85,10 @@ export class Checkout extends SourceCheckout {
     const {paymentInformation} = this.state
 
     const paymentInformationUpdated = JSON.parse(localStorage.getItem("PAYMENT_INFO"))
-
-    if(prevState?.paymentInformation?.paymentMethod?.code !== paymentInformation?.paymentMethod?.code){
+    console.log("prev state",prevState)
+    console.log("current state", this.state)
+    if(prevState?.paymentInformation?.paymentMethod?.code !== paymentInformation?.paymentMethod?.code && paymentInformationUpdated){
+      console.log("payment info changed", paymentInformationUpdated)
       this.setState({paymentInformation :paymentInformationUpdated})
     }
 }

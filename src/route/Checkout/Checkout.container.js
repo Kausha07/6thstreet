@@ -822,7 +822,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     verifyPayment(tabbyPaymentId).then(({ status }) => {
       if (status === AUTHORIZED_STATUS || status === CAPTURED_STATUS) {
         BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
-        this.setState({ tabbyPaymentStatus: status });
+        this.setState({ tabbyPaymentStatus: status,isTabbyPopupShown: false });
         updateTabbyPayment(tabbyPaymentId, order_id);
         this.setDetailsStep(order_id, increment_id);
         this.resetCart();
