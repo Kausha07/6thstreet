@@ -703,5 +703,6 @@
     "TYPE YOUR FULL NAME*": null,
     "RESET YOUR PASSWORD": null,
     "Forgot Password": null,
-    "FORGOT PASSWORD": null
+    "FORGOT PASSWORD": null,
+    "EMAIL ADDRESS*": null
 }
