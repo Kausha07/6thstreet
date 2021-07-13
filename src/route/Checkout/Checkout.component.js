@@ -72,6 +72,14 @@ export class Checkout extends SourceCheckout {
   };
 
 
+  componentDidMount() {
+
+    const paymentInformation = JSON.parse(localStorage.getItem("PAYMENT_INFO"))
+    if(paymentInformation){
+      this.setState({paymentInformation})
+    }
+}
+
   componentDidUpdate() {
 
     const paymentInformation = JSON.parse(localStorage.getItem("PAYMENT_INFO"))

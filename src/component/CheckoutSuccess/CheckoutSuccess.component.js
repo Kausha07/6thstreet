@@ -685,7 +685,7 @@ export class CheckoutSuccess extends PureComponent {
       customer,
       billingAddress: { guest_email },
     } = this.props;
-
+    console.log("props in checkout success component", this.props)
     return (
       <div block="CheckoutSuccess">
         {this.renderChangePhonePopUp()}
