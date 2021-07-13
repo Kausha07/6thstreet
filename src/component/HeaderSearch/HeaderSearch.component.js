@@ -6,7 +6,6 @@ import PropTypes from "prop-types";
 import { createRef, PureComponent } from "react";
 import { isArabic } from "Util/App";
 import "./HeaderSearch.style";
-
 import Clear from "./icons/close-black.png";
 import searchPng from "./icons/search-black.svg";
 
@@ -99,7 +98,7 @@ class HeaderSearch extends PureComponent {
           ref={this.inputRef}
           name="search"
           type="text"
-          autocomplete="false"
+          autocomplete="off"
           autocorrect="off"
           spellcheck="false"
           placeholder={__("Search for items, brands, inspiration and styles")}

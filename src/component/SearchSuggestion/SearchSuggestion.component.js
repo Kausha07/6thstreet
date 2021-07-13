@@ -1,15 +1,18 @@
-import PropTypes from "prop-types";
-import { PureComponent } from "react";
-
 import Link from "Component/Link";
 import Loader from "Component/Loader";
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
+import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { Products } from "Util/API/endpoint/Product/Product.type";
+import {
+  formatQuerySuggestions,
+  getHighlightedText,
+} from "Util/API/endpoint/Suggestions/Suggestions.create";
 import { isArabic } from "Util/App";
+import { getCurrency } from "Util/App/App";
+import BrowserDatabase from "Util/BrowserDatabase";
 import isMobile from "Util/Mobile";
 import BRAND_MAPPING from "./SearchSiggestion.config";
-import { getCurrency } from "Util/App/App";
-import Price from "Component/Price/Price.component";
-
 import "./SearchSuggestion.style";
 
 class SearchSuggestion extends PureComponent {
@@ -23,6 +26,9 @@ class SearchSuggestion extends PureComponent {
     trendingBrands: PropTypes.array.isRequired,
     trendingTags: PropTypes.array.isRequired,
     hideActiveOverlay: PropTypes.func,
+    querySuggestions: PropTypes.array,
+    topSearches: PropTypes.array,
+    searchString: PropTypes.string,
   };
 
   static defaultProps = {
@@ -54,7 +60,7 @@ class SearchSuggestion extends PureComponent {
 
     name = name ? name : brandName;
     const urlName = name
-      .replace(/'/g, "")
+      ?.replace(/'/g, "")
       .replace(/[(\s+).&]/g, "-")
       .replace(/-{2,}/g, "-")
       .replace(/\-$/, "")
@@ -65,13 +71,11 @@ class SearchSuggestion extends PureComponent {
     // .replace(/(\s+)|--/g, "-")
     // .replace("@", "at")
     // .toLowerCase();
-
     return urlName;
   };
 
   renderBrand = (brand) => {
     const { brand_name: name = "", count } = brand;
-
     const urlName = this.getBrandUrl(name);
 
     return (
@@ -97,6 +101,107 @@ class SearchSuggestion extends PureComponent {
       </div>
     );
   }
+
+  // query suggestion block starts
+
+  getBrandSuggestionUrl = (brandName) => {
+    const { isArabic } = this.state;
+    let brandUrl;
+    let formattedBrandName;
+    const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
+    if (isArabic) {
+      let requestedGender = this.getGenderInArabic(gender);
+      let arabicAlphabetDigits =
+        /[\u0600-\u06ff]|[\u0750-\u077f]|[\ufb50-\ufc3f]|[\ufe70-\ufefc]|[\u0200]|[\u00A0]/g;
+      if (arabicAlphabetDigits.test(brandName)) {
+        formattedBrandName = brandName.match("\\s*[^a-zA-Z]+\\s*");
+        brandName = formattedBrandName[0].trim();
+      }
+      brandUrl = `${this.getBrandUrl(
+        brandName
+      )}.html?q=${brandName}&dFR[gender][0]=${requestedGender}`;
+    } else {
+      formattedBrandName = brandName
+        .toUpperCase()
+        .split(" ")
+        .filter(function (allItems, i, a) {
+          return i == a.indexOf(allItems.toUpperCase());
+        })
+        .join(" ")
+        .toLowerCase();
+      brandUrl = `${this.getBrandUrl(
+        formattedBrandName
+      )}.html?q=${formattedBrandName}&dFR[gender][0]=${gender}`;
+    }
+    return brandUrl;
+  };
+
+  getCatalogUrl = (query, gender) => {
+    const { isArabic } = this.state;
+    let requestedGender = gender;
+    if (isArabic) {
+      requestedGender = this.getGenderInArabic(gender);
+    }
+    const catalogUrl = `/catalogsearch/result/?q=${formatQuerySuggestions(
+      query
+    )}&p=0&dFR[gender][0]=${requestedGender}`;
+    return catalogUrl;
+  };
+
+  getGenderInArabic = (gender) => {
+    switch (gender) {
+      case "men":
+        return "رجال";
+      case "women":
+        return "نساء";
+      case "kids":
+        return "أطفال";
+    }
+  };
+
+  renderQuerySuggestion = (querySuggestions) => {
+    const { query, count, isBrand } = querySuggestions;
+    const { searchString } = this.props;
+    const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
+    return (
+      <li>
+        {isBrand ? (
+          <Link
+            to={encodeURI(
+              this.getBrandSuggestionUrl(formatQuerySuggestions(query))
+            )}
+            onClick={this.closeSearchPopup}
+          >
+            <div className="suggestion-details-box">
+              {getHighlightedText(formatQuerySuggestions(query), searchString)}
+              <div>{count}</div>
+            </div>
+          </Link>
+        ) : (
+          <Link
+            to={encodeURI(this.getCatalogUrl(query, gender))}
+            onClick={this.closeSearchPopup}
+          >
+            <div className="suggestion-details-box">
+              {getHighlightedText(formatQuerySuggestions(query), searchString)}
+              <div>{count}</div>
+            </div>
+          </Link>
+        )}
+      </li>
+    );
+  };
+
+  renderQuerySuggestions() {
+    const { querySuggestions = [] } = this.props;
+    return (
+      <div block="SearchSuggestion" elem="Item">
+        <ul>{querySuggestions.map(this.renderQuerySuggestion)}</ul>
+      </div>
+    );
+  }
+
+  // query suggestion block ends
 
   discountPercentage(basePrice, specialPrice, haveDiscount) {
     let discountPercentage = Math.round(100 * (1 - specialPrice / basePrice));
@@ -215,6 +320,7 @@ class SearchSuggestion extends PureComponent {
   renderSuggestions() {
     return (
       <>
+        {this.renderQuerySuggestions()}
         {this.renderBrands()}
         {this.renderProducts()}
       </>
@@ -285,9 +391,33 @@ class SearchSuggestion extends PureComponent {
     );
   }
 
+  renderTopSearch = ({ search }, i) => (
+    <li key={i}>
+      <Link
+        to={`/catalogsearch/result/?q=${search}`}
+        onClick={this.closeSearchPopup}
+      >
+        <div block="SearchSuggestion" elem="TrandingTag">
+          {search}
+        </div>
+      </Link>
+    </li>
+  );
+
+  renderTopSearches() {
+    const { topSearches = [] } = this.props;
+    return (
+      <div block="TrandingTags">
+        <h2>{__("Top searches")}</h2>
+        <ul>{topSearches.map(this.renderTopSearch)}</ul>
+      </div>
+    );
+  }
+
   renderEmptySearch() {
     return (
       <>
+        {this.renderTopSearches()}
         {this.renderTrendingBrands()}
         {this.renderTrendingTags()}
       </>
@@ -347,7 +477,6 @@ class SearchSuggestion extends PureComponent {
   }
   render() {
     const { isArabic } = this.state;
-
     return (
       <div block="SearchSuggestion" mods={{ isArabic }}>
         <div block="SearchSuggestion" elem="Content">

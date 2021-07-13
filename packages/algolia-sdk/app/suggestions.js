@@ -1,25 +1,14 @@
-export default function getSuggestions(
-    {
-        query = '',
-        limit = 3
-    },
-    options = {}
+export default async function getSuggestions(
+  { query = "", limit = 5 },
+  options = {}
 ) {
-    const { index } = options;
-
-    return new Promise((resolve, reject) => {
-        index.search(
-            {
-                query,
-                hitsPerPage: limit
-            },
-            (err, data = {}) => {
-                if (err) {
-                    return reject(err);
-                }
-
-                return resolve(data);
-            }
-        );
+  const { index } = options;
+  try {
+    const res = await index.search(query, {
+      hitsPerPage: limit,
     });
+    return res.hits;
+  } catch (e) {
+    console.log(e);
+  }
 }

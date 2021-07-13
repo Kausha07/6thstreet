@@ -245,7 +245,7 @@
     "Select shipping method": "إختر طريقة الشحن",
     "There are no shipping methods available, try different address.": "لا توجد طرق شحن متاحة ، جرب عنوانًا مختلفًا.",
     "Save customer": "حفظ العميل",
-    "Recommended": "موصى به",
+    "Recommended": null,
     "Please select a size.": "الرجاء إختيار مقاس",
     "New Products": "منتجات جديدة",
     "You have no items in your shopping cart.": "لا يوجد لديك منتجات في سلة التسوق الخاصة بك.",
@@ -461,8 +461,8 @@
     "Receive your package and enjoy it": "إستلم طلبيتك وإستمتع بها",
     "Pay 14 days later using your debit or credit card by logging into your Tabby account": "أكمل الدفع بعد ١٤ يوم من الإستلام باستخدام بطاقة الائتمان أو السحب الآلي عبر موقع تابي",
     "New": "جديد",
-    "Trending brands": "الماركات الشهيرة",
-    "Trending tags": "أحدث العلامات",
+    "Trending brands": null,
+    "Trending tags": null,
     "Color: ": "اللون: ",
     "Qty: ": "الكمية: ",
     "Size: ": "المقاس: ",
@@ -795,5 +795,6 @@
     "Whatsapp": null,
     "Customer service is available all days": null,
     "from: ": null,
-    "9am - 9pm": null
+    "9am - 9pm": null,
+    "Top searches": null
 }
