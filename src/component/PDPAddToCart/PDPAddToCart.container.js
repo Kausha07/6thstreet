@@ -20,6 +20,9 @@ import history from "Util/History";
 import isMobile from "Util/Mobile";
 import PDPAddToCart from "./PDPAddToCart.component";
 import PDPAddToCartDesktop from "./PDPAddToCartDesktop.component";
+import BrowserDatabase from "Util/BrowserDatabase";
+import { ONE_MONTH_IN_SECONDS } from 'Util/Request/QueryDispatcher';
+import { NOTIFY_EMAIL } from './PDPAddToCard.config';
 
 export const mapStateToProps = (state) => ({
   product: state.PDP.product,
@@ -189,14 +192,13 @@ export class PDPAddToCartContainer extends PureComponent {
 
   componentDidMount() {
     const {
-      product: { sku },
+      product: { sku, in_stock },
       getProductStock,
     } = this.props;
     const {
       sizeObject: { sizeTypes },
     } = this.state;
     this.setState({ processingRequest: true });
-
     getProductStock(sku).then((response) => {
       const allSizes = Object.entries(response).reduce((acc, size) => {
         const sizeCode = size[0];
@@ -214,7 +216,7 @@ export class PDPAddToCartContainer extends PureComponent {
         sizeCodes: allSizes,
       };
 
-      this.setState({ processingRequest: false, mappedSizeObject: object, productStock: response });
+      this.setState({ processingRequest: false, mappedSizeObject: object, productStock: response, isOutOfStock: in_stock === 0 });
     });
   }
 
@@ -231,7 +233,16 @@ export class PDPAddToCartContainer extends PureComponent {
 
     sendNotifyMeEmail(data).then((response) => {
       if (response && response.success) {//if success
-        this.setState({ notifyMeSuccess: true, isOutOfStock: false });
+        if (response.message) {
+          showNotification("error", response.message);
+          this.setState({ notifyMeSuccess: false, isOutOfStock: false });
+        } else {
+          this.setState({ notifyMeSuccess: true, isOutOfStock: false });
+          BrowserDatabase.setItem(email, NOTIFY_EMAIL, ONE_MONTH_IN_SECONDS);
+          setTimeout(() => {
+            this.setState({ notifyMeSuccess: false, isOutOfStock: false });
+          }, 4000);
+        }
       } else {//if error
         showNotification("error", __('Something went wrong.'));
       }

@@ -5,6 +5,7 @@ import { PRODUCT_SLIDER_TYPE } from "Component/DynamicContent/DynamicContent.con
 import Event, { EVENT_GTM_IMPRESSIONS_HOME } from "Util/Event";
 import Logger from "Util/Logger";
 // import DynamicContent from "Component/DynamicContent";
+import DynamicContent from "Component/DynamicContent";
 import MenuBanner from "Component/MenuBanner";
 import MenuBrands from "Component/MenuBrands";
 import MenuGrid from "Component/MenuGrid";

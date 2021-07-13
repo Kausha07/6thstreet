@@ -25,7 +25,6 @@ class DynamicContentBanner extends PureComponent {
   };
   constructor(props) {
     super(props);
-    console.log("--------------------- props", this.props);
     this.onclick = this.onclick.bind(this);
   }
 
@@ -38,7 +37,6 @@ class DynamicContentBanner extends PureComponent {
   };
 
   onclick = (item) => {
-    console.log(this.props);
     const { toggleMobileMenuSideBar } = this.props;
     if (toggleMobileMenuSideBar) {
       toggleMobileMenuSideBar();

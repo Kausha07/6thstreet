@@ -225,6 +225,10 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
 
+      &-Wrapper {
+        position: unset;
+      }
+
       &:after {
         background: rgba(0, 0, 0, 0.7);
         content: " ";
@@ -278,6 +282,7 @@
           margin-bottom: 15px;
         }
       }
+
       .MenuGrid {
         width: 100%;
         margin: 0;

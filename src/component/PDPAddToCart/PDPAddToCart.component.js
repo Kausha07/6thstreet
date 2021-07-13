@@ -8,6 +8,8 @@ import PDPSizeGuide from "../PDPSizeGuide";
 import "./PDPAddToCart.style";
 import Spinner from "react-spinkit";
 import NotifySuccessImg from "./icons/success-circle.png";
+import { NOTIFY_EMAIL } from "./PDPAddToCard.config";
+import BrowserDatabase from "Util/BrowserDatabase";
 
 class PDPAddToCart extends PureComponent {
   static propTypes = {
@@ -28,7 +30,7 @@ class PDPAddToCart extends PureComponent {
   };
 
   state = {
-    notifyMeEmail: "",
+    notifyMeEmail: BrowserDatabase.getItem(NOTIFY_EMAIL) || "",
     isIPhoneNavigationHidden: false,
     pageYOffset: window.innerHeight,
     isRoundedIphone: this.isRoundedIphoneScreen() ?? false,
@@ -143,8 +145,35 @@ class PDPAddToCart extends PureComponent {
         </div>
       );
     }
-
     return null;
+  }
+  renderSizeOption(simple_products, code, label) {
+    const { selectedSizeCode, onSizeSelect } = this.props;
+    const isNotAvailable = parseInt(simple_products[code].quantity) === 0;
+
+    return (
+      <div
+        block="PDPAddToCart-SizeSelector"
+        elem={isNotAvailable ? "SizeOptionContainerOOS" : "SizeOptionContainer"}
+        onClick={() => {
+          onSizeSelect({ target: { value: code } });
+        }}
+      >
+        <input
+          id={code}
+          key={code}
+          type="radio"
+          elem="SizeOption"
+          name="size"
+          block="PDPAddToCart"
+          value={code}
+          checked={selectedSizeCode === code}
+        />
+        <label for={code}>{label}</label>
+        <div />
+        {isNotAvailable && <div className="line" />}
+      </div>
+    );
   }
 
   renderSizeInfo() {
@@ -296,6 +325,13 @@ class PDPAddToCart extends PureComponent {
     sendNotifyMeEmail(notifyMeEmail);
   };
 
+  // renderOutOfStock() {
+  //   const { isOutOfStock, notifyMeLoading } = this.props;
+  //   const { notifyMeEmail } = this.state;
+  //   if (!isOutOfStock) {
+  //     return null;
+  //   }
+
   renderOutOfStock() {
     const { isOutOfStock, notifyMeLoading } = this.props;
     const { notifyMeEmail } = this.state;
@@ -315,7 +351,7 @@ class PDPAddToCart extends PureComponent {
           <input
             block="PDPAddToCart"
             elem="EmailInput"
-            placeholder="ALITA@GMAIL.COM"
+            placeholder={`${__("Email")}*`}
             value={notifyMeEmail}
             disabled={notifyMeLoading}
             onChange={({ target }) => {
@@ -344,7 +380,6 @@ class PDPAddToCart extends PureComponent {
     if (!notifyMeSuccess) {
       return null;
     }
-
     return (
       <div block="PDPAddToCart" elem="NotifyMeSuccessContainer">
         <img src={NotifySuccessImg} alt="success circle" />

@@ -40,34 +40,38 @@ class PDPDetailsSection extends PureComponent {
     const { gender, pdpWidgetsData, product: sourceProduct } = this.props;
     if (pdpWidgetsData && pdpWidgetsData.length > 0) {
       //load vue data for widgets only if widgets data available
-      const {
-        USER_DATA: { deviceUuid },
-      } = BrowserDatabase.getItem("MOE_DATA");
-      const customer = BrowserDatabase.getItem("customer");
-      const userID = customer && customer.id ? customer.id : null;
-      const query = {
-        filters: [],
-        num_results: 10,
-        mad_uuid: deviceUuid,
-      };
+      const userData = BrowserDatabase.getItem("MOE_DATA");
+      if (userData) {
+        //added check if user data is loaded then only load PDP widgets otherwise not.
+        const {
+          USER_DATA: { deviceUuid },
+        } = userData;
+        const customer = BrowserDatabase.getItem("customer");
+        const userID = customer && customer.id ? customer.id : null;
+        const query = {
+          filters: [],
+          num_results: 10,
+          mad_uuid: deviceUuid,
+        };
 
-      let promisesArray = [];
-      pdpWidgetsData.forEach((element) => {
-        const { type } = element;
-        const payload = VueQuery.buildQuery(type, query, {
-          gender,
-          userID,
-          sourceProduct,
+        let promisesArray = [];
+        pdpWidgetsData.forEach((element) => {
+          const { type } = element;
+          const payload = VueQuery.buildQuery(type, query, {
+            gender,
+            userID,
+            sourceProduct,
+          });
+          promisesArray.push(fetchVueData(payload));
         });
-        promisesArray.push(fetchVueData(payload));
-      });
-      Promise.all(promisesArray)
-        .then((resp) => {
-          this.setState({ pdpWidgetsAPIData: resp });
-        })
-        .catch((err) => {
-          console.log("pdp widget vue query catch", err);
-        });
+        Promise.all(promisesArray)
+          .then((resp) => {
+            this.setState({ pdpWidgetsAPIData: resp });
+          })
+          .catch((err) => {
+            console.log("pdp widget vue query catch", err);
+          });
+      }
     }
   }
 
@@ -170,9 +174,8 @@ class PDPDetailsSection extends PureComponent {
       sleeve_length,
     };
 
-    const { isArabic } = this.state;
     return (
-      <div block="PDPDetailsSection" elem="Highlights" mods={{ isArabic }}>
+      <div block="PDPDetailsSection" elem="Highlights">
         <h4>{__("Highlights")}</h4>
         <ul>{this.renderListItems(productInfo)}</ul>
         {this.renderMoreDetailsList()}
@@ -259,13 +262,14 @@ class PDPDetailsSection extends PureComponent {
           {pdpWidgetsAPIData.map((item, index) => {
             if (typeof item === "object" && Object.keys(item).length > 0) {
               const { title: heading } = pdpWidgetsData[index]["layout"];
+              const widgetID = pdpWidgetsData[index]["type"];
               const { data } = item;
               if (data && data.length > 0) {
                 return (
                   <DynamicContentVueProductSliderContainer
+                    widgetID={widgetID}
                     products={data}
                     heading={heading}
-                    isHome={true}
                     key={`DynamicContentVueProductSliderContainer${index}`}
                   />
                 );
