@@ -201,7 +201,7 @@ export class PDPAddToCartContainer extends PureComponent {
 
   componentDidMount() {
     const {
-      product: { sku },
+      product: { sku, size_eu, size_uk, size_us },
       getProductStock,
       setGuestUserEmail,
     } = this.props;
@@ -214,6 +214,8 @@ export class PDPAddToCartContainer extends PureComponent {
     } = this.state;
     this.setState({ processingRequest: true });
     getProductStock(sku).then((response) => {
+      console.log("this.props.product", this.props.product);
+      console.log("getProductStock", response);
       const allSizes = Object.entries(response).reduce((acc, size) => {
         const sizeCode = size[0];
         const { quantity } = size[1];
@@ -234,6 +236,7 @@ export class PDPAddToCartContainer extends PureComponent {
         processingRequest: false,
         mappedSizeObject: object,
         productStock: response,
+        ...(size_us.length === 0 && size_uk.length === 0 && size_eu.length === 0 && { isOutOfStock: true })
       });
     });
   }
