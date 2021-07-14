@@ -189,6 +189,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const { checkoutStep, initialGTMSent } = this.state;
     this.refreshCart();
     setMeta({ title: __("Checkout") });
+    const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
+    if(QPAY_CHECK){
+      this.setState({isLoading: true})
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -238,11 +242,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           if (status === "Authorized" || status === "Captured") {
             BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
             this.setDetailsStep(order_id, increment_id);
-            // this.resetCart();
-            this.refreshCart();
+            this.setState({isLoading: false})
+            this.resetCart();
             capturePayment(paymentId, order_id).then(response => {
               if(response){
-                this.setstate({CaptureID: response.confirmation_id})
+                this.setState({CaptureID: response?.confirmation_id})
               }
             });
           }
@@ -251,8 +255,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             cancelOrder(order_id, PAYMENT_FAILED);
             this.setState({ isLoading: false, isFailed: true });
             this.setDetailsStep(order_id, increment_id);
-            // this.resetCart();
-            this.refreshCart();
+            this.resetCart();
           }
         }
       }).catch(rejected => {
