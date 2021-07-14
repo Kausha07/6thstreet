@@ -714,5 +714,6 @@
     "EMAIL ADDRESS*": null,
     "Show": null,
     "Mask": null,
-    "QPAY": null
+    "QPAY": null,
+    "Confirmation ID": null
 }
