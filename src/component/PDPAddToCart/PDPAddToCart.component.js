@@ -148,7 +148,7 @@ class PDPAddToCart extends PureComponent {
   }
 
   renderSizeOption(productStock, code, label) {
-    const { selectedSizeCode, onSizeSelect, notifyMeLoading } = this.props;
+    const { selectedSizeCode, onSizeSelect, notifyMeLoading, notifyMeSuccess } = this.props;
     const isNotAvailable = parseInt(productStock[code].quantity) === 0;
 
     const selectedLabelStyle = {
@@ -171,7 +171,7 @@ class PDPAddToCart extends PureComponent {
         block="PDPAddToCart-SizeSelector"
         elem={isNotAvailable ? "SizeOptionContainerOOS" : "SizeOptionContainer"}
         onClick={() => {
-          if (!notifyMeLoading) onSizeSelect({ target: { value: code } });
+          if (!notifyMeLoading && !notifyMeSuccess) onSizeSelect({ target: { value: code } });
         }}
       >
         <input
@@ -501,7 +501,7 @@ class PDPAddToCart extends PureComponent {
         {this.renderNotifyMeSuccess()}
         {this.renderNotAvailable()}
         {sizeObject.sizeTypes !== undefined &&
-        sizeObject.sizeTypes.length !== 0 ? (
+          sizeObject.sizeTypes.length !== 0 ? (
           <>
             <div block="PDPAddToCart" elem="SizeInfoContainer">
               <span block="PDPAddToCart-SizeInfoContainer" elem="title">
