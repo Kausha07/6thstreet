@@ -46,13 +46,23 @@ class PDPAddToCart extends PureComponent {
 
   componentDidMount() {
     window.addEventListener("scroll", this.handleResize);
-    // var data = localStorage.getItem("customer");
-    // if (data) {
-    //   let userData = JSON.parse(data);
-    //   if (userData?.data?.email && !!this.state.notifyMeEmail.length) {
-    //     this.setState({ notifyMeEmail: userData.data.email });
-    //   }
-    // }
+
+    window.addEventListener("userLogin", () => this.updateStateNotifyEmail());
+
+    window.addEventListener("userLogout", () => this.updateStateNotifyEmail());
+  }
+
+  updateStateNotifyEmail() {
+    const {
+      customer: { email }, guestUserEmail } = this.props;
+    const { notifyMeEmail } = this.state;
+    if (email && notifyMeEmail !== email) {
+      this.setState({ notifyMeEmail: email });
+    } else if (!email && guestUserEmail !== notifyMeEmail) {
+      this.setState({
+        notifyMeEmail: BrowserDatabase.getItem(NOTIFY_EMAIL) || "",
+      });
+    }
   }
 
   isRoundedIphoneScreen() {
@@ -400,13 +410,13 @@ class PDPAddToCart extends PureComponent {
     if (!isOutOfStock) {
       return null;
     }
-    if (email && notifyMeEmail !== email) {
-      this.setState({ notifyMeEmail: email });
-    } else if (!email && guestUserEmail !== notifyMeEmail) {
-      this.setState({
-        notifyMeEmail: BrowserDatabase.getItem(NOTIFY_EMAIL) || "",
-      });
-    }
+    // if (email && notifyMeEmail !== email) {
+    //   this.setState({ notifyMeEmail: email });
+    // } else if (!email && guestUserEmail !== notifyMeEmail) {
+    //   this.setState({
+    //     notifyMeEmail: BrowserDatabase.getItem(NOTIFY_EMAIL) || "",
+    //   });
+    // }
 
     return (
       <div block="PDPAddToCart" elem="OutOfStockContainer">
