@@ -138,7 +138,7 @@ const createCustomQuerySuggestions = (hit, resArray, sourceIndexName) => {
           [
             {
               type: "brand",
-              value: brand_name[0].value,
+              value: brand_name[0]?.value,
             },
             {
               type: "categories_level1",
@@ -166,7 +166,7 @@ const createCustomQuerySuggestions = (hit, resArray, sourceIndexName) => {
           [
             {
               type: "brand",
-              value: brand_name[0].value,
+              value: brand_name[0]?.value,
             },
             {
               type: "categories_level2",
@@ -291,7 +291,7 @@ const createCustomQuerySuggestions = (hit, resArray, sourceIndexName) => {
         [
           {
             type: "brand",
-            value: brand_name[0].value,
+            value: brand_name[0]?.value,
           },
         ],
         brand_name[0]?.count,
@@ -380,7 +380,7 @@ export const formatQuerySuggestions = (query) => {
   const capitalizedQuery = capitalizeFirstLetters(query);
   let avoidFilter = gender;
   if (checkForKidsFilterQuery(capitalizedQuery)) avoidFilter = "kids";
-  else if (gender === "all") return query;
+  else if (gender === "all") return capitalizedQuery;
 
   let regex = new RegExp("\\b" + avoidFilter + "\\b", "i");
   return query

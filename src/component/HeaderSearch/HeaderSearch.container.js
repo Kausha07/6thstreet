@@ -47,6 +47,9 @@ export class HeaderSearchContainer extends PureComponent {
       AppState: { gender },
     } = getStore().getState();
     const PRODUCT_RESULT_LIMIT = 8;
+    let recentSearches =
+      JSON.parse(localStorage.getItem("recentSearches")) || [];
+    let tempRecentSearches = [];
     // const queryID = getStore().getState().SearchSuggestions.queryID
     //   ? getStore().getState().SearchSuggestions.queryID
     //   : "";
@@ -64,6 +67,24 @@ export class HeaderSearchContainer extends PureComponent {
             gender: gender,
             addAnalytics: true,
           }
+    );
+    if (recentSearches) {
+      tempRecentSearches = [...recentSearches.reverse()];
+    }
+    tempRecentSearches = tempRecentSearches.filter(
+      (item) => item.name !== search
+    );
+    if (tempRecentSearches.length > 2) {
+      tempRecentSearches.shift();
+      tempRecentSearches.push({
+        name: search,
+      });
+    } else {
+      tempRecentSearches.push({ name: search });
+    }
+    localStorage.setItem(
+      "recentSearches",
+      JSON.stringify(tempRecentSearches.reverse())
     );
     const queryID = productData?.queryID ? productData?.queryID : null;
     history.push(`/catalogsearch/result/?q=${search}&qid=${queryID}`);

@@ -28,6 +28,7 @@ class SearchSuggestion extends PureComponent {
     hideActiveOverlay: PropTypes.func,
     querySuggestions: PropTypes.array,
     topSearches: PropTypes.array,
+    recentSearches: PropTypes.array,
     searchString: PropTypes.string,
   };
 
@@ -394,7 +395,6 @@ class SearchSuggestion extends PureComponent {
   }
 
   renderTopSearch = ({ search, link }, i) => {
-    console.log("link", link);
     return (
       <li key={i}>
         <Link
@@ -419,9 +419,37 @@ class SearchSuggestion extends PureComponent {
     );
   }
 
+  // recent searches
+
+  renderRecentSearch = ({ name, link }, i) => {
+    return (
+      <li key={i}>
+        <Link
+          to={link ? link : `/catalogsearch/result/?q=${name}`}
+          onClick={this.closeSearchPopup}
+        >
+          <div block="SearchSuggestion" elem="TopSearches">
+            {name}
+          </div>
+        </Link>
+      </li>
+    );
+  };
+
+  renderRecentSearches() {
+    const { recentSearches = [] } = this.props;
+    return (
+      <div block="TrandingTags">
+        <h2>{__("Recent searches")}</h2>
+        <ul>{recentSearches.map(this.renderRecentSearch)}</ul>
+      </div>
+    );
+  }
+
   renderEmptySearch() {
     return (
       <>
+        {this.renderRecentSearches()}
         {this.renderTopSearches()}
         {this.renderTrendingBrands()}
         {this.renderTrendingTags()}
