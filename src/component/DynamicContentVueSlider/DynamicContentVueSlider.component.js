@@ -1,12 +1,11 @@
 import PropTypes from "prop-types";
-import React from "react";
-import { PureComponent } from "react";
+import React, { PureComponent } from "react";
 import { connect } from "react-redux";
-import VueQuery from "../../query/Vue.query";
-import BrowserDatabase from "Util/BrowserDatabase";
 import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
-import DynamicContentVueProductSliderContainer from "../DynamicContentVueProductSlider";
 import { isArabic } from "Util/App";
+import BrowserDatabase from "Util/BrowserDatabase";
+import VueQuery from "../../query/Vue.query";
+import DynamicContentVueProductSliderContainer from "../DynamicContentVueProductSlider";
 import "./DynamicContentVueSlider.style";
 
 export const mapStateToProps = (state) => ({
@@ -70,7 +69,7 @@ class DynamicContentVueSlider extends PureComponent {
     const { isArabic } = this.state;
     return (
       <div block="VeuSliderWrapper" mods={{ isArabic }}>
-        {this.state.data.length > 0 && (
+        {this.state.data?.length > 0 && (
           <DynamicContentVueProductSliderContainer
             products={this.state.data}
             heading={this.props.layout.title}

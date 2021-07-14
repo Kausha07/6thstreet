@@ -2,10 +2,10 @@ import PropTypes from "prop-types";
 import React, { PureComponent } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
-
-import { HistoryType, LocationType } from "Type/Common";
-
 import { getStore } from "Store";
+import { HistoryType, LocationType } from "Type/Common";
+import Algolia from "Util/API/provider/Algolia";
+import { isArabic } from "Util/App";
 import HeaderSearch from "./HeaderSearch.component";
 
 export const mapStateToProps = (_state) => ({
@@ -40,12 +40,53 @@ export class HeaderSearchContainer extends PureComponent {
     onSearchClean: this.onSearchClean.bind(this),
     hideSearchBar: this.hideSearchBar.bind(this),
   };
-  onSearchSubmit() {
+  async onSearchSubmit() {
     const { history } = this.props;
     const { search } = this.state;
-    const queryID = getStore().getState().SearchSuggestions.queryID
-      ? getStore().getState().SearchSuggestions.queryID
-      : "";
+    const {
+      AppState: { gender },
+    } = getStore().getState();
+    const PRODUCT_RESULT_LIMIT = 8;
+    let recentSearches =
+      JSON.parse(localStorage.getItem("recentSearches")) || [];
+    let tempRecentSearches = [];
+    // const queryID = getStore().getState().SearchSuggestions.queryID
+    //   ? getStore().getState().SearchSuggestions.queryID
+    //   : "";
+    const productData = await new Algolia().searchBy(
+      isArabic()
+        ? {
+            query: search,
+            limit: PRODUCT_RESULT_LIMIT,
+            gender: gender,
+            addAnalytics: true,
+          }
+        : {
+            query: search,
+            limit: PRODUCT_RESULT_LIMIT,
+            gender: gender,
+            addAnalytics: true,
+          }
+    );
+    if (recentSearches) {
+      tempRecentSearches = [...recentSearches.reverse()];
+    }
+    tempRecentSearches = tempRecentSearches.filter(
+      (item) => item.name !== search
+    );
+    if (tempRecentSearches.length > 4) {
+      tempRecentSearches.shift();
+      tempRecentSearches.push({
+        name: search,
+      });
+    } else {
+      tempRecentSearches.push({ name: search });
+    }
+    localStorage.setItem(
+      "recentSearches",
+      JSON.stringify(tempRecentSearches.reverse())
+    );
+    const queryID = productData?.queryID ? productData?.queryID : null;
     history.push(`/catalogsearch/result/?q=${search}&qid=${queryID}`);
   }
 

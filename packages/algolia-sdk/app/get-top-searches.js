@@ -1,3 +1,4 @@
+import { formatDate } from "Util/Date";
 const fetch = require("node-fetch");
 
 export default async function getTopSearches(options = {}) {
@@ -6,10 +7,14 @@ export default async function getTopSearches(options = {}) {
   const apiKey = index.as.apiKey;
   const applicationID = index.as.applicationID;
   try {
+    var endDateObj = new Date();
+    var startDateObj = new Date();
+    startDateObj.setDate(endDateObj.getDate() - 7);
+    var formattedStartDate = formatDate("YYYY-MM-DD", startDateObj);
+    var formattedEndDate = formatDate("YYYY-MM-DD", endDateObj);
     return new Promise((resolve, reject) => {
-      // Multiply limit by 2 because there are duplicated values
       fetch(
-        `https://analytics.algolia.com/2/searches?index=${indexName}&limit=5&tags=PWA_Search`,
+        `https://analytics.algolia.com/2/searches?index=${indexName}&limit=5&tags=PWA_Search&startDate=${formattedStartDate}&endDate=${formattedEndDate}`,
         {
           headers: {
             "X-Algolia-API-Key": apiKey,

@@ -25,10 +25,14 @@ export class SearchSuggestionsDispatcher {
           ? {
               query: search,
               limit: PRODUCT_RESULT_LIMIT,
+              gender: gender,
+              addAnalytics: false,
             }
           : {
               query: search,
               limit: PRODUCT_RESULT_LIMIT,
+              gender: gender,
+              addAnalytics: false,
             }
       );
 
@@ -68,7 +72,6 @@ export class SearchSuggestionsDispatcher {
 
       // In case anyone needs desktop data (use this!)
       // const lang = language === 'en' ? 'english' : 'arabic';
-      // console.log("sourceQuerySuggestionIndex", sourceQuerySuggestionIndex);
       const hits = await new Algolia({
         index: sourceQuerySuggestionIndex,
       }).getSuggestions(

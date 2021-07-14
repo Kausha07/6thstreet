@@ -74,6 +74,7 @@ export class SearchSuggestionContainer extends PureComponent {
       trendingBrands: [],
       trendingTags: [],
       topSearches: [],
+      recentSearches: [],
     };
 
     // TODO: please render this component only once. Otherwise it is x3 times the request
@@ -81,6 +82,7 @@ export class SearchSuggestionContainer extends PureComponent {
     SearchSuggestionContainer.requestSearchSuggestions(props);
     this.requestTrendingInformation();
     this.requestTopSearches();
+    this.requestRecentSearches();
   }
 
   getAlgoliaIndex(countryCodeFromUrl, lang) {
@@ -148,13 +150,61 @@ export class SearchSuggestionContainer extends PureComponent {
 
   async requestTopSearches() {
     const topSearches = await new Algolia().getTopSearches();
+    let refinedTopSearches = [];
+    await Promise.all(
+      topSearches?.data
+        ?.filter((ele) => ele !== "")
+        .map(async (item) => {
+          const filteredItem = await this.checkForSKU(item.search);
+          if (filteredItem) {
+            refinedTopSearches.push({ link: filteredItem.url, ...item });
+          } else {
+            refinedTopSearches.push({ link: null, ...item });
+          }
+        })
+    );
     this.setState({
-      topSearches: topSearches?.data?.filter((ele) => ele !== "") || [],
+      topSearches: refinedTopSearches || [],
     });
   }
 
+  async requestRecentSearches() {
+    let recentSearches =
+      JSON.parse(localStorage.getItem("recentSearches")) || [];
+    let refinedRecentSearches = [];
+    if (recentSearches.length > 0) {
+      await Promise.all(
+        recentSearches?.map(async (item) => {
+          const filteredItem = await this.checkForSKU(item.name);
+          if (filteredItem) {
+            refinedRecentSearches.push({ link: filteredItem.url, ...item });
+          } else {
+            refinedRecentSearches.push({ link: null, ...item });
+          }
+        })
+      );
+    }
+    this.setState({
+      recentSearches: refinedRecentSearches || [],
+    });
+  }
+
+  checkForSKU = async (search) => {
+    const config = {
+      q: search,
+      page: 0,
+      limit: 2,
+    };
+    const { data } = await new Algolia().getPLP(config);
+    if (data && data.length === 1) {
+      return data[0];
+    }
+    return null;
+  };
+
   containerProps = () => {
-    const { trendingBrands, trendingTags, topSearches } = this.state;
+    const { trendingBrands, trendingTags, topSearches, recentSearches } =
+      this.state;
     const { search, data, closeSearch, queryID, querySuggestions } = this.props;
     const { brands = [], products = [] } = data;
 
@@ -175,6 +225,7 @@ export class SearchSuggestionContainer extends PureComponent {
       queryID,
       querySuggestions,
       topSearches,
+      recentSearches,
     };
   };
   containerFunctions = {

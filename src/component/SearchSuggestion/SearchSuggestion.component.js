@@ -28,6 +28,7 @@ class SearchSuggestion extends PureComponent {
     hideActiveOverlay: PropTypes.func,
     querySuggestions: PropTypes.array,
     topSearches: PropTypes.array,
+    recentSearches: PropTypes.array,
     searchString: PropTypes.string,
   };
 
@@ -172,7 +173,9 @@ class SearchSuggestion extends PureComponent {
             to={encodeURI(
               this.getBrandSuggestionUrl(formatQuerySuggestions(query))
             )}
-            onClick={this.closeSearchPopup}
+            onClick={() =>
+              this.onSearchQueryClick(formatQuerySuggestions(query))
+            }
           >
             <div className="suggestion-details-box">
               {getHighlightedText(formatQuerySuggestions(query), searchString)}
@@ -182,7 +185,9 @@ class SearchSuggestion extends PureComponent {
         ) : (
           <Link
             to={encodeURI(this.getCatalogUrl(query, gender))}
-            onClick={this.closeSearchPopup}
+            onClick={() =>
+              this.onSearchQueryClick(formatQuerySuggestions(query))
+            }
           >
             <div className="suggestion-details-box">
               {getHighlightedText(formatQuerySuggestions(query), searchString)}
@@ -313,7 +318,7 @@ class SearchSuggestion extends PureComponent {
 
     return (
       <div block="SearchSuggestion" elem="Recommended">
-        <h2>{__("Recommended")}</h2>
+        <h2>{__("Trending Products")}</h2>
         <ul>{products.map(this.renderProduct)}</ul>
       </div>
     );
@@ -323,7 +328,7 @@ class SearchSuggestion extends PureComponent {
     return (
       <>
         {this.renderQuerySuggestions()}
-        {this.renderBrands()}
+        {/* {this.renderBrands()} */}
         {this.renderProducts()}
       </>
     );
@@ -334,6 +339,37 @@ class SearchSuggestion extends PureComponent {
   }
   closeSearchPopup = () => {
     this.props.closeSearch();
+  };
+
+  logRecentSearches = (search) => {
+    let recentSearches =
+      JSON.parse(localStorage.getItem("recentSearches")) || [];
+    let tempRecentSearches = [];
+    if (recentSearches) {
+      tempRecentSearches = [...recentSearches.reverse()];
+    }
+    tempRecentSearches = tempRecentSearches.filter(
+      (item) => item.name !== search
+    );
+    if (tempRecentSearches.length > 4) {
+      tempRecentSearches.shift();
+      tempRecentSearches.push({
+        name: search,
+      });
+    } else {
+      tempRecentSearches.push({ name: search });
+    }
+    localStorage.setItem(
+      "recentSearches",
+      JSON.stringify(tempRecentSearches.reverse())
+    );
+  };
+
+  // common function for top search, recent search, query suggestion search.
+  onSearchQueryClick = (search) => {
+    const { closeSearch } = this.props;
+    this.logRecentSearches(search);
+    closeSearch();
   };
 
   renderTrendingBrand = (brand, i) => {
@@ -393,32 +429,62 @@ class SearchSuggestion extends PureComponent {
     );
   }
 
-  renderTopSearch = ({ search }, i) => (
-    <li key={i}>
-      <Link
-        to={`/catalogsearch/result/?q=${search}`}
-        onClick={this.closeSearchPopup}
-      >
-        <div block="SearchSuggestion" elem="TrandingTag">
-          {search}
-        </div>
-      </Link>
-    </li>
-  );
+  renderTopSearch = ({ search, link }, i) => {
+    return (
+      <li key={i}>
+        <Link
+          to={link ? link : `/catalogsearch/result/?q=${search}`}
+          onClick={() => this.onSearchQueryClick(search)}
+        >
+          <div block="SearchSuggestion" elem="TopSearches">
+            {search}
+          </div>
+        </Link>
+      </li>
+    );
+  };
 
   renderTopSearches() {
     const { topSearches = [] } = this.props;
     return (
-      <div block="TrandingTags">
+      <div block="TopSearches">
         <h2>{__("Top searches")}</h2>
         <ul>{topSearches.map(this.renderTopSearch)}</ul>
       </div>
     );
   }
 
+  // recent searches
+
+  renderRecentSearch = ({ name, link }, i) => {
+    return (
+      <li key={i}>
+        <Link
+          to={link ? link : `/catalogsearch/result/?q=${name}`}
+          onClick={() => this.onSearchQueryClick(name)}
+        >
+          <div block="SearchSuggestion" elem="TopSearches">
+            {name}
+          </div>
+        </Link>
+      </li>
+    );
+  };
+
+  renderRecentSearches() {
+    const { recentSearches = [] } = this.props;
+    return recentSearches.length > 0 ? (
+      <div block="RecentSearches">
+        <h2>{__("Recent searches")}</h2>
+        <ul>{recentSearches.map(this.renderRecentSearch)}</ul>
+      </div>
+    ) : null;
+  }
+
   renderEmptySearch() {
     return (
       <>
+        {this.renderRecentSearches()}
         {this.renderTopSearches()}
         {this.renderTrendingBrands()}
         {this.renderTrendingTags()}
