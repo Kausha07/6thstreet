@@ -283,6 +283,10 @@ export class CartPage extends PureComponent {
             return <CmsBlock identifier={ cart_cms } />;
         }
 
+        if(!club_apparel_estimated_pointsvalue) {
+            return null
+        }
+
         if (accountLinked && isSignedIn) {
             return (
                 <div
