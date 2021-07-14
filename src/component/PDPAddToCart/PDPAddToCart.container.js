@@ -201,10 +201,9 @@ export class PDPAddToCartContainer extends PureComponent {
 
   componentDidMount() {
     const {
-      product: { sku, in_stock },
+      product: { sku },
       getProductStock,
       setGuestUserEmail,
-      guestUserEmail,
     } = this.props;
     const email = BrowserDatabase.getItem(NOTIFY_EMAIL);
     if (email) {
@@ -235,7 +234,6 @@ export class PDPAddToCartContainer extends PureComponent {
         processingRequest: false,
         mappedSizeObject: object,
         productStock: response,
-        isOutOfStock: in_stock === 0,
       });
     });
   }
