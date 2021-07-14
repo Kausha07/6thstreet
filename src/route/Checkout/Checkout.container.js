@@ -79,7 +79,7 @@ export const mapDispatchToProps = (dispatch) => ({
   setMeta: (meta) => dispatch(updateMeta(meta)),
   setGender: (gender) => dispatch(setGender(gender)),
   resetCart: () => dispatch(resetCart()),
-  getCart: () => CartDispatcher.getCart(dispatch),
+  getCart: (isNewCart) => CartDispatcher.getCart(dispatch, isNewCart),
   updateTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId),
   saveCreditCard: (cardData) =>
     CreditCardDispatcher.saveCreditCard(dispatch, cardData),
@@ -243,7 +243,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
             this.setDetailsStep(order_id, increment_id);
             this.setState({isLoading: false})
-            this.resetCart();
+            this.resetCart(true);
             capturePayment(paymentId, order_id).then(response => {
               if(response){
                 this.setState({CaptureID: response?.confirmation_id})
@@ -255,7 +255,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             cancelOrder(order_id, PAYMENT_FAILED);
             this.setState({ isLoading: false, isFailed: true });
             this.setDetailsStep(order_id, increment_id);
-            this.resetCart();
+            this.resetCart(true);
           }
         }
       }).catch(rejected => {
@@ -886,11 +886,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     }
   }
 
-  resetCart() {
+  resetCart(isNewCart) {
     const { updateStoreCredit, resetCart, getCart } = this.props;
 
     resetCart();
-    getCart();
+    getCart(isNewCart);
     updateStoreCredit();
   }
 }
