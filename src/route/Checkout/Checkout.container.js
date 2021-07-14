@@ -151,7 +151,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
     toggleBreadcrumbs(false);
 
-    const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
 
     this.state = {
       isLoading: false,
@@ -160,7 +159,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       paymentMethods: [],
       shippingMethods: [],
       shippingAddress: {},
-      checkoutStep:QPAY_CHECK ? DETAILS_STEP:is_virtual ? BILLING_STEP : SHIPPING_STEP,
+      checkoutStep:is_virtual ? BILLING_STEP : SHIPPING_STEP,
       orderID: "",
       incrementID: "",
       threeDsUrl: "",
@@ -189,54 +188,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const { checkoutStep, initialGTMSent } = this.state;
     this.refreshCart();
     setMeta({ title: __("Checkout") });
-   
-    const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
-    console.log("checkout step (in checkout container)",checkoutStep )
-    console.log("QPAY check (in checkout container)", QPAY_CHECK)
-    if (QPAY_CHECK) {
-      const {
-        getPaymentAuthorization,
-        capturePayment,
-        cancelOrder,
-      } = this.props;
-
-      localStorage.removeItem("QPAY_ORDER_DETAILS");
-      
-      const ShippingAddress = JSON.parse(localStorage.getItem("Shipping_Address"));
-      
-      this.setState({shippingAddress: ShippingAddress})
-      
-      const { id, order_id, increment_id } = QPAY_CHECK;
-      
-      console.log("payment with Qpay")
-      getPaymentAuthorization(id).then((response) => {
-        if (response) {
-          this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
-          
-          localStorage.removeItem("Shipping_Address");
-
-          console.log("QPAY auth response (checkout container)", response)
-          const { status, id: paymentId = "" } = response;
-
-          if (status === "Authorized" || status === "Captured") {
-            BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
-            this.setDetailsStep(order_id, increment_id);
-            this.resetCart();
-            capturePayment(paymentId, order_id);
-          }
-
-          if (status === "Declined" ||status === "Canceled"  ) {
-            cancelOrder(order_id, PAYMENT_FAILED);
-            this.setState({ isLoading: false, isFailed: true });
-            this.setDetailsStep(order_id, increment_id);
-            this.resetCart();
-          }
-        }
-      }).catch(rejected => {
-        console.log("request rejected(in checkout container)", rejected)
-      });
-      return;
-    }
   }
 
   componentDidUpdate(prevProps, prevState) {
