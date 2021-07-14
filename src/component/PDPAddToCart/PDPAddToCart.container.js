@@ -93,7 +93,7 @@ export class PDPAddToCartContainer extends PureComponent {
     this.state = {
       sizeObject: {},
       mappedSizeObject: {},
-      selectedSizeType: "uk",
+      selectedSizeType: "eu",
       selectedSizeCode: "",
       insertedSizeStatus: true,
       isLoading: false,
@@ -196,8 +196,6 @@ export class PDPAddToCartContainer extends PureComponent {
     } = this.state;
     this.setState({ processingRequest: true });
     getProductStock(sku).then((response) => {
-      console.log("getProductStock", response)
-      console.log("this.props.product", this.props.product)
       const allSizes = Object.entries(response).reduce((acc, size) => {
         const sizeCode = size[0];
         const { quantity } = size[1];
@@ -225,8 +223,9 @@ export class PDPAddToCartContainer extends PureComponent {
       sendNotifyMeEmail,
       showNotification
     } = this.props;
-    let data = { email, sku, locale };
+    const { selectedSizeCode } = this.state;
 
+    let data = { email, sku: selectedSizeCode || sku, locale };
     this.setState({ notifyMeLoading: true });
 
     sendNotifyMeEmail(data).then((response) => {
@@ -282,19 +281,17 @@ export class PDPAddToCartContainer extends PureComponent {
 
   onSizeTypeSelect(type) {
     this.setState({
-      selectedSizeType: type.target.value,
-      selectedSizeCode: "",
+      selectedSizeType: type.target.value
     });
   }
 
   onSizeSelect({ target }) {
     const { value } = target;
-    const { isOutOfStock } = this.state;
-    const { product: { simple_products } } = this.props;
+    const { productStock, isOutOfStock } = this.state;
     let outOfStockVal = isOutOfStock;
-    if (simple_products && simple_products[value]) {
-      const selectedSize = simple_products[value];
-      if (selectedSize['quantity'] == 0) {
+    if (productStock && productStock[value]) {
+      const selectedSize = productStock[value];
+      if (selectedSize['quantity'] && parseInt(selectedSize['quantity'], 0) === 0) {
         outOfStockVal = true;
       } else {
         outOfStockVal = false;
@@ -306,7 +303,6 @@ export class PDPAddToCartContainer extends PureComponent {
   addToCart() {
     const {
       product: {
-        simple_products = {},
         thumbnail_url,
         url,
         color,
@@ -323,6 +319,7 @@ export class PDPAddToCartContainer extends PureComponent {
       addProductToCart,
       showNotification,
     } = this.props;
+    const { productStock } = this.state;
 
     if (!price[0]) {
       showNotification("error", __("Unable to add product to cart."));
@@ -349,7 +346,7 @@ export class PDPAddToCartContainer extends PureComponent {
       selectedSizeCode !== ""
     ) {
       this.setState({ isLoading: true });
-      const { size } = simple_products[selectedSizeCode];
+      const { size } = productStock[selectedSizeCode];
       const optionId = selectedSizeType.toLocaleUpperCase();
       const optionValue = size[selectedSizeType];
       addProductToCart(
@@ -429,7 +426,7 @@ export class PDPAddToCartContainer extends PureComponent {
 
     if (!insertedSizeStatus) {
       this.setState({ isLoading: true });
-      const code = Object.keys(simple_products);
+      const code = Object.keys(productStock);
 
       addProductToCart(
         {

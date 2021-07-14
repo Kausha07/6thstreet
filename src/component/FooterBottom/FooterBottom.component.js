@@ -26,6 +26,7 @@ class FooterBottom extends PureComponent {
                 || location.pathname === '/women.html'
                 || location.pathname === '/men.html'
                 || location.pathname === '/kids.html'
+                || location.pathname === '/home.html'
                 || TYPE_CMS_PAGE === type
                 || TYPE_CATEGORY === type
                 || TYPE_PRODUCT === type ? {
