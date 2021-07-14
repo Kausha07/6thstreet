@@ -277,6 +277,7 @@
     &-Promo {
         order: 2;
         background: var(--cart-page-promo-background);
+        padding: 8px!important;
 
         &Block {
             display: flex;
@@ -435,7 +436,7 @@
     &-Static {
         @include mobile {
             // max-height: calc(100vh - 275px);
-            overflow-y: auto;
+            overflow-y: hidden;
             overflow-x: hidden;
             width: 100%;
             &:first-child {
