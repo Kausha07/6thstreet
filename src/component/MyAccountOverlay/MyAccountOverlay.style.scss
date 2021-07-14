@@ -119,8 +119,8 @@
     }
 
     &-Heading {
-        text-transform: uppercase;
-        font-size: 16px;
+        // text-transform: uppercase;
+        font-size: 18px;
         font-weight: 600;
         letter-spacing: 0;
         line-height: 30px;
@@ -488,6 +488,11 @@
 
     &-Button {
 
+        &:hover {
+            background-color: var(--btn-bg-lite-gray-color)!important;
+            border-radius: 6px!important;
+        }
+
         .Button{
             --button-background: var(--btn-bg-lite-gray-color);
             --button-border:  var(--btn-bg-lite-gray-color);
@@ -499,10 +504,11 @@
             letter-spacing: 0;
             line-height: 16px;
             border-radius: 6px;
+            
 
             &[disabled] {
                 opacity: unset;
-                background: var(--btn-bg-lite-gray-color);
+                background-color: var(--btn-bg-lite-gray-color);
             }
         }
 
@@ -965,6 +971,9 @@
                         }
                         .Form {
                             padding-top: 15%;
+                            .MyAccountOverlay-Heading {
+                                font-size: 18px;
+                            }
                         }
                     }
                 }
