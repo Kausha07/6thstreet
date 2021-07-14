@@ -473,6 +473,7 @@ componentWillUnmount(){
       initialTotals,
       isVerificationCodeSent,
       newCardVisible,
+      CaptureID
     } = this.props;
     const { cashOnDeliveryFee } = this.state;
     console.log("props passed in details section (in checkout component)", this.props)
@@ -493,6 +494,7 @@ componentWillUnmount(){
           creditCardData={creditCardData}
           totals={initialTotals}
           isVerificationCodeSent={isVerificationCodeSent}
+          CaptureID={CaptureID}
         />
       );
     }
@@ -509,6 +511,7 @@ componentWillUnmount(){
         cashOnDeliveryFee={cashOnDeliveryFee}
         isVerificationCodeSent={isVerificationCodeSent}
         selectedCard={newCardVisible ? {} : selectedCard}
+        CaptureID={CaptureID}
       />
     );
   }

@@ -515,14 +515,22 @@ export class CheckoutSuccess extends PureComponent {
 
   renderPaymentType = () => {
     const { isArabic } = this.state;
+    const {CaptureID} = this.props
     return (
+      <>
       <div block="PaymentType" mods={{ isArabic }}>
         <div block="PaymentType" elem="Title">
           {__("Payment")}
         </div>
         {this.renderPaymentTypeContent()}
         <p></p>
+        {paymentMethod?.code === "checkout_qpay" && <><div block="PaymentType" elem="Title">
+          {__("Confirmation ID")}
+        </div>
+        {CaptureID}
+        <p></p> </>}
       </div>
+      </>
     );
   };
 

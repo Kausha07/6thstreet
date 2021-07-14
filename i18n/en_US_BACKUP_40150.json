@@ -824,5 +824,6 @@
     "EMAIL ADDRESS*": null,
     "QPAY": null,
     "Show": null,
-    "Mask": null
+    "Mask": null,
+    "Confirmation ID": null
 }

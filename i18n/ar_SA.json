@@ -809,5 +809,6 @@
     "EMAIL ADDRESS*": "البريد الإلكتروني",
     "Forgot password?": "هل نسيت كلمة المرور؟",
     "Show": null,
-    "Mask": null
+    "Mask": null,
+    "Confirmation ID": null
 }
