@@ -515,7 +515,7 @@ export class CheckoutSuccess extends PureComponent {
 
   renderPaymentType = () => {
     const { isArabic } = this.state;
-    const {CaptureID} = this.props
+    const {CaptureID, paymentMethod} = this.props
     return (
       <>
       <div block="PaymentType" mods={{ isArabic }}>
@@ -524,7 +524,7 @@ export class CheckoutSuccess extends PureComponent {
         </div>
         {this.renderPaymentTypeContent()}
         <p></p>
-        {paymentMethod?.code === "checkout_qpay" && <><div block="PaymentType" elem="Title">
+        {paymentMethod?.code === "checkout_qpay" && CaptureID &&  <><div block="PaymentType" elem="Title">
           {__("Confirmation ID")}
         </div>
         {CaptureID}
