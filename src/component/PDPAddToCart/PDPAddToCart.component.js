@@ -69,32 +69,38 @@ class PDPAddToCart extends PureComponent {
         const {
             sizeObject = {},
             selectedSizeType,
-            onSizeTypeSelect
+            onSizeTypeSelect,
+            product
         } = this.props;
 
         if (sizeObject.sizeTypes !== undefined) {
-            const listItems = sizeObject.sizeTypes.map((type = '') => (
-                <div
-                    block="PDPAddToCart"
-                    elem="SizeTypeOptionContainer"
-                >
-                    <input
-                        type="radio"
-                        key={type}
-                        block="PDPAddToCart"
-                        elem="SizeTypeOption"
-                        value={type}
-                        name="sizeType"
-                        id={type}
-                        checked={selectedSizeType === type}
-                        onChange={onSizeTypeSelect}
-                    >
-                    </input>
-                    <label for={type}>
-                        {type.toUpperCase()}
-                    </label>
-                </div>
-            ));
+            const listItems = sizeObject.sizeTypes.map((type = '') => {
+                if (product[`size_${type}`].length > 0) {
+                    return (
+                        <div
+                            block="PDPAddToCart"
+                            elem="SizeTypeOptionContainer"
+                        >
+                            <input
+                                type="radio"
+                                key={type}
+                                block="PDPAddToCart"
+                                elem="SizeTypeOption"
+                                value={type}
+                                name="sizeType"
+                                id={type}
+                                checked={selectedSizeType === type}
+                                onChange={onSizeTypeSelect}
+                            >
+                            </input>
+                            <label for={type}>
+                                {type.toUpperCase()}
+                            </label>
+                        </div>
+                    );
+                }
+                return null;
+            });
 
             return listItems;
         }
