@@ -237,7 +237,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           if (status === "Authorized" || status === "Captured") {
             BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
             this.setDetailsStep(order_id, increment_id);
-            this.resetCart();
+            // this.resetCart();
+            this.refreshCart();
             capturePayment(paymentId, order_id);
           }
 
@@ -245,7 +246,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             cancelOrder(order_id, PAYMENT_FAILED);
             this.setState({ isLoading: false, isFailed: true });
             this.setDetailsStep(order_id, increment_id);
-            this.resetCart();
+            // this.resetCart();
+            this.refreshCart();
           }
         }
       }).catch(rejected => {

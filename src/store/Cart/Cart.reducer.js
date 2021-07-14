@@ -169,12 +169,14 @@ export const CartReducer = (state = getInitialState(), action) => {
         };
 
     case RESET_CART:
-        BrowserDatabase.deleteItem(
-            CART_ITEMS_CACHE_KEY
-        );
+
         BrowserDatabase.deleteItem(
             CART_ID_CACHE_KEY
         );
+
+        BrowserDatabase.deleteItem(
+            CART_ITEMS_CACHE_KEY
+        );        
 
         return {
             ...getInitialState()
