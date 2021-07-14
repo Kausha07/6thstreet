@@ -28,7 +28,7 @@ class CreditCard extends PureComponent {
         this.state = {
             cvv: '',
             cardLogo: null,
-            saveCard: true,
+            saveCard: this.props.isSignedIn,
             cvvFilled: false,
             numberFilled: false,
             expDateFilled: false,
@@ -40,9 +40,9 @@ class CreditCard extends PureComponent {
     }
 
     componentDidMount() {
-        const { setOrderButtonDisabled, setCreditCardData } = this.props;
+        const { setOrderButtonDisabled, setCreditCardData, isSignedIn } = this.props;
         setOrderButtonDisabled();
-        setCreditCardData({ saveCard: true });
+        setCreditCardData({ saveCard: isSignedIn });
     }
 
     componentDidUpdate() {

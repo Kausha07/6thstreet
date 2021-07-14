@@ -5,7 +5,6 @@ import Algolia from "Util/API/provider/Algolia";
 import { isArabic } from "Util/App";
 // import { getUUIDToken } from 'Util/Auth';
 // import { VIEW_SEARCH_RESULTS_ALGOLIA } from 'Util/Event';
-
 const PRODUCT_RESULT_LIMIT = 8;
 
 export class SearchSuggestionsDispatcher {

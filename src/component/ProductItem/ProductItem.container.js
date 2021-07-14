@@ -7,11 +7,11 @@ import ProductItem from './ProductItem.component';
 
 
 export const mapStateToProps = (_state) => ({
-    // wishlistItems: state.WishlistReducer.productsInWishlist
+  // wishlistItems: state.WishlistReducer.productsInWishlist
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
-    // addProduct: options => CartDispatcher.addProductToCart(dispatch, options)
+  // addProduct: options => CartDispatcher.addProductToCart(dispatch, options)
 });
 
 export class ProductItemContainer extends PureComponent {
@@ -41,4 +41,7 @@ export class ProductItemContainer extends PureComponent {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProductItemContainer);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ProductItemContainer);

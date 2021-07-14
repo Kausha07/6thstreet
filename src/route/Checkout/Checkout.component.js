@@ -71,6 +71,33 @@ export class Checkout extends SourceCheckout {
     binInfo: {},
   };
 
+
+  componentDidMount() {
+
+    const paymentInformation = JSON.parse(localStorage.getItem("PAYMENT_INFO"))
+    if(paymentInformation){
+      this.setState({paymentInformation})
+    }
+}
+
+  componentDidUpdate(prevProps, prevState) {
+
+    const {paymentInformation} = this.state
+
+    const paymentInformationUpdated = JSON.parse(localStorage.getItem("PAYMENT_INFO"))
+    console.log("prev state",prevState)
+    console.log("current state", this.state)
+    if(prevState?.paymentInformation?.paymentMethod?.code !== paymentInformation?.paymentMethod?.code && paymentInformationUpdated){
+      console.log("payment info changed", paymentInformationUpdated)
+      this.setState({paymentInformation :paymentInformationUpdated})
+    }
+}
+
+componentWillUnmount(){
+  localStorage.removeItem("PAYMENT_INFO")
+}
+
+
   hideModalListener = () => {
     // Will hide bin promotion popup after 5 sec
     setTimeout(() => {
@@ -426,7 +453,6 @@ export class Checkout extends SourceCheckout {
     if (!isTabbyPopupShown) {
       return null;
     }
-
     return (
       <TabbyPopup
         tabbyWebUrl={
@@ -449,11 +475,11 @@ export class Checkout extends SourceCheckout {
       newCardVisible,
     } = this.props;
     const { cashOnDeliveryFee } = this.state;
+    console.log("props passed in details section (in checkout component)", this.props)
     const {
       paymentInformation: { billing_address, paymentMethod, selectedCard },
       creditCardData,
     } = this.state;
-
     this.setState({ isSuccess: true });
 
     if (isFailed) {

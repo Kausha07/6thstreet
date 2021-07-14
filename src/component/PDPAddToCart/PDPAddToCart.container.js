@@ -17,9 +17,7 @@ import Event, {
   VUE_ADD_TO_CART,
 } from "Util/Event";
 import history from "Util/History";
-import isMobile from "Util/Mobile";
 import PDPAddToCart from "./PDPAddToCart.component";
-import PDPAddToCartDesktop from "./PDPAddToCartDesktop.component";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { ONE_MONTH_IN_SECONDS } from 'Util/Request/QueryDispatcher';
 import { NOTIFY_EMAIL } from './PDPAddToCard.config';
@@ -31,8 +29,7 @@ export const mapStateToProps = (state) => ({
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-  showNotification: (type, message) =>
-    dispatch(showNotification(type, message)),
+  showNotification: (type, message) => dispatch(showNotification(type, message)),
   getCartTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId),
   addProductToCart: (
     productData,
@@ -55,8 +52,7 @@ export const mapDispatchToProps = (dispatch) => ({
       url,
       itemPrice
     ),
-  setMinicartOpen: (isMinicartOpen = false) =>
-    dispatch(setMinicartOpen(isMinicartOpen)),
+  setMinicartOpen: (isMinicartOpen = false) => dispatch(setMinicartOpen(isMinicartOpen)),
   getProductStock: (sku) => PDPDispatcher.getProductStock(dispatch, sku),
   sendNotifyMeEmail: (data) => PDPDispatcher.sendNotifyMeEmail(data)
 });
@@ -156,7 +152,7 @@ export class PDPAddToCartContainer extends PureComponent {
 
       const object = {
         sizeCodes: filteredProductKeys || [],
-        sizeTypes: filteredProductSizeKeys || [],
+        sizeTypes: filteredProductSizeKeys?.length ? ["uk", "eu", "us"] : [],
       };
 
       if (
@@ -227,8 +223,9 @@ export class PDPAddToCartContainer extends PureComponent {
       sendNotifyMeEmail,
       showNotification
     } = this.props;
-    let data = { email, sku, locale };
+    const { selectedSizeCode } = this.state;
 
+    let data = { email, sku: selectedSizeCode || sku, locale };
     this.setState({ notifyMeLoading: true });
 
     sendNotifyMeEmail(data).then((response) => {
@@ -249,6 +246,7 @@ export class PDPAddToCartContainer extends PureComponent {
       this.setState({ notifyMeLoading: false });
     });
   }
+
 
   componentDidUpdate(prevProps, _) {
     const {
@@ -283,8 +281,7 @@ export class PDPAddToCartContainer extends PureComponent {
 
   onSizeTypeSelect(type) {
     this.setState({
-      selectedSizeType: type.target.value,
-      selectedSizeCode: "",
+      selectedSizeType: type.target.value
     });
   }
 
@@ -306,7 +303,6 @@ export class PDPAddToCartContainer extends PureComponent {
   addToCart() {
     const {
       product: {
-        simple_products = {},
         thumbnail_url,
         url,
         color,
@@ -318,11 +314,12 @@ export class PDPAddToCartContainer extends PureComponent {
         name,
         sku: configSKU,
         objectID,
-        product_type_6s,
+        product_type_6s
       },
       addProductToCart,
       showNotification,
     } = this.props;
+    const { productStock } = this.state;
 
     if (!price[0]) {
       showNotification("error", __("Unable to add product to cart."));
@@ -349,7 +346,7 @@ export class PDPAddToCartContainer extends PureComponent {
       selectedSizeCode !== ""
     ) {
       this.setState({ isLoading: true });
-      const { size } = simple_products[selectedSizeCode];
+      const { size } = productStock[selectedSizeCode];
       const optionId = selectedSizeType.toLocaleUpperCase();
       const optionValue = size[selectedSizeType];
       addProductToCart(
@@ -429,7 +426,7 @@ export class PDPAddToCartContainer extends PureComponent {
 
     if (!insertedSizeStatus) {
       this.setState({ isLoading: true });
-      const code = Object.keys(simple_products);
+      const code = Object.keys(productStock);
 
       addProductToCart(
         {
@@ -482,6 +479,7 @@ export class PDPAddToCartContainer extends PureComponent {
           userToken: userToken ? `user-${userToken}` : getUUIDToken(),
         });
       }
+
       // vue analytics
       const locale = VueIntegrationQueries.getLocaleFromUrl();
       VueIntegrationQueries.vueAnalayticsLogger({
@@ -553,14 +551,6 @@ export class PDPAddToCartContainer extends PureComponent {
   }
 
   render() {
-    if (!isMobile.any()) {
-      return (
-        <PDPAddToCartDesktop
-          {...this.containerFunctions}
-          {...this.containerProps()}
-        />
-      );
-    }
     return (
       <PDPAddToCart {...this.containerFunctions} {...this.containerProps()} />
     );

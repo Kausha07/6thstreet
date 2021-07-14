@@ -1,13 +1,17 @@
 // import PropTypes from 'prop-types';
-import Accordion from "Component/Accordion";
-import { PureComponent } from "react";
-import { Product } from "Util/API/endpoint/Product/Product.type";
+import { PureComponent } from 'react';
+
+import Accordion from 'Component/Accordion';
+import ShareButton from 'Component/ShareButton';
+import { Product } from 'Util/API/endpoint/Product/Product.type';
+import { isArabic } from 'Util/App';
+
+import { PDP_ARABIC_VALUES_TRANSLATIONS } from './PDPDetailsSection.config';
+import './PDPDetailsSection.style';
+import VueQuery from '../../query/Vue.query';
 import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
-import { isArabic } from "Util/App";
 import BrowserDatabase from "Util/BrowserDatabase";
-import VueQuery from "../../query/Vue.query";
 import DynamicContentVueProductSliderContainer from "../DynamicContentVueProductSlider";
-import { PDP_ARABIC_VALUES_TRANSLATIONS } from "./PDPDetailsSection.config";
 import "./PDPDetailsSection.style";
 
 class PDPDetailsSection extends PureComponent {
@@ -69,6 +73,49 @@ class PDPDetailsSection extends PureComponent {
           });
       }
     }
+  }
+
+  renderShareButton() {
+      const url = new URL(window.location.href);
+      url.searchParams.append('utm_source', 'pdp_share')
+      return (
+          <div block="PDPDetailsSection" elem="ShareButtonContainer">
+              <ShareButton
+                  block="PDPDetailsSection-ShareButtonContainer"
+                  elem="ShareButton"
+                  title = { document.title }
+                  text =  {`Hey check this out: ${document.title}`}
+                  url = { url.toString() }
+              >
+                  <span>{ __('Share') }</span>
+              </ShareButton>
+          </div>
+      );
+  }
+
+  renderSizeAndFit() {
+      const { product: { description } } = this.props;
+      return (
+          <>
+              <p block="PDPDetailsSection" elem="SizeFit">
+                  {__('Fitting Information - Items fits true to size')}
+              </p>
+              <div block="PDPDetailsSection" elem="ModelMeasurements">
+                  <h4>{__('Model Measurements')}</h4>
+              </div>
+          </>
+      )
+  }
+
+  renderMoreDetailsItem(item) {
+    return (
+        <li block="PDPDetailsSection" elem="MoreDetailsList" key={item.key}>
+            <span block="PDPDetailsSection" elem="ListItem" mods={{ mod: 'title' }}>
+                {isArabic() ? this._translateValue(item.key) : this.listTitle(__(item.key))}
+            </span>
+            <span block="PDPDetailsSection" elem="ListItem" mods={{ mod: 'value' }}>{item.value}</span>
+        </li>
+    );
   }
 
   _translateValue(value) {
@@ -195,20 +242,6 @@ class PDPDetailsSection extends PureComponent {
     );
   }
 
-  renderMoreDetailsItem(item) {
-    return (
-      <li block="PDPDetailsSection" elem="MoreDetailsList" key={item.key}>
-        <span block="PDPDetailsSection" elem="ListItem" mods={{ mod: "title" }}>
-          {isArabic()
-            ? this._translateValue(item.key)
-            : this.listTitle(__(item.key))}
-        </span>
-        <span block="PDPDetailsSection" elem="ListItem" mods={{ mod: "value" }}>
-          {item.value}
-        </span>
-      </li>
-    );
-  }
 
   renderMoreDetailsList() {
     const {
@@ -293,6 +326,8 @@ class PDPDetailsSection extends PureComponent {
         >
           {this.renderIconsSection()}
           {this.renderDescription()}
+          <div block="Seperator" />
+          { this.renderShareButton() }
         </Accordion>
         {this.renderPdpWidgets()}
         {/* <Accordion

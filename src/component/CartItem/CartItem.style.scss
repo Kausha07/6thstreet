@@ -24,7 +24,7 @@
 .CartItem {
     --header-color: var(--cart-item-actions-color);
 
-    border-top: 1px solid var(--Gallery);
+    // border-top: 1px solid var(--Gallery);
     margin: 0;
     font-weight: var(--fw-regular);
     min-height: 140px;
@@ -153,10 +153,14 @@
     }
 
     &-Picture {
-        height: 130px;
-        width: 95px;
-        object-fit: cover;
-        margin-right: 24px;
+        height: 150px;
+        width: 130px;
+        object-fit: cover!important;
+        margin-right: 16px;
+        .Image-Image {
+            object-position: top;
+            object-fit: cover!important;
+        }
 
         &_isArabic {
             margin: 0 0 0 24px;
@@ -173,9 +177,11 @@
         text-align: left;
         color: var(--Black);
         letter-spacing: .75px;
-
-        span {
-            margin-left: 5px;
+        &-Qty {
+            text-decoration: underline;
+            text-decoration-color: #e5e5e5;
+            text-underline-position: under;
+            cursor: pointer;
         }
     }
 
@@ -211,10 +217,14 @@
         color: var(--Tundora);
         font-weight: var(--fw-regular);
         width: 200px;
-
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
         span {
             color: var(--DustyGray);
-
+            &:first-child{
+                margin-left: 0 !important;
+            }
         }
 
         &_isArabic {
@@ -235,7 +245,9 @@
         transition-duration: 200ms;
 
         @include mobile {
-            margin-bottom: 10px;
+            position: absolute;
+            top: 0;
+            right: -12px;
             padding: 0;
         }
 
@@ -277,17 +289,20 @@
 
     &-Delete {
         // @include clear-button;
-        background: url(./trash.png) no-repeat;
-        background-size: 15px;
-        width: 15px;
-        height: 15px;
+        background: url(../Icons/Close/icon.svg) no-repeat;
+        background-size: 16px;
+        width: 16px;
+        height: 16px;
         padding: 0;
-        bottom: -10px;
+        bottom: -14px;
     }
 
     & &-Qty { // hack to obtain required specificity
         margin-top: 10px;
         display: flex;
+        @include mobile {
+            display: none;
+        }
 
         input {
             background: transparent;
@@ -331,4 +346,8 @@
             }
         }
     }
+}
+
+.pipe {
+    color: #4b4b4b!important;
 }

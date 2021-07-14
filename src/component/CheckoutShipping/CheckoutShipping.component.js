@@ -117,6 +117,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     const {
       customer: { addresses = [] },
       selectedCustomerAddressId,
+      isPaymentLoading
     } = this.props;
     const { isSignedIn } = this.state;
     const selectedAddress = addresses.filter(
@@ -137,7 +138,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
 
     return (
       <div block="CheckoutShippingStep" elem="DeliveryButton">
-        <button type="submit" block="Button button primary medium">
+        <button type="submit" block="Button button primary medium" disabled={isPaymentLoading}>
           {__("Deliver to this address")}
         </button>
       </div>

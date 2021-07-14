@@ -15,7 +15,7 @@ export class PDPMixAndMatchContainer extends PureComponent {
     static propTypes = {
         product: Product.isRequired,
         isLoading: PropTypes.bool.isRequired
-    };   
+    };
 
     state = {
         products: [],

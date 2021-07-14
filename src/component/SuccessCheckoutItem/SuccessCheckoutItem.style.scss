@@ -115,7 +115,7 @@
         font-size: 14px;
         line-height: 1.2;
         width: 100%;
-        margin-bottom: .5rem;
+        margin-bottom: .5rem !important;
         color: var(--successcheckout-item-heading-color);
         text-align: left;
         letter-spacing: .75px;
@@ -128,18 +128,23 @@
 
     &-Details{
         font-size: 12px;
-        line-height: 1.2;
-
+        line-height: 24px;
         text-align: left !important;
         font-weight: normal;
         display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         &_isArabic {
             text-align: right !important;
+        }
+        @include before-desktop {
+            max-width: 200px;
         }
     }
 
     &-Picture {
-        height: 130px;
+        height: 110px;
         width: 85px;
         margin-right: 24px;
         background-color: var(--image-default-background);
@@ -147,11 +152,14 @@
         &_isArabic {
             margin: 0 0 0 24px;
         }
+        @include before-desktop {
+            height: 95px;
+        }
     }
 
     &-Price, &-ColSizeQty {
         margin-top: auto;
-        line-height: 30px;
+        line-height: 24px;
         font-size: 12px;
         text-align: left;
         color: var(--Black);
@@ -204,8 +212,8 @@
         font-weight: var(--fw-regular);
         width: 200px;
         display: flex;
-        align-self: center;
-
+        align-items: center;
+        flex-wrap: wrap;
         span {
             margin-left: 5px;
             color: var(--DustyGray);

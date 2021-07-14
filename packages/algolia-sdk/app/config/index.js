@@ -16,9 +16,9 @@ const FACET_FILTERS = [
   'is_new_in',
   'leg_length',
   'neck_line',
+  'size_uk',
   'size_eu',
   'size_us',
-  'size_uk',
   'skirt_length',
   'sleeve_length',
   'technology',
@@ -51,7 +51,7 @@ const config = {
     'discount'
   ],
 
-  SIZE_FILTERS: ['size_eu', 'size_uk', 'size_us'],
+  SIZE_FILTERS: ['size_uk', 'size_eu', 'size_us'],
   CURRENCY_STRIP_INSIGNIFICANT_ZEROS: ['AED', 'SAR', 'QAR'],
 
   INDICES: {

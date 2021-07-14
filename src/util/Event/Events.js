@@ -16,8 +16,7 @@ export const EVENT_GTM_GENERAL_INIT = "gtm_general_init";
 export const EVENT_GTM_PRODUCT_ADD_TO_CART = "gtm_product_add_to_cart";
 export const EVENT_GTM_PRODUCT_CLICK = "gtm_product_click";
 export const EVENT_GTM_PRODUCT_DETAIL = "gtm_product_detail";
-export const EVENT_GTM_PRODUCT_REMOVE_FROM_CART =
-  "gtm_product_remove_from_cart";
+export const EVENT_GTM_PRODUCT_REMOVE_FROM_CART = "gtm_product_remove_from_cart";
 export const EVENT_GTM_PURCHASE = "gtm_purchase";
 export const EVENT_GTM_BANNER_CLICK = "gtm_banner_widget_click";
 export const VIEW_SEARCH_RESULTS_ALGOLIA = "view_search_results_algolia";

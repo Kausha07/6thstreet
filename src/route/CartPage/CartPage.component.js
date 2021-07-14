@@ -8,7 +8,6 @@
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
-
 import CartCoupon from 'Component/CartCoupon';
 import CartItem from 'Component/CartItem';
 import CmsBlock from 'Component/CmsBlock';
@@ -30,8 +29,9 @@ import { ClubApparelMember } from 'Util/API/endpoint/ClubApparel/ClubApparel.typ
 import { getCurrency, getDiscountFromTotals, isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
 
+import { Shipping } from 'Component/Icons'
+
 import ClubApparel from './icons/club-apparel.png';
-import Delivery from './icons/delivery-truck.png';
 
 import './CartPage.style';
 
@@ -137,7 +137,7 @@ export class CartPage extends PureComponent {
         return (
             <div block="CartPage" elem="OrderTotals">
                 <ul>
-                    <div block="CartPage" elem="Subtotals">
+                    {/* <div block="CartPage" elem="Subtotals">
                         { this.renderPriceLine(subTotal, __('Subtotal')) }
                         { this.renderPriceLine(shipping_fee, __('Shipping fee')) }
                         { this.renderPriceLine(
@@ -156,9 +156,9 @@ export class CartPage extends PureComponent {
                             getDiscountFromTotals(totals, 'tax'),
                             __('Tax')
                         ) }
-                    </div>
+                    </div> */}
                     <div block="CartPage" elem="Totals">
-                        { this.renderPriceLine(grandTotal, __('Total'), {}, true) }
+                        { this.renderPriceLine(grandTotal, __('Subtotal'), {}, true) }
                     </div>
                 </ul>
             </div>
@@ -180,15 +180,15 @@ export class CartPage extends PureComponent {
                   onClick={ onCheckoutButtonClick }
                 >
                     <span />
-                    { __('Checkout') }
+                    { __('Proceed to Checkout') }
                 </button>
-                <Link
+                {/* <Link
                   block="CartPage"
                   elem="ContinueShopping"
                   to="/"
                 >
                     { __('Continue shopping') }
-                </Link>
+                </Link> */}
             </div>
         );
     }
@@ -249,10 +249,14 @@ export class CartPage extends PureComponent {
               elem="PromoBlock"
             >
                 <figcaption block="CartPage" elem="PromoText" mods={ { isArabic } }>
-                    <img src={ Delivery } alt="Delivery icon" />
-                    { __('Add ') }
+                    <Shipping />
+                    &nbsp;
+                    { __('Add') }
+                    &nbsp;
                     <span>{ `${currency_code } ${avail_free_shipping_amount.toFixed(3)} ` }</span>
+                    &nbsp;
                     { __('more to your cart for ') }
+                    &nbsp;
                     <span>{ __('Free delivery') }</span>
                 </figcaption>
             </figure>
@@ -286,7 +290,7 @@ export class CartPage extends PureComponent {
                   elem="ClubApparelBlock"
                   mods={ { isArabic } }
                 >
-                    <img src={ ClubApparel } alt="Delivery icon" />
+                    <img src={ ClubApparel } alt="Club Apparel Logo" />
                     <div block="CartPage" elem="ClubApparelText">
                         { __('You may earn ') }
                         <span>{ `${currency_code } ${club_apparel_estimated_pointsvalue} ` }</span>
@@ -302,7 +306,7 @@ export class CartPage extends PureComponent {
                   block="CartPage"
                   elem="ClubApparelBlock"
                 >
-                    <img src={ ClubApparel } alt="Delivery icon" />
+                    <img src={ ClubApparel } alt="Club Apparel Logo" />
                     <div block="CartPage" elem="ClubApparelText">
                         { __('Link your Club Apparel account to earn ') }
                         <span>{ `${currency_code } ${club_apparel_estimated_pointsvalue} ` }</span>
@@ -324,7 +328,7 @@ export class CartPage extends PureComponent {
               block="CartPage"
               elem="ClubApparelBlock"
             >
-                <img src={ ClubApparel } alt="Delivery icon" />
+                <img src={ ClubApparel } alt="Club Apparel Logo" />
                 <div block="CartPage" elem="ClubApparelText">
                     { __('Link your Club Apparel account to earn ') }
                     <span>{ `${currency_code } ${club_apparel_estimated_pointsvalue} ` }</span>
@@ -386,7 +390,7 @@ export class CartPage extends PureComponent {
             <div>
                 { this.renderBack() }
                 <h1 block="CartPage" elem="Heading">
-                    { isMobile.any() ? __('My shopping cart ') : __('My bag ') }
+                    { isMobile.any() ? __('My SHOPPING BAG ') : __('My Bag ') }
                     <span>
                         (
                         { totalQuantity }
@@ -498,9 +502,9 @@ export class CartPage extends PureComponent {
                         { this.renderCrossSellProducts() }
                         { this.renderDiscountCode() }
                         { this.renderPromo() }
-                        { this.renderClubApparel() }
                     </div>
                     <div block="CartPage" elem="Floating" mods={ { isArabic } }>
+                        { this.renderClubApparel() }
                         { this.renderTotals() }
                     </div>
                 </ContentWrapper>

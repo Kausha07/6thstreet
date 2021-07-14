@@ -504,7 +504,7 @@ class MyAccountOrderView extends PureComponent {
         return this.renderPaymentTypeText(__("Tabby: Pay later"));
       case CHECK_MONEY:
       case CASH_ON_DELIVERY:
-        return this.renderPaymentTypeText(__("Cash on delivery"));
+        return this.renderPaymentTypeText(__("Cash on Delivery"));
       case APPLE_PAY:
       case CHECKOUT_APPLE_PAY:
         return this.renderPaymentTypeText(__("Apple"));

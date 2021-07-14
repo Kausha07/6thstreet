@@ -10,7 +10,7 @@
 
   &-Accordion {
     @include mobile() {
-      padding-bottom: 75px;
+      padding-bottom: 59px;
     }
   }
   @include desktop() {
@@ -137,6 +137,31 @@
     }
   }
 
+  &-ShareButtonContainer {
+    display: flex;
+    justify-content: center;
+    padding: 32px;
+    &-ShareButton {
+      display: flex;
+      align-items: center;
+      border: 1px solid #000000;
+      border-radius: 8px;
+      background-color: #FFFFFF;
+      padding: 0 20px;
+      svg {
+        margin: 0 8px 0 0;
+      }
+      span {
+        text-transform: none;
+        font-size: 17px;
+        font-weight: 600;
+        letter-spacing: 0;
+        line-height: 20px;
+        text-align: right;
+      }
+    }
+  }
+
   &-MoreDetails {
     position: relative;
     margin-top: 40px;
@@ -232,5 +257,10 @@
         margin-right: 0;
       }
     }
+  }
+  .Seperator {
+    background-color: #EFEFEF;
+    margin: 15px 0 0 0;
+    height: 1.5px;
   }
 }

@@ -3,7 +3,7 @@
     justify-content: center;
     align-items: center;
     height: 50px;
-    border: 1px solid var(--color-silver);
+    border: 0.5px solid var(--color-silver);
 
     @include desktop {
         margin: 7px 18px 0;
@@ -14,12 +14,12 @@
         height: 100%;
         width: 100%;
         font-size: 13px;
-        text-transform: capitalize;
+        text-transform: none;
         border: none;
         color: var(--color-tundora);
 
         @include mobile {
-            font-size: 11px;
+            font-size: 13px;
         }
 
         &:focus {
@@ -52,8 +52,9 @@
         border: none;
         color: var(--color-turquoise);
         transition-property: color;
-        font-weight: var(--fw-medium);
-        font-size: 12px;
+        font-weight: 400;
+        font-size: 13px;
+        color: black!important;
         line-height: 16px;
 
         &:hover {
