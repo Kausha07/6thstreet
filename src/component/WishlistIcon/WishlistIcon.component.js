@@ -61,7 +61,6 @@ class WishlistIcon extends PureComponent {
                 elem="Icon"
                 aria-label="Wishlist"
                 onClick={ this.handleClick }
-                onKeyDown={ this.handleClick }
             >
                 {
                     blackMod

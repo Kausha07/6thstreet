@@ -8,11 +8,6 @@
   padding: 0 20px;
   font-weight: var(--fw-regular);
 
-  &-Accordion {
-    @include mobile() {
-      padding-bottom: 59px;
-    }
-  }
   @include desktop() {
     padding: 0 20px;
   }
