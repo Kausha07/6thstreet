@@ -169,7 +169,8 @@ export class SearchSuggestionContainer extends PureComponent {
   }
 
   async requestRecentSearches() {
-    let recentSearches = JSON.parse(localStorage.getItem("recentSearches"));
+    let recentSearches =
+      JSON.parse(localStorage.getItem("recentSearches")) || [];
     let refinedRecentSearches = [];
     if (recentSearches.length > 0) {
       await Promise.all(
