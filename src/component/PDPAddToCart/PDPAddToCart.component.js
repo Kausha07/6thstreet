@@ -52,7 +52,7 @@ class PDPAddToCart extends PureComponent {
     window.addEventListener("userLogout", () => this.updateStateNotifyEmail());
 
     const { customer } = this.props;
-    if (customer && customer.email && !!this.state.notifyMeEmail.length) {
+    if (customer && customer.email) {
       this.setState({ notifyMeEmail: customer.email });
     }
   }
