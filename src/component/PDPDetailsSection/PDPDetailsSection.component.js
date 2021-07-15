@@ -262,7 +262,6 @@ class PDPDetailsSection extends PureComponent {
               const widgetID = pdpWidgetsData[index]["type"];
               const { data } = item;
               if (data && data.length > 0) {
-                console.log("data for vue slider", data);
                 return (
                   <DynamicContentVueProductSliderContainer
                     widgetID={widgetID}
