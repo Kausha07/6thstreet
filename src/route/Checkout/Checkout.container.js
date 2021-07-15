@@ -44,6 +44,7 @@ import { TABBY_POPUP_ID } from "Component/TabbyPopup/TabbyPopup.config";
 import {
   CART_ID_CACHE_KEY,
   LAST_CART_ID_CACHE_KEY,
+  CART_ITEMS_CACHE_KEY
 } from "../../store/MobileCart/MobileCart.reducer";
 const PAYMENT_ABORTED = "payment_aborted";
 const PAYMENT_FAILED = "payment_failed";
