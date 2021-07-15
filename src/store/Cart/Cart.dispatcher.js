@@ -59,7 +59,7 @@ export class CartDispatcher {
     try {
       const { items = [] } = data || {};
 
-      if (items.length) {
+      if (items?.length >= 0) {
         dispatch(processingCartRequest());
         dispatch(removeCartItems());
 
@@ -196,6 +196,7 @@ export class CartDispatcher {
       // catch will process that
       if (data) {
         dispatch(removeCartItem({ item_id: productId }));
+        // await this.getCart(dispatch);
       }
     } catch (e) {
       Logger.log(e);

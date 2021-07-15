@@ -130,7 +130,6 @@ export const CartReducer = (state = getInitialState(), action) => {
         };
 
         const updatedCartItems = updateCartItem(cartItems, formattedCartItem);
-
         BrowserDatabase.setItem(
             updatedCartItems,
             CART_ITEMS_CACHE_KEY,
@@ -144,7 +143,6 @@ export const CartReducer = (state = getInitialState(), action) => {
 
     case REMOVE_CART_ITEM:
         const reducedCartItems = removeCartItem(cartItems, cartItem);
-
         BrowserDatabase.setItem(
             reducedCartItems,
             CART_ITEMS_CACHE_KEY,
