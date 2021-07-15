@@ -9,9 +9,6 @@ import './HeaderSearch.style';
 import Clear from './icons/close-black.png';
 import searchPng from './icons/search-black.png';
 
-
-
-
 class HeaderSearch extends PureComponent {
   static propTypes = {
     search: PropTypes.string,
