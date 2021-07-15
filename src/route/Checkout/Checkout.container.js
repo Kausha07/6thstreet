@@ -244,12 +244,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
             this.setDetailsStep(order_id, increment_id);
             this.setState({isLoading: false})
-            BrowserDatabase.deleteItem(
-              CART_ID_CACHE_KEY
-          );
-          BrowserDatabase.deleteItem(
-              CART_ITEMS_CACHE_KEY
-          ); 
             this.resetCart();
             capturePayment(paymentId, order_id).then(response => {
               if(response){
@@ -262,12 +256,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             cancelOrder(order_id, PAYMENT_FAILED);
             this.setState({ isLoading: false, isFailed: true });
             this.setDetailsStep(order_id, increment_id);
-            BrowserDatabase.deleteItem(
-              CART_ID_CACHE_KEY
-          );
-          BrowserDatabase.deleteItem(
-              CART_ITEMS_CACHE_KEY
-          );
             this.resetCart();
           }
         }
