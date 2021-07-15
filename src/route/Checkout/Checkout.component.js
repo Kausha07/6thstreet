@@ -85,10 +85,8 @@ export class Checkout extends SourceCheckout {
     const {paymentInformation} = this.state
 
     const paymentInformationUpdated = JSON.parse(localStorage.getItem("PAYMENT_INFO"))
-    console.log("prev state",prevState)
-    console.log("current state", this.state)
+   
     if(prevState?.paymentInformation?.paymentMethod?.code !== paymentInformation?.paymentMethod?.code && paymentInformationUpdated){
-      console.log("payment info changed", paymentInformationUpdated)
       this.setState({paymentInformation :paymentInformationUpdated})
     }
 }
@@ -476,7 +474,6 @@ componentWillUnmount(){
       CaptureID
     } = this.props;
     const { cashOnDeliveryFee } = this.state;
-    console.log("props passed in details section (in checkout component)", this.props)
     const {
       paymentInformation: { billing_address, paymentMethod, selectedCard },
       creditCardData,

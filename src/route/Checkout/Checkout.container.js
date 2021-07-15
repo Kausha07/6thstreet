@@ -213,8 +213,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const { checkoutStep: prevCheckoutStep } = prevState;
 
     const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
-    console.log("checkout step (in checkout container)",checkoutStep )
-    console.log("QPAY check (in checkout container)", QPAY_CHECK)
+
     if (QPAY_CHECK) {
       const {
         getPaymentAuthorization,
@@ -230,14 +229,12 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       
       const { id, order_id, increment_id } = QPAY_CHECK;
       
-      console.log("payment with Qpay")
       getPaymentAuthorization(id).then((response) => {
         if (response) {
           this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
           
           localStorage.removeItem("Shipping_Address");
 
-          console.log("QPAY auth response (checkout container)", response)
           const { status, id: paymentId = "" } = response;
 
           if (status === "Authorized" || status === "Captured") {
@@ -264,7 +261,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       });
       return;
     }
-    console.log("checking if rest conditions are checked")
     if (Object.keys(totals).length !== 0) {
       this.updateInitTotals();
     }
@@ -466,7 +462,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   }
 
   /*async*/ savePaymentMethodAndPlaceOrder(paymentInformation) {
-    //console.log('Tabby123:');
     console.table(paymentInformation);
     const {
       paymentMethod: { code, additional_data },
@@ -480,7 +475,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const {
       shippingAddress: { email },
     } = this.state;
-    //console.log("here1"+tabbyPaymentId)
     let data = {};
     if (code === CARD) {
       data = {
@@ -531,7 +525,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   }
 
   placeOrder(code, data, paymentInformation) {
-    //console.log("here2"+tabbyPaymentId)
     const { createOrder, showErrorNotification } = this.props;
     const ONE_YEAR_IN_SECONDS = 31536000;
     const cart_id = BrowserDatabase.getItem(CART_ID_CACHE_KEY);
@@ -576,7 +569,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                   code === TABBY_ISTALLMENTS ||
                   code === TABBY_PAY_LATER
                 ) {
-                  //console.log("here3"+tabbyPaymentId)
                   this.setState({
                     isTabbyPopupShown: true,
                     order_id,
@@ -604,7 +596,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                     "QPAY_ORDER_DETAILS",
                     JSON.stringify(obj)
                   );
-                  console.log("payment information", paymentInformation)
                   localStorage.setItem(
                     "PAYMENT_INFO",
                     JSON.stringify(paymentInformation)
@@ -682,8 +673,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       isSignedIn,
       customer,
     } = this.props;
-    console.log("props in setting details step", this.props)
-    console.log("order id and increment id", orderID , ",", incrementID)
     const { shippingAddress } = this.state;
 
     if (isSignedIn) {
@@ -798,7 +787,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       activeOverlay === CC_POPUP_ID
     ) {
       setTimeout(() => {
-        console.log("processThreeDS");
         this.processThreeDS();
         this.processThreeDSWithTimeout(counter + 1);
       }, 5000);
