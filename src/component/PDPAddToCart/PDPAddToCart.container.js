@@ -201,7 +201,7 @@ export class PDPAddToCartContainer extends PureComponent {
 
   componentDidMount() {
     const {
-      product: { sku },
+      product: { sku, size_eu, size_uk, size_us },
       getProductStock,
       setGuestUserEmail,
     } = this.props;
@@ -234,6 +234,7 @@ export class PDPAddToCartContainer extends PureComponent {
         processingRequest: false,
         mappedSizeObject: object,
         productStock: response,
+        ...(size_us.length === 0 && size_uk.length === 0 && size_eu.length === 0 && { isOutOfStock: true })
       });
     });
   }
@@ -268,7 +269,11 @@ export class PDPAddToCartContainer extends PureComponent {
           this.setState({ notifyMeSuccess: false, isOutOfStock: false });
         } else {
           this.setState({ notifyMeSuccess: true, isOutOfStock: false });
-
+          if (customer && customer.id) {
+            //if user is logged in then change email
+            const loginEvent = new CustomEvent("userLogin");
+            window.dispatchEvent(loginEvent);
+          }
           setTimeout(() => {
             this.setState({ notifyMeSuccess: false, isOutOfStock: false });
           }, 4000);
