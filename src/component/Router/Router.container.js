@@ -95,7 +95,6 @@ export class RouterContainer extends SourceRouterContainer {
       }
       const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
       if(!QPAY_CHECK){
-        console.log("router qpay_check");
         getCart(true);
       }
     } else {

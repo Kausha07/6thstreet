@@ -332,7 +332,6 @@ export class CartItem extends PureComponent {
     renderColSizeQty() {
         const { item: { color, optionValue, qty, full_item_info: { size_option } }, toggleCartItemQuantityPopup } = this.props;
         const { isArabic } = this.state;
-        console.log(this.props)
         return (
             <div
                 block="CartItem"

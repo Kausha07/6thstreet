@@ -172,7 +172,6 @@ export class CheckoutDispatcher {
   }
 
   async updateTabbyPayment(dispatch, paymentId, order_id) {
-    //console.log('here4:'+paymentId);
     return updateTabbyPayment(paymentId, order_id);
   }
   async sendVerificationCode(dispatch, data) {
