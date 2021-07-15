@@ -79,7 +79,7 @@ export const mapDispatchToProps = (dispatch) => ({
   setMeta: (meta) => dispatch(updateMeta(meta)),
   setGender: (gender) => dispatch(setGender(gender)),
   resetCart: () => dispatch(resetCart()),
-  getCart: (isNewCart) => CartDispatcher.getCart(dispatch, isNewCart),
+  getCart: () => CartDispatcher.getCart(dispatch),
   updateTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId),
   saveCreditCard: (cardData) =>
     CreditCardDispatcher.saveCreditCard(dispatch, cardData),
@@ -243,7 +243,13 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
             this.setDetailsStep(order_id, increment_id);
             this.setState({isLoading: false})
-            this.resetCart(true);
+            BrowserDatabase.deleteItem(
+              CART_ID_CACHE_KEY
+          );
+          BrowserDatabase.deleteItem(
+              CART_ITEMS_CACHE_KEY
+          ); 
+            this.resetCart();
             capturePayment(paymentId, order_id).then(response => {
               if(response){
                 this.setState({CaptureID: response?.confirmation_id})
@@ -255,7 +261,13 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             cancelOrder(order_id, PAYMENT_FAILED);
             this.setState({ isLoading: false, isFailed: true });
             this.setDetailsStep(order_id, increment_id);
-            this.resetCart(true);
+            BrowserDatabase.deleteItem(
+              CART_ID_CACHE_KEY
+          );
+          BrowserDatabase.deleteItem(
+              CART_ITEMS_CACHE_KEY
+          );
+            this.resetCart();
           }
         }
       }).catch(rejected => {
@@ -886,11 +898,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     }
   }
 
-  resetCart(isNewCart) {
+  resetCart() {
     const { updateStoreCredit, resetCart, getCart } = this.props;
 
     resetCart();
-    getCart(isNewCart);
+    getCart();
     updateStoreCredit();
   }
 }
