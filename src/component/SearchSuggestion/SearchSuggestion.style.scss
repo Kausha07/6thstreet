@@ -97,7 +97,8 @@
   }
 
   .TrandingTags,
-  .TopSearches, .RecentSearches,
+  .TopSearches,
+  .RecentSearches,
   .TrandingBrands {
     ul {
       display: flex;
@@ -123,7 +124,9 @@
     }
   }
 
-  .TrandingTags, .TopSearches, .RecentSearches {
+  .TrandingTags,
+  .TopSearches,
+  .RecentSearches {
     margin: 0;
     padding: 0 20px;
 
@@ -411,4 +414,19 @@
   color: var(--color-pure-black);
   letter-spacing: 0;
   line-height: 19px;
+}
+
+.recommendedForYouSliderBox {
+  .VueProductSlider {
+    &-VueProductContainer {
+      &:nth-last-child(2) {
+        margin-right: 7.92px;
+      }
+      &_isArabic {
+        &:nth-child(2) {
+          margin-right: 7.92px;
+        }
+      }
+    }
+  }
 }

@@ -12,9 +12,9 @@ import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
 import BrowserDatabase from "Util/BrowserDatabase";
 import isMobile from "Util/Mobile";
+import DynamicContentVueProductSliderContainer from "../DynamicContentVueProductSlider";
 import BRAND_MAPPING from "./SearchSiggestion.config";
 import "./SearchSuggestion.style";
-
 class SearchSuggestion extends PureComponent {
   static propTypes = {
     inNothingFound: PropTypes.bool.isRequired,
@@ -29,6 +29,7 @@ class SearchSuggestion extends PureComponent {
     querySuggestions: PropTypes.array,
     topSearches: PropTypes.array,
     recentSearches: PropTypes.array,
+    recommendedForYou: PropTypes.array,
     searchString: PropTypes.string,
   };
 
@@ -372,6 +373,24 @@ class SearchSuggestion extends PureComponent {
     closeSearch();
   };
 
+  // recommended for you
+
+  renderRecommendedForYou = () => {
+    const { recommendedForYou } = this.props;
+    console.log("recommendedForYou", recommendedForYou);
+    if (recommendedForYou && recommendedForYou.length > 0) {
+      return (
+        <div className="recommendedForYouSliderBox">
+          <DynamicContentVueProductSliderContainer
+            widgetID="vue_browsing_history_slider"
+            products={recommendedForYou}
+            heading={__("Recommended for you")}
+            key={`DynamicContentVueProductSliderContainer99`}
+          />
+        </div>
+      );
+    }
+  };
   renderTrendingBrand = (brand, i) => {
     const { label = "", image_url } = brand;
 
@@ -486,6 +505,7 @@ class SearchSuggestion extends PureComponent {
       <>
         {this.renderRecentSearches()}
         {this.renderTopSearches()}
+        {this.renderRecommendedForYou()}
         {this.renderTrendingBrands()}
         {this.renderTrendingTags()}
       </>
