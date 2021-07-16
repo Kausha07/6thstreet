@@ -444,6 +444,7 @@ class PDPAddToCart extends PureComponent {
           <span
             block="PDPAddToCart"
             elem="EmailSendBtn"
+            lang={isArabic() ? 'ar' : 'en'}
             onClick={this.onNotifyMeSendClick}
           >
             {notifyMeLoading ? __("Sending..") : __("Send")}
