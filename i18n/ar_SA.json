@@ -782,7 +782,6 @@
     "That looks like an invalid email address": "يبدو أن هذا البريد الإلكتروني غير صالح",
     "We’ll let you know as soon as the product becomes available": "سنخبرك بمجرد توفر المنتج",
     "Phone": "هاتف",
-    "Store Cre": null,
     "My SHOPPING BAG ": null,
     "My BAG ": null,
     "Enter a Coupon or Discount code": null,
@@ -807,6 +806,5 @@
     "Forgot password?": "هل نسيت كلمة المرور؟",
     "Show": "اظهر",
     "Mask": "اخفاء",
-    "Confirmation ID": null,
-    "null": null
+    "Confirmation ID": null
 }

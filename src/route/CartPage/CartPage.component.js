@@ -158,7 +158,7 @@ export class CartPage extends PureComponent {
                         ) }
                     </div> */}
                     <div block="CartPage" elem="Totals">
-                        { this.renderPriceLine(grandTotal, __('Subtotal'), {}, true) }
+                        { this.renderPriceLine(subTotal, __('Subtotal'), {}, true) }
                     </div>
                 </ul>
             </div>
