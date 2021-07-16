@@ -184,7 +184,11 @@ const VISIBLE_GENDERS = {
     [translations.en.baby_girl]: true,
     [translations.ar.baby_girl]: true,
     [translations.en.baby_boy]: true,
-    [translations.ar.baby_boy]: true
+    [translations.ar.baby_boy]: true,
+    [translations.en.infant]: true,
+    [translations.ar.infant]: true,
+    [translations.en.unisex]: true,
+    [translations.ar.unisex]: true,
   },
   OTHER: {
     [translations.en.women]: true,
