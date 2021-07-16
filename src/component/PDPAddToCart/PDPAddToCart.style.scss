@@ -504,9 +504,16 @@ $select-arrow-width: 6px !default;
     font-size: 11px;
     cursor: pointer;
     color: #f96446;
-    margin-right: 16px;
     text-transform: uppercase;
     font-family: "Avenir Next Demi Bold";
+  }
+
+  &-EmailSendBtn:lang(en) {
+    margin-right: 16px;
+  }
+
+  &-EmailSendBtn:lang(ar) {
+    margin-left: 16px;
   }
 
   &-LoadingContainer {
