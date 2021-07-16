@@ -95,7 +95,7 @@ class PDPMixAndMatchProduct extends PureComponent {
         return (
             <div block="PDPMixAndMatchProduct-SummaryAndAddToCartContainer" elem="ColorContainer">
                 <h3>
-                    <span>Color: </span>
+                    <span>{ __("Color: ") }</span>
                     { color }
                 </h3>
             </div>
@@ -118,7 +118,7 @@ class PDPMixAndMatchProduct extends PureComponent {
             return (
                 <div block="PDPMixAndMatchAddToCart" elem="SizeSelector">
                     <h3>
-                        Size: 
+                        {__("Size: ")}
                     </h3>
                     <button
                       key="SizeSelect"
@@ -196,7 +196,7 @@ class PDPMixAndMatchProduct extends PureComponent {
         return (
             <>
                 <li block="PDPMixAndMatchProduct">
-                    <div block="PDPMixAndMatchProduct" elem="ImageContainer">
+                    <div block="PDPMixAndMatchProduct" elem="ImageContainer" mods={ { isArabic: isArabic() } }>
                         { this.renderImage() }
                     </div>
                     <div block="PDPMixAndMatchProduct" elem="SummaryAndAddToCartContainer">

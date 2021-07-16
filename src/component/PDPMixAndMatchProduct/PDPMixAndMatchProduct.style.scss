@@ -21,6 +21,9 @@ $select-arrow-width: 6px !default;
     &-ImageContainer{
         min-width: 50%;
         padding: 0 16px 0 0;
+        &_isArabic {
+            padding: 0 0 0 16px;
+        }
         .WishlistIcon {
             background: white;
             top: 0.25rem;
