@@ -167,7 +167,6 @@ class SearchSuggestion extends PureComponent {
   renderQuerySuggestion = (querySuggestions) => {
     const { query, count, isBrand } = querySuggestions;
     const { searchString } = this.props;
-    console.log("query", query);
     const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
     return (
       <li>

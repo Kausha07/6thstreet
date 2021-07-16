@@ -110,9 +110,7 @@ const createCustomQuerySuggestions = (hit, resArray, sourceIndexName) => {
     genderModifiedQuery = `${gender} ${query}`;
   }
   // if query does include brands
-  console.log("has brand", brand_name[0]);
   if (query?.toUpperCase().includes(brand_name[0]?.value.toUpperCase())) {
-    console.log("found brand");
     if (checkForValidSuggestion(genderModifiedQuery, [...resArray, ...arr])) {
       addSuggestion(
         genderModifiedQuery,
