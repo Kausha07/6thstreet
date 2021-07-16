@@ -197,7 +197,6 @@ export class SearchSuggestionContainer extends PureComponent {
         getStaticFile("search_trending_tags"),
         // getStaticFile("search_trending_products"),
       ]);
-      console.log("trending data", data);
       this.setState({
         trendingBrands: data[0][gender],
         trendingTags: data[1][gender],
