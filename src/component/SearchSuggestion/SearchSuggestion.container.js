@@ -3,10 +3,13 @@ import { PureComponent } from "react";
 import { connect } from "react-redux";
 import SearchSuggestionDispatcher from "Store/SearchSuggestions/SearchSuggestions.dispatcher";
 import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
+import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
 import Algolia from "Util/API/provider/Algolia";
 import { isArabic } from "Util/App";
+import BrowserDatabase from "Util/BrowserDatabase";
 import { getLocaleFromUrl } from "Util/Url/Url";
 import AlgoliaSDK from "../../../packages/algolia-sdk";
+import VueQuery from "../../query/Vue.query";
 import SearchSuggestion from "./SearchSuggestion.component";
 
 export const mapStateToProps = (state) => ({
@@ -75,6 +78,7 @@ export class SearchSuggestionContainer extends PureComponent {
       trendingTags: [],
       topSearches: [],
       recentSearches: [],
+      recommendedForYou: [],
     };
 
     // TODO: please render this component only once. Otherwise it is x3 times the request
@@ -122,11 +126,38 @@ export class SearchSuggestionContainer extends PureComponent {
     }
   }
 
+  getPdpSearchWidgetData() {
+    const { gender } = this.props;
+    const userData = BrowserDatabase.getItem("MOE_DATA");
+    const {
+      USER_DATA: { deviceUuid },
+    } = userData;
+    const query = {
+      filters: [],
+      num_results: 10,
+      mad_uuid: deviceUuid,
+    };
+
+    const payload = VueQuery.buildQuery("vue_browsing_history_slider", query, {
+      gender,
+    });
+    fetchVueData(payload)
+      .then((resp) => {
+        this.setState({
+          recommendedForYou: resp.data,
+        });
+      })
+      .catch((err) => {
+        console.log("fetchVueData error", err);
+      });
+  }
+
   componentDidMount() {
     sourceIndexName = AlgoliaSDK.index.indexName;
     const countryCodeFromUrl = getLocaleFromUrl();
     const lang = isArabic() ? "arabic" : "english";
     sourceQuerySuggestionIndex = this.getAlgoliaIndex(countryCodeFromUrl, lang);
+    this.getPdpSearchWidgetData();
   }
 
   async requestTrendingInformation() {
@@ -203,8 +234,13 @@ export class SearchSuggestionContainer extends PureComponent {
   };
 
   containerProps = () => {
-    const { trendingBrands, trendingTags, topSearches, recentSearches } =
-      this.state;
+    const {
+      trendingBrands,
+      trendingTags,
+      topSearches,
+      recentSearches,
+      recommendedForYou,
+    } = this.state;
     const { search, data, closeSearch, queryID, querySuggestions } = this.props;
     const { brands = [], products = [] } = data;
 
@@ -226,6 +262,7 @@ export class SearchSuggestionContainer extends PureComponent {
       querySuggestions,
       topSearches,
       recentSearches,
+      recommendedForYou,
     };
   };
   containerFunctions = {

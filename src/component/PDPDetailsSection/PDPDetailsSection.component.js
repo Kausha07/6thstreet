@@ -1,17 +1,14 @@
 // import PropTypes from 'prop-types';
-import { PureComponent } from "react";
-
 import Accordion from "Component/Accordion";
+import { PureComponent } from "react";
 import { Product } from "Util/API/endpoint/Product/Product.type";
-import { isArabic } from "Util/App";
-
-import { PDP_ARABIC_VALUES_TRANSLATIONS } from "./PDPDetailsSection.config";
-
-import "./PDPDetailsSection.style";
-import VueQuery from "../../query/Vue.query";
-import BrowserDatabase from "Util/BrowserDatabase";
 import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
+import { isArabic } from "Util/App";
+import BrowserDatabase from "Util/BrowserDatabase";
+import VueQuery from "../../query/Vue.query";
 import DynamicContentVueProductSliderContainer from "../DynamicContentVueProductSlider";
+import { PDP_ARABIC_VALUES_TRANSLATIONS } from "./PDPDetailsSection.config";
+import "./PDPDetailsSection.style";
 
 class PDPDetailsSection extends PureComponent {
   static propTypes = {
