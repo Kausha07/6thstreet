@@ -102,6 +102,7 @@ const createCustomQuerySuggestions = (hit, resArray, sourceIndexName) => {
     },
   } = hit;
   let genderModifiedQuery;
+  let replaceStrReg = new RegExp("/// ", "g");
 
   if (checkForQueryWithGender(query)) {
     genderModifiedQuery = query;
@@ -126,8 +127,8 @@ const createCustomQuerySuggestions = (hit, resArray, sourceIndexName) => {
       );
     }
     categories_level1?.forEach((ele) => {
-      const suggestionLabel = `${brand_name[0].value} ${ele.value.replaceAll(
-        "/// ",
+      const suggestionLabel = `${brand_name[0].value} ${ele.value.replace(
+        replaceStrReg,
         ""
       )}`;
 
@@ -182,7 +183,7 @@ const createCustomQuerySuggestions = (hit, resArray, sourceIndexName) => {
 
     categories_level3?.forEach((ele) => {
       const val = ele.value.split(" /// ");
-      const formattedQuery = ele.value.replaceAll("/// ", "");
+      const formattedQuery = ele.value?.replace(replaceStrReg, "");
       const testQuery = `${brand_name[0].value} ${[
         ...val.slice(
           0,
@@ -210,7 +211,7 @@ const createCustomQuerySuggestions = (hit, resArray, sourceIndexName) => {
   // if query does not include brands
   else {
     categories_level1?.forEach((ele) => {
-      const suggestionLabel = ele.value.replaceAll("/// ", "");
+      const suggestionLabel = ele.value?.replace(replaceStrReg, "");
 
       if (checkForValidSuggestion(suggestionLabel, [...resArray, ...arr])) {
         addSuggestion(
@@ -255,7 +256,7 @@ const createCustomQuerySuggestions = (hit, resArray, sourceIndexName) => {
 
     categories_level3?.forEach((ele) => {
       const val = ele.value.split(" /// ");
-      const formattedQuery = ele.value.replaceAll("/// ", "");
+      const formattedQuery = ele.value?.replace(replaceStrReg, "");
       const testQuery = `${[
         ...val.slice(
           0,

@@ -78,7 +78,8 @@ export class SearchSuggestionContainer extends PureComponent {
       trendingTags: [],
       topSearches: [],
       recentSearches: [],
-      recommendedForYou: [],
+      // recommendedForYou: [],
+      trendingProducts: [],
     };
 
     // TODO: please render this component only once. Otherwise it is x3 times the request
@@ -152,12 +153,39 @@ export class SearchSuggestionContainer extends PureComponent {
       });
   }
 
+  getTrendingProducts() {
+    const { gender } = this.props;
+    const userData = BrowserDatabase.getItem("MOE_DATA");
+    const {
+      USER_DATA: { deviceUuid },
+    } = userData;
+    const query = {
+      filters: [],
+      num_results: 10,
+      mad_uuid: deviceUuid,
+    };
+
+    const payload = VueQuery.buildQuery("vue_trending_slider", query, {
+      gender,
+    });
+    fetchVueData(payload)
+      .then((resp) => {
+        this.setState({
+          trendingProducts: resp.data,
+        });
+      })
+      .catch((err) => {
+        console.log("fetchVueData error", err);
+      });
+  }
+
   componentDidMount() {
     sourceIndexName = AlgoliaSDK.index.indexName;
     const countryCodeFromUrl = getLocaleFromUrl();
     const lang = isArabic() ? "arabic" : "english";
     sourceQuerySuggestionIndex = this.getAlgoliaIndex(countryCodeFromUrl, lang);
-    this.getPdpSearchWidgetData();
+    // this.getPdpSearchWidgetData();
+    this.getTrendingProducts();
   }
 
   async requestTrendingInformation() {
@@ -169,6 +197,7 @@ export class SearchSuggestionContainer extends PureComponent {
         getStaticFile("search_trending_tags"),
         // getStaticFile("search_trending_products"),
       ]);
+      console.log("trending data", data);
       this.setState({
         trendingBrands: data[0][gender],
         trendingTags: data[1][gender],
@@ -239,7 +268,8 @@ export class SearchSuggestionContainer extends PureComponent {
       trendingTags,
       topSearches,
       recentSearches,
-      recommendedForYou,
+      // recommendedForYou,
+      trendingProducts,
     } = this.state;
     const { search, data, closeSearch, queryID, querySuggestions } = this.props;
     const { brands = [], products = [] } = data;
@@ -262,7 +292,8 @@ export class SearchSuggestionContainer extends PureComponent {
       querySuggestions,
       topSearches,
       recentSearches,
-      recommendedForYou,
+      // recommendedForYou,
+      trendingProducts,
     };
   };
   containerFunctions = {

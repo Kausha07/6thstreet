@@ -29,7 +29,8 @@ class SearchSuggestion extends PureComponent {
     querySuggestions: PropTypes.array,
     topSearches: PropTypes.array,
     recentSearches: PropTypes.array,
-    recommendedForYou: PropTypes.array,
+    // recommendedForYou: PropTypes.array,
+    trendingProducts: PropTypes.array,
     searchString: PropTypes.string,
   };
 
@@ -319,7 +320,7 @@ class SearchSuggestion extends PureComponent {
 
     return (
       <div block="SearchSuggestion" elem="Recommended">
-        <h2>{__("Trending Products")}</h2>
+        {/* <h2>{__("Trending Products")}</h2> */}
         <ul>{products.map(this.renderProduct)}</ul>
       </div>
     );
@@ -375,15 +376,31 @@ class SearchSuggestion extends PureComponent {
 
   // recommended for you
 
-  renderRecommendedForYou = () => {
-    const { recommendedForYou } = this.props;
-    if (recommendedForYou && recommendedForYou.length > 0) {
+  // renderRecommendedForYou = () => {
+  //   const { recommendedForYou } = this.props;
+  //   if (recommendedForYou && recommendedForYou.length > 0) {
+  //     return (
+  //       <div className="recommendedForYouSliderBox">
+  //         <DynamicContentVueProductSliderContainer
+  //           widgetID="vue_trending_slider"
+  //           products={recommendedForYou}
+  //           heading={__("Recommended for you")}
+  //           key={`DynamicContentVueProductSliderContainer99`}
+  //         />
+  //       </div>
+  //     );
+  //   }
+  // };
+
+  renderTrendingProducts = () => {
+    const { trendingProducts } = this.props;
+    if (trendingProducts && trendingProducts.length > 0) {
       return (
         <div className="recommendedForYouSliderBox">
           <DynamicContentVueProductSliderContainer
-            widgetID="vue_browsing_history_slider"
-            products={recommendedForYou}
-            heading={__("Recommended for you")}
+            widgetID="vue_trending_slider"
+            products={trendingProducts}
+            heading={__("Trending products")}
             key={`DynamicContentVueProductSliderContainer99`}
           />
         </div>
@@ -504,7 +521,8 @@ class SearchSuggestion extends PureComponent {
       <>
         {this.renderRecentSearches()}
         {this.renderTopSearches()}
-        {this.renderRecommendedForYou()}
+        {/* {this.renderRecommendedForYou()} */}
+        {this.renderTrendingProducts()}
         {this.renderTrendingBrands()}
         {this.renderTrendingTags()}
       </>
