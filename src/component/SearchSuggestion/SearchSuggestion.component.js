@@ -167,6 +167,7 @@ class SearchSuggestion extends PureComponent {
   renderQuerySuggestion = (querySuggestions) => {
     const { query, count, isBrand } = querySuggestions;
     const { searchString } = this.props;
+    console.log("query", query);
     const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
     return (
       <li>
@@ -337,7 +338,24 @@ class SearchSuggestion extends PureComponent {
   }
 
   renderNothingFound() {
-    return <div block="NothingFound">{__("No result found")}</div>;
+    const { searchString } = this.props;
+    return (
+      <>
+        <div block="NothingFound">
+          <p>
+            {__(
+              `No result found for ${searchString} but here are few suggestions`
+            )}
+          </p>
+        </div>
+        {this.renderRecentSearches()}
+        {this.renderTopSearches()}
+        {this.renderTrendingBrands()}
+        {/* {this.renderRecommendedForYou()} */}
+        {this.renderTrendingProducts()}
+        {this.renderTrendingTags()}
+      </>
+    );
   }
   closeSearchPopup = () => {
     this.props.closeSearch();
@@ -353,7 +371,7 @@ class SearchSuggestion extends PureComponent {
     tempRecentSearches = tempRecentSearches.filter(
       (item) => item.name !== search
     );
-    if (tempRecentSearches.length < 10) {
+    if (tempRecentSearches.length > 4) {
       tempRecentSearches.shift();
       tempRecentSearches.push({
         name: search,
@@ -521,9 +539,9 @@ class SearchSuggestion extends PureComponent {
       <>
         {this.renderRecentSearches()}
         {this.renderTopSearches()}
+        {this.renderTrendingBrands()}
         {/* {this.renderRecommendedForYou()} */}
         {this.renderTrendingProducts()}
-        {this.renderTrendingBrands()}
         {this.renderTrendingTags()}
       </>
     );

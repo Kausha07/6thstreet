@@ -74,7 +74,7 @@ export class HeaderSearchContainer extends PureComponent {
     tempRecentSearches = tempRecentSearches.filter(
       (item) => item.name !== search
     );
-    if (tempRecentSearches.length < 10) {
+    if (tempRecentSearches.length > 4) {
       tempRecentSearches.shift();
       tempRecentSearches.push({
         name: search,

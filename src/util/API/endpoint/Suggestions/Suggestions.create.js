@@ -110,7 +110,9 @@ const createCustomQuerySuggestions = (hit, resArray, sourceIndexName) => {
     genderModifiedQuery = `${gender} ${query}`;
   }
   // if query does include brands
+  console.log("has brand", brand_name[0]);
   if (query?.toUpperCase().includes(brand_name[0]?.value.toUpperCase())) {
+    console.log("found brand");
     if (checkForValidSuggestion(genderModifiedQuery, [...resArray, ...arr])) {
       addSuggestion(
         genderModifiedQuery,
@@ -320,7 +322,11 @@ const createCustomQuerySuggestions = (hit, resArray, sourceIndexName) => {
 const checkForValidSuggestion = (value, arr) => {
   let valid = true;
 
-  if (/\b(?:OUTLET|INFLUENCER|INFLUENCERS|NEW IN|BLACK FRIDAY)\b/i.test(value))
+  if (
+    /\b(?:OUTLET|INFLUENCER|INFLUENCERS|NEW IN|BLACK FRIDAY|DEFAULT CATEGORY)\b/i.test(
+      value
+    )
+  )
     return false;
 
   if (
@@ -384,7 +390,7 @@ export const formatQuerySuggestions = (query) => {
   else if (gender === "all") return capitalizedQuery;
 
   let regex = new RegExp("\\b" + avoidFilter + "\\b", "i");
-  return query
+  return capitalizedQuery
     ?.replace(regex, "")
     .replace(/^\s+|\s+$/g, "")
     .replace(/\s+/g, " ");
