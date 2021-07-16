@@ -144,7 +144,14 @@
       background-color: #FFFFFF;
       padding: 0 20px;
       svg {
+        transform: rotateY(0deg);
         margin: 0 8px 0 0;
+      }
+      &_isArabic {
+        svg {
+          transform: rotateY(180deg);
+          margin: 0 0 0 8px;
+        }
       }
       span {
         text-transform: none;

@@ -86,6 +86,7 @@ class PDPDetailsSection extends PureComponent {
                   title = { document.title }
                   text =  {`Hey check this out: ${document.title}`}
                   url = { url.toString() }
+                  mods = {{isArabic: isArabic()}}
               >
                   <span>{ __('Share') }</span>
               </ShareButton>
@@ -326,9 +327,9 @@ class PDPDetailsSection extends PureComponent {
         >
           {this.renderIconsSection()}
           {this.renderDescription()}
-          <div block="Seperator" />
-          { this.renderShareButton() }
         </Accordion>
+        <div block="Seperator" />
+        { this.renderShareButton() }
         {this.renderPdpWidgets()}
         {/* <Accordion
                   mix={ { block: 'PDPDetailsSection', elem: 'Accordion' } }

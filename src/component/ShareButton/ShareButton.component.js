@@ -19,7 +19,7 @@ class ShareButton extends PureComponent {
         const { initiateShare, children, ...rest } = this.props;
         return (
             <button onClick={ initiateShare } { ...rest }>
-                <Share />
+                <Share block="Icon" />
                 { children }
             </button>
         );
