@@ -1,7 +1,4 @@
 /* eslint-disable no-magic-numbers */
-import PropTypes from "prop-types";
-
-import Popup from "SourceComponent/Popup";
 import CheckoutBilling from "Component/CheckoutBilling";
 import CheckoutFail from "Component/CheckoutFail";
 import CheckoutGuestForm from "Component/CheckoutGuestForm";
@@ -9,7 +6,6 @@ import CheckoutOrderSummary from "Component/CheckoutOrderSummary";
 import {
   TABBY_ISTALLMENTS,
   TABBY_PAY_LATER,
-  TABBY_PAYMENT_CODES,
 } from "Component/CheckoutPayments/CheckoutPayments.config";
 import CheckoutShipping from "Component/CheckoutShipping";
 import CheckoutSuccess from "Component/CheckoutSuccess";
@@ -18,22 +14,20 @@ import CreditCardPopup from "Component/CreditCardPopup";
 import HeaderLogo from "Component/HeaderLogo";
 import TabbyPopup from "Component/TabbyPopup";
 import { TABBY_POPUP_ID } from "Component/TabbyPopup/TabbyPopup.config";
-import Loader from "SourceComponent/Loader";
+import PropTypes from "prop-types";
+import Popup from "SourceComponent/Popup";
 import { Checkout as SourceCheckout } from "SourceRoute/Checkout/Checkout.component";
 import { TotalsType } from "Type/MiniCart";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
-import GiftIconSmall from "./icons/gift-heart.png";
-import GiftIconLarge from "./icons/gift-heart@3x.png";
-
 import {
   AUTHORIZED_STATUS,
   BILLING_STEP,
   CAPTURED_STATUS,
 } from "./Checkout.config";
-
 import "./Checkout.style";
-
+import GiftIconSmall from "./icons/gift-heart.png";
+import GiftIconLarge from "./icons/gift-heart@3x.png";
 export class Checkout extends SourceCheckout {
   static propTypes = {
     isSignedIn: PropTypes.bool.isRequired,
@@ -71,30 +65,31 @@ export class Checkout extends SourceCheckout {
     binInfo: {},
   };
 
-
   componentDidMount() {
-
-    const paymentInformation = JSON.parse(localStorage.getItem("PAYMENT_INFO"))
-    if(paymentInformation){
-      this.setState({paymentInformation})
+    const paymentInformation = JSON.parse(localStorage.getItem("PAYMENT_INFO"));
+    if (paymentInformation) {
+      this.setState({ paymentInformation });
     }
-}
+  }
 
   componentDidUpdate(prevProps, prevState) {
+    const { paymentInformation } = this.state;
+    const paymentInformationUpdated = JSON.parse(
+      localStorage.getItem("PAYMENT_INFO")
+    );
 
-    const {paymentInformation} = this.state
-
-    const paymentInformationUpdated = JSON.parse(localStorage.getItem("PAYMENT_INFO"))
-   
-    if(prevState?.paymentInformation?.paymentMethod?.code !== paymentInformation?.paymentMethod?.code && paymentInformationUpdated){
-      this.setState({paymentInformation :paymentInformationUpdated})
+    if (
+      prevState?.paymentInformation?.paymentMethod?.code !==
+        paymentInformation?.paymentMethod?.code &&
+      paymentInformationUpdated
+    ) {
+      this.setState({ paymentInformation: paymentInformationUpdated });
     }
-}
+  }
 
-componentWillUnmount(){
-  localStorage.removeItem("PAYMENT_INFO")
-}
-
+  componentWillUnmount() {
+    localStorage.removeItem("PAYMENT_INFO");
+  }
 
   hideModalListener = () => {
     // Will hide bin promotion popup after 5 sec
@@ -171,11 +166,8 @@ componentWillUnmount(){
 
   processTabbyWithTimeout(counter, paymentInformation) {
     const { tabbyPaymentStatus } = this.state;
-    const {
-      showErrorNotification,
-      hideActiveOverlay,
-      activeOverlay,
-    } = this.props;
+    const { showErrorNotification, hideActiveOverlay, activeOverlay } =
+      this.props;
 
     // Need to get payment data from Tabby.
     // Could not get callback of Tabby another way because Tabby is iframe in iframe
@@ -241,12 +233,8 @@ componentWillUnmount(){
 
   renderSummary() {
     const { cashOnDeliveryFee } = this.state;
-    const {
-      checkoutTotals,
-      checkoutStep,
-      paymentTotals,
-      processingRequest,
-    } = this.props;
+    const { checkoutTotals, checkoutStep, paymentTotals, processingRequest } =
+      this.props;
     const { areTotalsVisible } = this.stepMap[checkoutStep];
     if (!areTotalsVisible) {
       return null;
@@ -334,7 +322,7 @@ componentWillUnmount(){
       getBinPromotion,
       updateTotals,
     } = this.props;
-    const { isArabic , cashOnDeliveryFee} = this.state;
+    const { isArabic, cashOnDeliveryFee } = this.state;
 
     return (
       <>
@@ -351,7 +339,7 @@ componentWillUnmount(){
           </button>
         </div>
         <CheckoutBilling
-        cashOnDeliveryFee={cashOnDeliveryFee}
+          cashOnDeliveryFee={cashOnDeliveryFee}
           setLoading={setLoading}
           paymentMethods={paymentMethods}
           setDetailsStep={setDetailsStep}
@@ -372,7 +360,14 @@ componentWillUnmount(){
     );
   }
 
-  setCheckoutCreditCardData = (number, expMonth, expYear, cvv, saveCard, email) => {
+  setCheckoutCreditCardData = (
+    number,
+    expMonth,
+    expYear,
+    cvv,
+    saveCard,
+    email
+  ) => {
     let creditCardData = {
       cvv,
       email,
@@ -442,11 +437,8 @@ componentWillUnmount(){
   }
 
   renderTabbyIframe() {
-    const {
-      tabbyInstallmentsUrl,
-      tabbyPayLaterUrl,
-      selectedPaymentMethod,
-    } = this.state;
+    const { tabbyInstallmentsUrl, tabbyPayLaterUrl, selectedPaymentMethod } =
+      this.state;
     const { isTabbyPopupShown } = this.props;
     if (!isTabbyPopupShown) {
       return null;
@@ -471,7 +463,7 @@ componentWillUnmount(){
       initialTotals,
       isVerificationCodeSent,
       newCardVisible,
-      CaptureID
+      CaptureID,
     } = this.props;
     const { cashOnDeliveryFee } = this.state;
     const {
@@ -480,9 +472,9 @@ componentWillUnmount(){
     } = this.state;
     this.setState({ isSuccess: true });
 
-    if (isFailed) {
+    if (!isFailed) {
       return (
-        <CheckoutFail
+        <CheckoutSuccess
           orderID={orderID}
           incrementID={incrementID}
           shippingAddress={shippingAddress}
@@ -490,14 +482,15 @@ componentWillUnmount(){
           paymentMethod={paymentMethod}
           creditCardData={creditCardData}
           totals={initialTotals}
+          cashOnDeliveryFee={cashOnDeliveryFee}
           isVerificationCodeSent={isVerificationCodeSent}
+          selectedCard={newCardVisible ? {} : selectedCard}
           CaptureID={CaptureID}
         />
       );
     }
-
     return (
-      <CheckoutSuccess
+      <CheckoutFail
         orderID={orderID}
         incrementID={incrementID}
         shippingAddress={shippingAddress}
@@ -505,9 +498,7 @@ componentWillUnmount(){
         paymentMethod={paymentMethod}
         creditCardData={creditCardData}
         totals={initialTotals}
-        cashOnDeliveryFee={cashOnDeliveryFee}
         isVerificationCodeSent={isVerificationCodeSent}
-        selectedCard={newCardVisible ? {} : selectedCard}
         CaptureID={CaptureID}
       />
     );
@@ -771,10 +762,7 @@ componentWillUnmount(){
               {this.renderStep()}
               {this.renderLoader()}
             </div>
-            <div
-              block="Checkout"
-              elem="WebDisplay"
-            >
+            <div block="Checkout" elem="WebDisplay">
               <div block="Checkout" elem="Additional">
                 {this.renderSummary()}
                 {this.renderPromo()}

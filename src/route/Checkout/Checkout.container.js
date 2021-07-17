@@ -1,14 +1,14 @@
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-
 import {
   CARD,
   CHECKOUT_APPLE_PAY,
+  CHECKOUT_QPAY,
   TABBY_ISTALLMENTS,
   TABBY_PAY_LATER,
-  CHECKOUT_QPAY,
 } from "Component/CheckoutPayments/CheckoutPayments.config";
 import { CC_POPUP_ID } from "Component/CreditCardPopup/CreditCardPopup.config";
+import { TABBY_POPUP_ID } from "Component/TabbyPopup/TabbyPopup.config";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import {
   AUTHORIZED_STATUS,
   CAPTURED_STATUS,
@@ -28,6 +28,7 @@ import { resetCart } from "Store/Cart/Cart.action";
 // eslint-disable-next-line no-unused-vars
 import CartDispatcher from "Store/Cart/Cart.dispatcher";
 import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
+import CreditCardDispatcher from "Store/CreditCard/CreditCard.dispatcher";
 import { updateMeta } from "Store/Meta/Meta.action";
 import {
   hideActiveOverlay,
@@ -38,18 +39,15 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import { checkProducts } from "Util/Cart/Cart";
 import Event, { EVENT_GTM_CHECKOUT, EVENT_GTM_PURCHASE } from "Util/Event";
 import history from "Util/History";
+import isMobile from "Util/Mobile";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
-import parseJson from "parse-json";
-import { TABBY_POPUP_ID } from "Component/TabbyPopup/TabbyPopup.config";
 import {
   CART_ID_CACHE_KEY,
   LAST_CART_ID_CACHE_KEY,
-  CART_ITEMS_CACHE_KEY
 } from "../../store/MobileCart/MobileCart.reducer";
+
 const PAYMENT_ABORTED = "payment_aborted";
 const PAYMENT_FAILED = "payment_failed";
-import CreditCardDispatcher from 'Store/CreditCard/CreditCard.dispatcher';
-import isMobile from 'Util/Mobile';
 
 export const mapDispatchToProps = (dispatch) => ({
   ...sourceMapDispatchToProps(dispatch),
@@ -118,9 +116,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     savePaymentInformation: this.savePaymentInformation.bind(this),
     getBinPromotion: this.getBinPromotion.bind(this),
     saveAddressInformation: this.saveAddressInformation.bind(this),
-    onShippingEstimationFieldsChange: this.onShippingEstimationFieldsChange.bind(
-      this
-    ),
+    onShippingEstimationFieldsChange:
+      this.onShippingEstimationFieldsChange.bind(this),
     onEmailChange: this.onEmailChange.bind(this),
     onCreateUserChange: this.onCreateUserChange.bind(this),
     onPasswordChange: this.onPasswordChange.bind(this),
@@ -152,7 +149,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
     toggleBreadcrumbs(false);
 
-
     this.state = {
       isLoading: false,
       isDeliveryOptionsLoading: false,
@@ -160,7 +156,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       paymentMethods: [],
       shippingMethods: [],
       shippingAddress: {},
-      checkoutStep:is_virtual ? BILLING_STEP : SHIPPING_STEP,
+      checkoutStep: is_virtual ? BILLING_STEP : SHIPPING_STEP,
       orderID: "",
       incrementID: "",
       threeDsUrl: "",
@@ -176,7 +172,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       tabbyPaymentId: null,
       isTabbyPopupShown: false,
       tabbyPaymentStatus: "",
-      CaptureID:""
+      CaptureID: "",
     };
   }
 
@@ -191,8 +187,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     this.refreshCart();
     setMeta({ title: __("Checkout") });
     const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
-    if(QPAY_CHECK){
-      this.setState({isLoading: true})
+    if (QPAY_CHECK) {
+      this.setState({ isLoading: true });
     }
   }
 
@@ -213,52 +209,56 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const { checkoutStep: prevCheckoutStep } = prevState;
 
     const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
-
     if (QPAY_CHECK) {
-      const {
-        getPaymentAuthorization,
-        capturePayment,
-        cancelOrder,
-      } = this.props;
+      const { getPaymentAuthorization, capturePayment, cancelOrder } =
+        this.props;
 
       localStorage.removeItem("QPAY_ORDER_DETAILS");
-      
-      const ShippingAddress = JSON.parse(localStorage.getItem("Shipping_Address"));
-      
-      this.setState({shippingAddress: ShippingAddress})
-      
+
+      const ShippingAddress = JSON.parse(
+        localStorage.getItem("Shipping_Address")
+      );
+
+      this.setState({ shippingAddress: ShippingAddress });
+
       const { id, order_id, increment_id } = QPAY_CHECK;
-      
-      getPaymentAuthorization(id).then((response) => {
-        if (response) {
-          this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
-          
-          localStorage.removeItem("Shipping_Address");
 
-          const { status, id: paymentId = "" } = response;
+      getPaymentAuthorization(id)
+        .then((response) => {
+          if (response) {
+            this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
 
-          if (status === "Authorized" || status === "Captured") {
-            BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
-            this.setDetailsStep(order_id, increment_id);
-            this.setState({isLoading: false})
-            this.resetCart();
-            capturePayment(paymentId, order_id).then(response => {
-              if(response){
-                this.setState({CaptureID: response?.confirmation_id})
-              }
-            });
+            localStorage.removeItem("Shipping_Address");
+
+            const { status, id: paymentId = "" } = response;
+
+            localStorage.removeItem("Shipping_Address");
+
+            console.log("QPAY auth response (checkout container)", response);
+
+            if (status === "Authorized" || status === "Captured") {
+              BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
+              this.setDetailsStep(order_id, increment_id);
+              this.setState({ isLoading: false });
+              this.resetCart();
+              capturePayment(paymentId, order_id).then((response) => {
+                if (response) {
+                  this.setState({ CaptureID: response?.confirmation_id });
+                }
+              });
+            }
+
+            if (status === "Declined" || status === "Canceled") {
+              cancelOrder(order_id, PAYMENT_FAILED);
+              this.setState({ isLoading: false, isFailed: true });
+              this.setDetailsStep(order_id, increment_id);
+              this.resetCart();
+            }
           }
-
-          if (status === "Declined" ||status === "Canceled"  ) {
-            cancelOrder(order_id, PAYMENT_FAILED);
-            this.setState({ isLoading: false, isFailed: true });
-            this.setDetailsStep(order_id, increment_id);
-            this.resetCart();
-          }
-        }
-      }).catch(rejected => {
-        console.log("request rejected(in checkout container)", rejected)
-      });
+        })
+        .catch((rejected) => {
+          console.log("request rejected(in checkout container)", rejected);
+        });
       return;
     }
     if (Object.keys(totals).length !== 0) {
@@ -517,9 +517,13 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
     if (code === CHECKOUT_APPLE_PAY) {
       this.setState({ processApplePay: true });
-    } else if (code === TABBY_ISTALLMENTS || code === TABBY_PAY_LATER || code === CHECKOUT_QPAY) {
+    } else if (
+      code === TABBY_ISTALLMENTS ||
+      code === TABBY_PAY_LATER ||
+      code === CHECKOUT_QPAY
+    ) {
       this.placeOrder(code, data, paymentInformation);
-    }else {
+    } else {
       this.placeOrder(code, data, null);
     }
   }
@@ -539,7 +543,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         .then((response) => {
           if (response && response.data) {
             const { data } = response;
-
             if (typeof data === "object") {
               const {
                 order_id,
@@ -581,7 +584,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
                   //return true;
                 } else if (code === CHECKOUT_QPAY) {
-                  const {shippingAddress} = this.state
+                  const { shippingAddress } = this.state;
                   this.setState({
                     order_id,
                     increment_id,
@@ -667,12 +670,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   }
 
   setDetailsStep(orderID, incrementID) {
-    const {
-      setNavigationState,
-      sendVerificationCode,
-      isSignedIn,
-      customer,
-    } = this.props;
+    const { setNavigationState, sendVerificationCode, isSignedIn, customer } =
+      this.props;
     const { shippingAddress } = this.state;
 
     if (isSignedIn) {
@@ -734,7 +733,14 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   }
 
   processThreeDS() {
-    const { getPaymentAuthorization, capturePayment, cancelOrder, saveCreditCard, newCardVisible, showOverlay } = this.props;
+    const {
+      getPaymentAuthorization,
+      capturePayment,
+      cancelOrder,
+      saveCreditCard,
+      newCardVisible,
+      showOverlay,
+    } = this.props;
     const { order_id, increment_id, id = "", creditCardData } = this.state;
     getPaymentAuthorization(id).then((response) => {
       if (response) {
@@ -821,7 +827,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     verifyPayment(tabbyPaymentId).then(({ status }) => {
       if (status === AUTHORIZED_STATUS || status === CAPTURED_STATUS) {
         BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
-        this.setState({ tabbyPaymentStatus: status,isTabbyPopupShown: false });
+        this.setState({ tabbyPaymentStatus: status, isTabbyPopupShown: false });
         updateTabbyPayment(tabbyPaymentId, order_id);
         this.setDetailsStep(order_id, increment_id);
         this.resetCart();

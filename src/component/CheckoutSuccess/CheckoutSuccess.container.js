@@ -1,9 +1,8 @@
 /* eslint-disable react/prop-types */
+import { CUSTOMER_ACCOUNT_PAGE } from "Component/Header/Header.config";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
-
-import { CUSTOMER_ACCOUNT_PAGE } from "Component/Header/Header.config";
 import { MY_ACCOUNT_URL } from "Route/MyAccount/MyAccount.config";
 import MyAccountContainer, {
   tabMap,
@@ -18,10 +17,11 @@ import { showNotification } from "Store/Notification/Notification.action";
 import { toggleOverlayByKey } from "Store/Overlay/Overlay.action";
 import { customerType } from "Type/Account";
 import { TotalsType } from "Type/MiniCart";
+import Algolia from "Util/API/provider/Algolia";
+import { getUUIDToken } from "Util/Auth";
+import { ADD_TO_CART_ALGOLIA } from "Util/Event";
 import history from "Util/History";
 import isMobile from "Util/Mobile";
-import { getCountriesForSelect } from "Util/API/endpoint/Config/Config.format";
-
 import CheckoutSuccess from "./CheckoutSuccess.component";
 
 export const BreadcrumbsDispatcher = import(
@@ -137,7 +137,30 @@ export class CheckoutSuccessContainer extends PureComponent {
       customer,
       shippingAddress: { phone: guestPhone },
       isSignedIn,
+      totals,
     } = this.props;
+
+    var data = localStorage.getItem("customer");
+    let userData = JSON.parse(data);
+    let userToken;
+    if (userData?.data?.id) {
+      userToken = userData.data.id;
+    }
+    totals?.items?.map((item) => {
+      if (item?.full_item_info?.search_query_id) {
+        new Algolia().logAlgoliaAnalytics(
+          "conversion",
+          ADD_TO_CART_ALGOLIA,
+          [],
+          {
+            objectIDs: [item?.full_item_info?.parent_id.toString()],
+            queryID: item?.full_item_info?.search_query_id,
+            userToken: userToken ? `user-${userToken}` : getUUIDToken(),
+          }
+        );
+      }
+    });
+
     if (isSignedIn) {
       this.setPhone(phone);
     } else {
@@ -214,12 +237,8 @@ export class CheckoutSuccessContainer extends PureComponent {
   }
 
   onVerifySuccess(fields) {
-    const {
-      verifyUserPhone,
-      isSignedIn,
-      orderID,
-      showNotification,
-    } = this.props;
+    const { verifyUserPhone, isSignedIn, orderID, showNotification } =
+      this.props;
 
     const { phone } = this.state;
     if (phone) {

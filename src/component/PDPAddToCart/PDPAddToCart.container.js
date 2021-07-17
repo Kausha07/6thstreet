@@ -6,24 +6,21 @@ import { connect } from "react-redux";
 import { getStore } from "Store";
 import { setMinicartOpen } from "Store/Cart/Cart.action";
 import CartDispatcher from "Store/Cart/Cart.dispatcher";
+import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
 import { showNotification } from "Store/Notification/Notification.action";
 import PDPDispatcher from "Store/PDP/PDP.dispatcher";
+import { customerType } from "Type/Account";
 import { Product } from "Util/API/endpoint/Product/Product.type";
-import Algolia from "Util/API/provider/Algolia";
-import { getUUID, getUUIDToken } from "Util/Auth";
+import { getUUID } from "Util/Auth";
+import BrowserDatabase from "Util/BrowserDatabase";
 import Event, {
-  ADD_TO_CART_ALGOLIA,
   EVENT_GTM_PRODUCT_ADD_TO_CART,
   VUE_ADD_TO_CART,
 } from "Util/Event";
 import history from "Util/History";
-import PDPAddToCart from "./PDPAddToCart.component";
-import BrowserDatabase from "Util/BrowserDatabase";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
 import { NOTIFY_EMAIL } from "./PDPAddToCard.config";
-
-import { customerType } from "Type/Account";
-import MyAccountDispatcher from "Store/MyAccount/MyAccount.dispatcher";
+import PDPAddToCart from "./PDPAddToCart.component";
 
 export const mapStateToProps = (state) => ({
   product: state.PDP.product,
@@ -47,7 +44,8 @@ export const mapDispatchToProps = (dispatch) => ({
     brand_name,
     thumbnail_url,
     url,
-    itemPrice
+    itemPrice,
+    searchQueryId
   ) =>
     CartDispatcher.addProductToCart(
       dispatch,
@@ -58,7 +56,8 @@ export const mapDispatchToProps = (dispatch) => ({
       brand_name,
       thumbnail_url,
       url,
-      itemPrice
+      itemPrice,
+      searchQueryId
     ),
   setMinicartOpen: (isMinicartOpen = false) =>
     dispatch(setMinicartOpen(isMinicartOpen)),
@@ -234,7 +233,9 @@ export class PDPAddToCartContainer extends PureComponent {
         processingRequest: false,
         mappedSizeObject: object,
         productStock: response,
-        ...(size_us.length === 0 && size_uk.length === 0 && size_eu.length === 0 && { isOutOfStock: true })
+        ...(size_us.length === 0 &&
+          size_uk.length === 0 &&
+          size_eu.length === 0 && { isOutOfStock: true }),
       });
     });
   }
@@ -381,7 +382,13 @@ export class PDPAddToCartContainer extends PureComponent {
     const basePrice = price[0][Object.keys(price[0])[0]]["6s_base_price"];
 
     this.setState({ productAdded: true });
-
+    var qid = new URLSearchParams(window.location.search).get("qid");
+    let searchQueryId;
+    if (!qid) {
+      searchQueryId = getStore().getState().SearchSuggestions.queryID;
+    } else {
+      searchQueryId = qid;
+    }
     if (
       (size_uk.length !== 0 || size_eu.length !== 0 || size_us.length !== 0) &&
       selectedSizeCode === ""
@@ -411,7 +418,8 @@ export class PDPAddToCartContainer extends PureComponent {
         brand_name,
         thumbnail_url,
         url,
-        itemPrice
+        itemPrice,
+        searchQueryId
       ).then((response) => {
         // Response is sent only if error appear
         if (response) {
@@ -434,31 +442,7 @@ export class PDPAddToCartContainer extends PureComponent {
           variant: color,
         },
       });
-      var data = localStorage.getItem("customer");
-      let userData = JSON.parse(data);
-      let userToken;
-      var qid = new URLSearchParams(window.location.search).get("qid");
-      let queryID;
-      if (!qid) {
-        queryID = getStore().getState().SearchSuggestions.queryID;
-      } else {
-        queryID = qid;
-      }
-      if (userData?.data?.id) {
-        userToken = userData.data.id;
-      }
-      if (queryID) {
-        new Algolia().logAlgoliaAnalytics(
-          "conversion",
-          ADD_TO_CART_ALGOLIA,
-          [],
-          {
-            objectIDs: [objectID],
-            queryID,
-            userToken: userToken ? `user-${userToken}` : getUUIDToken(),
-          }
-        );
-      }
+
       // vue analytics
       const locale = VueIntegrationQueries.getLocaleFromUrl();
       VueIntegrationQueries.vueAnalayticsLogger({
@@ -480,7 +464,6 @@ export class PDPAddToCartContainer extends PureComponent {
     if (!insertedSizeStatus) {
       this.setState({ isLoading: true });
       const code = Object.keys(productStock);
-
       addProductToCart(
         {
           sku: code[0],
@@ -495,7 +478,8 @@ export class PDPAddToCartContainer extends PureComponent {
         brand_name,
         thumbnail_url,
         url,
-        itemPrice
+        itemPrice,
+        searchQueryId
       ).then((response) => {
         // Response is sent only if error appear
         if (response) {
@@ -518,25 +502,6 @@ export class PDPAddToCartContainer extends PureComponent {
           variant: "",
         },
       });
-      var data = localStorage.getItem("customer");
-      let userData = JSON.parse(data);
-      let userToken;
-      const queryID = getStore().getState().SearchSuggestions.queryID;
-      if (userData?.data?.id) {
-        userToken = userData.data.id;
-      }
-      if (queryID) {
-        new Algolia().logAlgoliaAnalytics(
-          "conversion",
-          ADD_TO_CART_ALGOLIA,
-          [],
-          {
-            objectIDs: [objectID],
-            queryID,
-            userToken: userToken ? `user-${userToken}` : getUUIDToken(),
-          }
-        );
-      }
 
       // vue analytics
       const locale = VueIntegrationQueries.getLocaleFromUrl();
