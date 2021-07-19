@@ -327,7 +327,7 @@ class MyAccountOrderView extends PureComponent {
     } = this.props;
     const { isArabic } = this.state;
     const itemNumber = shipped.length;
-
+    const suffixNumber = appendOrdinalSuffix(itemNumber - index)
     return (
       <div
         key={item.shipment_number}
@@ -342,7 +342,7 @@ class MyAccountOrderView extends PureComponent {
             item.courier_status_code
           )}
           title={this.renderAccordionTitle(
-            __("%s Package", appendOrdinalSuffix(itemNumber - index)),
+            __("%s Package",suffixNumber),
             PackageImage,
             item.courier_status_code
           )}
