@@ -172,7 +172,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       tabbyPaymentId: null,
       isTabbyPopupShown: false,
       tabbyPaymentStatus: "",
-      CaptureID: "",
+      QPayDetails:{}
     };
   }
 
@@ -241,9 +241,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
               this.setDetailsStep(order_id, increment_id);
               this.setState({ isLoading: false });
               this.resetCart();
-              capturePayment(paymentId, order_id).then((response) => {
-                if (response) {
-                  this.setState({ CaptureID: response?.confirmation_id });
+              capturePayment(paymentId, order_id).then(response => {
+                console.log("capture payment success response", response)
+                if(response){
+                  const {pun,requested_on,amount , currency }= response
+                  this.setState({QPayDetails: {PUN : pun, date:requested_on, status:"SUCCESS"}})
                 }
               });
             }
@@ -253,6 +255,13 @@ export class CheckoutContainer extends SourceCheckoutContainer {
               this.setState({ isLoading: false, isFailed: true });
               this.setDetailsStep(order_id, increment_id);
               this.resetCart();
+              capturePayment(paymentId, order_id).then(response => {
+                console.log("capture payment failure response", response)
+                if(response){
+                  const {pun,requested_on,amount , currency }= response
+                  this.setState({QPayDetails: {PUN : pun, date:requested_on, amount:`${currency} ${amount}`, status:"FAILED", Payment_ID: paymentId}})
+                }
+              });
             }
           }
         })

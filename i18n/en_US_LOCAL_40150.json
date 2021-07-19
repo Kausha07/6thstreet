@@ -826,5 +826,11 @@
     "QPAY": null,
     "Show": null,
     "Mask": null,
-    "Confirmation ID": null
+    "Confirmation ID": null,
+    "PUN": null,
+    "STATUS": null,
+    "Status": null,
+    "Amount": null,
+    "Pay": null,
+    "Payment ID": null
 }

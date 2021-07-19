@@ -219,7 +219,9 @@ export class Checkout extends SourceCheckout {
 
   renderLoader() {
     const { isLoading, checkoutStep } = this.props;
-    if (checkoutStep === BILLING_STEP && isLoading) {
+    const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
+
+    if ((checkoutStep === BILLING_STEP && isLoading) || QPAY_CHECK) {
       return (
         <div block="CheckoutSuccess">
           <div block="LoadingOverlay" dir="ltr">
@@ -463,7 +465,7 @@ export class Checkout extends SourceCheckout {
       initialTotals,
       isVerificationCodeSent,
       newCardVisible,
-      CaptureID,
+      QPayDetails
     } = this.props;
     const { cashOnDeliveryFee } = this.state;
     const {
@@ -484,8 +486,8 @@ export class Checkout extends SourceCheckout {
           totals={initialTotals}
           cashOnDeliveryFee={cashOnDeliveryFee}
           isVerificationCodeSent={isVerificationCodeSent}
+          QPAY_DETAILS={QPayDetails}
           selectedCard={newCardVisible ? {} : selectedCard}
-          CaptureID={CaptureID}
         />
       );
     }
@@ -499,7 +501,8 @@ export class Checkout extends SourceCheckout {
         creditCardData={creditCardData}
         totals={initialTotals}
         isVerificationCodeSent={isVerificationCodeSent}
-        CaptureID={CaptureID}
+        selectedCard={newCardVisible ? {} : selectedCard}
+        QPAY_DETAILS={QPayDetails}
       />
     );
   }
