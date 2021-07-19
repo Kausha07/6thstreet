@@ -18,6 +18,7 @@ export class SearchSuggestionsDispatcher {
     const {
       AppState: { gender },
     } = getStore().getState();
+    let queryID = null;
 
     try {
       const productData = await new Algolia().searchBy(
@@ -72,7 +73,7 @@ export class SearchSuggestionsDispatcher {
 
       // In case anyone needs desktop data (use this!)
       // const lang = language === 'en' ? 'english' : 'arabic';
-      const hits = await new Algolia({
+      const data = await new Algolia({
         index: sourceQuerySuggestionIndex,
       }).getSuggestions(
         isArabic()
@@ -86,10 +87,14 @@ export class SearchSuggestionsDispatcher {
             }
       );
       const querySuggestions =
-        hits?.length > 0
-          ? getCustomQuerySuggestions(hits, sourceIndexName)
+        data?.hits?.length > 0
+          ? getCustomQuerySuggestions(data?.hits, sourceIndexName)
           : [];
-      const queryID = productData?.queryID ? productData?.queryID : null;
+      if (data && data.queryID) {
+        queryID = data.queryID;
+      } else {
+        queryID = productData?.queryID ? productData?.queryID : null;
+      }
       const results = formatProductSuggestions(productData);
 
       dispatch(

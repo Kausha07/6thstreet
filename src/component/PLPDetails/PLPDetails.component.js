@@ -1,11 +1,11 @@
 // import PropTypes from 'prop-types';
-import { PureComponent } from "react";
 import PropTypes from "prop-types";
-import isMobile from "Util/Mobile";
-import {isArabic} from "Util/App"
-import "./PLPDetails.style";
-import shareIcon from "Style/icons/share.svg";
+import { PureComponent } from "react";
 import favIcon from "Style/icons/favorites.svg";
+import shareIcon from "Style/icons/share.svg";
+import { isArabic } from "Util/App";
+import isMobile from "Util/Mobile";
+import "./PLPDetails.style";
 
 class PLPDetails extends PureComponent {
   static propTypes = {
@@ -16,7 +16,7 @@ class PLPDetails extends PureComponent {
 
   state = {
     isMobile: isMobile.any() || isMobile.tablet(),
-    isArabic: isArabic()
+    isArabic: isArabic(),
   };
 
   renderBrandImage = () => {
@@ -78,7 +78,11 @@ class PLPDetails extends PureComponent {
 
   render() {
     const { isArabic } = this.state;
-    return <div block="PLPDetails" mods={{isArabic}}>{this.renderContent()}</div>;
+    return (
+      <div block="PLPDetails" mods={{ isArabic }}>
+        {this.renderContent()}
+      </div>
+    );
   }
 }
 
