@@ -1,13 +1,11 @@
-import PropTypes from "prop-types";
-import { PureComponent } from "react";
-
 import Link from "Component/Link";
 import Loader from "Component/Loader";
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
 import { Products } from "Util/API/endpoint/Product/Product.type";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 import BRAND_MAPPING from "./SearchSiggestion.config";
-
 import "./SearchSuggestion.style";
 
 class SearchSuggestion extends PureComponent {
@@ -259,7 +257,7 @@ class SearchSuggestion extends PureComponent {
       <div block="SearchSuggestion" mods={{ isArabic }}>
         <div block="SearchSuggestion" elem="Content">
           {this.renderCloseButton()}
-          {this.renderLoader()}
+          {/* {this.renderLoader()} */}
           {this.renderContent()}
         </div>
         <div block="SearchSuggestion" elem="ShadeWrapper">
