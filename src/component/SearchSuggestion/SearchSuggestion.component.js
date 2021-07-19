@@ -109,7 +109,7 @@ class SearchSuggestion extends PureComponent {
 
   // query suggestion block starts
 
-  getBrandSuggestionUrl = (brandName) => {
+  getBrandSuggestionUrl = (brandName, queryID) => {
     const { isArabic } = this.state;
     let brandUrl;
     let formattedBrandName;
@@ -124,7 +124,7 @@ class SearchSuggestion extends PureComponent {
       }
       brandUrl = `${this.getBrandUrl(
         brandName
-      )}.html?q=${brandName}&dFR[gender][0]=${requestedGender}`;
+      )}.html?q=${brandName}&qid=${queryID}&dFR[gender][0]=${requestedGender}`;
     } else {
       formattedBrandName = brandName
         .toUpperCase()
@@ -136,12 +136,12 @@ class SearchSuggestion extends PureComponent {
         .toLowerCase();
       brandUrl = `${this.getBrandUrl(
         formattedBrandName
-      )}.html?q=${formattedBrandName}&dFR[gender][0]=${gender}`;
+      )}.html?q=${formattedBrandName}&qid=${queryID}&dFR[gender][0]=${gender}`;
     }
     return brandUrl;
   };
 
-  getCatalogUrl = (query, gender) => {
+  getCatalogUrl = (query, gender, queryID) => {
     const { isArabic } = this.state;
     let requestedGender = gender;
     if (isArabic) {
@@ -149,7 +149,7 @@ class SearchSuggestion extends PureComponent {
     }
     const catalogUrl = `/catalogsearch/result/?q=${formatQuerySuggestions(
       query
-    )}&p=0&dFR[gender][0]=${requestedGender}`;
+    )}&qid=${queryID}&p=0&dFR[gender][0]=${requestedGender}`;
     return catalogUrl;
   };
 
@@ -166,14 +166,14 @@ class SearchSuggestion extends PureComponent {
 
   renderQuerySuggestion = (querySuggestions) => {
     const { query, count, isBrand } = querySuggestions;
-    const { searchString } = this.props;
+    const { searchString, queryID } = this.props;
     const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
     return (
       <li>
         {isBrand ? (
           <Link
             to={encodeURI(
-              this.getBrandSuggestionUrl(formatQuerySuggestions(query))
+              this.getBrandSuggestionUrl(formatQuerySuggestions(query), queryID)
             )}
             onClick={() =>
               this.onSearchQueryClick(formatQuerySuggestions(query))
@@ -186,7 +186,7 @@ class SearchSuggestion extends PureComponent {
           </Link>
         ) : (
           <Link
-            to={encodeURI(this.getCatalogUrl(query, gender))}
+            to={encodeURI(this.getCatalogUrl(query, gender, queryID))}
             onClick={() =>
               this.onSearchQueryClick(formatQuerySuggestions(query))
             }
@@ -603,7 +603,7 @@ class SearchSuggestion extends PureComponent {
       <div block="SearchSuggestion" mods={{ isArabic }}>
         <div block="SearchSuggestion" elem="Content">
           {this.renderCloseButton()}
-          {this.renderLoader()}
+          {/* {this.renderLoader()} */}
           {this.renderContent()}
         </div>
         <div block="SearchSuggestion" elem="ShadeWrapper">
