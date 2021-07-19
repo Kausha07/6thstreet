@@ -217,13 +217,12 @@ export class PDPAddToCartContainer extends PureComponent {
         const sizeCode = size[0];
         const { quantity } = size[1];
 
-        if (quantity) {
+        if (quantity !== null && quantity !== undefined) {
           acc.push(sizeCode);
         }
 
         return acc;
       }, []);
-
       const object = {
         sizeTypes,
         sizeCodes: allSizes,
@@ -334,8 +333,8 @@ export class PDPAddToCartContainer extends PureComponent {
     if (productStock && productStock[value]) {
       const selectedSize = productStock[value];
       if (
-        selectedSize["quantity"] &&
-        parseInt(selectedSize["quantity"], 0) === 0
+        (selectedSize["quantity"] !== undefined && selectedSize["quantity"] !== null)
+        && (typeof (selectedSize["quantity"]) === 'string' ? parseInt(selectedSize["quantity"], 0) === 0 : selectedSize["quantity"] === 0)
       ) {
         outOfStockVal = true;
       } else {
