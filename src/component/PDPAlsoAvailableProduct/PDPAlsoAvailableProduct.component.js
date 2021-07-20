@@ -3,6 +3,7 @@ import { PureComponent } from 'react';
 
 import Image from 'Component/Image';
 import Link from 'Component/Link';
+import WishlistIcon from 'Component/WishlistIcon';
 
 import './PDPAlsoAvailableProduct.style';
 
@@ -12,12 +13,45 @@ class PDPAlsoAvailableProduct extends PureComponent {
         setIsLoading: PropTypes.func.isRequired
     };
 
+    state = {
+        date: ''
+    };
+
+    componentDidMount() {
+        this.getDate();
+    }
+
+    getDate = () => {
+        const date = new Date().toLocaleString('default', { year: 'numeric', month: 'short', day: 'numeric' });
+        this.setState({ date });
+    };
+
+    renderNew() {
+        const { product: { news_from_date, news_to_date } } = this.props;
+        const { date } = this.state;
+        if (Date.parse(date) <= Date.parse(news_to_date) && Date.parse(date) >= Date.parse(news_from_date)) {
+            return (
+                <div block="ProductLabel">
+                        { __('New') }
+                </div>
+            );
+        }
+
+        return null;
+    }
+
     renderImage() {
         const { product: { thumbnail_url } } = this.props;
 
         return (
-            <Image src={ thumbnail_url } />
-        );
+            <div
+                block="PDPAlsoAvailableProduct-Link"
+                elem="Image"
+                style={{
+                    backgroundImage: `url(${thumbnail_url})`
+                }}
+            />
+        )
     }
 
     renderColor() {
@@ -50,7 +84,7 @@ class PDPAlsoAvailableProduct extends PureComponent {
         };
 
         return (
-            <Link to={ linkTo } onClick={ this.alsoAvailableClick }>
+            <Link to={ linkTo } onClick={ this.alsoAvailableClick } block="PDPAlsoAvailableProduct" elem="Link">
                 { this.renderImage() }
                 { this.renderColor() }
             </Link>
@@ -58,8 +92,16 @@ class PDPAlsoAvailableProduct extends PureComponent {
     }
 
     render() {
-        return (
+        const {
+            product: { sku }
+        } = this.props;
+
+        return (     
             <li block="PDPAlsoAvailableProduct">
+                <div block="PDPAlsoAvailableProduct" elem="OverlayContainer">
+                    { this.renderNew() }
+                    <WishlistIcon sku={ sku } />
+                </div>
                 { this.renderLink() }
             </li>
         );

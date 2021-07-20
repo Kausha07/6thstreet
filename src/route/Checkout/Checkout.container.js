@@ -1,13 +1,14 @@
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-
 import {
   CARD,
   CHECKOUT_APPLE_PAY,
+  CHECKOUT_QPAY,
   TABBY_ISTALLMENTS,
   TABBY_PAY_LATER,
 } from "Component/CheckoutPayments/CheckoutPayments.config";
 import { CC_POPUP_ID } from "Component/CreditCardPopup/CreditCardPopup.config";
+import { TABBY_POPUP_ID } from "Component/TabbyPopup/TabbyPopup.config";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import {
   AUTHORIZED_STATUS,
   CAPTURED_STATUS,
@@ -27,6 +28,7 @@ import { resetCart } from "Store/Cart/Cart.action";
 // eslint-disable-next-line no-unused-vars
 import CartDispatcher from "Store/Cart/Cart.dispatcher";
 import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
+import CreditCardDispatcher from "Store/CreditCard/CreditCard.dispatcher";
 import { updateMeta } from "Store/Meta/Meta.action";
 import {
   hideActiveOverlay,
@@ -37,17 +39,15 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import { checkProducts } from "Util/Cart/Cart";
 import Event, { EVENT_GTM_CHECKOUT, EVENT_GTM_PURCHASE } from "Util/Event";
 import history from "Util/History";
+import isMobile from "Util/Mobile";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
-import parseJson from "parse-json";
-import { TABBY_POPUP_ID } from "Component/TabbyPopup/TabbyPopup.config";
 import {
   CART_ID_CACHE_KEY,
   LAST_CART_ID_CACHE_KEY,
 } from "../../store/MobileCart/MobileCart.reducer";
+
 const PAYMENT_ABORTED = "payment_aborted";
 const PAYMENT_FAILED = "payment_failed";
-import CreditCardDispatcher from 'Store/CreditCard/CreditCard.dispatcher';
-import isMobile from 'Util/Mobile';
 
 export const mapDispatchToProps = (dispatch) => ({
   ...sourceMapDispatchToProps(dispatch),
@@ -80,7 +80,8 @@ export const mapDispatchToProps = (dispatch) => ({
   resetCart: () => dispatch(resetCart()),
   getCart: () => CartDispatcher.getCart(dispatch),
   updateTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId),
-  saveCreditCard: (cardData) => CreditCardDispatcher.saveCreditCard(dispatch, cardData),
+  saveCreditCard: (cardData) =>
+    CreditCardDispatcher.saveCreditCard(dispatch, cardData),
 });
 export const mapStateToProps = (state) => ({
   totals: state.CartReducer.cartTotals,
@@ -171,6 +172,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       tabbyPaymentId: null,
       isTabbyPopupShown: false,
       tabbyPaymentStatus: "",
+      QPayDetails:{}
     };
   }
 
@@ -181,9 +183,13 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   };
   componentDidMount() {
     const { setMeta } = this.props;
-
+    const { checkoutStep, initialGTMSent } = this.state;
     this.refreshCart();
     setMeta({ title: __("Checkout") });
+    const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
+    if (QPAY_CHECK) {
+      this.setState({ isLoading: true });
+    }
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -202,6 +208,65 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
     const { checkoutStep: prevCheckoutStep } = prevState;
 
+    const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
+    if (QPAY_CHECK) {
+      const { getPaymentAuthorization, capturePayment, cancelOrder } =
+        this.props;
+
+      localStorage.removeItem("QPAY_ORDER_DETAILS");
+
+      const ShippingAddress = JSON.parse(
+        localStorage.getItem("Shipping_Address")
+      );
+
+      this.setState({ shippingAddress: ShippingAddress });
+
+      const { id, order_id, increment_id } = QPAY_CHECK;
+
+      getPaymentAuthorization(id)
+        .then((response) => {
+          if (response) {
+            this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
+
+            localStorage.removeItem("Shipping_Address");
+
+            const { status, id: paymentId = "" } = response;
+
+            localStorage.removeItem("Shipping_Address");
+
+
+            if (status === "Authorized" || status === "Captured") {
+              BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
+              this.setDetailsStep(order_id, increment_id);
+              this.setState({ isLoading: false });
+              this.resetCart();
+              capturePayment(paymentId, order_id).then(response => {
+                if(response){
+                  const {pun,requested_on,amount , currency }= response
+                  this.setState({QPayDetails: {PUN : pun, date:requested_on, status:"SUCCESS"}})
+                }
+              });
+            }
+
+            if (status === "Declined" || status === "Canceled") {
+              cancelOrder(order_id, PAYMENT_FAILED);
+              this.setState({ isLoading: false, isFailed: true });
+              this.setDetailsStep(order_id, increment_id);
+              this.resetCart();
+              capturePayment(paymentId, order_id).then(response => {
+                if(response){
+                  const {pun,requested_on,amount , currency }= response
+                  this.setState({QPayDetails: {PUN : pun, date:requested_on, amount:`${currency} ${amount}`, status:"FAILED", Payment_ID: paymentId}})
+                }
+              });
+            }
+          }
+        })
+        .catch((rejected) => {
+          console.log("request rejected(in checkout container)", rejected);
+        });
+      return;
+    }
     if (Object.keys(totals).length !== 0) {
       this.updateInitTotals();
     }
@@ -403,7 +468,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   }
 
   /*async*/ savePaymentMethodAndPlaceOrder(paymentInformation) {
-    //console.log('Tabby123:');
     console.table(paymentInformation);
     const {
       paymentMethod: { code, additional_data },
@@ -417,7 +481,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const {
       shippingAddress: { email },
     } = this.state;
-    //console.log("here1"+tabbyPaymentId)
     let data = {};
     if (code === CARD) {
       data = {
@@ -426,7 +489,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           email: customerEmail ? customerEmail : email,
         },
         "3ds": {
-          enabled: newCardVisible ? BrowserDatabase.getItem("CREDIT_CART_3DS") : true,
+          enabled: newCardVisible
+            ? BrowserDatabase.getItem("CREDIT_CART_3DS")
+            : true,
         },
         metadata: {
           udf1:
@@ -434,27 +499,35 @@ export class CheckoutContainer extends SourceCheckoutContainer {
               ? BrowserDatabase.getItem("CREDIT_CART_TYPE")
               : null,
         },
-      }
+      };
       if (newCardVisible) {
-        data['source'] = {
+        data["source"] = {
           type: "token",
           token: BrowserDatabase.getItem("CREDIT_CART_TOKEN"),
-        }
+        };
       } else {
-        const { selectedCard: { cvv, gateway_token } } = paymentInformation;
-        data['source'] = {
+        const {
+          selectedCard: { cvv, gateway_token },
+        } = paymentInformation;
+        data["source"] = {
           cvv,
           type: "id",
           id: gateway_token,
-        }
+        };
       }
+    } else if (code === CHECKOUT_QPAY) {
+      data = {};
     } else {
       data = additional_data;
     }
 
     if (code === CHECKOUT_APPLE_PAY) {
       this.setState({ processApplePay: true });
-    } else if (code === TABBY_ISTALLMENTS || code === TABBY_PAY_LATER) {
+    } else if (
+      code === TABBY_ISTALLMENTS ||
+      code === TABBY_PAY_LATER ||
+      code === CHECKOUT_QPAY
+    ) {
       this.placeOrder(code, data, paymentInformation);
     } else {
       this.placeOrder(code, data, null);
@@ -462,7 +535,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   }
 
   placeOrder(code, data, paymentInformation) {
-    //console.log("here2"+tabbyPaymentId)
     const { createOrder, showErrorNotification } = this.props;
     const ONE_YEAR_IN_SECONDS = 31536000;
     const cart_id = BrowserDatabase.getItem(CART_ID_CACHE_KEY);
@@ -477,10 +549,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         .then((response) => {
           if (response && response.data) {
             const { data } = response;
-
             if (typeof data === "object") {
               const {
                 order_id,
+                http_response_code,
                 success,
                 response_code,
                 increment_id,
@@ -488,7 +560,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                 _links: { redirect: { href = "" } = {} } = {},
               } = data;
 
-              if (success || response_code === 200) {
+              if (
+                success ||
+                response_code === 200 ||
+                http_response_code === 202
+              ) {
                 this.setState({ isLoading: false });
                 if (code === CARD && href) {
                   this.setState({
@@ -502,7 +578,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                   code === TABBY_ISTALLMENTS ||
                   code === TABBY_PAY_LATER
                 ) {
-                  //console.log("here3"+tabbyPaymentId)
                   this.setState({
                     isTabbyPopupShown: true,
                     order_id,
@@ -514,17 +589,48 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                   );
 
                   //return true;
+                } else if (code === CHECKOUT_QPAY) {
+                  const { shippingAddress } = this.state;
+                  this.setState({
+                    order_id,
+                    increment_id,
+                    id,
+                  });
+                  const obj = {
+                    order_id,
+                    id,
+                    increment_id,
+                  };
+                  localStorage.setItem(
+                    "QPAY_ORDER_DETAILS",
+                    JSON.stringify(obj)
+                  );
+                  localStorage.setItem(
+                    "PAYMENT_INFO",
+                    JSON.stringify(paymentInformation)
+                  );
+                  localStorage.setItem(
+                    "Shipping_Address",
+                    JSON.stringify(shippingAddress)
+                  );
+                  window.open(`${href}`, "_self");
+
+                  //return true;
                 } else {
                   if (code === CARD) {
                     const { saveCreditCard, newCardVisible } = this.props;
                     const { creditCardData } = this.state;
                     if (newCardVisible && creditCardData.saveCard) {
-                      saveCreditCard({ email: creditCardData.email, paymentId: id })
-                        .then(() => {
-                        })
+                      saveCreditCard({
+                        email: creditCardData.email,
+                        paymentId: id,
+                      })
+                        .then(() => {})
                         .catch(() => {
-                          showErrorNotification(__("Something went wrong! Please, try again!"));
-                        })
+                          showErrorNotification(
+                            __("Something went wrong! Please, try again!")
+                          );
+                        });
                     }
                   }
                   BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
@@ -572,7 +678,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   setDetailsStep(orderID, incrementID) {
     const { setNavigationState, sendVerificationCode, isSignedIn, customer } =
       this.props;
-
     const { shippingAddress } = this.state;
 
     if (isSignedIn) {
@@ -634,9 +739,15 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   }
 
   processThreeDS() {
-    const { getPaymentAuthorization, capturePayment, cancelOrder, saveCreditCard, newCardVisible, showOverlay } = this.props;
+    const {
+      getPaymentAuthorization,
+      capturePayment,
+      cancelOrder,
+      saveCreditCard,
+      newCardVisible,
+      showOverlay,
+    } = this.props;
     const { order_id, increment_id, id = "", creditCardData } = this.state;
-
     getPaymentAuthorization(id).then((response) => {
       if (response) {
         const { status, id: paymentId = "" } = response;
@@ -652,11 +763,12 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           }
           if (newCardVisible && creditCardData.saveCard) {
             saveCreditCard({ email: creditCardData.email, paymentId })
-              .then(() => {
-              })
+              .then(() => {})
               .catch(() => {
-                showErrorNotification(__("Something went wrong! Please, try again!"));
-              })
+                showErrorNotification(
+                  __("Something went wrong! Please, try again!")
+                );
+              });
           }
         }
 
@@ -687,7 +799,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       activeOverlay === CC_POPUP_ID
     ) {
       setTimeout(() => {
-        console.log("processThreeDS");
         this.processThreeDS();
         this.processThreeDSWithTimeout(counter + 1);
       }, 5000);
@@ -722,7 +833,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     verifyPayment(tabbyPaymentId).then(({ status }) => {
       if (status === AUTHORIZED_STATUS || status === CAPTURED_STATUS) {
         BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
-        this.setState({ tabbyPaymentStatus: status });
+        this.setState({ tabbyPaymentStatus: status, isTabbyPopupShown: false });
         updateTabbyPayment(tabbyPaymentId, order_id);
         this.setDetailsStep(order_id, increment_id);
         this.resetCart();

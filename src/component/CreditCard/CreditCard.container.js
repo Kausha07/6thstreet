@@ -13,6 +13,7 @@ import { MINI_CARDS } from './CreditCard.config';
 import CreditCardDispatcher from "Store/CreditCard/CreditCard.dispatcher";
 
 export const mapStateToProps = (state) => ({
+    customer: state.MyAccountReducer.customer,
     savedCards: state.CreditCardReducer.savedCards,
     newCardVisible: state.CreditCardReducer.newCardVisible,
     loadingSavedCards: state.CreditCardReducer.loadingSavedCards,
@@ -49,8 +50,12 @@ export class CreditCardContainer extends PureComponent {
     };
 
     componentDidMount() {
-        const { getSavedCards } = this.props;
-        getSavedCards();
+        const { customer, toggleNewCardVisible, getSavedCards } = this.props;
+        if (customer && customer.id) {
+            getSavedCards();
+        } else {
+            toggleNewCardVisible(true);
+        }
     }
 
     isNumber(value) {

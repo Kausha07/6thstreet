@@ -173,12 +173,15 @@ class PDPSizeGuide extends PureComponent {
   }
 
   renderSizeChart() {
-    const { isArabic } = this.state;
     const {
       currentContentGender,
-      product: { brand_name, gender },
+      product: { fit_size_url, brand_name, gender },
     } = this.props;
-    const isOpen = true;
+
+    if (!!fit_size_url) {
+      return <img src={fit_size_url} alt="Size Chart" />;
+    }
+
     return (
       <SizeTable
         brand={brand_name}
@@ -186,10 +189,6 @@ class PDPSizeGuide extends PureComponent {
         currentContentGender={currentContentGender}
       />
     );
-    // return (
-    //     <img src={ chart }  />
-    //     // <Image mix={ { block: 'Image', mods: { isArabic } } } src={ chart } />
-    // )
   }
 
   renderTableUK() {

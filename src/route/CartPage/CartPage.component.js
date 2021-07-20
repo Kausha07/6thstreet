@@ -8,9 +8,9 @@
 
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
-
 import CartCoupon from "Component/CartCoupon";
-import CartItem from "Component/CartItem";
+// import CartItem from "Component/CartItem";
+import CartPageItem from "Component/CartPageItem";
 import CmsBlock from "Component/CmsBlock";
 import ContentWrapper from "Component/ContentWrapper";
 import ExpandableContent from "Component/ExpandableContent";
@@ -28,8 +28,9 @@ import { ClubApparelMember } from "Util/API/endpoint/ClubApparel/ClubApparel.typ
 import { getCurrency, getDiscountFromTotals, isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 
+import { Shipping } from "Component/Icons";
+
 import ClubApparel from "./icons/club-apparel.png";
-import Delivery from "./icons/delivery-truck.png";
 
 import "./CartPage.style";
 
@@ -68,11 +69,10 @@ export class CartPage extends PureComponent {
         </p>
       );
     }
-
     return (
       <ul block="CartPage" elem="Items" aria-label="List of items in cart">
         {items.map((item) => (
-          <CartItem
+          <CartPageItem
             key={item.item_id}
             item={item}
             currency_code={quote_currency_code}
@@ -143,6 +143,80 @@ export class CartPage extends PureComponent {
     return (
       <div block="CartPage" elem="OrderTotals">
         <ul>
+          {/* <div block="CartPage" elem="Subtotals">
+                        { this.renderPriceLine(subTotal, __('Subtotal')) }
+                        { this.renderPriceLine(shipping_fee, __('Shipping fee')) }
+                        { this.renderPriceLine(
+                            getDiscountFromTotals(totals, 'customerbalance'),
+                            __('Store Credit')
+                        ) }
+                        { this.renderPriceLine(
+                            getDiscountFromTotals(totals, 'clubapparel'),
+                            __('Club Apparel Redemption')
+                        ) }
+                        { couponCode && this.renderPriceLine(
+                            discount,
+                            __('Discount (%s)', couponCode)
+                        ) }
+                        { this.renderPriceLine(
+                            getDiscountFromTotals(totals, 'tax'),
+                            __('Tax')
+                        ) }
+                    </div> */}
+          <div block="CartPage" elem="Totals">
+            {this.renderPriceLine(subTotal, __("Subtotal"), {}, true)}
+          </div>
+        </ul>
+      </div>
+    );
+  }
+
+  renderButtons() {
+    const { onCheckoutButtonClick, isCheckoutAvailable } = this.props;
+
+    const isDisabled = !isCheckoutAvailable;
+
+    return (
+      <div block="CartPage" elem="CheckoutButtons">
+        <button
+          block="CartPage"
+          elem="CheckoutButton"
+          mods={{ isDisabled }}
+          mix={{ block: "Button" }}
+          onClick={onCheckoutButtonClick}
+        >
+          <span />
+          {__("Proceed to Checkout")}
+        </button>
+        {/* <Link
+                  block="CartPage"
+                  elem="ContinueShopping"
+                  to="/"
+                >
+                    { __('Continue shopping') }
+                </Link> */}
+      </div>
+    );
+  }
+
+  renderTotal() {
+    const {
+      totals: {
+        coupon_code: couponCode,
+        discount,
+        subtotal = 0,
+        total = 0,
+        currency_code = getCurrency(),
+        total_segments: totals = [],
+        shipping_fee = 0,
+      },
+    } = this.props;
+    const grandTotal = getFinalPrice(total, currency_code);
+    const subTotal = getFinalPrice(subtotal, currency_code);
+
+    return (
+      <div block="CartPage" elem="OrderTotals">
+        <ul>
           <div block="CartPage" elem="Subtotals">
             {this.renderPriceLine(subTotal, __("Subtotal"))}
             {this.renderPriceLine(shipping_fee, __("Shipping fee"))}
@@ -165,30 +239,6 @@ export class CartPage extends PureComponent {
             {this.renderPriceLine(grandTotal, __("Total"), {}, true)}
           </div>
         </ul>
-      </div>
-    );
-  }
-
-  renderButtons() {
-    const { onCheckoutButtonClick, isCheckoutAvailable } = this.props;
-
-    const isDisabled = !isCheckoutAvailable;
-
-    return (
-      <div block="CartPage" elem="CheckoutButtons">
-        <button
-          block="CartPage"
-          elem="CheckoutButton"
-          mods={{ isDisabled }}
-          mix={{ block: "Button" }}
-          onClick={onCheckoutButtonClick}
-        >
-          <span />
-          {__("Checkout")}
-        </button>
-        <Link block="CartPage" elem="ContinueShopping" to="/">
-          {__("Continue shopping")}
-        </Link>
       </div>
     );
   }
@@ -259,6 +309,36 @@ export class CartPage extends PureComponent {
     );
   }
 
+  renderPromoContent() {
+    const { cart_content: { cart_cms } = {} } = window.contentConfiguration;
+    const {
+      totals: { currency_code, avail_free_shipping_amount },
+    } = this.props;
+    const { isArabic } = this.state;
+
+    if (cart_cms) {
+      return <CmsBlock identifier={cart_cms} />;
+    }
+
+    return (
+      <figure block="CartPage" elem="PromoBlock">
+        <figcaption block="CartPage" elem="PromoText" mods={{ isArabic }}>
+          <Shipping />
+          &nbsp;
+          {__("Add")}
+          &nbsp;
+          <span>{`${currency_code} ${avail_free_shipping_amount.toFixed(
+            3
+          )} `}</span>
+          &nbsp;
+          {__("more to your cart for ")}
+          &nbsp;
+          <span>{__("Free delivery")}</span>
+        </figcaption>
+      </figure>
+    );
+  }
+
   renderClubApparelContent() {
     const { cart_content: { cart_cms } = {} } = window.contentConfiguration;
     const {
@@ -275,10 +355,14 @@ export class CartPage extends PureComponent {
       return <CmsBlock identifier={cart_cms} />;
     }
 
+    if (!club_apparel_estimated_pointsvalue) {
+      return null;
+    }
+
     if (accountLinked && isSignedIn) {
       return (
         <div block="CartPage" elem="ClubApparelBlock" mods={{ isArabic }}>
-          <img src={ClubApparel} alt="Delivery icon" />
+          <img src={ClubApparel} alt="Club Apparel Logo" />
           <div block="CartPage" elem="ClubApparelText">
             {__("You may earn ")}
             <span>{`${currency_code} ${club_apparel_estimated_pointsvalue} `}</span>
@@ -291,7 +375,7 @@ export class CartPage extends PureComponent {
     if (!accountLinked && isSignedIn) {
       return (
         <div block="CartPage" elem="ClubApparelBlock">
-          <img src={ClubApparel} alt="Delivery icon" />
+          <img src={ClubApparel} alt="Club Apparel Logo" />
           <div block="CartPage" elem="ClubApparelText">
             {__("Link your Club Apparel account to earn ")}
             <span>{`${currency_code} ${club_apparel_estimated_pointsvalue} `}</span>
@@ -310,7 +394,7 @@ export class CartPage extends PureComponent {
 
     return (
       <div block="CartPage" elem="ClubApparelBlock">
-        <img src={ClubApparel} alt="Delivery icon" />
+        <img src={ClubApparel} alt="Club Apparel Logo" />
         <div block="CartPage" elem="ClubApparelText">
           {__("Link your Club Apparel account to earn ")}
           <span>{`${currency_code} ${club_apparel_estimated_pointsvalue} `}</span>
@@ -366,6 +450,33 @@ export class CartPage extends PureComponent {
     return isMobile.any() ? null : desktopSuffix;
   }
 
+  // renderHeading() {
+  //   const {
+  //     totals: { items = [] },
+  //   } = this.props;
+
+  //   const itemQuantityArray = items.map((item) => item.qty);
+  //   const totalQuantity = itemQuantityArray.reduce(
+  //     (qty, nextQty) => qty + nextQty,
+  //     0
+  //   );
+
+  //   return (
+  //     <div>
+  //       {this.renderBack()}
+  //       <h1 block="CartPage" elem="Heading">
+  //         {/* {isMobile.any() ? __("My Basket") : __("My bag ")} */}
+  //         {__("My Basket")}
+  //         <span>
+  //           ({totalQuantity}
+  //           {this.renderItemSuffix()})
+  //         </span>
+  //       </h1>
+  //     </div>
+  //   );
+  // }
+
+  // check for minicart heading
   renderHeading() {
     const {
       totals: { items = [] },
@@ -381,8 +492,7 @@ export class CartPage extends PureComponent {
       <div>
         {this.renderBack()}
         <h1 block="CartPage" elem="Heading">
-          {/* {isMobile.any() ? __("My Basket") : __("My bag ")} */}
-          {__("My Basket")}
+          {isMobile.any() ? __("My SHOPPING BAG ") : __("My Bag ")}
           <span>
             ({totalQuantity}
             {this.renderItemSuffix()})
@@ -478,7 +588,6 @@ export class CartPage extends PureComponent {
         {this.renderContent()}
         <ContentWrapper
           wrapperMix={{ block: "CartPage", elem: "Wrapper" }}
-          mix={{ block: "CartPage", elem: "Section" }}
           label="Cart page details"
         >
           <Loader isLoading={processingRequest} />
@@ -488,9 +597,9 @@ export class CartPage extends PureComponent {
             {this.renderCrossSellProducts()}
             {this.renderDiscountCode()}
             {this.renderPromo()}
-            {this.renderClubApparel()}
           </div>
           <div block="CartPage" elem="Floating" mods={{ isArabic }}>
+            {this.renderClubApparel()}
             {this.renderTotals()}
           </div>
         </ContentWrapper>

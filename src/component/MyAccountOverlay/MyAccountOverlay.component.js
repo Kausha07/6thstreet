@@ -10,7 +10,7 @@
  */
 
 import PropTypes from 'prop-types';
-import { PureComponent } from 'react';
+import { PureComponent, createRef } from 'react';
 import { withRouter } from 'react-router-dom';
 
 import CountrySwitcher from 'Component/CountrySwitcher';
@@ -19,6 +19,10 @@ import Field from 'SourceComponent/Field';
 import Form from 'SourceComponent/Form';
 import Loader from 'SourceComponent/Loader';
 import Overlay from 'SourceComponent/Overlay';
+import PhoneCountryCodeField from 'Component/PhoneCountryCodeField';
+import { PHONE_CODES } from 'Component/MyAccountAddressFieldForm/MyAccountAddressFieldForm.config';
+import { COUNTRY_CODES_FOR_PHONE_VALIDATION } from 'Component/MyAccountAddressForm/MyAccountAddressForm.config';
+import { Close } from 'Component/Icons';
 import { isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
 
@@ -29,7 +33,9 @@ import {
     STATE_FORGOT_PASSWORD,
     STATE_FORGOT_PASSWORD_SUCCESS,
     STATE_LOGGED_IN,
-    STATE_SIGN_IN
+    STATE_SIGN_IN,
+    ENABLE_OTP_LOGIN,
+    SSO_LOGIN_PROVIDERS
 } from './MyAccountOverlay.config';
 
 import './MyAccountOverlay.style';
@@ -82,8 +88,12 @@ export class MyAccountOverlay extends PureComponent {
         isArabic: isArabic(),
         isSignInValidated: false,
         isCreateValidated: false,
-        isForgotValidated: false
+        isForgotValidated: false,
+        isOTP: ENABLE_OTP_LOGIN,
+        countryCode: ''
     };
+
+    ref = [ createRef(), createRef() ];
 
     renderMap = {
         [STATE_SIGN_IN]: {
@@ -91,14 +101,14 @@ export class MyAccountOverlay extends PureComponent {
             title: __('Welcome Back')
         },
         [STATE_FORGOT_PASSWORD]: {
-            render: () => this.renderForgotPassword()
+            render: () => this.renderForgotPassword(),
+            title: __('FORGOT PASSWORD')
         },
         [STATE_FORGOT_PASSWORD_SUCCESS]: {
             render: () => this.renderForgotPasswordSuccess()
         },
         [STATE_CREATE_ACCOUNT]: {
-            render: () => this.renderCreateAccount(),
-            title: __('Let\'s get personal!')
+            render: () => this.renderCreateAccount()
         },
         [STATE_LOGGED_IN]: {
             render: () => {}
@@ -127,18 +137,50 @@ export class MyAccountOverlay extends PureComponent {
             setRegisterFieldFalse();
         }
 
+        // if (state === STATE_FORGOT_PASSWORD) {
+        //     return (
+        //         <div
+        //             block="MyAccountOverlay"
+        //             elem="Action"
+        //             mods={ { state } }
+        //         >
+        //             <p block="MyAccountOverlay" elem="Heading">{ title }</p>
+        //             { render() }
+        //             { this.renderCloseBtn() }
+        //         </div>
+        //     );
+        // }
+    
         return (
             <div
               block="MyAccountOverlay"
               elem="Action"
               mods={ { state } }
             >
-                <img
+                <div
                   block="MyAccountOverlay"
                   elem="Image"
                   src="https://static.6media.me/static/version1600859154/frontend/6SNEW/6snew/en_US/images/6street-login-banner.png"
                   alt=""
-                />
+                >
+                    {
+                        isArabic()
+                        ?
+                        <>
+                        <span>6
+                            <sup>TH</sup>
+                        </span>
+                        <span>ستريت</span>
+                        </>
+                        :
+                        <>
+                            <span>6</span>
+                            TH
+                            <span>S</span>
+                            TREET
+                        </>
+                    }
+                </div>
                 <div block="MyAccountOverlay" elem="Buttons">
                     <button block="Button" mods={ { isSignIn } } onClick={ handleSignIn }>{ __('Sign in') }</button>
                     <button
@@ -152,7 +194,6 @@ export class MyAccountOverlay extends PureComponent {
                 <p block="MyAccountOverlay" elem="Heading">{ title }</p>
                 { render() }
                 { this.renderCloseBtn() }
-                { this.renderChangeStore() }
             </div>
         );
     }
@@ -161,32 +202,26 @@ export class MyAccountOverlay extends PureComponent {
         this.setState({ isPopup: true });
     };
 
+    closePopup(e) {
+        const { state, handleSignIn, closePopup } = this.props;
+        if (state === STATE_FORGOT_PASSWORD) {
+            handleSignIn(e);
+        }
+        else {
+            closePopup();
+        }
+    }
     renderCloseBtn() {
-        const { closePopup } = this.props;
-        const { isArabic } = this.state;
-
-        const svg = (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              viewBox="0 -1 26 26"
-            >
-                <path
-                  d="M23.954 21.03l-9.184-9.095 9.092-9.174-1.832-1.807-9.09 9.179-9.176-9.088-1.81
-                  1.81 9.186 9.105-9.095 9.184 1.81 1.81 9.112-9.192 9.18 9.1z"
-                />
-            </svg>
-        );
+        const { isArabic } = this.state
 
         return (
             <button
               block="MyAccountOverlay"
               elem="Close"
               mods={ { isArabic } }
-              onClick={ closePopup }
+              onClick={ this.closePopup.bind(this) }
             >
-                { svg }
+                <Close />
             </button>
         );
     }
@@ -258,13 +293,13 @@ export class MyAccountOverlay extends PureComponent {
                   type="email"
                   id="email"
                   name="email"
-                  placeholder={ __('EMAIL') }
+                  placeholder={ `${ __('EMAIL') }*` }
                   autocomplete="email"
                   validation={ ['notEmpty', 'email'] }
                 />
                 <div block="MyAccountOverlay" elem="Button" mods={ { isMargin: true, isForgotValidated } }>
                     <button block="Button" type="submit" disabled={ !isForgotValidated }>
-                        { __('Send') }
+                        { __('RESET YOUR PASSWORD') }
                     </button>
                 </div>
             </Form>
@@ -329,24 +364,30 @@ export class MyAccountOverlay extends PureComponent {
               isValidateOnChange
               parentCallback={ this.onCreateChange }
             >
-                <p block="MyAccountOverlay" elem="Subtitle">
-                    { __('Sign up for a tailored shopping experience') }
-                </p>
-                <fieldset block="MyAccountOverlay" elem="Legend">
-                    <Field
-                      type="text"
-                      placeholder={ __('FIRST NAME*') }
-                      id="firstname"
-                      name="firstname"
-                      autocomplete="given-name"
-                      validation={ ['notEmpty'] }
+                {/* <fieldset block="MyAccountOverlay" elem="PhoneNumber">
+                    <PhoneCountryCodeField
+                        onSelect={(value) => this.setState({
+                            countryCode: value
+                        })}
                     />
                     <Field
+                        type="text"
+                        placeholder={ ('PHONE NUMBER*') }
+                        id="email"
+                        name="email"
+                        autocomplete="email"
+                        maxLength={ this.getUserIdentifierMaxLength() }
+                        validation={ ['notEmpty', this.getValidationForUserIdentifier()] }
+                        onChange={ this.setUserIdentifierType.bind(this) }
+                    />
+                </fieldset> */}
+                <fieldset block="MyAccountOverlay" elem="FullName">
+                    <Field
                       type="text"
-                      placeholder={ __('LAST NAME*') }
-                      id="lastname"
-                      name="lastname"
-                      autocomplete="family-name"
+                      placeholder={ `${__('TYPE YOUR FULL NAME')}*` }
+                      id="fullname"
+                      name="fullname"
+                      autocomplete="fullname"
                       validation={ ['notEmpty'] }
                     />
                 </fieldset>
@@ -388,7 +429,7 @@ export class MyAccountOverlay extends PureComponent {
                 <fieldset block="MyAccountOverlay" elem="Legend">
                     <Field
                       type="text"
-                      placeholder={ __('EMAIL*') }
+                      placeholder={ `${ __('EMAIL') }*` }
                       id="email"
                       name="email"
                       autocomplete="email"
@@ -396,33 +437,23 @@ export class MyAccountOverlay extends PureComponent {
                     />
                     <Field
                       type="password"
-                      placeholder={ __('PASSWORD*') }
+                      placeholder={ `${__('PASSWORD')}*` }
                       id="password"
                       name="password"
                       autocomplete="new-password"
                       validation={ ['notEmpty', 'password', 'containNumber', 'containCapitalize'] }
+                      ref={ this.ref[1] }
                     />
-                    <div
-                      block="MyAccountOverlay"
-                      elem="Checkbox"
-                      mods={ { isArabic } }
+                    <span
+                        block="Mask"
+                        mods={{
+                            isArabic: isArabic,
+                        }}
+                        role="button"
+                        onClick={ this.toggleMask.bind(this) }
                     >
-                        <Field
-                          type="checkbox"
-                          id="privacyPolicy"
-                          name="privacyPolicy"
-                          value="privacyPolicy"
-                          onClick={ this.handleCheckboxChange }
-                          checked={ isChecked }
-                        />
-                        <label htmlFor="PrivacyPolicy">
-                            { __('Yes, I\'d like to receive news and promotions from 6TH STREET. ') }
-                            <a href="https://en-ae.6thstreet.com/privacy-policy">
-                                <strong>{ __('Click here') }</strong>
-                            </a>
-                            { __(' to view privacy policy') }
-                        </label>
-                    </div>
+                        { __("Show") }
+                    </span>
                 </fieldset>
                 <div
                   block="MyAccountOverlay"
@@ -445,6 +476,85 @@ export class MyAccountOverlay extends PureComponent {
         this.setState({ isSignInValidated: invalidFields.length === 0 });
     };
 
+    setUserIdentifierType(value) {
+        if(!ENABLE_OTP_LOGIN){
+            return;
+        }
+
+        const regex = /[a-zA-Z!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/g;
+
+        if (!!!value.length) {
+            this.setState({
+                isOTP: true
+            });
+            return;
+        }
+
+        if (regex.test(value)) {
+            this.setState({
+                isOTP: false
+            });
+        }
+        else {
+            this.setState({
+                isOTP: true
+            });
+        }
+    }
+
+    getValidationForUserIdentifier() {
+        const { isOTP } = this.state;
+        if (!ENABLE_OTP_LOGIN || !isOTP) {
+            return 'email';
+        }
+
+        const { countryCode } = this.state;
+        const customerCountry = Object.keys(PHONE_CODES).find((key) => PHONE_CODES[key] === countryCode);
+
+        return COUNTRY_CODES_FOR_PHONE_VALIDATION[customerCountry]
+            ? 'telephoneAE' : 'telephone';
+    }
+
+    getValidationForPassword() {
+        const { isOTP } = this.state;
+        if (!ENABLE_OTP_LOGIN || !isOTP ) {
+            return ['noempty', 'password'];
+        }
+
+        return [];
+    }
+
+    getUserIdentifierMaxLength() {
+        const { countryCode, isOTP } = this.state;
+        if (!ENABLE_OTP_LOGIN || !isOTP ) {
+            return null;
+        }
+        const customerCountry = Object.keys(PHONE_CODES).find((key) => PHONE_CODES[key] === countryCode);
+
+        return COUNTRY_CODES_FOR_PHONE_VALIDATION[customerCountry]
+            ? '9' : '8';
+    }
+
+    toggleMask(e) {
+        e.persist();
+        const { state } = this.props;
+        const index = state === STATE_SIGN_IN ? 0 : 1;
+        const ref = this.ref[index];
+        try {
+            if(ref?.current?.props?.formRef?.current?.type === "password"){
+                ref.current.props.formRef.current.type = "text";
+                e.target.innerText = __("Mask");
+            }
+            else if(ref?.current?.props?.formRef?.current?.type === "text"){
+                ref.current.props.formRef.current.type = "password";
+                e.target.innerText = __("Show");
+            }
+        }
+        catch(err) {
+            console.error(err);
+        }
+    }
+
     renderSignIn() {
         const {
             email,
@@ -454,8 +564,7 @@ export class MyAccountOverlay extends PureComponent {
             handleForgotPassword
         } = this.props;
 
-        const { isArabic, isSignInValidated } = this.state;
-
+        const { isArabic, isSignInValidated, isOTP } = this.state;
         return (
             <Form
               key="sign-in"
@@ -466,23 +575,60 @@ export class MyAccountOverlay extends PureComponent {
               parentCallback={ this.onSignInChange }
             >
                 <fieldset block="MyAccountOverlay" elem="Legend">
-                    <Field
-                      type="email"
-                      placeholder={ __('EMAIL') }
-                      id="email"
-                      name="email"
-                      value={ email }
-                      autocomplete="email"
-                      validation={ ['notEmpty', 'email'] }
-                    />
-                    <Field
-                      type="password"
-                      placeholder={ __('PASSWORD*') }
-                      id="password"
-                      name="password"
-                      autocomplete="current-password"
-                      validation={ ['notEmpty', 'password'] }
-                    />
+                    <div
+                        block="UserIdentifierFieldsContainer"
+                        mods={{
+                            isOTP: isOTP && ENABLE_OTP_LOGIN
+                        }}
+                    >
+                        { isOTP && ENABLE_OTP_LOGIN &&
+                            <PhoneCountryCodeField
+                                onSelect={(value) => this.setState({
+                                    countryCode: value
+                                })}
+                            />
+                        }
+                        <Field
+                            type={ ENABLE_OTP_LOGIN && isOTP ? "text" : "email" }
+                            placeholder={ `${ ENABLE_OTP_LOGIN ? __('EMAIL OR PHONE') : __('EMAIL ADDRESS') }*` }
+                            id="email"
+                            name="email"
+                            value={ email }
+                            autocomplete="email"
+                            maxLength={ this.getUserIdentifierMaxLength() }
+                            validation={ ['notEmpty', this.getValidationForUserIdentifier()] }
+                            onChange={ this.setUserIdentifierType.bind(this) }
+                        />
+                    </div>
+                    { ( !isOTP || !ENABLE_OTP_LOGIN ) &&
+                        <>
+                            <Field
+                                type="password"
+                                placeholder={ `${__('PASSWORD')}*` }
+                                id="password"
+                                name="password"
+                                autocomplete="current-password"
+                                validation={ this.getValidationForPassword() }
+                                mix={{
+                                    block: "Password",
+                                    mods: {
+                                        isOTP
+                                    }
+                                }}
+                                ref={ this.ref[0] }
+                            />
+                            <span
+                                block="Mask"
+                                mods={{
+                                    isArabic: isArabic,
+                                }}
+                                role="button"
+                                onClick={ this.toggleMask.bind(this) }
+                            >
+                                { __("Show") }
+                            </span>
+                        </>
+                    }
                 </fieldset>
                 <button
                   type="button"
@@ -500,6 +646,34 @@ export class MyAccountOverlay extends PureComponent {
                   mods={ { isSignIn: true, isSignInValidated } }
                 >
                     <button block="Button" disabled={ !isSignInValidated }>{ __('Sign in') }</button>
+                </div>
+                <div
+                    block="MyAccountOverlay"
+                    elem="SSO"
+                    mods={{ disabled: !!!SSO_LOGIN_PROVIDERS?.length }}
+                >
+                    <div block="MyAccountOverlay-SSO" elem="title">
+                        { __('OR SIGN IN WITH') }
+                    </div>
+                    <div
+                        block="MyAccountOverlay-SSO"
+                        elem="Buttons"
+                    >
+                        <button
+                            block="MyAccountOverlay-SSO-Buttons"
+                            elem="Facebook"
+                            mods={{disabled: !!!SSO_LOGIN_PROVIDERS?.includes('Facebook')}}
+                        >
+                            { __('FACEBOOK') }
+                        </button>
+                        <button
+                            block="MyAccountOverlay-SSO-Buttons"
+                            elem="Google"
+                            mods={{disabled: !!!SSO_LOGIN_PROVIDERS?.includes('Google')}}
+                        >
+                            { __('GOOGLE') }
+                        </button>
+                    </div>
                 </div>
             </Form>
         );

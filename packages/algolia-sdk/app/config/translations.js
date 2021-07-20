@@ -28,7 +28,9 @@ const translations = {
     girl: 'Girl',
     boy: 'Boy',
     baby_girl: 'Baby Girl',
-    baby_boy: 'Baby Boy'
+    baby_boy: 'Baby Boy',
+    unisex: 'Unisex',
+    infant: 'Infant'
   },
 
   ar: {
@@ -57,10 +59,12 @@ const translations = {
     women: 'نساء',
     men: 'رجال',
     kids: 'أطفال',
-    girl: '',
-    boy: '',
+    girl: 'بنات',
+    boy: 'أولاد',
     baby_girl: 'طفلة',
-    baby_boy: 'طفل'
+    baby_boy: 'طفل',
+    unisex: 'الجنسين',
+    infant: 'للرضع'
   }
 };
 

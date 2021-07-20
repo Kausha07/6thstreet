@@ -28,7 +28,7 @@ class CreditCard extends PureComponent {
         this.state = {
             cvv: '',
             cardLogo: null,
-            saveCard: true,
+            saveCard: this.props.isSignedIn,
             cvvFilled: false,
             numberFilled: false,
             expDateFilled: false,
@@ -40,9 +40,9 @@ class CreditCard extends PureComponent {
     }
 
     componentDidMount() {
-        const { setOrderButtonDisabled, setCreditCardData } = this.props;
+        const { setOrderButtonDisabled, setCreditCardData, isSignedIn } = this.props;
         setOrderButtonDisabled();
-        setCreditCardData({ saveCard: true });
+        setCreditCardData({ saveCard: isSignedIn });
     }
 
     componentDidUpdate() {
@@ -319,7 +319,12 @@ class CreditCard extends PureComponent {
                     savedCards.map((item) => {
                         const { entity_id, selected, details } = item;
                         const { maskedCC, bin = "000000", expirationDate, scheme = "" } = details;
-                        const cardNum = `${bin.substr(0, 4)} **** **** ${maskedCC}`;
+                        let cardNum = `${bin.substr(0, 4)} **** **** ${maskedCC}`;
+
+                        if (isArabic) {
+                            cardNum = `${maskedCC} **** **** ${bin.substr(0, 4)}`;
+                        }
+
                         if (selected) {
                             const { cvv } = this.state;
                             const isAmex = scheme.toLowerCase() === AMEX;

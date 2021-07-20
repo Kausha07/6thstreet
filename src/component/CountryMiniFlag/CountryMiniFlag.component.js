@@ -1,7 +1,14 @@
 /* eslint-disable quote-props */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
-
+import {
+    AE,
+    SA,
+    OM,
+    QA,
+    BH,
+    KW
+} from './Flags';
 import './CountryMiniFlag.style';
 
 class CountryMiniFlag extends PureComponent {
@@ -21,27 +28,26 @@ class CountryMiniFlag extends PureComponent {
         } = this.props;
 
         const flagValues = {
-            'AE': '0px',
-            'SA': '-13px',
-            'QA': '-27px',
-            'OM': '-41px',
-            'BH': '-55px',
-            'KW': '-70px'
+            'AE': AE,
+            'SA': SA,
+            'QA': QA,
+            'OM': OM,
+            'BH': BH,
+            'KW': KW
         };
 
-        const left = '-1px';
-        const flagValue = `${left} ${ flagValues[label]}`;
+        const flagValue = flagValues[label || 'AE'];
 
         return (
-        <div
-          block="CountryMiniFlag"
-          elem="Container"
-          mods={ mods }
-          style={ { backgroundPosition: flagValue } }
-        >
-            <span block="CountryMiniFlag" elem="top" />
-            <span block="CountryMiniFlag" elem="bottom" />
-        </div>
+            <div
+                block="CountryMiniFlag"
+                elem="Container"
+                mods={ mods }
+                style={ { backgroundImage: `url(${flagValue})` } }
+            >
+                <span block="CountryMiniFlag" elem="top" />
+                <span block="CountryMiniFlag" elem="bottom" />
+            </div>
         );
     }
 

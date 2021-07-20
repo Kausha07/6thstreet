@@ -31,7 +31,7 @@
   @include mobile {
     margin-bottom: 0;
     height: auto;
-    padding: 17px 10px 0;
+    padding: 17px 0;
 
     > section:last-of-type {
       width: 100%;
@@ -67,6 +67,7 @@
       margin-left: 0;
       max-height: calc(100vh - 230px);
       width: 100%;
+      overflow-y: auto;
     }
     @include tablet {
       width: auto;
@@ -76,6 +77,10 @@
   &-Items {
     @include desktop() {
       overflow-x: hidden;
+    }
+
+    @include mobile() {
+      padding: 0 16px;
     }
   }
 
@@ -143,7 +148,9 @@
       flex-wrap: nowrap;
       justify-content: space-around;
       align-items: center;
-      height: 40px;
+      padding: 0 12px;
+      line-height: 24px;
+      // height: 40px;
     }
   }
 
@@ -157,10 +164,13 @@
     border: none;
 
     @include mobile {
-      width: 45%;
+      // width: 45%;
       height: 40px;
-      font-size: 12px;
+      font-size: 14px;
       order: 2;
+      border-radius: 6px;
+      line-height: 24px;
+      height: 48px;
     }
 
     &_isDisabled {
@@ -275,6 +285,7 @@
   &-Promo {
     order: 2;
     background: var(--cart-page-promo-background);
+    padding: 8px !important;
 
     &Block {
       display: flex;
@@ -427,23 +438,24 @@
 
   &-Discount {
     margin: 1rem 0;
+    border-bottom: none !important;
   }
 
   &-Static {
     @include mobile {
-      max-height: calc(100vh - 275px);
-      overflow-y: auto;
+      // max-height: calc(100vh - 275px);
+      overflow-y: hidden;
       overflow-x: hidden;
       width: 100%;
-      &::-webkit-scrollbar {
-        width: 5px;
+      &:first-child {
+        padding: 0 16px;
       }
     }
 
     &_isArabic {
       .CartItem-Wrapper img {
         margin-right: 0;
-        margin-left: 0px;
+        margin-left: 15px;
       }
     }
   }
@@ -459,7 +471,7 @@
       width: 100%;
       left: 0;
       background-color: var(--color-white);
-      bottom: 80px;
+      bottom: 12px;
     }
 
     &_isArabic {
@@ -535,6 +547,16 @@
 
         @include mobile {
           padding: 1rem;
+          &-Qty {
+            display: none;
+          }
+        }
+
+        &-Actions {
+          @include tablet {
+            flex-direction: column-reverse;
+            justify-content: center;
+          }
         }
       }
     }
@@ -644,12 +666,11 @@
   }
 
   &-BackArrow {
-    background-image: url(./icons/close-black.png);
+    background-image: url(../../component/Icons/Close/icon.svg);
     background-size: cover;
-    height: 14px;
+    height: 19px;
     position: absolute;
-    width: 14px;
-    top: 3px;
+    width: 19px;
     z-index: 10;
 
     button {
@@ -675,7 +696,7 @@
   }
 
   &-Totals {
-    border-top: 1px solid var(--color-soft-gray);
+    // border-top: 1px solid var(--color-soft-gray);
     padding: 11px 0;
 
     .CartPage {
@@ -698,12 +719,12 @@
 
     .CartPage {
       &-Text {
-        font-size: 13px;
+        font-size: 15px;
         font-weight: var(--fw-regular);
       }
 
       &-Price {
-        font-size: 13px;
+        font-size: 16px;
         font-weight: var(--fw-medium);
       }
     }
@@ -716,4 +737,7 @@
       margin-bottom: 0;
     }
   }
+}
+.MobileBottomBar {
+  display: none;
 }

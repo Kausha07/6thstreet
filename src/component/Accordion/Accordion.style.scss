@@ -6,42 +6,9 @@
     }
 
     &-Expand {
-        color: transparent;
-
-        &::after {
-            background: var(--black);
-            content: '';
-            height: 2px;
-            left: 50%;
-            position: absolute;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            width: 10px;
-
-            @include desktop {
-                width: 15px;
-            }
-        }
-
-        &::before {
-            background: var(--black);
-            content: '';
-            height: 10px;
-            left: 50%;
-            position: absolute;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            width: 2px;
-
-            @include desktop {
-                height: 15px;
-            }
-        }
-
-        &_isExpanded {
-            &::before {
-                content: unset;
-            }
-        }
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transform: translateY(6px);
     }
 }

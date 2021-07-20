@@ -17,9 +17,9 @@ import {
   removeProductFromCart,
   updateProductInCart,
 } from "Util/API/endpoint/Cart/Cart.enpoint";
+import BrowserDatabase from "Util/BrowserDatabase";
 import Logger from "Util/Logger";
 import { LAST_CART_ID_CACHE_KEY } from "../MobileCart/MobileCart.reducer";
-import BrowserDatabase from "Util/BrowserDatabase";
 export const GUEST_QUOTE_ID = "guest_quote_id";
 
 export class CartDispatcher {
@@ -59,7 +59,7 @@ export class CartDispatcher {
     try {
       const { items = [] } = data || {};
 
-      if (items.length) {
+      if (items?.length >= 0) {
         dispatch(processingCartRequest());
         dispatch(removeCartItems());
 
@@ -146,7 +146,8 @@ export class CartDispatcher {
     brand_name,
     thumbnail_url,
     url,
-    itemPrice
+    itemPrice,
+    searchQueryId
   ) {
     const {
       Cart: { cartId },
@@ -154,7 +155,11 @@ export class CartDispatcher {
 
     try {
       dispatch(processingCartRequest());
-      const response = await addProductToCart({ ...productData, cartId });
+      const response = await addProductToCart({
+        ...productData,
+        cartId,
+        searchQueryId,
+      });
       const { data } = response;
       dispatch(
         updateCartItem(
@@ -196,6 +201,7 @@ export class CartDispatcher {
       // catch will process that
       if (data) {
         dispatch(removeCartItem({ item_id: productId }));
+        // await this.getCart(dispatch);
       }
     } catch (e) {
       Logger.log(e);

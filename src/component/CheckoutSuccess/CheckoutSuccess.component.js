@@ -6,6 +6,8 @@ import { PureComponent } from "react";
 
 import ChangePhonePopup from "Component/ChangePhonePopUp";
 import { MINI_CARDS } from "Component/CreditCard/CreditCard.config";
+import { EMAIL_LINK, TEL_LINK, WHATSAPP_LINK } from "./CheckoutSuccess.config";
+
 import Field from "Component/Field";
 import Form from "Component/Form";
 import Link from "Component/Link";
@@ -142,7 +144,7 @@ export class CheckoutSuccess extends PureComponent {
     const { isArabic, isPhoneVerification } = this.state;
     const countryCode = phone ? phone.slice(0, "4") : null;
     const phoneNumber = phone ? phone.slice("4") : null;
-   
+
     if (!isPhoneVerified && isVerificationCodeSent) {
       return (
         <div
@@ -377,8 +379,9 @@ export class CheckoutSuccess extends PureComponent {
           getDiscountFromTotals(total_segments, "clubapparel"),
           __("Club Apparel Redemption")
         )}
-          {couponCode ? 
-              this.renderPriceLine(discount, __("Discount (%s)", couponCode)) :this.renderPriceLine(discount, __("Discount")) }
+        {couponCode
+          ? this.renderPriceLine(discount, __("Discount (%s)", couponCode))
+          : this.renderPriceLine(discount, __("Discount"))}
 
         {this.renderTotalPrice()}
       </div>
@@ -395,7 +398,7 @@ export class CheckoutSuccess extends PureComponent {
     return (
       <div block="ContactInfo" mods={{ isArabic }}>
         <div block="ContactInfo" elem="Links">
-          <a href="tel:+9718003852633" target="_blank" rel="noreferrer">
+          <a href={`tel:${TEL_LINK}`} target="_blank" rel="noreferrer">
             <div block="ContactInfo" elem="Link">
               <span>
                 <img src={Call} alt="Call" />
@@ -405,7 +408,7 @@ export class CheckoutSuccess extends PureComponent {
               </span>
             </div>
           </a>
-          <a href="mailto:customercare@6thstreet.com" target="_blank" rel="noreferrer">
+          <a href={`mailto:${EMAIL_LINK}`} target="_blank" rel="noreferrer">
             <div block="ContactInfo" elem="LinkMiddle">
               <span>
                 <img src={Mail} alt="e-mail" />
@@ -415,7 +418,7 @@ export class CheckoutSuccess extends PureComponent {
               </span>
             </div>
           </a>
-          <a href="https://wa.me/9718003852633" target="_blank" rel="noreferrer">
+          <a href={`${WHATSAPP_LINK}`} target="_blank" rel="noreferrer">
             <div block="ContactInfo" elem="Link">
               <span>
                 <img src={Whatsapp} alt="whatsapp" />
@@ -450,7 +453,6 @@ export class CheckoutSuccess extends PureComponent {
         city,
         country_id,
       },
-      getCountryNameById,
     } = this.props;
     return (
       <div block="Address">
@@ -464,7 +466,7 @@ export class CheckoutSuccess extends PureComponent {
           {street}, {postcode}
         </div>
         <div block="Address" elem="PostCode">
-          {city} - {getCountryNameById(country_id)}
+          {city} - {country_id}
         </div>
       </div>
     );
@@ -513,14 +515,46 @@ export class CheckoutSuccess extends PureComponent {
 
   renderPaymentType = () => {
     const { isArabic } = this.state;
+    const {QPAY_DETAILS, paymentMethod} = this.props
+    const {PUN,date,status} = QPAY_DETAILS
     return (
+      <>
       <div block="PaymentType" mods={{ isArabic }}>
         <div block="PaymentType" elem="Title">
           {__("Payment")}
         </div>
         {this.renderPaymentTypeContent()}
         <p></p>
+        {paymentMethod?.code === "checkout_qpay" && QPAY_DETAILS &&  
+        <>
+        <div block="PaymentType" elem="Title">
+          {__("PUN")}
+        </div>
+        {PUN}
+        <p></p> 
+        {QPAY_DETAILS?.Payment_ID && <> <div block="PaymentType" elem="Title">
+          {__("Payment ID")}
+        </div>
+        {QPAY_DETAILS?.Payment_ID}
+        <p></p> </>}
+        {QPAY_DETAILS?.amount && <> <div block="PaymentType" elem="Title">
+          {__("Amount")}
+        </div>
+        {QPAY_DETAILS?.amount}
+        <p></p> </>}
+        <div block="PaymentType" elem="Title">
+          {__("Status")}
+        </div>
+        {status}
+        <p></p> 
+        <div block="PaymentType" elem="Title">
+          {__("Date")}
+        </div>
+        {date}
+        <p></p> 
+        </>}
       </div>
+      </>
     );
   };
 
@@ -561,7 +595,6 @@ export class CheckoutSuccess extends PureComponent {
       paymentMethod,
       selectedCard,
     } = this.props;
-
     if (number && expMonth && expYear && cvv) {
       const displayNumberDigits = 4;
       const slicedNumber = number.slice(number.length - displayNumberDigits);
@@ -609,14 +642,21 @@ export class CheckoutSuccess extends PureComponent {
       );
     }
 
-    if (paymentMethod.code.match(/tabby_installments/)) {
+    if (paymentMethod?.code?.match(/tabby_installments/)) {
       this.setState({ paymentTitle: __("Tabby: Pay in installments") });
-    } else if (paymentMethod.code.match(/tabby_checkout/)) {
+    } else if (paymentMethod?.code?.match(/tabby_checkout/)) {
       this.setState({ paymentTitle: __("Tabby: Pay later") });
-    } else if (paymentMethod.code.match(/apple/)) {
+    } else if (paymentMethod?.code?.match(/apple/)) {
       this.setState({ paymentTitle: __("Apple") });
-    } else if (paymentMethod.code.match(/cash/)) {
-      this.setState({ paymentTitle: __("Cash on delivery") });
+    } else if (paymentMethod?.code?.match(/cash/)) {
+      this.setState({ paymentTitle: __("Cash on Delivery") });
+    }else if (paymentMethod?.code?.match(/free/)) {
+      this.setState({ paymentTitle: __("Store Credit") });
+    }else if (paymentMethod?.code?.match(/qpay/)) {
+      this.setState({ paymentTitle: __("QPAY") });
+    }
+    else if (paymentMethod.code.match(/qpay/)) {
+      this.setState({ paymentTitle: __("QPAY") });
     }
 
     const { paymentTitle } = this.state;
@@ -679,7 +719,6 @@ export class CheckoutSuccess extends PureComponent {
       customer,
       billingAddress: { guest_email },
     } = this.props;
-
     return (
       <div block="CheckoutSuccess">
         {this.renderChangePhonePopUp()}

@@ -1,13 +1,17 @@
 // import PropTypes from 'prop-types';
-import Accordion from "Component/Accordion";
-import { PureComponent } from "react";
-import { Product } from "Util/API/endpoint/Product/Product.type";
+import { PureComponent } from 'react';
+
+import Accordion from 'Component/Accordion';
+import ShareButton from 'Component/ShareButton';
+import { Product } from 'Util/API/endpoint/Product/Product.type';
+import { isArabic } from 'Util/App';
+
+import { PDP_ARABIC_VALUES_TRANSLATIONS } from './PDPDetailsSection.config';
+import './PDPDetailsSection.style';
+import VueQuery from '../../query/Vue.query';
 import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
-import { isArabic } from "Util/App";
 import BrowserDatabase from "Util/BrowserDatabase";
-import VueQuery from "../../query/Vue.query";
 import DynamicContentVueProductSliderContainer from "../DynamicContentVueProductSlider";
-import { PDP_ARABIC_VALUES_TRANSLATIONS } from "./PDPDetailsSection.config";
 import "./PDPDetailsSection.style";
 
 class PDPDetailsSection extends PureComponent {
@@ -70,6 +74,51 @@ class PDPDetailsSection extends PureComponent {
           });
       }
     }
+  }
+
+  renderShareButton() {
+      const url = new URL(window.location.href);
+      url.searchParams.append('utm_source', 'pdp_share')
+      return (
+          <div block="PDPDetailsSection" elem="ShareButtonContainer">
+              <ShareButton
+                  block="PDPDetailsSection-ShareButtonContainer"
+                  elem="ShareButton"
+                  title = { document.title }
+                  text =  {`Hey check this out: ${document.title}`}
+                  url = { url.toString() }
+                  mods = {{isArabic: isArabic()}}
+              >
+                  <span>{ __('Share') }</span>
+              </ShareButton>
+          </div>
+      );
+  }
+
+  renderSizeAndFit() {
+      const { product: { description } } = this.props;
+      console.log(product);
+      return (
+          <>
+              <p block="PDPDetailsSection" elem="SizeFit">
+                  {__('Fitting Information - Items fits true to size')}
+              </p>
+              <div block="PDPDetailsSection" elem="ModelMeasurements">
+                  <h4>{__('Model Measurements')}</h4>
+              </div>
+          </>
+      )
+  }
+
+  renderMoreDetailsItem(item) {
+    return (
+        <li block="PDPDetailsSection" elem="MoreDetailsList" key={item.key}>
+            <span block="PDPDetailsSection" elem="ListItem" mods={{ mod: 'title' }}>
+                {isArabic() ? this._translateValue(item.key) : this.listTitle(__(item.key))}
+            </span>
+            <span block="PDPDetailsSection" elem="ListItem" mods={{ mod: 'value' }}>{item.value}</span>
+        </li>
+    );
   }
 
   _translateValue(value) {
@@ -156,6 +205,12 @@ class PDPDetailsSection extends PureComponent {
         skirt_length,
         toe_shape,
         sleeve_length,
+        product_height,
+        product_length,
+        product_width,
+        model_height,
+        model_wearing_size,
+        sku
       },
     } = this.props;
 
@@ -169,14 +224,50 @@ class PDPDetailsSection extends PureComponent {
       skirt_length,
       toe_shape,
       sleeve_length,
+      product_height,
+      product_length,
+      product_width
     };
 
     return (
       <div block="PDPDetailsSection" elem="Highlights">
         <h4>{__("Highlights")}</h4>
         <ul>{this.renderListItems(productInfo)}</ul>
-        {this.renderMoreDetailsList()}
+        { this.renderModelDetails(model_height, model_wearing_size)}
+        { this.renderSKU(sku) }
+        {/* {this.renderMoreDetailsList()} */}
       </div>
+    );
+  }
+
+  renderSKU(sku) {
+    return (
+      <p block="PDPDetailsSection-Highlights" elem="SKU">
+        <span>SKU: </span>
+        <span>{sku}</span>
+      </p>
+    )
+  }
+  renderModelDetails(height, size) {
+    if(!size) {
+      return null;
+    }
+
+    if(!height) {
+      return (
+        <p block="PDPDetailsSection-Highlights" elem="ModelDetails">
+          <span>{ __(`Model is wearing `) }</span>
+          <span>{`size `}</span>
+          <span>{ size }</span>
+        </p>
+      )
+    }
+    return (
+      <p block="PDPDetailsSection-Highlights" elem="ModelDetails">
+        <span>{ __(`Model's height is ${height} & is wearing `) }</span>
+        <span>{`size `}</span>
+        <span>{ size }</span>
+      </p>
     );
   }
 
@@ -196,20 +287,6 @@ class PDPDetailsSection extends PureComponent {
     );
   }
 
-  renderMoreDetailsItem(item) {
-    return (
-      <li block="PDPDetailsSection" elem="MoreDetailsList" key={item.key}>
-        <span block="PDPDetailsSection" elem="ListItem" mods={{ mod: "title" }}>
-          {isArabic()
-            ? this._translateValue(item.key)
-            : this.listTitle(__(item.key))}
-        </span>
-        <span block="PDPDetailsSection" elem="ListItem" mods={{ mod: "value" }}>
-          {item.value}
-        </span>
-      </li>
-    );
-  }
 
   renderMoreDetailsList() {
     const {
@@ -295,15 +372,17 @@ class PDPDetailsSection extends PureComponent {
           {this.renderIconsSection()}
           {this.renderDescription()}
         </Accordion>
+        <div block="Seperator" />
+        { this.renderShareButton() }
         {this.renderPdpWidgets()}
         {/* <Accordion
-                  mix={ { block: 'PDPDetailsSection', elem: 'Accordion' } }
-                  title={ __('Size & Fit') }
-                  is_expanded={this.state.isExpanded["1"]}
-                >
-                    { this.renderSizeAndFit() }
-                </Accordion>
-                <Accordion
+            mix={ { block: 'PDPDetailsSection', elem: 'Accordion' } }
+            title={ __('Size & Fit') }
+            is_expanded={this.state.isExpanded["1"]}
+          >
+              { this.renderSizeAndFit() }
+        </Accordion> */}
+         {/*        <Accordion
                   mix={ { block: 'PDPDetailsSection', elem: 'Accordion' } }
                   title={ __('Click & Collect') }
                   is_expanded={this.state.isExpanded["2"]}

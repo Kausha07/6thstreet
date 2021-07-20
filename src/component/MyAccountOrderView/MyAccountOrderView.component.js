@@ -327,7 +327,7 @@ class MyAccountOrderView extends PureComponent {
     } = this.props;
     const { isArabic } = this.state;
     const itemNumber = shipped.length;
-
+    const suffixNumber = appendOrdinalSuffix(itemNumber - index)
     return (
       <div
         key={item.shipment_number}
@@ -342,7 +342,7 @@ class MyAccountOrderView extends PureComponent {
             item.courier_status_code
           )}
           title={this.renderAccordionTitle(
-            __("%s Package", appendOrdinalSuffix(itemNumber - index)),
+            __("%s Package",suffixNumber),
             PackageImage,
             item.courier_status_code
           )}
@@ -504,7 +504,7 @@ class MyAccountOrderView extends PureComponent {
         return this.renderPaymentTypeText(__("Tabby: Pay later"));
       case CHECK_MONEY:
       case CASH_ON_DELIVERY:
-        return this.renderPaymentTypeText(__("Cash on delivery"));
+        return this.renderPaymentTypeText(__("Cash on Delivery"));
       case APPLE_PAY:
       case CHECKOUT_APPLE_PAY:
         return this.renderPaymentTypeText(__("Apple"));

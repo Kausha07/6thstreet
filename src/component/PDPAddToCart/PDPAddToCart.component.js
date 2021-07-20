@@ -1,15 +1,21 @@
 /* eslint-disable no-magic-numbers */
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
+
 import { Product } from "Util/API/endpoint/Product/Product.type";
 import isMobile from "Util/Mobile";
-import { isArabic } from "Util/App";
 import PDPSizeGuide from "../PDPSizeGuide";
 import "./PDPAddToCart.style";
 import Spinner from "react-spinkit";
 import NotifySuccessImg from "./icons/success-circle.png";
 import { NOTIFY_EMAIL } from "./PDPAddToCard.config";
 import BrowserDatabase from "Util/BrowserDatabase";
+import { isSignedIn } from "Util/Auth";
+import { customerType } from "Type/Account";
+
+import "./PDPAddToCart.style";
+import { isArabic } from "Util/App";
+import StrikeThrough from "./icons/strike-through.png";
 
 class PDPAddToCart extends PureComponent {
   static propTypes = {
@@ -27,6 +33,7 @@ class PDPAddToCart extends PureComponent {
     processingRequest: PropTypes.bool.isRequired,
     routeChangeToCart: PropTypes.func.isRequired,
     setStockAvailability: PropTypes.func.isRequired,
+    customer: customerType,
   };
 
   state = {
@@ -35,16 +42,34 @@ class PDPAddToCart extends PureComponent {
     pageYOffset: window.innerHeight,
     isRoundedIphone: this.isRoundedIphoneScreen() ?? false,
     isArabic: isArabic(),
+    customer: null,
   };
 
   componentDidMount() {
     window.addEventListener("scroll", this.handleResize);
-    var data = localStorage.getItem("customer");
-    if (data) {
-      let userData = JSON.parse(data);
-      if (userData?.data?.email && !!this.state.notifyMeEmail.length) {
-        this.setState({ notifyMeEmail: userData.data.email });
-      }
+
+    window.addEventListener("userLogin", () => this.updateStateNotifyEmail());
+
+    window.addEventListener("userLogout", () => this.updateStateNotifyEmail());
+
+    const { customer } = this.props;
+    if (customer && customer.email) {
+      this.setState({ notifyMeEmail: customer.email });
+    }
+  }
+
+  updateStateNotifyEmail() {
+    const {
+      customer: { email },
+      guestUserEmail,
+    } = this.props;
+    const { notifyMeEmail } = this.state;
+    if (email && notifyMeEmail !== email) {
+      this.setState({ notifyMeEmail: email });
+    } else if (!email && guestUserEmail !== notifyMeEmail) {
+      this.setState({
+        notifyMeEmail: BrowserDatabase.getItem(NOTIFY_EMAIL) || "",
+      });
     }
   }
 
@@ -64,26 +89,36 @@ class PDPAddToCart extends PureComponent {
     });
   };
 
-  getSizeTypeSelect() {
-    const { sizeObject = {}, selectedSizeType, onSizeTypeSelect } = this.props;
+  getSizeTypeRadio() {
+    const {
+      sizeObject = {},
+      selectedSizeType,
+      onSizeTypeSelect,
+      product,
+    } = this.props;
 
     if (sizeObject.sizeTypes !== undefined) {
-      const listItems = sizeObject.sizeTypes.map((type = "") => (
-        <div block="PDPAddToCart" elem="SizeTypeOptionContainer">
-          <input
-            type="radio"
-            key={type}
-            block="PDPAddToCart"
-            elem="SizeTypeOption"
-            value={type}
-            name="sizeType"
-            id={type}
-            checked={selectedSizeType === type}
-            onChange={onSizeTypeSelect}
-          ></input>
-          <label for={type}>{type.toUpperCase()}</label>
-        </div>
-      ));
+      const listItems = sizeObject.sizeTypes.map((type = "") => {
+        if (product[`size_${type}`].length > 0) {
+          return (
+            <div block="PDPAddToCart" elem="SizeTypeOptionContainer">
+              <input
+                type="radio"
+                key={type}
+                block="PDPAddToCart"
+                elem="SizeTypeOption"
+                value={type}
+                name="sizeType"
+                id={type}
+                checked={selectedSizeType === type}
+                onChange={onSizeTypeSelect}
+              ></input>
+              <label for={type}>{type.toUpperCase()}</label>
+            </div>
+          );
+        }
+        return null;
+      });
 
       return listItems;
     }
@@ -91,72 +126,72 @@ class PDPAddToCart extends PureComponent {
     return null;
   }
 
-  renderSizeOption(simple_products, code, label) {
-    const { selectedSizeCode, onSizeSelect } = this.props;
-    const isNotAvailable = simple_products[code].quantity === 0;
-
-    return (
-      <div
-        block="PDPAddToCart-SizeSelector"
-        elem={isNotAvailable ? "SizeOptionContainerOOS" : "SizeOptionContainer"}
-      >
-        <input
-          id={code}
-          key={code}
-          type="radio"
-          elem="SizeOption"
-          name="size"
-          block="PDPAddToCart"
-          value={code}
-          onChange={onSizeSelect}
-          checked={selectedSizeCode === code}
-        />
-        <label for={code}>{label}</label>
-        <div />
-        {isNotAvailable && <div className="line" />}
-      </div>
-    );
-  }
-
-  getSizeSelect() {
+  getSizeTypeSelect() {
     const {
-      product: { simple_products },
-      product,
-      selectedSizeType,
       sizeObject = {},
+      onSizeTypeSelect,
+      selectedSizeType,
+      product,
     } = this.props;
 
-    if (
-      sizeObject.sizeCodes !== undefined &&
-      simple_products !== undefined &&
-      product[`size_${selectedSizeType}`].length !== 0
-    ) {
+    if (sizeObject.sizeTypes !== undefined) {
       return (
-        <div block="PDPAddToCart-SizeSelector" elem="AvailableSizes">
-          {sizeObject.sizeCodes.reduce((acc, code) => {
-            const label = simple_products[code].size[selectedSizeType];
-
-            if (label) {
-              acc.push(this.renderSizeOption(simple_products, code, label));
+        <select
+          key="SizeTypeSelect"
+          block="PDPAddToCart"
+          elem="SizeTypeSelectElement"
+          value={selectedSizeType}
+          onChange={onSizeTypeSelect}
+        >
+          {sizeObject.sizeTypes.map((type = "") => {
+            if (product[`size_${type}`].length > 0) {
+              return (
+                <option
+                  key={type}
+                  block="PDPAddToCart"
+                  elem="SizeTypeOption"
+                  value={type}
+                >
+                  {type.toUpperCase()}
+                </option>
+              );
             }
-
-            return acc;
-          }, [])}
-        </div>
+            return null;
+          })}
+        </select>
       );
     }
+
     return null;
   }
-  renderSizeOption(simple_products, code, label) {
-    const { selectedSizeCode, onSizeSelect } = this.props;
-    const isNotAvailable = parseInt(simple_products[code].quantity) === 0;
+
+  renderSizeOption(productStock, code, label) {
+    const { selectedSizeCode, onSizeSelect, notifyMeLoading, notifyMeSuccess } =
+      this.props;
+    const isNotAvailable = parseInt(productStock[code].quantity) === 0;
+
+    const selectedLabelStyle = {
+      fontSize: "14px",
+      color: "#ffffff",
+      fontWeight: 600,
+      letterSpacing: 0,
+      backgroundColor: "#000000",
+    };
+
+    const selectedStrikeThruLineStyle = {
+      opacity: 0.6,
+      filter: "none",
+    };
+
+    const isCurrentSizeSelected = selectedSizeCode === code;
 
     return (
       <div
         block="PDPAddToCart-SizeSelector"
         elem={isNotAvailable ? "SizeOptionContainerOOS" : "SizeOptionContainer"}
         onClick={() => {
-          onSizeSelect({ target: { value: code } });
+          if (!notifyMeLoading && !notifyMeSuccess)
+            onSizeSelect({ target: { value: code } });
         }}
       >
         <input
@@ -167,24 +202,72 @@ class PDPAddToCart extends PureComponent {
           name="size"
           block="PDPAddToCart"
           value={code}
-          checked={selectedSizeCode === code}
+          checked={isCurrentSizeSelected}
         />
-        <label for={code}>{label}</label>
+        <div>
+          <label
+            for={code}
+            style={isCurrentSizeSelected ? selectedLabelStyle : {}}
+          >
+            {label}
+          </label>
+          {isNotAvailable && (
+            <img
+              src={StrikeThrough}
+              className="lineImg"
+              style={isCurrentSizeSelected ? selectedStrikeThruLineStyle : {}}
+            />
+          )}
+        </div>
         <div />
-        {isNotAvailable && <div className="line" />}
       </div>
     );
   }
 
+  getSizeSelect() {
+    const {
+      product,
+      selectedSizeType,
+      sizeObject = {},
+      productStock = {},
+    } = this.props;
+
+    if (
+      sizeObject.sizeCodes !== undefined &&
+      Object.keys(productStock).length !== 0 &&
+      product[`size_${selectedSizeType}`].length !== 0
+    ) {
+      return (
+        <div block="PDPAddToCart-SizeSelector" elem="AvailableSizes">
+          {sizeObject.sizeCodes.reduce((acc, code) => {
+            const label = productStock[code].size[selectedSizeType];
+
+            if (label) {
+              acc.push(this.renderSizeOption(productStock, code, label));
+            }
+
+            return acc;
+          }, [])}
+        </div>
+      );
+    }
+
+    return <span id="notavailable">{__("Out of stock")}</span>;
+  }
+
   renderSizeInfo() {
-    const { sizeObject, product } = this.props;
+    const {
+      sizeObject,
+      product,
+      product: { fit_size_url },
+    } = this.props;
 
     if (
       sizeObject.sizeTypes !== undefined &&
       sizeObject.sizeTypes.length !== 0
     ) {
       return (
-        <div block="PDPAddToCart" elem="SizeInfo">
+        <div block="PDPAddToCart-SizeInfoContainer" elem="SizeInfo">
           <PDPSizeGuide product={product} />
         </div>
       );
@@ -194,24 +277,17 @@ class PDPAddToCart extends PureComponent {
   }
 
   renderSizeTypeSelect() {
-    const { isArabic } = this.state;
     return (
-      <div block="PDPAddToCart" elem="SizeTypeSelector" mods={{ isArabic }}>
-        {this.getSizeTypeSelect()}
+      <div block="PDPAddToCart" elem="SizeTypeSelector">
+        {isMobile.any() ? this.getSizeTypeRadio() : this.getSizeTypeSelect()}
       </div>
     );
   }
 
   renderSizeSelect() {
-    const {
-      product: { simple_products },
-      selectedSizeCode,
-    } = this.props;
-    const { isArabic } = this.state;
-
     return (
       <>
-        <div block="PDPAddToCart" elem="SizeSelector" mods={{ isArabic }}>
+        <div block="PDPAddToCart" elem="SizeSelector">
           {this.getSizeSelect()}
         </div>
       </>
@@ -225,9 +301,15 @@ class PDPAddToCart extends PureComponent {
       product: { stock_qty, highlighted_attributes },
       product = {},
       basePrice,
+      isOutOfStock,
+      notifyMeLoading,
+      notifyMeSuccess,
     } = this.props;
     if (
       isLoading ||
+      isOutOfStock ||
+      notifyMeLoading ||
+      notifyMeSuccess ||
       addedToCart ||
       stock_qty === 0 ||
       highlighted_attributes === null ||
@@ -245,8 +327,9 @@ class PDPAddToCart extends PureComponent {
       addToCart,
       isLoading,
       addedToCart,
-      product: { stock_qty, highlighted_attributes, simple_products = {} },
+      product: { stock_qty, highlighted_attributes },
       product = {},
+      productStock = {},
     } = this.props;
 
     const disabled = this.checkStateForButtonDisabling();
@@ -257,7 +340,7 @@ class PDPAddToCart extends PureComponent {
           highlighted_attributes === null ||
           (Object.keys(product).length !== 0 &&
             product.constructor !== Object)) &&
-          Object.keys(simple_products).length !== 0 && (
+          Object.keys(productStock).length !== 0 && (
             <button
               onClick={addToCart}
               block="PDPAddToCart"
@@ -325,19 +408,24 @@ class PDPAddToCart extends PureComponent {
     sendNotifyMeEmail(notifyMeEmail);
   };
 
-  // renderOutOfStock() {
-  //   const { isOutOfStock, notifyMeLoading } = this.props;
-  //   const { notifyMeEmail } = this.state;
-  //   if (!isOutOfStock) {
-  //     return null;
-  //   }
-
   renderOutOfStock() {
-    const { isOutOfStock, notifyMeLoading } = this.props;
+    const {
+      isOutOfStock,
+      notifyMeLoading,
+      customer: { email },
+      guestUserEmail,
+    } = this.props;
     const { notifyMeEmail } = this.state;
     if (!isOutOfStock) {
       return null;
     }
+    // if (email && notifyMeEmail !== email) {
+    //   this.setState({ notifyMeEmail: email });
+    // } else if (!email && guestUserEmail !== notifyMeEmail) {
+    //   this.setState({
+    //     notifyMeEmail: BrowserDatabase.getItem(NOTIFY_EMAIL) || "",
+    //   });
+    // }
 
     return (
       <div block="PDPAddToCart" elem="OutOfStockContainer">
@@ -361,6 +449,7 @@ class PDPAddToCart extends PureComponent {
           <span
             block="PDPAddToCart"
             elem="EmailSendBtn"
+            lang={isArabic() ? "ar" : "en"}
             onClick={this.onNotifyMeSendClick}
           >
             {notifyMeLoading ? __("Sending..") : __("Send")}
@@ -380,6 +469,7 @@ class PDPAddToCart extends PureComponent {
     if (!notifyMeSuccess) {
       return null;
     }
+
     return (
       <div block="PDPAddToCart" elem="NotifyMeSuccessContainer">
         <img src={NotifySuccessImg} alt="success circle" />
@@ -390,9 +480,21 @@ class PDPAddToCart extends PureComponent {
     );
   }
 
+  renderNotAvailable() {
+    const {
+      product: { in_stock },
+      notifyMeSuccess,
+      isOutOfStock,
+    } = this.props;
+    if (in_stock === 0 && !isOutOfStock && !notifyMeSuccess) {
+      return <span id="notavailable">{__("Out of stock")}</span>;
+    }
+    return null;
+  }
+
   renderContent() {
     const {
-      product: { simple_products },
+      productStock = {},
       sizeObject = {},
       processingRequest,
       setStockAvailability,
@@ -406,7 +508,7 @@ class PDPAddToCart extends PureComponent {
     // check for sizes availability in configurable products
     if (
       sizeObject.sizeCodes !== undefined &&
-      simple_products !== undefined &&
+      Object.keys(productStock).length === 0 &&
       sizeObject.sizeCodes.length === 0
     ) {
       setStockAvailability(false);
@@ -415,17 +517,23 @@ class PDPAddToCart extends PureComponent {
 
     return (
       <>
+        {this.renderOutOfStock()}
+        {this.renderNotifyMeSuccess()}
+        {this.renderNotAvailable()}
         {sizeObject.sizeTypes !== undefined &&
         sizeObject.sizeTypes.length !== 0 ? (
           <>
-            {this.renderOutOfStock()}
-            {this.renderNotifyMeSuccess()}
-            {this.renderSizeInfo()}
+            <div block="PDPAddToCart" elem="SizeInfoContainer">
+              <span block="PDPAddToCart-SizeInfoContainer" elem="title">
+                {__("Size:")}
+              </span>
+              {this.renderSizeInfo()}
+            </div>
             <div block="PDPAddToCart" elem="SizeSelect">
               {this.renderSizeTypeSelect()}
               {this.renderSizeSelect()}
             </div>
-            <div block="Seperator" />
+            {isMobile.any() && <div block="Seperator" />}
           </>
         ) : null}
         <div block="PDPAddToCart" elem="Bottom">

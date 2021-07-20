@@ -4,15 +4,17 @@ import { PureComponent } from "react";
 
 import PDPAddToCart from "Component/PDPAddToCart/PDPAddToCart.container";
 import PDPTags from "Component/PDPTags";
-// import PDPAlsoAvailableProducts from "Component/PDPAlsoAvailableProducts";
+import PDPAlsoAvailable from "Component/PDPAlsoAvailable";
 import Price from "Component/Price";
+import ShareButton from "Component/ShareButton";
+import WishlistIcon from "Component/WishlistIcon";
 import ProductLabel from "Component/ProductLabel/ProductLabel.component";
 import TabbyMiniPopup from "Component/TabbyMiniPopup";
 import { TABBY_TOOLTIP_PDP } from "Component/TabbyMiniPopup/TabbyMiniPopup.config";
 import { Product } from "Util/API/endpoint/Product/Product.type";
 import { isArabic } from "Util/App";
+import isMobile from "Util/Mobile";
 import { SPECIAL_COLORS, translateArabicColor } from "Util/Common";
-import PDPAlsoAvailable from "Component/PDPAlsoAvailable";
 
 import tabby from "./icons/tabby.svg";
 
@@ -45,7 +47,6 @@ class PDPSummary extends PureComponent {
         prevAlsoAvailable: alsoAvailable !== undefined ? alsoAvailable : null,
       });
     }
-
     return Object.keys(derivedState).length ? derivedState : null;
   }
 
@@ -56,16 +57,6 @@ class PDPSummary extends PureComponent {
 
     this.setState({ stockAvailibility: !!price && status });
   };
-
-  renderSummaryHeader() {
-    const { product } = this.props;
-
-    return (
-      <div block="PDPSummary" elem="Header">
-        <ProductLabel product={product} />
-      </div>
-    );
-  }
 
   renderBrand() {
     const {
@@ -87,7 +78,41 @@ class PDPSummary extends PureComponent {
     );
   }
 
-  renderPrice() {
+  renderPDPSummaryHeader() {
+    const { product } = this.props;
+    return (
+      <div block="PDPSummary" elem="Header">
+        <ProductLabel product={product} />
+      </div>
+    );
+  }
+
+  renderPDPSummaryHeaderAndShareAndWishlistButton() {
+    const {
+      product: { sku },
+    } = this.props;
+    const url = new URL(window.location.href);
+
+    if (isMobile.any()) {
+      return null;
+    }
+
+    return (
+      <>
+        {this.renderPDPSummaryHeader()}
+        <div block="ShareAndWishlistButtonContainer">
+          <ShareButton
+            title={document.title}
+            text={`Hey check this out: ${document.title}`}
+            url={url.searchParams.append("utm_source", "pdp_share")}
+          />
+          <WishlistIcon sku={sku} />
+        </div>
+      </>
+    );
+  }
+
+  renderPriceAndPDPSummaryHeader() {
     const {
       product: { price, stock_qty },
     } = this.props;
@@ -100,51 +125,9 @@ class PDPSummary extends PureComponent {
     return (
       <div block="PriceContainer">
         <Price price={price} />
+        {isMobile.any() && this.renderPDPSummaryHeader()}
       </div>
     );
-  }
-
-  renderTabby() {
-    const {
-      product: { price },
-    } = this.props;
-    if (price) {
-      const priceObj = Array.isArray(price) ? price[0] : price;
-      const [currency, priceData] = Object.entries(priceObj)[0];
-      const { country } = JSON.parse(
-        localStorage.getItem("APP_STATE_CACHE_KEY")
-      ).data;
-      const { default: defPrice } = priceData;
-
-      if ((country === "AE" || country === "SA") && defPrice >= 150) {
-        const monthPrice = (defPrice / 4).toFixed(2);
-        return (
-          <>
-            <button
-              block="PDPSummary"
-              elem="Tabby"
-              onClick={this.openTabbyPopup}
-            >
-              {__("From")}
-              <strong
-                block="PDPSummary"
-                elem="TabbyPrice"
-              >{`${monthPrice} ${currency}`}</strong>
-              {__(" a month with ")}
-              <img src={tabby} alt="tabby" />
-              <span block="PDPSummary" elem="LearnMore">
-                {__("Learn more")}
-              </span>
-            </button>
-            <div block="Seperator" />
-          </>
-        );
-      }
-
-      return null;
-    }
-
-    return null;
   }
 
   openTabbyPopup = () => {
@@ -266,15 +249,60 @@ class PDPSummary extends PureComponent {
     return null;
   }
 
+  renderTabby() {
+    const {
+      product: { price },
+    } = this.props;
+    if (price) {
+      const priceObj = Array.isArray(price) ? price[0] : price;
+      const [currency, priceData] = Object.entries(priceObj)[0];
+      const { country } = JSON.parse(
+        localStorage.getItem("APP_STATE_CACHE_KEY")
+      ).data;
+      const { default: defPrice } = priceData;
+
+      if ((country === "AE" || country === "SA") && defPrice >= 150) {
+        const monthPrice = (defPrice / 4).toFixed(2);
+        return (
+          <>
+            <button
+              block="PDPSummary"
+              elem="Tabby"
+              onClick={this.openTabbyPopup}
+            >
+              {__("From")}
+              <strong
+                block="PDPSummary"
+                elem="TabbyPrice"
+              >{`${monthPrice} ${currency}`}</strong>
+              {__(" a month with ")}
+              <img src={tabby} alt="tabby" />
+              <span block="PDPSummary" elem="LearnMore">
+                {__("Learn more")}
+              </span>
+            </button>
+            <div block="Seperator" />
+          </>
+        );
+      }
+
+      return null;
+    }
+
+    return null;
+  }
+
   render() {
     const { isArabic } = this.state;
     return (
-      <div block="PDPSummary" mods={{ isArabic }}>
+      <div block="PDPSummary">
+        <div block="PDPSummaryHeaderAndShareAndWishlistButtonContainer">
+          {this.renderPDPSummaryHeaderAndShareAndWishlistButton()}
+        </div>
         {this.renderBrand()}
         {this.renderName()}
         <div block="PriceAndPDPSummaryHeader">
-          {this.renderPrice()}
-          {this.renderSummaryHeader()}
+          {this.renderPriceAndPDPSummaryHeader()}
         </div>
         <div block="Seperator" />
         {this.renderTabby()}

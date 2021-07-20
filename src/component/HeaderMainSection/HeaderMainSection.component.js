@@ -92,12 +92,9 @@ class HeaderMainSection extends NavigationAbstract {
     // if (!this.isPDP()) {
     //   return;
     // }
-
     // const { prevScrollpos, isMobile } = this.state;
-
     // const currentScrollPos = window.pageYOffset;
     // const visible = prevScrollpos < currentScrollPos;
-
     // this.setState({
     //   prevScrollpos: currentScrollPos,
     //   visible: isMobile && visible,

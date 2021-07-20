@@ -13,6 +13,11 @@
     text-transform: capitalize;
     margin-left: -20px;
     margin-right: 0px;
+    .CountryMiniFlag {
+      &-Container {
+        margin-right: 2px;
+      }
+    }
 
     span {
       margin-right: 5px;

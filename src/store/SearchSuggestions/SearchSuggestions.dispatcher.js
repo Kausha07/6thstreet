@@ -4,7 +4,6 @@ import { getCustomQuerySuggestions } from "Util/API/endpoint/Suggestions/Suggest
 import { formatProductSuggestions } from "Util/API/endpoint/Suggestions/Suggestions.format";
 import Algolia from "Util/API/provider/Algolia";
 import { isArabic } from "Util/App";
-
 const PRODUCT_RESULT_LIMIT = 8;
 const QUERY_SUGGESTION_LIMIT = 5;
 
