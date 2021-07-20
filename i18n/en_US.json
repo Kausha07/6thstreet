@@ -721,5 +721,7 @@
     "Status": null,
     "Amount": null,
     "Pay": null,
-    "Payment ID": null
+    "Payment ID": null,
+    "Size & Fit": null,
+    "Model is wearing ": null
 }

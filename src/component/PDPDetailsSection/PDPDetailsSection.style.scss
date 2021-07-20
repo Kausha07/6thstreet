@@ -75,6 +75,30 @@
     line-height: 24px;
   }
 
+  &-Highlights {
+    &-ModelDetails {
+      font-weight: var(--fw-regular);
+      margin-top: 16px;
+      margin-bottom: 0;
+      span:nth-child(2) {
+        font-weight: var(--fw-demi);
+      }
+      span:nth-child(3) {
+        font-weight: var(--fw-demi);
+        text-transform: uppercase;
+      }
+    }
+    &-SKU {
+      span:nth-child(1) {
+        font-weight: var(--fw-demi);
+      }
+      span:nth-child(2) {
+        font-weight: var(--fw-regular);
+        text-transform: uppercase;
+      }
+    }
+  }
+
   &-Highlights, &-ModelMeasurements {
     font-size: 16px;
     margin-top: 32px;

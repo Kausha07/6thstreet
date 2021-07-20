@@ -96,6 +96,7 @@ class PDPDetailsSection extends PureComponent {
 
   renderSizeAndFit() {
       const { product: { description } } = this.props;
+      console.log(product);
       return (
           <>
               <p block="PDPDetailsSection" elem="SizeFit">
@@ -203,6 +204,12 @@ class PDPDetailsSection extends PureComponent {
         skirt_length,
         toe_shape,
         sleeve_length,
+        product_height,
+        product_length,
+        product_width,
+        model_height,
+        model_wearing_size,
+        sku
       },
     } = this.props;
 
@@ -216,14 +223,50 @@ class PDPDetailsSection extends PureComponent {
       skirt_length,
       toe_shape,
       sleeve_length,
+      product_height,
+      product_length,
+      product_width
     };
 
     return (
       <div block="PDPDetailsSection" elem="Highlights">
         <h4>{__("Highlights")}</h4>
         <ul>{this.renderListItems(productInfo)}</ul>
-        {this.renderMoreDetailsList()}
+        { this.renderModelDetails(model_height, model_wearing_size)}
+        { this.renderSKU(sku) }
+        {/* {this.renderMoreDetailsList()} */}
       </div>
+    );
+  }
+
+  renderSKU(sku) {
+    return (
+      <p block="PDPDetailsSection-Highlights" elem="SKU">
+        <span>SKU: </span>
+        <span>{sku}</span>
+      </p>
+    )
+  }
+  renderModelDetails(height, size) {
+    if(!size) {
+      return null;
+    }
+
+    if(!height) {
+      return (
+        <p block="PDPDetailsSection-Highlights" elem="ModelDetails">
+          <span>{ __(`Model is wearing `) }</span>
+          <span>{`size `}</span>
+          <span>{ size }</span>
+        </p>
+      )
+    }
+    return (
+      <p block="PDPDetailsSection-Highlights" elem="ModelDetails">
+        <span>{ __(`Model's height is ${height} & is wearing `) }</span>
+        <span>{`size `}</span>
+        <span>{ size }</span>
+      </p>
     );
   }
 
@@ -332,13 +375,13 @@ class PDPDetailsSection extends PureComponent {
         { this.renderShareButton() }
         {this.renderPdpWidgets()}
         {/* <Accordion
-                  mix={ { block: 'PDPDetailsSection', elem: 'Accordion' } }
-                  title={ __('Size & Fit') }
-                  is_expanded={this.state.isExpanded["1"]}
-                >
-                    { this.renderSizeAndFit() }
-                </Accordion>
-                <Accordion
+            mix={ { block: 'PDPDetailsSection', elem: 'Accordion' } }
+            title={ __('Size & Fit') }
+            is_expanded={this.state.isExpanded["1"]}
+          >
+              { this.renderSizeAndFit() }
+        </Accordion> */}
+         {/*        <Accordion
                   mix={ { block: 'PDPDetailsSection', elem: 'Accordion' } }
                   title={ __('Click & Collect') }
                   is_expanded={this.state.isExpanded["2"]}
