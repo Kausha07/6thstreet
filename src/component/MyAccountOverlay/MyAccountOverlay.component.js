@@ -293,7 +293,7 @@ export class MyAccountOverlay extends PureComponent {
                   type="email"
                   id="email"
                   name="email"
-                  placeholder={ __('EMAIL*') }
+                  placeholder={ `${ __('EMAIL') }*` }
                   autocomplete="email"
                   validation={ ['notEmpty', 'email'] }
                 />
@@ -384,7 +384,7 @@ export class MyAccountOverlay extends PureComponent {
                 <fieldset block="MyAccountOverlay" elem="FullName">
                     <Field
                       type="text"
-                      placeholder={ __('TYPE YOUR FULL NAME*') }
+                      placeholder={ `${__('TYPE YOUR FULL NAME')}*` }
                       id="fullname"
                       name="fullname"
                       autocomplete="fullname"
@@ -429,7 +429,7 @@ export class MyAccountOverlay extends PureComponent {
                 <fieldset block="MyAccountOverlay" elem="Legend">
                     <Field
                       type="text"
-                      placeholder={ __('EMAIL*') }
+                      placeholder={ `${ __('EMAIL') }*` }
                       id="email"
                       name="email"
                       autocomplete="email"
@@ -437,7 +437,7 @@ export class MyAccountOverlay extends PureComponent {
                     />
                     <Field
                       type="password"
-                      placeholder={ __('PASSWORD*') }
+                      placeholder={ `${__('PASSWORD')}*` }
                       id="password"
                       name="password"
                       autocomplete="new-password"
@@ -590,7 +590,7 @@ export class MyAccountOverlay extends PureComponent {
                         }
                         <Field
                             type={ ENABLE_OTP_LOGIN && isOTP ? "text" : "email" }
-                            placeholder={ ENABLE_OTP_LOGIN ? __('EMAIL OR PHONE*') : __('EMAIL ADDRESS*') }
+                            placeholder={ `${ ENABLE_OTP_LOGIN ? __('EMAIL OR PHONE') : __('EMAIL ADDRESS') }*` }
                             id="email"
                             name="email"
                             value={ email }
@@ -604,7 +604,7 @@ export class MyAccountOverlay extends PureComponent {
                         <>
                             <Field
                                 type="password"
-                                placeholder={ __('PASSWORD*') }
+                                placeholder={ `${__('PASSWORD')}*` }
                                 id="password"
                                 name="password"
                                 autocomplete="current-password"

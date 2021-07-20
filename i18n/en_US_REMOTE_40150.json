@@ -833,5 +833,9 @@
     "Amount": null,
     "Pay": null,
     "Payment ID": null,
-    "Model is wearing ": null
+    "Model is wearing ": null,
+    "EMAIL OR PHONE": null,
+    "EMAIL ADDRESS": null,
+    "TYPE YOUR FULL NAME": null,
+    "PASSWORD": null
 }
