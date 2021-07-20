@@ -195,7 +195,7 @@
     "Male": "ذكر",
     "Female": "أنثى",
     "Prefer not to say": "افضل عدم القول",
-    "PASSWORD": null,
+    "PASSWORD": "كلمه السر",
     "Yes, I'd like to receive news and promotions from 6TH STREET. ": "نعم, أود استلام رسائل حول أخبار و عروض 6thstreet.com. اضغط هنا  للاطلاع على سياسة الخصوصية ",
     "Click here": "اضغط هنا",
     " to view privacy policy": "   للاطلاع على سياسة الخصوصية",
@@ -314,6 +314,7 @@
     "Cm": "سم",
     "Inches": "بوصة",
     "Size": "بحجم",
+    "size": "بحجم",
     "Bust": "الصدر",
     "Waist": "الخصر",
     "State/Province": "الولاية / المحافظة",
@@ -796,7 +797,7 @@
     "OR SIGN IN WITH": null,
     "FACEBOOK": null,
     "GOOGLE": null,
-    "TYPE YOUR FULL NAME": null,
+    "TYPE YOUR FULL NAME": "اكتب اسمك الكامل",
     "RESET YOUR PASSWORD": null,
     "Forgot Password": null,
     "QPAY": null,
@@ -813,5 +814,8 @@
     "Model is wearing ": null,
     "null": null,
     "EMAIL OR PHONE": null,
-    "EMAIL*": null
+    "EMAIL*": null,
+    "Model's height is ": null,
+    "& is wearing ": null,
+    " & is wearing ": null
 }
