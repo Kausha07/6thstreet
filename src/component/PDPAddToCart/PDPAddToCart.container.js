@@ -227,14 +227,14 @@ export class PDPAddToCartContainer extends PureComponent {
         sizeTypes,
         sizeCodes: allSizes,
       };
-
       this.setState({
         processingRequest: false,
         mappedSizeObject: object,
         productStock: response,
-        ...(size_us.length === 0 &&
-          size_uk.length === 0 &&
-          size_eu.length === 0 && { isOutOfStock: true }),
+        ...(allSizes.length === 0 && { isOutOfStock: true })
+        // ...(size_us.length === 0 &&
+        //   size_uk.length === 0 &&
+        //   size_eu.length === 0 && { isOutOfStock: true }),
       });
     });
   }
