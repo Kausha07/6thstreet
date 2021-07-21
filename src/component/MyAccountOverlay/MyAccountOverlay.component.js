@@ -10,7 +10,7 @@
  */
 
 import PropTypes from 'prop-types';
-import { PureComponent, createRef } from 'react';
+import { PureComponent } from 'react';
 import { withRouter } from 'react-router-dom';
 
 import CountrySwitcher from 'Component/CountrySwitcher';
@@ -92,8 +92,6 @@ export class MyAccountOverlay extends PureComponent {
         isOTP: ENABLE_OTP_LOGIN,
         countryCode: ''
     };
-
-    ref = [ createRef(), createRef() ];
 
     renderMap = {
         [STATE_SIGN_IN]: {
@@ -442,18 +440,8 @@ export class MyAccountOverlay extends PureComponent {
                       name="password"
                       autocomplete="new-password"
                       validation={ ['notEmpty', 'password', 'containNumber', 'containCapitalize'] }
-                      ref={ this.ref[1] }
+                      
                     />
-                    <span
-                        block="Mask"
-                        mods={{
-                            isArabic: isArabic,
-                        }}
-                        role="button"
-                        onClick={ this.toggleMask.bind(this) }
-                    >
-                        { __("Show") }
-                    </span>
                 </fieldset>
                 <div
                   block="MyAccountOverlay"
@@ -535,26 +523,6 @@ export class MyAccountOverlay extends PureComponent {
             ? '9' : '8';
     }
 
-    toggleMask(e) {
-        e.persist();
-        const { state } = this.props;
-        const index = state === STATE_SIGN_IN ? 0 : 1;
-        const ref = this.ref[index];
-        try {
-            if(ref?.current?.props?.formRef?.current?.type === "password"){
-                ref.current.props.formRef.current.type = "text";
-                e.target.innerText = __("Mask");
-            }
-            else if(ref?.current?.props?.formRef?.current?.type === "text"){
-                ref.current.props.formRef.current.type = "password";
-                e.target.innerText = __("Show");
-            }
-        }
-        catch(err) {
-            console.error(err);
-        }
-    }
-
     renderSignIn() {
         const {
             email,
@@ -615,18 +583,7 @@ export class MyAccountOverlay extends PureComponent {
                                         isOTP
                                     }
                                 }}
-                                ref={ this.ref[0] }
                             />
-                            <span
-                                block="Mask"
-                                mods={{
-                                    isArabic: isArabic,
-                                }}
-                                role="button"
-                                onClick={ this.toggleMask.bind(this) }
-                            >
-                                { __("Show") }
-                            </span>
                         </>
                     }
                 </fieldset>
