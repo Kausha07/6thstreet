@@ -253,7 +253,7 @@
   }
 
   .CheckoutNavigation {
-    padding: 19px 0 45px;
+    padding: 19px 60px 45px;
     display: flex;
 
     @include desktop {
@@ -381,7 +381,7 @@
   &-GuestCheckout {
     &:not(&_continueAsGuest) {
       @include before-desktop {
-        padding: 0 0;
+        padding: 0 20px;
       }
       @include desktop {
         display: flex;
@@ -553,7 +553,7 @@
   }
 
   &-Heading {
-    padding: 20px 0;
+    padding: 20px;
     width: 100%;
     text-transform: capitalize;
     font-size: 18px;
