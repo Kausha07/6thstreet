@@ -147,6 +147,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
         <Link
           to={link}
           data-banner-type="vueSlider"
+          block="VueProductSlider-Link"
           onClick={() => {
             this.onclick(widgetID);
           }}

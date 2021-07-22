@@ -19,6 +19,11 @@
       padding-left: 30px;
     }
   }
+  @include desktop{
+    &-Link{
+      height: 278px;
+    }
+  }
 
   &-HeaderContainer {
     margin-top: 10px;
