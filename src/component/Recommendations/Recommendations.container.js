@@ -11,12 +11,8 @@ export const mapDispatchToProps = (_dispatch) => ({
 });
 
 export class RecommendationsContainer extends PureComponent {
-  // componentDidMount() {
-  //   this.getRecommendedProducts();
-  // }
   containerProps = () => {
     const { products, isVueData } = this.props;
-    console.log("products", products);
     return { products, isVueData };
   };
 
