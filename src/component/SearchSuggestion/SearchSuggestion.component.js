@@ -342,9 +342,9 @@ class SearchSuggestion extends PureComponent {
       <>
         <div block="NothingFound">
           <p>
-            {__(
-              `No result found for ${searchString} but here are few suggestions`
-            )}
+            {__("No result found for")}
+            <span>{query}</span>
+            {__(" but here are few suggestions")}
           </p>
         </div>
         {this.renderRecentSearches()}
