@@ -15,6 +15,8 @@ import isMobile from "Util/Mobile";
 import DynamicContentVueProductSliderContainer from "../DynamicContentVueProductSlider";
 import BRAND_MAPPING from "./SearchSiggestion.config";
 import "./SearchSuggestion.style";
+var ESCAPE_KEY = 27;
+
 class SearchSuggestion extends PureComponent {
   static propTypes = {
     inNothingFound: PropTypes.bool.isRequired,
@@ -41,6 +43,24 @@ class SearchSuggestion extends PureComponent {
   state = {
     isArabic: isArabic(),
     isMobile: isMobile.any() || isMobile.tablet(),
+  };
+
+  componentDidMount() {
+    document.addEventListener("keydown", this._handleKeyDown);
+  }
+
+  componentDidUnmount() {
+    document.removeEventListener("keydown", this._handleKeyDown);
+  }
+
+  _handleKeyDown = (event) => {
+    switch (event.keyCode) {
+      case ESCAPE_KEY:
+        this.props.closeSearch();
+        break;
+      default:
+        break;
+    }
   };
 
   renderLoader() {

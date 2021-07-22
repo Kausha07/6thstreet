@@ -28,7 +28,7 @@ class EmptySearch extends PureComponent {
       mad_uuid: deviceUuid,
     };
 
-    const payload = VueQuery.buildQuery("vue_trending_slider", query, {
+    const payload = VueQuery.buildQuery("vue_browsing_history_slider", query, {
       gender,
     });
     fetchVueData(payload)
