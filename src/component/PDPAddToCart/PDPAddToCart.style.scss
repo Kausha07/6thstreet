@@ -197,7 +197,7 @@ $select-arrow-width: 6px !default;
   &-SizeSelector {
     @include desktop {
       margin-left: 20px;
-      width: calc(100% - 150px);
+      // width: calc(100% - 150px);
     }
 
     position: relative;
@@ -341,7 +341,7 @@ $select-arrow-width: 6px !default;
     @include desktop {
       border-radius: 0;
       font-size: 13px;
-      width: 270px;
+      // width: 270px;
       border-radius: 6px;
     }
     span {
