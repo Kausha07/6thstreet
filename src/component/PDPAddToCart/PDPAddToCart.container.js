@@ -208,7 +208,6 @@ export class PDPAddToCartContainer extends PureComponent {
     if (email) {
       setGuestUserEmail(email);
     }
-    console.log(this.props.product,"muskan")
     const {
       sizeObject: { sizeTypes },
     } = this.state;
