@@ -10,7 +10,7 @@
  */
 
 import PropTypes from 'prop-types';
-import { PureComponent, createRef } from 'react';
+import { PureComponent } from 'react';
 import { withRouter } from 'react-router-dom';
 
 import CountrySwitcher from 'Component/CountrySwitcher';
@@ -92,8 +92,6 @@ export class MyAccountOverlay extends PureComponent {
         isOTP: ENABLE_OTP_LOGIN,
         countryCode: ''
     };
-
-    ref = [ createRef(), createRef() ];
 
     renderMap = {
         [STATE_SIGN_IN]: {
@@ -293,7 +291,7 @@ export class MyAccountOverlay extends PureComponent {
                   type="email"
                   id="email"
                   name="email"
-                  placeholder={ __('EMAIL*') }
+                  placeholder={ `${ __('EMAIL') }*` }
                   autocomplete="email"
                   validation={ ['notEmpty', 'email'] }
                 />
@@ -384,7 +382,7 @@ export class MyAccountOverlay extends PureComponent {
                 <fieldset block="MyAccountOverlay" elem="FullName">
                     <Field
                       type="text"
-                      placeholder={ __('TYPE YOUR FULL NAME*') }
+                      placeholder={ `${__('TYPE YOUR FULL NAME')}*` }
                       id="fullname"
                       name="fullname"
                       autocomplete="fullname"
@@ -429,7 +427,7 @@ export class MyAccountOverlay extends PureComponent {
                 <fieldset block="MyAccountOverlay" elem="Legend">
                     <Field
                       type="text"
-                      placeholder={ __('EMAIL*') }
+                      placeholder={ `${ __('EMAIL') }*` }
                       id="email"
                       name="email"
                       autocomplete="email"
@@ -437,23 +435,13 @@ export class MyAccountOverlay extends PureComponent {
                     />
                     <Field
                       type="password"
-                      placeholder={ __('PASSWORD*') }
+                      placeholder={ `${__('PASSWORD')}*` }
                       id="password"
                       name="password"
                       autocomplete="new-password"
                       validation={ ['notEmpty', 'password', 'containNumber', 'containCapitalize'] }
-                      ref={ this.ref[1] }
+                      
                     />
-                    <span
-                        block="Mask"
-                        mods={{
-                            isArabic: isArabic,
-                        }}
-                        role="button"
-                        onClick={ this.toggleMask.bind(this) }
-                    >
-                        { __("Show") }
-                    </span>
                 </fieldset>
                 <div
                   block="MyAccountOverlay"
@@ -535,26 +523,6 @@ export class MyAccountOverlay extends PureComponent {
             ? '9' : '8';
     }
 
-    toggleMask(e) {
-        e.persist();
-        const { state } = this.props;
-        const index = state === STATE_SIGN_IN ? 0 : 1;
-        const ref = this.ref[index];
-        try {
-            if(ref?.current?.props?.formRef?.current?.type === "password"){
-                ref.current.props.formRef.current.type = "text";
-                e.target.innerText = __("Mask");
-            }
-            else if(ref?.current?.props?.formRef?.current?.type === "text"){
-                ref.current.props.formRef.current.type = "password";
-                e.target.innerText = __("Show");
-            }
-        }
-        catch(err) {
-            console.error(err);
-        }
-    }
-
     renderSignIn() {
         const {
             email,
@@ -590,7 +558,7 @@ export class MyAccountOverlay extends PureComponent {
                         }
                         <Field
                             type={ ENABLE_OTP_LOGIN && isOTP ? "text" : "email" }
-                            placeholder={ ENABLE_OTP_LOGIN ? __('EMAIL OR PHONE*') : __('EMAIL ADDRESS*') }
+                            placeholder={ `${ ENABLE_OTP_LOGIN ? __('EMAIL OR PHONE') : __('EMAIL ADDRESS') }*` }
                             id="email"
                             name="email"
                             value={ email }
@@ -604,7 +572,7 @@ export class MyAccountOverlay extends PureComponent {
                         <>
                             <Field
                                 type="password"
-                                placeholder={ __('PASSWORD*') }
+                                placeholder={ `${__('PASSWORD')}*` }
                                 id="password"
                                 name="password"
                                 autocomplete="current-password"
@@ -615,18 +583,7 @@ export class MyAccountOverlay extends PureComponent {
                                         isOTP
                                     }
                                 }}
-                                ref={ this.ref[0] }
                             />
-                            <span
-                                block="Mask"
-                                mods={{
-                                    isArabic: isArabic,
-                                }}
-                                role="button"
-                                onClick={ this.toggleMask.bind(this) }
-                            >
-                                { __("Show") }
-                            </span>
                         </>
                     }
                 </fieldset>

@@ -780,7 +780,7 @@
                     border-right: none;
                     border-bottom: none;
                     border-left: none;
-                    &_type_select{
+                    &_type_select {
                         height: 40px;
                         .FieldSelect-Select {
                             border-top: none;
@@ -824,8 +824,6 @@
             font-size: 12px;
             letter-spacing: 0;
             line-height: 40px;
-            position: absolute;
-            bottom: 0;
             right: 12px;
             cursor: pointer;
             &_isArabic {
@@ -982,7 +980,7 @@
                         &-Button {
                             &_likeLink {
                                 &:hover {
-                                    background: transparent;
+                                    background: transparent!important;
                                 }
                             }
                         }
@@ -1019,4 +1017,8 @@
             }
         }
     }
+}
+
+.Field_hasError + .Mask {
+    bottom: 1.8rem!important;    
 }

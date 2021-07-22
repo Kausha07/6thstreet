@@ -233,4 +233,23 @@
             font-weight: var(--fw-regular);
         }
     }
+
+    &_type_password {
+        .Mask {
+            color: #9B9B9B;
+            font-size: 12px;
+            letter-spacing: 0;
+            line-height: 40px;
+            position: absolute;
+            top: 0;
+            right: 12px;
+            cursor: pointer;
+            z-index: 1;
+            &_isArabic {
+                left: 12px;
+                right: unset;
+                direction: ltr;
+            }
+        }
+    }
 }
