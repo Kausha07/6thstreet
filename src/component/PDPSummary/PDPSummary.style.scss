@@ -28,7 +28,7 @@
     .WishlistIcon {
       position: relative;
       top: initial;
-      right: initial;
+      // right: initial;
       width: 50px;
       height: 50px;
       background-color: transparent;
@@ -40,7 +40,8 @@
   }
 
   @include desktop {
-    padding: 0 40px;
+    padding-left: 40px;
+    padding-right: 0px;
   }
 
   h1 {
@@ -103,7 +104,7 @@
     }
 
     @include desktop() {
-      width: 147px;
+      width: 100%;
 
       div:before {
         top: -4px;
@@ -130,11 +131,11 @@
     }
   }
 
-  .PriceAndPDPSummaryHeader {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-  }
+  // .PriceAndPDPSummaryHeader {
+  //   display: flex;
+  //   flex-direction: column;
+  //   justify-content: space-between;
+  // }
 
   .Price {
     font-weight: var(--fw-bold);
@@ -148,56 +149,57 @@
       line-height: 30px;
     }
 
-    .PriceContainer {
+
+  }
+  .PriceContainer {
+    display: flex;
+    flex-direction: column;
+    @include mobile {
+      justify-content: space-between;
+    }
+
+    .Price {
       display: flex;
-      flex-direction: column;
-      @include mobile {
-        justify-content: space-between;
+      justify-content: space-between;
+      font-weight: var(--fw-bold);
+      font-size: 20px;
+      margin: 0.36rem 0 0 0;
+
+      @include before-desktop {
+        font-size: 18px;
+        font-weight: bold;
+        letter-spacing: 0;
+        line-height: 30px;
       }
 
-      .Price {
-        display: flex;
-        justify-content: space-between;
-        font-weight: var(--fw-bold);
+      &-Base {
+        &_discount {
+          margin-right: 20px;
+          font-weight: var(--fw-medium);
+        }
+      }
+
+      &-Special {
+        color: $default-primary-dark-color;
         font-size: 20px;
-        margin: 0.36rem 0 0 0;
+        font-weight: bold;
+        letter-spacing: 0;
+        line-height: 30px;
+        padding: 0 8px 0 0;
+      }
 
-        @include before-desktop {
-          font-size: 18px;
-          font-weight: bold;
-          letter-spacing: 0;
-          line-height: 30px;
-        }
-
-        &-Base {
-          &_discount {
-            margin-right: 20px;
-            font-weight: var(--fw-medium);
-          }
-        }
-
-        &-Special {
-          color: $default-primary-dark-color;
-          font-size: 20px;
-          font-weight: bold;
-          letter-spacing: 0;
-          line-height: 30px;
-          padding: 0 8px 0 0;
-        }
-
-        &-Del {
-          font-size: 16px;
-          letter-spacing: 0;
-          line-height: 30px;
-        }
-        &-Discount {
-          color: $default-primary-dark-color;
-          font-size: 15px;
-          font-weight: 600;
-          letter-spacing: 0;
-          line-height: 30px;
-          text-align: right;
-        }
+      &-Del {
+        font-size: 16px;
+        letter-spacing: 0;
+        line-height: 30px;
+      }
+      &-Discount {
+        color: $default-primary-dark-color;
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: 0;
+        line-height: 30px;
+        text-align: right;
       }
     }
   }
@@ -212,7 +214,7 @@
     display: inline-block;
     text-transform: none;
     font-weight: 400;
-    max-width: 366px;
+    // max-width: 366px;
     width: 100%;
     box-shadow: 0px 0px 11px rgba(0, 0, 0, 0.1);
     border-radius: 7px;

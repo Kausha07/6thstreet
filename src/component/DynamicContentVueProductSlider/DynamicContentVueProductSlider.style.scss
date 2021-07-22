@@ -19,6 +19,11 @@
       padding-left: 30px;
     }
   }
+  @include desktop{
+    &-Link{
+      height: 278px;
+    }
+  }
 
   &-HeaderContainer {
     margin-top: 10px;
@@ -155,8 +160,8 @@
         width: 2rem;
         height: 2rem;
         background-size: 2rem;
-        left: 7px;
-        top: 8px;
+        left: 3px;
+        top: 7px;
       }
 
       @include tablet {
@@ -166,7 +171,7 @@
           width: 20px;
           height: 20px;
           background-size: 20px;
-          left: 4px;
+          left: -1px;
           top: 5px;
         }
       }
@@ -177,7 +182,7 @@
           width: 20px;
           height: 20px;
           background-size: 20px;
-          left: 4px;
+          left: -1px;
           top: 5px;
         }
       }
@@ -225,6 +230,7 @@
 
   &-PriceWrapper {
     display: inline-block;
+    font-size: 14px;
 
     span {
       color: #d1490c;
