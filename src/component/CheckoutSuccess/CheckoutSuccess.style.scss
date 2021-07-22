@@ -59,9 +59,6 @@
 
   &-Details {
     margin: 0 10px;
-    @include mobile {
-      margin: 0;
-    }
     .SuccessMessage {
       &-Icon {
         height: 50px;
