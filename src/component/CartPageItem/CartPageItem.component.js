@@ -104,7 +104,7 @@ export class CartItem extends PureComponent {
       <li
         key={attribute_code}
         aria-label={attribute_code}
-        block="CartItem"
+        block="CartPageItem"
         elem="Option"
       >
         {label}
@@ -132,7 +132,7 @@ export class CartItem extends PureComponent {
     }
 
     return (
-      <ul block="CartItem" elem="Options" mods={{ isLikeTable }}>
+      <ul block="CartPageItem" elem="Options" mods={{ isLikeTable }}>
         {Object.entries(attributes).map(this.renderProductConfigurationOption)}
       </ul>
     );
@@ -163,7 +163,7 @@ export class CartItem extends PureComponent {
     // TODO: implement shared-transition here?
 
     return (
-      <figure block="CartItem" elem="Wrapper">
+      <figure block="CartPageItem" elem="Wrapper">
         {this.renderImage()}
         {this.renderContent()}
       </figure>
@@ -175,7 +175,7 @@ export class CartItem extends PureComponent {
     const isNextAvailable = Boolean(array[i + 1]);
 
     return (
-      <span block="CartItem" elem="ItemOptionValue" key={label}>
+      <span block="CartPageItem" elem="ItemOptionValue" key={label}>
         {label || value}
         {isNextAvailable && ", "}
       </span>
@@ -186,11 +186,11 @@ export class CartItem extends PureComponent {
     const { label, values = [], id } = option;
 
     return (
-      <div block="CartItem" elem="ItemOption" key={id}>
-        <div block="CartItem" elem="ItemOptionLabel" key={`label-${id}`}>
+      <div block="CartPageItem" elem="ItemOption" key={id}>
+        <div block="CartPageItem" elem="ItemOptionLabel" key={`label-${id}`}>
           {`${label}:`}
         </div>
-        <div block="CartItem" elem="ItemOptionValues">
+        <div block="CartPageItem" elem="ItemOptionValues">
           {values.map(this.renderProductOptionValue)}
         </div>
       </div>
@@ -205,7 +205,11 @@ export class CartItem extends PureComponent {
     }
 
     return (
-      <div block="CartItem" elem="ItemOptionsWrapper" mods={{ isLikeTable }}>
+      <div
+        block="CartPageItem"
+        elem="ItemOptionsWrapper"
+        mods={{ isLikeTable }}
+      >
         {itemOptions.map(this.renderProductOption)}
       </div>
     );
@@ -220,7 +224,7 @@ export class CartItem extends PureComponent {
     const { isArabic } = this.state;
 
     return (
-      <p block="CartItem" elem="Heading" mods={{ isArabic }}>
+      <p block="CartPageItem" elem="Heading" mods={{ isArabic }}>
         {name}
       </p>
     );
@@ -233,7 +237,7 @@ export class CartItem extends PureComponent {
     const { isArabic } = this.state;
 
     return (
-      <p block="CartItem" elem="Heading" mods={{ isArabic }}>
+      <p block="CartPageItem" elem="Heading" mods={{ isArabic }}>
         {brand_name}
       </p>
     );
@@ -258,7 +262,7 @@ export class CartItem extends PureComponent {
     const discountPercentage = Math.round(100 * (1 - row_total / basePrice));
 
     const withDiscount = (
-      <div block="CartItem" elem="DiscountPrice" mods={{ isArabic }}>
+      <div block="CartPageItem" elem="DiscountPrice" mods={{ isArabic }}>
         <div
           block="CartItem-DiscountPrice"
           elem="BasePrice"
@@ -275,7 +279,7 @@ export class CartItem extends PureComponent {
     );
 
     return (
-      <div block="CartItem" elem="Price" mods={{ isArabic }}>
+      <div block="CartPageItem" elem="Price" mods={{ isArabic }}>
         {basePrice === row_total || !basePrice ? withoutDiscount : withDiscount}
       </div>
     );
@@ -293,7 +297,7 @@ export class CartItem extends PureComponent {
     } = this.props;
     const { isArabic } = this.state;
     return (
-      <div block="CartItem" elem="ColSizeQty" mods={{ isArabic }}>
+      <div block="CartPageItem" elem="ColSizeQty" mods={{ isArabic }}>
         {color && (
           <>
             <span block="CartItem-ColSizeQty" elem="Col">
@@ -332,7 +336,7 @@ export class CartItem extends PureComponent {
     const { isNotAvailble } = this.state;
 
     return (
-      <figcaption block="CartItem" elem="Content" mods={{ isLikeTable }}>
+      <figcaption block="CartPageItem" elem="Content" mods={{ isLikeTable }}>
         {this.renderBrandName()}
         {this.renderProductName()}
         {this.renderProductOptions(customizable_options)}
@@ -359,12 +363,12 @@ export class CartItem extends PureComponent {
 
     return (
       <div
-        block="CartItem"
+        block="CartPageItem"
         elem="Actions"
         mods={{ isEditing, isLikeTable, isArabic }}
       >
         <button
-          block="CartItem"
+          block="CartPageItem"
           id="RemoveItem"
           name="RemoveItem"
           elem="Delete"
@@ -374,7 +378,7 @@ export class CartItem extends PureComponent {
           <span />
         </button>
         {isNotAvailble ? (
-          <span block="CartItem" elem="NotAvailable">
+          <span block="CartPageItem" elem="NotAvailable">
             {__("Not available")}
           </span>
         ) : (
@@ -385,7 +389,7 @@ export class CartItem extends PureComponent {
             isControlled
             min={minSaleQuantity}
             max={maxSaleQuantity}
-            mix={{ block: "CartItem", elem: "Qty" }}
+            mix={{ block: "CartPageItem", elem: "Qty" }}
             value={qty}
             onChange={handleChangeQuantity}
           />
@@ -409,7 +413,7 @@ export class CartItem extends PureComponent {
         <Image
           src={thumbnail}
           mix={{
-            block: "CartItem",
+            block: "CartPageItem",
             elem: "Picture",
             mods: { isArabic, isCartPage },
           }}
@@ -425,7 +429,7 @@ export class CartItem extends PureComponent {
     const { isLoading } = this.props;
 
     return (
-      <li block="CartItem">
+      <li block="CartPageItem">
         <Loader isLoading={isLoading} />
         {this.renderWrapper()}
       </li>
