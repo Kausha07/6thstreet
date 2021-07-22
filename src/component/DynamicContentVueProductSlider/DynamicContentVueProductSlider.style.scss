@@ -9,11 +9,8 @@
     font-weight: var(--fw-demi);
 
     @include mobile() {
-      width: 96.005vw;
-      margin: 0px 0px 50px 0px;
-    }
-    @media (max-width: 760px) {
-      padding-left: 8px;
+      // width: 96.005vw;
+      // margin: 0px 0px 50px 0px;
     }
     @media (max-width: 1024px) and (min-width: 768px) {
       padding-left: 30px;
@@ -43,6 +40,7 @@
     }
     @media (max-width: 760px) {
       display: block;
+      text-align: center;
       h1 {
         font-size: 15px;
         margin-bottom: 0px;

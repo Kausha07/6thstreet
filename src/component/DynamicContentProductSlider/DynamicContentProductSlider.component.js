@@ -77,41 +77,6 @@ class DynamicContentProductSlider extends PureComponent {
     );
   }
 
-  renderProductsMobile() {
-    const { isLoading, products = [] } = this.props;
-    const { currentPage, isArabic } = this.state;
-
-    if (isLoading) {
-      return "loading...";
-    }
-
-    return (
-      <div
-        mix={{
-          block: "DynamicContentProductSlider",
-          elem: "MobileSliderWrapper",
-          mods: { isArabic },
-        }}
-      >
-        <Slider
-          mix={{
-            block: "DynamicContentProductSlider",
-            elem: "MobileSlider",
-            mods: { isArabic },
-          }}
-          activeImage={currentPage}
-          onActiveImageChange={this.mobileSliderCallback}
-        >
-          {products.map(this.renderProduct)}
-        </Slider>
-      </div>
-    );
-  }
-
-  mobileSliderCallback = (newPage) => {
-    this.setState({ currentPage: newPage });
-  };
-
   render() {
     const { isArabic, withViewAll } = this.state;
     const { products } = this.props;
@@ -138,18 +103,7 @@ class DynamicContentProductSlider extends PureComponent {
     );
     return (
       <div mix={{ block: "DynamicContentProductSlider", mods: { isArabic } }}>
-        {isMobile.any() && (
-          <div
-            mix={{
-              block: "DynamicContentProductSlider",
-              elem: "HeaderContainer",
-              mods: { isArabic },
-            }}
-          >
-            {this.renderTitle()}
-          </div>
-        )}
-        {isMobile.any() ? this.renderProductsMobile() : productsDesktop}
+        {productsDesktop}
       </div>
     );
   }
