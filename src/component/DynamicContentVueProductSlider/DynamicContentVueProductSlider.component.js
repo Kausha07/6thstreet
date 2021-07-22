@@ -146,6 +146,7 @@ class DynamicContentVueProductSlider extends PureComponent {
     const items = this.getProducts();
     const { isHome } = this.props;
     const { widgetID } = this.props;
+    // debugger
     return (
       <DragScroll data={{ rootClass: "ScrollWrapper", ref: this.cmpRef }}>
         <>
@@ -172,6 +173,7 @@ class DynamicContentVueProductSlider extends PureComponent {
               );
             })}
             {isHome && <div block="SliderHelper" mods={{ isHome }}></div>}
+
           </div>
           {this.renderScrollbar()}
         </>
