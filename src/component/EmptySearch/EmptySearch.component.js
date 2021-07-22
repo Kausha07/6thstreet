@@ -36,7 +36,6 @@ class EmptySearch extends PureComponent {
         this.setState({
           products: resp.data,
         });
-        console.log("response", resp.data);
       })
       .catch((err) => {
         console.log("fetchVueData error", err);
