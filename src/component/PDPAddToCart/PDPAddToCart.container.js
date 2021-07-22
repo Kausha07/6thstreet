@@ -200,7 +200,7 @@ export class PDPAddToCartContainer extends PureComponent {
 
   componentDidMount() {
     const {
-      product: { sku, size_eu, size_uk, size_us },
+      product: { sku, size_eu, size_uk, size_us,in_stock },
       getProductStock,
       setGuestUserEmail,
     } = this.props;
@@ -231,10 +231,10 @@ export class PDPAddToCartContainer extends PureComponent {
         processingRequest: false,
         mappedSizeObject: object,
         productStock: response,
-        ...(allSizes.length === 0 && { isOutOfStock: true })
-        // ...(size_us.length === 0 &&
-        //   size_uk.length === 0 &&
-        //   size_eu.length === 0 && { isOutOfStock: true }),
+        ...(size_us.length === 0 &&
+          size_uk.length === 0 &&
+          size_eu.length === 0 &&
+          in_stock === 0 && { isOutOfStock: true }),
       });
     });
   }
@@ -333,8 +333,11 @@ export class PDPAddToCartContainer extends PureComponent {
     if (productStock && productStock[value]) {
       const selectedSize = productStock[value];
       if (
-        (selectedSize["quantity"] !== undefined && selectedSize["quantity"] !== null)
-        && (typeof (selectedSize["quantity"]) === 'string' ? parseInt(selectedSize["quantity"], 0) === 0 : selectedSize["quantity"] === 0)
+        selectedSize["quantity"] !== undefined &&
+        selectedSize["quantity"] !== null &&
+        (typeof selectedSize["quantity"] === "string"
+          ? parseInt(selectedSize["quantity"], 0) === 0
+          : selectedSize["quantity"] === 0)
       ) {
         outOfStockVal = true;
       } else {
