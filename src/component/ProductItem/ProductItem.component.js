@@ -22,6 +22,7 @@ class ProductItem extends PureComponent {
     page: PropTypes.string,
     position: PropTypes.number,
     qid: PropTypes.string,
+    isVueData: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -35,15 +36,17 @@ class ProductItem extends PureComponent {
   handleClick = this.handleProductClick.bind(this);
 
   handleProductClick() {
-    const { product, position, qid } = this.props;
+    const { product, position, qid, isVueData } = this.props;
     var data = localStorage.getItem("customer");
     let userData = JSON.parse(data);
     let userToken;
     let queryID;
-    if (!qid) {
-      queryID = getStore().getState().SearchSuggestions.queryID;
-    } else {
-      queryID = qid;
+    if (!isVueData) {
+      if (!qid) {
+        queryID = getStore().getState().SearchSuggestions.queryID;
+      } else {
+        queryID = qid;
+      }
     }
     if (userData?.data) {
       userToken = userData.data.id;
@@ -158,21 +161,28 @@ class ProductItem extends PureComponent {
   renderLink() {
     const {
       product,
-      product: { url },
+      product: { url, link },
       qid,
+      isVueData,
     } = this.props;
     let queryID;
-    if (!qid) {
-      queryID = getStore().getState().SearchSuggestions.queryID;
-    } else {
-      queryID = qid;
+    if (!isVueData) {
+      if (!qid) {
+        queryID = getStore().getState().SearchSuggestions.queryID;
+      } else {
+        queryID = qid;
+      }
     }
-    const { pathname } = new URL(url);
     let urlWithQueryID;
-    if (queryID) {
-      urlWithQueryID = `${pathname}?qid=${queryID}`;
+    if (!isVueData) {
+      const { pathname } = new URL(url);
+      if (queryID) {
+        urlWithQueryID = `${pathname}?qid=${queryID}`;
+      } else {
+        urlWithQueryID = pathname;
+      }
     } else {
-      urlWithQueryID = pathname;
+      urlWithQueryID = link;
     }
     const linkTo = {
       pathname: urlWithQueryID,
