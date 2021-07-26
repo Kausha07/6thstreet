@@ -2,6 +2,8 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import { ChildrenType, MixType } from 'Type/Common';
+import { isArabic } from 'Util/App';
+import { ChevronUp, ChevronRight } from '../Icons';
 
 import './Accordion.style';
 
@@ -51,10 +53,14 @@ export class Accordion extends PureComponent {
                 <button
                   block="Accordion"
                   elem="Expand"
-                  mods={ { isExpanded } }
+                  mods={ { isExpanded, isArabic: isArabic() } }
                   onClick={ this.toggleAccordion }
                 >
-                    .
+                    {
+                        isExpanded
+                        ? <ChevronUp alt={ `Close ${title}` } />
+                        : <ChevronRight alt={ `Expand ${title}` } />
+                    }
                 </button>
             </div>
         );

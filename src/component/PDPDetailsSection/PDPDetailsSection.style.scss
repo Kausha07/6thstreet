@@ -8,11 +8,6 @@
   padding: 0 20px;
   font-weight: var(--fw-regular);
 
-  &-Accordion {
-    @include mobile() {
-      padding-bottom: 75px;
-    }
-  }
   @include desktop() {
     padding: 0 20px;
   }
@@ -80,6 +75,30 @@
     line-height: 24px;
   }
 
+  &-Highlights {
+    &-ModelDetails {
+      font-weight: var(--fw-regular);
+      margin-top: 16px;
+      margin-bottom: 0;
+      span:nth-child(2), span:nth-child(4) {
+        font-weight: var(--fw-demi);
+      }
+      span:nth-child(5) {
+        font-weight: var(--fw-demi);
+        text-transform: uppercase;
+      }
+    }
+    &-SKU {
+      span:nth-child(1) {
+        font-weight: var(--fw-demi);
+      }
+      span:nth-child(2) {
+        font-weight: var(--fw-regular);
+        text-transform: uppercase;
+      }
+    }
+  }
+
   &-Highlights, &-ModelMeasurements {
     font-size: 16px;
     margin-top: 32px;
@@ -134,6 +153,38 @@
 
     &_mod_value {
       font-weight: var(--fw-regular);
+    }
+  }
+
+  &-ShareButtonContainer {
+    display: flex;
+    justify-content: center;
+    padding: 32px;
+    &-ShareButton {
+      display: flex;
+      align-items: center;
+      border: 1px solid #000000;
+      border-radius: 8px;
+      background-color: #FFFFFF;
+      padding: 0 20px;
+      svg {
+        transform: rotateY(0deg);
+        margin: 0 8px 0 0;
+      }
+      &_isArabic {
+        svg {
+          transform: rotateY(180deg);
+          margin: 0 0 0 8px;
+        }
+      }
+      span {
+        text-transform: none;
+        font-size: 17px;
+        font-weight: 600;
+        letter-spacing: 0;
+        line-height: 20px;
+        text-align: right;
+      }
     }
   }
 
@@ -232,5 +283,10 @@
         margin-right: 0;
       }
     }
+  }
+  .Seperator {
+    background-color: #EFEFEF;
+    margin: 15px 0 0 0;
+    height: 1.5px;
   }
 }

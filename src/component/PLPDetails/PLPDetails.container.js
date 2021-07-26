@@ -1,9 +1,9 @@
 // import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
-import PropTypes from "prop-types";
-
 import PLPDetails from "./PLPDetails.component";
+
 
 export const mapStateToProps = (_state) => ({
   // wishlistItems: state.WishlistReducer.productsInWishlist

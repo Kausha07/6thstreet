@@ -48,23 +48,22 @@ export class CheckoutPayment extends PureComponent {
             method: { m_code }
         } = this.props;
         const { isArabic } = this.state;
-
-        const {
-            name,
-            mod,
-            paragraph,
-            img
-        } = PAYMENTS_DATA[m_code];
-
-        const isTabby = TABBY_PAYMENT_CODES.includes(m_code);
-
+        
         if (PAYMENTS_DATA[m_code]) {
+            const {
+                name,
+                mod,
+                paragraph,
+                img
+            } = PAYMENTS_DATA[m_code];
+    
+            const isTabby = TABBY_PAYMENT_CODES.includes(m_code);
             return (
                 <div block="CheckoutPayment" elem="Method" mods={ mod }>
                     { isTabby
                         ? <img src={ isArabic ? tabbyAr : img } alt={ name } />
                         : <img src={ img } alt={ name } /> }
-                    <p>{ paragraph }</p>
+                    {paragraph ? <p>{ paragraph }</p>: null}
                 </div>
             );
         }

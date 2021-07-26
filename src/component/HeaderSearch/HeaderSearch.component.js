@@ -1,13 +1,13 @@
-import ClickOutside from "Component/ClickOutside";
-import Field from "Component/Field";
-import Form from "Component/Form";
-import SearchSuggestion from "Component/SearchSuggestion";
-import PropTypes from "prop-types";
-import { createRef, PureComponent } from "react";
-import { isArabic } from "Util/App";
-import "./HeaderSearch.style";
-import Clear from "./icons/close-black.png";
-import searchPng from "./icons/search-black.png";
+import ClickOutside from 'Component/ClickOutside';
+import Field from 'Component/Field';
+import Form from 'Component/Form';
+import SearchSuggestion from 'Component/SearchSuggestion';
+import PropTypes from 'prop-types';
+import { createRef, PureComponent } from 'react';
+import { isArabic } from 'Util/App';
+import './HeaderSearch.style';
+import Clear from './icons/close-black.png';
+import searchPng from './icons/search-black.png';
 
 class HeaderSearch extends PureComponent {
   static propTypes = {

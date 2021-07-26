@@ -20,7 +20,7 @@
             input,
             select {
                 font-size: 14px;
-                padding: 16px 15px;
+                padding: 16px 15px !important;
                 height: 50px;
             }
 
@@ -43,7 +43,7 @@
                     grid-row: 1;
                     justify-content: space-between;
                     background: var(--white);
-                    padding: 20px 35px;
+                    padding: 20px 35px !important;
                     margin-bottom: 15px;
                     pointer-events: none;
                     text-align-last: 50%;
@@ -53,7 +53,7 @@
                     }
 
                     select {
-                        padding-left: 35px;
+                        padding-left: 35px !important;
                     }
 
                     label {
@@ -74,7 +74,7 @@
                     grid-row: 1;
                     justify-content: space-between;
                     background: var(--white);
-                    padding: 20px 35px;
+                    padding: 20px 35px !important;
                     margin-bottom: 15px;
                     pointer-events: none;
                     text-align-last: 50%;
@@ -84,7 +84,7 @@
                     }
 
                     select {
-                        padding-left: 35px;
+                        padding-left: 35px !important;
                     }
 
                     label {
@@ -105,12 +105,12 @@
                     grid-row: 1;
 
                     @include desktop {
-                        padding-top: 20px;
+                        padding-top: 20px !important;
                         grid-row: 2;
                     }
 
                     label {
-                        padding-bottom: 22px;
+                        padding-bottom: 22px !important;
 
                         @include before-desktop {
                             display: none;
@@ -143,8 +143,8 @@
 
                     grid-column: 1;
                     grid-row: 5;
-                    padding-right: 5px;
-                    padding-bottom: 20px;
+                    padding-right: 5px !important;
+                    padding-bottom: 20px !important;
 
                     @include desktop {
                         grid-row: 6;
@@ -164,7 +164,7 @@
                 &:nth-child(6) {
                     grid-column: 3 / span 4;
                     grid-row: 4;
-                    padding-left: 5px;
+                    padding-left: 5px !important;
 
                     @include desktop {
                         grid-column: 4 / span 5;
@@ -190,7 +190,7 @@
                 &:nth-child(8) {
                     grid-column: 1 / span 2;
                     grid-row: 4;
-                    padding-right: 5px;
+                    padding-right: 5px !important;
 
                     @include desktop {
                         grid-column: 1 / span 3;
@@ -241,8 +241,8 @@
                 &:nth-child(10) {
                     grid-column: 2 / span 5;
                     grid-row: 5;
-                    padding-left: 5px;
-                    padding-bottom: 20px;
+                    padding-left: 5px !important;
+                    padding-bottom: 20px !important;
 
                     @include desktop {
                         grid-row: 6;
@@ -250,11 +250,11 @@
                 }
 
                 background: var(--white);
-                padding: 0 20px 10px;
+                padding: 0 20px 10px !important;
                 margin: 0;
 
                 @include desktop {
-                    padding: 0 30px 10px;
+                    padding: 0 30px 10px !important;
                 }
             }
         }
@@ -282,7 +282,7 @@
                 input,
                 select {
                     font-size: 14px;
-                    padding: 16px 15px;
+                    padding: 16px 15px !important;
                     height: 50px;
                 }
     
@@ -294,9 +294,9 @@
 
                     &:first-child {
                         grid-column: 1 / span 5;
-                        grid-row: 3;
+                        grid-row: 1;
                         justify-content: unset;
-                        padding: 0 20px 10px;
+                        padding: 0 20px 10px !important;
                         margin-bottom: unset;
                         pointer-events: all;
                         text-align-last: unset;
@@ -304,7 +304,7 @@
     
                         @include desktop {
                             grid-row: 4;
-                            padding: 0 30px 10px;
+                            padding: 0 30px 10px !important;
                         }
                     }
     
@@ -313,7 +313,7 @@
                         grid-row: 1;
                         justify-content: space-between;
                         background: var(--white);
-                        padding: 20px 35px;
+                        padding: 20px 35px !important;
                         margin-bottom: 15px;
                         pointer-events: none;
                         text-align-last: 50%;
@@ -323,7 +323,7 @@
                         }
     
                         select {
-                            padding-left: 35px;
+                            padding-left: 35px !important;
                         }
     
                         label {
@@ -341,15 +341,15 @@
     
                     &:nth-child(3) {
                         grid-column: 1 / span 5;
-                        grid-row: 1;
+                        grid-row: 2;
     
                         @include desktop {
-                            padding-top: 20px;
+                            padding-top: 20px !important;
                             grid-row: 2;
                         }
     
                         label {
-                            padding-bottom: 22px;
+                            padding-bottom: 22px !important;
     
                             @include before-desktop {
                                 display: none;
@@ -359,7 +359,7 @@
     
                     &:nth-child(4) {
                         grid-column: 1 / span 5;
-                        grid-row: 2;
+                        grid-row: 3;
     
                         @include desktop {
                             grid-row: 3;
@@ -382,8 +382,8 @@
     
                         grid-column: 1;
                         grid-row: 6;
-                        padding-right: 5px;
-                        padding-bottom: 20px;
+                        padding-right: 5px !important;
+                        padding-bottom: 20px !important;
     
                         @include desktop {
                             grid-row: 7;
@@ -399,7 +399,7 @@
                     &:nth-child(6) {
                         grid-column: 3 / span 4;
                         grid-row: 5;
-                        padding-left: 5px;
+                        padding-left: 5px !important;
     
                         @include desktop {
                             grid-column: 4 / span 5;
@@ -429,7 +429,7 @@
                     &:nth-child(7) {
                         grid-column: 1 / span 2;
                         grid-row: 5;
-                        padding-right: 5px;
+                        padding-right: 5px !important;
     
                         @include desktop {
                             grid-column: 1 / span 3;
@@ -479,8 +479,8 @@
                     &:nth-child(10) {
                         grid-column: 2 / span 5;
                         grid-row: 6;
-                        padding-left: 5px;
-                        padding-bottom: 20px;
+                        padding-left: 5px !important;
+                        padding-bottom: 20px !important;
     
                         @include desktop {
                             grid-row: 7;
@@ -497,11 +497,11 @@
                     }
     
                     background: var(--white);
-                    padding: 0 20px 10px;
+                    padding: 0 20px 10px !important;
                     margin: 0;
     
                     @include desktop {
-                        padding: 0 30px 10px;
+                        padding: 0 30px 10px !important;
                     }
                 }
             }
@@ -524,17 +524,17 @@
                     .Field {
                         &:first-child {
                             select {
-                                padding-right: 35px;
+                                padding-right: 35px !important;
                             }
                         }
 
                         &:nth-child(4) {
-                            padding-right: 20px;
-                            padding-left: 5px;
+                            padding-right: 20px !important;
+                            padding-left: 5px !important;
 
                             @include desktop {
-                                padding-right: 30px;
-                                padding-left: 5px;
+                                padding-right: 30px !important;
+                                padding-left: 5px !important;
                             }
 
                             input {
@@ -551,12 +551,12 @@
                         }
 
                         &:nth-child(5) {
-                            padding-left: 20px;
-                            padding-right: 5px;
+                            padding-left: 20px !important;
+                            padding-right: 5px!important;
 
                             @include desktop {
-                                padding-left: 30px;
-                                padding-right: 5px;
+                                padding-left: 30px !important;
+                                padding-right: 5px !important;
                             }
 
                             input {
@@ -573,12 +573,12 @@
                         }
 
                         &:nth-child(6) {
-                            padding-right: 20px;
-                            padding-left: 5px;
+                            padding-right: 20px !important;
+                            padding-left: 5px!important;
 
                             @include desktop {
-                                padding-right: 30px;
-                                padding-left: 5px;
+                                padding-right: 30px !important;
+                                padding-left: 5px !important;
                             }
 
                             ::after {
@@ -605,11 +605,11 @@
                         }
 
                         &:nth-child(10) {
-                            padding-left: 20px;
-                            padding-right: 5px;
+                            padding-left: 20px !important;
+                            padding-right: 5px !important;
                             @include desktop {
-                                padding-left: 30px;
-                                padding-right: 5px;
+                                padding-left: 30px !important;
+                                padding-right: 5px !important;
                             }
                         }
                     }
@@ -622,17 +622,17 @@
                         .Field {
                             &:nth-child(2) {
                                 select {
-                                    padding-right: 35px;
+                                    padding-right: 35px !important;
                                 }
                             }
     
                             &:nth-child(4) {
-                                padding-right: 20px;
-                                padding-left: 20px;
+                                padding-right: 20px !important;
+                                padding-left: 20px !important;
     
                                 @include desktop {
-                                    padding-right: 30px;
-                                    padding-left: 30px;
+                                    padding-right: 30px !important;
+                                    padding-left: 30px !important;
                                 }
     
                                 input {
@@ -649,12 +649,12 @@
                             }
 
                             &:nth-child(5) {
-                                padding-left: 5px;
-                                padding-right: 20px;
+                                padding-left: 5px !important;
+                                padding-right: 20px !important;
     
                                 @include desktop {
-                                    padding-left: 5px;
-                                    padding-right: 30px;
+                                    padding-left: 5px !important;
+                                    padding-right: 30px !important;
                                 }
     
                                 ::after {
@@ -664,12 +664,12 @@
                             }
     
                             &:nth-child(6) {
-                                padding-left: 20px;
-                                padding-right: 5px;
+                                padding-left: 20px !important;
+                                padding-right: 5px!important;
     
                                 @include desktop {
-                                    padding-left: 30px;
-                                    padding-right: 5px;
+                                    padding-left: 30px !important;
+                                    padding-right: 5px !important;
                                 }
     
                                 ::after {
@@ -679,12 +679,12 @@
                             }
     
                             &:nth-child(7) {
-                                padding-right: 20px;
-                                padding-left: 5px;
+                                padding-right: 20px !important;
+                                padding-left: 5px !important;
     
                                 @include desktop {
-                                    padding-right: 30px;
-                                    padding-left: 5px;
+                                    padding-right: 30px !important;
+                                    padding-left: 5px !important;
                                 }
     
                                 ::after {
@@ -704,11 +704,11 @@
                             }
     
                             &:nth-child(9) {
-                                padding-left: 20px;
-                                padding-right: 20px;
+                                padding-left: 20px !important;
+                                padding-right: 20px !important;
                                 @include desktop {
-                                    padding-left: 30px;
-                                    padding-right: 30px;
+                                    padding-left: 30px !important;
+                                    padding-right: 30px!important;
                                 }
 
                                 &:after {

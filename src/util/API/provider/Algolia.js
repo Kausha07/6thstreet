@@ -1,4 +1,5 @@
 import { getStore } from "Store";
+import { VIEW_SEARCH_RESULTS_ALGOLIA } from "Util/Event";
 import AlgoliaSDK from "../../../../packages/algolia-sdk";
 import { queryString } from "../helper/Object";
 

@@ -43,6 +43,7 @@ export class CartItem extends PureComponent {
         maxSaleQuantity: PropTypes.number.isRequired,
         handleChangeQuantity: PropTypes.func.isRequired,
         getCurrentProduct: PropTypes.func.isRequired,
+        toggleCartItemQuantityPopup: PropTypes.func.isRequired,
         thumbnail: PropTypes.string.isRequired,
         hideActiveOverlay: PropTypes.func.isRequired,
         closePopup: PropTypes.func,
@@ -250,7 +251,11 @@ export class CartItem extends PureComponent {
     }
 
     renderBrandName() {
-        const { brand_name } = this.props;
+        const {
+            item: {
+                brand_name
+            }
+        } = this.props;
         const {
             isArabic
         } = this.state;
@@ -271,12 +276,13 @@ export class CartItem extends PureComponent {
             currency_code,
             item: {
                 row_total,
-                basePrice
+                basePrice,
             }
         } = this.props;
+
         const { isArabic } = this.state;
         const decimals = FIXED_CURRENCIES.includes(currency_code) ? 3 : 2;
-
+        
         const withoutDiscount = (
             <>
                 <span>{ currency_code }</span>
@@ -285,6 +291,8 @@ export class CartItem extends PureComponent {
                 </span>
             </>
         );
+
+        const discountPercentage = Math.round(100 * (1 - (row_total / basePrice)));
 
         const withDiscount = (
             <div
@@ -304,6 +312,7 @@ export class CartItem extends PureComponent {
                 </div>
                 <div
                 >
+                    { `-${discountPercentage}%` }
                     { withoutDiscount }
                 </div>
             </div>
@@ -321,33 +330,42 @@ export class CartItem extends PureComponent {
     }
 
     renderColSizeQty() {
-        const { item: { color, optionValue, qty } } = this.props;
+        const { item: { color, optionValue, qty, full_item_info: { size_option } }, toggleCartItemQuantityPopup } = this.props;
         const { isArabic } = this.state;
-
-        if (optionValue) {
-            return (
-                <div
-                  block="CartItem"
-                  elem="ColSizeQty"
-                  mods={ { isArabic } }
-                >
-                    { color }
-                    <span>| { __('Size:') }    </span>
-                    { optionValue }
-                    <span>| { __('Qty:') } </span>
-                    { qty }
-                </div>
-            );
-        }
-
         return (
             <div
-              block="CartItem"
-              elem="ColSizeQty"
+                block="CartItem"
+                elem="ColSizeQty"
+                mods={ { isArabic } }
             >
-                { color }
-                <span>| { __('Qty:') } </span>
-                { qty }
+                {
+                    color &&
+                    <>
+                        <span block="CartItem-ColSizeQty" elem="Col">
+                            <span>{__("Color:")}</span>
+                            <span>{ color }</span>
+                        </span>
+                        <span block="pipe">&nbsp;|&nbsp;</span>
+                    </>
+                }
+                <span
+                    block="CartItem-ColSizeQty"
+                    elem="Qty"
+                    onClick={ () => toggleCartItemQuantityPopup() }
+                >
+                    <span>{ __('Qty:') }</span>
+                    <span>{ qty }</span>
+                </span>
+                {
+                    optionValue &&
+                    <>
+                        <span block="pipe">&nbsp;|&nbsp;</span>
+                        <span>
+                            <span>{ __('Size: ') }</span>
+                            <span>{ `${ size_option || '' } ${ optionValue }` }</span>
+                        </span>
+                    </>
+                }
             </div>
         );
     }

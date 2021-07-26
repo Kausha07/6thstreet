@@ -1,13 +1,12 @@
 /* eslint-disable fp/no-let */
 /* eslint-disable max-len */
-import PropTypes from "prop-types";
-import { PureComponent } from "react";
-
+import PDPDetail from "Component/PDPDetail";
 import PDPDetailsSection from "Component/PDPDetailsSection";
 import PDPMainSection from "Component/PDPMainSection";
-import PDPDetail from "Component/PDPDetail";
+import PDPMixAndMatch from "Component/PDPMixAndMatch";
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
 import NoMatch from "Route/NoMatch";
-
 import "./PDP.style";
 
 class PDP extends PureComponent {
@@ -21,7 +20,11 @@ class PDP extends PureComponent {
   }
 
   renderDetailsSection() {
-    return <PDPDetailsSection />;
+    return <PDPDetailsSection {...this.props} />;
+  }
+
+  renderMixAndMatchSection() {
+    return <PDPMixAndMatch />;
   }
 
   renderDetail() {
@@ -35,6 +38,7 @@ class PDP extends PureComponent {
       return nbHits === 1 ? (
         <div block="PDP">
           {this.renderMainSection()}
+          {this.renderMixAndMatchSection()}
           {this.renderDetailsSection()}
           {this.renderDetail()}
         </div>

@@ -211,10 +211,9 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
               getDiscountFromTotals(totals, "clubapparel"),
               __("Club Apparel Redemption")
             )}
-            {/* {couponCode &&
-              this.renderPriceLine(discount, __("Discount (%s)", couponCode))} */}
+            {couponCode ? 
+              this.renderPriceLine(discount, __("Discount (%s)", couponCode)) :this.renderPriceLine(discount, __("Discount")) }
 
-            {this.renderPriceLine(discount, __("Discount"))}
 
             {this.renderPriceLine(
               getDiscountFromTotals(totals, "shipping") || __("FREE"),
@@ -243,7 +242,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     const { processingRequest } = this.props;
     return (
       <article block="CheckoutOrderSummary" aria-label="Order Summary">
-        <Loader isLoading={processingRequest} />
+        {/* <Loader isLoading={processingRequest} /> */}
         {this.renderHeading()}
         {this.renderItems()}
         {this.renderToggleableDiscountOptions()}

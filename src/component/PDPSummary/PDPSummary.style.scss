@@ -10,13 +10,42 @@
     padding: 0 20px;
     overflow-x: hidden;
 
+    .PDPSummaryHeaderAndShareAndWishlistButtonContainer {
+        display: flex;
+        justify-content: space-between;
+        .ShareAndWishlistButtonContainer {
+            display: flex;
+            justify-content: center;
+        }
+        button {
+            width: 50px;
+            height: 50px;
+            padding: 0;
+            border-radius: 50%;
+            border: solid transparent;
+            background-color: #F6F6F6;
+        }
+        .WishlistIcon {
+            position: relative;
+            top: initial;
+            right: initial;
+            width: 50px;
+            height: 50px;
+            background-color: transparent;
+            margin-left: 8px;
+            button {
+                top: 0;
+            }
+        }
+    }
+
     @include desktop {
         padding: 0 40px;
     }
 
     h1 {
         font-size: 24px;
-
+        margin: 0.4px 0 0 0;
         @include before-desktop {
             font-size: 18px;
             font-weight: 600;
@@ -41,7 +70,9 @@
         letter-spacing: 0;
         line-height: 30px;
         text-align: right;
-
+        @include desktop {
+            padding: 0px 0 12px 0
+        }
     }
 
     &-Name {
@@ -123,41 +154,60 @@
         }
     }
 
-    .PriceAndPDPSummaryHeader {
+    .PriceContainer {
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
-    }
-
-    .Price {
-        font-weight: var(--fw-bold);
-        font-size: 20px;
-        margin: .36rem 0 0 0;
-
-        @include before-desktop {
-            font-size: 18px;
-            font-weight: bold;
-            letter-spacing: 0;
-            line-height: 30px;
+        @include mobile {
+            justify-content: space-between;
         }
 
-        &-Base {
-            &_discount {
-                margin-right: 20px;
-                font-weight: var(--fw-medium);
+        .Price {
+            display: flex;
+            justify-content: space-between;
+            font-weight: var(--fw-bold);
+            font-size: 20px;
+            margin: .36rem 0 0 0;
+
+            @include before-desktop {
+                font-size: 18px;
+                font-weight: bold;
+                letter-spacing: 0;
+                line-height: 30px;
             }
-        }
 
-        &-Discount,
-        &-Special {
-            color: $default-primary-dark-color;
+            &-Base {
+                &_discount {
+                    margin-right: 20px;
+                    font-weight: var(--fw-medium);
+                }
+            }
+
+            &-Special {
+                color: $default-primary-dark-color;
+                font-size: 20px;
+                font-weight: bold;
+                letter-spacing: 0;
+                line-height: 30px;
+                padding: 0 8px 0 0;
+            }
+
+            &-Del {
+                font-size: 16px;
+                letter-spacing: 0;
+                line-height: 30px;
+            }
+            &-Discount {
+                color: $default-primary-dark-color;
+                font-size: 15px;
+                font-weight: 600;
+                letter-spacing: 0;
+                line-height: 30px;
+                text-align: right;
+            }
         }
     }
 
     .Seperator {
-        @include desktop {
-            display: none;
-        }
         background-color: #EFEFEF;
         margin: 15px 0 0 0;
         height: 1.5px;
@@ -180,7 +230,6 @@
         @include desktop() {
             padding: 15px 15px 14px 18px;
             font-size: 14px;
-            margin-bottom: 30px;
         }
 
         strong {

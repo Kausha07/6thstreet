@@ -278,9 +278,11 @@ class MobileBottomBar extends NavigationAbstract {
     render() {
         const { isIPhoneNavigationHidden } = this.state;
 
-        if(this.isPDP()){
-            return null;
-        }
+        // Commenting it for not hiding bottom bar after coming from pdp(PWA-907)
+
+        // if(this.isPDP()){
+        //     return null;
+        // }
 
         return (
             <div block="MobileBottomBar" mods={ { isIPhoneNavigationHidden } }>

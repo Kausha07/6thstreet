@@ -94,9 +94,13 @@
 
     &-Check {
         float: right;
+        right: 0px;
+        position: absolute;
     }
 
     &-CountryBtn {
+        display: flex;
+        align-items: center;
         width: 100%;
         text-align: start;
         padding: 0;

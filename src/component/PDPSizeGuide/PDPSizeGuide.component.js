@@ -120,18 +120,18 @@ class PDPSizeGuide extends PureComponent {
         );
     }
 
-    renderSizeChart(){
+    renderSizeChart() {
+        const { currentContentGender, product: { fit_size_url, brand_name, gender } } = this.props;
 
-        const { isArabic } = this.state;
-        const {currentContentGender,product:{brand_name,gender}} = this.props
-        const isOpen = true;
+        if(!!fit_size_url){
+            return (
+                <img src={ fit_size_url }  alt="Size Chart" />
+            );
+        }
+
         return (
-            <SizeTable brand={brand_name} gender =  {gender} currentContentGender={currentContentGender} />
+            <SizeTable brand={brand_name} gender = {gender} currentContentGender={currentContentGender} />
         );
-        // return (
-        //     <img src={ chart }  />
-        //     // <Image mix={ { block: 'Image', mods: { isArabic } } } src={ chart } />
-        // )
     }
 
     renderTableUK() {

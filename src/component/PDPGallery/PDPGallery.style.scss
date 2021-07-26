@@ -89,6 +89,9 @@
         min-width: 0;
         margin: 0px;
         direction: ltr;
+        @include desktop {
+            margin-left: 8px;
+        }
         &-Crumb {
             background: var(--crumb-background-color);
             border: none;
@@ -115,6 +118,9 @@
     }
 
     .OverlayIcons {
+        @include desktop {
+            display: none;
+        }
         position: absolute;
         top: 1rem;
         right: 1rem;

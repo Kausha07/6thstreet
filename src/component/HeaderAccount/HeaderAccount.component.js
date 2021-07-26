@@ -116,9 +116,8 @@ class HeaderAccount extends PureComponent {
 
         const accountButtonText = isSignedIn
             && customer
-            && customer.firstname
-            && customer.lastname
-            ? `${customer.firstname} ${customer.lastname}`
+            && (customer.firstname || customer.lastname)
+            ? `${customer.firstname || ""} ${customer.lastname || ""}`
             : __('Login/Register');
 
         return (

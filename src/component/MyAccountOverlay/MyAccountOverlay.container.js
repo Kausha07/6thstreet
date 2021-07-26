@@ -219,6 +219,7 @@ export class MyAccountOverlayContainer extends PureComponent {
     };
 
     async onSignInSuccess(fields) {
+        console.log(fields)
         const {
             signIn,
             showNotification,
@@ -268,16 +269,16 @@ export class MyAccountOverlayContainer extends PureComponent {
         const {
             password,
             email,
-            firstname,
-            lastname,
+            fullname,
             privacyPolicy,
             gender
         } = fields;
 
+        const [firstname, ...rest] = fullname?.split(" ");
         const customerData = {
             customer: {
                 firstname,
-                lastname,
+                lastname: rest?.join(" ") || "",
                 email,
                 is_subscribed: privacyPolicy,
                 gender

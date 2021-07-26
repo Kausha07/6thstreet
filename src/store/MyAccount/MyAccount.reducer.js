@@ -1,76 +1,89 @@
-import { CUSTOMER } from 'Store/MyAccount/MyAccount.dispatcher';
-import {
-    isSignedIn as isInitiallySignedIn
-} from 'Util/Auth';
-import BrowserDatabase from 'Util/BrowserDatabase';
-import { ONE_MONTH_IN_SECONDS } from 'Util/Request/QueryDispatcher';
+import { CUSTOMER } from "Store/MyAccount/MyAccount.dispatcher";
+import { isSignedIn as isInitiallySignedIn } from "Util/Auth";
+import BrowserDatabase from "Util/BrowserDatabase";
+import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
 
 import {
-    SET_IS_MOBILE_TAB_ACTIVE,
-    UPDATE_CUSTOMER_DETAILS,
-    UPDATE_CUSTOMER_PASSWORD_FORGOT_STATUS,
-    UPDATE_CUSTOMER_PASSWORD_RESET_STATUS,
-    UPDATE_CUSTOMER_SIGN_IN_STATUS
-} from './MyAccount.action';
+  SET_IS_MOBILE_TAB_ACTIVE,
+  SET_GUEST_USER_EMAIL,
+  UPDATE_CUSTOMER_DETAILS,
+  UPDATE_CUSTOMER_PASSWORD_FORGOT_STATUS,
+  UPDATE_CUSTOMER_PASSWORD_RESET_STATUS,
+  UPDATE_CUSTOMER_SIGN_IN_STATUS,
+} from "./MyAccount.action";
 
 export const initialState = {
-    isSignedIn: isInitiallySignedIn(),
-    passwordResetStatus: false,
-    isPasswordForgotSend: false,
-    customer: {},
-    mobileTabActive: true
+  isSignedIn: isInitiallySignedIn(),
+  passwordResetStatus: false,
+  isPasswordForgotSend: false,
+  customer: {},
+  mobileTabActive: true,
+  guestUserEmail: "",
 };
 
 export const MyAccountReducer = (state = initialState, action) => {
-    const { status, customer } = action;
+  const { status, customer, guestUserEmail } = action;
 
-    switch (action.type) {
+  switch (action.type) {
     case UPDATE_CUSTOMER_SIGN_IN_STATUS:
-        return {
-            ...state,
-            isSignedIn: status
-        };
+      return {
+        ...state,
+        isSignedIn: status,
+      };
+    case SET_GUEST_USER_EMAIL:
+      return {
+        ...state,
+        guestUserEmail,
+      };
 
     case UPDATE_CUSTOMER_PASSWORD_RESET_STATUS:
-        return {
-            ...state,
-            passwordResetStatus: status
-        };
+      return {
+        ...state,
+        passwordResetStatus: status,
+      };
 
     case UPDATE_CUSTOMER_PASSWORD_FORGOT_STATUS:
-        return {
-            ...state,
-            isPasswordForgotSend: !state.isPasswordForgotSend
-        };
+      return {
+        ...state,
+        isPasswordForgotSend: !state.isPasswordForgotSend,
+      };
 
     case UPDATE_CUSTOMER_DETAILS:
-        const { firstname = '', lastname = '' } = customer;
-        const data = firstname || lastname
-            ? {
-                ...customer,
-                firstname: firstname.indexOf(' ') > 0 ? firstname.substr(0, firstname.indexOf(' ')) : firstname,
-                lastname: firstname.indexOf(' ') > 0 ? firstname.substr(firstname.indexOf(' ') + 1) : lastname
+      const { firstname = "", lastname = "" } = customer;
+      console.log( firstname, lastname)
+      const data =
+        firstname || lastname
+          ? {
+              ...customer,
+              firstname:
+                firstname.indexOf(" ") > 0
+                  ? firstname.substr(0, firstname.indexOf(" "))
+                  : firstname,
+              lastname:
+                firstname.indexOf(" ") > 0
+                  ? firstname.substr(firstname.indexOf(" ") + 1)
+                  : lastname,
             }
-            : customer;
+          : customer;
 
-        BrowserDatabase.setItem(data, CUSTOMER, ONE_MONTH_IN_SECONDS);
+      BrowserDatabase.setItem(data, CUSTOMER, ONE_MONTH_IN_SECONDS);
 
-        return {
-            ...state,
-            customer: data
-        };
+      return {
+        ...state,
+        customer: data,
+      };
 
     case SET_IS_MOBILE_TAB_ACTIVE:
-        const { isActive } = action;
+      const { isActive } = action;
 
-        return {
-            ...state,
-            mobileTabActive: isActive
-        };
+      return {
+        ...state,
+        mobileTabActive: isActive,
+      };
 
     default:
-        return state;
-    }
+      return state;
+  }
 };
 
 export default MyAccountReducer;
