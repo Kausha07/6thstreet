@@ -460,7 +460,7 @@
     "Receive your package and enjoy it": null,
     "Pay 14 days later using your debit or credit card by logging into your Tabby account": null,
     "New": null,
-    "Trending brands": null,
+    "Trending brands": "ماركات رائجة",
     "Trending tags": null,
     "Color: ": null,
     "Qty: ": null,
@@ -787,11 +787,11 @@
     "Sending..": null,
     "That looks like an invalid email address": null,
     "We’ll let you know as soon as the product becomes available": null,
-    "Top searches": null,
-    "Trending Products": null,
-    "Recent searches": null,
+    "Top searches": "الأكثر بحثاً",
+    "Trending Products": "مُنتجات رائجة",
+    "Recent searches": "البحوث الأخيرة",
     "Recommended for you": null,
-    "Trending products": null,
+    "Trending products": "مُنتجات رائجة",
     "Phone": null,
     "My SHOPPING BAG ": null,
     "My BAG ": null,
@@ -826,6 +826,6 @@
     "null": null,
     "EMAIL OR PHONE": null,
     "EMAIL*": null,
-    "No result found for": null,
-    " but here are few suggestions": null
+    "No result found for": "لا يوجد نتائج لبحثك",
+    " but here are few suggestions": "لكن هناك بعض الاقتراحات"
 }
