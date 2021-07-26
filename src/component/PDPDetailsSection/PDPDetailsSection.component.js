@@ -270,7 +270,9 @@ class PDPDetailsSection extends PureComponent {
     }
     return (
       <p block="PDPDetailsSection-Highlights" elem="ModelDetails">
-        <span>{__(`Model's height is ${height} & is wearing `)}</span>
+        <span>{__(`Model's height is `)}</span>
+        <span>{height}</span>
+        <span>{__(" & is wearing ")}</span>
         <span>{`size `}</span>
         <span>{size}</span>
       </p>
