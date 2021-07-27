@@ -48,7 +48,8 @@ export class CartItem extends PureComponent {
         hideActiveOverlay: PropTypes.func.isRequired,
         closePopup: PropTypes.func,
         availability: PropTypes.number.isRequired,
-        isCartPage: PropTypes.bool
+        isCartPage: PropTypes.bool,
+        readOnly: PropTypes.bool
     };
 
     state = {
@@ -61,7 +62,8 @@ export class CartItem extends PureComponent {
         isLikeTable: false,
         brand_name: '',
         closePopup: () => {},
-        isCartPage: false
+        isCartPage: false,
+        readOnly: false
     };
 
     static getDerivedStateFromProps(props) {
@@ -330,7 +332,7 @@ export class CartItem extends PureComponent {
     }
 
     renderColSizeQty() {
-        const { item: { color, optionValue, qty, full_item_info: { size_option } }, toggleCartItemQuantityPopup } = this.props;
+        const { item: { color, optionValue, qty, full_item_info: { size_option } }, toggleCartItemQuantityPopup, readOnly } = this.props;
         const { isArabic } = this.state;
         return (
             <div
@@ -351,6 +353,9 @@ export class CartItem extends PureComponent {
                 <span
                     block="CartItem-ColSizeQty"
                     elem="Qty"
+                    mods={{
+                        readOnly: readOnly
+                    }}
                     onClick={ () => toggleCartItemQuantityPopup() }
                 >
                     <span>{ __('Qty:') }</span>

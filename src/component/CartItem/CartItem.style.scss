@@ -230,6 +230,12 @@
         &_isArabic {
             text-align: right;
         }
+        &-Qty {
+            &_readOnly {
+                text-decoration: none!important;
+                cursor: unset!important;
+            }
+        }
     }
 
     &-Actions {
