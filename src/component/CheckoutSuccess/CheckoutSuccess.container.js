@@ -147,14 +147,17 @@ export class CheckoutSuccessContainer extends PureComponent {
       userToken = userData.data.id;
     }
     totals?.items?.map((item) => {
-      if (item?.full_item_info?.search_query_id) {
+      var queryID = item?.full_item_info?.search_query_id
+        ? item?.full_item_info?.search_query_id
+        : null;
+      if (queryID) {
         new Algolia().logAlgoliaAnalytics(
           "conversion",
           ADD_TO_CART_ALGOLIA,
           [],
           {
             objectIDs: [item?.full_item_info?.parent_id.toString()],
-            queryID: item?.full_item_info?.search_query_id,
+            queryID: queryID,
             userToken: userToken ? `user-${userToken}` : getUUIDToken(),
           }
         );
