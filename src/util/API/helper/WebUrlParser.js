@@ -146,8 +146,12 @@ const Parser = {
   },
 
   setParam(key, values = []) {
-    const url = new URL(location.href.replace(/%20&%20/gi, "%20%26%20"));
-    // remove all matchign search params
+    const appendQuery =  history.state.state.split('.html')[1].replace(/ /g, "%20")
+    const urlLink = location.href.concat(`${appendQuery}`);
+
+    const url = new URL(urlLink.replace(/%20&%20/gi, "%20%26%20"));
+
+    // // remove all matchign search params
     url.searchParams.forEach((_, sKey) => {
       if (sKey.includes(key)) {
         url.searchParams.delete(sKey);
@@ -163,10 +167,13 @@ const Parser = {
       url.searchParams.append(`${prefix}[${key}][0]`, values);
     }
 
-    // update the URL, preserve the state
-    const { pathname, search } = url;
-
-    browserHistory.push(pathname + search);
+    // // update the URL, preserve the state
+    const { href } = url;
+    const {pathname} = location
+    browserHistory.push({
+      pathname: `${pathname}`,
+      state: `${href}`,
+    });
   },
 };
 

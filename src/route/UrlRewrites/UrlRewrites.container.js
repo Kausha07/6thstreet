@@ -66,10 +66,6 @@ export class UrlRewritesContainer extends PureComponent {
         } else {
           partialQuery = partialQuery.substring(1);
           history.push(`${pathname}?${query}&${partialQuery}`);
-          // history.push({
-          //   pathname: `${pathname}`,
-          //   state: `${pathname}?${query}&${partialQuery}`,
-          // });
         }
       } else {
         // history.push(`${pathname}?${query}`);

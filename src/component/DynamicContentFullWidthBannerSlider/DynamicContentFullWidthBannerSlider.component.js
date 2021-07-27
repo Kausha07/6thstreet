@@ -94,7 +94,7 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
     const { link, label, url: image_url, plp_config } = item;
 
     const linkTo = {
-      pathname: formatCDNLink(link),
+      pathname: formatCDNLink(link.split('?q=')[0]),
       state: { plp_config },
     };
 
