@@ -746,6 +746,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       saveCreditCard,
       newCardVisible,
       showOverlay,
+      hideActiveOverlay
     } = this.props;
     const { order_id, increment_id, id = "", creditCardData } = this.state;
     getPaymentAuthorization(id).then((response) => {
@@ -754,6 +755,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
         if (status === "Authorized") {
           BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
+          hideActiveOverlay();
           this.setDetailsStep(order_id, increment_id);
           this.resetCart();
           this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
@@ -775,6 +777,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         if (status === "Declined") {
           cancelOrder(order_id, PAYMENT_FAILED);
           this.setState({ isLoading: false, isFailed: true });
+          hideActiveOverlay();
           this.setDetailsStep(order_id, increment_id);
           this.resetCart();
         }
