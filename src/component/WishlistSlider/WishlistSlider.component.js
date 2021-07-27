@@ -35,6 +35,11 @@ class WishlistSlider extends PureComponent {
     return products;
   };
 
+  async handleContainerScroll(event) {
+    const target = event.nativeEvent.target;
+    this.scrollerRef.current.scrollLeft = target.scrollLeft;
+  }
+
   renderHeader() {
     const { heading } = this.props;
     return (
@@ -102,6 +107,9 @@ class WishlistSlider extends PureComponent {
             id="ScrollWrapper"
             ref={this.cmpRef}
             mods={{ isHome }}
+            onScroll={(e) => {
+              this.handleContainerScroll(e);
+            }}
           >
             {isHome && <div block="SliderHelper" mods={{ isHome }}></div>}
             {items.map((item) => {
