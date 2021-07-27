@@ -18,6 +18,7 @@ import {
 } from "Util/API/endpoint/Product/Product.type";
 import WebUrlParser from "Util/API/helper/WebUrlParser";
 import { capitalize } from "Util/App";
+import { URLS } from "Util/Url/Url.config";
 import { getUUID } from "Util/Auth";
 import {
   getBreadcrumbs,
@@ -93,11 +94,9 @@ export class PLPContainer extends PureComponent {
     const { pages } = props;
     const requestOptions = PLPContainer.getRequestOptions();
     const { page, ...restOptions } = requestOptions;
-
     const {
       prevRequestOptions: { page: prevPage, ...prevRestOptions },
     } = state;
-
     if (JSON.stringify(restOptions) !== JSON.stringify(prevRestOptions)) {
       // if queries match (excluding pages) => not inital
       PLPContainer.requestProductList(props);
@@ -112,8 +111,10 @@ export class PLPContainer extends PureComponent {
   }
 
   static getRequestOptions() {
-    const { params: parsedParams } = WebUrlParser.parsePLP(location.href);
-
+    // const { params: parsedParams } = WebUrlParser.parsePLP(location.href);
+    const urlLink = `${URLS["en-ae"]}${history.state.state}`
+    const parseURL = urlLink.replace(/ /g,"%20")
+    const { params: parsedParams } = WebUrlParser.parsePLP(parseURL);
     return {
       // TODO: inject gender ?
       ...parsedParams,
@@ -208,7 +209,6 @@ export class PLPContainer extends PureComponent {
       options,
       menuCategories,
     } = this.props;
-
     if (query) {
       const { updateBreadcrumbs, setGender } = this.props;
       const breadcrumbLevels = options["categories.level2"]
@@ -229,25 +229,25 @@ export class PLPContainer extends PureComponent {
           return acc;
         }, []);
 
-        const breadcrumbs = [
-          ...productListBreadcrumbs,
-          {
-            url: "/",
-            name: __("Home"),
-          },
-        ];
+        // const breadcrumbs = [
+        //   ...productListBreadcrumbs,
+        //   {
+        //     url: "/",
+        //     name: __("Home"),
+        //   },
+        // ];
 
-        updateBreadcrumbs(breadcrumbs);
+        updateBreadcrumbs(productListBreadcrumbs);
       } else {
         const breadcrumbs = [
           {
             url: "/",
             name: options["categories.level0"],
           },
-          {
-            url: "/",
-            name: __("Home"),
-          },
+          // {
+          //   url: "/",
+          //   name: __("Home"),
+          // },
         ];
 
         updateBreadcrumbs(breadcrumbs);
@@ -304,7 +304,6 @@ export class PLPContainer extends PureComponent {
   getIsLoading() {
     const { requestedOptions } = this.props;
     const options = PLPContainer.getRequestOptions();
-
     const {
       // eslint-disable-next-line no-unused-vars
       page: requestedPage,
@@ -316,7 +315,6 @@ export class PLPContainer extends PureComponent {
       page,
       ...restOptions
     } = options;
-
     // If requested options are not matching requested options -> we are loading
     // we also ignore pages, this is handled by PLPPages
     return JSON.stringify(requestedRestOptions) !== JSON.stringify(restOptions);

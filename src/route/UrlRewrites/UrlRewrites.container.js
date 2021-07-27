@@ -58,7 +58,6 @@ export class UrlRewritesContainer extends PureComponent {
     const { locale: prevLocale } = prevProps;
     const { prevPathname, query } = this.state;
     const { prevPathname: prevStatePathname, query: prevQuery } = prevState;
-
     if (query && query !== prevQuery) {
       let partialQuery = location.search;
       if (location.search) {
@@ -67,9 +66,17 @@ export class UrlRewritesContainer extends PureComponent {
         } else {
           partialQuery = partialQuery.substring(1);
           history.push(`${pathname}?${query}&${partialQuery}`);
+          // history.push({
+          //   pathname: `${pathname}`,
+          //   state: `${pathname}?${query}&${partialQuery}`,
+          // });
         }
       } else {
-        history.push(`${pathname}?${query}`);
+        // history.push(`${pathname}?${query}`);
+        history.push({
+          pathname: `${pathname}`,
+          state: `${pathname}?${query}`,
+        });
       }
     }
     // if (!location.search && query) {
@@ -158,15 +165,8 @@ export class UrlRewritesContainer extends PureComponent {
   }
 
   containerProps = () => {
-    const {
-      isLoading,
-      type,
-      id,
-      sku,
-      brandDescription,
-      brandImg,
-      brandName,
-    } = this.state;
+    const { isLoading, type, id, sku, brandDescription, brandImg, brandName } =
+      this.state;
 
     return {
       isLoading,

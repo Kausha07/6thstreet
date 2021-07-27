@@ -194,10 +194,10 @@ export class PDPContainer extends PureComponent {
           name: __(name),
         },
         ...productBreadcrumbs,
-        {
-          url: "/",
-          name: __("Home"),
-        },
+        // {
+        //   url: "/",
+        //   name: __("Home"),
+        // },
       ];
 
       updateBreadcrumbs(breadcrumbs);

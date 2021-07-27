@@ -60,14 +60,14 @@ class Menu extends PureComponent {
             key,
             link
         } = category;
-
+        let linkURL = link.split('?q=')[0]
         return (
             <MenuCategory
               key={ key }
               categoryKey={ key }
               data={ data }
               label={ label }
-              link = {link}
+              link = {linkURL}
               design={ design }
               currentActiveCategory={ activeCategory }
               closeDefaultCategory={ this.closeDefaultCategory }
