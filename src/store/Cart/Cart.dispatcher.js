@@ -147,7 +147,7 @@ export class CartDispatcher {
     thumbnail_url,
     url,
     itemPrice,
-    searchQueryId
+    searchQueryId = null
   ) {
     const {
       Cart: { cartId },
