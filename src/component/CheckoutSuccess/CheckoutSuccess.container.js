@@ -146,12 +146,10 @@ export class CheckoutSuccessContainer extends PureComponent {
     if (userData?.data?.id) {
       userToken = userData.data.id;
     }
-    console.log("totals", totals);
     totals?.items?.map((item) => {
       var queryID = item?.full_item_info?.search_query_id
         ? item?.full_item_info?.search_query_id
         : null;
-      console.log("queryID", queryID);
       if (queryID) {
         new Algolia().logAlgoliaAnalytics(
           "conversion",
