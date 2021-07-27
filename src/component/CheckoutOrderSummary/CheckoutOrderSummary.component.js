@@ -77,7 +77,12 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     return (
       <div block="CheckoutOrderSummary" elem="OrderItems">
         <ul block="CheckoutOrderSummary" elem="CartItemList">
-          {items.map(this.renderItem)}
+          {
+            items.map((item)=>(
+              React.cloneElement(this.renderItem(item), {
+                readOnly: true
+              })
+            ))}
         </ul>
       </div>
     );
