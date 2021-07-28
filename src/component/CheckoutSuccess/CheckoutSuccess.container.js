@@ -179,9 +179,7 @@ export class CheckoutSuccessContainer extends PureComponent {
       this.setState({ isMobileVerification: true });
     }
 
-    updateMeta({ title: __("Account") });
-
-    this._updateBreadcrumbs();
+    
   }
 
   containerProps = () => {

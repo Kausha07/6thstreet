@@ -462,7 +462,7 @@ class MyAccountOrderView extends PureComponent {
     return (
       <div block="MyAccountOrderView" elem="CardPaymentType">
         <div block="MyAccountOrderView" elem="TypeLogo">
-          {this.renderMiniCard(cc_type.toLowerCase())}
+          {this.renderMiniCard(cc_type?.toLowerCase())}
         </div>
         <div block="MyAccountOrderView" elem="Number">
           <div block="MyAccountOrderView" elem="Number-Dots">
