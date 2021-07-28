@@ -99,9 +99,12 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
       .catch(() => {});
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     const {
+      billingAddress,
+      setTabbyWebUrl,
       totals: { total },
+      createTabbySession
     } = this.props;
     const { selectedPaymentCode } = this.state;
 
@@ -110,6 +113,38 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
       (selectedPaymentCode !== FREE && total === 0)
     ) {
       this.selectPaymentMethod({ m_code: total ? CARD : FREE });
+    }
+    if(prevProps?.totals?.total !== total){
+      createTabbySession(billingAddress)
+      .then((response) => {
+        if (response && response.configuration) {
+          const {
+            configuration: {
+              available_products: { installments, pay_later },
+            },
+            payment: { id },
+          } = response;
+
+          if (installments || pay_later) {
+            if (installments) {
+              setTabbyWebUrl(installments[0].web_url, id, TABBY_ISTALLMENTS);
+
+              // this variable actually is used in the component
+              // eslint-disable-next-line quote-props
+              this.setState({ isTabbyInstallmentAvailable: true });
+            }
+
+            if (pay_later) {
+              setTabbyWebUrl(pay_later[0].web_url, id, TABBY_PAY_LATER);
+
+              // this variable actually is used in the component
+              // eslint-disable-next-line quote-props
+              this.setState({ isTabbyPayLaterAvailable: true });
+            }
+          }
+        }
+      }, this._handleError)
+      .catch(() => {});
     }
   }
 

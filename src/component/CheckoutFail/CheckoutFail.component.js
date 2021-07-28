@@ -23,11 +23,12 @@ export class CheckoutFail extends CheckoutSuccess {
                 <div block="CheckoutSuccess" elem="Details">
                     { this.renderStatus() }
                     { this.renderTotalsItems() }
-                    { this.renderTotals() }
                     { this.renderAddresses() }
                     { this.renderDeliveryOption() }
                     { this.renderPaymentType() }
+                    { this.renderTotals() }
                 </div>
+                {this.renderButton()}
                 { this.renderMyAccountPopup() }
             </div>
         );
