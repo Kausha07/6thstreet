@@ -8,13 +8,16 @@ import {
   formatQuerySuggestions,
   getHighlightedText,
 } from "Util/API/endpoint/Suggestions/Suggestions.create";
+import { WishlistItems } from "Util/API/endpoint/Wishlist/Wishlist.type";
 import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
 import BrowserDatabase from "Util/BrowserDatabase";
 import isMobile from "Util/Mobile";
 import DynamicContentVueProductSliderContainer from "../DynamicContentVueProductSlider";
+import WishlistSliderContainer from "../WishlistSlider";
 import BRAND_MAPPING from "./SearchSiggestion.config";
 import "./SearchSuggestion.style";
+
 var ESCAPE_KEY = 27;
 
 class SearchSuggestion extends PureComponent {
@@ -34,6 +37,7 @@ class SearchSuggestion extends PureComponent {
     // recommendedForYou: PropTypes.array,
     trendingProducts: PropTypes.array,
     searchString: PropTypes.string,
+    wishlistData: WishlistItems.isRequired,
   };
 
   static defaultProps = {
@@ -444,6 +448,24 @@ class SearchSuggestion extends PureComponent {
       );
     }
   };
+
+  renderWishlistProducts = () => {
+    const { wishlistData } = this.props;
+    console.log("wishlistData", wishlistData);
+    if (wishlistData && wishlistData.length > 0) {
+      return (
+        <div className="recommendedForYouSliderBox">
+          <WishlistSliderContainer
+            products={wishlistData}
+            heading={__("Wishlist")}
+            key={`Wishlist`}
+            isHome={true}
+          />
+        </div>
+      );
+    }
+  };
+
   renderTrendingBrand = (brand, i) => {
     const { label = "", image_url } = brand;
 
@@ -561,6 +583,7 @@ class SearchSuggestion extends PureComponent {
         {this.renderTrendingBrands()}
         {/* {this.renderRecommendedForYou()} */}
         {this.renderTrendingProducts()}
+        {this.renderWishlistProducts()}
         {this.renderTrendingTags()}
       </>
     );

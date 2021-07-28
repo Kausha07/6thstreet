@@ -68,24 +68,26 @@ export class HeaderSearchContainer extends PureComponent {
             addAnalytics: true,
           }
     );
-    if (recentSearches) {
-      tempRecentSearches = [...recentSearches.reverse()];
+    if (search.trim()) {
+      if (recentSearches) {
+        tempRecentSearches = [...recentSearches.reverse()];
+      }
+      tempRecentSearches = tempRecentSearches.filter(
+        (item) => item.name !== search
+      );
+      if (tempRecentSearches.length > 4) {
+        tempRecentSearches.shift();
+        tempRecentSearches.push({
+          name: search,
+        });
+      } else {
+        tempRecentSearches.push({ name: search });
+      }
+      localStorage.setItem(
+        "recentSearches",
+        JSON.stringify(tempRecentSearches.reverse())
+      );
     }
-    tempRecentSearches = tempRecentSearches.filter(
-      (item) => item.name !== search
-    );
-    if (tempRecentSearches.length > 4) {
-      tempRecentSearches.shift();
-      tempRecentSearches.push({
-        name: search,
-      });
-    } else {
-      tempRecentSearches.push({ name: search });
-    }
-    localStorage.setItem(
-      "recentSearches",
-      JSON.stringify(tempRecentSearches.reverse())
-    );
     const queryID = productData?.queryID ? productData?.queryID : null;
     history.push(`/catalogsearch/result/?q=${search}&qid=${queryID}`);
   }
