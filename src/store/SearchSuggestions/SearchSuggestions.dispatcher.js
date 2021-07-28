@@ -74,7 +74,7 @@ export class SearchSuggestionsDispatcher {
       // const lang = language === 'en' ? 'english' : 'arabic';
       const data = await new Algolia({
         index: sourceQuerySuggestionIndex,
-      }).getSuggestions(
+      }).autocompleteSearch(
         isArabic()
           ? {
               query: search,
