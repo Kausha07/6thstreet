@@ -71,10 +71,10 @@ export class UrlRewritesContainer extends PureComponent {
         }
       } else {
         // history.push(`${pathname}?${query}`);
-        if(search){
+        if(query && search){
           history.push({
             pathname: `${pathname}`,
-            state: `${pathname}?${search}`,
+            state: `${pathname}?${search.split('?')[1]}`,
           });
         }else{
           history.push({

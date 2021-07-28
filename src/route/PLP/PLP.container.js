@@ -112,22 +112,22 @@ export class PLPContainer extends PureComponent {
 
   static getRequestOptions(props) {
     // const { params: parsedParams } = WebUrlParser.parsePLP(location.href);
-
     const {
       history: {
         location: { state: query },
       },
-      location
     } = props;
-
     let parseURL;
-    if (query && query.includes(".html")) {
-      const urlLink = `${URLS["en-ae"]}${query.split(".html")[1]}`;
-      parseURL = urlLink.replace(/ /g, "%20");
-    } else if (query && !query.includes(".html")) {
-      const urlLink = `${URLS["en-ae"]}${query}`;
-      parseURL = urlLink.replace(/ /g, "%20");
+    if(query && !query.product){
+      if (query && query.includes(".html")) {
+        const urlLink = `${URLS["en-ae"]}${query.split(".html")[1]}`;
+        parseURL = urlLink.replace(/ /g, "%20");
+      } else if (query && !query.includes(".html")) {
+        const urlLink = `${URLS["en-ae"]}${query}`;
+        parseURL = urlLink.replace(/ /g, "%20");
+      }
     }
+   
     const { params: parsedParams } = WebUrlParser.parsePLP(parseURL);
     return {
       // TODO: inject gender ?
