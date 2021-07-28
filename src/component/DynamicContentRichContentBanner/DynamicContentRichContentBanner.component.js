@@ -94,6 +94,10 @@ class DynamicContentRichContentBanner extends PureComponent {
       pathname: formatCDNLink(link),
       state: { plp_config },
     };
+    const shopNow = {
+      pathname: formatCDNLink(item.button.link.split("?q=")[0]),
+      state: item.button.link.split(".html")[1],
+    };
     let ht, wd;
     if (screen.width > 900) {
       let ht1 = (item.height / item.width) * 600;
@@ -134,13 +138,20 @@ class DynamicContentRichContentBanner extends PureComponent {
                     { label }
                 </button> */}
         </Link>
-        <div block="Label">
+        <div block="Label" className="customTag">
           {item.title && <p block="Label-Title">{item.title}</p>}
           {item.subtitle && <p block="Label-SubTitle">{item.subtitle}</p>}
           {item.button && (
-            <a href={item.button.link} block="Label-Button">
+            <Link
+              to={shopNow}
+              className="Label-Button"
+              data-banner-type="Label-Button"
+            >
               {item.button.label}
-            </a>
+            </Link>
+            // <a href={item.button.link.split('?q=')[0]} block="Label-Button">
+            //   {item.button.label}
+            // </a>
           )}
         </div>
         {item.tag && (

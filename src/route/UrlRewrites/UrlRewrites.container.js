@@ -54,7 +54,9 @@ export class UrlRewritesContainer extends PureComponent {
 
   componentDidUpdate(prevProps, prevState) {
     const { pathname } = location;
-    const { locale, hideActiveOverlay } = this.props;
+    const { locale, hideActiveOverlay, history: {
+      location: { state: search },
+    }, } = this.props;
     const { locale: prevLocale } = prevProps;
     const { prevPathname, query } = this.state;
     const { prevPathname: prevStatePathname, query: prevQuery } = prevState;
@@ -69,10 +71,18 @@ export class UrlRewritesContainer extends PureComponent {
         }
       } else {
         // history.push(`${pathname}?${query}`);
-        history.push({
-          pathname: `${pathname}`,
-          state: `${pathname}?${query}`,
-        });
+        if(search){
+          history.push({
+            pathname: `${pathname}`,
+            state: `${pathname}?${search}`,
+          });
+        }else{
+          history.push({
+            pathname: `${pathname}`,
+            state: `${pathname}?${query}`,
+          });
+        }
+       
       }
     }
     // if (!location.search && query) {

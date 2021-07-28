@@ -83,10 +83,9 @@ class DynamicContentCircleInfluencerSlider extends PureComponent {
         } = item;
 
         const linkTo = {
-            pathname: formatCDNLink(link),
-            state: { plp_config }
-        };
-
+            pathname: formatCDNLink(link.split('?q=')[0]),
+            state:  link.split('.html')[1] ,
+          };
         // TODO: move to new component
 
         return (

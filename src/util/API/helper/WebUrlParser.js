@@ -127,26 +127,28 @@ const Parser = {
   },
 
   setPage(number) {
+    const appendQuery = history.state.state
+      .split(".html")[1]
+      .replace(/ /g, "%20");
+    const urlLink = location.href.concat(`${appendQuery}`);
+    const url = new URL(urlLink);
+    url.searchParams.set("p", number);
+    const { href } = url;
     const { pathname } = location;
-    const urlLink = `${URLS["en-ae"]}${history.state.state}`;
-    const parseURL = urlLink.replace(/ /g, "%20");
-    const pageText = parseURL.split("&")[2];
-    const newURL = parseURL.replace(pageText, `p=${number}`);
     browserHistory.push({
-        pathname: `${pathname}`,
-        state: `${newURL}`,
-      });
-    // const url = new URL(location.href.replace(/%20&%20/gi,"%20%26%20"));
-    // url.searchParams.set('p', number);
+      pathname: `${pathname}`,
+      state: `${href}`,
+    });
     // // // update the URL, preserve the state
     // const { pathname, search } = url;
 
     // browserHistory.push(pathname + search);
-  
   },
 
   setParam(key, values = []) {
-    const appendQuery =  history.state.state.split('.html')[1].replace(/ /g, "%20")
+    const appendQuery = history.state.state
+      .split(".html")[1]
+      .replace(/ /g, "%20");
     const urlLink = location.href.concat(`${appendQuery}`);
 
     const url = new URL(urlLink.replace(/%20&%20/gi, "%20%26%20"));
@@ -169,7 +171,7 @@ const Parser = {
 
     // // update the URL, preserve the state
     const { href } = url;
-    const {pathname} = location
+    const { pathname } = location;
     browserHistory.push({
       pathname: `${pathname}`,
       state: `${href}`,

@@ -75,7 +75,6 @@ class DynamicContentBanner extends PureComponent {
       wd = width.toString() + "px";
       ht = height.toString() + "px";
     }
-
     // TODO: calculate aspect ratio to ensure images not jumping.
     if (!link) {
       return (
@@ -85,10 +84,13 @@ class DynamicContentBanner extends PureComponent {
         </>
       );
     }
-
+    const linkTo = {
+      pathname: formatCDNLink(link.split('?q=')[0]),
+      state:  link.split('.html')[1] ,
+    };
     return (
       <Link
-        to={formatCDNLink(link)}
+        to={linkTo}
         key={i}
         data-banner-type="banner"
         data-promotion-name={item.promotion_name ? item.promotion_name : ""}

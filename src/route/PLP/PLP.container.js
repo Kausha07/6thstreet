@@ -92,7 +92,7 @@ export class PLPContainer extends PureComponent {
 
   static getDerivedStateFromProps(props, state) {
     const { pages } = props;
-    const requestOptions = PLPContainer.getRequestOptions();
+    const requestOptions = PLPContainer.getRequestOptions(props);
     const { page, ...restOptions } = requestOptions;
     const {
       prevRequestOptions: { page: prevPage, ...prevRestOptions },
@@ -110,10 +110,24 @@ export class PLPContainer extends PureComponent {
     };
   }
 
-  static getRequestOptions() {
+  static getRequestOptions(props) {
     // const { params: parsedParams } = WebUrlParser.parsePLP(location.href);
-    const urlLink = `${URLS["en-ae"]}${history.state.state}`
-    const parseURL = urlLink.replace(/ /g,"%20")
+
+    const {
+      history: {
+        location: { state: query },
+      },
+      location
+    } = props;
+
+    let parseURL;
+    if (query && query.includes(".html")) {
+      const urlLink = `${URLS["en-ae"]}${query.split(".html")[1]}`;
+      parseURL = urlLink.replace(/ /g, "%20");
+    } else if (query && !query.includes(".html")) {
+      const urlLink = `${URLS["en-ae"]}${query}`;
+      parseURL = urlLink.replace(/ /g, "%20");
+    }
     const { params: parsedParams } = WebUrlParser.parsePLP(parseURL);
     return {
       // TODO: inject gender ?
@@ -123,7 +137,7 @@ export class PLPContainer extends PureComponent {
 
   static async request(isPage, props) {
     const { requestProductList, requestProductListPage } = props;
-    const options = PLPContainer.getRequestOptions();
+    const options = PLPContainer.getRequestOptions(props);
     const requestFunction = isPage
       ? requestProductListPage
       : requestProductList;
@@ -131,7 +145,7 @@ export class PLPContainer extends PureComponent {
   }
 
   state = {
-    prevRequestOptions: PLPContainer.getRequestOptions(),
+    prevRequestOptions: PLPContainer.getRequestOptions(this.props),
   };
 
   containerFunctions = {
@@ -303,7 +317,7 @@ export class PLPContainer extends PureComponent {
 
   getIsLoading() {
     const { requestedOptions } = this.props;
-    const options = PLPContainer.getRequestOptions();
+    const options = PLPContainer.getRequestOptions(this.props);
     const {
       // eslint-disable-next-line no-unused-vars
       page: requestedPage,

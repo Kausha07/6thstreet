@@ -113,8 +113,8 @@ class DynamicContentSliderWithLabel extends PureComponent {
     const { link, text, url, plp_config, height, width } = item;
 
     const linkTo = {
-      pathname: formatCDNLink(link),
-      state: { plp_config },
+      pathname: formatCDNLink(link.split('?q=')[0]),
+      state:  link.split('.html')[1] ,
     };
     let wd;
     if (this.state.settings.responsive[300].items === 1) {

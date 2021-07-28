@@ -63,7 +63,7 @@ export class PLPPagesContainer extends PureComponent {
 
     getIsLoading() {
         const { pages } = this.props;
-        const { page } = PLPContainer.getRequestOptions();
+        const { page } = PLPContainer.getRequestOptions(this.props);
 
         // If the page in URL is not yet present -> we are loading
         return !pages[page];
