@@ -82,7 +82,7 @@ const checkForQueryWithGender = (query) => {
     default:
       break;
   }
-  let regex = new RegExp(`\\b${regexStr}\\b`, "i");
+  let regex = new RegExp(isArabic() ? `${regexStr}` : `\\b${regexStr}\\b`, "i");
   return regex.test(query);
 };
 
@@ -355,7 +355,10 @@ const checkForValidSuggestion = (value, arr) => {
 
     Object.keys(filters).forEach((filter) => {
       if (filter !== "all" && filter !== gender) {
-        let regex = new RegExp("\\b" + filter + "\\b", "i");
+        let regex = new RegExp(
+          isArabic() ? `${getGenderInArabic(filter)}` : `\\b${filter}\\b`,
+          "i"
+        );
         if (regex.test(value)) {
           valid = false;
         }
@@ -398,10 +401,13 @@ export const getCustomQuerySuggestions = (hits, sourceIndexName) => {
 export const formatQuerySuggestions = (query) => {
   const capitalizedQuery = capitalizeFirstLetters(query);
   let avoidFilter = isArabic() ? getGenderInArabic(gender) : gender;
-  if (checkForKidsFilterQuery(capitalizedQuery)) avoidFilter = "kids";
+  if (checkForKidsFilterQuery(capitalizedQuery))
+    avoidFilter = isArabic() ? getGenderInArabic("kids") : "kids";
   else if (gender === "all") return capitalizedQuery;
-
-  let regex = new RegExp("\\b" + avoidFilter + "\\b", "i");
+  let regex = new RegExp(
+    isArabic() ? `${avoidFilter}` : `\\b${avoidFilter}\\b`,
+    "i"
+  );
   return capitalizedQuery
     ?.replace(regex, "")
     .replace(/^\s+|\s+$/g, "")
