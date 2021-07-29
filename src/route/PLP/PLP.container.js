@@ -118,14 +118,18 @@ export class PLPContainer extends PureComponent {
       },
     } = props;
     let parseURL;
-    if(query && !query.product){
-      if (query && query.includes(".html")) {
-        const urlLink = `${URLS["en-ae"]}${query.split(".html")[1]}`;
-        parseURL = urlLink.replace(/ /g, "%20");
-      } else if (query && !query.includes(".html")) {
-        const urlLink = `${URLS["en-ae"]}${query}`;
-        parseURL = urlLink.replace(/ /g, "%20");
+    if(query){
+      if(query && !query.product){
+        if (query && query.includes(".html")) {
+          const urlLink = `${URLS["en-ae"]}${query.split(".html")[1]}`;
+          parseURL = urlLink.replace(/ /g, "%20");
+        } else if (query && !query.includes(".html")) {
+          const urlLink = `${URLS["en-ae"]}${query}`;
+          parseURL = urlLink.replace(/ /g, "%20");
+        }
       }
+    }else{
+      parseURL= location.href
     }
    
     const { params: parsedParams } = WebUrlParser.parsePLP(parseURL);

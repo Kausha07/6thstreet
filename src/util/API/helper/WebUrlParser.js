@@ -130,15 +130,15 @@ const Parser = {
     const appendQuery = history.state.state
       .split(".html")[1]
       .replace(/ /g, "%20");
-    const urlLink = location.href.concat(`${appendQuery}`);
+    const urlLink = (location.origin+location.pathname).concat(`${appendQuery}`);
     const url = new URL(urlLink);
     url.searchParams.set("p", number);
     const { href } = url;
     const { pathname } = location;
-    browserHistory.push({
-      pathname: `${pathname}`,
-      state: `${href}`,
-    });
+      browserHistory.push({
+        pathname: `${pathname}`,
+        state: `${href}`,
+      });
     // // // update the URL, preserve the state
     // const { pathname, search } = url;
 
@@ -149,7 +149,7 @@ const Parser = {
     const appendQuery = history.state.state
       .split(".html")[1]
       .replace(/ /g, "%20");
-    const urlLink = location.href.concat(`${appendQuery}`);
+    const urlLink = (location.origin+location.pathname).concat(`${appendQuery}`);
 
     const url = new URL(urlLink.replace(/%20&%20/gi, "%20%26%20"));
 
@@ -168,14 +168,22 @@ const Parser = {
       // For non-array cases
       url.searchParams.append(`${prefix}[${key}][0]`, values);
     }
-
     // // update the URL, preserve the state
-    const { href } = url;
+    const { href,search } = url;
     const { pathname } = location;
-    browserHistory.push({
-      pathname: `${pathname}`,
-      state: `${href}`,
-    });
+    if(values.length === 0){
+      browserHistory.push({
+        pathname: `${pathname}`,
+        state: `${href}`,
+      });
+    }else{
+      browserHistory.push({
+        pathname: `${pathname+search}`,
+        state: `${href}`,
+      });
+    }
+    
+  
   },
 };
 
