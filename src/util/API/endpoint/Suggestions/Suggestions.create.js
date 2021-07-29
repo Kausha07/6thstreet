@@ -1,7 +1,7 @@
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
+import { isArabic } from "Util/App";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { capitalizeFirstLetters } from "../../../../../packages/algolia-sdk/app/utils";
-
 const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
 
 const genders = {
@@ -25,13 +25,13 @@ const genders = {
 
 const checkForKidsFilterQuery = (query) => {
   return (
-    query.toUpperCase().includes("KIDS") ||
-    query.toUpperCase().includes("GIRL") ||
-    query.toUpperCase().includes("GIRLS") ||
-    query.toUpperCase().includes("BOY") ||
-    query.toUpperCase().includes("BOYS") ||
-    query.toUpperCase().includes("BABY GIRL") ||
-    query.toUpperCase().includes("BABY BOY")
+    query.toUpperCase().includes(__("KIDS")) ||
+    query.toUpperCase().includes(__("GIRL")) ||
+    query.toUpperCase().includes(__("GIRLS")) ||
+    query.toUpperCase().includes(__("BOY")) ||
+    query.toUpperCase().includes(__("BOYS")) ||
+    query.toUpperCase().includes(__("BABY GIRL")) ||
+    query.toUpperCase().includes(__("BABY BOY"))
   );
 };
 
@@ -68,20 +68,21 @@ const checkForQueryWithGender = (query) => {
   let regexStr;
   switch (gender) {
     case "women":
-      regexStr = "women";
+      regexStr = __("women");
       break;
 
     case "men":
-      regexStr = "men";
+      regexStr = __("men");
       break;
 
     case "kids":
-      regexStr = "KIDS|GIRL|BOY|BABY BOY|BABY GIRL";
+      regexStr =
+        __("KIDS") | __("GIRL") | __("BOY") | __("BABY BOY") | __("BABY GIRL");
       break;
     default:
       break;
   }
-  let regex = new RegExp(`\\b${regexStr}\\b`, "i");
+  let regex = new RegExp(isArabic() ? `${regexStr}` : `\\b${regexStr}\\b`, "i");
   return regex.test(query);
 };
 
@@ -107,7 +108,9 @@ const createCustomQuerySuggestions = (hit, resArray, sourceIndexName) => {
   if (checkForQueryWithGender(query)) {
     genderModifiedQuery = query;
   } else {
-    genderModifiedQuery = `${gender} ${query}`;
+    genderModifiedQuery = `${
+      isArabic() ? getGenderInArabic(gender) : gender
+    } ${query}`;
   }
   // if query does include brands
   if (query?.toUpperCase().includes(brand_name[0]?.value.toUpperCase())) {
@@ -327,21 +330,35 @@ const checkForValidSuggestion = (value, arr) => {
   )
     return false;
 
-  if (
-    value?.toUpperCase() === gender.toUpperCase() ||
-    value?.toUpperCase() === "KIDS BABY GIRL" ||
-    value?.toUpperCase() === "KIDS GIRL" ||
-    value?.toUpperCase() === "KIDS BOY" ||
-    value?.toUpperCase() === "KIDS BABY BOY"
-  )
-    return false;
+  if (isArabic()) {
+    if (
+      value?.toUpperCase() === getGenderInArabic(gender).toUpperCase() ||
+      value?.toUpperCase() === __("KIDS BABY GIRL") ||
+      value?.toUpperCase() === __("KIDS GIRL") ||
+      value?.toUpperCase() === __("KIDS BOY") ||
+      value?.toUpperCase() === __("KIDS BABY BOY")
+    )
+      return false;
+  } else {
+    if (
+      value?.toUpperCase() === gender.toUpperCase() ||
+      value?.toUpperCase() === "KIDS BABY GIRL" ||
+      value?.toUpperCase() === "KIDS GIRL" ||
+      value?.toUpperCase() === "KIDS BOY" ||
+      value?.toUpperCase() === "KIDS BABY BOY"
+    )
+      return false;
+  }
 
   if (gender !== "all") {
     let { all, [gender]: selectedGender, ...filters } = genders;
 
     Object.keys(filters).forEach((filter) => {
       if (filter !== "all" && filter !== gender) {
-        let regex = new RegExp("\\b" + filter + "\\b", "i");
+        let regex = new RegExp(
+          isArabic() ? `${getGenderInArabic(filter)}` : `\\b${filter}\\b`,
+          "i"
+        );
         if (regex.test(value)) {
           valid = false;
         }
@@ -383,11 +400,14 @@ export const getCustomQuerySuggestions = (hits, sourceIndexName) => {
 
 export const formatQuerySuggestions = (query) => {
   const capitalizedQuery = capitalizeFirstLetters(query);
-  let avoidFilter = gender;
-  if (checkForKidsFilterQuery(capitalizedQuery)) avoidFilter = "kids";
+  let avoidFilter = isArabic() ? getGenderInArabic(gender) : gender;
+  if (checkForKidsFilterQuery(capitalizedQuery))
+    avoidFilter = isArabic() ? getGenderInArabic("kids") : "kids";
   else if (gender === "all") return capitalizedQuery;
-
-  let regex = new RegExp("\\b" + avoidFilter + "\\b", "i");
+  let regex = new RegExp(
+    isArabic() ? `${avoidFilter}` : `\\b${avoidFilter}\\b`,
+    "i"
+  );
   return capitalizedQuery
     ?.replace(regex, "")
     .replace(/^\s+|\s+$/g, "")
@@ -414,4 +434,15 @@ export const getHighlightedText = (text, highlight) => {
       ))}{" "}
     </span>
   );
+};
+
+export const getGenderInArabic = (gender) => {
+  switch (gender) {
+    case "men":
+      return "رجال";
+    case "women":
+      return "نساء";
+    case "kids":
+      return "أطفال";
+  }
 };

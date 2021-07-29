@@ -1,4 +1,5 @@
 import {
+  autocompleteSearch,
   getBrands,
   getPDP,
   getPLP,
@@ -33,6 +34,8 @@ const AlgoliaSDK = {
   searchBy: (params) => searchBy(params, { index: AlgoliaSDK.index }),
   getSuggestions: (params) =>
     getSuggestions(params, { index: AlgoliaSDK.index }),
+  autocompleteSearch: (params) =>
+    autocompleteSearch(params, { index: AlgoliaSDK.index }),
   getTopSearches: () => getTopSearches({ index: AlgoliaSDK.index }),
   getPopularBrands: (limit) =>
     getPopularBrands(limit, { index: AlgoliaSDK.index }),

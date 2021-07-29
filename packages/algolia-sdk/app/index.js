@@ -1,3 +1,4 @@
+import autocompleteSearch from "./autocompleteSearch";
 import getBrands from "./get-brands";
 import getPDP from "./get-pdp";
 import getPLP from "./get-plp";
@@ -20,4 +21,5 @@ export {
   getSuggestions,
   logAlgoliaAnalytics,
   getTopSearches,
+  autocompleteSearch,
 };
