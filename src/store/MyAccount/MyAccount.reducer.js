@@ -50,6 +50,7 @@ export const MyAccountReducer = (state = initialState, action) => {
 
     case UPDATE_CUSTOMER_DETAILS:
       const { firstname = "", lastname = "" } = customer;
+      console.log( firstname, lastname)
       const data =
         firstname || lastname
           ? {

@@ -274,11 +274,11 @@ export class MyAccountOverlayContainer extends PureComponent {
             gender
         } = fields;
 
-        const name = fullname?.split(" ");
+        const [firstname, ...rest] = fullname?.split(" ");
         const customerData = {
             customer: {
-                firstname: name[0],
-                lastname: name[name.length - 1],
+                firstname,
+                lastname: rest?.join(" ") || "",
                 email,
                 is_subscribed: privacyPolicy,
                 gender

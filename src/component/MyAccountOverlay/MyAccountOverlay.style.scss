@@ -961,38 +961,38 @@
       }
     }
   }
-}
 
-.HeaderAccount {
-  &-PopUp {
-    .MyAccountOverlay {
-      .MyAccountOverlay-Action {
-        &_state {
-          &_forgotPassword {
-            .MyAccountOverlay-Image,
-            .MyAccountOverlay-Buttons {
-              display: none;
-            }
-            .MyAccountOverlay-Heading {
-              top: 10px;
-              margin-top: 10px;
-              font-size: 14px;
-              line-height: 30px;
-            }
-            .Form {
-              padding-top: 15%;
+  .HeaderAccount {
+    &-PopUp {
+      .MyAccountOverlay {
+        .MyAccountOverlay-Action {
+          &_state {
+            &_forgotPassword {
+              .MyAccountOverlay-Image,
+              .MyAccountOverlay-Buttons {
+                display: none;
+              }
               .MyAccountOverlay-Heading {
-                font-size: 18px;
+                top: 10px;
+                margin-top: 10px;
+                font-size: 14px;
+                line-height: 30px;
+              }
+              .Form {
+                padding-top: 15%;
+                .MyAccountOverlay-Heading {
+                  font-size: 18px;
+                }
               }
             }
           }
-        }
-        .Form {
-          .MyAccountOverlay {
-            &-Button {
-              &_likeLink {
-                &:hover {
-                  background: transparent !important;
+          .Form {
+            .MyAccountOverlay {
+              &-Button {
+                &_likeLink {
+                  &:hover {
+                    background: transparent !important;
+                  }
                 }
               }
             }
@@ -1001,33 +1001,37 @@
       }
     }
   }
-}
 
-.PageWrapper {
-  &_isArabic {
-    .MyAccountOverlay {
-      &-StoreSwitcher {
-        .WelcomeScreen {
-          &-Content {
-            h1,
-            p {
-              text-align: right;
+  .PageWrapper {
+    &_isArabic {
+      .MyAccountOverlay {
+        &-StoreSwitcher {
+          .WelcomeScreen {
+            &-Content {
+              h1,
+              p {
+                text-align: right;
+              }
             }
-          }
 
-          &-ButtonsContainer {
-            .primary {
-              margin-right: 0;
-              margin-left: 10px;
+            &-ButtonsContainer {
+              .primary {
+                margin-right: 0;
+                margin-left: 10px;
+              }
             }
-          }
 
-          &-Close {
-            right: auto;
-            left: 0;
+            &-Close {
+              right: auto;
+              left: 0;
+            }
           }
         }
       }
     }
   }
+}
+
+.Field_hasError + .Mask {
+  bottom: 1.8rem !important;
 }

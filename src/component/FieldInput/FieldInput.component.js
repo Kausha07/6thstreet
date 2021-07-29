@@ -10,10 +10,12 @@
  */
 
 import PropTypes from 'prop-types';
+import { isArabic } from 'Util/App';
 
 import {
     FieldInput as SourceFieldInput
 } from 'SourceComponent/FieldInput/FieldInput.component';
+import { PASSWORD_TYPE } from '../Field/Field.config';
 
 
 export class FieldInput extends SourceFieldInput {
@@ -28,19 +30,56 @@ export class FieldInput extends SourceFieldInput {
         formRef: () => {}
     };
 
+    toggleMask(e) {
+        e.persist();
+        const { formRef } = this.props;
+        try {
+            if(formRef?.current?.type === "password"){
+                formRef.current.type = "text";
+                e.target.innerText = __("Mask");
+            }
+            else if(formRef?.current?.type === "text"){
+                formRef.current.type = "password";
+                e.target.innerText = __("Show");
+            }
+        }
+        catch(err) {
+            console.error(err);
+        }
+    }
+
     render() {
         const {
             type,
             formRef,
+            isDisabled,
             ...validProps
         } = this.props;
 
         return (
-            <input
-              type={ type }
-              ref={ formRef }
-              { ...validProps }
-            />
+            <>
+                {
+                    type===PASSWORD_TYPE && !!!isDisabled
+                    ?
+                    <span
+                        block="Mask"
+                        mods={{
+                            isArabic: isArabic(),
+                        }}
+                        role="button"
+                        onClick={ this.toggleMask.bind(this) }
+                    >
+                        { __("Show") }
+                    </span>
+                    :
+                    null
+                }
+                <input
+                    type={ type }
+                    ref={ formRef }
+                    { ...validProps }
+                />
+            </>
         );
     }
 }
