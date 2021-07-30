@@ -127,12 +127,13 @@ const Parser = {
   },
 
   setPage(number) {
-    if (location.href.includes("dFR")) {
-      const url = new URL(location.href.replace(/%20&%20/gi, "%20%26%20"));
-      url.searchParams.set("p", number);
-      const { pathname, search } = url;
-      browserHistory.push(`${pathname + search}`);
-    } else {
+    // if (location.href.includes("dFR")) {
+    //   const url = new URL(location.href.replace(/%20&%20/gi, "%20%26%20"));
+    //   url.searchParams.set("p", number);
+    //   const { pathname, search } = url;
+    //   browserHistory.push(`${pathname + search}`);
+    // } else {
+
       const appendQuery = history.state.state
         .split(".html")[1]
         .replace(/ /g, "%20");
@@ -143,11 +144,21 @@ const Parser = {
       url.searchParams.set("p", number);
       const { href, search } = url;
       const { pathname } = location;
-      browserHistory.push({
-        pathname: `${pathname}`,
-        state: `${href}`,
-      });
-    }
+    console.log(location,"muskan",history)
+
+      if(location.href.includes("dFR")){
+        browserHistory.push({
+          pathname: `${pathname+"?dFR"+search.split('dFR')[1]}`,
+          state: `${href}`,
+        });
+      }else{
+        browserHistory.push({
+          pathname: `${pathname}`,
+          state: `${href}`,
+        });
+      }
+    
+    // }
 
     // // // update the URL, preserve the state
     // const { pathname, search } = url;
@@ -186,16 +197,24 @@ const Parser = {
       url.searchParams.append(`${prefix}[${key}][0]`, values);
     }
     // // update the URL, preserve the state
-    const { href, search } = url;
-    const { pathname } = location;
+    const { href } = url;
+    // const { pathname } = location;
+
+    // URL modification in case of filter
+    let senturl = new URL(location.href);
+    senturl.searchParams.append(`${prefix}[${key}][0]`, values.join(","));
+    const { pathname, search } = senturl;
+    let finalSearch = search.replace(/ /g, "%20")
+    let splitSearch = "?"+finalSearch.split("&")[finalSearch.split("&").length - 1];
+    // ///////////////////////////
     if (values.length === 0) {
       browserHistory.push({
-        pathname: `${pathname}`,
+        pathname: `${location.pathname}`,
         state: `${href.split("dFR")[0]}`,
       });
     } else {
       browserHistory.push({
-        pathname: `${pathname + search}`,
+        pathname: `${pathname + splitSearch}`,
         state: `${href}`,
       });
     }

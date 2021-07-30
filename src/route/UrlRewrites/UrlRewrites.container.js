@@ -60,14 +60,23 @@ export class UrlRewritesContainer extends PureComponent {
     const { locale: prevLocale } = prevProps;
     const { prevPathname, query } = this.state;
     const { prevPathname: prevStatePathname, query: prevQuery } = prevState;
+
     if (query && query !== prevQuery) {
       let partialQuery = location.search;
+
       if (location.search) {
         if (partialQuery.indexOf("idx") !== -1) {
           return;
         } else {
+          if(location.search.includes('dFR')){
+            history.push({
+              pathname: `${pathname}?dFR${location.search.split('dFR')[1]}`,
+              state: `${pathname}?${query}&dFR${location.search.split('dFR')[1]}`,
+            });
+          }else{
           partialQuery = partialQuery.substring(1);
           history.push(`${pathname}?${query}&${partialQuery}`);
+          }
         }
       } else {
         // history.push(`${pathname}?${query}`);
@@ -77,10 +86,12 @@ export class UrlRewritesContainer extends PureComponent {
             state: `${pathname}?${search.split('?')[1]}`,
           });
         }else{
-          history.push({
-            pathname: `${pathname}`,
-            state: `${pathname}?${query}`,
-          });
+         
+            history.push({
+              pathname: `${pathname}`,
+              state: `${pathname}?${query}`,
+            });
+         
         }
        
       }
