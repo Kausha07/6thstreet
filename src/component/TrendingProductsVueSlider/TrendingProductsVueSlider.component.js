@@ -106,7 +106,6 @@ class TrendingProductsVueSlider extends PureComponent {
   };
 
   renderScrollbar = () => {
-    console.log(this.state);
     let items = this.getProducts();
 
     const width =

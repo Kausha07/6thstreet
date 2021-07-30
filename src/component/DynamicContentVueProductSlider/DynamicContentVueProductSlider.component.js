@@ -1,13 +1,13 @@
-import PropTypes from "prop-types";
-import React, { PureComponent } from "react";
 import DragScroll from "Component/DragScroll/DragScroll.component";
-import "./DynamicContentVueProductSlider.style.scss";
-import DynamicContentVueProductSliderItem from "./DynamicContentVueProductSlider.Item";
-import { isArabic } from "Util/App";
-
+import PropTypes from "prop-types";
 import VueIntegrationQueries from "Query/vueIntegration.query";
+import React, { PureComponent } from "react";
+import { isArabic } from "Util/App";
 import { getUUID } from "Util/Auth";
 import { VUE_CAROUSEL_SWIPE } from "Util/Event";
+import DynamicContentVueProductSliderItem from "./DynamicContentVueProductSlider.Item";
+import "./DynamicContentVueProductSlider.style.scss";
+
 class DynamicContentVueProductSlider extends PureComponent {
   static propTypes = {
     withViewAll: PropTypes.bool,
@@ -106,7 +106,6 @@ class DynamicContentVueProductSlider extends PureComponent {
   };
 
   renderScrollbar = () => {
-    console.log(this.state);
     let items = this.getProducts();
 
     const width =
@@ -173,7 +172,6 @@ class DynamicContentVueProductSlider extends PureComponent {
               );
             })}
             {isHome && <div block="SliderHelper" mods={{ isHome }}></div>}
-
           </div>
           {this.renderScrollbar()}
         </>
