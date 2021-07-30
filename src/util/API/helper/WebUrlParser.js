@@ -127,13 +127,6 @@ const Parser = {
   },
 
   setPage(number) {
-    // if (location.href.includes("dFR")) {
-    //   const url = new URL(location.href.replace(/%20&%20/gi, "%20%26%20"));
-    //   url.searchParams.set("p", number);
-    //   const { pathname, search } = url;
-    //   browserHistory.push(`${pathname + search}`);
-    // } else {
-
       const appendQuery = history.state.state
         .split(".html")[1]
         .replace(/ /g, "%20");
@@ -144,8 +137,6 @@ const Parser = {
       url.searchParams.set("p", number);
       const { href, search } = url;
       const { pathname } = location;
-    console.log(location,"muskan",history)
-
       if(location.href.includes("dFR")){
         browserHistory.push({
           pathname: `${pathname+"?dFR"+search.split('dFR')[1]}`,
@@ -157,13 +148,7 @@ const Parser = {
           state: `${href}`,
         });
       }
-    
-    // }
 
-    // // // update the URL, preserve the state
-    // const { pathname, search } = url;
-
-    // browserHistory.push(pathname + search);
   },
 
   setParam(key, values = []) {

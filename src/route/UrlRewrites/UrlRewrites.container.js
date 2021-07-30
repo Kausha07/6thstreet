@@ -48,7 +48,6 @@ export class UrlRewritesContainer extends PureComponent {
 
   constructor(props) {
     super(props);
-
     this.requestUrlRewrite();
   }
 
@@ -68,6 +67,8 @@ export class UrlRewritesContainer extends PureComponent {
         if (partialQuery.indexOf("idx") !== -1) {
           return;
         } else {
+          // If we are sharing URL with filters do if condition
+
           if(location.search.includes('dFR')){
             history.push({
               pathname: `${pathname}?dFR${location.search.split('dFR')[1]}`,
@@ -79,36 +80,35 @@ export class UrlRewritesContainer extends PureComponent {
           }
         }
       } else {
-        // history.push(`${pathname}?${query}`);
+
         if(query && search){
           history.push({
             pathname: `${pathname}`,
             state: `${pathname}?${search.split('?')[1]}`,
           });
         }else{
-         
+
             history.push({
               pathname: `${pathname}`,
               state: `${pathname}?${query}`,
             });
-         
-        }
-       
+
+          }
+
       }
     }
-    // if (!location.search && query) {
-    //     history.push(`${pathname}?${query}`);
-    // }
 
     if (
       pathname !== prevPathname ||
-      locale !== prevLocale ||
-      !prevStatePathname
+      locale !== prevLocale 
     ) {
-      hideActiveOverlay();
-      document.body.style.overflow = "visible";
-      // Request URL rewrite if pathname or locale changed
-      this.requestUrlRewrite(true);
+      if(!this.state.isLoading){
+        hideActiveOverlay();
+        document.body.style.overflow = "visible";
+        // Request URL rewrite if pathname or locale changed
+        this.requestUrlRewrite(true);
+      }
+    
     }
   }
 
@@ -119,10 +119,8 @@ export class UrlRewritesContainer extends PureComponent {
     // eslint-disable-next-line no-magic-numbers
     const magentoProductId = Number(slicedUrl.slice("3").split("/")[0]);
     const possibleSku = this.getPossibleSku();
-
     if (isUpdate) {
       this.setState({
-        prevPathname: urlParam,
         isLoading: true,
       });
     }
