@@ -75,6 +75,10 @@ export class CheckoutSuccess extends PureComponent {
     }
   }
 
+  componentWillUnmount(){
+    const {setCheckoutDetails} = this.props
+  setCheckoutDetails(false)
+  }
   tick = () => {
     const { wasLoaded, successHidden } = this.state;
     if (!successHidden) {

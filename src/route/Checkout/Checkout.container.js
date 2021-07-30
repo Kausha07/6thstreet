@@ -24,7 +24,7 @@ import {
   mapDispatchToProps as sourceMapDispatchToProps,
 } from "SourceRoute/Checkout/Checkout.container";
 import { setGender } from "Store/AppState/AppState.action";
-import { resetCart } from "Store/Cart/Cart.action";
+import { resetCart  } from "Store/Cart/Cart.action";
 // eslint-disable-next-line no-unused-vars
 import CartDispatcher from "Store/Cart/Cart.dispatcher";
 import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
@@ -676,7 +676,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   }
 
   setDetailsStep(orderID, incrementID) {
-    const { setNavigationState, sendVerificationCode, isSignedIn, customer } =
+    const { setNavigationState, sendVerificationCode, isSignedIn, customer, } =
       this.props;
     const { shippingAddress } = this.state;
 
@@ -702,13 +702,14 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
     BrowserDatabase.deleteItem(PAYMENT_TOTALS);
 
+    
     this.setState({
       isLoading: false,
       checkoutStep: DETAILS_STEP,
       orderID,
       incrementID,
     });
-
+    
     setNavigationState({
       name: DETAILS_STEP,
     });

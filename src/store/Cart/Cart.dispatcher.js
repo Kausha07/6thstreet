@@ -6,6 +6,7 @@ import {
   setCartId,
   setCartTotals,
   updateCartItem,
+  setCheckoutDetails
 } from "Store/Cart/Cart.action";
 import { showNotification } from "Store/Notification/Notification.action";
 import {
@@ -23,6 +24,11 @@ import { LAST_CART_ID_CACHE_KEY } from "../MobileCart/MobileCart.reducer";
 export const GUEST_QUOTE_ID = "guest_quote_id";
 
 export class CartDispatcher {
+
+  async setCheckoutStep(dispatch, checkoutDetails = false){
+    dispatch(setCheckoutDetails(checkoutDetails))
+  }
+
   async getCart(dispatch, isNewCart = false) {
     const {
       Cart: { cartId },
