@@ -127,18 +127,28 @@ const Parser = {
   },
 
   setPage(number) {
-    const appendQuery = history.state.state
-      .split(".html")[1]
-      .replace(/ /g, "%20");
-    const urlLink = (location.origin+location.pathname).concat(`${appendQuery}`);
-    const url = new URL(urlLink);
-    url.searchParams.set("p", number);
-    const { href } = url;
-    const { pathname } = location;
+    if (location.href.includes("dFR")) {
+      const url = new URL(location.href.replace(/%20&%20/gi, "%20%26%20"));
+      url.searchParams.set("p", number);
+      const { pathname, search } = url;
+      browserHistory.push(`${pathname + search}`);
+    } else {
+      const appendQuery = history.state.state
+        .split(".html")[1]
+        .replace(/ /g, "%20");
+      const urlLink = (location.origin + location.pathname).concat(
+        `${appendQuery}`
+      );
+      const url = new URL(urlLink);
+      url.searchParams.set("p", number);
+      const { href, search } = url;
+      const { pathname } = location;
       browserHistory.push({
         pathname: `${pathname}`,
         state: `${href}`,
       });
+    }
+
     // // // update the URL, preserve the state
     // const { pathname, search } = url;
 
@@ -146,12 +156,19 @@ const Parser = {
   },
 
   setParam(key, values = []) {
-    const appendQuery = history.state.state
-      .split(".html")[1]
-      .replace(/ /g, "%20");
-    const urlLink = (location.origin+location.pathname).concat(`${appendQuery}`);
+    let url;
+    if (history.state.state) {
+      const appendQuery = history.state.state
+        .split(".html")[1]
+        .replace(/ /g, "%20");
+      const urlLink = (location.origin + location.pathname).concat(
+        `${appendQuery}`
+      );
 
-    const url = new URL(urlLink.replace(/%20&%20/gi, "%20%26%20"));
+      url = new URL(urlLink.replace(/%20&%20/gi, "%20%26%20"));
+    } else {
+      url = new URL(location.href.replace(/%20&%20/gi, "%20%26%20"));
+    }
 
     // // remove all matchign search params
     url.searchParams.forEach((_, sKey) => {
@@ -169,21 +186,19 @@ const Parser = {
       url.searchParams.append(`${prefix}[${key}][0]`, values);
     }
     // // update the URL, preserve the state
-    const { href,search } = url;
+    const { href, search } = url;
     const { pathname } = location;
-    if(values.length === 0){
+    if (values.length === 0) {
       browserHistory.push({
         pathname: `${pathname}`,
-        state: `${href}`,
+        state: `${href.split("dFR")[0]}`,
       });
-    }else{
+    } else {
       browserHistory.push({
-        pathname: `${pathname+search}`,
+        pathname: `${pathname + search}`,
         state: `${href}`,
       });
     }
-    
-  
   },
 };
 
