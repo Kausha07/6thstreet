@@ -127,28 +127,27 @@ const Parser = {
   },
 
   setPage(number) {
-      const appendQuery = history.state.state
-        .split(".html")[1]
-        .replace(/ /g, "%20");
-      const urlLink = (location.origin + location.pathname).concat(
-        `${appendQuery}`
-      );
-      const url = new URL(urlLink);
-      url.searchParams.set("p", number);
-      const { href, search } = url;
-      const { pathname } = location;
-      if(location.href.includes("dFR")){
-        browserHistory.push({
-          pathname: `${pathname+"?dFR"+search.split('dFR')[1]}`,
-          state: `${href}`,
-        });
-      }else{
-        browserHistory.push({
-          pathname: `${pathname}`,
-          state: `${href}`,
-        });
-      }
-
+    const appendQuery = history.state.state
+      .split(".html")[1]
+      .replace(/ /g, "%20");
+    const urlLink = (location.origin + location.pathname).concat(
+      `${appendQuery}`
+    );
+    const url = new URL(urlLink);
+    url.searchParams.set("p", number);
+    const { href, search } = url;
+    const { pathname } = location;
+    if (location.href.includes("dFR")) {
+      browserHistory.push({
+        pathname: `${pathname + "?dFR" + search.split("dFR")[1]}`,
+        state: `${href}`,
+      });
+    } else {
+      browserHistory.push({
+        pathname: `${pathname}`,
+        state: `${href}`,
+      });
+    }
   },
 
   setParam(key, values = []) {
@@ -187,10 +186,15 @@ const Parser = {
 
     // URL modification in case of filter
     let senturl = new URL(location.href);
-    senturl.searchParams.append(`${prefix}[${key}][0]`, values.join(","));
+    if (Array.isArray(values)) {
+      senturl.searchParams.append(`${prefix}[${key}][0]`, values.join(","));
+    } else {
+      senturl.searchParams.append(`${prefix}[${key}][0]`, values);
+    }
     const { pathname, search } = senturl;
-    let finalSearch = search.replace(/ /g, "%20")
-    let splitSearch = "?"+finalSearch.split("&")[finalSearch.split("&").length - 1];
+    let finalSearch = search.replace(/ /g, "%20");
+    let splitSearch =
+      "?" + finalSearch.split("&")[finalSearch.split("&").length - 1];
     // ///////////////////////////
     if (values.length === 0) {
       browserHistory.push({
