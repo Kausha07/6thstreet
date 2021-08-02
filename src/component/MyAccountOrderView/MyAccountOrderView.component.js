@@ -459,7 +459,6 @@ class MyAccountOrderView extends PureComponent {
         },
       },
     } = this.props;
-    console.log("this props credit card payment", this.props)
     return (
       <div block="MyAccountOrderView" elem="CardPaymentType">
         <div block="MyAccountOrderView" elem="TypeLogo">
