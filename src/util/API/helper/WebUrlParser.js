@@ -152,6 +152,7 @@ const Parser = {
 
   setParam(key, values = []) {
     let url;
+    let senturl = new URL(location.href);
     if (history.state.state) {
       const appendQuery = history.state.state
         .split(".html")[1]
@@ -176,21 +177,18 @@ const Parser = {
     if (Array.isArray(values)) {
       // For arrays case
       url.searchParams.append(`${prefix}[${key}][0]`, values.join(","));
+      senturl.searchParams.append(`${prefix}[${key}][0]`, values.join(","));
     } else {
       // For non-array cases
       url.searchParams.append(`${prefix}[${key}][0]`, values);
+      senturl.searchParams.append(`${prefix}[${key}][0]`, values);
     }
     // // update the URL, preserve the state
     const { href } = url;
     // const { pathname } = location;
 
     // URL modification in case of filter
-    let senturl = new URL(location.href);
-    if (Array.isArray(values)) {
-      senturl.searchParams.append(`${prefix}[${key}][0]`, values.join(","));
-    } else {
-      senturl.searchParams.append(`${prefix}[${key}][0]`, values);
-    }
+    console.log(senturl,"muskan",`${prefix}[${key}][0]`, values.join(","),values)
     const { pathname, search } = senturl;
     let finalSearch = search.replace(/ /g, "%20");
     let splitSearch =

@@ -35,8 +35,7 @@ export class MenuContainer extends PureComponent {
 
     constructor(props) {
         super(props);
-
-        this.requestCategories();
+        // this.requestCategories();
     }
 
     componentDidMount() {
@@ -70,7 +69,7 @@ export class MenuContainer extends PureComponent {
         if (!gender) {
             return;
         }
-
+        
         requestCategories(gender);
     }
 
