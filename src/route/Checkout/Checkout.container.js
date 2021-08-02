@@ -825,7 +825,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   }
 
   processTabby(paymentInformation) {
-    const { verifyPayment, updateTabbyPayment } = this.props;
+    const { verifyPayment, updateTabbyPayment , hideActiveOverlay} = this.props;
     const { checkoutStep } = this.state;
     const { tabbyPaymentId } = paymentInformation;
     const { order_id, increment_id } = this.state;
@@ -836,6 +836,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
     verifyPayment(tabbyPaymentId).then(({ status }) => {
       if (status === AUTHORIZED_STATUS || status === CAPTURED_STATUS) {
+        hideActiveOverlay()
         BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
         this.setState({ tabbyPaymentStatus: status, isTabbyPopupShown: false });
         updateTabbyPayment(tabbyPaymentId, order_id);
