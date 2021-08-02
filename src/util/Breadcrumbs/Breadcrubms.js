@@ -4,7 +4,7 @@ export const getBreadcrumbs = (data = [], onClick, urlArray) => data.reduce((acc
     const transformedCategory = categoryLevel.replace(/-/g, ' ');
 
     acc.push({
-        url: idx !== 0 ? urlArray[idx] : '/',
+        url: idx !== 0 ? urlArray[idx]:`/${data[0].toLowerCase()}.html`,
         name: transformedCategory,
         onClick: idx === 0 ? onClick : () => {}
     });
