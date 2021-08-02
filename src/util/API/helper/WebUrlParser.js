@@ -10,23 +10,23 @@ const pipe =
     funcs.reduce((v, f) => f(v), value);
 
 /*
-  input:
-  '/women/clothing.html#q=&idx=stage_magento_english_products&p=0&dFR%5Bbrand_name%5D%5B0%5D=Adidas&dFR%5Bbrand_name%5D%5B1%5D=Ardene&hFR%5Bcategories.level0%5D%5B0%5D=Women%20%2F%2F%2F%20Clothing%20%2F%2F%2F%20Jumpsuits%20%26%20Playsuits&nR%5Bdiscount%5D%5B%3E%3D%5D%5B0%5D=10&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1'
+input:
+'/women/clothing.html#q=&idx=stage_magento_english_products&p=0&dFR%5Bbrand_name%5D%5B0%5D=Adidas&dFR%5Bbrand_name%5D%5B1%5D=Ardene&hFR%5Bcategories.level0%5D%5B0%5D=Women%20%2F%2F%2F%20Clothing%20%2F%2F%2F%20Jumpsuits%20%26%20Playsuits&nR%5Bdiscount%5D%5B%3E%3D%5D%5B0%5D=10&nR%5Bvisibility_catalog%5D%5B%3D%5D%5B0%5D=1'
 
-  output:
-  {
-    q: '',
-    'categories.level2': 'Women /// Clothing /// Jumpsuits & Playsuits',
-    discount: 'gte10',
-    visibility_catalog: 'eq1'
-  }
+output:
+{
+q: '',
+'categories.level2': 'Women /// Clothing /// Jumpsuits & Playsuits',
+discount: 'gte10',
+visibility_catalog: 'eq1'
+}
 */
 
 const transformParams = (str) => str.replace("#", "?");
 const parseURL = (URL) => urlparse(URL, true);
 
 const hFR = (str) => str.match(/hFR\[(categories\.level)\d\]\[(\d)\]/);
-const dFR = (str) => str.match(/dFR\[(.*)\]\[(\d)\]/);
+const dFR = (str) => str.match(/&(.*)/);
 const nR = (str) => str.match(/nR\[(\w*)\]\[(\W*)\]\[(\d)\]/);
 
 const getAlgoliaOperator = (urlOperator = "") => {
@@ -54,6 +54,7 @@ const getFacetParam = ({ urlParam = "", urlValue = "" }) => {
   }
 
   const is_dFR = dFR(urlParam);
+
   if (is_dFR) {
     const [, facetKey] = is_dFR;
     return {
@@ -61,8 +62,9 @@ const getFacetParam = ({ urlParam = "", urlValue = "" }) => {
       facetValue: urlValue,
     };
   }
-
+console.log("muskan 12",is_dFR)
   const is_nR = nR(urlParam);
+
   if (is_nR) {
     const [, facetKey, operator] = is_nR;
     const algoliaOperator = getAlgoliaOperator(operator);
@@ -120,7 +122,6 @@ const Parser = {
       page,
       ...queryParams,
     });
-
     return {
       params,
     };
@@ -137,9 +138,11 @@ const Parser = {
     url.searchParams.set("p", number);
     const { href, search } = url;
     const { pathname } = location;
-    if (location.href.includes("dFR")) {
+    let sentQuery = this.createCustomQuery(search);
+
+    if (location.href.includes("?")) {
       browserHistory.push({
-        pathname: `${pathname + "?dFR" + search.split("dFR")[1]}`,
+        pathname: `${pathname + sentQuery}`,
         state: `${href}`,
       });
     } else {
@@ -152,7 +155,6 @@ const Parser = {
 
   setParam(key, values = []) {
     let url;
-    let senturl = new URL(location.href);
     if (history.state.state) {
       const appendQuery = history.state.state
         .split(".html")[1]
@@ -172,39 +174,45 @@ const Parser = {
         url.searchParams.delete(sKey);
       }
     });
-
     const prefix = /categories\.level/.test(key) ? "hFR" : "dFR";
     if (Array.isArray(values)) {
       // For arrays case
-      url.searchParams.append(`${prefix}[${key}][0]`, values.join(","));
-      senturl.searchParams.append(`${prefix}[${key}][0]`, values.join(","));
+      url.searchParams.append(`&${key}`, values.join(","));
     } else {
       // For non-array cases
-      url.searchParams.append(`${prefix}[${key}][0]`, values);
-      senturl.searchParams.append(`${prefix}[${key}][0]`, values);
+      url.searchParams.append(`&${key}`, values);
     }
     // // update the URL, preserve the state
-    const { href } = url;
-    // const { pathname } = location;
+    const { href, search } = url;
+    const { pathname } = location;
 
     // URL modification in case of filter
-    console.log(senturl,"muskan",`${prefix}[${key}][0]`, values.join(","),values)
-    const { pathname, search } = senturl;
-    let finalSearch = search.replace(/ /g, "%20");
-    let splitSearch =
-      "?" + finalSearch.split("&")[finalSearch.split("&").length - 1];
-    // ///////////////////////////
     if (values.length === 0) {
       browserHistory.push({
-        pathname: `${location.pathname}`,
-        state: `${href.split("dFR")[0]}`,
+        pathname: `${pathname}`,
+        state: `${href}`,
       });
     } else {
+      let sentQuery = this.createCustomQuery(search);
       browserHistory.push({
-        pathname: `${pathname + splitSearch}`,
+        pathname: `${pathname + sentQuery}`,
         state: `${href}`,
       });
     }
+  },
+  createCustomQuery(search) {
+    let arrQuery = search.split("&");
+    let newQuery = "?";
+    arrQuery.map((query, index) => {
+      if (index > 4 && index < arrQuery.length) {
+        newQuery = newQuery + query;
+        return null;
+      }
+    });
+    let parsedNewQuery = newQuery.split("%2C").join("~");
+    let parsedQuery = parsedNewQuery.replace("%26", "");
+    let finalQuery = parsedQuery.split("%26").join("&");
+    return finalQuery;
   },
 };
 

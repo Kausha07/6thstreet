@@ -14,6 +14,7 @@ import {
   TYPE_NOTFOUND,
   TYPE_PRODUCT,
 } from "./UrlRewrites.config";
+import WebUrlParser from "Util/API/helper/WebUrlParser";
 
 export const mapStateToProps = (state) => ({
   locale: state.AppState.locale,
@@ -53,9 +54,13 @@ export class UrlRewritesContainer extends PureComponent {
 
   componentDidUpdate(prevProps, prevState) {
     const { pathname } = location;
-    const { locale, hideActiveOverlay, history: {
-      location: { state: search },
-    }, } = this.props;
+    const {
+      locale,
+      hideActiveOverlay,
+      history: {
+        location: { state: search },
+      },
+    } = this.props;
     const { locale: prevLocale } = prevProps;
     const { prevPathname, query } = this.state;
     const { prevPathname: prevStatePathname, query: prevQuery } = prevState;
@@ -69,46 +74,43 @@ export class UrlRewritesContainer extends PureComponent {
         } else {
           // If we are sharing URL with filters do if condition
 
-          if(location.search.includes('dFR')){
-            history.push({
-              pathname: `${pathname}?dFR${location.search.split('dFR')[1]}`,
-              state: `${pathname}?${query}&dFR${location.search.split('dFR')[1]}`,
-            });
-          }else{
-          partialQuery = partialQuery.substring(1);
-          history.push(`${pathname}?${query}&${partialQuery}`);
+          if (location.href.includes("?")) {
+            if (history.location.state) {
+              let sentURL = WebUrlParser.createCustomQuery(
+                history.location.state
+              );
+              history.push({
+                pathname: `${pathname + sentURL}`,
+                state: `${pathname}?${query}&${sentURL}`,
+              });
+            }
+          } else {
+            partialQuery = partialQuery.substring(1);
+            history.push(`${pathname}?${query}&${partialQuery}`);
           }
         }
       } else {
-
-        if(query && search){
+        if (query && search) {
           history.push({
             pathname: `${pathname}`,
-            state: `${pathname}?${search.split('?')[1]}`,
+            state: `${pathname}?${search.split("?")[1]}`,
           });
-        }else{
-
-            history.push({
-              pathname: `${pathname}`,
-              state: `${pathname}?${query}`,
-            });
-
-          }
-
+        } else {
+          history.push({
+            pathname: `${pathname}`,
+            state: `${pathname}?${query}`,
+          });
+        }
       }
     }
 
-    if (
-      pathname !== prevPathname ||
-      locale !== prevLocale 
-    ) {
-      if(!this.state.isLoading){
+    if (pathname !== prevPathname || locale !== prevLocale) {
+      if (!this.state.isLoading) {
         hideActiveOverlay();
         document.body.style.overflow = "visible";
         // Request URL rewrite if pathname or locale changed
         this.requestUrlRewrite(true);
       }
-    
     }
   }
 
