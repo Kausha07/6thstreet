@@ -20,11 +20,14 @@ export const EVENT_GTM_PRODUCT_REMOVE_FROM_CART =
   "gtm_product_remove_from_cart";
 export const EVENT_GTM_PURCHASE = "gtm_purchase";
 export const EVENT_GTM_BANNER_CLICK = "gtm_banner_widget_click";
-// currently working
+// new events
 export const EVENT_GTM_TRENDING_BRANDS_CLICK = "gtm_trending_brands_click";
 export const EVENT_GTM_TRENDING_TAGS_CLICK = "gtm_trending_tags_click";
 export const EVENT_GTM_BRANDS_CLICK = "gtm_brands_click";
 export const EVENT_GTM_RECOMMENDED_CLICK = "gtm_recommended_click";
+export const EVENT_GTM_PRODUCT_ADD_TO_WISHLIST = "gtm_product_add_to_wishlist";
+export const EVENT_GTM_PRODUCT_REMOVE_FROM_WISHLIST =
+  "gtm_product_remove_from_wishlist";
 
 export const VIEW_SEARCH_RESULTS_ALGOLIA = "view_search_results_algolia";
 export const SELECT_ITEM_ALGOLIA = "select_item_algolia";

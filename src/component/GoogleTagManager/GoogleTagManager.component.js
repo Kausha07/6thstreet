@@ -5,6 +5,7 @@ import { CUSTOMER } from "Store/MyAccount/MyAccount.dispatcher";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
 import AddToCartEvent from "./events/AddToCart.event";
+import AddToWishlistEvent from "./events/AddToWishlist.event";
 import BannerClickEvent from "./events/BannerClickEvent.event";
 import BrandsClickEvent from "./events/BrandsClick.event";
 import CheckoutEvent from "./events/Checkout.event";
@@ -15,6 +16,7 @@ import ProductClickEvent from "./events/ProductClick.event";
 import ProductDetailEvent from "./events/ProductDetail.event";
 import PurchaseEvent from "./events/Purchase.event";
 import RemoveFromCartEvent from "./events/RemoveFromCart.event";
+import RemoveFromWishlistEvent from "./events/RemoveFromWishlist.event";
 import TrendingBrandsClickEvent from "./events/TrendingBrandsClick.event";
 import TrendingTagsClickEvent from "./events/TrendingTagsClick.event";
 import Scripts from "./Scripts";
@@ -26,7 +28,9 @@ export const EVENT_GENERAL = "general";
 export const EVENT_IMPRESSION = "ee.impression";
 export const EVENT_PRODUCT_CLICK = "productClick";
 export const EVENT_ADD_TO_CART = "addToCart";
+export const EVENT_ADD_TO_WISHLIST = "addToWishlist";
 export const EVENT_REMOVE_FROM_CART = "removeFromCart";
+export const EVENT_REMOVE_FROM_WISHLIST = "removeFromWishlist";
 export const EVENT_PRODUCT_DETAIL = "ee.detail";
 export const EVENT_PURCHASE = "ee.purchase";
 export const EVENT_CHECKOUT = "checkout";
@@ -80,10 +84,12 @@ class GoogleTagManager extends PureComponent {
     [EVENT_CHECKOUT_OPTION]: CheckoutOptionEvent,
     [EVENT_IMPRESSION]: Impression,
     [EVENT_ADD_TO_CART]: AddToCartEvent,
+    [EVENT_ADD_TO_WISHLIST]: AddToWishlistEvent,
     [EVENT_PRODUCT_CLICK]: ProductClickEvent,
     [EVENT_BANNER_CLICK]: BannerClickEvent,
     [EVENT_PRODUCT_DETAIL]: ProductDetailEvent,
     [EVENT_REMOVE_FROM_CART]: RemoveFromCartEvent,
+    [EVENT_REMOVE_FROM_WISHLIST]: RemoveFromWishlistEvent,
     [EVENT_GTM_BRANDS_CLICK]: BrandsClickEvent,
     [EVENT_GTM_TRENDING_BRANDS_CLICK]: TrendingBrandsClickEvent,
     [EVENT_GTM_TRENDING_TAGS_CLICK]: TrendingTagsClickEvent,

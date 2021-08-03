@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import React, { PureComponent } from "react";
 import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
+import Event, { EVENT_GTM_PRODUCT_CLICK } from "Util/Event";
 
 class WishlistSliderItem extends PureComponent {
   static propTypes = {
@@ -88,9 +89,14 @@ class WishlistSliderItem extends PureComponent {
     return null;
   }
 
+  handleWishlistProductClick = (product) => {
+    Event.dispatch(EVENT_GTM_PRODUCT_CLICK, product);
+  };
+
   render() {
     const {
       data: { thumbnail_url, name, brand_name, price, sku, url = "" },
+      data,
     } = this.props;
     const { isArabic } = this.state;
     return (
@@ -105,6 +111,7 @@ class WishlistSliderItem extends PureComponent {
           to={url}
           data-banner-type="vueSlider"
           block="VueProductSlider-Link"
+          onClick={() => this.handleWishlistProductClick(data)}
         >
           <Image src={thumbnail_url} alt={name} />
           {/* <img

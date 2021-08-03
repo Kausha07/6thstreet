@@ -65,9 +65,9 @@ class ProductItem extends PureComponent {
   renderWishlistIcon() {
     const {
       product: { sku },
+      product,
     } = this.props;
-
-    return <WishlistIcon sku={sku} />;
+    return <WishlistIcon sku={sku} data={product} />;
   }
 
   renderLabel() {
@@ -212,7 +212,7 @@ class ProductItem extends PureComponent {
       >
         {" "}
         {/* {this.renderLabel()} */}
-         {this.renderWishlistIcon()} {this.renderLink()}{" "}
+        {this.renderWishlistIcon()} {this.renderLink()}{" "}
       </li>
     );
   }

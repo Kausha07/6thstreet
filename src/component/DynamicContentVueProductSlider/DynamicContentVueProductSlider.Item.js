@@ -1,14 +1,13 @@
 import Link from "Component/Link";
-import React from "react";
-import PropTypes from "prop-types";
-import { PureComponent } from "react";
-import { getCurrency } from "Util/App/App";
 import WishlistIcon from "Component/WishlistIcon";
-import { isArabic } from "Util/App";
-
+import PropTypes from "prop-types";
 import VueIntegrationQueries from "Query/vueIntegration.query";
+import React, { PureComponent } from "react";
+import { isArabic } from "Util/App";
+import { getCurrency } from "Util/App/App";
 import { getUUID } from "Util/Auth";
 import { VUE_CAROUSEL_CLICK } from "Util/Event";
+
 class DynamicContentVueProductSliderItem extends PureComponent {
   static propTypes = {
     data: PropTypes.object.isRequired,
@@ -132,6 +131,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
         sku,
         link = "",
       },
+      data,
       widgetID,
     } = this.props;
     const { isArabic } = this.state;
@@ -163,7 +163,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
         <span id="productName">{name}</span>
         {this.renderPrice(price)}
         {this.renderIsNew(is_new_in)}
-        <WishlistIcon sku={sku} />
+        <WishlistIcon sku={sku} data={data} />
       </div>
     );
   }
