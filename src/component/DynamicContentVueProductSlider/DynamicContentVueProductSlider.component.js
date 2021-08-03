@@ -3,6 +3,7 @@ import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
 import { getUUID } from "Util/Auth";
 import { VUE_CAROUSEL_SWIPE } from "Util/Event";
+import { isArabic } from "Util/App";
 import DynamicContentVueProductSliderItem from "./DynamicContentVueProductSlider.Item";
 import "./DynamicContentVueProductSlider.style.scss";
 class DynamicContentVueProductSlider extends PureComponent {
@@ -85,6 +86,7 @@ class DynamicContentVueProductSlider extends PureComponent {
       <div
         block="VueProductSlider"
         elem="SliderContainer"
+        mods = {{isArabic: isArabic()}}
         ref={this.scrollerRef}
         onScroll={() => {
           this.handleOnScroll(widgetID);

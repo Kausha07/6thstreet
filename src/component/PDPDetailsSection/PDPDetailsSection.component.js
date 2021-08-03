@@ -69,7 +69,7 @@ class PDPDetailsSection extends PureComponent {
             this.setState({ pdpWidgetsAPIData: resp });
           })
           .catch((err) => {
-            console.log("pdp widget vue query catch", err);
+            console.err(err);
           });
       }
     }
