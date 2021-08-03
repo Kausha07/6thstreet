@@ -39,19 +39,33 @@ class WishlistIcon extends PureComponent {
       removeFromWishlist(wishlist_item_id);
       Event.dispatch(EVENT_GTM_PRODUCT_REMOVE_FROM_WISHLIST, {
         product: {
-          brand_name: wishListItem.product.brand_name,
+          brand: wishListItem.product.brand_name,
+          category: "",
+          id: wishListItem.product.sku,
           name: wishListItem.product.name,
           price: wishListItem.product.price,
-          sku: wishListItem.product.sku,
-          thumbnail_url: wishListItem.product.thumbnail_url,
-          url: wishListItem.product.url,
+          variant: wishListItem.product.color,
         },
       });
       return;
     }
 
     addToWishlist(skuFromProps);
-    Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_WISHLIST, { product: data });
+    // Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_WISHLIST, { product: data });
+    const priceObject = data.price[0];
+    const itemPrice = priceObject
+      ? priceObject[Object.keys(priceObject)[0]]["6s_special_price"]
+      : "";
+    Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_WISHLIST, {
+      product: {
+        brand: data.brand_name,
+        category: "",
+        id: skuFromProps,
+        name: data.name,
+        price: itemPrice,
+        variant: data.color,
+      },
+    });
   };
 
   isBlack = (item) => {

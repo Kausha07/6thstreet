@@ -20,7 +20,6 @@ class RemoveFromWishlistEvent extends BaseEvent {
    * Handle product remove from wishlist
    */
   handler(product) {
-    console.log("handler called", product);
     if (this.spamProtection(SPAM_PROTECTION_DELAY)) {
       return;
     }

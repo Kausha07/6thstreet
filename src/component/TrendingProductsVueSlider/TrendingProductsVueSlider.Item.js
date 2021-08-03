@@ -132,6 +132,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
         is_new_in = false,
         sku,
         link = "",
+        url = "",
       },
       data,
       widgetID,
@@ -147,7 +148,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
         ref={this.childRef}
       >
         <Link
-          to={link}
+          to={link ? link : url}
           data-banner-type="vueSlider"
           block="VueProductSlider-Link"
           onClick={() => {
