@@ -75,6 +75,10 @@ export class CheckoutSuccess extends PureComponent {
     }
   }
 
+  componentWillUnmount(){
+    const {setCheckoutDetails} = this.props
+  setCheckoutDetails(false)
+  }
   tick = () => {
     const { wasLoaded, successHidden } = this.state;
     if (!successHidden) {
@@ -380,8 +384,7 @@ export class CheckoutSuccess extends PureComponent {
           __("Club Apparel Redemption")
         )}
         {couponCode
-          ? this.renderPriceLine(discount, __("Discount (%s)", couponCode))
-          : this.renderPriceLine(discount, __("Discount"))}
+          && this.renderPriceLine(discount, __("Discount"))}
 
         {this.renderTotalPrice()}
       </div>

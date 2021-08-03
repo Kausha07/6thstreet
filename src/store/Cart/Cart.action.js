@@ -7,7 +7,13 @@ export const UPDATE_TOTALS = 'UPDATE_TOTALS';
 export const PROCESSING_CART_REQUEST = 'START_CART_REQUEST';
 export const PROCESSING_PAYMENT_SELECT_REQUEST = 'SET_PAYMENT_SELECT_REQUEST';
 export const SET_MINICART_OPEN = 'SET_MINICART_OPEN';
+export const SET_DETAIL_STEP = "SET_DETAIL_STEP";
 export const RESET_CART = 'RESET_CART';
+
+export const setCheckoutDetails = (checkoutDetails) => ({
+    type: SET_DETAIL_STEP,
+    checkoutDetails
+});
 
 export const setCartId = (cartId) => ({
     type: SET_CART_ID,

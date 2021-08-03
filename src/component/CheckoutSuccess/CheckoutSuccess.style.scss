@@ -4,6 +4,9 @@
 
 .CheckoutSuccess {
   margin-bottom: -var(navi);
+  @include desktop {
+    padding-top: 156px;
+  }
   .SuccessOverlay {
     height: 100%;
     background-color: var(--color-green-cyan);
