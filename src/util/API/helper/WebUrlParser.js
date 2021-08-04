@@ -54,7 +54,6 @@ const getFacetParam = ({ urlParam = "", urlValue = "" }) => {
   }
 
   const is_dFR = dFR(urlParam);
-
   if (is_dFR) {
     const [, facetKey] = is_dFR;
     return {
@@ -62,7 +61,7 @@ const getFacetParam = ({ urlParam = "", urlValue = "" }) => {
       facetValue: urlValue,
     };
   }
-console.log("muskan 12",is_dFR)
+
   const is_nR = nR(urlParam);
 
   if (is_nR) {
@@ -138,11 +137,10 @@ const Parser = {
     url.searchParams.set("p", number);
     const { href, search } = url;
     const { pathname } = location;
-    let sentQuery = this.createCustomQuery(search);
-
     if (location.href.includes("?")) {
+      // let sentQuery = this.createCustomQuery(search);
       browserHistory.push({
-        pathname: `${pathname + sentQuery}`,
+        pathname: `${pathname + location.search}`,
         state: `${href}`,
       });
     } else {
@@ -177,28 +175,30 @@ const Parser = {
     const prefix = /categories\.level/.test(key) ? "hFR" : "dFR";
     if (Array.isArray(values)) {
       // For arrays case
-      url.searchParams.append(`&${key}`, values.join(","));
+      if (values.length === 0) {
+        url.searchParams.delete(`${key}`);
+      } else {
+        url.searchParams.append(`&${key}`, values.join(","));
+      }
     } else {
       // For non-array cases
+      if (!values) {
+        url.searchParams.delete(`${key}`);
+      } else {
       url.searchParams.append(`&${key}`, values);
+      }
     }
     // // update the URL, preserve the state
     const { href, search } = url;
     const { pathname } = location;
 
     // URL modification in case of filter
-    if (values.length === 0) {
-      browserHistory.push({
-        pathname: `${pathname}`,
-        state: `${href}`,
-      });
-    } else {
+  
       let sentQuery = this.createCustomQuery(search);
       browserHistory.push({
         pathname: `${pathname + sentQuery}`,
         state: `${href}`,
       });
-    }
   },
   createCustomQuery(search) {
     let arrQuery = search.split("&");

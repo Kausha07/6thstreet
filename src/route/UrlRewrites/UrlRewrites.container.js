@@ -75,15 +75,21 @@ export class UrlRewritesContainer extends PureComponent {
           // If we are sharing URL with filters do if condition
 
           if (location.href.includes("?")) {
-            if (history.location.state) {
-              let sentURL = WebUrlParser.createCustomQuery(
-                history.location.state
-              );
-              history.push({
-                pathname: `${pathname + sentURL}`,
-                state: `${pathname}?${query}&${sentURL}`,
-              });
-            }
+            const {
+              location: { state: locationState, search: locationSearch },
+            } = history;
+            let queryURL = new URL(
+              location.origin +
+                location.pathname +
+                "?" +
+                query +
+                '&%26'+
+                location.href.split("?")[1].split("&").join("&%26")
+            );
+            history.push({
+              pathname: `${pathname + locationSearch}`,
+              state: `${queryURL.href}`,
+            });
           } else {
             partialQuery = partialQuery.substring(1);
             history.push(`${pathname}?${query}&${partialQuery}`);

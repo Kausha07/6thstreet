@@ -121,10 +121,10 @@ export class PLPContainer extends PureComponent {
     if(query){
       if(query && !query.product){
         if (query && query.includes(".html")) {
-          const urlLink = `${URLS["en-ae"]}${query.split(".html")[1]}`;
+          const urlLink = `${query.split(".html")[1]}`;
           parseURL = urlLink.replace(/ /g, "%20");
         } else if (query && !query.includes(".html")) {
-          const urlLink = `${URLS["en-ae"]}${query}`;
+          const urlLink = `${query}`;
           parseURL = urlLink.replace(/ /g, "%20");
         }
       }
