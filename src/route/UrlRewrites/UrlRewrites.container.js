@@ -61,7 +61,13 @@ export class UrlRewritesContainer extends PureComponent {
         location: { state: search },
       },
     } = this.props;
-    const { locale: prevLocale } = prevProps;
+    const {
+      locale: prevLocale,
+      location: { state: prevLocaState },
+    } = prevProps;
+    const {
+      location: { state: LocationState ,pathname:prevLocaPathname },
+    } = this.props;
     const { prevPathname, query } = this.state;
     const { prevPathname: prevStatePathname, query: prevQuery } = prevState;
 
@@ -73,7 +79,6 @@ export class UrlRewritesContainer extends PureComponent {
           return;
         } else {
           // If we are sharing URL with filters do if condition
-
           if (location.href.includes("?")) {
             const {
               location: { state: locationState, search: locationSearch },
@@ -83,7 +88,7 @@ export class UrlRewritesContainer extends PureComponent {
                 location.pathname +
                 "?" +
                 query +
-                '&%26'+
+                "&%26" +
                 location.href.split("?")[1].split("&").join("&%26")
             );
             history.push({
@@ -108,6 +113,16 @@ export class UrlRewritesContainer extends PureComponent {
           });
         }
       }
+    } else if (
+      !LocationState &&
+      prevLocaState !== LocationState &&
+      prevLocaState.includes("?")
+    ) {
+      let initialKey = prevLocaPathname.split('?')[0].split("=")[0]
+      history.push({
+        pathname: `${pathname}`,
+        state: `${pathname}?${query.split(initialKey)[0]}`,
+      });
     }
 
     if (pathname !== prevPathname || locale !== prevLocale) {
