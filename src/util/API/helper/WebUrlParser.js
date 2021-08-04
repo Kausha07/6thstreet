@@ -152,8 +152,9 @@ const Parser = {
 
   setParam(key, values = []) {
     let url;
-    if (history.state.state) {
-      const appendQuery = history.state.state
+    const {state:{state:historyState}} = history
+    if (historyState) {
+      const appendQuery = historyState
         .split(".html")[1]
         .replace(/ /g, "%20");
       const urlLink = (location.origin + location.pathname).concat(
