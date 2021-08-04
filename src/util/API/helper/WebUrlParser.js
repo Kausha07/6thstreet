@@ -138,7 +138,6 @@ const Parser = {
     const { href, search } = url;
     const { pathname } = location;
     if (location.href.includes("?")) {
-      // let sentQuery = this.createCustomQuery(search);
       browserHistory.push({
         pathname: `${pathname + location.search}`,
         state: `${href}`,

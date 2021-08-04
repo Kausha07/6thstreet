@@ -149,9 +149,6 @@ class DynamicContentRichContentBanner extends PureComponent {
             >
               {item.button.label}
             </Link>
-            // <a href={item.button.link.split('?q=')[0]} block="Label-Button">
-            //   {item.button.label}
-            // </a>
           )}
         </div>
         {item.tag && (

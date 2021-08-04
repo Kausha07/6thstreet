@@ -36,7 +36,6 @@ export class MenuContainer extends PureComponent {
     constructor(props) {
         super(props);
 
-        // this.requestCategories();
     }
 
     componentDidMount() {

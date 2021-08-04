@@ -112,7 +112,6 @@ export class PLPContainer extends PureComponent {
   }
 
   static getRequestOptions(props) {
-    // const { params: parsedParams } = WebUrlParser.parsePLP(location.href);
     const {
       history: {
         location: { state: query },
@@ -248,25 +247,13 @@ export class PLPContainer extends PureComponent {
           return acc;
         }, []);
 
-        // const breadcrumbs = [
-        //   ...productListBreadcrumbs,
-        //   {
-        //     url: "/",
-        //     name: __("Home"),
-        //   },
-        // ];
-
         updateBreadcrumbs(productListBreadcrumbs);
       } else {
         const breadcrumbs = [
           {
             url: "/",
             name: options["categories.level0"],
-          },
-          // {
-          //   url: "/",
-          //   name: __("Home"),
-          // },
+          }
         ];
 
         updateBreadcrumbs(breadcrumbs);
