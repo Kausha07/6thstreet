@@ -60,6 +60,7 @@ class Menu extends PureComponent {
             key,
             link
         } = category;
+        
         let linkURL = link.split('?q=')[0]
         return (
             <MenuCategory

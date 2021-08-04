@@ -35,6 +35,7 @@ export class MenuContainer extends PureComponent {
 
     constructor(props) {
         super(props);
+
         // this.requestCategories();
     }
 
@@ -68,8 +69,7 @@ export class MenuContainer extends PureComponent {
         // ignore menu request if there is no gender passed
         if (!gender) {
             return;
-        }
-        
+        }    
         requestCategories(gender);
     }
 

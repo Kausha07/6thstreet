@@ -94,6 +94,7 @@ export class PLPContainer extends PureComponent {
     const { pages } = props;
     const requestOptions = PLPContainer.getRequestOptions(props);
     const { page, ...restOptions } = requestOptions;
+
     const {
       prevRequestOptions: { page: prevPage, ...prevRestOptions },
     } = state;
@@ -333,6 +334,7 @@ export class PLPContainer extends PureComponent {
       page,
       ...restOptions
     } = options;
+    
     // If requested options are not matching requested options -> we are loading
     // we also ignore pages, this is handled by PLPPages
     return JSON.stringify(requestedRestOptions) !== JSON.stringify(restOptions);

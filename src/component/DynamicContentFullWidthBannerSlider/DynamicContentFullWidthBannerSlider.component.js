@@ -83,7 +83,6 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
     //     widgetID: "vue_visually_similar_slider", // // TODO: will be added after vue product slider.
     //   },
     // });
-    
     let banner = {
       link: item.link,
       promotion_name: item.promotion_name,
@@ -98,6 +97,7 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
       pathname: formatCDNLink(link.split('?q=')[0]),
       state:  link.split('.html')[1] ,
     };
+    
     return (
       <Link
         to={linkTo}
