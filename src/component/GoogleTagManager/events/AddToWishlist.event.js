@@ -28,7 +28,7 @@ class AddToWishlistEvent extends BaseEvent {
     this.pushEventData({
       ecommerce: {
         currencyCode: this.getCurrencyCode(),
-        add: {
+        add_wishlist: {
           products: [product],
         },
       },

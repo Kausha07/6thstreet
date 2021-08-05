@@ -478,7 +478,7 @@ class SearchSuggestion extends PureComponent {
         <div className="recommendedForYouSliderBox">
           <WishlistSliderContainer
             products={wishlistData}
-            heading={__("Wishlist")}
+            heading={__("Your Wishlist")}
             key={`Wishlist`}
             isHome={true}
           />

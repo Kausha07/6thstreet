@@ -19,6 +19,7 @@ import RemoveFromCartEvent from "./events/RemoveFromCart.event";
 import RemoveFromWishlistEvent from "./events/RemoveFromWishlist.event";
 import TrendingBrandsClickEvent from "./events/TrendingBrandsClick.event";
 import TrendingTagsClickEvent from "./events/TrendingTagsClick.event";
+import WishlistClickEvent from "./events/WishlistClick.event";
 import Scripts from "./Scripts";
 
 /**
@@ -27,6 +28,7 @@ import Scripts from "./Scripts";
 export const EVENT_GENERAL = "general";
 export const EVENT_IMPRESSION = "ee.impression";
 export const EVENT_PRODUCT_CLICK = "productClick";
+export const EVENT_WISHLIST_PRODUCT_CLICK = "productClick";
 export const EVENT_ADD_TO_CART = "addToCart";
 export const EVENT_ADD_TO_WISHLIST = "addToWishlist";
 export const EVENT_REMOVE_FROM_CART = "removeFromCart";
@@ -86,6 +88,7 @@ class GoogleTagManager extends PureComponent {
     [EVENT_ADD_TO_CART]: AddToCartEvent,
     [EVENT_ADD_TO_WISHLIST]: AddToWishlistEvent,
     [EVENT_PRODUCT_CLICK]: ProductClickEvent,
+    [EVENT_WISHLIST_PRODUCT_CLICK]: WishlistClickEvent,
     [EVENT_BANNER_CLICK]: BannerClickEvent,
     [EVENT_PRODUCT_DETAIL]: ProductDetailEvent,
     [EVENT_REMOVE_FROM_CART]: RemoveFromCartEvent,

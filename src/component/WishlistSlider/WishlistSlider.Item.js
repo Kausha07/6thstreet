@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import React, { PureComponent } from "react";
 import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
-import Event, { EVENT_GTM_PRODUCT_CLICK } from "Util/Event";
+import Event, { EVENT_GTM_WISHLIST_PRODUCT_CLICK } from "Util/Event";
 
 class WishlistSliderItem extends PureComponent {
   static propTypes = {
@@ -90,7 +90,7 @@ class WishlistSliderItem extends PureComponent {
   }
 
   handleWishlistProductClick = (product) => {
-    Event.dispatch(EVENT_GTM_PRODUCT_CLICK, product);
+    Event.dispatch(EVENT_GTM_WISHLIST_PRODUCT_CLICK, product);
   };
 
   render() {
