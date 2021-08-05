@@ -13,8 +13,14 @@ import { WishlistItems } from "Util/API/endpoint/Wishlist/Wishlist.type";
 import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
 import BrowserDatabase from "Util/BrowserDatabase";
+import Event, {
+  EVENT_GTM_BRANDS_CLICK,
+  EVENT_GTM_PRODUCT_CLICK,
+  EVENT_GTM_TRENDING_BRANDS_CLICK,
+  EVENT_GTM_TRENDING_TAGS_CLICK,
+} from "Util/Event";
 import isMobile from "Util/Mobile";
-import DynamicContentVueProductSliderContainer from "../DynamicContentVueProductSlider";
+import TrendingProductsVueSliderContainer from "../TrendingProductsVueSlider";
 import WishlistSliderContainer from "../WishlistSlider";
 import BRAND_MAPPING from "./SearchSiggestion.config";
 import "./SearchSuggestion.style";
@@ -68,13 +74,6 @@ class SearchSuggestion extends PureComponent {
     }
   };
 
-  renderLoader() {
-    const { isLoading } = this.props;
-    const { isMobile } = this.state;
-
-    return isMobile ? null : <Loader isLoading={isLoading} />;
-  }
-
   getKeyByValue = (object, value) => {
     return Object.keys(object).find((key) => object[key] === value);
   };
@@ -101,36 +100,6 @@ class SearchSuggestion extends PureComponent {
     // .toLowerCase();
     return urlName;
   };
-
-  renderBrand = (brand) => {
-    const { brand_name: name = "", count } = brand;
-    const urlName = this.getBrandUrl(name);
-
-    return (
-      <li>
-        <Link
-          to={`/${urlName}.html?q=${urlName}`}
-          onClick={this.closeSearchPopup}
-        >
-          <div className="suggestion-details-box">
-            {name}
-            <div>{count}</div>
-          </div>
-        </Link>
-      </li>
-    );
-  };
-
-  renderBrands() {
-    const { brands = [] } = this.props;
-
-    return (
-      <div block="SearchSuggestion" elem="Brands">
-        <h2>{__("Brands")}</h2>
-        <ul>{brands.map(this.renderBrand)}</ul>
-      </div>
-    );
-  }
 
   // query suggestion block starts
 
@@ -178,6 +147,122 @@ class SearchSuggestion extends PureComponent {
     return catalogUrl;
   };
 
+  // query suggestion block ends
+
+  discountPercentage(basePrice, specialPrice, haveDiscount) {
+    let discountPercentage = Math.round(100 * (1 - specialPrice / basePrice));
+    if (discountPercentage === 0) {
+      discountPercentage = 1;
+    }
+
+    return (
+      <span
+        block="SearchProduct"
+        elem="Discount"
+        mods={{ discount: haveDiscount }}
+      >
+        -({discountPercentage}%)<span> </span>
+      </span>
+    );
+  }
+
+  closeSearchPopup = () => {
+    this.props.closeSearch();
+  };
+
+  logRecentSearches = (search) => {
+    let recentSearches =
+      JSON.parse(localStorage.getItem("recentSearches")) || [];
+    let tempRecentSearches = [];
+    if (recentSearches) {
+      tempRecentSearches = [...recentSearches.reverse()];
+    }
+    tempRecentSearches = tempRecentSearches.filter(
+      (item) => item.name !== search
+    );
+    if (tempRecentSearches.length > 4) {
+      tempRecentSearches.shift();
+      tempRecentSearches.push({
+        name: search,
+      });
+    } else {
+      tempRecentSearches.push({ name: search });
+    }
+    localStorage.setItem(
+      "recentSearches",
+      JSON.stringify(tempRecentSearches.reverse())
+    );
+  };
+
+  // common function for top search, recent search, query suggestion search.
+  onSearchQueryClick = (search) => {
+    const { closeSearch } = this.props;
+    this.logRecentSearches(search);
+    closeSearch();
+  };
+
+  handleProductClick = (product) => {
+    Event.dispatch(EVENT_GTM_PRODUCT_CLICK, product);
+    this.closeSearchPopup();
+  };
+
+  handleBrandsClick = (brandItem) => {
+    const { closeSearch } = this.props;
+    Event.dispatch(EVENT_GTM_BRANDS_CLICK, brandItem);
+    closeSearch();
+  };
+
+  handleTrendingBrandsClick = (brandName) => {
+    const { closeSearch } = this.props;
+    Event.dispatch(EVENT_GTM_TRENDING_BRANDS_CLICK, brandName);
+    closeSearch();
+  };
+
+  handleTrendingTagsClick = (label) => {
+    const { closeSearch } = this.props;
+    Event.dispatch(EVENT_GTM_TRENDING_TAGS_CLICK, label);
+    closeSearch();
+  };
+
+  // render functions
+
+  renderBrand = (brand) => {
+    const { brand_name: name = "", count } = brand;
+    const urlName = this.getBrandUrl(name);
+
+    return (
+      <li>
+        <Link
+          to={`/${urlName}.html?q=${urlName}`}
+          onClick={() => this.handleBrandsClick(urlName)}
+        >
+          <div className="suggestion-details-box">
+            {name}
+            <div>{count}</div>
+          </div>
+        </Link>
+      </li>
+    );
+  };
+
+  renderLoader() {
+    const { isLoading } = this.props;
+    const { isMobile } = this.state;
+
+    return isMobile ? null : <Loader isLoading={isLoading} />;
+  }
+
+  renderBrands() {
+    const { brands = [] } = this.props;
+
+    return (
+      <div block="SearchSuggestion" elem="Brands">
+        <h2>{__("Brands")}</h2>
+        <ul>{brands.map(this.renderBrand)}</ul>
+      </div>
+    );
+  }
+
   renderQuerySuggestion = (querySuggestions) => {
     const { query, count, isBrand } = querySuggestions;
     const { searchString, queryID } = this.props;
@@ -221,25 +306,6 @@ class SearchSuggestion extends PureComponent {
       <div block="SearchSuggestion" elem="Item">
         <ul>{querySuggestions.slice(0, 5).map(this.renderQuerySuggestion)}</ul>
       </div>
-    );
-  }
-
-  // query suggestion block ends
-
-  discountPercentage(basePrice, specialPrice, haveDiscount) {
-    let discountPercentage = Math.round(100 * (1 - specialPrice / basePrice));
-    if (discountPercentage === 0) {
-      discountPercentage = 1;
-    }
-
-    return (
-      <span
-        block="SearchProduct"
-        elem="Discount"
-        mods={{ discount: haveDiscount }}
-      >
-        -({discountPercentage}%)<span> </span>
-      </span>
     );
   }
 
@@ -306,7 +372,7 @@ class SearchSuggestion extends PureComponent {
 
     return (
       <li>
-        <Link to={url} onClick={this.closeSearchPopup}>
+        <Link to={url} onClick={() => this.handleProductClick(product)}>
           <div block="SearchProduct">
             <img
               src={thumbnail_url}
@@ -370,40 +436,6 @@ class SearchSuggestion extends PureComponent {
       </>
     );
   }
-  closeSearchPopup = () => {
-    this.props.closeSearch();
-  };
-
-  logRecentSearches = (search) => {
-    let recentSearches =
-      JSON.parse(localStorage.getItem("recentSearches")) || [];
-    let tempRecentSearches = [];
-    if (recentSearches) {
-      tempRecentSearches = [...recentSearches.reverse()];
-    }
-    tempRecentSearches = tempRecentSearches.filter(
-      (item) => item.name !== search
-    );
-    if (tempRecentSearches.length > 4) {
-      tempRecentSearches.shift();
-      tempRecentSearches.push({
-        name: search,
-      });
-    } else {
-      tempRecentSearches.push({ name: search });
-    }
-    localStorage.setItem(
-      "recentSearches",
-      JSON.stringify(tempRecentSearches.reverse())
-    );
-  };
-
-  // common function for top search, recent search, query suggestion search.
-  onSearchQueryClick = (search) => {
-    const { closeSearch } = this.props;
-    this.logRecentSearches(search);
-    closeSearch();
-  };
 
   // recommended for you
 
@@ -428,11 +460,11 @@ class SearchSuggestion extends PureComponent {
     if (trendingProducts && trendingProducts.length > 0) {
       return (
         <div className="recommendedForYouSliderBox">
-          <DynamicContentVueProductSliderContainer
+          <TrendingProductsVueSliderContainer
             widgetID="vue_trending_slider"
             products={trendingProducts}
             heading={__("Trending products")}
-            key={`DynamicContentVueProductSliderContainer99`}
+            key={`TrendingProductsVueSliderContainer`}
           />
         </div>
       );
@@ -446,7 +478,7 @@ class SearchSuggestion extends PureComponent {
         <div className="recommendedForYouSliderBox">
           <WishlistSliderContainer
             products={wishlistData}
-            heading={__("Wishlist")}
+            heading={__("Your Wishlist")}
             key={`Wishlist`}
             isHome={true}
           />
@@ -469,7 +501,7 @@ class SearchSuggestion extends PureComponent {
       <li key={i}>
         <Link
           to={`/${urlName}.html?q=${urlName}`}
-          onClick={this.closeSearchPopup}
+          onClick={() => this.handleTrendingBrandsClick(urlName)}
         >
           <div block="SearchSuggestion" elem="TrandingImg">
             <img src={image_url} alt="Trending" />
@@ -493,7 +525,10 @@ class SearchSuggestion extends PureComponent {
 
   renderTrendingTag = ({ link, label }, i) => (
     <li key={i}>
-      <Link to={{ pathname: link }} onClick={this.closeSearchPopup}>
+      <Link
+        to={{ pathname: link }}
+        onClick={() => this.handleTrendingTagsClick(label)}
+      >
         <div block="SearchSuggestion" elem="TrandingTag">
           {label}
         </div>

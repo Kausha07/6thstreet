@@ -1,23 +1,20 @@
 /* eslint-disable no-magic-numbers */
-import PropTypes from "prop-types";
-import { PureComponent } from "react";
-
 import PDPAddToCart from "Component/PDPAddToCart/PDPAddToCart.container";
-import PDPTags from "Component/PDPTags";
 import PDPAlsoAvailable from "Component/PDPAlsoAvailable";
+import PDPTags from "Component/PDPTags";
 import Price from "Component/Price";
-import ShareButton from "Component/ShareButton";
-import WishlistIcon from "Component/WishlistIcon";
 import ProductLabel from "Component/ProductLabel/ProductLabel.component";
+import ShareButton from "Component/ShareButton";
 import TabbyMiniPopup from "Component/TabbyMiniPopup";
 import { TABBY_TOOLTIP_PDP } from "Component/TabbyMiniPopup/TabbyMiniPopup.config";
+import WishlistIcon from "Component/WishlistIcon";
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
 import { Product } from "Util/API/endpoint/Product/Product.type";
 import { isArabic } from "Util/App";
-import isMobile from "Util/Mobile";
 import { SPECIAL_COLORS, translateArabicColor } from "Util/Common";
-
+import isMobile from "Util/Mobile";
 import tabby from "./icons/tabby.svg";
-
 import "./PDPSummary.style";
 
 class PDPSummary extends PureComponent {
@@ -90,6 +87,7 @@ class PDPSummary extends PureComponent {
   renderPDPSummaryHeaderAndShareAndWishlistButton() {
     const {
       product: { sku },
+      product,
     } = this.props;
     const url = new URL(window.location.href);
 
@@ -106,7 +104,7 @@ class PDPSummary extends PureComponent {
             text={`Hey check this out: ${document.title}`}
             url={url.searchParams.append("utm_source", "pdp_share")}
           />
-          <WishlistIcon sku={sku} />
+          <WishlistIcon sku={sku} data={product} />
         </div>
       </>
     );

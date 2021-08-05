@@ -21,6 +21,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
   }
 
   onclick = (widgetID) => {
+    const { data } = this.props;
     // vue analytics
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
@@ -35,6 +36,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
         widgetID: widgetID,
       },
     });
+    Event.dispatch(EVENT_GTM_PRODUCT_CLICK, data);
   };
 
   discountPercentage(basePrice, specialPrice, haveDiscount) {
@@ -130,15 +132,12 @@ class DynamicContentVueProductSliderItem extends PureComponent {
         is_new_in = false,
         sku,
         link = "",
+        url = "",
       },
       data,
       widgetID,
     } = this.props;
     const { isArabic } = this.state;
-    let newLink = link
-    if(this.props.data.url){
-      newLink = this.props.data.url
-    }
     return (
       <div
         block="VueProductSlider"
@@ -149,7 +148,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
         ref={this.childRef}
       >
         <Link
-          to={newLink}
+          to={link ? link : url}
           data-banner-type="vueSlider"
           block="VueProductSlider-Link"
           onClick={() => {
