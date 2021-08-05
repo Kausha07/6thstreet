@@ -11,6 +11,7 @@
     display: grid;
     grid-template-columns: 1fr 6fr;
     margin-top: 0;
+    grid-gap: 10px;
   }
   @include mobile {
     margin-top: 0;

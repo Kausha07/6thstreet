@@ -295,7 +295,7 @@ class PDPSummary extends PureComponent {
   render() {
     const { isArabic } = this.state;
     return (
-      <div block="PDPSummary">
+      <div block="PDPSummary" mods={{ isArabic }}>
         <div block="PDPSummaryHeaderAndShareAndWishlistButtonContainer">
           {this.renderPDPSummaryHeaderAndShareAndWishlistButton()}
         </div>

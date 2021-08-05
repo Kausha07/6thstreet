@@ -42,6 +42,10 @@
   @include desktop {
     padding-left: 40px;
     padding-right: 0px;
+    &_isArabic {
+      padding-left: 0;
+      padding-right: 40px;
+    }
   }
 
   h1 {
@@ -148,8 +152,6 @@
       letter-spacing: 0;
       line-height: 30px;
     }
-
-
   }
   .PriceContainer {
     display: flex;
