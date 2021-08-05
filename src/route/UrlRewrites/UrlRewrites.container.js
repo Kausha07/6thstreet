@@ -114,16 +114,6 @@ export class UrlRewritesContainer extends PureComponent {
           });
         }
       }
-    } else if (
-      !LocationState &&
-      prevLocaState !== LocationState &&
-      prevLocaState.includes("?")
-    ) {
-      let initialKey = prevLocaPathname.split('?')[0].split("=")[0]
-      history.push({
-        pathname: `${pathname}`,
-        state: `${pathname}?${query.split(initialKey)[0]}`,
-      });
     }
 
     if (pathname !== prevPathname || locale !== prevLocale) {
