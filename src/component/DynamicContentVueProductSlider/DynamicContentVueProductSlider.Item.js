@@ -132,7 +132,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
         data-category={category}
       >
         <Link
-          to={link}
+          to={link.split('?q=')[0]}
           data-banner-type="vueSlider"
           onClick={() => {
             this.onclick(widgetID);
