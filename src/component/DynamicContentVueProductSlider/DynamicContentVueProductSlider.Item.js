@@ -135,6 +135,10 @@ class DynamicContentVueProductSliderItem extends PureComponent {
       widgetID,
     } = this.props;
     const { isArabic } = this.state;
+    let newLink = link
+    if(this.props.data.url){
+      newLink = this.props.data.url
+    }
     return (
       <div
         block="VueProductSlider"
@@ -145,7 +149,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
         ref={this.childRef}
       >
         <Link
-          to={link}
+          to={newLink}
           data-banner-type="vueSlider"
           block="VueProductSlider-Link"
           onClick={() => {
