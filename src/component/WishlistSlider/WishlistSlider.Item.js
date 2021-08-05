@@ -1,15 +1,11 @@
+import Image from "Component/Image";
 import Link from "Component/Link";
-import React from "react";
 import PropTypes from "prop-types";
-import { PureComponent } from "react";
-import { getCurrency } from "Util/App/App";
-import WishlistIcon from "Component/WishlistIcon";
+import React, { PureComponent } from "react";
 import { isArabic } from "Util/App";
+import { getCurrency } from "Util/App/App";
 
-import VueIntegrationQueries from "Query/vueIntegration.query";
-import { getUUID } from "Util/Auth";
-import { VUE_CAROUSEL_CLICK } from "Util/Event";
-class DynamicContentVueProductSliderItem extends PureComponent {
+class WishlistSliderItem extends PureComponent {
   static propTypes = {
     data: PropTypes.object.isRequired,
   };
@@ -20,23 +16,6 @@ class DynamicContentVueProductSliderItem extends PureComponent {
       isArabic: isArabic(),
     };
   }
-
-  onclick = (widgetID) => {
-    // vue analytics
-    const locale = VueIntegrationQueries.getLocaleFromUrl();
-    VueIntegrationQueries.vueAnalayticsLogger({
-      event_name: VUE_CAROUSEL_CLICK,
-      params: {
-        event: VUE_CAROUSEL_CLICK,
-        pageType: "plp",
-        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-        clicked: Date.now(),
-        uuid: getUUID(),
-        referrer: "desktop",
-        widgetID: widgetID,
-      },
-    });
-  };
 
   discountPercentage(basePrice, specialPrice, haveDiscount) {
     let discountPercentage = Math.round(100 * (1 - specialPrice / basePrice));
@@ -109,68 +88,38 @@ class DynamicContentVueProductSliderItem extends PureComponent {
     return null;
   }
 
-  renderIsNew(is_new_in) {
-    if (is_new_in) {
-      return (
-        <div block="VueProductSlider" elem="VueIsNewTag">
-          <span>{__("New")}</span>
-        </div>
-      );
-    }
-    return null;
-  }
-
   render() {
     const {
-      data: {
-        category,
-        thumbnail_url,
-        name,
-        brand_name,
-        price,
-        is_new_in = false,
-        sku,
-        link = "",
-      },
-      widgetID,
+      data: { thumbnail_url, name, brand_name, price, sku, url = "" },
     } = this.props;
     const { isArabic } = this.state;
-    let newLink = link
-    if(this.props.data.url){
-      newLink = this.props.data.url
-    }
     return (
       <div
         block="VueProductSlider"
         elem="VueProductContainer"
         data-sku={sku}
-        data-category={category}
         mods={{ isArabic }}
         ref={this.childRef}
       >
         <Link
-          to={newLink}
+          to={url}
           data-banner-type="vueSlider"
           block="VueProductSlider-Link"
-          onClick={() => {
-            this.onclick(widgetID);
-          }}
         >
-          <img
+          <Image src={thumbnail_url} alt={name} />
+          {/* <img
             block="VueProductSlider"
             elem="VueProductImage"
             src={thumbnail_url}
             alt={name}
-          />
+          /> */}
         </Link>
         <h6 id="brandName">{brand_name}</h6>
         <span id="productName">{name}</span>
         {this.renderPrice(price)}
-        {this.renderIsNew(is_new_in)}
-        <WishlistIcon sku={sku} />
       </div>
     );
   }
 }
 
-export default DynamicContentVueProductSliderItem;
+export default WishlistSliderItem;

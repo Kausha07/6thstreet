@@ -143,6 +143,11 @@ export class Algolia {
     return data;
   }
 
+  async autocompleteSearch(query, limit) {
+    const data = (await AlgoliaSDK.autocompleteSearch(query, limit)) || {};
+    return data;
+  }
+
   async getTopSearches() {
     const data = (await AlgoliaSDK.getTopSearches()) || [];
     return data;

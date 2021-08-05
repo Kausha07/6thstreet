@@ -6,15 +6,19 @@ import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { Products } from "Util/API/endpoint/Product/Product.type";
 import {
   formatQuerySuggestions,
+  getGenderInArabic,
   getHighlightedText,
 } from "Util/API/endpoint/Suggestions/Suggestions.create";
+import { WishlistItems } from "Util/API/endpoint/Wishlist/Wishlist.type";
 import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
 import BrowserDatabase from "Util/BrowserDatabase";
 import isMobile from "Util/Mobile";
 import DynamicContentVueProductSliderContainer from "../DynamicContentVueProductSlider";
+import WishlistSliderContainer from "../WishlistSlider";
 import BRAND_MAPPING from "./SearchSiggestion.config";
 import "./SearchSuggestion.style";
+
 var ESCAPE_KEY = 27;
 
 class SearchSuggestion extends PureComponent {
@@ -34,6 +38,7 @@ class SearchSuggestion extends PureComponent {
     // recommendedForYou: PropTypes.array,
     trendingProducts: PropTypes.array,
     searchString: PropTypes.string,
+    wishlistData: WishlistItems.isRequired,
   };
 
   static defaultProps = {
@@ -135,7 +140,7 @@ class SearchSuggestion extends PureComponent {
     let formattedBrandName;
     const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
     if (isArabic) {
-      let requestedGender = this.getGenderInArabic(gender);
+      let requestedGender = getGenderInArabic(gender);
       let arabicAlphabetDigits =
         /[\u0600-\u06ff]|[\u0750-\u077f]|[\ufb50-\ufc3f]|[\ufe70-\ufefc]|[\u0200]|[\u00A0]/g;
       if (arabicAlphabetDigits.test(brandName)) {
@@ -165,23 +170,12 @@ class SearchSuggestion extends PureComponent {
     const { isArabic } = this.state;
     let requestedGender = gender;
     if (isArabic) {
-      requestedGender = this.getGenderInArabic(gender);
+      requestedGender = getGenderInArabic(gender);
     }
     const catalogUrl = `/catalogsearch/result/?q=${formatQuerySuggestions(
       query
     )}&qid=${queryID}&p=0&dFR[gender][0]=${requestedGender}`;
     return catalogUrl;
-  };
-
-  getGenderInArabic = (gender) => {
-    switch (gender) {
-      case "men":
-        return "رجال";
-      case "women":
-        return "نساء";
-      case "kids":
-        return "أطفال";
-    }
   };
 
   renderQuerySuggestion = (querySuggestions) => {
@@ -444,6 +438,23 @@ class SearchSuggestion extends PureComponent {
       );
     }
   };
+
+  renderWishlistProducts = () => {
+    const { wishlistData } = this.props;
+    if (wishlistData && wishlistData.length > 0) {
+      return (
+        <div className="recommendedForYouSliderBox">
+          <WishlistSliderContainer
+            products={wishlistData}
+            heading={__("Wishlist")}
+            key={`Wishlist`}
+            isHome={true}
+          />
+        </div>
+      );
+    }
+  };
+
   renderTrendingBrand = (brand, i) => {
     const { label = "", image_url } = brand;
 
@@ -561,14 +572,19 @@ class SearchSuggestion extends PureComponent {
         {this.renderTrendingBrands()}
         {/* {this.renderRecommendedForYou()} */}
         {this.renderTrendingProducts()}
+        {this.renderWishlistProducts()}
         {this.renderTrendingTags()}
       </>
     );
   }
 
   renderContent() {
-    const { isActive, isEmpty, inNothingFound } = this.props;
-
+    const {
+      isActive,
+      isEmpty,
+      inNothingFound,
+      querySuggestions = [],
+    } = this.props;
     if (!isActive) {
       return null;
     }
@@ -577,7 +593,7 @@ class SearchSuggestion extends PureComponent {
       return this.renderEmptySearch();
     }
 
-    if (inNothingFound) {
+    if (inNothingFound && querySuggestions.length === 0) {
       return this.renderNothingFound();
     }
 

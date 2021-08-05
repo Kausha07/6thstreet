@@ -1,6 +1,9 @@
 import { getStore } from "Store";
 import { setSearchSuggestions } from "Store/SearchSuggestions/SearchSuggestions.action";
-import { getCustomQuerySuggestions } from "Util/API/endpoint/Suggestions/Suggestions.create";
+import {
+  getCustomQuerySuggestions,
+  getGenderInArabic,
+} from "Util/API/endpoint/Suggestions/Suggestions.create";
 import { formatProductSuggestions } from "Util/API/endpoint/Suggestions/Suggestions.format";
 import Algolia from "Util/API/provider/Algolia";
 import { isArabic } from "Util/App";
@@ -25,7 +28,7 @@ export class SearchSuggestionsDispatcher {
           ? {
               query: search,
               limit: PRODUCT_RESULT_LIMIT,
-              gender: gender,
+              gender: getGenderInArabic(gender),
               addAnalytics: false,
             }
           : {
@@ -74,7 +77,7 @@ export class SearchSuggestionsDispatcher {
       // const lang = language === 'en' ? 'english' : 'arabic';
       const data = await new Algolia({
         index: sourceQuerySuggestionIndex,
-      }).getSuggestions(
+      }).autocompleteSearch(
         isArabic()
           ? {
               query: search,
