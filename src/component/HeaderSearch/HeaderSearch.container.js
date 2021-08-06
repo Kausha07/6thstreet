@@ -89,7 +89,9 @@ export class HeaderSearchContainer extends PureComponent {
       );
     }
     const queryID = productData?.queryID ? productData?.queryID : null;
-    history.push(`/catalogsearch/result/?q=${search}&qid=${queryID}`);
+    history.push(
+      `/catalogsearch/result/?q=${search}&qid=${queryID}&dFR[gender][0]=${gender}`
+    );
   }
 
   hideSearchBar() {

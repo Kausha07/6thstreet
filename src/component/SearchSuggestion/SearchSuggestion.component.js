@@ -506,7 +506,7 @@ class SearchSuggestion extends PureComponent {
 
   renderTrendingBrand = (brand, i) => {
     const { label = "", image_url } = brand;
-
+    const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
     const urlName = label
       .replace("&", "")
       .replace(/'/g, "")
@@ -517,7 +517,7 @@ class SearchSuggestion extends PureComponent {
     return (
       <li key={i}>
         <Link
-          to={`/${urlName}.html?q=${urlName}`}
+          to={`/${urlName}.html?q=${urlName}&dFR[gender][0]=${gender}`}
           onClick={() => this.handleTrendingBrandsClick(urlName)}
         >
           <div block="SearchSuggestion" elem="TrandingImg">
@@ -565,10 +565,15 @@ class SearchSuggestion extends PureComponent {
   }
 
   renderTopSearch = ({ search, link }, i) => {
+    const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
     return (
       <li key={i}>
         <Link
-          to={link ? link : `/catalogsearch/result/?q=${search}`}
+          to={
+            link
+              ? link
+              : `/catalogsearch/result/?q=${search}&dFR[gender][0]=${gender}`
+          }
           onClick={() => this.onSearchQueryClick(search)}
         >
           <div block="SearchSuggestion" elem="TopSearches">
@@ -592,10 +597,15 @@ class SearchSuggestion extends PureComponent {
   // recent searches
 
   renderRecentSearch = ({ name, link }, i) => {
+    const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
     return (
       <li key={i}>
         <Link
-          to={link ? link : `/catalogsearch/result/?q=${name}`}
+          to={
+            link
+              ? link
+              : `/catalogsearch/result/?q=${name}&dFR[gender][0]=${gender}`
+          }
           onClick={() => this.onSearchQueryClick(name)}
         >
           <div block="SearchSuggestion" elem="TopSearches">
