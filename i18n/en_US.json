@@ -1,4 +1,5 @@
 {
+    "HomeCategory": null,
     "Club Apparel Points are applied!": null,
     "Club Apparel Points are removed!": null,
     "There was an error, please try again later.": null,
@@ -730,5 +731,6 @@
     "PASSWORD": null,
     "Model's height is ": null,
     "& is wearing ": null,
-    " & is wearing ": null
+    " & is wearing ": null,
+    "Home_Category": null
 }

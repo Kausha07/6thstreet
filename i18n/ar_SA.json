@@ -1,4 +1,5 @@
 {
+    "HomeCategory": null,
     "There was an error creating your cart, please refresh the page in a little while": "هناك خطأ ما ، يرجى تحديث الصفحة بعد قليل",
     "There was an error": "هنالك خطأ من طرفنا يرجى المحاولة مرة أخرى",
     "Something went wrong!": "هنالك خطأ من طرفنا يرجى المحاولة مرة أخرى",
@@ -818,5 +819,6 @@
     "EMAIL*": null,
     "null": null,
     "PUN": null,
-    "West (CM)": null
+    "West (CM)": null,
+    "Home_Category": null
 }
