@@ -411,6 +411,7 @@ class SearchSuggestion extends PureComponent {
       <>
         {this.renderQuerySuggestions()}
         {/* {this.renderBrands()} */}
+        {this.renderWishlistProducts()}
         {this.renderProducts()}
       </>
     );
@@ -472,12 +473,28 @@ class SearchSuggestion extends PureComponent {
   };
 
   renderWishlistProducts = () => {
-    const { wishlistData } = this.props;
+    const { wishlistData, searchString } = this.props;
     if (wishlistData && wishlistData.length > 0) {
+      console.log("wishlistData", wishlistData);
+      let filteredWishlist =
+        wishlistData.filter(
+          (item) =>
+            item.product.brand_name
+              .toUpperCase()
+              .includes(searchString.toUpperCase()) ||
+            item.product.name
+              .toUpperCase()
+              .includes(searchString.toUpperCase()) ||
+            item.product.sku.toUpperCase().includes(searchString.toUpperCase())
+        ) || [];
       return (
         <div className="recommendedForYouSliderBox">
           <WishlistSliderContainer
-            products={wishlistData}
+            products={
+              searchString && filteredWishlist.length > 0
+                ? filteredWishlist
+                : wishlistData
+            }
             heading={__("Your Wishlist")}
             key={`Wishlist`}
             isHome={true}
