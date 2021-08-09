@@ -206,6 +206,7 @@
     "view more details": "عرض المزيد من التفاصيل",
     "What are you looking for?": "ما الذي تبحث عنه؟",
     "WishList": "قائمة الأمنيات",
+    "Your WishList": "قائمة الأمنيات",
     "CATEGORIES": "الفئات",
     "Categories": null,
     "Please select product options!": null,
@@ -829,5 +830,6 @@
     "KIDS GIRL": null,
     "KIDS BOY": null,
     "KIDS BABY BOY": null,
-    "KIDS": null
+    "KIDS": null,
+    "Your Wishlist": null
 }

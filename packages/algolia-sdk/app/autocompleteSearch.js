@@ -9,8 +9,6 @@ export default async function autocompleteSearch(params, options) {
         ...queryOptions,
       },
       (err, data = {}) => {
-        console.log(data, err);
-
         if (err) {
           return reject(err);
         }

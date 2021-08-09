@@ -5,10 +5,10 @@ import React, { PureComponent } from "react";
 import { isArabic } from "Util/App";
 import { getUUID } from "Util/Auth";
 import { VUE_CAROUSEL_SWIPE } from "Util/Event";
-import DynamicContentVueProductSliderItem from "./DynamicContentVueProductSlider.Item";
-import "./DynamicContentVueProductSlider.style.scss";
+import TrendingProductsVueSliderItem from "./TrendingProductsVueSlider.Item";
+import "./TrendingProductsVueSlider.style.scss";
 
-class DynamicContentVueProductSlider extends PureComponent {
+class TrendingProductsVueSlider extends PureComponent {
   static propTypes = {
     withViewAll: PropTypes.bool,
     sliderLength: PropTypes.number,
@@ -163,7 +163,7 @@ class DynamicContentVueProductSlider extends PureComponent {
             {items.map((item) => {
               const { sku } = item;
               return (
-                <DynamicContentVueProductSliderItem
+                <TrendingProductsVueSliderItem
                   key={sku}
                   data={item}
                   ref={this.itemRef}
@@ -189,4 +189,4 @@ class DynamicContentVueProductSlider extends PureComponent {
   }
 }
 
-export default DynamicContentVueProductSlider;
+export default TrendingProductsVueSlider;
