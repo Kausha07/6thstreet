@@ -92,7 +92,12 @@ class PDPSummary extends PureComponent {
         return (
             <>
                 { this.renderPDPSummaryHeader() }
-                <div block="ShareAndWishlistButtonContainer">
+                <div
+                    block="ShareAndWishlistButtonContainer"
+                    mods={{
+                        isArabic: isArabic()
+                    }}
+                >
                     <ShareButton
                         title = { document.title }
                         text =  {`Hey check this out: ${document.title}`}
