@@ -506,7 +506,9 @@ class SearchSuggestion extends PureComponent {
 
   renderTrendingBrand = (brand, i) => {
     const { label = "", image_url } = brand;
+    const { isArabic } = this.state;
     const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
+    let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
     const urlName = label
       .replace("&", "")
       .replace(/'/g, "")
@@ -517,7 +519,7 @@ class SearchSuggestion extends PureComponent {
     return (
       <li key={i}>
         <Link
-          to={`/${urlName}.html?q=${urlName}&dFR[gender][0]=${gender}`}
+          to={`/${urlName}.html?q=${urlName}&dFR[gender][0]=${requestedGender}`}
           onClick={() => this.handleTrendingBrandsClick(urlName)}
         >
           <div block="SearchSuggestion" elem="TrandingImg">
@@ -565,14 +567,16 @@ class SearchSuggestion extends PureComponent {
   }
 
   renderTopSearch = ({ search, link }, i) => {
+    const { isArabic } = this.state;
     const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
+    let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
     return (
       <li key={i}>
         <Link
           to={
             link
               ? link
-              : `/catalogsearch/result/?q=${search}&dFR[gender][0]=${gender}`
+              : `/catalogsearch/result/?q=${search}&dFR[gender][0]=${requestedGender}`
           }
           onClick={() => this.onSearchQueryClick(search)}
         >
@@ -597,14 +601,16 @@ class SearchSuggestion extends PureComponent {
   // recent searches
 
   renderRecentSearch = ({ name, link }, i) => {
+    const { isArabic } = this.state;
     const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
+    let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
     return (
       <li key={i}>
         <Link
           to={
             link
               ? link
-              : `/catalogsearch/result/?q=${name}&dFR[gender][0]=${gender}`
+              : `/catalogsearch/result/?q=${name}&dFR[gender][0]=${requestedGender}`
           }
           onClick={() => this.onSearchQueryClick(name)}
         >
