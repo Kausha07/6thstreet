@@ -26,7 +26,8 @@ const transformParams = (str) => str.replace("#", "?");
 const parseURL = (URL) => urlparse(URL, true);
 
 const hFR = (str) => str.match(/hFR\[(categories\.level)\d\]\[(\d)\]/);
-const dFR = (str) => str.match(/&(.*)/);
+const dFR = (str) => str.match(/dFR\[(.*)\]\[(\d)\]/);
+const noURLdFR = (str) => str.match(/&(.*)/);
 const nR = (str) => str.match(/nR\[(\w*)\]\[(\W*)\]\[(\d)\]/);
 
 const getAlgoliaOperator = (urlOperator = "") => {
@@ -49,6 +50,15 @@ const getFacetParam = ({ urlParam = "", urlValue = "" }) => {
     const [, categoryKeyWithoutLevel] = is_hFR;
     return {
       facetKey: `${categoryKeyWithoutLevel}${level}`,
+      facetValue: urlValue,
+    };
+  }
+
+  const is_URL_no_dFR = noURLdFR(urlParam);
+  if (is_URL_no_dFR) {
+    const [, facetKey] = is_URL_no_dFR;
+    return {
+      facetKey,
       facetValue: urlValue,
     };
   }
