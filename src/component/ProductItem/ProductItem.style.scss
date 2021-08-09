@@ -19,6 +19,11 @@
       flex-direction: none;
       grid-gap: 10px;
     }
+    .WishlistIcon {
+      &-Icon {
+        left: unset !important;
+      }
+    }
   }
 
   &::before {
