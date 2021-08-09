@@ -80,10 +80,12 @@ export class CartItemContainer extends PureComponent {
     updateProductInCart: PropTypes.func.isRequired,
     removeProduct: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
+    readOnly: PropTypes.bool,
   };
 
   static defaultProps = {
     brand_name: "",
+    readOnly: false
   };
 
   state = {
@@ -290,8 +292,11 @@ export class CartItemContainer extends PureComponent {
   }
 
   toggleCartItemQuantityPopup() {
-    const { showOverlay } = this.props;
+    const { showOverlay, readOnly } = this.props;
     const { showCartItemQuantityPopup } = this.state;
+    if(readOnly){
+      return;
+    }
 
     if(!showCartItemQuantityPopup){
       showOverlay(CART_ITEM_QUANTITY_POPUP_ID);

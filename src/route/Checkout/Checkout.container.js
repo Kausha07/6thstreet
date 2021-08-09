@@ -24,7 +24,7 @@ import {
   mapDispatchToProps as sourceMapDispatchToProps,
 } from "SourceRoute/Checkout/Checkout.container";
 import { setGender } from "Store/AppState/AppState.action";
-import { resetCart } from "Store/Cart/Cart.action";
+import { resetCart  } from "Store/Cart/Cart.action";
 // eslint-disable-next-line no-unused-vars
 import CartDispatcher from "Store/Cart/Cart.dispatcher";
 import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
@@ -676,7 +676,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   }
 
   setDetailsStep(orderID, incrementID) {
-    const { setNavigationState, sendVerificationCode, isSignedIn, customer } =
+    const { setNavigationState, sendVerificationCode, isSignedIn, customer, } =
       this.props;
     const { shippingAddress } = this.state;
 
@@ -702,13 +702,14 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
     BrowserDatabase.deleteItem(PAYMENT_TOTALS);
 
+    
     this.setState({
       isLoading: false,
       checkoutStep: DETAILS_STEP,
       orderID,
       incrementID,
     });
-
+    
     setNavigationState({
       name: DETAILS_STEP,
     });
@@ -746,6 +747,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       saveCreditCard,
       newCardVisible,
       showOverlay,
+      hideActiveOverlay
     } = this.props;
     const { order_id, increment_id, id = "", creditCardData } = this.state;
     getPaymentAuthorization(id).then((response) => {
@@ -754,6 +756,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
         if (status === "Authorized") {
           BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
+          hideActiveOverlay();
           this.setDetailsStep(order_id, increment_id);
           this.resetCart();
           this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
@@ -775,6 +778,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         if (status === "Declined") {
           cancelOrder(order_id, PAYMENT_FAILED);
           this.setState({ isLoading: false, isFailed: true });
+          hideActiveOverlay();
           this.setDetailsStep(order_id, increment_id);
           this.resetCart();
         }
@@ -821,7 +825,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   }
 
   processTabby(paymentInformation) {
-    const { verifyPayment, updateTabbyPayment } = this.props;
+    const { verifyPayment, updateTabbyPayment , hideActiveOverlay} = this.props;
     const { checkoutStep } = this.state;
     const { tabbyPaymentId } = paymentInformation;
     const { order_id, increment_id } = this.state;
@@ -832,6 +836,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
     verifyPayment(tabbyPaymentId).then(({ status }) => {
       if (status === AUTHORIZED_STATUS || status === CAPTURED_STATUS) {
+        hideActiveOverlay()
         BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
         this.setState({ tabbyPaymentStatus: status, isTabbyPopupShown: false });
         updateTabbyPayment(tabbyPaymentId, order_id);

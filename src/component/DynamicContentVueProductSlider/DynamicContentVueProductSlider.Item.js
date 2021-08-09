@@ -3,11 +3,11 @@ import WishlistIcon from "Component/WishlistIcon";
 import PropTypes from "prop-types";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import React, { PureComponent } from "react";
-import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
 import { getUUID } from "Util/Auth";
 import { VUE_CAROUSEL_CLICK } from "Util/Event";
 
+import { isArabic } from "Util/App";
 class DynamicContentVueProductSliderItem extends PureComponent {
   static propTypes = {
     data: PropTypes.object.isRequired,
@@ -135,14 +135,15 @@ class DynamicContentVueProductSliderItem extends PureComponent {
       widgetID,
     } = this.props;
     const { isArabic } = this.state;
-    let newLink = link
-    if(this.props.data.url){
-      newLink = this.props.data.url
+    let newLink = link;
+    if (this.props.data.url) {
+      newLink = this.props.data.url;
     }
     return (
       <div
         block="VueProductSlider"
         elem="VueProductContainer"
+        mods={{ isArabic }}
         data-sku={sku}
         data-category={category}
         mods={{ isArabic }}
@@ -162,12 +163,12 @@ class DynamicContentVueProductSliderItem extends PureComponent {
             src={thumbnail_url}
             alt={name}
           />
+          <h6 id="brandName">{brand_name}</h6>
+          <span id="productName">{name}</span>
+          {this.renderPrice(price)}
+          {this.renderIsNew(is_new_in)}
         </Link>
-        <h6 id="brandName">{brand_name}</h6>
-        <span id="productName">{name}</span>
-        {this.renderPrice(price)}
-        {this.renderIsNew(is_new_in)}
-        <WishlistIcon sku={sku} data={data} />
+        <WishlistIcon sku={sku} />
       </div>
     );
   }

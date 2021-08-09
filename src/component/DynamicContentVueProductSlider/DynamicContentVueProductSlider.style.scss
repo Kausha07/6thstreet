@@ -16,8 +16,8 @@
       padding-left: 30px;
     }
   }
-  @include desktop{
-    &-Link{
+  @include desktop {
+    &-Link {
       height: 278px;
     }
   }
@@ -92,6 +92,7 @@
   }
 
   &-SliderContainer::-webkit-scrollbar {
+    display: none;
     width: 6px;
     height: 6px;
   }
@@ -110,13 +111,10 @@
     position: relative;
     margin-right: 7.92px;
     display: inline-block;
-    vertical-align: top;
-    &:nth-last-child(2) {
-      margin-right: 0;
-    }
     &_isArabic {
-      &:nth-child(2) {
-        margin-right: 0;
+      .WishlistIcon {
+        left: 0.8rem !important;
+        right: unset !important;
       }
     }
 

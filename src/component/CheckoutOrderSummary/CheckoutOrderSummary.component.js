@@ -77,7 +77,12 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     return (
       <div block="CheckoutOrderSummary" elem="OrderItems">
         <ul block="CheckoutOrderSummary" elem="CartItemList">
-          {items.map(this.renderItem)}
+          {
+            items.map((item)=>(
+              React.cloneElement(this.renderItem(item), {
+                readOnly: true
+              })
+            ))}
         </ul>
       </div>
     );
@@ -211,8 +216,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
               getDiscountFromTotals(totals, "clubapparel"),
               __("Club Apparel Redemption")
             )}
-            {couponCode ? 
-              this.renderPriceLine(discount, __("Discount (%s)", couponCode)) :this.renderPriceLine(discount, __("Discount")) }
+            {couponCode && this.renderPriceLine(discount, __("Discount")) }
 
 
             {this.renderPriceLine(

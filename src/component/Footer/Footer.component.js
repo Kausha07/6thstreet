@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import { withRouter } from 'react-router';
+import { connect } from "react-redux";
 
 import CmsBlock from 'Component/CmsBlock';
 import FooterBottom from 'Component/FooterBottom';
@@ -10,6 +11,10 @@ import FooterMobile from 'Component/FooterMobile';
 import isMobile from 'Util/Mobile';
 
 import './Footer.style';
+
+export const mapStateToProps = (state) => {
+   return  {checkoutDetails: state.CartReducer.checkoutDetails}
+  };
 
 export class Footer extends PureComponent {
     static propTypes = {
@@ -22,8 +27,11 @@ export class Footer extends PureComponent {
 
     state = {
         isCheckout: false,
-        isFooterAccountOpen: false
+        isFooterAccountOpen: false,
+        isMobile: isMobile.any() || isMobile.tablet(),
     };
+
+   
 
     static getDerivedStateFromProps() {
         return location.pathname.match(/checkout/) ? {
@@ -41,14 +49,19 @@ export class Footer extends PureComponent {
     renderSections() {
         const { footer_content: { footer_cms } = {} } = window.contentConfiguration;
 
-        const { isCheckout } = this.state;
+        const { isCheckout , isMobile} = this.state;
 
+        const {checkoutDetails}= this.props
         if (footer_cms) {
             return <CmsBlock identifier={ footer_cms } />;
         }
 
-        if (isCheckout) {
-            return <FooterMiddle />;
+        if (isCheckout  && !checkoutDetails) {
+                return <FooterMiddle />;
+        }
+
+        if(checkoutDetails && isMobile){
+            return null
         }
 
         return (
@@ -83,4 +96,4 @@ export class Footer extends PureComponent {
     }
 }
 
-export default withRouter(Footer);
+export default connect(mapStateToProps)(withRouter(Footer));
