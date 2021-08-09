@@ -43,11 +43,13 @@ export class CartItem extends PureComponent {
     maxSaleQuantity: PropTypes.number.isRequired,
     handleChangeQuantity: PropTypes.func.isRequired,
     getCurrentProduct: PropTypes.func.isRequired,
+    toggleCartItemQuantityPopup: PropTypes.func.isRequired,
     thumbnail: PropTypes.string.isRequired,
     hideActiveOverlay: PropTypes.func.isRequired,
     closePopup: PropTypes.func,
     availability: PropTypes.number.isRequired,
     isCartPage: PropTypes.bool,
+    readOnly: PropTypes.bool,
   };
 
   state = {
@@ -61,6 +63,7 @@ export class CartItem extends PureComponent {
     brand_name: "",
     closePopup: () => {},
     isCartPage: false,
+    readOnly: false,
   };
 
   static getDerivedStateFromProps(props) {
@@ -241,19 +244,18 @@ export class CartItem extends PureComponent {
       currency_code,
       item: { row_total, basePrice },
     } = this.props;
-    // debugger
+
     const { isArabic } = this.state;
     const decimals = FIXED_CURRENCIES.includes(currency_code) ? 3 : 2;
-    let percentDiscount = ((basePrice - row_total) * 100) / basePrice;
 
     const withoutDiscount = (
       <>
-        <span>{`(-${parseFloat(percentDiscount).toFixed(1)}%)`}</span>
-        <span>{`  ${currency_code} ${parseFloat(row_total).toFixed(
-          decimals
-        )}`}</span>
+        <span>{currency_code}</span>
+        <span>{`${parseFloat(row_total).toFixed(decimals)}`}</span>
       </>
     );
+
+    const discountPercentage = Math.round(100 * (1 - row_total / basePrice));
 
     const withDiscount = (
       <div block="CartItem" elem="DiscountPrice" mods={{ isArabic }}>
@@ -265,7 +267,10 @@ export class CartItem extends PureComponent {
           <span>{currency_code}</span>
           <span>{`${parseFloat(basePrice).toFixed(decimals)}`}</span>
         </div>
-        <div>{withoutDiscount}</div>
+        <div>
+          {`-${discountPercentage}%`}
+          {withoutDiscount}
+        </div>
       </div>
     );
 

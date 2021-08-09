@@ -253,7 +253,7 @@
   }
 
   .CheckoutNavigation {
-    padding: 19px 60px 45px;
+    padding: 16px 36px;
     display: flex;
 
     @include desktop {
@@ -648,11 +648,9 @@
       position: absolute;
       width: 16px;
       height: 22px;
-      // left: 20px;
-      // top: 30px;
-      left: 10px;
-      top: 20px;
-      background-image: url(./icons/arrow-left-black.svg);
+      left: 20px;
+      top: 30px;
+      background-image: url(../../component/Icons/ChevronLeft/icon.svg);
       background-size: 16px;
       background-repeat: no-repeat;
     }
@@ -677,7 +675,7 @@
       height: 22px;
       left: 6px;
       top: 15px;
-      background-image: url(./icons/arrow-left-black.svg);
+      background-image: url(../../component/Icons/ChevronLeft/icon.svg);
       background-size: 16px;
       background-repeat: no-repeat;
     }
@@ -699,7 +697,7 @@
     :hover {
       @include desktop {
         ::before {
-          background-image: url(./icons/arrow-left-white.svg);
+          background-image: url(../../component/Icons/ChevronLeft/icon.svg);
         }
       }
     }

@@ -474,6 +474,7 @@ export class Checkout extends SourceCheckout {
     } = this.state;
     this.setState({ isSuccess: true });
 
+
     if (!isFailed) {
       return (
         <CheckoutSuccess
@@ -503,6 +504,7 @@ export class Checkout extends SourceCheckout {
         isVerificationCodeSent={isVerificationCodeSent}
         selectedCard={newCardVisible ? {} : selectedCard}
         QPAY_DETAILS={QPayDetails}
+
       />
     );
   }
@@ -750,7 +752,6 @@ export class Checkout extends SourceCheckout {
   render() {
     const { isSuccess } = this.state;
     const { checkoutStep } = this.props;
-
     return (
       <>
         {this.renderBinPromotion()}

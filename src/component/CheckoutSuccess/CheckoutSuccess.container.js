@@ -23,6 +23,8 @@ import { ADD_TO_CART_ALGOLIA } from "Util/Event";
 import history from "Util/History";
 import isMobile from "Util/Mobile";
 import CheckoutSuccess from "./CheckoutSuccess.component";
+import CartDispatcher from "Store/Cart/Cart.dispatcher";
+
 
 export const BreadcrumbsDispatcher = import(
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
@@ -57,6 +59,7 @@ export const mapDispatchToProps = (dispatch) => ({
     MyAccountDispatcher.then(({ default: dispatcher }) =>
       dispatcher.requestCustomerData(dispatch)
     ),
+    setCheckoutDetails: (checkoutDetails) => CartDispatcher.setCheckoutStep(dispatch,checkoutDetails),
 });
 
 export class CheckoutSuccessContainer extends PureComponent {
@@ -138,7 +141,10 @@ export class CheckoutSuccessContainer extends PureComponent {
       shippingAddress: { phone: guestPhone },
       isSignedIn,
       totals,
+      setCheckoutDetails
     } = this.props;
+
+    setCheckoutDetails(true)
 
     var data = localStorage.getItem("customer");
     let userData = JSON.parse(data);
@@ -147,14 +153,17 @@ export class CheckoutSuccessContainer extends PureComponent {
       userToken = userData.data.id;
     }
     totals?.items?.map((item) => {
-      if (item?.full_item_info?.search_query_id) {
+      var queryID = item?.full_item_info?.search_query_id
+        ? item?.full_item_info?.search_query_id
+        : null;
+      if (queryID) {
         new Algolia().logAlgoliaAnalytics(
           "conversion",
           ADD_TO_CART_ALGOLIA,
           [],
           {
             objectIDs: [item?.full_item_info?.parent_id.toString()],
-            queryID: item?.full_item_info?.search_query_id,
+            queryID: queryID,
             userToken: userToken ? `user-${userToken}` : getUUIDToken(),
           }
         );
@@ -176,9 +185,7 @@ export class CheckoutSuccessContainer extends PureComponent {
       this.setState({ isMobileVerification: true });
     }
 
-    updateMeta({ title: __("Account") });
-
-    this._updateBreadcrumbs();
+    
   }
 
   containerProps = () => {

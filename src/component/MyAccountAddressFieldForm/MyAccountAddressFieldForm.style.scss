@@ -164,10 +164,8 @@
       }
     }
 
-    .Field {
-      &_type_toggle {
-        display: flex;
-      }
+    input {
+      padding-left: 100px;
     }
   }
 
@@ -200,7 +198,7 @@
         &_phone {
           input {
             padding-left: 0;
-            padding-right: 80px;
+            padding-right: 100px;
           }
         }
 
