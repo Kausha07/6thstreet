@@ -239,7 +239,8 @@
   .CheckoutNavigation {
     padding: 16px 36px;
     display: flex;
-
+    margin-bottom:45px;
+    
     @include desktop {
       display: none;
     }

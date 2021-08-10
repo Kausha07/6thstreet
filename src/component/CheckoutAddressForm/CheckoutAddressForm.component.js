@@ -4,6 +4,7 @@ import { CheckoutAddressForm as SourceCheckoutAddressForm } from "SourceComponen
 
 import "./CheckoutAddressForm.style";
 
+
 const objTabIndex = {
   city: "6",
   telephone: "9",
@@ -38,8 +39,15 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
       telephone: prevTelephone,
     } = prevState;
 
+    const streetValue = document.getElementById("street")?.value
+
+    if(streetValue === street){
+      this.onChange("street", streetValue)
+    }
+
     if (
       (countryId !== prevCountryId ||
+        streetValue === street||
         regionId !== prevRegionId ||
         city !== prevCity ||
         region !== prevRegion ||
@@ -61,6 +69,7 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
       shippingAddress: { guest_email },
     } = this.props;
     const { telephone, street, ...fieldMap } = super.fieldMap;
+   
 
     fieldMap.street = {
       ...street,
@@ -92,7 +101,6 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
           result[key] = o;
         }
       }
-      console.info("result", result);
       return result;
     }
     return fFieldMap;
@@ -103,9 +111,11 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
 
     const { countryId, regionId, city, telephone = "", street } = this.state;
 
+    const streetValue = document.getElementById("street")?.value
+
     onShippingEstimationFieldsChange({
       country_code: countryId,
-      street,
+      street:street || streetValue,
       region: regionId,
       area: regionId,
       city,
