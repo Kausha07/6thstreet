@@ -26,7 +26,7 @@ import Event, {
 import CartItemQuantityPopup from 'Component/CartItemQuantityPopup';
 import { CART_ITEM_QUANTITY_POPUP_ID } from 'Component/CartItemQuantityPopup/CartItemQuantityPopup.config';
 import CartItem from "./CartItem.component";
-
+import isMobile from "Util/Mobile";
 
 export const CartDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -295,7 +295,7 @@ export class CartItemContainer extends PureComponent {
   toggleCartItemQuantityPopup() {
     const { showOverlay, readOnly } = this.props;
     const { showCartItemQuantityPopup } = this.state;
-    if(readOnly){
+    if(readOnly || !(isMobile.any() || isMobile.tablet())){
       return;
     }
 
@@ -330,7 +330,7 @@ export class CartItemContainer extends PureComponent {
           showCartItemQuantityPopup &&
           <CartItemQuantityPopup
             min={ minSaleQuantity }
-            max={ maxSaleQuantity }
+            max={ Math.min(maxSaleQuantity, 10) }
             value={ qty }
             toggle={ this.toggleCartItemQuantityPopup.bind(this) }
             onChange={ handleChangeQuantity }

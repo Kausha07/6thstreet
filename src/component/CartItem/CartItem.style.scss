@@ -235,6 +235,10 @@
                 text-decoration: none!important;
                 cursor: unset!important;
             }
+            @include desktop {
+                text-decoration: none!important;
+                cursor: unset!important;
+            }
         }
     }
 
@@ -307,6 +311,9 @@
         margin-top: 10px;
         display: flex;
         @include mobile {
+            display: none;
+        }
+        @include tablet {
             display: none;
         }
 
