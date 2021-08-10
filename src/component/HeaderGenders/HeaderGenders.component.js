@@ -56,7 +56,7 @@ class HeaderGenders extends PureComponent {
         {
             label: `${__('HomeCategory')}`,
             key: 'home'
-        },
+        }
     ];
 
     getNewActiveMenuGender = (key) => {
