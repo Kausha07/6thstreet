@@ -146,7 +146,7 @@ class SearchSuggestion extends PureComponent {
     return (
       <li key={i}>
         <Link
-          to={{pathname:`/${urlName}.html`,state:`?q=${urlName}`}}
+          to={{ pathname: `/${urlName}.html`, state: `?q=${urlName}` }}
           onClick={this.closeSearchPopup}
         >
           <div block="SearchSuggestion" elem="TrandingImg">
@@ -172,7 +172,10 @@ class SearchSuggestion extends PureComponent {
   renderTrendingTag = ({ link, label }, i) => (
     <li key={i}>
       <Link
-        to={{ pathname: link.split("?q")[0], state: link.split(".html")[1] }}
+        to={{
+          pathname: link ? link.split("?q")[0] : "#",
+          state: link ? link.split(".html")[1] : "",
+        }}
         onClick={this.closeSearchPopup}
       >
         <div block="SearchSuggestion" elem="TrandingTag">

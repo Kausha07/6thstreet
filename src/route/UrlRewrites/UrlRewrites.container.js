@@ -102,17 +102,10 @@ export class UrlRewritesContainer extends PureComponent {
           }
         }
       } else {
-        if (query && search) {
-          history.push({
-            pathname: `${pathname}`,
-            state: `${pathname}?${search.split("?")[1]}`,
-          });
-        } else {
           history.push({
             pathname: `${pathname}`,
             state: `${pathname}?${query}`,
           });
-        }
       }
     }
 
