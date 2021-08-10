@@ -1,4 +1,5 @@
 {
+    "HomeCategory": "منزل",
     "There was an error creating your cart, please refresh the page in a little while": "هناك خطأ ما ، يرجى تحديث الصفحة بعد قليل",
     "There was an error": "هنالك خطأ من طرفنا يرجى المحاولة مرة أخرى",
     "Something went wrong!": "هنالك خطأ من طرفنا يرجى المحاولة مرة أخرى",
@@ -814,5 +815,10 @@
     "EMAIL OR PHONE": "البريد الإلكتروني او الهاتف",
     "Model's height is ": "طول العارض",
     "& is wearing ": null,
-    " & is wearing ": null
+    " & is wearing ": null,
+    "EMAIL*": null,
+    "null": null,
+    "PUN": null,
+    "West (CM)": null,
+    "Home_Category": null
 }

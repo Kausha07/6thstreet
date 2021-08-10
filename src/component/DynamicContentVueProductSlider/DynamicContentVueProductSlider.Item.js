@@ -6,6 +6,7 @@ import { PureComponent } from "react";
 import { getCurrency } from "Util/App/App";
 import { getUUID } from "Util/Auth";
 import { VUE_CAROUSEL_CLICK } from "Util/Event";
+import { isArabic } from 'Util/App';
 class DynamicContentVueProductSliderItem extends PureComponent {
   static propTypes = {
     data: PropTypes.object.isRequired,
@@ -128,6 +129,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
       <div
         block="VueProductSlider"
         elem="VueProductContainer"
+        mods = {{isArabic: isArabic()}}
         data-sku={sku}
         data-category={category}
       >
@@ -144,11 +146,11 @@ class DynamicContentVueProductSliderItem extends PureComponent {
             src={thumbnail_url}
             alt={name}
           />
+          <h6 id="brandName">{brand_name}</h6>
+          <span id="productName">{name}</span>
+          {this.renderPrice(price)}
+          {this.renderIsNew(is_new_in)}
         </Link>
-        <h6 id="brandName">{brand_name}</h6>
-        <span id="productName">{name}</span>
-        {this.renderPrice(price)}
-        {this.renderIsNew(is_new_in)}
         <WishlistIcon sku={sku} />
       </div>
     );
