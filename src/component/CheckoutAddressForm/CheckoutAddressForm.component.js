@@ -4,9 +4,6 @@ import { CheckoutAddressForm as SourceCheckoutAddressForm } from "SourceComponen
 
 import "./CheckoutAddressForm.style";
 
-import { debounce } from 'Util/Request';
-
-import { UPDATE_STATE_FREQUENCY } from './CheckoutAddressForm.config';
 
 const objTabIndex = {
   city: "6",
@@ -77,7 +74,6 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
     fieldMap.street = {
       ...street,
       onChange: (value) => this.onChange("street", value),
-      // ref:{this.streetInput}
     };
     fieldMap.telephone = {
       ...telephone,
