@@ -43,7 +43,9 @@ export class HeaderSearchContainer extends PureComponent {
     const { pathname } = location;
 
     if (pathname !== prevPathname && pathname !== "/catalogsearch/result/") {
-      this.onSearchChange("");
+      if(prevPathname && pathname && !prevPathname.includes(pathname)){
+        this.onSearchChange("");
+      }
     }
   }
 
