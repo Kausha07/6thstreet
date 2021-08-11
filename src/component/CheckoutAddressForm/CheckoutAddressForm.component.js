@@ -130,7 +130,6 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
     const { isArabic } = this.state;
 
     const isGuestForm = !isSignedIn;
-
     return (
       <FormPortal id={id} name="CheckoutAddressForm">
         <div
