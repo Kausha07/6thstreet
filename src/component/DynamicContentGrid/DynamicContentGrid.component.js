@@ -54,8 +54,8 @@ class DynamicContentGrid extends PureComponent {
     const { link, url } = item;
     let ht = this.props.item_height.toString() + "px";
     const linkTo = {
-      pathname: formatCDNLink(link.split('?q=')[0]),
-      state:  link.split('.html')[1] ,
+      pathname: formatCDNLink(link.split("?q=")[0]),
+      state: "?q=" + link.split("?q=")[1],
     };
     return (
       <div block="CategoryItem" elem="Content" key={i}>

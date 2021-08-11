@@ -137,9 +137,18 @@ const Parser = {
   },
 
   setPage(number) {
-    const appendQuery = history.state.state
-      .split(".html")[1]
-      .replace(/ /g, "%20");
+    const {
+      state: { state: historyState },
+    } = history;
+    let appendQuery;
+    if (historyState.includes(".html")) {
+      appendQuery = historyState
+        .split(".html")[1]
+        .replace(/ /g, "%20")
+        .replace(/%20&%20/gi, "%20%26%20");
+    } else {
+      appendQuery = historyState.replace(/%20&%20/gi, "%20%26%20");
+    }
     const urlLink = (location.origin + location.pathname).concat(
       `${appendQuery}`
     );
@@ -162,11 +171,11 @@ const Parser = {
 
   setParam(key, values = []) {
     let url;
-    const {state:{state:historyState}} = history
+    const {
+      state: { state: historyState },
+    } = history;
     if (historyState) {
-      const appendQuery = historyState
-        .split(".html")[1]
-        .replace(/ /g, "%20");
+      const appendQuery = historyState.split(".html")[1].replace(/ /g, "%20");
       const urlLink = (location.origin + location.pathname).concat(
         `${appendQuery}`
       );
@@ -195,7 +204,7 @@ const Parser = {
       if (!values) {
         url.searchParams.delete(`${key}`);
       } else {
-      url.searchParams.append(`&${key}`, values);
+        url.searchParams.append(`&${key}`, values);
       }
     }
     // // update the URL, preserve the state
@@ -203,12 +212,12 @@ const Parser = {
     const { pathname } = location;
 
     // URL modification in case of filter
-  
-      let sentQuery = this.createCustomQuery(search);
-      browserHistory.push({
-        pathname: `${pathname + sentQuery}`,
-        state: `${href}`,
-      });
+
+    let sentQuery = this.createCustomQuery(search);
+    browserHistory.push({
+      pathname: `${pathname + sentQuery}`,
+      state: `${href}`,
+    });
   },
   createCustomQuery(search) {
     let arrQuery = search.split("&");
