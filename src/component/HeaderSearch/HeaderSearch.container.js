@@ -79,7 +79,7 @@ export class HeaderSearchContainer extends PureComponent {
     );
     const queryID = productData?.queryID ? productData?.queryID : null;
     history.push({
-      pathname: `/catalogsearch/result`,
+      pathname: `/catalogsearch/result/`,
       state: `?q=${search}&qid=${queryID}`,
     });
   }

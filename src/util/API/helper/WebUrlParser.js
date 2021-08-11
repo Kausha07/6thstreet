@@ -175,7 +175,15 @@ const Parser = {
       state: { state: historyState },
     } = history;
     if (historyState) {
-      const appendQuery = historyState.split(".html")[1].replace(/ /g, "%20");
+      let appendQuery;
+      if (historyState.includes(".html")) {
+        appendQuery = historyState
+          .split(".html")[1]
+          .replace(/ /g, "%20")
+          .replace(/%20&%20/gi, "%20%26%20");
+      } else {
+        appendQuery = historyState.replace(/%20&%20/gi, "%20%26%20");
+      }
       const urlLink = (location.origin + location.pathname).concat(
         `${appendQuery}`
       );
@@ -184,7 +192,6 @@ const Parser = {
     } else {
       url = new URL(location.href.replace(/%20&%20/gi, "%20%26%20"));
     }
-
     // // remove all matchign search params
     url.searchParams.forEach((_, sKey) => {
       if (sKey.includes(key)) {
@@ -212,7 +219,6 @@ const Parser = {
     const { pathname } = location;
 
     // URL modification in case of filter
-
     let sentQuery = this.createCustomQuery(search);
     browserHistory.push({
       pathname: `${pathname + sentQuery}`,
@@ -222,12 +228,29 @@ const Parser = {
   createCustomQuery(search) {
     let arrQuery = search.split("&");
     let newQuery = "?";
-    arrQuery.map((query, index) => {
-      if (index > 4 && index < arrQuery.length) {
-        newQuery = newQuery + query;
-        return null;
-      }
-    });
+    if (search.includes("qid=")) {
+      let qIDIndex;
+      arrQuery.filter((data, index) => {
+        if (data.includes("qid=")) {
+          qIDIndex = index;
+        }
+        return;
+      });
+      arrQuery.map((query, index) => {
+        if (index > qIDIndex + 1 && index < arrQuery.length) {
+          newQuery = newQuery + query;
+          return null;
+        }
+      });
+    } else {
+      arrQuery.map((query, index) => {
+        if (index > 4 && index < arrQuery.length) {
+          newQuery = newQuery + query;
+          return null;
+        }
+      });
+    }
+
     let parsedNewQuery = newQuery.split("%2C").join("~");
     let parsedQuery = parsedNewQuery.replace("%26", "");
     let finalQuery = parsedQuery.split("%26").join("&");
