@@ -1,9 +1,10 @@
+import DragScroll from "Component/DragScroll/DragScroll.component";
 import PropTypes from "prop-types";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
+import { isArabic } from "Util/App";
 import { getUUID } from "Util/Auth";
 import { VUE_CAROUSEL_SWIPE } from "Util/Event";
-import { isArabic } from "Util/App";
 import DynamicContentVueProductSliderItem from "./DynamicContentVueProductSlider.Item";
 import "./DynamicContentVueProductSlider.style.scss";
 class DynamicContentVueProductSlider extends PureComponent {
@@ -79,30 +80,80 @@ class DynamicContentVueProductSlider extends PureComponent {
     );
   }
 
-  renderSliderContainer() {
-    const productsToRender = this.getProducts();
-    const { widgetID } = this.props;
+  handleScroll = (event) => {
+    const target = event.nativeEvent.target;
+    const prentComponent = [...this.cmpRef.current.childNodes].filter(
+      (node) => node.id == "ScrollWrapper"
+    )[0];
+    prentComponent.scrollLeft = target.scrollLeft;
+  };
+
+  renderScrollbar = () => {
+    let items = this.getProducts();
+
+    const width =
+      (this.itemRef &&
+        this.itemRef.current &&
+        this.itemRef.current.childRef.current.clientWidth) *
+        items.length +
+      items.length * 7 * 2 -
+      690;
+    this.setState({
+      customScrollWidth: width,
+    });
+
+    // return null;
+
     return (
       <div
         block="VueProductSlider"
         elem="SliderContainer"
-        mods = {{isArabic: isArabic()}}
+        mods={{ isArabic: isArabic() }}
         ref={this.scrollerRef}
-        onScroll={() => {
-          this.handleOnScroll(widgetID);
+        mods={{
+          Hidden:
+            this.scrollerRef.current &&
+            this.scrollerRef.current.clientWidth >=
+              this.state.customScrollWidth,
         }}
+        onScroll={this.handleScroll}
       >
-        {productsToRender.map((item) => {
-          const { sku } = item;
-          return (
-            <DynamicContentVueProductSliderItem
-              key={sku}
-              data={item}
-              widgetID={widgetID}
-            />
-          );
-        })}
+        <div
+          block="Outer"
+          style={{ width: this.state.customScrollWidth }}
+          elem="Inner"
+        ></div>
       </div>
+    );
+  };
+
+  renderSliderContainer() {
+    const productsToRender = this.getProducts();
+    const { widgetID } = this.props;
+    return (
+      <DragScroll data={{ rootClass: "ScrollWrapper", ref: this.cmpRef }}>
+        <div
+          id="ScrollWrapper"
+          block="VueProductSlider"
+          elem="SliderContainer"
+          mods={{ isArabic: isArabic() }}
+          ref={this.scrollerRef}
+          onScroll={() => {
+            this.handleOnScroll(widgetID);
+          }}
+        >
+          {productsToRender.map((item) => {
+            const { sku } = item;
+            return (
+              <DynamicContentVueProductSliderItem
+                key={sku}
+                data={item}
+                widgetID={widgetID}
+              />
+            );
+          })}
+        </div>
+      </DragScroll>
     );
   }
 
