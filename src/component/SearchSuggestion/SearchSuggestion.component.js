@@ -173,8 +173,8 @@ class SearchSuggestion extends PureComponent {
     <li key={i}>
       <Link
         to={{
-          pathname: link ? link.split("?q")[0] : "#",
-          state: link ? link.split(".html")[1] : "",
+          pathname: link && link.split("#q")[0] ,
+          state: link && link.split(".html")[1],
         }}
         onClick={this.closeSearchPopup}
       >
