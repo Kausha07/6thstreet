@@ -9,7 +9,7 @@
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import CartCoupon from "Component/CartCoupon";
-import CartItem from "Component/CartItem";
+import CartPageItem from "Component/CartPageItem";
 import CmsBlock from "Component/CmsBlock";
 import ContentWrapper from "Component/ContentWrapper";
 import ExpandableContent from "Component/ExpandableContent";
@@ -72,7 +72,7 @@ export class CartPage extends PureComponent {
     return (
       <ul block="CartPage" elem="Items" aria-label="List of items in cart">
         {items.map((item) => (
-          <CartItem
+          <CartPageItem
             key={item.item_id}
             item={item}
             currency_code={quote_currency_code}

@@ -118,7 +118,7 @@ class HeaderCart extends PureComponent {
         return (
             <div block="HeaderCart" mods={ { isArabic } }>
                 <button
-                  onClick={ isMobile.any()
+                  onClick={ (isMobile.any() || isMobile.tablet())
                       ? this.routeChangeCart
                       : this.openPopup }
                   block="HeaderCart"

@@ -1,13 +1,13 @@
-import ClickOutside from 'Component/ClickOutside';
-import Field from 'Component/Field';
-import Form from 'Component/Form';
-import SearchSuggestion from 'Component/SearchSuggestion';
-import PropTypes from 'prop-types';
-import { createRef, PureComponent } from 'react';
-import { isArabic } from 'Util/App';
-import './HeaderSearch.style';
-import Clear from './icons/close-black.png';
-import searchPng from './icons/search-black.png';
+import ClickOutside from "Component/ClickOutside";
+import Field from "Component/Field";
+import Form from "Component/Form";
+import SearchSuggestion from "Component/SearchSuggestion";
+import PropTypes from "prop-types";
+import { createRef, PureComponent } from "react";
+import { isArabic } from "Util/App";
+import "./HeaderSearch.style";
+import Clear from "./icons/close-black.png";
+import searchPng from "./icons/search-black.png";
 
 class HeaderSearch extends PureComponent {
   static propTypes = {
@@ -29,6 +29,22 @@ class HeaderSearch extends PureComponent {
     showSearch: false,
   };
 
+  constructor(props) {
+    super(props);
+    this.inputRef = createRef();
+  }
+  componentDidMount() {
+    const { focusInput } = this.props;
+    const {
+      current: {
+        form: { children },
+      },
+    } = this.searchRef;
+    const searchInput = children[0].children[0];
+    if (focusInput && searchInput) {
+      searchInput.focus();
+    }
+  }
   searchRef = createRef();
 
   static getDerivedStateFromProps(props) {
@@ -59,6 +75,10 @@ class HeaderSearch extends PureComponent {
     this.setState({ showSearch: true });
   };
   closeSearch = () => {
+    const { hideSearchBar } = this.props;
+    if (hideSearchBar) {
+      hideSearchBar();
+    }
     this.setState({ showSearch: false });
   };
 
@@ -75,12 +95,13 @@ class HeaderSearch extends PureComponent {
       >
         <Field
           id="search-field"
+          ref={this.inputRef}
           name="search"
           type="text"
           autocomplete="off"
           autocorrect="off"
           spellcheck="false"
-          placeholder={__("What are you looking for?")}
+          placeholder={__("Search for items, brands, inspiration and styles")}
           onChange={onSearchChange}
           onFocus={this.onFocus}
           value={search}

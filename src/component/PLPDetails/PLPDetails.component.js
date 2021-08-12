@@ -1,6 +1,9 @@
 // import PropTypes from 'prop-types';
-import { PureComponent } from "react";
 import PropTypes from "prop-types";
+import { PureComponent } from "react";
+import favIcon from "Style/icons/favorites.svg";
+import shareIcon from "Style/icons/share.svg";
+import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 import "./PLPDetails.style";
 
@@ -13,6 +16,7 @@ class PLPDetails extends PureComponent {
 
   state = {
     isMobile: isMobile.any() || isMobile.tablet(),
+    isArabic: isArabic(),
   };
 
   renderBrandImage = () => {
@@ -22,12 +26,31 @@ class PLPDetails extends PureComponent {
 
   renderBrandName = () => {
     const { brandName } = this.props;
-    return <h1>{brandName}</h1>;
+    return (
+      <h1 block="PLPDetails" elem="BrandName">
+        {brandName}
+      </h1>
+    );
   };
 
   renderBrandHtml = () => {
     const { brandDescription } = this.props;
-    return <p dangerouslySetInnerHTML={{ __html: brandDescription }} />;
+
+    return (
+      <p
+        block="PLPDetails"
+        elem="BrandHTML"
+        dangerouslySetInnerHTML={{ __html: brandDescription }}
+      />
+    );
+  };
+  renderActionButtons = () => {
+    return (
+      <div block="PLPDetails" elem="ShareIcon">
+        <img src={shareIcon} alt={__("Share Icon")} />
+        <img src={favIcon} alt={__("Favorite Icon")} />
+      </div>
+    );
   };
 
   renderContent = () => {
@@ -36,12 +59,16 @@ class PLPDetails extends PureComponent {
     if (!brandDescription || !brandImg || !brandName) {
       return null;
     }
+    if (isMobile) {
+      return null;
+    }
     return (
       <>
         <div block="PLPDetails" elem="BrandImage">
           {isMobile ? "" : this.renderBrandImage()}
         </div>
         <div block="PLPDetails" elem="BrandDescription">
+          {/* {this.renderActionButtons()} */}
           {isMobile ? "" : this.renderBrandName()}
           {isMobile ? "" : this.renderBrandHtml()}
         </div>
@@ -50,7 +77,12 @@ class PLPDetails extends PureComponent {
   };
 
   render() {
-    return <div block="PLPDetails">{this.renderContent()}</div>;
+    const { isArabic } = this.state;
+    return (
+      <div block="PLPDetails" mods={{ isArabic }}>
+        {this.renderContent()}
+      </div>
+    );
   }
 }
 

@@ -139,6 +139,8 @@ export class MyAccount extends SourceMyAccount {
             mobileTabActive
         } = this.props;
 
+        const { isArabic } = this.state;
+
         const hiddenTabContent = mobileTabActive ? 'Active' : 'Hidden';
         const hiddenTabList = mobileTabActive ? 'Hidden' : 'Active';
 
@@ -151,7 +153,7 @@ export class MyAccount extends SourceMyAccount {
         return (
             <ContentWrapper
               label={ __('My Account page') }
-              wrapperMix={ { block: 'MyAccount', elem: 'Wrapper' } }
+              wrapperMix={ { block: 'MyAccount', elem: 'Wrapper', mods: { isArabic } } }
             >
                 <MyAccountMobileHeader
                   onClose={ this.handleClick }

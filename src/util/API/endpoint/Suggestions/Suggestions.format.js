@@ -1,3 +1,8 @@
+import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
+import BrowserDatabase from "Util/BrowserDatabase";
+
+const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
+
 const BRANDS_RESULT_LIMIT = 4;
 
 const getBrandsArrayFromFacets = ({ facets = {} }) => {

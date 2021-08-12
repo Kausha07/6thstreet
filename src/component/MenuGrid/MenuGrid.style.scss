@@ -1,215 +1,224 @@
 .MenuGrid {
-    width: 23%;
+  width: 23%;
+
+  &-ItemLabel {
+    margin-left: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 88%;
+    line-height: 1;
+    margin-bottom: 28px;
+  }
+
+  &-Content {
+    background-color: var(--white);
+    pointer-events: all;
+
+    span,
+    a {
+      color: var(--black);
+    }
+  }
+
+  &-Columns {
+    display: flex;
+    height: 100%;
+  }
+
+  &-Column {
+    width: 100%;
+
+    &:not(:last-child) {
+      border-right: solid 1px var(--grey);
+    }
+
+    span {
+      text-transform: uppercase;
+      width: 100%;
+    }
 
     &-Content {
-        background-color: var(--white);
-        pointer-events: all;
+      display: grid;
+      grid-template-columns: auto auto;
+      margin-top: 10px;
 
-        span, a {
-            color: var(--black);
+      a {
+        margin: 0;
+      }
+    }
+  }
+
+  @include before-desktop {
+    margin-top: 5px;
+    position: relative;
+    width: 100%;
+
+    &-Content {
+      margin: 0;
+      width: 100%;
+
+      &_isArabic {
+        button {
+          margin-left: 0;
+          margin-right: -30px;
         }
+      }
     }
 
     &-Columns {
-        display: flex;
-        height: 100%;
+      flex-direction: column;
+      text-align: center;
+
+      :last-child {
+        margin-right: 0;
+      }
+
+      > div {
+        margin: 0;
+      }
     }
 
-    &-ItemLink {
-        padding-right: 16px;
+    &-Title {
+      display: none;
     }
 
     &-Column {
-        width: 100%;
+      line-height: 30px;
+      width: 100%;
 
-        &:not(:last-child) {
-            border-right: solid 1px var(--grey);
+      &:not(:last-child) {
+        border-right: 0;
+      }
+
+      .ViewAll {
+        &-Link {
+          display: none;
+          font-weight: var(--fw-bold);
+
+          text-align: center;
         }
 
-        span {
-            text-transform: uppercase;
-            width: 100%;
+        &-Button {
+          margin-left: -30px;
         }
+      }
 
-        &-Content {
-            display: grid;
-            grid-template-columns: auto auto;
-            margin-top: 10px;
-
-            a {
-                margin: 0;
-            }
-        }
-    }
-
-    @include before-desktop {
-        margin-top: 5px;
-        position: relative;
-        width: 100%;
-
-        &-Content {
-            margin: 0;
-            width: 100%;
-
-            &_isArabic {
-                button {
-                    margin-left: 0;
-                    margin-right: -30px;
-                }
-            }
-        }
-
-        &-Columns {
-            flex-direction: column;
-            text-align: center;
-
-            :last-child {
-                margin-right: 0;
-            }
-
-            > div {
-                margin: 0;
-            }
-        }
-
-        &-Title {
-            display: none;
-        }
-
-        &-Column {
-            line-height: 30px;
-            width: 100%;
-
-            &:not(:last-child) {
-                border-right: 0;
-            }
-
-            .ViewAll {
-                &-Link {
-                    display: none;
-                    font-weight: var(--fw-bold);
-
-                    text-align: center;
-                }
-
-                &-Button {
-                    margin-left: -30px;
-                }
-            }
-
-            &-Content {
-                grid-auto-flow: row;
-                grid-template-columns: 1fr 1fr;
-
-                a {
-                    line-height: 20px;
-                    margin: 10px 0;
-                    text-align: center;
-
-                    &:not(:nth-child(-n+5)) {
-                        display: none;
-                    }
-
-                    &:first-child {
-                        display: none;
-                    }
-
-                    &:last-child {
-                        margin: 10px;
-                    }
-
-                    .Image {
-                        width: 80px;
-
-                        &-Image {
-                            border-radius: 50%;
-                        }
-                    }
-                }
-
-                &_isArabic {
-                    a {
-                        .Image {
-                            margin-left: 0;
-                            margin-right: -20px;
-                        }
-                    }
-                }
-            }
-
-            &_isAllShow {
-                background-color: var(--white);
-                left: 0;
-                position: absolute;
-                top: 0;
-                width: 100%;
-
-                .MenuGrid {
-                    &-Column {
-                        &-Content {
-                            position: relative;
-
-                            a {
-                                &:not(:nth-child(-n+4)) {
-                                    display: block;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    @include desktop {
-        margin: 20px 0 30px 35px;
-
-        &-Content {
-            &_isArabic {
-                .MenuGrid {
-                    &-Column {
-                        border-left: solid 1px var(--grey);
-                        border-right: 0;
-                        margin-left: 0;
-                        margin-right: 35px;
-
-                        &:nth-last-child(1) {
-                            border-left: 0;
-                        }
-                    }
-                }
-            }
-        }
+      &-Content {
+        grid-auto-flow: row;
+        grid-template-columns: 1fr 1fr;
 
         a {
-            font-weight: var(--fw-medium);
+          line-height: 20px;
+          margin: 10px 0;
+          text-align: center;
+
+          &:not(:nth-child(-n + 5)) {
+            display: none;
+          }
+
+          &:first-child {
+            display: none;
+          }
+
+          &:last-child {
+            margin: 10px;
+          }
+
+          .Image {
+            width: 80px;
+
+            &-Image {
+              border-radius: 50%;
+            }
+          }
         }
 
-        &-Column {
+        &_isArabic {
+          a {
+            .Image {
+              margin-left: 0;
+              margin-right: -20px;
+            }
+          }
+        }
+      }
+
+      &_isAllShow {
+        background-color: var(--white);
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+
+        .MenuGrid {
+          &-Column {
             &-Content {
-                display: flex;
-                flex-direction: column;
-                flex-wrap: wrap;
-                height: 320px;
-                justify-content: flex-start;
-                margin-top: 10px;
+              position: relative;
 
-                a {
-                    div:not(.MenuGrid-ItemLabel) {
-                        display: none;
-                    }
+              a {
+                &:not(:nth-child(-n + 4)) {
+                  display: block;
                 }
+              }
             }
-
-            .ViewAll {
-                &-Link {
-                    display: none;
-                }
-
-                &-Button {
-                    display: none;
-                }
-            }
+          }
         }
+      }
     }
+  }
+
+  @include desktop {
+    margin: 20px 0 30px 35px;
+
+    &-Content {
+      &_isArabic {
+        .MenuGrid {
+          &-Column {
+            border-left: solid 1px var(--grey);
+            border-right: 0;
+            margin-left: 0;
+            margin-right: 35px;
+
+            &:nth-last-child(1) {
+              border-left: 0;
+            }
+          }
+        }
+      }
+    }
+
+    a {
+      font-weight: var(--fw-medium);
+    }
+
+    &-Column {
+      &-Content {
+        display: flex;
+        // display: grid;
+        // grid-template-columns: repeat(2, 1fr);
+        flex-direction: column;
+        flex-wrap: wrap;
+        height: 344px;
+        justify-content: flex-start;
+        margin-top: 10px;
+
+        a {
+          div:not(.MenuGrid-ItemLabel) {
+            display: none;
+          }
+        }
+      }
+
+      .ViewAll {
+        &-Link {
+          display: none;
+        }
+
+        &-Button {
+          display: none;
+        }
+      }
+    }
+  }
 }

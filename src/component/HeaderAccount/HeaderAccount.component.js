@@ -1,164 +1,173 @@
 /* eslint-disable max-len */
-import PropTypes from 'prop-types';
-import { PureComponent } from 'react';
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
 
-import ClickOutside from 'Component/ClickOutside';
-import MyAccountOverlay from 'Component/MyAccountOverlay';
-import MyAccountSignedInOverlay from 'Component/MyAccountSignedInOverlay';
-import { customerType } from 'Type/Account';
-import { isArabic } from 'Util/App';
-import history from 'Util/History';
-import isMobile from 'Util/Mobile';
+import ClickOutside from "Component/ClickOutside";
+import MyAccountOverlay from "Component/MyAccountOverlay";
+import MyAccountSignedInOverlay from "Component/MyAccountSignedInOverlay";
+import { customerType } from "Type/Account";
+import { isArabic } from "Util/App";
+import history from "Util/History";
+import isMobile from "Util/Mobile";
 
-import { SMS_LINK } from './HeaderAccount.config';
+import { SMS_LINK } from "./HeaderAccount.config";
 
-import './HeaderAccount.style';
+import "./HeaderAccount.style";
 
 class HeaderAccount extends PureComponent {
-    static propTypes = {
-        isBottomBar: PropTypes.bool.isRequired,
-        isAccount: PropTypes.bool.isRequired,
-        isSignedIn: PropTypes.bool.isRequired,
-        customer: customerType,
-        isMobile: PropTypes.bool,
-        isFooter: PropTypes.bool.isRequired,
-        handleFooterIsAccountOpen: PropTypes.func.isRequired
-    };
+  static propTypes = {
+    isBottomBar: PropTypes.bool.isRequired,
+    isAccount: PropTypes.bool.isRequired,
+    isSignedIn: PropTypes.bool.isRequired,
+    customer: customerType,
+    isMobile: PropTypes.bool,
+    isFooter: PropTypes.bool.isRequired,
+    handleFooterIsAccountOpen: PropTypes.func.isRequired,
+  };
 
-    static defaultProps = {
-        isMobile: false,
-        customer: null
-    };
+  static defaultProps = {
+    isMobile: false,
+    customer: null,
+  };
 
-    _isArabic = isArabic();
+  _isArabic = isArabic();
 
-    state = {
-        showPopup: false,
-        showPopupSignedIn: false
-    };
+  state = {
+    showPopup: false,
+    showPopupSignedIn: false,
+  };
 
-    componentDidMount() {
-        this.orderRedirect();
+  componentDidMount() {
+    this.orderRedirect();
+  }
+
+  orderRedirect() {
+    const { pathname = "" } = window.location;
+    const { isSignedIn } = this.props;
+    const orderId = pathname.split(SMS_LINK)[1] || null;
+
+    if (orderId && pathname.includes(SMS_LINK) && isSignedIn) {
+      history.push(`/my-account/my-orders/${orderId}`);
     }
 
-    orderRedirect() {
-        const { pathname = '' } = window.location;
-        const { isSignedIn } = this.props;
-        const orderId = pathname.split(SMS_LINK)[1] || null;
+    if (
+      orderId &&
+      pathname.includes(SMS_LINK) &&
+      !isSignedIn &&
+      !isMobile.any()
+    ) {
+      history.push("/");
+      localStorage.setItem("ORDER_ID", orderId);
+      this.showMyAccountPopup();
+    }
+  }
 
-        if (orderId && pathname.includes(SMS_LINK) && isSignedIn) {
-            history.push(`/my-account/my-orders/${orderId}`);
-        }
+  closePopup = () => {
+    this.setState({ showPopup: false, showPopupSignedIn: false });
+    this.handleFooterPopup();
+  };
 
-        if (orderId && pathname.includes(SMS_LINK) && !isSignedIn && !isMobile.any()) {
-            history.push('/');
-            localStorage.setItem('ORDER_ID', orderId);
-            this.showMyAccountPopup();
-        }
+  showMyAccountPopup = () => {
+    const { isSignedIn } = this.props;
+    this.setState({ showPopup: true, showPopupSignedIn: isSignedIn });
+    this.handleFooterPopup();
+  };
+
+  handleFooterPopup = () => {
+    const { handleFooterIsAccountOpen, isFooter } = this.props;
+    if (isFooter) {
+      handleFooterIsAccountOpen();
+    }
+  };
+
+  onSignIn = () => {
+    this.closePopup();
+  };
+
+  renderMyAccountPopup() {
+    const { isSignedIn } = this.props;
+    const { showPopup, showPopupSignedIn } = this.state;
+
+    if (!showPopup) {
+      return null;
     }
 
-    closePopup = () => {
-        this.setState({ showPopup: false, showPopupSignedIn: false });
-        this.handleFooterPopup();
-    };
-
-    showMyAccountPopup = () => {
-        const { isSignedIn } = this.props;
-        this.setState({ showPopup: true, showPopupSignedIn: isSignedIn });
-        this.handleFooterPopup();
-    };
-
-    handleFooterPopup = () => {
-        const { handleFooterIsAccountOpen, isFooter } = this.props;
-        if (isFooter) {
-            handleFooterIsAccountOpen();
-        }
-    };
-
-    onSignIn = () => {
-        this.closePopup();
-    };
-
-    renderMyAccountPopup() {
-        const { isSignedIn } = this.props;
-        const { showPopup, showPopupSignedIn } = this.state;
-
-        if (!showPopup) {
-            return null;
-        }
-
-        if (isSignedIn && showPopupSignedIn) {
-            return (
-                <ClickOutside onClick={ this.closePopup }>
-                    <div>
-                        <MyAccountSignedInOverlay onHide={ this.closePopup } />
-                    </div>
-                </ClickOutside>
-            );
-        }
-
-        return <MyAccountOverlay closePopup={ this.closePopup } onSignIn={ this.onSignIn } isPopup />;
+    if (isSignedIn && showPopupSignedIn) {
+      return (
+        <ClickOutside onClick={this.closePopup}>
+          <div>
+            <MyAccountSignedInOverlay onHide={this.closePopup} />
+          </div>
+        </ClickOutside>
+      );
     }
 
-    renderAccountButton() {
-        const {
-            isSignedIn,
-            customer,
-            isBottomBar,
-            isFooter
-        } = this.props;
+    return (
+      <MyAccountOverlay
+        closePopup={this.closePopup}
+        onSignIn={this.onSignIn}
+        isPopup
+      />
+    );
+  }
 
-        if (isBottomBar) {
-            return (
-                <label htmlFor="Account">{ __('Account') }</label>
-            );
-        }
+  renderAccountButton() {
+    const { isSignedIn, customer, isBottomBar, isFooter } = this.props;
 
-        const accountButtonText = isSignedIn
-            && customer
-            && (customer.firstname || customer.lastname)
-            ? `${customer.firstname || ""} ${customer.lastname || ""}`
-            : __('Login/Register');
-
-        return (
-            <div block="HeaderAccount" elem="ButtonWrapper">
-                <button
-                  block="HeaderAccount"
-                  elem="Button"
-                  mods={ { isArabic: this._isArabic, isFooter } }
-                  onClick={ isFooter && isSignedIn ? this.redirectToAccount : this.showMyAccountPopup }
-                >
-                    <label htmlFor="Account">{ accountButtonText }</label>
-                </button>
-                { this.renderMyAccountPopup() }
-            </div>
-        );
+    if (isBottomBar) {
+      return <label htmlFor="Account">{__("Account")}</label>;
     }
 
-    redirectToAccount() {
-        window.location = ('/my-account/dashboard');
-    }
+    const accountButtonText =
+      isSignedIn && customer && customer.firstname && customer.lastname
+        ? `${customer.firstname} ${customer.lastname}`
+        : __("Login/Register");
 
-    render() {
-        const { isBottomBar, isAccount, isMobile } = this.props;
+    return (
+      <div block="HeaderAccount" elem="ButtonWrapper">
+        <button
+          block="HeaderAccount"
+          elem="Button"
+          mods={{ isArabic: this._isArabic, isFooter }}
+          onClick={
+            isFooter && isSignedIn
+              ? this.redirectToAccount
+              : this.showMyAccountPopup
+          }
+        >
+          <label htmlFor="Account">
+            <span>{accountButtonText}</span>
+          </label>
+        </button>
+        {this.renderMyAccountPopup()}
+      </div>
+    );
+  }
 
-        return (
-            <div
-              block="HeaderAccount"
-              mods={ { isBottomBar } }
-              mix={ {
-                  block: 'HeaderAccount',
-                  mods: { isAccount },
-                  mix: {
-                      block: 'HeaderAccount',
-                      mods: { isMobile }
-                  }
-              } }
-            >
-                { this.renderAccountButton() }
-            </div>
-        );
-    }
+  redirectToAccount() {
+    window.location = "/my-account/dashboard";
+  }
+
+  render() {
+    const { isBottomBar, isAccount, isMobile } = this.props;
+
+    return (
+      <div
+        block="HeaderAccount"
+        mods={{ isBottomBar }}
+        mix={{
+          block: "HeaderAccount",
+          mods: { isAccount },
+          mix: {
+            block: "HeaderAccount",
+            mods: { isMobile },
+          },
+        }}
+      >
+        {this.renderAccountButton()}
+      </div>
+    );
+  }
 }
 
 export default HeaderAccount;
