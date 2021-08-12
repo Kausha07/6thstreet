@@ -39,11 +39,11 @@ export class PLP extends PureComponent {
   }
 
   renderPLPFilters() {
-    return <PLPFilters />;
+    return <PLPFilters {...this.props} />;
   }
 
   renderPLPPages() {
-    return <PLPPages />;
+    return <PLPPages {...this.props} />;
   }
 
   renderBanner() {

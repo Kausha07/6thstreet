@@ -24,10 +24,9 @@ class PLPPages extends PureComponent {
 
   renderPage = ([key, page]) => {
     const { products, isPlaceholder } = page;
-    const { impressions } = this.props;
-
+    const { impressions,query } = this.props;
     if (isPlaceholder) {
-      return <PLPPagePlaceholder key={key} pageIndex={key} />;
+      return <PLPPagePlaceholder key={key} pageIndex={key} query={query} />;
     }
 
     return <PLPPage key={key} products={products} impressions={impressions} />;

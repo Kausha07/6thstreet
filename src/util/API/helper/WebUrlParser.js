@@ -137,24 +137,21 @@ const Parser = {
     };
   },
 
-  setPage(number) {
-    const {
-      state: { state: historyState },
-    } = history;
-    let appendQuery;
-    if (historyState.includes(".html")) {
-      appendQuery = historyState
-        .split(".html")[1]
-        .replace(/ /g, "%20")
-        .replace(/%20&%20/gi, "%20%26%20");
-    } else {
-      appendQuery = historyState.replace(/%20&%20/gi, "%20%26%20");
+  setPage(number, query) {
+    let filter = "";
+    if (location.href.includes("?")) {
+      filter = "&%26" + location.href.split("?")[1].split("&").join("&%26");
     }
+    let appendQuery =
+      "?" +
+      (query + filter).replace(/ /g, "%20").replace(/%20&%20/gi, "%20%26%20");
     const urlLink = (location.origin + location.pathname).concat(
       `${appendQuery}`
     );
+
     const url = new URL(urlLink);
     url.searchParams.set("p", number);
+
     const { href, search } = url;
     const { pathname } = location;
     if (location.href.includes("?")) {
@@ -170,29 +167,19 @@ const Parser = {
     }
   },
 
-  setParam(key, values = []) {
+  setParam(key, values = [], query) {
     let url;
-    const {
-      state: { state: historyState },
-    } = history;
-    if (historyState) {
-      let appendQuery;
-      if (historyState.includes(".html")) {
-        appendQuery = historyState
-          .split(".html")[1]
-          .replace(/ /g, "%20")
-          .replace(/%20&%20/gi, "%20%26%20");
-      } else {
-        appendQuery = historyState.replace(/%20&%20/gi, "%20%26%20");
-      }
-      const urlLink = (location.origin + location.pathname).concat(
-        `${appendQuery}`
-      );
-
-      url = new URL(urlLink.replace(/%20&%20/gi, "%20%26%20"));
-    } else {
-      url = new URL(location.href.replace(/%20&%20/gi, "%20%26%20"));
+    let filter = "";
+    if (location.href.includes("?")) {
+      filter = "&%26" + location.href.split("?")[1];
     }
+    let appendQuery =
+      "?" +
+      (query + filter).replace(/ /g, "%20").replace(/%20&%20/gi, "%20%26%20");
+    const urlLink = (location.origin + location.pathname).concat(
+      `${appendQuery}`
+    );
+    url = new URL(urlLink.replace(/%20&%20/gi, "%20%26%20"));
     // // remove all matchign search params
     url.searchParams.forEach((_, sKey) => {
       if (sKey.includes(key)) {
@@ -221,7 +208,7 @@ const Parser = {
     // // update the URL, preserve the state
     const { href, search } = url;
     const { pathname } = location;
-    
+
     // URL modification in case of filter
     let sentQuery = this.createCustomQuery(search);
     browserHistory.push({
@@ -231,19 +218,18 @@ const Parser = {
   },
   createCustomQuery(search) {
     let arrQuery = search.split("&%26");
-    let newQuery ;
-    if(arrQuery.length>1){
-      newQuery = "?"
+    let newQuery;
+    if (arrQuery.length > 1) {
+      newQuery = "?";
       arrQuery.map((query, index) => {
         if (index > 0 && index < arrQuery.length) {
           newQuery = newQuery + "%26" + query;
           return null;
         }
       });
-    }else{
-      newQuery = ""
+    } else {
+      newQuery = "";
     }
-    
 
     let parsedNewQuery = newQuery.split("%2C").join("~");
     let parsedQuery = parsedNewQuery.replace("%26", "");

@@ -49,41 +49,26 @@ export class UrlRewritesContainer extends PureComponent {
 
   constructor(props) {
     super(props);
-    
+
     this.requestUrlRewrite();
   }
 
   componentDidUpdate(prevProps, prevState) {
     const { pathname } = location;
-    const {
-      locale,
-      hideActiveOverlay,
-      history: {
-        location: { state: search },
-      },
-    } = this.props;
-    const {
-      locale: prevLocale,
-      location: { state: prevLocaState },
-    } = prevProps;
-    const {
-      location: { state: LocationState ,pathname:prevLocaPathname },
-    } = this.props;
+    const { locale, hideActiveOverlay } = this.props;
+    const { locale: prevLocale } = prevProps;
+
     const { prevPathname, query } = this.state;
-    const { prevPathname: prevStatePathname, query: prevQuery } = prevState;
+    const { query: prevQuery } = prevState;
 
     if (query && query !== prevQuery) {
       let partialQuery = location.search;
-
       if (location.search) {
         if (partialQuery.indexOf("idx") !== -1) {
           return;
         } else {
           // If we are sharing URL with filters do if condition
           if (location.href.includes("?")) {
-            const {
-              location: { state: locationState, search: locationSearch },
-            } = history;
             let queryURL = new URL(
               location.origin +
                 location.pathname +
@@ -93,7 +78,7 @@ export class UrlRewritesContainer extends PureComponent {
                 location.href.split("?")[1].split("&").join("&%26")
             );
             history.push({
-              pathname: `${pathname + locationSearch}`,
+              pathname: `${pathname + partialQuery}`,
               state: `${queryURL.href}`,
             });
           } else {
@@ -102,10 +87,10 @@ export class UrlRewritesContainer extends PureComponent {
           }
         }
       } else {
-          history.push({
-            pathname: `${pathname}`,
-            state: `${pathname}?${query}`,
-          });
+        history.push({
+          pathname: `${pathname}`,
+          state: `${pathname}?${query}`,
+        });
       }
     }
 
@@ -187,7 +172,7 @@ export class UrlRewritesContainer extends PureComponent {
   }
 
   containerProps = () => {
-    const { isLoading, type, id, sku, brandDescription, brandImg, brandName } =
+    const { isLoading, type, id, sku, brandDescription, brandImg, brandName,query } =
       this.state;
 
     return {
@@ -198,6 +183,7 @@ export class UrlRewritesContainer extends PureComponent {
       brandDescription,
       brandImg,
       brandName,
+      query
     };
   };
 

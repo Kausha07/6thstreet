@@ -133,6 +133,7 @@ export class PLPContainer extends PureComponent {
     }
    
     const { params: parsedParams } = WebUrlParser.parsePLP(parseURL);
+    console.log(parseURL,"muskan params-->",parsedParams)
     return {
       // TODO: inject gender ?
       ...parsedParams,
@@ -328,12 +329,14 @@ export class PLPContainer extends PureComponent {
   }
 
   containerProps = () => {
-    const { brandDescription, brandImg, brandName } = this.props;
+    const { brandDescription, brandImg, brandName,query } = this.props;
+
     // isDisabled: this._getIsDisabled()
     return {
       brandDescription,
       brandImg,
       brandName,
+      query
     };
   };
 
