@@ -128,6 +128,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     hideActiveOverlay: this.props.hideActiveOverlay.bind(this),
     updateTotals: this.updateTotals.bind(this),
     updateCreditCardData: this.updateCreditCardData.bind(this),
+    setBillingStep:this.setBillingStep.bind(this)
   };
 
   //   showOverlay() {
@@ -712,6 +713,12 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     
     setNavigationState({
       name: DETAILS_STEP,
+    });
+  }
+
+  setBillingStep(){
+    this.setState({
+      checkoutStep: SHIPPING_STEP,
     });
   }
 

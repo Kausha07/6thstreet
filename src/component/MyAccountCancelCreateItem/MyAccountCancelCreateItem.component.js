@@ -82,7 +82,9 @@ export class MyAccountCancelCreateItem extends SourceComponent {
         return (
             <div block="MyAccountReturnCreateItem">
                 <div block="MyAccountReturnCreateItem" elem="Content">
-                    { this.renderField() }
+                    { this.renderField({
+                        type: 'CANCELLATION'
+                    }) }
                     { this.renderImage() }
                     { this.renderDetails() }
                 </div>

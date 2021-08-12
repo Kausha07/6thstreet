@@ -323,6 +323,7 @@ export class Checkout extends SourceCheckout {
       placeOrder,
       getBinPromotion,
       updateTotals,
+      setBillingStep
     } = this.props;
     const { isArabic, cashOnDeliveryFee } = this.state;
 
@@ -335,7 +336,7 @@ export class Checkout extends SourceCheckout {
               <span>{__("Edit")}</span>
             </button>
           )}
-          <button onClick={goBack}>
+          <button onClick={()=>setBillingStep()}>
             {this.renderHeading(__("Delivery Options"), true)}
             <span>{__("Edit")}</span>
           </button>
@@ -588,16 +589,22 @@ export class Checkout extends SourceCheckout {
 
   redirectURL = () => {
     const { isMobile, continueAsGuest } = this.state;
-    const { history, goBack, setGender } = this.props;
+    const { history, goBack, setGender, setBillingStep ,checkoutStep} = this.props;
 
     if (isMobile) {
-      const path = location.pathname.match(/checkout\/shipping/);
+     
+      const path = location.pathname.match(/checkout/);
+   
 
       if (path) {
+        if(checkoutStep ==="SHIPPING_STEP"){
+          return history.push("/cart");
+        }
         if (continueAsGuest) {
-          this.changeEmail();
+          this.continueAsGuest()
+          setBillingStep()
         } else {
-          history.push("/cart");
+          setBillingStep()
         }
       } else {
         goBack();
