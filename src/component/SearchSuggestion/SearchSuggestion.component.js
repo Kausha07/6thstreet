@@ -60,7 +60,7 @@ class SearchSuggestion extends PureComponent {
     document.addEventListener("keydown", this._handleKeyDown);
   }
 
-  componentDidUnmount() {
+  componentWillUnmount() {
     document.removeEventListener("keydown", this._handleKeyDown);
   }
 
@@ -464,6 +464,7 @@ class SearchSuggestion extends PureComponent {
           <TrendingProductsVueSliderContainer
             widgetID="vue_trending_slider"
             products={trendingProducts}
+            isHome={true}
             heading={__("Trending products")}
             key={`TrendingProductsVueSliderContainer`}
           />
@@ -488,7 +489,7 @@ class SearchSuggestion extends PureComponent {
             item.product.sku.toUpperCase().includes(searchString.toUpperCase())
         ) || [];
       return (
-        <div className="recommendedForYouSliderBox">
+        <div className="wishlistSliderContainer">
           <WishlistSliderContainer
             products={
               searchString && filteredWishlist.length > 0
