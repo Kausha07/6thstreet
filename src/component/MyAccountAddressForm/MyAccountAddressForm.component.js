@@ -63,7 +63,6 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
                 region: { region_id } = {}
             }
         } = props;
-
         const countryId = country_id || default_country;
         const country = countries.find(({ id }) => id === countryId);
         const { available_regions: availableRegions } = country || {};
@@ -212,6 +211,7 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
 
         const { street = [] } = address;
         const isShippingAddress = Object.keys(shippingAddress).length !== 0;
+        const shippingPhone =  phone?.slice(4,phone?.length)
 
         return {
             country_id: {
@@ -257,7 +257,7 @@ export class MyAccountAddressForm extends SourceMyAccountAddressForm {
                 validation: ['notEmpty', this.getValidationForTelephone()],
                 maxLength: this.getPhoneNumberMaxLength(),
                 placeholder: __('Phone Number'),
-                value: isShippingAddress ? phone : ''
+                value: isShippingAddress ? +shippingPhone : ''
             },
             city: {
                 validation: ['notEmpty'],
