@@ -60,7 +60,7 @@ class SearchSuggestion extends PureComponent {
     document.addEventListener("keydown", this._handleKeyDown);
   }
 
-  componentDidUnmount() {
+  componentWillUnmount() {
     document.removeEventListener("keydown", this._handleKeyDown);
   }
 
@@ -464,6 +464,7 @@ class SearchSuggestion extends PureComponent {
           <TrendingProductsVueSliderContainer
             widgetID="vue_trending_slider"
             products={trendingProducts}
+            isHome={true}
             heading={__("Trending products")}
             key={`TrendingProductsVueSliderContainer`}
           />
@@ -488,7 +489,7 @@ class SearchSuggestion extends PureComponent {
             item.product.sku.toUpperCase().includes(searchString.toUpperCase())
         ) || [];
       return (
-        <div className="recommendedForYouSliderBox">
+        <div className="wishlistSliderContainer">
           <WishlistSliderContainer
             products={
               searchString && filteredWishlist.length > 0
@@ -506,7 +507,9 @@ class SearchSuggestion extends PureComponent {
 
   renderTrendingBrand = (brand, i) => {
     const { label = "", image_url } = brand;
-
+    const { isArabic } = this.state;
+    const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
+    let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
     const urlName = label
       .replace("&", "")
       .replace(/'/g, "")
@@ -517,7 +520,7 @@ class SearchSuggestion extends PureComponent {
     return (
       <li key={i}>
         <Link
-          to={`/${urlName}.html?q=${urlName}`}
+          to={`/${urlName}.html?q=${urlName}&dFR[gender][0]=${requestedGender}`}
           onClick={() => this.handleTrendingBrandsClick(urlName)}
         >
           <div block="SearchSuggestion" elem="TrandingImg">
@@ -565,10 +568,17 @@ class SearchSuggestion extends PureComponent {
   }
 
   renderTopSearch = ({ search, link }, i) => {
+    const { isArabic } = this.state;
+    const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
+    let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
     return (
       <li key={i}>
         <Link
-          to={link ? link : `/catalogsearch/result/?q=${search}`}
+          to={
+            link
+              ? link
+              : `/catalogsearch/result/?q=${search}&dFR[gender][0]=${requestedGender}`
+          }
           onClick={() => this.onSearchQueryClick(search)}
         >
           <div block="SearchSuggestion" elem="TopSearches">
@@ -592,10 +602,17 @@ class SearchSuggestion extends PureComponent {
   // recent searches
 
   renderRecentSearch = ({ name, link }, i) => {
+    const { isArabic } = this.state;
+    const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
+    let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
     return (
       <li key={i}>
         <Link
-          to={link ? link : `/catalogsearch/result/?q=${name}`}
+          to={
+            link
+              ? link
+              : `/catalogsearch/result/?q=${name}&dFR[gender][0]=${requestedGender}`
+          }
           onClick={() => this.onSearchQueryClick(name)}
         >
           <div block="SearchSuggestion" elem="TopSearches">

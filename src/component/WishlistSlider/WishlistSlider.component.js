@@ -75,7 +75,9 @@ class WishlistSlider extends PureComponent {
 
     return (
       <div
-        block="Outer"
+        block="VueProductSlider"
+        elem="SliderContainer"
+        mods={{ isArabic: isArabic() }}
         ref={this.scrollerRef}
         mods={{
           Hidden:
@@ -98,12 +100,14 @@ class WishlistSlider extends PureComponent {
     const { isHome } = this.props;
     // debugger
     return (
-      <DragScroll data={{ rootClass: "ScrollWrapper", ref: this.cmpRef }}>
+      <DragScroll
+        data={{ rootClass: "WishlistScrollWrapper", ref: this.cmpRef }}
+      >
         <>
           <div
             block="VueProductSlider"
             elem="SliderContainer"
-            id="ScrollWrapper"
+            id="WishlistScrollWrapper"
             ref={this.cmpRef}
             mods={{ isHome }}
             onScroll={(e) => {

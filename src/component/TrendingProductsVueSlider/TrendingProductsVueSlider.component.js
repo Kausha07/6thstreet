@@ -123,7 +123,9 @@ class TrendingProductsVueSlider extends PureComponent {
 
     return (
       <div
-        block="Outer"
+        block="VueProductSlider"
+        elem="SliderContainer"
+        mods={{ isArabic: isArabic() }}
         ref={this.scrollerRef}
         mods={{
           Hidden:
