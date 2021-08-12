@@ -87,7 +87,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
         );
     }
 
-    renderField() {
+    renderField(type) {
         const { item: { item_id, is_returnable } } = this.props;
         const { onClick } = this.props;
         return (
@@ -99,7 +99,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
               type="checkbox"
               onClick={ onClick }
               defaultChecked={ false }
-              disabled={ !is_returnable }
+              disabled={ type==="RETURN" && !is_returnable }
             />
         );
     }
@@ -173,7 +173,9 @@ export class MyAccountReturnCreateItem extends PureComponent {
         return (
             <div block="MyAccountReturnCreateItem">
                 <div block="MyAccountReturnCreateItem" elem="Content">
-                    { this.renderField() }
+                    { this.renderField({
+                        type: 'RETURN'
+                    }) }
                     { this.renderImage() }
                     { this.renderDetails() }
                 </div>

@@ -12,7 +12,6 @@ export class SearchSuggestionsDispatcher {
     const {
       AppState: { gender },
     } = getStore().getState();
-
     try {
       const productData = await new Algolia().searchBy(
         isArabic()
