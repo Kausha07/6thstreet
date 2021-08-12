@@ -59,7 +59,7 @@ const getFacetParam = ({ urlParam = "", urlValue = "" }) => {
     const [, facetKey] = is_URL_no_dFR;
     return {
       facetKey,
-      facetValue: urlValue,
+      facetValue: urlValue.split("^").join("&").split("~").join(","),
     };
   }
 
@@ -68,7 +68,7 @@ const getFacetParam = ({ urlParam = "", urlValue = "" }) => {
     const [, facetKey] = is_dFR;
     return {
       facetKey,
-      facetValue: urlValue,
+      facetValue: urlValue.split("^").join("&").split("~").join(","),
     };
   }
 
@@ -123,6 +123,7 @@ const Parser = {
 
   parsePLP(URL = "") {
     URL = URL.replace(/%20&%20/gi, "%20%26%20");
+
     const { query } = this.parse(URL);
     const { q, p: page } = query;
     const queryParams = buildQuery(query);
@@ -204,7 +205,10 @@ const Parser = {
       if (values.length === 0) {
         url.searchParams.delete(`${key}`);
       } else {
-        url.searchParams.append(`&${key}`, values.join(","));
+        let newValues = values.map((value) => {
+          return value.replace("&", "^");
+        });
+        url.searchParams.append(`&${key}`, newValues.join(","));
       }
     } else {
       // For non-array cases
