@@ -133,7 +133,6 @@ export class PLPContainer extends PureComponent {
     }
    
     const { params: parsedParams } = WebUrlParser.parsePLP(parseURL);
-    console.log(parseURL,"muskan params-->",parsedParams)
     return {
       // TODO: inject gender ?
       ...parsedParams,
