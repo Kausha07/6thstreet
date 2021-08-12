@@ -221,7 +221,7 @@ const Parser = {
     // // update the URL, preserve the state
     const { href, search } = url;
     const { pathname } = location;
-
+    
     // URL modification in case of filter
     let sentQuery = this.createCustomQuery(search);
     browserHistory.push({
@@ -230,30 +230,20 @@ const Parser = {
     });
   },
   createCustomQuery(search) {
-    let arrQuery = search.split("&");
-    let newQuery = "?";
-    if (search.includes("qid=")) {
-      let qIDIndex;
-      arrQuery.filter((data, index) => {
-        if (data.includes("qid=")) {
-          qIDIndex = index;
-        }
-        return;
-      });
+    let arrQuery = search.split("&%26");
+    let newQuery ;
+    if(arrQuery.length>1){
+      newQuery = "?"
       arrQuery.map((query, index) => {
-        if (index > qIDIndex + 1 && index < arrQuery.length) {
-          newQuery = newQuery + query;
+        if (index > 0 && index < arrQuery.length) {
+          newQuery = newQuery + "%26" + query;
           return null;
         }
       });
-    } else {
-      arrQuery.map((query, index) => {
-        if (index > 4 && index < arrQuery.length) {
-          newQuery = newQuery + query;
-          return null;
-        }
-      });
+    }else{
+      newQuery = ""
     }
+    
 
     let parsedNewQuery = newQuery.split("%2C").join("~");
     let parsedQuery = parsedNewQuery.replace("%26", "");
