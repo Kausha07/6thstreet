@@ -41,13 +41,13 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
 
     const streetValue = document.getElementById("street")?.value
 
-    if(streetValue === street){
+    if(streetValue !== street){
       this.onChange("street", streetValue)
     }
 
     if (
       (countryId !== prevCountryId ||
-        streetValue === street||
+        streetValue !== street||
         regionId !== prevRegionId ||
         city !== prevCity ||
         region !== prevRegion ||

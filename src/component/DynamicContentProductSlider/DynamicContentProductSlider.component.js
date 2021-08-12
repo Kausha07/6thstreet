@@ -38,7 +38,7 @@ class DynamicContentProductSlider extends PureComponent {
                   product={ product }
                   key={ sku }
                 />
-                { this.renderCTA() }
+                {/* { this.renderCTA() } */}
             </div>
         );
     };
