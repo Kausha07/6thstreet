@@ -280,7 +280,7 @@ class SearchSuggestion extends PureComponent {
                   formatQuerySuggestions(query),
                   queryID
                 )
-              ).split("&")[0]
+              ).split("?")[0]
             }
             onClick={() =>
               this.onSearchQueryClick(formatQuerySuggestions(query))
