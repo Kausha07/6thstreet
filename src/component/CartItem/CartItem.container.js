@@ -15,18 +15,21 @@ import { PureComponent } from "react";
 import { connect } from "react-redux";
 // import { getStore } from "Store";
 import { showNotification } from "Store/Notification/Notification.action";
-import { hideActiveOverlay, toggleOverlayByKey } from "Store/Overlay/Overlay.action";
+import {
+  hideActiveOverlay,
+  toggleOverlayByKey,
+} from "Store/Overlay/Overlay.action";
 import { CartItemType } from "Type/MiniCart";
 // import Algolia from "Util/API/provider/Algolia";
 // import { getUUIDToken } from 'Util/Auth';
 import Event, {
   EVENT_GTM_PRODUCT_ADD_TO_CART,
-  EVENT_GTM_PRODUCT_REMOVE_FROM_CART
+  EVENT_GTM_PRODUCT_REMOVE_FROM_CART,
 } from "Util/Event";
-import CartItemQuantityPopup from 'Component/CartItemQuantityPopup';
-import { CART_ITEM_QUANTITY_POPUP_ID } from 'Component/CartItemQuantityPopup/CartItemQuantityPopup.config';
+import CartItemQuantityPopup from "Component/CartItemQuantityPopup";
+import { CART_ITEM_QUANTITY_POPUP_ID } from "Component/CartItemQuantityPopup/CartItemQuantityPopup.config";
 import CartItem from "./CartItem.component";
-
+import isMobile from "Util/Mobile";
 
 export const CartDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -70,7 +73,7 @@ export const mapDispatchToProps = (dispatch) => ({
       dispatcher.removeProductFromCart(dispatch, options)
     ),
   showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
-  hideActiveOverlay: () => dispatch(hideActiveOverlay())
+  hideActiveOverlay: () => dispatch(hideActiveOverlay()),
 });
 
 export class CartItemContainer extends PureComponent {
@@ -81,15 +84,17 @@ export class CartItemContainer extends PureComponent {
     updateProductInCart: PropTypes.func.isRequired,
     removeProduct: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
+    readOnly: PropTypes.bool,
   };
 
   static defaultProps = {
     brand_name: "",
+    readOnly: false,
   };
 
   state = {
     isLoading: false,
-    showCartItemQuantityPopup: false
+    showCartItemQuantityPopup: false,
   };
 
   handlers = [];
@@ -98,7 +103,7 @@ export class CartItemContainer extends PureComponent {
     handleChangeQuantity: this.handleChangeQuantity.bind(this),
     handleRemoveItem: this.handleRemoveItem.bind(this),
     getCurrentProduct: this.getCurrentProduct.bind(this),
-    toggleCartItemQuantityPopup: () => this.toggleCartItemQuantityPopup()
+    toggleCartItemQuantityPopup: () => this.toggleCartItemQuantityPopup(),
   };
 
   componentWillUnmount() {
@@ -160,7 +165,7 @@ export class CartItemContainer extends PureComponent {
           row_total,
           sku,
           qty: oldQuantity,
-          objectID
+          objectID,
         },
         showNotification,
       } = this.props;
@@ -175,23 +180,25 @@ export class CartItemContainer extends PureComponent {
         thumbnail.url,
         url,
         row_total
-      ).then((response) => {
-        // Response exist only if error appear
-        if (response) {
-          showNotification("error", __(response));
-        } else {
-          showNotification("success", __("Quantity successfully updated"));
-        }
+      )
+        .then((response) => {
+          // Response exist only if error appear
+          if (response) {
+            showNotification("error", __(response));
+          } else {
+            showNotification("success", __("Quantity successfully updated"));
+          }
 
-        this.setStateNotLoading();
-      }).finally(() => {
-        const { showCartItemQuantityPopup } = this.state;
-        if(showCartItemQuantityPopup){
-          this.setState({
-            showCartItemQuantityPopup: false
-          })
-        }
-      });
+          this.setStateNotLoading();
+        })
+        .finally(() => {
+          const { showCartItemQuantityPopup } = this.state;
+          if (showCartItemQuantityPopup) {
+            this.setState({
+              showCartItemQuantityPopup: false,
+            });
+          }
+        });
 
       const event =
         oldQuantity < quantity
@@ -291,26 +298,31 @@ export class CartItemContainer extends PureComponent {
   }
 
   toggleCartItemQuantityPopup() {
-    const { showOverlay } = this.props;
+    const { showOverlay, readOnly } = this.props;
     const { showCartItemQuantityPopup } = this.state;
+    if (readOnly || !(isMobile.any() || isMobile.tablet())) {
+      return;
+    }
 
-    if(!showCartItemQuantityPopup){
+    if (!showCartItemQuantityPopup) {
       showOverlay(CART_ITEM_QUANTITY_POPUP_ID);
     }
-  
-    if(showCartItemQuantityPopup){
+
+    if (showCartItemQuantityPopup) {
       hideActiveOverlay(CART_ITEM_QUANTITY_POPUP_ID);
     }
 
     this.setState({
-        showCartItemQuantityPopup: !showCartItemQuantityPopup
+      showCartItemQuantityPopup: !showCartItemQuantityPopup,
     });
   }
 
   render() {
     const { minSaleQuantity, maxSaleQuantity } = this.containerProps();
     const { handleChangeQuantity } = this.containerFunctions;
-    const { item: { qty } } = this.props;
+    const {
+      item: { qty },
+    } = this.props;
     const { showCartItemQuantityPopup } = this.state;
 
     return (
@@ -321,16 +333,15 @@ export class CartItemContainer extends PureComponent {
           {...this.containerFunctions}
           {...this.containerProps()}
         />
-        {
-          showCartItemQuantityPopup &&
+        {showCartItemQuantityPopup && (
           <CartItemQuantityPopup
-            min={ minSaleQuantity }
-            max={ maxSaleQuantity }
-            value={ qty }
-            toggle={ this.toggleCartItemQuantityPopup.bind(this) }
-            onChange={ handleChangeQuantity }
+            min={minSaleQuantity}
+            max={Math.min(maxSaleQuantity, 10)}
+            value={qty}
+            toggle={this.toggleCartItemQuantityPopup.bind(this)}
+            onChange={handleChangeQuantity}
           />
-        }
+        )}
       </>
     );
   }

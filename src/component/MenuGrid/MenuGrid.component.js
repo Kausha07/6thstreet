@@ -69,7 +69,7 @@ class MenuGrid extends PureComponent {
 
   renderItems() {
     const { items = [] } = this.props;
-    return items.map(this.renderItem);
+    return items.slice(0, 14).map(this.renderItem);
   }
 
   renderDesktopButton() {

@@ -30,6 +30,9 @@
 
   &-Methods {
     margin-bottom: 10px;
+    .Slider {
+      overflow-x: auto;
+    }
   }
 
   &-MethodDiscription {

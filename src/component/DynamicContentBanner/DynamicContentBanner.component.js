@@ -1,15 +1,15 @@
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
+
 import Image from "Component/Image";
 import Link from "Component/Link";
-import PropTypes from "prop-types";
-// import VueIntegrationQueries from "Query/vueIntegration.query";
-import { PureComponent } from "react";
-// import { getUUID } from "Util/Auth";
-import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
 import isMobile from "Util/Mobile";
 import { formatCDNLink } from "Util/Url";
-import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
+import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
 import "./DynamicContentBanner.style";
+
+import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
 class DynamicContentBanner extends PureComponent {
   static propTypes = {
     items: PropTypes.arrayOf(
@@ -69,7 +69,7 @@ class DynamicContentBanner extends PureComponent {
     const { url, link, height = "", width = "" } = item;
     let ht, wd;
     if (screen.width < 900) {
-      wd = (screen.width - 16).toString() + "px";
+      wd = (screen.width - 20).toString() + "px";
       ht = (height / width) * screen.width;
     } else {
       wd = width.toString() + "px";
@@ -97,7 +97,7 @@ class DynamicContentBanner extends PureComponent {
           this.onclick(item);
         }}
       >
-        <img src={url} block="Image" style={{ width: wd, height: ht }} />
+        <img src={url} block="Image" style={{ maxWidth: wd, height: ht }} />
 
         {this.renderButton()}
       </Link>

@@ -235,6 +235,14 @@
     }
 
     &_type_password {
+        label[for=passwordReset] ~ .Mask {
+            top: unset!important;
+            line-height: 45px!important;
+        }
+        label[for=passwordResetConfirm] ~ .Mask {
+            top: unset!important;
+            line-height: 45px!important;
+        }
         .Mask {
             color: #9B9B9B;
             font-size: 12px;

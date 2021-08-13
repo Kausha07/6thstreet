@@ -5,11 +5,42 @@
 }
 
 .PDPDetailsSection {
-  padding: 0 20px;
+  // padding: 0 20px;
   font-weight: var(--fw-regular);
 
+  .VueProductSlider {
+    &-HeaderContainer {
+      h1 {
+        @include tablet {
+          padding-inline: 30px;
+        }
+        @include mobile {
+          padding-inline: 10px;
+        }
+      }
+    }
+    &-SliderContainer {
+      @include mobile {
+        width: 100vw;
+      }
+    }
+    // &-Container {
+    //   padding: 0;
+    //   margin: 0;
+    //   width: 100%;
+    // }
+  }
+  &-Accordion {
+    @include mobile() {
+      padding-bottom: 75px;
+      padding-inline: 10px;
+    }
+    @include tablet {
+      padding-inline: 30px;
+    }
+  }
   @include desktop() {
-    padding: 0 20px;
+    // padding: 0 20px;
   }
 
   h3 {
@@ -70,7 +101,8 @@
     }
   }
 
-  &-Description, &-SizeFit {
+  &-Description,
+  &-SizeFit {
     font-size: 16px;
     line-height: 24px;
   }
@@ -99,7 +131,8 @@
     }
   }
 
-  &-Highlights, &-ModelMeasurements {
+  &-Highlights,
+  &-ModelMeasurements {
     font-size: 16px;
     margin-top: 32px;
     font-weight: var(--fw-demi);
@@ -115,6 +148,14 @@
     }
     li {
       list-style-position: outside;
+    }
+  }
+  &-Highlights {
+    &_isArabic {
+      ul {
+        padding-left: 0;
+        padding-right: 30px;
+      }
     }
   }
 
@@ -165,7 +206,7 @@
       align-items: center;
       border: 1px solid #000000;
       border-radius: 8px;
-      background-color: #FFFFFF;
+      background-color: #ffffff;
       padding: 0 20px;
       svg {
         transform: rotateY(0deg);
@@ -285,7 +326,7 @@
     }
   }
   .Seperator {
-    background-color: #EFEFEF;
+    background-color: #efefef;
     margin: 15px 0 0 0;
     height: 1.5px;
   }

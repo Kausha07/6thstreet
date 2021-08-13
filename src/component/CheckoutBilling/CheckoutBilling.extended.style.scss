@@ -8,6 +8,9 @@
 }
 .CheckoutBilling {
   padding: 0 0.5rem;
+  @include mobile {
+    padding-inline: 0;
+  }
   button {
     @include before-desktop {
       font-size: 14px !important;
@@ -202,6 +205,11 @@
         margin-top: 20px;
         background: var(--white);
         padding: 20px 60px 30px 60px;
+        &_formContent {
+          .MyAccountAddressPopup {
+            position: relative;
+          }
+        }
 
         h2 {
           border: none;

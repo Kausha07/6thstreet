@@ -1,10 +1,8 @@
-import PropTypes from "prop-types";
-import { PureComponent } from "react";
-
 import PLPPage from "Component/PLPPage";
 import PLPPagePlaceholder from "Component/PLPPagePlaceholder";
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
 import { Products } from "Util/API/endpoint/Product/Product.type";
-
 import "./PLPPages.style";
 
 class PLPPages extends PureComponent {

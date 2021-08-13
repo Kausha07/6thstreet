@@ -73,6 +73,7 @@ export {
 };
 
 export class Router extends SourceRouter {
+  
   static propTypes = {
     ...SourceRouter.propTypes,
     isAppReady: PropTypes.bool.isRequired,
@@ -85,6 +86,8 @@ export class Router extends SourceRouter {
     isArabic: false,
     homepageUrl: "/(|men.html|women.html|kids.html|home.html|home_beauty_women.html)/",
   };
+
+ 
 
   [BEFORE_ITEMS_TYPE] = [
     {
@@ -331,7 +334,6 @@ export class Router extends SourceRouter {
 
   renderContent() {
     const { isArabic } = this.state;
-
     return (
       <div block="PageWrapper" mods={{ isArabic }}>
         {this.renderItemsOfType(BEFORE_ITEMS_TYPE)}

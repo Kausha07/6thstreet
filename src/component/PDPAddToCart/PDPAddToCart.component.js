@@ -41,6 +41,7 @@ class PDPAddToCart extends PureComponent {
     isIPhoneNavigationHidden: false,
     pageYOffset: window.innerHeight,
     isRoundedIphone: this.isRoundedIphoneScreen() ?? false,
+    isArabic: isArabic(),
     customer: null,
   };
 
@@ -59,7 +60,9 @@ class PDPAddToCart extends PureComponent {
 
   updateStateNotifyEmail() {
     const {
-      customer: { email }, guestUserEmail } = this.props;
+      customer: { email },
+      guestUserEmail,
+    } = this.props;
     const { notifyMeEmail } = this.state;
     if (email && notifyMeEmail !== email) {
       this.setState({ notifyMeEmail: email });
@@ -163,7 +166,8 @@ class PDPAddToCart extends PureComponent {
   }
 
   renderSizeOption(productStock, code, label) {
-    const { selectedSizeCode, onSizeSelect, notifyMeLoading, notifyMeSuccess } = this.props;
+    const { selectedSizeCode, onSizeSelect, notifyMeLoading, notifyMeSuccess } =
+      this.props;
     const isNotAvailable = parseInt(productStock[code].quantity) === 0;
 
     const selectedLabelStyle = {
@@ -186,7 +190,8 @@ class PDPAddToCart extends PureComponent {
         block="PDPAddToCart-SizeSelector"
         elem={isNotAvailable ? "SizeOptionContainerOOS" : "SizeOptionContainer"}
         onClick={() => {
-          if (!notifyMeLoading && !notifyMeSuccess) onSizeSelect({ target: { value: code } });
+          if (!notifyMeLoading && !notifyMeSuccess)
+            onSizeSelect({ target: { value: code } });
         }}
       >
         <input
@@ -444,7 +449,7 @@ class PDPAddToCart extends PureComponent {
           <span
             block="PDPAddToCart"
             elem="EmailSendBtn"
-            lang={isArabic() ? 'ar' : 'en'}
+            lang={isArabic() ? "ar" : "en"}
             onClick={this.onNotifyMeSendClick}
           >
             {notifyMeLoading ? __("Sending..") : __("Send")}
@@ -516,7 +521,7 @@ class PDPAddToCart extends PureComponent {
         {this.renderNotifyMeSuccess()}
         {this.renderNotAvailable()}
         {sizeObject.sizeTypes !== undefined &&
-          sizeObject.sizeTypes.length !== 0 ? (
+        sizeObject.sizeTypes.length !== 0 ? (
           <>
             <div block="PDPAddToCart" elem="SizeInfoContainer">
               <span block="PDPAddToCart-SizeInfoContainer" elem="title">

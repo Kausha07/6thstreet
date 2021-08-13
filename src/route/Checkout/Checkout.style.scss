@@ -11,6 +11,13 @@
   @include before-desktop {
     .Checkout-StickyButtonWrapper {
       padding-top: 0.5rem;
+      padding: 1.5rem 30px calc(env(safe-area-inset-bottom) + 1rem);
+    }
+  }
+  @include mobile {
+    padding-bottom: 120px;
+    .Checkout-StickyButtonWrapper {
+      padding: 1.5rem 10px calc(env(safe-area-inset-bottom) + 1rem);
     }
   }
 
@@ -208,7 +215,7 @@
   &-Step {
     @include before-desktop {
       margin: 0 auto;
-      max-width: 700px;
+      // max-width: 700px;
     }
   }
   &-MobileDisplay {
@@ -224,8 +231,17 @@
   }
 
   &-Wrapper {
-    max-width: var(--checkout-max-width);
-
+    // max-width: var(--checkout-max-width);
+    max-width: 1440px;
+    width: var(--main-container-width-dsk);
+    @include tablet {
+      width: auto;
+      margin: 0 30px;
+    }
+    @include mobile {
+      width: auto;
+      margin: 0 10px;
+    }
     @include desktop {
       display: grid;
       grid-template-columns: minmax(calc(65% - 1rem), 600px) minmax(
@@ -237,9 +253,10 @@
   }
 
   .CheckoutNavigation {
-    padding: 19px 60px 45px;
+    padding: 16px 36px;
     display: flex;
-
+    margin-bottom:45px;
+    
     @include desktop {
       display: none;
     }
@@ -495,6 +512,7 @@
 
   &-BackButtons {
     padding: 10px 0;
+    padding-top: 0;
     display: none;
 
     @include desktop {
@@ -562,7 +580,7 @@
         border: 2px solid var(--input-border-color);
         width: 100%;
         padding: 20px;
-        margin: 10px 0;
+        margin: 0 0 10px 0;
       }
 
       &:not(&_isDisabled) {
@@ -573,7 +591,7 @@
             }
           }
         }
-        margin-top: 20px;
+        // margin-top: 20px;
         padding: 20px 30px 0 30px;
         background: var(--white-color);
       }
@@ -594,6 +612,10 @@
     @include desktop {
       display: none !important;
     }
+    @include tablet {
+      width: 100%;
+      margin: 0 0 24px !important;
+    }
   }
   .LoadingBlock {
     @include before-desktop {
@@ -612,9 +634,10 @@
   background-color: var(--white);
   display: flex;
   justify-content: space-between;
-  max-width: 1120px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 20px 0;
+  max-width: 1440px;
+  width: var(--main-container-width-dsk);
 
   &-BackToShoppingMobile {
     @include desktop {
@@ -628,7 +651,7 @@
       height: 22px;
       left: 20px;
       top: 30px;
-      background-image: url(./icons/arrow-left-black.svg);
+      background-image: url(../../component/Icons/ChevronLeft/icon.svg);
       background-size: 16px;
       background-repeat: no-repeat;
     }
@@ -653,7 +676,7 @@
       height: 22px;
       left: 6px;
       top: 15px;
-      background-image: url(./icons/arrow-left-black.svg);
+      background-image: url(../../component/Icons/ChevronLeft/icon.svg);
       background-size: 16px;
       background-repeat: no-repeat;
     }
@@ -675,7 +698,7 @@
     :hover {
       @include desktop {
         ::before {
-          background-image: url(./icons/arrow-left-white.svg);
+          background-image: url(../../component/Icons/ChevronLeft/icon.svg);
         }
       }
     }

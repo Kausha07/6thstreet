@@ -1,251 +1,485 @@
 :root {
-    --main-content-padding: 150px;
+  --main-content-padding: 150px;
 }
 
 main {
-    @include mobile {
-        padding-top: var(--main-content-padding);
-    }
+  @include mobile {
+    padding-top: var(--main-content-padding);
+  }
+  @include tablet {
+    padding-top: var(--main-content-padding);
+  }
 }
 
 .HeaderMainSection {
-    align-items: center;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 60px;
+  max-width: 1440px;
+  margin: 0 auto;
+
+  @include mobile {
+    z-index: 90;
+    position: fixed;
+    width: 100%;
+    background: $white;
+    top: 0;
+    transition: all 0.5s ease-in-out;
+    -webkit-transition-property: all;
+    -webkit-transition-duration: 0.5s;
+    -webkit-transition-timing-function: ease-in-out;
+    &[data-visible="false"] {
+      display: none;
+      top: -50px;
+    }
+  }
+  @include tablet {
+    z-index: 90;
+    position: fixed;
+    width: 100%;
+    background: $white;
+    top: 0;
+    transition: all 0.5s ease-in-out;
+    -webkit-transition-property: all;
+    -webkit-transition-duration: 0.5s;
+    -webkit-transition-timing-function: ease-in-out;
+    &[data-visible="false"] {
+      display: none;
+      top: -50px;
+    }
+  }
+
+  .HeaderGenders {
     display: flex;
-    height: 60px;
-    max-width: 1470px;
-    margin: 0 auto;
+    order: 0;
+  }
 
+  .HeaderLogo {
+    order: 1;
     @include mobile {
-        z-index: 90;
+      position: fixed;
+      top: 15px;
+      width: 90%;
+    }
+    @include tablet {
+      position: fixed;
+      top: 15px;
+      width: 90%;
+    }
+  }
+  .SearchIcon {
+    order: 2;
+    display: none;
+    // padding-right: 47px;
+    img {
+      cursor: pointer;
+    }
+    &-Button {
+      content: "";
+      background: url(./icons/search-black.svg) no-repeat;
+      background-size: 24px;
+      width: 24px;
+      height: 24px;
+      display: inline-block;
+      position: relative;
+      // top: -4px;
+    }
+    @include desktop {
+      display: block;
+    }
+  }
+
+  .CategoryTitle {
+    @include mobile {
+      font-size: 12px;
+      padding-left: 15px;
+      padding-right: 15px;
+      top: 0;
+      width: 70%;
+      margin-left: 15%;
+      height: 40px;
+      line-height: 40px;
+
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      &_isArabic {
+        margin-right: 15%;
+        margin-left: unset;
+      }
+    }
+    @include tablet {
+      font-size: 12px;
+      padding-left: 15px;
+      padding-right: 15px;
+      top: 0;
+      width: 70%;
+      margin-left: 15%;
+      height: 40px;
+      line-height: 40px;
+
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      &_isArabic {
+        margin-right: 15%;
+        margin-left: unset;
+      }
+    }
+    @include after-mobile {
+      display: none;
+    }
+  }
+  .BackArrow {
+    height: 40px;
+    width: 40px;
+    border-radius: 20px;
+
+    position: fixed;
+    top: 15px;
+    left: 15px;
+
+    background: $white;
+
+    &_isArabic {
+      right: 15px;
+      left: unset;
+
+      .BackArrow {
+        &-Button {
+          right: 5px;
+          left: unset;
+
+          &::before {
+            right: 5px;
+            left: unset;
+            transform: rotate(-45deg);
+            -webkit-transform: rotate(-45deg);
+          }
+        }
+      }
+    }
+
+    &-Button {
+      top: 0;
+      left: 5px;
+      background-size: 30px;
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      p {
+        display: none;
+      }
+      &::before {
+        content: "";
+        position: absolute;
+        top: 10px;
+        left: 5px;
+        border: solid $black;
+        border-width: 0 2px 2px 0;
+        display: inline-block;
+        padding: 4px;
+        transform: rotate(135deg);
+        -webkit-transform: rotate(135deg);
+      }
+    }
+
+    @include after-mobile {
+      display: none;
+    }
+  }
+
+  .HeaderWishlist {
+    order: 3;
+    margin-left: 15px;
+    margin-right: 15px;
+  }
+
+  .HeaderAccount {
+    order: 4;
+    margin-left: 15px;
+    margin-right: 15px;
+    &_isArabic {
+      // margin-left: 0;
+    }
+  }
+
+  .HeaderCart {
+    order: 5;
+    margin-left: 15px;
+    &_isArabic {
+      margin-right: 15px;
+      margin-left: 0;
+    }
+
+    @include before-desktop {
+      top: 5px;
+      width: 45px;
+      margin: 0 auto;
+
+      @include mobile {
         position: fixed;
-        width: 100%;
+        top: 10px;
+        right: 20px;
+
         background: $white;
-        top: 0;
-        transition: all .5s ease-in-out;
-        -webkit-transition-property: all;
-        -webkit-transition-duration: .5s;
-        -webkit-transition-timing-function: ease-in-out;
-        &[data-visible="false"] {
-            display: none;
-            top: -50px
-        }
-    }
-
-    .HeaderGenders {
-        display: flex;
-        order: 0;
-    }
-
-    .HeaderLogo {
-        order: 1;
-        @include mobile {
-            position: fixed;
-            top: 15px;
-            width: 90%;
-        }
-
-    }
-
-    .CategoryTitle {
-        @include mobile {
-            font-size: 12px;
-            padding-left: 15px;
-            padding-right: 15px;
-            top: 0;
-            width: 70%;
-            margin-left: 15%;
-            height: 40px;
-            line-height: 40px;
-
-            text-align: center;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-
-            &_isArabic {
-                margin-right: 15%;
-                margin-left: unset;
-            }
-
-        }
-        @include after-mobile {
-            display: none;
-        }
-    }
-    .BackArrow {
         height: 40px;
-        width: 40px;
+        width: 30px;
         border-radius: 20px;
 
-        position: fixed;
-        top: 15px;
-        left: 15px;
-        right: unset;
+        &-Button {
+          left: 5px;
+          top: 3px;
+          background-size: 24px;
+          width: 24px;
+          height: 24px;
+        }
 
-        background: $white;
+        &-Count {
+          top: 2px;
+          right: -2px;
+        }
 
         &_isArabic {
-            right: 15px;
+          right: unset;
+          left: 20px;
+          .HeaderCart {
+            margin-left: 0 !important;
+            &-Button {
+              right: 5px;
+              left: unset;
+            }
+          }
+        }
+      }
+    }
+    @include tablet {
+      position: fixed;
+      top: 10px;
+      right: 20px;
+
+      background: $white;
+      height: 40px;
+      width: 30px;
+      border-radius: 20px;
+
+      &-Button {
+        right: 5px;
+        top: 3px;
+        background-size: 24px;
+        width: 24px;
+        height: 24px;
+      }
+
+      &-Count {
+        top: 0px;
+        right: -5px;
+      }
+
+      &_isArabic {
+        right: unset;
+        left: 20px;
+        .HeaderCart {
+          &-Button {
+            right: 5px;
             left: unset;
-
-            .BackArrow {
-                &-Button {
-                    right: 5px;
-                    left: unset;
-
-                    &::before{
-                        right: 5px;
-                        left: unset;
-                        transform: rotate(-45deg);
-                        -webkit-transform: rotate(-45deg);
-                    }
-                }
-            }
+            // background-size: 24px;
+          }
         }
+      }
+    }
+  }
 
-        &-Button {
-            top: 0;
-            left: 5px;
-            background-size: 30px;
-            width: 30px;
-            height: 30px;
-            padding: 0;
-            p {
-                display: none;
-            }
-            &::before{
-                content: '';
-                position: absolute;
-                top: 10px;
-                left: 5px;
-                border: solid $black;
-                border-width: 0 2px 2px 0;
-                display: inline-block;
-                padding: 4px;
-                transform: rotate(135deg);
-                -webkit-transform: rotate(135deg);
-            }
+  .HeaderSearch {
+    @include mobile {
+      background: $white;
+      position: fixed;
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      top: 50px;
+    }
+    @include tablet {
+      background: $white;
+      position: fixed;
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      top: 50px;
+    }
+    @include after-mobile {
+      // display: none;
+    }
+  }
+
+  .HeaderGenders {
+    @include mobile {
+      &_isMobile {
+        display: flex;
+        background: $white;
+        width: 100%;
+        top: 100px;
+        position: fixed;
+        justify-content: center;
+      }
+
+      .GenderButton-Container {
+        display: flex;
+        justify-content: center;
+        width: 33.33%;
+
+        .GenderButton-Button {
+          padding: 0 0px;
+          height: 25px;
         }
+      }
+    }
+    @include tablet {
+      &_isMobile {
+        display: flex;
+        background: $white;
+        width: 100%;
+        top: 100px;
+        position: fixed;
+        justify-content: center;
+      }
 
-        @include after-mobile {
-            display: none;
+      .GenderButton-Container {
+        display: flex;
+        justify-content: center;
+        padding-left: 15px;
+        padding-right: 15px;
+        // width: 33.33%;
+
+        .GenderButton-Button {
+          padding: 0;
+          height: 25px;
         }
+      }
     }
+  }
 
-    .HeaderWishlist {
-        order: 2;
+  .HeaderWishlist,
+  .HeaderAccount {
+    label {
+      span {
+        display: none;
+      }
     }
-
-    .HeaderAccount {
-        order: 3;
+    &_isMobile {
+      @include before-desktop {
+        display: none;
+      }
     }
+  }
 
-    .HeaderCart {
-        order: 4;
+  @include desktop() {
+    display: flex;
+    height: 84px;
+    flex-direction: unset;
+    // padding: 0 15px;
+    padding: 0;
+    width: var(--main-container-width-dsk);
 
-        @include before-desktop {
-            top: 5px;
-            width: 45px;
-            margin: 0 auto;
-
-            @include mobile {
-                position: fixed;
-                top: 10px;
-                right: 20px;
-
-                background: $white;
-                height: 40px;
-                width: 30px;
-                border-radius: 20px;
-
-                &-Button {
-                    left: 5px;
-                    top: 3px;
-                    background-size: 30px;
-                    width: 30px;
-                    height: 30px;
-                }
-
-                &-Count {
-                    top: 5px;
-                    right: 5px;
-                }
-
-                &_isArabic {
-                    right: unset;
-                    left: 20px;
-                    .HeaderCart {
-
-                        &-Button {
-                            right: 5px;
-                            left: unset;
-                        }
-                    }
-                }
-            }
-        }
+    &_isMobile {
+      display: block;
     }
+  }
 
+  @include desktop() {
+    display: flex;
+  }
+
+  .DesktopSearch {
+    position: fixed;
+    top: 119px;
+    background: #f6f6f6;
+    width: 100%;
+    height: 40px;
+    left: 0;
+    z-index: 10;
     .HeaderSearch {
+      position: relative;
+      width: var(--main-container-width-dsk);
+      max-width: 100%;
+      height: 40px;
+      top: 0;
+      border-radius: 0;
+      margin-left: auto;
+      margin-right: auto;
+      background: #f6f6f6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      &-Clear {
+        padding-right: 0px;
+        padding-left: 0px;
+        width: 15px;
+      }
 
-        @include mobile {
-            background: $white;
-            position: fixed;
-            display: flex;
-            width: 100%;
-            justify-content: center;
-            top: 50px;
-        }
-        @include after-mobile {
-            display: none;
-        }
-    }
-
-    .HeaderGenders {
-        @include mobile {
-            &_isMobile {
-                display: flex;
-                background: $white;
-                width: 100%;
-                top: 100px;
-                position: fixed;
-                justify-content: center;
-            }
-
-            .GenderButton-Container {
-                display: flex;
-                justify-content: center;
-                width: 33.33%;
-
-                .GenderButton-Button {
-                    padding: 0 15px;
-                    height: 25px;
-                }
-            }
-        }
-    }
-
-    .HeaderWishlist,
-    .HeaderAccount {
-        &_isMobile {
-            @include before-desktop{
-                display: none;
-            }
-        }
-    }
-
-    @include desktop() {
+      .Form {
+        width: 100%;
         display: flex;
-        height: 84px;
-        flex-direction: unset;
-        padding: 0 15px;
-
-        &_isMobile {
-            display: block;
+        align-items: center;
+      }
+      .Field {
+        input {
+          padding-left: 35px !important;
         }
-    }
-
-    @include desktop() {
+      }
+      &-Clear {
         display: flex;
+      }
+      &-SubmitBtn {
+        left: 0;
+        right: 0;
+      }
+      .SearchSuggestion {
+        width: 100%;
+        left: 0;
+        right: 0;
+        &-Shade {
+          background: transparent;
+        }
+        &-Content {
+          margin-left: 0;
+          opacity: 0.97;
+          max-height: 400px;
+          overflow-y: auto;
+          right: 0;
+          & > div {
+            width: var(--main-container-width-dsk);
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 35px;
+          }
+        }
+      }
     }
+  }
 }
+
+.SearchIcon {
+  margin-right: 15px;
+  &_isArabic {
+    margin-right: 0;
+    margin-left: 15px;
+  }
+}
+// .HeaderWishlist {
+//   margin-left: 15px !important;
+//   margin-right: 15px !important;
+// }
+// .HeaderAccount {
+//   margin-left: 15px !important;
+//   margin-right: 15px !important;
+// }
+// .HeaderCart {
+//   margin-left: 15px !important;
+// }
