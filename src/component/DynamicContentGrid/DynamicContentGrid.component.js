@@ -53,14 +53,10 @@ class DynamicContentGrid extends PureComponent {
   renderItem = (item, i) => {
     const { link, url } = item;
     let ht = this.props.item_height.toString() + "px";
-    const linkTo = {
-      pathname: formatCDNLink(link.split("?q=")[0]),
-      state: "?q=" + link.split("?q=")[1],
-    };
     return (
       <div block="CategoryItem" elem="Content" key={i}>
         <Link
-          to={linkTo}
+          to={formatCDNLink(link.split("?q=")[0])}
           key={i}
           data-banner-type="grid"
           data-promotion-name={item.promotion_name ? item.promotion_name : ""}

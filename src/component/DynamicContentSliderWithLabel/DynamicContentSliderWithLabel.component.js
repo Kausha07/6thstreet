@@ -112,10 +112,6 @@ class DynamicContentSliderWithLabel extends PureComponent {
   renderCircle = (item, i) => {
     const { link, text, url, plp_config, height, width } = item;
 
-    const linkTo = {
-      pathname: formatCDNLink(link.split('?q=')[0]),
-      state:  link.split('.html')[1] ,
-    };
     let wd;
     if (this.state.settings.responsive[300].items === 1) {
       wd = (screen.width - 16).toString() + "px";
@@ -129,7 +125,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
     return (
       <div block="SliderWithLabel" key={i * 10}>
         <Link
-          to={linkTo}
+          to={formatCDNLink(link.split('?q=')[0])}
           key={i * 10}
           data-banner-type="sliderWithLabel"
           data-promotion-name={item.promotion_name ? item.promotion_name : ""}
