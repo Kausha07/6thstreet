@@ -60,14 +60,9 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
   renderSlide = (item, i) => {
     const { link, label, url: image_url, plp_config } = item;
 
-    const linkTo = {
-      pathname: formatCDNLink(link),
-      state: { plp_config },
-    };
-
     return (
       <Link
-        to={linkTo}
+        to={formatCDNLink(link)}
         key={i}
         data-banner-type="fullWidthBanner"
         data-promotion-name={item.promotion_name ? item.promotion_name : ""}

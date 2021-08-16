@@ -130,7 +130,7 @@ class SearchSuggestion extends PureComponent {
         .toLowerCase();
       brandUrl = `${this.getBrandUrl(
         formattedBrandName
-      )}.html?q=${formattedBrandName}&qid=${queryID}&dFR[gender][0]=${gender}`;
+      )}.html?q=${formattedBrandName}&gender=${gender}`;
     }
     return brandUrl;
   };
@@ -143,7 +143,10 @@ class SearchSuggestion extends PureComponent {
     }
     const catalogUrl = `/catalogsearch/result/?q=${formatQuerySuggestions(
       query
-    )}&qid=${queryID}&p=0&dFR[gender][0]=${requestedGender}`;
+    )}&gender=${requestedGender.replace(
+      requestedGender.charAt(0),
+      requestedGender.charAt(0).toUpperCase()
+    )}`;
     return catalogUrl;
   };
 
@@ -233,7 +236,7 @@ class SearchSuggestion extends PureComponent {
     return (
       <li>
         <Link
-          to={`/${urlName}.html?q=${urlName}`}
+          to={`/${urlName}.html`}
           onClick={() => this.handleBrandsClick(urlName)}
         >
           <div className="suggestion-details-box">
@@ -271,9 +274,14 @@ class SearchSuggestion extends PureComponent {
       <li>
         {isBrand ? (
           <Link
-            to={encodeURI(
-              this.getBrandSuggestionUrl(formatQuerySuggestions(query), queryID)
-            )}
+            to={
+              encodeURI(
+                this.getBrandSuggestionUrl(
+                  formatQuerySuggestions(query),
+                  queryID
+                )
+              )
+            }
             onClick={() =>
               this.onSearchQueryClick(formatQuerySuggestions(query))
             }
@@ -369,10 +377,19 @@ class SearchSuggestion extends PureComponent {
 
   renderProduct = (product) => {
     const { url, name, thumbnail_url, brand_name, price } = product;
+    const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
+    let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
+
+    let parseLink = url.includes("catalogsearch/result")
+      ? url.split("&")[0] +`&gender=${requestedGender.replace(
+      requestedGender.charAt(0),
+      requestedGender.charAt(0).toUpperCase()
+    )}`
+      : url;
 
     return (
       <li>
-        <Link to={url} onClick={() => this.handleProductClick(product)}>
+        <Link to={parseLink} onClick={() => this.handleProductClick(product)}>
           <div block="SearchProduct">
             <img
               src={thumbnail_url}
@@ -519,7 +536,7 @@ class SearchSuggestion extends PureComponent {
     return (
       <li key={i}>
         <Link
-          to={`/${urlName}.html?q=${urlName}&dFR[gender][0]=${requestedGender}`}
+          to={`/${urlName}.html`}
           onClick={() => this.handleTrendingBrandsClick(urlName)}
         >
           <div block="SearchSuggestion" elem="TrandingImg">
@@ -545,7 +562,7 @@ class SearchSuggestion extends PureComponent {
   renderTrendingTag = ({ link, label }, i) => (
     <li key={i}>
       <Link
-        to={{ pathname: link }}
+        to={{ pathname: link && link.split("#q")[0] }}
         onClick={() => this.handleTrendingTagsClick(label)}
       >
         <div block="SearchSuggestion" elem="TrandingTag">
@@ -576,7 +593,10 @@ class SearchSuggestion extends PureComponent {
           to={
             link
               ? link
-              : `/catalogsearch/result/?q=${search}&dFR[gender][0]=${requestedGender}`
+              : `/catalogsearch/result/?q=${search}&gender=${requestedGender.replace(
+                  requestedGender.charAt(0),
+                  requestedGender.charAt(0).toUpperCase()
+                )}`
           }
           onClick={() => this.onSearchQueryClick(search)}
         >
@@ -610,7 +630,10 @@ class SearchSuggestion extends PureComponent {
           to={
             link
               ? link
-              : `/catalogsearch/result/?q=${name}&dFR[gender][0]=${requestedGender}`
+              : `/catalogsearch/result/?q=${name}&gender=${requestedGender.replace(
+                  requestedGender.charAt(0),
+                  requestedGender.charAt(0).toUpperCase()
+                )}`
           }
           onClick={() => this.onSearchQueryClick(name)}
         >

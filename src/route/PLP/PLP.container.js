@@ -18,6 +18,7 @@ import {
 } from "Util/API/endpoint/Product/Product.type";
 import WebUrlParser from "Util/API/helper/WebUrlParser";
 import { capitalize } from "Util/App";
+import { URLS } from "Util/Url/Url.config";
 import { getUUID } from "Util/Auth";
 import {
   getBreadcrumbs,
@@ -91,13 +92,12 @@ export class PLPContainer extends PureComponent {
 
   static getDerivedStateFromProps(props, state) {
     const { pages } = props;
-    const requestOptions = PLPContainer.getRequestOptions();
+    const requestOptions = PLPContainer.getRequestOptions(props);
     const { page, ...restOptions } = requestOptions;
 
     const {
       prevRequestOptions: { page: prevPage, ...prevRestOptions },
     } = state;
-
     if (JSON.stringify(restOptions) !== JSON.stringify(prevRestOptions)) {
       // if queries match (excluding pages) => not inital
       PLPContainer.requestProductList(props);
@@ -111,9 +111,28 @@ export class PLPContainer extends PureComponent {
     };
   }
 
-  static getRequestOptions() {
-    const { params: parsedParams } = WebUrlParser.parsePLP(location.href);
-
+  static getRequestOptions(props) {
+    const {
+      history: {
+        location: { state: query },
+      },
+    } = props;
+    let parseURL;
+    if(query){
+      if(query && !query.product){
+        if (query && query.includes(".html")) {
+          const urlLink = `${query.split(".html")[1]}`;
+          parseURL = urlLink.replace(/ /g, "%20");
+        } else if (query && !query.includes(".html")) {
+          const urlLink = `${query}`;
+          parseURL = urlLink.replace(/ /g, "%20");
+        }
+      }
+    }else{
+      parseURL= location.href
+    }
+   
+    const { params: parsedParams } = WebUrlParser.parsePLP(parseURL);
     return {
       // TODO: inject gender ?
       ...parsedParams,
@@ -122,7 +141,7 @@ export class PLPContainer extends PureComponent {
 
   static async request(isPage, props) {
     const { requestProductList, requestProductListPage } = props;
-    const options = PLPContainer.getRequestOptions();
+    const options = PLPContainer.getRequestOptions(props);
     const requestFunction = isPage
       ? requestProductListPage
       : requestProductList;
@@ -130,7 +149,7 @@ export class PLPContainer extends PureComponent {
   }
 
   state = {
-    prevRequestOptions: PLPContainer.getRequestOptions(),
+    prevRequestOptions: PLPContainer.getRequestOptions(this.props),
   };
 
   containerFunctions = {
@@ -208,7 +227,6 @@ export class PLPContainer extends PureComponent {
       options,
       menuCategories,
     } = this.props;
-
     if (query) {
       const { updateBreadcrumbs, setGender } = this.props;
       const breadcrumbLevels = options["categories.level2"]
@@ -229,25 +247,13 @@ export class PLPContainer extends PureComponent {
           return acc;
         }, []);
 
-        const breadcrumbs = [
-          ...productListBreadcrumbs,
-          {
-            url: "/",
-            name: __("Home"),
-          },
-        ];
-
-        updateBreadcrumbs(breadcrumbs);
+        updateBreadcrumbs(productListBreadcrumbs);
       } else {
         const breadcrumbs = [
           {
             url: "/",
             name: options["categories.level0"],
-          },
-          {
-            url: "/",
-            name: __("Home"),
-          },
+          }
         ];
 
         updateBreadcrumbs(breadcrumbs);
@@ -303,8 +309,7 @@ export class PLPContainer extends PureComponent {
 
   getIsLoading() {
     const { requestedOptions } = this.props;
-    const options = PLPContainer.getRequestOptions();
-
+    const options = PLPContainer.getRequestOptions(this.props);
     const {
       // eslint-disable-next-line no-unused-vars
       page: requestedPage,
@@ -316,19 +321,21 @@ export class PLPContainer extends PureComponent {
       page,
       ...restOptions
     } = options;
-
+    
     // If requested options are not matching requested options -> we are loading
     // we also ignore pages, this is handled by PLPPages
     return JSON.stringify(requestedRestOptions) !== JSON.stringify(restOptions);
   }
 
   containerProps = () => {
-    const { brandDescription, brandImg, brandName } = this.props;
+    const { brandDescription, brandImg, brandName,query } = this.props;
+
     // isDisabled: this._getIsDisabled()
     return {
       brandDescription,
       brandImg,
       brandName,
+      query
     };
   };
 

@@ -150,7 +150,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
         ref={this.childRef}
       >
         <Link
-          to={newLink}
+          to={newLink.split("?_ga")[0]}
           data-banner-type="vueSlider"
           block="VueProductSlider-Link"
           onClick={() => {
