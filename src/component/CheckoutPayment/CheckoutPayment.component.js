@@ -81,11 +81,9 @@ export class CheckoutPayment extends PureComponent {
                 m_code
             }
         } = this.props;
-
         if (
             HIDDEN_PAYMENTS.includes(m_code)
-            // || (  m_code === CHECKOUT_APPLE_PAY
-            && ((!['AE', 'SA'].includes(getCountryFromUrl()) || !window.ApplePaySession))
+            || (  m_code === CHECKOUT_APPLE_PAY &&  !window.ApplePaySession)
         ) {
             return null;
         }
