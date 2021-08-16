@@ -1,14 +1,14 @@
 // import PropTypes from 'prop-types';
-import { PureComponent } from 'react';
+import { PureComponent } from "react";
 
-import Accordion from 'Component/Accordion';
-import ShareButton from 'Component/ShareButton';
-import { Product } from 'Util/API/endpoint/Product/Product.type';
-import { isArabic } from 'Util/App';
+import Accordion from "Component/Accordion";
+import ShareButton from "Component/ShareButton";
+import { Product } from "Util/API/endpoint/Product/Product.type";
+import { isArabic } from "Util/App";
 
-import { PDP_ARABIC_VALUES_TRANSLATIONS } from './PDPDetailsSection.config';
-import './PDPDetailsSection.style';
-import VueQuery from '../../query/Vue.query';
+import { PDP_ARABIC_VALUES_TRANSLATIONS } from "./PDPDetailsSection.config";
+import "./PDPDetailsSection.style";
+import VueQuery from "../../query/Vue.query";
 import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
 import BrowserDatabase from "Util/BrowserDatabase";
 import DynamicContentVueProductSliderContainer from "../DynamicContentVueProductSlider";
@@ -30,6 +30,7 @@ class PDPDetailsSection extends PureComponent {
       5: true,
     },
     pdpWidgetsAPIData: [],
+    isArabic: isArabic(),
   };
 
   componentDidMount() {
@@ -76,47 +77,53 @@ class PDPDetailsSection extends PureComponent {
   }
 
   renderShareButton() {
-      const url = new URL(window.location.href);
-      url.searchParams.append('utm_source', 'pdp_share')
-      return (
-          <div block="PDPDetailsSection" elem="ShareButtonContainer">
-              <ShareButton
-                  block="PDPDetailsSection-ShareButtonContainer"
-                  elem="ShareButton"
-                  title = { document.title }
-                  text =  {`Hey check this out: ${document.title}`}
-                  url = { url.toString() }
-                  mods = {{isArabic: isArabic()}}
-              >
-                  <span>{ __('Share') }</span>
-              </ShareButton>
-          </div>
-      );
+    const url = new URL(window.location.href);
+    url.searchParams.append("utm_source", "pdp_share");
+    return (
+      <div block="PDPDetailsSection" elem="ShareButtonContainer">
+        <ShareButton
+          block="PDPDetailsSection-ShareButtonContainer"
+          elem="ShareButton"
+          title={document.title}
+          text={`Hey check this out: ${document.title}`}
+          url={url.toString()}
+          mods={{ isArabic: isArabic() }}
+        >
+          <span>{__("Share")}</span>
+        </ShareButton>
+      </div>
+    );
   }
 
   renderSizeAndFit() {
-      const { product: { description } } = this.props;
-      console.log(product);
-      return (
-          <>
-              <p block="PDPDetailsSection" elem="SizeFit">
-                  {__('Fitting Information - Items fits true to size')}
-              </p>
-              <div block="PDPDetailsSection" elem="ModelMeasurements">
-                  <h4>{__('Model Measurements')}</h4>
-              </div>
-          </>
-      )
+    const {
+      product: { description },
+    } = this.props;
+    console.log(product);
+    return (
+      <>
+        <p block="PDPDetailsSection" elem="SizeFit">
+          {__("Fitting Information - Items fits true to size")}
+        </p>
+        <div block="PDPDetailsSection" elem="ModelMeasurements">
+          <h4>{__("Model Measurements")}</h4>
+        </div>
+      </>
+    );
   }
 
   renderMoreDetailsItem(item) {
     return (
-        <li block="PDPDetailsSection" elem="MoreDetailsList" key={item.key}>
-            <span block="PDPDetailsSection" elem="ListItem" mods={{ mod: 'title' }}>
-                {isArabic() ? this._translateValue(item.key) : this.listTitle(__(item.key))}
-            </span>
-            <span block="PDPDetailsSection" elem="ListItem" mods={{ mod: 'value' }}>{item.value}</span>
-        </li>
+      <li block="PDPDetailsSection" elem="MoreDetailsList" key={item.key}>
+        <span block="PDPDetailsSection" elem="ListItem" mods={{ mod: "title" }}>
+          {isArabic()
+            ? this._translateValue(item.key)
+            : this.listTitle(__(item.key))}
+        </span>
+        <span block="PDPDetailsSection" elem="ListItem" mods={{ mod: "value" }}>
+          {item.value}
+        </span>
+      </li>
     );
   }
 
@@ -209,7 +216,7 @@ class PDPDetailsSection extends PureComponent {
         product_width,
         model_height,
         model_wearing_size,
-        sku
+        sku,
       },
     } = this.props;
 
@@ -225,15 +232,15 @@ class PDPDetailsSection extends PureComponent {
       sleeve_length,
       product_height,
       product_length,
-      product_width
+      product_width,
     };
 
     return (
       <div block="PDPDetailsSection" elem="Highlights">
         <h4>{__("Highlights")}</h4>
         <ul>{this.renderListItems(productInfo)}</ul>
-        { this.renderModelDetails(model_height, model_wearing_size)}
-        { this.renderSKU(sku) }
+        {this.renderModelDetails(model_height, model_wearing_size)}
+        {this.renderSKU(sku)}
         {/* {this.renderMoreDetailsList()} */}
       </div>
     );
@@ -245,29 +252,29 @@ class PDPDetailsSection extends PureComponent {
         <span>SKU: </span>
         <span>{sku}</span>
       </p>
-    )
+    );
   }
   renderModelDetails(height, size) {
-    if(!size) {
+    if (!size) {
       return null;
     }
 
-    if(!height) {
+    if (!height) {
       return (
         <p block="PDPDetailsSection-Highlights" elem="ModelDetails">
-          <span>{ __(`Model is wearing `) }</span>
+          <span>{__(`Model is wearing `)}</span>
           <span>{`size `}</span>
-          <span>{ size }</span>
+          <span>{size}</span>
         </p>
-      )
+      );
     }
     return (
       <p block="PDPDetailsSection-Highlights" elem="ModelDetails">
-        <span>{ __(`Model's height is `) }</span>
+        <span>{__(`Model's height is `)}</span>
         <span>{height}</span>
-        <span>{__(' & is wearing ')}</span>
+        <span>{__(" & is wearing ")}</span>
         <span>{`size `}</span>
-        <span>{ size }</span>
+        <span>{size}</span>
       </p>
     );
   }
@@ -287,7 +294,6 @@ class PDPDetailsSection extends PureComponent {
       </>
     );
   }
-
 
   renderMoreDetailsList() {
     const {
@@ -345,6 +351,7 @@ class PDPDetailsSection extends PureComponent {
                     widgetID={widgetID}
                     products={data}
                     heading={heading}
+                    isHome={true}
                     key={`DynamicContentVueProductSliderContainer${index}`}
                   />
                 );
@@ -374,7 +381,7 @@ class PDPDetailsSection extends PureComponent {
           {this.renderDescription()}
         </Accordion>
         <div block="Seperator" />
-        { this.renderShareButton() }
+        {this.renderShareButton()}
         {this.renderPdpWidgets()}
         {/* <Accordion
             mix={ { block: 'PDPDetailsSection', elem: 'Accordion' } }
@@ -383,7 +390,7 @@ class PDPDetailsSection extends PureComponent {
           >
               { this.renderSizeAndFit() }
         </Accordion> */}
-         {/*        <Accordion
+        {/*        <Accordion
                   mix={ { block: 'PDPDetailsSection', elem: 'Accordion' } }
                   title={ __('Click & Collect') }
                   is_expanded={this.state.isExpanded["2"]}

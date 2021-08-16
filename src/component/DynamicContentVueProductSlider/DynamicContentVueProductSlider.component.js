@@ -1,12 +1,13 @@
 import DragScroll from "Component/DragScroll/DragScroll.component";
 import PropTypes from "prop-types";
 import VueIntegrationQueries from "Query/vueIntegration.query";
-import { PureComponent } from "react";
+import React, { PureComponent } from "react";
 import { isArabic } from "Util/App";
 import { getUUID } from "Util/Auth";
 import { VUE_CAROUSEL_SWIPE } from "Util/Event";
 import DynamicContentVueProductSliderItem from "./DynamicContentVueProductSlider.Item";
 import "./DynamicContentVueProductSlider.style.scss";
+
 class DynamicContentVueProductSlider extends PureComponent {
   static propTypes = {
     withViewAll: PropTypes.bool,
@@ -16,18 +17,34 @@ class DynamicContentVueProductSlider extends PureComponent {
     widgetID: PropTypes.string.isRequired,
   };
 
-  scrollerRef = React.createRef();
-  cmpRef = React.createRef(0);
-  async handleOnScroll(widgetID) {
+  constructor(props) {
+    super(props);
+    this.itemRef = React.createRef();
+    this.cmpRef = React.createRef();
+    this.indexRef = React.createRef(0);
+    this.scrollerRef = React.createRef();
+    this.state = {
+      customScrollWidth: null,
+      isArabic: isArabic(),
+    };
+  }
+  componentDidMount() {
+    if (this.state.customScrollWidth < 0) {
+      this.renderScrollbar();
+    }
+  }
+  async handleContainerScroll(widgetID, event) {
+    const target = event.nativeEvent.target;
+    this.scrollerRef.current.scrollLeft = target.scrollLeft;
     let width = 0;
     if (screen.width > 1024) {
       width = 245;
     } else {
       width = 220;
     }
-    let index = Math.floor(this.scrollerRef.current.scrollLeft / width);
-    if (this.cmpRef.current !== index) {
-      this.cmpRef.current = index;
+    let index = Math.floor(this.cmpRef.current.scrollLeft / width);
+    if (this.indexRef.current !== index) {
+      this.indexRef.current = index;
       const productsToRender = this.getProducts();
       let sourceProdID = productsToRender[index].sku;
       let sourceCatgID = productsToRender[index].category;
@@ -75,7 +92,7 @@ class DynamicContentVueProductSlider extends PureComponent {
     return (
       <div block="VueProductSlider" elem="HeaderContainer">
         <h4>{heading}</h4>
-        {this.viewAllBtn()}
+        {/* {this.viewAllBtn()} */}
       </div>
     );
   }
@@ -126,33 +143,40 @@ class DynamicContentVueProductSlider extends PureComponent {
       </div>
     );
   };
-
   renderSliderContainer() {
-    const productsToRender = this.getProducts();
+    const items = this.getProducts();
+    const { isHome } = this.props;
     const { widgetID } = this.props;
+    // debugger
     return (
       <DragScroll data={{ rootClass: "ScrollWrapper", ref: this.cmpRef }}>
-        <div
-          id="ScrollWrapper"
-          block="VueProductSlider"
-          elem="SliderContainer"
-          mods={{ isArabic: isArabic() }}
-          ref={this.scrollerRef}
-          onScroll={() => {
-            this.handleOnScroll(widgetID);
-          }}
-        >
-          {productsToRender.map((item) => {
-            const { sku } = item;
-            return (
-              <DynamicContentVueProductSliderItem
-                key={sku}
-                data={item}
-                widgetID={widgetID}
-              />
-            );
-          })}
-        </div>
+        <>
+          <div
+            block="VueProductSlider"
+            elem="SliderContainer"
+            id="ScrollWrapper"
+            ref={this.cmpRef}
+            mods={{ isHome }}
+            onScroll={(e) => {
+              this.handleContainerScroll(widgetID, e);
+            }}
+          >
+            {isHome && <div block="SliderHelper" mods={{ isHome }}></div>}
+            {items.map((item) => {
+              const { sku } = item;
+              return (
+                <DynamicContentVueProductSliderItem
+                  key={sku}
+                  data={item}
+                  ref={this.itemRef}
+                  widgetID={widgetID}
+                />
+              );
+            })}
+            {isHome && <div block="SliderHelper" mods={{ isHome }}></div>}
+          </div>
+          {this.renderScrollbar()}
+        </>
       </DragScroll>
     );
   }

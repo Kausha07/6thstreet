@@ -1,68 +1,85 @@
 :root {
-    --shadow-color: rgba(0, 0, 0, .1);
+  --shadow-color: rgba(0, 0, 0, 0.1);
 }
 
 .HeaderTopBar {
-    min-height: 35px;
-    box-shadow: none;
+  min-height: 35px;
+  box-shadow: none;
+  width: 100%;
+  position: fixed;
+  bottom: 70px;
+  z-index: 4;
+  background: $black;
+  transition: 0.5s ease-in-out;
+
+  @include desktop {
     width: 100%;
-    position: fixed;
-    bottom: 70px;
+    position: relative;
+    top: 0;
     z-index: 4;
-    background: $black;
-    transition: 0.5s ease-in-out;
+    box-shadow: 0 1px 0 0 var(--shadow-color);
+    background: none;
+    height: 30px;
+    // padding: 0 15px;
+    padding: 0;
+  }
+
+  &-ContentWrapper {
+    display: flex;
+    max-width: 1440px;
+    margin: 0 auto;
+    width: var(--main-container-width-dsk);
+    justify-content: space-between;
+    @include tablet {
+      justify-content: center;
+    }
+  }
+
+  &-CmsBlock {
+    display: none;
+    // font-size: 12px;
+    // font-weight: var(--fw-demi);
+    // letter-spacing: 0.5px;
+    // line-height: 16px;
+    margin: 7px 0;
+    text-transform: uppercase;
+
+    color: #4a4a4a;
+    font-family: "Avenir Next";
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    line-height: 16px;
+    text-align: center;
 
     @include desktop {
-        width: 100%;
-        position: relative;
-        top: 0;
-        z-index: 4;
-        box-shadow: 0 1px 0 0 var(--shadow-color);
-        background: none;
-        height: 30px;
-        padding: 0 15px;
+      display: block;
     }
+  }
 
-    &-ContentWrapper {
-        display: flex;
-        max-width: 1440px;
-        margin: 0 auto;
+  &_isOnMobile {
+    display: none;
+  }
+
+  &_isHidden {
+    @include mobile {
+      bottom: 0;
     }
+  }
+  .Switcher {
+    display: flex;
+    align-items: center;
+  }
 
-    &-CmsBlock {
-        display: none;
-        font-size: 12px;
-        font-weight: var(--fw-demi);
-        letter-spacing: .5px;
-        line-height: 16px;
-        margin: 7px 0;
-        text-transform: uppercase;
-
-        @include desktop {
-            display: block;
-        }
+  .LanguageSwitcher {
+    @include before-desktop() {
+      display: none;
     }
+  }
 
-    &_isOnMobile {
-        display: none;
+  .CountrySwitcher {
+    @include before-desktop() {
+      display: none;
     }
-
-    &_isHidden {
-        @include mobile {
-            bottom: 0;
-        }
-    }
-
-    .LanguageSwitcher {
-        @include before-desktop() {
-            display: none;
-        }
-    }
-
-    .CountrySwitcher {
-        @include before-desktop() {
-            display: none;
-        }
-    }
-
+  }
 }
