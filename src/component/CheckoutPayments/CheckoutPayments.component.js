@@ -88,7 +88,6 @@ export class CheckoutPayments extends SourceCheckoutPayments {
       if (!isTabbyInstallmentAvailable && !isTabbyPayLaterAvailable) {
         return null;
       }
-
       return (
         <CheckoutPayment
           key={m_code}
@@ -334,7 +333,6 @@ export class CheckoutPayments extends SourceCheckoutPayments {
 
       this.setState({ tabbyPaymentMethods });
     }
-
     return paymentMethods.map(this.renderPayment);
   }
 
