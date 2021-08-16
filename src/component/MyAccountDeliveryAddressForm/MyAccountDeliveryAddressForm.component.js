@@ -326,10 +326,12 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
             firstname: {
                 validation: ['notEmpty'],
                 value: firstname,
+                placeholder: __('First Name'),
                 autocomplete: 'on'
             },
             lastname: {
                 validation: ['notEmpty'],
+                placeholder: __('Last Name'),
                 value: lastname
             },
             phoneCode: {
