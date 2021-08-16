@@ -16,6 +16,7 @@
         "html-minifier": "^4.0.0",
         "lerna": "^3.22.1",
         "node-cache": "^5.1.2",
+        "normalize-scroll-left": "^0.2.1",
         "puppeteer": "^9.0.0",
         "react-circular-carousel": "^1.0.4-0",
         "react-collapse": "^5.1.0",
