@@ -62,7 +62,7 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
 
     return (
       <Link
-        to={formatCDNLink(link.split('?q=')[0])}
+        to={formatCDNLink(link)}
         key={i}
         data-banner-type="fullWidthBanner"
         data-promotion-name={item.promotion_name ? item.promotion_name : ""}

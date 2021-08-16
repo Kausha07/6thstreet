@@ -41,21 +41,20 @@ class MenuGrid extends PureComponent {
   renderItem = (item, i) => {
     const { image_url, label, link } = item;
     
-    let linkURL = link.split('?q=')[0]
-    if (!linkURL) {
+    if (!link) {
       return null;
     }
 
-    const updatedLink = linkURL.match(
+    const updatedLink = link.match(
       /\/men|\/women|\/kids-baby_boy-boy-girl-baby_girl|\/kids/
     )
-      ? linkURL
+      ? link
           .replace("/men.html", ".html")
           .replace("/women.html", ".html")
           .replace("/kids-baby_boy-boy-girl-baby_girl.html", ".html")
           .replace("/kids.html", ".html")
           .replace("/home.html", ".html")
-      : linkURL;
+      : link;
 
     return (
       <Link to={updatedLink} key={i} title={label} onClick={this.onItemClick}>

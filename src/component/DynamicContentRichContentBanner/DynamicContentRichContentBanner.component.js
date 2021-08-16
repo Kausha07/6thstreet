@@ -114,7 +114,7 @@ class DynamicContentRichContentBanner extends PureComponent {
           {item.subtitle && <p block="Label-SubTitle">{item.subtitle}</p>}
           {item.button && (
             <Link
-              to={formatCDNLink(item.button.link.split("#q=")[0])}
+              to={formatCDNLink(item.button.link)}
               className="Label-Button"
               data-banner-type="Label-Button"
             >

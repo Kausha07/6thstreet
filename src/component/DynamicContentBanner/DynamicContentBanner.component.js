@@ -88,7 +88,7 @@ class DynamicContentBanner extends PureComponent {
     
     return (
       <Link
-        to={formatCDNLink(link.split('?q=')[0])}
+        to={formatCDNLink(link)}
         key={i}
         data-banner-type="banner"
         data-promotion-name={item.promotion_name ? item.promotion_name : ""}

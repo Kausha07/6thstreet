@@ -80,7 +80,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
     return (
       <div block="CircleSlider" mods={{ isArabic }} key={i}>
         <Link
-          to={formatCDNLink(link.split('?q=')[0])}
+          to={formatCDNLink(link)}
           key={i}
           data-banner-type="circleItemSlider"
           data-promotion-name={item.promotion_name ? item.promotion_name : ""}

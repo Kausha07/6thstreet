@@ -88,7 +88,7 @@ class DynamicContentCircleInfluencerSlider extends PureComponent {
             <div block="CircleSlider">
 
                 <Link
-                  to={ formatCDNLink(link.split('?q=')[0]) }
+                  to={ formatCDNLink(link) }
                   key={ i }
                   onClick={ () => {
                       this.clickLink(item);
