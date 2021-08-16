@@ -120,6 +120,7 @@ class DynamicContentVueProductSlider extends PureComponent {
       (node) => node.id == "ScrollWrapper"
     )[0];
     prentComponent.scrollLeft = target.scrollLeft;
+    console.log("scrollLeft", target.scrollLeft);
   };
 
   renderScrollbar = () => {
@@ -173,12 +174,12 @@ class DynamicContentVueProductSlider extends PureComponent {
             elem="SliderContainer"
             id="ScrollWrapper"
             ref={this.cmpRef}
-            mods={{ isHome }}
+            mods={false}
             onScroll={(e) => {
               this.handleContainerScroll(widgetID, e);
             }}
           >
-            {isHome && <div block="SliderHelper" mods={{ isHome }}></div>}
+            {/* {isHome && <div block="SliderHelper" mods={{ isHome }}></div>} */}
             {items.map((item) => {
               const { sku } = item;
               return (
@@ -190,7 +191,7 @@ class DynamicContentVueProductSlider extends PureComponent {
                 />
               );
             })}
-            {isHome && <div block="SliderHelper" mods={{ isHome }}></div>}
+            {/* {isHome && <div block="SliderHelper" mods={{ isHome }}></div>} */}
           </div>
           {this.renderScrollbar()}
         </>

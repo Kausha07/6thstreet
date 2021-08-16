@@ -476,6 +476,7 @@ class SearchSuggestion extends PureComponent {
   renderWishlistProducts = () => {
     const { wishlistData, searchString } = this.props;
     if (wishlistData && wishlistData.length > 0) {
+      console.log("wishlistData", wishlistData);
       let filteredWishlist =
         wishlistData.filter(
           (item) =>
