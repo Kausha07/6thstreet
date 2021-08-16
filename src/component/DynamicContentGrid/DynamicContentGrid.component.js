@@ -74,7 +74,7 @@ class DynamicContentGrid extends PureComponent {
         requestedGender.charAt(0),
         requestedGender.charAt(0).toUpperCase()
       )}`
-      : link.split("?q=")[0];
+      : link;
     return (
       <div
         block="CategoryItem"
@@ -125,7 +125,7 @@ class DynamicContentGrid extends PureComponent {
         requestedGender.charAt(0),
         requestedGender.charAt(0).toUpperCase()
       )}`
-      : link.split("?q=")[0];
+      : link;
     return (
       <div block="CategoryItem" elem="Content" key={i}>
         <Link

@@ -195,7 +195,7 @@ class ProductItem extends PureComponent {
           requestedGender.charAt(0),
           requestedGender.charAt(0).toUpperCase()
         )}`
-      : urlWithQueryID.split("?")[0];
+      : urlWithQueryID;
     const linkTo = {
       pathname: parseLink,
       state: {

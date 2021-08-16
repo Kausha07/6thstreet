@@ -51,7 +51,7 @@ class DynamicContentTwiceBanner extends PureComponent {
       requestedGender.charAt(0),
       requestedGender.charAt(0).toUpperCase()
     )}`
-    : button_link.split("?q=")[0];
+    : button_link;
     
     if (isTwiceBanner) {
       return (

@@ -60,7 +60,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
         requestedGender.charAt(0),
         requestedGender.charAt(0).toUpperCase()
       )}`
-      : link.split("?q=")[0];
+      : link;
 
     const wd = `${width.toString()}px`;
     const ht = `${height.toString()}px`;

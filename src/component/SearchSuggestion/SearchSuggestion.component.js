@@ -280,7 +280,7 @@ class SearchSuggestion extends PureComponent {
                   formatQuerySuggestions(query),
                   queryID
                 )
-              ).split("?")[0]
+              )
             }
             onClick={() =>
               this.onSearchQueryClick(formatQuerySuggestions(query))
@@ -385,7 +385,7 @@ class SearchSuggestion extends PureComponent {
       requestedGender.charAt(0),
       requestedGender.charAt(0).toUpperCase()
     )}`
-      : url.split("?")[0];
+      : url;
 
     return (
       <li>
@@ -592,7 +592,7 @@ class SearchSuggestion extends PureComponent {
         <Link
           to={
             link
-              ? link.split("?")[0]
+              ? link
               : `/catalogsearch/result/?q=${search}&gender=${requestedGender.replace(
                   requestedGender.charAt(0),
                   requestedGender.charAt(0).toUpperCase()
@@ -629,7 +629,7 @@ class SearchSuggestion extends PureComponent {
         <Link
           to={
             link
-              ? link.split("?")[0]
+              ? link
               : `/catalogsearch/result/?q=${name}&gender=${requestedGender.replace(
                   requestedGender.charAt(0),
                   requestedGender.charAt(0).toUpperCase()
