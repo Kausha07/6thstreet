@@ -4,10 +4,10 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import { getStore } from "Store";
 import { HistoryType, LocationType } from "Type/Common";
+import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import Algolia from "Util/API/provider/Algolia";
 import { isArabic } from "Util/App";
 import HeaderSearch from "./HeaderSearch.component";
-
 export const mapStateToProps = (_state) => ({
   // wishlistItems: state.WishlistReducer.productsInWishlist
 });
@@ -58,7 +58,7 @@ export class HeaderSearchContainer extends PureComponent {
         ? {
             query: search,
             limit: PRODUCT_RESULT_LIMIT,
-            gender: gender,
+            gender: getGenderInArabic(gender),
             addAnalytics: true,
           }
         : {
@@ -89,7 +89,10 @@ export class HeaderSearchContainer extends PureComponent {
       );
     }
     const queryID = productData?.queryID ? productData?.queryID : null;
-    history.push(`/catalogsearch/result/?q=${search}&qid=${queryID}`);
+    let requestedGender = isArabic() ? getGenderInArabic(gender) : gender;
+    history.push(
+      `/catalogsearch/result/?q=${search}&qid=${queryID}&dFR[gender][0]=${requestedGender}`
+    );
   }
 
   hideSearchBar() {
