@@ -8,7 +8,7 @@ import { getCurrency } from "Util/App/App";
 import { getUUID } from "Util/Auth";
 import { VUE_CAROUSEL_CLICK } from "Util/Event";
 
-class DynamicContentVueProductSliderItem extends PureComponent {
+class RecommendedForYouVueSliderItem extends PureComponent {
   static propTypes = {
     data: PropTypes.object.isRequired,
   };
@@ -21,6 +21,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
   }
 
   onclick = (widgetID) => {
+    const { data } = this.props;
     // vue analytics
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
@@ -35,6 +36,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
         widgetID: widgetID,
       },
     });
+    Event.dispatch(EVENT_GTM_PRODUCT_CLICK, data);
   };
 
   discountPercentage(basePrice, specialPrice, haveDiscount) {
@@ -130,27 +132,23 @@ class DynamicContentVueProductSliderItem extends PureComponent {
         is_new_in = false,
         sku,
         link = "",
+        url = "",
       },
       data,
       widgetID,
     } = this.props;
     const { isArabic } = this.state;
-    let newLink = link;
-    if (this.props.data.url) {
-      newLink = this.props.data.url;
-    }
     return (
       <div
         block="VueProductSlider"
         elem="VueProductContainer"
-        mods={{ isArabic }}
         data-sku={sku}
         data-category={category}
         mods={{ isArabic }}
         ref={this.childRef}
       >
         <Link
-          to={newLink}
+          to={link ? link : url}
           data-banner-type="vueSlider"
           block="VueProductSlider-Link"
           onClick={() => {
@@ -163,15 +161,15 @@ class DynamicContentVueProductSliderItem extends PureComponent {
             src={thumbnail_url}
             alt={name}
           />
-          <h6 id="brandName">{brand_name}</h6>
-          <span id="productName">{name}</span>
-          {this.renderPrice(price)}
-          {this.renderIsNew(is_new_in)}
         </Link>
+        <h6 id="brandName">{brand_name}</h6>
+        <span id="productName">{name}</span>
+        {this.renderPrice(price)}
+        {this.renderIsNew(is_new_in)}
         <WishlistIcon sku={sku} data={data} />
       </div>
     );
   }
 }
 
-export default DynamicContentVueProductSliderItem;
+export default RecommendedForYouVueSliderItem;
