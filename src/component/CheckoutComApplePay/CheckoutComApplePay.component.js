@@ -25,7 +25,7 @@ export class CheckoutComApplePay extends PureComponent {
 
     static defaultProps = {
         isLoading: false,
-        applePayDisabled: true,
+        applePayDisabled: false,
         button_style: ''
     };
 

@@ -20,7 +20,7 @@ import Event, {
   EVENT_GTM_TRENDING_TAGS_CLICK,
 } from "Util/Event";
 import isMobile from "Util/Mobile";
-import TrendingProductsVueSliderContainer from "../TrendingProductsVueSlider";
+import RecommendedForYouVueSliderContainer from "../RecommendedForYouVueSlider";
 import WishlistSliderContainer from "../WishlistSlider";
 import BRAND_MAPPING from "./SearchSiggestion.config";
 import "./SearchSuggestion.style";
@@ -41,7 +41,7 @@ class SearchSuggestion extends PureComponent {
     querySuggestions: PropTypes.array,
     topSearches: PropTypes.array,
     recentSearches: PropTypes.array,
-    // recommendedForYou: PropTypes.array,
+    recommendedForYou: PropTypes.array,
     trendingProducts: PropTypes.array,
     searchString: PropTypes.string,
     wishlistData: WishlistItems.isRequired,
@@ -448,8 +448,8 @@ class SearchSuggestion extends PureComponent {
         {this.renderRecentSearches()}
         {this.renderTopSearches()}
         {this.renderTrendingBrands()}
-        {/* {this.renderRecommendedForYou()} */}
-        {this.renderTrendingProducts()}
+        {this.renderRecommendedForYou()}
+        {/* {this.renderTrendingProducts()} */}
         {this.renderTrendingTags()}
       </>
     );
@@ -457,21 +457,21 @@ class SearchSuggestion extends PureComponent {
 
   // recommended for you
 
-  // renderRecommendedForYou = () => {
-  //   const { recommendedForYou } = this.props;
-  //   if (recommendedForYou && recommendedForYou.length > 0) {
-  //     return (
-  //       <div className="recommendedForYouSliderBox">
-  //         <DynamicContentVueProductSliderContainer
-  //           widgetID="vue_trending_slider"
-  //           products={recommendedForYou}
-  //           heading={__("Recommended for you")}
-  //           key={`DynamicContentVueProductSliderContainer99`}
-  //         />
-  //       </div>
-  //     );
-  //   }
-  // };
+  renderRecommendedForYou = () => {
+    const { recommendedForYou } = this.props;
+    if (recommendedForYou && recommendedForYou.length > 0) {
+      return (
+        <div className="recommendedForYouSliderBox">
+          <RecommendedForYouVueSliderContainer
+            widgetID="vue_trending_slider"
+            products={recommendedForYou}
+            heading={__("Recommended for you")}
+            key={`DynamicContentVueProductSliderContainer99`}
+          />
+        </div>
+      );
+    }
+  };
 
   renderTrendingProducts = () => {
     const { trendingProducts } = this.props;
@@ -493,7 +493,6 @@ class SearchSuggestion extends PureComponent {
   renderWishlistProducts = () => {
     const { wishlistData, searchString } = this.props;
     if (wishlistData && wishlistData.length > 0) {
-      console.log("wishlistData", wishlistData);
       let filteredWishlist =
         wishlistData.filter(
           (item) =>
@@ -662,8 +661,8 @@ class SearchSuggestion extends PureComponent {
         {this.renderRecentSearches()}
         {this.renderTopSearches()}
         {this.renderTrendingBrands()}
-        {/* {this.renderRecommendedForYou()} */}
-        {this.renderTrendingProducts()}
+        {this.renderRecommendedForYou()}
+        {/* {this.renderTrendingProducts()} */}
         {this.renderWishlistProducts()}
         {this.renderTrendingTags()}
       </>

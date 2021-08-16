@@ -1,4 +1,4 @@
-.wishlistSliderContainer {
+.recommendedForYouSliderBox {
   .VueProductSlider {
     padding: 0 20px;
     font-weight: var(--fw-regular);
@@ -12,6 +12,8 @@
       @include mobile() {
         // width: 96.005vw;
         // margin: 0px 0px 50px 0px;
+        margin-bottom: 0;
+        margin-top: 0;
       }
       @media (max-width: 1024px) and (min-width: 768px) {
         padding-left: 30px;
@@ -86,6 +88,9 @@
         }
       }
       padding-bottom: 25px !important;
+      @include before-desktop {
+        padding-bottom: 0 !important;
+      }
 
       @media (max-width: 1024px) {
         width: 99vw;
@@ -114,6 +119,11 @@
       vertical-align: top;
       &:nth-last-child(2) {
         margin-right: 0;
+      }
+      @include before-desktop {
+        &:first-child {
+          margin-left: 20px;
+        }
       }
       &_isArabic {
         &:nth-child(2) {
