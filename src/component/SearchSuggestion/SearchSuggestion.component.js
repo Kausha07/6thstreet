@@ -268,11 +268,16 @@ class SearchSuggestion extends PureComponent {
 
   renderQuerySuggestion = (querySuggestions) => {
     const { query, count, isBrand } = querySuggestions;
-    const { searchString, queryID } = this.props;
+    const { searchString, queryID, products = [] } = this.props;
     const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
-    return (
-      <li>
-        {isBrand ? (
+    const fetchSKU = products.find(
+      (item) =>
+        item.name.toUpperCase().includes(query.toUpperCase()) ||
+        item.sku.toUpperCase().includes(query.toUpperCase())
+    );
+    if (isBrand) {
+      return (
+        <li>
           <Link
             to={
               encodeURI(
@@ -291,21 +296,43 @@ class SearchSuggestion extends PureComponent {
               <div>{count}</div>
             </div>
           </Link>
-        ) : (
-          <Link
-            to={encodeURI(this.getCatalogUrl(query, gender, queryID))}
-            onClick={() =>
-              this.onSearchQueryClick(formatQuerySuggestions(query))
-            }
-          >
-            <div className="suggestion-details-box">
-              {getHighlightedText(formatQuerySuggestions(query), searchString)}
-              <div>{count}</div>
-            </div>
-          </Link>
-        )}
-      </li>
-    );
+        </li>
+      );
+    } else {
+      if (products.length === 1 && fetchSKU) {
+        return (
+          <li>
+            <Link
+              to={fetchSKU?.url}
+              onClick={() => this.onSearchQueryClick(query)}
+            >
+              <div className="suggestion-details-box text-capitalize">
+                {getHighlightedText(query, searchString)}
+              </div>
+            </Link>
+          </li>
+        );
+      } else {
+        return (
+          <li>
+            <Link
+              to={encodeURI(this.getCatalogUrl(query, gender, queryID))}
+              onClick={() =>
+                this.onSearchQueryClick(formatQuerySuggestions(query))
+              }
+            >
+              <div className="suggestion-details-box">
+                {getHighlightedText(
+                  formatQuerySuggestions(query),
+                  searchString
+                )}
+                <div>{count}</div>
+              </div>
+            </Link>
+          </li>
+        );
+      }
+    }
   };
 
   renderQuerySuggestions() {

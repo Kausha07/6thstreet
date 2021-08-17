@@ -60,7 +60,7 @@ class DynamicContentVueProductSlider extends PureComponent {
     } else {
       width = 220;
     }
-    let index = Math.floor(this.cmpRef.current.scrollLeft / width);
+    let index = Math.floor(Math.abs(target.scrollLeft) / width);
     if (this.indexRef.current !== index) {
       this.indexRef.current = index;
       const productsToRender = this.getProducts();
