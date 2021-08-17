@@ -27,6 +27,7 @@ export const BreadcrumbsDispatcher = import(
 export const mapStateToProps = (state) => ({
   isLoading: state.PDP.isLoading,
   product: state.PDP.product,
+  clickAndCollectStores: state.PDP.clickAndCollectStores,
   options: state.PDP.options,
   nbHits: state.PDP.nbHits,
   country: state.AppState.country,
@@ -38,8 +39,8 @@ export const mapStateToProps = (state) => ({
 
 export const mapDispatchToProps = (dispatch) => ({
   requestProduct: (options) => PDPDispatcher.requestProduct(options, dispatch),
-  requestProductBySku: (options) =>
-    PDPDispatcher.requestProductBySku(options, dispatch),
+  requestProductBySku: (options) => PDPDispatcher.requestProductBySku(options, dispatch),
+  getClickAndCollectStores: (brandName, sku) => PDPDispatcher.getClickAndCollectStores(brandName, sku, dispatch),
   setIsLoading: (isLoading) => dispatch(setPDPLoading(isLoading)),
   updateBreadcrumbs: (breadcrumbs) => {
     BreadcrumbsDispatcher.then(({ default: dispatcher }) =>
@@ -57,6 +58,7 @@ export class PDPContainer extends PureComponent {
     options: PropTypes.shape({ id: PropTypes.number }).isRequired,
     requestProduct: PropTypes.func.isRequired,
     requestProductBySku: PropTypes.func.isRequired,
+    getClickAndCollectStores: PropTypes.func.isRequired,
     setIsLoading: PropTypes.func.isRequired,
     isLoading: PropTypes.bool.isRequired,
     product: Product.isRequired,
@@ -90,7 +92,6 @@ export class PDPContainer extends PureComponent {
 
   constructor(props) {
     super(props);
-
     this.requestProduct();
   }
 
@@ -119,9 +120,10 @@ export class PDPContainer extends PureComponent {
       id,
       isLoading,
       setIsLoading,
-      product: { sku } = {},
+      product: { sku, brand_name: brandName, } = {},
       product,
       menuCategories = [],
+      getClickAndCollectStores
     } = this.props;
     const currentIsLoading = this.getIsLoading();
     const { id: prevId } = prevProps;
@@ -141,6 +143,7 @@ export class PDPContainer extends PureComponent {
       this.updateBreadcrumbs();
       this.setMetaData();
       this.updateHeaderState();
+      getClickAndCollectStores(brandName, sku);
     }
 
     Event.dispatch(EVENT_GTM_PRODUCT_DETAIL, {

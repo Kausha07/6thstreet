@@ -751,7 +751,7 @@
     "Description": "الوصف",
     "Size & Fit": "المقاس والملائمة",
     "Model Measurements": "مقاسات العارض",
-    "Click & Collect": "الطلب والاستلام",
+    "Click & Collect": null,
     "Shipping & Free Returns": "مقاسات العارض",
     "Contact Us": "اتصل بنا",
     "Size Help": "المساعدة في المقاس",
@@ -834,5 +834,11 @@
     "KIDS": null,
     "Your Wishlist": null,
     "West (CM)": null,
-    "Home_Category": null
+    "Home_Category": null,
+    "Click And Collect": null,
+    "PICK A STORE": null,
+    "Select a Store": null,
+    "CONFIRM CLICK & COLLECT": null,
+    "Click": null,
+    "& Collect": null
 }

@@ -146,9 +146,20 @@ class PDPDetailsSection extends PureComponent {
           <div
             block="PDPDetailsSection"
             elem="Icon"
+            mods={{ clickAndCollect: true }}
+          />
+          <div>
+            <div block="Click">{__("Click")}</div>
+            <div block="AndCollect">{__("& Collect")}</div>
+          </div>
+        </div>
+        <div block="PDPDetailsSection" elem="IconContainer">
+          <div
+            block="PDPDetailsSection"
+            elem="Icon"
             mods={{ isGenuine: true }}
           />
-          {__("100% Genuine")}
+          <div>{__("100% Genuine")}</div>
         </div>
         <div block="PDPDetailsSection" elem="IconContainer">
           <div
@@ -156,7 +167,7 @@ class PDPDetailsSection extends PureComponent {
             elem="Icon"
             mods={{ freeReturn: true }}
           />
-          {__("Free Returns")}
+          <div>{__("Free Returns")}</div>
         </div>
       </div>
     );

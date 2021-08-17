@@ -21,9 +21,14 @@ import history from "Util/History";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
 import { NOTIFY_EMAIL } from "./PDPAddToCard.config";
 import PDPAddToCart from "./PDPAddToCart.component";
+import PDPClickAndCollectPopup from "../PDPClickAndCollectPopup";
+
+import { PDP_CLICK_AND_COLLECT_POPUP_ID } from '../PDPClickAndCollectPopup/PDPClickAndCollectPopup.config';
+import { hideActiveOverlay, toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
 
 export const mapStateToProps = (state) => ({
   product: state.PDP.product,
+  clickAndCollectStores: state.PDP.clickAndCollectStores,
   locale: state.AppState.locale,
   totals: state.CartReducer.cartTotals,
   customer: state.MyAccountReducer.customer,
@@ -63,11 +68,14 @@ export const mapDispatchToProps = (dispatch) => ({
     dispatch(setMinicartOpen(isMinicartOpen)),
   getProductStock: (sku) => PDPDispatcher.getProductStock(dispatch, sku),
   sendNotifyMeEmail: (data) => PDPDispatcher.sendNotifyMeEmail(data),
+  showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
+  hideActiveOverlay: () => dispatch(hideActiveOverlay())
 });
 
 export class PDPAddToCartContainer extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
+    clickAndCollectStores: PropTypes.object.isRequired,
     addProductToCart: PropTypes.func.isRequired,
     showNotification: PropTypes.func.isRequired,
     totals: PropTypes.object,
@@ -79,6 +87,8 @@ export class PDPAddToCartContainer extends PureComponent {
     setStockAvailability: PropTypes.func.isRequired,
     customer: customerType,
     guestUserEmail: PropTypes.string,
+    showOverlay: PropTypes.func.isRequired,
+    hideActiveOverlay: PropTypes.func.isRequired
   };
 
   static defaultProps = {
@@ -97,6 +107,8 @@ export class PDPAddToCartContainer extends PureComponent {
     showAlertNotification: this.showAlertNotification.bind(this),
     sendNotifyMeEmail: this.sendNotifyMeEmail.bind(this),
     setGuestUserEmail: this.setGuestUserEmail.bind(this),
+    togglePDPClickAndCollectPopup: this.togglePDPClickAndCollectPopup.bind(this),
+    selectClickAndCollectStore: this.selectClickAndCollectStore.bind(this)
   };
 
   constructor(props) {
@@ -119,6 +131,8 @@ export class PDPAddToCartContainer extends PureComponent {
       isOutOfStock: false,
       notifyMeLoading: false,
       notifyMeSuccess: false,
+      openClickAndCollectPopup: false,
+      selectedClickAndCollectStore: null
     };
 
     this.fullCheckoutHide = null;
@@ -302,7 +316,7 @@ export class PDPAddToCartContainer extends PureComponent {
   }
 
   containerProps = () => {
-    const { product, setStockAvailability, customer, guestUserEmail } =
+    const { product, setStockAvailability, customer, guestUserEmail, clickAndCollectStores, selectedClickAndCollectStore } =
       this.props;
     const { mappedSizeObject } = this.state;
     const basePrice =
@@ -317,6 +331,8 @@ export class PDPAddToCartContainer extends PureComponent {
       setStockAvailability,
       customer,
       guestUserEmail,
+      stores: clickAndCollectStores,
+      selectedClickAndCollectStore
     };
   };
 
@@ -349,6 +365,10 @@ export class PDPAddToCartContainer extends PureComponent {
       isOutOfStock: outOfStockVal,
       notifyMeSuccess: false,
     });
+  }
+
+  clickAndCollect() {
+
   }
 
   addToCart() {
@@ -575,9 +595,51 @@ export class PDPAddToCartContainer extends PureComponent {
     this.props.showNotification("error", message);
   }
 
+  selectClickAndCollectStore(value) {
+    console.log(value);
+    this.setState({
+      selectedClickAndCollectStore: value
+    });
+  }
+  toggleRootElementsOpacity() {
+    const { openClickAndCollectPopup } = this.state;
+    const rootElement = document.getElementById("root");
+    if (rootElement) {
+      root.style.opacity = openClickAndCollectPopup ? 0.5 : 1;
+    }
+  }
+
+  togglePDPClickAndCollectPopup() {
+    const { openClickAndCollectPopup } = this.state;
+    const { showOverlay, hideActiveOverlay } = this.props;
+
+    if(!openClickAndCollectPopup) {
+      showOverlay(PDP_CLICK_AND_COLLECT_POPUP_ID);
+    }
+
+    if(openClickAndCollectPopup) {
+      hideActiveOverlay(PDP_CLICK_AND_COLLECT_POPUP_ID);
+    }
+    this.setState({
+      openClickAndCollectPopup: !this.state.openClickAndCollectPopup
+    },
+    () => {
+      this.toggleRootElementsOpacity();
+    })
+  }
+
   render() {
+    const { openClickAndCollectPopup } = this.state;
     return (
-      <PDPAddToCart {...this.containerFunctions} {...this.containerProps()} />
+      <>
+        <PDPAddToCart {...this.containerFunctions} {...this.containerProps()} />
+        {
+          openClickAndCollectPopup && <PDPClickAndCollectPopup
+            {...this.containerFunctions}
+            {...this.containerProps()}
+          />
+        }
+      </>
     );
   }
 }

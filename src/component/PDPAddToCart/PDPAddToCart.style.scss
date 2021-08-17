@@ -313,18 +313,48 @@ $select-arrow-width: 6px !default;
     width: 100%;
   }
 
-  @include mobile {
     &-Bottom {
-      height: 85px;
-      bottom: 0;
-      background-color: #ffffff;
-      left: 0%;
-      position: fixed;
-      width: calc(100vw + 1px);
-      z-index: 90;
-      padding: 16px;
-      box-shadow: inset 0 0.5px 0 0 rgba(0, 0, 0, 0.2);
-      box-sizing: border-box;
+      display: flex;
+      @include mobile {
+        height: 85px;
+        bottom: 0;
+        background-color: #ffffff;
+        left: 0%;
+        position: fixed;
+        width: calc(100vw + 1px);
+        z-index: 90;
+        padding: 16px;
+        box-shadow: inset 0 0.5px 0 0 rgba(0, 0, 0, 0.2);
+        box-sizing: border-box;
+      }
+  }
+
+  &-ClickAndCollectButton {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    border: 1px solid #F96446;
+    border-radius: 6px;
+    background-color: #FFFFFF;
+    margin-left: 8px;
+    @include mobile {
+      transition: width 0.5s;
+    }
+    div {
+      @include mobile {
+        display: block;
+        animation: slide 2s;
+        -webkit-animation: slide 2s;
+        max-width: 0;
+        transition: color 1s 1.5s, max-width 2s;
+        opacity: 0;
+        overflow: hidden;
+      }
+    }
+    svg {
+      padding: 0 6px;
+      width: 42px;
+      height: 42px;
     }
   }
 
@@ -589,5 +619,30 @@ $select-arrow-width: 6px !default;
 @include mobile {
   .PDPAddToCart-SizeSelector::-webkit-scrollbar-thumb {
     display: none;
+  }
+}
+
+@-webkit-keyframes slide {
+  from {
+    display: none;
+    max-width: 0px;
+    opacity: 0;
+  }
+  to {
+    display: block;
+    max-width: 300px;
+    opacity: 1;
+  }
+}
+@keyframes slide {
+  from {
+    visibility: collapse;
+    max-width: 0px;
+    opacity: 0;
+  }
+  to {
+    visibility: visible;
+    max-width: 300px;
+    opacity: 1;
   }
 }

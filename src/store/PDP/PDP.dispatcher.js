@@ -1,7 +1,9 @@
-import { setPDPData, setPDPLoading } from "Store/PDP/PDP.action";
+import { setPDPData, setPDPClickAndCollect, setPDPLoading } from "Store/PDP/PDP.action";
 import {
   getProductStock,
   sendNotifyMeEmail,
+  isClickAndCollectAvailable,
+  getClickAndCollectStores
 } from "Util/API/endpoint/Product/Product.enpoint";
 import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
 import Algolia from "Util/API/provider/Algolia";
@@ -13,12 +15,9 @@ export class PDPDispatcher {
     dispatch(setPDPLoading(true));
 
     const { options } = payload;
-
     try {
       const response = await new Algolia().getPDP(options);
-      //   if (!localStorage.getItem("queryID")) {
-      //     localStorage.setItem("queryID", response.queryID);
-      //   }
+
       dispatch(setPDPData(response, options));
     } catch (e) {
       Logger.log(e);
@@ -50,6 +49,29 @@ export class PDPDispatcher {
 
   async getProductStock(dispatch, sku) {
     return getProductStock(sku);
+  }
+
+  async getClickAndCollectStores(brandName, sku, dispatch) {
+    let clickAndCollectStores = [];
+    try {
+      const isAvailableResponse = await isClickAndCollectAvailable({brandName, sku});
+      if(isAvailableResponse?.data?.isAvailable) {
+        const storeListResponse = await getClickAndCollectStores({brandName, sku});
+        clickAndCollectStores = (storeListResponse?.data?.items || []).map((store) => (
+          {
+            id: store.storeNo,
+            value: store.storeNo,
+            label: store.name
+          }
+        ));
+      }
+    }
+    catch(err) {
+      console.error(err);
+    }
+    finally {
+      dispatch(setPDPClickAndCollect(clickAndCollectStores))
+    }
   }
 
   async requestPdpWidgetData(dispatch) {
