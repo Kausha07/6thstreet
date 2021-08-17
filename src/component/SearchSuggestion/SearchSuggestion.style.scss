@@ -217,7 +217,7 @@
 
   &-TopSearches {
     margin: 0;
-    height: 30px;
+    min-height: 30px;
     background: var(--gray);
     color: var(--link-dark-gray);
     width: auto;
@@ -534,4 +534,8 @@
 
 .isSuggestionOpen {
   position: fixed;
+}
+
+.text-capitalize {
+  text-transform: capitalize;
 }
