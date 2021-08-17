@@ -118,7 +118,7 @@ class SearchSuggestion extends PureComponent {
       }
       brandUrl = `${this.getBrandUrl(
         brandName
-      )}.html?q=${brandName}&qid=${queryID}&dFR[gender][0]=${requestedGender}`;
+      )}.html?q=${brandName}&qid=${queryID}&gender=${requestedGender}`;
     } else {
       formattedBrandName = brandName
         .toUpperCase()
@@ -279,14 +279,9 @@ class SearchSuggestion extends PureComponent {
       return (
         <li>
           <Link
-            to={
-              encodeURI(
-                this.getBrandSuggestionUrl(
-                  formatQuerySuggestions(query),
-                  queryID
-                )
-              )
-            }
+            to={encodeURI(
+              this.getBrandSuggestionUrl(formatQuerySuggestions(query), queryID)
+            )}
             onClick={() =>
               this.onSearchQueryClick(formatQuerySuggestions(query))
             }
@@ -408,10 +403,11 @@ class SearchSuggestion extends PureComponent {
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
 
     let parseLink = url.includes("catalogsearch/result")
-      ? url.split("&")[0] +`&gender=${requestedGender.replace(
-      requestedGender.charAt(0),
-      requestedGender.charAt(0).toUpperCase()
-    )}`
+      ? url.split("&")[0] +
+        `&gender=${requestedGender.replace(
+          requestedGender.charAt(0),
+          requestedGender.charAt(0).toUpperCase()
+        )}`
       : url;
 
     return (
