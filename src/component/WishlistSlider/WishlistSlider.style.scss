@@ -142,7 +142,7 @@
       }
 
       #productName {
-        width: 80%;
+        width: 100%;
         display: block;
         font-size: 13px;
         color: #4a4a4a;
@@ -151,6 +151,7 @@
         margin-bottom: 4.5px;
         text-overflow: ellipsis;
         font-weight: var(--fw-regular);
+        text-align: left;
       }
 
       #price {
