@@ -6,6 +6,7 @@ import { isArabic } from "Util/App";
 import { getUUID } from "Util/Auth";
 import { VUE_CAROUSEL_SWIPE } from "Util/Event";
 import DynamicContentVueProductSliderItem from "./DynamicContentVueProductSlider.Item";
+import isMobile from "Util/Mobile";
 import "./DynamicContentVueProductSlider.style.scss";
 
 class DynamicContentVueProductSlider extends PureComponent {
