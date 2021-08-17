@@ -56,7 +56,7 @@ class RecommendedForYouVueSlider extends PureComponent {
     } else {
       width = 220;
     }
-    let index = Math.floor(this.cmpRef.current.scrollLeft / width);
+    let index = Math.floor(target.scrollLeft / width);
     if (this.indexRef.current !== index) {
       this.indexRef.current = index;
       const productsToRender = this.getProducts();
@@ -67,7 +67,7 @@ class RecommendedForYouVueSlider extends PureComponent {
         event_name: VUE_CAROUSEL_SWIPE,
         params: {
           event: VUE_CAROUSEL_SWIPE,
-          pageType: "plp",
+          pageType: "search",
           currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
           clicked: Date.now(),
           uuid: getUUID(),
@@ -106,7 +106,6 @@ class RecommendedForYouVueSlider extends PureComponent {
     return (
       <div block="recommendedForYou">
         <h2>{heading}</h2>
-        {/* {this.viewAllBtn()} */}
       </div>
     );
   }
