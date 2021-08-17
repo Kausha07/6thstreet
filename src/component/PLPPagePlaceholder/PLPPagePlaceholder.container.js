@@ -33,13 +33,13 @@ export class PLPPagePlaceholderContainer extends PureComponent {
 
     onVisibilityChange(isVisible) {
         // TODO: implement page pre-load
-        const { pageIndex } = this.props;
+        const { pageIndex,query } = this.props;
         const { wasRequested } = this.state;
 
         if (isVisible && !wasRequested) {
             // if this page appears first time -> do request
             this.setState({ wasRequested: true });
-            WebUrlParser.setPage(pageIndex);
+            WebUrlParser.setPage(pageIndex,query);
         }
     }
 

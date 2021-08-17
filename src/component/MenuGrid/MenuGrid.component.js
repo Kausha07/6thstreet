@@ -40,7 +40,7 @@ class MenuGrid extends PureComponent {
 
   renderItem = (item, i) => {
     const { image_url, label, link } = item;
-
+    
     if (!link) {
       return null;
     }

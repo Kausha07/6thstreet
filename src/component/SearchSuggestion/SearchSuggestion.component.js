@@ -20,7 +20,7 @@ import Event, {
   EVENT_GTM_TRENDING_TAGS_CLICK,
 } from "Util/Event";
 import isMobile from "Util/Mobile";
-import TrendingProductsVueSliderContainer from "../TrendingProductsVueSlider";
+import RecommendedForYouVueSliderContainer from "../RecommendedForYouVueSlider";
 import WishlistSliderContainer from "../WishlistSlider";
 import BRAND_MAPPING from "./SearchSiggestion.config";
 import "./SearchSuggestion.style";
@@ -41,7 +41,7 @@ class SearchSuggestion extends PureComponent {
     querySuggestions: PropTypes.array,
     topSearches: PropTypes.array,
     recentSearches: PropTypes.array,
-    // recommendedForYou: PropTypes.array,
+    recommendedForYou: PropTypes.array,
     trendingProducts: PropTypes.array,
     searchString: PropTypes.string,
     wishlistData: WishlistItems.isRequired,
@@ -130,7 +130,7 @@ class SearchSuggestion extends PureComponent {
         .toLowerCase();
       brandUrl = `${this.getBrandUrl(
         formattedBrandName
-      )}.html?q=${formattedBrandName}&qid=${queryID}&dFR[gender][0]=${gender}`;
+      )}.html?q=${formattedBrandName}&gender=${gender}`;
     }
     return brandUrl;
   };
@@ -143,7 +143,10 @@ class SearchSuggestion extends PureComponent {
     }
     const catalogUrl = `/catalogsearch/result/?q=${formatQuerySuggestions(
       query
-    )}&qid=${queryID}&p=0&dFR[gender][0]=${requestedGender}`;
+    )}&gender=${requestedGender.replace(
+      requestedGender.charAt(0),
+      requestedGender.charAt(0).toUpperCase()
+    )}`;
     return catalogUrl;
   };
 
@@ -233,7 +236,7 @@ class SearchSuggestion extends PureComponent {
     return (
       <li>
         <Link
-          to={`/${urlName}.html?q=${urlName}`}
+          to={`/${urlName}.html`}
           onClick={() => this.handleBrandsClick(urlName)}
         >
           <div className="suggestion-details-box">
@@ -265,39 +268,71 @@ class SearchSuggestion extends PureComponent {
 
   renderQuerySuggestion = (querySuggestions) => {
     const { query, count, isBrand } = querySuggestions;
-    const { searchString, queryID } = this.props;
+    const { searchString, queryID, products = [] } = this.props;
     const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
-    return (
-      <li>
-        {isBrand ? (
-          <Link
-            to={encodeURI(
-              this.getBrandSuggestionUrl(formatQuerySuggestions(query), queryID)
-            )}
-            onClick={() =>
-              this.onSearchQueryClick(formatQuerySuggestions(query))
-            }
-          >
-            <div className="suggestion-details-box">
-              {getHighlightedText(formatQuerySuggestions(query), searchString)}
-              <div>{count}</div>
-            </div>
-          </Link>
-        ) : (
-          <Link
-            to={encodeURI(this.getCatalogUrl(query, gender, queryID))}
-            onClick={() =>
-              this.onSearchQueryClick(formatQuerySuggestions(query))
-            }
-          >
-            <div className="suggestion-details-box">
-              {getHighlightedText(formatQuerySuggestions(query), searchString)}
-              <div>{count}</div>
-            </div>
-          </Link>
-        )}
-      </li>
+    const fetchSKU = products.find(
+      (item) =>
+        item.name.toUpperCase().includes(query.toUpperCase()) ||
+        item.sku.toUpperCase().includes(query.toUpperCase())
     );
+    if (isBrand) {
+      return (
+        <li>
+          <Link
+            to={
+              encodeURI(
+                this.getBrandSuggestionUrl(
+                  formatQuerySuggestions(query),
+                  queryID
+                )
+              )
+            }
+            onClick={() =>
+              this.onSearchQueryClick(formatQuerySuggestions(query))
+            }
+          >
+            <div className="suggestion-details-box">
+              {getHighlightedText(formatQuerySuggestions(query), searchString)}
+              <div>{count}</div>
+            </div>
+          </Link>
+        </li>
+      );
+    } else {
+      if (products.length === 1 && fetchSKU) {
+        return (
+          <li>
+            <Link
+              to={fetchSKU?.url}
+              onClick={() => this.onSearchQueryClick(query)}
+            >
+              <div className="suggestion-details-box text-capitalize">
+                {getHighlightedText(query, searchString)}
+              </div>
+            </Link>
+          </li>
+        );
+      } else {
+        return (
+          <li>
+            <Link
+              to={encodeURI(this.getCatalogUrl(query, gender, queryID))}
+              onClick={() =>
+                this.onSearchQueryClick(formatQuerySuggestions(query))
+              }
+            >
+              <div className="suggestion-details-box">
+                {getHighlightedText(
+                  formatQuerySuggestions(query),
+                  searchString
+                )}
+                <div>{count}</div>
+              </div>
+            </Link>
+          </li>
+        );
+      }
+    }
   };
 
   renderQuerySuggestions() {
@@ -369,10 +404,19 @@ class SearchSuggestion extends PureComponent {
 
   renderProduct = (product) => {
     const { url, name, thumbnail_url, brand_name, price } = product;
+    const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
+    let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
+
+    let parseLink = url.includes("catalogsearch/result")
+      ? url.split("&")[0] +`&gender=${requestedGender.replace(
+      requestedGender.charAt(0),
+      requestedGender.charAt(0).toUpperCase()
+    )}`
+      : url;
 
     return (
       <li>
-        <Link to={url} onClick={() => this.handleProductClick(product)}>
+        <Link to={parseLink} onClick={() => this.handleProductClick(product)}>
           <div block="SearchProduct">
             <img
               src={thumbnail_url}
@@ -431,8 +475,8 @@ class SearchSuggestion extends PureComponent {
         {this.renderRecentSearches()}
         {this.renderTopSearches()}
         {this.renderTrendingBrands()}
-        {/* {this.renderRecommendedForYou()} */}
-        {this.renderTrendingProducts()}
+        {this.renderRecommendedForYou()}
+        {/* {this.renderTrendingProducts()} */}
         {this.renderTrendingTags()}
       </>
     );
@@ -440,21 +484,21 @@ class SearchSuggestion extends PureComponent {
 
   // recommended for you
 
-  // renderRecommendedForYou = () => {
-  //   const { recommendedForYou } = this.props;
-  //   if (recommendedForYou && recommendedForYou.length > 0) {
-  //     return (
-  //       <div className="recommendedForYouSliderBox">
-  //         <DynamicContentVueProductSliderContainer
-  //           widgetID="vue_trending_slider"
-  //           products={recommendedForYou}
-  //           heading={__("Recommended for you")}
-  //           key={`DynamicContentVueProductSliderContainer99`}
-  //         />
-  //       </div>
-  //     );
-  //   }
-  // };
+  renderRecommendedForYou = () => {
+    const { recommendedForYou } = this.props;
+    if (recommendedForYou && recommendedForYou.length > 0) {
+      return (
+        <div className="recommendedForYouSliderBox">
+          <RecommendedForYouVueSliderContainer
+            widgetID="vue_trending_slider"
+            products={recommendedForYou}
+            heading={__("Recommended for you")}
+            key={`DynamicContentVueProductSliderContainer99`}
+          />
+        </div>
+      );
+    }
+  };
 
   renderTrendingProducts = () => {
     const { trendingProducts } = this.props;
@@ -476,7 +520,6 @@ class SearchSuggestion extends PureComponent {
   renderWishlistProducts = () => {
     const { wishlistData, searchString } = this.props;
     if (wishlistData && wishlistData.length > 0) {
-      console.log("wishlistData", wishlistData);
       let filteredWishlist =
         wishlistData.filter(
           (item) =>
@@ -520,7 +563,7 @@ class SearchSuggestion extends PureComponent {
     return (
       <li key={i}>
         <Link
-          to={`/${urlName}.html?q=${urlName}&dFR[gender][0]=${requestedGender}`}
+          to={`/${urlName}.html`}
           onClick={() => this.handleTrendingBrandsClick(urlName)}
         >
           <div block="SearchSuggestion" elem="TrandingImg">
@@ -546,7 +589,7 @@ class SearchSuggestion extends PureComponent {
   renderTrendingTag = ({ link, label }, i) => (
     <li key={i}>
       <Link
-        to={{ pathname: link }}
+        to={{ pathname: link && link.split("#q")[0] }}
         onClick={() => this.handleTrendingTagsClick(label)}
       >
         <div block="SearchSuggestion" elem="TrandingTag">
@@ -577,7 +620,10 @@ class SearchSuggestion extends PureComponent {
           to={
             link
               ? link
-              : `/catalogsearch/result/?q=${search}&dFR[gender][0]=${requestedGender}`
+              : `/catalogsearch/result/?q=${search}&gender=${requestedGender.replace(
+                  requestedGender.charAt(0),
+                  requestedGender.charAt(0).toUpperCase()
+                )}`
           }
           onClick={() => this.onSearchQueryClick(search)}
         >
@@ -611,7 +657,10 @@ class SearchSuggestion extends PureComponent {
           to={
             link
               ? link
-              : `/catalogsearch/result/?q=${name}&dFR[gender][0]=${requestedGender}`
+              : `/catalogsearch/result/?q=${name}&gender=${requestedGender.replace(
+                  requestedGender.charAt(0),
+                  requestedGender.charAt(0).toUpperCase()
+                )}`
           }
           onClick={() => this.onSearchQueryClick(name)}
         >
@@ -639,8 +688,8 @@ class SearchSuggestion extends PureComponent {
         {this.renderRecentSearches()}
         {this.renderTopSearches()}
         {this.renderTrendingBrands()}
-        {/* {this.renderRecommendedForYou()} */}
-        {this.renderTrendingProducts()}
+        {this.renderRecommendedForYou()}
+        {/* {this.renderTrendingProducts()} */}
         {this.renderWishlistProducts()}
         {this.renderTrendingTags()}
       </>

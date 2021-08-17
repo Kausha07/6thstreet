@@ -343,8 +343,8 @@ export class CheckoutBilling extends SourceCheckoutBilling {
             disabled={
               isDisabled ||
               processingRequest ||
-              processingPaymentSelectRequest ||
-              isApplePay
+              processingPaymentSelectRequest 
+              // ||isApplePay
             }
             mix={{
               block: "CheckoutBilling",

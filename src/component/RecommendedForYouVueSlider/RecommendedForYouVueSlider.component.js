@@ -1,20 +1,27 @@
 import DragScroll from "Component/DragScroll/DragScroll.component";
 import PropTypes from "prop-types";
+import VueIntegrationQueries from "Query/vueIntegration.query";
 import React, { PureComponent } from "react";
 import { isArabic } from "Util/App";
-import WishlistSliderItem from "./WishlistSlider.Item";
-import "./WishlistSlider.style.scss";
-class WishlistSlider extends PureComponent {
+import { getUUID } from "Util/Auth";
+import { VUE_CAROUSEL_SHOW, VUE_CAROUSEL_SWIPE } from "Util/Event";
+import RecommendedForYouVueSliderItem from "./RecommendedForYouVueSlider.Item";
+import "./RecommendedForYouVueSlider.style.scss";
+
+class RecommendedForYouVueSlider extends PureComponent {
   static propTypes = {
+    withViewAll: PropTypes.bool,
     sliderLength: PropTypes.number,
     heading: PropTypes.string.isRequired,
     products: PropTypes.array.isRequired,
+    widgetID: PropTypes.string.isRequired,
   };
 
   constructor(props) {
     super(props);
     this.itemRef = React.createRef();
     this.cmpRef = React.createRef();
+    this.indexRef = React.createRef(0);
     this.scrollerRef = React.createRef();
     this.state = {
       customScrollWidth: null,
@@ -25,25 +32,79 @@ class WishlistSlider extends PureComponent {
     if (this.state.customScrollWidth < 0) {
       this.renderScrollbar();
     }
+    const { widgetID } = this.props;
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
+    VueIntegrationQueries.vueAnalayticsLogger({
+      event_name: VUE_CAROUSEL_SHOW,
+      params: {
+        event: VUE_CAROUSEL_SHOW,
+        pageType: "search",
+        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+        clicked: Date.now(),
+        uuid: getUUID(),
+        referrer: "desktop",
+        widgetID: widgetID,
+      },
+    });
+  }
+  async handleContainerScroll(widgetID, event) {
+    const target = event.nativeEvent.target;
+    this.scrollerRef.current.scrollLeft = target.scrollLeft;
+    let width = 0;
+    if (screen.width > 1024) {
+      width = 245;
+    } else {
+      width = 220;
+    }
+    let index = Math.floor(target.scrollLeft / width);
+    if (this.indexRef.current !== index) {
+      this.indexRef.current = index;
+      const productsToRender = this.getProducts();
+      let sourceProdID = productsToRender[index].sku;
+      let sourceCatgID = productsToRender[index].category;
+      const locale = VueIntegrationQueries.getLocaleFromUrl();
+      VueIntegrationQueries.vueAnalayticsLogger({
+        event_name: VUE_CAROUSEL_SWIPE,
+        params: {
+          event: VUE_CAROUSEL_SWIPE,
+          pageType: "search",
+          currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+          clicked: Date.now(),
+          uuid: getUUID(),
+          referrer: "desktop",
+          sourceProdID: sourceProdID,
+          sourceCatgID: sourceCatgID,
+          widgetID: widgetID,
+        },
+      });
+    }
   }
 
   getProducts = () => {
-    const { products, sliderLength } = this.props;
+    const { products: data, sliderLength } = this.props;
+    let products = [...data];
     if (products.length > sliderLength) {
       products.length = sliderLength;
     }
-    return products;
+    return [...products];
   };
 
-  async handleContainerScroll(event) {
-    const target = event.nativeEvent.target;
-    this.scrollerRef.current.scrollLeft = target.scrollLeft;
+  viewAllBtn() {
+    const { withViewAll } = this.props;
+    if (withViewAll) {
+      return (
+        <div block="VueProductSlider" elem="ViewAllBtn">
+          <span>{"View All"}</span>
+        </div>
+      );
+    }
+    return null;
   }
 
   renderHeader() {
     const { heading } = this.props;
     return (
-      <div block="WishlistSliderHeader">
+      <div block="recommendedForYou">
         <h2>{heading}</h2>
       </div>
     );
@@ -98,30 +159,30 @@ class WishlistSlider extends PureComponent {
   renderSliderContainer() {
     const items = this.getProducts();
     const { isHome } = this.props;
+    const { widgetID } = this.props;
     // debugger
     return (
-      <DragScroll
-        data={{ rootClass: "WishlistScrollWrapper", ref: this.cmpRef }}
-      >
+      <DragScroll data={{ rootClass: "ScrollWrapper", ref: this.cmpRef }}>
         <>
           <div
             block="VueProductSlider"
             elem="SliderContainer"
-            id="WishlistScrollWrapper"
+            id="ScrollWrapper"
             ref={this.cmpRef}
             mods={{ isHome }}
             onScroll={(e) => {
-              this.handleContainerScroll(e);
+              this.handleContainerScroll(widgetID, e);
             }}
           >
             {isHome && <div block="SliderHelper" mods={{ isHome }}></div>}
             {items.map((item) => {
-              const { product } = item;
+              const { sku } = item;
               return (
-                <WishlistSliderItem
-                  key={product.sku}
-                  data={product}
+                <RecommendedForYouVueSliderItem
+                  key={sku}
+                  data={item}
                   ref={this.itemRef}
+                  widgetID={widgetID}
                 />
               );
             })}
@@ -143,4 +204,4 @@ class WishlistSlider extends PureComponent {
   }
 }
 
-export default WishlistSlider;
+export default RecommendedForYouVueSlider;

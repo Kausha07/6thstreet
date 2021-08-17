@@ -75,8 +75,8 @@ class DynamicContentBanner extends PureComponent {
       wd = width.toString() + "px";
       ht = height.toString() + "px";
     }
-
     // TODO: calculate aspect ratio to ensure images not jumping.
+
     if (!link) {
       return (
         <>
@@ -85,7 +85,7 @@ class DynamicContentBanner extends PureComponent {
         </>
       );
     }
-
+    
     return (
       <Link
         to={formatCDNLink(link)}

@@ -445,11 +445,11 @@ main {
         left: 0;
         right: 0;
         &-Shade {
-          background: transparent;
+          // background: transparent;
         }
         &-Content {
           margin-left: 0;
-          opacity: 0.97;
+          opacity: 1;
           max-height: 400px;
           overflow-y: auto;
           right: 0;

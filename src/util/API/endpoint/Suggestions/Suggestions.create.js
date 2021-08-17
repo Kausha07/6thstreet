@@ -400,6 +400,7 @@ export const getCustomQuerySuggestions = (hits, sourceIndexName) => {
 
 export const formatQuerySuggestions = (query) => {
   const capitalizedQuery = capitalizeFirstLetters(query);
+  // console.log("format Query suggestions", query);
   let avoidFilter = isArabic() ? getGenderInArabic(gender) : gender;
   if (checkForKidsFilterQuery(capitalizedQuery))
     avoidFilter = isArabic() ? getGenderInArabic("kids") : "kids";

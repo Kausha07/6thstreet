@@ -81,7 +81,7 @@ export class SearchSuggestionContainer extends PureComponent {
       trendingTags: [],
       topSearches: [],
       recentSearches: [],
-      // recommendedForYou: [],
+      recommendedForYou: [],
       trendingProducts: [],
     };
 
@@ -187,8 +187,13 @@ export class SearchSuggestionContainer extends PureComponent {
     const countryCodeFromUrl = getLocaleFromUrl();
     const lang = isArabic() ? "arabic" : "english";
     sourceQuerySuggestionIndex = this.getAlgoliaIndex(countryCodeFromUrl, lang);
-    // this.getPdpSearchWidgetData();
-    this.getTrendingProducts();
+    this.getPdpSearchWidgetData();
+    // this.getTrendingProducts();
+    document.body.classList.add("isSuggestionOpen");
+  }
+
+  componentWillUnmount() {
+    document.body.classList.remove("isSuggestionOpen");
   }
 
   async requestTrendingInformation() {
@@ -270,7 +275,7 @@ export class SearchSuggestionContainer extends PureComponent {
       trendingTags,
       topSearches,
       recentSearches,
-      // recommendedForYou,
+      recommendedForYou,
       trendingProducts,
     } = this.state;
     const {
@@ -282,7 +287,6 @@ export class SearchSuggestionContainer extends PureComponent {
       wishlistData,
     } = this.props;
     const { brands = [], products = [] } = data;
-
     const isEmpty = search === "";
     const inNothingFound = brands.length + products.length === 0;
     return {
@@ -300,7 +304,7 @@ export class SearchSuggestionContainer extends PureComponent {
       querySuggestions,
       topSearches,
       recentSearches,
-      // recommendedForYou,
+      recommendedForYou,
       trendingProducts,
       wishlistData,
     };

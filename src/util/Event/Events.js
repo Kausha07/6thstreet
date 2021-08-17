@@ -39,3 +39,5 @@ export const VUE_CAROUSEL_SWIPE = "carouselSwipe";
 export const VUE_PDP_VIEW = "pdpView";
 export const VUE_PAGE_VIEW = "pageView";
 export const VUE_ADD_TO_CART = "addToCart";
+export const VUE_ADD_TO_WISHLIST = "addToWishlist";
+export const VUE_REMOVE_TO_WISHLIST = "removeFromWishlist";

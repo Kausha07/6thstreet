@@ -15,7 +15,9 @@ import Event, {
   SELECT_ITEM_ALGOLIA,
 } from "Util/Event";
 import "./ProductItem.style";
-
+import BrowserDatabase from "Util/BrowserDatabase";
+import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
+import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 class ProductItem extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
@@ -184,8 +186,18 @@ class ProductItem extends PureComponent {
     } else {
       urlWithQueryID = link;
     }
+    const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
+    let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
+
+    let parseLink = urlWithQueryID.includes("catalogsearch/result")
+      ? urlWithQueryID.split("&")[0] +
+        `&gender=${requestedGender.replace(
+          requestedGender.charAt(0),
+          requestedGender.charAt(0).toUpperCase()
+        )}`
+      : urlWithQueryID;
     const linkTo = {
-      pathname: urlWithQueryID,
+      pathname: parseLink,
       state: {
         product,
       },

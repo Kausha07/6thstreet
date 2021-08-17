@@ -4,7 +4,7 @@ import VueIntegrationQueries from "Query/vueIntegration.query";
 import React, { PureComponent } from "react";
 import { isArabic } from "Util/App";
 import { getUUID } from "Util/Auth";
-import { VUE_CAROUSEL_SWIPE } from "Util/Event";
+import { VUE_CAROUSEL_SHOW, VUE_CAROUSEL_SWIPE } from "Util/Event";
 import DynamicContentVueProductSliderItem from "./DynamicContentVueProductSlider.Item";
 import isMobile from "Util/Mobile";
 import "./DynamicContentVueProductSlider.style.scss";
@@ -33,17 +33,34 @@ class DynamicContentVueProductSlider extends PureComponent {
     if (this.state.customScrollWidth < 0) {
       this.renderScrollbar();
     }
+    const { widgetID } = this.props;
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
+    VueIntegrationQueries.vueAnalayticsLogger({
+      event_name: VUE_CAROUSEL_SHOW,
+      params: {
+        event: VUE_CAROUSEL_SHOW,
+        pageType: "plp",
+        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+        clicked: Date.now(),
+        uuid: getUUID(),
+        referrer: "desktop",
+        widgetID: widgetID,
+      },
+    });
   }
   async handleContainerScroll(widgetID, event) {
+    const { isArabic } = this.state;
     const target = event.nativeEvent.target;
-    this.scrollerRef.current.scrollLeft = target.scrollLeft;
+    this.scrollerRef.current.scrollLeft = isArabic
+      ? Math.abs(target.scrollLeft)
+      : target.scrollLeft;
     let width = 0;
     if (screen.width > 1024) {
       width = 245;
     } else {
       width = 220;
     }
-    let index = Math.floor(this.cmpRef.current.scrollLeft / width);
+    let index = Math.floor(Math.abs(target.scrollLeft) / width);
     if (this.indexRef.current !== index) {
       this.indexRef.current = index;
       const productsToRender = this.getProducts();

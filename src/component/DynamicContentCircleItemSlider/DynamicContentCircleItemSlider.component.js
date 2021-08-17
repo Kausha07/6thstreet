@@ -48,7 +48,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
   };
 
   clickLink = (a) => {
-    let link = "/" + a.link.split("?")[0];
+    let link = "/" + a.link;
     localStorage.setItem("bannerData", JSON.stringify(a));
     localStorage.setItem("CircleBannerUrl", link);
     let banner = {
@@ -75,17 +75,12 @@ class DynamicContentCircleItemSlider extends PureComponent {
     const { link, label, image_url, plp_config } = item;
     const { isArabic } = this.state;
 
-    const linkTo = {
-      pathname: formatCDNLink(link),
-      state: { plp_config },
-    };
-
     // TODO: move to new component
 
     return (
       <div block="CircleSlider" mods={{ isArabic }} key={i}>
         <Link
-          to={linkTo}
+          to={formatCDNLink(link)}
           key={i}
           data-banner-type="circleItemSlider"
           data-promotion-name={item.promotion_name ? item.promotion_name : ""}
