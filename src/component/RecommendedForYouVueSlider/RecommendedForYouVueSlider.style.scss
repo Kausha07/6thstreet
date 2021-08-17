@@ -208,7 +208,15 @@ html {
 
     &-VueProductImage {
       width: 100%;
-      height: 80.33%;
+      @include mobile{
+        min-height: 173px;
+      }
+      @include desktop{
+        min-height: 291px;
+      }
+      @include tablet{
+        min-height: 291px;
+      }
     }
 
     &-VueIsNewTag {
