@@ -32,10 +32,11 @@
     }
     @include mobile {
       // padding: 0 8px;
-      font-size: 22px;
+      font-size: 15px;
       text-align: center;
       text-transform: uppercase;
       margin-bottom: 0px;
+      margin-top: 10px;
     }
   }
   p {
@@ -47,14 +48,6 @@
 @include mobile {
   .DynamicContentHeader {
     margin-bottom: 10px;
-    h1 {
-      font-size: 15px;
-      margin-bottom: 0px;
-      margin-top: 10px;
-      @include tablet {
-        text-align: start;
-      }
-    }
     p {
       text-align: center;
       font-size: 13px;

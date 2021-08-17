@@ -268,7 +268,7 @@ export class CartItem extends PureComponent {
           <span>{`${parseFloat(basePrice).toFixed(decimals)}`}</span>
         </div>
         <div>
-          {`-${discountPercentage}%`}
+          {`(-${discountPercentage}%)` }&nbsp;
           {withoutDiscount}
         </div>
       </div>

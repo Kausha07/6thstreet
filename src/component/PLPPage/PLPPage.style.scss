@@ -10,6 +10,55 @@
   }
 
 
+  .ProductItem{
+    &-Brand{
+      text-align: center;
+      @include mobile{
+        font-size: 12px;
+        line-height: 7px;
+      }
+    }
+    &-Title{
+      margin: 0 auto;
+      text-align: center;
+      @include mobile{
+        font-size: 11px;
+        line-height: 14px;
+      }
+    }
+
+    .Price{
+      justify-content: center;
+      @include mobile{
+        display: block;
+        line-height: 17px;
+
+        &-Wrapper{
+          display: block;
+          text-align: center;
+        }
+        &-Discount{
+          display: block;
+          text-align: center;
+        }
+        &-Base{
+          display: block;
+          text-align: center;
+        }
+        &-Base_discount{
+          display: inline;
+        }
+      }
+
+    }
+    .PLPSummary-Exclusive{
+      @include mobile{
+        font-size: 12px;
+      }
+    }
+  }
+
+
 
 
 }
