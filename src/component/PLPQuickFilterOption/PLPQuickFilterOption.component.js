@@ -30,7 +30,9 @@ class PLPQuickFilterOption extends PureComponent {
 
     componentDidUpdate() {
         const { updateFilters } = this.props;
-        updateFilters();
+
+        // causing issue of url fluctuating in case of filter 
+        // updateFilters();
     }
 
     handleClick = () => {

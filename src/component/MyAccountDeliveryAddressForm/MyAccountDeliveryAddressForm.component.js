@@ -305,14 +305,10 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
             changeDefaultShipping,
             address,
             newForm,
-            default_country,
-            customer: {
-                firstname,
-                lastname
-            }
+            default_country,     
         } = this.props;
 
-        const { telephone, street = [] } = address;
+        const { telephone, street = [], firstname, lastname } = address;
 
         const clearValue = newForm ? { value: '' } : null;
 
@@ -330,10 +326,12 @@ export class MyAccountDeliveryAddressForm extends MyAccountAddressFieldForm {
             firstname: {
                 validation: ['notEmpty'],
                 value: firstname,
+                placeholder: __('First Name'),
                 autocomplete: 'on'
             },
             lastname: {
                 validation: ['notEmpty'],
+                placeholder: __('Last Name'),
                 value: lastname
             },
             phoneCode: {

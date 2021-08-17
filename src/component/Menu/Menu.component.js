@@ -60,7 +60,7 @@ class Menu extends PureComponent {
             key,
             link
         } = category;
-
+        
         return (
             <MenuCategory
               key={ key }

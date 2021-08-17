@@ -3,7 +3,9 @@ import { PureComponent } from "react";
 import { formatCDNLink } from "Util/Url";
 import Link from "Component/Link";
 import { isArabic } from "Util/App";
-
+import BrowserDatabase from "Util/BrowserDatabase";
+import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
+import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import "./DynamicContentTwiceBanner.style";
 
 class DynamicContentTwiceBanner extends PureComponent {
@@ -42,6 +44,15 @@ class DynamicContentTwiceBanner extends PureComponent {
     //         </>
     //     );
     // }
+    const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
+    let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
+    let parseLink = button_link.includes("/catalogsearch/result")
+    ? button_link.split("&")[0] +`&gender=${requestedGender.replace(
+      requestedGender.charAt(0),
+      requestedGender.charAt(0).toUpperCase()
+    )}`
+    : button_link;
+    
     if (isTwiceBanner) {
       return (
         <div className="TwiceBanner">
@@ -50,7 +61,7 @@ class DynamicContentTwiceBanner extends PureComponent {
             <div className="TwiceBannerBlockChildSub">{subtitle}</div>
             <div className="TwiceBannerBlockChild">
               {" "}
-              <a href={button_link}>
+              <a href={parseLink}>
                 <button>{button_label}</button>
               </a>{" "}
             </div>

@@ -60,13 +60,14 @@ class UrlRewrites extends PureComponent {
   }
 
   renderCategory() {
-    const { brandDescription, brandImg, brandName } = this.props;
+    const { brandDescription, brandImg, brandName,query } = this.props;
     return (
       <GTMRouteWrapper route={CATEGORY}>
         <PLP
           brandDescription={brandDescription}
           brandImg={brandImg}
           brandName={brandName}
+          query={query}
         />
       </GTMRouteWrapper>
     );
