@@ -21,13 +21,14 @@ class DynamicContentVueProductSliderItem extends PureComponent {
   }
 
   onclick = (widgetID) => {
+    const { pageType } = this.props;
     // vue analytics
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_CAROUSEL_CLICK,
       params: {
         event: VUE_CAROUSEL_CLICK,
-        pageType: "plp",
+        pageType: pageType,
         currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),

@@ -4,7 +4,7 @@ import VueIntegrationQueries from "Query/vueIntegration.query";
 import React, { PureComponent } from "react";
 import { isArabic } from "Util/App";
 import { getUUID } from "Util/Auth";
-import { VUE_CAROUSEL_SWIPE } from "Util/Event";
+import { VUE_CAROUSEL_SHOW, VUE_CAROUSEL_SWIPE } from "Util/Event";
 import TrendingProductsVueSliderItem from "./TrendingProductsVueSlider.Item";
 import "./TrendingProductsVueSlider.style.scss";
 
@@ -32,6 +32,20 @@ class TrendingProductsVueSlider extends PureComponent {
     if (this.state.customScrollWidth < 0) {
       this.renderScrollbar();
     }
+    const { widgetID } = this.props;
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
+    VueIntegrationQueries.vueAnalayticsLogger({
+      event_name: VUE_CAROUSEL_SHOW,
+      params: {
+        event: VUE_CAROUSEL_SHOW,
+        pageType: "search",
+        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+        clicked: Date.now(),
+        uuid: getUUID(),
+        referrer: "desktop",
+        widgetID: widgetID,
+      },
+    });
   }
   async handleContainerScroll(widgetID, event) {
     const target = event.nativeEvent.target;
@@ -53,7 +67,7 @@ class TrendingProductsVueSlider extends PureComponent {
         event_name: VUE_CAROUSEL_SWIPE,
         params: {
           event: VUE_CAROUSEL_SWIPE,
-          pageType: "plp",
+          pageType: "search",
           currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
           clicked: Date.now(),
           uuid: getUUID(),

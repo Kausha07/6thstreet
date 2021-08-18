@@ -164,4 +164,12 @@
       }
     }
   }
+  &-WishListAndAccount{
+    label{
+      @include mobile{
+        line-height: 1;
+      }
+
+    }
+  }
 }

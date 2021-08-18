@@ -15,6 +15,7 @@ class DynamicContentVueProductSlider extends PureComponent {
     heading: PropTypes.string.isRequired,
     products: PropTypes.array.isRequired,
     widgetID: PropTypes.string.isRequired,
+    pageType: PropTypes.string.isRequired,
   };
 
   constructor(props) {
@@ -32,13 +33,13 @@ class DynamicContentVueProductSlider extends PureComponent {
     if (this.state.customScrollWidth < 0) {
       this.renderScrollbar();
     }
-    const { widgetID } = this.props;
+    const { widgetID, pageType = "home" } = this.props;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_CAROUSEL_SHOW,
       params: {
         event: VUE_CAROUSEL_SHOW,
-        pageType: "plp",
+        pageType: pageType,
         currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),
@@ -49,6 +50,7 @@ class DynamicContentVueProductSlider extends PureComponent {
   }
   async handleContainerScroll(widgetID, event) {
     const { isArabic } = this.state;
+    const { pageType = "home" } = this.props;
     const target = event.nativeEvent.target;
     this.scrollerRef.current.scrollLeft = isArabic
       ? Math.abs(target.scrollLeft)
@@ -59,7 +61,7 @@ class DynamicContentVueProductSlider extends PureComponent {
     } else {
       width = 220;
     }
-    let index = Math.floor(this.cmpRef.current.scrollLeft / width);
+    let index = Math.floor(Math.abs(target.scrollLeft) / width);
     if (this.indexRef.current !== index) {
       this.indexRef.current = index;
       const productsToRender = this.getProducts();
@@ -70,7 +72,7 @@ class DynamicContentVueProductSlider extends PureComponent {
         event_name: VUE_CAROUSEL_SWIPE,
         params: {
           event: VUE_CAROUSEL_SWIPE,
-          pageType: "plp",
+          pageType: pageType,
           currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
           clicked: Date.now(),
           uuid: getUUID(),
@@ -163,7 +165,7 @@ class DynamicContentVueProductSlider extends PureComponent {
   renderSliderContainer() {
     const items = this.getProducts();
     const { isHome } = this.props;
-    const { widgetID } = this.props;
+    const { widgetID, pageType } = this.props;
     // debugger
     return (
       <DragScroll data={{ rootClass: "ScrollWrapper", ref: this.cmpRef }}>
@@ -187,6 +189,7 @@ class DynamicContentVueProductSlider extends PureComponent {
                   data={item}
                   ref={this.itemRef}
                   widgetID={widgetID}
+                  pageType={pageType}
                 />
               );
             })}

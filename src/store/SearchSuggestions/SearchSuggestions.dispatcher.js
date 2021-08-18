@@ -1,9 +1,6 @@
 import { getStore } from "Store";
 import { setSearchSuggestions } from "Store/SearchSuggestions/SearchSuggestions.action";
-import {
-  getCustomQuerySuggestions,
-  getGenderInArabic,
-} from "Util/API/endpoint/Suggestions/Suggestions.create";
+import { getCustomQuerySuggestions } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import { formatProductSuggestions } from "Util/API/endpoint/Suggestions/Suggestions.format";
 import Algolia from "Util/API/provider/Algolia";
 import { isArabic } from "Util/App";
@@ -23,19 +20,27 @@ export class SearchSuggestionsDispatcher {
     let queryID = null;
 
     try {
-      const productData = await new Algolia().searchBy(
+      const productData = await new Algolia().getPLP(
         isArabic()
           ? {
-              query: search,
+              q: search,
+              page: 0,
               limit: PRODUCT_RESULT_LIMIT,
-              gender: getGenderInArabic(gender),
-              addAnalytics: false,
+              // gender: getGenderInArabic(gender),
+              // query: search,
+              // limit: PRODUCT_RESULT_LIMIT,
+              // gender: getGenderInArabic(gender),
+              // addAnalytics: false,
             }
           : {
-              query: search,
+              // query: search,
+              // limit: PRODUCT_RESULT_LIMIT,
+              // gender: gender,
+              // addAnalytics: false,
+              q: search,
+              page: 0,
               limit: PRODUCT_RESULT_LIMIT,
-              gender: gender,
-              addAnalytics: false,
+              // gender: gender,
             }
       );
 
@@ -88,10 +93,14 @@ export class SearchSuggestionsDispatcher {
               limit: QUERY_SUGGESTION_LIMIT,
             }
       );
+      const defaultHit = {
+        query: search,
+        count: "",
+      };
       const querySuggestions =
         data?.hits?.length > 0
           ? getCustomQuerySuggestions(data?.hits, sourceIndexName)
-          : [];
+          : [defaultHit];
       if (data && data.queryID) {
         queryID = data.queryID;
       } else {
