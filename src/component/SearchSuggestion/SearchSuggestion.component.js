@@ -132,7 +132,6 @@ class SearchSuggestion extends PureComponent {
         formattedBrandName
       )}.html?q=${formattedBrandName}&gender=${gender}`;
     }
-    console.log("brandurl", brandUrl);
     return brandUrl;
   };
 
