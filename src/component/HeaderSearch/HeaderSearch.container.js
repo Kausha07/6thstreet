@@ -84,8 +84,17 @@ export class HeaderSearchContainer extends PureComponent {
       const queryID = productData?.queryID ? productData?.queryID : null;
       let requestedGender = isArabic() ? getGenderInArabic(gender) : gender;
       history.push(
-        `/catalogsearch/result/?q=${search}&qid=${queryID}&gender=${requestedGender}`
+        `/catalogsearch/result/?q=${search}&qid=${queryID}&gender=${requestedGender.replace(
+          requestedGender.charAt(0),
+          requestedGender.charAt(0).toUpperCase()
+        )}`
       );
+      // history.push(
+      //   `/catalogsearch/result/?q=${search}&gender=${requestedGender.replace(
+      //     requestedGender.charAt(0),
+      //     requestedGender.charAt(0).toUpperCase()
+      //   )}`
+      // );
     }
   }
 

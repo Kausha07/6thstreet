@@ -9,7 +9,7 @@ import {
   getGenderInArabic,
   getHighlightedText,
 } from "Util/API/endpoint/Suggestions/Suggestions.create";
-import { WishlistItems } from "Util/API/endpoint/Wishlist/Wishlist.type";
+// import { WishlistItems } from "Util/API/endpoint/Wishlist/Wishlist.type";
 import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
 import BrowserDatabase from "Util/BrowserDatabase";
@@ -21,7 +21,7 @@ import Event, {
 } from "Util/Event";
 import isMobile from "Util/Mobile";
 import RecommendedForYouVueSliderContainer from "../RecommendedForYouVueSlider";
-import WishlistSliderContainer from "../WishlistSlider";
+// import WishlistSliderContainer from "../WishlistSlider";
 import BRAND_MAPPING from "./SearchSiggestion.config";
 import "./SearchSuggestion.style";
 
@@ -44,7 +44,7 @@ class SearchSuggestion extends PureComponent {
     recommendedForYou: PropTypes.array,
     trendingProducts: PropTypes.array,
     searchString: PropTypes.string,
-    wishlistData: WishlistItems.isRequired,
+    // wishlistData: WishlistItems.isRequired,
   };
 
   static defaultProps = {
@@ -118,7 +118,10 @@ class SearchSuggestion extends PureComponent {
       }
       brandUrl = `${this.getBrandUrl(
         brandName
-      )}.html?q=${brandName}&qid=${queryID}&gender=${requestedGender}`;
+      )}.html?q=${brandName}&qid=${queryID}&gender=${requestedGender.replace(
+        requestedGender.charAt(0),
+        requestedGender.charAt(0).toUpperCase()
+      )}`;
     } else {
       formattedBrandName = brandName
         .toUpperCase()
@@ -130,7 +133,10 @@ class SearchSuggestion extends PureComponent {
         .toLowerCase();
       brandUrl = `${this.getBrandUrl(
         formattedBrandName
-      )}.html?q=${formattedBrandName}&gender=${gender}`;
+      )}.html?q=${formattedBrandName}&gender=${gender.replace(
+        gender.charAt(0),
+        gender.charAt(0).toUpperCase()
+      )}`;
     }
     return brandUrl;
   };
@@ -311,7 +317,7 @@ class SearchSuggestion extends PureComponent {
         return (
           <li>
             <Link
-              to={`/${encodeURI(this.getCatalogUrl(query, gender, queryID))}`}
+              to={`${encodeURI(this.getCatalogUrl(query, gender, queryID))}`}
               onClick={() =>
                 this.onSearchQueryClick(formatQuerySuggestions(query))
               }
@@ -451,7 +457,7 @@ class SearchSuggestion extends PureComponent {
       <>
         {this.renderQuerySuggestions()}
         {/* {this.renderBrands()} */}
-        {this.renderWishlistProducts()}
+        {/* {this.renderWishlistProducts()} */}
         {this.renderProducts()}
       </>
     );
@@ -513,36 +519,36 @@ class SearchSuggestion extends PureComponent {
     }
   };
 
-  renderWishlistProducts = () => {
-    const { wishlistData, searchString } = this.props;
-    if (wishlistData && wishlistData.length > 0) {
-      let filteredWishlist =
-        wishlistData.filter(
-          (item) =>
-            item.product.brand_name
-              .toUpperCase()
-              .includes(searchString.toUpperCase()) ||
-            item.product.name
-              .toUpperCase()
-              .includes(searchString.toUpperCase()) ||
-            item.product.sku.toUpperCase().includes(searchString.toUpperCase())
-        ) || [];
-      return (
-        <div className="wishlistSliderContainer">
-          <WishlistSliderContainer
-            products={
-              searchString && filteredWishlist.length > 0
-                ? filteredWishlist
-                : wishlistData
-            }
-            heading={__("Your Wishlist")}
-            key={`Wishlist`}
-            isHome={true}
-          />
-        </div>
-      );
-    }
-  };
+  // renderWishlistProducts = () => {
+  //   const { wishlistData, searchString } = this.props;
+  //   if (wishlistData && wishlistData.length > 0) {
+  //     let filteredWishlist =
+  //       wishlistData.filter(
+  //         (item) =>
+  //           item.product.brand_name
+  //             .toUpperCase()
+  //             .includes(searchString.toUpperCase()) ||
+  //           item.product.name
+  //             .toUpperCase()
+  //             .includes(searchString.toUpperCase()) ||
+  //           item.product.sku.toUpperCase().includes(searchString.toUpperCase())
+  //       ) || [];
+  //     return (
+  //       <div className="wishlistSliderContainer">
+  //         <WishlistSliderContainer
+  //           products={
+  //             searchString && filteredWishlist.length > 0
+  //               ? filteredWishlist
+  //               : wishlistData
+  //           }
+  //           heading={__("Your Wishlist")}
+  //           key={`Wishlist`}
+  //           isHome={true}
+  //         />
+  //       </div>
+  //     );
+  //   }
+  // };
 
   renderTrendingBrand = (brand, i) => {
     const { label = "", image_url } = brand;
@@ -686,7 +692,7 @@ class SearchSuggestion extends PureComponent {
         {this.renderTrendingBrands()}
         {this.renderRecommendedForYou()}
         {/* {this.renderTrendingProducts()} */}
-        {this.renderWishlistProducts()}
+        {/* {this.renderWishlistProducts()} */}
         {this.renderTrendingTags()}
       </>
     );
