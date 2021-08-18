@@ -64,6 +64,8 @@
 
   &-Recommended {
     margin-top: 15px;
+    margin-left: 15px;
+    margin-right: 15px;
     ul {
       li {
         margin-top: 20px !important;
@@ -76,12 +78,11 @@
     }
 
     @include before-desktop {
-      margin-bottom: 155px;
+      margin-bottom: 15px;
     }
   }
   &-Item {
-    margin-top: 15px;
-    margin-bottom: 15px;
+    margin: 15px;
     ul {
       li {
         margin-top: 20px !important;
@@ -91,10 +92,6 @@
           }
         }
       }
-    }
-
-    @include before-desktop {
-      margin-bottom: 155px;
     }
   }
 
