@@ -308,10 +308,14 @@ class SearchSuggestion extends PureComponent {
           </li>
         );
       } else {
+        console.log(
+          "catelogURL",
+          encodeURI(this.getCatalogUrl(query, gender, queryID))
+        );
         return (
           <li>
             <Link
-              to={`/${encodeURI(this.getCatalogUrl(query, gender, queryID))}`}
+              to={`${encodeURI(this.getCatalogUrl(query, gender, queryID))}`}
               onClick={() =>
                 this.onSearchQueryClick(formatQuerySuggestions(query))
               }

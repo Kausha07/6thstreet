@@ -159,13 +159,10 @@ export class SearchSuggestionContainer extends PureComponent {
   getTrendingProducts() {
     const { gender } = this.props;
     const userData = BrowserDatabase.getItem("MOE_DATA");
-    const {
-      USER_DATA: { deviceUuid },
-    } = userData;
     const query = {
       filters: [],
       num_results: 10,
-      mad_uuid: deviceUuid,
+      mad_uuid: userData?.USER_DATA?.deviceUuid,
     };
 
     const payload = VueQuery.buildQuery("vue_trending_slider", query, {
