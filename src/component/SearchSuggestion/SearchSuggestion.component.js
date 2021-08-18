@@ -132,6 +132,7 @@ class SearchSuggestion extends PureComponent {
         formattedBrandName
       )}.html?q=${formattedBrandName}&gender=${gender}`;
     }
+    console.log("brandurl", brandUrl);
     return brandUrl;
   };
 
@@ -279,9 +280,9 @@ class SearchSuggestion extends PureComponent {
       return (
         <li>
           <Link
-            to={encodeURI(
+            to={`/${encodeURI(
               this.getBrandSuggestionUrl(formatQuerySuggestions(query), queryID)
-            )}
+            )}`}
             onClick={() =>
               this.onSearchQueryClick(formatQuerySuggestions(query))
             }
@@ -311,7 +312,7 @@ class SearchSuggestion extends PureComponent {
         return (
           <li>
             <Link
-              to={encodeURI(this.getCatalogUrl(query, gender, queryID))}
+              to={`/${encodeURI(this.getCatalogUrl(query, gender, queryID))}`}
               onClick={() =>
                 this.onSearchQueryClick(formatQuerySuggestions(query))
               }

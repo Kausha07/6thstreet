@@ -1,17 +1,15 @@
 import Link from "Component/Link";
-import { formatCDNLink } from "Util/Url";
-import isMobile from "Util/Mobile";
-import { isArabic } from "Util/App";
 import PropTypes from "prop-types";
-// import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
-// import { getUUID } from "Util/Auth";
+import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
+import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
+import { isArabic } from "Util/App";
+import BrowserDatabase from "Util/BrowserDatabase";
 import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
+import isMobile from "Util/Mobile";
+import { formatCDNLink } from "Util/Url";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import "./DynamicContentGrid.style";
-import BrowserDatabase from "Util/BrowserDatabase";
-import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
-import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 
 class DynamicContentGrid extends PureComponent {
   static propTypes = {
@@ -41,20 +39,6 @@ class DynamicContentGrid extends PureComponent {
       link: item.link,
       promotion_name: item.promotion_name,
     };
-    // vue analytics
-    // const locale = VueIntegrationQueries.getLocaleFromUrl();
-    // VueIntegrationQueries.vueAnalayticsLogger({
-    //   event_name: VUE_CAROUSEL_CLICK,
-    //   params: {
-    //     event: VUE_CAROUSEL_CLICK,
-    //     pageType: "plp",
-    //     currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-    //     clicked: Date.now(),
-    //     uuid: getUUID(),
-    //     referrer: "desktop",
-    //     widgetID: "vue_visually_similar_slider", // TODO: will be added after vue product slider.
-    //   },
-    // });
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
   };
 
@@ -70,10 +54,11 @@ class DynamicContentGrid extends PureComponent {
     const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
     let parseLink = link.includes("/catalogsearch/result")
-      ? link.split("&")[0] +`&gender=${requestedGender.replace(
-        requestedGender.charAt(0),
-        requestedGender.charAt(0).toUpperCase()
-      )}`
+      ? link.split("&")[0] +
+        `&gender=${requestedGender.replace(
+          requestedGender.charAt(0),
+          requestedGender.charAt(0).toUpperCase()
+        )}`
       : link;
     return (
       <div
@@ -121,10 +106,11 @@ class DynamicContentGrid extends PureComponent {
     const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
     let parseLink = link.includes("/catalogsearch/result")
-      ? link.split("&")[0] +`&gender=${requestedGender.replace(
-        requestedGender.charAt(0),
-        requestedGender.charAt(0).toUpperCase()
-      )}`
+      ? link.split("&")[0] +
+        `&gender=${requestedGender.replace(
+          requestedGender.charAt(0),
+          requestedGender.charAt(0).toUpperCase()
+        )}`
       : link;
     return (
       <div block="CategoryItem" elem="Content" key={i}>
