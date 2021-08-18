@@ -1,8 +1,6 @@
 import Link from "Component/Link";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
-import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
-import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import { isArabic } from "Util/App";
 import BrowserDatabase from "Util/BrowserDatabase";
 import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
@@ -10,6 +8,8 @@ import isMobile from "Util/Mobile";
 import { formatCDNLink } from "Util/Url";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import "./DynamicContentGrid.style";
+import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
+import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 
 class DynamicContentGrid extends PureComponent {
   static propTypes = {
@@ -54,11 +54,10 @@ class DynamicContentGrid extends PureComponent {
     const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
     let parseLink = link.includes("/catalogsearch/result")
-      ? link.split("&")[0] +
-        `&gender=${requestedGender.replace(
-          requestedGender.charAt(0),
-          requestedGender.charAt(0).toUpperCase()
-        )}`
+      ? link.split("&")[0] +`&gender=${requestedGender.replace(
+        requestedGender.charAt(0),
+        requestedGender.charAt(0).toUpperCase()
+      )}`
       : link;
     return (
       <div
@@ -106,11 +105,10 @@ class DynamicContentGrid extends PureComponent {
     const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
     let parseLink = link.includes("/catalogsearch/result")
-      ? link.split("&")[0] +
-        `&gender=${requestedGender.replace(
-          requestedGender.charAt(0),
-          requestedGender.charAt(0).toUpperCase()
-        )}`
+      ? link.split("&")[0] +`&gender=${requestedGender.replace(
+        requestedGender.charAt(0),
+        requestedGender.charAt(0).toUpperCase()
+      )}`
       : link;
     return (
       <div block="CategoryItem" elem="Content" key={i}>
