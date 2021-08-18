@@ -24,6 +24,7 @@ const FACET_FILTERS = [
   'technology',
   'toe_shape',
   'tommy_label'
+
 ];
 
 const config = {
