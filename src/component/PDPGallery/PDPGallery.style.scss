@@ -24,6 +24,30 @@
     }
   }
 
+  &-VideoButtonsContainer {
+    &-VideoButtons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px 0;
+      &-StyleVideo {
+        border-right: solid 1.5px #efefef;
+      }
+      &-360DegreeVideo {
+        border-left: solid 1.5px #efefef;
+      }
+      &-ViewGallery {
+        padding: 10px 0!important;
+      }
+    }
+    .Seperator {
+      background-color: #efefef;
+      margin: 0;
+      padding: 0;
+      height: 1.5px;
+    }
+  }
+
   .BackArrow {
     position: absolute;
     top: 1rem;
@@ -116,6 +140,12 @@
       object-fit: cover;
       object-position: center;
     }
+  }
+
+  .Video {
+    height: 534px;
+    object-fit: cover;
+    object-position: center;
   }
 
   .OverlayIcons {
