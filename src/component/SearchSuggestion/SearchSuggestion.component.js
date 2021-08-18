@@ -118,7 +118,10 @@ class SearchSuggestion extends PureComponent {
       }
       brandUrl = `${this.getBrandUrl(
         brandName
-      )}.html?q=${brandName}&qid=${queryID}&gender=${requestedGender}`;
+      )}.html?q=${brandName}&qid=${queryID}&gender=${requestedGender.replace(
+        requestedGender.charAt(0),
+        requestedGender.charAt(0).toUpperCase()
+      )}`;
     } else {
       formattedBrandName = brandName
         .toUpperCase()
@@ -130,7 +133,10 @@ class SearchSuggestion extends PureComponent {
         .toLowerCase();
       brandUrl = `${this.getBrandUrl(
         formattedBrandName
-      )}.html?q=${formattedBrandName}&gender=${gender}`;
+      )}.html?q=${formattedBrandName}&gender=${gender.replace(
+        gender.charAt(0),
+        gender.charAt(0).toUpperCase()
+      )}`;
     }
     return brandUrl;
   };
