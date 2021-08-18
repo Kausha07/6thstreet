@@ -3,6 +3,7 @@ import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
+import { doFetch } from '../../util/API/helper/Fetch';
 import { DEFAULT_STATE_NAME } from 'Component/NavigationAbstract/NavigationAbstract.config';
 import { changeNavigationState } from 'Store/Navigation/Navigation.action';
 import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
@@ -55,6 +56,23 @@ class BrandsContainer extends PureComponent {
         this.requestBrands(brandType);
         this.updateBreadcrumbs();
         this.updateHeaderState();
+        this.requestBrandMapping()
+        console.log("hiiiii")
+    }
+
+    requestBrandMapping = () => {
+        this.getBrandMappingData()
+
+    }
+
+    async getBrandMappingData() {
+        const apiUrl = 'https://en-ae.6thstreet.com/cdn/config/brands.json';
+        fetch(apiUrl)
+        .then((response) => response.json())
+      .then((data) => {
+          return data
+      })
+      .catch((error) => reject(error));
     }
 
     updateHeaderState() {
