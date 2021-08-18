@@ -96,6 +96,8 @@ class ProductItem extends PureComponent {
     return null;
   }
 
+ 
+
   renderExclusive() {
     const {
       product: { promotion },
@@ -113,6 +115,21 @@ class ProductItem extends PureComponent {
     return null;
   }
 
+  renderOutOfStock() {
+    const {
+      product: { in_stock },
+    } = this.props;
+    if (in_stock === 0) {
+      return (
+        <span block="ProductItem" elem="OutOfStock">
+          {" "}
+          {"Out Of Stock"}
+        </span>
+      )
+    }
+
+    return null;
+  }
   renderImage() {
     const {
       product: { thumbnail_url },
@@ -120,7 +137,9 @@ class ProductItem extends PureComponent {
 
     return (
       <div>
-        <Image src={thumbnail_url} /> {this.renderExclusive()}{" "}
+        <Image src={thumbnail_url} /> 
+        {this.renderOutOfStock()} {" "}
+        {this.renderExclusive()}{" "}
         {this.renderColors()}{" "}
       </div>
     );
