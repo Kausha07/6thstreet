@@ -1,8 +1,3 @@
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { createRef } from "react";
-import { matchPath, withRouter } from "react-router";
-
 import HeaderAccount from "Component/HeaderAccount";
 import HeaderCart from "Component/HeaderCart";
 import HeaderGenders from "Component/HeaderGenders";
@@ -12,6 +7,10 @@ import HeaderWishlist from "Component/HeaderWishlist";
 import { MOBILE_MENU_SIDEBAR_ID } from "Component/MobileMenuSideBar/MoblieMenuSideBar.config";
 import NavigationAbstract from "Component/NavigationAbstract/NavigationAbstract.component";
 import { DEFAULT_STATE_NAME } from "Component/NavigationAbstract/NavigationAbstract.config";
+import PropTypes from "prop-types";
+import { createRef } from "react";
+import { connect } from "react-redux";
+import { matchPath, withRouter } from "react-router";
 import {
   TYPE_ACCOUNT,
   TYPE_BRAND,
@@ -23,8 +22,6 @@ import {
 import { isArabic } from "Util/App";
 import BrowserDatabase from "Util/BrowserDatabase";
 import isMobile from "Util/Mobile";
-import searchIcon from "./icons/search-black.png";
-
 import "./HeaderMainSection.style";
 
 export const mapStateToProps = (state) => ({

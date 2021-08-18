@@ -50,10 +50,11 @@ class PLPFilter extends PureComponent {
     if (category === "categories.level1") {
       return null;
     }
+    let placeholder = category === "in_stock" ? 'BY STOCK' : label
 
     return (
       <FieldMultiselect
-        placeholder={label}
+        placeholder={placeholder}
         showCheckbox
         isRadio={is_radio}
         filter={filter}

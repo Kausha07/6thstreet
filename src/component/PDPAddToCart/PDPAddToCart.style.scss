@@ -197,6 +197,7 @@ $select-arrow-width: 6px !default;
   &-SizeSelector {
     @include desktop {
       margin-left: 20px;
+      scrollbar-width: none;
       // width: calc(100% - 150px);
     }
 

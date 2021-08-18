@@ -83,7 +83,7 @@ html {
 
     &-SliderContainer {
       width: 100%;
-      overflow: auto;
+      overflow-x: auto;
       white-space: nowrap;
       &_isHome {
         &::-webkit-scrollbar {
@@ -114,12 +114,13 @@ html {
     }
 
     &-VueProductContainer {
-      width: 245.39px;
+      width: 220px;
       height: 362.66px;
       position: relative;
       margin-right: 7.92px;
       display: inline-block;
       vertical-align: top;
+      overflow-y: hidden;
       &:nth-last-child(2) {
         margin-right: 0;
       }
@@ -208,7 +209,15 @@ html {
 
     &-VueProductImage {
       width: 100%;
-      height: 80.33%;
+      @include mobile{
+        min-height: 173px;
+      }
+      @include desktop{
+        min-height: 168px;
+      }
+      @include tablet{
+        min-height: 168px;
+      }
     }
 
     &-VueIsNewTag {
