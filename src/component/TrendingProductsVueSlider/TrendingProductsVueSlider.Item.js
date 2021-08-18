@@ -28,7 +28,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
       event_name: VUE_CAROUSEL_CLICK,
       params: {
         event: VUE_CAROUSEL_CLICK,
-        pageType: "plp",
+        pageType: "search",
         currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),
