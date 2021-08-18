@@ -30,7 +30,7 @@ export class PriceContainer extends PureComponent {
   };
 
   containerProps = () => {
-    const { price, page } = this.props;
+    const { price, page, country } = this.props;
     const priceObj = Array.isArray(price) ? price[0] : price;
     const [currency, priceData] = Object.entries(priceObj)[0];
     const {
@@ -44,6 +44,7 @@ export class PriceContainer extends PureComponent {
       basePrice,
       specialPrice,
       currency,
+      country,
       fixedPrice,
     };
   };
