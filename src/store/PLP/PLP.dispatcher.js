@@ -3,6 +3,7 @@ import {
   setPLPInitialFilters,
   setPLPLoading,
   setPLPPage,
+  setPLPWidget,
 } from "Store/PLP/PLP.action";
 import Algolia from "Util/API/provider/Algolia";
 import Logger from "Util/Logger";
@@ -65,6 +66,11 @@ export class PLPDispatcher {
       // Needed, so PLPPages container sets "isLoading" to false
       dispatch(setPLPPage({}, page));
     }
+  }
+
+  updatePlpWidgetData(payload, dispatch) {
+    const { category, data } = payload;
+    dispatch(setPLPWidget(category, data));
   }
 
   _getInitalOptions(options = {}) {
