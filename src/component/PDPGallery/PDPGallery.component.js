@@ -23,6 +23,8 @@ class PDPGallery extends PureComponent {
   static propTypes = {
     currentIndex: PropTypes.number.isRequired,
     gallery: PropTypes.arrayOf(PropTypes.string).isRequired,
+    prod_style_video: PropTypes.string.isRequired,
+    prod_360_video: PropTypes.string.isRequired,
     crumbs: PropTypes.arrayOf(
       PropTypes.oneOfType([PropTypes.string, PropTypes.number])
     ).isRequired,
@@ -38,8 +40,11 @@ class PDPGallery extends PureComponent {
 
   state = {
     galleryOverlay: "",
+    isVideoPlaying: false,
     isArabic: isArabic(),
   };
+
+  videoRef = [React.createRef(), React.createRef()];
 
   componentDidMount() {
     CSS.setVariable(
@@ -142,7 +147,7 @@ class PDPGallery extends PureComponent {
 
   renderGallery() {
     const { gallery = [] } = this.props;
-
+    
     return gallery.map(this.renderGalleryImage);
   }
 
@@ -162,8 +167,101 @@ class PDPGallery extends PureComponent {
         showCrumbs={isMobile.any()}
       >
         {this.renderGallery()}
+        {this.renderVideos()}
       </Slider>
     );
+  }
+  
+  renderVideos() {
+    const { prod_360_video, prod_style_video } = this.props;
+    
+    return (
+      [prod_360_video, prod_style_video].filter((src) => !!src).map((src, index) => (
+          <video
+            key={index}
+            block="Video"
+            ref={this.videoRef[index]}
+            height="534"
+            src={src}
+            type="video/mp4"
+            controls={!isMobile.any()}
+            disablepictureinpicture
+            playsinline
+          />
+      ))
+    );
+  }
+
+  playVideo(index) {
+    const { gallery, onSliderChange } = this.props;
+    onSliderChange(gallery.length + index);
+    this.setState({ isVideoPlaying: true}, () => {
+      const video = this.videoRef[index];
+      if(video?.current)
+      {
+        var counter = 1;
+        video.current.play();
+        video.current.addEventListener("ended", () => {
+          counter = counter + 1;
+          if(counter <= 2){
+            video.current.play();
+          }
+          else {
+            onSliderChange(0);
+            this.setState({ isVideoPlaying: false});
+          }
+        });
+      }
+    });
+  }
+
+  renderVideoButtons() {
+    const { prod_360_video, prod_style_video } = this.props;
+    const { isVideoPlaying } = this.state;
+    if(!(prod_360_video || prod_style_video) || !isMobile.any()){
+      return null;
+    }
+
+    return (
+      <div
+        block="PDPGallery"
+        elem="VideoButtonsContainer"
+      >
+        {
+          isVideoPlaying
+          ?
+          <button
+            block="PDPGallery-VideoButtonsContainer-VideoButtons"
+            elem="ViewGallery"
+          >
+            View Gallery
+          </button>
+          :
+          <div
+            block="PDPGallery-VideoButtonsContainer"
+            elem="VideoButtons"
+          >
+            { prod_style_video && <button
+              block="PDPGallery-VideoButtonsContainer-VideoButtons"
+              elem="StyleVideo"
+              onClick={()=>this.playVideo(0)}
+            >
+              Video
+            </button>
+            }
+            { prod_360_video && <button
+              block="PDPGallery-VideoButtonsContainer-VideoButtons"
+              elem="360DegreeVideo"
+              onClick={()=>this.playVideo(1)}
+            >
+              360
+            </button>
+            }
+          </div>
+        }
+        <div block="Seperator" />
+      </div>
+    )
   }
 
   render() {
@@ -186,6 +284,7 @@ class PDPGallery extends PureComponent {
         >
           {this.renderSlider()}
         </button>
+        {this.renderVideoButtons()}
       </div>
     );
   }
