@@ -41,3 +41,5 @@ export const VUE_PAGE_VIEW = "pageView";
 export const VUE_ADD_TO_CART = "addToCart";
 export const VUE_ADD_TO_WISHLIST = "addToWishlist";
 export const VUE_REMOVE_TO_WISHLIST = "removeFromWishlist";
+
+export const EVENT_PROMOTION_IMPRESSION = "promotionImpression";
