@@ -1,21 +1,27 @@
 /* eslint-disable react/jsx-one-expression-per-line */
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
+import { connect } from "react-redux";
 import { withRouter } from "react-router";
 
 import Image from "Component/Image";
 import Loader from "Component/Loader";
-import { getFinalPrice } from "Component/Price/Price.config";
+import { getFinalPrice, DISPLAY_DISCOUNT_PERCENTAGE } from "Component/Price/Price.config";
 import { CartItemType } from "Type/MiniCart";
 import { isArabic } from "Util/App";
 
 import "./SuccessCheckoutItem.style";
 import "./SuccessCheckoutItem.extended.style";
 
+export const mapStateToProps = (state) => ({
+  country: state.AppState.country,
+});
+
 export class SuccessCheckoutItem extends PureComponent {
   static propTypes = {
     isLoading: PropTypes.bool.isRequired,
     item: CartItemType.isRequired,
+    country: PropTypes.string.isRequired,
     currency_code: PropTypes.string.isRequired,
     isLikeTable: PropTypes.bool,
     history: PropTypes.object.isRequired,
@@ -130,6 +136,7 @@ export class SuccessCheckoutItem extends PureComponent {
 
   renderProductPrice() {
     const {
+      country,
       currency_code,
       item: { row_total, basePrice },
     } = this.props;
@@ -145,21 +152,31 @@ export class SuccessCheckoutItem extends PureComponent {
     );
     const finalBasePrice = getFinalPrice(basePrice, currency_code);
 
+    const renderDiscountPercentage = () => {
+      if(!DISPLAY_DISCOUNT_PERCENTAGE[country]){
+        return null;
+      }
+
+      return (
+        isArabic
+        ?
+        <span block="SuccessCheckoutItem" elem="DiscountPercentage">
+          {discountPercentage}
+          %-
+        </span>
+        :
+        <span block="SuccessCheckoutItem" elem="DiscountPercentage">
+          -{discountPercentage}%<span> </span>
+        </span>
+      );
+    }
+  
     const withDiscount = (
       <div block="SuccessCheckoutItem" elem="DiscountPrice">
         <div>
           {currency_code} {`${finalBasePrice}`}
         </div>
-        {isArabic ? (
-          <span block="SuccessCheckoutItem" elem="DiscountPercentage">
-            {discountPercentage}
-            %-
-          </span>
-        ) : (
-          <span block="SuccessCheckoutItem" elem="DiscountPercentage">
-            -{discountPercentage}%<span> </span>
-          </span>
-        )}
+        { renderDiscountPercentage() }
         <span
           block="SuccessCheckoutItem"
           elem="WithoutDiscount"
@@ -268,4 +285,4 @@ export class SuccessCheckoutItem extends PureComponent {
   }
 }
 
-export default withRouter(SuccessCheckoutItem);
+export default withRouter(connect(mapStateToProps, null)(SuccessCheckoutItem));

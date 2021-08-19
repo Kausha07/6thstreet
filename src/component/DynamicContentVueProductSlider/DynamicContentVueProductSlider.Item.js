@@ -1,3 +1,4 @@
+import { connect } from "react-redux";
 import Link from "Component/Link";
 import WishlistIcon from "Component/WishlistIcon";
 import PropTypes from "prop-types";
@@ -7,9 +8,15 @@ import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
 import { getUUID } from "Util/Auth";
 import { VUE_CAROUSEL_CLICK } from "Util/Event";
+import { DISPLAY_DISCOUNT_PERCENTAGE } from "Component/Price/Price.config";
+
+export const mapStateToProps = (state) => ({
+  country: state.AppState.country,
+});
 
 class DynamicContentVueProductSliderItem extends PureComponent {
   static propTypes = {
+    country: PropTypes.string.isRequired,
     data: PropTypes.object.isRequired,
   };
   constructor(props) {
@@ -39,6 +46,11 @@ class DynamicContentVueProductSliderItem extends PureComponent {
   };
 
   discountPercentage(basePrice, specialPrice, haveDiscount) {
+    const { country } = this.props;
+    if (!DISPLAY_DISCOUNT_PERCENTAGE[country]) {
+      return null;
+    }
+
     let discountPercentage = Math.round(100 * (1 - specialPrice / basePrice));
     if (discountPercentage === 0) {
       discountPercentage = 1;
@@ -175,4 +187,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
   }
 }
 
-export default DynamicContentVueProductSliderItem;
+export default connect(
+  mapStateToProps,
+  null
+)(DynamicContentVueProductSliderItem);
