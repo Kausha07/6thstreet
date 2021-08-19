@@ -1,6 +1,8 @@
 import Link from "Component/Link";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
+import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
+import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import { isArabic } from "Util/App";
 import BrowserDatabase from "Util/BrowserDatabase";
 import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
@@ -8,8 +10,6 @@ import isMobile from "Util/Mobile";
 import { formatCDNLink } from "Util/Url";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import "./DynamicContentGrid.style";
-import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
-import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 
 class DynamicContentGrid extends PureComponent {
   static propTypes = {
@@ -51,13 +51,16 @@ class DynamicContentGrid extends PureComponent {
     if (item_height >= 500 && items_per_row === 2) {
       contentClass = `Content_${i}`;
     }
-    const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
+    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      : "all";
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
     let parseLink = link.includes("/catalogsearch/result")
-      ? link.split("&")[0] +`&gender=${requestedGender.replace(
-        requestedGender.charAt(0),
-        requestedGender.charAt(0).toUpperCase()
-      )}`
+      ? link.split("&")[0] +
+        `&gender=${requestedGender.replace(
+          requestedGender.charAt(0),
+          requestedGender.charAt(0).toUpperCase()
+        )}`
       : link;
     return (
       <div
@@ -102,13 +105,16 @@ class DynamicContentGrid extends PureComponent {
   renderItemMobile = (item, i) => {
     const { link, url } = item;
     let ht = this.props.item_height.toString() + "px";
-    const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
+    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      : "all";
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
     let parseLink = link.includes("/catalogsearch/result")
-      ? link.split("&")[0] +`&gender=${requestedGender.replace(
-        requestedGender.charAt(0),
-        requestedGender.charAt(0).toUpperCase()
-      )}`
+      ? link.split("&")[0] +
+        `&gender=${requestedGender.replace(
+          requestedGender.charAt(0),
+          requestedGender.charAt(0).toUpperCase()
+        )}`
       : link;
     return (
       <div block="CategoryItem" elem="Content" key={i}>
