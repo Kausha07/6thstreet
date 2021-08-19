@@ -34,6 +34,7 @@ class DynamicContentGrid extends PureComponent {
     isArabic: isArabic(),
     isAllShowing: true,
   };
+
   onclick = (item) => {
     let banner = {
       link: item.link,
