@@ -15,6 +15,7 @@ import {
 
 import "./DynamicContentProductSlider.style";
 import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
+import Event from "Util/Event";
 
 class DynamicContentProductSlider extends PureComponent {
   static propTypes = {
@@ -89,7 +90,13 @@ class DynamicContentProductSlider extends PureComponent {
 
   sendImpressions() {
     const { products = [] } = this.props;
-    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, products);
+    const items = products.map((item) => {
+      return {
+        id: item.sku,
+        label: item.name,
+      };
+    });
+    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
   }
 
   isInViewport = () => {

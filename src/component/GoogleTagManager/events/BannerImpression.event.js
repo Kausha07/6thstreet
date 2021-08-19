@@ -57,7 +57,8 @@ class BannerImpressionEvent extends BaseEvent {
     }
 
     const formattedImpressions = impressions.map(
-      ({ label, promotion_name }, index) => ({
+      ({ label, promotion_name, id }, index) => ({
+        id: id,
         name: label || promotion_name,
         creative: promotion_name || "",
         position: index + 1,
@@ -74,7 +75,6 @@ class BannerImpressionEvent extends BaseEvent {
         },
       },
     });
-    console.log("Promotion View Impression updated");
   }
 }
 

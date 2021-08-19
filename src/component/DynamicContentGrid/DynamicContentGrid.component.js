@@ -6,11 +6,7 @@ import PropTypes from "prop-types";
 // import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
 // import { getUUID } from "Util/Auth";
-import Event, {
-  EVENT_GTM_BANNER_CLICK,
-  EVENT_PROMOTION_IMPRESSION,
-} from "Util/Event";
-import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
+import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import "./DynamicContentGrid.style";
 import BrowserDatabase from "Util/BrowserDatabase";
@@ -39,15 +35,7 @@ class DynamicContentGrid extends PureComponent {
   state = {
     isArabic: isArabic(),
     isAllShowing: true,
-    impressionSent: false,
   };
-  componentDidMount() {
-    document.addEventListener("scroll", this.isInViewport);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener("scroll", this.isInViewport);
-  }
 
   onclick = (item) => {
     let banner = {
@@ -197,45 +185,8 @@ class DynamicContentGrid extends PureComponent {
     );
   }
 
-  sendImpressions() {
-    const { items = [] } = this.props;
-    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
-  }
-
-  isInViewport = () => {
-    //get how much pixels left to scrolling our ReactElement
-    const top = this.viewElement.getBoundingClientRect().top;
-
-    //here we check if element top reference is on the top of viewport
-    /*
-     * If the value is positive then top of element is below the top of viewport
-     * If the value is zero then top of element is on the top of viewport
-     * If the value is negative then top of element is above the top of viewport
-     * */
-    if (top <= 0) {
-      // inside viewport
-      const { header: { title } = {} } = this.props;
-
-      const { impressionSent } = this.state;
-      if (!impressionSent) {
-        const { items = [] } = this.props;
-        if (items.length > 0) {
-          this.sendImpressions();
-          this.setState({ impressionSent: true });
-        }
-      }
-    }
-  };
-
   render() {
-    let setRef = (el) => {
-      this.viewElement = el;
-    };
-    return (
-      <div ref={setRef} block="DynamicContentGrid">
-        {this.renderGrid()}
-      </div>
-    );
+    return <div block="DynamicContentGrid">{this.renderGrid()}</div>;
   }
 }
 
