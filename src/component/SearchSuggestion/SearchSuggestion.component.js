@@ -290,14 +290,9 @@ class SearchSuggestion extends PureComponent {
       return (
         <li>
           <Link
-            to={
-              encodeURI(
-                this.getBrandSuggestionUrl(
-                  formatQuerySuggestions(query),
-                  queryID
-                )
-              )
-            }
+            to={`/${encodeURI(
+              this.getBrandSuggestionUrl(formatQuerySuggestions(query), queryID)
+            )}`}
             onClick={() =>
               this.onSearchQueryClick(formatQuerySuggestions(query))
             }
@@ -422,10 +417,11 @@ class SearchSuggestion extends PureComponent {
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
 
     let parseLink = url.includes("catalogsearch/result")
-      ? url.split("&")[0] +`&gender=${requestedGender.replace(
-      requestedGender.charAt(0),
-      requestedGender.charAt(0).toUpperCase()
-    )}`
+      ? url.split("&")[0] +
+        `&gender=${requestedGender.replace(
+          requestedGender.charAt(0),
+          requestedGender.charAt(0).toUpperCase()
+        )}`
       : url;
 
     return (
