@@ -3,7 +3,7 @@
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
-
+import { DISPLAY_DISCOUNT_PERCENTAGE } from './Price.config';
 import { isArabic } from 'Util/App';
 
 class Price extends PureComponent {
@@ -11,6 +11,7 @@ class Price extends PureComponent {
         basePrice: PropTypes.number.isRequired,
         specialPrice: PropTypes.number.isRequired,
         currency: PropTypes.string.isRequired,
+        country: PropTypes.string.isRequired,
         fixedPrice: PropTypes.bool,
     };
 
@@ -71,7 +72,8 @@ class Price extends PureComponent {
     renderPrice() {
         const {
             basePrice,
-            specialPrice
+            specialPrice,
+            country,
         } = this.props;
 
         if(!parseFloat(basePrice)){
@@ -89,9 +91,13 @@ class Price extends PureComponent {
                     &nbsp;
                     <del block="Price" elem="Del">{ this.renderBasePrice() }</del>
                 </span>
-                <span block="Price" elem="Discount" mods={ { discount: this.haveDiscount() } }>
-                    { `On Sale ${ this.discountPercentage() } Off`}
-                </span>
+                {
+                DISPLAY_DISCOUNT_PERCENTAGE[country] && (
+                    <span block="Price" elem="Discount" mods={ { discount: this.haveDiscount() } }>
+                        { `On Sale ${ this.discountPercentage() } Off`}
+                    </span>
+                )
+                }
             </>
         );
     }
