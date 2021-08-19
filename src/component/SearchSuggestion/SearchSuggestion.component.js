@@ -107,7 +107,9 @@ class SearchSuggestion extends PureComponent {
     const { isArabic } = this.state;
     let brandUrl;
     let formattedBrandName;
-    const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
+    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      : "all";
     if (isArabic) {
       let requestedGender = getGenderInArabic(gender);
       let arabicAlphabetDigits =
@@ -275,7 +277,10 @@ class SearchSuggestion extends PureComponent {
   renderQuerySuggestion = (querySuggestions) => {
     const { query, count, isBrand } = querySuggestions;
     const { searchString, queryID, products = [] } = this.props;
-    const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
+    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      : "all";
+
     const fetchSKU = products.find(
       (item) =>
         item.name.toUpperCase().includes(query.toUpperCase()) ||
@@ -405,7 +410,10 @@ class SearchSuggestion extends PureComponent {
 
   renderProduct = (product) => {
     const { url, name, thumbnail_url, brand_name, price } = product;
-    const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
+    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      : "all";
+
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
 
     let parseLink = url.includes("catalogsearch/result")
@@ -553,8 +561,6 @@ class SearchSuggestion extends PureComponent {
   renderTrendingBrand = (brand, i) => {
     const { label = "", image_url } = brand;
     const { isArabic } = this.state;
-    const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
-    let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
     const urlName = label
       .replace("&", "")
       .replace(/'/g, "")
@@ -614,7 +620,10 @@ class SearchSuggestion extends PureComponent {
 
   renderTopSearch = ({ search, link }, i) => {
     const { isArabic } = this.state;
-    const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
+    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      : "all";
+
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
     return (
       <li key={i}>
@@ -651,7 +660,10 @@ class SearchSuggestion extends PureComponent {
 
   renderRecentSearch = ({ name, link }, i) => {
     const { isArabic } = this.state;
-    const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
+    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      : "all";
+
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
     return (
       <li key={i}>

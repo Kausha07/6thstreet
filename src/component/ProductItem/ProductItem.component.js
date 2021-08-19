@@ -6,18 +6,18 @@ import WishlistIcon from "Component/WishlistIcon";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { getStore } from "Store";
+import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { Product } from "Util/API/endpoint/Product/Product.type";
+import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import Algolia from "Util/API/provider/Algolia";
 import { isArabic } from "Util/App";
 import { getUUIDToken } from "Util/Auth";
+import BrowserDatabase from "Util/BrowserDatabase";
 import Event, {
   EVENT_GTM_PRODUCT_CLICK,
   SELECT_ITEM_ALGOLIA,
 } from "Util/Event";
 import "./ProductItem.style";
-import BrowserDatabase from "Util/BrowserDatabase";
-import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
-import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 class ProductItem extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
@@ -186,7 +186,9 @@ class ProductItem extends PureComponent {
     } else {
       urlWithQueryID = link;
     }
-    const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
+    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      : "all";
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
 
     let parseLink = urlWithQueryID.includes("catalogsearch/result")

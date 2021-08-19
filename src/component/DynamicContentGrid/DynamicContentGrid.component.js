@@ -9,8 +9,7 @@ import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
 import isMobile from "Util/Mobile";
 import { formatCDNLink } from "Util/Url";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
-import "./DynamicContentGrid.style";
-
+import "./DynamicContentGrid.style.scss";
 class DynamicContentGrid extends PureComponent {
   static propTypes = {
     items: PropTypes.arrayOf(
@@ -51,7 +50,9 @@ class DynamicContentGrid extends PureComponent {
     if (item_height >= 500 && items_per_row === 2) {
       contentClass = `Content_${i}`;
     }
-    const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
+    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      : "all";
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
     let parseLink = link.includes("/catalogsearch/result")
       ? link.split("&")[0] +
@@ -103,7 +104,9 @@ class DynamicContentGrid extends PureComponent {
   renderItemMobile = (item, i) => {
     const { link, url } = item;
     let ht = this.props.item_height.toString() + "px";
-    const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
+    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      : "all";
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
     let parseLink = link.includes("/catalogsearch/result")
       ? link.split("&")[0] +
