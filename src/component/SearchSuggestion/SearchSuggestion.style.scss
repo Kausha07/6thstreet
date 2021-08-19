@@ -18,6 +18,9 @@
   &-CloseContainer {
     display: flex;
     justify-content: flex-end;
+    .CloseContainer-Close {
+      height: 25px;
+    }
   }
 
   &-Content {

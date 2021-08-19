@@ -286,13 +286,83 @@ class SearchSuggestion extends PureComponent {
         item.name.toUpperCase().includes(query.toUpperCase()) ||
         item.sku.toUpperCase().includes(query.toUpperCase())
     );
-    if (isBrand) {
+    // will be good to work when all brands exists properly
+    // if (isBrand) {
+    //   return (
+    //     <li>
+    //       <Link
+    //         to={
+    //           encodeURI(
+    //             this.getBrandSuggestionUrl(
+    //               formatQuerySuggestions(query),
+    //               queryID
+    //             )
+    //           )
+    //         }
+    //         onClick={() =>
+    //           this.onSearchQueryClick(formatQuerySuggestions(query))
+    //         }
+    //       >
+    //         <div className="suggestion-details-box">
+    //           {getHighlightedText(formatQuerySuggestions(query), searchString)}
+    //           <div>{count}</div>
+    //         </div>
+    //       </Link>
+    //     </li>
+    //   );
+    // } else {
+    //   if (products.length === 1 && fetchSKU) {
+    //     return (
+    //       <li>
+    //         <Link
+    //           to={fetchSKU?.url}
+    //           onClick={() => this.onSearchQueryClick(query)}
+    //         >
+    //           <div className="suggestion-details-box text-capitalize">
+    //             {getHighlightedText(query, searchString)}
+    //           </div>
+    //         </Link>
+    //       </li>
+    //     );
+    //   } else {
+    //     return (
+    //       <li>
+    //         <Link
+    //           to={`${encodeURI(this.getCatalogUrl(query, gender, queryID))}`}
+    //           onClick={() =>
+    //             this.onSearchQueryClick(formatQuerySuggestions(query))
+    //           }
+    //         >
+    //           <div className="suggestion-details-box">
+    //             {getHighlightedText(
+    //               formatQuerySuggestions(query),
+    //               searchString
+    //             )}
+    //             <div>{count}</div>
+    //           </div>
+    //         </Link>
+    //       </li>
+    //     );
+    //   }
+    // }
+    if (products.length === 1 && fetchSKU) {
       return (
         <li>
           <Link
-            to={`/${encodeURI(
-              this.getBrandSuggestionUrl(formatQuerySuggestions(query), queryID)
-            )}`}
+            to={fetchSKU?.url}
+            onClick={() => this.onSearchQueryClick(query)}
+          >
+            <div className="suggestion-details-box text-capitalize">
+              {getHighlightedText(query, searchString)}
+            </div>
+          </Link>
+        </li>
+      );
+    } else {
+      return (
+        <li>
+          <Link
+            to={`${encodeURI(this.getCatalogUrl(query, gender, queryID))}`}
             onClick={() =>
               this.onSearchQueryClick(formatQuerySuggestions(query))
             }
@@ -304,40 +374,6 @@ class SearchSuggestion extends PureComponent {
           </Link>
         </li>
       );
-    } else {
-      if (products.length === 1 && fetchSKU) {
-        return (
-          <li>
-            <Link
-              to={fetchSKU?.url}
-              onClick={() => this.onSearchQueryClick(query)}
-            >
-              <div className="suggestion-details-box text-capitalize">
-                {getHighlightedText(query, searchString)}
-              </div>
-            </Link>
-          </li>
-        );
-      } else {
-        return (
-          <li>
-            <Link
-              to={`${encodeURI(this.getCatalogUrl(query, gender, queryID))}`}
-              onClick={() =>
-                this.onSearchQueryClick(formatQuerySuggestions(query))
-              }
-            >
-              <div className="suggestion-details-box">
-                {getHighlightedText(
-                  formatQuerySuggestions(query),
-                  searchString
-                )}
-                <div>{count}</div>
-              </div>
-            </Link>
-          </li>
-        );
-      }
     }
   };
 
