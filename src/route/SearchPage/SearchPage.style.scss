@@ -2,6 +2,7 @@
   width: var(--main-container-width-dsk);
   max-width: 1440px;
   margin-inline: auto;
+  margin: 0 auto;
   @include mobile {
     width: 100vw;
     padding-top: 160px;

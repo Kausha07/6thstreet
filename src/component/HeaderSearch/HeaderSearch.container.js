@@ -122,7 +122,16 @@ export class HeaderSearchContainer extends PureComponent {
         JSON.stringify(tempRecentSearches.reverse())
       );
     }
-  };
+    const queryID = productData?.queryID ? productData?.queryID : null;
+    let requestedGender = isArabic() ? getGenderInArabic(gender) : gender;
+    history.push(
+      `/catalogsearch/result/?q=${search}&gender=${requestedGender.replace(
+        requestedGender.charAt(0),
+        requestedGender.charAt(0).toUpperCase()
+      )}`
+    );
+  }
+
   hideSearchBar() {
     const { hideSearchBar } = this.props;
     if (hideSearchBar) {

@@ -9,7 +9,8 @@ import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
 import isMobile from "Util/Mobile";
 import { formatCDNLink } from "Util/Url";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
-import "./DynamicContentGrid.style.scss";
+import "./DynamicContentGrid.style";
+
 class DynamicContentGrid extends PureComponent {
   static propTypes = {
     items: PropTypes.arrayOf(

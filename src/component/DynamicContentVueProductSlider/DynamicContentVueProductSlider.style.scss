@@ -79,7 +79,10 @@
     width: 100%;
     overflow: auto;
     white-space: nowrap;
+    scrollbar-width: none;
+
     &_isHome {
+      scrollbar-width: none;
       &::-webkit-scrollbar {
         display: none;
       }
