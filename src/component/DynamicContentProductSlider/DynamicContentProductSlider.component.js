@@ -1,18 +1,11 @@
 /* eslint-disable no-constant-condition */
+import ProductItem from "Component/ProductItem";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
-
-import ProductItem from "Component/ProductItem";
-import Slider from "SourceComponent/Slider";
-import isMobile from "SourceUtil/Mobile/isMobile";
 import { Products } from "Util/API/endpoint/Product/Product.type";
 import { isArabic } from "Util/App";
 import DynamicContentVueProductSliderContainer from "./../DynamicContentVueProductSlider/DynamicContentVueProductSlider.container";
-import {
-  HOME_PAGE_TRANSLATIONS,
-  ITEMS_PER_PAGE,
-} from "./DynamicContentProductSlider.config";
-
+import { HOME_PAGE_TRANSLATIONS } from "./DynamicContentProductSlider.config";
 import "./DynamicContentProductSlider.style";
 
 class DynamicContentProductSlider extends PureComponent {
@@ -95,6 +88,7 @@ class DynamicContentProductSlider extends PureComponent {
           withViewAll
           key={`VueProductSliderContainer`}
           isHome={true}
+          pageType={"home"}
         />
         {/* );
                         })

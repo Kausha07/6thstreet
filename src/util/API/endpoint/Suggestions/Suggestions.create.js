@@ -2,7 +2,9 @@ import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { isArabic } from "Util/App";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { capitalizeFirstLetters } from "../../../../../packages/algolia-sdk/app/utils";
-const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
+const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+  ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+  : "all";
 
 const genders = {
   all: {
@@ -329,7 +331,6 @@ const checkForValidSuggestion = (value, arr) => {
     )
   )
     return false;
-
   if (isArabic()) {
     if (
       value?.toUpperCase() === getGenderInArabic(gender).toUpperCase() ||
