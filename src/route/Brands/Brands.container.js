@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import { doFetch } from '../../util/API/helper/Fetch';
+import ThirdPartyAPI from "../../util/API/provider/ThirdPartyAPI";
 import { DEFAULT_STATE_NAME } from 'Component/NavigationAbstract/NavigationAbstract.config';
 import { changeNavigationState } from 'Store/Navigation/Navigation.action';
 import { TOP_NAVIGATION_TYPE } from 'Store/Navigation/Navigation.reducer';
@@ -42,7 +43,8 @@ class BrandsContainer extends PureComponent {
 
     state = {
         brands: [],
-        isLoading: true
+        isLoading: true,
+        brandMapping: {}
     };
 
     containerFunctions = {
@@ -61,18 +63,22 @@ class BrandsContainer extends PureComponent {
     }
 
     requestBrandMapping = () => {
-        this.getBrandMappingData()
-
+        let brandMapping = this.getBrandMappingData();
     }
 
     async getBrandMappingData() {
-        const apiUrl = 'https://en-ae.6thstreet.com/cdn/config/brands.json';
+        const apiUrl = '/cdn/config/brands.json';
         fetch(apiUrl)
         .then((response) => response.json())
       .then((data) => {
-          return data
+        let ret = {};
+        Object.keys(data).forEach(key => {
+          ret[data[key]] = key;
+        });
+        this.setState({
+            brandMapping: ret
+        }, ()=>{console.log(this.state.brandMapping)})
       })
-      .catch((error) => reject(error));
     }
 
     updateHeaderState() {
@@ -137,11 +143,12 @@ class BrandsContainer extends PureComponent {
     }
 
     containerProps = () => {
-        const { brands, isLoading } = this.state;
+        const { brands, isLoading, brandMapping } = this.state;
 
         return {
             brands,
             isLoading,
+            brandMapping,
             type: getQueryParam('type', location)
         };
     };

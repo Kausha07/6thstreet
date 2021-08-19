@@ -46,8 +46,9 @@ class Brand extends PureComponent {
   getBrandUrl = (brandName) => {
     const { isArabic } = this.state;
     let name = brandName;
+    let brandMapping = this.props.brandMapping;
     if (isArabic) {
-      name = this.getKeyByValue(BRAND_MAPPING, brandName);
+      name = this.getKeyByValue(brandMapping, brandName);
     }
 
     name = name ? name : brandName;
