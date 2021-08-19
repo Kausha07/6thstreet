@@ -85,11 +85,11 @@ export class SearchSuggestionsDispatcher {
       }).autocompleteSearch(
         isArabic()
           ? {
-              query: search,
+              query: `${gender} ${search}`,
               limit: QUERY_SUGGESTION_LIMIT,
             }
           : {
-              query: search,
+              query: `${gender} ${search}`,
               limit: QUERY_SUGGESTION_LIMIT,
             }
       );
