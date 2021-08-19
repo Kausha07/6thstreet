@@ -7,7 +7,11 @@ import {
 } from "Store/PLP/PLP.action";
 import Algolia from "Util/API/provider/Algolia";
 import Logger from "Util/Logger";
-
+import isMobile from "Util/Mobile";
+import BrowserDatabase from "Util/BrowserDatabase";
+import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
+import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
+import { HOME_STATIC_FILE_KEY } from "Route/HomePage/HomePage.config";
 export class PLPDispatcher {
   async requestProductList(payload, dispatch, state) {
     const { options = {} } = payload;
@@ -68,9 +72,31 @@ export class PLPDispatcher {
     }
   }
 
+  getDevicePrefix() {
+    return isMobile.any() ? "m/" : "d/";
+  }
+  async requestPLPWidgetData(dispatch) {
+    // alert("fetching data");
+    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      : "all";
+
+    const devicePrefix = this.getDevicePrefix();
+    try {
+      const plpData = await getStaticFile(HOME_STATIC_FILE_KEY, {
+        $FILE_NAME: `${devicePrefix}${gender}_plp.json`,
+      });
+      dispatch(setPLPWidget(plpData));
+      // this.updatePlpWidgetData(plpData, dispatch);
+    } catch (e) {
+      // TODO: handle error
+      Logger.log(e);
+      console.log("plp", e);
+    }
+  }
+
   updatePlpWidgetData(payload, dispatch) {
-    const { category, data } = payload;
-    dispatch(setPLPWidget(category, data));
+    dispatch(setPLPWidget(payload));
   }
 
   _getInitalOptions(options = {}) {

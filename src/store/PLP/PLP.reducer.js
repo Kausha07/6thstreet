@@ -18,7 +18,7 @@ export const getInitialState = () => ({
   // initial data (filters, options)
   initialFilters: {},
   initialOptions: {},
-  plpWidgetData: {},
+  plpWidgetData: [],
 });
 
 export const formatFilters = (filters = {}) =>
@@ -74,10 +74,10 @@ export const PLPReducer = (state = getInitialState(), action) => {
 
   switch (type) {
     case SET_PLP_WIDGET_DATA:
-      const { category, data } = action;
+      const { plpWidgetData } = action;
       return {
-        category,
-        data,
+        ...state,
+        plpWidgetData,
       };
     case SET_PLP_PAGE:
       const { pageProducts, page } = action;

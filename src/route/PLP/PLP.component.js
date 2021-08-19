@@ -57,12 +57,36 @@ export class PLP extends PureComponent {
       );
   }
 
+  renderPLPWidget = () => {
+    const { plpWidgetData } = this.props;
+    console.log("plp", plpWidgetData);
+    console.log("plp", location);
+    const { pathname } = location;
+    const tagName = pathname
+      .replace(".html", "")
+      .replace("/", "")
+      .replaceAll("/", "_");
+
+    const widget = plpWidgetData.filter((item) => item.tag == tagName);
+    if (widget && widget.length == 0) {
+      return null;
+    }
+    console.log("plp widget", widget);
+
+    return (
+      <>
+        <h1>PLP Widget</h1>
+      </>
+    );
+  };
+
   render() {
     return (
       <main block="PLP">
         <ContentWrapper label={__("Product List Page")}>
           {this.renderPLPDetails()}
           {this.state.bannerData && this.renderBanner()}
+          {this.renderPLPWidget()}
           {this.renderPLPFilters()}
           {this.renderPLPPages()}
         </ContentWrapper>

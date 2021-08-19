@@ -4,10 +4,9 @@ export const SET_PLP_INIT_FILTERS = "SET_PLP_INIT_FILTERS";
 export const SET_PLP_PAGE = "SET_PLP_PAGE";
 export const SET_PLP_WIDGET_DATA = "SET_PLP_WIDGET_DATA";
 
-export const setPLPWidget = (category, data) => ({
+export const setPLPWidget = (data) => ({
   type: SET_PLP_WIDGET_DATA,
-  category,
-  data,
+  plpWidgetData: data,
 });
 export const setPLPPage = (pageProducts, page) => ({
   type: SET_PLP_PAGE,
