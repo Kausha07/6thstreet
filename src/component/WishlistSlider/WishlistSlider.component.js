@@ -43,8 +43,8 @@ class WishlistSlider extends PureComponent {
   renderHeader() {
     const { heading } = this.props;
     return (
-      <div block="VueProductSlider" elem="HeaderContainer">
-        <h4>{heading}</h4>
+      <div block="WishlistSliderHeader">
+        <h2>{heading}</h2>
       </div>
     );
   }

@@ -23,6 +23,7 @@ class PDPGalleryCrumb extends PureComponent {
     };
 
     renderVideo() {
+        const { options: { src } } = this.props;
         return 'video';
     }
 

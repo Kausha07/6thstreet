@@ -5,10 +5,10 @@ import React, { PureComponent } from "react";
 import { isArabic } from "Util/App";
 import { getUUID } from "Util/Auth";
 import { VUE_CAROUSEL_SHOW, VUE_CAROUSEL_SWIPE } from "Util/Event";
-import TrendingProductsVueSliderItem from "./TrendingProductsVueSlider.Item";
-import "./TrendingProductsVueSlider.style.scss";
+import RecommendedForYouVueSliderItem from "./RecommendedForYouVueSlider.Item";
+import "./RecommendedForYouVueSlider.style.scss";
 
-class TrendingProductsVueSlider extends PureComponent {
+class RecommendedForYouVueSlider extends PureComponent {
   static propTypes = {
     withViewAll: PropTypes.bool,
     sliderLength: PropTypes.number,
@@ -56,7 +56,7 @@ class TrendingProductsVueSlider extends PureComponent {
     } else {
       width = 220;
     }
-    let index = Math.floor(this.cmpRef.current.scrollLeft / width);
+    let index = Math.floor(target.scrollLeft / width);
     if (this.indexRef.current !== index) {
       this.indexRef.current = index;
       const productsToRender = this.getProducts();
@@ -104,9 +104,8 @@ class TrendingProductsVueSlider extends PureComponent {
   renderHeader() {
     const { heading } = this.props;
     return (
-      <div block="VueProductSlider" elem="HeaderContainer">
-        <h4>{heading}</h4>
-        {/* {this.viewAllBtn()} */}
+      <div block="recommendedForYou">
+        <h2>{heading}</h2>
       </div>
     );
   }
@@ -179,7 +178,7 @@ class TrendingProductsVueSlider extends PureComponent {
             {items.map((item) => {
               const { sku } = item;
               return (
-                <TrendingProductsVueSliderItem
+                <RecommendedForYouVueSliderItem
                   key={sku}
                   data={item}
                   ref={this.itemRef}
@@ -205,4 +204,4 @@ class TrendingProductsVueSlider extends PureComponent {
   }
 }
 
-export default TrendingProductsVueSlider;
+export default RecommendedForYouVueSlider;

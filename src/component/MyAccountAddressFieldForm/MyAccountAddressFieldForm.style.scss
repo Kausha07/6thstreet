@@ -99,7 +99,7 @@
     position: absolute;
     display: flex;
     align-items: center;
-    top: 14px;
+    top: 11px;
     left: 10px;
     font-size: 14px;
   }
@@ -125,7 +125,7 @@
       position: relative;
 
       input {
-        padding-left: 80px;
+        padding-left: 100px;
       }
     }
 
@@ -149,10 +149,10 @@
       margin-top: 20px;
 
       div {
+        display: flex;
         flex-direction: row-reverse;
         align-items: center;
         margin-top: 0;
-        display: inline-block;
       }
 
       label {
@@ -164,9 +164,6 @@
       }
     }
 
-    input {
-      padding-left: 100px;
-    }
   }
 
   .MyAccountBtn {

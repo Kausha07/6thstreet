@@ -40,60 +40,89 @@ export class HeaderSearchContainer extends PureComponent {
     onSearchClean: this.onSearchClean.bind(this),
     hideSearchBar: this.hideSearchBar.bind(this),
   };
+  checkForSKU = async (search) => {
+    const config = {
+      q: search,
+      page: 0,
+      limit: 2,
+    };
+    const { data } = await new Algolia().getPLP(config);
+    if (data && data.length === 1) {
+      return data[0];
+    }
+    return null;
+  };
+
   async onSearchSubmit() {
     const { history } = this.props;
     const { search } = this.state;
-    const {
-      AppState: { gender },
-    } = getStore().getState();
-    const PRODUCT_RESULT_LIMIT = 8;
-    let recentSearches =
-      JSON.parse(localStorage.getItem("recentSearches")) || [];
-    let tempRecentSearches = [];
-    // const queryID = getStore().getState().SearchSuggestions.queryID
-    //   ? getStore().getState().SearchSuggestions.queryID
-    //   : "";
-    const productData = await new Algolia().searchBy(
-      isArabic()
-        ? {
-            query: search,
-            limit: PRODUCT_RESULT_LIMIT,
-            gender: getGenderInArabic(gender),
-            addAnalytics: true,
-          }
-        : {
-            query: search,
-            limit: PRODUCT_RESULT_LIMIT,
-            gender: gender,
-            addAnalytics: true,
-          }
-    );
-    if (search.trim()) {
+    const filteredItem = await this.checkForSKU(search);
+    if (filteredItem) {
+      this.logRecentSearch(search);
+      history.push(filteredItem?.url.split(".com")[1]);
+    } else {
+      const {
+        AppState: { gender },
+      } = getStore().getState();
+      const PRODUCT_RESULT_LIMIT = 8;
+      const productData = await new Algolia().searchBy(
+        isArabic()
+          ? {
+              query: search,
+              limit: PRODUCT_RESULT_LIMIT,
+              gender: getGenderInArabic(gender),
+              addAnalytics: true,
+            }
+          : {
+              query: search,
+              limit: PRODUCT_RESULT_LIMIT,
+              gender: gender,
+              addAnalytics: true,
+            }
+      );
+      this.logRecentSearch(search);
+      const queryID = productData?.queryID ? productData?.queryID : null;
+      let requestedGender = isArabic() ? getGenderInArabic(gender) : gender;
+      history.push(
+        `/catalogsearch/result/?q=${search}&qid=${queryID}&gender=${requestedGender.replace(
+          requestedGender.charAt(0),
+          requestedGender.charAt(0).toUpperCase()
+        )}`
+      );
+      // history.push(
+      //   `/catalogsearch/result/?q=${search}&gender=${requestedGender.replace(
+      //     requestedGender.charAt(0),
+      //     requestedGender.charAt(0).toUpperCase()
+      //   )}`
+      // );
+    }
+  }
+
+  logRecentSearch = (searchQuery) => {
+    if (searchQuery.trim()) {
+      let recentSearches =
+        JSON.parse(localStorage.getItem("recentSearches")) || [];
+      let tempRecentSearches = [];
       if (recentSearches) {
         tempRecentSearches = [...recentSearches.reverse()];
       }
       tempRecentSearches = tempRecentSearches.filter(
-        (item) => item.name !== search
+        (item) => item.name !== searchQuery
       );
       if (tempRecentSearches.length > 4) {
         tempRecentSearches.shift();
         tempRecentSearches.push({
-          name: search,
+          name: searchQuery,
         });
       } else {
-        tempRecentSearches.push({ name: search });
+        tempRecentSearches.push({ name: searchQuery });
       }
       localStorage.setItem(
         "recentSearches",
         JSON.stringify(tempRecentSearches.reverse())
       );
     }
-    const queryID = productData?.queryID ? productData?.queryID : null;
-    let requestedGender = isArabic() ? getGenderInArabic(gender) : gender;
-    history.push(
-      `/catalogsearch/result/?q=${search}&qid=${queryID}&dFR[gender][0]=${requestedGender}`
-    );
-  }
+  };
 
   hideSearchBar() {
     const { hideSearchBar } = this.props;
@@ -108,9 +137,9 @@ export class HeaderSearchContainer extends PureComponent {
     } = prevProps;
     const { pathname } = location;
 
-    if (pathname !== prevPathname && pathname !== "/catalogsearch/result/") {
-      this.onSearchChange("");
-    }
+    // if (pathname !== prevPathname && pathname !== "/catalogsearch/result/") {
+    //   this.onSearchChange("");
+    // }
   }
 
   containerProps = () => {

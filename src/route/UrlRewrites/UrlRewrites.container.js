@@ -14,6 +14,7 @@ import {
   TYPE_NOTFOUND,
   TYPE_PRODUCT,
 } from "./UrlRewrites.config";
+import WebUrlParser from "Util/API/helper/WebUrlParser";
 
 export const mapStateToProps = (state) => ({
   locale: state.AppState.locale,
@@ -56,8 +57,9 @@ export class UrlRewritesContainer extends PureComponent {
     const { pathname } = location;
     const { locale, hideActiveOverlay } = this.props;
     const { locale: prevLocale } = prevProps;
+
     const { prevPathname, query } = this.state;
-    const { prevPathname: prevStatePathname, query: prevQuery } = prevState;
+    const { query: prevQuery } = prevState;
 
     if (query && query !== prevQuery) {
       let partialQuery = location.search;
@@ -65,26 +67,40 @@ export class UrlRewritesContainer extends PureComponent {
         if (partialQuery.indexOf("idx") !== -1) {
           return;
         } else {
-          partialQuery = partialQuery.substring(1);
-          history.push(`${pathname}?${query}&${partialQuery}`);
+          // If we are sharing URL with filters do if condition
+          if (location.href.includes("?")) {
+            let queryURL = new URL(
+              location.origin +
+                location.pathname +
+                "?" +
+                query +
+                "&%26" +
+                location.href.split("?")[1].split("&").join("&%26")
+            );
+            history.push({
+              pathname: `${pathname + partialQuery}`,
+              state: `${queryURL.href}`,
+            });
+          } else {
+            partialQuery = partialQuery.substring(1);
+            history.push(`${pathname}?${query}&${partialQuery}`);
+          }
         }
       } else {
-        history.push(`${pathname}?${query}`);
+        history.push({
+          pathname: `${pathname}`,
+          state: `${pathname}?${query}`,
+        });
       }
     }
-    // if (!location.search && query) {
-    //     history.push(`${pathname}?${query}`);
-    // }
 
-    if (
-      pathname !== prevPathname ||
-      locale !== prevLocale ||
-      !prevStatePathname
-    ) {
-      hideActiveOverlay();
-      document.body.style.overflow = "visible";
-      // Request URL rewrite if pathname or locale changed
-      this.requestUrlRewrite(true);
+    if (pathname !== prevPathname || locale !== prevLocale) {
+      if (!this.state.isLoading) {
+        hideActiveOverlay();
+        document.body.style.overflow = "visible";
+        // Request URL rewrite if pathname or locale changed
+        this.requestUrlRewrite(true);
+      }
     }
   }
 
@@ -95,10 +111,8 @@ export class UrlRewritesContainer extends PureComponent {
     // eslint-disable-next-line no-magic-numbers
     const magentoProductId = Number(slicedUrl.slice("3").split("/")[0]);
     const possibleSku = this.getPossibleSku();
-
     if (isUpdate) {
       this.setState({
-        prevPathname: urlParam,
         isLoading: true,
       });
     }
@@ -158,15 +172,8 @@ export class UrlRewritesContainer extends PureComponent {
   }
 
   containerProps = () => {
-    const {
-      isLoading,
-      type,
-      id,
-      sku,
-      brandDescription,
-      brandImg,
-      brandName,
-    } = this.state;
+    const { isLoading, type, id, sku, brandDescription, brandImg, brandName,query } =
+      this.state;
 
     return {
       isLoading,
@@ -176,6 +183,7 @@ export class UrlRewritesContainer extends PureComponent {
       brandDescription,
       brandImg,
       brandName,
+      query
     };
   };
 

@@ -6,16 +6,18 @@ import WishlistIcon from "Component/WishlistIcon";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { getStore } from "Store";
+import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { Product } from "Util/API/endpoint/Product/Product.type";
+import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import Algolia from "Util/API/provider/Algolia";
 import { isArabic } from "Util/App";
 import { getUUIDToken } from "Util/Auth";
+import BrowserDatabase from "Util/BrowserDatabase";
 import Event, {
   EVENT_GTM_PRODUCT_CLICK,
   SELECT_ITEM_ALGOLIA,
 } from "Util/Event";
 import "./ProductItem.style";
-
 class ProductItem extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
@@ -94,6 +96,8 @@ class ProductItem extends PureComponent {
     return null;
   }
 
+ 
+
   renderExclusive() {
     const {
       product: { promotion },
@@ -111,6 +115,21 @@ class ProductItem extends PureComponent {
     return null;
   }
 
+  renderOutOfStock() {
+    const {
+      product: { in_stock },
+    } = this.props;
+    if (in_stock === 0) {
+      return (
+        <span block="ProductItem" elem="OutOfStock">
+          {" "}
+          {"Out Of Stock"}
+        </span>
+      )
+    }
+
+    return null;
+  }
   renderImage() {
     const {
       product: { thumbnail_url },
@@ -118,7 +137,9 @@ class ProductItem extends PureComponent {
 
     return (
       <div>
-        <Image src={thumbnail_url} /> {this.renderExclusive()}{" "}
+        <Image src={thumbnail_url} /> 
+        {this.renderOutOfStock()} {" "}
+        {this.renderExclusive()}{" "}
         {this.renderColors()}{" "}
       </div>
     );
@@ -184,8 +205,20 @@ class ProductItem extends PureComponent {
     } else {
       urlWithQueryID = link;
     }
+    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      : "all";
+    let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
+
+    let parseLink = urlWithQueryID.includes("catalogsearch/result")
+      ? urlWithQueryID.split("&")[0] +
+        `&gender=${requestedGender.replace(
+          requestedGender.charAt(0),
+          requestedGender.charAt(0).toUpperCase()
+        )}`
+      : urlWithQueryID;
     const linkTo = {
-      pathname: urlWithQueryID,
+      pathname: parseLink,
       state: {
         product,
       },

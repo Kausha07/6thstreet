@@ -1,9 +1,11 @@
+import Link from "Component/Link";
 import { PureComponent } from "react";
+import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
+import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
+import { isArabic } from "Util/App";
+import BrowserDatabase from "Util/BrowserDatabase";
 // import Image from 'Component/Image';
 import { formatCDNLink } from "Util/Url";
-import Link from "Component/Link";
-import { isArabic } from "Util/App";
-
 import "./DynamicContentTwiceBanner.style";
 
 class DynamicContentTwiceBanner extends PureComponent {
@@ -42,6 +44,18 @@ class DynamicContentTwiceBanner extends PureComponent {
     //         </>
     //     );
     // }
+    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      : "all";
+    let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
+    let parseLink = button_link.includes("/catalogsearch/result")
+      ? button_link.split("&")[0] +
+        `&gender=${requestedGender.replace(
+          requestedGender.charAt(0),
+          requestedGender.charAt(0).toUpperCase()
+        )}`
+      : button_link;
+
     if (isTwiceBanner) {
       return (
         <div className="TwiceBanner">
@@ -50,7 +64,7 @@ class DynamicContentTwiceBanner extends PureComponent {
             <div className="TwiceBannerBlockChildSub">{subtitle}</div>
             <div className="TwiceBannerBlockChild">
               {" "}
-              <a href={button_link}>
+              <a href={parseLink}>
                 <button>{button_label}</button>
               </a>{" "}
             </div>
@@ -88,7 +102,12 @@ class DynamicContentTwiceBanner extends PureComponent {
     const { typeOfBanner } = this.props;
     const BannerPosition = typeOfBanner === "header" ? "Right" : "Left";
     return (
-      <div block="DynamicContentTwiceBanner" className="row" elem="Content" mods={{ isArabic }}>
+      <div
+        block="DynamicContentTwiceBanner"
+        className="row"
+        elem="Content"
+        mods={{ isArabic }}
+      >
         {BannerPosition === "Left" ? (
           <>
             <div

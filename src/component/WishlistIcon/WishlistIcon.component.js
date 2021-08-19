@@ -1,12 +1,17 @@
 /* eslint-disable fp/no-let */
 import PropTypes from "prop-types";
+import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
+import { getUUID } from "Util/Auth";
 import Event, {
   EVENT_GTM_PRODUCT_ADD_TO_WISHLIST,
   EVENT_GTM_PRODUCT_REMOVE_FROM_WISHLIST,
+  VUE_ADD_TO_WISHLIST,
+  VUE_REMOVE_TO_WISHLIST,
 } from "Util/Event";
 import { Favourite, FavouriteFilled } from "../Icons";
 import "./WishlistIcon.style";
+
 class WishlistIcon extends PureComponent {
   static propTypes = {
     sku: PropTypes.string.isRequired,
@@ -47,6 +52,22 @@ class WishlistIcon extends PureComponent {
           variant: wishListItem.product.color,
         },
       });
+      const locale = VueIntegrationQueries.getLocaleFromUrl();
+      VueIntegrationQueries.vueAnalayticsLogger({
+        event_name: VUE_REMOVE_TO_WISHLIST,
+        params: {
+          event: VUE_REMOVE_TO_WISHLIST,
+          pageType: "wishlist",
+          currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+          clicked: Date.now(),
+          prodPrice: wishListItem.product.price,
+          sourceCatgID: "",
+          sourceProdID: skuFromProps,
+          uuid: getUUID(),
+          referrer: "desktop",
+          // userID: userToken ? `user-${userToken}` : getUUIDToken(),
+        },
+      });
       return;
     }
 
@@ -64,6 +85,21 @@ class WishlistIcon extends PureComponent {
         name: data.name,
         price: itemPrice,
         variant: data.color,
+      },
+    });
+    VueIntegrationQueries.vueAnalayticsLogger({
+      event_name: VUE_ADD_TO_WISHLIST,
+      params: {
+        event: VUE_ADD_TO_WISHLIST,
+        pageType: "wishlist",
+        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+        clicked: Date.now(),
+        prodPrice: wishListItem.product.price,
+        sourceCatgID: "",
+        sourceProdID: skuFromProps,
+        uuid: getUUID(),
+        referrer: "desktop",
+        // userID: userToken ? `user-${userToken}` : getUUIDToken(),
       },
     });
   };

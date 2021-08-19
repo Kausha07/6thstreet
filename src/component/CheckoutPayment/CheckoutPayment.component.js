@@ -48,7 +48,6 @@ export class CheckoutPayment extends PureComponent {
             method: { m_code }
         } = this.props;
         const { isArabic } = this.state;
-        
         if (PAYMENTS_DATA[m_code]) {
             const {
                 name,
@@ -82,11 +81,9 @@ export class CheckoutPayment extends PureComponent {
                 m_code
             }
         } = this.props;
-
         if (
             HIDDEN_PAYMENTS.includes(m_code)
-            || (m_code === CHECKOUT_APPLE_PAY
-            && (!['AE', 'SA'].includes(getCountryFromUrl()) || !window.ApplePaySession))
+            || (  m_code === CHECKOUT_APPLE_PAY &&  !window.ApplePaySession)
         ) {
             return null;
         }

@@ -74,6 +74,7 @@ class DynamicContentVueSlider extends PureComponent {
             products={this.state.data}
             heading={this.props.layout.title}
             isHome={true}
+            pageType={"Home"}
           />
         )}
       </div>

@@ -8,7 +8,7 @@ import { getCurrency } from "Util/App/App";
 import { getUUID } from "Util/Auth";
 import { VUE_CAROUSEL_CLICK } from "Util/Event";
 
-class DynamicContentVueProductSliderItem extends PureComponent {
+class RecommendedForYouVueSliderItem extends PureComponent {
   static propTypes = {
     data: PropTypes.object.isRequired,
   };
@@ -148,7 +148,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
         ref={this.childRef}
       >
         <Link
-          to={link ? link.split("?_ga")[0] : url.split("?_ga")[0]}
+          to={link ? link : url}
           data-banner-type="vueSlider"
           block="VueProductSlider-Link"
           onClick={() => {
@@ -172,4 +172,4 @@ class DynamicContentVueProductSliderItem extends PureComponent {
   }
 }
 
-export default DynamicContentVueProductSliderItem;
+export default RecommendedForYouVueSliderItem;

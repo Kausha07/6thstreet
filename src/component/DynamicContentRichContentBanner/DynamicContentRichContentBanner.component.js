@@ -63,6 +63,7 @@ class DynamicContentRichContentBanner extends PureComponent {
       pathname: formatCDNLink(link),
       state: { plp_config },
     };
+  
     let ht, wd;
     if (screen.width > 900) {
       let ht1 = (item.height / item.width) * 600;
@@ -108,13 +109,17 @@ class DynamicContentRichContentBanner extends PureComponent {
             )}
           </div>
         </Link>
-        <div block="Label">
+        <div block="Label" className="customTag">
           {item.title && <p block="Label-Title">{item.title}</p>}
           {item.subtitle && <p block="Label-SubTitle">{item.subtitle}</p>}
           {item.button && (
-            <a href={item.button.link} block="Label-Button">
+            <Link
+              to={formatCDNLink(item.button.link)}
+              className="Label-Button"
+              data-banner-type="Label-Button"
+            >
               {item.button.label}
-            </a>
+            </Link>
           )}
         </div>
       </div>
