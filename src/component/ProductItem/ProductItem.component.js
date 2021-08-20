@@ -123,7 +123,7 @@ class ProductItem extends PureComponent {
       return (
         <span block="ProductItem" elem="OutOfStock">
           {" "}
-          {"Out Of Stock"}
+          {__("out of stock")}
         </span>
       )
     }
