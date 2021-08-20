@@ -331,8 +331,14 @@ export class PLPContainer extends PureComponent {
   }
 
   containerProps = () => {
-    const { brandDescription, brandImg, brandName, query, plpWidgetData } =
-      this.props;
+    const {
+      brandDescription,
+      brandImg,
+      brandName,
+      query,
+      plpWidgetData,
+      gender,
+    } = this.props;
 
     // isDisabled: this._getIsDisabled()
     return {
@@ -341,6 +347,7 @@ export class PLPContainer extends PureComponent {
       brandName,
       query,
       plpWidgetData,
+      gender,
     };
   };
 

@@ -127,10 +127,12 @@ class HeaderMainSection extends NavigationAbstract {
 
   isPLP() {
     const { type } = this.state;
+    // updated this.props with window. in case of any issue need to verify this in future
     const {
       location: { search, pathname = "" },
-    } = this.props;
+    } = window;
     const isSearch = pathname.includes("catalogsearch");
+    const tt = TYPE_CATEGORY === type && search && !isSearch;
 
     return TYPE_CATEGORY === type && search && !isSearch;
   }
@@ -195,6 +197,10 @@ class HeaderMainSection extends NavigationAbstract {
     if (isMobile.any() && activeOverlay === MOBILE_MENU_SIDEBAR_ID) {
       return null;
     }
+
+    const tt =
+      (this.isPLP() || this.isPDP() || this.getPageType() === TYPE_BRAND) &&
+      isMobile.any();
 
     return (this.isPLP() ||
       this.isPDP() ||

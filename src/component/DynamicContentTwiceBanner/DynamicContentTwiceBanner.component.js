@@ -28,7 +28,6 @@ class DynamicContentTwiceBanner extends PureComponent {
     const { title, subtitle, button_label, button_link } =
       typeOfBanner && this.props[typeOfBanner];
     const { url, link, height = "", width = "" } = item;
-
     // TODO: calculate aspect ratio to ensure images not jumping.
     // if (!link) {
     //     return (
@@ -48,13 +47,14 @@ class DynamicContentTwiceBanner extends PureComponent {
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "all";
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
-    let parseLink = button_link.includes("/catalogsearch/result")
-      ? button_link.split("&")[0] +
-        `&gender=${requestedGender.replace(
-          requestedGender.charAt(0),
-          requestedGender.charAt(0).toUpperCase()
-        )}`
-      : button_link;
+    let parseLink =
+      button_link && button_link.includes("/catalogsearch/result")
+        ? button_link.split("&")[0] +
+          `&gender=${requestedGender.replace(
+            requestedGender.charAt(0),
+            requestedGender.charAt(0).toUpperCase()
+          )}`
+        : button_link;
 
     if (isTwiceBanner) {
       return (

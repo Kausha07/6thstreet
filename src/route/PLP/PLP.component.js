@@ -6,7 +6,7 @@ import PLPDetails from "Component/PLPDetails";
 import PLPFilters from "Component/PLPFilters";
 import PLPPages from "Component/PLPPages";
 import CircleItemSliderSubPage from "../../component/DynamicContentCircleItemSlider/CircleItemSliderSubPage";
-
+import DynamicContent from "Component/DynamicContent";
 // import DynamicContentCircleItemSlider from '../../component/DynamicContentCircleItemSlider';
 import "./PLP.style";
 
@@ -72,12 +72,10 @@ export class PLP extends PureComponent {
       return null;
     }
     console.log("plp widget", widget);
+    const { gender } = this.props;
 
-    return (
-      <>
-        <h1>PLP Widget</h1>
-      </>
-    );
+    // return <h1>Plp Widget</h1>;
+    return <DynamicContent gender={gender} content={widget} />;
   };
 
   render() {

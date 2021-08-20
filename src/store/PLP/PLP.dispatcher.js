@@ -75,8 +75,8 @@ export class PLPDispatcher {
   getDevicePrefix() {
     return isMobile.any() ? "m/" : "d/";
   }
+
   async requestPLPWidgetData(dispatch) {
-    // alert("fetching data");
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "all";
@@ -87,11 +87,9 @@ export class PLPDispatcher {
         $FILE_NAME: `${devicePrefix}${gender}_plp.json`,
       });
       dispatch(setPLPWidget(plpData));
-      // this.updatePlpWidgetData(plpData, dispatch);
     } catch (e) {
       // TODO: handle error
       Logger.log(e);
-      console.log("plp", e);
     }
   }
 
