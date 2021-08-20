@@ -24,7 +24,8 @@ export default async function getTopSearches(options = {}) {
       )
         .then((response) => {
           if (!response.ok) {
-            throw Error(response.statusText);
+            console.log("response", response.ok);
+            // throw Error(response.statusText);
           }
 
           return response.json();

@@ -60,8 +60,8 @@ class TrendingProductsVueSlider extends PureComponent {
     if (this.indexRef.current !== index) {
       this.indexRef.current = index;
       const productsToRender = this.getProducts();
-      let sourceProdID = productsToRender[index].sku;
-      let sourceCatgID = productsToRender[index].category;
+      let sourceProdID = productsToRender?.[index]?.sku;
+      let sourceCatgID = productsToRender?.[index]?.category;
       const locale = VueIntegrationQueries.getLocaleFromUrl();
       VueIntegrationQueries.vueAnalayticsLogger({
         event_name: VUE_CAROUSEL_SWIPE,

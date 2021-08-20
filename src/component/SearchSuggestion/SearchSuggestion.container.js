@@ -129,7 +129,7 @@ export class SearchSuggestionContainer extends PureComponent {
     }
   }
 
-  getPdpSearchWidgetData() {
+  async getPdpSearchWidgetData() {
     const { gender } = this.props;
     const userData = BrowserDatabase.getItem("MOE_DATA");
     const query = {
@@ -180,7 +180,10 @@ export class SearchSuggestionContainer extends PureComponent {
     const countryCodeFromUrl = getLocaleFromUrl();
     const lang = isArabic() ? "arabic" : "english";
     sourceQuerySuggestionIndex = this.getAlgoliaIndex(countryCodeFromUrl, lang);
-    this.getPdpSearchWidgetData();
+    const { gender } = this.props;
+    if (gender !== "home") {
+      this.getPdpSearchWidgetData();
+    }
     // this.getTrendingProducts();
     document.body.classList.add("isSuggestionOpen");
   }

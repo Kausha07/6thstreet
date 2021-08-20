@@ -46,7 +46,7 @@ class DynamicContentTwiceBanner extends PureComponent {
     // }
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
-      : "all";
+      : "home";
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
     let parseLink = button_link.includes("/catalogsearch/result")
       ? button_link.split("&")[0] +

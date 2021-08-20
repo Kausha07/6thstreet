@@ -96,8 +96,6 @@ class ProductItem extends PureComponent {
     return null;
   }
 
- 
-
   renderExclusive() {
     const {
       product: { promotion },
@@ -125,7 +123,7 @@ class ProductItem extends PureComponent {
           {" "}
           {"Out Of Stock"}
         </span>
-      )
+      );
     }
 
     return null;
@@ -137,10 +135,8 @@ class ProductItem extends PureComponent {
 
     return (
       <div>
-        <Image src={thumbnail_url} /> 
-        {this.renderOutOfStock()} {" "}
-        {this.renderExclusive()}{" "}
-        {this.renderColors()}{" "}
+        <Image src={thumbnail_url} />
+        {this.renderOutOfStock()} {this.renderExclusive()} {this.renderColors()}{" "}
       </div>
     );
   }
@@ -207,7 +203,7 @@ class ProductItem extends PureComponent {
     }
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
-      : "all";
+      : "home";
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
 
     let parseLink = urlWithQueryID.includes("catalogsearch/result")

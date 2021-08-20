@@ -3,10 +3,12 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { CUSTOMER } from "Store/MyAccount/MyAccount.dispatcher";
 import BrowserDatabase from "Util/BrowserDatabase";
+import EVENT_PROMOTION_IMPRESSION from "Util/Event";
 import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
 import AddToCartEvent from "./events/AddToCart.event";
 import AddToWishlistEvent from "./events/AddToWishlist.event";
 import BannerClickEvent from "./events/BannerClickEvent.event";
+import BannerImpressionEvent from "./events/BannerImpression.event";
 import BrandsClickEvent from "./events/BrandsClick.event";
 import CheckoutEvent from "./events/Checkout.event";
 import CheckoutOptionEvent from "./events/CheckoutOption.event";
@@ -20,9 +22,7 @@ import RemoveFromWishlistEvent from "./events/RemoveFromWishlist.event";
 import TrendingBrandsClickEvent from "./events/TrendingBrandsClick.event";
 import TrendingTagsClickEvent from "./events/TrendingTagsClick.event";
 import WishlistClickEvent from "./events/WishlistClick.event";
-import BannerImpressionEvent from "./events/BannerImpression.event";
 import Scripts from "./Scripts";
-import EVENT_PROMOTION_IMPRESSION from "Util/Event";
 
 /**
  * Event list
@@ -307,7 +307,6 @@ class GoogleTagManager extends PureComponent {
   registerEvents() {
     this.events = Object.entries(GoogleTagManager.eventList || {}).reduce(
       (acc, [name, Event]) => {
-        console.log({ name, Event });
         acc[name] = new Event(name, this);
         acc[name].bindEvent();
 
