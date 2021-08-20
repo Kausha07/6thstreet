@@ -109,7 +109,7 @@ class SearchSuggestion extends PureComponent {
     let formattedBrandName;
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
-      : "all";
+      : "home";
     if (isArabic) {
       let requestedGender = getGenderInArabic(gender);
       let arabicAlphabetDigits =
@@ -279,7 +279,7 @@ class SearchSuggestion extends PureComponent {
     const { searchString, queryID, products = [] } = this.props;
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
-      : "all";
+      : "home";
 
     const fetchSKU = products.find(
       (item) =>
@@ -448,7 +448,7 @@ class SearchSuggestion extends PureComponent {
     const { url, name, thumbnail_url, brand_name, price } = product;
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
-      : "all";
+      : "home";
 
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
 
@@ -658,7 +658,7 @@ class SearchSuggestion extends PureComponent {
     const { isArabic } = this.state;
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
-      : "all";
+      : "home";
 
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
     return (
@@ -698,7 +698,7 @@ class SearchSuggestion extends PureComponent {
     const { isArabic } = this.state;
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
-      : "all";
+      : "home";
 
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
     return (
@@ -756,14 +756,18 @@ class SearchSuggestion extends PureComponent {
     if (!isActive) {
       return null;
     }
+    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      : "home";
+    console.log("gender", gender);
 
-    if (isEmpty && isActive) {
+    if (isEmpty && isActive && gender !== "home") {
       return this.renderEmptySearch();
     }
 
-    if (inNothingFound && querySuggestions.length === 0) {
-      return this.renderNothingFound();
-    }
+    // if (inNothingFound && querySuggestions.length === 0) {
+    //   return this.renderNothingFound();
+    // }
 
     return this.renderSuggestions();
   }

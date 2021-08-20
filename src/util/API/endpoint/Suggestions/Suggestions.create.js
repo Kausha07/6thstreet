@@ -4,12 +4,12 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import { capitalizeFirstLetters } from "../../../../../packages/algolia-sdk/app/utils";
 const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
   ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
-  : "all";
+  : "home";
 
 const genders = {
   all: {
-    label: "All",
-    value: "all",
+    label: "Home",
+    value: "home",
   },
   women: {
     label: "Women",
@@ -66,7 +66,7 @@ const addSuggestion = (
 };
 
 const checkForQueryWithGender = (query) => {
-  if (gender === "all") return true;
+  if (gender === "home") return true;
   let regexStr;
   switch (gender) {
     case "women":
@@ -351,11 +351,11 @@ const checkForValidSuggestion = (value, arr) => {
       return false;
   }
 
-  if (gender !== "all") {
+  if (gender !== "home") {
     let { all, [gender]: selectedGender, ...filters } = genders;
 
     Object.keys(filters).forEach((filter) => {
-      if (filter !== "all" && filter !== gender) {
+      if (filter !== "home" && filter !== gender) {
         let regex = new RegExp(
           isArabic() ? `${getGenderInArabic(filter)}` : `\\b${filter}\\b`,
           "i"
@@ -405,7 +405,7 @@ export const formatQuerySuggestions = (query) => {
   let avoidFilter = isArabic() ? getGenderInArabic(gender) : gender;
   if (checkForKidsFilterQuery(capitalizedQuery))
     avoidFilter = isArabic() ? getGenderInArabic("kids") : "kids";
-  else if (gender === "all") return capitalizedQuery;
+  else if (gender === "home") return capitalizedQuery;
   let regex = new RegExp(
     isArabic() ? `${avoidFilter}` : `\\b${avoidFilter}\\b`,
     "i"
