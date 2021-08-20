@@ -27,13 +27,13 @@ const genders = {
 
 const checkForKidsFilterQuery = (query) => {
   return (
-    query.toUpperCase().includes(__("KIDS")) ||
-    query.toUpperCase().includes(__("GIRL")) ||
-    query.toUpperCase().includes(__("GIRLS")) ||
-    query.toUpperCase().includes(__("BOY")) ||
-    query.toUpperCase().includes(__("BOYS")) ||
-    query.toUpperCase().includes(__("BABY GIRL")) ||
-    query.toUpperCase().includes(__("BABY BOY"))
+    query?.toUpperCase().includes(__("KIDS")) ||
+    query?.toUpperCase().includes(__("GIRL")) ||
+    query?.toUpperCase().includes(__("GIRLS")) ||
+    query?.toUpperCase().includes(__("BOY")) ||
+    query?.toUpperCase().includes(__("BOYS")) ||
+    query?.toUpperCase().includes(__("BABY GIRL")) ||
+    query?.toUpperCase().includes(__("BABY BOY"))
   );
 };
 
@@ -333,7 +333,7 @@ const checkForValidSuggestion = (value, arr) => {
     return false;
   if (isArabic()) {
     if (
-      value?.toUpperCase() === getGenderInArabic(gender).toUpperCase() ||
+      value?.toUpperCase() === getGenderInArabic(gender)?.toUpperCase() ||
       value?.toUpperCase() === __("KIDS BABY GIRL") ||
       value?.toUpperCase() === __("KIDS GIRL") ||
       value?.toUpperCase() === __("KIDS BOY") ||
@@ -342,7 +342,7 @@ const checkForValidSuggestion = (value, arr) => {
       return false;
   } else {
     if (
-      value?.toUpperCase() === gender.toUpperCase() ||
+      value?.toUpperCase() === gender?.toUpperCase() ||
       value?.toUpperCase() === "KIDS BABY GIRL" ||
       value?.toUpperCase() === "KIDS GIRL" ||
       value?.toUpperCase() === "KIDS BOY" ||
@@ -446,5 +446,7 @@ export const getGenderInArabic = (gender) => {
       return "نساء";
     case "kids":
       return "أطفال";
+    case "home":
+      return "منزل";
   }
 };

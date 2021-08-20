@@ -143,18 +143,28 @@ class SearchSuggestion extends PureComponent {
     return brandUrl;
   };
 
-  getCatalogUrl = (query, gender, queryID) => {
+  getCatalogUrl = (query, gender, queryID, brandValue = null) => {
     const { isArabic } = this.state;
     let requestedGender = gender;
+    let catalogUrl;
     if (isArabic) {
       requestedGender = getGenderInArabic(gender);
     }
-    const catalogUrl = `/catalogsearch/result/?q=${formatQuerySuggestions(
-      query
-    )}&gender=${requestedGender.replace(
-      requestedGender.charAt(0),
-      requestedGender.charAt(0).toUpperCase()
-    )}`;
+    if (brandValue) {
+      catalogUrl = `/catalogsearch/result/?q=${formatQuerySuggestions(
+        query
+      )}&gender=${requestedGender.replace(
+        requestedGender.charAt(0),
+        requestedGender.charAt(0).toUpperCase()
+      )}&brand_name=${brandValue}`;
+    } else {
+      catalogUrl = `/catalogsearch/result/?q=${formatQuerySuggestions(
+        query
+      )}&gender=${requestedGender.replace(
+        requestedGender.charAt(0),
+        requestedGender.charAt(0).toUpperCase()
+      )}`;
+    }
     return catalogUrl;
   };
 
@@ -275,12 +285,12 @@ class SearchSuggestion extends PureComponent {
   }
 
   renderQuerySuggestion = (querySuggestions) => {
-    const { query, count, isBrand } = querySuggestions;
+    const { query, count, isBrand, filter } = querySuggestions;
     const { searchString, queryID, products = [] } = this.props;
+    const brandValue = filter?.find((item) => (item.type = "brand"))?.value;
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
-
     const fetchSKU = products.find(
       (item) =>
         item.name.toUpperCase().includes(query.toUpperCase()) ||
@@ -362,7 +372,14 @@ class SearchSuggestion extends PureComponent {
       return (
         <li>
           <Link
-            to={`${encodeURI(this.getCatalogUrl(query, gender, queryID))}`}
+            to={`${encodeURI(
+              this.getCatalogUrl(
+                query,
+                gender,
+                queryID,
+                !brandValue?.includes("///") ? brandValue : null
+              )
+            )}`}
             onClick={() =>
               this.onSearchQueryClick(formatQuerySuggestions(query))
             }
@@ -759,7 +776,6 @@ class SearchSuggestion extends PureComponent {
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
-    console.log("gender", gender);
 
     if (isEmpty && isActive && gender !== "home") {
       return this.renderEmptySearch();
