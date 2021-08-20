@@ -55,14 +55,22 @@ export const combineFilters = (filters = {}, _initialFilters) => (
         // if there is at least one filter selected - return all possible
         const { data: initData } = _initialFilters[key];
 
+        let combData;
+        if(key === 'in_stock'){
+            combData = {
+                ...data
+            }
+        }else{
+            combData = {
+                ...initData,
+                ...data
+            }
+        }
         return {
             ...acc,
             [key]: {
                 ...filter,
-                data: {
-                    ...initData,
-                    ...data
-                }
+                data:combData
             }
         };
     }, {})
