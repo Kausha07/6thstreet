@@ -53,29 +53,28 @@ export const combineFilters = (filters = {}, _initialFilters) =>
             };
         } */
 
-        // if there is at least one filter selected - return all possible
-        const { data: initData } = _initialFilters[key];
+    // if there is at least one filter selected - return all possible
+    const { data: initData } = _initialFilters[key];
 
-        let combData;
-        if(key === 'in_stock'){
-            combData = {
-                ...data
-            }
-        }else{
-            combData = {
-                ...initData,
-                ...data
-            }
-        }
-        return {
-            ...acc,
-            [key]: {
-                ...filter,
-                data:combData
-            }
-        };
-    }, {})
-);
+    let combData;
+    if (key === "in_stock") {
+      combData = {
+        ...data,
+      };
+    } else {
+      combData = {
+        ...initData,
+        ...data,
+      };
+    }
+    return {
+      ...acc,
+      [key]: {
+        ...filter,
+        data: combData,
+      },
+    };
+  }, {});
 
 // TODO: implement initial reducer, needed to handle filter count
 export const PLPReducer = (state = getInitialState(), action) => {
