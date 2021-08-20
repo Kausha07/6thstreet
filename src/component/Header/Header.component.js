@@ -9,9 +9,14 @@ import MobileMenuSidebar from "Component/MobileMenuSideBar/MobileMenuSidebar.com
 import { MOBILE_MENU_SIDEBAR_ID } from "Component/MobileMenuSideBar/MoblieMenuSideBar.config";
 import OfflineNotice from "Component/OfflineNotice";
 import isMobile from "Util/Mobile";
+import { connect } from "react-redux";
+
 
 import "./Header.style";
 
+export const mapStateToProps = (state) => {
+  return  {checkoutDetails: state.CartReducer.checkoutDetails}
+};
 export class Header extends PureComponent {
   static propTypes = {
     navigationState: PropTypes.shape({
@@ -73,13 +78,15 @@ export class Header extends PureComponent {
   render() {
     const {
       navigationState: { name },
+      checkoutDetails
     } = this.props;
+    const { isMobile } = this.state;
     const isCheckout = this.getIsCheckout();
     this.shouldChatBeHidden();
     return (
       <>
         <header block="Header" mods={{ name }}>
-          {isCheckout ? null : this.headerSections.map(this.renderSection)}
+          {isCheckout   && !checkoutDetails ?  null :isMobile && checkoutDetails ? null :  this.headerSections.map(this.renderSection)}
           <MobileMenuSidebar activeOverlay={MOBILE_MENU_SIDEBAR_ID} />
         </header>
         <OfflineNotice />
@@ -88,4 +95,4 @@ export class Header extends PureComponent {
   }
 }
 
-export default withRouter(Header);
+export default connect(mapStateToProps)(withRouter(Header));

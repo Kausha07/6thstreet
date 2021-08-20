@@ -44,6 +44,7 @@ export class HomePageContainer extends PureComponent {
     dynamicContent: [],
     isLoading: true,
     defaultGender: "women",
+    isMobile: isMobile.any(),
   };
 
   constructor(props) {
@@ -121,6 +122,20 @@ export class HomePageContainer extends PureComponent {
     return isMobile.any() ? "m/" : "d/";
   }
 
+  async fetchDataFromLocal() {
+    const { isMobile } = this.state;
+    let fileName = "women.json";
+    if (isMobile) {
+      fileName = "women_mobile.json";
+    }
+    return fetch(fileName, {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+  }
+
   async requestDynamicContent(isUpdate = false) {
     const { gender } = this.props;
     const devicePrefix = this.getDevicePrefix();
@@ -129,29 +144,44 @@ export class HomePageContainer extends PureComponent {
       this.setState({ isLoading: true });
     }
 
-    try {
-      const dynamicContent = await getStaticFile(
-        HOME_STATIC_FILE_KEY,
-        { $FILE_NAME: `${devicePrefix}${gender}.json` }
-        // { $FILE_NAME: `http://mobilecdn.6thstreet.com/resources/20190121/en-ae/women.json` }
-      );
+    // TODO commented thiss try catch block temp uncomment after development
+    // try {
+    //   const dynamicContent = await getStaticFile(
+    //     HOME_STATIC_FILE_KEY,
+    //     { $FILE_NAME: `${devicePrefix}${gender}.json` }
+    //     // { $FILE_NAME: `http://mobilecdn.6thstreet.com/resources/20190121/en-ae/women.json` }
+    //   );
 
+    //   this.setState({
+    //     dynamicContent: Array.isArray(dynamicContent) ? dynamicContent : [],
+    //     isLoading: false,
+    //   });
+    // } catch (e) {
+    //   // TODO: handle error
+    //   Logger.log(e);
+    // }
+
+    // // TODO remove this try catch block after development
+    try {
+      const response = await (await this.fetchDataFromLocal()).json();
+      const dynamicContent = response.data ? response.data : [];
       this.setState({
         dynamicContent: Array.isArray(dynamicContent) ? dynamicContent : [],
         isLoading: false,
       });
-    } catch (e) {
-      // TODO: handle error
+    } catch (error) {
       Logger.log(e);
     }
   }
 
   containerProps = () => {
+    const { gender } = this.props;
     const { dynamicContent, isLoading } = this.state;
 
     return {
       dynamicContent,
       isLoading,
+      gender,
     };
   };
 

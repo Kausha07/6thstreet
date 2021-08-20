@@ -1,10 +1,8 @@
-import PropTypes from "prop-types";
-import { PureComponent } from "react";
-
 import PLPPage from "Component/PLPPage";
 import PLPPagePlaceholder from "Component/PLPPagePlaceholder";
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
 import { Products } from "Util/API/endpoint/Product/Product.type";
-
 import "./PLPPages.style";
 
 class PLPPages extends PureComponent {
@@ -24,10 +22,9 @@ class PLPPages extends PureComponent {
 
   renderPage = ([key, page]) => {
     const { products, isPlaceholder } = page;
-    const { impressions } = this.props;
-
+    const { impressions,query } = this.props;
     if (isPlaceholder) {
-      return <PLPPagePlaceholder key={key} pageIndex={key} />;
+      return <PLPPagePlaceholder key={key} pageIndex={key} query={query} />;
     }
 
     return <PLPPage key={key} products={products} impressions={impressions} />;

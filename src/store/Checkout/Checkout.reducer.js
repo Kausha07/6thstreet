@@ -3,7 +3,7 @@ import {
 } from './Checkout.action';
 
 export const getInitialState = () => ({
-    shipping: {}
+    shipping: {},
 });
 
 export const CheckoutReducer = (state = getInitialState(), action) => {
@@ -15,7 +15,7 @@ export const CheckoutReducer = (state = getInitialState(), action) => {
 
         return {
             ...state,
-            shipping
+            shipping,
         };
 
     default:

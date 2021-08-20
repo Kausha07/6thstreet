@@ -1,7 +1,19 @@
 .PDP {
-    max-width: 1440px;
-    margin: 0 auto;
-    @include mobile() {
-        margin-top: -64px;
+  max-width: 1440px;
+  margin: 0 auto;
+  @include mobile() {
+    margin-top: -64px;
+  }
+  @include tablet {
+    // margin-inline: 30px;
+  }
+  .VueProductSlider {
+    &-Container {
+      @include tablet {
+        padding: 0;
+        margin: 0;
+        width: 100%;
+      }
     }
+  }
 }

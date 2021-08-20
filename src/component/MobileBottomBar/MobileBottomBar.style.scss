@@ -1,163 +1,175 @@
 :root {
-    --active-button-header-color: #f96446;
-    --inactive-button-header-color: #4a4a4a;
+  --active-button-header-color: #f96446;
+  --inactive-button-header-color: #4a4a4a;
 }
 
 @include before-desktop {
-    .HeaderAccount-PopUp,
-    .HeaderAccount-PopUp_isHidden_undefined {
-        display: block;
-        overflow-y: auto;
-    }
+  .HeaderAccount-PopUp,
+  .HeaderAccount-PopUp_isHidden_undefined {
+    display: block;
+    overflow-y: auto;
+  }
 
-    .MyAccountOverlay-Heading {
-        display: block;
-    }
+  .MyAccountOverlay-Heading {
+    display: block;
+  }
 
-    .MyAccountOverlay {
-        display: block;
-        height: 100%;
-        padding-top: 0;
-    }
+  .MyAccountOverlay {
+    display: block;
+    height: 100%;
+    padding-top: 0;
+  }
 
-    .MyAccountOverlay-Action_state_createAccount {
-        padding-top: 0;
-    }
+  .MyAccountOverlay-Action_state_createAccount {
+    padding-top: 0;
+  }
 
-    .MyAccountOverlay-Image {
-        object-position: 0;
-        width: 100%;
-    }
+  .MyAccountOverlay-Image {
+    object-position: 0;
+    width: 100%;
+  }
 
-    .MyAccountOverlay-ForgotPasswordSubheading {
-        font-weight: inherit;
-    }
+  .MyAccountOverlay-ForgotPasswordSubheading {
+    font-weight: inherit;
+  }
 }
 
 @include mobile {
-    .MyAccountOverlay-Action {
-        display: block;
-    }
+  .MyAccountOverlay-Action {
+    display: block;
+  }
 
-    .MyAccountOverlay-Buttons {
-        margin: 30px;
-    }
+  .MyAccountOverlay-Buttons {
+    margin: 30px;
+  }
 }
 
 .MyAccountOverlay-Button,
 .Button {
-    &:hover {
-        background-color: var(--black-color);
-    }
+  &:hover {
+    background-color: var(--black-color);
+  }
 }
 
 .MyAccountOverlay-Button_isSignIn::after {
-    background: none;
+  background: none;
 }
 
 .MobileBottomBar {
-    display: flex;
-    z-index: 90;
-    background: $white;
-    height: 70px;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    border-top: 1px solid var(--light-gray);
-    transition: .1s ease;
+  display: flex;
+  z-index: 90;
+  background: $white;
+  height: 70px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  border-top: 1px solid var(--light-gray);
+  transition: 0.1s ease;
+  &.hidden {
+    display: none;
+  }
 
-    &_isIPhoneNavigationHidden {
-        height: 113px;
+  &_isIPhoneNavigationHidden {
+    height: 113px;
+  }
+
+  @include desktop {
+    display: none;
+    z-index: 0;
+    background: none;
+    height: auto;
+    position: relative;
+  }
+
+  &-HomeAndBrand {
+    display: block;
+    text-transform: none;
+    font-size: 10px;
+    font-weight: var(--fw-medium);
+    letter-spacing: -0.2px;
+    line-height: 14px;
+    color: var(--inactive-button-header-color);
+    height: 40px;
+    width: 20%;
+    padding: 10px 0 0;
+    text-align: center;
+    margin: 0;
+
+    &::before {
+      content: "";
+      right: 0;
+      background-size: 27px;
+      width: 27px;
+      height: 29px;
+      display: inline-block;
+      font-size: 0;
+      filter: invert(26%) sepia(2%) saturate(21%) hue-rotate(43deg)
+        brightness(90%) contrast(80%);
+    }
+
+    &_isHomeButton {
+      &::before {
+        background: url(./icons/home-gray@2x.png) no-repeat center center;
+        background-size: 24px;
+      }
+    }
+
+    &_isBrandButton {
+      &::before {
+        background: url(./icons/brands-gray@2x.png) no-repeat center center;
+        background-size: 27px;
+      }
+    }
+
+    &_isActive {
+      color: var(--active-button-header-color);
+
+      &::before {
+        filter: invert(43%) sepia(60%) saturate(1535%) hue-rotate(335deg)
+          brightness(107%) contrast(95%);
+      }
     }
 
     @include desktop {
+      display: none;
+    }
+  }
+
+  > div {
+    width: 20%;
+  }
+
+  &-WishListAndAccount {
+    width: 100%;
+  }
+
+  .HeaderMenu {
+    width: 20%;
+    padding: 12px 0 0;
+
+    .Menu {
+      &-Container {
         display: none;
-        z-index: 0;
-        background: none;
-        height: auto;
-        position: relative;
+      }
     }
 
-    &-HomeAndBrand {
-        display: block;
-        text-transform: none;
-        font-size: 10px;
-        font-weight: var(--fw-medium);
-        letter-spacing: -0.2px;
-        line-height: 14px;
-        color: var(--inactive-button-header-color);
-        height: 40px;
-        width: 20%;
-        padding: 10px 0 0;
-        text-align: center;
-        margin: 0;
+    &-Button {
+      width: 100%;
+      margin: 0;
 
-        &::before {
-            content: "";
-            right: 0;
-            background-size: 27px;
-            width: 27px;
-            height: 29px;
-            display: inline-block;
-            font-size: 0;
-            filter: invert(26%) sepia(2%) saturate(21%) hue-rotate(43deg) brightness(90%) contrast(80%);
-        }
-
-        &_isHomeButton {
-            &::before{
-                background: url(./icons/home-gray@2x.png) no-repeat center center;
-                background-size: 24px;
-            }
-        }
-
-        &_isBrandButton {
-            &::before{
-                background: url(./icons/brands-gray@2x.png) no-repeat center center;
-                background-size: 27px;
-            }
-        }
-
-        &_isActive {
-            color: var(--active-button-header-color);
-
-            &::before {
-                filter: invert(43%) sepia(60%) saturate(1535%) hue-rotate(335deg) brightness(107%) contrast(95%);
-            }
-        }
-
-
-        @include desktop {
-            display: none;
-        }
+      &::before {
+        background-position: center;
+        background-size: 28px;
+        height: 29px;
+      }
     }
+  }
+  &-WishListAndAccount{
+    label{
+      @include mobile{
+        line-height: 1;
+      }
 
-    > div {
-        width: 20%;
     }
-
-    &-WishListAndAccount {
-        width: 100%;
-    }
-
-    .HeaderMenu {
-        width: 20%;
-        padding: 12px 0 0;
-
-        .Menu {
-            &-Container {
-                display: none;
-            }
-        }
-
-        &-Button {
-            width: 100%;
-            margin: 0;
-
-            &::before{
-                background-position: center;
-                background-size: 28px;
-                height: 29px;
-            }
-        }
-    }
+  }
 }

@@ -1,13 +1,17 @@
 .PageWrapper {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
+  height: 100vh;
+  //   display: flex;
+  //   flex-direction: column;
+  .HomePage,
+  .SearchPage {
+    min-height: 500px;
+  }
 
-    &-Content {
-        flex: 1;
-    }
+  &-Content {
+    flex: 1;
+  }
 
-    &_isArabic {
-        direction: rtl;
-    }
+  &_isArabic {
+    direction: rtl;
+  }
 }

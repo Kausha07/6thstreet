@@ -23,6 +23,8 @@ import { ADD_TO_CART_ALGOLIA } from "Util/Event";
 import history from "Util/History";
 import isMobile from "Util/Mobile";
 import CheckoutSuccess from "./CheckoutSuccess.component";
+import CartDispatcher from "Store/Cart/Cart.dispatcher";
+
 
 export const BreadcrumbsDispatcher = import(
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
@@ -57,6 +59,7 @@ export const mapDispatchToProps = (dispatch) => ({
     MyAccountDispatcher.then(({ default: dispatcher }) =>
       dispatcher.requestCustomerData(dispatch)
     ),
+    setCheckoutDetails: (checkoutDetails) => CartDispatcher.setCheckoutStep(dispatch,checkoutDetails),
 });
 
 export class CheckoutSuccessContainer extends PureComponent {
@@ -138,7 +141,10 @@ export class CheckoutSuccessContainer extends PureComponent {
       shippingAddress: { phone: guestPhone },
       isSignedIn,
       totals,
+      setCheckoutDetails
     } = this.props;
+
+    setCheckoutDetails(true)
 
     var data = localStorage.getItem("customer");
     let userData = JSON.parse(data);
@@ -179,9 +185,7 @@ export class CheckoutSuccessContainer extends PureComponent {
       this.setState({ isMobileVerification: true });
     }
 
-    updateMeta({ title: __("Account") });
-
-    this._updateBreadcrumbs();
+    
   }
 
   containerProps = () => {

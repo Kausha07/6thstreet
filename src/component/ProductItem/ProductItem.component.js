@@ -6,22 +6,25 @@ import WishlistIcon from "Component/WishlistIcon";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { getStore } from "Store";
+import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { Product } from "Util/API/endpoint/Product/Product.type";
+import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import Algolia from "Util/API/provider/Algolia";
 import { isArabic } from "Util/App";
 import { getUUIDToken } from "Util/Auth";
+import BrowserDatabase from "Util/BrowserDatabase";
 import Event, {
   EVENT_GTM_PRODUCT_CLICK,
   SELECT_ITEM_ALGOLIA,
 } from "Util/Event";
 import "./ProductItem.style";
-
 class ProductItem extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
     page: PropTypes.string,
     position: PropTypes.number,
     qid: PropTypes.string,
+    isVueData: PropTypes.bool,
   };
 
   static defaultProps = {
@@ -35,15 +38,17 @@ class ProductItem extends PureComponent {
   handleClick = this.handleProductClick.bind(this);
 
   handleProductClick() {
-    const { product, position, qid } = this.props;
+    const { product, position, qid, isVueData } = this.props;
     var data = localStorage.getItem("customer");
     let userData = JSON.parse(data);
     let userToken;
     let queryID;
-    if (!qid) {
-      queryID = getStore().getState().SearchSuggestions.queryID;
-    } else {
-      queryID = qid;
+    if (!isVueData) {
+      if (!qid) {
+        queryID = getStore().getState().SearchSuggestions.queryID;
+      } else {
+        queryID = qid;
+      }
     }
     if (userData?.data) {
       userToken = userData.data.id;
@@ -62,9 +67,9 @@ class ProductItem extends PureComponent {
   renderWishlistIcon() {
     const {
       product: { sku },
+      product,
     } = this.props;
-
-    return <WishlistIcon sku={sku} />;
+    return <WishlistIcon sku={sku} data={product} />;
   }
 
   renderLabel() {
@@ -108,6 +113,21 @@ class ProductItem extends PureComponent {
     return null;
   }
 
+  renderOutOfStock() {
+    const {
+      product: { in_stock },
+    } = this.props;
+    if (in_stock === 0) {
+      return (
+        <span block="ProductItem" elem="OutOfStock">
+          {" "}
+          {"Out Of Stock"}
+        </span>
+      );
+    }
+
+    return null;
+  }
   renderImage() {
     const {
       product: { thumbnail_url },
@@ -115,8 +135,8 @@ class ProductItem extends PureComponent {
 
     return (
       <div>
-        <Image src={thumbnail_url} /> {this.renderExclusive()}{" "}
-        {this.renderColors()}{" "}
+        <Image src={thumbnail_url} />
+        {this.renderOutOfStock()} {this.renderExclusive()} {this.renderColors()}{" "}
       </div>
     );
   }
@@ -158,24 +178,43 @@ class ProductItem extends PureComponent {
   renderLink() {
     const {
       product,
-      product: { url },
+      product: { url, link },
       qid,
+      isVueData,
     } = this.props;
     let queryID;
-    if (!qid) {
-      queryID = getStore().getState().SearchSuggestions.queryID;
-    } else {
-      queryID = qid;
+    if (!isVueData) {
+      if (!qid) {
+        queryID = getStore().getState().SearchSuggestions.queryID;
+      } else {
+        queryID = qid;
+      }
     }
-    const { pathname } = new URL(url);
     let urlWithQueryID;
-    if (queryID) {
-      urlWithQueryID = `${pathname}?qid=${queryID}`;
+    if (!isVueData) {
+      const { pathname } = new URL(url);
+      if (queryID) {
+        urlWithQueryID = `${pathname}?qid=${queryID}`;
+      } else {
+        urlWithQueryID = pathname;
+      }
     } else {
-      urlWithQueryID = pathname;
+      urlWithQueryID = link;
     }
+    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      : "home";
+    let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
+
+    let parseLink = urlWithQueryID.includes("catalogsearch/result")
+      ? urlWithQueryID.split("&")[0] +
+        `&gender=${requestedGender.replace(
+          requestedGender.charAt(0),
+          requestedGender.charAt(0).toUpperCase()
+        )}`
+      : urlWithQueryID;
     const linkTo = {
-      pathname: urlWithQueryID,
+      pathname: parseLink,
       state: {
         product,
       },
@@ -201,7 +240,8 @@ class ProductItem extends PureComponent {
         }}
       >
         {" "}
-        {this.renderLabel()} {this.renderWishlistIcon()} {this.renderLink()}{" "}
+        {/* {this.renderLabel()} */}
+        {this.renderWishlistIcon()} {this.renderLink()}{" "}
       </li>
     );
   }

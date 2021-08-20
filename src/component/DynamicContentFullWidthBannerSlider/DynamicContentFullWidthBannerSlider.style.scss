@@ -1,80 +1,128 @@
 .DynamicContentFullWidthBannerSlider {
-    // margin-top: 55px;
-    margin-bottom: 30px;
-    a+a {
-        margin-left: 0px;
+  // margin-top: 55px;
+  margin-bottom: 30px;
+  a + a {
+    margin-left: 0px;
+  }
+  // a {
+  //     img {}
+  // }
+  .DynamicContentHeader{
+    padding-left: 15px;
+    padding-right: 15px;
+    p{
+      text-align: left;
     }
-    // a {
-    //     img {}
-    // }
+    @include mobile{
+      padding-left: 0px;
+      padding-right: 0px;
+      p{
+        text-align: center;
+      }
+      .title{
+        text-align: center;
+      }
+    }
+  }
+
+  @include mobile {
+    a {
+      margin-left: -30px;
+      padding: 0 2px 0 10px;
+      &:first-of-type {
+        margin-left: 0;
+      }
+    }
+  }
+  .Image {
+    height: auto;
+    &-Image {
+      position: static;
+      @include desktop {
+        margin-top: 50px;
+      }
+    }
+  }
+  .tns-outer {
+    direction: ltr !important;
+    button[data-action="stop"] {
+      display: none;
+    }
+    button[data-action="start"] {
+      display: none;
+    }
+  }
+  .tns-controls {
+    display: none;
+    position: initial;
+    button:first-child {
+      left: 0;
+      position: absolute;
+      font-size: 75px;
+      font-weight: 500;
+      color: #888;
+      bottom: 5%;
+      height: 100%;
+      margin-left: 15px;
+      &:hover {
+        color: #000;
+      }
+      z-index: 2;
+    }
+    button:last-child {
+      right: 0;
+      position: absolute;
+      font-size: 75px;
+      font-weight: 500;
+      color: #888;
+      bottom: 5%;
+      height: 100%;
+      margin-right: 15px;
+      z-index: 2;
+      &:hover {
+        color: #000;
+      }
+    }
+  }
+  .tns-nav {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 20px;
+    align-items: center;
+    // margin-bottom: 25px;
+    button {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background-color: #bfbfbf;
+      padding: 0;
+    }
+    &-active {
+      background-color: #3d4447 !important;
+      width: 7px !important;
+      height: 7px !important;
+
+    }
     @include mobile {
-        a {
-            margin-left: -30px;
-            padding: 0 5px 0 5px;
-            &:first-of-type {
-                margin-left: 0;
-            }
-        }
+      display: none;
     }
-    .Image {
-        height: auto;
-        &-Image {
-            position: static;
-            @include desktop {
-                margin-top: 50px;
-            }
-        }
+    @include tablet {
+      margin-top: 10px;
+      // margin-bottom: 10px;
+
     }
-    .tns-outer {
-        direction: ltr!important;
-        button[data-action="stop"] {
-            display: none;
-        }
-        button[data-action="start"] {
-            display: none;
-        }
-    }
-    .tns-controls {
-        position: initial;
-        button:first-child {
-            left: 0;
-            position: absolute;
-            font-size: 75px;
-            font-weight: 500;
-            color: #888;
-            bottom: 5%;
-            height: 100%;
-            margin-left: 15px;
-            &:hover {
-                color: #000
-            }
-            z-index: 2;
-        }
-        button:last-child {
-            right: 0;
-            position: absolute;
-            font-size: 75px;
-            font-weight: 500;
-            color: #888;
-            bottom: 5%;
-            height: 100%;
-            margin-right: 15px;
-            z-index: 2;
-            &:hover {
-                color: #000
-            }
-        }
-    }
-    .tns-nav {
-        display: none;
-    }
+  }
+  .tns-nav {
+    // display: none;
+  }
 }
 
 @media (max-width: 760px) {
-    .DynamicContentFullWidthBannerSlider {
-        margin-top: 0px;
-        .tns-controls {
-            display: none
-        }
+  .DynamicContentFullWidthBannerSlider {
+    margin-top: 0px;
+    .tns-controls {
+      display: none;
     }
+  }
 }

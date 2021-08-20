@@ -77,7 +77,6 @@ export class MyAccountOrderViewContainer extends PureComponent {
                 } = {}
             } = {}
         } = this.props;
-
         return order;
     }
 

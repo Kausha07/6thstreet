@@ -3,6 +3,12 @@ import Image from 'Component/Image';
 import WarningImage from 'Component/MyAccountOrderView/icons/warning.png';
 
 export class CheckoutFail extends CheckoutSuccess {
+
+    componentWillUnmount(){
+        const {setCheckoutDetails} = this.props
+      setCheckoutDetails(false)
+      }
+
     renderStatus() {
         return (
             <div block="MyAccountOrderView" elem="StatusFailed">
@@ -23,11 +29,12 @@ export class CheckoutFail extends CheckoutSuccess {
                 <div block="CheckoutSuccess" elem="Details">
                     { this.renderStatus() }
                     { this.renderTotalsItems() }
-                    { this.renderTotals() }
                     { this.renderAddresses() }
                     { this.renderDeliveryOption() }
                     { this.renderPaymentType() }
+                    { this.renderTotals() }
                 </div>
+                {this.renderButton()}
                 { this.renderMyAccountPopup() }
             </div>
         );

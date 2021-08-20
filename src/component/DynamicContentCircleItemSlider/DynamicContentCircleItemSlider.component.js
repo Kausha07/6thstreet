@@ -1,10 +1,9 @@
+import DragScroll from "Component/DragScroll/DragScroll.component";
 import Link from "Component/Link";
 import PropTypes from "prop-types";
-// import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
 import "react-circular-carousel/dist/index.css";
-import TinySlider from "tiny-slider-react";
-// import { getUUID } from "Util/Auth";
+import { isArabic } from "Util/App";
 import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
 import { formatCDNLink } from "Util/Url";
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
@@ -42,45 +41,32 @@ class DynamicContentCircleItemSlider extends PureComponent {
       })
     ).isRequired,
   };
+  ref = React.createRef();
+  state = {
+    isArabic: isArabic(),
+  };
 
   clickLink = (a) => {
-    let link = "/" + a.link.split("?")[0];
+    let link = "/" + a.link;
     localStorage.setItem("bannerData", JSON.stringify(a));
     localStorage.setItem("CircleBannerUrl", link);
     let banner = {
       link: a.link,
       promotion_name: a.promotion_name,
     };
-    // const locale = VueIntegrationQueries.getLocaleFromUrl();
-    // VueIntegrationQueries.vueAnalayticsLogger({
-    //   event_name: VUE_CAROUSEL_CLICK,
-    //   params: {
-    //     event: VUE_CAROUSEL_CLICK,
-    //     pageType: "plp",
-    //     currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-    //     clicked: Date.now(),
-    //     uuid: getUUID(),
-    //     referrer: "desktop",
-    //     widgetID: "vue_visually_similar_slider", // TODO: will be added after vue product slider.
-    //   },
-    // });
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
   };
 
   renderCircle = (item, i) => {
     const { link, label, image_url, plp_config } = item;
-
-    const linkTo = {
-      pathname: formatCDNLink(link),
-      state: { plp_config },
-    };
+    const { isArabic } = this.state;
 
     // TODO: move to new component
 
     return (
-      <div block="CircleSlider" key={i}>
+      <div block="CircleSlider" mods={{ isArabic }} key={i}>
         <Link
-          to={linkTo}
+          to={formatCDNLink(link)}
           key={i}
           data-banner-type="circleItemSlider"
           data-promotion-name={item.promotion_name ? item.promotion_name : ""}
@@ -89,28 +75,16 @@ class DynamicContentCircleItemSlider extends PureComponent {
             this.clickLink(item);
           }}
         >
-          <img
-            src={image_url}
-            alt={label}
-            block="Image"
-            width="70px"
-            height="70px"
-          />
-          {/* <Image
-                      src={ image_url }
-                      alt={ label }
-                      mix={ { block: 'DynamicContentCircleItemSlider', elem: 'Image' } }
-                      ratio="custom"
-                      height="70px"
-                      width="70px"
-                    /> */}
-          {/* <button
-                  block="DynamicContentCircleItemSlider"
-                  elem="Label"
-                  mix={ { block: 'button primary' } }
-                >
-                    { label }
-                </button> */}
+          <div block="OuterCircle">
+            <div block="OuterCircle" elem="InnerCircle"></div>
+            <img
+              src={image_url}
+              alt={label}
+              block="Image"
+              width="70px"
+              height="70px"
+            />
+          </div>
         </Link>
         <div block="CircleSliderLabel">{label}</div>
       </div>
@@ -120,9 +94,17 @@ class DynamicContentCircleItemSlider extends PureComponent {
   renderCircles() {
     const { items = [] } = this.props;
     return (
-      <TinySlider settings={settings} block="CircleSliderWrapper">
-        {items.map(this.renderCircle)}
-      </TinySlider>
+      <DragScroll data={{ rootClass: "CircleSliderWrapper", ref: this.ref }}>
+        <div
+          ref={this.ref}
+          id="CircleSliderWrapper"
+          block="CircleSliderWrapper"
+        >
+          <div className="CircleItemHelper"></div>
+          {items.map(this.renderCircle)}
+          <div className="CircleItemHelper"></div>
+        </div>
+      </DragScroll>
     );
   }
 

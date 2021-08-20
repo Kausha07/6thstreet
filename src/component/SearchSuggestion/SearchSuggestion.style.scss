@@ -11,13 +11,16 @@
   @include before-desktop {
     height: 100%;
     min-height: 100vh;
-    overflow-y: scroll;
+    overflow-y: hidden;
     top: 75px;
   }
 
   &-CloseContainer {
     display: flex;
     justify-content: flex-end;
+    .CloseContainer-Close {
+      height: 25px;
+    }
   }
 
   &-Content {
@@ -37,10 +40,12 @@
     @include before-desktop {
       height: 100%;
       margin-left: 0;
-      min-height: 100vh;
-      overflow-y: scroll;
-      padding: 20px;
+      // max-height: 100vh;
+      max-height: calc(100vh - 160px);
+      overflow-y: auto;
+      padding: 20px 0;
       padding-top: 0;
+      position: absolute;
     }
 
     @include desktop {
@@ -62,13 +67,40 @@
 
   &-Recommended {
     margin-top: 15px;
+    margin-left: 15px;
+    margin-right: 15px;
+    ul {
+      li {
+        margin-top: 20px !important;
+        a {
+          &:hover {
+            text-decoration: none;
+          }
+        }
+      }
+    }
 
     @include before-desktop {
-      margin-bottom: 155px;
+      margin-bottom: 15px;
+    }
+  }
+  &-Item {
+    margin: 15px;
+    ul {
+      li {
+        margin-top: 20px !important;
+        a {
+          &:hover {
+            text-decoration: none;
+          }
+        }
+      }
     }
   }
 
   .TrandingTags,
+  .TopSearches,
+  .RecentSearches,
   .TrandingBrands {
     ul {
       display: flex;
@@ -77,6 +109,9 @@
     li {
       margin-top: 0;
       margin-right: 5px;
+    }
+    h2 {
+      margin-top: 5px;
     }
 
     @include before-desktop() {
@@ -94,7 +129,9 @@
     }
   }
 
-  .TrandingTags {
+  .TrandingTags,
+  .TopSearches,
+  .RecentSearches, .recommendedForYou, .WishlistSliderHeader {
     margin: 0;
     padding: 0 20px;
 
@@ -108,11 +145,15 @@
 
     h2 {
       margin-bottom: 15px;
+      margin-top: 5px;
     }
 
     @include desktop() {
       padding: 0;
     }
+  }
+  .TopSearches {
+    text-transform: capitalize;
   }
 
   .TrandingBrands {
@@ -120,6 +161,9 @@
       margin-top: 15px;
       margin-left: 20px;
       margin-bottom: 50px;
+      @include before-desktop() {
+        margin-bottom: 30px;
+      }
     }
 
     h2 {
@@ -175,6 +219,18 @@
     align-items: center;
   }
 
+  &-TopSearches {
+    margin: 0;
+    color: var(--link-dark-gray);
+    width: auto;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-transform: capitalize;
+    text-decoration: underline;
+  }
+
   ul {
     :before {
       content: unset;
@@ -185,6 +241,9 @@
       margin-top: 15px;
       font-size: 15px;
       margin-bottom: 0;
+      @include before-desktop() {
+        font-size: 12px;
+      }
     }
 
     a {
@@ -193,8 +252,16 @@
       display: block;
 
       span {
-        position: absolute;
-        right: 0;
+        // position: absolute;
+        // right: 0;
+      }
+      .suggestion-details-box {
+        display: flex;
+        justify-content: space-between;
+        // text-transform: capitalize;
+        span {
+          position: relative;
+        }
       }
     }
   }
@@ -203,6 +270,9 @@
     font-size: 17px;
     text-transform: none;
     margin: 0;
+    color: #000000;
+    font-weight: 600;
+    letter-spacing: 0;
 
     @include before-desktop {
       color: black;
@@ -247,4 +317,230 @@
       }
     }
   }
+
+  .SearchProduct {
+    display: grid;
+    grid-template-columns: auto 1fr 1fr;
+    grid-auto-flow: row dense;
+    grid-gap: 10px;
+    &-SpecialPriceCon {
+      display: block;
+      right: unset;
+      font-size: 14px;
+      font-weight: var(--fw-demi);
+      color: var(--color-pure-black);
+      letter-spacing: 0;
+      line-height: 19px;
+    }
+
+    &-Del {
+      display: inline-block;
+
+      span {
+        position: relative;
+        right: unset;
+      }
+      #price {
+        margin-right: 10px;
+        font-weight: var(--fw-medium);
+      }
+    }
+
+    &-PriceWrapper {
+      display: inline-block;
+      position: relative;
+      right: unset;
+      span {
+        color: #d1490c;
+        font-weight: var(--fw-bold);
+        position: relative;
+        right: unset;
+      }
+    }
+    &-Info {
+      grid-column: 2;
+      grid-row: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+    &-Image {
+      width: 80px;
+      grid-column: 1;
+      grid-row: auto;
+    }
+    &-Brand {
+      font-size: 14px;
+      font-weight: var(--fw-demi);
+      letter-spacing: 0;
+      line-height: 19px;
+      color: var(--color-pure-black);
+      width: 400px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      @include tablet {
+        width: 300px;
+      }
+      @include mobile {
+        width: 200px;
+      }
+    }
+    &-ProductName {
+      display: -webkit-box;
+      position: relative;
+      font-size: 13px;
+      letter-spacing: 0;
+      line-height: 15px;
+      width: 400px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      -webkit-line-clamp: 2;
+      white-space: unset;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      @include tablet {
+        width: 300px;
+      }
+      @include mobile {
+        width: 200px;
+      }
+    }
+    &-Price {
+      display: block;
+      position: relative;
+      font-size: 14px;
+      font-weight: var(--fw-demi);
+      color: var(--color-pure-black);
+      letter-spacing: 0;
+      line-height: 19px;
+    }
+  }
+}
+.NothingFound {
+  width: var(--main-container-width-dsk);
+  margin: 0 auto;
+}
+#price {
+  font-size: 14px;
+  font-weight: var(--fw-medium);
+  color: var(--color-pure-black);
+  letter-spacing: 0;
+  line-height: 19px;
+}
+
+.recommendedForYouSliderBox {
+  margin-bottom: 10px;
+  .VueProductSlider {
+    &-Container {
+    width: 100%;
+    font-size: 16px;
+    margin-top: 0;
+    font-weight: var(--fw-demi);
+
+    @media (max-width: 1024px) {
+      width: 96.005vw;
+      margin: 0;
+    }
+    @media (max-width: 760px) {
+      padding-left: 8px;
+    }
+    @media (max-width: 1024px) and (min-width: 768px) {
+      padding-left: 30px;
+    }
+    .DragWrapper {
+      .Outer {
+        margin: 0 auto 15px auto;
+      }
+    }
+  }
+    &-VueProductContainer {
+      &:nth-last-child(2) {
+        margin-right: 7.92px;
+      }
+      &_isArabic {
+        &:nth-child(2) {
+          margin-right: 7.92px;
+        }
+      }
+    }
+    &-HeaderContainer {
+      h4 {
+        font-size: 17px;
+        text-transform: none;
+        margin: 0;
+        letter-spacing: .25px;
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+.wishlistSliderContainer {
+  margin-bottom: 10px;
+  .VueProductSlider {
+    &-SliderContainer {
+      padding-bottom: 0 !important;
+    }
+    &-Container {
+    width: 100%;
+    font-size: 16px;
+    margin: 15px 0px 0;
+    font-weight: var(--fw-demi);
+
+    @media (max-width: 1024px) {
+      width: 96.005vw;
+      margin: 0px;
+    }
+    @media (max-width: 760px) {
+      padding-left: 8px;
+    }
+    @media (max-width: 1024px) and (min-width: 768px) {
+      padding-left: 30px;
+    }
+    .DragWrapper {
+      .Outer {
+        margin: 0 auto 15px auto;
+      }
+    }
+  }
+    &-VueProductContainer {
+      &:nth-last-child(2) {
+        margin-right: 7.92px;
+      }
+      &_isArabic {
+        &:nth-child(2) {
+          margin-right: 7.92px;
+        }
+      }
+    }
+    &-HeaderContainer {
+      h4 {
+        font-size: 17px;
+        text-transform: none;
+        margin: 0;
+        letter-spacing: .25px;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+.cursor-pointer {
+  cursor: pointer !important;
+}
+
+@include before-desktop {
+  ::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.isSuggestionOpen {
+  position: fixed;
+}
+
+.text-capitalize {
+  text-transform: capitalize;
 }

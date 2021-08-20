@@ -11,7 +11,8 @@ import {
     SET_CART_TOTALS,
     SET_MINICART_OPEN,
     UPDATE_CART_ITEM,
-    UPDATE_TOTALS
+    UPDATE_TOTALS,
+    SET_DETAIL_STEP
 } from './Cart.action';
 
 export const CART_ID_CACHE_KEY = 'CART_ID_CACHE_KEY';
@@ -24,7 +25,8 @@ export const getInitialState = () => ({
     cartTotals: {},
     isLoading: true,
     cartItems: BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [],
-    isMinicartOpen: false
+    isMinicartOpen: false,
+    checkoutDetails:false
 });
 
 const updateCartItem = (cartItems, newItem) => {
@@ -51,7 +53,7 @@ const removeCartItem = (cartItems, itemToRemove) => {
 
 export const CartReducer = (state = getInitialState(), action) => {
     const {
-        type, cartId, cartItem, cartTotals, requestStatus
+        type, cartId, cartItem, cartTotals, requestStatus, checkoutDetails
     } = action;
     const { cartItems } = state;
     const ONE_DAY_IN_SECONDS = 86400;
@@ -60,6 +62,14 @@ export const CartReducer = (state = getInitialState(), action) => {
     const expireTime = isSignedIn() ? ONE_HOUR : ONE_DAY_IN_SECONDS;
 
     switch (type) {
+       
+        case SET_DETAIL_STEP:
+    
+            return {
+                ...state,
+                checkoutDetails:checkoutDetails
+            };
+        
     case SET_CART_ID:
         BrowserDatabase.setItem(
             cartId,
@@ -167,7 +177,6 @@ export const CartReducer = (state = getInitialState(), action) => {
         };
 
     case RESET_CART:
-
         BrowserDatabase.deleteItem(
             CART_ID_CACHE_KEY
         );
@@ -177,7 +186,8 @@ export const CartReducer = (state = getInitialState(), action) => {
         );        
 
         return {
-            ...getInitialState()
+            ...getInitialState(),
+            checkoutDetails:state.checkoutDetails
         };
     case UPDATE_TOTALS:
     case SET_MINICART_OPEN:

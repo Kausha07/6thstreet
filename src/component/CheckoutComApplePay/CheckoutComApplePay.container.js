@@ -72,7 +72,7 @@ class CheckoutComApplePayContainer extends PureComponent {
 
     this.state = {
       isApplePayAvailable: !!window.ApplePaySession,
-      applePayDisabled: true,
+      applePayDisabled: false,
       isLoading: true,
       merchant_id: null,
       supported_networks: null,

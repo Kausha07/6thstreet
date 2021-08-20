@@ -1,60 +1,48 @@
 import { getStore } from "Store";
 import { setSearchSuggestions } from "Store/SearchSuggestions/SearchSuggestions.action";
+import { getCustomQuerySuggestions } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import { formatProductSuggestions } from "Util/API/endpoint/Suggestions/Suggestions.format";
 import Algolia from "Util/API/provider/Algolia";
 import { isArabic } from "Util/App";
-// import { getUUIDToken } from 'Util/Auth';
-// import { VIEW_SEARCH_RESULTS_ALGOLIA } from 'Util/Event';
 const PRODUCT_RESULT_LIMIT = 8;
+const QUERY_SUGGESTION_LIMIT = 5;
 
 export class SearchSuggestionsDispatcher {
-  async requestSearchSuggestions(search, dispatch) {
+  async requestSearchSuggestions(
+    search,
+    sourceIndexName,
+    sourceQuerySuggestionIndex,
+    dispatch
+  ) {
     const {
       AppState: { gender },
     } = getStore().getState();
+    let queryID = null;
 
     try {
-      const productData = await new Algolia().searchBy(
+      const productData = await new Algolia().getPLP(
         isArabic()
           ? {
-              query: search,
+              q: search,
+              page: 0,
               limit: PRODUCT_RESULT_LIMIT,
+              // gender: getGenderInArabic(gender),
+              // query: search,
+              // limit: PRODUCT_RESULT_LIMIT,
+              // gender: getGenderInArabic(gender),
+              // addAnalytics: false,
             }
           : {
-              query: search,
+              // query: search,
+              // limit: PRODUCT_RESULT_LIMIT,
+              // gender: gender,
+              // addAnalytics: false,
+              q: search,
+              page: 0,
               limit: PRODUCT_RESULT_LIMIT,
+              // gender: gender,
             }
       );
-
-      // In case anyone needs desktop data (use this!)
-      // const lang = language === 'en' ? 'english' : 'arabic';
-
-      // const { hits: searchSuggestions } = await new Algolia({
-      //     index: `enterprise_magento_${ lang }_suggestions`
-      // }).getSuggestions({
-      //     query: search,
-      //     limit: SEARCH_RESULT_LIMIT
-      // });
-
-      // const { hits: categorySuggestions } = await new Algolia({
-      //     index: `enterprise_magento_${ lang }_categories`
-      // }).getSuggestions({
-      //     query: search,
-      //     limit: CATEGORY_RESULT_LIMIT
-      // });
-
-      // const { hits: productSuggestions } = await new Algolia({
-      //     index: `enterprise_magento_${ lang }_products`
-      // }).getSuggestions({
-      //     query: search,
-      //     limit: PRODUCT_RESULT_LIMIT
-      // });
-
-      // console.log(
-      //     searchSuggestions,
-      //     categorySuggestions,
-      //     productSuggestions
-      // );
 
       // if you need search analytics then uncomment it (default automatically tracks it) UPDATE: causing wrong data.
 
@@ -75,10 +63,54 @@ export class SearchSuggestionsDispatcher {
       //   },
       //   { objectIDs, queryID: productData.queryID,userToken: userToken ? `user-${userToken}`: getUUIDToken(),  },
       //   );
-      const queryID = productData?.queryID ? productData?.queryID : null;
+
+      // const { hits: categorySuggestions } = await new Algolia({
+      //     index: `enterprise_magento_${ lang }_categories`
+      // }).getSuggestions({
+      //     query: search,
+      //     limit: CATEGORY_RESULT_LIMIT
+      // });
+
+      // const { hits: productSuggestions } = await new Algolia({
+      //     index: `enterprise_magento_${ lang }_products`
+      // }).getSuggestions({
+      //     query: search,
+      //     limit: PRODUCT_RESULT_LIMIT
+      // });
+
+      // In case anyone needs desktop data (use this!)
+      // const lang = language === 'en' ? 'english' : 'arabic';
+      const data = await new Algolia({
+        index: sourceQuerySuggestionIndex,
+      }).autocompleteSearch(
+        isArabic()
+          ? {
+              query: search,
+              limit: QUERY_SUGGESTION_LIMIT,
+            }
+          : {
+              query: search,
+              limit: QUERY_SUGGESTION_LIMIT,
+            }
+      );
+      const defaultHit = {
+        query: search,
+        count: "",
+      };
+      const querySuggestions =
+        data?.hits?.length > 0
+          ? getCustomQuerySuggestions(data?.hits, sourceIndexName)
+          : [defaultHit];
+      if (data && data.queryID) {
+        queryID = data.queryID;
+      } else {
+        queryID = productData?.queryID ? productData?.queryID : null;
+      }
       const results = formatProductSuggestions(productData);
 
-      dispatch(setSearchSuggestions(search, results, queryID));
+      dispatch(
+        setSearchSuggestions(search, results, queryID, querySuggestions)
+      );
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e);

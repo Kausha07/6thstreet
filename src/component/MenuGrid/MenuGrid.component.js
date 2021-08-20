@@ -40,7 +40,7 @@ class MenuGrid extends PureComponent {
 
   renderItem = (item, i) => {
     const { image_url, label, link } = item;
-
+    
     if (!link) {
       return null;
     }
@@ -68,7 +68,7 @@ class MenuGrid extends PureComponent {
 
   renderItems() {
     const { items = [] } = this.props;
-    return items.map(this.renderItem);
+    return items.slice(0, 14).map(this.renderItem);
   }
 
   renderDesktopButton() {
@@ -101,14 +101,10 @@ class MenuGrid extends PureComponent {
       button: { link },
     } = this.props;
 
-    const linkTo = {
-      pathname: link,
-      state: { plp_config: {} },
-    };
 
     return (
       <button block="ViewAll" elem="Button">
-        <Link to={linkTo} onClick={this.hideMenu}>
+        <Link to={link} onClick={this.onItemClick}>
           <span>{__("view all")}</span>
         </Link>
       </button>

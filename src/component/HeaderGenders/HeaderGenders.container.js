@@ -36,6 +36,9 @@ class HeaderGendersContainer extends PureComponent {
         else if(window.location.pathname.includes("kid")){
             this.props.setGender("kids")
         }
+        else if(window.location.pathname.includes("home")){
+            this.props.setGender("home")
+        }
         else if(this.props.product.gender === "Women"){
             this.props.setGender("women")
             console.log(this.props)
@@ -46,6 +49,10 @@ class HeaderGendersContainer extends PureComponent {
         }
         else if(this.props.product.gender === "Kids"){
             this.props.setGender("kids")
+            console.log(this.props)
+        }
+        else if(this.props.product.gender === "home"){
+            this.props.setGender("home")
             console.log(this.props)
         }
     }
@@ -60,6 +67,9 @@ class HeaderGendersContainer extends PureComponent {
         else if(window.location.pathname.includes("kid")){
             this.props.setGender("kids")
         }
+        else if(window.location.pathname.includes("home")){
+            this.props.setGender("home")
+        }
         else if(this.props.product.gender === "Women"){
             this.props.setGender("women")
             console.log(this.props)
@@ -70,6 +80,10 @@ class HeaderGendersContainer extends PureComponent {
         }
         else if(this.props.product.gender === "Kids"){
             this.props.setGender("kids")
+            console.log(this.props)
+        }
+        else if(this.props.product.gender === "home"){
+            this.props.setGender("home")
             console.log(this.props)
         }
     }

@@ -233,6 +233,11 @@
       font-weight: 600;
       font-size: 20px;
     }
+    .spck-list{
+        @include desktop{
+            justify-content: center;
+        }
+    }
 
     .spck-event-description {
       font-family: inherit;
