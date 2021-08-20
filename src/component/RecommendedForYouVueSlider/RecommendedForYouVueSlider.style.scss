@@ -83,7 +83,7 @@ html {
 
     &-SliderContainer {
       width: 100%;
-      overflow: auto;
+      overflow-x: auto;
       white-space: nowrap;
       &_isHome {
         &::-webkit-scrollbar {
@@ -120,6 +120,7 @@ html {
       margin-right: 7.92px;
       display: inline-block;
       vertical-align: top;
+      overflow-y: hidden;
       &:nth-last-child(2) {
         margin-right: 0;
       }
@@ -212,10 +213,10 @@ html {
         min-height: 173px;
       }
       @include desktop{
-        min-height: 291px;
+        min-height: 168px;
       }
       @include tablet{
-        min-height: 291px;
+        min-height: 168px;
       }
     }
 

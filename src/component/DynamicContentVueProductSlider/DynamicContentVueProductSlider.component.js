@@ -7,6 +7,8 @@ import { getUUID } from "Util/Auth";
 import { VUE_CAROUSEL_SHOW, VUE_CAROUSEL_SWIPE } from "Util/Event";
 import DynamicContentVueProductSliderItem from "./DynamicContentVueProductSlider.Item";
 import "./DynamicContentVueProductSlider.style.scss";
+import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
+import Event from "Util/Event";
 
 class DynamicContentVueProductSlider extends PureComponent {
   static propTypes = {
@@ -35,6 +37,7 @@ class DynamicContentVueProductSlider extends PureComponent {
     }
     const { widgetID, pageType = "home" } = this.props;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
+
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_CAROUSEL_SHOW,
       params: {
@@ -47,6 +50,11 @@ class DynamicContentVueProductSlider extends PureComponent {
         widgetID: widgetID,
       },
     });
+
+    document.addEventListener("scroll", this.isInViewport);
+  }
+  componentWillUnmount() {
+    document.removeEventListener("scroll", this.isInViewport);
   }
   async handleContainerScroll(widgetID, event) {
     const { isArabic } = this.state;
@@ -162,6 +170,44 @@ class DynamicContentVueProductSlider extends PureComponent {
       </div>
     );
   };
+  sendImpressions() {
+    const products = this.getProducts();
+    const items = products.map((item) => {
+      return {
+        id: item.sku,
+        label: item.name,
+      };
+    });
+    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
+  }
+  isInViewport = () => {
+    if (!this.viewElement) {
+      return;
+    }
+    //get how much pixels left to scrolling our ReactElement
+    const top = this.viewElement.getBoundingClientRect().top;
+
+    //here we check if element top reference is on the top of viewport
+    /*
+     * If the value is positive then top of element is below the top of viewport
+     * If the value is zero then top of element is on the top of viewport
+     * If the value is negative then top of element is above the top of viewport
+     * */
+    if (top <= 0) {
+      // inside viewport
+      const { header: { title } = {} } = this.props;
+
+      const { impressionSent } = this.state;
+      if (!impressionSent) {
+        const { products = [] } = this.props;
+        if (products.length > 0) {
+          this.sendImpressions();
+          this.setState({ impressionSent: true });
+        }
+      }
+    }
+  };
+
   renderSliderContainer() {
     const items = this.getProducts();
     const { isHome } = this.props;
@@ -202,8 +248,11 @@ class DynamicContentVueProductSlider extends PureComponent {
   }
 
   render() {
+    let setRef = (el) => {
+      this.viewElement = el;
+    };
     return (
-      <div block="VueProductSlider" elem="Container">
+      <div ref={setRef} block="VueProductSlider" elem="Container">
         {this.renderHeader()}
         {this.renderSliderContainer()}
       </div>

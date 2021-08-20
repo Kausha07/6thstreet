@@ -9,7 +9,7 @@ import {
   getGenderInArabic,
   getHighlightedText,
 } from "Util/API/endpoint/Suggestions/Suggestions.create";
-import { WishlistItems } from "Util/API/endpoint/Wishlist/Wishlist.type";
+// import { WishlistItems } from "Util/API/endpoint/Wishlist/Wishlist.type";
 import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
 import BrowserDatabase from "Util/BrowserDatabase";
@@ -21,7 +21,7 @@ import Event, {
 } from "Util/Event";
 import isMobile from "Util/Mobile";
 import RecommendedForYouVueSliderContainer from "../RecommendedForYouVueSlider";
-import WishlistSliderContainer from "../WishlistSlider";
+// import WishlistSliderContainer from "../WishlistSlider";
 import BRAND_MAPPING from "./SearchSiggestion.config";
 import "./SearchSuggestion.style";
 
@@ -44,7 +44,7 @@ class SearchSuggestion extends PureComponent {
     recommendedForYou: PropTypes.array,
     trendingProducts: PropTypes.array,
     searchString: PropTypes.string,
-    wishlistData: WishlistItems.isRequired,
+    // wishlistData: WishlistItems.isRequired,
   };
 
   static defaultProps = {
@@ -107,7 +107,9 @@ class SearchSuggestion extends PureComponent {
     const { isArabic } = this.state;
     let brandUrl;
     let formattedBrandName;
-    const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
+    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      : "all";
     if (isArabic) {
       let requestedGender = getGenderInArabic(gender);
       let arabicAlphabetDigits =
@@ -118,7 +120,10 @@ class SearchSuggestion extends PureComponent {
       }
       brandUrl = `${this.getBrandUrl(
         brandName
-      )}.html?q=${brandName}&qid=${queryID}&gender=${requestedGender}`;
+      )}.html?q=${brandName}&qid=${queryID}&gender=${requestedGender.replace(
+        requestedGender.charAt(0),
+        requestedGender.charAt(0).toUpperCase()
+      )}`;
     } else {
       formattedBrandName = brandName
         .toUpperCase()
@@ -130,7 +135,10 @@ class SearchSuggestion extends PureComponent {
         .toLowerCase();
       brandUrl = `${this.getBrandUrl(
         formattedBrandName
-      )}.html?q=${formattedBrandName}&gender=${gender}`;
+      )}.html?q=${formattedBrandName}&gender=${gender.replace(
+        gender.charAt(0),
+        gender.charAt(0).toUpperCase()
+      )}`;
     }
     return brandUrl;
   };
@@ -269,7 +277,10 @@ class SearchSuggestion extends PureComponent {
   renderQuerySuggestion = (querySuggestions) => {
     const { query, count, isBrand } = querySuggestions;
     const { searchString, queryID, products = [] } = this.props;
-    const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
+    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      : "all";
+
     const fetchSKU = products.find(
       (item) =>
         item.name.toUpperCase().includes(query.toUpperCase()) ||
@@ -279,9 +290,14 @@ class SearchSuggestion extends PureComponent {
       return (
         <li>
           <Link
-            to={`/${encodeURI(
-              this.getBrandSuggestionUrl(formatQuerySuggestions(query), queryID)
-            )}`}
+            to={
+              encodeURI(
+                this.getBrandSuggestionUrl(
+                  formatQuerySuggestions(query),
+                  queryID
+                )
+              )
+            }
             onClick={() =>
               this.onSearchQueryClick(formatQuerySuggestions(query))
             }
@@ -311,7 +327,7 @@ class SearchSuggestion extends PureComponent {
         return (
           <li>
             <Link
-              to={`/${encodeURI(this.getCatalogUrl(query, gender, queryID))}`}
+              to={`${encodeURI(this.getCatalogUrl(query, gender, queryID))}`}
               onClick={() =>
                 this.onSearchQueryClick(formatQuerySuggestions(query))
               }
@@ -399,15 +415,17 @@ class SearchSuggestion extends PureComponent {
 
   renderProduct = (product) => {
     const { url, name, thumbnail_url, brand_name, price } = product;
-    const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
+    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      : "all";
+
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
 
     let parseLink = url.includes("catalogsearch/result")
-      ? url.split("&")[0] +
-        `&gender=${requestedGender.replace(
-          requestedGender.charAt(0),
-          requestedGender.charAt(0).toUpperCase()
-        )}`
+      ? url.split("&")[0] +`&gender=${requestedGender.replace(
+      requestedGender.charAt(0),
+      requestedGender.charAt(0).toUpperCase()
+    )}`
       : url;
 
     return (
@@ -451,7 +469,7 @@ class SearchSuggestion extends PureComponent {
       <>
         {this.renderQuerySuggestions()}
         {/* {this.renderBrands()} */}
-        {this.renderWishlistProducts()}
+        {/* {this.renderWishlistProducts()} */}
         {this.renderProducts()}
       </>
     );
@@ -513,42 +531,40 @@ class SearchSuggestion extends PureComponent {
     }
   };
 
-  renderWishlistProducts = () => {
-    const { wishlistData, searchString } = this.props;
-    if (wishlistData && wishlistData.length > 0) {
-      let filteredWishlist =
-        wishlistData.filter(
-          (item) =>
-            item.product.brand_name
-              .toUpperCase()
-              .includes(searchString.toUpperCase()) ||
-            item.product.name
-              .toUpperCase()
-              .includes(searchString.toUpperCase()) ||
-            item.product.sku.toUpperCase().includes(searchString.toUpperCase())
-        ) || [];
-      return (
-        <div className="wishlistSliderContainer">
-          <WishlistSliderContainer
-            products={
-              searchString && filteredWishlist.length > 0
-                ? filteredWishlist
-                : wishlistData
-            }
-            heading={__("Your Wishlist")}
-            key={`Wishlist`}
-            isHome={true}
-          />
-        </div>
-      );
-    }
-  };
+  // renderWishlistProducts = () => {
+  //   const { wishlistData, searchString } = this.props;
+  //   if (wishlistData && wishlistData.length > 0) {
+  //     let filteredWishlist =
+  //       wishlistData.filter(
+  //         (item) =>
+  //           item.product.brand_name
+  //             .toUpperCase()
+  //             .includes(searchString.toUpperCase()) ||
+  //           item.product.name
+  //             .toUpperCase()
+  //             .includes(searchString.toUpperCase()) ||
+  //           item.product.sku.toUpperCase().includes(searchString.toUpperCase())
+  //       ) || [];
+  //     return (
+  //       <div className="wishlistSliderContainer">
+  //         <WishlistSliderContainer
+  //           products={
+  //             searchString && filteredWishlist.length > 0
+  //               ? filteredWishlist
+  //               : wishlistData
+  //           }
+  //           heading={__("Your Wishlist")}
+  //           key={`Wishlist`}
+  //           isHome={true}
+  //         />
+  //       </div>
+  //     );
+  //   }
+  // };
 
   renderTrendingBrand = (brand, i) => {
     const { label = "", image_url } = brand;
     const { isArabic } = this.state;
-    const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
-    let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
     const urlName = label
       .replace("&", "")
       .replace(/'/g, "")
@@ -608,7 +624,10 @@ class SearchSuggestion extends PureComponent {
 
   renderTopSearch = ({ search, link }, i) => {
     const { isArabic } = this.state;
-    const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
+    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      : "all";
+
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
     return (
       <li key={i}>
@@ -645,7 +664,10 @@ class SearchSuggestion extends PureComponent {
 
   renderRecentSearch = ({ name, link }, i) => {
     const { isArabic } = this.state;
-    const { gender } = BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {};
+    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      : "all";
+
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
     return (
       <li key={i}>
@@ -686,7 +708,7 @@ class SearchSuggestion extends PureComponent {
         {this.renderTrendingBrands()}
         {this.renderRecommendedForYou()}
         {/* {this.renderTrendingProducts()} */}
-        {this.renderWishlistProducts()}
+        {/* {this.renderWishlistProducts()} */}
         {this.renderTrendingTags()}
       </>
     );

@@ -7,6 +7,8 @@ import { isArabic } from "Util/App";
 import DynamicContentVueProductSliderContainer from "./../DynamicContentVueProductSlider/DynamicContentVueProductSlider.container";
 import { HOME_PAGE_TRANSLATIONS } from "./DynamicContentProductSlider.config";
 import "./DynamicContentProductSlider.style";
+import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
+import Event from "Util/Event";
 
 class DynamicContentProductSlider extends PureComponent {
   static propTypes = {
@@ -23,7 +25,16 @@ class DynamicContentProductSlider extends PureComponent {
     currentPage: 0,
     isArabic: isArabic(),
     withViewAll: true,
+    impressionSent: false,
   };
+
+  componentDidMount() {
+    document.addEventListener("scroll", this.isInViewport);
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("scroll", this.isInViewport);
+  }
 
   renderProduct = (product, i) => {
     const { sku } = product;
@@ -70,6 +81,46 @@ class DynamicContentProductSlider extends PureComponent {
     );
   }
 
+  sendImpressions() {
+    const { products = [] } = this.props;
+    const items = products.map((item) => {
+      return {
+        id: item.sku,
+        label: item.name,
+      };
+    });
+    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
+  }
+
+  isInViewport = () => {
+    if (!this.viewElement) {
+      return;
+    }
+    //get how much pixels left to scrolling our ReactElement
+    const top =
+      this.viewElement && this.viewElement.getBoundingClientRect().top;
+
+    //here we check if element top reference is on the top of viewport
+    /*
+     * If the value is positive then top of element is below the top of viewport
+     * If the value is zero then top of element is on the top of viewport
+     * If the value is negative then top of element is above the top of viewport
+     * */
+    if (top <= 0) {
+      // inside viewport
+      const { header: { title } = {} } = this.props;
+
+      const { impressionSent } = this.state;
+      if (!impressionSent) {
+        const { products = [] } = this.props;
+        if (products.length > 0) {
+          this.sendImpressions();
+          this.setState({ impressionSent: true });
+        }
+      }
+    }
+  };
+
   render() {
     const { isArabic, withViewAll } = this.state;
     const { products } = this.props;
@@ -95,8 +146,16 @@ class DynamicContentProductSlider extends PureComponent {
                     } */}
       </React.Fragment>
     );
+
+    let setRef = (el) => {
+      this.viewElement = el;
+    };
+
     return (
-      <div mix={{ block: "DynamicContentProductSlider", mods: { isArabic } }}>
+      <div
+        ref={setRef}
+        mix={{ block: "DynamicContentProductSlider", mods: { isArabic } }}
+      >
         {productsDesktop}
       </div>
     );

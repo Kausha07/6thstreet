@@ -15,5 +15,5 @@ export const DISPLAY_DISCOUNT_PERCENTAGE = {
     "KW": true,
     "OM": true,
     "SA": true,
-    "QA": true,
+    "QA": false,
 }

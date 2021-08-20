@@ -70,7 +70,7 @@ class DynamicContentBanner extends PureComponent {
         </>
       );
     }
-
+    
     return (
       <Link
         to={formatCDNLink(link)}

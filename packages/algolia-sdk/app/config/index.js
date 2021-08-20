@@ -23,8 +23,8 @@ const FACET_FILTERS = [
   'sleeve_length',
   'technology',
   'toe_shape',
-  'tommy_label'
-
+  'tommy_label',
+  'in_stock'
 ];
 
 const config = {
@@ -49,7 +49,8 @@ const config = {
     'gender',
     'size',
     'price',
-    'discount'
+    'discount',
+    'in_stock'
   ],
 
   SIZE_FILTERS: ['size_uk', 'size_eu', 'size_us'],
@@ -158,6 +159,7 @@ const config = {
       'news_from_date',
       'news_to_date',
       'promotion',
+      'in_stock',
       'also_available_color'
     ],
     facets: FACET_FILTERS,

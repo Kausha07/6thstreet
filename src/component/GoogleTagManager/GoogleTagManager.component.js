@@ -20,7 +20,9 @@ import RemoveFromWishlistEvent from "./events/RemoveFromWishlist.event";
 import TrendingBrandsClickEvent from "./events/TrendingBrandsClick.event";
 import TrendingTagsClickEvent from "./events/TrendingTagsClick.event";
 import WishlistClickEvent from "./events/WishlistClick.event";
+import BannerImpressionEvent from "./events/BannerImpression.event";
 import Scripts from "./Scripts";
+import EVENT_PROMOTION_IMPRESSION from "Util/Event";
 
 /**
  * Event list
@@ -96,6 +98,7 @@ class GoogleTagManager extends PureComponent {
     [EVENT_GTM_BRANDS_CLICK]: BrandsClickEvent,
     [EVENT_GTM_TRENDING_BRANDS_CLICK]: TrendingBrandsClickEvent,
     [EVENT_GTM_TRENDING_TAGS_CLICK]: TrendingTagsClickEvent,
+    [EVENT_PROMOTION_IMPRESSION]: BannerImpressionEvent,
   };
 
   /**
@@ -304,6 +307,7 @@ class GoogleTagManager extends PureComponent {
   registerEvents() {
     this.events = Object.entries(GoogleTagManager.eventList || {}).reduce(
       (acc, [name, Event]) => {
+        console.log({ name, Event });
         acc[name] = new Event(name, this);
         acc[name].bindEvent();
 
