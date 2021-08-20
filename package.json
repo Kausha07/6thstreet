@@ -2,7 +2,7 @@
     "name": "6th-street",
     "private": true,
     "dependencies": {
-        "@6thstreetdotcom/algolia-sdk": "^1.8.3-beta.4",
+        "@6thstreetdotcom/algolia-sdk": "^1.8.3-beta.5",
         "@scandipwa/scandipwa": "0.0.1",
         "@scandipwa/scandipwa-scripts": "0.0.8",
         "@sentry/react": "^6.5.1",

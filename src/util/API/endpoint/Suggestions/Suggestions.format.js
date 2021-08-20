@@ -3,7 +3,7 @@ import BrowserDatabase from "Util/BrowserDatabase";
 
 const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
   ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
-  : "all";
+  : "home";
 
 const BRANDS_RESULT_LIMIT = 4;
 

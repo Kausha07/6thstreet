@@ -55,7 +55,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
     const { isArabic } = this.state;
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
-      : "all";
+      : "home";
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
     let parseLink = link.includes("/catalogsearch/result")
       ? link.split("&")[0] +

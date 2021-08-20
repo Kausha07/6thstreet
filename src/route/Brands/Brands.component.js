@@ -78,7 +78,7 @@ class Brands extends PureComponent {
     }
 
     renderBrandGroup = ([letter, brands]) => {
-        const { type } = this.props;
+        const { type, brandMapping } = this.props;
         const { filteredLetter } = this.state;
 
         return (
@@ -88,6 +88,7 @@ class Brands extends PureComponent {
               brands={ brands }
               isFiltered={ !!filteredLetter }
               type={ type }
+              brandMapping={brandMapping}
             />
         );
     };
