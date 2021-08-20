@@ -296,6 +296,8 @@
       @include mobile() {
         width: auto;
         margin-inline: 0;
+        margin-left: 0;
+        margin-right: 0;
 
         &_isArabic {
           // margin-left: unset;
@@ -363,7 +365,7 @@
       .Totals {
         display: grid;
         grid-auto-flow: column;
-        
+
         &:last-child {
           border-top: 2px solid var(--lightest-gray);
           margin: 10px 0 0 0;

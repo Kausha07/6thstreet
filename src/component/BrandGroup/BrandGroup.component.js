@@ -19,7 +19,7 @@ class BrandGroup extends PureComponent {
     };
 
     renderBrand = (brand) => {
-        const { type } = this.props;
+        const { type, brandMapping } = this.props;
         const { name } = brand;
 
         return (
@@ -27,6 +27,7 @@ class BrandGroup extends PureComponent {
               key={ name }
               brand={ brand }
               type={ type }
+              brandMapping= { brandMapping }
             />
         );
     };

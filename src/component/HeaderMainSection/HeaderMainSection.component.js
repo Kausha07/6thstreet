@@ -127,6 +127,7 @@ class HeaderMainSection extends NavigationAbstract {
 
   isPLP() {
     const { type } = this.state;
+    // updated this.props with window. in case of any issue need to verify this in future
     const {
       location: { state, pathname = "" },
     } = this.props;
@@ -195,6 +196,10 @@ class HeaderMainSection extends NavigationAbstract {
     if (isMobile.any() && activeOverlay === MOBILE_MENU_SIDEBAR_ID) {
       return null;
     }
+
+    const tt =
+      (this.isPLP() || this.isPDP() || this.getPageType() === TYPE_BRAND) &&
+      isMobile.any();
 
     return (this.isPLP() ||
       this.isPDP() ||

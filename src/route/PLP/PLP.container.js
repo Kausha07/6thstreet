@@ -43,6 +43,7 @@ export const mapStateToProps = (state) => ({
   country: state.AppState.country,
   config: state.AppConfig.config,
   menuCategories: state.MenuReducer.categories,
+  plpWidgetData: state.PLP.plpWidgetData,
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
@@ -84,6 +85,7 @@ export class PLPContainer extends PureComponent {
     brandDeascription: PropTypes.string,
     brandImg: PropTypes.string,
     brandName: PropTypes.string,
+    // plpWidgetData: PropTypes.any,
   };
 
   static requestProductList = PLPContainer.request.bind({}, false);
@@ -118,8 +120,8 @@ export class PLPContainer extends PureComponent {
       },
     } = props;
     let parseURL;
-    if(query){
-      if(query && !query.product){
+    if (query) {
+      if (query && !query.product) {
         if (query && query.includes(".html")) {
           const urlLink = `${query.split(".html")[1]}`;
           parseURL = urlLink.replace(/ /g, "%20");
@@ -128,10 +130,10 @@ export class PLPContainer extends PureComponent {
           parseURL = urlLink.replace(/ /g, "%20");
         }
       }
-    }else{
-      parseURL= location.href
+    } else {
+      parseURL = location.href;
     }
-   
+
     const { params: parsedParams } = WebUrlParser.parsePLP(parseURL);
     return {
       // TODO: inject gender ?
@@ -253,7 +255,7 @@ export class PLPContainer extends PureComponent {
           {
             url: "/",
             name: options["categories.level0"],
-          }
+          },
         ];
 
         updateBreadcrumbs(breadcrumbs);
@@ -309,6 +311,7 @@ export class PLPContainer extends PureComponent {
 
   getIsLoading() {
     const { requestedOptions } = this.props;
+
     const options = PLPContainer.getRequestOptions(this.props);
     const {
       // eslint-disable-next-line no-unused-vars
@@ -321,21 +324,30 @@ export class PLPContainer extends PureComponent {
       page,
       ...restOptions
     } = options;
-    
+
     // If requested options are not matching requested options -> we are loading
     // we also ignore pages, this is handled by PLPPages
     return JSON.stringify(requestedRestOptions) !== JSON.stringify(restOptions);
   }
 
   containerProps = () => {
-    const { brandDescription, brandImg, brandName,query } = this.props;
+    const {
+      brandDescription,
+      brandImg,
+      brandName,
+      query,
+      plpWidgetData,
+      gender,
+    } = this.props;
 
     // isDisabled: this._getIsDisabled()
     return {
       brandDescription,
       brandImg,
       brandName,
-      query
+      query,
+      plpWidgetData,
+      gender,
     };
   };
 
