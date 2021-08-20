@@ -84,6 +84,7 @@ html {
     &-SliderContainer {
       width: 100%;
       overflow-x: auto;
+      overflow-y: hidden;
       white-space: nowrap;
       &_isHome {
         &::-webkit-scrollbar {
@@ -97,6 +98,11 @@ html {
 
       @media (max-width: 1024px) {
         width: 99vw;
+      }
+      a {
+        display: block;
+        overflow: hidden;
+
       }
     }
 
@@ -209,6 +215,7 @@ html {
 
     &-VueProductImage {
       width: 100%;
+      overflow: hidden;
       @include mobile{
         min-height: 173px;
       }
