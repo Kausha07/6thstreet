@@ -129,12 +129,11 @@ class HeaderMainSection extends NavigationAbstract {
     const { type } = this.state;
     // updated this.props with window. in case of any issue need to verify this in future
     const {
-      location: { search, pathname = "" },
-    } = window;
+      location: { state, pathname = "" },
+    } = this.props;
     const isSearch = pathname.includes("catalogsearch");
-    const tt = TYPE_CATEGORY === type && search && !isSearch;
-
-    return TYPE_CATEGORY === type && search && !isSearch;
+    
+    return TYPE_CATEGORY === type && state && !isSearch;
   }
 
   isPDP() {

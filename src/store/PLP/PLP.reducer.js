@@ -75,8 +75,8 @@ export const combineFilters = (filters = {}, _initialFilters) =>
             }
         };
     }, {})
-);
 
+    
 // TODO: implement initial reducer, needed to handle filter count
 export const PLPReducer = (state = getInitialState(), action) => {
   const { type } = action;
