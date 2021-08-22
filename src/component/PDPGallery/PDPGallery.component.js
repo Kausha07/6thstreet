@@ -44,7 +44,10 @@ class PDPGallery extends PureComponent {
     isArabic: isArabic(),
   };
 
-  videoRef = [React.createRef(), React.createRef()];
+  videoRef = {
+    prod_style_video: React.createRef(),
+    prod_360_video: React.createRef()
+  };
 
   componentDidMount() {
     CSS.setVariable(
@@ -122,7 +125,6 @@ class PDPGallery extends PureComponent {
 
   renderCrumbs() {
     const { crumbs = [], currentIndex, onSliderChange } = this.props;
-
     return (
       <div ref={this.crumbsRef} block="PDPGallery" elem="Crumbs">
         <SliderVertical
@@ -173,16 +175,17 @@ class PDPGallery extends PureComponent {
   }
   
   renderVideos() {
-    const { prod_360_video, prod_style_video } = this.props;
-    
+    const { prod_style_video, prod_360_video } = this.props;
+    const videos =  { prod_style_video, prod_360_video };
     return (
-      [prod_360_video, prod_style_video].filter((src) => !!src).map((src, index) => (
+      Object.keys(videos).filter((key) => !!videos[key]).map((key, index) => (
           <video
             key={index}
+            data-index={index}
             block="Video"
-            ref={this.videoRef[index]}
+            ref={this.videoRef[key]}
             height="534"
-            src={src}
+            src={videos[key]}
             type="video/mp4"
             controls={!isMobile.any()}
             disablepictureinpicture
@@ -192,14 +195,13 @@ class PDPGallery extends PureComponent {
     );
   }
 
-  playVideo(index) {
+  playVideo(video_type) {
     const { gallery, onSliderChange } = this.props;
-    onSliderChange(gallery.length + index);
-    this.setState({ isVideoPlaying: true}, () => {
-      const video = this.videoRef[index];
-      if(video?.current)
-      {
-        var counter = 1;
+    const video = this.videoRef[video_type];
+    var counter = 1;
+    if(video?.current) {
+      this.setState({ isVideoPlaying: video }, () => {
+        onSliderChange(gallery.length + parseInt(video?.current.dataset['index']));
         video.current.play();
         video.current.addEventListener("ended", () => {
           counter = counter + 1;
@@ -208,15 +210,28 @@ class PDPGallery extends PureComponent {
           }
           else {
             onSliderChange(0);
-            this.setState({ isVideoPlaying: false});
+            this.setState({ isVideoPlaying: false}, () => {
+              counter = 1;
+            });
           }
         });
-      }
-    });
+      });
+    }
+  }
+
+  stopVideo() {
+    const { isVideoPlaying } = this.state;
+    const { onSliderChange } = this.props;
+    if(isVideoPlaying?.current){
+      isVideoPlaying.current.pause();
+      isVideoPlaying.current.currentTime = 0;
+    }
+    onSliderChange(0);
+    this.setState({ isVideoPlaying: false})
   }
 
   renderVideoButtons() {
-    const { prod_360_video, prod_style_video } = this.props;
+    const { prod_360_video, prod_style_video, currentIndex, gallery } = this.props;
     const { isVideoPlaying } = this.state;
     if(!(prod_360_video || prod_style_video) || !isMobile.any()){
       return null;
@@ -228,11 +243,12 @@ class PDPGallery extends PureComponent {
         elem="VideoButtonsContainer"
       >
         {
-          isVideoPlaying
+          isVideoPlaying && currentIndex>=gallery.length
           ?
           <button
             block="PDPGallery-VideoButtonsContainer-VideoButtons"
             elem="ViewGallery"
+            onClick={() => this.stopVideo()}
           >
             View Gallery
           </button>
@@ -244,7 +260,7 @@ class PDPGallery extends PureComponent {
             { prod_style_video && <button
               block="PDPGallery-VideoButtonsContainer-VideoButtons"
               elem="StyleVideo"
-              onClick={()=>this.playVideo(0)}
+              onClick={()=>this.playVideo('prod_style_video')}
             >
               Video
             </button>
@@ -252,7 +268,7 @@ class PDPGallery extends PureComponent {
             { prod_360_video && <button
               block="PDPGallery-VideoButtonsContainer-VideoButtons"
               elem="360DegreeVideo"
-              onClick={()=>this.playVideo(1)}
+              onClick={()=>this.playVideo('prod_360_video')}
             >
               360
             </button>

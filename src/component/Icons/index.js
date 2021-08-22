@@ -6,9 +6,24 @@ import Close from './Close';
 import FavouriteFilled from './FavouriteFilled';
 import Favourite from './Favourite';
 import Lock from './Lock';
+import Player from './Player';
 import ShareFilled from './ShareFilled';
 import Select from './Select';
 import Share from './Share';
 import Shipping from './Shipping';
 
-export { ChevronDown, ChevronLeft, ChevronRight, ChevronUp, Close, FavouriteFilled, Favourite, Lock, ShareFilled, Select, Share, Shipping }
+export {
+    ChevronDown,
+    ChevronLeft,
+    ChevronRight,
+    ChevronUp,
+    Close,
+    FavouriteFilled,
+    Favourite,
+    Lock,
+    Player,
+    ShareFilled,
+    Select,
+    Share,
+    Shipping
+}
