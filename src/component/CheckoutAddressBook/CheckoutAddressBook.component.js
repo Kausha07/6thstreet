@@ -21,6 +21,7 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
     isSignedIn: PropTypes.bool.isRequired,
     isBilling: PropTypes.bool.isRequired,
     shippingAddress: PropTypes.object.isRequired,
+    isClickAndCollect: PropTypes.bool.isRequired
   };
 
   state = {
@@ -57,6 +58,7 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
       onShippingEstimationFieldsChange,
       isSignedIn,
       shippingAddress,
+      isClickAndCollect
     } = this.props;
     const formPortalId = isBilling ? BILLING_STEP : SHIPPING_STEP;
 
@@ -67,6 +69,7 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
         isSignedIn={isSignedIn}
         id={formPortalId}
         shippingAddress={shippingAddress}
+        isClickAndCollect={isClickAndCollect}
       />
     );
   }

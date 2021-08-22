@@ -108,7 +108,8 @@ export class PDPAddToCartContainer extends PureComponent {
     sendNotifyMeEmail: this.sendNotifyMeEmail.bind(this),
     setGuestUserEmail: this.setGuestUserEmail.bind(this),
     togglePDPClickAndCollectPopup: this.togglePDPClickAndCollectPopup.bind(this),
-    selectClickAndCollectStore: this.selectClickAndCollectStore.bind(this)
+    selectClickAndCollectStore: this.selectClickAndCollectStore.bind(this),
+    confirmClickAndCollect: this.confirmClickAndCollect.bind(this)
   };
 
   constructor(props) {
@@ -316,9 +317,8 @@ export class PDPAddToCartContainer extends PureComponent {
   }
 
   containerProps = () => {
-    const { product, setStockAvailability, customer, guestUserEmail, clickAndCollectStores, selectedClickAndCollectStore } =
-      this.props;
-    const { mappedSizeObject } = this.state;
+    const { product, setStockAvailability, customer, guestUserEmail, clickAndCollectStores } = this.props;
+    const { mappedSizeObject, selectedClickAndCollectStore } = this.state;
     const basePrice =
       product.price[0] &&
       product.price[0][Object.keys(product.price[0])[0]]["6s_base_price"];
@@ -367,10 +367,6 @@ export class PDPAddToCartContainer extends PureComponent {
     });
   }
 
-  clickAndCollect() {
-
-  }
-
   addToCart() {
     const {
       product: {
@@ -390,11 +386,10 @@ export class PDPAddToCartContainer extends PureComponent {
       addProductToCart,
       showNotification,
     } = this.props;
-    const { productStock } = this.state;
+    const { productStock, selectedClickAndCollectStore } = this.state;
 
     if (!price[0]) {
       showNotification("error", __("Unable to add product to cart."));
-
       return;
     }
 
@@ -433,6 +428,7 @@ export class PDPAddToCartContainer extends PureComponent {
           qty: 1,
           optionId,
           optionValue,
+          selectedClickAndCollectStore
         },
         color,
         optionValue,
@@ -545,9 +541,12 @@ export class PDPAddToCartContainer extends PureComponent {
   }
 
   afterAddToCart(isAdded = "true") {
+    const { buttonRefreshTimeout, openClickAndCollectPopup } = this.state;
+    if(openClickAndCollectPopup) {
+      this.togglePDPClickAndCollectPopup();
+    }
     const { setMinicartOpen } = this.props;
     // eslint-disable-next-line no-unused-vars
-    const { buttonRefreshTimeout } = this.state;
     this.setState({ isLoading: false });
     // TODO props for addedToCart
     const timeout = 1250;
@@ -595,12 +594,16 @@ export class PDPAddToCartContainer extends PureComponent {
     this.props.showNotification("error", message);
   }
 
+  confirmClickAndCollect() {
+    this.addToCart()
+  }
+
   selectClickAndCollectStore(value) {
-    console.log(value);
     this.setState({
-      selectedClickAndCollectStore: value
+      selectedClickAndCollectStore : value
     });
   }
+
   toggleRootElementsOpacity() {
     const { openClickAndCollectPopup } = this.state;
     const rootElement = document.getElementById("root");
@@ -610,10 +613,30 @@ export class PDPAddToCartContainer extends PureComponent {
   }
 
   togglePDPClickAndCollectPopup() {
-    const { openClickAndCollectPopup } = this.state;
-    const { showOverlay, hideActiveOverlay } = this.props;
+    const { openClickAndCollectPopup, selectedSizeCode } = this.state;
+    const {
+      showOverlay,
+      hideActiveOverlay,
+      product: {
+        price = {},
+        size_uk = [],
+        size_eu = [],
+        size_us = []
+      },
+      showNotification
+    } = this.props;
 
     if(!openClickAndCollectPopup) {
+      if (!price[0]) {
+        showNotification("error", __("Unable to add product to cart."));
+        return;
+      }
+  
+      if ( (size_uk.length !== 0 || size_eu.length !== 0 || size_us.length !== 0) && selectedSizeCode === "") {
+        showNotification("error", __("Please select a size."));
+        return;
+      }
+      
       showOverlay(PDP_CLICK_AND_COLLECT_POPUP_ID);
     }
 
@@ -621,7 +644,7 @@ export class PDPAddToCartContainer extends PureComponent {
       hideActiveOverlay(PDP_CLICK_AND_COLLECT_POPUP_ID);
     }
     this.setState({
-      openClickAndCollectPopup: !this.state.openClickAndCollectPopup
+      openClickAndCollectPopup: !openClickAndCollectPopup
     },
     () => {
       this.toggleRootElementsOpacity();

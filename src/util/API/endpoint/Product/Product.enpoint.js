@@ -15,7 +15,7 @@ export const isClickAndCollectAvailable = ({brandName, sku}) =>
 
 
 export const getClickAndCollectStores = ({brandName, sku, latitude, longitude}) =>
-  MobileAPI.get(`/clicktocollect/stores?brandName=${brandName}&sku=${sku}&latitude=${23.4241}&longitude=${53.8478}`) || {};
+  MobileAPI.get(`/clicktocollect/stores?brandName=${brandName}&sku=${sku}&latitude=${latitude}&longitude=${longitude}`) || {};
 
 export const getStoreAddress = (storeNo) =>
   MobileAPI.get(`/clicktocollect/stores/${storeNo}/address`) || {};

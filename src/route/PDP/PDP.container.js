@@ -40,7 +40,7 @@ export const mapStateToProps = (state) => ({
 export const mapDispatchToProps = (dispatch) => ({
   requestProduct: (options) => PDPDispatcher.requestProduct(options, dispatch),
   requestProductBySku: (options) => PDPDispatcher.requestProductBySku(options, dispatch),
-  getClickAndCollectStores: (brandName, sku) => PDPDispatcher.getClickAndCollectStores(brandName, sku, dispatch),
+  getClickAndCollectStores: (brandName, sku, latitude, longitude) => PDPDispatcher.getClickAndCollectStores(brandName, sku, latitude, longitude, dispatch),
   setIsLoading: (isLoading) => dispatch(setPDPLoading(isLoading)),
   updateBreadcrumbs: (breadcrumbs) => {
     BreadcrumbsDispatcher.then(({ default: dispatcher }) =>
@@ -143,7 +143,13 @@ export class PDPContainer extends PureComponent {
       this.updateBreadcrumbs();
       this.setMetaData();
       this.updateHeaderState();
-      getClickAndCollectStores(brandName, sku);
+      navigator.geolocation.getCurrentPosition(
+        ({ coords }) => getClickAndCollectStores(brandName, sku, coords?.latitude, coords?.longitude),
+        (err) => console.error(err),
+        {
+          enableHighAccuracy: true
+        }
+      )
     }
 
     Event.dispatch(EVENT_GTM_PRODUCT_DETAIL, {

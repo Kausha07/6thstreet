@@ -11,6 +11,7 @@ export const addProductToCart = ({
   sku,
   configSKU,
   qty,
+  selectedClickAndCollectStore,
   optionId = null,
   optionValue = null,
   cartId,
@@ -22,6 +23,7 @@ export const addProductToCart = ({
       quote_id: cartId,
       sku,
       qty,
+      ctc_store_no: selectedClickAndCollectStore,
       option_id: optionId,
       option_value: optionValue,
     }

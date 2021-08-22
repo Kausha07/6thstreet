@@ -24,6 +24,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     customer: customerType.isRequired,
     showCreateNewPopup: PropTypes.func.isRequired,
     shippingAddress: PropTypes.object.isRequired,
+    isClickAndCollect: PropTypes.bool.isRequired
   };
 
   state = {
@@ -277,6 +278,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       onAddressSelect,
       onShippingEstimationFieldsChange,
       shippingAddress,
+      isClickAndCollect
     } = this.props;
     const { formContent } = this.state;
     return (
@@ -289,6 +291,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         openForm={this.openForm.bind(this)}
         showCards={this.showCards}
         hideCards={this.hideCards}
+        isClickAndCollect={isClickAndCollect}
       />
     );
   }

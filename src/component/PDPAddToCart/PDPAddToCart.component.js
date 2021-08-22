@@ -16,7 +16,7 @@ import { customerType } from "Type/Account";
 import "./PDPAddToCart.style";
 import { isArabic } from "Util/App";
 import StrikeThrough from "./icons/strike-through.png";
-import { Store } from '../Icons';
+import clickAndCollectIcon from "../PDPDetailsSection/icons/clickAndCollect.png";
 
 class PDPAddToCart extends PureComponent {
   static propTypes = {
@@ -345,7 +345,7 @@ class PDPAddToCart extends PureComponent {
         disabled={disabled}
     >
          <div>{__("Click & Collect")}</div>
-        <Store />
+        <img src={clickAndCollectIcon} />
         {/* <span>{__("Adding...")}</span> */}
         {/* <span>{__("Added to bag")}</span> */}
       </button>

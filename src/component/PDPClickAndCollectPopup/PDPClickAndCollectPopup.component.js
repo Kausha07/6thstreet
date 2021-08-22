@@ -15,6 +15,7 @@ class PDPClickAndCollectPopup extends PureComponent {
         togglePDPClickAndCollectPopup: PropTypes.func.isRequired,
         stores: PropTypes.object.isRequired,
         selectedClickAndCollectStore: PropTypes.object,
+        confirmClickAndCollect: PropTypes.func.isRequired
     };
 
     static defaultProps = {
@@ -23,6 +24,7 @@ class PDPClickAndCollectPopup extends PureComponent {
 
     renderStoreSelect() {
         const { stores, selectedClickAndCollectStore, selectClickAndCollectStore } = this.props;
+        console.log(stores)
         return (
             <Form
                 key="select-store"
@@ -47,11 +49,11 @@ class PDPClickAndCollectPopup extends PureComponent {
     }
 
     renderConfirmButton() {
-        const { selectedClickAndCollectStore } = this.props;
-        console.log(selectedClickAndCollectStore)
+        const { selectedClickAndCollectStore, confirmClickAndCollect } = this.props;
         return (
             <button
-                disabled={!selectedClickAndCollectStore}
+                disabled={ !selectedClickAndCollectStore }
+                onClick={ confirmClickAndCollect }
             >
                 { __('CONFIRM CLICK & COLLECT')}
             </button>

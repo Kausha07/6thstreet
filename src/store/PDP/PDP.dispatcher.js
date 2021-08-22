@@ -51,12 +51,12 @@ export class PDPDispatcher {
     return getProductStock(sku);
   }
 
-  async getClickAndCollectStores(brandName, sku, dispatch) {
+  async getClickAndCollectStores(brandName, sku, latitude, longitude, dispatch) {
     let clickAndCollectStores = [];
     try {
       const isAvailableResponse = await isClickAndCollectAvailable({brandName, sku});
       if(isAvailableResponse?.data?.isAvailable) {
-        const storeListResponse = await getClickAndCollectStores({brandName, sku});
+        const storeListResponse = await getClickAndCollectStores({brandName, sku, latitude, longitude});
         clickAndCollectStores = (storeListResponse?.data?.items || []).map((store) => (
           {
             id: store.storeNo,

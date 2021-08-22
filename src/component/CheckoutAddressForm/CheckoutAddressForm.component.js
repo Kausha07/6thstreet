@@ -67,14 +67,37 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
     const {
       isSignedIn,
       shippingAddress: { guest_email },
+      isClickAndCollect
     } = this.props;
+
     const { telephone, street, ...fieldMap } = super.fieldMap;
    
+    console.log(fieldMap)
+    // if(!!isClickAndCollect){
+    //   delete fieldMap.street;
+    //   delete fieldMap.city;
+    //   delete fieldMap.postcode;
+    //   delete fieldMap.region_string;
+    //   // if(fieldMap.street){
+    //   //   fieldMap.street.validation = [];
+    //   // }
+    //   // if(fieldMap.city){
+    //   //   fieldMap.city.validation = [];
+    //   // }
+    //   // if(fieldMap.postcode) {
+    //   //   fieldMap.postcode.validation = [];
+    //   // }
+    //   // if(fieldMap.region_string) {
+    //   //   fieldMap.region_string.validation = [];
+    //   // }
+    // }
+    // else {
+      fieldMap.street = {
+        ...street,
+        onChange: (value) => this.onChange("street", value),
+      };
+    // }
 
-    fieldMap.street = {
-      ...street,
-      onChange: (value) => this.onChange("street", value),
-    };
     fieldMap.telephone = {
       ...telephone,
       onChange: (value) => this.onChange("telephone", value),

@@ -68,7 +68,6 @@ export class CartPage extends PureComponent {
         </p>
       );
     }
-
     return (
       <ul block="CartPage" elem="Items" aria-label="List of items in cart">
         {items.map((item) => (
