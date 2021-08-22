@@ -55,7 +55,15 @@
     text-align: start;
     margin: 8.23px 0px 5.58px 0px;
   }
-
+  &-OutOfStock {
+    display: block;
+    font-size: 13px;
+    line-height: 30px;
+    text-align: center;
+    color: var(--Cardinal);
+    text-transform: uppercase;
+    font-family: "Avenir Next Medium";
+  }
   &-Title {
     white-space: nowrap;
     overflow: hidden;

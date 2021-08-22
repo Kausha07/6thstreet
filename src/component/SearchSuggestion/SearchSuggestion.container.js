@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import SearchSuggestionDispatcher from "Store/SearchSuggestions/SearchSuggestions.dispatcher";
 import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
 import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
-import { WishlistItems } from "Util/API/endpoint/Wishlist/Wishlist.type";
 import Algolia from "Util/API/provider/Algolia";
 import { isArabic } from "Util/App";
 import BrowserDatabase from "Util/BrowserDatabase";
@@ -19,7 +18,7 @@ export const mapStateToProps = (state) => ({
   gender: state.AppState.gender,
   queryID: state.SearchSuggestions.queryID,
   querySuggestions: state.SearchSuggestions.querySuggestions,
-  wishlistData: state.WishlistReducer.items,
+  // wishlistData: state.WishlistReducer.items,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -47,7 +46,7 @@ export class SearchSuggestionContainer extends PureComponent {
     closeSearch: PropTypes.func.isRequired,
     queryID: PropTypes.string,
     querySuggestions: PropTypes.array,
-    wishlistData: WishlistItems.isRequired,
+    // wishlistData: WishlistItems.isRequired,
   };
 
   static getDerivedStateFromProps(props, state) {
@@ -130,16 +129,13 @@ export class SearchSuggestionContainer extends PureComponent {
     }
   }
 
-  getPdpSearchWidgetData() {
+  async getPdpSearchWidgetData() {
     const { gender } = this.props;
     const userData = BrowserDatabase.getItem("MOE_DATA");
-    const {
-      USER_DATA: { deviceUuid },
-    } = userData;
     const query = {
       filters: [],
       num_results: 10,
-      mad_uuid: deviceUuid,
+      mad_uuid: userData?.USER_DATA?.deviceUuid,
     };
 
     const payload = VueQuery.buildQuery("vue_browsing_history_slider", query, {
@@ -159,13 +155,10 @@ export class SearchSuggestionContainer extends PureComponent {
   getTrendingProducts() {
     const { gender } = this.props;
     const userData = BrowserDatabase.getItem("MOE_DATA");
-    const {
-      USER_DATA: { deviceUuid },
-    } = userData;
     const query = {
       filters: [],
       num_results: 10,
-      mad_uuid: deviceUuid,
+      mad_uuid: userData?.USER_DATA?.deviceUuid,
     };
 
     const payload = VueQuery.buildQuery("vue_trending_slider", query, {
@@ -187,7 +180,10 @@ export class SearchSuggestionContainer extends PureComponent {
     const countryCodeFromUrl = getLocaleFromUrl();
     const lang = isArabic() ? "arabic" : "english";
     sourceQuerySuggestionIndex = this.getAlgoliaIndex(countryCodeFromUrl, lang);
-    this.getPdpSearchWidgetData();
+    const { gender } = this.props;
+    if (gender !== "home") {
+      this.getPdpSearchWidgetData();
+    }
     // this.getTrendingProducts();
     document.body.classList.add("isSuggestionOpen");
   }
@@ -284,7 +280,7 @@ export class SearchSuggestionContainer extends PureComponent {
       closeSearch,
       queryID,
       querySuggestions,
-      wishlistData,
+      // wishlistData,
     } = this.props;
     const { brands = [], products = [] } = data;
     const isEmpty = search === "";
@@ -306,7 +302,7 @@ export class SearchSuggestionContainer extends PureComponent {
       recentSearches,
       recommendedForYou,
       trendingProducts,
-      wishlistData,
+      // wishlistData,
     };
   };
   containerFunctions = {
