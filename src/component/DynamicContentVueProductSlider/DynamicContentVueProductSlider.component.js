@@ -201,7 +201,6 @@ class DynamicContentVueProductSlider extends PureComponent {
   };
   sendImpressions() {
     const products = this.getProducts();
-    debugger;
     const items = products.map((item) => {
       return {
         id: item.sku,

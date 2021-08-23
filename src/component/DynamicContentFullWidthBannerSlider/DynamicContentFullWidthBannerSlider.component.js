@@ -65,7 +65,6 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
     observer.observe(this.viewElement);
   }
   sendImpressions() {
-    debugger;
     // setTimeout(() => {
     const { items = [] } = this.props;
     Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);

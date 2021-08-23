@@ -47,7 +47,6 @@ class BannerImpressionEvent extends BaseEvent {
    * @param impressions banner list
    */
   handler(EVENT_TYPE, impressions = []) {
-    debugger;
     const storage = this.getStorage();
     // if (
     //   !impressions ||
