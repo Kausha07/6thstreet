@@ -37,15 +37,73 @@ class DynamicContent extends PureComponent {
     });
   }
   componentDidMount() {
-    this.registerViewportScrollEvent();
+    // this.registerViewportScrollEvent();
+    // this.registerAllViewPortEvent();
   }
 
   componentWillUnmount() {
-    document.removeEventListener("scroll", this.scrollHandler);
+    // document.removeEventListener("scroll", this.scrollHandler);
   }
   registerViewportScrollEvent() {
-    document.addEventListener("scroll", this.scrollHandler);
+    // document.addEventListener("scroll", this.scrollHandler);
   }
+
+  registerAllViewPortEvent() {
+    const refList = this.comprefs.filter(
+      (ref) => ref && ref.current && ref.current.props
+    );
+    // console.log(refList.length, "aaa");
+    refList.map((compref, index) => {
+      this.registerViewPortEvent(compref, index);
+    });
+  }
+  registerViewPortEvent(ref, index) {
+    // sliderWithLabel
+    // const elem = document.querySelector("#sliderWithLabel");
+
+    let observer;
+
+    let options = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.5,
+    };
+
+    observer = new IntersectionObserver((entries, observer) => {
+      const { impressionSent } = this.state;
+      if (impressionSent[index]) {
+        return;
+      }
+
+      entries.forEach((entry) => {
+        console.log("elem in view port ", entry.isIntersecting);
+        if (entry.isIntersecting) {
+          const { items = [] } = this.props;
+          this.sendBannerImpressions();
+          impressionSent[index] = true;
+          this.setState({ impressionSent });
+        }
+      });
+    }, options);
+    observer.observe(ReactDOM.findDOMNode(ref.current));
+  }
+  handleIntersect = (entries, observer) => {
+    const { impressionSent } = this.state;
+    return;
+    // if (impressionSent[index]) {
+    //   return;
+    // }
+
+    entries.forEach((entry) => {
+      console.log("elem in view port ", entry);
+      if (entry.isIntersecting) {
+        this.sendBannerImpressions();
+        impressionSent[index] = true;
+        this.setState({ impressionSent });
+      }
+    });
+  };
+
   scrollHandler = () => {
     const refList = this.comprefs.filter(
       (ref) => ref && ref.current && ref.current.props
@@ -71,8 +129,7 @@ class DynamicContent extends PureComponent {
       if (!impressionSent[index]) {
         const { items = [], promotion_name, type, tag } = ref.current.props;
         // this.sendBannerImpressions(items);
-        Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
-        console.log("impression sent");
+        // Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
         impressionSent[index] = true;
         this.setState({ impressionSent });
         // console.log({ impressionSent, promotion_name, type, tag, items });
@@ -80,7 +137,7 @@ class DynamicContent extends PureComponent {
     }
   };
   sendBannerImpressions(items) {
-    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
+    // Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
   }
   state = {
     impressions: [],

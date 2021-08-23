@@ -29,6 +29,8 @@ class DynamicContentVueProductSlider extends PureComponent {
     this.state = {
       customScrollWidth: null,
       isArabic: isArabic(),
+      impressionSent: false,
+      eventRegistered: false,
     };
   }
   componentDidMount() {
@@ -50,12 +52,39 @@ class DynamicContentVueProductSlider extends PureComponent {
         widgetID: widgetID,
       },
     });
+    this.registerViewPortEvent();
+  }
+  componentWillUnmount() {}
 
-    document.addEventListener("scroll", this.isInViewport);
+  registerViewPortEvent() {
+    let observer;
+    const elem = document.querySelector("#productSlider");
+
+    let options = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.5,
+    };
+
+    observer = new IntersectionObserver(this.handleIntersect, options);
+
+    observer.observe(elem);
+    this.setState({ eventRegistered: true });
   }
-  componentWillUnmount() {
-    document.removeEventListener("scroll", this.isInViewport);
-  }
+
+  handleIntersect = (entries, observer) => {
+    const { impressionSent } = this.state;
+    if (impressionSent) {
+      return;
+    }
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        console.log("dynamic product slider component in view port ", entry);
+        this.sendImpressions();
+      }
+    });
+  };
+
   async handleContainerScroll(widgetID, event) {
     const { isArabic } = this.state;
     const { pageType = "home" } = this.props;
@@ -172,6 +201,7 @@ class DynamicContentVueProductSlider extends PureComponent {
   };
   sendImpressions() {
     const products = this.getProducts();
+    debugger;
     const items = products.map((item) => {
       return {
         id: item.sku,
@@ -179,34 +209,8 @@ class DynamicContentVueProductSlider extends PureComponent {
       };
     });
     Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
+    this.setState({ impressionSent: true });
   }
-  isInViewport = () => {
-    if (!this.viewElement) {
-      return;
-    }
-    //get how much pixels left to scrolling our ReactElement
-    const top = this.viewElement.getBoundingClientRect().top;
-
-    //here we check if element top reference is on the top of viewport
-    /*
-     * If the value is positive then top of element is below the top of viewport
-     * If the value is zero then top of element is on the top of viewport
-     * If the value is negative then top of element is above the top of viewport
-     * */
-    if (top <= 0) {
-      // inside viewport
-      const { header: { title } = {} } = this.props;
-
-      const { impressionSent } = this.state;
-      if (!impressionSent) {
-        const { products = [] } = this.props;
-        if (products.length > 0) {
-          this.sendImpressions();
-          this.setState({ impressionSent: true });
-        }
-      }
-    }
-  };
 
   renderSliderContainer() {
     const items = this.getProducts();

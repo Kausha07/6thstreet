@@ -47,14 +47,16 @@ class BannerImpressionEvent extends BaseEvent {
    * @param impressions banner list
    */
   handler(EVENT_TYPE, impressions = []) {
+    debugger;
     const storage = this.getStorage();
-    if (
-      !impressions ||
-      impressions.length === 0 ||
-      this.spamProtection(SPAM_PROTECTION_DELAY)
-    ) {
-      return;
-    }
+    // if (
+    //   !impressions ||
+    //   impressions.length === 0 ||
+    //   this.spamProtection(SPAM_PROTECTION_DELAY)
+    // ) {
+    //   console.log("impression not recorded", EVENT_TYPE, impressions);
+    //   return;
+    // }
 
     const formattedImpressions = impressions.map(
       ({ label, promotion_name, id }, index) => ({

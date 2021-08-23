@@ -8,6 +8,7 @@ import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
 // import VueIntegrationQueries from "Query/vueIntegration.query";
 // import { getUUID } from "Util/Auth";
 import "./DynamicContentFullWidthBannerSlider.style";
+import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
 
 const settings = {
   lazyload: true,
@@ -44,8 +45,45 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
 
   state = {
     activeSlide: 0,
+    impressionSent: false,
   };
 
+  componentDidMount() {
+    this.registerViewPortEvent();
+  }
+
+  registerViewPortEvent() {
+    let observer;
+
+    let options = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.5,
+    };
+
+    observer = new IntersectionObserver(this.handleIntersect, options);
+    observer.observe(this.viewElement);
+  }
+  sendImpressions() {
+    debugger;
+    // setTimeout(() => {
+    const { items = [] } = this.props;
+    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
+    this.setState({ impressionSent: true });
+    // }, 100);
+  }
+  handleIntersect = (entries, observer) => {
+    const { impressionSent } = this.state;
+    if (impressionSent) {
+      return;
+    }
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        console.log("full width slider item component in view port ", entry);
+        this.sendImpressions();
+      }
+    });
+  };
   onSliderChange = (activeSlide) => {
     this.setState({ activeSlide });
   };
@@ -92,8 +130,11 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
   }
 
   render() {
+    let setRef = (el) => {
+      this.viewElement = el;
+    };
     return (
-      <div block="DynamicContentFullWidthBannerSlider">
+      <div ref={setRef} block="DynamicContentFullWidthBannerSlider">
         {this.props.header && (
           <DynamicContentHeader header={this.props.header} />
         )}
