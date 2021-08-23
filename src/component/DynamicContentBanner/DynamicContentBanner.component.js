@@ -8,6 +8,7 @@ import { formatCDNLink } from "Util/Url";
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import "./DynamicContentBanner.style";
+import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
 
 class DynamicContentBanner extends PureComponent {
   static propTypes = {
@@ -33,6 +34,41 @@ class DynamicContentBanner extends PureComponent {
 
   state = {
     isMobile: isMobile.any() || isMobile.tablet(),
+    impressionSent: false,
+  };
+
+  componentDidMount() {
+    this.registerViewPortEvent();
+  }
+
+  registerViewPortEvent() {
+    let observer;
+
+    let options = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.5,
+    };
+
+    observer = new IntersectionObserver(this.handleIntersect, options);
+    observer.observe(this.viewElement);
+  }
+  sendImpressions() {
+    const { items = [] } = this.props;
+    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
+    this.setState({ impressionSent: true });
+  }
+  handleIntersect = (entries, observer) => {
+    const { impressionSent } = this.state;
+    if (impressionSent) {
+      return;
+    }
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        console.log("dynamic content banner in view port ", entry);
+        this.sendImpressions();
+      }
+    });
   };
 
   onclick = (item) => {
@@ -70,7 +106,7 @@ class DynamicContentBanner extends PureComponent {
         </>
       );
     }
-    
+
     return (
       <Link
         to={formatCDNLink(link)}
@@ -102,8 +138,11 @@ class DynamicContentBanner extends PureComponent {
   }
 
   render() {
+    let setRef = (el) => {
+      this.viewElement = el;
+    };
     return (
-      <div block="DynamicContentBanner">
+      <div ref={setRef} block="DynamicContentBanner">
         {this.props.header && (
           <DynamicContentHeader header={this.props.header} />
         )}
