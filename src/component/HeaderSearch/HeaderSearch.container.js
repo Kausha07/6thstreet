@@ -80,7 +80,10 @@ export class HeaderSearchContainer extends PureComponent {
               addAnalytics: true,
             }
       );
-      this.logRecentSearch(search);
+      console.log("product data", productData);
+      if (productData?.nbHits !== 0 && productData?.data.length > 0) {
+        this.logRecentSearch(search);
+      }
       const queryID = productData?.queryID ? productData?.queryID : null;
       let requestedGender = isArabic() ? getGenderInArabic(gender) : gender;
       history.push(
@@ -89,12 +92,6 @@ export class HeaderSearchContainer extends PureComponent {
           requestedGender.charAt(0).toUpperCase()
         )}`
       );
-      // history.push(
-      //   `/catalogsearch/result/?q=${search}&gender=${requestedGender.replace(
-      //     requestedGender.charAt(0),
-      //     requestedGender.charAt(0).toUpperCase()
-      //   )}`
-      // );
     }
   }
 
