@@ -50,6 +50,7 @@ class DynamicContent extends PureComponent {
     const refList = this.comprefs.filter(
       (ref) => ref && ref.current && ref.current.props
     );
+    // console.log(refList.length, "aaa");
     refList.map((compref, index) => {
       this.isInViewport(compref, index);
     });
@@ -60,11 +61,21 @@ class DynamicContent extends PureComponent {
     if (top <= 0) {
       // inside viewport
       const { impressionSent } = this.state;
+      const trackedImpressions = window.dataLayer.filter(
+        (item) => item.event == "promotionImpression"
+      );
+      const isTracked =
+        trackedImpressions.filter((item) => item.index == index).length > 0;
+      console.log({ isTracked, index });
+
       if (!impressionSent[index]) {
-        const { items = [] } = ref.current.props;
-        this.sendBannerImpressions(items);
+        const { items = [], promotion_name, type, tag } = ref.current.props;
+        // this.sendBannerImpressions(items);
+        Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
+        console.log("impression sent");
         impressionSent[index] = true;
         this.setState({ impressionSent });
+        // console.log({ impressionSent, promotion_name, type, tag, items });
       }
     }
   };
@@ -127,6 +138,7 @@ class DynamicContent extends PureComponent {
   };
   renderBlock = (block, i) => {
     const { type, ...restProps } = block;
+    const { promotion_name, tag, items } = block;
     let vueSliderType = [
       "vue_browsing_history_slider",
       "vue_trending_slider",
@@ -150,7 +162,14 @@ class DynamicContent extends PureComponent {
       }
 
       return (
-        <Component ref={this.comprefs[i]} {...restProps} type={type} key={i} />
+        <Component
+          ref={this.comprefs[i]}
+          {...restProps}
+          promotion_name={promotion_name}
+          tag={tag}
+          type={type}
+          key={i}
+        />
       );
     } else {
       Component = this.renderMap[type];
@@ -173,7 +192,16 @@ class DynamicContent extends PureComponent {
       };
     }
 
-    return <Component ref={this.comprefs[i]} {...restProps} key={i} />;
+    return (
+      <Component
+        ref={this.comprefs[i]}
+        {...restProps}
+        type={type}
+        promotion_name={promotion_name}
+        tag={tag}
+        key={i}
+      />
+    );
   };
 
   renderBlocks() {
