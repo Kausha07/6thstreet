@@ -1,15 +1,13 @@
-import { PureComponent } from "react";
-
 import Image from "Component/Image";
 import Link from "Component/Link";
-import { hideActiveOverlay } from "SourceStore/Overlay/Overlay.action";
 import { MOBILE_MENU_SIDEBAR_ID } from "Component/MobileMenuSideBar/MoblieMenuSideBar.config";
+import { PureComponent } from "react";
+import { hideActiveOverlay } from "SourceStore/Overlay/Overlay.action";
 import {
   CategoryButton,
   CategoryItems,
 } from "Util/API/endpoint/Categories/Categories.type";
 import { isArabic } from "Util/App";
-
 import "./MenuGrid.style";
 
 class MenuGrid extends PureComponent {
@@ -40,7 +38,7 @@ class MenuGrid extends PureComponent {
 
   renderItem = (item, i) => {
     const { image_url, label, link } = item;
-    
+
     if (!link) {
       return null;
     }
@@ -100,7 +98,6 @@ class MenuGrid extends PureComponent {
     const {
       button: { link },
     } = this.props;
-
 
     return (
       <button block="ViewAll" elem="Button">

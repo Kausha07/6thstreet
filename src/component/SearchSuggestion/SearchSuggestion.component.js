@@ -701,12 +701,12 @@ class SearchSuggestion extends PureComponent {
 
   renderTopSearches() {
     const { topSearches = [] } = this.props;
-    return (
+    return topSearches.length > 0 ? (
       <div block="TopSearches">
         <h2>{__("Top searches")}</h2>
         <ul>{topSearches.map(this.renderTopSearch)}</ul>
       </div>
-    );
+    ) : null;
   }
 
   // recent searches
