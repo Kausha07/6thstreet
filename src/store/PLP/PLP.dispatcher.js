@@ -84,7 +84,7 @@ export class PLPDispatcher {
     const devicePrefix = this.getDevicePrefix();
     try {
       const plpData = await getStaticFile(HOME_STATIC_FILE_KEY, {
-        $FILE_NAME: `${devicePrefix}${gender}_plpas.json`,
+        $FILE_NAME: `${devicePrefix}${gender}_plp.json`,
       });
       if (Array.isArray(plpData)) {
         dispatch(setPLPWidget(plpData));
