@@ -38,7 +38,10 @@ class DynamicContentBanner extends PureComponent {
   };
 
   componentDidMount() {
-    this.registerViewPortEvent();
+    const { doNotTrackImpression } = this.props;
+    if (!doNotTrackImpression) {
+      this.registerViewPortEvent();
+    }
   }
 
   registerViewPortEvent() {
