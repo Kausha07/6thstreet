@@ -166,7 +166,7 @@ class RecommendedForYouVueSliderItem extends PureComponent {
         <span id="productName">{name}</span>
         {this.renderPrice(price)}
         {this.renderIsNew(is_new_in)}
-        <WishlistIcon sku={sku} data={data} />
+        <WishlistIcon sku={sku} data={data} pageType="search" />
       </div>
     );
   }

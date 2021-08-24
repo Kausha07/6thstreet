@@ -5,20 +5,17 @@
  * @copyright Copyright (c) 2020 Scandiweb, Inc (https://scandiweb.com)
  */
 
-import PropTypes from "prop-types";
-import { PureComponent } from "react";
-
 import PLPFilter from "Component/PLPFilter";
 import PLPQuickFilter from "Component/PLPQuickFilter";
 import Popup from "Component/Popup";
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
 import { Filters } from "Util/API/endpoint/Product/Product.type";
 import WebUrlParser from "Util/API/helper/WebUrlParser";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
-
 import fitlerImage from "./icons/filter-button.png";
 import { SIZES } from "./PLPFilters.config";
-
 import "./PLPFilters.style";
 
 class PLPFilters extends PureComponent {
@@ -99,7 +96,6 @@ class PLPFilters extends PureComponent {
 
   renderFilters() {
     const { filters = {} } = this.props;
-
     return Object.entries(filters).map((filter) => {
       if (filter[0] === SIZES && !isMobile.any()) {
         const { data = {} } = filter[1];
@@ -152,7 +148,7 @@ class PLPFilters extends PureComponent {
     const { activeFilters = {} } = this.state;
     const { query } = this.props;
     Object.keys(activeFilters).map((key) =>
-      WebUrlParser.setParam(key, activeFilters[key],query)
+      WebUrlParser.setParam(key, activeFilters[key], query)
     );
     this.hidePopUp();
   };
@@ -161,7 +157,7 @@ class PLPFilters extends PureComponent {
     const { activeFilters = {} } = this.state;
     const { query } = this.props;
     Object.keys(activeFilters).map((key) =>
-      WebUrlParser.setParam(key, activeFilters[key],query)
+      WebUrlParser.setParam(key, activeFilters[key], query)
     );
   };
 
@@ -401,7 +397,7 @@ class PLPFilters extends PureComponent {
     const { query } = this.props;
     if (!isMobile.any() || isQuickFilters) {
       Object.keys(activeFilters).map((key) =>
-        WebUrlParser.setParam(key, activeFilters[key],query)
+        WebUrlParser.setParam(key, activeFilters[key], query)
       );
     }
   };
