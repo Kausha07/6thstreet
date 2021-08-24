@@ -255,7 +255,12 @@ class DynamicContentVueProductSlider extends PureComponent {
       this.viewElement = el;
     };
     return (
-      <div ref={setRef} block="VueProductSlider" elem="Container">
+      <div
+        ref={setRef}
+        id="productSlider"
+        block="VueProductSlider"
+        elem="Container"
+      >
         {this.renderHeader()}
         {this.renderSliderContainer()}
       </div>
