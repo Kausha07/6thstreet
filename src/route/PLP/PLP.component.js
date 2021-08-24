@@ -59,8 +59,7 @@ export class PLP extends PureComponent {
 
   renderPLPWidget = () => {
     const { plpWidgetData } = this.props;
-    console.log("plp", plpWidgetData);
-    console.log("plp", location);
+    console.log("plp data", plpWidgetData);
     const { pathname } = location;
     const tagName = pathname
       .replace(".html", "")
