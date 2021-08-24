@@ -199,6 +199,7 @@ class CheckoutComApplePayContainer extends PureComponent {
     } = this.props;
     console.log("apple pay events props", this.props)
     applePaySession.onvalidatemerchant = (event) => {
+      console.log("validation URL",event.validationURL )
       const promise = this._performValidation(event.validationURL);
 
       promise
