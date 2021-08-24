@@ -142,7 +142,7 @@ class HeaderSearch extends PureComponent {
               mods={{ isArabic }}
               onClick={this.closeSearch}
             >
-              Cancel
+              {__("Cancel")}
               {/* {svg} */}
             </button>
           </div>
