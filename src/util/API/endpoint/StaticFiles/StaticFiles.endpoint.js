@@ -38,15 +38,16 @@ export const getStaticFile = async (key, TemplateParamsOverride = {}) => {
   const { pathname } = new URL(url);
   try {
     const res = await CDN.get(pathname);
-
     if (res.data) {
       return res.data;
     } else if (res === "Something Went Wrong") {
+      throw new Error(res);
+    } else if (res === "هناك خطأ ما!") {
       throw new Error(res);
     }
 
     return res;
   } catch (error) {
-    throw new Error(error);
+    return error;
   }
 };

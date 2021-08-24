@@ -147,23 +147,36 @@ class SearchSuggestion extends PureComponent {
     const { isArabic } = this.state;
     let requestedGender = gender;
     let catalogUrl;
+    let genderInURL;
     if (isArabic) {
-      requestedGender = getGenderInArabic(gender);
+      if (gender === "kids") {
+        genderInURL = "";
+        // to add Boy~Girl in arabic
+      } else {
+        requestedGender = getGenderInArabic(gender);
+        genderInURL = requestedGender?.replace(
+          requestedGender?.charAt(0),
+          requestedGender?.charAt(0).toUpperCase()
+        );
+      }
+    } else {
+      if (gender === "kids") {
+        genderInURL = "Boy~Girl";
+      } else {
+        genderInURL = requestedGender?.replace(
+          requestedGender?.charAt(0),
+          requestedGender?.charAt(0).toUpperCase()
+        );
+      }
     }
     if (brandValue) {
       catalogUrl = `/catalogsearch/result/?q=${formatQuerySuggestions(
         query
-      )}&gender=${requestedGender.replace(
-        requestedGender.charAt(0),
-        requestedGender.charAt(0).toUpperCase()
-      )}&brand_name=${brandValue}`;
+      )}&gender=${genderInURL}&brand_name=${brandValue}`;
     } else {
       catalogUrl = `/catalogsearch/result/?q=${formatQuerySuggestions(
         query
-      )}&gender=${requestedGender.replace(
-        requestedGender.charAt(0),
-        requestedGender.charAt(0).toUpperCase()
-      )}`;
+      )}&gender=${genderInURL}`;
     }
     return catalogUrl;
   };
