@@ -217,7 +217,9 @@ html {
       width: 100%;
       overflow: hidden;
       @include mobile{
-        min-height: 173px;
+        height: 100%;
+        object-fit: contain;
+        max-height: 168px;
       }
       @include desktop{
         min-height: 168px;
