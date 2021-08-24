@@ -176,12 +176,7 @@ class ProductItem extends PureComponent {
   }
 
   renderLink() {
-    const {
-      product,
-      product: { url, link },
-      qid,
-      isVueData,
-    } = this.props;
+    const { product, link = "", url = "", qid, isVueData } = this.props;
     let queryID;
     if (!isVueData) {
       if (!qid) {
@@ -192,7 +187,7 @@ class ProductItem extends PureComponent {
     }
     let urlWithQueryID;
     if (!isVueData) {
-      const { pathname } = new URL(url);
+      const { pathname } = new URL(url ? url : link);
       if (queryID) {
         urlWithQueryID = `${pathname}?qid=${queryID}`;
       } else {
@@ -221,7 +216,7 @@ class ProductItem extends PureComponent {
     };
 
     return (
-      <Link to={linkTo} onClick={this.handleClick}>
+      <Link to={isVueData ? parseLink : linkTo} onClick={this.handleClick}>
         {" "}
         {this.renderImage()} {this.renderBrand()} {this.renderTitle()}{" "}
         {this.renderPrice()}{" "}

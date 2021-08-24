@@ -829,7 +829,8 @@ class SearchSuggestion extends PureComponent {
           mods={{ isArabic }}
           onClick={closeSearch}
         >
-          {svg}
+          Cancel
+          {/* {svg} */}
         </button>
       </div>
     );
@@ -839,7 +840,7 @@ class SearchSuggestion extends PureComponent {
     return (
       <div block="SearchSuggestion" mods={{ isArabic }}>
         <div block="SearchSuggestion" elem="Content">
-          {this.renderCloseButton()}
+          {/* {this.renderCloseButton()} */}
           {/* {this.renderLoader()} */}
           {this.renderContent()}
         </div>

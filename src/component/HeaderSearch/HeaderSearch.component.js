@@ -84,51 +84,70 @@ class HeaderSearch extends PureComponent {
 
   renderField() {
     const { search, onSearchChange, isVisible, onSearchClean } = this.props;
-    const { isClearVisible, isArabic } = this.state;
+    const { isClearVisible, isArabic, showSearch } = this.state;
 
     return (
-      <Form
-        id="header-search"
-        onSubmit={this.onSubmit}
-        ref={this.searchRef}
-        autocomplete="off"
-      >
-        <Field
-          id="search-field"
-          ref={this.inputRef}
-          name="search"
-          type="text"
+      <>
+        <Form
+          id="header-search"
+          onSubmit={this.onSubmit}
+          ref={this.searchRef}
           autocomplete="off"
-          autocorrect="off"
-          spellcheck="false"
-          placeholder={__("Search for items, brands, inspiration and styles")}
-          onChange={onSearchChange}
-          onFocus={this.onFocus}
-          value={search}
-        />
-        <button
-          block="HeaderSearch"
-          elem="SubmitBtn"
-          mods={{ isArabic }}
-          type="submit"
         >
-          <img src={searchPng} alt="search" />
-        </button>
-        <button
-          block="HeaderSearch"
-          elem="Clear"
-          onClick={onSearchClean}
-          type="button"
-          mods={{
-            type: "searchClear",
-            isVisible,
-            isClearVisible,
-          }}
-          aria-label="Clear search"
-        >
-          <img src={Clear} alt="Clear button" />
-        </button>
-      </Form>
+          <Field
+            id="search-field"
+            ref={this.inputRef}
+            name="search"
+            type="text"
+            autocomplete="off"
+            autocorrect="off"
+            spellcheck="false"
+            placeholder={__("Search for items, brands, inspiration and styles")}
+            onChange={onSearchChange}
+            onFocus={this.onFocus}
+            value={search}
+          />
+          <button
+            block="HeaderSearch"
+            elem="SubmitBtn"
+            mods={{ isArabic }}
+            type="submit"
+          >
+            <img src={searchPng} alt="search" />
+          </button>
+          <button
+            block="HeaderSearch"
+            elem="Clear"
+            onClick={onSearchClean}
+            type="button"
+            mods={{
+              type: "searchClear",
+              isVisible,
+              isClearVisible,
+            }}
+            aria-label="Clear search"
+          >
+            <img src={Clear} alt="Clear button" />
+          </button>
+        </Form>
+        {showSearch ? (
+          <div
+            block="SearchSuggestion"
+            elem="CloseContainer"
+            mods={{ isArabic }}
+          >
+            <button
+              block="CloseContainer"
+              elem="Close"
+              mods={{ isArabic }}
+              onClick={this.closeSearch}
+            >
+              Cancel
+              {/* {svg} */}
+            </button>
+          </div>
+        ) : null}
+      </>
     );
   }
 
