@@ -419,8 +419,8 @@ export const formatQuerySuggestions = (query) => {
 export const getHighlightedText = (text, highlight) => {
   // Split on highlight term and include term into parts, ignore case
   var invalid = /[°"§%()\[\]{}=\\?´`'#<>|,;.:+_-]+/g;
-  var repl = highlight.replace(invalid, "");
-  const parts = text?.split(new RegExp(`(${repl})`, "gi"));
+  var filteredHighlight = highlight.replace(invalid, "");
+  const parts = text?.split(new RegExp(`(${filteredHighlight})`, "gi"));
   return (
     <span>
       {" "}
