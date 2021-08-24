@@ -69,7 +69,7 @@ class ProductItem extends PureComponent {
       product: { sku },
       product,
     } = this.props;
-    return <WishlistIcon sku={sku} data={product} />;
+    return <WishlistIcon sku={sku} data={product} pageType="plp" />;
   }
 
   renderLabel() {
@@ -176,7 +176,12 @@ class ProductItem extends PureComponent {
   }
 
   renderLink() {
-    const { product, link = "", url = "", qid, isVueData } = this.props;
+    const {
+      product,
+      product: { url, link },
+      qid,
+      isVueData,
+    } = this.props;
     let queryID;
     if (!isVueData) {
       if (!qid) {
@@ -187,7 +192,7 @@ class ProductItem extends PureComponent {
     }
     let urlWithQueryID;
     if (!isVueData) {
-      const { pathname } = new URL(url ? url : link);
+      const { pathname } = new URL(url);
       if (queryID) {
         urlWithQueryID = `${pathname}?qid=${queryID}`;
       } else {

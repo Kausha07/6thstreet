@@ -5,12 +5,10 @@
  * @copyright Copyright (c) 2020 Scandiweb, Inc (https://scandiweb.com)
  */
 
+import FieldMultiselect from "Component/FieldMultiselect";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
-
-import FieldMultiselect from "Component/FieldMultiselect";
 import { Filter } from "Util/API/endpoint/Product/Product.type";
-
 import "./PLPFilter.style";
 
 class PLPFilter extends PureComponent {
@@ -46,11 +44,10 @@ class PLPFilter extends PureComponent {
       setDefaultFilters,
       defaultFilters,
     } = this.props;
-
     if (category === "categories.level1") {
       return null;
     }
-    let placeholder = category === "in_stock" ? 'BY STOCK' : label
+    let placeholder = category === "in_stock" ? "BY STOCK" : label;
 
     return (
       <FieldMultiselect

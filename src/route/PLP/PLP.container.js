@@ -18,7 +18,6 @@ import {
 } from "Util/API/endpoint/Product/Product.type";
 import WebUrlParser from "Util/API/helper/WebUrlParser";
 import { capitalize } from "Util/App";
-import { URLS } from "Util/Url/Url.config";
 import { getUUID } from "Util/Auth";
 import {
   getBreadcrumbs,

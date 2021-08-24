@@ -220,6 +220,7 @@ html {
         height: 100%;
         object-fit: contain;
         max-height: 168px;
+        min-height: 168px;
       }
       @include desktop{
         min-height: 168px;

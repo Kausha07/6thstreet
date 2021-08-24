@@ -1,12 +1,11 @@
 /* eslint-disable fp/no-let */
-import { PureComponent } from "react";
-
 import ContentWrapper from "Component/ContentWrapper/ContentWrapper.component";
+import DynamicContent from "Component/DynamicContent";
 import PLPDetails from "Component/PLPDetails";
 import PLPFilters from "Component/PLPFilters";
 import PLPPages from "Component/PLPPages";
+import { PureComponent } from "react";
 import CircleItemSliderSubPage from "../../component/DynamicContentCircleItemSlider/CircleItemSliderSubPage";
-import DynamicContent from "Component/DynamicContent";
 // import DynamicContentCircleItemSlider from '../../component/DynamicContentCircleItemSlider';
 import "./PLP.style";
 
