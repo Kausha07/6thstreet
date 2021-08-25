@@ -348,7 +348,6 @@ export class MyAccountOverlayContainer extends PureComponent {
   }
 
   handleSignIn(e) {
-    console.log("bhuvan", e);
     const { setHeaderState } = this.props;
     e.preventDefault();
     e.nativeEvent.stopImmediatePropagation();

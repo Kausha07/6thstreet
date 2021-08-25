@@ -6,7 +6,6 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { customerType } from "Type/Account";
 import { isArabic } from "Util/App";
-import BrowserDatabase from "Util/BrowserDatabase";
 import history from "Util/History";
 import isMobile from "Util/Mobile";
 import { SMS_LINK } from "./HeaderAccount.config";
@@ -79,11 +78,6 @@ class HeaderAccount extends PureComponent {
   };
 
   onSignIn = () => {
-    console.log("header success");
-    const customerData = BrowserDatabase.getItem("customer");
-    const userID = customerData && customerData.id ? customerData.id : null;
-    // const locale = VueIntegrationQueries.getLocaleFromUrl();
-    console.log("userID my account overlay", userID);
     this.closePopup();
   };
 
