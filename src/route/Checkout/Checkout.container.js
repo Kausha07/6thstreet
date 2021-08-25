@@ -569,6 +569,14 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                 http_response_code === 202
               ) {
                 this.setState({ isLoading: false });
+                if (code === CHECKOUT_APPLE_PAY) {
+                  this.setState({
+                    order_id,
+                    increment_id,
+                  });
+                  console.log("apple pay positive response")
+                  return true
+                }
                 if (code === CARD && href) {
                   this.setState({
                     threeDsUrl: href,
