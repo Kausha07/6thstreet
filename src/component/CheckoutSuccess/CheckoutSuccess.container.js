@@ -364,6 +364,10 @@ export class CheckoutSuccessContainer extends PureComponent {
       name: CUSTOMER_ACCOUNT_PAGE,
       onBackClick: () => history.push("/"),
     });
+    const customerData = BrowserDatabase.getItem("customer");
+    const userID = customerData && customerData.id ? customerData.id : null;
+    // const locale = VueIntegrationQueries.getLocaleFromUrl();
+    console.log("userID", userID);
   }
 
   render() {

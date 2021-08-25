@@ -1,33 +1,29 @@
 /* eslint-disable radix */
 /* eslint-disable no-restricted-globals */
 /* eslint-disable no-magic-numbers */
-import PropTypes from "prop-types";
-import { PureComponent } from "react";
-
 import ChangePhonePopup from "Component/ChangePhonePopUp";
 import { MINI_CARDS } from "Component/CreditCard/CreditCard.config";
-import { EMAIL_LINK, TEL_LINK, WHATSAPP_LINK } from "./CheckoutSuccess.config";
-
 import Field from "Component/Field";
 import Form from "Component/Form";
 import Link from "Component/Link";
 import MyAccountOverlay from "Component/MyAccountOverlay";
 import { getFinalPrice } from "Component/Price/Price.config";
 import SuccessCheckoutItem from "Component/SuccessCheckoutItem";
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
 import { TotalsType } from "Type/MiniCart";
 import { getDiscountFromTotals, isArabic } from "Util/App";
-
+import { EMAIL_LINK, TEL_LINK, WHATSAPP_LINK } from "./CheckoutSuccess.config";
+import "./CheckoutSuccess.style";
 import Apple from "./icons/apple.png";
 import Call from "./icons/call.svg";
-import Mail from "./icons/mail.svg";
-import Whatsapp from "./icons/whatsapp.svg";
 import Cash from "./icons/cash.png";
 import Confirm from "./icons/confirm.png";
+import Mail from "./icons/mail.svg";
 import SuccessCircle from "./icons/success-circle.png";
 import TabbyAR from "./icons/tabby-ar.png";
 import Tabby from "./icons/tabby.png";
-
-import "./CheckoutSuccess.style";
+import Whatsapp from "./icons/whatsapp.svg";
 
 export class CheckoutSuccess extends PureComponent {
   static propTypes = {
@@ -75,9 +71,9 @@ export class CheckoutSuccess extends PureComponent {
     }
   }
 
-  componentWillUnmount(){
-    const {setCheckoutDetails} = this.props
-  setCheckoutDetails(false)
+  componentWillUnmount() {
+    const { setCheckoutDetails } = this.props;
+    setCheckoutDetails(false);
   }
   tick = () => {
     const { wasLoaded, successHidden } = this.state;
@@ -383,8 +379,7 @@ export class CheckoutSuccess extends PureComponent {
           getDiscountFromTotals(total_segments, "clubapparel"),
           __("Club Apparel Redemption")
         )}
-        {couponCode
-          && this.renderPriceLine(discount, __("Discount"))}
+        {couponCode && this.renderPriceLine(discount, __("Discount"))}
 
         {this.renderTotalPrice()}
       </div>
@@ -518,45 +513,56 @@ export class CheckoutSuccess extends PureComponent {
 
   renderPaymentType = () => {
     const { isArabic } = this.state;
-    const {QPAY_DETAILS, paymentMethod} = this.props
-    const {PUN,date,status} = QPAY_DETAILS
+    const { QPAY_DETAILS, paymentMethod } = this.props;
+    const { PUN, date, status } = QPAY_DETAILS;
     return (
       <>
-      <div block="PaymentType" mods={{ isArabic }}>
-        <div block="PaymentType" elem="Title">
-          {__("Payment")}
+        <div block="PaymentType" mods={{ isArabic }}>
+          <div block="PaymentType" elem="Title">
+            {__("Payment")}
+          </div>
+          {this.renderPaymentTypeContent()}
+          <p></p>
+          {paymentMethod?.code === "checkout_qpay" && QPAY_DETAILS && (
+            <>
+              <div block="PaymentType" elem="Title">
+                {__("PUN")}
+              </div>
+              {PUN}
+              <p></p>
+              {QPAY_DETAILS?.Payment_ID && (
+                <>
+                  {" "}
+                  <div block="PaymentType" elem="Title">
+                    {__("Payment ID")}
+                  </div>
+                  {QPAY_DETAILS?.Payment_ID}
+                  <p></p>{" "}
+                </>
+              )}
+              {QPAY_DETAILS?.amount && (
+                <>
+                  {" "}
+                  <div block="PaymentType" elem="Title">
+                    {__("Amount")}
+                  </div>
+                  {QPAY_DETAILS?.amount}
+                  <p></p>{" "}
+                </>
+              )}
+              <div block="PaymentType" elem="Title">
+                {__("Status")}
+              </div>
+              {status}
+              <p></p>
+              <div block="PaymentType" elem="Title">
+                {__("Date")}
+              </div>
+              {date}
+              <p></p>
+            </>
+          )}
         </div>
-        {this.renderPaymentTypeContent()}
-        <p></p>
-        {paymentMethod?.code === "checkout_qpay" && QPAY_DETAILS &&  
-        <>
-        <div block="PaymentType" elem="Title">
-          {__("PUN")}
-        </div>
-        {PUN}
-        <p></p> 
-        {QPAY_DETAILS?.Payment_ID && <> <div block="PaymentType" elem="Title">
-          {__("Payment ID")}
-        </div>
-        {QPAY_DETAILS?.Payment_ID}
-        <p></p> </>}
-        {QPAY_DETAILS?.amount && <> <div block="PaymentType" elem="Title">
-          {__("Amount")}
-        </div>
-        {QPAY_DETAILS?.amount}
-        <p></p> </>}
-        <div block="PaymentType" elem="Title">
-          {__("Status")}
-        </div>
-        {status}
-        <p></p> 
-        <div block="PaymentType" elem="Title">
-          {__("Date")}
-        </div>
-        {date}
-        <p></p> 
-        </>}
-      </div>
       </>
     );
   };
@@ -653,12 +659,11 @@ export class CheckoutSuccess extends PureComponent {
       this.setState({ paymentTitle: __("Apple") });
     } else if (paymentMethod?.code?.match(/cash/)) {
       this.setState({ paymentTitle: __("Cash on Delivery") });
-    }else if (paymentMethod?.code?.match(/free/)) {
+    } else if (paymentMethod?.code?.match(/free/)) {
       this.setState({ paymentTitle: __("Store Credit") });
-    }else if (paymentMethod?.code?.match(/qpay/)) {
+    } else if (paymentMethod?.code?.match(/qpay/)) {
       this.setState({ paymentTitle: __("QPAY") });
-    }
-    else if (paymentMethod.code.match(/qpay/)) {
+    } else if (paymentMethod.code.match(/qpay/)) {
       this.setState({ paymentTitle: __("QPAY") });
     }
 
