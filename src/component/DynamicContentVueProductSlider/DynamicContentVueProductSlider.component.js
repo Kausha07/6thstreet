@@ -1,14 +1,14 @@
 import DragScroll from "Component/DragScroll/DragScroll.component";
+import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
 import PropTypes from "prop-types";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import React, { PureComponent } from "react";
 import { isArabic } from "Util/App";
 import { getUUID } from "Util/Auth";
-import { VUE_CAROUSEL_SHOW, VUE_CAROUSEL_SWIPE } from "Util/Event";
+import BrowserDatabase from "Util/BrowserDatabase";
+import Event, { VUE_CAROUSEL_SHOW, VUE_CAROUSEL_SWIPE } from "Util/Event";
 import DynamicContentVueProductSliderItem from "./DynamicContentVueProductSlider.Item";
 import "./DynamicContentVueProductSlider.style.scss";
-import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
-import Event from "Util/Event";
 
 class DynamicContentVueProductSlider extends PureComponent {
   static propTypes = {
@@ -39,7 +39,8 @@ class DynamicContentVueProductSlider extends PureComponent {
     }
     const { widgetID, pageType = "home" } = this.props;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
-
+    const customer = BrowserDatabase.getItem("customer");
+    const userID = customer && customer.id ? customer.id : null;
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_CAROUSEL_SHOW,
       params: {
@@ -50,6 +51,7 @@ class DynamicContentVueProductSlider extends PureComponent {
         uuid: getUUID(),
         referrer: "desktop",
         widgetID: widgetID,
+        userID: userID,
       },
     });
     this.registerViewPortEvent();

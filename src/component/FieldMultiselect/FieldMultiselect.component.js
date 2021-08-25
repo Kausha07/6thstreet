@@ -1,12 +1,10 @@
 /* eslint-disable react/jsx-no-bind */
+import PLPFilterOption from "Component/PLPFilterOption";
 import PropTypes from "prop-types";
 import { createRef, PureComponent } from "react";
-
-import PLPFilterOption from "Component/PLPFilterOption";
 import { Filter } from "Util/API/endpoint/Product/Product.type";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
-
 import "./FieldMultiselect.style";
 
 class FieldMultiselect extends PureComponent {
@@ -191,14 +189,13 @@ class FieldMultiselect extends PureComponent {
     const {
       filter: { data = {}, subcategories = {}, category },
     } = this.props;
-
     let finalData = data ? data : subcategories;
     if (category === "in_stock") {
       if (finalData) {
         Object.values(finalData).map((subData) => {
-          if (subData.facet_value === '0') {
+          if (subData.facet_value === "0") {
             return (subData.label = "Out of Stock");
-          } else if (subData.facet_value === '1') {
+          } else if (subData.facet_value === "1") {
             return (subData.label = "In Stock");
           }
         });

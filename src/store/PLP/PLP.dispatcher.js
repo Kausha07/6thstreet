@@ -1,3 +1,5 @@
+import { HOME_STATIC_FILE_KEY } from "Route/HomePage/HomePage.config";
+import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import {
   setPLPData,
   setPLPInitialFilters,
@@ -5,13 +7,11 @@ import {
   setPLPPage,
   setPLPWidget,
 } from "Store/PLP/PLP.action";
+import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
 import Algolia from "Util/API/provider/Algolia";
+import BrowserDatabase from "Util/BrowserDatabase";
 import Logger from "Util/Logger";
 import isMobile from "Util/Mobile";
-import BrowserDatabase from "Util/BrowserDatabase";
-import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
-import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
-import { HOME_STATIC_FILE_KEY } from "Route/HomePage/HomePage.config";
 export class PLPDispatcher {
   async requestProductList(payload, dispatch, state) {
     const { options = {} } = payload;
@@ -34,7 +34,6 @@ export class PLPDispatcher {
           const { filters: initialFilters } = await new Algolia().getPLP(
             initialOptions
           );
-
           dispatch(setPLPInitialFilters(initialFilters, initialOptions));
         } catch (e) {
           Logger.log(e);
