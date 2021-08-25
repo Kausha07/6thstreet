@@ -142,7 +142,7 @@ export class Checkout extends SourceCheckout {
     return null;
   };
 
-  savePaymentInformationApplePay(paymentInformation){
+  savePaymentInformationApplePay = (paymentInformation) => {
     this.setState({ paymentInformation });
   }
 
