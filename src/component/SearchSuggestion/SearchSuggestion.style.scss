@@ -159,11 +159,31 @@
       padding: 0;
     }
   }
+  .TrandingTags {
+    &-trendingTagsList {
+      &_isArabic {
+        li {
+          &:first-of-type {
+            margin-right: 0 !important;
+          }
+        }
+      }
+    }
+  }
   .TopSearches {
     text-transform: capitalize;
   }
 
   .TrandingBrands {
+    &-trendingBrandList {
+      &_isArabic {
+        li {
+          &:first-of-type {
+            margin-right: 0 !important;
+          }
+        }
+      }
+    }
     li {
       margin-top: 15px;
       margin-left: 20px;

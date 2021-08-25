@@ -177,6 +177,9 @@ html {
         white-space: nowrap;
         overflow: hidden;
       }
+      .isArabic {
+        text-align: right !important;
+      }
 
       #productName {
         width: 100%;
@@ -253,10 +256,13 @@ html {
       justify-content: center;
       background-color: #c8b581;
       border-radius: 0 10px 10px 0;
-
       left: 0;
       top: 12px;
       position: absolute;
+      &_isArabic {
+        right: 0;
+        border-radius: 10px 0 0 10px;
+      }
 
       span {
         font-size: 11px;
@@ -269,7 +275,16 @@ html {
     &-SpecialPriceCon {
       display: block;
     }
-
+    &-brandName {
+      &_isArabic {
+        text-align: right !important;
+      }
+    }
+    &-productName {
+      &_isArabic {
+        text-align: right !important;
+      }
+    }
     &-Del {
       display: inline-block;
 
