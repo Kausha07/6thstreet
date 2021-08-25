@@ -193,10 +193,11 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     const {
       options: { supported_networks },
     } = this.getSelectedMethodData();
-    const { billingAddress, processApplePay, placeOrder } = this.props;
+    const { billingAddress, processApplePay, placeOrder,savePaymentInformationApplePay } = this.props;
 
     return (
       <CheckoutComApplePay
+      savePaymentInformationApplePay={savePaymentInformationApplePay}
         billingAddress={billingAddress}
         supported_networks={supported_networks}
         processApplePay={processApplePay}

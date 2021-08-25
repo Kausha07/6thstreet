@@ -154,6 +154,7 @@ class CheckoutComApplePayContainer extends PureComponent {
    * Handle apple pay click
    */
   handleApplePayButtonClick() {
+    const {savePaymentInformationApplePay} = this.props
     const {
       cartTotals: { total, quote_currency_code },
       default_title,
@@ -166,7 +167,7 @@ class CheckoutComApplePayContainer extends PureComponent {
       merchantCapabilities: this._getMerchantCapabilities(),
       total: { label: default_title, amount: total },
     };
-    console.log("payment request apple pay", paymentRequest)
+    savePaymentInformationApplePay({billing_address:billingAddress, paymentMethod: {code: "checkout_apple_pay"}})
     const applePaySession = new window.ApplePaySession(1, paymentRequest);
 
     try {
