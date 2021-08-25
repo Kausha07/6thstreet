@@ -208,7 +208,6 @@ class CheckoutComApplePayContainer extends PureComponent {
             verifyCheckoutComApplePay: merchantSession,
             verifyCheckoutComApplePay: { statusMessage = "" },
           } = response;
-          console.log("on validate merchant response", response)
           if (statusMessage) {
             showError(__(statusMessage));
             Logger.log("Cannot validate merchant:", merchantSession);
@@ -223,10 +222,6 @@ class CheckoutComApplePayContainer extends PureComponent {
 
     applePaySession.onshippingcontactselected = (event) => {
       const status = window.ApplePaySession.STATUS_SUCCESS;
-      console.log("session status (in onshippingcontact selected)", window.ApplePaySession.STATUS_SUCCESS)
-      console.log("new totals (in onshippingcontact selected)", newTotal)
-      console.log("line items (in onshippingcontact selected)", this._getLineItems())
-
       const newTotal = {
         type: "final",
         label: default_title,
@@ -248,9 +243,6 @@ class CheckoutComApplePayContainer extends PureComponent {
         label: default_title,
         amount: grand_total,
       };
-      console.log("session status (in onshippingmethod selected)", window.ApplePaySession.STATUS_SUCCESS)
-      console.log("new totals (in onshippingmethod selected)", newTotal)
-      console.log("line items (in onshippingmethod selected)", this._getLineItems())
       applePaySession.completeShippingMethodSelection(
         status,
         newTotal,
@@ -264,8 +256,6 @@ class CheckoutComApplePayContainer extends PureComponent {
         label: default_title,
         amount: grand_total,
       };
-      console.log("new totals (in onpaymentmethod selected)", newTotal)
-      console.log("line items (in onpaymentmethod selected)", this._getLineItems())
       applePaySession.completePaymentMethodSelection(
         newTotal,
         this._getLineItems()
@@ -301,7 +291,7 @@ class CheckoutComApplePayContainer extends PureComponent {
           const status = placeOrder(CHECKOUT_APPLE_PAY, data)
             ? window.ApplePaySession.STATUS_SUCCESS
             : window.ApplePaySession.STATUS_FAILURE;
-
+          console.log("status", status)
           applePaySession.completePayment(status);
         }
       });
