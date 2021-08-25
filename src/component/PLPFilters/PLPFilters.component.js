@@ -216,12 +216,7 @@ class PLPFilters extends PureComponent {
   }
 
   renderContent() {
-    const { isLoading } = this.props;
     const { isArabic } = this.state;
-
-    if (isLoading) {
-      this.updateFilters();
-    }
 
     return (
       <div block="Content" elem="Filters" mods={{ isArabic }}>
