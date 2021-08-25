@@ -654,11 +654,14 @@ class SearchSuggestion extends PureComponent {
 
   renderTrendingBrands() {
     const { trendingBrands = [] } = this.props;
+    const { isArabic } = this.state;
 
     return trendingBrands.length > 0 ? (
       <div block="TrandingBrands">
         <h2>{__("Trending brands")}</h2>
-        <ul>{trendingBrands.map(this.renderTrendingBrand)}</ul>
+        <ul block="TrandingBrands" elem="trendingBrandList" mods={{ isArabic }}>
+          {trendingBrands.map(this.renderTrendingBrand)}
+        </ul>
       </div>
     ) : null;
   }
@@ -678,11 +681,13 @@ class SearchSuggestion extends PureComponent {
 
   renderTrendingTags() {
     const { trendingTags = [] } = this.props;
-
+    const { isArabic } = this.state;
     return trendingTags.length > 0 ? (
       <div block="TrandingTags">
         <h2>{__("Trending tags")}</h2>
-        <ul>{trendingTags.map(this.renderTrendingTag)}</ul>
+        <ul block="TrandingTags" elem="trendingTagsList" mods={{ isArabic }}>
+          {trendingTags.map(this.renderTrendingTag)}
+        </ul>
       </div>
     ) : null;
   }

@@ -117,7 +117,8 @@ class RecommendedForYouVueSliderItem extends PureComponent {
         <div
           block="VueProductSlider"
           elem="VueIsNewTag"
-          className={isArabic ? "isNewTagArabic" : null}
+          mods={{ isArabic }}
+          // className={isArabic ? "isNewTagArabic" : null}
         >
           <span>{__("New")}</span>
         </div>
@@ -167,10 +168,20 @@ class RecommendedForYouVueSliderItem extends PureComponent {
             alt={name}
           />
         </Link>
-        <h6 id="brandName" className={isArabic ? "isArabic" : null}>
+        <h6
+          block="VueProductSlider"
+          id="brandName"
+          elem="brandName"
+          mods={{ isArabic }}
+        >
           {brand_name}
         </h6>
-        <span id="productName" className={isArabic ? "isArabic" : null}>
+        <span
+          id="productName"
+          block="VueProductSlider"
+          elem="productName"
+          mods={{ isArabic }}
+        >
           {name}
         </span>
         {this.renderPrice(price)}

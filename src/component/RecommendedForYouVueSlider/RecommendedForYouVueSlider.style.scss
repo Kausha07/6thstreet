@@ -259,7 +259,7 @@ html {
       left: 0;
       top: 12px;
       position: absolute;
-      &.isNewTagArabic {
+      &_isArabic {
         right: 0;
         border-radius: 10px 0 0 10px;
       }
@@ -275,7 +275,16 @@ html {
     &-SpecialPriceCon {
       display: block;
     }
-
+    &-brandName {
+      &_isArabic {
+        text-align: right !important;
+      }
+    }
+    &-productName {
+      &_isArabic {
+        text-align: right !important;
+      }
+    }
     &-Del {
       display: inline-block;
 
