@@ -111,9 +111,14 @@ class RecommendedForYouVueSliderItem extends PureComponent {
   }
 
   renderIsNew(is_new_in) {
+    const { isArabic } = this.state;
     if (is_new_in) {
       return (
-        <div block="VueProductSlider" elem="VueIsNewTag">
+        <div
+          block="VueProductSlider"
+          elem="VueIsNewTag"
+          className={isArabic ? "isNewTagArabic" : null}
+        >
           <span>{__("New")}</span>
         </div>
       );
@@ -162,8 +167,12 @@ class RecommendedForYouVueSliderItem extends PureComponent {
             alt={name}
           />
         </Link>
-        <h6 id="brandName">{brand_name}</h6>
-        <span id="productName">{name}</span>
+        <h6 id="brandName" className={isArabic ? "isArabic" : null}>
+          {brand_name}
+        </h6>
+        <span id="productName" className={isArabic ? "isArabic" : null}>
+          {name}
+        </span>
         {this.renderPrice(price)}
         {this.renderIsNew(is_new_in)}
         <WishlistIcon sku={sku} data={data} pageType="search" />

@@ -126,10 +126,10 @@ class SearchSuggestion extends PureComponent {
       )}`;
     } else {
       formattedBrandName = brandName
-        .toUpperCase()
+        ?.toUpperCase()
         .split(" ")
         .filter(function (allItems, i, a) {
-          return i == a.indexOf(allItems.toUpperCase());
+          return i == a.indexOf(allItems?.toUpperCase());
         })
         .join(" ")
         .toLowerCase();
@@ -306,8 +306,8 @@ class SearchSuggestion extends PureComponent {
       : "home";
     const fetchSKU = products.find(
       (item) =>
-        item.name.toUpperCase().includes(query.toUpperCase()) ||
-        item.sku.toUpperCase().includes(query.toUpperCase())
+        item.name?.toUpperCase()?.includes(query?.toUpperCase()) ||
+        item.sku?.toUpperCase()?.includes(query?.toUpperCase())
     );
     // will be good to work when all brands exists properly
     // if (isBrand) {
@@ -482,17 +482,20 @@ class SearchSuggestion extends PureComponent {
 
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
 
-    let parseLink = url.includes("catalogsearch/result")
-      ? url.split("&")[0] +
+    let parseLink = url?.includes("catalogsearch/result")
+      ? url?.split("&")[0] +
         `&gender=${requestedGender.replace(
           requestedGender.charAt(0),
-          requestedGender.charAt(0).toUpperCase()
+          requestedGender.charAt(0)?.toUpperCase()
         )}`
       : url;
 
     return (
       <li>
-        <Link to={parseLink} onClick={() => this.handleProductClick(product)}>
+        <Link
+          to={parseLink ? parseLink : "#"}
+          onClick={() => this.handleProductClick(product)}
+        >
           <div block="SearchProduct">
             <img
               src={thumbnail_url}
