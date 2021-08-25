@@ -296,6 +296,8 @@ class CheckoutComApplePayContainer extends PureComponent {
             },
           };
           console.log("place order data", data)
+          console.log("success session status", window.ApplePaySession.STATUS_SUCCESS)
+          console.log("failure session status", window.ApplePaySession.STATUS_FAILURE)
           const status = placeOrder(CHECKOUT_APPLE_PAY, data)
             ? window.ApplePaySession.STATUS_SUCCESS
             : window.ApplePaySession.STATUS_FAILURE;
