@@ -218,6 +218,7 @@ class PDPSummary extends PureComponent {
     if (tags && tags.length) {
       return (
         <>
+        <div block="Seperatortop" />
           <PDPTags tags={tags} />
           <div block="Seperator" />
         </>
