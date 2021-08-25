@@ -549,6 +549,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       createOrder(code, data)
         .then((response) => {
           if (response && response.data) {
+            console.log("payment method code", code)
+            console.log("response in create order api", response)
             const { data } = response;
             if (typeof data === "object") {
               const {
