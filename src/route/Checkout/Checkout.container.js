@@ -574,6 +574,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                     order_id,
                     increment_id,
                   });
+                  BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
+                  this.setDetailsStep(order_id, increment_id);
+                  this.resetCart();
                   console.log("apple pay positive response")
                   return true
                 }
