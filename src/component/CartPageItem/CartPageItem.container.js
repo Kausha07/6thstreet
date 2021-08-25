@@ -8,9 +8,11 @@
  * @package scandipwa/base-theme
  * @link https://github.com/scandipwa/base-theme
  */
-
+import CartItemQuantityPopup from "Component/CartItemQuantityPopup";
+import { CART_ITEM_QUANTITY_POPUP_ID } from "Component/CartItemQuantityPopup/CartItemQuantityPopup.config";
 import { DEFAULT_MAX_PRODUCTS } from "Component/ProductActions/ProductActions.config";
 import PropTypes from "prop-types";
+import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
 // import { getStore } from "Store";
@@ -20,14 +22,15 @@ import {
   toggleOverlayByKey,
 } from "Store/Overlay/Overlay.action";
 import { CartItemType } from "Type/MiniCart";
+import { getUUID } from "Util/Auth";
+import BrowserDatabase from "Util/BrowserDatabase";
 // import Algolia from "Util/API/provider/Algolia";
 // import { getUUIDToken } from 'Util/Auth';
 import Event, {
   EVENT_GTM_PRODUCT_ADD_TO_CART,
   EVENT_GTM_PRODUCT_REMOVE_FROM_CART,
+  VUE_REMOVE_FROM_CART,
 } from "Util/Event";
-import CartItemQuantityPopup from "Component/CartItemQuantityPopup";
-import { CART_ITEM_QUANTITY_POPUP_ID } from "Component/CartItemQuantityPopup/CartItemQuantityPopup.config";
 import CartPageItem from "./CartPageItem.component";
 
 export const CartDispatcher = import(
@@ -249,6 +252,7 @@ export class CartItemContainer extends PureComponent {
           color,
           qty,
           product: { name } = {},
+          full_item_info: { config_sku, category, price },
         },
       } = this.props;
 
@@ -264,6 +268,26 @@ export class CartItemContainer extends PureComponent {
           quantity: qty,
           size: optionValue,
           variant: color,
+        },
+      });
+
+      // vue analytics
+      const locale = VueIntegrationQueries.getLocaleFromUrl();
+      const customer = BrowserDatabase.getItem("customer");
+      const userID = customer && customer.id ? customer.id : null;
+      VueIntegrationQueries.vueAnalayticsLogger({
+        event_name: VUE_REMOVE_FROM_CART,
+        params: {
+          event: VUE_REMOVE_FROM_CART,
+          pageType: "cart",
+          currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+          clicked: Date.now(),
+          uuid: getUUID(),
+          referrer: "desktop",
+          sourceProdID: config_sku,
+          sourceCatgID: category, // TODO: replace with category id
+          prodPrice: price,
+          userID: userID,
         },
       });
     });
