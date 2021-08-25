@@ -197,6 +197,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
       applyPromotionSavedCard,
       removePromotionSavedCard,
       isSignedIn,
+      savePaymentInformationApplePay
     } = this.props;
 
     if (!paymentMethods.length) {
@@ -204,6 +205,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
     }
     return (
       <CheckoutPayments
+      savePaymentInformationApplePay={savePaymentInformationApplePay}
         setCashOnDeliveryFee={setCashOnDeliveryFee}
         setLoading={setLoading}
         setDetailsStep={setDetailsStep}

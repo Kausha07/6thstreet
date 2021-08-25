@@ -723,6 +723,8 @@ export class CheckoutSuccess extends PureComponent {
   }
 
   renderDetails() {
+    console.log("props", this.props)
+    console.log("state", this.state)
     const {
       customer,
       billingAddress: { guest_email },
