@@ -1,70 +1,96 @@
-import PropTypes from 'prop-types';
-import { PureComponent } from 'react';
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
 
-import Image from 'Component/Image';
-import Link from 'Component/Link';
-import { formatCDNLink } from 'Util/Url';
+import Image from "Component/Image";
+import Link from "Component/Link";
+import { formatCDNLink } from "Util/Url";
 
-import './DynamicContentMainBanner.style';
-
+import "./DynamicContentMainBanner.style";
+import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
 class DynamicContentMainBanner extends PureComponent {
-    static propTypes = {
-        items: PropTypes.arrayOf(
-            PropTypes.shape({
-                url: PropTypes.string,
-                link: PropTypes.string,
-                height: PropTypes.number,
-                width: PropTypes.number
-            })
-        ).isRequired
+  static propTypes = {
+    items: PropTypes.arrayOf(
+      PropTypes.shape({
+        url: PropTypes.string,
+        link: PropTypes.string,
+        height: PropTypes.number,
+        width: PropTypes.number,
+      })
+    ).isRequired,
+  };
+
+  state = {
+    impressionSent: false,
+  };
+
+  componentDidMount() {
+    this.registerViewPortEvent();
+  }
+
+  registerViewPortEvent() {
+    let observer;
+
+    let options = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.5,
     };
 
-    renderImage(item, i) {
-        const {
-            url,
-            link
-            // height,
-            // width
-        } = item;
+    observer = new IntersectionObserver(this.handleIntersect, options);
+    observer.observe(this.viewElement);
+  }
+  sendImpressions() {
+    const { items = [] } = this.props;
+    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
+    this.setState({ impressionSent: true });
+  }
+  handleIntersect = (entries, observer) => {
+    const { impressionSent } = this.state;
+    if (impressionSent) {
+      return;
+    }
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        this.sendImpressions();
+      }
+    });
+  };
 
-        // TODO: calculate aspect ratio to ensure images not jumping.
-        if (!link) {
-            return (
-                <Image
-                  key={ i }
-                  src={ url }
-                  ratio="custom"
-                  height="auto"
-                />
-            );
-        }
+  renderImage(item, i) {
+    const {
+      url,
+      link,
+      // height,
+      // width
+    } = item;
 
-        return (
-            <Link
-              to={ formatCDNLink(link) }
-              key={ i }
-            >
-                <Image
-                  src={ url }
-                  ratio="custom"
-                  height="auto"
-                />
-            </Link>
-        );
+    // TODO: calculate aspect ratio to ensure images not jumping.
+    if (!link) {
+      return <Image key={i} src={url} ratio="custom" height="auto" />;
     }
 
-    renderImages() {
-        const { items = [] } = this.props;
-        return items.map(this.renderImage);
-    }
+    return (
+      <Link to={formatCDNLink(link)} key={i}>
+        <Image src={url} ratio="custom" height="auto" />
+      </Link>
+    );
+  }
 
-    render() {
-        return (
-            <div block="DynamicContentMainBanner">
-                { this.renderImages() }
-            </div>
-        );
-    }
+  renderImages() {
+    const { items = [] } = this.props;
+    return items.map(this.renderImage);
+  }
+
+  render() {
+    let setRef = (el) => {
+      this.viewElement = el;
+    };
+    return (
+      <div ref={setRef} block="DynamicContentMainBanner">
+        {this.renderImages()}
+      </div>
+    );
+  }
 }
 
 export default DynamicContentMainBanner;
