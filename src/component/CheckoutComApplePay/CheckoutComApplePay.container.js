@@ -159,6 +159,7 @@ class CheckoutComApplePayContainer extends PureComponent {
       cartTotals: { total, quote_currency_code },
       default_title,
       billingAddress: { country_id: countryCode },
+      billingAddress
     } = this.props;
     const paymentRequest = {
       countryCode,
