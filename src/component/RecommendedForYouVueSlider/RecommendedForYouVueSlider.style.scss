@@ -102,7 +102,18 @@ html {
       a {
         display: block;
         overflow: hidden;
-
+        position: relative;
+        padding-top: 100%;
+        display: block;
+        img {
+          position: absolute;
+          height: 100%;
+          width: 100%;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right: 0;
+        }
       }
     }
 
@@ -121,7 +132,7 @@ html {
 
     &-VueProductContainer {
       width: 245.39px;
-      height: 363.66px;
+      height: auto;
       position: relative;
       margin-right: 7.92px;
       display: inline-block;
@@ -141,13 +152,19 @@ html {
         }
       }
 
-      @media (max-width: 1024px) {
-        width: 220.08px;
-      }
+      // @media (max-width: 1024px) {
+      //   width: 220.08px;
+      //   height: 340px;
+      // }
 
-      @media (max-width: 411px) {
+      // @media (max-width: 411px) {
+      //   height: auto;
+      //   width: 154.31px;
+      // }
+      @include before-desktop() {
         height: auto;
-        width: 154.31px;
+        width: 220.08px;
+        margin-bottom: 10px;
       }
 
       #brandName {
@@ -216,16 +233,14 @@ html {
     &-VueProductImage {
       width: 100%;
       overflow: hidden;
-      @include mobile{
+      @include mobile {
         height: 100%;
-        object-fit: contain;
-        max-height: 168px;
+        object-fit: cover;
+      }
+      @include desktop {
         min-height: 168px;
       }
-      @include desktop{
-        min-height: 168px;
-      }
-      @include tablet{
+      @include tablet {
         min-height: 168px;
       }
     }
