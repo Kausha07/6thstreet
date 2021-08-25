@@ -7,6 +7,8 @@ import { getUUID } from "Util/Auth";
 import { VUE_CAROUSEL_SWIPE } from "Util/Event";
 import DynamicContentVueProductSliderItem from "./DynamicContentVueProductSlider.Item";
 import "./DynamicContentVueProductSlider.style.scss";
+import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
+import Event from "Util/Event";
 class DynamicContentVueProductSlider extends PureComponent {
   static propTypes = {
     withViewAll: PropTypes.bool,
@@ -18,6 +20,53 @@ class DynamicContentVueProductSlider extends PureComponent {
 
   scrollerRef = React.createRef();
   cmpRef = React.createRef(0);
+  state = {
+    impressionSent: false,
+    eventRegistered: false,
+  };
+
+  componentDidMount() {
+    this.registerViewPortEvent();
+  }
+
+  registerViewPortEvent() {
+    let observer;
+    const elem = document.querySelector("#productSlider");
+
+    let options = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.5,
+    };
+
+    observer = new IntersectionObserver(this.handleIntersect, options);
+
+    observer.observe(elem);
+    this.setState({ eventRegistered: true });
+  }
+
+  sendImpressions() {
+    const products = this.getProducts();
+    const items = products.map((item) => {
+      return {
+        id: item.sku,
+        label: item.name,
+      };
+    });
+    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
+    this.setState({ impressionSent: true });
+  }
+  handleIntersect = (entries, observer) => {
+    const { impressionSent } = this.state;
+    if (impressionSent) {
+      return;
+    }
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        this.sendImpressions();
+      }
+    });
+  };
   async handleOnScroll(widgetID) {
     let width = 0;
     if (screen.width > 1024) {
@@ -158,8 +207,16 @@ class DynamicContentVueProductSlider extends PureComponent {
   }
 
   render() {
+    let setRef = (el) => {
+      this.viewElement = el;
+    };
     return (
-      <div block="VueProductSlider" elem="Container">
+      <div
+        ref={setRef}
+        id="productSlider"
+        block="VueProductSlider"
+        elem="Container"
+      >
         {this.renderHeader()}
         {this.renderSliderContainer()}
       </div>

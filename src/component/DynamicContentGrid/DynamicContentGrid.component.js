@@ -8,6 +8,7 @@ import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
 import { formatCDNLink } from "Util/Url";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import "./DynamicContentGrid.style";
+import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
 
 class DynamicContentGrid extends PureComponent {
   static propTypes = {
@@ -26,6 +27,42 @@ class DynamicContentGrid extends PureComponent {
   static defaultProps = {
     items_per_row: 4,
     header: {},
+  };
+
+  state = {
+    impressionSent: false,
+  };
+  componentDidMount() {
+    this.registerViewPortEvent();
+  }
+
+  registerViewPortEvent() {
+    let observer;
+
+    let options = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.5,
+    };
+
+    observer = new IntersectionObserver(this.handleIntersect, options);
+    observer.observe(this.viewElement);
+  }
+  sendImpressions() {
+    const { items = [] } = this.props;
+    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
+    this.setState({ impressionSent: true });
+  }
+  handleIntersect = (entries, observer) => {
+    const { impressionSent } = this.state;
+    if (impressionSent) {
+      return;
+    }
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        this.sendImpressions();
+      }
+    });
   };
 
   onclick = (item) => {
@@ -106,7 +143,14 @@ class DynamicContentGrid extends PureComponent {
   }
 
   render() {
-    return <div block="DynamicContentGrid">{this.renderGrid()}</div>;
+    let setRef = (el) => {
+      this.viewElement = el;
+    };
+    return (
+      <div ref={setRef} block="DynamicContentGrid">
+        {this.renderGrid()}
+      </div>
+    );
   }
 }
 

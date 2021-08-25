@@ -9,6 +9,7 @@ import { formatCDNLink } from "Util/Url";
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import "./DynamicContentSliderWithLabel.style";
+import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
 
 class DynamicContentSliderWithLabel extends PureComponent {
   static propTypes = {
@@ -46,6 +47,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
           },
         },
       },
+      impressionSent: false,
     };
   }
 
@@ -67,7 +69,36 @@ class DynamicContentSliderWithLabel extends PureComponent {
         },
       }));
     }
+    this.registerViewPortEvent();
   }
+  registerViewPortEvent() {
+    let observer;
+
+    let options = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.5,
+    };
+
+    observer = new IntersectionObserver(this.handleIntersect, options);
+    observer.observe(this.viewElement);
+  }
+  sendImpressions() {
+    const { items = [] } = this.props;
+    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
+    this.setState({ impressionSent: true });
+  }
+  handleIntersect = (entries, observer) => {
+    const { impressionSent } = this.state;
+    if (impressionSent) {
+      return;
+    }
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        this.sendImpressions();
+      }
+    });
+  };
 
   onclick = (item) => {
     // vue analytics
@@ -172,8 +203,11 @@ class DynamicContentSliderWithLabel extends PureComponent {
   }
 
   render() {
+    let setRef = (el) => {
+      this.viewElement = el;
+    };
     return (
-      <div block="DynamicContentSliderWithLabel">
+      <div ref={setRef} block="DynamicContentSliderWithLabel">
         {this.props.header && (
           <DynamicContentHeader header={this.props.header} />
         )}
