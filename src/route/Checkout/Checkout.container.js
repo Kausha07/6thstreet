@@ -548,11 +548,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     ) {
       this.placeOrder(code, data, paymentInformation);
     } else {
-      this.placeOrder(code, data, null);
+      this.placeOrder(code, data, null)
     }
   }
 
-  placeOrder(code, data, paymentInformation) {
+  async placeOrder(code, data, paymentInformation) {
     const { createOrder, showErrorNotification } = this.props;
     const ONE_YEAR_IN_SECONDS = 31536000;
     const cart_id = BrowserDatabase.getItem(CART_ID_CACHE_KEY);
@@ -563,9 +563,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     );
     this.setState({ isLoading: true });
     try {
-      createOrder(code, data)
-        .then((response) => {
-          if (response && response.data) {
+      const response = await createOrder(code, data)
+      if (response && response.data) {
             console.log("payment method code", code)
             console.log("response in create order api", response)
             const { data } = response;
@@ -667,7 +666,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                   BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
                   this.setDetailsStep(order_id, increment_id);
                   this.resetCart();
-
                   return true;
                 }
               } else {
@@ -693,15 +691,13 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             this.setState({ isLoading: false });
             this.resetCart();
           }
-        }, this._handleError)
-        .catch(() => {
-          const { showErrorNotification } = this.props;
-          this.setState({ isLoading: false });
+    }
+    catch (e) {
+      const { showErrorNotification } = this.props;
+      this.setState({ isLoading: false });
 
-          showErrorNotification(__("Something went wrong."));
-          this.resetCart();
-        });
-    } catch (e) {
+      showErrorNotification(__("Something went wrong."));
+      this.resetCart();
       this._handleError(e);
     }
   }
