@@ -44,6 +44,7 @@ export const updateCartItem = (
     url,
     itemPrice,
     availability,
+    extension_attributes,
     available_qty
 ) => ({
     type: UPDATE_CART_ITEM,
@@ -54,6 +55,7 @@ export const updateCartItem = (
         basePrice,
         brand_name,
         thumbnail_url,
+        extension_attributes,
         url,
         itemPrice,
         availability,

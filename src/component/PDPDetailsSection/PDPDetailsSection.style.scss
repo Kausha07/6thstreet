@@ -56,9 +56,8 @@
   &-IconsSection,
   &-IconContainer {
     display: flex;
-    width: 103px;
+    justify-content: space-evenly;
     align-items: center;
-    font-size: 15px;
     color: var(--pdp-icon-text-color);
     font-weight: var(--fw-regular);
 
@@ -69,14 +68,24 @@
   }
 
   &-IconsSection {
-    align-items: start;
     padding-bottom: 28px;
   }
 
   &-IconContainer {
     margin-top: 10px;
-    font-weight: var(--fw-demi);
-    margin: 0 32px 0 0;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 15px;
+    max-width: 33.333%;
+    .Click {
+      font-size: 16px;
+      font-weight: bold;
+      color: #F96446
+    }
+    .AndCollect {
+      font-size: 13px;
+      font-weight: bold;
+    }
   }
 
   &-Icon {
@@ -86,14 +95,22 @@
     height: 40px;
     margin-right: 7px;
 
+    &_clickAndCollect {
+      background: url(./icons/clickAndCollect.png) no-repeat;
+      background-size: contain;
+    }
+
     &_isGenuine {
       background: url(./icons/genuine.png) no-repeat;
+      background-size: contain;
     }
 
     &_freeReturn {
       background: url(./icons/returns.png) no-repeat;
+      background-size: contain;
     }
 
+    &_clickAndCollect,
     &_isGenuine,
     &_freeReturn {
       background-size: 40px;

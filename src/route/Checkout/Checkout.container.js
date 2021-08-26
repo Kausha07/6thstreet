@@ -23,6 +23,7 @@ import {
   CheckoutContainer as SourceCheckoutContainer,
   mapDispatchToProps as sourceMapDispatchToProps,
 } from "SourceRoute/Checkout/Checkout.container";
+import Checkout from "./Checkout.component";
 import { setGender } from "Store/AppState/AppState.action";
 import { resetCart  } from "Store/Cart/Cart.action";
 // eslint-disable-next-line no-unused-vars
@@ -173,7 +174,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       tabbyPaymentId: null,
       isTabbyPopupShown: false,
       tabbyPaymentStatus: "",
-      QPayDetails:{}
+      QPayDetails: {},
+      isClickAndCollect: ""
     };
   }
 
@@ -208,6 +210,21 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const { checkoutStep, initialGTMSent } = this.state;
 
     const { checkoutStep: prevCheckoutStep } = prevState;
+    const { total: { items: prevItems } = {} } = prevProps;
+    
+    if(prevItems !== items && items.length){
+      let isClickAndCollect = "";
+      for(let i = 0; i<items.length; i++){
+        if(!!items[i]?.availableQty?.click_to_collect_store){
+          isClickAndCollect = items[i]?.availableQty?.click_to_collect_store || "";
+        }
+        else {
+          isClickAndCollect = "";
+          break;
+        }
+      }
+      this.setState({ isClickAndCollect: isClickAndCollect });
+    }
 
     const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
     if (QPAY_CHECK) {
@@ -918,6 +935,19 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     resetCart();
     getCart();
     updateStoreCredit();
+  }
+
+  render() {
+    const { isClickAndCollect } = this.state;
+    return (
+        <Checkout
+          { ...this.props }
+          { ...this.state }
+          { ...this.containerFunctions }
+          { ...this.containerProps() }
+          isClickAndCollect={ isClickAndCollect }
+        />
+    );
   }
 }
 

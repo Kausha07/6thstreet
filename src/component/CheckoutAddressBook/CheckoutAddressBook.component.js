@@ -21,6 +21,7 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
     isSignedIn: PropTypes.bool.isRequired,
     isBilling: PropTypes.bool.isRequired,
     shippingAddress: PropTypes.object.isRequired,
+    isClickAndCollect: PropTypes.bool.isRequired
   };
 
   state = {
@@ -57,6 +58,7 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
       onShippingEstimationFieldsChange,
       isSignedIn,
       shippingAddress,
+      isClickAndCollect
     } = this.props;
     const formPortalId = isBilling ? BILLING_STEP : SHIPPING_STEP;
 
@@ -64,9 +66,11 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
       <CheckoutAddressForm
         onShippingEstimationFieldsChange={onShippingEstimationFieldsChange}
         address={{}}
-        isSignedIn={isSignedIn}
+        // If Click And Collect is selected, treat it as guest form
+        isSignedIn={isSignedIn && !!!isClickAndCollect}
         id={formPortalId}
         shippingAddress={shippingAddress}
+        isClickAndCollect={isClickAndCollect}
       />
     );
   }
@@ -159,6 +163,15 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
         />
       </div>
     );
+  }
+  
+  renderContent() {
+    const { isSignedIn, isClickAndCollect } = this.props;
+    if (isSignedIn && !!!isClickAndCollect) {
+        return this.renderSignedInContent();
+    }
+
+    return this.renderGuestContent();
   }
 
   render() {
