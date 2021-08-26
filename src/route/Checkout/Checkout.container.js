@@ -531,8 +531,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     ) {
       this.placeOrder(code, data, paymentInformation);
     } else {
-    const dataCheck = await this.placeOrder(code, data, null)
-    console.log("data check", dataCheck)
+      this.placeOrder(code, data, null)
     }
   }
 
