@@ -19,7 +19,14 @@
     display: flex;
     justify-content: flex-end;
     .CloseContainer-Close {
-      height: 8px;
+      height: 100%;
+      padding: 0;
+      margin: 0 8px;
+      font-weight: normal;
+      text-transform: capitalize;
+      @include desktop() {
+        display: none;
+      }
     }
   }
 
@@ -152,11 +159,31 @@
       padding: 0;
     }
   }
+  .TrandingTags {
+    &-trendingTagsList {
+      &_isArabic {
+        li {
+          &:first-of-type {
+            margin-right: 0 !important;
+          }
+        }
+      }
+    }
+  }
   .TopSearches {
     text-transform: capitalize;
   }
 
   .TrandingBrands {
+    &-trendingBrandList {
+      &_isArabic {
+        li {
+          &:first-of-type {
+            margin-right: 0 !important;
+          }
+        }
+      }
+    }
     li {
       margin-top: 15px;
       margin-left: 20px;

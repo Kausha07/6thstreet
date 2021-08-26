@@ -1,21 +1,23 @@
 /* eslint-disable no-unused-vars */
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
-
 import {
-  ADD_ADDRESS,
   ADDRESS_POPUP_ID,
+  ADD_ADDRESS,
 } from "Component/MyAccountAddressPopup/MyAccountAddressPopup.config";
+import PropTypes from "prop-types";
+import VueIntegrationQueries from "Query/vueIntegration.query";
+import { connect } from "react-redux";
 import { CheckoutShippingContainer as SourceCheckoutShippingContainer } from "SourceComponent/CheckoutShipping/CheckoutShipping.container";
+import { resetCart } from "Store/Cart/Cart.action";
+import CartDispatcher from "Store/Cart/Cart.dispatcher";
 import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
 import { showNotification } from "Store/Notification/Notification.action";
 import { showPopup } from "Store/Popup/Popup.action";
 import { trimAddressFields } from "Util/Address";
 import { capitalize } from "Util/App";
-import { isSignedIn } from "Util/Auth";
+import { getUUID, isSignedIn } from "Util/Auth";
+import BrowserDatabase from "Util/BrowserDatabase";
+import { VUE_PLACE_ORDER } from "Util/Event";
 import { getCountryFromUrl } from "Util/Url/Url";
-import { resetCart } from "Store/Cart/Cart.action";
-import CartDispatcher from "Store/Cart/Cart.dispatcher";
 
 export const mapDispatchToProps = (dispatch) => ({
   showPopup: (payload) => dispatch(showPopup(ADDRESS_POPUP_ID, payload)),
@@ -31,6 +33,7 @@ export const mapDispatchToProps = (dispatch) => ({
 
 export const mapStateToProps = (state) => ({
   customer: state.MyAccountReducer.customer,
+  totals: state.CartReducer.cartTotals,
 });
 
 export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
@@ -233,6 +236,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     const {
       saveAddressInformation,
       customer: { email },
+      totals,
     } = this.props;
     const { guest_email: guestEmail } = fields;
 
@@ -246,14 +250,8 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       ? this._getAddressById(selectedCustomerAddressId)
       : trimAddressFields(fields);
 
-    const {
-      region_id,
-      region,
-      street,
-      country_id,
-      telephone,
-      postcode,
-    } = shippingAddress;
+    const { region_id, region, street, country_id, telephone, postcode } =
+      shippingAddress;
 
     const shippingAddressMapped = {
       ...shippingAddress,
@@ -293,6 +291,28 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       shipping_method_code,
     };
 
+    // Vue call
+    const customerData = BrowserDatabase.getItem("customer");
+    const userID = customerData && customerData.id ? customerData.id : null;
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
+    totals?.items?.map((item) => {
+      VueIntegrationQueries.vueAnalayticsLogger({
+        event_name: VUE_PLACE_ORDER,
+        params: {
+          event: VUE_PLACE_ORDER,
+          pageType: "checkout_payment",
+          currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+          clicked: Date.now(),
+          sourceProdID: item?.full_item_info?.config_sku,
+          sourceCatgID: item?.full_item_info?.category,
+          prodQty: item?.full_item_info?.qty,
+          prodPrice: item?.full_item_info?.price,
+          uuid: getUUID(),
+          referrer: "desktop",
+          userID: userID,
+        },
+      });
+    });
     saveAddressInformation(data);
   }
 }

@@ -16,6 +16,7 @@ import { customerType } from "Type/Account";
 import "./PDPAddToCart.style";
 import { isArabic } from "Util/App";
 import StrikeThrough from "./icons/strike-through.png";
+import clickAndCollectIcon from "../PDPDetailsSection/icons/clickAndCollect.png";
 
 class PDPAddToCart extends PureComponent {
   static propTypes = {
@@ -33,6 +34,8 @@ class PDPAddToCart extends PureComponent {
     processingRequest: PropTypes.bool.isRequired,
     routeChangeToCart: PropTypes.func.isRequired,
     setStockAvailability: PropTypes.func.isRequired,
+    stores: PropTypes.object.isRequired,
+    togglePDPClickAndCollectPopup: PropTypes.func.isRequired,
     customer: customerType,
   };
 
@@ -322,6 +325,32 @@ class PDPAddToCart extends PureComponent {
     return false;
   }
 
+  renderClickAndCollectButton() {
+    const { togglePDPClickAndCollectPopup, stores } = this.props
+    if(!stores?.length){
+      return null
+    }
+    const disabled = this.checkStateForButtonDisabling();
+    return (
+      <button
+        onClick={ togglePDPClickAndCollectPopup }
+        block="PDPAddToCart"
+        elem="ClickAndCollectButton"
+        // mods={{ isLoading }}
+        // mix={{
+        //   block: "PDPAddToCart",
+        //   elem: "AddToCartButton",
+        //   mods: { addedToCart },
+        // }}
+        disabled={disabled}
+    >
+        <div>{__("Click & Collect")}</div>
+        <img src={clickAndCollectIcon} />
+        {/* <span>{__("Adding...")}</span> */}
+        {/* <span>{__("Added to bag")}</span> */}
+      </button>
+    )
+  }
   renderAddToCartButton() {
     const {
       addToCart,
@@ -342,7 +371,7 @@ class PDPAddToCart extends PureComponent {
             product.constructor !== Object)) &&
           Object.keys(productStock).length !== 0 && (
             <button
-              onClick={addToCart}
+              onClick={() => addToCart()}
               block="PDPAddToCart"
               elem="AddToCartButton"
               mods={{ isLoading }}
@@ -538,6 +567,7 @@ class PDPAddToCart extends PureComponent {
         ) : null}
         <div block="PDPAddToCart" elem="Bottom">
           {this.renderAddToCartButton()}
+          {this.renderClickAndCollectButton()}
         </div>
         {this.renderProceedToCheckoutBlock()}
       </>

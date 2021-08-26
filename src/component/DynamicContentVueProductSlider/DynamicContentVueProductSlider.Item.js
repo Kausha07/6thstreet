@@ -1,14 +1,14 @@
-import { connect } from "react-redux";
 import Link from "Component/Link";
+import { DISPLAY_DISCOUNT_PERCENTAGE } from "Component/Price/Price.config";
 import WishlistIcon from "Component/WishlistIcon";
 import PropTypes from "prop-types";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import React, { PureComponent } from "react";
+import { connect } from "react-redux";
 import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
 import { getUUID } from "Util/Auth";
 import { VUE_CAROUSEL_CLICK } from "Util/Event";
-import { DISPLAY_DISCOUNT_PERCENTAGE } from "Component/Price/Price.config";
 
 export const mapStateToProps = (state) => ({
   country: state.AppState.country,
@@ -146,6 +146,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
       },
       data,
       widgetID,
+      pageType,
     } = this.props;
     const { isArabic } = this.state;
     let newLink = link;
@@ -181,7 +182,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
           {this.renderPrice(price)}
           {this.renderIsNew(is_new_in)}
         </Link>
-        <WishlistIcon sku={sku} data={data} />
+        <WishlistIcon sku={sku} data={data} pageType={pageType} />
       </div>
     );
   }

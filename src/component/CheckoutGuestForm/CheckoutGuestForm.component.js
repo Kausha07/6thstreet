@@ -9,125 +9,120 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import PropTypes from 'prop-types';
-
-import FieldForm from 'Component/FieldForm/FieldForm.component';
-import MyAccountOverlay from 'Component/MyAccountOverlay';
-import { isArabic } from 'Util/App';
-
-import lock from './icons/lock.png';
-
-import './CheckoutGuestForm.style';
+import FieldForm from "Component/FieldForm/FieldForm.component";
+import MyAccountOverlay from "Component/MyAccountOverlay";
+import PropTypes from "prop-types";
+import { isArabic } from "Util/App";
+import "./CheckoutGuestForm.style";
+import lock from "./icons/lock.png";
 
 export class CheckoutGuestForm extends FieldForm {
-    static propTypes = {
-        requestCustomerData: PropTypes.func.isRequired,
-        formId: PropTypes.string.isRequired,
-        handleEmailInput: PropTypes.func.isRequired,
-        handleCreateUser: PropTypes.func.isRequired,
-        isEmailAdded: PropTypes.bool.isRequired
+  static propTypes = {
+    requestCustomerData: PropTypes.func.isRequired,
+    formId: PropTypes.string.isRequired,
+    handleEmailInput: PropTypes.func.isRequired,
+    handleCreateUser: PropTypes.func.isRequired,
+    isEmailAdded: PropTypes.bool.isRequired,
+  };
+
+  state = {
+    showPopup: false,
+    isArabic: isArabic(),
+  };
+
+  get fieldMap() {
+    const { handleEmailInput, handlePasswordInput, formId, isCreateUser } =
+      this.props;
+
+    const fields = {
+      guest_email: {
+        label: __("Email"),
+        form: formId,
+        placeholder: __("Email"),
+        validation: ["notEmpty", "email"],
+        onChange: handleEmailInput,
+        skipValue: true,
+      },
     };
 
-    state = {
-        showPopup: false,
-        isArabic: isArabic()
-    };
-
-    get fieldMap() {
-        const {
-            handleEmailInput,
-            handlePasswordInput,
-            formId,
-            isCreateUser
-        } = this.props;
-
-        const fields = {
-            guest_email: {
-                label: __('Email'),
-                form: formId,
-                placeholder: __('Email'),
-                validation: ['notEmpty', 'email'],
-                onChange: handleEmailInput,
-                skipValue: true
-            }
-        };
-
-        if (isCreateUser) {
-            fields.guest_password = {
-                form: formId,
-                label: __('Create Password'),
-                onChange: handlePasswordInput,
-                validation: ['notEmpty', 'password'],
-                type: 'password',
-                skipValue: true
-            };
-        }
-
-        return fields;
+    if (isCreateUser) {
+      fields.guest_password = {
+        form: formId,
+        label: __("Create Password"),
+        onChange: handlePasswordInput,
+        validation: ["notEmpty", "password"],
+        type: "password",
+        skipValue: true,
+      };
     }
 
-    renderHeading(text) {
-        const { isEmailAdded } = this.props;
-        return (
-            <h2
-              block="Checkout"
-              elem="Heading"
-              mods={ { isEmailAdded } }
-            >
-                { __(text) }
-            </h2>
-        );
+    return fields;
+  }
+
+  renderHeading(text) {
+    const { isEmailAdded } = this.props;
+    return (
+      <h2 block="Checkout" elem="Heading" mods={{ isEmailAdded }}>
+        {__(text)}
+      </h2>
+    );
+  }
+
+  renderMyAccountPopup() {
+    const { showPopup } = this.state;
+
+    if (!showPopup) {
+      return null;
     }
 
-    renderMyAccountPopup() {
-        const { showPopup } = this.state;
+    return (
+      <MyAccountOverlay
+        closePopup={this.closePopup}
+        onSignIn={this.onSignIn}
+        isPopup
+      />
+    );
+  }
 
-        if (!showPopup) {
-            return null;
-        }
+  onSignIn = () => {
+    const { requestCustomerData } = this.props;
 
-        return <MyAccountOverlay closePopup={ this.closePopup } onSignIn={ this.onSignIn } isPopup />;
-    }
+    requestCustomerData();
+    this.closePopup();
+  };
 
-    onSignIn = () => {
-        const { requestCustomerData } = this.props;
+  closePopup = () => {
+    this.setState({ showPopup: false });
+  };
 
-        requestCustomerData();
-        this.closePopup();
-    };
+  showMyAccountPopup = () => {
+    this.setState({ showPopup: true });
+  };
 
-    closePopup = () => {
-        this.setState({ showPopup: false });
-    };
+  render() {
+    const { isEmailAdded } = this.props;
+    const { isArabic } = this.state;
 
-    showMyAccountPopup = () => {
-        this.setState({ showPopup: true });
-    };
-
-    render() {
-        const { isEmailAdded } = this.props;
-        const { isArabic } = this.state;
-
-        return (
-            <div
-              block="CheckoutGuestForm"
-              mods={ { isEmailAdded } }
-              mix={ { block: 'FieldForm' } }
-            >
-                <div
-                  block="CheckoutGuestForm"
-                  elem="FieldAndSignIn"
-                  mods={ { isArabic } }
-                >
-                    <button onClick={ this.showMyAccountPopup }>
-                        { __('Sign In') }
-                        <img src={ lock } alt="" />
-                    </button>
-                </div>
-                { this.renderMyAccountPopup() }
-            </div>
-        );
-    }
+    return (
+      <div
+        block="CheckoutGuestForm"
+        mods={{ isEmailAdded }}
+        mix={{ block: "FieldForm" }}
+      >
+        <div
+          block="CheckoutGuestForm"
+          elem="FieldAndSignIn"
+          mods={{ isArabic }}
+        >
+          <button onClick={this.showMyAccountPopup}>
+            {__("Sign In")}
+            <img src={lock} alt="" />
+          </button>
+        </div>
+        {this.renderMyAccountPopup()}
+      </div>
+    );
+  }
 }
 
 export default CheckoutGuestForm;

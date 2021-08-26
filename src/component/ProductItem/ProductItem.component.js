@@ -69,7 +69,7 @@ class ProductItem extends PureComponent {
       product: { sku },
       product,
     } = this.props;
-    return <WishlistIcon sku={sku} data={product} />;
+    return <WishlistIcon sku={sku} data={product} pageType="plp" />;
   }
 
   renderLabel() {
@@ -221,7 +221,7 @@ class ProductItem extends PureComponent {
     };
 
     return (
-      <Link to={linkTo} onClick={this.handleClick}>
+      <Link to={isVueData ? parseLink : linkTo} onClick={this.handleClick}>
         {" "}
         {this.renderImage()} {this.renderBrand()} {this.renderTitle()}{" "}
         {this.renderPrice()}{" "}

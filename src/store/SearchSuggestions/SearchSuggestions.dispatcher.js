@@ -80,16 +80,18 @@ export class SearchSuggestionsDispatcher {
 
       // In case anyone needs desktop data (use this!)
       // const lang = language === 'en' ? 'english' : 'arabic';
+      var invalid = /[°"§%()\[\]{}=\\?´`'#<>|,;.:+_-]+/g;
+      var searchQuery = search.replace(invalid, "");
       const data = await new Algolia({
         index: sourceQuerySuggestionIndex,
       }).autocompleteSearch(
         isArabic()
           ? {
-              query: search,
+              query: searchQuery,
               limit: QUERY_SUGGESTION_LIMIT,
             }
           : {
-              query: search,
+              query: searchQuery,
               limit: QUERY_SUGGESTION_LIMIT,
             }
       );

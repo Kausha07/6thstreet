@@ -2,7 +2,9 @@
 import PropTypes from "prop-types";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
+import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { getUUID } from "Util/Auth";
+import BrowserDatabase from "Util/BrowserDatabase";
 import Event, {
   EVENT_GTM_PRODUCT_ADD_TO_WISHLIST,
   EVENT_GTM_PRODUCT_REMOVE_FROM_WISHLIST,
@@ -18,6 +20,7 @@ class WishlistIcon extends PureComponent {
     removeFromWishlist: PropTypes.func.isRequired,
     addToWishlist: PropTypes.func.isRequired,
     items: PropTypes.array.isRequired,
+    pageType: PropTypes.string.isRequired,
   };
 
   state = {
@@ -33,11 +36,16 @@ class WishlistIcon extends PureComponent {
   }
 
   handleClick = () => {
-    const { addToWishlist, removeFromWishlist, items, data } = this.props;
+    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender;
+    const { addToWishlist, removeFromWishlist, items, data, pageType } =
+      this.props;
+    const customer = BrowserDatabase.getItem("customer");
+    const userID = customer && customer.id ? customer.id : null;
     const { skuFromProps } = this.state;
     const wishListItem = items.find(
       ({ product: { sku } }) => sku === skuFromProps
     );
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
 
     if (wishListItem) {
       const { wishlist_item_id } = wishListItem;
@@ -52,7 +60,11 @@ class WishlistIcon extends PureComponent {
           variant: wishListItem.product.color,
         },
       });
-      const locale = VueIntegrationQueries.getLocaleFromUrl();
+      const prodPriceObject = wishListItem?.product?.price[0];
+      const prodPrice = prodPriceObject
+        ? prodPriceObject[Object.keys(prodPriceObject)[0]]["6s_base_price"]
+        : "";
+      // to do add 6s_special_price when we get response from backend.
       VueIntegrationQueries.vueAnalayticsLogger({
         event_name: VUE_REMOVE_TO_WISHLIST,
         params: {
@@ -60,12 +72,12 @@ class WishlistIcon extends PureComponent {
           pageType: "wishlist",
           currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
           clicked: Date.now(),
-          prodPrice: wishListItem.product.price,
-          sourceCatgID: "",
+          prodPrice: prodPrice,
+          sourceCatgID: gender,
           sourceProdID: skuFromProps,
           uuid: getUUID(),
           referrer: "desktop",
-          // userID: userToken ? `user-${userToken}` : getUUIDToken(),
+          userID: userID,
         },
       });
       return;
@@ -80,7 +92,7 @@ class WishlistIcon extends PureComponent {
     Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_WISHLIST, {
       product: {
         brand: data.brand_name,
-        category: "",
+        category: gender,
         id: skuFromProps,
         name: data.name,
         price: itemPrice,
@@ -91,15 +103,15 @@ class WishlistIcon extends PureComponent {
       event_name: VUE_ADD_TO_WISHLIST,
       params: {
         event: VUE_ADD_TO_WISHLIST,
-        pageType: "wishlist",
+        pageType: pageType,
         currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
-        prodPrice: wishListItem.product.price,
-        sourceCatgID: "",
+        prodPrice: itemPrice,
+        sourceCatgID: gender,
         sourceProdID: skuFromProps,
         uuid: getUUID(),
         referrer: "desktop",
-        // userID: userToken ? `user-${userToken}` : getUUIDToken(),
+        userID: userID,
       },
     });
   };
