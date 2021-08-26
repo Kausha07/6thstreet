@@ -531,11 +531,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     ) {
       this.placeOrder(code, data, paymentInformation);
     } else {
-      this.placeOrder(code, data, null);
+    this.placeOrder(code, data, null)
     }
   }
 
-  placeOrder(code, data, paymentInformation) {
+  async placeOrder(code, data, paymentInformation) {
     const { createOrder, showErrorNotification } = this.props;
     const ONE_YEAR_IN_SECONDS = 31536000;
     const cart_id = BrowserDatabase.getItem(CART_ID_CACHE_KEY);
@@ -546,7 +546,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     );
     this.setState({ isLoading: true });
     try {
-      createOrder(code, data)
+      await createOrder(code, data)
         .then((response) => {
           if (response && response.data) {
             console.log("payment method code", code)
@@ -650,7 +650,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                   BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
                   this.setDetailsStep(order_id, increment_id);
                   this.resetCart();
-
                   return true;
                 }
               } else {
