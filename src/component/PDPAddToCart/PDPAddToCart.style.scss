@@ -646,3 +646,6 @@ $select-arrow-width: 6px !default;
     opacity: 1;
   }
 }
+.PDPAddToCart-AddToCartButton[disabled] {
+  opacity: 0.3!important;
+}

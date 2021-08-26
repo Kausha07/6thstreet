@@ -6,6 +6,7 @@ import Close from './Close';
 import FavouriteFilled from './FavouriteFilled';
 import Favourite from './Favourite';
 import Lock from './Lock';
+import Player from './Player';
 import ShareFilled from './ShareFilled';
 import Search from './Search';
 import Select from './Select';
@@ -27,5 +28,6 @@ export {
     Select,
     Share,
     Shipping,
-    Store
+    Store,
+    Player,
 }

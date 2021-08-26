@@ -112,7 +112,7 @@ class PDPAlsoAvailableProduct extends PureComponent {
       <li block="PDPAlsoAvailableProduct">
         <div block="PDPAlsoAvailableProduct" elem="OverlayContainer">
           {this.renderNew()}
-          <WishlistIcon sku={sku} data={product} />
+          <WishlistIcon sku={sku} data={product} pageType="pdp" />
         </div>
         {this.renderLink()}
       </li>

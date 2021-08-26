@@ -143,6 +143,10 @@ export class Checkout extends SourceCheckout {
     return null;
   };
 
+  savePaymentInformationApplePay = (paymentInformation) => {
+    this.setState({ paymentInformation });
+  }
+
   processTabby(paymentInformation) {
     const { savePaymentInformation, verifyPayment, checkoutStep } = this.props;
     const { tabbyPaymentId } = this.state;
@@ -351,6 +355,7 @@ export class Checkout extends SourceCheckout {
           shippingAddress={shippingAddress}
           setCashOnDeliveryFee={this.setCashOnDeliveryFee}
           savePaymentInformation={this.savePaymentInformation}
+          savePaymentInformationApplePay={this.savePaymentInformationApplePay}
           getBinPromotion={getBinPromotion}
           updateTotals={updateTotals}
           setTabbyWebUrl={this.setTabbyWebUrl}

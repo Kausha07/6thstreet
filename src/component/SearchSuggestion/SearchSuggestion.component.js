@@ -109,7 +109,7 @@ class SearchSuggestion extends PureComponent {
     let formattedBrandName;
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
-      : "all";
+      : "home";
     if (isArabic) {
       let requestedGender = getGenderInArabic(gender);
       let arabicAlphabetDigits =
@@ -126,10 +126,10 @@ class SearchSuggestion extends PureComponent {
       )}`;
     } else {
       formattedBrandName = brandName
-        .toUpperCase()
+        ?.toUpperCase()
         .split(" ")
         .filter(function (allItems, i, a) {
-          return i == a.indexOf(allItems.toUpperCase());
+          return i == a.indexOf(allItems?.toUpperCase());
         })
         .join(" ")
         .toLowerCase();
@@ -143,18 +143,41 @@ class SearchSuggestion extends PureComponent {
     return brandUrl;
   };
 
-  getCatalogUrl = (query, gender, queryID) => {
+  getCatalogUrl = (query, gender, queryID, brandValue = null) => {
     const { isArabic } = this.state;
     let requestedGender = gender;
+    let catalogUrl;
+    let genderInURL;
     if (isArabic) {
-      requestedGender = getGenderInArabic(gender);
+      if (gender === "kids") {
+        genderInURL = "";
+        // to add Boy~Girl in arabic
+      } else {
+        requestedGender = getGenderInArabic(gender);
+        genderInURL = requestedGender?.replace(
+          requestedGender?.charAt(0),
+          requestedGender?.charAt(0).toUpperCase()
+        );
+      }
+    } else {
+      if (gender === "kids") {
+        genderInURL = "Boy~Girl";
+      } else {
+        genderInURL = requestedGender?.replace(
+          requestedGender?.charAt(0),
+          requestedGender?.charAt(0).toUpperCase()
+        );
+      }
     }
-    const catalogUrl = `/catalogsearch/result/?q=${formatQuerySuggestions(
-      query
-    )}&gender=${requestedGender.replace(
-      requestedGender.charAt(0),
-      requestedGender.charAt(0).toUpperCase()
-    )}`;
+    if (brandValue) {
+      catalogUrl = `/catalogsearch/result/?q=${formatQuerySuggestions(
+        query
+      )}&gender=${genderInURL}&brand_name=${brandValue}`;
+    } else {
+      catalogUrl = `/catalogsearch/result/?q=${formatQuerySuggestions(
+        query
+      )}&gender=${genderInURL}`;
+    }
     return catalogUrl;
   };
 
@@ -275,29 +298,101 @@ class SearchSuggestion extends PureComponent {
   }
 
   renderQuerySuggestion = (querySuggestions) => {
-    const { query, count, isBrand } = querySuggestions;
+    const { query, count, isBrand, filter } = querySuggestions;
     const { searchString, queryID, products = [] } = this.props;
+    const brandValue = filter?.find((item) => (item.type = "brand"))?.value;
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
-      : "all";
-
+      : "home";
     const fetchSKU = products.find(
       (item) =>
-        item.name.toUpperCase().includes(query.toUpperCase()) ||
-        item.sku.toUpperCase().includes(query.toUpperCase())
+        item.name?.toUpperCase()?.includes(query?.toUpperCase()) ||
+        item.sku?.toUpperCase()?.includes(query?.toUpperCase())
     );
-    if (isBrand) {
+    // will be good to work when all brands exists properly
+    // if (isBrand) {
+    //   return (
+    //     <li>
+    //       <Link
+    //         to={
+    //           encodeURI(
+    //             this.getBrandSuggestionUrl(
+    //               formatQuerySuggestions(query),
+    //               queryID
+    //             )
+    //           )
+    //         }
+    //         onClick={() =>
+    //           this.onSearchQueryClick(formatQuerySuggestions(query))
+    //         }
+    //       >
+    //         <div className="suggestion-details-box">
+    //           {getHighlightedText(formatQuerySuggestions(query), searchString)}
+    //           <div>{count}</div>
+    //         </div>
+    //       </Link>
+    //     </li>
+    //   );
+    // } else {
+    //   if (products.length === 1 && fetchSKU) {
+    //     return (
+    //       <li>
+    //         <Link
+    //           to={fetchSKU?.url}
+    //           onClick={() => this.onSearchQueryClick(query)}
+    //         >
+    //           <div className="suggestion-details-box text-capitalize">
+    //             {getHighlightedText(query, searchString)}
+    //           </div>
+    //         </Link>
+    //       </li>
+    //     );
+    //   } else {
+    //     return (
+    //       <li>
+    //         <Link
+    //           to={`${encodeURI(this.getCatalogUrl(query, gender, queryID))}`}
+    //           onClick={() =>
+    //             this.onSearchQueryClick(formatQuerySuggestions(query))
+    //           }
+    //         >
+    //           <div className="suggestion-details-box">
+    //             {getHighlightedText(
+    //               formatQuerySuggestions(query),
+    //               searchString
+    //             )}
+    //             <div>{count}</div>
+    //           </div>
+    //         </Link>
+    //       </li>
+    //     );
+    //   }
+    // }
+    if (products.length === 1 && fetchSKU) {
       return (
         <li>
           <Link
-            to={
-              encodeURI(
-                this.getBrandSuggestionUrl(
-                  formatQuerySuggestions(query),
-                  queryID
-                )
+            to={fetchSKU?.url}
+            onClick={() => this.onSearchQueryClick(query)}
+          >
+            <div className="suggestion-details-box text-capitalize">
+              {getHighlightedText(query, searchString)}
+            </div>
+          </Link>
+        </li>
+      );
+    } else {
+      return (
+        <li>
+          <Link
+            to={`${encodeURI(
+              this.getCatalogUrl(
+                query,
+                gender,
+                queryID,
+                !brandValue?.includes("///") ? brandValue : null
               )
-            }
+            )}`}
             onClick={() =>
               this.onSearchQueryClick(formatQuerySuggestions(query))
             }
@@ -309,40 +404,6 @@ class SearchSuggestion extends PureComponent {
           </Link>
         </li>
       );
-    } else {
-      if (products.length === 1 && fetchSKU) {
-        return (
-          <li>
-            <Link
-              to={fetchSKU?.url}
-              onClick={() => this.onSearchQueryClick(query)}
-            >
-              <div className="suggestion-details-box text-capitalize">
-                {getHighlightedText(query, searchString)}
-              </div>
-            </Link>
-          </li>
-        );
-      } else {
-        return (
-          <li>
-            <Link
-              to={`${encodeURI(this.getCatalogUrl(query, gender, queryID))}`}
-              onClick={() =>
-                this.onSearchQueryClick(formatQuerySuggestions(query))
-              }
-            >
-              <div className="suggestion-details-box">
-                {getHighlightedText(
-                  formatQuerySuggestions(query),
-                  searchString
-                )}
-                <div>{count}</div>
-              </div>
-            </Link>
-          </li>
-        );
-      }
     }
   };
 
@@ -417,20 +478,24 @@ class SearchSuggestion extends PureComponent {
     const { url, name, thumbnail_url, brand_name, price } = product;
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
-      : "all";
+      : "home";
 
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
 
-    let parseLink = url.includes("catalogsearch/result")
-      ? url.split("&")[0] +`&gender=${requestedGender.replace(
-      requestedGender.charAt(0),
-      requestedGender.charAt(0).toUpperCase()
-    )}`
+    let parseLink = url?.includes("catalogsearch/result")
+      ? url?.split("&")[0] +
+        `&gender=${requestedGender.replace(
+          requestedGender.charAt(0),
+          requestedGender.charAt(0)?.toUpperCase()
+        )}`
       : url;
 
     return (
       <li>
-        <Link to={parseLink} onClick={() => this.handleProductClick(product)}>
+        <Link
+          to={parseLink ? parseLink : "#"}
+          onClick={() => this.handleProductClick(product)}
+        >
           <div block="SearchProduct">
             <img
               src={thumbnail_url}
@@ -589,13 +654,16 @@ class SearchSuggestion extends PureComponent {
 
   renderTrendingBrands() {
     const { trendingBrands = [] } = this.props;
+    const { isArabic } = this.state;
 
-    return (
+    return trendingBrands.length > 0 ? (
       <div block="TrandingBrands">
         <h2>{__("Trending brands")}</h2>
-        <ul>{trendingBrands.map(this.renderTrendingBrand)}</ul>
+        <ul block="TrandingBrands" elem="trendingBrandList" mods={{ isArabic }}>
+          {trendingBrands.map(this.renderTrendingBrand)}
+        </ul>
       </div>
-    );
+    ) : null;
   }
 
   renderTrendingTag = ({ link, label }, i) => (
@@ -613,20 +681,22 @@ class SearchSuggestion extends PureComponent {
 
   renderTrendingTags() {
     const { trendingTags = [] } = this.props;
-
-    return (
+    const { isArabic } = this.state;
+    return trendingTags.length > 0 ? (
       <div block="TrandingTags">
         <h2>{__("Trending tags")}</h2>
-        <ul>{trendingTags.map(this.renderTrendingTag)}</ul>
+        <ul block="TrandingTags" elem="trendingTagsList" mods={{ isArabic }}>
+          {trendingTags.map(this.renderTrendingTag)}
+        </ul>
       </div>
-    );
+    ) : null;
   }
 
   renderTopSearch = ({ search, link }, i) => {
     const { isArabic } = this.state;
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
-      : "all";
+      : "home";
 
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
     return (
@@ -652,12 +722,12 @@ class SearchSuggestion extends PureComponent {
 
   renderTopSearches() {
     const { topSearches = [] } = this.props;
-    return (
+    return topSearches.length > 0 ? (
       <div block="TopSearches">
         <h2>{__("Top searches")}</h2>
         <ul>{topSearches.map(this.renderTopSearch)}</ul>
       </div>
-    );
+    ) : null;
   }
 
   // recent searches
@@ -666,7 +736,7 @@ class SearchSuggestion extends PureComponent {
     const { isArabic } = this.state;
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
-      : "all";
+      : "home";
 
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
     return (
@@ -724,14 +794,17 @@ class SearchSuggestion extends PureComponent {
     if (!isActive) {
       return null;
     }
+    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      : "home";
 
-    if (isEmpty && isActive) {
+    if (isEmpty && isActive && gender !== "home") {
       return this.renderEmptySearch();
     }
 
-    if (inNothingFound && querySuggestions.length === 0) {
-      return this.renderNothingFound();
-    }
+    // if (inNothingFound && querySuggestions.length === 0) {
+    //   return this.renderNothingFound();
+    // }
 
     return this.renderSuggestions();
   }
@@ -764,7 +837,8 @@ class SearchSuggestion extends PureComponent {
           mods={{ isArabic }}
           onClick={closeSearch}
         >
-          {svg}
+          Cancel
+          {/* {svg} */}
         </button>
       </div>
     );
@@ -774,7 +848,7 @@ class SearchSuggestion extends PureComponent {
     return (
       <div block="SearchSuggestion" mods={{ isArabic }}>
         <div block="SearchSuggestion" elem="Content">
-          {this.renderCloseButton()}
+          {/* {this.renderCloseButton()} */}
           {/* {this.renderLoader()} */}
           {this.renderContent()}
         </div>

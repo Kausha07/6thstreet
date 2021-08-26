@@ -208,10 +208,12 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
   }
 
   async onBillingSuccess(fields, asyncData) {
+    console.log("async data", asyncData)
     const paymentMethod = this._getPaymentData(asyncData);
     const { savePaymentInformation, savedCards, newCardVisible ,showErrorNotification} = this.props;
     const address = this._getAddress(fields);
     const { code } = paymentMethod;
+    console.log("payment method", paymentMethod)
 
     if (code === CARD) {
       if (newCardVisible) {

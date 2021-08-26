@@ -7,11 +7,14 @@ import BrowserDatabase from "Util/BrowserDatabase";
 // import Image from 'Component/Image';
 import { formatCDNLink } from "Util/Url";
 import "./DynamicContentTwiceBanner.style";
+import Event from "Util/Event";
+import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
 
 class DynamicContentTwiceBanner extends PureComponent {
   state = {
     isArabic: isArabic(),
     isAllShowing: true,
+    impressionSent: false,
   };
 
   static defaultProps = {
@@ -23,12 +26,45 @@ class DynamicContentTwiceBanner extends PureComponent {
     super(props);
   }
 
+  componentDidMount() {
+    this.registerViewPortEvent();
+  }
+
+  registerViewPortEvent() {
+    let observer;
+
+    let options = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.5,
+    };
+
+    observer = new IntersectionObserver(this.handleIntersect, options);
+    observer.observe(this.viewElement);
+  }
+  sendImpressions() {
+    const { items = [] } = this.props;
+    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
+    this.setState({ impressionSent: true });
+  }
+  handleIntersect = (entries, observer) => {
+    const { impressionSent } = this.state;
+    if (impressionSent) {
+      return;
+    }
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        console.log("twice banner component in view port ", entry);
+        this.sendImpressions();
+      }
+    });
+  };
+
   renderImage = (item, isTwiceBanner) => {
     const { typeOfBanner } = this.props;
     const { title, subtitle, button_label, button_link } =
       typeOfBanner && this.props[typeOfBanner];
     const { url, link, height = "", width = "" } = item;
-
     // TODO: calculate aspect ratio to ensure images not jumping.
     // if (!link) {
     //     return (
@@ -46,15 +82,16 @@ class DynamicContentTwiceBanner extends PureComponent {
     // }
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
-      : "all";
+      : "home";
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
-    let parseLink = button_link.includes("/catalogsearch/result")
-      ? button_link.split("&")[0] +
-        `&gender=${requestedGender.replace(
-          requestedGender.charAt(0),
-          requestedGender.charAt(0).toUpperCase()
-        )}`
-      : button_link;
+    let parseLink =
+      button_link && button_link.includes("/catalogsearch/result")
+        ? button_link.split("&")[0] +
+          `&gender=${requestedGender.replace(
+            requestedGender.charAt(0),
+            requestedGender.charAt(0).toUpperCase()
+          )}`
+        : button_link;
 
     if (isTwiceBanner) {
       return (
@@ -97,12 +134,16 @@ class DynamicContentTwiceBanner extends PureComponent {
   }
 
   render() {
+    let setRef = (el) => {
+      this.viewElement = el;
+    };
     const { isArabic } = this.state;
     // const { isAllShowing } = this.state;
     const { typeOfBanner } = this.props;
     const BannerPosition = typeOfBanner === "header" ? "Right" : "Left";
     return (
       <div
+        ref={setRef}
         block="DynamicContentTwiceBanner"
         className="row"
         elem="Content"

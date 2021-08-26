@@ -104,7 +104,7 @@ class PDPSummary extends PureComponent {
             text={`Hey check this out: ${document.title}`}
             url={url.searchParams.append("utm_source", "pdp_share")}
           />
-          <WishlistIcon sku={sku} data={product} />
+          <WishlistIcon sku={sku} data={product} pageType="pdp" />
         </div>
       </>
     );
@@ -218,6 +218,7 @@ class PDPSummary extends PureComponent {
     if (tags && tags.length) {
       return (
         <>
+        <div block="Seperatortop" />
           <PDPTags tags={tags} />
           <div block="Seperator" />
         </>
