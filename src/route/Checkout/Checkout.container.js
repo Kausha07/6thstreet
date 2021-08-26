@@ -531,7 +531,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     ) {
       this.placeOrder(code, data, paymentInformation);
     } else {
-    this.placeOrder(code, data, null)
+    const dataCheck = await this.placeOrder(code, data, null)
+    console.log("data check", dataCheck)
     }
   }
 
@@ -546,9 +547,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     );
     this.setState({ isLoading: true });
     try {
-      await createOrder(code, data)
-        .then((response) => {
-          if (response && response.data) {
+      const response = await createOrder(code, data)
+      if (response && response.data) {
             console.log("payment method code", code)
             console.log("response in create order api", response)
             const { data } = response;
@@ -675,15 +675,13 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             this.setState({ isLoading: false });
             this.resetCart();
           }
-        }, this._handleError)
-        .catch(() => {
-          const { showErrorNotification } = this.props;
-          this.setState({ isLoading: false });
+    }
+    catch (e) {
+      const { showErrorNotification } = this.props;
+      this.setState({ isLoading: false });
 
-          showErrorNotification(__("Something went wrong."));
-          this.resetCart();
-        });
-    } catch (e) {
+      showErrorNotification(__("Something went wrong."));
+      this.resetCart();
       this._handleError(e);
     }
   }
