@@ -69,20 +69,22 @@
   }
 
   &-IconsSection {
-    align-items: start;
     padding-bottom: 28px;
   }
 
   &-IconContainer {
     margin-top: 10px;
-    font-weight: var(--fw-demi);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 15px;
+    max-width: 33.333%;
     .Click {
       font-size: 16px;
       font-weight: bold;
       color: #F96446
     }
     .AndCollect {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: bold;
     }
   }

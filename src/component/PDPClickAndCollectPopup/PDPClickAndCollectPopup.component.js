@@ -14,6 +14,7 @@ class PDPClickAndCollectPopup extends PureComponent {
     static propTypes = {
         togglePDPClickAndCollectPopup: PropTypes.func.isRequired,
         stores: PropTypes.object.isRequired,
+        isLoading: PropTypes.bool.isRequired,
         selectedClickAndCollectStore: PropTypes.object,
         confirmClickAndCollect: PropTypes.func.isRequired
     };
@@ -24,16 +25,8 @@ class PDPClickAndCollectPopup extends PureComponent {
 
     renderStoreSelect() {
         const { stores, selectedClickAndCollectStore, selectClickAndCollectStore } = this.props;
-        console.log(stores)
         return (
-            <Form
-                key="select-store"
-                // onSubmit={ onForgotPasswordAttempt }
-                // onSubmitSuccess={ onForgotPasswordSuccess }
-                // onSubmitError={ onFormError }
-                // parentCallback={ this.onForgotChange }
-                // isValidateOnChange
-            >
+            <Form key="select-store">
                 <Search />
                 <Field
                     type="select"
@@ -49,13 +42,24 @@ class PDPClickAndCollectPopup extends PureComponent {
     }
 
     renderConfirmButton() {
-        const { selectedClickAndCollectStore, confirmClickAndCollect } = this.props;
+        const { selectedClickAndCollectStore, confirmClickAndCollect, isLoading } = this.props;
         return (
             <button
-                disabled={ !selectedClickAndCollectStore }
+                block="PDPAddToCart"
+                elem="ConfirmClickAndCollectButton"
+                mods={{
+                    isLoading: isLoading
+                }}
+                disabled={ !selectedClickAndCollectStore || isLoading }
                 onClick={ confirmClickAndCollect }
             >
-                { __('CONFIRM CLICK & COLLECT')}
+                {
+                    isLoading
+                    ?
+                    <span>{ __('Adding to Bag...')}</span>
+                    :
+                    <span>{ __('CONFIRM CLICK & COLLECT')}</span>
+                }
             </button>
         )
     }

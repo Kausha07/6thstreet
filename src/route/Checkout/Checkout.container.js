@@ -175,7 +175,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       isTabbyPopupShown: false,
       tabbyPaymentStatus: "",
       QPayDetails: {},
-      isClickAndCollect: false
+      isClickAndCollect: ""
     };
   }
 
@@ -213,12 +213,15 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const { total: { items: prevItems } = {} } = prevProps;
     
     if(prevItems !== items && items.length){
-      let isClickAndCollect = false;
-      if(items.length === items.filter((item) => !!item?.availableQty?.click_to_collect_store)?.length) {
-        isClickAndCollect = true;
-      }
-      else {
-        isClickAndCollect = false;
+      let isClickAndCollect = "";
+      for(let i = 0; i<items.length; i++){
+        if(!!items[i]?.availableQty?.click_to_collect_store){
+          isClickAndCollect = items[i]?.availableQty?.click_to_collect_store || "";
+        }
+        else {
+          isClickAndCollect = "";
+          break;
+        }
       }
       this.setState({ isClickAndCollect: isClickAndCollect });
     }

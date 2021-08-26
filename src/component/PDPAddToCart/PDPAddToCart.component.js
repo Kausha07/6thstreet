@@ -344,7 +344,7 @@ class PDPAddToCart extends PureComponent {
         // }}
         disabled={disabled}
     >
-         <div>{__("Click & Collect")}</div>
+        <div>{__("Click & Collect")}</div>
         <img src={clickAndCollectIcon} />
         {/* <span>{__("Adding...")}</span> */}
         {/* <span>{__("Added to bag")}</span> */}

@@ -67,36 +67,16 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
     const {
       isSignedIn,
       shippingAddress: { guest_email },
-      isClickAndCollect
+      isClickAndCollect,
+      storeAddress
     } = this.props;
 
     const { telephone, street, ...fieldMap } = super.fieldMap;
    
-    console.log(fieldMap)
-    // if(!!isClickAndCollect){
-    //   delete fieldMap.street;
-    //   delete fieldMap.city;
-    //   delete fieldMap.postcode;
-    //   delete fieldMap.region_string;
-    //   // if(fieldMap.street){
-    //   //   fieldMap.street.validation = [];
-    //   // }
-    //   // if(fieldMap.city){
-    //   //   fieldMap.city.validation = [];
-    //   // }
-    //   // if(fieldMap.postcode) {
-    //   //   fieldMap.postcode.validation = [];
-    //   // }
-    //   // if(fieldMap.region_string) {
-    //   //   fieldMap.region_string.validation = [];
-    //   // }
-    // }
-    // else {
-      fieldMap.street = {
-        ...street,
-        onChange: (value) => this.onChange("street", value),
-      };
-    // }
+    fieldMap.street = {
+      ...street,
+      onChange: (value) => this.onChange("street", value),
+    };
 
     fieldMap.telephone = {
       ...telephone,
@@ -115,6 +95,38 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
           },
           ...fieldMap,
         };
+  
+    if(!!isClickAndCollect && storeAddress){
+      console.log(fieldMap)
+      
+      const { store_name, address, city, area } = storeAddress;
+      if(store_name && address){
+        const value = `${store_name}, ${address}`;
+        Object.assign(fieldMap.street || {}, {
+          value,
+          disabled: true
+        });
+        this.onChange('street', value)
+      }
+      if(city && fieldMap?.city?.selectOptions) {
+        const value = fieldMap.city.selectOptions.filter(({ label }) => label.toLowerCase()===city.toLowerCase())[0]?.value || ""; 
+        Object.assign(fieldMap.city || {}, {
+          value,
+          disabled: true
+        });
+        this.onChange('city', value)
+      }
+
+      if(area && fieldMap?.region_id?.selectOptions) {
+        const value = fieldMap.region_id.selectOptions.filter(({ label }) => label.toLowerCase()===area.toLowerCase())[0]?.value || "";
+        Object.assign(fieldMap.region_id || {}, {
+          value,
+          disabled: true
+        });
+        this.setState({regionId: value});
+      }
+    }
+
     if (this.props.isSignedIn === false) {
       let result = {};
       for (const [key, value] of Object.entries(fFieldMap)) {

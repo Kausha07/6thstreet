@@ -30,6 +30,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
     processingPaymentSelectRequest: PropTypes.bool,
     processApplePay: PropTypes.bool,
     placeOrder: PropTypes.func,
+    isClickAndCollect: PropTypes.bool.isRequired
   };
 
   static defaultProps = {
@@ -197,6 +198,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
       applyPromotionSavedCard,
       removePromotionSavedCard,
       isSignedIn,
+      isClickAndCollect
     } = this.props;
 
     if (!paymentMethods.length) {
@@ -223,6 +225,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
         isSignedIn={isSignedIn}
         applyPromotionSavedCard={applyPromotionSavedCard}
         removePromotionSavedCard={removePromotionSavedCard}
+        isClickAndCollect={isClickAndCollect}
       />
     );
   }

@@ -367,7 +367,7 @@ export class PDPAddToCartContainer extends PureComponent {
     });
   }
 
-  addToCart() {
+  addToCart(isClickAndCollect) {
     const {
       product: {
         thumbnail_url,
@@ -442,9 +442,13 @@ export class PDPAddToCartContainer extends PureComponent {
         // Response is sent only if error appear
         if (response) {
           showNotification("error", __(response));
-          this.afterAddToCart(false);
+          this.afterAddToCart(false, {
+            isClickAndCollect: !!isClickAndCollect
+          });
         } else {
-          this.afterAddToCart();
+          this.afterAddToCart(true, {
+            isClickAndCollect: !!isClickAndCollect
+          });
         }
       });
 
@@ -502,9 +506,13 @@ export class PDPAddToCartContainer extends PureComponent {
         // Response is sent only if error appear
         if (response) {
           showNotification("error", __(response));
-          this.afterAddToCart(false);
+          this.afterAddToCart(false, {
+            isClickAndCollect: !!isClickAndCollect
+          });
         } else {
-          this.afterAddToCart();
+          this.afterAddToCart(true, {
+            isClickAndCollect: !!isClickAndCollect
+          });
         }
       });
 
@@ -540,7 +548,7 @@ export class PDPAddToCartContainer extends PureComponent {
     }
   }
 
-  afterAddToCart(isAdded = "true") {
+  afterAddToCart(isAdded = "true", options) {
     const { buttonRefreshTimeout, openClickAndCollectPopup } = this.state;
     if(openClickAndCollectPopup) {
       this.togglePDPClickAndCollectPopup();
@@ -550,6 +558,13 @@ export class PDPAddToCartContainer extends PureComponent {
     this.setState({ isLoading: false });
     // TODO props for addedToCart
     const timeout = 1250;
+
+    if(options?.isClickAndCollect){
+      this.setState(
+        { addedToCart: true },
+        () => history.push('/cart')
+      );
+    }
 
     if (isAdded) {
       setMinicartOpen(true);
@@ -595,7 +610,7 @@ export class PDPAddToCartContainer extends PureComponent {
   }
 
   confirmClickAndCollect() {
-    this.addToCart()
+    this.addToCart(true)
   }
 
   selectClickAndCollectStore(value) {
