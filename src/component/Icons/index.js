@@ -8,9 +8,11 @@ import Favourite from './Favourite';
 import Lock from './Lock';
 import Player from './Player';
 import ShareFilled from './ShareFilled';
+import Search from './Search';
 import Select from './Select';
 import Share from './Share';
 import Shipping from './Shipping';
+import Store from './Store';
 
 export {
     ChevronDown,
@@ -21,9 +23,11 @@ export {
     FavouriteFilled,
     Favourite,
     Lock,
-    Player,
     ShareFilled,
+    Search,
     Select,
     Share,
-    Shipping
+    Shipping,
+    Store,
+    Player,
 }

@@ -44,6 +44,7 @@ export class Checkout extends SourceCheckout {
     isTabbyPopupShown: PropTypes.bool,
     showOverlay: PropTypes.func.isRequired,
     hideActiveOverlay: PropTypes.func.isRequired,
+    isClickAndCollect: PropTypes.bool.isRequired
   };
 
   state = {
@@ -258,7 +259,7 @@ export class Checkout extends SourceCheckout {
   }
 
   renderTitle() {
-    const { checkoutStep, isSignedIn } = this.props;
+    const { checkoutStep, isSignedIn, isClickAndCollect } = this.props;
     const { isCustomAddressExpanded, continueAsGuest } = this.state;
     const isBilling = checkoutStep === BILLING_STEP;
 
@@ -285,7 +286,7 @@ export class Checkout extends SourceCheckout {
                 elem="DeliveryLabel"
                 mods={{ checkoutStep }}
               >
-                {__("Delivery")}
+                { isClickAndCollect ? __("Pick Up") : __("Delivery") }
               </span>
             </button>
           </div>
@@ -327,7 +328,8 @@ export class Checkout extends SourceCheckout {
       placeOrder,
       getBinPromotion,
       updateTotals,
-      setBillingStep
+      setBillingStep,
+      isClickAndCollect
     } = this.props;
     const { isArabic, cashOnDeliveryFee } = this.state;
 
@@ -363,6 +365,7 @@ export class Checkout extends SourceCheckout {
           setCheckoutCreditCardData={this.setCheckoutCreditCardData}
           processApplePay={processApplePay}
           placeOrder={placeOrder}
+          isClickAndCollect={isClickAndCollect}
         />
       </>
     );
@@ -414,11 +417,10 @@ export class Checkout extends SourceCheckout {
       onCreateUserChange,
       onPasswordChange,
       isGuestEmailSaved,
-      isLoading,
+      isLoading
     } = this.props;
     const { continueAsGuest, isInvalidEmail } = this.state;
     const isBilling = checkoutStep === BILLING_STEP;
-
     return (
       <CheckoutGuestForm
         isLoading={isLoading}
@@ -527,6 +529,7 @@ export class Checkout extends SourceCheckout {
       shippingAddress,
       setLoading,
       isLoading,
+      isClickAndCollect
     } = this.props;
 
     const { continueAsGuest, isArabic } = this.state;
@@ -543,19 +546,25 @@ export class Checkout extends SourceCheckout {
           totals={checkoutTotals}
           shippingAddress={shippingAddress}
           setLoading={setLoading}
+          isClickAndCollect={isClickAndCollect}
+          renderGuestForm={this.renderGuestForm.bind(this)}
         />
       </div>
     );
 
     return (
       <>
-        {continueAsGuest || isSignedIn
-          ? null
-          : this.renderHeading(__("Login / Sign Up"), false)}
+        {
+          continueAsGuest || isSignedIn
+          ?
+          null
+          :
+          this.renderHeading(__("Login / Sign Up"), false)
+        }
         <div block="Checkout" elem="GuestCheckout" mods={{ continueAsGuest }}>
           {continueAsGuest ? (
             <h3 block="Checkout" elem="DeliveryMessageGuest">
-              {__("Where can we send your order?")}
+              { isClickAndCollect ? __("Please Confirm your contact details") : __("Where can we send your order?")}
             </h3>
           ) : null}
           {this.renderGuestForm()}

@@ -23,6 +23,7 @@ import {
   CheckoutContainer as SourceCheckoutContainer,
   mapDispatchToProps as sourceMapDispatchToProps,
 } from "SourceRoute/Checkout/Checkout.container";
+import Checkout from "./Checkout.component";
 import { setGender } from "Store/AppState/AppState.action";
 import { resetCart  } from "Store/Cart/Cart.action";
 // eslint-disable-next-line no-unused-vars
@@ -173,7 +174,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       tabbyPaymentId: null,
       isTabbyPopupShown: false,
       tabbyPaymentStatus: "",
-      QPayDetails:{}
+      QPayDetails: {},
+      isClickAndCollect: ""
     };
   }
 
@@ -208,6 +210,21 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const { checkoutStep, initialGTMSent } = this.state;
 
     const { checkoutStep: prevCheckoutStep } = prevState;
+    const { total: { items: prevItems } = {} } = prevProps;
+    
+    if(prevItems !== items && items.length){
+      let isClickAndCollect = "";
+      for(let i = 0; i<items.length; i++){
+        if(!!items[i]?.availableQty?.click_to_collect_store){
+          isClickAndCollect = items[i]?.availableQty?.click_to_collect_store || "";
+        }
+        else {
+          isClickAndCollect = "";
+          break;
+        }
+      }
+      this.setState({ isClickAndCollect: isClickAndCollect });
+    }
 
     const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
     if (QPAY_CHECK) {
@@ -531,11 +548,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     ) {
       this.placeOrder(code, data, paymentInformation);
     } else {
-      this.placeOrder(code, data, null);
+      this.placeOrder(code, data, null)
     }
   }
 
-  placeOrder(code, data, paymentInformation) {
+  async placeOrder(code, data, paymentInformation) {
     const { createOrder, showErrorNotification } = this.props;
     const ONE_YEAR_IN_SECONDS = 31536000;
     const cart_id = BrowserDatabase.getItem(CART_ID_CACHE_KEY);
@@ -546,9 +563,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     );
     this.setState({ isLoading: true });
     try {
-      createOrder(code, data)
-        .then((response) => {
-          if (response && response.data) {
+      const response = await createOrder(code, data)
+      if (response && response.data) {
             console.log("payment method code", code)
             console.log("response in create order api", response)
             const { data } = response;
@@ -650,7 +666,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                   BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
                   this.setDetailsStep(order_id, increment_id);
                   this.resetCart();
-
                   return true;
                 }
               } else {
@@ -676,15 +691,13 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             this.setState({ isLoading: false });
             this.resetCart();
           }
-        }, this._handleError)
-        .catch(() => {
-          const { showErrorNotification } = this.props;
-          this.setState({ isLoading: false });
+    }
+    catch (e) {
+      const { showErrorNotification } = this.props;
+      this.setState({ isLoading: false });
 
-          showErrorNotification(__("Something went wrong."));
-          this.resetCart();
-        });
-    } catch (e) {
+      showErrorNotification(__("Something went wrong."));
+      this.resetCart();
       this._handleError(e);
     }
   }
@@ -918,6 +931,19 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     resetCart();
     getCart();
     updateStoreCredit();
+  }
+
+  render() {
+    const { isClickAndCollect } = this.state;
+    return (
+        <Checkout
+          { ...this.props }
+          { ...this.state }
+          { ...this.containerFunctions }
+          { ...this.containerProps() }
+          isClickAndCollect={ isClickAndCollect }
+        />
+    );
   }
 }
 

@@ -36,6 +36,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     selectedPaymentCode: PropTypes.string,
     processApplePay: PropTypes.bool,
     placeOrder: PropTypes.func,
+    isClickAndCollect: PropTypes.bool.isRequired
   };
 
   static defaultProps = {
@@ -75,8 +76,13 @@ export class CheckoutPayments extends SourceCheckoutPayments {
       setCashOnDeliveryFee,
       isTabbyInstallmentAvailable,
       isTabbyPayLaterAvailable,
+      isClickAndCollect
     } = this.props;
     const { m_code } = method;
+    if(m_code==="msp_cashondelivery" && isClickAndCollect){
+      return null;
+    }
+
     const isSelected = selectedPaymentCode === m_code;
     const { tabbyPaymentMethods = [] } = this.state;
     const isTabbySelected = TABBY_PAYMENT_CODES.includes(selectedPaymentCode);
@@ -120,6 +126,11 @@ export class CheckoutPayments extends SourceCheckoutPayments {
   };
 
   renderCashOnDelivery() {
+    const { isClickAndCollect } = this.props;
+    if(isClickAndCollect){
+      return null;
+    }
+  
     const {
       options: { method_description, method_title },
     } = this.getSelectedMethodData();

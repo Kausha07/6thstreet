@@ -1,4 +1,5 @@
 import MobileAPI from "../../provider/MobileAPI";
+
 export const getCart = (cartId) => MobileAPI.get(`/carts2/${cartId}`) || {};
 export const createCart = (cart_id) =>
   MobileAPI.post(`/carts2?cart_id=${cart_id}`) || {};
@@ -10,6 +11,7 @@ export const addProductToCart = ({
   sku,
   configSKU,
   qty,
+  selectedClickAndCollectStore,
   optionId = null,
   optionValue = null,
   cartId,
@@ -21,6 +23,7 @@ export const addProductToCart = ({
       quote_id: cartId,
       sku,
       qty,
+      ctc_store_no: selectedClickAndCollectStore,
       option_id: optionId,
       option_value: optionValue,
     }
