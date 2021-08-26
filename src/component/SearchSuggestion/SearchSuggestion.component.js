@@ -150,7 +150,7 @@ class SearchSuggestion extends PureComponent {
     let genderInURL;
     if (isArabic) {
       if (gender === "kids") {
-        genderInURL = "";
+        genderInURL = "أولاد~بنات";
         // to add Boy~Girl in arabic
       } else {
         requestedGender = getGenderInArabic(gender);
