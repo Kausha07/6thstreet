@@ -54,8 +54,8 @@ class MenuGrid extends PureComponent {
           .replace("/home.html", ".html")
       : link;
 
-    return (
-      <Link to={updatedLink} key={i} title={label} onClick={this.onItemClick}>
+      return (
+      <Link to={updatedLink.split('?')[0]+'?is_new_in=1'} key={i} title={label} onClick={this.onItemClick}>
         <Image src={image_url} width="80px" height="80px" ratio="custom" />
         <div block="MenuGrid" elem="ItemLabel">
           {label}
