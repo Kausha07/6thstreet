@@ -367,7 +367,7 @@ export class PDPAddToCartContainer extends PureComponent {
     });
   }
 
-  addToCart(isClickAndCollect) {
+  addToCart(isClickAndCollect =  false) {
     const {
       product: {
         thumbnail_url,
@@ -559,16 +559,15 @@ export class PDPAddToCartContainer extends PureComponent {
     // TODO props for addedToCart
     const timeout = 1250;
 
-    if(options?.isClickAndCollect){
-      this.setState(
-        { addedToCart: true },
-        () => history.push('/cart')
-      );
-    }
 
     if (isAdded) {
-      setMinicartOpen(true);
-      this.setState({ addedToCart: true });
+      if(!!!options?.isClickAndCollect) {
+        setMinicartOpen(true);
+      }
+      this.setState(
+        { addedToCart: true },
+        () => options?.isClickAndCollect && history.push('/cart')
+      );
     }
 
     setTimeout(
