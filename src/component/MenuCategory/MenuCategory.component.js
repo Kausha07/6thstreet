@@ -99,7 +99,9 @@ class MenuCategory extends PureComponent {
   renderLabel() {
     const { label } = this.props;
     const link = this.getMenuCategoryLink();
-    let updatedLink = link.includes('new-in.html') ? link.split('?')[0]+'?is_new_in=1' :link
+    let updatedLink = link.includes("new-in.html")
+      ? link.split("?")[0] + "?is_new_in=1"
+      : link;
     return (
       <Link to={updatedLink} block="MenuCategory" elem="CategoryLink">
         <div block="MenuCategory" elem="CategoryLink-Label">
