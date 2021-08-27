@@ -3,6 +3,7 @@ import { PureComponent } from "react";
 
 import ClickOutside from "Component/ClickOutside";
 import { isArabic } from "Util/App";
+import isMobile from "Util/Mobile";
 
 import "./InlineCustomerSupport.style";
 
@@ -56,14 +57,29 @@ class InlineCustomerSupport extends PureComponent {
     }
 
     return (
-      <a
-        block="InlineCustomerSupport"
-        elem="Phone"
-        mods={{ isArabic }}
-        href={`tel:${phone}`}
-      >
-        <bdi>{phone}</bdi>
-      </a>
+      <div>
+        { isMobile.any() ?
+          <a
+          block="InlineCustomerSupport"
+          elem="Phone"
+          mods={{ isArabic }}
+          href={`https://api.whatsapp.com/send?phone=${phone}`}
+        >
+          <bdi>{phone}</bdi>
+        </a>
+         :
+         <a
+         block="InlineCustomerSupport"
+         elem="Phone"
+         mods={{ isArabic }}
+         href={`tel:${phone}`}
+       >
+         <bdi>{phone}</bdi>
+       </a>
+
+        }
+      </div>
+
     );
   };
 
@@ -84,6 +100,7 @@ class InlineCustomerSupport extends PureComponent {
     const { isExpanded, isArabic } = this.state;
     const Email = this.renderEmail();
     const Phone = this.renderPhone();
+    // debugger
 
     return (
       <div>
@@ -151,6 +168,7 @@ class InlineCustomerSupport extends PureComponent {
     const contactRenderer = isPhoneSupported
       ? this.renderPhone
       : this.renderEmail;
+      // debugger
 
     return (
       <div
