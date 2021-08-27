@@ -1,119 +1,117 @@
-import PropTypes from 'prop-types';
-import { PureComponent } from 'react';
-import { connect } from 'react-redux';
-
-import { setPDPGaleryImage } from 'Store/PDP/PDP.action';
-import { Product } from 'Util/API/endpoint/Product/Product.type';
-
-import PDPGallery from './PDPGallery.component';
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
+import { connect } from "react-redux";
+import { setPDPGaleryImage } from "Store/PDP/PDP.action";
+import { Product } from "Util/API/endpoint/Product/Product.type";
+import PDPGallery from "./PDPGallery.component";
 
 export const mapStateToProps = (state) => ({
-    currentIndex: state.PDP.imageIndex,
-    isLoading: state.PDP.isLoading,
-    product: state.PDP.product
+  currentIndex: state.PDP.imageIndex,
+  isLoading: state.PDP.isLoading,
+  product: state.PDP.product,
 });
 
 export const mapDispatchToProps = (_dispatch) => ({
-    setImageIndex: (index) => _dispatch(setPDPGaleryImage(index))
+  setImageIndex: (index) => _dispatch(setPDPGaleryImage(index)),
 });
 
 export class PDPGalleryContainer extends PureComponent {
-    static propTypes = {
-        currentIndex: PropTypes.number.isRequired,
-        isLoading: PropTypes.bool.isRequired,
-        product: Product.isRequired,
-        setImageIndex: PropTypes.func.isRequired,
-        index: PropTypes.number
+  static propTypes = {
+    currentIndex: PropTypes.number.isRequired,
+    isLoading: PropTypes.bool.isRequired,
+    product: Product.isRequired,
+    setImageIndex: PropTypes.func.isRequired,
+    index: PropTypes.number,
+  };
+
+  static defaultProps = {
+    index: 0,
+  };
+
+  containerFunctions = {
+    onSliderChange: this.onSliderChange.bind(this),
+  };
+
+  containerProps = () => {
+    const { currentIndex, product } = this.props;
+
+    return {
+      gallery: this.getGallery(),
+      prod_style_video: this.getStyleVideo(),
+      prod_360_video: this.get360Video(),
+      crumbs: this.getCrumbs(),
+      currentIndex,
+      product,
     };
+  };
 
-    static defaultProps = {
-        index: 0
-    };
+  onSliderChange(activeSlide) {
+    const { setImageIndex } = this.props;
 
-    containerFunctions = {
-        onSliderChange: this.onSliderChange.bind(this)
-    };
+    return setImageIndex(activeSlide);
+  }
 
-    containerProps = () => {
-        const { currentIndex } = this.props;
+  getCrumbs() {
+    // TODO: determine if has video append it here
+    const galleryCrumbs = Object.keys(this.getGallery() || {});
+    return galleryCrumbs;
+  }
 
-        return {
-            gallery: this.getGallery(),
-            prod_style_video: this.getStyleVideo(),
-            prod_360_video: this.get360Video(),
-            crumbs: this.getCrumbs(),
-            currentIndex
-        };
-    };
+  getGallery() {
+    const {
+      isLoading,
+      product: { gallery_images = [] },
+    } = this.props;
 
-    onSliderChange(activeSlide) {
-        const { setImageIndex } = this.props;
-
-        return setImageIndex(activeSlide);
+    if (isLoading || gallery_images.length === 0) {
+      return Array.from({ length: 4 });
     }
 
-    getCrumbs() {
-        // TODO: determine if has video append it here
-        const galleryCrumbs = Object.keys(this.getGallery()|| {});
-        return galleryCrumbs;
+    return gallery_images;
+  }
+
+  getStyleVideo() {
+    const {
+      isLoading,
+      product: { prod_style_video = "" },
+    } = this.props;
+
+    if (isLoading || !prod_style_video) {
+      return "";
     }
 
-    getGallery() {
-        const {
-            isLoading,
-            product: {
-                gallery_images = []
-            }
-        } = this.props;
+    return prod_style_video;
+  }
 
-        if (isLoading || gallery_images.length === 0) {
-            return Array.from({ length: 4 });
-        }
+  get360Video() {
+    const {
+      isLoading,
+      product: { prod_360_video = "" },
+    } = this.props;
 
-        return gallery_images;
+    if (isLoading || !prod_360_video) {
+      return "";
     }
 
-    getStyleVideo() {
-        const {
-            isLoading,
-            product: {
-                prod_style_video = ""
-            }
-        } = this.props;
+    return prod_360_video;
+  }
 
-        if (isLoading || !prod_style_video) {
-            return "";
-        }
+  render() {
+    const {
+      product: { sku = "" },
+    } = this.props;
 
-        return prod_style_video;
-    }
-
-    get360Video() {
-        const {
-            isLoading,
-            product: {
-                prod_360_video = ""
-            }
-        } = this.props;
-
-        if (isLoading || !prod_360_video) {
-            return "";
-        }
-
-        return prod_360_video;
-    }
-
-    render() {
-        const { product: { sku = '' } } = this.props;
-
-        return (
-            <PDPGallery
-              { ...this.containerFunctions }
-              { ...this.containerProps() }
-              sku={ sku }
-            />
-        );
-    }
+    return (
+      <PDPGallery
+        {...this.containerFunctions}
+        {...this.containerProps()}
+        sku={sku}
+      />
+    );
+  }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PDPGalleryContainer);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PDPGalleryContainer);

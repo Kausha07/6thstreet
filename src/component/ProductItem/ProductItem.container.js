@@ -19,6 +19,7 @@ export class ProductItemContainer extends PureComponent {
     position: PropTypes.number,
     queryID: PropTypes.string,
     isVueData: PropTypes.bool,
+    pageType: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -26,8 +27,15 @@ export class ProductItemContainer extends PureComponent {
   };
 
   containerProps = () => {
-    const { product, page, position, qid, isVueData = false } = this.props;
-    return { product, page, position, qid, isVueData };
+    const {
+      product,
+      page,
+      position,
+      qid,
+      isVueData = false,
+      pageType,
+    } = this.props;
+    return { product, page, position, qid, isVueData, pageType };
   };
 
   render() {

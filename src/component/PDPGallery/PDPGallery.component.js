@@ -89,8 +89,15 @@ class PDPGallery extends PureComponent {
   }
   renderWishlistIcon() {
     const { isArabic } = this.state;
-    const { sku } = this.props;
-    return <WishlistIcon sku={sku} mods={{ isArabic }} pageType="pdp" />;
+    const { sku, product } = this.props;
+    return (
+      <WishlistIcon
+        sku={sku}
+        mods={{ isArabic }}
+        pageType="pdp"
+        data={product}
+      />
+    );
   }
 
   renderCrumb = (index, i) => (
