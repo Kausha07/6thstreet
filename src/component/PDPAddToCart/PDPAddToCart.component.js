@@ -371,7 +371,7 @@ class PDPAddToCart extends PureComponent {
             product.constructor !== Object)) &&
           Object.keys(productStock).length !== 0 && (
             <button
-              onClick={addToCart}
+              onClick={() => addToCart()}
               block="PDPAddToCart"
               elem="AddToCartButton"
               mods={{ isLoading }}
