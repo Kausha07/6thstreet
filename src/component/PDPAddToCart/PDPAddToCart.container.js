@@ -215,7 +215,7 @@ export class PDPAddToCartContainer extends PureComponent {
 
   componentDidMount() {
     const {
-      product: { sku, size_eu, size_uk, size_us,in_stock },
+      product: { sku, size_eu, size_uk, size_us, in_stock, stock_qty },
       getProductStock,
       setGuestUserEmail,
     } = this.props;
@@ -242,14 +242,31 @@ export class PDPAddToCartContainer extends PureComponent {
         sizeTypes,
         sizeCodes: allSizes,
       };
+      let outOfStockStatus;
+      if (size_us && size_uk && size_eu) {
+        outOfStockStatus =
+          size_us.length === 0 &&
+          size_uk.length === 0 &&
+          size_eu.length === 0 &&
+          in_stock === 0
+            ? true
+            : in_stock === 1 && stock_qty === 0
+            ? true
+            : false;
+      } else {
+        outOfStockStatus =
+          in_stock === 0
+            ? true
+            : in_stock === 1 && stock_qty === 0
+            ? true
+            : false;
+      }
+
       this.setState({
         processingRequest: false,
         mappedSizeObject: object,
         productStock: response,
-        ...(size_us.length === 0 &&
-          size_uk.length === 0 &&
-          size_eu.length === 0 &&
-          in_stock === 0 && { isOutOfStock: true }),
+        isOutOfStock: outOfStockStatus,
       });
     });
   }
