@@ -115,9 +115,9 @@ class ProductItem extends PureComponent {
 
   renderOutOfStock() {
     const {
-      product: { in_stock },
+      product: { in_stock, stock_qty },
     } = this.props;
-    if (in_stock === 0) {
+    if (in_stock === 0 || (in_stock === 1 && stock_qty === 0)) {
       return (
         <span block="ProductItem" elem="OutOfStock">
           {" "}

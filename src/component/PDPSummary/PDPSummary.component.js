@@ -218,7 +218,8 @@ class PDPSummary extends PureComponent {
     if (tags && tags.length) {
       return (
         <>
-          {in_stock === 0 && <div block="Seperatortop" />}
+          {in_stock === 0 ||
+            (in_stock === 1 && stock_qty === 0 && <div block="Seperatortop" />)}
           <PDPTags tags={tags} />
           <div block="Seperator" />
         </>
