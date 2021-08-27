@@ -69,7 +69,7 @@ class WishlistIcon extends PureComponent {
         event_name: VUE_REMOVE_TO_WISHLIST,
         params: {
           event: VUE_REMOVE_TO_WISHLIST,
-          pageType: "wishlist",
+          pageType: pageType,
           currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
           clicked: Date.now(),
           prodPrice: prodPrice,
