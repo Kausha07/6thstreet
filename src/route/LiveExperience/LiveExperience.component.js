@@ -1,5 +1,6 @@
 import { PureComponent } from "react";
 import Config from "./LiveExperience.config";
+import { getQueryParam } from "Util/Url";
 
 export class LiveExperience extends PureComponent {
   constructor(props) {
@@ -19,6 +20,7 @@ export class LiveExperience extends PureComponent {
   }
 
   renderLiveParty = () => {
+    const isStaging = getQueryParam("isStaging", location) === "true" ? true : false;
     const spck = {
       storeId: Config.storeId,
       storeType: "sixthstreet",
@@ -26,7 +28,7 @@ export class LiveExperience extends PureComponent {
       containerId: "single",
       displayType: "one",
       broadcastId: this.props.broadcastId,
-      staging: true,
+      staging: isStaging,
     };
 
     const el = document.createElement("script");
@@ -41,6 +43,7 @@ export class LiveExperience extends PureComponent {
     }, 2000);
   };
   renderUpcomingParty = () => {
+    const isStaging = getQueryParam("isStaging", location) === "true" ? true : false;
     const spck = {
       storeId: Config.storeId,
 
@@ -52,7 +55,7 @@ export class LiveExperience extends PureComponent {
 
       displayType: "upcoming",
 
-      staging: true,
+      staging: isStaging,
     };
 
     const el = document.createElement("script");
@@ -68,6 +71,7 @@ export class LiveExperience extends PureComponent {
   };
 
   renderArchivedParty = () => {
+    const isStaging = getQueryParam("isStaging", location) === "true" ? true : false;
     const spck = {
       storeId: Config.storeId,
 
@@ -79,7 +83,7 @@ export class LiveExperience extends PureComponent {
 
       displayType: "vod",
 
-      staging: true,
+      staging: isStaging,
     };
 
     const el = document.createElement("script");
