@@ -1,14 +1,14 @@
 /* eslint-disable no-constant-condition */
+import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
 import ProductItem from "Component/ProductItem";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { Products } from "Util/API/endpoint/Product/Product.type";
 import { isArabic } from "Util/App";
+import Event from "Util/Event";
 import DynamicContentVueProductSliderContainer from "./../DynamicContentVueProductSlider/DynamicContentVueProductSlider.container";
 import { HOME_PAGE_TRANSLATIONS } from "./DynamicContentProductSlider.config";
 import "./DynamicContentProductSlider.style";
-import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
-import Event from "Util/Event";
 
 class DynamicContentProductSlider extends PureComponent {
   static propTypes = {
@@ -86,7 +86,7 @@ class DynamicContentProductSlider extends PureComponent {
         }}
         key={i}
       >
-        <ProductItem product={product} key={sku} />
+        <ProductItem product={product} key={sku} pageType="home" />
         {this.renderCTA()}
       </div>
     );

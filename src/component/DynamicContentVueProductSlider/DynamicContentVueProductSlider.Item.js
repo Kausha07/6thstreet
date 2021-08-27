@@ -18,6 +18,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
   static propTypes = {
     country: PropTypes.string.isRequired,
     data: PropTypes.object.isRequired,
+    pageType: PropTypes.string.isRequired,
   };
   constructor(props) {
     super(props);
