@@ -482,11 +482,18 @@ class PDPAddToCart extends PureComponent {
 
   renderNotAvailable() {
     const {
-      product: { in_stock },
+      product: { in_stock, stock_qty },
       notifyMeSuccess,
       isOutOfStock,
     } = this.props;
     if (in_stock === 0 && !isOutOfStock && !notifyMeSuccess) {
+      return <span id="notavailable">{__("Out of stock")}</span>;
+    } else if (
+      in_stock === 1 &&
+      stock_qty === 0 &&
+      !isOutOfStock &&
+      !notifyMeSuccess
+    ) {
       return <span id="notavailable">{__("Out of stock")}</span>;
     }
     return null;
