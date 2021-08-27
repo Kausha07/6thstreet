@@ -149,7 +149,6 @@ class DynamicContentVueProductSliderItem extends PureComponent {
       widgetID,
       pageType,
     } = this.props;
-    console.log("pageType", pageType);
     const { isArabic } = this.state;
     let newLink = link;
     if (this.props.data.url) {

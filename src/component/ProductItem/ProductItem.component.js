@@ -71,7 +71,6 @@ class ProductItem extends PureComponent {
       product,
       pageType,
     } = this.props;
-    console.log("pageType", pageType);
     return <WishlistIcon sku={sku} data={product} pageType={pageType} />;
   }
 
