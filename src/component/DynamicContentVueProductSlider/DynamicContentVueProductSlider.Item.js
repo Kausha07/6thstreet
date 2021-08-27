@@ -1,14 +1,14 @@
-import { connect } from "react-redux";
 import Link from "Component/Link";
+import { DISPLAY_DISCOUNT_PERCENTAGE } from "Component/Price/Price.config";
 import WishlistIcon from "Component/WishlistIcon";
 import PropTypes from "prop-types";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
+import { connect } from "react-redux";
+import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
 import { getUUID } from "Util/Auth";
 import { VUE_CAROUSEL_CLICK } from "Util/Event";
-import { isArabic } from 'Util/App';
-import { DISPLAY_DISCOUNT_PERCENTAGE } from 'Component/Price/Price.config';
 
 export const mapStateToProps = (state) => ({
   country: state.AppState.country,
@@ -18,16 +18,18 @@ class DynamicContentVueProductSliderItem extends PureComponent {
   static propTypes = {
     country: PropTypes.string.isRequired,
     data: PropTypes.object.isRequired,
+    pageType: PropTypes.string.isRequired,
   };
 
   onclick = (widgetID) => {
+    const { pageType } = this.props;
     // vue analytics
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_CAROUSEL_CLICK,
       params: {
         event: VUE_CAROUSEL_CLICK,
-        pageType: "plp",
+        pageType: pageType,
         currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),
@@ -39,7 +41,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
 
   discountPercentage(basePrice, specialPrice, haveDiscount) {
     const { country } = this.props;
-    if(!DISPLAY_DISCOUNT_PERCENTAGE[country]){
+    if (!DISPLAY_DISCOUNT_PERCENTAGE[country]) {
       return null;
     }
 
@@ -136,13 +138,15 @@ class DynamicContentVueProductSliderItem extends PureComponent {
         sku,
         link = "",
       },
+      data,
       widgetID,
+      pageType,
     } = this.props;
     return (
       <div
         block="VueProductSlider"
         elem="VueProductContainer"
-        mods = {{isArabic: isArabic()}}
+        mods={{ isArabic: isArabic() }}
         data-sku={sku}
         data-category={category}
       >
@@ -164,10 +168,13 @@ class DynamicContentVueProductSliderItem extends PureComponent {
           {this.renderPrice(price)}
           {this.renderIsNew(is_new_in)}
         </Link>
-        <WishlistIcon sku={sku} />
+        <WishlistIcon sku={sku} data={data} pageType={pageType} />
       </div>
     );
   }
 }
 
-export default connect(mapStateToProps, null)(DynamicContentVueProductSliderItem);
+export default connect(
+  mapStateToProps,
+  null
+)(DynamicContentVueProductSliderItem);

@@ -9,24 +9,31 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
+// import Algolia from "Util/API/provider/Algolia";
+// import { getUUIDToken } from 'Util/Auth';
+import CartItemQuantityPopup from "Component/CartItemQuantityPopup";
+import { CART_ITEM_QUANTITY_POPUP_ID } from "Component/CartItemQuantityPopup/CartItemQuantityPopup.config";
 import { DEFAULT_MAX_PRODUCTS } from "Component/ProductActions/ProductActions.config";
 import PropTypes from "prop-types";
+import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
 // import { getStore } from "Store";
 import { showNotification } from "Store/Notification/Notification.action";
-import { hideActiveOverlay, toggleOverlayByKey } from "Store/Overlay/Overlay.action";
+import {
+  hideActiveOverlay,
+  toggleOverlayByKey,
+} from "Store/Overlay/Overlay.action";
 import { CartItemType } from "Type/MiniCart";
-// import Algolia from "Util/API/provider/Algolia";
-// import { getUUIDToken } from 'Util/Auth';
+import { getUUID } from "Util/Auth";
+import BrowserDatabase from "Util/BrowserDatabase";
 import Event, {
   EVENT_GTM_PRODUCT_ADD_TO_CART,
-  EVENT_GTM_PRODUCT_REMOVE_FROM_CART
+  EVENT_GTM_PRODUCT_REMOVE_FROM_CART,
+  VUE_REMOVE_FROM_CART,
 } from "Util/Event";
-import CartItemQuantityPopup from 'Component/CartItemQuantityPopup';
-import { CART_ITEM_QUANTITY_POPUP_ID } from 'Component/CartItemQuantityPopup/CartItemQuantityPopup.config';
-import CartItem from "./CartItem.component";
 import isMobile from "Util/Mobile";
+import CartItem from "./CartItem.component";
 
 export const CartDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -70,7 +77,7 @@ export const mapDispatchToProps = (dispatch) => ({
       dispatcher.removeProductFromCart(dispatch, options)
     ),
   showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
-  hideActiveOverlay: () => dispatch(hideActiveOverlay())
+  hideActiveOverlay: () => dispatch(hideActiveOverlay()),
 });
 
 export class CartItemContainer extends PureComponent {
@@ -86,12 +93,12 @@ export class CartItemContainer extends PureComponent {
 
   static defaultProps = {
     brand_name: "",
-    readOnly: false
+    readOnly: false,
   };
 
   state = {
     isLoading: false,
-    showCartItemQuantityPopup: false
+    showCartItemQuantityPopup: false,
   };
 
   handlers = [];
@@ -100,7 +107,7 @@ export class CartItemContainer extends PureComponent {
     handleChangeQuantity: this.handleChangeQuantity.bind(this),
     handleRemoveItem: this.handleRemoveItem.bind(this),
     getCurrentProduct: this.getCurrentProduct.bind(this),
-    toggleCartItemQuantityPopup: () => this.toggleCartItemQuantityPopup()
+    toggleCartItemQuantityPopup: () => this.toggleCartItemQuantityPopup(),
   };
 
   componentWillUnmount() {
@@ -162,7 +169,7 @@ export class CartItemContainer extends PureComponent {
           row_total,
           sku,
           qty: oldQuantity,
-          objectID
+          objectID,
         },
         showNotification,
       } = this.props;
@@ -177,23 +184,25 @@ export class CartItemContainer extends PureComponent {
         thumbnail.url,
         url,
         row_total
-      ).then((response) => {
-        // Response exist only if error appear
-        if (response) {
-          showNotification("error", __(response));
-        } else {
-          showNotification("success", __("Quantity successfully updated"));
-        }
+      )
+        .then((response) => {
+          // Response exist only if error appear
+          if (response) {
+            showNotification("error", __(response));
+          } else {
+            showNotification("success", __("Quantity successfully updated"));
+          }
 
-        this.setStateNotLoading();
-      }).finally(() => {
-        const { showCartItemQuantityPopup } = this.state;
-        if(showCartItemQuantityPopup){
-          this.setState({
-            showCartItemQuantityPopup: false
-          })
-        }
-      });
+          this.setStateNotLoading();
+        })
+        .finally(() => {
+          const { showCartItemQuantityPopup } = this.state;
+          if (showCartItemQuantityPopup) {
+            this.setState({
+              showCartItemQuantityPopup: false,
+            });
+          }
+        });
 
       const event =
         oldQuantity < quantity
@@ -247,6 +256,7 @@ export class CartItemContainer extends PureComponent {
           color,
           qty,
           product: { name } = {},
+          full_item_info: { config_sku, category, price },
         },
       } = this.props;
 
@@ -262,6 +272,25 @@ export class CartItemContainer extends PureComponent {
           quantity: qty,
           size: optionValue,
           variant: color,
+        },
+      });
+      // vue analytics
+      const locale = VueIntegrationQueries.getLocaleFromUrl();
+      const customer = BrowserDatabase.getItem("customer");
+      const userID = customer && customer.id ? customer.id : null;
+      VueIntegrationQueries.vueAnalayticsLogger({
+        event_name: VUE_REMOVE_FROM_CART,
+        params: {
+          event: VUE_REMOVE_FROM_CART,
+          pageType: "cart",
+          currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+          clicked: Date.now(),
+          uuid: getUUID(),
+          referrer: "desktop",
+          sourceProdID: config_sku,
+          sourceCatgID: category, // TODO: replace with category id
+          prodPrice: price,
+          userID: userID,
         },
       });
     });
@@ -295,27 +324,29 @@ export class CartItemContainer extends PureComponent {
   toggleCartItemQuantityPopup() {
     const { showOverlay, readOnly } = this.props;
     const { showCartItemQuantityPopup } = this.state;
-    if(readOnly || !(isMobile.any() || isMobile.tablet())){
+    if (readOnly || !(isMobile.any() || isMobile.tablet())) {
       return;
     }
 
-    if(!showCartItemQuantityPopup){
+    if (!showCartItemQuantityPopup) {
       showOverlay(CART_ITEM_QUANTITY_POPUP_ID);
     }
-  
-    if(showCartItemQuantityPopup){
+
+    if (showCartItemQuantityPopup) {
       hideActiveOverlay(CART_ITEM_QUANTITY_POPUP_ID);
     }
 
     this.setState({
-        showCartItemQuantityPopup: !showCartItemQuantityPopup
+      showCartItemQuantityPopup: !showCartItemQuantityPopup,
     });
   }
 
   render() {
     const { minSaleQuantity, maxSaleQuantity } = this.containerProps();
     const { handleChangeQuantity } = this.containerFunctions;
-    const { item: { qty } } = this.props;
+    const {
+      item: { qty },
+    } = this.props;
     const { showCartItemQuantityPopup } = this.state;
 
     return (
@@ -326,16 +357,15 @@ export class CartItemContainer extends PureComponent {
           {...this.containerFunctions}
           {...this.containerProps()}
         />
-        {
-          showCartItemQuantityPopup &&
+        {showCartItemQuantityPopup && (
           <CartItemQuantityPopup
-            min={ minSaleQuantity }
-            max={ Math.min(maxSaleQuantity, 10) }
-            value={ qty }
-            toggle={ this.toggleCartItemQuantityPopup.bind(this) }
-            onChange={ handleChangeQuantity }
+            min={minSaleQuantity}
+            max={Math.min(maxSaleQuantity, 10)}
+            value={qty}
+            toggle={this.toggleCartItemQuantityPopup.bind(this)}
+            onChange={handleChangeQuantity}
           />
-        }
+        )}
       </>
     );
   }
