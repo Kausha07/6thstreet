@@ -268,7 +268,7 @@ class PDPGallery extends PureComponent {
                 elem="360DegreeVideo"
                 onClick={() => this.playVideo("prod_360_video")}
               >
-                360
+                360°
               </button>
             )}
           </div>
