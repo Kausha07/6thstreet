@@ -49,7 +49,7 @@ export class CheckoutGuestFormContainer extends PureComponent {
     onCreateUserChange: PropTypes.func.isRequired,
     onPasswordChange: PropTypes.func.isRequired,
     requestCustomerData: PropTypes.func.isRequired,
-    isEmailAdded: PropTypes.bool.isRequired,
+    isEmailAdded: PropTypes.bool.isRequired
   };
 
   static defaultProps = {

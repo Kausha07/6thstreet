@@ -104,7 +104,7 @@ class PDPSummary extends PureComponent {
             text={`Hey check this out: ${document.title}`}
             url={url.searchParams.append("utm_source", "pdp_share")}
           />
-          <WishlistIcon sku={sku} data={product} />
+          <WishlistIcon sku={sku} data={product} pageType="pdp" />
         </div>
       </>
     );
@@ -210,7 +210,7 @@ class PDPSummary extends PureComponent {
 
   renderPDPTags() {
     const {
-      product: { prod_tag_1, prod_tag_2 },
+      product: { prod_tag_1, prod_tag_2, in_stock },
     } = this.props;
 
     const tags = [prod_tag_1, prod_tag_2].filter(Boolean);
@@ -218,6 +218,8 @@ class PDPSummary extends PureComponent {
     if (tags && tags.length) {
       return (
         <>
+          {in_stock === 0 ||
+            (in_stock === 1 && stock_qty === 0 && <div block="Seperatortop" />)}
           <PDPTags tags={tags} />
           <div block="Seperator" />
         </>

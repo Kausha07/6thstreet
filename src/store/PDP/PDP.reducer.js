@@ -2,13 +2,15 @@
 import {
     SET_PDP_DATA,
     SET_PDP_GALLERY_IMAGE_INDEX,
-    SET_PDP_LOADING
+    SET_PDP_LOADING,
+    SET_PDP_CLICK_AND_COLLECT
 } from './PDP.action';
 
 export const getInitialState = () => ({
     product: {},
     options: {},
     imageIndex: 0, // positive numbers - gallery, negative numbers - special cases, i.e. video = -1
+    clickAndCollectStores: [],
     isLoading: true
 });
 
@@ -39,6 +41,13 @@ export const PDPReducer = (state = getInitialState(), action) => {
         return {
             ...state,
             imageIndex
+        };
+
+    case SET_PDP_CLICK_AND_COLLECT:
+        const { clickAndCollectStores } = action;
+        return {
+            ...state,
+            clickAndCollectStores
         };
 
     case SET_PDP_LOADING:

@@ -762,6 +762,7 @@
     "Your Wishlist": null,
     "Home_Category": null,
     "HomeCategory": null,
+    "Click & Collect": null,
     "Click And Collect": null,
     "PICK A STORE": null,
     "Select a Store": null,
@@ -769,5 +770,9 @@
     "Click": null,
     "& Collect": null,
     "Delivery2": null,
+    "Adding": null,
+    "Adding to Bag": null,
+    "Adding to Bag...": null,
+    "Please Confirm your contact details": null,
     "Pick Up": null
 }

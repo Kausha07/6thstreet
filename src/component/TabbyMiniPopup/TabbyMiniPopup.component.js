@@ -145,10 +145,9 @@ class TabbyMiniPopup extends PureComponent {
     }
 
     render() {
-        const { closeTabbyPopup } = this.props;
 
         return (
-            <div block="TabbyMiniPopup" elem="Overlay" onClick={ closeTabbyPopup }>
+            <div block="TabbyMiniPopup" elem="Overlay">
                 { this.renderPopup() }
             </div>
         );

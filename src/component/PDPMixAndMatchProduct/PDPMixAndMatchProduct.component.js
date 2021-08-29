@@ -53,7 +53,12 @@ class PDPMixAndMatchProduct extends PureComponent {
       product,
     } = this.props;
     return (
-      <WishlistIcon sku={sku} mods={{ isArabic: isArabic() }} data={product} />
+      <WishlistIcon
+        sku={sku}
+        mods={{ isArabic: isArabic() }}
+        data={product}
+        pageType="pdp"
+      />
     );
   }
 

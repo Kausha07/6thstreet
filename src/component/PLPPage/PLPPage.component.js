@@ -46,6 +46,7 @@ class PLPPage extends PureComponent {
         product={product}
         key={sku}
         page="plp"
+        pageType="plp"
         qid={qid}
       />
     );

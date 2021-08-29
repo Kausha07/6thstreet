@@ -285,9 +285,9 @@
     &:hover {
       cursor: pointer;
     }
-    @include mobile {
-      display: none;
-    }
+    // @include mobile {
+    //   display: none;
+    // }
   }
   &::-webkit-scrollbar-thumb {
     background: #000000;

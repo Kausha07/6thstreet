@@ -1,6 +1,7 @@
 export const SET_PDP_DATA = 'SET_PDP_DATA';
 export const SET_PDP_LOADING = 'SET_PDP_LOADING';
 export const SET_PDP_GALLERY_IMAGE_INDEX = 'SET_PDP_GALLERY_IMAGE_INDEX';
+export const SET_PDP_CLICK_AND_COLLECT = 'SET_PDP_CLICK_AND_COLLECT';
 
 export const setPDPGaleryImage = (imageIndex) => ({
     type: SET_PDP_GALLERY_IMAGE_INDEX,
@@ -20,3 +21,8 @@ export const setPDPData = (
     response,
     options
 });
+
+export const setPDPClickAndCollect = ( storesList ) => ({
+    type: SET_PDP_CLICK_AND_COLLECT,
+    clickAndCollectStores: storesList
+})

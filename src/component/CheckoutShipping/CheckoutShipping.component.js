@@ -24,6 +24,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     customer: customerType.isRequired,
     showCreateNewPopup: PropTypes.func.isRequired,
     shippingAddress: PropTypes.object.isRequired,
+    isClickAndCollect: PropTypes.bool.isRequired
   };
 
   state = {
@@ -215,6 +216,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     const {
       notSavedAddress,
       customer: { addresses = [] },
+      isClickAndCollect
     } = this.props;
 
     if (!openFirstPopup && addresses && isSignedIn() && notSavedAddress()) {
@@ -222,7 +224,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       this.openNewForm();
     }
 
-    if (isSignedIn()) {
+    if (isSignedIn() && !!!isClickAndCollect) {
       return (
         <div
           block="MyAccountAddressBook"
@@ -272,11 +274,13 @@ export class CheckoutShipping extends SourceCheckoutShipping {
   onEditSelect() {
     this.setState({ editAddress: true });
   }
+
   renderAddressBook() {
     const {
       onAddressSelect,
       onShippingEstimationFieldsChange,
       shippingAddress,
+      isClickAndCollect
     } = this.props;
     const { formContent } = this.state;
     return (
@@ -289,12 +293,13 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         openForm={this.openForm.bind(this)}
         showCards={this.showCards}
         hideCards={this.hideCards}
+        isClickAndCollect={isClickAndCollect}
       />
     );
   }
 
   render() {
-    const { onShippingSuccess, onShippingError } = this.props;
+    const { onShippingSuccess, onShippingError, isClickAndCollect } = this.props;
     const { formContent } = this.state;
     return (
       <div
@@ -313,7 +318,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
             <>
               <h3>{__("Delivering to")}</h3>
               <h4 block="CheckoutShipping" elem="DeliveryMessage">
-                {__("Where can we send your order?")}
+                { isClickAndCollect ? ("Please confirm your contact details") : __("Where can we send your order?") }
               </h4>
             </>
           ) : null}

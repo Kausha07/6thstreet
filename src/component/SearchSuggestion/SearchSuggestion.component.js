@@ -126,10 +126,10 @@ class SearchSuggestion extends PureComponent {
       )}`;
     } else {
       formattedBrandName = brandName
-        .toUpperCase()
+        ?.toUpperCase()
         .split(" ")
         .filter(function (allItems, i, a) {
-          return i == a.indexOf(allItems.toUpperCase());
+          return i == a.indexOf(allItems?.toUpperCase());
         })
         .join(" ")
         .toLowerCase();
@@ -147,23 +147,36 @@ class SearchSuggestion extends PureComponent {
     const { isArabic } = this.state;
     let requestedGender = gender;
     let catalogUrl;
+    let genderInURL;
     if (isArabic) {
-      requestedGender = getGenderInArabic(gender);
+      if (gender === "kids") {
+        genderInURL = "أولاد~بنات";
+        // to add Boy~Girl in arabic
+      } else {
+        requestedGender = getGenderInArabic(gender);
+        genderInURL = requestedGender?.replace(
+          requestedGender?.charAt(0),
+          requestedGender?.charAt(0).toUpperCase()
+        );
+      }
+    } else {
+      if (gender === "kids") {
+        genderInURL = "Boy~Girl";
+      } else {
+        genderInURL = requestedGender?.replace(
+          requestedGender?.charAt(0),
+          requestedGender?.charAt(0).toUpperCase()
+        );
+      }
     }
     if (brandValue) {
       catalogUrl = `/catalogsearch/result/?q=${formatQuerySuggestions(
         query
-      )}&gender=${requestedGender.replace(
-        requestedGender.charAt(0),
-        requestedGender.charAt(0).toUpperCase()
-      )}&brand_name=${brandValue}`;
+      )}&gender=${genderInURL}&brand_name=${brandValue}`;
     } else {
       catalogUrl = `/catalogsearch/result/?q=${formatQuerySuggestions(
         query
-      )}&gender=${requestedGender.replace(
-        requestedGender.charAt(0),
-        requestedGender.charAt(0).toUpperCase()
-      )}`;
+      )}&gender=${genderInURL}`;
     }
     return catalogUrl;
   };
@@ -293,8 +306,8 @@ class SearchSuggestion extends PureComponent {
       : "home";
     const fetchSKU = products.find(
       (item) =>
-        item.name.toUpperCase().includes(query.toUpperCase()) ||
-        item.sku.toUpperCase().includes(query.toUpperCase())
+        item.name?.toUpperCase()?.includes(query?.toUpperCase()) ||
+        item.sku?.toUpperCase()?.includes(query?.toUpperCase())
     );
     // will be good to work when all brands exists properly
     // if (isBrand) {
@@ -469,17 +482,20 @@ class SearchSuggestion extends PureComponent {
 
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
 
-    let parseLink = url.includes("catalogsearch/result")
-      ? url.split("&")[0] +
+    let parseLink = url?.includes("catalogsearch/result")
+      ? url?.split("&")[0] +
         `&gender=${requestedGender.replace(
           requestedGender.charAt(0),
-          requestedGender.charAt(0).toUpperCase()
+          requestedGender.charAt(0)?.toUpperCase()
         )}`
       : url;
 
     return (
       <li>
-        <Link to={parseLink} onClick={() => this.handleProductClick(product)}>
+        <Link
+          to={parseLink ? parseLink : "#"}
+          onClick={() => this.handleProductClick(product)}
+        >
           <div block="SearchProduct">
             <img
               src={thumbnail_url}
@@ -638,13 +654,16 @@ class SearchSuggestion extends PureComponent {
 
   renderTrendingBrands() {
     const { trendingBrands = [] } = this.props;
+    const { isArabic } = this.state;
 
-    return (
+    return trendingBrands.length > 0 ? (
       <div block="TrandingBrands">
         <h2>{__("Trending brands")}</h2>
-        <ul>{trendingBrands.map(this.renderTrendingBrand)}</ul>
+        <ul block="TrandingBrands" elem="trendingBrandList" mods={{ isArabic }}>
+          {trendingBrands.map(this.renderTrendingBrand)}
+        </ul>
       </div>
-    );
+    ) : null;
   }
 
   renderTrendingTag = ({ link, label }, i) => (
@@ -662,13 +681,15 @@ class SearchSuggestion extends PureComponent {
 
   renderTrendingTags() {
     const { trendingTags = [] } = this.props;
-
-    return (
+    const { isArabic } = this.state;
+    return trendingTags.length > 0 ? (
       <div block="TrandingTags">
         <h2>{__("Trending tags")}</h2>
-        <ul>{trendingTags.map(this.renderTrendingTag)}</ul>
+        <ul block="TrandingTags" elem="trendingTagsList" mods={{ isArabic }}>
+          {trendingTags.map(this.renderTrendingTag)}
+        </ul>
       </div>
-    );
+    ) : null;
   }
 
   renderTopSearch = ({ search, link }, i) => {
@@ -701,12 +722,12 @@ class SearchSuggestion extends PureComponent {
 
   renderTopSearches() {
     const { topSearches = [] } = this.props;
-    return (
+    return topSearches.length > 0 ? (
       <div block="TopSearches">
         <h2>{__("Top searches")}</h2>
         <ul>{topSearches.map(this.renderTopSearch)}</ul>
       </div>
-    );
+    ) : null;
   }
 
   // recent searches
@@ -816,7 +837,8 @@ class SearchSuggestion extends PureComponent {
           mods={{ isArabic }}
           onClick={closeSearch}
         >
-          {svg}
+          Cancel
+          {/* {svg} */}
         </button>
       </div>
     );
@@ -826,7 +848,7 @@ class SearchSuggestion extends PureComponent {
     return (
       <div block="SearchSuggestion" mods={{ isArabic }}>
         <div block="SearchSuggestion" elem="Content">
-          {this.renderCloseButton()}
+          {/* {this.renderCloseButton()} */}
           {/* {this.renderLoader()} */}
           {this.renderContent()}
         </div>

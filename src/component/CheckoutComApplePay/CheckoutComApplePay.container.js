@@ -154,10 +154,12 @@ class CheckoutComApplePayContainer extends PureComponent {
    * Handle apple pay click
    */
   handleApplePayButtonClick() {
+    const {savePaymentInformationApplePay} = this.props
     const {
       cartTotals: { total, quote_currency_code },
       default_title,
       billingAddress: { country_id: countryCode },
+      billingAddress
     } = this.props;
     const paymentRequest = {
       countryCode,
@@ -166,7 +168,7 @@ class CheckoutComApplePayContainer extends PureComponent {
       merchantCapabilities: this._getMerchantCapabilities(),
       total: { label: default_title, amount: total },
     };
-    console.log("payment request apple pay", paymentRequest)
+    savePaymentInformationApplePay({billing_address:billingAddress, paymentMethod: {code: "checkout_apple_pay"}})
     const applePaySession = new window.ApplePaySession(1, paymentRequest);
 
     try {
@@ -199,6 +201,7 @@ class CheckoutComApplePayContainer extends PureComponent {
     } = this.props;
     console.log("apple pay events props", this.props)
     applePaySession.onvalidatemerchant = (event) => {
+      console.log("validation URL",event.validationURL )
       const promise = this._performValidation(event.validationURL);
 
       promise
@@ -207,7 +210,6 @@ class CheckoutComApplePayContainer extends PureComponent {
             verifyCheckoutComApplePay: merchantSession,
             verifyCheckoutComApplePay: { statusMessage = "" },
           } = response;
-          console.log("on validate merchant response", response)
           if (statusMessage) {
             showError(__(statusMessage));
             Logger.log("Cannot validate merchant:", merchantSession);
@@ -222,10 +224,6 @@ class CheckoutComApplePayContainer extends PureComponent {
 
     applePaySession.onshippingcontactselected = (event) => {
       const status = window.ApplePaySession.STATUS_SUCCESS;
-      console.log("session status (in onshippingcontact selected)", window.ApplePaySession.STATUS_SUCCESS)
-      console.log("new totals (in onshippingcontact selected)", newTotal)
-      console.log("line items (in onshippingcontact selected)", this._getLineItems())
-
       const newTotal = {
         type: "final",
         label: default_title,
@@ -247,9 +245,6 @@ class CheckoutComApplePayContainer extends PureComponent {
         label: default_title,
         amount: grand_total,
       };
-      console.log("session status (in onshippingmethod selected)", window.ApplePaySession.STATUS_SUCCESS)
-      console.log("new totals (in onshippingmethod selected)", newTotal)
-      console.log("line items (in onshippingmethod selected)", this._getLineItems())
       applePaySession.completeShippingMethodSelection(
         status,
         newTotal,
@@ -263,8 +258,6 @@ class CheckoutComApplePayContainer extends PureComponent {
         label: default_title,
         amount: grand_total,
       };
-      console.log("new totals (in onpaymentmethod selected)", newTotal)
-      console.log("line items (in onpaymentmethod selected)", this._getLineItems())
       applePaySession.completePaymentMethodSelection(
         newTotal,
         this._getLineItems()
@@ -295,11 +288,11 @@ class CheckoutComApplePayContainer extends PureComponent {
             },
           };
           console.log("place order data", data)
-          const status = placeOrder(CHECKOUT_APPLE_PAY, data)
-            ? window.ApplePaySession.STATUS_SUCCESS
-            : window.ApplePaySession.STATUS_FAILURE;
-
-          applePaySession.completePayment(status);
+          console.log("success session status", window.ApplePaySession.STATUS_SUCCESS)
+          console.log("failure session status", window.ApplePaySession.STATUS_FAILURE)
+          placeOrder(CHECKOUT_APPLE_PAY, data).then(() => applePaySession.completePayment(window.ApplePaySession.STATUS_SUCCESS)).catch(err => {
+            applePaySession.completePayment(window.ApplePaySession.STATUS_FAILURE);
+          })
         }
       });
     };

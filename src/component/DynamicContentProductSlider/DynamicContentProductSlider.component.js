@@ -1,14 +1,14 @@
 /* eslint-disable no-constant-condition */
+import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
 import ProductItem from "Component/ProductItem";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { Products } from "Util/API/endpoint/Product/Product.type";
 import { isArabic } from "Util/App";
+import Event from "Util/Event";
 import DynamicContentVueProductSliderContainer from "./../DynamicContentVueProductSlider/DynamicContentVueProductSlider.container";
 import { HOME_PAGE_TRANSLATIONS } from "./DynamicContentProductSlider.config";
 import "./DynamicContentProductSlider.style";
-import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
-import Event from "Util/Event";
 
 class DynamicContentProductSlider extends PureComponent {
   static propTypes = {
@@ -26,14 +26,50 @@ class DynamicContentProductSlider extends PureComponent {
     isArabic: isArabic(),
     withViewAll: true,
     impressionSent: false,
+    eventRegistered: false,
   };
 
-  componentDidMount() {
-    document.addEventListener("scroll", this.isInViewport);
+  componentDidMount() {}
+
+  registerViewPortEvent() {
+    let observer;
+    const elem = document.querySelector("#productSlider");
+
+    let options = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.5,
+    };
+
+    observer = new IntersectionObserver(this.handleIntersect, options);
+
+    observer.observe(elem);
+    this.setState({ eventRegistered: true });
   }
 
-  componentWillUnmount() {
-    document.removeEventListener("scroll", this.isInViewport);
+  handleIntersect = (entries, observer) => {
+    const { impressionSent } = this.state;
+    if (impressionSent) {
+      return;
+    }
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        console.log("dynamic product slider component in view port ", entry);
+        this.sendImpressions();
+      }
+    });
+  };
+  sendImpressions() {
+    const { products = [] } = this.props;
+    const items = products.map((item) => {
+      return {
+        id: item.sku,
+        label: item.name,
+      };
+    });
+
+    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
+    this.setState({ impressionSent: true });
   }
 
   renderProduct = (product, i) => {
@@ -50,7 +86,7 @@ class DynamicContentProductSlider extends PureComponent {
         }}
         key={i}
       >
-        <ProductItem product={product} key={sku} />
+        <ProductItem product={product} key={sku} pageType="home" />
         {this.renderCTA()}
       </div>
     );
@@ -81,52 +117,18 @@ class DynamicContentProductSlider extends PureComponent {
     );
   }
 
-  sendImpressions() {
-    const { products = [] } = this.props;
-    const items = products.map((item) => {
-      return {
-        id: item.sku,
-        label: item.name,
-      };
-    });
-    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
-  }
-
-  isInViewport = () => {
-    if (!this.viewElement) {
-      return;
-    }
-    //get how much pixels left to scrolling our ReactElement
-    const top =
-      this.viewElement && this.viewElement.getBoundingClientRect().top;
-
-    //here we check if element top reference is on the top of viewport
-    /*
-     * If the value is positive then top of element is below the top of viewport
-     * If the value is zero then top of element is on the top of viewport
-     * If the value is negative then top of element is above the top of viewport
-     * */
-    if (top <= 0) {
-      // inside viewport
-      const { header: { title } = {} } = this.props;
-
-      const { impressionSent } = this.state;
-      if (!impressionSent) {
-        const { products = [] } = this.props;
-        if (products.length > 0) {
-          this.sendImpressions();
-          this.setState({ impressionSent: true });
-        }
-      }
-    }
-  };
-
   render() {
-    const { isArabic, withViewAll } = this.state;
+    const { isArabic, withViewAll, eventRegistered } = this.state;
     const { products } = this.props;
 
     if (products.length === 0) {
       return null;
+    }
+
+    if (!eventRegistered) {
+      setTimeout(() => {
+        // this.registerViewPortEvent();
+      }, 3000);
     }
 
     const { title } = this.props;
@@ -154,6 +156,7 @@ class DynamicContentProductSlider extends PureComponent {
     return (
       <div
         ref={setRef}
+        id="productSlider"
         mix={{ block: "DynamicContentProductSlider", mods: { isArabic } }}
       >
         {productsDesktop}

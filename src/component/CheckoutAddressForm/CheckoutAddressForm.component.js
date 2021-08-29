@@ -67,14 +67,17 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
     const {
       isSignedIn,
       shippingAddress: { guest_email },
+      isClickAndCollect,
+      storeAddress
     } = this.props;
+
     const { telephone, street, ...fieldMap } = super.fieldMap;
    
-
     fieldMap.street = {
       ...street,
       onChange: (value) => this.onChange("street", value),
     };
+
     fieldMap.telephone = {
       ...telephone,
       onChange: (value) => this.onChange("telephone", value),
@@ -92,6 +95,38 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
           },
           ...fieldMap,
         };
+  
+    if(!!isClickAndCollect && storeAddress){
+      console.log(fieldMap)
+      
+      const { store_name, address, city, area } = storeAddress;
+      if(store_name && address){
+        const value = `${store_name}, ${address}`;
+        Object.assign(fieldMap.street || {}, {
+          value,
+          disabled: true
+        });
+        this.onChange('street', value)
+      }
+      if(city && fieldMap?.city?.selectOptions) {
+        const value = fieldMap.city.selectOptions.filter(({ label }) => label.toLowerCase()===city.toLowerCase())[0]?.value || ""; 
+        Object.assign(fieldMap.city || {}, {
+          value,
+          disabled: true
+        });
+        this.onChange('city', value)
+      }
+
+      if(area && fieldMap?.region_id?.selectOptions) {
+        const value = fieldMap.region_id.selectOptions.filter(({ label }) => label.toLowerCase()===area.toLowerCase())[0]?.value || "";
+        Object.assign(fieldMap.region_id || {}, {
+          value,
+          disabled: true
+        });
+        this.setState({regionId: value});
+      }
+    }
+
     if (this.props.isSignedIn === false) {
       let result = {};
       for (const [key, value] of Object.entries(fFieldMap)) {
