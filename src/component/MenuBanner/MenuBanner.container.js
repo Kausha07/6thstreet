@@ -31,7 +31,12 @@ class MenuBannerContainer extends PureComponent {
   };
 
   render() {
-    return <DynamicContentBanner {...this.containerProps()} />;
+    return (
+      <DynamicContentBanner
+        doNotTrackImpression={true}
+        {...this.containerProps()}
+      />
+    );
   }
 }
 

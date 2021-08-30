@@ -25,6 +25,7 @@ class ProductItem extends PureComponent {
     position: PropTypes.number,
     qid: PropTypes.string,
     isVueData: PropTypes.bool,
+    pageType: PropTypes.string,
   };
 
   static defaultProps = {
@@ -68,8 +69,9 @@ class ProductItem extends PureComponent {
     const {
       product: { sku },
       product,
+      pageType,
     } = this.props;
-    return <WishlistIcon sku={sku} data={product} />;
+    return <WishlistIcon sku={sku} data={product} pageType={pageType} />;
   }
 
   renderLabel() {
@@ -96,8 +98,6 @@ class ProductItem extends PureComponent {
     return null;
   }
 
- 
-
   renderExclusive() {
     const {
       product: { promotion },
@@ -117,15 +117,15 @@ class ProductItem extends PureComponent {
 
   renderOutOfStock() {
     const {
-      product: { in_stock },
+      product: { in_stock, stock_qty },
     } = this.props;
-    if (in_stock === 0) {
+    if (in_stock === 0 || (in_stock === 1 && stock_qty === 0)) {
       return (
         <span block="ProductItem" elem="OutOfStock">
           {" "}
-          {"Out Of Stock"}
+          {__("out of stock")}
         </span>
-      )
+      );
     }
 
     return null;
@@ -137,10 +137,8 @@ class ProductItem extends PureComponent {
 
     return (
       <div>
-        <Image src={thumbnail_url} /> 
-        {this.renderOutOfStock()} {" "}
-        {this.renderExclusive()}{" "}
-        {this.renderColors()}{" "}
+        <Image src={thumbnail_url} />
+        {this.renderOutOfStock()} {this.renderExclusive()} {this.renderColors()}{" "}
       </div>
     );
   }
@@ -207,7 +205,7 @@ class ProductItem extends PureComponent {
     }
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
-      : "all";
+      : "home";
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
 
     let parseLink = urlWithQueryID.includes("catalogsearch/result")
@@ -225,7 +223,7 @@ class ProductItem extends PureComponent {
     };
 
     return (
-      <Link to={linkTo} onClick={this.handleClick}>
+      <Link to={isVueData ? parseLink : linkTo} onClick={this.handleClick}>
         {" "}
         {this.renderImage()} {this.renderBrand()} {this.renderTitle()}{" "}
         {this.renderPrice()}{" "}

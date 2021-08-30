@@ -152,8 +152,29 @@
     }
   }
 
+  &-ClickAndCollect {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 11px;
+    line-height: 1.2;
+    font-weight: 500;
+    flex-grow: 1;
+    width: 100%;
+    color: var(--cart-item-heading-color);
+    text-align: left;
+
+    &-StoreName {
+      padding: 0 6px;
+    }
+
+    &_isArabic {
+      text-align: right;
+    }
+  }
+
   &-Picture {
-    height: 150px;
+    height: 165px;
     width: 130px;
     object-fit: cover !important;
     margin-right: 16px;

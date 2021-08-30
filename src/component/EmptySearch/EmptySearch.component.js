@@ -51,8 +51,11 @@ class EmptySearch extends PureComponent {
 
     return (
       <div block="EmptySearch" elem="SearchQuery">
-        {__("You search for: ")}
-        <span>{query}</span>
+        <p>
+          {__("No result found for")} &nbsp;
+          <span>{query}</span>
+          {__(" but here are few suggestions")}
+        </p>
       </div>
     );
   }

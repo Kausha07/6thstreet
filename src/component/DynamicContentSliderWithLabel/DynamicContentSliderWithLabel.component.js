@@ -11,6 +11,7 @@ import { formatCDNLink } from "Util/Url";
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import "./DynamicContentSliderWithLabel.style";
+import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
 // import VueIntegrationQueries from "Query/vueIntegration.query";
 // import { getUUID } from "Util/Auth";
 
@@ -37,10 +38,43 @@ class DynamicContentSliderWithLabel extends PureComponent {
       startX: 0,
       scrollLeft: 0,
       isArabic: isArabic(),
+      impressionSent: false,
     };
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    this.registerViewPortEvent();
+  }
+
+  registerViewPortEvent() {
+    let observer;
+
+    let options = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.5,
+    };
+
+    observer = new IntersectionObserver(this.handleIntersect, options);
+    observer.observe(this.viewElement);
+  }
+  sendImpressions() {
+    const { items = [] } = this.props;
+    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
+    this.setState({ impressionSent: true });
+  }
+  handleIntersect = (entries, observer) => {
+    const { impressionSent } = this.state;
+    if (impressionSent) {
+      return;
+    }
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        console.log("slider with label component in view port ", entry);
+        this.sendImpressions();
+      }
+    });
+  };
 
   onclick = (item) => {
     let banner = {
@@ -55,7 +89,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
     const { isArabic } = this.state;
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
-      : "all";
+      : "home";
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
     let parseLink = link.includes("/catalogsearch/result")
       ? link.split("&")[0] +
@@ -170,8 +204,16 @@ class DynamicContentSliderWithLabel extends PureComponent {
 
   render() {
     const { isArabic } = this.state;
+    let setRef = (el) => {
+      this.viewElement = el;
+    };
+
     return (
-      <div block="DynamicContentSliderWithLabel" mods={{ isArabic }}>
+      <div
+        ref={setRef}
+        block="DynamicContentSliderWithLabel"
+        mods={{ isArabic }}
+      >
         {this.props.header && (
           <DynamicContentHeader header={this.props.header} />
         )}

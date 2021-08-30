@@ -149,7 +149,7 @@
       color: #4a4a4a;
       overflow: hidden;
       white-space: nowrap;
-      margin-bottom: 4.5px;
+      // margin-bottom: 4.5px;
       text-overflow: ellipsis;
       font-weight: var(--fw-regular);
     }
@@ -285,9 +285,9 @@
     &:hover {
       cursor: pointer;
     }
-    @include mobile {
-      display: none;
-    }
+    // @include mobile {
+    //   display: none;
+    // }
   }
   &::-webkit-scrollbar-thumb {
     background: #000000;

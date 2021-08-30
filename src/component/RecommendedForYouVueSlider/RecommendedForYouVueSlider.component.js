@@ -4,6 +4,7 @@ import VueIntegrationQueries from "Query/vueIntegration.query";
 import React, { PureComponent } from "react";
 import { isArabic } from "Util/App";
 import { getUUID } from "Util/Auth";
+import BrowserDatabase from "Util/BrowserDatabase";
 import { VUE_CAROUSEL_SHOW, VUE_CAROUSEL_SWIPE } from "Util/Event";
 import RecommendedForYouVueSliderItem from "./RecommendedForYouVueSlider.Item";
 import "./RecommendedForYouVueSlider.style.scss";
@@ -34,6 +35,8 @@ class RecommendedForYouVueSlider extends PureComponent {
     }
     const { widgetID } = this.props;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
+    const customer = BrowserDatabase.getItem("customer");
+    const userID = customer && customer.id ? customer.id : null;
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_CAROUSEL_SHOW,
       params: {
@@ -44,6 +47,7 @@ class RecommendedForYouVueSlider extends PureComponent {
         uuid: getUUID(),
         referrer: "desktop",
         widgetID: widgetID,
+        userID: userID,
       },
     });
   }
@@ -60,8 +64,8 @@ class RecommendedForYouVueSlider extends PureComponent {
     if (this.indexRef.current !== index) {
       this.indexRef.current = index;
       const productsToRender = this.getProducts();
-      let sourceProdID = productsToRender[index].sku;
-      let sourceCatgID = productsToRender[index].category;
+      let sourceProdID = productsToRender?.[index]?.sku;
+      let sourceCatgID = productsToRender?.[index]?.category;
       const locale = VueIntegrationQueries.getLocaleFromUrl();
       VueIntegrationQueries.vueAnalayticsLogger({
         event_name: VUE_CAROUSEL_SWIPE,

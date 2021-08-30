@@ -80,21 +80,36 @@ export class HeaderSearchContainer extends PureComponent {
               addAnalytics: true,
             }
       );
-      this.logRecentSearch(search);
+      if (productData?.nbHits !== 0 && productData?.data.length > 0) {
+        this.logRecentSearch(search);
+      }
       const queryID = productData?.queryID ? productData?.queryID : null;
-      let requestedGender = isArabic() ? getGenderInArabic(gender) : gender;
+      let requestedGender = gender;
+      let genderInURL;
+      if (isArabic()) {
+        if (gender === "kids") {
+          genderInURL = "أولاد~بنات";
+          // to add Boy~Girl in arabic
+        } else {
+          requestedGender = getGenderInArabic(gender);
+          genderInURL = requestedGender?.replace(
+            requestedGender?.charAt(0),
+            requestedGender?.charAt(0).toUpperCase()
+          );
+        }
+      } else {
+        if (gender === "kids") {
+          genderInURL = "Boy~Girl";
+        } else {
+          genderInURL = requestedGender?.replace(
+            requestedGender?.charAt(0),
+            requestedGender?.charAt(0).toUpperCase()
+          );
+        }
+      }
       history.push(
-        `/catalogsearch/result/?q=${search}&qid=${queryID}&gender=${requestedGender.replace(
-          requestedGender.charAt(0),
-          requestedGender.charAt(0).toUpperCase()
-        )}`
+        `/catalogsearch/result/?q=${search}&qid=${queryID}&gender=${genderInURL}`
       );
-      // history.push(
-      //   `/catalogsearch/result/?q=${search}&gender=${requestedGender.replace(
-      //     requestedGender.charAt(0),
-      //     requestedGender.charAt(0).toUpperCase()
-      //   )}`
-      // );
     }
   }
 

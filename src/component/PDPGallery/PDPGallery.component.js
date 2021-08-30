@@ -1,22 +1,17 @@
-import PropTypes from "prop-types";
-import { createRef, PureComponent } from "react";
-
+import HeaderCart from "Component/HeaderCart";
 import Image from "Component/Image";
-import Link from "Component/Link";
 import PDPGalleryCrumb from "Component/PDPGalleryCrumb";
 import PDPGalleryOverlay from "Component/PDPGalleryOverlay";
 import Slider from "Component/Slider";
 import SliderVertical from "Component/SliderVertical";
 import WishlistIcon from "Component/WishlistIcon";
-import HeaderCart from "Component/HeaderCart";
-import CSS from "Util/CSS";
-import isMobile from "Util/Mobile";
-
-import browserHistory from "Util/History";
+import PropTypes from "prop-types";
+import { createRef, PureComponent } from "react";
 import { isArabic } from "Util/App";
-
+import CSS from "Util/CSS";
+import browserHistory from "Util/History";
+import isMobile from "Util/Mobile";
 import { MAX_ZOOM_SCALE } from "./PDPGallery.config";
-
 import "./PDPGallery.style";
 
 class PDPGallery extends PureComponent {
@@ -44,7 +39,10 @@ class PDPGallery extends PureComponent {
     isArabic: isArabic(),
   };
 
-  videoRef = [React.createRef(), React.createRef()];
+  videoRef = {
+    prod_style_video: React.createRef(),
+    prod_360_video: React.createRef(),
+  };
 
   componentDidMount() {
     CSS.setVariable(
@@ -91,8 +89,15 @@ class PDPGallery extends PureComponent {
   }
   renderWishlistIcon() {
     const { isArabic } = this.state;
-    const { sku } = this.props;
-    return <WishlistIcon sku={sku} mods={{ isArabic }} />;
+    const { sku, product } = this.props;
+    return (
+      <WishlistIcon
+        sku={sku}
+        mods={{ isArabic }}
+        pageType="pdp"
+        data={product}
+      />
+    );
   }
 
   renderCrumb = (index, i) => (
@@ -122,7 +127,6 @@ class PDPGallery extends PureComponent {
 
   renderCrumbs() {
     const { crumbs = [], currentIndex, onSliderChange } = this.props;
-
     return (
       <div ref={this.crumbsRef} block="PDPGallery" elem="Crumbs">
         <SliderVertical
@@ -147,7 +151,7 @@ class PDPGallery extends PureComponent {
 
   renderGallery() {
     const { gallery = [] } = this.props;
-    
+
     return gallery.map(this.renderGalleryImage);
   }
 
@@ -171,97 +175,107 @@ class PDPGallery extends PureComponent {
       </Slider>
     );
   }
-  
+
   renderVideos() {
-    const { prod_360_video, prod_style_video } = this.props;
-    
-    return (
-      [prod_360_video, prod_style_video].filter((src) => !!src).map((src, index) => (
-          <video
-            key={index}
-            block="Video"
-            ref={this.videoRef[index]}
-            height="534"
-            src={src}
-            type="video/mp4"
-            controls={!isMobile.any()}
-            disablepictureinpicture
-            playsinline
-          />
-      ))
-    );
+    const { prod_style_video, prod_360_video } = this.props;
+    const videos = { prod_style_video, prod_360_video };
+    return Object.keys(videos)
+      .filter((key) => !!videos[key])
+      .map((key, index) => (
+        <video
+          key={index}
+          data-index={index}
+          block="Video"
+          ref={this.videoRef[key]}
+          height="534"
+          src={videos[key]}
+          type="video/mp4"
+          controls={!isMobile.any()}
+          disablepictureinpicture
+          playsinline
+        />
+      ));
   }
 
-  playVideo(index) {
+  playVideo(video_type) {
     const { gallery, onSliderChange } = this.props;
-    onSliderChange(gallery.length + index);
-    this.setState({ isVideoPlaying: true}, () => {
-      const video = this.videoRef[index];
-      if(video?.current)
-      {
-        var counter = 1;
+    const video = this.videoRef[video_type];
+    var counter = 1;
+    if (video?.current) {
+      this.setState({ isVideoPlaying: video }, () => {
+        onSliderChange(
+          gallery.length + parseInt(video?.current.dataset["index"])
+        );
         video.current.play();
         video.current.addEventListener("ended", () => {
           counter = counter + 1;
-          if(counter <= 2){
+          if (counter <= 2) {
             video.current.play();
-          }
-          else {
+          } else {
             onSliderChange(0);
-            this.setState({ isVideoPlaying: false});
+            this.setState({ isVideoPlaying: false }, () => {
+              counter = 1;
+            });
           }
         });
-      }
-    });
+      });
+    }
+  }
+
+  stopVideo() {
+    const { isVideoPlaying } = this.state;
+    const { onSliderChange } = this.props;
+    if (isVideoPlaying?.current) {
+      isVideoPlaying.current.pause();
+      isVideoPlaying.current.currentTime = 0;
+    }
+    onSliderChange(0);
+    this.setState({ isVideoPlaying: false });
   }
 
   renderVideoButtons() {
-    const { prod_360_video, prod_style_video } = this.props;
+    const { prod_360_video, prod_style_video, currentIndex, gallery } =
+      this.props;
     const { isVideoPlaying } = this.state;
-    if(!(prod_360_video || prod_style_video) || !isMobile.any()){
+    if (!(prod_360_video || prod_style_video) || !isMobile.any()) {
       return null;
     }
 
     return (
-      <div
-        block="PDPGallery"
-        elem="VideoButtonsContainer"
-      >
-        {
-          isVideoPlaying
-          ?
+      <div block="PDPGallery" elem="VideoButtonsContainer">
+        {isVideoPlaying && currentIndex >= gallery.length ? (
           <button
             block="PDPGallery-VideoButtonsContainer-VideoButtons"
             elem="ViewGallery"
+            onClick={() => this.stopVideo()}
           >
             View Gallery
           </button>
-          :
-          <div
-            block="PDPGallery-VideoButtonsContainer"
-            elem="VideoButtons"
-          >
-            { prod_style_video && <button
-              block="PDPGallery-VideoButtonsContainer-VideoButtons"
-              elem="StyleVideo"
-              onClick={()=>this.playVideo(0)}
-            >
-              Video
-            </button>
-            }
-            { prod_360_video && <button
-              block="PDPGallery-VideoButtonsContainer-VideoButtons"
-              elem="360DegreeVideo"
-              onClick={()=>this.playVideo(1)}
-            >
-              360
-            </button>
-            }
+        ) : (
+          <div block="PDPGallery-VideoButtonsContainer" elem="VideoButtons">
+            {prod_style_video && (
+              <button
+                block="PDPGallery-VideoButtonsContainer-VideoButtons"
+                elem="StyleVideo"
+                onClick={() => this.playVideo("prod_style_video")}
+              >
+                Video
+              </button>
+            )}
+            {prod_360_video && (
+              <button
+                block="PDPGallery-VideoButtonsContainer-VideoButtons"
+                elem="360DegreeVideo"
+                onClick={() => this.playVideo("prod_360_video")}
+              >
+                360°
+              </button>
+            )}
           </div>
-        }
+        )}
         <div block="Seperator" />
       </div>
-    )
+    );
   }
 
   render() {

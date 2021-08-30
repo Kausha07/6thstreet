@@ -4,12 +4,12 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import { capitalizeFirstLetters } from "../../../../../packages/algolia-sdk/app/utils";
 const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
   ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
-  : "all";
+  : "home";
 
 const genders = {
   all: {
-    label: "All",
-    value: "all",
+    label: "Home",
+    value: "home",
   },
   women: {
     label: "Women",
@@ -27,13 +27,13 @@ const genders = {
 
 const checkForKidsFilterQuery = (query) => {
   return (
-    query.toUpperCase().includes(__("KIDS")) ||
-    query.toUpperCase().includes(__("GIRL")) ||
-    query.toUpperCase().includes(__("GIRLS")) ||
-    query.toUpperCase().includes(__("BOY")) ||
-    query.toUpperCase().includes(__("BOYS")) ||
-    query.toUpperCase().includes(__("BABY GIRL")) ||
-    query.toUpperCase().includes(__("BABY BOY"))
+    query?.toUpperCase().includes(__("KIDS")) ||
+    query?.toUpperCase().includes(__("GIRL")) ||
+    query?.toUpperCase().includes(__("GIRLS")) ||
+    query?.toUpperCase().includes(__("BOY")) ||
+    query?.toUpperCase().includes(__("BOYS")) ||
+    query?.toUpperCase().includes(__("BABY GIRL")) ||
+    query?.toUpperCase().includes(__("BABY BOY"))
   );
 };
 
@@ -66,7 +66,7 @@ const addSuggestion = (
 };
 
 const checkForQueryWithGender = (query) => {
-  if (gender === "all") return true;
+  if (gender === "home") return true;
   let regexStr;
   switch (gender) {
     case "women":
@@ -333,7 +333,7 @@ const checkForValidSuggestion = (value, arr) => {
     return false;
   if (isArabic()) {
     if (
-      value?.toUpperCase() === getGenderInArabic(gender).toUpperCase() ||
+      value?.toUpperCase() === getGenderInArabic(gender)?.toUpperCase() ||
       value?.toUpperCase() === __("KIDS BABY GIRL") ||
       value?.toUpperCase() === __("KIDS GIRL") ||
       value?.toUpperCase() === __("KIDS BOY") ||
@@ -342,7 +342,7 @@ const checkForValidSuggestion = (value, arr) => {
       return false;
   } else {
     if (
-      value?.toUpperCase() === gender.toUpperCase() ||
+      value?.toUpperCase() === gender?.toUpperCase() ||
       value?.toUpperCase() === "KIDS BABY GIRL" ||
       value?.toUpperCase() === "KIDS GIRL" ||
       value?.toUpperCase() === "KIDS BOY" ||
@@ -351,11 +351,11 @@ const checkForValidSuggestion = (value, arr) => {
       return false;
   }
 
-  if (gender !== "all") {
+  if (gender !== "home") {
     let { all, [gender]: selectedGender, ...filters } = genders;
 
     Object.keys(filters).forEach((filter) => {
-      if (filter !== "all" && filter !== gender) {
+      if (filter !== "home" && filter !== gender) {
         let regex = new RegExp(
           isArabic() ? `${getGenderInArabic(filter)}` : `\\b${filter}\\b`,
           "i"
@@ -405,7 +405,7 @@ export const formatQuerySuggestions = (query) => {
   let avoidFilter = isArabic() ? getGenderInArabic(gender) : gender;
   if (checkForKidsFilterQuery(capitalizedQuery))
     avoidFilter = isArabic() ? getGenderInArabic("kids") : "kids";
-  else if (gender === "all") return capitalizedQuery;
+  else if (gender === "home") return capitalizedQuery;
   let regex = new RegExp(
     isArabic() ? `${avoidFilter}` : `\\b${avoidFilter}\\b`,
     "i"
@@ -418,7 +418,9 @@ export const formatQuerySuggestions = (query) => {
 
 export const getHighlightedText = (text, highlight) => {
   // Split on highlight term and include term into parts, ignore case
-  const parts = text?.split(new RegExp(`(${highlight})`, "gi"));
+  var invalid = /[°"§%()\[\]{}=\\?´`'#<>|,;.:+_-]+/g;
+  var filteredHighlight = highlight.replace(invalid, "");
+  const parts = text?.split(new RegExp(`(${filteredHighlight})`, "gi"));
   return (
     <span>
       {" "}
@@ -446,5 +448,7 @@ export const getGenderInArabic = (gender) => {
       return "نساء";
     case "kids":
       return "أطفال";
+    case "home":
+      return "منزل";
   }
 };

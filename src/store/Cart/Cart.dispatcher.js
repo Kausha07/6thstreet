@@ -80,6 +80,7 @@ export class CartDispatcher {
             id,
             availability,
             available_qty,
+            extension_attributes
           } = item;
 
           return dispatch(
@@ -93,7 +94,8 @@ export class CartDispatcher {
               "",
               price,
               availability,
-              available_qty
+              available_qty,
+              extension_attributes
             )
           );
         });
