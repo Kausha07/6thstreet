@@ -255,7 +255,7 @@ export class CartItem extends PureComponent {
 
     const withoutDiscount = (
       <>
-        <span>{currency_code}{" "}</span>
+        <span>{currency_code}</span>&nbsp;
         <span>{`${parseFloat(row_total).toFixed(decimals)}`}</span>
       </>
     );
@@ -269,7 +269,7 @@ export class CartItem extends PureComponent {
           elem="BasePrice"
           mods={{ isArabic }}
         >
-          <span>{currency_code}{" "}</span>
+          <span>{currency_code}</span>&nbsp;
           <span>{`${parseFloat(basePrice).toFixed(decimals)}`}</span>
         </div>
         <div>
