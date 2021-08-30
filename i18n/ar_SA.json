@@ -777,7 +777,7 @@
     "Success": "ناجح",
     "MM": null,
     "YY": null,
-    "out of stock": null,
+    "out of stock": "غير متوفر",
     "Notify me when it’s available": null,
     "Sending..": null,
     "That looks like an invalid email address": null,
