@@ -9,7 +9,7 @@ main {
 .Header {
     @include desktop {
         background-color: var(--white);
-        height: 30px;
+        height: auto;
         position: fixed;
         width: 100%;
         z-index: 5;
