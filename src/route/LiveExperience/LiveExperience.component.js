@@ -26,7 +26,7 @@ export class LiveExperience extends PureComponent {
       containerId: "single",
       displayType: "one",
       broadcastId: this.props.broadcastId,
-      staging: true,
+      staging: process.env.REACT_APP_SPOCKEE_STAGING,
     };
 
     const el = document.createElement("script");
@@ -52,7 +52,7 @@ export class LiveExperience extends PureComponent {
 
       displayType: "upcoming",
 
-      staging: true,
+      staging: process.env.REACT_APP_SPOCKEE_STAGING,
     };
 
     const el = document.createElement("script");
@@ -79,7 +79,7 @@ export class LiveExperience extends PureComponent {
 
       displayType: "vod",
 
-      staging: true,
+      staging: process.env.REACT_APP_SPOCKEE_STAGING,
     };
 
     const el = document.createElement("script");
