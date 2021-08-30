@@ -5,4 +5,58 @@
   @include mobile {
     padding-top: 0;
   }
+  .DynamicContentGrid {
+    @include mobile {
+      margin: 0;
+    }
+    &-Grid img {
+      object-fit: cover;
+    }
+  }
+  // .DynamicContent > div {
+  //   margin-bottom: 30px !important;
+  // }
+  .DynamicContentBanner {
+    box-sizing: border-box;
+    margin: 0;
+    // padding: 0 8px;
+
+    &:last-of-type {
+      padding-bottom: 30px;
+
+      @include desktop() {
+        padding-bottom: 0;
+      }
+    }
+  }
+
+  .DynamicContent {
+    @include mobile {
+      margin-top: 60px;
+    }
+    > div:not(.DynamicContentFullWidthBannerSlider) {
+      @include desktop {
+        margin: 0 auto;
+        width: var(--main-container-width-dsk);
+        max-width: 1440px;
+      }
+    }
+    .DynamicContentGrid {
+      @include tablet {
+        margin-left: 30px !important;
+        margin-right: 30px !important;
+      }
+    }
+  }
+  .DynamicContent {
+    > div:not(.DynamicContentCircleItemSlider) {
+      margin-bottom: 60px !important;
+      @include tablet {
+        margin-bottom: 40px !important;
+      }
+      @include mobile {
+        margin-bottom: 20px !important;
+      }
+    }
+  }
 }

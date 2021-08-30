@@ -12,6 +12,7 @@ import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
 // import VueIntegrationQueries from "Query/vueIntegration.query";
 // import { getUUID } from "Util/Auth";
 import "./DynamicContentRichContentBanner.style";
+import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
 
 const settings = {
   lazyload: true,
@@ -48,6 +49,43 @@ class DynamicContentRichContentBanner extends PureComponent {
       })
     ).isRequired,
   };
+  state = {
+    impressionSent: false,
+  };
+
+  componentDidMount() {
+    this.registerViewPortEvent();
+  }
+
+  registerViewPortEvent() {
+    let observer;
+
+    let options = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.5,
+    };
+
+    observer = new IntersectionObserver(this.handleIntersect, options);
+    observer.observe(this.viewElement);
+  }
+  sendImpressions() {
+    const { items = [] } = this.props;
+    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
+    this.setState({ impressionSent: true });
+  }
+  handleIntersect = (entries, observer) => {
+    const { impressionSent } = this.state;
+    if (impressionSent) {
+      return;
+    }
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        console.log("rich content banner component in view port ", entry);
+        this.sendImpressions();
+      }
+    });
+  };
   onclick = (item) => {
     let banner = {
       link: item.link,
@@ -63,7 +101,7 @@ class DynamicContentRichContentBanner extends PureComponent {
       pathname: formatCDNLink(link),
       state: { plp_config },
     };
-  
+
     let ht, wd;
     if (screen.width > 900) {
       let ht1 = (item.height / item.width) * 600;
@@ -136,8 +174,11 @@ class DynamicContentRichContentBanner extends PureComponent {
   }
 
   render() {
+    let setRef = (el) => {
+      this.viewElement = el;
+    };
     return (
-      <div block="DynamicContentRichContentBanner">
+      <div ref={setRef} block="DynamicContentRichContentBanner">
         {this.props.header && (
           <DynamicContentHeader header={this.props.header} />
         )}

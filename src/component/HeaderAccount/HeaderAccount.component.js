@@ -1,17 +1,14 @@
 /* eslint-disable max-len */
-import PropTypes from "prop-types";
-import { PureComponent } from "react";
-
 import ClickOutside from "Component/ClickOutside";
 import MyAccountOverlay from "Component/MyAccountOverlay";
 import MyAccountSignedInOverlay from "Component/MyAccountSignedInOverlay";
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
 import { customerType } from "Type/Account";
 import { isArabic } from "Util/App";
 import history from "Util/History";
 import isMobile from "Util/Mobile";
-
 import { SMS_LINK } from "./HeaderAccount.config";
-
 import "./HeaderAccount.style";
 
 class HeaderAccount extends PureComponent {

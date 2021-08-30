@@ -13,12 +13,16 @@
 
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
+import { connect } from "react-redux";
 import { withRouter } from "react-router";
 
 import Field from "Component/Field";
 import Image from "Component/Image";
 import Loader from "Component/Loader";
-import { FIXED_CURRENCIES } from "Component/Price/Price.config";
+import {
+  FIXED_CURRENCIES,
+  DISPLAY_DISCOUNT_PERCENTAGE,
+} from "Component/Price/Price.config";
 import { CartItemType } from "Type/MiniCart";
 import { isArabic } from "Util/App";
 
@@ -29,10 +33,16 @@ import "./CartItem.extended.style";
  * Cart and CartOverlay item
  * @class CartItem
  */
+
+export const mapStateToProps = (state) => ({
+  country: state.AppState.country,
+});
+
 export class CartItem extends PureComponent {
   static propTypes = {
     isLoading: PropTypes.bool.isRequired,
     item: CartItemType.isRequired,
+    country: PropTypes.string.isRequired,
     currency_code: PropTypes.string.isRequired,
     brand_name: PropTypes.string,
     isEditing: PropTypes.bool,
@@ -51,7 +61,6 @@ export class CartItem extends PureComponent {
     isCartPage: PropTypes.bool,
     readOnly: PropTypes.bool,
   };
-
   state = {
     isArabic: isArabic(),
     isNotAvailble: false,
@@ -76,7 +85,6 @@ export class CartItem extends PureComponent {
         availability === 0 || availableQty === 0 || qty > availableQty,
     };
   }
-
   renderProductConfigurationOption = ([key, attribute]) => {
     const {
       item: {
@@ -160,7 +168,6 @@ export class CartItem extends PureComponent {
 
     history.push(url.split(".com")[1]);
   };
-
   renderWrapper() {
     // TODO: implement shared-transition here?
 
@@ -241,6 +248,7 @@ export class CartItem extends PureComponent {
 
   renderProductPrice() {
     const {
+      country,
       currency_code,
       item: { row_total, basePrice },
     } = this.props;
@@ -250,7 +258,7 @@ export class CartItem extends PureComponent {
 
     const withoutDiscount = (
       <>
-        <span>{currency_code}</span>
+        <span>{currency_code}</span>&nbsp;
         <span>{`${parseFloat(row_total).toFixed(decimals)}`}</span>
       </>
     );
@@ -264,11 +272,11 @@ export class CartItem extends PureComponent {
           elem="BasePrice"
           mods={{ isArabic }}
         >
-          <span>{currency_code}</span>
+          <span>{currency_code}</span>&nbsp;
           <span>{`${parseFloat(basePrice).toFixed(decimals)}`}</span>
         </div>
         <div>
-          {`(-${discountPercentage}%)` }&nbsp;
+          {DISPLAY_DISCOUNT_PERCENTAGE[country] && `-${discountPercentage}%`}
           {withoutDiscount}
         </div>
       </div>
@@ -465,4 +473,4 @@ export class CartItem extends PureComponent {
   }
 }
 
-export default withRouter(CartItem);
+export default withRouter(connect(mapStateToProps, null)(CartItem));

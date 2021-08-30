@@ -1,16 +1,24 @@
 import Link from "Component/Link";
+import { DISPLAY_DISCOUNT_PERCENTAGE } from "Component/Price/Price.config";
 import WishlistIcon from "Component/WishlistIcon";
 import PropTypes from "prop-types";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import React, { PureComponent } from "react";
+import { connect } from "react-redux";
 import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
 import { getUUID } from "Util/Auth";
 import { VUE_CAROUSEL_CLICK } from "Util/Event";
 
+export const mapStateToProps = (state) => ({
+  country: state.AppState.country,
+});
+
 class DynamicContentVueProductSliderItem extends PureComponent {
   static propTypes = {
+    country: PropTypes.string.isRequired,
     data: PropTypes.object.isRequired,
+    pageType: PropTypes.string.isRequired,
   };
   constructor(props) {
     super(props);
@@ -39,6 +47,11 @@ class DynamicContentVueProductSliderItem extends PureComponent {
   };
 
   discountPercentage(basePrice, specialPrice, haveDiscount) {
+    const { country } = this.props;
+    if (!DISPLAY_DISCOUNT_PERCENTAGE[country]) {
+      return null;
+    }
+
     let discountPercentage = Math.round(100 * (1 - specialPrice / basePrice));
     if (discountPercentage === 0) {
       discountPercentage = 1;
@@ -134,6 +147,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
       },
       data,
       widgetID,
+      pageType,
     } = this.props;
     const { isArabic } = this.state;
     let newLink = link;
@@ -169,10 +183,13 @@ class DynamicContentVueProductSliderItem extends PureComponent {
           {this.renderPrice(price)}
           {this.renderIsNew(is_new_in)}
         </Link>
-        <WishlistIcon sku={sku} data={data} />
+        <WishlistIcon sku={sku} data={data} pageType={pageType} />
       </div>
     );
   }
 }
 
-export default DynamicContentVueProductSliderItem;
+export default connect(
+  mapStateToProps,
+  null
+)(DynamicContentVueProductSliderItem);

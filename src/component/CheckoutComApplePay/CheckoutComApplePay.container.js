@@ -154,10 +154,12 @@ class CheckoutComApplePayContainer extends PureComponent {
    * Handle apple pay click
    */
   handleApplePayButtonClick() {
+    const {savePaymentInformationApplePay} = this.props
     const {
       cartTotals: { total, quote_currency_code },
       default_title,
       billingAddress: { country_id: countryCode },
+      billingAddress
     } = this.props;
     const paymentRequest = {
       countryCode,
@@ -166,6 +168,7 @@ class CheckoutComApplePayContainer extends PureComponent {
       merchantCapabilities: this._getMerchantCapabilities(),
       total: { label: default_title, amount: total },
     };
+    savePaymentInformationApplePay({billing_address:billingAddress, paymentMethod: {code: "checkout_apple_pay"}})
     const applePaySession = new window.ApplePaySession(1, paymentRequest);
 
     try {
@@ -196,8 +199,9 @@ class CheckoutComApplePayContainer extends PureComponent {
       default_title,
       placeOrder,
     } = this.props;
-
+    console.log("apple pay events props", this.props)
     applePaySession.onvalidatemerchant = (event) => {
+      console.log("validation URL",event.validationURL )
       const promise = this._performValidation(event.validationURL);
 
       promise
@@ -206,7 +210,6 @@ class CheckoutComApplePayContainer extends PureComponent {
             verifyCheckoutComApplePay: merchantSession,
             verifyCheckoutComApplePay: { statusMessage = "" },
           } = response;
-
           if (statusMessage) {
             showError(__(statusMessage));
             Logger.log("Cannot validate merchant:", merchantSession);
@@ -242,7 +245,6 @@ class CheckoutComApplePayContainer extends PureComponent {
         label: default_title,
         amount: grand_total,
       };
-
       applePaySession.completeShippingMethodSelection(
         status,
         newTotal,
@@ -256,7 +258,6 @@ class CheckoutComApplePayContainer extends PureComponent {
         label: default_title,
         amount: grand_total,
       };
-
       applePaySession.completePaymentMethodSelection(
         newTotal,
         this._getLineItems()
@@ -264,10 +265,12 @@ class CheckoutComApplePayContainer extends PureComponent {
     };
 
     applePaySession.onpaymentauthorized = (event) => {
+      console.log("apple pay token", event.payment.token)
       tokenize({
         type: "applepay",
         token_data: event.payment.token.paymentData,
       }).then((response) => {
+        console.log("tokenization response", response)
         if (response && response.token) {
           const data = {
             source: {
@@ -284,12 +287,12 @@ class CheckoutComApplePayContainer extends PureComponent {
               udf1: null,
             },
           };
-
-          const status = placeOrder(CHECKOUT_APPLE_PAY, data)
-            ? window.ApplePaySession.STATUS_SUCCESS
-            : window.ApplePaySession.STATUS_FAILURE;
-
-          applePaySession.completePayment(status);
+          console.log("place order data", data)
+          console.log("success session status", window.ApplePaySession.STATUS_SUCCESS)
+          console.log("failure session status", window.ApplePaySession.STATUS_FAILURE)
+          placeOrder(CHECKOUT_APPLE_PAY, data).then(() => applePaySession.completePayment(window.ApplePaySession.STATUS_SUCCESS)).catch(err => {
+            applePaySession.completePayment(window.ApplePaySession.STATUS_FAILURE);
+          })
         }
       });
     };

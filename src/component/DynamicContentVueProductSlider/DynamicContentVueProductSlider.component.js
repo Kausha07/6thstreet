@@ -1,10 +1,12 @@
 import DragScroll from "Component/DragScroll/DragScroll.component";
+import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
 import PropTypes from "prop-types";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import React, { PureComponent } from "react";
 import { isArabic } from "Util/App";
 import { getUUID } from "Util/Auth";
-import { VUE_CAROUSEL_SHOW, VUE_CAROUSEL_SWIPE } from "Util/Event";
+import BrowserDatabase from "Util/BrowserDatabase";
+import Event, { VUE_CAROUSEL_SHOW, VUE_CAROUSEL_SWIPE } from "Util/Event";
 import DynamicContentVueProductSliderItem from "./DynamicContentVueProductSlider.Item";
 import "./DynamicContentVueProductSlider.style.scss";
 
@@ -27,6 +29,8 @@ class DynamicContentVueProductSlider extends PureComponent {
     this.state = {
       customScrollWidth: null,
       isArabic: isArabic(),
+      impressionSent: false,
+      eventRegistered: false,
     };
   }
   componentDidMount() {
@@ -35,6 +39,8 @@ class DynamicContentVueProductSlider extends PureComponent {
     }
     const { widgetID, pageType = "home" } = this.props;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
+    const customer = BrowserDatabase.getItem("customer");
+    const userID = customer && customer.id ? customer.id : null;
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_CAROUSEL_SHOW,
       params: {
@@ -45,9 +51,42 @@ class DynamicContentVueProductSlider extends PureComponent {
         uuid: getUUID(),
         referrer: "desktop",
         widgetID: widgetID,
+        userID: userID,
       },
     });
+    this.registerViewPortEvent();
   }
+  componentWillUnmount() {}
+
+  registerViewPortEvent() {
+    let observer;
+    const elem = document.querySelector("#productSlider");
+
+    let options = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.5,
+    };
+
+    observer = new IntersectionObserver(this.handleIntersect, options);
+
+    observer.observe(elem);
+    this.setState({ eventRegistered: true });
+  }
+
+  handleIntersect = (entries, observer) => {
+    const { impressionSent } = this.state;
+    if (impressionSent) {
+      return;
+    }
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        console.log("dynamic product slider component in view port ", entry);
+        this.sendImpressions();
+      }
+    });
+  };
+
   async handleContainerScroll(widgetID, event) {
     const { isArabic } = this.state;
     const { pageType = "home" } = this.props;
@@ -65,8 +104,8 @@ class DynamicContentVueProductSlider extends PureComponent {
     if (this.indexRef.current !== index) {
       this.indexRef.current = index;
       const productsToRender = this.getProducts();
-      let sourceProdID = productsToRender[index].sku;
-      let sourceCatgID = productsToRender[index].category;
+      let sourceProdID = productsToRender?.[index]?.sku;
+      let sourceCatgID = productsToRender?.[index]?.category;
       const locale = VueIntegrationQueries.getLocaleFromUrl();
       VueIntegrationQueries.vueAnalayticsLogger({
         event_name: VUE_CAROUSEL_SWIPE,
@@ -162,6 +201,18 @@ class DynamicContentVueProductSlider extends PureComponent {
       </div>
     );
   };
+  sendImpressions() {
+    const products = this.getProducts();
+    const items = products.map((item) => {
+      return {
+        id: item.sku,
+        label: item.name,
+      };
+    });
+    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
+    this.setState({ impressionSent: true });
+  }
+
   renderSliderContainer() {
     const items = this.getProducts();
     const { isHome } = this.props;
@@ -202,8 +253,16 @@ class DynamicContentVueProductSlider extends PureComponent {
   }
 
   render() {
+    let setRef = (el) => {
+      this.viewElement = el;
+    };
     return (
-      <div block="VueProductSlider" elem="Container">
+      <div
+        ref={setRef}
+        id="productSlider"
+        block="VueProductSlider"
+        elem="Container"
+      >
         {this.renderHeader()}
         {this.renderSliderContainer()}
       </div>

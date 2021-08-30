@@ -1,12 +1,11 @@
 /* eslint-disable fp/no-let */
-import { PureComponent } from "react";
-
 import ContentWrapper from "Component/ContentWrapper/ContentWrapper.component";
+import DynamicContent from "Component/DynamicContent";
 import PLPDetails from "Component/PLPDetails";
 import PLPFilters from "Component/PLPFilters";
 import PLPPages from "Component/PLPPages";
+import { PureComponent } from "react";
 import CircleItemSliderSubPage from "../../component/DynamicContentCircleItemSlider/CircleItemSliderSubPage";
-
 // import DynamicContentCircleItemSlider from '../../component/DynamicContentCircleItemSlider';
 import "./PLP.style";
 
@@ -57,12 +56,33 @@ export class PLP extends PureComponent {
       );
   }
 
+  renderPLPWidget = () => {
+    const { plpWidgetData } = this.props;
+    console.log("plp data", plpWidgetData);
+    const { pathname } = location;
+    const tagName = pathname
+      .replace(".html", "")
+      .replace("/", "")
+      .replaceAll("/", "_");
+
+    const widget = plpWidgetData.filter((item) => item.tag == tagName);
+    if (widget && widget.length == 0) {
+      return null;
+    }
+    console.log("plp widget", widget);
+    const { gender } = this.props;
+
+    // return <h1>Plp Widget</h1>;
+    return <DynamicContent gender={gender} content={widget} />;
+  };
+
   render() {
     return (
       <main block="PLP">
         <ContentWrapper label={__("Product List Page")}>
           {this.renderPLPDetails()}
           {this.state.bannerData && this.renderBanner()}
+          {this.renderPLPWidget()}
           {this.renderPLPFilters()}
           {this.renderPLPPages()}
         </ContentWrapper>

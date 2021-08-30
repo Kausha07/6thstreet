@@ -21,6 +21,7 @@ import Loader from "Component/Loader";
 import { FIXED_CURRENCIES } from "Component/Price/Price.config";
 import { CartItemType } from "Type/MiniCart";
 import { isArabic } from "Util/App";
+import { Store } from "../Icons";
 
 import "./CartPageItem.style";
 import "./CartPageItem.extended.style";
@@ -254,7 +255,7 @@ export class CartItem extends PureComponent {
 
     const withoutDiscount = (
       <>
-        <span>{currency_code}</span>
+        <span>{currency_code}</span>&nbsp;
         <span>{`${parseFloat(row_total).toFixed(decimals)}`}</span>
       </>
     );
@@ -268,12 +269,12 @@ export class CartItem extends PureComponent {
           elem="BasePrice"
           mods={{ isArabic }}
         >
-          <span>{currency_code}</span>
+          <span>{currency_code}</span>&nbsp;
           <span>{`${parseFloat(basePrice).toFixed(decimals)}`}</span>
         </div>
         <div>
-          {`-${discountPercentage}%`}
-          {withoutDiscount}
+          {`(-${discountPercentage}%)`}&nbsp;
+          {' '}{withoutDiscount}
         </div>
       </div>
     );
@@ -283,6 +284,26 @@ export class CartItem extends PureComponent {
         {basePrice === row_total || !basePrice ? withoutDiscount : withDiscount}
       </div>
     );
+  }
+
+  renderClickAndCollectStoreName() {
+    const {
+      item: {
+        availableQty
+      }
+    } = this.props;
+
+    const { isArabic } = this.state;
+
+    if(availableQty?.click_to_collect_store) {
+      return (
+        <div block="CartPageItem" elem="ClickAndCollect" mods={{ isArabic }} mods={{ isArabic }}>
+          <div block="CartPageItem-ClickAndCollect" elem="icon"><Store /></div>
+          <div block="CartPageItem-ClickAndCollect" elem="StoreName">{ availableQty?.click_to_collect_store_name}</div>
+        </div>
+      );
+    }
+    return null;
   }
 
   renderColSizeQty() {
@@ -343,7 +364,14 @@ export class CartItem extends PureComponent {
         {this.renderProductOptions(bundle_options)}
         {this.renderProductConfigurations()}
         {this.renderColSizeQty()}
-        {isNotAvailble ? null : this.renderProductPrice()}
+        {   
+          !isNotAvailble && (
+            <>
+              { this.renderProductPrice() }
+              { this.renderClickAndCollectStoreName() }
+            </>
+          )
+        }
         {this.renderActions()}
       </figcaption>
     );

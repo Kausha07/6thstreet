@@ -1,15 +1,13 @@
-import { PureComponent } from "react";
-
 import Image from "Component/Image";
 import Link from "Component/Link";
-import { hideActiveOverlay } from "SourceStore/Overlay/Overlay.action";
 import { MOBILE_MENU_SIDEBAR_ID } from "Component/MobileMenuSideBar/MoblieMenuSideBar.config";
+import { PureComponent } from "react";
+import { hideActiveOverlay } from "SourceStore/Overlay/Overlay.action";
 import {
   CategoryButton,
   CategoryItems,
 } from "Util/API/endpoint/Categories/Categories.type";
 import { isArabic } from "Util/App";
-
 import "./MenuGrid.style";
 
 class MenuGrid extends PureComponent {
@@ -40,7 +38,7 @@ class MenuGrid extends PureComponent {
 
   renderItem = (item, i) => {
     const { image_url, label, link } = item;
-    
+
     if (!link) {
       return null;
     }
@@ -55,9 +53,17 @@ class MenuGrid extends PureComponent {
           .replace("/kids.html", ".html")
           .replace("/home.html", ".html")
       : link;
+    let newUpdatedLink = link.includes("is_new_in")
+      ? link.split("?")[0] + "?is_new_in=1"
+      : link;
 
     return (
-      <Link to={updatedLink} key={i} title={label} onClick={this.onItemClick}>
+      <Link
+        to={newUpdatedLink}
+        key={i}
+        title={label}
+        onClick={this.onItemClick}
+      >
         <Image src={image_url} width="80px" height="80px" ratio="custom" />
         <div block="MenuGrid" elem="ItemLabel">
           {label}
@@ -101,14 +107,9 @@ class MenuGrid extends PureComponent {
       button: { link },
     } = this.props;
 
-    const linkTo = {
-      pathname: link,
-      state: { plp_config: {} },
-    };
-
     return (
       <button block="ViewAll" elem="Button">
-        <Link to={linkTo} onClick={this.hideMenu}>
+        <Link to={link} onClick={this.onItemClick}>
           <span>{__("view all")}</span>
         </Link>
       </button>

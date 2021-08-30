@@ -24,6 +24,7 @@ class Recommendations extends PureComponent {
         product={product}
         key={sku}
         page="plp"
+        pageType="plp"
         qid={qid}
         isVueData={isVueData}
       />

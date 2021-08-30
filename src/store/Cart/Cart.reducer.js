@@ -135,6 +135,7 @@ export const CartReducer = (state = getInitialState(), action) => {
             currency: totals.currency,
             availability: item.availability,
             availableQty: item.available_qty,
+            extension_attributes: item.extension_attributes,
             full_item_info: item,
             processingRequest: false
         };
