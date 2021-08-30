@@ -210,7 +210,7 @@ class PDPSummary extends PureComponent {
 
   renderPDPTags() {
     const {
-      product: { prod_tag_1, prod_tag_2, in_stock,stock_qty },
+      product: { prod_tag_1, prod_tag_2, in_stock, stock_qty },
     } = this.props;
 
     const tags = [prod_tag_1, prod_tag_2].filter(Boolean);
@@ -218,8 +218,7 @@ class PDPSummary extends PureComponent {
     if (tags && tags.length) {
       return (
         <>
-          {in_stock === 0 ||
-            (in_stock === 1 && stock_qty === 0 && <div block="Seperatortop" />)}
+          {in_stock === 0 && <div block="Seperatortop" />}
           <PDPTags tags={tags} />
           <div block="Seperator" />
         </>
