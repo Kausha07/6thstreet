@@ -33,7 +33,7 @@ export const PAYMENTS_DATA = {
     checkout_apple_pay: {
         name: 'apple',
         mod: { apple: true },
-        paragraph: __('checkout'),
+        paragraph:null,
         img: apple
     },
     tabby_checkout: {
