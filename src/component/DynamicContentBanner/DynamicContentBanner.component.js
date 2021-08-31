@@ -71,7 +71,6 @@ class DynamicContentBanner extends PureComponent {
     }
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        console.log("dynamic content banner in view port ", entry);
         this.sendImpressions();
       }
     });
@@ -151,6 +150,7 @@ class DynamicContentBanner extends PureComponent {
     let setRef = (el) => {
       this.viewElement = el;
     };
+
     return (
       <div ref={setRef} block="DynamicContentBanner">
         {this.props.header && (

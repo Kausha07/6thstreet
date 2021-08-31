@@ -1,5 +1,6 @@
 import { PureComponent } from "react";
 import Config from "./LiveExperience.config";
+import { getQueryParam } from "Util/Url";
 
 export class LiveExperience extends PureComponent {
   constructor(props) {
@@ -19,6 +20,8 @@ export class LiveExperience extends PureComponent {
   }
 
   renderLiveParty = () => {
+    const isStaging =
+      getQueryParam("isStaging", location) === "true" ? true : false;
     const spck = {
       storeId: Config.storeId,
       storeType: "sixthstreet",
@@ -41,6 +44,8 @@ export class LiveExperience extends PureComponent {
     }, 2000);
   };
   renderUpcomingParty = () => {
+    const isStaging =
+      getQueryParam("isStaging", location) === "true" ? true : false;
     const spck = {
       storeId: Config.storeId,
 
@@ -68,6 +73,8 @@ export class LiveExperience extends PureComponent {
   };
 
   renderArchivedParty = () => {
+    const isStaging =
+      getQueryParam("isStaging", location) === "true" ? true : false;
     const spck = {
       storeId: Config.storeId,
 
@@ -99,12 +106,14 @@ export class LiveExperience extends PureComponent {
       <div>
         <div block="Container">
           <div id="single"></div>
-          { !this.props.broadcastId && <div>
-            <h1 block="Container" elem="Title">
-              {__("COMING NEXT")}
-            </h1>
-            <div id="live"></div>
-          </div> }
+          {!this.props.broadcastId && (
+            <div>
+              <h1 block="Container" elem="Title">
+                {__("COMING NEXT")}
+              </h1>
+              <div id="live"></div>
+            </div>
+          )}
           <div>
             <h1 block="Container" elem="Title">
               {__("RECENTLY PLAYED")}
@@ -116,6 +125,5 @@ export class LiveExperience extends PureComponent {
     );
   }
 }
-
 
 export default LiveExperience;

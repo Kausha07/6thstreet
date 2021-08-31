@@ -68,11 +68,9 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
     observer.observe(this.viewElement);
   }
   sendImpressions() {
-    // setTimeout(() => {
     const { items = [] } = this.props;
     Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
     this.setState({ impressionSent: true });
-    // }, 100);
   }
   handleIntersect = (entries, observer) => {
     const { impressionSent } = this.state;
@@ -81,7 +79,6 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
     }
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        console.log("full width slider item component in view port ", entry);
         this.sendImpressions();
       }
     });

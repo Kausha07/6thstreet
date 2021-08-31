@@ -41,13 +41,79 @@ class DynamicContentSliderWithLabel extends PureComponent {
       startX: 0,
       scrollLeft: 0,
       isArabic: isArabic(),
+      settings: {
+        lazyload: true,
+        nav: false,
+        mouseDrag: true,
+        touch: true,
+        controlsText: ["&#x27E8", "&#x27E9"],
+        gutter: 8,
+        loop: false,
+        responsive: {
+          1024: {
+            items: 5,
+            gutter: 25,
+          },
+          420: {
+            items: 5,
+          },
+          300: {
+            items: 2.3,
+          },
+        },
+      },
       impressionSent: false,
     };
   }
 
   componentDidMount() {
+    if (this.props.items.length < 8) {
+      let setting = JSON.parse(JSON.stringify(this.state.settings));
+      setting.responsive[1024].items = this.props.items.length;
+      this.setState((prevState) => ({
+        ...prevState,
+        settings: {
+          ...prevState.settings,
+          responsive: {
+            ...prevState.settings.responsive,
+            1024: {
+              ...prevState.settings.responsive[1024],
+              items: this.props.items.length,
+            },
+          },
+        },
+      }));
+    }
     this.registerViewPortEvent();
   }
+  registerViewPortEvent() {
+    let observer;
+
+    let options = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.5,
+    };
+
+    observer = new IntersectionObserver(this.handleIntersect, options);
+    observer.observe(this.viewElement);
+  }
+  sendImpressions() {
+    const { items = [] } = this.props;
+    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
+    this.setState({ impressionSent: true });
+  }
+  handleIntersect = (entries, observer) => {
+    const { impressionSent } = this.state;
+    if (impressionSent) {
+      return;
+    }
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        this.sendImpressions();
+      }
+    });
+  };
 
   registerViewPortEvent() {
     let observer;
@@ -210,17 +276,11 @@ class DynamicContentSliderWithLabel extends PureComponent {
   }
 
   render() {
-    const { isArabic } = this.state;
     let setRef = (el) => {
       this.viewElement = el;
     };
-
     return (
-      <div
-        ref={setRef}
-        block="DynamicContentSliderWithLabel"
-        mods={{ isArabic }}
-      >
+      <div ref={setRef} block="DynamicContentSliderWithLabel">
         {this.props.header && (
           <DynamicContentHeader header={this.props.header} />
         )}
