@@ -15,7 +15,7 @@ export const mapStateToProps = (state) => ({
   country: state.AppState.country,
 });
 
-class DynamicContentVueProductSliderItem extends PureComponent {
+class RecommendedForYouVueSliderItem extends PureComponent {
   static propTypes = {
     country: PropTypes.string.isRequired,
     data: PropTypes.object.isRequired,
@@ -209,7 +209,4 @@ class DynamicContentVueProductSliderItem extends PureComponent {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  null
-)(DynamicContentVueProductSliderItem);
+export default connect(mapStateToProps, null)(RecommendedForYouVueSliderItem);
