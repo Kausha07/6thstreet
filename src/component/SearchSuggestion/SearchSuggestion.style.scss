@@ -567,8 +567,7 @@
 }
 
 .isSuggestionOpen {
-  // position: fixed;
-  // scrollbar-width: none
+  overflow: hidden;
 }
 
 .text-capitalize {
