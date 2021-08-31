@@ -5,7 +5,7 @@ import React, { PureComponent } from "react";
 import { isArabic } from "Util/App";
 import { getUUID } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
-import { VUE_CAROUSEL_SHOW } from "Util/Event";
+import { VUE_CAROUSEL_SHOW, VUE_CAROUSEL_SWIPE } from "Util/Event";
 import RecommendedForYouVueSliderItem from "./RecommendedForYouVueSlider.Item";
 import "./RecommendedForYouVueSlider.style.scss";
 
@@ -52,36 +52,40 @@ class RecommendedForYouVueSlider extends PureComponent {
     });
   }
   async handleContainerScroll(widgetID, event) {
-    // const target = event.nativeEvent.target;
-    // this.scrollerRef.current.scrollLeft = target.scrollLeft;
-    // let width = 0;
-    // if (screen.width > 1024) {
-    //   width = 245;
-    // } else {
-    //   width = 220;
-    // }
-    // let index = Math.floor(target.scrollLeft / width);
-    // if (this.indexRef.current !== index) {
-    //   this.indexRef.current = index;
-    //   const productsToRender = this.getProducts();
-    //   let sourceProdID = productsToRender?.[index]?.sku;
-    //   let sourceCatgID = productsToRender?.[index]?.category;
-    //   const locale = VueIntegrationQueries.getLocaleFromUrl();
-    //   VueIntegrationQueries.vueAnalayticsLogger({
-    //     event_name: VUE_CAROUSEL_SWIPE,
-    //     params: {
-    //       event: VUE_CAROUSEL_SWIPE,
-    //       pageType: "search",
-    //       currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-    //       clicked: Date.now(),
-    //       uuid: getUUID(),
-    //       referrer: "desktop",
-    //       sourceProdID: sourceProdID,
-    //       sourceCatgID: sourceCatgID,
-    //       widgetID: widgetID,
-    //     },
-    //   });
-    // }
+    const { isArabic } = this.state;
+    const { pageType = "home" } = this.props;
+    const target = event.nativeEvent.target;
+    this.scrollerRef.current.scrollLeft = isArabic
+      ? Math.abs(target.scrollLeft)
+      : target.scrollLeft;
+    let width = 0;
+    if (screen.width > 1024) {
+      width = 245;
+    } else {
+      width = 220;
+    }
+    let index = Math.floor(Math.abs(target.scrollLeft) / width);
+    if (this.indexRef.current !== index) {
+      this.indexRef.current = index;
+      const productsToRender = this.getProducts();
+      let sourceProdID = productsToRender?.[index]?.sku;
+      let sourceCatgID = productsToRender?.[index]?.category;
+      const locale = VueIntegrationQueries.getLocaleFromUrl();
+      VueIntegrationQueries.vueAnalayticsLogger({
+        event_name: VUE_CAROUSEL_SWIPE,
+        params: {
+          event: VUE_CAROUSEL_SWIPE,
+          pageType: "search",
+          currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+          clicked: Date.now(),
+          uuid: getUUID(),
+          referrer: "desktop",
+          sourceProdID: sourceProdID,
+          sourceCatgID: sourceCatgID,
+          widgetID: widgetID,
+        },
+      });
+    }
   }
 
   getProducts = () => {
@@ -92,18 +96,6 @@ class RecommendedForYouVueSlider extends PureComponent {
     }
     return [...products];
   };
-
-  viewAllBtn() {
-    const { withViewAll } = this.props;
-    if (withViewAll) {
-      return (
-        <div block="VueProductSlider" elem="ViewAllBtn">
-          <span>{"View All"}</span>
-        </div>
-      );
-    }
-    return null;
-  }
 
   renderHeader() {
     const { heading } = this.props;
@@ -117,7 +109,7 @@ class RecommendedForYouVueSlider extends PureComponent {
   handleScroll = (event) => {
     const target = event.nativeEvent.target;
     const prentComponent = [...this.cmpRef.current.childNodes].filter(
-      (node) => node.id == "ScrollWrapper"
+      (node) => node.id == "RecommendedScrollWrapper"
     )[0];
     prentComponent.scrollLeft = target.scrollLeft;
   };
@@ -160,18 +152,21 @@ class RecommendedForYouVueSlider extends PureComponent {
       </div>
     );
   };
+
   renderSliderContainer() {
     const items = this.getProducts();
     const { isHome } = this.props;
     const { widgetID } = this.props;
     // debugger
     return (
-      <DragScroll data={{ rootClass: "ScrollWrapper", ref: this.cmpRef }}>
+      <DragScroll
+        data={{ rootClass: "RecommendedScrollWrapper", ref: this.cmpRef }}
+      >
         <>
           <div
             block="VueProductSlider"
             elem="SliderContainer"
-            id="ScrollWrapper"
+            id="RecommendedScrollWrapper"
             ref={this.cmpRef}
             mods={{ isHome }}
             onScroll={(e) => {
@@ -187,6 +182,7 @@ class RecommendedForYouVueSlider extends PureComponent {
                   data={item}
                   ref={this.itemRef}
                   widgetID={widgetID}
+                  pageType="search"
                 />
               );
             })}
@@ -199,8 +195,16 @@ class RecommendedForYouVueSlider extends PureComponent {
   }
 
   render() {
+    let setRef = (el) => {
+      this.viewElement = el;
+    };
     return (
-      <div block="VueProductSlider" elem="Container">
+      <div
+        ref={setRef}
+        id="productSlider"
+        block="VueProductSlider"
+        elem="Container"
+      >
         {this.renderHeader()}
         {this.renderSliderContainer()}
       </div>
