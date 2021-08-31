@@ -19,7 +19,7 @@ import { isArabic } from "Util/App";
 import { isSignedIn } from "Util/Auth";
 import Spinner from "react-spinkit";
 import "./CheckoutBilling.extended.style";
-import Applepay from "./icons/apple-pay.png";
+import Applepay from "./icons/apple.png";
 
 export class CheckoutBilling extends SourceCheckoutBilling {
   static propTypes = {
