@@ -6,6 +6,11 @@ import Link from "Component/Link";
 import { formatCDNLink } from "Util/Url";
 
 import "./DynamicContentMainBanner.style";
+import Event from "Util/Event";
+import {
+  HOME_PAGE_BANNER_IMPRESSIONS,
+  HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
+} from "Component/GoogleTagManager/events/BannerImpression.event";
 
 class DynamicContentMainBanner extends PureComponent {
   static propTypes = {
@@ -58,6 +63,12 @@ class DynamicContentMainBanner extends PureComponent {
       }
     });
   };
+  onclick = (item) => {
+    this.sendBannerClickImpression(item);
+  };
+  sendBannerClickImpression(item) {
+    Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);
+  }
 
   renderImage(item, i) {
     const {
@@ -73,7 +84,13 @@ class DynamicContentMainBanner extends PureComponent {
     }
 
     return (
-      <Link to={formatCDNLink(link)} key={i}>
+      <Link
+        to={formatCDNLink(link)}
+        onClick={() => {
+          this.onclick(item);
+        }}
+        key={i}
+      >
         <Image src={url} ratio="custom" height="auto" />
       </Link>
     );
