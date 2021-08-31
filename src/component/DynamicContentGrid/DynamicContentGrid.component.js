@@ -58,7 +58,6 @@ class DynamicContentGrid extends PureComponent {
   sendImpressions() {
     const { items = [] } = this.props;
     Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
-    console.log("grid component in view port sent ", items);
     this.setState({ impressionSent: true });
   }
   handleIntersect = (entries, observer) => {
@@ -68,7 +67,6 @@ class DynamicContentGrid extends PureComponent {
     }
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        console.log("grid component in view port ", entry);
         this.sendImpressions();
       }
     });
