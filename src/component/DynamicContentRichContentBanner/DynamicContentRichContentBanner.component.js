@@ -123,7 +123,7 @@ class DynamicContentRichContentBanner extends PureComponent {
     return (
       <div block="CircleSlider" key={i}>
         <Link
-          to={linkTo}
+          to={formatCDNLink(item.button.link)}
           key={i}
           data-banner-type="richContentBanner"
           data-promotion-name={item.promotion_name ? item.promotion_name : ""}
@@ -163,6 +163,9 @@ class DynamicContentRichContentBanner extends PureComponent {
               to={formatCDNLink(item.button.link)}
               className="Label-Button"
               data-banner-type="Label-Button"
+              onClick={() => {
+                this.onclick(item);
+              }}
             >
               {item.button.label}
             </Link>
