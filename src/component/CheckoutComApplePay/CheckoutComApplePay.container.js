@@ -72,7 +72,7 @@ class CheckoutComApplePayContainer extends PureComponent {
 
     this.state = {
       isApplePayAvailable: !!window.ApplePaySession,
-      applePayDisabled: false,
+      applePayDisabled: true,
       isLoading: true,
       merchant_id: null,
       supported_networks: null,
@@ -199,9 +199,7 @@ class CheckoutComApplePayContainer extends PureComponent {
       default_title,
       placeOrder,
     } = this.props;
-    console.log("apple pay events props", this.props)
     applePaySession.onvalidatemerchant = (event) => {
-      console.log("validation URL",event.validationURL )
       const promise = this._performValidation(event.validationURL);
 
       promise
@@ -265,12 +263,10 @@ class CheckoutComApplePayContainer extends PureComponent {
     };
 
     applePaySession.onpaymentauthorized = (event) => {
-      console.log("apple pay token", event.payment.token)
       tokenize({
         type: "applepay",
         token_data: event.payment.token.paymentData,
       }).then((response) => {
-        console.log("tokenization response", response)
         if (response && response.token) {
           const data = {
             source: {
@@ -287,9 +283,6 @@ class CheckoutComApplePayContainer extends PureComponent {
               udf1: null,
             },
           };
-          console.log("place order data", data)
-          console.log("success session status", window.ApplePaySession.STATUS_SUCCESS)
-          console.log("failure session status", window.ApplePaySession.STATUS_FAILURE)
           placeOrder(CHECKOUT_APPLE_PAY, data).then(() => applePaySession.completePayment(window.ApplePaySession.STATUS_SUCCESS)).catch(err => {
             applePaySession.completePayment(window.ApplePaySession.STATUS_FAILURE);
           })

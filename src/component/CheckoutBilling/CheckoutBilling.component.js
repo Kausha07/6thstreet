@@ -30,7 +30,13 @@ export class CheckoutBilling extends SourceCheckoutBilling {
     processingPaymentSelectRequest: PropTypes.bool,
     processApplePay: PropTypes.bool,
     placeOrder: PropTypes.func,
-    isClickAndCollect: PropTypes.bool.isRequired
+    isClickAndCollect: PropTypes.bool.isRequired,
+    isLoading: PropTypes.bool,
+    applePayDisabled: PropTypes.bool,
+    launchPaymentMethod: PropTypes.func.isRequired,
+    requestConfig: PropTypes.func.isRequired,
+    handleApplePayButtonClick: PropTypes.func.isRequired,
+    button_style: PropTypes.string
   };
 
   static defaultProps = {
@@ -38,8 +44,28 @@ export class CheckoutBilling extends SourceCheckoutBilling {
     processApplePay: true,
     processingPaymentSelectRequest: false,
     placeOrder: () => {},
+    isLoading: false,
+    applePayDisabled: true,
+    button_style: ''
   };
 
+  componentDidMount() {
+    const { termsAreEnabled } = this.props;
+    if (!termsAreEnabled) {
+        this.setState({ isOrderButtonEnabled: true });
+    }
+}
+componentDidUpdate(prevProps) {
+  const { paymentMethod } = this.props;
+  const {
+  paymentMethod: prevPaymentMethod 
+  } = prevProps;
+  if(prevPaymentMethod !== paymentMethod && paymentMethod === CHECKOUT_APPLE_PAY){
+    const { requestConfig, launchPaymentMethod } = this.props;
+
+    requestConfig().then(launchPaymentMethod);
+  }
+}
   state = {
     // isOrderButtonVisible: true,
     // isOrderButtonEnabled: true,
@@ -322,6 +348,9 @@ export class CheckoutBilling extends SourceCheckoutBilling {
       processingPaymentSelectRequest,
       paymentMethod,
       binApplied,
+      applePayDisabled,
+            handleApplePayButtonClick,
+            button_style
     } = this.props;
 
     if (!isOrderButtonVisible) {
@@ -342,14 +371,27 @@ export class CheckoutBilling extends SourceCheckoutBilling {
         {this.renderCreditCardTooltipBar()}
         <div block="Checkout" elem="StickyButtonWrapper">
           {this.renderTotals()}
-          <button
+          {isApplePay? <div block="CheckoutComApplePayPayment" elem="Wrapper">
+                {/* <Loader isLoading={ isLoading } /> */}
+                <button
+                  type="button"
+                  block="CheckoutComApplePayPayment"
+                  elem="Button"
+                  label="Pay with ApplePay"
+                  onClick={ handleApplePayButtonClick }
+                  disabled={ applePayDisabled }
+                  mods={ { button_style } }
+                >
+                    { __('Pay with ApplePay') }
+                </button>
+            </div>:  <button
             type="submit"
             block="Button"
             disabled={
               isDisabled ||
               processingRequest ||
               processingPaymentSelectRequest 
-              // ||isApplePay
+              ||isApplePay
             }
             mix={{
               block: "CheckoutBilling",
@@ -373,7 +415,8 @@ export class CheckoutBilling extends SourceCheckoutBilling {
             ) : (
               this.renderButtonPlaceholder()
             )}
-          </button>
+          </button>}
+         
         </div>
       </>
     );
