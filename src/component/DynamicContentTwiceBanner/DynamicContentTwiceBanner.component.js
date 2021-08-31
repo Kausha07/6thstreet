@@ -8,7 +8,10 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import { formatCDNLink } from "Util/Url";
 import "./DynamicContentTwiceBanner.style";
 import Event from "Util/Event";
-import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
+import {
+  HOME_PAGE_BANNER_IMPRESSIONS,
+  HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
+} from "Component/GoogleTagManager/events/BannerImpression.event";
 
 class DynamicContentTwiceBanner extends PureComponent {
   state = {
@@ -59,6 +62,13 @@ class DynamicContentTwiceBanner extends PureComponent {
       }
     });
   };
+  onclick = (item) => {
+    this.sendBannerClickImpression(item);
+  };
+
+  sendBannerClickImpression(item) {
+    Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);
+  }
 
   renderImage = (item, isTwiceBanner) => {
     const { typeOfBanner } = this.props;

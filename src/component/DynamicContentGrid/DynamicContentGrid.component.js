@@ -10,7 +10,10 @@ import isMobile from "Util/Mobile";
 import { formatCDNLink } from "Util/Url";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import "./DynamicContentGrid.style";
-import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
+import {
+  HOME_PAGE_BANNER_IMPRESSIONS,
+  HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
+} from "Component/GoogleTagManager/events/BannerImpression.event";
 
 class DynamicContentGrid extends PureComponent {
   static propTypes = {
@@ -55,7 +58,6 @@ class DynamicContentGrid extends PureComponent {
   sendImpressions() {
     const { items = [] } = this.props;
     Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
-    console.log("grid component in view port sent ", items);
     this.setState({ impressionSent: true });
   }
   handleIntersect = (entries, observer) => {
@@ -65,7 +67,6 @@ class DynamicContentGrid extends PureComponent {
     }
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        console.log("grid component in view port ", entry);
         this.sendImpressions();
       }
     });
@@ -76,7 +77,11 @@ class DynamicContentGrid extends PureComponent {
       promotion_name: item.promotion_name,
     };
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
+    this.sendBannerClickImpression(item);
   };
+  sendBannerClickImpression(item) {
+    Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);
+  }
 
   renderItem = (item, i) => {
     const { link, url } = item;

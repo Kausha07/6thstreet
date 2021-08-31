@@ -8,7 +8,10 @@ import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
 // import VueIntegrationQueries from "Query/vueIntegration.query";
 // import { getUUID } from "Util/Auth";
 import "./DynamicContentFullWidthBannerSlider.style";
-import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
+import {
+  HOME_PAGE_BANNER_IMPRESSIONS,
+  HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
+} from "Component/GoogleTagManager/events/BannerImpression.event";
 
 const settings = {
   lazyload: true,
@@ -65,11 +68,9 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
     observer.observe(this.viewElement);
   }
   sendImpressions() {
-    // setTimeout(() => {
     const { items = [] } = this.props;
     Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
     this.setState({ impressionSent: true });
-    // }, 100);
   }
   handleIntersect = (entries, observer) => {
     const { impressionSent } = this.state;
@@ -78,7 +79,6 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
     }
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        console.log("full width slider item component in view port ", entry);
         this.sendImpressions();
       }
     });
@@ -92,7 +92,11 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
       promotion_name: item.promotion_name,
     };
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
+    this.sendBannerClickImpression(item);
   };
+  sendBannerClickImpression(item) {
+    Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);
+  }
 
   renderSlide = (item, i) => {
     const { link, label, url: image_url, plp_config } = item;
