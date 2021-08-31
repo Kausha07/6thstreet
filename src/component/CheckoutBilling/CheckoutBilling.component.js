@@ -19,6 +19,7 @@ import { isArabic } from "Util/App";
 import { isSignedIn } from "Util/Auth";
 import Spinner from "react-spinkit";
 import "./CheckoutBilling.extended.style";
+import Applepay from "./icons/apple.png";
 
 export class CheckoutBilling extends SourceCheckoutBilling {
   static propTypes = {
@@ -381,8 +382,10 @@ componentDidUpdate(prevProps) {
                   onClick={ handleApplePayButtonClick }
                   disabled={ applePayDisabled }
                   mods={ { button_style } }
-                >
-                    { __('Pay with ApplePay') }
+                ><div>
+                    { __('Buy with ') }           
+                </div>
+                    <img block="CheckoutComApplePayPayment" elem="icon" mods={ { button_style } } src={Applepay} alt="Apple Pay" />
                 </button>
             </div>:  <button
             type="submit"

@@ -165,7 +165,7 @@ class PDPGallery extends PureComponent {
     return (
       <Slider
         activeImage={currentIndex}
-        onActiveImageChange={onSliderChange}
+        onActiveImageChange={this.onSlideChange}
         mix={{ block: "PDPGallery", elem: "Slider" }}
         isInteractionDisabled={!isMobile.any()}
         showCrumbs={isMobile.any()}
@@ -221,6 +221,33 @@ class PDPGallery extends PureComponent {
       });
     }
   }
+
+  onSlideChange = (activeSlide) => {
+    const { gallery, onSliderChange, prod_360_video, prod_style_video } =
+      this.props;
+    const { isVideoPlaying } = this.state;
+    if (activeSlide <= gallery.length - 1) {
+      // stop the video
+      if (isVideoPlaying?.current) {
+        isVideoPlaying.current.pause();
+        isVideoPlaying.current.currentTime = 0;
+      }
+      this.setState({ isVideoPlaying: false });
+      onSliderChange(activeSlide);
+    } else if (activeSlide > gallery.length - 1) {
+      // play the video
+      if (!(prod_360_video || prod_style_video) || !isMobile.any()) {
+        return null;
+      }
+      if (prod_360_video) {
+        this.playVideo("prod_360_video");
+      } else if (prod_style_video) {
+        this.playVideo("prod_style_video");
+      } else {
+        onSliderChange(activeSlide);
+      }
+    }
+  };
 
   stopVideo() {
     const { isVideoPlaying } = this.state;

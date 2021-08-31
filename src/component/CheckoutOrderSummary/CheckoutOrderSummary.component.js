@@ -216,7 +216,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
               getDiscountFromTotals(totals, "clubapparel"),
               __("Club Apparel Redemption")
             )}
-            {couponCode && this.renderPriceLine(discount, __("Discount")) }
+            {(couponCode || discount) && this.renderPriceLine(discount, __("Discount")) }
 
 
             {this.renderPriceLine(
