@@ -144,6 +144,10 @@ class RecommendedForYouVueSliderItem extends PureComponent {
       widgetID,
     } = this.props;
     const { isArabic } = this.state;
+    let newLink = link;
+    if (this.props.data.url) {
+      newLink = this.props.data.url;
+    }
     return (
       <div
         block="VueProductSlider"
@@ -154,7 +158,7 @@ class RecommendedForYouVueSliderItem extends PureComponent {
         ref={this.childRef}
       >
         <Link
-          to={link ? link : url}
+          to={newLink.split("?_ga")[0]}
           data-banner-type="vueSlider"
           block="VueProductSlider-Link"
           onClick={() => {
