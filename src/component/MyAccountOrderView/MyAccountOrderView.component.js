@@ -455,10 +455,16 @@ class MyAccountOrderView extends PureComponent {
       order: {
         payment: {
           cc_type,
-          cc_last_4,
+          // cc_last_4,
+          additional_information : {
+            source : {
+              last4
+            }
+          }
         },
       },
     } = this.props;
+    
     return (
       <div block="MyAccountOrderView" elem="CardPaymentType">
         <div block="MyAccountOrderView" elem="TypeLogo">
@@ -472,7 +478,8 @@ class MyAccountOrderView extends PureComponent {
             <div />
           </div>
           <div block="MyAccountOrderView" elem="Number-Value">
-            {cc_last_4}
+            {/* {cc_last_4} */}
+            {last4 ? last4 : ''}
           </div>
         </div>
       </div>

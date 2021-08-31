@@ -12,7 +12,7 @@
   &-Wrapper {
     @include desktop {
       display: flex;
-      grid-gap: 50px;
+      // grid-gap: 50px;
     }
   }
 
@@ -33,12 +33,14 @@
 
     @include desktop {
       width: 100%;
+      margin-left: 50px;
     }
 
     &_isArabic {
       @include after-mobile {
         padding-left: 0;
-        padding-right: 105px;
+        padding-right: 50px;
+        margin-left: 0px;
       }
     }
   }

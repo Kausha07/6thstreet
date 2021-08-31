@@ -227,6 +227,10 @@ class PDPAddToCart extends PureComponent {
     );
   }
 
+  capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
   getSizeSelect() {
     const {
       product,
@@ -255,7 +259,11 @@ class PDPAddToCart extends PureComponent {
       );
     }
 
-    return <span id="notavailable">{__("Out of stock")}</span>;
+    return (
+      <span id="notavailable">
+        {this.capitalizeFirstLetter(`${__("out of stock")}`)}
+      </span>
+    );
   }
 
   renderSizeInfo() {
@@ -516,14 +524,14 @@ class PDPAddToCart extends PureComponent {
       isOutOfStock,
     } = this.props;
     if (in_stock === 0 && !isOutOfStock && !notifyMeSuccess) {
-      return <span id="notavailable">{__("Out of stock")}</span>;
+      return <span id="notavailable">{this.capitalizeFirstLetter(`${__("out of stock")}`)}</span>;
     } else if (
       in_stock === 1 &&
       stock_qty === 0 &&
       !isOutOfStock &&
       !notifyMeSuccess
     ) {
-      return <span id="notavailable">{__("Out of stock")}</span>;
+      return <span id="notavailable">{this.capitalizeFirstLetter(`${__("out of stock")}`)}</span>;
     }
     return null;
   }

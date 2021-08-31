@@ -5,7 +5,7 @@ import React, { PureComponent } from "react";
 import { isArabic } from "Util/App";
 import { getUUID } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
-import { VUE_CAROUSEL_SHOW, VUE_CAROUSEL_SWIPE } from "Util/Event";
+import { VUE_CAROUSEL_SHOW } from "Util/Event";
 import RecommendedForYouVueSliderItem from "./RecommendedForYouVueSlider.Item";
 import "./RecommendedForYouVueSlider.style.scss";
 
@@ -52,36 +52,36 @@ class RecommendedForYouVueSlider extends PureComponent {
     });
   }
   async handleContainerScroll(widgetID, event) {
-    const target = event.nativeEvent.target;
-    this.scrollerRef.current.scrollLeft = target.scrollLeft;
-    let width = 0;
-    if (screen.width > 1024) {
-      width = 245;
-    } else {
-      width = 220;
-    }
-    let index = Math.floor(target.scrollLeft / width);
-    if (this.indexRef.current !== index) {
-      this.indexRef.current = index;
-      const productsToRender = this.getProducts();
-      let sourceProdID = productsToRender?.[index]?.sku;
-      let sourceCatgID = productsToRender?.[index]?.category;
-      const locale = VueIntegrationQueries.getLocaleFromUrl();
-      VueIntegrationQueries.vueAnalayticsLogger({
-        event_name: VUE_CAROUSEL_SWIPE,
-        params: {
-          event: VUE_CAROUSEL_SWIPE,
-          pageType: "search",
-          currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-          clicked: Date.now(),
-          uuid: getUUID(),
-          referrer: "desktop",
-          sourceProdID: sourceProdID,
-          sourceCatgID: sourceCatgID,
-          widgetID: widgetID,
-        },
-      });
-    }
+    // const target = event.nativeEvent.target;
+    // this.scrollerRef.current.scrollLeft = target.scrollLeft;
+    // let width = 0;
+    // if (screen.width > 1024) {
+    //   width = 245;
+    // } else {
+    //   width = 220;
+    // }
+    // let index = Math.floor(target.scrollLeft / width);
+    // if (this.indexRef.current !== index) {
+    //   this.indexRef.current = index;
+    //   const productsToRender = this.getProducts();
+    //   let sourceProdID = productsToRender?.[index]?.sku;
+    //   let sourceCatgID = productsToRender?.[index]?.category;
+    //   const locale = VueIntegrationQueries.getLocaleFromUrl();
+    //   VueIntegrationQueries.vueAnalayticsLogger({
+    //     event_name: VUE_CAROUSEL_SWIPE,
+    //     params: {
+    //       event: VUE_CAROUSEL_SWIPE,
+    //       pageType: "search",
+    //       currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+    //       clicked: Date.now(),
+    //       uuid: getUUID(),
+    //       referrer: "desktop",
+    //       sourceProdID: sourceProdID,
+    //       sourceCatgID: sourceCatgID,
+    //       widgetID: widgetID,
+    //     },
+    //   });
+    // }
   }
 
   getProducts = () => {
