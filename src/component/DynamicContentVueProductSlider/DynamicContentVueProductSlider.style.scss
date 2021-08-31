@@ -77,7 +77,8 @@
 
   &-SliderContainer {
     width: 100%;
-    overflow: auto;
+    overflow-x: auto;
+    overflow-y: hidden;
     white-space: nowrap;
     scrollbar-width: none;
 
