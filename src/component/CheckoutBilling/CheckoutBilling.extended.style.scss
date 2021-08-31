@@ -232,18 +232,38 @@
 }
 .CheckoutComApplePayPayment-Wrapper {
   margin-top: 20px;
+ 
+  .CheckoutComApplePayPayment-icon {
+    width: 50px !important;
+    height: 22px !important;
+    margin-left: 5px;
+    &_button_style {
+      &_black {
+          color: white;
+      }
+
+      &_white {
+          color: black;
+      }
+  }
+  }
 
   .CheckoutComApplePayPayment-Button {
       height: 50px;
       margin-bottom: 20px;
       min-width: 100%;
-
+      display: flex;
+      justify-content: center;
+      align-items: center;
       @include desktop {
           min-width: 250px;
       }
 
       &:disabled {
           opacity: .5;
+          .CheckoutComApplePayPayment-icon{
+            opacity: .5;
+          }
       }
 
       &_button_style {
