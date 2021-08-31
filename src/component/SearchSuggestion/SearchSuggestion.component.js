@@ -573,6 +573,7 @@ class SearchSuggestion extends PureComponent {
             products={recommendedForYou}
             heading={__("Recommended for you")}
             key={`DynamicContentVueProductSliderContainer99`}
+            pageType="search"
           />
         </div>
       );

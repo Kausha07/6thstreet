@@ -1,11 +1,12 @@
 import DragScroll from "Component/DragScroll/DragScroll.component";
+import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
 import PropTypes from "prop-types";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import React, { PureComponent } from "react";
 import { isArabic } from "Util/App";
 import { getUUID } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
-import { VUE_CAROUSEL_SHOW } from "Util/Event";
+import Event, { VUE_CAROUSEL_SHOW, VUE_CAROUSEL_SWIPE } from "Util/Event";
 import RecommendedForYouVueSliderItem from "./RecommendedForYouVueSlider.Item";
 import "./RecommendedForYouVueSlider.style.scss";
 
@@ -16,6 +17,7 @@ class RecommendedForYouVueSlider extends PureComponent {
     heading: PropTypes.string.isRequired,
     products: PropTypes.array.isRequired,
     widgetID: PropTypes.string.isRequired,
+    pageType: PropTypes.string.isRequired,
   };
 
   constructor(props) {
@@ -27,13 +29,15 @@ class RecommendedForYouVueSlider extends PureComponent {
     this.state = {
       customScrollWidth: null,
       isArabic: isArabic(),
+      impressionSent: false,
+      eventRegistered: false,
     };
   }
   componentDidMount() {
     if (this.state.customScrollWidth < 0) {
       this.renderScrollbar();
     }
-    const { widgetID } = this.props;
+    const { widgetID, pageType = "home" } = this.props;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     const customer = BrowserDatabase.getItem("customer");
     const userID = customer && customer.id ? customer.id : null;
@@ -41,7 +45,7 @@ class RecommendedForYouVueSlider extends PureComponent {
       event_name: VUE_CAROUSEL_SHOW,
       params: {
         event: VUE_CAROUSEL_SHOW,
-        pageType: "search",
+        pageType: pageType,
         currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),
@@ -50,38 +54,73 @@ class RecommendedForYouVueSlider extends PureComponent {
         userID: userID,
       },
     });
+    this.registerViewPortEvent();
   }
+  componentWillUnmount() {}
+
+  registerViewPortEvent() {
+    let observer;
+    const elem = document.querySelector("#productSlider");
+
+    let options = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.5,
+    };
+
+    observer = new IntersectionObserver(this.handleIntersect, options);
+
+    observer.observe(elem);
+    this.setState({ eventRegistered: true });
+  }
+
+  handleIntersect = (entries, observer) => {
+    const { impressionSent } = this.state;
+    if (impressionSent) {
+      return;
+    }
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        this.sendImpressions();
+      }
+    });
+  };
+
   async handleContainerScroll(widgetID, event) {
-    // const target = event.nativeEvent.target;
-    // this.scrollerRef.current.scrollLeft = target.scrollLeft;
-    // let width = 0;
-    // if (screen.width > 1024) {
-    //   width = 245;
-    // } else {
-    //   width = 220;
-    // }
-    // let index = Math.floor(target.scrollLeft / width);
-    // if (this.indexRef.current !== index) {
-    //   this.indexRef.current = index;
-    //   const productsToRender = this.getProducts();
-    //   let sourceProdID = productsToRender?.[index]?.sku;
-    //   let sourceCatgID = productsToRender?.[index]?.category;
-    //   const locale = VueIntegrationQueries.getLocaleFromUrl();
-    //   VueIntegrationQueries.vueAnalayticsLogger({
-    //     event_name: VUE_CAROUSEL_SWIPE,
-    //     params: {
-    //       event: VUE_CAROUSEL_SWIPE,
-    //       pageType: "search",
-    //       currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-    //       clicked: Date.now(),
-    //       uuid: getUUID(),
-    //       referrer: "desktop",
-    //       sourceProdID: sourceProdID,
-    //       sourceCatgID: sourceCatgID,
-    //       widgetID: widgetID,
-    //     },
-    //   });
-    // }
+    const { isArabic } = this.state;
+    const { pageType = "home" } = this.props;
+    const target = event.nativeEvent.target;
+    this.scrollerRef.current.scrollLeft = isArabic
+      ? Math.abs(target.scrollLeft)
+      : target.scrollLeft;
+    let width = 0;
+    if (screen.width > 1024) {
+      width = 245;
+    } else {
+      width = 220;
+    }
+    let index = Math.floor(Math.abs(target.scrollLeft) / width);
+    if (this.indexRef.current !== index) {
+      this.indexRef.current = index;
+      const productsToRender = this.getProducts();
+      let sourceProdID = productsToRender?.[index]?.sku;
+      let sourceCatgID = productsToRender?.[index]?.category;
+      const locale = VueIntegrationQueries.getLocaleFromUrl();
+      VueIntegrationQueries.vueAnalayticsLogger({
+        event_name: VUE_CAROUSEL_SWIPE,
+        params: {
+          event: VUE_CAROUSEL_SWIPE,
+          pageType: pageType,
+          currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+          clicked: Date.now(),
+          uuid: getUUID(),
+          referrer: "desktop",
+          sourceProdID: sourceProdID,
+          sourceCatgID: sourceCatgID,
+          widgetID: widgetID,
+        },
+      });
+    }
   }
 
   getProducts = () => {
@@ -160,10 +199,22 @@ class RecommendedForYouVueSlider extends PureComponent {
       </div>
     );
   };
+  sendImpressions() {
+    const products = this.getProducts();
+    const items = products.map((item) => {
+      return {
+        id: item.sku,
+        label: item.name,
+      };
+    });
+    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
+    this.setState({ impressionSent: true });
+  }
+
   renderSliderContainer() {
     const items = this.getProducts();
     const { isHome } = this.props;
-    const { widgetID } = this.props;
+    const { widgetID, pageType } = this.props;
     // debugger
     return (
       <DragScroll data={{ rootClass: "ScrollWrapper", ref: this.cmpRef }}>
@@ -187,6 +238,7 @@ class RecommendedForYouVueSlider extends PureComponent {
                   data={item}
                   ref={this.itemRef}
                   widgetID={widgetID}
+                  pageType={pageType}
                 />
               );
             })}
@@ -199,8 +251,16 @@ class RecommendedForYouVueSlider extends PureComponent {
   }
 
   render() {
+    let setRef = (el) => {
+      this.viewElement = el;
+    };
     return (
-      <div block="VueProductSlider" elem="Container">
+      <div
+        ref={setRef}
+        id="productSlider"
+        block="VueProductSlider"
+        elem="Container"
+      >
         {this.renderHeader()}
         {this.renderSliderContainer()}
       </div>
