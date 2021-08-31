@@ -565,8 +565,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     try {
       const response = await createOrder(code, data)
       if (response && response.data) {
-            console.log("payment method code", code)
-            console.log("response in create order api", response)
             const { data } = response;
             if (typeof data === "object") {
               const {
@@ -593,7 +591,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                   BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
                   this.setDetailsStep(order_id, increment_id);
                   this.resetCart();
-                  console.log("apple pay positive response")
                   return true
                 }
                 if (code === CARD && href) {
