@@ -223,7 +223,6 @@ class PDPGallery extends PureComponent {
   }
 
   onSlideChange = (activeSlide) => {
-    console.log({ activeSlide });
     const { gallery, onSliderChange, prod_360_video, prod_style_video } =
       this.props;
     const { isVideoPlaying } = this.state;
@@ -232,13 +231,11 @@ class PDPGallery extends PureComponent {
       if (isVideoPlaying?.current) {
         isVideoPlaying.current.pause();
         isVideoPlaying.current.currentTime = 0;
-        console.log("Pause video");
       }
       this.setState({ isVideoPlaying: false });
       onSliderChange(activeSlide);
     } else if (activeSlide > gallery.length - 1) {
       // play the video
-      console.log("Play Video");
       if (!(prod_360_video || prod_style_video) || !isMobile.any()) {
         return null;
       }
