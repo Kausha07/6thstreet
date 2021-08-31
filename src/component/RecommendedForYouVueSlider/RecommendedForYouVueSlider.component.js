@@ -1,11 +1,12 @@
 import DragScroll from "Component/DragScroll/DragScroll.component";
+import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
 import PropTypes from "prop-types";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import React, { PureComponent } from "react";
 import { isArabic } from "Util/App";
 import { getUUID } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
-import { VUE_CAROUSEL_SHOW, VUE_CAROUSEL_SWIPE } from "Util/Event";
+import Event, { VUE_CAROUSEL_SHOW, VUE_CAROUSEL_SWIPE } from "Util/Event";
 import RecommendedForYouVueSliderItem from "./RecommendedForYouVueSlider.Item";
 import "./RecommendedForYouVueSlider.style.scss";
 
@@ -16,6 +17,7 @@ class RecommendedForYouVueSlider extends PureComponent {
     heading: PropTypes.string.isRequired,
     products: PropTypes.array.isRequired,
     widgetID: PropTypes.string.isRequired,
+    pageType: PropTypes.string.isRequired,
   };
 
   constructor(props) {
@@ -27,13 +29,15 @@ class RecommendedForYouVueSlider extends PureComponent {
     this.state = {
       customScrollWidth: null,
       isArabic: isArabic(),
+      impressionSent: false,
+      eventRegistered: false,
     };
   }
   componentDidMount() {
     if (this.state.customScrollWidth < 0) {
       this.renderScrollbar();
     }
-    const { widgetID } = this.props;
+    const { widgetID, pageType = "home" } = this.props;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     const customer = BrowserDatabase.getItem("customer");
     const userID = customer && customer.id ? customer.id : null;
@@ -41,7 +45,7 @@ class RecommendedForYouVueSlider extends PureComponent {
       event_name: VUE_CAROUSEL_SHOW,
       params: {
         event: VUE_CAROUSEL_SHOW,
-        pageType: "search",
+        pageType: pageType,
         currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),
@@ -50,7 +54,38 @@ class RecommendedForYouVueSlider extends PureComponent {
         userID: userID,
       },
     });
+    this.registerViewPortEvent();
   }
+  componentWillUnmount() {}
+
+  registerViewPortEvent() {
+    let observer;
+    const elem = document.querySelector("#productSlider");
+
+    let options = {
+      root: null,
+      rootMargin: "0px",
+      threshold: 0.5,
+    };
+
+    observer = new IntersectionObserver(this.handleIntersect, options);
+
+    observer.observe(elem);
+    this.setState({ eventRegistered: true });
+  }
+
+  handleIntersect = (entries, observer) => {
+    const { impressionSent } = this.state;
+    if (impressionSent) {
+      return;
+    }
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        this.sendImpressions();
+      }
+    });
+  };
+
   async handleContainerScroll(widgetID, event) {
     const { isArabic } = this.state;
     const { pageType = "home" } = this.props;
@@ -75,7 +110,7 @@ class RecommendedForYouVueSlider extends PureComponent {
         event_name: VUE_CAROUSEL_SWIPE,
         params: {
           event: VUE_CAROUSEL_SWIPE,
-          pageType: "search",
+          pageType: pageType,
           currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
           clicked: Date.now(),
           uuid: getUUID(),
@@ -97,6 +132,18 @@ class RecommendedForYouVueSlider extends PureComponent {
     return [...products];
   };
 
+  viewAllBtn() {
+    const { withViewAll } = this.props;
+    if (withViewAll) {
+      return (
+        <div block="VueProductSlider" elem="ViewAllBtn">
+          <span>{"View All"}</span>
+        </div>
+      );
+    }
+    return null;
+  }
+
   renderHeader() {
     const { heading } = this.props;
     return (
@@ -109,7 +156,7 @@ class RecommendedForYouVueSlider extends PureComponent {
   handleScroll = (event) => {
     const target = event.nativeEvent.target;
     const prentComponent = [...this.cmpRef.current.childNodes].filter(
-      (node) => node.id == "RecommendedScrollWrapper"
+      (node) => node.id == "ScrollWrapper"
     )[0];
     prentComponent.scrollLeft = target.scrollLeft;
   };
@@ -152,21 +199,30 @@ class RecommendedForYouVueSlider extends PureComponent {
       </div>
     );
   };
+  sendImpressions() {
+    const products = this.getProducts();
+    const items = products.map((item) => {
+      return {
+        id: item.sku,
+        label: item.name,
+      };
+    });
+    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
+    this.setState({ impressionSent: true });
+  }
 
   renderSliderContainer() {
     const items = this.getProducts();
     const { isHome } = this.props;
-    const { widgetID } = this.props;
+    const { widgetID, pageType } = this.props;
     // debugger
     return (
-      <DragScroll
-        data={{ rootClass: "RecommendedScrollWrapper", ref: this.cmpRef }}
-      >
+      <DragScroll data={{ rootClass: "ScrollWrapper", ref: this.cmpRef }}>
         <>
           <div
             block="VueProductSlider"
             elem="SliderContainer"
-            id="RecommendedScrollWrapper"
+            id="ScrollWrapper"
             ref={this.cmpRef}
             mods={{ isHome }}
             onScroll={(e) => {
@@ -182,7 +238,7 @@ class RecommendedForYouVueSlider extends PureComponent {
                   data={item}
                   ref={this.itemRef}
                   widgetID={widgetID}
-                  pageType="search"
+                  pageType={pageType}
                 />
               );
             })}
