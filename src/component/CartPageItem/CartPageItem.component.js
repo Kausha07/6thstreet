@@ -430,14 +430,16 @@ export class CartItem extends PureComponent {
     const {
       item: {
         product: { name },
+        full_item_info: { url_key },
       },
       thumbnail,
       isCartPage,
     } = this.props;
     const { isArabic } = this.state;
+    let customURL = `${url_key}.html`;
 
     return (
-      <>
+      <div onClick={() => this.props.history.push(customURL)}>
         <Image
           src={thumbnail}
           mix={{
@@ -449,7 +451,7 @@ export class CartItem extends PureComponent {
           alt={`Product ${name} thumbnail.`}
         />
         <img style={{ display: "none" }} alt={name} src={thumbnail} />
-      </>
+      </div>
     );
   }
 
