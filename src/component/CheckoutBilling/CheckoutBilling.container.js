@@ -619,7 +619,14 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
               udf1: null,
             },
           };
-          placeOrder(CHECKOUT_APPLE_PAY, data).then(() => applePaySession.completePayment(window.ApplePaySession.STATUS_SUCCESS)).catch(err => {
+        placeOrder(CHECKOUT_APPLE_PAY, data).then((res) => {
+          console.log("response", res)
+          if(res){
+            applePaySession.completePayment(window.ApplePaySession.STATUS_SUCCESS)
+          }else{
+            applePaySession.completePayment(window.ApplePaySession.STATUS_FAILURE);
+          }
+        }).catch(err => {
             applePaySession.completePayment(window.ApplePaySession.STATUS_FAILURE);
           })
         }
