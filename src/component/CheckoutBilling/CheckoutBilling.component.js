@@ -341,7 +341,7 @@ componentDidUpdate(prevProps) {
   }
 
   renderActions() {
-    const { isTermsAndConditionsAccepted } = this.state;
+    const { isTermsAndConditionsAccepted, isArabic } = this.state;
     const { isOrderButtonVisible, isOrderButtonEnabled } = this.props;
     const {
       termsAreEnabled,
@@ -372,7 +372,8 @@ componentDidUpdate(prevProps) {
         {this.renderCreditCardTooltipBar()}
         <div block="Checkout" elem="StickyButtonWrapper">
           {this.renderTotals()}
-          {isApplePay? <div block="CheckoutComApplePayPayment" elem="Wrapper">
+          {isApplePay ? 
+          <div block="CheckoutComApplePayPayment" elem="Wrapper">
                 {/* <Loader isLoading={ isLoading } /> */}
                 <button
                   type="button"
@@ -385,9 +386,11 @@ componentDidUpdate(prevProps) {
                 ><div>
                     { __('Buy with ') }           
                 </div>
-                    <img block="CheckoutComApplePayPayment" elem="icon" mods={ { button_style } } src={Applepay} alt="Apple Pay" />
+                    <img block="CheckoutComApplePayPayment" elem="icon" mods={ { button_style , isArabic} } src={Applepay} alt="Apple Pay" />
                 </button>
-            </div>:  <button
+            </div> 
+            :  
+            <button
             type="submit"
             block="Button"
             disabled={
