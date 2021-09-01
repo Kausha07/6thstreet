@@ -671,7 +671,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                 if (error && typeof error === "string") {
                   showErrorNotification(__(error));
                   this.setState({ isLoading: false });
-                  this.resetCart();
+                  if(code === CHECKOUT_APPLE_PAY){
+                    return false
+                  }
+                  this.resetCart();  
                 }
               }
             }
@@ -679,6 +682,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             if (typeof data === "string") {
               showErrorNotification(__(data));
               this.setState({ isLoading: false });
+              if(code === CHECKOUT_APPLE_PAY){
+                return false
+              }
               this.resetCart();
             }
           }
@@ -686,6 +692,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           if (response && typeof response === "string") {
             showErrorNotification(__(response));
             this.setState({ isLoading: false });
+            if(code === CHECKOUT_APPLE_PAY){
+              return false
+            }
             this.resetCart();
           }
     }
