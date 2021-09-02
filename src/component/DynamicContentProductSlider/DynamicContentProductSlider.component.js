@@ -1,5 +1,4 @@
 /* eslint-disable no-constant-condition */
-import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
 import ProductItem from "Component/ProductItem";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
@@ -9,6 +8,7 @@ import Event from "Util/Event";
 import DynamicContentVueProductSliderContainer from "./../DynamicContentVueProductSlider/DynamicContentVueProductSlider.container";
 import { HOME_PAGE_TRANSLATIONS } from "./DynamicContentProductSlider.config";
 import "./DynamicContentProductSlider.style";
+import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
 
 class DynamicContentProductSlider extends PureComponent {
   static propTypes = {
@@ -54,7 +54,6 @@ class DynamicContentProductSlider extends PureComponent {
     }
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        console.log("dynamic product slider component in view port ", entry);
         this.sendImpressions();
       }
     });

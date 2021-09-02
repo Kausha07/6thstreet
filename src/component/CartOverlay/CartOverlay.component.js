@@ -127,16 +127,16 @@ export class CartOverlay extends PureComponent {
     } = this.props;
     const finalDiscount = discount_amount || discount || 0;
 
-    if (!coupon_code) {
+    if (!coupon_code && !discount) {
       return null;
     }
 
     return (
       <dl block="CartOverlay" elem="Discount">
         <dt>
-          {__("Coupon ")}
+          {coupon_code ? __("Coupon ") : __("Discount") }
           <strong block="CartOverlay" elem="DiscountCoupon">
-            {coupon_code.toUpperCase()}
+            {coupon_code ? coupon_code.toUpperCase() : ''}
           </strong>
         </dt>
         <dd>{`-${this.renderPriceLine(Math.abs(finalDiscount))}`}</dd>

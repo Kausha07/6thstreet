@@ -212,7 +212,7 @@ class SearchSuggestion extends PureComponent {
       tempRecentSearches = [...recentSearches.reverse()];
     }
     tempRecentSearches = tempRecentSearches.filter(
-      (item) => item.name !== search
+      (item) => item.name.toUpperCase().trim() !== search.toUpperCase().trim()
     );
     if (tempRecentSearches.length > 4) {
       tempRecentSearches.shift();
@@ -573,6 +573,7 @@ class SearchSuggestion extends PureComponent {
             products={recommendedForYou}
             heading={__("Recommended for you")}
             key={`DynamicContentVueProductSliderContainer99`}
+            pageType="search"
           />
         </div>
       );

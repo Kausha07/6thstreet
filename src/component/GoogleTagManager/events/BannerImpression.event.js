@@ -1,4 +1,7 @@
-import Event, { EVENT_PROMOTION_IMPRESSION } from "Util/Event";
+import Event, {
+  EVENT_PROMOTION_IMPRESSION,
+  EVENT_CLICK_PROMOTION_IMPRESSION,
+} from "Util/Event";
 
 import BaseEvent from "./Base.event";
 
@@ -8,6 +11,8 @@ import BaseEvent from "./Base.event";
  * @type {string}
  */
 export const HOME_PAGE_BANNER_IMPRESSIONS = "HOME_PAGE_BANNER_IMPRESSIONS";
+export const HOME_PAGE_BANNER_CLICK_IMPRESSIONS =
+  "HOME_PAGE_BANNER_CLICK_IMPRESSIONS";
 
 /**
  * Constants
@@ -36,7 +41,10 @@ class BannerImpressionEvent extends BaseEvent {
   bindEvent() {
     // Home
     Event.observer(HOME_PAGE_BANNER_IMPRESSIONS, (impression) => {
-      this.handle(EVENT_PROMOTION_IMPRESSION, impression);
+      this.handle(EVENT_PROMOTION_IMPRESSION, impression, "promoView");
+    });
+    Event.observer(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, (impression) => {
+      this.handle(EVENT_CLICK_PROMOTION_IMPRESSION, impression, "promoClick");
     });
   }
 
@@ -46,7 +54,7 @@ class BannerImpressionEvent extends BaseEvent {
    * @param eventName Unique event id
    * @param impressions banner list
    */
-  handler(EVENT_TYPE, impressions = []) {
+  handler(EVENT_TYPE, impressions = [], promo_key = "promoView") {
     const storage = this.getStorage();
     // if (
     //   !impressions ||
@@ -69,9 +77,9 @@ class BannerImpressionEvent extends BaseEvent {
     storage.impressions = formattedImpressions;
     this.setStorage(storage);
     this.pushEventData({
-      event: "promotionImpression",
+      event: EVENT_TYPE,
       ecommerce: {
-        promoView: {
+        [promo_key]: {
           promotions: formattedImpressions,
         },
       },

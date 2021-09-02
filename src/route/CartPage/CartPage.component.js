@@ -138,11 +138,10 @@ export class CartPage extends PureComponent {
     } = this.props;
     const grandTotal = getFinalPrice(total, currency_code);
     const subTotal = getFinalPrice(subtotal, currency_code);
-
     return (
       <div block="CartPage" elem="OrderTotals">
         <ul>
-          {/* <div block="CartPage" elem="Subtotals">
+          <div block="CartPage" elem="Subtotals">
                         { this.renderPriceLine(subTotal, __('Subtotal')) }
                         { this.renderPriceLine(shipping_fee, __('Shipping fee')) }
                         { this.renderPriceLine(
@@ -153,18 +152,15 @@ export class CartPage extends PureComponent {
                             getDiscountFromTotals(totals, 'clubapparel'),
                             __('Club Apparel Redemption')
                         ) }
-                        { couponCode && this.renderPriceLine(
+                        { (couponCode || discount) && this.renderPriceLine(
                             discount,
-                            __('Discount (%s)', couponCode)
+                            __('Discount')
                         ) }
                         { this.renderPriceLine(
                             getDiscountFromTotals(totals, 'tax'),
                             __('Tax')
                         ) }
-                    </div> */}
-          <div block="CartPage" elem="Totals">
-            {this.renderPriceLine(subTotal, __("Subtotal"), {}, true)}
-          </div>
+                    </div>
         </ul>
       </div>
     );

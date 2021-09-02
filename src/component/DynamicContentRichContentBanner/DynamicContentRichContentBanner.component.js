@@ -12,7 +12,10 @@ import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
 // import VueIntegrationQueries from "Query/vueIntegration.query";
 // import { getUUID } from "Util/Auth";
 import "./DynamicContentRichContentBanner.style";
-import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
+import {
+  HOME_PAGE_BANNER_IMPRESSIONS,
+  HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
+} from "Component/GoogleTagManager/events/BannerImpression.event";
 
 const settings = {
   lazyload: true,
@@ -92,7 +95,12 @@ class DynamicContentRichContentBanner extends PureComponent {
       promotion_name: item.promotion_name,
     };
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
+    this.sendBannerClickImpression(item);
   };
+
+  sendBannerClickImpression(item) {
+    Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);
+  }
 
   renderCircle = (item, i) => {
     const { link, title, image_url, plp_config, width, height } = item;
@@ -115,7 +123,7 @@ class DynamicContentRichContentBanner extends PureComponent {
     return (
       <div block="CircleSlider" key={i}>
         <Link
-          to={linkTo}
+          to={formatCDNLink(item.button.link)}
           key={i}
           data-banner-type="richContentBanner"
           data-promotion-name={item.promotion_name ? item.promotion_name : ""}
@@ -155,6 +163,9 @@ class DynamicContentRichContentBanner extends PureComponent {
               to={formatCDNLink(item.button.link)}
               className="Label-Button"
               data-banner-type="Label-Button"
+              onClick={() => {
+                this.onclick(item);
+              }}
             >
               {item.button.label}
             </Link>

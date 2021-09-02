@@ -201,19 +201,24 @@ export class CheckoutPayments extends SourceCheckoutPayments {
   }
 
   renderApplePayMethods() {
+    const { isClickAndCollect } = this.props;
+    if(isClickAndCollect){
+      return null;
+    }
+  
     const {
-      options: { supported_networks },
+      options: { method_description, method_title },
     } = this.getSelectedMethodData();
-    const { billingAddress, processApplePay, placeOrder,savePaymentInformationApplePay } = this.props;
 
     return (
-      <CheckoutComApplePay
-      savePaymentInformationApplePay={savePaymentInformationApplePay}
-        billingAddress={billingAddress}
-        supported_networks={supported_networks}
-        processApplePay={processApplePay}
-        placeOrder={placeOrder}
-      />
+      <div block="CheckoutPayments" elem="SelectedInfo">
+        <h2 block="CheckoutPayments" elem="MethodTitle">
+          {method_title}
+        </h2>
+        <p block="CheckoutPayments" elem="MethodDiscription">
+          {method_description}
+        </p>
+      </div>
     );
   }
 

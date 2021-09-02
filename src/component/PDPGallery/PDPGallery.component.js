@@ -37,6 +37,7 @@ class PDPGallery extends PureComponent {
     galleryOverlay: "",
     isVideoPlaying: false,
     isArabic: isArabic(),
+    listener: "",
   };
 
   videoRef = {
@@ -165,7 +166,7 @@ class PDPGallery extends PureComponent {
     return (
       <Slider
         activeImage={currentIndex}
-        onActiveImageChange={onSliderChange}
+        onActiveImageChange={this.onSlideChange}
         mix={{ block: "PDPGallery", elem: "Slider" }}
         isInteractionDisabled={!isMobile.any()}
         showCrumbs={isMobile.any()}
@@ -207,29 +208,77 @@ class PDPGallery extends PureComponent {
           gallery.length + parseInt(video?.current.dataset["index"])
         );
         video.current.play();
-        video.current.addEventListener("ended", () => {
+        video.current.addEventListener("ended", listener);
+        this.setState({ listener });
+        // after issue fix can be removed below commented code
+
+        // video.current.addEventListener("ended", () => {
+        //   console.log({ counter });
+        //   counter = counter + 1;
+        //   if (counter <= 2) {
+        //     video.current.play();
+        //   } else {
+        //     onSliderChange(0);
+        //     video.current.removeEventListener("ended");
+        //     this.setState({ isVideoPlaying: false }, () => {
+        //       counter = 1;
+        //     });
+        //   }
+        // });
+        function listener(event) {
           counter = counter + 1;
           if (counter <= 2) {
             video.current.play();
           } else {
             onSliderChange(0);
+            video.current.removeEventListener("ended", listener);
             this.setState({ isVideoPlaying: false }, () => {
               counter = 1;
             });
           }
-        });
+        }
       });
     }
   }
 
+  onSlideChange = (activeSlide) => {
+    const { gallery, onSliderChange, prod_360_video, prod_style_video } =
+      this.props;
+    const { isVideoPlaying, listener } = this.state;
+    if (activeSlide <= gallery.length - 1) {
+      // stop the video
+      if (isVideoPlaying?.current) {
+        isVideoPlaying.current.pause();
+        isVideoPlaying.current.currentTime = 0;
+        isVideoPlaying?.current.removeEventListener("ended", listener);
+      }
+      this.setState({ isVideoPlaying: false });
+      onSliderChange(activeSlide);
+    } else if (activeSlide > gallery.length - 1) {
+      // play the video
+      if (!(prod_360_video || prod_style_video) || !isMobile.any()) {
+        return null;
+      }
+      if (prod_360_video) {
+        this.playVideo("prod_360_video");
+      } else if (prod_style_video) {
+        this.playVideo("prod_style_video");
+      } else {
+        onSliderChange(activeSlide);
+      }
+    }
+  };
+
   stopVideo() {
-    const { isVideoPlaying } = this.state;
+    const { isVideoPlaying, listener } = this.state;
+
     const { onSliderChange } = this.props;
     if (isVideoPlaying?.current) {
       isVideoPlaying.current.pause();
       isVideoPlaying.current.currentTime = 0;
     }
     onSliderChange(0);
+    isVideoPlaying?.current.removeEventListener("ended", listener);
     this.setState({ isVideoPlaying: false });
   }
 

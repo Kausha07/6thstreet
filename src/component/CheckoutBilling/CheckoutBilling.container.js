@@ -21,6 +21,17 @@ import { showPopup } from "Store/Popup/Popup.action";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { FIVE_MINUTES_IN_SECONDS } from "Util/Request/QueryDispatcher";
 import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
+
+import { CHECKOUT_APPLE_PAY } from "Component/CheckoutPayments/CheckoutPayments.config";
+import CheckoutComQuery from "Query/CheckoutCom.query";
+import CartDispatcher from "Store/Cart/Cart.dispatcher";
+import { customerType } from "Type/Account";
+import { TotalsType } from "Type/MiniCart";
+import { tokenize } from "Util/API/endpoint/ApplePay/ApplePay.enpoint";
+import { isSignedIn } from "Util/Auth";
+import Logger from "Util/Logger";
+import { fetchMutation, fetchQuery } from "Util/Request";
+import * as Sentry from "@sentry/react";
 export const mapStateToProps = (state) => ({
   ...sourceMapStateToProps(state),
   processingRequest: state.CartReducer.processingRequest,
@@ -30,6 +41,8 @@ export const mapStateToProps = (state) => ({
   cartId: state.CartReducer.cartId,
   savedCards: state.CreditCardReducer.savedCards,
   newCardVisible: state.CreditCardReducer.newCardVisible,
+  default_title: state.ConfigReducer.default_title,
+  customer: state.MyAccountReducer.customer,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
@@ -43,6 +56,7 @@ export const mapDispatchToProps = (dispatch) => ({
   createTabbySession: (code) =>
     CheckoutDispatcher.createTabbySession(dispatch, code),
   removeBinPromotion: () => CheckoutDispatcher.removeBinPromotion(dispatch),
+  showError: (message) => dispatch(showNotification("error", message)),
 });
 
 export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
@@ -54,12 +68,22 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     setCheckoutCreditCardData: PropTypes.func.isRequired,
     processingRequest: PropTypes.bool.isRequired,
     processingPaymentSelectRequest: PropTypes.bool,
-    isClickAndCollect: PropTypes.bool.isRequired
+    isClickAndCollect: PropTypes.bool.isRequired,
+    merchant_id: PropTypes.string,
+    showError: PropTypes.func.isRequired,
+    supported_networks: PropTypes.arrayOf(PropTypes.string).isRequired,
+    default_title: PropTypes.string,
+    customer: customerType,
+    placeOrder: PropTypes.func,
   };
 
   static defaultProps = {
     ...SourceCheckoutBillingContainer.defaultProps,
     processingPaymentSelectRequest: false,
+    customer: null,
+    default_title: "6th Street",
+    merchant_id: process.env.REACT_APP_CHECKOUT_COM_APPLE_MERCHANT_ID,
+    placeOrder: () => {},
   };
 
   containerFunctions = {
@@ -77,7 +101,33 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     setOrderButtonEnableStatus: this.setOrderButtonEnableStatus.bind(this),
     applyPromotionSavedCard: this.applyPromotionSavedCard.bind(this),
     removePromotionSavedCard: this.removePromotionSavedCard.bind(this),
+    requestConfig: this.requestConfig.bind(this),
+    launchPaymentMethod: this.launchPaymentMethod.bind(this),
+    handleApplePayButtonClick: this.handleApplePayButtonClick.bind(this),
   };
+
+   /**
+   * Constructor
+   * @param props
+   * @param context
+   */
+  constructor(props, context) {
+    super(props, context);
+    const { paymentMethods, customer } = props;
+    const [method] = paymentMethods;
+    const { code: paymentMethod } = method || {};
+    this.state = {
+      isApplePayAvailable: !!window.ApplePaySession,
+      applePayDisabled: true,
+      isLoading: true,
+      merchant_id: null,
+      supported_networks: null,
+      isSameAsShipping: this.isSameShippingAddress(customer),
+      selectedCustomerAddressId: 0,
+      prevPaymentMethods: paymentMethods,
+      paymentMethod
+    };
+  }
 
   conatinerProps = () => {
     const { binModal } = this.props;
@@ -208,12 +258,10 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
   }
 
   async onBillingSuccess(fields, asyncData) {
-    console.log("async data", asyncData)
     const paymentMethod = this._getPaymentData(asyncData);
     const { savePaymentInformation, savedCards, newCardVisible ,showErrorNotification} = this.props;
     const address = this._getAddress(fields);
     const { code } = paymentMethod;
-    console.log("payment method", paymentMethod)
 
     if (code === CARD) {
       if (newCardVisible) {
@@ -367,6 +415,272 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     this.setState({ paymentMethod: code });
     setPaymentCode(code);
   }
+  /**
+   * Get quest quote id
+   * @returns {string}
+   * @private
+   */
+  _getGuestQuoteId = () =>
+    isSignedIn() ? "" : CartDispatcher._getGuestQuoteId();
+
+  /**
+   * Load configuration
+   * @return {Promise<Request>}
+   */
+  requestConfig() {
+    const promise = fetchQuery(CheckoutComQuery.getApplePayConfigQuery());
+
+    promise.then(
+      ({
+        storeConfig: {
+          checkout_com: { apple_pay },
+        },
+      }) => {
+        this.setState({
+          isLoading: false,
+          ...apple_pay,
+        });
+      },
+      () => this.setState({ isLoading: false })
+    );
+
+    return promise;
+  }
+
+  /**
+   * Launch payment method
+   */
+  launchPaymentMethod() {
+    const { showError } = this.props;
+    const { isApplePayAvailable, merchant_id } = this.state;
+
+    if (!isApplePayAvailable) {
+      const missingApplePayMessage =
+        "Apple Pay is not available for this browser.";
+
+      showError(__(missingApplePayMessage));
+      Logger.log(missingApplePayMessage);
+
+      return;
+    }
+
+    new Promise((resolve) => {
+      resolve(
+        window.ApplePaySession.canMakePaymentsWithActiveCard(merchant_id)
+      );
+    })
+      .then((canMakePayments) => {
+        if (canMakePayments) {
+          this.setState({ applePayDisabled: false });
+        } else {
+          const missingApplePayMessage =
+            "Apple Pay is available but not currently active.";
+
+          showError(__(missingApplePayMessage));
+          Logger.log(missingApplePayMessage);
+        }
+      })
+      .catch((error) => {
+        showError(__("Something went wrong!"));
+        Logger.log(error);
+      });
+  }
+
+  /**
+   * Handle apple pay click
+   */
+  handleApplePayButtonClick() {
+    const {savePaymentInformationApplePay} = this.props
+    const {
+      totals: { total, quote_currency_code },
+      default_title,
+      shippingAddress: { country_id: countryCode },
+      shippingAddress
+    } = this.props;
+    const paymentRequest = {
+      countryCode,
+      currencyCode: quote_currency_code,
+      supportedNetworks: this._getSupportedNetworks(),
+      merchantCapabilities: this._getMerchantCapabilities(),
+      total: { label: default_title, amount: total },
+    };
+    savePaymentInformationApplePay({billing_address:shippingAddress, paymentMethod: {code: "checkout_apple_pay"}})
+    const applePaySession = new window.ApplePaySession(1, paymentRequest);
+
+    try {
+      this._addApplePayEvents(applePaySession);
+      applePaySession.begin();
+    } catch (error) {
+      Sentry.captureException(e, function (sendErr, eventId) {
+        // This callback fires once the report has been sent to Sentry
+        if (sendErr) {
+          console.error("Failed to send captured exception to Sentry");
+        } else {
+          console.log("Captured exception and send to Sentry successfully");
+        }
+      });
+    }
+  }
+
+  /**
+   * Add apple pay button events
+   * @param applePaySession
+   */
+  _addApplePayEvents = (applePaySession) => {
+    const {
+      shippingAddress: { email },
+      totals: { total: grand_total },
+      customer: { email: customerEmail },
+      showError,
+      default_title,
+      placeOrder,
+    } = this.props;
+    applePaySession.onvalidatemerchant = (event) => {
+      const promise = this._performValidation(event.validationURL);
+
+      promise
+        .then((response) => {
+          const {
+            verifyCheckoutComApplePay: merchantSession,
+            verifyCheckoutComApplePay: { statusMessage = "" },
+          } = response;
+          if (statusMessage) {
+            showError(__(statusMessage));
+            Logger.log("Cannot validate merchant:", merchantSession);
+
+            return;
+          }
+
+          applePaySession.completeMerchantValidation(merchantSession);
+        })
+        .catch((error) => Logger.log(error));
+    };
+
+    applePaySession.onshippingcontactselected = (event) => {
+      const status = window.ApplePaySession.STATUS_SUCCESS;
+      const newTotal = {
+        type: "final",
+        label: default_title,
+        amount: grand_total,
+      };
+
+      applePaySession.completeShippingContactSelection(
+        status,
+        [],
+        newTotal,
+        this._getLineItems()
+      );
+    };
+
+    applePaySession.onshippingmethodselected = () => {
+      const status = window.ApplePaySession.STATUS_SUCCESS;
+      const newTotal = {
+        type: "final",
+        label: default_title,
+        amount: grand_total,
+      };
+      applePaySession.completeShippingMethodSelection(
+        status,
+        newTotal,
+        this._getLineItems()
+      );
+    };
+
+    applePaySession.onpaymentmethodselected = () => {
+      const newTotal = {
+        type: "final",
+        label: default_title,
+        amount: grand_total,
+      };
+      applePaySession.completePaymentMethodSelection(
+        newTotal,
+        this._getLineItems()
+      );
+    };
+
+    applePaySession.onpaymentauthorized = (event) => {
+      tokenize({
+        type: "applepay",
+        token_data: event.payment.token.paymentData,
+      }).then((response) => {
+        if (response && response.token) {
+          const data = {
+            source: {
+              type: "token",
+              token: response.token,
+            },
+            customer: {
+              email: customerEmail ?? email,
+            },
+            "3ds": {
+              enabled: false,
+            },
+            metadata: {
+              udf1: null,
+            },
+          };
+        placeOrder(CHECKOUT_APPLE_PAY, data).then((res) => {
+          console.log("response", res)
+          if(res){
+            applePaySession.completePayment(window.ApplePaySession.STATUS_SUCCESS)
+          }else{
+            applePaySession.completePayment(window.ApplePaySession.STATUS_FAILURE);
+          }
+        }).catch(err => {
+            applePaySession.completePayment(window.ApplePaySession.STATUS_FAILURE);
+          })
+        }
+      });
+    };
+
+    applePaySession.oncancel = () =>
+      Logger.log("Apple Pay session was cancelled.");
+  };
+
+  /**
+   * Get supported networks
+   * @return {array}
+   */
+  _getSupportedNetworks = () => {
+    const { supported_networks = "" } = this.state;
+
+    return supported_networks.split(",");
+  };
+
+  /**
+   * Get merchant capabilities
+   * @return {array}
+   */
+  _getMerchantCapabilities = () => {
+    const { merchant_capabilities } = this.state;
+    const output = ["supports3DS"];
+    const capabilities = merchant_capabilities.split(",");
+
+    return output.concat(capabilities);
+  };
+
+  /**
+   * Get line items
+   * @returns {*[]}
+   */
+  _getLineItems = () => [];
+
+  /**
+   * Get apple pay validation
+   * @param validationUrl
+   * @returns {Promise<Request>}
+   */
+  _performValidation = (validationUrl) => {
+    this.setState({ isLoading: true });
+    const mutation = CheckoutComQuery.getVerifyCheckoutComApplePayQuery(
+      validationUrl
+    );
+
+    return fetchMutation(mutation).finally(() =>
+      this.setState({ isLoading: false })
+    );
+  };
+
 }
 
 export default connect(

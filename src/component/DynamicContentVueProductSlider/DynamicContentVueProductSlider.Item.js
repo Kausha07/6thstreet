@@ -8,7 +8,8 @@ import { connect } from "react-redux";
 import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
 import { getUUID } from "Util/Auth";
-import { VUE_CAROUSEL_CLICK } from "Util/Event";
+import Event, { VUE_CAROUSEL_CLICK } from "Util/Event";
+import { HOME_PAGE_BANNER_CLICK_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
 
 export const mapStateToProps = (state) => ({
   country: state.AppState.country,
@@ -28,7 +29,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
     };
   }
 
-  onclick = (widgetID) => {
+  onclick = (widgetID, item) => {
     const { pageType } = this.props;
     // vue analytics
     const locale = VueIntegrationQueries.getLocaleFromUrl();
@@ -44,7 +45,11 @@ class DynamicContentVueProductSliderItem extends PureComponent {
         widgetID: widgetID,
       },
     });
+    this.sendBannerClickImpression(item);
   };
+  sendBannerClickImpression(item) {
+    Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);
+  }
 
   discountPercentage(basePrice, specialPrice, haveDiscount) {
     const { country } = this.props;
@@ -169,7 +174,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
           data-banner-type="vueSlider"
           block="VueProductSlider-Link"
           onClick={() => {
-            this.onclick(widgetID);
+            this.onclick(widgetID, data);
           }}
         >
           <img

@@ -66,12 +66,14 @@ export class LiveExperienceContainer extends PureComponent {
 
   requestUpcomingParty() {
     const { requestUpcomingParty } = this.props;
-    requestUpcomingParty({ storeId: Config.storeId, isStaging: process.env.REACT_APP_SPOCKEE_STAGING });
+    const isStaging = getQueryParam("isStaging", location) === "true" ? true : false;
+    requestUpcomingParty({ storeId: Config.storeId, isStaging });
   }
 
   requestArchivedParty() {
     const { requestArchivedParty } = this.props;
-    requestArchivedParty({ storeId: Config.storeId, isStaging: process.env.REACT_APP_SPOCKEE_STAGING });
+    const isStaging = getQueryParam("isStaging", location) === "true" ? true : false;
+    requestArchivedParty({ storeId: Config.storeId, isStaging });
   }
   parseBool = (b) => {
     return !/^(false|0)$/i.test(b) && !!b;

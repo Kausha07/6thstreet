@@ -1,5 +1,4 @@
 import { withRouter } from 'react-router';
-
 import Image from 'Component/Image';
 import {
     MyAccountReturnCreateListItem as SourceComponent
@@ -63,8 +62,7 @@ class MyAccountOrderListItem extends SourceComponent {
                 status
             }
         } = this.props;
-
-        const date = new Date(created_at);
+        const date = new Date(created_at.replace(/-/g, "/"));
         const arabicDate = `${date.getDate()} ${ARABIC_MONTHS[date.getMonth()]} ${date.getFullYear()}`;
 
         return (
@@ -122,7 +120,7 @@ class MyAccountOrderListItem extends SourceComponent {
                       elem="DetailsDate"
                     >
                         <span>{ __('Order placed: ') }</span>
-                        <span>{ isArabic() ? arabicDate : formatDate('DD MMM YYYY', new Date(created_at)) }</span>
+                        <span>{ isArabic() ? arabicDate : formatDate('DD MMM YYYY', new Date(created_at.replace(/-/g, "/"))) }</span>
                     </p>
                 </div>
             </div>

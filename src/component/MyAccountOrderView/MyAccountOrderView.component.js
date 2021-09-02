@@ -19,7 +19,7 @@ import { HistoryType } from "Type/Common";
 import { getCurrency, isArabic } from "Util/App";
 import { appendOrdinalSuffix } from "Util/Common";
 import { formatDate } from "Util/Date";
-
+import Applepay from "./icons/apple.png";
 import { formatPrice } from "../../../packages/algolia-sdk/app/utils/filters";
 import CancelledImage from "./icons/cancelled.png";
 import CloseImage from "./icons/close.png";
@@ -148,7 +148,7 @@ class MyAccountOrderView extends PureComponent {
         </p>
         <p block="MyAccountOrderView" elem="StatusDate">
           {__("Order placed: ")}
-          <span>{formatDate("DD MMM YYYY", new Date(created_at))}</span>
+          <span>{formatDate("DD MMM YYYY", new Date(created_at.replace(/-/g, "/")))}</span>
         </p>
       </div>
     );
@@ -455,14 +455,22 @@ class MyAccountOrderView extends PureComponent {
       order: {
         payment: {
           cc_type,
-          cc_last_4,
+          method,
+          // cc_last_4,
+          additional_information : {
+            source : {
+              last4
+            }
+          }
         },
       },
     } = this.props;
+    
     return (
       <div block="MyAccountOrderView" elem="CardPaymentType">
         <div block="MyAccountOrderView" elem="TypeLogo">
-          {this.renderMiniCard(cc_type?.toLowerCase())}
+        {method === CHECKOUT_APPLE_PAY ?<img src={Applepay} alt="card icon" /> : this.renderMiniCard(cc_type?.toLowerCase())}
+       
         </div>
         <div block="MyAccountOrderView" elem="Number">
           <div block="MyAccountOrderView" elem="Number-Dots">
@@ -472,7 +480,8 @@ class MyAccountOrderView extends PureComponent {
             <div />
           </div>
           <div block="MyAccountOrderView" elem="Number-Value">
-            {cc_last_4}
+            {/* {cc_last_4} */}
+            {last4 ? last4 : ''}
           </div>
         </div>
       </div>
@@ -507,7 +516,7 @@ class MyAccountOrderView extends PureComponent {
         return this.renderPaymentTypeText(__("Cash on Delivery"));
       case APPLE_PAY:
       case CHECKOUT_APPLE_PAY:
-        return this.renderPaymentTypeText(__("Apple"));
+        return this.renderCardPaymentType();
       default:
         return null;
     }
