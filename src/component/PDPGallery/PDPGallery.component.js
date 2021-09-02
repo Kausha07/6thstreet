@@ -242,7 +242,6 @@ class PDPGallery extends PureComponent {
   }
 
   onSlideChange = (activeSlide) => {
-    console.log({ activeSlide });
     const { gallery, onSliderChange, prod_360_video, prod_style_video } =
       this.props;
     const { isVideoPlaying, listener } = this.state;
@@ -252,7 +251,6 @@ class PDPGallery extends PureComponent {
         isVideoPlaying.current.pause();
         isVideoPlaying.current.currentTime = 0;
         isVideoPlaying?.current.removeEventListener("ended", listener);
-        console.log("counter removed");
       }
       this.setState({ isVideoPlaying: false });
       onSliderChange(activeSlide);
