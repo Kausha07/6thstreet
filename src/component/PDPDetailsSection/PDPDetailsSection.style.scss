@@ -12,10 +12,12 @@
     &-HeaderContainer {
       h1 {
         @include tablet {
-          padding-inline: 30px;
+          padding-left: 30px;
+          padding-right: 30px;
         }
         @include mobile {
-          padding-inline: 10px;
+          padding-left: 10px;
+          padding-right: 10px;
         }
       }
     }
@@ -33,10 +35,12 @@
   &-Accordion {
     @include mobile() {
       padding-bottom: 75px;
-      padding-inline: 10px;
+      padding-left: 10px;
+      padding-right: 10px;
     }
     @include tablet {
-      padding-inline: 30px;
+      padding-left: 30px;
+      padding-right: 30px;
     }
   }
   @include desktop() {
@@ -80,7 +84,7 @@
     .Click {
       font-size: 16px;
       font-weight: bold;
-      color: #F96446
+      color: #f96446;
     }
     .AndCollect {
       font-size: 13px;
@@ -128,7 +132,8 @@
       font-weight: var(--fw-regular);
       margin-top: 16px;
       margin-bottom: 0;
-      span:nth-child(2), span:nth-child(4) {
+      span:nth-child(2),
+      span:nth-child(4) {
         font-weight: var(--fw-demi);
       }
       span:nth-child(5) {

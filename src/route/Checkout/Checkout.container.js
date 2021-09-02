@@ -565,8 +565,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     try {
       const response = await createOrder(code, data)
       if (response && response.data) {
-            console.log("payment method code", code)
-            console.log("response in create order api", response)
             const { data } = response;
             if (typeof data === "object") {
               const {
@@ -593,7 +591,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                   BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
                   this.setDetailsStep(order_id, increment_id);
                   this.resetCart();
-                  console.log("apple pay positive response")
                   return true
                 }
                 if (code === CARD && href) {
@@ -674,7 +671,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                 if (error && typeof error === "string") {
                   showErrorNotification(__(error));
                   this.setState({ isLoading: false });
-                  this.resetCart();
+                  if(code === CHECKOUT_APPLE_PAY){
+                    return false
+                  }
+                  this.resetCart();  
                 }
               }
             }
@@ -682,6 +682,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             if (typeof data === "string") {
               showErrorNotification(__(data));
               this.setState({ isLoading: false });
+              if(code === CHECKOUT_APPLE_PAY){
+                return false
+              }
               this.resetCart();
             }
           }
@@ -689,6 +692,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           if (response && typeof response === "string") {
             showErrorNotification(__(response));
             this.setState({ isLoading: false });
+            if(code === CHECKOUT_APPLE_PAY){
+              return false
+            }
             this.resetCart();
           }
     }

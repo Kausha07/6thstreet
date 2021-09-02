@@ -284,6 +284,7 @@
           font-size: 14px;
           padding: 16px 15px;
           height: 50px;
+          -webkit-appearance: none;
         }
 
         .Field {
@@ -310,7 +311,8 @@
               padding: 0 0 10px;
             }
             @include mobile {
-              padding-inline: 0;
+              padding-left: 0;
+              padding-right: 0;
             }
           }
 
@@ -632,7 +634,8 @@
         .FieldForm {
           &-Fields {
             .Field {
-              padding-inline: 0;
+              padding-left: 0;
+              padding-right: 0;
               &:nth-child(2) {
                 select {
                   padding-right: 35px;

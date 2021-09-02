@@ -106,6 +106,18 @@ export class RouterContainer extends SourceRouterContainer {
     }
   }
 
+  componentDidUpdate() {    
+    const countryCode = navigator.language.substr(0,2);
+    const currentLn= window.location.href.indexOf("://") + 3;
+    const currentLang = window.location.href.substr(currentLn,2);
+    if(countryCode === "en" && currentLang !==countryCode && window.location.pathname ==="/superstars" ){
+      const redirectPath = window.location.href.replace("ar-", "en-");
+      window.location.href= redirectPath;      
+    }
+  }
+
+
+
   containerProps = () => {
     const { isBigOffline, setCountry, setLanguage } = this.props;
 
