@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { getCurrency , getDiscountFromTotals} from "Util/App";
 
 import {
   CARD,
@@ -411,7 +412,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
 
   onPaymentMethodSelect(code) {
     const { setPaymentCode } = this.props;
-
+    console.log("props check", this.props)
     this.setState({ paymentMethod: code });
     setPaymentCode(code);
   }
@@ -492,17 +493,65 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
   handleApplePayButtonClick() {
     const {savePaymentInformationApplePay} = this.props
     const {
-      totals: { total, quote_currency_code },
+      totals: { 
+        discount,
+        subtotal = 0,
+        total = 0,
+        shipping_fee = 0,
+        currency_code = getCurrency(),
+        total_segments: totals = [],
+        quote_currency_code ,
+        items
+      },
       default_title,
       shippingAddress: { country_id: countryCode },
       shippingAddress
     } = this.props;
+
+    let LineItems = items.map((item) => ({
+      label: `${item?.full_item_info?.brand_name} - ${item?.full_item_info?.name}`,
+      amount: { currency: currency_code, value: item?.full_item_info?.price * item?.qty }
+    }))
+
+    if(discount){
+      LineItems.push({
+        label: __("Discount"),
+        amount: { currency: currency_code, value: discount }
+      });
+    }
+
+    if(shipping_fee){
+      LineItems.push({
+        label: __("Shipping Charges"),
+        amount: { currency: currency_code, value: shipping_fee }
+      });
+    }
+    
+    const storeCredit = getDiscountFromTotals(totals, "customerbalance")
+    
+    const clubApparel = getDiscountFromTotals(totals, "clubapparel")
+
+    if(storeCredit){
+      LineItems.push({
+        label: __("Store Credit"),
+        amount: { currency: currency_code, value: storeCredit }
+      });
+    }
+
+    if(clubApparel){
+      LineItems.push({
+        label: __("Club Apparel Redemption"),
+        amount: { currency: currency_code, value: clubApparel }
+      });
+    }
+
     const paymentRequest = {
       countryCode,
       currencyCode: quote_currency_code,
       supportedNetworks: this._getSupportedNetworks(),
       merchantCapabilities: this._getMerchantCapabilities(),
       total: { label: default_title, amount: total },
+      lineItems : LineItems
     };
     savePaymentInformationApplePay({billing_address:shippingAddress, paymentMethod: {code: "checkout_apple_pay"}})
     const applePaySession = new window.ApplePaySession(1, paymentRequest);
