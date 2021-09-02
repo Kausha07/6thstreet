@@ -412,7 +412,6 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
 
   onPaymentMethodSelect(code) {
     const { setPaymentCode } = this.props;
-    console.log("props check", this.props)
     this.setState({ paymentMethod: code });
     setPaymentCode(code);
   }
@@ -669,7 +668,6 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
             },
           };
         placeOrder(CHECKOUT_APPLE_PAY, data).then((res) => {
-          console.log("response", res)
           if(res){
             applePaySession.completePayment(window.ApplePaySession.STATUS_SUCCESS)
           }else{
