@@ -8,15 +8,32 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import NoMatch from "Route/NoMatch";
 import "./PDP.style";
+import MyAccountOverlay from "Component/MyAccountOverlay";
 
 class PDP extends PureComponent {
   static propTypes = {
     nbHits: PropTypes.number.isRequired,
     isLoading: PropTypes.bool.isRequired,
   };
+  state = {
+    signInPopUp: "",
+  };
 
+  closePopup = () => {
+    this.setState({ signInPopUp: "" });
+  };
+
+  renderMySignInPopup = () => {
+    const { signInPopUp } = this.state;
+    const popUpElement = (
+      <MyAccountOverlay isPopup={signInPopUp} closePopup={this.closePopup} />
+    );
+
+    this.setState({ signInPopUp: popUpElement });
+    return popUpElement;
+  }
   renderMainSection() {
-    return <PDPMainSection />;
+    return <PDPMainSection renderMySignInPopup={this.renderMySignInPopup} />;
   }
 
   renderDetailsSection() {
@@ -32,11 +49,12 @@ class PDP extends PureComponent {
   }
 
   renderPDP() {
-    const { nbHits, isLoading } = this.props;
-
+    const { nbHits, isLoading, } = this.props;
+    const {signInPopUp} = this.state
     if (!isLoading) {
       return nbHits === 1 ? (
         <div block="PDP">
+          {signInPopUp}
           {this.renderMainSection()}
           {this.renderMixAndMatchSection()}
           {this.renderDetailsSection()}

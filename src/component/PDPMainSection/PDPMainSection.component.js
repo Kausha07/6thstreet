@@ -13,7 +13,7 @@ class PDPMainSection extends PureComponent {
 
     renderSummary() {
         return (
-            <PDPSummary />
+            <PDPSummary {...this.props} />
         );
     }
 
