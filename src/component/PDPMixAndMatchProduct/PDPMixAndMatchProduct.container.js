@@ -13,12 +13,15 @@ import Event, {
 import PDPMixAndMatchProduct from "./PDPMixAndMatchProduct.component";
 import PDPMixAndMatchProductSizePopup from "../PDPMixAndMatchProductSizePopup";
 
-import { PDP_MIX_AND_MATCH_POPUP_ID } from '../PDPMixAndMatchProductSizePopup/PDPMixAndMatchProductSizePopup.config';
-import { hideActiveOverlay, toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
+import { PDP_MIX_AND_MATCH_POPUP_ID } from "../PDPMixAndMatchProductSizePopup/PDPMixAndMatchProductSizePopup.config";
+import {
+  hideActiveOverlay,
+  toggleOverlayByKey,
+} from "Store/Overlay/Overlay.action";
 
 export const mapDispatchToProps = (dispatch) => ({
   showNotification: (type, message) =>
-  dispatch(showNotification(type, message)),
+    dispatch(showNotification(type, message)),
   getCartTotals: (cartId) => CartDispatcher.getCartTotals(dispatch, cartId),
   addProductToCart: (
     productData,
@@ -41,10 +44,11 @@ export const mapDispatchToProps = (dispatch) => ({
       url,
       itemPrice
     ),
-  setMinicartOpen: (isMinicartOpen = false) => dispatch(setMinicartOpen(isMinicartOpen)),
+  setMinicartOpen: (isMinicartOpen = false) =>
+    dispatch(setMinicartOpen(isMinicartOpen)),
   getProductStock: (sku) => PDPDispatcher.getProductStock(dispatch, sku),
   showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
-  hideActiveOverlay: () => dispatch(hideActiveOverlay())
+  hideActiveOverlay: () => dispatch(hideActiveOverlay()),
 });
 
 export class PDPMixAndMatchProductContainer extends PureComponent {
@@ -59,7 +63,7 @@ export class PDPMixAndMatchProductContainer extends PureComponent {
     setMinicartOpen: PropTypes.func.isRequired,
     getProductStock: PropTypes.func.isRequired,
     showOverlay: PropTypes.func.isRequired,
-    hideActiveOverlay: PropTypes.func.isRequired
+    hideActiveOverlay: PropTypes.func.isRequired,
   };
 
   state = {
@@ -357,20 +361,17 @@ export class PDPMixAndMatchProductContainer extends PureComponent {
     const { isSizePopupOpen } = this.state;
     const { showOverlay, hideActiveOverlay } = this.props;
 
-    if(!isSizePopupOpen){
+    if (!isSizePopupOpen) {
       showOverlay(PDP_MIX_AND_MATCH_POPUP_ID);
     }
 
-    if(isSizePopupOpen){
+    if (isSizePopupOpen) {
       hideActiveOverlay(PDP_MIX_AND_MATCH_POPUP_ID);
     }
-  
-    this.setState(
-      { isSizePopupOpen: !isSizePopupOpen },
-      () => {
-        this.toggleRootElementsOpacity();
-      }
-    );
+
+    this.setState({ isSizePopupOpen: !isSizePopupOpen }, () => {
+      this.toggleRootElementsOpacity();
+    });
   }
 
   onSizeTypeSelect(e) {
@@ -389,7 +390,7 @@ export class PDPMixAndMatchProductContainer extends PureComponent {
   }
 
   containerProps = () => {
-    const { product, setStockAvailability } = this.props;
+    const { product, setStockAvailability, renderMySignInPopup } = this.props;
     const { mappedSizeObject } = this.state;
     const basePrice =
       product.price[0] &&
@@ -402,6 +403,7 @@ export class PDPMixAndMatchProductContainer extends PureComponent {
       product,
       basePrice,
       setStockAvailability,
+      renderMySignInPopup,
     };
   };
 
@@ -410,7 +412,8 @@ export class PDPMixAndMatchProductContainer extends PureComponent {
     onSizeSelect: this.onSizeSelect.bind(this),
     addToCart: this.addToCart.bind(this),
     routeChangeToCart: this.routeChangeToCart.bind(this),
-    togglePDPMixAndMatchProductSizePopup: this.togglePDPMixAndMatchProductSizePopup.bind(this),
+    togglePDPMixAndMatchProductSizePopup:
+      this.togglePDPMixAndMatchProductSizePopup.bind(this),
   };
 
   componentDidMount() {

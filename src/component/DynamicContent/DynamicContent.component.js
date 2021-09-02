@@ -113,11 +113,12 @@ class DynamicContent extends PureComponent {
       if (!Component) {
         return null;
       }
-
+    
       return (
         <Component
           ref={this.comprefs[i]}
           {...restProps}
+          renderMySignInPopup={this.props.renderMySignInPopup}
           promotion_name={promotion_name}
           tag={tag}
           type={type}
@@ -144,13 +145,14 @@ class DynamicContent extends PureComponent {
         }));
       };
     }
-
+   
     return (
       <Component
         ref={this.comprefs[i]}
         {...restProps}
         type={type}
         promotion_name={promotion_name}
+        renderMySignInPopup={this.props.renderMySignInPopup}
         tag={tag}
         key={i}
       />

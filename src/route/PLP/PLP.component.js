@@ -94,11 +94,18 @@ export class PLP extends PureComponent {
     const { gender } = this.props;
 
     // return <h1>Plp Widget</h1>;
-    return <DynamicContent gender={gender} content={widget} />;
+    return (
+      <DynamicContent
+        gender={gender}
+        content={widget}
+        renderMySignInPopup={this.renderMySignInPopup}
+      />
+    );
   };
 
   render() {
     const { signInPopUp } = this.state;
+
     return (
       <main block="PLP">
         <ContentWrapper label={__("Product List Page")}>

@@ -564,11 +564,12 @@ class SearchSuggestion extends PureComponent {
   // recommended for you
 
   renderRecommendedForYou = () => {
-    const { recommendedForYou } = this.props;
+    const { recommendedForYou, renderMySignInPopup } = this.props;
     if (recommendedForYou && recommendedForYou.length > 0) {
       return (
         <div className="recommendedForYouSliderBox">
           <RecommendedForYouVueSliderContainer
+            renderMySignInPopup={renderMySignInPopup}
             widgetID="vue_trending_slider"
             products={recommendedForYou}
             heading={__("Recommended for you")}
@@ -844,6 +845,7 @@ class SearchSuggestion extends PureComponent {
       </div>
     );
   }
+
   render() {
     const { isArabic } = this.state;
     return (

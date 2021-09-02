@@ -70,9 +70,16 @@ class ProductItem extends PureComponent {
       product: { sku },
       product,
       pageType,
-      renderMySignInPopup
+      renderMySignInPopup,
     } = this.props;
-    return <WishlistIcon renderMySignInPopup={renderMySignInPopup} sku={sku} data={product} pageType={pageType} />;
+    return (
+      <WishlistIcon
+        renderMySignInPopup={renderMySignInPopup}
+        sku={sku}
+        data={product}
+        pageType={pageType}
+      />
+    );
   }
 
   renderLabel() {

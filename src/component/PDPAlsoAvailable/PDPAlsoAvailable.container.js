@@ -1,59 +1,60 @@
-import PropTypes from 'prop-types';
-import { PureComponent } from 'react';
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
 
-import Algolia from 'Util/API/provider/Algolia';
+import Algolia from "Util/API/provider/Algolia";
 
-import PDPAlsoAvailable from './PDPAlsoAvailable.component';
+import PDPAlsoAvailable from "./PDPAlsoAvailable.component";
 
 export class PDPAlsoAvailableContainer extends PureComponent {
-    static propTypes = {
-        productsAvailable: PropTypes.array.isRequired,
-        isLoading: PropTypes.bool.isRequired
-    };
+  static propTypes = {
+    productsAvailable: PropTypes.array.isRequired,
+    isLoading: PropTypes.bool.isRequired,
+  };
 
-    state = {
-        products: [],
-        isAlsoAvailable: true,
-        firstLoad: true
-    };
+  state = {
+    products: [],
+    isAlsoAvailable: true,
+    firstLoad: true,
+  };
 
-    componentDidMount() {
-        const { firstLoad, products = [] } = this.state;
+  componentDidMount() {
+    const { firstLoad, products = [] } = this.state;
 
-        if (firstLoad && !products.length) {
-            this.getAvailableProducts();
+    if (firstLoad && !products.length) {
+      this.getAvailableProducts();
+    }
+  }
+
+  getAvailableProducts() {
+    const { productsAvailable = [] } = this.props;
+
+    productsAvailable.map((productID) =>
+      this.getAvailableProduct(productID).then((productData) => {
+        const { products = [] } = this.state;
+
+        if (productData.nbHits === 1) {
+          this.setState({ products: [...products, productData.data] });
         }
-    }
 
-    getAvailableProducts() {
-        const {
-            productsAvailable = []
-        } = this.props;
+        this.setState({ isAlsoAvailable: products.length === 0 });
+      })
+    );
+  }
 
-        productsAvailable.map((productID) => this.getAvailableProduct(productID).then((productData) => {
-            const { products = [] } = this.state;
+  async getAvailableProduct(sku) {
+    const product = await new Algolia().getProductBySku({ sku });
 
-            if (productData.nbHits === 1) {
-                this.setState({ products: [...products, productData.data] });
-            }
+    return product;
+  }
 
-            this.setState({ isAlsoAvailable: products.length === 0 });
-        }));
-    }
-
-    async getAvailableProduct(sku) {
-        const product = await new Algolia().getProductBySku({ sku });
-
-        return product;
-    }
-
-    render() {
-        return (
-            <PDPAlsoAvailable
-              { ...this.state }
-            />
-        );
-    }
+  render() {
+    return (
+      <PDPAlsoAvailable
+        renderMySignInPopup={this.props.renderMySignInPopup}
+        {...this.state}
+      />
+    );
+  }
 }
 
 export default PDPAlsoAvailableContainer;

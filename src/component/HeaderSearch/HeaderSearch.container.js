@@ -159,10 +159,10 @@ export class HeaderSearchContainer extends PureComponent {
   }
 
   containerProps = () => {
-    const { focusInput } = this.props;
+    const { focusInput,renderMySignInPopup } = this.props;
     const { search } = this.state;
 
-    return { search, focusInput };
+    return { search, focusInput,renderMySignInPopup };
   };
 
   onSearchChange(search) {

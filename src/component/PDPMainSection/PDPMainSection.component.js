@@ -18,7 +18,7 @@ class PDPMainSection extends PureComponent {
     }
 
     renderGallery() {
-        return <PDPGallery />;
+        return <PDPGallery {...this.props}/>;
     }
 
     render() {

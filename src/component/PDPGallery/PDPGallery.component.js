@@ -90,10 +90,11 @@ class PDPGallery extends PureComponent {
   }
   renderWishlistIcon() {
     const { isArabic } = this.state;
-    const { sku, product } = this.props;
+    const { sku, product,renderMySignInPopup } = this.props;
     return (
       <WishlistIcon
         sku={sku}
+        renderMySignInPopup={renderMySignInPopup}
         mods={{ isArabic }}
         pageType="pdp"
         data={product}
@@ -329,7 +330,7 @@ class PDPGallery extends PureComponent {
 
   render() {
     const { galleryOverlay, isArabic } = this.state;
-
+    const {renderMySignInPopup} = this.props
     return (
       <div block="PDPGallery">
         {galleryOverlay}
