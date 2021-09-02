@@ -15,7 +15,7 @@ import {
 } from "Component/TabbyMiniPopup/TabbyMiniPopup.config";
 import SourceCheckoutPayments from "SourceComponent/CheckoutPayments/CheckoutPayments.component";
 import { isArabic } from "Util/App";
-
+import Applepay from "./icons/apple-pay@3x.png";
 import {
   CARD,
   CASH_ON_DELIVERY,
@@ -218,6 +218,9 @@ export class CheckoutPayments extends SourceCheckoutPayments {
         <p block="CheckoutPayments" elem="MethodDiscription">
           {method_description}
         </p>
+        <div block="CheckoutPayments" elem="MethodImage">
+        <img src={Applepay} alt="Apple pay" />
+        </div>
       </div>
     );
   }
