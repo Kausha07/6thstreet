@@ -152,10 +152,10 @@ export class CartPage extends PureComponent {
                             getDiscountFromTotals(totals, 'clubapparel'),
                             __('Club Apparel Redemption')
                         ) }
-                        { (couponCode || discount) && this.renderPriceLine(
+                        { (couponCode || discount) ? this.renderPriceLine(
                             discount,
                             __('Discount')
-                        ) }
+                        ):null }
                         { this.renderPriceLine(
                             getDiscountFromTotals(totals, 'tax'),
                             __('Tax')
