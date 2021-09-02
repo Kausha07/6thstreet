@@ -74,8 +74,8 @@ componentDidUpdate(prevProps) {
     isArabic: isArabic(),
     formContent: false,
     isSignedIn: isSignedIn(),
-    isDropdownOpen: false,
-    dropdownToggleIcon: false,
+    isDropdownOpen: true,
+    dropdownToggleIcon: true,
   };
 
   renderPriceLine(price, name, mods) {

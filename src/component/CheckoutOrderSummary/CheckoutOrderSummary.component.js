@@ -198,7 +198,6 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     } = this.props;
     const grandTotal = getFinalPrice(total, currency_code);
     const subTotal = getFinalPrice(subtotal, currency_code);
-
     return (
       <div block="CheckoutOrderSummary" elem="OrderTotals">
         <ul>
@@ -216,9 +215,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
               getDiscountFromTotals(totals, "clubapparel"),
               __("Club Apparel Redemption")
             )}
-            {(couponCode || discount) && this.renderPriceLine(discount, __("Discount")) }
-
-
+            {(couponCode || discount) ? this.renderPriceLine(discount, __("Discount")):null }
             {this.renderPriceLine(
               getDiscountFromTotals(totals, "shipping") || __("FREE"),
               __("Shipping Charges")
