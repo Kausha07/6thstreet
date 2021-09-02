@@ -446,10 +446,10 @@ class SearchSuggestion extends PureComponent {
     // return null;
 
     if (price && price.length > 0) {
-      const priceObj = price[0],
+      const priceObj = price?.[0],
         currency = getCurrency();
-      const basePrice = priceObj[currency]["6s_base_price"];
-      const specialPrice = priceObj[currency]["6s_special_price"];
+      const basePrice = priceObj?.[currency]?.["6s_base_price"];
+      const specialPrice = priceObj?.[currency]?.["6s_special_price"];
       const haveDiscount =
         specialPrice !== "undefined" &&
         specialPrice &&
