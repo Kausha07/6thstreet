@@ -122,7 +122,8 @@ export class HeaderSearchContainer extends PureComponent {
         tempRecentSearches = [...recentSearches.reverse()];
       }
       tempRecentSearches = tempRecentSearches.filter(
-        (item) => item.name !== searchQuery
+        (item) =>
+          item.name.toUpperCase().trim() !== searchQuery.toUpperCase().trim()
       );
       if (tempRecentSearches.length > 4) {
         tempRecentSearches.shift();
