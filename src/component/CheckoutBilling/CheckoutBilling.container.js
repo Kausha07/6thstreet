@@ -543,14 +543,13 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
         amount: { currency: currency_code, value: clubApparel }
       });
     }
-
+    console.log("line items", LineItems)
     const paymentRequest = {
       countryCode,
       currencyCode: quote_currency_code,
       supportedNetworks: this._getSupportedNetworks(),
       merchantCapabilities: this._getMerchantCapabilities(),
       total: { label: default_title, amount: total },
-      lineItems : LineItems
     };
     savePaymentInformationApplePay({billing_address:shippingAddress, paymentMethod: {code: "checkout_apple_pay"}})
     const applePaySession = new window.ApplePaySession(1, paymentRequest);

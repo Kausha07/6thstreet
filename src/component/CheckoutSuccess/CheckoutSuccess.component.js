@@ -656,7 +656,7 @@ export class CheckoutSuccess extends PureComponent {
     } else if (paymentMethod?.code?.match(/tabby_checkout/)) {
       this.setState({ paymentTitle: __("Tabby: Pay later") });
     } else if (paymentMethod?.code?.match(/apple/)) {
-      this.setState({ paymentTitle: __("Apple") });
+      this.setState({ paymentTitle: __("Apple Pay") });
     } else if (paymentMethod?.code?.match(/cash/)) {
       this.setState({ paymentTitle: __("Cash on Delivery") });
     } else if (paymentMethod?.code?.match(/free/)) {
