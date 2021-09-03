@@ -245,6 +245,11 @@
     width: 100vw;
     overflow-x: auto;
     overflow-y: hidden;
+    margin-right: 10px;
+    &_isArabic{
+      margin-left: 10px;
+      margin-right: 0px;
+    }
 
     @include desktop {
       overflow: hidden;
@@ -302,7 +307,7 @@
   &-ToolBar {
     display: flex;
     margin-bottom: 10px;
-    grid-gap: 10px;
+    // grid-gap: 10px;
     // height: 60px;
     // padding: 0 0 20px;
 
