@@ -20,6 +20,14 @@ main {
   max-width: 1440px;
   margin: 0 auto;
 
+  .leftContainer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex: 1;
+    order: 2;
+  }
+
   @include mobile {
     z-index: 90;
     position: fixed;
@@ -53,6 +61,7 @@ main {
 
   .HeaderGenders {
     display: flex;
+    flex: 1;
     order: 0;
   }
 
