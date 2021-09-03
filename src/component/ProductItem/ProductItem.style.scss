@@ -32,12 +32,26 @@
   &::before {
     display: none;
   }
-
+  &-ImageBox {
+    height: 0;
+    overflow: hidden;
+    padding-top: 89.41%;
+    background: #fff;
+    position: relative;
+  }
   .Image {
-    min-height: 190px;
-
-    &-Image {
-      object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding-bottom: 0 !important;
+    img {
+      object-position: center;
+      width: 100%;
+      height: 100%;
+      position: static;
+      object-fit: initial;
     }
   }
 

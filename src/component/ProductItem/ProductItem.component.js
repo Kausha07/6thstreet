@@ -144,7 +144,7 @@ class ProductItem extends PureComponent {
     } = this.props;
 
     return (
-      <div>
+      <div block="ProductItem" elem="ImageBox">
         <Image src={thumbnail_url} />
         {this.renderOutOfStock()} {this.renderExclusive()} {this.renderColors()}{" "}
       </div>
