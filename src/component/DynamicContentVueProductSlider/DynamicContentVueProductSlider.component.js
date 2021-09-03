@@ -1,14 +1,14 @@
 import DragScroll from "Component/DragScroll/DragScroll.component";
+import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
 import PropTypes from "prop-types";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
 import { isArabic } from "Util/App";
 import { getUUID } from "Util/Auth";
-import { VUE_CAROUSEL_SWIPE } from "Util/Event";
+import BrowserDatabase from "Util/BrowserDatabase";
+import Event, { VUE_CAROUSEL_SHOW, VUE_CAROUSEL_SWIPE } from "Util/Event";
 import DynamicContentVueProductSliderItem from "./DynamicContentVueProductSlider.Item";
 import "./DynamicContentVueProductSlider.style.scss";
-import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
-import Event from "Util/Event";
 class DynamicContentVueProductSlider extends PureComponent {
   static propTypes = {
     withViewAll: PropTypes.bool,
@@ -16,6 +16,7 @@ class DynamicContentVueProductSlider extends PureComponent {
     heading: PropTypes.string.isRequired,
     products: PropTypes.array.isRequired,
     widgetID: PropTypes.string.isRequired,
+    pageType: PropTypes.string.isRequired,
   };
 
   scrollerRef = React.createRef();
@@ -26,6 +27,23 @@ class DynamicContentVueProductSlider extends PureComponent {
   };
 
   componentDidMount() {
+    const { widgetID, pageType = "home" } = this.props;
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
+    const customer = BrowserDatabase.getItem("customer");
+    const userID = customer && customer.id ? customer.id : null;
+    VueIntegrationQueries.vueAnalayticsLogger({
+      event_name: VUE_CAROUSEL_SHOW,
+      params: {
+        event: VUE_CAROUSEL_SHOW,
+        pageType: pageType,
+        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+        clicked: Date.now(),
+        uuid: getUUID(),
+        referrer: "desktop",
+        widgetID: widgetID,
+        userID: userID,
+      },
+    });
     this.registerViewPortEvent();
   }
 
@@ -67,14 +85,16 @@ class DynamicContentVueProductSlider extends PureComponent {
       }
     });
   };
-  async handleOnScroll(widgetID) {
+  async handleOnScroll(widgetID, event) {
+    const { pageType = "home" } = this.props;
+    const target = event.nativeEvent.target;
     let width = 0;
     if (screen.width > 1024) {
       width = 245;
     } else {
       width = 220;
     }
-    let index = Math.floor(this.scrollerRef.current.scrollLeft / width);
+    let index = Math.floor(Math.abs(target.scrollLeft) / width);
     if (this.cmpRef.current !== index) {
       this.cmpRef.current = index;
       const productsToRender = this.getProducts();
@@ -85,7 +105,7 @@ class DynamicContentVueProductSlider extends PureComponent {
         event_name: VUE_CAROUSEL_SWIPE,
         params: {
           event: VUE_CAROUSEL_SWIPE,
-          pageType: "plp",
+          pageType: pageType,
           currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
           clicked: Date.now(),
           uuid: getUUID(),
@@ -178,7 +198,7 @@ class DynamicContentVueProductSlider extends PureComponent {
 
   renderSliderContainer() {
     const productsToRender = this.getProducts();
-    const { widgetID } = this.props;
+    const { widgetID, pageType } = this.props;
     return (
       <DragScroll data={{ rootClass: "ScrollWrapper", ref: this.cmpRef }}>
         <div
@@ -187,8 +207,8 @@ class DynamicContentVueProductSlider extends PureComponent {
           elem="SliderContainer"
           mods={{ isArabic: isArabic() }}
           ref={this.scrollerRef}
-          onScroll={() => {
-            this.handleOnScroll(widgetID);
+          onScroll={(e) => {
+            this.handleOnScroll(widgetID, e);
           }}
         >
           {productsToRender.map((item) => {
@@ -198,6 +218,7 @@ class DynamicContentVueProductSlider extends PureComponent {
                 key={sku}
                 data={item}
                 widgetID={widgetID}
+                pageType={pageType}
               />
             );
           })}

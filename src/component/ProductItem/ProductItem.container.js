@@ -1,10 +1,8 @@
-import PropTypes from 'prop-types';
-import { PureComponent } from 'react';
-import { connect } from 'react-redux';
-import { Product } from 'Util/API/endpoint/Product/Product.type';
-import ProductItem from './ProductItem.component';
-
-
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
+import { connect } from "react-redux";
+import { Product } from "Util/API/endpoint/Product/Product.type";
+import ProductItem from "./ProductItem.component";
 
 export const mapStateToProps = (_state) => ({
   // wishlistItems: state.WishlistReducer.productsInWishlist
@@ -15,30 +13,28 @@ export const mapDispatchToProps = (_dispatch) => ({
 });
 
 export class ProductItemContainer extends PureComponent {
-    static propTypes = {
-        product: Product.isRequired,
-        page: PropTypes.string,
-        position: PropTypes.number,
-        queryID: PropTypes.string
-    };
+  static propTypes = {
+    product: Product.isRequired,
+    page: PropTypes.string,
+    position: PropTypes.number,
+    queryID: PropTypes.string,
+    pageType: PropTypes.string.isRequired,
+  };
 
-    static defaultProps = {
-        page: ''
-    };
+  static defaultProps = {
+    page: "",
+  };
 
-    containerProps = () => {
-        const { product, page, position,qid } = this.props;
-        return { product, page,position,qid };
-    };
+  containerProps = () => {
+    const { product, page, position, qid, pageType } = this.props;
+    return { product, page, position, qid, pageType };
+  };
 
-    render() {
-        return (
-            <ProductItem
-              { ...this.containerFunctions }
-              { ...this.containerProps() }
-            />
-        );
-    }
+  render() {
+    return (
+      <ProductItem {...this.containerFunctions} {...this.containerProps()} />
+    );
+  }
 }
 
 export default connect(

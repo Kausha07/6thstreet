@@ -22,6 +22,7 @@ class ProductItem extends PureComponent {
     page: PropTypes.string,
     position: PropTypes.number,
     qid: PropTypes.string,
+    pageType: PropTypes.string,
   };
 
   static defaultProps = {
@@ -62,9 +63,11 @@ class ProductItem extends PureComponent {
   renderWishlistIcon() {
     const {
       product: { sku },
+      product,
+      pageType,
     } = this.props;
 
-    return <WishlistIcon sku={sku} />;
+    return <WishlistIcon sku={sku} data={product} pageType={pageType} />;
   }
 
   renderLabel() {
