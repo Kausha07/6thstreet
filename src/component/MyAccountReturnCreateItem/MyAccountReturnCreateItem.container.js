@@ -84,7 +84,7 @@ export class MyAccountReturnCreateItemContainer extends PureComponent {
         return resolutions.map(({ id, label }) => ({
             id,
             label,
-            value: id
+            value: id +1 
         }));
     }
 
