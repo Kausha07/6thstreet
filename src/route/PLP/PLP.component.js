@@ -8,12 +8,14 @@ import { PureComponent } from "react";
 import CircleItemSliderSubPage from "../../component/DynamicContentCircleItemSlider/CircleItemSliderSubPage";
 // import DynamicContentCircleItemSlider from '../../component/DynamicContentCircleItemSlider';
 import "./PLP.style";
+import MyAccountOverlay from "Component/MyAccountOverlay";
 
 export class PLP extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       bannerData: null,
+      signInPopUp: "",
       circleBannerUrl: null,
     };
   }
@@ -29,6 +31,20 @@ export class PLP extends PureComponent {
       });
     }
   }
+
+  closePopup = () => {
+    this.setState({ signInPopUp: "" });
+  };
+
+  renderMySignInPopup = () => {
+    const { signInPopUp } = this.state;
+    const popUpElement = (
+      <MyAccountOverlay isPopup={signInPopUp} closePopup={this.closePopup} />
+    );
+
+    this.setState({ signInPopUp: popUpElement });
+    return popUpElement;
+  };
   // componentWillUnmount(){
   //     localStorage.removeItem("bannerData");
   // }
@@ -42,7 +58,12 @@ export class PLP extends PureComponent {
   }
 
   renderPLPPages() {
-    return <PLPPages {...this.props} />;
+    return (
+      <PLPPages
+        {...this.props}
+        renderMySignInPopup={this.renderMySignInPopup}
+      />
+    );
   }
 
   renderBanner() {
@@ -73,13 +94,22 @@ export class PLP extends PureComponent {
     const { gender } = this.props;
 
     // return <h1>Plp Widget</h1>;
-    return <DynamicContent gender={gender} content={widget} />;
+    return (
+      <DynamicContent
+        gender={gender}
+        content={widget}
+        renderMySignInPopup={this.renderMySignInPopup}
+      />
+    );
   };
 
   render() {
+    const { signInPopUp } = this.state;
+
     return (
       <main block="PLP">
         <ContentWrapper label={__("Product List Page")}>
+          {signInPopUp}
           {this.renderPLPDetails()}
           {this.state.bannerData && this.renderBanner()}
           {this.renderPLPWidget()}

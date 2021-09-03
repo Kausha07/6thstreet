@@ -134,6 +134,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
         link = "",
         url = "",
       },
+      renderMySignInPopup,
       data,
       widgetID,
     } = this.props;
@@ -166,7 +167,12 @@ class DynamicContentVueProductSliderItem extends PureComponent {
         <span id="productName">{name}</span>
         {this.renderPrice(price)}
         {this.renderIsNew(is_new_in)}
-        <WishlistIcon sku={sku} data={data} pageType="search" />
+        <WishlistIcon
+          sku={sku}
+          data={data}
+          pageType="search"
+          renderMySignInPopup={renderMySignInPopup}
+        />
       </div>
     );
   }
