@@ -20,7 +20,7 @@
   }
   .SliderWithLabelWrapper {
     display: flex;
-    grid-gap: 10px;
+    // grid-gap: 10px;
     overflow-x: auto;
     scroll-behavior: auto;
     scrollbar-width: none; /* Firefox */
@@ -36,10 +36,15 @@
       background: #dcdcdc;
     }
 
+    @include mobile{
+      margin-right: 10px;
+      margin-left: 10px;
+    }
 
   }
   .SliderWithLabel {
     display: inline-block;
+    margin-right: 10px;
     &:nth-last-child(2) {
       margin-right: 0;
     }
@@ -48,8 +53,14 @@
       display: block;
     }
     &_isArabic {
+
       &:nth-last-child(2) {
-        margin-left: 0;
+        // margin-left: 10px;
+        margin-right: 10px;
+      }
+      &:nth-child(2) {
+        // margin-left: 10px;
+        margin-right: 0px;
       }
     }
   }
