@@ -56,21 +56,23 @@ class WishlistIcon extends PureComponent {
         ? prodPriceObject[Object.keys(prodPriceObject)[0]]["6s_base_price"]
         : "";
       // to do add 6s_special_price when we get response from backend.
-      VueIntegrationQueries.vueAnalayticsLogger({
-        event_name: VUE_REMOVE_TO_WISHLIST,
-        params: {
-          event: VUE_REMOVE_TO_WISHLIST,
-          pageType: pageType,
-          currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-          clicked: Date.now(),
-          prodPrice: prodPrice,
-          sourceCatgID: gender,
-          sourceProdID: skuFromProps,
-          uuid: getUUID(),
-          referrer: "desktop",
-          userID: userID,
-        },
-      });
+      if (userID) {
+        VueIntegrationQueries.vueAnalayticsLogger({
+          event_name: VUE_REMOVE_TO_WISHLIST,
+          params: {
+            event: VUE_REMOVE_TO_WISHLIST,
+            pageType: pageType,
+            currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+            clicked: Date.now(),
+            prodPrice: prodPrice,
+            sourceCatgID: gender,
+            sourceProdID: skuFromProps,
+            uuid: getUUID(),
+            referrer: "desktop",
+            userID: userID,
+          },
+        });
+      }
       return;
     }
 
@@ -79,21 +81,23 @@ class WishlistIcon extends PureComponent {
     const itemPrice = priceObject
       ? priceObject[Object.keys(priceObject)[0]]["6s_special_price"]
       : "";
-    VueIntegrationQueries.vueAnalayticsLogger({
-      event_name: VUE_ADD_TO_WISHLIST,
-      params: {
-        event: VUE_ADD_TO_WISHLIST,
-        pageType: pageType,
-        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-        clicked: Date.now(),
-        prodPrice: itemPrice,
-        sourceCatgID: gender,
-        sourceProdID: skuFromProps,
-        uuid: getUUID(),
-        referrer: "desktop",
-        userID: userID,
-      },
-    });
+    if (userID) {
+      VueIntegrationQueries.vueAnalayticsLogger({
+        event_name: VUE_ADD_TO_WISHLIST,
+        params: {
+          event: VUE_ADD_TO_WISHLIST,
+          pageType: pageType,
+          currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+          clicked: Date.now(),
+          prodPrice: itemPrice,
+          sourceCatgID: gender,
+          sourceProdID: skuFromProps,
+          uuid: getUUID(),
+          referrer: "desktop",
+          userID: userID,
+        },
+      });
+    }
   };
 
   isBlack = (item) => {
