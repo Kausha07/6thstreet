@@ -102,7 +102,7 @@ class PDPAddToCart extends PureComponent {
 
     switch (simple_products[code].quantity) {
       case 0:
-        return `${size} - ${__("Out of stock")}`;
+        return `${size} - ${__("out of stock")}`;
       case 1:
         return `${size} - ${__("1 left in stock")}`;
       case 2 || 3:

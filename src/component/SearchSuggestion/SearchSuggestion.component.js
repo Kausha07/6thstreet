@@ -212,7 +212,7 @@ class SearchSuggestion extends PureComponent {
       tempRecentSearches = [...recentSearches.reverse()];
     }
     tempRecentSearches = tempRecentSearches.filter(
-      (item) => item.name !== search
+      (item) => item.name.toUpperCase().trim() !== search.toUpperCase().trim()
     );
     if (tempRecentSearches.length > 4) {
       tempRecentSearches.shift();
@@ -446,10 +446,10 @@ class SearchSuggestion extends PureComponent {
     // return null;
 
     if (price && price.length > 0) {
-      const priceObj = price[0],
+      const priceObj = price?.[0],
         currency = getCurrency();
-      const basePrice = priceObj[currency]["6s_base_price"];
-      const specialPrice = priceObj[currency]["6s_special_price"];
+      const basePrice = priceObj?.[currency]?.["6s_base_price"];
+      const specialPrice = priceObj?.[currency]?.["6s_special_price"];
       const haveDiscount =
         specialPrice !== "undefined" &&
         specialPrice &&
@@ -573,6 +573,7 @@ class SearchSuggestion extends PureComponent {
             products={recommendedForYou}
             heading={__("Recommended for you")}
             key={`DynamicContentVueProductSliderContainer99`}
+            pageType="search"
           />
         </div>
       );

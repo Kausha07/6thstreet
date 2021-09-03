@@ -39,7 +39,7 @@ export class MyAccountCancelCreateSuccess extends SourceComponent {
 
     renderDetails() {
         const { cancelNumber, orderNumber, date } = this.props;
-        const dateObject = new Date(date);
+        const dateObject = new Date(date.replace(/-/g, "/"));
         const dateString = formatDate('YY/MM/DD at hh:mm', dateObject);
 
         return (

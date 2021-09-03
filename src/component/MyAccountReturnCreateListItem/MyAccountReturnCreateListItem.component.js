@@ -76,7 +76,7 @@ export class MyAccountReturnCreateListItem extends PureComponent {
                               mix={ { block: 'MyAccountReturnCreateListItem', elem: 'DetailsProp' } }
                             >
                                 { __('Delivered on ') }
-                                <span>{ formatDate('DD MMM YYYY', new Date(courier_deliver_date)) }</span>
+                                <span>{ formatDate('DD MMM YYYY', new Date(courier_deliver_date.replace(/-/g, "/"))) }</span>
                             </p>
                         ) }
                     </div>
