@@ -24,9 +24,6 @@
       &:first-child {
         padding-left: 0;
       }
-      &:not(:last-child) {
-        border-right: 1px solid var(--black);
-      }
     }
   }
 
