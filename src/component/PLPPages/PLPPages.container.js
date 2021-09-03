@@ -38,7 +38,8 @@ export class PLPPagesContainer extends PureComponent {
 
     containerProps = () => ({
         pages: this.getPages(),
-        query:this.props.query
+        query:this.props.query,
+        renderMySignInPopup:this.props.renderMySignInPopup
     });
 
     getPages() {

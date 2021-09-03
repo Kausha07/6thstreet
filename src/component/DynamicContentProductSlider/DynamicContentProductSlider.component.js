@@ -118,8 +118,7 @@ class DynamicContentProductSlider extends PureComponent {
 
   render() {
     const { isArabic, withViewAll, eventRegistered } = this.state;
-    const { products } = this.props;
-
+    const { products,renderMySignInPopup } = this.props;
     if (products.length === 0) {
       return null;
     }
@@ -138,6 +137,7 @@ class DynamicContentProductSlider extends PureComponent {
           products={products}
           heading={finalTitle}
           withViewAll
+          renderMySignInPopup={renderMySignInPopup}
           key={`VueProductSliderContainer`}
           isHome={true}
           pageType={"home"}

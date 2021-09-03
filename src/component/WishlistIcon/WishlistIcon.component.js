@@ -13,6 +13,7 @@ import Event, {
 } from "Util/Event";
 import { Favourite, FavouriteFilled } from "../Icons";
 import "./WishlistIcon.style";
+import { isSignedIn } from "Util/Auth";
 
 class WishlistIcon extends PureComponent {
   static propTypes = {
@@ -37,8 +38,14 @@ class WishlistIcon extends PureComponent {
 
   handleClick = () => {
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender;
-    const { addToWishlist, removeFromWishlist, items, data, pageType } =
-      this.props;
+    const {
+      addToWishlist,
+      removeFromWishlist,
+      items,
+      data,
+      pageType,
+      renderMySignInPopup,
+    } = this.props;
     const customer = BrowserDatabase.getItem("customer");
     const userID = customer && customer.id ? customer.id : null;
     const { skuFromProps } = this.state;
@@ -84,8 +91,11 @@ class WishlistIcon extends PureComponent {
       }
       return;
     }
-
-    addToWishlist(skuFromProps);
+    if (isSignedIn()) {
+      addToWishlist(skuFromProps);
+    } else {
+      renderMySignInPopup();
+    }
     // Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_WISHLIST, { product: data });
     const priceObject = data.price[0];
     const itemPrice = priceObject
