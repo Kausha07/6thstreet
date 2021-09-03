@@ -100,7 +100,6 @@ class MyAccountOrderView extends PureComponent {
     } = this.props;
     const buttonText =
       status === STATUS_COMPLETE ? __("Return an Item") : __("Cancel an Item");
-
     return (
       <div block="MyAccountOrderView" elem="Heading" mods={{ isArabic }}>
         <h3>{__("Order #%s", increment_id)}</h3>
@@ -498,6 +497,7 @@ class MyAccountOrderView extends PureComponent {
   renderOrderPaymentType() {
     const {
       order: {
+        status,
         payment: {
           method,
         },
@@ -516,6 +516,9 @@ class MyAccountOrderView extends PureComponent {
         return this.renderPaymentTypeText(__("Cash on Delivery"));
       case APPLE_PAY:
       case CHECKOUT_APPLE_PAY:
+        if (STATUS_FAILED.includes(status)) {
+          return this.renderPaymentTypeText(__("Apple Pay"));
+        }
         return this.renderCardPaymentType();
       default:
         return null;
@@ -629,6 +632,7 @@ class MyAccountOrderView extends PureComponent {
   };
 
   renderBackButton() {
+
     const { isArabic } = this.state;
     // eslint-disable-next-line jsx-a11y/control-has-associated-label
     return (
@@ -650,7 +654,6 @@ class MyAccountOrderView extends PureComponent {
         </div>
       );
     }
-
     const { billing_address } = order;
 
     return (
