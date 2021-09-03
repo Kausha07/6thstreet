@@ -214,7 +214,7 @@ class RecommendedForYouVueSlider extends PureComponent {
   renderSliderContainer() {
     const items = this.getProducts();
     const { isHome } = this.props;
-    const { widgetID, pageType } = this.props;
+    const { widgetID, pageType,renderMySignInPopup } = this.props;
     // debugger
     return (
       <DragScroll data={{ rootClass: "ScrollWrapper", ref: this.cmpRef }}>
@@ -235,6 +235,7 @@ class RecommendedForYouVueSlider extends PureComponent {
               return (
                 <RecommendedForYouVueSliderItem
                   key={sku}
+                  renderMySignInPopup={renderMySignInPopup}
                   data={item}
                   ref={this.itemRef}
                   widgetID={widgetID}

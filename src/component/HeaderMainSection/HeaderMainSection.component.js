@@ -23,6 +23,7 @@ import { isArabic } from "Util/App";
 import BrowserDatabase from "Util/BrowserDatabase";
 import isMobile from "Util/Mobile";
 import "./HeaderMainSection.style";
+import MyAccountOverlay from "Component/MyAccountOverlay";
 
 export const mapStateToProps = (state) => ({
   activeOverlay: state.OverlayReducer.activeOverlay,
@@ -55,6 +56,7 @@ class HeaderMainSection extends NavigationAbstract {
       search: "",
       showSearch: false,
       isArabic: isArabic(),
+      signInPopUp: "",
       isMobile: isMobile.any(),
     };
     this.headerSearchRef = createRef();
@@ -79,7 +81,20 @@ class HeaderMainSection extends NavigationAbstract {
     search: this.renderSearch.bind(this),
     back: this.renderBack.bind(this),
   };
+  closePopup = () => {
+    this.setState({ signInPopUp: "" });
+  };
 
+  renderMySignInPopup = () => {
+    const { signInPopUp } = this.state;
+    this.setState({ showSearch: false });
+
+    const popUpElement = (
+      <MyAccountOverlay isPopup={signInPopUp} closePopup={this.closePopup} />
+    );
+    this.setState({ signInPopUp: popUpElement });
+    return popUpElement;
+  };
   // state = {
 
   // };
@@ -132,7 +147,7 @@ class HeaderMainSection extends NavigationAbstract {
       location: { state, pathname = "" },
     } = this.props;
     const isSearch = pathname.includes("catalogsearch");
-    
+
     return TYPE_CATEGORY === type && state && !isSearch;
   }
 
@@ -325,6 +340,7 @@ class HeaderMainSection extends NavigationAbstract {
       <div block="DesktopSearch">
         <HeaderSearch
           hideSearchBar={this.hideSearchBar}
+          renderMySignInPopup={this.renderMySignInPopup}
           focusInput={true}
           key="search"
         />
@@ -343,7 +359,7 @@ class HeaderMainSection extends NavigationAbstract {
 
   render() {
     const pageWithHiddenHeader = [TYPE_CART, TYPE_ACCOUNT];
-
+    const { signInPopUp } = this.state;
     return pageWithHiddenHeader.includes(this.getPageType()) &&
       isMobile.any() ? null : (
       <div
@@ -352,6 +368,7 @@ class HeaderMainSection extends NavigationAbstract {
           this.isPDP() && isMobile.any() ? this.state.visible : true
         }
       >
+        {signInPopUp}
         {this.renderNavigationState()}
         {this.renderSearchIcon()}
         {this.renderDesktopSearch()}

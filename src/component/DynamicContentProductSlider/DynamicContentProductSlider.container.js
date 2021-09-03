@@ -40,7 +40,8 @@ export class DynamicContentProductSliderContainer extends PureComponent {
         const {
             title,
             data_url,
-            language
+            language,
+            renderMySignInPopup
         } = this.props;
 
         const {
@@ -53,7 +54,8 @@ export class DynamicContentProductSliderContainer extends PureComponent {
             data_url,
             language,
             isLoading,
-            products
+            products,
+            renderMySignInPopup
         };
     };
 

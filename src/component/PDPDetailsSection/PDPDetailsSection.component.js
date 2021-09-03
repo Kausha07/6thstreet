@@ -343,7 +343,7 @@ class PDPDetailsSection extends PureComponent {
   }
 
   renderPdpWidgets() {
-    const { pdpWidgetsData } = this.props;
+    const { pdpWidgetsData,renderMySignInPopup } = this.props;
     const { pdpWidgetsAPIData } = this.state;
     if (pdpWidgetsData.length > 0 && pdpWidgetsAPIData.length > 0) {
       return (
@@ -360,6 +360,7 @@ class PDPDetailsSection extends PureComponent {
                     products={data}
                     heading={heading}
                     isHome={true}
+                    renderMySignInPopup={renderMySignInPopup}
                     pageType={"pdp"}
                     key={`DynamicContentVueProductSliderContainer${index}`}
                   />

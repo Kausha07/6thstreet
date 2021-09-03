@@ -153,6 +153,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
       data,
       widgetID,
       pageType,
+      renderMySignInPopup,
     } = this.props;
     const { isArabic } = this.state;
     let newLink = link;
@@ -188,7 +189,12 @@ class DynamicContentVueProductSliderItem extends PureComponent {
           {this.renderPrice(price)}
           {this.renderIsNew(is_new_in)}
         </Link>
-        <WishlistIcon sku={sku} data={data} pageType={pageType} />
+        <WishlistIcon
+          renderMySignInPopup={renderMySignInPopup}
+          sku={sku}
+          data={data}
+          pageType={pageType}
+        />
       </div>
     );
   }

@@ -88,6 +88,7 @@ class PDPSummary extends PureComponent {
     const {
       product: { sku },
       product,
+      renderMySignInPopup,
     } = this.props;
     const url = new URL(window.location.href);
 
@@ -104,7 +105,12 @@ class PDPSummary extends PureComponent {
             text={`Hey check this out: ${document.title}`}
             url={url.searchParams.append("utm_source", "pdp_share")}
           />
-          <WishlistIcon sku={sku} data={product} pageType="pdp" />
+          <WishlistIcon
+            sku={sku}
+            renderMySignInPopup={renderMySignInPopup}
+            data={product}
+            pageType="pdp"
+          />
         </div>
       </>
     );
@@ -231,6 +237,7 @@ class PDPSummary extends PureComponent {
     const {
       product: { sku },
       isLoading,
+      renderMySignInPopup,
     } = this.props;
     const { alsoAvailable } = this.state;
 
@@ -239,6 +246,7 @@ class PDPSummary extends PureComponent {
         return (
           <PDPAlsoAvailable
             productsAvailable={alsoAvailable}
+            renderMySignInPopup={renderMySignInPopup}
             productSku={sku}
           />
         );

@@ -213,7 +213,7 @@ class DynamicContentVueProductSlider extends PureComponent {
 
   renderSliderContainer() {
     const items = this.getProducts();
-    const { isHome } = this.props;
+    const { isHome, renderMySignInPopup } = this.props;
     const { widgetID, pageType } = this.props;
     // debugger
     return (
@@ -234,6 +234,7 @@ class DynamicContentVueProductSlider extends PureComponent {
               const { sku } = item;
               return (
                 <DynamicContentVueProductSliderItem
+                  renderMySignInPopup={renderMySignInPopup}
                   key={sku}
                   data={item}
                   ref={this.itemRef}
