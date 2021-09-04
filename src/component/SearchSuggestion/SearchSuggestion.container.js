@@ -280,6 +280,7 @@ export class SearchSuggestionContainer extends PureComponent {
       closeSearch,
       queryID,
       querySuggestions,
+      renderMySignInPopup
       // wishlistData,
     } = this.props;
     const { brands = [], products = [] } = data;
@@ -302,6 +303,7 @@ export class SearchSuggestionContainer extends PureComponent {
       recentSearches,
       recommendedForYou,
       trendingProducts,
+      renderMySignInPopup
       // wishlistData,
     };
   };

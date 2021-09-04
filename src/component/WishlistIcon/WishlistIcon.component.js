@@ -13,6 +13,7 @@ import Event, {
 } from "Util/Event";
 import { Favourite, FavouriteFilled } from "../Icons";
 import "./WishlistIcon.style";
+import { isSignedIn } from "Util/Auth";
 
 class WishlistIcon extends PureComponent {
   static propTypes = {
@@ -37,8 +38,14 @@ class WishlistIcon extends PureComponent {
 
   handleClick = () => {
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender;
-    const { addToWishlist, removeFromWishlist, items, data, pageType } =
-      this.props;
+    const {
+      addToWishlist,
+      removeFromWishlist,
+      items,
+      data,
+      pageType,
+      renderMySignInPopup,
+    } = this.props;
     const customer = BrowserDatabase.getItem("customer");
     const userID = customer && customer.id ? customer.id : null;
     const { skuFromProps } = this.state;
@@ -64,26 +71,31 @@ class WishlistIcon extends PureComponent {
       const prodPrice = prodPriceObject
         ? prodPriceObject[Object.keys(prodPriceObject)[0]]["6s_base_price"]
         : "";
-      // to do add 6s_special_price when we get response from backend.
-      VueIntegrationQueries.vueAnalayticsLogger({
-        event_name: VUE_REMOVE_TO_WISHLIST,
-        params: {
-          event: VUE_REMOVE_TO_WISHLIST,
-          pageType: pageType,
-          currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-          clicked: Date.now(),
-          prodPrice: prodPrice,
-          sourceCatgID: gender,
-          sourceProdID: skuFromProps,
-          uuid: getUUID(),
-          referrer: "desktop",
-          userID: userID,
-        },
-      });
+      if (userID) {
+        // to do add 6s_special_price when we get response from backend.
+        VueIntegrationQueries.vueAnalayticsLogger({
+          event_name: VUE_REMOVE_TO_WISHLIST,
+          params: {
+            event: VUE_REMOVE_TO_WISHLIST,
+            pageType: pageType,
+            currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+            clicked: Date.now(),
+            prodPrice: prodPrice,
+            sourceCatgID: gender,
+            sourceProdID: skuFromProps,
+            uuid: getUUID(),
+            referrer: "desktop",
+            userID: userID,
+          },
+        });
+      }
       return;
     }
-
-    addToWishlist(skuFromProps);
+    if (isSignedIn()) {
+      addToWishlist(skuFromProps);
+    } else {
+      renderMySignInPopup();
+    }
     // Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_WISHLIST, { product: data });
     const priceObject = data.price[0];
     const itemPrice = priceObject
@@ -99,21 +111,23 @@ class WishlistIcon extends PureComponent {
         variant: data.color,
       },
     });
-    VueIntegrationQueries.vueAnalayticsLogger({
-      event_name: VUE_ADD_TO_WISHLIST,
-      params: {
-        event: VUE_ADD_TO_WISHLIST,
-        pageType: pageType,
-        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-        clicked: Date.now(),
-        prodPrice: itemPrice,
-        sourceCatgID: gender,
-        sourceProdID: skuFromProps,
-        uuid: getUUID(),
-        referrer: "desktop",
-        userID: userID,
-      },
-    });
+    if (userID) {
+      VueIntegrationQueries.vueAnalayticsLogger({
+        event_name: VUE_ADD_TO_WISHLIST,
+        params: {
+          event: VUE_ADD_TO_WISHLIST,
+          pageType: pageType,
+          currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+          clicked: Date.now(),
+          prodPrice: itemPrice,
+          sourceCatgID: gender,
+          sourceProdID: skuFromProps,
+          uuid: getUUID(),
+          referrer: "desktop",
+          userID: userID,
+        },
+      });
+    }
   };
 
   isBlack = (item) => {

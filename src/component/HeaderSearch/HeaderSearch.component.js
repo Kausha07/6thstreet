@@ -152,7 +152,7 @@ class HeaderSearch extends PureComponent {
   }
 
   renderSuggestion() {
-    const { search } = this.props;
+    const { search,renderMySignInPopup } = this.props;
     const { showSearch } = this.state;
 
     if (!showSearch) {
@@ -161,14 +161,17 @@ class HeaderSearch extends PureComponent {
 
     return (
       <>
-        <SearchSuggestion closeSearch={this.closeSearch} search={search} />
+        <SearchSuggestion
+          closeSearch={this.closeSearch}
+          renderMySignInPopup={renderMySignInPopup}
+          search={search}
+        />
       </>
     );
   }
 
   render() {
     const { isArabic } = this.state;
-
     return (
       <>
         <div block="SearchBackground" mods={{ isArabic }} />

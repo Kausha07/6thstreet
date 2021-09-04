@@ -9,7 +9,6 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import Event, { VUE_CAROUSEL_SHOW, VUE_CAROUSEL_SWIPE } from "Util/Event";
 import DynamicContentVueProductSliderItem from "./DynamicContentVueProductSlider.Item";
 import "./DynamicContentVueProductSlider.style.scss";
-
 class DynamicContentVueProductSlider extends PureComponent {
   static propTypes = {
     withViewAll: PropTypes.bool,
@@ -81,7 +80,6 @@ class DynamicContentVueProductSlider extends PureComponent {
     }
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        console.log("dynamic product slider component in view port ", entry);
         this.sendImpressions();
       }
     });
@@ -215,7 +213,7 @@ class DynamicContentVueProductSlider extends PureComponent {
 
   renderSliderContainer() {
     const items = this.getProducts();
-    const { isHome } = this.props;
+    const { isHome, renderMySignInPopup } = this.props;
     const { widgetID, pageType } = this.props;
     // debugger
     return (
@@ -236,6 +234,7 @@ class DynamicContentVueProductSlider extends PureComponent {
               const { sku } = item;
               return (
                 <DynamicContentVueProductSliderItem
+                  renderMySignInPopup={renderMySignInPopup}
                   key={sku}
                   data={item}
                   ref={this.itemRef}

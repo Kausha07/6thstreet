@@ -25,11 +25,32 @@ class SearchPage extends PLP {
   }
 
   render() {
+    const {
+      isLoading,
+      options: { q },
+      pages,
+    } = this.props;
+    if (
+      isLoading ||
+      (pages.undefined && pages.undefined.length > 0) ||
+      (pages["0"] && pages["0"].length > 0)
+    ) {
+      return (
+        <main block="SearchPage">
+          <ContentWrapper label={__("Product List Page")}>
+            {this.renderPLPDetails()}
+            {this.renderPLPFilters()}
+            {this.renderPLPPages()}
+            {this.renderSearchNotFound()}
+          </ContentWrapper>
+        </main>
+      );
+    }
+
     return (
       <main block="SearchPage">
         <ContentWrapper label={__("Product List Page")}>
           {this.renderPLPDetails()}
-          {this.renderPLPFilters()}
           {this.renderPLPPages()}
           {this.renderSearchNotFound()}
         </ContentWrapper>

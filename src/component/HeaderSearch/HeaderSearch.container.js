@@ -122,7 +122,8 @@ export class HeaderSearchContainer extends PureComponent {
         tempRecentSearches = [...recentSearches.reverse()];
       }
       tempRecentSearches = tempRecentSearches.filter(
-        (item) => item.name !== searchQuery
+        (item) =>
+          item.name.toUpperCase().trim() !== searchQuery.toUpperCase().trim()
       );
       if (tempRecentSearches.length > 4) {
         tempRecentSearches.shift();
@@ -158,10 +159,10 @@ export class HeaderSearchContainer extends PureComponent {
   }
 
   containerProps = () => {
-    const { focusInput } = this.props;
+    const { focusInput,renderMySignInPopup } = this.props;
     const { search } = this.state;
 
-    return { search, focusInput };
+    return { search, focusInput,renderMySignInPopup };
   };
 
   onSearchChange(search) {

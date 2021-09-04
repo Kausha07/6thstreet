@@ -20,7 +20,6 @@ import Logger from "Util/Logger";
 import VueQuery from "../../query/Vue.query";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
-import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
 
 import "./DynamicContent.style";
 
@@ -36,113 +35,10 @@ class DynamicContent extends PureComponent {
       return React.createRef();
     });
   }
-  componentDidMount() {
-    // this.registerViewportScrollEvent();
-    // this.registerAllViewPortEvent();
-  }
 
-  componentWillUnmount() {
-    // document.removeEventListener("scroll", this.scrollHandler);
-  }
-  registerViewportScrollEvent() {
-    // document.addEventListener("scroll", this.scrollHandler);
-  }
-
-  registerAllViewPortEvent() {
-    const refList = this.comprefs.filter(
-      (ref) => ref && ref.current && ref.current.props
-    );
-    // console.log(refList.length, "aaa");
-    refList.map((compref, index) => {
-      this.registerViewPortEvent(compref, index);
-    });
-  }
-  registerViewPortEvent(ref, index) {
-    // sliderWithLabel
-    // const elem = document.querySelector("#sliderWithLabel");
-
-    let observer;
-
-    let options = {
-      root: null,
-      rootMargin: "0px",
-      threshold: 0.5,
-    };
-
-    observer = new IntersectionObserver((entries, observer) => {
-      const { impressionSent } = this.state;
-      if (impressionSent[index]) {
-        return;
-      }
-
-      entries.forEach((entry) => {
-        console.log("elem in view port ", entry.isIntersecting);
-        if (entry.isIntersecting) {
-          const { items = [] } = this.props;
-          this.sendBannerImpressions();
-          impressionSent[index] = true;
-          this.setState({ impressionSent });
-        }
-      });
-    }, options);
-    observer.observe(ReactDOM.findDOMNode(ref.current));
-  }
-  handleIntersect = (entries, observer) => {
-    const { impressionSent } = this.state;
-    return;
-    // if (impressionSent[index]) {
-    //   return;
-    // }
-
-    entries.forEach((entry) => {
-      console.log("elem in view port ", entry);
-      if (entry.isIntersecting) {
-        this.sendBannerImpressions();
-        impressionSent[index] = true;
-        this.setState({ impressionSent });
-      }
-    });
-  };
-
-  scrollHandler = () => {
-    const refList = this.comprefs.filter(
-      (ref) => ref && ref.current && ref.current.props
-    );
-    // console.log(refList.length, "aaa");
-    refList.map((compref, index) => {
-      this.isInViewport(compref, index);
-    });
-  };
-  isInViewport = (ref, index) => {
-    //get how much pixels left to scrolling our ReactElement
-    const top = ReactDOM.findDOMNode(ref.current).getBoundingClientRect().top;
-    if (top <= 0) {
-      // inside viewport
-      const { impressionSent } = this.state;
-      const trackedImpressions = window.dataLayer.filter(
-        (item) => item.event == "promotionImpression"
-      );
-      const isTracked =
-        trackedImpressions.filter((item) => item.index == index).length > 0;
-      console.log({ isTracked, index });
-
-      if (!impressionSent[index]) {
-        const { items = [], promotion_name, type, tag } = ref.current.props;
-        // this.sendBannerImpressions(items);
-        // Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
-        impressionSent[index] = true;
-        this.setState({ impressionSent });
-        // console.log({ impressionSent, promotion_name, type, tag, items });
-      }
-    }
-  };
-  sendBannerImpressions(items) {
-    // Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
-  }
   state = {
     impressions: [],
     sliderImpressionCount: 0,
-    impressionSent: {},
   };
 
   renderMap = {
@@ -217,11 +113,12 @@ class DynamicContent extends PureComponent {
       if (!Component) {
         return null;
       }
-
+    
       return (
         <Component
           ref={this.comprefs[i]}
           {...restProps}
+          renderMySignInPopup={this.props.renderMySignInPopup}
           promotion_name={promotion_name}
           tag={tag}
           type={type}
@@ -248,13 +145,14 @@ class DynamicContent extends PureComponent {
         }));
       };
     }
-
+   
     return (
       <Component
         ref={this.comprefs[i]}
         {...restProps}
         type={type}
         promotion_name={promotion_name}
+        renderMySignInPopup={this.props.renderMySignInPopup}
         tag={tag}
         key={i}
       />

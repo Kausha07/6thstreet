@@ -70,8 +70,16 @@ class ProductItem extends PureComponent {
       product: { sku },
       product,
       pageType,
+      renderMySignInPopup,
     } = this.props;
-    return <WishlistIcon sku={sku} data={product} pageType={pageType} />;
+    return (
+      <WishlistIcon
+        renderMySignInPopup={renderMySignInPopup}
+        sku={sku}
+        data={product}
+        pageType={pageType}
+      />
+    );
   }
 
   renderLabel() {
@@ -136,7 +144,7 @@ class ProductItem extends PureComponent {
     } = this.props;
 
     return (
-      <div>
+      <div block="ProductItem" elem="ImageBox">
         <Image src={thumbnail_url} />
         {this.renderOutOfStock()} {this.renderExclusive()} {this.renderColors()}{" "}
       </div>

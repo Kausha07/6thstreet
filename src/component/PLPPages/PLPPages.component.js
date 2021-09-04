@@ -22,12 +22,19 @@ class PLPPages extends PureComponent {
 
   renderPage = ([key, page]) => {
     const { products, isPlaceholder } = page;
-    const { impressions,query } = this.props;
+    const { impressions, query, renderMySignInPopup } = this.props;
     if (isPlaceholder) {
       return <PLPPagePlaceholder key={key} pageIndex={key} query={query} />;
     }
 
-    return <PLPPage key={key} products={products} impressions={impressions} />;
+    return (
+      <PLPPage
+        key={key}
+        products={products}
+        impressions={impressions}
+        renderMySignInPopup={renderMySignInPopup}
+      />
+    );
   };
 
   renderPages() {

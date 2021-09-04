@@ -106,13 +106,19 @@ class PDPAlsoAvailableProduct extends PureComponent {
     const {
       product: { sku },
       product,
+      renderMySignInPopup,
     } = this.props;
 
     return (
       <li block="PDPAlsoAvailableProduct">
         <div block="PDPAlsoAvailableProduct" elem="OverlayContainer">
           {this.renderNew()}
-          <WishlistIcon sku={sku} data={product} pageType="pdp" />
+          <WishlistIcon
+            sku={sku}
+            data={product}
+            pageType="pdp"
+            renderMySignInPopup={renderMySignInPopup}
+          />
         </div>
         {this.renderLink()}
       </li>

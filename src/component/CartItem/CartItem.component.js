@@ -258,7 +258,7 @@ export class CartItem extends PureComponent {
 
     const withoutDiscount = (
       <>
-        <span>{currency_code}</span>
+        <span>{currency_code}</span>&nbsp;
         <span>{`${parseFloat(row_total).toFixed(decimals)}`}</span>
       </>
     );
@@ -272,7 +272,7 @@ export class CartItem extends PureComponent {
           elem="BasePrice"
           mods={{ isArabic }}
         >
-          <span>{currency_code}</span>
+          <span>{currency_code}</span>&nbsp;
           <span>{`${parseFloat(basePrice).toFixed(decimals)}`}</span>
         </div>
         <div>
@@ -438,14 +438,15 @@ export class CartItem extends PureComponent {
     const {
       item: {
         product: { name },
+        full_item_info: { url_key },
       },
       thumbnail,
       isCartPage,
     } = this.props;
     const { isArabic } = this.state;
-
+    let customURL = `${url_key}.html`;
     return (
-      <>
+      <div onClick={() => this.props.history.push(customURL)}>
         <img
           src={thumbnail}
           mix={{
@@ -457,7 +458,7 @@ export class CartItem extends PureComponent {
           alt={`Product ${name} thumbnail.`}
         />
         <img style={{ display: "none" }} alt={name} src={thumbnail} />
-      </>
+      </div>
     );
   }
 
