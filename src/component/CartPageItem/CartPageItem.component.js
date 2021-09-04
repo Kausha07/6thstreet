@@ -289,17 +289,16 @@ export class CartItem extends PureComponent {
   renderClickAndCollectStoreName() {
     const {
       item: {
-        availableQty
+        extension_attributes
       }
     } = this.props;
 
     const { isArabic } = this.state;
-
-    if(availableQty?.click_to_collect_store) {
+    if(extension_attributes?.click_to_collect_store) {
       return (
-        <div block="CartPageItem" elem="ClickAndCollect" mods={{ isArabic }} mods={{ isArabic }}>
+        <div block="CartPageItem" elem="ClickAndCollect" mods={{ isArabic }}>
           <div block="CartPageItem-ClickAndCollect" elem="icon"><Store /></div>
-          <div block="CartPageItem-ClickAndCollect" elem="StoreName">{ availableQty?.click_to_collect_store_name}</div>
+          <div block="CartPageItem-ClickAndCollect" elem="StoreName">{ extension_attributes?.click_to_collect_store_name}</div>
         </div>
       );
     }

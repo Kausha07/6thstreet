@@ -23,22 +23,95 @@ class PDPClickAndCollectPopup extends PureComponent {
         selectedClickAndCollectStore: null
     };
 
+    state = {
+        searchKeyword: "",
+        showStoreList: false,
+        nearMe: true
+    }
+
+    handleSearchKeywordChange(value) {
+        this.setState({searchKeyword: value})
+    }
+
+    handleStoreSelect(store) {
+        const { selectClickAndCollectStore } = this.props;
+        selectClickAndCollectStore(store);
+        this.setState({
+            searchKeyword: store.label,
+        }, this.toggleStoreList)
+    }
+
+    toggleStoreList() {
+        const { showStoreList } = this.state;
+        this.setState({
+            showStoreList: !showStoreList,
+        })
+    }
+
     renderStoreSelect() {
-        const { stores, selectedClickAndCollectStore, selectClickAndCollectStore } = this.props;
+        const { searchKeyword } = this.state;
         return (
-            <Form key="select-store">
-                <Search />
-                <Field
-                    type="select"
-                    id="selectStore"
-                    name="selectStore"
-                    placeholder={ `${ __('Select a Store') }*` }
-                    selectOptions={ stores }
-                    value={ selectedClickAndCollectStore }
-                    onChange={ selectClickAndCollectStore }
-                />
-            </Form>
+            <>
+                <Form key="select-store">
+                    <Search />
+                    <Field
+                        type="input"
+                        id="selectStore"
+                        name="selectStore"
+                        placeholder={ `${ __('Select a Store') }*` }
+                        value={ searchKeyword }
+                        onChange={ (value) => this.handleSearchKeywordChange(value) }
+                        onClick={ () => this.toggleStoreList() }
+                    />
+                </Form>
+                { this.renderStoresList() }
+            </>
         );
+    }
+
+    renderStoresList() {
+        const { stores } = this.props;
+        const { searchKeyword, showStoreList, nearMe } = this.state;
+        
+        if(showStoreList) {
+            return (
+                <>
+                    {/* <Field
+                            type="toggle"
+                            value={nearMe}
+                            checked={nearMe}
+                            name="Near Me"
+                            label="Near Me"
+                            id="NearMe"
+                            onClick={(checked) => {
+                                console.log(checked)
+                                this.setState({nearMe: !checked})
+                            }}
+                    /> */}
+                    <ul>
+                        {
+                            stores
+                            .filter((store) => store.label.toLowerCase().includes(searchKeyword.toLowerCase()))
+                            .map((store) => (
+                                <li
+                                    onClick={(e) => {
+                                        e.persist(); 
+                                        e.nativeEvent.stopImmediatePropagation();
+                                        this.handleStoreSelect(store);
+                                        e.stopPropagation();
+                                    }}
+                                    key={store.id}
+                                >
+                                    <div>{ store.label }</div>
+                                    <div>{ `${store.city} | ${store.area}`}</div>
+                                </li>
+                            ))
+                        }
+                    </ul>
+                </>
+            )
+        }
+        return null;
     }
 
     renderConfirmButton() {
@@ -65,25 +138,38 @@ class PDPClickAndCollectPopup extends PureComponent {
     }
 
     render() {
+        const { togglePDPClickAndCollectPopup, openClickAndCollectPopup } = this.props;
+        const { showStoreList } = this.state;
         return (
             <Popup
                 id={ PDP_CLICK_AND_COLLECT_POPUP_ID }
                 mix={ {
                     block: 'PDPClickAndCollectPopup',
-                    mods: { isArabic: isArabic() } 
+                    mods: {
+                        isArabic: isArabic()
+                    } 
                 }}
-                onHide={this.props.togglePDPClickAndCollectPopup}
+                onHide={ togglePDPClickAndCollectPopup }
+                open={ openClickAndCollectPopup }
             >
                 <h3>{ __( "PICK A STORE" ) }</h3>
                 <div block="PDPClickAndCollectPopup" elem="StoreSelectContainer">
                     { this.renderStoreSelect() }
                 </div>
-                <h4>
-                    Orders can take 1-2 hours to get to the store. In addition to your order confirmation, you will receive an email notification once your order has shipped and another email once it has arrived in store and is available for pickup.
-                </h4>
-                <div block="PDPClickAndCollectPopup" elem="ConfirmButtonContainer">
-                    { this.renderConfirmButton() }
-                </div>
+                {
+                    !showStoreList
+                    ?
+                    <>
+                        <h4>
+                            Orders can take 1-2 hours to get to the store. In addition to your order confirmation, you will receive an email notification once your order has shipped and another email once it has arrived in store and is available for pickup.
+                        </h4>
+                        <div block="PDPClickAndCollectPopup" elem="ConfirmButtonContainer">
+                            { this.renderConfirmButton() }
+                        </div>
+                    </>
+                    :
+                    null
+                }
             </Popup>
         );
     }

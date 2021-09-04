@@ -61,7 +61,10 @@ export class PDPDispatcher {
           {
             id: store.storeNo,
             value: store.storeNo,
-            label: store.name
+            label: store.name,
+            address: store.address,
+            area: store.area,
+            city: store.city
           }
         ));
       }
