@@ -210,7 +210,7 @@ class PDPSummary extends PureComponent {
 
   renderPDPTags() {
     const {
-      product: { prod_tag_1, prod_tag_2, in_stock },
+      product: { prod_tag_1, prod_tag_2, in_stock, stock_qty },
     } = this.props;
 
     const tags = [prod_tag_1, prod_tag_2].filter(Boolean);
