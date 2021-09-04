@@ -507,42 +507,8 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       shippingAddress
     } = this.props;
 
-    let LineItems = items.map((item) => ({
-      label: `${item?.full_item_info?.brand_name} - ${item?.full_item_info?.name}`,
-      amount: item?.full_item_info?.price * item?.qty 
-    }))
-
-    if(discount){
-      LineItems.push({
-        label: __("Discount"),
-        amount: discount
-      });
-    }
-
-    if(shipping_fee){
-      LineItems.push({
-        label: __("Shipping Charges"),
-        amount: shipping_fee 
-      });
-    }
+    const LineItems = this._getLineItems()
     
-    const storeCredit = getDiscountFromTotals(totals, "customerbalance")
-    
-    const clubApparel = getDiscountFromTotals(totals, "clubapparel")
-
-    if(storeCredit){
-      LineItems.push({
-        label: __("Store Credit"),
-        amount: storeCredit 
-      });
-    }
-
-    if(clubApparel){
-      LineItems.push({
-        label: __("Club Apparel Redemption"),
-        amount: clubApparel 
-      });
-    }
     const paymentRequest = {
       countryCode,
       currencyCode: quote_currency_code,
@@ -709,7 +675,52 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
    * Get line items
    * @returns {*[]}
    */
-  _getLineItems = () => [];
+  _getLineItems = () => {
+    const {
+      totals: { 
+        discount,
+        shipping_fee = 0,
+        total_segments: totals = [],
+        items
+      },
+    } = this.props;
+    const LineItems = items.map((item) => ({
+      label: `${item?.full_item_info?.brand_name} - ${item?.full_item_info?.name}`,
+      amount: item?.full_item_info?.price * item?.qty 
+    }))
+    if(discount){
+      LineItems.push({
+        label: __("Discount"),
+        amount: discount
+      });
+    }
+
+    if(shipping_fee){
+      LineItems.push({
+        label: __("Shipping Charges"),
+        amount: shipping_fee 
+      });
+    }
+    
+    const storeCredit = getDiscountFromTotals(totals, "customerbalance")
+    
+    const clubApparel = getDiscountFromTotals(totals, "clubapparel")
+
+    if(storeCredit){
+      LineItems.push({
+        label: __("Store Credit"),
+        amount: storeCredit 
+      });
+    }
+
+    if(clubApparel){
+      LineItems.push({
+        label: __("Club Apparel Redemption"),
+        amount: clubApparel 
+      });
+    }
+    return LineItems
+  };
 
   /**
    * Get apple pay validation
