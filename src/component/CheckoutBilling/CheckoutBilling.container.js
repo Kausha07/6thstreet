@@ -507,49 +507,15 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       shippingAddress
     } = this.props;
 
-    let LineItems = items.map((item) => ({
-      label: `${item?.full_item_info?.brand_name} - ${item?.full_item_info?.name}`,
-      amount: { currency: currency_code, value: item?.full_item_info?.price * item?.qty }
-    }))
-
-    if(discount){
-      LineItems.push({
-        label: __("Discount"),
-        amount: { currency: currency_code, value: discount }
-      });
-    }
-
-    if(shipping_fee){
-      LineItems.push({
-        label: __("Shipping Charges"),
-        amount: { currency: currency_code, value: shipping_fee }
-      });
-    }
+    const LineItems = this._getLineItems()
     
-    const storeCredit = getDiscountFromTotals(totals, "customerbalance")
-    
-    const clubApparel = getDiscountFromTotals(totals, "clubapparel")
-
-    if(storeCredit){
-      LineItems.push({
-        label: __("Store Credit"),
-        amount: { currency: currency_code, value: storeCredit }
-      });
-    }
-
-    if(clubApparel){
-      LineItems.push({
-        label: __("Club Apparel Redemption"),
-        amount: { currency: currency_code, value: clubApparel }
-      });
-    }
-    console.log("line items", LineItems)
     const paymentRequest = {
       countryCode,
       currencyCode: quote_currency_code,
       supportedNetworks: this._getSupportedNetworks(),
       merchantCapabilities: this._getMerchantCapabilities(),
       total: { label: default_title, amount: total },
+      lineItems: LineItems
     };
     savePaymentInformationApplePay({billing_address:shippingAddress, paymentMethod: {code: "checkout_apple_pay"}})
     const applePaySession = new window.ApplePaySession(1, paymentRequest);
@@ -709,7 +675,52 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
    * Get line items
    * @returns {*[]}
    */
-  _getLineItems = () => [];
+  _getLineItems = () => {
+    const {
+      totals: { 
+        discount,
+        shipping_fee = 0,
+        total_segments: totals = [],
+        items
+      },
+    } = this.props;
+    const LineItems = items.map((item) => ({
+      label: `${item?.full_item_info?.brand_name} - ${item?.full_item_info?.name}`,
+      amount: item?.full_item_info?.price * item?.qty 
+    }))
+    if(discount){
+      LineItems.push({
+        label: __("Discount"),
+        amount: discount
+      });
+    }
+
+    if(shipping_fee){
+      LineItems.push({
+        label: __("Shipping Charges"),
+        amount: shipping_fee 
+      });
+    }
+    
+    const storeCredit = getDiscountFromTotals(totals, "customerbalance")
+    
+    const clubApparel = getDiscountFromTotals(totals, "clubapparel")
+
+    if(storeCredit){
+      LineItems.push({
+        label: __("Store Credit"),
+        amount: storeCredit 
+      });
+    }
+
+    if(clubApparel){
+      LineItems.push({
+        label: __("Club Apparel Redemption"),
+        amount: clubApparel 
+      });
+    }
+    return LineItems
+  };
 
   /**
    * Get apple pay validation
