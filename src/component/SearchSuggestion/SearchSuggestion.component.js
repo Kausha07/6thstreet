@@ -724,10 +724,13 @@ class SearchSuggestion extends PureComponent {
 
   renderTopSearches() {
     const { topSearches = [] } = this.props;
+    const { isArabic } = this.state;
     return topSearches.length > 0 ? (
       <div block="TopSearches">
         <h2>{__("Top searches")}</h2>
-        <ul>{topSearches.map(this.renderTopSearch)}</ul>
+        <ul block="TopSearches" elem="searchList" mods={{ isArabic }}>
+          {topSearches.map(this.renderTopSearch)}
+        </ul>
       </div>
     ) : null;
   }
@@ -764,10 +767,11 @@ class SearchSuggestion extends PureComponent {
 
   renderRecentSearches() {
     const { recentSearches = [] } = this.props;
+    const { isArabic } = this.state;
     return recentSearches.length > 0 ? (
       <div block="RecentSearches">
         <h2>{__("Recent searches")}</h2>
-        <ul>{recentSearches.map(this.renderRecentSearch)}</ul>
+        <ul block="RecentSearches" elem="searchList" mods={{ isArabic }}>{recentSearches.map(this.renderRecentSearch)}</ul>
       </div>
     ) : null;
   }
