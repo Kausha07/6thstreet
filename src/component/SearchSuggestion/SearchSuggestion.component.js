@@ -647,9 +647,12 @@ class SearchSuggestion extends PureComponent {
         >
           <div block="SearchSuggestion" elem="TrandingImg">
             <img src={image_url} alt="Trending" />
-            {label}
+            {/* {label} */}
           </div>
         </Link>
+        <div block="CircleSliderLabel">
+          {label}
+        </div>
       </li>
     );
   };
@@ -771,7 +774,9 @@ class SearchSuggestion extends PureComponent {
     return recentSearches.length > 0 ? (
       <div block="RecentSearches">
         <h2>{__("Recent searches")}</h2>
-        <ul block="RecentSearches" elem="searchList" mods={{ isArabic }}>{recentSearches.map(this.renderRecentSearch)}</ul>
+        <ul block="RecentSearches" elem="searchList" mods={{ isArabic }}>
+          {recentSearches.map(this.renderRecentSearch)}
+        </ul>
       </div>
     ) : null;
   }
