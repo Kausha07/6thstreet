@@ -76,9 +76,6 @@ class HeaderMainSection extends NavigationAbstract {
     gender: this.renderGenderSwitcher.bind(this),
     logo: this.renderLogo.bind(this),
     leftContainer:this.renderLeftContainer.bind(this),
-    // account: this.renderAccount.bind(this),
-    // cart: this.renderCart.bind(this),
-    // wishlist: this.renderWishlist.bind(this),
     search: this.renderSearch.bind(this),
     back: this.renderBack.bind(this),
   };

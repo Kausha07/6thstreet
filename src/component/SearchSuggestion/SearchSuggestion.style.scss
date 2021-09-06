@@ -64,7 +64,7 @@
   @include desktop() {
     position: fixed;
     right: -20px;
-    top: 155px;
+    top: 151px;
     width: 720px;
   }
 
@@ -109,7 +109,7 @@
   .TopSearches,
   .RecentSearches
   {
-    margin-bottom: 30px;
+    margin-bottom: 21px;
 
     ul {
       display: flex;
@@ -144,7 +144,7 @@
 
   .TrandingTags,
   .TrandingBrands {
-    margin-bottom: 30px;
+    margin-bottom: 21px;
 
     ul {
       display: flex;
@@ -152,7 +152,7 @@
 
     li {
       margin-top: 0;
-      margin-right: 20px;
+      margin-right: 5px;
       @include mobile {
         margin-right: 5px;
       }
@@ -344,10 +344,10 @@
     font-weight: 600;
     letter-spacing: 0;
 
-    @include before-desktop {
-      color: black;
-      text-transform: uppercase;
-    }
+    // @include before-desktop {
+    //   color: black;
+    //   text-transform: uppercase;
+    // }
   }
 
   &-Recommended,
