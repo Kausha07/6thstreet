@@ -39,8 +39,16 @@ export const mapStateToProps = (state) => ({
 
 export const mapDispatchToProps = (dispatch) => ({
   requestProduct: (options) => PDPDispatcher.requestProduct(options, dispatch),
-  requestProductBySku: (options) => PDPDispatcher.requestProductBySku(options, dispatch),
-  getClickAndCollectStores: (brandName, sku, latitude, longitude) => PDPDispatcher.getClickAndCollectStores(brandName, sku, latitude, longitude, dispatch),
+  requestProductBySku: (options) =>
+    PDPDispatcher.requestProductBySku(options, dispatch),
+  getClickAndCollectStores: (brandName, sku, latitude, longitude) =>
+    PDPDispatcher.getClickAndCollectStores(
+      brandName,
+      sku,
+      latitude,
+      longitude,
+      dispatch
+    ),
   setIsLoading: (isLoading) => dispatch(setPDPLoading(isLoading)),
   updateBreadcrumbs: (breadcrumbs) => {
     BreadcrumbsDispatcher.then(({ default: dispatcher }) =>
@@ -120,10 +128,10 @@ export class PDPContainer extends PureComponent {
       id,
       isLoading,
       setIsLoading,
-      product: { sku, brand_name: brandName, } = {},
+      product: { sku, brand_name: brandName } = {},
       product,
       menuCategories = [],
-      getClickAndCollectStores
+      getClickAndCollectStores,
     } = this.props;
     const currentIsLoading = this.getIsLoading();
     const { id: prevId } = prevProps;
@@ -144,12 +152,18 @@ export class PDPContainer extends PureComponent {
       this.setMetaData();
       this.updateHeaderState();
       navigator.geolocation.getCurrentPosition(
-        ({ coords }) => getClickAndCollectStores(brandName, sku, coords?.latitude, coords?.longitude),
+        ({ coords }) =>
+          getClickAndCollectStores(
+            brandName,
+            sku,
+            coords?.latitude,
+            coords?.longitude
+          ),
         (err) => console.error(err),
         {
-          enableHighAccuracy: true
+          enableHighAccuracy: true,
         }
-      )
+      );
     }
 
     Event.dispatch(EVENT_GTM_PRODUCT_DETAIL, {
@@ -179,7 +193,7 @@ export class PDPContainer extends PureComponent {
       const rawCategoriesLastLevel =
         categories[
           Object.keys(categories)[Object.keys(categories).length - 1]
-        ][0];
+        ]?.[0];
       const categoriesLastLevel = rawCategoriesLastLevel
         ? rawCategoriesLastLevel.split(" /// ")
         : [];
@@ -202,7 +216,7 @@ export class PDPContainer extends PureComponent {
           url: "",
           name: __(name),
         },
-        ...productBreadcrumbs
+        ...productBreadcrumbs,
       ];
 
       updateBreadcrumbs(breadcrumbs);
