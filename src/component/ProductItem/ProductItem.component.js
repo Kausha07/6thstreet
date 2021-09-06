@@ -15,6 +15,7 @@ import Event, {
   SELECT_ITEM_ALGOLIA,
 } from "Util/Event";
 import "./ProductItem.style";
+import { HOME_PAGE_BANNER_CLICK_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
 
 class ProductItem extends PureComponent {
   static propTypes = {
@@ -58,6 +59,10 @@ class ProductItem extends PureComponent {
         position: [position],
       });
     }
+    this.sendBannerClickImpression(product);
+  }
+  sendBannerClickImpression(item) {
+    Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);
   }
 
   renderWishlistIcon() {

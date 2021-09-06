@@ -35,3 +35,4 @@ export const VUE_REMOVE_TO_WISHLIST = "removeFromWishlist";
 export const VUE_BUY = "buy";
 export const VUE_PLACE_ORDER = "placeOrder";
 export const EVENT_PROMOTION_IMPRESSION = "promotionImpression";
+export const EVENT_CLICK_PROMOTION_IMPRESSION = "promotionClick";
