@@ -1,4 +1,4 @@
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import Accordion from "Component/Accordion";
 import ShareButton from "Component/ShareButton";
 import { PureComponent } from "react";
@@ -14,6 +14,7 @@ import "./PDPDetailsSection.style";
 class PDPDetailsSection extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
+    clickAndCollectStores: PropTypes.object.isRequired,
   };
 
   state = {
@@ -96,7 +97,7 @@ class PDPDetailsSection extends PureComponent {
     const {
       product: { description },
     } = this.props;
-    console.log(product);
+
     return (
       <>
         <p block="PDPDetailsSection" elem="SizeFit">
@@ -137,19 +138,26 @@ class PDPDetailsSection extends PureComponent {
   };
 
   renderIconsSection() {
+    const { clickAndCollectStores } = this.props;
     return (
       <div block="PDPDetailsSection" elem="IconsSection">
-        <div block="PDPDetailsSection" elem="IconContainer">
-          <div
-            block="PDPDetailsSection"
-            elem="Icon"
-            mods={{ clickAndCollect: true }}
-          />
-          <div>
-            <div block="Click">{__("Click")}</div>
-            <div block="AndCollect">{__("& Collect")}</div>
+        {
+          clickAndCollectStores?.length
+          ?
+          <div block="PDPDetailsSection" elem="IconContainer">
+            <div
+              block="PDPDetailsSection"
+              elem="Icon"
+              mods={{ clickAndCollect: true }}
+            />
+            <div>
+              <div block="Click">{__("Click")}</div>
+              <div block="AndCollect">{__("& Collect")}</div>
+            </div>
           </div>
-        </div>
+          :
+          null
+        }
         <div block="PDPDetailsSection" elem="IconContainer">
           <div
             block="PDPDetailsSection"
