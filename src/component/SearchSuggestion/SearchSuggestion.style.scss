@@ -107,7 +107,8 @@
   }
 
   .TopSearches,
-  .RecentSearches {
+  .RecentSearches
+  {
     margin-bottom: 21px;
 
     ul {
@@ -134,6 +135,7 @@
     }
 
     @include desktop() {
+
       ul {
         flex-wrap: wrap;
       }
@@ -212,8 +214,9 @@
   }
 
   .TopSearches,
-  .RecentSearches {
-    &-searchList {
+  .RecentSearches
+  {
+    &-searchList{
       &_isArabic {
         li {
           &:first-of-type {
@@ -222,8 +225,8 @@
         }
       }
     }
-  }
-
+    }
+  
   .TrandingTags {
     &-trendingTagsList {
       &_isArabic {
