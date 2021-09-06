@@ -12,7 +12,10 @@ import { formatCDNLink } from "Util/Url";
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import "./DynamicContentRichContentBanner.style";
-import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
+import {
+  HOME_PAGE_BANNER_IMPRESSIONS,
+  HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
+} from "Component/GoogleTagManager/events/BannerImpression.event";
 
 const settings = {
   lazyload: true,
@@ -104,8 +107,11 @@ class DynamicContentRichContentBanner extends PureComponent {
     //   },
     // });
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
+    this.sendBannerClickImpression(item);
   };
-
+  sendBannerClickImpression(item) {
+    Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);
+  }
   // async onSwipe() {
   //   const locale = VueIntegrationQueries.getLocaleFromUrl();
   //   VueIntegrationQueries.vueAnalayticsLogger({
