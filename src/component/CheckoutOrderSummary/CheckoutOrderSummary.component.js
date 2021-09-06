@@ -215,7 +215,9 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
               getDiscountFromTotals(totals, "clubapparel"),
               __("Club Apparel Redemption")
             )}
-            {(couponCode || discount) ? this.renderPriceLine(discount, __("Discount")):null }
+            {(couponCode || (discount && discount != 0)) ? this.renderPriceLine(discount, __("Discount")) : null}
+
+
             {this.renderPriceLine(
               getDiscountFromTotals(totals, "shipping") || __("FREE"),
               __("Shipping Charges")
