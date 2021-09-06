@@ -335,7 +335,7 @@ export class PDPAddToCartContainer extends PureComponent {
 
   containerProps = () => {
     const { product, setStockAvailability, customer, guestUserEmail, clickAndCollectStores } = this.props;
-    const { mappedSizeObject, selectedClickAndCollectStore } = this.state;
+    const { mappedSizeObject, selectedClickAndCollectStore, openClickAndCollectPopup } = this.state;
     const basePrice =
       product.price[0] &&
       product.price[0][Object.keys(product.price[0])[0]]["6s_base_price"];
@@ -349,7 +349,8 @@ export class PDPAddToCartContainer extends PureComponent {
       customer,
       guestUserEmail,
       stores: clickAndCollectStores,
-      selectedClickAndCollectStore
+      selectedClickAndCollectStore,
+      openClickAndCollectPopup
     };
   };
 
@@ -445,7 +446,7 @@ export class PDPAddToCartContainer extends PureComponent {
           qty: 1,
           optionId,
           optionValue,
-          selectedClickAndCollectStore
+          selectedClickAndCollectStore: selectedClickAndCollectStore?.value || ""
         },
         color,
         optionValue,

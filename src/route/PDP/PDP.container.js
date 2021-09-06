@@ -67,6 +67,7 @@ export class PDPContainer extends PureComponent {
     requestProduct: PropTypes.func.isRequired,
     requestProductBySku: PropTypes.func.isRequired,
     getClickAndCollectStores: PropTypes.func.isRequired,
+    clickAndCollectStores: PropTypes.object.isRequired,
     setIsLoading: PropTypes.func.isRequired,
     isLoading: PropTypes.bool.isRequired,
     product: Product.isRequired,
@@ -131,7 +132,6 @@ export class PDPContainer extends PureComponent {
       product: { sku, brand_name: brandName } = {},
       product,
       menuCategories = [],
-      getClickAndCollectStores,
     } = this.props;
     const currentIsLoading = this.getIsLoading();
     const { id: prevId } = prevProps;
@@ -151,24 +151,36 @@ export class PDPContainer extends PureComponent {
       this.updateBreadcrumbs();
       this.setMetaData();
       this.updateHeaderState();
-      navigator.geolocation.getCurrentPosition(
-        ({ coords }) =>
-          getClickAndCollectStores(
-            brandName,
-            sku,
-            coords?.latitude,
-            coords?.longitude
-          ),
-        (err) => console.error(err),
-        {
-          enableHighAccuracy: true,
-        }
-      );
+      this.fetchClickAndCollectStores(brandName, sku);
     }
 
     Event.dispatch(EVENT_GTM_PRODUCT_DETAIL, {
       product: product,
     });
+  }
+
+  fetchClickAndCollectStores(brandName, sku) {
+    const { getClickAndCollectStores } = this.props;
+
+    const options = {
+      enableHighAccuracy: true,
+    };
+
+    const successCallback = ({ coords }) =>
+      getClickAndCollectStores(
+        brandName,
+        sku,
+        coords?.latitude,
+        coords?.longitude
+      );
+    const errorCallback = (err) => console.error(err);
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        successCallback,
+        errorCallback,
+        options
+      );
+    }
   }
 
   updateHeaderState() {
@@ -292,8 +304,14 @@ export class PDPContainer extends PureComponent {
   }
 
   containerProps = () => {
-    const { nbHits, isLoading, brandDescription, brandImg, brandName } =
-      this.props;
+    const {
+      nbHits,
+      isLoading,
+      brandDescription,
+      brandImg,
+      brandName,
+      clickAndCollectStores,
+    } = this.props;
 
     const { isLoading: isCategoryLoading } = this.state;
 
@@ -304,6 +322,7 @@ export class PDPContainer extends PureComponent {
       brandDescription,
       brandImg,
       brandName,
+      clickAndCollectStores,
     };
   };
 

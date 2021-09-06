@@ -344,18 +344,13 @@ class PDPAddToCart extends PureComponent {
         onClick={ togglePDPClickAndCollectPopup }
         block="PDPAddToCart"
         elem="ClickAndCollectButton"
-        // mods={{ isLoading }}
-        // mix={{
-        //   block: "PDPAddToCart",
-        //   elem: "AddToCartButton",
-        //   mods: { addedToCart },
-        // }}
+        mods={{
+          isArabic: isArabic()
+        }}
         disabled={disabled}
     >
         <div>{__("Click & Collect")}</div>
         <img src={clickAndCollectIcon} />
-        {/* <span>{__("Adding...")}</span> */}
-        {/* <span>{__("Added to bag")}</span> */}
       </button>
     )
   }
@@ -538,6 +533,8 @@ class PDPAddToCart extends PureComponent {
 
   renderContent() {
     const {
+      product: { in_stock, stock_qty },
+      isOutOfStock,
       productStock = {},
       sizeObject = {},
       processingRequest,
@@ -580,7 +577,13 @@ class PDPAddToCart extends PureComponent {
             {isMobile.any() && <div block="Seperator" />}
           </>
         ) : null}
-        <div block="PDPAddToCart" elem="Bottom">
+        <div
+          block="PDPAddToCart"
+          elem="Bottom"
+          mods={{
+            isOutOfStock: stock_qty === 0 || isOutOfStock || !in_stock
+          }}
+        >
           {this.renderAddToCartButton()}
           {this.renderClickAndCollectButton()}
         </div>
