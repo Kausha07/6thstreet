@@ -170,7 +170,7 @@ export class PDPContainer extends PureComponent {
       const rawCategoriesLastLevel =
         categories[
           Object.keys(categories)[Object.keys(categories).length - 1]
-        ][0];
+        ]?.[0];
       const categoriesLastLevel = rawCategoriesLastLevel
         ? rawCategoriesLastLevel.split(" /// ")
         : [];
