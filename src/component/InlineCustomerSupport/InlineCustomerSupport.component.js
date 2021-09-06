@@ -178,8 +178,9 @@ class InlineCustomerSupport extends PureComponent {
       >
         {this.renderCirclePulse()}
         <p>
-          {openHoursLabel}
-          {contactRenderer() ? " at" : ""}
+          {/* {openHoursLabel} */}
+           {isArabic ? 'مفتوحة من':'Open'}
+          {contactRenderer() && !isArabic ? " at" : ""}
         </p>
         {contactRenderer()}
       </div>

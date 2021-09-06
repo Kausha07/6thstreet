@@ -58,14 +58,13 @@
 
     @include desktop {
       right: 4px;
-
     }
   }
 
   @include desktop() {
     position: fixed;
     right: -20px;
-    top: 155px;
+    top: 151px;
     width: 720px;
   }
 
@@ -107,17 +106,23 @@
     }
   }
 
-  .TrandingTags,
   .TopSearches,
-  .RecentSearches,
-  .TrandingBrands {
+  .RecentSearches
+  {
+    margin-bottom: 21px;
+
     ul {
       display: flex;
     }
-
     li {
       margin-top: 0;
-      margin-right: 5px;
+      margin-right: 20px;
+      @include mobile {
+        margin-right: 8px;
+      }
+      @include tablet {
+        margin-right: 8px;
+      }
     }
     h2 {
       margin-top: 5px;
@@ -130,7 +135,53 @@
     }
 
     @include desktop() {
-      margin-bottom: 30px;
+
+      ul {
+        flex-wrap: wrap;
+      }
+    }
+  }
+
+  .TrandingTags,
+  .TrandingBrands {
+    margin-bottom: 21px;
+
+    ul {
+      display: flex;
+    }
+    &_isArabic {
+      li {
+        margin-top: 0;
+        margin-left: 5px;
+        @include mobile {
+          margin-left: 5px;
+        }
+        @include tablet {
+          margin-left: 5px;
+        }
+      }
+    }
+    li {
+      margin-top: 0;
+      margin-right: 5px;
+      @include mobile {
+        margin-right: 5px;
+      }
+      @include tablet {
+        margin-right: 5px;
+      }
+    }
+    h2 {
+      margin-top: 5px;
+    }
+
+    @include before-desktop() {
+      ul {
+        overflow-x: auto;
+      }
+    }
+
+    @include desktop() {
 
       ul {
         flex-wrap: wrap;
@@ -140,8 +191,9 @@
 
   .TrandingTags,
   .TopSearches,
-  .RecentSearches, .recommendedForYou, .WishlistSliderHeader {
-    margin: 0;
+  .RecentSearches,
+  .recommendedForYou,
+  .WishlistSliderHeader {
     padding: 0 20px;
 
     ul {
@@ -161,6 +213,21 @@
       padding: 0;
     }
   }
+
+  .TopSearches,
+  .RecentSearches
+  {
+    &-searchList{
+      &_isArabic {
+        li {
+          &:first-of-type {
+            margin-right: 0 !important;
+          }
+        }
+      }
+    }
+    }
+  
   .TrandingTags {
     &-trendingTagsList {
       &_isArabic {
@@ -181,11 +248,17 @@
       &_isArabic {
         li {
           &:first-of-type {
-            margin-right: 0 !important;
+            @include desktop() {
+              margin-right: 0px !important;
+            }
+            margin-right: 20px !important;
           }
+          margin-left: 5px !important;
+          margin-right: 20px;
         }
       }
     }
+
     li {
       margin-top: 15px;
       margin-left: 20px;
@@ -303,10 +376,10 @@
     font-weight: 600;
     letter-spacing: 0;
 
-    @include before-desktop {
-      color: black;
-      text-transform: uppercase;
-    }
+    // @include before-desktop {
+    //   color: black;
+    //   text-transform: uppercase;
+    // }
   }
 
   &-Recommended,
@@ -463,27 +536,27 @@
   margin-bottom: 10px;
   .VueProductSlider {
     &-Container {
-    width: 100%;
-    font-size: 16px;
-    margin-top: 0;
-    font-weight: var(--fw-demi);
+      width: 100%;
+      font-size: 16px;
+      margin-top: 0;
+      font-weight: var(--fw-demi);
 
-    @media (max-width: 1024px) {
-      width: 96.005vw;
-      margin: 0;
-    }
-    @media (max-width: 760px) {
-      padding-left: 8px;
-    }
-    @media (max-width: 1024px) and (min-width: 768px) {
-      padding-left: 30px;
-    }
-    .DragWrapper {
-      .Outer {
-        margin: 0 auto 15px auto;
+      @media (max-width: 1024px) {
+        width: 96.005vw;
+        margin: 0;
+      }
+      @media (max-width: 760px) {
+        padding-left: 8px;
+      }
+      @media (max-width: 1024px) and (min-width: 768px) {
+        padding-left: 30px;
+      }
+      .DragWrapper {
+        .Outer {
+          margin: 0 auto 15px auto;
+        }
       }
     }
-  }
     &-VueProductContainer {
       &:nth-last-child(2) {
         margin-right: 7.92px;
@@ -499,7 +572,7 @@
         font-size: 17px;
         text-transform: none;
         margin: 0;
-        letter-spacing: .25px;
+        letter-spacing: 0.25px;
         font-weight: bold;
       }
     }
@@ -513,27 +586,27 @@
       padding-bottom: 0 !important;
     }
     &-Container {
-    width: 100%;
-    font-size: 16px;
-    margin: 15px 0px 0;
-    font-weight: var(--fw-demi);
+      width: 100%;
+      font-size: 16px;
+      margin: 15px 0px 0;
+      font-weight: var(--fw-demi);
 
-    @media (max-width: 1024px) {
-      width: 96.005vw;
-      margin: 0px;
-    }
-    @media (max-width: 760px) {
-      padding-left: 8px;
-    }
-    @media (max-width: 1024px) and (min-width: 768px) {
-      padding-left: 30px;
-    }
-    .DragWrapper {
-      .Outer {
-        margin: 0 auto 15px auto;
+      @media (max-width: 1024px) {
+        width: 96.005vw;
+        margin: 0px;
+      }
+      @media (max-width: 760px) {
+        padding-left: 8px;
+      }
+      @media (max-width: 1024px) and (min-width: 768px) {
+        padding-left: 30px;
+      }
+      .DragWrapper {
+        .Outer {
+          margin: 0 auto 15px auto;
+        }
       }
     }
-  }
     &-VueProductContainer {
       &:nth-last-child(2) {
         margin-right: 7.92px;
@@ -549,7 +622,7 @@
         font-size: 17px;
         text-transform: none;
         margin: 0;
-        letter-spacing: .25px;
+        letter-spacing: 0.25px;
         font-weight: 600;
       }
     }
