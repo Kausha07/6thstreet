@@ -145,8 +145,10 @@ class DynamicContentVueProductSlider extends PureComponent {
 
   renderHeader() {
     const { heading } = this.props;
+    const { isHome } = this.props;
+
     return (
-      <div block="VueProductSlider" elem="HeaderContainer">
+      <div block="VueProductSlider" elem="HeaderContainer" mods={{isHome}}>
         <h4>{heading}</h4>
         {/* {this.viewAllBtn()} */}
       </div>

@@ -279,6 +279,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
     let setRef = (el) => {
       this.viewElement = el;
     };
+    const { isArabic } = this.state;
     return (
       <div ref={setRef} block="DynamicContentSliderWithLabel">
         {this.props.header && (
