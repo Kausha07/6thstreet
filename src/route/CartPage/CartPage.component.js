@@ -155,7 +155,7 @@ export class CartPage extends PureComponent {
                         { (couponCode || (discount && discount != 0)) ? this.renderPriceLine(
                             discount,
                             __('Discount')
-                        ) : ''}
+                        ) : null}
                         { this.renderPriceLine(
                             getDiscountFromTotals(totals, 'tax'),
                             __('Tax')

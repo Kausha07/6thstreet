@@ -100,7 +100,6 @@ class MyAccountOrderView extends PureComponent {
     } = this.props;
     const buttonText =
       status === STATUS_COMPLETE ? __("Return an Item") : __("Cancel an Item");
-
     return (
       <div block="MyAccountOrderView" elem="Heading" mods={{ isArabic }}>
         <h3>{__("Order #%s", increment_id)}</h3>
@@ -116,15 +115,15 @@ class MyAccountOrderView extends PureComponent {
     const {
       order: { status, created_at },
     } = this.props;
-
+    
     if (STATUS_FAILED.includes(status)) {
       const title =
-        status === STATUS_PAYMENT_ABORTED
-          ? __("Payment Failed")
-          : __("Order Cancelled");
+      status === STATUS_PAYMENT_ABORTED
+      ? __("Payment Failed")
+      : __("Order Cancelled");
       const StatusImage =
         status === STATUS_PAYMENT_ABORTED ? WarningImage : CloseImage;
-
+        
       return (
         <div block="MyAccountOrderView" elem="StatusFailed">
           <Image
@@ -163,7 +162,6 @@ class MyAccountOrderView extends PureComponent {
     if (STATUS_FAILED.includes(status) || shipped.length < 1) {
       return null;
     }
-
     return (
       <div
         block="MyAccountOrderView"
@@ -469,7 +467,7 @@ class MyAccountOrderView extends PureComponent {
     return (
       <div block="MyAccountOrderView" elem="CardPaymentType">
         <div block="MyAccountOrderView" elem="TypeLogo">
-        {method === CHECKOUT_APPLE_PAY ?<img src={Applepay} alt="card icon" /> : this.renderMiniCard(cc_type?.toLowerCase())}
+        {method === CHECKOUT_APPLE_PAY ?<img src={Applepay} alt="Apple pay" /> : this.renderMiniCard(cc_type?.toLowerCase())}
        
         </div>
         <div block="MyAccountOrderView" elem="Number">
@@ -499,13 +497,19 @@ class MyAccountOrderView extends PureComponent {
   renderOrderPaymentType() {
     const {
       order: {
+        status,
         payment: {
           method,
         },
       },
     } = this.props;
+
+   
     switch (method) {
       case CARD:
+        if ( !this.props?.additional_information?.source?.last4) {
+          return this.renderPaymentTypeText(__("Credit Card"));
+        }
         return this.renderCardPaymentType();
       case TABBY_ISTALLMENTS:
         return this.renderPaymentTypeText(__("Tabby: Pay in installments"));
@@ -516,6 +520,9 @@ class MyAccountOrderView extends PureComponent {
         return this.renderPaymentTypeText(__("Cash on Delivery"));
       case APPLE_PAY:
       case CHECKOUT_APPLE_PAY:
+        if ( !this.props?.additional_information?.source?.last4) {
+          return this.renderPaymentTypeText(__("Apple Pay"));
+        }
         return this.renderCardPaymentType();
       default:
         return null;
@@ -535,7 +542,6 @@ class MyAccountOrderView extends PureComponent {
     if (!price && !allowZero) {
       return null;
     }
-
     const { isTotal, isStoreCredit, isClubApparel } = mods;
     const formatPrice =
       isStoreCredit || isClubApparel ? parseFloat(-price) : parseFloat(price);
@@ -630,8 +636,8 @@ class MyAccountOrderView extends PureComponent {
   };
 
   renderBackButton() {
-    const { isArabic } = this.state;
 
+    const { isArabic } = this.state;
     // eslint-disable-next-line jsx-a11y/control-has-associated-label
     return (
       <button
@@ -645,7 +651,6 @@ class MyAccountOrderView extends PureComponent {
 
   render() {
     const { isLoading, order } = this.props;
-
     if (isLoading || !order) {
       return (
         <div block="MyAccountOrderView">
@@ -653,7 +658,6 @@ class MyAccountOrderView extends PureComponent {
         </div>
       );
     }
-
     const { billing_address } = order;
 
     return (

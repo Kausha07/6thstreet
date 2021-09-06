@@ -110,8 +110,8 @@ export class RouterContainer extends SourceRouterContainer {
     const countryCode = navigator.language.substr(0,2);
     const currentLn= window.location.href.indexOf("://") + 3;
     const currentLang = window.location.href.substr(currentLn,2);
-    if(countryCode === "en" && currentLang !==countryCode && window.location.pathname ==="/superstars" ){
-      const redirectPath = window.location.href.replace("ar-", "en-");
+    if(countryCode === "ar" && currentLang !== countryCode && window.location.pathname ==="/superstars" && window.location.href.indexOf('?_branch_match_id') > 0 ){
+      const redirectPath = window.location.href.replace("en-", "ar-").split('?')[0] ;      
       window.location.href= redirectPath;      
     }
   }

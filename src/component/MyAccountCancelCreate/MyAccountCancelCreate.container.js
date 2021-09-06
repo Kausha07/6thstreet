@@ -74,7 +74,7 @@ export class MyAccountCancelCreateContainer extends MyAccountReturnCreateContain
             orderId
         } = this.state;
         const resolutionId =  Object.entries(selectedItems).map(([order_item_id, { resolutionId }]) => {
-            return resolutionId;
+            return resolutionId - 1;
         })
         const payload = {
             order_id: incrementId,
