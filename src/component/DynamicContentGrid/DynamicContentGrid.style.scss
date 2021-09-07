@@ -13,6 +13,7 @@
     grid-gap: 0 0;
     img{
       display: block;
+      object-fit: cover;
     }
     @include desktop {
       grid-gap: 15px;
@@ -72,19 +73,38 @@
 }
 
 .CategoryItem-Content.Content_0 {
-  padding-right: 20px;
+  padding-right: 7px;
 }
 .CategoryItem-Content.Content_1 {
-  padding-left: 20px;
+  padding-left: 7px;
 }
 .CategoryItem-Content_isArabic.Content_0 {
-  padding-left: 20px;
+  padding-left: 7px;
   padding-right: 0px;
 }
 .CategoryItem-Content_isArabic.Content_1 {
-  padding-right: 20px;
+  padding-right: 7px;
   padding-left: 0px;
 }
+@include tablet{
+  .CategoryItem-Content.Content_0 {
+    padding-right: 3px;
+  }
+  .CategoryItem-Content.Content_1 {
+    padding-left: 3px;
+  }
+
+  .CategoryItem-Content_isArabic.Content_0 {
+    padding-left: 3px;
+    padding-right: 0px;
+  }
+  .CategoryItem-Content_isArabic.Content_1 {
+    padding-right: 3px;
+    padding-left: 0px;
+  }
+}
+
+
 @include desktop {
   .CategoryItem {
     &-Content {
