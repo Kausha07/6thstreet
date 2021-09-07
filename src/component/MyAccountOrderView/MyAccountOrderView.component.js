@@ -504,8 +504,12 @@ class MyAccountOrderView extends PureComponent {
       },
     } = this.props;
 
+   
     switch (method) {
       case CARD:
+        if ( !this.props?.additional_information?.source?.last4) {
+          return this.renderPaymentTypeText(__("Credit Card"));
+        }
         return this.renderCardPaymentType();
       case TABBY_ISTALLMENTS:
         return this.renderPaymentTypeText(__("Tabby: Pay in installments"));
@@ -516,7 +520,7 @@ class MyAccountOrderView extends PureComponent {
         return this.renderPaymentTypeText(__("Cash on Delivery"));
       case APPLE_PAY:
       case CHECKOUT_APPLE_PAY:
-        if (STATUS_FAILED.includes(status)) {
+        if ( !this.props?.additional_information?.source?.last4) {
           return this.renderPaymentTypeText(__("Apple Pay"));
         }
         return this.renderCardPaymentType();
