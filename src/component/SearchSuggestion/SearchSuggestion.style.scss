@@ -116,7 +116,7 @@
     }
     li {
       margin-top: 0;
-      margin-right: 20px;
+      margin-right: 14px;
       @include mobile {
         margin-right: 8px;
       }
@@ -125,7 +125,8 @@
       }
     }
     h2 {
-      margin-top: 5px;
+      // margin-top: 5px;
+      line-height: 40px;
     }
 
     @include before-desktop() {
@@ -172,7 +173,8 @@
       }
     }
     h2 {
-      margin-top: 5px;
+      // margin-top: 5px;
+      line-height: 40px;
     }
 
     @include before-desktop() {
@@ -204,8 +206,7 @@
     }
 
     h2 {
-      margin-bottom: 15px;
-      margin-top: 5px;
+      line-height: 40px;
     }
 
     @include desktop() {
@@ -250,21 +251,16 @@
             @include desktop() {
               margin-right: 0px !important;
             }
-            margin-right: 20px !important;
+            margin-right: 14px !important;
           }
           margin-left: 5px !important;
-          margin-right: 20px;
+          margin-right: 14px;
         }
       }
     }
 
     li {
-      margin-top: 15px;
-      margin-left: 20px;
-      margin-bottom: 21px;
-      @include before-desktop() {
-        margin-bottom: 30px;
-      }
+      margin-left: 14px;
     }
 
     h2 {
@@ -274,7 +270,7 @@
     @include desktop() {
       li {
         margin-left: 0;
-        margin-right: 20px;
+        margin-right: 14px;
 
         &:first-of-type {
           margin-left: 0;
@@ -316,10 +312,6 @@
       margin-bottom: 10px;
       border-radius: 45px;
     }
-
-    @include before-desktop() {
-      margin-bottom: 30px;
-    }
   }
 
   &-TrandingTag {
@@ -338,9 +330,9 @@
 
   &-TopSearches {
     margin: 0;
-    color: var(--link-dark-gray);
+    color: #000000;
     width: auto;
-    font-size: 13px;
+    font-size: 14px;
     border-radius: 15px;
     display: flex;
     justify-content: center;
@@ -430,7 +422,7 @@
     .TrandingBrands {
       li {
         &:first-of-type {
-          margin-right: 20px;
+          margin-right: 14px;
         }
       }
     }
@@ -460,7 +452,7 @@
       }
       #price {
         margin-right: 10px;
-        font-weight: var(--fw-medium);
+        font-weight: var(--fw-demi);
       }
     }
 
@@ -542,7 +534,7 @@
 }
 #price {
   font-size: 14px;
-  font-weight: var(--fw-medium);
+  font-weight: var(--fw-demi);
   color: var(--color-pure-black);
   letter-spacing: 0;
   line-height: 19px;
