@@ -13,6 +13,7 @@
     grid-gap: 0 0;
     img{
       display: block;
+      object-fit: cover;
     }
     @include desktop {
       grid-gap: 15px;
