@@ -19,10 +19,25 @@
     }
 
     @include desktop {
-      padding: 0 7px;
-
+      margin: 20px 20px;
       &:first-child {
         padding-left: 0;
+        margin-left: 0;
+      }
+      &:last-child {
+        padding-left: 0;
+        margin-right: 0;
+      }
+    }
+    @include tablet {
+      margin: 20px 15px;
+      &:first-child {
+        padding-left: 0;
+        margin-left: 0;
+      }
+      &:last-child {
+        padding-left: 0;
+        margin-right: 0;
       }
     }
   }
@@ -73,8 +88,13 @@
       &-Container {
         @include desktop {
           &:first-child {
-            padding-left: 7px;
+            margin-left: 20px;
             padding-right: 0;
+            margin-right: 0;
+          }
+          &:last-child {
+            margin-left: 0px;
+            margin-right: 20px;
           }
         }
       }

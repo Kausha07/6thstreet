@@ -18,15 +18,12 @@
   }
 
   &-Button {
+    padding-right: 31px;
     padding-left: 0;
     text-align: left;
-    // width: 160px;
     width: 150px;
     height: 30px;
-    // font-size: 12px;
     display: none;
-    // font-weight: var(--fw-demi);
-
     color: #4a4a4a;
     font-family: "Avenir Next";
     font-size: 11px;
@@ -43,7 +40,7 @@
     &::after {
       display: block;
       box-sizing: border-box;
-      right: 9px;
+      right: 17px;
       top: 9px;
       position: absolute;
       content: "";
