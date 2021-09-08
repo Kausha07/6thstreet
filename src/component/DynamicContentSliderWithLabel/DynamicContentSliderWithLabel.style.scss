@@ -1,7 +1,7 @@
 .DynamicContentSliderWithLabel {
   margin-right: 30px;
   margin-left: 30px;
-  margin-bottom: 30px !important;
+  margin-bottom: 60px !important;
   max-width: 1440px;
   text-align: left;
   &_isArabic {
@@ -37,8 +37,8 @@
     }
 
     @include mobile{
-      margin-right: 10px;
-      margin-left: 10px;
+      // margin-right: 10px;
+      // margin-left: 10px;
     }
 
   }
@@ -136,6 +136,10 @@
       display: none;
     }
 
+    @include tablet{
+      display: none;
+    }
+
     &::-webkit-scrollbar {
       height: 3px;
 
@@ -167,6 +171,7 @@
     font-weight: 500;
     text-transform: uppercase;
 
+
     &_isArabic {
       text-align: right;
     }
@@ -178,10 +183,16 @@
       text-align: center;
       letter-spacing: 0;
       font-weight: 600;
+      line-height: 18px;
 
     }
     @include tablet {
       margin-bottom: 20px;
+      margin-left: 30px;
+      &_isArabic {
+        margin-left: 0px;
+        margin-right: 30px;
+      }
     }
   }
   @include mobile {
@@ -216,10 +227,10 @@
     min-width: 30px;
     background: transparent;
     @include mobile {
-      min-width: 0px;
+      min-width: 10px;
     }
     @include tablet {
-      display: none;
+      // display: none;
     }
     @include desktop {
       display: none;
@@ -227,7 +238,8 @@
   }
 
   @include tablet {
-    margin-left: 30px;
-    margin-right: 30px;
+    margin-right: 0px;
+    margin-left: 0px;
+    margin-bottom: 40px !important;
   }
 }

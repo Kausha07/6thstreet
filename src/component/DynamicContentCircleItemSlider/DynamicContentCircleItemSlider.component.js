@@ -83,26 +83,6 @@ class DynamicContentCircleItemSlider extends PureComponent {
     });
   };
 
-  state = {
-    impressionSent: false,
-  };
-
-  componentDidMount() {
-    this.registerViewPortEvent();
-  }
-
-  registerViewPortEvent() {
-    let observer;
-
-    let options = {
-      root: null,
-      rootMargin: "0px",
-      threshold: 0.5,
-    };
-
-    observer = new IntersectionObserver(this.handleIntersect, options);
-    observer.observe(this.viewElement);
-  }
   sendImpressions() {
     const { items = [] } = this.props;
     Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);

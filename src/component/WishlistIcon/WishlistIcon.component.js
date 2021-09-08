@@ -94,6 +94,7 @@ class WishlistIcon extends PureComponent {
     if (isSignedIn()) {
       addToWishlist(skuFromProps);
     } else {
+      localStorage.setItem("Wishlist_Item",skuFromProps);
       renderMySignInPopup();
     }
     // Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_WISHLIST, { product: data });

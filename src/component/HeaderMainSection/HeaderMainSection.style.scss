@@ -20,6 +20,14 @@ main {
   max-width: 1440px;
   margin: 0 auto;
 
+  .leftContainer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex: 1;
+    order: 2;
+  }
+
   @include mobile {
     z-index: 90;
     position: fixed;
@@ -53,6 +61,7 @@ main {
 
   .HeaderGenders {
     display: flex;
+    flex: 1;
     order: 0;
   }
 
@@ -197,14 +206,15 @@ main {
 
   .HeaderWishlist {
     order: 3;
-    margin-left: 15px;
-    margin-right: 15px;
+    height: 27px;
+    margin-left: 22px;
+    margin-right: 22px;
   }
 
   .HeaderAccount {
     order: 4;
-    margin-left: 15px;
-    margin-right: 15px;
+    margin-left: 22px;
+    margin-right: 22px;
     &_isArabic {
       // margin-left: 0;
     }
@@ -212,9 +222,9 @@ main {
 
   .HeaderCart {
     order: 5;
-    margin-left: 15px;
+    margin-left: 22px;
     &_isArabic {
-      margin-right: 15px;
+      margin-right: 22px;
       margin-left: 0;
     }
 
@@ -398,7 +408,7 @@ main {
 
   .DesktopSearch {
     position: fixed;
-    top: 119px;
+    top: 115px;
     background: #f6f6f6;
     width: 100%;
     height: 40px;
@@ -467,20 +477,10 @@ main {
 }
 
 .SearchIcon {
-  margin-right: 15px;
+  margin-right: 22px;
   &_isArabic {
     margin-right: 0;
-    margin-left: 15px;
+    margin-left: 22px;
   }
 }
-// .HeaderWishlist {
-//   margin-left: 15px !important;
-//   margin-right: 15px !important;
-// }
-// .HeaderAccount {
-//   margin-left: 15px !important;
-//   margin-right: 15px !important;
-// }
-// .HeaderCart {
-//   margin-left: 15px !important;
-// }
+

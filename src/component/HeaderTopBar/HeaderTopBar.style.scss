@@ -3,7 +3,11 @@
 }
 
 .HeaderTopBar {
-  min-height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex:0.6;
+  min-height: 31px;
   box-shadow: none;
   width: 100%;
   position: fixed;
@@ -19,7 +23,7 @@
     z-index: 4;
     box-shadow: 0 1px 0 0 var(--shadow-color);
     background: none;
-    height: 30px;
+    height: 31px;
     // padding: 0 15px;
     padding: 0;
   }
@@ -69,6 +73,7 @@
   .Switcher {
     display: flex;
     align-items: center;
+    flex: 1;
   }
 
   .LanguageSwitcher {

@@ -36,10 +36,10 @@
     }
   }
   .DynamicContent {
-    > div:not(.DynamicContentCircleItemSlider) {
-      margin-bottom: 60px !important;
+    > div:not(.DynamicContentCircleItemSlider  )  {
+      // margin-bottom: 60px !important;
       @include tablet {
-        margin-bottom: 40px !important;
+        // margin-bottom: 40px !important;
       }
       @include mobile {
         margin-bottom: 20px !important;
