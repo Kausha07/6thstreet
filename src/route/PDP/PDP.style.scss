@@ -1,5 +1,5 @@
 .PDP {
-  max-width: 1440px;
+  max-width: var(--container-max-width);
   margin: 0 auto;
   @include mobile() {
     margin-top: -64px;

@@ -14,7 +14,7 @@
   }
 
   &-Layout {
-    max-width: 1440px;
+    max-width: var(--container-max-width);
     width: var(--main-container-width-dsk);
     margin: 0 auto;
     margin: auto;
