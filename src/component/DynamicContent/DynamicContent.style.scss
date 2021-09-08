@@ -6,7 +6,7 @@
     margin-left: auto;
     margin-right: auto;
     width: var(--main-container-width-dsk);
-    max-width: 1440px;
+    max-width: var(--container-max-width);
     @include tablet {
       width: calc(100vw - 60px);
       margin-top: 40px;

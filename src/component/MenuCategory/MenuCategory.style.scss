@@ -9,6 +9,11 @@
   letter-spacing: 0;
   font-size: 14px;
 
+  &-CategoryLink-Label {
+    &:hover {
+      color: #C8B581;
+    }
+  }
   &:before {
     content: none;
   }
@@ -213,12 +218,12 @@
     .DynamicContent {
       background-color: var(--white);
       // display: flex;
-      height: 390px;
+      height: 403px;
       overflow: hidden;
       pointer-events: all;
       position: absolute;
       width: var(--main-container-width-dsk);
-      max-width: 1440px;
+      max-width: var(--container-max-width);
       margin-left: auto;
       margin-right: auto;
       left: 0;
@@ -384,7 +389,7 @@
     &_isArabic {
       .DynamicContent {
         left: unset;
-        max-width: 1440px;
+        max-width: var(--container-max-width);
         right: -5px;
 
         & > div {

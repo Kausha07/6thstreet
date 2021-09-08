@@ -75,12 +75,22 @@ class HeaderMainSection extends NavigationAbstract {
   renderMap = {
     gender: this.renderGenderSwitcher.bind(this),
     logo: this.renderLogo.bind(this),
-    account: this.renderAccount.bind(this),
-    cart: this.renderCart.bind(this),
-    wishlist: this.renderWishlist.bind(this),
+    leftContainer:this.renderLeftContainer.bind(this),
     search: this.renderSearch.bind(this),
     back: this.renderBack.bind(this),
   };
+
+renderLeftContainer(){
+  return(
+    <div block="leftContainer">
+      {this.renderAccount()}
+      {this.renderCart()}
+      {this.renderWishlist()}
+      {this.renderSearchIcon()}
+    </div>
+  )
+}
+
   closePopup = () => {
     this.setState({ signInPopUp: "" });
   };
@@ -370,7 +380,7 @@ class HeaderMainSection extends NavigationAbstract {
       >
         {signInPopUp}
         {this.renderNavigationState()}
-        {this.renderSearchIcon()}
+        {/* {this.renderSearchIcon()} */}
         {this.renderDesktopSearch()}
       </div>
     );

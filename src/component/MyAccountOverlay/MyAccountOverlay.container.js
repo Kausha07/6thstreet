@@ -30,6 +30,7 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import history from "Util/History";
 import isMobile from "Util/Mobile";
 import MyAccountOverlay from "./MyAccountOverlay.component";
+
 import {
   CUSTOMER_ACCOUNT_OVERLAY_KEY,
   STATE_CONFIRM_EMAIL,

@@ -65,7 +65,7 @@ class FooterBottom extends PureComponent {
         return (
         <div block="FooterBottom" elem="Copyright">
             { __('Copyright') }
-            &#169;&nbsp;
+            &nbsp;&#169;&nbsp;
             { this.getCurrentYear() }
             &nbsp;
             { __('6TH STREET. All rights reserved.') }
