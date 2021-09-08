@@ -6,7 +6,7 @@
 
 .DynamicContentGrid {
 
-  max-width: 1440px;
+  max-width: var(--container-max-width);
   margin-bottom: 14px !important;
   &-Grid {
     display: grid;
