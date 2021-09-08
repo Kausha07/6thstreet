@@ -110,6 +110,7 @@ const createCustomQuerySuggestions = (hit, resArray, sourceIndexName) => {
   if (checkForQueryWithGender(query)) {
     genderModifiedQuery = query;
   } else {
+    console.log("query", query);
     genderModifiedQuery = `${
       isArabic() ? getGenderInArabic(gender) : gender
     } ${query}`;
@@ -418,7 +419,7 @@ export const formatQuerySuggestions = (query) => {
 
 export const getHighlightedText = (text, highlight) => {
   // Split on highlight term and include term into parts, ignore case
-  var invalid = /[°"§%()\[\]{}=\\?´`'#<>|,;.:+_-]+/g;
+  var invalid = /[°"§%()*\[\]{}=\\?´`'#<>|,;.:+_-]+/g;
   var filteredHighlight = highlight.replace(invalid, "");
   const parts = text?.split(new RegExp(`(${filteredHighlight})`, "gi"));
   return (
