@@ -277,14 +277,12 @@ export class CheckoutSuccess extends PureComponent {
   };
 
   renderTotalsItems() {
-    const {
-      initialTotals: { items = [], quote_currency_code },
-      incrementID,
-    } = this.props;
+    const {paymentMethod} = this.props
+    if(paymentMethod?.code === "checkout_qpay"){
 
-    if (!items || items.length < 1) {
-      return <p>{__("There are no products in totals.")}</p>;
-    }
+      const {
+      order: { status, unship = [] , base_currency_code: currency},
+    } = this.props;
 
     return (
       <div block="TotalItems">
@@ -292,26 +290,73 @@ export class CheckoutSuccess extends PureComponent {
           {`${__("Order")} #${incrementID} ${__("Details")}`}
         </div>
         <ul block="TotalItems" elem="Items">
-          {items.map((item) => (
-            <SuccessCheckoutItem
+          {unship
+            .reduce((acc, { items }) => [...acc, ...items], [])
+            .filter(
+              ({ qty_canceled, qty_ordered }) => +qty_canceled < +qty_ordered
+            )
+            .map(<SuccessCheckoutItem
               key={item.item_id}
               item={item}
-              currency_code={quote_currency_code}
+              currency_code={currency}
               isEditing
               isLikeTable
-            />
-          ))}
+            />)
+          }
         </ul>
       </div>
     );
+
+    }else{
+      const {
+        initialTotals: { items = [], quote_currency_code },
+        incrementID,
+      } = this.props;
+  
+      if (!items || items.length < 1) {
+        return <p>{__("There are no products in totals.")}</p>;
+      }
+  
+      return (
+        <div block="TotalItems">
+          <div block="TotalItems" elem="OrderId">
+            {`${__("Order")} #${incrementID} ${__("Details")}`}
+          </div>
+          <ul block="TotalItems" elem="Items">
+            {items.map((item) => (
+              <SuccessCheckoutItem
+                key={item.item_id}
+                item={item}
+                currency_code={quote_currency_code}
+                isEditing
+                isLikeTable
+              />
+            ))}
+          </ul>
+        </div>
+      );
+    }
   }
 
   renderTotalPrice() {
-    const {
-      initialTotals: { total, quote_currency_code },
-    } = this.props;
-    const finalPrice = getFinalPrice(total, quote_currency_code);
-    const fullPrice = `${quote_currency_code} ${finalPrice}`;
+    const {paymentMethod} = this.props
+    let fullPrice;
+    if(paymentMethod?.code === "checkout_qpay"){
+      const {
+        order: {
+          grand_total = 0,
+          currency_code = getCurrency(),
+        },
+      } = this.props;
+       fullPrice = `${currency_code} ${grand_total}`;
+    }else{
+      const {
+        initialTotals: { total, quote_currency_code },
+      } = this.props;
+      const finalPrice = getFinalPrice(total, quote_currency_code);
+      fullPrice = `${quote_currency_code} ${finalPrice}`;
+    }
+
 
     return (
       <div block="Totals">
@@ -327,15 +372,28 @@ export class CheckoutSuccess extends PureComponent {
   }
 
   renderPriceLine(price, name) {
+
     if (!price) {
       return null;
     }
-    const {
-      initialTotals: { quote_currency_code },
-    } = this.props;
-    const finalPrice = getFinalPrice(price, quote_currency_code);
+    let fullPrice
 
-    const fullPrice = `${quote_currency_code} ${finalPrice}`;
+    if(paymentMethod?.code === "checkout_qpay"){
+      const {
+        order: { order_currency_code: currency_code = getCurrency() },
+      } = this.props;
+      const finalPrice = getFinalPrice(price, currency_code);
+      fullPrice = `${currency_code} ${finalPrice}`;
+    }else{
+
+      const {
+        initialTotals: { quote_currency_code },
+      } = this.props;
+      const finalPrice = getFinalPrice(price, quote_currency_code);
+  
+      fullPrice = `${quote_currency_code} ${finalPrice}`;
+    }
+
 
     return (
       <div block="Totals">
@@ -388,10 +446,6 @@ export class CheckoutSuccess extends PureComponent {
 
   renderContact = () => {
     const { isArabic } = this.state;
-    const {
-      cashOnDeliveryFee,
-      initialTotals: { coupon_code: couponCode, discount, total_segments = [] },
-    } = this.props;
 
     return (
       <div block="ContactInfo" mods={{ isArabic }}>
