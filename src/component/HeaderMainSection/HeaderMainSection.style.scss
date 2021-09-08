@@ -17,7 +17,7 @@ main {
   flex-direction: row;
   align-items: center;
   height: 60px;
-  max-width: 1440px;
+  max-width: var(--container-max-width);
   margin: 0 auto;
 
   .leftContainer {
@@ -206,7 +206,7 @@ main {
 
   .HeaderWishlist {
     order: 3;
-    height: 27px;
+    height: 25px;
     margin-left: 22px;
     margin-right: 22px;
   }
@@ -363,8 +363,6 @@ main {
       .GenderButton-Container {
         display: flex;
         justify-content: center;
-        padding-left: 15px;
-        padding-right: 15px;
         // width: 33.33%;
 
         .GenderButton-Button {

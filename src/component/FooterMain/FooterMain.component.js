@@ -2,6 +2,7 @@ import { Fragment, PureComponent } from 'react';
 
 import FooterCustomerSupport from 'Component/FooterCustomerSupport';
 import Link from 'Component/Link';
+import { isArabic } from 'Util/App';
 
 import facebook from './icons/facebook.png';
 import instagram from './icons/instagram.png';
@@ -9,6 +10,13 @@ import instagram from './icons/instagram.png';
 import './FooterMain.style';
 
 class FooterMain extends PureComponent {
+
+    state = {
+        isArabic: isArabic()
+    };
+
+
+
     linksMap = [{
         title: __('About'),
         items: [
@@ -166,9 +174,10 @@ class FooterMain extends PureComponent {
     }
 
     render() {
+        const { isArabic } = this.state;
         return (
             <div block="FooterMain">
-                <div block="FooterMain" elem="Layout">
+                <div block="FooterMain" elem="Layout" mods={{isArabic}}>
                     { this.renderFirstTwoCloumns() }
                         <FooterCustomerSupport />
                     { this.renderAppColumn() }
