@@ -378,6 +378,9 @@ export class CheckoutSuccess extends PureComponent {
     }
     let fullPrice
 
+    const {paymentMethod} = this.props
+
+
     if(paymentMethod?.code === "checkout_qpay"){
       const {
         order: { order_currency_code: currency_code = getCurrency() },
