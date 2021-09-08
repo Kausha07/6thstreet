@@ -30,7 +30,8 @@
       }
     }
     @include tablet {
-      margin: 20px 15px;
+      margin: 0px 15px;
+      padding: 0;
       &:first-child {
         padding-left: 0;
         margin-left: 0;

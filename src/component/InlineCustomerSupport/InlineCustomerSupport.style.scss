@@ -22,7 +22,7 @@
     padding-left: 0;
     text-align: left;
     width: 150px;
-    height: 30px;
+    height: 31px;
     display: none;
     color: #4a4a4a;
     font-family: "Avenir Next";
@@ -231,14 +231,13 @@
     line-height: 18px;
     &_isArabic {
       justify-content: right;
-
     }
     @include desktop {
       color: var(--black-color);
       // margin-left: 20px;
       // padding-left: 15px;
       margin-left: 0;
-      padding-left: 10px;
+      padding-left: 9px;
       // margin-top: 7px;
       // margin-bottom: 7px;
       border-left: 1px solid var(--border-color);
@@ -286,7 +285,7 @@
       }
       @include desktop {
         margin-left: 0;
-        padding-right: 8px;
+        padding-right: 9px;
         padding-left: 0;
         // margin-right: 20px;
         // padding-right: 15px;
@@ -305,6 +304,11 @@
       &-Button {
         padding-right: 0;
         text-align: right;
+      }
+
+      .CircleContainer {
+        margin-right: 0px;
+        margin-left: 4px;
       }
     }
   }
@@ -344,7 +348,8 @@
   justify-content: center;
   align-items: center;
   position: relative;
-  margin-right: 2px;
+  margin-right: 4px;
+
   &-Pulse {
     width: 10px;
     height: 10px;

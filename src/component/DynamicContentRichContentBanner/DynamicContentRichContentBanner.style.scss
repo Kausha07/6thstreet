@@ -1,4 +1,7 @@
 .DynamicContentRichContentBanner {
+  @include desktop{
+    margin-bottom: 50px !important;
+  }
   .DynamicContentHeader{
     margin-bottom: 20px;
   }
@@ -131,7 +134,7 @@
       font-weight: 400;
       line-height: 22px;
       margin-top: 3px;
-      margin-bottom: 5px;
+      margin-bottom: 19px;
     }
     &-Button {
       //   color: white;
