@@ -80,8 +80,7 @@ export class SearchSuggestionsDispatcher {
 
       // In case anyone needs desktop data (use this!)
       // const lang = language === 'en' ? 'english' : 'arabic';
-      var invalid = /[°"§%()\[\]{}=\\?´`'#<>|,;.:+_-]+/g;
-      var searchQuery = search.replace(invalid, "");
+      var searchQuery = search;
       const data = await new Algolia({
         index: sourceQuerySuggestionIndex,
       }).autocompleteSearch(
@@ -101,8 +100,10 @@ export class SearchSuggestionsDispatcher {
       };
       const querySuggestions =
         data?.hits?.length > 0
-          ? getCustomQuerySuggestions(data?.hits, sourceIndexName)
+          ? getCustomQuerySuggestions(data?.hits, sourceIndexName, searchQuery)
           : [defaultHit];
+      console.log("data", data);
+      console.log("querySuggestion", querySuggestions);
       if (data && data.queryID) {
         queryID = data.queryID;
       } else {
