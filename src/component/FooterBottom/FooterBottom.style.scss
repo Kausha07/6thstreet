@@ -6,7 +6,8 @@
 
 .FooterBottom {
   background: var(--footer-bottom-background-color);
-  padding: 20.5px 0;
+  padding: 26px 0;
+  height: 90px;
 
   @include before-desktop {
     display: none;
@@ -16,8 +17,8 @@
     display: flex;
     justify-content: space-between;
     margin: auto;
-    max-width: 1470px;
     padding: 0;
+    max-width: var(--container-max-width);
     width: var(--main-container-width-dsk);
   }
 

@@ -9,11 +9,6 @@
   letter-spacing: 0;
   font-size: 14px;
 
-  &-CategoryLink-Label {
-    &:hover {
-      color: #C8B581;
-    }
-  }
   &:before {
     content: none;
   }
@@ -302,7 +297,26 @@
         }
       }
     }
+    &:first-child {
+      text-transform: uppercase;
+      .MenuCategory {
+        &-CategoryLink {
+          text-decoration: none;
 
+          &-Label {
+            color: #C8B581;
+          }
+        }
+
+        &_isArabic {
+          .MenuCategory {
+            &::before {
+              transform: skew(-15deg, 0deg) translate(10px, 0px);
+            }
+          }
+        }
+      }
+    }
     &:last-child {
       text-transform: uppercase;
 

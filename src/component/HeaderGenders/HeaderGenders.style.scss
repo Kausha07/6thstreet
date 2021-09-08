@@ -3,7 +3,9 @@
 
   @include before-desktop {
     display: none;
+   @include desktop{
     margin-top: -30px;
+   }
 
     .GenderButton {
       &-Button {

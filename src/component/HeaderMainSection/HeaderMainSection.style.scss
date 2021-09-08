@@ -1,5 +1,5 @@
 :root {
-  --main-content-padding: 150px;
+  --main-content-padding: 141px;
 }
 
 main {
@@ -15,8 +15,9 @@ main {
   align-items: center;
   display: flex;
   flex-direction: row;
+  justify-content: center;
   align-items: center;
-  height: 60px;
+  height: 50px;
   max-width: var(--container-max-width);
   margin: 0 auto;
 
@@ -232,10 +233,9 @@ main {
       top: 5px;
       width: 45px;
       margin: 0 auto;
-
       @include mobile {
         position: fixed;
-        top: 10px;
+        top: 12px;
         right: 20px;
 
         background: $white;
@@ -271,7 +271,7 @@ main {
     }
     @include tablet {
       position: fixed;
-      top: 10px;
+      top: 12px;
       right: 20px;
 
       background: $white;
@@ -334,7 +334,9 @@ main {
         display: flex;
         background: $white;
         width: 100%;
-        top: 100px;
+        height: 22px;
+        margin-top: 22px;
+        top: 87px !important;
         position: fixed;
         justify-content: center;
       }
@@ -355,7 +357,9 @@ main {
         display: flex;
         background: $white;
         width: 100%;
-        top: 100px;
+        margin-top: 22px;
+        height: 22px;
+        top: 87px !important;
         position: fixed;
         justify-content: center;
       }
@@ -415,7 +419,7 @@ main {
     .HeaderSearch {
       position: relative;
       width: var(--main-container-width-dsk);
-      max-width: 100%;
+      max-width: var(--container-max-width);
       height: 40px;
       top: 0;
       border-radius: 0;
@@ -463,6 +467,7 @@ main {
           overflow-y: auto;
           right: 0;
           & > div {
+            max-width: var(--container-max-width);
             width: var(--main-container-width-dsk);
             margin-left: auto;
             margin-right: auto;
@@ -481,4 +486,3 @@ main {
     margin-left: 22px;
   }
 }
-
