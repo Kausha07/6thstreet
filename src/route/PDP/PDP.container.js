@@ -39,8 +39,16 @@ export const mapStateToProps = (state) => ({
 
 export const mapDispatchToProps = (dispatch) => ({
   requestProduct: (options) => PDPDispatcher.requestProduct(options, dispatch),
-  requestProductBySku: (options) => PDPDispatcher.requestProductBySku(options, dispatch),
-  getClickAndCollectStores: (brandName, sku, latitude, longitude) => PDPDispatcher.getClickAndCollectStores(brandName, sku, latitude, longitude, dispatch),
+  requestProductBySku: (options) =>
+    PDPDispatcher.requestProductBySku(options, dispatch),
+  getClickAndCollectStores: (brandName, sku, latitude, longitude) =>
+    PDPDispatcher.getClickAndCollectStores(
+      brandName,
+      sku,
+      latitude,
+      longitude,
+      dispatch
+    ),
   setIsLoading: (isLoading) => dispatch(setPDPLoading(isLoading)),
   updateBreadcrumbs: (breadcrumbs) => {
     BreadcrumbsDispatcher.then(({ default: dispatcher }) =>
@@ -121,7 +129,7 @@ export class PDPContainer extends PureComponent {
       id,
       isLoading,
       setIsLoading,
-      product: { sku, brand_name: brandName, } = {},
+      product: { sku, brand_name: brandName } = {},
       product,
       menuCategories = [],
     } = this.props;
@@ -155,13 +163,23 @@ export class PDPContainer extends PureComponent {
     const { getClickAndCollectStores } = this.props;
 
     const options = {
-      enableHighAccuracy: true
-    }
+      enableHighAccuracy: true,
+    };
 
-    const successCallback = ({ coords }) => getClickAndCollectStores(brandName, sku, coords?.latitude, coords?.longitude);
+    const successCallback = ({ coords }) =>
+      getClickAndCollectStores(
+        brandName,
+        sku,
+        coords?.latitude,
+        coords?.longitude
+      );
     const errorCallback = (err) => console.error(err);
-    if(navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(successCallback, errorCallback, options);
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        successCallback,
+        errorCallback,
+        options
+      );
     }
   }
 
@@ -187,7 +205,7 @@ export class PDPContainer extends PureComponent {
       const rawCategoriesLastLevel =
         categories[
           Object.keys(categories)[Object.keys(categories).length - 1]
-        ][0];
+        ]?.[0];
       const categoriesLastLevel = rawCategoriesLastLevel
         ? rawCategoriesLastLevel.split(" /// ")
         : [];
@@ -210,7 +228,7 @@ export class PDPContainer extends PureComponent {
           url: "",
           name: __(name),
         },
-        ...productBreadcrumbs
+        ...productBreadcrumbs,
       ];
 
       updateBreadcrumbs(breadcrumbs);
@@ -286,7 +304,14 @@ export class PDPContainer extends PureComponent {
   }
 
   containerProps = () => {
-    const { nbHits, isLoading, brandDescription, brandImg, brandName, clickAndCollectStores } = this.props;
+    const {
+      nbHits,
+      isLoading,
+      brandDescription,
+      brandImg,
+      brandName,
+      clickAndCollectStores,
+    } = this.props;
 
     const { isLoading: isCategoryLoading } = this.state;
 
@@ -297,7 +322,7 @@ export class PDPContainer extends PureComponent {
       brandDescription,
       brandImg,
       brandName,
-      clickAndCollectStores
+      clickAndCollectStores,
     };
   };
 
