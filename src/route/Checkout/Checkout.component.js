@@ -482,6 +482,7 @@ export class Checkout extends SourceCheckout {
     } = this.state;
     this.setState({ isSuccess: true });
 
+    console.log("this.props checkoutsuccess", this.props)
 
     if (!isFailed) {
       return (
@@ -533,6 +534,8 @@ export class Checkout extends SourceCheckout {
     } = this.props;
 
     const { continueAsGuest, isArabic } = this.state;
+    console.log("rendering shipping step")
+    console.log("shipping address", shippingAddress)
     const renderCheckoutShipping = (
       <div block="Checkout" elem="Shipping" mods={isSignedIn}>
         {continueAsGuest ? this.renderHeading("Login / Sign Up", true) : null}
