@@ -17,36 +17,51 @@ class PDP extends PureComponent {
   };
   state = {
     signInPopUp: "",
+    showPopup:false
+  };
+
+
+  showMyAccountPopup = () => {
+    this.setState({ showPopup: true });
   };
 
   closePopup = () => {
-    this.setState({ signInPopUp: "" });
+    this.setState({ signInPopUp: "",showPopup:false });
   };
 
-  renderMySignInPopup = () => {
-    const { signInPopUp } = this.state;
-    const popUpElement = (
-      <MyAccountOverlay isPopup={signInPopUp} closePopup={this.closePopup} />
+  onSignIn = () => {
+    this.closePopup();
+  };
+
+
+  renderMySignInPopup() {
+    const { showPopup } = this.state;
+    if (!showPopup) {
+      return null;
+    }
+    return (
+      <MyAccountOverlay
+        closePopup={this.closePopup}
+        onSignIn={this.onSignIn}
+        isPopup
+      />
     );
-
-    this.setState({ signInPopUp: popUpElement });
-    return popUpElement;
-  };
+  }
   renderMainSection() {
-    return <PDPMainSection renderMySignInPopup={this.renderMySignInPopup} />;
+    return <PDPMainSection renderMySignInPopup={this.showMyAccountPopup} />;
   }
 
   renderDetailsSection() {
     return (
       <PDPDetailsSection
         {...this.props}
-        renderMySignInPopup={this.renderMySignInPopup}
+        renderMySignInPopup={this.showMyAccountPopup}
       />
     );
   }
 
   renderMixAndMatchSection() {
-    return <PDPMixAndMatch renderMySignInPopup={this.renderMySignInPopup} />;
+    return <PDPMixAndMatch renderMySignInPopup={this.showMyAccountPopup} />;
   }
 
   renderDetail() {
@@ -55,11 +70,10 @@ class PDP extends PureComponent {
 
   renderPDP() {
     const { nbHits, isLoading } = this.props;
-    const { signInPopUp } = this.state;
     if (!isLoading) {
       return nbHits === 1 ? (
         <div block="PDP">
-          {signInPopUp}
+          {this.renderMySignInPopup()}
           {this.renderMainSection()}
           {this.renderMixAndMatchSection()}
           {this.renderDetailsSection()}
