@@ -176,7 +176,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       tabbyPaymentStatus: "",
       QPayDetails: {},
       isClickAndCollect: "",
-      QPAYRedirect: false
+      QPAYRedirect: false, 
+      QPayOrderDetails: null
     };
   }
 
@@ -185,72 +186,81 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     await removeBinPromotion();
     await updateTotals(cartId);
   };
+
+  getQPayData = async () => {
+    try {
+      const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
+      if (QPAY_CHECK) {
+        this.setState({ QPAYRedirect: true });
+  
+        const { getPaymentAuthorization, capturePayment, cancelOrder } =this.props;
+  
+        localStorage.removeItem("QPAY_ORDER_DETAILS");
+  
+        const ShippingAddress = JSON.parse(
+          localStorage.getItem("Shipping_Address")
+        );
+  
+        this.setState({ shippingAddress: ShippingAddress });
+  
+        const { id, order_id, increment_id } = QPAY_CHECK;
+          
+        const response = getPaymentAuthorization(id)
+        if (response) {
+          this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
+
+          localStorage.removeItem("Shipping_Address");
+
+          const { status, id: paymentId = "" } = response;
+
+          localStorage.removeItem("Shipping_Address");
+
+          const { data: order } = await MagentoAPI.get(`orders/${ order_id }`);
+          
+          console.log("data from magento api", order)
+
+          this.setState({ QPayOrderDetails: order });
+
+
+          if (status === "Authorized" || status === "Captured") {
+            BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
+            this.setDetailsStep(order_id, increment_id);
+            this.setState({ isLoading: false });
+            this.resetCart();
+            capturePayment(paymentId, order_id).then(response => {
+              if(response){
+                const {pun,requested_on,amount , currency }= response
+                this.setState({QPayDetails: {PUN : pun, date:requested_on, status:"SUCCESS"}})
+              }
+            });
+          }
+
+          if (status === "Declined" || status === "Canceled") {
+            cancelOrder(order_id, PAYMENT_FAILED);
+            this.setState({ isLoading: false, isFailed: true });
+            this.setDetailsStep(order_id, increment_id);
+            this.resetCart();
+            capturePayment(paymentId, order_id).then(response => {
+              if(response){
+                const {pun,requested_on,amount , currency }= response
+                this.setState({QPayDetails: {PUN : pun, date:requested_on, amount:`${currency} ${amount}`, status:"FAILED", Payment_ID: paymentId}})
+              }
+            });
+          }
+        } 
+        return;
+      }
+    } catch (error) {
+      console.log("error while auth in qpay case")
+    }
+  }
+
   componentDidMount() {
     const { setMeta } = this.props;
     const { checkoutStep, initialGTMSent } = this.state;
     this.refreshCart();
     setMeta({ title: __("Checkout") });
-    const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
-    if (QPAY_CHECK) {
-      this.setState({ QPAYRedirect: true });
-
-      const { getPaymentAuthorization, capturePayment, cancelOrder } =
-        this.props;
-
-      localStorage.removeItem("QPAY_ORDER_DETAILS");
-
-      const ShippingAddress = JSON.parse(
-        localStorage.getItem("Shipping_Address")
-      );
-
-      this.setState({ shippingAddress: ShippingAddress });
-
-      const { id, order_id, increment_id } = QPAY_CHECK;
-
-      getPaymentAuthorization(id)
-        .then((response) => {
-          if (response) {
-            this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
-
-            localStorage.removeItem("Shipping_Address");
-
-            const { status, id: paymentId = "" } = response;
-
-            localStorage.removeItem("Shipping_Address");
-
-
-            if (status === "Authorized" || status === "Captured") {
-              BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
-              this.setDetailsStep(order_id, increment_id);
-              this.setState({ isLoading: false });
-              this.resetCart();
-              capturePayment(paymentId, order_id).then(response => {
-                if(response){
-                  const {pun,requested_on,amount , currency }= response
-                  this.setState({QPayDetails: {PUN : pun, date:requested_on, status:"SUCCESS"}})
-                }
-              });
-            }
-
-            if (status === "Declined" || status === "Canceled") {
-              cancelOrder(order_id, PAYMENT_FAILED);
-              this.setState({ isLoading: false, isFailed: true });
-              this.setDetailsStep(order_id, increment_id);
-              this.resetCart();
-              capturePayment(paymentId, order_id).then(response => {
-                if(response){
-                  const {pun,requested_on,amount , currency }= response
-                  this.setState({QPayDetails: {PUN : pun, date:requested_on, amount:`${currency} ${amount}`, status:"FAILED", Payment_ID: paymentId}})
-                }
-              });
-            }
-          }
-        })
-        .catch((rejected) => {
-          console.log("request rejected(in checkout container)", rejected);
-        });
-      return;
-    }
+    this.getQPayData();
   }
 
   componentDidUpdate(prevProps, prevState) {
