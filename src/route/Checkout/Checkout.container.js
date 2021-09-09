@@ -581,6 +581,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       const response = await createOrder(code, data)
       if (response && response.data) {
             const { data } = response;
+            console.log("response of create order api", response)
             if (typeof data === "object") {
               const {
                 order_id,
