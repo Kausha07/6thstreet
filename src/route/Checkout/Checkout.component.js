@@ -473,7 +473,8 @@ export class Checkout extends SourceCheckout {
       initialTotals,
       isVerificationCodeSent,
       newCardVisible,
-      QPayDetails
+      QPayDetails, 
+      QPayOrderDetails
     } = this.props;
     const { cashOnDeliveryFee } = this.state;
     const {
@@ -498,6 +499,7 @@ export class Checkout extends SourceCheckout {
           isVerificationCodeSent={isVerificationCodeSent}
           QPAY_DETAILS={QPayDetails}
           selectedCard={newCardVisible ? {} : selectedCard}
+          order = {QPayOrderDetails}
         />
       );
     }
@@ -513,7 +515,7 @@ export class Checkout extends SourceCheckout {
         isVerificationCodeSent={isVerificationCodeSent}
         selectedCard={newCardVisible ? {} : selectedCard}
         QPAY_DETAILS={QPayDetails}
-
+        order = {QPayOrderDetails}
       />
     );
   }
