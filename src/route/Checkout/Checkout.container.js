@@ -7,6 +7,8 @@ import {
 } from "Component/CheckoutPayments/CheckoutPayments.config";
 import { CC_POPUP_ID } from "Component/CreditCardPopup/CreditCardPopup.config";
 import { TABBY_POPUP_ID } from "Component/TabbyPopup/TabbyPopup.config";
+import MagentoAPI from 'Util/API/provider/MagentoAPI';
+
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import {
@@ -69,7 +71,7 @@ export const mapDispatchToProps = (dispatch) => ({
     CheckoutDispatcher.sendVerificationCode(dispatch, phone),
   getPaymentAuthorization: (paymentId) =>
     CheckoutDispatcher.getPaymentAuthorization(dispatch, paymentId),
-    getPaymentAuthorizationQPay: (paymentId) =>
+    getPaymentAuthorizationQPay: (paymentId, qpaymethod) =>
     CheckoutDispatcher.getPaymentAuthorization(dispatch, paymentId, qpaymethod = true),
   capturePayment: (paymentId, orderId) =>
     CheckoutDispatcher.capturePayment(dispatch, paymentId, orderId),
@@ -207,7 +209,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   
         const { id, order_id, increment_id } = QPAY_CHECK;
           
-        const response = getPaymentAuthorizationQPay(id)
+        const response = getPaymentAuthorizationQPay(id, true)
         if (response) {
           this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
 
