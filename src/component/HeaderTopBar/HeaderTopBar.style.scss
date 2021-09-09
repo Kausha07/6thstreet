@@ -74,10 +74,7 @@
     display: flex;
     align-items: center;
     flex: 1;
-    @include tablet{
-      display: none;
-    }
-    @include mobile{
+    @include before-desktop() {
       display: none;
     }
   }
