@@ -175,7 +175,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       isTabbyPopupShown: false,
       tabbyPaymentStatus: "",
       QPayDetails: {},
-      isClickAndCollect: ""
+      isClickAndCollect: "",
+      QPAYRedirect: false
     };
   }
 
@@ -191,43 +192,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     setMeta({ title: __("Checkout") });
     const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
     if (QPAY_CHECK) {
-      this.setState({ isLoading: true });
-    }
-  }
+      this.setState({ QPAYRedirect: true });
 
-  componentDidUpdate(prevProps, prevState) {
-    const {
-      history,
-      showInfoNotification,
-      showErrorNotification,
-      guest_checkout = true,
-      totals = {},
-      totals: { items = [], total, total_segments = [] },
-      updateStoreCredit,
-      isSignedIn,
-    } = this.props;
-
-    const { checkoutStep, initialGTMSent } = this.state;
-
-    const { checkoutStep: prevCheckoutStep } = prevState;
-    const { total: { items: prevItems } = {} } = prevProps;
-    
-    if(prevItems !== items && items.length){
-      let isClickAndCollect = "";
-      for(let i = 0; i<items.length; i++){
-        if(!!items[i]?.availableQty?.click_to_collect_store){
-          isClickAndCollect = items[i]?.availableQty?.click_to_collect_store || "";
-        }
-        else {
-          isClickAndCollect = "";
-          break;
-        }
-      }
-      this.setState({ isClickAndCollect: isClickAndCollect });
-    }
-
-    const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
-    if (QPAY_CHECK) {
       const { getPaymentAuthorization, capturePayment, cancelOrder } =
         this.props;
 
@@ -285,6 +251,45 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         });
       return;
     }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const {
+      history,
+      showInfoNotification,
+      showErrorNotification,
+      guest_checkout = true,
+      totals = {},
+      totals: { items = [], total, total_segments = [] },
+      updateStoreCredit,
+      isSignedIn,
+    } = this.props;
+
+    const { checkoutStep, initialGTMSent, QPAYRedirect } = this.state;
+
+    const { checkoutStep: prevCheckoutStep } = prevState;
+    const { total: { items: prevItems } = {} } = prevProps;
+    
+    if(QPAYRedirect){
+    console.log("Qpay available")
+      return true
+    }
+    console.log("Qpay not available")
+    if(prevItems !== items && items.length){
+      let isClickAndCollect = "";
+      for(let i = 0; i<items.length; i++){
+        if(!!items[i]?.availableQty?.click_to_collect_store){
+          isClickAndCollect = items[i]?.availableQty?.click_to_collect_store || "";
+        }
+        else {
+          isClickAndCollect = "";
+          break;
+        }
+      }
+      this.setState({ isClickAndCollect: isClickAndCollect });
+    }
+
+    
     if (Object.keys(totals).length !== 0) {
       this.updateInitTotals();
     }
