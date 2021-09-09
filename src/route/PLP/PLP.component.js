@@ -16,6 +16,7 @@ export class PLP extends PureComponent {
     this.state = {
       bannerData: null,
       signInPopUp: "",
+      showPopup:false,
       circleBannerUrl: null,
     };
   }
@@ -32,19 +33,33 @@ export class PLP extends PureComponent {
     }
   }
 
+
+  showMyAccountPopup = () => {
+    this.setState({ showPopup: true });
+  };
+
   closePopup = () => {
-    this.setState({ signInPopUp: "" });
+    this.setState({ signInPopUp: "",showPopup:false });
   };
 
-  renderMySignInPopup = () => {
-    const { signInPopUp } = this.state;
-    const popUpElement = (
-      <MyAccountOverlay isPopup={signInPopUp} closePopup={this.closePopup} />
+  onSignIn = () => {
+    this.closePopup();
+  };
+
+
+  renderMySignInPopup() {
+    const { showPopup } = this.state;
+    if (!showPopup) {
+      return null;
+    }
+    return (
+      <MyAccountOverlay
+        closePopup={this.closePopup}
+        onSignIn={this.onSignIn}
+        isPopup
+      />
     );
-
-    this.setState({ signInPopUp: popUpElement });
-    return popUpElement;
-  };
+  }
   // componentWillUnmount(){
   //     localStorage.removeItem("bannerData");
   // }
@@ -61,7 +76,7 @@ export class PLP extends PureComponent {
     return (
       <PLPPages
         {...this.props}
-        renderMySignInPopup={this.renderMySignInPopup}
+        renderMySignInPopup={this.showMyAccountPopup}
       />
     );
   }
@@ -98,7 +113,7 @@ export class PLP extends PureComponent {
       <DynamicContent
         gender={gender}
         content={widget}
-        renderMySignInPopup={this.renderMySignInPopup}
+        renderMySignInPopup={this.showMyAccountPopup}
       />
     );
   };
@@ -109,7 +124,7 @@ export class PLP extends PureComponent {
     return (
       <main block="PLP">
         <ContentWrapper label={__("Product List Page")}>
-          {signInPopUp}
+          {this.renderMySignInPopup()}
           {this.renderPLPDetails()}
           {this.state.bannerData && this.renderBanner()}
           {this.renderPLPWidget()}
