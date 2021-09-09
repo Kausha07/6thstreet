@@ -23,7 +23,7 @@
 
   // Font declaration
   --avenir-next-font: "Avenir Next", sans-serif;
-
+  --cairo-next-font: 'Cairo', sans-serif;
   --fw-ultra-light: #{$fw-ultra-light};
   --fw-thin: #{$fw-thin};
   --fw-light: #{$fw-light};
@@ -39,4 +39,5 @@
 
 body {
   font-family: var(--avenir-next-font);
+  
 }

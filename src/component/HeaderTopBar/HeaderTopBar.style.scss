@@ -6,7 +6,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  flex:0.6;
+  flex: 0.6;
   min-height: 31px;
   box-shadow: none;
   width: 100%;
@@ -74,6 +74,9 @@
     display: flex;
     align-items: center;
     flex: 1;
+    @include before-desktop() {
+      display: none;
+    }
   }
 
   .LanguageSwitcher {
