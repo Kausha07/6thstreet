@@ -16,8 +16,8 @@
     display: flex;
     justify-content: space-between;
     margin: auto;
-    max-width: 1470px;
     padding: 0;
+    max-width: var(--container-max-width);
     width: var(--main-container-width-dsk);
   }
 
