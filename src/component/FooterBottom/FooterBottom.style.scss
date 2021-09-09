@@ -5,7 +5,7 @@
 }
 
 .FooterBottom {
-  background: var(--footer-bottom-background-color);
+  background: #000000;
   padding: 20.5px 0;
 
   @include before-desktop {
@@ -26,12 +26,11 @@
   }
 
   &-Copyright {
-    padding-top: 12px;
+    line-height: 37px;
     color: var(--footer-bottom-text-color);
     font-size: 13px;
     font-weight: var(--fw-medium);
     letter-spacing: 0;
-    line-height: 18px;
     width: auto;
   }
 
@@ -39,7 +38,7 @@
   a {
     margin: 0 5px;
     text-decoration: none;
-    padding-top: 16px;
+    line-height: 37px;
     text-transform: uppercase;
     text-align: center;
     font-size: 11px;
@@ -53,9 +52,30 @@
   }
 
   &-PaymentIcons {
-    background: url(../../style/icons/icons.png) -620px -953px no-repeat;
+    // background: url(../../style/icons/icons.png) -620px -953px no-repeat;
     width: 377px;
     height: 37px;
+    display: flex;
+    align-items: center;
+    &-ClubApparel{
+      width: 48px;
+      height: 31px;
+      margin-right: 28px;
+    }
+    &-CashOnDelivery{
+      width: 52px;
+      height: 22px;
+      margin-right: 20px;
+    }
+    &-Mastercard{
+      width: 31px;
+      height: 19px;
+      margin-right: 20px;
+    }
+    &-Visa{
+      width: 48px;
+      height: 16px;
+    }
   }
 }
 

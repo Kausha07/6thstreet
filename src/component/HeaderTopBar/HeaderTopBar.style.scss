@@ -74,7 +74,14 @@
     display: flex;
     align-items: center;
     flex: 1;
+    @include tablet{
+      display: none;
+    }
+    @include mobile{
+      display: none;
+    }
   }
+
 
   .LanguageSwitcher {
     @include before-desktop() {
