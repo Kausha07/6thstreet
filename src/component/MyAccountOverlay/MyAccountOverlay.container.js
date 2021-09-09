@@ -30,7 +30,6 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import history from "Util/History";
 import isMobile from "Util/Mobile";
 import MyAccountOverlay from "./MyAccountOverlay.component";
-import Wishlist from "Store/Wishlist/Wishlist.dispatcher";
 
 import {
   CUSTOMER_ACCOUNT_OVERLAY_KEY,
@@ -61,7 +60,6 @@ export const mapDispatchToProps = (dispatch) => ({
     MyAccountDispatcher.then(({ default: dispatcher }) =>
       dispatcher.forgotPassword(dispatch, options)
     ),
-  addToWishlist: (sku) => Wishlist.addSkuToWishlist(dispatch, sku),
   createAccount: (options) =>
     MyAccountDispatcher.then(({ default: dispatcher }) =>
       dispatcher.createAccount(options, dispatch)
@@ -250,18 +248,9 @@ export class MyAccountOverlayContainer extends PureComponent {
       await signIn(fields);
       onSignIn();
       this.checkForOrder();
-      this.checkForWishlist();
     } catch (e) {
       this.setState({ isLoading: false });
       showNotification("error", e.message);
-    }
-  }
-
-  checkForWishlist(){
-    const wishlistItem = localStorage.getItem("Wishlist_Item");
-    if(wishlistItem){
-      this.props.addToWishlist(wishlistItem)
-      localStorage.removeItem("Wishlist_Item")
     }
   }
 
@@ -291,6 +280,7 @@ export class MyAccountOverlayContainer extends PureComponent {
   }
 
   onCreateAccountSuccess(fields) {
+    localStorage.removeItem("Wishlist_Item");
     const { createAccount } = this.props;
 
     const { password, email, fullname, privacyPolicy, gender } = fields;
