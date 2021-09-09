@@ -129,7 +129,7 @@ export class MyAccountOverlay extends PureComponent {
         const { render, title } = this.renderMap[state];
         const isSignIn = state === STATE_SIGN_IN;
         const isCreateAccount = state === STATE_CREATE_ACCOUNT;
-
+        console.log("muskan",state);
         if (registerField) {
             onCreateAccountClick();
             setRegisterFieldFalse();
