@@ -17,6 +17,7 @@ import {
   cancelOrder,
   getBinPromotion,
   removeBinPromotion,
+  getPaymentAuthorizationQPay
 } from "Util/API/endpoint/Checkout/Checkout.endpoint";
 import {
   createSession,

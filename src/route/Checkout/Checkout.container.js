@@ -253,7 +253,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         return;
       }
     } catch (error) {
-      console.log("error while auth in qpay case")
+      console.log("error while auth in qpay case", error)
     }
   }
 
