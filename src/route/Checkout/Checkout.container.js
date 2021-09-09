@@ -69,6 +69,8 @@ export const mapDispatchToProps = (dispatch) => ({
     CheckoutDispatcher.sendVerificationCode(dispatch, phone),
   getPaymentAuthorization: (paymentId) =>
     CheckoutDispatcher.getPaymentAuthorization(dispatch, paymentId),
+    getPaymentAuthorizationQPay: (paymentId) =>
+    CheckoutDispatcher.getPaymentAuthorization(dispatch, paymentId, qpaymethod = true),
   capturePayment: (paymentId, orderId) =>
     CheckoutDispatcher.capturePayment(dispatch, paymentId, orderId),
   cancelOrder: (orderId, cancelReason) =>
@@ -193,7 +195,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       if (QPAY_CHECK) {
         this.setState({ QPAYRedirect: true });
   
-        const { getPaymentAuthorization, capturePayment, cancelOrder } =this.props;
+        const { getPaymentAuthorizationQPay, capturePayment, cancelOrder } =this.props;
   
         localStorage.removeItem("QPAY_ORDER_DETAILS");
   
@@ -205,7 +207,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   
         const { id, order_id, increment_id } = QPAY_CHECK;
           
-        const response = getPaymentAuthorization(id)
+        const response = getPaymentAuthorizationQPay(id)
         if (response) {
           this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
 
