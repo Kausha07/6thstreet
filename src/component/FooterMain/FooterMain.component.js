@@ -21,7 +21,7 @@ class FooterMain extends PureComponent {
         title: __('About'),
         items: [
             {
-                name: __('About 6TH STREET'),
+                name: __('About 6THStreet'),
                 href: 'https://www.appareluae.com/6th-street/'
             },
             {

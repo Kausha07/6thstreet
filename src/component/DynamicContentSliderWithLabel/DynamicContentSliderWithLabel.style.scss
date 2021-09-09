@@ -44,7 +44,7 @@
   }
   .SliderWithLabel {
     display: inline-block;
-    margin-right: 10px;
+    margin-right: 10.5px;
     &:nth-last-child(2) {
       margin-right: 0;
     }
@@ -70,7 +70,7 @@
     height: 100%;
     object-fit: cover;
     @include tablet {
-      min-width: 21.224vw;
+      min-width: 163px;
     }
     @include mobile {
       min-width: 41vw;
@@ -124,7 +124,7 @@
     width: 29.444vw;
     overflow-x: auto;
     scroll-behavior: auto;
-    margin: 60px auto 0 auto;
+    margin: 50px auto 0 auto;
     cursor: grabbing;
     cursor: -webkit-grabbing;
     // display: none;

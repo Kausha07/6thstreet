@@ -4,6 +4,10 @@ import { withRouter } from 'react-router';
 
 import Link from 'Component/Link';
 import { TYPE_CATEGORY, TYPE_CMS_PAGE, TYPE_PRODUCT } from 'Route/UrlRewrites/UrlRewrites.config';
+import CA from './icons/CA.svg'
+import COD from './icons/COD.svg'
+import mastercard from './icons/mastercard.svg'
+import visa from './icons/visa.svg'
 
 import './FooterBottom.style';
 
@@ -87,7 +91,12 @@ class FooterBottom extends PureComponent {
 
     renderPaymentIcons() {
         return (
-            <div block="FooterBottom" elem="PaymentIcons" />
+            <div block="FooterBottom" elem="PaymentIcons" >
+              <img block="FooterBottom" elem="PaymentIcons-ClubApparel" src={CA} alt="ca" />
+              <img block="FooterBottom" elem="PaymentIcons-CashOnDelivery" src={COD} alt="ca" />
+              <img block="FooterBottom" elem="PaymentIcons-Mastercard" src={mastercard} alt="ca" />
+              <img block="FooterBottom" elem="PaymentIcons-Visa" src={visa} alt="ca" />
+            </div>
         );
     }
 
