@@ -307,14 +307,6 @@
             color: #C8B581;
           }
         }
-
-        &_isArabic {
-          .MenuCategory {
-            &::before {
-              transform: skew(-15deg, 0deg) translate(10px, 0px);
-            }
-          }
-        }
       }
     }
     &:last-child {
@@ -349,7 +341,11 @@
 
       .DynamicContent {
         background-color: var(--red);
-
+        .DynamicContentBanner{
+          button:hover {
+            color: var(--white);
+          }
+        }
         .MenuBrands {
           &-ContentWrapper {
             &-Brands {
