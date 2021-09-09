@@ -341,7 +341,11 @@
 
       .DynamicContent {
         background-color: var(--red);
-
+        .DynamicContentBanner{
+          button:hover {
+            color: var(--white);
+          }
+        }
         .MenuBrands {
           &-ContentWrapper {
             &-Brands {
