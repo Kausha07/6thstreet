@@ -7,7 +7,12 @@
 .DynamicContentGrid {
 
   max-width: var(--container-max-width);
-  margin-bottom: 14px !important;
+  margin-bottom: 40px !important;
+  margin-top: 40px !important;
+  @include tablet{
+    margin-bottom: 40px !important;
+    margin-top: 40px !important;
+  }
   &-Grid {
     display: grid;
     grid-gap: 0 0;

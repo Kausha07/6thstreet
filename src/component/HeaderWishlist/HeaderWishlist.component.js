@@ -107,7 +107,7 @@ class HeaderWishlist extends PureComponent {
           />
         </button>
         {this.renderMySignInPopup()}
-        <label htmlFor="WishList">{__("Wishlist")}</label>
+        { !isBottomBar && <label htmlFor="WishList">{__("Wishlist")}</label>}
       </div>
     );
   }

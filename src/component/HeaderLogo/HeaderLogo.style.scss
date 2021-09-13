@@ -6,25 +6,25 @@
   @include before-desktop {
     height: auto;
     margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
     .Image {
     height: 22px;
-    width: 30%;
     // background-color: #fff;
 
     @include before-desktop {
-      display: block;
+      // display: block;
       padding: 0;
-      margin-left: calc(35% + 30px);
-      margin-right: calc(35% - 30px);
-
-      height: 25px;
-      &_isArabic {
-        margin-left: calc(35% - 19px);
-        margin-right: calc(35% + 19px);
-      }
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 21px;
+      width: 119px;
     }
     @include desktop {
+      width: 30%;
       height: 34px;
       margin-top: 0;
       padding: 0;

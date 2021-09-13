@@ -177,14 +177,14 @@ export class CartOverlay extends PureComponent {
 
     return (
       <div block="CartOverlay" elem="Actions">
-        {/* <Link
+        <Link
           block="CartOverlay"
           elem="CartButton"
           to="/cart"
           onClick={handleViewBagClick}
         >
           {__("View bag")}
-        </Link> */}
+        </Link>
         <button
           block="CartOverlay"
           elem="CheckoutButton"
