@@ -7,15 +7,15 @@
   &-Container {
     display: inline-block;
     height: 14px;
-    margin: 20px 0;
+    // margin: 20px 0;
 
     @include before-desktop {
       border-left: 0;
-    height: 23px;
-    border-right: 0;
+      height: 20px;
+      border-right: 0;
       margin-bottom: 0;
-      padding-bottom: 49px;
-      padding-top: 15px;
+      // padding-bottom: 49px;
+      // padding-top: 15px;
       pointer-events: none;
     }
 
