@@ -286,6 +286,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     
     if(QPAYRedirect){
     console.log("Qpay available")
+    if (checkoutStep !== prevCheckoutStep) {
+      updateStoreCredit();
+      this.handleCheckoutGTM();
+    }
       return true
     }
     console.log("Qpay not available")

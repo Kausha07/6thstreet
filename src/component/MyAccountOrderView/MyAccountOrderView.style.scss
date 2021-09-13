@@ -23,6 +23,9 @@
         h3 {
             margin: 0;
         }
+        @include before-desktop{
+            margin-top:40px ;
+        }
     }
 
     &-Status {
