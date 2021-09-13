@@ -90,15 +90,15 @@
     height: 24px;
     width: 20%;
     text-align: center;
-    padding-top: 10px;
+    padding-top: 16px;
 
 
     &::before {
       content: "";
       right: 0;
       background-size: 27px;
-      width: 27px;
-      height: 29px;
+      width: 24px;
+      height: 24px;
       display: inline-block;
       font-size: 0;
       // filter: invert(26%) sepia(2%) saturate(21%) hue-rotate(43deg)
@@ -113,8 +113,8 @@
       &.MobileBottomBar-HomeAndBrand_isActive {
         background-image: linear-gradient(black, black);
         background-repeat: no-repeat;
-        background-size: 50% 2px, calc(100% - 2px) 100%;
-        background-position: center top, 2px 0;
+        background-size: 50% 1px, calc(100% - 1px) 100%;
+        background-position: center top, 1px 0;
         &::before{
           background: url(./icons/home-active.svg) no-repeat center center;
           background-size: 24px;
@@ -130,8 +130,8 @@
       &.MobileBottomBar-HomeAndBrand_isActive {
         background-image: linear-gradient(black, black);
         background-repeat: no-repeat;
-        background-size: 50% 2px, calc(100% - 2px) 100%;
-        background-position: center top, 2px 0;
+        background-size: 50% 1px, calc(100% - 1px) 100%;
+        background-position: center top, 1px 0;
         &::before{
           background: url(./icons/brand-active.svg) no-repeat center center;
           background-size: 24px;
@@ -171,18 +171,21 @@
       height: 24px;
       width: 100%;
       text-align: center;
-      padding-top: 10px;
+      padding-top: 16px;
       margin-top: 0px;
 
       &::before {
         background: url(./icons/categories.svg) no-repeat center center;
         background-size: 24px;
+        filter: none;
+        height: 24px;
+        width: 24px;
       }
       &_isExpanded{
         background-image: linear-gradient(black, black);
         background-repeat: no-repeat;
-        background-size: 50% 2px, calc(100% - 2px) 100%;
-        background-position: center top, 2px 0;
+        background-size: 50% 1px, calc(100% - 1px) 100%;
+        background-position: center top, 1px 0;
         &::before {
           background: url(./icons/categories-active.svg) no-repeat center center;
           background-size: 24px;
@@ -199,20 +202,22 @@
     padding-left: 0px;
     .HeaderWishlist{
       height: 24px;
-      padding-top: 10px;
+      padding-top: 16px;
       margin-top: 0px;
       width: 100%;
       &::before {
         background: url(./icons/favorites.svg) no-repeat center center;
         background-size: 24px;
         filter: none;
+        width: 24px;
+        height: 24px;
 
       }
       &_isWishlist{
         background-image: linear-gradient(black, black);
         background-repeat: no-repeat;
-        background-size: 50% 2px, calc(100% - 2px) 100%;
-        background-position: center top, 2px 0;
+        background-size: 50% 1px, calc(100% - 1px) 100%;
+        background-position: center top, 1px 0;
         &::before {
           background: url(./icons/favorites-active.svg) no-repeat center center;
           background-size: 24px;
@@ -223,20 +228,22 @@
     }
     .HeaderAccount{
       height: 24px;
-      padding-top: 10px;
+      padding-top: 16px;
       margin-top: 0px;
       width: 100%;
       &::before {
         background: url(./icons/account.svg) no-repeat center center;
         background-size: 24px;
         filter: none;
+        width: 24px;
+        height: 24px;
 
       }
       &_isAccount{
         background-image: linear-gradient(black, black);
         background-repeat: no-repeat;
-        background-size: 50% 2px, calc(100% - 2px) 100%;
-        background-position: center top, 2px 0;
+        background-size: 50% 1px, calc(100% - 1px) 100%;
+        background-position: center top, 1px 0;
         &::before {
           background: url(./icons/account-active.svg) no-repeat center center;
           background-size: 24px;
