@@ -536,8 +536,6 @@ export class Checkout extends SourceCheckout {
     } = this.props;
 
     const { continueAsGuest, isArabic } = this.state;
-    console.log("rendering shipping step")
-    console.log("shipping address", shippingAddress)
     const renderCheckoutShipping = (
       <div block="Checkout" elem="Shipping" mods={isSignedIn}>
         {continueAsGuest ? this.renderHeading("Login / Sign Up", true) : null}

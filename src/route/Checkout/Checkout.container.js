@@ -211,6 +211,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           
         const response = getPaymentAuthorizationQPay(id, true)
         if (response) {
+          console.log("payment auth response", response)
           this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
 
           localStorage.removeItem("Shipping_Address");
@@ -233,6 +234,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             this.resetCart();
             capturePayment(paymentId, order_id).then(response => {
               if(response){
+                console.log("capture payment response", response)
                 const {pun,requested_on,amount , currency }= response
                 this.setState({QPayDetails: {PUN : pun, date:requested_on, status:"SUCCESS"}})
               }
@@ -242,10 +244,12 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           if (status === "Declined" || status === "Canceled") {
             cancelOrder(order_id, PAYMENT_FAILED);
             this.setState({ isLoading: false, isFailed: true });
+            console.log("order id and increment id", order_id, increment_id)
             this.setDetailsStep(order_id, increment_id);
             this.resetCart();
             capturePayment(paymentId, order_id).then(response => {
               if(response){
+                console.log("capture payment response", response)
                 const {pun,requested_on,amount , currency }= response
                 this.setState({QPayDetails: {PUN : pun, date:requested_on, amount:`${currency} ${amount}`, status:"FAILED", Payment_ID: paymentId}})
               }
@@ -285,7 +289,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const { total: { items: prevItems } = {} } = prevProps;
     
     if(QPAYRedirect){
-    console.log("Qpay available")
+    console.log("Qpay available and state is ", this.state)
     if (checkoutStep !== prevCheckoutStep) {
       updateStoreCredit();
       this.handleCheckoutGTM();
@@ -737,7 +741,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const { setNavigationState, sendVerificationCode, isSignedIn, customer, } =
       this.props;
     const { shippingAddress } = this.state;
-
+    console.log("details step running")
+    console.log("order id", orderID)
+    console.log("increment id", incrementID)
     if (isSignedIn) {
       if (customer.isVerified !== "0") {
         const { phone = "" } = customer;
