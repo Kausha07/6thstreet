@@ -110,6 +110,8 @@
     }
   }
 
+
+
   &-SliderContainer::-webkit-scrollbar {
     display: none;
     width: 6px;
@@ -137,6 +139,10 @@
         right: unset !important;
       }
     }
+    img{
+      object-fit: cover;
+    }
+
 
     @media (max-width: 1024px) {
       width: 220.08px;
