@@ -194,7 +194,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   getQPayData = async () => {
     try {
       const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
-      if (QPAY_CHECK) {
+      const now = new Date()
+      if (QPAY_CHECK && (now.getTime() < QPAY_CHECK?.expiry)) {
         this.setState({ QPAYRedirect: true });
   
         const { getPaymentAuthorizationQPay, capturePayment, cancelOrder } =this.props;
@@ -209,8 +210,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   
         const { id, order_id, increment_id } = QPAY_CHECK;
           
-        const response = getPaymentAuthorizationQPay(id, true)
+        const response = await getPaymentAuthorizationQPay(id, true)
         if (response) {
+          console.log("payment auth response", response)
           this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
 
           localStorage.removeItem("Shipping_Address");
@@ -231,28 +233,39 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             this.setDetailsStep(order_id, increment_id);
             this.setState({ isLoading: false });
             this.resetCart();
-            capturePayment(paymentId, order_id).then(response => {
-              if(response){
-                const {pun,requested_on,amount , currency }= response
-                this.setState({QPayDetails: {PUN : pun, date:requested_on, status:"SUCCESS"}})
-              }
-            });
+            try {
+              const cResponse =  await capturePayment(paymentId, order_id)
+                if(cResponse){
+                  console.log("capture payment response", cResponse)
+                  const {pun,requested_on,amount , currency }= cResponse
+                  this.setState({QPayDetails: {PUN : pun, date:requested_on, status:"SUCCESS"}})
+                }
+            } catch (error) {
+              console.log("capture api response", error)
+            }
           }
 
           if (status === "Declined" || status === "Canceled") {
             cancelOrder(order_id, PAYMENT_FAILED);
             this.setState({ isLoading: false, isFailed: true });
+            console.log("order id and increment id", order_id, increment_id)
             this.setDetailsStep(order_id, increment_id);
             this.resetCart();
-            capturePayment(paymentId, order_id).then(response => {
-              if(response){
-                const {pun,requested_on,amount , currency }= response
-                this.setState({QPayDetails: {PUN : pun, date:requested_on, amount:`${currency} ${amount}`, status:"FAILED", Payment_ID: paymentId}})
-              }
-            });
+            try {
+                const cResponse = await capturePayment(paymentId, order_id)
+                if(cResponse){
+                  console.log("capture payment response", cResponse)
+                  const {pun,requested_on,amount , currency }= cResponse
+                  this.setState({QPayDetails: {PUN : pun, date:requested_on, amount:`${currency} ${amount}`, status:"FAILED", Payment_ID: paymentId}})
+                }
+            } catch (error) {
+              console.log("capture api response",error)
+            }
           }
         } 
         return;
+      }else if(now.getTime() >= QPAY_CHECK?.expiry){
+        localStorage.removeItem("QPAY_ORDER_DETAILS");
       }
     } catch (error) {
       console.log("error while auth in qpay case", error)
@@ -285,7 +298,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const { total: { items: prevItems } = {} } = prevProps;
     
     if(QPAYRedirect){
-    console.log("Qpay available")
+    console.log("Qpay available and state is ", this.state)
     if (checkoutStep !== prevCheckoutStep) {
       updateStoreCredit();
       this.handleCheckoutGTM();
@@ -648,10 +661,12 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                     increment_id,
                     id,
                   });
+                  const now = new Date()
                   const obj = {
                     order_id,
                     id,
                     increment_id,
+                    expiry: now.getTime() + 300000,
                   };
                   localStorage.setItem(
                     "QPAY_ORDER_DETAILS",
@@ -737,7 +752,9 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const { setNavigationState, sendVerificationCode, isSignedIn, customer, } =
       this.props;
     const { shippingAddress } = this.state;
-
+    console.log("details step running")
+    console.log("order id", orderID)
+    console.log("increment id", incrementID)
     if (isSignedIn) {
       if (customer.isVerified !== "0") {
         const { phone = "" } = customer;
