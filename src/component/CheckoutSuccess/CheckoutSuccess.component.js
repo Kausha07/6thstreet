@@ -296,13 +296,15 @@ export class CheckoutSuccess extends PureComponent {
             .filter(
               ({ qty_canceled, qty_ordered }) => +qty_canceled < +qty_ordered
             )
-            .map(<SuccessCheckoutItem
-              key={item.item_id}
-              item={item}
-              currency_code={currency}
-              isEditing
-              isLikeTable
-            />)
+            .map((item) => (
+              <SuccessCheckoutItem
+                key={item?.item_id}
+                item={item}
+                currency_code={quote_currency_code}
+                isEditing
+                isLikeTable
+              />
+            ))
           }
         </ul>
       </div>
