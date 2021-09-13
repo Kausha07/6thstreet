@@ -57,6 +57,7 @@ class HeaderMainSection extends NavigationAbstract {
       showSearch: false,
       isArabic: isArabic(),
       signInPopUp: "",
+      showPopup:false,
       isMobile: isMobile.any(),
     };
     this.headerSearchRef = createRef();
@@ -91,20 +92,32 @@ renderLeftContainer(){
   )
 }
 
-  closePopup = () => {
-    this.setState({ signInPopUp: "" });
-  };
+showMyAccountPopup = () => {
+  this.setState({ showPopup: true });
+};
 
-  renderMySignInPopup = () => {
-    const { signInPopUp } = this.state;
-    this.setState({ showSearch: false });
+closePopup = () => {
+  this.setState({ signInPopUp: "",showPopup:false });
+};
 
-    const popUpElement = (
-      <MyAccountOverlay isPopup={signInPopUp} closePopup={this.closePopup} />
-    );
-    this.setState({ signInPopUp: popUpElement });
-    return popUpElement;
-  };
+onSignIn = () => {
+  this.closePopup();
+};
+
+
+renderMySignInPopup() {
+  const { showPopup } = this.state;
+  if (!showPopup) {
+    return null;
+  }
+  return (
+    <MyAccountOverlay
+      closePopup={this.closePopup}
+      onSignIn={this.onSignIn}
+      isPopup
+    />
+  );
+}
   // state = {
 
   // };
@@ -350,7 +363,7 @@ renderLeftContainer(){
       <div block="DesktopSearch">
         <HeaderSearch
           hideSearchBar={this.hideSearchBar}
-          renderMySignInPopup={this.renderMySignInPopup}
+          renderMySignInPopup={this.showMyAccountPopup}
           focusInput={true}
           key="search"
         />
@@ -378,7 +391,7 @@ renderLeftContainer(){
           this.isPDP() && isMobile.any() ? this.state.visible : true
         }
       >
-        {signInPopUp}
+        {this.renderMySignInPopup()}
         {this.renderNavigationState()}
         {/* {this.renderSearchIcon()} */}
         {this.renderDesktopSearch()}
