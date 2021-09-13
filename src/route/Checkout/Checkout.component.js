@@ -24,6 +24,7 @@ import {
   AUTHORIZED_STATUS,
   BILLING_STEP,
   CAPTURED_STATUS,
+  SHIPPING_STEP
 } from "./Checkout.config";
 import "./Checkout.style";
 import GiftIconSmall from "./icons/gift-heart.png";
@@ -223,10 +224,9 @@ export class Checkout extends SourceCheckout {
   };
 
   renderLoader() {
-    const { isLoading, checkoutStep } = this.props;
-    const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
+    const { isLoading, checkoutStep , QPAYRedirect} = this.props;
 
-    if ((checkoutStep === BILLING_STEP && isLoading) || QPAY_CHECK) {
+    if ((checkoutStep === BILLING_STEP && isLoading) || (checkoutStep === SHIPPING_STEP && QPAYRedirect)) {
       return (
         <div block="CheckoutSuccess">
           <div block="LoadingOverlay" dir="ltr">
