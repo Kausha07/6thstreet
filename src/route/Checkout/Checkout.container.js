@@ -209,7 +209,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   
         const { id, order_id, increment_id } = QPAY_CHECK;
           
-        const response = getPaymentAuthorizationQPay(id, true)
+        const response = await getPaymentAuthorizationQPay(id, true)
         if (response) {
           console.log("payment auth response", response)
           this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
