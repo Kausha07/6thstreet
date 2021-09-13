@@ -530,6 +530,7 @@
 }
 .NothingFound {
   width: var(--main-container-width-dsk);
+  max-width: var(--container-max-width);
   margin: 0 auto;
 }
 #price {

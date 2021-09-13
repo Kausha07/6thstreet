@@ -112,7 +112,8 @@ class HeaderAccount extends PureComponent {
     const { isSignedIn, customer, isBottomBar, isFooter } = this.props;
 
     if (isBottomBar) {
-      return <label htmlFor="Account">{__("Account")}</label>;
+      return
+      // return <label htmlFor="Account">{__("Account")}</label>;
     }
 
     const accountButtonText =

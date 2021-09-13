@@ -9,11 +9,6 @@
   letter-spacing: 0;
   font-size: 14px;
 
-  &-CategoryLink-Label {
-    &:hover {
-      color: #C8B581;
-    }
-  }
   &:before {
     content: none;
   }
@@ -302,7 +297,18 @@
         }
       }
     }
+    &:first-child {
+      text-transform: uppercase;
+      .MenuCategory {
+        &-CategoryLink {
+          text-decoration: none;
 
+          &-Label {
+            color: #C8B581;
+          }
+        }
+      }
+    }
     &:last-child {
       text-transform: uppercase;
 
@@ -335,7 +341,11 @@
 
       .DynamicContent {
         background-color: var(--red);
-
+        .DynamicContentBanner{
+          button:hover {
+            color: var(--white);
+          }
+        }
         .MenuBrands {
           &-ContentWrapper {
             &-Brands {

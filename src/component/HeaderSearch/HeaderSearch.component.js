@@ -7,7 +7,8 @@ import { createRef, PureComponent } from "react";
 import { isArabic } from "Util/App";
 import "./HeaderSearch.style";
 import Clear from "./icons/close-black.png";
-import searchPng from "./icons/search-transparent.png";
+import searchPng from "./icons/search.svg";
+import isMobile from "Util/Mobile";
 
 class HeaderSearch extends PureComponent {
   static propTypes = {
@@ -102,7 +103,11 @@ class HeaderSearch extends PureComponent {
             autocomplete="off"
             autocorrect="off"
             spellcheck="false"
-            placeholder={__("Search for items, brands, inspiration and styles")}
+            placeholder={
+              isMobile.any() || isMobile.tablet()
+                ? " What are you looking for?"
+                : __("Search for items, brands, inspiration and styles")
+            }
             onChange={onSearchChange}
             onFocus={this.onFocus}
             value={search}
@@ -152,7 +157,7 @@ class HeaderSearch extends PureComponent {
   }
 
   renderSuggestion() {
-    const { search,renderMySignInPopup } = this.props;
+    const { search, renderMySignInPopup } = this.props;
     const { showSearch } = this.state;
 
     if (!showSearch) {
