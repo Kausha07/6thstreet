@@ -286,6 +286,10 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     
     if(QPAYRedirect){
     console.log("Qpay available")
+    if (checkoutStep !== prevCheckoutStep) {
+      updateStoreCredit();
+      this.handleCheckoutGTM();
+    }
       return true
     }
     console.log("Qpay not available")
@@ -375,7 +379,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   handleCheckoutGTM(isInitial = false) {
     const { totals } = this.props;
     const { checkoutStep, incrementID, initialTotals } = this.state;
-
+    console.log("totals in handle checkout gtm", totals)
+    console.log("checkoutstep , increment id , inital totals", checkoutStep, incrementID,initialTotals )
     if (checkoutStep !== DETAILS_STEP) {
       Event.dispatch(EVENT_GTM_CHECKOUT, {
         totals,
