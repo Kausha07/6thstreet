@@ -58,10 +58,11 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
       onShippingEstimationFieldsChange,
       isSignedIn,
       shippingAddress,
-      isClickAndCollect
+      isClickAndCollect,
+      clickAndCollectStatus
     } = this.props;
     const formPortalId = isBilling ? BILLING_STEP : SHIPPING_STEP;
-
+    
     return (
       <CheckoutAddressForm
         onShippingEstimationFieldsChange={onShippingEstimationFieldsChange}
@@ -70,6 +71,7 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
         isSignedIn={isSignedIn && !!!isClickAndCollect}
         id={formPortalId}
         shippingAddress={shippingAddress}
+        clickAndCollectStatus={clickAndCollectStatus}
         isClickAndCollect={isClickAndCollect}
       />
     );

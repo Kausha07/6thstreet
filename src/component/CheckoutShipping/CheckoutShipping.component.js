@@ -275,6 +275,19 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     this.setState({ editAddress: true });
   }
 
+  checkClickAndCollect (){
+    const {
+      totals: { items = [] },
+    } = this.props;
+    let newItemList = items.filter((item)=>{
+      return item.extension_attributes;
+    })
+      if(newItemList.length === items.length){
+        return true
+      }
+      return false;
+  }
+
   renderAddressBook() {
     const {
       onAddressSelect,
@@ -294,6 +307,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         showCards={this.showCards}
         hideCards={this.hideCards}
         isClickAndCollect={isClickAndCollect}
+        clickAndCollectStatus = {this.checkClickAndCollect()}
       />
     );
   }
