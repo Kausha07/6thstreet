@@ -143,6 +143,7 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
           data !== "city" &&
           data !== "street" &&
           data !== "region_string" &&
+          data !== "region_id" &&
           data !== "postcode"
         ) {
           returnValue = result[data];
