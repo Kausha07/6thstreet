@@ -344,7 +344,6 @@ export class CheckoutShipping extends SourceCheckoutShipping {
           {this.renderAddressBook()}
           <div>
             {/* {<Loader isLoading={isLoading} />} */}
-            {/* {!checkClickAndCollect() && this.renderDelivery()} */}
             {this.renderDelivery()}
             {this.renderHeading(__("Payment Options"), true)}
             {this.renderActions()}

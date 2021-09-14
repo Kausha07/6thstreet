@@ -3,10 +3,14 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
+import { Store } from "../Icons";
 
 import Image from "Component/Image";
 import Loader from "Component/Loader";
-import { getFinalPrice, DISPLAY_DISCOUNT_PERCENTAGE } from "Component/Price/Price.config";
+import {
+  getFinalPrice,
+  DISPLAY_DISCOUNT_PERCENTAGE,
+} from "Component/Price/Price.config";
 import { CartItemType } from "Type/MiniCart";
 import { isArabic } from "Util/App";
 
@@ -153,37 +157,34 @@ export class SuccessCheckoutItem extends PureComponent {
     const finalBasePrice = getFinalPrice(basePrice, currency_code);
 
     const renderDiscountPercentage = () => {
-      if(!DISPLAY_DISCOUNT_PERCENTAGE[country]){
+      if (!DISPLAY_DISCOUNT_PERCENTAGE[country]) {
         return null;
       }
 
-      return (
-        isArabic
-        ?
+      return isArabic ? (
         <span block="SuccessCheckoutItem" elem="DiscountPercentage">
           {discountPercentage}
           %-
         </span>
-        :
+      ) : (
         <span block="SuccessCheckoutItem" elem="DiscountPercentage">
           -{discountPercentage}%<span> </span>
         </span>
       );
-    }
-  
+    };
+
     const withDiscount = (
       <div block="SuccessCheckoutItem" elem="DiscountPrice">
         <div>
           {currency_code} {`${finalBasePrice}`}
         </div>
-        { renderDiscountPercentage() }
+        {renderDiscountPercentage()}
         <span
           block="SuccessCheckoutItem"
           elem="WithoutDiscount"
           mods={{ isArabic }}
-        ><span>
-          {withoutDiscount}
-        </span>
+        >
+          <span>{withoutDiscount}</span>
         </span>
       </div>
     );
@@ -204,20 +205,31 @@ export class SuccessCheckoutItem extends PureComponent {
     if (optionValue) {
       return (
         <div block="SuccessCheckoutItem" elem="ColSizeQty" mods={{ isArabic }}>
-          <span> {__("Color: ")} {color}</span>
-          
-          <span>| {__("Size:")} {optionValue}</span>
-          
-          <span>| {__("Qty: ")} {qty}</span>
-          
+          <span>
+            {" "}
+            {__("Color: ")} {color}
+          </span>
+
+          <span>
+            | {__("Size:")} {optionValue}
+          </span>
+
+          <span>
+            | {__("Qty: ")} {qty}
+          </span>
         </div>
       );
     }
 
     return (
       <div block="SuccessCheckoutItem" elem="ColSizeQty">
-        {color ? <span> {__("Color: ")} {color}</span> : null}
-        
+        {color ? (
+          <span>
+            {" "}
+            {__("Color: ")} {color}
+          </span>
+        ) : null}
+
         <span>
           {color ? "|" : null} {__("Qty: ")}{" "}
         </span>
@@ -226,23 +238,47 @@ export class SuccessCheckoutItem extends PureComponent {
     );
   }
 
+  renderClickAndCollectStoreName(extension_attributes) {
+    const { isArabic } = this.state;
+    if (extension_attributes?.click_to_collect_store) {
+      return (
+        <div
+          block="SuccessCheckoutItem"
+          elem="ClickAndCollect"
+          mods={{ isArabic }}
+        >
+          <div block="SuccessCheckoutItem-ClickAndCollect" elem="icon">
+            <Store />
+          </div>
+          <div block="SuccessCheckoutItem-ClickAndCollect" elem="StoreName">
+            {extension_attributes?.click_to_collect_store_name}
+          </div>
+        </div>
+      );
+    }
+    return null;
+  }
+
   renderContent() {
     const {
       isLikeTable,
-      item: { customizable_options, bundle_options },
+      item: { customizable_options, bundle_options, extension_attributes },
     } = this.props;
 
     return (
       <figcaption
         block="SuccessCheckoutItem"
         elem="Content"
-        mods={{ isLikeTable }}
+        mods={{
+          isLikeTable,
+        }}
       >
         {this.renderProductName()}
         {this.renderProductOptions(customizable_options)}
         {this.renderProductOptions(bundle_options)}
         {this.renderColSizeQty()}
         {this.renderProductPrice()}
+        {this.renderClickAndCollectStoreName(extension_attributes)}
       </figcaption>
     );
   }
@@ -274,10 +310,18 @@ export class SuccessCheckoutItem extends PureComponent {
   }
 
   render() {
-    const { isLoading } = this.props;
+    const {
+      isLoading,
+      item: { extension_attributes },
+    } = this.props;
 
     return (
-      <li block="SuccessCheckoutItem">
+      <li
+        block="SuccessCheckoutItem"
+        mods={{
+          ClickNCollect: extension_attributes?true:false,
+        }}
+      >
         <Loader isLoading={isLoading} />
         {this.renderWrapper()}
       </li>

@@ -25,7 +25,38 @@
             text-decoration: none;
         }
     }
-
+    &_ClickNCollect{
+        @include desktop{
+            margin-bottom: 20px !important;
+        }
+        &:last-child {
+            margin-bottom: 0 !important;
+        }
+}
+    &-ClickAndCollect {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        font-size: 11px;
+        line-height: 1.2;
+        font-weight: 500;
+        flex-grow: 1;
+        width: 100%;
+        color: var(--cart-item-heading-color);
+        text-align: left;
+        @include desktop {
+          padding: 0px 0;
+        }
+    
+        &-StoreName {
+          padding: 0 6px;
+        }
+    
+        &_isArabic {
+          text-align: right;
+        }
+      }
+    
     &-Option,
     & {
         padding-left: 0;

@@ -440,6 +440,25 @@ export class CheckoutSuccess extends PureComponent {
     );
   };
 
+  renderClickAndCollectStoreName() {
+    const {
+      item: {
+        extension_attributes
+      }
+    } = this.props;
+
+    const { isArabic } = this.state;
+    if(extension_attributes?.click_to_collect_store) {
+      return (
+        <div block="CartPageItem" elem="ClickAndCollect" mods={{ isArabic }}>
+          <div block="CartPageItem-ClickAndCollect" elem="icon"><Store /></div>
+          <div block="CartPageItem-ClickAndCollect" elem="StoreName">{ extension_attributes?.click_to_collect_store_name}</div>
+        </div>
+      );
+    }
+    return null;
+  }
+
   renderDeliveringAddress() {
     const {
       shippingAddress: {
