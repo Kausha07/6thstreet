@@ -174,7 +174,7 @@ class InlineCustomerSupport extends PureComponent {
         mods={{ isArabic }}
       >
         {this.renderCirclePulse()}
-        {isMobile.any() ?
+        {(isMobile.any() || isMobile.tablet()) ?
         <p>
           {/* {openHoursLabel} */}
           {isArabic ? "مفتوحة من" : "OPEN"}

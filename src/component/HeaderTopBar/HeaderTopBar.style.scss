@@ -28,6 +28,10 @@
     padding: 0;
   }
 
+  @include mobile{
+    bottom: 70px;
+  }
+
   &-ContentWrapper {
     display: flex;
     max-width: var(--container-max-width);
