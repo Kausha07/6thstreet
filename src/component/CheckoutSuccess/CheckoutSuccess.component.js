@@ -301,7 +301,7 @@ export class CheckoutSuccess extends PureComponent {
               <SuccessCheckoutItem
                 key={item?.item_id}
                 item={item}
-                currency_code={quote_currency_code}
+                currency_code={currency}
                 isEditing
                 isLikeTable
               />
