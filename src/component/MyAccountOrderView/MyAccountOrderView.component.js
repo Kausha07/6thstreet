@@ -20,6 +20,7 @@ import { getCurrency, isArabic } from "Util/App";
 import { appendOrdinalSuffix } from "Util/Common";
 import { formatDate } from "Util/Date";
 import Applepay from "./icons/apple.png";
+import QPAY from "./icons/qpay.png";
 import { formatPrice } from "../../../packages/algolia-sdk/app/utils/filters";
 import CancelledImage from "./icons/cancelled.png";
 import CloseImage from "./icons/close.png";
@@ -467,7 +468,7 @@ class MyAccountOrderView extends PureComponent {
     return (
       <div block="MyAccountOrderView" elem="CardPaymentType">
         <div block="MyAccountOrderView" elem="TypeLogo">
-        {method === CHECKOUT_APPLE_PAY ?<img src={Applepay} alt="Apple pay" /> : this.renderMiniCard(cc_type?.toLowerCase())}
+        {method === CHECKOUT_APPLE_PAY ?<img src={Applepay} alt="Apple pay" /> :method === CHECKOUT_QPAY ? <img src={QPAY} alt="Apple pay" />:  this.renderMiniCard(cc_type?.toLowerCase())}
        
         </div>
         <div block="MyAccountOrderView" elem="Number">
@@ -526,7 +527,10 @@ class MyAccountOrderView extends PureComponent {
         }
         return this.renderCardPaymentType();
       case CHECKOUT_QPAY:
+        if ( !this.props?.additional_information?.source?.last4) {
         return this.renderPaymentTypeText(__("QPAY"));
+      }
+      return this.renderCardPaymentType();
       default:
         return null;
     }
