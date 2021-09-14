@@ -24,7 +24,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     customer: customerType.isRequired,
     showCreateNewPopup: PropTypes.func.isRequired,
     shippingAddress: PropTypes.object.isRequired,
-    isClickAndCollect: PropTypes.bool.isRequired
+    isClickAndCollect: PropTypes.bool.isRequired,
   };
 
   state = {
@@ -117,7 +117,8 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     const {
       customer: { addresses = [] },
       selectedCustomerAddressId,
-      isPaymentLoading
+      checkClickAndCollect,
+      isPaymentLoading,
     } = this.props;
     const { isSignedIn } = this.state;
     const selectedAddress = addresses.filter(
@@ -138,8 +139,12 @@ export class CheckoutShipping extends SourceCheckoutShipping {
 
     return (
       <div block="CheckoutShippingStep" elem="DeliveryButton">
-        <button type="submit" block="Button button primary medium" disabled={isPaymentLoading}>
-          {__("Deliver to this address")}
+        <button
+          type="submit"
+          block="Button button primary medium"
+          disabled={isPaymentLoading}
+        >
+          {checkClickAndCollect() ? "Next" : __("Deliver to this address")}
         </button>
       </div>
     );
@@ -216,7 +221,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     const {
       notSavedAddress,
       customer: { addresses = [] },
-      isClickAndCollect
+      isClickAndCollect,
     } = this.props;
 
     if (!openFirstPopup && addresses && isSignedIn() && notSavedAddress()) {
@@ -275,25 +280,13 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     this.setState({ editAddress: true });
   }
 
-  checkClickAndCollect (){
-    const {
-      totals: { items = [] },
-    } = this.props;
-    let newItemList = items.filter((item)=>{
-      return item.extension_attributes;
-    })
-      if(newItemList.length === items.length){
-        return true
-      }
-      return false;
-  }
-
   renderAddressBook() {
     const {
       onAddressSelect,
       onShippingEstimationFieldsChange,
       shippingAddress,
-      isClickAndCollect
+      isClickAndCollect,
+      checkClickAndCollect,
     } = this.props;
     const { formContent } = this.state;
     return (
@@ -307,13 +300,19 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         showCards={this.showCards}
         hideCards={this.hideCards}
         isClickAndCollect={isClickAndCollect}
-        clickAndCollectStatus = {this.checkClickAndCollect()}
+        clickAndCollectStatus={checkClickAndCollect()}
       />
     );
   }
 
   render() {
-    const { onShippingSuccess, onShippingError, isClickAndCollect } = this.props;
+    const {
+      onShippingSuccess,
+      onShippingError,
+      isClickAndCollect,
+      checkClickAndCollect,
+      handleClickNCollectPayment,
+    } = this.props;
     const { formContent } = this.state;
     return (
       <div
@@ -326,19 +325,26 @@ export class CheckoutShipping extends SourceCheckoutShipping {
           id={SHIPPING_STEP}
           mix={{ block: "CheckoutShipping" }}
           onSubmitError={onShippingError}
-          onSubmitSuccess={onShippingSuccess}
+          onSubmitSuccess={
+            !checkClickAndCollect()
+              ? onShippingSuccess
+              : handleClickNCollectPayment
+          }
         >
           {isSignedIn() ? (
             <>
               <h3>{__("Delivering to")}</h3>
               <h4 block="CheckoutShipping" elem="DeliveryMessage">
-                { isClickAndCollect ? ("Please confirm your contact details") : __("Where can we send your order?") }
+                {checkClickAndCollect()
+                  ? "Please confirm your contact details"
+                  : __("Where can we send your order?")}
               </h4>
             </>
           ) : null}
           {this.renderAddressBook()}
           <div>
             {/* {<Loader isLoading={isLoading} />} */}
+            {/* {!checkClickAndCollect() && this.renderDelivery()} */}
             {this.renderDelivery()}
             {this.renderHeading(__("Payment Options"), true)}
             {this.renderActions()}

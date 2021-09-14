@@ -153,7 +153,6 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
       filterResult.map((data) => {
         return (finalResult[data] = result[data]);
       });
-      console.log(finalResult, result, "muskan");
       if (clickAndCollectStatus) {
         setClickAndCollect(true);
         return finalResult;

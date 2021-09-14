@@ -252,7 +252,7 @@
     "You have no items in your shopping cart.": null,
     "(Taxes Included) ": null,
     "Coupon ": null,
-    "View bag": "عرض الحقيبة",
+    "View bag": null,
     "Free shipping on order 49$ and more.": "شحن مجاني على أي طلب بـ 49 دولارًا وأكثر.",
     "My Bag": "حقيبتي",
     " item(s)": " عنصر",
@@ -860,5 +860,6 @@
     "You should be ": null,
     "Buy with ": null,
     "Catalog1": null,
-    "Apple Pay": null
+    "Apple Pay": null,
+    "About 6THStreet": null
 }

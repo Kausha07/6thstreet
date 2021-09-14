@@ -25,7 +25,7 @@ import {
 } from "SourceRoute/Checkout/Checkout.container";
 import Checkout from "./Checkout.component";
 import { setGender } from "Store/AppState/AppState.action";
-import { resetCart  } from "Store/Cart/Cart.action";
+import { resetCart } from "Store/Cart/Cart.action";
 // eslint-disable-next-line no-unused-vars
 import CartDispatcher from "Store/Cart/Cart.dispatcher";
 import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
@@ -129,7 +129,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     hideActiveOverlay: this.props.hideActiveOverlay.bind(this),
     updateTotals: this.updateTotals.bind(this),
     updateCreditCardData: this.updateCreditCardData.bind(this),
-    setBillingStep:this.setBillingStep.bind(this)
+    setBillingStep: this.setBillingStep.bind(this),
   };
 
   //   showOverlay() {
@@ -175,7 +175,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       isTabbyPopupShown: false,
       tabbyPaymentStatus: "",
       QPayDetails: {},
-      isClickAndCollect: ""
+      isClickAndCollect: "",
     };
   }
 
@@ -211,14 +211,14 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
     const { checkoutStep: prevCheckoutStep } = prevState;
     const { total: { items: prevItems } = {} } = prevProps;
-    
-    if(prevItems !== items && items.length){
+
+    if (prevItems !== items && items.length) {
       let isClickAndCollect = "";
-      for(let i = 0; i<items.length; i++){
-        if(!!items[i]?.availableQty?.click_to_collect_store){
-          isClickAndCollect = items[i]?.availableQty?.click_to_collect_store || "";
-        }
-        else {
+      for (let i = 0; i < items.length; i++) {
+        if (!!items[i]?.availableQty?.click_to_collect_store) {
+          isClickAndCollect =
+            items[i]?.availableQty?.click_to_collect_store || "";
+        } else {
           isClickAndCollect = "";
           break;
         }
@@ -252,16 +252,21 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
             localStorage.removeItem("Shipping_Address");
 
-
             if (status === "Authorized" || status === "Captured") {
               BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
               this.setDetailsStep(order_id, increment_id);
               this.setState({ isLoading: false });
               this.resetCart();
-              capturePayment(paymentId, order_id).then(response => {
-                if(response){
-                  const {pun,requested_on,amount , currency }= response
-                  this.setState({QPayDetails: {PUN : pun, date:requested_on, status:"SUCCESS"}})
+              capturePayment(paymentId, order_id).then((response) => {
+                if (response) {
+                  const { pun, requested_on, amount, currency } = response;
+                  this.setState({
+                    QPayDetails: {
+                      PUN: pun,
+                      date: requested_on,
+                      status: "SUCCESS",
+                    },
+                  });
                 }
               });
             }
@@ -271,10 +276,18 @@ export class CheckoutContainer extends SourceCheckoutContainer {
               this.setState({ isLoading: false, isFailed: true });
               this.setDetailsStep(order_id, increment_id);
               this.resetCart();
-              capturePayment(paymentId, order_id).then(response => {
-                if(response){
-                  const {pun,requested_on,amount , currency }= response
-                  this.setState({QPayDetails: {PUN : pun, date:requested_on, amount:`${currency} ${amount}`, status:"FAILED", Payment_ID: paymentId}})
+              capturePayment(paymentId, order_id).then((response) => {
+                if (response) {
+                  const { pun, requested_on, amount, currency } = response;
+                  this.setState({
+                    QPayDetails: {
+                      PUN: pun,
+                      date: requested_on,
+                      amount: `${currency} ${amount}`,
+                      status: "FAILED",
+                      Payment_ID: paymentId,
+                    },
+                  });
                 }
               });
             }
@@ -548,7 +561,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     ) {
       this.placeOrder(code, data, paymentInformation);
     } else {
-      this.placeOrder(code, data, null)
+      this.placeOrder(code, data, null);
     }
   }
 
@@ -563,142 +576,131 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     );
     this.setState({ isLoading: true });
     try {
-      const response = await createOrder(code, data)
+      const response = await createOrder(code, data);
       if (response && response.data) {
-            const { data } = response;
-            if (typeof data === "object") {
-              const {
+        const { data } = response;
+        if (typeof data === "object") {
+          const {
+            order_id,
+            http_response_code,
+            success,
+            response_code,
+            increment_id,
+            id = "",
+            _links: { redirect: { href = "" } = {} } = {},
+          } = data;
+
+          if (success || response_code === 200 || http_response_code === 202) {
+            this.setState({ isLoading: false });
+            if (code === CHECKOUT_APPLE_PAY) {
+              this.setState({
                 order_id,
-                http_response_code,
-                success,
-                response_code,
                 increment_id,
-                id = "",
-                _links: { redirect: { href = "" } = {} } = {},
-              } = data;
+              });
+              BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
+              this.setDetailsStep(order_id, increment_id);
+              this.resetCart();
+              return true;
+            }
+            if (code === CARD && href) {
+              this.setState({
+                threeDsUrl: href,
+                order_id,
+                increment_id,
+                id,
+              });
+              setTimeout(() => this.processThreeDSWithTimeout(3), 10000);
+            } else if (code === TABBY_ISTALLMENTS || code === TABBY_PAY_LATER) {
+              this.setState({
+                isTabbyPopupShown: true,
+                order_id,
+                increment_id,
+              });
+              setTimeout(
+                () => this.processTabbyWithTimeout(3, paymentInformation),
+                10000
+              );
 
-              if (
-                success ||
-                response_code === 200 ||
-                http_response_code === 202
-              ) {
-                this.setState({ isLoading: false });
-                if (code === CHECKOUT_APPLE_PAY) {
-                  this.setState({
-                    order_id,
-                    increment_id,
-                  });
-                  BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
-                  this.setDetailsStep(order_id, increment_id);
-                  this.resetCart();
-                  return true
-                }
-                if (code === CARD && href) {
-                  this.setState({
-                    threeDsUrl: href,
-                    order_id,
-                    increment_id,
-                    id,
-                  });
-                  setTimeout(() => this.processThreeDSWithTimeout(3), 10000);
-                } else if (
-                  code === TABBY_ISTALLMENTS ||
-                  code === TABBY_PAY_LATER
-                ) {
-                  this.setState({
-                    isTabbyPopupShown: true,
-                    order_id,
-                    increment_id,
-                  });
-                  setTimeout(
-                    () => this.processTabbyWithTimeout(3, paymentInformation),
-                    10000
-                  );
+              //return true;
+            } else if (code === CHECKOUT_QPAY) {
+              const { shippingAddress } = this.state;
+              this.setState({
+                order_id,
+                increment_id,
+                id,
+              });
+              const obj = {
+                order_id,
+                id,
+                increment_id,
+              };
+              localStorage.setItem("QPAY_ORDER_DETAILS", JSON.stringify(obj));
+              localStorage.setItem(
+                "PAYMENT_INFO",
+                JSON.stringify(paymentInformation)
+              );
+              localStorage.setItem(
+                "Shipping_Address",
+                JSON.stringify(shippingAddress)
+              );
+              window.open(`${href}`, "_self");
 
-                  //return true;
-                } else if (code === CHECKOUT_QPAY) {
-                  const { shippingAddress } = this.state;
-                  this.setState({
-                    order_id,
-                    increment_id,
-                    id,
-                  });
-                  const obj = {
-                    order_id,
-                    id,
-                    increment_id,
-                  };
-                  localStorage.setItem(
-                    "QPAY_ORDER_DETAILS",
-                    JSON.stringify(obj)
-                  );
-                  localStorage.setItem(
-                    "PAYMENT_INFO",
-                    JSON.stringify(paymentInformation)
-                  );
-                  localStorage.setItem(
-                    "Shipping_Address",
-                    JSON.stringify(shippingAddress)
-                  );
-                  window.open(`${href}`, "_self");
-
-                  //return true;
-                } else {
-                  if (code === CARD) {
-                    const { saveCreditCard, newCardVisible } = this.props;
-                    const { creditCardData } = this.state;
-                    if (newCardVisible && creditCardData.saveCard) {
-                      saveCreditCard({
-                        email: creditCardData.email,
-                        paymentId: id,
-                      })
-                        .then(() => {})
-                        .catch(() => {
-                          showErrorNotification(
-                            __("Something went wrong! Please, try again!")
-                          );
-                        });
-                    }
-                  }
-                  BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
-                  this.setDetailsStep(order_id, increment_id);
-                  this.resetCart();
-                  return true;
-                }
-              } else {
-                const { error } = data;
-
-                if (error && typeof error === "string") {
-                  showErrorNotification(__(error));
-                  this.setState({ isLoading: false });
-                  if(code === CHECKOUT_APPLE_PAY){
-                    return false
-                  }
-                  this.resetCart();  
+              //return true;
+            } else {
+              if (code === CARD) {
+                const { saveCreditCard, newCardVisible } = this.props;
+                const { creditCardData } = this.state;
+                if (newCardVisible && creditCardData.saveCard) {
+                  saveCreditCard({
+                    email: creditCardData.email,
+                    paymentId: id,
+                  })
+                    .then(() => {})
+                    .catch(() => {
+                      showErrorNotification(
+                        __("Something went wrong! Please, try again!")
+                      );
+                    });
                 }
               }
+              BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
+              this.setDetailsStep(order_id, increment_id);
+              this.resetCart();
+              return true;
             }
+          } else {
+            const { error } = data;
 
-            if (typeof data === "string") {
-              showErrorNotification(__(data));
+            if (error && typeof error === "string") {
+              showErrorNotification(__(error));
               this.setState({ isLoading: false });
-              if(code === CHECKOUT_APPLE_PAY){
-                return false
+              if (code === CHECKOUT_APPLE_PAY) {
+                return false;
               }
               this.resetCart();
             }
           }
+        }
 
-          if (response && typeof response === "string") {
-            showErrorNotification(__(response));
-            this.setState({ isLoading: false });
-            if(code === CHECKOUT_APPLE_PAY){
-              return false
-            }
-            this.resetCart();
+        if (typeof data === "string") {
+          showErrorNotification(__(data));
+          this.setState({ isLoading: false });
+          if (code === CHECKOUT_APPLE_PAY) {
+            return false;
           }
-    }
-    catch (e) {
+          this.resetCart();
+        }
+      }
+
+      if (response && typeof response === "string") {
+        showErrorNotification(__(response));
+        this.setState({ isLoading: false });
+        if (code === CHECKOUT_APPLE_PAY) {
+          return false;
+        }
+        this.resetCart();
+      }
+    } catch (e) {
       const { showErrorNotification } = this.props;
       this.setState({ isLoading: false });
 
@@ -709,7 +711,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   }
 
   setDetailsStep(orderID, incrementID) {
-    const { setNavigationState, sendVerificationCode, isSignedIn, customer, } =
+    const { setNavigationState, sendVerificationCode, isSignedIn, customer } =
       this.props;
     const { shippingAddress } = this.state;
 
@@ -735,20 +737,19 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
     BrowserDatabase.deleteItem(PAYMENT_TOTALS);
 
-    
     this.setState({
       isLoading: false,
       checkoutStep: DETAILS_STEP,
       orderID,
       incrementID,
     });
-    
+
     setNavigationState({
       name: DETAILS_STEP,
     });
   }
 
-  setBillingStep(){
+  setBillingStep() {
     this.setState({
       checkoutStep: SHIPPING_STEP,
     });
@@ -786,7 +787,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       saveCreditCard,
       newCardVisible,
       showOverlay,
-      hideActiveOverlay
+      hideActiveOverlay,
     } = this.props;
     const { order_id, increment_id, id = "", creditCardData } = this.state;
     getPaymentAuthorization(id).then((response) => {
@@ -864,7 +865,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   }
 
   processTabby(paymentInformation) {
-    const { verifyPayment, updateTabbyPayment , hideActiveOverlay} = this.props;
+    const { verifyPayment, updateTabbyPayment, hideActiveOverlay } = this.props;
     const { checkoutStep } = this.state;
     const { tabbyPaymentId } = paymentInformation;
     const { order_id, increment_id } = this.state;
@@ -875,7 +876,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
     verifyPayment(tabbyPaymentId).then(({ status }) => {
       if (status === AUTHORIZED_STATUS || status === CAPTURED_STATUS) {
-        hideActiveOverlay()
+        hideActiveOverlay();
         BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
         this.setState({ tabbyPaymentStatus: status, isTabbyPopupShown: false });
         updateTabbyPayment(tabbyPaymentId, order_id);
@@ -942,13 +943,13 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   render() {
     const { isClickAndCollect } = this.state;
     return (
-        <Checkout
-          { ...this.props }
-          { ...this.state }
-          { ...this.containerFunctions }
-          { ...this.containerProps() }
-          isClickAndCollect={ isClickAndCollect }
-        />
+      <Checkout
+        {...this.props}
+        {...this.state}
+        {...this.containerFunctions}
+        {...this.containerProps()}
+        isClickAndCollect={isClickAndCollect}
+      />
     );
   }
 }
