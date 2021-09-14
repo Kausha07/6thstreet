@@ -230,7 +230,7 @@ export class PLPContainer extends PureComponent {
     } = this.props;
     if (query) {
       const { updateBreadcrumbs, setGender } = this.props;
-      const breadcrumbLevels = options["categories.level2"]
+      const breadcrumbLevels = options["categories.level4"] ? options["categories.level4"] : options["categories.level3"] ? options["categories.level3"] : options["categories.level2"]
         ? options["categories.level2"]
         : options["categories.level1"];
 
