@@ -129,7 +129,7 @@
       font-size: 0;
       transform: rotate(-10deg);
       left: 5px;
-      top: -5px;
+      top: -3px;
     }
 
     &::after {
@@ -164,13 +164,15 @@
 
     &_isArabic {
       &::after {
-        right: 35px;
+        right: 22px;
         left: 0;
+        width: auto;
       }
 
       &::before {
         right: 5px;
         left: 0;
+
       }
     }
   }
@@ -217,7 +219,6 @@
     align-items: center;
     justify-content: left;
     width: 100%;
-    margin: 5px 0;
     color: var(--white-color);
     // font-weight: var(--fw-demi);
     text-align: center;
@@ -235,6 +236,7 @@
     line-height: 18px;
     &_isArabic {
       justify-content: right;
+      margin-left: 5px;
     }
     @include desktop {
       color: var(--black-color);
@@ -265,6 +267,8 @@
       color: white;
       font-size: 10px;
       letter-spacing: 0.91px;
+      line-height: 36px;
+      margin: 0;
       }
 
       &::first-letter {
