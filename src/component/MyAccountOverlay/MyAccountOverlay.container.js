@@ -280,7 +280,6 @@ export class MyAccountOverlayContainer extends PureComponent {
   }
 
   onCreateAccountSuccess(fields) {
-    localStorage.removeItem("Wishlist_Item");
     const { createAccount } = this.props;
 
     const { password, email, fullname, privacyPolicy, gender } = fields;

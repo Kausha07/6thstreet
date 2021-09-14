@@ -12,7 +12,8 @@ import SuccessCheckoutItem from "Component/SuccessCheckoutItem";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { TotalsType } from "Type/MiniCart";
-import { getDiscountFromTotals, isArabic } from "Util/App";
+
+import { getDiscountFromTotals, isArabic , getCurrency} from "Util/App";
 import { EMAIL_LINK, TEL_LINK, WHATSAPP_LINK } from "./CheckoutSuccess.config";
 import "./CheckoutSuccess.style";
 import Apple from "./icons/apple.png";
@@ -282,6 +283,7 @@ export class CheckoutSuccess extends PureComponent {
 
       const {
       order: { status, unship = [] , base_currency_code: currency},
+      incrementID,
     } = this.props;
 
     return (
@@ -295,13 +297,15 @@ export class CheckoutSuccess extends PureComponent {
             .filter(
               ({ qty_canceled, qty_ordered }) => +qty_canceled < +qty_ordered
             )
-            .map(<SuccessCheckoutItem
-              key={item.item_id}
-              item={item}
-              currency_code={currency}
-              isEditing
-              isLikeTable
-            />)
+            .map((item) => (
+              <SuccessCheckoutItem
+                key={item?.item_id}
+                item={item}
+                currency_code={quote_currency_code}
+                isEditing
+                isLikeTable
+              />
+            ))
           }
         </ul>
       </div>
@@ -376,27 +380,13 @@ export class CheckoutSuccess extends PureComponent {
     if (!price) {
       return null;
     }
-    let fullPrice
-
-    const {paymentMethod} = this.props
-
-
-    if(paymentMethod?.code === "checkout_qpay"){
-      const {
-        order: { order_currency_code: currency_code = getCurrency() },
-      } = this.props;
-      const finalPrice = getFinalPrice(price, currency_code);
-      fullPrice = `${currency_code} ${finalPrice}`;
-    }else{
 
       const {
         initialTotals: { quote_currency_code },
       } = this.props;
       const finalPrice = getFinalPrice(price, quote_currency_code);
   
-      fullPrice = `${quote_currency_code} ${finalPrice}`;
-    }
-
+      const fullPrice = `${quote_currency_code} ${finalPrice}`;
 
     return (
       <div block="Totals">
@@ -779,10 +769,102 @@ export class CheckoutSuccess extends PureComponent {
     );
   }
 
+  renderPriceLineQPAY(price, name, mods = {}, allowZero = false) {
+    if (!price && !allowZero) {
+      return null;
+    }
+    const { isTotal, isStoreCredit, isClubApparel } = mods;
+    const formatPrice =
+      isStoreCredit || isClubApparel ? parseFloat(-price) : parseFloat(price);
+
+    const {
+      order: { order_currency_code: currency_code = getCurrency() },
+    } = this.props;
+    const finalPrice = getFinalPrice(formatPrice, currency_code);
+
+    return (
+      <li block="MyAccountOrderView" elem="SummaryItem" mods={mods}>
+        <strong block="MyAccountOrderView" elem="Text">
+          {name}
+          {isTotal && (
+            <>
+              {" "}
+              <span>{__("(Taxes included)")}</span>
+            </>
+          )}
+        </strong>
+        <strong block="MyAccountOrderView" elem="Price">
+          {currency_code} {finalPrice}
+        </strong>
+      </li>
+    );
+  }
+
+  renderPaymentSummary() {
+    const {
+      order: {
+        subtotal = 0,
+        grand_total = 0,
+        shipping_amount = 0,
+        discount_amount = 0,
+        msp_cod_amount = 0,
+        tax_amount = 0,
+        customer_balance_amount = 0,
+        club_apparel_amount = 0,
+        currency_code = getCurrency(),
+      },
+    } = this.props;
+    const grandTotal = getFinalPrice(grand_total, currency_code);
+    const subTotal = getFinalPrice(subtotal, currency_code);
+
+    return (
+      <div block="MyAccountOrderView" elem="OrderTotals">
+        <ul>
+          <div block="MyAccountOrderView" elem="Subtotals">
+            {this.renderPriceLineQPAY(subTotal, __("Subtotal"))}
+            {this.renderPriceLineQPAY(shipping_amount, __("Shipping"), {
+              divider: true,
+            })}
+            {customer_balance_amount !== 0
+              ? this.renderPriceLineQPAY(
+                customer_balance_amount,
+                __("Store Credit"),
+                { isStoreCredit: true }
+              )
+              : null}
+            {parseFloat(club_apparel_amount) !== 0
+              ? this.renderPriceLineQPAY(
+                club_apparel_amount,
+                __("Club Apparel Redemption"),
+                { isClubApparel: true }
+              )
+              : null}
+            {parseFloat(discount_amount) !== 0
+              ? this.renderPriceLineQPAY(discount_amount, __("Discount"))
+              : null}
+            {parseFloat(tax_amount) !== 0
+              ? this.renderPriceLineQPAY(tax_amount, __("Tax"))
+              : null}
+            {parseFloat(msp_cod_amount) !== 0
+              ? this.renderPriceLineQPAY(msp_cod_amount, __("Cash on Delivery"))
+              : null}
+            {this.renderPriceLineQPAY(
+              grandTotal,
+              __("Total"),
+              { isTotal: true },
+              true
+            )}
+          </div>
+        </ul>
+      </div>
+    );
+  }
+
   renderDetails() {
     const {
       customer,
       billingAddress: { guest_email },
+      paymentMethod
     } = this.props;
     return (
       <div block="CheckoutSuccess">
@@ -796,7 +878,7 @@ export class CheckoutSuccess extends PureComponent {
           {this.renderTotalsItems()}
           {this.renderAddresses()}
           {this.renderPaymentType()}
-          {this.renderTotals()}
+          {paymentMethod?.code === "checkout_qpay" ? this.renderPaymentSummary() : this.renderTotals()}
           {this.renderContact()}
         </div>
         {this.renderButton()}
