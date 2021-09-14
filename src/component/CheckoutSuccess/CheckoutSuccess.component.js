@@ -12,7 +12,7 @@ import SuccessCheckoutItem from "Component/SuccessCheckoutItem";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { TotalsType } from "Type/MiniCart";
-
+import MyAccountOrderViewItem from "Component/MyAccountOrderViewItem";
 import { getDiscountFromTotals, isArabic , getCurrency} from "Util/App";
 import { EMAIL_LINK, TEL_LINK, WHATSAPP_LINK } from "./CheckoutSuccess.config";
 import "./CheckoutSuccess.style";
@@ -277,6 +277,14 @@ export class CheckoutSuccess extends PureComponent {
     this.setState({ showPopup: false });
   };
 
+  renderItem = (item) => {
+    const {
+      order: { base_currency_code: currency },
+    } = this.props;
+
+    return <MyAccountOrderViewItem item={item} currency={currency} displayDiscountPercentage={true} />;
+  };
+
   renderTotalsItems() {
     const {paymentMethod} = this.props
     if(paymentMethod?.code === "checkout_qpay"){
@@ -287,28 +295,12 @@ export class CheckoutSuccess extends PureComponent {
     } = this.props;
 
     return (
-      <div block="TotalItems">
-        <div block="TotalItems" elem="OrderId">
-          {`${__("Order")} #${incrementID} ${__("Details")}`}
-        </div>
-        <ul block="TotalItems" elem="Items">
-          {unship
+      unship
             .reduce((acc, { items }) => [...acc, ...items], [])
             .filter(
               ({ qty_canceled, qty_ordered }) => +qty_canceled < +qty_ordered
             )
-            .map((item) => (
-              <SuccessCheckoutItem
-                key={item?.item_id}
-                item={item}
-                currency_code={quote_currency_code}
-                isEditing
-                isLikeTable
-              />
-            ))
-          }
-        </ul>
-      </div>
+            .map(this.renderItem)
     );
 
     }else{
