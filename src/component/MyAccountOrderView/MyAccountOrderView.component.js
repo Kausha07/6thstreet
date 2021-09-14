@@ -36,7 +36,7 @@ import {
 import "./MyAccountOrderView.style";
 import {
   CARD, TABBY_ISTALLMENTS, TABBY_PAY_LATER, CHECK_MONEY, APPLE_PAY,
-  CHECKOUT_APPLE_PAY, CASH_ON_DELIVERY, FREE,
+  CHECKOUT_APPLE_PAY, CASH_ON_DELIVERY, FREE,CHECKOUT_QPAY
 } from '../CheckoutPayments/CheckoutPayments.config';
 import { MINI_CARDS } from "Component/CreditCard/CreditCard.config";
 
@@ -504,6 +504,7 @@ class MyAccountOrderView extends PureComponent {
       },
     } = this.props;
 
+    console.log("this.props", this.props)
    
     switch (method) {
       case CARD:
@@ -524,6 +525,8 @@ class MyAccountOrderView extends PureComponent {
           return this.renderPaymentTypeText(__("Apple Pay"));
         }
         return this.renderCardPaymentType();
+      case CHECKOUT_QPAY:
+        return this.renderPaymentTypeText(__("QPAY"));
       default:
         return null;
     }
