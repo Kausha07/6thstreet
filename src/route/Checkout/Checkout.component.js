@@ -483,7 +483,6 @@ export class Checkout extends SourceCheckout {
     } = this.state;
     this.setState({ isSuccess: true });
 
-    console.log("this.props checkoutsuccess", this.props)
 
     if (!isFailed) {
       return (

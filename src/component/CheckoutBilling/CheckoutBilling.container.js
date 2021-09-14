@@ -517,7 +517,6 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       total: { label: default_title, amount: total },
       lineItems: LineItems
     };
-    console.log("payment request", paymentRequest);
     savePaymentInformationApplePay({billing_address:shippingAddress, paymentMethod: {code: "checkout_apple_pay"}})
     const applePaySession = new window.ApplePaySession(1, paymentRequest);
 
@@ -606,7 +605,6 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
         label: default_title,
         amount: grand_total,
       };
-      console.log("payment total on payment method selected", newTotal)
       applePaySession.completePaymentMethodSelection(
         newTotal,
         this._getLineItems()

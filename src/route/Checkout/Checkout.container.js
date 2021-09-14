@@ -212,7 +212,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           
         const response = await getPaymentAuthorizationQPay(id, true)
         if (response) {
-          console.log("payment auth response", response)
           this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
 
           localStorage.removeItem("Shipping_Address");
@@ -223,8 +222,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
           const { data: order } = await MagentoAPI.get(`orders/${ order_id }`);
           
-          console.log("data from magento api", order)
-
           this.setState({ QPayOrderDetails: order });
 
 
@@ -236,7 +233,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             try {
               const cResponse =  await capturePayment(paymentId, order_id)
                 if(cResponse){
-                  console.log("capture payment response", cResponse)
                   const {pun,requested_on,amount , currency }= cResponse
                   this.setState({QPayDetails: {PUN : pun, date:requested_on, status:"SUCCESS"}})
                 }
@@ -248,13 +244,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
           if (status === "Declined" || status === "Canceled") {
             cancelOrder(order_id, PAYMENT_FAILED);
             this.setState({ isLoading: false, isFailed: true });
-            console.log("order id and increment id", order_id, increment_id)
             this.setDetailsStep(order_id, increment_id);
             this.resetCart();
             try {
                 const cResponse = await capturePayment(paymentId, order_id)
                 if(cResponse){
-                  console.log("capture payment response", cResponse)
                   const {pun,requested_on,amount , currency }= cResponse
                   this.setState({QPayDetails: {PUN : pun, date:requested_on, amount:`${currency} ${amount}`, status:"FAILED", Payment_ID: paymentId}})
                 }
@@ -298,14 +292,12 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const { total: { items: prevItems } = {} } = prevProps;
     
     if(QPAYRedirect){
-    console.log("Qpay available and state is ", this.state)
     if (checkoutStep !== prevCheckoutStep) {
       updateStoreCredit();
       this.handleCheckoutGTM();
     }
       return true
     }
-    console.log("Qpay not available")
     if(prevItems !== items && items.length){
       let isClickAndCollect = "";
       for(let i = 0; i<items.length; i++){
@@ -392,8 +384,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   handleCheckoutGTM(isInitial = false) {
     const { totals } = this.props;
     const { checkoutStep, incrementID, initialTotals } = this.state;
-    console.log("totals in handle checkout gtm", totals)
-    console.log("checkoutstep , increment id , inital totals", checkoutStep, incrementID,initialTotals )
     if (checkoutStep !== DETAILS_STEP) {
       Event.dispatch(EVENT_GTM_CHECKOUT, {
         totals,
@@ -603,7 +593,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       const response = await createOrder(code, data)
       if (response && response.data) {
             const { data } = response;
-            console.log("response of create order api", response)
             if (typeof data === "object") {
               const {
                 order_id,
@@ -752,9 +741,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const { setNavigationState, sendVerificationCode, isSignedIn, customer, } =
       this.props;
     const { shippingAddress } = this.state;
-    console.log("details step running")
-    console.log("order id", orderID)
-    console.log("increment id", incrementID)
     if (isSignedIn) {
       if (customer.isVerified !== "0") {
         const { phone = "" } = customer;
