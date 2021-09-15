@@ -78,9 +78,9 @@ export class CheckoutShipping extends SourceCheckoutShipping {
   }
 
   checkForDisabling() {
-    const { selectedShippingMethod } = this.props;
+    const { selectedShippingMethod ,checkClickAndCollect} = this.props;
     const { isMobile } = this.state;
-    if (!selectedShippingMethod || !isMobile) {
+    if (!checkClickAndCollect() && !selectedShippingMethod || !isMobile) {
       return true;
     }
 
@@ -287,6 +287,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       shippingAddress,
       isClickAndCollect,
       checkClickAndCollect,
+      totals
     } = this.props;
     const { formContent } = this.state;
     return (
@@ -299,6 +300,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         openForm={this.openForm.bind(this)}
         showCards={this.showCards}
         hideCards={this.hideCards}
+        totals={totals}
         isClickAndCollect={isClickAndCollect}
         clickAndCollectStatus={checkClickAndCollect()}
       />

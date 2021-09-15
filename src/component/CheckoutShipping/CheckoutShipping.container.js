@@ -283,7 +283,6 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     if (!selectedShippingMethod) {
       return;
     }
-    console.log(trimAddressFields(fields),"muskan0---------------",fields);
 
     const shippingAddress = selectedCustomerAddressId
       ? this._getAddressById(selectedCustomerAddressId)
