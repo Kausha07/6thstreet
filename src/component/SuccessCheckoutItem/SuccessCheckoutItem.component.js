@@ -238,31 +238,10 @@ export class SuccessCheckoutItem extends PureComponent {
     );
   }
 
-  renderClickAndCollectStoreName(extension_attributes) {
-    const { isArabic } = this.state;
-    if (extension_attributes?.click_to_collect_store) {
-      return (
-        <div
-          block="SuccessCheckoutItem"
-          elem="ClickAndCollect"
-          mods={{ isArabic }}
-        >
-          <div block="SuccessCheckoutItem-ClickAndCollect" elem="icon">
-            <Store />
-          </div>
-          <div block="SuccessCheckoutItem-ClickAndCollect" elem="StoreName">
-            {extension_attributes?.click_to_collect_store_name}
-          </div>
-        </div>
-      );
-    }
-    return null;
-  }
-
   renderContent() {
     const {
       isLikeTable,
-      item: { customizable_options, bundle_options, extension_attributes },
+      item: { customizable_options, bundle_options },
     } = this.props;
 
     return (
@@ -278,7 +257,6 @@ export class SuccessCheckoutItem extends PureComponent {
         {this.renderProductOptions(bundle_options)}
         {this.renderColSizeQty()}
         {this.renderProductPrice()}
-        {this.renderClickAndCollectStoreName(extension_attributes)}
       </figcaption>
     );
   }
@@ -312,15 +290,11 @@ export class SuccessCheckoutItem extends PureComponent {
   render() {
     const {
       isLoading,
-      item: { extension_attributes },
     } = this.props;
 
     return (
       <li
         block="SuccessCheckoutItem"
-        mods={{
-          ClickNCollect: extension_attributes?true:false,
-        }}
       >
         <Loader isLoading={isLoading} />
         {this.renderWrapper()}

@@ -92,8 +92,6 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
         };
 
     if (!!isClickAndCollect && storeAddress) {
-      console.log(fieldMap);
-
       const { store_name, address, city, area } = storeAddress;
       if (store_name && address) {
         const value = `${store_name}, ${address}`;
@@ -190,7 +188,6 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
 
     const isGuestForm = !isSignedIn;
     const ClickNCollect = clickNCollectStatus
-    console.log(isGuestForm,"clickAndCollectStatus",ClickNCollect);
     return (
       <FormPortal id={id} name="CheckoutAddressForm">
         <div
