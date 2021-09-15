@@ -241,7 +241,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             }
           }
 
-          if (status === "Declined" || status === "Canceled") {
+          if (status === "Declined" || status === "Canceled"|| status === "Pending") {
             cancelOrder(order_id, PAYMENT_FAILED);
             this.setState({ isLoading: false, isFailed: true });
             this.setDetailsStep(order_id, increment_id);
@@ -655,7 +655,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                     order_id,
                     id,
                     increment_id,
-                    expiry: now.getTime() + 300000,
+                    // keep details in localstorage for 2 mins only
+                    expiry: now.getTime() + 120000,
                   };
                   localStorage.setItem(
                     "QPAY_ORDER_DETAILS",
