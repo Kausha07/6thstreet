@@ -1,5 +1,5 @@
 .Brand {
-    display: block;
+    display: flex;
     text-transform: none;
     height: unset;
     padding: 0;
@@ -7,4 +7,5 @@
     font-size: 13px;
     line-height: 1.5;
     margin-top: 1rem;
+    margin-left: 0;
 }

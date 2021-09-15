@@ -1,13 +1,12 @@
+import Link from "Component/Link";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
-
 import { KIDS_GENDERS } from "Route/Brands/Brands.config";
 import { Brand as BrandType } from "Util/API/endpoint/Brands/Brands.type";
+import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import WebUrlParser from "Util/API/helper/WebUrlParser";
-import browserHistory from "Util/History";
 import { isArabic } from "Util/App";
-import BRAND_MAPPING from "Component/SearchSuggestion/SearchSiggestion.config";
-
+import browserHistory from "Util/History";
 import "./Brand.style";
 
 class Brand extends PureComponent {
@@ -47,9 +46,11 @@ class Brand extends PureComponent {
     const { isArabic } = this.state;
     let name = brandName;
     let brandMapping = this.props.brandMapping;
-    if (isArabic) {
-      name = this.getKeyByValue(brandMapping, brandName);
-    }
+    let testbrandMapping = this.props.testbrandMapping;
+    // if (isArabic) {
+    //   name = this.getKeyByValue(brandMapping, brandName);
+    // }
+    testbrandMapping.map((item) => item.en === brandName);
 
     name = name ? name : brandName;
     const urlName = name
@@ -91,10 +92,42 @@ class Brand extends PureComponent {
   };
 
   render() {
+    const {
+      brand: { name = "", url = "" },
+      type,
+    } = this.props;
+    const { isArabic } = this.state;
+    let finalURL;
+    let requestedGender;
+    if (type) {
+      if (type === "kids") {
+        requestedGender = isArabic ? "أولاد~بنات" : "Boy~Girl";
+      } else {
+        requestedGender = isArabic ? getGenderInArabic(type) : type;
+      }
+      finalURL = url
+        ? `${url}.html?brand_name=${encodeURI(
+            name
+          )}&gender=${this.capitalizeFirstLetter(requestedGender)}`
+        : `/catalogsearch/result/?q=${encodeURI(name)}brand_name=${encodeURI(
+            name
+          )}&gender=${this.capitalizeFirstLetter(
+            requestedGender
+          )}&brand_name=${encodeURI(name)}`;
+    } else {
+      finalURL = url
+        ? `${url}.html?brand_name=${encodeURI(name)}`
+        : `/catalogsearch/result/?q=${encodeURI(name)}&brand_name=${encodeURI(
+            name
+          )}`;
+    }
     return (
-      <button onClick={this.handleBrandRedirect} block="Brand">
+      // <button onClick={this.handleBrandRedirect} block="Brand">
+      //   {this.renderName()}
+      // </button>
+      <Link to={finalURL} block="Brand">
         {this.renderName()}
-      </button>
+      </Link>
     );
   }
 }

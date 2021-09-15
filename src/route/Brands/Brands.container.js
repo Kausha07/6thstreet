@@ -8,7 +8,9 @@ import { TOP_NAVIGATION_TYPE } from "Store/Navigation/Navigation.reducer";
 import { showNotification } from "Store/Notification/Notification.action";
 import { HistoryType, LocationType } from "Type/Common";
 import { groupByName } from "Util/API/endpoint/Brands/Brands.format";
+import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import Algolia from "Util/API/provider/Algolia";
+import { isArabic } from "Util/App";
 import { getQueryParam, setQueryParams } from "Util/Url";
 import Brands from "./Brands.component";
 import { TYPES_ARRAY } from "./Brands.config";
@@ -45,6 +47,8 @@ class BrandsContainer extends PureComponent {
     brands: [],
     isLoading: true,
     brandMapping: {},
+    testbrandMapping: [],
+    isArabic: isArabic(),
   };
 
   containerFunctions = {
@@ -55,14 +59,15 @@ class BrandsContainer extends PureComponent {
     const brandUrlParam = getQueryParam("type", location);
     const brandType = TYPES_ARRAY.includes(brandUrlParam) ? brandUrlParam : "";
 
+    this.requestBrandMapping();
     this.requestBrands(brandType);
     this.updateBreadcrumbs();
     this.updateHeaderState();
-    this.requestBrandMapping();
   }
 
   requestBrandMapping = () => {
     let brandMapping = this.getBrandMappingData();
+    let TestbrandMapping = this.getTestBrandMappingData();
   };
 
   async getBrandMappingData() {
@@ -80,6 +85,23 @@ class BrandsContainer extends PureComponent {
           },
           () => {
             console.log(this.state.brandMapping);
+          }
+        );
+      });
+  }
+
+  getTestBrandMappingData() {
+    const apiUrl = "/cdn/config/brandswithUrl.json";
+    fetch(apiUrl)
+      .then((response) => response.json())
+      .then((data) => {
+        let ret = {};
+        this.setState(
+          {
+            testbrandMapping: data.brands,
+          },
+          () => {
+            console.log(this.state.testbrandMapping);
           }
         );
       });
@@ -112,22 +134,20 @@ class BrandsContainer extends PureComponent {
 
   changeBrandType(brandUrlParam) {
     const { location, history } = this.props;
+    const { isArabic } = this.state;
     const brandType = TYPES_ARRAY.includes(brandUrlParam) ? brandUrlParam : "";
-
+    const genderType = isArabic ? getGenderInArabic(brandType) : brandType;
     setQueryParams({ type: brandType }, location, history);
-    this.requestBrands(brandType);
+    this.requestBrands(genderType);
   }
 
   requestBrands(brandType = "") {
     const { showErrorNotification } = this.props;
-
     this.setState({ isLoading: true });
-
     this._brandRequest = new Algolia()
       .getBrands(brandType)
       .then((data) => {
         const groupedBrands = groupByName(data) || {};
-
         // This sort places numeric brands to the end of the list
         const sortedBrands = Object.entries(groupedBrands).sort(
           ([letter1], [letter2]) => {
@@ -142,7 +162,6 @@ class BrandsContainer extends PureComponent {
             return letter1 - letter2;
           }
         );
-
         this.setState({
           brands: sortedBrands,
           isLoading: false,
@@ -152,12 +171,12 @@ class BrandsContainer extends PureComponent {
   }
 
   containerProps = () => {
-    const { brands, isLoading, brandMapping } = this.state;
-
+    const { brands, isLoading, brandMapping, testbrandMapping } = this.state;
     return {
       brands,
       isLoading,
       brandMapping,
+      testbrandMapping,
       type: getQueryParam("type", location),
     };
   };

@@ -29,7 +29,7 @@ export class Algolia {
       adminKey = process.env.REACT_APP_ALGOLIA_KEY,
       index = "",
     } = options;
-
+    console.log("env", env);
     AlgoliaSDK.init(appId, adminKey);
 
     AlgoliaSDK.setIndex.call(AlgoliaSDK, locale, env, index);
