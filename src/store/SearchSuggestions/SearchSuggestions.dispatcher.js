@@ -102,8 +102,6 @@ export class SearchSuggestionsDispatcher {
         data?.hits?.length > 0
           ? getCustomQuerySuggestions(data?.hits, sourceIndexName, searchQuery)
           : [defaultHit];
-      console.log("data", data);
-      console.log("querySuggestion", querySuggestions);
       if (data && data.queryID) {
         queryID = data.queryID;
       } else {

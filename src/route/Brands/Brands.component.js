@@ -85,7 +85,6 @@ class Brands extends PureComponent {
       );
       return Object.assign({}, testBrandItem, brand);
     });
-    console.log("final Array", finalArray);
     return (
       <BrandGroup
         key={letter}

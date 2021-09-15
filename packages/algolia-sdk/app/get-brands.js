@@ -2,7 +2,6 @@ import { searchParams } from "./config";
 
 export default function getBrands(gender = "", options = {}) {
   const { index } = options;
-  console.log("gender", gender);
   return new Promise((resolve, reject) => {
     const newSearchParams = Object.assign({}, searchParams);
     newSearchParams.hitsPerPage = 0;
@@ -13,7 +12,6 @@ export default function getBrands(gender = "", options = {}) {
       if (err) {
         return reject(err);
       }
-      console.log("data", data);
       const brandNamesObj = data.facets.brand_name;
       let brands = [];
 
