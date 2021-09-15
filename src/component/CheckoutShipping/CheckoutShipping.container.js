@@ -196,7 +196,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     const shippingAddress = selectedCustomerAddressId
       ? this._getAddressById(selectedCustomerAddressId)
       : trimAddressFields(fields);
-    const addressForValidation = isSignedIn() ? shippingAddress : fields;
+    const addressForValidation = isSignedIn() && !this.checkClickAndCollect() ? shippingAddress : fields;
     const validationResult = this.validateAddress(addressForValidation);
 
     if (!validationResult) {

@@ -4,7 +4,6 @@ import { CheckoutAddressForm as SourceCheckoutAddressForm } from "SourceComponen
 
 import "./CheckoutAddressForm.style";
 
-
 const objTabIndex = {
   city: "6",
   telephone: "9",
@@ -53,7 +52,26 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
       this.estimateShipping();
     }
   }
-
+  getFilteredFields(result) {
+    let filterResult = Object.keys(result).filter((data) => {
+      let returnValue;
+      if (
+        data !== "city" &&
+        data !== "street" &&
+        data !== "region_string" &&
+        data !== "region_id" &&
+        data !== "postcode"
+      ) {
+        returnValue = result[data];
+      }
+      return returnValue;
+    });
+    let finalResult = {};
+    filterResult.map((data) => {
+      return (finalResult[data] = result[data]);
+    });
+    return finalResult;
+  }
   get fieldMap() {
     this.getCitiesAndRegionsData();
 
@@ -63,11 +81,11 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
       isClickAndCollect,
       storeAddress,
       clickAndCollectStatus,
-      setClickAndCollect
+      setClickAndCollect,
     } = this.props;
 
     const { telephone, street, ...fieldMap } = super.fieldMap;
-    
+
     fieldMap.street = {
       ...street,
       onChange: (value) => this.onChange("street", value),
@@ -90,9 +108,8 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
           },
           ...fieldMap,
         };
-  
-    if(!!isClickAndCollect && storeAddress){
-      
+
+    if (!!isClickAndCollect && storeAddress) {
       const { store_name, address, city, area } = storeAddress;
       if (store_name && address) {
         const value = `${store_name}, ${address}`;
@@ -136,23 +153,7 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
           result[key] = o;
         }
       }
-      let filterResult = Object.keys(result).filter((data) => {
-        let returnValue;
-        if (
-          data !== "city" &&
-          data !== "street" &&
-          data !== "region_string" &&
-          data !== "region_id" &&
-          data !== "postcode"
-        ) {
-          returnValue = result[data];
-        }
-        return returnValue;
-      });
-      let finalResult = {};
-      filterResult.map((data) => {
-        return (finalResult[data] = result[data]);
-      });
+      let finalResult = this.getFilteredFields(result);
       if (clickAndCollectStatus) {
         setClickAndCollect(true);
         return finalResult;
@@ -161,7 +162,14 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
         return result;
       }
     }
-    return fFieldMap;
+    let finalResult = this.getFilteredFields(fFieldMap);
+    if (clickAndCollectStatus) {
+      setClickAndCollect(true);
+      return finalResult;
+    } else {
+      setClickAndCollect(false);
+      return fFieldMap;
+    }
   }
 
   estimateShipping() {
@@ -184,17 +192,20 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
   }
 
   render() {
-    const { id, isSignedIn, clickNCollectStatus } = this.props;
+    const { id, isSignedIn, clickAndCollectStatus ,showCountry} = this.props;
     const { isArabic } = this.state;
 
     const isGuestForm = !isSignedIn;
-    const ClickNCollect = clickNCollectStatus
+    const ClickNCollect = clickAndCollectStatus;
     return (
-      <FormPortal id={id} name="CheckoutAddressForm">
+      <FormPortal id={id} name="CheckoutAddressForm" >
         <div
           block="FieldForm"
-          mix={{ block: "CheckoutAddressForm", mods: { isGuestForm,ClickNCollect } }}
-          mods={{ isArabic }}
+          mix={{
+            block: "CheckoutAddressForm",
+            mods: { isGuestForm, ClickNCollect,showCountry },
+          }}
+          mods={{ isArabic}}
         >
           {this.renderFields()}
         </div>

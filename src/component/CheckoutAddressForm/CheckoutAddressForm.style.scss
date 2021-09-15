@@ -249,19 +249,22 @@
       }
     }
   }
+  &_showCountry{
+    .FieldForm {
+      &-Fields {
+        .Field {
+          &:nth-child(2) {
+           display: none !important;
+          } 
+        }
+      }
+    }
+
+  }
   &_ClickNCollect {
     .FieldForm {
       &-Fields {
         .Field {
-          // &:nth-child(6) {
-          //   display: none;
-          // }
-          // &:nth-child(7) {
-          //   display: none;
-          // }
-          // &:nth-child(9) {
-          //   display: none;
-          // }
           &:nth-child(5) {
             grid-column: 1;
             grid-row: 5 !important;

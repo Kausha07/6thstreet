@@ -131,8 +131,8 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     if (
       isMobile.any() ||
       isMobile.tablet() ||
-      (isSignedIn && addresses.length === 0) ||
-      (isSignedIn && selectedAddressCountry !== getCountryFromUrl())
+      (isSignedIn && addresses.length === 0 && !checkClickAndCollect()) ||
+      (isSignedIn && selectedAddressCountry !== getCountryFromUrl() && !checkClickAndCollect() )
     ) {
       return null;
     }
@@ -222,14 +222,15 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       notSavedAddress,
       customer: { addresses = [] },
       isClickAndCollect,
+      checkClickAndCollect
     } = this.props;
 
-    if (!openFirstPopup && addresses && isSignedIn() && notSavedAddress()) {
+    if (!openFirstPopup && addresses && isSignedIn() && notSavedAddress() && !checkClickAndCollect()) {
       this.setState({ openFirstPopup: true });
       this.openNewForm();
     }
 
-    if (isSignedIn() && !!!isClickAndCollect) {
+    if (isSignedIn() && !checkClickAndCollect()) {
       return (
         <div
           block="MyAccountAddressBook"
@@ -333,7 +334,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
               : handleClickNCollectPayment
           }
         >
-          {isSignedIn() ? (
+          {isSignedIn() && !checkClickAndCollect()? (
             <>
               <h3>{__("Delivering to")}</h3>
               <h4 block="CheckoutShipping" elem="DeliveryMessage">

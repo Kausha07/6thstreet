@@ -68,7 +68,8 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
         onShippingEstimationFieldsChange={onShippingEstimationFieldsChange}
         address={{}}
         // If Click And Collect is selected, treat it as guest form
-        isSignedIn={isSignedIn && !!!isClickAndCollect}
+        isSignedIn={isSignedIn && !clickAndCollectStatus}
+        showCountry ={isSignedIn}
         id={formPortalId}
         shippingAddress={shippingAddress}
         clickAndCollectStatus={clickAndCollectStatus}
@@ -168,8 +169,8 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
   }
   
   renderContent() {
-    const { isSignedIn, isClickAndCollect } = this.props;
-    if (isSignedIn && !!!isClickAndCollect) {
+    const { isSignedIn, isClickAndCollect,clickAndCollectStatus } = this.props;
+    if (isSignedIn && !clickAndCollectStatus) {
         return this.renderSignedInContent();
     }
 
