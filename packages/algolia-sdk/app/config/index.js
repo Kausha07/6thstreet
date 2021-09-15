@@ -25,8 +25,8 @@ const FACET_FILTERS = [
   "toe_shape",
   "tommy_label",
   "in_stock",
-  "age",
-  "age_group",
+  // "age",
+  // "age_group",
 ];
 
 const config = {
@@ -49,8 +49,8 @@ const config = {
     "brand_name",
     "colorfamily",
     "gender",
-    "age",
-    "age_group",
+    // "age",
+    // "age_group",
     "size",
     "price",
     "discount",
