@@ -7,6 +7,8 @@ import {
 } from "Component/CheckoutPayments/CheckoutPayments.config";
 import { CC_POPUP_ID } from "Component/CreditCardPopup/CreditCardPopup.config";
 import { TABBY_POPUP_ID } from "Component/TabbyPopup/TabbyPopup.config";
+import MagentoAPI from 'Util/API/provider/MagentoAPI';
+
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import {
@@ -69,6 +71,8 @@ export const mapDispatchToProps = (dispatch) => ({
     CheckoutDispatcher.sendVerificationCode(dispatch, phone),
   getPaymentAuthorization: (paymentId) =>
     CheckoutDispatcher.getPaymentAuthorization(dispatch, paymentId),
+    getPaymentAuthorizationQPay: (paymentId, qpaymethod) =>
+    CheckoutDispatcher.getPaymentAuthorization(dispatch, paymentId, qpaymethod = true),
   capturePayment: (paymentId, orderId) =>
     CheckoutDispatcher.capturePayment(dispatch, paymentId, orderId),
   cancelOrder: (orderId, cancelReason) =>
@@ -176,6 +180,8 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       tabbyPaymentStatus: "",
       QPayDetails: {},
       isClickAndCollect: "",
+      QPAYRedirect: false, 
+      QPayOrderDetails: null
     };
   }
 
@@ -184,15 +190,88 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     await removeBinPromotion();
     await updateTotals(cartId);
   };
+
+  getQPayData = async () => {
+    try {
+      const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
+      const now = new Date()
+      if (QPAY_CHECK && (now.getTime() < QPAY_CHECK?.expiry)) {
+        this.setState({ QPAYRedirect: true });
+  
+        const { getPaymentAuthorizationQPay, capturePayment, cancelOrder } =this.props;
+  
+        localStorage.removeItem("QPAY_ORDER_DETAILS");
+  
+        const ShippingAddress = JSON.parse(
+          localStorage.getItem("Shipping_Address")
+        );
+  
+        this.setState({ shippingAddress: ShippingAddress });
+  
+        const { id, order_id, increment_id } = QPAY_CHECK;
+          
+        const response = await getPaymentAuthorizationQPay(id, true)
+        if (response) {
+          this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
+
+          localStorage.removeItem("Shipping_Address");
+
+          const { status, id: paymentId = "" } = response;
+
+          localStorage.removeItem("Shipping_Address");
+
+          const { data: order } = await MagentoAPI.get(`orders/${ order_id }`);
+          
+          this.setState({ QPayOrderDetails: order });
+
+
+          if (status === "Authorized" || status === "Captured") {
+            BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
+            this.setDetailsStep(order_id, increment_id);
+            this.setState({ isLoading: false });
+            this.resetCart();
+            try {
+              const cResponse =  await capturePayment(paymentId, order_id)
+                if(cResponse){
+                  const {pun,requested_on,amount , currency }= cResponse
+                  this.setState({QPayDetails: {PUN : pun, date:requested_on, status:"SUCCESS"}})
+                }
+            } catch (error) {
+              console.log("capture api response", error)
+            }
+          }
+
+          if (status === "Declined" || status === "Canceled") {
+            cancelOrder(order_id, PAYMENT_FAILED);
+            this.setState({ isLoading: false, isFailed: true });
+            this.setDetailsStep(order_id, increment_id);
+            this.resetCart();
+            try {
+                const cResponse = await capturePayment(paymentId, order_id)
+                if(cResponse){
+                  const {pun,requested_on,amount , currency }= cResponse
+                  this.setState({QPayDetails: {PUN : pun, date:requested_on, amount:`${currency} ${amount}`, status:"FAILED", Payment_ID: paymentId}})
+                }
+            } catch (error) {
+              console.log("capture api response",error)
+            }
+          }
+        } 
+        return;
+      }else if(now.getTime() >= QPAY_CHECK?.expiry){
+        localStorage.removeItem("QPAY_ORDER_DETAILS");
+      }
+    } catch (error) {
+      console.log("error while auth in qpay case", error)
+    }
+  }
+
   componentDidMount() {
     const { setMeta } = this.props;
     const { checkoutStep, initialGTMSent } = this.state;
     this.refreshCart();
     setMeta({ title: __("Checkout") });
-    const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
-    if (QPAY_CHECK) {
-      this.setState({ isLoading: true });
-    }
+    this.getQPayData();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -207,12 +286,19 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       isSignedIn,
     } = this.props;
 
-    const { checkoutStep, initialGTMSent } = this.state;
+    const { checkoutStep, initialGTMSent, QPAYRedirect } = this.state;
 
     const { checkoutStep: prevCheckoutStep } = prevState;
     const { total: { items: prevItems } = {} } = prevProps;
-
-    if (prevItems !== items && items.length) {
+    
+    if(QPAYRedirect){
+    if (checkoutStep !== prevCheckoutStep) {
+      updateStoreCredit();
+      this.handleCheckoutGTM();
+    }
+      return true
+    }
+    if(prevItems !== items && items.length){
       let isClickAndCollect = "";
       for (let i = 0; i < items.length; i++) {
         if (!!items[i]?.availableQty?.click_to_collect_store) {
@@ -226,78 +312,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       this.setState({ isClickAndCollect: isClickAndCollect });
     }
 
-    const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
-    if (QPAY_CHECK) {
-      const { getPaymentAuthorization, capturePayment, cancelOrder } =
-        this.props;
-
-      localStorage.removeItem("QPAY_ORDER_DETAILS");
-
-      const ShippingAddress = JSON.parse(
-        localStorage.getItem("Shipping_Address")
-      );
-
-      this.setState({ shippingAddress: ShippingAddress });
-
-      const { id, order_id, increment_id } = QPAY_CHECK;
-
-      getPaymentAuthorization(id)
-        .then((response) => {
-          if (response) {
-            this.setState({ CreditCardPaymentStatus: AUTHORIZED_STATUS });
-
-            localStorage.removeItem("Shipping_Address");
-
-            const { status, id: paymentId = "" } = response;
-
-            localStorage.removeItem("Shipping_Address");
-
-            if (status === "Authorized" || status === "Captured") {
-              BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
-              this.setDetailsStep(order_id, increment_id);
-              this.setState({ isLoading: false });
-              this.resetCart();
-              capturePayment(paymentId, order_id).then((response) => {
-                if (response) {
-                  const { pun, requested_on, amount, currency } = response;
-                  this.setState({
-                    QPayDetails: {
-                      PUN: pun,
-                      date: requested_on,
-                      status: "SUCCESS",
-                    },
-                  });
-                }
-              });
-            }
-
-            if (status === "Declined" || status === "Canceled") {
-              cancelOrder(order_id, PAYMENT_FAILED);
-              this.setState({ isLoading: false, isFailed: true });
-              this.setDetailsStep(order_id, increment_id);
-              this.resetCart();
-              capturePayment(paymentId, order_id).then((response) => {
-                if (response) {
-                  const { pun, requested_on, amount, currency } = response;
-                  this.setState({
-                    QPayDetails: {
-                      PUN: pun,
-                      date: requested_on,
-                      amount: `${currency} ${amount}`,
-                      status: "FAILED",
-                      Payment_ID: paymentId,
-                    },
-                  });
-                }
-              });
-            }
-          }
-        })
-        .catch((rejected) => {
-          console.log("request rejected(in checkout container)", rejected);
-        });
-      return;
-    }
+    
     if (Object.keys(totals).length !== 0) {
       this.updateInitTotals();
     }
@@ -369,7 +384,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   handleCheckoutGTM(isInitial = false) {
     const { totals } = this.props;
     const { checkoutStep, incrementID, initialTotals } = this.state;
-
     if (checkoutStep !== DETAILS_STEP) {
       Event.dispatch(EVENT_GTM_CHECKOUT, {
         totals,
@@ -587,97 +601,109 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             response_code,
             increment_id,
             id = "",
-            _links: { redirect: { href = "" } = {} } = {},
-          } = data;
+                _links: { redirect: { href = "" } = {} } = {},
+              } = data;
 
-          if (success || response_code === 200 || http_response_code === 202) {
-            this.setState({ isLoading: false });
-            if (code === CHECKOUT_APPLE_PAY) {
-              this.setState({
-                order_id,
-                increment_id,
-              });
-              BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
-              this.setDetailsStep(order_id, increment_id);
-              this.resetCart();
-              return true;
-            }
-            if (code === CARD && href) {
-              this.setState({
-                threeDsUrl: href,
-                order_id,
-                increment_id,
-                id,
-              });
-              setTimeout(() => this.processThreeDSWithTimeout(3), 10000);
-            } else if (code === TABBY_ISTALLMENTS || code === TABBY_PAY_LATER) {
-              this.setState({
-                isTabbyPopupShown: true,
-                order_id,
-                increment_id,
-              });
-              setTimeout(
-                () => this.processTabbyWithTimeout(3, paymentInformation),
-                10000
-              );
-
-              //return true;
-            } else if (code === CHECKOUT_QPAY) {
-              const { shippingAddress } = this.state;
-              this.setState({
-                order_id,
-                increment_id,
-                id,
-              });
-              const obj = {
-                order_id,
-                id,
-                increment_id,
-              };
-              localStorage.setItem("QPAY_ORDER_DETAILS", JSON.stringify(obj));
-              localStorage.setItem(
-                "PAYMENT_INFO",
-                JSON.stringify(paymentInformation)
-              );
-              localStorage.setItem(
-                "Shipping_Address",
-                JSON.stringify(shippingAddress)
-              );
-              window.open(`${href}`, "_self");
-
-              //return true;
-            } else {
-              if (code === CARD) {
-                const { saveCreditCard, newCardVisible } = this.props;
-                const { creditCardData } = this.state;
-                if (newCardVisible && creditCardData.saveCard) {
-                  saveCreditCard({
-                    email: creditCardData.email,
-                    paymentId: id,
-                  })
-                    .then(() => {})
-                    .catch(() => {
-                      showErrorNotification(
-                        __("Something went wrong! Please, try again!")
-                      );
-                    });
+              if (
+                success ||
+                response_code === 200 ||
+                http_response_code === 202
+              ) {
+                this.setState({ isLoading: false });
+                if (code === CHECKOUT_APPLE_PAY) {
+                  this.setState({
+                    order_id,
+                    increment_id,
+                  });
+                  BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
+                  this.setDetailsStep(order_id, increment_id);
+                  this.resetCart();
+                  return true
                 }
-              }
-              BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
-              this.setDetailsStep(order_id, increment_id);
-              this.resetCart();
-              return true;
-            }
-          } else {
-            const { error } = data;
+                if (code === CARD && href) {
+                  this.setState({
+                    threeDsUrl: href,
+                    order_id,
+                    increment_id,
+                    id,
+                  });
+                  setTimeout(() => this.processThreeDSWithTimeout(3), 10000);
+                } else if (
+                  code === TABBY_ISTALLMENTS ||
+                  code === TABBY_PAY_LATER
+                ) {
+                  this.setState({
+                    isTabbyPopupShown: true,
+                    order_id,
+                    increment_id,
+                  });
+                  setTimeout(
+                    () => this.processTabbyWithTimeout(3, paymentInformation),
+                    10000
+                  );
 
-            if (error && typeof error === "string") {
-              showErrorNotification(__(error));
-              this.setState({ isLoading: false });
-              if (code === CHECKOUT_APPLE_PAY) {
-                return false;
-              }
-              this.resetCart();
+                  //return true;
+                } else if (code === CHECKOUT_QPAY) {
+                  const { shippingAddress } = this.state;
+                  this.setState({
+                    order_id,
+                    increment_id,
+                    id,
+                  });
+                  const now = new Date()
+                  const obj = {
+                    order_id,
+                    id,
+                    increment_id,
+                    expiry: now.getTime() + 300000,
+                  };
+                  localStorage.setItem(
+                    "QPAY_ORDER_DETAILS",
+                    JSON.stringify(obj)
+                  );
+                  localStorage.setItem(
+                    "PAYMENT_INFO",
+                    JSON.stringify(paymentInformation)
+                  );
+                  localStorage.setItem(
+                    "Shipping_Address",
+                    JSON.stringify(shippingAddress)
+                  );
+                  window.open(`${href}`, "_self");
+
+                  //return true;
+                } else {
+                  if (code === CARD) {
+                    const { saveCreditCard, newCardVisible } = this.props;
+                    const { creditCardData } = this.state;
+                    if (newCardVisible && creditCardData.saveCard) {
+                      saveCreditCard({
+                        email: creditCardData.email,
+                        paymentId: id,
+                      })
+                        .then(() => {})
+                        .catch(() => {
+                          showErrorNotification(
+                            __("Something went wrong! Please, try again!")
+                          );
+                        });
+                    }
+                  }
+                  BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
+                  this.setDetailsStep(order_id, increment_id);
+                  this.resetCart();
+                  return true;
+                }
+              } else {
+                const { error } = data;
+
+                if (error && typeof error === "string") {
+                  showErrorNotification(__(error));
+                  this.setState({ isLoading: false });
+                  if(code === CHECKOUT_APPLE_PAY){
+                    return false
+                  }
+                  this.resetCart();  
             }
           }
         }
@@ -714,7 +740,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     const { setNavigationState, sendVerificationCode, isSignedIn, customer } =
       this.props;
     const { shippingAddress } = this.state;
-
     if (isSignedIn) {
       if (customer.isVerified !== "0") {
         const { phone = "" } = customer;

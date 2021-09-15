@@ -217,16 +217,6 @@
             grid-row: 4;
           }
 
-          &:before {
-            content: "";
-            position: absolute;
-            width: 15px;
-            height: 15px;
-            background: url(icons/path-address.svg) no-repeat;
-            top: 33%;
-            right: 50px;
-            z-index: 2;
-          }
         }
 
         &:nth-child(9) {
@@ -499,17 +489,6 @@
             @include desktop {
               grid-row: 5;
             }
-
-            &:before {
-              content: "";
-              position: absolute;
-              width: 15px;
-              height: 15px;
-              background: url(icons/path-address.svg) no-repeat;
-              top: 33%;
-              right: 50px;
-              z-index: 2;
-            }
           }
 
           &:nth-child(8) {
@@ -637,17 +616,6 @@
               &::before {
                 display: none;
               }
-
-              &:after {
-                content: "";
-                position: absolute;
-                width: 15px;
-                height: 15px;
-                background: url(icons/path-address.svg) no-repeat;
-                top: 33%;
-                left: 40px;
-                z-index: 2;
-              }
             }
 
             &:nth-child(10) {
@@ -758,18 +726,6 @@
                   padding-left: 30px;
                   padding-right: 30px;
                 }
-
-                &:after {
-                  content: "";
-                  position: absolute;
-                  width: 15px;
-                  height: 15px;
-                  background: url(icons/path-address.svg) no-repeat;
-                  top: 33%;
-                  left: 40px;
-                  z-index: 2;
-                }
-
                 &:before {
                   content: none;
                 }

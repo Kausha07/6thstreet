@@ -20,6 +20,7 @@ import { getCurrency, isArabic } from "Util/App";
 import { appendOrdinalSuffix } from "Util/Common";
 import { formatDate } from "Util/Date";
 import Applepay from "./icons/apple.png";
+import QPAY from "./icons/qpay.png";
 import { formatPrice } from "../../../packages/algolia-sdk/app/utils/filters";
 import CancelledImage from "./icons/cancelled.png";
 import CloseImage from "./icons/close.png";
@@ -36,7 +37,7 @@ import {
 import "./MyAccountOrderView.style";
 import {
   CARD, TABBY_ISTALLMENTS, TABBY_PAY_LATER, CHECK_MONEY, APPLE_PAY,
-  CHECKOUT_APPLE_PAY, CASH_ON_DELIVERY, FREE,
+  CHECKOUT_APPLE_PAY, CASH_ON_DELIVERY, FREE,CHECKOUT_QPAY
 } from '../CheckoutPayments/CheckoutPayments.config';
 import { MINI_CARDS } from "Component/CreditCard/CreditCard.config";
 
@@ -467,7 +468,7 @@ class MyAccountOrderView extends PureComponent {
     return (
       <div block="MyAccountOrderView" elem="CardPaymentType">
         <div block="MyAccountOrderView" elem="TypeLogo">
-        {method === CHECKOUT_APPLE_PAY ?<img src={Applepay} alt="Apple pay" /> : this.renderMiniCard(cc_type?.toLowerCase())}
+        {method === CHECKOUT_APPLE_PAY ?<img src={Applepay} alt="Apple pay" /> :method === CHECKOUT_QPAY ? <img src={QPAY} alt="Apple pay" />:  this.renderMiniCard(cc_type?.toLowerCase())}
        
         </div>
         <div block="MyAccountOrderView" elem="Number">
@@ -504,8 +505,13 @@ class MyAccountOrderView extends PureComponent {
       },
     } = this.props;
 
+    console.log("this.props", this.props)
+   
     switch (method) {
       case CARD:
+        if ( !this.props?.additional_information?.source?.last4) {
+          return this.renderPaymentTypeText(__("Credit Card"));
+        }
         return this.renderCardPaymentType();
       case TABBY_ISTALLMENTS:
         return this.renderPaymentTypeText(__("Tabby: Pay in installments"));
@@ -516,10 +522,15 @@ class MyAccountOrderView extends PureComponent {
         return this.renderPaymentTypeText(__("Cash on Delivery"));
       case APPLE_PAY:
       case CHECKOUT_APPLE_PAY:
-        if (STATUS_FAILED.includes(status)) {
+        if ( !this.props?.additional_information?.source?.last4) {
           return this.renderPaymentTypeText(__("Apple Pay"));
         }
         return this.renderCardPaymentType();
+      case CHECKOUT_QPAY:
+        if ( !this.props?.additional_information?.source?.last4) {
+        return this.renderPaymentTypeText(__("QPAY"));
+      }
+      return this.renderCardPaymentType();
       default:
         return null;
     }

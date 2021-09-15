@@ -58,28 +58,26 @@ class InlineCustomerSupport extends PureComponent {
 
     return (
       <div>
-        { isMobile.any() ?
+        {isMobile.any() ? (
           <a
-          block="InlineCustomerSupport"
-          elem="Phone"
-          mods={{ isArabic }}
-          href={`https://api.whatsapp.com/send?phone=${phone}`}
-        >
-          <bdi>{phone}</bdi>
-        </a>
-         :
-         <a
-         block="InlineCustomerSupport"
-         elem="Phone"
-         mods={{ isArabic }}
-         href={`tel:${phone}`}
-       >
-         <bdi>{phone}</bdi>
-       </a>
-
-        }
+            block="InlineCustomerSupport"
+            elem="Phone"
+            mods={{ isArabic }}
+            href={`https://api.whatsapp.com/send?phone=${phone}`}
+          >
+            <bdi>{phone}</bdi>
+          </a>
+        ) : (
+          <a
+            block="InlineCustomerSupport"
+            elem="Phone"
+            mods={{ isArabic }}
+            href={`tel:${phone}`}
+          >
+            <bdi>{phone}</bdi>
+          </a>
+        )}
       </div>
-
     );
   };
 
@@ -101,7 +99,6 @@ class InlineCustomerSupport extends PureComponent {
     const Email = this.renderEmail();
     const Phone = this.renderPhone();
     // debugger
-
     return (
       <div>
         <button
@@ -113,7 +110,7 @@ class InlineCustomerSupport extends PureComponent {
             elem: "Button",
             mods: { isArabic },
           }}
-          onClick={this.onDropdownClick}
+          onClick={() => this.onDropdownClick()}
         >
           {__("customer service")}
         </button>
@@ -168,7 +165,7 @@ class InlineCustomerSupport extends PureComponent {
     const contactRenderer = isPhoneSupported
       ? this.renderPhone
       : this.renderEmail;
-      // debugger
+    // debugger
 
     return (
       <div
@@ -177,16 +174,26 @@ class InlineCustomerSupport extends PureComponent {
         mods={{ isArabic }}
       >
         {this.renderCirclePulse()}
+        {(isMobile.any() || isMobile.tablet()) ?
         <p>
-          {openHoursLabel}
-          {contactRenderer() ? " at" : ""}
+          {/* {openHoursLabel} */}
+          {isArabic ? "مفتوحة من" : "OPEN"}
+          {contactRenderer() && !isArabic ? " 24/7" : ""}
         </p>
+        :
+        <p>
+          {/* {openHoursLabel} */}
+          {isArabic ? "مفتوحة من" : "Open"}
+          {contactRenderer() && !isArabic ? " at" : ""}
+        </p>
+        }
         {contactRenderer()}
       </div>
     );
   }
 
   render() {
+    const { isArabic } = this.state;
     return (
       <div block="InlineCustomerSupport" mods={{ isArabic }}>
         <ClickOutside onClick={this.onClickOutside}>

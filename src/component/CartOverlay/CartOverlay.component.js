@@ -127,7 +127,7 @@ export class CartOverlay extends PureComponent {
     } = this.props;
     const finalDiscount = discount_amount || discount || 0;
 
-    if (!coupon_code && !discount) {
+    if (!coupon_code && (!finalDiscount && finalDiscount === 0)) {
       return null;
     }
 
@@ -177,14 +177,14 @@ export class CartOverlay extends PureComponent {
 
     return (
       <div block="CartOverlay" elem="Actions">
-        {/* <Link
+        <Link
           block="CartOverlay"
           elem="CartButton"
           to="/cart"
           onClick={handleViewBagClick}
         >
           {__("View bag")}
-        </Link> */}
+        </Link>
         <button
           block="CartOverlay"
           elem="CheckoutButton"

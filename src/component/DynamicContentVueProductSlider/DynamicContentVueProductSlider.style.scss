@@ -5,12 +5,12 @@
   &-Container {
     width: 100%;
     font-size: 16px;
-    margin: 50px 0px;
+    margin: 40px 0px;
     font-weight: var(--fw-demi);
 
     @include mobile() {
       // width: 96.005vw;
-      margin: 30px 0px;
+      margin: 20px 0px;
     }
     @media (max-width: 1024px) and (min-width: 768px) {
       padding-left: 30px;
@@ -27,6 +27,7 @@
     margin-bottom: 15px;
     display: flex;
     justify-content: space-between;
+
     h1 {
       text-transform: uppercase;
     }
@@ -36,6 +37,9 @@
         font-weight: 500;
         letter-spacing: 2px;
         line-height: 25px;
+      }
+      &_isHome{
+        margin-bottom: 34px;
       }
     }
     @media (max-width: 760px) {
@@ -56,6 +60,9 @@
         letter-spacing: 2px;
         line-height: 25px;
         margin-bottom: 0px;
+      }
+      &_isHome{
+        margin-bottom: 20px;
       }
     }
   }
@@ -84,9 +91,13 @@
 
     &_isHome {
       scrollbar-width: none;
+      padding-bottom: 0px;
       &::-webkit-scrollbar {
         display: none;
       }
+    }
+    &_Hidden{
+      display: none;
     }
 
     padding-bottom: 40px;
@@ -98,6 +109,8 @@
       width: 99vw;
     }
   }
+
+
 
   &-SliderContainer::-webkit-scrollbar {
     display: none;
@@ -126,6 +139,10 @@
         right: unset !important;
       }
     }
+    img{
+      object-fit: cover;
+    }
+
 
     @media (max-width: 1024px) {
       width: 220.08px;
@@ -169,6 +186,18 @@
         top: 7px;
       }
 
+      @include desktop {
+        width: 28px;
+        height: 28px;
+        &-Icon {
+          width: 20px;
+          height: 20px;
+          background-size: 20px;
+          left: -1px;
+          top: 5px;
+        }
+      }
+
       @include tablet {
         width: 28px;
         height: 28px;
@@ -180,6 +209,7 @@
           top: 5px;
         }
       }
+
       @include mobile {
         width: 28px;
         height: 28px;

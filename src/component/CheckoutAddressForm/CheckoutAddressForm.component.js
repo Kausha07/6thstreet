@@ -11,9 +11,9 @@ const objTabIndex = {
   street: "5",
   postcode: "11",
   phonecode: "8",
-  firstname: "3",
-  guest_email: "2",
-  lastname: "4",
+  firstname: "2",
+  guest_email: "4",
+  lastname: "3",
   country_id: "10",
   region_string: "7",
 };
@@ -90,8 +90,9 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
           },
           ...fieldMap,
         };
-
-    if (!!isClickAndCollect && storeAddress) {
+  
+    if(!!isClickAndCollect && storeAddress){
+      
       const { store_name, address, city, area } = storeAddress;
       if (store_name && address) {
         const value = `${store_name}, ${address}`;

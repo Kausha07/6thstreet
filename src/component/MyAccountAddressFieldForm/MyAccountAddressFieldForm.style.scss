@@ -130,17 +130,7 @@
     }
 
     &_street {
-      &:after {
-        content: "";
-        position: absolute;
-        width: 20px;
-        height: 20px;
-        background: url(icons/path-address.svg);
-        background-size: 20px;
-        background-repeat: no-repeat;
-        top: 14px;
-        right: 10px;
-      }
+
     }
 
     &_toggle {
@@ -210,18 +200,7 @@
           &:after {
             display: none;
           }
-          &:before {
-            content: "";
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background: url(icons/path-address.svg);
-            background-size: 20px;
-            background-repeat: no-repeat;
-            top: 14px;
-            left: 10px;
-            z-index: 2;
-          }
+
         }
       }
 

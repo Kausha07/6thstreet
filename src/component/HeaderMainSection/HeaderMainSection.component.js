@@ -57,6 +57,7 @@ class HeaderMainSection extends NavigationAbstract {
       showSearch: false,
       isArabic: isArabic(),
       signInPopUp: "",
+      showPopup:false,
       isMobile: isMobile.any(),
     };
     this.headerSearchRef = createRef();
@@ -75,26 +76,48 @@ class HeaderMainSection extends NavigationAbstract {
   renderMap = {
     gender: this.renderGenderSwitcher.bind(this),
     logo: this.renderLogo.bind(this),
-    account: this.renderAccount.bind(this),
-    cart: this.renderCart.bind(this),
-    wishlist: this.renderWishlist.bind(this),
+    leftContainer:this.renderLeftContainer.bind(this),
     search: this.renderSearch.bind(this),
     back: this.renderBack.bind(this),
   };
-  closePopup = () => {
-    this.setState({ signInPopUp: "" });
-  };
 
-  renderMySignInPopup = () => {
-    const { signInPopUp } = this.state;
-    this.setState({ showSearch: false });
+renderLeftContainer(){
+  return(
+    <div block="leftContainer">
+      {this.renderAccount()}
+      {this.renderCart()}
+      {this.renderWishlist()}
+      {this.renderSearchIcon()}
+    </div>
+  )
+}
 
-    const popUpElement = (
-      <MyAccountOverlay isPopup={signInPopUp} closePopup={this.closePopup} />
-    );
-    this.setState({ signInPopUp: popUpElement });
-    return popUpElement;
-  };
+showMyAccountPopup = () => {
+  this.setState({ showPopup: true });
+};
+
+closePopup = () => {
+  this.setState({ signInPopUp: "",showPopup:false });
+};
+
+onSignIn = () => {
+  this.closePopup();
+};
+
+
+renderMySignInPopup() {
+  const { showPopup } = this.state;
+  if (!showPopup) {
+    return null;
+  }
+  return (
+    <MyAccountOverlay
+      closePopup={this.closePopup}
+      onSignIn={this.onSignIn}
+      isPopup
+    />
+  );
+}
   // state = {
 
   // };
@@ -340,7 +363,7 @@ class HeaderMainSection extends NavigationAbstract {
       <div block="DesktopSearch">
         <HeaderSearch
           hideSearchBar={this.hideSearchBar}
-          renderMySignInPopup={this.renderMySignInPopup}
+          renderMySignInPopup={this.showMyAccountPopup}
           focusInput={true}
           key="search"
         />
@@ -368,9 +391,9 @@ class HeaderMainSection extends NavigationAbstract {
           this.isPDP() && isMobile.any() ? this.state.visible : true
         }
       >
-        {signInPopUp}
+        {this.renderMySignInPopup()}
         {this.renderNavigationState()}
-        {this.renderSearchIcon()}
+        {/* {this.renderSearchIcon()} */}
         {this.renderDesktopSearch()}
       </div>
     );

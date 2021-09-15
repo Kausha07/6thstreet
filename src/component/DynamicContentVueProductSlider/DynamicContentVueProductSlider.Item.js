@@ -1,4 +1,5 @@
 import Link from "Component/Link";
+import Image from "Component/Image";
 import { DISPLAY_DISCOUNT_PERCENTAGE } from "Component/Price/Price.config";
 import WishlistIcon from "Component/WishlistIcon";
 import PropTypes from "prop-types";
@@ -178,7 +179,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
             this.onclick(widgetID, data);
           }}
         >
-          <img
+          <Image
             block="VueProductSlider"
             elem="VueProductImage"
             src={thumbnail_url}

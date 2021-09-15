@@ -2,6 +2,11 @@
   // min-height: 500px;
  @include mobile{
    padding-bottom: 106px;
+   padding-top: 147px;
+ }
+ @include tablet{
+  padding-top: 147px;
+
  }
   .DynamicContentBanner {
     box-sizing: border-box;
@@ -25,7 +30,7 @@
       @include desktop {
         margin: 0 auto;
         width: var(--main-container-width-dsk);
-        max-width: 1440px;
+        max-width: var(--container-max-width);
       }
     }
     .DynamicContentGrid {
@@ -36,10 +41,10 @@
     }
   }
   .DynamicContent {
-    > div:not(.DynamicContentCircleItemSlider) {
-      margin-bottom: 60px !important;
+    > div:not(.DynamicContentCircleItemSlider  )  {
+      // margin-bottom: 60px !important;
       @include tablet {
-        margin-bottom: 40px !important;
+        // margin-bottom: 40px !important;
       }
       @include mobile {
         margin-bottom: 20px !important;
