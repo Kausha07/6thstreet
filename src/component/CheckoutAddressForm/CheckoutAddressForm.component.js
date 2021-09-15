@@ -97,7 +97,6 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
         };
   
     if(!!isClickAndCollect && storeAddress){
-      console.log(fieldMap)
       
       const { store_name, address, city, area } = storeAddress;
       if(store_name && address){
