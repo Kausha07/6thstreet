@@ -45,7 +45,7 @@
 
   .ContentWrapper {
     width: var(--main-container-width-dsk);
-    max-width: 1440px;
+    max-width: var(--container-max-width);
     margin-inline: auto;
     margin-left: auto;
     margin-right: auto;
@@ -54,6 +54,7 @@
   }
   &-List {
     padding: 15px 0 !important;
-    height: 50px !important;
+    min-height: 50px !important;
+    height: auto !important;
   }
 }

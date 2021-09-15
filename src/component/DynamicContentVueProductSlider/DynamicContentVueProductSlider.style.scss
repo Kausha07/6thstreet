@@ -110,6 +110,8 @@
     }
   }
 
+
+
   &-SliderContainer::-webkit-scrollbar {
     display: none;
     width: 6px;
@@ -137,6 +139,10 @@
         right: unset !important;
       }
     }
+    img{
+      object-fit: cover;
+    }
+
 
     @media (max-width: 1024px) {
       width: 220.08px;
@@ -180,6 +186,18 @@
         top: 7px;
       }
 
+      @include desktop {
+        width: 28px;
+        height: 28px;
+        &-Icon {
+          width: 20px;
+          height: 20px;
+          background-size: 20px;
+          left: -1px;
+          top: 5px;
+        }
+      }
+
       @include tablet {
         width: 28px;
         height: 28px;
@@ -191,6 +209,7 @@
           top: 5px;
         }
       }
+
       @include mobile {
         width: 28px;
         height: 28px;

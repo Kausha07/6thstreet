@@ -174,11 +174,19 @@ class InlineCustomerSupport extends PureComponent {
         mods={{ isArabic }}
       >
         {this.renderCirclePulse()}
+        {(isMobile.any() || isMobile.tablet()) ?
+        <p>
+          {/* {openHoursLabel} */}
+          {isArabic ? "مفتوحة من" : "OPEN"}
+          {contactRenderer() && !isArabic ? " 24/7" : ""}
+        </p>
+        :
         <p>
           {/* {openHoursLabel} */}
           {isArabic ? "مفتوحة من" : "Open"}
           {contactRenderer() && !isArabic ? " at" : ""}
         </p>
+        }
         {contactRenderer()}
       </div>
     );

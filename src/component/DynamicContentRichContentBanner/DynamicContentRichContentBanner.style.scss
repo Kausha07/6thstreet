@@ -1,4 +1,11 @@
 .DynamicContentRichContentBanner {
+  @include desktop{
+    margin-bottom: 50px !important;
+  }
+  @include tablet {
+    margin-left: 30px;
+    margin-right: 30px;
+  }
   .DynamicContentHeader{
     margin-bottom: 20px;
   }
@@ -111,6 +118,10 @@
       width: 7px !important;
       height: 7px !important;
     }
+    @include tablet{
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
   }
   .Label {
     text-align: center;
@@ -131,7 +142,7 @@
       font-weight: 400;
       line-height: 22px;
       margin-top: 3px;
-      margin-bottom: 5px;
+      margin-bottom: 19px;
     }
     &-Button {
       //   color: white;
@@ -139,6 +150,22 @@
       font-size: 16px;
       line-height: 22px;
       font-weight: 500;
+    }
+    @include tablet{
+      &-Title {
+        margin-top: 12px;
+      }
+      &-SubTitle {
+        margin-top: 2px;
+        margin-bottom: 12px;
+      }
+      &-Button {
+        //   color: white;
+        text-decoration: underline;
+        font-size: 16px;
+        line-height: 22px;
+        font-weight: 500;
+      }
     }
   }
   .Tag {
@@ -184,37 +211,8 @@
     margin-top: 30px;
   }
 
-  @include tablet {
-    margin-left: 30px;
-    margin-right: 30px;
-  }
-
-  // @include mobile {
-  //   max-height: 700px;
-  //   overflow: none;
-
-  //   &-Label {
-  //     right: 2rem;
-  //     bottom: 2rem;
-  //     text-decoration: underline;
-  //     background: none !important;
-  //   }
-
-  //   .Slider {
-  //     &-Wrapper {
-  //       width: 80%;
-  //       margin: 10px;
-  //     }
-
-  //     &-Crumbs {
-  //       display: none;
-  //     }
-  //   }
-  // }
   .tns-item {
-    // padding-right: 20px !important;
     @include tablet {
-      // padding-right: 20px !important;
     }
     @include mobile {
       padding-right: 0 !important;
