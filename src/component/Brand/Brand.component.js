@@ -125,9 +125,11 @@ class Brand extends PureComponent {
       // <button onClick={this.handleBrandRedirect} block="Brand">
       //   {this.renderName()}
       // </button>
-      <Link to={finalURL} block="Brand">
-        {this.renderName()}
-      </Link>
+      <div block="Brand">
+        <Link to={finalURL} block="BrandLink">
+          {this.renderName()}
+        </Link>
+      </div>
     );
   }
 }
