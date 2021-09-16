@@ -249,7 +249,42 @@
       }
     }
   }
+  &_showCountry{
+    .FieldForm {
+      &-Fields {
+        .Field {
+          &:nth-child(2) {
+           display: none !important;
+          } 
+        }
+      }
+    }
 
+  }
+  &_ClickNCollect {
+    .FieldForm {
+      &-Fields {
+        .Field {
+          &:nth-child(5) {
+            grid-column: 1;
+            grid-row: 5 !important;
+            @include desktop {
+              grid-row: 5 !important;
+            }
+          }
+
+          &:nth-child(6) {
+            grid-column: 2 / span 5 !important;
+            grid-row: 5;
+            @include desktop {
+              grid-column: 2 / span 5 !important;
+              grid-row: 5 !important;
+            }
+          }
+        }
+      }
+    }
+  }
   &_isGuestForm {
     .FieldForm {
       &-Fields {

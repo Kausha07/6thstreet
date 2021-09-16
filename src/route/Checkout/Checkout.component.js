@@ -531,7 +531,8 @@ export class Checkout extends SourceCheckout {
       shippingAddress,
       setLoading,
       isLoading,
-      isClickAndCollect
+      isClickAndCollect,
+      handleClickNCollectPayment
     } = this.props;
 
     const { continueAsGuest, isArabic } = this.state;
@@ -550,6 +551,7 @@ export class Checkout extends SourceCheckout {
           setLoading={setLoading}
           isClickAndCollect={isClickAndCollect}
           renderGuestForm={this.renderGuestForm.bind(this)}
+          handleClickNCollectPayment={handleClickNCollectPayment}
         />
       </div>
     );
