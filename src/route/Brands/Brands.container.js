@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
+import { updateMeta } from "Store/Meta/Meta.action";
 import { changeNavigationState } from "Store/Navigation/Navigation.action";
 import { TOP_NAVIGATION_TYPE } from "Store/Navigation/Navigation.reducer";
 import { showNotification } from "Store/Notification/Notification.action";
@@ -32,6 +33,7 @@ export const mapDispatchToProps = (dispatch) => ({
   },
   changeHeaderState: (state) =>
     dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, state)),
+  setMeta: (meta) => dispatch(updateMeta(meta)),
 });
 
 class BrandsContainer extends PureComponent {
@@ -41,6 +43,7 @@ class BrandsContainer extends PureComponent {
     showErrorNotification: PropTypes.func.isRequired,
     updateBreadcrumbs: PropTypes.func.isRequired,
     changeHeaderState: PropTypes.func.isRequired,
+    setMeta: PropTypes.func.isRequired,
   };
 
   state = {
@@ -63,6 +66,7 @@ class BrandsContainer extends PureComponent {
     this.requestBrands(brandType);
     this.updateBreadcrumbs();
     this.updateHeaderState();
+    this.setMetaData();
   }
 
   requestBrandMapping = () => {
@@ -180,6 +184,18 @@ class BrandsContainer extends PureComponent {
       type: getQueryParam("type", location),
     };
   };
+
+  setMetaData() {
+    const { setMeta } = this.props;
+    setMeta({
+      title: __("Brands | 6thStreet"),
+      keywords: __("brands"),
+      description: __(
+        // eslint-disable-next-line max-len
+        "Buy & Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet."
+      ),
+    });
+  }
 
   render() {
     return <Brands {...this.containerFunctions} {...this.containerProps()} />;
