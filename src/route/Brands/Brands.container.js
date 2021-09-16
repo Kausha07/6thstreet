@@ -49,8 +49,7 @@ class BrandsContainer extends PureComponent {
   state = {
     brands: [],
     isLoading: true,
-    brandMapping: {},
-    testbrandMapping: [],
+    brandMapping: [],
     isArabic: isArabic(),
   };
 
@@ -71,30 +70,9 @@ class BrandsContainer extends PureComponent {
 
   requestBrandMapping = () => {
     let brandMapping = this.getBrandMappingData();
-    let TestbrandMapping = this.getTestBrandMappingData();
   };
 
-  async getBrandMappingData() {
-    const apiUrl = "/cdn/config/brands.json";
-    fetch(apiUrl)
-      .then((response) => response.json())
-      .then((data) => {
-        let ret = {};
-        Object.keys(data).forEach((key) => {
-          ret[data[key]] = key;
-        });
-        this.setState(
-          {
-            brandMapping: ret,
-          },
-          () => {
-            console.log(this.state.brandMapping);
-          }
-        );
-      });
-  }
-
-  getTestBrandMappingData() {
+  getBrandMappingData() {
     const apiUrl = "/cdn/config/brandswithUrl.json";
     fetch(apiUrl)
       .then((response) => response.json())
@@ -102,10 +80,10 @@ class BrandsContainer extends PureComponent {
         let ret = {};
         this.setState(
           {
-            testbrandMapping: data.brands,
+            brandMapping: data.brands,
           },
           () => {
-            console.log(this.state.testbrandMapping);
+            console.log(this.state.brandMapping);
           }
         );
       });
@@ -175,12 +153,11 @@ class BrandsContainer extends PureComponent {
   }
 
   containerProps = () => {
-    const { brands, isLoading, brandMapping, testbrandMapping } = this.state;
+    const { brands, isLoading, brandMapping } = this.state;
     return {
       brands,
       isLoading,
       brandMapping,
-      testbrandMapping,
       type: getQueryParam("type", location),
     };
   };

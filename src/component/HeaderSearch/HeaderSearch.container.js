@@ -107,9 +107,13 @@ export class HeaderSearchContainer extends PureComponent {
           );
         }
       }
-      history.push(
-        `/catalogsearch/result/?q=${search}&qid=${queryID}&gender=${genderInURL}`
-      );
+      if (gender !== "home") {
+        history.push(
+          `/catalogsearch/result/?q=${search}&qid=${queryID}&gender=${genderInURL}`
+        );
+      } else {
+        history.push(`/catalogsearch/result/?q=${search}&qid=${queryID}`);
+      }
     }
   }
 
@@ -159,10 +163,10 @@ export class HeaderSearchContainer extends PureComponent {
   }
 
   containerProps = () => {
-    const { focusInput,renderMySignInPopup } = this.props;
+    const { focusInput, renderMySignInPopup } = this.props;
     const { search } = this.state;
 
-    return { search, focusInput,renderMySignInPopup };
+    return { search, focusInput, renderMySignInPopup };
   };
 
   onSearchChange(search) {

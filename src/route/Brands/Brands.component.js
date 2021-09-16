@@ -77,13 +77,13 @@ class Brands extends PureComponent {
   }
 
   renderBrandGroup = ([letter, brands]) => {
-    const { type, brandMapping, testbrandMapping } = this.props;
+    const { type, brandMapping } = this.props;
     const { filteredLetter } = this.state;
     const finalArray = brands.map((brand) => {
-      const testBrandItem = testbrandMapping.find(
+      const brandItem = brandMapping.find(
         (item) => item.en.toUpperCase() === brand.name.toUpperCase()
       );
-      return Object.assign({}, testBrandItem, brand);
+      return Object.assign({}, brandItem, brand);
     });
     return (
       <BrandGroup
@@ -92,7 +92,6 @@ class Brands extends PureComponent {
         brands={finalArray}
         isFiltered={!!filteredLetter}
         type={type}
-        brandMapping={brandMapping}
       />
     );
   };
