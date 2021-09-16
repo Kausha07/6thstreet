@@ -295,12 +295,19 @@ export class CheckoutSuccess extends PureComponent {
     } = this.props;
 
     return (
-      unship
+      <div block="TotalItems">
+          <div block="TotalItems" elem="OrderId">
+            {`${__("Order")} #${incrementID} ${__("Details")}`}
+          </div>
+          <ul block="TotalItems" elem="Items">
+            {unship
             .reduce((acc, { items }) => [...acc, ...items], [])
             .filter(
               ({ qty_canceled, qty_ordered }) => +qty_canceled < +qty_ordered
             )
-            .map(this.renderItem)
+            .map(this.renderItem)}
+          </ul>
+        </div>     
     );
 
     }else{
