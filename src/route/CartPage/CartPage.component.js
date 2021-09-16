@@ -527,7 +527,6 @@ export class CartPage extends PureComponent {
 
   render() {
     const { isArabic } = this.state;
-console.log("totals cart item",this.props.totals);
     return (
       <main block="CartPage" aria-label="Cart Page" mods={{ isArabic }}>
         {this.renderDynamicContent()}
