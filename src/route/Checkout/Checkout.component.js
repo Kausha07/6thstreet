@@ -226,7 +226,7 @@ export class Checkout extends SourceCheckout {
   renderLoader() {
     const { isLoading, checkoutStep , QPAYRedirect} = this.props;
 
-    if ((checkoutStep === BILLING_STEP && isLoading) || (checkoutStep === SHIPPING_STEP && QPAYRedirect)) {
+    if ((checkoutStep === BILLING_STEP && isLoading) || (checkoutStep === BILLING_STEP && QPAYRedirect)) {
       return (
         <div block="CheckoutSuccess">
           <div block="LoadingOverlay" dir="ltr">
