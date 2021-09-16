@@ -295,12 +295,19 @@ export class CheckoutSuccess extends PureComponent {
     } = this.props;
 
     return (
-      unship
+      <div block="TotalItems">
+          <div block="TotalItems" elem="OrderId">
+            {`${__("Order")} #${incrementID} ${__("Details")}`}
+          </div>
+          <ul block="TotalItems" elem="Items">
+            {unship
             .reduce((acc, { items }) => [...acc, ...items], [])
             .filter(
               ({ qty_canceled, qty_ordered }) => +qty_canceled < +qty_ordered
             )
-            .map(this.renderItem)
+            .map(this.renderItem)}
+          </ul>
+        </div>     
     );
 
     }else{
@@ -478,6 +485,25 @@ export class CheckoutSuccess extends PureComponent {
       </div>
     );
   };
+
+  renderClickAndCollectStoreName() {
+    const {
+      item: {
+        extension_attributes
+      }
+    } = this.props;
+
+    const { isArabic } = this.state;
+    if(extension_attributes?.click_to_collect_store) {
+      return (
+        <div block="CartPageItem" elem="ClickAndCollect" mods={{ isArabic }}>
+          <div block="CartPageItem-ClickAndCollect" elem="icon"><Store /></div>
+          <div block="CartPageItem-ClickAndCollect" elem="StoreName">{ extension_attributes?.click_to_collect_store_name}</div>
+        </div>
+      );
+    }
+    return null;
+  }
 
   renderDeliveringAddress() {
     const {

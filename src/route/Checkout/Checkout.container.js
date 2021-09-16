@@ -27,7 +27,7 @@ import {
 } from "SourceRoute/Checkout/Checkout.container";
 import Checkout from "./Checkout.component";
 import { setGender } from "Store/AppState/AppState.action";
-import { resetCart  } from "Store/Cart/Cart.action";
+import { resetCart } from "Store/Cart/Cart.action";
 // eslint-disable-next-line no-unused-vars
 import CartDispatcher from "Store/Cart/Cart.dispatcher";
 import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
@@ -133,7 +133,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     hideActiveOverlay: this.props.hideActiveOverlay.bind(this),
     updateTotals: this.updateTotals.bind(this),
     updateCreditCardData: this.updateCreditCardData.bind(this),
-    setBillingStep:this.setBillingStep.bind(this)
+    setBillingStep: this.setBillingStep.bind(this),
   };
 
   //   showOverlay() {
@@ -300,11 +300,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     }
     if(prevItems !== items && items.length){
       let isClickAndCollect = "";
-      for(let i = 0; i<items.length; i++){
-        if(!!items[i]?.availableQty?.click_to_collect_store){
-          isClickAndCollect = items[i]?.availableQty?.click_to_collect_store || "";
-        }
-        else {
+      for (let i = 0; i < items.length; i++) {
+        if (!!items[i]?.availableQty?.click_to_collect_store) {
+          isClickAndCollect =
+            items[i]?.availableQty?.click_to_collect_store || "";
+        } else {
           isClickAndCollect = "";
           break;
         }
@@ -575,7 +575,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     ) {
       this.placeOrder(code, data, paymentInformation);
     } else {
-      this.placeOrder(code, data, null)
+      this.placeOrder(code, data, null);
     }
   }
 
@@ -590,17 +590,17 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     );
     this.setState({ isLoading: true });
     try {
-      const response = await createOrder(code, data)
+      const response = await createOrder(code, data);
       if (response && response.data) {
-            const { data } = response;
-            if (typeof data === "object") {
-              const {
-                order_id,
-                http_response_code,
-                success,
-                response_code,
-                increment_id,
-                id = "",
+        const { data } = response;
+        if (typeof data === "object") {
+          const {
+            order_id,
+            http_response_code,
+            success,
+            response_code,
+            increment_id,
+            id = "",
                 _links: { redirect: { href = "" } = {} } = {},
               } = data;
 
@@ -705,30 +705,29 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                     return false
                   }
                   this.resetCart();  
-                }
-              }
-            }
-
-            if (typeof data === "string") {
-              showErrorNotification(__(data));
-              this.setState({ isLoading: false });
-              if(code === CHECKOUT_APPLE_PAY){
-                return false
-              }
-              this.resetCart();
             }
           }
+        }
 
-          if (response && typeof response === "string") {
-            showErrorNotification(__(response));
-            this.setState({ isLoading: false });
-            if(code === CHECKOUT_APPLE_PAY){
-              return false
-            }
-            this.resetCart();
+        if (typeof data === "string") {
+          showErrorNotification(__(data));
+          this.setState({ isLoading: false });
+          if (code === CHECKOUT_APPLE_PAY) {
+            return false;
           }
-    }
-    catch (e) {
+          this.resetCart();
+        }
+      }
+
+      if (response && typeof response === "string") {
+        showErrorNotification(__(response));
+        this.setState({ isLoading: false });
+        if (code === CHECKOUT_APPLE_PAY) {
+          return false;
+        }
+        this.resetCart();
+      }
+    } catch (e) {
       const { showErrorNotification } = this.props;
       this.setState({ isLoading: false });
 
@@ -739,7 +738,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   }
 
   setDetailsStep(orderID, incrementID) {
-    const { setNavigationState, sendVerificationCode, isSignedIn, customer, } =
+    const { setNavigationState, sendVerificationCode, isSignedIn, customer } =
       this.props;
     const { shippingAddress } = this.state;
     if (isSignedIn) {
@@ -764,20 +763,19 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
     BrowserDatabase.deleteItem(PAYMENT_TOTALS);
 
-    
     this.setState({
       isLoading: false,
       checkoutStep: DETAILS_STEP,
       orderID,
       incrementID,
     });
-    
+
     setNavigationState({
       name: DETAILS_STEP,
     });
   }
 
-  setBillingStep(){
+  setBillingStep() {
     this.setState({
       checkoutStep: SHIPPING_STEP,
     });
@@ -815,7 +813,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       saveCreditCard,
       newCardVisible,
       showOverlay,
-      hideActiveOverlay
+      hideActiveOverlay,
     } = this.props;
     const { order_id, increment_id, id = "", creditCardData } = this.state;
     getPaymentAuthorization(id).then((response) => {
@@ -893,7 +891,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   }
 
   processTabby(paymentInformation) {
-    const { verifyPayment, updateTabbyPayment , hideActiveOverlay} = this.props;
+    const { verifyPayment, updateTabbyPayment, hideActiveOverlay } = this.props;
     const { checkoutStep } = this.state;
     const { tabbyPaymentId } = paymentInformation;
     const { order_id, increment_id } = this.state;
@@ -904,7 +902,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
     verifyPayment(tabbyPaymentId).then(({ status }) => {
       if (status === AUTHORIZED_STATUS || status === CAPTURED_STATUS) {
-        hideActiveOverlay()
+        hideActiveOverlay();
         BrowserDatabase.deleteItem(LAST_CART_ID_CACHE_KEY);
         this.setState({ tabbyPaymentStatus: status, isTabbyPopupShown: false });
         updateTabbyPayment(tabbyPaymentId, order_id);
@@ -971,13 +969,13 @@ export class CheckoutContainer extends SourceCheckoutContainer {
   render() {
     const { isClickAndCollect } = this.state;
     return (
-        <Checkout
-          { ...this.props }
-          { ...this.state }
-          { ...this.containerFunctions }
-          { ...this.containerProps() }
-          isClickAndCollect={ isClickAndCollect }
-        />
+      <Checkout
+        {...this.props}
+        {...this.state}
+        {...this.containerFunctions}
+        {...this.containerProps()}
+        isClickAndCollect={isClickAndCollect}
+      />
     );
   }
 }
