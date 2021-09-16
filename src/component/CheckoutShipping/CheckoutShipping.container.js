@@ -284,11 +284,11 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       return;
     }
 
-    const shippingAddress = selectedCustomerAddressId
+    const shippingAddress = selectedCustomerAddressId && !this.checkClickAndCollect()
       ? this._getAddressById(selectedCustomerAddressId)
       : trimAddressFields(fields);
 
-    const { region_id, region, street, country_id, telephone, postcode } =
+      const { region_id, region, street, country_id, telephone, postcode } =
       shippingAddress;
 
     const shippingAddressMapped = {
