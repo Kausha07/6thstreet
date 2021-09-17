@@ -1,7 +1,6 @@
 export default async function autocompleteSearch(params, options) {
   return new Promise((resolve, reject) => {
     const { index, ...queryOptions } = options;
-    console.log("params", params);
     index.search(
       {
         query: params.query,

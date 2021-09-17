@@ -153,20 +153,28 @@ class SearchSuggestion extends PureComponent {
         genderInURL = "أولاد~بنات";
         // to add Boy~Girl in arabic
       } else {
-        requestedGender = getGenderInArabic(gender);
-        genderInURL = requestedGender?.replace(
-          requestedGender?.charAt(0),
-          requestedGender?.charAt(0).toUpperCase()
-        );
+        if (gender !== "home") {
+          requestedGender = getGenderInArabic(gender);
+          genderInURL = requestedGender?.replace(
+            requestedGender?.charAt(0),
+            requestedGender?.charAt(0).toUpperCase()
+          );
+        } else {
+          genderInURL = "";
+        }
       }
     } else {
       if (gender === "kids") {
         genderInURL = "Boy~Girl";
       } else {
-        genderInURL = requestedGender?.replace(
-          requestedGender?.charAt(0),
-          requestedGender?.charAt(0).toUpperCase()
-        );
+        if (gender !== "home") {
+          genderInURL = requestedGender?.replace(
+            requestedGender?.charAt(0),
+            requestedGender?.charAt(0).toUpperCase()
+          );
+        } else {
+          genderInURL = "";
+        }
       }
     }
     if (brandValue) {
@@ -480,8 +488,12 @@ class SearchSuggestion extends PureComponent {
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
 
-    let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
-
+    let requestedGender;
+    if (gender !== "home") {
+      requestedGender = isArabic ? getGenderInArabic(gender) : gender;
+    } else {
+      requestedGender = "";
+    }
     let parseLink = url?.includes("catalogsearch/result")
       ? url?.split("&")[0] +
         `&gender=${requestedGender.replace(
@@ -650,9 +662,7 @@ class SearchSuggestion extends PureComponent {
             {/* {label} */}
           </div>
         </Link>
-        <div block="CircleSliderLabel">
-          {label}
-        </div>
+        <div block="CircleSliderLabel">{label}</div>
       </li>
     );
   };
@@ -703,7 +713,12 @@ class SearchSuggestion extends PureComponent {
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
 
-    let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
+    let requestedGender;
+    if (gender !== "home") {
+      requestedGender = isArabic ? getGenderInArabic(gender) : gender;
+    } else {
+      requestedGender = "";
+    }
     return (
       <li key={i}>
         <Link
@@ -746,7 +761,12 @@ class SearchSuggestion extends PureComponent {
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
 
-    let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
+    let requestedGender;
+    if (gender !== "home") {
+      requestedGender = isArabic ? getGenderInArabic(gender) : gender;
+    } else {
+      requestedGender = "";
+    }
     return (
       <li key={i}>
         <Link
