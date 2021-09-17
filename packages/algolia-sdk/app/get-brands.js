@@ -1,19 +1,17 @@
-import { searchParams } from './config';
+import { searchParams } from "./config";
 
-export default function getBrands(gender = '', options = {}) {
+export default function getBrands(gender = "", options = {}) {
   const { index } = options;
-
   return new Promise((resolve, reject) => {
     const newSearchParams = Object.assign({}, searchParams);
     newSearchParams.hitsPerPage = 0;
-    newSearchParams.facets = ['brand_name', 'url'];
+    newSearchParams.facets = ["brand_name", "url"];
     newSearchParams.facetFilters = [[`gender: ${gender}`]];
 
-    index.search({ query: '', ...newSearchParams }, (err, data = {}) => {
+    index.search({ query: "", ...newSearchParams }, (err, data = {}) => {
       if (err) {
         return reject(err);
       }
-
       const brandNamesObj = data.facets.brand_name;
       let brands = [];
 
@@ -26,8 +24,8 @@ export default function getBrands(gender = '', options = {}) {
           ...brands,
           {
             name: item,
-            count: brandNamesObj[item]
-          }
+            count: brandNamesObj[item],
+          },
         ];
       });
 

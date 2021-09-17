@@ -17,25 +17,6 @@ class PDPDetail extends PureComponent {
     isMobile: isMobile.any() || isMobile.tablet(),
   };
 
-  componentDidMount() {
-    // console.log("product", product);
-    // const locale = VueIntegrationQueries.getLocaleFromUrl();
-    // VueIntegrationQueries.vueAnalayticsLogger({
-    //   event_name: VUE_PDP_VIEW,
-    //   params: {
-    //     event: VUE_PAGE_VIEW,
-    //     pageType: "pdp",
-    //     currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-    //     clicked: Date.now(),
-    //     uuid: getUUID(),
-    //     referrer: "desktop",
-    //     sourceProdID: configSKU,
-    //     sourceCatgID: objectID, // TODO: replace with category id
-    //     prodPrice: basePrice,
-    //   },
-    // });
-  }
-
   renderBrandImage = () => {
     const { brandImg } = this.props;
     return <img block="PDPDetail" elem="Image" src={brandImg} />;

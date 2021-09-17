@@ -155,9 +155,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
     toggleBreadcrumbs(false);
 
-    const QPAY_CHECK = JSON.parse(localStorage.getItem("QPAY_ORDER_DETAILS"));
-    const now = new Date()
-
     this.state = {
       isLoading: false,
       isDeliveryOptionsLoading: false,
@@ -165,7 +162,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       paymentMethods: [],
       shippingMethods: [],
       shippingAddress: {},
-      checkoutStep: is_virtual || (QPAY_CHECK && (now.getTime() < QPAY_CHECK?.expiry)) ? BILLING_STEP : SHIPPING_STEP,
+      checkoutStep: is_virtual ? BILLING_STEP : SHIPPING_STEP,
       orderID: "",
       incrementID: "",
       threeDsUrl: "",
