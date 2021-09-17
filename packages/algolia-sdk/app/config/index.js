@@ -6,6 +6,7 @@ const FACET_FILTERS = [
   'categories.level1',
   'categories.level2',
   'categories.level3',
+  'categories.level4',
   'categories_without_path',
   'color',
   'colorfamily',
