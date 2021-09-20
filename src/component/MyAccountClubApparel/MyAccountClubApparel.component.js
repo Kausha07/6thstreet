@@ -13,6 +13,7 @@ import Benefits from './images/club_apparel_benefits@2x.png';
 import Redemption from './images/club_apparel_redemption_value@2x.png';
 import TierBenefits from './images/club_apparel_tier_benefits@2x.png';
 import { TIER_DATA } from './MyAccountClubApparel.config';
+import Image from "Component/Image";
 
 import './MyAccountClubApparel.style';
 

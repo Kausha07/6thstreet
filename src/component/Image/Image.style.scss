@@ -15,9 +15,9 @@
 }
 
 .Image {
-    display: inline-block;
+    // display: inline-block;
     overflow: hidden;
-    width: 100%;
+    // width: 100%;
     background: var(--image-default-background);
 
     &_ratio {
@@ -36,6 +36,7 @@
     .LazyLoad-wrapper{
        height: 100%;
        width: 100%; 
+       display: block
     }
     &_imageStatus_0,
     &_isPlaceholder {
@@ -70,7 +71,7 @@
     }
 
     &-Image {
-        position: absolute;
+        // position: absolute;
         top: 0;
         left: 0;
         width: 100%;

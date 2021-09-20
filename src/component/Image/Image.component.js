@@ -135,7 +135,7 @@ export class Image extends PureComponent {
       case IMAGE_LOADED:
       case IMAGE_LOADING:
         return (
-          <LazyLoad once block="LazyLoad">
+          <LazyLoad once classNamePrefix="LazyLoad">
             <img
               block="Image"
               elem="Image"

@@ -16,6 +16,7 @@ import { SPECIAL_COLORS, translateArabicColor } from "Util/Common";
 import isMobile from "Util/Mobile";
 import tabby from "./icons/tabby.svg";
 import "./PDPSummary.style";
+import Image from "Component/Image";
 
 class PDPSummary extends PureComponent {
   static propTypes = {

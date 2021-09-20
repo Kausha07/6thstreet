@@ -26,6 +26,7 @@ import { TotalsType } from "Type/MiniCart";
 import { ClubApparelMember } from "Util/API/endpoint/ClubApparel/ClubApparel.type";
 import { getCurrency, getDiscountFromTotals, isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
+import Image from "Component/Image";
 
 import { Shipping } from "Component/Icons";
 
@@ -287,7 +288,9 @@ export class CartPage extends PureComponent {
     if (accountLinked && isSignedIn) {
       return (
         <div block="CartPage" elem="ClubApparelBlock" mods={{ isArabic }}>
-          <img src={ClubApparel} alt="Club Apparel Logo" />
+          {/* <img src={ClubApparel} alt="Club Apparel Logo" /> */}
+          <Image src={ClubApparel} alt="Club Apparel Logo" />
+
           <div block="CartPage" elem="ClubApparelText">
             {__("You may earn ")}
             <span>{`${currency_code} ${club_apparel_estimated_pointsvalue} `}</span>
@@ -300,7 +303,9 @@ export class CartPage extends PureComponent {
     if (!accountLinked && isSignedIn) {
       return (
         <div block="CartPage" elem="ClubApparelBlock">
-          <img src={ClubApparel} alt="Club Apparel Logo" />
+          {/* <img src={ClubApparel} alt="Club Apparel Logo" /> */}
+          <Image src={ClubApparel} alt="Club Apparel Logo" />
+
           <div block="CartPage" elem="ClubApparelText">
             {__("Link your Club Apparel account to earn ")}
             <span>{`${currency_code} ${club_apparel_estimated_pointsvalue} `}</span>
@@ -319,7 +324,9 @@ export class CartPage extends PureComponent {
 
     return (
       <div block="CartPage" elem="ClubApparelBlock">
-        <img src={ClubApparel} alt="Club Apparel Logo" />
+                <Image src={ClubApparel} alt="Club Apparel Logo" />
+
+        {/* <img src={ClubApparel} alt="Club Apparel Logo" /> */}
         <div block="CartPage" elem="ClubApparelText">
           {__("Link your Club Apparel account to earn ")}
           <span>{`${currency_code} ${club_apparel_estimated_pointsvalue} `}</span>

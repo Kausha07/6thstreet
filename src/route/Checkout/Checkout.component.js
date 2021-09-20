@@ -29,6 +29,8 @@ import {
 import "./Checkout.style";
 import GiftIconSmall from "./icons/gift-heart.png";
 import GiftIconLarge from "./icons/gift-heart@3x.png";
+import Image from "Component/Image";
+
 export class Checkout extends SourceCheckout {
   static propTypes = {
     isSignedIn: PropTypes.bool.isRequired,
@@ -731,7 +733,9 @@ export class Checkout extends SourceCheckout {
             <div block="Placeholder" elem="Line"></div>
           </div>
           <div block="BinContent" elem="Icon">
-            <img src={giftImgUrl} alt="__('Gift Icon')" />
+          <Image src={giftImgUrl} alt="__('Gift Icon')" />
+
+            {/* <img src={giftImgUrl} alt="__('Gift Icon')" /> */}
           </div>
           <h1 block="BinContent" elem="Title1">
             {__("Congrats!")}

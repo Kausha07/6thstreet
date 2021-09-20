@@ -282,20 +282,18 @@ export class SuccessCheckoutItem extends PureComponent {
           ratio="custom"
           alt={`Product ${name} thumbnail.`}
         />
-        <img style={{ display: "none" }} alt={name} src={thumbnail} />
+        <Image style={{ display: "none" }} alt={name} src={thumbnail} />
+
+        {/* <img style={{ display: "none" }} alt={name} src={thumbnail} /> */}
       </>
     );
   }
 
   render() {
-    const {
-      isLoading,
-    } = this.props;
+    const { isLoading } = this.props;
 
     return (
-      <li
-        block="SuccessCheckoutItem"
-      >
+      <li block="SuccessCheckoutItem">
         <Loader isLoading={isLoading} />
         {this.renderWrapper()}
       </li>

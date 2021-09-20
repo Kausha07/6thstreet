@@ -12,6 +12,7 @@ import Loader from 'SourceComponent/Loader';
 import Popup from 'SourceComponent/Popup';
 import { isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
+import Image from "Component/Image";
 
 import {
     STATE_LINK,

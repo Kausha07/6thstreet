@@ -20,6 +20,7 @@ import { addressType } from 'Type/Account';
 import { MixType } from 'Type/Common';
 import { isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
+import Image from "Component/Image";
 
 import pencil from './icons/edit_btn.png';
 import trash from './icons/trash.png';

@@ -11,6 +11,7 @@ import { CheckoutOrderSummary as SourceCheckoutOrderSummary } from "SourceCompon
 import { getCurrency, getDiscountFromTotals, isArabic } from "Util/App";
 import { isSignedIn } from "Util/Auth";
 import isMobile from "Util/Mobile";
+import Image from "Component/Image";
 
 import Delivery from "./icons/delivery-truck.png";
 

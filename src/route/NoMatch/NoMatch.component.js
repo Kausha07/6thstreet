@@ -5,93 +5,99 @@
  * @copyright Copyright (c) 2020 Scandiweb, Inc (https://scandiweb.com)
  */
 
-import PropTypes from 'prop-types';
-import { PureComponent } from 'react';
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
 import Image from "Component/Image";
 
-import ContentWrapper from 'Component/ContentWrapper';
-import { DEFAULT_STATE_NAME } from 'Component/NavigationAbstract/NavigationAbstract.config';
+import ContentWrapper from "Component/ContentWrapper";
+import { DEFAULT_STATE_NAME } from "Component/NavigationAbstract/NavigationAbstract.config";
 
-import pageNotFound from './images/pagenotfound.png';
+import pageNotFound from "./images/pagenotfound.png";
 
-import './NoMatch.style.override';
+import "./NoMatch.style.override";
 
 export class NoMatch extends PureComponent {
   static propTypes = {
-      updateBreadcrumbs: PropTypes.func.isRequired,
-      cleanUpTransition: PropTypes.func.isRequired,
-      changeHeaderState: PropTypes.func.isRequired
+    updateBreadcrumbs: PropTypes.func.isRequired,
+    cleanUpTransition: PropTypes.func.isRequired,
+    changeHeaderState: PropTypes.func.isRequired,
   };
 
   componentDidMount() {
-      this.updateBreadcrumbs();
-      this.updateHeaderState();
-      this.cleanUpTransition();
+    this.updateBreadcrumbs();
+    this.updateHeaderState();
+    this.cleanUpTransition();
   }
 
   cleanUpTransition() {
-      const { cleanUpTransition } = this.props;
+    const { cleanUpTransition } = this.props;
 
-      cleanUpTransition();
+    cleanUpTransition();
   }
 
   updateHeaderState() {
-      const { changeHeaderState } = this.props;
+    const { changeHeaderState } = this.props;
 
-      changeHeaderState({
-          name: DEFAULT_STATE_NAME,
-          isHiddenOnMobile: true
-      });
+    changeHeaderState({
+      name: DEFAULT_STATE_NAME,
+      isHiddenOnMobile: true,
+    });
   }
 
   updateBreadcrumbs() {
-      const { updateBreadcrumbs } = this.props;
-      const breadcrumbs = [
-          {
-              url: '',
-              name: __('Not Found')
-          },
-          {
-              url: '/',
-              name: __('Home')
-          }
-      ];
+    const { updateBreadcrumbs } = this.props;
+    const breadcrumbs = [
+      {
+        url: "",
+        name: __("Not Found"),
+      },
+      {
+        url: "/",
+        name: __("Home"),
+      },
+    ];
 
-      updateBreadcrumbs(breadcrumbs);
+    updateBreadcrumbs(breadcrumbs);
   }
 
   render() {
-      return (
-        <main block="NoMatch" aria-label={ __('Page not found') }>
-          <ContentWrapper
-            mix={ { block: 'NoMatch' } }
-            wrapperMix={ {
-                block: 'NoMatch',
-                elem: 'Wrapper'
-            } }
-            label={ __('Page Not Found Content') }
-          >
-            <div block="NoMatch">
-              <div block="NoMatch-PageNotFound">
-                <h4 block="PageNotFound-Title">
-                  { __('we are sorry!') }
-                  <span>{ __('error 404!') }</span>
-                </h4>
-                <div block="PageNotFound-Image">
-          <Image src={pageNotFound} alt="pageNotFound" />
+    return (
+      <main block="NoMatch" aria-label={__("Page not found")}>
+        <ContentWrapper
+          mix={{ block: "NoMatch" }}
+          wrapperMix={{
+            block: "NoMatch",
+            elem: "Wrapper",
+          }}
+          label={__("Page Not Found Content")}
+        >
+          <div block="NoMatch">
+            <div block="NoMatch-PageNotFound">
+              <h4 block="PageNotFound-Title">
+                {__("we are sorry!")}
+                <span>{__("error 404!")}</span>
+              </h4>
+              <div block="PageNotFound">
+                <Image src={pageNotFound} alt="pageNotFound" />
 
-                  {/* <img src={ pageNotFound } alt="pageNotFound" /> */}
-                </div>
-                <span block="PageNotFound-SubTitle">{ __('this page could not be found :(') }</span>
-                <p block="PageNotFound-Content">
-                  { __('Can\'t find what you need? Take a moment\nand do a search or start from our homepage') }
-                </p>
-                <a block="PageNotFound-LinkHome" href="/">{ __('back to homepage') }</a>
+                {/* <img src={ pageNotFound } alt="pageNotFound" /> */}
               </div>
+              <span block="PageNotFound-SubTitle">
+                {__("this page could not be found :(")}
+              </span>
+              <p block="PageNotFound-Content">
+                {__(
+                  "Can't find what you need? Take a moment\nand do a search or start from our homepage"
+                )}
+              </p>
+              <a block="PageNotFound-LinkHome" href="/">
+                {__("back to homepage")}
+              </a>
             </div>
-          </ContentWrapper>
-        </main>
-      );
+          </div>
+        </ContentWrapper>
+      </main>
+    );
   }
 }
 

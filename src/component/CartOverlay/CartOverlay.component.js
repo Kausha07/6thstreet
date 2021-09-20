@@ -24,6 +24,7 @@ import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 
 import Delivery from "./icons/delivery-truck.png";
+import Image from "Component/Image";
 
 import "./CartOverlay.style";
 

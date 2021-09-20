@@ -5,6 +5,8 @@ import { PureComponent } from "react";
 // import { Product } from "Util/API/endpoint/Product/Product.type";
 import isMobile from "Util/Mobile";
 import "./PDPDetail.style";
+import Image from "Component/Image";
+
 class PDPDetail extends PureComponent {
   static propTypes = {
     // product: Product.isRequired,

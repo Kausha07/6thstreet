@@ -7,6 +7,7 @@ import isMobile from "Util/Mobile";
 import { isArabic } from "Util/App";
 
 import PDPSizeGuide from "../PDPSizeGuide";
+import Image from "Component/Image";
 
 import "./PDPAddToCart.style";
 import Spinner from "react-spinkit";

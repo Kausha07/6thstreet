@@ -6,6 +6,7 @@ import { isArabic } from 'Util/App';
 
 import facebook from './icons/facebook.png';
 import instagram from './icons/instagram.png';
+import Image from "Component/Image";
 
 import './FooterMain.style';
 

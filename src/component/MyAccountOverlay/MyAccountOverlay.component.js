@@ -25,6 +25,7 @@ import { COUNTRY_CODES_FOR_PHONE_VALIDATION } from 'Component/MyAccountAddressFo
 import { Close } from 'Component/Icons';
 import { isArabic } from 'Util/App';
 import isMobile from 'Util/Mobile';
+import Image from "Component/Image";
 
 import {
     CUSTOMER_ACCOUNT_OVERLAY_KEY,

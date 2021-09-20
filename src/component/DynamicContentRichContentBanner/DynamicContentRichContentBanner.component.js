@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import TinySlider from "tiny-slider-react";
-import Image from "Component/Image";
 import Link from "Component/Link";
 import { formatCDNLink } from "Util/Url";
 import cx from "classnames";
@@ -16,6 +15,7 @@ import {
   HOME_PAGE_BANNER_IMPRESSIONS,
   HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
 } from "Component/GoogleTagManager/events/BannerImpression.event";
+import Image from "Component/Image";
 
 const settings = {
   lazyload: true,

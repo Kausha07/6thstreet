@@ -12,6 +12,7 @@ import { NOTIFY_EMAIL } from "./PDPAddToCard.config";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { isSignedIn } from "Util/Auth";
 import { customerType } from "Type/Account";
+import Image from "Component/Image";
 
 import "./PDPAddToCart.style";
 import { isArabic } from "Util/App";

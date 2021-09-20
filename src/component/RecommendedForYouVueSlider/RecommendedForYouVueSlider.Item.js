@@ -10,6 +10,7 @@ import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
 import { getUUID } from "Util/Auth";
 import Event, { VUE_CAROUSEL_CLICK } from "Util/Event";
+import Image from "Component/Image";
 
 export const mapStateToProps = (state) => ({
   country: state.AppState.country,
@@ -179,12 +180,18 @@ class RecommendedForYouVueSliderItem extends PureComponent {
             this.onclick(widgetID, data);
           }}
         >
-          <img
+          <Image
             block="VueProductSlider"
             elem="VueProductImage"
             src={thumbnail_url}
             alt={name}
           />
+          {/* <img
+            block="VueProductSlider"
+            elem="VueProductImage"
+            src={thumbnail_url}
+            alt={name}
+          /> */}
         </Link>
         <h6
           block="VueProductSlider"

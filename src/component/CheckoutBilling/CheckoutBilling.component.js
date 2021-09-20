@@ -20,6 +20,7 @@ import { isSignedIn } from "Util/Auth";
 import Spinner from "react-spinkit";
 import "./CheckoutBilling.extended.style";
 import Applepay from "./icons/apple.png";
+import Image from "Component/Image";
 
 export class CheckoutBilling extends SourceCheckoutBilling {
   static propTypes = {

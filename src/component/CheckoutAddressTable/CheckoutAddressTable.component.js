@@ -7,6 +7,7 @@ import { getCountryFromUrl } from "Util/Url/Url";
 import isMobile from "Util/Mobile";
 import pencil from "./icons/edit_btn.png";
 import trash from "./icons/trash.png";
+import Image from "Component/Image";
 import "./CheckoutAddressTable.style.scss";
 import editLogo from "../CheckoutAddressBook/icons/checkmark-circle-active.png";
 export class CheckoutAddressTable extends SourceCheckoutAddressTable {

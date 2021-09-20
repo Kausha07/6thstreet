@@ -15,6 +15,7 @@ import PropTypes from "prop-types";
 import { isArabic } from "Util/App";
 import "./CheckoutGuestForm.style";
 import lock from "./icons/lock.png";
+import Image from "Component/Image";
 
 export class CheckoutGuestForm extends FieldForm {
   static propTypes = {

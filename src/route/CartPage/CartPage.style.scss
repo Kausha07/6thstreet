@@ -243,11 +243,14 @@
       span {
         font-weight: var(--fw-bold);
       }
-
-      img {
-        width: 20px;
-        height: auto;
-        margin: 0 12px 0 0;
+      .Image {
+        .LazyLoad-wrapper {
+          img {
+            width: 20px !important;
+            height: auto !important;
+            margin: 0 12px 0 0;
+          }
+        }
       }
 
       &_isArabic {

@@ -6,6 +6,7 @@ import shareIcon from "Style/icons/share.svg";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 import "./PLPDetails.style";
+import Image from "Component/Image";
 
 class PLPDetails extends PureComponent {
   static propTypes = {

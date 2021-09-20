@@ -4,7 +4,7 @@ import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import { isArabic } from "Util/App";
 import BrowserDatabase from "Util/BrowserDatabase";
-// import Image from 'Component/Image';
+import Image from 'Component/Image';
 import { formatCDNLink } from "Util/Url";
 import "./DynamicContentTwiceBanner.style";
 import Event from "Util/Event";

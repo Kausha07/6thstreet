@@ -8,6 +8,7 @@ import CA from './icons/CA.svg'
 import COD from './icons/COD.svg'
 import mastercard from './icons/mastercard.svg'
 import visa from './icons/visa.svg'
+import Image from "Component/Image";
 
 import './FooterBottom.style';
 

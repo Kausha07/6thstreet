@@ -9,6 +9,7 @@ import {
 import { paymentMethodType } from 'Type/Checkout';
 import { isArabic } from 'Util/App';
 import { getCountryFromUrl } from 'Util/Url/Url';
+import Image from "Component/Image";
 
 import { PAYMENTS_DATA } from './CheckoutPayment.config';
 import tabbyAr from './icons/tabby-logo-black-ar@2x.png';

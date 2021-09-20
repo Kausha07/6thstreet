@@ -7,6 +7,7 @@ import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
 import { getUUID } from "Util/Auth";
 import { VUE_CAROUSEL_CLICK } from "Util/Event";
+import Image from "Component/Image";
 
 class DynamicContentVueProductSliderItem extends PureComponent {
   static propTypes = {
@@ -156,12 +157,18 @@ class DynamicContentVueProductSliderItem extends PureComponent {
             this.onclick(widgetID);
           }}
         >
-          <img
+          <Image
             block="VueProductSlider"
             elem="VueProductImage"
             src={thumbnail_url}
             alt={name}
           />
+          {/* <img
+            block="VueProductSlider"
+            elem="VueProductImage"
+            src={thumbnail_url}
+            alt={name}
+          /> */}
         </Link>
         <h6 id="brandName">{brand_name}</h6>
         <span id="productName">{name}</span>

@@ -27,6 +27,7 @@ import {
   CHECKOUT_QPAY,
 } from "./CheckoutPayments.config";
 import info from "./icons/info.png";
+import Image from "Component/Image";
 
 import "./CheckoutPayments.extended.style";
 

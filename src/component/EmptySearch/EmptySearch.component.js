@@ -6,6 +6,7 @@ import VueQuery from "../../query/Vue.query";
 import Recommendations from "../Recommendations/Recommendations.container";
 import "./EmptySearch.style";
 import noProduct from "./icons/no_product.png";
+import Image from "Component/Image";
 
 class EmptySearch extends PureComponent {
   static propTypes = {
