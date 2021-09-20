@@ -135,7 +135,7 @@ export class Image extends PureComponent {
       case IMAGE_LOADED:
       case IMAGE_LOADING:
         return (
-          <LazyLoad height={200} once>
+          <LazyLoad once block="LazyLoad">
             <img
               block="Image"
               elem="Image"
@@ -165,7 +165,6 @@ export class Image extends PureComponent {
         block="Image"
         ref={imageRef}
         mods={{
-          ratio,
           imageStatus,
           isPlaceholder,
           hasSrc: !!src,

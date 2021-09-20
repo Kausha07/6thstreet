@@ -7,6 +7,7 @@
 
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
+import Image from "Component/Image";
 
 import ContentWrapper from 'Component/ContentWrapper';
 import { DEFAULT_STATE_NAME } from 'Component/NavigationAbstract/NavigationAbstract.config';
@@ -77,7 +78,9 @@ export class NoMatch extends PureComponent {
                   <span>{ __('error 404!') }</span>
                 </h4>
                 <div block="PageNotFound-Image">
-                  <img src={ pageNotFound } alt="pageNotFound" />
+          <Image src={pageNotFound} alt="pageNotFound" />
+
+                  {/* <img src={ pageNotFound } alt="pageNotFound" /> */}
                 </div>
                 <span block="PageNotFound-SubTitle">{ __('this page could not be found :(') }</span>
                 <p block="PageNotFound-Content">

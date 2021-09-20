@@ -7,6 +7,7 @@ import { isArabic } from "Util/App";
 import BrowserDatabase from "Util/BrowserDatabase";
 import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
 import isMobile from "Util/Mobile";
+import Image from "Component/Image";
 import { formatCDNLink } from "Util/Url";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import "./DynamicContentGrid.style";
@@ -122,7 +123,8 @@ class DynamicContentGrid extends PureComponent {
           }}
         >
           {/* <Image src={url} height={ht} /> */}
-          <img src={url} className="GridImage" style={{ maxHeight: ht }} />
+          <Image src={url} className="GridImage" style={{ maxHeight: ht }} />
+          {/* <img src={url} className="GridImage" style={{ maxHeight: ht }} /> */}
           {item.footer && (
             <div block="Footer">
               {item.footer.title && (

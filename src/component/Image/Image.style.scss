@@ -17,7 +17,6 @@
 .Image {
     display: inline-block;
     overflow: hidden;
-    height: 0;
     width: 100%;
     background: var(--image-default-background);
 
@@ -34,7 +33,10 @@
             padding-bottom: 100%;
         }
     }
-
+    .LazyLoad-wrapper{
+       height: 100%;
+       width: 100%; 
+    }
     &_imageStatus_0,
     &_isPlaceholder {
         background-image: var(--placeholder-image);
