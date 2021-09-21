@@ -117,7 +117,8 @@ export class CheckoutGuestForm extends FieldForm {
         >
           <button onClick={this.showMyAccountPopup}>
             {__("Sign In")}
-            <img src={lock} alt="" />
+            <Image src={lock} alt="" />
+            {/* <img src={lock} alt="" /> */}
           </button>
         </div>
         {this.renderMyAccountPopup()}

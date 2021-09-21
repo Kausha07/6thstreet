@@ -351,7 +351,7 @@ $select-arrow-width: 6px !default;
       transition: width 0.5s;
     }
     div {
-      color: #F96446;
+      color: #f96446;
       @include mobile {
         display: block;
         animation: slide 2s;
@@ -362,9 +362,13 @@ $select-arrow-width: 6px !default;
         overflow: hidden;
       }
     }
-    img {
-      padding: 0 6px;
-      width: 40px;
+    .Image {
+      .LazyLoad-wrapper {
+        img {
+          padding: 0 6px;
+          width: 40px !important;
+        }
+      }
     }
   }
 
@@ -581,14 +585,16 @@ $select-arrow-width: 6px !default;
     padding-bottom: 20px;
     animation: fadeIn 2s;
     box-shadow: 0px 0px 11px rgba(0, 0, 0, 0.1);
-
-    img {
-      width: 40px;
-      height: 40px;
-      display: block;
-      margin: 20px auto;
+    .Image {
+      .LazyLoad-wrapper {
+        img {
+          width: 40px !important;
+          height: 40px !important;
+          display: block;
+          margin: 20px auto;
+        }
+      }
     }
-
     span {
       width: 70%;
       display: block;

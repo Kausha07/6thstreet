@@ -195,12 +195,18 @@ class DynamicContentSliderWithLabel extends PureComponent {
             this.onclick(item);
           }}
         >
-          <img
+          <Image
             src={url}
             alt={text}
             block="Image"
             style={{ maxWidth: wd, maxHeight: ht }}
           />
+          {/* <img
+            src={url}
+            alt={text}
+            block="Image"
+            style={{ maxWidth: wd, maxHeight: ht }}
+          /> */}
         </Link>
         {text ? (
           <div block="SliderText" style={{ textAlign: text_align }}>

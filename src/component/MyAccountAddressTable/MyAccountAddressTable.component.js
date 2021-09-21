@@ -12,176 +12,199 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
-import KeyValueTable from 'Component/KeyValueTable';
-import Loader from 'Component/Loader';
-import { addressType } from 'Type/Account';
-import { MixType } from 'Type/Common';
-import { isArabic } from 'Util/App';
-import isMobile from 'Util/Mobile';
+import KeyValueTable from "Component/KeyValueTable";
+import Loader from "Component/Loader";
+import { addressType } from "Type/Account";
+import { MixType } from "Type/Common";
+import { isArabic } from "Util/App";
+import isMobile from "Util/Mobile";
 import Image from "Component/Image";
 
-import pencil from './icons/edit_btn.png';
-import trash from './icons/trash.png';
+import pencil from "./icons/edit_btn.png";
+import trash from "./icons/trash.png";
 
-import './MyAccountAddressTable.style';
+import "./MyAccountAddressTable.style";
 
 export class MyAccountAddressTable extends KeyValueTable {
-    static propTypes = {
-        mix: MixType,
-        getFormatedRegion: PropTypes.func.isRequired,
-        address: addressType.isRequired,
-        showActions: PropTypes.bool,
-        showAdditionalFields: PropTypes.bool,
-        onEditClick: PropTypes.func.isRequired,
-        onDeleteClick: PropTypes.func.isRequired,
-        countries: PropTypes.arrayOf(
-            PropTypes.shape({
-                label: PropTypes.string,
-                id: PropTypes.string,
-                available_regions: PropTypes.arrayOf(
-                    PropTypes.shape({
-                        code: PropTypes.string,
-                        name: PropTypes.string,
-                        id: PropTypes.number
-                    })
-                )
-            })
-        ).isRequired
-    };
+  static propTypes = {
+    mix: MixType,
+    getFormatedRegion: PropTypes.func.isRequired,
+    address: addressType.isRequired,
+    showActions: PropTypes.bool,
+    showAdditionalFields: PropTypes.bool,
+    onEditClick: PropTypes.func.isRequired,
+    onDeleteClick: PropTypes.func.isRequired,
+    countries: PropTypes.arrayOf(
+      PropTypes.shape({
+        label: PropTypes.string,
+        id: PropTypes.string,
+        available_regions: PropTypes.arrayOf(
+          PropTypes.shape({
+            code: PropTypes.string,
+            name: PropTypes.string,
+            id: PropTypes.number,
+          })
+        ),
+      })
+    ).isRequired,
+  };
 
-    static defaultProps = {
-        showAdditionalFields: false,
-        showActions: false,
-        mix: {}
-    };
+  static defaultProps = {
+    showAdditionalFields: false,
+    showActions: false,
+    mix: {},
+  };
 
-    onEdit = () => {
-        const { onEditClick } = this.props;
-        onEditClick();
-        if (!isMobile.any()) {
-            const elmnts = document.getElementsByClassName('MyAccountAddressBook-NewAddress');
+  onEdit = () => {
+    const { onEditClick } = this.props;
+    onEditClick();
+    if (!isMobile.any()) {
+      const elmnts = document.getElementsByClassName(
+        "MyAccountAddressBook-NewAddress"
+      );
 
-            if (elmnts && elmnts.length > 0) {
-                elmnts[0].scrollIntoView();
-            }
-        }
-    };
+      if (elmnts && elmnts.length > 0) {
+        elmnts[0].scrollIntoView();
+      }
+    }
+  };
 
-    renderActions() {
-        const {
-            onDeleteClick,
-            showActions
-        } = this.props;
+  renderActions() {
+    const { onDeleteClick, showActions } = this.props;
 
-        if (!showActions) {
-            return null;
-        }
+    if (!showActions) {
+      return null;
+    }
 
-        return (
-            <>
-                <button
-                  block="MyAccountAddressTable"
-                  elem="ActionBtn"
-                  onClick={ this.onEdit }
-                >
-                    <img
+    return (
+      <>
+        <button
+          block="MyAccountAddressTable"
+          elem="ActionBtn"
+          onClick={this.onEdit}
+        >
+          <Image
+            block="MyAccountAddressTable"
+            mix={{
+              block: "MyAccountAddressTable",
+              elem: "Edit",
+            }}
+            mods={{ pencil: true }}
+            alt="pencil"
+            src={pencil}
+          />
+          {/* <img
                       block="MyAccountAddressTable"
                       elem="Icon"
                       mods={ { pencil: true } }
                       alt="pencil"
                       src={ pencil }
-                    />
-                </button>
-                <button
-                  block="MyAccountAddressTable"
-                  elem="ActionBtn"
-                  onClick={ onDeleteClick }
-                >
-                    <img
-                      block="MyAccountAddressTable"
-                      elem="Icon"
-                      mods={ { trash: true } }
-                      alt="trash"
-                      src={ trash }
-                    />
-                </button>
-            </>
-        );
+                    /> */}
+        </button>
+        <button
+          block="MyAccountAddressTable"
+          elem="ActionBtn"
+          onClick={onDeleteClick}
+        >
+          <Image
+            block="MyAccountAddressTable"
+            mix={{
+              block: "MyAccountAddressTable",
+              elem: "Trash",
+            }}
+            mods={{ trash: true }}
+            alt="trash"
+            src={trash}
+          />
+          {/* <img
+            block="MyAccountAddressTable"
+            elem="Icon"
+            mods={{ trash: true }}
+            alt="trash"
+            src={trash}
+          /> */}
+        </button>
+      </>
+    );
+  }
+
+  mobileEditAddress = () => {
+    const { hideCards, onEditClick } = this.props;
+    if (isMobile.any()) {
+      onEditClick();
+      hideCards();
+    }
+  };
+
+  getPhone = () => {
+    const {
+      address: { telephone = "" },
+    } = this.props;
+    const numbers = telephone.slice(1);
+    const code = numbers.slice(0, 3);
+    const phone = numbers.slice(3);
+
+    if (isArabic()) {
+      return `${phone} ${code}+`;
     }
 
-    mobileEditAddress = () => {
-        const { hideCards, onEditClick } = this.props;
-        if (isMobile.any()) {
-            onEditClick();
-            hideCards();
-        }
-    };
+    return `+${code} ${phone}`;
+  };
 
-    getPhone = () => {
-        const { address: { telephone = '' } } = this.props;
-        const numbers = telephone.slice(1);
-        const code = numbers.slice(0, 3);
-        const phone = numbers.slice(3);
+  renderCard() {
+    const {
+      address: {
+        default_billing,
+        firstname,
+        lastname,
+        street,
+        city,
+        country_id,
+        region: { region },
+      },
+    } = this.props;
 
-        if (isArabic()) {
-            return `${phone} ${code}+`;
-        }
+    const def = default_billing === true ? __("default") : " ";
+    const countryId = `(${country_id})`;
 
-        return `+${code} ${phone}`;
-    };
+    return (
+      <div block="MyAccountAddressCard" onClick={this.mobileEditAddress}>
+        <div block="MyAccountAddressCard" elem="Default">
+          {def}
+        </div>
+        <div block="MyAccountAddressCard" elem="Name">
+          {firstname} {lastname}
+        </div>
+        <div block="MyAccountAddressCard" elem="Street">
+          {street}
+        </div>
+        <div block="MyAccountAddressCard" elem="City">
+          {region}
+          {" - "}
+          {city}
+          {" - "}
+          {countryId}
+        </div>
+        <div block="MyAccountAddressCard" elem="Phone">
+          {this.getPhone()}
+        </div>
+      </div>
+    );
+  }
 
-    renderCard() {
-        const {
-            address: {
-                default_billing,
-                firstname,
-                lastname,
-                street,
-                city,
-                country_id,
-                region: {
-                    region
-                }
-            }
-        } = this.props;
+  render() {
+    const { countries = [], mix } = this.props;
 
-        const def = default_billing === true ? __('default') : ' ';
-        const countryId = `(${country_id})`;
-
-        return (
-            <div block="MyAccountAddressCard" onClick={ this.mobileEditAddress }>
-                <div block="MyAccountAddressCard" elem="Default">{ def }</div>
-                <div block="MyAccountAddressCard" elem="Name">
-                    { firstname }
-                    { ' ' }
-                    { lastname }
-                </div>
-                <div block="MyAccountAddressCard" elem="Street">{ street }</div>
-                <div block="MyAccountAddressCard" elem="City">
-                    { region }
-                    { ' - ' }
-                    { city }
-                    { ' - ' }
-                    { countryId }
-                </div>
-                <div block="MyAccountAddressCard" elem="Phone">{ this.getPhone() }</div>
-            </div>
-        );
-    }
-
-    render() {
-        const { countries = [], mix } = this.props;
-
-        return (
-            <div block="MyAccountAddressTable" mix={ mix }>
-                <Loader isLoading={ !countries.length } />
-                { this.renderCard() }
-                { this.renderActions() }
-            </div>
-        );
-    }
+    return (
+      <div block="MyAccountAddressTable" mix={mix}>
+        <Loader isLoading={!countries.length} />
+        {this.renderCard()}
+        {this.renderActions()}
+      </div>
+    );
+  }
 }
 
 export default MyAccountAddressTable;

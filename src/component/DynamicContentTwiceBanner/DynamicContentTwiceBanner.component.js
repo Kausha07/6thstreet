@@ -4,7 +4,7 @@ import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import { isArabic } from "Util/App";
 import BrowserDatabase from "Util/BrowserDatabase";
-import Image from 'Component/Image';
+import Image from "Component/Image";
 import { formatCDNLink } from "Util/Url";
 import "./DynamicContentTwiceBanner.style";
 import Event from "Util/Event";
@@ -129,11 +129,17 @@ class DynamicContentTwiceBanner extends PureComponent {
           this.onclick(item);
         }}
       >
-        <img
+        <Image
           src={url}
           className="BannerImage"
           style={{ maxWidth: width, maxHeight: height }}
         />
+
+        {/* <img
+          src={url}
+          className="BannerImage"
+          style={{ maxWidth: width, maxHeight: height }}
+        /> */}
       </Link>
     );
   };

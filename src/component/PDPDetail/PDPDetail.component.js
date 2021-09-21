@@ -21,7 +21,8 @@ class PDPDetail extends PureComponent {
 
   renderBrandImage = () => {
     const { brandImg } = this.props;
-    return <img block="PDPDetail" elem="Image" src={brandImg} />;
+    // return <img block="PDPDetail" elem="Image" src={brandImg} />;
+    return <Image block="PDPDetail" elem="Image" src={brandImg} />;
   };
 
   renderBrandName = () => {

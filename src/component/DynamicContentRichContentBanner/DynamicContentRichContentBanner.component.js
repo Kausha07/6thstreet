@@ -133,12 +133,18 @@ class DynamicContentRichContentBanner extends PureComponent {
           }}
         >
           <div block="ImageContainer">
-            <img
+            <Image
+              src={image_url}
+              alt={title}
+              mix={{ block: "DynamicContentRichContentBanner", elem: "Image" }}
+            />
+
+            {/* <img
               src={image_url}
               alt={title}
               mix={{ block: "DynamicContentRichContentBanner", elem: "Image" }}
               // style={{ maxWidth: width, maxHeight: height }}
-            />
+            /> */}
             {item.tag && (
               <div
                 block={cx("Tag", {

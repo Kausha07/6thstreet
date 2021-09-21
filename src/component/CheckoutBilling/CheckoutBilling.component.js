@@ -38,7 +38,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
     launchPaymentMethod: PropTypes.func.isRequired,
     requestConfig: PropTypes.func.isRequired,
     handleApplePayButtonClick: PropTypes.func.isRequired,
-    button_style: PropTypes.string
+    button_style: PropTypes.string,
   };
 
   static defaultProps = {
@@ -48,26 +48,27 @@ export class CheckoutBilling extends SourceCheckoutBilling {
     placeOrder: () => {},
     isLoading: false,
     applePayDisabled: true,
-    button_style: ''
+    button_style: "",
   };
 
   componentDidMount() {
     const { termsAreEnabled } = this.props;
     if (!termsAreEnabled) {
-        this.setState({ isOrderButtonEnabled: true });
+      this.setState({ isOrderButtonEnabled: true });
     }
-}
-componentDidUpdate(prevProps) {
-  const { paymentMethod } = this.props;
-  const {
-  paymentMethod: prevPaymentMethod 
-  } = prevProps;
-  if(prevPaymentMethod !== paymentMethod && paymentMethod === CHECKOUT_APPLE_PAY){
-    const { requestConfig, launchPaymentMethod } = this.props;
-
-    requestConfig().then(launchPaymentMethod);
   }
-}
+  componentDidUpdate(prevProps) {
+    const { paymentMethod } = this.props;
+    const { paymentMethod: prevPaymentMethod } = prevProps;
+    if (
+      prevPaymentMethod !== paymentMethod &&
+      paymentMethod === CHECKOUT_APPLE_PAY
+    ) {
+      const { requestConfig, launchPaymentMethod } = this.props;
+
+      requestConfig().then(launchPaymentMethod);
+    }
+  }
   state = {
     // isOrderButtonVisible: true,
     // isOrderButtonEnabled: true,
@@ -227,7 +228,7 @@ componentDidUpdate(prevProps) {
       removePromotionSavedCard,
       isSignedIn,
       isClickAndCollect,
-      savePaymentInformationApplePay
+      savePaymentInformationApplePay,
     } = this.props;
 
     if (!paymentMethods.length) {
@@ -235,7 +236,7 @@ componentDidUpdate(prevProps) {
     }
     return (
       <CheckoutPayments
-      savePaymentInformationApplePay={savePaymentInformationApplePay}
+        savePaymentInformationApplePay={savePaymentInformationApplePay}
         setCashOnDeliveryFee={setCashOnDeliveryFee}
         setLoading={setLoading}
         setDetailsStep={setDetailsStep}
@@ -286,13 +287,13 @@ componentDidUpdate(prevProps) {
           ></div>
         </div>
         <div block="Checkout" elem="OrderSummaryTotalsContainer">
-        <Collapse isOpened={isDropdownOpen}>
-          <CheckoutOrderSummary
-            checkoutStep="BILLING_STEP"
-            totals={totals}
-            cashOnDeliveryFee={cashOnDeliveryFee}
-          />
-        </Collapse>
+          <Collapse isOpened={isDropdownOpen}>
+            <CheckoutOrderSummary
+              checkoutStep="BILLING_STEP"
+              totals={totals}
+              cashOnDeliveryFee={cashOnDeliveryFee}
+            />
+          </Collapse>
         </div>
         {this.renderPriceLine(grandTotal, __("Total Amount"), {
           isDropdownOpen,
@@ -351,8 +352,8 @@ componentDidUpdate(prevProps) {
       paymentMethod,
       binApplied,
       applePayDisabled,
-            handleApplePayButtonClick,
-            button_style
+      handleApplePayButtonClick,
+      button_style,
     } = this.props;
 
     if (!isOrderButtonVisible) {
@@ -373,57 +374,73 @@ componentDidUpdate(prevProps) {
         {this.renderCreditCardTooltipBar()}
         <div block="Checkout" elem="StickyButtonWrapper">
           {this.renderTotals()}
-          {isApplePay ? 
-          <div block="CheckoutComApplePayPayment" elem="Wrapper">
-                {/* <Loader isLoading={ isLoading } /> */}
-                <button
-                  type="button"
+          {isApplePay ? (
+            <div block="CheckoutComApplePayPayment" elem="Wrapper">
+              {/* <Loader isLoading={ isLoading } /> */}
+              <button
+                type="button"
+                block="CheckoutComApplePayPayment"
+                elem="Button"
+                label="Pay with ApplePay"
+                onClick={handleApplePayButtonClick}
+                disabled={applePayDisabled}
+                mods={{ button_style }}
+              >
+                <div>{__("Buy with ")}</div>
+                <Image
                   block="CheckoutComApplePayPayment"
-                  elem="Button"
-                  label="Pay with ApplePay"
-                  onClick={ handleApplePayButtonClick }
-                  disabled={ applePayDisabled }
-                  mods={ { button_style } }
-                ><div>
-                    { __('Buy with ') }           
-                </div>
-                    <img block="CheckoutComApplePayPayment" elem="icon" mods={ { button_style , isArabic} } src={Applepay} alt="Apple Pay" />
-                </button>
-            </div> 
-            :  
+                  elem="icon"
+                  mix={{
+                    block: "CheckoutComApplePayPayment",
+                    elem: "icon",
+                  }}
+                  mods={{ button_style, isArabic }}
+                  src={Applepay}
+                  alt="Apple Pay"
+                />
+                {/* <img
+                  block="CheckoutComApplePayPayment"
+                  elem="icon"
+                  mods={{ button_style, isArabic }}
+                  src={Applepay}
+                  alt="Apple Pay"
+                /> */}
+              </button>
+            </div>
+          ) : (
             <button
-            type="submit"
-            block="Button"
-            disabled={
-              isDisabled ||
-              processingRequest ||
-              processingPaymentSelectRequest 
-              ||isApplePay
-            }
-            mix={{
-              block: "CheckoutBilling",
-              elem:
-                processingRequest || processingPaymentSelectRequest
-                  ? "spinningButton"
-                  : isTabbyPay
-                  ? "tabbyButton"
-                  : "Button",
-            }}
-          >
-            {processingRequest || processingPaymentSelectRequest ? (
-              <Spinner
-                className="loadingSpinner"
-                name="three-bounce"
-                color="white"
-                fadeIn="none"
-              />
-            ) : isTabbyPay ? (
-              __("Place tabby order")
-            ) : (
-              this.renderButtonPlaceholder()
-            )}
-          </button>}
-         
+              type="submit"
+              block="Button"
+              disabled={
+                isDisabled ||
+                processingRequest ||
+                processingPaymentSelectRequest ||
+                isApplePay
+              }
+              mix={{
+                block: "CheckoutBilling",
+                elem:
+                  processingRequest || processingPaymentSelectRequest
+                    ? "spinningButton"
+                    : isTabbyPay
+                    ? "tabbyButton"
+                    : "Button",
+              }}
+            >
+              {processingRequest || processingPaymentSelectRequest ? (
+                <Spinner
+                  className="loadingSpinner"
+                  name="three-bounce"
+                  color="white"
+                  fadeIn="none"
+                />
+              ) : isTabbyPay ? (
+                __("Place tabby order")
+              ) : (
+                this.renderButtonPlaceholder()
+              )}
+            </button>
+          )}
         </div>
       </>
     );

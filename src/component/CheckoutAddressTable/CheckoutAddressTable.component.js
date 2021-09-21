@@ -43,9 +43,13 @@ export class CheckoutAddressTable extends SourceCheckoutAddressTable {
     const { isArabic } = this.state;
 
     return (
-      <div block="MyAccountAddressCard" onClick={this.onAddressClick} mods={{ isSelected }}>
+      <div
+        block="MyAccountAddressCard"
+        onClick={this.onAddressClick}
+        mods={{ isSelected }}
+      >
         <div block="MyAccountAddressCard" elem="EditButton" mods={{ isArabic }}>
-          <div >
+          <div>
             <div block="MyAccountAddressCard" elem="Default">
               {def}
             </div>
@@ -110,13 +114,24 @@ export class CheckoutAddressTable extends SourceCheckoutAddressTable {
           type="button"
           onClick={this.onEdit}
         >
-          <img
+          <Image
+            block="MyAccountAddressTable"
+            mix={{
+              block: "MyAccountAddressTable",
+              elem: "Edit",
+            }}
+            mods={{ pencil: true }}
+            alt="pencil"
+            src={pencil}
+          />
+
+          {/* <img
             block="MyAccountAddressTable"
             elem="Icon"
             mods={{ pencil: true }}
             alt="pencil"
             src={pencil}
-          />
+          /> */}
         </button>
         <button
           block="MyAccountAddressTable"
@@ -124,13 +139,23 @@ export class CheckoutAddressTable extends SourceCheckoutAddressTable {
           type="button"
           onClick={onDeleteClick}
         >
-          <img
+          <Image
+            block="MyAccountAddressTable"
+            mix={{
+              block: "MyAccountAddressTable",
+              elem: "Trash",
+            }}
+            mods={{ trash: true }}
+            alt="trash"
+            src={trash}
+          />
+          {/* <img
             block="MyAccountAddressTable"
             elem="Icon"
             mods={{ trash: true }}
             alt="trash"
             src={trash}
-          />
+          /> */}
         </button>
       </>
     );

@@ -38,6 +38,9 @@ export class Image extends PureComponent {
       width: PropTypes.string,
       height: PropTypes.string,
       maxHeight: PropTypes.string,
+      top: PropTypes.string,
+      maxWidth:PropTypes.string,
+      objectFit:PropTypes.string
     }),
     alt: PropTypes.string,
     className: PropTypes.string,
@@ -165,6 +168,7 @@ export class Image extends PureComponent {
         block="Image"
         ref={imageRef}
         mods={{
+          // ratio,
           imageStatus,
           isPlaceholder,
           hasSrc: !!src,

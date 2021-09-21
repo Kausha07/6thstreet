@@ -134,7 +134,7 @@ class HeaderSearch extends PureComponent {
             }}
             aria-label="Clear search"
           >
-            <Image src={Clear} alt="Clear button" />
+            <Image src={Clear} alt="Clear button" style={{top:'2px'}} />
             {/* <img src={Clear} alt="Clear button" /> */}
           </button>
         </Form>

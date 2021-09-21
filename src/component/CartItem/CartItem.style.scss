@@ -217,9 +217,12 @@
   }
 
   &-Picture {
-    height: 121px;
-    width: 90px;
-    object-fit: cover;
+    img{
+      height: 121px !important;
+      width: 90px !important;
+      object-fit: cover;
+    }
+  
     // margin-right: 18px;
 
     &_isArabic {

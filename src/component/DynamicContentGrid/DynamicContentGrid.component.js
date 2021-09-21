@@ -171,7 +171,9 @@ class DynamicContentGrid extends PureComponent {
             this.onclick(item);
           }}
         >
-          <img src={url} />
+          {/* <img src={url} /> */}
+          <Image src={url} />
+
           {item.footer && (
             <div block="Footer">
               {item.footer.title && (

@@ -101,7 +101,7 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
 
   renderSlide = (item, i) => {
     const { link, label, url: image_url, plp_config } = item;
-
+console.log("muskan",image_url);
     return (
       <Link
         to={formatCDNLink(link)}
@@ -113,9 +113,9 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
           this.onclick(item);
         }}
       >
-            {/* <Image src={image_url} alt={label} /> */}
+        <Image src={image_url} alt={label} />
 
-        <img src={image_url} alt={label} />
+        {/* <img src={image_url} alt={label} /> */}
       </Link>
     );
   };
