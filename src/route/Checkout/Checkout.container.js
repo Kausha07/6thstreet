@@ -301,14 +301,15 @@ export class CheckoutContainer extends SourceCheckoutContainer {
     if(prevItems !== items && items.length){
       let isClickAndCollect = "";
       for (let i = 0; i < items.length; i++) {
-        if (!!items[i]?.availableQty?.click_to_collect_store) {
+        if (!!items[i]?.extension_attributes?.click_to_collect_store) {
           isClickAndCollect =
-            items[i]?.availableQty?.click_to_collect_store || "";
+            items[i]?.extension_attributes?.click_to_collect_store || "";
         } else {
           isClickAndCollect = "";
           break;
         }
       }
+
       this.setState({ isClickAndCollect: isClickAndCollect });
     }
 
