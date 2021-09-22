@@ -180,7 +180,6 @@ class PDPSizeGuide extends PureComponent {
 
     if (!!fit_size_url) {
     return <Image src={fit_size_url} alt="Size Chart" />;
-      // return <img src={fit_size_url} alt="Size Chart" />;
     }
 
     return (

@@ -80,7 +80,6 @@ export class NoMatch extends PureComponent {
               <div block="PageNotFound">
                 <Image src={pageNotFound} alt="pageNotFound" />
 
-                {/* <img src={ pageNotFound } alt="pageNotFound" /> */}
               </div>
               <span block="PageNotFound-SubTitle">
                 {__("this page could not be found :(")}

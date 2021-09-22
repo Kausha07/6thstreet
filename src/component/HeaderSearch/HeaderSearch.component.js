@@ -119,7 +119,6 @@ class HeaderSearch extends PureComponent {
             mods={{ isArabic }}
             type="submit"
           >
-            {/* <img src={searchPng} alt="search" /> */}
             <Image src={searchPng} alt="search" />
           </button>
           <button
@@ -135,7 +134,6 @@ class HeaderSearch extends PureComponent {
             aria-label="Clear search"
           >
             <Image src={Clear} alt="Clear button" style={{top:'2px'}} />
-            {/* <img src={Clear} alt="Clear button" /> */}
           </button>
         </Form>
         {showSearch ? (

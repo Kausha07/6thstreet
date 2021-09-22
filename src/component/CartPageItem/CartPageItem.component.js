@@ -449,7 +449,6 @@ export class CartItem extends PureComponent {
           alt={`Product ${name} thumbnail.`}
         />
         <Image style={{ display: "none" }} alt={name} src={thumbnail} />
-        {/* <img style={{ display: "none" }} alt={name} src={thumbnail} /> */}
       </div>
     );
   }

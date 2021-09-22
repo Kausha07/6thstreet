@@ -213,7 +213,6 @@ export class CartOverlay extends PureComponent {
       <div block="CartOverlay" elem="PromoBlock">
         <figcaption block="CartOverlay" elem="PromoText" mods={{ isArabic }}>
           <Image src={Delivery} alt="Delivery icon" />
-          {/* <img src={Delivery} alt="Delivery icon" /> */}
           {__("Add ")}
           <span block="CartOverlay" elem="Currency">
             {`${currency_code} ${avail_free_shipping_amount.toFixed(3)} `}

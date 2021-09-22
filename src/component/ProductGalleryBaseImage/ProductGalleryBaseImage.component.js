@@ -53,12 +53,6 @@ export class ProductGalleryBaseImage extends PureComponent {
           />
           <Image ref={imageRef} alt={alt} src={src} itemProp="image" />
 
-          {/* <img
-                  ref={ imageRef }
-                  alt={ alt }
-                  src={ src }
-                  itemProp="image"
-                /> */}
         </div>
       </TransformComponent>
     );

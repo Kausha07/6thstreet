@@ -135,11 +135,6 @@ class DynamicContentTwiceBanner extends PureComponent {
           style={{ maxWidth: width, maxHeight: height }}
         />
 
-        {/* <img
-          src={url}
-          className="BannerImage"
-          style={{ maxWidth: width, maxHeight: height }}
-        /> */}
       </Link>
     );
   };

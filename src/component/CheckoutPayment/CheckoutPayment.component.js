@@ -64,7 +64,6 @@ export class CheckoutPayment extends PureComponent {
               }}
               />
             ) : (
-              //  <img src={ isArabic ? tabbyAr : img } alt={ name } />
               <Image src={ img } alt={ name }
               mix={{
                 block:"CheckoutPayment" ,
@@ -73,7 +72,6 @@ export class CheckoutPayment extends PureComponent {
               />
             )
 
-            //  <img src={ img } alt={ name } />
           }
           {paragraph ? <p>{paragraph}</p> : null}
         </div>

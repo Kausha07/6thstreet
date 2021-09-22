@@ -106,8 +106,14 @@
   .Slider-Wrapper > * {
     min-height: 534px;
   }
+  
   .Slider-Wrapper {
     align-items: unset;
+    .PDPGallery-sliderItem{
+      .LazyLoad-wrapper {
+        position: absolute;
+      }
+    }
   }
   .Crumbs {
     margin-left: 10px;

@@ -126,27 +126,23 @@ class FooterMain extends PureComponent {
               <Fragment key="last_main_footer_column">
                 <div block="FooterMain" elem="WrapperFirst">
                   <Link to={items.app_onclick} key={items.id_app}>
-                    {/* <img src={ items.app_store } alt="app store download" /> */}
                     <Image src={items.app_store} alt="app store download" />
                   </Link>
                   <br />
                   <Link to={items.google_onclick} key={items.id_google}>
                     <Image src={items.google_play} alt="google play download" />{" "}
                     
-                    {/* <img src={items.google_play} alt="google play download" /> */}
                   </Link>
                   <br />
                   <Link to={items.gallery_onclick} key={items.id_gallery}>
                     <Image src={items.app_gallery} alt="app gallery download" className="appGallery"/>
 
-                    {/* <img src={items.app_gallery} alt="app gallery download" /> */}
                   </Link>
                 </div>
                 <h4>{items.header}</h4>
                 <div block="FooterMain" elem="WrapperSecond">
                   <div block="FooterMain" elem="SocialIcon">
                     <Link to={items.facebook_href} key={items.id_facebook}>
-                      {/* <img src={facebook} alt="facebook icon" /> */}
                       <Image src={facebook} alt="facebook icon" />
                     </Link>
                   </div>
@@ -155,7 +151,6 @@ class FooterMain extends PureComponent {
                     <Link to={items.insta_href} key={items.id_insta}>
                       <Image src={instagram} alt="instagram icon" />
 
-                      {/* <img src={instagram} alt="instagram icon" /> */}
                     </Link>
                   </div>
                 </div>

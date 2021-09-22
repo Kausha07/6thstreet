@@ -133,8 +133,6 @@ class DynamicContentBanner extends PureComponent {
           style={{ maxWidth: wd, height: ht, objectFit: "unset" }}
         />
 
-        {/* <img src={url} block="Image" style={{ maxWidth: wd, height: ht }} /> */}
-
         {this.renderButton()}
       </Link>
     );

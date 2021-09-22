@@ -163,12 +163,6 @@ class DynamicContentVueProductSliderItem extends PureComponent {
             src={thumbnail_url}
             alt={name}
           />
-          {/* <img
-            block="VueProductSlider"
-            elem="VueProductImage"
-            src={thumbnail_url}
-            alt={name}
-          /> */}
         </Link>
         <h6 id="brandName">{brand_name}</h6>
         <span id="productName">{name}</span>

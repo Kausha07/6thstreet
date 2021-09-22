@@ -112,12 +112,6 @@ class MyAccountClubApparel extends PureComponent {
             </span>
           </div>
           <div block="MyAccountClubApparel" elem="Tier" mods={{ isArabic }}>
-            {/* <img
-              block="MyAccountClubApparel"
-              elem="TierImage"
-              src={img}
-              alt="Tier"
-            /> */}
             <Image
               block="MyAccountClubApparel"
               elem="TierImage"
@@ -165,7 +159,6 @@ class MyAccountClubApparel extends PureComponent {
       <div block="MyAccountClubApparel" elem="MemberData">
         <div block="MyAccountClubApparel" elem="Cards">
           <div block="MyAccountClubApparel" elem="Card">
-            {/* <img src={ Benefits } alt="Loyalty" /> */}
             <Image elem="Card" src={Benefits} alt="Loyalty" />
             <h3>{__("AVAIL LOYALTY BENEFITS ON 6THSTREET")}</h3>
             <p>
@@ -175,13 +168,11 @@ class MyAccountClubApparel extends PureComponent {
             </p>
           </div>
           <div block="MyAccountClubApparel" elem="Card">
-            {/* <img src={TierBenefits} alt="Tiers" /> */}
             <Image elem="Card" src={TierBenefits} alt="Tiers" />
             <h3>{__("TIERS BENEFIT")}</h3>
             <p>{__("Enjoy a tier-based rewards and benefits")}</p>
           </div>
           <div block="MyAccountClubApparel" elem="Card">
-            {/* <img src={Redemption} alt="Redemption" /> */}
             <Image elem="Card" src={Redemption} alt="Redemption" />
             <h3>{__("REDEMPTION VALUE")}</h3>
             <p block="MyAccountClubApparel" elem="RedemptionParagraph">
@@ -297,12 +288,6 @@ class MyAccountClubApparel extends PureComponent {
     return (
       <div block="MyAccountClubApparel" elem="MobileWrapper">
         <div block="MyAccountClubApparel" elem="AboutMobile">
-          {/* <img
-            block="MyAccountClubApparel"
-            elem="MemberDataLogo"
-            src={isArabic ? ClubApparelLogoAR : ClubApparelLogoEN}
-            alt="Logo icon"
-          /> */}
           <Image
             className="MemberDataLogo"
             src={isArabic ? ClubApparelLogoAR : ClubApparelLogoEN}
@@ -323,12 +308,6 @@ class MyAccountClubApparel extends PureComponent {
     return (
       <div block="MyAccountClubApparel" elem="MobileWrapper">
         <div block="MyAccountClubApparel" elem="EarnMobile">
-          {/* <img
-            block="MyAccountClubApparel"
-            elem="MemberDataLogo"
-            src={isArabic ? ClubApparelLogoAR : ClubApparelLogoEN}
-            alt="Logo icon"
-          /> */}
           <Image
             className="MemberDataLogo"
             src={isArabic ? ClubApparelLogoAR : ClubApparelLogoEN}
@@ -361,13 +340,6 @@ class MyAccountClubApparel extends PureComponent {
       <div block="MyAccountClubApparel">
         <div block="MyAccountClubApparel" elem="Wrapper" />
         <div block="MyAccountClubApparel" elem="ClubApparelContainer">
-          {/* <img
-            block="MyAccountClubApparel"
-            elem="MemberDataLogo"
-            mods={{ isMobileLogo }}
-            src={isArabic ? ClubApparelLogoAR : ClubApparelLogoEN}
-            alt="Logo icon"
-          /> */}
           <Image
             className="MemberDataLogo"
             mods={{ isMobileLogo }}

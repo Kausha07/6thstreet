@@ -510,12 +510,6 @@ class SearchSuggestion extends PureComponent {
           onClick={() => this.handleProductClick(product)}
         >
           <div block="SearchProduct">
-            {/* <img
-              src={thumbnail_url}
-              alt="Product Image"
-              block="SearchProduct"
-              elem="Image"
-            /> */}
             <Image
               src={thumbnail_url}
               alt="Product Image"
@@ -666,7 +660,6 @@ class SearchSuggestion extends PureComponent {
           onClick={() => this.handleTrendingBrandsClick(urlName)}
         >
           <div block="SearchSuggestion" elem="TrandingImg">
-            {/* <img src={image_url} alt="Trending" /> */}
             <Image src={image_url} alt="Trending" />
 
             {/* {label} */}

@@ -43,7 +43,6 @@ class TabbyPopup extends PureComponent {
           onClick={hideActiveOverlay}
         >
           <Image src={Close} alt={"Close button"} />
-         {/* <img src={ Close } alt="Close button" /> */}
         </button>
       </div>
     );

@@ -108,7 +108,6 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
           mods={{ isArabic }}
         >
           <Image src={Delivery} alt="Delivery icon" />
-          {/* <img src={Delivery} alt="Delivery icon" /> */}
           {__("Add ")}
           <span block="CheckoutOrderSummary" elem="Currency">
             {`${currency_code} ${avail_free_shipping_amount.toFixed(3)} `}

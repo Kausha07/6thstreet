@@ -733,9 +733,7 @@ export class Checkout extends SourceCheckout {
             <div block="Placeholder" elem="Line"></div>
           </div>
           <div block="BinContent" elem="Icon">
-          <Image src={giftImgUrl} alt="__('Gift Icon')" />
-
-            {/* <img src={giftImgUrl} alt="__('Gift Icon')" /> */}
+            <img src={giftImgUrl} alt="__('Gift Icon')" />
           </div>
           <h1 block="BinContent" elem="Title1">
             {__("Congrats!")}

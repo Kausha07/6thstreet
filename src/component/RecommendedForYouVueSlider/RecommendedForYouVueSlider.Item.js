@@ -180,18 +180,12 @@ class RecommendedForYouVueSliderItem extends PureComponent {
             this.onclick(widgetID, data);
           }}
         >
-          <Image
+          <img
             block="VueProductSlider"
             elem="VueProductImage"
             src={thumbnail_url}
             alt={name}
           />
-          {/* <img
-            block="VueProductSlider"
-            elem="VueProductImage"
-            src={thumbnail_url}
-            alt={name}
-          /> */}
         </Link>
         <h6
           block="VueProductSlider"

@@ -95,13 +95,6 @@ export class MyAccountAddressTable extends KeyValueTable {
             alt="pencil"
             src={pencil}
           />
-          {/* <img
-                      block="MyAccountAddressTable"
-                      elem="Icon"
-                      mods={ { pencil: true } }
-                      alt="pencil"
-                      src={ pencil }
-                    /> */}
         </button>
         <button
           block="MyAccountAddressTable"
@@ -118,13 +111,6 @@ export class MyAccountAddressTable extends KeyValueTable {
             alt="trash"
             src={trash}
           />
-          {/* <img
-            block="MyAccountAddressTable"
-            elem="Icon"
-            mods={{ trash: true }}
-            alt="trash"
-            src={trash}
-          /> */}
         </button>
       </>
     );

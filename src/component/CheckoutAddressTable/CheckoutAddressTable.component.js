@@ -125,13 +125,6 @@ export class CheckoutAddressTable extends SourceCheckoutAddressTable {
             src={pencil}
           />
 
-          {/* <img
-            block="MyAccountAddressTable"
-            elem="Icon"
-            mods={{ pencil: true }}
-            alt="pencil"
-            src={pencil}
-          /> */}
         </button>
         <button
           block="MyAccountAddressTable"
@@ -149,13 +142,6 @@ export class CheckoutAddressTable extends SourceCheckoutAddressTable {
             alt="trash"
             src={trash}
           />
-          {/* <img
-            block="MyAccountAddressTable"
-            elem="Icon"
-            mods={{ trash: true }}
-            alt="trash"
-            src={trash}
-          /> */}
         </button>
       </>
     );

@@ -457,18 +457,7 @@ export class CartItem extends PureComponent {
           ratio="custom"
           alt={`Product ${name} thumbnail.`}
         />
-        {/* <img
-          src={thumbnail}
-          mix={{
-            block: "CartItem",
-            elem: "Picture",
-            mods: { isArabic, isCartPage },
-          }}
-          ratio="custom"
-          alt={`Product ${name} thumbnail.`}
-        /> */}
         <Image style={{ display: "none" }} alt={name} src={thumbnail} />
-        {/* <img style={{ display: "none" }} alt={name} src={thumbnail} /> */}
       </div>
     );
   }

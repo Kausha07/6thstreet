@@ -398,13 +398,6 @@ export class CheckoutBilling extends SourceCheckoutBilling {
                   src={Applepay}
                   alt="Apple Pay"
                 />
-                {/* <img
-                  block="CheckoutComApplePayPayment"
-                  elem="icon"
-                  mods={{ button_style, isArabic }}
-                  src={Applepay}
-                  alt="Apple Pay"
-                /> */}
               </button>
             </div>
           ) : (

@@ -216,11 +216,6 @@ class PDPAddToCart extends PureComponent {
             {label}
           </label>
           {isNotAvailable && (
-            // <img
-            //   src={StrikeThrough}
-            //   className="lineImg"
-            //   style={isCurrentSizeSelected ? selectedStrikeThruLineStyle : {}}
-            // />
             <Image
               src={StrikeThrough}
               className="lineImg"
@@ -357,7 +352,6 @@ class PDPAddToCart extends PureComponent {
       >
         <div>{__("Click & Collect")}</div>
         <Image src={clickAndCollectIcon} />
-        {/* <img src={clickAndCollectIcon} /> */}
       </button>
     );
   }
@@ -511,7 +505,6 @@ class PDPAddToCart extends PureComponent {
 
     return (
       <div block="PDPAddToCart" elem="NotifyMeSuccessContainer">
-        {/* <img src={NotifySuccessImg} alt="success circle" /> */}
         <Image src={NotifySuccessImg} alt="success circle" />
 
         <span>

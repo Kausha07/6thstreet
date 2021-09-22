@@ -284,7 +284,6 @@ export class SuccessCheckoutItem extends PureComponent {
         />
         <Image style={{ display: "none" }} alt={name} src={thumbnail} />
 
-        {/* <img style={{ display: "none" }} alt={name} src={thumbnail} /> */}
       </>
     );
   }

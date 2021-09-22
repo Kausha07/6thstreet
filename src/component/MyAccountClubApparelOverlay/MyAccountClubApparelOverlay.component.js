@@ -291,12 +291,6 @@ class MyAccountClubApparelOverlay extends PureComponent {
         {isLoading ? <Loader isLoading={isLoading} /> : null}
         {isMessage && beforeDesktop ? null : (
           <div block="MyAccountClubApparelOverlay" elem="LinkAccountBanner">
-            {/* <img
-                              block="MyAccountClubApparelOverlay"
-                              elem="LinkAccountLogo"
-                              src={ isArabic ? ClubApparelLogoAR : ClubApparelLogoEN }
-                              alt="Logo icon"
-                            /> */}
             <Image
               className="LinkAccountLogo"
               src={isArabic ? ClubApparelLogoAR : ClubApparelLogoEN}

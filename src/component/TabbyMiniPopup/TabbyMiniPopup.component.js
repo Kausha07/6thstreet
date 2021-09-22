@@ -51,7 +51,6 @@ class TabbyMiniPopup extends PureComponent {
             {" "}
           </button>
           <a href="https://tabby.ai">
-            {/* <img src={ tabby } alt="tabby" /> */}
             <Image src={tabby} alt={"tabby"} />
           </a>
           {this.renderTabbyContent()}
@@ -132,7 +131,6 @@ class TabbyMiniPopup extends PureComponent {
 
     return (
       <div block="TabbyMiniPopup" elem="Row">
-        {/* <img src={img} alt="icon" /> */}
         <Image src={img} alt="icon" />
         <div block="TabbyMiniPopup" elem="RowText">
           <h5>{title}</h5>

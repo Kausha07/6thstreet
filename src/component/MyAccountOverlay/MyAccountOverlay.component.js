@@ -271,12 +271,6 @@ export class MyAccountOverlay extends PureComponent {
           alt=""
         />
 
-        {/* <img
-                  block="MyAccountOverlay"
-                  elem="LockImg"
-                  src="https://static.6media.me/static/version1600859154/frontend/6SNEW/6snew/en_US/images/forgot_pass.png"
-                  alt=""
-                /> */}
         <p block="MyAccountOverlay" elem="Heading">
           {__("Forgot your Password?")}
         </p>

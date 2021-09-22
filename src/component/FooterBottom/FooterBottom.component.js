@@ -129,30 +129,6 @@ class FooterBottom extends PureComponent {
           src={visa}
           alt="ca"
         />
-        {/* <img
-          block="FooterBottom"
-          elem="PaymentIcons-ClubApparel"
-          src={CA}
-          alt="ca"
-        />
-        <img
-          block="FooterBottom"
-          elem="PaymentIcons-CashOnDelivery"
-          src={COD}
-          alt="ca"
-        />
-        <img
-          block="FooterBottom"
-          elem="PaymentIcons-Mastercard"
-          src={mastercard}
-          alt="ca"
-        />
-        <img
-          block="FooterBottom"
-          elem="PaymentIcons-Visa"
-          src={visa}
-          alt="ca"
-        /> */}
       </div>
     );
   }
