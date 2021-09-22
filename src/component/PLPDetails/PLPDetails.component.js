@@ -22,7 +22,8 @@ class PLPDetails extends PureComponent {
 
   renderBrandImage = () => {
     const { brandImg } = this.props;
-    return <img src={brandImg} />;
+    return <Image src={brandImg} />
+    //  <img src={brandImg} />
   };
 
   renderBrandName = () => {
@@ -48,8 +49,10 @@ class PLPDetails extends PureComponent {
   renderActionButtons = () => {
     return (
       <div block="PLPDetails" elem="ShareIcon">
-        <img src={shareIcon} alt={__("Share Icon")} />
-        <img src={favIcon} alt={__("Favorite Icon")} />
+        <Image src={shareIcon} alt={__("Share Icon")} />
+        <Image src={favIcon} alt={__("Favorite Icon")} />
+        {/* <img src={shareIcon} alt={__("Share Icon")} />
+        <img src={favIcon} alt={__("Favorite Icon")} /> */}
       </div>
     );
   };

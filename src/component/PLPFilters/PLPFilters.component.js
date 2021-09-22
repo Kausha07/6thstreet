@@ -235,8 +235,9 @@ class PLPFilters extends PureComponent {
         tabIndex={0}
         block="PLPFilterMobile"
       >
-        
-        <img src={fitlerImage} alt="fitler" />
+        <Image src={fitlerImage} alt="fitler" />
+
+        {/* <img src={fitlerImage} alt="fitler" /> */}
         {__("refine ")}
         <div block="PLPFilterMobile" elem="Count">
           {this.renderFiltersCount()}

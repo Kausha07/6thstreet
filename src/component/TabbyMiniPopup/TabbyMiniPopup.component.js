@@ -132,7 +132,8 @@ class TabbyMiniPopup extends PureComponent {
 
     return (
       <div block="TabbyMiniPopup" elem="Row">
-        <img src={img} alt="icon" />
+        {/* <img src={img} alt="icon" /> */}
+        <Image src={img} alt="icon" />
         <div block="TabbyMiniPopup" elem="RowText">
           <h5>{title}</h5>
           <p>{text}</p>

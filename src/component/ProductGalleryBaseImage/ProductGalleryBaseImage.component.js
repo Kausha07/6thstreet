@@ -9,63 +9,60 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import PropTypes from 'prop-types';
-import { PureComponent } from 'react';
-import { TransformComponent } from 'react-zoom-pan-pinch';
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
+import { TransformComponent } from "react-zoom-pan-pinch";
 
-import Image from 'Component/Image';
+import Image from "Component/Image";
 
 export class ProductGalleryBaseImage extends PureComponent {
-    static propTypes = {
-        src: PropTypes.string.isRequired,
-        alt: PropTypes.string.isRequired,
-        imageRef: PropTypes.oneOfType([
-            PropTypes.func,
-            PropTypes.shape({ current: PropTypes.instanceOf(Element) })
-        ]),
-        containerRef: PropTypes.oneOfType([
-            PropTypes.func,
-            PropTypes.shape({ current: PropTypes.instanceOf(Element) })
-        ])
-    };
+  static propTypes = {
+    src: PropTypes.string.isRequired,
+    alt: PropTypes.string.isRequired,
+    imageRef: PropTypes.oneOfType([
+      PropTypes.func,
+      PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
+    ]),
+    containerRef: PropTypes.oneOfType([
+      PropTypes.func,
+      PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
+    ]),
+  };
 
-    static defaultProps = {
-        imageRef: () => {},
-        containerRef: () => {}
-    };
+  static defaultProps = {
+    imageRef: () => {},
+    containerRef: () => {},
+  };
 
-    render() {
-        const {
-            src,
-            alt,
-            imageRef,
-            containerRef
-        } = this.props;
+  render() {
+    const { src, alt, imageRef, containerRef } = this.props;
 
-        return (
-            <TransformComponent>
-                <div ref={ containerRef }>
-                <Image
-                  src={ src }
-                  ratio="custom"
-                  mix={ {
-                      block: 'ProductGallery',
-                      elem: 'SliderImage',
-                      mods: { isPlaceholder: !src }
-                  } }
-                  isPlaceholder={ !src }
-                  alt={ alt }
-                />
-                <img
+    return (
+      <TransformComponent>
+        <div ref={containerRef}>
+          <Image
+            src={src}
+            ratio="custom"
+            mix={{
+              block: "ProductGallery",
+              elem: "SliderImage",
+              mods: { isPlaceholder: !src },
+            }}
+            isPlaceholder={!src}
+            alt={alt}
+          />
+          <Image ref={imageRef} alt={alt} src={src} itemProp="image" />
+
+          {/* <img
                   ref={ imageRef }
                   alt={ alt }
                   src={ src }
                   itemProp="image"
-                />
-                </div>
-            </TransformComponent>
-        );
-    }
+                /> */}
+        </div>
+      </TransformComponent>
+    );
+  }
 }
 
 export default ProductGalleryBaseImage;
