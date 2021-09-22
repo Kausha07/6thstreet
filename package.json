@@ -14,6 +14,11 @@
         "express": "^4.17.1",
         "forever": "^3.0.4",
         "html-minifier": "^4.0.0",
+        "imagemin": "^8.0.1",
+        "imagemin-gifsicle": "^7.0.0",
+        "imagemin-mozjpeg": "^9.0.0",
+        "imagemin-pngquant": "^9.0.2",
+        "imagemin-svgo": "^10.0.0",
         "lerna": "^3.22.1",
         "node-cache": "^5.1.2",
         "normalize-scroll-left": "^0.2.1",
@@ -35,7 +40,8 @@
         "start-ar": "scandipwa-scripts start --locale ar_SA",
         "build": "scandipwa-scripts build",
         "build-ar": "scandipwa-scripts build --locale ar_SA",
-        "start-ssr": "forever stopall && forever cleanlogs && forever start -l pwa.log app.js && forever start -l renderer.log renderer/index.js"
+        "start-ssr": "forever stopall && forever cleanlogs && forever start -l pwa.log app.js && forever start -l renderer.log renderer/index.js",
+        "image-opt": "node image-opt.mjs"
     },
     "browserslist": {
         "production": [
