@@ -101,8 +101,8 @@ class HeaderSearch extends PureComponent {
             name="search"
             type="text"
             autocomplete="off"
-            autocorrect="off"
-            spellcheck="false"
+            autoCorrect="off"
+            spellCheck="false"
             placeholder={
               isMobile.any() || isMobile.tablet()
                 ? " What are you looking for ?"

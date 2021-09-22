@@ -24,7 +24,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     customer: customerType.isRequired,
     showCreateNewPopup: PropTypes.func.isRequired,
     shippingAddress: PropTypes.object.isRequired,
-    isClickAndCollect: PropTypes.bool.isRequired
+    isClickAndCollect: PropTypes.bool.isRequired,
   };
 
   state = {
@@ -78,9 +78,9 @@ export class CheckoutShipping extends SourceCheckoutShipping {
   }
 
   checkForDisabling() {
-    const { selectedShippingMethod } = this.props;
+    const { selectedShippingMethod ,checkClickAndCollect} = this.props;
     const { isMobile } = this.state;
-    if (!selectedShippingMethod || !isMobile) {
+    if (!checkClickAndCollect() && !selectedShippingMethod || !isMobile) {
       return true;
     }
 
@@ -117,7 +117,8 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     const {
       customer: { addresses = [] },
       selectedCustomerAddressId,
-      isPaymentLoading
+      checkClickAndCollect,
+      isPaymentLoading,
     } = this.props;
     const { isSignedIn } = this.state;
     const selectedAddress = addresses.filter(
@@ -130,16 +131,20 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     if (
       isMobile.any() ||
       isMobile.tablet() ||
-      (isSignedIn && addresses.length === 0) ||
-      (isSignedIn && selectedAddressCountry !== getCountryFromUrl())
+      (isSignedIn && addresses.length === 0 && !checkClickAndCollect()) ||
+      (isSignedIn && selectedAddressCountry !== getCountryFromUrl() && !checkClickAndCollect() )
     ) {
       return null;
     }
 
     return (
       <div block="CheckoutShippingStep" elem="DeliveryButton">
-        <button type="submit" block="Button button primary medium" disabled={isPaymentLoading}>
-          {__("Deliver to this address")}
+        <button
+          type="submit"
+          block="Button button primary medium"
+          disabled={isPaymentLoading}
+        >
+          {checkClickAndCollect() ? "Next" : __("Deliver to this address")}
         </button>
       </div>
     );
@@ -216,15 +221,16 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     const {
       notSavedAddress,
       customer: { addresses = [] },
-      isClickAndCollect
+      isClickAndCollect,
+      checkClickAndCollect
     } = this.props;
 
-    if (!openFirstPopup && addresses && isSignedIn() && notSavedAddress()) {
+    if (!openFirstPopup && addresses && isSignedIn() && notSavedAddress() && !checkClickAndCollect()) {
       this.setState({ openFirstPopup: true });
       this.openNewForm();
     }
 
-    if (isSignedIn() && !!!isClickAndCollect) {
+    if (isSignedIn() && !checkClickAndCollect()) {
       return (
         <div
           block="MyAccountAddressBook"
@@ -280,7 +286,9 @@ export class CheckoutShipping extends SourceCheckoutShipping {
       onAddressSelect,
       onShippingEstimationFieldsChange,
       shippingAddress,
-      isClickAndCollect
+      isClickAndCollect,
+      checkClickAndCollect,
+      totals
     } = this.props;
     const { formContent } = this.state;
     return (
@@ -293,13 +301,21 @@ export class CheckoutShipping extends SourceCheckoutShipping {
         openForm={this.openForm.bind(this)}
         showCards={this.showCards}
         hideCards={this.hideCards}
+        totals={totals}
         isClickAndCollect={isClickAndCollect}
+        clickAndCollectStatus={checkClickAndCollect()}
       />
     );
   }
 
   render() {
-    const { onShippingSuccess, onShippingError, isClickAndCollect } = this.props;
+    const {
+      onShippingSuccess,
+      onShippingError,
+      isClickAndCollect,
+      checkClickAndCollect,
+      handleClickNCollectPayment,
+    } = this.props;
     const { formContent } = this.state;
     return (
       <div
@@ -312,13 +328,19 @@ export class CheckoutShipping extends SourceCheckoutShipping {
           id={SHIPPING_STEP}
           mix={{ block: "CheckoutShipping" }}
           onSubmitError={onShippingError}
-          onSubmitSuccess={onShippingSuccess}
+          onSubmitSuccess={
+            !checkClickAndCollect()
+              ? onShippingSuccess
+              : handleClickNCollectPayment
+          }
         >
-          {isSignedIn() ? (
+          {isSignedIn() && !checkClickAndCollect()? (
             <>
               <h3>{__("Delivering to")}</h3>
               <h4 block="CheckoutShipping" elem="DeliveryMessage">
-                { isClickAndCollect ? ("Please confirm your contact details") : __("Where can we send your order?") }
+                {checkClickAndCollect()
+                  ? "Please confirm your contact details"
+                  : __("Where can we send your order?")}
               </h4>
             </>
           ) : null}

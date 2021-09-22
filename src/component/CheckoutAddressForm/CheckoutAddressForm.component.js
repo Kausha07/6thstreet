@@ -4,7 +4,6 @@ import { CheckoutAddressForm as SourceCheckoutAddressForm } from "SourceComponen
 
 import "./CheckoutAddressForm.style";
 
-
 const objTabIndex = {
   city: "6",
   telephone: "9",
@@ -19,15 +18,8 @@ const objTabIndex = {
 };
 export class CheckoutAddressForm extends SourceCheckoutAddressForm {
   componentDidUpdate(_, prevState) {
-    const {
-      countryId,
-      regionId,
-      region,
-      city,
-      postcode,
-      street,
-      telephone,
-    } = this.state;
+    const { countryId, regionId, region, city, postcode, street, telephone } =
+      this.state;
 
     const {
       countryId: prevCountryId,
@@ -39,15 +31,15 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
       telephone: prevTelephone,
     } = prevState;
 
-    const streetValue = document.getElementById("street")?.value
+    const streetValue = document.getElementById("street")?.value;
 
-    if(streetValue !== street){
-      this.onChange("street", streetValue)
+    if (streetValue !== street) {
+      this.onChange("street", streetValue);
     }
 
     if (
       (countryId !== prevCountryId ||
-        streetValue !== street||
+        streetValue !== street ||
         regionId !== prevRegionId ||
         city !== prevCity ||
         region !== prevRegion ||
@@ -60,7 +52,26 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
       this.estimateShipping();
     }
   }
-
+  getFilteredFields(result) {
+    let filterResult = Object.keys(result).filter((data) => {
+      let returnValue;
+      if (
+        data !== "city" &&
+        data !== "street" &&
+        data !== "region_string" &&
+        data !== "region_id" &&
+        data !== "postcode"
+      ) {
+        returnValue = result[data];
+      }
+      return returnValue;
+    });
+    let finalResult = {};
+    filterResult.map((data) => {
+      return (finalResult[data] = result[data]);
+    });
+    return finalResult;
+  }
   get fieldMap() {
     this.getCitiesAndRegionsData();
 
@@ -68,11 +79,13 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
       isSignedIn,
       shippingAddress: { guest_email },
       isClickAndCollect,
-      storeAddress
+      storeAddress,
+      clickAndCollectStatus,
+      setClickAndCollect,
     } = this.props;
 
     const { telephone, street, ...fieldMap } = super.fieldMap;
-   
+
     fieldMap.street = {
       ...street,
       onChange: (value) => this.onChange("street", value),
@@ -95,34 +108,39 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
           },
           ...fieldMap,
         };
-  
-    if(!!isClickAndCollect && storeAddress){
-      
+
+    if (!!isClickAndCollect && storeAddress) {
       const { store_name, address, city, area } = storeAddress;
-      if(store_name && address){
+      if (store_name && address) {
         const value = `${store_name}, ${address}`;
         Object.assign(fieldMap.street || {}, {
           value,
-          disabled: true
+          disabled: true,
         });
-        this.onChange('street', value)
+        this.onChange("street", value);
       }
-      if(city && fieldMap?.city?.selectOptions) {
-        const value = fieldMap.city.selectOptions.filter(({ label }) => label.toLowerCase()===city.toLowerCase())[0]?.value || ""; 
+      if (city && fieldMap?.city?.selectOptions) {
+        const value =
+          fieldMap.city.selectOptions.filter(
+            ({ label }) => label.toLowerCase() === city.toLowerCase()
+          )[0]?.value || "";
         Object.assign(fieldMap.city || {}, {
           value,
-          disabled: true
+          disabled: true,
         });
-        this.onChange('city', value)
+        this.onChange("city", value);
       }
 
-      if(area && fieldMap?.region_id?.selectOptions) {
-        const value = fieldMap.region_id.selectOptions.filter(({ label }) => label.toLowerCase()===area.toLowerCase())[0]?.value || "";
+      if (area && fieldMap?.region_id?.selectOptions) {
+        const value =
+          fieldMap.region_id.selectOptions.filter(
+            ({ label }) => label.toLowerCase() === area.toLowerCase()
+          )[0]?.value || "";
         Object.assign(fieldMap.region_id || {}, {
           value,
-          disabled: true
+          disabled: true,
         });
-        this.setState({regionId: value});
+        this.setState({ regionId: value });
       }
     }
 
@@ -135,9 +153,23 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
           result[key] = o;
         }
       }
-      return result;
+      let finalResult = this.getFilteredFields(result);
+      if (clickAndCollectStatus) {
+        setClickAndCollect(true);
+        return finalResult;
+      } else {
+        setClickAndCollect(false);
+        return result;
+      }
     }
-    return fFieldMap;
+    let finalResult = this.getFilteredFields(fFieldMap);
+    if (clickAndCollectStatus) {
+      setClickAndCollect(true);
+      return finalResult;
+    } else {
+      setClickAndCollect(false);
+      return fFieldMap;
+    }
   }
 
   estimateShipping() {
@@ -145,11 +177,11 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
 
     const { countryId, regionId, city, telephone = "", street } = this.state;
 
-    const streetValue = document.getElementById("street")?.value
+    const streetValue = document.getElementById("street")?.value;
 
     onShippingEstimationFieldsChange({
       country_code: countryId,
-      street:street || streetValue,
+      street: street || streetValue,
       region: regionId,
       area: regionId,
       city,
@@ -160,16 +192,20 @@ export class CheckoutAddressForm extends SourceCheckoutAddressForm {
   }
 
   render() {
-    const { id, isSignedIn } = this.props;
+    const { id, isSignedIn, clickAndCollectStatus ,showCountry} = this.props;
     const { isArabic } = this.state;
 
     const isGuestForm = !isSignedIn;
+    const ClickNCollect = clickAndCollectStatus;
     return (
-      <FormPortal id={id} name="CheckoutAddressForm">
+      <FormPortal id={id} name="CheckoutAddressForm" >
         <div
           block="FieldForm"
-          mix={{ block: "CheckoutAddressForm", mods: { isGuestForm } }}
-          mods={{ isArabic }}
+          mix={{
+            block: "CheckoutAddressForm",
+            mods: { isGuestForm, ClickNCollect,showCountry },
+          }}
+          mods={{ isArabic}}
         >
           {this.renderFields()}
         </div>

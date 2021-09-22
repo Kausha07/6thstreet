@@ -220,14 +220,9 @@
     justify-content: left;
     width: 100%;
     color: var(--white-color);
-    // font-weight: var(--fw-demi);
     text-align: center;
     padding: 0;
     border: none;
-    // line-height: 16px;
-
-    // height: 18px;
-    // width: 177px;
     color: #4a4a4a;
     font-family: "Avenir Next";
     font-size: 13px;
@@ -269,6 +264,14 @@
       letter-spacing: 0.91px;
       line-height: 36px;
       margin: 0;
+      }
+      @include mobile{
+        font-weight: bold;
+        color: white;
+        font-size: 10px;
+        letter-spacing: 0.91px;
+        line-height: 36px;
+        margin: 0;
       }
 
       &::first-letter {
@@ -396,6 +399,9 @@
     opacity: 0;
   }
   @include tablet{
+    display: none;
+  }
+  @include mobile{
     display: none;
   }
 }

@@ -110,7 +110,6 @@ const createCustomQuerySuggestions = (hit, resArray, sourceIndexName) => {
   if (checkForQueryWithGender(query)) {
     genderModifiedQuery = query;
   } else {
-    console.log("query", query);
     genderModifiedQuery = `${
       isArabic() ? getGenderInArabic(gender) : gender
     } ${query}`;
