@@ -171,7 +171,6 @@ class PDPGallery extends PureComponent {
   render() {
     const { galleryOverlay, isArabic } = this.state;
     const { product } = this.props;
-    console.log("all well", product);
     return (
       <div block="PDPGallery">
         {galleryOverlay}

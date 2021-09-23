@@ -76,13 +76,8 @@
         }
     }
     .Slider-Wrapper>* {
-        @include desktop {
-            min-height: 534px;
-        }
-        @include mobile {
-            width: 100%!important;
-            height: auto!important;
-        }
+        width: 100%!important;
+        height: auto!important;
     }
     .Slider-Wrapper {
         align-items: unset;
@@ -118,18 +113,10 @@
     }
     .Image {
         &-Image {
-            @include desktop {
-                object-fit: cover;
-                object-position: center;
-            }
-            @include mobile {
-                position: unset!important;
-            }
+            position: unset!important;
         }
         &_ratio_square {
-            @include mobile {
-                padding: unset!important;
-            }
+            padding: unset!important;
         }
     }
 

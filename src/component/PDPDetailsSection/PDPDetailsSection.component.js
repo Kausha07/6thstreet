@@ -191,7 +191,9 @@ class PDPDetailsSection extends PureComponent {
 
   renderListItems(data) {
     return (
-      data.map((item) => this.renderListItem(
+      data
+      ?.filter(({ key }) => key !== "sku" && key !== "alternate_name")
+      ?.map((item) => this.renderListItem(
         {
           key: item.key,
           value: item.value
@@ -213,12 +215,10 @@ class PDPDetailsSection extends PureComponent {
   getHighlights(
     highlights = [],
     categories = {},
-    model_height = '',
     product_height = '',
     product_length = '',
     product_width = '',
     bag_dimension = '',
-    model_wearing_size = '',
     product
   ) {
       if (!Object.keys(categories).length) {
@@ -234,12 +234,6 @@ class PDPDetailsSection extends PureComponent {
         key: 'subcategory',
         value: this.getCategoryByLevel(categories, 2)
       };
-
-      const modelHeight = {
-        key: 'model_height',
-        value: model_height
-      };
-
       const productHeight = {
         key: 'product_height',
         value: product_height
@@ -258,11 +252,6 @@ class PDPDetailsSection extends PureComponent {
       const bagDimention = {
         key: 'bag_dimension',
         value: bag_dimension
-      };
-
-      const modelWearingSize = {
-        key: 'model_wearing_size',
-        value: model_wearing_size
       };
 
       const material = {
@@ -423,12 +412,10 @@ class PDPDetailsSection extends PureComponent {
         ...(highlights || []),
         ...(category.value ? [category] : []),
         ...(subcategory.value ? [subcategory] : []),
-        ...(modelHeight.value ? [modelHeight] : []),
         ...(productHeight.value ? [productHeight] : []),
         ...(productLength.value ? [productLength] : []),
         ...(productWidth.value ? [productWidth] : []),
         ...(bagDimention.value ? [bagDimention] : []),
-        ...(modelWearingSize.value ? [modelWearingSize] : []),
         ...(material.value ? [material] : []),
         ...(occasion.value ? [occasion] : []),
         ...(heelHeight.value ? [heelHeight] : []),
@@ -480,15 +467,14 @@ class PDPDetailsSection extends PureComponent {
       product
     } = this.props;
     
+    highlighted_attributes.forEach((item) => console.log(item))
     const highlights = this.getHighlights(
-      highlighted_attributes?.filter((attribute) => attribute?.key !== "sku"),
+      highlighted_attributes,
       categories,
-      model_height,
       product_height,
       product_length,
       product_width,
       bag_dimension,
-      model_wearing_size,
       product
     )
 
@@ -496,9 +482,35 @@ class PDPDetailsSection extends PureComponent {
       <div block="PDPDetailsSection" elem="Highlights">
         <h4>{__("Highlights")}</h4>
         <ul>{this.renderListItems(highlights)}</ul>
+        {this.renderModelDetails(model_height, model_wearing_size)}
         {this.renderSKU(sku)}
         {/* {this.renderMoreDetailsList()} */}
       </div>
+    );
+  }
+
+  renderModelDetails(height, size) {
+    if (!size) {
+      return null;
+    }
+
+    if (!height) {
+      return (
+        <p block="PDPDetailsSection-Highlights" elem="ModelDetails">
+          <span>{ __("Model is wearing") } </span>
+          <span>{ __("size") } </span>
+          <span>{ size }</span>
+        </p>
+      );
+    }
+    return (
+      <p block="PDPDetailsSection-Highlights" elem="ModelDetails">
+        <span>{ __("Model's height is") } </span>
+        <span>{ height }</span>
+        <span> {__("& is wearing")} </span>
+        <span>{ __("size") } </span>
+        <span>{ size }</span>
+      </p>
     );
   }
 
@@ -510,6 +522,7 @@ class PDPDetailsSection extends PureComponent {
       </p>
     );
   }
+  
 
   renderSizeAndFit() {
     const {

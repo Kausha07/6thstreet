@@ -677,7 +677,7 @@
     "free": "مجاني",
     "No Payment Information Required": "لا يلزم الدفع",
     "Free": "مجاني",
-    "Highlights": "يسلط الضوء",
+    "Highlights": "ميزات المنتج",
     "View Bag": "حقيبة عرض",
     "Shipping fee": "الشحن",
     "Unable to add product to cart.": "غير قادر على اضافة المنتج في السله.",
@@ -811,7 +811,7 @@
     "Show": "اظهر",
     "Mask": "اخفاء",
     "Confirmation ID": "تأكيد الهوية ",
-    "Model is wearing ": "مايرتديه العارض",
+    "Model is wearing": "مايرتديه العارض",
     "EMAIL OR PHONE": "البريد الإلكتروني او الهاتف",
     "Model's height is ": "طول العارض",
     "& is wearing ": null,
@@ -820,5 +820,7 @@
     "null": null,
     "PUN": null,
     "West (CM)": null,
-    "Home_Category": null
+    "Home_Category": null,
+    "Model's height is": null,
+    "& is wearing": null
 }
