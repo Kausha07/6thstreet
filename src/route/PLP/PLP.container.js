@@ -94,7 +94,6 @@ export class PLPContainer extends PureComponent {
     const { pages } = props;
     const requestOptions = PLPContainer.getRequestOptions();
     const { page, ...restOptions } = requestOptions;
-
     const {
       prevRequestOptions: { page: prevPage, ...prevRestOptions },
     } = state;
@@ -112,17 +111,23 @@ export class PLPContainer extends PureComponent {
   }
 
   static getRequestOptions() {
-    const { params: parsedParams } = WebUrlParser.parsePLP(location.href);
-
-    return {
-      // TODO: inject gender ?
-      ...parsedParams,
-    };
+    let params;
+    if (location.search && location.search.startsWith('?q')) {
+      const { params: parsedParams } = WebUrlParser.parsePLP(location.href);
+      params = parsedParams;
+    } else {
+      const { params: parsedParams } = WebUrlParser.parsePLPWithoutQuery(
+        location.href
+      );
+      params = parsedParams;
+    }
+    return params;
   }
 
   static async request(isPage, props) {
     const { requestProductList, requestProductListPage } = props;
     const options = PLPContainer.getRequestOptions();
+
     const requestFunction = isPage
       ? requestProductListPage
       : requestProductList;
@@ -210,9 +215,15 @@ export class PLPContainer extends PureComponent {
     } = this.props;
     if (query) {
       const { updateBreadcrumbs, setGender } = this.props;
-      const breadcrumbLevels = options["categories.level4"] ? options["categories.level4"] : options["categories.level3"] ? options["categories.level3"] : options["categories.level2"]
+      const breadcrumbLevels = options["categories.level4"]
+        ? options["categories.level4"]
+        : options["categories.level3"]
+        ? options["categories.level3"]
+        : options["categories.level2"]
         ? options["categories.level2"]
-        : options["categories.level1"];
+        : options["categories.level1"]
+        ? options["categories.level1"]
+        : options["q"];
 
       if (breadcrumbLevels) {
         const levelArray = breadcrumbLevels.split(" /// ") || [];
@@ -290,7 +301,7 @@ export class PLPContainer extends PureComponent {
 
   getIsLoading() {
     const { requestedOptions } = this.props;
-    
+
     const options = PLPContainer.getRequestOptions();
     const {
       // eslint-disable-next-line no-unused-vars

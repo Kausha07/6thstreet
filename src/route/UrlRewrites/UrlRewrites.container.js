@@ -92,7 +92,7 @@ export class UrlRewritesContainer extends PureComponent {
 
   async requestUrlRewrite(isUpdate = false) {
     // TODO: rename this to pathname, urlParam is strange
-    const { pathname: urlParam = "" } = location;
+    const { pathname: urlParam = "",search } = location;
     const slicedUrl = urlParam.slice(urlParam.search("id/"));
     // eslint-disable-next-line no-magic-numbers
     const magentoProductId = Number(slicedUrl.slice("3").split("/")[0]);
@@ -119,10 +119,11 @@ export class UrlRewritesContainer extends PureComponent {
         brand_name: brandName,
       },
     } = urlResolver || { data: {} };
-    const finalType =
-      type === TYPE_NOTFOUND && decodeURI(location.search).match(/idx=/)
-        ? TYPE_CATEGORY
-        : type;
+    const finalType = !search.startsWith("?q")
+    ? TYPE_CATEGORY
+    : type === TYPE_NOTFOUND && decodeURI(location.search).match(/idx=/)
+    ? TYPE_CATEGORY
+    : type;
 
     window.pageType = finalType;
     this.setState({
