@@ -23,8 +23,11 @@
         max-height: 550px;
     }
 
-    &-Image {
-        width: 385px;
-        object-fit: cover;
+    .LazyLoad-wrapper {
+        img{
+            width: 385px !important;
+            object-fit: cover;
+        }
+       
     }
 }

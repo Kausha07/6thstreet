@@ -127,7 +127,11 @@ class DynamicContentBanner extends PureComponent {
           this.onclick(item);
         }}
       >
-        <img src={url} block="Image" style={{ maxWidth: wd, height: ht }} />
+        <Image
+          src={url}
+          block="Image"
+          style={{ maxWidth: wd, height: ht, objectFit: "unset" }}
+        />
 
         {this.renderButton()}
       </Link>

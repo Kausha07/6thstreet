@@ -420,13 +420,24 @@
               margin: 10% 5% 10% 10%;
             }
           }
-
-          img {
-            width: 11px;
-            height: auto;
+          .Image{
             float: right;
-            top: 1px;
+            overflow: inherit;
+            .LazyLoad-wrapper {
+              img {
+                width: 11px !important;
+                height: auto !important;
+                float: right;
+                top: 1px;
+              }
+            }
           }
+          // img {
+          //   width: 11px;
+          //   height: auto;
+          //   float: right;
+          //   top: 1px;
+          // }
 
           &_isArabic {
             button {

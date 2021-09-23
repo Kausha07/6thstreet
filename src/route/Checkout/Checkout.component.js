@@ -29,6 +29,8 @@ import {
 import "./Checkout.style";
 import GiftIconSmall from "./icons/gift-heart.png";
 import GiftIconLarge from "./icons/gift-heart@3x.png";
+import Image from "Component/Image";
+
 export class Checkout extends SourceCheckout {
   static propTypes = {
     isSignedIn: PropTypes.bool.isRequired,

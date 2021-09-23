@@ -273,8 +273,7 @@ export class CartItem extends PureComponent {
           <span>{`${parseFloat(basePrice).toFixed(decimals)}`}</span>
         </div>
         <div>
-          {`(-${discountPercentage}%)`}&nbsp;
-          {' '}{withoutDiscount}
+          {`(-${discountPercentage}%)`}&nbsp; {withoutDiscount}
         </div>
       </div>
     );
@@ -288,17 +287,19 @@ export class CartItem extends PureComponent {
 
   renderClickAndCollectStoreName() {
     const {
-      item: {
-        extension_attributes
-      }
+      item: { extension_attributes },
     } = this.props;
 
     const { isArabic } = this.state;
-    if(extension_attributes?.click_to_collect_store) {
+    if (extension_attributes?.click_to_collect_store) {
       return (
         <div block="CartPageItem" elem="ClickAndCollect" mods={{ isArabic }}>
-          <div block="CartPageItem-ClickAndCollect" elem="icon"><Store /></div>
-          <div block="CartPageItem-ClickAndCollect" elem="StoreName">{ extension_attributes?.click_to_collect_store_name}</div>
+          <div block="CartPageItem-ClickAndCollect" elem="icon">
+            <Store />
+          </div>
+          <div block="CartPageItem-ClickAndCollect" elem="StoreName">
+            {extension_attributes?.click_to_collect_store_name}
+          </div>
         </div>
       );
     }
@@ -363,14 +364,12 @@ export class CartItem extends PureComponent {
         {this.renderProductOptions(bundle_options)}
         {this.renderProductConfigurations()}
         {this.renderColSizeQty()}
-        {   
-          !isNotAvailble && (
-            <>
-              { this.renderProductPrice() }
-              { this.renderClickAndCollectStoreName() }
-            </>
-          )
-        }
+        {!isNotAvailble && (
+          <>
+            {this.renderProductPrice()}
+            {this.renderClickAndCollectStoreName()}
+          </>
+        )}
         {this.renderActions()}
       </figcaption>
     );
@@ -449,7 +448,7 @@ export class CartItem extends PureComponent {
           ratio="custom"
           alt={`Product ${name} thumbnail.`}
         />
-        <img style={{ display: "none" }} alt={name} src={thumbnail} />
+        <Image style={{ display: "none" }} alt={name} src={thumbnail} />
       </div>
     );
   }

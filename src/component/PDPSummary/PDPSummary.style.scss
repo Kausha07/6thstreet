@@ -242,33 +242,17 @@
       font-size: 12px;
     }
 
-    img {
-      width: 42px;
-      height: auto;
-      margin: 0 3px -8px 0;
+    .Image {
+      display: inline-block;
+      overflow: inherit;
+      img {
+        width: 42px !important;
+        height: auto !important;
+        margin: 0 3px -8px 0;
 
-      @include desktop() {
-        width: 47px;
-      }
-    }
-
-    span {
-      text-decoration: underline;
-      font-weight: 600;
-      margin: 0;
-
-      @include desktop() {
-        margin: 0 4px;
-      }
-    }
-
-    img {
-      width: 42px;
-      height: auto;
-      margin: 0 3px -8px 0;
-
-      @include desktop() {
-        width: 47px;
+        @include desktop() {
+          width: 47px !important;
+        }
       }
     }
 

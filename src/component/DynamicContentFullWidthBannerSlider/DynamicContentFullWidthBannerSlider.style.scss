@@ -35,15 +35,15 @@
   }
 
 
-  .Image {
-    height: auto;
-    &-Image {
-      position: static;
-      @include desktop {
-        margin-top: 50px;
-      }
-    }
-  }
+  // .Image {
+  //   height: auto;
+  //   &-Image {
+  //     position: static;
+  //     @include desktop {
+  //       margin-top: 50px;
+  //     }
+  //   }
+  // }
   .tns-outer {
     direction: ltr !important;
     button[data-action="stop"] {
