@@ -98,13 +98,14 @@ class DynamicContentBanner extends PureComponent {
     // const { height, width } = items[0];
     const { url, link, height = "", width = "" } = item;
     let ht, wd;
-    if (screen.width < 900) {
-      wd = (screen.width - 20).toString() + "px";
-      ht = (height / width) * screen.width;
-    } else {
-      wd = width.toString() + "px";
-      ht = height.toString() + "px";
-    }
+    // if (screen.width < 900) {
+    //   wd = (screen.width - 20).toString() + "px";
+    //   ht = (height / width) * screen.width;
+    // } else {
+    //   wd = width.toString() + "px";
+    //   ht = height.toString() + "px";
+    // }
+
     // TODO: calculate aspect ratio to ensure images not jumping.
 
     if (!link) {
