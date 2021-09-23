@@ -62,7 +62,8 @@ export class HomePageContainer extends PureComponent {
         currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),
-        referrer: "desktop",
+        referrer: window.location.href,
+        url: window.location.href,
       },
     });
     const { gender, toggleBreadcrumbs } = this.props;

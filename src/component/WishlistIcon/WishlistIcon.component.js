@@ -68,7 +68,8 @@ class WishlistIcon extends PureComponent {
             sourceCatgID: gender,
             sourceProdID: skuFromProps,
             uuid: getUUID(),
-            referrer: "desktop",
+            referrer: window.location.href,
+            url: window.location.href,
             userID: userID,
           },
         });
@@ -93,7 +94,8 @@ class WishlistIcon extends PureComponent {
           sourceCatgID: gender,
           sourceProdID: skuFromProps,
           uuid: getUUID(),
-          referrer: "desktop",
+          referrer: window.location.href,
+          url: window.location.href,
           userID: userID,
         },
       });

@@ -455,7 +455,8 @@ export class PDPAddToCartContainer extends PureComponent {
           currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
           clicked: Date.now(),
           uuid: getUUID(),
-          referrer: "desktop",
+          referrer: window.location.href,
+          url: window.location.href,
           sourceProdID: configSKU,
           sourceCatgID: product_type_6s, // TODO: replace with category id
           prodPrice: basePrice,
@@ -515,7 +516,8 @@ export class PDPAddToCartContainer extends PureComponent {
           currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
           clicked: Date.now(),
           uuid: getUUID(),
-          referrer: "desktop",
+          referrer: window.location.href,
+          url: window.location.href,
           sourceProdID: configSKU,
           sourceCatgID: product_type_6s, // TODO: replace with category id
           prodPrice: basePrice,

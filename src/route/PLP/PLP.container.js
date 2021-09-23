@@ -157,7 +157,8 @@ export class PLPContainer extends PureComponent {
         currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),
-        referrer: "desktop",
+        referrer: window.location.href,
+        url: window.location.href,
       },
     });
     const { menuCategories = [] } = this.props;

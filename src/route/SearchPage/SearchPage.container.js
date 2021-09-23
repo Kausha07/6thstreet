@@ -23,7 +23,8 @@ export class SearchPageContainer extends PLPContainer {
         currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),
-        referrer: "desktop",
+        referrer: window.location.href,
+        url: window.location.href,
       },
     });
   }

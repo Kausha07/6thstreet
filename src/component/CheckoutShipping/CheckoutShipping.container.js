@@ -307,7 +307,8 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
           prodQty: item?.full_item_info?.qty,
           prodPrice: item?.full_item_info?.price,
           uuid: getUUID(),
-          referrer: "desktop",
+          referrer: window.location.href,
+          url: window.location.href,
           userID: userID,
         },
       });

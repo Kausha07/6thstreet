@@ -31,6 +31,7 @@ class DynamicContentVueProductSlider extends PureComponent {
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     const customer = BrowserDatabase.getItem("customer");
     const userID = customer && customer.id ? customer.id : null;
+    console.log('window.location.href',window.location.href)
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_CAROUSEL_SHOW,
       params: {
@@ -39,8 +40,9 @@ class DynamicContentVueProductSlider extends PureComponent {
         currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),
-        referrer: "desktop",
-        widgetID: widgetID,
+        referrer: window.location.href,
+        url: window.location.href,
+        widgetID: VueIntegrationQueries.getWidgetTypeMapped(widgetID,pageType),
         userID: userID,
       },
     });
@@ -109,7 +111,8 @@ class DynamicContentVueProductSlider extends PureComponent {
           currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
           clicked: Date.now(),
           uuid: getUUID(),
-          referrer: "desktop",
+          referrer: window.location.href,
+          url: window.location.href,
           sourceProdID: sourceProdID,
           sourceCatgID: sourceCatgID,
           widgetID: widgetID,
