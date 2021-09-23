@@ -550,13 +550,14 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     } = this.props;
     applePaySession.onvalidatemerchant = (event) => {
       const promise = this._performValidation(event.validationURL);
-
+      console.log("validation URL", event.validationURL)
       promise
         .then((response) => {
           const {
             verifyCheckoutComApplePay: merchantSession,
             verifyCheckoutComApplePay: { statusMessage = "" },
           } = response;
+          console.log("response validation", response)
           if (statusMessage) {
             showError(__(statusMessage));
             Logger.log("Cannot validate merchant:", merchantSession);
