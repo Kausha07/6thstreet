@@ -517,6 +517,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       total: { label: default_title, amount: total },
       lineItems: LineItems
     };
+    console.log("payment request payload", paymentRequest)
     savePaymentInformationApplePay({billing_address:shippingAddress, paymentMethod: {code: "checkout_apple_pay"}})
     const applePaySession = new window.ApplePaySession(1, paymentRequest);
 
@@ -577,6 +578,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
         label: default_title,
         amount: grand_total,
       };
+      console.log("shipping contact selected", status, newTotal)
 
       applePaySession.completeShippingContactSelection(
         status,
@@ -588,11 +590,13 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
 
     applePaySession.onshippingmethodselected = () => {
       const status = window.ApplePaySession.STATUS_SUCCESS;
+      
       const newTotal = {
         type: "final",
         label: default_title,
         amount: grand_total,
       };
+      console.log("shipping method selected", status, newTotal)
       applePaySession.completeShippingMethodSelection(
         status,
         newTotal,
@@ -606,6 +610,8 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
         label: default_title,
         amount: grand_total,
       };
+      console.log("payment method selected", newTotal)
+
       applePaySession.completePaymentMethodSelection(
         newTotal,
         this._getLineItems()
@@ -613,10 +619,13 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     };
 
     applePaySession.onpaymentauthorized = (event) => {
+      console.log("payment authorization", event?.payment?.token?.paymentData)
+
       tokenize({
         type: "applepay",
         token_data: event.payment.token.paymentData,
       }).then((response) => {
+        console.log("payment auth response")
         if (response && response.token) {
           const data = {
             source: {
