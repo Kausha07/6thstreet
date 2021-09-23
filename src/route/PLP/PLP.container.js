@@ -84,7 +84,6 @@ export class PLPContainer extends PureComponent {
     brandDeascription: PropTypes.string,
     brandImg: PropTypes.string,
     brandName: PropTypes.string,
-    // plpWidgetData: PropTypes.any,
   };
 
   static requestProductList = PLPContainer.request.bind({}, false);
@@ -93,7 +92,7 @@ export class PLPContainer extends PureComponent {
 
   static getDerivedStateFromProps(props, state) {
     const { pages } = props;
-    const requestOptions = PLPContainer.getRequestOptions(props);
+    const requestOptions = PLPContainer.getRequestOptions();
     const { page, ...restOptions } = requestOptions;
 
     const {
@@ -112,28 +111,9 @@ export class PLPContainer extends PureComponent {
     };
   }
 
-  static getRequestOptions(props) {
-    const {
-      history: {
-        location: { state: query },
-      },
-    } = props;
-    let parseURL;
-    if (query) {
-      if (query && !query.product) {
-        if (query && query.includes(".html")) {
-          const urlLink = `${query.split(".html")[1]}`;
-          parseURL = urlLink.replace(/ /g, "%20");
-        } else if (query && !query.includes(".html")) {
-          const urlLink = `${query}`;
-          parseURL = urlLink.replace(/ /g, "%20");
-        }
-      }
-    } else {
-      parseURL = location.href;
-    }
+  static getRequestOptions() {
+    const { params: parsedParams } = WebUrlParser.parsePLP(location.href);
 
-    const { params: parsedParams } = WebUrlParser.parsePLP(parseURL);
     return {
       // TODO: inject gender ?
       ...parsedParams,
@@ -142,7 +122,7 @@ export class PLPContainer extends PureComponent {
 
   static async request(isPage, props) {
     const { requestProductList, requestProductListPage } = props;
-    const options = PLPContainer.getRequestOptions(props);
+    const options = PLPContainer.getRequestOptions();
     const requestFunction = isPage
       ? requestProductListPage
       : requestProductList;
@@ -150,7 +130,7 @@ export class PLPContainer extends PureComponent {
   }
 
   state = {
-    prevRequestOptions: PLPContainer.getRequestOptions(this.props),
+    prevRequestOptions: PLPContainer.getRequestOptions(),
   };
 
   containerFunctions = {
@@ -310,8 +290,8 @@ export class PLPContainer extends PureComponent {
 
   getIsLoading() {
     const { requestedOptions } = this.props;
-
-    const options = PLPContainer.getRequestOptions(this.props);
+    
+    const options = PLPContainer.getRequestOptions();
     const {
       // eslint-disable-next-line no-unused-vars
       page: requestedPage,
