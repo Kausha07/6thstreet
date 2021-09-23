@@ -123,7 +123,8 @@ class DynamicContentGrid extends PureComponent {
           }}
         >
           {/* <Image src={url} height={ht} /> */}
-          <Image src={url} className="GridImage" style={{ maxHeight: ht }} />
+          {/* style={{ maxHeight: ht }} */}
+          <Image src={url} className="GridImage" />
           {item.footer && (
             <div block="Footer">
               {item.footer.title && (
