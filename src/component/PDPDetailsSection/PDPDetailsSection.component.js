@@ -176,66 +176,326 @@ class PDPDetailsSection extends PureComponent {
     return str.replace("_", " ");
   }
 
-  renderListItem(arr) {
+  renderListItem(item) {
     return (
-      <li block="PDPDetailsSection" elem="HighlightsList" key={arr[0]}>
+      <li block="PDPDetailsSection" elem="HighlightsList" key={item.key}>
         <span block="PDPDetailsSection" elem="ListItem" mods={{ mod: "title" }}>
-          {isArabic() ? this._translateValue(arr[0]) : this.listTitle(arr[0])}
+          {isArabic() ? this._translateValue(item.key) : this.listTitle(item.key)}
         </span>
         <span block="PDPDetailsSection" elem="ListItem" mods={{ mod: "value" }}>
-          {arr[1]}
+          {item.value}
         </span>
       </li>
     );
   }
 
-  renderListItems(obj = {}) {
-    return Object.entries(obj)
-      .filter((item) => item[1] != null)
-      .map((item) => this.renderListItem(item));
+  renderListItems(data) {
+    return (
+      data.map((item) => this.renderListItem(
+        {
+          key: item.key,
+          value: item.value
+        }
+      ))
+    );
   }
+
+  getCategoryByLevel (categories = {}, level = 0) {
+    try {
+      return categories.level2[0].split(' /// ')[level];
+    }
+    catch (err) {
+      console.error(err);
+      return undefined;
+    }
+  }
+
+  getHighlights(
+    highlights = [],
+    categories = {},
+    model_height = '',
+    product_height = '',
+    product_length = '',
+    product_width = '',
+    bag_dimension = '',
+    model_wearing_size = '',
+    product
+  ) {
+      if (!Object.keys(categories).length) {
+        return highlights || [];
+      }
+
+      const category = {
+        key: 'category',
+        value: this.getCategoryByLevel(categories, 1)
+      };
+
+      const subcategory = {
+        key: 'subcategory',
+        value: this.getCategoryByLevel(categories, 2)
+      };
+
+      const modelHeight = {
+        key: 'model_height',
+        value: model_height
+      };
+
+      const productHeight = {
+        key: 'product_height',
+        value: product_height
+      };
+
+      const productLength = {
+        key: 'product_length',
+        value: product_length
+      };
+
+      const productWidth = {
+        key: 'product_width',
+        value: product_width
+      };
+
+      const bagDimention = {
+        key: 'bag_dimension',
+        value: bag_dimension
+      };
+
+      const modelWearingSize = {
+        key: 'model_wearing_size',
+        value: model_wearing_size
+      };
+
+      const material = {
+        key: 'material',
+        value: product?.material
+      };
+
+      const occasion = {
+        key: 'occasion',
+        value: product?.occasion
+      };
+
+      const heelHeight = {
+        key: 'heel_height',
+        value: product?.heel_height
+      };
+
+      const ToeShape = {
+        key: 'toe_shape',
+        value: product?.toe_shape
+      };
+
+      const HeelShape = {
+        key: 'heel_shape',
+        value: product?.heel_shape
+      };
+
+      const UpperMaterial = {
+        key: 'upper_material',
+        value: product?.upper_material
+      };
+
+      const sole = {
+        key: 'sole',
+        value: product?.sole
+      };
+
+      const fit = {
+        key: 'fit',
+        value: product?.fit
+      };
+
+      const dressLegth = {
+        key: 'dress_length',
+        value: product?.dress_length
+      };
+
+      const length = {
+        key: 'length',
+        value: product?.length
+      };
+
+      const sleeveLength = {
+        key: 'sleeve_length',
+        value: product?.sleeve_length
+      };
+
+      const skirtLength = {
+        key: 'skirt_length',
+        value: product?.skirt_length
+      };
+
+      const collerType = {
+        key: 'coller_type',
+        value: product?.coller_type
+      };
+
+      const legLength = {
+        key: 'leg_length',
+        value: product?.leg_length
+      };
+
+      const neckTine = {
+        key: 'neck_line',
+        value: product?.neck_line
+      };
+
+      const type = {
+        key: 'type',
+        value: product?.type
+      };
+
+      const bagSize = {
+        key: 'bag_size',
+        value: product?.bag_size
+      };
+
+      const bagStyle = {
+        key: 'bag_style',
+        value: product?.bag_style
+      };
+
+      const fastener = {
+        key: 'fastener',
+        value: product?.fastener
+      };
+
+      const neckline = {
+        key: 'neckline',
+        value: product?.neckline
+      };
+
+      const trend = {
+        key: 'trend',
+        value: product?.trend
+      };
+
+      const fashionSegment = {
+        key: 'fashion_segment',
+        value: product?.fashion_segment
+      };
+
+      const unisex = {
+        key: 'unisex',
+        value: product?.unisex
+      };
+
+      const sustainableFashion = {
+        key: 'sustainable_fashion',
+        value: product?.sustainable_fashion
+      };
+
+      const returnable = {
+        key: 'returnable',
+        value: product?.returnable
+      };
+
+      const discountable = {
+        key: 'discountable',
+        value: product?.discountable
+      };
+      const skinType = {
+        key: 'skin_type',
+        value: product?.skin_type
+      };
+      const formulation = {
+        key: 'formulation',
+        value: product?.formulation
+      };
+      const concern = {
+        key: 'concern',
+        value: product?.concern
+      };
+      const preference = {
+        key: 'preference',
+        value: product?.preference
+      };
+      const finish = {
+        key: 'finish',
+        value: product?.finish
+      };
+      const coverage = {
+        key: 'coverage',
+        value: product?.coverage
+      };
+
+      return [
+        ...(highlights || []),
+        ...(category.value ? [category] : []),
+        ...(subcategory.value ? [subcategory] : []),
+        ...(modelHeight.value ? [modelHeight] : []),
+        ...(productHeight.value ? [productHeight] : []),
+        ...(productLength.value ? [productLength] : []),
+        ...(productWidth.value ? [productWidth] : []),
+        ...(bagDimention.value ? [bagDimention] : []),
+        ...(modelWearingSize.value ? [modelWearingSize] : []),
+        ...(material.value ? [material] : []),
+        ...(occasion.value ? [occasion] : []),
+        ...(heelHeight.value ? [heelHeight] : []),
+        ...(ToeShape.value ? [ToeShape] : []),
+        ...(HeelShape.value ? [HeelShape] : []),
+        ...(UpperMaterial.value ? [UpperMaterial] : []),
+        ...(sole.value ? [sole] : []),
+        ...(fit.value ? [fit] : []),
+        ...(dressLegth.value ? [dressLegth] : []),
+        ...(length.value ? [length] : []),
+        ...(skirtLength.value ? [skirtLength] : []),
+        ...(sleeveLength.value ? [sleeveLength] : []),
+        ...(collerType.value ? [collerType] : []),
+        ...(legLength.value ? [legLength] : []),
+        ...(neckTine.value ? [neckTine] : []),
+        ...(type.value ? [type] : []),
+        ...(bagSize.value ? [bagSize] : []),
+        ...(bagStyle.value ? [bagStyle] : []),
+        ...(fastener.value ? [fastener] : []),
+        ...(neckline.value ? [neckline] : []),
+        ...(trend.value ? [trend] : []),
+        ...(fashionSegment.value ? [fashionSegment] : []),
+        ...(unisex.value ? [unisex] : []),
+        ...(sustainableFashion.value ? [sustainableFashion] : []),
+        ...(returnable.value ? [returnable] : []),
+        ...(discountable.value ? [discountable] : []),
+        ...(skinType.value ? [skinType] : []),
+        ...(formulation.value ? [formulation] : []),
+        ...(concern.value ? [concern] : []),
+        ...(preference.value ? [preference] : []),
+        ...(finish.value ? [finish] : []),
+        ...(coverage.value ? [coverage] : [])
+      ];
+    }
 
   renderHighlights() {
     const {
       product: {
-        material,
-        dress_length,
-        heel_height,
-        heel_shape,
-        leg_length,
-        neck_line,
-        skirt_length,
-        toe_shape,
-        sleeve_length,
+        sku,
+        highlighted_attributes,
+        categories,
+        model_height,
         product_height,
         product_length,
         product_width,
-        model_height,
-        model_wearing_size,
-        sku,
+        bag_dimension,
+        model_wearing_size
       },
+      product
     } = this.props;
-
-    const productInfo = {
-      material,
-      dress_length,
-      heel_height,
-      heel_shape,
-      leg_length,
-      neck_line,
-      skirt_length,
-      toe_shape,
-      sleeve_length,
+    
+    const highlights = this.getHighlights(
+      highlighted_attributes?.filter((attribute) => attribute?.key !== "sku"),
+      categories,
+      model_height,
       product_height,
       product_length,
       product_width,
-    };
+      bag_dimension,
+      model_wearing_size,
+      product
+    )
 
     return (
       <div block="PDPDetailsSection" elem="Highlights">
         <h4>{__("Highlights")}</h4>
-        <ul>{this.renderListItems(productInfo)}</ul>
-        {this.renderModelDetails(model_height, model_wearing_size)}
+        <ul>{this.renderListItems(highlights)}</ul>
         {this.renderSKU(sku)}
         {/* {this.renderMoreDetailsList()} */}
       </div>
@@ -247,30 +507,6 @@ class PDPDetailsSection extends PureComponent {
       <p block="PDPDetailsSection-Highlights" elem="SKU">
         <span>SKU: </span>
         <span>{sku}</span>
-      </p>
-    );
-  }
-  renderModelDetails(height, size) {
-    if (!size) {
-      return null;
-    }
-
-    if (!height) {
-      return (
-        <p block="PDPDetailsSection-Highlights" elem="ModelDetails">
-          <span>{__(`Model is wearing `)}</span>
-          <span>{`size `}</span>
-          <span>{size}</span>
-        </p>
-      );
-    }
-    return (
-      <p block="PDPDetailsSection-Highlights" elem="ModelDetails">
-        <span>{__(`Model's height is `)}</span>
-        <span>{height}</span>
-        <span>{__(" & is wearing ")}</span>
-        <span>{`size `}</span>
-        <span>{size}</span>
       </p>
     );
   }
