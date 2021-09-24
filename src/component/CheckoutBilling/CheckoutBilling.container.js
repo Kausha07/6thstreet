@@ -565,8 +565,12 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
 
             return;
           }
-
-          applePaySession.completeMerchantValidation(merchantSession);
+          try {
+            applePaySession.completeMerchantValidation(merchantSession);
+            Logger.log("Completed merchant validation", merchantSession);
+          } catch (error) {
+            console.log("error on validation complete", error)
+          }
         })
         .catch((error) => Logger.log(error));
     };

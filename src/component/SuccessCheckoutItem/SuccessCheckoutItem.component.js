@@ -282,7 +282,7 @@ export class SuccessCheckoutItem extends PureComponent {
           ratio="custom"
           alt={`Product ${name} thumbnail.`}
         />
-        <Image style={{ display: "none" }} alt={name} src={thumbnail} />
+        <img style={{ display: "none" }} alt={name} src={thumbnail} />
 
       </>
     );
