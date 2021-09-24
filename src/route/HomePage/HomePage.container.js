@@ -145,33 +145,33 @@ export class HomePageContainer extends PureComponent {
     }
 
     // TODO commented thiss try catch block temp uncomment after development
-    try {
-      const dynamicContent = await getStaticFile(
-        HOME_STATIC_FILE_KEY,
-        { $FILE_NAME: `${devicePrefix}${gender}.json` }
-        // { $FILE_NAME: `http://mobilecdn.6thstreet.com/resources/20190121/en-ae/women.json` }
-      );
-
-      this.setState({
-        dynamicContent: Array.isArray(dynamicContent) ? dynamicContent : [],
-        isLoading: false,
-      });
-    } catch (e) {
-      // TODO: handle error
-      Logger.log(e);
-    }
-
-    // // TODO remove this try catch block after development
     // try {
-    //   const response = await (await this.fetchDataFromLocal()).json();
-    //   const dynamicContent = response.data ? response.data : [];
+    //   const dynamicContent = await getStaticFile(
+    //     HOME_STATIC_FILE_KEY,
+    //     { $FILE_NAME: `${devicePrefix}${gender}.json` }
+    //     // { $FILE_NAME: `http://mobilecdn.6thstreet.com/resources/20190121/en-ae/women.json` }
+    //   );
+
     //   this.setState({
     //     dynamicContent: Array.isArray(dynamicContent) ? dynamicContent : [],
     //     isLoading: false,
     //   });
-    // } catch (error) {
+    // } catch (e) {
+    //   // TODO: handle error
     //   Logger.log(e);
     // }
+
+    // // TODO remove this try catch block after development
+    try {
+      const response = await (await this.fetchDataFromLocal()).json();
+      const dynamicContent = response.data ? response.data : [];
+      this.setState({
+        dynamicContent: Array.isArray(dynamicContent) ? dynamicContent : [],
+        isLoading: false,
+      });
+    } catch (error) {
+      Logger.log(e);
+    }
   }
 
   containerProps = () => {
