@@ -55,24 +55,11 @@ export class CheckoutPayment extends PureComponent {
       const isTabby = TABBY_PAYMENT_CODES.includes(m_code);
       return (
         <div block="CheckoutPayment" elem="Method" mods={mod}>
-          {
-            isTabby ? (
-              <Image src={ isArabic ? tabbyAr : img } alt={ name }
-              mix={{
-                block:"CheckoutPayment",
-                elem:"Method",
-              }}
-              />
-            ) : (
-              <Image src={ img } alt={ name }
-              mix={{
-                block:"CheckoutPayment" ,
-                elem:"Method",
-              }}
-              />
-            )
-
-          }
+          {isTabby ? (
+            <img src={isArabic ? tabbyAr : img} alt={name} />
+          ) : (
+            <img src={img} alt={name} />
+          )}
           {paragraph ? <p>{paragraph}</p> : null}
         </div>
       );
