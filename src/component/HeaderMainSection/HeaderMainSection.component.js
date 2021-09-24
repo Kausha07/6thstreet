@@ -341,11 +341,6 @@ renderMySignInPopup() {
           onClick={this.handleSearchClick.bind(this)}
           elem="Button"
         ></button>
-        {/* <img
-          src={searchIcon}
-          onClick={this.handleSearchClick.bind(this)}
-          alt="Search Icon"
-        /> */}
       </div>
     );
   }

@@ -27,6 +27,7 @@ import {
   CHECKOUT_QPAY,
 } from "./CheckoutPayments.config";
 import info from "./icons/info.png";
+import Image from "Component/Image";
 
 import "./CheckoutPayments.extended.style";
 
@@ -79,6 +80,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
       isClickAndCollect
     } = this.props;
     const { m_code } = method;
+    console.log( isClickAndCollect )
     if(m_code==="msp_cashondelivery" && isClickAndCollect){
       return null;
     }

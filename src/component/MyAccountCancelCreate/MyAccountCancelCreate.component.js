@@ -1,4 +1,6 @@
 import Form from 'Component/Form';
+import Field from 'Component/Field';
+
 import MyAccountCancelCreateItem from 'Component/MyAccountCancelCreateItem';
 import { MyAccountReturnCreate } from 'Component/MyAccountReturnCreate/MyAccountReturnCreate.component';
 
@@ -49,13 +51,39 @@ class MyAccountCancelCreate extends MyAccountReturnCreate {
         );
     }
 
+    renderResolutions() {
+        const {
+            onResolutionChangeValue,
+            resolutions,
+            resolutionId
+        } = this.props;
+        const resolutionValue =  resolutions.map(({ id, label }) => ({
+            id,
+            label,
+            value: id +1 
+        }));
+        return (
+            <Field
+              type="select"
+              id={ `cancel_resolution` }
+              name={ `cancel_resolution` }
+              placeholder={ __('Select a resolution') }
+              mix={ { block: 'MyAccountReturnCreateItem', elem: 'Resolutions' } }
+              onChange={ onResolutionChangeValue }
+              selectOptions={ resolutionValue }
+            />
+        );
+    }
+
     renderActions() {
-        const { handleDiscardClick, selectedNumber } = this.props;
+        const { handleDiscardClick, selectedNumber , resolutionId} = this.props;
         const itemString = selectedNumber === 1 ? __('item') : __('items');
         const submitText = selectedNumber <= 0
             ? __('Cancel') : `${__('Cancel')} ${selectedNumber} ${itemString}`;
 
         return (
+        <div>
+             { this.renderResolutions() }
             <div block="MyAccountReturnCreate" elem="Actions">
                 <button
                   block="MyAccountReturnCreate"
@@ -71,11 +99,12 @@ class MyAccountCancelCreate extends MyAccountReturnCreate {
                   elem="ButtonSubmit"
                   type="submit"
                   mix={ { block: 'Button' } }
-                  disabled={ selectedNumber <= 0 }
-                >
+                  disabled={ selectedNumber <= 0  || resolutionId == null}
+                  >
                     { submitText }
                 </button>
             </div>
+        </div>
         );
     }
 }

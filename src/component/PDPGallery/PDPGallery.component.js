@@ -90,7 +90,7 @@ class PDPGallery extends PureComponent {
   }
   renderWishlistIcon() {
     const { isArabic } = this.state;
-    const { sku, product,renderMySignInPopup } = this.props;
+    const { sku, product, renderMySignInPopup } = this.props;
     return (
       <WishlistIcon
         sku={sku}
@@ -110,7 +110,13 @@ class PDPGallery extends PureComponent {
     />
   );
 
-  renderGalleryImage = (src, i) => <Image src={src} key={i} />;
+  renderGalleryImage = (src, i) => (
+    <Image
+      src={src}
+      key={i}
+      mix={{ block: "PDPGallery", elem: "sliderItem" }}
+    />
+  );
 
   renderGalleryOverlay = () => {
     const galleryOverlay = (
@@ -330,7 +336,7 @@ class PDPGallery extends PureComponent {
 
   render() {
     const { galleryOverlay, isArabic } = this.state;
-    const {renderMySignInPopup} = this.props
+    const { renderMySignInPopup } = this.props;
     return (
       <div block="PDPGallery">
         {galleryOverlay}

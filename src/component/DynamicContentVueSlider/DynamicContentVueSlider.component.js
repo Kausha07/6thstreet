@@ -41,7 +41,7 @@ class DynamicContentVueSlider extends PureComponent {
     const { gender } = this.props;
     const {
       USER_DATA: { deviceUuid },
-    } = BrowserDatabase.getItem("MOE_DATA");
+    } = BrowserDatabase.getItem("MOE_DATA") || { USER_DATA: {} };
     const customer = BrowserDatabase.getItem("customer");
     const userID = customer && customer.id ? customer.id : null;
     const query = {
@@ -67,7 +67,7 @@ class DynamicContentVueSlider extends PureComponent {
 
   render() {
     const { isArabic } = this.state;
-    const {renderMySignInPopup} = this.props
+    const { renderMySignInPopup } = this.props;
     return (
       <div block="VeuSliderWrapper" mods={{ isArabic }}>
         {this.state.data?.length > 0 && (

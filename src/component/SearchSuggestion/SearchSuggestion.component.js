@@ -24,6 +24,7 @@ import RecommendedForYouVueSliderContainer from "../RecommendedForYouVueSlider";
 // import WishlistSliderContainer from "../WishlistSlider";
 import BRAND_MAPPING from "./SearchSiggestion.config";
 import "./SearchSuggestion.style";
+import Image from "Component/Image";
 
 var ESCAPE_KEY = 27;
 
@@ -153,20 +154,28 @@ class SearchSuggestion extends PureComponent {
         genderInURL = "أولاد~بنات";
         // to add Boy~Girl in arabic
       } else {
-        requestedGender = getGenderInArabic(gender);
-        genderInURL = requestedGender?.replace(
-          requestedGender?.charAt(0),
-          requestedGender?.charAt(0).toUpperCase()
-        );
+        if (gender !== "home") {
+          requestedGender = getGenderInArabic(gender);
+          genderInURL = requestedGender?.replace(
+            requestedGender?.charAt(0),
+            requestedGender?.charAt(0).toUpperCase()
+          );
+        } else {
+          genderInURL = "";
+        }
       }
     } else {
       if (gender === "kids") {
         genderInURL = "Boy~Girl";
       } else {
-        genderInURL = requestedGender?.replace(
-          requestedGender?.charAt(0),
-          requestedGender?.charAt(0).toUpperCase()
-        );
+        if (gender !== "home") {
+          genderInURL = requestedGender?.replace(
+            requestedGender?.charAt(0),
+            requestedGender?.charAt(0).toUpperCase()
+          );
+        } else {
+          genderInURL = "";
+        }
       }
     }
     if (brandValue) {
@@ -480,8 +489,12 @@ class SearchSuggestion extends PureComponent {
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
 
-    let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
-
+    let requestedGender;
+    if (gender !== "home") {
+      requestedGender = isArabic ? getGenderInArabic(gender) : gender;
+    } else {
+      requestedGender = "";
+    }
     let parseLink = url?.includes("catalogsearch/result")
       ? url?.split("&")[0] +
         `&gender=${requestedGender.replace(
@@ -497,12 +510,13 @@ class SearchSuggestion extends PureComponent {
           onClick={() => this.handleProductClick(product)}
         >
           <div block="SearchProduct">
-            <img
+            <Image
               src={thumbnail_url}
               alt="Product Image"
               block="SearchProduct"
               elem="Image"
             />
+
             <div block="SearchProduct" elem="Info">
               <h6 block="SearchProduct" elem="Brand">
                 {brand_name}
@@ -646,13 +660,12 @@ class SearchSuggestion extends PureComponent {
           onClick={() => this.handleTrendingBrandsClick(urlName)}
         >
           <div block="SearchSuggestion" elem="TrandingImg">
-            <img src={image_url} alt="Trending" />
+            <Image src={image_url} alt="Trending" />
+
             {/* {label} */}
           </div>
         </Link>
-        <div block="CircleSliderLabel">
-          {label}
-        </div>
+        <div block="CircleSliderLabel">{label}</div>
       </li>
     );
   };
@@ -703,7 +716,12 @@ class SearchSuggestion extends PureComponent {
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
 
-    let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
+    let requestedGender;
+    if (gender !== "home") {
+      requestedGender = isArabic ? getGenderInArabic(gender) : gender;
+    } else {
+      requestedGender = "";
+    }
     return (
       <li key={i}>
         <Link
@@ -746,7 +764,12 @@ class SearchSuggestion extends PureComponent {
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
 
-    let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
+    let requestedGender;
+    if (gender !== "home") {
+      requestedGender = isArabic ? getGenderInArabic(gender) : gender;
+    } else {
+      requestedGender = "";
+    }
     return (
       <li key={i}>
         <Link

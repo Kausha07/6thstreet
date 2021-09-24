@@ -79,7 +79,7 @@
         @include mobile() {
             right: 0;
         }
-        .BannerImage {
+        img {
             object-fit: cover;
             @include tablet {
                 min-height: 334px;

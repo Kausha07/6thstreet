@@ -13,6 +13,7 @@ import {
   HOME_PAGE_BANNER_IMPRESSIONS,
   HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
 } from "Component/GoogleTagManager/events/BannerImpression.event";
+import Image from "Component/Image";
 
 const settings = {
   lazyload: true,

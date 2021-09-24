@@ -11,6 +11,7 @@ import { CheckoutOrderSummary as SourceCheckoutOrderSummary } from "SourceCompon
 import { getCurrency, getDiscountFromTotals, isArabic } from "Util/App";
 import { isSignedIn } from "Util/Auth";
 import isMobile from "Util/Mobile";
+import Image from "Component/Image";
 
 import Delivery from "./icons/delivery-truck.png";
 
@@ -106,7 +107,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
           elem="PromoText"
           mods={{ isArabic }}
         >
-          <img src={Delivery} alt="Delivery icon" />
+          <Image src={Delivery} alt="Delivery icon" />
           {__("Add ")}
           <span block="CheckoutOrderSummary" elem="Currency">
             {`${currency_code} ${avail_free_shipping_amount.toFixed(3)} `}

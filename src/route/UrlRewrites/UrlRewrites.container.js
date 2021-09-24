@@ -14,7 +14,6 @@ import {
   TYPE_NOTFOUND,
   TYPE_PRODUCT,
 } from "./UrlRewrites.config";
-import WebUrlParser from "Util/API/helper/WebUrlParser";
 
 export const mapStateToProps = (state) => ({
   locale: state.AppState.locale,
@@ -59,60 +58,49 @@ export class UrlRewritesContainer extends PureComponent {
     const { locale: prevLocale } = prevProps;
 
     const { prevPathname, query } = this.state;
-    const { query: prevQuery } = prevState;
+    const { prevPathname: prevStatePathname, query: prevQuery } = prevState;
 
     if (query && query !== prevQuery) {
+
       let partialQuery = location.search;
       if (location.search) {
         if (partialQuery.indexOf("idx") !== -1) {
           return;
         } else {
-          // If we are sharing URL with filters do if condition
-          if (location.href.includes("?")) {
-            let queryURL = new URL(
-              location.origin +
-                location.pathname +
-                "?" +
-                query +
-                "&%26" +
-                location.href.split("?")[1].split("&").join("&%26")
-            );
-            history.push({
-              pathname: `${pathname + partialQuery}`,
-              state: `${queryURL.href}`,
-            });
-          } else {
-            partialQuery = partialQuery.substring(1);
-            history.push(`${pathname}?${query}&${partialQuery}`);
-          }
+          partialQuery = partialQuery.substring(1);
+          history.push(`${pathname}?${query}&${partialQuery}`);
         }
       } else {
-        history.push({
-          pathname: `${pathname}`,
-          state: `${pathname}?${query}`,
-        });
+        history.push(`${pathname}?${query}`);
       }
     }
+    // if (!location.search && query) {
+    //     history.push(`${pathname}?${query}`);
+    // }
 
-    if (pathname !== prevPathname || locale !== prevLocale) {
-      if (!this.state.isLoading) {
-        hideActiveOverlay();
-        document.body.style.overflow = "visible";
-        // Request URL rewrite if pathname or locale changed
-        this.requestUrlRewrite(true);
-      }
+    if (
+      pathname !== prevPathname ||
+      locale !== prevLocale ||
+      !prevStatePathname
+    ) {
+      hideActiveOverlay();
+      document.body.style.overflow = "visible";
+      // Request URL rewrite if pathname or locale changed
+      this.requestUrlRewrite(true);
     }
   }
 
   async requestUrlRewrite(isUpdate = false) {
     // TODO: rename this to pathname, urlParam is strange
-    const { pathname: urlParam = "" } = location;
+    const { pathname: urlParam = "",search } = location;
     const slicedUrl = urlParam.slice(urlParam.search("id/"));
     // eslint-disable-next-line no-magic-numbers
     const magentoProductId = Number(slicedUrl.slice("3").split("/")[0]);
     const possibleSku = this.getPossibleSku();
+
     if (isUpdate) {
       this.setState({
+        prevPathname: urlParam,
         isLoading: true,
       });
     }
@@ -131,10 +119,11 @@ export class UrlRewritesContainer extends PureComponent {
         brand_name: brandName,
       },
     } = urlResolver || { data: {} };
-    const finalType =
-      type === TYPE_NOTFOUND && decodeURI(location.search).match(/idx=/)
-        ? TYPE_CATEGORY
-        : type;
+    const finalType = !search.startsWith("?q")
+    ? TYPE_CATEGORY
+    : type === TYPE_NOTFOUND && decodeURI(location.search).match(/idx=/)
+    ? TYPE_CATEGORY
+    : type;
 
     window.pageType = finalType;
     this.setState({
@@ -172,7 +161,7 @@ export class UrlRewritesContainer extends PureComponent {
   }
 
   containerProps = () => {
-    const { isLoading, type, id, sku, brandDescription, brandImg, brandName,query } =
+    const { isLoading, type, id, sku, brandDescription, brandImg, brandName } =
       this.state;
 
     return {
@@ -183,7 +172,6 @@ export class UrlRewritesContainer extends PureComponent {
       brandDescription,
       brandImg,
       brandName,
-      query
     };
   };
 

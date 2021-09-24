@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
+import Field from 'Component/Field';
 
 import Form from 'Component/Form';
 import Loader from 'Component/Loader';
@@ -57,42 +58,70 @@ export class MyAccountReturnCreate extends PureComponent {
 
     renderOrderItems() {
         const { items = [], onFormSubmit } = this.props;
-
         return (
             <Form id="create-return" onSubmitSuccess={ onFormSubmit }>
                 <ul>
                     { items.map(this.renderOrderItem) }
                 </ul>
                 { this.renderActions() }
+
             </Form>
         );
     }
 
+    renderResolutions() {
+        const {
+            onResolutionChange,
+            resolutions,
+            onResolutionChangeValue
+        } = this.props;
+        const { pathname = '' } = location;
+        const isCancel = pathname.includes('/return-item/cancel');
+        const resolutionValue =  resolutions.map(({ id, label }) => ({
+            id,
+            label,
+            value: isCancel ? id +1 : id 
+        }));
+        return (
+            <Field
+              type="select"
+              id={ `return_resolution` }
+              name={ `return_resolution` }
+              placeholder={ __('Select a resolution') }
+              mix={ { block: 'MyAccountReturnCreateItem', elem: 'Resolutions' } }
+              onChange={ onResolutionChangeValue }
+              selectOptions={ resolutionValue }
+            />
+        );
+    }
+
     renderActions() {
-        const { handleDiscardClick, selectedNumber } = this.props;
+        const { handleDiscardClick, selectedNumber , resolutionId} = this.props;
         const submitText = selectedNumber !== 1
             ? __('Return %s items', selectedNumber) : __('Return %s item', selectedNumber);
-
         return (
-            <div block="MyAccountReturnCreate" elem="Actions">
-                <button
-                  block="MyAccountReturnCreate"
-                  elem="ButtonDiscard"
-                  type="button"
-                  mix={ { block: 'Button' } }
-                  onClick={ handleDiscardClick }
-                >
-                    { __('Discard') }
-                </button>
-                <button
-                  block="MyAccountReturnCreate"
-                  elem="ButtonSubmit"
-                  type="submit"
-                  mix={ { block: 'Button' } }
-                  disabled={ selectedNumber <= 0 }
-                >
-                    { submitText }
-                </button>
+            <div>
+                { this.renderResolutions() }
+                <div block="MyAccountReturnCreate" elem="Actions">
+                    <button
+                    block="MyAccountReturnCreate"
+                    elem="ButtonDiscard"
+                    type="button"
+                    mix={ { block: 'Button' } }
+                    onClick={ handleDiscardClick }
+                    >
+                        { __('Discard') }
+                    </button>
+                    <button
+                    block="MyAccountReturnCreate"
+                    elem="ButtonSubmit"
+                    type="submit"
+                    mix={ { block: 'Button' } }
+                    disabled={ selectedNumber <= 0  || resolutionId == null}
+                    >
+                        { submitText }
+                    </button>
+                </div>
             </div>
         );
     }
@@ -129,7 +158,6 @@ export class MyAccountReturnCreate extends PureComponent {
 
     renderContent() {
         const { isLoading, incrementId } = this.props;
-
         if (isLoading) {
             return null;
         }

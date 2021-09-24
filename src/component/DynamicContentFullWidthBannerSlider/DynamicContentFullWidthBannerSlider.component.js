@@ -12,6 +12,7 @@ import {
   HOME_PAGE_BANNER_IMPRESSIONS,
   HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
 } from "Component/GoogleTagManager/events/BannerImpression.event";
+import Image from "Component/Image";
 
 const settings = {
   lazyload: true,
@@ -100,7 +101,6 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
 
   renderSlide = (item, i) => {
     const { link, label, url: image_url, plp_config } = item;
-
     return (
       <Link
         to={formatCDNLink(link)}

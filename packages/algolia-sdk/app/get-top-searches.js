@@ -40,6 +40,6 @@ export default async function getTopSearches(options = {}) {
         .catch((error) => reject(error));
     });
   } catch (e) {
-    console.log(e.response);
+    console.error(e?.response);
   }
 }

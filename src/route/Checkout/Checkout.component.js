@@ -29,6 +29,8 @@ import {
 import "./Checkout.style";
 import GiftIconSmall from "./icons/gift-heart.png";
 import GiftIconLarge from "./icons/gift-heart@3x.png";
+import Image from "Component/Image";
+
 export class Checkout extends SourceCheckout {
   static propTypes = {
     isSignedIn: PropTypes.bool.isRequired,
@@ -531,7 +533,8 @@ export class Checkout extends SourceCheckout {
       shippingAddress,
       setLoading,
       isLoading,
-      isClickAndCollect
+      isClickAndCollect,
+      handleClickNCollectPayment
     } = this.props;
 
     const { continueAsGuest, isArabic } = this.state;
@@ -550,6 +553,7 @@ export class Checkout extends SourceCheckout {
           setLoading={setLoading}
           isClickAndCollect={isClickAndCollect}
           renderGuestForm={this.renderGuestForm.bind(this)}
+          handleClickNCollectPayment={handleClickNCollectPayment}
         />
       </div>
     );

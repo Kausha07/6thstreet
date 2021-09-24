@@ -16,6 +16,7 @@ import { SPECIAL_COLORS, translateArabicColor } from "Util/Common";
 import isMobile from "Util/Mobile";
 import tabby from "./icons/tabby.svg";
 import "./PDPSummary.style";
+import Image from "Component/Image";
 
 class PDPSummary extends PureComponent {
   static propTypes = {
@@ -283,7 +284,8 @@ class PDPSummary extends PureComponent {
                 elem="TabbyPrice"
               >{`${monthPrice} ${currency}`}</strong>
               {__(" a month with ")}
-              <img src={tabby} alt="tabby" />
+              <Image src={tabby} alt="tabby" />
+
               <span block="PDPSummary" elem="LearnMore">
                 {__("Learn more")}
               </span>
