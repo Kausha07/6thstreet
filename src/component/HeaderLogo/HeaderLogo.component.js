@@ -30,10 +30,6 @@ class HeaderLogo extends PureComponent {
         onClick={setGender}
       >
         <Image mix={{ block: "Image", mods: { isArabic } }} src={logo} />
-        {/* <img
-          mix={{ block: "Image", mods: { isArabic, new: true } }}
-          src={logo}
-        /> */}
       </Link>
     );
   }

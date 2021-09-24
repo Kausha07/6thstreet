@@ -25,6 +25,7 @@ import SuccessCircle from "./icons/success-circle.png";
 import TabbyAR from "./icons/tabby-ar.png";
 import Tabby from "./icons/tabby.png";
 import Whatsapp from "./icons/whatsapp.svg";
+import Image from "Component/Image";
 
 export class CheckoutSuccess extends PureComponent {
   static propTypes = {

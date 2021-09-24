@@ -9,6 +9,7 @@ import "./HeaderSearch.style";
 import Clear from "./icons/close-black.png";
 import searchPng from "./icons/search.svg";
 import isMobile from "Util/Mobile";
+import Image from "Component/Image";
 
 class HeaderSearch extends PureComponent {
   static propTypes = {
@@ -118,7 +119,7 @@ class HeaderSearch extends PureComponent {
             mods={{ isArabic }}
             type="submit"
           >
-            <img src={searchPng} alt="search" />
+            <Image src={searchPng} alt="search" />
           </button>
           <button
             block="HeaderSearch"
@@ -132,7 +133,7 @@ class HeaderSearch extends PureComponent {
             }}
             aria-label="Clear search"
           >
-            <img src={Clear} alt="Clear button" />
+            <Image src={Clear} alt="Clear button" style={{top:'2px'}} />
           </button>
         </Form>
         {showSearch ? (

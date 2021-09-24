@@ -95,7 +95,6 @@ class UrlRewrites extends PureComponent {
     if (isLoading) {
       return <Loader isLoading={isLoading} />;
     }
-
     const renderFunction = this.typeMap[type] || this.render404;
 
     return <div block="UrlRewrites">{renderFunction()}</div>;
