@@ -5,8 +5,7 @@ import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
 import { isArabic } from "Util/App";
 import { getUUID } from "Util/Auth";
-import BrowserDatabase from "Util/BrowserDatabase";
-import Event, { VUE_CAROUSEL_SHOW, VUE_CAROUSEL_SWIPE } from "Util/Event";
+import Event, { VUE_CAROUSEL_SWIPE } from "Util/Event";
 import DynamicContentVueProductSliderItem from "./DynamicContentVueProductSlider.Item";
 import "./DynamicContentVueProductSlider.style.scss";
 class DynamicContentVueProductSlider extends PureComponent {
@@ -27,25 +26,6 @@ class DynamicContentVueProductSlider extends PureComponent {
   };
 
   componentDidMount() {
-    const { widgetID, pageType = "home" } = this.props;
-    const locale = VueIntegrationQueries.getLocaleFromUrl();
-    const customer = BrowserDatabase.getItem("customer");
-    const userID = customer && customer.id ? customer.id : null;
-    console.log('window.location.href',window.location.href)
-    VueIntegrationQueries.vueAnalayticsLogger({
-      event_name: VUE_CAROUSEL_SHOW,
-      params: {
-        event: VUE_CAROUSEL_SHOW,
-        pageType: pageType,
-        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-        clicked: Date.now(),
-        uuid: getUUID(),
-        referrer: window.location.href,
-        url: window.location.href,
-        widgetID: VueIntegrationQueries.getWidgetTypeMapped(widgetID,pageType),
-        userID: userID,
-      },
-    });
     this.registerViewPortEvent();
   }
 
