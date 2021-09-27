@@ -124,12 +124,18 @@
       width: 100%;
       text-align: center;
 
-      img {
-        width: 20px;
-        height: auto;
-        margin-right: 5px;
-        float: left;
-        margin-top: 5px;
+      .Image {
+        overflow: inherit !important;
+
+        .LazyLoad-wrapper {
+          img {
+            width: 20px !important;
+            height: auto !important;
+            margin-right: 5px;
+            float: left;
+            margin-top: 5px;
+          }
+        }
       }
 
       @include mobile {
@@ -137,10 +143,14 @@
       }
 
       &_isArabic {
-        img {
-          margin-right: unset;
-          margin-left: 5px;
-          float: right;
+        .Image {
+          .LazyLoad-wrapper {
+            img {
+              margin-right: unset;
+              margin-left: 5px;
+              float: right;
+            }
+          }
         }
       }
     }

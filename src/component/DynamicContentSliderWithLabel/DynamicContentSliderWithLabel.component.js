@@ -17,6 +17,7 @@ import {
 } from "Component/GoogleTagManager/events/BannerImpression.event";
 // import VueIntegrationQueries from "Query/vueIntegration.query";
 // import { getUUID } from "Util/Auth";
+import Image from "Component/Image";
 
 class DynamicContentSliderWithLabel extends PureComponent {
   static propTypes = {
@@ -194,12 +195,13 @@ class DynamicContentSliderWithLabel extends PureComponent {
             this.onclick(item);
           }}
         >
-          <img
+          <Image
             src={url}
             alt={text}
             block="Image"
             style={{ maxWidth: wd, maxHeight: ht }}
           />
+         
         </Link>
         {text ? (
           <div block="SliderText" style={{ textAlign: text_align }}>

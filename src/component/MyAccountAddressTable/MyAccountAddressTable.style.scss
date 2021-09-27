@@ -22,11 +22,15 @@
     }
   }
 
-  &-Icon {
-    width: 17px;
+  &-Edit {
+    img {
+      width: 17px !important;
+    }
+  }
 
-    &_trash {
-      width: 15px;
+  &-Trash {
+    img {
+      width: 15px !important;
     }
   }
 

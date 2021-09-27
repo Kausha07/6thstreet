@@ -27,14 +27,16 @@ export class MyAccountReturnCreateContainer extends PureComponent {
         onItemClick: this.onItemClick.bind(this),
         onReasonChange: this.onReasonChange.bind(this),
         onResolutionChange: this.onResolutionChange.bind(this),
-        handleDiscardClick: this.onDiscardClick.bind(this)
+        handleDiscardClick: this.onDiscardClick.bind(this),
+        onResolutionChangeValue: this.onResolutionChangeValue.bind(this)
     };
 
     state = {
         selectedItems: {},
         isLoading: true,
         incrementId: '',
-        items: []
+        items: [],
+        resolutionId: null
     };
 
     componentDidMount() {
@@ -48,7 +50,8 @@ export class MyAccountReturnCreateContainer extends PureComponent {
             incrementId,
             items,
             selectedItems = {},
-            resolutions
+            resolutions,
+            resolutionId
         } = this.state;
 
         return {
@@ -57,10 +60,10 @@ export class MyAccountReturnCreateContainer extends PureComponent {
             items,
             selectedNumber: Object.keys(selectedItems).length,
             history,
-            resolutions
+            resolutions,
+            resolutionId
         };
     };
-
     onDiscardClick() {
         const { history } = this.props;
         const { incrementId } = this.state;
@@ -127,13 +130,15 @@ export class MyAccountReturnCreateContainer extends PureComponent {
             selectedItems: { ...selectedItems, [itemId]: { ...item, reasonId } }
         }));
     }
-
+    onResolutionChangeValue(value) {  
+        this.setState({resolutionId:value  })
+    }
     onFormSubmit() {
         const { history, showErrorMessage } = this.props;
-        const { selectedItems = {}, items } = this.state;
+        const { selectedItems = {}, items , resolutionId} = this.state;
         const payload = {
             order_id: this.getOrderId(),
-            items: Object.entries(selectedItems).map(([order_item_id, { reasonId, resolutionId }]) => {
+            items: Object.entries(selectedItems).map(([order_item_id, { reasonId, resolutionIdd }]) => {
                 const {
                     product_options: {
                         info_buyRequest: {

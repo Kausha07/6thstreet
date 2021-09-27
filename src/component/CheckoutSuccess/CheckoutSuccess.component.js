@@ -25,6 +25,7 @@ import SuccessCircle from "./icons/success-circle.png";
 import TabbyAR from "./icons/tabby-ar.png";
 import Tabby from "./icons/tabby.png";
 import Whatsapp from "./icons/whatsapp.svg";
+import Image from "Component/Image";
 
 export class CheckoutSuccess extends PureComponent {
   static propTypes = {
@@ -429,7 +430,7 @@ export class CheckoutSuccess extends PureComponent {
           getDiscountFromTotals(total_segments, "clubapparel"),
           __("Club Apparel Redemption")
         )}
-        {couponCode && this.renderPriceLine(discount, __("Discount"))}
+        {(couponCode || (discount && discount != 0)) && this.renderPriceLine(discount, __("Discount"))}
 
         {this.renderTotalPrice()}
       </div>

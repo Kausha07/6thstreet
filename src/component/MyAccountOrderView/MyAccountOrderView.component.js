@@ -504,8 +504,6 @@ class MyAccountOrderView extends PureComponent {
         },
       },
     } = this.props;
-
-    console.log("this.props", this.props)
    
     switch (method) {
       case CARD:
