@@ -17,7 +17,7 @@
     .Price {
       display: flex;
       flex-direction: none;
-      &-Wrapper {
+      &-Wrapper{
         margin-left: 7px;
         margin-right: 0px;
       }
@@ -38,9 +38,6 @@
     padding-top: 100%;
     background: #fff;
     position: relative;
-  }
-  .Image_imageStatus_2 {
-    display: flex;
   }
   .Image {
     position: absolute;
@@ -155,7 +152,7 @@
     text-align: start;
     margin-top: 5px;
     display: flex;
-    &-Wrapper {
+    &-Wrapper{
       margin-right: 7px;
     }
     @include mobile {
