@@ -48,7 +48,6 @@ export class UrlRewritesContainer extends PureComponent {
 
   constructor(props) {
     super(props);
-    // this.requestUrlRewrite();
   }
 
   componentDidMount() {

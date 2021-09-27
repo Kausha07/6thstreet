@@ -37,7 +37,7 @@
         border-left: solid 1.5px #efefef;
       }
       &-ViewGallery {
-        padding: 10px 0!important;
+        padding: 10px 0 !important;
       }
     }
     .Seperator {
@@ -106,10 +106,10 @@
   .Slider-Wrapper > * {
     min-height: 534px;
   }
-  
+
   .Slider-Wrapper {
     align-items: unset;
-    .PDPGallery-sliderItem{
+    .PDPGallery-sliderItem {
       .LazyLoad-wrapper {
         position: absolute;
       }
@@ -142,6 +142,8 @@
     }
   }
   .Image {
+    display: flex;
+
     &-Image {
       object-fit: cover;
       object-position: center;
