@@ -104,7 +104,7 @@ class MenuGrid extends PureComponent {
 
   renderViewAllButton() {
     const {
-      button: { link },
+      button: { link = "/" },
     } = this.props;
 
     return (

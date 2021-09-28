@@ -118,7 +118,6 @@ $select-arrow-width: 6px !default;
     @include desktop {
       width: 363px;
       padding-bottom: 16px;
-      width: auto;
       align-items: center;
     }
   }
@@ -350,7 +349,8 @@ $select-arrow-width: 6px !default;
     @include mobile {
       transition: width 0.5s;
     }
-    div {
+    
+    div:nth-child(1) {
       color: #f96446;
       @include mobile {
         display: block;
@@ -364,6 +364,8 @@ $select-arrow-width: 6px !default;
     }
     .Image {
       .LazyLoad-wrapper {
+        max-width: unset;
+        opacity: unset;
         img {
           padding: 0 6px;
           width: 40px !important;
