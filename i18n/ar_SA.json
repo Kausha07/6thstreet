@@ -316,7 +316,7 @@
     "Cm": "سم",
     "Inches": "بوصة",
     "Size": "بحجم",
-    "size": "بحجم",
+    "size": null,
     "Bust": "الصدر",
     "Waist": "الخصر",
     "State/Province": null,
@@ -816,7 +816,7 @@
     "Show": null,
     "Mask": null,
     "Confirmation ID": "تأكيد الهوية ",
-    "Model is wearing": "مايرتديه العارض",
+    "Model is wearing": null,
     "EMAIL OR PHONE": "البريد الإلكتروني او الهاتف",
     "Model's height is ": "طول العارض",
     "& is wearing ": null,
@@ -865,5 +865,7 @@
     "About 6THStreet": null,
     "Brands | 6thStreet": null,
     "brands": null,
-    "Buy & Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet.": null
+    "Buy & Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet.": null,
+    "Model's height is": null,
+    "& is wearing": null
 }

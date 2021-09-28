@@ -6,7 +6,6 @@ import Link from "Component/Link";
 import { formatCDNLink } from "Util/Url";
 import Event from "Util/Event";
 import "./DynamicContentMainBanner.style";
-import Event from "Util/Event";
 import {
   HOME_PAGE_BANNER_IMPRESSIONS,
   HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
