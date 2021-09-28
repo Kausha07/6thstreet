@@ -288,7 +288,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       ? this._getAddressById(selectedCustomerAddressId)
       : trimAddressFields(fields);
 
-      const { region_id, region, street, country_id, telephone, postcode } =
+    const { region_id, region, street, country_id, telephone, postcode } =
       shippingAddress;
 
     const shippingAddressMapped = {
@@ -328,6 +328,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       shipping_carrier_code,
       shipping_method_code,
     };
+
 
     // Vue call
     const customerData = BrowserDatabase.getItem("customer");

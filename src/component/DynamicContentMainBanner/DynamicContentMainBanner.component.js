@@ -4,9 +4,8 @@ import { PureComponent } from "react";
 import Image from "Component/Image";
 import Link from "Component/Link";
 import { formatCDNLink } from "Util/Url";
-
-import "./DynamicContentMainBanner.style";
 import Event from "Util/Event";
+import "./DynamicContentMainBanner.style";
 import {
   HOME_PAGE_BANNER_IMPRESSIONS,
   HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
@@ -63,6 +62,7 @@ class DynamicContentMainBanner extends PureComponent {
   onclick = (item) => {
     this.sendBannerClickImpression(item);
   };
+
   sendBannerClickImpression(item) {
     Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);
   }

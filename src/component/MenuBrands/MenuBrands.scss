@@ -94,6 +94,24 @@
                 justify-content: flex-start;
                 margin-top: 10px;
                 margin-bottom: 5px;
+                scrollbar-width: thin;
+                scrollbar-color: #585757 #dcdcdc;
+                &::-webkit-scrollbar {
+                    width: 6px;
+                    /* width of the entire scrollbar */
+                }
+                &::-webkit-scrollbar-track {
+                    background: #dcdcdc;
+                    /* color of the tracking area */
+                }
+                &::-webkit-scrollbar-thumb {
+                    background-color: #585757;
+                    /* color of the scroll thumb */
+                    border-radius: 0px;
+                    /* roundness of the scroll thumb */
+                    border: 0px solid white;
+                    /* creates padding around scroll thumb */
+                }
                 a {
                     margin-left: 0;
                     margin-left: 0;
@@ -102,6 +120,7 @@
                     width: 50%;
                     line-height: 1.3;
                     margin-bottom: 20px;
+                    padding-right: 10px;
                 }
             }
         }

@@ -46,6 +46,7 @@ class PLPPage extends PureComponent {
         position={index}
         product={product}
         key={sku}
+        pageType="plp"
         page="plp"
         renderMySignInPopup={renderMySignInPopup}
         pageType="plp"

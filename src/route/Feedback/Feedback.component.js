@@ -35,27 +35,23 @@ export class Feedback extends PureComponent {
   componentDidMount(){
     var data = localStorage.getItem('customer');
     let userData = JSON.parse(data);
-    if(userData.data){
-      if(userData.data.firstname){
-        this.setState({
-          firstname: userData.data.firstname,
-          lastname: userData.data.lastname,
-          email: userData.data.email,
-        })
-      }
+    if(userData?.data?.firstname){
+      this.setState({
+        firstname: userData?.data?.firstname || "",
+        lastname: userData?.data?.lastname || "",
+        email: userData?.data?.email || "",
+      });
     }
   }
   componentDidUpdate(){
     var data = localStorage.getItem('customer');
     let userData = JSON.parse(data);
-    if(userData.data){
-      if(userData.data.firstname){
-        this.setState({
-          firstname: userData.data.firstname,
-          lastname: userData.data.lastname,
-          email: userData.data.email,
-        })
-      }
+    if(userData?.data?.firstname){
+      this.setState({
+        firstname: userData?.data?.firstname || "",
+        lastname: userData?.data?.lastname || "",
+        email: userData?.data?.email || "",
+      });
     }
   }
 
