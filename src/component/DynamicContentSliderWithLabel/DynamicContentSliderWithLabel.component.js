@@ -201,7 +201,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
             block="Image"
             style={{ maxWidth: wd, maxHeight: ht }}
           />
-         
+
         </Link>
         {text ? (
           <div block="SliderText" style={{ textAlign: text_align }}>
