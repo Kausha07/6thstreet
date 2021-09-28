@@ -1,3 +1,4 @@
+import Image from "Component/Image";
 import Link from "Component/Link";
 import Loader from "Component/Loader";
 import PropTypes from "prop-types";
@@ -24,7 +25,6 @@ import RecommendedForYouVueSliderContainer from "../RecommendedForYouVueSlider";
 // import WishlistSliderContainer from "../WishlistSlider";
 import BRAND_MAPPING from "./SearchSiggestion.config";
 import "./SearchSuggestion.style";
-import Image from "Component/Image";
 
 var ESCAPE_KEY = 27;
 
@@ -121,7 +121,7 @@ class SearchSuggestion extends PureComponent {
       }
       brandUrl = `${this.getBrandUrl(
         brandName
-      )}.html?q=${brandName}&qid=${queryID}&gender=${requestedGender.replace(
+      )}.html?q=${brandName}&qid=${queryID}&dFR[gender][0]=${requestedGender.replace(
         requestedGender.charAt(0),
         requestedGender.charAt(0).toUpperCase()
       )}`;
@@ -136,7 +136,7 @@ class SearchSuggestion extends PureComponent {
         .toLowerCase();
       brandUrl = `${this.getBrandUrl(
         formattedBrandName
-      )}.html?q=${formattedBrandName}&gender=${gender.replace(
+      )}.html?q=${formattedBrandName}&dFR[gender][0]=${gender.replace(
         gender.charAt(0),
         gender.charAt(0).toUpperCase()
       )}`;
@@ -181,11 +181,11 @@ class SearchSuggestion extends PureComponent {
     if (brandValue) {
       catalogUrl = `/catalogsearch/result/?q=${formatQuerySuggestions(
         query
-      )}&gender=${genderInURL}&brand_name=${brandValue}`;
+      )}&dFR[gender][0]=${genderInURL}&dFR[brand_name][0]=${brandValue}`;
     } else {
       catalogUrl = `/catalogsearch/result/?q=${formatQuerySuggestions(
         query
-      )}&gender=${genderInURL}`;
+      )}&dFR[gender][0]=${genderInURL}`;
     }
     return catalogUrl;
   };
@@ -497,7 +497,7 @@ class SearchSuggestion extends PureComponent {
     }
     let parseLink = url?.includes("catalogsearch/result")
       ? url?.split("&")[0] +
-        `&gender=${requestedGender.replace(
+        `&dFR[gender][0]=${requestedGender.replace(
           requestedGender.charAt(0),
           requestedGender.charAt(0)?.toUpperCase()
         )}`
@@ -728,7 +728,7 @@ class SearchSuggestion extends PureComponent {
           to={
             link
               ? link
-              : `/catalogsearch/result/?q=${search}&gender=${requestedGender.replace(
+              : `/catalogsearch/result/?q=${search}&dFR[gender][0]=${requestedGender.replace(
                   requestedGender.charAt(0),
                   requestedGender.charAt(0).toUpperCase()
                 )}`
@@ -776,7 +776,7 @@ class SearchSuggestion extends PureComponent {
           to={
             link
               ? link
-              : `/catalogsearch/result/?q=${name}&gender=${requestedGender.replace(
+              : `/catalogsearch/result/?q=${name}&dFR[gender][0]=${requestedGender.replace(
                   requestedGender.charAt(0),
                   requestedGender.charAt(0).toUpperCase()
                 )}`
