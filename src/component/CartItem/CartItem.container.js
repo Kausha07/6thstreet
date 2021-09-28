@@ -9,12 +9,12 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
+// import Algolia from "Util/API/provider/Algolia";
+// import { getUUIDToken } from 'Util/Auth';
 import CartItemQuantityPopup from "Component/CartItemQuantityPopup";
 import { CART_ITEM_QUANTITY_POPUP_ID } from "Component/CartItemQuantityPopup/CartItemQuantityPopup.config";
 import { DEFAULT_MAX_PRODUCTS } from "Component/ProductActions/ProductActions.config";
 import PropTypes from "prop-types";
-// import Algolia from "Util/API/provider/Algolia";
-// import { getUUIDToken } from 'Util/Auth';
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
 import { connect } from "react-redux";

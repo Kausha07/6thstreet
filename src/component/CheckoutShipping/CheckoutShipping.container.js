@@ -288,7 +288,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       ? this._getAddressById(selectedCustomerAddressId)
       : trimAddressFields(fields);
 
-      const { region_id, region, street, country_id, telephone, postcode } =
+    const { region_id, region, street, country_id, telephone, postcode } =
       shippingAddress;
 
     const shippingAddressMapped = {
@@ -328,6 +328,28 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       shipping_carrier_code,
       shipping_method_code,
     };
+    // Vue call
+    const customerData = BrowserDatabase.getItem("customer");
+    const userID = customerData && customerData.id ? customerData.id : null;
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
+    totals?.items?.map((item) => {
+      VueIntegrationQueries.vueAnalayticsLogger({
+        event_name: VUE_PLACE_ORDER,
+        params: {
+          event: VUE_PLACE_ORDER,
+          pageType: "checkout_payment",
+          currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+          clicked: Date.now(),
+          sourceProdID: item?.full_item_info?.config_sku,
+          sourceCatgID: item?.full_item_info?.category,
+          prodQty: item?.full_item_info?.qty,
+          prodPrice: item?.full_item_info?.price,
+          uuid: getUUID(),
+          referrer: "desktop",
+          userID: userID,
+        },
+      });
+    });
 
     // Vue call
     const customerData = BrowserDatabase.getItem("customer");
