@@ -52,10 +52,12 @@ class Brand extends PureComponent {
           )}&dFR[gender][0]=${this.capitalizeFirstLetter(requestedGender)}`;
     } else {
       finalURL = url
-        ? `${url}.html?dFR[brand_name][0]=${encodeURI(name)}`
+        ? `${url}.html?q=${encodeURI(name)}&p=0&dFR[brand_name][0]=${encodeURI(
+            name
+          )}`
         : `/catalogsearch/result/?q=${encodeURI(
             name
-          )}&p=0&&dFR[brand_name][0]=${encodeURI(name)}`;
+          )}&p=0&dFR[brand_name][0]=${encodeURI(name)}`;
     }
     return (
       <div block="Brand">
