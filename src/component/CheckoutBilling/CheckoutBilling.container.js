@@ -583,13 +583,17 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
         amount: grand_total,
       };
       console.log("shipping contact selected", status, newTotal)
-
-      applePaySession.completeShippingContactSelection(
-        status,
-        [],
-        newTotal,
-        this._getLineItems()
-      );
+      try {
+        
+        applePaySession.completeShippingContactSelection(
+          status,
+          [],
+          newTotal,
+          this._getLineItems()
+        );
+      } catch (error) {
+        Logger.log("error on shipping contact selected", error)
+      }
     };
 
     applePaySession.onshippingmethodselected = () => {
@@ -600,12 +604,16 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
         label: default_title,
         amount: grand_total,
       };
-      console.log("shipping method selected", status, newTotal)
-      applePaySession.completeShippingMethodSelection(
-        status,
-        newTotal,
-        this._getLineItems()
-      );
+      try {
+        console.log("shipping method selected", status, newTotal)
+        applePaySession.completeShippingMethodSelection(
+          status,
+          newTotal,
+          this._getLineItems()
+        );
+      } catch (error) {
+        Logger.log("error on shipping methiod selected", error)
+      }
     };
 
     applePaySession.onpaymentmethodselected = () => {
@@ -615,11 +623,14 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
         amount: grand_total,
       };
       console.log("payment method selected", newTotal)
-
-      applePaySession.completePaymentMethodSelection(
-        newTotal,
-        this._getLineItems()
-      );
+      try {
+        applePaySession.completePaymentMethodSelection(
+          newTotal,
+          this._getLineItems()
+        );
+      } catch (error) {
+        Logger.log("payment method selected error", error)
+      }
     };
 
     applePaySession.onpaymentauthorized = (event) => {
