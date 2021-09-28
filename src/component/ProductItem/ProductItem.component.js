@@ -146,7 +146,8 @@ class ProductItem extends PureComponent {
     return (
       <div block="ProductItem" elem="ImageBox">
         <Image src={thumbnail_url} />
-        {this.renderOutOfStock()} {this.renderExclusive()} {this.renderColors()}{" "}
+        {/* {this.renderOutOfStock()} */}
+        {this.renderExclusive()} {this.renderColors()}{" "}
       </div>
     );
   }
@@ -233,7 +234,8 @@ class ProductItem extends PureComponent {
     return (
       <Link to={isVueData ? parseLink : linkTo} onClick={this.handleClick}>
         {" "}
-        {this.renderImage()} {this.renderBrand()} {this.renderTitle()}{" "}
+        {this.renderImage()}
+        {this.renderOutOfStock()} {this.renderBrand()} {this.renderTitle()}{" "}
         {this.renderPrice()}{" "}
       </Link>
     );
