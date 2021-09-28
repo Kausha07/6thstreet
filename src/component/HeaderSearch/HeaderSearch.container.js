@@ -89,7 +89,6 @@ export class HeaderSearchContainer extends PureComponent {
       if (isArabic()) {
         if (gender === "kids") {
           genderInURL = "أولاد~بنات";
-          // to add Boy~Girl in arabic
         } else {
           requestedGender = getGenderInArabic(gender);
           genderInURL = requestedGender?.replace(
@@ -109,7 +108,7 @@ export class HeaderSearchContainer extends PureComponent {
       }
       if (gender !== "home") {
         history.push(
-          `/catalogsearch/result/?q=${search}&qid=${queryID}&gender=${genderInURL}`
+          `/catalogsearch/result/?q=${search}&qid=${queryID}&dFR[gender][0]=${genderInURL}`
         );
       } else {
         history.push(`/catalogsearch/result/?q=${search}&qid=${queryID}`);
