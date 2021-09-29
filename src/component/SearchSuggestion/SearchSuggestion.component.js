@@ -324,7 +324,7 @@ class SearchSuggestion extends PureComponent {
     //     <li>
     //       <Link
     //         to={
-    //           encodeURI(
+    //           encodeURIComponent(
     //             this.getBrandSuggestionUrl(
     //               formatQuerySuggestions(query),
     //               queryID
@@ -360,7 +360,7 @@ class SearchSuggestion extends PureComponent {
     //     return (
     //       <li>
     //         <Link
-    //           to={`${encodeURI(this.getCatalogUrl(query, gender, queryID))}`}
+    //           to={`${encodeURIComponent(this.getCatalogUrl(query, gender, queryID))}`}
     //           onClick={() =>
     //             this.onSearchQueryClick(formatQuerySuggestions(query))
     //           }
@@ -394,7 +394,7 @@ class SearchSuggestion extends PureComponent {
       return (
         <li>
           <Link
-            to={`${encodeURI(
+            to={`${encodeURIComponent(
               this.getCatalogUrl(
                 query,
                 gender,
