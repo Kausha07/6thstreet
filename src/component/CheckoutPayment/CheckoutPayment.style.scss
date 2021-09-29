@@ -32,7 +32,7 @@
         &_cash,
         &_free {
             img {
-                width: 22px;
+                width: 22px !important;
             }
         }
 
@@ -40,7 +40,7 @@
         &_tabby,
         &_qpay {
             img {
-                width: 40px;
+                width: 40px !important;
                 filter: invert(50%);
             }
         }

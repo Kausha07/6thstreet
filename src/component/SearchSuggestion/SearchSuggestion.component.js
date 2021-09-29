@@ -1,3 +1,4 @@
+import Image from "Component/Image";
 import Link from "Component/Link";
 import Loader from "Component/Loader";
 import PropTypes from "prop-types";
@@ -120,7 +121,7 @@ class SearchSuggestion extends PureComponent {
       }
       brandUrl = `${this.getBrandUrl(
         brandName
-      )}.html?q=${brandName}&qid=${queryID}&gender=${requestedGender.replace(
+      )}.html?q=${brandName}&qid=${queryID}&dFR[gender][0]=${requestedGender.replace(
         requestedGender.charAt(0),
         requestedGender.charAt(0).toUpperCase()
       )}`;
@@ -135,7 +136,7 @@ class SearchSuggestion extends PureComponent {
         .toLowerCase();
       brandUrl = `${this.getBrandUrl(
         formattedBrandName
-      )}.html?q=${formattedBrandName}&gender=${gender.replace(
+      )}.html?q=${formattedBrandName}&dFR[gender][0]=${gender.replace(
         gender.charAt(0),
         gender.charAt(0).toUpperCase()
       )}`;
@@ -178,13 +179,15 @@ class SearchSuggestion extends PureComponent {
       }
     }
     if (brandValue) {
-      catalogUrl = `/catalogsearch/result/?q=${formatQuerySuggestions(
-        query
-      )}&gender=${genderInURL}&brand_name=${brandValue}`;
+      catalogUrl = `/catalogsearch/result/?q=${encodeURIComponent(
+        formatQuerySuggestions(query)
+      )}&dFR[gender][0]=${genderInURL}&dFR[brand_name][0]=${encodeURIComponent(
+        brandValue
+      )}`;
     } else {
-      catalogUrl = `/catalogsearch/result/?q=${formatQuerySuggestions(
-        query
-      )}&gender=${genderInURL}`;
+      catalogUrl = `/catalogsearch/result/?q=${encodeURIComponent(
+        formatQuerySuggestions(query)
+      )}&dFR[gender][0]=${genderInURL}`;
     }
     return catalogUrl;
   };
@@ -323,7 +326,7 @@ class SearchSuggestion extends PureComponent {
     //     <li>
     //       <Link
     //         to={
-    //           encodeURI(
+    //           encodeURIComponent(
     //             this.getBrandSuggestionUrl(
     //               formatQuerySuggestions(query),
     //               queryID
@@ -359,7 +362,7 @@ class SearchSuggestion extends PureComponent {
     //     return (
     //       <li>
     //         <Link
-    //           to={`${encodeURI(this.getCatalogUrl(query, gender, queryID))}`}
+    //           to={`${encodeURIComponent(this.getCatalogUrl(query, gender, queryID))}`}
     //           onClick={() =>
     //             this.onSearchQueryClick(formatQuerySuggestions(query))
     //           }
@@ -393,13 +396,11 @@ class SearchSuggestion extends PureComponent {
       return (
         <li>
           <Link
-            to={`${encodeURI(
-              this.getCatalogUrl(
-                query,
-                gender,
-                queryID,
-                !brandValue?.includes("///") ? brandValue : null
-              )
+            to={`${this.getCatalogUrl(
+              query,
+              gender,
+              queryID,
+              !brandValue?.includes("///") ? brandValue : null
             )}`}
             onClick={() =>
               this.onSearchQueryClick(formatQuerySuggestions(query))
@@ -496,7 +497,7 @@ class SearchSuggestion extends PureComponent {
     }
     let parseLink = url?.includes("catalogsearch/result")
       ? url?.split("&")[0] +
-        `&gender=${requestedGender.replace(
+        `&dFR[gender][0]=${requestedGender.replace(
           requestedGender.charAt(0),
           requestedGender.charAt(0)?.toUpperCase()
         )}`
@@ -509,12 +510,13 @@ class SearchSuggestion extends PureComponent {
           onClick={() => this.handleProductClick(product)}
         >
           <div block="SearchProduct">
-            <img
+            <Image
               src={thumbnail_url}
               alt="Product Image"
               block="SearchProduct"
               elem="Image"
             />
+
             <div block="SearchProduct" elem="Info">
               <h6 block="SearchProduct" elem="Brand">
                 {brand_name}
@@ -658,7 +660,8 @@ class SearchSuggestion extends PureComponent {
           onClick={() => this.handleTrendingBrandsClick(urlName)}
         >
           <div block="SearchSuggestion" elem="TrandingImg">
-            <img src={image_url} alt="Trending" />
+            <Image src={image_url} alt="Trending" />
+
             {/* {label} */}
           </div>
         </Link>
@@ -725,7 +728,7 @@ class SearchSuggestion extends PureComponent {
           to={
             link
               ? link
-              : `/catalogsearch/result/?q=${search}&gender=${requestedGender.replace(
+              : `/catalogsearch/result/?q=${search}&dFR[gender][0]=${requestedGender.replace(
                   requestedGender.charAt(0),
                   requestedGender.charAt(0).toUpperCase()
                 )}`
@@ -773,7 +776,7 @@ class SearchSuggestion extends PureComponent {
           to={
             link
               ? link
-              : `/catalogsearch/result/?q=${name}&gender=${requestedGender.replace(
+              : `/catalogsearch/result/?q=${name}&dFR[gender][0]=${requestedGender.replace(
                   requestedGender.charAt(0),
                   requestedGender.charAt(0).toUpperCase()
                 )}`

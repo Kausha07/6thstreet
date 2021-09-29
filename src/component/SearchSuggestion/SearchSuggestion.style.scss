@@ -474,11 +474,16 @@
       flex-direction: column;
       justify-content: flex-end;
     }
-    &-Image {
-      width: 80px;
-      grid-column: 1;
-      grid-row: auto;
+    .Image{
+      .LazyLoad-wrapper {
+        img {
+          width: 80px !important;
+          grid-column: 1;
+          grid-row: auto;
+        }
+      }
     }
+  
     &-Brand {
       font-size: 14px;
       font-weight: var(--fw-demi);

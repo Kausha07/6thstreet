@@ -5,6 +5,7 @@ export class VueIntegrationQueries {
    * log vue analytics query
    * @return {Field}
    */
+
   async vueAnalayticsLogger(payload) {
     const locale = this.getLocaleFromUrl();
     return new Promise((resolve, reject) => {
@@ -64,6 +65,18 @@ export class VueIntegrationQueries {
       case "ar-bh":
         return "ar_BHD";
     }
+  }
+
+  getWidgetTypeMapped(widgetType) {
+    const WIDGET_MAP = {
+      "vue_visually_similar_slider": 0,
+      "vue_browsing_history_slider": 1,
+      "vue_trending_slider": 3,
+      "vue_recently_viewed_slider": 7,
+      "vue_top_picks_slider": 11,
+      "vue_style_it_slider": 9,
+      "vue_compact_style_it_slider": "9a"
+     };
   }
 }
 export default new VueIntegrationQueries();

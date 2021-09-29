@@ -6,14 +6,10 @@
   --gallery-crumbs-height: auto;
   height: auto;
   display: block;
-  margin-top: 11px;
+  // margin-top: 11px;
   @include desktop {
     display: grid;
     grid-template-columns: 1fr 6fr;
-    margin-top: 0;
-    grid-gap: 10px;
-  }
-  @include mobile {
     margin-top: 0;
   }
   &-Crumbs {
@@ -21,30 +17,6 @@
     height: var(--gallery-crumbs-height);
     @include desktop {
       display: block;
-    }
-  }
-
-  &-VideoButtonsContainer {
-    &-VideoButtons {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 10px 0;
-      &-StyleVideo {
-        border-right: solid 1.5px #efefef;
-      }
-      &-360DegreeVideo {
-        border-left: solid 1.5px #efefef;
-      }
-      &-ViewGallery {
-        padding: 10px 0!important;
-      }
-    }
-    .Seperator {
-      background-color: #efefef;
-      margin: 0;
-      padding: 0;
-      height: 1.5px;
     }
   }
 
@@ -99,12 +71,14 @@
       }
     }
 
+
     @include after-mobile {
       display: none;
     }
   }
-  .Slider-Wrapper > * {
-    min-height: 534px;
+  .Slider-Wrapper>* {
+    width: 100%!important;
+    height: auto!important;
   }
   .Slider-Wrapper {
     align-items: unset;
@@ -117,6 +91,9 @@
     min-width: 0;
     margin: 0px;
     direction: ltr;
+    @include desktop {
+      margin-left: 8px;
+    }
     &-Crumb {
       background: var(--crumb-background-color);
       border: none;
@@ -135,17 +112,16 @@
       padding: 0px 20px;
     }
   }
+  .Image_imageStatus_2 {
+    display: flex;
+  }
   .Image {
     &-Image {
-      object-fit: cover;
-      object-position: center;
+        position: unset!important;
     }
-  }
-
-  .Video {
-    height: 534px;
-    object-fit: cover;
-    object-position: center;
+    &_ratio_square {
+        padding: unset!important;
+    }
   }
 
   .OverlayIcons {
@@ -192,7 +168,7 @@
         top: 1px;
         right: 3px;
         @include mobile {
-          // top: 4.5px;
+          top: 4.5px;
           right: 10px;
         }
       }

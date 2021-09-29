@@ -6,6 +6,7 @@ import VueQuery from "../../query/Vue.query";
 import Recommendations from "../Recommendations/Recommendations.container";
 import "./EmptySearch.style";
 import noProduct from "./icons/no_product.png";
+import Image from "Component/Image";
 
 class EmptySearch extends PureComponent {
   static propTypes = {
@@ -63,7 +64,7 @@ class EmptySearch extends PureComponent {
   renderStaticContent() {
     return (
       <div block="EmptySearch" elem="StaticContent">
-        <img src={noProduct} alt="no product" />
+        <Image src={noProduct} alt="no product" />
         <p block="EmptySearch" elem="Sorry">
           {__("Sorry, we couldn't find any Product!")}
         </p>

@@ -6,6 +6,7 @@ const FACET_FILTERS = [
   "categories.level1",
   "categories.level2",
   "categories.level3",
+  "categories.level4",
   "categories_without_path",
   "color",
   "colorfamily",
@@ -25,8 +26,7 @@ const FACET_FILTERS = [
   "toe_shape",
   "tommy_label",
   "in_stock",
-  // "age",
-  // "age_group",
+  "age"
 ];
 
 const config = {
@@ -49,8 +49,7 @@ const config = {
     "brand_name",
     "colorfamily",
     "gender",
-    // "age",
-    // "age_group",
+    "age",
     "size",
     "price",
     "discount",
@@ -165,6 +164,7 @@ const config = {
       "promotion",
       "in_stock",
       "also_available_color",
+      "age",
     ],
     facets: FACET_FILTERS,
     facetFilters: [],

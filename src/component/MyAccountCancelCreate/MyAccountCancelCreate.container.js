@@ -23,7 +23,8 @@ export class MyAccountCancelCreateContainer extends MyAccountReturnCreateContain
         isLoading: false,
         incrementId: null,
         items: [],
-        resolutions : []
+        resolutions : [],
+        resolutionId:null
     };
 
     componentDidMount() {
@@ -65,17 +66,19 @@ export class MyAccountCancelCreateContainer extends MyAccountReturnCreateContain
         });
     }
 
+    onResolutionChangeValue(value) {  
+        this.setState({resolutionId:value})
+    }
     onFormSubmit() {
         const { showErrorMessage, history } = this.props;
         const {
             selectedItems = {},
             items,
             incrementId,
-            orderId
+            orderId, 
+            resolutionId
         } = this.state;
-        const resolutionId =  Object.entries(selectedItems).map(([order_item_id, { resolutionId }]) => {
-            return resolutionId - 1;
-        })
+        const resolutionIdPass =  resolutionId -1 
         const payload = {
             order_id: incrementId,
             items: Object.entries(selectedItems).map(([order_item_id, { reasonId }]) => {
@@ -87,9 +90,9 @@ export class MyAccountCancelCreateContainer extends MyAccountReturnCreateContain
                     reason: reasonId
                 };
             }),
-            return_to_store_credit : resolutionId[0]
-        };
+            return_to_store_credit : resolutionIdPass === 1 ? 1: 0
 
+        };
         this.setState({ isLoading: true });
 
         MagentoAPI.post('recan/commitRecan', payload).then(() => {

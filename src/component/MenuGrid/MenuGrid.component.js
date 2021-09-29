@@ -74,7 +74,7 @@ class MenuGrid extends PureComponent {
 
   renderItems() {
     const { items = [] } = this.props;
-    return items.slice(0, 14).map(this.renderItem);
+    return items.map(this.renderItem);
   }
 
   renderDesktopButton() {
@@ -104,7 +104,7 @@ class MenuGrid extends PureComponent {
 
   renderViewAllButton() {
     const {
-      button: { link },
+      button: { link = "/" },
     } = this.props;
 
     return (
@@ -122,7 +122,8 @@ class MenuGrid extends PureComponent {
     return (
       <>
         <span block="MenuGrid" elem="Title">
-          {__("Shop by product")}
+          {this.props.title}
+          {/* {__("Shop by product")} */}
         </span>
         {this.renderViewAllButton()}
         <div

@@ -883,12 +883,16 @@
   }
 
   &-LockImg {
-    width: auto;
-    height: 60px;
-    justify-content: center;
-    text-align: center;
-    align-items: center;
-    margin: 0 42%;
+    .LazyLoad-wrapper {
+      img {
+        width: auto !important;
+        height: 60px !important;
+        justify-content: center;
+        text-align: center;
+        align-items: center;
+        margin: 0 42%;
+      }
+    }
   }
 
   &-StoreSwitcher {

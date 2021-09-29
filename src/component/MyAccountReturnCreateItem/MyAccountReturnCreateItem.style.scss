@@ -94,6 +94,13 @@
     }
   }
 
+  &-Resolutions {
+
+    @include desktop {
+      margin: 10px 0 0 40px;
+    }
+  }
+
   &-Resolution {
     border-bottom: 2px solid var(--color-gainsboro);
     margin-left: 40px;

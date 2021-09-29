@@ -24,6 +24,7 @@ import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 
 import Delivery from "./icons/delivery-truck.png";
+import Image from "Component/Image";
 
 import "./CartOverlay.style";
 
@@ -127,16 +128,16 @@ export class CartOverlay extends PureComponent {
     } = this.props;
     const finalDiscount = discount_amount || discount || 0;
 
-    if (!coupon_code && (!finalDiscount && finalDiscount === 0)) {
+    if (!coupon_code && !finalDiscount && finalDiscount === 0) {
       return null;
     }
 
     return (
       <dl block="CartOverlay" elem="Discount">
         <dt>
-          {coupon_code ? __("Coupon ") : __("Discount") }
+          {coupon_code ? __("Coupon ") : __("Discount")}
           <strong block="CartOverlay" elem="DiscountCoupon">
-            {coupon_code ? coupon_code.toUpperCase() : ''}
+            {coupon_code ? coupon_code.toUpperCase() : ""}
           </strong>
         </dt>
         <dd>{`-${this.renderPriceLine(Math.abs(finalDiscount))}`}</dd>
@@ -211,7 +212,7 @@ export class CartOverlay extends PureComponent {
     return (
       <div block="CartOverlay" elem="PromoBlock">
         <figcaption block="CartOverlay" elem="PromoText" mods={{ isArabic }}>
-          <img src={Delivery} alt="Delivery icon" />
+          <Image src={Delivery} alt="Delivery icon" />
           {__("Add ")}
           <span block="CartOverlay" elem="Currency">
             {`${currency_code} ${avail_free_shipping_amount.toFixed(3)} `}
@@ -242,7 +243,6 @@ export class CartOverlay extends PureComponent {
     if (!avail_free_shipping_amount && avail_free_shipping_amount !== 0) {
       return null;
     }
-
     return (
       <div block="CartOverlay" elem="Promo">
         {avail_free_shipping_amount === 0
