@@ -1,13 +1,11 @@
 import PropTypes from "prop-types";
+import UrlRewritesQuery from "Query/UrlRewrites.query";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
-
-import UrlRewritesQuery from "Query/UrlRewrites.query";
 import { hideActiveOverlay } from "Store/Overlay/Overlay.action";
 import { LocationType } from "Type/Common";
 import history from "Util/History";
 import { fetchQuery } from "Util/Request";
-
 import UrlRewrites from "./UrlRewrites.component";
 import {
   TYPE_CATEGORY,
@@ -62,6 +60,8 @@ export class UrlRewritesContainer extends PureComponent {
     const { prevPathname: prevStatePathname, query: prevQuery } = prevState;
 
     if (query && query !== prevQuery) {
+      console.log("location", location);
+      console.log("query", query);
       let partialQuery = location.search;
       if (location.search) {
         if (partialQuery.indexOf("idx") !== -1) {
