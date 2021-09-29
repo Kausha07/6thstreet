@@ -26,7 +26,7 @@
   }
   .CircleSliderWrapper {
     display: flex;
-    // justify-content: center;
+    justify-content: center;
     overflow-x: auto;
     .CircleItemHelper {
       display: none;
@@ -106,14 +106,14 @@
         z-index: -1;
         border-radius: inherit;
       }
-      &-LivePartyText{
+      &-LivePartyText {
         position: absolute;
         bottom: -5px;
         left: 16px;
         z-index: 3;
         width: 43.83px;
         border-radius: 7.5px;
-        background-color: #28D9AA;
+        background-color: #28d9aa;
         font-size: 10px;
         font-weight: 600;
         letter-spacing: 0;
@@ -126,9 +126,9 @@
         right: 0;
       }
     }
-    .OuterLiveParty{
+    .OuterLiveParty {
       margin-left: 11px !important;
-      .Image{
+      .Image {
         background: rgba(39, 217, 170, 0.1);
         // opacity: .1;
       }
@@ -138,7 +138,7 @@
       padding-right: 17px;
       // width: 100%;
 
-      @include mobile{
+      @include mobile {
         padding-right: 10px;
       }
 
@@ -157,7 +157,7 @@
           padding-left: 14px;
           padding-right: 0;
         }
-        @include mobile{
+        @include mobile {
           padding-right: 0px;
           padding-left: 10px;
         }
@@ -174,8 +174,7 @@
       @include tablet {
         padding-right: 14px;
       }
-      .LivePartyBackground{
-
+      .LivePartyBackground {
       }
     }
   }
