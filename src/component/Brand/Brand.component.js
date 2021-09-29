@@ -42,7 +42,9 @@ class Brand extends PureComponent {
         requestedGender = isArabic ? getGenderInArabic(type) : type;
       }
       finalURL = url
-        ? `${url}.html?dFR[brand_name][0]=${encodeURIComponent(
+        ? `${url}.html?q=${encodeURIComponent(
+            name
+          )}&p=0&dFR[brand_name][0]=${encodeURIComponent(
             name
           )}&dFR[gender][0]=${this.capitalizeFirstLetter(requestedGender)}`
         : `/catalogsearch/result/?q=${encodeURIComponent(
