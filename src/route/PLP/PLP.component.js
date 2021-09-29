@@ -1,20 +1,22 @@
 /* eslint-disable fp/no-let */
-import { PureComponent } from "react";
-
 import ContentWrapper from "Component/ContentWrapper/ContentWrapper.component";
+import DynamicContent from "Component/DynamicContent";
 import PLPDetails from "Component/PLPDetails";
 import PLPFilters from "Component/PLPFilters";
 import PLPPages from "Component/PLPPages";
+import { PureComponent } from "react";
 import CircleItemSliderSubPage from "../../component/DynamicContentCircleItemSlider/CircleItemSliderSubPage";
-
 // import DynamicContentCircleItemSlider from '../../component/DynamicContentCircleItemSlider';
 import "./PLP.style";
+import MyAccountOverlay from "Component/MyAccountOverlay";
 
 export class PLP extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
       bannerData: null,
+      signInPopUp: "",
+      showPopup:false,
       circleBannerUrl: null,
     };
   }
@@ -30,6 +32,34 @@ export class PLP extends PureComponent {
       });
     }
   }
+
+
+  showMyAccountPopup = () => {
+    this.setState({ showPopup: true });
+  };
+
+  closePopup = () => {
+    this.setState({ signInPopUp: "",showPopup:false });
+  };
+
+  onSignIn = () => {
+    this.closePopup();
+  };
+
+
+  renderMySignInPopup() {
+    const { showPopup } = this.state;
+    if (!showPopup) {
+      return null;
+    }
+    return (
+      <MyAccountOverlay
+        closePopup={this.closePopup}
+        onSignIn={this.onSignIn}
+        isPopup
+      />
+    );
+  }
   // componentWillUnmount(){
   //     localStorage.removeItem("bannerData");
   // }
@@ -39,11 +69,16 @@ export class PLP extends PureComponent {
   }
 
   renderPLPFilters() {
-    return <PLPFilters />;
+    return <PLPFilters {...this.props} />;
   }
 
   renderPLPPages() {
-    return <PLPPages />;
+    return (
+      <PLPPages
+        {...this.props}
+        renderMySignInPopup={this.showMyAccountPopup}
+      />
+    );
   }
 
   renderBanner() {
@@ -57,12 +92,42 @@ export class PLP extends PureComponent {
       );
   }
 
+  renderPLPWidget = () => {
+    const { plpWidgetData } = this.props;
+    console.log("plp data", plpWidgetData);
+    const { pathname } = location;
+    const tagName = pathname
+      .replace(".html", "")
+      .replace("/", "")
+      .replaceAll("/", "_");
+
+    const widget = plpWidgetData.filter((item) => item.tag == tagName);
+    if (widget && widget.length == 0) {
+      return null;
+    }
+    console.log("plp widget", widget);
+    const { gender } = this.props;
+
+    // return <h1>Plp Widget</h1>;
+    return (
+      <DynamicContent
+        gender={gender}
+        content={widget}
+        renderMySignInPopup={this.showMyAccountPopup}
+      />
+    );
+  };
+
   render() {
+    const { signInPopUp } = this.state;
+
     return (
       <main block="PLP">
         <ContentWrapper label={__("Product List Page")}>
+          {this.renderMySignInPopup()}
           {this.renderPLPDetails()}
           {this.state.bannerData && this.renderBanner()}
+          {this.renderPLPWidget()}
           {this.renderPLPFilters()}
           {this.renderPLPPages()}
         </ContentWrapper>

@@ -5,9 +5,15 @@ import { PureComponent } from "react";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { getUUID } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
-import { VUE_ADD_TO_WISHLIST, VUE_REMOVE_TO_WISHLIST } from "Util/Event";
+import Event, {
+  EVENT_GTM_PRODUCT_ADD_TO_WISHLIST,
+  EVENT_GTM_PRODUCT_REMOVE_FROM_WISHLIST,
+  VUE_ADD_TO_WISHLIST,
+  VUE_REMOVE_TO_WISHLIST,
+} from "Util/Event";
 import { Favourite, FavouriteFilled } from "../Icons";
 import "./WishlistIcon.style";
+import { isSignedIn } from "Util/Auth";
 
 class WishlistIcon extends PureComponent {
   static propTypes = {
@@ -37,26 +43,36 @@ class WishlistIcon extends PureComponent {
       removeFromWishlist,
       items,
       data,
-      pageType = "wishlist",
+      pageType,
+      renderMySignInPopup,
     } = this.props;
     const customer = BrowserDatabase.getItem("customer");
     const userID = customer && customer.id ? customer.id : null;
-    const locale = VueIntegrationQueries.getLocaleFromUrl();
     const { skuFromProps } = this.state;
-
     const wishListItem = items.find(
       ({ product: { sku } }) => sku === skuFromProps
     );
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
 
     if (wishListItem) {
       const { wishlist_item_id } = wishListItem;
       removeFromWishlist(wishlist_item_id);
+      Event.dispatch(EVENT_GTM_PRODUCT_REMOVE_FROM_WISHLIST, {
+        product: {
+          brand: wishListItem.product.brand_name,
+          category: "",
+          id: wishListItem.product.sku,
+          name: wishListItem.product.name,
+          price: wishListItem.product.price,
+          variant: wishListItem.product.color,
+        },
+      });
       const prodPriceObject = wishListItem?.product?.price[0];
       const prodPrice = prodPriceObject
         ? prodPriceObject[Object.keys(prodPriceObject)[0]]["6s_base_price"]
         : "";
-      // to do add 6s_special_price when we get response from backend.
       if (userID) {
+        // to do add 6s_special_price when we get response from backend.
         VueIntegrationQueries.vueAnalayticsLogger({
           event_name: VUE_REMOVE_TO_WISHLIST,
           params: {
@@ -75,12 +91,27 @@ class WishlistIcon extends PureComponent {
       }
       return;
     }
-
-    addToWishlist(skuFromProps);
+    if (isSignedIn()) {
+      addToWishlist(skuFromProps);
+    } else {
+      localStorage.setItem("Wishlist_Item",skuFromProps);
+      renderMySignInPopup();
+    }
+    // Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_WISHLIST, { product: data });
     const priceObject = data.price[0];
     const itemPrice = priceObject
       ? priceObject[Object.keys(priceObject)[0]]["6s_special_price"]
       : "";
+    Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_WISHLIST, {
+      product: {
+        brand: data.brand_name,
+        category: gender,
+        id: skuFromProps,
+        name: data.name,
+        price: itemPrice,
+        variant: data.color,
+      },
+    });
     if (userID) {
       VueIntegrationQueries.vueAnalayticsLogger({
         event_name: VUE_ADD_TO_WISHLIST,

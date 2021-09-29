@@ -38,7 +38,9 @@ class PLPPage extends PureComponent {
   }
 
   renderProduct = (product, index, qid) => {
-    const { sku, price } = product;
+    // debugger
+    const { sku } = product;
+    const {renderMySignInPopup} = this.props
     return (
       <ProductItem
         position={index}
@@ -46,6 +48,8 @@ class PLPPage extends PureComponent {
         key={sku}
         pageType="plp"
         page="plp"
+        renderMySignInPopup={renderMySignInPopup}
+        pageType="plp"
         qid={qid}
       />
     );
@@ -53,7 +57,12 @@ class PLPPage extends PureComponent {
 
   renderProducts() {
     const { products = [] } = this.props;
-    var qid = new URLSearchParams(window.location.search).get("qid");
+    var qid = null;
+    if (new URLSearchParams(window.location.search).get("qid")) {
+      qid = new URLSearchParams(window.location.search).get("qid");
+    } else {
+      qid = localStorage.getItem("queryID");
+    }
     return products.map((i, index) => this.renderProduct(i, index + 1, qid));
   }
 

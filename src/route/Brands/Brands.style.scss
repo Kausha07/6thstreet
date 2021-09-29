@@ -1,6 +1,6 @@
 .Brands {
     margin: 90px auto 110px;
-    max-width: 1440px;
+    max-width: var(--container-max-width);
     padding: 5px 0;
 
     @include desktop {

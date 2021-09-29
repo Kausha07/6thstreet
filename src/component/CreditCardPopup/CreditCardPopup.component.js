@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 import Iframe from 'react-iframe';
+import Image from "Component/Image";
 
 import Close from 'Component/HeaderSearch/icons/close-black.png';
 import Popup from 'Component/Popup';

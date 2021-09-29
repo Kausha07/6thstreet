@@ -11,6 +11,7 @@ import {
   HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
 } from "Component/GoogleTagManager/events/BannerImpression.event";
 
+import "./DynamicContentMainBanner.style";
 class DynamicContentMainBanner extends PureComponent {
   static propTypes = {
     items: PropTypes.arrayOf(
@@ -22,7 +23,6 @@ class DynamicContentMainBanner extends PureComponent {
       })
     ).isRequired,
   };
-
   state = {
     impressionSent: false,
   };

@@ -22,6 +22,12 @@
 
         .MyAccountAddressBook {
           &-ContentWrapper {
+            &_formContent {
+              .MyAccountAddressPopup {
+                position: relative;
+                padding-bottom: 20px;
+              }
+            }
             .MyAccountAddressBook {
               &-backButton {
                 @include desktop {
@@ -44,7 +50,7 @@
                   height: 30px;
                   top: 20px;
                   right: unset;
-                  left:10px;
+                  left: 10px;
                   z-index: 9;
 
                   &::before {
@@ -65,8 +71,8 @@
 
                   &_isArabic {
                     top: 20px;
-                  left: unset;
-                  right:10px;
+                    left: unset;
+                    right: 10px;
                     transform: rotate(180deg);
                     -webkit-transform: rotate(180deg);
                   }
@@ -104,7 +110,8 @@
             background: transparent;
             color: var(--black);
             border: none;
-            margin: 0 20px;
+            margin: 0 5px;
+            // padding-inline: 20px;
 
             &:hover {
               text-decoration: underline;
@@ -126,13 +133,12 @@
         }
 
         .MyAccountAddressPopup {
-          margin: 20px auto;
+          margin: 0 auto 20px auto;
           background: var(--white);
           height: 100% !important;
           position: absolute;
           width: 100%;
           .Form {
-            
             @include desktop {
               top: 0;
               padding: 20px 30px 30px 30px;
@@ -157,7 +163,6 @@
               @include desktop {
                 padding: 20px 30px 30px 30px;
                 background: var(--white);
-
               }
 
               .MyAccountAddressFieldForm {
@@ -195,7 +200,7 @@
 .CheckoutShipping {
   .CheckoutAddressBook {
     &-Wrapper {
-      padding: 30px;
+      padding: 30px 20px;
     }
 
     .Checkout {
@@ -222,7 +227,7 @@
     background: var(--white);
     font-size: 21px;
     margin: 0;
-    padding: 30px 30px 3px;
+    padding: 30px 20px 3px;
 
     @include before-desktop {
       display: none;
@@ -231,7 +236,7 @@
   &-DeliveryMessage {
     font-weight: 600;
     width: 60vw;
-    padding: 0 !important; 
+    padding: 0 !important;
     margin: -45px auto 24px !important;
     font-size: 18px;
     text-align: center;
@@ -240,12 +245,12 @@
       display: none !important;
     }
   }
-  &-LoadingButton{
-    background-color: #a9a9a9  !important;
+  &-LoadingButton {
+    background-color: #a9a9a9 !important;
     border: #a9a9a9 !important;
   }
   &-Button {
-    @include before-desktop{
+    @include before-desktop {
       font-size: 14px;
     }
     @include desktop {
@@ -260,6 +265,7 @@
   &-DeliveryButton {
     padding: 30px;
     background: var(--white);
+    text-align: center;
 
     button.primary {
       height: 50px;

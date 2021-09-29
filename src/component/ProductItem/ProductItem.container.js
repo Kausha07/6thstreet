@@ -18,6 +18,7 @@ export class ProductItemContainer extends PureComponent {
     page: PropTypes.string,
     position: PropTypes.number,
     queryID: PropTypes.string,
+    isVueData: PropTypes.bool,
     pageType: PropTypes.string.isRequired,
   };
 
@@ -26,8 +27,16 @@ export class ProductItemContainer extends PureComponent {
   };
 
   containerProps = () => {
-    const { product, page, position, qid, pageType } = this.props;
-    return { product, page, position, qid, pageType };
+    const {
+      product,
+      page,
+      position,
+      qid,
+      isVueData = false,
+      pageType,
+      renderMySignInPopup
+    } = this.props;
+    return { product, page, position, qid, isVueData, pageType,renderMySignInPopup };
   };
 
   render() {

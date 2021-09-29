@@ -1,279 +1,407 @@
 :root {
-    --border-color: #D1D3D4;
-    --link-color: hsl(0, 0%, 0%);
-    --white-color: #fff;
-    --black-color: #000;
+  --border-color: #d1d3d4;
+  --link-color: hsl(0, 0%, 0%);
+  --white-color: #fff;
+  --black-color: #000;
 }
 
 .InlineCustomerSupport {
-    width: 100%;
-    transform: translateX(-25px);
+  // width: 100%;
+  // transform: translateX(-25px);
+
+  @include desktop {
+    display: flex;
+    flex: 1;
+    // width: 50%;
+    // min-width: 30.556vw;
+    transform: none;
+  }
+
+  &-Button {
+    padding-right: 31px;
+    padding-left: 0;
+    text-align: left;
+    width: 150px;
+    height: 31px;
+    display: none;
+    color: #4a4a4a;
+    font-family: "Avenir Next";
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    line-height: 15px;
 
     @include desktop {
-        display: flex;
-        width: 50%;
-        transform: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
-    &-Button {
-        padding-left: 0;
-        text-align: left;
-        width: 160px;
-        height: 30px;
-        font-size: 12px;
-        display: none;
-        font-weight: var(--fw-demi);
-
-        @include desktop {
-            display: block;
-        }
-
-        &::after {
-            content:"";
-            position:absolute;
-            width: 0;
-            height: 0;
-            border-left: 5px solid transparent;
-            border-right: 5px solid transparent;
-            border-top: 5px solid var(--black-color);
-            top: 11px;
-            right: 10px;
-        }
-
-        &_isExpanded {
-            &::after {
-                border-left: 5px solid transparent;
-                border-right: 5px solid transparent;
-                border-bottom: 5px solid var(--black-color);
-                border-top: 0;
-            }
-        }
-
-        &_isArabic {
-            padding-left: 5px;
-            &::after {
-                right: 140px;
-            }
-        }
+    &::after {
+      display: block;
+      box-sizing: border-box;
+      right: 17px;
+      top: 9px;
+      position: absolute;
+      content: "";
+      background: url(../Icons/ChevronDown/icon.svg) no-repeat;
+      background-size: 12px;
+      width: 12px;
+      height: 12px;
     }
 
-    &-Dropdown {
-        border: 1px solid var(--border-color);
-        border-radius: 5px;
-        width: 260px;
-        margin-left: 80px;
-        position: absolute;
-        z-index: 4;
-        background: var(--white-color);
-        padding: 20px 20px 8px;
-        display: none;
+    &_isExpanded {
+      &::after {
+        background: url(../Icons/ChevronUp/icon.svg) no-repeat;
+        background-size: 12px;
+        top: 8px;
+      }
+    }
 
-        &_isExpanded {
-            display: block;
-        }
+    &_isArabic {
+      padding-left: 31px !important;
+      text-align: left !important;
+
+      &::after {
+        right: 121px;
+      }
+    }
+  }
+
+  &-Dropdown {
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    width: 260px;
+    margin-left: 80px;
+    position: absolute;
+    z-index: 4;
+    background: var(--white-color);
+    padding: 20px 20px 8px;
+    display: none;
+
+    &_isExpanded {
+      display: block;
+    }
+  }
+
+  p {
+    font-size: 12px;
+    line-height: 16px;
+    margin: 4px 0;
+
+    @include desktop {
+      margin: unset;
+    }
+  }
+
+  a {
+    margin: 4px 0;
+    display: block;
+    color: var(--white-color);
+
+    @include desktop {
+      color: var(--link-color);
+      margin: unset;
+    }
+  }
+
+  &-OpenHours {
+    font-weight: var(--fw-bold);
+    padding-bottom: 12px;
+  }
+
+  &-DisplayPhone {
+    display: flex;
+    padding: 12px 0;
+  }
+
+  &-Phone {
+    font-size: 14px;
+
+    &::before {
+      position: absolute;
+      content: "";
+      background: url(./icons/phone.svg) no-repeat;
+      background-size: 22px;
+      width: 22px;
+      height: 22px;
+      display: inline-block;
+      font-size: 0;
+      transform: rotate(-10deg);
+      left: 5px;
+      top: -3px;
+    }
+
+    &::after {
+      width: 120px;
+      position: absolute;
+      left: 12px;
+      content: "TAP TO CALL";
+      font-weight: bold;
+      font-weight: bold;
+      font-size: 10px;
+      color: white;
+      letter-spacing: 0.91px;
+    }
+
+    @include desktop {
+      &::before {
+        content: none;
+      }
+
+      &::after {
+        content: none;
+      }
+    }
+
+    bdi {
+      visibility: hidden;
+
+      @include desktop {
+        visibility: visible;
+      }
+    }
+
+    &_isArabic {
+      &::after {
+        right: 22px;
+        left: 0;
+        width: auto;
+      }
+
+      &::before {
+        right: 5px;
+        left: 0;
+
+      }
+    }
+  }
+
+  &-PhoneIcon {
+    background: url(./icons/icons.png) -10px -36px no-repeat;
+    width: 20px;
+    height: 21px;
+    top: -3px;
+    margin-right: 15px;
+
+    &_isArabic {
+      margin-left: 15px;
+      margin-right: 0;
+    }
+  }
+
+  &-DisplayEmail {
+    display: flex;
+    padding: 12px 0;
+  }
+
+  &-Email {
+    margin: 0;
+    font-size: 13px;
+  }
+
+  &-EmailIcon {
+    background: url(./icons/icons.png) -41px -36px no-repeat;
+    width: 28px;
+    height: 20px;
+    top: -3px;
+    margin-right: 15px;
+
+    &_isArabic {
+      margin-left: 15px;
+      margin-right: 0;
+    }
+  }
+
+  &-DisplayQuickAccess {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: left;
+    width: 100%;
+    color: var(--white-color);
+    text-align: center;
+    padding: 0;
+    border: none;
+    color: #4a4a4a;
+    font-family: "Avenir Next";
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 18px;
+    &_isArabic {
+      justify-content: right;
+      margin-left: 5px;
+    }
+    @include desktop {
+      color: var(--black-color);
+      // margin-left: 20px;
+      // padding-left: 15px;
+      margin-left: 0;
+      padding-left: 9px;
+      // margin-top: 7px;
+      // margin-bottom: 7px;
+      border-left: 1px solid var(--border-color);
+      // justify-content: left;
+      // min-height: 25px;
     }
 
     p {
-        font-size: 12px;
-        line-height: 16px;
-        margin: 4px 0;
+      // text-transform: uppercase;
+      padding-right: 3px;
 
-        @include desktop {
-            margin: unset;
-        }
+      font-weight: var(--fw-demi);
+      color: #4a4a4a;
+      font-family: "Avenir Next";
+      font-size: 13px;
+      letter-spacing: 0;
+      line-height: 18px;
+
+      @include tablet{
+      font-weight: bold;
+      color: white;
+      font-size: 10px;
+      letter-spacing: 0.91px;
+      line-height: 36px;
+      margin: 0;
+      }
+      @include mobile{
+        font-weight: bold;
+        color: white;
+        font-size: 10px;
+        letter-spacing: 0.91px;
+        line-height: 36px;
+        margin: 0;
+      }
+
+      &::first-letter {
+        text-transform: uppercase;
+      }
+
+      @include desktop {
+        width: auto;
+        font-size: 13px;
+      }
     }
 
     a {
-        margin: 4px 0;
-        display: block;
-        color: var(--white-color);
+      font-weight: var(--fw-demi);
+      color: #4a4a4a;
+      font-size: 13px;
+      letter-spacing: 0;
+      line-height: 18px;
 
-        @include desktop {
-            color: var(--link-color);
-            margin: unset;
-        }
+      @include desktop {
+        // font-size: 13px;
+      }
     }
 
-    &-OpenHours {
-        font-weight: var(--fw-bold);
-        padding-bottom: 12px;
+    &_isArabic {
+      p {
+        padding-left: 3px;
+        padding-right: 0;
+      }
+      @include desktop {
+        margin-left: 0;
+        padding-right: 9px;
+        padding-left: 0;
+        // margin-right: 20px;
+        // padding-right: 15px;
+        border-right: 1px solid var(--border-color);
+        border-left: none;
+      }
     }
-
-    &-DisplayPhone{
-        display: flex;
-        padding: 12px 0;
-    }
-
-    &-Phone {
-        font-size: 14px;
-
-        &::before{
-            position: absolute;
-            content: "";
-            background: url(./icons/phonecall.svg) no-repeat;
-            background-size: 24px;
-            width: 24px;
-            height: 24px;
-            display: inline-block;
-            font-size: 0;
-            transform: rotate(-10deg);
-            left: 5px;
-            top: -5px;
-        }
-
-        &::after{
-            width: 120px;
-            position: absolute;
-            left: 32px;
-            content: "TAP TO WHATSAPP";
-            font-weight: var(--fw-medium);
-        }
-
-        @include desktop {
-            &::before {
-                content: none;
-            }
-
-            &::after{
-                content: none;
-            }
-        }
-
-        bdi {
-            visibility: hidden;
-
-            @include desktop {
-                visibility: visible;
-            }
-        }
-
-        &_isArabic {
-            &::after{
-                right: 35px;
-                left: 0;
-            }
-
-            &::before{
-                right: 5px;
-                left: 0;
-            }
-        }
-    }
-
-    &-PhoneIcon {
-        background: url(./icons/icons.png) -10px -36px no-repeat;
-        width: 20px;
-        height: 21px;
-        top: -3px;
-        margin-right: 15px;
-
-        &_isArabic {
-            margin-left: 15px;
-            margin-right: 0;
-        }
-    }
-
-    &-DisplayEmail{
-        display: flex;
-        padding: 12px 0;
-    }
-
-    &-Email {
-        margin: 0;
-        font-size: 13px;
-    }
-
-    &-EmailIcon {
-        background: url(./icons/icons.png) -41px -36px no-repeat;
-        width: 28px;
-        height: 20px;
-        top: -3px;
-        margin-right: 15px;
-
-        &_isArabic {
-            margin-left: 15px;
-            margin-right: 0;
-        }
-    }
-
-    &-DisplayQuickAccess {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        margin: 5px 0;
-        color: var(--white-color);
-        font-weight: var(--fw-demi);
-        text-align: center;
-        padding: 0;
-        border: none;
-        line-height: 16px;
-
-        @include desktop {
-            color: var(--black-color);
-            margin-left: 20px;
-            padding-left: 15px;
-            margin-top: 7px;
-            margin-bottom: 7px;
-            border-left: 1px solid var(--border-color);
-            justify-content: left;
-            min-height: 25px;
-        }
-
-        p {
-            text-transform: uppercase;
-            font-weight: var(--fw-medium);
-            letter-spacing: 0;
-            padding-right: 3px;
-            font-size: 12px;
-
-            &::first-letter{
-                text-transform: uppercase;
-            }
-
-            @include desktop {
-                width: auto;
-                font-size: 13px;
-            }
-        }
-
-        a {
-            font-size: 12px;
-            line-height: 16px;
-            font-weight: var(--fw-bold);
-
-            @include desktop {
-                font-size: 13px;
-            }
-        }
-
-        &_isArabic {
-            p {
-                padding-left: 3px;
-                padding-right: 0;
-            }
-            @include desktop {
-                margin-left: 0;
-                padding-left: 0;
-                margin-right: 20px;
-                padding-right: 15px;
-                border-right: 1px solid var(--border-color);
-                border-left: none;
-            }
-        }
-    }
+  }
 }
 
 .PageWrapper {
-    &_isArabic {
-        .InlineCustomerSupport {
-            transform: translateX(25px);
+  &_isArabic {
+    .InlineCustomerSupport {
+      transform: translateX(0);
 
-            &-Button {
-                padding-right: 0;
-                text-align: right;
-            }
-        }
+      &-Button {
+        padding-right: 0;
+        text-align: right;
+      }
+
+      .CircleContainer {
+        margin-right: 0px;
+        margin-left: 4px;
+      }
     }
+  }
+}
+
+@keyframes pulse {
+  0% {
+    -moz-transform: scale(0);
+    -webkit-transform: scale(0);
+    opacity: 0;
+  }
+  25% {
+    -moz-transform: scale(0);
+    -webkit-transform: scale(0);
+    opacity: 0.1;
+  }
+  50% {
+    -moz-transform: scale(0.1);
+    -webkit-transform: scale(0.1);
+    opacity: 0.3;
+  }
+  75% {
+    -moz-transform: scale(0.5);
+    -webkit-transform: scale(0.5);
+    opacity: 0.5;
+  }
+  100% {
+    -moz-transform: scale(1);
+    -webkit-transform: scale(1);
+    opacity: 0;
+  }
+}
+
+.CircleContainer {
+  width: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin-right: 4px;
+
+  &-Pulse {
+    width: 10px;
+    height: 10px;
+    border: 5px solid #28d9aa;
+    -webkit-border-radius: 30px;
+    -moz-border-radius: 30px;
+    border-radius: 30px;
+    background-color: #28d9aa;
+    z-index: 10;
+    position: absolute;
+  }
+
+  &-Dot {
+    border: 10px solid #28d9aa;
+    background: transparent;
+    -webkit-border-radius: 60px;
+    -moz-border-radius: 60px;
+    border-radius: 60px;
+    height: 16px;
+    width: 16px;
+    -webkit-animation: pulse 3s ease-out;
+    -moz-animation: pulse 3s ease-out;
+    animation: pulse 3s ease-out;
+    -webkit-animation-iteration-count: infinite;
+    -moz-animation-iteration-count: infinite;
+    animation-iteration-count: infinite;
+
+    z-index: 1;
+    opacity: 0;
+  }
+  @include tablet{
+    display: none;
+  }
+  @include mobile{
+    display: none;
+  }
 }

@@ -1,10 +1,9 @@
+import DragScroll from "Component/DragScroll/DragScroll.component";
 import Link from "Component/Link";
 import PropTypes from "prop-types";
-// import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
 import "react-circular-carousel/dist/index.css";
-import TinySlider from "tiny-slider-react";
-// import { getUUID } from "Util/Auth";
+import { isArabic } from "Util/App";
 import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
 import { formatCDNLink } from "Util/Url";
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
@@ -14,6 +13,7 @@ import {
   HOME_PAGE_BANNER_IMPRESSIONS,
   HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
 } from "Component/GoogleTagManager/events/BannerImpression.event";
+import Image from "Component/Image";
 
 const settings = {
   lazyload: true,
@@ -46,14 +46,34 @@ class DynamicContentCircleItemSlider extends PureComponent {
       })
     ).isRequired,
   };
-
+  ref = React.createRef();
   state = {
+    isArabic: isArabic(),
     impressionSent: false,
+    livePartyItems: null
   };
-
   componentDidMount() {
     this.registerViewPortEvent();
+    this.fetchLivePartyData();
   }
+
+  fetchLivePartyData = () => {
+    const apiUrl = "https://api.spockee.io/rest/v2/broadcast/upcoming?storeId=13207961&isStaging=true";
+    fetch(apiUrl)
+      .then((response) => response.json())
+      .then((data) => {
+        let newData = data.filter(val => (!val.m3u8URI))
+        this.setState(
+          {
+            livePartyItems: newData,
+          },
+          () => {
+            console.log(this.state.livePartyItems);
+          }
+        );
+      });
+  }
+
 
   registerViewPortEvent() {
     let observer;
@@ -84,27 +104,31 @@ class DynamicContentCircleItemSlider extends PureComponent {
     });
   };
 
+  sendImpressions() {
+    const { items = [] } = this.props;
+    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
+    this.setState({ impressionSent: true });
+  }
+  handleIntersect = (entries, observer) => {
+    const { impressionSent } = this.state;
+    if (impressionSent) {
+      return;
+    }
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        this.sendImpressions();
+      }
+    });
+  };
+
   clickLink = (a) => {
-    let link = "/" + a.link.split("?")[0];
+    let link = "/" + a.link;
     localStorage.setItem("bannerData", JSON.stringify(a));
     localStorage.setItem("CircleBannerUrl", link);
     let banner = {
       link: a.link,
       promotion_name: a.promotion_name,
     };
-    // const locale = VueIntegrationQueries.getLocaleFromUrl();
-    // VueIntegrationQueries.vueAnalayticsLogger({
-    //   event_name: VUE_CAROUSEL_CLICK,
-    //   params: {
-    //     event: VUE_CAROUSEL_CLICK,
-    //     pageType: "plp",
-    //     currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-    //     clicked: Date.now(),
-    //     uuid: getUUID(),
-    //     referrer: "desktop",
-    //     widgetID: "vue_visually_similar_slider", // TODO: will be added after vue product slider.
-    //   },
-    // });
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
     this.sendBannerClickImpression(a);
   };
@@ -114,18 +138,14 @@ class DynamicContentCircleItemSlider extends PureComponent {
 
   renderCircle = (item, i) => {
     const { link, label, image_url, plp_config } = item;
-
-    const linkTo = {
-      pathname: formatCDNLink(link),
-      state: { plp_config },
-    };
+    const { isArabic } = this.state;
 
     // TODO: move to new component
 
     return (
-      <div block="CircleSlider" key={i}>
+      <div block="CircleSlider" mods={{ isArabic }} key={i}>
         <Link
-          to={linkTo}
+          to={formatCDNLink(link)}
           key={i}
           data-banner-type="circleItemSlider"
           data-promotion-name={item.promotion_name ? item.promotion_name : ""}
@@ -134,40 +154,78 @@ class DynamicContentCircleItemSlider extends PureComponent {
             this.clickLink(item);
           }}
         >
-          <img
-            src={image_url}
-            alt={label}
-            block="Image"
-            width="70px"
-            height="70px"
-          />
-          {/* <Image
-                      src={ image_url }
-                      alt={ label }
-                      mix={ { block: 'DynamicContentCircleItemSlider', elem: 'Image' } }
-                      ratio="custom"
-                      height="70px"
-                      width="70px"
-                    /> */}
-          {/* <button
-                  block="DynamicContentCircleItemSlider"
-                  elem="Label"
-                  mix={ { block: 'button primary' } }
-                >
-                    { label }
-                </button> */}
+          <div block="OuterCircle">
+            <div block="OuterCircle" elem="InnerCircle"></div>
+            <img
+              src={image_url}
+              alt={label}
+              block="Image"
+              width="70px"
+              height="70px"
+            />
+          </div>
         </Link>
         <div block="CircleSliderLabel">{label}</div>
       </div>
     );
   };
 
+  renderLiveParty = (item, i) => {
+    // const { link, label, image_url, plp_config } = item;
+    let link = `/live-party?broadcastId=${item.id}`
+    let label = item.name;
+    let image_url = item.mainImageURI
+    const { isArabic } = this.state;
+
+    // TODO: move to new component
+
+    return (
+      <div block="CircleSlider" mods={{ isArabic }} key={i}>
+        <Link
+          to={formatCDNLink(link)}
+          key={i}
+          data-banner-type="circleItemSlider"
+          data-promotion-name={item.promotion_name ? item.promotion_name : ""}
+          data-tag={item.tag ? item.tag : ""}
+          onClick={() => {
+            this.clickLink(item);
+          }}
+        >
+          <div block="OuterCircle OuterLiveParty">
+            <div block="OuterCircle" elem="LiveParty"></div>
+            <div block="OuterCircle" elem="LivePartyBackground"></div>
+            <div block="OuterCircle" elem="LivePartyText">LIVE</div>
+            <img
+              src={image_url}
+              alt={label}
+              block="Image"
+              width="70px"
+              height="70px"
+            />
+          </div>
+        </Link>
+        <div block="CircleSliderLabel">{label}</div>
+
+      </div>
+    );
+  };
+
+
   renderCircles() {
     const { items = [] } = this.props;
     return (
-      <TinySlider settings={settings} block="CircleSliderWrapper">
-        {items.map(this.renderCircle)}
-      </TinySlider>
+      <DragScroll data={{ rootClass: "CircleSliderWrapper", ref: this.ref }}>
+        <div
+          ref={this.ref}
+          id="CircleSliderWrapper"
+          block="CircleSliderWrapper"
+        >
+          <div className="CircleItemHelper"></div>
+            {this.state.livePartyItems && this.state.livePartyItems.map(this.renderLiveParty)}
+          {items.map(this.renderCircle)}
+          <div className="CircleItemHelper"></div>
+        </div>
+      </DragScroll>
     );
   }
 

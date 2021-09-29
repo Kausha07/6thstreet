@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 // import PropTypes from 'prop-types';
 import Accordion from "Component/Accordion";
 import ShareButton from "Component/ShareButton";
@@ -14,6 +15,7 @@ import "./PDPDetailsSection.style";
 class PDPDetailsSection extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
+    clickAndCollectStores: PropTypes.object.isRequired,
   };
 
   state = {
@@ -27,6 +29,7 @@ class PDPDetailsSection extends PureComponent {
       5: true,
     },
     pdpWidgetsAPIData: [],
+    isArabic: isArabic(),
   };
 
   componentDidMount() {
@@ -95,7 +98,6 @@ class PDPDetailsSection extends PureComponent {
     const {
       product: { description },
     } = this.props;
-    console.log(product);
     return (
       <>
         <p block="PDPDetailsSection" elem="SizeFit">
@@ -136,15 +138,33 @@ class PDPDetailsSection extends PureComponent {
   };
 
   renderIconsSection() {
+    const { clickAndCollectStores } = this.props;
     return (
       <div block="PDPDetailsSection" elem="IconsSection">
+        {
+          clickAndCollectStores?.length
+          ?
+          <div block="PDPDetailsSection" elem="IconContainer">
+            <div
+              block="PDPDetailsSection"
+              elem="Icon"
+              mods={{ clickAndCollect: true }}
+            />
+            <div>
+              <div block="Click">{__("Click")}</div>
+              <div block="AndCollect">{__("& Collect")}</div>
+            </div>
+          </div>
+          :
+          null
+        }
         <div block="PDPDetailsSection" elem="IconContainer">
           <div
             block="PDPDetailsSection"
             elem="Icon"
             mods={{ isGenuine: true }}
           />
-          {__("100% Genuine")}
+          <div>{__("100% Genuine")}</div>
         </div>
         <div block="PDPDetailsSection" elem="IconContainer">
           <div
@@ -152,7 +172,7 @@ class PDPDetailsSection extends PureComponent {
             elem="Icon"
             mods={{ freeReturn: true }}
           />
-          {__("Free Returns")}
+          <div>{__("Free Returns")}</div>
         </div>
       </div>
     );
@@ -466,7 +486,7 @@ class PDPDetailsSection extends PureComponent {
       },
       product
     } = this.props;
-    
+
     highlighted_attributes.forEach((item) => console.log(item))
     const highlights = this.getHighlights(
       highlighted_attributes,
@@ -522,7 +542,7 @@ class PDPDetailsSection extends PureComponent {
       </p>
     );
   }
-  
+
 
   renderSizeAndFit() {
     const {
@@ -580,7 +600,7 @@ class PDPDetailsSection extends PureComponent {
   }
 
   renderPdpWidgets() {
-    const { pdpWidgetsData } = this.props;
+    const { pdpWidgetsData,renderMySignInPopup } = this.props;
     const { pdpWidgetsAPIData } = this.state;
     if (pdpWidgetsData.length > 0 && pdpWidgetsAPIData.length > 0) {
       return (
@@ -596,6 +616,8 @@ class PDPDetailsSection extends PureComponent {
                     widgetID={widgetID}
                     products={data}
                     heading={heading}
+                    isHome={true}
+                    renderMySignInPopup={renderMySignInPopup}
                     pageType={"pdp"}
                     key={`DynamicContentVueProductSliderContainer${index}`}
                   />

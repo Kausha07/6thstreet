@@ -35,19 +35,27 @@ export class DynamicContentProductSliderContainer extends PureComponent {
   }
 
   containerProps = () => {
-    const { title, data_url, language } = this.props;
+    const {
+        title,
+        data_url,
+        language,
+        renderMySignInPopup
+    } = this.props;
 
-    const { products, isLoading } = this.state;
+    const {
+        products,
+        isLoading
+    } = this.state;
 
     return {
-      title,
-      data_url,
-      language,
-      isLoading,
-      products,
+        title,
+        data_url,
+        language,
+        isLoading,
+        products,
+        renderMySignInPopup
     };
   };
-
   async requestItems() {
     const { data_url, setImpressions } = this.props;
     const { params } = WebUrlParser.parsePLP(data_url);
@@ -70,10 +78,12 @@ export class DynamicContentProductSliderContainer extends PureComponent {
 
       this.setState({
         products: [],
-        isLoading: false,
-      });
-    }
+        isLoading: true
+    })
+
+
   }
+}
 
   render() {
     return <DynamicContentProductSlider {...this.containerProps()} />;

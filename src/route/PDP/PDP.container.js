@@ -27,6 +27,7 @@ export const BreadcrumbsDispatcher = import(
 export const mapStateToProps = (state) => ({
   isLoading: state.PDP.isLoading,
   product: state.PDP.product,
+  clickAndCollectStores: state.PDP.clickAndCollectStores,
   options: state.PDP.options,
   nbHits: state.PDP.nbHits,
   country: state.AppState.country,
@@ -40,6 +41,14 @@ export const mapDispatchToProps = (dispatch) => ({
   requestProduct: (options) => PDPDispatcher.requestProduct(options, dispatch),
   requestProductBySku: (options) =>
     PDPDispatcher.requestProductBySku(options, dispatch),
+  getClickAndCollectStores: (brandName, sku, latitude, longitude) =>
+    PDPDispatcher.getClickAndCollectStores(
+      brandName,
+      sku,
+      latitude,
+      longitude,
+      dispatch
+    ),
   setIsLoading: (isLoading) => dispatch(setPDPLoading(isLoading)),
   updateBreadcrumbs: (breadcrumbs) => {
     BreadcrumbsDispatcher.then(({ default: dispatcher }) =>
@@ -57,6 +66,8 @@ export class PDPContainer extends PureComponent {
     options: PropTypes.shape({ id: PropTypes.number }).isRequired,
     requestProduct: PropTypes.func.isRequired,
     requestProductBySku: PropTypes.func.isRequired,
+    getClickAndCollectStores: PropTypes.func.isRequired,
+    clickAndCollectStores: PropTypes.object.isRequired,
     setIsLoading: PropTypes.func.isRequired,
     isLoading: PropTypes.bool.isRequired,
     product: Product.isRequired,
@@ -90,7 +101,6 @@ export class PDPContainer extends PureComponent {
 
   constructor(props) {
     super(props);
-
     this.requestProduct();
   }
 
@@ -119,7 +129,7 @@ export class PDPContainer extends PureComponent {
       id,
       isLoading,
       setIsLoading,
-      product: { sku } = {},
+      product: { sku, brand_name: brandName } = {},
       product,
       menuCategories = [],
     } = this.props;
@@ -141,11 +151,36 @@ export class PDPContainer extends PureComponent {
       this.updateBreadcrumbs();
       this.setMetaData();
       this.updateHeaderState();
+      this.fetchClickAndCollectStores(brandName, sku);
     }
 
     Event.dispatch(EVENT_GTM_PRODUCT_DETAIL, {
       product: product,
     });
+  }
+
+  fetchClickAndCollectStores(brandName, sku) {
+    const { getClickAndCollectStores } = this.props;
+
+    const options = {
+      enableHighAccuracy: true,
+    };
+
+    const successCallback = ({ coords }) =>
+      getClickAndCollectStores(
+        brandName,
+        sku,
+        coords?.latitude,
+        coords?.longitude
+      );
+    const errorCallback = (err) => console.error(err);
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        successCallback,
+        errorCallback,
+        options
+      );
+    }
   }
 
   updateHeaderState() {
@@ -194,10 +229,6 @@ export class PDPContainer extends PureComponent {
           name: __(name),
         },
         ...productBreadcrumbs,
-        {
-          url: "/",
-          name: __("Home"),
-        },
       ];
 
       updateBreadcrumbs(breadcrumbs);
@@ -273,8 +304,14 @@ export class PDPContainer extends PureComponent {
   }
 
   containerProps = () => {
-    const { nbHits, isLoading, brandDescription, brandImg, brandName } =
-      this.props;
+    const {
+      nbHits,
+      isLoading,
+      brandDescription,
+      brandImg,
+      brandName,
+      clickAndCollectStores,
+    } = this.props;
 
     const { isLoading: isCategoryLoading } = this.state;
 
@@ -285,6 +322,7 @@ export class PDPContainer extends PureComponent {
       brandDescription,
       brandImg,
       brandName,
+      clickAndCollectStores,
     };
   };
 

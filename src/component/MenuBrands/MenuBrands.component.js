@@ -45,15 +45,23 @@ class MenuBrands extends PureComponent {
       /\/men|\/women|\/kids-baby_boy-boy-girl-baby_girl|\/kids/
     )
       ? link
-          .replace("/men.html", ".html")
-          .replace("/women.html", ".html")
-          .replace("/kids-baby_boy-boy-girl-baby_girl.html", ".html")
-          .replace("/kids.html", ".html")
-          .replace("/home.html", ".html")
+        .replace("/men.html", ".html")
+        .replace("/women.html", ".html")
+        .replace("/kids-baby_boy-boy-girl-baby_girl.html", ".html")
+        .replace("/kids.html", ".html")
+        .replace("/home.html", ".html")
+      : link;
+    let newUpdatedLink = link.includes("is_new_in")
+      ? link.split("?")[0] + "?is_new_in=1"
       : link;
 
     return (
-      <Link to={updatedLink} title={label} key={i} onClick={this.onItemClick}>
+      <Link
+        to={newUpdatedLink}
+        title={label}
+        key={i}
+        onClick={this.onItemClick}
+      >
         <Image src={image_url} />
         {label}
       </Link>
@@ -104,7 +112,8 @@ class MenuBrands extends PureComponent {
       <div block="MenuBrands">
         <div block="MenuBrands" elem="ContentWrapper">
           <span block="MenuBrands" elem="Title">
-            {__("Shop By Brands")}
+            {this.props.title}
+            {/* {__("Shop By Brands")} */}
           </span>
           <div
             mix={{

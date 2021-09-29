@@ -33,7 +33,6 @@ export class MyAccountReturnCreateItem extends PureComponent {
             onResolutionChange,
             resolutions
         } = this.props;
-
         if (!isSelected) {
             return null;
         }
@@ -181,7 +180,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
                 </div>
                 { isSelected && (
                     <div block="MyAccountReturnCreateItem" elem="Resolution">
-                        { this.renderResolutions() }
+                        {/* { this.renderResolutions() } */}
                         { this.renderReasons() }
                     </div>
                 ) }

@@ -42,6 +42,7 @@ export const mapStateToProps = (state) => ({
   country: state.AppState.country,
   config: state.AppConfig.config,
   menuCategories: state.MenuReducer.categories,
+  plpWidgetData: state.PLP.plpWidgetData,
 });
 
 export const mapDispatchToProps = (dispatch, state) => ({
@@ -93,11 +94,9 @@ export class PLPContainer extends PureComponent {
     const { pages } = props;
     const requestOptions = PLPContainer.getRequestOptions();
     const { page, ...restOptions } = requestOptions;
-
     const {
       prevRequestOptions: { page: prevPage, ...prevRestOptions },
     } = state;
-
     if (JSON.stringify(restOptions) !== JSON.stringify(prevRestOptions)) {
       // if queries match (excluding pages) => not inital
       PLPContainer.requestProductList(props);
@@ -112,17 +111,23 @@ export class PLPContainer extends PureComponent {
   }
 
   static getRequestOptions() {
-    const { params: parsedParams } = WebUrlParser.parsePLP(location.href);
-
-    return {
-      // TODO: inject gender ?
-      ...parsedParams,
-    };
+    let params;
+    if (location.search && location.search.startsWith('?q')) {
+      const { params: parsedParams } = WebUrlParser.parsePLP(location.href);
+      params = parsedParams;
+    } else {
+      const { params: parsedParams } = WebUrlParser.parsePLPWithoutQuery(
+        location.href
+      );
+      params = parsedParams;
+    }
+    return params;
   }
 
   static async request(isPage, props) {
     const { requestProductList, requestProductListPage } = props;
     const options = PLPContainer.getRequestOptions();
+
     const requestFunction = isPage
       ? requestProductListPage
       : requestProductList;
@@ -208,12 +213,17 @@ export class PLPContainer extends PureComponent {
       options,
       menuCategories,
     } = this.props;
-
     if (query) {
       const { updateBreadcrumbs, setGender } = this.props;
-      const breadcrumbLevels = options["categories.level2"]
+      const breadcrumbLevels = options["categories.level4"]
+        ? options["categories.level4"]
+        : options["categories.level3"]
+        ? options["categories.level3"]
+        : options["categories.level2"]
         ? options["categories.level2"]
-        : options["categories.level1"];
+        : options["categories.level1"]
+        ? options["categories.level1"]
+        : options["q"];
 
       if (breadcrumbLevels) {
         const levelArray = breadcrumbLevels.split(" /// ") || [];
@@ -229,24 +239,12 @@ export class PLPContainer extends PureComponent {
           return acc;
         }, []);
 
-        const breadcrumbs = [
-          ...productListBreadcrumbs,
-          {
-            url: "/",
-            name: __("Home"),
-          },
-        ];
-
-        updateBreadcrumbs(breadcrumbs);
+        updateBreadcrumbs(productListBreadcrumbs);
       } else {
         const breadcrumbs = [
           {
             url: "/",
             name: options["categories.level0"],
-          },
-          {
-            url: "/",
-            name: __("Home"),
           },
         ];
 
@@ -303,8 +301,8 @@ export class PLPContainer extends PureComponent {
 
   getIsLoading() {
     const { requestedOptions } = this.props;
-    const options = PLPContainer.getRequestOptions();
 
+    const options = PLPContainer.getRequestOptions();
     const {
       // eslint-disable-next-line no-unused-vars
       page: requestedPage,
@@ -323,12 +321,23 @@ export class PLPContainer extends PureComponent {
   }
 
   containerProps = () => {
-    const { brandDescription, brandImg, brandName } = this.props;
+    const {
+      brandDescription,
+      brandImg,
+      brandName,
+      query,
+      plpWidgetData,
+      gender,
+    } = this.props;
+
     // isDisabled: this._getIsDisabled()
     return {
       brandDescription,
       brandImg,
       brandName,
+      query,
+      plpWidgetData,
+      gender,
     };
   };
 

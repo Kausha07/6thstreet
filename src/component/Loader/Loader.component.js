@@ -11,6 +11,7 @@
 
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
+import Image from "Component/Image";
 
 import LoaderImg from "./images/loader-1.gif";
 

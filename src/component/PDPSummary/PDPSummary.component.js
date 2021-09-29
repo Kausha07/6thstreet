@@ -16,6 +16,7 @@ import { SPECIAL_COLORS, translateArabicColor } from "Util/Common";
 import isMobile from "Util/Mobile";
 import tabby from "./icons/tabby.svg";
 import "./PDPSummary.style";
+import Image from "Component/Image";
 
 class PDPSummary extends PureComponent {
   static propTypes = {
@@ -28,6 +29,7 @@ class PDPSummary extends PureComponent {
     prevAlsoAvailable: [],
     showPopup: false,
     stockAvailibility: true,
+    isArabic: isArabic(),
   };
 
   static getDerivedStateFromProps(props, state) {
@@ -43,7 +45,6 @@ class PDPSummary extends PureComponent {
         prevAlsoAvailable: alsoAvailable !== undefined ? alsoAvailable : null,
       });
     }
-
     return Object.keys(derivedState).length ? derivedState : null;
   }
 
@@ -88,6 +89,7 @@ class PDPSummary extends PureComponent {
     const {
       product: { sku },
       product,
+      renderMySignInPopup,
     } = this.props;
     const url = new URL(window.location.href);
 
@@ -98,18 +100,18 @@ class PDPSummary extends PureComponent {
     return (
       <>
         {this.renderPDPSummaryHeader()}
-        <div
-          block="ShareAndWishlistButtonContainer"
-          mods={{
-            isArabic: isArabic(),
-          }}
-        >
+        <div block="ShareAndWishlistButtonContainer">
           <ShareButton
             title={document.title}
             text={`Hey check this out: ${document.title}`}
             url={url.searchParams.append("utm_source", "pdp_share")}
           />
-          <WishlistIcon sku={sku} data={product} pageType="pdp" />
+          <WishlistIcon
+            sku={sku}
+            renderMySignInPopup={renderMySignInPopup}
+            data={product}
+            pageType="pdp"
+          />
         </div>
       </>
     );
@@ -131,49 +133,6 @@ class PDPSummary extends PureComponent {
         {isMobile.any() && this.renderPDPSummaryHeader()}
       </div>
     );
-  }
-
-  renderTabby() {
-    const {
-      product: { price },
-    } = this.props;
-    if (price) {
-      const priceObj = Array.isArray(price) ? price[0] : price;
-      const [currency, priceData] = Object.entries(priceObj)[0];
-      const { country } = JSON.parse(
-        localStorage.getItem("APP_STATE_CACHE_KEY")
-      ).data;
-      const { default: defPrice } = priceData;
-
-      if ((country === "AE" || country === "SA") && defPrice >= 150) {
-        const monthPrice = (defPrice / 4).toFixed(2);
-        return (
-          <>
-            <button
-              block="PDPSummary"
-              elem="Tabby"
-              onClick={this.openTabbyPopup}
-            >
-              {__("From")}
-              <strong
-                block="PDPSummary"
-                elem="TabbyPrice"
-              >{`${monthPrice} ${currency}`}</strong>
-              {__(" a month with ")}
-              <img src={tabby} alt="tabby" />
-              <span block="PDPSummary" elem="LearnMore">
-                {__("Learn more")}
-              </span>
-            </button>
-            <div block="Seperator" />
-          </>
-        );
-      }
-
-      return null;
-    }
-
-    return null;
   }
 
   openTabbyPopup = () => {
@@ -258,7 +217,7 @@ class PDPSummary extends PureComponent {
 
   renderPDPTags() {
     const {
-      product: { prod_tag_1, prod_tag_2 },
+      product: { prod_tag_1, prod_tag_2, in_stock, stock_qty },
     } = this.props;
 
     const tags = [prod_tag_1, prod_tag_2].filter(Boolean);
@@ -266,12 +225,12 @@ class PDPSummary extends PureComponent {
     if (tags && tags.length) {
       return (
         <>
+          {in_stock === 0 && <div block="Seperatortop" />}
           <PDPTags tags={tags} />
           <div block="Seperator" />
         </>
       );
     }
-
     return null;
   }
 
@@ -279,6 +238,7 @@ class PDPSummary extends PureComponent {
     const {
       product: { sku },
       isLoading,
+      renderMySignInPopup,
     } = this.props;
     const { alsoAvailable } = this.state;
 
@@ -287,6 +247,7 @@ class PDPSummary extends PureComponent {
         return (
           <PDPAlsoAvailable
             productsAvailable={alsoAvailable}
+            renderMySignInPopup={renderMySignInPopup}
             productSku={sku}
           />
         );
@@ -296,9 +257,54 @@ class PDPSummary extends PureComponent {
     return null;
   }
 
+  renderTabby() {
+    const {
+      product: { price },
+    } = this.props;
+    if (price) {
+      const priceObj = Array.isArray(price) ? price[0] : price;
+      const [currency, priceData] = Object.entries(priceObj)[0];
+      const { country } = JSON.parse(
+        localStorage.getItem("APP_STATE_CACHE_KEY")
+      ).data;
+      const { default: defPrice } = priceData;
+
+      if ((country === "AE" || country === "SA") && defPrice >= 150) {
+        const monthPrice = (defPrice / 4).toFixed(2);
+        return (
+          <>
+            <button
+              block="PDPSummary"
+              elem="Tabby"
+              onClick={this.openTabbyPopup}
+            >
+              {__("From")}
+              <strong
+                block="PDPSummary"
+                elem="TabbyPrice"
+              >{`${monthPrice} ${currency}`}</strong>
+              {__(" a month with ")}
+              <Image src={tabby} alt="tabby" />
+
+              <span block="PDPSummary" elem="LearnMore">
+                {__("Learn more")}
+              </span>
+            </button>
+            <div block="Seperator" />
+          </>
+        );
+      }
+
+      return null;
+    }
+
+    return null;
+  }
+
   render() {
+    const { isArabic } = this.state;
     return (
-      <div block="PDPSummary">
+      <div block="PDPSummary" mods={{ isArabic }}>
         <div block="PDPSummaryHeaderAndShareAndWishlistButtonContainer">
           {this.renderPDPSummaryHeaderAndShareAndWishlistButton()}
         </div>

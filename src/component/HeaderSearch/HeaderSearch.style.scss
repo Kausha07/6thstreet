@@ -110,10 +110,13 @@
     position: absolute;
     top: 7px;
     left: 5px;
-
-    img {
-      width: 15px;
-      height: 15px;
+    .Image {
+      .LazyLoad-wrapper  {
+        img {
+          width: 15px !important;
+          height: 15px !important;
+        }
+      }
     }
 
     @include desktop {
@@ -148,9 +151,13 @@
 
   .Form {
     width: 100%;
+    @include tablet {
+      width: 372px;
+    }
 
     @include before-desktop {
       border-radius: 10px;
+      width: 372px;
       background-color: var(--gray);
       height: 36px;
       display: flex;
@@ -163,7 +170,7 @@
     width: 100%;
 
     input {
-      background-color: transparent;
+      background-color: #f5f5f5;
       border: none;
       border-radius: 5px;
       font-weight: var(--fw-regular);
@@ -194,7 +201,7 @@
 
       @include desktop {
         padding-left: 35px;
-        padding-right: 10px;
+        padding-right: 30px;
       }
     }
 

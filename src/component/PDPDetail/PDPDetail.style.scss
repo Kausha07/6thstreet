@@ -4,16 +4,20 @@
   padding: 16px 0;
   &-BrandImage {
     flex: 1;
-    padding: 1rem;
+    padding: 1rem 1rem 1rem 0;
   }
-  &-Image {
-    max-height: 300px;
-    width: auto;
+  .Image {
+    .LazyLoad-wrapper {
+      img {
+        max-height: 300px !important;
+        width: auto !important;
+      }
+    }
   }
 
   &-BrandDescription {
     flex: 1;
-    padding: 1rem;
+    padding: 1rem 0 1rem 1rem;
   }
 }
 

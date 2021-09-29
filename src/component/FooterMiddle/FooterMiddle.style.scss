@@ -1,107 +1,115 @@
 :root {
-    --footer-background-color: #f6f6f6;
+  --footer-background-color: #f6f6f6;
 }
 
 .FooterMiddle {
-    padding: 25px 50px 25px 50px;
-    margin-top: 3px;
-    background: var(--footer-background-color);
+  padding: 18px 0;
+  margin-top: 3px;
+  background: var(--footer-background-color);
 
-    @include before-desktop {
-        display: none;
+  @include before-desktop {
+    display: none;
+  }
+
+  &_isCheckout {
+    height: 70px;
+    padding: 20px 30px 30px 30px;
+    background: var(--white);
+
+    .HeaderAccount,
+    .CountrySwitcher,
+    .LanguageSwitcher {
+      display: none;
     }
+  }
 
+  &-Layout {
+    display: flex;
+    justify-content: space-between;
+
+    margin: auto;
+    width: var(--main-container-width-dsk);
+    max-width: var(--container-max-width);
     &_isCheckout {
-        height: 70px;
-        padding: 20px 30px 30px 30px;
-        background: var(--white);
-
-        .HeaderAccount,
-        .CountrySwitcher,
-        .LanguageSwitcher {
-            display: none;
-        }
+      max-width: 1150px;
     }
+  }
 
-    &-Layout {
+  &-CustomerSupport {
+    width: 33%;
+
+    .InlineCustomerSupport {
+      &-Dropdown {
+        top: auto;
+        bottom: 100%;
+      }
+
+      &-DisplayQuickAccess {
+        display: none;
+      }
+
+      &-Button {
+        // padding: ;
+      }
+    }
+  }
+
+  &-FooterAccount {
+    // padding-left: 40px;
+    font-size: 14px;
+    font-weight: var(--fw-demi);
+    letter-spacing: 0;
+    line-height: 19px;
+
+    .HeaderAccount {
+      z-index: 1;
+      padding-top: 5px;
+      margin: 0;
+      label {
         display: flex;
-        justify-content: space-between;
-        max-width: 1440px;
-        margin: auto;
-
-        &_isCheckout {
-            max-width: 1150px;
+        span {
+          display: flex;
+          align-items: center;
         }
+      }
+    }
+  }
+
+  &-StoreSwitcher {
+    width: 33%;
+    display: flex;
+
+    .CountrySwitcher {
+      &-CountryBtn {
+        &::after {
+          // transform: none;
+        }
+      }
     }
 
-    &-CustomerSupport {
-        width: 33%;
-
-        .InlineCustomerSupport {
-            &-Dropdown {
-                top: auto;
-                bottom: 100%
-            }
-
-            &-DisplayQuickAccess {
-                display: none;
-            }
-
-            &-Button {
-                padding: 0;
-            }
+    .CountryMiniFlag {
+      &-Container {
+        span {
+          border-left: 7px solid var(--footer-background-color);
+          border-right: 7px solid var(--footer-background-color);
         }
+      }
     }
-
-    &-FooterAccount {
-        padding-left: 40px;
-        font-size: 14px;
-        font-weight: var(--fw-demi);
-        letter-spacing: 0;
-        line-height: 19px;
-
-        .HeaderAccount {
-            z-index: 1;
-            padding-top: 5px;
-            margin: 0;
-        }
-    }
-
-    &-StoreSwitcher {
-        width: 33%;
-        display: flex;
-
-        .CountrySwitcher {
-            &-CountryBtn {
-                &::after {
-                    transform: none;
-                }
-            }
-        }
-
-        .CountryMiniFlag {
-            &-Container {
-                span {
-                    border-left: 7px solid var(--footer-background-color);
-                    border-right: 7px solid var(--footer-background-color);
-                }
-            }
-        }
-    }
+  }
 }
 
 .PageWrapper {
-    &_isArabic {
-        .FooterMiddle {
-            &-StoreSwitcher {
-                .CountrySwitcher {
-                    &-CountryBtn {
-                        &::before {
-                            transform: none;
-                        }
-                    }
-                }
+  &_isArabic {
+    .FooterMiddle {
+      &-StoreSwitcher {
+        .CountrySwitcher {
+          &-CountryBtn {
+            &::before {
+              transform: none;
             }
+          }
         }
+      }
     }
+  }
 }

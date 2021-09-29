@@ -1,7 +1,7 @@
 :root {
     --dark-gray: #b8b8b8;
     --light-gray: #cacaca;
-    --middle-gray: #b7b7b7
+    --middle-gray: #b7b7b7;
 }
 
 .MyAccountCustomerForm {
@@ -40,7 +40,7 @@
     .Field {
         width: 100%;
         @include desktop() {
-            padding-top: .5rem;
+            padding-top: 0.5rem;
         }
         &.Field_type_radio {
             label:last-of-type {
@@ -61,7 +61,7 @@
         margin-top: 9px;
         padding: 0 15px;
         text-transform: uppercase;
-        transition-duration: .25s;
+        transition-duration: 0.25s;
         transition-property: background-color, color, border;
         transition-timing-function: ease-out;
         &:hover {
@@ -73,19 +73,29 @@
     &-Gender {
         &-Radio {
             display: flex;
-            margin-top: 10px;
+            margin-top: 0px;
+            @include after-mobile() {
+                margin-top: 10px;
+            }
+            @include mobile() {
+                margin-top: 10px;
+            }
             .Field {
                 margin-right: 23px;
                 margin-top: 5px;
                 padding-top: 0;
                 width: unset;
+                @include desktop() {
+                    margin-top: 0 !important;
+                    margin-bottom: 5px !important;
+                }
                 label {
                     label {
                         margin-right: 5px;
                     }
                 }
             }
-            .Field [type='radio'] {
+            .Field [type="radio"] {
                 +label {
                     border-radius: 50%;
                     height: 15px;
@@ -103,13 +113,13 @@
                     &::after {
                         border-radius: 50%;
                         bottom: 0;
-                        height: .5rem;
+                        height: 0.5rem;
                         left: 0;
                         margin: auto;
                         right: 0;
                         top: 0;
                         transition-property: background-color, box-shadow;
-                        width: .5rem;
+                        width: 0.5rem;
                         will-change: background-color, box-shadow;
                     }
                 }
@@ -146,7 +156,7 @@
                         margin-right: 0;
                     }
                 }
-                .Field [type='radio'] {
+                .Field [type="radio"] {
                     &:not(:checked)+label {
                         &:after {
                             margin-left: -48px;
@@ -191,7 +201,7 @@
                 font-weight: var(--fw-thin);
             }
             .Cross {
-                background: url('./icons/x-close.svg');
+                background: url("./icons/x-close.svg");
                 height: 20px;
                 margin-left: auto;
                 margin-right: 0;
@@ -230,7 +240,7 @@
         margin-top: 1rem;
         &:after {
             background-color: var(--white);
-            content: '';
+            content: "";
             height: 58px;
             margin-bottom: 2px;
             margin-left: -60px;
@@ -248,7 +258,7 @@
             &:after {
                 border: solid var(--light-gray);
                 border-width: 0 2px 2px 0;
-                content: '';
+                content: "";
                 height: 6px;
                 margin-bottom: 2px;
                 margin-left: -15px;
@@ -279,7 +289,7 @@
             }
         }
         @include desktop() {
-            margin-top: -.5rem;
+            margin-top: -0.5rem;
         }
     }
     #change-password-button {
@@ -318,7 +328,7 @@
     @include after-mobile {
         grid-auto-flow: column;
         grid-column-gap: 2rem;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr;
         margin-bottom: 0;
         &>div {
             margin-top: -50px;
@@ -327,8 +337,8 @@
             width: 50%;
         }
         &-Gender {
-            margin-bottom: 25px;
-            margin-top: -20px;
+            margin-bottom: 0px;
+            margin-top: 0;
         }
         .MyAccountPasswordForm {
             &-Title {
@@ -338,6 +348,6 @@
     }
     @include desktop {
         margin-bottom: 150px;
-        width: 800px;
+        // width: 800px;
     }
 }

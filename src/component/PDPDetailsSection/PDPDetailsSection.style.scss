@@ -5,11 +5,46 @@
 }
 
 .PDPDetailsSection {
-  padding: 0 20px;
+  // padding: 0 20px;
   font-weight: var(--fw-regular);
 
+  .VueProductSlider {
+    &-HeaderContainer {
+      h1 {
+        @include tablet {
+          padding-left: 30px;
+          padding-right: 30px;
+        }
+        @include mobile {
+          padding-left: 10px;
+          padding-right: 10px;
+        }
+      }
+    }
+    &-SliderContainer {
+      @include mobile {
+        width: 100vw;
+      }
+    }
+    // &-Container {
+    //   padding: 0;
+    //   margin: 0;
+    //   width: 100%;
+    // }
+  }
+  &-Accordion {
+    @include mobile() {
+      padding-bottom: 75px;
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+    @include tablet {
+      padding-left: 30px;
+      padding-right: 30px;
+    }
+  }
   @include desktop() {
-    padding: 0 20px;
+    // padding: 0 20px;
   }
 
   h3 {
@@ -20,15 +55,13 @@
     line-height: 50px;
     // border-top: 1px solid var(--pdp-split-line);
     margin-top: 0;
-    padding-top: 28px;
   }
 
   &-IconsSection,
   &-IconContainer {
     display: flex;
-    width: 103px;
+    justify-content: space-evenly;
     align-items: center;
-    font-size: 15px;
     color: var(--pdp-icon-text-color);
     font-weight: var(--fw-regular);
 
@@ -39,14 +72,24 @@
   }
 
   &-IconsSection {
-    align-items: start;
     padding-bottom: 28px;
   }
 
   &-IconContainer {
     margin-top: 10px;
-    font-weight: var(--fw-demi);
-    margin: 0 32px 0 0;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 15px;
+    max-width: 33.333%;
+    .Click {
+      font-size: 16px;
+      font-weight: bold;
+      color: #f96446;
+    }
+    .AndCollect {
+      font-size: 13px;
+      font-weight: bold;
+    }
   }
 
   &-Icon {
@@ -56,21 +99,30 @@
     height: 40px;
     margin-right: 7px;
 
+    &_clickAndCollect {
+      background: url(./icons/clickAndCollect.png) no-repeat;
+      background-size: contain;
+    }
+
     &_isGenuine {
       background: url(./icons/genuine.png) no-repeat;
+      background-size: contain;
     }
 
     &_freeReturn {
       background: url(./icons/returns.png) no-repeat;
+      background-size: contain;
     }
 
+    &_clickAndCollect,
     &_isGenuine,
     &_freeReturn {
       background-size: 40px;
     }
   }
 
-  &-Description, &-SizeFit {
+  &-Description,
+  &-SizeFit {
     font-size: 16px;
     line-height: 24px;
   }
@@ -80,7 +132,8 @@
       font-weight: var(--fw-regular);
       margin-top: 16px;
       margin-bottom: 0;
-      span:nth-child(2), span:nth-child(4) {
+      span:nth-child(2),
+      span:nth-child(4) {
         font-weight: var(--fw-demi);
       }
       span:nth-child(5) {
@@ -99,7 +152,8 @@
     }
   }
 
-  &-Highlights, &-ModelMeasurements {
+  &-Highlights,
+  &-ModelMeasurements {
     font-size: 16px;
     margin-top: 32px;
     font-weight: var(--fw-demi);
@@ -115,6 +169,14 @@
     }
     li {
       list-style-position: outside;
+    }
+  }
+  &-Highlights {
+    &_isArabic {
+      ul {
+        padding-left: 0;
+        padding-right: 30px;
+      }
     }
   }
 
@@ -165,7 +227,7 @@
       align-items: center;
       border: 1px solid #000000;
       border-radius: 8px;
-      background-color: #FFFFFF;
+      background-color: #ffffff;
       padding: 0 20px;
       svg {
         transform: rotateY(0deg);
@@ -285,7 +347,7 @@
     }
   }
   .Seperator {
-    background-color: #EFEFEF;
+    background-color: #efefef;
     margin: 15px 0 0 0;
     height: 1.5px;
   }

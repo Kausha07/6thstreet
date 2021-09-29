@@ -57,6 +57,9 @@
                 overflow: hidden;
                 justify-content: right;
                 top: 12px;
+                @include tablet{
+                    top: -15px;
+                }
 
                 @include desktop {
                     display: flex;
@@ -135,7 +138,7 @@
                 }
             }
         }
-    
+
         .Field {
             margin: auto 5px auto 15px;
 
@@ -159,38 +162,38 @@
                     }
                 }
 
-                +label {           
+                +label {
                     &:hover {
                         &::after {
                                 --checkmark-color: var(--black-color);
                         }
                     }
-    
+
                     border-radius: 50%;
-    
+
                 }
                 &:disabled + label {
                     color: var(--disabeled-radio-button-color);
                     cursor: auto;
                 }
-    
+
                 &:checked + label {
                     --primary-base-color: var(--white-color);
                     border-color: var(--disabeled-radio-button-color);
-                    
+
                     &::after {
                         --checkmark-color: var(--check-mark-mobile-filter-color);
                     }
                 }
 
-                
-    
+
+
                 &:focus {
 
                     &::after {
                         --checkmark-color: var(--check-mark-mobile-filter-color);
                     }
-                    
+
                     + label {
                         &::after {
                             --checkmark-color: var(--check-mark-mobile-filter-color);
@@ -212,7 +215,7 @@
                     }
                 }
             }
-    
+
             [type='checkbox'] {
 
                 + label{
@@ -222,7 +225,7 @@
                         right: 5px;
                     }
                 }
-    
+
                 &:checked + label {
                     --primary-base-color: transparent;
                     @include desktop {
@@ -241,12 +244,12 @@
 
                     &:checked + label {
                         --primary-base-color: transparent;
-    
+
                         &::after {
                             --checkmark-color: var(--check-mark-mobile-filter-color);
                         }
                     }
-                    
+
                 }
             }
         }
@@ -255,7 +258,7 @@
             span {
                 margin-right: 5px;
             }
-        
+
             .Field {
                 margin: auto 15px auto 5px;
             }
