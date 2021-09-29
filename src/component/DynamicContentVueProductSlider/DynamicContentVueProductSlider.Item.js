@@ -8,8 +8,7 @@ import { connect } from "react-redux";
 import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
 import { getUUID } from "Util/Auth";
-import BrowserDatabase from "Util/BrowserDatabase";
-import { VUE_CAROUSEL_CLICK, VUE_CAROUSEL_SHOW } from "Util/Event";
+import { VUE_CAROUSEL_CLICK } from "Util/Event";
 
 export const mapStateToProps = (state) => ({
   country: state.AppState.country,
@@ -22,42 +21,15 @@ class DynamicContentVueProductSliderItem extends PureComponent {
     pageType: PropTypes.string.isRequired,
   };
 
-  componentDidMount() {
-    const {
-      widgetID,
-      pageType = "home",
-      data: { category, sku },
-    } = this.props;
-    let sourceProdID = sku;
-    let sourceCatgID = category;
-    const locale = VueIntegrationQueries.getLocaleFromUrl();
-    const customer = BrowserDatabase.getItem("customer");
-    const userID = customer && customer.id ? customer.id : null;
-    VueIntegrationQueries.vueAnalayticsLogger({
-      event_name: VUE_CAROUSEL_SHOW,
-      params: {
-        event: VUE_CAROUSEL_SHOW,
-        pageType: pageType,
-        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-        clicked: Date.now(),
-        uuid: getUUID(),
-        referrer: window.location.href,
-        url: window.location.href,
-        widgetID: VueIntegrationQueries.getWidgetTypeMapped(widgetID, pageType),
-        userID: userID,
-        sourceProdID: sourceProdID,
-        sourceCatgID: sourceCatgID,
-      },
-    });
-  }
-
   onclick = (widgetID) => {
     const {
       pageType,
-      data: { category, sku },
+      data: { category, sku, link },
+      posofreco,
+      sourceProdID,
+      sourceCatgID,
     } = this.props;
-    let sourceProdID = sku;
-    let sourceCatgID = category;
+    let destProdID = sku;
     // vue analytics
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
@@ -69,10 +41,12 @@ class DynamicContentVueProductSliderItem extends PureComponent {
         clicked: Date.now(),
         uuid: getUUID(),
         referrer: window.location.href,
-        url: window.location.href,
+        url: link,
         widgetID: widgetID,
         sourceProdID: sourceProdID,
         sourceCatgID: sourceCatgID,
+        destprodid: destProdID,
+        posofreco: posofreco,
       },
     });
   };

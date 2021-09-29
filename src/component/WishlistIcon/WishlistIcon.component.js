@@ -49,7 +49,7 @@ class WishlistIcon extends PureComponent {
     );
 
     if (wishListItem) {
-      const { wishlist_item_id } = wishListItem;
+      const { wishlist_item_id, product } = wishListItem;
       removeFromWishlist(wishlist_item_id);
       const prodPriceObject = wishListItem?.product?.price[0];
       const prodPrice = prodPriceObject
@@ -69,7 +69,7 @@ class WishlistIcon extends PureComponent {
             sourceProdID: skuFromProps,
             uuid: getUUID(),
             referrer: window.location.href,
-            url: window.location.href,
+            url: product.url,
             userID: userID,
           },
         });
@@ -82,6 +82,7 @@ class WishlistIcon extends PureComponent {
     const itemPrice = priceObject
       ? priceObject[Object.keys(priceObject)[0]]["6s_special_price"]
       : "";
+    console.log("data", data);
     if (userID) {
       VueIntegrationQueries.vueAnalayticsLogger({
         event_name: VUE_ADD_TO_WISHLIST,
@@ -95,7 +96,7 @@ class WishlistIcon extends PureComponent {
           sourceProdID: skuFromProps,
           uuid: getUUID(),
           referrer: window.location.href,
-          url: window.location.href,
+          url: data.url,
           userID: userID,
         },
       });

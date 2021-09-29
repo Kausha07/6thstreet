@@ -108,7 +108,7 @@ export class PDPContainer extends PureComponent {
         clicked: Date.now(),
         uuid: getUUID(),
         referrer: window.location.href,
-        url: window.location.href,
+        // url: window.location.href,
         sourceProdID: sku,
         sourceCatgID: product_type_6s, // TODO: replace with category id
       },

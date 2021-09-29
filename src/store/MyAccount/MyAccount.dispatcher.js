@@ -95,7 +95,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
             clicked: Date.now(),
             uuid: getUUID(),
             referrer: window.location.href,
-            url: window.location.href,
+            // url: window.location.href,
             userID: userID,
           },
         });

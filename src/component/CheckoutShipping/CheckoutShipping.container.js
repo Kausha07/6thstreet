@@ -295,6 +295,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     const userID = customerData && customerData.id ? customerData.id : null;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     totals?.items?.map((item) => {
+      console.log("item", item);
       VueIntegrationQueries.vueAnalayticsLogger({
         event_name: VUE_PLACE_ORDER,
         params: {
@@ -308,7 +309,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
           prodPrice: item?.full_item_info?.price,
           uuid: getUUID(),
           referrer: window.location.href,
-          url: window.location.href,
+          // url: window.location.href,
           userID: userID,
         },
       });

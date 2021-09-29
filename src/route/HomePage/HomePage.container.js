@@ -63,7 +63,7 @@ export class HomePageContainer extends PureComponent {
         clicked: Date.now(),
         uuid: getUUID(),
         referrer: window.location.href,
-        url: window.location.href,
+        // url: window.location.href,
       },
     });
     const { gender, toggleBreadcrumbs } = this.props;
