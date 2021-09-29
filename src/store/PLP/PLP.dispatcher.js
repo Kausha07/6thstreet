@@ -34,7 +34,6 @@ export class PLPDispatcher {
           const { filters: initialFilters } = await new Algolia().getPLP(
             initialOptions
           );
-          console.log("initial Filters", initialFilters);
           dispatch(setPLPInitialFilters(initialFilters, initialOptions));
         } catch (e) {
           Logger.log(e);

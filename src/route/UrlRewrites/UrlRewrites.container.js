@@ -60,8 +60,6 @@ export class UrlRewritesContainer extends PureComponent {
     const { prevPathname: prevStatePathname, query: prevQuery } = prevState;
 
     if (query && query !== prevQuery) {
-      console.log("location", location);
-      console.log("query", query);
       let partialQuery = location.search;
       if (location.search) {
         if (partialQuery.indexOf("idx") !== -1) {

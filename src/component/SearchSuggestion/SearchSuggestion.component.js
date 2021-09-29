@@ -179,12 +179,14 @@ class SearchSuggestion extends PureComponent {
       }
     }
     if (brandValue) {
-      catalogUrl = `/catalogsearch/result/?q=${formatQuerySuggestions(
-        query
-      )}&dFR[gender][0]=${genderInURL}&dFR[brand_name][0]=${brandValue}`;
+      catalogUrl = `/catalogsearch/result/?q=${encodeURIComponent(
+        formatQuerySuggestions(query)
+      )}&dFR[gender][0]=${genderInURL}&dFR[brand_name][0]=${encodeURIComponent(
+        brandValue
+      )}`;
     } else {
-      catalogUrl = `/catalogsearch/result/?q=${formatQuerySuggestions(
-        query
+      catalogUrl = `/catalogsearch/result/?q=${encodeURIComponent(
+        formatQuerySuggestions(query)
       )}&dFR[gender][0]=${genderInURL}`;
     }
     return catalogUrl;
@@ -394,13 +396,11 @@ class SearchSuggestion extends PureComponent {
       return (
         <li>
           <Link
-            to={`${encodeURIComponent(
-              this.getCatalogUrl(
-                query,
-                gender,
-                queryID,
-                !brandValue?.includes("///") ? brandValue : null
-              )
+            to={`${this.getCatalogUrl(
+              query,
+              gender,
+              queryID,
+              !brandValue?.includes("///") ? brandValue : null
             )}`}
             onClick={() =>
               this.onSearchQueryClick(formatQuerySuggestions(query))

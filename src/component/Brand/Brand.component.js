@@ -51,7 +51,6 @@ class Brand extends PureComponent {
             name
           )}&dFR[gender][0]=${this.capitalizeFirstLetter(requestedGender)}`;
     } else {
-      console.log("encoded brand", encodeURIComponent(name), name);
       finalURL = url
         ? `${url}.html?q=${encodeURIComponent(
             name
