@@ -79,7 +79,7 @@ class DynamicContentTwiceBanner extends PureComponent {
     // if (!link) {
     //     return (
     //         <>
-    //             <Image
+    //             <Image lazyLoad={true}
     //               key={ i }
     //               src={ url }
     //               ratio="custom"
@@ -129,7 +129,7 @@ class DynamicContentTwiceBanner extends PureComponent {
           this.onclick(item);
         }}
       >
-        <Image
+        <Image lazyLoad={true}
           src={url}
           className="BannerImage"
           // style={{ maxWidth: width, maxHeight: height }}

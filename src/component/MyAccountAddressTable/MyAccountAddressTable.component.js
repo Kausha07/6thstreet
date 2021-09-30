@@ -85,7 +85,7 @@ export class MyAccountAddressTable extends KeyValueTable {
           elem="ActionBtn"
           onClick={this.onEdit}
         >
-          <Image
+          <Image lazyLoad={true}
             block="MyAccountAddressTable"
             mix={{
               block: "MyAccountAddressTable",
@@ -101,7 +101,7 @@ export class MyAccountAddressTable extends KeyValueTable {
           elem="ActionBtn"
           onClick={onDeleteClick}
         >
-          <Image
+          <Image lazyLoad={true}
             block="MyAccountAddressTable"
             mix={{
               block: "MyAccountAddressTable",

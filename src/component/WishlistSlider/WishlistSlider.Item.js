@@ -113,7 +113,7 @@ class WishlistSliderItem extends PureComponent {
           block="VueProductSlider-Link"
           onClick={() => this.handleWishlistProductClick(data)}
         >
-          <Image
+          <Image lazyLoad={true}
             block="VueProductSlider"
             elem="VueProductImage"
             src={thumbnail_url}

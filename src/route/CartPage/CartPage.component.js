@@ -288,7 +288,7 @@ export class CartPage extends PureComponent {
     if (accountLinked && isSignedIn) {
       return (
         <div block="CartPage" elem="ClubApparelBlock" mods={{ isArabic }}>
-          <Image src={ClubApparel} alt="Club Apparel Logo" />
+          <Image lazyLoad={true} src={ClubApparel} alt="Club Apparel Logo" />
 
           <div block="CartPage" elem="ClubApparelText">
             {__("You may earn ")}
@@ -302,7 +302,7 @@ export class CartPage extends PureComponent {
     if (!accountLinked && isSignedIn) {
       return (
         <div block="CartPage" elem="ClubApparelBlock">
-          <Image src={ClubApparel} alt="Club Apparel Logo" />
+          <Image lazyLoad={true} src={ClubApparel} alt="Club Apparel Logo" />
 
           <div block="CartPage" elem="ClubApparelText">
             {__("Link your Club Apparel account to earn ")}
@@ -322,7 +322,7 @@ export class CartPage extends PureComponent {
 
     return (
       <div block="CartPage" elem="ClubApparelBlock">
-                <Image src={ClubApparel} alt="Club Apparel Logo" />
+                <Image lazyLoad={true} src={ClubApparel} alt="Club Apparel Logo" />
 
         <div block="CartPage" elem="ClubApparelText">
           {__("Link your Club Apparel account to earn ")}

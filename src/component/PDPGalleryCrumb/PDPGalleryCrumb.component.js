@@ -31,7 +31,7 @@ class PDPGalleryCrumb extends PureComponent {
         const { options: { src } } = this.props;
 
         return (
-            <Image src={ src } />
+            <Image lazyLoad={false} src={ src } />
         );
     }
 

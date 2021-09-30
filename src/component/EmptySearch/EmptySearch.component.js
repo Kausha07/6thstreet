@@ -64,7 +64,7 @@ class EmptySearch extends PureComponent {
   renderStaticContent() {
     return (
       <div block="EmptySearch" elem="StaticContent">
-        <Image src={noProduct} alt="no product" />
+        <Image lazyLoad={true} src={noProduct} alt="no product" />
         <p block="EmptySearch" elem="Sorry">
           {__("Sorry, we couldn't find any Product!")}
         </p>

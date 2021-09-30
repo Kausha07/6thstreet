@@ -78,7 +78,7 @@ export class NoMatch extends PureComponent {
                 <span>{__("error 404!")}</span>
               </h4>
               <div block="PageNotFound">
-                <Image src={pageNotFound} alt="pageNotFound" />
+                <Image lazyLoad={true} src={pageNotFound} alt="pageNotFound" />
 
               </div>
               <span block="PageNotFound-SubTitle">

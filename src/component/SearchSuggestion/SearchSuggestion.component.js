@@ -510,7 +510,7 @@ class SearchSuggestion extends PureComponent {
           onClick={() => this.handleProductClick(product)}
         >
           <div block="SearchProduct">
-            <Image
+            <Image lazyLoad={true}
               src={thumbnail_url}
               alt="Product Image"
               block="SearchProduct"
@@ -660,7 +660,7 @@ class SearchSuggestion extends PureComponent {
           onClick={() => this.handleTrendingBrandsClick(urlName)}
         >
           <div block="SearchSuggestion" elem="TrandingImg">
-            <Image src={image_url} alt="Trending" />
+            <Image lazyLoad={true} src={image_url} alt="Trending" />
 
             {/* {label} */}
           </div>

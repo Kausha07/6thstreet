@@ -24,7 +24,7 @@ class StoreSwitcherPopup extends PureComponent {
     return (
       <div block="StoreSwitcherPopup">
         <div block="StoreSwitcherPopup" elem="Container">
-          <Image
+          <Image lazyLoad={true}
             mix={{
               block: "StoreSwitcherPopup",
               elem: "Image",

@@ -111,7 +111,7 @@ class DynamicContentBanner extends PureComponent {
     if (!link) {
       return (
         <>
-          <Image key={i} src={url} ratio="custom" height={ht} width={wd} />
+          <Image lazyLoad={true} key={i} src={url} ratio="custom" height={ht} width={wd} />
           {this.renderButton()}
         </>
       );
@@ -128,7 +128,7 @@ class DynamicContentBanner extends PureComponent {
           this.onclick(item);
         }}
       >
-        <Image
+        <Image lazyLoad={true}
           src={url}
           block="Image"
           style={{ maxWidth: wd, height: ht, objectFit: "unset" }}
