@@ -1,3 +1,4 @@
+import { HOME_PAGE_BANNER_CLICK_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
 import Image from "Component/Image";
 import Link from "Component/Link";
 import Price from "Component/Price";
@@ -15,7 +16,6 @@ import Event, {
   SELECT_ITEM_ALGOLIA,
 } from "Util/Event";
 import "./ProductItem.style";
-import { HOME_PAGE_BANNER_CLICK_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
 
 class ProductItem extends PureComponent {
   static propTypes = {
@@ -24,6 +24,7 @@ class ProductItem extends PureComponent {
     position: PropTypes.number,
     qid: PropTypes.string,
     pageType: PropTypes.string,
+    prevPath: PropTypes.string,
   };
 
   static defaultProps = {
@@ -168,7 +169,9 @@ class ProductItem extends PureComponent {
       product,
       product: { url },
       qid,
+      prevPath = null,
     } = this.props;
+    console.log("productitem props", this.props);
     let queryID;
     if (!qid) {
       queryID = getStore().getState().SearchSuggestions.queryID;
@@ -184,9 +187,7 @@ class ProductItem extends PureComponent {
     }
     const linkTo = {
       pathname: urlWithQueryID,
-      state: {
-        product,
-      },
+      params: prevPath,
     };
 
     return (

@@ -96,8 +96,10 @@ export class PDPContainer extends PureComponent {
 
   componentDidMount() {
     const {
-      product: { product_type_6s, sku },
+      product: { product_type_6s, sku, url },
+      product,
     } = this.props;
+    console.log("pdp props", this.props);
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_PAGE_VIEW,
@@ -108,7 +110,7 @@ export class PDPContainer extends PureComponent {
         clicked: Date.now(),
         uuid: getUUID(),
         referrer: window.location.href,
-        // url: window.location.href,
+        // url: url,
         sourceProdID: sku,
         sourceCatgID: product_type_6s, // TODO: replace with category id
       },

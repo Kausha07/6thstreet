@@ -1,3 +1,7 @@
+import {
+  HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
+  HOME_PAGE_BANNER_IMPRESSIONS,
+} from "Component/GoogleTagManager/events/BannerImpression.event";
 import Link from "Component/Link";
 import PropTypes from "prop-types";
 // import VueIntegrationQueries from "Query/vueIntegration.query";
@@ -10,10 +14,6 @@ import { formatCDNLink } from "Util/Url";
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import "./DynamicContentCircleItemSlider.style";
-import {
-  HOME_PAGE_BANNER_IMPRESSIONS,
-  HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
-} from "Component/GoogleTagManager/events/BannerImpression.event";
 
 const settings = {
   lazyload: true,
@@ -92,19 +92,6 @@ class DynamicContentCircleItemSlider extends PureComponent {
       link: a.link,
       promotion_name: a.promotion_name,
     };
-    // const locale = VueIntegrationQueries.getLocaleFromUrl();
-    // VueIntegrationQueries.vueAnalayticsLogger({
-    //   event_name: VUE_CAROUSEL_CLICK,
-    //   params: {
-    //     event: VUE_CAROUSEL_CLICK,
-    //     pageType: "plp",
-    //     currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-    //     clicked: Date.now(),
-    //     uuid: getUUID(),
-    //     referrer: "desktop",
-    //     widgetID: "vue_visually_similar_slider", // TODO: will be added after vue product slider.
-    //   },
-    // });
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
     this.sendBannerClickImpression(a);
   };

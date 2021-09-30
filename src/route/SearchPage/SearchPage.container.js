@@ -14,6 +14,9 @@ import SearchPage from "./SearchPage.component";
 
 export class SearchPageContainer extends PLPContainer {
   componentDidMount() {
+    const {
+      location: { prevPath = null },
+    } = this.props;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_PAGE_VIEW,
@@ -23,8 +26,8 @@ export class SearchPageContainer extends PLPContainer {
         currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),
-        referrer: window.location.href,
-        // url: window.location.href,
+        referrer: prevPath,
+        url: window.location.href,
       },
     });
   }
@@ -38,9 +41,14 @@ export class SearchPageContainer extends PLPContainer {
   }
 
   containerProps = () => {
-    const { options, pages, isLoading } = this.props;
+    const {
+      options,
+      pages,
+      isLoading,
+      location: { prevPath = null },
+    } = this.props;
 
-    return { options, pages, isLoading };
+    return { options, pages, isLoading, prevPath };
   };
 
   setMetaData() {
