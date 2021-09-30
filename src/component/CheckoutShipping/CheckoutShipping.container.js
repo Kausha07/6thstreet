@@ -309,7 +309,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
           prodPrice: item?.full_item_info?.price,
           uuid: getUUID(),
           referrer: window.location.href,
-          // url: window.location.href,
+          url: window.location.href,
           userID: userID,
         },
       });

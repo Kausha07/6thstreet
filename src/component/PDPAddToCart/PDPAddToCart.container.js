@@ -456,7 +456,7 @@ export class PDPAddToCartContainer extends PureComponent {
           clicked: Date.now(),
           uuid: getUUID(),
           referrer: window.location.href,
-          // url: window.location.href,
+          url: window.location.href,
           sourceProdID: configSKU,
           sourceCatgID: product_type_6s, // TODO: replace with category id
           prodPrice: basePrice,
