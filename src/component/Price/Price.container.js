@@ -39,7 +39,6 @@ export class PriceContainer extends PureComponent {
       "6s_special_price": specialPrice = defaultPrice,
     } = priceData;
     const fixedPrice = FIXED_CURRENCIES.includes(currency) && page !== "plp";
-
     return {
       basePrice,
       specialPrice,

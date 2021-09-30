@@ -4,6 +4,7 @@ import {
   getPLP,
   getPopularBrands,
   getProductBySku,
+  getWishlistProduct,
   init,
   logAlgoliaAnalytics,
   searchBy,
@@ -33,6 +34,7 @@ const AlgoliaSDK = {
   getPopularBrands: (limit) =>
     getPopularBrands(limit, { index: AlgoliaSDK.index }),
   getBrands: (gender) => getBrands(gender, { index: AlgoliaSDK.index }),
+  getWishlistProduct: (idsArray) => getWishlistProduct(idsArray, { index: AlgoliaSDK.index }),
   getProductBySku: (params) =>
     getProductBySku(params, { index: AlgoliaSDK.index }),
   logAlgoliaAnalytics: (
