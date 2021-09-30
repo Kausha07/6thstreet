@@ -77,7 +77,7 @@ class DynamicContentMainBanner extends PureComponent {
 
     // TODO: calculate aspect ratio to ensure images not jumping.
     if (!link) {
-      return <Image key={i} src={url} ratio="custom" height="auto" />;
+      return <Image lazyLoad={true} key={i} src={url} ratio="custom" height="auto" />;
     }
 
     return (
@@ -88,7 +88,7 @@ class DynamicContentMainBanner extends PureComponent {
         }}
         key={i}
       >
-        <Image src={url} ratio="custom" height="auto" />
+        <Image lazyLoad={true} src={url} ratio="custom" height="auto" />
       </Link>
     );
   }

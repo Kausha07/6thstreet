@@ -126,16 +126,16 @@ class FooterMain extends PureComponent {
               <Fragment key="last_main_footer_column">
                 <div block="FooterMain" elem="WrapperFirst">
                   <Link to={items.app_onclick} key={items.id_app}>
-                    <Image src={items.app_store} alt="app store download" />
+                    <Image lazyLoad={true} src={items.app_store} alt="app store download" />
                   </Link>
                   <br />
                   <Link to={items.google_onclick} key={items.id_google}>
-                    <Image src={items.google_play} alt="google play download" />{" "}
+                    <Image lazyLoad={true} src={items.google_play} alt="google play download" />{" "}
                     
                   </Link>
                   <br />
                   <Link to={items.gallery_onclick} key={items.id_gallery}>
-                    <Image src={items.app_gallery} alt="app gallery download" className="appGallery"/>
+                    <Image lazyLoad={true} src={items.app_gallery} alt="app gallery download" className="appGallery"/>
 
                   </Link>
                 </div>
@@ -143,13 +143,13 @@ class FooterMain extends PureComponent {
                 <div block="FooterMain" elem="WrapperSecond">
                   <div block="FooterMain" elem="SocialIcon">
                     <Link to={items.facebook_href} key={items.id_facebook}>
-                      <Image src={facebook} alt="facebook icon" />
+                      <Image lazyLoad={true} src={facebook} alt="facebook icon" />
                     </Link>
                   </div>
                   <span />
                   <div block="FooterMain" elem="SocialIcon">
                     <Link to={items.insta_href} key={items.id_insta}>
-                      <Image src={instagram} alt="instagram icon" />
+                      <Image lazyLoad={true} src={instagram} alt="instagram icon" />
 
                     </Link>
                   </div>

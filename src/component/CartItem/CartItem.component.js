@@ -447,7 +447,7 @@ export class CartItem extends PureComponent {
     let customURL = `${url_key}.html`;
     return (
       <div onClick={() => this.props.history.push(customURL)}>
-        <Image
+        <Image lazyLoad={true}
           src={thumbnail}
           mix={{
             block: "CartItem",
@@ -457,7 +457,7 @@ export class CartItem extends PureComponent {
           ratio="custom"
           alt={`Product ${name} thumbnail.`}
         />
-        <Image style={{ display: "none" }} alt={name} src={thumbnail} />
+        <Image lazyLoad={true} style={{ display: "none" }} alt={name} src={thumbnail} />
       </div>
     );
   }

@@ -39,8 +39,8 @@ export class Image extends PureComponent {
       height: PropTypes.string,
       maxHeight: PropTypes.string,
       top: PropTypes.string,
-      maxWidth:PropTypes.string,
-      objectFit:PropTypes.string
+      maxWidth: PropTypes.string,
+      objectFit: PropTypes.string,
     }),
     alt: PropTypes.string,
     className: PropTypes.string,
@@ -118,14 +118,48 @@ export class Image extends PureComponent {
     return <span block="Image" elem="Content" mods={{ isOffline: true }} />;
   }
 
+  renderLazyImage(lazyLoad, data) {
+    const { src, alt, style, imageStatus } = data;
+    if (lazyLoad) {
+      return (
+        <LazyLoad once classNamePrefix="LazyLoad" offset={100}>
+          <img
+            block="Image"
+            elem="Image"
+            src={src || ""}
+            alt={alt}
+            mods={{ isLoading: imageStatus === IMAGE_LOADING }}
+            style={style}
+            onLoad={this.onLoad}
+            onError={this.onError}
+            loading="lazy"
+          />
+        </LazyLoad>
+      );
+    } else {
+      return (
+        <img
+          block="Image"
+          elem="Image"
+          src={src || ""}
+          alt={alt}
+          mods={{ isLoading: imageStatus === IMAGE_LOADING }}
+          style={style}
+          onLoad={this.onLoad}
+          onError={this.onError}
+          loading="lazy"
+        />
+      );
+    }
+  }
+
   renderImage() {
-    const { alt, src, isPlaceholder, style } = this.props;
+    const { alt, src, isPlaceholder, style,lazyLoad } = this.props;
     const { imageStatus } = this.state;
 
     if (isPlaceholder) {
       return null;
     }
-
     switch (imageStatus) {
       case IMAGE_NOT_FOUND:
         return this.renderImageNotFound();
@@ -137,21 +171,7 @@ export class Image extends PureComponent {
         );
       case IMAGE_LOADED:
       case IMAGE_LOADING:
-        return (
-          <LazyLoad once classNamePrefix="LazyLoad" offset={100}>
-            <img
-              block="Image"
-              elem="Image"
-              src={src || ""}
-              alt={alt}
-              mods={{ isLoading: imageStatus === IMAGE_LOADING }}
-              style={style}
-              onLoad={this.onLoad}
-              onError={this.onError}
-              loading="lazy"
-            />
-          </LazyLoad>
-        );
+        return this.renderLazyImage(lazyLoad, { src, alt, style, imageStatus });
       default:
         return null;
     }

@@ -262,7 +262,7 @@ export class MyAccountOverlay extends PureComponent {
         parentCallback={this.onForgotChange}
         isValidateOnChange
       >
-        <Image
+        <Image lazyLoad={true}
           mix={{
             block: "MyAccountOverlay",
             elem: "LockImg",
