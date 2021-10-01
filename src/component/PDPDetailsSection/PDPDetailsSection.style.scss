@@ -127,6 +127,10 @@
     line-height: 24px;
   }
 
+  &-Description {
+    text-align: justify;
+  }
+
   &-Highlights {
     &-ModelDetails {
       font-weight: var(--fw-regular);
