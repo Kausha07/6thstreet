@@ -26,7 +26,6 @@
   }
   .CircleSliderWrapper {
     display: flex;
-    justify-content: center;
     overflow-x: auto;
     .CircleItemHelper {
       display: none;
@@ -34,10 +33,14 @@
       height: 78px;
       @include tablet {
         display: block;
+        margin-left: auto;
+        margin-right: auto;
       }
       @include mobile {
         display: block;
         min-width: 20px;
+        margin-left: auto;
+        margin-right: auto;
       }
     }
 
@@ -142,9 +145,31 @@
         padding-right: 10px;
       }
 
+      @include desktop{
+        &:nth-child(2) {
+          margin-left: auto;
+        }
+        &:nth-last-child(2) {
+          margin-right: auto;
+        }
+      }
+
+
+
       &_isArabic {
         padding-right: 0;
         padding-left: 17px;
+        @include desktop{
+          &:nth-child(2) {
+            margin-left: 0;
+            margin-right: auto;
+          }
+          &:nth-last-child(2) {
+            margin-right: 0;
+            margin-left: auto;
+          }
+        }
+
         &:nth-child(2) {
           .OuterCircle {
             margin-right: 2px;

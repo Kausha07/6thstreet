@@ -88,7 +88,7 @@ export class HeaderSearchContainer extends PureComponent {
       let genderInURL;
       if (isArabic()) {
         if (gender === "kids") {
-          genderInURL = "أولاد~بنات";
+          genderInURL = "أولاد,بنات";
         } else {
           requestedGender = getGenderInArabic(gender);
           genderInURL = requestedGender?.replace(
@@ -98,7 +98,7 @@ export class HeaderSearchContainer extends PureComponent {
         }
       } else {
         if (gender === "kids") {
-          genderInURL = "Boy~Girl";
+          genderInURL = "Boy,Girl";
         } else {
           genderInURL = requestedGender?.replace(
             requestedGender?.charAt(0),

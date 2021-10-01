@@ -79,7 +79,7 @@ export class MyAccountReturnCreateItem extends PureComponent {
         const { item: { thumbnail } } = this.props;
 
         return (
-            <Image
+            <Image lazyLoad={true}
               src={ thumbnail }
               mix={ { block: 'MyAccountReturnCreateItem', elem: 'Image' } }
             />

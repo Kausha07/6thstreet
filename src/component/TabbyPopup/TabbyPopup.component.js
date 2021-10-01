@@ -42,7 +42,7 @@ class TabbyPopup extends PureComponent {
           // mods={ { isArabic } }
           onClick={hideActiveOverlay}
         >
-          <Image src={Close} alt={"Close button"} />
+          <Image lazyLoad={true} src={Close} alt={"Close button"} />
         </button>
       </div>
     );

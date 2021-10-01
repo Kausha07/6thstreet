@@ -37,7 +37,7 @@ class Brand extends PureComponent {
     let requestedGender;
     if (type) {
       if (type === "kids") {
-        requestedGender = isArabic ? "أولاد~بنات" : "Boy~Girl";
+        requestedGender = isArabic ? "أولاد,بنات" : "Boy,Girl";
       } else {
         requestedGender = isArabic ? getGenderInArabic(type) : type;
       }

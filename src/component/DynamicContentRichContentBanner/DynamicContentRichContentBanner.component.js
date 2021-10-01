@@ -133,7 +133,7 @@ class DynamicContentRichContentBanner extends PureComponent {
           }}
         >
           <div block="ImageContainer">
-            <Image
+            <Image lazyLoad={true}
               src={image_url}
               alt={title}
               mix={{ block: "DynamicContentRichContentBanner", elem: "Image" }}

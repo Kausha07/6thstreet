@@ -284,7 +284,7 @@ class PDPSummary extends PureComponent {
                 elem="TabbyPrice"
               >{`${monthPrice} ${currency}`}</strong>
               {__(" a month with ")}
-              <Image src={tabby} alt="tabby" />
+              <Image lazyLoad={true} src={tabby} alt="tabby" />
 
               <span block="PDPSummary" elem="LearnMore">
                 {__("Learn more")}

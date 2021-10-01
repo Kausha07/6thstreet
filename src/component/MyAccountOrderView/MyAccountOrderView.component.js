@@ -157,7 +157,7 @@ class MyAccountOrderView extends PureComponent {
 
       return (
         <div block="MyAccountOrderView" elem="StatusFailed">
-          <Image
+          <Image lazyLoad={true}
             src={StatusImage}
             mix={{ block: "MyAccountOrderView", elem: "WarningImage" }}
           />
@@ -203,7 +203,7 @@ class MyAccountOrderView extends PureComponent {
         elem="PackagesMessage"
         mods={{ isArabic }}
       >
-        <Image
+        <Image lazyLoad={true}
           src={TruckImage}
           mix={{ block: "MyAccountOrderView", elem: "TruckImage" }}
         />
@@ -228,7 +228,7 @@ class MyAccountOrderView extends PureComponent {
 
     return (
       <div block="MyAccountOrderView" elem="AccordionTitle">
-        <Image
+        <Image lazyLoad={true}
           src={image}
           mix={{ block: "MyAccountOrderView", elem: "AccordionTitleImage" }}
         />

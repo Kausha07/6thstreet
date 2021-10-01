@@ -14,7 +14,7 @@
   }
   &-Crumbs {
     display: none;
-    height: var(--gallery-crumbs-height);
+    height: var(--gallery-crumbs-height) !important;
     @include desktop {
       display: block;
     }
@@ -112,9 +112,7 @@
       padding: 0px 20px;
     }
   }
-  .Image_imageStatus_2 {
-    display: flex;
-  }
+
   .Image {
     &-Image {
         position: unset!important;
@@ -203,6 +201,10 @@
     .PDPGallery {
       &-OverlayButton {
         height: fit-content;
+        .Image_imageStatus_2{
+          display: flex;
+          height: 400px !important;
+        }
       }
     }
   }

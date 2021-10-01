@@ -122,9 +122,8 @@ class DynamicContentGrid extends PureComponent {
             this.onclick(item);
           }}
         >
-          {/* <Image src={url} height={ht} /> */}
-          {/* style={{ maxHeight: ht }} */}
-          <Image src={url} className="GridImage" />
+         
+          <Image lazyLoad={true} src={url} className="GridImage" />
           {item.footer && (
             <div block="Footer">
               {item.footer.title && (
@@ -171,7 +170,7 @@ class DynamicContentGrid extends PureComponent {
             this.onclick(item);
           }}
         >
-          <Image src={url} />
+          <Image lazyLoad={true} src={url} />
 
           {item.footer && (
             <div block="Footer">

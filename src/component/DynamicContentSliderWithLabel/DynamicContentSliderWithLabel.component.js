@@ -196,12 +196,12 @@ class DynamicContentSliderWithLabel extends PureComponent {
           }}
         >
           <Image
+            lazyLoad={true}
             src={url}
             alt={text}
             block="Image"
-            style={{ maxWidth: wd, maxHeight: ht }}
+            style={{ maxWidth: wd }}
           />
-
         </Link>
         {text ? (
           <div block="SliderText" style={{ textAlign: text_align }}>

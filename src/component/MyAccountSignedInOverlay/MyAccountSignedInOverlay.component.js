@@ -46,7 +46,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
     renderOrderHistoryLink() {
         return (
             <Link block="MyAccountSignedInOverlay" elem="LinkHistory" to="/my-account/my-orders">
-                <Image src={ OrdersIcon } mix={ { block: 'MyAccountSignedInOverlay', elem: 'Image' } } />
+                <Image lazyLoad={true} src={ OrdersIcon } mix={ { block: 'MyAccountSignedInOverlay', elem: 'Image' } } />
                 <span block="MyAccountSignedInOverlay" elem="LinkTitle">{ __('Order history') }</span>
             </Link>
         );
@@ -55,7 +55,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
     renderReturnAnItemLink() {
         return (
             <Link block="MyAccountSignedInOverlay" elem="ReturnAnItem" to="/my-account/return-item">
-                <Image src={ ReturnIcon } mix={ { block: 'MyAccountSignedInOverlay', elem: 'Image' } } />
+                <Image lazyLoad={true} src={ ReturnIcon } mix={ { block: 'MyAccountSignedInOverlay', elem: 'Image' } } />
                 <span block="MyAccountSignedInOverlay" elem="LinkTitle">{ __('Return An Item') }</span>
             </Link>
         );
@@ -67,7 +67,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
 
         return (
             <Link block="MyAccountSignedInOverlay" elem="LinkClub" to="/my-account/club-apparel">
-                <Image src={ ClubIcon } mix={ { block: 'MyAccountSignedInOverlay', elem: 'Image' } } />
+                <Image lazyLoad={true} src={ ClubIcon } mix={ { block: 'MyAccountSignedInOverlay', elem: 'Image' } } />
                 <span block="MyAccountSignedInOverlay" elem="LinkTitle">{ __('Club apparel loyalty') }</span>
                 { !accountLinked ? linkNowBtn : null }
             </Link>
@@ -77,7 +77,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
     renderWishlistLink() {
         return (
             <Link block="MyAccountSignedInOverlay" elem="LinkWishlist" to="/my-account/my-wishlist">
-                <Image src={ HeartIcon } mix={ { block: 'MyAccountSignedInOverlay', elem: 'Image' } } />
+                <Image lazyLoad={true} src={ HeartIcon } mix={ { block: 'MyAccountSignedInOverlay', elem: 'Image' } } />
                 <span block="MyAccountSignedInOverlay" elem="LinkTitle">{ __('My Wishlist') }</span>
             </Link>
         );
@@ -86,7 +86,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
     renderDeliveryLink() {
         return (
             <Link block="MyAccountSignedInOverlay" elem="LinkDelivery" to="/my-account/address-book">
-                <Image src={ AddressIcon } mix={ { block: 'MyAccountSignedInOverlay', elem: 'Image' } } />
+                <Image lazyLoad={true} src={ AddressIcon } mix={ { block: 'MyAccountSignedInOverlay', elem: 'Image' } } />
                 <span block="MyAccountSignedInOverlay" elem="LinkTitle">{ __('Delivery addresses') }</span>
             </Link>
         );
@@ -97,7 +97,7 @@ export class MyAccountSignedInOverlay extends PureComponent {
 
         return (
             <button block="MyAccountSignedInOverlay" elem="ButtonDelivery" onClick={ signOut }>
-                <Image src={ LogoutIcon } mix={ { block: 'MyAccountSignedInOverlay', elem: 'Image' } } />
+                <Image lazyLoad={true} src={ LogoutIcon } mix={ { block: 'MyAccountSignedInOverlay', elem: 'Image' } } />
                 <span block="MyAccountSignedInOverlay" elem="LinkTitle">{ __('Logout') }</span>
             </button>
         );

@@ -179,7 +179,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
             this.onclick(widgetID, data);
           }}
         >
-          <Image
+          <Image lazyLoad={true}
             block="VueProductSlider"
             elem="VueProductImage"
             src={thumbnail_url}

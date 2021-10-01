@@ -50,7 +50,7 @@ export class MyAccountReturnCreateListItem extends PureComponent {
 
         return (
             <div block="MyAccountReturnCreateListItem" elem="Content">
-                <Image
+                <Image lazyLoad={true}
                   mix={ { block: 'MyAccountReturnCreateListItem', elem: 'Image' } }
                   src={ thumbnail }
                 />

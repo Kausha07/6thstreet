@@ -387,7 +387,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
                 mods={{ button_style }}
               >
                 <div>{__("Buy with ")}</div>
-                <Image
+                <Image lazyLoad={true}
                   block="CheckoutComApplePayPayment"
                   elem="icon"
                   mix={{
