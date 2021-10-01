@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
+import { withRouter } from "react-router";
 import { getStore } from "Store";
 import { setMinicartOpen } from "Store/Cart/Cart.action";
 import CartDispatcher from "Store/Cart/Cart.dispatcher";
@@ -369,9 +370,9 @@ export class PDPAddToCartContainer extends PureComponent {
       },
       addProductToCart,
       showNotification,
+      location: { state },
     } = this.props;
     const { productStock } = this.state;
-
     if (!price[0]) {
       showNotification("error", __("Unable to add product to cart."));
 
@@ -455,7 +456,7 @@ export class PDPAddToCartContainer extends PureComponent {
           currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
           clicked: Date.now(),
           uuid: getUUID(),
-          referrer: window.location.href,
+          referrer: state?.prevPath ? state?.prevPath : null,
           url: window.location.href,
           sourceProdID: configSKU,
           sourceCatgID: product_type_6s, // TODO: replace with category id
@@ -516,8 +517,8 @@ export class PDPAddToCartContainer extends PureComponent {
           currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
           clicked: Date.now(),
           uuid: getUUID(),
-          referrer: window.location.href,
-          // url: window.location.href,
+          referrer: state?.prevPath ? state?.prevPath : null,
+          url: window.location.href,
           sourceProdID: configSKU,
           sourceCatgID: product_type_6s, // TODO: replace with category id
           prodPrice: basePrice,
@@ -584,7 +585,6 @@ export class PDPAddToCartContainer extends PureComponent {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(PDPAddToCartContainer);
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(PDPAddToCartContainer)
+);

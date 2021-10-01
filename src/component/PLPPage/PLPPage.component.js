@@ -17,8 +17,7 @@ class PLPPage extends PureComponent {
   };
 
   componentDidMount() {
-    const { prevPath, impressions } = this.props;
-    console.log("this.props", this.props);
+    const { prevPath = null, impressions } = this.props;
     const category = this.getCategory();
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({

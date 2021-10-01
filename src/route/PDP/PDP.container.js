@@ -98,9 +98,7 @@ export class PDPContainer extends PureComponent {
   componentDidMount() {
     const {
       product: { product_type_6s, sku, url },
-      location: {
-        state: { prevPath },
-      },
+      location: { state },
       product,
     } = this.props;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
@@ -112,7 +110,7 @@ export class PDPContainer extends PureComponent {
         currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),
-        referrer: prevPath,
+        referrer: state?.prevPath ? state?.prevPath : null,
         url: url,
         sourceProdID: sku,
         sourceCatgID: product_type_6s, // TODO: replace with category id

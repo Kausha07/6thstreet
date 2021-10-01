@@ -2,6 +2,7 @@ import Link from "Component/Link";
 import Loader from "Component/Loader";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
+import { withRouter } from "react-router";
 import { Products } from "Util/API/endpoint/Product/Product.type";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
@@ -73,7 +74,12 @@ class SearchSuggestion extends PureComponent {
     return (
       <li>
         <Link
-          to={`/${urlName}.html?q=${urlName}`}
+          to={{
+            pathname: `/${urlName}.html?q=${urlName}`,
+            state: {
+              prevPath: window.location.href,
+            },
+          }}
           onClick={this.closeSearchPopup}
         >
           {name}
@@ -99,7 +105,15 @@ class SearchSuggestion extends PureComponent {
 
     return (
       <li>
-        <Link to={url} onClick={this.closeSearchPopup}>
+        <Link
+          to={{
+            pathname: url,
+            state: {
+              prevPath: window.location.href,
+            },
+          }}
+          onClick={this.closeSearchPopup}
+        >
           {name}
         </Link>
       </li>
@@ -146,7 +160,12 @@ class SearchSuggestion extends PureComponent {
     return (
       <li key={i}>
         <Link
-          to={`/${urlName}.html?q=${urlName}`}
+          to={{
+            pathname: `/${urlName}.html?q=${urlName}`,
+            state: {
+              prevPath: window.location.href,
+            },
+          }}
           onClick={this.closeSearchPopup}
         >
           <div block="SearchSuggestion" elem="TrandingImg">
@@ -171,7 +190,15 @@ class SearchSuggestion extends PureComponent {
 
   renderTrendingTag = ({ link, label }, i) => (
     <li key={i}>
-      <Link to={{ pathname: link }} onClick={this.closeSearchPopup}>
+      <Link
+        to={{
+          pathname: link,
+          state: {
+            prevPath: window.location.href,
+          },
+        }}
+        onClick={this.closeSearchPopup}
+      >
         <div block="SearchSuggestion" elem="TrandingTag">
           {label}
         </div>
@@ -268,4 +295,4 @@ class SearchSuggestion extends PureComponent {
   }
 }
 
-export default SearchSuggestion;
+export default withRouter(SearchSuggestion);

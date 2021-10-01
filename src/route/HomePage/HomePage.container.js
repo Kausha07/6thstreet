@@ -54,11 +54,9 @@ export class HomePageContainer extends PureComponent {
   }
 
   componentDidMount() {
-    console.log("this.props home", this.props);
+    console.log("this.props", this.props);
     const {
-      location: {
-        state: { prevPath = null },
-      },
+      location: { state },
     } = this.props;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
@@ -69,7 +67,7 @@ export class HomePageContainer extends PureComponent {
         currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),
-        referrer: prevPath,
+        referrer: state?.prevPath ? state?.prevPath : null,
         url: window.location.href,
       },
     });

@@ -1,6 +1,5 @@
 import { DEFAULT_STATE_NAME } from "Component/NavigationAbstract/NavigationAbstract.config";
 import PropTypes from "prop-types";
-import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
@@ -18,12 +17,10 @@ import {
 } from "Util/API/endpoint/Product/Product.type";
 import WebUrlParser from "Util/API/helper/WebUrlParser";
 import { capitalize } from "Util/App";
-import { getUUID } from "Util/Auth";
 import {
   getBreadcrumbs,
   getBreadcrumbsUrl,
 } from "Util/Breadcrumbs/Breadcrubms";
-import { VUE_PAGE_VIEW } from "Util/Event";
 import PLP from "./PLP.component";
 
 export const BreadcrumbsDispatcher = import(
@@ -148,19 +145,6 @@ export class PLPContainer extends PureComponent {
   }
 
   componentDidMount() {
-    const locale = VueIntegrationQueries.getLocaleFromUrl();
-    VueIntegrationQueries.vueAnalayticsLogger({
-      event_name: VUE_PAGE_VIEW,
-      params: {
-        event: VUE_PAGE_VIEW,
-        pageType: "categories",
-        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-        clicked: Date.now(),
-        uuid: getUUID(),
-        referrer: window.location.href,
-        // url: window.location.href,
-      },
-    });
     const { menuCategories = [] } = this.props;
     if (menuCategories.length !== 0) {
       this.updateBreadcrumbs();

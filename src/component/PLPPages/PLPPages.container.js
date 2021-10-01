@@ -74,7 +74,7 @@ export class PLPPagesContainer extends PureComponent {
 
   render() {
     const { impressions } = this.state;
-    const { prevPath } = this.props;
+    const { prevPath = null } = this.props;
     return (
       <PLPPages
         prevPath={prevPath}

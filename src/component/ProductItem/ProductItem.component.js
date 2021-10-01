@@ -171,7 +171,6 @@ class ProductItem extends PureComponent {
       qid,
       prevPath = null,
     } = this.props;
-    console.log("productitem props", this.props);
     let queryID;
     if (!qid) {
       queryID = getStore().getState().SearchSuggestions.queryID;
