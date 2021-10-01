@@ -187,7 +187,7 @@ class ProductItem extends PureComponent {
     }
     const linkTo = {
       pathname: urlWithQueryID,
-      params: prevPath,
+      state: { prevPath: prevPath },
     };
 
     return (

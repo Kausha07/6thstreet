@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
+import { withRouter } from "react-router";
 import { setGender } from "Store/AppState/AppState.action";
 import { updateMeta } from "Store/Meta/Meta.action";
 import { changeNavigationState } from "Store/Navigation/Navigation.action";
@@ -97,9 +98,11 @@ export class PDPContainer extends PureComponent {
   componentDidMount() {
     const {
       product: { product_type_6s, sku, url },
+      location: {
+        state: { prevPath },
+      },
       product,
     } = this.props;
-    console.log("pdp props", this.props);
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_PAGE_VIEW,
@@ -109,8 +112,8 @@ export class PDPContainer extends PureComponent {
         currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),
-        referrer: window.location.href,
-        // url: url,
+        referrer: prevPath,
+        url: url,
         sourceProdID: sku,
         sourceCatgID: product_type_6s, // TODO: replace with category id
       },
@@ -298,4 +301,6 @@ export class PDPContainer extends PureComponent {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PDPContainer);
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(PDPContainer)
+);
