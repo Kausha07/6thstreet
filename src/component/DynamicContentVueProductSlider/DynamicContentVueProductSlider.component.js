@@ -3,6 +3,7 @@ import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/
 import PropTypes from "prop-types";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
+import { withRouter } from "react-router";
 import { isArabic } from "Util/App";
 import { getUUID } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
@@ -32,6 +33,7 @@ class DynamicContentVueProductSlider extends PureComponent {
       pageType = "home",
       sourceProdID = null,
       sourceCatgID = null,
+      location: { state },
     } = this.props;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     const customer = BrowserDatabase.getItem("customer");
@@ -44,7 +46,8 @@ class DynamicContentVueProductSlider extends PureComponent {
         currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),
-        referrer: window.location.href,
+        referrer: state?.prevPath ? state?.prevPath : null,
+        url: window.location.href,
         widgetID: VueIntegrationQueries.getWidgetTypeMapped(widgetID, pageType),
         userID: userID,
         sourceProdID: sourceProdID,
@@ -264,4 +267,4 @@ class DynamicContentVueProductSlider extends PureComponent {
   }
 }
 
-export default DynamicContentVueProductSlider;
+export default withRouter(DynamicContentVueProductSlider);
