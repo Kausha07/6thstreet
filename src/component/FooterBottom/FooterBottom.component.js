@@ -97,7 +97,7 @@ class FooterBottom extends PureComponent {
   renderPaymentIcons() {
     return (
       <div block="FooterBottom" elem="PaymentIcons">
-        <Image
+        <Image lazyLoad={true}
           mix={{
             block: "FooterBottom",
             elem: "PaymentIcons-ClubApparel",
@@ -105,7 +105,7 @@ class FooterBottom extends PureComponent {
           src={CA}
           alt="ca"
         />
-        <Image
+        <Image lazyLoad={true}
           mix={{
             block: "FooterBottom",
             elem: "PaymentIcons-CashOnDelivery",
@@ -113,7 +113,7 @@ class FooterBottom extends PureComponent {
           src={COD}
           alt="ca"
         />
-        <Image
+        <Image lazyLoad={true}
           mix={{
             block: "FooterBottom",
             elem: "PaymentIcons-Mastercard",
@@ -121,7 +121,7 @@ class FooterBottom extends PureComponent {
           src={mastercard}
           alt="ca"
         />
-        <Image
+        <Image lazyLoad={true}
           mix={{
             block: "FooterBottom",
             elem: "PaymentIcons-Visa",

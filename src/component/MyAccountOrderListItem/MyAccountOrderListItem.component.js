@@ -76,7 +76,7 @@ class MyAccountOrderListItem extends SourceComponent {
 
     return (
       <div block="MyAccountReturnCreateListItem" elem="Content">
-        <Image
+        <Image lazyLoad={true}
           mix={{ block: "MyAccountOrderListItem", elem: "Image" }}
           src={thumbnail}
         />
@@ -104,7 +104,7 @@ class MyAccountOrderListItem extends SourceComponent {
           >
             {!!packages_count && (
               <>
-                <Image
+                <Image lazyLoad={true}
                   src={PackageIcon}
                   mix={{
                     block: "MyAccountOrderListItem",

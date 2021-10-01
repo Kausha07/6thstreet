@@ -272,7 +272,7 @@ export class SuccessCheckoutItem extends PureComponent {
 
     return (
       <>
-        <Image
+        <Image lazyLoad={true}
           src={thumbnail}
           mix={{
             block: "SuccessCheckoutItem",

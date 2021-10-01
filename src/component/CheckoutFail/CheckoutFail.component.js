@@ -12,7 +12,7 @@ export class CheckoutFail extends CheckoutSuccess {
     renderStatus() {
         return (
             <div block="MyAccountOrderView" elem="StatusFailed">
-                <Image
+                <Image lazyLoad={true}
                   src={ WarningImage }
                   mix={ { block: 'MyAccountOrderView', elem: 'WarningImage' } }
                 />

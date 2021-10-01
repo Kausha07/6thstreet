@@ -9,6 +9,10 @@
   margin-top: 6px;
   padding: 0 20px;
   overflow-x: visible;
+  
+  @include mobile {
+    overflow: hidden;
+  }
 
   .PDPSummaryHeaderAndShareAndWishlistButtonContainer {
     display: flex;

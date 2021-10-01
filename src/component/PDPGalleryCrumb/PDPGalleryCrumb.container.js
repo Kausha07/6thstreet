@@ -91,6 +91,7 @@ export class PDPGalleryCrumbContainer extends PureComponent {
     }
 
     render() {
+
         return (
             <PDPGalleryCrumb
               { ...this.containerFunctions }

@@ -195,7 +195,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
             this.onclick(item);
           }}
         >
-          <Image
+          <Image lazyLoad={true}
             src={url}
             alt={text}
             block="Image"

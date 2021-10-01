@@ -151,7 +151,7 @@ class ProductItem extends PureComponent {
 
     return (
       <div block="ProductItem" elem="ImageBox">
-        <Image src={thumbnail_url} />
+        <Image lazyLoad={true} src={thumbnail_url} />
         {/* {this.renderOutOfStock()} */}
         {this.renderExclusive()} {this.renderColors()}{" "}
       </div>
