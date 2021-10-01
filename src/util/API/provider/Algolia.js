@@ -74,6 +74,12 @@ export class Algolia {
     return data;
   }
 
+  async getWishlistProduct(idsArray) {
+    // TODO: validate data, possible cache
+    const { data = [] } = (await AlgoliaSDK.getWishlistProduct(idsArray)) || {};
+    return data;
+  }
+
   async getPopularBrands(limit) {
     // TODO: validate data, possible cache
     const { data = [] } = (await AlgoliaSDK.getPopularBrands(limit)) || {};
