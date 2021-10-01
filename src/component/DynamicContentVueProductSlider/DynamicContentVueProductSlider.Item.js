@@ -22,7 +22,14 @@ class DynamicContentVueProductSliderItem extends PureComponent {
   };
 
   onclick = (widgetID) => {
-    const { pageType } = this.props;
+    const {
+      pageType,
+      data: { category, sku, link },
+      posofreco,
+      sourceProdID,
+      sourceCatgID,
+    } = this.props;
+    let destProdID = sku;
     // vue analytics
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
@@ -33,8 +40,13 @@ class DynamicContentVueProductSliderItem extends PureComponent {
         currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),
-        referrer: "desktop",
+        referrer: window.location.href,
+        url: link,
         widgetID: widgetID,
+        sourceProdID: sourceProdID,
+        sourceCatgID: sourceCatgID,
+        destprodid: destProdID,
+        posofreco: posofreco,
       },
     });
   };

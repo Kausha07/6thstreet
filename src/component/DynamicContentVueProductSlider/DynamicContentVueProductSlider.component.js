@@ -27,7 +27,12 @@ class DynamicContentVueProductSlider extends PureComponent {
   };
 
   componentDidMount() {
-    const { widgetID, pageType = "home" } = this.props;
+    const {
+      widgetID,
+      pageType = "home",
+      sourceProdID = null,
+      sourceCatgID = null,
+    } = this.props;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     const customer = BrowserDatabase.getItem("customer");
     const userID = customer && customer.id ? customer.id : null;
@@ -39,9 +44,11 @@ class DynamicContentVueProductSlider extends PureComponent {
         currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),
-        referrer: "desktop",
-        widgetID: widgetID,
+        referrer: window.location.href,
+        widgetID: VueIntegrationQueries.getWidgetTypeMapped(widgetID, pageType),
         userID: userID,
+        sourceProdID: sourceProdID,
+        sourceCatgID: sourceCatgID,
       },
     });
     this.registerViewPortEvent();
@@ -86,7 +93,11 @@ class DynamicContentVueProductSlider extends PureComponent {
     });
   };
   async handleOnScroll(widgetID, event) {
-    const { pageType = "home" } = this.props;
+    const {
+      pageType = "home",
+      sourceProdID = null,
+      sourceCatgID = null,
+    } = this.props;
     const target = event.nativeEvent.target;
     let width = 0;
     if (screen.width > 1024) {
@@ -98,8 +109,7 @@ class DynamicContentVueProductSlider extends PureComponent {
     if (this.cmpRef.current !== index) {
       this.cmpRef.current = index;
       const productsToRender = this.getProducts();
-      let sourceProdID = productsToRender[index].sku;
-      let sourceCatgID = productsToRender[index].category;
+      let destURL = productsToRender[index]?.link;
       const locale = VueIntegrationQueries.getLocaleFromUrl();
       VueIntegrationQueries.vueAnalayticsLogger({
         event_name: VUE_CAROUSEL_SWIPE,
@@ -109,7 +119,8 @@ class DynamicContentVueProductSlider extends PureComponent {
           currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
           clicked: Date.now(),
           uuid: getUUID(),
-          referrer: "desktop",
+          referrer: window.location.href,
+          url: destURL,
           sourceProdID: sourceProdID,
           sourceCatgID: sourceCatgID,
           widgetID: widgetID,
@@ -198,7 +209,12 @@ class DynamicContentVueProductSlider extends PureComponent {
 
   renderSliderContainer() {
     const productsToRender = this.getProducts();
-    const { widgetID, pageType } = this.props;
+    const {
+      widgetID,
+      pageType,
+      sourceProdID = null,
+      sourceCatgID = null,
+    } = this.props;
     return (
       <DragScroll data={{ rootClass: "ScrollWrapper", ref: this.cmpRef }}>
         <div
@@ -211,7 +227,7 @@ class DynamicContentVueProductSlider extends PureComponent {
             this.handleOnScroll(widgetID, e);
           }}
         >
-          {productsToRender.map((item) => {
+          {productsToRender.map((item, i) => {
             const { sku } = item;
             return (
               <DynamicContentVueProductSliderItem
@@ -219,6 +235,9 @@ class DynamicContentVueProductSlider extends PureComponent {
                 data={item}
                 widgetID={widgetID}
                 pageType={pageType}
+                posofreco={i}
+                sourceProdID={sourceProdID}
+                sourceCatgID={sourceCatgID}
               />
             );
           })}

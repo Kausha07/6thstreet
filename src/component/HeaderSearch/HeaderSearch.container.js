@@ -61,6 +61,7 @@ export class HeaderSearchContainer extends PureComponent {
     const { history } = this.props;
     const { search } = this.state;
     const PRODUCT_RESULT_LIMIT = 8;
+    console.log("window.location", window.location.href);
     // const queryID = getStore().getState().SearchSuggestions.queryID
     //   ? getStore().getState().SearchSuggestions.queryID
     //   : "";
@@ -76,7 +77,10 @@ export class HeaderSearchContainer extends PureComponent {
           }
     );
     const queryID = productData?.queryID ? productData?.queryID : null;
-    history.push(`/catalogsearch/result/?q=${search}&qid=${queryID}`);
+    history.push({
+      pathname: `/catalogsearch/result/?q=${search}&qid=${queryID}`,
+      state: { prevPath: window.location.href },
+    });
   }
 
   onSearchClean() {

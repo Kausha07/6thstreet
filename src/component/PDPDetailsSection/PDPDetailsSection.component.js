@@ -580,7 +580,10 @@ class PDPDetailsSection extends PureComponent {
   }
 
   renderPdpWidgets() {
-    const { pdpWidgetsData } = this.props;
+    const {
+      pdpWidgetsData,
+      product: { sku = null, categories_without_path = [] },
+    } = this.props;
     const { pdpWidgetsAPIData } = this.state;
     if (pdpWidgetsData.length > 0 && pdpWidgetsAPIData.length > 0) {
       return (
@@ -596,6 +599,8 @@ class PDPDetailsSection extends PureComponent {
                     widgetID={widgetID}
                     products={data}
                     heading={heading}
+                    sourceProdID={sku}
+                    sourceCatgID={categories_without_path[0]}
                     pageType={"pdp"}
                     key={`DynamicContentVueProductSliderContainer${index}`}
                   />

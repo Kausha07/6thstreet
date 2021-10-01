@@ -26,8 +26,15 @@ export class ProductItemContainer extends PureComponent {
   };
 
   containerProps = () => {
-    const { product, page, position, qid, pageType } = this.props;
-    return { product, page, position, qid, pageType };
+    const {
+      product,
+      page,
+      position,
+      qid,
+      pageType,
+      prevPath = null,
+    } = this.props;
+    return { product, page, position, qid, pageType, prevPath };
   };
 
   render() {
