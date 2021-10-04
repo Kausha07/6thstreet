@@ -28,7 +28,7 @@ class PLPPage extends PureComponent {
         currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),
-        referrer: prevPath,
+        referrer: prevPath ? prevPath : null,
         url: window.location.href,
       },
     });

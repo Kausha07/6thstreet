@@ -25,35 +25,10 @@ class DynamicContentVueProductSlider extends PureComponent {
   state = {
     impressionSent: false,
     eventRegistered: false,
+    apiCalled: false,
   };
 
   componentDidMount() {
-    const {
-      widgetID,
-      pageType = "home",
-      sourceProdID = null,
-      sourceCatgID = null,
-      location: { state },
-    } = this.props;
-    const locale = VueIntegrationQueries.getLocaleFromUrl();
-    const customer = BrowserDatabase.getItem("customer");
-    const userID = customer && customer.id ? customer.id : null;
-    VueIntegrationQueries.vueAnalayticsLogger({
-      event_name: VUE_CAROUSEL_SHOW,
-      params: {
-        event: VUE_CAROUSEL_SHOW,
-        pageType: pageType,
-        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-        clicked: Date.now(),
-        uuid: getUUID(),
-        referrer: state?.prevPath ? state?.prevPath : null,
-        url: window.location.href,
-        widgetID: VueIntegrationQueries.getWidgetTypeMapped(widgetID, pageType),
-        userID: userID,
-        sourceProdID: sourceProdID,
-        sourceCatgID: sourceCatgID,
-      },
-    });
     this.registerViewPortEvent();
   }
 
@@ -84,14 +59,48 @@ class DynamicContentVueProductSlider extends PureComponent {
     Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
     this.setState({ impressionSent: true });
   }
+
+  handleCarouselShowEvent = () => {
+    const {
+      widgetID,
+      pageType = "home",
+      sourceProdID = null,
+      sourceCatgID = null,
+      location: { state },
+    } = this.props;
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
+    const customer = BrowserDatabase.getItem("customer");
+    const userID = customer && customer.id ? customer.id : null;
+    VueIntegrationQueries.vueAnalayticsLogger({
+      event_name: VUE_CAROUSEL_SHOW,
+      params: {
+        event: VUE_CAROUSEL_SHOW,
+        pageType: pageType,
+        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+        clicked: Date.now(),
+        uuid: getUUID(),
+        referrer: state?.prevPath ? state?.prevPath : null,
+        url: window.location.href,
+        widgetID: VueIntegrationQueries.getWidgetTypeMapped(widgetID, pageType),
+        userID: userID,
+        sourceProdID: sourceProdID,
+        sourceCatgID: sourceCatgID,
+      },
+    });
+    this.setState({ apiCalled: true });
+  };
   handleIntersect = (entries, observer) => {
-    const { impressionSent } = this.state;
+    const { impressionSent, apiCalled } = this.state;
     if (impressionSent) {
+      return;
+    }
+    if (apiCalled) {
       return;
     }
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         this.sendImpressions();
+        this.handleCarouselShowEvent();
       }
     });
   };
