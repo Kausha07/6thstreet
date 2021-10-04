@@ -30,13 +30,11 @@ function formatResult(data) {
   let finalData = [];
   data.results = data.results.filter((subData) => {
     let newSubData = {};
-    if (subData) {
-      Object.keys(subData).map((key) => {
-        if (field.includes(key)) {
-          newSubData[key] = subData[key];
-        }
-      });
-    }
+    Object.keys(subData).map((key) => {
+      if (field.includes(key)) {
+        newSubData[key] = subData[key];
+      }
+    });
     finalData.push(newSubData);
   });
   finalData.map((data, index) => {
