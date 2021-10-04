@@ -28,7 +28,7 @@ export default function getWishlistProduct(idsArray, options = {}) {
 
 function formatResult(data) {
   let finalData = [];
-  data.results = data.results.filter((subData) => {
+  data.results = data.results.filter(item=>!!item).map((subData) => {
     let newSubData = {};
     Object.keys(subData).map((key) => {
       if (field.includes(key)) {
