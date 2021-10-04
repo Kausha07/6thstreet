@@ -24,18 +24,21 @@ export class WishlistDispatcher {
         data: { product_ids },
       } = items2;
 
-      let productIdsArr = [];
-      product_ids.map((product, index) => {
-        productIdsArr.push(product.product_id.toString());
-      });
-      const wishListData = await new Algolia().getWishlistProduct(
-        productIdsArr
-      );
-      product_ids.map((product, index) => {
-        product["product"] = wishListData[index];
-      });
-
-      dispatch(setWishlistItems(product_ids));
+      if (product_ids) {
+        let productIdsArr = [];
+        product_ids.map((product, index) => {
+          productIdsArr.push(product.product_id.toString());
+        });
+        const wishListData = await new Algolia().getWishlistProduct(
+          productIdsArr
+        );
+        product_ids.map((product, index) => {
+          product["product"] = wishListData[index];
+        });
+        dispatch(setWishlistItems(product_ids));
+      } else {
+        dispatch(setWishlistItems([]));
+      }
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error(e);
@@ -56,7 +59,7 @@ export class WishlistDispatcher {
     }
 
     try {
-      await MagentoAPI.delete(`/wishlist/delete/${id}?new=1`);
+      await MobileAPI.delete(`/wishlist/${id}?new=1`);
 
       this.updateInitialWishlistData(dispatch);
 
@@ -90,12 +93,11 @@ export class WishlistDispatcher {
     }
 
     try {
-      const response = await MagentoAPI.post(
-        `/wishlist/add/${sku.replace(/\//g, "%2F")}?new=1`
-      );
+      const response = await MobileAPI.post(`/wishlist?new=1`, {
+        sku: sku.replace(/\//g, "%2F"),
+      });
       this.updateInitialWishlistData(dispatch);
-
-      if (response === true) {
+      if (response.status === 200) {
         dispatch(
           showNotification("success", __("Product added to wish-list!"))
         );
