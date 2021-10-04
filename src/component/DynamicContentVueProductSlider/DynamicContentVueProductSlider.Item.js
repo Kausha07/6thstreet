@@ -41,7 +41,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
         clicked: Date.now(),
         uuid: getUUID(),
         referrer: window.location.href,
-        url: link,
+        url: link ? link : null,
         widgetID: widgetID,
         sourceProdID: sourceProdID,
         sourceCatgID: sourceCatgID,

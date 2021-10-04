@@ -96,6 +96,7 @@ export class PDPContainer extends PureComponent {
   }
 
   componentDidMount() {
+    console.log("pdp called");
     const {
       product: { product_type_6s, sku, url },
       location: { state },
@@ -111,7 +112,7 @@ export class PDPContainer extends PureComponent {
         clicked: Date.now(),
         uuid: getUUID(),
         referrer: state?.prevPath ? state?.prevPath : null,
-        url: url,
+        url: window.location.href,
         sourceProdID: sku,
         sourceCatgID: product_type_6s, // TODO: replace with category id
       },

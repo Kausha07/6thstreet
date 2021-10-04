@@ -73,7 +73,6 @@ export class PDPGalleryContainer extends PureComponent {
       product: { sku = "" },
       product,
     } = this.props;
-    console.log("product", product);
     return (
       <PDPGallery
         {...this.containerFunctions}
