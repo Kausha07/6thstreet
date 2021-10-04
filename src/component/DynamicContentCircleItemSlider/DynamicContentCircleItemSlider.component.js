@@ -61,6 +61,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
     const apiUrl = "https://api.spockee.io/rest/v2/broadcast/upcoming?storeId=13207961&isStaging=true";
     fetch(apiUrl)
       .then((response) => response.json())
+
       .then((data) => {
         let newData = data.filter(val => (!val.m3u8URI))
         this.setState(
@@ -71,7 +72,9 @@ class DynamicContentCircleItemSlider extends PureComponent {
             console.log(this.state.livePartyItems);
           }
         );
-      });
+      })
+      .catch((error) => console.log(error))
+      ;
   }
 
 
