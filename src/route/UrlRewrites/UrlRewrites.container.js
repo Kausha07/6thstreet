@@ -112,6 +112,7 @@ export class UrlRewritesContainer extends PureComponent {
         brandImg: "",
         brandName: "",
       });
+      window.pageType = TYPE_CATEGORY;
     } else if (search.startsWith("?p")) {
       this.setState({
         prevPathname: urlParam,
@@ -120,6 +121,7 @@ export class UrlRewritesContainer extends PureComponent {
         sku: possibleSku,
         query: "",
       });
+      window.pageType = TYPE_CATEGORY;
     } else {
       const { urlResolver } = await fetchQuery(
         UrlRewritesQuery.getQuery({ urlParam })
@@ -143,6 +145,9 @@ export class UrlRewritesContainer extends PureComponent {
           isLoading: false,
           query: search,
         });
+        window.pageType = search.startsWith("?qid")
+          ? TYPE_PRODUCT
+          : TYPE_CATEGORY;
       } else {
         const finalType =
           type === TYPE_NOTFOUND && decodeURI(location.search).match(/idx=/)
