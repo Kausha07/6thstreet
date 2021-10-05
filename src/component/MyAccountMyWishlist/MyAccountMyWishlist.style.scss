@@ -1,6 +1,8 @@
 .MyAccountMyWishlist {
   margin: 20px 0 150px 0;
-
+  @include tablet {
+      margin-top: 594px;
+    }
   &-Empty {
     h2 {
       font-size: 30px;
