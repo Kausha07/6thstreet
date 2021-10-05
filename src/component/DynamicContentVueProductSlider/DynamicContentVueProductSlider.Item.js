@@ -42,7 +42,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
         uuid: getUUID(),
         referrer: window.location.href,
         url: link ? link : null,
-        widgetID: widgetID,
+        widgetID: VueIntegrationQueries.getWidgetTypeMapped(widgetID, pageType),
         sourceProdID: sourceProdID,
         sourceCatgID: sourceCatgID,
         destprodid: destProdID,

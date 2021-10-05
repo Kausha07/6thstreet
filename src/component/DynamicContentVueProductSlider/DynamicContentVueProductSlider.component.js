@@ -135,7 +135,10 @@ class DynamicContentVueProductSlider extends PureComponent {
           url: destURL,
           sourceProdID: sourceProdID,
           sourceCatgID: sourceCatgID,
-          widgetID: widgetID,
+          widgetID: VueIntegrationQueries.getWidgetTypeMapped(
+            widgetID,
+            pageType
+          ),
         },
       });
     }
