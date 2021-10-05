@@ -10,23 +10,20 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import PropTypes from "prop-types";
-import { PureComponent } from "react";
-
 import CartItem from "Component/CartItem";
 import CmsBlock from "Component/CmsBlock";
 import { CART_OVERLAY } from "Component/Header/Header.config";
+import Image from "Component/Image";
 import Link from "Component/Link";
 import { FIXED_CURRENCIES } from "Component/Price/Price.config";
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
 import Overlay from "SourceComponent/Overlay";
 import { TotalsType } from "Type/MiniCart";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
-
-import Delivery from "./icons/delivery-truck.png";
-import Image from "Component/Image";
-
 import "./CartOverlay.style";
+import Delivery from "./icons/delivery-truck.png";
 
 export class CartOverlay extends PureComponent {
   static propTypes = {
@@ -181,7 +178,12 @@ export class CartOverlay extends PureComponent {
         <Link
           block="CartOverlay"
           elem="CartButton"
-          to="/cart"
+          to={{
+            pathname: "/cart",
+            state: {
+              prevPath: window.location.href,
+            },
+          }}
           onClick={handleViewBagClick}
         >
           {__("View bag")}

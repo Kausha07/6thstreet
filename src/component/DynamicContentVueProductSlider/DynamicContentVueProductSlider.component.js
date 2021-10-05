@@ -3,9 +3,9 @@ import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/
 import PropTypes from "prop-types";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import React, { PureComponent } from "react";
+import { withRouter } from "react-router";
 import { isArabic } from "Util/App";
 import { getUUID } from "Util/Auth";
-import { withRouter } from "react-router";
 import BrowserDatabase from "Util/BrowserDatabase";
 import Event, { VUE_CAROUSEL_SHOW, VUE_CAROUSEL_SWIPE } from "Util/Event";
 import DynamicContentVueProductSliderItem from "./DynamicContentVueProductSlider.Item";
@@ -117,8 +117,11 @@ class DynamicContentVueProductSlider extends PureComponent {
 
   async handleContainerScroll(widgetID, event) {
     const { isArabic } = this.state;
-    const { pageType = "home" ,sourceProdID = null,
-    sourceCatgID = null,} = this.props;
+    const {
+      pageType = "home",
+      sourceProdID = null,
+      sourceCatgID = null,
+    } = this.props;
     const target = event.nativeEvent.target;
     this.scrollerRef.current.scrollLeft = isArabic
       ? Math.abs(target.scrollLeft)
@@ -147,7 +150,10 @@ class DynamicContentVueProductSlider extends PureComponent {
           url: destURL,
           sourceProdID: sourceProdID,
           sourceCatgID: sourceCatgID,
-          widgetID: widgetID,
+          widgetID: VueIntegrationQueries.getWidgetTypeMapped(
+            widgetID,
+            pageType
+          ),
         },
       });
     }
@@ -179,7 +185,7 @@ class DynamicContentVueProductSlider extends PureComponent {
     const { isHome } = this.props;
 
     return (
-      <div block="VueProductSlider" elem="HeaderContainer" mods={{isHome}}>
+      <div block="VueProductSlider" elem="HeaderContainer" mods={{ isHome }}>
         <h4>{heading}</h4>
         {/* {this.viewAllBtn()} */}
       </div>
@@ -233,12 +239,15 @@ class DynamicContentVueProductSlider extends PureComponent {
     );
   };
 
-
   renderSliderContainer() {
     const items = this.getProducts();
     const { isHome, renderMySignInPopup } = this.props;
-    const { widgetID, pageType, sourceProdID = null,
-      sourceCatgID = null, } = this.props;
+    const {
+      widgetID,
+      pageType,
+      sourceProdID = null,
+      sourceCatgID = null,
+    } = this.props;
     // debugger
     return (
       <DragScroll data={{ rootClass: "ScrollWrapper", ref: this.cmpRef }}>

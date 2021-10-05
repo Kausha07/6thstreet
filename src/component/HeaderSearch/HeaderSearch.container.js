@@ -108,11 +108,9 @@ export class HeaderSearchContainer extends PureComponent {
       }
       if (gender !== "home") {
         history.push({
-          pathname:`/catalogsearch/result/?q=${search}&qid=${queryID}&dFR[gender][0]=${genderInURL}`,
-
-        }
-
-        );
+          pathname: `/catalogsearch/result/?q=${search}&qid=${queryID}&dFR[gender][0]=${genderInURL}`,
+          state: { prevPath: window.location.href },
+        });
       } else {
         history.push({
           pathname: `/catalogsearch/result/?q=${search}&qid=${queryID}`,

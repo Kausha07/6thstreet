@@ -3,8 +3,8 @@ import Link from "Component/Link";
 import Loader from "Component/Loader";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
-import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { withRouter } from "react-router";
+import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { Products } from "Util/API/endpoint/Product/Product.type";
 import {
   formatQuerySuggestions,
@@ -389,7 +389,12 @@ class SearchSuggestion extends PureComponent {
       return (
         <li>
           <Link
-            to={fetchSKU?.url}
+            to={{
+              pathname: fetchSKU?.url,
+              state: {
+                prevPath: window.location.href,
+              },
+            }}
             onClick={() => this.onSearchQueryClick(query)}
           >
             <div className="suggestion-details-box text-capitalize">
@@ -402,12 +407,17 @@ class SearchSuggestion extends PureComponent {
       return (
         <li>
           <Link
-            to={`${this.getCatalogUrl(
-              query,
-              gender,
-              queryID,
-              !brandValue?.includes("///") ? brandValue : null
-            )}`}
+            to={{
+              pathname: this.getCatalogUrl(
+                query,
+                gender,
+                queryID,
+                !brandValue?.includes("///") ? brandValue : null
+              ),
+              state: {
+                prevPath: window.location.href,
+              },
+            }}
             onClick={() =>
               this.onSearchQueryClick(formatQuerySuggestions(query))
             }
@@ -518,11 +528,11 @@ class SearchSuggestion extends PureComponent {
               prevPath: window.location.href,
             },
           }}
-
           onClick={() => this.handleProductClick(product)}
         >
           <div block="SearchProduct">
-            <Image lazyLoad={true}
+            <Image
+              lazyLoad={true}
               src={thumbnail_url}
               alt="Product Image"
               block="SearchProduct"
@@ -704,7 +714,8 @@ class SearchSuggestion extends PureComponent {
   renderTrendingTag = ({ link, label }, i) => (
     <li key={i}>
       <Link
-        to={{ pathname: link && link.split("#q")[0] ,
+        to={{
+          pathname: link && link.split("#q")[0],
           state: {
             prevPath: window.location.href,
           },
@@ -746,14 +757,15 @@ class SearchSuggestion extends PureComponent {
     return (
       <li key={i}>
         <Link
-          to={
-            link
+          to={{
+            pathname: link
               ? link
               : `/catalogsearch/result/?q=${search}&dFR[gender][0]=${requestedGender.replace(
                   requestedGender.charAt(0),
                   requestedGender.charAt(0).toUpperCase()
-                )}`
-          }
+                )}`,
+            state: { prevPath: window.location.href },
+          }}
           onClick={() => this.onSearchQueryClick(search)}
         >
           <div block="SearchSuggestion" elem="TopSearches">
@@ -794,14 +806,17 @@ class SearchSuggestion extends PureComponent {
     return (
       <li key={i}>
         <Link
-          to={
-            link
+          to={{
+            pathname: link
               ? link
-              : `/catalogsearch/result/?q=${name}&dFR[gender][0]=${requestedGender.replace(
+              : `/catalogsearch/result/?q=${encodeURIComponent(
+                  name
+                )}&dFR[gender][0]=${requestedGender.replace(
                   requestedGender.charAt(0),
                   requestedGender.charAt(0).toUpperCase()
-                )}`
-          }
+                )}`,
+            state: { prevPath: window.location.href },
+          }}
           onClick={() => this.onSearchQueryClick(name)}
         >
           <div block="SearchSuggestion" elem="TopSearches">
