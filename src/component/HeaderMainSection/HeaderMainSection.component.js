@@ -57,7 +57,7 @@ class HeaderMainSection extends NavigationAbstract {
       showSearch: false,
       isArabic: isArabic(),
       signInPopUp: "",
-      showPopup:false,
+      showPopup: false,
       isMobile: isMobile.any(),
     };
     this.headerSearchRef = createRef();
@@ -76,48 +76,47 @@ class HeaderMainSection extends NavigationAbstract {
   renderMap = {
     gender: this.renderGenderSwitcher.bind(this),
     logo: this.renderLogo.bind(this),
-    leftContainer:this.renderLeftContainer.bind(this),
+    leftContainer: this.renderLeftContainer.bind(this),
     search: this.renderSearch.bind(this),
     back: this.renderBack.bind(this),
   };
 
-renderLeftContainer(){
-  return(
-    <div block="leftContainer">
-      {this.renderAccount()}
-      {this.renderCart()}
-      {this.renderWishlist()}
-      {this.renderSearchIcon()}
-    </div>
-  )
-}
-
-showMyAccountPopup = () => {
-  this.setState({ showPopup: true });
-};
-
-closePopup = () => {
-  this.setState({ signInPopUp: "",showPopup:false });
-};
-
-onSignIn = () => {
-  this.closePopup();
-};
-
-
-renderMySignInPopup() {
-  const { showPopup } = this.state;
-  if (!showPopup) {
-    return null;
+  renderLeftContainer() {
+    return (
+      <div block="leftContainer">
+        {this.renderAccount()}
+        {this.renderCart()}
+        {this.renderWishlist()}
+        {this.renderSearchIcon()}
+      </div>
+    );
   }
-  return (
-    <MyAccountOverlay
-      closePopup={this.closePopup}
-      onSignIn={this.onSignIn}
-      isPopup
-    />
-  );
-}
+
+  showMyAccountPopup = () => {
+    this.setState({ showPopup: true });
+  };
+
+  closePopup = () => {
+    this.setState({ signInPopUp: "", showPopup: false });
+  };
+
+  onSignIn = () => {
+    this.closePopup();
+  };
+
+  renderMySignInPopup() {
+    const { showPopup } = this.state;
+    if (!showPopup) {
+      return null;
+    }
+    return (
+      <MyAccountOverlay
+        closePopup={this.closePopup}
+        onSignIn={this.onSignIn}
+        isPopup
+      />
+    );
+  }
   // state = {
 
   // };
@@ -165,13 +164,13 @@ renderMySignInPopup() {
 
   isPLP() {
     const { type } = this.state;
+    debugger;
     // updated this.props with window. in case of any issue need to verify this in future
     const {
-      location: { state, pathname = "" },
+      location: { search, pathname = "" },
     } = this.props;
     const isSearch = pathname.includes("catalogsearch");
-
-    return TYPE_CATEGORY === type && state && !isSearch;
+    return TYPE_CATEGORY === type && search && !isSearch;
   }
 
   isPDP() {

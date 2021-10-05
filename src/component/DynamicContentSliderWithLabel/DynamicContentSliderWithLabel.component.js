@@ -161,18 +161,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
   renderSliderWithLabel = (item, i) => {
     const { link, text, url, plp_config, height, width, text_align } = item;
     const { isArabic } = this.state;
-    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
-      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
-      : "home";
-    let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
-    let parseLink = link.includes("/catalogsearch/result")
-      ? link.split("&")[0] +
-        `&gender=${requestedGender.replace(
-          requestedGender.charAt(0),
-          requestedGender.charAt(0).toUpperCase()
-        )}`
-      : link;
-
+    let parseLink = link;
     const wd = `${width.toString()}px`;
     const ht = `${height.toString()}px`;
 
@@ -195,13 +184,13 @@ class DynamicContentSliderWithLabel extends PureComponent {
             this.onclick(item);
           }}
         >
-          <Image lazyLoad={true}
+          <Image
+            lazyLoad={true}
             src={url}
             alt={text}
             block="Image"
-            style={{ maxWidth: wd, maxHeight: ht }}
+            style={{ maxWidth: wd }}
           />
-
         </Link>
         {text ? (
           <div block="SliderText" style={{ textAlign: text_align }}>

@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
+import { withRouter } from "react-router";
 import { setGender } from "Store/AppState/AppState.action";
 import { toggleBreadcrumbs } from "Store/Breadcrumbs/Breadcrumbs.action";
 import { updateMeta } from "Store/Meta/Meta.action";
@@ -54,6 +55,10 @@ export class HomePageContainer extends PureComponent {
   }
 
   componentDidMount() {
+    console.log("this.props", this.props);
+    const {
+      location: { state },
+    } = this.props;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_PAGE_VIEW,
@@ -63,7 +68,8 @@ export class HomePageContainer extends PureComponent {
         currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),
-        referrer: "desktop",
+        referrer: state?.prevPath ? state?.prevPath : null,
+        url: window.location.href,
       },
     });
     const { gender, toggleBreadcrumbs } = this.props;
@@ -196,4 +202,6 @@ export class HomePageContainer extends PureComponent {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomePageContainer);
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(HomePageContainer)
+);

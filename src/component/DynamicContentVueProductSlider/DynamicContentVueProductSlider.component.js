@@ -5,6 +5,7 @@ import VueIntegrationQueries from "Query/vueIntegration.query";
 import React, { PureComponent } from "react";
 import { isArabic } from "Util/App";
 import { getUUID } from "Util/Auth";
+import { withRouter } from "react-router";
 import BrowserDatabase from "Util/BrowserDatabase";
 import Event, { VUE_CAROUSEL_SHOW, VUE_CAROUSEL_SWIPE } from "Util/Event";
 import DynamicContentVueProductSliderItem from "./DynamicContentVueProductSlider.Item";
@@ -30,29 +31,13 @@ class DynamicContentVueProductSlider extends PureComponent {
       isArabic: isArabic(),
       impressionSent: false,
       eventRegistered: false,
+      apiCalled: false,
     };
   }
   componentDidMount() {
     if (this.state.customScrollWidth < 0) {
       this.renderScrollbar();
     }
-    const { widgetID, pageType = "home" } = this.props;
-    const locale = VueIntegrationQueries.getLocaleFromUrl();
-    const customer = BrowserDatabase.getItem("customer");
-    const userID = customer && customer.id ? customer.id : null;
-    VueIntegrationQueries.vueAnalayticsLogger({
-      event_name: VUE_CAROUSEL_SHOW,
-      params: {
-        event: VUE_CAROUSEL_SHOW,
-        pageType: pageType,
-        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-        clicked: Date.now(),
-        uuid: getUUID(),
-        referrer: "desktop",
-        widgetID: widgetID,
-        userID: userID,
-      },
-    });
     this.registerViewPortEvent();
   }
   componentWillUnmount() {}
@@ -73,21 +58,67 @@ class DynamicContentVueProductSlider extends PureComponent {
     this.setState({ eventRegistered: true });
   }
 
+  sendImpressions() {
+    const products = this.getProducts();
+    const items = products.map((item) => {
+      return {
+        id: item.sku,
+        label: item.name,
+      };
+    });
+    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
+    this.setState({ impressionSent: true });
+  }
+
+  handleCarouselShowEvent = () => {
+    const {
+      widgetID,
+      pageType = "home",
+      sourceProdID = null,
+      sourceCatgID = null,
+      location: { state },
+    } = this.props;
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
+    const customer = BrowserDatabase.getItem("customer");
+    const userID = customer && customer.id ? customer.id : null;
+    VueIntegrationQueries.vueAnalayticsLogger({
+      event_name: VUE_CAROUSEL_SHOW,
+      params: {
+        event: VUE_CAROUSEL_SHOW,
+        pageType: pageType,
+        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+        clicked: Date.now(),
+        uuid: getUUID(),
+        referrer: state?.prevPath ? state?.prevPath : null,
+        url: window.location.href,
+        widgetID: VueIntegrationQueries.getWidgetTypeMapped(widgetID, pageType),
+        userID: userID,
+        sourceProdID: sourceProdID,
+        sourceCatgID: sourceCatgID,
+      },
+    });
+    this.setState({ apiCalled: true });
+  };
   handleIntersect = (entries, observer) => {
-    const { impressionSent } = this.state;
+    const { impressionSent, apiCalled } = this.state;
     if (impressionSent) {
+      return;
+    }
+    if (apiCalled) {
       return;
     }
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         this.sendImpressions();
+        this.handleCarouselShowEvent();
       }
     });
   };
 
   async handleContainerScroll(widgetID, event) {
     const { isArabic } = this.state;
-    const { pageType = "home" } = this.props;
+    const { pageType = "home" ,sourceProdID = null,
+    sourceCatgID = null,} = this.props;
     const target = event.nativeEvent.target;
     this.scrollerRef.current.scrollLeft = isArabic
       ? Math.abs(target.scrollLeft)
@@ -102,8 +133,7 @@ class DynamicContentVueProductSlider extends PureComponent {
     if (this.indexRef.current !== index) {
       this.indexRef.current = index;
       const productsToRender = this.getProducts();
-      let sourceProdID = productsToRender?.[index]?.sku;
-      let sourceCatgID = productsToRender?.[index]?.category;
+      let destURL = productsToRender[index]?.link;
       const locale = VueIntegrationQueries.getLocaleFromUrl();
       VueIntegrationQueries.vueAnalayticsLogger({
         event_name: VUE_CAROUSEL_SWIPE,
@@ -113,7 +143,8 @@ class DynamicContentVueProductSlider extends PureComponent {
           currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
           clicked: Date.now(),
           uuid: getUUID(),
-          referrer: "desktop",
+          referrer: window.location.href,
+          url: destURL,
           sourceProdID: sourceProdID,
           sourceCatgID: sourceCatgID,
           widgetID: widgetID,
@@ -201,22 +232,13 @@ class DynamicContentVueProductSlider extends PureComponent {
       </div>
     );
   };
-  sendImpressions() {
-    const products = this.getProducts();
-    const items = products.map((item) => {
-      return {
-        id: item.sku,
-        label: item.name,
-      };
-    });
-    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
-    this.setState({ impressionSent: true });
-  }
+
 
   renderSliderContainer() {
     const items = this.getProducts();
     const { isHome, renderMySignInPopup } = this.props;
-    const { widgetID, pageType } = this.props;
+    const { widgetID, pageType, sourceProdID = null,
+      sourceCatgID = null, } = this.props;
     // debugger
     return (
       <DragScroll data={{ rootClass: "ScrollWrapper", ref: this.cmpRef }}>
@@ -242,6 +264,8 @@ class DynamicContentVueProductSlider extends PureComponent {
                   ref={this.itemRef}
                   widgetID={widgetID}
                   pageType={pageType}
+                  sourceProdID={sourceProdID}
+                  sourceCatgID={sourceCatgID}
                 />
               );
             })}
@@ -271,4 +295,4 @@ class DynamicContentVueProductSlider extends PureComponent {
   }
 }
 
-export default DynamicContentVueProductSlider;
+export default withRouter(DynamicContentVueProductSlider);
