@@ -63,6 +63,15 @@
       font-weight: var(--fw-regular);
       text-decoration: none;
       color: var(--foter-hyperlink-color);
+      div {
+        display: flex;
+        span:nth-last-of-type(2){
+          font-size: 22px;
+          line-height: 35px;
+          transform: translateY(-3.2px);
+          font-weight: var(--fw-light);
+        }
+      }
     }
 
     li::before {
