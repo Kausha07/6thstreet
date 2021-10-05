@@ -263,13 +263,14 @@ class DynamicContentVueProductSlider extends PureComponent {
             }}
           >
             {isHome && <div block="SliderHelper" mods={{ isHome }}></div>}
-            {items.map((item) => {
+            {items.map((item, i) => {
               const { sku } = item;
               return (
                 <DynamicContentVueProductSliderItem
                   renderMySignInPopup={renderMySignInPopup}
                   key={sku}
                   data={item}
+                  posofreco={i}
                   ref={this.itemRef}
                   widgetID={widgetID}
                   pageType={pageType}

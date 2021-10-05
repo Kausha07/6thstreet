@@ -389,12 +389,7 @@ class SearchSuggestion extends PureComponent {
       return (
         <li>
           <Link
-            to={{
-              pathname: fetchSKU?.url,
-              state: {
-                prevPath: window.location.href,
-              },
-            }}
+            to={fetchSKU?.url}
             onClick={() => this.onSearchQueryClick(query)}
           >
             <div className="suggestion-details-box text-capitalize">
@@ -522,12 +517,7 @@ class SearchSuggestion extends PureComponent {
     return (
       <li>
         <Link
-          to={{
-            pathname: parseLink ? parseLink : "#",
-            state: {
-              prevPath: window.location.href,
-            },
-          }}
+          to={parseLink ? parseLink : "#"}
           onClick={() => this.handleProductClick(product)}
         >
           <div block="SearchProduct">
@@ -611,6 +601,8 @@ class SearchSuggestion extends PureComponent {
             heading={__("Recommended for you")}
             key={`DynamicContentVueProductSliderContainer99`}
             pageType="search"
+            sourceProdID={null}
+            sourceCatgID={null}
           />
         </div>
       );
@@ -760,7 +752,9 @@ class SearchSuggestion extends PureComponent {
           to={{
             pathname: link
               ? link
-              : `/catalogsearch/result/?q=${search}&dFR[gender][0]=${requestedGender.replace(
+              : `/catalogsearch/result/?q=${encodeURIComponent(
+                  search
+                )}&dFR[gender][0]=${requestedGender.replace(
                   requestedGender.charAt(0),
                   requestedGender.charAt(0).toUpperCase()
                 )}`,
