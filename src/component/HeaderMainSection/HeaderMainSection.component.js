@@ -5,6 +5,7 @@ import HeaderLogo from "Component/HeaderLogo";
 import HeaderSearch from "Component/HeaderSearch";
 import HeaderWishlist from "Component/HeaderWishlist";
 import { MOBILE_MENU_SIDEBAR_ID } from "Component/MobileMenuSideBar/MoblieMenuSideBar.config";
+import MyAccountOverlay from "Component/MyAccountOverlay";
 import NavigationAbstract from "Component/NavigationAbstract/NavigationAbstract.component";
 import { DEFAULT_STATE_NAME } from "Component/NavigationAbstract/NavigationAbstract.config";
 import PropTypes from "prop-types";
@@ -23,7 +24,6 @@ import { isArabic } from "Util/App";
 import BrowserDatabase from "Util/BrowserDatabase";
 import isMobile from "Util/Mobile";
 import "./HeaderMainSection.style";
-import MyAccountOverlay from "Component/MyAccountOverlay";
 
 export const mapStateToProps = (state) => ({
   activeOverlay: state.OverlayReducer.activeOverlay,
@@ -164,7 +164,6 @@ class HeaderMainSection extends NavigationAbstract {
 
   isPLP() {
     const { type } = this.state;
-    debugger;
     // updated this.props with window. in case of any issue need to verify this in future
     const {
       location: { search, pathname = "" },
