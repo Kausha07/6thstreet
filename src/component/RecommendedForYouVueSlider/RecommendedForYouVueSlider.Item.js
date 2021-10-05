@@ -10,7 +10,6 @@ import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
 import { getUUID } from "Util/Auth";
 import Event, { VUE_CAROUSEL_CLICK } from "Util/Event";
-import Image from "Component/Image";
 
 export const mapStateToProps = (state) => ({
   country: state.AppState.country,
@@ -31,7 +30,12 @@ class RecommendedForYouVueSliderItem extends PureComponent {
   }
 
   onclick = (widgetID, item) => {
-    const { pageType } = this.props;
+    const {
+      pageType,
+      data: { category, sku, link },
+      posofreco,
+    } = this.props;
+    let destProdID = sku;
     // vue analytics
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
@@ -42,8 +46,13 @@ class RecommendedForYouVueSliderItem extends PureComponent {
         currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),
-        referrer: "desktop",
-        widgetID: widgetID,
+        referrer: window.location.href,
+        url: link ? link : null,
+        widgetID: VueIntegrationQueries.getWidgetTypeMapped(widgetID, pageType),
+        sourceProdID: null,
+        sourceCatgID: null,
+        destprodid: destProdID,
+        posofreco: posofreco,
       },
     });
     this.sendBannerClickImpression(item);

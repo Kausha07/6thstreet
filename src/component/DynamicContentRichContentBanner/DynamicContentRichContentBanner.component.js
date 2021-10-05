@@ -1,9 +1,14 @@
+import cx from "classnames";
+import {
+  HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
+  HOME_PAGE_BANNER_IMPRESSIONS,
+} from "Component/GoogleTagManager/events/BannerImpression.event";
+import Image from "Component/Image";
+import Link from "Component/Link";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import TinySlider from "tiny-slider-react";
-import Link from "Component/Link";
 import { formatCDNLink } from "Util/Url";
-import cx from "classnames";
 import "react-circular-carousel/dist/index.css";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
@@ -11,11 +16,6 @@ import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
 // import VueIntegrationQueries from "Query/vueIntegration.query";
 // import { getUUID } from "Util/Auth";
 import "./DynamicContentRichContentBanner.style";
-import {
-  HOME_PAGE_BANNER_IMPRESSIONS,
-  HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
-} from "Component/GoogleTagManager/events/BannerImpression.event";
-import Image from "Component/Image";
 
 const settings = {
   lazyload: true,

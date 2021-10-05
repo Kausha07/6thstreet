@@ -107,11 +107,15 @@ export class HeaderSearchContainer extends PureComponent {
         }
       }
       if (gender !== "home") {
-        history.push(
-          `/catalogsearch/result/?q=${search}&qid=${queryID}&dFR[gender][0]=${genderInURL}`
-        );
+        history.push({
+          pathname: `/catalogsearch/result/?q=${search}&qid=${queryID}&dFR[gender][0]=${genderInURL}`,
+          state: { prevPath: window.location.href },
+        });
       } else {
-        history.push(`/catalogsearch/result/?q=${search}&qid=${queryID}`);
+        history.push({
+          pathname: `/catalogsearch/result/?q=${search}&qid=${queryID}`,
+          state: { prevPath: window.location.href },
+        });
       }
     }
   }

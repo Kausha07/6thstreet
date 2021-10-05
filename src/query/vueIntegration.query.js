@@ -67,16 +67,20 @@ export class VueIntegrationQueries {
     }
   }
 
-  getWidgetTypeMapped(widgetType) {
-    const WIDGET_MAP = {
-      "vue_visually_similar_slider": 0,
-      "vue_browsing_history_slider": 1,
-      "vue_trending_slider": 3,
-      "vue_recently_viewed_slider": 7,
-      "vue_top_picks_slider": 11,
-      "vue_style_it_slider": 9,
-      "vue_compact_style_it_slider": "9a"
-     };
+  getWidgetTypeMapped(widgetType, pageType) {
+    const WIDGET_MAP = [
+      {"name":"vue_visually_similar_slider", "value" : 0},
+      {"name":"vue_browsing_history_slider", "value": 1},
+      {"name":"vue_trending_slider" , "value":3},
+      {"name":"vue_recently_viewed_slider" , "value":7},
+      {"name":"vue_top_picks_slider" , "value":11},
+      {"name":"vue_style_it_slider", "value":9},
+      {"name":"vue_compact_style_it_slider" , "value":"9a"}
+    ];
+    const getWidgetID = WIDGET_MAP.find(item => item.name === widgetType)?.value;
+    const widgetID = `${getWidgetID}_${pageType}`;
+    return widgetID;
   }
+
 }
 export default new VueIntegrationQueries();

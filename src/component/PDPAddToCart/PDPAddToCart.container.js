@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
+import { withRouter } from "react-router";
 import { getStore } from "Store";
 import { setMinicartOpen } from "Store/Cart/Cart.action";
 import CartDispatcher from "Store/Cart/Cart.dispatcher";
@@ -403,6 +404,7 @@ export class PDPAddToCartContainer extends PureComponent {
       },
       addProductToCart,
       showNotification,
+      location: { state },
     } = this.props;
     const { productStock, selectedClickAndCollectStore } = this.state;
 
@@ -493,7 +495,8 @@ export class PDPAddToCartContainer extends PureComponent {
           currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
           clicked: Date.now(),
           uuid: getUUID(),
-          referrer: "desktop",
+          referrer: state?.prevPath ? state?.prevPath : null,
+          url: window.location.href,
           sourceProdID: configSKU,
           sourceCatgID: product_type_6s, // TODO: replace with category id
           prodPrice: basePrice,
@@ -557,7 +560,8 @@ export class PDPAddToCartContainer extends PureComponent {
           currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
           clicked: Date.now(),
           uuid: getUUID(),
-          referrer: "desktop",
+          referrer: state?.prevPath ? state?.prevPath : null,
+          url: window.location.href,
           sourceProdID: configSKU,
           sourceCatgID: product_type_6s, // TODO: replace with category id
           prodPrice: basePrice,
@@ -663,12 +667,12 @@ export class PDPAddToCartContainer extends PureComponent {
         showNotification("error", __("Unable to add product to cart."));
         return;
       }
-  
+
       if ( (size_uk.length !== 0 || size_eu.length !== 0 || size_us.length !== 0) && selectedSizeCode === "") {
         showNotification("error", __("Please select a size."));
         return;
       }
-      
+
       showOverlay(PDP_CLICK_AND_COLLECT_POPUP_ID);
     }
 
@@ -699,7 +703,6 @@ export class PDPAddToCartContainer extends PureComponent {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(PDPAddToCartContainer);
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(PDPAddToCartContainer)
+);

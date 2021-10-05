@@ -15,7 +15,7 @@ export const WishlistReducer = (state = getInitialState(), action) => {
         return {
             ...state,
             isLoading: false,
-            items: formatItems(items)
+            items: formatItems(items.filter(({ product }) => !!product))
         };
 
     default:
