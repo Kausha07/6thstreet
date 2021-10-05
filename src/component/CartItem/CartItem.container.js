@@ -257,9 +257,9 @@ export class CartItemContainer extends PureComponent {
           qty,
           product: { name } = {},
           full_item_info: { config_sku, category, price },
+          full_item_info,
         },
       } = this.props;
-
       removeProduct(item_id).then(() => this.setStateNotLoading());
 
       Event.dispatch(EVENT_GTM_PRODUCT_REMOVE_FROM_CART, {
@@ -286,7 +286,8 @@ export class CartItemContainer extends PureComponent {
           currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
           clicked: Date.now(),
           uuid: getUUID(),
-          referrer: "desktop",
+          referrer: window.location.href,
+          url: window.location.href,
           sourceProdID: config_sku,
           sourceCatgID: category, // TODO: replace with category id
           prodPrice: price,

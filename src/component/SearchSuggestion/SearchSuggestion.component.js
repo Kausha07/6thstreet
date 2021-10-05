@@ -4,6 +4,7 @@ import Loader from "Component/Loader";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
+import { withRouter } from "react-router";
 import { Products } from "Util/API/endpoint/Product/Product.type";
 import {
   formatQuerySuggestions,
@@ -278,7 +279,12 @@ class SearchSuggestion extends PureComponent {
     return (
       <li>
         <Link
-          to={`/${urlName}.html`}
+          to={{
+            pathname: `/${urlName}.html?q=${urlName}`,
+            state: {
+              prevPath: window.location.href,
+            },
+          }}
           onClick={() => this.handleBrandsClick(urlName)}
         >
           <div className="suggestion-details-box">
@@ -506,7 +512,13 @@ class SearchSuggestion extends PureComponent {
     return (
       <li>
         <Link
-          to={parseLink ? parseLink : "#"}
+          to={{
+            pathname: parseLink ? parseLink : "#",
+            state: {
+              prevPath: window.location.href,
+            },
+          }}
+
           onClick={() => this.handleProductClick(product)}
         >
           <div block="SearchProduct">
@@ -656,7 +668,12 @@ class SearchSuggestion extends PureComponent {
     return (
       <li key={i}>
         <Link
-          to={`/${urlName}.html`}
+          to={{
+            pathname: `/${urlName}.html?q=${urlName}`,
+            state: {
+              prevPath: window.location.href,
+            },
+          }}
           onClick={() => this.handleTrendingBrandsClick(urlName)}
         >
           <div block="SearchSuggestion" elem="TrandingImg">
@@ -687,7 +704,11 @@ class SearchSuggestion extends PureComponent {
   renderTrendingTag = ({ link, label }, i) => (
     <li key={i}>
       <Link
-        to={{ pathname: link && link.split("#q")[0] }}
+        to={{ pathname: link && link.split("#q")[0] ,
+          state: {
+            prevPath: window.location.href,
+          },
+        }}
         onClick={() => this.handleTrendingTagsClick(label)}
       >
         <div block="SearchSuggestion" elem="TrandingTag">
@@ -895,4 +916,4 @@ class SearchSuggestion extends PureComponent {
   }
 }
 
-export default SearchSuggestion;
+export default withRouter(SearchSuggestion);

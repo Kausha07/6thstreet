@@ -71,8 +71,13 @@ export class PLP extends PureComponent {
   }
 
   renderPLPPages() {
+    const { prevPath = null } = this.props;
     return (
-      <PLPPages {...this.props} renderMySignInPopup={this.showMyAccountPopup} />
+      <PLPPages
+      {...this.props}
+      renderMySignInPopup={this.showMyAccountPopup}
+      prevPath={prevPath}
+      />
     );
   }
 
