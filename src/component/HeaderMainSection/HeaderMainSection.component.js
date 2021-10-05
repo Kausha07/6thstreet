@@ -164,7 +164,6 @@ class HeaderMainSection extends NavigationAbstract {
 
   isPLP() {
     const { type } = this.state;
-    debugger;
     // updated this.props with window. in case of any issue need to verify this in future
     const {
       location: { search, pathname = "" },
