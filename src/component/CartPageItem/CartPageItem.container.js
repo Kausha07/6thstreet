@@ -15,6 +15,7 @@ import PropTypes from "prop-types";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
+import { withRouter } from "react-router";
 // import { getStore } from "Store";
 import { showNotification } from "Store/Notification/Notification.action";
 import {
@@ -254,6 +255,7 @@ export class CartItemContainer extends PureComponent {
           product: { name } = {},
           full_item_info: { config_sku, category, price },
         },
+        location: { state },
       } = this.props;
 
       removeProduct(item_id).then(() => this.setStateNotLoading());
@@ -283,7 +285,8 @@ export class CartItemContainer extends PureComponent {
           currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
           clicked: Date.now(),
           uuid: getUUID(),
-          referrer: "desktop",
+          referrer: state?.prevPath ? state?.prevPath : null,
+          url: window.location.href,
           sourceProdID: config_sku,
           sourceCatgID: category, // TODO: replace with category id
           prodPrice: price,
@@ -342,7 +345,7 @@ export class CartItemContainer extends PureComponent {
       item: { qty },
     } = this.props;
     const { showCartItemQuantityPopup } = this.state;
-
+    console.log("container props", this.props);
     return (
       <>
         <CartPageItem
@@ -365,4 +368,4 @@ export class CartItemContainer extends PureComponent {
   }
 }
 
-export default connect(null, mapDispatchToProps)(CartItemContainer);
+export default withRouter(connect(null, mapDispatchToProps)(CartItemContainer));

@@ -1,5 +1,6 @@
-import Link from "Component/Link";
+import { HOME_PAGE_BANNER_CLICK_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
 import Image from "Component/Image";
+import Link from "Component/Link";
 import { DISPLAY_DISCOUNT_PERCENTAGE } from "Component/Price/Price.config";
 import WishlistIcon from "Component/WishlistIcon";
 import PropTypes from "prop-types";
@@ -10,7 +11,6 @@ import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
 import { getUUID } from "Util/Auth";
 import Event, { VUE_CAROUSEL_CLICK } from "Util/Event";
-import { HOME_PAGE_BANNER_CLICK_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
 
 export const mapStateToProps = (state) => ({
   country: state.AppState.country,
@@ -51,7 +51,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
         uuid: getUUID(),
         referrer: window.location.href,
         url: link ? link : null,
-        widgetID: widgetID,
+        widgetID: VueIntegrationQueries.getWidgetTypeMapped(widgetID, pageType),
         sourceProdID: sourceProdID,
         sourceCatgID: sourceCatgID,
         destprodid: destProdID,
@@ -191,7 +191,8 @@ class DynamicContentVueProductSliderItem extends PureComponent {
             this.onclick(widgetID, data);
           }}
         >
-          <Image lazyLoad={true}
+          <Image
+            lazyLoad={true}
             block="VueProductSlider"
             elem="VueProductImage"
             src={thumbnail_url}

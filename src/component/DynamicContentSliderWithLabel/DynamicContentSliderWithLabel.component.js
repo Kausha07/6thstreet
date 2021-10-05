@@ -1,23 +1,20 @@
 import DragScroll from "Component/DragScroll/DragScroll.component";
+import {
+  HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
+  HOME_PAGE_BANNER_IMPRESSIONS,
+} from "Component/GoogleTagManager/events/BannerImpression.event";
+// import VueIntegrationQueries from "Query/vueIntegration.query";
+// import { getUUID } from "Util/Auth";
+import Image from "Component/Image";
 import Link from "Component/Link";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
-import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
-import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import { isArabic } from "Util/App";
-import BrowserDatabase from "Util/BrowserDatabase";
 import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
 import { formatCDNLink } from "Util/Url";
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import "./DynamicContentSliderWithLabel.style";
-import {
-  HOME_PAGE_BANNER_IMPRESSIONS,
-  HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
-} from "Component/GoogleTagManager/events/BannerImpression.event";
-// import VueIntegrationQueries from "Query/vueIntegration.query";
-// import { getUUID } from "Util/Auth";
-import Image from "Component/Image";
 
 class DynamicContentSliderWithLabel extends PureComponent {
   static propTypes = {
