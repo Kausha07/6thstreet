@@ -1,3 +1,5 @@
 .MyAccountDashboard {
-
+@include tablet{
+    margin-top: 594px;
+}
 }

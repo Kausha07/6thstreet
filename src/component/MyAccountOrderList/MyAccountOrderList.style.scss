@@ -1,7 +1,13 @@
 .MyAccountOrderList {
     margin-bottom: 110px;
     width: 100%;
-
+    @include tablet{
+        margin-top: 594px;
+        padding-bottom: 130px;
+    }
+    @include mobile{
+        padding-bottom: 80px;
+    }
     &-MoreOrders {
         margin-top: 50px;
     }
