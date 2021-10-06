@@ -1,3 +1,4 @@
+import { HOME_PAGE_BANNER_CLICK_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
 import Image from "Component/Image";
 import Link from "Component/Link";
 import Price from "Component/Price";
@@ -18,6 +19,7 @@ import Event, {
   SELECT_ITEM_ALGOLIA,
 } from "Util/Event";
 import "./ProductItem.style";
+
 class ProductItem extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
@@ -26,6 +28,7 @@ class ProductItem extends PureComponent {
     qid: PropTypes.string,
     isVueData: PropTypes.bool,
     pageType: PropTypes.string,
+    prevPath: PropTypes.string,
   };
 
   static defaultProps = {
@@ -63,6 +66,10 @@ class ProductItem extends PureComponent {
         position: [position],
       });
     }
+    this.sendBannerClickImpression(product);
+  }
+  sendBannerClickImpression(item) {
+    Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);
   }
 
   renderWishlistIcon() {
@@ -145,8 +152,9 @@ class ProductItem extends PureComponent {
 
     return (
       <div block="ProductItem" elem="ImageBox">
-        <Image src={thumbnail_url} />
-        {this.renderOutOfStock()} {this.renderExclusive()} {this.renderColors()}{" "}
+        <Image lazyLoad={true} src={thumbnail_url} />
+        {/* {this.renderOutOfStock()} */}
+        {this.renderExclusive()} {this.renderColors()}{" "}
       </div>
     );
   }
@@ -191,6 +199,7 @@ class ProductItem extends PureComponent {
       product: { url, link },
       qid,
       isVueData,
+      prevPath = null,
     } = this.props;
     let queryID;
     if (!isVueData) {
@@ -227,13 +236,15 @@ class ProductItem extends PureComponent {
       pathname: parseLink,
       state: {
         product,
+        prevPath: prevPath,
       },
     };
 
     return (
       <Link to={isVueData ? parseLink : linkTo} onClick={this.handleClick}>
         {" "}
-        {this.renderImage()} {this.renderBrand()} {this.renderTitle()}{" "}
+        {this.renderImage()}
+        {this.renderOutOfStock()} {this.renderBrand()} {this.renderTitle()}{" "}
         {this.renderPrice()}{" "}
       </Link>
     );

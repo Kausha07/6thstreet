@@ -1,23 +1,20 @@
 import DragScroll from "Component/DragScroll/DragScroll.component";
+import {
+  HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
+  HOME_PAGE_BANNER_IMPRESSIONS,
+} from "Component/GoogleTagManager/events/BannerImpression.event";
+// import VueIntegrationQueries from "Query/vueIntegration.query";
+// import { getUUID } from "Util/Auth";
+import Image from "Component/Image";
 import Link from "Component/Link";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
-import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
-import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import { isArabic } from "Util/App";
-import BrowserDatabase from "Util/BrowserDatabase";
 import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
 import { formatCDNLink } from "Util/Url";
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import "./DynamicContentSliderWithLabel.style";
-import {
-  HOME_PAGE_BANNER_IMPRESSIONS,
-  HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
-} from "Component/GoogleTagManager/events/BannerImpression.event";
-// import VueIntegrationQueries from "Query/vueIntegration.query";
-// import { getUUID } from "Util/Auth";
-import Image from "Component/Image";
 
 class DynamicContentSliderWithLabel extends PureComponent {
   static propTypes = {
@@ -161,18 +158,7 @@ class DynamicContentSliderWithLabel extends PureComponent {
   renderSliderWithLabel = (item, i) => {
     const { link, text, url, plp_config, height, width, text_align } = item;
     const { isArabic } = this.state;
-    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
-      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
-      : "home";
-    let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
-    let parseLink = link.includes("/catalogsearch/result")
-      ? link.split("&")[0] +
-        `&gender=${requestedGender.replace(
-          requestedGender.charAt(0),
-          requestedGender.charAt(0).toUpperCase()
-        )}`
-      : link;
-
+    let parseLink = link;
     const wd = `${width.toString()}px`;
     const ht = `${height.toString()}px`;
 
@@ -196,12 +182,12 @@ class DynamicContentSliderWithLabel extends PureComponent {
           }}
         >
           <Image
+            lazyLoad={true}
             src={url}
             alt={text}
             block="Image"
-            style={{ maxWidth: wd, maxHeight: ht }}
+            style={{ maxWidth: wd }}
           />
-         
         </Link>
         {text ? (
           <div block="SliderText" style={{ textAlign: text_align }}>

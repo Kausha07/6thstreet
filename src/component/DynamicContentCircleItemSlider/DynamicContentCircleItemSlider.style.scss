@@ -26,7 +26,6 @@
   }
   .CircleSliderWrapper {
     display: flex;
-    // justify-content: center;
     overflow-x: auto;
     .CircleItemHelper {
       display: none;
@@ -34,10 +33,14 @@
       height: 78px;
       @include tablet {
         display: block;
+        margin-left: auto;
+        margin-right: auto;
       }
       @include mobile {
         display: block;
         min-width: 20px;
+        margin-left: auto;
+        margin-right: auto;
       }
     }
 
@@ -106,14 +109,14 @@
         z-index: -1;
         border-radius: inherit;
       }
-      &-LivePartyText{
+      &-LivePartyText {
         position: absolute;
         bottom: -5px;
         left: 16px;
         z-index: 3;
         width: 43.83px;
         border-radius: 7.5px;
-        background-color: #28D9AA;
+        background-color: #28d9aa;
         font-size: 10px;
         font-weight: 600;
         letter-spacing: 0;
@@ -126,9 +129,9 @@
         right: 0;
       }
     }
-    .OuterLiveParty{
+    .OuterLiveParty {
       margin-left: 11px !important;
-      .Image{
+      .Image {
         background: rgba(39, 217, 170, 0.1);
         // opacity: .1;
       }
@@ -138,13 +141,35 @@
       padding-right: 17px;
       // width: 100%;
 
-      @include mobile{
+      @include mobile {
         padding-right: 10px;
       }
+
+      @include desktop{
+        &:nth-child(2) {
+          margin-left: auto;
+        }
+        &:nth-last-child(2) {
+          margin-right: auto;
+        }
+      }
+
+
 
       &_isArabic {
         padding-right: 0;
         padding-left: 17px;
+        @include desktop{
+          &:nth-child(2) {
+            margin-left: 0;
+            margin-right: auto;
+          }
+          &:nth-last-child(2) {
+            margin-right: 0;
+            margin-left: auto;
+          }
+        }
+
         &:nth-child(2) {
           .OuterCircle {
             margin-right: 2px;
@@ -157,7 +182,7 @@
           padding-left: 14px;
           padding-right: 0;
         }
-        @include mobile{
+        @include mobile {
           padding-right: 0px;
           padding-left: 10px;
         }
@@ -174,8 +199,7 @@
       @include tablet {
         padding-right: 14px;
       }
-      .LivePartyBackground{
-
+      .LivePartyBackground {
       }
     }
   }

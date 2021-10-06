@@ -1,183 +1,210 @@
-import { withRouter } from 'react-router';
-import Image from 'Component/Image';
-import {
-    MyAccountReturnCreateListItem as SourceComponent
-} from 'Component/MyAccountReturnCreateListItem/MyAccountReturnCreateListItem.component';
-import { isArabic } from 'Util/App';
-import { formatDate } from 'Util/Date';
+import { withRouter } from "react-router";
+import Image from "Component/Image";
+import { MyAccountReturnCreateListItem as SourceComponent } from "Component/MyAccountReturnCreateListItem/MyAccountReturnCreateListItem.component";
+import { isArabic } from "Util/App";
+import { formatDate } from "Util/Date";
 
-import { formatPrice } from '../../../packages/algolia-sdk/app/utils/filters';
-import PackageIcon from './icons/box.png';
+import { formatPrice } from "../../../packages/algolia-sdk/app/utils/filters";
+import PackageIcon from "./icons/box.png";
 import {
-    ARABIC_MONTHS,
-    STATUS_BEING_PROCESSED,
-    STATUS_FAILED,
-    STATUS_HIDE_BAR,
-    STATUS_SUCCESS,
-    translateArabicStatus
-} from './MyAccountOrderListItem.config';
+  ARABIC_MONTHS,
+  STATUS_BEING_PROCESSED,
+  STATUS_FAILED,
+  STATUS_HIDE_BAR,
+  STATUS_SUCCESS,
+  STATUS_COMPLETE,
+  translateArabicStatus,
+  ORDER_STATUS,
+} from "./MyAccountOrderListItem.config";
 
-import './MyAccountOrderListItem.style';
+import "./MyAccountOrderListItem.style";
 
 class MyAccountOrderListItem extends SourceComponent {
-    handleClick = () => {
-        const { history, order: { id } } = this.props;
+  handleClick = () => {
+    const {
+      history,
+      order: { id },
+    } = this.props;
 
-        history.push(`/my-account/my-orders/${ id }`);
+    history.push(`/my-account/my-orders/${id}`);
+  };
+
+  renderHeading() {
+    const {
+      order: { increment_id, status },
+    } = this.props;
+    const statusMods = {
+      isSuccess: STATUS_COMPLETE === status,
+      isFailed: STATUS_FAILED.includes(status),
     };
+    const finalStatus = isArabic()
+      ? translateArabicStatus(status)
+      : ORDER_STATUS[status];
 
-    renderHeading() {
-        const { order: { increment_id, status } } = this.props;
-        const statusMods = {
-            isSuccess: STATUS_SUCCESS.includes(status),
-            isFailed: STATUS_FAILED.includes(status)
-        };
-        const finalStatus = isArabic() ? translateArabicStatus(status) : status.split('_').join(' ');
+    return (
+      <p
+        block="MyAccountOrderListItem"
+        elem="Heading"
+        mods={statusMods}
+        mix={{ block: "MyAccountReturnCreateListItem", elem: "Heading" }}
+      >
+        {__("Order #%s ", increment_id)}
+        <span>
+          {/* Some statuses are written with _ so they need to be splitted and joined */}
+          {`- ${finalStatus}`}
+        </span>
+      </p>
+    );
+  }
 
-        return (
-            <p
-              block="MyAccountOrderListItem"
-              elem="Heading"
-              mods={ statusMods }
-              mix={ { block: 'MyAccountReturnCreateListItem', elem: 'Heading' } }
-            >
-                { __('Order #%s ', increment_id) }
-                <span>
-                    { /* Some statuses are written with _ so they need to be splitted and joined */ }
-                    { `- ${ finalStatus }` }
-                </span>
-            </p>
-        );
-    }
+  renderContent() {
+    const {
+      order: {
+        thumbnail,
+        currency_code,
+        grand_total,
+        packages_count,
+        items_count,
+        created_at,
+        status,
+      },
+    } = this.props;
+    const date = new Date(created_at.replace(/-/g, "/"));
+    const arabicDate = `${date.getDate()} ${
+      ARABIC_MONTHS[date.getMonth()]
+    } ${date.getFullYear()}`;
 
-    renderContent() {
-        const {
-            order: {
-                thumbnail,
-                currency_code,
-                grand_total,
-                packages_count,
-                items_count,
-                created_at,
-                status
-            }
-        } = this.props;
-        const date = new Date(created_at.replace(/-/g, "/"));
-        const arabicDate = `${date.getDate()} ${ARABIC_MONTHS[date.getMonth()]} ${date.getFullYear()}`;
-
-        return (
-            <div block="MyAccountReturnCreateListItem" elem="Content">
-                <Image
-                  mix={ { block: 'MyAccountOrderListItem', elem: 'Image' } }
-                  src={ thumbnail }
+    return (
+      <div block="MyAccountReturnCreateListItem" elem="Content">
+        <Image lazyLoad={true}
+          mix={{ block: "MyAccountOrderListItem", elem: "Image" }}
+          src={thumbnail}
+        />
+        <div
+          block="MyAccountOrderListItem"
+          elem="Details"
+          mix={{ block: "MyAccountReturnCreateListItem", elem: "Details" }}
+        >
+          <p
+            block="MyAccountOrderListItem"
+            elem="DetailsPrice"
+            mods={{ isFailed: STATUS_FAILED.includes(status) }}
+            mix={{
+              block: "MyAccountReturnCreateListItem",
+              elem: "DetailsPrice",
+            }}
+          >
+            {__("Total: ")}
+            <span>{formatPrice(+grand_total, currency_code)}</span>
+          </p>
+          <div
+            block="MyAccountOrderListItem"
+            elem="SubDetails"
+            mix={{ block: "MyAccountReturnCreateListItem", elem: "SubDetails" }}
+          >
+            {!!packages_count && (
+              <>
+                <Image lazyLoad={true}
+                  src={PackageIcon}
+                  mix={{
+                    block: "MyAccountOrderListItem",
+                    elem: "PackageImage",
+                  }}
                 />
-                <div
+                <p
                   block="MyAccountOrderListItem"
-                  elem="Details"
-                  mix={ { block: 'MyAccountReturnCreateListItem', elem: 'Details' } }
+                  elem="DetailsPackages"
+                  mix={{
+                    block: "MyAccountReturnCreateListItem",
+                    elem: "DetailsProp",
+                  }}
                 >
-                    <p
-                      block="MyAccountOrderListItem"
-                      elem="DetailsPrice"
-                      mods={ { isFailed: STATUS_FAILED.includes(status) } }
-                      mix={ { block: 'MyAccountReturnCreateListItem', elem: 'DetailsPrice' } }
-                    >
-                        { __('Total: ') }
-                        <span>{ formatPrice(+grand_total, currency_code) }</span>
-                    </p>
-                    <div
-                      block="MyAccountOrderListItem"
-                      elem="SubDetails"
-                      mix={ { block: 'MyAccountReturnCreateListItem', elem: 'SubDetails' } }
-                    >
-                        { !!packages_count && (
-                            <>
-                                <Image
-                                  src={ PackageIcon }
-                                  mix={ { block: 'MyAccountOrderListItem', elem: 'PackageImage' } }
-                                />
-                                <p
-                                  block="MyAccountOrderListItem"
-                                  elem="DetailsPackages"
-                                  mix={ { block: 'MyAccountReturnCreateListItem', elem: 'DetailsProp' } }
-                                >
-                                    <span>{ packages_count }</span>
-                                    { packages_count !== 1 ? __(' Packages') : __(' Package') }
-                                </p>
-                            </>
-                        ) }
-                        <p
-                          block="MyAccountReturnCreateListItem"
-                          elem="DetailsQty"
-                          mix={ { block: 'MyAccountReturnCreateListItem', elem: 'DetailsProp' } }
-                        >
-                            <span>{ items_count }</span>
-                            { items_count !== 1 ? __(' Items') : __(' Item') }
-                        </p>
-                    </div>
-                    <p
-                      block="MyAccountReturnCreateListItem"
-                      elem="DetailsDate"
-                    >
-                        <span>{ __('Order placed: ') }</span>
-                        <span>{ isArabic() ? arabicDate : formatDate('DD MMM YYYY', new Date(created_at.replace(/-/g, "/"))) }</span>
-                    </p>
-                </div>
-            </div>
-        );
+                  <span>{packages_count}</span>
+                  {packages_count !== 1 ? __(" Packages") : __(" Package")}
+                </p>
+              </>
+            )}
+            <p
+              block="MyAccountReturnCreateListItem"
+              elem="DetailsQty"
+              mix={{
+                block: "MyAccountReturnCreateListItem",
+                elem: "DetailsProp",
+              }}
+            >
+              <span>{items_count}</span>
+              {items_count !== 1 ? __(" Items") : __(" Item")}
+            </p>
+          </div>
+          <p block="MyAccountReturnCreateListItem" elem="DetailsDate">
+            <span>{__("Order placed: ")}</span>
+            <span>
+              {isArabic()
+                ? arabicDate
+                : formatDate(
+                    "DD MMM YYYY",
+                    new Date(created_at.replace(/-/g, "/"))
+                  )}
+            </span>
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  renderOrderStatus() {
+    const {
+      order: { status },
+    } = this.props;
+
+    if (STATUS_HIDE_BAR.includes(status)) {
+      return null;
     }
 
-    renderOrderStatus() {
-        const { order: { status } } = this.props;
+    return (
+      <div block="MyAccountOrderListItem" elem="Status">
+        <div block="MyAccountOrderListItem" elem="ProgressBar">
+          <div
+            block="MyAccountOrderListItem"
+            elem="ProgressCurrent"
+            mods={{ isProcessing: STATUS_BEING_PROCESSED.includes(status) }}
+          />
+          <div
+            block="MyAccountOrderListItem"
+            elem="ProgressCheckbox"
+            mods={{ isProcessing: STATUS_BEING_PROCESSED.includes(status) }}
+          />
+        </div>
+        <div block="MyAccountOrderListItem" elem="StatusList">
+          <p block="MyAccountOrderListItem" elem="StatusTitle">
+            {__("Ordered")}
+          </p>
+          <p block="MyAccountOrderListItem" elem="StatusTitle">
+            {__("Processing")}
+          </p>
+          <p block="MyAccountOrderListItem" elem="StatusTitle">
+            {__("Completed")}
+          </p>
+        </div>
+      </div>
+    );
+  }
 
-        if (STATUS_HIDE_BAR.includes(status)) {
-            return null;
-        }
+  render() {
+    const { order } = this.props;
 
-        return (
-            <div block="MyAccountOrderListItem" elem="Status">
-                <div block="MyAccountOrderListItem" elem="ProgressBar">
-                    <div
-                      block="MyAccountOrderListItem"
-                      elem="ProgressCurrent"
-                      mods={ { isProcessing: STATUS_BEING_PROCESSED.includes(status) } }
-                    />
-                    <div
-                      block="MyAccountOrderListItem"
-                      elem="ProgressCheckbox"
-                      mods={ { isProcessing: STATUS_BEING_PROCESSED.includes(status) } }
-                    />
-                </div>
-                <div block="MyAccountOrderListItem" elem="StatusList">
-                    <p block="MyAccountOrderListItem" elem="StatusTitle">
-                        { __('Ordered') }
-                    </p>
-                    <p block="MyAccountOrderListItem" elem="StatusTitle">
-                        { __('Processing') }
-                    </p>
-                    <p block="MyAccountOrderListItem" elem="StatusTitle">
-                        { __('Completed') }
-                    </p>
-                </div>
-            </div>
-        );
+    if (!order) {
+      return null;
     }
 
-    render() {
-        const { order } = this.props;
-
-        if (!order) {
-            return null;
-        }
-
-        return (
-            <button block="MyAccountOrderListItem" onClick={ this.handleClick }>
-                { this.renderHeading() }
-                { this.renderContent() }
-                { this.renderOrderStatus() }
-            </button>
-        );
-    }
+    return (
+      <button block="MyAccountOrderListItem" onClick={this.handleClick}>
+        {this.renderHeading()}
+        {this.renderContent()}
+        {this.renderOrderStatus()}
+      </button>
+    );
+  }
 }
 
 export default withRouter(MyAccountOrderListItem);

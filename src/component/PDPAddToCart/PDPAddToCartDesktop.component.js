@@ -385,7 +385,7 @@ class PDPAddToCart extends PureComponent {
     }
     return (
       <div block="PDPAddToCart" elem="NotifyMeSuccessContainer">
-        <Image src={NotifySuccessImg} alt="success circle" />
+        <Image lazyLoad={true} src={NotifySuccessImg} alt="success circle" />
 
         <span>
           {__("We’ll let you know as soon as the product becomes available")}

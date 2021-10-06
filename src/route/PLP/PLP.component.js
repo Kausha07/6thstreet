@@ -1,6 +1,7 @@
 /* eslint-disable fp/no-let */
 import ContentWrapper from "Component/ContentWrapper/ContentWrapper.component";
 import DynamicContent from "Component/DynamicContent";
+import MyAccountOverlay from "Component/MyAccountOverlay";
 import PLPDetails from "Component/PLPDetails";
 import PLPFilters from "Component/PLPFilters";
 import PLPPages from "Component/PLPPages";
@@ -8,7 +9,6 @@ import { PureComponent } from "react";
 import CircleItemSliderSubPage from "../../component/DynamicContentCircleItemSlider/CircleItemSliderSubPage";
 // import DynamicContentCircleItemSlider from '../../component/DynamicContentCircleItemSlider';
 import "./PLP.style";
-import MyAccountOverlay from "Component/MyAccountOverlay";
 
 export class PLP extends PureComponent {
   constructor(props) {
@@ -16,7 +16,7 @@ export class PLP extends PureComponent {
     this.state = {
       bannerData: null,
       signInPopUp: "",
-      showPopup:false,
+      showPopup: false,
       circleBannerUrl: null,
     };
   }
@@ -33,19 +33,17 @@ export class PLP extends PureComponent {
     }
   }
 
-
   showMyAccountPopup = () => {
     this.setState({ showPopup: true });
   };
 
   closePopup = () => {
-    this.setState({ signInPopUp: "",showPopup:false });
+    this.setState({ signInPopUp: "", showPopup: false });
   };
 
   onSignIn = () => {
     this.closePopup();
   };
-
 
   renderMySignInPopup() {
     const { showPopup } = this.state;
@@ -73,10 +71,12 @@ export class PLP extends PureComponent {
   }
 
   renderPLPPages() {
+    const { prevPath = null } = this.props;
     return (
       <PLPPages
-        {...this.props}
-        renderMySignInPopup={this.showMyAccountPopup}
+      {...this.props}
+      renderMySignInPopup={this.showMyAccountPopup}
+      prevPath={prevPath}
       />
     );
   }
@@ -94,7 +94,6 @@ export class PLP extends PureComponent {
 
   renderPLPWidget = () => {
     const { plpWidgetData } = this.props;
-    console.log("plp data", plpWidgetData);
     const { pathname } = location;
     const tagName = pathname
       .replace(".html", "")
@@ -105,7 +104,6 @@ export class PLP extends PureComponent {
     if (widget && widget.length == 0) {
       return null;
     }
-    console.log("plp widget", widget);
     const { gender } = this.props;
 
     // return <h1>Plp Widget</h1>;

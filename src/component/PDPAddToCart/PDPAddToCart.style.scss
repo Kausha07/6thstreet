@@ -27,7 +27,9 @@ $select-arrow-width: 6px !default;
     width: 100vw;
     z-index: 90;
     animation-name: checkout_show_up;
+    -webkit-animation-name: checkout_show_up;
     animation-duration: 0.6s;
+    -webkit-animation-duration: 0.6s;
     padding: 0px;
 
     &_isIPhoneNavigationHidden {
@@ -36,7 +38,9 @@ $select-arrow-width: 6px !default;
 
     &_hide {
       animation-name: checkout_show_down;
+      -webkit-animation-name: checkout_show_down;
       animation-duration: 2s;
+      -webkit-animation-duration: 2s;
       bottom: -300px;
     }
 
@@ -118,7 +122,6 @@ $select-arrow-width: 6px !default;
     @include desktop {
       width: 363px;
       padding-bottom: 16px;
-      width: auto;
       align-items: center;
     }
   }
@@ -193,8 +196,10 @@ $select-arrow-width: 6px !default;
       line-height: 30px;
     }
   }
-  &-SizeSelector::-webkit-scrollbar {
-    display: none; /* for Chrome, Safari, and Opera */
+  @include mobile {
+    &-SizeSelector::-webkit-scrollbar {
+      display: none; /* for Chrome, Safari, and Opera */
+    }
   }
   &-SizeSelector {
     @include desktop {
@@ -350,7 +355,8 @@ $select-arrow-width: 6px !default;
     @include mobile {
       transition: width 0.5s;
     }
-    div {
+
+    div:nth-child(1) {
       color: #f96446;
       @include mobile {
         display: block;
@@ -364,6 +370,8 @@ $select-arrow-width: 6px !default;
     }
     .Image {
       .LazyLoad-wrapper {
+        max-width: unset;
+        opacity: unset;
         img {
           padding: 0 6px;
           width: 40px !important;
@@ -480,6 +488,7 @@ $select-arrow-width: 6px !default;
     background-image: var(--placeholder-image);
     background-size: var(--placeholder-size);
     animation: var(--placeholder-animation);
+    -webkit-animation: var(--placeholder-animation);
     margin-top: 35px;
 
     @include mobile() {
@@ -507,6 +516,7 @@ $select-arrow-width: 6px !default;
     border-radius: 7px;
     margin-bottom: 20px;
     animation: fadeIn 2s;
+    -webkit-animation: fadeIn 2s;
     box-shadow: 0px 0px 11px rgba(0, 0, 0, 0.1);
   }
 
@@ -585,6 +595,7 @@ $select-arrow-width: 6px !default;
     margin-bottom: 20px;
     padding-bottom: 20px;
     animation: fadeIn 2s;
+    -webkit-animation: fadeIn 2s;
     box-shadow: 0px 0px 11px rgba(0, 0, 0, 0.1);
     .Image {
       .LazyLoad-wrapper {

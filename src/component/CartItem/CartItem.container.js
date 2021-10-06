@@ -9,12 +9,12 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
+// import Algolia from "Util/API/provider/Algolia";
+// import { getUUIDToken } from 'Util/Auth';
 import CartItemQuantityPopup from "Component/CartItemQuantityPopup";
 import { CART_ITEM_QUANTITY_POPUP_ID } from "Component/CartItemQuantityPopup/CartItemQuantityPopup.config";
 import { DEFAULT_MAX_PRODUCTS } from "Component/ProductActions/ProductActions.config";
 import PropTypes from "prop-types";
-// import Algolia from "Util/API/provider/Algolia";
-// import { getUUIDToken } from 'Util/Auth';
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
@@ -257,9 +257,9 @@ export class CartItemContainer extends PureComponent {
           qty,
           product: { name } = {},
           full_item_info: { config_sku, category, price },
+          full_item_info,
         },
       } = this.props;
-
       removeProduct(item_id).then(() => this.setStateNotLoading());
 
       Event.dispatch(EVENT_GTM_PRODUCT_REMOVE_FROM_CART, {
@@ -286,7 +286,8 @@ export class CartItemContainer extends PureComponent {
           currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
           clicked: Date.now(),
           uuid: getUUID(),
-          referrer: "desktop",
+          referrer: window.location.href,
+          url: window.location.href,
           sourceProdID: config_sku,
           sourceCatgID: category, // TODO: replace with category id
           prodPrice: price,

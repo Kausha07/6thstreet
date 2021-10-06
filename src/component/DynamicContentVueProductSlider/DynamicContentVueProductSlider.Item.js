@@ -1,5 +1,6 @@
-import Link from "Component/Link";
+import { HOME_PAGE_BANNER_CLICK_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
 import Image from "Component/Image";
+import Link from "Component/Link";
 import { DISPLAY_DISCOUNT_PERCENTAGE } from "Component/Price/Price.config";
 import WishlistIcon from "Component/WishlistIcon";
 import PropTypes from "prop-types";
@@ -10,7 +11,6 @@ import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
 import { getUUID } from "Util/Auth";
 import Event, { VUE_CAROUSEL_CLICK } from "Util/Event";
-import { HOME_PAGE_BANNER_CLICK_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
 
 export const mapStateToProps = (state) => ({
   country: state.AppState.country,
@@ -30,8 +30,15 @@ class DynamicContentVueProductSliderItem extends PureComponent {
     };
   }
 
-  onclick = (widgetID, item) => {
-    const { pageType } = this.props;
+  onclick = (widgetID) => {
+    const {
+      pageType,
+      data: { category, sku, link },
+      posofreco,
+      sourceProdID,
+      sourceCatgID,
+    } = this.props;
+    let destProdID = sku;
     // vue analytics
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
@@ -42,8 +49,13 @@ class DynamicContentVueProductSliderItem extends PureComponent {
         currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),
-        referrer: "desktop",
-        widgetID: widgetID,
+        referrer: window.location.href,
+        url: link ? link : null,
+        widgetID: VueIntegrationQueries.getWidgetTypeMapped(widgetID, pageType),
+        sourceProdID: sourceProdID,
+        sourceCatgID: sourceCatgID,
+        destprodid: destProdID,
+        posofreco: posofreco,
       },
     });
     this.sendBannerClickImpression(item);
@@ -180,6 +192,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
           }}
         >
           <Image
+            lazyLoad={true}
             block="VueProductSlider"
             elem="VueProductImage"
             src={thumbnail_url}

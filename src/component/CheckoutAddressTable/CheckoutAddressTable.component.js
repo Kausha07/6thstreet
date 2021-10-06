@@ -114,7 +114,7 @@ export class CheckoutAddressTable extends SourceCheckoutAddressTable {
           type="button"
           onClick={this.onEdit}
         >
-          <Image
+          <Image lazyLoad={true}
             block="MyAccountAddressTable"
             mix={{
               block: "MyAccountAddressTable",
@@ -132,7 +132,7 @@ export class CheckoutAddressTable extends SourceCheckoutAddressTable {
           type="button"
           onClick={onDeleteClick}
         >
-          <Image
+          <Image lazyLoad={true}
             block="MyAccountAddressTable"
             mix={{
               block: "MyAccountAddressTable",

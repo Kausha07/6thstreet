@@ -11,20 +11,18 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import PropTypes from "prop-types";
-import { PureComponent } from "react";
-import { withRouter } from "react-router";
-
 import Field from "Component/Field";
 import Image from "Component/Image";
 import Loader from "Component/Loader";
 import { FIXED_CURRENCIES } from "Component/Price/Price.config";
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
+import { withRouter } from "react-router";
 import { CartItemType } from "Type/MiniCart";
 import { isArabic } from "Util/App";
 import { Store } from "../Icons";
-
-import "./CartPageItem.style";
 import "./CartPageItem.extended.style";
+import "./CartPageItem.style";
 
 /**
  * Cart and CartOverlay item
@@ -439,6 +437,7 @@ export class CartItem extends PureComponent {
     return (
       <div onClick={() => this.props.history.push(customURL)}>
         <Image
+          lazyLoad={true}
           src={thumbnail}
           mix={{
             block: "CartPageItem",
@@ -448,14 +447,19 @@ export class CartItem extends PureComponent {
           ratio="custom"
           alt={`Product ${name} thumbnail.`}
         />
-        <Image style={{ display: "none" }} alt={name} src={thumbnail} />
+        <Image
+          lazyLoad={true}
+          style={{ display: "none" }}
+          alt={name}
+          src={thumbnail}
+        />
       </div>
     );
   }
 
   render() {
     const { isLoading } = this.props;
-
+    console.log("this.props", this.props);
     return (
       <li block="CartPageItem">
         <Loader isLoading={isLoading} />

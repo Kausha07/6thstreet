@@ -22,7 +22,7 @@ class PLPDetails extends PureComponent {
 
   renderBrandImage = () => {
     const { brandImg } = this.props;
-    return <Image src={brandImg} />
+    return <Image lazyLoad={true} src={brandImg} />
   };
 
   renderBrandName = () => {
@@ -48,8 +48,8 @@ class PLPDetails extends PureComponent {
   renderActionButtons = () => {
     return (
       <div block="PLPDetails" elem="ShareIcon">
-        <Image src={shareIcon} alt={__("Share Icon")} />
-        <Image src={favIcon} alt={__("Favorite Icon")} />
+        <Image lazyLoad={true} src={shareIcon} alt={__("Share Icon")} />
+        <Image lazyLoad={true} src={favIcon} alt={__("Favorite Icon")} />
       </div>
     );
   };

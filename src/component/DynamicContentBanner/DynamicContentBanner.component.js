@@ -1,3 +1,7 @@
+import {
+  HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
+  HOME_PAGE_BANNER_IMPRESSIONS,
+} from "Component/GoogleTagManager/events/BannerImpression.event";
 import Image from "Component/Image";
 import Link from "Component/Link";
 import PropTypes from "prop-types";
@@ -8,10 +12,6 @@ import { formatCDNLink } from "Util/Url";
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import "./DynamicContentBanner.style";
-import {
-  HOME_PAGE_BANNER_IMPRESSIONS,
-  HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
-} from "Component/GoogleTagManager/events/BannerImpression.event";
 
 class DynamicContentBanner extends PureComponent {
   static propTypes = {
@@ -111,7 +111,7 @@ class DynamicContentBanner extends PureComponent {
     if (!link) {
       return (
         <>
-          <Image key={i} src={url} ratio="custom" height={ht} width={wd} />
+          <Image lazyLoad={true} key={i} src={url} ratio="custom" height={ht} width={wd} />
           {this.renderButton()}
         </>
       );
@@ -128,7 +128,7 @@ class DynamicContentBanner extends PureComponent {
           this.onclick(item);
         }}
       >
-        <Image
+        <Image lazyLoad={true}
           src={url}
           block="Image"
           style={{ maxWidth: wd, height: ht, objectFit: "unset" }}

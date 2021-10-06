@@ -55,7 +55,7 @@ class WishlistIcon extends PureComponent {
     const locale = VueIntegrationQueries.getLocaleFromUrl();
 
     if (wishListItem) {
-      const { wishlist_item_id } = wishListItem;
+      const { wishlist_item_id, product } = wishListItem;
       removeFromWishlist(wishlist_item_id);
       Event.dispatch(EVENT_GTM_PRODUCT_REMOVE_FROM_WISHLIST, {
         product: {
@@ -84,7 +84,8 @@ class WishlistIcon extends PureComponent {
             sourceCatgID: gender,
             sourceProdID: skuFromProps,
             uuid: getUUID(),
-            referrer: "desktop",
+            referrer: window.location.href,
+            url: product.url ? product.url : null,
             userID: userID,
           },
         });
@@ -124,7 +125,8 @@ class WishlistIcon extends PureComponent {
           sourceCatgID: gender,
           sourceProdID: skuFromProps,
           uuid: getUUID(),
-          referrer: "desktop",
+          referrer: window.location.href,
+          url: data.url ? data.url : null,
           userID: userID,
         },
       });

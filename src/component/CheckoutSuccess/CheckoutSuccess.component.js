@@ -430,7 +430,7 @@ export class CheckoutSuccess extends PureComponent {
           getDiscountFromTotals(total_segments, "clubapparel"),
           __("Club Apparel Redemption")
         )}
-        {couponCode && this.renderPriceLine(discount, __("Discount"))}
+        {(couponCode || (discount && discount != 0)) ? this.renderPriceLine(discount, __("Discount")) : null}
 
         {this.renderTotalPrice()}
       </div>

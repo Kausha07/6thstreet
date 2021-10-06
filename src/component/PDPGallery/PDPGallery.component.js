@@ -45,13 +45,13 @@ class PDPGallery extends PureComponent {
     prod_360_video: React.createRef(),
   };
 
-  componentDidMount() {
-    CSS.setVariable(
-      this.crumbsRef,
-      "gallery-crumbs-height",
-      `${this.overlaybuttonRef.current.offsetHeight}px`
-    );
-  }
+  // componentDidMount() {
+  //   CSS.setVariable(
+  //     this.crumbsRef,
+  //     "gallery-crumbs-height",
+  //     `${this.overlaybuttonRef.current.offsetHeight}px`
+  //   );
+  // }
 
   renderBackButton() {
     const { isArabic } = this.state;
@@ -106,12 +106,12 @@ class PDPGallery extends PureComponent {
     <PDPGalleryCrumb
       key={i}
       // prefer numerical index
-      index={+index}
+      index={i}
     />
   );
 
   renderGalleryImage = (src, i) => (
-    <Image
+    <Image lazyLoad={false}
       src={src}
       key={i}
       mix={{ block: "PDPGallery", elem: "sliderItem" }}
@@ -122,7 +122,6 @@ class PDPGallery extends PureComponent {
     const galleryOverlay = (
       <PDPGalleryOverlay closeGalleryOverlay={this.closeGalleryOverlay} />
     );
-
     document.body.style.overflow = "hidden";
 
     this.setState({ galleryOverlay });

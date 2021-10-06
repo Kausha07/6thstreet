@@ -47,7 +47,12 @@ class PLPFilter extends PureComponent {
     if (category === "categories.level1") {
       return null;
     }
-    let placeholder = category === "in_stock" ? "BY STOCK" : label;
+    let placeholder =
+      category === "in_stock"
+        ? "BY STOCK"
+        : category === "age"
+        ? "BY AGE"
+        : label;
 
     return (
       <FieldMultiselect

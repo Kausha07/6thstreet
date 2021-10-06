@@ -95,7 +95,7 @@ class DynamicContentCircleInfluencerSlider extends PureComponent {
                   } }
 
                 >
-                    <Image
+                    <Image lazyLoad={true}
                       src={ image_url }
                       alt={ label }
                       mix={ { block: 'DynamicContentCircleItemSlider', elem: 'Image' } }

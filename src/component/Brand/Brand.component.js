@@ -37,25 +37,29 @@ class Brand extends PureComponent {
     let requestedGender;
     if (type) {
       if (type === "kids") {
-        requestedGender = isArabic ? "أولاد~بنات" : "Boy~Girl";
+        requestedGender = isArabic ? "أولاد,بنات" : "Boy,Girl";
       } else {
         requestedGender = isArabic ? getGenderInArabic(type) : type;
       }
       finalURL = url
-        ? `${url}.html?brand_name=${encodeURI(
+        ? `${url}.html?q=${encodeURIComponent(
             name
-          )}&gender=${this.capitalizeFirstLetter(requestedGender)}`
-        : `/catalogsearch/result/?q=${encodeURI(name)}brand_name=${encodeURI(
+          )}&p=0&dFR[brand_name][0]=${encodeURIComponent(
             name
-          )}&gender=${this.capitalizeFirstLetter(
-            requestedGender
-          )}&brand_name=${encodeURI(name)}`;
+          )}&dFR[gender][0]=${this.capitalizeFirstLetter(requestedGender)}`
+        : `/catalogsearch/result/?q=${encodeURIComponent(
+            name
+          )}&p=0&dFR[brand_name][0]=${encodeURIComponent(
+            name
+          )}&dFR[gender][0]=${this.capitalizeFirstLetter(requestedGender)}`;
     } else {
       finalURL = url
-        ? `${url}.html?brand_name=${encodeURI(name)}`
-        : `/catalogsearch/result/?q=${encodeURI(name)}&brand_name=${encodeURI(
+        ? `${url}.html?q=${encodeURIComponent(
             name
-          )}`;
+          )}&p=0&dFR[brand_name][0]=${encodeURIComponent(name)}`
+        : `/catalogsearch/result/?q=${encodeURIComponent(
+            name
+          )}&p=0&dFR[brand_name][0]=${encodeURIComponent(name)}`;
     }
     return (
       <div block="Brand">

@@ -1,3 +1,7 @@
+import {
+  HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
+  HOME_PAGE_BANNER_IMPRESSIONS,
+} from "Component/GoogleTagManager/events/BannerImpression.event";
 import Link from "Component/Link";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
@@ -11,10 +15,6 @@ import Image from "Component/Image";
 import { formatCDNLink } from "Util/Url";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import "./DynamicContentGrid.style";
-import {
-  HOME_PAGE_BANNER_IMPRESSIONS,
-  HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
-} from "Component/GoogleTagManager/events/BannerImpression.event";
 
 class DynamicContentGrid extends PureComponent {
   static propTypes = {
@@ -122,9 +122,8 @@ class DynamicContentGrid extends PureComponent {
             this.onclick(item);
           }}
         >
-          {/* <Image src={url} height={ht} /> */}
-          {/* style={{ maxHeight: ht }} */}
-          <Image src={url} className="GridImage" />
+
+          <Image lazyLoad={true} src={url} className="GridImage" />
           {item.footer && (
             <div block="Footer">
               {item.footer.title && (
@@ -171,7 +170,7 @@ class DynamicContentGrid extends PureComponent {
             this.onclick(item);
           }}
         >
-          <Image src={url} />
+          <Image lazyLoad={true} src={url} />
 
           {item.footer && (
             <div block="Footer">

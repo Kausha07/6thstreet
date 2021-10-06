@@ -288,7 +288,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       ? this._getAddressById(selectedCustomerAddressId)
       : trimAddressFields(fields);
 
-      const { region_id, region, street, country_id, telephone, postcode } =
+    const { region_id, region, street, country_id, telephone, postcode } =
       shippingAddress;
 
     const shippingAddressMapped = {
@@ -329,11 +329,13 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       shipping_method_code,
     };
 
+
     // Vue call
     const customerData = BrowserDatabase.getItem("customer");
     const userID = customerData && customerData.id ? customerData.id : null;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     totals?.items?.map((item) => {
+      console.log("item", item);
       VueIntegrationQueries.vueAnalayticsLogger({
         event_name: VUE_PLACE_ORDER,
         params: {
@@ -346,7 +348,8 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
           prodQty: item?.full_item_info?.qty,
           prodPrice: item?.full_item_info?.price,
           uuid: getUUID(),
-          referrer: "desktop",
+          referrer: window.location.href,
+          url: window.location.href,
           userID: userID,
         },
       });

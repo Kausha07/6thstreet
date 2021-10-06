@@ -154,7 +154,7 @@ class PDPGalleryOverlay extends PureComponent {
     }
 
     renderGalleryImage = (src, i) => (
-        <Image src={ src } key={ i } />
+        <Image lazyLoad={false} src={ src } key={ i } />
     );
 
     renderCrumbs() {

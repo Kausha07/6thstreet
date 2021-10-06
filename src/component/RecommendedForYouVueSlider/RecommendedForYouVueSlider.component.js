@@ -50,7 +50,7 @@ class RecommendedForYouVueSlider extends PureComponent {
         clicked: Date.now(),
         uuid: getUUID(),
         referrer: "desktop",
-        widgetID: widgetID,
+        widgetID: VueIntegrationQueries.getWidgetTypeMapped(widgetID, pageType),
         userID: userID,
       },
     });
@@ -117,7 +117,10 @@ class RecommendedForYouVueSlider extends PureComponent {
           referrer: "desktop",
           sourceProdID: sourceProdID,
           sourceCatgID: sourceCatgID,
-          widgetID: widgetID,
+          widgetID: VueIntegrationQueries.getWidgetTypeMapped(
+            widgetID,
+            pageType
+          ),
         },
       });
     }
@@ -214,7 +217,7 @@ class RecommendedForYouVueSlider extends PureComponent {
   renderSliderContainer() {
     const items = this.getProducts();
     const { isHome } = this.props;
-    const { widgetID, pageType,renderMySignInPopup } = this.props;
+    const { widgetID, pageType, renderMySignInPopup } = this.props;
     // debugger
     return (
       <DragScroll data={{ rootClass: "ScrollWrapper", ref: this.cmpRef }}>
@@ -230,7 +233,7 @@ class RecommendedForYouVueSlider extends PureComponent {
             }}
           >
             {isHome && <div block="SliderHelper" mods={{ isHome }}></div>}
-            {items.map((item) => {
+            {items.map((item, i) => {
               const { sku } = item;
               return (
                 <RecommendedForYouVueSliderItem
@@ -240,6 +243,9 @@ class RecommendedForYouVueSlider extends PureComponent {
                   ref={this.itemRef}
                   widgetID={widgetID}
                   pageType={pageType}
+                  sourceProdID={null}
+                  sourceCatgID={null}
+                  posofreco={i}
                 />
               );
             })}
