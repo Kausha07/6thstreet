@@ -41,6 +41,10 @@ class PDPDetailsSection extends PureComponent {
     if (pdpWidgetsData && pdpWidgetsData.length > 0) {
       //load vue data for widgets only if widgets data available
       const userData = BrowserDatabase.getItem("MOE_DATA");
+      if(userData?.USER_DATA) {
+        return;
+      }
+
       if (userData) {
         //added check if user data is loaded then only load PDP widgets otherwise not.
         const {
@@ -148,7 +152,7 @@ class PDPDetailsSection extends PureComponent {
               elem="Icon"
               mods={{ clickAndCollect: true }}
             />
-            <div>
+            <div block="ClickAndCollect">
               <div block="Click">{__("Click")}</div>
               <div block="AndCollect">{__("& Collect")}</div>
             </div>
