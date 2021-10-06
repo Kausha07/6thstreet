@@ -203,9 +203,13 @@ class PLPFilterOption extends PureComponent {
         if (!facet_value) {
             return null;
         }
-
         return (
-            <li ref={ this.optionRef } block="PLPFilterOption" elem="List" mods={ { isArabic } }>
+            <li
+                ref={ this.optionRef }
+                block="PLPFilterOption"
+                elem="List"
+                mods={ { isArabic } }
+            >
                 { this.renderField() }
                 { this.renderLabel() }
             </li>
