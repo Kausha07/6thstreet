@@ -20,8 +20,15 @@ class FooterMain extends PureComponent {
       title: __("About"),
       items: [
         {
-          name: <div block="About">
-                  <span>{__("About 6TH")}</span>
+          name: isArabic()
+                ?
+                <span>معلومات عن 6thستريت</span>
+                :
+                <div block="About">
+                  <span>{__("About")}</span>
+                  &nbsp;
+                  <span>6</span>
+                  <span>{__("TH")}</span>
                   <span>{__("S")}</span>
                   <span>{__("TREET")}</span>
                 </div>,
