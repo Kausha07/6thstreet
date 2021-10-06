@@ -496,22 +496,44 @@ class SearchSuggestion extends PureComponent {
 
   renderProduct = (product) => {
     const { url, name, thumbnail_url, brand_name, price } = product;
+    const { isArabic } = this.state;
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
 
-    let requestedGender;
-    if (gender !== "home") {
-      requestedGender = isArabic ? getGenderInArabic(gender) : gender;
+    let requestedGender = gender;
+    let genderInURL;
+    if (isArabic) {
+      if (gender === "kids") {
+        genderInURL = "أولاد,بنات";
+        // to add Boy~Girl in arabic
+      } else {
+        if (gender !== "home") {
+          requestedGender = getGenderInArabic(gender);
+          genderInURL = requestedGender?.replace(
+            requestedGender?.charAt(0),
+            requestedGender?.charAt(0).toUpperCase()
+          );
+        } else {
+          genderInURL = "";
+        }
+      }
     } else {
-      requestedGender = "";
+      if (gender === "kids") {
+        genderInURL = "Boy,Girl";
+      } else {
+        if (gender !== "home") {
+          genderInURL = requestedGender?.replace(
+            requestedGender?.charAt(0),
+            requestedGender?.charAt(0).toUpperCase()
+          );
+        } else {
+          genderInURL = "";
+        }
+      }
     }
     let parseLink = url?.includes("catalogsearch/result")
-      ? url?.split("&")[0] +
-        `&dFR[gender][0]=${requestedGender.replace(
-          requestedGender.charAt(0),
-          requestedGender.charAt(0)?.toUpperCase()
-        )}`
+      ? url?.split("&")[0] + `&dFR[gender][0]=${genderInURL}`
       : url;
 
     return (
@@ -740,11 +762,36 @@ class SearchSuggestion extends PureComponent {
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
 
-    let requestedGender;
-    if (gender !== "home") {
-      requestedGender = isArabic ? getGenderInArabic(gender) : gender;
+    let requestedGender = gender;
+    let genderInURL;
+    if (isArabic) {
+      if (gender === "kids") {
+        genderInURL = "أولاد,بنات";
+        // to add Boy~Girl in arabic
+      } else {
+        if (gender !== "home") {
+          requestedGender = getGenderInArabic(gender);
+          genderInURL = requestedGender?.replace(
+            requestedGender?.charAt(0),
+            requestedGender?.charAt(0).toUpperCase()
+          );
+        } else {
+          genderInURL = "";
+        }
+      }
     } else {
-      requestedGender = "";
+      if (gender === "kids") {
+        genderInURL = "Boy,Girl";
+      } else {
+        if (gender !== "home") {
+          genderInURL = requestedGender?.replace(
+            requestedGender?.charAt(0),
+            requestedGender?.charAt(0).toUpperCase()
+          );
+        } else {
+          genderInURL = "";
+        }
+      }
     }
     return (
       <li key={i}>
@@ -754,10 +801,7 @@ class SearchSuggestion extends PureComponent {
               ? link
               : `/catalogsearch/result/?q=${encodeURIComponent(
                   search
-                )}&dFR[gender][0]=${requestedGender.replace(
-                  requestedGender.charAt(0),
-                  requestedGender.charAt(0).toUpperCase()
-                )}`,
+                )}&dFR[gender][0]=${genderInURL}`,
             state: { prevPath: window.location.href },
           }}
           onClick={() => this.onSearchQueryClick(search)}
@@ -791,11 +835,38 @@ class SearchSuggestion extends PureComponent {
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
 
-    let requestedGender;
-    if (gender !== "home") {
-      requestedGender = isArabic ? getGenderInArabic(gender) : gender;
+    let requestedGender = gender;
+    let genderInURL;
+    if (isArabic) {
+      if (gender === "kids") {
+        genderInURL = "أولاد,بنات";
+        // to add Boy~Girl in arabic
+      } else {
+        if (gender !== "home") {
+          requestedGender = getGenderInArabic(gender);
+          genderInURL = requestedGender?.replace(
+            requestedGender?.charAt(0),
+            requestedGender?.charAt(0).toUpperCase()
+          );
+        } else {
+          genderInURL = "";
+        }
+      }
     } else {
-      requestedGender = "";
+      if (gender === "kids") {
+        genderInURL = "Boy,Girl";
+      } else {
+        if (gender !== "home") {
+          genderInURL = requestedGender?.replace(
+            requestedGender?.charAt(0),
+            requestedGender?.charAt(0).toUpperCase()
+          );
+          console.log("genderInURL", genderInURL);
+          console.log("gender", gender);
+        } else {
+          genderInURL = "";
+        }
+      }
     }
     return (
       <li key={i}>
@@ -805,10 +876,7 @@ class SearchSuggestion extends PureComponent {
               ? link
               : `/catalogsearch/result/?q=${encodeURIComponent(
                   name
-                )}&dFR[gender][0]=${requestedGender.replace(
-                  requestedGender.charAt(0),
-                  requestedGender.charAt(0).toUpperCase()
-                )}`,
+                )}&dFR[gender][0]=${genderInURL}`,
             state: { prevPath: window.location.href },
           }}
           onClick={() => this.onSearchQueryClick(name)}
