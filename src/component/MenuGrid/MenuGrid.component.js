@@ -89,7 +89,9 @@ class MenuGrid extends PureComponent {
   }
 
   hideMenu = () => {
+    const { toggleOverlayByKey } = this.props;
     hideActiveOverlay();
+    toggleOverlayByKey(MOBILE_MENU_SIDEBAR_ID);
   };
 
   showAllCategories() {
