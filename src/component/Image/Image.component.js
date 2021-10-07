@@ -178,9 +178,8 @@ export class Image extends PureComponent {
   }
 
   render() {
-    const { ratio, mix, isPlaceholder, wrapperSize, src, imageRef, className } =
+    const { ratio, mix, isPlaceholder, wrapperSize, src, imageRef, className,mods } =
       this.props;
-
     const { imageStatus } = this.state;
 
     return (
@@ -192,6 +191,7 @@ export class Image extends PureComponent {
           imageStatus,
           isPlaceholder,
           hasSrc: !!src,
+          ...mods
         }}
         mix={mix}
         style={wrapperSize}
