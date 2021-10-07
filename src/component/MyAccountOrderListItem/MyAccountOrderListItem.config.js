@@ -9,72 +9,7 @@ export const STATUS_PROCESSING = "processing";
 export const STATUS_PAYMENT_ABORTED = "payment_aborted";
 
 export const STATUS_PAYMENT_SUCCESS = "payment_success";
-export const STATUS_PENDING = "pending";
-export const STATUS_FRAUD = "fraud";
-export const STATUS_HOLDED = "holded";
 
-export const ORDER_STATUS = {
-  [STATUS_COMPLETE]: "Delivered",
-  [STATUS_CANCELED]: "Cancelled",
-  [STATUS_CLOSED]: "Refunded",
-  [STATUS_PROCESSING]: "Processing",
-  [STATUS_PAYMENT_ABORTED]: "Payment Failed",
-  [STATUS_PAYMENT_SUCCESS]: "Processing",
-  [STATUS_PENDING]: "Ordered",
-  [STATUS_FRAUD]: "Ordered",
-  [STATUS_HOLDED]: "On Hold",
-};
-
-export const OrderStatusFormat = {
-  formatStatus: (status) => {
-    switch (status) {
-      case "pending": {
-        return __("pending");
-      }
-      case "fraud": {
-        return __("ordered");
-      }
-      case "processing": {
-        return __("processing");
-      }
-      case "payment_success": {
-        return __("payment_success");
-      }
-      case "payment_review": {
-        return __("payment_review");
-      }
-      case "complete": {
-        return __("complete");
-      }
-      case "delivered": {
-        return __("delivered");
-      }
-      case "closed": {
-        return __("refunded");
-      }
-      case "holded": {
-        return "on_hold";
-      }
-      case "payment_aborted": {
-        return __("payment_aborted");
-      }
-      case "canceled": {
-        return __("cancelled");
-      }
-      default: {
-        return __("ordered");
-      }
-    }
-  },
-};
-
-export const STATUS_HIDE_PROGRESSBAR = [
-  STATUS_PAYMENT_ABORTED,
-  STATUS_CANCELED,
-  STATUS_COMPLETE,
-  STATUS_CLOSED,
-  STATUS_HOLDED,
-];
 export const STATUS_HIDE_BAR = [
   STATUS_COMPLETE,
   STATUS_CANCELED,
@@ -91,11 +26,6 @@ export const STATUS_BEING_PROCESSED = [
   STATUS_PAYMENT_SUCCESS,
 ];
 
-export const STATUS_ITEM_CANCELLABLE = [
-  STATUS_PROCESSING,
-  STATUS_PAYMENT_SUCCESS,
-  STATUS_PENDING,
-];
 export const STATUS_ABLE_TO_RETURN = [
   STATUS_PROCESSING,
   STATUS_PAYMENT_SUCCESS,

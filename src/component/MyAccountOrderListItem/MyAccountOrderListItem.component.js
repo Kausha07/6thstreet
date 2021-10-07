@@ -12,10 +12,7 @@ import {
   STATUS_FAILED,
   STATUS_HIDE_BAR,
   STATUS_SUCCESS,
-  STATUS_COMPLETE,
   translateArabicStatus,
-  ORDER_STATUS,
-  OrderStatusFormat,
 } from "./MyAccountOrderListItem.config";
 
 import "./MyAccountOrderListItem.style";
@@ -35,13 +32,12 @@ class MyAccountOrderListItem extends SourceComponent {
       order: { increment_id, status },
     } = this.props;
     const statusMods = {
-      isSuccess: STATUS_COMPLETE === status,
+      isSuccess: STATUS_SUCCESS.includes(status),
       isFailed: STATUS_FAILED.includes(status),
     };
-    // const finalStatus = isArabic()
-    //   ? translateArabicStatus(status)
-    //   : ORDER_STATUS[status];
-    const finalStatus = OrderStatusFormat.formatStatus(status);
+    const finalStatus = isArabic()
+      ? translateArabicStatus(status)
+      : status.split("_").join(" ");
 
     return (
       <p
@@ -79,7 +75,6 @@ class MyAccountOrderListItem extends SourceComponent {
     return (
       <div block="MyAccountReturnCreateListItem" elem="Content">
         <Image
-          lazyLoad={true}
           mix={{ block: "MyAccountOrderListItem", elem: "Image" }}
           src={thumbnail}
         />
@@ -108,7 +103,6 @@ class MyAccountOrderListItem extends SourceComponent {
             {!!packages_count && (
               <>
                 <Image
-                  lazyLoad={true}
                   src={PackageIcon}
                   mix={{
                     block: "MyAccountOrderListItem",
