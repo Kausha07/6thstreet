@@ -88,4 +88,20 @@
             background: var(--image-default-background);
         }
     }
+    &_button_style {
+      
+        &_black {
+          filter: invert(100%) brightness(20);
+          -webkit-filter:invert(100%) brightness(20);
+        }
+  
+        &_white {
+          filter: invert(100%);
+          -webkit-filter:invert(100%);
+        }
+      }
+      &_isArabic {
+        margin-left: 0px !important;
+        margin-right: 5px !important;
+      }
 }

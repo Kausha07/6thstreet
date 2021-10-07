@@ -9,7 +9,7 @@
   margin-top: 6px;
   padding: 0 20px;
   overflow-x: visible;
-  
+
   @include mobile {
     overflow: hidden;
   }
@@ -186,7 +186,7 @@
       }
 
       &-Special {
-        color: $default-primary-dark-color;
+        color: #d12228;
         font-size: 20px;
         font-weight: bold;
         letter-spacing: 0;
@@ -200,7 +200,7 @@
         line-height: 30px;
       }
       &-Discount {
-        color: $default-primary-dark-color;
+        color: #d12228;
         font-size: 15px;
         font-weight: 600;
         letter-spacing: 0;
