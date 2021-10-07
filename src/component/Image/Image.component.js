@@ -24,6 +24,7 @@ import {
   IMAGE_NOT_FOUND,
   IMAGE_NOT_SPECIFIED,
 } from "./Image.config";
+import fallbackImage from "../../style/icons/fallback.png";
 
 /**
  * Image component
@@ -58,6 +59,7 @@ export class Image extends PureComponent {
   static defaultProps = {
     className: "",
     src: "",
+    isFallback: "",
     alt: "",
     ratio: "square",
     mix: {},
@@ -92,14 +94,17 @@ export class Image extends PureComponent {
     const { src } = this.props;
 
     if (!src) {
-      return this.setState({ imageStatus: IMAGE_NOT_SPECIFIED });
+      return this.setState({
+        imageStatus: IMAGE_NOT_SPECIFIED,
+        isFallback: fallbackImage,
+      });
     }
 
     return this.setState({ imageStatus: IMAGE_LOADING });
   }
 
   onError() {
-    this.setState({ imageStatus: IMAGE_NOT_FOUND });
+    this.setState({ imageStatus: IMAGE_NOT_FOUND, isFallback: fallbackImage });
   }
 
   onLoad() {
@@ -120,13 +125,15 @@ export class Image extends PureComponent {
 
   renderLazyImage(lazyLoad, data) {
     const { src, alt, style, imageStatus } = data;
+    const { isFallback } = this.state;
+
     if (lazyLoad) {
       return (
         <LazyLoad once classNamePrefix="LazyLoad" offset={100}>
           <img
             block="Image"
             elem="Image"
-            src={src || ""}
+            src={isFallback ? fallbackImage : src}
             alt={alt}
             mods={{ isLoading: imageStatus === IMAGE_LOADING }}
             style={style}
@@ -141,7 +148,7 @@ export class Image extends PureComponent {
         <img
           block="Image"
           elem="Image"
-          src={src || ""}
+          src={isFallback ? fallbackImage : src}
           alt={alt}
           mods={{ isLoading: imageStatus === IMAGE_LOADING }}
           style={style}
@@ -154,7 +161,7 @@ export class Image extends PureComponent {
   }
 
   renderImage() {
-    const { alt, src, isPlaceholder, style,lazyLoad } = this.props;
+    const { alt, src, isPlaceholder, style, lazyLoad } = this.props;
     const { imageStatus } = this.state;
 
     if (isPlaceholder) {
@@ -162,13 +169,13 @@ export class Image extends PureComponent {
     }
     switch (imageStatus) {
       case IMAGE_NOT_FOUND:
-        return this.renderImageNotFound();
+      // return this.renderImageNotFound();
       case IMAGE_NOT_SPECIFIED:
-        return (
-          <span block="Image" elem="Content">
-            {__("Image not specified")}
-          </span>
-        );
+      // return (
+      //   <span block="Image" elem="Content">
+      //     {__("Image not specified")}
+      //   </span>
+      // );
       case IMAGE_LOADED:
       case IMAGE_LOADING:
         return this.renderLazyImage(lazyLoad, { src, alt, style, imageStatus });
