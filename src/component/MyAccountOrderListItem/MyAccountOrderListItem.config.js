@@ -25,6 +25,49 @@ export const ORDER_STATUS = {
   [STATUS_HOLDED]: "On Hold",
 };
 
+export const OrderStatusFormat = {
+  formatStatus: (status) => {
+    switch (status) {
+      case "pending": {
+        return __("pending");
+      }
+      case "fraud": {
+        return __("ordered");
+      }
+      case "processing": {
+        return __("processing");
+      }
+      case "payment_success": {
+        return __("payment_success");
+      }
+      case "payment_review": {
+        return __("payment_review");
+      }
+      case "complete": {
+        return __("complete");
+      }
+      case "delivered": {
+        return __("delivered");
+      }
+      case "closed": {
+        return __("refunded");
+      }
+      case "holded": {
+        return "on_hold";
+      }
+      case "payment_aborted": {
+        return __("payment_aborted");
+      }
+      case "canceled": {
+        return __("cancelled");
+      }
+      default: {
+        return __("ordered");
+      }
+    }
+  },
+};
+
 export const STATUS_HIDE_PROGRESSBAR = [
   STATUS_PAYMENT_ABORTED,
   STATUS_CANCELED,

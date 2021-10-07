@@ -901,5 +901,15 @@
     "TREET": null,
     "About 6THS": null,
     "About ": null,
-    "TH": null
+    "TH": null,
+    "pending": null,
+    "ordered": null,
+    "processing": null,
+    "payment_success": null,
+    "payment_review": null,
+    "complete": null,
+    "delivered": null,
+    "refunded": null,
+    "payment_aborted": null,
+    "cancelled": null
 }
