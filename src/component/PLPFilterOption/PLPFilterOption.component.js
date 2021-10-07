@@ -119,7 +119,8 @@ class PLPFilterOption extends PureComponent {
               onClick={ this.handleClick }
               mix={ {
                   block: 'PLPFilterOption',
-                  elem: 'Input'
+                  elem: 'Input',
+                  mods: {isArabic: isArabic()}
               } }
               type={ type }
               id={ facet_value + initialFacetKey }
