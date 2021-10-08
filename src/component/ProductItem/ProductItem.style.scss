@@ -18,8 +18,7 @@
       display: flex;
       flex-direction: none;
       &-Wrapper{
-        margin-left: 7px;
-        margin-right: 0px;
+        justify-content: center;
       }
     }
     .WishlistIcon {
@@ -156,7 +155,7 @@
     margin-top: 5px;
     display: flex;
     &-Wrapper{
-      margin-right: 7px;
+      justify-content: center;
     }
     @include mobile {
       font-size: 11px;
@@ -168,7 +167,7 @@
 
       &_discount {
         display: inline;
-        color: $default-primary-dark-color;
+        color: #d12228;
       }
     }
 

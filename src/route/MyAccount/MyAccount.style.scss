@@ -210,9 +210,16 @@
   .ExpandableContent-Content {
     opacity: 1;
     overflow: visible;
+    @include tablet{
+      max-height: 0px !important;
+      ul{
+        margin-top: 100px;
+      }
+    }
     @include before-desktop {
       padding: 0;
     }
+   
   }
 
   .ExpandableContent-Button {

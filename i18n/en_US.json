@@ -767,5 +767,16 @@
     "TREET": null,
     "About 6THS": null,
     "About ": null,
-    "TH": null
+    "TH": null,
+    "pending": "Pending",
+    "ordered": "Ordered",
+    "processing": "processing",
+    "payment_success": "Payment Success",
+    "payment_review": "Payment Review",
+    "complete": "Complete",
+    "delivered": "Delivered",
+    "refunded": "Refunded",
+    "payment_aborted": "Payment Aborted",
+    "cancelled": "Cancelled",
+    "On Sale": null
 }

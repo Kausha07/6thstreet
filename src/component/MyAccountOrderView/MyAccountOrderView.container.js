@@ -6,7 +6,6 @@ import { withRouter } from "react-router";
 import {
   STATUS_BEING_PROCESSED,
   STATUS_COMPLETE,
-  STATUS_ITEM_CANCELLABLE,
 } from "Component/MyAccountOrderListItem/MyAccountOrderListItem.config";
 import { HistoryType, MatchType } from "Type/Common";
 import { getCountriesForSelect } from "Util/API/endpoint/Config/Config.format";
@@ -74,39 +73,24 @@ export class MyAccountOrderViewContainer extends PureComponent {
 
   openOrderCancelation() {
     const { history } = this.props;
-    const {
-      order: { entity_id, status, is_returnable, shipped = [], unship } = {},
-    } = this.state;
+    const { order: { entity_id, status, is_returnable } = {} } = this.state;
 
-    // if (
-    //   !entity_id ||
-    //   !(
-    //     STATUS_BEING_PROCESSED.includes(status) ||
-    //     (status === STATUS_COMPLETE && is_returnable)
-    //   )
-    // ) {
-    //   return;
-    // }
-
-    const is_cancellable = ![
-      ...shipped.reduce((acc, { items }) => [...acc, ...items], []),
-      ...unship.reduce((acc, { items }) => [...acc, ...items], []),
-    ].every((item) => parseInt(item.qty_invoiced, 10) > 0);
-
-    if (!entity_id) {
+    if (
+      !entity_id ||
+      !(
+        STATUS_BEING_PROCESSED.includes(status) ||
+        (status === STATUS_COMPLETE && is_returnable)
+      )
+    ) {
       return;
-    } else if (is_returnable) {
-      const url = `/my-account/return-item/create/${entity_id}`;
-      history.push(url);
-    } else if (STATUS_ITEM_CANCELLABLE.includes(status) && is_cancellable) {
-      const url = `/my-account/return-item/cancel/${entity_id}`;
-      history.push(url);
     }
-    // const url = is_returnable
-    //   ? `/my-account/return-item/create/${entity_id}`
-    //   : STATUS_ITEM_CANCELLABLE.includes(status) && is_cancellable
-    //   ? `/my-account/return-item/cancel/${entity_id}`
-    //   : "";
+
+    const url =
+      status === STATUS_COMPLETE
+        ? `/my-account/return-item/create/${entity_id}`
+        : `/my-account/return-item/cancel/${entity_id}`;
+
+    history.push(url);
   }
 
   async getOrder() {

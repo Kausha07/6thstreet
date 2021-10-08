@@ -11,9 +11,6 @@ import {
   STATUS_FAILED,
   STATUS_PAYMENT_ABORTED,
   STATUS_SUCCESS,
-  ORDER_STATUS,
-  STATUS_ITEM_CANCELLABLE,
-  STATUS_HIDE_PROGRESSBAR,
 } from "Component/MyAccountOrderListItem/MyAccountOrderListItem.config";
 import MyAccountOrderViewItem from "Component/MyAccountOrderViewItem";
 import { getFinalPrice } from "Component/Price/Price.config";
@@ -113,38 +110,24 @@ class MyAccountOrderView extends PureComponent {
     const { isArabic } = this.state;
     const {
       openOrderCancelation,
-      order: { status, increment_id, is_returnable, shipped = [], unship = [] },
+      order: { status, increment_id, is_returnable },
     } = this.props;
-
-    const is_cancellable = ![
-      ...shipped.reduce((acc, { items }) => [...acc, ...items], []),
-      ...unship.reduce((acc, { items }) => [...acc, ...items], []),
-    ].every((item) => parseInt(item.qty_invoiced, 10) > 0);
-
-    const buttonText = is_returnable
-      ? __("Return an Item")
-      : STATUS_ITEM_CANCELLABLE.includes(status) && is_cancellable
-      ? __("Cancel an Item")
-      : "";
+    const buttonText =
+      status === STATUS_COMPLETE ? __("Return an Item") : __("Cancel an Item");
     return (
       <div block="MyAccountOrderView" elem="Heading" mods={{ isArabic }}>
         <h3>{__("Order #%s", increment_id)}</h3>
-
-        {buttonText && (
-          <button onClick={openOrderCancelation}>{buttonText}</button>
-        )}
-
-        {/* {(STATUS_BEING_PROCESSED.includes(status) ||
+        {(STATUS_BEING_PROCESSED.includes(status) ||
           (status === STATUS_COMPLETE && is_returnable)) && (
           <button onClick={openOrderCancelation}>{buttonText}</button>
-        )} */}
+        )}
       </div>
     );
   }
 
   renderStatus() {
     const {
-      order: { status, created_at, is_rto },
+      order: { status, created_at },
     } = this.props;
 
     if (STATUS_FAILED.includes(status)) {
@@ -157,7 +140,7 @@ class MyAccountOrderView extends PureComponent {
 
       return (
         <div block="MyAccountOrderView" elem="StatusFailed">
-          <Image lazyLoad={true}
+          <Image
             src={StatusImage}
             mix={{ block: "MyAccountOrderView", elem: "WarningImage" }}
           />
@@ -171,12 +154,10 @@ class MyAccountOrderView extends PureComponent {
         <p
           block="MyAccountOrderView"
           elem="StatusTitle"
-          mods={{ isSuccess: STATUS_COMPLETE === status, is_rto }}
+          mods={{ isSuccess: STATUS_SUCCESS.includes(status) }}
         >
           {__("Status: ")}
-          <span>{`${
-            is_rto ? __("Delivery Failed") : ORDER_STATUS[status]
-          }`}</span>
+          <span>{`${status.split("_").join(" ")}`}</span>
         </p>
         <p block="MyAccountOrderView" elem="StatusDate">
           {__("Order placed: ")}
@@ -203,7 +184,7 @@ class MyAccountOrderView extends PureComponent {
         elem="PackagesMessage"
         mods={{ isArabic }}
       >
-        <Image lazyLoad={true}
+        <Image
           src={TruckImage}
           mix={{ block: "MyAccountOrderView", elem: "TruckImage" }}
         />
@@ -223,29 +204,25 @@ class MyAccountOrderView extends PureComponent {
     );
   }
 
-  renderAccordionTitle(title, image, status = null, is_rto = false) {
+  renderAccordionTitle(title, image, status = null) {
     const { [status]: statusTitle = null } = STATUS_LABEL_MAP;
 
     return (
       <div block="MyAccountOrderView" elem="AccordionTitle">
-        <Image lazyLoad={true}
+        <Image
           src={image}
           mix={{ block: "MyAccountOrderView", elem: "AccordionTitleImage" }}
         />
-        {is_rto ? (
-          <h3>{__("Delivery Failed")}</h3>
-        ) : (
-          <h3>
-            {title}
-            {!!statusTitle && <span>{` - ${statusTitle}`}</span>}
-          </h3>
-        )}
+        <h3>
+          {title}
+          {!!statusTitle && <span>{` - ${statusTitle}`}</span>}
+        </h3>
       </div>
     );
   }
 
-  renderAccordionProgress(status, is_rto = false) {
-    if (STATUS_HIDE_PROGRESSBAR.includes(status) || is_rto) {
+  renderAccordionProgress(status) {
+    if (STATUS_DELIVERED === status) {
       return null;
     }
 
@@ -376,14 +353,12 @@ class MyAccountOrderView extends PureComponent {
           mix={{ block: "MyAccountOrderView", elem: "Accordion" }}
           is_expanded={index === 0}
           shortDescription={this.renderAccordionProgress(
-            item.courier_status_code,
-            item.is_rto
+            item.courier_status_code
           )}
           title={this.renderAccordionTitle(
             __("%s Package", suffixNumber),
             PackageImage,
-            item.courier_status_code,
-            item.is_rto
+            item.courier_status_code
           )}
         >
           <p>
@@ -545,6 +520,8 @@ class MyAccountOrderView extends PureComponent {
         payment: { method },
       },
     } = this.props;
+
+    console.log("this.props", this.props);
 
     switch (method) {
       case CARD:

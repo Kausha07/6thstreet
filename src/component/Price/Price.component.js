@@ -94,7 +94,7 @@ class Price extends PureComponent {
                 {
                 DISPLAY_DISCOUNT_PERCENTAGE[country] && (
                     <span block="Price" elem="Discount" mods={ { discount: this.haveDiscount() } }>
-                        { `On Sale ${ this.discountPercentage() } Off`}
+                        { `${__("On Sale")} ${ this.discountPercentage() } Off`}
                     </span>
                 )
                 }
