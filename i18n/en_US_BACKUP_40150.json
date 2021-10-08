@@ -910,5 +910,6 @@
     "delivered": null,
     "refunded": null,
     "payment_aborted": null,
-    "cancelled": null
+    "cancelled": null,
+    "On Sale": null
 }
