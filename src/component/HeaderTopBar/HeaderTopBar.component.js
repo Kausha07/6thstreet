@@ -88,10 +88,9 @@ class HeaderTopBar extends NavigationAbstract {
   render() {
     const { isHidden, isOnMobile } = this.state;
     const offset = window.pageYOffset;
-    // debugger;
 
     return (
-      <div block="HeaderTopBar" mods={{  isOnMobile }}>
+      <div block="HeaderTopBar" mods={{ isOnMobile }}>
         <div block="HeaderTopBar" elem="ContentWrapper">
           {this.renderNavigationState()}
         </div>

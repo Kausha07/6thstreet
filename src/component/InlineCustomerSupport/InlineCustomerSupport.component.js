@@ -98,7 +98,6 @@ class InlineCustomerSupport extends PureComponent {
     const { isExpanded, isArabic } = this.state;
     const Email = this.renderEmail();
     const Phone = this.renderPhone();
-    // debugger
     return (
       <div>
         <button
@@ -165,7 +164,6 @@ class InlineCustomerSupport extends PureComponent {
     const contactRenderer = isPhoneSupported
       ? this.renderPhone
       : this.renderEmail;
-    // debugger
 
     return (
       <div
@@ -174,19 +172,19 @@ class InlineCustomerSupport extends PureComponent {
         mods={{ isArabic }}
       >
         {this.renderCirclePulse()}
-        {(isMobile.any() || isMobile.tablet()) ?
-        <p>
-          {/* {openHoursLabel} */}
-          {isArabic ? "مفتوحة من" : "OPEN"}
-          {contactRenderer() && !isArabic ? " 24/7" : ""}
-        </p>
-        :
-        <p>
-          {/* {openHoursLabel} */}
-          {isArabic ? "مفتوحة من" : "Open"}
-          {contactRenderer() && !isArabic ? " at" : ""}
-        </p>
-        }
+        {isMobile.any() || isMobile.tablet() ? (
+          <p>
+            {/* {openHoursLabel} */}
+            {isArabic ? "مفتوحة من" : "OPEN"}
+            {contactRenderer() && !isArabic ? " 24/7" : ""}
+          </p>
+        ) : (
+          <p>
+            {/* {openHoursLabel} */}
+            {isArabic ? "مفتوحة من" : "Open"}
+            {contactRenderer() && !isArabic ? " at" : ""}
+          </p>
+        )}
         {contactRenderer()}
       </div>
     );
