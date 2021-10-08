@@ -276,6 +276,7 @@
     "View Size Guide": "عرض دليل المقاسات",
     "Size guide": "دليل المقاسات",
     "SIZE GUIDE": "إرشادات المقاسات",
+    "Size Help": "إرشادات المقاسات",
     "Sizing Guide": "دليل المقاسات",
     "Fitting Information - Items fits true to size": "معلومات القياسات حقيقية",
     "UK": "الولايات المتحدة",
@@ -418,6 +419,8 @@
     "Size: ": "القياس",
     "Color:": "اللون",
     "Qty:": "الكمية",
+    "View Gallery": "عرض معرض",
+    "Video": "فيديو",
     "Item details": "تفاصيل المُنتج",
     "Split your purchase into equal monthly installments": "قسم قيمة مُشترياتك بقيمة مُتساوية على أشهر",
     "Sounds good? Just select Tabby at checkout.": "اختر تابي عند عملية الدفع",
@@ -752,7 +755,11 @@
     "& is wearing": null,
     "Delivery Failed": "لم يتم توصيل الطلب",
     "About 6THSTREET": "نبذة عن 6 ستريت",
+    "Off": "",
     "clear": "إزالة",
+    "On Sale": "خصم",
+    "From": "من",
+    " a month with ": " شهرا مع ",
     "About 6TH": null,
     "TREET": null,
     "About 6THS": null,
@@ -774,6 +781,7 @@
     "%s Online Shopping - shoes, bags, clothing | 6thStreet %s": null,
     "online shopping for %s, %s online shopping, %s": null,
     "Shop for %s fashion brands in %s. Exclusive collection of shoes, clothing, bags, grooming - Online Shopping ✯ Free Delivery ✯ COD ✯ 100% original brands - 6thStreet": null,
+<<<<<<< HEAD
     "This is a demo store": null,
     "RECENTLY PLAYED": null,
     "%s Items": null,
@@ -784,6 +792,16 @@
     "null": null,
     "Confirm Account Page": null,
     "Confirm Account Action": null,
+=======
+    "RECENTLY PLAYED": null,
+    "Search results for %s. Online shopping in %s | 6thStreet": null,
+    "%s online shopping": null,
+    "Buy %s. Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet.": null,
+    "%s Items": null,
+    "This is a demo store": null,
+    "null": null,
+    "Breadcrumbs (current location)...": null,
+>>>>>>> 3c110f8bbea40d2a4d51a3f5ed37b7c88e643ff5
     "Add": null,
     "You may earn ": null,
     "worth of Club Apparel points for this purchase.": null,
@@ -798,6 +816,11 @@
     "Shop %s for %s Online in %s | Free shipping and returns | 6thStreet.com %s": null,
     "Password Change Actions": null,
     "You have received %s% off!": null,
+<<<<<<< HEAD
+=======
+    "Confirm Account Page": null,
+    "Confirm Account Action": null,
+>>>>>>> 3c110f8bbea40d2a4d51a3f5ed37b7c88e643ff5
     "%s %s | 6thStreet.com %s": null,
     "%s, %s, %s, Online Shopping %s": null,
     "Shop %s %s Online in %s. Discover the latest collection from %s. Free shipping and returns.": null,
@@ -805,8 +828,16 @@
     "FACEBOOK": null,
     "GOOGLE": null,
     "Error cleaning wishlist": null,
+<<<<<<< HEAD
     "Please wait %s before re-sending the request": null,
     "We are available all days from:": null,
+=======
+    "We are available all days from:": null,
+    "Share Icon": null,
+    "Favorite Icon": null,
+    "Please wait %s before re-sending the request": null,
+    "refine": null,
+>>>>>>> 3c110f8bbea40d2a4d51a3f5ed37b7c88e643ff5
     "Address #%s%s": null,
     "To be rewarded for 6thStreet purchases, you must have a 6thStreet account and you must be a Club Apparel Member. You need to link your Club Apparel account to your 6thStreet account. If you are not a Club Apparel member, you can download the Club Apparel App and Register from ": null,
     "here.": null,
@@ -826,6 +857,7 @@
     " for any additional information.": null,
     "Coupon %s:": null,
     "%s Item(s) In Cart": null,
+<<<<<<< HEAD
     "Order": null,
     "Sorry! Child product quantities are invalid!": null,
     "Order #%s": null,
@@ -841,6 +873,16 @@
     "Error initializing Klarna payment method.": null,
     "%s Package": null,
     "Package contains %s %s": null,
+=======
+    "Sorry! Child product quantities are invalid!": null,
+    "Order #%s": null,
+    "%s Package": null,
+    "Package contains %s %s": null,
+    "Address #%s": null,
+    "Buy %s for %s%s each and ": null,
+    "save %s%": null,
+    "As low as ": null,
+>>>>>>> 3c110f8bbea40d2a4d51a3f5ed37b7c88e643ff5
     "You have successfully linked your 6thstreet.com Account with your ": null,
     " Account.": null,
     "Sorry! We were unable to find a ": null,
@@ -848,6 +890,7 @@
     "If you are not already a ": null,
     " member, download the ": null,
     " and Register prior to linking accounts.": null,
+<<<<<<< HEAD
     "Save customer": null,
     "CVV": null,
     "Address #%s": null,
@@ -863,4 +906,23 @@
     " a month with ": null,
     "Size Help": null,
     "West (CM)": null
+=======
+    "Order": null,
+    "N/A": null,
+    "Return %s items": null,
+    "Return %s item": null,
+    "Return is not possible at the time": null,
+    "Buy now and pay later in 2, 3 or 6 months.": null,
+    "2,3 or 6 months": null,
+    "Order #%s ": null,
+    "Save customer": null,
+    "Error initializing Klarna payment method.": null,
+    "CVV": null,
+    "Page %s": null,
+    "Error loading Stripe! No API-key specified.": null,
+    "Can't find what you need? Take a moment\nand do a search or start from our homepage": null,
+    "Model is wearing": null,
+    "West (CM)": null,
+    "360°": null
+>>>>>>> 3c110f8bbea40d2a4d51a3f5ed37b7c88e643ff5
 }
