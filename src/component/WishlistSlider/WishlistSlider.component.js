@@ -98,7 +98,6 @@ class WishlistSlider extends PureComponent {
   renderSliderContainer() {
     const items = this.getProducts();
     const { isHome } = this.props;
-    // debugger
     return (
       <DragScroll
         data={{ rootClass: "WishlistScrollWrapper", ref: this.cmpRef }}
