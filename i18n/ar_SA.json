@@ -712,7 +712,7 @@
     "Mask": "قناع",
     "Confirmation ID": "تأكيد الهوية ",
     "EMAIL OR PHONE": "البريد الإلكتروني او الهاتف",
-    "Model's height is ": "طول العارض",
+    "Model's height is": "طول العارض",
     "BOY~GIRL": "أولاد~بنات",
     "GIRL": "بنات",
     "GIRLS": "بنات",
@@ -755,7 +755,6 @@
     "Buy & Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet.": null,
     "To be rewarded for 6thStreet purchases you must have a 6thStreet account and you must be a Club Apparel Member. You need to link your Club Apparel account": "لتكافئ بقسيمة شراء من 6thstreet يجب أن يكون لديك حساب 6thstreet وأن تكون عضواً لدى كلوب أباريل",
     "AVAIL LOYALTY BENEFITS ON 6THSTREET": "6thStreet الاستفادة من مزايا نقاط الولاء على",
-    "Model's height is": null,
     "& is wearing": null,
     "Delivery Failed": "لم يتم توصيل الطلب",
     "About 6THSTREET": "نبذة عن 6 ستريت",
@@ -870,5 +869,6 @@
     "Can't find what you need? Take a moment\nand do a search or start from our homepage": null,
     "Model is wearing": null,
     "West (CM)": null,
-    "360°": null
+    "360°": null,
+    " What are you looking for ?": null
 }
