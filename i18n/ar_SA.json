@@ -419,6 +419,8 @@
     "Size: ": "القياس",
     "Color:": "اللون",
     "Qty:": "الكمية",
+    "View Gallery": "عرض معرض",
+    "Video": "فيديو",
     "Item details": "تفاصيل المُنتج",
     "Split your purchase into equal monthly installments": "قسم قيمة مُشترياتك بقيمة مُتساوية على أشهر",
     "Sounds good? Just select Tabby at checkout.": "اختر تابي عند عملية الدفع",
@@ -864,5 +866,6 @@
     "Error loading Stripe! No API-key specified.": null,
     "Can't find what you need? Take a moment\nand do a search or start from our homepage": null,
     "Model is wearing": null,
-    "West (CM)": null
+    "West (CM)": null,
+    "360°": null
 }
