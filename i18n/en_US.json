@@ -777,5 +777,7 @@
     "delivered": "Delivered",
     "refunded": "Refunded",
     "payment_aborted": "Payment Aborted",
-    "cancelled": "Cancelled"
+    "cancelled": "Cancelled",
+    "On Sale": null,
+    "360°": null
 }

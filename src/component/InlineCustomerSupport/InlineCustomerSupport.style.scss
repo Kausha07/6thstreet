@@ -144,6 +144,12 @@
       letter-spacing: 0.91px;
     }
 
+    &_isArabic {
+      &::after {
+        content: "اضغط هنا للاتصال"
+      }
+    }
+
     @include desktop {
       &::before {
         content: none;

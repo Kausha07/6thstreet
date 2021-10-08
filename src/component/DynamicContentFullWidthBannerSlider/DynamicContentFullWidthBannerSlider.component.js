@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import TinySlider from "tiny-slider-react";
 import Link from "Component/Link";
+// import { getUUID } from "Util/Auth";
 import { formatCDNLink } from "Util/Url";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
@@ -88,6 +89,9 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
     this.setState({ activeSlide });
   };
   onclick = (item) => {
+    if(!!!item){
+      return;
+    }
     let banner = {
       link: item.link,
       promotion_name: item.promotion_name,

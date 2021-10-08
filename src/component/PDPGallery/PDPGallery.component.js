@@ -304,7 +304,7 @@ class PDPGallery extends PureComponent {
             elem="ViewGallery"
             onClick={() => this.stopVideo()}
           >
-            View Gallery
+            { __("View Gallery") }
           </button>
         ) : (
           <div block="PDPGallery-VideoButtonsContainer" elem="VideoButtons">
@@ -314,7 +314,7 @@ class PDPGallery extends PureComponent {
                 elem="StyleVideo"
                 onClick={() => this.playVideo("prod_style_video")}
               >
-                Video
+                { __("Video") }
               </button>
             )}
             {prod_360_video && (
@@ -323,7 +323,7 @@ class PDPGallery extends PureComponent {
                 elem="360DegreeVideo"
                 onClick={() => this.playVideo("prod_360_video")}
               >
-                360°
+                { __("360°")}
               </button>
             )}
           </div>
