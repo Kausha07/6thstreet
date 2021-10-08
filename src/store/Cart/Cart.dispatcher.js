@@ -34,6 +34,9 @@ export class CartDispatcher {
       Cart: { cartId },
     } = getStore().getState();
     const cart_id = BrowserDatabase.getItem(LAST_CART_ID_CACHE_KEY);
+    console.log("cartId from store",cartId)
+    console.log("cartId from localstorage",cart_id)
+    console.log("store values",getStore().getState())
     if (!cartId || isNewCart) {
       try {
         const { data: requestedCartId = null } = await createCart(cart_id);
@@ -160,7 +163,8 @@ export class CartDispatcher {
     const {
       Cart: { cartId },
     } = getStore().getState();
-
+    console.log("getstore values", getStore().getState())
+    console.log("cartid", cartId)
     try {
       dispatch(processingCartRequest());
       const response = await addProductToCart({
