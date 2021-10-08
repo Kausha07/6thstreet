@@ -28,7 +28,7 @@ export const getInitialState = () => ({
     // TODO set initial data to empty cart structure???
     cartTotals: {},
     isLoading: true,
-    cartItems: cartId ||  BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [],
+    cartItems: BrowserDatabase.getItem(CART_ITEMS_CACHE_KEY) || [],
     isMinicartOpen: false,
     checkoutDetails:false
 });
