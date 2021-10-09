@@ -211,7 +211,11 @@ class MyAccountOrderView extends PureComponent {
       <div block="MyAccountOrderView" elem="AccordionTitle">
         <Image
           src={image}
-          mix={{ block: "MyAccountOrderView", elem: "AccordionTitleImage" }}
+          mix={{
+            block: "MyAccountOrderView",
+            elem: "AccordionTitleImage",
+            mods: {isArabic: isArabic()} 
+          }}
         />
         <h3>
           {title}
