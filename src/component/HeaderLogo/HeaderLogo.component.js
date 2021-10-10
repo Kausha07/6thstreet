@@ -32,7 +32,7 @@ class HeaderLogo extends PureComponent {
         mods={{ isArabic }}
         onClick={setGender}
       >
-        <Image mix={{ block: "Image", mods: { isArabic } }} src={logo} />
+        <Image lazyLoad={true} mix={{ block: "Image", mods: { isArabic } }} src={logo} />
       </Link>
     );
   }

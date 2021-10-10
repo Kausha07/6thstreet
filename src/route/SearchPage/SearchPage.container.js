@@ -32,10 +32,15 @@ export class SearchPageContainer extends PLPContainer {
     });
   }
   updateBreadcrumbs() {
-    const { updateBreadcrumbs } = this.props;
+    const {
+      updateBreadcrumbs,
+      location: { pathname = "", search = "" } = {},
+      options: { q } = {},
+    } = this.props;
+    const link = `${pathname}${search}`;
 
     updateBreadcrumbs([
-      { name: __("Catalog"), url: "" },
+      { name: q?.trim(), url: link },
       { name: __("Home"), url: "/" },
     ]);
   }

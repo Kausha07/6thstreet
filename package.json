@@ -2,7 +2,7 @@
     "name": "6th-street",
     "private": true,
     "dependencies": {
-        "@6thstreetdotcom/algolia-sdk": "^1.8.3-beta.1",
+        "@6thstreetdotcom/algolia-sdk": "^1.8.3-beta.5",
         "@scandipwa/scandipwa": "0.0.1",
         "@scandipwa/scandipwa-scripts": "0.0.8",
         "@sentry/react": "^6.5.1",
@@ -14,16 +14,24 @@
         "express": "^4.17.1",
         "forever": "^3.0.4",
         "html-minifier": "^4.0.0",
+        "imagemin": "^8.0.1",
+        "imagemin-gifsicle": "^7.0.0",
+        "imagemin-mozjpeg": "^9.0.0",
+        "imagemin-pngquant": "^9.0.2",
+        "imagemin-svgo": "^10.0.0",
         "lerna": "^3.22.1",
         "node-cache": "^5.1.2",
+        "normalize-scroll-left": "^0.2.1",
         "puppeteer": "^9.0.0",
         "react-circular-carousel": "^1.0.4-0",
         "react-collapse": "^5.1.0",
         "react-countdown": "^2.3.2",
         "react-helmet": "^6.1.0",
         "react-iframe": "^1.8.0",
+        "react-lazyload": "^3.2.0",
         "react-spinkit": "^3.0.0",
         "react-swipe-to-delete-component": "^0.5.5",
+        "server-timings": "^2.0.1",
         "tiny-slider": "^2.9.3",
         "tiny-slider-react": "^0.5.3",
         "uuid": "^8.3.2",
@@ -34,7 +42,8 @@
         "start-ar": "scandipwa-scripts start --locale ar_SA",
         "build": "scandipwa-scripts build",
         "build-ar": "scandipwa-scripts build --locale ar_SA",
-        "start-ssr": "forever stopall && forever cleanlogs && forever start -l pwa.log app.js && forever start -l renderer.log renderer/index.js"
+        "start-ssr": "forever stopall && forever cleanlogs && forever start -l pwa.log app.js && forever start -l renderer.log renderer/index.js",
+        "image-opt": "node image-opt.mjs"
     },
     "browserslist": {
         "production": [

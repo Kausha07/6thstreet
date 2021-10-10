@@ -8,6 +8,10 @@
 }
 .CheckoutBilling {
   padding: 0 0.5rem;
+  @include mobile {
+    padding-left: 0;
+    padding-right: 0;
+  }
   button {
     @include before-desktop {
       font-size: 14px !important;
@@ -202,6 +206,11 @@
         margin-top: 20px;
         background: var(--white);
         padding: 20px 60px 30px 60px;
+        &_formContent {
+          .MyAccountAddressPopup {
+            position: relative;
+          }
+        }
 
         h2 {
           border: none;
@@ -219,6 +228,65 @@
           margin: 0;
         }
       }
+    }
+  }
+}
+.CheckoutComApplePayPayment-Wrapper {
+  margin-top: 20px;
+
+  .CheckoutComApplePayPayment-icon {
+    width: 50px !important;
+    height: 22px !important;
+    margin-left: 5px !important;
+    margin-right: 0px !important;
+
+    &_button_style {
+      
+      &_black {
+        filter: invert(100%) brightness(20);
+        -webkit-filter:invert(100%) brightness(20);
+      }
+
+      &_white {
+        filter: invert(100%);
+        -webkit-filter:invert(100%);
+      }
+    }
+    &_isArabic {
+      margin-left: 0px !important;
+      margin-right: 5px !important;
+    }
+  }
+
+  .CheckoutComApplePayPayment-Button {
+    height: 50px;
+    margin-bottom: 20px;
+    min-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &:disabled {
+      opacity: 0.5;
+      .CheckoutComApplePayPayment-icon {
+        opacity: 0.5;
+      }
+    }
+
+    &_button_style {
+      &_black {
+        color: white;
+        background-color: black;
+      }
+
+      &_white {
+        color: black;
+        background-color: white;
+      }
+    }
+
+    &.apple-pay-button-white-with-line {
+      -apple-pay-button-style: white-outline;
     }
   }
 }

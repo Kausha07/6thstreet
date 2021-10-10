@@ -42,6 +42,7 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
     setTabbyWebUrl: PropTypes.func.isRequired,
     setCreditCardData: PropTypes.func.isRequired,
     totals: TotalsType.isRequired,
+    isClickAndCollect: PropTypes.bool.isRequired
   };
 
   state = {

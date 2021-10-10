@@ -62,7 +62,6 @@
 
   &-Details {
     margin: 0 10px;
-
     .SuccessMessage {
       &-Icon {
         height: 50px;
@@ -84,7 +83,7 @@
         }
 
         &-Email {
-          font-weight: var(--fw-bold);
+          font-weight: var(--fw-medium);
         }
       }
     }
@@ -295,12 +294,14 @@
       }
 
       @include mobile() {
-        margin-left: -24px;
-        width: 100vw;
+        width: auto;
+        margin-inline: 0;
+        margin-left: 0;
+        margin-right: 0;
 
         &_isArabic {
-          margin-left: unset;
-          margin-right: -24px;
+          // margin-left: unset;
+          // margin-right: -24px;
         }
       }
     }
@@ -364,7 +365,7 @@
       .Totals {
         display: grid;
         grid-auto-flow: column;
-        
+
         &:last-child {
           border-top: 2px solid var(--lightest-gray);
           margin: 10px 0 0 0;

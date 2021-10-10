@@ -22,10 +22,10 @@ class PLPPages extends PureComponent {
 
   renderPage = ([key, page]) => {
     const { products, isPlaceholder } = page;
-    const { impressions, prevPath = null } = this.props;
+    const { impressions, query, renderMySignInPopup, prevPath = null } = this.props;
 
     if (isPlaceholder) {
-      return <PLPPagePlaceholder key={key} pageIndex={key} />;
+      return <PLPPagePlaceholder key={key} pageIndex={key} query={query} />;
     }
 
     return (
@@ -33,6 +33,7 @@ class PLPPages extends PureComponent {
         key={key}
         products={products}
         impressions={impressions}
+        renderMySignInPopup={renderMySignInPopup}
         prevPath={prevPath}
       />
     );

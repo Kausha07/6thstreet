@@ -5,6 +5,7 @@ export class VueIntegrationQueries {
    * log vue analytics query
    * @return {Field}
    */
+
   async vueAnalayticsLogger(payload) {
     const locale = this.getLocaleFromUrl();
     return new Promise((resolve, reject) => {
@@ -19,7 +20,7 @@ export class VueIntegrationQueries {
         .then((response) => {
           if (response.status !== 200) {
             // throw Error(response.statusText);
-            console.log("Error", response.statusText);
+            console.error("Error", response.statusText);
           }
           return response.json();
         })

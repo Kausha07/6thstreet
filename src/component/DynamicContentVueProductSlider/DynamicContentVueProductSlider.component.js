@@ -2,7 +2,7 @@ import DragScroll from "Component/DragScroll/DragScroll.component";
 import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
 import PropTypes from "prop-types";
 import VueIntegrationQueries from "Query/vueIntegration.query";
-import { PureComponent } from "react";
+import React, { PureComponent } from "react";
 import { withRouter } from "react-router";
 import { isArabic } from "Util/App";
 import { getUUID } from "Util/Auth";
@@ -20,17 +20,27 @@ class DynamicContentVueProductSlider extends PureComponent {
     pageType: PropTypes.string.isRequired,
   };
 
-  scrollerRef = React.createRef();
-  cmpRef = React.createRef(0);
-  state = {
-    impressionSent: false,
-    eventRegistered: false,
-    apiCalled: false,
-  };
-
+  constructor(props) {
+    super(props);
+    this.itemRef = React.createRef();
+    this.cmpRef = React.createRef();
+    this.indexRef = React.createRef(0);
+    this.scrollerRef = React.createRef();
+    this.state = {
+      customScrollWidth: null,
+      isArabic: isArabic(),
+      impressionSent: false,
+      eventRegistered: false,
+      apiCalled: false,
+    };
+  }
   componentDidMount() {
+    if (this.state.customScrollWidth < 0) {
+      this.renderScrollbar();
+    }
     this.registerViewPortEvent();
   }
+  componentWillUnmount() {}
 
   registerViewPortEvent() {
     let observer;
@@ -104,13 +114,18 @@ class DynamicContentVueProductSlider extends PureComponent {
       }
     });
   };
-  async handleOnScroll(widgetID, event) {
+
+  async handleContainerScroll(widgetID, event) {
+    const { isArabic } = this.state;
     const {
       pageType = "home",
       sourceProdID = null,
       sourceCatgID = null,
     } = this.props;
     const target = event.nativeEvent.target;
+    this.scrollerRef.current.scrollLeft = isArabic
+      ? Math.abs(target.scrollLeft)
+      : target.scrollLeft;
     let width = 0;
     if (screen.width > 1024) {
       width = 245;
@@ -118,8 +133,8 @@ class DynamicContentVueProductSlider extends PureComponent {
       width = 220;
     }
     let index = Math.floor(Math.abs(target.scrollLeft) / width);
-    if (this.cmpRef.current !== index) {
-      this.cmpRef.current = index;
+    if (this.indexRef.current !== index) {
+      this.indexRef.current = index;
       const productsToRender = this.getProducts();
       let destURL = productsToRender[index]?.link;
       const locale = VueIntegrationQueries.getLocaleFromUrl();
@@ -167,10 +182,12 @@ class DynamicContentVueProductSlider extends PureComponent {
 
   renderHeader() {
     const { heading } = this.props;
+    const { isHome } = this.props;
+
     return (
-      <div block="VueProductSlider" elem="HeaderContainer">
+      <div block="VueProductSlider" elem="HeaderContainer" mods={{ isHome }}>
         <h4>{heading}</h4>
-        {this.viewAllBtn()}
+        {/* {this.viewAllBtn()} */}
       </div>
     );
   }
@@ -223,40 +240,49 @@ class DynamicContentVueProductSlider extends PureComponent {
   };
 
   renderSliderContainer() {
-    const productsToRender = this.getProducts();
+    const items = this.getProducts();
+    const { isHome, renderMySignInPopup } = this.props;
     const {
       widgetID,
       pageType,
       sourceProdID = null,
       sourceCatgID = null,
     } = this.props;
+    //
     return (
       <DragScroll data={{ rootClass: "ScrollWrapper", ref: this.cmpRef }}>
-        <div
-          id="ScrollWrapper"
-          block="VueProductSlider"
-          elem="SliderContainer"
-          mods={{ isArabic: isArabic() }}
-          ref={this.scrollerRef}
-          onScroll={(e) => {
-            this.handleOnScroll(widgetID, e);
-          }}
-        >
-          {productsToRender.map((item, i) => {
-            const { sku } = item;
-            return (
-              <DynamicContentVueProductSliderItem
-                key={sku}
-                data={item}
-                widgetID={widgetID}
-                pageType={pageType}
-                posofreco={i}
-                sourceProdID={sourceProdID}
-                sourceCatgID={sourceCatgID}
-              />
-            );
-          })}
-        </div>
+        <>
+          <div
+            block="VueProductSlider"
+            elem="SliderContainer"
+            id="ScrollWrapper"
+            ref={this.cmpRef}
+            mods={{ isHome }}
+            onScroll={(e) => {
+              this.handleContainerScroll(widgetID, e);
+            }}
+          >
+            {isHome && <div block="SliderHelper" mods={{ isHome }}></div>}
+            {items.map((item, i) => {
+              const { sku } = item;
+              return (
+                <DynamicContentVueProductSliderItem
+                  renderMySignInPopup={renderMySignInPopup}
+                  key={sku}
+                  data={item}
+                  posofreco={i}
+                  ref={this.itemRef}
+                  widgetID={widgetID}
+                  pageType={pageType}
+                  sourceProdID={sourceProdID}
+                  sourceCatgID={sourceCatgID}
+                />
+              );
+            })}
+            {isHome && <div block="SliderHelper" mods={{ isHome }}></div>}
+          </div>
+          {this.renderScrollbar()}
+        </>
       </DragScroll>
     );
   }

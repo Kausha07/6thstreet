@@ -42,6 +42,7 @@ import { prepareQuery } from "Util/Query";
 import { executePost, fetchMutation } from "Util/Request";
 import { setCrossSubdomainCookie } from "Util/Url/Url";
 import { updateGuestUserEmail } from "./MyAccount.action";
+import Wishlist from "Store/Wishlist/Wishlist.dispatcher";
 
 export {
   CUSTOMER,
@@ -86,7 +87,6 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         const customerData = BrowserDatabase.getItem("customer");
         const userID = customerData && customerData.id ? customerData.id : null;
         const locale = VueIntegrationQueries.getLocaleFromUrl();
-        console.log("window.location.href", window.location.href);
         VueIntegrationQueries.vueAnalayticsLogger({
           event_name: VUE_PAGE_VIEW,
           params: {
@@ -170,11 +170,15 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
       const {
         generateCustomerToken: { token },
       } = result;
-
       setAuthorizationToken(token);
       dispatch(updateCustomerSignInStatus(true));
 
       await this.handleMobileAuthorization(dispatch, options);
+      const wishlistItem = localStorage.getItem("Wishlist_Item");
+      if (wishlistItem) {
+        await Wishlist.addSkuToWishlist(dispatch, wishlistItem);
+        localStorage.removeItem("Wishlist_Item");
+      }
       await WishlistDispatcher.updateInitialWishlistData(dispatch);
       await StoreCreditDispatcher.getStoreCredit(dispatch);
       setCrossSubdomainCookie("authData", this.getCustomerData(), "1");

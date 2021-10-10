@@ -3,6 +3,13 @@ import { PureComponent } from "react";
 import { connect } from "react-redux";
 import SearchSuggestionDispatcher from "Store/SearchSuggestions/SearchSuggestions.dispatcher";
 import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
+import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
+import Algolia from "Util/API/provider/Algolia";
+import { isArabic } from "Util/App";
+import BrowserDatabase from "Util/BrowserDatabase";
+import { getLocaleFromUrl } from "Util/Url/Url";
+import AlgoliaSDK from "../../../packages/algolia-sdk";
+import VueQuery from "../../query/Vue.query";
 import SearchSuggestion from "./SearchSuggestion.component";
 
 export const mapStateToProps = (state) => ({
@@ -10,14 +17,22 @@ export const mapStateToProps = (state) => ({
   data: state.SearchSuggestions.data,
   gender: state.AppState.gender,
   queryID: state.SearchSuggestions.queryID,
+  querySuggestions: state.SearchSuggestions.querySuggestions,
+  // wishlistData: state.WishlistReducer.items,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
   requestSearchSuggestions: (search) => {
-    SearchSuggestionDispatcher.requestSearchSuggestions(search, dispatch);
+    SearchSuggestionDispatcher.requestSearchSuggestions(
+      search,
+      sourceIndexName,
+      sourceQuerySuggestionIndex,
+      dispatch
+    );
   },
 });
-
+let sourceIndexName;
+let sourceQuerySuggestionIndex;
 export class SearchSuggestionContainer extends PureComponent {
   static propTypes = {
     requestSearchSuggestions: PropTypes.func.isRequired,
@@ -30,6 +45,8 @@ export class SearchSuggestionContainer extends PureComponent {
     }).isRequired,
     closeSearch: PropTypes.func.isRequired,
     queryID: PropTypes.string,
+    querySuggestions: PropTypes.array,
+    // wishlistData: WishlistItems.isRequired,
   };
 
   static getDerivedStateFromProps(props, state) {
@@ -61,12 +78,118 @@ export class SearchSuggestionContainer extends PureComponent {
       prevSearch: props.search,
       trendingBrands: [],
       trendingTags: [],
+      topSearches: [],
+      recentSearches: [],
+      recommendedForYou: [],
+      trendingProducts: [],
     };
 
     // TODO: please render this component only once. Otherwise it is x3 times the request
 
     SearchSuggestionContainer.requestSearchSuggestions(props);
     this.requestTrendingInformation();
+    this.requestTopSearches();
+    this.requestRecentSearches();
+  }
+
+  getAlgoliaIndex(countryCodeFromUrl, lang) {
+    const algoliaENV =
+      process.env.REACT_APP_ALGOLIA_ENV === "staging" ? "stage" : "enterprise";
+    // production will work after resolving index issue.
+    if (lang === "english") {
+      switch (countryCodeFromUrl) {
+        case "en-ae":
+          return `${algoliaENV}_magento_english_products_query_suggestions`;
+        case "en-bh":
+          return `${algoliaENV}_magento_en_bh_products_query_suggestions`;
+        case "en-kw":
+          return `${algoliaENV}_magento_en_kw_products_query_suggestions`;
+        case "en-om":
+          return `${algoliaENV}_magento_en_om_products_query_suggestions`;
+        case "en-qa":
+          return `${algoliaENV}_magento_en_qa_products_query_suggestions`;
+        case "en-sa":
+          return `${algoliaENV}_magento_en_sa_products_query_suggestions`;
+      }
+    } else {
+      switch (countryCodeFromUrl) {
+        case "ar-ae":
+          return `${algoliaENV}_magento_arabic_products_query_suggestions`;
+        case "ar-bh":
+          return `${algoliaENV}_magento_ar_bh_products_query_suggestions`;
+        case "ar-kw":
+          return `${algoliaENV}_magento_ar_kw_products_query_suggestions`;
+        case "ar-om":
+          return `${algoliaENV}_magento_ar_om_products_query_suggestions`;
+        case "ar-qa":
+          return `${algoliaENV}_magento_ar_qa_products_query_suggestions`;
+        case "ar-sa":
+          return `${algoliaENV}_magento_ar_sa_products_query_suggestions`;
+      }
+    }
+  }
+
+  async getPdpSearchWidgetData() {
+    const { gender } = this.props;
+    const userData = BrowserDatabase.getItem("MOE_DATA");
+    const query = {
+      filters: [],
+      num_results: 10,
+      mad_uuid: userData?.USER_DATA?.deviceUuid,
+    };
+
+    const payload = VueQuery.buildQuery("vue_browsing_history_slider", query, {
+      gender,
+    });
+    fetchVueData(payload)
+      .then((resp) => {
+        this.setState({
+          recommendedForYou: resp.data,
+        });
+      })
+      .catch((err) => {
+        console.error("fetchVueData error", err);
+      });
+  }
+
+  getTrendingProducts() {
+    const { gender } = this.props;
+    const userData = BrowserDatabase.getItem("MOE_DATA");
+    const query = {
+      filters: [],
+      num_results: 10,
+      mad_uuid: userData?.USER_DATA?.deviceUuid,
+    };
+
+    const payload = VueQuery.buildQuery("vue_trending_slider", query, {
+      gender,
+    });
+    fetchVueData(payload)
+      .then((resp) => {
+        this.setState({
+          trendingProducts: resp.data,
+        });
+      })
+      .catch((err) => {
+        console.error("fetchVueData error", err);
+      });
+  }
+
+  componentDidMount() {
+    sourceIndexName = AlgoliaSDK.index.indexName;
+    const countryCodeFromUrl = getLocaleFromUrl();
+    const lang = isArabic() ? "arabic" : "english";
+    sourceQuerySuggestionIndex = this.getAlgoliaIndex(countryCodeFromUrl, lang);
+    const { gender } = this.props;
+    if (gender !== "home") {
+      this.getPdpSearchWidgetData();
+    }
+    // this.getTrendingProducts();
+    document.body.classList.add("isSuggestionOpen");
+  }
+
+  componentWillUnmount() {
+    document.body.classList.remove("isSuggestionOpen");
   }
 
   async requestTrendingInformation() {
@@ -76,6 +199,7 @@ export class SearchSuggestionContainer extends PureComponent {
       const data = await Promise.all([
         getStaticFile("search_trending_brands"),
         getStaticFile("search_trending_tags"),
+        // getStaticFile("search_trending_products"),
       ]);
       this.setState({
         trendingBrands: data[0][gender],
@@ -87,15 +211,83 @@ export class SearchSuggestionContainer extends PureComponent {
     }
   }
 
-  containerProps = () => {
-    const { trendingBrands, trendingTags } = this.state;
-    const { search, data, closeSearch, queryID } = this.props;
-    const { brands = [], products = [] } = data;
+  async requestTopSearches() {
+    const topSearches = await new Algolia().getTopSearches();
+    let refinedTopSearches = [];
+    await Promise.all(
+      topSearches?.data
+        ?.filter((ele) => ele !== "")
+        .map(async (item) => {
+          const filteredItem = await this.checkForSKU(item.search);
+          if (filteredItem) {
+            refinedTopSearches.push({ link: filteredItem.url, ...item });
+          } else {
+            refinedTopSearches.push({ link: null, ...item });
+          }
+        })
+    );
+    this.setState({
+      topSearches: refinedTopSearches || [],
+    });
+  }
 
+  async requestRecentSearches() {
+    let recentSearches =
+      JSON.parse(localStorage.getItem("recentSearches")) || [];
+    let refinedRecentSearches = [];
+    if (recentSearches.length > 0) {
+      await Promise.all(
+        recentSearches?.map(async (item) => {
+          const filteredItem = await this.checkForSKU(item.name);
+          if (filteredItem) {
+            refinedRecentSearches.push({ link: filteredItem.url, ...item });
+          } else {
+            refinedRecentSearches.push({ link: null, ...item });
+          }
+        })
+      );
+    }
+    this.setState({
+      recentSearches: refinedRecentSearches || [],
+    });
+  }
+
+  checkForSKU = async (search) => {
+    const config = {
+      q: search,
+      page: 0,
+      limit: 2,
+    };
+    const { data } = await new Algolia().getPLP(config);
+    if (data && data.length === 1) {
+      return data[0];
+    }
+    return null;
+  };
+
+  containerProps = () => {
+    const {
+      trendingBrands,
+      trendingTags,
+      topSearches,
+      recentSearches,
+      recommendedForYou,
+      trendingProducts,
+    } = this.state;
+    const {
+      search,
+      data,
+      closeSearch,
+      queryID,
+      querySuggestions,
+      renderMySignInPopup
+      // wishlistData,
+    } = this.props;
+    const { brands = [], products = [] } = data;
     const isEmpty = search === "";
     const inNothingFound = brands.length + products.length === 0;
-
     return {
+      searchString: search,
       brands,
       products,
       inNothingFound,
@@ -106,9 +298,15 @@ export class SearchSuggestionContainer extends PureComponent {
       trendingTags,
       closeSearch,
       queryID,
+      querySuggestions,
+      topSearches,
+      recentSearches,
+      recommendedForYou,
+      trendingProducts,
+      renderMySignInPopup
+      // wishlistData,
     };
   };
-
   containerFunctions = {
     hideActiveOverlay: this.props.hideActiveOverlay,
   };

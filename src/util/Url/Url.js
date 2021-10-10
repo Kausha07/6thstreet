@@ -137,3 +137,11 @@ export const getCountryCurrencyCode = () => {
   const { currency } = countries[getCountryFromUrl()];
   return currency;
 };
+
+export const parseURL = (url) => {
+  if(!!!url){
+    console.error("Pleae provide a valid URL");
+    return;
+  }
+  return new URL(url);
+}

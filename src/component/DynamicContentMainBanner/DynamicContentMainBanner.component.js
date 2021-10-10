@@ -11,6 +11,7 @@ import {
   HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
 } from "Component/GoogleTagManager/events/BannerImpression.event";
 
+import "./DynamicContentMainBanner.style";
 class DynamicContentMainBanner extends PureComponent {
   static propTypes = {
     items: PropTypes.arrayOf(
@@ -22,7 +23,6 @@ class DynamicContentMainBanner extends PureComponent {
       })
     ).isRequired,
   };
-
   state = {
     impressionSent: false,
   };
@@ -77,7 +77,7 @@ class DynamicContentMainBanner extends PureComponent {
 
     // TODO: calculate aspect ratio to ensure images not jumping.
     if (!link) {
-      return <Image key={i} src={url} ratio="custom" height="auto" />;
+      return <Image lazyLoad={true} key={i} src={url} ratio="custom" height="auto" />;
     }
 
     return (
@@ -88,7 +88,7 @@ class DynamicContentMainBanner extends PureComponent {
         }}
         key={i}
       >
-        <Image src={url} ratio="custom" height="auto" />
+        <Image lazyLoad={true} src={url} ratio="custom" height="auto" />
       </Link>
     );
   }

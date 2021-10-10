@@ -33,13 +33,16 @@ export class PDPGalleryContainer extends PureComponent {
   };
 
   containerProps = () => {
-    const { currentIndex, product } = this.props;
+    const { currentIndex, product,renderMySignInPopup } = this.props;
 
     return {
       gallery: this.getGallery(),
+      prod_style_video: this.getStyleVideo(),
+      prod_360_video: this.get360Video(),
       crumbs: this.getCrumbs(),
       currentIndex,
       product,
+      renderMySignInPopup
     };
   };
 
@@ -51,7 +54,7 @@ export class PDPGalleryContainer extends PureComponent {
 
   getCrumbs() {
     // TODO: determine if has video append it here
-    const galleryCrumbs = Object.keys(this.getGallery() || {});
+    const galleryCrumbs = Object.values(this.getGallery() || {});
     return galleryCrumbs;
   }
 
@@ -60,7 +63,6 @@ export class PDPGalleryContainer extends PureComponent {
       isLoading,
       product: { gallery_images = [] },
     } = this.props;
-
     if (isLoading || gallery_images.length === 0) {
       return Array.from({ length: 4 });
     }
@@ -68,11 +70,37 @@ export class PDPGalleryContainer extends PureComponent {
     return gallery_images;
   }
 
+  getStyleVideo() {
+    const {
+      isLoading,
+      product: { prod_style_video = "" },
+    } = this.props;
+
+    if (isLoading || !prod_style_video) {
+      return "";
+    }
+
+    return prod_style_video;
+  }
+
+  get360Video() {
+    const {
+      isLoading,
+      product: { prod_360_video = "" },
+    } = this.props;
+
+    if (isLoading || !prod_360_video) {
+      return "";
+    }
+
+    return prod_360_video;
+  }
+
   render() {
     const {
       product: { sku = "" },
-      product,
     } = this.props;
+
     return (
       <PDPGallery
         {...this.containerFunctions}

@@ -29,7 +29,6 @@ export class Algolia {
       adminKey = process.env.REACT_APP_ALGOLIA_KEY,
       index = "",
     } = options;
-
     AlgoliaSDK.init(appId, adminKey);
 
     AlgoliaSDK.setIndex.call(AlgoliaSDK, locale, env, index);
@@ -142,6 +141,21 @@ export class Algolia {
         return data;
       }
     }
+  }
+
+  async getSuggestions(query, limit) {
+    const data = (await AlgoliaSDK.getSuggestions(query, limit)) || {};
+    return data;
+  }
+
+  async autocompleteSearch(query, limit) {
+    const data = (await AlgoliaSDK.autocompleteSearch(query, limit)) || {};
+    return data;
+  }
+
+  async getTopSearches() {
+    const data = (await AlgoliaSDK.getTopSearches()) || [];
+    return data;
   }
 }
 

@@ -13,6 +13,7 @@ import BaseEvent from "./Base.event";
 export const HOME_PAGE_BANNER_IMPRESSIONS = "HOME_PAGE_BANNER_IMPRESSIONS";
 export const HOME_PAGE_BANNER_CLICK_IMPRESSIONS =
   "HOME_PAGE_BANNER_CLICK_IMPRESSIONS";
+
 /**
  * Constants
  *

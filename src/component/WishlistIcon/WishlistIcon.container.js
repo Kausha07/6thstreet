@@ -19,8 +19,8 @@ class WishlistIconContainer extends PureComponent {
     sku: PropTypes.string.isRequired,
     items: WishlistItems.isRequired,
     removeFromWishlist: PropTypes.func.isRequired,
-    pageType: PropTypes.string.isRequired,
     data: PropTypes.object.isRequired,
+    pageType: PropTypes.string.isRequired,
   };
 
   render() {

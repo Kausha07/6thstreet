@@ -51,12 +51,14 @@ class PDPMixAndMatchProduct extends PureComponent {
     const {
       product: { sku },
       product,
+      renderMySignInPopup,
     } = this.props;
     return (
       <WishlistIcon
         sku={sku}
         mods={{ isArabic: isArabic() }}
         data={product}
+        renderMySignInPopup={renderMySignInPopup}
         pageType="pdp"
       />
     );
@@ -72,7 +74,7 @@ class PDPMixAndMatchProduct extends PureComponent {
         <div block="OverlayIcons" mods={{ isArabic: isArabic() }}>
           {this.renderWishlistIcon()}
         </div>
-        <Image src={thumbnail_url} />
+        <Image lazyLoad={true} src={thumbnail_url} />
       </Link>
     );
   }

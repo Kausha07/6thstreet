@@ -23,6 +23,7 @@ class PDPGalleryCrumb extends PureComponent {
     };
 
     renderVideo() {
+        const { options: { src } } = this.props;
         return 'video';
     }
 
@@ -30,7 +31,7 @@ class PDPGalleryCrumb extends PureComponent {
         const { options: { src } } = this.props;
 
         return (
-            <Image src={ src } />
+            <Image lazyLoad={false} src={ src } />
         );
     }
 

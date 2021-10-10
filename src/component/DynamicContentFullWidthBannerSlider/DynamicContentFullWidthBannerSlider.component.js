@@ -1,23 +1,25 @@
-import {
-  HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
-  HOME_PAGE_BANNER_IMPRESSIONS,
-} from "Component/GoogleTagManager/events/BannerImpression.event";
-import Link from "Component/Link";
 import PropTypes from "prop-types";
-// import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
 import TinySlider from "tiny-slider-react";
+import Link from "Component/Link";
 // import { getUUID } from "Util/Auth";
-import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
 import { formatCDNLink } from "Util/Url";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
+import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
+// import VueIntegrationQueries from "Query/vueIntegration.query";
+// import { getUUID } from "Util/Auth";
 import "./DynamicContentFullWidthBannerSlider.style";
+import {
+  HOME_PAGE_BANNER_IMPRESSIONS,
+  HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
+} from "Component/GoogleTagManager/events/BannerImpression.event";
+import Image from "Component/Image";
 
 const settings = {
   lazyload: true,
   mouseDrag: true,
   touch: true,
-  controlsText: ["&#x27E8", "&#x27E9"],
+  // controlsText: ["&#x27E8", "&#x27E9"],
   nav: true,
   loop: true,
   navPosition: "bottom",
@@ -83,53 +85,29 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
       }
     });
   };
-
   onSliderChange = (activeSlide) => {
     this.setState({ activeSlide });
   };
-
   onclick = (item) => {
-    // vue analytics
-    // const locale = VueIntegrationQueries.getLocaleFromUrl();
-    // VueIntegrationQueries.vueAnalayticsLogger({
-    //   event_name: VUE_CAROUSEL_CLICK,
-    //   params: {
-    //     event: VUE_CAROUSEL_CLICK,
-    //     pageType: "plp",
-    //     currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-    //     clicked: Date.now(),
-    //     uuid: getUUID(),
-    //     referrer: "desktop",
-    //     widgetID: "vue_visually_similar_slider", // // TODO: will be added after vue product slider.
-    //   },
-    // });
     if(!!!item){
       return;
     }
-  
-    const banner = {
-      link: item?.link,
-      promotion_name: item?.promotion_name,
+    let banner = {
+      link: item.link,
+      promotion_name: item.promotion_name,
     };
-  
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
     this.sendBannerClickImpression(item);
   };
-
   sendBannerClickImpression(item) {
     Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);
   }
+
   renderSlide = (item, i) => {
     const { link, label, url: image_url, plp_config } = item;
-
-    const linkTo = {
-      pathname: formatCDNLink(link),
-      state: { plp_config },
-    };
-
     return (
       <Link
-        to={linkTo}
+        to={formatCDNLink(link)}
         key={i}
         data-banner-type="fullWidthBanner"
         data-promotion-name={item.promotion_name ? item.promotion_name : ""}
@@ -146,14 +124,15 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
   renderSlider() {
     const { items = [] } = this.props;
     const { activeSlide } = this.state;
+    // const items = [];
 
     return (
-      <TinySlider
-        settings={settings}
-        block=""
-      >
-        {items.map(this.renderSlide)}
-      </TinySlider>
+      <>
+        {items && items.length === 0 ? this.renderBannerAnimation() : null}
+        <TinySlider settings={settings} block="">
+          {items.map(this.renderSlide)}
+        </TinySlider>
+      </>
     );
   }
 

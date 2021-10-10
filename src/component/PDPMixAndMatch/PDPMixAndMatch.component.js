@@ -13,9 +13,11 @@ class PDPMixAndMatch extends PureComponent {
 
     renderAvailableProduct = (product) => {
         const { sku } = product;
+        const {renderMySignInPopup} = this.props
         return (
             <PDPMixAndMatchProduct
               product={ product }
+              renderMySignInPopup={renderMySignInPopup}
               key={ sku }
             />
         );

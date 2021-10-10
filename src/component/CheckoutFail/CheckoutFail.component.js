@@ -12,7 +12,7 @@ export class CheckoutFail extends CheckoutSuccess {
     renderStatus() {
         return (
             <div block="MyAccountOrderView" elem="StatusFailed">
-                <Image
+                <Image lazyLoad={true}
                   src={ WarningImage }
                   mix={ { block: 'MyAccountOrderView', elem: 'WarningImage' } }
                 />
@@ -24,6 +24,9 @@ export class CheckoutFail extends CheckoutSuccess {
     }
 
     renderDetails() {
+        const {
+            paymentMethod
+          } = this.props; 
         return (
             <div block="CheckoutSuccess">
                 <div block="CheckoutSuccess" elem="Details">
@@ -32,7 +35,7 @@ export class CheckoutFail extends CheckoutSuccess {
                     { this.renderAddresses() }
                     { this.renderDeliveryOption() }
                     { this.renderPaymentType() }
-                    { this.renderTotals() }
+                    {paymentMethod?.code === "checkout_qpay" ? this.renderPaymentSummary() : this.renderTotals() }
                 </div>
                 {this.renderButton()}
                 { this.renderMyAccountPopup() }

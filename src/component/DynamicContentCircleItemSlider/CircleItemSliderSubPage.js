@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
 
 import './CircleItemSliderSubPage.style';
+import Image from "Component/Image";
 
 class CircleItemSliderSubPage extends PureComponent {
     static propTypes = {

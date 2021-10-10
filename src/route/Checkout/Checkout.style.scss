@@ -11,6 +11,13 @@
   @include before-desktop {
     .Checkout-StickyButtonWrapper {
       padding-top: 0.5rem;
+      padding: 1.5rem 30px calc(env(safe-area-inset-bottom) + 1rem);
+    }
+  }
+  @include mobile {
+    padding-bottom: 120px;
+    .Checkout-StickyButtonWrapper {
+      padding: 1.5rem 10px calc(env(safe-area-inset-bottom) + 1rem);
     }
   }
 
@@ -80,7 +87,7 @@
       margin-bottom: 100px;
 
       .ContentWrapper {
-        max-width: 1440px;
+        max-width: var(--container-max-width);
         display: block;
 
         .Checkout-Step {
@@ -128,23 +135,38 @@
             font-weight: var(--fw-regular);
             font-size: 13px;
             line-height: 20px;
+            &:empty{
+              display: none;
+            }
           }
 
           &-Price {
             font-weight: var(--fw-bold);
             font-size: 13px;
             line-height: 25px;
+            &:empty{
+              display: none;
+            }
           }
 
           &-SummaryItem,
           &-DiscountOptionWrapper {
             padding: 0;
+            &:empty{
+              display: none;
+            }
           }
           &-PromoBlock {
             margin: 10px 0 0;
+            &:empty{
+              display: none;
+            }
           }
           &-DiscountOptionWrapper {
             padding: 10px 0 0;
+            &:empty{
+              display: none;
+            }
           }
         }
       }
@@ -208,7 +230,7 @@
   &-Step {
     @include before-desktop {
       margin: 0 auto;
-      max-width: 700px;
+      // max-width: 700px;
     }
   }
   &-MobileDisplay {
@@ -224,8 +246,17 @@
   }
 
   &-Wrapper {
-    max-width: var(--checkout-max-width);
-
+    // max-width: var(--checkout-max-width);
+    max-width: var(--container-max-width);
+    width: var(--main-container-width-dsk);
+    @include tablet {
+      width: auto;
+      margin: 0 30px;
+    }
+    @include mobile {
+      width: auto;
+      margin: 0 10px;
+    }
     @include desktop {
       display: grid;
       grid-template-columns: minmax(calc(65% - 1rem), 600px) minmax(
@@ -389,13 +420,24 @@
               margin: 10% 5% 10% 10%;
             }
           }
-
-          img {
-            width: 11px;
-            height: auto;
+          .Image{
             float: right;
-            top: 1px;
+            overflow: inherit;
+            .LazyLoad-wrapper {
+              img {
+                width: 11px !important;
+                height: auto !important;
+                float: right;
+                top: 1px;
+              }
+            }
           }
+          // img {
+          //   width: 11px;
+          //   height: auto;
+          //   float: right;
+          //   top: 1px;
+          // }
 
           &_isArabic {
             button {
@@ -496,6 +538,7 @@
 
   &-BackButtons {
     padding: 10px 0;
+    padding-top: 0;
     display: none;
 
     @include desktop {
@@ -563,7 +606,7 @@
         border: 2px solid var(--input-border-color);
         width: 100%;
         padding: 20px;
-        margin: 10px 0;
+        margin: 0 0 10px 0;
       }
 
       &:not(&_isDisabled) {
@@ -574,7 +617,7 @@
             }
           }
         }
-        margin-top: 20px;
+        // margin-top: 20px;
         padding: 20px 30px 0 30px;
         background: var(--white-color);
       }
@@ -595,6 +638,10 @@
     @include desktop {
       display: none !important;
     }
+    @include tablet {
+      width: 100%;
+      margin: 0 0 24px !important;
+    }
   }
   .LoadingBlock {
     @include before-desktop {
@@ -613,9 +660,10 @@
   background-color: var(--white);
   display: flex;
   justify-content: space-between;
-  max-width: 1120px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 20px 0;
+  max-width: var(--container-max-width);
+  width: var(--main-container-width-dsk);
 
   &-BackToShoppingMobile {
     @include desktop {

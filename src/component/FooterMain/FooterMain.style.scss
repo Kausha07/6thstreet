@@ -1,104 +1,135 @@
-:root{
-    --footer-background-color:#f6f6f6;
-    --foter-hyperlink-color: #000;
-    --social-icon-background-color: #fff;
+:root {
+  --footer-background-color: #f6f6f6;
+  --foter-hyperlink-color: #000;
+  --social-icon-background-color: #fff;
 }
 
 .FooterMain {
-    padding: 35px 50px 35px 50px;
-    background: var(--footer-background-color);
+  padding-top: 50px;
+  padding-bottom: 27px;
+  background: var(--footer-background-color);
+  // height: 352px;
 
-    @include before-desktop {
-        display: none;
+  @include before-desktop {
+    display: none;
+  }
+
+  &-Layout {
+    max-width: var(--container-max-width);
+    width: var(--main-container-width-dsk);
+    margin: 0 auto;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    padding-right: 90px;
+    &_isArabic {
+      padding-right: 0px;
+      padding-left: 90px;
     }
 
-    &-Layout{
-        max-width: 1440px;
-        margin: auto;
+    p {
+      letter-spacing: 0;
+      margin-bottom: 20px;
+    }
+  }
+
+  h4 {
+    // text-transform: uppercase;
+    margin-bottom: 6px;
+    font-size: 16px;
+    font-weight: var(--fw-demi);
+    letter-spacing: 0;
+    line-height: 22px;
+  }
+
+  &-Column {
+    min-height: 240px;
+
+    span {
+      display: block;
+      font-weight: var(--fw-regular);
+      font-size: 14px;
+    }
+  }
+
+  &-Nav {
+    letter-spacing: 0;
+    line-height: 35px;
+
+    a {
+      font-size: 14px;
+      letter-spacing: 0;
+      line-height: 35px;
+      font-weight: var(--fw-regular);
+      text-decoration: none;
+      color: var(--foter-hyperlink-color);
+      div {
         display: flex;
-        justify-content: space-between;
-
-        p {
-            letter-spacing: 0;
-            margin-bottom: 20px;
+        span:nth-last-of-type(2){
+          font-size: 20px;
+          line-height: 35px;
+          transform: translateY(-2px);
+          font-weight: var(--fw-light);
         }
+        span:nth-last-of-type(4){
+          font-size: 20px;
+          line-height: 35px;
+          transform: translateY(-2px);
+          font-weight: var(--fw-light);
+        }
+      }
     }
 
-    h4 {
-        text-transform: uppercase;
-        font-size: 16px;
-        font-weight: var(--fw-bold);
-        letter-spacing: 0;
-        line-height: 22px;
-        margin-bottom: 6px;
+    li::before {
+      content: "";
     }
 
-    &-Column{
-        min-height: 240px;
+    li {
+      padding-left: 0;
+      margin-bottom: 0;
+    }
+  }
 
-        span {
-            display: block;
-            font-weight: var(--fw-regular);
-            font-size: 14px;
-        }
+  &-WrapperFirst {
+    margin-bottom: 24px;
+    margin-top: 20px;
+    .Image {
+      display: inline-block;
+      width: 151px;
+      height: 45px;
+    }
+    .appGallery {
+      height: 49px;
+    }
+    img {
+      cursor: pointer;
+      max-height: auto !important;
+      max-width: 151px !important;
+    }
+  }
+
+  &-WrapperSecond {
+    padding-top: 8px;
+
+    img {
+      padding-bottom: 2px;
     }
 
-    &-Nav {
-        letter-spacing: 0;
-        line-height: 35px;
-
-        a {
-            font-size: 14px;
-            font-weight: var(--fw-regular);
-            text-decoration: none;
-            color: var(--foter-hyperlink-color);
-        }
-
-        li::before{
-            content: "";
-        }
-
-        li {
-            padding-left: 0;
-            margin-bottom: 0;
-        }
+    span {
+      padding: 5px 0 30px;
+      margin: 0 11.5px;
     }
+  }
 
-    &-WrapperFirst {
-        margin-bottom: 45px;
-        margin-top: 10px;
-
-        img {
-            cursor: pointer;
-            max-height: auto;
-            max-width: 160px;
-        }
-    }
-
-    &-WrapperSecond {
-        padding-top: 10px;
-
-        img {
-            padding-bottom: 2px;
-        }
-
-        span {
-            border: 1px solid var(--black-color);
-            padding: 5px 0 30px;
-            margin: 0 10px;
-        }
-    }
-
-    &-SocialIcon {
-        display: inline-block;
-        vertical-align: top;
-        padding: 20px;
-        background: var(--social-icon-background-color);
-        border-radius: 50%;
-        float: none;
-        width: 60px;
-        height: 60px;
-        text-align: center;
-    }
-
+  &-SocialIcon {
+    display: inline-block;
+    vertical-align: top;
+    padding: 20px;
+    background: var(--social-icon-background-color);
+    border-radius: 50%;
+    float: none;
+    width: 60px;
+    height: 60px;
+    text-align: center;
+  }
 }

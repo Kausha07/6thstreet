@@ -7,6 +7,7 @@ import { getCountryFromUrl } from "Util/Url/Url";
 import isMobile from "Util/Mobile";
 import pencil from "./icons/edit_btn.png";
 import trash from "./icons/trash.png";
+import Image from "Component/Image";
 import "./CheckoutAddressTable.style.scss";
 import editLogo from "../CheckoutAddressBook/icons/checkmark-circle-active.png";
 export class CheckoutAddressTable extends SourceCheckoutAddressTable {
@@ -42,9 +43,13 @@ export class CheckoutAddressTable extends SourceCheckoutAddressTable {
     const { isArabic } = this.state;
 
     return (
-      <div block="MyAccountAddressCard" onClick={this.onAddressClick} mods={{ isSelected }}>
+      <div
+        block="MyAccountAddressCard"
+        onClick={this.onAddressClick}
+        mods={{ isSelected }}
+      >
         <div block="MyAccountAddressCard" elem="EditButton" mods={{ isArabic }}>
-          <div >
+          <div>
             <div block="MyAccountAddressCard" elem="Default">
               {def}
             </div>
@@ -109,13 +114,17 @@ export class CheckoutAddressTable extends SourceCheckoutAddressTable {
           type="button"
           onClick={this.onEdit}
         >
-          <img
+          <Image lazyLoad={true}
             block="MyAccountAddressTable"
-            elem="Icon"
+            mix={{
+              block: "MyAccountAddressTable",
+              elem: "Edit",
+            }}
             mods={{ pencil: true }}
             alt="pencil"
             src={pencil}
           />
+
         </button>
         <button
           block="MyAccountAddressTable"
@@ -123,9 +132,12 @@ export class CheckoutAddressTable extends SourceCheckoutAddressTable {
           type="button"
           onClick={onDeleteClick}
         >
-          <img
+          <Image lazyLoad={true}
             block="MyAccountAddressTable"
-            elem="Icon"
+            mix={{
+              block: "MyAccountAddressTable",
+              elem: "Trash",
+            }}
             mods={{ trash: true }}
             alt="trash"
             src={trash}

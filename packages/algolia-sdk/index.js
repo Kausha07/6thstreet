@@ -1,9 +1,12 @@
 import {
+  autocompleteSearch,
   getBrands,
   getPDP,
   getPLP,
   getPopularBrands,
   getProductBySku,
+  getSuggestions,
+  getTopSearches,
   getWishlistProduct,
   init,
   logAlgoliaAnalytics,
@@ -30,7 +33,11 @@ const AlgoliaSDK = {
     getPLP(URL, { client: AlgoliaSDK.client, env: AlgoliaSDK.env }),
   getPDP: (params) => getPDP(params, { index: AlgoliaSDK.index }),
   searchBy: (params) => searchBy(params, { index: AlgoliaSDK.index }),
-  // getSuggestions: (params) => getSuggestions(params, { index: AlgoliaSDK.index }),
+  getSuggestions: (params) =>
+    getSuggestions(params, { index: AlgoliaSDK.index }),
+  autocompleteSearch: (params) =>
+    autocompleteSearch(params, { index: AlgoliaSDK.index }),
+  getTopSearches: () => getTopSearches({ index: AlgoliaSDK.index }),
   getPopularBrands: (limit) =>
     getPopularBrands(limit, { index: AlgoliaSDK.index }),
   getBrands: (gender) => getBrands(gender, { index: AlgoliaSDK.index }),

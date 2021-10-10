@@ -126,7 +126,8 @@ class PLPFilterOption extends PureComponent {
               id={ facet_value + initialFacetKey }
               name={ initialFacetKey }
               value={ facet_value }
-              defaultChecked={ defaultCheck || checked || onSelectChecked }
+              defaultCheck={ defaultCheck || checked || onSelectChecked }
+              checked={ defaultCheck || checked || onSelectChecked }
             />
         );
     }
