@@ -61,7 +61,7 @@ class DynamicContentVueSlider extends PureComponent {
         });
       })
       .catch((err) => {
-        console.log("pdp widget vue query catch", err);
+        console.error("pdp widget vue query catch", err);
       });
   };
 

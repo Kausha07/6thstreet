@@ -148,7 +148,7 @@ export class SearchSuggestionContainer extends PureComponent {
         });
       })
       .catch((err) => {
-        console.log("fetchVueData error", err);
+        console.error("fetchVueData error", err);
       });
   }
 
@@ -171,7 +171,7 @@ export class SearchSuggestionContainer extends PureComponent {
         });
       })
       .catch((err) => {
-        console.log("fetchVueData error", err);
+        console.error("fetchVueData error", err);
       });
   }
 

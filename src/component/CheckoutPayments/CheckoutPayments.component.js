@@ -80,7 +80,6 @@ export class CheckoutPayments extends SourceCheckoutPayments {
       isClickAndCollect
     } = this.props;
     const { m_code } = method;
-    console.log( isClickAndCollect )
     if(m_code==="msp_cashondelivery" && isClickAndCollect){
       return null;
     }

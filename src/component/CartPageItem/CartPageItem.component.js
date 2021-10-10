@@ -459,7 +459,6 @@ export class CartItem extends PureComponent {
 
   render() {
     const { isLoading } = this.props;
-    console.log("this.props", this.props);
     return (
       <li block="CartPageItem">
         <Loader isLoading={isLoading} />

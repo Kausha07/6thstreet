@@ -345,7 +345,6 @@ export class CartItemContainer extends PureComponent {
       item: { qty },
     } = this.props;
     const { showCartItemQuantityPopup } = this.state;
-    console.log("container props", this.props);
     return (
       <>
         <CartPageItem

@@ -57,7 +57,6 @@ class DynamicContentTwiceBanner extends PureComponent {
     }
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        console.log("twice banner component in view port ", entry);
         this.sendImpressions();
       }
     });

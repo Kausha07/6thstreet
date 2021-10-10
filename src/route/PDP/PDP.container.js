@@ -106,7 +106,6 @@ export class PDPContainer extends PureComponent {
   }
 
   componentDidMount() {
-    console.log("pdp called");
     const {
       product: { product_type_6s, sku, url },
       location: { state },

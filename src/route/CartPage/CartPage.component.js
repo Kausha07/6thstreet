@@ -408,7 +408,6 @@ export class CartPage extends PureComponent {
     const { history } = this.props;
     const self = this;
     function goHome() {
-      console.log(self.shouldMobileBottomBarHidden);
       self.shouldMobileBottomBarHidden();
       history.push("/");
     }

@@ -84,7 +84,6 @@ class DynamicContentRichContentBanner extends PureComponent {
     }
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        console.log("rich content banner component in view port ", entry);
         this.sendImpressions();
       }
     });

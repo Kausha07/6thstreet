@@ -861,8 +861,6 @@ class SearchSuggestion extends PureComponent {
             requestedGender?.charAt(0),
             requestedGender?.charAt(0).toUpperCase()
           );
-          console.log("genderInURL", genderInURL);
-          console.log("gender", gender);
         } else {
           genderInURL = "";
         }

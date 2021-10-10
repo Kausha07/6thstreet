@@ -43,7 +43,7 @@ class EmptySearch extends PureComponent {
         });
       })
       .catch((err) => {
-        console.log("fetchVueData error", err);
+        console.error("fetchVueData error", err);
       });
   }
 

@@ -517,7 +517,6 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       total: { label: default_title, amount: total },
       lineItems: LineItems
     };
-    console.log("payment request payload", paymentRequest)
     savePaymentInformationApplePay({billing_address:shippingAddress, paymentMethod: {code: "checkout_apple_pay"}})
     const applePaySession = new window.ApplePaySession(1, paymentRequest);
 
@@ -551,14 +550,12 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     } = this.props;
     applePaySession.onvalidatemerchant = (event) => {
       const promise = this._performValidation(event.validationURL);
-      console.log("validation URL", event.validationURL)
       promise
         .then((response) => {
           const {
             verifyCheckoutComApplePay: merchantSession,
             verifyCheckoutComApplePay: { statusMessage = "" },
           } = response;
-          console.log("response validation", response)
           if (statusMessage) {
             showError(__(statusMessage));
             Logger.log("Cannot validate merchant:", merchantSession);
@@ -569,7 +566,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
             applePaySession.completeMerchantValidation(merchantSession);
             Logger.log("Completed merchant validation", merchantSession);
           } catch (error) {
-            console.log("error on validation complete", error)
+            console.error("error on validation complete", error)
           }
         })
         .catch((error) => Logger.log(error));
@@ -582,9 +579,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
         label: default_title,
         amount: grand_total,
       };
-      console.log("shipping contact selected", status, newTotal)
-      try {
-        
+      try {      
         applePaySession.completeShippingContactSelection(
           status,
           [],
@@ -605,7 +600,6 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
         amount: grand_total,
       };
       try {
-        console.log("shipping method selected", status, newTotal)
         applePaySession.completeShippingMethodSelection(
           status,
           newTotal,
@@ -622,7 +616,6 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
         label: default_title,
         amount: grand_total,
       };
-      console.log("payment method selected", newTotal)
       try {
         applePaySession.completePaymentMethodSelection(
           newTotal,
@@ -634,13 +627,10 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     };
 
     applePaySession.onpaymentauthorized = (event) => {
-      console.log("payment authorization", event?.payment?.token?.paymentData)
-
       tokenize({
         type: "applepay",
         token_data: event.payment.token.paymentData,
       }).then((response) => {
-        console.log("payment auth response")
         if (response && response.token) {
           const data = {
             source: {

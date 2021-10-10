@@ -87,7 +87,6 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         const customerData = BrowserDatabase.getItem("customer");
         const userID = customerData && customerData.id ? customerData.id : null;
         const locale = VueIntegrationQueries.getLocaleFromUrl();
-        console.log("window.location.href", window.location.href);
         VueIntegrationQueries.vueAnalayticsLogger({
           event_name: VUE_PAGE_VIEW,
           params: {
