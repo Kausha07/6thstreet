@@ -612,7 +612,13 @@ class SearchSuggestion extends PureComponent {
   // recommended for you
 
   renderRecommendedForYou = () => {
-    const { recommendedForYou, renderMySignInPopup } = this.props;
+    const {
+      recommendedForYou,
+      renderMySignInPopup,
+      location: { state },
+    } = this.props;
+    const sku = JSON.parse(localStorage.getItem("PRODUCT_SKU"));
+    const sourceCatgID = JSON.parse(localStorage.getItem("PRODUCT_CATEGORY"));
     if (recommendedForYou && recommendedForYou.length > 0) {
       return (
         <div className="recommendedForYouSliderBox">
@@ -623,8 +629,9 @@ class SearchSuggestion extends PureComponent {
             heading={__("Recommended for you")}
             key={`DynamicContentVueProductSliderContainer99`}
             pageType="search"
-            sourceProdID={null}
-            sourceCatgID={null}
+            sourceProdID={sku ? sku : null}
+            sourceCatgID={sourceCatgID ? sourceCatgID : null}
+            prevPath={state?.prevPath ? state?.prevPath : null}
           />
         </div>
       );
