@@ -1,6 +1,5 @@
 import { isSignedIn, ONE_HOUR } from 'Util/Auth';
 import BrowserDatabase from 'Util/BrowserDatabase';
-import { getStore } from 'Store';
 
 import {
     PROCESSING_CART_REQUEST,
@@ -20,9 +19,6 @@ export const CART_ID_CACHE_KEY = 'CART_ID_CACHE_KEY';
 
 export const CART_ITEMS_CACHE_KEY = 'CART_ITEMS_CACHE_KEY';
 
-// const {
-//     Cart: { cartId },
-// } = getStore().getState();
 export const getInitialState = () => ({
     cartId: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
     // TODO set initial data to empty cart structure???
@@ -56,7 +52,6 @@ const removeCartItem = (cartItems, itemToRemove) => {
 };
 
 export const CartReducer = (state = getInitialState(), action) => {
-    console.log("initial store values", getStore().getState())
     const {
         type, cartId, cartItem, cartTotals, requestStatus, checkoutDetails
     } = action;
