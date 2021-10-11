@@ -101,7 +101,7 @@ export class PLPDispatcher {
   _getInitalOptions(options = {}) {
     // eslint-disable-next-line no-unused-vars
     return Object.entries(options).reduce((acc, [key, value]) => {
-      if (["q", "sort", "page"].includes(key) || /categories\./.test(key)) {
+      if (["q", "sort", "page","gender"].includes(key) || /categories\./.test(key)) {
         acc[key] = value;
       }
 
