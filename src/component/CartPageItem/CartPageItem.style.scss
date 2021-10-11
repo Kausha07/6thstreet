@@ -18,7 +18,7 @@
   --cart-item-divider-color: var(--expandable-content-divider-color);
 
   --Gallery: #efefef;
-  --Cardinal: #d12229;
+  --Cardinal: #d12228;
 }
 
 .CartPageItem {
@@ -69,7 +69,7 @@
 
   &-Content {
     height: auto;
-    width: 60%;
+    width: 50%;
 
     @include desktop() {
       height: 130px;
@@ -241,7 +241,8 @@
   &-ColSizeQty {
     color: var(--Tundora);
     font-weight: var(--fw-regular);
-    width: 200px;
+    width: 100%;
+    word-wrap: break-word;
     display: flex;
     align-items: center;
     flex-wrap: wrap;

@@ -137,7 +137,6 @@ class DynamicContentSliderWithLabel extends PureComponent {
     }
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        console.log("slider with label component in view port ", entry);
         this.sendImpressions();
       }
     });

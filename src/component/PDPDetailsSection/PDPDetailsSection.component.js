@@ -498,7 +498,7 @@ class PDPDetailsSection extends PureComponent {
     );
 
     return (
-      <div block="PDPDetailsSection" elem="Highlights">
+      <div block="PDPDetailsSection" elem="Highlights" mods={{isArabic: isArabic()}}>
         <h4>{__("Highlights")}</h4>
         <ul>{this.renderListItems(highlights)}</ul>
         {this.renderModelDetails(model_height, model_wearing_size)}

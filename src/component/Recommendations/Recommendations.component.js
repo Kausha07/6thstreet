@@ -15,7 +15,6 @@ class Recommendations extends PureComponent {
   }
 
   renderProduct = (product, index, qid) => {
-    // debugger
     const { sku, price } = product;
     const { isVueData } = this.props;
     return (

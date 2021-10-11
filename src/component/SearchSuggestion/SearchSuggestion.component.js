@@ -861,8 +861,6 @@ class SearchSuggestion extends PureComponent {
             requestedGender?.charAt(0),
             requestedGender?.charAt(0).toUpperCase()
           );
-          console.log("genderInURL", genderInURL);
-          console.log("gender", gender);
         } else {
           genderInURL = "";
         }
@@ -871,14 +869,13 @@ class SearchSuggestion extends PureComponent {
     return (
       <li key={i}>
         <Link
-          to={{
-            pathname: link
+          to={
+            link
               ? link
               : `/catalogsearch/result/?q=${encodeURIComponent(
                   name
-                )}&dFR[gender][0]=${genderInURL}`,
-            state: { prevPath: window.location.href },
-          }}
+                )}&dFR[gender][0]=${genderInURL}`
+          }
           onClick={() => this.onSearchQueryClick(name)}
         >
           <div block="SearchSuggestion" elem="TopSearches">

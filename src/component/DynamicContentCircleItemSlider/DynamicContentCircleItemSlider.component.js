@@ -67,9 +67,6 @@ class DynamicContentCircleItemSlider extends PureComponent {
         this.setState(
           {
             livePartyItems: newData,
-          },
-          () => {
-            console.log(this.state.livePartyItems);
           }
         );
       })

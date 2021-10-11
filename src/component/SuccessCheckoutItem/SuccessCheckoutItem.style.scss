@@ -9,7 +9,7 @@
     --successcheckout-item-action-border: var(--successcheckout-item-divider-color);
 
     --Gallery: #EFEFEF;
-    --Cardinal: #D12229;
+    --Cardinal: #D12228;
 }
 
 .SuccessCheckoutItem {
@@ -25,7 +25,7 @@
             text-decoration: none;
         }
     }
- 
+
     &-Option,
     & {
         padding-left: 0;
@@ -185,7 +185,7 @@
 
                 color: var(--Black);
                 text-decoration-line: line-through;
-                -webkit-text-decoration-line: line-through; 
+                -webkit-text-decoration-line: line-through;
                 padding-right: 5px;
                 font-weight: var(--fw-regular);
             }
@@ -202,7 +202,7 @@
         display: flex;
         flex-direction: row-reverse;
 
-        &_isArabic{ 
+        &_isArabic{
             flex-direction: row;
             margin-right: 5px;
         }

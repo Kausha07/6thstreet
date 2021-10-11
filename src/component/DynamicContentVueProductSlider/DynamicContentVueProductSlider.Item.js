@@ -11,6 +11,7 @@ import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
 import { getUUID } from "Util/Auth";
 import Event, { VUE_CAROUSEL_CLICK } from "Util/Event";
+import { parseURL } from "Util/Url";
 
 export const mapStateToProps = (state) => ({
   country: state.AppState.country,
@@ -30,7 +31,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
     };
   }
 
-  onclick = (widgetID) => {
+  onclick = (widgetID, item) => {
     const {
       pageType,
       data: { category, sku, link },
@@ -170,9 +171,10 @@ class DynamicContentVueProductSliderItem extends PureComponent {
     } = this.props;
     const { isArabic } = this.state;
     let newLink = link;
-    if (this.props.data.url) {
-      newLink = this.props.data.url;
+    if (data?.url) {
+      newLink = data.url;
     }
+  
     return (
       <div
         block="VueProductSlider"
@@ -184,7 +186,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
         ref={this.childRef}
       >
         <Link
-          to={newLink.split("?_ga")[0]}
+          to={parseURL(newLink)?.pathname?.split("?_ga")[0] || "/"}
           data-banner-type="vueSlider"
           block="VueProductSlider-Link"
           onClick={() => {

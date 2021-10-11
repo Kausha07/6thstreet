@@ -233,11 +233,11 @@ export class CheckoutContainer extends SourceCheckoutContainer {
             try {
               const cResponse =  await capturePayment(paymentId, order_id)
                 if(cResponse){
-                  const {pun,requested_on,amount , currency }= cResponse
+                  const {pun,requested_on,amount , currency } = cResponse
                   this.setState({QPayDetails: {PUN : pun, date:requested_on, status:"SUCCESS"}})
                 }
             } catch (error) {
-              console.log("capture api response", error)
+              console.error("capture api response", error)
             }
           }
 
@@ -253,7 +253,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
                   this.setState({QPayDetails: {PUN : pun, date:requested_on, amount:`${currency} ${amount}`, status:"FAILED", Payment_ID: paymentId}})
                 }
             } catch (error) {
-              console.log("capture api response",error)
+              console.error("capture api response",error)
             }
           }
         } 
@@ -262,7 +262,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         localStorage.removeItem("QPAY_ORDER_DETAILS");
       }
     } catch (error) {
-      console.log("error while auth in qpay case", error)
+      console.error("error while auth in qpay case", error)
     }
   }
 

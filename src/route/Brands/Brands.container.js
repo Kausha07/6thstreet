@@ -81,9 +81,6 @@ class BrandsContainer extends PureComponent {
         this.setState(
           {
             brandMapping: data.brands,
-          },
-          () => {
-            console.log(this.state.brandMapping);
           }
         );
       });

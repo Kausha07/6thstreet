@@ -55,7 +55,6 @@ export class HomePageContainer extends PureComponent {
   }
 
   componentDidMount() {
-    console.log("this.props", this.props);
     const {
       location: { state },
     } = this.props;

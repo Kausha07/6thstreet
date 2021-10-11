@@ -249,6 +249,9 @@
             width: 20px !important;
             height: auto !important;
             margin: 0 12px 0 0;
+            @include mobile {
+              margin: 0 32px 0 0;
+            }
           }
         }
       }

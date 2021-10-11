@@ -218,7 +218,6 @@ class RecommendedForYouVueSlider extends PureComponent {
     const items = this.getProducts();
     const { isHome } = this.props;
     const { widgetID, pageType, renderMySignInPopup } = this.props;
-    // debugger
     return (
       <DragScroll data={{ rootClass: "ScrollWrapper", ref: this.cmpRef }}>
         <>

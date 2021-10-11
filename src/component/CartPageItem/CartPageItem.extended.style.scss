@@ -74,6 +74,11 @@
       }
     }
 
+    &-DiscountPrice {
+      flex-wrap: wrap;
+      line-height: 18px;
+    }
+
     &_isArabic {
       span {
         padding-right: 0;

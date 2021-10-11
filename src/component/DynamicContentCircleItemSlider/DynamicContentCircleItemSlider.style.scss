@@ -145,14 +145,14 @@
         padding-right: 10px;
       }
 
-      @include desktop{
-        &:nth-child(2) {
-          margin-left: auto;
-        }
-        &:nth-last-child(2) {
-          margin-right: auto;
-        }
-      }
+      // @include desktop{
+      //   &:nth-child(2) {
+      //     margin-left: auto;
+      //   }
+      //   &:nth-last-child(2) {
+      //     margin-right: auto;
+      //   }
+      // }
 
 
 

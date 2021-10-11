@@ -48,6 +48,7 @@ export const getStaticFile = async (key, TemplateParamsOverride = {}) => {
 
     return res;
   } catch (error) {
-    return error;
+    console.error(error);
+    throw new Error(error);
   }
 };
