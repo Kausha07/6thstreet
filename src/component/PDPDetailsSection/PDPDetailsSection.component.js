@@ -1,7 +1,7 @@
-import PropTypes from "prop-types";
 // import PropTypes from 'prop-types';
 import Accordion from "Component/Accordion";
 import ShareButton from "Component/ShareButton";
+import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { Product } from "Util/API/endpoint/Product/Product.type";
 import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
@@ -34,6 +34,19 @@ class PDPDetailsSection extends PureComponent {
 
   componentDidMount() {
     this.getPdpWidgetsVueData();
+    const {
+      product: { sku = null, categories_without_path = [] },
+    } = this.props;
+    localStorage.setItem("PRODUCT_SKU", JSON.stringify(sku));
+    localStorage.setItem(
+      "PRODUCT_CATEGORY",
+      JSON.stringify(categories_without_path[0])
+    );
+  }
+
+  componentWillUnmount() {
+    localStorage.removeItem("PRODUCT_SKU");
+    localStorage.removeItem("PRODUCT_CATEGORY");
   }
 
   getPdpWidgetsVueData() {
@@ -41,7 +54,7 @@ class PDPDetailsSection extends PureComponent {
     if (pdpWidgetsData && pdpWidgetsData.length > 0) {
       //load vue data for widgets only if widgets data available
       const userData = BrowserDatabase.getItem("MOE_DATA");
-      if(userData?.USER_DATA) {
+      if (userData?.USER_DATA) {
         return;
       }
 
@@ -498,7 +511,11 @@ class PDPDetailsSection extends PureComponent {
     );
 
     return (
-      <div block="PDPDetailsSection" elem="Highlights" mods={{isArabic: isArabic()}}>
+      <div
+        block="PDPDetailsSection"
+        elem="Highlights"
+        mods={{ isArabic: isArabic() }}
+      >
         <h4>{__("Highlights")}</h4>
         <ul>{this.renderListItems(highlights)}</ul>
         {this.renderModelDetails(model_height, model_wearing_size)}

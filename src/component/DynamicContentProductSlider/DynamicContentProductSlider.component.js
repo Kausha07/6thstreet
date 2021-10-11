@@ -1,4 +1,5 @@
 /* eslint-disable no-constant-condition */
+import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
 import ProductItem from "Component/ProductItem";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
@@ -8,7 +9,6 @@ import Event from "Util/Event";
 import DynamicContentVueProductSliderContainer from "./../DynamicContentVueProductSlider/DynamicContentVueProductSlider.container";
 import { HOME_PAGE_TRANSLATIONS } from "./DynamicContentProductSlider.config";
 import "./DynamicContentProductSlider.style";
-import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
 
 class DynamicContentProductSlider extends PureComponent {
   static propTypes = {
@@ -94,8 +94,13 @@ class DynamicContentProductSlider extends PureComponent {
   renderProductsDesktop() {}
 
   renderTitle() {
-    const { title } = this.props;
-    const finalTitle = isArabic() ? HOME_PAGE_TRANSLATIONS[title] : title;
+    const { title, isHomePage } = this.props;
+    let finalTitle;
+    if (isHomePage) {
+      finalTitle = title;
+    } else {
+      finalTitle = isArabic() ? HOME_PAGE_TRANSLATIONS[title] : title;
+    }
     return (
       <h2 mix={{ block: "DynamicContentProductSlider", elem: "Header" }}>
         {finalTitle}
@@ -118,7 +123,7 @@ class DynamicContentProductSlider extends PureComponent {
 
   render() {
     const { isArabic, withViewAll, eventRegistered } = this.state;
-    const { products,renderMySignInPopup } = this.props;
+    const { products, renderMySignInPopup } = this.props;
     if (products.length === 0) {
       return null;
     }
@@ -129,8 +134,13 @@ class DynamicContentProductSlider extends PureComponent {
       }, 3000);
     }
 
-    const { title } = this.props;
-    const finalTitle = isArabic ? HOME_PAGE_TRANSLATIONS[title] : title;
+    const { title, isHomePage } = this.props;
+    let finalTitle;
+    if (isHomePage) {
+      finalTitle = title;
+    } else {
+      finalTitle = isArabic() ? HOME_PAGE_TRANSLATIONS[title] : title;
+    }
     const productsDesktop = (
       <React.Fragment>
         <DynamicContentVueProductSliderContainer
@@ -142,9 +152,6 @@ class DynamicContentProductSlider extends PureComponent {
           isHome={true}
           pageType={"home"}
         />
-        {/* );
-                        })
-                    } */}
       </React.Fragment>
     );
 
@@ -156,7 +163,10 @@ class DynamicContentProductSlider extends PureComponent {
       <div
         ref={setRef}
         id="productSlider"
-        mix={{ block: "DynamicContentProductSlider", mods: { isArabic } }}
+        mix={{
+          block: "DynamicContentProductSliderHomePage",
+          mods: { isArabic },
+        }}
       >
         {productsDesktop}
       </div>

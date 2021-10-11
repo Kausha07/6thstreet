@@ -37,7 +37,13 @@ class RecommendedForYouVueSlider extends PureComponent {
     if (this.state.customScrollWidth < 0) {
       this.renderScrollbar();
     }
-    const { widgetID, pageType = "home" } = this.props;
+    const {
+      widgetID,
+      pageType = "home",
+      prevPath = null,
+      sourceCatgID,
+      sourceProdID,
+    } = this.props;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     const customer = BrowserDatabase.getItem("customer");
     const userID = customer && customer.id ? customer.id : null;
@@ -49,9 +55,12 @@ class RecommendedForYouVueSlider extends PureComponent {
         currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),
-        referrer: "desktop",
+        referrer: prevPath,
         widgetID: VueIntegrationQueries.getWidgetTypeMapped(widgetID, pageType),
         userID: userID,
+        sourceProdID: sourceProdID,
+        sourceCatgID: sourceCatgID,
+        url: window.location.href,
       },
     });
     this.registerViewPortEvent();
@@ -88,7 +97,12 @@ class RecommendedForYouVueSlider extends PureComponent {
 
   async handleContainerScroll(widgetID, event) {
     const { isArabic } = this.state;
-    const { pageType = "home" } = this.props;
+    const {
+      pageType = "home",
+      prevPath = null,
+      sourceCatgID,
+      sourceProdID,
+    } = this.props;
     const target = event.nativeEvent.target;
     this.scrollerRef.current.scrollLeft = isArabic
       ? Math.abs(target.scrollLeft)
@@ -102,9 +116,6 @@ class RecommendedForYouVueSlider extends PureComponent {
     let index = Math.floor(Math.abs(target.scrollLeft) / width);
     if (this.indexRef.current !== index) {
       this.indexRef.current = index;
-      const productsToRender = this.getProducts();
-      let sourceProdID = productsToRender?.[index]?.sku;
-      let sourceCatgID = productsToRender?.[index]?.category;
       const locale = VueIntegrationQueries.getLocaleFromUrl();
       VueIntegrationQueries.vueAnalayticsLogger({
         event_name: VUE_CAROUSEL_SWIPE,
@@ -114,7 +125,8 @@ class RecommendedForYouVueSlider extends PureComponent {
           currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
           clicked: Date.now(),
           uuid: getUUID(),
-          referrer: "desktop",
+          referrer: prevPath,
+          url: window.location.href,
           sourceProdID: sourceProdID,
           sourceCatgID: sourceCatgID,
           widgetID: VueIntegrationQueries.getWidgetTypeMapped(
@@ -217,7 +229,14 @@ class RecommendedForYouVueSlider extends PureComponent {
   renderSliderContainer() {
     const items = this.getProducts();
     const { isHome } = this.props;
-    const { widgetID, pageType, renderMySignInPopup } = this.props;
+    const {
+      widgetID,
+      pageType,
+      renderMySignInPopup,
+      prevPath = null,
+      sourceCatgID,
+      sourceProdID,
+    } = this.props;
     return (
       <DragScroll data={{ rootClass: "ScrollWrapper", ref: this.cmpRef }}>
         <>
@@ -242,9 +261,10 @@ class RecommendedForYouVueSlider extends PureComponent {
                   ref={this.itemRef}
                   widgetID={widgetID}
                   pageType={pageType}
-                  sourceProdID={null}
-                  sourceCatgID={null}
+                  sourceProdID={sourceProdID}
+                  sourceCatgID={sourceCatgID}
                   posofreco={i}
+                  prevPath={prevPath}
                 />
               );
             })}
