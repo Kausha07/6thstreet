@@ -1,7 +1,9 @@
 .PageWrapper {
   height: 100vh;
-  //   display: flex;
-  //   flex-direction: column;
+  @include desktop {
+    display: flex;
+    flex-direction: column;
+  }
   .HomePage,
   .SearchPage {
     min-height: 500px;
