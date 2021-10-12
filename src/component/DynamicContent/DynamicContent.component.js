@@ -1,7 +1,4 @@
 // import PropTypes from 'prop-types';
-import { PureComponent } from "react";
-import ReactDOM from "react-dom";
-
 import { PRODUCT_SLIDER_TYPE } from "Component/DynamicContent/DynamicContent.config";
 import DynamicContentBanner from "Component/DynamicContentBanner";
 import DynamicContentCircleItemSlider from "Component/DynamicContentCircleItemSlider";
@@ -9,18 +6,18 @@ import DynamicContentFullWidthBannerSlider from "Component/DynamicContentFullWid
 import DynamicContentGrid from "Component/DynamicContentGrid";
 import DynamicContentMainBanner from "Component/DynamicContentMainBanner";
 import DynamicContentProductSlider from "Component/DynamicContentProductSlider";
-import DynamicContentSliderWithLabel from "Component/DynamicContentSliderWithLabel";
 import DynamicContentRichContentBanner from "Component/DynamicContentRichContentBanner";
-import DynamicContentVueSlider from "Component/DynamicContentVueSlider";
-import { DynamicContent as DynamicContentType } from "Util/API/endpoint/StaticFiles/StaticFiles.type";
+import DynamicContentSliderWithLabel from "Component/DynamicContentSliderWithLabel";
 import DynamicContentTwiceBanner from "Component/DynamicContentTwiceBanner";
-import Event, { EVENT_GTM_IMPRESSIONS_HOME } from "Util/Event";
-import isMobile from "Util/Mobile";
-import Logger from "Util/Logger";
-import VueQuery from "../../query/Vue.query";
-import BrowserDatabase from "Util/BrowserDatabase";
+import DynamicContentVueSlider from "Component/DynamicContentVueSlider";
+import { PureComponent } from "react";
+import { DynamicContent as DynamicContentType } from "Util/API/endpoint/StaticFiles/StaticFiles.type";
 import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
-
+import BrowserDatabase from "Util/BrowserDatabase";
+import Event, { EVENT_GTM_IMPRESSIONS_HOME } from "Util/Event";
+import Logger from "Util/Logger";
+import isMobile from "Util/Mobile";
+import VueQuery from "../../query/Vue.query";
 import "./DynamicContent.style";
 
 class DynamicContent extends PureComponent {
@@ -90,6 +87,7 @@ class DynamicContent extends PureComponent {
     return isValid;
   };
   renderBlock = (block, i) => {
+    console.log("block", block);
     const { type, ...restProps } = block;
     const { promotion_name, tag, items } = block;
     let vueSliderType = [
@@ -113,7 +111,7 @@ class DynamicContent extends PureComponent {
       if (!Component) {
         return null;
       }
-    
+
       return (
         <Component
           ref={this.comprefs[i]}
@@ -123,6 +121,7 @@ class DynamicContent extends PureComponent {
           tag={tag}
           type={type}
           key={i}
+          isHomePage={true}
         />
       );
     } else {
@@ -145,7 +144,7 @@ class DynamicContent extends PureComponent {
         }));
       };
     }
-   
+
     return (
       <Component
         ref={this.comprefs[i]}
@@ -155,6 +154,7 @@ class DynamicContent extends PureComponent {
         renderMySignInPopup={this.props.renderMySignInPopup}
         tag={tag}
         key={i}
+        isHomePage={true}
       />
     );
   };

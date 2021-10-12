@@ -18,14 +18,13 @@
       letter-spacing: 2px;
       line-height: 25px;
       text-transform: uppercase;
-      @include mobile{
+      @include mobile {
         font-size: 15px;
         font-weight: 600;
         letter-spacing: 0;
         text-transform: uppercase;
       }
     }
-
   }
   &-VueProductContainer {
     cursor: pointer;
@@ -38,7 +37,7 @@
       line-height: 19px;
       text-align: start;
       text-transform: uppercase;
-      @include mobile{
+      @include mobile {
         text-align: center;
       }
     }
@@ -49,7 +48,7 @@
       letter-spacing: 0;
       line-height: 15px;
       text-align: start;
-      @include mobile{
+      @include mobile {
         text-align: center;
         width: 100%;
       }
@@ -62,13 +61,21 @@
       letter-spacing: -0.5px;
       line-height: 19px;
       text-align: start;
-      @include mobile{
+      @include mobile {
         text-align: center;
       }
     }
   }
 }
-.DynamicContentProductSlider {
+.DynamicContentProductSliderHomePage {
+    &_isArabic {
+      left: 0;
+      right: 0 !important;
+      text-align: right;
+      transform: translateX(0%) !important;
+    }
+  }
+.DynamicContentProductSlider, .DynamicContentProductSliderHomePage  {
   text-align: left;
   .VueProductSlider {
     &-VueProductContainer {

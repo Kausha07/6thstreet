@@ -69,7 +69,7 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
     setCheckoutCreditCardData: PropTypes.func.isRequired,
     processingRequest: PropTypes.bool.isRequired,
     processingPaymentSelectRequest: PropTypes.bool,
-    isClickAndCollect: PropTypes.bool.isRequired,
+    isClickAndCollect: PropTypes.string.isRequired,
     merchant_id: PropTypes.string,
     showError: PropTypes.func.isRequired,
     supported_networks: PropTypes.arrayOf(PropTypes.string).isRequired,

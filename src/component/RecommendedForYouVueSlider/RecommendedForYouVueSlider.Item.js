@@ -33,6 +33,8 @@ class RecommendedForYouVueSliderItem extends PureComponent {
     const {
       pageType,
       data: { category, sku, link },
+      sourceProdID,
+      sourceCatgID,
       posofreco,
     } = this.props;
     let destProdID = sku;
@@ -49,8 +51,8 @@ class RecommendedForYouVueSliderItem extends PureComponent {
         referrer: window.location.href,
         url: link ? link : null,
         widgetID: VueIntegrationQueries.getWidgetTypeMapped(widgetID, pageType),
-        sourceProdID: null,
-        sourceCatgID: null,
+        sourceProdID: sourceProdID,
+        sourceCatgID: sourceCatgID,
         destprodid: destProdID,
         posofreco: posofreco,
       },
@@ -99,6 +101,7 @@ class RecommendedForYouVueSliderItem extends PureComponent {
   }
 
   renderPrice(price) {
+    const { isArabic } = this.state;
     if (price && price.length > 0) {
       const priceObj = price[0],
         currency = getCurrency();
@@ -111,7 +114,11 @@ class RecommendedForYouVueSliderItem extends PureComponent {
 
       if (basePrice === specialPrice || !specialPrice) {
         return (
-          <div block="VueProductSlider" elem="SpecialPriceCon">
+          <div
+            block="VueProductSlider"
+            elem="SpecialPriceCon"
+            mods={{ isArabic }}
+          >
             <span block="VueProductSlider" elem="PriceWrapper">
               <span
                 id="price"
@@ -123,7 +130,11 @@ class RecommendedForYouVueSliderItem extends PureComponent {
       }
 
       return (
-        <div block="VueProductSlider" elem="SpecialPriceCon">
+        <div
+          block="VueProductSlider"
+          elem="SpecialPriceCon"
+          mods={{ isArabic }}
+        >
           <del block="VueProductSlider" elem="Del">
             <span id="price">{`${currency} ${basePrice}`}</span>
           </del>
