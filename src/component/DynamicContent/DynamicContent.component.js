@@ -87,7 +87,6 @@ class DynamicContent extends PureComponent {
     return isValid;
   };
   renderBlock = (block, i) => {
-    console.log("block", block);
     const { type, ...restProps } = block;
     const { promotion_name, tag, items } = block;
     let vueSliderType = [
