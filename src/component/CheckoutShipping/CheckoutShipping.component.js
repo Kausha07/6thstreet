@@ -24,7 +24,7 @@ export class CheckoutShipping extends SourceCheckoutShipping {
     customer: customerType.isRequired,
     showCreateNewPopup: PropTypes.func.isRequired,
     shippingAddress: PropTypes.object.isRequired,
-    isClickAndCollect: PropTypes.bool.isRequired,
+    isClickAndCollect: PropTypes.string.isRequired,
   };
 
   state = {

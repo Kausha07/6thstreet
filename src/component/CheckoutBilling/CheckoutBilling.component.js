@@ -32,7 +32,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
     processingPaymentSelectRequest: PropTypes.bool,
     processApplePay: PropTypes.bool,
     placeOrder: PropTypes.func,
-    isClickAndCollect: PropTypes.bool.isRequired,
+    isClickAndCollect: PropTypes.string.isRequired,
     isLoading: PropTypes.bool,
     applePayDisabled: PropTypes.bool,
     launchPaymentMethod: PropTypes.func.isRequired,

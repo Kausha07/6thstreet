@@ -139,9 +139,12 @@ export const getCountryCurrencyCode = () => {
 };
 
 export const parseURL = (url) => {
-  if(!!!url){
-    console.error("Pleae provide a valid URL");
-    return;
+  let parsedURL = "/";
+  try {
+    parsedURL = new URL(url)
   }
-  return new URL(url);
+  catch(err) {
+    console.error(err)
+  }
+  return parseURL;
 }

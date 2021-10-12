@@ -37,7 +37,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     selectedPaymentCode: PropTypes.string,
     processApplePay: PropTypes.bool,
     placeOrder: PropTypes.func,
-    isClickAndCollect: PropTypes.bool.isRequired
+    isClickAndCollect: PropTypes.string.isRequired
   };
 
   static defaultProps = {
