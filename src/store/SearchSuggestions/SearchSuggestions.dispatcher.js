@@ -100,7 +100,7 @@ export class SearchSuggestionsDispatcher {
       };
       const querySuggestions =
         data?.hits?.length > 0
-          ? getCustomQuerySuggestions(data?.hits, sourceIndexName, searchQuery)
+          ? getCustomQuerySuggestions(data?.hits, sourceIndexName, data?.query)
           : [defaultHit];
       if (data && data.queryID) {
         queryID = data.queryID;
