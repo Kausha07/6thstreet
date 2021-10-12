@@ -151,6 +151,7 @@ class DynamicContentProductSlider extends PureComponent {
           key={`VueProductSliderContainer`}
           isHome={true}
           pageType={"home"}
+          widgetID={"vue_top_picks_slider"}
         />
       </React.Fragment>
     );
