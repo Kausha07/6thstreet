@@ -598,7 +598,7 @@ export class CheckoutSuccess extends PureComponent {
       paymentMethod,
       selectedCard,
     } = this.props;
-    if (number && expMonth && expYear && cvv) {
+    if (number && expMonth && expYear && cvv && !paymentMethod?.code?.match(/cash/)) {
       const displayNumberDigits = 4;
       const slicedNumber = number.slice(number.length - displayNumberDigits);
 
