@@ -108,7 +108,7 @@ export class Header extends PureComponent {
     if(!isMobile){
       return false
     }
-    const result = this.isPDP()
+    const result = this.isPDP() || location.pathname.match(/cart/)
     return result
   }
   shouldChatBeHidden() {
