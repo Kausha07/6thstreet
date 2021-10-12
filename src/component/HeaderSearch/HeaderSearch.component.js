@@ -133,7 +133,12 @@ class HeaderSearch extends PureComponent {
             }}
             aria-label="Clear search"
           >
-            <Image lazyLoad={true} src={Clear} alt="Clear button" style={{top:'2px'}} />
+            <Image
+              lazyLoad={false}
+              src={Clear}
+              alt="Clear button"
+              style={{ top: "2px" }}
+            />
           </button>
         </Form>
         {showSearch ? (
@@ -149,7 +154,6 @@ class HeaderSearch extends PureComponent {
               onClick={this.closeSearch}
             >
               {__("Cancel")}
-              {/* {svg} */}
             </button>
           </div>
         ) : null}
