@@ -156,6 +156,9 @@
       height: 50px;
       text-transform: uppercase;
       width: 86%;
+       &_isArabic{
+        direction: rtl;
+       }
     }
   }
 }
