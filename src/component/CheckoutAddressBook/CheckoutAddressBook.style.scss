@@ -4,7 +4,7 @@
       position: fixed;
       top: 10px;
     }
-  }  
+  }
   &-Wrapper {
     @include desktop {
       background: var(--white);
@@ -30,7 +30,7 @@
       padding-left: 60px;
       text-align: left;
 
-      &-EditButton{
+      &-EditButton {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
@@ -68,8 +68,8 @@
           opacity: 1;
           top: 40%;
           left: 21px;
-          width: 100%;
-          height: 100%;
+          width: 9%;
+          height: 9%;
           background: url("icons/checkmark-circle-active.png") no-repeat;
           background-size: 18px 18px;
           border: none;
@@ -86,7 +86,7 @@
     &_isArabic {
       .MyAccountAddressCard {
         padding-right: 60px;
-        padding-left: 0;
+        padding-left: 24px;
         text-align: right;
 
         &::before {
@@ -214,9 +214,9 @@
     }
   }
 }
-.EditAddress{
-  &-PopUp{
-    @include before-desktop{
+.EditAddress {
+  &-PopUp {
+    @include before-desktop {
       position: fixed;
       top: 170px;
       height: 100vh !important;

@@ -17,6 +17,7 @@ import {
   cancelOrder,
   getBinPromotion,
   removeBinPromotion,
+  getPaymentAuthorizationQPay
 } from "Util/API/endpoint/Checkout/Checkout.endpoint";
 import {
   createSession,
@@ -186,7 +187,11 @@ export class CheckoutDispatcher {
     return getLastOrder();
   }
 
-  async getPaymentAuthorization(dispatch, paymentId) {
+  async getPaymentAuthorization(dispatch, paymentId, qpaymethod) {
+    if(qpaymethod){
+      return getPaymentAuthorizationQPay({ paymentId });
+
+    }
     return getPaymentAuthorization({ paymentId });
   }
 

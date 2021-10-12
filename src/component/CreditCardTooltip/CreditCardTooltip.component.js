@@ -54,7 +54,7 @@ class CreditCardTooltip extends PureComponent {
         const { bankLogos = [] } = this.props;
 
         return bankLogos.map((bankLogo) => (
-            <Image
+            <Image lazyLoad={true}
               key="bankLogo"
               src={ bankLogo.value }
               ratio="custom"

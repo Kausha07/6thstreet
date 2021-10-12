@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
+import { withRouter } from "react-router";
 import { setGender } from "Store/AppState/AppState.action";
 import { toggleBreadcrumbs } from "Store/Breadcrumbs/Breadcrumbs.action";
 import { updateMeta } from "Store/Meta/Meta.action";
@@ -44,6 +45,7 @@ export class HomePageContainer extends PureComponent {
     dynamicContent: [],
     isLoading: true,
     defaultGender: "women",
+    isMobile: isMobile.any(),
   };
 
   constructor(props) {
@@ -53,6 +55,9 @@ export class HomePageContainer extends PureComponent {
   }
 
   componentDidMount() {
+    const {
+      location: { state },
+    } = this.props;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_PAGE_VIEW,
@@ -62,7 +67,8 @@ export class HomePageContainer extends PureComponent {
         currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),
-        referrer: "desktop",
+        referrer: state?.prevPath ? state?.prevPath : null,
+        url: window.location.href,
       },
     });
     const { gender, toggleBreadcrumbs } = this.props;
@@ -121,6 +127,20 @@ export class HomePageContainer extends PureComponent {
     return isMobile.any() ? "m/" : "d/";
   }
 
+  async fetchDataFromLocal() {
+    const { isMobile } = this.state;
+    let fileName = "women.json";
+    if (isMobile) {
+      fileName = "women_mobile.json";
+    }
+    return fetch(fileName, {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    });
+  }
+
   async requestDynamicContent(isUpdate = false) {
     const { gender } = this.props;
     const devicePrefix = this.getDevicePrefix();
@@ -129,6 +149,7 @@ export class HomePageContainer extends PureComponent {
       this.setState({ isLoading: true });
     }
 
+    // TODO commented thiss try catch block temp uncomment after development
     try {
       const dynamicContent = await getStaticFile(
         HOME_STATIC_FILE_KEY,
@@ -144,14 +165,28 @@ export class HomePageContainer extends PureComponent {
       // TODO: handle error
       Logger.log(e);
     }
+
+    // // TODO remove this try catch block after development
+    // try {
+    //   const response = await (await this.fetchDataFromLocal()).json();
+    //   const dynamicContent = response.data ? response.data : [];
+    //   this.setState({
+    //     dynamicContent: Array.isArray(dynamicContent) ? dynamicContent : [],
+    //     isLoading: false,
+    //   });
+    // } catch (error) {
+    //   Logger.log(e);
+    // }
   }
 
   containerProps = () => {
+    const { gender } = this.props;
     const { dynamicContent, isLoading } = this.state;
 
     return {
       dynamicContent,
       isLoading,
+      gender,
     };
   };
 
@@ -166,4 +201,6 @@ export class HomePageContainer extends PureComponent {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomePageContainer);
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(HomePageContainer)
+);

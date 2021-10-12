@@ -1,12 +1,14 @@
 /* eslint-disable react/prop-types */
 import { CUSTOMER_ACCOUNT_PAGE } from "Component/Header/Header.config";
 import PropTypes from "prop-types";
+import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
 import { MY_ACCOUNT_URL } from "Route/MyAccount/MyAccount.config";
 import MyAccountContainer, {
   tabMap,
 } from "Route/MyAccount/MyAccount.container";
+import CartDispatcher from "Store/Cart/Cart.dispatcher";
 import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
 import ClubApparelDispatcher from "Store/ClubApparel/ClubApparel.dispatcher";
 import { updateMeta } from "Store/Meta/Meta.action";
@@ -18,13 +20,12 @@ import { toggleOverlayByKey } from "Store/Overlay/Overlay.action";
 import { customerType } from "Type/Account";
 import { TotalsType } from "Type/MiniCart";
 import Algolia from "Util/API/provider/Algolia";
-import { getUUIDToken } from "Util/Auth";
-import { ADD_TO_CART_ALGOLIA } from "Util/Event";
+import { getUUID, getUUIDToken } from "Util/Auth";
+import BrowserDatabase from "Util/BrowserDatabase";
+import { ADD_TO_CART_ALGOLIA, VUE_BUY } from "Util/Event";
 import history from "Util/History";
 import isMobile from "Util/Mobile";
 import CheckoutSuccess from "./CheckoutSuccess.component";
-import CartDispatcher from "Store/Cart/Cart.dispatcher";
-
 
 export const BreadcrumbsDispatcher = import(
   "Store/Breadcrumbs/Breadcrumbs.dispatcher"
@@ -59,7 +60,8 @@ export const mapDispatchToProps = (dispatch) => ({
     MyAccountDispatcher.then(({ default: dispatcher }) =>
       dispatcher.requestCustomerData(dispatch)
     ),
-    setCheckoutDetails: (checkoutDetails) => CartDispatcher.setCheckoutStep(dispatch,checkoutDetails),
+  setCheckoutDetails: (checkoutDetails) =>
+    CartDispatcher.setCheckoutStep(dispatch, checkoutDetails),
 });
 
 export class CheckoutSuccessContainer extends PureComponent {
@@ -141,10 +143,10 @@ export class CheckoutSuccessContainer extends PureComponent {
       shippingAddress: { phone: guestPhone },
       isSignedIn,
       totals,
-      setCheckoutDetails
+      setCheckoutDetails,
     } = this.props;
 
-    setCheckoutDetails(true)
+    setCheckoutDetails(true);
 
     var data = localStorage.getItem("customer");
     let userData = JSON.parse(data);
@@ -152,6 +154,9 @@ export class CheckoutSuccessContainer extends PureComponent {
     if (userData?.data?.id) {
       userToken = userData.data.id;
     }
+    const customerData = BrowserDatabase.getItem("customer");
+    const userID = customerData && customerData.id ? customerData.id : null;
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
     totals?.items?.map((item) => {
       var queryID = item?.full_item_info?.search_query_id
         ? item?.full_item_info?.search_query_id
@@ -168,6 +173,23 @@ export class CheckoutSuccessContainer extends PureComponent {
           }
         );
       }
+      VueIntegrationQueries.vueAnalayticsLogger({
+        event_name: VUE_BUY,
+        params: {
+          event: VUE_BUY,
+          pageType: "checkout_payment",
+          currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+          clicked: Date.now(),
+          sourceProdID: item?.full_item_info?.config_sku,
+          sourceCatgID: item?.full_item_info?.category,
+          prodQty: item?.full_item_info?.qty,
+          prodPrice: item?.full_item_info?.price,
+          uuid: getUUID(),
+          referrer: window.location.href,
+          url: window.location.href,
+          userID: userID,
+        },
+      });
     });
 
     if (isSignedIn) {
@@ -184,8 +206,6 @@ export class CheckoutSuccessContainer extends PureComponent {
     ) {
       this.setState({ isMobileVerification: true });
     }
-
-    
   }
 
   containerProps = () => {

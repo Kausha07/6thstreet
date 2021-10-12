@@ -1,3 +1,4 @@
+import { HOME_PAGE_BANNER_CLICK_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
 import Image from "Component/Image";
 import Link from "Component/Link";
 import Price from "Component/Price";
@@ -6,10 +7,13 @@ import WishlistIcon from "Component/WishlistIcon";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { getStore } from "Store";
+import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { Product } from "Util/API/endpoint/Product/Product.type";
+import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import Algolia from "Util/API/provider/Algolia";
 import { isArabic } from "Util/App";
 import { getUUIDToken } from "Util/Auth";
+import BrowserDatabase from "Util/BrowserDatabase";
 import Event, {
   EVENT_GTM_PRODUCT_CLICK,
   SELECT_ITEM_ALGOLIA,
@@ -22,6 +26,9 @@ class ProductItem extends PureComponent {
     page: PropTypes.string,
     position: PropTypes.number,
     qid: PropTypes.string,
+    isVueData: PropTypes.bool,
+    pageType: PropTypes.string,
+    prevPath: PropTypes.string,
   };
 
   static defaultProps = {
@@ -35,15 +42,17 @@ class ProductItem extends PureComponent {
   handleClick = this.handleProductClick.bind(this);
 
   handleProductClick() {
-    const { product, position, qid } = this.props;
+    const { product, position, qid, isVueData } = this.props;
     var data = localStorage.getItem("customer");
     let userData = JSON.parse(data);
     let userToken;
     let queryID;
-    if (!qid) {
-      queryID = getStore().getState().SearchSuggestions.queryID;
-    } else {
-      queryID = qid;
+    if (!isVueData) {
+      if (!qid) {
+        queryID = getStore().getState().SearchSuggestions.queryID;
+      } else {
+        queryID = qid;
+      }
     }
     if (userData?.data) {
       userToken = userData.data.id;
@@ -57,14 +66,27 @@ class ProductItem extends PureComponent {
         position: [position],
       });
     }
+    this.sendBannerClickImpression(product);
+  }
+  sendBannerClickImpression(item) {
+    Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);
   }
 
   renderWishlistIcon() {
     const {
       product: { sku },
+      product,
+      pageType,
+      renderMySignInPopup,
     } = this.props;
-
-    return <WishlistIcon sku={sku} />;
+    return (
+      <WishlistIcon
+        renderMySignInPopup={renderMySignInPopup}
+        sku={sku}
+        data={product}
+        pageType={pageType}
+      />
+    );
   }
 
   renderLabel() {
@@ -108,15 +130,31 @@ class ProductItem extends PureComponent {
     return null;
   }
 
+  renderOutOfStock() {
+    const {
+      product: { in_stock, stock_qty },
+    } = this.props;
+    if (in_stock === 0 || (in_stock === 1 && stock_qty === 0)) {
+      return (
+        <span block="ProductItem" elem="OutOfStock">
+          {" "}
+          {__("out of stock")}
+        </span>
+      );
+    }
+
+    return null;
+  }
   renderImage() {
     const {
       product: { thumbnail_url },
     } = this.props;
 
     return (
-      <div>
-        <Image src={thumbnail_url} /> {this.renderExclusive()}{" "}
-        {this.renderColors()}{" "}
+      <div block="ProductItem" elem="ImageBox">
+        <Image lazyLoad={true} src={thumbnail_url} />
+        {/* {this.renderOutOfStock()} */}
+        {this.renderExclusive()} {this.renderColors()}{" "}
       </div>
     );
   }
@@ -158,33 +196,55 @@ class ProductItem extends PureComponent {
   renderLink() {
     const {
       product,
-      product: { url },
+      product: { url, link },
       qid,
+      isVueData,
+      prevPath = null,
     } = this.props;
     let queryID;
-    if (!qid) {
-      queryID = getStore().getState().SearchSuggestions.queryID;
-    } else {
-      queryID = qid;
+    if (!isVueData) {
+      if (!qid) {
+        queryID = getStore().getState().SearchSuggestions.queryID;
+      } else {
+        queryID = qid;
+      }
     }
-    const { pathname } = new URL(url);
     let urlWithQueryID;
-    if (queryID) {
-      urlWithQueryID = `${pathname}?qid=${queryID}`;
+    if (!isVueData) {
+      const { pathname } = new URL(url);
+      if (queryID) {
+        urlWithQueryID = `${pathname}?qid=${queryID}`;
+      } else {
+        urlWithQueryID = pathname;
+      }
     } else {
-      urlWithQueryID = pathname;
+      urlWithQueryID = link;
     }
+    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      : "home";
+    let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
+
+    let parseLink = urlWithQueryID.includes("catalogsearch/result")
+      ? urlWithQueryID.split("&")[0] +
+        `&gender=${requestedGender.replace(
+          requestedGender.charAt(0),
+          requestedGender.charAt(0).toUpperCase()
+        )}`
+      : urlWithQueryID;
     const linkTo = {
-      pathname: urlWithQueryID,
+      pathname: parseLink,
       state: {
         product,
+        prevPath: prevPath,
       },
     };
 
     return (
-      <Link to={linkTo} onClick={this.handleClick}>
+      <Link to={isVueData ? parseLink : linkTo} onClick={this.handleClick}>
         {" "}
-        {this.renderImage()} {this.renderBrand()} {this.renderTitle()}{" "}
+        {this.renderImage()}
+        {this.renderOutOfStock()} {this.renderBrand()} {this.renderTitle()}{" "}
         {this.renderPrice()}{" "}
       </Link>
     );
@@ -201,7 +261,8 @@ class ProductItem extends PureComponent {
         }}
       >
         {" "}
-        {this.renderLabel()} {this.renderWishlistIcon()} {this.renderLink()}{" "}
+        {/* {this.renderLabel()} */}
+        {this.renderWishlistIcon()} {this.renderLink()}{" "}
       </li>
     );
   }

@@ -90,10 +90,7 @@ const _getCategoryLevel2Data = ({
           facet_key: facetKey,
           label: l2,
           is_selected: false,
-          product_count: sum(
-            acc[l1].subcategories[l2]?.product_count,
-            productCount
-          )
+          product_count: categoriesWithoutPath[l2],
         };
 
         // Mark selected filters, using the query params

@@ -105,7 +105,6 @@ export class MyAccount extends SourceMyAccount {
         const { name, alternativePageName, alternateName } = tabMap[activeTab];
         const returnTitle = activeTab === RETURN_ITEM ? __('Return Statement') : null;
         const isCancel = pathname.includes('/return-item/cancel');
-
         return (
             <ContentWrapper
               label={ __('My Account page') }
@@ -139,25 +138,29 @@ export class MyAccount extends SourceMyAccount {
             mobileTabActive
         } = this.props;
 
+        const { isArabic } = this.state;
+
         const hiddenTabContent = mobileTabActive ? 'Active' : 'Hidden';
         const hiddenTabList = mobileTabActive ? 'Hidden' : 'Active';
 
         if (!isSignedIn) {
             return this.renderLoginOverlay();
         }
+        const { pathname = '' } = location;
 
         const TabContent = this.renderMap[activeTab];
-        const { alternativePageName, name } = tabMap[activeTab];
+        const { alternativePageName, name, alternateName } = tabMap[activeTab];
+        const isCancel = pathname.includes('/return-item/cancel');
         return (
             <ContentWrapper
               label={ __('My Account page') }
-              wrapperMix={ { block: 'MyAccount', elem: 'Wrapper' } }
+              wrapperMix={ { block: 'MyAccount', elem: 'Wrapper', mods: { isArabic } } }
             >
                 <MyAccountMobileHeader
                   onClose={ this.handleClick }
                   isHiddenTabContent={ hiddenTabContent === 'Active' }
                   alternativePageName={ alternativePageName }
-                  name={ name }
+                  name={ isCancel? alternateName: name }
                 />
                 <div block={ hiddenTabList }>
                     <MyAccountTabList

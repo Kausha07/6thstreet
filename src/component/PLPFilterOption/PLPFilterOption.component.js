@@ -119,13 +119,15 @@ class PLPFilterOption extends PureComponent {
               onClick={ this.handleClick }
               mix={ {
                   block: 'PLPFilterOption',
-                  elem: 'Input'
+                  elem: 'Input',
+                  mods: {isArabic: isArabic()}
               } }
               type={ type }
               id={ facet_value + initialFacetKey }
               name={ initialFacetKey }
               value={ facet_value }
-              defaultChecked={ defaultCheck || checked || onSelectChecked }
+              defaultCheck={ defaultCheck || checked || onSelectChecked }
+              checked={ defaultCheck || checked || onSelectChecked }
             />
         );
     }
@@ -203,9 +205,13 @@ class PLPFilterOption extends PureComponent {
         if (!facet_value) {
             return null;
         }
-
         return (
-            <li ref={ this.optionRef } block="PLPFilterOption" elem="List" mods={ { isArabic } }>
+            <li
+                ref={ this.optionRef }
+                block="PLPFilterOption"
+                elem="List"
+                mods={ { isArabic } }
+            >
                 { this.renderField() }
                 { this.renderLabel() }
             </li>

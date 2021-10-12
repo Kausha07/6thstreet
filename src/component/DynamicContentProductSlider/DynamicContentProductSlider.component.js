@@ -1,21 +1,14 @@
 /* eslint-disable no-constant-condition */
+import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
+import ProductItem from "Component/ProductItem";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
-
-import ProductItem from "Component/ProductItem";
-import Slider from "SourceComponent/Slider";
-import isMobile from "SourceUtil/Mobile/isMobile";
 import { Products } from "Util/API/endpoint/Product/Product.type";
 import { isArabic } from "Util/App";
-
-import {
-  HOME_PAGE_TRANSLATIONS,
-  ITEMS_PER_PAGE,
-} from "./DynamicContentProductSlider.config";
-
-import "./DynamicContentProductSlider.style";
-import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
 import Event from "Util/Event";
+import DynamicContentVueProductSliderContainer from "./../DynamicContentVueProductSlider/DynamicContentVueProductSlider.container";
+import { HOME_PAGE_TRANSLATIONS } from "./DynamicContentProductSlider.config";
+import "./DynamicContentProductSlider.style";
 
 class DynamicContentProductSlider extends PureComponent {
   static propTypes = {
@@ -24,12 +17,19 @@ class DynamicContentProductSlider extends PureComponent {
     products: Products.isRequired,
   };
 
+  constructor(props) {
+    super(props);
+  }
+
   state = {
     currentPage: 0,
     isArabic: isArabic(),
+    withViewAll: true,
     impressionSent: false,
     eventRegistered: false,
   };
+
+  componentDidMount() {}
 
   registerViewPortEvent() {
     let observer;
@@ -47,17 +47,6 @@ class DynamicContentProductSlider extends PureComponent {
     this.setState({ eventRegistered: true });
   }
 
-  sendImpressions() {
-    const { products = [] } = this.props;
-    const items = products.map((item) => {
-      return {
-        id: item.sku,
-        label: item.name,
-      };
-    });
-    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
-    this.setState({ impressionSent: true });
-  }
   handleIntersect = (entries, observer) => {
     const { impressionSent } = this.state;
     if (impressionSent) {
@@ -69,6 +58,19 @@ class DynamicContentProductSlider extends PureComponent {
       }
     });
   };
+  sendImpressions() {
+    const { products = [] } = this.props;
+    const items = products.map((item) => {
+      return {
+        id: item.sku,
+        label: item.name,
+      };
+    });
+
+    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
+    this.setState({ impressionSent: true });
+  }
+
   renderProduct = (product, i) => {
     const { sku } = product;
     const { isArabic } = this.state;
@@ -83,46 +85,22 @@ class DynamicContentProductSlider extends PureComponent {
         }}
         key={i}
       >
-        <ProductItem product={product} key={sku} />
-        {/* { this.renderCTA() } */}
+        <ProductItem product={product} key={sku} pageType="home" />
+        {this.renderCTA()}
       </div>
     );
   };
 
-  renderProductsDesktop() {
-    const { isLoading, products = [] } = this.props;
-    const { currentPage } = this.state;
-
-    if (isLoading) {
-      return "loading...";
-    }
-    const productArray = products.map(this.renderProduct) || [];
-    const lastPage = parseInt(Math.floor(products.length / ITEMS_PER_PAGE), 10); // first page is 0
-    const lastPageItemCount = products.length % ITEMS_PER_PAGE; // number of products on last page'
-
-    if (currentPage === lastPage) {
-      if (lastPageItemCount === ITEMS_PER_PAGE) {
-        return productArray.slice(
-          currentPage * ITEMS_PER_PAGE,
-          currentPage * ITEMS_PER_PAGE + lastPageItemCount
-        );
-      }
-
-      return productArray.slice(
-        currentPage * ITEMS_PER_PAGE - (ITEMS_PER_PAGE - lastPageItemCount),
-        currentPage * ITEMS_PER_PAGE + lastPageItemCount
-      );
-    }
-
-    return productArray.slice(
-      currentPage * ITEMS_PER_PAGE,
-      currentPage * ITEMS_PER_PAGE + ITEMS_PER_PAGE
-    );
-  }
+  renderProductsDesktop() {}
 
   renderTitle() {
-    const { title } = this.props;
-    const finalTitle = isArabic() ? HOME_PAGE_TRANSLATIONS[title] : title;
+    const { title, isHomePage } = this.props;
+    let finalTitle;
+    if (isHomePage) {
+      finalTitle = title;
+    } else {
+      finalTitle = isArabic() ? HOME_PAGE_TRANSLATIONS[title] : title;
+    }
     return (
       <h2 mix={{ block: "DynamicContentProductSlider", elem: "Header" }}>
         {finalTitle}
@@ -143,145 +121,39 @@ class DynamicContentProductSlider extends PureComponent {
     );
   }
 
-  renderButtonNext() {
-    const { isLoading, products = [] } = this.props;
-    const { currentPage, isArabic } = this.state;
-
-    if (isLoading || isMobile.any()) {
-      return null;
-    }
-    const lastPage = parseInt(Math.floor(products.length / ITEMS_PER_PAGE), 10); // first page is 0
-    if (currentPage !== lastPage) {
-      return (
-        <div
-          role="button"
-          aria-label="Next"
-          tabIndex={0}
-          onClick={this.handleClickNext}
-          onKeyDown={this.handleClickNext}
-          mix={{
-            block: "DynamicContentProductSlider",
-            elem: "ButtonNext",
-            mods: { isArabic },
-          }}
-        >
-          <div
-            mix={{
-              block: "DynamicContentProductSlider",
-              elem: "ArrowNext",
-              mods: { isArabic },
-            }}
-          />
-        </div>
-      );
-    }
-
-    return null;
-  }
-
-  renderButtonPrev() {
-    const { isLoading } = this.props;
-    const { currentPage, isArabic } = this.state;
-
-    if (isLoading || isMobile.any()) {
-      return null;
-    }
-    if (currentPage !== 0) {
-      return (
-        <div
-          role="button"
-          aria-label="Next"
-          tabIndex={0}
-          onClick={this.handleClickPrev}
-          onKeyDown={this.handleClickPrev}
-          mix={{
-            block: "DynamicContentProductSlider",
-            elem: "ButtonPrev",
-            mods: { isArabic },
-          }}
-        >
-          <div
-            mix={{
-              block: "DynamicContentProductSlider",
-              elem: "ArrowPrev",
-              mods: { isArabic },
-            }}
-          />
-        </div>
-      );
-    }
-
-    return null;
-  }
-
-  handleClickNext = () => {
-    const { currentPage } = this.state;
-    this.setState({ currentPage: currentPage + 1 });
-  };
-
-  handleClickPrev = () => {
-    const { currentPage } = this.state;
-    this.setState({ currentPage: currentPage - 1 });
-  };
-
-  renderProductsMobile() {
-    const { isLoading, products = [] } = this.props;
-    const { currentPage, isArabic } = this.state;
-
-    if (isLoading) {
-      return "loading...";
-    }
-
-    return (
-      <div
-        mix={{
-          block: "DynamicContentProductSlider",
-          elem: "MobileSliderWrapper",
-          mods: { isArabic },
-        }}
-      >
-        <Slider
-          mix={{
-            block: "DynamicContentProductSlider",
-            elem: "MobileSlider",
-            mods: { isArabic },
-          }}
-          activeImage={currentPage}
-          onActiveImageChange={this.mobileSliderCallback}
-        >
-          {products.map(this.renderProduct)}
-        </Slider>
-      </div>
-    );
-  }
-
-  mobileSliderCallback = (newPage) => {
-    this.setState({ currentPage: newPage });
-  };
-
   render() {
-    const { isArabic, eventRegistered } = this.state;
-    const { products: productArray = [] } = this.props;
-    if (productArray.length === 0) {
+    const { isArabic, withViewAll, eventRegistered } = this.state;
+    const { products, renderMySignInPopup } = this.props;
+    if (products.length === 0) {
       return null;
     }
+
     if (!eventRegistered) {
       setTimeout(() => {
-        this.registerViewPortEvent();
-      }, 2000);
+        // this.registerViewPortEvent();
+      }, 3000);
     }
-    const products = (
-      <div
-        mix={{
-          block: "DynamicContentProductSlider",
-          elem: "ProductContainer",
-          mods: { isArabic },
-        }}
-      >
-        {this.renderButtonPrev()}
-        {this.renderProductsDesktop()}
-        {this.renderButtonNext()}
-      </div>
+
+    const { title, isHomePage } = this.props;
+    let finalTitle;
+    if (isHomePage) {
+      finalTitle = title;
+    } else {
+      finalTitle = isArabic() ? HOME_PAGE_TRANSLATIONS[title] : title;
+    }
+    const productsDesktop = (
+      <React.Fragment>
+        <DynamicContentVueProductSliderContainer
+          products={products}
+          heading={finalTitle}
+          withViewAll
+          renderMySignInPopup={renderMySignInPopup}
+          key={`VueProductSliderContainer`}
+          isHome={true}
+          pageType={"home"}
+          widgetID={"vue_top_picks_slider"}
+        />
+      </React.Fragment>
     );
 
     let setRef = (el) => {
@@ -292,20 +164,12 @@ class DynamicContentProductSlider extends PureComponent {
       <div
         ref={setRef}
         id="productSlider"
-        mix={{ block: "DynamicContentProductSlider", mods: { isArabic } }}
+        mix={{
+          block: "DynamicContentProductSliderHomePage",
+          mods: { isArabic },
+        }}
       >
-        <div
-          mix={{
-            block: "DynamicContentProductSlider",
-            elem: "HeaderContainer",
-            mods: { isArabic },
-          }}
-        >
-          {this.renderTitle()}
-        </div>
-        {isMobile.any() || isMobile.tablet()
-          ? this.renderProductsMobile()
-          : products}
+        {productsDesktop}
       </div>
     );
   }

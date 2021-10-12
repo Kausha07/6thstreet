@@ -1,22 +1,21 @@
 // import PropTypes from 'prop-types';
-import { PureComponent } from 'react';
-
-import Accordion from 'Component/Accordion';
-import ShareButton from 'Component/ShareButton';
-import { Product } from 'Util/API/endpoint/Product/Product.type';
-import { isArabic } from 'Util/App';
-
-import { PDP_ARABIC_VALUES_TRANSLATIONS } from './PDPDetailsSection.config';
-import './PDPDetailsSection.style';
-import VueQuery from '../../query/Vue.query';
+import Accordion from "Component/Accordion";
+import ShareButton from "Component/ShareButton";
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
+import { Product } from "Util/API/endpoint/Product/Product.type";
 import { fetchVueData } from "Util/API/endpoint/Vue/Vue.endpoint";
+import { isArabic } from "Util/App";
 import BrowserDatabase from "Util/BrowserDatabase";
+import VueQuery from "../../query/Vue.query";
 import DynamicContentVueProductSliderContainer from "../DynamicContentVueProductSlider";
+import { PDP_ARABIC_VALUES_TRANSLATIONS } from "./PDPDetailsSection.config";
 import "./PDPDetailsSection.style";
 
 class PDPDetailsSection extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
+    clickAndCollectStores: PropTypes.object.isRequired,
   };
 
   state = {
@@ -30,10 +29,24 @@ class PDPDetailsSection extends PureComponent {
       5: true,
     },
     pdpWidgetsAPIData: [],
+    isArabic: isArabic(),
   };
 
   componentDidMount() {
     this.getPdpWidgetsVueData();
+    const {
+      product: { sku = null, categories_without_path = [] },
+    } = this.props;
+    localStorage.setItem("PRODUCT_SKU", JSON.stringify(sku));
+    localStorage.setItem(
+      "PRODUCT_CATEGORY",
+      JSON.stringify(categories_without_path[0])
+    );
+  }
+
+  componentWillUnmount() {
+    localStorage.removeItem("PRODUCT_SKU");
+    localStorage.removeItem("PRODUCT_CATEGORY");
   }
 
   getPdpWidgetsVueData() {
@@ -41,6 +54,10 @@ class PDPDetailsSection extends PureComponent {
     if (pdpWidgetsData && pdpWidgetsData.length > 0) {
       //load vue data for widgets only if widgets data available
       const userData = BrowserDatabase.getItem("MOE_DATA");
+      if (userData?.USER_DATA) {
+        return;
+      }
+
       if (userData) {
         //added check if user data is loaded then only load PDP widgets otherwise not.
         const {
@@ -76,47 +93,52 @@ class PDPDetailsSection extends PureComponent {
   }
 
   renderShareButton() {
-      const url = new URL(window.location.href);
-      url.searchParams.append('utm_source', 'pdp_share')
-      return (
-          <div block="PDPDetailsSection" elem="ShareButtonContainer">
-              <ShareButton
-                  block="PDPDetailsSection-ShareButtonContainer"
-                  elem="ShareButton"
-                  title = { document.title }
-                  text =  {`Hey check this out: ${document.title}`}
-                  url = { url.toString() }
-                  mods = {{isArabic: isArabic()}}
-              >
-                  <span>{ __('Share') }</span>
-              </ShareButton>
-          </div>
-      );
+    const url = new URL(window.location.href);
+    url.searchParams.append("utm_source", "pdp_share");
+    return (
+      <div block="PDPDetailsSection" elem="ShareButtonContainer">
+        <ShareButton
+          block="PDPDetailsSection-ShareButtonContainer"
+          elem="ShareButton"
+          title={document.title}
+          text={`Hey check this out: ${document.title}`}
+          url={url.toString()}
+          mods={{ isArabic: isArabic() }}
+        >
+          <span>{__("Share")}</span>
+        </ShareButton>
+      </div>
+    );
   }
 
   renderSizeAndFit() {
-      const { product: { description } } = this.props;
-      console.log(product);
-      return (
-          <>
-              <p block="PDPDetailsSection" elem="SizeFit">
-                  {__('Fitting Information - Items fits true to size')}
-              </p>
-              <div block="PDPDetailsSection" elem="ModelMeasurements">
-                  <h4>{__('Model Measurements')}</h4>
-              </div>
-          </>
-      )
+    const {
+      product: { description },
+    } = this.props;
+    return (
+      <>
+        <p block="PDPDetailsSection" elem="SizeFit">
+          {__("Fitting Information - Items fits true to size")}
+        </p>
+        <div block="PDPDetailsSection" elem="ModelMeasurements">
+          <h4>{__("Model Measurements")}</h4>
+        </div>
+      </>
+    );
   }
 
   renderMoreDetailsItem(item) {
     return (
-        <li block="PDPDetailsSection" elem="MoreDetailsList" key={item.key}>
-            <span block="PDPDetailsSection" elem="ListItem" mods={{ mod: 'title' }}>
-                {isArabic() ? this._translateValue(item.key) : this.listTitle(__(item.key))}
-            </span>
-            <span block="PDPDetailsSection" elem="ListItem" mods={{ mod: 'value' }}>{item.value}</span>
-        </li>
+      <li block="PDPDetailsSection" elem="MoreDetailsList" key={item.key}>
+        <span block="PDPDetailsSection" elem="ListItem" mods={{ mod: "title" }}>
+          {isArabic()
+            ? this._translateValue(item.key)
+            : this.listTitle(__(item.key))}
+        </span>
+        <span block="PDPDetailsSection" elem="ListItem" mods={{ mod: "value" }}>
+          {item.value}
+        </span>
+      </li>
     );
   }
 
@@ -133,15 +155,29 @@ class PDPDetailsSection extends PureComponent {
   };
 
   renderIconsSection() {
+    const { clickAndCollectStores } = this.props;
     return (
       <div block="PDPDetailsSection" elem="IconsSection">
+        {clickAndCollectStores?.length ? (
+          <div block="PDPDetailsSection" elem="IconContainer">
+            <div
+              block="PDPDetailsSection"
+              elem="Icon"
+              mods={{ clickAndCollect: true }}
+            />
+            <div block="ClickAndCollect">
+              <div block="Click">{__("Click")}</div>
+              <div block="AndCollect">{__("& Collect")}</div>
+            </div>
+          </div>
+        ) : null}
         <div block="PDPDetailsSection" elem="IconContainer">
           <div
             block="PDPDetailsSection"
             elem="Icon"
             mods={{ isGenuine: true }}
           />
-          {__("100% Genuine")}
+          <div>{__("100% Genuine")}</div>
         </div>
         <div block="PDPDetailsSection" elem="IconContainer">
           <div
@@ -149,7 +185,7 @@ class PDPDetailsSection extends PureComponent {
             elem="Icon"
             mods={{ freeReturn: true }}
           />
-          {__("Free Returns")}
+          <div>{__("Free Returns")}</div>
         </div>
       </div>
     );
@@ -173,69 +209,344 @@ class PDPDetailsSection extends PureComponent {
     return str.replace("_", " ");
   }
 
-  renderListItem(arr) {
+  renderListItem(item) {
     return (
-      <li block="PDPDetailsSection" elem="HighlightsList" key={arr[0]}>
+      <li block="PDPDetailsSection" elem="HighlightsList" key={item.key}>
         <span block="PDPDetailsSection" elem="ListItem" mods={{ mod: "title" }}>
-          {isArabic() ? this._translateValue(arr[0]) : this.listTitle(arr[0])}
+          {isArabic()
+            ? this._translateValue(item.key)
+            : this.listTitle(item.key)}
         </span>
         <span block="PDPDetailsSection" elem="ListItem" mods={{ mod: "value" }}>
-          {arr[1]}
+          {item.value}
         </span>
       </li>
     );
   }
 
-  renderListItems(obj = {}) {
-    return Object.entries(obj)
-      .filter((item) => item[1] != null)
-      .map((item) => this.renderListItem(item));
+  renderListItems(data) {
+    return data
+      ?.filter(({ key }) => key !== "sku" && key !== "alternate_name")
+      ?.map((item) =>
+        this.renderListItem({
+          key: item.key,
+          value: item.value,
+        })
+      );
+  }
+
+  getCategoryByLevel(categories = {}, level = 0) {
+    try {
+      return categories.level2[0].split(" /// ")[level];
+    } catch (err) {
+      console.error(err);
+      return undefined;
+    }
+  }
+
+  getHighlights(
+    highlights = [],
+    categories = {},
+    product_height = "",
+    product_length = "",
+    product_width = "",
+    bag_dimension = "",
+    product
+  ) {
+    if (!Object.keys(categories).length) {
+      return highlights || [];
+    }
+
+    const category = {
+      key: "category",
+      value: this.getCategoryByLevel(categories, 1),
+    };
+
+    const subcategory = {
+      key: "subcategory",
+      value: this.getCategoryByLevel(categories, 2),
+    };
+    const productHeight = {
+      key: "product_height",
+      value: product_height,
+    };
+
+    const productLength = {
+      key: "product_length",
+      value: product_length,
+    };
+
+    const productWidth = {
+      key: "product_width",
+      value: product_width,
+    };
+
+    const bagDimention = {
+      key: "bag_dimension",
+      value: bag_dimension,
+    };
+
+    const material = {
+      key: "material",
+      value: product?.material,
+    };
+
+    const occasion = {
+      key: "occasion",
+      value: product?.occasion,
+    };
+
+    const heelHeight = {
+      key: "heel_height",
+      value: product?.heel_height,
+    };
+
+    const ToeShape = {
+      key: "toe_shape",
+      value: product?.toe_shape,
+    };
+
+    const HeelShape = {
+      key: "heel_shape",
+      value: product?.heel_shape,
+    };
+
+    const UpperMaterial = {
+      key: "upper_material",
+      value: product?.upper_material,
+    };
+
+    const sole = {
+      key: "sole",
+      value: product?.sole,
+    };
+
+    const fit = {
+      key: "fit",
+      value: product?.fit,
+    };
+
+    const dressLegth = {
+      key: "dress_length",
+      value: product?.dress_length,
+    };
+
+    const length = {
+      key: "length",
+      value: product?.length,
+    };
+
+    const sleeveLength = {
+      key: "sleeve_length",
+      value: product?.sleeve_length,
+    };
+
+    const skirtLength = {
+      key: "skirt_length",
+      value: product?.skirt_length,
+    };
+
+    const collerType = {
+      key: "coller_type",
+      value: product?.coller_type,
+    };
+
+    const legLength = {
+      key: "leg_length",
+      value: product?.leg_length,
+    };
+
+    const neckTine = {
+      key: "neck_line",
+      value: product?.neck_line,
+    };
+
+    const type = {
+      key: "type",
+      value: product?.type,
+    };
+
+    const bagSize = {
+      key: "bag_size",
+      value: product?.bag_size,
+    };
+
+    const bagStyle = {
+      key: "bag_style",
+      value: product?.bag_style,
+    };
+
+    const fastener = {
+      key: "fastener",
+      value: product?.fastener,
+    };
+
+    const neckline = {
+      key: "neckline",
+      value: product?.neckline,
+    };
+
+    const trend = {
+      key: "trend",
+      value: product?.trend,
+    };
+
+    const fashionSegment = {
+      key: "fashion_segment",
+      value: product?.fashion_segment,
+    };
+
+    const unisex = {
+      key: "unisex",
+      value: product?.unisex,
+    };
+
+    const sustainableFashion = {
+      key: "sustainable_fashion",
+      value: product?.sustainable_fashion,
+    };
+
+    const returnable = {
+      key: "returnable",
+      value: product?.returnable,
+    };
+
+    const discountable = {
+      key: "discountable",
+      value: product?.discountable,
+    };
+    const skinType = {
+      key: "skin_type",
+      value: product?.skin_type,
+    };
+    const formulation = {
+      key: "formulation",
+      value: product?.formulation,
+    };
+    const concern = {
+      key: "concern",
+      value: product?.concern,
+    };
+    const preference = {
+      key: "preference",
+      value: product?.preference,
+    };
+    const finish = {
+      key: "finish",
+      value: product?.finish,
+    };
+    const coverage = {
+      key: "coverage",
+      value: product?.coverage,
+    };
+
+    return [
+      ...(highlights || []),
+      ...(category.value ? [category] : []),
+      ...(subcategory.value ? [subcategory] : []),
+      ...(productHeight.value ? [productHeight] : []),
+      ...(productLength.value ? [productLength] : []),
+      ...(productWidth.value ? [productWidth] : []),
+      ...(bagDimention.value ? [bagDimention] : []),
+      ...(material.value ? [material] : []),
+      ...(occasion.value ? [occasion] : []),
+      ...(heelHeight.value ? [heelHeight] : []),
+      ...(ToeShape.value ? [ToeShape] : []),
+      ...(HeelShape.value ? [HeelShape] : []),
+      ...(UpperMaterial.value ? [UpperMaterial] : []),
+      ...(sole.value ? [sole] : []),
+      ...(fit.value ? [fit] : []),
+      ...(dressLegth.value ? [dressLegth] : []),
+      ...(length.value ? [length] : []),
+      ...(skirtLength.value ? [skirtLength] : []),
+      ...(sleeveLength.value ? [sleeveLength] : []),
+      ...(collerType.value ? [collerType] : []),
+      ...(legLength.value ? [legLength] : []),
+      ...(neckTine.value ? [neckTine] : []),
+      ...(type.value ? [type] : []),
+      ...(bagSize.value ? [bagSize] : []),
+      ...(bagStyle.value ? [bagStyle] : []),
+      ...(fastener.value ? [fastener] : []),
+      ...(neckline.value ? [neckline] : []),
+      ...(trend.value ? [trend] : []),
+      ...(fashionSegment.value ? [fashionSegment] : []),
+      ...(unisex.value ? [unisex] : []),
+      ...(sustainableFashion.value ? [sustainableFashion] : []),
+      ...(returnable.value ? [returnable] : []),
+      ...(discountable.value ? [discountable] : []),
+      ...(skinType.value ? [skinType] : []),
+      ...(formulation.value ? [formulation] : []),
+      ...(concern.value ? [concern] : []),
+      ...(preference.value ? [preference] : []),
+      ...(finish.value ? [finish] : []),
+      ...(coverage.value ? [coverage] : []),
+    ];
   }
 
   renderHighlights() {
     const {
       product: {
-        material,
-        dress_length,
-        heel_height,
-        heel_shape,
-        leg_length,
-        neck_line,
-        skirt_length,
-        toe_shape,
-        sleeve_length,
+        sku,
+        highlighted_attributes,
+        categories,
+        model_height,
         product_height,
         product_length,
         product_width,
-        model_height,
+        bag_dimension,
         model_wearing_size,
-        sku
       },
+      product,
     } = this.props;
 
-    const productInfo = {
-      material,
-      dress_length,
-      heel_height,
-      heel_shape,
-      leg_length,
-      neck_line,
-      skirt_length,
-      toe_shape,
-      sleeve_length,
+    // highlighted_attributes.forEach((item) => console.log(item))
+    const highlights = this.getHighlights(
+      highlighted_attributes,
+      categories,
       product_height,
       product_length,
-      product_width
-    };
+      product_width,
+      bag_dimension,
+      product
+    );
 
     return (
-      <div block="PDPDetailsSection" elem="Highlights">
+      <div
+        block="PDPDetailsSection"
+        elem="Highlights"
+        mods={{ isArabic: isArabic() }}
+      >
         <h4>{__("Highlights")}</h4>
-        <ul>{this.renderListItems(productInfo)}</ul>
-        { this.renderModelDetails(model_height, model_wearing_size)}
-        { this.renderSKU(sku) }
+        <ul>{this.renderListItems(highlights)}</ul>
+        {this.renderModelDetails(model_height, model_wearing_size)}
+        {this.renderSKU(sku)}
         {/* {this.renderMoreDetailsList()} */}
       </div>
+    );
+  }
+
+  renderModelDetails(height, size) {
+    if (!size) {
+      return null;
+    }
+
+    if (!height) {
+      return (
+        <p block="PDPDetailsSection-Highlights" elem="ModelDetails">
+          <span>{__("Model is wearing")} </span>
+          <span>{__("size")} </span>
+          <span>{size}</span>
+        </p>
+      );
+    }
+    return (
+      <p block="PDPDetailsSection-Highlights" elem="ModelDetails">
+        <span>{__("Model's height is")} </span>
+        <span>{height}</span>
+        <span> {__("& is wearing")} </span>
+        <span>{__("size")} </span>
+        <span>{size}</span>
+      </p>
     );
   }
 
@@ -244,30 +555,6 @@ class PDPDetailsSection extends PureComponent {
       <p block="PDPDetailsSection-Highlights" elem="SKU">
         <span>SKU: </span>
         <span>{sku}</span>
-      </p>
-    )
-  }
-  renderModelDetails(height, size) {
-    if(!size) {
-      return null;
-    }
-
-    if(!height) {
-      return (
-        <p block="PDPDetailsSection-Highlights" elem="ModelDetails">
-          <span>{ __(`Model is wearing `) }</span>
-          <span>{`size `}</span>
-          <span>{ size }</span>
-        </p>
-      )
-    }
-    return (
-      <p block="PDPDetailsSection-Highlights" elem="ModelDetails">
-        <span>{ __(`Model's height is `) }</span>
-        <span>{height}</span>
-        <span>{__(' & is wearing ')}</span>
-        <span>{`size `}</span>
-        <span>{ size }</span>
       </p>
     );
   }
@@ -287,7 +574,6 @@ class PDPDetailsSection extends PureComponent {
       </>
     );
   }
-
 
   renderMoreDetailsList() {
     const {
@@ -329,7 +615,11 @@ class PDPDetailsSection extends PureComponent {
   }
 
   renderPdpWidgets() {
-    const { pdpWidgetsData } = this.props;
+    const {
+      pdpWidgetsData,
+      renderMySignInPopup,
+      product: { sku = null, categories_without_path = [] },
+    } = this.props;
     const { pdpWidgetsAPIData } = this.state;
     if (pdpWidgetsData.length > 0 && pdpWidgetsAPIData.length > 0) {
       return (
@@ -345,6 +635,11 @@ class PDPDetailsSection extends PureComponent {
                     widgetID={widgetID}
                     products={data}
                     heading={heading}
+                    isHome={true}
+                    renderMySignInPopup={renderMySignInPopup}
+                    sourceProdID={sku}
+                    sourceCatgID={categories_without_path[0]}
+                    pageType={"pdp"}
                     key={`DynamicContentVueProductSliderContainer${index}`}
                   />
                 );
@@ -374,7 +669,7 @@ class PDPDetailsSection extends PureComponent {
           {this.renderDescription()}
         </Accordion>
         <div block="Seperator" />
-        { this.renderShareButton() }
+        {this.renderShareButton()}
         {this.renderPdpWidgets()}
         {/* <Accordion
             mix={ { block: 'PDPDetailsSection', elem: 'Accordion' } }
@@ -383,7 +678,7 @@ class PDPDetailsSection extends PureComponent {
           >
               { this.renderSizeAndFit() }
         </Accordion> */}
-         {/*        <Accordion
+        {/*        <Accordion
                   mix={ { block: 'PDPDetailsSection', elem: 'Accordion' } }
                   title={ __('Click & Collect') }
                   is_expanded={this.state.isExpanded["2"]}

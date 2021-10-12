@@ -1,16 +1,18 @@
+import {
+  HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
+  HOME_PAGE_BANNER_IMPRESSIONS,
+} from "Component/GoogleTagManager/events/BannerImpression.event";
 import Image from "Component/Image";
 import Link from "Component/Link";
 import PropTypes from "prop-types";
-// import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
-// import { getUUID } from "Util/Auth";
 import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
 import isMobile from "Util/Mobile";
 import { formatCDNLink } from "Util/Url";
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import "./DynamicContentBanner.style";
-import { HOME_PAGE_BANNER_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
+
 class DynamicContentBanner extends PureComponent {
   static propTypes = {
     items: PropTypes.arrayOf(
@@ -37,6 +39,7 @@ class DynamicContentBanner extends PureComponent {
     isMobile: isMobile.any() || isMobile.tablet(),
     impressionSent: false,
   };
+
   componentDidMount() {
     const { doNotTrackImpression } = this.props;
     if (!doNotTrackImpression) {
@@ -79,45 +82,36 @@ class DynamicContentBanner extends PureComponent {
       toggleMobileMenuSideBar();
     }
     setTimeout(() => {});
-    // vue analytics
-    // const locale = VueIntegrationQueries.getLocaleFromUrl();
-    // VueIntegrationQueries.vueAnalayticsLogger({
-    //   event_name: VUE_CAROUSEL_CLICK,
-    //   params: {
-    //     event: VUE_CAROUSEL_CLICK,
-    //     pageType: "plp",
-    //     currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-    //     clicked: Date.now(),
-    //     uuid: getUUID(),
-    //     referrer: "desktop",
-    //     widgetID: "vue_visually_similar_slider", // TODO: will be added after vue product slider.
-    //   },
-    // });
     let banner = {
       link: item.link,
       promotion_name: item.promotion_name,
     };
     Event.dispatch(EVENT_GTM_BANNER_CLICK, banner);
+    this.sendBannerClickImpression(item);
   };
+  sendBannerClickImpression(item) {
+    Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);
+  }
 
   renderImage = (item, i) => {
     // const { items } = this.props;
     // const { height, width } = items[0];
     const { url, link, height = "", width = "" } = item;
     let ht, wd;
-    if (screen.width < 900) {
-      wd = (screen.width - 16).toString() + "px";
-      ht = (height / width) * screen.width;
-    } else {
-      wd = width.toString() + "px";
-      ht = height.toString() + "px";
-    }
+    // if (screen.width < 900) {
+    //   wd = (screen.width - 20).toString() + "px";
+    //   ht = (height / width) * screen.width;
+    // } else {
+    //   wd = width.toString() + "px";
+    //   ht = height.toString() + "px";
+    // }
 
     // TODO: calculate aspect ratio to ensure images not jumping.
+
     if (!link) {
       return (
         <>
-          <Image key={i} src={url} ratio="custom" height={ht} width={wd} />
+          <Image lazyLoad={true} key={i} src={url} ratio="custom" height={ht} width={wd} />
           {this.renderButton()}
         </>
       );
@@ -134,7 +128,11 @@ class DynamicContentBanner extends PureComponent {
           this.onclick(item);
         }}
       >
-        <img src={url} block="Image" style={{ width: wd, height: ht }} />
+        <Image lazyLoad={true}
+          src={url}
+          block="Image"
+          style={{ maxWidth: wd, height: ht, objectFit: "unset" }}
+        />
 
         {this.renderButton()}
       </Link>

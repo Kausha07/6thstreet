@@ -422,6 +422,7 @@ function getPLP(URL, options = {}) {
       query: q,
       page,
       hitsPerPage: limit,
+      clickAnalytics: true,
     };
 
     index.search(query, (err, res = {}) => {
@@ -429,7 +430,7 @@ function getPLP(URL, options = {}) {
         return reject(err);
       }
 
-      const { hits, facets, nbHits, nbPages, hitsPerPage } = res;
+      const { hits, facets, nbHits, nbPages, hitsPerPage, queryID } = res;
 
       const { filters, _filtersUnselected } = getFilters({
         locale,
@@ -450,6 +451,7 @@ function getPLP(URL, options = {}) {
           query: queryParams,
         },
         _filters_unselected: _filtersUnselected,
+        queryID,
       };
 
       return resolve(output);

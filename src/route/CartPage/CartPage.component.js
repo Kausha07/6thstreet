@@ -9,7 +9,7 @@
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import CartCoupon from "Component/CartCoupon";
-import CartItem from "Component/CartItem";
+import CartPageItem from "Component/CartPageItem";
 import CmsBlock from "Component/CmsBlock";
 import ContentWrapper from "Component/ContentWrapper";
 import ExpandableContent from "Component/ExpandableContent";
@@ -26,6 +26,7 @@ import { TotalsType } from "Type/MiniCart";
 import { ClubApparelMember } from "Util/API/endpoint/ClubApparel/ClubApparel.type";
 import { getCurrency, getDiscountFromTotals, isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
+import Image from "Component/Image";
 
 import { Shipping } from "Component/Icons";
 
@@ -68,11 +69,10 @@ export class CartPage extends PureComponent {
         </p>
       );
     }
-
     return (
       <ul block="CartPage" elem="Items" aria-label="List of items in cart">
         {items.map((item) => (
-          <CartItem
+          <CartPageItem
             key={item.item_id}
             item={item}
             currency_code={quote_currency_code}
@@ -139,7 +139,6 @@ export class CartPage extends PureComponent {
     } = this.props;
     const grandTotal = getFinalPrice(total, currency_code);
     const subTotal = getFinalPrice(subtotal, currency_code);
-
     return (
       <div block="CartPage" elem="OrderTotals">
         <ul>
@@ -154,10 +153,10 @@ export class CartPage extends PureComponent {
                             getDiscountFromTotals(totals, 'clubapparel'),
                             __('Club Apparel Redemption')
                         ) }
-                        { couponCode && this.renderPriceLine(
+                        { (couponCode || (discount && discount != 0)) ? this.renderPriceLine(
                             discount,
                             __('Discount')
-                        ) }
+                        ) : null}
                         { this.renderPriceLine(
                             getDiscountFromTotals(totals, 'tax'),
                             __('Tax')
@@ -289,7 +288,8 @@ export class CartPage extends PureComponent {
     if (accountLinked && isSignedIn) {
       return (
         <div block="CartPage" elem="ClubApparelBlock" mods={{ isArabic }}>
-          <img src={ClubApparel} alt="Club Apparel Logo" />
+          <Image lazyLoad={true} src={ClubApparel} alt="Club Apparel Logo" />
+
           <div block="CartPage" elem="ClubApparelText">
             {__("You may earn ")}
             <span>{`${currency_code} ${club_apparel_estimated_pointsvalue} `}</span>
@@ -302,7 +302,8 @@ export class CartPage extends PureComponent {
     if (!accountLinked && isSignedIn) {
       return (
         <div block="CartPage" elem="ClubApparelBlock">
-          <img src={ClubApparel} alt="Club Apparel Logo" />
+          <Image lazyLoad={true} src={ClubApparel} alt="Club Apparel Logo" />
+
           <div block="CartPage" elem="ClubApparelText">
             {__("Link your Club Apparel account to earn ")}
             <span>{`${currency_code} ${club_apparel_estimated_pointsvalue} `}</span>
@@ -321,7 +322,8 @@ export class CartPage extends PureComponent {
 
     return (
       <div block="CartPage" elem="ClubApparelBlock">
-        <img src={ClubApparel} alt="Club Apparel Logo" />
+                <Image lazyLoad={true} src={ClubApparel} alt="Club Apparel Logo" />
+
         <div block="CartPage" elem="ClubApparelText">
           {__("Link your Club Apparel account to earn ")}
           <span>{`${currency_code} ${club_apparel_estimated_pointsvalue} `}</span>
@@ -406,7 +408,6 @@ export class CartPage extends PureComponent {
     const { history } = this.props;
     const self = this;
     function goHome() {
-      console.log(self.shouldMobileBottomBarHidden);
       self.shouldMobileBottomBarHidden();
       history.push("/");
     }
@@ -529,7 +530,6 @@ export class CartPage extends PureComponent {
 
   render() {
     const { isArabic } = this.state;
-
     return (
       <main block="CartPage" aria-label="Cart Page" mods={{ isArabic }}>
         {this.renderDynamicContent()}

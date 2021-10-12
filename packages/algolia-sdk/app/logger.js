@@ -75,6 +75,6 @@ export default function logAlgoliaAnalytics(
         }
         return response.json();
       })
-      .catch((error) => reject(error));
+      .catch((error) => console.log(error));
   });
 }

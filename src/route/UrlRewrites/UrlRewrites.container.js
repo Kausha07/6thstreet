@@ -1,13 +1,11 @@
 import PropTypes from "prop-types";
+import UrlRewritesQuery from "Query/UrlRewrites.query";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
-
-import UrlRewritesQuery from "Query/UrlRewrites.query";
 import { hideActiveOverlay } from "Store/Overlay/Overlay.action";
 import { LocationType } from "Type/Common";
 import history from "Util/History";
 import { fetchQuery } from "Util/Request";
-
 import UrlRewrites from "./UrlRewrites.component";
 import {
   TYPE_CATEGORY,
@@ -48,14 +46,16 @@ export class UrlRewritesContainer extends PureComponent {
 
   constructor(props) {
     super(props);
-
-    this.requestUrlRewrite();
   }
 
+  componentDidMount() {
+    this.requestUrlRewrite();
+  }
   componentDidUpdate(prevProps, prevState) {
     const { pathname } = location;
     const { locale, hideActiveOverlay } = this.props;
     const { locale: prevLocale } = prevProps;
+
     const { prevPathname, query } = this.state;
     const { prevPathname: prevStatePathname, query: prevQuery } = prevState;
 
@@ -66,14 +66,14 @@ export class UrlRewritesContainer extends PureComponent {
           return;
         } else {
           partialQuery = partialQuery.substring(1);
-          history.push(`${pathname}?${query}&${partialQuery}`);
+          history.push(`${pathname}${query}`);
         }
       } else {
         history.push(`${pathname}?${query}`);
       }
     }
     // if (!location.search && query) {
-    //     history.push(`${pathname}?${query}`);
+    // history.push(`${pathname}?${query}`);
     // }
 
     if (
@@ -90,50 +90,89 @@ export class UrlRewritesContainer extends PureComponent {
 
   async requestUrlRewrite(isUpdate = false) {
     // TODO: rename this to pathname, urlParam is strange
-    const { pathname: urlParam = "" } = location;
+    const { pathname: urlParam = "", search } = location;
     const slicedUrl = urlParam.slice(urlParam.search("id/"));
     // eslint-disable-next-line no-magic-numbers
     const magentoProductId = Number(slicedUrl.slice("3").split("/")[0]);
     const possibleSku = this.getPossibleSku();
-
     if (isUpdate) {
       this.setState({
         prevPathname: urlParam,
         isLoading: true,
       });
     }
-
+    if (search.startsWith("?q=")) {
+      this.setState({
+        prevPathname: urlParam,
+        type: TYPE_CATEGORY,
+        id: magentoProductId,
+        sku: possibleSku,
+        query: search,
+        brandDescription: "",
+        brandImg: "",
+        brandName: "",
+      });
+      window.pageType = TYPE_CATEGORY;
+    } else if (search.startsWith("?p")) {
+      this.setState({
+        prevPathname: urlParam,
+        type: TYPE_CATEGORY,
+        id: magentoProductId,
+        sku: possibleSku,
+        query: "",
+      });
+      window.pageType = TYPE_CATEGORY;
+    } else {
+      const { urlResolver } = await fetchQuery(
+        UrlRewritesQuery.getQuery({ urlParam })
+      );
+      const {
+        type = magentoProductId || possibleSku ? TYPE_PRODUCT : TYPE_NOTFOUND,
+        id,
+        data: {
+          url: query,
+          brand_html: brandDescription,
+          brand_logo: brandImg,
+          brand_name: brandName,
+        },
+      } = urlResolver || { data: {} };
+      if (!urlResolver) {
+        this.setState({
+          prevPathname: urlParam,
+          type: search.startsWith("?qid") ? TYPE_PRODUCT : TYPE_CATEGORY,
+          id: magentoProductId,
+          sku: possibleSku,
+          isLoading: false,
+          query: search,
+        });
+        window.pageType = search.startsWith("?qid")
+          ? TYPE_PRODUCT
+          : TYPE_CATEGORY;
+      } else {
+        const finalType =
+          type === TYPE_NOTFOUND && decodeURI(location.search).match(/idx=/)
+            ? TYPE_CATEGORY
+            : type;
+        window.pageType = finalType;
+        this.setState({
+          prevPathname: urlParam,
+          type: finalType,
+          id: id === undefined ? magentoProductId : id,
+          isLoading: false,
+          sku: possibleSku,
+          query: finalType === TYPE_PRODUCT ? "" : query,
+          brandDescription: brandDescription,
+          brandImg: brandImg,
+          brandName: brandName,
+        });
+      }
+    }
+    setTimeout(() => {
+      this.setState({
+        isLoading: false,
+      });
+    }, 3000);
     // TODO: switch to "executeGet" afterwards
-    const { urlResolver } = await fetchQuery(
-      UrlRewritesQuery.getQuery({ urlParam })
-    );
-    const {
-      type = magentoProductId || possibleSku ? TYPE_PRODUCT : TYPE_NOTFOUND,
-      id,
-      data: {
-        url: query,
-        brand_html: brandDescription,
-        brand_logo: brandImg,
-        brand_name: brandName,
-      },
-    } = urlResolver || { data: {} };
-    const finalType =
-      type === TYPE_NOTFOUND && decodeURI(location.search).match(/idx=/)
-        ? TYPE_CATEGORY
-        : type;
-
-    window.pageType = finalType;
-    this.setState({
-      prevPathname: urlParam,
-      isLoading: false,
-      type: finalType,
-      id: id === undefined ? magentoProductId : id,
-      sku: possibleSku,
-      query: finalType === TYPE_PRODUCT ? "" : query,
-      brandDescription: brandDescription,
-      brandImg: brandImg,
-      brandName: brandName,
-    });
   }
 
   getPossibleSku() {
@@ -158,16 +197,8 @@ export class UrlRewritesContainer extends PureComponent {
   }
 
   containerProps = () => {
-    const {
-      isLoading,
-      type,
-      id,
-      sku,
-      brandDescription,
-      brandImg,
-      brandName,
-    } = this.state;
-
+    const { isLoading, type, id, sku, brandDescription, brandImg, brandName } =
+      this.state;
     return {
       isLoading,
       type,

@@ -1,15 +1,25 @@
 .SearchPage {
-    @include mobile {
-        padding-top: 160px;
-    }
-    
-    .PLPFilters-ToolBar {
-        @include mobile {
-            top: 190px;
-        }
-    }
+  width: var(--main-container-width-dsk);
+  max-width: var(--container-max-width);
+  margin-inline: auto;
+  margin-left: auto;
+  margin-right: auto;
+  margin: 0 auto;
+  @include mobile {
+    width: 100vw;
+    padding-top: 160px;
+  }
+  @include tablet {
+    width: 100vw;
+  }
 
-    .PLPFilterMobile {
-        top: 160px;
+  .PLPFilters-ToolBar {
+    @include mobile {
+      top: 190px;
     }
+  }
+
+  .PLPFilterMobile {
+    top: 154px;
+  }
 }

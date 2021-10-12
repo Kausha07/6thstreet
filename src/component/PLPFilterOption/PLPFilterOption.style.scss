@@ -12,6 +12,10 @@
         width: 100%;
         z-index: 1;
 
+        &_isArabic {
+            right: 0;
+        }
+
         @include desktop {
             width: calc(100% - 20px);
 
@@ -57,6 +61,9 @@
                 overflow: hidden;
                 justify-content: right;
                 top: 12px;
+                @include tablet{
+                    top: -15px;
+                }
 
                 @include desktop {
                     display: flex;
@@ -68,7 +75,9 @@
                     cursor: pointer;
                 }
             }
-
+            label:nth-child(2){
+                direction: rtl;
+            }
             .Field {
                 [type='checkbox'],
                 [type='radio'] {
@@ -135,7 +144,7 @@
                 }
             }
         }
-    
+
         .Field {
             margin: auto 5px auto 15px;
 
@@ -159,38 +168,38 @@
                     }
                 }
 
-                +label {           
+                +label {
                     &:hover {
                         &::after {
                                 --checkmark-color: var(--black-color);
                         }
                     }
-    
+
                     border-radius: 50%;
-    
+
                 }
                 &:disabled + label {
                     color: var(--disabeled-radio-button-color);
                     cursor: auto;
                 }
-    
+
                 &:checked + label {
                     --primary-base-color: var(--white-color);
                     border-color: var(--disabeled-radio-button-color);
-                    
+
                     &::after {
                         --checkmark-color: var(--check-mark-mobile-filter-color);
                     }
                 }
 
-                
-    
+
+
                 &:focus {
 
                     &::after {
                         --checkmark-color: var(--check-mark-mobile-filter-color);
                     }
-                    
+
                     + label {
                         &::after {
                             --checkmark-color: var(--check-mark-mobile-filter-color);
@@ -212,17 +221,22 @@
                     }
                 }
             }
-    
+
             [type='checkbox'] {
 
                 + label{
                     @include before-desktop {
                         position: absolute;
                         top: 10px;
-                        right: 5px;
+                        right: 0px;
+                        width: 21px;
+                        height: 21px;
+                        border-radius: 50%;
+                        background-color: var(--box-color);
+                        border: 1px solid var(--input-border-color)!important;
                     }
                 }
-    
+
                 &:checked + label {
                     --primary-base-color: transparent;
                     @include desktop {
@@ -241,12 +255,12 @@
 
                     &:checked + label {
                         --primary-base-color: transparent;
-    
+
                         &::after {
                             --checkmark-color: var(--check-mark-mobile-filter-color);
                         }
                     }
-                    
+
                 }
             }
         }
@@ -255,7 +269,7 @@
             span {
                 margin-right: 5px;
             }
-        
+
             .Field {
                 margin: auto 15px auto 5px;
             }

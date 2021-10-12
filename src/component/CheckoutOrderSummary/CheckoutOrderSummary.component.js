@@ -11,6 +11,7 @@ import { CheckoutOrderSummary as SourceCheckoutOrderSummary } from "SourceCompon
 import { getCurrency, getDiscountFromTotals, isArabic } from "Util/App";
 import { isSignedIn } from "Util/Auth";
 import isMobile from "Util/Mobile";
+import Image from "Component/Image";
 
 import Delivery from "./icons/delivery-truck.png";
 
@@ -106,7 +107,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
           elem="PromoText"
           mods={{ isArabic }}
         >
-          <img src={Delivery} alt="Delivery icon" />
+          <Image lazyLoad={true} src={Delivery} alt="Delivery icon" />
           {__("Add ")}
           <span block="CheckoutOrderSummary" elem="Currency">
             {`${currency_code} ${avail_free_shipping_amount.toFixed(3)} `}
@@ -198,7 +199,6 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
     } = this.props;
     const grandTotal = getFinalPrice(total, currency_code);
     const subTotal = getFinalPrice(subtotal, currency_code);
-
     return (
       <div block="CheckoutOrderSummary" elem="OrderTotals">
         <ul>
@@ -216,7 +216,7 @@ export class CheckoutOrderSummary extends SourceCheckoutOrderSummary {
               getDiscountFromTotals(totals, "clubapparel"),
               __("Club Apparel Redemption")
             )}
-            {couponCode && this.renderPriceLine(discount, __("Discount")) }
+            {(couponCode || (discount && discount != 0)) ? this.renderPriceLine(discount, __("Discount")) : null}
 
 
             {this.renderPriceLine(

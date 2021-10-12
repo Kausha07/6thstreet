@@ -1,15 +1,14 @@
 import MyAccountQuery from "Query/MyAccount.query";
+import VueIntegrationQueries from "Query/vueIntegration.query";
 import {
   updateCustomerDetails,
   updateCustomerSignInStatus,
 } from "SourceStore/MyAccount/MyAccount.action";
-import { updateGuestUserEmail } from "./MyAccount.action";
 import {
   CUSTOMER,
   MyAccountDispatcher as SourceMyAccountDispatcher,
   ONE_MONTH_IN_SECONDS,
 } from "SourceStore/MyAccount/MyAccount.dispatcher";
-import { getStore } from "Store";
 import { removeCartItems, setCartId } from "Store/Cart/Cart.action";
 import CartDispatcher from "Store/Cart/Cart.dispatcher";
 import { setClubApparel } from "Store/ClubApparel/ClubApparel.action";
@@ -33,14 +32,17 @@ import {
   deleteMobileAuthorizationToken,
   getAuthorizationToken,
   getMobileAuthorizationToken,
+  getUUID,
   setAuthorizationToken,
   setMobileAuthorizationToken,
 } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
-import Event, { EVENT_GTM_GENERAL_INIT } from "Util/Event";
+import Event, { EVENT_GTM_GENERAL_INIT, VUE_PAGE_VIEW } from "Util/Event";
 import { prepareQuery } from "Util/Query";
 import { executePost, fetchMutation } from "Util/Request";
 import { setCrossSubdomainCookie } from "Util/Url/Url";
+import { updateGuestUserEmail } from "./MyAccount.action";
+import Wishlist from "Store/Wishlist/Wishlist.dispatcher";
 
 export {
   CUSTOMER,
@@ -82,6 +84,22 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
         //after login dispatching custom event
         const loginEvent = new CustomEvent("userLogin");
         window.dispatchEvent(loginEvent);
+        const customerData = BrowserDatabase.getItem("customer");
+        const userID = customerData && customerData.id ? customerData.id : null;
+        const locale = VueIntegrationQueries.getLocaleFromUrl();
+        VueIntegrationQueries.vueAnalayticsLogger({
+          event_name: VUE_PAGE_VIEW,
+          params: {
+            event: VUE_PAGE_VIEW,
+            pageType: "menu",
+            currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+            clicked: Date.now(),
+            uuid: getUUID(),
+            referrer: window.location.href,
+            url: window.location.href,
+            userID: userID,
+          },
+        });
       },
       () => {
         window.location.reload();
@@ -152,11 +170,15 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
       const {
         generateCustomerToken: { token },
       } = result;
-
       setAuthorizationToken(token);
       dispatch(updateCustomerSignInStatus(true));
 
       await this.handleMobileAuthorization(dispatch, options);
+      const wishlistItem = localStorage.getItem("Wishlist_Item");
+      if (wishlistItem) {
+        await Wishlist.addSkuToWishlist(dispatch, wishlistItem);
+        localStorage.removeItem("Wishlist_Item");
+      }
       await WishlistDispatcher.updateInitialWishlistData(dispatch);
       await StoreCreditDispatcher.getStoreCredit(dispatch);
       setCrossSubdomainCookie("authData", this.getCustomerData(), "1");

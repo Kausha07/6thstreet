@@ -6,75 +6,177 @@
  */
 
 .ProductItem {
-    &-Brand {
-        font-size: 12px;
-    }
+  font-weight: var(--fw-regular);
+  // margin: 20px 5px;
+  min-width: 0;
+  padding-left: 0;
+  position: relative;
+  text-align: center;
 
-    &-Title {
-        font-weight: var(--fw-medium);
-        color: var(--gray-color);
-        font-size: 13px;
-    }
-
-    .ProductLabel {
-        width: 40px;
-        height: 25px;
-        background-color: #C8B581;
-        z-index: 1;
-        display: flex;
-        font-size: 13px;
-        color: white;
+  &_isArabic {
+    .Price {
+      display: flex;
+      flex-direction: none;
+      &-Wrapper{
         justify-content: center;
-        align-items: center;
-        position: absolute;
-        top: 20px;
-        border-radius: 0 10px 10px 0;
+      }
     }
     .WishlistIcon {
-        &-Icon{
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: initial
-        }
+      &-Icon {
+        left: unset !important;
+      }
     }
-    &_isArabic {
-        .ProductLabel {
-            border-radius: 10px 0 0 10px;
-            right: 0;
-        }
+  }
 
-        .WishlistIcon {
-            left: 0.8rem;
-            right: auto;
-            &-Icon{
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                padding: initial
-            }
-        }
+  &::before {
+    display: none;
+  }
+  &-ImageBox {
+    height: 0;
+    overflow: hidden;
+    padding-top: 100%;
+    background: #fff;
+    position: relative;
+  }
+  .Image_imageStatus_2{
+    display: flex;
+  }
+  .Image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding-bottom: 0 !important;
+    img {
+      object-position: center;
+      width: 100%;
+      height: 100%;
+      position: static;
+      object-fit: initial;
+    }
+  }
+
+  &:hover {
+    @include desktop {
+      box-shadow: 0 0 7px #d3d3d3;
+    }
+  }
+  a {
+    text-decoration: none;
+  }
+
+  &-Brand {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 19px;
+    text-align: start;
+    margin: 8.23px 0px 5.58px 0px;
+  }
+  &-OutOfStock {
+    display: block;
+    font-size: 13px;
+    line-height: 30px;
+    text-align: center;
+    color: var(--Cardinal);
+    text-transform: uppercase;
+    font-family: "Avenir Next Medium";
+  }
+  &-Title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 80%;
+    margin-bottom: 0;
+    font-size: 13px;
+    letter-spacing: 0;
+    line-height: 15px;
+    text-align: left;
+  }
+  .ProductLabel {
+    width: 35px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #c8b581;
+    border-radius: 0 10px 10px 0;
+    top: 12px;
+    position: absolute;
+    font-size: 11px;
+    color: #ffffff;
+    line-height: 13px;
+    font-weight: var(--fw-medium);
+  }
+
+  .WishlistIcon {
+    width: 28px;
+    height: 28px;
+    &-Icon {
+      width: 20px;
+      height: 20px;
+      background-size: 20px;
+      left: -1px;
+      top: 5px;
+    }
+  }
+  // .WishlistIcon {
+  //     &-Icon{
+  //         display: flex;
+  //         justify-content: center;
+  //         align-items: center;
+  //         padding: initial
+  //     }
+  // }
+  &_isArabic {
+    .ProductLabel {
+      border-radius: 10px 0 0 10px;
+      right: 0;
     }
 
-    .PDPSummary {
-        &-Dash, &-Exclusive {
-            display: none;
-        }
+    .WishlistIcon {
+      left: 0.8rem;
+      right: auto;
+      &-Icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: initial;
+      }
+    }
+  }
+
+  .Price {
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: -0.5px;
+    text-align: start;
+    margin-top: 5px;
+    display: flex;
+    &-Wrapper{
+      justify-content: center;
+    }
+    @include mobile {
+      font-size: 11px;
     }
 
-    .PLPSummary {
-        &-Exclusive,
-        &-Colors {
-            color: var(--Tundora);
-            font-size: 12px;
-            position: absolute;
-            padding: 7px 0;
-            width: 100%;
-            background-color: rgba(255, 255, 255, 0.6);
-            z-index: 1;
-            right: 0;
-            grid-row: 3;
-            bottom: 0;
-        }
+    &-Special,
+    &-Discount {
+      display: none;
+
+      &_discount {
+        display: inline;
+        color: #d12228;
+      }
     }
+
+    &-Base {
+      &_discount {
+        // font-size: 11px;
+        // font-weight: var(--fw-demi);
+        // margin-right: 10px;
+      }
+    }
+  }
 }

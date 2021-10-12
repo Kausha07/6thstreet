@@ -14,6 +14,9 @@ import SearchPage from "./SearchPage.component";
 
 export class SearchPageContainer extends PLPContainer {
   componentDidMount() {
+    const {
+      location: { state },
+    } = this.props;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_PAGE_VIEW,
@@ -23,23 +26,34 @@ export class SearchPageContainer extends PLPContainer {
         currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),
-        referrer: "desktop",
+        referrer: state?.prevPath ? state?.prevPath : null,
+        url: window.location.href,
       },
     });
   }
   updateBreadcrumbs() {
-    const { updateBreadcrumbs } = this.props;
-
+    const {
+      updateBreadcrumbs,
+      location: { pathname = "", search = "" } = {},
+      options: { q } = {},
+    } = this.props;
+    const link = `${pathname}${search}`;
+    let breadCrumbName = q?.trim() ? q?.trim() : "Available products";
     updateBreadcrumbs([
-      { name: __("Catalog"), url: "" },
+      { name: breadCrumbName, url: link },
       { name: __("Home"), url: "/" },
     ]);
   }
 
   containerProps = () => {
-    const { options, pages, isLoading } = this.props;
+    const {
+      options,
+      pages,
+      isLoading,
+      location: { prevPath = null },
+    } = this.props;
 
-    return { options, pages, isLoading };
+    return { options, pages, isLoading, prevPath };
   };
 
   setMetaData() {

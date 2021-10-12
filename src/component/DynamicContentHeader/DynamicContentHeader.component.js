@@ -17,9 +17,9 @@ class DynamicContentHeader extends PureComponent {
 
         return (
             <div block="DynamicContentHeader">
-                <h1 block={ cx('foo', { baz: true }) } style={ this.props.header.title_color && titleStyle }>{ this.props.header.title }</h1>
-                <p block="">{ this.props.header.subtitle }</p>
-                <a href={this.props.header.button_link} block="">{this.props.header.button_label}</a>
+                {this.props.header.title && <h1 block={ cx('foo', { baz: true }) } style={ this.props.header.title_color && titleStyle }>{ this.props.header.title }</h1>}
+                { this.props.header.subtitle && <p block="">{ this.props.header.subtitle }</p>}
+                {this.props.header.button_link && <a href={this.props.header.button_link} block="">{this.props.header.button_label}</a>}
 
             </div>
         );

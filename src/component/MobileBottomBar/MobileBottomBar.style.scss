@@ -61,7 +61,7 @@
   background: $white;
   height: 70px;
   position: fixed;
-  bottom: 0;
+  bottom: 0px;
   width: 100%;
   border-top: 1px solid var(--light-gray);
   transition: 0.1s ease;
@@ -71,6 +71,10 @@
 
   &_isIPhoneNavigationHidden {
     height: 113px;
+  }
+
+  @include tablet{
+    height: 80px;
   }
 
   @include desktop {
@@ -83,51 +87,60 @@
 
   &-HomeAndBrand {
     display: block;
-    text-transform: none;
-    font-size: 10px;
-    font-weight: var(--fw-medium);
-    letter-spacing: -0.2px;
-    line-height: 14px;
-    color: var(--inactive-button-header-color);
-    height: 40px;
+    height: fit-content;
     width: 20%;
-    padding: 10px 0 0;
     text-align: center;
-    margin: 0;
+    padding-top: 16px;
+
 
     &::before {
       content: "";
       right: 0;
       background-size: 27px;
-      width: 27px;
-      height: 29px;
+      width: 24px;
+      height: 24px;
       display: inline-block;
       font-size: 0;
-      filter: invert(26%) sepia(2%) saturate(21%) hue-rotate(43deg)
-        brightness(90%) contrast(80%);
+      // filter: invert(26%) sepia(2%) saturate(21%) hue-rotate(43deg)
+      //   brightness(90%) contrast(80%);
     }
 
     &_isHomeButton {
       &::before {
-        background: url(./icons/home-gray@2x.png) no-repeat center center;
+        background: url(./icons/home.svg) no-repeat center center;
         background-size: 24px;
+      }
+      &.MobileBottomBar-HomeAndBrand_isActive {
+        background-image: linear-gradient(black, black);
+        background-repeat: no-repeat;
+        background-size: 50% 1px, calc(100% - 1px) 100%;
+        background-position: center top, 1px 0;
+        &::before{
+          background: url(./icons/home-active.svg) no-repeat center center;
+          background-size: 24px;
+        }
       }
     }
 
     &_isBrandButton {
       &::before {
-        background: url(./icons/brands-gray@2x.png) no-repeat center center;
-        background-size: 27px;
+        background: url(./icons/brand.svg) no-repeat center center;
+        background-size: 24px;
+      }
+      &.MobileBottomBar-HomeAndBrand_isActive {
+        background-image: linear-gradient(black, black);
+        background-repeat: no-repeat;
+        background-size: 50% 1px, calc(100% - 1px) 100%;
+        background-position: center top, 1px 0;
+        &::before{
+          background: url(./icons/brand-active.svg) no-repeat center center;
+          background-size: 24px;
+        }
       }
     }
 
-    &_isActive {
-      color: var(--active-button-header-color);
+    &_isHomeButton {
 
-      &::before {
-        filter: invert(43%) sepia(60%) saturate(1535%) hue-rotate(335deg)
-          brightness(107%) contrast(95%);
-      }
     }
 
     @include desktop {
@@ -144,8 +157,8 @@
   }
 
   .HeaderMenu {
-    width: 20%;
-    padding: 12px 0 0;
+    // width: 20%;
+    // padding: 12px 0 0;
 
     .Menu {
       &-Container {
@@ -154,14 +167,96 @@
     }
 
     &-Button {
+      display: block;
+      height: fit-content;
       width: 100%;
-      margin: 0;
+      text-align: center;
+      padding-top: 16px;
+      margin-top: 0px;
 
       &::before {
-        background-position: center;
-        background-size: 28px;
-        height: 29px;
+        background: url(./icons/categories.svg) no-repeat center center;
+        background-size: 24px;
+        filter: none;
+        height: 24px;
+        width: 24px;
       }
+      &_isExpanded{
+        background-image: linear-gradient(black, black);
+        background-repeat: no-repeat;
+        background-size: 50% 1px, calc(100% - 1px) 100%;
+        background-position: center top, 1px 0;
+        &::before {
+          background: url(./icons/categories-active.svg) no-repeat center center;
+          background-size: 24px;
+          filter: none;
+        }
+      }
+    }
+  }
+  &-WishListAndAccount{
+    display: block;
+    height: 24px;
+    text-align: center;
+    padding-right: 0px;
+    padding-left: 0px;
+    .HeaderWishlist{
+      height: 24px;
+      padding-top: 16px;
+      margin-top: 0px;
+      width: 100%;
+      &::before {
+        background: url(./icons/favorites.svg) no-repeat center center;
+        background-size: 24px;
+        filter: none;
+        width: 24px;
+        height: 24px;
+
+      }
+      &_isWishlist{
+        background-image: linear-gradient(black, black);
+        background-repeat: no-repeat;
+        background-size: 50% 1px, calc(100% - 1px) 100%;
+        background-position: center top, 1px 0;
+        &::before {
+          background: url(./icons/favorites-active.svg) no-repeat center center;
+          background-size: 24px;
+          filter: none;
+
+        }
+      }
+    }
+    .HeaderAccount{
+      height: 24px;
+      padding-top: 16px;
+      margin-top: 0px;
+      width: 100%;
+      &::before {
+        background: url(./icons/account.svg) no-repeat center center;
+        background-size: 24px;
+        filter: none;
+        width: 24px;
+        height: 24px;
+
+      }
+      &_isAccount{
+        background-image: linear-gradient(black, black);
+        background-repeat: no-repeat;
+        background-size: 50% 1px, calc(100% - 1px) 100%;
+        background-position: center top, 1px 0;
+        &::before {
+          background: url(./icons/account-active.svg) no-repeat center center;
+          background-size: 24px;
+          filter: none;
+
+        }
+      }
+    }
+    label{
+      @include mobile{
+        line-height: 1;
+      }
+
     }
   }
 }
