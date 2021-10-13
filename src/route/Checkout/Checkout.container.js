@@ -8,6 +8,7 @@ import {
 import { CC_POPUP_ID } from "Component/CreditCardPopup/CreditCardPopup.config";
 import { TABBY_POPUP_ID } from "Component/TabbyPopup/TabbyPopup.config";
 import MagentoAPI from 'Util/API/provider/MagentoAPI';
+import { getCountryFromUrl } from 'Util/Url/Url';
 
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -795,7 +796,13 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
         return acc;
       }, []);
-
+      const swapPositions = (array, a ,b) => {
+        [array[a], array[b]] = [array[b], array[a]]
+      }
+      const countryCode = ['AE', 'SA'].includes(getCountryFromUrl()) 
+      if(countryCode){
+        swapPositions(availablePaymentMethods,0,2);
+      }
       if (data) {
         this.setState({
           isLoading: false,
