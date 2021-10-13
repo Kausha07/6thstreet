@@ -36,7 +36,7 @@ export class CheckoutAddressBookContainer extends SourceCheckoutAddressBookConta
     isBilling: PropTypes.bool,
     showPopup: PropTypes.func.isRequired,
     shippingAddress: PropTypes.object.isRequired,
-    isClickAndCollect: PropTypes.bool.isRequired
+    isClickAndCollect: PropTypes.string.isRequired
   };
 
   containerFunctions = {

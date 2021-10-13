@@ -75,7 +75,9 @@
                     cursor: pointer;
                 }
             }
-
+            label:nth-child(2){
+                direction: rtl;
+            }
             .Field {
                 [type='checkbox'],
                 [type='radio'] {

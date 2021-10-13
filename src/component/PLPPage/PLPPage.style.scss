@@ -9,58 +9,66 @@
     margin: 0;
   }
 
-
-  .ProductItem{
-    &-Brand{
+  .ProductItem {
+    &-Brand {
       text-align: center;
-      @include mobile{
+      @include mobile {
         font-size: 12px;
         line-height: 7px;
       }
     }
-    &-Title{
+    &-Title {
       margin: 0 auto;
       text-align: center;
-      @include mobile{
+      @include mobile {
         font-size: 11px;
         line-height: 14px;
       }
     }
 
-    .Price{
+    .Price {
       justify-content: center;
-      @include mobile{
+      @include mobile {
         display: block;
         line-height: 17px;
 
-        &-Wrapper{
+        &-Wrapper {
           display: block;
           text-align: center;
         }
-        &-Discount{
+        &-Discount {
           display: block;
           text-align: center;
         }
-        &-Base{
+        &-Base {
           display: block;
           text-align: center;
         }
-        &-Base_discount{
+        &-Base_discount {
           display: inline;
         }
       }
-
     }
-    .PLPSummary-Exclusive{
-      @include mobile{
+    .PLPSummary-Colors {
+      background-color: #ffffff;
+      opacity: 0.8;
+      width: 100%;
+      bottom: 0;
+      position: absolute;
+      padding: 4px 0px
+    }
+    .PLPSummary-Exclusive {
+      background-color: #ffffff;
+      opacity: 0.8;
+      width: 100%;
+      bottom: 0;
+      padding: 4px 0px;
+      position: absolute;
+      @include mobile {
         font-size: 12px;
       }
     }
   }
-
-
-
-
 }
 
 .PageWrapper {

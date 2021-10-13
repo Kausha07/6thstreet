@@ -18,7 +18,7 @@ export const mapDispatchToProps = (dispatch) => ({
 
 class CheckoutAddressFormContainer extends PureComponent {
   static propTypes = {
-    isClickAndCollect: PropTypes.bool.isRequired,
+    isClickAndCollect: PropTypes.string.isRequired,
   };
 
   constructor(props) {

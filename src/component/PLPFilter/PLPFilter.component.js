@@ -49,9 +49,9 @@ class PLPFilter extends PureComponent {
     }
     let placeholder =
       category === "in_stock"
-        ? "BY STOCK"
+        ? __("BY STOCK")
         : category === "age"
-        ? "BY AGE"
+        ? __("BY AGE")
         : label;
 
     return (

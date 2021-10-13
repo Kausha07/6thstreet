@@ -21,7 +21,7 @@ export class CheckoutAddressBook extends SourceCheckoutAddressBook {
     isSignedIn: PropTypes.bool.isRequired,
     isBilling: PropTypes.bool.isRequired,
     shippingAddress: PropTypes.object.isRequired,
-    isClickAndCollect: PropTypes.bool.isRequired
+    isClickAndCollect: PropTypes.string.isRequired
   };
 
   state = {

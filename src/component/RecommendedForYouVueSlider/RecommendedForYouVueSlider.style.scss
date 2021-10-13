@@ -274,6 +274,10 @@ html {
 
     &-SpecialPriceCon {
       display: block;
+      text-align: left !important;
+      &_isArabic {
+        text-align: right !important;
+      }
     }
     &-brandName {
       &_isArabic {

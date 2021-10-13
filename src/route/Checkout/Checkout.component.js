@@ -47,7 +47,7 @@ export class Checkout extends SourceCheckout {
     isTabbyPopupShown: PropTypes.bool,
     showOverlay: PropTypes.func.isRequired,
     hideActiveOverlay: PropTypes.func.isRequired,
-    isClickAndCollect: PropTypes.bool.isRequired
+    isClickAndCollect: PropTypes.string.isRequired
   };
 
   state = {
