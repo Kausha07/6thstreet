@@ -103,10 +103,10 @@ class ProductItem extends PureComponent {
       const count = also_available_color.split(",").length - 2;
 
       return count > 0 ? (
-        <span block="PLPSummary" elem="Colors">
+        <div block="PLPSummary" elem="Colors">
           {" "}
           {`+${count} `} {__("Colors")}{" "}
-        </span>
+        </div>
       ) : null;
     }
 
@@ -120,10 +120,10 @@ class ProductItem extends PureComponent {
 
     if (promotion !== undefined) {
       return promotion !== null ? (
-        <span block="PLPSummary" elem="Exclusive">
+        <div block="PLPSummary" elem="Exclusive">
           {" "}
           {promotion}{" "}
-        </span>
+        </div>
       ) : null;
     }
 
