@@ -50,10 +50,20 @@
       }
     }
     .PLPSummary-Colors {
-      bottom: 23px;
+      background-color: #ffffff;
+      opacity: 0.8;
+      width: 100%;
+      bottom: 0;
+      position: absolute;
+      padding: 4px 0px
     }
     .PLPSummary-Exclusive {
-      bottom: 23px;
+      background-color: #ffffff;
+      opacity: 0.8;
+      width: 100%;
+      bottom: 0;
+      padding: 4px 0px;
+      position: absolute;
       @include mobile {
         font-size: 12px;
       }
