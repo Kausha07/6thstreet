@@ -380,7 +380,7 @@ class GoogleTagManager extends PureComponent {
     GoogleTagManager.instance = this;
 
     this.initGroupedProducts();
-    this.injectGTMScripts();
+    // this.injectGTMScripts();
     this.registerEvents();
   }
 
