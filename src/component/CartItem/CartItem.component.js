@@ -318,9 +318,10 @@ export class CartItem extends PureComponent {
           value={qty}
           onChange={(e) => this.onQuantityChange(e.target.value)}
         >
-          {qtyList.map((item) => {
+          {qtyList.map((item, index) => {
             return (
               <option
+                key={index}
                 selected={qty == item}
                 block="CartItem"
                 elem="QuantityOption"

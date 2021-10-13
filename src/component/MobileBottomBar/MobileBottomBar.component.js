@@ -76,7 +76,6 @@ class MobileBottomBar extends NavigationAbstract {
 
   handleResize = () => {
     const { pageYOffset, isRoundedIphone } = this.state;
-
     this.setState({
       isIPhoneNavigationHidden:
         isRoundedIphone && window.pageYOffset > pageYOffset,

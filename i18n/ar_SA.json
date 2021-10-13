@@ -12,8 +12,6 @@
     "Oman": "سلطنة عمان",
     "Bahrain": "مملكة البحرين",
     "Qatar": "دولة قطر",
-    "English": "الإنجليزية",
-    "Arabic": "العربية",
     "You must be logged in to remove items to wishlist": "يجب تسجيل الدخول لإزالة مُنتجات من قائمة أمنياتك",
     "Product has been removed from your Wish List!": "تمت إزالة المنتج من قائمة أمنياتك",
     "Failed to remove item from wishlist": "فشل إزالة المُنتج من قائمة أمنياتك",
@@ -339,7 +337,7 @@
     "Club Apparel Redemption": "استرداد نقاط كلوب أباريل",
     "Total": "المجموع",
     "Cash on Delivery": "الدفع عند الاستلام",
-    "refine ": "تحسين",
+    "refine ": " تحسين",
     "Products": "المُنتجات",
     "Current Store Credit:": ":رصيد المتجرالحالية",
     "Action": "تفعيل",
@@ -819,7 +817,7 @@
     "Share Icon": null,
     "Favorite Icon": null,
     "Please wait %s before re-sending the request": null,
-    "refine": null,
+    "refine": "تحسين",
     "Address #%s%s": null,
     "To be rewarded for 6thStreet purchases, you must have a 6thStreet account and you must be a Club Apparel Member. You need to link your Club Apparel account to your 6thStreet account. If you are not a Club Apparel member, you can download the Club Apparel App and Register from ": null,
     "here.": null,
@@ -871,5 +869,9 @@
     "Model is wearing": null,
     "West (CM)": null,
     "360°": null,
-    " What are you looking for ?": "ما الذي تبحث عنه؟ "
+    " What are you looking for ?": "ما الذي تبحث عنه؟ ",
+    "English": null,
+    "Arabic": null,
+    "BY STOCK": null,
+    "BY AGE": null
 }

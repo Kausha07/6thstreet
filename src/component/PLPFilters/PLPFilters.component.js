@@ -164,11 +164,14 @@ class PLPFilters extends PureComponent {
 
   renderSeeResultButton() {
     const { productsCount } = this.props;
+    const { isArabic } = this.state;
+
     const count = ` ( ${productsCount} )`;
     return (
       <button
         block="Content"
         elem="SeeResult"
+        mods={{ isArabic }}
         onClick={this.onShowResultButton}
       >
         {__("show result")}

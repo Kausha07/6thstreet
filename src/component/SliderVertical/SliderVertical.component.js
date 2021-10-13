@@ -131,7 +131,7 @@ export class SliderVertical extends PureComponent {
             countPerPage,
             count: countPerPage
         });
-
+        
         if (!sliderChildren || !sliderChildren[0]) {
             return;
         }

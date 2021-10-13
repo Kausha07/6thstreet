@@ -115,7 +115,7 @@ const createCustomQuerySuggestions = (hit, resArray, sourceIndexName) => {
     } ${query}`;
   }
   // if query does include brands
-  if (query?.toUpperCase().includes(brand_name[0]?.value.toUpperCase())) {
+  if (brand_name[0]?.value?.toUpperCase().replace(/\s/g, "").includes(query?.toUpperCase().replace(/\s/g, ""))) {
     if (checkForValidSuggestion(genderModifiedQuery, [...resArray, ...arr])) {
       addSuggestion(
         genderModifiedQuery,
@@ -389,11 +389,11 @@ const checkForValidSuggestion = (value, arr) => {
   return valid;
 };
 
-export const getCustomQuerySuggestions = (hits, sourceIndexName) => {
+export const getCustomQuerySuggestions = (hits, sourceIndexName,query) => {
   let arr = [];
   let i = 0;
   while (arr.length < 5 && i < hits.length) {
-    arr.push(...createCustomQuerySuggestions(hits[i], arr, sourceIndexName));
+    arr.push(...createCustomQuerySuggestions(hits[i], arr, sourceIndexName,query));
     i++;
   }
   return arr;
@@ -424,6 +424,10 @@ export const getHighlightedText = (text, highlight) => {
   return (
     <span>
       {" "}
+      {/* {console.log("part",parts)}
+      {console.log("filteredHighlight",filteredHighlight)}
+      {console.log("text",text)}
+      {console.log("regex",new RegExp(`(${filteredHighlight})`, "gi"))} */}
       {parts?.map((part, i) => (
         <span
           key={i}

@@ -169,7 +169,6 @@ class FieldMultiselect extends PureComponent {
         ? Object.entries(subcategories).map(this.renderOption)
         : this.renderOptionMobile(option);
     }
-
     return (
       <PLPFilterOption
         key={key}
