@@ -32,7 +32,7 @@
     display: none;
   }
   &-ImageBox {
-    overflow: hidden;
+    overflow: visible;
     padding-top: 100%;
     background: #fff;
     position: relative;
@@ -71,7 +71,7 @@
     letter-spacing: 0;
     line-height: 19px;
     text-align: start;
-    margin: 8.23px 0px 5.58px 0px;
+    margin: 32px 0px 5.58px 0px;
   }
   &-OutOfStock {
     display: block;
