@@ -70,7 +70,7 @@ class PLPPage extends PureComponent {
   }
 
   render() {
-    return <div block="PLPPage">{this.renderProducts()}</div>;
+    return <div block="PLPPage"><ul>{this.renderProducts()}</ul></div>;
   }
 }
 
