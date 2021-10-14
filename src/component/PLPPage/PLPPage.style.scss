@@ -1,5 +1,4 @@
 .PLPPage {
-  display: flex;
   ul {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -53,7 +52,10 @@
       background-color: #ffffff;
       opacity: 0.8;
       width: 100%;
-      bottom: 0;
+      bottom: -19px;
+      @include desktop {
+        bottom: -27px;
+      }
       position: absolute;
       padding: 4px 0px;
     }
@@ -61,7 +63,10 @@
       background-color: #ffffff;
       opacity: 0.8;
       width: 100%;
-      bottom: 0;
+      bottom: -19px;
+      @include desktop {
+        bottom: -27px;
+      }
       padding: 4px 0px;
       position: absolute;
       @include mobile {
