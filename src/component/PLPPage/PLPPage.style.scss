@@ -1,14 +1,14 @@
 .PLPPage {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  //   margin: 0 20px;
-  grid-gap: 35px 25px;
-
-  @include mobile() {
-    grid-template-columns: repeat(2, 1fr);
-    margin: 0;
+  display: flex;
+  ul {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 35px 25px;
+    @include mobile() {
+      grid-template-columns: repeat(2, 1fr);
+      margin: 0;
+    }
   }
-
   .ProductItem {
     &-Brand {
       text-align: center;
@@ -55,7 +55,7 @@
       width: 100%;
       bottom: 0;
       position: absolute;
-      padding: 4px 0px
+      padding: 4px 0px;
     }
     .PLPSummary-Exclusive {
       background-color: #ffffff;
