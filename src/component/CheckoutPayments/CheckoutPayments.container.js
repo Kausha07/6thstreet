@@ -1,9 +1,11 @@
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
+import { getCountryFromUrl } from 'Util/Url/Url';
 
 import {
   TABBY_ISTALLMENTS,
   TABBY_PAY_LATER,
+  HIDDEN_PAYMENTS
 } from "Component/CheckoutPayments/CheckoutPayments.config";
 import { BILLING_STEP } from "Route/Checkout/Checkout.config";
 import {
@@ -17,7 +19,7 @@ import CheckoutDispatcher from "Store/Checkout/Checkout.dispatcher";
 import { showNotification } from "Store/Notification/Notification.action";
 import { TotalsType } from "Type/MiniCart";
 
-import { CARD, FREE } from "./CheckoutPayments.config";
+import { CARD, FREE , CHECKOUT_APPLE_PAY} from "./CheckoutPayments.config";
 
 export const mapStateToProps = (state) => ({
   totals: state.CartReducer.cartTotals,
@@ -57,8 +59,9 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
       setTabbyWebUrl,
       totals: { total },
     } = this.props;
-
-    this.selectPaymentMethod({ m_code: total ? CARD : FREE });
+    const countryCode = ['AE', 'SA'].includes(getCountryFromUrl()) 
+    const isApplePayAvailable = HIDDEN_PAYMENTS.includes(CHECKOUT_APPLE_PAY) || !window.ApplePaySession
+    this.selectPaymentMethod({ m_code: total ? countryCode && !isApplePayAvailable ? CHECKOUT_APPLE_PAY : CARD : FREE });
 
     if (window.formPortalCollector) {
       window.formPortalCollector.subscribe(
@@ -108,12 +111,14 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
       createTabbySession
     } = this.props;
     const { selectedPaymentCode } = this.state;
+    const countryCode = ['AE', 'SA'].includes(getCountryFromUrl()) 
+    const isApplePayAvailable = HIDDEN_PAYMENTS.includes(CHECKOUT_APPLE_PAY) || !window.ApplePaySession
 
     if (
       (selectedPaymentCode === FREE && total > 0) ||
       (selectedPaymentCode !== FREE && total === 0)
     ) {
-      this.selectPaymentMethod({ m_code: total ? CARD : FREE });
+      this.selectPaymentMethod({ m_code: total ?countryCode && !isApplePayAvailable ? CHECKOUT_APPLE_PAY : CARD : FREE  });
     }
     if(prevProps?.totals?.total !== total){
       createTabbySession(billingAddress)
