@@ -59,7 +59,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
         posofreco: posofreco,
       },
     });
-    this.sendBannerClickImpression(item);
+    // this.sendBannerClickImpression(item);
   };
   sendBannerClickImpression(item) {
     Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);
@@ -174,7 +174,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
     if (data?.url) {
       newLink = data.url;
     }
-  
+
     return (
       <div
         block="VueProductSlider"
