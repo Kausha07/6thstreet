@@ -72,6 +72,20 @@ class ProductItem extends PureComponent {
     Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);
   }
 
+  renderNew() {
+    const { product: { news_from_date, news_to_date } } = this.props;
+    const { date } = this.state;
+    if (Date.parse(date) <= Date.parse(news_to_date) && Date.parse(date) >= Date.parse(news_from_date)) {
+        return (
+            <span block="ProductLabel">
+                    { __('New') }
+            </span>
+        );
+    }
+
+    return null;
+}
+
   renderWishlistIcon() {
     const {
       product: { sku },
@@ -261,7 +275,7 @@ class ProductItem extends PureComponent {
         }}
       >
         {" "}
-        {/* {this.renderLabel()} */}
+        {this.renderLabel()}
         {this.renderWishlistIcon()} {this.renderLink()}{" "}
       </li>
     );

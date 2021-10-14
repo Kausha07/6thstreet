@@ -51,13 +51,10 @@ class MenuBrands extends PureComponent {
         .replace("/kids.html", ".html")
         .replace("/home.html", ".html")
       : link;
-    let newUpdatedLink = link.includes("is_new_in")
-      ? link.split("?")[0] + "?is_new_in=1"
-      : link;
 
     return (
       <Link
-        to={newUpdatedLink}
+        to={link}
         title={label}
         key={i}
         onClick={this.onItemClick}
