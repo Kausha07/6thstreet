@@ -63,10 +63,10 @@ class ProductLabel extends PureComponent {
 
     render() {
         return (
-            <div>
+            <div block="ProductContainer">
                 { this.renderNew() }
-                { this.renderDash() }
-                { this.renderExclusive() }
+                {/* { this.renderDash() } */}
+                {/* { this.renderExclusive() } */}
             </div>
         );
     }
