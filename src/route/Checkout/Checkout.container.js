@@ -796,13 +796,6 @@ export class CheckoutContainer extends SourceCheckoutContainer {
 
         return acc;
       }, []);
-      const swapPositions = (array, a ,b) => {
-        [array[a], array[b]] = [array[b], array[a]]
-      }
-      const countryCode = ['AE', 'SA'].includes(getCountryFromUrl()) 
-      if(countryCode){
-        swapPositions(availablePaymentMethods,0,2);
-      }
       if (data) {
         this.setState({
           isLoading: false,
