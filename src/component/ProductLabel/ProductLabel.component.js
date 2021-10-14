@@ -46,7 +46,7 @@ class ProductLabel extends PureComponent {
 
         if (promotion !== undefined) {
             return promotion !== null
-                ? <span block="PDPSummary" elem="Exclusive">{ promotion.toLowerCase() }</span>
+                ? <span block="PDPSummary" elem="Exclusive">{ promotion }</span>
                 : null;
         }
 
