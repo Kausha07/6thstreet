@@ -1,12 +1,13 @@
 .PLPPage {
+  display: flex;
   ul {
-    display: flex;
-    // grid-template-columns: repeat(4, 1fr);
-    // grid-gap: 35px 25px;
-    // @include mobile() {
-    //   grid-template-columns: repeat(2, 1fr);
-    //   margin: 0;
-    // }
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 35px 25px;
+    @include mobile() {
+      grid-template-columns: repeat(2, 1fr);
+      margin: 0;
+    }
   }
   .ProductItem {
     &-Brand {
