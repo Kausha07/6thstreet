@@ -59,7 +59,7 @@
   display: flex;
   z-index: 90;
   background: $white;
-  height: 70px;
+  height: 70px !important;
   position: fixed;
   bottom: 0px;
   width: 100%;
@@ -69,9 +69,9 @@
     display: none;
   }
 
-  &_isIPhoneNavigationHidden {
-    height: 113px;
-  }
+  // &_isIPhoneNavigationHidden {
+  //   height: 113px;
+  // }
 
   @include tablet{
     height: 80px;
