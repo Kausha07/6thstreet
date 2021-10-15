@@ -433,6 +433,9 @@
         &-PostCode {
           font-weight: var(--fw-demi);
         }
+        &-Street {
+          word-break: break-all;
+        }
       }
     }
 
@@ -521,7 +524,7 @@
 
       &_isArabic {
         .Details {
-
+         
           &-Number {
             margin-left: auto;
             margin-right: 5px;
