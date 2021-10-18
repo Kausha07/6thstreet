@@ -91,7 +91,7 @@ class ProductItem extends PureComponent {
 
   renderLabel() {
     const { product } = this.props;
-    return <ProductLabel product={product} />;
+    return <ProductLabel product={product} section="productItem" />;
   }
 
   renderColors() {
