@@ -1,15 +1,25 @@
 .PLPPage {
-  display: flex;
+  display: unset!important;
   ul {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-gap: 35px 25px;
+    grid-gap: 24px 16px;
     @include mobile() {
       grid-template-columns: repeat(2, 1fr);
       margin: 0;
     }
   }
   .ProductItem {
+    &-ImageBox {
+      padding-top: unset!important;
+      .Image {
+        position: unset!important;
+        top: unset!important;
+        left: unset!important;
+        padding-bottom: unset!important;
+      }
+      margin-bottom: 16px;
+    }
     &-Brand {
       text-align: center;
       @include mobile {
@@ -53,23 +63,17 @@
       background-color: #ffffff;
       opacity: 0.8;
       width: 100%;
-      bottom: -19px;
-      @include desktop {
-        bottom: -27px;
-      }
       position: absolute;
+      bottom: 0;
       padding: 4px 0px;
     }
     .PLPSummary-Exclusive {
       background-color: #ffffff;
       opacity: 0.8;
       width: 100%;
-      bottom: -19px;
-      @include desktop {
-        bottom: -27px;
-      }
-      padding: 4px 0px;
       position: absolute;
+      bottom: 0;
+      padding: 4px 0px;
       @include mobile {
         font-size: 12px;
       }

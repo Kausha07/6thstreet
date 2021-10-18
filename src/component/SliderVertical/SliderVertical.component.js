@@ -276,7 +276,7 @@ export class SliderVertical extends PureComponent {
     isSlider() {
         const { children = [] } = this.props;
         const { countPerPage } = this.state;
-
+        console.log(children,"muskan",countPerPage);
         this.setState({ isSlider: countPerPage < children.length });
     }
 

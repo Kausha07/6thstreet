@@ -94,6 +94,7 @@ export class PLPContainer extends PureComponent {
     const {
       prevRequestOptions: { page: prevPage, ...prevRestOptions },
     } = state;
+
     if (JSON.stringify(restOptions) !== JSON.stringify(prevRestOptions)) {
       // if queries match (excluding pages) => not inital
       PLPContainer.requestProductList(props);

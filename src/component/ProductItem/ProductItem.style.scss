@@ -32,7 +32,6 @@
     display: none;
   }
   &-ImageBox {
-    overflow: visible;
     padding-top: 100%;
     background: #fff;
     position: relative;
@@ -66,12 +65,12 @@
   }
 
   &-Brand {
-    font-size: 14px;
+    font-size: 11px;
     font-weight: 600;
-    letter-spacing: 0;
-    line-height: 19px;
+    letter-spacing: 0.18px;
+    line-height: 15px;
     text-align: start;
-    margin: 32px 0px 5.58px 0px;
+    margin: 0px 0px 6px 0px;
   }
   &-OutOfStock {
     display: block;
@@ -88,9 +87,10 @@
     text-overflow: ellipsis;
     width: 80%;
     margin-bottom: 0;
-    font-size: 13px;
-    letter-spacing: 0;
+    font-size: 12px;
+    letter-spacing: -0.09px;
     line-height: 15px;
+    color: #4A4A4A;
     text-align: left;
   }
   .ProductLabel {
@@ -165,9 +165,6 @@
     &-Wrapper {
       justify-content: center;
     }
-    @include mobile {
-      font-size: 11px;
-    }
 
     &-Special,
     &-Discount {
@@ -177,6 +174,11 @@
         display: inline;
         color: #d12228;
       }
+    }
+    &-Del{
+      font-size: 12px;
+      letter-spacing: 0;
+      line-height: 16px;
     }
 
     &-Base {
