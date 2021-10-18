@@ -94,7 +94,7 @@ export class WishlistDispatcher {
 
     try {
       const response = await MobileAPI.post(`/wishlist?new=1`, {
-        sku: sku.replace(/\//g, "%2F"),
+        sku: sku,
       });
       this.updateInitialWishlistData(dispatch);
       if (response.status === 200) {
