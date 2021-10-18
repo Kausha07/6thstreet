@@ -146,5 +146,5 @@ export const parseURL = (url) => {
   catch(err) {
     console.error(err)
   }
-  return parseURL;
+  return parsedURL;
 }
