@@ -148,13 +148,15 @@ class ProductItem extends PureComponent {
   renderImage() {
     const {
       product: { thumbnail_url },
+      lazyLoad=true
     } = this.props;
 
     return (
       <div block="ProductItem" elem="ImageBox">
-        <Image lazyLoad={true} src={thumbnail_url} />
+        <Image lazyLoad={lazyLoad} src={thumbnail_url} />
         {/* {this.renderOutOfStock()} */}
-        {this.renderExclusive()} {this.renderColors()}{" "}
+        {this.renderExclusive()}
+        {this.renderColors()}
       </div>
     );
   }
@@ -242,10 +244,11 @@ class ProductItem extends PureComponent {
 
     return (
       <Link to={isVueData ? parseLink : linkTo} onClick={this.handleClick}>
-        {" "}
         {this.renderImage()}
-        {this.renderOutOfStock()} {this.renderBrand()} {this.renderTitle()}{" "}
-        {this.renderPrice()}{" "}
+        {this.renderOutOfStock()}
+        {this.renderBrand()}
+        {this.renderTitle()}
+        {this.renderPrice()}
       </Link>
     );
   }
