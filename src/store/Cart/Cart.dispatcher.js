@@ -160,6 +160,8 @@ export class CartDispatcher {
     const {
       Cart: { cartId },
     } = getStore().getState();
+    console.log("cart id", cartId)
+    console.log("store state", getStore().getState())
     try {
       dispatch(processingCartRequest());
       const response = await addProductToCart({
