@@ -69,4 +69,7 @@
         }
 
     }
+    &_isTabby:nth-of-type(2n) {
+        display: none;
+    }
 }
