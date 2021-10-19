@@ -18,10 +18,12 @@ export class RecommendationsContainer extends PureComponent {
 
   render() {
     return (
-      <Recommendations
+      <ul>
+        <Recommendations
         {...this.containerFunctions}
         {...this.containerProps()}
       />
+      </ul>
     );
   }
 }
