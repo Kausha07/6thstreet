@@ -20,13 +20,10 @@ class EmptySearch extends PureComponent {
   getRecommendedProducts() {
     const { gender } = this.props;
     const userData = BrowserDatabase.getItem("MOE_DATA");
-    const {
-      USER_DATA: { deviceUuid },
-    } = userData;
     const query = {
       filters: [],
       num_results: 50,
-      mad_uuid: userData?.USER_DATA?.deviceUuid,
+      mad_uuid: userData?.USER_DATA?.deviceUuid || null,
     };
 
     const payload = VueQuery.buildQuery("vue_browsing_history_slider", query, {

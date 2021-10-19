@@ -58,7 +58,7 @@ class PDPDetailsSection extends PureComponent {
         const query = {
           filters: [],
           num_results: 10,
-          mad_uuid: userData?.USER_DATA?.deviceUuid,
+          mad_uuid: userData?.USER_DATA?.deviceUuid || null,
         };
 
         let promisesArray = [];
