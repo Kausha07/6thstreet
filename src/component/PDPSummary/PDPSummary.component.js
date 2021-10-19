@@ -80,7 +80,7 @@ class PDPSummary extends PureComponent {
     const { product } = this.props;
     return (
       <div block="PDPSummary" elem="Header">
-        <ProductLabel product={product} />
+        <ProductLabel product={product} section="PDPSummary" />
       </div>
     );
   }

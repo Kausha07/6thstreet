@@ -79,11 +79,12 @@ class ProductLabel extends PureComponent {
   }
 
   render() {
+    const { section } = this.props;
     return (
       <div block="ProductContainer">
         {this.renderNew()}
         {/* { this.renderDash() } */}
-        {/* { this.renderExclusive() } */}
+        {section === "PDPSummary" && this.renderExclusive()}
       </div>
     );
   }
