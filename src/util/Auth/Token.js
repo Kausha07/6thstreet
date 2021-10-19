@@ -1,4 +1,5 @@
 import BrowserDatabase from "Util/BrowserDatabase";
+import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
 
 export const AUTH_TOKEN = "auth_token";
 
@@ -11,7 +12,7 @@ export const UUID = 'uuid';
 export const ONE_HOUR = 3600;
 
 export const setAuthorizationToken = (token) =>
-  BrowserDatabase.setItem(token, AUTH_TOKEN, ONE_HOUR);
+  BrowserDatabase.setItem(token, AUTH_TOKEN, ONE_MONTH_IN_SECONDS);
 
 export const deleteAuthorizationToken = () =>
   BrowserDatabase.deleteItem(AUTH_TOKEN);
@@ -19,7 +20,7 @@ export const deleteAuthorizationToken = () =>
 export const getAuthorizationToken = () => BrowserDatabase.getItem(AUTH_TOKEN);
 
 export const setMobileAuthorizationToken = (token) =>
-  BrowserDatabase.setItem(token, MOBILE_AUTH_TOKEN, ONE_HOUR);
+  BrowserDatabase.setItem(token, MOBILE_AUTH_TOKEN, ONE_MONTH_IN_SECONDS);
 
 export const deleteMobileAuthorizationToken = () =>
   BrowserDatabase.deleteItem(MOBILE_AUTH_TOKEN);

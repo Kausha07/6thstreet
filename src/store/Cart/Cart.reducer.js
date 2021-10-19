@@ -1,5 +1,6 @@
 import { isSignedIn, ONE_HOUR } from 'Util/Auth';
 import BrowserDatabase from 'Util/BrowserDatabase';
+import { ONE_MONTH_IN_SECONDS } from "Util/Request/QueryDispatcher";
 
 import {
     PROCESSING_CART_REQUEST,
@@ -59,7 +60,7 @@ export const CartReducer = (state = getInitialState(), action) => {
     const ONE_DAY_IN_SECONDS = 86400;
     const item = { ...cartItem };
     const totals = { ...cartTotals };
-    const expireTime = isSignedIn() ? ONE_HOUR : ONE_DAY_IN_SECONDS;
+    const expireTime = isSignedIn() ? ONE_MONTH_IN_SECONDS : ONE_DAY_IN_SECONDS;
 
     switch (type) {
        
