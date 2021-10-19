@@ -52,23 +52,13 @@ class PDPDetailsSection extends PureComponent {
   getPdpWidgetsVueData() {
     const { gender, pdpWidgetsData, product: sourceProduct } = this.props;
     if (pdpWidgetsData && pdpWidgetsData.length > 0) {
-      //load vue data for widgets only if widgets data available
       const userData = BrowserDatabase.getItem("MOE_DATA");
-      if (userData?.USER_DATA) {
-        return;
-      }
-
-      if (userData) {
-        //added check if user data is loaded then only load PDP widgets otherwise not.
-        const {
-          USER_DATA: { deviceUuid },
-        } = userData;
         const customer = BrowserDatabase.getItem("customer");
         const userID = customer && customer.id ? customer.id : null;
         const query = {
           filters: [],
           num_results: 10,
-          mad_uuid: deviceUuid,
+          mad_uuid: userData?.USER_DATA?.deviceUuid || null,
         };
 
         let promisesArray = [];
@@ -88,7 +78,6 @@ class PDPDetailsSection extends PureComponent {
           .catch((err) => {
             console.err(err);
           });
-      }
     }
   }
 
