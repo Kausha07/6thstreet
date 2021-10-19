@@ -100,8 +100,6 @@ export class CheckoutPayments extends SourceCheckoutPayments {
       totals: { total,currency_code },
     } = this.props;
     const { isArabic ,isMobile} = this.state;
-    console.log("props", this.props)
-    console.log("state", this.state)
     if(selectedPaymentCode === TABBY_ISTALLMENTS){
       const script = document.createElement("script");
 
@@ -284,7 +282,6 @@ export class CheckoutPayments extends SourceCheckoutPayments {
 
   renderTabbyPaymentMethod(method) {
     const { title, m_code } = method;
-    console.log("method", method)
     const {
       selectPaymentMethod,
       selectedPaymentCode,
