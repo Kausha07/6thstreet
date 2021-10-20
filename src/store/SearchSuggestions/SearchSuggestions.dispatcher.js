@@ -3,6 +3,7 @@ import { setSearchSuggestions } from "Store/SearchSuggestions/SearchSuggestions.
 import { getCustomQuerySuggestions } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import { formatProductSuggestions } from "Util/API/endpoint/Suggestions/Suggestions.format";
 import Algolia from "Util/API/provider/Algolia";
+import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import { isArabic } from "Util/App";
 const PRODUCT_RESULT_LIMIT = 8;
 const QUERY_SUGGESTION_LIMIT = 5;
@@ -26,7 +27,7 @@ export class SearchSuggestionsDispatcher {
               q: search,
               page: 0,
               limit: PRODUCT_RESULT_LIMIT,
-              // gender: getGenderInArabic(gender),
+              gender: getGenderInArabic(gender),
               // query: search,
               // limit: PRODUCT_RESULT_LIMIT,
               // gender: getGenderInArabic(gender),
@@ -35,7 +36,7 @@ export class SearchSuggestionsDispatcher {
           : {
               // query: search,
               // limit: PRODUCT_RESULT_LIMIT,
-              // gender: gender,
+              gender: gender,
               // addAnalytics: false,
               q: search,
               page: 0,
