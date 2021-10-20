@@ -31,7 +31,57 @@ class PDPSummary extends PureComponent {
     stockAvailibility: true,
     isArabic: isArabic(),
   };
+  componentDidMount() {
 
+        const script = document.createElement("script");
+      script.src ="https://checkout.tabby.ai/tabby-promo.js";
+      script.async = true;
+      script.onload =  function(){
+      let s = document.createElement('script');
+      s.type = 'text/javascript';
+      const  code = `new TabbyPromo({
+        selector: '#TabbyPromo', 
+        price: '500.00', 
+        installmentsCount: 4,
+        lang: 'en', 
+        source: 'product', 
+      });`;
+      try {
+        s.appendChild(document.createTextNode(code));
+        document.body.appendChild(s);
+      } catch (e) {
+        s.text = code;
+        document.body.appendChild(s);
+      }
+    }
+    document.body.appendChild(script);    
+  }
+  // componentDidUpdate(prevProps) {
+  //     const script = document.createElement("script");
+
+  //   script.src = "https://checkout.tabby.ai/tabby-promo.js";
+  //   script.async = true;
+  //   script.onload =  function(){
+  //     let s = document.createElement('script');
+  //     s.type = 'text/javascript';
+  //     const  code = `new TabbyPromo({
+  //       selector: '#TabbyPromo', 
+  //       price: '500.00', 
+  //       installmentsCount: 4,
+  //       lang: 'en', 
+  //       source: 'product', 
+  //     });`;
+  //     try {
+  //       s.appendChild(document.createTextNode(code));
+  //       document.body.appendChild(s);
+  //     } catch (e) {
+  //       s.text = code;
+  //       document.body.appendChild(s);
+  //     }
+  //   }
+  //   document.body.appendChild(script);
+
+  // }
   static getDerivedStateFromProps(props, state) {
     const { product } = props;
 
@@ -273,7 +323,8 @@ class PDPSummary extends PureComponent {
         const monthPrice = (defPrice / 4).toFixed(2);
         return (
           <>
-            <button
+          <div id="TabbyPromo"></div>
+            {/* <button
               block="PDPSummary"
               elem="Tabby"
               onClick={this.openTabbyPopup}
@@ -290,7 +341,7 @@ class PDPSummary extends PureComponent {
                 {__("Learn more")}
               </span>
             </button>
-            <div block="Seperator" />
+            <div block="Seperator" /> */}
           </>
         );
       }

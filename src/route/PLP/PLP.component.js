@@ -32,6 +32,10 @@ export class PLP extends PureComponent {
       });
     }
   }
+  componentWillUnmount() {
+    const { resetPLPData } = this.props;
+    resetPLPData();
+  }
 
   showMyAccountPopup = () => {
     this.setState({ showPopup: true });
@@ -74,9 +78,9 @@ export class PLP extends PureComponent {
     const { prevPath = null } = this.props;
     return (
       <PLPPages
-      {...this.props}
-      renderMySignInPopup={this.showMyAccountPopup}
-      prevPath={prevPath}
+        {...this.props}
+        renderMySignInPopup={this.showMyAccountPopup}
+        prevPath={prevPath}
       />
     );
   }
