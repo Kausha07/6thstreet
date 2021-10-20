@@ -227,13 +227,7 @@ class ProductItem extends PureComponent {
       : "home";
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
 
-    let parseLink = urlWithQueryID.includes("catalogsearch/result")
-      ? urlWithQueryID.split("&")[0] +
-        `&gender=${requestedGender.replace(
-          requestedGender.charAt(0),
-          requestedGender.charAt(0).toUpperCase()
-        )}`
-      : urlWithQueryID;
+    let parseLink = urlWithQueryID
     const linkTo = {
       pathname: parseLink,
       state: {
