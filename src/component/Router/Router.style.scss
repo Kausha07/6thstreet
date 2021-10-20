@@ -5,12 +5,17 @@
     flex-direction: column;
   }
   .HomePage,
-  .SearchPage {
+  .SearchPage,
+  .UrlRewrites {
     min-height: 500px;
   }
 
   &-Content {
     flex: 1;
+    .EmptyPage {
+      display: block;
+      min-height: 500px;
+    }
   }
 
   &_isArabic {

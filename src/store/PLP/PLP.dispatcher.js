@@ -53,6 +53,10 @@ export class PLPDispatcher {
     }
   }
 
+  resetPLPData(dispatch) {
+    dispatch(setPLPData({}));
+  }
+
   async requestProductListPage(payload, dispatch) {
     const {
       options,
