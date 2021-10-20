@@ -32,7 +32,20 @@ class PDPSummary extends PureComponent {
     isArabic: isArabic(),
   };
   componentDidMount() {
+    const {
+      product: { price },
+    } = this.props;
+    const {isArabic} = this.state
+    if (price) {
+      const priceObj = Array.isArray(price) ? price[0] : price;
+      const [currency, priceData] = Object.entries(priceObj)[0];
 
+      const { country } = JSON.parse(
+        localStorage.getItem("APP_STATE_CACHE_KEY")
+      ).data;
+      const { default: defPrice } = priceData;
+
+      if ((country === "AE" || country === "SA") && defPrice >= 150) {
         const script = document.createElement("script");
       script.src ="https://checkout.tabby.ai/tabby-promo.js";
       script.async = true;
@@ -41,9 +54,10 @@ class PDPSummary extends PureComponent {
       s.type = 'text/javascript';
       const  code = `new TabbyPromo({
         selector: '#TabbyPromo', 
-        price: '500.00', 
+        currency: '${currency}',
+        price: '${defPrice}', 
         installmentsCount: 4,
-        lang: 'en', 
+        lang: '${isArabic? "ar": "en"}', 
         source: 'product', 
       });`;
       try {
@@ -54,34 +68,51 @@ class PDPSummary extends PureComponent {
         document.body.appendChild(s);
       }
     }
-    document.body.appendChild(script);    
+    document.body.appendChild(script);   
+  }} 
   }
-  // componentDidUpdate(prevProps) {
-  //     const script = document.createElement("script");
+  componentDidUpdate(prevProps) {
+    const {
+      product: { price },
+    } = this.props;
+    const {isArabic} = this.state
 
-  //   script.src = "https://checkout.tabby.ai/tabby-promo.js";
-  //   script.async = true;
-  //   script.onload =  function(){
-  //     let s = document.createElement('script');
-  //     s.type = 'text/javascript';
-  //     const  code = `new TabbyPromo({
-  //       selector: '#TabbyPromo', 
-  //       price: '500.00', 
-  //       installmentsCount: 4,
-  //       lang: 'en', 
-  //       source: 'product', 
-  //     });`;
-  //     try {
-  //       s.appendChild(document.createTextNode(code));
-  //       document.body.appendChild(s);
-  //     } catch (e) {
-  //       s.text = code;
-  //       document.body.appendChild(s);
-  //     }
-  //   }
-  //   document.body.appendChild(script);
+    if (price) {
+      const priceObj = Array.isArray(price) ? price[0] : price;
+      const [currency, priceData] = Object.entries(priceObj)[0];
+      const { country } = JSON.parse(
+        localStorage.getItem("APP_STATE_CACHE_KEY")
+      ).data;
+      const { default: defPrice } = priceData;
+      if ((country === "AE" || country === "SA") && defPrice >= 150) {
+        if(prevProps.product.price !== price){
 
-  // }
+          const script = document.createElement("script");
+        script.src ="https://checkout.tabby.ai/tabby-promo.js";
+        script.async = true;
+        script.onload =  function(){
+        let s = document.createElement('script');
+        s.type = 'text/javascript';
+        const  code = `new TabbyPromo({
+          selector: '#TabbyPromo', 
+          currency: '${currency}', 
+          price: '${defPrice}', 
+          installmentsCount: 4,
+          lang: '${isArabic? "ar": "en"}', 
+          source: 'product', 
+        });`;
+        try {
+          s.appendChild(document.createTextNode(code));
+          document.body.appendChild(s);
+        } catch (e) {
+          s.text = code;
+          document.body.appendChild(s);
+        }
+      }
+      document.body.appendChild(script);   
+        }
+  }} 
+  }
   static getDerivedStateFromProps(props, state) {
     const { product } = props;
 
@@ -340,8 +371,8 @@ class PDPSummary extends PureComponent {
               <span block="PDPSummary" elem="LearnMore">
                 {__("Learn more")}
               </span>
-            </button>
-            <div block="Seperator" /> */}
+            </button>*/}
+            <div block="Seperator" /> 
           </>
         );
       }
