@@ -75,29 +75,27 @@
 
   &-TabbyPayment {
     
-    align-items: stretch;
+    align-items: center;
     border: 1px solid var(--gray);
     border-radius: 4px;
     display: flex;
     margin-bottom: 9px;
-    max-width: 500px;
+    max-width: 350px;
 
     &Content {
       padding: 17px 20px;
       width: 100%;
 
-      #tabbyCard{
-        margin-bottom: -28px;
-      }
+      // #tabbyCard{
+      //   margin-bottom: -28px;
+      // }
       &Title {
         display: flex;
-        flex-direction: row-reverse;
         justify-content: space-between;
         text-transform: uppercase;
         font-size: 13px;
         font-weight: var(--fw-bold);
-        margin-bottom: 8px;
-        margin-top: -5px;
+        margin-bottom: 3px;
 
         button {
           height: 16px;
@@ -121,7 +119,7 @@
       border-radius: 4px 0 0 4px;
       display: flex;
       justify-content: space-between;
-      // height: 100%;
+      height:70px;
       padding: 0 12px;
       width: 110px;
 
@@ -151,14 +149,6 @@
           display: none;
         }
       }
-      &_check {
-        width: 100%;
-        justify-content: center;
-        height: 40px;
     }
-    }
-    &_check {
-      flex-direction: column;
-  }
   }
 }
