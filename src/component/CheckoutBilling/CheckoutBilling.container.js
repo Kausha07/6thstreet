@@ -126,7 +126,9 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       isSameAsShipping: this.isSameShippingAddress(customer),
       selectedCustomerAddressId: 0,
       prevPaymentMethods: paymentMethods,
-      paymentMethod
+      paymentMethod,
+      isTabbyInstallmentAvailable:false,
+      isTabbyPayLaterAvailable:false
     };
   }
 
@@ -136,16 +138,86 @@ export class CheckoutBillingContainer extends SourceCheckoutBillingContainer {
       isOrderButtonEnabled,
       isOrderButtonVisible,
       binApplied,
+      isTabbyInstallmentAvailable,
+      isTabbyPayLaterAvailable
     } = this.state;
-    return { binModal, isOrderButtonEnabled, isOrderButtonVisible, binApplied };
+    return { binModal, isOrderButtonEnabled, isOrderButtonVisible, binApplied ,isTabbyInstallmentAvailable,
+      isTabbyPayLaterAvailable};
   };
 
   componentDidMount() {
     this.setState({ isOrderButtonVisible: true });
     this.setState({ isOrderButtonEnabled: true });
     this.setState({ binApplied: false });
-  }
+    const {
+      createTabbySession,
+      shippingAddress,
+      setTabbyWebUrl,
+    } = this.props;
+    createTabbySession(shippingAddress)
+      .then((response) => {
+        if (response && response.configuration) {
+          const {
+            configuration: {
+              available_products: { installments, pay_later },
+            },
+            payment: { id },
+          } = response;
+          if (installments || pay_later) {
+            if (installments) {
+              setTabbyWebUrl(installments[0].web_url, id, TABBY_ISTALLMENTS);
+              this.setState({ isTabbyInstallmentAvailable: true });
+            }
 
+            if (pay_later) {
+              setTabbyWebUrl(pay_later[0].web_url, id, TABBY_PAY_LATER);
+              this.setState({ isTabbyPayLaterAvailable: true });
+            }
+          }
+        }
+      }, this._handleError)
+      .catch(() => {});
+  }
+  componentDidUpdate(prevProps) {
+    const {
+      createTabbySession,
+      shippingAddress,
+      setTabbyWebUrl,
+      totals: { total },
+    } = this.props;
+    if(prevProps?.totals?.total !== total){
+      createTabbySession(shippingAddress)
+      .then((response) => {
+        if (response && response.configuration) {
+          const {
+            configuration: {
+              available_products: { installments, pay_later },
+            },
+            payment: { id },
+          } = response;
+
+          if (installments || pay_later) {
+            if (installments) {
+              setTabbyWebUrl(installments[0].web_url, id, TABBY_ISTALLMENTS);
+
+              // this variable actually is used in the component
+              // eslint-disable-next-line quote-props
+              this.setState({ isTabbyInstallmentAvailable: true });
+            }
+
+            if (pay_later) {
+              setTabbyWebUrl(pay_later[0].web_url, id, TABBY_PAY_LATER);
+
+              // this variable actually is used in the component
+              // eslint-disable-next-line quote-props
+              this.setState({ isTabbyPayLaterAvailable: true });
+            }
+          }
+        }
+      }, this._handleError)
+      .catch(() => {});
+    }
+  }
   setOrderButtonDisabled() {
     this.setState({ isOrderButtonEnabled: false });
   }

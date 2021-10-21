@@ -66,7 +66,7 @@ class ProductItem extends PureComponent {
         position: [position],
       });
     }
-    this.sendBannerClickImpression(product);
+    // this.sendBannerClickImpression(product);
   }
   sendBannerClickImpression(item) {
     Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);
@@ -91,7 +91,7 @@ class ProductItem extends PureComponent {
 
   renderLabel() {
     const { product } = this.props;
-    return <ProductLabel product={product} />;
+    return <ProductLabel product={product} section="productItem" />;
   }
 
   renderColors() {
@@ -148,7 +148,7 @@ class ProductItem extends PureComponent {
   renderImage() {
     const {
       product: { thumbnail_url },
-      lazyLoad=true
+      lazyLoad = true,
     } = this.props;
 
     return (
@@ -227,13 +227,7 @@ class ProductItem extends PureComponent {
       : "home";
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
 
-    let parseLink = urlWithQueryID.includes("catalogsearch/result")
-      ? urlWithQueryID.split("&")[0] +
-        `&gender=${requestedGender.replace(
-          requestedGender.charAt(0),
-          requestedGender.charAt(0).toUpperCase()
-        )}`
-      : urlWithQueryID;
+    let parseLink = urlWithQueryID;
     const linkTo = {
       pathname: parseLink,
       state: {
