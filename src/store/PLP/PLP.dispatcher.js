@@ -14,6 +14,9 @@ import Logger from "Util/Logger";
 import isMobile from "Util/Mobile";
 export class PLPDispatcher {
   async requestProductList(payload, dispatch, state) {
+    if (!payload?.options?.hasOwnProperty("page")) {
+      payload.options["page"] = 0;
+    }
     const { options = {} } = payload;
 
     if (Object.keys(options).length !== 0) {
