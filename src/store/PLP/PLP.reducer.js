@@ -14,7 +14,9 @@ export const getInitialState = () => ({
   pages: {},
   filters: {},
   meta: {},
-  options: {},
+  options: {
+    page: 0,
+  },
   // initial data (filters, options)
   initialFilters: {},
   initialOptions: {},
@@ -95,14 +97,13 @@ export const PLPReducer = (state = getInitialState(), action) => {
       return {
         ...state,
         pages: {
-          ...prevPages,
+          ...(prevPages || {}),
           [page]: pageProducts,
         },
       };
 
     case SET_PLP_INIT_FILTERS:
       const { initialFilters, initialOptions } = action;
-
       return {
         ...state,
         initialFilters,
@@ -115,7 +116,6 @@ export const PLPReducer = (state = getInitialState(), action) => {
         options: requestedOptions = {},
         isInitial,
       } = action;
-
       const { page: initialPage } = requestedOptions;
       const { initialFilters: stateInitialFilters } = state;
 
@@ -139,7 +139,6 @@ export const PLPReducer = (state = getInitialState(), action) => {
 
     case SET_PLP_LOADING:
       const { isLoading } = action;
-
       return {
         ...state,
         isLoading,
