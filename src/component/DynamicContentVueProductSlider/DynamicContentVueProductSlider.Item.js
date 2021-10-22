@@ -10,7 +10,7 @@ import { connect } from "react-redux";
 import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
 import { getUUID } from "Util/Auth";
-import Event, { VUE_CAROUSEL_CLICK } from "Util/Event";
+import Event, { VUE_CAROUSEL_CLICK, EVENT_GTM_PRODUCT_CLICK } from "Util/Event";
 import { parseURL } from "Util/Url";
 
 export const mapStateToProps = (state) => ({
@@ -59,6 +59,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
         posofreco: posofreco,
       },
     });
+    Event.dispatch(EVENT_GTM_PRODUCT_CLICK, data);
     // this.sendBannerClickImpression(item);
   };
   sendBannerClickImpression(item) {
