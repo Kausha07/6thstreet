@@ -57,6 +57,76 @@ export class CartPage extends PureComponent {
     processingRequest: false,
   };
 
+  componentDidMount() {
+    const{
+      totals:{total,currency_code}
+    } = this.props;
+    const {isArabic} = this.state;
+    const { country } = JSON.parse(
+      localStorage.getItem("APP_STATE_CACHE_KEY")
+    ).data;
+    if((country === "AE" || country === "SA") && total >= 150){
+      const script = document.createElement("script");
+      script.src ="https://checkout.tabby.ai/tabby-promo.js";
+      script.async = true;
+      script.onload =  function(){
+        let s = document.createElement('script');
+        s.type = 'text/javascript';
+        const  code = `new TabbyPromo({
+          selector: '#TabbyPromo', 
+          currency: '${currency_code}', // required, currency of your product
+          price: '${total}', 
+          installmentsCount: 4,
+          lang: '${isArabic? "ar": "en"}', 
+          source: 'product', 
+        });`;
+        try {
+            s.appendChild(document.createTextNode(code));
+            document.body.appendChild(s);
+        } catch (e) {
+            s.text = code;
+            document.body.appendChild(s);
+        }
+      }  
+      document.body.appendChild(script);   
+    }
+  }
+  componentDidUpdate(prevProps) {
+    const{
+      totals:{total,currency_code}
+    } = this.props;
+    const {isArabic}= this.state
+    const { country } = JSON.parse(
+      localStorage.getItem("APP_STATE_CACHE_KEY")
+    ).data;
+    if(prevProps?.totals?.total !== total ){
+      if((country === "AE" || country === "SA") && total >= 150){
+        const script = document.createElement("script");
+        script.src ="https://checkout.tabby.ai/tabby-promo.js";
+        script.async = true;
+        script.onload =  function(){
+          let s = document.createElement('script');
+          s.type = 'text/javascript';
+          const  code = `new TabbyPromo({
+            selector: '#TabbyPromo', 
+            currency: '${currency_code}', // required, currency of your product
+            price: '${total}', 
+            installmentsCount: 4,
+            lang: '${isArabic? "ar": "en"}', 
+            source: 'product', 
+          });`;
+          try {
+              s.appendChild(document.createTextNode(code));
+              document.body.appendChild(s);
+          } catch (e) {
+              s.text = code;
+              document.body.appendChild(s);
+          }
+        }  
+        document.body.appendChild(script);   
+      }
+    }
+  }
   renderCartItems() {
     const {
       totals: { items = [], quote_currency_code },
@@ -124,7 +194,13 @@ export class CartPage extends PureComponent {
       </li>
     );
   }
-
+  renderTabbyPromo(){
+    return (
+      <div block="CartPage" elem="TabbyBlock">
+        <div id="TabbyPromo"></div>
+      </div>
+    )
+  }
   renderTotal() {
     const {
       totals: {
@@ -504,6 +580,7 @@ export class CartPage extends PureComponent {
           </div>
           <div block="CartPage" elem="Floating" mods={{ isArabic }}>
             {this.renderClubApparel()}
+            {this.renderTabbyPromo()}
             {this.renderTotals()}
           </div>
         </ContentWrapper>

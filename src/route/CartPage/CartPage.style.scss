@@ -279,6 +279,16 @@
     }
   }
 
+  &-TabbyBlock{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 0 5px;
+    @include desktop {
+      justify-content: flex-start;
+    }
+  }
+
   &-Promo {
     order: 2;
     background: var(--cart-page-promo-background);

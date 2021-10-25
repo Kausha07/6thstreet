@@ -103,6 +103,8 @@ class DynamicContentVueProductSliderItem extends PureComponent {
   }
 
   renderPrice(price) {
+    console.log("rendered home");
+    const { isArabic } = this.state;
     if (price && price.length > 0) {
       const priceObj = price[0],
         currency = getCurrency();
@@ -115,7 +117,10 @@ class DynamicContentVueProductSliderItem extends PureComponent {
 
       if (basePrice === specialPrice || !specialPrice) {
         return (
-          <div block="VueProductSlider" elem="SpecialPriceCon">
+          <div 
+          block="VueProductSlider" 
+          elem="SpecialPriceCon" 
+          mods={{ isArabic }}>
             <span block="VueProductSlider" elem="PriceWrapper">
               <span
                 id="price"
@@ -127,7 +132,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
       }
 
       return (
-        <div block="VueProductSlider" elem="SpecialPriceCon">
+        <div block="VueProductSlider" elem="SpecialPriceCon"  mods={{ isArabic }}>
           <del block="VueProductSlider" elem="Del">
             <span id="price">{`${currency} ${basePrice}`}</span>
           </del>

@@ -6,6 +6,8 @@ import { withRouter } from "react-router";
 import { isArabic } from "Util/App";
 import "./HeaderLogo.style";
 import logo from "./logo/6thstreet_logo.png";
+import BrowserDatabase from "Util/BrowserDatabase";
+import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 
 class HeaderLogo extends PureComponent {
   static propTypes = {
@@ -19,11 +21,13 @@ class HeaderLogo extends PureComponent {
   render() {
     const { isArabic } = this.state;
     const { setGender } = this.props;
-
+    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      : "home";
     return (
       <Link
         to={{
-          pathname: "/women.html",
+          pathname: `/${gender}.html`,
           state: {
             prevPath: window.location.href,
           },
