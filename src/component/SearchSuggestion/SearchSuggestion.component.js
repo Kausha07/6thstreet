@@ -1,7 +1,9 @@
+import Image from "Component/Image";
 import Link from "Component/Link";
 import Loader from "Component/Loader";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
+import { withRouter } from "react-router";
 import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { Products } from "Util/API/endpoint/Product/Product.type";
 import {
@@ -120,7 +122,7 @@ class SearchSuggestion extends PureComponent {
       }
       brandUrl = `${this.getBrandUrl(
         brandName
-      )}.html?q=${brandName}&qid=${queryID}&gender=${requestedGender.replace(
+      )}.html?q=${brandName}&qid=${queryID}&dFR[gender][0]=${requestedGender.replace(
         requestedGender.charAt(0),
         requestedGender.charAt(0).toUpperCase()
       )}`;
@@ -135,7 +137,7 @@ class SearchSuggestion extends PureComponent {
         .toLowerCase();
       brandUrl = `${this.getBrandUrl(
         formattedBrandName
-      )}.html?q=${formattedBrandName}&gender=${gender.replace(
+      )}.html?q=${formattedBrandName}&dFR[gender][0]=${gender.replace(
         gender.charAt(0),
         gender.charAt(0).toUpperCase()
       )}`;
@@ -150,33 +152,43 @@ class SearchSuggestion extends PureComponent {
     let genderInURL;
     if (isArabic) {
       if (gender === "kids") {
-        genderInURL = "أولاد~بنات";
+        genderInURL = "أولاد,بنات";
         // to add Boy~Girl in arabic
       } else {
-        requestedGender = getGenderInArabic(gender);
-        genderInURL = requestedGender?.replace(
-          requestedGender?.charAt(0),
-          requestedGender?.charAt(0).toUpperCase()
-        );
+        if (gender !== "home") {
+          requestedGender = getGenderInArabic(gender);
+          genderInURL = requestedGender?.replace(
+            requestedGender?.charAt(0),
+            requestedGender?.charAt(0).toUpperCase()
+          );
+        } else {
+          genderInURL = "";
+        }
       }
     } else {
       if (gender === "kids") {
-        genderInURL = "Boy~Girl";
+        genderInURL = "Boy,Girl";
       } else {
-        genderInURL = requestedGender?.replace(
-          requestedGender?.charAt(0),
-          requestedGender?.charAt(0).toUpperCase()
-        );
+        if (gender !== "home") {
+          genderInURL = requestedGender?.replace(
+            requestedGender?.charAt(0),
+            requestedGender?.charAt(0).toUpperCase()
+          );
+        } else {
+          genderInURL = "";
+        }
       }
     }
     if (brandValue) {
-      catalogUrl = `/catalogsearch/result/?q=${formatQuerySuggestions(
-        query
-      )}&gender=${genderInURL}&brand_name=${brandValue}`;
+      catalogUrl = `/catalogsearch/result/?q=${encodeURIComponent(
+        formatQuerySuggestions(query)
+      )}&dFR[gender][0]=${genderInURL}&dFR[brand_name][0]=${encodeURIComponent(
+        brandValue
+      )}`;
     } else {
-      catalogUrl = `/catalogsearch/result/?q=${formatQuerySuggestions(
-        query
-      )}&gender=${genderInURL}`;
+      catalogUrl = `/catalogsearch/result/?q=${encodeURIComponent(
+        formatQuerySuggestions(query)
+      )}&dFR[gender][0]=${genderInURL}`;
     }
     return catalogUrl;
   };
@@ -212,7 +224,7 @@ class SearchSuggestion extends PureComponent {
       tempRecentSearches = [...recentSearches.reverse()];
     }
     tempRecentSearches = tempRecentSearches.filter(
-      (item) => item.name !== search
+      (item) => item.name.toUpperCase().trim() !== search.toUpperCase().trim()
     );
     if (tempRecentSearches.length > 4) {
       tempRecentSearches.shift();
@@ -267,7 +279,12 @@ class SearchSuggestion extends PureComponent {
     return (
       <li>
         <Link
-          to={`/${urlName}.html`}
+          to={{
+            pathname: `/${urlName}.html?q=${urlName}`,
+            state: {
+              prevPath: window.location.href,
+            },
+          }}
           onClick={() => this.handleBrandsClick(urlName)}
         >
           <div className="suggestion-details-box">
@@ -315,7 +332,7 @@ class SearchSuggestion extends PureComponent {
     //     <li>
     //       <Link
     //         to={
-    //           encodeURI(
+    //           encodeURIComponent(
     //             this.getBrandSuggestionUrl(
     //               formatQuerySuggestions(query),
     //               queryID
@@ -351,7 +368,7 @@ class SearchSuggestion extends PureComponent {
     //     return (
     //       <li>
     //         <Link
-    //           to={`${encodeURI(this.getCatalogUrl(query, gender, queryID))}`}
+    //           to={`${encodeURIComponent(this.getCatalogUrl(query, gender, queryID))}`}
     //           onClick={() =>
     //             this.onSearchQueryClick(formatQuerySuggestions(query))
     //           }
@@ -385,14 +402,17 @@ class SearchSuggestion extends PureComponent {
       return (
         <li>
           <Link
-            to={`${encodeURI(
-              this.getCatalogUrl(
+            to={{
+              pathname: this.getCatalogUrl(
                 query,
                 gender,
                 queryID,
                 !brandValue?.includes("///") ? brandValue : null
-              )
-            )}`}
+              ),
+              state: {
+                prevPath: window.location.href,
+              },
+            }}
             onClick={() =>
               this.onSearchQueryClick(formatQuerySuggestions(query))
             }
@@ -446,10 +466,10 @@ class SearchSuggestion extends PureComponent {
     // return null;
 
     if (price && price.length > 0) {
-      const priceObj = price[0],
+      const priceObj = price?.[0],
         currency = getCurrency();
-      const basePrice = priceObj[currency]["6s_base_price"];
-      const specialPrice = priceObj[currency]["6s_special_price"];
+      const basePrice = priceObj?.[currency]?.["6s_base_price"];
+      const specialPrice = priceObj?.[currency]?.["6s_special_price"];
       const haveDiscount =
         specialPrice !== "undefined" &&
         specialPrice &&
@@ -476,18 +496,44 @@ class SearchSuggestion extends PureComponent {
 
   renderProduct = (product) => {
     const { url, name, thumbnail_url, brand_name, price } = product;
+    const { isArabic } = this.state;
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
 
-    let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
-
+    let requestedGender = gender;
+    let genderInURL;
+    if (isArabic) {
+      if (gender === "kids") {
+        genderInURL = "أولاد,بنات";
+        // to add Boy~Girl in arabic
+      } else {
+        if (gender !== "home") {
+          requestedGender = getGenderInArabic(gender);
+          genderInURL = requestedGender?.replace(
+            requestedGender?.charAt(0),
+            requestedGender?.charAt(0).toUpperCase()
+          );
+        } else {
+          genderInURL = "";
+        }
+      }
+    } else {
+      if (gender === "kids") {
+        genderInURL = "Boy,Girl";
+      } else {
+        if (gender !== "home") {
+          genderInURL = requestedGender?.replace(
+            requestedGender?.charAt(0),
+            requestedGender?.charAt(0).toUpperCase()
+          );
+        } else {
+          genderInURL = "";
+        }
+      }
+    }
     let parseLink = url?.includes("catalogsearch/result")
-      ? url?.split("&")[0] +
-        `&gender=${requestedGender.replace(
-          requestedGender.charAt(0),
-          requestedGender.charAt(0)?.toUpperCase()
-        )}`
+      ? url?.split("&")[0] + `&dFR[gender][0]=${genderInURL}`
       : url;
 
     return (
@@ -497,12 +543,14 @@ class SearchSuggestion extends PureComponent {
           onClick={() => this.handleProductClick(product)}
         >
           <div block="SearchProduct">
-            <img
+            <Image
+              lazyLoad={true}
               src={thumbnail_url}
               alt="Product Image"
               block="SearchProduct"
               elem="Image"
             />
+
             <div block="SearchProduct" elem="Info">
               <h6 block="SearchProduct" elem="Brand">
                 {brand_name}
@@ -564,15 +612,26 @@ class SearchSuggestion extends PureComponent {
   // recommended for you
 
   renderRecommendedForYou = () => {
-    const { recommendedForYou } = this.props;
+    const {
+      recommendedForYou,
+      renderMySignInPopup,
+      location: { state },
+    } = this.props;
+    const sku = JSON.parse(localStorage.getItem("PRODUCT_SKU"));
+    const sourceCatgID = JSON.parse(localStorage.getItem("PRODUCT_CATEGORY"));
     if (recommendedForYou && recommendedForYou.length > 0) {
       return (
         <div className="recommendedForYouSliderBox">
           <RecommendedForYouVueSliderContainer
+            renderMySignInPopup={renderMySignInPopup}
             widgetID="vue_trending_slider"
             products={recommendedForYou}
             heading={__("Recommended for you")}
             key={`DynamicContentVueProductSliderContainer99`}
+            pageType="search"
+            sourceProdID={sku ? sku : null}
+            sourceCatgID={sourceCatgID ? sourceCatgID : null}
+            prevPath={state?.prevPath ? state?.prevPath : null}
           />
         </div>
       );
@@ -640,14 +699,21 @@ class SearchSuggestion extends PureComponent {
     return (
       <li key={i}>
         <Link
-          to={`/${urlName}.html`}
+          to={{
+            pathname: `/${urlName}.html?q=${urlName}`,
+            state: {
+              prevPath: window.location.href,
+            },
+          }}
           onClick={() => this.handleTrendingBrandsClick(urlName)}
         >
           <div block="SearchSuggestion" elem="TrandingImg">
-            <img src={image_url} alt="Trending" />
-            {label}
+            <Image lazyLoad={true} src={image_url} alt="Trending" />
+
+            {/* {label} */}
           </div>
         </Link>
+        <div block="CircleSliderLabel">{label}</div>
       </li>
     );
   };
@@ -669,7 +735,12 @@ class SearchSuggestion extends PureComponent {
   renderTrendingTag = ({ link, label }, i) => (
     <li key={i}>
       <Link
-        to={{ pathname: link && link.split("#q")[0] }}
+        to={{
+          pathname: link && link.split("#q")[0],
+          state: {
+            prevPath: window.location.href,
+          },
+        }}
         onClick={() => this.handleTrendingTagsClick(label)}
       >
         <div block="SearchSuggestion" elem="TrandingTag">
@@ -698,18 +769,48 @@ class SearchSuggestion extends PureComponent {
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
 
-    let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
+    let requestedGender = gender;
+    let genderInURL;
+    if (isArabic) {
+      if (gender === "kids") {
+        genderInURL = "أولاد,بنات";
+        // to add Boy~Girl in arabic
+      } else {
+        if (gender !== "home") {
+          requestedGender = getGenderInArabic(gender);
+          genderInURL = requestedGender?.replace(
+            requestedGender?.charAt(0),
+            requestedGender?.charAt(0).toUpperCase()
+          );
+        } else {
+          genderInURL = "";
+        }
+      }
+    } else {
+      if (gender === "kids") {
+        genderInURL = "Boy,Girl";
+      } else {
+        if (gender !== "home") {
+          genderInURL = requestedGender?.replace(
+            requestedGender?.charAt(0),
+            requestedGender?.charAt(0).toUpperCase()
+          );
+        } else {
+          genderInURL = "";
+        }
+      }
+    }
     return (
       <li key={i}>
         <Link
-          to={
-            link
+          to={{
+            pathname: link
               ? link
-              : `/catalogsearch/result/?q=${search}&gender=${requestedGender.replace(
-                  requestedGender.charAt(0),
-                  requestedGender.charAt(0).toUpperCase()
-                )}`
-          }
+              : `/catalogsearch/result/?q=${encodeURIComponent(
+                  search
+                )}&dFR[gender][0]=${genderInURL}`,
+            state: { prevPath: window.location.href },
+          }}
           onClick={() => this.onSearchQueryClick(search)}
         >
           <div block="SearchSuggestion" elem="TopSearches">
@@ -722,10 +823,13 @@ class SearchSuggestion extends PureComponent {
 
   renderTopSearches() {
     const { topSearches = [] } = this.props;
+    const { isArabic } = this.state;
     return topSearches.length > 0 ? (
       <div block="TopSearches">
         <h2>{__("Top searches")}</h2>
-        <ul>{topSearches.map(this.renderTopSearch)}</ul>
+        <ul block="TopSearches" elem="searchList" mods={{ isArabic }}>
+          {topSearches.map(this.renderTopSearch)}
+        </ul>
       </div>
     ) : null;
   }
@@ -738,17 +842,46 @@ class SearchSuggestion extends PureComponent {
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
 
-    let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
+    let requestedGender = gender;
+    let genderInURL;
+    if (isArabic) {
+      if (gender === "kids") {
+        genderInURL = "أولاد,بنات";
+        // to add Boy~Girl in arabic
+      } else {
+        if (gender !== "home") {
+          requestedGender = getGenderInArabic(gender);
+          genderInURL = requestedGender?.replace(
+            requestedGender?.charAt(0),
+            requestedGender?.charAt(0).toUpperCase()
+          );
+        } else {
+          genderInURL = "";
+        }
+      }
+    } else {
+      if (gender === "kids") {
+        genderInURL = "Boy,Girl";
+      } else {
+        if (gender !== "home") {
+          genderInURL = requestedGender?.replace(
+            requestedGender?.charAt(0),
+            requestedGender?.charAt(0).toUpperCase()
+          );
+        } else {
+          genderInURL = "";
+        }
+      }
+    }
     return (
       <li key={i}>
         <Link
           to={
             link
               ? link
-              : `/catalogsearch/result/?q=${name}&gender=${requestedGender.replace(
-                  requestedGender.charAt(0),
-                  requestedGender.charAt(0).toUpperCase()
-                )}`
+              : `/catalogsearch/result/?q=${encodeURIComponent(
+                  name
+                )}&dFR[gender][0]=${genderInURL}`
           }
           onClick={() => this.onSearchQueryClick(name)}
         >
@@ -762,10 +895,13 @@ class SearchSuggestion extends PureComponent {
 
   renderRecentSearches() {
     const { recentSearches = [] } = this.props;
+    const { isArabic } = this.state;
     return recentSearches.length > 0 ? (
       <div block="RecentSearches">
         <h2>{__("Recent searches")}</h2>
-        <ul>{recentSearches.map(this.renderRecentSearch)}</ul>
+        <ul block="RecentSearches" elem="searchList" mods={{ isArabic }}>
+          {recentSearches.map(this.renderRecentSearch)}
+        </ul>
       </div>
     ) : null;
   }
@@ -843,6 +979,7 @@ class SearchSuggestion extends PureComponent {
       </div>
     );
   }
+
   render() {
     const { isArabic } = this.state;
     return (
@@ -860,4 +997,4 @@ class SearchSuggestion extends PureComponent {
   }
 }
 
-export default SearchSuggestion;
+export default withRouter(SearchSuggestion);

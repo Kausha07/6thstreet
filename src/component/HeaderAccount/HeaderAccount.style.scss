@@ -30,6 +30,9 @@
           height: 24px;
           display: flex;
           font-size: 0;
+          margin-right: 6px
+
+
           //   margin-top: -8px;
         }
 
@@ -50,7 +53,14 @@
     }
 
     &_isArabic {
+
       &:not(&_isBottomBar) {
+        label {
+
+          &::before {
+            margin-right: 0px;
+            margin-left: 6px;
+          }}
         // margin-left: 90px;
       }
     }

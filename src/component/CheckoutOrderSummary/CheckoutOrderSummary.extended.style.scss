@@ -4,7 +4,8 @@
     padding: 0 0.5rem;
   }
   @include mobile {
-    padding-inline: 0;
+    padding-left: 0;
+    padding-right: 0;
   }
 
   &-HeaderWrapper {
@@ -13,7 +14,8 @@
     padding: 25px 18px 0;
 
     @include tablet {
-      padding-inline: 0;
+      padding-left: 0;
+      padding-right: 0;
     }
     @include mobile {
       display: none;
@@ -57,7 +59,7 @@
     margin-bottom: 10px;
 
     .CartItem {
-      margin: 1rem 18px 0;
+      margin: 1rem 12px 0;
       @include tablet {
         margin: 1rem 0px 0;
       }
@@ -122,12 +124,18 @@
       width: 100%;
       text-align: center;
 
-      img {
-        width: 20px;
-        height: auto;
-        margin-right: 5px;
-        float: left;
-        margin-top: 5px;
+      .Image {
+        overflow: inherit !important;
+
+        .LazyLoad-wrapper {
+          img {
+            width: 20px !important;
+            height: auto !important;
+            margin-right: 5px;
+            float: left;
+            margin-top: 5px;
+          }
+        }
       }
 
       @include mobile {
@@ -135,10 +143,14 @@
       }
 
       &_isArabic {
-        img {
-          margin-right: unset;
-          margin-left: 5px;
-          float: right;
+        .Image {
+          .LazyLoad-wrapper {
+            img {
+              margin-right: unset;
+              margin-left: 5px;
+              float: right;
+            }
+          }
         }
       }
     }
@@ -168,12 +180,12 @@
   &-SummaryItem {
     padding: 5px 0;
     &_isDropdownOpen {
-     border-top: 2px solid var(--lightest-gray);
+      border-top: 2px solid var(--lightest-gray);
     }
   }
 
   &-Subtotals {
-    margin: 20px auto 11px;
+    margin: 5px auto 11px;
 
     li {
       .CheckoutOrderSummary {

@@ -87,7 +87,7 @@
       margin-bottom: 100px;
 
       .ContentWrapper {
-        max-width: 1440px;
+        max-width: var(--container-max-width);
         display: block;
 
         .Checkout-Step {
@@ -135,23 +135,38 @@
             font-weight: var(--fw-regular);
             font-size: 13px;
             line-height: 20px;
+            &:empty{
+              display: none;
+            }
           }
 
           &-Price {
             font-weight: var(--fw-bold);
             font-size: 13px;
             line-height: 25px;
+            &:empty{
+              display: none;
+            }
           }
 
           &-SummaryItem,
           &-DiscountOptionWrapper {
             padding: 0;
+            &:empty{
+              display: none;
+            }
           }
           &-PromoBlock {
             margin: 10px 0 0;
+            &:empty{
+              display: none;
+            }
           }
           &-DiscountOptionWrapper {
             padding: 10px 0 0;
+            &:empty{
+              display: none;
+            }
           }
         }
       }
@@ -232,7 +247,7 @@
 
   &-Wrapper {
     // max-width: var(--checkout-max-width);
-    max-width: 1440px;
+    max-width: var(--container-max-width);
     width: var(--main-container-width-dsk);
     @include tablet {
       width: auto;
@@ -405,13 +420,24 @@
               margin: 10% 5% 10% 10%;
             }
           }
-
-          img {
-            width: 11px;
-            height: auto;
+          .Image{
             float: right;
-            top: 1px;
+            overflow: inherit;
+            .LazyLoad-wrapper {
+              img {
+                width: 11px !important;
+                height: auto !important;
+                float: right;
+                top: 1px;
+              }
+            }
           }
+          // img {
+          //   width: 11px;
+          //   height: auto;
+          //   float: right;
+          //   top: 1px;
+          // }
 
           &_isArabic {
             button {
@@ -636,7 +662,7 @@
   justify-content: space-between;
   margin: 0 auto;
   padding: 20px 0;
-  max-width: 1440px;
+  max-width: var(--container-max-width);
   width: var(--main-container-width-dsk);
 
   &-BackToShoppingMobile {

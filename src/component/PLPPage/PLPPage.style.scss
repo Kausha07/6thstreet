@@ -1,66 +1,84 @@
 .PLPPage {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  //   margin: 0 20px;
-  grid-gap: 35px 25px;
-
-  @include mobile() {
-    grid-template-columns: repeat(2, 1fr);
-    margin: 0;
+  display: unset!important;
+  ul {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 24px 16px;
+    @include mobile() {
+      grid-template-columns: repeat(2, 1fr);
+      margin: 0;
+    }
   }
-
-
-  .ProductItem{
-    &-Brand{
+  .ProductItem {
+    &-ImageBox {
+      padding-top: unset!important;
+      .Image {
+        position: unset!important;
+        top: unset!important;
+        left: unset!important;
+        padding-bottom: unset!important;
+      }
+      margin-bottom: 16px;
+    }
+    &-Brand {
       text-align: center;
-      @include mobile{
+      @include mobile {
         font-size: 12px;
         line-height: 7px;
       }
     }
-    &-Title{
+    &-Title {
       margin: 0 auto;
       text-align: center;
-      @include mobile{
+      @include mobile {
         font-size: 11px;
         line-height: 14px;
       }
     }
 
-    .Price{
+    .Price {
       justify-content: center;
-      @include mobile{
+      @include mobile {
         display: block;
         line-height: 17px;
 
-        &-Wrapper{
+        &-Wrapper {
           display: block;
           text-align: center;
         }
-        &-Discount{
+        &-Discount {
           display: block;
           text-align: center;
         }
-        &-Base{
+        &-Base {
           display: block;
           text-align: center;
         }
-        &-Base_discount{
+        &-Base_discount {
           display: inline;
         }
       }
-
     }
-    .PLPSummary-Exclusive{
-      @include mobile{
+    .PLPSummary-Colors {
+      background-color: #ffffff;
+      opacity: 0.8;
+      width: 100%;
+      position: absolute;
+      bottom: 0;
+      padding: 4px 0px;
+    }
+    .PLPSummary-Exclusive {
+      background-color: #ffffff;
+      opacity: 0.8;
+      width: 100%;
+      position: absolute;
+      bottom: 0;
+      padding: 4px 0px;
+      @include mobile {
         font-size: 12px;
       }
     }
   }
-
-
-
-
 }
 
 .PageWrapper {

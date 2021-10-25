@@ -4,6 +4,7 @@
  * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
  * @copyright Copyright (c) 2020 Scandiweb, Inc (https://scandiweb.com)
  */
+import Image from "Component/Image";
 
 import PLPFilter from "Component/PLPFilter";
 import PLPQuickFilter from "Component/PLPQuickFilter";
@@ -163,11 +164,14 @@ class PLPFilters extends PureComponent {
 
   renderSeeResultButton() {
     const { productsCount } = this.props;
+    const { isArabic } = this.state;
+
     const count = ` ( ${productsCount} )`;
     return (
       <button
         block="Content"
         elem="SeeResult"
+        mods={{ isArabic }}
         onClick={this.onShowResultButton}
       >
         {__("show result")}
@@ -234,7 +238,8 @@ class PLPFilters extends PureComponent {
         tabIndex={0}
         block="PLPFilterMobile"
       >
-        <img src={fitlerImage} alt="fitler" />
+        <Image lazyLoad={true} src={fitlerImage} alt="fitler" />
+
         {__("refine ")}
         <div block="PLPFilterMobile" elem="Count">
           {this.renderFiltersCount()}

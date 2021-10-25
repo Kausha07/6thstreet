@@ -5,6 +5,7 @@ import HeaderLogo from "Component/HeaderLogo";
 import HeaderSearch from "Component/HeaderSearch";
 import HeaderWishlist from "Component/HeaderWishlist";
 import { MOBILE_MENU_SIDEBAR_ID } from "Component/MobileMenuSideBar/MoblieMenuSideBar.config";
+import MyAccountOverlay from "Component/MyAccountOverlay";
 import NavigationAbstract from "Component/NavigationAbstract/NavigationAbstract.component";
 import { DEFAULT_STATE_NAME } from "Component/NavigationAbstract/NavigationAbstract.config";
 import PropTypes from "prop-types";
@@ -55,6 +56,8 @@ class HeaderMainSection extends NavigationAbstract {
       search: "",
       showSearch: false,
       isArabic: isArabic(),
+      signInPopUp: "",
+      showPopup: false,
       isMobile: isMobile.any(),
     };
     this.headerSearchRef = createRef();
@@ -73,13 +76,47 @@ class HeaderMainSection extends NavigationAbstract {
   renderMap = {
     gender: this.renderGenderSwitcher.bind(this),
     logo: this.renderLogo.bind(this),
-    account: this.renderAccount.bind(this),
-    cart: this.renderCart.bind(this),
-    wishlist: this.renderWishlist.bind(this),
+    leftContainer: this.renderLeftContainer.bind(this),
     search: this.renderSearch.bind(this),
     back: this.renderBack.bind(this),
   };
 
+  renderLeftContainer() {
+    return (
+      <div block="leftContainer">
+        {this.renderAccount()}
+        {this.renderCart()}
+        {this.renderWishlist()}
+        {this.renderSearchIcon()}
+      </div>
+    );
+  }
+
+  showMyAccountPopup = () => {
+    this.setState({ showPopup: true });
+  };
+
+  closePopup = () => {
+    this.setState({ signInPopUp: "", showPopup: false });
+  };
+
+  onSignIn = () => {
+    this.closePopup();
+  };
+
+  renderMySignInPopup() {
+    const { showPopup } = this.state;
+    if (!showPopup) {
+      return null;
+    }
+    return (
+      <MyAccountOverlay
+        closePopup={this.closePopup}
+        onSignIn={this.onSignIn}
+        isPopup
+      />
+    );
+  }
   // state = {
 
   // };
@@ -129,11 +166,10 @@ class HeaderMainSection extends NavigationAbstract {
     const { type } = this.state;
     // updated this.props with window. in case of any issue need to verify this in future
     const {
-      location: { state, pathname = "" },
+      location: { search, pathname = "" },
     } = this.props;
     const isSearch = pathname.includes("catalogsearch");
-    
-    return TYPE_CATEGORY === type && state && !isSearch;
+    return TYPE_CATEGORY === type && search && !isSearch;
   }
 
   isPDP() {
@@ -303,11 +339,6 @@ class HeaderMainSection extends NavigationAbstract {
           onClick={this.handleSearchClick.bind(this)}
           elem="Button"
         ></button>
-        {/* <img
-          src={searchIcon}
-          onClick={this.handleSearchClick.bind(this)}
-          alt="Search Icon"
-        /> */}
       </div>
     );
   }
@@ -325,6 +356,7 @@ class HeaderMainSection extends NavigationAbstract {
       <div block="DesktopSearch">
         <HeaderSearch
           hideSearchBar={this.hideSearchBar}
+          renderMySignInPopup={this.showMyAccountPopup}
           focusInput={true}
           key="search"
         />
@@ -343,7 +375,7 @@ class HeaderMainSection extends NavigationAbstract {
 
   render() {
     const pageWithHiddenHeader = [TYPE_CART, TYPE_ACCOUNT];
-
+    const { signInPopUp } = this.state;
     return pageWithHiddenHeader.includes(this.getPageType()) &&
       isMobile.any() ? null : (
       <div
@@ -352,8 +384,9 @@ class HeaderMainSection extends NavigationAbstract {
           this.isPDP() && isMobile.any() ? this.state.visible : true
         }
       >
+        {this.renderMySignInPopup()}
         {this.renderNavigationState()}
-        {this.renderSearchIcon()}
+        {/* {this.renderSearchIcon()} */}
         {this.renderDesktopSearch()}
       </div>
     );

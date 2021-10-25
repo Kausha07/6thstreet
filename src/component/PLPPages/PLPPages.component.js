@@ -15,23 +15,53 @@ class PLPPages extends PureComponent {
     ).isRequired,
     impressions: Products,
   };
-
   static defaultProps = {
     impressions: [],
   };
 
   renderPage = ([key, page]) => {
-    const { products, isPlaceholder } = page;
-    const { impressions,query } = this.props;
+    const { products, isPlaceholder, isFirst = false } = page;
+    const {
+      impressions,
+      query,
+      renderMySignInPopup,
+      prevPath = null,
+    } = this.props;
+
     if (isPlaceholder) {
-      return <PLPPagePlaceholder key={key} pageIndex={key} query={query} />;
+      return (
+        <PLPPagePlaceholder
+          isFirst={isFirst}
+          key={key}
+          pageIndex={key}
+          query={query}
+        />
+      );
     }
 
-    return <PLPPage key={key} products={products} impressions={impressions} />;
+    return (
+      <PLPPage
+        key={key}
+        products={products}
+        impressions={impressions}
+        renderMySignInPopup={renderMySignInPopup}
+        prevPath={prevPath}
+      />
+    );
   };
 
   renderPages() {
     const { pages = {} } = this.props;
+    if (pages && pages.length === 0) {
+      const placeholderConfig = [
+        {
+          isPlaceholder: true,
+          products: [],
+          isFirst: true,
+        },
+      ];
+      return Object.entries(placeholderConfig).map(this.renderPage);
+    }
     return Object.entries(pages).map(this.renderPage);
   }
 

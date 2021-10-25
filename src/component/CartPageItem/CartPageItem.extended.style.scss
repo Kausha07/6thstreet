@@ -26,7 +26,7 @@
     margin-bottom: 8px;
 
     @include desktop() {
-      height: 170px;
+      height: 182px;
     }
 
     &-Wrapper {
@@ -38,7 +38,7 @@
 
       .Image {
         display: block;
-        width: 130px;
+        width: 142px;
 
         &-Image {
           position: relative;
@@ -72,6 +72,11 @@
           color: black;
         }
       }
+    }
+
+    &-DiscountPrice {
+      flex-wrap: wrap;
+      line-height: 18px;
     }
 
     &_isArabic {

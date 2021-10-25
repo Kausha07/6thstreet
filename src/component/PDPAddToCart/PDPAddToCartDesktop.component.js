@@ -7,6 +7,7 @@ import isMobile from "Util/Mobile";
 import { isArabic } from "Util/App";
 
 import PDPSizeGuide from "../PDPSizeGuide";
+import Image from "Component/Image";
 
 import "./PDPAddToCart.style";
 import Spinner from "react-spinkit";
@@ -384,7 +385,8 @@ class PDPAddToCart extends PureComponent {
     }
     return (
       <div block="PDPAddToCart" elem="NotifyMeSuccessContainer">
-        <img src={NotifySuccessImg} alt="success circle" />
+        <Image lazyLoad={true} src={NotifySuccessImg} alt="success circle" />
+
         <span>
           {__("We’ll let you know as soon as the product becomes available")}
         </span>

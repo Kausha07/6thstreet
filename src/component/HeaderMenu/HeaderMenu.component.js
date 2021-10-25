@@ -66,7 +66,7 @@ class HeaderMenu extends PureComponent {
               } }
               onClick={ this.onCategoriesClick }
             >
-                <label htmlFor="Categories">{ __('Categories') }</label>
+                {!this.props.isMobileBottomBar && <label htmlFor="Categories">{ __('Categories') }</label>}
             </button>
         );
     }

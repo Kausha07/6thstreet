@@ -36,7 +36,6 @@ export const ADD_TO_CART_ALGOLIA = "add_to_cart_algolia";
 export const VUE_CAROUSEL_SHOW = "carouselShow";
 export const VUE_CAROUSEL_CLICK = "carouselClick";
 export const VUE_CAROUSEL_SWIPE = "carouselSwipe";
-export const VUE_PDP_VIEW = "pdpView";
 export const VUE_PAGE_VIEW = "pageView";
 export const VUE_ADD_TO_CART = "addToCart";
 export const VUE_REMOVE_FROM_CART = "removeFromCart";
@@ -44,6 +43,5 @@ export const VUE_ADD_TO_WISHLIST = "addToWishlist";
 export const VUE_REMOVE_TO_WISHLIST = "removeFromWishlist";
 export const VUE_BUY = "buy";
 export const VUE_PLACE_ORDER = "placeOrder";
-
 export const EVENT_PROMOTION_IMPRESSION = "promotionImpression";
 export const EVENT_CLICK_PROMOTION_IMPRESSION = "promotionClick";

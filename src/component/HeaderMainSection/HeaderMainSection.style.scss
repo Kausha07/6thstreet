@@ -1,5 +1,5 @@
 :root {
-  --main-content-padding: 150px;
+  --main-content-padding: 147px;
 }
 
 main {
@@ -15,10 +15,19 @@ main {
   align-items: center;
   display: flex;
   flex-direction: row;
+  justify-content: center;
   align-items: center;
-  height: 60px;
-  max-width: 1440px;
+  height: 50px;
+  max-width: var(--container-max-width);
   margin: 0 auto;
+
+  .leftContainer {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex: 1;
+    order: 2;
+  }
 
   @include mobile {
     z-index: 90;
@@ -53,6 +62,7 @@ main {
 
   .HeaderGenders {
     display: flex;
+    flex: 1;
     order: 0;
   }
 
@@ -197,14 +207,15 @@ main {
 
   .HeaderWishlist {
     order: 3;
-    margin-left: 15px;
-    margin-right: 15px;
+    height: 25px;
+    margin-left: 22px;
+    margin-right: 22px;
   }
 
   .HeaderAccount {
     order: 4;
-    margin-left: 15px;
-    margin-right: 15px;
+    margin-left: 22px;
+    margin-right: 22px;
     &_isArabic {
       // margin-left: 0;
     }
@@ -212,9 +223,9 @@ main {
 
   .HeaderCart {
     order: 5;
-    margin-left: 15px;
+    margin-left: 22px;
     &_isArabic {
-      margin-right: 15px;
+      margin-right: 22px;
       margin-left: 0;
     }
 
@@ -222,10 +233,9 @@ main {
       top: 5px;
       width: 45px;
       margin: 0 auto;
-
       @include mobile {
         position: fixed;
-        top: 10px;
+        top: 14px;
         right: 20px;
 
         background: $white;
@@ -235,7 +245,6 @@ main {
 
         &-Button {
           left: 5px;
-          top: 3px;
           background-size: 24px;
           width: 24px;
           height: 24px;
@@ -261,7 +270,7 @@ main {
     }
     @include tablet {
       position: fixed;
-      top: 10px;
+      top: 14px;
       right: 20px;
 
       background: $white;
@@ -271,7 +280,6 @@ main {
 
       &-Button {
         right: 5px;
-        top: 3px;
         background-size: 24px;
         width: 24px;
         height: 24px;
@@ -303,15 +311,21 @@ main {
       display: flex;
       width: 100%;
       justify-content: center;
-      top: 50px;
+      align-items: top;
+      padding-top: 5px;
+      height: 54px;
+      top: 49px;
     }
     @include tablet {
       background: $white;
       position: fixed;
       display: flex;
       width: 100%;
+      padding-top: 5px;
       justify-content: center;
-      top: 50px;
+      align-items: top;
+      height: 54px;
+      top: 49px;
     }
     @include after-mobile {
       // display: none;
@@ -324,7 +338,11 @@ main {
         display: flex;
         background: $white;
         width: 100%;
-        top: 100px;
+        padding-top: 9px;
+        padding-bottom: 18px;
+        align-items: center;
+        margin-top: 0px;
+        top: 100px !important;
         position: fixed;
         justify-content: center;
       }
@@ -336,7 +354,7 @@ main {
 
         .GenderButton-Button {
           padding: 0 0px;
-          height: 25px;
+          height: 20px;
         }
       }
     }
@@ -345,7 +363,11 @@ main {
         display: flex;
         background: $white;
         width: 100%;
-        top: 100px;
+        padding-top: 9px;
+        padding-bottom: 18px;
+        align-items: center;
+        margin-top: 0px;
+        top: 100px !important;
         position: fixed;
         justify-content: center;
       }
@@ -353,13 +375,11 @@ main {
       .GenderButton-Container {
         display: flex;
         justify-content: center;
-        padding-left: 15px;
-        padding-right: 15px;
         // width: 33.33%;
 
         .GenderButton-Button {
           padding: 0;
-          height: 25px;
+          height: 20px;
         }
       }
     }
@@ -398,7 +418,7 @@ main {
 
   .DesktopSearch {
     position: fixed;
-    top: 119px;
+    top: 115px;
     background: #f6f6f6;
     width: 100%;
     height: 40px;
@@ -407,7 +427,7 @@ main {
     .HeaderSearch {
       position: relative;
       width: var(--main-container-width-dsk);
-      max-width: 100%;
+      max-width: var(--container-max-width);
       height: 40px;
       top: 0;
       border-radius: 0;
@@ -455,6 +475,7 @@ main {
           overflow-y: auto;
           right: 0;
           & > div {
+            max-width: var(--container-max-width);
             width: var(--main-container-width-dsk);
             margin-left: auto;
             margin-right: auto;
@@ -467,20 +488,9 @@ main {
 }
 
 .SearchIcon {
-  margin-right: 15px;
+  margin-right: 22px;
   &_isArabic {
     margin-right: 0;
-    margin-left: 15px;
+    margin-left: 22px;
   }
 }
-// .HeaderWishlist {
-//   margin-left: 15px !important;
-//   margin-right: 15px !important;
-// }
-// .HeaderAccount {
-//   margin-left: 15px !important;
-//   margin-right: 15px !important;
-// }
-// .HeaderCart {
-//   margin-left: 15px !important;
-// }

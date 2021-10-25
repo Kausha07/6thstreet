@@ -39,15 +39,13 @@ class DynamicContentVueSlider extends PureComponent {
 
   getPdpWidgetsVueData = () => {
     const { gender } = this.props;
-    const {
-      USER_DATA: { deviceUuid },
-    } = BrowserDatabase.getItem("MOE_DATA");
+    const userData = BrowserDatabase.getItem("MOE_DATA");
     const customer = BrowserDatabase.getItem("customer");
     const userID = customer && customer.id ? customer.id : null;
     const query = {
       filters: [],
       num_results: 10,
-      mad_uuid: deviceUuid,
+      mad_uuid: userData?.USER_DATA?.deviceUuid || null,
     };
     let type = this.props.type;
     const payload = VueQuery.buildQuery(type, query, {
@@ -61,17 +59,19 @@ class DynamicContentVueSlider extends PureComponent {
         });
       })
       .catch((err) => {
-        console.log("pdp widget vue query catch", err);
+        console.error("pdp widget vue query catch", err);
       });
   };
 
   render() {
     const { isArabic } = this.state;
+    const { renderMySignInPopup } = this.props;
     return (
       <div block="VeuSliderWrapper" mods={{ isArabic }}>
         {this.state.data?.length > 0 && (
           <DynamicContentVueProductSliderContainer
             products={this.state.data}
+            renderMySignInPopup={renderMySignInPopup}
             heading={this.props.layout.title}
             isHome={true}
             pageType={"Home"}

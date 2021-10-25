@@ -1,13 +1,13 @@
-import PropTypes from "prop-types";
-import { PureComponent } from "react";
-
 import Image from "Component/Image";
 import Link from "Component/Link";
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
+import { withRouter } from "react-router";
 import { isArabic } from "Util/App";
-
-import logo from "./logo/6thstreet_logo.png";
-
 import "./HeaderLogo.style";
+import logo from "./logo/6thstreet_logo.png";
+import BrowserDatabase from "Util/BrowserDatabase";
+import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 
 class HeaderLogo extends PureComponent {
   static propTypes = {
@@ -21,22 +21,25 @@ class HeaderLogo extends PureComponent {
   render() {
     const { isArabic } = this.state;
     const { setGender } = this.props;
-
+    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      : "home";
     return (
       <Link
-        to="/women.html"
+        to={{
+          pathname: `/${gender}.html`,
+          state: {
+            prevPath: window.location.href,
+          },
+        }}
         block="HeaderLogo"
         mods={{ isArabic }}
         onClick={setGender}
       >
-        <Image mix={{ block: "Image", mods: { isArabic } }} src={logo} />
-        {/* <img
-          mix={{ block: "Image", mods: { isArabic, new: true } }}
-          src={logo}
-        /> */}
+        <Image lazyLoad={true} mix={{ block: "Image", mods: { isArabic } }} src={logo} />
       </Link>
     );
   }
 }
 
-export default HeaderLogo;
+export default withRouter(HeaderLogo);

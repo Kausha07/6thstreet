@@ -26,6 +26,7 @@ import { TotalsType } from "Type/MiniCart";
 import { ClubApparelMember } from "Util/API/endpoint/ClubApparel/ClubApparel.type";
 import { getCurrency, getDiscountFromTotals, isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
+import Image from "Component/Image";
 
 import { Shipping } from "Component/Icons";
 
@@ -56,6 +57,76 @@ export class CartPage extends PureComponent {
     processingRequest: false,
   };
 
+  componentDidMount() {
+    const{
+      totals:{total,currency_code}
+    } = this.props;
+    const {isArabic} = this.state;
+    const { country } = JSON.parse(
+      localStorage.getItem("APP_STATE_CACHE_KEY")
+    ).data;
+    if((country === "AE" || country === "SA") && total >= 150){
+      const script = document.createElement("script");
+      script.src ="https://checkout.tabby.ai/tabby-promo.js";
+      script.async = true;
+      script.onload =  function(){
+        let s = document.createElement('script');
+        s.type = 'text/javascript';
+        const  code = `new TabbyPromo({
+          selector: '#TabbyPromo', 
+          currency: '${currency_code}', // required, currency of your product
+          price: '${total}', 
+          installmentsCount: 4,
+          lang: '${isArabic? "ar": "en"}', 
+          source: 'product', 
+        });`;
+        try {
+            s.appendChild(document.createTextNode(code));
+            document.body.appendChild(s);
+        } catch (e) {
+            s.text = code;
+            document.body.appendChild(s);
+        }
+      }  
+      document.body.appendChild(script);   
+    }
+  }
+  componentDidUpdate(prevProps) {
+    const{
+      totals:{total,currency_code}
+    } = this.props;
+    const {isArabic}= this.state
+    const { country } = JSON.parse(
+      localStorage.getItem("APP_STATE_CACHE_KEY")
+    ).data;
+    if(prevProps?.totals?.total !== total ){
+      if((country === "AE" || country === "SA") && total >= 150){
+        const script = document.createElement("script");
+        script.src ="https://checkout.tabby.ai/tabby-promo.js";
+        script.async = true;
+        script.onload =  function(){
+          let s = document.createElement('script');
+          s.type = 'text/javascript';
+          const  code = `new TabbyPromo({
+            selector: '#TabbyPromo', 
+            currency: '${currency_code}', // required, currency of your product
+            price: '${total}', 
+            installmentsCount: 4,
+            lang: '${isArabic? "ar": "en"}', 
+            source: 'product', 
+          });`;
+          try {
+              s.appendChild(document.createTextNode(code));
+              document.body.appendChild(s);
+          } catch (e) {
+              s.text = code;
+              document.body.appendChild(s);
+          }
+        }  
+        document.body.appendChild(script);   
+      }
+    }
+  }
   renderCartItems() {
     const {
       totals: { items = [], quote_currency_code },
@@ -123,7 +194,13 @@ export class CartPage extends PureComponent {
       </li>
     );
   }
-
+  renderTabbyPromo(){
+    return (
+      <div block="CartPage" elem="TabbyBlock">
+        <div id="TabbyPromo"></div>
+      </div>
+    )
+  }
   renderTotal() {
     const {
       totals: {
@@ -138,11 +215,10 @@ export class CartPage extends PureComponent {
     } = this.props;
     const grandTotal = getFinalPrice(total, currency_code);
     const subTotal = getFinalPrice(subtotal, currency_code);
-
     return (
       <div block="CartPage" elem="OrderTotals">
         <ul>
-          {/* <div block="CartPage" elem="Subtotals">
+          <div block="CartPage" elem="Subtotals">
                         { this.renderPriceLine(subTotal, __('Subtotal')) }
                         { this.renderPriceLine(shipping_fee, __('Shipping fee')) }
                         { this.renderPriceLine(
@@ -153,18 +229,15 @@ export class CartPage extends PureComponent {
                             getDiscountFromTotals(totals, 'clubapparel'),
                             __('Club Apparel Redemption')
                         ) }
-                        { couponCode && this.renderPriceLine(
+                        { (couponCode || (discount && discount != 0)) ? this.renderPriceLine(
                             discount,
-                            __('Discount (%s)', couponCode)
-                        ) }
+                            __('Discount')
+                        ) : null}
                         { this.renderPriceLine(
                             getDiscountFromTotals(totals, 'tax'),
                             __('Tax')
                         ) }
-                    </div> */}
-          <div block="CartPage" elem="Totals">
-            {this.renderPriceLine(subTotal, __("Subtotal"), {}, true)}
-          </div>
+                    </div>
         </ul>
       </div>
     );
@@ -291,7 +364,8 @@ export class CartPage extends PureComponent {
     if (accountLinked && isSignedIn) {
       return (
         <div block="CartPage" elem="ClubApparelBlock" mods={{ isArabic }}>
-          <img src={ClubApparel} alt="Club Apparel Logo" />
+          <Image lazyLoad={true} src={ClubApparel} alt="Club Apparel Logo" />
+
           <div block="CartPage" elem="ClubApparelText">
             {__("You may earn ")}
             <span>{`${currency_code} ${club_apparel_estimated_pointsvalue} `}</span>
@@ -304,7 +378,8 @@ export class CartPage extends PureComponent {
     if (!accountLinked && isSignedIn) {
       return (
         <div block="CartPage" elem="ClubApparelBlock">
-          <img src={ClubApparel} alt="Club Apparel Logo" />
+          <Image lazyLoad={true} src={ClubApparel} alt="Club Apparel Logo" />
+
           <div block="CartPage" elem="ClubApparelText">
             {__("Link your Club Apparel account to earn ")}
             <span>{`${currency_code} ${club_apparel_estimated_pointsvalue} `}</span>
@@ -323,7 +398,8 @@ export class CartPage extends PureComponent {
 
     return (
       <div block="CartPage" elem="ClubApparelBlock">
-        <img src={ClubApparel} alt="Club Apparel Logo" />
+                <Image lazyLoad={true} src={ClubApparel} alt="Club Apparel Logo" />
+
         <div block="CartPage" elem="ClubApparelText">
           {__("Link your Club Apparel account to earn ")}
           <span>{`${currency_code} ${club_apparel_estimated_pointsvalue} `}</span>
@@ -408,7 +484,6 @@ export class CartPage extends PureComponent {
     const { history } = this.props;
     const self = this;
     function goHome() {
-      console.log(self.shouldMobileBottomBarHidden);
       self.shouldMobileBottomBarHidden();
       history.push("/");
     }
@@ -505,6 +580,7 @@ export class CartPage extends PureComponent {
           </div>
           <div block="CartPage" elem="Floating" mods={{ isArabic }}>
             {this.renderClubApparel()}
+            {this.renderTabbyPromo()}
             {this.renderTotals()}
           </div>
         </ContentWrapper>
@@ -531,7 +607,6 @@ export class CartPage extends PureComponent {
 
   render() {
     const { isArabic } = this.state;
-
     return (
       <main block="CartPage" aria-label="Cart Page" mods={{ isArabic }}>
         {this.renderDynamicContent()}

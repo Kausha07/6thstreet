@@ -7,6 +7,7 @@ import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
 import { getUUID } from "Util/Auth";
 import { VUE_CAROUSEL_CLICK } from "Util/Event";
+import Image from "Component/Image";
 
 class DynamicContentVueProductSliderItem extends PureComponent {
   static propTypes = {
@@ -134,6 +135,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
         link = "",
         url = "",
       },
+      renderMySignInPopup,
       data,
       widgetID,
     } = this.props;
@@ -155,7 +157,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
             this.onclick(widgetID);
           }}
         >
-          <img
+          <Image lazyLoad={true}
             block="VueProductSlider"
             elem="VueProductImage"
             src={thumbnail_url}
@@ -166,7 +168,12 @@ class DynamicContentVueProductSliderItem extends PureComponent {
         <span id="productName">{name}</span>
         {this.renderPrice(price)}
         {this.renderIsNew(is_new_in)}
-        <WishlistIcon sku={sku} data={data} pageType="search" />
+        <WishlistIcon
+          sku={sku}
+          data={data}
+          pageType="search"
+          renderMySignInPopup={renderMySignInPopup}
+        />
       </div>
     );
   }

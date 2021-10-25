@@ -11,21 +11,19 @@
 
   @include desktop {
     display: flex;
+    flex: 1;
     // width: 50%;
     // min-width: 30.556vw;
     transform: none;
   }
 
   &-Button {
+    padding-right: 31px;
     padding-left: 0;
     text-align: left;
-    // width: 160px;
     width: 150px;
-    height: 30px;
-    // font-size: 12px;
+    height: 31px;
     display: none;
-    // font-weight: var(--fw-demi);
-
     color: #4a4a4a;
     font-family: "Avenir Next";
     font-size: 11px;
@@ -34,40 +32,38 @@
     line-height: 15px;
 
     @include desktop {
-      display: block;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     &::after {
-      content: "";
       display: block;
       box-sizing: border-box;
-      position: absolute;
-      width: 7px;
-      height: 7px;
-      border-bottom: 1px solid;
-      border-right: 1px solid;
-      transform: rotate(45deg);
-      right: 15px;
+      right: 17px;
       top: 9px;
+      position: absolute;
+      content: "";
+      background: url(../Icons/ChevronDown/icon.svg) no-repeat;
+      background-size: 12px;
+      width: 12px;
+      height: 12px;
     }
 
     &_isExpanded {
       &::after {
-        // border-left: 5px solid transparent;
-        // border-right: 5px solid transparent;
-        // border-bottom: 5px solid var(--black-color);
-        // border-top: 0;
-        transform: rotate(225deg);
-        top: 12px;
+        background: url(../Icons/ChevronUp/icon.svg) no-repeat;
+        background-size: 12px;
+        top: 8px;
       }
     }
 
     &_isArabic {
-      padding-left: 30px !important;
+      padding-left: 31px !important;
       text-align: left !important;
 
       &::after {
-        right: 126px;
+        right: 121px;
       }
     }
   }
@@ -125,23 +121,33 @@
     &::before {
       position: absolute;
       content: "";
-      background: url(./icons/phonecall.svg) no-repeat;
-      background-size: 24px;
-      width: 24px;
-      height: 24px;
+      background: url(./icons/phone.svg) no-repeat;
+      background-size: 22px;
+      width: 22px;
+      height: 22px;
       display: inline-block;
       font-size: 0;
       transform: rotate(-10deg);
       left: 5px;
-      top: -5px;
+      top: -3px;
     }
 
     &::after {
       width: 120px;
       position: absolute;
-      left: 32px;
-      content: "TAP TO WHATSAPP";
-      font-weight: var(--fw-medium);
+      left: 12px;
+      content: "TAP TO CALL";
+      font-weight: bold;
+      font-weight: bold;
+      font-size: 10px;
+      color: white;
+      letter-spacing: 0.91px;
+    }
+
+    &_isArabic {
+      &::after {
+        content: "اضغط هنا للاتصال"
+      }
     }
 
     @include desktop {
@@ -164,13 +170,15 @@
 
     &_isArabic {
       &::after {
-        right: 35px;
+        right: 22px;
         left: 0;
+        width: auto;
       }
 
       &::before {
         right: 5px;
         left: 0;
+
       }
     }
   }
@@ -215,35 +223,32 @@
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
-    justify-content: center;
+    justify-content: left;
     width: 100%;
-    margin: 5px 0;
     color: var(--white-color);
-    // font-weight: var(--fw-demi);
     text-align: center;
     padding: 0;
     border: none;
-    // line-height: 16px;
-
-    // height: 18px;
-    // width: 177px;
     color: #4a4a4a;
     font-family: "Avenir Next";
     font-size: 13px;
     font-weight: 600;
     letter-spacing: 0;
     line-height: 18px;
-
+    &_isArabic {
+      justify-content: right;
+      margin-left: 5px;
+    }
     @include desktop {
       color: var(--black-color);
       // margin-left: 20px;
       // padding-left: 15px;
       margin-left: 0;
-      padding-left: 10px;
+      padding-left: 9px;
       // margin-top: 7px;
       // margin-bottom: 7px;
       border-left: 1px solid var(--border-color);
-      justify-content: left;
+      // justify-content: left;
       // min-height: 25px;
     }
 
@@ -251,12 +256,29 @@
       // text-transform: uppercase;
       padding-right: 3px;
 
-      font-weight: var(--fw-medium);
+      font-weight: var(--fw-demi);
       color: #4a4a4a;
       font-family: "Avenir Next";
       font-size: 13px;
       letter-spacing: 0;
       line-height: 18px;
+
+      @include tablet{
+      font-weight: bold;
+      color: white;
+      font-size: 10px;
+      letter-spacing: 0.91px;
+      line-height: 36px;
+      margin: 0;
+      }
+      @include mobile{
+        font-weight: bold;
+        color: white;
+        font-size: 10px;
+        letter-spacing: 0.91px;
+        line-height: 36px;
+        margin: 0;
+      }
 
       &::first-letter {
         text-transform: uppercase;
@@ -287,6 +309,7 @@
       }
       @include desktop {
         margin-left: 0;
+        padding-right: 9px;
         padding-left: 0;
         // margin-right: 20px;
         // padding-right: 15px;
@@ -305,6 +328,11 @@
       &-Button {
         padding-right: 0;
         text-align: right;
+      }
+
+      .CircleContainer {
+        margin-right: 0px;
+        margin-left: 4px;
       }
     }
   }
@@ -344,7 +372,8 @@
   justify-content: center;
   align-items: center;
   position: relative;
-  margin-right: 10px;
+  margin-right: 4px;
+
   &-Pulse {
     width: 10px;
     height: 10px;
@@ -374,5 +403,11 @@
 
     z-index: 1;
     opacity: 0;
+  }
+  @include tablet{
+    display: none;
+  }
+  @include mobile{
+    display: none;
   }
 }

@@ -318,9 +318,10 @@ export class CartItem extends PureComponent {
           value={qty}
           onChange={(e) => this.onQuantityChange(e.target.value)}
         >
-          {qtyList.map((item) => {
+          {qtyList.map((item, index) => {
             return (
               <option
+                key={index}
                 selected={qty == item}
                 block="CartItem"
                 elem="QuantityOption"
@@ -438,15 +439,16 @@ export class CartItem extends PureComponent {
     const {
       item: {
         product: { name },
+        full_item_info: { url_key },
       },
       thumbnail,
       isCartPage,
     } = this.props;
     const { isArabic } = this.state;
-
+    let customURL = `${url_key}.html`;
     return (
-      <>
-        <img
+      <div onClick={() => this.props.history.push(customURL)}>
+        <Image lazyLoad={true}
           src={thumbnail}
           mix={{
             block: "CartItem",
@@ -456,8 +458,8 @@ export class CartItem extends PureComponent {
           ratio="custom"
           alt={`Product ${name} thumbnail.`}
         />
-        <img style={{ display: "none" }} alt={name} src={thumbnail} />
-      </>
+        <Image lazyLoad={true} style={{ display: "none" }} alt={name} src={thumbnail} />
+      </div>
     );
   }
 

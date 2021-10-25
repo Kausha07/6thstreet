@@ -1,9 +1,13 @@
-import { setPDPData, setPDPClickAndCollect, setPDPLoading } from "Store/PDP/PDP.action";
+import {
+  setPDPData,
+  setPDPClickAndCollect,
+  setPDPLoading,
+} from "Store/PDP/PDP.action";
 import {
   getProductStock,
   sendNotifyMeEmail,
   isClickAndCollectAvailable,
-  getClickAndCollectStores
+  getClickAndCollectStores,
 } from "Util/API/endpoint/Product/Product.enpoint";
 import { getStaticFile } from "Util/API/endpoint/StaticFiles/StaticFiles.endpoint";
 import Algolia from "Util/API/provider/Algolia";
@@ -51,33 +55,52 @@ export class PDPDispatcher {
     return getProductStock(sku);
   }
 
-  async getClickAndCollectStores(brandName, sku, latitude, longitude, dispatch) {
+  async getClickAndCollectStores(
+    brandName,
+    sku,
+    latitude,
+    longitude,
+    dispatch
+  ) {
     let clickAndCollectStores = [];
     try {
-      const isAvailableResponse = await isClickAndCollectAvailable({brandName, sku});
-      if(isAvailableResponse?.data?.isAvailable) {
-        const storeListResponse = await getClickAndCollectStores({brandName, sku, latitude, longitude});
-        clickAndCollectStores = (storeListResponse?.data?.items || []).map((store) => (
-          {
+      const isAvailableResponse = await isClickAndCollectAvailable({
+        brandName,
+        sku,
+      });
+      if (isAvailableResponse?.data?.isAvailable) {
+        const storeListResponse = await getClickAndCollectStores({
+          brandName,
+          sku,
+          latitude,
+          longitude,
+        });
+        clickAndCollectStores = (storeListResponse?.data?.items || []).map(
+          (store) => ({
             id: store.storeNo,
             value: store.storeNo,
-            label: store.name
-          }
-        ));
+            label: store.name,
+            address: store.address,
+            area: store.area,
+            city: store.city,
+          })
+        );
       }
-    }
-    catch(err) {
+    } catch (err) {
       console.error(err);
-    }
-    finally {
-      dispatch(setPDPClickAndCollect(clickAndCollectStores))
+    } finally {
+      dispatch(setPDPClickAndCollect(clickAndCollectStores));
     }
   }
 
   async requestPdpWidgetData(dispatch) {
-    const pdpWidgetData = await getStaticFile("pdp");
-    if (pdpWidgetData && pdpWidgetData.widgets) {
-      dispatch(setPdpWidgetsData(pdpWidgetData.widgets));
+    try {
+      const pdpWidgetData = await getStaticFile("pdp");
+      if (pdpWidgetData && pdpWidgetData.widgets) {
+        dispatch(setPdpWidgetsData(pdpWidgetData.widgets));
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 

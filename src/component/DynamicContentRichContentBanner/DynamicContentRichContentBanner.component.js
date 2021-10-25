@@ -1,10 +1,14 @@
+import cx from "classnames";
+import {
+  HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
+  HOME_PAGE_BANNER_IMPRESSIONS,
+} from "Component/GoogleTagManager/events/BannerImpression.event";
+import Image from "Component/Image";
+import Link from "Component/Link";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import TinySlider from "tiny-slider-react";
-import Image from "Component/Image";
-import Link from "Component/Link";
 import { formatCDNLink } from "Util/Url";
-import cx from "classnames";
 import "react-circular-carousel/dist/index.css";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
@@ -12,10 +16,6 @@ import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
 // import VueIntegrationQueries from "Query/vueIntegration.query";
 // import { getUUID } from "Util/Auth";
 import "./DynamicContentRichContentBanner.style";
-import {
-  HOME_PAGE_BANNER_IMPRESSIONS,
-  HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
-} from "Component/GoogleTagManager/events/BannerImpression.event";
 
 const settings = {
   lazyload: true,
@@ -84,7 +84,6 @@ class DynamicContentRichContentBanner extends PureComponent {
     }
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        console.log("rich content banner component in view port ", entry);
         this.sendImpressions();
       }
     });
@@ -123,7 +122,7 @@ class DynamicContentRichContentBanner extends PureComponent {
     return (
       <div block="CircleSlider" key={i}>
         <Link
-          to={linkTo}
+          to={formatCDNLink(item.button.link)}
           key={i}
           data-banner-type="richContentBanner"
           data-promotion-name={item.promotion_name ? item.promotion_name : ""}
@@ -133,12 +132,12 @@ class DynamicContentRichContentBanner extends PureComponent {
           }}
         >
           <div block="ImageContainer">
-            <img
+            <Image lazyLoad={true}
               src={image_url}
               alt={title}
               mix={{ block: "DynamicContentRichContentBanner", elem: "Image" }}
-              // style={{ maxWidth: width, maxHeight: height }}
             />
+
             {item.tag && (
               <div
                 block={cx("Tag", {
@@ -163,6 +162,9 @@ class DynamicContentRichContentBanner extends PureComponent {
               to={formatCDNLink(item.button.link)}
               className="Label-Button"
               data-banner-type="Label-Button"
+              onClick={() => {
+                this.onclick(item);
+              }}
             >
               {item.button.label}
             </Link>

@@ -102,12 +102,18 @@
       width: 100%;
       text-align: center;
 
-      img {
-        width: 20px;
-        height: auto;
-        margin-right: 5px;
-        float: left;
-        margin-top: 5px;
+      .Image {
+        overflow: inherit !important;
+
+        .LazyLoad-wrapper {
+          img {
+            width: 20px !important;
+            height: auto !important;
+            margin-right: 5px;
+            float: left;
+            margin-top: 5px;
+          }
+        }
       }
 
       @include mobile {
@@ -115,10 +121,14 @@
       }
 
       &_isArabic {
-        img {
-          margin-right: unset;
-          margin-left: 5px;
-          float: right;
+        .Image {
+          .LazyLoad-wrapper {
+            img {
+              margin-right: unset;
+              margin-left: 5px;
+              float: right;
+            }
+          }
         }
       }
     }
@@ -227,10 +237,13 @@
   }
 
   &-Actions {
-    display: grid;
-    // grid-template-columns: 47.775% 47.775%;
-    grid-template-columns: 100%;
-    // grid-column-gap: 4.45%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    // display: grid;
+    // // grid-template-columns: 47.775% 47.775%;
+    // grid-template-columns: 100%;
+    // // grid-column-gap: 4.45%;
     padding: 15px 20px;
   }
 
@@ -246,7 +259,7 @@
     }
 
     @include after-mobile {
-      flex-grow: 1;
+      // flex-grow: 1;
       text-align: center;
     }
 
@@ -257,8 +270,12 @@
 
   &-CartButton {
     border: 2px solid var(--Black);
-    color: var(--Black);
-
+    color: var(--Black) !important;
+    width: 124px !important;
+    background-color: var(--white) !important;
+    font-size: 12px;
+    font-weight: var(--fw-bold);
+    text-transform: uppercase;
     @include mobile {
       display: none;
     }
@@ -279,6 +296,7 @@
     border-radius: 6px;
     background-color: #000000;
     height: 50px;
+    width: 200px;
     color: #ffffff;
     font-family: "Avenir Next";
     letter-spacing: 0;

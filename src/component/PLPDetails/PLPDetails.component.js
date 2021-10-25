@@ -6,6 +6,7 @@ import shareIcon from "Style/icons/share.svg";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 import "./PLPDetails.style";
+import Image from "Component/Image";
 
 class PLPDetails extends PureComponent {
   static propTypes = {
@@ -21,7 +22,7 @@ class PLPDetails extends PureComponent {
 
   renderBrandImage = () => {
     const { brandImg } = this.props;
-    return <img src={brandImg} />;
+    return <Image lazyLoad={true} src={brandImg} />
   };
 
   renderBrandName = () => {
@@ -47,8 +48,8 @@ class PLPDetails extends PureComponent {
   renderActionButtons = () => {
     return (
       <div block="PLPDetails" elem="ShareIcon">
-        <img src={shareIcon} alt={__("Share Icon")} />
-        <img src={favIcon} alt={__("Favorite Icon")} />
+        <Image lazyLoad={true} src={shareIcon} alt={__("Share Icon")} />
+        <Image lazyLoad={true} src={favIcon} alt={__("Favorite Icon")} />
       </div>
     );
   };

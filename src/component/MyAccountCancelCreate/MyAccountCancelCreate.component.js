@@ -1,4 +1,6 @@
 import Form from 'Component/Form';
+import Field from 'Component/Field';
+
 import MyAccountCancelCreateItem from 'Component/MyAccountCancelCreateItem';
 import { MyAccountReturnCreate } from 'Component/MyAccountReturnCreate/MyAccountReturnCreate.component';
 
@@ -49,32 +51,63 @@ class MyAccountCancelCreate extends MyAccountReturnCreate {
         );
     }
 
+    renderResolutions() {
+        const {
+            onResolutionChangeValue,
+            resolutions,
+        } = this.props;
+        if(!!!resolutions?.length){
+            return null;
+        }
+        const resolutionValue =  resolutions.map(({ id, label }) => ({
+            id,
+            label,
+            value: id +1 
+        }));
+        return (
+            <Field
+              type="select"
+              id={ `cancel_resolution` }
+              name={ `cancel_resolution` }
+              placeholder={ __('Select a resolution') }
+              mix={ { block: 'MyAccountReturnCreateItem', elem: 'Resolutions' } }
+              onChange={ onResolutionChangeValue }
+              selectOptions={ resolutionValue }
+            />
+        );
+    }
+
     renderActions() {
-        const { handleDiscardClick, selectedNumber } = this.props;
+        const { handleDiscardClick, selectedNumber, resolutions, resolutionId} = this.props;
         const itemString = selectedNumber === 1 ? __('item') : __('items');
         const submitText = selectedNumber <= 0
             ? __('Cancel') : `${__('Cancel')} ${selectedNumber} ${itemString}`;
 
         return (
-            <div block="MyAccountReturnCreate" elem="Actions">
-                <button
-                  block="MyAccountReturnCreate"
-                  elem="ButtonDiscard"
-                  type="button"
-                  mix={ { block: 'Button' } }
-                  onClick={ handleDiscardClick }
-                >
-                    { __('Discard') }
-                </button>
-                <button
-                  block="MyAccountReturnCreate"
-                  elem="ButtonSubmit"
-                  type="submit"
-                  mix={ { block: 'Button' } }
-                  disabled={ selectedNumber <= 0 }
-                >
-                    { submitText }
-                </button>
+            <div>
+                { this.renderResolutions() }
+                <div block="MyAccountReturnCreate" elem="Actions">
+                    <button
+                    block="MyAccountReturnCreate"
+                    elem="ButtonDiscard"
+                    type="button"
+                    mix={ { block: 'Button' } }
+                    onClick={ handleDiscardClick }
+                    >
+                        { __('Discard') }
+                    </button>
+                    <button
+                    block="MyAccountReturnCreate"
+                    elem="ButtonSubmit"
+                    type="submit"
+                    mix={ { block: 'Button' } }
+                    disabled={
+                        selectedNumber <= 0  || (!!resolutions?.length && resolutionId === null)
+                    }
+                    >
+                        { submitText }
+                    </button>
+                </div>
             </div>
         );
     }

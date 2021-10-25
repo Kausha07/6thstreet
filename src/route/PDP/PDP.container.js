@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
+import { withRouter } from "react-router";
 import { setGender } from "Store/AppState/AppState.action";
 import { updateMeta } from "Store/Meta/Meta.action";
 import { changeNavigationState } from "Store/Navigation/Navigation.action";
@@ -39,8 +40,16 @@ export const mapStateToProps = (state) => ({
 
 export const mapDispatchToProps = (dispatch) => ({
   requestProduct: (options) => PDPDispatcher.requestProduct(options, dispatch),
-  requestProductBySku: (options) => PDPDispatcher.requestProductBySku(options, dispatch),
-  getClickAndCollectStores: (brandName, sku, latitude, longitude) => PDPDispatcher.getClickAndCollectStores(brandName, sku, latitude, longitude, dispatch),
+  requestProductBySku: (options) =>
+    PDPDispatcher.requestProductBySku(options, dispatch),
+  getClickAndCollectStores: (brandName, sku, latitude, longitude) =>
+    PDPDispatcher.getClickAndCollectStores(
+      brandName,
+      sku,
+      latitude,
+      longitude,
+      dispatch
+    ),
   setIsLoading: (isLoading) => dispatch(setPDPLoading(isLoading)),
   updateBreadcrumbs: (breadcrumbs) => {
     BreadcrumbsDispatcher.then(({ default: dispatcher }) =>
@@ -59,6 +68,7 @@ export class PDPContainer extends PureComponent {
     requestProduct: PropTypes.func.isRequired,
     requestProductBySku: PropTypes.func.isRequired,
     getClickAndCollectStores: PropTypes.func.isRequired,
+    clickAndCollectStores: PropTypes.object.isRequired,
     setIsLoading: PropTypes.func.isRequired,
     isLoading: PropTypes.bool.isRequired,
     product: Product.isRequired,
@@ -97,7 +107,9 @@ export class PDPContainer extends PureComponent {
 
   componentDidMount() {
     const {
-      product: { product_type_6s, sku },
+      product: { product_type_6s, sku, url },
+      location: { state },
+      product,
     } = this.props;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
@@ -108,7 +120,8 @@ export class PDPContainer extends PureComponent {
         currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),
-        referrer: "desktop",
+        referrer: state?.prevPath ? state?.prevPath : null,
+        url: window.location.href,
         sourceProdID: sku,
         sourceCatgID: product_type_6s, // TODO: replace with category id
       },
@@ -120,10 +133,9 @@ export class PDPContainer extends PureComponent {
       id,
       isLoading,
       setIsLoading,
-      product: { sku, brand_name: brandName, } = {},
+      product: { sku, brand_name: brandName } = {},
       product,
       menuCategories = [],
-      getClickAndCollectStores
     } = this.props;
     const currentIsLoading = this.getIsLoading();
     const { id: prevId } = prevProps;
@@ -143,18 +155,36 @@ export class PDPContainer extends PureComponent {
       this.updateBreadcrumbs();
       this.setMetaData();
       this.updateHeaderState();
-      navigator.geolocation.getCurrentPosition(
-        ({ coords }) => getClickAndCollectStores(brandName, sku, coords?.latitude, coords?.longitude),
-        (err) => console.error(err),
-        {
-          enableHighAccuracy: true
-        }
-      )
+      this.fetchClickAndCollectStores(brandName, sku);
     }
 
     Event.dispatch(EVENT_GTM_PRODUCT_DETAIL, {
       product: product,
     });
+  }
+
+  fetchClickAndCollectStores(brandName, sku) {
+    const { getClickAndCollectStores } = this.props;
+
+    const options = {
+      enableHighAccuracy: true,
+    };
+
+    const successCallback = ({ coords }) =>
+      getClickAndCollectStores(
+        brandName,
+        sku,
+        coords?.latitude,
+        coords?.longitude
+      );
+    const errorCallback = (err) => console.error(err);
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        successCallback,
+        errorCallback,
+        options
+      );
+    }
   }
 
   updateHeaderState() {
@@ -179,7 +209,7 @@ export class PDPContainer extends PureComponent {
       const rawCategoriesLastLevel =
         categories[
           Object.keys(categories)[Object.keys(categories).length - 1]
-        ][0];
+        ]?.[0];
       const categoriesLastLevel = rawCategoriesLastLevel
         ? rawCategoriesLastLevel.split(" /// ")
         : [];
@@ -202,7 +232,7 @@ export class PDPContainer extends PureComponent {
           url: "",
           name: __(name),
         },
-        ...productBreadcrumbs
+        ...productBreadcrumbs,
       ];
 
       updateBreadcrumbs(breadcrumbs);
@@ -278,8 +308,14 @@ export class PDPContainer extends PureComponent {
   }
 
   containerProps = () => {
-    const { nbHits, isLoading, brandDescription, brandImg, brandName } =
-      this.props;
+    const {
+      nbHits,
+      isLoading,
+      brandDescription,
+      brandImg,
+      brandName,
+      clickAndCollectStores,
+    } = this.props;
 
     const { isLoading: isCategoryLoading } = this.state;
 
@@ -290,6 +326,7 @@ export class PDPContainer extends PureComponent {
       brandDescription,
       brandImg,
       brandName,
+      clickAndCollectStores,
     };
   };
 
@@ -300,4 +337,6 @@ export class PDPContainer extends PureComponent {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PDPContainer);
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(PDPContainer)
+);

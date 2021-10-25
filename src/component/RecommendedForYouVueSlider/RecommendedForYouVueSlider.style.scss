@@ -204,8 +204,8 @@ html {
           width: 2rem;
           height: 2rem;
           background-size: 2rem;
-          left: 3px;
-          top: 7px;
+          // left: 3px;
+          // top: 7px;
         }
 
         @include tablet {
@@ -274,6 +274,10 @@ html {
 
     &-SpecialPriceCon {
       display: block;
+      text-align: left !important;
+      &_isArabic {
+        text-align: right !important;
+      }
     }
     &-brandName {
       &_isArabic {
@@ -299,7 +303,7 @@ html {
       font-size: 14px;
 
       span {
-        color: #d1490c;
+        color: #D12228;
         font-weight: var(--fw-bold);
         @media (max-width: 411px) {
           font-size: 12px;

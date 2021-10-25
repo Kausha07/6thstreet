@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import TinySlider from "tiny-slider-react";
 import Link from "Component/Link";
+// import { getUUID } from "Util/Auth";
 import { formatCDNLink } from "Util/Url";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
@@ -12,6 +13,7 @@ import {
   HOME_PAGE_BANNER_IMPRESSIONS,
   HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
 } from "Component/GoogleTagManager/events/BannerImpression.event";
+import Image from "Component/Image";
 
 const settings = {
   lazyload: true,
@@ -68,11 +70,9 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
     observer.observe(this.viewElement);
   }
   sendImpressions() {
-    // setTimeout(() => {
     const { items = [] } = this.props;
     Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
     this.setState({ impressionSent: true });
-    // }, 100);
   }
   handleIntersect = (entries, observer) => {
     const { impressionSent } = this.state;
@@ -81,7 +81,6 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
     }
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        console.log("full width slider item component in view port ", entry);
         this.sendImpressions();
       }
     });
@@ -90,6 +89,9 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
     this.setState({ activeSlide });
   };
   onclick = (item) => {
+    if(!!!item){
+      return;
+    }
     let banner = {
       link: item.link,
       promotion_name: item.promotion_name,
@@ -103,7 +105,6 @@ class DynamicContentFullWidthBannerSlider extends PureComponent {
 
   renderSlide = (item, i) => {
     const { link, label, url: image_url, plp_config } = item;
-
     return (
       <Link
         to={formatCDNLink(link)}

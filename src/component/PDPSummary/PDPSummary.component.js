@@ -16,6 +16,7 @@ import { SPECIAL_COLORS, translateArabicColor } from "Util/Common";
 import isMobile from "Util/Mobile";
 import tabby from "./icons/tabby.svg";
 import "./PDPSummary.style";
+import Image from "Component/Image";
 
 class PDPSummary extends PureComponent {
   static propTypes = {
@@ -30,7 +31,88 @@ class PDPSummary extends PureComponent {
     stockAvailibility: true,
     isArabic: isArabic(),
   };
+  componentDidMount() {
+    const {
+      product: { price },
+    } = this.props;
+    const {isArabic} = this.state
+    if (price) {
+      const priceObj = Array.isArray(price) ? price[0] : price;
+      const [currency, priceData] = Object.entries(priceObj)[0];
 
+      const { country } = JSON.parse(
+        localStorage.getItem("APP_STATE_CACHE_KEY")
+      ).data;
+      const { default: defPrice } = priceData;
+
+      if ((country === "AE" || country === "SA") && defPrice >= 150) {
+        const script = document.createElement("script");
+      script.src ="https://checkout.tabby.ai/tabby-promo.js";
+      script.async = true;
+      script.onload =  function(){
+      let s = document.createElement('script');
+      s.type = 'text/javascript';
+      const  code = `new TabbyPromo({
+        selector: '#TabbyPromo', 
+        currency: '${currency}',
+        price: '${defPrice}', 
+        installmentsCount: 4,
+        lang: '${isArabic? "ar": "en"}', 
+        source: 'product', 
+      });`;
+      try {
+        s.appendChild(document.createTextNode(code));
+        document.body.appendChild(s);
+      } catch (e) {
+        s.text = code;
+        document.body.appendChild(s);
+      }
+    }
+    document.body.appendChild(script);   
+  }} 
+  }
+  componentDidUpdate(prevProps) {
+    const {
+      product: { price },
+    } = this.props;
+    const {isArabic} = this.state
+
+    if (price) {
+      const priceObj = Array.isArray(price) ? price[0] : price;
+      const [currency, priceData] = Object.entries(priceObj)[0];
+      const { country } = JSON.parse(
+        localStorage.getItem("APP_STATE_CACHE_KEY")
+      ).data;
+      const { default: defPrice } = priceData;
+      if ((country === "AE" || country === "SA") && defPrice >= 150) {
+        if(prevProps.product.price !== price){
+
+          const script = document.createElement("script");
+        script.src ="https://checkout.tabby.ai/tabby-promo.js";
+        script.async = true;
+        script.onload =  function(){
+        let s = document.createElement('script');
+        s.type = 'text/javascript';
+        const  code = `new TabbyPromo({
+          selector: '#TabbyPromo', 
+          currency: '${currency}', 
+          price: '${defPrice}', 
+          installmentsCount: 4,
+          lang: '${isArabic? "ar": "en"}', 
+          source: 'product', 
+        });`;
+        try {
+          s.appendChild(document.createTextNode(code));
+          document.body.appendChild(s);
+        } catch (e) {
+          s.text = code;
+          document.body.appendChild(s);
+        }
+      }
+      document.body.appendChild(script);   
+        }
+  }} 
+  }
   static getDerivedStateFromProps(props, state) {
     const { product } = props;
 
@@ -79,7 +161,7 @@ class PDPSummary extends PureComponent {
     const { product } = this.props;
     return (
       <div block="PDPSummary" elem="Header">
-        <ProductLabel product={product} />
+        <ProductLabel product={product} section="PDPSummary" />
       </div>
     );
   }
@@ -88,6 +170,7 @@ class PDPSummary extends PureComponent {
     const {
       product: { sku },
       product,
+      renderMySignInPopup,
     } = this.props;
     const url = new URL(window.location.href);
 
@@ -104,7 +187,12 @@ class PDPSummary extends PureComponent {
             text={`Hey check this out: ${document.title}`}
             url={url.searchParams.append("utm_source", "pdp_share")}
           />
-          <WishlistIcon sku={sku} data={product} pageType="pdp" />
+          <WishlistIcon
+            sku={sku}
+            renderMySignInPopup={renderMySignInPopup}
+            data={product}
+            pageType="pdp"
+          />
         </div>
       </>
     );
@@ -231,6 +319,7 @@ class PDPSummary extends PureComponent {
     const {
       product: { sku },
       isLoading,
+      renderMySignInPopup,
     } = this.props;
     const { alsoAvailable } = this.state;
 
@@ -239,6 +328,7 @@ class PDPSummary extends PureComponent {
         return (
           <PDPAlsoAvailable
             productsAvailable={alsoAvailable}
+            renderMySignInPopup={renderMySignInPopup}
             productSku={sku}
           />
         );
@@ -264,7 +354,8 @@ class PDPSummary extends PureComponent {
         const monthPrice = (defPrice / 4).toFixed(2);
         return (
           <>
-            <button
+          <div id="TabbyPromo"></div>
+            {/*<button
               block="PDPSummary"
               elem="Tabby"
               onClick={this.openTabbyPopup}
@@ -275,12 +366,13 @@ class PDPSummary extends PureComponent {
                 elem="TabbyPrice"
               >{`${monthPrice} ${currency}`}</strong>
               {__(" a month with ")}
-              <img src={tabby} alt="tabby" />
+              <Image lazyLoad={true} src={tabby} alt="tabby" />
+
               <span block="PDPSummary" elem="LearnMore">
                 {__("Learn more")}
               </span>
-            </button>
-            <div block="Seperator" />
+            </button>*/}
+            <div block="Seperator" /> 
           </>
         );
       }

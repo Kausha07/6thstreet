@@ -135,7 +135,7 @@ export class SearchSuggestionContainer extends PureComponent {
     const query = {
       filters: [],
       num_results: 10,
-      mad_uuid: userData?.USER_DATA?.deviceUuid,
+      mad_uuid: userData?.USER_DATA?.deviceUuid || null,
     };
 
     const payload = VueQuery.buildQuery("vue_browsing_history_slider", query, {
@@ -148,7 +148,7 @@ export class SearchSuggestionContainer extends PureComponent {
         });
       })
       .catch((err) => {
-        console.log("fetchVueData error", err);
+        console.error("fetchVueData error", err);
       });
   }
 
@@ -158,7 +158,7 @@ export class SearchSuggestionContainer extends PureComponent {
     const query = {
       filters: [],
       num_results: 10,
-      mad_uuid: userData?.USER_DATA?.deviceUuid,
+      mad_uuid: userData?.USER_DATA?.deviceUuid || null,
     };
 
     const payload = VueQuery.buildQuery("vue_trending_slider", query, {
@@ -171,7 +171,7 @@ export class SearchSuggestionContainer extends PureComponent {
         });
       })
       .catch((err) => {
-        console.log("fetchVueData error", err);
+        console.error("fetchVueData error", err);
       });
   }
 
@@ -280,6 +280,7 @@ export class SearchSuggestionContainer extends PureComponent {
       closeSearch,
       queryID,
       querySuggestions,
+      renderMySignInPopup
       // wishlistData,
     } = this.props;
     const { brands = [], products = [] } = data;
@@ -302,6 +303,7 @@ export class SearchSuggestionContainer extends PureComponent {
       recentSearches,
       recommendedForYou,
       trendingProducts,
+      renderMySignInPopup
       // wishlistData,
     };
   };

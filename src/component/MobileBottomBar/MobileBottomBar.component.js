@@ -76,7 +76,6 @@ class MobileBottomBar extends NavigationAbstract {
 
   handleResize = () => {
     const { pageYOffset, isRoundedIphone } = this.state;
-
     this.setState({
       isIPhoneNavigationHidden:
         isRoundedIphone && window.pageYOffset > pageYOffset,
@@ -177,7 +176,7 @@ class MobileBottomBar extends NavigationAbstract {
           mods: { isActive: isHome },
         }}
       >
-        <label htmlFor="Home">{__("Home")}</label>
+        {/* <label htmlFor="Home">{__("Home")}</label> */}
       </button>
     );
   }
@@ -208,7 +207,7 @@ class MobileBottomBar extends NavigationAbstract {
           mods: { isActive: isBrand },
         }}
       >
-        <label htmlFor="Home">{__("Brands")}</label>
+        {/* <label htmlFor="Home">{__("Brands")}</label> */}
       </button>
     );
   }
@@ -216,7 +215,7 @@ class MobileBottomBar extends NavigationAbstract {
   renderMenu() {
     const { newMenuGender } = this.props;
 
-    return <HeaderMenu key="menu" newMenuGender={newMenuGender} />;
+    return <HeaderMenu key="menu" newMenuGender={newMenuGender} isMobileBottomBar={true}/>;
   }
 
   renderWishlist() {

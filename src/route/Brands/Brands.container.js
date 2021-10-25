@@ -3,12 +3,15 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
+import { updateMeta } from "Store/Meta/Meta.action";
 import { changeNavigationState } from "Store/Navigation/Navigation.action";
 import { TOP_NAVIGATION_TYPE } from "Store/Navigation/Navigation.reducer";
 import { showNotification } from "Store/Notification/Notification.action";
 import { HistoryType, LocationType } from "Type/Common";
 import { groupByName } from "Util/API/endpoint/Brands/Brands.format";
+import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import Algolia from "Util/API/provider/Algolia";
+import { isArabic } from "Util/App";
 import { getQueryParam, setQueryParams } from "Util/Url";
 import Brands from "./Brands.component";
 import { TYPES_ARRAY } from "./Brands.config";
@@ -30,6 +33,7 @@ export const mapDispatchToProps = (dispatch) => ({
   },
   changeHeaderState: (state) =>
     dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, state)),
+  setMeta: (meta) => dispatch(updateMeta(meta)),
 });
 
 class BrandsContainer extends PureComponent {
@@ -39,12 +43,14 @@ class BrandsContainer extends PureComponent {
     showErrorNotification: PropTypes.func.isRequired,
     updateBreadcrumbs: PropTypes.func.isRequired,
     changeHeaderState: PropTypes.func.isRequired,
+    setMeta: PropTypes.func.isRequired,
   };
 
   state = {
     brands: [],
     isLoading: true,
-    brandMapping: {},
+    brandMapping: [],
+    isArabic: isArabic(),
   };
 
   containerFunctions = {
@@ -55,31 +61,26 @@ class BrandsContainer extends PureComponent {
     const brandUrlParam = getQueryParam("type", location);
     const brandType = TYPES_ARRAY.includes(brandUrlParam) ? brandUrlParam : "";
 
+    this.requestBrandMapping();
     this.requestBrands(brandType);
     this.updateBreadcrumbs();
     this.updateHeaderState();
-    this.requestBrandMapping();
+    this.setMetaData();
   }
 
   requestBrandMapping = () => {
     let brandMapping = this.getBrandMappingData();
   };
 
-  async getBrandMappingData() {
-    const apiUrl = "/cdn/config/brands.json";
+  getBrandMappingData() {
+    const apiUrl = "/cdn/config/brandswithUrl.json";
     fetch(apiUrl)
       .then((response) => response.json())
       .then((data) => {
         let ret = {};
-        Object.keys(data).forEach((key) => {
-          ret[data[key]] = key;
-        });
         this.setState(
           {
-            brandMapping: ret,
-          },
-          () => {
-            console.log(this.state.brandMapping);
+            brandMapping: data.brands,
           }
         );
       });
@@ -112,22 +113,20 @@ class BrandsContainer extends PureComponent {
 
   changeBrandType(brandUrlParam) {
     const { location, history } = this.props;
+    const { isArabic } = this.state;
     const brandType = TYPES_ARRAY.includes(brandUrlParam) ? brandUrlParam : "";
-
+    const genderType = isArabic ? getGenderInArabic(brandType) : brandType;
     setQueryParams({ type: brandType }, location, history);
-    this.requestBrands(brandType);
+    this.requestBrands(genderType);
   }
 
   requestBrands(brandType = "") {
     const { showErrorNotification } = this.props;
-
     this.setState({ isLoading: true });
-
     this._brandRequest = new Algolia()
       .getBrands(brandType)
       .then((data) => {
         const groupedBrands = groupByName(data) || {};
-
         // This sort places numeric brands to the end of the list
         const sortedBrands = Object.entries(groupedBrands).sort(
           ([letter1], [letter2]) => {
@@ -142,7 +141,6 @@ class BrandsContainer extends PureComponent {
             return letter1 - letter2;
           }
         );
-
         this.setState({
           brands: sortedBrands,
           isLoading: false,
@@ -153,7 +151,6 @@ class BrandsContainer extends PureComponent {
 
   containerProps = () => {
     const { brands, isLoading, brandMapping } = this.state;
-
     return {
       brands,
       isLoading,
@@ -161,6 +158,18 @@ class BrandsContainer extends PureComponent {
       type: getQueryParam("type", location),
     };
   };
+
+  setMetaData() {
+    const { setMeta } = this.props;
+    setMeta({
+      title: __("Brands | 6thStreet"),
+      keywords: __("brands"),
+      description: __(
+        // eslint-disable-next-line max-len
+        "Buy & Explore your favourite brands ✯ Free delivery ✯ Cash On Delivery ✯ 100% original brands | 6thStreet."
+      ),
+    });
+  }
 
   render() {
     return <Brands {...this.containerFunctions} {...this.containerProps()} />;

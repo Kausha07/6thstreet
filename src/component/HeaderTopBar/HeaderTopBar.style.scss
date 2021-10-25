@@ -3,11 +3,15 @@
 }
 
 .HeaderTopBar {
-  min-height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0.6;
+  min-height: 31px;
   box-shadow: none;
   width: 100%;
   position: fixed;
-  bottom: 70px;
+  bottom: 80px;
   z-index: 4;
   background: $black;
   transition: 0.5s ease-in-out;
@@ -19,18 +23,25 @@
     z-index: 4;
     box-shadow: 0 1px 0 0 var(--shadow-color);
     background: none;
-    height: 30px;
+    height: 31px;
     // padding: 0 15px;
     padding: 0;
   }
 
+  @include mobile{
+    bottom: 70px;
+  }
+
   &-ContentWrapper {
     display: flex;
-    max-width: 1440px;
+    max-width: var(--container-max-width);
     margin: 0 auto;
     width: var(--main-container-width-dsk);
     justify-content: space-between;
     @include tablet {
+      justify-content: center;
+    }
+    @include mobile {
       justify-content: center;
     }
   }
@@ -69,7 +80,15 @@
   .Switcher {
     display: flex;
     align-items: center;
+    flex: 1;
+    @include tablet{
+      display: none;
+    }
+    @include mobile{
+      display: none;
+    }
   }
+
 
   .LanguageSwitcher {
     @include before-desktop() {

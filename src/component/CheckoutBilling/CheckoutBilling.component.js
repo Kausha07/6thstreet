@@ -19,6 +19,8 @@ import { isArabic } from "Util/App";
 import { isSignedIn } from "Util/Auth";
 import Spinner from "react-spinkit";
 import "./CheckoutBilling.extended.style";
+import Applepay from "./icons/apple.png";
+import Image from "Component/Image";
 
 export class CheckoutBilling extends SourceCheckoutBilling {
   static propTypes = {
@@ -30,7 +32,13 @@ export class CheckoutBilling extends SourceCheckoutBilling {
     processingPaymentSelectRequest: PropTypes.bool,
     processApplePay: PropTypes.bool,
     placeOrder: PropTypes.func,
-    isClickAndCollect: PropTypes.bool.isRequired
+    isClickAndCollect: PropTypes.string.isRequired,
+    isLoading: PropTypes.bool,
+    applePayDisabled: PropTypes.bool,
+    launchPaymentMethod: PropTypes.func.isRequired,
+    requestConfig: PropTypes.func.isRequired,
+    handleApplePayButtonClick: PropTypes.func.isRequired,
+    button_style: PropTypes.string,
   };
 
   static defaultProps = {
@@ -38,8 +46,29 @@ export class CheckoutBilling extends SourceCheckoutBilling {
     processApplePay: true,
     processingPaymentSelectRequest: false,
     placeOrder: () => {},
+    isLoading: false,
+    applePayDisabled: true,
+    button_style: "",
   };
 
+  componentDidMount() {
+    const { termsAreEnabled } = this.props;
+    if (!termsAreEnabled) {
+      this.setState({ isOrderButtonEnabled: true });
+    }
+  }
+  componentDidUpdate(prevProps) {
+    const { paymentMethod } = this.props;
+    const { paymentMethod: prevPaymentMethod } = prevProps;
+    if (
+      prevPaymentMethod !== paymentMethod &&
+      paymentMethod === CHECKOUT_APPLE_PAY
+    ) {
+      const { requestConfig, launchPaymentMethod } = this.props;
+
+      requestConfig().then(launchPaymentMethod);
+    }
+  }
   state = {
     // isOrderButtonVisible: true,
     // isOrderButtonEnabled: true,
@@ -47,8 +76,8 @@ export class CheckoutBilling extends SourceCheckoutBilling {
     isArabic: isArabic(),
     formContent: false,
     isSignedIn: isSignedIn(),
-    isDropdownOpen: false,
-    dropdownToggleIcon: false,
+    isDropdownOpen: true,
+    dropdownToggleIcon: true,
   };
 
   renderPriceLine(price, name, mods) {
@@ -199,7 +228,9 @@ export class CheckoutBilling extends SourceCheckoutBilling {
       removePromotionSavedCard,
       isSignedIn,
       isClickAndCollect,
-      savePaymentInformationApplePay
+      savePaymentInformationApplePay,
+      isTabbyInstallmentAvailable,
+      isTabbyPayLaterAvailable
     } = this.props;
 
     if (!paymentMethods.length) {
@@ -207,7 +238,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
     }
     return (
       <CheckoutPayments
-      savePaymentInformationApplePay={savePaymentInformationApplePay}
+        savePaymentInformationApplePay={savePaymentInformationApplePay}
         setCashOnDeliveryFee={setCashOnDeliveryFee}
         setLoading={setLoading}
         setDetailsStep={setDetailsStep}
@@ -228,6 +259,8 @@ export class CheckoutBilling extends SourceCheckoutBilling {
         applyPromotionSavedCard={applyPromotionSavedCard}
         removePromotionSavedCard={removePromotionSavedCard}
         isClickAndCollect={isClickAndCollect}
+        isTabbyInstallmentAvailable = {isTabbyInstallmentAvailable}
+        isTabbyPayLaterAvailable={isTabbyPayLaterAvailable}
       />
     );
   }
@@ -258,13 +291,13 @@ export class CheckoutBilling extends SourceCheckoutBilling {
           ></div>
         </div>
         <div block="Checkout" elem="OrderSummaryTotalsContainer">
-        <Collapse isOpened={isDropdownOpen}>
-          <CheckoutOrderSummary
-            checkoutStep="BILLING_STEP"
-            totals={totals}
-            cashOnDeliveryFee={cashOnDeliveryFee}
-          />
-        </Collapse>
+          <Collapse isOpened={isDropdownOpen}>
+            <CheckoutOrderSummary
+              checkoutStep="BILLING_STEP"
+              totals={totals}
+              cashOnDeliveryFee={cashOnDeliveryFee}
+            />
+          </Collapse>
         </div>
         {this.renderPriceLine(grandTotal, __("Total Amount"), {
           isDropdownOpen,
@@ -314,7 +347,7 @@ export class CheckoutBilling extends SourceCheckoutBilling {
   }
 
   renderActions() {
-    const { isTermsAndConditionsAccepted } = this.state;
+    const { isTermsAndConditionsAccepted, isArabic } = this.state;
     const { isOrderButtonVisible, isOrderButtonEnabled } = this.props;
     const {
       termsAreEnabled,
@@ -322,6 +355,9 @@ export class CheckoutBilling extends SourceCheckoutBilling {
       processingPaymentSelectRequest,
       paymentMethod,
       binApplied,
+      applePayDisabled,
+      handleApplePayButtonClick,
+      button_style,
     } = this.props;
 
     if (!isOrderButtonVisible) {
@@ -342,38 +378,66 @@ export class CheckoutBilling extends SourceCheckoutBilling {
         {this.renderCreditCardTooltipBar()}
         <div block="Checkout" elem="StickyButtonWrapper">
           {this.renderTotals()}
-          <button
-            type="submit"
-            block="Button"
-            disabled={
-              isDisabled ||
-              processingRequest ||
-              processingPaymentSelectRequest 
-              // ||isApplePay
-            }
-            mix={{
-              block: "CheckoutBilling",
-              elem:
-                processingRequest || processingPaymentSelectRequest
-                  ? "spinningButton"
-                  : isTabbyPay
-                  ? "tabbyButton"
-                  : "Button",
-            }}
-          >
-            {processingRequest || processingPaymentSelectRequest ? (
-              <Spinner
-                className="loadingSpinner"
-                name="three-bounce"
-                color="white"
-                fadeIn="none"
-              />
-            ) : isTabbyPay ? (
-              __("Place tabby order")
-            ) : (
-              this.renderButtonPlaceholder()
-            )}
-          </button>
+          {isApplePay ? (
+            <div block="CheckoutComApplePayPayment" elem="Wrapper">
+              {/* <Loader isLoading={ isLoading } /> */}
+              <button
+                type="button"
+                block="CheckoutComApplePayPayment"
+                elem="Button"
+                label="Pay with ApplePay"
+                onClick={handleApplePayButtonClick}
+                disabled={applePayDisabled}
+                mods={{ button_style }}
+              >
+                <div>{__("Buy with ")}</div>
+                <Image lazyLoad={true}
+                  block="CheckoutComApplePayPayment"
+                  elem="icon"
+                  mix={{
+                    block: "CheckoutComApplePayPayment",
+                    elem: "icon",
+                  }}
+                  mods={{ button_style, isArabic }}
+                  src={Applepay}
+                  alt="Apple Pay"
+                />
+              </button>
+            </div>
+          ) : (
+            <button
+              type="submit"
+              block="Button"
+              disabled={
+                isDisabled ||
+                processingRequest ||
+                processingPaymentSelectRequest ||
+                isApplePay
+              }
+              mix={{
+                block: "CheckoutBilling",
+                elem:
+                  processingRequest || processingPaymentSelectRequest
+                    ? "spinningButton"
+                    : isTabbyPay
+                    ? "tabbyButton"
+                    : "Button",
+              }}
+            >
+              {processingRequest || processingPaymentSelectRequest ? (
+                <Spinner
+                  className="loadingSpinner"
+                  name="three-bounce"
+                  color="white"
+                  fadeIn="none"
+                />
+              ) : isTabbyPay ? (
+                __("Place tabby order")
+              ) : (
+                this.renderButtonPlaceholder()
+              )}
+            </button>
+          )}
         </div>
       </>
     );

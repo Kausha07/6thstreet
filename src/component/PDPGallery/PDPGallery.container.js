@@ -33,7 +33,7 @@ export class PDPGalleryContainer extends PureComponent {
   };
 
   containerProps = () => {
-    const { currentIndex, product } = this.props;
+    const { currentIndex, product,renderMySignInPopup } = this.props;
 
     return {
       gallery: this.getGallery(),
@@ -42,6 +42,7 @@ export class PDPGalleryContainer extends PureComponent {
       crumbs: this.getCrumbs(),
       currentIndex,
       product,
+      renderMySignInPopup
     };
   };
 
@@ -53,7 +54,7 @@ export class PDPGalleryContainer extends PureComponent {
 
   getCrumbs() {
     // TODO: determine if has video append it here
-    const galleryCrumbs = Object.keys(this.getGallery() || {});
+    const galleryCrumbs = Object.values(this.getGallery() || {});
     return galleryCrumbs;
   }
 
@@ -62,7 +63,6 @@ export class PDPGalleryContainer extends PureComponent {
       isLoading,
       product: { gallery_images = [] },
     } = this.props;
-
     if (isLoading || gallery_images.length === 0) {
       return Array.from({ length: 4 });
     }

@@ -1,6 +1,5 @@
 import { DEFAULT_STATE_NAME } from "Component/NavigationAbstract/NavigationAbstract.config";
 import PropTypes from "prop-types";
-import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
@@ -18,12 +17,10 @@ import {
 } from "Util/API/endpoint/Product/Product.type";
 import WebUrlParser from "Util/API/helper/WebUrlParser";
 import { capitalize } from "Util/App";
-import { getUUID } from "Util/Auth";
 import {
   getBreadcrumbs,
   getBreadcrumbsUrl,
 } from "Util/Breadcrumbs/Breadcrubms";
-import { VUE_PAGE_VIEW } from "Util/Event";
 import PLP from "./PLP.component";
 
 export const BreadcrumbsDispatcher = import(
@@ -60,6 +57,7 @@ export const mapDispatchToProps = (dispatch, state) => ({
     dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, state)),
   setGender: (gender) => dispatch(setGender(gender)),
   setMeta: (meta) => dispatch(updateMeta(meta)),
+  resetPLPData: () => PLPDispatcher.resetPLPData(dispatch),
 });
 
 export class PLPContainer extends PureComponent {
@@ -84,7 +82,6 @@ export class PLPContainer extends PureComponent {
     brandDeascription: PropTypes.string,
     brandImg: PropTypes.string,
     brandName: PropTypes.string,
-    // plpWidgetData: PropTypes.any,
   };
 
   static requestProductList = PLPContainer.request.bind({}, false);
@@ -93,12 +90,12 @@ export class PLPContainer extends PureComponent {
 
   static getDerivedStateFromProps(props, state) {
     const { pages } = props;
-    const requestOptions = PLPContainer.getRequestOptions(props);
+    const requestOptions = PLPContainer.getRequestOptions();
     const { page, ...restOptions } = requestOptions;
-
     const {
       prevRequestOptions: { page: prevPage, ...prevRestOptions },
     } = state;
+
     if (JSON.stringify(restOptions) !== JSON.stringify(prevRestOptions)) {
       // if queries match (excluding pages) => not inital
       PLPContainer.requestProductList(props);
@@ -112,37 +109,24 @@ export class PLPContainer extends PureComponent {
     };
   }
 
-  static getRequestOptions(props) {
-    const {
-      history: {
-        location: { state: query },
-      },
-    } = props;
-    let parseURL;
-    if (query) {
-      if (query && !query.product) {
-        if (query && query.includes(".html")) {
-          const urlLink = `${query.split(".html")[1]}`;
-          parseURL = urlLink.replace(/ /g, "%20");
-        } else if (query && !query.includes(".html")) {
-          const urlLink = `${query}`;
-          parseURL = urlLink.replace(/ /g, "%20");
-        }
-      }
+  static getRequestOptions() {
+    let params;
+    if (location.search && location.search.startsWith("?q")) {
+      const { params: parsedParams } = WebUrlParser.parsePLP(location.href);
+      params = parsedParams;
     } else {
-      parseURL = location.href;
+      const { params: parsedParams } = WebUrlParser.parsePLPWithoutQuery(
+        location.href
+      );
+      params = parsedParams;
     }
-
-    const { params: parsedParams } = WebUrlParser.parsePLP(parseURL);
-    return {
-      // TODO: inject gender ?
-      ...parsedParams,
-    };
+    return params;
   }
 
   static async request(isPage, props) {
     const { requestProductList, requestProductListPage } = props;
-    const options = PLPContainer.getRequestOptions(props);
+    const options = PLPContainer.getRequestOptions();
+
     const requestFunction = isPage
       ? requestProductListPage
       : requestProductList;
@@ -150,12 +134,17 @@ export class PLPContainer extends PureComponent {
   }
 
   state = {
-    prevRequestOptions: PLPContainer.getRequestOptions(this.props),
+    prevRequestOptions: PLPContainer.getRequestOptions(),
   };
 
   containerFunctions = {
     // getData: this.getData.bind(this)
+    resetPLPData: this.resetPLPData.bind(this),
   };
+  resetPLPData() {
+    const { resetPLPData } = this.props;
+    resetPLPData();
+  }
 
   constructor(props) {
     super(props);
@@ -168,18 +157,6 @@ export class PLPContainer extends PureComponent {
   }
 
   componentDidMount() {
-    const locale = VueIntegrationQueries.getLocaleFromUrl();
-    VueIntegrationQueries.vueAnalayticsLogger({
-      event_name: VUE_PAGE_VIEW,
-      params: {
-        event: VUE_PAGE_VIEW,
-        pageType: "categories",
-        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-        clicked: Date.now(),
-        uuid: getUUID(),
-        referrer: "desktop",
-      },
-    });
     const { menuCategories = [] } = this.props;
     if (menuCategories.length !== 0) {
       this.updateBreadcrumbs();
@@ -230,9 +207,15 @@ export class PLPContainer extends PureComponent {
     } = this.props;
     if (query) {
       const { updateBreadcrumbs, setGender } = this.props;
-      const breadcrumbLevels = options["categories.level2"]
+      const breadcrumbLevels = options["categories.level4"]
+        ? options["categories.level4"]
+        : options["categories.level3"]
+        ? options["categories.level3"]
+        : options["categories.level2"]
         ? options["categories.level2"]
-        : options["categories.level1"];
+        : options["categories.level1"]
+        ? options["categories.level1"]
+        : options["q"];
 
       if (breadcrumbLevels) {
         const levelArray = breadcrumbLevels.split(" /// ") || [];
@@ -311,7 +294,7 @@ export class PLPContainer extends PureComponent {
   getIsLoading() {
     const { requestedOptions } = this.props;
 
-    const options = PLPContainer.getRequestOptions(this.props);
+    const options = PLPContainer.getRequestOptions();
     const {
       // eslint-disable-next-line no-unused-vars
       page: requestedPage,

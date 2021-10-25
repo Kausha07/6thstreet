@@ -15,7 +15,6 @@ class Recommendations extends PureComponent {
   }
 
   renderProduct = (product, index, qid) => {
-    // debugger
     const { sku, price } = product;
     const { isVueData } = this.props;
     return (
@@ -38,7 +37,7 @@ class Recommendations extends PureComponent {
   }
 
   render() {
-    return <div block="PLPPage">{this.renderProducts()}</div>;
+    return <div block="PLPPage"><ul>{this.renderProducts()}</ul></div>;
   }
 }
 

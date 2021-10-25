@@ -32,8 +32,11 @@ export const getPaymentMethods = () => MobileAPI.get("/payment-methods") || {};
 
 export const getLastOrder = () => MobileAPI.get("/order/last") || {};
 
-export const getPaymentAuthorization = ({ paymentId }) =>
+export const getPaymentAuthorization = ({ paymentId}) =>
   MobileAPI.get(`/checkout/payments/${paymentId}`) || {};
+
+  export const getPaymentAuthorizationQPay = ({ paymentId }) =>
+  MobileAPI.get(`/checkout/payments/${paymentId}?pmethod=checkout_qpay`) || {};
 
 export const capturePayment = ({ paymentId, orderId }) =>
   MobileAPI.post(`/checkout/payments/${paymentId}/captures`, {

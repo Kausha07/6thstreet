@@ -53,18 +53,15 @@ class MenuGrid extends PureComponent {
           .replace("/kids.html", ".html")
           .replace("/home.html", ".html")
       : link;
-    let newUpdatedLink = link.includes("is_new_in")
-      ? link.split("?")[0] + "?is_new_in=1"
-      : link;
 
     return (
       <Link
-        to={newUpdatedLink}
+        to={link}
         key={i}
         title={label}
         onClick={this.onItemClick}
       >
-        <Image src={image_url} width="80px" height="80px" ratio="custom" />
+        <Image lazyLoad={true} src={image_url} width="80px" height="80px" ratio="custom" />
         <div block="MenuGrid" elem="ItemLabel">
           {label}
         </div>
@@ -74,7 +71,7 @@ class MenuGrid extends PureComponent {
 
   renderItems() {
     const { items = [] } = this.props;
-    return items.slice(0, 14).map(this.renderItem);
+    return items.map(this.renderItem);
   }
 
   renderDesktopButton() {
@@ -95,7 +92,9 @@ class MenuGrid extends PureComponent {
   }
 
   hideMenu = () => {
+    const { toggleOverlayByKey } = this.props;
     hideActiveOverlay();
+    toggleOverlayByKey(MOBILE_MENU_SIDEBAR_ID);
   };
 
   showAllCategories() {
@@ -104,7 +103,7 @@ class MenuGrid extends PureComponent {
 
   renderViewAllButton() {
     const {
-      button: { link },
+      button: { link = "/" },
     } = this.props;
 
     return (
@@ -122,7 +121,8 @@ class MenuGrid extends PureComponent {
     return (
       <>
         <span block="MenuGrid" elem="Title">
-          {__("Shop by product")}
+          {this.props.title}
+          {/* {__("Shop by product")} */}
         </span>
         {this.renderViewAllButton()}
         <div

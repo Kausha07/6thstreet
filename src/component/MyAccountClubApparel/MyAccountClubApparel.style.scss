@@ -8,6 +8,17 @@
 }
 
 .MyAccountClubApparel {
+  .MemberDataLogo {
+    .LazyLoad-wrapper {
+      img {
+        width: 200px !important;
+        display: inline-block;
+        max-width: 100%;
+        margin: 60px 0 40px;
+      }
+    }
+  }
+
   &-Cards {
     display: flex;
     margin: 0 10%;
@@ -45,8 +56,8 @@
     background-color: var(--ca-card-color);
 
     img {
-      height: 45px;
-      width: auto;
+      height: 45px !important;
+      width: auto !important;
     }
 
     h3 {
@@ -370,9 +381,13 @@
     border-left: 1px solid var(--ca-reward-light-gray);
     padding-left: 20px;
 
-    &Image {
-      height: 80px;
-      width: auto;
+    .Image {
+      .LazyLoad-wrapper {
+        img {
+          height: 80px !important;
+          width: auto !important;
+        }
+      }
     }
 
     &_isArabic {

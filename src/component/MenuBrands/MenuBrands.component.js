@@ -26,7 +26,7 @@ class MenuBrands extends PureComponent {
 
   renderItems() {
     const { items = [] } = this.props;
-    return items.slice(0, 14).map(this.renderItem);
+    return items.map(this.renderItem);
   }
 
   handleChange = (activeImage) => {
@@ -45,24 +45,21 @@ class MenuBrands extends PureComponent {
       /\/men|\/women|\/kids-baby_boy-boy-girl-baby_girl|\/kids/
     )
       ? link
-          .replace("/men.html", ".html")
-          .replace("/women.html", ".html")
-          .replace("/kids-baby_boy-boy-girl-baby_girl.html", ".html")
-          .replace("/kids.html", ".html")
-          .replace("/home.html", ".html")
-      : link;
-    let newUpdatedLink = link.includes("is_new_in")
-      ? link.split("?")[0] + "?is_new_in=1"
+        .replace("/men.html", ".html")
+        .replace("/women.html", ".html")
+        .replace("/kids-baby_boy-boy-girl-baby_girl.html", ".html")
+        .replace("/kids.html", ".html")
+        .replace("/home.html", ".html")
       : link;
 
     return (
       <Link
-        to={newUpdatedLink}
+        to={link}
         title={label}
         key={i}
         onClick={this.onItemClick}
       >
-        <Image src={image_url} />
+        <Image lazyLoad={true} src={image_url} />
         {label}
       </Link>
     );
@@ -112,7 +109,8 @@ class MenuBrands extends PureComponent {
       <div block="MenuBrands">
         <div block="MenuBrands" elem="ContentWrapper">
           <span block="MenuBrands" elem="Title">
-            {__("Shop By Brands")}
+            {this.props.title}
+            {/* {__("Shop By Brands")} */}
           </span>
           <div
             mix={{

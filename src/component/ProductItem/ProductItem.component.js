@@ -1,3 +1,4 @@
+import { HOME_PAGE_BANNER_CLICK_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
 import Image from "Component/Image";
 import Link from "Component/Link";
 import Price from "Component/Price";
@@ -18,6 +19,7 @@ import Event, {
   SELECT_ITEM_ALGOLIA,
 } from "Util/Event";
 import "./ProductItem.style";
+
 class ProductItem extends PureComponent {
   static propTypes = {
     product: Product.isRequired,
@@ -26,6 +28,7 @@ class ProductItem extends PureComponent {
     qid: PropTypes.string,
     isVueData: PropTypes.bool,
     pageType: PropTypes.string,
+    prevPath: PropTypes.string,
   };
 
   static defaultProps = {
@@ -63,6 +66,10 @@ class ProductItem extends PureComponent {
         position: [position],
       });
     }
+    // this.sendBannerClickImpression(product);
+  }
+  sendBannerClickImpression(item) {
+    Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);
   }
 
   renderWishlistIcon() {
@@ -70,13 +77,21 @@ class ProductItem extends PureComponent {
       product: { sku },
       product,
       pageType,
+      renderMySignInPopup,
     } = this.props;
-    return <WishlistIcon sku={sku} data={product} pageType={pageType} />;
+    return (
+      <WishlistIcon
+        renderMySignInPopup={renderMySignInPopup}
+        sku={sku}
+        data={product}
+        pageType={pageType}
+      />
+    );
   }
 
   renderLabel() {
     const { product } = this.props;
-    return <ProductLabel product={product} />;
+    return <ProductLabel product={product} section="productItem" />;
   }
 
   renderColors() {
@@ -88,10 +103,10 @@ class ProductItem extends PureComponent {
       const count = also_available_color.split(",").length - 2;
 
       return count > 0 ? (
-        <span block="PLPSummary" elem="Colors">
+        <div block="PLPSummary" elem="Colors">
           {" "}
           {`+${count} `} {__("Colors")}{" "}
-        </span>
+        </div>
       ) : null;
     }
 
@@ -105,10 +120,10 @@ class ProductItem extends PureComponent {
 
     if (promotion !== undefined) {
       return promotion !== null ? (
-        <span block="PLPSummary" elem="Exclusive">
+        <div block="PLPSummary" elem="Exclusive">
           {" "}
           {promotion}{" "}
-        </span>
+        </div>
       ) : null;
     }
 
@@ -133,12 +148,15 @@ class ProductItem extends PureComponent {
   renderImage() {
     const {
       product: { thumbnail_url },
+      lazyLoad = true,
     } = this.props;
 
     return (
-      <div>
-        <Image src={thumbnail_url} />
-        {this.renderOutOfStock()} {this.renderExclusive()} {this.renderColors()}{" "}
+      <div block="ProductItem" elem="ImageBox">
+        <Image lazyLoad={lazyLoad} src={thumbnail_url} />
+        {/* {this.renderOutOfStock()} */}
+        {this.renderExclusive()}
+        {this.renderColors()}
       </div>
     );
   }
@@ -183,6 +201,7 @@ class ProductItem extends PureComponent {
       product: { url, link },
       qid,
       isVueData,
+      prevPath = null,
     } = this.props;
     let queryID;
     if (!isVueData) {
@@ -208,25 +227,22 @@ class ProductItem extends PureComponent {
       : "home";
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
 
-    let parseLink = urlWithQueryID.includes("catalogsearch/result")
-      ? urlWithQueryID.split("&")[0] +
-        `&gender=${requestedGender.replace(
-          requestedGender.charAt(0),
-          requestedGender.charAt(0).toUpperCase()
-        )}`
-      : urlWithQueryID;
+    let parseLink = urlWithQueryID;
     const linkTo = {
       pathname: parseLink,
       state: {
         product,
+        prevPath: prevPath,
       },
     };
 
     return (
       <Link to={isVueData ? parseLink : linkTo} onClick={this.handleClick}>
-        {" "}
-        {this.renderImage()} {this.renderBrand()} {this.renderTitle()}{" "}
-        {this.renderPrice()}{" "}
+        {this.renderImage()}
+        {this.renderOutOfStock()}
+        {this.renderBrand()}
+        {this.renderTitle()}
+        {this.renderPrice()}
       </Link>
     );
   }
@@ -242,7 +258,7 @@ class ProductItem extends PureComponent {
         }}
       >
         {" "}
-        {/* {this.renderLabel()} */}
+        {this.renderLabel()}
         {this.renderWishlistIcon()} {this.renderLink()}{" "}
       </li>
     );

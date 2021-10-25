@@ -6,13 +6,13 @@
   margin-right: auto;
   @include mobile {
     width: 100%;
-    padding-top: 15px;
+    padding-top: 60px;
+    padding-bottom: 80px;
   }
 
   &-Wrapper {
     @include desktop {
       display: flex;
-      // grid-gap: 50px;
     }
   }
 
@@ -211,6 +211,12 @@
   .ExpandableContent-Content {
     opacity: 1;
     overflow: visible;
+    @include tablet {
+      max-height: 0px !important;
+      ul {
+        margin-top: 100px;
+      }
+    }
     @include before-desktop {
       padding: 0;
     }

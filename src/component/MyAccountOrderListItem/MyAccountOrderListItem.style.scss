@@ -1,210 +1,220 @@
 :root {
-    --progress-bar-color: #f0f0f0;
-    --color-failed: #f01136;
+  --progress-bar-color: #f0f0f0;
+  --color-failed: #f01136;
 }
 
 .MyAccountOrderListItem {
-    border: 1px solid var(--divider-color);
-    border-radius: 10px;
-    height: auto;
-    padding: 20px;
-    width: 100%;
+  border: 1px solid var(--divider-color);
+  border-radius: 10px;
+  height: auto;
+  padding: 20px;
+  width: 100%;
+
+  @include desktop {
+    padding: 30px;
+  }
+
+  &:not(:last-of-type) {
+    margin-bottom: 25px;
+  }
+
+  &::after {
+    border-bottom: 1px solid var(--black);
+    border-right: 1px solid var(--black);
+    content: "";
+    height: 5px;
+    position: absolute;
+    right: 20px;
+    top: 30px;
+    transform: rotate(-45deg) scale(1.5);
+    width: 5px;
 
     @include desktop {
-        padding: 30px;
+      right: 30px;
+      top: 40px;
     }
 
-    &:not(:last-of-type) {
-        margin-bottom: 25px;
+    .PageWrapper_isArabic & {
+      left: 20px;
+      right: unset;
+      transform: rotate(135deg) scale(1.5);
+
+      @include desktop {
+        left: 30px;
+        right: unset;
+      }
+    }
+  }
+
+  &-Heading {
+    max-width: calc(100% - 10px);
+
+    @include mobile {
+      font-size: 14px;
     }
 
-    &::after {
-        border-bottom: 1px solid var(--black);
-        border-right: 1px solid var(--black);
-        content: '';
-        height: 5px;
-        position: absolute;
-        right: 20px;
-        top: 30px;
-        transform: rotate(-45deg) scale(1.5);
-        width: 5px;
-
-        @include desktop {
-            right: 30px;
-            top: 40px;
-        }
-
-        .PageWrapper_isArabic &  {
-            left: 20px;
-            right: unset;
-            transform: rotate(135deg) scale(1.5);
-
-            @include desktop {
-                left: 30px;
-                right: unset;
-            }
-        }
+    &_isSuccess span {
+      color: var(--color-green-cyan);
     }
 
-    &-Heading {
-        max-width: calc(100% - 10px);
+    &_isFailed span {
+      color: var(--color-failed);
+    }
+  }
 
-        @include mobile {
-            font-size: 14px;
-        }
-
-        &_isSuccess span {
-            color: var(--color-green-cyan);
-        }
-
-        &_isFailed span {
-            color: var(--color-failed);
-        }
+  .MyAccountOrderListItem-Image {
+    img {
+      height: 75px !important;
+    }
+    height: 0;
+    width: 100%;
+    margin-right: 10px;
+    max-width: 55px;
+    padding-bottom: 75px;
+    overflow: inherit;
+    @include desktop {
+      margin-top: 5px;
+      max-width: 70px;
     }
 
-    &-Image {
-        margin-right: 10px;
-        max-width: 55px;
-        padding-bottom: 75px;
+    .PageWrapper_isArabic & {
+      margin-left: 15px;
+      margin-right: 0;
+    }
+  }
 
-        @include desktop {
-            margin-top: 5px;
-            max-width: 70px;
-        }
+  &-Details {
+    width: 100%;
 
-        .PageWrapper_isArabic &  {
-            margin-left: 15px;
-            margin-right: 0;
-        }
+    &Price {
+      margin-bottom: 10px;
     }
 
-    &-Details {
-        width: 100%;
+    &Packages {
+      color: var(--color-gray);
+      font-weight: var(--fw-regular);
+      margin: 0;
+      text-transform: none;
 
-        &Price {
-            margin-bottom: 10px;
-        }
+      span {
+        color: var(--black);
+      }
+    }
+  }
 
-        &Packages {
-            color: var(--color-gray);
-            font-weight: var(--fw-regular);
-            margin: 0;
-            text-transform: none;
+  &-SubDetails {
+    align-items: center;
+    display: flex;
+    margin-bottom: 10px;
+  }
 
-            span {
-                color: var(--black);
-            }
-        }
+  &-PackageImage {
+    img {
+      height: 15px !important;
+    }
+    height: 0;
+    width: 100%;
+    margin-right: 5px;
+    max-width: 15px;
+    padding-bottom: 15px;
+    overflow: inherit;
+    .PageWrapper_isArabic & {
+      margin-left: 5px;
+      margin-right: 0;
+    }
+  }
+
+  &-Status {
+    margin-top: 30px;
+
+    @include desktop {
+      padding: 0 95px;
     }
 
-    &-SubDetails {
-        align-items: center;
-        display: flex;
-        margin-bottom: 10px;
+    &List {
+      display: flex;
+      justify-content: space-between;
     }
 
-    &-PackageImage {
-        margin-right: 5px;
-        max-width: 15px;
-        padding-bottom: 15px;
+    &Title {
+      color: var(--color-gray);
+      font-size: 12px;
+      font-weight: var(--fw-regular);
+      margin-bottom: 0;
+      text-transform: none;
+    }
+  }
+
+  &-Progress {
+    &Bar {
+      background: var(--progress-bar-color);
+      border-radius: 10px;
+      height: 3px;
+      margin-bottom: 10px;
+      width: 100%;
+    }
+
+    &Current {
+      background: var(--primary-base-color);
+      border-radius: 100px;
+      height: 5px;
+      left: 0;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 30px;
+
+      .PageWrapper_isArabic & {
+        left: unset;
+        right: 0;
+      }
+
+      &_isProcessing {
+        width: calc(50% - 10px);
 
         .PageWrapper_isArabic & {
-            margin-left: 5px;
-            margin-right: 0;
+          width: calc(50% + 10px);
         }
+      }
     }
 
-    &-Status {
-        margin-top: 30px;
+    &Checkbox {
+      background: var(--white);
+      border: 2px solid var(--primary-base-color);
+      border-radius: 100%;
+      height: 15px;
+      left: 30px;
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: 15px;
 
-        @include desktop {
-            padding: 0 95px;
-        }
+      .PageWrapper_isArabic & {
+        left: unset;
+        right: 30px;
+        transform: translate(50%, -50%);
+      }
 
-        &List {
-            display: flex;
-            justify-content: space-between;
-        }
+      &::after {
+        border-bottom: 3px solid var(--primary-base-color);
+        border-right: 3px solid var(--primary-base-color);
+        content: "";
+        height: 10px;
+        left: 50%;
+        position: absolute;
+        top: 50%;
+        transform: translate(-50%, -50%) scale(0.5) rotate(45deg);
+        width: 5px;
+      }
 
-        &Title {
-            color: var(--color-gray);
-            font-size: 12px;
-            font-weight: var(--fw-regular);
-            margin-bottom: 0;
-            text-transform: none;
+      &_isProcessing {
+        left: calc(50% - 10px);
+
+        .PageWrapper_isArabic & {
+          left: unset;
+          right: calc(50% + 10px);
         }
+      }
     }
-
-    &-Progress {
-        &Bar {
-            background: var(--progress-bar-color);
-            border-radius: 10px;
-            height: 3px;
-            margin-bottom: 10px;
-            width: 100%;
-        }
-
-        &Current {
-            background: var(--primary-base-color);
-            border-radius: 100px;
-            height: 5px;
-            left: 0;
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 30px;
-
-            .PageWrapper_isArabic & {
-                left: unset;
-                right: 0;
-            }
-
-            &_isProcessing {
-                width: calc(50% - 10px);
-
-                .PageWrapper_isArabic & {
-                    width: calc(50% + 10px);
-                }
-            }
-        }
-
-        &Checkbox {
-            background: var(--white);
-            border: 2px solid var(--primary-base-color);
-            border-radius: 100%;
-            height: 15px;
-            left: 30px;
-            position: absolute;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            width: 15px;
-
-            .PageWrapper_isArabic & {
-                left: unset;
-                right: 30px;
-                transform: translate(50%, -50%);
-            }
-
-            &::after {
-                border-bottom: 3px solid var(--primary-base-color);
-                border-right: 3px solid var(--primary-base-color);
-                content: '';
-                height: 10px;
-                left: 50%;
-                position: absolute;
-                top: 50%;
-                transform: translate(-50%, -50%) scale(.5) rotate(45deg);
-                width: 5px;
-            }
-
-            &_isProcessing {
-                left: calc(50% - 10px);
-
-                .PageWrapper_isArabic & {
-                    left: unset;
-                    right: calc(50% + 10px);
-                }
-            }
-        }
-    }
+  }
 }

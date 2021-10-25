@@ -2,6 +2,8 @@
 import ProductItem from "Component/ProductItem";
 import VueIntegrationQueries from "Query/vueIntegration.query";
 import { PureComponent } from "react";
+import { connect } from "react-redux";
+import { withRouter } from "react-router";
 import { Products } from "Util/API/endpoint/Product/Product.type";
 import { getUUID } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
@@ -15,7 +17,7 @@ class PLPPage extends PureComponent {
   };
 
   componentDidMount() {
-    const { impressions } = this.props;
+    const { prevPath = null, impressions } = this.props;
     const category = this.getCategory();
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
@@ -26,7 +28,8 @@ class PLPPage extends PureComponent {
         currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),
-        referrer: "desktop",
+        referrer: prevPath ? prevPath : null,
+        url: window.location.href,
       },
     });
 
@@ -38,16 +41,20 @@ class PLPPage extends PureComponent {
   }
 
   renderProduct = (product, index, qid) => {
-    // debugger
-    const { sku, price } = product;
+    const { sku } = product;
+    const { renderMySignInPopup } = this.props;
     return (
       <ProductItem
         position={index}
         product={product}
         key={sku}
+        pageType="plp"
         page="plp"
+        renderMySignInPopup={renderMySignInPopup}
         pageType="plp"
         qid={qid}
+        prevPath={window.location.href}
+        lazyLoad={false}
       />
     );
   };
@@ -64,8 +71,8 @@ class PLPPage extends PureComponent {
   }
 
   render() {
-    return <div block="PLPPage">{this.renderProducts()}</div>;
+    return <div block="PLPPage"><ul>{this.renderProducts()}</ul></div>;
   }
 }
 
-export default PLPPage;
+export default withRouter(connect()(PLPPage));

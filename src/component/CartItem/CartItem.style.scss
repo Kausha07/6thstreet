@@ -18,7 +18,7 @@
   --cart-item-divider-color: var(--expandable-content-divider-color);
 
   --Gallery: #efefef;
-  --Cardinal: #d12229;
+  --Cardinal: #d12228;
 }
 
 .CartItem {
@@ -150,7 +150,7 @@
     width: 100%;
     // display: flex;
     display: grid;
-    grid-gap: 20px;
+    grid-gap: 3px;
     grid-template-columns: auto auto;
     background: var(--cart-item-background);
     padding-top: 15px;
@@ -217,9 +217,12 @@
   }
 
   &-Picture {
-    height: 121px;
-    width: 90px;
-    object-fit: cover;
+    img{
+      height: 121px !important;
+      width: 90px !important;
+      object-fit: cover;
+    }
+
     // margin-right: 18px;
 
     &_isArabic {

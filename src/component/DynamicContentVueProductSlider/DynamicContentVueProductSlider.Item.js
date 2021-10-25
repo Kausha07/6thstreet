@@ -1,3 +1,5 @@
+import { HOME_PAGE_BANNER_CLICK_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
+import Image from "Component/Image";
 import Link from "Component/Link";
 import { DISPLAY_DISCOUNT_PERCENTAGE } from "Component/Price/Price.config";
 import WishlistIcon from "Component/WishlistIcon";
@@ -9,7 +11,7 @@ import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
 import { getUUID } from "Util/Auth";
 import Event, { VUE_CAROUSEL_CLICK } from "Util/Event";
-import { HOME_PAGE_BANNER_CLICK_IMPRESSIONS } from "Component/GoogleTagManager/events/BannerImpression.event";
+import { parseURL } from "Util/Url";
 
 export const mapStateToProps = (state) => ({
   country: state.AppState.country,
@@ -30,7 +32,14 @@ class DynamicContentVueProductSliderItem extends PureComponent {
   }
 
   onclick = (widgetID, item) => {
-    const { pageType } = this.props;
+    const {
+      pageType,
+      data: { category, sku, link },
+      posofreco,
+      sourceProdID,
+      sourceCatgID,
+    } = this.props;
+    let destProdID = sku;
     // vue analytics
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
@@ -41,11 +50,16 @@ class DynamicContentVueProductSliderItem extends PureComponent {
         currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
         clicked: Date.now(),
         uuid: getUUID(),
-        referrer: "desktop",
-        widgetID: widgetID,
+        referrer: window.location.href,
+        url: link ? link : null,
+        widgetID: VueIntegrationQueries.getWidgetTypeMapped(widgetID, pageType),
+        sourceProdID: sourceProdID,
+        sourceCatgID: sourceCatgID,
+        destprodid: destProdID,
+        posofreco: posofreco,
       },
     });
-    this.sendBannerClickImpression(item);
+    // this.sendBannerClickImpression(item);
   };
   sendBannerClickImpression(item) {
     Event.dispatch(HOME_PAGE_BANNER_CLICK_IMPRESSIONS, [item]);
@@ -89,6 +103,8 @@ class DynamicContentVueProductSliderItem extends PureComponent {
   }
 
   renderPrice(price) {
+    console.log("rendered home");
+    const { isArabic } = this.state;
     if (price && price.length > 0) {
       const priceObj = price[0],
         currency = getCurrency();
@@ -101,7 +117,10 @@ class DynamicContentVueProductSliderItem extends PureComponent {
 
       if (basePrice === specialPrice || !specialPrice) {
         return (
-          <div block="VueProductSlider" elem="SpecialPriceCon">
+          <div 
+          block="VueProductSlider" 
+          elem="SpecialPriceCon" 
+          mods={{ isArabic }}>
             <span block="VueProductSlider" elem="PriceWrapper">
               <span
                 id="price"
@@ -113,7 +132,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
       }
 
       return (
-        <div block="VueProductSlider" elem="SpecialPriceCon">
+        <div block="VueProductSlider" elem="SpecialPriceCon"  mods={{ isArabic }}>
           <del block="VueProductSlider" elem="Del">
             <span id="price">{`${currency} ${basePrice}`}</span>
           </del>
@@ -153,12 +172,14 @@ class DynamicContentVueProductSliderItem extends PureComponent {
       data,
       widgetID,
       pageType,
+      renderMySignInPopup,
     } = this.props;
     const { isArabic } = this.state;
     let newLink = link;
-    if (this.props.data.url) {
-      newLink = this.props.data.url;
+    if (data?.url) {
+      newLink = data.url;
     }
+
     return (
       <div
         block="VueProductSlider"
@@ -170,14 +191,15 @@ class DynamicContentVueProductSliderItem extends PureComponent {
         ref={this.childRef}
       >
         <Link
-          to={newLink.split("?_ga")[0]}
+          to={parseURL(newLink)?.pathname?.split("?_ga")[0] || "/"}
           data-banner-type="vueSlider"
           block="VueProductSlider-Link"
           onClick={() => {
             this.onclick(widgetID, data);
           }}
         >
-          <img
+          <Image
+            lazyLoad={true}
             block="VueProductSlider"
             elem="VueProductImage"
             src={thumbnail_url}
@@ -188,7 +210,12 @@ class DynamicContentVueProductSliderItem extends PureComponent {
           {this.renderPrice(price)}
           {this.renderIsNew(is_new_in)}
         </Link>
-        <WishlistIcon sku={sku} data={data} pageType={pageType} />
+        <WishlistIcon
+          renderMySignInPopup={renderMySignInPopup}
+          sku={sku}
+          data={data}
+          pageType={pageType}
+        />
       </div>
     );
   }

@@ -54,7 +54,6 @@ class DynamicContentProductSlider extends PureComponent {
     }
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        console.log("dynamic product slider component in view port ", entry);
         this.sendImpressions();
       }
     });
@@ -95,8 +94,13 @@ class DynamicContentProductSlider extends PureComponent {
   renderProductsDesktop() {}
 
   renderTitle() {
-    const { title } = this.props;
-    const finalTitle = isArabic() ? HOME_PAGE_TRANSLATIONS[title] : title;
+    const { title, isHomePage } = this.props;
+    let finalTitle;
+    if (isHomePage) {
+      finalTitle = title;
+    } else {
+      finalTitle = isArabic() ? HOME_PAGE_TRANSLATIONS[title] : title;
+    }
     return (
       <h2 mix={{ block: "DynamicContentProductSlider", elem: "Header" }}>
         {finalTitle}
@@ -119,8 +123,7 @@ class DynamicContentProductSlider extends PureComponent {
 
   render() {
     const { isArabic, withViewAll, eventRegistered } = this.state;
-    const { products } = this.props;
-
+    const { products, renderMySignInPopup } = this.props;
     if (products.length === 0) {
       return null;
     }
@@ -131,21 +134,25 @@ class DynamicContentProductSlider extends PureComponent {
       }, 3000);
     }
 
-    const { title } = this.props;
-    const finalTitle = isArabic ? HOME_PAGE_TRANSLATIONS[title] : title;
+    const { title, isHomePage } = this.props;
+    let finalTitle;
+    if (isHomePage) {
+      finalTitle = title;
+    } else {
+      finalTitle = isArabic() ? HOME_PAGE_TRANSLATIONS[title] : title;
+    }
     const productsDesktop = (
       <React.Fragment>
         <DynamicContentVueProductSliderContainer
           products={products}
           heading={finalTitle}
           withViewAll
+          renderMySignInPopup={renderMySignInPopup}
           key={`VueProductSliderContainer`}
           isHome={true}
           pageType={"home"}
+          widgetID={"vue_top_picks_slider"}
         />
-        {/* );
-                        })
-                    } */}
       </React.Fragment>
     );
 
@@ -157,7 +164,10 @@ class DynamicContentProductSlider extends PureComponent {
       <div
         ref={setRef}
         id="productSlider"
-        mix={{ block: "DynamicContentProductSlider", mods: { isArabic } }}
+        mix={{
+          block: "DynamicContentProductSliderHomePage",
+          mods: { isArabic },
+        }}
       >
         {productsDesktop}
       </div>

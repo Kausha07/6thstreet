@@ -34,8 +34,10 @@ export class ProductItemContainer extends PureComponent {
       qid,
       isVueData = false,
       pageType,
+      prevPath = null,
+      renderMySignInPopup
     } = this.props;
-    return { product, page, position, qid, isVueData, pageType };
+    return { product, page, position, qid, isVueData, pageType,renderMySignInPopup, prevPath };
   };
 
   render() {

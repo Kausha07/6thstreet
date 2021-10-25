@@ -26,8 +26,8 @@ export class PDPSummaryContainer extends PureComponent {
     };
 
     containerProps = () => {
-        const { product, isLoading } = this.props;
-        return { product, isLoading };
+        const { product, isLoading,renderMySignInPopup } = this.props;
+        return { product, isLoading,renderMySignInPopup };
     };
 
     render() {

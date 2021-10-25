@@ -1,6 +1,7 @@
 /* eslint-disable fp/no-let */
 import ContentWrapper from "Component/ContentWrapper/ContentWrapper.component";
 import DynamicContent from "Component/DynamicContent";
+import MyAccountOverlay from "Component/MyAccountOverlay";
 import PLPDetails from "Component/PLPDetails";
 import PLPFilters from "Component/PLPFilters";
 import PLPPages from "Component/PLPPages";
@@ -14,6 +15,8 @@ export class PLP extends PureComponent {
     super(props);
     this.state = {
       bannerData: null,
+      signInPopUp: "",
+      showPopup: false,
       circleBannerUrl: null,
     };
   }
@@ -29,6 +32,36 @@ export class PLP extends PureComponent {
       });
     }
   }
+  componentWillUnmount() {
+    const { resetPLPData } = this.props;
+    resetPLPData();
+  }
+
+  showMyAccountPopup = () => {
+    this.setState({ showPopup: true });
+  };
+
+  closePopup = () => {
+    this.setState({ signInPopUp: "", showPopup: false });
+  };
+
+  onSignIn = () => {
+    this.closePopup();
+  };
+
+  renderMySignInPopup() {
+    const { showPopup } = this.state;
+    if (!showPopup) {
+      return null;
+    }
+    return (
+      <MyAccountOverlay
+        closePopup={this.closePopup}
+        onSignIn={this.onSignIn}
+        isPopup
+      />
+    );
+  }
   // componentWillUnmount(){
   //     localStorage.removeItem("bannerData");
   // }
@@ -42,7 +75,14 @@ export class PLP extends PureComponent {
   }
 
   renderPLPPages() {
-    return <PLPPages {...this.props} />;
+    const { prevPath = null } = this.props;
+    return (
+      <PLPPages
+        {...this.props}
+        renderMySignInPopup={this.showMyAccountPopup}
+        prevPath={prevPath}
+      />
+    );
   }
 
   renderBanner() {
@@ -58,7 +98,6 @@ export class PLP extends PureComponent {
 
   renderPLPWidget = () => {
     const { plpWidgetData } = this.props;
-    console.log("plp data", plpWidgetData);
     const { pathname } = location;
     const tagName = pathname
       .replace(".html", "")
@@ -69,17 +108,25 @@ export class PLP extends PureComponent {
     if (widget && widget.length == 0) {
       return null;
     }
-    console.log("plp widget", widget);
     const { gender } = this.props;
 
     // return <h1>Plp Widget</h1>;
-    return <DynamicContent gender={gender} content={widget} />;
+    return (
+      <DynamicContent
+        gender={gender}
+        content={widget}
+        renderMySignInPopup={this.showMyAccountPopup}
+      />
+    );
   };
 
   render() {
+    const { signInPopUp } = this.state;
+
     return (
       <main block="PLP">
         <ContentWrapper label={__("Product List Page")}>
+          {this.renderMySignInPopup()}
           {this.renderPLPDetails()}
           {this.state.bannerData && this.renderBanner()}
           {this.renderPLPWidget()}

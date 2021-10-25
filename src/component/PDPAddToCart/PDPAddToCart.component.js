@@ -12,6 +12,7 @@ import { NOTIFY_EMAIL } from "./PDPAddToCard.config";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { isSignedIn } from "Util/Auth";
 import { customerType } from "Type/Account";
+import Image from "Component/Image";
 
 import "./PDPAddToCart.style";
 import { isArabic } from "Util/App";
@@ -215,7 +216,7 @@ class PDPAddToCart extends PureComponent {
             {label}
           </label>
           {isNotAvailable && (
-            <img
+            <Image lazyLoad={false}
               src={StrikeThrough}
               className="lineImg"
               style={isCurrentSizeSelected ? selectedStrikeThruLineStyle : {}}
@@ -334,30 +335,25 @@ class PDPAddToCart extends PureComponent {
   }
 
   renderClickAndCollectButton() {
-    const { togglePDPClickAndCollectPopup, stores } = this.props
-    if(!stores?.length){
-      return null
+    const { togglePDPClickAndCollectPopup, stores } = this.props;
+    if (!stores?.length) {
+      return null;
     }
     const disabled = this.checkStateForButtonDisabling();
     return (
       <button
-        onClick={ togglePDPClickAndCollectPopup }
+        onClick={togglePDPClickAndCollectPopup}
         block="PDPAddToCart"
         elem="ClickAndCollectButton"
-        // mods={{ isLoading }}
-        // mix={{
-        //   block: "PDPAddToCart",
-        //   elem: "AddToCartButton",
-        //   mods: { addedToCart },
-        // }}
+        mods={{
+          isArabic: isArabic(),
+        }}
         disabled={disabled}
-    >
+      >
         <div>{__("Click & Collect")}</div>
-        <img src={clickAndCollectIcon} />
-        {/* <span>{__("Adding...")}</span> */}
-        {/* <span>{__("Added to bag")}</span> */}
+        <Image lazyLoad={true} src={clickAndCollectIcon} />
       </button>
-    )
+    );
   }
   renderAddToCartButton() {
     const {
@@ -509,7 +505,8 @@ class PDPAddToCart extends PureComponent {
 
     return (
       <div block="PDPAddToCart" elem="NotifyMeSuccessContainer">
-        <img src={NotifySuccessImg} alt="success circle" />
+        <Image lazyLoad={true} src={NotifySuccessImg} alt="success circle" />
+
         <span>
           {__("We’ll let you know as soon as the product becomes available")}
         </span>
@@ -524,20 +521,30 @@ class PDPAddToCart extends PureComponent {
       isOutOfStock,
     } = this.props;
     if (in_stock === 0 && !isOutOfStock && !notifyMeSuccess) {
-      return <span id="notavailable">{this.capitalizeFirstLetter(`${__("out of stock")}`)}</span>;
+      return (
+        <span id="notavailable">
+          {this.capitalizeFirstLetter(`${__("out of stock")}`)}
+        </span>
+      );
     } else if (
       in_stock === 1 &&
       stock_qty === 0 &&
       !isOutOfStock &&
       !notifyMeSuccess
     ) {
-      return <span id="notavailable">{this.capitalizeFirstLetter(`${__("out of stock")}`)}</span>;
+      return (
+        <span id="notavailable">
+          {this.capitalizeFirstLetter(`${__("out of stock")}`)}
+        </span>
+      );
     }
     return null;
   }
 
   renderContent() {
     const {
+      product: { in_stock, stock_qty },
+      isOutOfStock,
       productStock = {},
       sizeObject = {},
       processingRequest,
@@ -580,7 +587,13 @@ class PDPAddToCart extends PureComponent {
             {isMobile.any() && <div block="Seperator" />}
           </>
         ) : null}
-        <div block="PDPAddToCart" elem="Bottom">
+        <div
+          block="PDPAddToCart"
+          elem="Bottom"
+          mods={{
+            isOutOfStock: stock_qty === 0 || isOutOfStock || !in_stock,
+          }}
+        >
           {this.renderAddToCartButton()}
           {this.renderClickAndCollectButton()}
         </div>

@@ -60,7 +60,7 @@ class UrlRewrites extends PureComponent {
   }
 
   renderCategory() {
-    const { brandDescription, brandImg, brandName,query } = this.props;
+    const { brandDescription, brandImg, brandName, query } = this.props;
     return (
       <GTMRouteWrapper route={CATEGORY}>
         <PLP
@@ -93,9 +93,13 @@ class UrlRewrites extends PureComponent {
     );
 
     if (isLoading) {
-      return <Loader isLoading={isLoading} />;
+      return (
+        <>
+          <div block="EmptyPage"></div>
+          <Loader isLoading={isLoading} />
+        </>
+      );
     }
-
     const renderFunction = this.typeMap[type] || this.render404;
 
     return <div block="UrlRewrites">{renderFunction()}</div>;

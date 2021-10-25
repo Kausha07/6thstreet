@@ -7,7 +7,9 @@ import { createRef, PureComponent } from "react";
 import { isArabic } from "Util/App";
 import "./HeaderSearch.style";
 import Clear from "./icons/close-black.png";
-import searchPng from "./icons/search-transparent.png";
+import searchPng from "./icons/search.svg";
+import isMobile from "Util/Mobile";
+import Image from "Component/Image";
 
 class HeaderSearch extends PureComponent {
   static propTypes = {
@@ -75,10 +77,11 @@ class HeaderSearch extends PureComponent {
     this.setState({ showSearch: true });
   };
   closeSearch = () => {
-    const { hideSearchBar } = this.props;
+    const { hideSearchBar,onSearchClean } = this.props;
     if (hideSearchBar) {
       hideSearchBar();
     }
+    onSearchClean();
     this.setState({ showSearch: false });
   };
 
@@ -100,9 +103,13 @@ class HeaderSearch extends PureComponent {
             name="search"
             type="text"
             autocomplete="off"
-            autocorrect="off"
-            spellcheck="false"
-            placeholder={__("Search for items, brands, inspiration and styles")}
+            autoCorrect="off"
+            spellCheck="false"
+            placeholder={
+              isMobile.any() || isMobile.tablet()
+                ? __(" What are you looking for ?")
+                : __("Search for items, brands, inspiration and styles")
+            }
             onChange={onSearchChange}
             onFocus={this.onFocus}
             value={search}
@@ -113,7 +120,7 @@ class HeaderSearch extends PureComponent {
             mods={{ isArabic }}
             type="submit"
           >
-            <img src={searchPng} alt="search" />
+            <Image lazyLoad={true} src={searchPng} alt="search" />
           </button>
           <button
             block="HeaderSearch"
@@ -127,7 +134,12 @@ class HeaderSearch extends PureComponent {
             }}
             aria-label="Clear search"
           >
-            <img src={Clear} alt="Clear button" />
+            <Image
+              lazyLoad={false}
+              src={Clear}
+              alt="Clear button"
+              style={{ top: "2px" }}
+            />
           </button>
         </Form>
         {showSearch ? (
@@ -143,7 +155,6 @@ class HeaderSearch extends PureComponent {
               onClick={this.closeSearch}
             >
               {__("Cancel")}
-              {/* {svg} */}
             </button>
           </div>
         ) : null}
@@ -152,7 +163,7 @@ class HeaderSearch extends PureComponent {
   }
 
   renderSuggestion() {
-    const { search } = this.props;
+    const { search, renderMySignInPopup,onSearchClean } = this.props;
     const { showSearch } = this.state;
 
     if (!showSearch) {
@@ -161,14 +172,18 @@ class HeaderSearch extends PureComponent {
 
     return (
       <>
-        <SearchSuggestion closeSearch={this.closeSearch} search={search} />
+        <SearchSuggestion
+          closeSearch={this.closeSearch}
+          cleanSearch={onSearchClean}
+          renderMySignInPopup={renderMySignInPopup}
+          search={search}
+        />
       </>
     );
   }
 
   render() {
     const { isArabic } = this.state;
-
     return (
       <>
         <div block="SearchBackground" mods={{ isArabic }} />

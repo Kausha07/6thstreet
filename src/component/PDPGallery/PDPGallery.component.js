@@ -37,6 +37,7 @@ class PDPGallery extends PureComponent {
     galleryOverlay: "",
     isVideoPlaying: false,
     isArabic: isArabic(),
+    listener: "",
   };
 
   videoRef = {
@@ -44,13 +45,13 @@ class PDPGallery extends PureComponent {
     prod_360_video: React.createRef(),
   };
 
-  componentDidMount() {
-    CSS.setVariable(
-      this.crumbsRef,
-      "gallery-crumbs-height",
-      `${this.overlaybuttonRef.current.offsetHeight}px`
-    );
-  }
+  // componentDidMount() {
+  //   CSS.setVariable(
+  //     this.crumbsRef,
+  //     "gallery-crumbs-height",
+  //     `${this.overlaybuttonRef.current.offsetHeight}px`
+  //   );
+  // }
 
   renderBackButton() {
     const { isArabic } = this.state;
@@ -89,10 +90,11 @@ class PDPGallery extends PureComponent {
   }
   renderWishlistIcon() {
     const { isArabic } = this.state;
-    const { sku, product } = this.props;
+    const { sku, product, renderMySignInPopup } = this.props;
     return (
       <WishlistIcon
         sku={sku}
+        renderMySignInPopup={renderMySignInPopup}
         mods={{ isArabic }}
         pageType="pdp"
         data={product}
@@ -104,17 +106,22 @@ class PDPGallery extends PureComponent {
     <PDPGalleryCrumb
       key={i}
       // prefer numerical index
-      index={+index}
+      index={i}
     />
   );
 
-  renderGalleryImage = (src, i) => <Image src={src} key={i} />;
+  renderGalleryImage = (src, i) => (
+    <Image lazyLoad={false}
+      src={src}
+      key={i}
+      mix={{ block: "PDPGallery", elem: "sliderItem" }}
+    />
+  );
 
   renderGalleryOverlay = () => {
     const galleryOverlay = (
       <PDPGalleryOverlay closeGalleryOverlay={this.closeGalleryOverlay} />
     );
-
     document.body.style.overflow = "hidden";
 
     this.setState({ galleryOverlay });
@@ -165,7 +172,7 @@ class PDPGallery extends PureComponent {
     return (
       <Slider
         activeImage={currentIndex}
-        onActiveImageChange={onSliderChange}
+        onActiveImageChange={this.onSlideChange}
         mix={{ block: "PDPGallery", elem: "Slider" }}
         isInteractionDisabled={!isMobile.any()}
         showCrumbs={isMobile.any()}
@@ -207,29 +214,77 @@ class PDPGallery extends PureComponent {
           gallery.length + parseInt(video?.current.dataset["index"])
         );
         video.current.play();
-        video.current.addEventListener("ended", () => {
+        video.current.addEventListener("ended", listener);
+        this.setState({ listener });
+        // after issue fix can be removed below commented code
+
+        // video.current.addEventListener("ended", () => {
+        //   console.log({ counter });
+        //   counter = counter + 1;
+        //   if (counter <= 2) {
+        //     video.current.play();
+        //   } else {
+        //     onSliderChange(0);
+        //     video.current.removeEventListener("ended");
+        //     this.setState({ isVideoPlaying: false }, () => {
+        //       counter = 1;
+        //     });
+        //   }
+        // });
+        function listener(event) {
           counter = counter + 1;
           if (counter <= 2) {
             video.current.play();
           } else {
             onSliderChange(0);
+            video.current.removeEventListener("ended", listener);
             this.setState({ isVideoPlaying: false }, () => {
               counter = 1;
             });
           }
-        });
+        }
       });
     }
   }
 
+  onSlideChange = (activeSlide) => {
+    const { gallery, onSliderChange, prod_360_video, prod_style_video } =
+      this.props;
+    const { isVideoPlaying, listener } = this.state;
+    if (activeSlide <= gallery.length - 1) {
+      // stop the video
+      if (isVideoPlaying?.current) {
+        isVideoPlaying.current.pause();
+        isVideoPlaying.current.currentTime = 0;
+        isVideoPlaying?.current.removeEventListener("ended", listener);
+      }
+      this.setState({ isVideoPlaying: false });
+      onSliderChange(activeSlide);
+    } else if (activeSlide > gallery.length - 1) {
+      // play the video
+      if (!(prod_360_video || prod_style_video) || !isMobile.any()) {
+        return null;
+      }
+      if (prod_360_video) {
+        this.playVideo("prod_360_video");
+      } else if (prod_style_video) {
+        this.playVideo("prod_style_video");
+      } else {
+        onSliderChange(activeSlide);
+      }
+    }
+  };
+
   stopVideo() {
-    const { isVideoPlaying } = this.state;
+    const { isVideoPlaying, listener } = this.state;
+
     const { onSliderChange } = this.props;
     if (isVideoPlaying?.current) {
       isVideoPlaying.current.pause();
       isVideoPlaying.current.currentTime = 0;
     }
     onSliderChange(0);
+    isVideoPlaying?.current.removeEventListener("ended", listener);
     this.setState({ isVideoPlaying: false });
   }
 
@@ -249,7 +304,7 @@ class PDPGallery extends PureComponent {
             elem="ViewGallery"
             onClick={() => this.stopVideo()}
           >
-            View Gallery
+            { __("View Gallery") }
           </button>
         ) : (
           <div block="PDPGallery-VideoButtonsContainer" elem="VideoButtons">
@@ -259,7 +314,7 @@ class PDPGallery extends PureComponent {
                 elem="StyleVideo"
                 onClick={() => this.playVideo("prod_style_video")}
               >
-                Video
+                { __("Video") }
               </button>
             )}
             {prod_360_video && (
@@ -268,7 +323,7 @@ class PDPGallery extends PureComponent {
                 elem="360DegreeVideo"
                 onClick={() => this.playVideo("prod_360_video")}
               >
-                360°
+                { __("360°")}
               </button>
             )}
           </div>
@@ -280,7 +335,7 @@ class PDPGallery extends PureComponent {
 
   render() {
     const { galleryOverlay, isArabic } = this.state;
-
+    const { renderMySignInPopup } = this.props;
     return (
       <div block="PDPGallery">
         {galleryOverlay}

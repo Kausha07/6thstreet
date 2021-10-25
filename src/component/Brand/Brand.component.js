@@ -1,13 +1,9 @@
+import Link from "Component/Link";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
-
-import { KIDS_GENDERS } from "Route/Brands/Brands.config";
 import { Brand as BrandType } from "Util/API/endpoint/Brands/Brands.type";
-import WebUrlParser from "Util/API/helper/WebUrlParser";
-import browserHistory from "Util/History";
+import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import { isArabic } from "Util/App";
-import BRAND_MAPPING from "Component/SearchSuggestion/SearchSiggestion.config";
-
 import "./Brand.style";
 
 class Brand extends PureComponent {
@@ -31,70 +27,46 @@ class Brand extends PureComponent {
     return name;
   }
 
-  renderCount() {
+  render() {
     const {
-      brand: { count },
-    } = this.props;
-
-    return count;
-  }
-
-  getKeyByValue = (object, value) => {
-    return Object.keys(object).find((key) => object[key] === value);
-  };
-
-  getBrandUrl = (brandName) => {
-    const { isArabic } = this.state;
-    let name = brandName;
-    let brandMapping = this.props.brandMapping;
-    if (isArabic) {
-      name = this.getKeyByValue(brandMapping, brandName);
-    }
-
-    name = name ? name : brandName;
-    const urlName = name
-      // .replace("&", "")
-      .replace(/'/g, "")
-      .replace(/[(\s+).&]/g, "-")
-      .replace(/-{2,}/g, "-")
-      .replace(/\-$/, "")
-      .replace("@", "at")
-      .toLowerCase();
-
-    return urlName;
-  };
-
-  handleBrandRedirect = () => {
-    const {
-      brand: { name = "" },
+      brand: { name = "", url = "" },
       type,
     } = this.props;
-
-    const urlName = this.getBrandUrl(name);
-
-    switch (type) {
-      case "women":
-        browserHistory.push(`/${urlName}.html?q=${urlName}`);
-        WebUrlParser.setParam("gender", this.capitalizeFirstLetter(type));
-        break;
-      case "men":
-        browserHistory.push(`/${urlName}.html?q=${urlName}`);
-        WebUrlParser.setParam("gender", this.capitalizeFirstLetter(type));
-        break;
-      case "kids":
-        browserHistory.push(`/${urlName}.html?q=${urlName}`);
-        WebUrlParser.setParam("gender", KIDS_GENDERS);
-        break;
-      default:
-        browserHistory.push(`/${urlName}.html?q=${urlName}`);
+    const { isArabic } = this.state;
+    let finalURL;
+    let requestedGender;
+    if (type) {
+      if (type === "kids") {
+        requestedGender = isArabic ? "أولاد,بنات" : "Boy,Girl";
+      } else {
+        requestedGender = isArabic ? getGenderInArabic(type) : type;
+      }
+      finalURL = url
+        ? `${url}.html?q=${encodeURIComponent(
+            name
+          )}&p=0&dFR[brand_name][0]=${encodeURIComponent(
+            name
+          )}&dFR[gender][0]=${this.capitalizeFirstLetter(requestedGender)}`
+        : `/catalogsearch/result/?q=${encodeURIComponent(
+            name
+          )}&p=0&dFR[brand_name][0]=${encodeURIComponent(
+            name
+          )}&dFR[gender][0]=${this.capitalizeFirstLetter(requestedGender)}`;
+    } else {
+      finalURL = url
+        ? `${url}.html?q=${encodeURIComponent(
+            name
+          )}&p=0&dFR[brand_name][0]=${encodeURIComponent(name)}`
+        : `/catalogsearch/result/?q=${encodeURIComponent(
+            name
+          )}&p=0&dFR[brand_name][0]=${encodeURIComponent(name)}`;
     }
-  };
-
-  render() {
     return (
-      <button onClick={this.handleBrandRedirect} block="Brand">
-        {this.renderName()}
-      </button>
+      <div block="Brand">
+        <Link to={finalURL} block="BrandLink">
+          {this.renderName()}
+        </Link>
+      </div>
     );
   }
 }

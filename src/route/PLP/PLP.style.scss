@@ -38,7 +38,7 @@
       @include desktop {
         margin: 0 auto;
         width: var(--main-container-width-dsk);
-        max-width: 1440px;
+        max-width: var(--container-max-width);
       }
     }
     .DynamicContentGrid {

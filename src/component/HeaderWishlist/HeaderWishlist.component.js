@@ -20,7 +20,7 @@ class HeaderWishlist extends PureComponent {
 
   static defaultProps = {
     isMobile: false,
-    showPopup: true,
+    showPopup: false,
     signInPopUp: "",
   };
 
@@ -34,22 +34,30 @@ class HeaderWishlist extends PureComponent {
     if (isSignedIn) {
       history.push("/my-account/my-wishlist");
     } else {
-      this.renderMySignInPopup()
+      this.setState({ showPopup: true });
     }
   };
 
   closePopup = () => {
-    this.setState({ signInPopUp: "" });
+    this.setState({ signInPopUp: "", showPopup: false });
+  };
+
+  onSignIn = () => {
+    this.closePopup();
   };
 
   renderMySignInPopup() {
     const { showPopup } = this.state;
-    const popUpElement = (
-      <MyAccountOverlay isPopup={showPopup} closePopup={this.closePopup} />
+    if (!showPopup) {
+      return null;
+    }
+    return (
+      <MyAccountOverlay
+        closePopup={this.closePopup}
+        onSignIn={this.onSignIn}
+        isPopup
+      />
     );
-
-    this.setState({ signInPopUp: popUpElement });
-    return popUpElement;
   }
 
   render() {
@@ -59,7 +67,7 @@ class HeaderWishlist extends PureComponent {
       isMobile,
       wishListItems = [],
     } = this.props;
-    const { isArabic,signInPopUp } = this.state;
+    const { isArabic, signInPopUp } = this.state;
     const itemsCount = wishListItems.length;
 
     return (
@@ -98,8 +106,8 @@ class HeaderWishlist extends PureComponent {
             mods={{ isBlack: !!itemsCount }}
           />
         </button>
-        {signInPopUp}
-        <label htmlFor="WishList">{__("Wishlist")}</label>
+        {this.renderMySignInPopup()}
+        { !isBottomBar && <label htmlFor="WishList">{__("Wishlist")}</label>}
       </div>
     );
   }

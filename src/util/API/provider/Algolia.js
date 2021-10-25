@@ -29,7 +29,6 @@ export class Algolia {
       adminKey = process.env.REACT_APP_ALGOLIA_KEY,
       index = "",
     } = options;
-
     AlgoliaSDK.init(appId, adminKey);
 
     AlgoliaSDK.setIndex.call(AlgoliaSDK, locale, env, index);
@@ -71,6 +70,12 @@ export class Algolia {
   async getBrands(gender) {
     // TODO: validate data, possible cache
     const { data = [] } = (await AlgoliaSDK.getBrands(gender)) || {};
+    return data;
+  }
+
+  async getWishlistProduct(idsArray) {
+    // TODO: validate data, possible cache
+    const { data = [] } = (await AlgoliaSDK.getWishlistProduct(idsArray)) || {};
     return data;
   }
 

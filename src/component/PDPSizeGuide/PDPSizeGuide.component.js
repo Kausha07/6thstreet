@@ -179,7 +179,7 @@ class PDPSizeGuide extends PureComponent {
     } = this.props;
 
     if (!!fit_size_url) {
-      return <img src={fit_size_url} alt="Size Chart" />;
+    return <Image lazyLoad={true} src={fit_size_url} alt="Size Chart" />;
     }
 
     return (

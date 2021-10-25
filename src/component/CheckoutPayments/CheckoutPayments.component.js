@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import PropTypes from "prop-types";
+import isMobile from "Util/Mobile";
 
 import CheckoutComApplePay from "Component/CheckoutComApplePay";
 import CheckoutPayment from "Component/CheckoutPayment";
@@ -28,6 +29,7 @@ import {
   CHECKOUT_QPAY,
 } from "./CheckoutPayments.config";
 import info from "./icons/info.png";
+import Image from "Component/Image";
 
 import "./CheckoutPayments.extended.style";
 
@@ -37,7 +39,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     selectedPaymentCode: PropTypes.string,
     processApplePay: PropTypes.bool,
     placeOrder: PropTypes.func,
-    isClickAndCollect: PropTypes.bool.isRequired
+    isClickAndCollect: PropTypes.string.isRequired
   };
 
   static defaultProps = {
@@ -144,7 +146,6 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     const isSelected = selectedPaymentCode === m_code;
     const { tabbyPaymentMethods = [] } = this.state;
     const isTabbySelected = TABBY_PAYMENT_CODES.includes(selectedPaymentCode);
-
     if (
       TABBY_PAYMENT_CODES.includes(m_code) &&
       tabbyPaymentMethods.length > 0
@@ -253,19 +254,27 @@ export class CheckoutPayments extends SourceCheckoutPayments {
   }
 
   renderApplePayMethods() {
+    const { isClickAndCollect } = this.props;
+    if(isClickAndCollect){
+      return null;
+    }
+  
     const {
-      options: { supported_networks },
+      options: { method_description, method_title },
     } = this.getSelectedMethodData();
-    const { billingAddress, processApplePay, placeOrder,savePaymentInformationApplePay } = this.props;
 
     return (
-      <CheckoutComApplePay
-      savePaymentInformationApplePay={savePaymentInformationApplePay}
-        billingAddress={billingAddress}
-        supported_networks={supported_networks}
-        processApplePay={processApplePay}
-        placeOrder={placeOrder}
-      />
+      <div block="CheckoutPayments" elem="SelectedInfo">
+        <h2 block="CheckoutPayments" elem="MethodTitle">
+          {method_title}
+        </h2>
+        <p block="CheckoutPayments" elem="MethodDiscription">
+          {method_description}
+        </p>
+        <div block="CheckoutPayments" elem="MethodImage">
+        <img src={Applepay} alt="Apple pay" />
+        </div>
+      </div>
     );
   }
 

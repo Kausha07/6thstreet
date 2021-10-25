@@ -1,14 +1,21 @@
 .PageWrapper {
   height: 100vh;
-  //   display: flex;
-  //   flex-direction: column;
+  @include desktop {
+    display: flex;
+    flex-direction: column;
+  }
   .HomePage,
-  .SearchPage {
+  .SearchPage,
+  .UrlRewrites {
     min-height: 500px;
   }
 
   &-Content {
     flex: 1;
+    .EmptyPage {
+      display: block;
+      min-height: 500px;
+    }
   }
 
   &_isArabic {

@@ -6,13 +6,19 @@
 
 .DynamicContentGrid {
 
-  max-width: 1440px;
-  margin-bottom: 14px !important;
+  max-width: var(--container-max-width);
+  margin-bottom: 40px !important;
+  margin-top: 40px !important;
+  @include tablet{
+    margin-bottom: 40px !important;
+    margin-top: 40px !important;
+  }
   &-Grid {
     display: grid;
     grid-gap: 0 0;
     img{
       display: block;
+      object-fit: cover;
     }
     @include desktop {
       grid-gap: 15px;
@@ -72,19 +78,52 @@
 }
 
 .CategoryItem-Content.Content_0 {
-  padding-right: 20px;
+  padding-right: 7px;
+  .Footer {
+    &-Title {
+      text-transform: uppercase;
+      letter-spacing: 2px;
+
+    }
+  }
 }
 .CategoryItem-Content.Content_1 {
-  padding-left: 20px;
+  padding-left: 7px;
+  .Footer {
+    &-Title {
+      text-transform: uppercase;
+      letter-spacing: 2px;
+
+    }
+  }
 }
 .CategoryItem-Content_isArabic.Content_0 {
-  padding-left: 20px;
+  padding-left: 7px;
   padding-right: 0px;
 }
 .CategoryItem-Content_isArabic.Content_1 {
-  padding-right: 20px;
+  padding-right: 7px;
   padding-left: 0px;
 }
+@include tablet{
+  .CategoryItem-Content.Content_0 {
+    padding-right: 3px;
+  }
+  .CategoryItem-Content.Content_1 {
+    padding-left: 3px;
+  }
+
+  .CategoryItem-Content_isArabic.Content_0 {
+    padding-left: 3px;
+    padding-right: 0px;
+  }
+  .CategoryItem-Content_isArabic.Content_1 {
+    padding-right: 3px;
+    padding-left: 0px;
+  }
+}
+
+
 @include desktop {
   .CategoryItem {
     &-Content {
@@ -94,16 +133,16 @@
         text-decoration: none;
       }
       .Footer {
-        margin-top: 15px;
+        margin-top: 17px;
         &-Title {
-          text-transform: capitalize;
+          // text-transform: uppercase;
           margin-bottom: 0px;
           text-decoration: none !important;
           color: #000000;
           font-family: "Avenir Next";
           font-size: 18px;
           font-weight: 600;
-          letter-spacing: 0;
+          letter-spacing: 0px;
           line-height: 25px;
           text-align: center;
 
@@ -118,6 +157,7 @@
           letter-spacing: 0;
           line-height: 22px;
           text-align: center;
+
         }
         .Footer-Button {
           color: #000000;
@@ -128,6 +168,7 @@
           line-height: 22px;
           text-align: center;
           border-bottom: 1px solid black !important;
+          margin-top: 19px;
         }
       }
     }
@@ -148,14 +189,12 @@
       .Footer {
         margin-top: 15px;
         &-Title {
-          text-transform: uppercase;
           margin-bottom: 0px;
           text-decoration: none !important;
           color: #000000;
           font-family: "Avenir Next";
           font-size: 18px;
           font-weight: 500;
-          letter-spacing: 2px;
           line-height: 25px;
           text-align: center;
         }

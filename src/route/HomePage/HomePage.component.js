@@ -4,15 +4,49 @@ import { PureComponent } from "react";
 import DynamicContent from "Component/DynamicContent";
 import LoginBlockContainer from "Component/LoginBlock";
 import { DynamicContent as DynamicContentType } from "Util/API/endpoint/StaticFiles/StaticFiles.type";
+import MyAccountOverlay from "Component/MyAccountOverlay";
 
 import "./HomePage.style";
 
 class HomePage extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = {
+      signInPopUp: "",
+      showPopup:false
+    };
+  }
   static propTypes = {
     dynamicContent: DynamicContentType.isRequired,
     isLoading: PropTypes.bool.isRequired,
   };
 
+  showMyAccountPopup = () => {
+    this.setState({ showPopup: true });
+  };
+
+  closePopup = () => {
+    this.setState({ signInPopUp: "",showPopup:false });
+  };
+
+  onSignIn = () => {
+    this.closePopup();
+  };
+
+
+  renderMySignInPopup() {
+    const { showPopup } = this.state;
+    if (!showPopup) {
+      return null;
+    }
+    return (
+      <MyAccountOverlay
+        closePopup={this.closePopup}
+        onSignIn={this.onSignIn}
+        isPopup
+      />
+    );
+  }
   componentDidUpdate() {
     const DynamicContent = document.getElementsByClassName("DynamicContent")[0];
 
@@ -43,7 +77,13 @@ class HomePage extends PureComponent {
   renderDynamicContent() {
     const { dynamicContent, gender } = this.props;
 
-    return <DynamicContent gender={gender} content={dynamicContent} />;
+    return (
+      <DynamicContent
+        gender={gender}
+        content={dynamicContent}
+        renderMySignInPopup={this.showMyAccountPopup}
+      />
+    );
   }
 
   renderLoginBlock() {
@@ -85,7 +125,12 @@ class HomePage extends PureComponent {
   }
 
   render() {
-    return <main block="HomePage">{this.renderContent()}</main>;
+    return (
+      <main block="HomePage">
+        {this.renderMySignInPopup()}
+        {this.renderContent()}
+      </main>
+    );
   }
 }
 

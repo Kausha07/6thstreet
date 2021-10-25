@@ -1,3 +1,7 @@
+import {
+  HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
+  HOME_PAGE_BANNER_IMPRESSIONS,
+} from "Component/GoogleTagManager/events/BannerImpression.event";
 import Image from "Component/Image";
 import Link from "Component/Link";
 import PropTypes from "prop-types";
@@ -8,10 +12,6 @@ import { formatCDNLink } from "Util/Url";
 import DynamicContentFooter from "../DynamicContentFooter/DynamicContentFooter.component";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import "./DynamicContentBanner.style";
-import {
-  HOME_PAGE_BANNER_IMPRESSIONS,
-  HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
-} from "Component/GoogleTagManager/events/BannerImpression.event";
 
 class DynamicContentBanner extends PureComponent {
   static propTypes = {
@@ -71,7 +71,6 @@ class DynamicContentBanner extends PureComponent {
     }
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        console.log("dynamic content banner in view port ", entry);
         this.sendImpressions();
       }
     });
@@ -99,19 +98,20 @@ class DynamicContentBanner extends PureComponent {
     // const { height, width } = items[0];
     const { url, link, height = "", width = "" } = item;
     let ht, wd;
-    if (screen.width < 900) {
-      wd = (screen.width - 20).toString() + "px";
-      ht = (height / width) * screen.width;
-    } else {
-      wd = width.toString() + "px";
-      ht = height.toString() + "px";
-    }
+    // if (screen.width < 900) {
+    //   wd = (screen.width - 20).toString() + "px";
+    //   ht = (height / width) * screen.width;
+    // } else {
+    //   wd = width.toString() + "px";
+    //   ht = height.toString() + "px";
+    // }
+
     // TODO: calculate aspect ratio to ensure images not jumping.
 
     if (!link) {
       return (
         <>
-          <Image key={i} src={url} ratio="custom" height={ht} width={wd} />
+          <Image lazyLoad={true} key={i} src={url} ratio="custom" height={ht} width={wd} />
           {this.renderButton()}
         </>
       );
@@ -128,7 +128,11 @@ class DynamicContentBanner extends PureComponent {
           this.onclick(item);
         }}
       >
-        <img src={url} block="Image" style={{ maxWidth: wd, height: ht }} />
+        <Image lazyLoad={true}
+          src={url}
+          block="Image"
+          style={{ maxWidth: wd, height: ht, objectFit: "unset" }}
+        />
 
         {this.renderButton()}
       </Link>
@@ -151,6 +155,7 @@ class DynamicContentBanner extends PureComponent {
     let setRef = (el) => {
       this.viewElement = el;
     };
+
     return (
       <div ref={setRef} block="DynamicContentBanner">
         {this.props.header && (

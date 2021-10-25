@@ -1,44 +1,41 @@
-import { PureComponent } from 'react';
-import { connect } from 'react-redux';
-import { PLPContainer } from 'Route/PLP/PLP.container';
-import { Meta, Pages } from 'Util/API/endpoint/Product/Product.type';
-import PLPPages from './PLPPages.component';
-
-
+import { PureComponent } from "react";
+import { connect } from "react-redux";
+import { PLPContainer } from "Route/PLP/PLP.container";
+import { Meta, Pages } from "Util/API/endpoint/Product/Product.type";
+import PLPPages from "./PLPPages.component";
 
 export const mapStateToProps = (state) => ({
-    pages: state.PLP.pages,
-    meta: state.PLP.meta
+  pages: state.PLP.pages,
+  meta: state.PLP.meta,
 });
 
 export class PLPPagesContainer extends PureComponent {
-    static propTypes = {
-        pages: Pages.isRequired,
-        meta: Meta.isRequired
-    };
+  static propTypes = {
+    pages: Pages.isRequired,
+    meta: Meta.isRequired,
+  };
 
-    state = {
-        pages: {},
-        impressions: []
-    };
+  state = {
+    pages: {},
+    impressions: [],
+  };
 
-    static getDerivedStateFromProps(props, state) {
-        const { pages = {} } = props;
-        const { pages: prevPages = {} } = state;
+  static getDerivedStateFromProps(props, state) {
+    const { pages = {} } = props;
+    const { pages: prevPages = {} } = state;
 
-        if (Object.keys(pages).length !== Object.keys(prevPages).length) {
-            return {
-                pages,
-                impressions: Object.keys(pages).flatMap((key) => pages[key])
-            };
-        }
-
-        return null;
+    if (Object.keys(pages).length !== Object.keys(prevPages).length) {
+      return {
+        pages,
+        impressions: Object.keys(pages).flatMap((key) => pages[key]),
+      };
     }
+  }
 
     containerProps = () => ({
         pages: this.getPages(),
-        query:this.props.query
+        query:this.props.query,
+        renderMySignInPopup:this.props.renderMySignInPopup
     });
 
     getPages() {
@@ -72,8 +69,10 @@ export class PLPPagesContainer extends PureComponent {
 
     render() {
         const { impressions } = this.state;
+        const { prevPath = null } = this.props;
         return (
             <PLPPages
+              prevPath={prevPath}
               impressions={ impressions }
               { ...this.containerProps() }
             />

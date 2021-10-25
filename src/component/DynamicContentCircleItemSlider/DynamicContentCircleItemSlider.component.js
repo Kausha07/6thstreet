@@ -13,6 +13,7 @@ import {
   HOME_PAGE_BANNER_IMPRESSIONS,
   HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
 } from "Component/GoogleTagManager/events/BannerImpression.event";
+import Image from "Component/Image";
 
 const settings = {
   lazyload: true,
@@ -49,10 +50,30 @@ class DynamicContentCircleItemSlider extends PureComponent {
   state = {
     isArabic: isArabic(),
     impressionSent: false,
+    livePartyItems: null
   };
   componentDidMount() {
     this.registerViewPortEvent();
+    this.fetchLivePartyData();
   }
+
+  fetchLivePartyData = () => {
+    const apiUrl = "https://api.spockee.io/rest/v2/broadcast/upcoming?storeId=13207961&isStaging=true";
+    fetch(apiUrl)
+      .then((response) => response.json())
+
+      .then((data) => {
+        let newData = data.filter(val => (!val.m3u8URI))
+        this.setState(
+          {
+            livePartyItems: newData,
+          }
+        );
+      })
+      .catch((error) => console.log(error))
+      ;
+  }
+
 
   registerViewPortEvent() {
     let observer;
@@ -78,7 +99,23 @@ class DynamicContentCircleItemSlider extends PureComponent {
     }
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        console.log("Circle item component in view port ", entry);
+        this.sendImpressions();
+      }
+    });
+  };
+
+  sendImpressions() {
+    const { items = [] } = this.props;
+    Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
+    this.setState({ impressionSent: true });
+  }
+  handleIntersect = (entries, observer) => {
+    const { impressionSent } = this.state;
+    if (impressionSent) {
+      return;
+    }
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
         this.sendImpressions();
       }
     });
@@ -133,6 +170,47 @@ class DynamicContentCircleItemSlider extends PureComponent {
     );
   };
 
+  renderLiveParty = (item, i) => {
+    // const { link, label, image_url, plp_config } = item;
+    let link = `/live-party?broadcastId=${item.id}`
+    let label = item.name;
+    let image_url = item.mainImageURI
+    const { isArabic } = this.state;
+
+    // TODO: move to new component
+
+    return (
+      <div block="CircleSlider" mods={{ isArabic }} key={i}>
+        <Link
+          to={formatCDNLink(link)}
+          key={i}
+          data-banner-type="circleItemSlider"
+          data-promotion-name={item.promotion_name ? item.promotion_name : ""}
+          data-tag={item.tag ? item.tag : ""}
+          onClick={() => {
+            this.clickLink(item);
+          }}
+        >
+          <div block="OuterCircle OuterLiveParty">
+            <div block="OuterCircle" elem="LiveParty"></div>
+            <div block="OuterCircle" elem="LivePartyBackground"></div>
+            <div block="OuterCircle" elem="LivePartyText">LIVE</div>
+            <img
+              src={image_url}
+              alt={label}
+              block="Image"
+              width="70px"
+              height="70px"
+            />
+          </div>
+        </Link>
+        <div block="CircleSliderLabel">{label}</div>
+
+      </div>
+    );
+  };
+
+
   renderCircles() {
     const { items = [] } = this.props;
     return (
@@ -143,6 +221,7 @@ class DynamicContentCircleItemSlider extends PureComponent {
           block="CircleSliderWrapper"
         >
           <div className="CircleItemHelper"></div>
+            {this.state.livePartyItems && this.state.livePartyItems.map(this.renderLiveParty)}
           {items.map(this.renderCircle)}
           <div className="CircleItemHelper"></div>
         </div>

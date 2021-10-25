@@ -6,6 +6,7 @@ import VueQuery from "../../query/Vue.query";
 import Recommendations from "../Recommendations/Recommendations.container";
 import "./EmptySearch.style";
 import noProduct from "./icons/no_product.png";
+import Image from "Component/Image";
 
 class EmptySearch extends PureComponent {
   static propTypes = {
@@ -19,18 +20,16 @@ class EmptySearch extends PureComponent {
   getRecommendedProducts() {
     const { gender } = this.props;
     const userData = BrowserDatabase.getItem("MOE_DATA");
-    const {
-      USER_DATA: { deviceUuid },
-    } = userData;
     const query = {
       filters: [],
       num_results: 50,
-      mad_uuid: deviceUuid,
+      mad_uuid: userData?.USER_DATA?.deviceUuid || null,
     };
 
     const payload = VueQuery.buildQuery("vue_browsing_history_slider", query, {
       gender,
     });
+  
     fetchVueData(payload)
       .then((resp) => {
         this.setState({
@@ -38,7 +37,7 @@ class EmptySearch extends PureComponent {
         });
       })
       .catch((err) => {
-        console.log("fetchVueData error", err);
+        console.error("fetchVueData error", err);
       });
   }
 
@@ -63,7 +62,7 @@ class EmptySearch extends PureComponent {
   renderStaticContent() {
     return (
       <div block="EmptySearch" elem="StaticContent">
-        <img src={noProduct} alt="no product" />
+        <Image lazyLoad={true} src={noProduct} alt="no product" />
         <p block="EmptySearch" elem="Sorry">
           {__("Sorry, we couldn't find any Product!")}
         </p>

@@ -18,16 +18,19 @@
         -webkit-overflow-scrolling: touch;
         margin-top: 16px;
         -ms-overflow-style: -ms-autohiding-scrollbar; 
+        width: 400px;
     }
 
-    &-List::-webkit-scrollbar {
-        display: none;
+    @include mobile {
+        &-List::-webkit-scrollbar {
+            display: none;
+        }
     }
 
     &-Title {
         @include desktop {
-            font-size: 17px;
-            font-weight: var(--fw-demi);
+            font-size: 17px!important;
+            font-weight: var(--fw-demi)!important;
         }
     }
 
@@ -41,11 +44,11 @@
         &-Title {
             text-transform: none;
             @include before-desktop {
-                font-size: 17px;
-                font-weight: 600;
-                letter-spacing: 0;
-                line-height: 30px;
-                text-align: center;
+                font-size: 17px!important;
+                font-weight: 600!important;
+                letter-spacing: 0!important;
+                line-height: 30px!important;
+                text-align: center!important;
             }
         }
     }
@@ -67,7 +70,7 @@
             position: absolute!important;
             justify-content: centere!important;
             top: .8rem!important;
-            left: 0.25rem!important;
+            left: 0.5rem!important;
             transform: translateY(8px)!important;
             margin: 0!important;
             height: 20px!important;

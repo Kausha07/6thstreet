@@ -11,20 +11,18 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import PropTypes from "prop-types";
-import { PureComponent } from "react";
-import { withRouter } from "react-router";
-
 import Field from "Component/Field";
 import Image from "Component/Image";
 import Loader from "Component/Loader";
 import { FIXED_CURRENCIES } from "Component/Price/Price.config";
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
+import { withRouter } from "react-router";
 import { CartItemType } from "Type/MiniCart";
 import { isArabic } from "Util/App";
 import { Store } from "../Icons";
-
-import "./CartPageItem.style";
 import "./CartPageItem.extended.style";
+import "./CartPageItem.style";
 
 /**
  * Cart and CartOverlay item
@@ -273,8 +271,7 @@ export class CartItem extends PureComponent {
           <span>{`${parseFloat(basePrice).toFixed(decimals)}`}</span>
         </div>
         <div>
-          {`(-${discountPercentage}%)`}&nbsp;
-          {' '}{withoutDiscount}
+          {`(-${discountPercentage}%)`}&nbsp; {withoutDiscount}
         </div>
       </div>
     );
@@ -288,18 +285,19 @@ export class CartItem extends PureComponent {
 
   renderClickAndCollectStoreName() {
     const {
-      item: {
-        availableQty
-      }
+      item: { extension_attributes },
     } = this.props;
 
     const { isArabic } = this.state;
-
-    if(availableQty?.click_to_collect_store) {
+    if (extension_attributes?.click_to_collect_store) {
       return (
-        <div block="CartPageItem" elem="ClickAndCollect" mods={{ isArabic }} mods={{ isArabic }}>
-          <div block="CartPageItem-ClickAndCollect" elem="icon"><Store /></div>
-          <div block="CartPageItem-ClickAndCollect" elem="StoreName">{ availableQty?.click_to_collect_store_name}</div>
+        <div block="CartPageItem" elem="ClickAndCollect" mods={{ isArabic }}>
+          <div block="CartPageItem-ClickAndCollect" elem="icon">
+            <Store />
+          </div>
+          <div block="CartPageItem-ClickAndCollect" elem="StoreName">
+            {extension_attributes?.click_to_collect_store_name}
+          </div>
         </div>
       );
     }
@@ -364,14 +362,12 @@ export class CartItem extends PureComponent {
         {this.renderProductOptions(bundle_options)}
         {this.renderProductConfigurations()}
         {this.renderColSizeQty()}
-        {   
-          !isNotAvailble && (
-            <>
-              { this.renderProductPrice() }
-              { this.renderClickAndCollectStoreName() }
-            </>
-          )
-        }
+        {!isNotAvailble && (
+          <>
+            {this.renderProductPrice()}
+            {this.renderClickAndCollectStoreName()}
+          </>
+        )}
         {this.renderActions()}
       </figcaption>
     );
@@ -430,15 +426,18 @@ export class CartItem extends PureComponent {
     const {
       item: {
         product: { name },
+        full_item_info: { url_key },
       },
       thumbnail,
       isCartPage,
     } = this.props;
     const { isArabic } = this.state;
+    let customURL = `${url_key}.html`;
 
     return (
-      <>
+      <div onClick={() => this.props.history.push(customURL)}>
         <Image
+          lazyLoad={true}
           src={thumbnail}
           mix={{
             block: "CartPageItem",
@@ -448,14 +447,18 @@ export class CartItem extends PureComponent {
           ratio="custom"
           alt={`Product ${name} thumbnail.`}
         />
-        <img style={{ display: "none" }} alt={name} src={thumbnail} />
-      </>
+        <Image
+          lazyLoad={true}
+          style={{ display: "none" }}
+          alt={name}
+          src={thumbnail}
+        />
+      </div>
     );
   }
 
   render() {
     const { isLoading } = this.props;
-
     return (
       <li block="CartPageItem">
         <Loader isLoading={isLoading} />

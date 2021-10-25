@@ -18,6 +18,7 @@ import { getUUID, isSignedIn } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
 import { VUE_PLACE_ORDER } from "Util/Event";
 import { getCountryFromUrl } from "Util/Url/Url";
+import { getStoreAddress } from "../../util/API/endpoint/Product/Product.enpoint";
 
 export const mapDispatchToProps = (dispatch) => ({
   showPopup: (payload) => dispatch(showPopup(ADDRESS_POPUP_ID, payload)),
@@ -50,7 +51,9 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
   containerFunctions = {
     onShippingSuccess: this.onShippingSuccess.bind(this),
     onShippingError: this.onShippingError.bind(this),
+    checkClickAndCollect: this.checkClickAndCollect.bind(this),
     onAddressSelect: this.onAddressSelect.bind(this),
+    handleClickNCollectPayment: this.handleClickNCollectPayment.bind(this),
     onShippingMethodSelect: this.onShippingMethodSelect.bind(this),
     showCreateNewPopup: this.showCreateNewPopup.bind(this),
     notSavedAddress: this.notSavedAddress.bind(this),
@@ -59,6 +62,28 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
   static defaultProps = {
     guestEmail: "",
   };
+
+  async handleClickNCollectPayment(fields) {
+    const {
+      totals: { items = [] },
+    } = this.props;
+    let storeNo = items[0].extension_attributes.click_to_collect_store;
+    const getStoreAddressResponse = await getStoreAddress(storeNo);
+    let addressField = getStoreAddressResponse.data
+    let inputFields = {
+      city: addressField.city,
+      country_id: addressField.country,
+      firstname: fields.firstname,
+      guest_email: fields.guest_email,
+      lastname: fields.lastname,
+      phonecode: fields.phonecode,
+      postcode: addressField.area,
+      region_id: addressField.area,
+      street: addressField.address,
+      telephone: fields.telephone,
+    };
+    this.onShippingSuccess(inputFields)
+  }
 
   openForm() {
     this.setState({ formContent: true });
@@ -112,6 +137,19 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     });
   }
 
+  checkClickAndCollect() {
+    const {
+      totals: { items = [] },
+    } = this.props;
+    let newItemList = items.filter((item) => {
+      return item.extension_attributes;
+    });
+    if (newItemList.length === items.length) {
+      return true;
+    }
+    return false;
+  }
+
   estimateShipping(address = {}, isValidted) {
     const { estimateShipping, setLoading } = this.props;
     const {
@@ -158,7 +196,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
     const shippingAddress = selectedCustomerAddressId
       ? this._getAddressById(selectedCustomerAddressId)
       : trimAddressFields(fields);
-    const addressForValidation = isSignedIn() ? shippingAddress : fields;
+    const addressForValidation = isSignedIn() && !this.checkClickAndCollect() ? shippingAddress : fields;
     const validationResult = this.validateAddress(addressForValidation);
 
     if (!validationResult) {
@@ -246,7 +284,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       return;
     }
 
-    const shippingAddress = selectedCustomerAddressId
+    const shippingAddress = selectedCustomerAddressId && !this.checkClickAndCollect()
       ? this._getAddressById(selectedCustomerAddressId)
       : trimAddressFields(fields);
 
@@ -291,6 +329,7 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
       shipping_method_code,
     };
 
+
     // Vue call
     const customerData = BrowserDatabase.getItem("customer");
     const userID = customerData && customerData.id ? customerData.id : null;
@@ -308,7 +347,8 @@ export class CheckoutShippingContainer extends SourceCheckoutShippingContainer {
           prodQty: item?.full_item_info?.qty,
           prodPrice: item?.full_item_info?.price,
           uuid: getUUID(),
-          referrer: "desktop",
+          referrer: window.location.href,
+          url: window.location.href,
           userID: userID,
         },
       });

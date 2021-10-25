@@ -4,7 +4,7 @@ import { APP_STATE_CACHE_KEY } from "Store/AppState/AppState.reducer";
 import { getGenderInArabic } from "Util/API/endpoint/Suggestions/Suggestions.create";
 import { isArabic } from "Util/App";
 import BrowserDatabase from "Util/BrowserDatabase";
-// import Image from 'Component/Image';
+import Image from "Component/Image";
 import { formatCDNLink } from "Util/Url";
 import "./DynamicContentTwiceBanner.style";
 import Event from "Util/Event";
@@ -57,7 +57,6 @@ class DynamicContentTwiceBanner extends PureComponent {
     }
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        console.log("twice banner component in view port ", entry);
         this.sendImpressions();
       }
     });
@@ -79,7 +78,7 @@ class DynamicContentTwiceBanner extends PureComponent {
     // if (!link) {
     //     return (
     //         <>
-    //             <Image
+    //             <Image lazyLoad={true}
     //               key={ i }
     //               src={ url }
     //               ratio="custom"
@@ -90,18 +89,6 @@ class DynamicContentTwiceBanner extends PureComponent {
     //         </>
     //     );
     // }
-    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
-      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
-      : "home";
-    let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
-    let parseLink =
-      button_link && button_link.includes("/catalogsearch/result")
-        ? button_link.split("&")[0] +
-          `&gender=${requestedGender.replace(
-            requestedGender.charAt(0),
-            requestedGender.charAt(0).toUpperCase()
-          )}`
-        : button_link;
 
     if (isTwiceBanner) {
       return (
@@ -111,7 +98,7 @@ class DynamicContentTwiceBanner extends PureComponent {
             <div className="TwiceBannerBlockChildSub">{subtitle}</div>
             <div className="TwiceBannerBlockChild">
               {" "}
-              <a href={parseLink}>
+              <a href={button_link}>
                 <button>{button_label}</button>
               </a>{" "}
             </div>
@@ -129,10 +116,10 @@ class DynamicContentTwiceBanner extends PureComponent {
           this.onclick(item);
         }}
       >
-        <img
+        <Image lazyLoad={true}
           src={url}
           className="BannerImage"
-          style={{ maxWidth: width, maxHeight: height }}
+          // style={{ maxWidth: width, maxHeight: height }}
         />
       </Link>
     );

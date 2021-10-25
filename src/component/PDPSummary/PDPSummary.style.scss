@@ -8,7 +8,11 @@
   font-weight: var(--fw-regular);
   margin-top: 6px;
   padding: 0 20px;
-  overflow-x: hidden;
+  overflow-x: visible;
+
+  @include mobile {
+    overflow: hidden;
+  }
 
   .PDPSummaryHeaderAndShareAndWishlistButtonContainer {
     display: flex;
@@ -40,6 +44,7 @@
   }
 
   @include desktop {
+    min-width: 40%;
     padding-left: 40px;
     padding-right: 0px;
     &_isArabic {
@@ -176,13 +181,13 @@
 
       &-Base {
         &_discount {
-          margin-right: 20px;
+          // margin-right: 20px;
           font-weight: var(--fw-medium);
         }
       }
 
       &-Special {
-        color: $default-primary-dark-color;
+        color: #d12228;
         font-size: 20px;
         font-weight: bold;
         letter-spacing: 0;
@@ -196,7 +201,7 @@
         line-height: 30px;
       }
       &-Discount {
-        color: $default-primary-dark-color;
+        color: #d12228;
         font-size: 15px;
         font-weight: 600;
         letter-spacing: 0;
@@ -208,7 +213,7 @@
 
   .Seperator {
     background-color: #efefef;
-    margin: 15px 0 0 0;
+    margin: 15px 0 15px 0;
     height: 1.5px;
   }
 
@@ -242,33 +247,17 @@
       font-size: 12px;
     }
 
-    img {
-      width: 42px;
-      height: auto;
-      margin: 0 3px -8px 0;
+    .Image {
+      display: inline-block;
+      overflow: inherit;
+      img {
+        width: 42px !important;
+        height: auto !important;
+        margin: 0 3px -8px 0;
 
-      @include desktop() {
-        width: 47px;
-      }
-    }
-
-    span {
-      text-decoration: underline;
-      font-weight: 600;
-      margin: 0;
-
-      @include desktop() {
-        margin: 0 4px;
-      }
-    }
-
-    img {
-      width: 42px;
-      height: auto;
-      margin: 0 3px -8px 0;
-
-      @include desktop() {
-        width: 47px;
+        @include desktop() {
+          width: 47px !important;
+        }
       }
     }
 

@@ -5,6 +5,8 @@ import { PureComponent } from "react";
 // import { Product } from "Util/API/endpoint/Product/Product.type";
 import isMobile from "Util/Mobile";
 import "./PDPDetail.style";
+import Image from "Component/Image";
+
 class PDPDetail extends PureComponent {
   static propTypes = {
     // product: Product.isRequired,
@@ -17,28 +19,9 @@ class PDPDetail extends PureComponent {
     isMobile: isMobile.any() || isMobile.tablet(),
   };
 
-  componentDidMount() {
-    // console.log("product", product);
-    // const locale = VueIntegrationQueries.getLocaleFromUrl();
-    // VueIntegrationQueries.vueAnalayticsLogger({
-    //   event_name: VUE_PDP_VIEW,
-    //   params: {
-    //     event: VUE_PAGE_VIEW,
-    //     pageType: "pdp",
-    //     currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-    //     clicked: Date.now(),
-    //     uuid: getUUID(),
-    //     referrer: "desktop",
-    //     sourceProdID: configSKU,
-    //     sourceCatgID: objectID, // TODO: replace with category id
-    //     prodPrice: basePrice,
-    //   },
-    // });
-  }
-
   renderBrandImage = () => {
     const { brandImg } = this.props;
-    return <img block="PDPDetail" elem="Image" src={brandImg} />;
+    return <Image lazyLoad={true} block="PDPDetail" elem="Image" src={brandImg} />;
   };
 
   renderBrandName = () => {

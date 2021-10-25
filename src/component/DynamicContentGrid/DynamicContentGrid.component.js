@@ -1,3 +1,7 @@
+import {
+  HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
+  HOME_PAGE_BANNER_IMPRESSIONS,
+} from "Component/GoogleTagManager/events/BannerImpression.event";
 import Link from "Component/Link";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
@@ -7,13 +11,10 @@ import { isArabic } from "Util/App";
 import BrowserDatabase from "Util/BrowserDatabase";
 import Event, { EVENT_GTM_BANNER_CLICK } from "Util/Event";
 import isMobile from "Util/Mobile";
+import Image from "Component/Image";
 import { formatCDNLink } from "Util/Url";
 import DynamicContentHeader from "../DynamicContentHeader/DynamicContentHeader.component";
 import "./DynamicContentGrid.style";
-import {
-  HOME_PAGE_BANNER_IMPRESSIONS,
-  HOME_PAGE_BANNER_CLICK_IMPRESSIONS,
-} from "Component/GoogleTagManager/events/BannerImpression.event";
 
 class DynamicContentGrid extends PureComponent {
   static propTypes = {
@@ -58,7 +59,6 @@ class DynamicContentGrid extends PureComponent {
   sendImpressions() {
     const { items = [] } = this.props;
     Event.dispatch(HOME_PAGE_BANNER_IMPRESSIONS, items);
-    console.log("grid component in view port sent ", items);
     this.setState({ impressionSent: true });
   }
   handleIntersect = (entries, observer) => {
@@ -68,7 +68,6 @@ class DynamicContentGrid extends PureComponent {
     }
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        console.log("grid component in view port ", entry);
         this.sendImpressions();
       }
     });
@@ -98,13 +97,7 @@ class DynamicContentGrid extends PureComponent {
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
-    let parseLink = link.includes("/catalogsearch/result")
-      ? link.split("&")[0] +
-        `&gender=${requestedGender.replace(
-          requestedGender.charAt(0),
-          requestedGender.charAt(0).toUpperCase()
-        )}`
-      : link;
+  
     return (
       <div
         block="CategoryItem"
@@ -114,7 +107,7 @@ class DynamicContentGrid extends PureComponent {
         key={i}
       >
         <Link
-          to={formatCDNLink(parseLink)}
+          to={formatCDNLink(link)}
           key={i}
           data-banner-type="grid"
           data-promotion-name={item.promotion_name ? item.promotion_name : ""}
@@ -123,8 +116,8 @@ class DynamicContentGrid extends PureComponent {
             this.onclick(item);
           }}
         >
-          {/* <Image src={url} height={ht} /> */}
-          <img src={url} className="GridImage" style={{ maxHeight: ht }} />
+
+          <Image lazyLoad={true} src={url} className="GridImage" />
           {item.footer && (
             <div block="Footer">
               {item.footer.title && (
@@ -152,17 +145,11 @@ class DynamicContentGrid extends PureComponent {
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
-    let parseLink = link.includes("/catalogsearch/result")
-      ? link.split("&")[0] +
-        `&gender=${requestedGender.replace(
-          requestedGender.charAt(0),
-          requestedGender.charAt(0).toUpperCase()
-        )}`
-      : link;
+   
     return (
       <div block="CategoryItem" elem="Content" key={i}>
         <Link
-          to={formatCDNLink(parseLink)}
+          to={formatCDNLink(link)}
           key={i}
           data-banner-type="grid"
           data-promotion-name={item.promotion_name ? item.promotion_name : ""}
@@ -171,7 +158,8 @@ class DynamicContentGrid extends PureComponent {
             this.onclick(item);
           }}
         >
-          <img src={url} />
+          <Image lazyLoad={true} src={url} />
+
           {item.footer && (
             <div block="Footer">
               {item.footer.title && (

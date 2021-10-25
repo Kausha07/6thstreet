@@ -51,12 +51,14 @@ class PDPMixAndMatchProduct extends PureComponent {
     const {
       product: { sku },
       product,
+      renderMySignInPopup,
     } = this.props;
     return (
       <WishlistIcon
         sku={sku}
         mods={{ isArabic: isArabic() }}
         data={product}
+        renderMySignInPopup={renderMySignInPopup}
         pageType="pdp"
       />
     );
@@ -72,7 +74,7 @@ class PDPMixAndMatchProduct extends PureComponent {
         <div block="OverlayIcons" mods={{ isArabic: isArabic() }}>
           {this.renderWishlistIcon()}
         </div>
-        <Image src={thumbnail_url} />
+        <Image lazyLoad={true} src={thumbnail_url} />
       </Link>
     );
   }
@@ -172,28 +174,22 @@ class PDPMixAndMatchProduct extends PureComponent {
 
     return (
       <>
-        {(stock_qty !== 0 ||
-          highlighted_attributes === null ||
-          (Object.keys(product).length !== 0 &&
-            product.constructor !== Object)) &&
-          Object.keys(simple_products).length !== 0 && (
-            <button
-              onClick={addToCart}
-              block="PDPMixAndMatchAddToCart"
-              elem="AddToCartButton"
-              mods={{ isLoading }}
-              mix={{
-                block: "PDPMixAndMatchAddToCart",
-                elem: "AddToCartButton",
-                mods: { addedToCart },
-              }}
-              disabled={disabled}
-            >
-              <span>{__("Add to bag")}</span>
-              <span>{__("Adding...")}</span>
-              <span>{__("Added to bag")}</span>
-            </button>
-          )}
+        <button
+          onClick={addToCart}
+          block="PDPMixAndMatchAddToCart"
+          elem="AddToCartButton"
+          mods={{ isLoading }}
+          mix={{
+            block: "PDPMixAndMatchAddToCart",
+            elem: "AddToCartButton",
+            mods: { addedToCart },
+          }}
+          disabled={disabled}
+        >
+          <span>{__("Add to bag")}</span>
+          <span>{__("Adding...")}</span>
+          <span>{__("Added to bag")}</span>
+        </button>
       </>
     );
   }

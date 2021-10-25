@@ -13,10 +13,11 @@ class PDPAlsoAvailable extends PureComponent {
 
     renderAvailableProduct = (product) => {
         const { sku } = product;
-
+        const {renderMySignInPopup} = this.props
         return (
             <PDPAlsoAvailableProduct
               product={ product }
+              renderMySignInPopup={renderMySignInPopup}
               key={ sku }
             />
         );
