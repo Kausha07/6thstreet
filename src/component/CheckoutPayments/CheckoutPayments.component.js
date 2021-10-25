@@ -16,7 +16,6 @@ import {
 } from "Component/TabbyMiniPopup/TabbyMiniPopup.config";
 import SourceCheckoutPayments from "SourceComponent/CheckoutPayments/CheckoutPayments.component";
 import { isArabic } from "Util/App";
-import isMobile from "Util/Mobile";
 
 import {
   CARD,
