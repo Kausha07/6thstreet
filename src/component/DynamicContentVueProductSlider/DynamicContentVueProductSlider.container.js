@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
 import DynamicContentVueProductSlider from "./DynamicContentVueProductSlider.component";
+import { getUUIDToken } from "Util/Auth";
 
 export const mapStateToProps = (state) => ({});
 

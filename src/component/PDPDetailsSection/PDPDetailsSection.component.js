@@ -11,6 +11,7 @@ import VueQuery from "../../query/Vue.query";
 import DynamicContentVueProductSliderContainer from "../DynamicContentVueProductSlider";
 import { PDP_ARABIC_VALUES_TRANSLATIONS } from "./PDPDetailsSection.config";
 import "./PDPDetailsSection.style";
+import { getUUIDToken } from "Util/Auth";
 
 class PDPDetailsSection extends PureComponent {
   static propTypes = {
@@ -58,7 +59,7 @@ class PDPDetailsSection extends PureComponent {
         const query = {
           filters: [],
           num_results: 10,
-          mad_uuid: userData?.USER_DATA?.deviceUuid || null,
+          mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
         };
 
         let promisesArray = [];
