@@ -97,13 +97,7 @@ class DynamicContentGrid extends PureComponent {
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
-    let parseLink = link.includes("/catalogsearch/result")
-      ? link.split("&")[0] +
-        `&gender=${requestedGender.replace(
-          requestedGender.charAt(0),
-          requestedGender.charAt(0).toUpperCase()
-        )}`
-      : link;
+  
     return (
       <div
         block="CategoryItem"
@@ -113,7 +107,7 @@ class DynamicContentGrid extends PureComponent {
         key={i}
       >
         <Link
-          to={formatCDNLink(parseLink)}
+          to={formatCDNLink(link)}
           key={i}
           data-banner-type="grid"
           data-promotion-name={item.promotion_name ? item.promotion_name : ""}
@@ -151,17 +145,11 @@ class DynamicContentGrid extends PureComponent {
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       : "home";
     let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
-    let parseLink = link.includes("/catalogsearch/result")
-      ? link.split("&")[0] +
-        `&gender=${requestedGender.replace(
-          requestedGender.charAt(0),
-          requestedGender.charAt(0).toUpperCase()
-        )}`
-      : link;
+   
     return (
       <div block="CategoryItem" elem="Content" key={i}>
         <Link
-          to={formatCDNLink(parseLink)}
+          to={formatCDNLink(link)}
           key={i}
           data-banner-type="grid"
           data-promotion-name={item.promotion_name ? item.promotion_name : ""}

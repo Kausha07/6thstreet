@@ -355,7 +355,7 @@ class PDPSummary extends PureComponent {
         return (
           <>
           <div id="TabbyPromo"></div>
-            {/* <button
+            {/*<button
               block="PDPSummary"
               elem="Tabby"
               onClick={this.openTabbyPopup}
