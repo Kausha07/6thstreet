@@ -7,6 +7,7 @@ import Recommendations from "../Recommendations/Recommendations.container";
 import "./EmptySearch.style";
 import noProduct from "./icons/no_product.png";
 import Image from "Component/Image";
+import { getUUIDToken } from "Util/Auth";
 
 class EmptySearch extends PureComponent {
   static propTypes = {
@@ -20,16 +21,10 @@ class EmptySearch extends PureComponent {
   getRecommendedProducts() {
     const { gender } = this.props;
     const userData = BrowserDatabase.getItem("MOE_DATA");
-    if(!!!userData?.USER_DATA){
-      return;
-    }
-    const {
-      USER_DATA: { deviceUuid },
-    } = userData;
     const query = {
       filters: [],
       num_results: 50,
-      mad_uuid: deviceUuid,
+      mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
     };
 
     const payload = VueQuery.buildQuery("vue_browsing_history_slider", query, {

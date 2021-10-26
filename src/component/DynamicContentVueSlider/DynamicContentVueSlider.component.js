@@ -7,6 +7,7 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import VueQuery from "../../query/Vue.query";
 import DynamicContentVueProductSliderContainer from "../DynamicContentVueProductSlider";
 import "./DynamicContentVueSlider.style";
+import { getUUIDToken } from "Util/Auth";
 
 export const mapStateToProps = (state) => ({
   gender: state.AppState.gender,
@@ -39,15 +40,13 @@ class DynamicContentVueSlider extends PureComponent {
 
   getPdpWidgetsVueData = () => {
     const { gender } = this.props;
-    const {
-      USER_DATA: { deviceUuid },
-    } = BrowserDatabase.getItem("MOE_DATA") || { USER_DATA: {} };
+    const userData = BrowserDatabase.getItem("MOE_DATA");
     const customer = BrowserDatabase.getItem("customer");
     const userID = customer && customer.id ? customer.id : null;
     const query = {
       filters: [],
       num_results: 10,
-      mad_uuid: deviceUuid,
+      mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
     };
     let type = this.props.type;
     const payload = VueQuery.buildQuery(type, query, {

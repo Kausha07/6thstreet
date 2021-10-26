@@ -19,6 +19,7 @@ import Logger from "Util/Logger";
 import isMobile from "Util/Mobile";
 import VueQuery from "../../query/Vue.query";
 import "./DynamicContent.style";
+import { getUUIDToken } from "Util/Auth";
 
 class DynamicContent extends PureComponent {
   static propTypes = {
@@ -53,15 +54,13 @@ class DynamicContent extends PureComponent {
   };
   async getHomeWidgetsVueData(type) {
     const { gender } = this.props;
-    const {
-      USER_DATA: { deviceUuid },
-    } = BrowserDatabase.getItem("MOE_DATA");
+    const userData = BrowserDatabase.getItem("MOE_DATA");
     const customer = BrowserDatabase.getItem("customer");
     const userID = customer && customer.id ? customer.id : null;
     const query = {
       filters: [],
       num_results: 10,
-      mad_uuid: deviceUuid,
+      mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
     };
     const payload = VueQuery.buildQuery(type, query, {
       gender,

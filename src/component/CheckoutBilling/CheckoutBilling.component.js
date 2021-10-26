@@ -229,6 +229,8 @@ export class CheckoutBilling extends SourceCheckoutBilling {
       isSignedIn,
       isClickAndCollect,
       savePaymentInformationApplePay,
+      isTabbyInstallmentAvailable,
+      isTabbyPayLaterAvailable
     } = this.props;
 
     if (!paymentMethods.length) {
@@ -257,6 +259,8 @@ export class CheckoutBilling extends SourceCheckoutBilling {
         applyPromotionSavedCard={applyPromotionSavedCard}
         removePromotionSavedCard={removePromotionSavedCard}
         isClickAndCollect={isClickAndCollect}
+        isTabbyInstallmentAvailable = {isTabbyInstallmentAvailable}
+        isTabbyPayLaterAvailable={isTabbyPayLaterAvailable}
       />
     );
   }

@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import PropTypes from "prop-types";
+import isMobile from "Util/Mobile";
 
 import CheckoutComApplePay from "Component/CheckoutComApplePay";
 import CheckoutPayment from "Component/CheckoutPayment";
@@ -64,6 +65,8 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     tabbyIsRendered: false,
     tooltipContent: null,
     isArabic: isArabic(),
+    isMobile: isMobile.any() || isMobile.tablet(),
+
   };
 
   handleChange = (activeImage) => {
@@ -233,7 +236,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
       setCashOnDeliveryFee,
     } = this.props;
     const { img } = PAYMENTS_DATA[m_code];
-    const { isArabic } = this.state;
+    const { isArabic , isMobile} = this.state;
 
     const isSelected = m_code === selectedPaymentCode;
 
@@ -243,10 +246,10 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     ) {
       return null;
     }
-
+    const check = isMobile ? true : false;
     return (
       <div block="CheckoutPayments" elem="TabbyPayment" key={m_code}>
-        <div block="CheckoutPayments" elem="TabbyPaymentSelect">
+      <div block="CheckoutPayments" elem="TabbyPaymentSelect">
           <CheckoutPayment
             key={m_code}
             isSelected={isSelected}
@@ -258,7 +261,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
         </div>
         <div block="CheckoutPayments" elem="TabbyPaymentContent">
           <div block="CheckoutPayments" elem="TabbyPaymentContentTitle">
-            {title}
+          {title}
             {m_code === TABBY_ISTALLMENTS ? (
               <button onClick={this.openTabbyInstallmentsTooltip}>
                 <img src={info} alt="info" />
@@ -274,6 +277,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
               ? __("2,3 or 6 months")
               : __("14 days after product delivery")}
           </div>
+          {/* <div id="tabbyCard"></div> */}
         </div>
       </div>
     );

@@ -252,7 +252,10 @@
 
   &-SpecialPriceCon {
     display: block;
-    text-align: center;
+    text-align: left;
+    &_isArabic {
+      text-align: right !important;
+    }
   }
 
   &-Del {

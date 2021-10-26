@@ -58,6 +58,8 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
       billingAddress,
       setTabbyWebUrl,
       totals: { total },
+      isTabbyInstallmentAvailable,
+      isTabbyPayLaterAvailable
     } = this.props;
     const countryCode = ['AE', 'SA'].includes(getCountryFromUrl()) 
     const isApplePayAvailable = HIDDEN_PAYMENTS.includes(CHECKOUT_APPLE_PAY) || !window.ApplePaySession
@@ -71,44 +73,16 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
       );
     }
 
-    createTabbySession(billingAddress)
-      .then((response) => {
-        if (response && response.configuration) {
-          const {
-            configuration: {
-              available_products: { installments, pay_later },
-            },
-            payment: { id },
-          } = response;
+    this.setState({ isTabbyInstallmentAvailable:isTabbyInstallmentAvailable });    
+    this.setState({ isTabbyPayLaterAvailable: isTabbyPayLaterAvailable });
 
-          if (installments || pay_later) {
-            if (installments) {
-              setTabbyWebUrl(installments[0].web_url, id, TABBY_ISTALLMENTS);
-
-              // this variable actually is used in the component
-              // eslint-disable-next-line quote-props
-              this.setState({ isTabbyInstallmentAvailable: true });
-            }
-
-            if (pay_later) {
-              setTabbyWebUrl(pay_later[0].web_url, id, TABBY_PAY_LATER);
-
-              // this variable actually is used in the component
-              // eslint-disable-next-line quote-props
-              this.setState({ isTabbyPayLaterAvailable: true });
-            }
-          }
-        }
-      }, this._handleError)
-      .catch(() => {});
   }
 
   componentDidUpdate(prevProps) {
     const {
-      billingAddress,
-      setTabbyWebUrl,
       totals: { total },
-      createTabbySession
+      isTabbyInstallmentAvailable,
+      isTabbyPayLaterAvailable
     } = this.props;
     const { selectedPaymentCode } = this.state;
     const countryCode = ['AE', 'SA'].includes(getCountryFromUrl()) 
@@ -120,37 +94,9 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
     ) {
       this.selectPaymentMethod({ m_code: total ?countryCode && !isApplePayAvailable ? CHECKOUT_APPLE_PAY : CARD : FREE  });
     }
-    if(prevProps?.totals?.total !== total){
-      createTabbySession(billingAddress)
-      .then((response) => {
-        if (response && response.configuration) {
-          const {
-            configuration: {
-              available_products: { installments, pay_later },
-            },
-            payment: { id },
-          } = response;
-
-          if (installments || pay_later) {
-            if (installments) {
-              setTabbyWebUrl(installments[0].web_url, id, TABBY_ISTALLMENTS);
-
-              // this variable actually is used in the component
-              // eslint-disable-next-line quote-props
-              this.setState({ isTabbyInstallmentAvailable: true });
-            }
-
-            if (pay_later) {
-              setTabbyWebUrl(pay_later[0].web_url, id, TABBY_PAY_LATER);
-
-              // this variable actually is used in the component
-              // eslint-disable-next-line quote-props
-              this.setState({ isTabbyPayLaterAvailable: true });
-            }
-          }
-        }
-      }, this._handleError)
-      .catch(() => {});
+    if(prevProps?.totals?.total !== total || prevProps?.isTabbyInstallmentAvailable !== isTabbyInstallmentAvailable ||prevProps?.isTabbyPayLaterAvailable !== isTabbyPayLaterAvailable ){
+      this.setState({ isTabbyInstallmentAvailable: isTabbyInstallmentAvailable });
+      this.setState({ isTabbyPayLaterAvailable: isTabbyPayLaterAvailable });
     }
   }
 

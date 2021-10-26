@@ -89,18 +89,6 @@ class DynamicContentTwiceBanner extends PureComponent {
     //         </>
     //     );
     // }
-    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
-      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
-      : "home";
-    let requestedGender = isArabic ? getGenderInArabic(gender) : gender;
-    let parseLink =
-      button_link && button_link.includes("/catalogsearch/result")
-        ? button_link.split("&")[0] +
-          `&gender=${requestedGender.replace(
-            requestedGender.charAt(0),
-            requestedGender.charAt(0).toUpperCase()
-          )}`
-        : button_link;
 
     if (isTwiceBanner) {
       return (
@@ -110,7 +98,7 @@ class DynamicContentTwiceBanner extends PureComponent {
             <div className="TwiceBannerBlockChildSub">{subtitle}</div>
             <div className="TwiceBannerBlockChild">
               {" "}
-              <a href={parseLink}>
+              <a href={button_link}>
                 <button>{button_label}</button>
               </a>{" "}
             </div>

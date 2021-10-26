@@ -174,28 +174,22 @@ class PDPMixAndMatchProduct extends PureComponent {
 
     return (
       <>
-        {(stock_qty !== 0 ||
-          highlighted_attributes === null ||
-          (Object.keys(product).length !== 0 &&
-            product.constructor !== Object)) &&
-          Object.keys(simple_products).length !== 0 && (
-            <button
-              onClick={addToCart}
-              block="PDPMixAndMatchAddToCart"
-              elem="AddToCartButton"
-              mods={{ isLoading }}
-              mix={{
-                block: "PDPMixAndMatchAddToCart",
-                elem: "AddToCartButton",
-                mods: { addedToCart },
-              }}
-              disabled={disabled}
-            >
-              <span>{__("Add to bag")}</span>
-              <span>{__("Adding...")}</span>
-              <span>{__("Added to bag")}</span>
-            </button>
-          )}
+        <button
+          onClick={addToCart}
+          block="PDPMixAndMatchAddToCart"
+          elem="AddToCartButton"
+          mods={{ isLoading }}
+          mix={{
+            block: "PDPMixAndMatchAddToCart",
+            elem: "AddToCartButton",
+            mods: { addedToCart },
+          }}
+          disabled={disabled}
+        >
+          <span>{__("Add to bag")}</span>
+          <span>{__("Adding...")}</span>
+          <span>{__("Added to bag")}</span>
+        </button>
       </>
     );
   }

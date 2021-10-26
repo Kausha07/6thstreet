@@ -54,6 +54,7 @@ class PLPPage extends PureComponent {
         pageType="plp"
         qid={qid}
         prevPath={window.location.href}
+        lazyLoad={false}
       />
     );
   };

@@ -11,6 +11,7 @@ import { getLocaleFromUrl } from "Util/Url/Url";
 import AlgoliaSDK from "../../../packages/algolia-sdk";
 import VueQuery from "../../query/Vue.query";
 import SearchSuggestion from "./SearchSuggestion.component";
+import { getUUIDToken } from "Util/Auth";
 
 export const mapStateToProps = (state) => ({
   requestedSearch: state.SearchSuggestions.search,
@@ -135,7 +136,7 @@ export class SearchSuggestionContainer extends PureComponent {
     const query = {
       filters: [],
       num_results: 10,
-      mad_uuid: userData?.USER_DATA?.deviceUuid,
+      mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
     };
 
     const payload = VueQuery.buildQuery("vue_browsing_history_slider", query, {
@@ -158,7 +159,7 @@ export class SearchSuggestionContainer extends PureComponent {
     const query = {
       filters: [],
       num_results: 10,
-      mad_uuid: userData?.USER_DATA?.deviceUuid,
+      mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
     };
 
     const payload = VueQuery.buildQuery("vue_trending_slider", query, {

@@ -7,7 +7,7 @@
         overflow-y: hidden;
     }
     li {
-        flex: 0 0 auto;
+        // flex: 0 0 auto;
         padding-left: 0;
         @include mobile {
             margin-bottom: 12px;
