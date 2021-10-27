@@ -7,6 +7,10 @@ const path = require('path');
 const PORT = 3000;
 const app = express();
 
+app.use((req, res, next) => {
+    res.append('Access-Control-Allow-Origin', ['*']);
+    next();
+});
 app.use(serverTimings);
 proxy(app);
 // Serve the static files from the React app
