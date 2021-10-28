@@ -53,15 +53,13 @@ class DynamicContent extends PureComponent {
   };
   async getHomeWidgetsVueData(type) {
     const { gender } = this.props;
-    const {
-      USER_DATA: { deviceUuid },
-    } = BrowserDatabase.getItem("MOE_DATA");
+    const userData = BrowserDatabase.getItem("MOE_DATA");
     const customer = BrowserDatabase.getItem("customer");
     const userID = customer && customer.id ? customer.id : null;
     const query = {
       filters: [],
       num_results: 10,
-      mad_uuid: deviceUuid,
+      mad_uuid: userData?.USER_DATA?.deviceUuid || null,
     };
     const payload = VueQuery.buildQuery(type, query, {
       gender,

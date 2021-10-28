@@ -77,10 +77,11 @@ class HeaderSearch extends PureComponent {
     this.setState({ showSearch: true });
   };
   closeSearch = () => {
-    const { hideSearchBar } = this.props;
+    const { hideSearchBar,onSearchClean } = this.props;
     if (hideSearchBar) {
       hideSearchBar();
     }
+    onSearchClean();
     this.setState({ showSearch: false });
   };
 
@@ -162,7 +163,7 @@ class HeaderSearch extends PureComponent {
   }
 
   renderSuggestion() {
-    const { search, renderMySignInPopup } = this.props;
+    const { search, renderMySignInPopup,onSearchClean } = this.props;
     const { showSearch } = this.state;
 
     if (!showSearch) {
@@ -173,6 +174,7 @@ class HeaderSearch extends PureComponent {
       <>
         <SearchSuggestion
           closeSearch={this.closeSearch}
+          cleanSearch={onSearchClean}
           renderMySignInPopup={renderMySignInPopup}
           search={search}
         />

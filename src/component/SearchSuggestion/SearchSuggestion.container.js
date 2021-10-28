@@ -135,7 +135,7 @@ export class SearchSuggestionContainer extends PureComponent {
     const query = {
       filters: [],
       num_results: 10,
-      mad_uuid: userData?.USER_DATA?.deviceUuid,
+      mad_uuid: userData?.USER_DATA?.deviceUuid || null,
     };
 
     const payload = VueQuery.buildQuery("vue_browsing_history_slider", query, {
@@ -158,7 +158,7 @@ export class SearchSuggestionContainer extends PureComponent {
     const query = {
       filters: [],
       num_results: 10,
-      mad_uuid: userData?.USER_DATA?.deviceUuid,
+      mad_uuid: userData?.USER_DATA?.deviceUuid || null,
     };
 
     const payload = VueQuery.buildQuery("vue_trending_slider", query, {

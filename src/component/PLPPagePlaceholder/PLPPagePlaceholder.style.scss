@@ -1,21 +1,26 @@
 .PLPPagePlaceholder {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+
+  @include mobile() {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  &_isFirst {
+    @include desktop {
+      //   margin-top: 150px;
+    }
+  }
+
+  &-Section {
+    height: 400px;
+    background-image: var(--placeholder-image);
+    background-size: var(--placeholder-size);
+    animation: var(--placeholder-animation);
+    margin: 10px;
+    padding-bottom: 30%;
 
     @include mobile() {
-        grid-template-columns: repeat(2, 1fr);
+      height: 200px;
     }
-
-    &-Section {
-        height: 400px;
-        background-image: var(--placeholder-image);
-        background-size: var(--placeholder-size);
-        animation: var(--placeholder-animation);
-        margin: 10px;
-        padding-bottom: 30%;
-
-        @include mobile() {
-            height: 200px;
-        }
-    }
+  }
 }
