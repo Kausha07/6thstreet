@@ -76,12 +76,13 @@ class MyAccountStoreCredit extends PureComponent {
             const {
                 action, balance_change, balance_amount, updated_at
             } = row;
-
+            let splitDate =  updated_at.split('/')
+            let finalUpdatedDate = [splitDate[1],splitDate[0],splitDate[2]].join('/')
             return [
                 action,
                 balance_change,
                 balance_amount,
-                dateformat(updated_at, 'd/M/yyyy, H:M TT')
+                finalUpdatedDate
             ];
         });
 
