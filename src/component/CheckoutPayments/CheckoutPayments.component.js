@@ -17,6 +17,7 @@ import {
 import SourceCheckoutPayments from "SourceComponent/CheckoutPayments/CheckoutPayments.component";
 import { isArabic } from "Util/App";
 import Applepay from "./icons/apple-pay@3x.png";
+
 import {
   CARD,
   CASH_ON_DELIVERY,
@@ -66,9 +67,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
     tooltipContent: null,
     isArabic: isArabic(),
     isMobile: isMobile.any() || isMobile.tablet(),
-
   };
-
   componentDidMount() {
     const script = document.createElement("script");
 
@@ -223,7 +222,6 @@ export class CheckoutPayments extends SourceCheckoutPayments {
   renderTabbyPaymentMethods() {
     const { tabbyPaymentMethods = [] } = this.state;
     const { selectPaymentMethod } = this.props;
-
     return (
       <div block="CheckoutPayments" elem="TabbyPayments">
         <div block="CheckoutPayments" elem="TabbyPaymentsHeader">
@@ -301,9 +299,10 @@ export class CheckoutPayments extends SourceCheckoutPayments {
       return null;
     }
     const check = isMobile ? true : false;
+
     return (
       <div block="CheckoutPayments" elem="TabbyPayment" key={m_code} mods={{check}}>
-        <div block="CheckoutPayments" elem="TabbyPaymentSelect" mods={{check}}>
+      <div block="CheckoutPayments" elem="TabbyPaymentSelect" mods={{check}}>
           <CheckoutPayment
             key={m_code}
             isSelected={isSelected}

@@ -19,6 +19,7 @@ import Logger from "Util/Logger";
 import isMobile from "Util/Mobile";
 import VueQuery from "../../query/Vue.query";
 import "./DynamicContent.style";
+import { getUUIDToken } from "Util/Auth";
 
 class DynamicContent extends PureComponent {
   static propTypes = {
@@ -59,7 +60,7 @@ class DynamicContent extends PureComponent {
     const query = {
       filters: [],
       num_results: 10,
-      mad_uuid: userData?.USER_DATA?.deviceUuid || null,
+      mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
     };
     const payload = VueQuery.buildQuery(type, query, {
       gender,
