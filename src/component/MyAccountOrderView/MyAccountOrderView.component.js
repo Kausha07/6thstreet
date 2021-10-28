@@ -84,7 +84,7 @@ class MyAccountOrderView extends PureComponent {
       <div block="MyAccountOrderView" elem="Address">
         <h3>{title}</h3>
         <p>{`${firstname} ${middlename || ""} ${lastname}`.trim()}</p>
-        <p>{`${street} ${postcode}`}</p>
+        <p block="Address" elem="Street">{`${street} ${postcode}`}</p>
         <p>{`${city} - ${getCountryNameById(country_id)}`}</p>
         <p>{`${telephone}`}</p>
       </div>

@@ -15,6 +15,7 @@ export const EVENT_GTM_META_UPDATE = "gtm_meta_update";
 export const EVENT_GTM_GENERAL_INIT = "gtm_general_init";
 export const EVENT_GTM_PRODUCT_ADD_TO_CART = "gtm_product_add_to_cart";
 export const EVENT_GTM_PRODUCT_CLICK = "gtm_product_click";
+export const EVENT_GTM_VUE_PRODUCT_CLICK = "gtm_vue_product_click";
 export const EVENT_GTM_WISHLIST_PRODUCT_CLICK = "gtm_wishlist_product_click";
 export const EVENT_GTM_PRODUCT_DETAIL = "gtm_product_detail";
 export const EVENT_GTM_PRODUCT_REMOVE_FROM_CART =
