@@ -91,6 +91,7 @@
 
   &-Street {
     color: var(--my-acc-street);
+    word-break: break-all;
   }
 
   &-City {
