@@ -135,8 +135,8 @@
     &::after {
       width: 120px;
       position: absolute;
-      left: 12px;
-      content: "TAP TO CALL";
+      left: 28px;
+      content: "TAP TO WHATSAPP";
       font-weight: bold;
       font-weight: bold;
       font-size: 10px;
@@ -145,8 +145,14 @@
     }
 
     &_isArabic {
+      &::before {
+        left: unset!important;
+        right: 5px
+      }
       &::after {
-        content: "اضغط هنا للاتصال"
+        content: "ضغط ل WHATSAPP";
+        left: unset!important;
+        right: 22px
       }
     }
 
@@ -165,20 +171,6 @@
 
       @include desktop {
         visibility: visible;
-      }
-    }
-
-    &_isArabic {
-      &::after {
-        right: 22px;
-        left: 0;
-        width: auto;
-      }
-
-      &::before {
-        right: 5px;
-        left: 0;
-
       }
     }
   }
