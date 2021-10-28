@@ -66,9 +66,8 @@ export class MyAccountReturnCreateContainer extends PureComponent {
     };
     onDiscardClick() {
         const { history } = this.props;
-        const { incrementId } = this.state;
-
-        history.push(`/my-account/my-orders/${ incrementId }`);
+        const { orderId } = this.state;
+        history.push(`/my-account/my-orders/${ orderId }`);
     }
 
     getOrderId() {

@@ -18,6 +18,7 @@ import {
     setAuthorizationToken,
     setMobileAuthorizationToken,
     setUUID,
+    getUUID,
     setUUIDToken
 } from 'Util/Auth';
 import { getCookie } from 'Util/Url/Url';
@@ -68,7 +69,9 @@ export class RouterContainer extends SourceRouterContainer {
     const { getCart, requestCustomerData, updateCustomerDetails, requestPdpWidgetData, pdpWidgetsData } = this.props;
     const decodedParams = atob(getCookie('authData'));
     setUUIDToken(uuidv4());
-    setUUID(uuidv4());
+    if(!getUUID()) {
+      setUUID(uuidv4()); 
+    }
     
     if (decodedParams.match('mobileToken') && decodedParams.match('authToken')) {
       const params = decodedParams.split('&').reduce((acc, param) => {

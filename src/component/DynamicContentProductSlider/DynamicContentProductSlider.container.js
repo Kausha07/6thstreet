@@ -5,6 +5,7 @@ import WebUrlParser from "Util/API/helper/WebUrlParser";
 import Algolia from "Util/API/provider/Algolia";
 import Logger from "Util/Logger";
 import DynamicContentProductSlider from "./DynamicContentProductSlider.component";
+import { getUUIDToken } from "Util/Auth";
 
 export const mapStateToProps = (_state) => ({
   language: _state.AppState.language,
