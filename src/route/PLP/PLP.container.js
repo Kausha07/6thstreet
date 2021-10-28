@@ -175,15 +175,15 @@ export class PLPContainer extends PureComponent {
     .substring(1)
     .split("/")?.[0];
     const data = await new Algolia({
-      index: isArabic ? "brands_arabic" : "brands_english",
+      index: "brands_info",
     }).getBrandsDetails({
       query: brandName,
       limit: 1
     });
     this.setState({
-      brandDescription: data?.hits[0]?.description,
+      brandDescription: isArabic ? data?.hits[0]?.description_ar : data?.hits[0]?.description,
       brandImg: data?.hits[0]?.image,
-      brandName: data?.hits[0]?.name
+      brandName: isArabic ? data?.hits[0]?.name_ar : data?.hits[0]?.name
     })
   }
 
