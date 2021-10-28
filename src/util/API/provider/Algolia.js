@@ -154,7 +154,7 @@ export class Algolia {
   }
 
   async getBrandsDetails(query, limit) {
-    const data = (await AlgoliaSDK.getBrandsDetails(query="", limit=1)) || {};
+    const data = (await AlgoliaSDK.getBrandsDetails(query, limit)) || {};
     return data;
   }  
 

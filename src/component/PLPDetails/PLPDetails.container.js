@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { connect } from "react-redux";
 import PLPDetails from "./PLPDetails.component";
-import Algolia from "Util/API/provider/Algolia";
+
 
 export const mapStateToProps = (_state) => ({
   // wishlistItems: state.WishlistReducer.productsInWishlist
@@ -33,13 +33,6 @@ export class PLPDetailsContainer extends PureComponent {
       brandName,
     };
   };
-
-  async componentDidMount() {
-    const data = await new Algolia({
-      index: "brands_english",
-    }).getBrandsDetails();
-    console.log('brand data',data)
-  }
 
   render() {
     return (
