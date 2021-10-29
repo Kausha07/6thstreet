@@ -1,7 +1,11 @@
 .MyAccountOrderView {
   padding-bottom: 40px;
   width: 100%;
-
+  .Address {
+    &-Street {
+      word-break: break-all;
+    }
+  }
   &-Heading {
     align-items: center;
     display: flex;
