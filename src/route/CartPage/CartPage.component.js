@@ -275,6 +275,7 @@ export class CartPage extends PureComponent {
     return (
       <article block="CartPage" elem="Summary">
         {this.renderTotal()}
+        {this.renderTabbyPromo()}
         {this.renderButtons()}
       </article>
     );
@@ -580,7 +581,6 @@ export class CartPage extends PureComponent {
           </div>
           <div block="CartPage" elem="Floating" mods={{ isArabic }}>
             {this.renderClubApparel()}
-            {this.renderTabbyPromo()}
             {this.renderTotals()}
           </div>
         </ContentWrapper>
