@@ -87,6 +87,7 @@
     font-weight: var(--fw-bold);
     text-transform: uppercase;
     line-height: 16px;
+    word-break: break-all;
   }
 
   &-Street {
