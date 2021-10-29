@@ -4,7 +4,6 @@ import {
   setPDPLoading,
 } from "Store/PDP/PDP.action";
 import {
-  getProductStock,
   sendNotifyMeEmail,
   isClickAndCollectAvailable,
   getClickAndCollectStores,
@@ -49,10 +48,6 @@ export class PDPDispatcher {
       // Needed, so PDP container sets "isLoading" to false
       dispatch(setPDPData({}, options));
     }
-  }
-
-  async getProductStock(dispatch, sku) {
-    return getProductStock(sku);
   }
 
   async getClickAndCollectStores(

@@ -289,9 +289,12 @@ class PDPSummary extends PureComponent {
   }
 
   renderAddToCartSection() {
+    const { product:{
+      simple_products
+    }} = this.props
     return (
       <>
-        <PDPAddToCart setStockAvailability={this.setStockAvailability} />
+        <PDPAddToCart simple_products={simple_products} setStockAvailability={this.setStockAvailability} />
       </>
     );
   }
