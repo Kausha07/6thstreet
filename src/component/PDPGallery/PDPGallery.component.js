@@ -150,7 +150,7 @@ class PDPGallery extends PureComponent {
     } = this.props;
 
     let filterCrumb = crumbs.filter((item) => {
-      return item.includes('http');
+      return item.includes("http");
     });
 
     if (prod_style_video !== "" && prod_360_video !== "") {
@@ -184,7 +184,7 @@ class PDPGallery extends PureComponent {
 
   renderGallery() {
     const { gallery = [] } = this.props;
-    
+
     return gallery.map(this.renderGalleryImage);
   }
 
@@ -277,6 +277,7 @@ class PDPGallery extends PureComponent {
     const { gallery, onSliderChange, prod_360_video, prod_style_video } =
       this.props;
     const { isVideoPlaying, listener } = this.state;
+
     if (activeSlide <= gallery.length - 1) {
       // stop the video
       if (isVideoPlaying?.current) {
@@ -292,11 +293,38 @@ class PDPGallery extends PureComponent {
         return null;
       }
       onSliderChange(activeSlide);
-
-      if (prod_360_video) {
-        this.playVideo("prod_360_video");
-      } else if (prod_style_video) {
-        this.playVideo("prod_style_video");
+      if (activeSlide >= gallery.length) {
+        if (activeSlide === gallery.length) {
+          if (isVideoPlaying?.current) {
+            isVideoPlaying.current.pause();
+            isVideoPlaying.current.currentTime = 0;
+            isVideoPlaying?.current.removeEventListener("ended", listener);
+          }
+          if (prod_360_video && prod_style_video) {
+            this.playVideo("prod_style_video");
+          } else {
+            if (prod_360_video) {
+              this.playVideo("prod_360_video");
+            } else if (prod_style_video) {
+              this.playVideo("prod_style_video");
+            }
+          }
+        } else if (activeSlide === gallery.length + 1) {
+          if (isVideoPlaying?.current) {
+            isVideoPlaying.current.pause();
+            isVideoPlaying.current.currentTime = 0;
+            isVideoPlaying?.current.removeEventListener("ended", listener);
+          }
+          if (prod_360_video && prod_style_video) {
+            this.playVideo("prod_360_video");
+          } else {
+            if (prod_360_video) {
+              this.playVideo("prod_360_video");
+            } else if (prod_style_video) {
+              this.playVideo("prod_style_video");
+            }
+          }
+        }
       }
     }
   };
