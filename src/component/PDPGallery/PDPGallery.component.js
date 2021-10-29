@@ -106,6 +106,7 @@ class PDPGallery extends PureComponent {
     return (
       <PDPGalleryCrumb
         key={i}
+        onSlideChange={this.onSlideChange}
         src={index}
         // prefer numerical index
         index={i}
@@ -147,11 +148,16 @@ class PDPGallery extends PureComponent {
       prod_style_video,
       prod_360_video,
     } = this.props;
+
+    let filterCrumb = crumbs.filter((item) => {
+      return item.includes('http');
+    });
+
     if (prod_style_video !== "" && prod_360_video !== "") {
-      crumbs.push(videoIcon);
-      crumbs.push(videoIcon);
+      filterCrumb.push(videoIcon);
+      filterCrumb.push(videoIcon);
     } else if (prod_style_video !== "" || prod_360_video !== "") {
-      crumbs.push(videoIcon);
+      filterCrumb.push(videoIcon);
     }
 
     return (
@@ -167,10 +173,10 @@ class PDPGallery extends PureComponent {
             },
           }}
           activeImage={currentIndex}
-          onActiveImageChange={onSliderChange}
+          onActiveImageChange={this.onSlideChange}
           isInteractionDisabled
         >
-          {crumbs.map(this.renderCrumb)}
+          {filterCrumb.map(this.renderCrumb)}
         </SliderVertical>
       </div>
     );
@@ -178,7 +184,7 @@ class PDPGallery extends PureComponent {
 
   renderGallery() {
     const { gallery = [] } = this.props;
-
+    
     return gallery.map(this.renderGalleryImage);
   }
 
@@ -205,7 +211,6 @@ class PDPGallery extends PureComponent {
 
   renderVideos() {
     const { prod_style_video, prod_360_video } = this.props;
-    console.log("muskan", this.props);
     const videos = { prod_style_video, prod_360_video };
     return Object.keys(videos)
       .filter((key) => !!videos[key])
@@ -283,15 +288,15 @@ class PDPGallery extends PureComponent {
       onSliderChange(activeSlide);
     } else if (activeSlide > gallery.length - 1) {
       // play the video
-      if (!(prod_360_video || prod_style_video) || !isMobile.any()) {
+      if (!(prod_360_video || prod_style_video)) {
         return null;
       }
+      onSliderChange(activeSlide);
+
       if (prod_360_video) {
         this.playVideo("prod_360_video");
       } else if (prod_style_video) {
         this.playVideo("prod_style_video");
-      } else {
-        onSliderChange(activeSlide);
       }
     }
   };
