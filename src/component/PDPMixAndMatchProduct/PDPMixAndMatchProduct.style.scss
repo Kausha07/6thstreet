@@ -111,7 +111,7 @@ $select-arrow-width: 6px !default;
             }
         }
         @include desktop {
-            width: 40%
+            width: 40% !important;
         }
     }
 
