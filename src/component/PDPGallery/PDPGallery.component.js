@@ -153,10 +153,10 @@ class PDPGallery extends PureComponent {
       return item.includes("http");
     });
 
-    if (prod_style_video !== "" && prod_360_video !== "") {
+    if (prod_style_video && prod_360_video) {
       filterCrumb.push(videoIcon);
       filterCrumb.push(videoIcon);
-    } else if (prod_style_video !== "" || prod_360_video !== "") {
+    } else if (prod_style_video || prod_360_video) {
       filterCrumb.push(videoIcon);
     }
 
