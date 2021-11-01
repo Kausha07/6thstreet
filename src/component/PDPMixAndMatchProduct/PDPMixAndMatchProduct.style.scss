@@ -131,7 +131,7 @@ $select-arrow-width: 6px !default;
                 height: $select-arrow-height;
                 transform: translateY(-2px) rotate(44deg);
                 position: absolute;
-                right: calc(50% - 25px);
+                right: calc(65% - 25px);
                 bottom: 0;
                 top: 0;
                 margin-top: 22px;
@@ -153,7 +153,7 @@ $select-arrow-width: 6px !default;
                 line-height: 30px;
                 text-align: center;
                 height: 38px;
-                width: 50%;
+                width: 35%;
                 padding: 0;
                 border: 1px solid #000000;
                 border-radius: 6px;
@@ -177,7 +177,7 @@ $select-arrow-width: 6px !default;
             @include desktop {
                 border-radius: 0;
                 font-size: 13px;
-                width: 363px;
+                width: 200px;
             }
 
             span {

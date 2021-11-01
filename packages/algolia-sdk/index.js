@@ -11,6 +11,7 @@ import {
   init,
   logAlgoliaAnalytics,
   searchBy,
+  getBrandsDetails
 } from "./app";
 import { getIndex } from "./app/utils";
 
@@ -37,6 +38,8 @@ const AlgoliaSDK = {
     getSuggestions(params, { index: AlgoliaSDK.index }),
   autocompleteSearch: (params) =>
     autocompleteSearch(params, { index: AlgoliaSDK.index }),
+    getBrandsDetails: (params) =>
+    getBrandsDetails(params, { index: AlgoliaSDK.index }),
   getTopSearches: () => getTopSearches({ index: AlgoliaSDK.index }),
   getPopularBrands: (limit) =>
     getPopularBrands(limit, { index: AlgoliaSDK.index }),
