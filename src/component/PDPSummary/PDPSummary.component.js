@@ -30,6 +30,8 @@ class PDPSummary extends PureComponent {
     showPopup: false,
     stockAvailibility: true,
     isArabic: isArabic(),
+    selectedSizeType: "eu",
+    selectedSizeCode: ""
   };
   componentDidMount() {
     const {
@@ -129,11 +131,17 @@ class PDPSummary extends PureComponent {
     return Object.keys(derivedState).length ? derivedState : null;
   }
 
+  setSize = (sizeType, sizeCode) => {
+    this.setState({
+      selectedSizeType: sizeType || "eu",
+      selectedSizeCode: sizeCode || ""
+    });
+  }
+
   setStockAvailability = (status) => {
     const {
       product: { price },
     } = this.props;
-
     this.setState({ stockAvailibility: !!price && status });
   };
 
@@ -293,19 +301,22 @@ class PDPSummary extends PureComponent {
       simple_products
     }} = this.props
     return (
-      <>
-        <PDPAddToCart simple_products={simple_products} setStockAvailability={this.setStockAvailability} />
-      </>
+      <PDPAddToCart simple_products={simple_products} setStockAvailability={this.setStockAvailability} setSize={this.setSize} />
     );
   }
 
   renderPDPTags() {
     const {
-      product: { prod_tag_1, prod_tag_2, in_stock, stock_qty },
+      product: { prod_tag_1, prod_tag_2, in_stock, stock_qty, simple_products },
     } = this.props;
 
-    const tags = [prod_tag_1, prod_tag_2].filter(Boolean);
+    const { selectedSizeCode } = this.state;
 
+    const tags = [prod_tag_1, prod_tag_2].filter(Boolean);
+    if(parseInt(simple_products[selectedSizeCode]?.cross_border_qty) > 0 ){
+      tags.push(__("International Shipment"));
+    }
+    console.log(simple_products, selectedSizeCode, simple_products[selectedSizeCode])
     if (tags && tags.length) {
       return (
         <>

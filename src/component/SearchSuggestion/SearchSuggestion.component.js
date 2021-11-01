@@ -687,25 +687,64 @@ class SearchSuggestion extends PureComponent {
   // };
 
   renderTrendingBrand = (brand, i) => {
-    const { label = "", image_url } = brand;
+    const { label = "", image_url, link= "" } = brand;
     const { isArabic } = this.state;
-    const urlName = label
-      .replace("&", "")
-      .replace(/'/g, "")
-      .replace(/(\s+)|--/g, "-")
-      .replace("@", "at")
-      .toLowerCase();
+    // const urlName = label
+    //   .replace("&", "")
+    //   .replace(/'/g, "")
+    //   .replace(/(\s+)|--/g, "-")
+    //   .replace("@", "at")
+    //   .toLowerCase();
+    const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
+      : "home";
 
+    let requestedGender = gender;
+    let genderInURL;
+    if (isArabic) {
+      if (gender === "kids") {
+        genderInURL = "أولاد,بنات";
+        // to add Boy~Girl in arabic
+      } else {
+        if (gender !== "home") {
+          requestedGender = getGenderInArabic(gender);
+          genderInURL = requestedGender?.replace(
+            requestedGender?.charAt(0),
+            requestedGender?.charAt(0).toUpperCase()
+          );
+        } else {
+          genderInURL = "";
+        }
+      }
+    } else {
+      if (gender === "kids") {
+        genderInURL = "Boy,Girl";
+      } else {
+        if (gender !== "home") {
+          genderInURL = requestedGender?.replace(
+            requestedGender?.charAt(0),
+            requestedGender?.charAt(0).toUpperCase()
+          );          
+        } else {
+          genderInURL = "";
+        }
+      }
+    }
+    
     return (
       <li key={i}>
         <Link
           to={{
-            pathname: `/${urlName}.html?q=${urlName}`,
+            pathname: link
+            ? `${link}`
+            : `/catalogsearch/result/?q=${encodeURIComponent(
+              label
+              )}&dFR[gender][0]=${genderInURL}`,
             state: {
               prevPath: window.location.href,
             },
           }}
-          onClick={() => this.handleTrendingBrandsClick(urlName)}
+          onClick={() => this.handleTrendingBrandsClick(label)}
         >
           <div block="SearchSuggestion" elem="TrandingImg">
             <Image lazyLoad={true} src={image_url} alt="Trending" />
