@@ -87,7 +87,8 @@ export class PDPAddToCartContainer extends PureComponent {
     customer: customerType,
     guestUserEmail: PropTypes.string,
     showOverlay: PropTypes.func.isRequired,
-    hideActiveOverlay: PropTypes.func.isRequired
+    hideActiveOverlay: PropTypes.func.isRequired,
+    setSize: PropTypes.func.isRequired
   };
 
   static defaultProps = {
@@ -313,18 +314,24 @@ export class PDPAddToCartContainer extends PureComponent {
     });
   }
 
-  componentDidUpdate(prevProps, _) {
+  componentDidUpdate(prevProps, prevState) {
     const {
       totals: { total: PrevTotal = null },
     } = prevProps;
     const {
       totals: { total = null },
     } = this.props;
-    const { productAdded } = this.state;
+    const { productAdded, selectedSizeType, selectedSizeCode } = this.state;
 
     if (productAdded && total && PrevTotal !== total) {
       this.clearTimeAll();
       this.proceedToCheckout();
+    }
+
+    const { setSize } = this.props;
+    const { prevSelectedSizeType, prevSelectedSizeCode } = prevState;
+    if( (selectedSizeType !== prevSelectedSizeType) || (selectedSizeCode !== prevSelectedSizeCode) ){
+      setSize(selectedSizeType, selectedSizeCode);
     }
   }
 
