@@ -22,8 +22,9 @@ $select-arrow-width: 6px !default;
     // width: 120px;
 
     &-ImageContainer{
-        width: 50%;
+        // width: 50%;
         @include mobile {
+            width: 186px;
             min-width: 186px;
         }
         padding: 0 16px 0 0;
