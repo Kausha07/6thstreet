@@ -9,6 +9,7 @@ const app = express();
 
 app.use((req, res, next) => {
     res.append('Access-Control-Allow-Origin', ['*']);
+    // res.append('cache-control', 'public, max-age=259200, must-revalidate');
     next();
 });
 app.use(serverTimings);

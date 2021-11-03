@@ -208,7 +208,7 @@ class PDPSummary extends PureComponent {
 
   renderPriceAndPDPSummaryHeader() {
     const {
-      product: { price, stock_qty },
+      product: { price, stock_qty, additional_shipping_info },
     } = this.props;
     const { stockAvailibility } = this.state;
 
@@ -220,6 +220,15 @@ class PDPSummary extends PureComponent {
       <div block="PriceContainer">
         <Price price={price} />
         {isMobile.any() && this.renderPDPSummaryHeader()}
+        {
+          additional_shipping_info
+          ?
+          <span block="AdditionShippingInformation">
+            { additional_shipping_info }
+          </span>
+          :
+          null
+        }
       </div>
     );
   }
@@ -316,7 +325,6 @@ class PDPSummary extends PureComponent {
     if(parseInt(simple_products[selectedSizeCode]?.cross_border_qty) > 0 ){
       tags.push(__("International Shipment"));
     }
-    console.log(simple_products, selectedSizeCode, simple_products[selectedSizeCode])
     if (tags && tags.length) {
       return (
         <>
