@@ -199,11 +199,12 @@ export class UrlRewritesContainer extends PureComponent {
   containerProps = () => {
     const { isLoading, type, id, sku, brandDescription, brandImg, brandName } =
       this.state;
+    const string_sku = sku.toString();
     return {
       isLoading,
       type,
       id,
-      sku,
+      string_sku,
       brandDescription,
       brandImg,
       brandName,

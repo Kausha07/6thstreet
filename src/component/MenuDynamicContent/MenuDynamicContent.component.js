@@ -35,7 +35,7 @@ class MenuDynamicContent extends PureComponent {
 
     if (!Component) {
       // TODO: implement all types
-      Logger.log(type, restProps);
+      // Logger.log(type, restProps);
       return null;
     }
 
