@@ -28,3 +28,9 @@
         }
     }
 }
+.tabby-iframe{
+    padding-top: 15px;
+    @include desktop(){
+        padding-top: 40px;
+    }
+}
