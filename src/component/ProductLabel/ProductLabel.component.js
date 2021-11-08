@@ -38,8 +38,8 @@ class ProductLabel extends PureComponent {
     const { date } = this.state;
     try {
       if (
-        Date.parse(date) <= Date.parse(news_to_date.replaceAll("-", "/")) &&
-        Date.parse(date) >= Date.parse(news_from_date.replaceAll("-", "/"))
+        Date.parse(date) <= Date.parse(news_to_date?.replaceAll("-", "/")) &&
+        Date.parse(date) >= Date.parse(news_from_date?.replaceAll("-", "/"))
       ) {
         return <span block="ProductLabel">{__("New")}</span>;
       }

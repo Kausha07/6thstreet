@@ -22,7 +22,7 @@ class DynamicContentVueSlider extends PureComponent {
         link: PropTypes.string,
         plp_config: PropTypes.shape({}), // TODO: describe
       })
-    ).isRequired,
+    ),
   };
 
   constructor(props) {

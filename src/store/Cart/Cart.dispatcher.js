@@ -6,7 +6,7 @@ import {
   setCartId,
   setCartTotals,
   updateCartItem,
-  setCheckoutDetails
+  setCheckoutDetails,
 } from "Store/Cart/Cart.action";
 import { showNotification } from "Store/Notification/Notification.action";
 import {
@@ -24,9 +24,8 @@ import { LAST_CART_ID_CACHE_KEY } from "../MobileCart/MobileCart.reducer";
 export const GUEST_QUOTE_ID = "guest_quote_id";
 
 export class CartDispatcher {
-
-  async setCheckoutStep(dispatch, checkoutDetails = false){
-    dispatch(setCheckoutDetails(checkoutDetails))
+  async setCheckoutStep(dispatch, checkoutDetails = false) {
+    dispatch(setCheckoutDetails(checkoutDetails));
   }
 
   async getCart(dispatch, isNewCart = false) {
@@ -80,7 +79,7 @@ export class CartDispatcher {
             id,
             availability,
             available_qty,
-            extension_attributes
+            extension_attributes,
           } = item;
 
           return dispatch(
@@ -160,8 +159,6 @@ export class CartDispatcher {
     const {
       Cart: { cartId },
     } = getStore().getState();
-    console.log("cart id", cartId)
-    console.log("store state", getStore().getState())
     try {
       dispatch(processingCartRequest());
       const response = await addProductToCart({

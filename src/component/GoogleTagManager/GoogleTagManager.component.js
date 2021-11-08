@@ -328,7 +328,6 @@ class GoogleTagManager extends PureComponent {
 
       if (this.debug) {
         // eslint-disable-next-line no-console
-        console.log(event, data);
       }
 
       window[this.currentDataLayerName].push({

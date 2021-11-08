@@ -116,7 +116,8 @@ class DynamicContentTwiceBanner extends PureComponent {
           this.onclick(item);
         }}
       >
-        <Image lazyLoad={true}
+        <Image
+          lazyLoad={true}
           src={url}
           className="BannerImage"
           // style={{ maxWidth: width, maxHeight: height }}
@@ -151,14 +152,14 @@ class DynamicContentTwiceBanner extends PureComponent {
             <div
               block="DynamicContentTwiceBanner"
               elem="BannerImg"
-              class="banner1"
+              className="banner1"
             >
               {this.renderImages()}
             </div>
             <div
               block="DynamicContentTwiceBanner"
               elem="Figure"
-              class="banner2"
+              className="banner2"
             >
               {this.renderImages(true)}
             </div>
@@ -168,14 +169,14 @@ class DynamicContentTwiceBanner extends PureComponent {
             <div
               block="DynamicContentTwiceBanner"
               elem="FigureRight"
-              class="banner1"
+              className="banner1"
             >
               {this.renderImages(true)}
             </div>
             <div
               block="DynamicContentTwiceBanner"
               elem="BannerImgRight"
-              class="banner2"
+              className="banner2"
             >
               {this.renderImages()}
             </div>
