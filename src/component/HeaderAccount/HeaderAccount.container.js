@@ -1,75 +1,75 @@
-import PropTypes from 'prop-types';
-import { PureComponent } from 'react';
-import { connect } from 'react-redux';
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
+import { connect } from "react-redux";
 
-import { customerType } from 'Type/Account';
-import { isSignedIn } from 'Util/Auth';
+import { customerType } from "Type/Account";
+import { isSignedIn } from "Util/Auth";
 
-import HeaderAccount from './HeaderAccount.component';
+import HeaderAccount from "./HeaderAccount.component";
 
 export const MyAccountDispatcher = import(
-    /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
-    'Store/MyAccount/MyAccount.dispatcher'
+  /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
+  "Store/MyAccount/MyAccount.dispatcher"
 );
 
 export const mapStateToProps = (state) => ({
-    language: state.AppState.language,
-    customer: state.MyAccountReducer.customer
+  language: state.AppState.language,
+  customer: state.MyAccountReducer.customer,
 });
 
 export class HeaderAccountContainer extends PureComponent {
-    static propTypes = {
-        isBottomBar: PropTypes.bool,
-        isAccount: PropTypes.bool,
-        language: PropTypes.string.isRequired,
-        customer: customerType,
-        requestCustomerData: PropTypes.func.isRequired,
-        handleFooterIsAccountOpen: PropTypes.func,
-        isFooter: PropTypes.bool
-    };
+  static propTypes = {
+    isBottomBar: PropTypes.bool,
+    isAccount: PropTypes.bool,
+    language: PropTypes.string.isRequired,
+    customer: customerType,
+    requestCustomerData: PropTypes.func,
+    handleFooterIsAccountOpen: PropTypes.func,
+    isFooter: PropTypes.bool,
+  };
 
-    static defaultProps = {
-        isBottomBar: false,
-        isAccount: false,
-        isFooter: false,
-        customer: null,
-        handleFooterIsAccountOpen: () => {}
-    };
+  static defaultProps = {
+    isBottomBar: false,
+    isAccount: false,
+    isFooter: false,
+    customer: null,
+    handleFooterIsAccountOpen: () => {},
+  };
 
-    containerFunctions = {
-        requestCustomerData: this.requestCustomerData.bind(this)
-    };
+  containerFunctions = {
+    requestCustomerData: this.requestCustomerData.bind(this),
+  };
 
-    containerProps = () => ({
-        customer: this._getCustomerInformation(),
-        isSignedIn: isSignedIn()
-    });
+  containerProps = () => ({
+    customer: this._getCustomerInformation(),
+    isSignedIn: isSignedIn(),
+  });
 
-    requestCustomerData() {
-        const { requestCustomerData } = this.props;
+  requestCustomerData() {
+    const { requestCustomerData } = this.props;
 
-        requestCustomerData();
+    requestCustomerData();
+  }
+
+  _getCustomerInformation() {
+    const { customer } = this.props;
+
+    if (!isSignedIn()) {
+      return null;
     }
 
-    _getCustomerInformation() {
-        const { customer } = this.props;
+    return customer;
+  }
 
-        if (!isSignedIn()) {
-            return null;
-        }
-
-        return customer;
-    }
-
-    render() {
-        return (
-            <HeaderAccount
-              { ...this.props }
-              { ...this.containerFunctions }
-              { ...this.containerProps() }
-            />
-        );
-    }
+  render() {
+    return (
+      <HeaderAccount
+        {...this.props}
+        {...this.containerFunctions}
+        {...this.containerProps()}
+      />
+    );
+  }
 }
 
 export default connect(mapStateToProps, null)(HeaderAccountContainer);
