@@ -31,13 +31,13 @@ class PDPSummary extends PureComponent {
     stockAvailibility: true,
     isArabic: isArabic(),
     selectedSizeType: "eu",
-    selectedSizeCode: "",
+    selectedSizeCode: ""
   };
   componentDidMount() {
     const {
       product: { price },
     } = this.props;
-    const { isArabic } = this.state;
+    const {isArabic} = this.state
     if (price) {
       const priceObj = Array.isArray(price) ? price[0] : price;
       const [currency, priceData] = Object.entries(priceObj)[0];
@@ -49,36 +49,35 @@ class PDPSummary extends PureComponent {
 
       if ((country === "AE" || country === "SA") && defPrice >= 150) {
         const script = document.createElement("script");
-        script.src = "https://checkout.tabby.ai/tabby-promo.js";
-        script.async = true;
-        script.onload = function () {
-          let s = document.createElement("script");
-          s.type = "text/javascript";
-          const code = `new TabbyPromo({
+      script.src ="https://checkout.tabby.ai/tabby-promo.js";
+      script.async = true;
+      script.onload =  function(){
+      let s = document.createElement('script');
+      s.type = 'text/javascript';
+      const  code = `new TabbyPromo({
         selector: '#TabbyPromo', 
         currency: '${currency}',
         price: '${defPrice}', 
         installmentsCount: 4,
-        lang: '${isArabic ? "ar" : "en"}', 
+        lang: '${isArabic? "ar": "en"}', 
         source: 'product', 
       });`;
-          try {
-            s.appendChild(document.createTextNode(code));
-            document.body.appendChild(s);
-          } catch (e) {
-            s.text = code;
-            document.body.appendChild(s);
-          }
-        };
-        document.body.appendChild(script);
+      try {
+        s.appendChild(document.createTextNode(code));
+        document.body.appendChild(s);
+      } catch (e) {
+        s.text = code;
+        document.body.appendChild(s);
       }
     }
+    document.body.appendChild(script);   
+  }} 
   }
   componentDidUpdate(prevProps) {
     const {
       product: { price },
     } = this.props;
-    const { isArabic } = this.state;
+    const {isArabic} = this.state
 
     if (price) {
       const priceObj = Array.isArray(price) ? price[0] : price;
@@ -88,33 +87,33 @@ class PDPSummary extends PureComponent {
       ).data;
       const { default: defPrice } = priceData;
       if ((country === "AE" || country === "SA") && defPrice >= 150) {
-        if (prevProps.product.price !== price) {
+        if(prevProps.product.price !== price){
+
           const script = document.createElement("script");
-          script.src = "https://checkout.tabby.ai/tabby-promo.js";
-          script.async = true;
-          script.onload = function () {
-            let s = document.createElement("script");
-            s.type = "text/javascript";
-            const code = `new TabbyPromo({
+        script.src ="https://checkout.tabby.ai/tabby-promo.js";
+        script.async = true;
+        script.onload =  function(){
+        let s = document.createElement('script');
+        s.type = 'text/javascript';
+        const  code = `new TabbyPromo({
           selector: '#TabbyPromo', 
           currency: '${currency}', 
           price: '${defPrice}', 
           installmentsCount: 4,
-          lang: '${isArabic ? "ar" : "en"}', 
+          lang: '${isArabic? "ar": "en"}', 
           source: 'product', 
         });`;
-            try {
-              s.appendChild(document.createTextNode(code));
-              document.body.appendChild(s);
-            } catch (e) {
-              s.text = code;
-              document.body.appendChild(s);
-            }
-          };
-          document.body.appendChild(script);
+        try {
+          s.appendChild(document.createTextNode(code));
+          document.body.appendChild(s);
+        } catch (e) {
+          s.text = code;
+          document.body.appendChild(s);
         }
       }
-    }
+      document.body.appendChild(script);   
+        }
+  }} 
   }
   static getDerivedStateFromProps(props, state) {
     const { product } = props;
@@ -135,9 +134,9 @@ class PDPSummary extends PureComponent {
   setSize = (sizeType, sizeCode) => {
     this.setState({
       selectedSizeType: sizeType || "eu",
-      selectedSizeCode: sizeCode || "",
+      selectedSizeCode: sizeCode || ""
     });
-  };
+  }
 
   setStockAvailability = (status) => {
     const {
@@ -221,11 +220,15 @@ class PDPSummary extends PureComponent {
       <div block="PriceContainer">
         <Price price={price} />
         {isMobile.any() && this.renderPDPSummaryHeader()}
-        {additional_shipping_info ? (
+        {
+          additional_shipping_info
+          ?
           <span block="AdditionShippingInformation">
-            {additional_shipping_info}
+            { additional_shipping_info }
           </span>
-        ) : null}
+          :
+          null
+        }
       </div>
     );
   }
@@ -303,15 +306,11 @@ class PDPSummary extends PureComponent {
   }
 
   renderAddToCartSection() {
-    const {
-      product: { simple_products },
-    } = this.props;
+    const { product:{
+      simple_products
+    }} = this.props
     return (
-      <PDPAddToCart
-        simple_products={simple_products}
-        setStockAvailability={this.setStockAvailability}
-        setSize={this.setSize}
-      />
+      <PDPAddToCart simple_products={simple_products} setStockAvailability={this.setStockAvailability} setSize={this.setSize} />
     );
   }
 
@@ -323,10 +322,7 @@ class PDPSummary extends PureComponent {
     const { selectedSizeCode } = this.state;
 
     const tags = [prod_tag_1, prod_tag_2].filter(Boolean);
-    if (
-      parseInt(simple_products[selectedSizeCode]?.cross_border_qty) > 0 &&
-      parseInt(simple_products[selectedSizeCode]?.quantity) == 0
-    ) {
+    if(parseInt(simple_products[selectedSizeCode]?.cross_border_qty) > 0 ){
       tags.push(__("International Shipment"));
     }
     if (tags && tags.length) {
@@ -380,7 +376,7 @@ class PDPSummary extends PureComponent {
         const monthPrice = (defPrice / 4).toFixed(2);
         return (
           <>
-            <div id="TabbyPromo"></div>
+          <div id="TabbyPromo"></div>
             {/*<button
               block="PDPSummary"
               elem="Tabby"
@@ -398,7 +394,7 @@ class PDPSummary extends PureComponent {
                 {__("Learn more")}
               </span>
             </button>*/}
-            <div block="Seperator" />
+            <div block="Seperator" /> 
           </>
         );
       }
