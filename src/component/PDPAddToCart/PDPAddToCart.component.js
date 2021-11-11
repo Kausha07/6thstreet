@@ -172,9 +172,7 @@ class PDPAddToCart extends PureComponent {
   renderSizeOption(productStock, code, label) {
     const { selectedSizeCode, onSizeSelect, notifyMeLoading, notifyMeSuccess } =
       this.props;
-    const isNotAvailable =
-      parseInt(productStock[code].quantity) === 0 &&
-      parseInt(productStock[code].cross_border_qty) === 0;
+    const isNotAvailable = parseInt(productStock[code].quantity) === 0;
 
     const selectedLabelStyle = {
       fontSize: "14px",
@@ -218,8 +216,7 @@ class PDPAddToCart extends PureComponent {
             {label}
           </label>
           {isNotAvailable && (
-            <Image
-              lazyLoad={false}
+            <Image lazyLoad={false}
               src={StrikeThrough}
               className="lineImg"
               style={isCurrentSizeSelected ? selectedStrikeThruLineStyle : {}}
@@ -343,7 +340,6 @@ class PDPAddToCart extends PureComponent {
       return null;
     }
     const disabled = this.checkStateForButtonDisabling();
-
     return (
       <button
         onClick={togglePDPClickAndCollectPopup}
