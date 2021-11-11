@@ -1,4 +1,8 @@
 /* eslint-disable no-magic-numbers */
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
+
+import Image from "Component/Image";
 import PDPAddToCart from "Component/PDPAddToCart/PDPAddToCart.container";
 import PDPAlsoAvailable from "Component/PDPAlsoAvailable";
 import PDPTags from "Component/PDPTags";
@@ -8,15 +12,14 @@ import ShareButton from "Component/ShareButton";
 import TabbyMiniPopup from "Component/TabbyMiniPopup";
 import { TABBY_TOOLTIP_PDP } from "Component/TabbyMiniPopup/TabbyMiniPopup.config";
 import WishlistIcon from "Component/WishlistIcon";
-import PropTypes from "prop-types";
-import { PureComponent } from "react";
 import { Product } from "Util/API/endpoint/Product/Product.type";
 import { isArabic } from "Util/App";
 import { SPECIAL_COLORS, translateArabicColor } from "Util/Common";
 import isMobile from "Util/Mobile";
+
 import tabby from "./icons/tabby.svg";
+
 import "./PDPSummary.style";
-import Image from "Component/Image";
 
 class PDPSummary extends PureComponent {
   static propTypes = {
@@ -322,7 +325,10 @@ class PDPSummary extends PureComponent {
     const { selectedSizeCode } = this.state;
 
     const tags = [prod_tag_1, prod_tag_2].filter(Boolean);
-    if(parseInt(simple_products[selectedSizeCode]?.cross_border_qty) > 0 ){
+    if(
+        simple_products && (parseInt(simple_products[selectedSizeCode]?.cross_border_qty) === parseInt(simple_products[selectedSizeCode]?.quantity))
+        && (parseInt(simple_products[selectedSizeCode]?.cross_border_qty) > 0)
+    ){
       tags.push(__("International Shipment"));
     }
     if (tags && tags.length) {
