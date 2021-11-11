@@ -34,7 +34,7 @@ export class PDPAlsoAvailableContainer extends PureComponent {
 
         if (productData.nbHits === 1) {
           this.setState({ products: [...products, productData.data] });
-          products = this.state.products;
+          products = this.state?.products || [];
         }
 
         this.setState({ isAlsoAvailable: products.length === 0 });
