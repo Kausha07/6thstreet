@@ -322,16 +322,21 @@ class PDPSummary extends PureComponent {
       product: { prod_tag_1, prod_tag_2, in_stock, stock_qty, simple_products, discountable },
     } = this.props;
 
-    const { selectedSizeCode } = this.state;
+    let { selectedSizeCode } = this.state;
 
     const tags = [prod_tag_1, prod_tag_2].filter(Boolean);
+    
+    if(simple_products?.length === 1) {
+      selectedSizeCode = Object.keys(simple_products)[0];
+    }
+
     if(
-        simple_products && (parseInt(simple_products[selectedSizeCode]?.cross_border_qty) === parseInt(simple_products[selectedSizeCode]?.quantity))
+         simple_products && selectedSizeCode && (parseInt(simple_products[selectedSizeCode]?.cross_border_qty) === parseInt(simple_products[selectedSizeCode]?.quantity))
         && (parseInt(simple_products[selectedSizeCode]?.cross_border_qty) > 0)
     ){
       tags.push(__("International Shipment"));
     }
-    if(discountable.toLowerCase() === "no"){
+    if(discountable?.toLowerCase() === "no"){
       tags.push(__("Non Discountable"));
     }
     if (tags && tags.length) {
