@@ -58,12 +58,12 @@ class PDPSummary extends PureComponent {
       let s = document.createElement('script');
       s.type = 'text/javascript';
       const  code = `new TabbyPromo({
-        selector: '#TabbyPromo', 
+        selector: '#TabbyPromo',
         currency: '${currency}',
-        price: '${defPrice}', 
+        price: '${defPrice}',
         installmentsCount: 4,
-        lang: '${isArabic? "ar": "en"}', 
-        source: 'product', 
+        lang: '${isArabic? "ar": "en"}',
+        source: 'product',
       });`;
       try {
         s.appendChild(document.createTextNode(code));
@@ -73,8 +73,8 @@ class PDPSummary extends PureComponent {
         document.body.appendChild(s);
       }
     }
-    document.body.appendChild(script);   
-  }} 
+    document.body.appendChild(script);
+  }}
   }
   componentDidUpdate(prevProps) {
     const {
@@ -99,12 +99,12 @@ class PDPSummary extends PureComponent {
         let s = document.createElement('script');
         s.type = 'text/javascript';
         const  code = `new TabbyPromo({
-          selector: '#TabbyPromo', 
-          currency: '${currency}', 
-          price: '${defPrice}', 
+          selector: '#TabbyPromo',
+          currency: '${currency}',
+          price: '${defPrice}',
           installmentsCount: 4,
-          lang: '${isArabic? "ar": "en"}', 
-          source: 'product', 
+          lang: '${isArabic? "ar": "en"}',
+          source: 'product',
         });`;
         try {
           s.appendChild(document.createTextNode(code));
@@ -114,9 +114,9 @@ class PDPSummary extends PureComponent {
           document.body.appendChild(s);
         }
       }
-      document.body.appendChild(script);   
+      document.body.appendChild(script);
         }
-  }} 
+  }}
   }
   static getDerivedStateFromProps(props, state) {
     const { product } = props;
@@ -319,7 +319,7 @@ class PDPSummary extends PureComponent {
 
   renderPDPTags() {
     const {
-      product: { prod_tag_1, prod_tag_2, in_stock, stock_qty, simple_products },
+      product: { prod_tag_1, prod_tag_2, in_stock, stock_qty, simple_products, discountable },
     } = this.props;
 
     const { selectedSizeCode } = this.state;
@@ -330,6 +330,9 @@ class PDPSummary extends PureComponent {
         && (parseInt(simple_products[selectedSizeCode]?.cross_border_qty) > 0)
     ){
       tags.push(__("International Shipment"));
+    }
+    if(discountable.toLowerCase() === "no"){
+      tags.push(__("Non Discountable"));
     }
     if (tags && tags.length) {
       return (
@@ -400,7 +403,7 @@ class PDPSummary extends PureComponent {
                 {__("Learn more")}
               </span>
             </button>*/}
-            <div block="Seperator" /> 
+            <div block="Seperator" />
           </>
         );
       }
