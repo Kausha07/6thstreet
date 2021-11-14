@@ -128,6 +128,7 @@ class HomePage extends PureComponent {
     return (
       <main block="HomePage">
         {this.renderMySignInPopup()}
+        <p>Test Text</p>
         {this.renderContent()}
       </main>
     );
