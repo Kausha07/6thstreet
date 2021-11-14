@@ -154,10 +154,10 @@ class PDPGallery extends PureComponent {
     });
 
     if (prod_style_video && prod_360_video) {
-      filterCrumb.push(videoIcon);
-      filterCrumb.push(videoIcon);
+      // filterCrumb.push(videoIcon);
+      // filterCrumb.push(videoIcon);
     } else if (prod_style_video || prod_360_video) {
-      filterCrumb.push(videoIcon);
+      // filterCrumb.push(videoIcon);
     }
 
     return (
