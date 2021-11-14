@@ -150,7 +150,7 @@ class PDPGallery extends PureComponent {
     } = this.props;
 
     let filterCrumb = crumbs.filter((item) => {
-      return item.includes("http");
+      return item?.includes("http");
     });
 
     if (prod_style_video && prod_360_video) {
