@@ -186,7 +186,7 @@ class InlineCustomerSupport extends PureComponent {
       <div block="InlineCustomerSupport" mods={{ isArabic }}>
         <ClickOutside onClick={this.onClickOutside}>
           {this.renderDropdown()}
-          {this.renderQuickAccess()}
+          {/* {this.renderQuickAccess()} */}
         </ClickOutside>
       </div>
     );
