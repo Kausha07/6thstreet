@@ -8,8 +8,24 @@
   &:last-of-type {
     padding-bottom: 10px;
   }
+  .staticDiv {
+    height: 97px;
+    width: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .staticImg {
+    height: 24px;
+    width: 24px;
+  }
   &_isActive {
-    img {
+    .Image {
+      img {
+        border: 1px solid $black;
+      }
+    }
+    .staticDiv {
       border: 1px solid $black;
     }
   }

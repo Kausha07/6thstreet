@@ -13,7 +13,7 @@ import browserHistory from "Util/History";
 import isMobile from "Util/Mobile";
 import { MAX_ZOOM_SCALE } from "./PDPGallery.config";
 import "./PDPGallery.style";
-
+import videoIcon from "./icons/video.svg";
 class PDPGallery extends PureComponent {
   static propTypes = {
     currentIndex: PropTypes.number.isRequired,
@@ -46,11 +46,11 @@ class PDPGallery extends PureComponent {
   };
 
   // componentDidMount() {
-  //   CSS.setVariable(
-  //     this.crumbsRef,
-  //     "gallery-crumbs-height",
-  //     `${this.overlaybuttonRef.current.offsetHeight}px`
-  //   );
+  // CSS.setVariable(
+  // this.crumbsRef,
+  // "gallery-crumbs-height",
+  // `${this.overlaybuttonRef.current.offsetHeight}px`
+  // );
   // }
 
   renderBackButton() {
@@ -102,16 +102,21 @@ class PDPGallery extends PureComponent {
     );
   }
 
-  renderCrumb = (index, i) => (
-    <PDPGalleryCrumb
-      key={i}
-      // prefer numerical index
-      index={i}
-    />
-  );
+  renderCrumb = (index, i) => {
+    return (
+      <PDPGalleryCrumb
+        key={i}
+        onSlideChange={this.onSlideChange}
+        src={index}
+        // prefer numerical index
+        index={i}
+      />
+    );
+  };
 
   renderGalleryImage = (src, i) => (
-    <Image lazyLoad={false}
+    <Image
+      lazyLoad={false}
       src={src}
       key={i}
       mix={{ block: "PDPGallery", elem: "sliderItem" }}
@@ -120,7 +125,10 @@ class PDPGallery extends PureComponent {
 
   renderGalleryOverlay = () => {
     const galleryOverlay = (
-      <PDPGalleryOverlay closeGalleryOverlay={this.closeGalleryOverlay} />
+      <PDPGalleryOverlay
+        closeGalleryOverlay={this.closeGalleryOverlay}
+        {...this.props}
+      />
     );
     document.body.style.overflow = "hidden";
 
@@ -133,7 +141,25 @@ class PDPGallery extends PureComponent {
   };
 
   renderCrumbs() {
-    const { crumbs = [], currentIndex, onSliderChange } = this.props;
+    const {
+      crumbs = [],
+      currentIndex,
+      onSliderChange,
+      prod_style_video,
+      prod_360_video,
+    } = this.props;
+
+    let filterCrumb = crumbs.filter((item) => {
+      return item?.includes("http");
+    });
+
+    if (prod_style_video && prod_360_video) {
+      // filterCrumb.push(videoIcon);
+      // filterCrumb.push(videoIcon);
+    } else if (prod_style_video || prod_360_video) {
+      // filterCrumb.push(videoIcon);
+    }
+
     return (
       <div ref={this.crumbsRef} block="PDPGallery" elem="Crumbs">
         <SliderVertical
@@ -147,10 +173,10 @@ class PDPGallery extends PureComponent {
             },
           }}
           activeImage={currentIndex}
-          onActiveImageChange={onSliderChange}
+          onActiveImageChange={this.onSlideChange}
           isInteractionDisabled
         >
-          {crumbs.map(this.renderCrumb)}
+          {filterCrumb.map(this.renderCrumb)}
         </SliderVertical>
       </div>
     );
@@ -219,17 +245,17 @@ class PDPGallery extends PureComponent {
         // after issue fix can be removed below commented code
 
         // video.current.addEventListener("ended", () => {
-        //   console.log({ counter });
-        //   counter = counter + 1;
-        //   if (counter <= 2) {
-        //     video.current.play();
-        //   } else {
-        //     onSliderChange(0);
-        //     video.current.removeEventListener("ended");
-        //     this.setState({ isVideoPlaying: false }, () => {
-        //       counter = 1;
-        //     });
-        //   }
+        // console.log({ counter });
+        // counter = counter + 1;
+        // if (counter <= 2) {
+        // video.current.play();
+        // } else {
+        // onSliderChange(0);
+        // video.current.removeEventListener("ended");
+        // this.setState({ isVideoPlaying: false }, () => {
+        // counter = 1;
+        // });
+        // }
         // });
         function listener(event) {
           counter = counter + 1;
@@ -251,6 +277,7 @@ class PDPGallery extends PureComponent {
     const { gallery, onSliderChange, prod_360_video, prod_style_video } =
       this.props;
     const { isVideoPlaying, listener } = this.state;
+
     if (activeSlide <= gallery.length - 1) {
       // stop the video
       if (isVideoPlaying?.current) {
@@ -262,15 +289,42 @@ class PDPGallery extends PureComponent {
       onSliderChange(activeSlide);
     } else if (activeSlide > gallery.length - 1) {
       // play the video
-      if (!(prod_360_video || prod_style_video) || !isMobile.any()) {
+      if (!(prod_360_video || prod_style_video)) {
         return null;
       }
-      if (prod_360_video) {
-        this.playVideo("prod_360_video");
-      } else if (prod_style_video) {
-        this.playVideo("prod_style_video");
-      } else {
-        onSliderChange(activeSlide);
+      onSliderChange(activeSlide);
+      if (activeSlide >= gallery.length) {
+        if (activeSlide === gallery.length) {
+          if (isVideoPlaying?.current) {
+            isVideoPlaying.current.pause();
+            isVideoPlaying.current.currentTime = 0;
+            isVideoPlaying?.current.removeEventListener("ended", listener);
+          }
+          if (prod_360_video && prod_style_video) {
+            this.playVideo("prod_style_video");
+          } else {
+            if (prod_360_video) {
+              this.playVideo("prod_360_video");
+            } else if (prod_style_video) {
+              this.playVideo("prod_style_video");
+            }
+          }
+        } else if (activeSlide === gallery.length + 1) {
+          if (isVideoPlaying?.current) {
+            isVideoPlaying.current.pause();
+            isVideoPlaying.current.currentTime = 0;
+            isVideoPlaying?.current.removeEventListener("ended", listener);
+          }
+          if (prod_360_video && prod_style_video) {
+            this.playVideo("prod_360_video");
+          } else {
+            if (prod_360_video) {
+              this.playVideo("prod_360_video");
+            } else if (prod_style_video) {
+              this.playVideo("prod_style_video");
+            }
+          }
+        }
       }
     }
   };
@@ -304,7 +358,7 @@ class PDPGallery extends PureComponent {
             elem="ViewGallery"
             onClick={() => this.stopVideo()}
           >
-            { __("View Gallery") }
+            {__("View Gallery")}
           </button>
         ) : (
           <div block="PDPGallery-VideoButtonsContainer" elem="VideoButtons">
@@ -314,7 +368,7 @@ class PDPGallery extends PureComponent {
                 elem="StyleVideo"
                 onClick={() => this.playVideo("prod_style_video")}
               >
-                { __("Video") }
+                {__("Video")}
               </button>
             )}
             {prod_360_video && (
@@ -323,7 +377,7 @@ class PDPGallery extends PureComponent {
                 elem="360DegreeVideo"
                 onClick={() => this.playVideo("prod_360_video")}
               >
-                { __("360°")}
+                {__("360°")}
               </button>
             )}
           </div>
