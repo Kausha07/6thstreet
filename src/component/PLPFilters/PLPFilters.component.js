@@ -336,8 +336,6 @@ class PLPFilters extends PureComponent {
     isRadio,
     isQuickFilters
   ) => {
-
-    () => this.select()
     const { activeFilters } = this.state;
     const filterArray = activeFilters[initialFacetKey];
 
@@ -391,7 +389,8 @@ class PLPFilters extends PureComponent {
           activeFilters: {
             [initialFacetKey]: facet_value,
           },
-        }
+        },
+        () => this.select()
 
       );
     }
