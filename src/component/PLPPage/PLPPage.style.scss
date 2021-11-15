@@ -38,8 +38,9 @@
 
     .Price {
       justify-content: center;
+      display: block;
+      text-align: center;
       @include mobile {
-        display: block;
         line-height: 17px;
 
         &-Wrapper {
