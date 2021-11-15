@@ -433,6 +433,9 @@
         &-PostCode {
           font-weight: var(--fw-demi);
         }
+        &-Street {
+          word-break: break-all;
+        }
       }
     }
 

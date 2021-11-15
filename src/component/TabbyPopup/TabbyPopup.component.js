@@ -27,6 +27,7 @@ class TabbyPopup extends PureComponent {
         id={TABBY_POPUP_ID}
         display="initial"
         position="relative"
+        className="tabby-iframe"
       />
     );
   }

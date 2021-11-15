@@ -30,7 +30,7 @@ import Scripts from "./Scripts";
 export const EVENT_GENERAL = "general";
 export const EVENT_IMPRESSION = "ee.impression";
 export const EVENT_PRODUCT_CLICK = "productClick";
-export const EVENT_WISHLIST_PRODUCT_CLICK = "productClick";
+export const EVENT_WISHLIST_PRODUCT_CLICK = "wishlistProductClick";
 export const EVENT_ADD_TO_WISHLIST = "addToWishlist";
 export const EVENT_REMOVE_FROM_WISHLIST = "removeFromWishlist";
 export const EVENT_ADD_TO_CART = "addToCart";
@@ -328,7 +328,6 @@ class GoogleTagManager extends PureComponent {
 
       if (this.debug) {
         // eslint-disable-next-line no-console
-        console.log(event, data);
       }
 
       window[this.currentDataLayerName].push({

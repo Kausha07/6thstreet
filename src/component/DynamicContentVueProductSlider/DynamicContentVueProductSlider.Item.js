@@ -10,7 +10,10 @@ import { connect } from "react-redux";
 import { isArabic } from "Util/App";
 import { getCurrency } from "Util/App/App";
 import { getUUID } from "Util/Auth";
-import Event, { VUE_CAROUSEL_CLICK } from "Util/Event";
+import Event, {
+  VUE_CAROUSEL_CLICK,
+  EVENT_GTM_VUE_PRODUCT_CLICK,
+} from "Util/Event";
 import { parseURL } from "Util/Url";
 
 export const mapStateToProps = (state) => ({
@@ -34,11 +37,13 @@ class DynamicContentVueProductSliderItem extends PureComponent {
   onclick = (widgetID, item) => {
     const {
       pageType,
-      data: { category, sku, link },
+      // data: { category, sku, link },
+      data,
       posofreco,
       sourceProdID,
       sourceCatgID,
     } = this.props;
+    const { category, sku, link } = data;
     let destProdID = sku;
     // vue analytics
     const locale = VueIntegrationQueries.getLocaleFromUrl();
@@ -59,6 +64,7 @@ class DynamicContentVueProductSliderItem extends PureComponent {
         posofreco: posofreco,
       },
     });
+    Event.dispatch(EVENT_GTM_VUE_PRODUCT_CLICK, data);
     // this.sendBannerClickImpression(item);
   };
   sendBannerClickImpression(item) {
@@ -103,7 +109,6 @@ class DynamicContentVueProductSliderItem extends PureComponent {
   }
 
   renderPrice(price) {
-    console.log("rendered home");
     const { isArabic } = this.state;
     if (price && price.length > 0) {
       const priceObj = price[0],
@@ -117,10 +122,11 @@ class DynamicContentVueProductSliderItem extends PureComponent {
 
       if (basePrice === specialPrice || !specialPrice) {
         return (
-          <div 
-          block="VueProductSlider" 
-          elem="SpecialPriceCon" 
-          mods={{ isArabic }}>
+          <div
+            block="VueProductSlider"
+            elem="SpecialPriceCon"
+            mods={{ isArabic }}
+          >
             <span block="VueProductSlider" elem="PriceWrapper">
               <span
                 id="price"
@@ -132,7 +138,11 @@ class DynamicContentVueProductSliderItem extends PureComponent {
       }
 
       return (
-        <div block="VueProductSlider" elem="SpecialPriceCon"  mods={{ isArabic }}>
+        <div
+          block="VueProductSlider"
+          elem="SpecialPriceCon"
+          mods={{ isArabic }}
+        >
           <del block="VueProductSlider" elem="Del">
             <span id="price">{`${currency} ${basePrice}`}</span>
           </del>

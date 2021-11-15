@@ -42,9 +42,6 @@ class HeaderMainSection extends NavigationAbstract {
 
   constructor(props) {
     super(props);
-    if (isMobile.any()) {
-      this.setState({ showSearch: true });
-    }
 
     this.state = {
       prevScrollpos: window.pageYOffset,
@@ -60,6 +57,7 @@ class HeaderMainSection extends NavigationAbstract {
       showPopup: false,
       isMobile: isMobile.any(),
     };
+
     this.headerSearchRef = createRef();
   }
 
@@ -83,7 +81,7 @@ class HeaderMainSection extends NavigationAbstract {
 
   renderLeftContainer() {
     return (
-      <div block="leftContainer">
+      <div block="leftContainer" key="leftContainer">
         {this.renderAccount()}
         {this.renderCart()}
         {this.renderWishlist()}
@@ -136,6 +134,9 @@ class HeaderMainSection extends NavigationAbstract {
   };
 
   componentDidMount() {
+    if (isMobile.any()) {
+      this.setState({ showSearch: true });
+    }
     window.addEventListener("scroll", this.handleScroll);
     const { delay } = this.state;
     this.timer = setInterval(this.tick, delay);
@@ -358,7 +359,7 @@ class HeaderMainSection extends NavigationAbstract {
           hideSearchBar={this.hideSearchBar}
           renderMySignInPopup={this.showMyAccountPopup}
           focusInput={true}
-          key="search"
+          key="searchDesktop"
         />
       </div>
     );

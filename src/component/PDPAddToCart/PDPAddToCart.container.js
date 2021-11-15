@@ -67,7 +67,6 @@ export const mapDispatchToProps = (dispatch) => ({
     ),
   setMinicartOpen: (isMinicartOpen = false) =>
     dispatch(setMinicartOpen(isMinicartOpen)),
-  getProductStock: (sku) => PDPDispatcher.getProductStock(dispatch, sku),
   sendNotifyMeEmail: (data) => PDPDispatcher.sendNotifyMeEmail(data),
   showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
   hideActiveOverlay: () => dispatch(hideActiveOverlay())
@@ -84,12 +83,12 @@ export class PDPAddToCartContainer extends PureComponent {
     total: PropTypes.number,
     productAdded: PropTypes.bool,
     setMinicartOpen: PropTypes.func.isRequired,
-    getProductStock: PropTypes.func.isRequired,
     setStockAvailability: PropTypes.func.isRequired,
     customer: customerType,
     guestUserEmail: PropTypes.string,
     showOverlay: PropTypes.func.isRequired,
-    hideActiveOverlay: PropTypes.func.isRequired
+    hideActiveOverlay: PropTypes.func.isRequired,
+    setSize: PropTypes.func.isRequired
   };
 
   static defaultProps = {
@@ -217,8 +216,8 @@ export class PDPAddToCartContainer extends PureComponent {
   componentDidMount() {
     const {
       product: { sku, size_eu, size_uk, size_us, in_stock, stock_qty },
-      getProductStock,
       setGuestUserEmail,
+      simple_products= []
     } = this.props;
     const email = BrowserDatabase.getItem(NOTIFY_EMAIL);
     if (email) {
@@ -227,9 +226,7 @@ export class PDPAddToCartContainer extends PureComponent {
     const {
       sizeObject: { sizeTypes },
     } = this.state;
-    this.setState({ processingRequest: true });
-    getProductStock(sku).then((response) => {
-      const allSizes = Object.entries(response).reduce((acc, size) => {
+      const allSizes = Object.entries(simple_products).reduce((acc, size) => {
         const sizeCode = size[0];
         const { quantity } = size[1];
 
@@ -264,12 +261,10 @@ export class PDPAddToCartContainer extends PureComponent {
       }
 
       this.setState({
-        processingRequest: false,
         mappedSizeObject: object,
-        productStock: response,
+        productStock: simple_products,
         isOutOfStock: outOfStockStatus,
       });
-    });
   }
 
   setGuestUserEmail(email) {
@@ -319,18 +314,24 @@ export class PDPAddToCartContainer extends PureComponent {
     });
   }
 
-  componentDidUpdate(prevProps, _) {
+  componentDidUpdate(prevProps, prevState) {
     const {
       totals: { total: PrevTotal = null },
     } = prevProps;
     const {
       totals: { total = null },
     } = this.props;
-    const { productAdded } = this.state;
+    const { productAdded, selectedSizeType, selectedSizeCode } = this.state;
 
     if (productAdded && total && PrevTotal !== total) {
       this.clearTimeAll();
       this.proceedToCheckout();
+    }
+
+    const { setSize } = this.props;
+    const { prevSelectedSizeType, prevSelectedSizeCode } = prevState;
+    if( (selectedSizeType !== prevSelectedSizeType) || (selectedSizeCode !== prevSelectedSizeCode) ){
+      setSize(selectedSizeType, selectedSizeCode);
     }
   }
 

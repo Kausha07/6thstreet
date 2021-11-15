@@ -12,12 +12,13 @@ class DragScroll extends PureComponent {
       scrollLeft: 0,
     };
   }
-  propTypes = {
+  static propTypes = {
     ref: PropTypes.object,
     rootClass: PropTypes.string,
-    children: PropTypes.string,
+    children: PropTypes.any,
+    isHomePage: PropTypes.bool,
   };
-  defaultProps = {
+  static defaultProps = {
     ref: { current: {} },
     rootClass: "",
   };

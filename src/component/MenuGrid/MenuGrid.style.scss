@@ -137,7 +137,7 @@
                         border-left: solid 1px var(--grey);
                         border-right: 0;
                         margin-left: 0;
-                        margin-right: 35px;
+                        margin-right: 0;
                         &:nth-last-child(1) {
                             border-left: 0;
                         }
@@ -203,6 +203,14 @@
                 a {
                     div:not(.MenuGrid-ItemLabel) {
                         display: none;
+                    }
+                }
+                &_isArabic {
+                    padding-right: 0;
+                    padding-left: 17px;
+                    a {
+                        padding-right: 0;
+                        padding-left: 10px;
                     }
                 }
             }

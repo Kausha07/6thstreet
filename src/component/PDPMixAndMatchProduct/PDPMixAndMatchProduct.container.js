@@ -46,7 +46,6 @@ export const mapDispatchToProps = (dispatch) => ({
     ),
   setMinicartOpen: (isMinicartOpen = false) =>
     dispatch(setMinicartOpen(isMinicartOpen)),
-  getProductStock: (sku) => PDPDispatcher.getProductStock(dispatch, sku),
   showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
   hideActiveOverlay: () => dispatch(hideActiveOverlay()),
 });
@@ -61,7 +60,6 @@ export class PDPMixAndMatchProductContainer extends PureComponent {
     total: PropTypes.number,
     productAdded: PropTypes.bool,
     setMinicartOpen: PropTypes.func.isRequired,
-    getProductStock: PropTypes.func.isRequired,
     showOverlay: PropTypes.func.isRequired,
     hideActiveOverlay: PropTypes.func.isRequired,
   };
@@ -418,16 +416,14 @@ export class PDPMixAndMatchProductContainer extends PureComponent {
 
   componentDidMount() {
     const {
-      product: { sku },
-      getProductStock,
+      product: { sku , simple_products=[]},
     } = this.props;
     const {
       sizeObject: { sizeCodes = [], sizeTypes },
     } = this.state;
     this.setState({ processingRequest: true });
 
-    getProductStock(sku).then((response) => {
-      const emptyStockSizes = Object.entries(response).reduce((acc, size) => {
+      const emptyStockSizes = Object.entries(simple_products).reduce((acc, size) => {
         const sizeCode = size[0];
         const { quantity } = size[1];
 
@@ -456,7 +452,6 @@ export class PDPMixAndMatchProductContainer extends PureComponent {
         mappedSizeObject: object,
         selectedSizeCode: object.sizeCodes[0],
       });
-    });
   }
 
   render() {

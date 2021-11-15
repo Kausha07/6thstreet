@@ -19,8 +19,8 @@ class DynamicContentBanner extends PureComponent {
       PropTypes.shape({
         url: PropTypes.string,
         link: PropTypes.string,
-        height: PropTypes.string,
-        width: PropTypes.string,
+        height: PropTypes.any,
+        width: PropTypes.any,
       })
     ).isRequired,
     isMenu: PropTypes.bool,
@@ -111,7 +111,14 @@ class DynamicContentBanner extends PureComponent {
     if (!link) {
       return (
         <>
-          <Image lazyLoad={true} key={i} src={url} ratio="custom" height={ht} width={wd} />
+          <Image
+            lazyLoad={true}
+            key={i}
+            src={url}
+            ratio="custom"
+            height={ht}
+            width={wd}
+          />
           {this.renderButton()}
         </>
       );
@@ -128,7 +135,8 @@ class DynamicContentBanner extends PureComponent {
           this.onclick(item);
         }}
       >
-        <Image lazyLoad={true}
+        <Image
+          lazyLoad={true}
           src={url}
           block="Image"
           style={{ maxWidth: wd, height: ht, objectFit: "unset" }}

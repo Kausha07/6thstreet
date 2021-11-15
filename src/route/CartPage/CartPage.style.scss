@@ -92,7 +92,7 @@
         display: inline-block;
         text-align: center;
         margin-bottom: 20px;
-        background-image: url();
+        // background-image: url();
         background-position: -447px -31px;
       }
     }
@@ -276,6 +276,16 @@
 
     strong {
       margin: 0 5px;
+    }
+  }
+
+  &-TabbyBlock {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 12px 8px;
+    @include desktop {
+      width: 100%;
     }
   }
 

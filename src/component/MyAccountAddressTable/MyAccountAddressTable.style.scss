@@ -87,10 +87,12 @@
     font-weight: var(--fw-bold);
     text-transform: uppercase;
     line-height: 16px;
+    word-break: break-all;
   }
 
   &-Street {
     color: var(--my-acc-street);
+    word-break: break-all;
   }
 
   &-City {

@@ -7,6 +7,7 @@ import BrowserDatabase from "Util/BrowserDatabase";
 import VueQuery from "../../query/Vue.query";
 import DynamicContentVueProductSliderContainer from "../DynamicContentVueProductSlider";
 import "./DynamicContentVueSlider.style";
+import { getUUIDToken } from "Util/Auth";
 
 export const mapStateToProps = (state) => ({
   gender: state.AppState.gender,
@@ -21,7 +22,7 @@ class DynamicContentVueSlider extends PureComponent {
         link: PropTypes.string,
         plp_config: PropTypes.shape({}), // TODO: describe
       })
-    ).isRequired,
+    ),
   };
 
   constructor(props) {
@@ -45,7 +46,7 @@ class DynamicContentVueSlider extends PureComponent {
     const query = {
       filters: [],
       num_results: 10,
-      mad_uuid: userData?.USER_DATA?.deviceUuid || null,
+      mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
     };
     let type = this.props.type;
     const payload = VueQuery.buildQuery(type, query, {

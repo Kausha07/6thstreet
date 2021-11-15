@@ -212,8 +212,14 @@ class ProductItem extends PureComponent {
       }
     }
     let urlWithQueryID;
-    if (!isVueData) {
-      const { pathname } = new URL(url);
+    let pathname = "/";
+    if (!isVueData && url) {
+      try {
+        pathname = new URL(url)?.pathname;
+      }
+      catch(err){
+        console.error(err);
+      }
       if (queryID) {
         urlWithQueryID = `${pathname}?qid=${queryID}`;
       } else {
