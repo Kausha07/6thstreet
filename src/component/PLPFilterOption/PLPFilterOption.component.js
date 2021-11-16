@@ -94,7 +94,7 @@ class PLPFilterOption extends PureComponent {
               id={ facet_value + initialFacetKey }
               name={ initialFacetKey }
               value={ facet_value }
-              checked={ this.state.filterSelected }
+              checked={ checked }
             />
         );
     }
@@ -130,7 +130,7 @@ class PLPFilterOption extends PureComponent {
               name={ initialFacetKey }
               value={ facet_value }
               defaultCheck={ defaultCheck || checked || onSelectChecked }
-              checked={ defaultCheck || this.state.filterSelected || onSelectChecked }
+              checked={ defaultCheck || checked || onSelectChecked }
             />
         );
     }
