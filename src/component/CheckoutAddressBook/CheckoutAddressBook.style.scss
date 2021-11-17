@@ -214,6 +214,17 @@
       }
     }
   }
+  .CheckoutAddressForm{
+    &_isGuestForm{
+      .Field_type_select{
+        .FieldSelect-Options{
+          .FieldSelect-Option{
+            text-transform: capitalize;
+          }
+        }
+      }
+    }
+  }
 }
 .EditAddress {
   &-PopUp {
