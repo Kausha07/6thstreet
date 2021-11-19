@@ -62,9 +62,14 @@ export class HeaderCartContainer extends PureComponent {
         const storeCredits = total_segments.find(
           ({ code }) => code === "customerbalance"
         );
-        const { value: appliedStoreCredit = 0 } = storeCredits || {};
 
-        if (subtotal > Math.abs(appliedStoreCredit)) {
+        const clubApparelCredits = total_segments.find(
+          ({ code }) => code === "clubapparel"
+        );
+        const { value: appliedStoreCredit = 0 } = storeCredits || {};
+        const { value: appliedClubApparelCredit = 0 } = clubApparelCredits || {};
+
+        if (subtotal > (Math.abs(appliedStoreCredit) + Math.abs(appliedClubApparelCredit))) {
           updateTotals(id);
         }
       }
