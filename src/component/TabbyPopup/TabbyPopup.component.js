@@ -51,7 +51,7 @@ class TabbyPopup extends PureComponent {
 
   render() {
     return (
-      <Popup id={TABBY_POPUP_ID} mix={{ block: "TabbyPopup" }}>
+      <Popup clickOutside={false} id={TABBY_POPUP_ID} mix={{ block: "TabbyPopup" }}>
         {this.renderCloseButton()}
         {this.renderContent()}
       </Popup>
