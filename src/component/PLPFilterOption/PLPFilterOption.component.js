@@ -48,7 +48,7 @@ class PLPFilterOption extends PureComponent {
         this.setState({ initialFacetKey: facet_key });
     }
 
-    handleClick = (e) => {
+    handleClick = () => {
         const {
             option: {
                 facet_value
@@ -62,11 +62,6 @@ class PLPFilterOption extends PureComponent {
 
 
         parentCallback(initialFacetKey, facet_value, checked, isRadio);
-        if(e){
-            this.setState({
-                filterSelected: e.target.checked
-            })
-        }
 
     };
 
@@ -90,7 +85,7 @@ class PLPFilterOption extends PureComponent {
         return (
             <Field
               formRef={ this.fieldRef }
-              onClick={ (e) => this.handleClick(e) }
+              onClick={ this.handleClick }
               mix={ {
                   block: 'PLPFilterOption',
                   elem: 'Input'
@@ -99,7 +94,7 @@ class PLPFilterOption extends PureComponent {
               id={ facet_value + initialFacetKey }
               name={ initialFacetKey }
               value={ facet_value }
-              checked={ this.state.filterSelected }
+              checked={ checked }
             />
         );
     }
@@ -124,7 +119,7 @@ class PLPFilterOption extends PureComponent {
         return (
             <Field
               formRef={ this.fieldRef }
-              onClick={  (e) => this.handleClick(e)  }
+              onClick={ this.handleClick }
               mix={ {
                   block: 'PLPFilterOption',
                   elem: 'Input',
@@ -135,7 +130,7 @@ class PLPFilterOption extends PureComponent {
               name={ initialFacetKey }
               value={ facet_value }
               defaultCheck={ defaultCheck || checked || onSelectChecked }
-              checked={ defaultCheck || this.state.filterSelected || onSelectChecked }
+              checked={ defaultCheck || checked || onSelectChecked }
             />
         );
     }
