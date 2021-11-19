@@ -93,6 +93,19 @@
         height: 30px;
         font-size: 20px;
     }
+    .MyAccountAddressFieldForm{
+        &-Fields{
+            .Field_type_select{
+                .FieldSelect{
+                    &-Options{
+                        .FieldSelect-Option{
+                            text-transform: capitalize;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 .PageWrapper {
