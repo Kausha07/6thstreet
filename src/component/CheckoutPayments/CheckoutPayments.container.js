@@ -61,7 +61,7 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
       isTabbyInstallmentAvailable,
       isTabbyPayLaterAvailable
     } = this.props;
-    const countryCode = ['AE', 'SA'].includes(getCountryFromUrl()) 
+    const countryCode = ['AE', 'SA'].includes(getCountryFromUrl())
     const isApplePayAvailable = HIDDEN_PAYMENTS.includes(CHECKOUT_APPLE_PAY) || !window.ApplePaySession
     this.selectPaymentMethod({ m_code: total ? countryCode && !isApplePayAvailable ? CHECKOUT_APPLE_PAY : CARD : FREE });
 
@@ -73,7 +73,7 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
       );
     }
 
-    this.setState({ isTabbyInstallmentAvailable:isTabbyInstallmentAvailable });    
+    this.setState({ isTabbyInstallmentAvailable:isTabbyInstallmentAvailable });
     this.setState({ isTabbyPayLaterAvailable: isTabbyPayLaterAvailable });
 
   }
@@ -85,7 +85,7 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
       isTabbyPayLaterAvailable
     } = this.props;
     const { selectedPaymentCode } = this.state;
-    const countryCode = ['AE', 'SA'].includes(getCountryFromUrl()) 
+    const countryCode = ['AE', 'SA'].includes(getCountryFromUrl())
     const isApplePayAvailable = HIDDEN_PAYMENTS.includes(CHECKOUT_APPLE_PAY) || !window.ApplePaySession
 
     if (
@@ -126,7 +126,7 @@ export class CheckoutPaymentsContainer extends SourceCheckoutPaymentsContainer {
       .then(() => {
         updateTotals(cartId);
         finishPaymentRequest();
-        removeBinPromotion();
+        // removeBinPromotion();
         resetBinApply();
       })
       .catch(() => {

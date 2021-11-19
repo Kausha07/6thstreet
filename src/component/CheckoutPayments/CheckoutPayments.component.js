@@ -430,7 +430,7 @@ export class CheckoutPayments extends SourceCheckoutPayments {
           </Slider>
         </ul>
         {this.renderSelectedPayment()}
-        {this.renderPayPal()}
+        {/* {this.renderPayPal()} */}
       </>
     );
   }
