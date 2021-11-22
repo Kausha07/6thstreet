@@ -7,12 +7,17 @@ const path = require('path');
 
 const PORT = 3000;
 const app = express();
-
 function setCustomCacheControl (res, path) {
     res.append('Access-Control-Allow-Origin', ['*']);
     if (serveStatic.mime.lookup(path) === 'text/html') {
       // Custom Cache-Control for HTML files
       res.setHeader('Cache-Control', 'public, max-age=0')
+      
+      CDN_URL = process.env?.PUBLIC_URL
+      if(CDN_URL){
+        res.setHeader('link', `<${CDN_URL}>; rel=preconnect`);
+      }
+    
     }
     else {
         res.append('cache-control', 'public, max-age=259200, must-revalidate');
