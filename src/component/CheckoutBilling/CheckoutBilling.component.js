@@ -52,9 +52,13 @@ export class CheckoutBilling extends SourceCheckoutBilling {
   };
 
   componentDidMount() {
-    const { termsAreEnabled } = this.props;
+    const { termsAreEnabled , paymentMethod} = this.props;
     if (!termsAreEnabled) {
       this.setState({ isOrderButtonEnabled: true });
+    }
+    if (paymentMethod === CHECKOUT_APPLE_PAY) {
+      const { requestConfig, launchPaymentMethod } = this.props;
+      requestConfig().then(launchPaymentMethod);
     }
   }
   componentDidUpdate(prevProps) {
