@@ -73,7 +73,7 @@ export {
 };
 
 export class Router extends SourceRouter {
-  
+
   static propTypes = {
     ...SourceRouter.propTypes,
     isAppReady: PropTypes.bool.isRequired,
@@ -87,7 +87,7 @@ export class Router extends SourceRouter {
     homepageUrl: "/(|men.html|women.html|kids.html|home.html|home_beauty_women.html)/",
   };
 
- 
+
 
   [BEFORE_ITEMS_TYPE] = [
     {
@@ -332,6 +332,15 @@ export class Router extends SourceRouter {
     return <LocaleWizard />;
   }
 
+
+  renderWelcomeHomePage() {
+    return (
+      <div>
+        <Footer/>
+      </div>
+    );
+  }
+
   renderContent() {
     const { isArabic } = this.state;
     return (
@@ -352,6 +361,8 @@ export class Router extends SourceRouter {
     if (isAppReady) {
       return this.renderContent();
     }
+
+    return this.renderWelcomeHomePage()
 
     return this.renderLocaleWizard();
   }

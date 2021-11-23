@@ -53,9 +53,10 @@ export const AppStateReducer = (state = getInitialState(), action) => {
 
     switch (type) {
         case SET_COUNTRY:
+            let k = 'AE'
             return updateCacheAndReturn({
                 ...state,
-                country: actionCountry,
+                country: k,
                 locale: buildLocale(language, actionCountry)
             });
 

@@ -142,7 +142,7 @@ class FooterMain extends PureComponent {
                   <br />
                   <Link to={items.google_onclick} key={items.id_google}>
                     <Image lazyLoad={true} src={items.google_play} alt="google play download" />{" "}
-                    
+
                   </Link>
                   <br />
                   <Link to={items.gallery_onclick} key={items.id_gallery}>
