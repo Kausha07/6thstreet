@@ -281,7 +281,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
       showErrorNotification,
       guest_checkout = true,
       totals = {},
-      totals: { items = [], total, total_segments = [] },
+      totals: { items = [], discount = 0, total, total_segments = [] },
       updateStoreCredit,
       isSignedIn,
     } = this.props;
@@ -359,7 +359,7 @@ export class CheckoutContainer extends SourceCheckoutContainer {
         0
       );
 
-      if (totalSum !== 0) {
+      if (totalSum + discount !== 0) {
         showErrorNotification(__("Your cart is invalid"));
         history.push("/");
       }
