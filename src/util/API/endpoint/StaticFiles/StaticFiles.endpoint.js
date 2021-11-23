@@ -1,5 +1,6 @@
 import { getStore } from "Store";
 import CDN from "../../provider/CDN";
+import ThirdPartyAPI from "../../provider/ThirdPartyAPI";
 
 // eslint-disable-next-line import/prefer-default-export
 export const getStaticFile = async (key, TemplateParamsOverride = {}) => {
@@ -36,8 +37,10 @@ export const getStaticFile = async (key, TemplateParamsOverride = {}) => {
   );
 
   const { pathname } = new URL(url);
+
   try {
-    const res = await CDN.get(pathname);
+    // replaced CDN to ThirdPartyAPI to bypass proxy
+    const res = await ThirdPartyAPI.get(url);
     if (res.data) {
       return res.data;
     } else if (res === "Something Went Wrong") {
