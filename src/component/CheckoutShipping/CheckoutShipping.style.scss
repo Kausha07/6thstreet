@@ -134,7 +134,7 @@
 
         .MyAccountAddressPopup {
           margin: 0 auto 20px auto;
-          background: var(--white);
+          background: #fff;
           height: 100% !important;
           position: absolute;
           width: 100%;
@@ -142,7 +142,7 @@
             @include desktop {
               top: 0;
               padding: 20px 30px 30px 30px;
-              background: var(--white);
+              background: #fff;
             }
 
             .MyAccountAddressFieldForm {
@@ -162,7 +162,7 @@
             .Form {
               @include desktop {
                 padding: 20px 30px 30px 30px;
-                background: var(--white);
+                background: #fff;
               }
 
               .MyAccountAddressFieldForm {
@@ -224,7 +224,7 @@
   }
 
   h3 {
-    background: var(--white);
+    background: #fff;
     font-size: 21px;
     margin: 0;
     padding: 30px 20px 3px;
@@ -260,11 +260,11 @@
 }
 
 .CheckoutShippingStep {
-  background: var(--white);
+  background: #fff;
 
   &-DeliveryButton {
     padding: 30px;
-    background: var(--white);
+    background: #fff;
     text-align: center;
 
     button.primary {

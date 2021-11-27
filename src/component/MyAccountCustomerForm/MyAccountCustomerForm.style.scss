@@ -55,7 +55,7 @@
     .Button {
         background: var(--black);
         border: 2px solid var(--black);
-        color: var(--white);
+        color: #fff;
         font-weight: var(--fw-bold);
         height: 50px;
         margin-top: 9px;
@@ -239,7 +239,7 @@
     &-BirthDay {
         margin-top: 1rem;
         &:after {
-            background-color: var(--white);
+            background-color: #fff;
             content: "";
             height: 58px;
             margin-bottom: 2px;

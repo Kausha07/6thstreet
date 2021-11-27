@@ -217,7 +217,7 @@
 
     span:last-of-type {
       @include close-button;
-      --header-color: var(--White);
+      --header-color: #fff;
       padding-right: 10px;
       top: -18px;
     }
@@ -248,7 +248,7 @@
   }
 
   &-CheckoutButton {
-    color: var(--White);
+    color: #fff;
     background-color: var(--OutrageousOrange);
     box-shadow: 0 1px 4px var(--BlackOpacityOf6);
 
@@ -272,7 +272,7 @@
     border: 2px solid var(--Black);
     color: var(--Black) !important;
     width: 124px !important;
-    background-color: var(--white) !important;
+    background-color: #fff !important;
     font-size: 12px;
     font-weight: var(--fw-bold);
     text-transform: uppercase;
@@ -328,7 +328,7 @@
 
     @include after-mobile {
       padding: 0 20px 10px 20px;
-      background: var(--white);
+      background: #fff;
     }
 
     strong {
@@ -451,7 +451,7 @@ div.CartOverlay.Overlay {
   opacity: 1;
   border-radius: 12px;
   //   border: 1px solid var(--Iron);
-  background-color: var(--White);
+  background-color: #fff;
   //   box-shadow: 0 0 6px 0 var(--BlackOpacityOf1);
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.15);
 }
