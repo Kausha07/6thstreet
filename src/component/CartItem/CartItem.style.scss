@@ -239,7 +239,7 @@
     line-height: 30px;
     font-size: 13px;
     text-align: left;
-    color: var(--Black);
+    color: #000;
     letter-spacing: 0.75px;
     margin-right: 0;
     display: flex;
@@ -290,7 +290,7 @@
     }
 
     &-BasePrice {
-      color: var(--Black);
+      color: #000;
       text-decoration: line-through;
       padding-right: 5px;
       font-weight: var(--fw-regular);
@@ -298,7 +298,7 @@
   }
 
   &-ColSizeQty {
-    // color: var(--Tundora);
+    // color: #4a4a4a;
     font-weight: var(--fw-regular);
     margin-right: 0;
     display: flex;

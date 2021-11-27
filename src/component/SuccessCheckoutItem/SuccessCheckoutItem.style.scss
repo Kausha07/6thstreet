@@ -162,7 +162,7 @@
         line-height: 24px;
         font-size: 12px;
         text-align: left;
-        color: var(--Black);
+        color: #000;
         letter-spacing: .75px;
 
         &_isArabic {
@@ -183,7 +183,7 @@
 
         div {
 
-                color: var(--Black);
+                color: #000;
                 text-decoration-line: line-through;
                 -webkit-text-decoration-line: line-through;
                 padding-right: 5px;
@@ -216,7 +216,7 @@
         flex-wrap: wrap;
         span {
             margin-left: 5px;
-            color: var(--DustyGray);
+            color: #9b9b9b;
             &:first-child{
                 margin-left: 0 !important;
             }

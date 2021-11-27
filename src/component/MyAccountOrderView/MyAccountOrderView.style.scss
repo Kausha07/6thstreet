@@ -14,7 +14,7 @@
     height: 50px;
 
     button {
-      border: 1px solid var(--black);
+      border: 1px solid #000;
       border-radius: 5px;
       font-family: var(--avenir-regular-font);
       font-size: 14px;
@@ -51,7 +51,7 @@
       width: 100%;
 
       p {
-        color: var(--white);
+        color: #fff;
         font-family: var(--avenir-medium-font);
         font-size: 16px;
         font-weight: bold;
@@ -63,7 +63,7 @@
     &Title,
     &Date {
       span {
-        color: var(--black);
+        color: #000;
         font-family: var(--avenir-medium-font);
         font-weight: bold;
         text-transform: capitalize;
@@ -229,13 +229,13 @@
   &-Button {
     &Return,
     &Cancel {
-      --button-background: var(--white);
-      --button-border: var(--black);
+      --button-background: #fff;
+      --button-border: #000;
       --button-border-width: 2px;
-      --button-color: var(--black);
-      --button-hover-background: var(--black);
-      --button-hover-border: var(--black);
-      --button-hover-color: var(--white);
+      --button-color: #000;
+      --button-hover-background: #000;
+      --button-hover-border: #000;
+      --button-hover-color: #fff;
     }
   }
 
@@ -301,7 +301,7 @@
       content: "";
       width: 0;
       height: 0;
-      border: solid var(--black);
+      border: solid #000;
       border-width: 0 2px 2px 0;
       display: inline-block;
       padding: 2px 7px 7px 2px;

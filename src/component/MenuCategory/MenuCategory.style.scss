@@ -12,9 +12,9 @@
         content: none;
     }
     @include before-desktop {
-        border: solid var(--white);
+        border: solid #fff;
         border-width: 7px 0;
-        color: var(--black);
+        color: #000;
         font-size: 13px;
         font-weight: var(--fw-demi);
         line-height: 45px;
@@ -43,7 +43,7 @@
         &:last-child {
             .MenuCategory {
                 &-CategoryButton {
-                    color: var(--red);
+                    color: #d12229;
                 }
             }
         }
@@ -52,14 +52,14 @@
                 .MenuCategory {
                     &-CategoryButton {
                         background-color: var(--gold);
-                        color: var(--white);
+                        color: #fff;
                         font-weight: var(--fw-bold);
                     }
                 }
             }
             .MenuCategory {
                 &-CategoryButton {
-                    color: var(--white);
+                    color: #fff;
                     font-size: 15px;
                 }
             }
@@ -73,8 +73,8 @@
         &_isVisible {
             .MenuCategory {
                 &-CategoryButton {
-                    background-color: var(--black);
-                    color: var(--white);
+                    background-color: #000;
+                    color: #fff;
                     font-weight: var(--fw-bold);
                     font-size: 15px;
                     transition-duration: 0s;
@@ -86,7 +86,7 @@
             &:first-child {
                 .MenuCategory {
                     &-CategoryButton {
-                        color: var(--white);
+                        color: #fff;
                         background-color: var(--gold);
                     }
                 }
@@ -94,8 +94,8 @@
             &:last-child {
                 .MenuCategory {
                     &-CategoryButton {
-                        background-color: var(--red);
-                        color: var(--white);
+                        background-color: #d12229;
+                        color: #fff;
                     }
                 }
             }
@@ -120,7 +120,7 @@
             }
         }
         .DynamicContent {
-            background-color: var(--white);
+            background-color: #fff;
             border-left: 1px solid var(--light-gray);
             height: 100%;
             overflow-x: hidden;
@@ -171,7 +171,7 @@
                 text-decoration: none;
             }
             &-Label {
-                color: var(--white);
+                color: #fff;
                 font-family: "Avenir Next";
                 font-size: 12px;
                 font-weight: 500;
@@ -180,7 +180,7 @@
             }
         }
         .DynamicContent {
-            background-color: var(--white);
+            background-color: #fff;
             // display: flex;
             height: 403px;
             overflow: hidden;
@@ -277,7 +277,7 @@
                     text-decoration: none;
                     &-Label {
                         &::before {
-                            background-color: var(--red);
+                            background-color: #d12229;
                             color: transparent;
                             transform: skew(-15deg, 0deg) translate(-10px, 0px);
                             content: "";
@@ -297,37 +297,37 @@
                 }
             }
             .DynamicContent {
-                background-color: var(--red);
+                background-color: #d12229;
                 .DynamicContentBanner {
                     button:hover {
-                        color: var(--white);
+                        color: #fff;
                     }
                 }
                 .MenuBrands {
                     &-ContentWrapper {
                         &-Brands {
                             a {
-                                color: var(--white);
+                                color: #fff;
                             }
                         }
                         span {
-                            color: var(--white);
+                            color: #fff;
                         }
                     }
                 }
                 .MenuGrid {
                     &-Content {
-                        background-color: var(--red);
+                        background-color: #d12229;
                         a,
                         span {
-                            color: var(--white);
+                            color: #fff;
                         }
                     }
                 }
             }
         }
         &-LastCategoryBackground {
-            background-color: var(--red);
+            background-color: #d12229;
             color: transparent;
             margin-left: -65px;
             transform: skew(-15deg, 0deg);
@@ -398,7 +398,7 @@
                 &:first-child {
                     text-transform: none;
                     .MenuCategory-CategoryLink-Label {
-                        color: var(--white);
+                        color: #fff;
                     }
                 }
             }
