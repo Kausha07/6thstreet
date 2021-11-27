@@ -24,7 +24,7 @@
     }
 
     @include before-desktop {
-      background-color: var(--white);
+      background-color: #fff;
       height: 100%;
       padding-bottom: 83px;
       position: fixed;
@@ -33,7 +33,7 @@
       z-index: 1;
 
       .FooterMain {
-        background-color: var(--white);
+        background-color: #fff;
         display: block;
         height: 280px;
         margin-bottom: -144px;
