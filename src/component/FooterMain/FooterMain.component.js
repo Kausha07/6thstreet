@@ -161,7 +161,6 @@ class FooterMain extends PureComponent {
                   <div block="FooterMain" elem="SocialIcon">
                     <Link to={items.insta_href} key={items.id_insta}>
                       <Image lazyLoad={true} src={instagram} alt="instagram icon" />
-
                     </Link>
                   </div>
                 </div>

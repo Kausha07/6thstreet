@@ -1,0 +1,38 @@
+.WelcomeHomePage{
+    &-Top{
+        &-Logo{
+            display: flex;
+            img{
+                margin: 0 auto;
+                width: 270px;
+                padding: 36px 0;
+            }
+        }
+    }
+    &-MainSection{
+        display: flex;
+        max-width: var(--container-max-width);
+        margin: 0 auto;
+        width: var(--main-container-width-dsk);
+        justify-content: space-between;
+        margin-bottom: 30px;
+        .WelcomeHomePage-GenderSelection{
+            img{
+                width: 362px;
+                cursor: pointer;
+                height: 535px;
+            }
+            &-Button{
+                position: absolute;
+                bottom: 30px;
+                left: 40px;
+                height: 59px;
+                width: 276px;
+                border-radius: 6px;
+                background-color: #FFFFFF;
+            }
+        }
+
+    }
+
+}

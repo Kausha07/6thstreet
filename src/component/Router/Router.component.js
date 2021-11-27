@@ -10,6 +10,8 @@ import Footer from "Component/Footer";
 import GoogleTagManager from "Component/GoogleTagManager";
 import GTMRouteWrapper from "Component/GoogleTagManager/GoogleTagManagerRouteWrapper.component";
 import Header from "Component/Header";
+import HeaderTopBar from "Component/HeaderTopBar";
+
 import {
   BRANDS,
   CART,
@@ -29,6 +31,8 @@ import Seo from "Component/Seo";
 import LocaleWizard from "Route/LocaleWizard";
 import UrlRewrites from "Route/UrlRewrites";
 import LiveExperience from "Route/LiveExperience";
+import WelcomeHomePage from "Component/WelcomeHomePage";
+
 import {
   CartPage,
   Checkout,
@@ -334,9 +338,21 @@ export class Router extends SourceRouter {
 
 
   renderWelcomeHomePage() {
+    let navigationState = {name: 'default'}
+    let newMenuGender = ""
+    let pathname = window.location
+
     return (
       <div>
-        <Footer/>
+        {/* <HeaderTopBar/> */}
+        <HeaderTopBar
+          navigationState={navigationState}
+          changeMenuGender={this.changeMenuGender}
+          newMenuGender={newMenuGender}
+          pathname={pathname}
+        />
+        <WelcomeHomePage/>
+
       </div>
     );
   }

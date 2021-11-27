@@ -5,17 +5,52 @@ import {
     SET_GENDER,
     SET_LANGUAGE,
     SET_LOCALE,
-    SET_PDP_WIDGET_DATA
+    SET_PDP_WIDGET_DATA,
+    SET_COUNTRY_FOR_WELCOME,
+    SET_LANGUAGE_FOR_WELCOME
 } from './AppState.action';
 
 export const APP_STATE_CACHE_KEY = 'APP_STATE_CACHE_KEY';
+
+export const APP_STATE_CACHE_KEY_WELCOME = 'APP_STATE_CACHE_KEY_WELCOME';
+
+export const getInitialCountry = () => {
+    let country = ''
+    let lang = ''
+    let langOptions = ['en', 'ar']
+
+    let k = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)
+    if(k && k.data.country){
+        country = k.data.country
+    }
+    if(k && k.data.language){
+        lang = k.data.language
+    }
+
+    if(!k){
+        if(langOptions.includes(window.navigator.language.slice(0,2))){
+            lang = window.navigator.language.slice(0,2)
+        }
+        else{
+            lang = 'en'
+        }
+        country = 'AE'
+    }
+    let data = {
+        language: lang,
+        country: country
+    }
+    return data
+
+    // debugger
+}
 
 export const getInitialState = () => (
     {
         ...(BrowserDatabase.getItem(APP_STATE_CACHE_KEY) || {
             locale: '', // en-ae, ar-ae, en-sa, ar-sa, en-kw, ar-kw ...
-            country: '', // one of AE, SA, KW, OM, BH, QA
-            language: 'en', // one of en, ar
+            country: getInitialCountry().country, // one of AE, SA, KW, OM, BH, QA
+            language: getInitialCountry().language, // one of en, ar
             gender: 'women' // one of 'men', 'women', 'kids'
         }),
         pdpWidgetsData: []
@@ -53,10 +88,9 @@ export const AppStateReducer = (state = getInitialState(), action) => {
 
     switch (type) {
         case SET_COUNTRY:
-            let k = 'AE'
             return updateCacheAndReturn({
                 ...state,
-                country: k,
+                country: actionCountry,
                 locale: buildLocale(language, actionCountry)
             });
 
@@ -85,6 +119,16 @@ export const AppStateReducer = (state = getInitialState(), action) => {
                 ...state,
                 pdpWidgetsData
             };
+        case SET_COUNTRY_FOR_WELCOME:
+            return updateCacheAndReturn({
+                ...state,
+                country: actionCountry
+            });
+            case SET_LANGUAGE_FOR_WELCOME:
+                return updateCacheAndReturn({
+                ...state,
+                language: actionLanguage
+            });
         default:
             return state;
     }

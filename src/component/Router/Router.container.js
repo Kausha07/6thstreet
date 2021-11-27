@@ -70,9 +70,9 @@ export class RouterContainer extends SourceRouterContainer {
     const decodedParams = atob(getCookie('authData'));
     setUUIDToken(uuidv4());
     if(!getUUID()) {
-      setUUID(uuidv4()); 
+      setUUID(uuidv4());
     }
-    
+
     if (decodedParams.match('mobileToken') && decodedParams.match('authToken')) {
       const params = decodedParams.split('&').reduce((acc, param) => {
         acc[param.substr(0, param.indexOf('='))] = param.substr(param.indexOf('=') + 1);
@@ -110,13 +110,13 @@ export class RouterContainer extends SourceRouterContainer {
     }
   }
 
-  componentDidUpdate() {    
+  componentDidUpdate() {
     const countryCode = navigator.language.substr(0,2);
     const currentLn= window.location.href.indexOf("://") + 3;
     const currentLang = window.location.href.substr(currentLn,2);
     if(countryCode === "ar" && currentLang !== countryCode && window.location.pathname ==="/superstars" && window.location.href.indexOf('?_branch_match_id') > 0 ){
-      const redirectPath = window.location.href.replace("en-", "ar-").split('?')[0] ;      
-      window.location.href= redirectPath;      
+      const redirectPath = window.location.href.replace("en-", "ar-").split('?')[0] ;
+      window.location.href= redirectPath;
     }
   }
 
