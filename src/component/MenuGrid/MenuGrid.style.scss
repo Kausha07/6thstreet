@@ -2,11 +2,11 @@
     width: 23%;
     &-ItemLabel {}
     &-Content {
-        background-color: #fff;
+        background-color: #ffffff;
         pointer-events: all;
         span,
         a {
-            color: #000;
+            color: #000000;
         }
     }
     &-Columns {
@@ -108,7 +108,7 @@
                 }
             }
             &_isAllShow {
-                background-color: #fff;
+                background-color: #ffffff;
                 left: 0;
                 position: absolute;
                 top: 0;

@@ -12,9 +12,9 @@
         content: none;
     }
     @include before-desktop {
-        border: solid #fff;
+        border: solid #ffffff;
         border-width: 7px 0;
-        color: #000;
+        color: #000000;
         font-size: 13px;
         font-weight: var(--fw-demi);
         line-height: 45px;
@@ -52,14 +52,14 @@
                 .MenuCategory {
                     &-CategoryButton {
                         background-color: var(--gold);
-                        color: #fff;
+                        color: #ffffff;
                         font-weight: var(--fw-bold);
                     }
                 }
             }
             .MenuCategory {
                 &-CategoryButton {
-                    color: #fff;
+                    color: #ffffff;
                     font-size: 15px;
                 }
             }
@@ -73,8 +73,8 @@
         &_isVisible {
             .MenuCategory {
                 &-CategoryButton {
-                    background-color: #000;
-                    color: #fff;
+                    background-color: #000000;
+                    color: #ffffff;
                     font-weight: var(--fw-bold);
                     font-size: 15px;
                     transition-duration: 0s;
@@ -86,7 +86,7 @@
             &:first-child {
                 .MenuCategory {
                     &-CategoryButton {
-                        color: #fff;
+                        color: #ffffff;
                         background-color: var(--gold);
                     }
                 }
@@ -95,7 +95,7 @@
                 .MenuCategory {
                     &-CategoryButton {
                         background-color: #d12229;
-                        color: #fff;
+                        color: #ffffff;
                     }
                 }
             }
@@ -120,7 +120,7 @@
             }
         }
         .DynamicContent {
-            background-color: #fff;
+            background-color: #ffffff;
             border-left: 1px solid var(--light-gray);
             height: 100%;
             overflow-x: hidden;
@@ -171,7 +171,7 @@
                 text-decoration: none;
             }
             &-Label {
-                color: #fff;
+                color: #ffffff;
                 font-family: "Avenir Next";
                 font-size: 12px;
                 font-weight: 500;
@@ -180,7 +180,7 @@
             }
         }
         .DynamicContent {
-            background-color: #fff;
+            background-color: #ffffff;
             // display: flex;
             height: 403px;
             overflow: hidden;
@@ -300,18 +300,18 @@
                 background-color: #d12229;
                 .DynamicContentBanner {
                     button:hover {
-                        color: #fff;
+                        color: #ffffff;
                     }
                 }
                 .MenuBrands {
                     &-ContentWrapper {
                         &-Brands {
                             a {
-                                color: #fff;
+                                color: #ffffff;
                             }
                         }
                         span {
-                            color: #fff;
+                            color: #ffffff;
                         }
                     }
                 }
@@ -320,7 +320,7 @@
                         background-color: #d12229;
                         a,
                         span {
-                            color: #fff;
+                            color: #ffffff;
                         }
                     }
                 }
@@ -398,7 +398,7 @@
                 &:first-child {
                     text-transform: none;
                     .MenuCategory-CategoryLink-Label {
-                        color: #fff;
+                        color: #ffffff;
                     }
                 }
             }

@@ -14,7 +14,7 @@
 }
 
 .CheckoutGuestForm {
-    background-color: #fff;
+    background-color: #ffffff;
 
     &-FieldAndSignIn {
         display: flex;
@@ -49,8 +49,8 @@
             height: 40px;
             background-color: red !important;
             border-radius: 40px !important;
-            --input-color: #000;
-            caret-color: #000;
+            --input-color: #000000;
+            caret-color: #000000;
             text-transform: none;
             font-size: 14px;
             padding: 16px 15px;

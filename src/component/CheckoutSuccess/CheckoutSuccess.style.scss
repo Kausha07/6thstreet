@@ -51,7 +51,7 @@
       p {
         font-size: 18px;
         font-weight: var(--fw-demi);
-        color: #fff;
+        color: #ffffff;
       }
     }
   }
@@ -128,7 +128,7 @@
         padding-top: 22px;
         width: 100%;
         margin-left: -33px;
-        color: #fff;
+        color: #ffffff;
         font-family: var(--avenir-demi-font);
         font-weight: var(--fw-medium);
         display: grid;
@@ -168,10 +168,10 @@
 
         &.secondary {
           margin-top: 12px !important;
-          background-color: #fff;
+          background-color: #ffffff;
           font-size: 12px;
           &:hover {
-            background-color: #000;
+            background-color: #000000;
           }
         }
 
@@ -180,7 +180,7 @@
           width: 70%;
 
           &:hover {
-            background-color: #fff;
+            background-color: #ffffff;
           }
         }
       }
@@ -276,7 +276,7 @@
         }
 
         @include before-desktop() {
-          background-color: #fff;
+          background-color: #ffffff;
         }
       }
 
@@ -546,7 +546,7 @@
   }
 
   &-ButtonWrapper {
-    background-color: #fff;
+    background-color: #ffffff;
     position: fixed;
     z-index: 10;
     bottom: 0;
@@ -565,7 +565,7 @@
   @include desktop() {
     margin: 0 auto;
     width: 640px;
-    background-color: #fff;
+    background-color: #ffffff;
 
     section {
       max-width: 250px;

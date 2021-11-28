@@ -7,7 +7,7 @@
   }
   &-Wrapper {
     @include desktop {
-      background: #fff;
+      background: #ffffff;
       padding-top: 20px;
     }
   }
@@ -53,7 +53,7 @@
         height: 18px;
         border-radius: 50%;
         border: 1px solid var(--border-color);
-        background: #fff;
+        background: #ffffff;
       }
 
       &::after {
@@ -62,7 +62,7 @@
 
       &_isSelected {
         border: 1px solid var(--selected-step-color);
-        background: #fff;
+        background: #ffffff;
 
         &::after {
           opacity: 1;
@@ -107,7 +107,7 @@
   }
 
   &-CustomAddressWrapper {
-    background: #fff;
+    background: #ffffff;
 
     .FieldForm {
       margin-top: 20px;
@@ -134,7 +134,7 @@
         border: none;
         border-radius: 7px;
         background: var(--my-acc-background);
-        color: #000;
+        color: #000000;
         font-weight: var(--fw-regular);
         text-transform: capitalize;
         min-width: 140px;
