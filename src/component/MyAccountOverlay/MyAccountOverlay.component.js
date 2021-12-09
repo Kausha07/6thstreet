@@ -511,11 +511,13 @@ export class MyAccountOverlay extends PureComponent {
     return COUNTRY_CODES_FOR_PHONE_VALIDATION[customerCountry] ? "9" : "8";
   }
   renderSocials(renderer) {
+    // change mods after api integration
     return (
       <div
         block="MyAccountOverlay"
         elem="SSO"
-        mods={{ disabled: !!!SSO_LOGIN_PROVIDERS?.length }}
+        mods={{ disabled: false }}
+        // mods={{ disabled: !!!SSO_LOGIN_PROVIDERS?.length }}
       >
         <div block="MyAccountOverlay-SSO" elem="title">
           {renderer === "SignIn"
@@ -526,21 +528,24 @@ export class MyAccountOverlay extends PureComponent {
           <button
             block="MyAccountOverlay-SSO-Buttons"
             elem="Facebook"
-            mods={{ disabled: !!!SSO_LOGIN_PROVIDERS?.includes("Facebook") }}
+            mods={{ disabled: false }}
+              // !!!SSO_LOGIN_PROVIDERS?.includes("Facebook") }}
           >
             {__("FACEBOOK")}
           </button>
           <button
             block="MyAccountOverlay-SSO-Buttons"
             elem="Google"
-            mods={{ disabled: !!!SSO_LOGIN_PROVIDERS?.includes("Google") }}
+            mods={{ disabled: false }}
+            // mods={{ disabled: !!!SSO_LOGIN_PROVIDERS?.includes("Google") }}
           >
             {__("GOOGLE")}
           </button>
           <button
             block="MyAccountOverlay-SSO-Buttons"
             elem="Apple"
-            mods={{ disabled: !!!SSO_LOGIN_PROVIDERS?.includes("Google") }}
+            mods={{ disabled: false }}
+            // mods={{ disabled: !!!SSO_LOGIN_PROVIDERS?.includes("Google") }}
           >
             {__("APPLE")}
           </button>
