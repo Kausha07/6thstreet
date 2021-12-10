@@ -43,11 +43,7 @@ import {
 import "./MyAccountOverlay.style";
 
 export class MyAccountOverlay extends PureComponent {
-  constructor(props) {
-    super(props);
-    this.authRef = React.createRef();
-    this.attachSigninFunction = React.createRef();
-  }
+
   static propTypes = {
     // eslint-disable-next-line react/no-unused-prop-types
     isOverlayVisible: PropTypes.bool.isRequired,
@@ -560,15 +556,6 @@ export class MyAccountOverlay extends PureComponent {
 
     return COUNTRY_CODES_FOR_PHONE_VALIDATION[customerCountry] ? "9" : "8";
   }
-
-  onSignIn = (googleUser) => {
-    var profile = googleUser.getBasicProfile();
-    console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-    console.log('Name: ' + profile.getName());
-    console.log('Image URL: ' + profile.getImageUrl());
-    console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-  }
-
   renderSocials(renderer) {
     // change mods after api integration
     return (
@@ -601,7 +588,6 @@ export class MyAccountOverlay extends PureComponent {
           >
             {__("GOOGLE")}
           </button>
-          {/* <div class="g-signin2" data-onsuccess="onSignIn"></div> */}
         </div>
       </div>
     );
