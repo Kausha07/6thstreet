@@ -204,7 +204,9 @@
     &_state {
       &_createAccount {
         height: 100vh;
-        // max-height: 700px;
+        @include desktop() {
+          max-height: 700px;
+        }
 
         h4 {
           padding-right: 1rem;
@@ -240,7 +242,9 @@
 
       &_signIn {
         height: 100vh;
-        // max-height: 672px;
+        @include desktop() {
+          max-height: 672px;
+        }
         h4 {
           text-align: center;
         }
