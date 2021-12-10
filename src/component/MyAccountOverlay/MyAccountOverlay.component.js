@@ -104,7 +104,6 @@ export class MyAccountOverlay extends PureComponent {
       attachSigninFunction(document.getElementById('g-signin2'));
     });
     const attachSigninFunction = (element) => {
-      console.log(element.id);
       authRef.attachClickHandler(element, {},
         function (googleUser) {
           const profile = googleUser.getBasicProfile()
@@ -235,6 +234,7 @@ export class MyAccountOverlay extends PureComponent {
           {title}
         </p>
         {render()}
+        {isSignIn ?  this.renderSocials("SignIn") : isCreateAccount?this.renderSocials("Create") : null}
         {this.renderCloseBtn()}
       </div>
     );
@@ -486,7 +486,6 @@ export class MyAccountOverlay extends PureComponent {
             {__("Create Account")}
           </button>
         </div>
-        {this.renderSocials("Create")}
       </Form>
     );
   }
@@ -683,7 +682,6 @@ export class MyAccountOverlay extends PureComponent {
             {__("Sign in")}
           </button>
         </div>
-        {this.renderSocials("SignIn")}
       </Form>
     );
   }
