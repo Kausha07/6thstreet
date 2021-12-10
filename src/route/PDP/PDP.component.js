@@ -17,22 +17,20 @@ class PDP extends PureComponent {
   };
   state = {
     signInPopUp: "",
-    showPopup:false
+    showPopup: false,
   };
-
 
   showMyAccountPopup = () => {
     this.setState({ showPopup: true });
   };
 
   closePopup = () => {
-    this.setState({ signInPopUp: "",showPopup:false });
+    this.setState({ signInPopUp: "", showPopup: false });
   };
 
   onSignIn = () => {
     this.closePopup();
   };
-
 
   renderMySignInPopup() {
     const { showPopup } = this.state;
@@ -68,6 +66,10 @@ class PDP extends PureComponent {
     return <PDPDetail {...this.props} />;
   }
 
+  renderSeperator() {
+    return <div block="Seperator" />;
+  }
+
   renderPDP() {
     const { nbHits, isLoading } = this.props;
     if (!isLoading) {
@@ -75,6 +77,7 @@ class PDP extends PureComponent {
         <div block="PDP">
           {this.renderMySignInPopup()}
           {this.renderMainSection()}
+          {this.renderSeperator()}
           {this.renderMixAndMatchSection()}
           {this.renderDetailsSection()}
           {this.renderDetail()}

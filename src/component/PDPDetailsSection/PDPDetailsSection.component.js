@@ -31,6 +31,7 @@ class PDPDetailsSection extends PureComponent {
     },
     pdpWidgetsAPIData: [],
     isArabic: isArabic(),
+    showMore: true,
   };
 
   componentDidMount() {
@@ -54,37 +55,40 @@ class PDPDetailsSection extends PureComponent {
     const { gender, pdpWidgetsData, product: sourceProduct } = this.props;
     if (pdpWidgetsData && pdpWidgetsData.length > 0) {
       const userData = BrowserDatabase.getItem("MOE_DATA");
-        const customer = BrowserDatabase.getItem("customer");
-        const userID = customer && customer.id ? customer.id : null;
-        const query = {
-          filters: [],
-          num_results: 10,
-          mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
-        };
+      const customer = BrowserDatabase.getItem("customer");
+      const userID = customer && customer.id ? customer.id : null;
+      const query = {
+        filters: [],
+        num_results: 10,
+        mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
+      };
 
-        let promisesArray = [];
-        pdpWidgetsData.forEach((element) => {
-          const { type } = element;
-          const payload = VueQuery.buildQuery(type, query, {
-            gender,
-            userID,
-            sourceProduct,
-          });
-          promisesArray.push(fetchVueData(payload));
+      let promisesArray = [];
+      pdpWidgetsData.forEach((element) => {
+        const { type } = element;
+        const payload = VueQuery.buildQuery(type, query, {
+          gender,
+          userID,
+          sourceProduct,
         });
-        Promise.all(promisesArray)
-          .then((resp) => {
-            this.setState({ pdpWidgetsAPIData: resp });
-          })
-          .catch((err) => {
-            console.err(err);
-          });
+        promisesArray.push(fetchVueData(payload));
+      });
+      Promise.all(promisesArray)
+        .then((resp) => {
+          this.setState({ pdpWidgetsAPIData: resp });
+        })
+        .catch((err) => {
+          console.err(err);
+        });
     }
   }
 
   renderShareButton() {
     const url = new URL(window.location.href);
     url.searchParams.append("utm_source", "pdp_share");
+    if (!window.navigator.share) {
+      return null;
+    }
     return (
       <div block="PDPDetailsSection" elem="ShareButtonContainer">
         <ShareButton
@@ -185,14 +189,32 @@ class PDPDetailsSection extends PureComponent {
     const {
       product: { description },
     } = this.props;
+    const { showMore } = this.state;
     return (
-      <>
-        <p block="PDPDetailsSection" elem="Description">
-          {description}
-        </p>
-        {this.renderHighlights()}
-      </>
+      <div block="PDPDetailWrapper">
+        <div block="PDPDetailWrapper" elem="Items" mods={{ showMore }}>
+          <div block="PDPDetailWrapper" elem="LeftDescription">
+            <p block="PDPDetailWrapper" elem="Title">
+              {__("PRODUCT DETAILS:")}
+            </p>
+            <p block="PDPDetailsSection" elem="Description">
+              {description}
+            </p>
+          </div>
+          {this.renderHighlights()}
+        </div>
+        {showMore ? (
+          <div block="PDPDetailWrapper" elem="Button">
+            <button onClick={() => this.updateShowMoreState(false)}>
+              {__("SHOW MORE DETAILS")}
+            </button>
+          </div>
+        ) : null}
+      </div>
     );
+  }
+  updateShowMoreState(state) {
+    this.setState({ showMore: state });
   }
 
   listTitle(str) {
@@ -621,17 +643,21 @@ class PDPDetailsSection extends PureComponent {
               const { data } = item;
               if (data && data.length > 0) {
                 return (
-                  <DynamicContentVueProductSliderContainer
-                    widgetID={widgetID}
-                    products={data}
-                    heading={heading}
-                    isHome={true}
-                    renderMySignInPopup={renderMySignInPopup}
-                    sourceProdID={sku}
-                    sourceCatgID={categories_without_path[0]}
-                    pageType={"pdp"}
-                    key={`DynamicContentVueProductSliderContainer${index}`}
-                  />
+                  <>
+                    <div block="PDPWidgets" elem="Slider">
+                      <DynamicContentVueProductSliderContainer
+                        widgetID={widgetID}
+                        products={data}
+                        heading={heading}
+                        isHome={true}
+                        renderMySignInPopup={renderMySignInPopup}
+                        sourceProdID={sku}
+                        sourceCatgID={categories_without_path[0]}
+                        pageType={"pdp"}
+                        key={`DynamicContentVueProductSliderContainer${index}`}
+                      />
+                    </div>
+                  </>
                 );
               }
               return null;
@@ -652,15 +678,16 @@ class PDPDetailsSection extends PureComponent {
       <div block="PDPDetailsSection">
         <Accordion
           mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
-          title={__("Description")}
+          title={__("PRODUCT DETAILS:")}
           is_expanded={this.state.isExpanded["0"]}
         >
           {this.renderIconsSection()}
           {this.renderDescription()}
         </Accordion>
-        <div block="Seperator" />
+
         {this.renderShareButton()}
-        {this.renderPdpWidgets()}
+        <div block="PDPWidgets">{this.renderPdpWidgets()}</div>
+        <div block="Seperator2" />
         {/* <Accordion
             mix={ { block: 'PDPDetailsSection', elem: 'Accordion' } }
             title={ __('Size & Fit') }
