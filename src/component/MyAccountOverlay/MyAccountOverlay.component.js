@@ -12,6 +12,7 @@
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { withRouter } from "react-router-dom";
+import MagentoAPI from 'Util/API/provider/MagentoAPI';
 
 import CountrySwitcher from "Component/CountrySwitcher";
 import LanguageSwitcher from "Component/LanguageSwitcher";
@@ -42,6 +43,11 @@ import {
 import "./MyAccountOverlay.style";
 
 export class MyAccountOverlay extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.authRef = React.createRef();
+    this.attachSigninFunction = React.createRef();
+  }
   static propTypes = {
     // eslint-disable-next-line react/no-unused-prop-types
     isOverlayVisible: PropTypes.bool.isRequired,
@@ -74,6 +80,7 @@ export class MyAccountOverlay extends PureComponent {
     email: PropTypes.string,
   };
 
+
   static defaultProps = {
     isCheckout: false,
     registerField: false,
@@ -94,6 +101,49 @@ export class MyAccountOverlay extends PureComponent {
     countryCode: "",
   };
 
+  componentDidMount() {
+    let authRef
+    gapi.load('auth2', function () {
+      authRef = gapi.auth2.init();
+      attachSigninFunction(document.getElementById('g-signin2'));
+    });
+    const attachSigninFunction = (element) => {
+      console.log(element.id);
+      authRef.attachClickHandler(element, {},
+        function (googleUser) {
+          const profile = googleUser.getBasicProfile()
+          console.log("id of the user", profile.getId())
+          console.log("user name ", profile.getName())
+          console.log("user email", profile.getEmail())
+          console.log("user google token", googleUser.getAuthResponse().id_token)
+
+          const id_token = googleUser.getAuthResponse().id_token;
+          const fullName = profile.getName().split(" ")
+          const social_id = profile.getId()
+          const email = profile.getEmail()
+          const payload = {
+            social_id,
+            firstname: fullName[0],
+            lastname: fullName[1],
+            email,
+            customer_telephone: null,
+            type: "google"
+          }
+          MagentoAPI.post(`sociallogin/google/login?${id_token}`, payload).then((response) => {
+            console.log("response", response)
+          }).catch(() => {
+            console.log("error occured while magento api call")
+            // showErrorMessage(__('Error appeared while requesting a cancelation'));
+            // this.setState({ isLoading: false });
+          });
+
+        }, function (error) {
+          alert(JSON.stringify(error, undefined, 2));
+        });
+    }
+  }
+
+
   renderMap = {
     [STATE_SIGN_IN]: {
       render: () => this.renderSignIn(),
@@ -110,7 +160,7 @@ export class MyAccountOverlay extends PureComponent {
       render: () => this.renderCreateAccount(),
     },
     [STATE_LOGGED_IN]: {
-      render: () => {},
+      render: () => { },
     },
     [STATE_CONFIRM_EMAIL]: {
       render: () => this.renderConfirmEmail(),
@@ -165,13 +215,13 @@ export class MyAccountOverlay extends PureComponent {
               <span>ستريت</span>
             </>
           ) : (
-            <>
-              <span>6</span>
+              <>
+                <span>6</span>
               TH
               <span>S</span>
               TREET
             </>
-          )}
+            )}
         </div>
         <div block="MyAccountOverlay" elem="Buttons">
           <button block="Button" mods={{ isSignIn }} onClick={handleSignIn}>
@@ -510,6 +560,15 @@ export class MyAccountOverlay extends PureComponent {
 
     return COUNTRY_CODES_FOR_PHONE_VALIDATION[customerCountry] ? "9" : "8";
   }
+
+  onSignIn = (googleUser) => {
+    var profile = googleUser.getBasicProfile();
+    console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+    console.log('Name: ' + profile.getName());
+    console.log('Image URL: ' + profile.getImageUrl());
+    console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+  }
+
   renderSocials(renderer) {
     // change mods after api integration
     return (
@@ -517,7 +576,7 @@ export class MyAccountOverlay extends PureComponent {
         block="MyAccountOverlay"
         elem="SSO"
         mods={{ disabled: false }}
-        // mods={{ disabled: !!!SSO_LOGIN_PROVIDERS?.length }}
+      // mods={{ disabled: !!!SSO_LOGIN_PROVIDERS?.length }}
       >
         <div block="MyAccountOverlay-SSO" elem="title">
           {renderer === "SignIn"
@@ -529,18 +588,20 @@ export class MyAccountOverlay extends PureComponent {
             block="MyAccountOverlay-SSO-Buttons"
             elem="Facebook"
             mods={{ disabled: false }}
-              // !!!SSO_LOGIN_PROVIDERS?.includes("Facebook") }}
+          // !!!SSO_LOGIN_PROVIDERS?.includes("Facebook") }}
           >
             {__("FACEBOOK")}
           </button>
           <button
+            id="g-signin2"
             block="MyAccountOverlay-SSO-Buttons"
             elem="Google"
             mods={{ disabled: false }}
-            // mods={{ disabled: !!!SSO_LOGIN_PROVIDERS?.includes("Google") }}
+          // mods={{ disabled: !!!SSO_LOGIN_PROVIDERS?.includes("Google") }}
           >
             {__("GOOGLE")}
           </button>
+          {/* <div class="g-signin2" data-onsuccess="onSignIn"></div> */}
         </div>
       </div>
     );
@@ -584,7 +645,7 @@ export class MyAccountOverlay extends PureComponent {
               type={ENABLE_OTP_LOGIN && isOTP ? "text" : "email"}
               placeholder={`${
                 ENABLE_OTP_LOGIN ? __("EMAIL OR PHONE") : __("EMAIL ADDRESS")
-              }*`}
+                }*`}
               id="email"
               name="email"
               value={email}
