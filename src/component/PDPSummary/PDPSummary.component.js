@@ -326,7 +326,7 @@ class PDPSummary extends PureComponent {
 
     const tags = [prod_tag_1, prod_tag_2].filter(Boolean);
     
-    if(simple_products?.length === 1) {
+    if(Object.keys(simple_products)?.length === 1) {
       selectedSizeCode = Object.keys(simple_products)[0];
     }
 
