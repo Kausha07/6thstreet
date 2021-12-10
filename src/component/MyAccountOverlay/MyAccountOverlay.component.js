@@ -262,7 +262,8 @@ export class MyAccountOverlay extends PureComponent {
         parentCallback={this.onForgotChange}
         isValidateOnChange
       >
-        <Image lazyLoad={true}
+        <Image
+          lazyLoad={true}
           mix={{
             block: "MyAccountOverlay",
             elem: "LockImg",
@@ -439,6 +440,7 @@ export class MyAccountOverlay extends PureComponent {
             {__("Create Account")}
           </button>
         </div>
+        {this.renderSocials("Create")}
       </Form>
     );
   }
@@ -508,7 +510,49 @@ export class MyAccountOverlay extends PureComponent {
 
     return COUNTRY_CODES_FOR_PHONE_VALIDATION[customerCountry] ? "9" : "8";
   }
-
+  renderSocials(renderer) {
+    // change mods after api integration
+    return (
+      <div
+        block="MyAccountOverlay"
+        elem="SSO"
+        mods={{ disabled: false }}
+        // mods={{ disabled: !!!SSO_LOGIN_PROVIDERS?.length }}
+      >
+        <div block="MyAccountOverlay-SSO" elem="title">
+          {renderer === "SignIn"
+            ? __("OR SIGN IN WITH")
+            : __("OR REGISTER IN WITH")}
+        </div>
+        <div block="MyAccountOverlay-SSO" elem="Buttons">
+          <button
+            block="MyAccountOverlay-SSO-Buttons"
+            elem="Facebook"
+            mods={{ disabled: false }}
+              // !!!SSO_LOGIN_PROVIDERS?.includes("Facebook") }}
+          >
+            {__("FACEBOOK")}
+          </button>
+          <button
+            block="MyAccountOverlay-SSO-Buttons"
+            elem="Google"
+            mods={{ disabled: false }}
+            // mods={{ disabled: !!!SSO_LOGIN_PROVIDERS?.includes("Google") }}
+          >
+            {__("GOOGLE")}
+          </button>
+          <button
+            block="MyAccountOverlay-SSO-Buttons"
+            elem="Apple"
+            mods={{ disabled: false }}
+            // mods={{ disabled: !!!SSO_LOGIN_PROVIDERS?.includes("Google") }}
+          >
+            {__("APPLE")}
+          </button>
+        </div>
+      </div>
+    );
+  }
   renderSignIn() {
     const {
       email,
@@ -600,31 +644,7 @@ export class MyAccountOverlay extends PureComponent {
             {__("Sign in")}
           </button>
         </div>
-        <div
-          block="MyAccountOverlay"
-          elem="SSO"
-          mods={{ disabled: !!!SSO_LOGIN_PROVIDERS?.length }}
-        >
-          <div block="MyAccountOverlay-SSO" elem="title">
-            {__("OR SIGN IN WITH")}
-          </div>
-          <div block="MyAccountOverlay-SSO" elem="Buttons">
-            <button
-              block="MyAccountOverlay-SSO-Buttons"
-              elem="Facebook"
-              mods={{ disabled: !!!SSO_LOGIN_PROVIDERS?.includes("Facebook") }}
-            >
-              {__("FACEBOOK")}
-            </button>
-            <button
-              block="MyAccountOverlay-SSO-Buttons"
-              elem="Google"
-              mods={{ disabled: !!!SSO_LOGIN_PROVIDERS?.includes("Google") }}
-            >
-              {__("GOOGLE")}
-            </button>
-          </div>
-        </div>
+        {this.renderSocials("SignIn")}
       </Form>
     );
   }

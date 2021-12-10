@@ -615,11 +615,16 @@
     }
     &-Buttons {
       display: flex;
+      flex-direction: column;
       margin-top: 48px;
       width: 100%;
-      justify-content: space-around;
+      justify-content: center;
+      @include mobile(){
+        margin-bottom: 24px;
+      }
       &-Facebook,
-      &-Google {
+      &-Google, 
+      &-Apple {
         color: #ffffff;
         font-size: 13px;
         font-weight: bold;
@@ -627,7 +632,8 @@
         line-height: 16px;
         text-align: center;
         border-radius: 6px;
-        width: 160px !important;
+        margin: 5px 0px;
+        width: 100% !important;
       }
       &-Facebook {
         &_disabled {
@@ -640,6 +646,12 @@
           display: none;
         }
         background-color: #dc4139;
+      }
+      &-Apple {
+        &_disabled {
+          display: none;
+        }
+        background-color: #000000;
       }
     }
   }
