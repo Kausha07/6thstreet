@@ -326,16 +326,16 @@ class PDPSummary extends PureComponent {
 
     const tags = [prod_tag_1, prod_tag_2].filter(Boolean);
     
-    // if(simple_products?.length === 1) {
-    //   selectedSizeCode = Object.keys(simple_products)[0];
-    // }
+    if(simple_products?.length === 1) {
+      selectedSizeCode = Object.keys(simple_products)[0];
+    }
 
-    // if(
-    //      simple_products && selectedSizeCode && (parseInt(simple_products[selectedSizeCode]?.cross_border_qty) === parseInt(simple_products[selectedSizeCode]?.quantity))
-    //     && (parseInt(simple_products[selectedSizeCode]?.cross_border_qty) > 0)
-    // ){
-    //   tags.push(__("International Shipment"));
-    // }
+    if(
+         simple_products && selectedSizeCode && (parseInt(simple_products[selectedSizeCode]?.cross_border_qty) === parseInt(simple_products[selectedSizeCode]?.quantity))
+        && (parseInt(simple_products[selectedSizeCode]?.cross_border_qty) > 0)
+    ){
+      tags.push(__("International Shipment"));
+    }
     if(discountable?.toLowerCase() === "no"){
       tags.push(__("Non Discountable"));
     }
