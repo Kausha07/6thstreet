@@ -619,12 +619,11 @@
       margin-top: 48px;
       width: 100%;
       justify-content: center;
-      @include mobile(){
+      @include mobile() {
         margin-bottom: 24px;
       }
       &-Facebook,
-      &-Google, 
-      &-Apple {
+      &-Google {
         color: #ffffff;
         font-size: 13px;
         font-weight: bold;
@@ -646,12 +645,6 @@
           display: none;
         }
         background-color: #dc4139;
-      }
-      &-Apple {
-        &_disabled {
-          display: none;
-        }
-        background-color: #000000;
       }
     }
   }

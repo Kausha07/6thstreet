@@ -541,14 +541,6 @@ export class MyAccountOverlay extends PureComponent {
           >
             {__("GOOGLE")}
           </button>
-          <button
-            block="MyAccountOverlay-SSO-Buttons"
-            elem="Apple"
-            mods={{ disabled: false }}
-            // mods={{ disabled: !!!SSO_LOGIN_PROVIDERS?.includes("Google") }}
-          >
-            {__("APPLE")}
-          </button>
         </div>
       </div>
     );
