@@ -1,119 +1,154 @@
 /* eslint-disable fp/no-let */
 /* eslint-disable no-magic-numbers */
 
-import PropTypes from 'prop-types';
-import { PureComponent } from 'react';
-import { DISPLAY_DISCOUNT_PERCENTAGE } from './Price.config';
-import { isArabic } from 'Util/App';
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
+import { DISPLAY_DISCOUNT_PERCENTAGE } from "./Price.config";
+import { isArabic } from "Util/App";
+import { getCurrency } from "Util/App/App";
 
 class Price extends PureComponent {
-    static propTypes = {
-        basePrice: PropTypes.number.isRequired,
-        specialPrice: PropTypes.number.isRequired,
-        currency: PropTypes.string.isRequired,
-        country: PropTypes.string.isRequired,
-        fixedPrice: PropTypes.bool,
-    };
+  static propTypes = {
+    basePrice: PropTypes.number.isRequired,
+    specialPrice: PropTypes.number.isRequired,
+    currency: PropTypes.string.isRequired,
+    country: PropTypes.string.isRequired,
+    fixedPrice: PropTypes.bool,
+  };
 
-    static defaultProps = {
-        fixedPrice: false,
-    };
+  static defaultProps = {
+    fixedPrice: false,
+  };
 
-    state = {
-        isArabic: isArabic()
-    };
+  state = {
+    isArabic: isArabic(),
+  };
 
-    haveDiscount() {
-        const { basePrice, specialPrice } = this.props;
+  haveDiscount() {
+    const { basePrice, specialPrice } = this.props;
 
-        return specialPrice !== 'undefined' && specialPrice && basePrice !== specialPrice;
+    return (
+      specialPrice !== "undefined" && specialPrice && basePrice !== specialPrice
+    );
+  }
+
+  renderDiscountSpecialPrice(onSale, specialPrice) {
+    const currency = getCurrency();
+    return (
+      <span
+        block="Price"
+        elem="Discount"
+        mods={{ discount: this.haveDiscount() }}
+      >
+        {onSale ? (
+          <>
+            {currency}
+            <span> </span>
+            {specialPrice}
+          </>
+        ) : (
+          <>{`${__("On Sale")} ${this.discountPercentage()} Off`}</>
+        )}
+      </span>
+    );
+  }
+
+  renderBasePrice() {
+    const { basePrice, fixedPrice } = this.props;
+
+    return (
+      <>
+        {this.renderCurrency()}
+        &nbsp;
+        {fixedPrice ? (1 * basePrice).toFixed(3) : basePrice}
+      </>
+    );
+  }
+
+  renderSpecialPrice() {
+    const { specialPrice, fixedPrice } = this.props;
+
+    return (
+      <span
+        block="Price"
+        elem="Special"
+        mods={{ discount: this.haveDiscount() }}
+      >
+        {this.renderCurrency()}
+        &nbsp;
+        {fixedPrice ? (1 * specialPrice).toFixed(3) : specialPrice}
+        &nbsp;
+      </span>
+    );
+  }
+
+  discountPercentage() {
+    const { basePrice, specialPrice, renderSpecialPrice } = this.props;
+
+    const { isArabic } = this.state;
+
+    let discountPercentage = Math.round(100 * (1 - specialPrice / basePrice));
+    if (discountPercentage === 0) {
+      discountPercentage = 1;
+    }
+    if (!renderSpecialPrice) {
+      return (
+        <span
+          block="SearchProduct"
+          elem="Discount"
+          mods={{ discount: this.haveDiscount() }}
+        >
+          -({discountPercentage}%)<span> </span>
+        </span>
+      );
+    } else {
+      return `-${discountPercentage}%`;
+    }
+  }
+
+  renderPrice() {
+    const { basePrice, specialPrice, country, renderSpecialPrice } = this.props;
+    const currency = getCurrency();
+
+    if (!parseFloat(basePrice)) {
+      return null;
     }
 
-    renderBasePrice() {
-        const { basePrice, fixedPrice } = this.props;
-
-        return (
-            <span block="Price" elem="Base" mods={ { discount: this.haveDiscount() } }>
-                { this.renderCurrency() }
-                &nbsp;
-                { fixedPrice ? (1 * basePrice).toFixed(3) : basePrice }
-            </span>
-        );
+    if (basePrice === specialPrice || !specialPrice) {
+      return this.renderBasePrice();
     }
+    return (
+      <>
+        <span block="Price" elem="Wrapper">
+          {renderSpecialPrice && this.renderSpecialPrice()}
+          <del block="Price" elem="Del">
+            {this.renderBasePrice()}
+          </del>
+        </span>
+        {DISPLAY_DISCOUNT_PERCENTAGE[country] && !renderSpecialPrice ? (
+          <span block="SearchProduct" elem="PriceWrapper">
+            {this.discountPercentage(basePrice, specialPrice)}
+            {this.renderDiscountSpecialPrice(true, specialPrice)}
+          </span>
+        ) : (
+          this.renderDiscountSpecialPrice(false)
+        )}
+      </>
+    );
+  }
 
-    renderSpecialPrice() {
-        const { specialPrice, fixedPrice } = this.props;
+  renderCurrency() {
+    const { currency } = this.props;
+    return (
+      <span block="Price" elem="Currency">
+        {currency}
+      </span>
+    );
+  }
 
-        return (
-            <span block="Price" elem="Special" mods={ { discount: this.haveDiscount() } }>
-                { this.renderCurrency() }
-                &nbsp;
-                { fixedPrice ? (1 * specialPrice).toFixed(3) : specialPrice }
-            </span>
-        );
-    }
-
-    discountPercentage() {
-        const {
-            basePrice,
-            specialPrice,
-        } = this.props;
-
-        const { isArabic } = this.state;
-
-        let discountPercentage = Math.round(100 * (1 - (specialPrice / basePrice)));
-        if (discountPercentage === 0) {
-            discountPercentage = 1;
-        }
-
-        return `-${discountPercentage}%`;
-    }
-
-    renderPrice() {
-        const {
-            basePrice,
-            specialPrice,
-            country,
-        } = this.props;
-
-        if(!parseFloat(basePrice)){
-            return null;
-        }
-
-        if (basePrice === specialPrice || !specialPrice) {
-            return this.renderBasePrice();
-        }
-
-        return (
-            <>
-                <span block="Price" elem="Wrapper">
-                    { this.renderSpecialPrice() }
-                    &nbsp;
-                    <del block="Price" elem="Del">{ this.renderBasePrice() }</del>
-                </span>
-                {
-                DISPLAY_DISCOUNT_PERCENTAGE[country] && (
-                    <span block="Price" elem="Discount" mods={ { discount: this.haveDiscount() } }>
-                        { `${__("On Sale")} ${ this.discountPercentage() } Off`}
-                    </span>
-                )
-                }
-            </>
-        );
-    }
-
-    renderCurrency() {
-        const { currency } = this.props;
-        return <span block="Price" elem="Currency">{ currency }</span>;
-    }
-
-    render() {
-        return (
-            <p block="Price">
-                { this.renderPrice() }
-            </p>
-        );
-    }
+  render() {
+    return <p block="Price">{this.renderPrice()}</p>;
+  }
 }
 
 export default Price;

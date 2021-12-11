@@ -26,6 +26,7 @@ import RecommendedForYouVueSliderContainer from "../RecommendedForYouVueSlider";
 // import WishlistSliderContainer from "../WishlistSlider";
 import BRAND_MAPPING from "./SearchSiggestion.config";
 import "./SearchSuggestion.style";
+import Price from "Component/Price";
 
 var ESCAPE_KEY = 27;
 
@@ -481,13 +482,15 @@ class SearchSuggestion extends PureComponent {
 
       return (
         <div block="SearchProduct" elem="SpecialPriceCon">
-          <del block="SearchProduct" elem="Del">
+          <Price price={price} renderSpecialPrice={false} />
+
+          {/* <del block="SearchProduct" elem="Del">
             <span id="price">{`${currency} ${basePrice}`}</span>
           </del>
           <span block="SearchProduct" elem="PriceWrapper">
             {this.discountPercentage(basePrice, specialPrice, haveDiscount)}
             {this.renderSpecialPrice(specialPrice, haveDiscount)}
-          </span>
+          </span> */}
         </div>
       );
     }
@@ -687,7 +690,7 @@ class SearchSuggestion extends PureComponent {
   // };
 
   renderTrendingBrand = (brand, i) => {
-    const { label = "", image_url, link= "" } = brand;
+    const { label = "", image_url, link = "" } = brand;
     const { isArabic } = this.state;
     // const urlName = label
     //   .replace("&", "")
@@ -724,22 +727,22 @@ class SearchSuggestion extends PureComponent {
           genderInURL = requestedGender?.replace(
             requestedGender?.charAt(0),
             requestedGender?.charAt(0).toUpperCase()
-          );          
+          );
         } else {
           genderInURL = "";
         }
       }
     }
-    
+
     return (
       <li key={i}>
         <Link
           to={{
             pathname: link
-            ? `${link}`
-            : `/catalogsearch/result/?q=${encodeURIComponent(
-              label
-              )}&dFR[gender][0]=${genderInURL}`,
+              ? `${link}`
+              : `/catalogsearch/result/?q=${encodeURIComponent(
+                  label
+                )}&dFR[gender][0]=${genderInURL}`,
             state: {
               prevPath: window.location.href,
             },
