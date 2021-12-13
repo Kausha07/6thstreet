@@ -25,6 +25,7 @@ import {
 } from "Component/Price/Price.config";
 import { CartItemType } from "Type/MiniCart";
 import { isArabic } from "Util/App";
+import Price from "Component/Price";
 
 import "./CartItem.style";
 import "./CartItem.extended.style";
@@ -255,31 +256,44 @@ export class CartItem extends PureComponent {
 
     const { isArabic } = this.state;
     const decimals = FIXED_CURRENCIES.includes(currency_code) ? 3 : 2;
-
+    const decimalPrice = parseFloat(row_total).toFixed(decimals);
+    const decimalBasePrice = parseFloat(basePrice).toFixed(decimals);
+    let price = [
+      {
+        [currency_code]: {
+          "6s_base_price": decimalBasePrice,
+          "6s_special_price": decimalPrice,
+          default: decimalPrice,
+          default_formated: `${currency_code} ${decimalPrice}`,
+        },
+      },
+    ];
     const withoutDiscount = (
-      <>
-        <span>{currency_code}</span>&nbsp;
-        <span>{`${parseFloat(row_total).toFixed(decimals)}`}</span>
-      </>
+      <Price price={price} renderSpecialPrice={false} />
+      // <>
+      //   <span>{currency_code}</span>&nbsp;
+      //   <span>{`${parseFloat(row_total).toFixed(decimals)}`}</span>
+      // </>
     );
 
     const discountPercentage = Math.round(100 * (1 - row_total / basePrice));
 
     const withDiscount = (
-      <div block="CartItem" elem="DiscountPrice" mods={{ isArabic }}>
-        <div
-          block="CartItem-DiscountPrice"
-          elem="BasePrice"
-          mods={{ isArabic }}
-        >
-          <span>{currency_code}</span>&nbsp;
-          <span>{`${parseFloat(basePrice).toFixed(decimals)}`}</span>
-        </div>
-        <div>
-          {DISPLAY_DISCOUNT_PERCENTAGE[country] && `-${discountPercentage}%`}
-          {withoutDiscount}
-        </div>
-      </div>
+      // <div block="CartItem" elem="DiscountPrice" mods={{ isArabic }}>
+      //   <div
+      //     block="CartItem-DiscountPrice"
+      //     elem="BasePrice"
+      //     mods={{ isArabic }}
+      //   >
+      //     <span>{currency_code}</span>&nbsp;
+      //     <span>{`${parseFloat(basePrice).toFixed(decimals)}`}</span>
+      //   </div>
+      //   <div>
+      //     {DISPLAY_DISCOUNT_PERCENTAGE[country] && `-${discountPercentage}%`}
+      //     {withoutDiscount}
+      //   </div>
+      // </div>
+      <Price price={price} renderSpecialPrice={false} cart={true} />
     );
 
     return (
@@ -448,7 +462,8 @@ export class CartItem extends PureComponent {
     let customURL = `${url_key}.html`;
     return (
       <div onClick={() => this.props.history.push(customURL)}>
-        <Image lazyLoad={true}
+        <Image
+          lazyLoad={true}
           src={thumbnail}
           mix={{
             block: "CartItem",
@@ -458,7 +473,12 @@ export class CartItem extends PureComponent {
           ratio="custom"
           alt={`Product ${name} thumbnail.`}
         />
-        <Image lazyLoad={true} style={{ display: "none" }} alt={name} src={thumbnail} />
+        <Image
+          lazyLoad={true}
+          style={{ display: "none" }}
+          alt={name}
+          src={thumbnail}
+        />
       </div>
     );
   }

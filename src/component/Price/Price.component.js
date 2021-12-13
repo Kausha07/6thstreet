@@ -43,7 +43,8 @@ class Price extends PureComponent {
         {onSale ? (
           <>
             {currency}
-            <span> </span>
+            <span block="Price-Discount" elem="space"></span>
+            &nbsp;
             {specialPrice}
           </>
         ) : (
@@ -83,7 +84,7 @@ class Price extends PureComponent {
   }
 
   discountPercentage() {
-    const { basePrice, specialPrice, renderSpecialPrice } = this.props;
+    const { basePrice, specialPrice, renderSpecialPrice, cart } = this.props;
 
     const { isArabic } = this.state;
 
@@ -91,7 +92,7 @@ class Price extends PureComponent {
     if (discountPercentage === 0) {
       discountPercentage = 1;
     }
-    if (!renderSpecialPrice) {
+    if (!renderSpecialPrice && !cart) {
       return (
         <span
           block="SearchProduct"
@@ -107,7 +108,8 @@ class Price extends PureComponent {
   }
 
   renderPrice() {
-    const { basePrice, specialPrice, country, renderSpecialPrice } = this.props;
+    const { basePrice, specialPrice, country, renderSpecialPrice, cart } =
+      this.props;
     const currency = getCurrency();
 
     if (!parseFloat(basePrice)) {
