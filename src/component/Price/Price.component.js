@@ -149,7 +149,11 @@ class Price extends PureComponent {
   }
 
   render() {
-    return <p block="Price">{this.renderPrice()}</p>;
+    return (
+      <p block={`Price ${this.haveDiscount() ? "discount" : ""}`}>
+        {this.renderPrice()}
+      </p>
+    );
   }
 }
 
