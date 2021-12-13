@@ -128,19 +128,19 @@ export class MyAccountOverlay extends PureComponent {
             lastname: fullName[1],
             email,
             customer_telephone: null,
-            type: "google",
-          };
-          MagentoAPI.post(`sociallogin/google/login?googleToken=${id_token}`, payload)
-            .then((response) => {
-              console.log("response", response);
-            })
-            .catch(() => {
-              console.log("error occured while magento api call");
-              // showErrorMessage(__('Error appeared while requesting a cancelation'));
-              // this.setState({ isLoading: false });
-            });
-        },
-        function (error) {
+            type: "google"
+          }
+
+          // Magento social login API 
+          MagentoAPI.post(`sociallogin/google/login?googleToken=${id_token}`, payload).then((response) => {
+            console.log("response", response)
+          }).catch(() => {
+            console.log("error occured while magento api call")
+            // showErrorMessage(__('Error appeared while requesting a cancelation'));
+            // this.setState({ isLoading: false });
+          });
+
+        }, function (error) {
           alert(JSON.stringify(error, undefined, 2));
         }
       );
@@ -576,7 +576,7 @@ export class MyAccountOverlay extends PureComponent {
      console.log("Please Login first")
     }
   }
-  
+
   // facebook login dialog
   facebookLogin = ()=> {
 
