@@ -12,7 +12,7 @@
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { withRouter } from "react-router-dom";
-import MagentoAPI from 'Util/API/provider/MagentoAPI';
+import MagentoAPI from "Util/API/provider/MagentoAPI";
 
 import CountrySwitcher from "Component/CountrySwitcher";
 import LanguageSwitcher from "Component/LanguageSwitcher";
@@ -43,7 +43,6 @@ import {
 import "./MyAccountOverlay.style";
 
 export class MyAccountOverlay extends PureComponent {
-
   static propTypes = {
     // eslint-disable-next-line react/no-unused-prop-types
     isOverlayVisible: PropTypes.bool.isRequired,
@@ -76,7 +75,6 @@ export class MyAccountOverlay extends PureComponent {
     email: PropTypes.string,
   };
 
-
   static defaultProps = {
     isCheckout: false,
     registerField: false,
@@ -98,46 +96,56 @@ export class MyAccountOverlay extends PureComponent {
   };
 
   componentDidMount() {
-    let authRef
-    gapi.load('auth2', function () {
+    let authRef;
+    gapi.load("auth2", function () {
       authRef = gapi.auth2.init();
-      attachSigninFunction(document.getElementById('g-signin2'));
+      attachSigninFunction(document.getElementById("g-signin2"));
     });
+
+
+
     const attachSigninFunction = (element) => {
-      authRef.attachClickHandler(element, {},
+      authRef.attachClickHandler(
+        element,
+        {},
         function (googleUser) {
-          const profile = googleUser.getBasicProfile()
-          console.log("id of the user", profile.getId())
-          console.log("user name ", profile.getName())
-          console.log("user email", profile.getEmail())
-          console.log("user google token", googleUser.getAuthResponse().id_token)
+          const profile = googleUser.getBasicProfile();
+          console.log("id of the user", profile.getId());
+          console.log("user name ", profile.getName());
+          console.log("user email", profile.getEmail());
+          console.log(
+            "user google token",
+            googleUser.getAuthResponse().id_token
+          );
 
           const id_token = googleUser.getAuthResponse().id_token;
-          const fullName = profile.getName().split(" ")
-          const social_id = profile.getId()
-          const email = profile.getEmail()
+          const fullName = profile.getName().split(" ");
+          const social_id = profile.getId();
+          const email = profile.getEmail();
           const payload = {
             social_id,
             firstname: fullName[0],
             lastname: fullName[1],
             email,
             customer_telephone: null,
-            type: "google"
-          }
-          MagentoAPI.post(`sociallogin/google/login?${id_token}`, payload).then((response) => {
-            console.log("response", response)
-          }).catch(() => {
-            console.log("error occured while magento api call")
-            // showErrorMessage(__('Error appeared while requesting a cancelation'));
-            // this.setState({ isLoading: false });
-          });
-
-        }, function (error) {
+            type: "google",
+          };
+          MagentoAPI.post(`sociallogin/google/login?googleToken=${id_token}`, payload)
+            .then((response) => {
+              console.log("response", response);
+            })
+            .catch(() => {
+              console.log("error occured while magento api call");
+              // showErrorMessage(__('Error appeared while requesting a cancelation'));
+              // this.setState({ isLoading: false });
+            });
+        },
+        function (error) {
           alert(JSON.stringify(error, undefined, 2));
-        });
-    }
+        }
+      );
+    };
   }
-
 
   renderMap = {
     [STATE_SIGN_IN]: {
@@ -155,7 +163,7 @@ export class MyAccountOverlay extends PureComponent {
       render: () => this.renderCreateAccount(),
     },
     [STATE_LOGGED_IN]: {
-      render: () => { },
+      render: () => {},
     },
     [STATE_CONFIRM_EMAIL]: {
       render: () => this.renderConfirmEmail(),
@@ -210,13 +218,13 @@ export class MyAccountOverlay extends PureComponent {
               <span>ستريت</span>
             </>
           ) : (
-              <>
-                <span>6</span>
+            <>
+              <span>6</span>
               TH
               <span>S</span>
               TREET
             </>
-            )}
+          )}
         </div>
         <div block="MyAccountOverlay" elem="Buttons">
           <button block="Button" mods={{ isSignIn }} onClick={handleSignIn}>
@@ -234,7 +242,11 @@ export class MyAccountOverlay extends PureComponent {
           {title}
         </p>
         {render()}
-        {isSignIn ? this.renderSocials("SignIn") : isCreateAccount ? this.renderSocials("Create") : null}
+        {isSignIn
+          ? this.renderSocials("SignIn")
+          : isCreateAccount
+          ? this.renderSocials("Create")
+          : null}
         {this.renderCloseBtn()}
       </div>
     );
@@ -555,8 +567,37 @@ export class MyAccountOverlay extends PureComponent {
 
     return COUNTRY_CODES_FOR_PHONE_VALIDATION[customerCountry] ? "9" : "8";
   }
+  statusChangeCallback(response) {  
+    console.log('statusChangeCallback');
+    console.log(response);                   
+    if (response.status === 'connected') {   
+      testAPI();  
+    } else {
+     console.log("Please Login first")
+    }
+  }
+  
+  // facebook login dialog
+  facebookLogin = ()=> {
 
-  //Socail logins rendering 
+    FB.getLoginStatus(function(response) {   
+      this.statusChangeCallback(response);
+    });
+    window.FB.login(function(response) {
+      console.log(response)
+        if (response.authResponse) {
+        console.log('Welcome!  Fetching your information.... ');
+        window.FB.api('/me', function(response) {
+          console.log("response", response);
+          console.log('Good to see you, ' + response.name + '.');
+        });
+        } else {
+        console.log('User cancelled login or did not fully authorize.');
+        }
+      }); 
+  }
+
+  //Socail logins rendering
   renderSocials(renderer) {
     // change mods after api integration
     return (
@@ -575,6 +616,7 @@ export class MyAccountOverlay extends PureComponent {
             block="MyAccountOverlay-SSO-Buttons"
             elem="Facebook"
             mods={{ disabled: !!!SSO_LOGIN_PROVIDERS?.includes("Facebook") }}
+            onClick={this.facebookLogin}
           >
             {__("FACEBOOK")}
           </button>
@@ -629,7 +671,7 @@ export class MyAccountOverlay extends PureComponent {
               type={ENABLE_OTP_LOGIN && isOTP ? "text" : "email"}
               placeholder={`${
                 ENABLE_OTP_LOGIN ? __("EMAIL OR PHONE") : __("EMAIL ADDRESS")
-                }*`}
+              }*`}
               id="email"
               name="email"
               value={email}
