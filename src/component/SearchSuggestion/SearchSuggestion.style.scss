@@ -1,5 +1,5 @@
 :root {
-  --black: #000;
+  --black: #000000;
   --gray: #f0f0f0;
   --link-dark-gray: #4a4a4a;
 }
@@ -32,7 +32,7 @@
   }
 
   &-Content {
-    background-color: var(--white);
+    background-color: #ffffff;
     display: block;
     flex-direction: column;
     font-weight: var(--fw-regular);

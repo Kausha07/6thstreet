@@ -94,7 +94,7 @@ class DynamicContentBanner extends PureComponent {
   }
 
   renderImage = (item, i) => {
-    // const { items } = this.props;
+    const { index } = this.props;
     // const { height, width } = items[0];
     const { url, link, height = "", width = "" } = item;
     let ht, wd;
@@ -112,7 +112,7 @@ class DynamicContentBanner extends PureComponent {
       return (
         <>
           <Image
-            lazyLoad={true}
+            lazyLoad={index === 21 || index === 35 ? false : true}
             key={i}
             src={url}
             ratio="custom"
@@ -136,7 +136,7 @@ class DynamicContentBanner extends PureComponent {
         }}
       >
         <Image
-          lazyLoad={true}
+          lazyLoad={index === 21 || index === 35 ? false : true}
           src={url}
           block="Image"
           style={{ maxWidth: wd, height: ht, objectFit: "unset" }}

@@ -15,7 +15,7 @@
   --s-loader-width: 50px;
   --s-loader-height: var(--s-loader-width);
   --s-loader-border-color-trans: #ddd;
-  --s-loader-border-color-full: #000;
+  --s-loader-border-color-full: #000000;
 }
 
 .Loader {
@@ -33,7 +33,7 @@
     width: 60px;
     height: 60px;
     border-radius: 60px;
-    background: var(--white);
+    background: #ffffff;
   }
 
   &-Scale {

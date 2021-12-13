@@ -12,7 +12,7 @@
       }
 
       .Field-Label {
-        color: var(--black);
+        color: #000000;
         font-size: 18px;
         font-weight: var(--fw-demi);
       }
@@ -42,7 +42,7 @@
           grid-column: 3 / span 5;
           grid-row: 1;
           justify-content: space-between;
-          background: var(--white);
+          background: #ffffff;
           padding: 20px 35px;
           margin-bottom: 15px;
           pointer-events: none;
@@ -73,7 +73,7 @@
           grid-column: 3 / span 5;
           grid-row: 1;
           justify-content: space-between;
-          background: var(--white);
+          background: #ffffff;
           padding: 20px 35px;
           margin-bottom: 15px;
           pointer-events: none;
@@ -182,7 +182,7 @@
             transform: translateY(-2px) rotate(45deg);
             right: 20px;
             border-style: solid;
-            border-color: #000;
+            border-color: #000000;
             border-width: 0 1px 1px 0;
           }
         }
@@ -204,7 +204,7 @@
             transform: translateY(-2px) rotate(45deg);
             right: 20px;
             border-style: solid;
-            border-color: #000;
+            border-color: #000000;
             border-width: 0 1px 1px 0;
           }
         }
@@ -238,7 +238,7 @@
           }
         }
 
-        background: var(--white);
+        background: #ffffff;
         padding: 0 20px 10px;
         margin: 0;
 
@@ -297,7 +297,7 @@
         }
 
         .Field-Label {
-          color: var(--black);
+          color: #000000;
           font-size: 18px;
           font-weight: var(--fw-demi);
         }
@@ -343,7 +343,7 @@
             grid-column: 3 / span 5;
             grid-row: 1;
             justify-content: space-between;
-            background: var(--white);
+            background: #ffffff;
             padding: 20px 35px;
             margin-bottom: 15px;
             pointer-events: none;
@@ -448,7 +448,7 @@
               transform: translateY(-2px) rotate(45deg);
               right: 20px;
               border-style: solid;
-              border-color: #000;
+              border-color: #000000;
               border-width: 0 1px 1px 0;
             }
           }
@@ -474,7 +474,7 @@
               transform: translateY(-2px) rotate(45deg);
               right: 20px;
               border-style: solid;
-              border-color: #000;
+              border-color: #000000;
               border-width: 0 1px 1px 0;
             }
 
@@ -516,7 +516,7 @@
             }
           }
 
-          background: var(--white);
+          background: #ffffff;
           padding: 0 20px 10px;
           margin: 0;
 

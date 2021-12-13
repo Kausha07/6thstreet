@@ -8,7 +8,7 @@ main {
 
 .Header {
     @include desktop {
-        background-color: var(--white);
+        background-color: #ffffff;
         height: auto;
         position: fixed;
         width: 100%;
