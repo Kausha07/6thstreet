@@ -15,8 +15,9 @@ function setCustomCacheControl (res, path) {
       
       CDN_URL = process.env?.PUBLIC_URL || '';
       S3_CDN_URL = process.env?.REACT_APP_CDN_API_URL || '';
+      CONFIG_DIRECTORY = process.env?.REACT_APP_REMOTE_CONFIG_DIR || '';
       if(CDN_URL || S3_CDN_URL){
-        res.setHeader('link', `<${CDN_URL}>; rel=preconnect, <${S3_CDN_URL}>; rel=preconnect`);
+        res.setHeader('link', `<${CDN_URL}>; rel="preconnect", <${S3_CDN_URL}>; rel="preconnect", <${S3_CDN_URL}${CONFIG_DIRECTORY}/default.json>; rel="preload" as="fetch"`);
       }
     
     }
