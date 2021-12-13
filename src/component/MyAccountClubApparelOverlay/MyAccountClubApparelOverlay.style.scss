@@ -93,8 +93,8 @@
     }
 
     &Button {
-      background-color: var(--black);
-      color: var(--white);
+      background-color: #000000;
+      color: #ffffff;
       margin: 30px auto 65px;
       width: 80%;
       border-radius: 5px;
@@ -137,8 +137,8 @@
     }
 
     &Button {
-      background-color: var(--black);
-      color: var(--white);
+      background-color: #000000;
+      color: #ffffff;
       margin: 30px auto 0;
       width: 80%;
       border-radius: 5px;
@@ -239,7 +239,7 @@
       right: 15px;
       top: 10px;
       position: absolute;
-      background-color: var(--black);
+      background-color: #000000;
       border-radius: 50%;
       height: 30px;
       width: 30px;
@@ -249,7 +249,7 @@
       &::before {
         height: 17px;
         width: 2px;
-        background-color: var(--white);
+        background-color: #ffffff;
         right: 14px;
         top: 6px;
       }
@@ -269,7 +269,7 @@
           content: "";
           width: 0;
           height: 0;
-          border: solid var(--white);
+          border: solid #ffffff;
           border-width: 0 2px 2px 0;
           display: inline-block;
           padding: 2px 7px 7px 2px;
@@ -349,7 +349,7 @@
             content: "";
             width: 0;
             height: 0;
-            border: solid var(--white);
+            border: solid #ffffff;
             border-width: 0 2px 2px 0;
             display: inline-block;
             padding: 2px 7px 7px 2px;

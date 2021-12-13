@@ -10,11 +10,11 @@
  */
 
 :root {
-  --cart-item-heading-color: #000;
+  --cart-item-heading-color: #000000;
   --cart-item-subheading-color: #888;
   --cart-item-option-color: #adadad;
-  --cart-item-background: #fff;
-  --cart-item-actions-color: #000;
+  --cart-item-background: #ffffff;
+  --cart-item-actions-color: #000000;
   --cart-item-divider-color: var(--expandable-content-divider-color);
 
   --Gallery: #efefef;
@@ -200,7 +200,7 @@
     line-height: 30px;
     font-size: 12px;
     text-align: left;
-    color: var(--Black);
+    color: #000000;
     letter-spacing: 0.75px;
     &-Qty {
       text-decoration: underline;
@@ -231,7 +231,7 @@
     }
 
     &-BasePrice {
-      color: var(--Black);
+      color: #000000;
       text-decoration: line-through;
       padding-right: 5px;
       font-weight: var(--fw-regular);
@@ -239,7 +239,7 @@
   }
 
   &-ColSizeQty {
-    color: var(--Tundora);
+    color: #4a4a4a;
     font-weight: var(--fw-regular);
     width: 100%;
     word-wrap: break-word;
@@ -247,7 +247,7 @@
     align-items: center;
     flex-wrap: wrap;
     span {
-      color: var(--DustyGray);
+      color: #9b9b9b;
       &:first-child {
         margin-left: 0 !important;
       }

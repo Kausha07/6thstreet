@@ -51,7 +51,7 @@ export class HomePageContainer extends PureComponent {
   constructor(props) {
     super(props);
 
-    this.requestDynamicContent();
+    // this.requestDynamicContent();
   }
 
   componentDidMount() {

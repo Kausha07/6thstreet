@@ -11,9 +11,10 @@ import { getCountriesForSelect } from "Util/API/endpoint/Config/Config.format";
 import { getUUID } from "Util/Auth";
 import { VUE_PAGE_VIEW } from "Util/Event";
 import SearchPage from "./SearchPage.component";
-
+import { TYPE_CATEGORY } from "../../route/UrlRewrites/UrlRewrites.config";
 export class SearchPageContainer extends PLPContainer {
   componentDidMount() {
+    window.pageType = TYPE_CATEGORY;
     const {
       location: { state },
     } = this.props;
