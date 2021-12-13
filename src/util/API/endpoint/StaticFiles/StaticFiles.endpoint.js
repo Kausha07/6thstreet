@@ -1,5 +1,5 @@
 import { getStore } from "Store";
-import CDN from "../../provider/CDN";
+// import CDN from "../../provider/CDN";
 import ThirdPartyAPI from "../../provider/ThirdPartyAPI";
 
 // eslint-disable-next-line import/prefer-default-export
