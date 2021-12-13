@@ -641,10 +641,7 @@
         text-align: center;
         border-radius: 6px;
         margin: 5px 0px;
-        width: 150px !important;
-        @include mobile() {
-          width: 47% !important;
-        }
+        width: 47% !important;
       }
       &-Facebook {
         &_disabled {
