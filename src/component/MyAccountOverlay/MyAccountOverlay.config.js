@@ -21,4 +21,6 @@ export const STATE_CONFIRM_EMAIL = 'confirmEmail';
 export const CUSTOMER_ACCOUNT_OVERLAY_KEY = 'customer_account';
 
 export const ENABLE_OTP_LOGIN = false;
-export const SSO_LOGIN_PROVIDERS = [];
+
+// available SSO providers 
+export const SSO_LOGIN_PROVIDERS = ["Facebook", "Google"];
