@@ -14,6 +14,7 @@ import isMobile from "Util/Mobile";
 import { MAX_ZOOM_SCALE } from "./PDPGallery.config";
 import "./PDPGallery.style";
 import videoIcon from "./icons/video.svg";
+import PDPGalleryTag from "Component/PDPGalleryTag/PDPGalleryTag.component";
 class PDPGallery extends PureComponent {
   static propTypes = {
     currentIndex: PropTypes.number.isRequired,
@@ -188,6 +189,12 @@ class PDPGallery extends PureComponent {
     return gallery.map(this.renderGalleryImage);
   }
 
+  renderGalleryTag() {
+    const {
+      product: { prod_tag_2 },
+    } = this.props;
+    return <PDPGalleryTag tag={prod_tag_2} />;
+  }
   renderSlider() {
     const { gallery, currentIndex, onSliderChange } = this.props;
 
@@ -406,6 +413,7 @@ class PDPGallery extends PureComponent {
           onClick={this.renderGalleryOverlay}
         >
           {this.renderSlider()}
+          {this.renderGalleryTag()}
         </button>
         {this.renderVideoButtons()}
       </div>

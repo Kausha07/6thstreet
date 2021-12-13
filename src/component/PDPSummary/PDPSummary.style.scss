@@ -6,7 +6,7 @@
 
 .PDPSummary {
   font-weight: var(--fw-regular);
-  margin-top: 6px;
+  margin-top: -6px;
   padding: 0 20px;
   overflow-x: visible;
 
@@ -36,7 +36,7 @@
       width: 50px;
       height: 50px;
       background-color: transparent;
-      margin-left: 8px;
+      margin-left: 16px;
       button {
         top: 0;
       }
@@ -45,11 +45,11 @@
 
   @include desktop {
     min-width: 40%;
-    padding-left: 40px;
+    padding-left: 34px;
     padding-right: 0px;
     &_isArabic {
       padding-left: 0;
-      padding-right: 40px;
+      padding-right: 34px;
     }
   }
 
@@ -57,10 +57,10 @@
     font-size: 24px;
     margin: 0.4px 0 0 0;
     @include before-desktop {
-      font-size: 18px;
-      font-weight: 600;
-      letter-spacing: 0;
-      line-height: 32px;
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      line-height: 40px;
       text-transform: uppercase;
       margin: 0.4px 0 0 0;
     }
@@ -86,8 +86,7 @@
     font-size: 18px;
 
     @include before-desktop {
-      font-size: 16px;
-      font-weight: 400;
+      font-size: 14px;
       letter-spacing: 0;
       line-height: 19px;
       margin-bottom: 0;
@@ -218,7 +217,7 @@
 
   .Seperator {
     background-color: #efefef;
-    margin: 15px 0 15px 0;
+    margin: 26px 0 20px 0;
     height: 1.5px;
   }
 

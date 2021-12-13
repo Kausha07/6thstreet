@@ -13,10 +13,7 @@ $select-arrow-width: 6px !default;
 .PDPAddToCart {
   display: flex;
   flex-direction: column;
-  padding: 12px 0 12px 0;
-  @include mobile {
-    padding: 0 0 12px 0;
-  }
+  // padding: 12px 0 12px 0;
   &-Checkout {
     position: fixed;
     overflow: hidden;
@@ -103,7 +100,8 @@ $select-arrow-width: 6px !default;
       @include mobile {
         display: none;
       }
-      font-size: 14px;
+      font-family: "Avenir Next";
+      font-size: 16px;
       font-weight: 600;
       letter-spacing: 0;
       line-height: 22px;
@@ -124,7 +122,7 @@ $select-arrow-width: 6px !default;
 
     @include desktop {
       width: 363px;
-      padding-bottom: 16px;
+      padding-bottom: 39px;
       align-items: center;
     }
   }
@@ -141,6 +139,7 @@ $select-arrow-width: 6px !default;
         border: 0.5px solid #d1d3d4;
         border-radius: 6px;
         width: 70px;
+        height: 50px;
       }
 
       &-SizeTypeSelectElement {
@@ -170,7 +169,7 @@ $select-arrow-width: 6px !default;
       justify-content: center;
       flex-direction: column;
       margin: -20px;
-      width: 15%;
+      width: 10%;
     }
   }
 
@@ -180,6 +179,9 @@ $select-arrow-width: 6px !default;
     width: 100%;
     padding: 0 12px;
     will-change: transform;
+    @include mobile {
+      padding: 0 0 0 6px;
+    }
     input {
       display: none;
       &:checked + label {
@@ -206,7 +208,7 @@ $select-arrow-width: 6px !default;
   }
   &-SizeSelector {
     @include desktop {
-      margin-left: 20px;
+      margin-left: 43px;
       scrollbar-width: none;
       // width: calc(100% - 150px);
     }
@@ -220,13 +222,14 @@ $select-arrow-width: 6px !default;
     padding: 16px 0 16px 0;
     overflow: scroll;
     white-space: nowrap;
-    @include mobile {
-      width: 85%;
-    }
+
     margin-left: 16px;
     -webkit-overflow-scrolling: touch;
     -ms-overflow-style: -ms-autohiding-scrollbar;
-
+    @include mobile {
+      width: 85%;
+      margin-left: 44px;
+    }
     &-AvailableSizes {
       display: flex;
       flex-direction: row;
@@ -256,7 +259,7 @@ $select-arrow-width: 6px !default;
 
     &-SizeOptionContainer {
       margin: auto;
-      padding: 0 6px 0 0;
+      padding: 0 10px 0 0;
 
       input {
         display: none;
