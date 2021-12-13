@@ -4,11 +4,13 @@ import { PureComponent } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import { Store } from "../Icons";
+import Price from "Component/Price";
 
 import Image from "Component/Image";
 import Loader from "Component/Loader";
 import {
   getFinalPrice,
+  FIXED_CURRENCIES,
   DISPLAY_DISCOUNT_PERCENTAGE,
 } from "Component/Price/Price.config";
 import { CartItemType } from "Type/MiniCart";
@@ -145,14 +147,27 @@ export class SuccessCheckoutItem extends PureComponent {
       item: { row_total, basePrice },
     } = this.props;
     const { isArabic } = this.state;
-
+    const decimals = FIXED_CURRENCIES.includes(currency_code) ? 3 : 2;
+    const decimalPrice = parseFloat(row_total).toFixed(decimals);
+    const decimalBasePrice = parseFloat(basePrice).toFixed(decimals);
+    let price = [
+      {
+        [currency_code]: {
+          "6s_base_price": decimalBasePrice,
+          "6s_special_price": decimalPrice,
+          default: decimalPrice,
+          default_formated: `${currency_code} ${decimalPrice}`,
+        },
+      },
+    ];
     const rowPrice = getFinalPrice(row_total, currency_code);
     let discountPercentage = Math.round(100 * (1 - row_total / basePrice));
     const withoutDiscount = (
-      <>
-        {`${currency_code} `}
-        <span>{`${rowPrice} `}</span>
-      </>
+      // <>
+      //   {`${currency_code} `}
+      //   <span>{`${rowPrice} `}</span>
+      // </>
+      <Price price={price} renderSpecialPrice={false} cart={true} />
     );
     const finalBasePrice = getFinalPrice(basePrice, currency_code);
 
@@ -174,19 +189,20 @@ export class SuccessCheckoutItem extends PureComponent {
     };
 
     const withDiscount = (
-      <div block="SuccessCheckoutItem" elem="DiscountPrice">
-        <div>
-          {currency_code} {`${finalBasePrice}`}
-        </div>
-        {renderDiscountPercentage()}
-        <span
-          block="SuccessCheckoutItem"
-          elem="WithoutDiscount"
-          mods={{ isArabic }}
-        >
-          <span>{withoutDiscount}</span>
-        </span>
-      </div>
+      // <div block="SuccessCheckoutItem" elem="DiscountPrice">
+      //   <div>
+      //     {currency_code} {`${finalBasePrice}`}
+      //   </div>
+      //   {renderDiscountPercentage()}
+      //   <span
+      //     block="SuccessCheckoutItem"
+      //     elem="WithoutDiscount"
+      //     mods={{ isArabic }}
+      //   >
+      //     <span>{withoutDiscount}</span>
+      //   </span>
+      // </div>
+      <Price price={price} renderSpecialPrice={false} cart={true} />
     );
 
     return (
@@ -272,7 +288,8 @@ export class SuccessCheckoutItem extends PureComponent {
 
     return (
       <>
-        <Image lazyLoad={true}
+        <Image
+          lazyLoad={true}
           src={thumbnail}
           mix={{
             block: "SuccessCheckoutItem",
@@ -283,7 +300,6 @@ export class SuccessCheckoutItem extends PureComponent {
           alt={`Product ${name} thumbnail.`}
         />
         <img style={{ display: "none" }} alt={name} src={thumbnail} />
-
       </>
     );
   }

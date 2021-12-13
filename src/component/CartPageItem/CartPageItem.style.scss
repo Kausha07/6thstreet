@@ -218,7 +218,7 @@
     }
   }
 
-  &-DiscountPrice {
+  .Price {
     color: var(--Cardinal);
     text-decoration: unset;
     font-weight: var(--fw-demi);
@@ -229,12 +229,13 @@
         direction: ltr;
       }
     }
-
-    &-BasePrice {
-      color: #000000;
-      text-decoration: line-through;
-      padding-right: 5px;
-      font-weight: var(--fw-regular);
+    span{
+      del {
+        color: #000000;
+        text-decoration: line-through;
+        padding-right: 5px;
+        font-weight: var(--fw-regular);
+      }
     }
   }
 

@@ -58,11 +58,11 @@ class Price extends PureComponent {
     const { basePrice, fixedPrice } = this.props;
 
     return (
-      <>
+      <span>
         {this.renderCurrency()}
         &nbsp;
         {fixedPrice ? (1 * basePrice).toFixed(3) : basePrice}
-      </>
+      </span>
     );
   }
 
@@ -150,9 +150,9 @@ class Price extends PureComponent {
 
   render() {
     return (
-      <p block={`Price ${this.haveDiscount() ? "discount" : ""}`}>
+      <div block={`Price ${this.haveDiscount() ? "discount" : ""}`}>
         {this.renderPrice()}
-      </p>
+      </div>
     );
   }
 }

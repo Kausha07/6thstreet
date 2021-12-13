@@ -269,7 +269,7 @@ export class CartItem extends PureComponent {
       },
     ];
     const withoutDiscount = (
-      <Price price={price} renderSpecialPrice={false} />
+      <Price price={price} renderSpecialPrice={false} cart={true} />
       // <>
       //   <span>{currency_code}</span>&nbsp;
       //   <span>{`${parseFloat(row_total).toFixed(decimals)}`}</span>
