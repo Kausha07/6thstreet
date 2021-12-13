@@ -122,7 +122,7 @@ $select-arrow-width: 6px !default;
 
     @include desktop {
       width: 363px;
-      padding-bottom: 16px;
+      padding-bottom: 39px;
       align-items: center;
     }
   }
@@ -169,7 +169,7 @@ $select-arrow-width: 6px !default;
       justify-content: center;
       flex-direction: column;
       margin: -20px;
-      width: 15%;
+      width: 10%;
     }
   }
 
@@ -179,6 +179,9 @@ $select-arrow-width: 6px !default;
     width: 100%;
     padding: 0 12px;
     will-change: transform;
+    @include mobile {
+      padding: 0 0 0 6px;
+    }
     input {
       display: none;
       &:checked + label {
@@ -205,7 +208,7 @@ $select-arrow-width: 6px !default;
   }
   &-SizeSelector {
     @include desktop {
-      margin-left: 20px;
+      margin-left: 43px;
       scrollbar-width: none;
       // width: calc(100% - 150px);
     }
@@ -219,13 +222,14 @@ $select-arrow-width: 6px !default;
     padding: 16px 0 16px 0;
     overflow: scroll;
     white-space: nowrap;
-    @include mobile {
-      width: 85%;
-    }
+
     margin-left: 16px;
     -webkit-overflow-scrolling: touch;
     -ms-overflow-style: -ms-autohiding-scrollbar;
-
+    @include mobile {
+      width: 85%;
+      margin-left: 44px;
+    }
     &-AvailableSizes {
       display: flex;
       flex-direction: row;

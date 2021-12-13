@@ -20,5 +20,8 @@
     background-color: #efefef;
     margin: 35px 0;
     height: 1.5px;
+    @include mobile {
+      margin: 15px 0;
+    }
   }
 }

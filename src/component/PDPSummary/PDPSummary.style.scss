@@ -57,10 +57,10 @@
     font-size: 24px;
     margin: 0.4px 0 0 0;
     @include before-desktop {
-      font-size: 18px;
-      font-weight: 600;
-      letter-spacing: 0;
-      line-height: 32px;
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      line-height: 40px;
       text-transform: uppercase;
       margin: 0.4px 0 0 0;
     }
@@ -86,8 +86,7 @@
     font-size: 18px;
 
     @include before-desktop {
-      font-size: 16px;
-      font-weight: 400;
+      font-size: 14px;
       letter-spacing: 0;
       line-height: 19px;
       margin-bottom: 0;
