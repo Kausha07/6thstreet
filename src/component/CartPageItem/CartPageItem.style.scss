@@ -239,6 +239,11 @@
     }
   }
 
+  .Price > span:first-child {
+    color: #000000;
+  }
+
+  
   &-ColSizeQty {
     color: #4a4a4a;
     font-weight: var(--fw-regular);

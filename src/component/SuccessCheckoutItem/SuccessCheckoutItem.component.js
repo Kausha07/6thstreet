@@ -147,16 +147,14 @@ export class SuccessCheckoutItem extends PureComponent {
       item: { row_total, basePrice },
     } = this.props;
     const { isArabic } = this.state;
-    const decimals = FIXED_CURRENCIES.includes(currency_code) ? 3 : 2;
-    const decimalPrice = parseFloat(row_total).toFixed(decimals);
-    const decimalBasePrice = parseFloat(basePrice).toFixed(decimals);
+
     let price = [
       {
         [currency_code]: {
-          "6s_base_price": decimalBasePrice,
-          "6s_special_price": decimalPrice,
-          default: decimalPrice,
-          default_formated: `${currency_code} ${decimalPrice}`,
+          "6s_base_price": basePrice,
+          "6s_special_price": row_total,
+          default: row_total,
+          default_formated: `${currency_code} ${row_total}`,
         },
       },
     ];

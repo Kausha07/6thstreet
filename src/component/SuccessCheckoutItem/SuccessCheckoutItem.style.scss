@@ -179,6 +179,11 @@
     }
   }
 
+  .Price > span:first-child {
+    color: #000000;
+  }
+
+
   .Price {
     color: var(--Cardinal);
     text-decoration: unset;
