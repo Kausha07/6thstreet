@@ -124,6 +124,8 @@ export class MyAccountOverlay extends PureComponent {
             customer_telephone: null,
             type: "google"
           }
+
+          // Magento social login API 
           MagentoAPI.post(`sociallogin/google/login?googleToken=${id_token}`, payload).then((response) => {
             console.log("response", response)
           }).catch(() => {
