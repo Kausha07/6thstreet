@@ -141,7 +141,7 @@ export class MyAccountOverlay extends PureComponent {
           });
 
         }, function (error) {
-          alert(JSON.stringify(error, undefined, 2));
+          console.log(JSON.stringify(error, undefined, 2));
         }
       );
     };
@@ -163,7 +163,7 @@ export class MyAccountOverlay extends PureComponent {
       render: () => this.renderCreateAccount(),
     },
     [STATE_LOGGED_IN]: {
-      render: () => {},
+      render: () => { },
     },
     [STATE_CONFIRM_EMAIL]: {
       render: () => this.renderConfirmEmail(),
@@ -218,13 +218,13 @@ export class MyAccountOverlay extends PureComponent {
               <span>ستريت</span>
             </>
           ) : (
-            <>
-              <span>6</span>
+              <>
+                <span>6</span>
               TH
               <span>S</span>
               TREET
             </>
-          )}
+            )}
         </div>
         <div block="MyAccountOverlay" elem="Buttons">
           <button block="Button" mods={{ isSignIn }} onClick={handleSignIn}>
@@ -245,8 +245,8 @@ export class MyAccountOverlay extends PureComponent {
         {isSignIn
           ? this.renderSocials("SignIn")
           : isCreateAccount
-          ? this.renderSocials("Create")
-          : null}
+            ? this.renderSocials("Create")
+            : null}
         {this.renderCloseBtn()}
       </div>
     );
@@ -567,13 +567,13 @@ export class MyAccountOverlay extends PureComponent {
 
     return COUNTRY_CODES_FOR_PHONE_VALIDATION[customerCountry] ? "9" : "8";
   }
-  statusChangeCallback(response) {  
+  statusChangeCallback(response) {
     console.log('statusChangeCallback');
-    console.log(response);                   
-    if (response.status === 'connected') {   
-      testAPI();  
+    console.log(response);
+    if (response.status === 'connected') {
+      testAPI();
     } else {
-     console.log("Please Login first")
+      console.log("Please Login first")
     }
   }
 
@@ -676,7 +676,7 @@ export class MyAccountOverlay extends PureComponent {
               type={ENABLE_OTP_LOGIN && isOTP ? "text" : "email"}
               placeholder={`${
                 ENABLE_OTP_LOGIN ? __("EMAIL OR PHONE") : __("EMAIL ADDRESS")
-              }*`}
+                }*`}
               id="email"
               name="email"
               value={email}
