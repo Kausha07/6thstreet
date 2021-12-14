@@ -181,6 +181,9 @@ $select-arrow-width: 6px !default;
     will-change: transform;
     @include mobile {
       padding: 0 0 0 6px;
+      &_isArabic {
+        padding: 0 6px 0 0;
+      }
     }
     input {
       display: none;
@@ -227,7 +230,7 @@ $select-arrow-width: 6px !default;
     -webkit-overflow-scrolling: touch;
     -ms-overflow-style: -ms-autohiding-scrollbar;
     @include mobile {
-      width: 85%;
+      width: 90%;
       margin-left: 44px;
     }
     &-AvailableSizes {

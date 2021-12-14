@@ -105,7 +105,13 @@ class PDPAddToCart extends PureComponent {
       const listItems = sizeObject.sizeTypes.map((type = "") => {
         if (product[`size_${type}`].length > 0) {
           return (
-            <div block="PDPAddToCart" elem="SizeTypeOptionContainer">
+            <div
+              block="PDPAddToCart"
+              elem="SizeTypeOptionContainer"
+              mods={{
+                isArabic: isArabic(),
+              }}
+            >
               <input
                 type="radio"
                 key={type}
@@ -216,7 +222,8 @@ class PDPAddToCart extends PureComponent {
             {label}
           </label>
           {isNotAvailable && (
-            <Image lazyLoad={false}
+            <Image
+              lazyLoad={false}
               src={StrikeThrough}
               className="lineImg"
               style={isCurrentSizeSelected ? selectedStrikeThruLineStyle : {}}

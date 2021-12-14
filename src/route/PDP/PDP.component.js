@@ -9,6 +9,7 @@ import { PureComponent } from "react";
 import NoMatch from "Route/NoMatch";
 import "./PDP.style";
 import MyAccountOverlay from "Component/MyAccountOverlay";
+import isMobile from "Util/Mobile";
 
 class PDP extends PureComponent {
   static propTypes = {
@@ -18,6 +19,7 @@ class PDP extends PureComponent {
   state = {
     signInPopUp: "",
     showPopup: false,
+    isMobile: isMobile.any() || isMobile.tablet(),
   };
 
   showMyAccountPopup = () => {
@@ -67,7 +69,8 @@ class PDP extends PureComponent {
   }
 
   renderSeperator() {
-    return <div block="Seperator" />;
+    const { isMobile } = this.state;
+    return <div block="Seperator" mods={{ isMobile: !!isMobile }} />;
   }
 
   renderPDP() {

@@ -8,6 +8,21 @@
   // padding: 0 20px;
   font-weight: var(--fw-regular);
 
+  @include mobile {
+    .Accordion-Expand {
+      align-items: center;
+      transform: none;
+      padding-right: 0;
+    }
+    .Accordion {
+      border-top: 1px solid #ddd;
+    }
+    .Accordion:last-child {
+      border-bottom: 1px solid #ddd;
+      .Accordion-Heading {
+      }
+    }
+  }
   .VueProductSlider {
     &-HeaderContainer {
       @include desktop {
@@ -35,11 +50,22 @@
       }
     }
   }
+  .AccordionWrapper {
+    @include mobile {
+      // border-top: 1px solid #ddd;
+      margin-left: 10px;
+      margin-right: 10px;
+      // &:last-child {
+      //   border-bottom: 1px solid #ddd;
+      // }
+    }
+  }
   &-Accordion {
     @include mobile() {
-      padding-bottom: 16px;
-      padding-left: 10px;
-      padding-right: 10px;
+      padding-bottom: 30px;
+      padding-top: 4px;
+      // padding-left: 10px;
+      // padding-right: 10px;
     }
     @include tablet {
       padding-left: 30px;
@@ -63,6 +89,13 @@
     line-height: 25px;
     // border-top: 1px solid var(--pdp-split-line);
     margin-top: 0;
+    @include mobile {
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0;
+      line-height: 50px;
+      margin-bottom: 0;
+    }
   }
 
   &-IconsSection,
@@ -140,6 +173,11 @@
 
   &-Description {
     text-align: justify;
+    @include mobile {
+      font-size: 14px;
+      letter-spacing: 0;
+      line-height: 24px;
+    }
   }
 
   &-Highlights {
@@ -180,6 +218,11 @@
       letter-spacing: 1.75px;
       line-height: 19px;
       margin-bottom: 14px;
+      @include mobile {
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: 0;
+      }
     }
 
     ul {
@@ -372,6 +415,9 @@
 }
 .PDPDetailWrapper {
   margin-bottom: 50px;
+  @include mobile {
+    margin-bottom: 0;
+  }
   &-Title {
     font-family: "Avenir Next";
     font-size: 14px;
@@ -379,6 +425,9 @@
     letter-spacing: 1.75px;
     line-height: 19px;
     margin-bottom: 14px;
+    &_isMobile {
+      display: none;
+    }
   }
   &-Items {
     display: grid;
@@ -388,7 +437,7 @@
     transition: height 2s ease;
     @include mobile {
       grid-template-columns: repeat(1, 1fr);
-      grid-gap: 50px;
+      grid-gap: 30px;
     }
     &_showMore {
       -webkit-mask-image: linear-gradient(
@@ -477,4 +526,40 @@
       }
     }
   }
+}
+.ContactUs {
+  font-weight: 400;
+  &-Message {
+    font-size: 13px;
+    letter-spacing: 0;
+    line-height: 18px;
+    text-align: center;
+    margin-top: 30px;
+    padding: 0 60px;
+  }
+  &-Icons {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 20px;
+  }
+  .IconWrapper {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    &-Icon {
+      height: 24px;
+      width: 24px;
+    }
+    &-IconTitle {
+      font-size: 14px;
+      letter-spacing: 0;
+      line-height: 19px;
+      margin-top: 6px;
+    }
+  }
+}
+.MobileIcons {
+  padding-left: 10px;
+  padding-right: 10px;
 }
