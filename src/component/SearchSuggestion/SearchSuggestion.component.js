@@ -453,18 +453,6 @@ class SearchSuggestion extends PureComponent {
   }
 
   renderPrice = (price) => {
-    // if (price && price.length > 0) {
-    //   const priceObj = price[0],
-    //     currency = getCurrency();
-    //   const priceToShow = priceObj[currency]["6s_base_price"];
-    //   return (
-    //     <span
-    //       block="SearchProduct"
-    //       elem="Price"
-    //     >{`${currency} ${priceToShow}`}</span>
-    //   );
-    // }
-    // return null;
 
     if (price && price.length > 0) {
       const priceObj = price?.[0],
@@ -476,21 +464,9 @@ class SearchSuggestion extends PureComponent {
         specialPrice &&
         basePrice !== specialPrice;
 
-      if (basePrice === specialPrice || !specialPrice) {
-        return <span id="price">{`${currency} ${basePrice}`}</span>;
-      }
-
       return (
         <div block="SearchProduct" elem="SpecialPriceCon">
           <Price price={price} renderSpecialPrice={false} />
-
-          {/* <del block="SearchProduct" elem="Del">
-            <span id="price">{`${currency} ${basePrice}`}</span>
-          </del>
-          <span block="SearchProduct" elem="PriceWrapper">
-            {this.discountPercentage(basePrice, specialPrice, haveDiscount)}
-            {this.renderSpecialPrice(specialPrice, haveDiscount)}
-          </span> */}
         </div>
       );
     }

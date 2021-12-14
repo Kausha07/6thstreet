@@ -268,37 +268,11 @@ export class CartItem extends PureComponent {
         },
       },
     ];
-    const withoutDiscount = (
-      <Price price={price} renderSpecialPrice={false} cart={true} />
-      // <>
-      //   <span>{currency_code}</span>&nbsp;
-      //   <span>{`${parseFloat(row_total).toFixed(decimals)}`}</span>
-      // </>
-    );
-
-    const discountPercentage = Math.round(100 * (1 - row_total / basePrice));
-
-    const withDiscount = (
-      // <div block="CartItem" elem="DiscountPrice" mods={{ isArabic }}>
-      //   <div
-      //     block="CartItem-DiscountPrice"
-      //     elem="BasePrice"
-      //     mods={{ isArabic }}
-      //   >
-      //     <span>{currency_code}</span>&nbsp;
-      //     <span>{`${parseFloat(basePrice).toFixed(decimals)}`}</span>
-      //   </div>
-      //   <div>
-      //     {DISPLAY_DISCOUNT_PERCENTAGE[country] && `-${discountPercentage}%`}
-      //     {withoutDiscount}
-      //   </div>
-      // </div>
-      <Price price={price} renderSpecialPrice={false} cart={true} />
-    );
+  
 
     return (
       <div block="CartItem" elem="Price" mods={{ isArabic }}>
-        {basePrice === row_total || !basePrice ? withoutDiscount : withDiscount}
+        <Price price={price} renderSpecialPrice={false} cart={true} />
       </div>
     );
   }

@@ -158,54 +158,10 @@ export class SuccessCheckoutItem extends PureComponent {
         },
       },
     ];
-    const rowPrice = getFinalPrice(row_total, currency_code);
-    let discountPercentage = Math.round(100 * (1 - row_total / basePrice));
-    const withoutDiscount = (
-      // <>
-      //   {`${currency_code} `}
-      //   <span>{`${rowPrice} `}</span>
-      // </>
-      <Price price={price} renderSpecialPrice={false} cart={true} />
-    );
-    const finalBasePrice = getFinalPrice(basePrice, currency_code);
-
-    const renderDiscountPercentage = () => {
-      if (!DISPLAY_DISCOUNT_PERCENTAGE[country]) {
-        return null;
-      }
-
-      return isArabic ? (
-        <span block="SuccessCheckoutItem" elem="DiscountPercentage">
-          {discountPercentage}
-          %-
-        </span>
-      ) : (
-        <span block="SuccessCheckoutItem" elem="DiscountPercentage">
-          -{discountPercentage}%<span> </span>
-        </span>
-      );
-    };
-
-    const withDiscount = (
-      // <div block="SuccessCheckoutItem" elem="DiscountPrice">
-      //   <div>
-      //     {currency_code} {`${finalBasePrice}`}
-      //   </div>
-      //   {renderDiscountPercentage()}
-      //   <span
-      //     block="SuccessCheckoutItem"
-      //     elem="WithoutDiscount"
-      //     mods={{ isArabic }}
-      //   >
-      //     <span>{withoutDiscount}</span>
-      //   </span>
-      // </div>
-      <Price price={price} renderSpecialPrice={false} cart={true} />
-    );
 
     return (
       <div block="SuccessCheckoutItem" elem="Price" mods={{ isArabic }}>
-        {basePrice === row_total || !basePrice ? withoutDiscount : withDiscount}
+        <Price price={price} renderSpecialPrice={false} cart={true} />
       </div>
     );
   }

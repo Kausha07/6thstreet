@@ -61,26 +61,6 @@ export class MyAccountOrderViewItem extends SourceComponent {
           )}
         </div>
         <p block="MyAccountReturnSuccessItem" elem="Price">
-          {/* <span
-                      block="MyAccountReturnSuccessItem"
-                      elem="PriceRegular"
-                      mods={ { isDiscount: !!(parseFloat(price) < parseFloat(original_price)) } }
-                    >
-                        { `${ formatPrice(+original_price, currency) }` }
-                    </span>
-                    { !!(parseFloat(price) < parseFloat(original_price)) && (
-                        <>
-                            {
-                                displayDiscountPercentage &&
-                                <span block="MyAccountReturnSuccessItem" elem="PriceDiscountPercent">
-                                    { `(-${discountPercentage}%)` }
-                                </span>
-                            }
-                            <span block="MyAccountReturnSuccessItem" elem="PriceDiscount">
-                                { `${ formatPrice(+price, currency) }` }
-                            </span>
-                        </>
-                    ) } */}
           <Price price={finalPrice} renderSpecialPrice={false} />
         </p>
       </div>
