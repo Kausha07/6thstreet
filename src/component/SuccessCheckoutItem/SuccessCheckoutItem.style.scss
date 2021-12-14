@@ -183,12 +183,15 @@
     color: #000000;
   }
 
-
   .Price {
     color: var(--Cardinal);
     text-decoration: unset;
     font-weight: var(--fw-demi);
-
+    &_isArabic {
+      text-align: left;
+      direction: ltr;
+      display: inline !important;
+    }
     span {
       del {
         color: #000000;

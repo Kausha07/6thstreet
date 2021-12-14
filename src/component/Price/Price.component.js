@@ -68,6 +68,7 @@ class Price extends PureComponent {
 
   renderSpecialPrice() {
     const { specialPrice, fixedPrice } = this.props;
+    const { isArabic } = this.state;
 
     return (
       <span
@@ -78,15 +79,13 @@ class Price extends PureComponent {
         {this.renderCurrency()}
         &nbsp;
         {fixedPrice ? (1 * specialPrice).toFixed(3) : specialPrice}
-        &nbsp;
+        {!isArabic && <>&nbsp;</>}
       </span>
     );
   }
 
   discountPercentage() {
     const { basePrice, specialPrice, renderSpecialPrice, cart } = this.props;
-
-    const { isArabic } = this.state;
 
     let discountPercentage = Math.round(100 * (1 - specialPrice / basePrice));
     if (discountPercentage === 0) {
@@ -99,7 +98,7 @@ class Price extends PureComponent {
           elem="Discount"
           mods={{ discount: this.haveDiscount() }}
         >
-          -({discountPercentage}%)<span> </span>
+          (-{discountPercentage}%)<span> </span>
         </span>
       );
     } else {
@@ -110,6 +109,8 @@ class Price extends PureComponent {
   renderPrice() {
     const { basePrice, specialPrice, country, renderSpecialPrice, cart } =
       this.props;
+    const { isArabic } = this.state;
+
     const currency = getCurrency();
 
     if (!parseFloat(basePrice)) {
@@ -123,6 +124,8 @@ class Price extends PureComponent {
       <>
         <span block="Price" elem="Wrapper">
           {renderSpecialPrice && this.renderSpecialPrice()}
+          {isArabic && <>&nbsp;</>}
+
           <del block="Price" elem="Del">
             {this.renderBasePrice()}
           </del>
@@ -149,8 +152,12 @@ class Price extends PureComponent {
   }
 
   render() {
+    const { isArabic } = this.state;
     return (
-      <div block={`Price ${this.haveDiscount() ? "discount" : ""}`}>
+      <div
+        block={`Price ${this.haveDiscount() ? "discount" : ""}`}
+        mix={{ block: "Price", mods: { isArabic } }}
+      >
         {this.renderPrice()}
       </div>
     );
