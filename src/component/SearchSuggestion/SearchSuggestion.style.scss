@@ -441,15 +441,13 @@
       line-height: 19px;
     }
 
-    &-Del {
-      display: inline-block;
-
-      span {
-        position: relative;
-        right: unset;
-      }
-      #price {
+    .Price {
+      &-Del {
+        display: inline-block;
         margin-right: 10px;
+       
+      }
+      &-Currency {
         font-weight: var(--fw-demi);
       }
     }
