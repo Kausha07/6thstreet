@@ -96,18 +96,21 @@ class PDPDetailsSection extends PureComponent {
       return null;
     }
     return (
-      <div block="PDPDetailsSection" elem="ShareButtonContainer">
-        <ShareButton
-          block="PDPDetailsSection-ShareButtonContainer"
-          elem="ShareButton"
-          title={document.title}
-          text={`Hey check this out: ${document.title}`}
-          url={url.toString()}
-          mods={{ isArabic: isArabic() }}
-        >
-          <span>{__("Share")}</span>
-        </ShareButton>
-      </div>
+      <>
+        <div block="PDPDetailsSection" elem="ShareButtonContainer">
+          <ShareButton
+            block="PDPDetailsSection-ShareButtonContainer"
+            elem="ShareButton"
+            title={document.title}
+            text={`Hey check this out: ${document.title}`}
+            url={url.toString()}
+            mods={{ isArabic: isArabic() }}
+          >
+            <span>{__("Share")}</span>
+          </ShareButton>
+        </div>
+        {this.renderAccordionSeperator()}
+      </>
     );
   }
 
@@ -812,7 +815,7 @@ class PDPDetailsSection extends PureComponent {
           ""
         )}
         <div block="AccordionWrapper">
-          {this.renderAccordionSeperator()}
+          {/* {this.renderAccordionSeperator()} */}
           <Accordion
             mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
             title={__(isMobile ? "Description" : "PRODUCT DETAILS:")}
@@ -823,7 +826,7 @@ class PDPDetailsSection extends PureComponent {
           </Accordion>
           {this.renderAccordionSeperator()}
           {this.renderShareButton()}
-          {this.renderAccordionSeperator()}
+
           {this.renderContactAccordion()}
           {this.renderAccordionSeperator()}
         </div>
