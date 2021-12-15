@@ -579,23 +579,28 @@ export class MyAccountOverlay extends PureComponent {
 
   // facebook login dialog
   facebookLogin = () => {
-
     FB.getLoginStatus(function (response) {
       this.statusChangeCallback(response);
     });
-    window.FB.login(function (response) {
-      console.log(response)
-      if (response.authResponse) {
-        console.log('Welcome!  Fetching your information.... ');
-        window.FB.api('/me', function (response) {
-          console.log("response", response);
-          console.log('Good to see you, ' + response.name + '.');
-        });
-      } else {
-        console.log('User cancelled login or did not fully authorize.');
+    window.FB.login(
+      function (response) {
+        console.log("login response", response);
+        if (response.authResponse) {
+          console.log("Welcome!  Fetching your information.... ");
+          window.FB.api("/me?fields=first_name,last_name,email", function (response) {
+            console.log("response", response);
+            console.log("Good to see you, " + response.name + ".");
+          });
+        } else {
+          console.log("User cancelled login or did not fully authorize.");
+        }
+      },
+      {
+        scope: "email",
+        return_scopes: true,
       }
-    });
-  }
+    );
+  };
 
   //Socail logins rendering
   renderSocials(renderer) {
