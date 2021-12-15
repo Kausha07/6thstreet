@@ -22,8 +22,6 @@ import {
   getBreadcrumbsUrl,
 } from "Util/Breadcrumbs/Breadcrubms";
 import PLP from "./PLP.component";
-import Algolia from "Util/API/provider/Algolia";
-import { isArabic } from "Util/App";
 
 export const BreadcrumbsDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -49,6 +47,8 @@ export const mapDispatchToProps = (dispatch, state) => ({
     PLPDispatcher.requestProductList(options, dispatch, state),
   requestProductListPage: (options) =>
     PLPDispatcher.requestProductListPage(options, dispatch),
+  setInitialPLPFilter: (initialOptions) =>
+    PLPDispatcher.setInitialPLPFilter(initialOptions, dispatch, state),
   setIsLoading: (isLoading) => dispatch(setPLPLoading(isLoading)),
   updateBreadcrumbs: (breadcrumbs) => {
     BreadcrumbsDispatcher.then(({ default: dispatcher }) =>
@@ -59,7 +59,6 @@ export const mapDispatchToProps = (dispatch, state) => ({
     dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, state)),
   setGender: (gender) => dispatch(setGender(gender)),
   setMeta: (meta) => dispatch(updateMeta(meta)),
-  resetPLPData: () => PLPDispatcher.resetPLPData(dispatch),
 });
 
 export class PLPContainer extends PureComponent {
@@ -68,6 +67,7 @@ export class PLPContainer extends PureComponent {
     locale: PropTypes.string.isRequired,
     requestProductList: PropTypes.func.isRequired,
     requestProductListPage: PropTypes.func.isRequired,
+    setInitialPLPFilter: PropTypes.func.isRequired,
     isLoading: PropTypes.bool.isRequired,
     setIsLoading: PropTypes.func.isRequired,
     requestedOptions: RequestedOptions.isRequired,
@@ -137,54 +137,44 @@ export class PLPContainer extends PureComponent {
 
   state = {
     prevRequestOptions: PLPContainer.getRequestOptions(),
-    brandDescription: "",
-      brandImg: "",
-      brandName: "",
-      isArabic: isArabic(),
   };
 
   containerFunctions = {
     // getData: this.getData.bind(this)
-    resetPLPData: this.resetPLPData.bind(this),
   };
-  resetPLPData() {
-    const { resetPLPData } = this.props;
-    resetPLPData();
-  }
 
   constructor(props) {
     super(props);
-
     if (this.getIsLoading()) {
-      PLPContainer.requestProductList(props);
-    }
+      const options = PLPContainer.getRequestOptions();
+      const initialOptions = this.getInitialOptions(options);
 
+      this.props.setInitialPLPFilter({ initialOptions });
+      setTimeout(() => {
+        PLPContainer.requestProductList(this.props);
+      }, 2000);
+    }
     this.setMetaData();
   }
 
-  async componentDidMount() {
+  getInitialOptions = (options) => {
+    const optionArr = ["categories.level1", "page", "q", "visibility_catalog"];
+    let initialOptions = {};
+    Object.keys(options).map((key) => {
+      if (optionArr.includes(key)) {
+        initialOptions[key] = options[key];
+      }
+    });
+    return initialOptions;
+  };
+
+  componentDidMount() {
     const { menuCategories = [] } = this.props;
-    const {isArabic} = this.state;
     if (menuCategories.length !== 0) {
       this.updateBreadcrumbs();
       this.setMetaData();
       this.updateHeaderState();
     }
-    const brandName = location.pathname
-    .split(".html")[0]
-    .substring(1)
-    .split("/")?.[0];
-    const data = await new Algolia({
-      index: "brands_info",
-    }).getBrandsDetails({
-      query: brandName,
-      limit: 1
-    });
-    this.setState({
-      brandDescription: isArabic ? data?.hits[0]?.description_ar : data?.hits[0]?.description,
-      brandImg: data?.hits[0]?.image,
-      brandName: isArabic ? data?.hits[0]?.name_ar : data?.hits[0]?.name
-    })
   }
 
   componentDidUpdate() {
@@ -336,15 +326,13 @@ export class PLPContainer extends PureComponent {
 
   containerProps = () => {
     const {
+      brandDescription,
+      brandImg,
+      brandName,
       query,
       plpWidgetData,
       gender,
     } = this.props;
-    const {
-      brandDescription,
-      brandImg,
-      brandName,
-    } = this.state;
 
     // isDisabled: this._getIsDisabled()
     return {
