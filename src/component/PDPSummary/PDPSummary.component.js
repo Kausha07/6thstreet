@@ -222,7 +222,7 @@ class PDPSummary extends PureComponent {
 
     return (
       <div block="PriceContainer">
-        <Price price={price} renderSpecialPrice={true}/>
+        <Price price={price} renderSpecialPrice={true} />
         {isMobile.any() && this.renderPDPSummaryHeader()}
         {additional_shipping_info ? (
           <span block="AdditionShippingInformation">
@@ -442,7 +442,7 @@ class PDPSummary extends PureComponent {
         <div block="PriceAndPDPSummaryHeader">
           {this.renderPriceAndPDPSummaryHeader()}
         </div>
-        <div block="Seperator" />
+        {/* <div block="Seperator" /> */}
         {this.renderTabby()}
         {/* { this.renderColors() } */}
         {this.renderAddToCartSection()}

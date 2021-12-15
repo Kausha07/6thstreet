@@ -211,6 +211,10 @@
         }
         @include desktop {
           margin-left: 5px;
+          &_isArabic {
+            margin-left: 0;
+            margin-right: 5px;
+          }
         }
       }
       &-VideoButtonsContainer {

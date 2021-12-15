@@ -14,6 +14,7 @@ import Event, {
 import { Favourite, FavouriteFilled } from "../Icons";
 import "./WishlistIcon.style";
 import { isSignedIn } from "Util/Auth";
+import { isArabic } from "Util/App";
 
 class WishlistIcon extends PureComponent {
   static propTypes = {
@@ -95,7 +96,7 @@ class WishlistIcon extends PureComponent {
     if (isSignedIn()) {
       addToWishlist(skuFromProps);
     } else {
-      localStorage.setItem("Wishlist_Item",skuFromProps);
+      localStorage.setItem("Wishlist_Item", skuFromProps);
       renderMySignInPopup();
     }
     // Event.dispatch(EVENT_GTM_PRODUCT_ADD_TO_WISHLIST, { product: data });
@@ -159,7 +160,11 @@ class WishlistIcon extends PureComponent {
   }
 
   render() {
-    return <div block="WishlistIcon">{this.renderIcon()}</div>;
+    return (
+      <div block="WishlistIcon" mods={{ isArabic: isArabic() }}>
+        {this.renderIcon()}
+      </div>
+    );
   }
 }
 
