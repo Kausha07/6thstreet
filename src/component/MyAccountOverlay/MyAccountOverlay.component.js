@@ -130,6 +130,7 @@ export class MyAccountOverlay extends PureComponent {
             type: "google",
             cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
           };
+          console.log("request payload", payload)
           try {
             onSignInSuccess(payload);
           } catch (e) {

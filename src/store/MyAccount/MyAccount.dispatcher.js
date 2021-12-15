@@ -178,6 +178,8 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
   }
 
   async signIn(options = {}, dispatch) {
+    console.log("sign in options payload", options)
+    console.log("options condition result", options.hasOwnProperty("type"))
     if (options.hasOwnProperty("type")) {
       console.log("Social Login Started.");
       try {
@@ -228,6 +230,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
   }
   // handleMobileAuthCommonBlock(){}
   async handleMobileAuthorization(dispatch, options) {
+    console.log("options", options)
     const { email: username, password } = options;
     const { data: { token, t, user: { custom_attributes, gender, id } } = {} } =
       await getMobileApiAuthorizationToken(
