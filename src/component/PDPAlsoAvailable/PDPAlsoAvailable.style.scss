@@ -99,14 +99,21 @@
     }
     .WishlistIcon {
       border-radius: 50%;
-      width: 32px;
-      height: 32px;
+      width: 28px;
+      height: 28px;
       align-items: center;
+      right: 14px;
+      top: 7px;
+      &_isArabic {
+        left: 14px;
+        right: unset;
+      }
       &-Icon {
         display: flex;
         justify-content: center;
-        width: auto;
-        height: auto;
+        width: 20px;
+        height: 20px;
+        align-items: center;
         @include desktop {
           position: revert;
         }

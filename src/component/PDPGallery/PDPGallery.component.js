@@ -410,6 +410,7 @@ class PDPGallery extends PureComponent {
           ref={this.overlaybuttonRef}
           block="PDPGallery"
           elem="OverlayButton"
+          mods={{ isArabic }}
           onClick={this.renderGalleryOverlay}
         >
           {this.renderSlider()}
