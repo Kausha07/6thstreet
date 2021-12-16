@@ -47,6 +47,10 @@ import {
 import "./MyAccountOverlay.style";
 
 export class MyAccountOverlay extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.authRef = React.createRef();
+  }
   static propTypes = {
     // eslint-disable-next-line react/no-unused-prop-types
     isOverlayVisible: PropTypes.bool.isRequired,
@@ -100,49 +104,44 @@ export class MyAccountOverlay extends PureComponent {
   };
 
   componentDidMount() {
-    let authRef;
-    let payload = {};
-    gapi.load("auth2", function () {
-      authRef = gapi.auth2.init();
-      attachSigninFunction(document.getElementById("g-signin2"));
+    gapi.load("auth2", () => {
+      this.authRef.current = gapi.auth2.init();
+      this.attachSigninFunction(document.getElementById("g-signin2"));
     });
-    const attachSigninFunction = (element) => {
-      authRef.attachClickHandler(
-        element,
-        {},
-        async function (googleUser) {
-          const profile = googleUser?.getBasicProfile();
-          const social_token = googleUser?.getAuthResponse()?.id_token;
-          const fullName = profile?.getName()?.split(" ");
-          const email = profile?.getEmail();
-          payload = {
-            social_token,
-            firstname: fullName[0],
-            lastname: fullName[1],
-            email,
-            customer_telephone: null,
-            type: "google",
-            cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
-          };
-          googleLogin(payload)
-        },
-        function (error) {
-          console.log(JSON.stringify(error, undefined, 2));
-        }
-      );
-    };
-    const googleLogin = (payload) => {
-      const {onSignInSuccess, onSignInAttempt } = this.props
-      try {
-        onSignInAttempt();
-        onSignInSuccess(payload);
-      } catch (e) {
-        console.log("error", e);
-        deleteAuthorizationToken();
-        deleteMobileAuthorizationToken();
-      }
-    }
   }
+  attachSigninFunction = (element) => {
+    this.authRef.current.attachClickHandler(
+      element,
+      {},
+      async (googleUser) => {
+        const { onSignInSuccess, onSignInAttempt } = this.props;
+        const profile = googleUser?.getBasicProfile();
+        const social_token = googleUser?.getAuthResponse()?.id_token;
+        const fullName = profile?.getName()?.split(" ");
+        const email = profile?.getEmail();
+        const payload = {
+          social_token,
+          firstname: fullName[0],
+          lastname: fullName[1],
+          email,
+          customer_telephone: null,
+          type: "google",
+          cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
+        };
+        try {
+          onSignInAttempt();
+          onSignInSuccess(payload);
+        } catch (e) {
+          console.log("error", e);
+          deleteAuthorizationToken();
+          deleteMobileAuthorizationToken();
+        }
+      },
+      function (error) {
+        console.log(JSON.stringify(error, undefined, 2));
+      }
+    );
+  };
 
   renderMap = {
     [STATE_SIGN_IN]: {
@@ -586,7 +585,7 @@ export class MyAccountOverlay extends PureComponent {
                 cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
               };
               try {
-                onSignInAttempt()
+                onSignInAttempt();
                 onSignInSuccess(payload);
               } catch (e) {
                 console.log("error", e);
