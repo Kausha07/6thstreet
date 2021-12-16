@@ -146,14 +146,14 @@ class WelcomeScreen extends PureComponent {
 
         return (
             <div block="WelcomeScreen" elem="Content" mods={ { isArabic } }>
-                { this.renderCloseBtn() }
+                {/* { this.renderCloseBtn() } */}
                 <div block="WelcomeScreen" elem="Options">
-                    <h1>
+                    {/* <h1>
                         { __('Welcome') }
                         ,
                     </h1>
-                    <p>{ __('you are shopping in') }</p>
-                    { this.renderLanguageButtons() }
+                    <p>{ __('you are shopping in') }</p> */}
+                    {/* { this.renderLanguageButtons() } */}
                     { this.renderCountryList() }
                 </div>
             </div>

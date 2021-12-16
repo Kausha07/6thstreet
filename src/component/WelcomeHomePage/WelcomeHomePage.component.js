@@ -1,6 +1,8 @@
-import { PureComponent } from 'react';
+import { Fragment, PureComponent } from 'react';
 import { isArabic } from 'Util/App';
 import PropTypes from 'prop-types';
+import CDN from "../../util/API/provider/CDN";
+import Link from "Component/Link";
 import { connect } from 'react-redux';
 import { setCountry, setLanguage } from 'Store/AppState/AppState.action';
 import { setAppConfig } from 'Store/AppConfig/AppConfig.action'
@@ -9,10 +11,12 @@ import { getCountriesForSelect, getCountryLocaleForSelect } from 'Util/API/endpo
 import { Config } from 'Util/API/endpoint/Config/Config.type';
 import { URLS } from 'Util/Url/Url.config';
 import Footer from "Component/Footer";
+import Image from "Component/Image";
+import CountrySwitcher from 'Component/CountrySwitcher';
 import logo from './icons/6thstreet_logo.png'
-import dummy from './icons/dummy.png'
-import dummy1 from './icons/dummy1.png'
-import dummy2 from './icons/dummy2.png'
+import isMobile from "Util/Mobile";
+import facebook from "./icons/facebook.png";
+import instagram from "./icons/instagram.png";
 import './WelcomeHomePage.style';
 
 
@@ -32,8 +36,41 @@ export const mapDispatchToProps = (dispatch) => ({
 
 class WelcomeHomePage extends PureComponent {
     state = {
-        isArabic: false
+        isArabic: false,
+        welcomeImg: null
     };
+
+    linkMap = {
+        title: __("Download The App"),
+        items: [
+            {
+                id_app: "App1",
+                app_store:
+                    "https://static.6media.me/static/version1600320971/frontend/6SNEW/6snew/en_US/images/apple-store-badge.svg",
+                app_onclick:
+                    "https://apps.apple.com/ro/app/6thstreet-com/id1370217070",
+                id_google: "Google1",
+                google_play:
+                    "https://static.6media.me/static/version1600320042/frontend/6SNEW/6snew/en_US/images/google-play-badge.svg",
+                google_onclick:
+                    "https://play.google.com/store/apps/details?id=com.apparel.app6thstreet",
+                id_gallery: "Gallery1",
+                app_gallery:
+                    "https://6thstreetmobileapp-eu-c.s3.eu-central-1.amazonaws.com/resources/20190121/en-ae/d/icon_huaweiappgallery.svg",
+                gallery_onclick: "https://appgallery.huawei.com/#/app/C102324663",
+                header: __("Follow the latest trends"),
+                id_facebook: "Facebook1",
+                facebook_href: "https://www.facebook.com/shop6thstreet/",
+                id_insta: "Insta1",
+                insta_href: "https://www.instagram.com/shop6thstreet/",
+            },
+        ],
+    }
+
+
+    componentDidMount() {
+        this.getWelcomeImageUrl();
+    }
 
     onGenderSelect = (val) => {
         const { country, language } = this.props;
@@ -43,8 +80,57 @@ class WelcomeHomePage extends PureComponent {
         window.location.href = url
     }
 
+    getWelcomeImageUrl = () => {
+        let url = 'homepage/m/home.json';
+        const directory = process.env.REACT_APP_REMOTE_CONFIG_DIR;
+
+        try {
+            const resp = CDN.get(`${directory}/${url}`)
+                .then((res) => {
+                    if (res.men) {
+                        this.setState({
+                            welcomeImg: res
+                        })
+                    }
+                });
+        }
+        catch (error) {
+            console.error(error);
+        }
+    }
+
+    renderAppColumn = () => {
+        return <div block="FooterMain" elem="LastColumn" >
+            <h4>{this.linkMap.title}</h4>
+            <div block="FooterMain" elem="Nav">
+                {this.linkMap.items.map((items) => (
+                    <Fragment key="last_main_footer_column">
+                        <div block="FooterMain" elem="WrapperFirst">
+                            <Link to={items.app_onclick} key={items.id_app}>
+                                <Image lazyLoad={true} src={items.app_store} alt="app store download" />
+                            </Link>
+                            <br />
+                            <Link to={items.google_onclick} key={items.id_google}>
+                                <Image lazyLoad={true} src={items.google_play} alt="google play download" />{" "}
+
+                            </Link>
+                            <br />
+                            <Link to={items.gallery_onclick} key={items.id_gallery}>
+                                <Image lazyLoad={true} src={items.app_gallery} alt="app gallery download" className="appGallery" />
+
+                            </Link>
+                        </div>
+                    </Fragment>
+                ))}
+            </div>
+        </div>
+    }
+
     render() {
         const { isArabic } = this.state;
+        let lang = this.props.language
+        let uni = isMobile.any()
+        console.log(uni);
         return (
             <div>
                 <div block="WelcomeHomePage">
@@ -52,28 +138,34 @@ class WelcomeHomePage extends PureComponent {
                         <div block="WelcomeHomePage-Top-Logo" >
                             <img src={logo} />
                         </div>
-
-
                     </div>
-                    <div block="WelcomeHomePage" elem="MainSection" >
-                        <div block="WelcomeHomePage-GenderSelection">
-                            <img src={dummy} onClick={() => this.onGenderSelect('women')} />
-                            <button block="WelcomeHomePage-GenderSelection-Button">Shop Women</button>
+                    {
+                        <div  block="WelcomeHomePage" elem="CountrySwitcher">
+                            <CountrySwitcher/>
                         </div>
-                        <div block="WelcomeHomePage-GenderSelection">
-                            <img src={dummy1} onClick={() => this.onGenderSelect('men')} />
-                            <button block="WelcomeHomePage-GenderSelection-Button">Shop Men</button>
+                    }
+                    {
+                    this.state.welcomeImg &&
+                        <div block="WelcomeHomePage" elem="MainSection" >
+                            <div block="WelcomeHomePage-GenderSelection">
+                                <img src={this.state.welcomeImg.women.img[lang]} onClick={() => this.onGenderSelect('women')} />
+                                <button block="WelcomeHomePage-GenderSelection-Button">Shop Women</button>
+                            </div>
+                            <div block="WelcomeHomePage-GenderSelection">
+                                <img src={this.state.welcomeImg.men.img[lang]} onClick={() => this.onGenderSelect('men')} />
+                                <button block="WelcomeHomePage-GenderSelection-Button">Shop Men</button>
+                            </div>
+                            <div block="WelcomeHomePage-GenderSelection">
+                                <img src={this.state.welcomeImg.kids.img[lang]} onClick={() => this.onGenderSelect('kids')} />
+                                <button block="WelcomeHomePage-GenderSelection-Button">Shop Kids</button>
+                            </div>
                         </div>
-                        <div block="WelcomeHomePage-GenderSelection">
-                            <img src={dummy2} onClick={() => this.onGenderSelect('kids')} />
-                            <button block="WelcomeHomePage-GenderSelection-Button">Shop Kids</button>
-                        </div>
-                    </div>
-
-
-
+                    }
                 </div>
-                <Footer/>
+                <div block="WelcomeHomePage" elem="Bottom">
+                    {this.renderAppColumn()}
+                </div>
+                <Footer />
             </div>
 
         );

@@ -16,11 +16,33 @@
         width: var(--main-container-width-dsk);
         justify-content: space-between;
         margin-bottom: 30px;
+        @include tablet{
+            width: auto;
+            max-width: 100%;
+            margin-right: 30px;
+            margin-left: 30px;
+        }
+        @include mobile{
+            width: 100%;
+            margin-right: 0px;
+            margin-left: 0px;
+            flex-direction: column;
+        }
         .WelcomeHomePage-GenderSelection{
             img{
                 width: 362px;
                 cursor: pointer;
                 height: 535px;
+                @include tablet{
+                    width: 232px;
+                    height: 345px;
+                }
+                @include mobile{
+                    width: 100%;
+                    height: 157px;
+                    object-fit: cover;
+
+                }
             }
             &-Button{
                 position: absolute;
@@ -30,9 +52,85 @@
                 width: 276px;
                 border-radius: 6px;
                 background-color: #FFFFFF;
+                @include tablet{
+                    height: 46px;
+                    width: 180px;
+                    left: 26px;
+                }
+                @include mobile {
+                    color: #FFFFFF;
+                    font-size: 26px;
+                    font-weight: 500;
+                    letter-spacing: 1.73px;
+                    line-height: 36px;
+                    text-align: center;
+                    background-color: transparent;
+                    bottom: 50px;
+                }
             }
         }
+    }
 
+    &-Bottom{
+        @include desktop{
+            display: none;
+        }
+        @include mobile{
+            display: none;
+        }
+        .FooterMain{
+            &-LastColumn{
+                text-align: center;
+                h4{
+                    font-size: 18px;
+                    font-weight: 500;
+                    letter-spacing: 2px;
+                    line-height: 25px;
+                    text-align: center;
+                }
+
+            }
+            &-Nav{
+                display: flex;
+                .FooterMain-WrapperFirst{
+                    display: flex;
+                    align-items: center;
+                    margin: 0 auto;
+                    margin-top: 20px;
+                    a{
+                        margin-right: 8px;
+                        margin-left: 8px;
+                    }
+                }
+            }
+
+
+        }
+    }
+
+    &-CountrySwitcher{
+        @include desktop{
+            display: none;
+        }
+        .CountrySwitcher{
+            padding-left: 40px;
+            padding-bottom: 40px;
+        }
+        .StoreSwitcherPopup{
+            &-Container{
+                @include mobile{
+                    right: unset;
+                    top: 165px;
+                    left: 30px;
+                }
+                @include tablet{
+                    right: unset;
+                    top: 165px;
+                    left: 30px;
+                }
+
+            }
+        }
     }
 
 }
