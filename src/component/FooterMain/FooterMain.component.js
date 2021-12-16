@@ -142,7 +142,7 @@ class FooterMain extends PureComponent {
                   <br />
                   <Link to={items.google_onclick} key={items.id_google}>
                     <Image lazyLoad={true} src={items.google_play} alt="google play download" />{" "}
-                    
+
                   </Link>
                   <br />
                   <Link to={items.gallery_onclick} key={items.id_gallery}>
@@ -161,7 +161,6 @@ class FooterMain extends PureComponent {
                   <div block="FooterMain" elem="SocialIcon">
                     <Link to={items.insta_href} key={items.id_insta}>
                       <Image lazyLoad={true} src={instagram} alt="instagram icon" />
-
                     </Link>
                   </div>
                 </div>

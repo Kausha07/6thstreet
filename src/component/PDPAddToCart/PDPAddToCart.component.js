@@ -591,7 +591,7 @@ class PDPAddToCart extends PureComponent {
               {this.renderSizeTypeSelect()}
               {this.renderSizeSelect()}
             </div>
-            {isMobile.any() && <div block="Seperator" />}
+            {/* {isMobile.any() && <div block="Seperator" />} */}
           </>
         ) : null}
         <div

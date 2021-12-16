@@ -15,6 +15,7 @@ import { getUUIDToken } from "Util/Auth";
 import isMobile from "Util/Mobile";
 import { Phone, Chat, Email } from "Component/Icons";
 import { EMAIL_LINK } from "Component/CheckoutSuccess/CheckoutSuccess.config";
+import Link from "Component/Link";
 
 class PDPDetailsSection extends PureComponent {
   static propTypes = {
@@ -90,22 +91,26 @@ class PDPDetailsSection extends PureComponent {
   renderShareButton() {
     const url = new URL(window.location.href);
     url.searchParams.append("utm_source", "pdp_share");
-    if (!window.navigator.share) {
+    const isDesktop = !(isMobile.any() || isMobile.tablet());
+    if (isDesktop || !window.navigator.share) {
       return null;
     }
     return (
-      <div block="PDPDetailsSection" elem="ShareButtonContainer">
-        <ShareButton
-          block="PDPDetailsSection-ShareButtonContainer"
-          elem="ShareButton"
-          title={document.title}
-          text={`Hey check this out: ${document.title}`}
-          url={url.toString()}
-          mods={{ isArabic: isArabic() }}
-        >
-          <span>{__("Share")}</span>
-        </ShareButton>
-      </div>
+      <>
+        <div block="PDPDetailsSection" elem="ShareButtonContainer">
+          <ShareButton
+            block="PDPDetailsSection-ShareButtonContainer"
+            elem="ShareButton"
+            title={document.title}
+            text={`Hey check this out: ${document.title}`}
+            url={url.toString()}
+            mods={{ isArabic: isArabic() }}
+          >
+            <span>{__("Share")}</span>
+          </ShareButton>
+        </div>
+        {this.renderAccordionSeperator()}
+      </>
     );
   }
 
@@ -154,10 +159,15 @@ class PDPDetailsSection extends PureComponent {
 
   renderIconsSection() {
     const { clickAndCollectStores } = this.props;
+    const { isArabic } = this.state;
     return (
       <div block="PDPDetailsSection" elem="IconsSection">
         {clickAndCollectStores?.length ? (
-          <div block="PDPDetailsSection" elem="IconContainer">
+          <div
+            block="PDPDetailsSection"
+            elem="IconContainer"
+            mods={{ isArabic }}
+          >
             <div
               block="PDPDetailsSection"
               elem="Icon"
@@ -169,7 +179,7 @@ class PDPDetailsSection extends PureComponent {
             </div>
           </div>
         ) : null}
-        <div block="PDPDetailsSection" elem="IconContainer">
+        <div block="PDPDetailsSection" elem="IconContainer" mods={{ isArabic }}>
           <div
             block="PDPDetailsSection"
             elem="Icon"
@@ -177,7 +187,7 @@ class PDPDetailsSection extends PureComponent {
           />
           <div>{__("100% Genuine")}</div>
         </div>
-        <div block="PDPDetailsSection" elem="IconContainer">
+        <div block="PDPDetailsSection" elem="IconContainer" mods={{ isArabic }}>
           <div
             block="PDPDetailsSection"
             elem="Icon"
@@ -714,6 +724,7 @@ class PDPDetailsSection extends PureComponent {
               {__("Phone")}
             </p>
           </div>
+          <div block="divider"></div>
           <div block="IconWrapper">
             <div block="IconWrapper" elem="Icon" onClick={this.chat}>
               <Chat />
@@ -722,6 +733,7 @@ class PDPDetailsSection extends PureComponent {
               {__("Live Chat")}
             </p>
           </div>
+          <div block="divider"></div>
           <div block="IconWrapper">
             <div block="IconWrapper" elem="Icon">
               <a href={`mailto:${EMAIL_LINK}`} target="_blank" rel="noreferrer">
@@ -759,6 +771,35 @@ class PDPDetailsSection extends PureComponent {
   renderSeperator() {
     return <div block="Seperator"></div>;
   }
+  renderAccordionSeperator() {
+    return <div block="AccordionSeperator"></div>;
+  }
+  getBrandUrl = () => {
+    const {
+      product: { brand_name },
+    } = this.props;
+    const url = brand_name
+      .replace(/'/g, "")
+      .replace(/[(\s+).&]/g, "-")
+      .replace(/-{2,}/g, "-")
+      .replace(/\-$/, "")
+      .replace("@", "at")
+      .toLowerCase();
+    return `${url}.html`;
+  };
+  renderMoreFromTheBrand = () => {
+    const url = this.getBrandUrl();
+    // const url = "https://www.google.com";
+    return (
+      <div block="FromBrand">
+        <Link block="FromBrand" elem="MoreButton" to={url}>
+          <span block="FromBrand" elem="ButtonText">
+            {__("More from this brand")}
+          </span>
+        </Link>
+      </div>
+    );
+  };
   render() {
     const {
       product: { brand_name },
@@ -774,6 +815,7 @@ class PDPDetailsSection extends PureComponent {
           ""
         )}
         <div block="AccordionWrapper">
+          {/* {this.renderAccordionSeperator()} */}
           <Accordion
             mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
             title={__(isMobile ? "Description" : "PRODUCT DETAILS:")}
@@ -782,12 +824,16 @@ class PDPDetailsSection extends PureComponent {
             {!isMobile ? this.renderIconsSection() : ""}
             {this.renderDescription()}
           </Accordion>
+          {this.renderAccordionSeperator()}
+          {this.renderShareButton()}
+
           {this.renderContactAccordion()}
+          {this.renderAccordionSeperator()}
         </div>
 
-        {this.renderShareButton()}
         <div block="PDPWidgets">{this.renderPdpWidgets()}</div>
         <div block="Seperator2" />
+        {isMobile ? this.renderMoreFromTheBrand() : ""}
 
         {/* <Accordion
             mix={ { block: 'PDPDetailsSection', elem: 'Accordion' } }

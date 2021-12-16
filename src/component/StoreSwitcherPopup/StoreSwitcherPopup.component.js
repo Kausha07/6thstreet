@@ -24,14 +24,14 @@ class StoreSwitcherPopup extends PureComponent {
     return (
       <div block="StoreSwitcherPopup">
         <div block="StoreSwitcherPopup" elem="Container">
-          <Image lazyLoad={true}
+          {/* <Image lazyLoad={true}
             mix={{
               block: "StoreSwitcherPopup",
               elem: "Image",
             }}
             src="https://static.6media.me/static/version1600395563/frontend/6SNEW/6snew/en_US/images/store-selector-background.png"
             alt="Store"
-          />
+          /> */}
           <WelcomeScreen
             countrySelectOptions={countrySelectOptions}
             country={country}

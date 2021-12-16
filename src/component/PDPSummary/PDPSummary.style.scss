@@ -28,6 +28,7 @@
       border-radius: 50%;
       border: solid transparent;
       background-color: #f6f6f6;
+      border-width: 0;
     }
     .WishlistIcon {
       position: relative;
@@ -37,6 +38,12 @@
       height: 50px;
       background-color: transparent;
       margin-left: 16px;
+      right: unset;
+      left: unset;
+      &-Icon {
+        left: unset;
+        border-width: 0;
+      }
       button {
         top: 0;
       }
@@ -331,6 +338,9 @@
         }
       }
       .PDPSummaryHeaderAndShareAndWishlistButtonContainer {
+        button {
+          border-width: 0;
+        }
         .WishlistIcon {
           margin-right: 8px !important;
           margin-left: unset !important;
@@ -338,4 +348,7 @@
       }
     }
   }
+}
+#TabbyPromo {
+  margin-top: 25px;
 }
