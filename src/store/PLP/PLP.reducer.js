@@ -1,3 +1,4 @@
+// TODO update this import when renamed
 import {
   SET_PLP_DATA,
   SET_PLP_INIT_FILTERS,
@@ -13,6 +14,7 @@ export const getInitialState = () => ({
   // actual data (pages, filters, options)
   pages: {},
   lastSelectedKey: null,
+  lastSelectedValue: null,
   filters: {},
   meta: {},
   options: {},
@@ -82,15 +84,6 @@ export const PLPReducer = (state = getInitialState(), action) => {
         },
       };
 
-    case SET_PLP_INIT_FILTERS:
-      const { initialFilters, initialOptions } = action;
-
-      return {
-        ...state,
-        initialFilters: initialFilters,
-        initialOptions: initialOptions,
-      };
-
     case UPDATE_PLP_INIT_FILTERS:
       const { updatedFilters, facet_key, facet_value } = action;
       return {
@@ -100,6 +93,15 @@ export const PLPReducer = (state = getInitialState(), action) => {
         lastSelectedValue: facet_value,
       };
 
+    case SET_PLP_INIT_FILTERS:
+      const { initialFilters, initialOptions } = action;
+
+      return {
+        ...state,
+        initialFilters: initialFilters,
+        initialOptions: initialOptions,
+      };
+
     case SET_PLP_DATA:
       const {
         response: { data: products = {}, meta = {}, filters = {} },
@@ -107,10 +109,21 @@ export const PLPReducer = (state = getInitialState(), action) => {
         isInitial,
       } = action;
       const { page: initialPage } = requestedOptions;
-
+      const {
+        filters: stateInitialFilters,
+        lastSelectedKey,
+        lastSelectedValue,
+      } = state;
+      const combinedFilters = combineFilters(
+        filters,
+        stateInitialFilters,
+        lastSelectedKey,
+        lastSelectedValue
+      );
       return {
         ...state,
         filters: filters,
+        // filters: combinedFilters,
         options: requestedOptions,
         meta,
         pages: {

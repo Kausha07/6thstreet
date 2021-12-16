@@ -269,7 +269,6 @@ class PLPFilters extends PureComponent {
           { count: 0 }
         )
       : { count: 0 };
-      console.log("muskan count",activeFilters,count);
     const displayCount = count - 1;
     return displayCount;
   }
@@ -443,6 +442,7 @@ class PLPFilters extends PureComponent {
           );
         }
       } else if (filterArray) {
+        console.log("muskan1")
         if (newFilterArray) {
           const { data } = newFilterArray;
           this.updateInitialFilters(

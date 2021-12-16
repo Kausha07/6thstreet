@@ -45,6 +45,7 @@ class FieldMultiselect extends PureComponent {
       toggleOptionsList: false,
       isArabic: isArabic(),
       subcategoryOptions: {},
+      currentActiveFilter: null,
     };
     this.toggelOptionList = this.toggelOptionList.bind(this);
   }
@@ -69,6 +70,13 @@ class FieldMultiselect extends PureComponent {
     document.removeEventListener("mousedown", this.handleClickOutside);
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.currentActiveFilter !== this.props.currentActiveFilter) {
+      this.setState({
+        currentActiveFilter,
+      });
+    }
+  }
   handleClickOutside = (event) => {
     const { toggleOptionsList } = this.state;
 
@@ -162,6 +170,8 @@ class FieldMultiselect extends PureComponent {
       setDefaultFilters,
       defaultFilters,
     } = this.props;
+
+    const { currentActiveFilter } = this.state;
     const { subcategories = {} } = option;
 
     if (Object.keys(subcategories).length !== 0) {
@@ -169,12 +179,14 @@ class FieldMultiselect extends PureComponent {
         ? Object.entries(subcategories).map(this.renderOption)
         : this.renderOptionMobile(option);
     }
+
     return (
       <PLPFilterOption
         key={key}
         option={option}
         isRadio={is_radio}
         activeFilter={activeFilter}
+        currentActiveFilter={currentActiveFilter}
         isChecked={isChecked}
         parentCallback={parentCallback}
         updateFilters={updateFilters}

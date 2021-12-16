@@ -133,7 +133,6 @@ export class PLPFiltersContainer extends PureComponent {
 
       return acc;
     }, {});
-    console.log("muskan",activeFilters,filters,newActiveFilters);
 
     if (!this.compareObjects(activeFilters, newActiveFilters)) {
       this.setActveFilters(newActiveFilters);

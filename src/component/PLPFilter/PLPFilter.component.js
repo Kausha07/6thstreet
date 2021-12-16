@@ -31,19 +31,32 @@ class PLPFilter extends PureComponent {
     currentActiveFilter: "",
   };
 
+  state = {
+    currentActiveFilter: null,
+  };
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.currentActiveFilter !== this.props.currentActiveFilter) {
+      this.setState({
+        currentActiveFilter,
+      });
+    }
+  }
   renderDropDownList() {
     const {
       filter: { label, category, is_radio },
       filter,
       activeFilter,
       isChecked,
-      currentActiveFilter,
       changeActiveFilter,
       handleCallback,
       updateFilters,
       setDefaultFilters,
       defaultFilters,
     } = this.props;
+
+    const { currentActiveFilter } = this.state;
+
     if (category === "categories.level1") {
       return null;
     }
