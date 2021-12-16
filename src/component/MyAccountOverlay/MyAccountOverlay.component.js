@@ -113,8 +113,8 @@ export class MyAccountOverlay extends PureComponent {
     this.authRef.current.attachClickHandler(
       element,
       {},
-      async (googleUser)=>  {
-        const { onSignInSuccess } = this.props;
+      async (googleUser) => {
+        const { onSignInSuccess, onSignInAttempt } = this.props;
         const profile = googleUser?.getBasicProfile();
         const social_token = googleUser?.getAuthResponse()?.id_token;
         const fullName = profile?.getName()?.split(" ");
@@ -129,18 +129,19 @@ export class MyAccountOverlay extends PureComponent {
           cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
         };
         try {
+          onSignInAttempt();
           onSignInSuccess(payload);
         } catch (e) {
           console.log("error", e);
           deleteAuthorizationToken();
           deleteMobileAuthorizationToken();
-        }      },
+        }
+      },
       function (error) {
         console.log(JSON.stringify(error, undefined, 2));
       }
     );
   };
-
 
   renderMap = {
     [STATE_SIGN_IN]: {
@@ -565,7 +566,7 @@ export class MyAccountOverlay extends PureComponent {
 
   // facebook login dialog
   facebookLogin = () => {
-    const { onSignInSuccess } = this.props;
+    const { onSignInSuccess, onSignInAttempt } = this.props;
     window.FB.login(
       function (response) {
         if (response.authResponse) {
@@ -584,6 +585,7 @@ export class MyAccountOverlay extends PureComponent {
                 cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
               };
               try {
+                onSignInAttempt();
                 onSignInSuccess(payload);
               } catch (e) {
                 console.log("error", e);
