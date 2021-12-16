@@ -12,7 +12,6 @@
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { withRouter } from "react-router-dom";
-import MagentoAPI from "Util/API/provider/MagentoAPI";
 
 import CountrySwitcher from "Component/CountrySwitcher";
 import LanguageSwitcher from "Component/LanguageSwitcher";
@@ -26,18 +25,13 @@ import { COUNTRY_CODES_FOR_PHONE_VALIDATION } from "Component/MyAccountAddressFo
 import { Close } from "Component/Icons";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
-import { getMobileApiAuthorizationToken } from "Util/API/endpoint/MyAccount/MyAccount.enpoint";
 import {
   deleteAuthorizationToken,
   deleteMobileAuthorizationToken,
-  setAuthorizationToken,
-  setMobileAuthorizationToken,
 } from "Util/Auth";
-import { updateCustomerSignInStatus } from "SourceStore/MyAccount/MyAccount.action";
 import BrowserDatabase from "Util/BrowserDatabase";
-import Wishlist from "Store/Wishlist/Wishlist.dispatcher";
 import Image from "Component/Image";
-import CART_ID_CACHE_KEY from "Store/MyAccount/MyAccount.dispatcher";
+import { CART_ID_CACHE_KEY } from "Store/MyAccount/MyAccount.dispatcher";
 import {
   CUSTOMER_ACCOUNT_OVERLAY_KEY,
   STATE_CONFIRM_EMAIL,
@@ -107,21 +101,24 @@ export class MyAccountOverlay extends PureComponent {
 
   componentDidMount() {
     let authRef;
+    let payload = {};
+    // console.log("BrowserDatabase.", BrowserDatabase.getItem(CART_ID_CACHE_KEY));
+    console.log("this.props", this.props)
     gapi.load("auth2", function () {
       authRef = gapi.auth2.init();
       attachSigninFunction(document.getElementById("g-signin2"));
     });
     const attachSigninFunction = (element) => {
+      console.log("attach function running!")
       authRef.attachClickHandler(
         element,
         {},
         async function (googleUser) {
-          const { onSignInSuccess } = this.props;
           const profile = googleUser?.getBasicProfile();
           const social_token = googleUser?.getAuthResponse()?.id_token;
           const fullName = profile?.getName()?.split(" ");
           const email = profile?.getEmail();
-          const payload = {
+          payload = {
             social_token,
             firstname: fullName[0],
             lastname: fullName[1],
@@ -130,20 +127,23 @@ export class MyAccountOverlay extends PureComponent {
             type: "google",
             cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
           };
-          console.log("request payload", payload)
-          try {
-            onSignInSuccess(payload);
-          } catch (e) {
-            console.log("error", e);
-            deleteAuthorizationToken();
-            deleteMobileAuthorizationToken();
-          }
+          googleLogin(payload)
         },
         function (error) {
           console.log(JSON.stringify(error, undefined, 2));
         }
       );
     };
+    const googleLogin = (payload) => {
+      const {onSignInSuccess} = this.props
+      try {
+        onSignInSuccess(payload);
+      } catch (e) {
+        console.log("error", e);
+        deleteAuthorizationToken();
+        deleteMobileAuthorizationToken();
+      }
+    }
   }
 
   renderMap = {
