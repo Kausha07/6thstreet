@@ -132,8 +132,9 @@ export class MyAccountOverlay extends PureComponent {
       );
     };
     const googleLogin = (payload) => {
-      const {onSignInSuccess} = this.props
+      const {onSignInSuccess, onSignInAttempt } = this.props
       try {
+        onSignInAttempt();
         onSignInSuccess(payload);
       } catch (e) {
         console.log("error", e);
@@ -566,7 +567,7 @@ export class MyAccountOverlay extends PureComponent {
 
   // facebook login dialog
   facebookLogin = () => {
-    const { onSignInSuccess } = this.props;
+    const { onSignInSuccess, onSignInAttempt } = this.props;
     window.FB.login(
       function (response) {
         if (response.authResponse) {
@@ -585,6 +586,7 @@ export class MyAccountOverlay extends PureComponent {
                 cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
               };
               try {
+                onSignInAttempt()
                 onSignInSuccess(payload);
               } catch (e) {
                 console.log("error", e);
