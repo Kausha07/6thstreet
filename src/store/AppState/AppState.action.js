@@ -1,5 +1,8 @@
 export const SET_COUNTRY = 'SET_COUNTRY';
+export const SET_COUNTRY_FOR_WELCOME = 'SET_COUNTRY_FOR_WELCOME';
 export const SET_LANGUAGE = 'SET_LANGUAGE';
+export const SET_LANGUAGE_FOR_WELCOME = 'SET_LANGUAGE_FOR_WELCOME';
+
 export const SET_GENDER = 'SET_GENDER';
 export const SET_LOCALE = 'SET_LOCALE';
 export const SET_PDP_WIDGET_DATA = 'SET_PDP_WIDGET_DATA';
@@ -9,8 +12,18 @@ export const setCountry = (country) => ({
     country
 });
 
+export const setCountryForWelcome = (country) => ({
+    type: SET_COUNTRY_FOR_WELCOME,
+    country
+});
+
 export const setLanguage = (language) => ({
     type: SET_LANGUAGE,
+    language
+});
+
+export const setLanguageForWelcome = (language) => ({
+    type: SET_LANGUAGE_FOR_WELCOME,
     language
 });
 
