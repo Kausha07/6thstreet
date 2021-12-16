@@ -102,14 +102,11 @@ export class MyAccountOverlay extends PureComponent {
   componentDidMount() {
     let authRef;
     let payload = {};
-    // console.log("BrowserDatabase.", BrowserDatabase.getItem(CART_ID_CACHE_KEY));
-    console.log("this.props", this.props)
     gapi.load("auth2", function () {
       authRef = gapi.auth2.init();
       attachSigninFunction(document.getElementById("g-signin2"));
     });
     const attachSigninFunction = (element) => {
-      console.log("attach function running!")
       authRef.attachClickHandler(
         element,
         {},
@@ -572,13 +569,11 @@ export class MyAccountOverlay extends PureComponent {
     const { onSignInSuccess } = this.props;
     window.FB.login(
       function (response) {
-        console.log("login response", response);
         if (response.authResponse) {
           const authToken = response.authResponse.accessToken;
           window.FB.api(
             "/me?fields=first_name,last_name,email",
             function (response) {
-              console.log("response", response);
               const social_token = authToken;
               const payload = {
                 social_token,
