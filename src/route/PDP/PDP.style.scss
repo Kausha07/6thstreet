@@ -22,6 +22,9 @@
     height: 1.5px;
     @include mobile {
       margin: 15px 0;
+      &_isMobile {
+        display: none;
+      }
     }
   }
 }

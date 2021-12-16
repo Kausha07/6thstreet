@@ -1,33 +1,39 @@
-import ChevronDown from './ChevronDown';
-import ChevronLeft from './ChevronLeft';
-import ChevronRight from './ChevronRight';
-import ChevronUp from './ChevronUp';
-import Close from './Close';
-import FavouriteFilled from './FavouriteFilled';
-import Favourite from './Favourite';
-import Lock from './Lock';
-import Player from './Player';
-import ShareFilled from './ShareFilled';
-import Search from './Search';
-import Select from './Select';
-import Share from './Share';
-import Shipping from './Shipping';
-import Store from './Store';
+import ChevronDown from "./ChevronDown";
+import ChevronLeft from "./ChevronLeft";
+import ChevronRight from "./ChevronRight";
+import ChevronUp from "./ChevronUp";
+import Close from "./Close";
+import FavouriteFilled from "./FavouriteFilled";
+import Favourite from "./Favourite";
+import Lock from "./Lock";
+import Player from "./Player";
+import ShareFilled from "./ShareFilled";
+import Search from "./Search";
+import Select from "./Select";
+import Share from "./Share";
+import Shipping from "./Shipping";
+import Store from "./Store";
+import Phone from "./Phone";
+import Chat from "./Chat";
+import Email from "./Email";
 
 export {
-    ChevronDown,
-    ChevronLeft,
-    ChevronRight,
-    ChevronUp,
-    Close,
-    FavouriteFilled,
-    Favourite,
-    Lock,
-    ShareFilled,
-    Search,
-    Select,
-    Share,
-    Shipping,
-    Store,
-    Player,
-}
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ChevronUp,
+  Close,
+  FavouriteFilled,
+  Favourite,
+  Lock,
+  ShareFilled,
+  Search,
+  Select,
+  Share,
+  Shipping,
+  Store,
+  Player,
+  Phone,
+  Chat,
+  Email,
+};

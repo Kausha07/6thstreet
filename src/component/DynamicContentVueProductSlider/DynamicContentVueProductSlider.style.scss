@@ -38,7 +38,7 @@
         letter-spacing: 2px;
         line-height: 25px;
       }
-      &_isHome{
+      &_isHome {
         margin-bottom: 34px;
       }
     }
@@ -61,7 +61,7 @@
         line-height: 25px;
         margin-bottom: 0px;
       }
-      &_isHome{
+      &_isHome {
         margin-bottom: 20px;
       }
     }
@@ -96,12 +96,12 @@
         display: none;
       }
     }
-    &_Hidden{
+    &_Hidden {
       display: none;
     }
 
     padding-bottom: 40px;
-    @include mobile{
+    @include mobile {
       padding-bottom: 0px;
     }
 
@@ -109,8 +109,6 @@
       width: 99vw;
     }
   }
-
-
 
   &-SliderContainer::-webkit-scrollbar {
     display: none;
@@ -139,10 +137,9 @@
         right: unset !important;
       }
     }
-    img{
+    img {
       object-fit: cover;
     }
-
 
     @media (max-width: 1024px) {
       width: 220.08px;
@@ -256,26 +253,27 @@
     &_isArabic {
       text-align: right !important;
     }
-  }
+    .SearchProduct {
+      &-PriceWrapper {
+        display: inline-block;
+        font-size: 14px;
 
-  &-Del {
-    display: inline-block;
+        color: #d12228;
+        font-weight: var(--fw-bold);
+        @media (max-width: 411px) {
+          font-size: 12px;
+        }
+        .Price-Discount{
+          margin-left: 3px;
+        }
+      }
 
-    #price {
-      margin-right: 10px;
-      font-weight: var(--fw-medium);
     }
-  }
 
-  &-PriceWrapper {
-    display: inline-block;
-    font-size: 14px;
-
-    span {
-      color: #D12228;
-      font-weight: var(--fw-bold);
-      @media (max-width: 411px) {
-        font-size: 12px;
+    .Price {
+      &-Wrapper {
+        display: inline-block;
+        margin-right: 10px;
       }
     }
   }

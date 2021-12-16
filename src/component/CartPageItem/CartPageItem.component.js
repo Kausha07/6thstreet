@@ -23,6 +23,7 @@ import { isArabic } from "Util/App";
 import { Store } from "../Icons";
 import "./CartPageItem.extended.style";
 import "./CartPageItem.style";
+import Price from "Component/Price";
 
 /**
  * Cart and CartOverlay item
@@ -250,35 +251,22 @@ export class CartItem extends PureComponent {
 
     const { isArabic } = this.state;
     const decimals = FIXED_CURRENCIES.includes(currency_code) ? 3 : 2;
-
-    const withoutDiscount = (
-      <>
-        <span>{currency_code}</span>&nbsp;
-        <span>{`${parseFloat(row_total).toFixed(decimals)}`}</span>
-      </>
-    );
-
-    const discountPercentage = Math.round(100 * (1 - row_total / basePrice));
-
-    const withDiscount = (
-      <div block="CartPageItem" elem="DiscountPrice" mods={{ isArabic }}>
-        <div
-          block="CartItem-DiscountPrice"
-          elem="BasePrice"
-          mods={{ isArabic }}
-        >
-          <span>{currency_code}</span>&nbsp;
-          <span>{`${parseFloat(basePrice).toFixed(decimals)}`}</span>
-        </div>
-        <div>
-          {`(-${discountPercentage}%)`}&nbsp; {withoutDiscount}
-        </div>
-      </div>
-    );
+    const decimalPrice = parseFloat(row_total).toFixed(decimals);
+    const decimalBasePrice = parseFloat(basePrice).toFixed(decimals);
+    let price = [
+      {
+        [currency_code]: {
+          "6s_base_price": decimalBasePrice,
+          "6s_special_price": decimalPrice,
+          default: decimalPrice,
+          default_formated: `${currency_code} ${decimalPrice}`,
+        },
+      },
+    ];
 
     return (
       <div block="CartPageItem" elem="Price" mods={{ isArabic }}>
-        {basePrice === row_total || !basePrice ? withoutDiscount : withDiscount}
+        <Price price={price} renderSpecialPrice={false} cart={true} />
       </div>
     );
   }

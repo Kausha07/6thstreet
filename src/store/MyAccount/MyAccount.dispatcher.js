@@ -162,36 +162,57 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
     );
   }
 
+  async signInCommonBlock(dispatch) {
+    console.log("common block ran");
+    const wishlistItem = localStorage.getItem("Wishlist_Item");
+    if (wishlistItem) {
+      await Wishlist.addSkuToWishlist(dispatch, wishlistItem);
+      localStorage.removeItem("Wishlist_Item");
+    }
+    await WishlistDispatcher.updateInitialWishlistData(dispatch);
+    await StoreCreditDispatcher.getStoreCredit(dispatch);
+    setCrossSubdomainCookie("authData", this.getCustomerData(), "1");
+    this.requestCustomerData(dispatch);
+
+    Event.dispatch(EVENT_GTM_GENERAL_INIT);
+  }
+
   async signIn(options = {}, dispatch) {
-    const mutation = MyAccountQuery.getSignInMutation(options);
-
-    try {
-      const result = await fetchMutation(mutation);
-      const {
-        generateCustomerToken: { token },
-      } = result;
-      setAuthorizationToken(token);
-      dispatch(updateCustomerSignInStatus(true));
-
-      await this.handleMobileAuthorization(dispatch, options);
-      const wishlistItem = localStorage.getItem("Wishlist_Item");
-      if (wishlistItem) {
-        await Wishlist.addSkuToWishlist(dispatch, wishlistItem);
-        localStorage.removeItem("Wishlist_Item");
+    console.log("sign in options payload", options)
+    console.log("options condition result", options.hasOwnProperty("type"))
+    if (options.hasOwnProperty("type")) {
+      console.log("Social Login Started.");
+      try {
+        await this.handleMobileAuthorization(dispatch, options);
+        dispatch(updateCustomerSignInStatus(true));
+        this.signInCommonBlock(dispatch);
+        return true;
+      } catch ([e]) {
+        deleteAuthorizationToken();
+        deleteMobileAuthorizationToken();
+        throw e;
       }
-      await WishlistDispatcher.updateInitialWishlistData(dispatch);
-      await StoreCreditDispatcher.getStoreCredit(dispatch);
-      setCrossSubdomainCookie("authData", this.getCustomerData(), "1");
-      this.requestCustomerData(dispatch);
+    } else {
+      const mutation = MyAccountQuery.getSignInMutation(options);
+      console.log("mutation", mutation);
+      try {
+        const result = await fetchMutation(mutation);
+        console.log("result", result);
+        const {
+          generateCustomerToken: { token },
+        } = result;
+        setAuthorizationToken(token);
+        dispatch(updateCustomerSignInStatus(true));
 
-      Event.dispatch(EVENT_GTM_GENERAL_INIT);
+        await this.handleMobileAuthorization(dispatch, options);
+        this.signInCommonBlock(dispatch);
+        return true;
+      } catch ([e]) {
+        deleteAuthorizationToken();
+        deleteMobileAuthorizationToken();
 
-      return true;
-    } catch ([e]) {
-      deleteAuthorizationToken();
-      deleteMobileAuthorizationToken();
-
-      throw e;
+        throw e;
+      }
     }
   }
 
@@ -207,25 +228,31 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
 
     return "";
   }
-
+  // handleMobileAuthCommonBlock(){}
   async handleMobileAuthorization(dispatch, options) {
+    console.log("options", options)
     const { email: username, password } = options;
-    const { data: { token, user: { custom_attributes, gender, id } } = {} } =
-      await getMobileApiAuthorizationToken({
-        username,
-        password,
-        cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
-      });
-    const phoneAttribute = custom_attributes.filter(
+    const { data: { token, t, user: { custom_attributes, gender, id } } = {} } =
+      await getMobileApiAuthorizationToken(
+        options.hasOwnProperty("type")
+          ? options
+          : {
+              username,
+              password,
+              cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
+            }
+      );
+
+    const phoneAttribute = custom_attributes?.filter(
       ({ attribute_code }) => attribute_code === "contact_no"
     );
-    const isPhone = phoneAttribute[0].value
+    const isPhone = phoneAttribute[0]?.value
       ? phoneAttribute[0].value.search("undefined") < 0
       : false;
 
     dispatch(setCartId(null));
     setMobileAuthorizationToken(token);
-
+    options.hasOwnProperty("type") ? setAuthorizationToken(t) : null;
     if (isPhone) {
       this.setCustomAttributes(dispatch, custom_attributes);
     }

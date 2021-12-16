@@ -218,26 +218,32 @@
     }
   }
 
-  &-DiscountPrice {
+  .Price {
     color: var(--Cardinal);
     text-decoration: unset;
     font-weight: var(--fw-demi);
 
     &_isArabic {
-      div {
+      span {
         text-align: left;
         direction: ltr;
       }
     }
-
-    &-BasePrice {
-      color: #000000;
-      text-decoration: line-through;
-      padding-right: 5px;
-      font-weight: var(--fw-regular);
+    span{
+      del {
+        color: #000000;
+        text-decoration: line-through;
+        padding-right: 5px;
+        font-weight: var(--fw-regular);
+      }
     }
   }
 
+  .Price > span:first-child {
+    color: #000000;
+  }
+
+  
   &-ColSizeQty {
     color: #4a4a4a;
     font-weight: var(--fw-regular);

@@ -874,12 +874,16 @@
     "Arabic": null,
     "BY STOCK": null,
     "BY AGE": null,
-    "International Shipment": null,
+    "International Shipment": "شحن دولي",
     "Non Discountable": null,
     "PRODUCT DETAILS": null,
     "PRODUCT DETAILS:": null,
     "SHOW MORE DETAILS": null,
     "APPLE": null,
     "or Register In with": null,
-    "OR REGISTER IN WITH": null
+    "OR REGISTER IN WITH": null,
+    "DESCRIPTION:": null,
+    "Live Chat": null,
+    "Customer Service available all days from: ": null,
+    "Contact us": null
 }

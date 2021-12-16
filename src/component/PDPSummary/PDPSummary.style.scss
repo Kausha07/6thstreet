@@ -28,6 +28,7 @@
       border-radius: 50%;
       border: solid transparent;
       background-color: #f6f6f6;
+      border-width: 0;
     }
     .WishlistIcon {
       position: relative;
@@ -37,6 +38,12 @@
       height: 50px;
       background-color: transparent;
       margin-left: 16px;
+      right: unset;
+      left: unset;
+      &-Icon {
+        left: unset;
+        border-width: 0;
+      }
       button {
         top: 0;
       }
@@ -163,10 +170,12 @@
     @include mobile {
       justify-content: space-between;
     }
-
+    .discount {
+      justify-content: space-between !important;
+    }
     .Price {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
       font-weight: var(--fw-bold);
       font-size: 20px;
       margin: 0.36rem 0 0 0;
@@ -198,6 +207,7 @@
         font-size: 16px;
         letter-spacing: 0;
         line-height: 30px;
+        font-weight: var(--fw-medium);
       }
       &-Discount {
         color: #d12228;
@@ -328,6 +338,9 @@
         }
       }
       .PDPSummaryHeaderAndShareAndWishlistButtonContainer {
+        button {
+          border-width: 0;
+        }
         .WishlistIcon {
           margin-right: 8px !important;
           margin-left: unset !important;
@@ -335,4 +348,7 @@
       }
     }
   }
+}
+#TabbyPromo {
+  margin-top: 25px;
 }
