@@ -71,6 +71,23 @@ class WelcomeHomePage extends PureComponent {
     componentDidMount() {
         this.getWelcomeImageUrl();
     }
+    componentDidUpdate(){
+        console.log("hi update")
+        let locale = this.props.language
+        ["women", "men", "kids"].forEach((gender) => {
+            const hint = document.createElement("link");
+            hint.setAttribute("rel", "prefetch");
+            hint.setAttribute("href", `https://${locale}.6thstreet.com/${gender}.html`);
+
+            try {
+                const head = document.getElementsByTagName("head")[0]
+                head.appendChild(hint);
+            }
+            catch(err){
+                console.error(err);
+            }
+        })
+    }
 
     onGenderSelect = (val) => {
         const { country, language } = this.props;
@@ -81,6 +98,8 @@ class WelcomeHomePage extends PureComponent {
     }
 
     getWelcomeImageUrl = () => {
+        let device = isMobile.any() ? 'm' : 'd'
+        console.log("hiiiiii", device);
         let url = 'homepage/m/home.json';
         const directory = process.env.REACT_APP_REMOTE_CONFIG_DIR;
 
