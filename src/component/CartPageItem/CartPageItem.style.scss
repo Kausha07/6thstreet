@@ -222,7 +222,9 @@
     color: var(--Cardinal);
     text-decoration: unset;
     font-weight: var(--fw-demi);
-
+    &-Discount{
+      margin-left: 4px;
+    }
     &_isArabic {
       span {
         text-align: left;
