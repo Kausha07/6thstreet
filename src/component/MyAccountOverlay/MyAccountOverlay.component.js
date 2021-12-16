@@ -568,7 +568,6 @@ export class MyAccountOverlay extends PureComponent {
     return COUNTRY_CODES_FOR_PHONE_VALIDATION[customerCountry] ? "9" : "8";
   }
   statusChangeCallback(response) {
-    console.log('statusChangeCallback');
     console.log(response);
     if (response.status === 'connected') {
       testAPI();
