@@ -54,6 +54,11 @@
       background-size: cover;
       background-repeat: no-repeat;
       margin-bottom: 8px;
+      background-color: #ddd;
+      @include desktop {
+        height: 112px !important;
+        width: 110px !important;
+      }
     }
   }
   // .Image {
