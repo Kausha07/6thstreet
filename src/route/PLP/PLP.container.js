@@ -59,6 +59,7 @@ export const mapDispatchToProps = (dispatch, state) => ({
     dispatch(changeNavigationState(TOP_NAVIGATION_TYPE, state)),
   setGender: (gender) => dispatch(setGender(gender)),
   setMeta: (meta) => dispatch(updateMeta(meta)),
+  resetPLPData: () => PLPDispatcher.resetPLPData(dispatch),
 });
 
 export class PLPContainer extends PureComponent {
@@ -141,7 +142,13 @@ export class PLPContainer extends PureComponent {
 
   containerFunctions = {
     // getData: this.getData.bind(this)
+    resetPLPData: this.resetPLPData.bind(this),
   };
+
+  resetPLPData() {
+    const { resetPLPData } = this.props;
+    resetPLPData();
+  }
 
   constructor(props) {
     super(props);
