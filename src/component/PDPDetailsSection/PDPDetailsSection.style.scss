@@ -8,21 +8,17 @@
   // padding: 0 20px;
   font-weight: var(--fw-regular);
 
-  @include mobile {
-    .Accordion-Expand {
+  .Accordion-Expand {
+    &_isArabic {
+      // transform: rotate(180deg);
+    }
+    @include mobile {
       align-items: center;
-      transform: none;
+      // transform: none;
       padding-right: 0;
     }
-    .Accordion {
-      // border-top: 1px solid #ddd;
-    }
-    .Accordion:last-child {
-      // border-bottom: 1px solid #ddd;
-      .Accordion-Heading {
-      }
-    }
   }
+
   .VueProductSlider {
     @include mobile {
       &-VueProductContainer {

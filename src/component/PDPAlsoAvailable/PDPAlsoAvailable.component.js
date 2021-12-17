@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 
 import PDPAlsoAvailableProduct from "Component/PDPAlsoAvailableProduct";
+import isMobile from "Util/Mobile";
 
 import "./PDPAlsoAvailable.style";
 
@@ -9,6 +10,9 @@ class PDPAlsoAvailable extends PureComponent {
   static propTypes = {
     products: PropTypes.array.isRequired,
     isAlsoAvailable: PropTypes.bool.isRequired,
+  };
+  state = {
+    isMobile: isMobile.any() || isMobile.tablet(),
   };
 
   renderAvailableProduct = (product) => {
@@ -34,12 +38,13 @@ class PDPAlsoAvailable extends PureComponent {
 
   render() {
     const { isAlsoAvailable } = this.props;
+    const { isMobile } = this.state;
     return (
       <>
-        {this.renderSeperator()}
+        {isMobile && this.renderSeperator()}
         <div block="PDPAlsoAvailable" mods={{ isAlsoAvailable }}>
           <h1 block="PDPAlsoAvailable" elem="Title">
-            {__("Also available in")}
+            {isMobile ? __("Also available in") : __("Also available in:")}
           </h1>
           <ul block="PDPAlsoAvailable" elem="List">
             {this.renderAvailableProducts()}
