@@ -12,7 +12,6 @@
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { withRouter } from "react-router-dom";
-import MagentoAPI from "Util/API/provider/MagentoAPI";
 
 import CountrySwitcher from "Component/CountrySwitcher";
 import LanguageSwitcher from "Component/LanguageSwitcher";
@@ -26,18 +25,13 @@ import { COUNTRY_CODES_FOR_PHONE_VALIDATION } from "Component/MyAccountAddressFo
 import { Close } from "Component/Icons";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
-import { getMobileApiAuthorizationToken } from "Util/API/endpoint/MyAccount/MyAccount.enpoint";
 import {
   deleteAuthorizationToken,
   deleteMobileAuthorizationToken,
-  setAuthorizationToken,
-  setMobileAuthorizationToken,
 } from "Util/Auth";
-import { updateCustomerSignInStatus } from "SourceStore/MyAccount/MyAccount.action";
 import BrowserDatabase from "Util/BrowserDatabase";
-import Wishlist from "Store/Wishlist/Wishlist.dispatcher";
 import Image from "Component/Image";
-import CART_ID_CACHE_KEY from "Store/MyAccount/MyAccount.dispatcher";
+import { CART_ID_CACHE_KEY } from "Store/MyAccount/MyAccount.dispatcher";
 import {
   CUSTOMER_ACCOUNT_OVERLAY_KEY,
   STATE_CONFIRM_EMAIL,
@@ -53,6 +47,10 @@ import {
 import "./MyAccountOverlay.style";
 
 export class MyAccountOverlay extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.authRef = React.createRef();
+  }
   static propTypes = {
     // eslint-disable-next-line react/no-unused-prop-types
     isOverlayVisible: PropTypes.bool.isRequired,
@@ -106,45 +104,44 @@ export class MyAccountOverlay extends PureComponent {
   };
 
   componentDidMount() {
-    let authRef;
-    gapi.load("auth2", function () {
-      authRef = gapi.auth2.init();
-      attachSigninFunction(document.getElementById("g-signin2"));
+    gapi.load("auth2", () => {
+      this.authRef.current = gapi.auth2.init();
+      this.attachSigninFunction(document.getElementById("g-signin2"));
     });
-    const attachSigninFunction = (element) => {
-      authRef.attachClickHandler(
-        element,
-        {},
-        async function (googleUser) {
-          const { onSignInSuccess } = this.props;
-          const profile = googleUser?.getBasicProfile();
-          const social_token = googleUser?.getAuthResponse()?.id_token;
-          const fullName = profile?.getName()?.split(" ");
-          const email = profile?.getEmail();
-          const payload = {
-            social_token,
-            firstname: fullName[0],
-            lastname: fullName[1],
-            email,
-            customer_telephone: null,
-            type: "google",
-            cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
-          };
-          console.log("request payload", payload)
-          try {
-            onSignInSuccess(payload);
-          } catch (e) {
-            console.log("error", e);
-            deleteAuthorizationToken();
-            deleteMobileAuthorizationToken();
-          }
-        },
-        function (error) {
-          console.log(JSON.stringify(error, undefined, 2));
-        }
-      );
-    };
   }
+  attachSigninFunction = (element) => {
+    this.authRef.current.attachClickHandler(
+      element,
+      {},
+      async (googleUser) => {
+        const { onSignInSuccess, onSignInAttempt } = this.props;
+        const profile = googleUser?.getBasicProfile();
+        const social_token = googleUser?.getAuthResponse()?.id_token;
+        const fullName = profile?.getName()?.split(" ");
+        const email = profile?.getEmail();
+        const payload = {
+          social_token,
+          firstname: fullName[0],
+          lastname: fullName[1],
+          email,
+          customer_telephone: null,
+          type: "google",
+          cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
+        };
+        try {
+          onSignInAttempt();
+          onSignInSuccess(payload);
+        } catch (e) {
+          console.log("error", e);
+          deleteAuthorizationToken();
+          deleteMobileAuthorizationToken();
+        }
+      },
+      function (error) {
+        console.log(JSON.stringify(error, undefined, 2));
+      }
+    );
+  };
 
   renderMap = {
     [STATE_SIGN_IN]: {
@@ -569,16 +566,14 @@ export class MyAccountOverlay extends PureComponent {
 
   // facebook login dialog
   facebookLogin = () => {
-    const { onSignInSuccess } = this.props;
+    const { onSignInSuccess, onSignInAttempt } = this.props;
     window.FB.login(
       function (response) {
-        console.log("login response", response);
         if (response.authResponse) {
           const authToken = response.authResponse.accessToken;
           window.FB.api(
             "/me?fields=first_name,last_name,email",
             function (response) {
-              console.log("response", response);
               const social_token = authToken;
               const payload = {
                 social_token,
@@ -590,6 +585,7 @@ export class MyAccountOverlay extends PureComponent {
                 cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
               };
               try {
+                onSignInAttempt();
                 onSignInSuccess(payload);
               } catch (e) {
                 console.log("error", e);

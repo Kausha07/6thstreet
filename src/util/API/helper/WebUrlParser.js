@@ -170,7 +170,7 @@ const Parser = {
 
     // update the URL, preserve the state
     const { pathname, search } = url;
-    browserHistory.push(pathname + search);
+    browserHistory.replace(pathname + search);
   },
 };
 

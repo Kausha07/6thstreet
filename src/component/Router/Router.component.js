@@ -10,6 +10,8 @@ import Footer from "Component/Footer";
 import GoogleTagManager from "Component/GoogleTagManager";
 import GTMRouteWrapper from "Component/GoogleTagManager/GoogleTagManagerRouteWrapper.component";
 import Header from "Component/Header";
+import HeaderTopBar from "Component/HeaderTopBar";
+
 import {
   BRANDS,
   CART,
@@ -29,6 +31,8 @@ import Seo from "Component/Seo";
 import LocaleWizard from "Route/LocaleWizard";
 import UrlRewrites from "Route/UrlRewrites";
 import LiveExperience from "Route/LiveExperience";
+import WelcomeHomePage from "Component/WelcomeHomePage";
+
 import {
   CartPage,
   Checkout,
@@ -73,7 +77,7 @@ export {
 };
 
 export class Router extends SourceRouter {
-  
+
   static propTypes = {
     ...SourceRouter.propTypes,
     isAppReady: PropTypes.bool.isRequired,
@@ -87,7 +91,7 @@ export class Router extends SourceRouter {
     homepageUrl: "/(|men.html|women.html|kids.html|home.html|home_beauty_women.html)/",
   };
 
- 
+
 
   [BEFORE_ITEMS_TYPE] = [
     {
@@ -332,6 +336,27 @@ export class Router extends SourceRouter {
     return <LocaleWizard />;
   }
 
+
+  renderWelcomeHomePage() {
+    let navigationState = {name: 'default'}
+    let newMenuGender = ""
+    let pathname = window.location
+
+    return (
+      <div>
+        {/* <HeaderTopBar/> */}
+        <HeaderTopBar
+          navigationState={navigationState}
+          changeMenuGender={this.changeMenuGender}
+          newMenuGender={newMenuGender}
+          pathname={pathname}
+        />
+        <WelcomeHomePage/>
+
+      </div>
+    );
+  }
+
   renderContent() {
     const { isArabic } = this.state;
     return (
@@ -352,6 +377,8 @@ export class Router extends SourceRouter {
     if (isAppReady) {
       return this.renderContent();
     }
+
+    return this.renderWelcomeHomePage()
 
     return this.renderLocaleWizard();
   }
