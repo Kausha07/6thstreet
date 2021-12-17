@@ -41,16 +41,21 @@ class PLPFilterContainer extends PureComponent {
   state = {
     activeFilters: {},
     isChecked: false,
-    currentActiveFilter: null,
+    parentActiveFilters: null,
     prevActiveFilters: {},
   };
+
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.currentActiveFilter !== this.props.currentActiveFilter) {
+    if (
+      JSON.stringify(prevProps.parentActiveFilters) !==
+      JSON.stringify(this.props.parentActiveFilters)
+    ) {
       this.setState({
-        currentActiveFilter,
+        parentActiveFilters: this.props.parentActiveFilters,
       });
     }
   }
+
   containerFunctions = {
     handleCallback: this.handleCallback.bind(this),
   };
@@ -67,16 +72,15 @@ class PLPFilterContainer extends PureComponent {
       updateFilters,
       setDefaultFilters,
       defaultFilters,
+      parentActiveFilters,
     } = this.props;
-    const { currentActiveFilter } = this.state;
     return {
       filter,
       changeActiveFilter,
-      currentActiveFilter,
       updateFilters,
       setDefaultFilters,
       defaultFilters,
-      currentActiveFilter,
+      parentActiveFilters,
     };
   };
 

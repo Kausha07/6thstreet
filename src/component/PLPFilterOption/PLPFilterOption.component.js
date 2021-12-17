@@ -81,8 +81,6 @@ class PLPFilterOption extends PureComponent {
         if (isMobile.any()) {
             return this.renderMobileField(facet_value, initialFacetKey, checked, onSelectChecked);
         }
-        console.log(this.props,"muskan  2",facet_value,checked,initialFacetKey);
-
         return (
             <Field
               formRef={ this.fieldRef }

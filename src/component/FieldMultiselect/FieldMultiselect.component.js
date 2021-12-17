@@ -71,12 +71,17 @@ class FieldMultiselect extends PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.currentActiveFilter !== this.props.currentActiveFilter) {
+
+    if (
+      JSON.stringify(prevProps.currentActiveFilter) !==
+      JSON.stringify(this.props.currentActiveFilter)
+    ) {
       this.setState({
-        currentActiveFilter,
+        currentActiveFilter: this.props.currentActiveFilter,
       });
     }
   }
+
   handleClickOutside = (event) => {
     const { toggleOptionsList } = this.state;
 
@@ -169,9 +174,9 @@ class FieldMultiselect extends PureComponent {
       updateFilters,
       setDefaultFilters,
       defaultFilters,
+      currentActiveFilter
     } = this.props;
 
-    const { currentActiveFilter } = this.state;
     const { subcategories = {} } = option;
 
     if (Object.keys(subcategories).length !== 0) {

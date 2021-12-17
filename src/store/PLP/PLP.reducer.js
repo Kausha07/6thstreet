@@ -114,12 +114,12 @@ export const PLPReducer = (state = getInitialState(), action) => {
         lastSelectedKey,
         lastSelectedValue,
       } = state;
-      const combinedFilters = combineFilters(
-        filters,
-        stateInitialFilters,
-        lastSelectedKey,
-        lastSelectedValue
-      );
+      // const combinedFilters = combineFilters(
+      //   filters,
+      //   stateInitialFilters,
+      //   lastSelectedKey,
+      //   lastSelectedValue
+      // );
       return {
         ...state,
         filters: filters,

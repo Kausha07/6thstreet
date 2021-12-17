@@ -33,15 +33,21 @@ class PLPFilter extends PureComponent {
 
   state = {
     currentActiveFilter: null,
+    parentActiveFilters: null,
   };
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.currentActiveFilter !== this.props.currentActiveFilter) {
+
+    if (
+      JSON.stringify(prevProps.parentActiveFilters) !==
+      JSON.stringify(this.props.parentActiveFilters)
+    ) {
       this.setState({
-        currentActiveFilter,
+        parentActiveFilters: this.props.parentActiveFilters,
       });
     }
   }
+
   renderDropDownList() {
     const {
       filter: { label, category, is_radio },
@@ -53,9 +59,8 @@ class PLPFilter extends PureComponent {
       updateFilters,
       setDefaultFilters,
       defaultFilters,
+      parentActiveFilters
     } = this.props;
-
-    const { currentActiveFilter } = this.state;
 
     if (category === "categories.level1") {
       return null;
@@ -75,7 +80,7 @@ class PLPFilter extends PureComponent {
         filter={filter}
         activeFilter={activeFilter}
         isChecked={isChecked}
-        currentActiveFilter={currentActiveFilter}
+        currentActiveFilter={parentActiveFilters}
         changeActiveFilter={changeActiveFilter}
         parentCallback={handleCallback}
         updateFilters={updateFilters}

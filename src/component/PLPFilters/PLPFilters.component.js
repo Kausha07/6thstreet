@@ -563,10 +563,9 @@ class PLPFilters extends PureComponent {
   };
 
   render() {
-    const { productsCount } = this.props;
+    const { productsCount,filters } = this.props;
     const { isOpen, isArabic } = this.state;
     const count = productsCount ? productsCount.toLocaleString() : null;
-
     return (
       <>
         {isOpen ? this.renderPopupFilters() : this.renderFilterButton()}
