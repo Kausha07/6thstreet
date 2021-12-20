@@ -353,7 +353,8 @@ class PDPSummary extends PureComponent {
     if (tags && tags.length) {
       return (
         <>
-          {in_stock === 0 && <div block="Seperatortop" />}
+          {/* {in_stock === 0 && <div block="Seperatortop" />} */}
+          <div block="Seperator" mods={{ isDesktop: !isMobile.any() }} />
           <PDPTags tags={tags} />
           {/* <div block="Seperator" /> */}
         </>
