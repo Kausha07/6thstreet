@@ -1,7 +1,7 @@
 /**
- * @category  sixth-street
- * @author    Vladislavs Belavskis <info@scandiweb.com>
- * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
+ * @category sixth-street
+ * @author Vladislavs Belavskis <info@scandiweb.com>
+ * @license http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
  * @copyright Copyright (c) 2020 Scandiweb, Inc (https://scandiweb.com)
  */
 import Image from "Component/Image";
@@ -18,7 +18,6 @@ import isMobile from "Util/Mobile";
 import fitlerImage from "./icons/filter-button.png";
 import { SIZES } from "./PLPFilters.config";
 import "./PLPFilters.style";
-
 class PLPFilters extends PureComponent {
   static propTypes = {
     isLoading: PropTypes.bool.isRequired,
@@ -131,6 +130,8 @@ class PLPFilters extends PureComponent {
       goToPreviousNavigationState,
       onReset,
       activeOverlay,
+      updatePLPInitialFilters,
+      initialFilters,
     } = this.props;
 
     clearTimeout(this.timer);
@@ -139,7 +140,7 @@ class PLPFilters extends PureComponent {
       hideActiveOverlay();
       goToPreviousNavigationState();
     }
-
+    updatePLPInitialFilters(initialFilters, null, null);
     this.setState({ activeFilters: {}, isReset: true, defaultFilters: false });
 
     onReset();
@@ -201,9 +202,9 @@ class PLPFilters extends PureComponent {
   }
 
   renderResetFilterButton() {
-    const { isArabic, activeFilters = {} } = this.state;
+    const { isArabic } = this.state;
 
-    const isClear = Object.keys(activeFilters).length !== 0;
+    const isClear = this.getFilterCount() >= 0;
 
     return isClear || isMobile.any() ? (
       <button
@@ -249,6 +250,16 @@ class PLPFilters extends PureComponent {
   }
 
   renderFiltersCount() {
+    const displayCount = this.getFilterCount();
+
+    if (displayCount < 0) {
+      return "(0)";
+    }
+
+    return `(${displayCount})`;
+  }
+
+  getFilterCount() {
     const { activeFilters = {} } = this.props;
     const { count } = activeFilters
       ? Object.entries(activeFilters).reduce(
@@ -259,12 +270,7 @@ class PLPFilters extends PureComponent {
         )
       : { count: 0 };
     const displayCount = count - 1;
-
-    if (displayCount < 0) {
-      return "(0)";
-    }
-
-    return `(${displayCount})`;
+    return displayCount;
   }
 
   renderRefine() {
@@ -307,7 +313,6 @@ class PLPFilters extends PureComponent {
 
   renderFilter = ([key, filter]) => {
     const { activeFilter, isReset, activeFilters, defaultFilters } = this.state;
-
     return (
       <PLPFilter
         key={key}
@@ -329,70 +334,187 @@ class PLPFilters extends PureComponent {
     this.setState({ isReset: false });
   };
 
+  updateInitialFilters = (
+    data,
+    facet_value,
+    newFilterArray,
+    categoryLevel1,
+    checked
+  ) => {
+    if (data[facet_value]) {
+      data[facet_value].is_selected = checked;
+      if (checked) {
+        newFilterArray.selected_filters_count += 1;
+      } else {
+        newFilterArray.selected_filters_count -= 1;
+      }
+    } else {
+      if (categoryLevel1) {
+        if (
+          data[categoryLevel1].subcategories &&
+          data[categoryLevel1].subcategories[facet_value]
+        ) {
+          data[categoryLevel1].subcategories[facet_value].is_selected = checked;
+          if (checked) {
+            data[categoryLevel1].selected_filters_count += 1;
+            newFilterArray.selected_filters_count += 1;
+          } else {
+            data[categoryLevel1].selected_filters_count -= 1;
+            newFilterArray.selected_filters_count -= 1;
+          }
+        }
+      } else {
+        Object.keys(data).map((value) => {
+          if (
+            data[value].subcategories &&
+            data[value].subcategories[facet_value]
+          ) {
+            data[value].subcategories[facet_value].is_selected = checked;
+            if (checked) {
+              data[value].selected_filters_count += 1;
+              newFilterArray.selected_filters_count += 1;
+            } else {
+              data[value].selected_filters_count -= 1;
+              newFilterArray.selected_filters_count -= 1;
+            }
+          }
+        });
+      }
+    }
+  };
+
+  updateRadioFilters = (data, facet_value, newFilterArray) => {
+    if (data[facet_value]) {
+      Object.values(data).map((value) => {
+        if (value.facet_value === facet_value) {
+          value.is_selected = true;
+        } else {
+          value.is_selected = false;
+        }
+      });
+
+      if (newFilterArray.selected_filters_count === 0) {
+        newFilterArray.selected_filters_count += 1;
+      }
+    }
+  };
+
   handleCallback = (
     initialFacetKey,
     facet_value,
     checked,
     isRadio,
+    facet_key,
     isQuickFilters
   ) => {
     const { activeFilters } = this.state;
+    const { filters, updatePLPInitialFilters, initialOptions } = this.props;
     const filterArray = activeFilters[initialFacetKey];
-
+    const newFilterArray = filters[initialFacetKey];
+    let categoryLevel1 = initialOptions.q.split(" ")[1];
     if (isMobile.any()) {
       this.delayFilterUpdate();
     }
-
     if (!isRadio) {
       if (checked) {
-        this.setState(
-          {
-            activeFilters: {
-              ...activeFilters,
-              [initialFacetKey]: filterArray
-                ? [...filterArray, facet_value]
-                : [facet_value],
-            },
-          },
-          () => {this.select(isQuickFilters)
-          // debugger
-          }
+        if (newFilterArray) {
+          const { data } = newFilterArray;
+          this.updateInitialFilters(
+            data,
+            facet_value,
+            newFilterArray,
+            categoryLevel1,
+            true
+          );
+          localStorage.setItem("lastSelectedKey", facet_key);
 
-        );
-      } else if (filterArray) {
-        const index = filterArray.indexOf(facet_value);
-        if (index > -1) {
-          filterArray.splice(index, 1);
-        }
-        this.setState(
-          {
-            activeFilters: {
-              [initialFacetKey]: filterArray,
+          updatePLPInitialFilters(filters, facet_key, facet_value);
+          this.setState(
+            {
+              activeFilters: {
+                ...activeFilters,
+                [initialFacetKey]: filterArray
+                  ? [...filterArray, facet_value]
+                  : [facet_value],
+              },
             },
-          },
-          () => this.select()
-        );
+            () => this.select(isQuickFilters)
+          );
+        }
+      } else if (filterArray) {
+        console.log("muskan1")
+        if (newFilterArray) {
+          const { data } = newFilterArray;
+          this.updateInitialFilters(
+            data,
+            facet_value,
+            newFilterArray,
+            categoryLevel1,
+            false
+          );
+          localStorage.setItem("lastSelectedKey", facet_key);
+
+          updatePLPInitialFilters(filters, facet_key, facet_value);
+
+          const index = filterArray.indexOf(facet_value);
+          if (index > -1) {
+            filterArray.splice(index, 1);
+          }
+          this.setState(
+            {
+              activeFilters: {
+                [initialFacetKey]: filterArray,
+              },
+            },
+            () => this.select()
+          );
+        }
       } else {
+        if (newFilterArray) {
+          const { data } = newFilterArray;
+          this.updateInitialFilters(
+            data,
+            facet_value,
+            newFilterArray,
+            categoryLevel1,
+            false
+          );
+          localStorage.setItem("lastSelectedKey", facet_key);
+
+          updatePLPInitialFilters(filters, facet_key, facet_value);
+          this.setState(
+            {
+              activeFilters: {
+                [initialFacetKey]: [],
+              },
+            },
+            () => this.select()
+          );
+        }
+      }
+    } else {
+      if (newFilterArray) {
+        const { data } = newFilterArray;
+        this.updateRadioFilters(
+          data,
+          facet_value,
+          newFilterArray,
+          categoryLevel1,
+          true
+        );
+        localStorage.setItem("lastSelectedKey", facet_key);
+
+        updatePLPInitialFilters(filters, facet_key, facet_value);
         this.setState(
           {
+            ...activeFilters,
             activeFilters: {
-              [initialFacetKey]: [],
+              [initialFacetKey]: facet_value,
             },
           },
           () => this.select()
         );
       }
-    } else {
-      this.setState(
-        {
-          ...activeFilters,
-          activeFilters: {
-            [initialFacetKey]: facet_value,
-          },
-        },
-        () => this.select()
-
-      );
     }
   };
 
@@ -441,10 +563,9 @@ class PLPFilters extends PureComponent {
   };
 
   render() {
-    const { productsCount } = this.props;
+    const { productsCount,filters } = this.props;
     const { isOpen, isArabic } = this.state;
     const count = productsCount ? productsCount.toLocaleString() : null;
-
     return (
       <>
         {isOpen ? this.renderPopupFilters() : this.renderFilterButton()}

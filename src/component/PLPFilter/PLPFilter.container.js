@@ -4,84 +4,95 @@
  * @license   http://opensource.org/licenses/OSL-3.0 The Open Software License 3.0 (OSL-3.0)
  * @copyright Copyright (c) 2020 Scandiweb, Inc (https://scandiweb.com)
  */
-import PropTypes from 'prop-types';
-import { PureComponent } from 'react';
-import { connect } from 'react-redux';
+import PropTypes from "prop-types";
+import { PureComponent } from "react";
+import { connect } from "react-redux";
 
-import { toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
-import { Filter } from 'Util/API/endpoint/Product/Product.type';
+import { toggleOverlayByKey } from "Store/Overlay/Overlay.action";
+import { Filter } from "Util/API/endpoint/Product/Product.type";
 
-import PLPFilter from './PLPFilter.component';
+import PLPFilter from "./PLPFilter.component";
 
 export const mapStateToProps = (_state) => ({});
 
 export const mapDispatchToProps = (_dispatch) => ({
-    toggleOverlayByKey: (key) => _dispatch(toggleOverlayByKey(key))
+  toggleOverlayByKey: (key) => _dispatch(toggleOverlayByKey(key)),
 });
 
 class PLPFilterContainer extends PureComponent {
-    static propTypes = {
-        filter: Filter.isRequired,
-        toggleOverlayByKey: PropTypes.func.isRequired,
-        updateFilters: PropTypes.func.isRequired,
-        parentCallback: PropTypes.func.isRequired,
-        currentActiveFilter: PropTypes.string,
-        changeActiveFilter: PropTypes.func.isRequired,
-        isReset: PropTypes.bool.isRequired,
-        defaultFilters: PropTypes.bool.isRequired,
-        resetParentState: PropTypes.func.isRequired,
-        setDefaultFilters: PropTypes.func.isRequired,
-        parentActiveFilters: PropTypes.object.isRequired
-    };
+  static propTypes = {
+    filter: Filter.isRequired,
+    toggleOverlayByKey: PropTypes.func.isRequired,
+    updateFilters: PropTypes.func.isRequired,
+    parentCallback: PropTypes.func.isRequired,
+    currentActiveFilter: PropTypes.string,
+    changeActiveFilter: PropTypes.func.isRequired,
+    isReset: PropTypes.bool.isRequired,
+    defaultFilters: PropTypes.bool.isRequired,
+    resetParentState: PropTypes.func.isRequired,
+    setDefaultFilters: PropTypes.func.isRequired,
+    parentActiveFilters: PropTypes.object.isRequired,
+  };
 
-    static defaultProps = {
-        currentActiveFilter: ''
-    };
+  static defaultProps = {
+    currentActiveFilter: "",
+  };
 
-    state = {
-        activeFilters: {},
-        isChecked: false,
-        prevActiveFilters: {}
-    };
+  state = {
+    activeFilters: {},
+    isChecked: false,
+    parentActiveFilters: null,
+    prevActiveFilters: {},
+  };
 
-    containerFunctions = {
-        handleCallback: this.handleCallback.bind(this)
-    };
-
-    handleCallback(initialFacetKey, facet_value, checked, isRadio) {
-        const { parentCallback } = this.props;
-        parentCallback(initialFacetKey, facet_value, checked, isRadio);
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      JSON.stringify(prevProps.parentActiveFilters) !==
+      JSON.stringify(this.props.parentActiveFilters)
+    ) {
+      this.setState({
+        parentActiveFilters: this.props.parentActiveFilters,
+      });
     }
+  }
 
-    containerProps = () => {
-        const {
-            filter,
-            changeActiveFilter,
-            currentActiveFilter,
-            updateFilters,
-            setDefaultFilters,
-            defaultFilters
-        } = this.props;
+  containerFunctions = {
+    handleCallback: this.handleCallback.bind(this),
+  };
 
-        return {
-            filter,
-            changeActiveFilter,
-            currentActiveFilter,
-            updateFilters,
-            setDefaultFilters,
-            defaultFilters
-        };
+  handleCallback(initialFacetKey, facet_value, checked, isRadio) {
+    const { parentCallback } = this.props;
+    parentCallback(initialFacetKey, facet_value, checked, isRadio);
+  }
+
+  containerProps = () => {
+    const {
+      filter,
+      changeActiveFilter,
+      updateFilters,
+      setDefaultFilters,
+      defaultFilters,
+      parentActiveFilters,
+    } = this.props;
+    return {
+      filter,
+      changeActiveFilter,
+      updateFilters,
+      setDefaultFilters,
+      defaultFilters,
+      parentActiveFilters,
     };
+  };
 
-    render() {
-        return (
-            <PLPFilter
-              { ...this.state }
-              { ...this.containerFunctions }
-              { ...this.containerProps() }
-            />
-        );
-    }
+  render() {
+    return (
+      <PLPFilter
+        {...this.state}
+        {...this.containerFunctions}
+        {...this.containerProps()}
+      />
+    );
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PLPFilterContainer);

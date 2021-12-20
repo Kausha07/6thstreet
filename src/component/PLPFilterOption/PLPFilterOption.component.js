@@ -81,7 +81,6 @@ class PLPFilterOption extends PureComponent {
         if (isMobile.any()) {
             return this.renderMobileField(facet_value, initialFacetKey, checked, onSelectChecked);
         }
-
         return (
             <Field
               formRef={ this.fieldRef }
