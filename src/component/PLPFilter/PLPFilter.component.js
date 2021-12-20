@@ -80,6 +80,7 @@ class PLPFilter extends PureComponent {
         filter={filter}
         activeFilter={activeFilter}
         isChecked={isChecked}
+        parentActiveFilters={parentActiveFilters}
         currentActiveFilter={currentActiveFilter}
         changeActiveFilter={changeActiveFilter}
         parentCallback={handleCallback}

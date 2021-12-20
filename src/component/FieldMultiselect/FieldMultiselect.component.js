@@ -45,6 +45,7 @@ class FieldMultiselect extends PureComponent {
       toggleOptionsList: false,
       isArabic: isArabic(),
       subcategoryOptions: {},
+      parentActiveFilters:null,
       currentActiveFilter: null,
     };
     this.toggelOptionList = this.toggelOptionList.bind(this);
@@ -73,11 +74,11 @@ class FieldMultiselect extends PureComponent {
   componentDidUpdate(prevProps, prevState) {
 
     if (
-      JSON.stringify(prevProps.currentActiveFilter) !==
-      JSON.stringify(this.props.currentActiveFilter)
+      JSON.stringify(prevProps.parentActiveFilters) !==
+      JSON.stringify(this.props.parentActiveFilters)
     ) {
       this.setState({
-        currentActiveFilter: this.props.currentActiveFilter,
+        parentActiveFilters: this.props.parentActiveFilters,
       });
     }
   }
@@ -174,6 +175,7 @@ class FieldMultiselect extends PureComponent {
       updateFilters,
       setDefaultFilters,
       defaultFilters,
+      parentActiveFilters,
       currentActiveFilter
     } = this.props;
 
@@ -193,6 +195,7 @@ class FieldMultiselect extends PureComponent {
         activeFilter={activeFilter}
         currentActiveFilter={currentActiveFilter}
         isChecked={isChecked}
+        parentActiveFilters={parentActiveFilters}
         parentCallback={parentCallback}
         updateFilters={updateFilters}
         setDefaultFilters={setDefaultFilters}

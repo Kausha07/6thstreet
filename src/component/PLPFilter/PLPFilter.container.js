@@ -46,6 +46,7 @@ class PLPFilterContainer extends PureComponent {
   };
 
   componentDidUpdate(prevProps, prevState) {
+
     if (
       JSON.stringify(prevProps.parentActiveFilters) !==
       JSON.stringify(this.props.parentActiveFilters)
@@ -74,6 +75,8 @@ class PLPFilterContainer extends PureComponent {
       defaultFilters,
       currentActiveFilter,
     } = this.props;
+
+    const { parentActiveFilters } = this.state;
     return {
       filter,
       changeActiveFilter,
@@ -81,6 +84,7 @@ class PLPFilterContainer extends PureComponent {
       setDefaultFilters,
       defaultFilters,
       currentActiveFilter,
+      parentActiveFilters,
     };
   };
 

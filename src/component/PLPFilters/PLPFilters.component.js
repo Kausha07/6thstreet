@@ -313,6 +313,7 @@ class PLPFilters extends PureComponent {
 
   renderFilter = ([key, filter]) => {
     const { activeFilter, isReset, activeFilters, defaultFilters } = this.state;
+
     return (
       <PLPFilter
         key={key}
