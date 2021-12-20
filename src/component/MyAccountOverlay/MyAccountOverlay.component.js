@@ -104,10 +104,10 @@ export class MyAccountOverlay extends PureComponent {
   };
 
   componentDidMount() {
-    gapi.load("auth2", () => {
-      this.authRef.current = gapi.auth2.init();
-      this.attachSigninFunction(document.getElementById("g-signin2"));
-    });
+    // gapi.load("auth2", () => {
+    //   this.authRef.current = gapi.auth2.init();
+    //   this.attachSigninFunction(document.getElementById("g-signin2"));
+    // });
   }
   attachSigninFunction = (element) => {
     this.authRef.current.attachClickHandler(

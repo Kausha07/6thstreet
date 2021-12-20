@@ -23,4 +23,4 @@ export const CUSTOMER_ACCOUNT_OVERLAY_KEY = 'customer_account';
 export const ENABLE_OTP_LOGIN = false;
 
 // available SSO providers 
-export const SSO_LOGIN_PROVIDERS = ["Facebook", "Google"];
+export const SSO_LOGIN_PROVIDERS = [];
