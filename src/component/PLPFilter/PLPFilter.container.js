@@ -72,7 +72,7 @@ class PLPFilterContainer extends PureComponent {
       updateFilters,
       setDefaultFilters,
       defaultFilters,
-      parentActiveFilters,
+      currentActiveFilter,
     } = this.props;
     return {
       filter,
@@ -80,7 +80,7 @@ class PLPFilterContainer extends PureComponent {
       updateFilters,
       setDefaultFilters,
       defaultFilters,
-      parentActiveFilters,
+      currentActiveFilter,
     };
   };
 

@@ -53,6 +53,7 @@ class PLPFilter extends PureComponent {
       filter: { label, category, is_radio },
       filter,
       activeFilter,
+      currentActiveFilter,
       isChecked,
       changeActiveFilter,
       handleCallback,
@@ -71,7 +72,6 @@ class PLPFilter extends PureComponent {
         : category === "age"
         ? __("BY AGE")
         : label;
-
     return (
       <FieldMultiselect
         placeholder={placeholder}
@@ -80,7 +80,7 @@ class PLPFilter extends PureComponent {
         filter={filter}
         activeFilter={activeFilter}
         isChecked={isChecked}
-        currentActiveFilter={parentActiveFilters}
+        currentActiveFilter={currentActiveFilter}
         changeActiveFilter={changeActiveFilter}
         parentCallback={handleCallback}
         updateFilters={updateFilters}
