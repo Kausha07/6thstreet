@@ -107,6 +107,15 @@
 
         }
     }
+    &-StoreSwitcher{
+        display: flex;
+        @include tablet{
+            padding-left: 30px;
+        }
+        @include desktop{
+            display: none;
+        }
+    }
 
     &-CountrySwitcher{
         @include desktop{
@@ -115,12 +124,18 @@
         .CountrySwitcher{
             padding-left: 40px;
             padding-bottom: 40px;
+            @include mobile{
+                padding-left: 0px;
+            }
+            @include tablet{
+                padding-left: 0px;
+            }
         }
         .StoreSwitcherPopup{
             &-Container{
                 @include mobile{
                     right: unset;
-                    top: 165px;
+                    top: 95px;
                     left: 30px;
                 }
                 @include tablet{
