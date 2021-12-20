@@ -13,6 +13,7 @@ import { URLS } from 'Util/Url/Url.config';
 import Footer from "Component/Footer";
 import Image from "Component/Image";
 import CountrySwitcher from 'Component/CountrySwitcher';
+import LanguageSwitcher from 'Component/LanguageSwitcher';
 import logo from './icons/6thstreet_logo.png'
 import isMobile from "Util/Mobile";
 import facebook from "./icons/facebook.png";
@@ -160,11 +161,19 @@ class WelcomeHomePage extends PureComponent {
                             <img src={logo} />
                         </div>
                     </div>
-                    {
-                        <div  block="WelcomeHomePage" elem="CountrySwitcher">
-                            <CountrySwitcher/>
-                        </div>
-                    }
+                    <div block="WelcomeHomePage" elem="StoreSwitcher">
+                        {
+                            <div  block="WelcomeHomePage" elem="LanguageSwitcher">
+                                <LanguageSwitcher/>
+                            </div>
+                        }
+                        {
+                            <div  block="WelcomeHomePage" elem="CountrySwitcher">
+                                <CountrySwitcher/>
+                            </div>
+                        }
+                    </div>
+
                     {
                     this.state.welcomeImg &&
                         <div block="WelcomeHomePage" elem="MainSection" >
