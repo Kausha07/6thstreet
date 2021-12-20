@@ -72,21 +72,23 @@ class WelcomeHomePage extends PureComponent {
         this.getWelcomeImageUrl();
     }
     componentDidUpdate(){
-        console.log("hi update")
-        let locale = this.props.language
-        // ["women", "men", "kids"].forEach((gender) => {
-        //     const hint = document.createElement("link");
-        //     hint.setAttribute("rel", "prefetch");
-        //     hint.setAttribute("href", `https://${locale}.6thstreet.com/${gender}.html`);
+        let lang = this.props.language
+        let country = this.props.country
+        const locale = `${lang}-${country.toLowerCase()}`
+        let genders = ["women", "men", "kids"]
+        genders.forEach((gender) => {
+            const hint = document.createElement("link");
+            hint.setAttribute("rel", "prefetch");
+            hint.setAttribute("href", `https://${locale}.6thstreet.com/${gender}.html`);
 
-        //     try {
-        //         const head = document.getElementsByTagName("head")[0]
-        //         head.appendChild(hint);
-        //     }
-        //     catch(err){
-        //         console.error(err);
-        //     }
-        // })
+            try {
+                const head = document.getElementsByTagName("head")[0]
+                head.appendChild(hint);
+            }
+            catch(err){
+                console.error(err);
+            }
+        })
     }
 
     onGenderSelect = (val) => {
