@@ -122,7 +122,7 @@ $select-arrow-width: 6px !default;
 
     @include desktop {
       width: 363px;
-      padding-bottom: 39px;
+      padding-bottom: 19px;
       align-items: center;
     }
   }
@@ -332,6 +332,8 @@ $select-arrow-width: 6px !default;
 
   &-Bottom {
     display: flex;
+    margin-top: 20px;
+
     @include mobile {
       height: 85px;
       bottom: 0;
