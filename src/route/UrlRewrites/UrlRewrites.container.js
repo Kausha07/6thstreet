@@ -49,6 +49,7 @@ export class UrlRewritesContainer extends PureComponent {
   }
 
   componentDidMount() {
+    console.log("logged")
     this.requestUrlRewrite();
   }
   componentDidUpdate(prevProps, prevState) {

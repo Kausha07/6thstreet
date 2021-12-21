@@ -500,7 +500,7 @@ export class PDPAddToCartContainer extends PureComponent {
           url: window.location.href,
           sourceProdID: configSKU,
           sourceCatgID: product_type_6s, // TODO: replace with category id
-          prodPrice: basePrice,
+          prodPrice: itemPrice,
         },
       });
     }
@@ -565,7 +565,7 @@ export class PDPAddToCartContainer extends PureComponent {
           url: window.location.href,
           sourceProdID: configSKU,
           sourceCatgID: product_type_6s, // TODO: replace with category id
-          prodPrice: basePrice,
+          prodPrice: itemPrice,
         },
       });
     }

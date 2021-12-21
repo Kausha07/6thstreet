@@ -111,6 +111,8 @@ export class PDPContainer extends PureComponent {
       location: { state },
       product,
     } = this.props;
+    console.log("sku",sku)
+    console.log("logged from pdp container")
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_PAGE_VIEW,
