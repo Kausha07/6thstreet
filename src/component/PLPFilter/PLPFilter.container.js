@@ -45,16 +45,59 @@ class PLPFilterContainer extends PureComponent {
     prevActiveFilters: {},
   };
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate() {
+    const { filters = {}, parentActiveFilters = {} } = this.props;
 
-    if (
-      JSON.stringify(prevProps.parentActiveFilters) !==
-      JSON.stringify(this.props.parentActiveFilters)
-    ) {
+    const newActiveFilters = Object.entries(filters).reduce((acc, filter) => {
+      const { selected_filters_count, data = {} } = filter[1];
+
+      if (selected_filters_count !== 0) {
+        if (filter[0] === SIZES) {
+          const mappedData = Object.entries(data).reduce((acc, size) => {
+            const { subcategories } = size[1];
+            const mappedSizeData = this.mapData(subcategories);
+
+            acc = { ...acc, [size[0]]: mappedSizeData };
+
+            return acc;
+          }, []);
+
+          acc = { ...acc, ...mappedData };
+        } else {
+          acc = { ...acc, [filter[0]]: this.mapData(data) };
+        }
+      }
+
+      return acc;
+    }, {});
+
+    if (!this.compareObjects(parentActiveFilters, newActiveFilters)) {
       this.setState({
         parentActiveFilters: this.props.parentActiveFilters,
       });
     }
+  }
+
+  compareObjects(object1 = {}, object2 = {}) {
+    if (Object.keys(object1).length === Object.keys(object2).length) {
+      const isEqual = Object.entries(object1).reduce((acc, key) => {
+        if (object2[key[0]]) {
+          if (key[1].length !== object2[key[0]].length) {
+            acc.push(0);
+          } else {
+            acc.push(1);
+          }
+        } else {
+          acc.push(1);
+        }
+
+        return acc;
+      }, []);
+
+      return !isEqual.includes(0);
+    }
+
+    return false;
   }
 
   containerFunctions = {

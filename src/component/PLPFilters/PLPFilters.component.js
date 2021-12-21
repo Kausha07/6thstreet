@@ -132,6 +132,7 @@ class PLPFilters extends PureComponent {
       activeOverlay,
       updatePLPInitialFilters,
       initialFilters,
+      filters
     } = this.props;
 
     clearTimeout(this.timer);
@@ -140,7 +141,7 @@ class PLPFilters extends PureComponent {
       hideActiveOverlay();
       goToPreviousNavigationState();
     }
-    updatePLPInitialFilters(initialFilters, null, null);
+    updatePLPInitialFilters(filters, null, null);
     this.setState({ activeFilters: {}, isReset: true, defaultFilters: false });
 
     onReset();
@@ -261,7 +262,8 @@ class PLPFilters extends PureComponent {
 
   getFilterCount() {
     const { activeFilters = {} } = this.props;
-    const { count } = activeFilters
+
+    let { count } = activeFilters
       ? Object.entries(activeFilters).reduce(
           (prev, [_key, value]) => ({
             count: prev.count + value.length,
@@ -269,6 +271,13 @@ class PLPFilters extends PureComponent {
           { count: 0 }
         )
       : { count: 0 };
+    Object.keys(activeFilters).length > 0 &&
+      Object.keys(activeFilters).map((key) => {
+        if (key === "categories.level1") {
+          count = count - 1;
+        }
+      });
+    console.log("muskan count", activeFilters);
     const displayCount = count - 1;
     return displayCount;
   }
@@ -427,6 +436,7 @@ class PLPFilters extends PureComponent {
             categoryLevel1,
             true
           );
+
           localStorage.setItem("lastSelectedKey", facet_key);
 
           updatePLPInitialFilters(filters, facet_key, facet_value);
@@ -443,7 +453,6 @@ class PLPFilters extends PureComponent {
           );
         }
       } else if (filterArray) {
-        console.log("muskan1")
         if (newFilterArray) {
           const { data } = newFilterArray;
           this.updateInitialFilters(
@@ -564,7 +573,7 @@ class PLPFilters extends PureComponent {
   };
 
   render() {
-    const { productsCount,filters } = this.props;
+    const { productsCount, filters } = this.props;
     const { isOpen, isArabic } = this.state;
     const count = productsCount ? productsCount.toLocaleString() : null;
     return (
