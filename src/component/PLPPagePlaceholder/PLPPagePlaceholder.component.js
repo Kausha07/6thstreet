@@ -3,10 +3,14 @@ import { PureComponent } from "react";
 import VisibilitySensor from "react-visibility-sensor";
 
 import "./PLPPagePlaceholder.style";
+import isMobile from "Util/Mobile";
 
 class PLPPagePlaceholder extends PureComponent {
   static propTypes = {
     onVisibilityChange: PropTypes.func.isRequired,
+  };
+  state = {
+    isMobile: isMobile.any() || isMobile.tablet()
   };
 
   renderPlaceholder = (_, index) => (
@@ -14,7 +18,8 @@ class PLPPagePlaceholder extends PureComponent {
   );
 
   renderPlaceholders() {
-    return Array.from({ length: 8 }, this.renderPlaceholder);
+    const placeholderCount = this.state.isMobile ? 8 : 9;
+    return Array.from({ length: placeholderCount }, this.renderPlaceholder);
   }
 
   render() {

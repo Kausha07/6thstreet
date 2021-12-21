@@ -6,6 +6,8 @@ import { Filter } from "Util/API/endpoint/Product/Product.type";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 import "./FieldMultiselect.style";
+import Field from "Component/Field";
+
 
 class FieldMultiselect extends PureComponent {
   static propTypes = {
@@ -29,10 +31,10 @@ class FieldMultiselect extends PureComponent {
     currentActiveFilter: "",
     isHidden: false,
     defaultFilters: false,
-    parentCallback: () => {},
-    changeActiveFilter: () => {},
-    updateFilters: () => {},
-    setDefaultFilters: () => {},
+    parentCallback: () => { },
+    changeActiveFilter: () => { },
+    updateFilters: () => { },
+    setDefaultFilters: () => { },
   };
 
   filterDropdownRef = createRef();
@@ -205,8 +207,8 @@ class FieldMultiselect extends PureComponent {
         {category === "in_stock"
           ? Object.entries(finalData).map(this.renderOption)
           : Object.keys(data).length
-          ? Object.entries(data).map(this.renderOption)
-          : Object.entries(subcategories).map(this.renderOption)}
+            ? Object.entries(data).map(this.renderOption)
+            : Object.entries(subcategories).map(this.renderOption)}
       </ul>
     );
   }
@@ -237,9 +239,39 @@ class FieldMultiselect extends PureComponent {
     this.toggelOptionList();
   };
 
+  renderOptionSelected() {
+    const { filter: { data } } = this.props;
+    if (data) {
+      return (
+        <ul>
+          {Object.values(data).map(function (values, index) {
+            if (values.subcategories) {
+              return Object.values(values.subcategories).map(function (val, index) {
+                if (val.is_selected === true) {
+                  return (
+                    <li>{val.label}</li>
+                  )
+                }
+              })
+            } else {
+              if (values.is_selected === true) {
+                return (
+                  <li>{values.label}</li>
+                )
+              }
+            }
+          })}
+        </ul>
+      )
+
+    }
+
+  }
+
   renderMultiselectContainer() {
     const { toggleOptionsList, isArabic } = this.state;
-    const { placeholder, isHidden } = this.props;
+    const { placeholder, isHidden, filter } = this.props;
+
     return (
       <div
         ref={this.filterDropdownRef}
@@ -263,6 +295,8 @@ class FieldMultiselect extends PureComponent {
         >
           {placeholder}
         </button>
+        {isMobile.any() ? null : this.renderOptionSelected()}
+
         <div
           block="FieldMultiselect"
           elem="OptionListContainer"
@@ -280,6 +314,7 @@ class FieldMultiselect extends PureComponent {
   }
 
   render() {
+
     return this.renderMultiselectContainer();
   }
 }

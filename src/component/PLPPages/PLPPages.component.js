@@ -18,6 +18,12 @@ class PLPPages extends PureComponent {
   static defaultProps = {
     impressions: [],
   };
+  constructor(props) {
+    super(props);
+    this.state = {
+      showSortDropdown: false
+    };
+  }
 
   renderPage = ([key, page]) => {
     const { products, isPlaceholder, isFirst = false } = page;
@@ -26,6 +32,7 @@ class PLPPages extends PureComponent {
       query,
       renderMySignInPopup,
       prevPath = null,
+      filters
     } = this.props;
 
     if (isPlaceholder) {
@@ -46,6 +53,7 @@ class PLPPages extends PureComponent {
         impressions={impressions}
         renderMySignInPopup={renderMySignInPopup}
         prevPath={prevPath}
+        filters={filters}
       />
     );
   };
@@ -64,9 +72,75 @@ class PLPPages extends PureComponent {
     }
     return Object.entries(pages).map(this.renderPage);
   }
+  renderSelectedFilters() {
+    const selectedFilters = this.props.filters;
+    if (selectedFilters) {
+      return (
+        <ul>
+
+          {
+            Object.values(selectedFilters).map(function (values, index) {
+
+              if (values.data) {
+                return Object.values(values.data).map(function (value, index) {
+                  if (value.subcategories) {
+                    return Object.values(value.subcategories).map(function (val, index) {
+                      if (val.is_selected === true) {
+                        return (
+                          <li>{val.label}</li>
+                        )
+                      }
+                    })
+                  } else {
+                    if (value.is_selected === true) {
+                      return (
+                        <li>{value.label}</li>
+                      )
+                    }
+                  }
+
+                })
+              }
+            })
+          }
+        </ul>
+      )
+
+    }
+  }
+  toggleSortDropdown = () => {
+    this.setState({ showSortDropdown: !this.state.showSortDropdown });
+  }
+
+  renderSortBy() {
+    const { sort: { data: sortByFilters } } = this.props.filters;
+    return (
+      <div block="sort-box">
+        <ul>
+          {
+            Object.values(sortByFilters).map(function (value, index) {
+              return <li>{value.label}</li>
+            })
+          }
+        </ul>
+
+      </div>
+    )
+  }
 
   render() {
-    return <div block="PLPPages">{this.renderPages()}</div>;
+    return (
+      <div block="PLPPages Products-Lists">
+        <div class="ProductToolBar">
+          <div block="ProductSelectedFilters">{this.renderSelectedFilters()}</div>
+          <div block="ProductSortby">
+            <div onClick={this.toggleSortDropdown}>Sort by</div>
+            {this.state.showSortDropdown && this.renderSortBy()}
+          </div>
+        </div>
+        {this.renderPages()}
+      </div>
+    );
   }
 }
 
