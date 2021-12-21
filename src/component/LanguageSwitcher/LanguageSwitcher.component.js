@@ -2,10 +2,11 @@
 /* eslint-disable prefer-destructuring */
 import PropTypes from 'prop-types';
 import { PureComponent } from 'react';
-
+import isMobile from "Util/Mobile";
 import Field from 'Component/Field';
 import { SelectOptions } from 'Type/Field';
 import { isArabic } from 'Util/App';
+import cx from 'classnames';
 
 import './LanguageSwitcher.style';
 
@@ -17,7 +18,8 @@ class LanguageSwitcher extends PureComponent {
     };
 
     state = {
-        isArabic: isArabic()
+        isArabic: isArabic(),
+        isMobile: isMobile.any() || isMobile.tablet(),
     };
 
     getNonSelectedLanguage() {
@@ -25,7 +27,6 @@ class LanguageSwitcher extends PureComponent {
             languageSelectOptions,
             language
         } = this.props;
-
         return languageSelectOptions.filter((obj) => obj.id !== language);
     }
 
@@ -72,6 +73,29 @@ class LanguageSwitcher extends PureComponent {
         );
     }
 
+    renderLanguageButtonForMobile() {
+        const {
+            onLanguageSelect,
+            language
+        } = this.props;
+
+        const buttonLabelObject = this.getNonSelectedLanguage();
+        let label = buttonLabelObject[0].label;
+        if (label === 'Arabic') {
+            label = 'العربية';
+        }
+
+        return (
+            <button
+                /* eslint-disable-next-line */
+              onClick={ () => onLanguageSelect(buttonLabelObject[0].id) }
+            >
+                <span block={ language === 'en' ? 'Language-Active' : ''}>English</span>
+                <span block={  language === 'ar' ? 'Language-Active' : '' }>العربية</span>
+            </button>
+        );
+    }
+
     render() {
         const {
             isArabic
@@ -80,7 +104,12 @@ class LanguageSwitcher extends PureComponent {
         return (
             <div block="LanguageSwitcher" mods={ { isArabic } }>
                 { this.renderLanguageSelect() }
-                { this.renderLanguageButton() }
+                {
+                    this.state.isMobile ?
+                    this.renderLanguageButtonForMobile() :
+                    this.renderLanguageButton()
+                }
+
             </div>
         );
     }

@@ -148,4 +148,40 @@
         }
     }
 
+    &-Popup{
+        width: auto;
+        height: 147px;
+        margin-right: 30px;
+        margin-left: 30px;
+        margin-bottom: 40px;
+        padding: 30px;
+        border-radius: 12px;
+        background-color: #FFFFFF;
+        box-shadow: 0 0 10px 0 rgba(0,0,0,0.15);
+        &-LanguageSwitcher{
+            .Popup-text{
+                display: flex;
+                align-items: center;
+
+                &-welcome{
+                    font-size: 22px;
+                    font-weight: 600;
+                    letter-spacing: 0;
+                    line-height: 30px;
+                }
+                &-shop{
+                    font-size: 15px;
+                    letter-spacing: 0;
+                    line-height: 20px;
+                    text-align: center;
+                    margin-left: 5px;
+                }
+            }
+            .LanguageSwitcher{
+
+            }
+        }
+
+    }
+
 }

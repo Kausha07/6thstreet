@@ -38,7 +38,8 @@ export const mapDispatchToProps = (dispatch) => ({
 class WelcomeHomePage extends PureComponent {
     state = {
         isArabic: false,
-        welcomeImg: null
+        welcomeImg: null,
+        isPopupOpen: true
     };
 
     linkMap = {
@@ -151,8 +152,6 @@ class WelcomeHomePage extends PureComponent {
     render() {
         const { isArabic } = this.state;
         let lang = this.props.language
-        let uni = isMobile.any()
-        console.log(uni);
         return (
             <div>
                 <div block="WelcomeHomePage">
@@ -173,6 +172,21 @@ class WelcomeHomePage extends PureComponent {
                             </div>
                         }
                     </div>
+                    { this.state.isPopupOpen &&
+                        <div block="WelcomeHomePage" elem="Popup">
+                            <div  block="WelcomeHomePage" elem="Popup-LanguageSwitcher">
+                                <div block="Popup-text">
+                                    <div block="Popup-text-welcome">Welcome,</div>
+                                    <div block="Popup-text-shop">You are shopping in</div>
+                                </div>
+                                <LanguageSwitcher/>
+                            </div>
+                            <div  block="WelcomeHomePage" elem="Popup-CountrySwitcher">
+                                <CountrySwitcher/>
+                            </div>
+                            <button block="WelcomeHomePage" elem="Popup-Button">OK</button>
+                        </div>
+                    }
 
                     {
                     this.state.welcomeImg &&
