@@ -13,6 +13,7 @@ import { URLS } from 'Util/Url/Url.config';
 import Footer from "Component/Footer";
 import Image from "Component/Image";
 import CountrySwitcher from 'Component/CountrySwitcher';
+import LanguageSwitcher from 'Component/LanguageSwitcher';
 import logo from './icons/6thstreet_logo.png'
 import isMobile from "Util/Mobile";
 import facebook from "./icons/facebook.png";
@@ -71,6 +72,25 @@ class WelcomeHomePage extends PureComponent {
     componentDidMount() {
         this.getWelcomeImageUrl();
     }
+    componentDidUpdate(){
+        let lang = this.props.language
+        let country = this.props.country
+        const locale = `${lang}-${country.toLowerCase()}`
+        let genders = ["women", "men", "kids"]
+        genders.forEach((gender) => {
+            const hint = document.createElement("link");
+            hint.setAttribute("rel", "prefetch");
+            hint.setAttribute("href", `https://${locale}.6thstreet.com/${gender}.html`);
+
+            try {
+                const head = document.getElementsByTagName("head")[0]
+                head.appendChild(hint);
+            }
+            catch(err){
+                console.error(err);
+            }
+        })
+    }
 
     onGenderSelect = (val) => {
         const { country, language } = this.props;
@@ -81,6 +101,8 @@ class WelcomeHomePage extends PureComponent {
     }
 
     getWelcomeImageUrl = () => {
+        let device = isMobile.any() ? 'm' : 'd'
+        console.log("hiiiiii", device);
         let url = 'homepage/m/home.json';
         const directory = process.env.REACT_APP_REMOTE_CONFIG_DIR;
 
@@ -139,11 +161,19 @@ class WelcomeHomePage extends PureComponent {
                             <img src={logo} />
                         </div>
                     </div>
-                    {
-                        <div  block="WelcomeHomePage" elem="CountrySwitcher">
-                            <CountrySwitcher/>
-                        </div>
-                    }
+                    <div block="WelcomeHomePage" elem="StoreSwitcher">
+                        {
+                            <div  block="WelcomeHomePage" elem="LanguageSwitcher">
+                                <LanguageSwitcher/>
+                            </div>
+                        }
+                        {
+                            <div  block="WelcomeHomePage" elem="CountrySwitcher">
+                                <CountrySwitcher/>
+                            </div>
+                        }
+                    </div>
+
                     {
                     this.state.welcomeImg &&
                         <div block="WelcomeHomePage" elem="MainSection" >

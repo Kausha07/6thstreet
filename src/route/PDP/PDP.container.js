@@ -106,7 +106,28 @@ export class PDPContainer extends PureComponent {
   }
 
   componentDidMount() {
-    //
+    const {
+      product: { product_type_6s, sku, url },
+      location: { state },
+      product,
+    } = this.props;
+    console.log("sku", sku);
+    console.log("logged from pdp container");
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
+    VueIntegrationQueries.vueAnalayticsLogger({
+      event_name: VUE_PAGE_VIEW,
+      params: {
+        event: VUE_PAGE_VIEW,
+        pageType: "pdp",
+        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+        clicked: Date.now(),
+        uuid: getUUID(),
+        referrer: state?.prevPath ? state?.prevPath : null,
+        url: window.location.href,
+        sourceProdID: sku,
+        sourceCatgID: product_type_6s, // TODO: replace with category id
+      },
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -122,6 +143,8 @@ export class PDPContainer extends PureComponent {
     const currentIsLoading = this.getIsLoading();
     const { id: prevId } = prevProps;
     const { productSku } = this.state;
+
+    console.log("prevProps", prevProps);
 
     // Request product, if URL rewrite has changed
     if (id !== prevId) {
@@ -143,26 +166,6 @@ export class PDPContainer extends PureComponent {
     Event.dispatch(EVENT_GTM_PRODUCT_DETAIL, {
       product: product,
     });
-
-    console.log("all well", prevProps);
-    console.log("product", this.props);
-    if (prevProps.id !== this.props.id) {
-      const locale = VueIntegrationQueries.getLocaleFromUrl();
-      VueIntegrationQueries.vueAnalayticsLogger({
-        event_name: VUE_PAGE_VIEW,
-        params: {
-          event: VUE_PAGE_VIEW,
-          pageType: "pdp",
-          currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-          clicked: Date.now(),
-          uuid: getUUID(),
-          referrer: state?.prevPath ? state?.prevPath : null,
-          url: window.location.href,
-          sourceProdID: sku,
-          sourceCatgID: product_type_6s, // TODO: replace with category id
-        },
-      });
-    }
   }
 
   fetchClickAndCollectStores(brandName, sku) {
