@@ -132,7 +132,7 @@ class PLPFilters extends PureComponent {
       activeOverlay,
       updatePLPInitialFilters,
       initialFilters,
-      filters
+      filters,
     } = this.props;
 
     clearTimeout(this.timer);
@@ -277,7 +277,6 @@ class PLPFilters extends PureComponent {
           count = count - 1;
         }
       });
-    console.log("muskan count", activeFilters);
     const displayCount = count - 1;
     return displayCount;
   }
@@ -420,7 +419,7 @@ class PLPFilters extends PureComponent {
     const { activeFilters } = this.state;
     const { filters, updatePLPInitialFilters, initialOptions } = this.props;
     const filterArray = activeFilters[initialFacetKey];
-    const newFilterArray = filters[initialFacetKey];
+    let newFilterArray = filters[initialFacetKey];
     let categoryLevel1 = initialOptions.q.split(" ")[1];
     if (isMobile.any()) {
       this.delayFilterUpdate();
@@ -428,7 +427,8 @@ class PLPFilters extends PureComponent {
     if (!isRadio) {
       if (checked) {
         if (newFilterArray) {
-          const { data } = newFilterArray;
+          const { data = {} } = newFilterArray;
+
           this.updateInitialFilters(
             data,
             facet_value,
@@ -454,7 +454,8 @@ class PLPFilters extends PureComponent {
         }
       } else if (filterArray) {
         if (newFilterArray) {
-          const { data } = newFilterArray;
+          const { data = {} } = newFilterArray;
+
           this.updateInitialFilters(
             data,
             facet_value,
@@ -481,7 +482,8 @@ class PLPFilters extends PureComponent {
         }
       } else {
         if (newFilterArray) {
-          const { data } = newFilterArray;
+          const { data = {} } = newFilterArray;
+
           this.updateInitialFilters(
             data,
             facet_value,
@@ -504,7 +506,6 @@ class PLPFilters extends PureComponent {
       }
     } else {
       if (newFilterArray) {
-        const { data } = newFilterArray;
         this.updateRadioFilters(
           data,
           facet_value,
