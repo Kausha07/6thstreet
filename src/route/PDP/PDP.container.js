@@ -106,26 +106,7 @@ export class PDPContainer extends PureComponent {
   }
 
   componentDidMount() {
-    const {
-      product: { product_type_6s, sku, url },
-      location: { state },
-      product,
-    } = this.props;
-    const locale = VueIntegrationQueries.getLocaleFromUrl();
-    VueIntegrationQueries.vueAnalayticsLogger({
-      event_name: VUE_PAGE_VIEW,
-      params: {
-        event: VUE_PAGE_VIEW,
-        pageType: "pdp",
-        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-        clicked: Date.now(),
-        uuid: getUUID(),
-        referrer: state?.prevPath ? state?.prevPath : null,
-        url: window.location.href,
-        sourceProdID: sku,
-        sourceCatgID: product_type_6s, // TODO: replace with category id
-      },
-    });
+    //
   }
 
   componentDidUpdate(prevProps) {
@@ -133,7 +114,8 @@ export class PDPContainer extends PureComponent {
       id,
       isLoading,
       setIsLoading,
-      product: { sku, brand_name: brandName } = {},
+      product: { product_type_6s, sku, brand_name: brandName, url } = {},
+      location: { state },
       product,
       menuCategories = [],
     } = this.props;
@@ -161,6 +143,26 @@ export class PDPContainer extends PureComponent {
     Event.dispatch(EVENT_GTM_PRODUCT_DETAIL, {
       product: product,
     });
+
+    console.log("all well", prevProps);
+    console.log("product", this.props);
+    if (prevProps.id !== this.props.id) {
+      const locale = VueIntegrationQueries.getLocaleFromUrl();
+      VueIntegrationQueries.vueAnalayticsLogger({
+        event_name: VUE_PAGE_VIEW,
+        params: {
+          event: VUE_PAGE_VIEW,
+          pageType: "pdp",
+          currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+          clicked: Date.now(),
+          uuid: getUUID(),
+          referrer: state?.prevPath ? state?.prevPath : null,
+          url: window.location.href,
+          sourceProdID: sku,
+          sourceCatgID: product_type_6s, // TODO: replace with category id
+        },
+      });
+    }
   }
 
   fetchClickAndCollectStores(brandName, sku) {

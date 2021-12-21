@@ -89,6 +89,7 @@ export class UrlRewritesContainer extends PureComponent {
   }
 
   async requestUrlRewrite(isUpdate = false) {
+    console.log("isUpdate", isUpdate);
     // TODO: rename this to pathname, urlParam is strange
     const { pathname: urlParam = "", search } = location;
     const slicedUrl = urlParam.slice(urlParam.search("id/"));
