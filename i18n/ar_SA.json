@@ -885,5 +885,7 @@
     "BY STOCK": "توفر المنتج",
     "BY AGE": null,
     "International Shipment": "شحن دولي",
-    "Non Discountable": null
+    "Non Discountable": null,
+    "In Stock": "متوفر",
+    "Out of Stock": "غير متوفر"
 }
