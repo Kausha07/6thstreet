@@ -1,5 +1,6 @@
 .PLPPages {
-  @include mobile() {
-    margin-top: 60px;
-  }
+    //width: calc(100% - 250px);
+    @include mobile() {
+        margin-top: 60px;
+    }
 }

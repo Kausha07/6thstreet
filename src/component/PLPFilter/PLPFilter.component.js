@@ -9,6 +9,7 @@ import FieldMultiselect from "Component/FieldMultiselect";
 import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { Filter } from "Util/API/endpoint/Product/Product.type";
+import isMobile from "Util/Mobile";
 import "./PLPFilter.style";
 
 class PLPFilter extends PureComponent {
@@ -47,12 +48,19 @@ class PLPFilter extends PureComponent {
     if (category === "categories.level1") {
       return null;
     }
+    if (!isMobile.any()) {
+      if (category === "sort") {
+        return null;
+      }
+    }
+
+
     let placeholder =
       category === "in_stock"
         ? __("BY STOCK")
         : category === "age"
-        ? __("BY AGE")
-        : label;
+          ? __("BY AGE")
+          : label;
 
     return (
       <FieldMultiselect

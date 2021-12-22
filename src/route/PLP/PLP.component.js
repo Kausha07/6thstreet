@@ -130,8 +130,10 @@ export class PLP extends PureComponent {
           {this.renderPLPDetails()}
           {this.state.bannerData && this.renderBanner()}
           {this.renderPLPWidget()}
-          {this.renderPLPFilters()}
-          {this.renderPLPPages()}
+          <div block="Products" elem="Wrapper">
+            {this.renderPLPFilters()}
+            {this.renderPLPPages()}
+          </div>
         </ContentWrapper>
       </main>
     );
