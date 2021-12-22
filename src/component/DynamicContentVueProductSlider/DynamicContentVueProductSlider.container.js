@@ -14,6 +14,7 @@ export class DynamicContentVueProductSliderContainer extends PureComponent {
     widgetID: PropTypes.string.isRequired,
     products: PropTypes.array.isRequired,
     pageType: PropTypes.string.isRequired,
+    index: PropTypes.number,
   };
 
   static defaultProps = {

@@ -66,7 +66,7 @@ class DynamicContentVueSlider extends PureComponent {
 
   render() {
     const { isArabic } = this.state;
-    const { renderMySignInPopup } = this.props;
+    const { renderMySignInPopup,index } = this.props;
     return (
       <div block="VeuSliderWrapper" mods={{ isArabic }}>
         {this.state.data?.length > 0 && (
@@ -76,6 +76,7 @@ class DynamicContentVueSlider extends PureComponent {
             heading={this.props.layout.title}
             isHome={true}
             pageType={"Home"}
+            index={index}
           />
         )}
       </div>

@@ -141,6 +141,7 @@ class DynamicContentProductSlider extends PureComponent {
     } else {
       finalTitle = isArabic() ? HOME_PAGE_TRANSLATIONS[title] : title;
     }
+    console.log('products',products)
     const productsDesktop = (
       <React.Fragment>
         <DynamicContentVueProductSliderContainer

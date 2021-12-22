@@ -43,8 +43,9 @@ class DynamicContentVueProductSlider extends PureComponent {
   componentWillUnmount() {}
 
   registerViewPortEvent() {
+    const {index} = this.props;
     let observer;
-    const elem = document.querySelector("#productSlider");
+    const elem = document.querySelector(`#productSlider-${index}`);
 
     let options = {
       root: null,
@@ -290,15 +291,18 @@ class DynamicContentVueProductSlider extends PureComponent {
     let setRef = (el) => {
       this.viewElement = el;
     };
+    const {index = null} = this.props;
     return (
-      <div
+      <div id="productSlider">
+        <div
         ref={setRef}
-        id="productSlider"
+        id={`productSlider-${index}`}
         block="VueProductSlider"
         elem="Container"
       >
         {this.renderHeader()}
         {this.renderSliderContainer()}
+      </div>
       </div>
     );
   }

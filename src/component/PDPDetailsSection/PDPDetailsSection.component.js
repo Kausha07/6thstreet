@@ -660,6 +660,7 @@ class PDPDetailsSection extends PureComponent {
               const widgetID = pdpWidgetsData[index]["type"];
               const { data } = item;
               if (data && data.length > 0) {
+                console.log("pdp detail section data",data)
                 return (
                   <>
                     <div block="PDPWidgets" elem="Slider">
@@ -673,6 +674,7 @@ class PDPDetailsSection extends PureComponent {
                         sourceCatgID={categories_without_path[0]}
                         pageType={"pdp"}
                         key={`DynamicContentVueProductSliderContainer${index}`}
+                        index={index}
                       />
                     </div>
                   </>

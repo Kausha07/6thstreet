@@ -49,17 +49,22 @@ export class UrlRewritesContainer extends PureComponent {
   }
 
   componentDidMount() {
-    console.log("logged")
-    this.requestUrlRewrite();
+    const possibleSku = this.getPossibleSku();
+    this.setState({
+      sku: possibleSku,
+    });
   }
   componentDidUpdate(prevProps, prevState) {
     const { pathname } = location;
     const { locale, hideActiveOverlay } = this.props;
     const { locale: prevLocale } = prevProps;
 
-    const { prevPathname, query } = this.state;
-    const { prevPathname: prevStatePathname, query: prevQuery } = prevState;
-
+    const { prevPathname, query, sku } = this.state;
+    const {
+      prevPathname: prevStatePathname,
+      query: prevQuery,
+      sku: prevSku,
+    } = prevState;
     if (query && query !== prevQuery) {
       let partialQuery = location.search;
       if (location.search) {
@@ -80,29 +85,36 @@ export class UrlRewritesContainer extends PureComponent {
     if (
       pathname !== prevPathname ||
       locale !== prevLocale ||
+      sku !== prevSku ||
       !prevStatePathname
     ) {
       hideActiveOverlay();
       document.body.style.overflow = "visible";
       // Request URL rewrite if pathname or locale changed
+      console.log('pathname',pathname);
+      console.log('prevPathname',prevPathname);
+      console.log('prevStatePathname',prevStatePathname);
       this.requestUrlRewrite(true);
     }
   }
 
   async requestUrlRewrite(isUpdate = false) {
-    console.log("isUpdate", isUpdate);
+    console.log("isUpdate",isUpdate);
     // TODO: rename this to pathname, urlParam is strange
     const { pathname: urlParam = "", search } = location;
     const slicedUrl = urlParam.slice(urlParam.search("id/"));
     // eslint-disable-next-line no-magic-numbers
     const magentoProductId = Number(slicedUrl.slice("3").split("/")[0]);
     const possibleSku = this.getPossibleSku();
+    console.log("possibleSku",possibleSku)
     if (isUpdate) {
       this.setState({
-        prevPathname: urlParam,
         isLoading: true,
       });
     }
+    this.setState({
+      prevPathname: urlParam,
+    });
     if (search.startsWith("?q=")) {
       this.setState({
         prevPathname: urlParam,
@@ -202,6 +214,7 @@ export class UrlRewritesContainer extends PureComponent {
     const { isLoading, type, id, sku, brandDescription, brandImg, brandName } =
       this.state;
     const string_sku = sku.toString();
+    console.log("string_sku",string_sku)
     return {
       isLoading,
       type,
@@ -214,6 +227,7 @@ export class UrlRewritesContainer extends PureComponent {
   };
 
   render() {
+    console.log("this.state",this.state)
     return (
       <UrlRewrites {...this.containerFunctions} {...this.containerProps()} />
     );

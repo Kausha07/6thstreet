@@ -44,11 +44,15 @@ class DynamicContentVueProductSliderItem extends PureComponent {
       sourceProdID,
       sourceCatgID,
     } = this.props;
-    const { category, sku, link, product_type_6s } = data;
-    console.log("data", data);
+    const { category, sku, link,price } = data;
     let destProdID = sku;
+    console.log('data',data);
     // vue analytics
     const locale = VueIntegrationQueries.getLocaleFromUrl();
+    const itemPrice = price[0][Object.keys(price[0])[0]]["6s_special_price"];
+    const basePrice = price[0][Object.keys(price[0])[0]]["6s_base_price"];
+    console.log("itemPrice", itemPrice);
+    console.log("basePrice", basePrice);
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_CAROUSEL_CLICK,
       params: {
@@ -63,7 +67,8 @@ class DynamicContentVueProductSliderItem extends PureComponent {
         sourceProdID: sourceProdID,
         sourceCatgID: sourceCatgID,
         destprodid: destProdID,
-        destcatgid: destProdID,
+        destcatgid: category,
+        destprodprice: itemPrice,
         posofreco: posofreco,
       },
     });
