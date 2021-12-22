@@ -850,7 +850,7 @@ class PDPDetailsSection extends PureComponent {
         <div block="AccordionWrapper">
           <Accordion
             mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
-            title={__(isMobile ? "Description" : "PRODUCT DETAILS:")}
+            title={ isMobile ? __("Description") : __("PRODUCT DETAILS:") }
             is_expanded={this.state.isExpanded["0"]}
           >
             {!isMobile ? this.renderIconsSection() : ""}
