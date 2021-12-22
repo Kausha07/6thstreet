@@ -21,7 +21,9 @@ class PDPDetail extends PureComponent {
 
   renderBrandImage = () => {
     const { brandImg } = this.props;
-    return <Image lazyLoad={true} block="PDPDetail" elem="Image" src={brandImg} />;
+    return (
+      <Image lazyLoad={true} block="PDPDetail" elem="Image" src={brandImg} />
+    );
   };
 
   renderBrandName = () => {
@@ -72,12 +74,12 @@ class PDPDetail extends PureComponent {
     return (
       <>
         <div block="PDPDetail" elem="BrandImage">
-          {isMobile ? "" : this.renderBrandImage()}
+          {this.renderBrandImage()}
         </div>
         <div block="PDPDetail" elem="BrandDescription">
-          {isMobile ? "" : this.renderBrandName()}
-          {isMobile ? "" : this.renderBrandHtml()}
-          {isMobile ? "" : this.renderMoreFromBrand()}
+          {this.renderBrandName()}
+          {this.renderBrandHtml()}
+          {this.renderMoreFromBrand()}
         </div>
       </>
     );
