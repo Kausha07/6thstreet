@@ -785,7 +785,7 @@
     "Error loading Stripe! No API-key specified.": " .API خطأ في تحميل الرابط! لم يتم تحديد مفتاح",
     "Model is wearing": "العارض يرتدي",
     " What are you looking for ?": "ما الذي تبحث عنه؟ ",
-    "English": "إنجليزي",
+    "English": null,
     "Arabic": "عربي",
     "BY STOCK": "توفر المنتج",
     "BY AGE": "العمر",
