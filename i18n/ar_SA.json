@@ -647,7 +647,7 @@
     "CM": null,
     "More from this brand": null,
     "COMING NEXT": null,
-    "Description": "المواصفات",
+    "Description": null,
     "Size & Fit": "المقاس والملائمة",
     "Model Measurements": null,
     "Click & Collect": null,
@@ -887,5 +887,7 @@
     "Customer Service available all days from: ": null,
     "Contact us": null,
     "Also available in:": null,
-    "Filters": null
+    "Filters": null,
+    "Out of Stock": null,
+    "In Stock": null
 }
