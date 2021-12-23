@@ -660,7 +660,7 @@
     "CM": "سم",
     "More from this brand": "المزيد من هذه الماركة",
     "COMING NEXT": "التالي",
-    "Description": "المواصفات",
+    "Description": null,
     "Size & Fit": "المقاس والملائمة",
     "Model Measurements": "قياسات المودل",
     "Click & Collect": "تسوق واستلم طلبك بنفسك",
@@ -886,6 +886,6 @@
     "BY AGE": null,
     "International Shipment": "شحن دولي",
     "Non Discountable": null,
-    "In Stock": "متوفر",
-    "Out of Stock": "غير متوفر"
+    "In Stock": null,
+    "Out of Stock": null
 }

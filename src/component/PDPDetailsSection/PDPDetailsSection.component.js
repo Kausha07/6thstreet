@@ -779,15 +779,24 @@ class PDPDetailsSection extends PureComponent {
   renderAboutBrand() {
     const {
       product: { brand_name },
+      brandDescription,
+      brandImg,
+      brandName,
     } = this.props;
+    if (!(brandDescription && brandImg && brandName)) {
+      return null;
+    }
     return (
-      <Accordion
-        mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
-        title={__("About ") + brand_name}
-        is_expanded={this.state.isExpanded["3"]}
-      >
-        {this.renderBrandDetail()}
-      </Accordion>
+      <>
+        <Accordion
+          mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
+          title={__("About ") + brand_name}
+          is_expanded={this.state.isExpanded["3"]}
+        >
+          {this.renderBrandDetail()}
+        </Accordion>
+        {this.renderAccordionSeperator()}
+      </>
     );
   }
 
@@ -850,7 +859,7 @@ class PDPDetailsSection extends PureComponent {
         <div block="AccordionWrapper">
           <Accordion
             mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
-            title={ isMobile ? __("Description") : __("PRODUCT DETAILS:") }
+            title={isMobile ? __("Description") : __("PRODUCT DETAILS:")}
             is_expanded={this.state.isExpanded["0"]}
           >
             {!isMobile ? this.renderIconsSection() : ""}
@@ -859,7 +868,6 @@ class PDPDetailsSection extends PureComponent {
           {this.renderAccordionSeperator()}
           {this.renderShareButton()}
           {isMobile ? this.renderAboutBrand() : ""}
-          {this.renderAccordionSeperator()}
         </div>
 
         <div block="PDPWidgets">{this.renderPdpWidgets()}</div>
