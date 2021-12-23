@@ -44,15 +44,12 @@ class PLPFilter extends PureComponent {
       updateFilters,
       setDefaultFilters,
       defaultFilters,
+      isSortBy
     } = this.props;
     if (category === "categories.level1") {
       return null;
     }
-    if (!isMobile.any()) {
-      if (category === "sort") {
-        return null;
-      }
-    }
+
 
 
     let placeholder =
@@ -76,6 +73,8 @@ class PLPFilter extends PureComponent {
         updateFilters={updateFilters}
         setDefaultFilters={setDefaultFilters}
         defaultFilters={defaultFilters}
+        isSortBy={isSortBy}
+
       />
     );
   }

@@ -104,7 +104,9 @@ class PLPFilters extends PureComponent {
       //     this.renderFilter([size, data[size]])
       //   );
       // }
-
+      if(filter[0] === 'sort'){
+        return this.renderSortBy([filter[0], filter[1]])
+      }
       return this.renderFilter([filter[0], filter[1]]);
     });
   }
@@ -323,6 +325,33 @@ class PLPFilters extends PureComponent {
         defaultFilters={defaultFilters}
       />
     );
+  };
+
+  renderSortBy = ([key, filter]) => {
+    const { activeFilter, isReset, activeFilters, defaultFilters } = this.state;
+
+    // return (
+
+    // );
+    // debugger
+    return (
+      <div block="SortBy">
+        <PLPFilter
+        key={key}
+        filter={filter}
+        parentCallback={this.handleCallback}
+        currentActiveFilter={activeFilter}
+        changeActiveFilter={this.changeActiveFilter}
+        isReset={isReset}
+        resetParentState={this.resetParentState}
+        parentActiveFilters={activeFilters}
+        updateFilters={this.updateFilters}
+        setDefaultFilters={this.setDefaultFilters}
+        defaultFilters={defaultFilters}
+        isSortBy={true}
+      />
+      </div>
+    )
   };
 
   resetParentState = () => {
