@@ -138,9 +138,9 @@ export class PLPContainer extends PureComponent {
   state = {
     prevRequestOptions: PLPContainer.getRequestOptions(),
     brandDescription: "",
-      brandImg: "",
-      brandName: "",
-      isArabic: isArabic(),
+    brandImg: "",
+    brandName: "",
+    isArabic: isArabic(),
   };
 
   containerFunctions = {
@@ -164,16 +164,16 @@ export class PLPContainer extends PureComponent {
 
   async componentDidMount() {
     const { menuCategories = [] } = this.props;
-    const {isArabic} = this.state;
+    const { isArabic } = this.state;
     if (menuCategories.length !== 0) {
       this.updateBreadcrumbs();
       this.setMetaData();
       this.updateHeaderState();
     }
     const brandName = location.pathname
-    .split(".html")[0]
-    .substring(1)
-    .split("/")?.[0];
+      .split(".html")[0]
+      .substring(1)
+      .split("/")?.[0];
     const data = await new Algolia({
       index: "brands_info",
     }).getBrandsDetails({
@@ -232,12 +232,12 @@ export class PLPContainer extends PureComponent {
       const breadcrumbLevels = options["categories.level4"]
         ? options["categories.level4"]
         : options["categories.level3"]
-        ? options["categories.level3"]
-        : options["categories.level2"]
-        ? options["categories.level2"]
-        : options["categories.level1"]
-        ? options["categories.level1"]
-        : options["q"];
+          ? options["categories.level3"]
+          : options["categories.level2"]
+            ? options["categories.level2"]
+            : options["categories.level1"]
+              ? options["categories.level1"]
+              : options["q"];
 
       if (breadcrumbLevels) {
         const levelArray = breadcrumbLevels.split(" /// ") || [];
@@ -339,6 +339,7 @@ export class PLPContainer extends PureComponent {
       query,
       plpWidgetData,
       gender,
+      filters
     } = this.props;
     const {
       brandDescription,
@@ -347,6 +348,7 @@ export class PLPContainer extends PureComponent {
     } = this.state;
 
     // isDisabled: this._getIsDisabled()
+
     return {
       brandDescription,
       brandImg,
@@ -354,6 +356,7 @@ export class PLPContainer extends PureComponent {
       query,
       plpWidgetData,
       gender,
+      filters
     };
   };
 

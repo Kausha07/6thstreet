@@ -98,12 +98,12 @@ class PLPFilters extends PureComponent {
   renderFilters() {
     const { filters = {} } = this.props;
     return Object.entries(filters).map((filter) => {
-      if (filter[0] === SIZES && !isMobile.any()) {
-        const { data = {} } = filter[1];
-        return Object.keys(data).map((size) =>
-          this.renderFilter([size, data[size]])
-        );
-      }
+      // if (filter[0] === SIZES && !isMobile.any()) {
+      //   const { data = {} } = filter[1];
+      //   return Object.keys(data).map((size) =>
+      //     this.renderFilter([size, data[size]])
+      //   );
+      // }
 
       return this.renderFilter([filter[0], filter[1]]);
     });
@@ -214,7 +214,7 @@ class PLPFilters extends PureComponent {
         aria-label={__("Reset")}
         onClick={this.resetFilters}
       >
-        {__("clear")}
+        {__("Clear all")}
       </button>
     ) : null;
   }
@@ -252,11 +252,11 @@ class PLPFilters extends PureComponent {
     const { activeFilters = {} } = this.props;
     const { count } = activeFilters
       ? Object.entries(activeFilters).reduce(
-          (prev, [_key, value]) => ({
-            count: prev.count + value.length,
-          }),
-          { count: 0 }
-        )
+        (prev, [_key, value]) => ({
+          count: prev.count + value.length,
+        }),
+        { count: 0 }
+      )
       : { count: 0 };
     const displayCount = count - 1;
 
@@ -354,8 +354,9 @@ class PLPFilters extends PureComponent {
                 : [facet_value],
             },
           },
-          () => {this.select(isQuickFilters)
-          // debugger
+          () => {
+            this.select(isQuickFilters)
+            // debugger
           }
 
         );
@@ -446,10 +447,13 @@ class PLPFilters extends PureComponent {
     const count = productsCount ? productsCount.toLocaleString() : null;
 
     return (
-      <>
-        {isOpen ? this.renderPopupFilters() : this.renderFilterButton()}
-        <form block="PLPFilters" name="filters">
-          {this.renderFilters()}
+      <div block="Products" elem="Filter">
+        <div block="PLPFilters" elem="ProductsCount" mods={{ isArabic }}>
+          <span>{count}</span>
+          {count ? __("Products") : null}
+        </div>
+        <div block="FilterHeader">
+          <h2>{__("Filters")}</h2>
           <div
             block="PLPFilters"
             elem="Reset"
@@ -462,8 +466,13 @@ class PLPFilters extends PureComponent {
           >
             {this.renderResetFilterButton()}
           </div>
+        </div>
+        {isOpen ? this.renderPopupFilters() : this.renderFilterButton()}
+        <form block="PLPFilters" name="filters">
+          {this.renderFilters()}
+
         </form>
-        <div block="PLPFilters" elem="ToolBar" mods={{ isArabic }}>
+        {/* <div block="PLPFilters" elem="ToolBar" mods={{ isArabic }}>
           <div block="PLPFilters" elem="QuickCategories" mods={{ isArabic }}>
             {this.renderQuickFilters()}
           </div>
@@ -471,8 +480,8 @@ class PLPFilters extends PureComponent {
             <span>{count}</span>
             {count ? __("Products") : null}
           </div>
-        </div>
-      </>
+        </div> */}
+      </div>
     );
   }
 }
