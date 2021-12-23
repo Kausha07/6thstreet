@@ -22,6 +22,9 @@ import {
   getBreadcrumbsUrl,
 } from "Util/Breadcrumbs/Breadcrubms";
 import PLP from "./PLP.component";
+import { isArabic } from "Util/App";
+import Algolia from "Util/API/provider/Algolia";
+
 
 export const BreadcrumbsDispatcher = import(
   /* webpackMode: "lazy", webpackChunkName: "dispatchers" */
@@ -139,6 +142,10 @@ export class PLPContainer extends PureComponent {
 
   state = {
     prevRequestOptions: PLPContainer.getRequestOptions(),
+    brandDescription: "",
+    brandImg: "",
+    brandName: "",
+    isArabic: isArabic(),
   };
 
   containerFunctions = {
@@ -159,7 +166,6 @@ export class PLPContainer extends PureComponent {
 
       // this.props.setInitialPLPFilter({ initialOptions });
       PLPContainer.requestProductList(this.props);
-
     }
     this.setMetaData();
   }
@@ -177,11 +183,33 @@ export class PLPContainer extends PureComponent {
 
   componentDidMount() {
     const { menuCategories = [] } = this.props;
+    const { isArabic } = this.state;
     if (menuCategories.length !== 0) {
       this.updateBreadcrumbs();
       this.setMetaData();
       this.updateHeaderState();
     }
+    this.getBrandDetails();
+  }
+
+  async getBrandDetails() {
+    const brandName = location.pathname
+      .split(".html")[0]
+      .substring(1)
+      .split("/")?.[0];
+    const data = await new Algolia({
+      index: "brands_info",
+    }).getBrandsDetails({
+      query: brandName,
+      limit: 1,
+    });
+    this.setState({
+      brandDescription: isArabic
+        ? data?.hits[0]?.description_ar
+        : data?.hits[0]?.description,
+      brandImg: data?.hits[0]?.image,
+      brandName: isArabic ? data?.hits[0]?.name_ar : data?.hits[0]?.name,
+    });
   }
 
   componentDidUpdate() {
@@ -339,9 +367,11 @@ export class PLPContainer extends PureComponent {
       query,
       plpWidgetData,
       gender,
+      filters,
     } = this.props;
 
     // isDisabled: this._getIsDisabled()
+
     return {
       brandDescription,
       brandImg,
@@ -349,11 +379,12 @@ export class PLPContainer extends PureComponent {
       query,
       plpWidgetData,
       gender,
+      filters,
     };
   };
 
   render() {
-    const { requestedOptions,filters } = this.props;
+    const { requestedOptions, filters } = this.props;
     localStorage.setItem("CATEGORY_NAME", JSON.stringify(requestedOptions.q));
     return <PLP {...this.containerFunctions} {...this.containerProps()} />;
   }
