@@ -11,12 +11,12 @@
   --cart-page-promo-background: #f6f6f6;
   --cart-page-table-head-background: var(--secondary-base-color);
 
-  --color-black: #000;
+  --color-black: #000000;
   --color-green-cyan: #28d9aa;
   --color-light-gray: #9b9b9b;
   --color-soft-gray: #ccc;
   --color-orange-soda: #f96446;
-  --color-white: #fff;
+  --color-white: #ffffff;
 }
 
 .CartPage {
@@ -597,7 +597,7 @@
         position: absolute;
         right: 6px;
         top: 1px;
-        background: #000;
+        background: #000000;
         height: 14px;
         width: 2px;
 
@@ -612,7 +612,7 @@
         position: absolute;
         right: 6px;
         top: 1px;
-        background: #000;
+        background: #000000;
         width: 2px;
         height: 12px;
 

@@ -87,7 +87,7 @@ class DynamicContentGrid extends PureComponent {
   renderItem = (item, i) => {
     const { link, url } = item;
     const { isArabic } = this.state;
-    const { items_per_row, item_height } = this.props;
+    const { items_per_row, item_height,index } = this.props;
     let ht = item_height.toString() + "px";
     let contentClass = "contentAll";
     if (item_height >= 500 && items_per_row === 2) {
@@ -117,7 +117,7 @@ class DynamicContentGrid extends PureComponent {
           }}
         >
 
-          <Image lazyLoad={true} src={url} className="GridImage" />
+          <Image lazyLoad={index === 34 ? false : true} src={url} className="GridImage" />
           {item.footer && (
             <div block="Footer">
               {item.footer.title && (
@@ -140,6 +140,7 @@ class DynamicContentGrid extends PureComponent {
 
   renderItemMobile = (item, i) => {
     const { link, url } = item;
+    const {index} = this.props
     let ht = this.props.item_height.toString() + "px";
     const gender = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
       ? BrowserDatabase.getItem(APP_STATE_CACHE_KEY)?.gender
@@ -158,7 +159,7 @@ class DynamicContentGrid extends PureComponent {
             this.onclick(item);
           }}
         >
-          <Image lazyLoad={true} src={url} />
+          <Image lazyLoad={index === 34 ? false : true} src={url} />
 
           {item.footer && (
             <div block="Footer">

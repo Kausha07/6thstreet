@@ -9,8 +9,8 @@
     }
 
     &::after {
-        border-bottom: 1px solid var(--black);
-        border-right: 1px solid var(--black);
+        border-bottom: 1px solid #000000;
+        border-right: 1px solid #000000;
         content: '';
         height: 5px;
         position: absolute;
@@ -86,12 +86,12 @@
             }
 
             span {
-                color: var(--black);
+                color: #000000;
             }
         }
 
         &Price {
-            color: var(--black);
+            color: #000000;
 
             span {
                 font-weight: var(--fw-bold);

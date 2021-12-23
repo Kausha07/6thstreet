@@ -2,11 +2,9 @@ import { doFetch } from '../helper/Fetch';
 
 class CDN {
     get(someUrl) {
-        // Make sure the CDN domain is not passed
-        const relativeUrl = someUrl.replace('https://mobilecdn.6thstreet.com/', '/');
-
-        const url = `/cdn/${relativeUrl}`
-            .replace(/([^:]\/)\/+/g, '$1'); // this replaces // to /
+        // const relativeUrl = someUrl.replace('https://mobilecdn.6thstreet.com/', '/');
+        const CDN_BASE_URL = process.env.REACT_APP_CDN_API_URL;
+        // const url = `/cdn/${relativeUrl}`.replace(/([^:]\/)\/+/g, '$1'); // this replaces // to /
 
         const options = {
             headers: {
@@ -15,7 +13,7 @@ class CDN {
             }
         };
 
-        return doFetch(url, options);
+        return doFetch(`${CDN_BASE_URL}${someUrl}`, options);
     }
 }
 

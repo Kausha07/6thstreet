@@ -1,10 +1,10 @@
 :root {
-  --black: #000;
+  --black: #000000;
   --dark-grey: #a9a9a9;
   --grey: #d3d3d3;
   --light-grey: #f3f4f6;
   --red: #d12229;
-  --white: #fff;
+  --white: #ffffff;
   --white-smoke: #f5f5f5;
 }
 
@@ -24,7 +24,7 @@
     }
 
     @include before-desktop {
-      background-color: var(--white);
+      background-color: #ffffff;
       height: 100%;
       padding-bottom: 83px;
       position: fixed;
@@ -33,7 +33,7 @@
       z-index: 1;
 
       .FooterMain {
-        background-color: var(--white);
+        background-color: #ffffff;
         display: block;
         height: 280px;
         margin-bottom: -144px;
@@ -106,8 +106,8 @@
               margin-left: 12px;
 
               &:after {
-                border-bottom: 2px solid var(--dark-grey);
-                border-right: 2px solid var(--dark-grey);
+                border-bottom: 2px solid #a9a9a9;
+                border-right: 2px solid #a9a9a9;
                 content: "";
                 display: inline-block;
                 height: 7px;

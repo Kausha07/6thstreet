@@ -55,14 +55,14 @@
             text-transform: capitalize;
 
             span {
-                color: var(--black);
+                color: #000000;
                 text-transform: none;
             }
         }
     }
 
     &-BackButton {
-        border: 1px solid var(--black);
+        border: 1px solid #000000;
         border-radius: 10px;
         font-weight: var(--fw-regular);
         font-size: 14px;

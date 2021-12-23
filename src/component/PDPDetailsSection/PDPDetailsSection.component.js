@@ -12,6 +12,11 @@ import DynamicContentVueProductSliderContainer from "../DynamicContentVueProduct
 import { PDP_ARABIC_VALUES_TRANSLATIONS } from "./PDPDetailsSection.config";
 import "./PDPDetailsSection.style";
 import { getUUIDToken } from "Util/Auth";
+import isMobile from "Util/Mobile";
+import { Phone, Chat, Email } from "Component/Icons";
+import { EMAIL_LINK } from "Component/CheckoutSuccess/CheckoutSuccess.config";
+import Link from "Component/Link";
+import PDPDetail from "Component/PDPDetail";
 
 class PDPDetailsSection extends PureComponent {
   static propTypes = {
@@ -25,12 +30,14 @@ class PDPDetailsSection extends PureComponent {
       0: true,
       1: true,
       2: true,
-      3: true,
+      3: false,
       4: true,
       5: true,
     },
     pdpWidgetsAPIData: [],
     isArabic: isArabic(),
+    showMore: isMobile.any() || isMobile.tablet() ? false : true,
+    isMobile: isMobile.any() || isMobile.tablet(),
   };
 
   componentDidMount() {
@@ -54,50 +61,57 @@ class PDPDetailsSection extends PureComponent {
     const { gender, pdpWidgetsData, product: sourceProduct } = this.props;
     if (pdpWidgetsData && pdpWidgetsData.length > 0) {
       const userData = BrowserDatabase.getItem("MOE_DATA");
-        const customer = BrowserDatabase.getItem("customer");
-        const userID = customer && customer.id ? customer.id : null;
-        const query = {
-          filters: [],
-          num_results: 10,
-          mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
-        };
+      const customer = BrowserDatabase.getItem("customer");
+      const userID = customer && customer.id ? customer.id : null;
+      const query = {
+        filters: [],
+        num_results: 10,
+        mad_uuid: userData?.USER_DATA?.deviceUuid || getUUIDToken(),
+      };
 
-        let promisesArray = [];
-        pdpWidgetsData.forEach((element) => {
-          const { type } = element;
-          const payload = VueQuery.buildQuery(type, query, {
-            gender,
-            userID,
-            sourceProduct,
-          });
-          promisesArray.push(fetchVueData(payload));
+      let promisesArray = [];
+      pdpWidgetsData.forEach((element) => {
+        const { type } = element;
+        const payload = VueQuery.buildQuery(type, query, {
+          gender,
+          userID,
+          sourceProduct,
         });
-        Promise.all(promisesArray)
-          .then((resp) => {
-            this.setState({ pdpWidgetsAPIData: resp });
-          })
-          .catch((err) => {
-            console.err(err);
-          });
+        promisesArray.push(fetchVueData(payload));
+      });
+      Promise.all(promisesArray)
+        .then((resp) => {
+          this.setState({ pdpWidgetsAPIData: resp });
+        })
+        .catch((err) => {
+          console.err(err);
+        });
     }
   }
 
   renderShareButton() {
     const url = new URL(window.location.href);
     url.searchParams.append("utm_source", "pdp_share");
+    const isDesktop = !(isMobile.any() || isMobile.tablet());
+    if (isDesktop || !window.navigator.share) {
+      return null;
+    }
     return (
-      <div block="PDPDetailsSection" elem="ShareButtonContainer">
-        <ShareButton
-          block="PDPDetailsSection-ShareButtonContainer"
-          elem="ShareButton"
-          title={document.title}
-          text={`Hey check this out: ${document.title}`}
-          url={url.toString()}
-          mods={{ isArabic: isArabic() }}
-        >
-          <span>{__("Share")}</span>
-        </ShareButton>
-      </div>
+      <>
+        <div block="PDPDetailsSection" elem="ShareButtonContainer">
+          <ShareButton
+            block="PDPDetailsSection-ShareButtonContainer"
+            elem="ShareButton"
+            title={document.title}
+            text={`Hey check this out: ${document.title}`}
+            url={url.toString()}
+            mods={{ isArabic: isArabic() }}
+          >
+            <span>{__("Share")}</span>
+          </ShareButton>
+        </div>
+        {this.renderAccordionSeperator()}
+      </>
     );
   }
 
@@ -146,10 +160,15 @@ class PDPDetailsSection extends PureComponent {
 
   renderIconsSection() {
     const { clickAndCollectStores } = this.props;
+    const { isArabic } = this.state;
     return (
       <div block="PDPDetailsSection" elem="IconsSection">
         {clickAndCollectStores?.length ? (
-          <div block="PDPDetailsSection" elem="IconContainer">
+          <div
+            block="PDPDetailsSection"
+            elem="IconContainer"
+            mods={{ isArabic }}
+          >
             <div
               block="PDPDetailsSection"
               elem="Icon"
@@ -161,7 +180,7 @@ class PDPDetailsSection extends PureComponent {
             </div>
           </div>
         ) : null}
-        <div block="PDPDetailsSection" elem="IconContainer">
+        <div block="PDPDetailsSection" elem="IconContainer" mods={{ isArabic }}>
           <div
             block="PDPDetailsSection"
             elem="Icon"
@@ -169,7 +188,7 @@ class PDPDetailsSection extends PureComponent {
           />
           <div>{__("100% Genuine")}</div>
         </div>
-        <div block="PDPDetailsSection" elem="IconContainer">
+        <div block="PDPDetailsSection" elem="IconContainer" mods={{ isArabic }}>
           <div
             block="PDPDetailsSection"
             elem="Icon"
@@ -185,14 +204,36 @@ class PDPDetailsSection extends PureComponent {
     const {
       product: { description },
     } = this.props;
+    const { showMore, isMobile } = this.state;
     return (
-      <>
-        <p block="PDPDetailsSection" elem="Description">
-          {description}
-        </p>
-        {this.renderHighlights()}
-      </>
+      <div block="PDPDetailWrapper">
+        <div block="PDPDetailWrapper" elem="Items" mods={{ showMore }}>
+          <div block="PDPDetailWrapper" elem="LeftDescription">
+            <p
+              block="PDPDetailWrapper"
+              elem="Title"
+              mods={{ isMobile: !!isMobile }}
+            >
+              {__("PRODUCT DETAILS:")}
+            </p>
+            <p block="PDPDetailsSection" elem="Description">
+              {description}
+            </p>
+          </div>
+          {this.renderHighlights()}
+        </div>
+        {showMore ? (
+          <div block="PDPDetailWrapper" elem="Button">
+            <button onClick={() => this.updateShowMoreState(false)}>
+              {__("SHOW MORE DETAILS")}
+            </button>
+          </div>
+        ) : null}
+      </div>
     );
+  }
+  updateShowMoreState(state) {
+    this.setState({ showMore: state });
   }
 
   listTitle(str) {
@@ -621,17 +662,21 @@ class PDPDetailsSection extends PureComponent {
               const { data } = item;
               if (data && data.length > 0) {
                 return (
-                  <DynamicContentVueProductSliderContainer
-                    widgetID={widgetID}
-                    products={data}
-                    heading={heading}
-                    isHome={true}
-                    renderMySignInPopup={renderMySignInPopup}
-                    sourceProdID={sku}
-                    sourceCatgID={categories_without_path[0]}
-                    pageType={"pdp"}
-                    key={`DynamicContentVueProductSliderContainer${index}`}
-                  />
+                  <>
+                    <div block="PDPWidgets" elem="Slider">
+                      <DynamicContentVueProductSliderContainer
+                        widgetID={widgetID}
+                        products={data}
+                        heading={heading}
+                        isHome={true}
+                        renderMySignInPopup={renderMySignInPopup}
+                        sourceProdID={sku}
+                        sourceCatgID={categories_without_path[0]}
+                        pageType={"pdp"}
+                        key={`DynamicContentVueProductSliderContainer${index}`}
+                      />
+                    </div>
+                  </>
                 );
               }
               return null;
@@ -644,23 +689,184 @@ class PDPDetailsSection extends PureComponent {
     return null;
   }
 
-  render() {
+  getCountryConfigs() {
+    const {
+      config: { countries },
+      country,
+      language,
+    } = this.props;
+
+    const {
+      opening_hours: { [language]: openHoursLabel },
+      // toll_free: phone,
+    } = countries[country];
+
+    return {
+      openHoursLabel,
+      // toll_free,
+    };
+  }
+  chat() {
+    document.querySelector(".ori-cursor-ptr").click();
+  }
+  renderContactUs() {
+    const { config } = this.props;
+    const { openHoursLabel, toll_free } = this.getCountryConfigs();
+    return (
+      <div block="ContactUs">
+        <div block="ContactUs" elem="Icons">
+          <div block="IconWrapper">
+            <div block="IconWrapper" elem="Icon">
+              <a href={`tel:${toll_free}`} target="_blank" rel="noreferrer">
+                <Phone />
+              </a>
+            </div>
+            <p block="IconWrapper" elem="IconTitle">
+              {__("Phone")}
+            </p>
+          </div>
+          <div block="divider"></div>
+          <div block="IconWrapper">
+            <div block="IconWrapper" elem="Icon" onClick={this.chat}>
+              <Chat />
+            </div>
+            <p block="IconWrapper" elem="IconTitle">
+              {__("Live Chat")}
+            </p>
+          </div>
+          <div block="divider"></div>
+          <div block="IconWrapper">
+            <div block="IconWrapper" elem="Icon">
+              <a href={`mailto:${EMAIL_LINK}`} target="_blank" rel="noreferrer">
+                <Email />
+              </a>
+            </div>
+            <p block="IconWrapper" elem="IconTitle">
+              {__("Email")}
+            </p>
+          </div>
+        </div>
+        <p block="ContactUs" elem="Message">
+          {__("Customer Service available all days from: ")}
+          {openHoursLabel}
+        </p>
+      </div>
+    );
+  }
+  renderContactAccordion() {
+    const { isMobile } = this.state;
+    if (!isMobile) {
+      return null;
+    }
+    return (
+      <Accordion
+        mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
+        title={__("Contact us")}
+        is_expanded={this.state.isExpanded["5"]}
+      >
+        {this.renderContactUs()}
+      </Accordion>
+    );
+  }
+
+  renderBrandDetail() {
+    const { isMobile } = this.state;
+    // if (isMobile) {
+    //   return null;
+    // }
+    return <PDPDetail {...this.props} />;
+  }
+  renderAboutBrand() {
     const {
       product: { brand_name },
     } = this.props;
     return (
+      <Accordion
+        mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
+        title={__("About ") + brand_name}
+        is_expanded={this.state.isExpanded["3"]}
+      >
+        {this.renderBrandDetail()}
+      </Accordion>
+    );
+  }
+
+  renderSeperator() {
+    return <div block="Seperator"></div>;
+  }
+  renderAccordionSeperator() {
+    return <div block="AccordionSeperator"></div>;
+  }
+  getBrandUrl = () => {
+    const {
+      product: { brand_name },
+    } = this.props;
+    const url = brand_name
+      .replace(/'/g, "")
+      .replace(/[(\s+).&]/g, "-")
+      .replace(/-{2,}/g, "-")
+      .replace(/\-$/, "")
+      .replace("@", "at")
+      .toLowerCase();
+    return `${url}.html`;
+  };
+  renderMoreFromTheBrand = () => {
+    const url = this.getBrandUrl();
+    // const url = "https://www.google.com";
+    return (
+      <div block="FromBrand">
+        <Link block="FromBrand" elem="MoreButton" to={url}>
+          <span block="FromBrand" elem="ButtonText">
+            {__("More from this brand")}
+          </span>
+        </Link>
+      </div>
+    );
+  };
+  renderContactUsSection() {
+    return (
+      <div block="ContactUsWrapper">
+        <div block="ContactUsWrapper" elem="Detail">
+          {this.renderAccordionSeperator()}
+          {this.renderContactUs()}
+        </div>
+      </div>
+    );
+  }
+  render() {
+    const {
+      product: { brand_name },
+    } = this.props;
+    const { isMobile } = this.state;
+    return (
       <div block="PDPDetailsSection">
-        <Accordion
-          mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
-          title={__("Description")}
-          is_expanded={this.state.isExpanded["0"]}
-        >
-          {this.renderIconsSection()}
-          {this.renderDescription()}
-        </Accordion>
-        <div block="Seperator" />
-        {this.renderShareButton()}
-        {this.renderPdpWidgets()}
+        {isMobile ? (
+          <div block="MobileIcons">
+            {this.renderSeperator()} {this.renderIconsSection()}
+          </div>
+        ) : (
+          ""
+        )}
+        <div block="AccordionWrapper">
+          <Accordion
+            mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
+            title={ isMobile ? __("Description") : __("PRODUCT DETAILS:") }
+            is_expanded={this.state.isExpanded["0"]}
+          >
+            {!isMobile ? this.renderIconsSection() : ""}
+            {this.renderDescription()}
+          </Accordion>
+          {this.renderAccordionSeperator()}
+          {this.renderShareButton()}
+          {isMobile ? this.renderAboutBrand() : ""}
+          {this.renderAccordionSeperator()}
+        </div>
+
+        <div block="PDPWidgets">{this.renderPdpWidgets()}</div>
+        {isMobile ? this.renderMoreFromTheBrand() : ""}
+        {isMobile ? this.renderContactUsSection() : ""}
+        <div block="Seperator2" />
+
         {/* <Accordion
             mix={ { block: 'PDPDetailsSection', elem: 'Accordion' } }
             title={ __('Size & Fit') }
@@ -686,12 +892,8 @@ class PDPDetailsSection extends PureComponent {
                   is_expanded={this.state.isExpanded["4"]}
                 >
                 </Accordion>
-                <Accordion
-                  mix={ { block: 'PDPDetailsSection', elem: 'Accordion' } }
-                  title={ __('Contact Us') }
-                  is_expanded={this.state.isExpanded["5"]}
-                >
-                </Accordion> */}
+                
+                */}
       </div>
     );
   }

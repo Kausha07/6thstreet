@@ -9,6 +9,7 @@ import { PureComponent } from "react";
 import NoMatch from "Route/NoMatch";
 import "./PDP.style";
 import MyAccountOverlay from "Component/MyAccountOverlay";
+import isMobile from "Util/Mobile";
 
 class PDP extends PureComponent {
   static propTypes = {
@@ -17,22 +18,21 @@ class PDP extends PureComponent {
   };
   state = {
     signInPopUp: "",
-    showPopup:false
+    showPopup: false,
+    isMobile: isMobile.any() || isMobile.tablet(),
   };
-
 
   showMyAccountPopup = () => {
     this.setState({ showPopup: true });
   };
 
   closePopup = () => {
-    this.setState({ signInPopUp: "",showPopup:false });
+    this.setState({ signInPopUp: "", showPopup: false });
   };
 
   onSignIn = () => {
     this.closePopup();
   };
-
 
   renderMySignInPopup() {
     const { showPopup } = this.state;
@@ -65,7 +65,16 @@ class PDP extends PureComponent {
   }
 
   renderDetail() {
+    const { isMobile } = this.state;
+    if (isMobile) {
+      return null;
+    }
     return <PDPDetail {...this.props} />;
+  }
+
+  renderSeperator() {
+    const { isMobile } = this.state;
+    return <div block="Seperator" mods={{ isMobile: !!isMobile }} />;
   }
 
   renderPDP() {
@@ -75,6 +84,7 @@ class PDP extends PureComponent {
         <div block="PDP">
           {this.renderMySignInPopup()}
           {this.renderMainSection()}
+          {this.renderSeperator()}
           {this.renderMixAndMatchSection()}
           {this.renderDetailsSection()}
           {this.renderDetail()}

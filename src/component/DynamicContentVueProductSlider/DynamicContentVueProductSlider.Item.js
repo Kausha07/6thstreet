@@ -15,6 +15,7 @@ import Event, {
   EVENT_GTM_VUE_PRODUCT_CLICK,
 } from "Util/Event";
 import { parseURL } from "Util/Url";
+import Price from "Component/Price";
 
 export const mapStateToProps = (state) => ({
   country: state.AppState.country,
@@ -111,45 +112,13 @@ class DynamicContentVueProductSliderItem extends PureComponent {
   renderPrice(price) {
     const { isArabic } = this.state;
     if (price && price.length > 0) {
-      const priceObj = price[0],
-        currency = getCurrency();
-      const basePrice = priceObj[currency]["6s_base_price"];
-      const specialPrice = priceObj[currency]["6s_special_price"];
-      const haveDiscount =
-        specialPrice !== "undefined" &&
-        specialPrice &&
-        basePrice !== specialPrice;
-
-      if (basePrice === specialPrice || !specialPrice) {
-        return (
-          <div
-            block="VueProductSlider"
-            elem="SpecialPriceCon"
-            mods={{ isArabic }}
-          >
-            <span block="VueProductSlider" elem="PriceWrapper">
-              <span
-                id="price"
-                style={{ color: "#000000" }}
-              >{`${currency} ${basePrice}`}</span>
-            </span>
-          </div>
-        );
-      }
-
       return (
         <div
           block="VueProductSlider"
           elem="SpecialPriceCon"
           mods={{ isArabic }}
         >
-          <del block="VueProductSlider" elem="Del">
-            <span id="price">{`${currency} ${basePrice}`}</span>
-          </del>
-          <span block="VueProductSlider" elem="PriceWrapper">
-            {this.discountPercentage(basePrice, specialPrice, haveDiscount)}
-            {this.renderSpecialPrice(specialPrice, haveDiscount)}
-          </span>
+          <Price price={price} renderSpecialPrice={false} cart={true} />
         </div>
       );
     }

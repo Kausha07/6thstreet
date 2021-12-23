@@ -1,100 +1,93 @@
-import PropTypes from 'prop-types';
-import {
-    MyAccountReturnCreateItem as SourceComponent
-} from 'Component/MyAccountReturnCreateItem/MyAccountReturnCreateItem.component';
-import { CONST_HUNDRED } from 'Util/Common';
+import PropTypes from "prop-types";
+import { MyAccountReturnCreateItem as SourceComponent } from "Component/MyAccountReturnCreateItem/MyAccountReturnCreateItem.component";
+import { CONST_HUNDRED } from "Util/Common";
+import { getCountryCurrencyCode } from "Util/Url/Url";
+import Price from "Component/Price";
 
-import { formatPrice } from '../../../packages/algolia-sdk/app/utils/filters';
+import { formatPrice } from "../../../packages/algolia-sdk/app/utils/filters";
 
 export class MyAccountCancelCreateItem extends SourceComponent {
-    static propTypes = {
-        displayDiscountPercentage: PropTypes.bool.isRequired
-    };
+  static propTypes = {
+    displayDiscountPercentage: PropTypes.bool.isRequired,
+  };
 
-    static defaultProps = {
-        displayDiscountPercentage: true
-    };
+  static defaultProps = {
+    displayDiscountPercentage: true,
+  };
 
-    renderDetails() {
-        const {
-            displayDiscountPercentage,
-            item: {
-                name,
-                color,
-                price,
-                original_price,
-                size: sizeField,
-                qty_ordered: qty
-            }
-        } = this.props;
-        const size = (!!sizeField && typeof sizeField === 'object') ? sizeField.value : sizeField;
+  renderDetails() {
+    const {
+      displayDiscountPercentage,
+      item: {
+        name,
+        color,
+        price,
+        original_price,
+        size: sizeField,
+        qty_ordered: qty,
+      },
+    } = this.props;
+    let currency_code = getCountryCurrencyCode();
+    const size =
+      !!sizeField && typeof sizeField === "object"
+        ? sizeField.value
+        : sizeField;
+    let finalPrice = [
+      {
+        [currency_code]: {
+          "6s_base_price": Math.floor(original_price),
+          "6s_special_price": Math.floor(price),
+          default: Math.floor(price),
+          default_formated: `${currency_code} ${Math.floor(price)}`,
+        },
+      },
+    ];
+    console.log("muskan", getCountryCurrencyCode());
+    return (
+      <div block="MyAccountReturnCreateItem" elem="Details">
+        <h2>{name}</h2>
+        <div block="MyAccountReturnCreateItem" elem="DetailsOptions">
+          {!!color && (
+            <p>
+              {__("Color: ")}
+              <span>{color}</span>
+            </p>
+          )}
+          {!!qty && (
+            <p>
+              {__("Qty: ")}
+              <span>{+qty}</span>
+            </p>
+          )}
+          {!!size && (
+            <p>
+              {__("Size: ")}
+              <span>{size}</span>
+            </p>
+          )}
+        </div>
+        <Price price={finalPrice} renderSpecialPrice={false} />
+      </div>
+    );
+  }
 
-        return (
-            <div block="MyAccountReturnCreateItem" elem="Details">
-                <h2>{ name }</h2>
-                <div block="MyAccountReturnCreateItem" elem="DetailsOptions">
-                    { !!color && (
-                        <p>
-                            { __('Color: ') }
-                            <span>{ color }</span>
-                        </p>
-                    ) }
-                    { !!qty && (
-                        <p>
-                            { __('Qty: ') }
-                            <span>{ +qty }</span>
-                        </p>
-                    ) }
-                    { !!size && (
-                        <p>
-                            { __('Size: ') }
-                            <span>{ size }</span>
-                        </p>
-                    ) }
-                </div>
-                <p block="MyAccountReturnCreateItem" elem="Price">
-                    <span
-                      block="MyAccountReturnCreateItem"
-                      elem="PriceRegular"
-                      mods={ { isDiscount: (+price < +original_price) } }
-                    >
-                        { `${ formatPrice((+price < +original_price) ? original_price : price) }` }
-                    </span>
-                    { (+price < +original_price) && (
-                        <>
-                            {
-                                displayDiscountPercentage &&
-                                <span block="MyAccountReturnCreateItem" elem="PriceDiscountPercent">
-                                    { `(-${ ((+price / +original_price) * CONST_HUNDRED).toFixed() }%)` }
-                                </span>
-                            }
-                            <span block="MyAccountReturnCreateItem" elem="PriceDiscount">
-                                { `${ formatPrice(+price) }` }
-                            </span>
-                        </>
-                    ) }
-                </p>
-            </div>
-        );
-    }
-
-    render() {
-        return (
-            <div block="MyAccountReturnCreateItem">
-                <div block="MyAccountReturnCreateItem" elem="Content">
-                    { this.renderField({
-                        type: 'CANCELLATION'
-                    }) }
-                    { this.renderImage() }
-                    { this.renderDetails() }
-                </div>
-                <div block="MyAccountReturnCreateItem" elem="Resolution">
-                    { this.renderReasons() }
-                    {/* { this.renderResolutions() } */}
-                </div>
-            </div>
-        );
-    }
+  render() {
+    return (
+      <div block="MyAccountReturnCreateItem">
+        <div block="MyAccountReturnCreateItem" elem="Content">
+          {this.renderField({
+            type: "CANCELLATION",
+          })}
+          {this.renderImage()}
+          {this.renderDetails()}
+        </div>
+        <div block="MyAccountReturnCreateItem" elem="Resolution">
+          {this.renderReasons()}
+          {/* { this.renderResolutions() } */}
+        </div>
+      </div>
+    );
+  }
 }
 
 export default MyAccountCancelCreateItem;

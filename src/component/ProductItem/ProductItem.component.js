@@ -192,7 +192,7 @@ class ProductItem extends PureComponent {
       product: { price },
       page,
     } = this.props;
-    return <Price price={price} page={page} />;
+    return <Price price={price} page={page} renderSpecialPrice={true}/>;
   }
 
   renderLink() {
