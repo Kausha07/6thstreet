@@ -79,22 +79,22 @@ class PLPPages extends PureComponent {
         <ul>
 
           {
-            Object.values(selectedFilters).map(function (values, index) {
+            Object.values(selectedFilters).map(function (values) {
 
               if (values.data) {
-                return Object.values(values.data).map(function (value, index) {
+                return Object.values(values.data).map(function (value, keys) {
                   if (value.subcategories) {
-                    return Object.values(value.subcategories).map(function (val, index) {
+                    return Object.values(value.subcategories).map(function (val, key) {
                       if (val.is_selected === true) {
                         return (
-                          <li>{val.label}</li>
+                          <li id={key}>{val.label}</li>
                         )
                       }
                     })
                   } else {
                     if (value.is_selected === true) {
                       return (
-                        <li>{value.label}</li>
+                        <li id={keys}>{value.label}</li>
                       )
                     }
                   }
@@ -118,8 +118,8 @@ class PLPPages extends PureComponent {
       <div block="sort-box">
         <ul>
           {
-            Object.values(sortByFilters).map(function (value, index) {
-              return <li>{value.label}</li>
+            Object.values(sortByFilters).map(function (value, keys) {
+              return <li id={keys}>{value.label}</li>
             })
           }
         </ul>
@@ -131,7 +131,7 @@ class PLPPages extends PureComponent {
   render() {
     return (
       <div block="PLPPages Products-Lists">
-        <div class="ProductToolBar">
+        <div block="ProductToolBar">
           <div block="ProductSelectedFilters">{this.renderSelectedFilters()}</div>
           <div block="ProductSortby">
             <div onClick={this.toggleSortDropdown}>Sort by</div>

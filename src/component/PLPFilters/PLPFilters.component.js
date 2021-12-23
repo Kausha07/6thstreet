@@ -216,7 +216,7 @@ class PLPFilters extends PureComponent {
         aria-label={__("Reset")}
         onClick={this.resetFilters}
       >
-        {__("clear")}
+        {__("Clear all")}
       </button>
     ) : null;
   }
