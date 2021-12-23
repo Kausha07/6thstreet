@@ -47,6 +47,8 @@ class FieldMultiselect extends PureComponent {
       toggleOptionsList: false,
       isArabic: isArabic(),
       subcategoryOptions: {},
+      parentActiveFilters:null,
+      currentActiveFilter: null,
       brandList: {},
       brandSearchKey: "",
       sizeDropDownList: {},
@@ -75,6 +77,18 @@ class FieldMultiselect extends PureComponent {
 
   componentWillUnmount() {
     document.removeEventListener("mousedown", this.handleClickOutside);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+
+    if (
+      JSON.stringify(prevProps.parentActiveFilters) !==
+      JSON.stringify(this.props.parentActiveFilters)
+    ) {
+      this.setState({
+        parentActiveFilters: this.props.parentActiveFilters,
+      });
+    }
   }
 
   handleClickOutside = (event) => {
@@ -169,7 +183,10 @@ class FieldMultiselect extends PureComponent {
       updateFilters,
       setDefaultFilters,
       defaultFilters,
+      parentActiveFilters,
+      currentActiveFilter
     } = this.props;
+
     const { subcategories = {} } = option;
 
 
@@ -178,13 +195,16 @@ class FieldMultiselect extends PureComponent {
         ? Object.entries(subcategories).map(this.renderOption)
         : this.renderOptionMobile(option);
     }
+
     return (
       <PLPFilterOption
         key={key}
         option={option}
         isRadio={is_radio}
         activeFilter={activeFilter}
+        currentActiveFilter={currentActiveFilter}
         isChecked={isChecked}
+        parentActiveFilters={parentActiveFilters}
         parentCallback={parentCallback}
         updateFilters={updateFilters}
         setDefaultFilters={setDefaultFilters}

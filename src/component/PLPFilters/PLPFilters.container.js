@@ -23,6 +23,7 @@ import {
   toggleOverlayByKey,
 } from "Store/Overlay/Overlay.action";
 import { Filters } from "Util/API/endpoint/Product/Product.type";
+import { updatePLPInitialFilters } from "Store/PLP/PLP.action";
 import WebUrlParser from "Util/API/helper/WebUrlParser";
 
 import PLPFilters from "./PLPFilters.component";
@@ -31,6 +32,7 @@ import { SIZES } from "./PLPFilters.config";
 export const mapStateToProps = (_state) => ({
   filters: _state.PLP.filters,
   isLoading: _state.PLP.isLoading,
+  initialOptions: _state.PLP.initialOptions,
   activeOverlay: _state.OverlayReducer.activeOverlay,
   productsCount: _state.PLP.meta.hits_count,
 });
@@ -38,6 +40,8 @@ export const mapStateToProps = (_state) => ({
 export const mapDispatchToProps = (_dispatch) => ({
   showOverlay: (overlayKey) => _dispatch(toggleOverlayByKey(overlayKey)),
   hideActiveOverlay: () => _dispatch(hideActiveOverlay()),
+  updatePLPInitialFilters: (filters,facet_key,facet_value) =>
+  _dispatch(updatePLPInitialFilters(filters,facet_key,facet_value)),
   goToPreviousNavigationState: () =>
     _dispatch(goToPreviousNavigationState(BOTTOM_NAVIGATION_TYPE)),
   goToPreviousHeaderState: () =>
@@ -175,11 +179,11 @@ export class PLPFiltersContainer extends PureComponent {
   }
 
   containerFunctions = () => {
-    const { showOverlay } = this.props;
+    const { showOverlay,updatePLPInitialFilters } = this.props;
 
-    return { showOverlay };
+    return { showOverlay,updatePLPInitialFilters };
   };
-
+  
   // eslint-disable-next-line consistent-return
   onReset() {
     const { initialFilters = {} } = this.state;
@@ -191,7 +195,7 @@ export class PLPFiltersContainer extends PureComponent {
   }
 
   containerProps = () => {
-    const { filters, isLoading, activeOverlay, query } = this.props;
+    const { filters, isLoading, activeOverlay, query,initialOptions } = this.props;
     const { activeFilters } = this.state;
 
     return {
@@ -199,6 +203,7 @@ export class PLPFiltersContainer extends PureComponent {
       isLoading,
       activeOverlay,
       activeFilters,
+      initialOptions,
       query,
     };
   };
