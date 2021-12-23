@@ -346,6 +346,9 @@ class FieldMultiselect extends PureComponent {
 
   renderOptionSelected() {
     const { filter: { data } } = this.props;
+    if(this.props.isSortBy){
+      return null
+    }
     if (data) {
       return (
         <div block="MultiSelectOption">
