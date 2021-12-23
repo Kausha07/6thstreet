@@ -65,6 +65,10 @@ class PDP extends PureComponent {
   }
 
   renderDetail() {
+    const { isMobile } = this.state;
+    if (isMobile) {
+      return null;
+    }
     return <PDPDetail {...this.props} />;
   }
 

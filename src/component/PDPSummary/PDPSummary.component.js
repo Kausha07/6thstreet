@@ -310,11 +310,14 @@ class PDPSummary extends PureComponent {
       product: { simple_products },
     } = this.props;
     return (
-      <PDPAddToCart
-        simple_products={simple_products}
-        setStockAvailability={this.setStockAvailability}
-        setSize={this.setSize}
-      />
+      <>
+        {/* <div block="Seperator" /> */}
+        <PDPAddToCart
+          simple_products={simple_products}
+          setStockAvailability={this.setStockAvailability}
+          setSize={this.setSize}
+        />
+      </>
     );
   }
 
@@ -334,7 +337,7 @@ class PDPSummary extends PureComponent {
 
     const tags = [prod_tag_1, prod_tag_2].filter(Boolean);
 
-    if (Object.keys(simple_products)?.length === 1) {
+    if (simple_products && Object.keys(simple_products)?.length === 1) {
       selectedSizeCode = Object.keys(simple_products)[0];
     }
 
@@ -353,7 +356,8 @@ class PDPSummary extends PureComponent {
     if (tags && tags.length) {
       return (
         <>
-          {in_stock === 0 && <div block="Seperatortop" />}
+          {/* {in_stock === 0 && <div block="Seperatortop" />} */}
+          <div block="Seperator" mods={{ isDesktop: !isMobile.any() }} />
           <PDPTags tags={tags} />
           {/* <div block="Seperator" /> */}
         </>
@@ -419,7 +423,7 @@ class PDPSummary extends PureComponent {
                 {__("Learn more")}
               </span>
             </button>*/}
-            <div block="Seperator" />
+            {/* <div block="Seperator" /> */}
           </>
         );
       }

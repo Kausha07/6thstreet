@@ -109,39 +109,39 @@ export class MyAccountOverlay extends PureComponent {
     //   this.attachSigninFunction(document.getElementById("g-signin2"));
     // });
   }
-  attachSigninFunction = (element) => {
-    this.authRef.current.attachClickHandler(
-      element,
-      {},
-      async (googleUser) => {
-        const { onSignInSuccess, onSignInAttempt } = this.props;
-        const profile = googleUser?.getBasicProfile();
-        const social_token = googleUser?.getAuthResponse()?.id_token;
-        const fullName = profile?.getName()?.split(" ");
-        const email = profile?.getEmail();
-        const payload = {
-          social_token,
-          firstname: fullName[0],
-          lastname: fullName[1],
-          email,
-          customer_telephone: null,
-          type: "google",
-          cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
-        };
-        try {
-          onSignInAttempt();
-          onSignInSuccess(payload);
-        } catch (e) {
-          console.log("error", e);
-          deleteAuthorizationToken();
-          deleteMobileAuthorizationToken();
-        }
-      },
-      function (error) {
-        console.log(JSON.stringify(error, undefined, 2));
-      }
-    );
-  };
+  // attachSigninFunction = (element) => {
+  //   this.authRef.current.attachClickHandler(
+  //     element,
+  //     {},
+  //     async (googleUser) => {
+  //       const { onSignInSuccess, onSignInAttempt } = this.props;
+  //       const profile = googleUser?.getBasicProfile();
+  //       const social_token = googleUser?.getAuthResponse()?.id_token;
+  //       const fullName = profile?.getName()?.split(" ");
+  //       const email = profile?.getEmail();
+  //       const payload = {
+  //         social_token,
+  //         firstname: fullName[0],
+  //         lastname: fullName[1],
+  //         email,
+  //         customer_telephone: null,
+  //         type: "google",
+  //         cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
+  //       };
+  //       try {
+  //         onSignInAttempt();
+  //         onSignInSuccess(payload);
+  //       } catch (e) {
+  //         console.log("error", e);
+  //         deleteAuthorizationToken();
+  //         deleteMobileAuthorizationToken();
+  //       }
+  //     },
+  //     function (error) {
+  //       console.log(JSON.stringify(error, undefined, 2));
+  //     }
+  //   );
+  // };
 
   renderMap = {
     [STATE_SIGN_IN]: {
@@ -238,11 +238,11 @@ export class MyAccountOverlay extends PureComponent {
           {title}
         </p>
         {render()}
-        {isSignIn
+        {/* {isSignIn
           ? this.renderSocials("SignIn")
           : isCreateAccount
           ? this.renderSocials("Create")
-          : null}
+          : null} */}
         {this.renderCloseBtn()}
       </div>
     );
@@ -565,81 +565,81 @@ export class MyAccountOverlay extends PureComponent {
   }
 
   // facebook login dialog
-  facebookLogin = () => {
-    const { onSignInSuccess, onSignInAttempt } = this.props;
-    window.FB.login(
-      function (response) {
-        if (response.authResponse) {
-          const authToken = response.authResponse.accessToken;
-          window.FB.api(
-            "/me?fields=first_name,last_name,email",
-            function (response) {
-              const social_token = authToken;
-              const payload = {
-                social_token,
-                firstname: response.first_name,
-                lastname: response.last_name,
-                email: response.email,
-                customer_telephone: null,
-                type: "facebook",
-                cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
-              };
-              try {
-                onSignInAttempt();
-                onSignInSuccess(payload);
-              } catch (e) {
-                console.log("error", e);
-                deleteAuthorizationToken();
-                deleteMobileAuthorizationToken();
-              }
-            }
-          );
-        } else {
-          console.log("User cancelled login or did not fully authorize.");
-        }
-      },
-      {
-        scope: "email",
-        return_scopes: true,
-      }
-    );
-  };
+  // facebookLogin = () => {
+  //   const { onSignInSuccess, onSignInAttempt } = this.props;
+  //   window.FB.login(
+  //     function (response) {
+  //       if (response.authResponse) {
+  //         const authToken = response.authResponse.accessToken;
+  //         window.FB.api(
+  //           "/me?fields=first_name,last_name,email",
+  //           function (response) {
+  //             const social_token = authToken;
+  //             const payload = {
+  //               social_token,
+  //               firstname: response.first_name,
+  //               lastname: response.last_name,
+  //               email: response.email,
+  //               customer_telephone: null,
+  //               type: "facebook",
+  //               cart_id: BrowserDatabase.getItem(CART_ID_CACHE_KEY),
+  //             };
+  //             try {
+  //               onSignInAttempt();
+  //               onSignInSuccess(payload);
+  //             } catch (e) {
+  //               console.log("error", e);
+  //               deleteAuthorizationToken();
+  //               deleteMobileAuthorizationToken();
+  //             }
+  //           }
+  //         );
+  //       } else {
+  //         console.log("User cancelled login or did not fully authorize.");
+  //       }
+  //     },
+  //     {
+  //       scope: "email",
+  //       return_scopes: true,
+  //     }
+  //   );
+  // };
 
   //Social logins rendering
-  renderSocials(renderer) {
-    // change mods after api integration
-    return (
-      <div
-        block="MyAccountOverlay"
-        elem="SSO"
-        mods={{ disabled: !!!SSO_LOGIN_PROVIDERS?.length }}
-      >
-        <div block="MyAccountOverlay-SSO" elem="title">
-          {renderer === "SignIn"
-            ? __("OR SIGN IN WITH")
-            : __("OR REGISTER IN WITH")}
-        </div>
-        <div block="MyAccountOverlay-SSO" elem="Buttons">
-          <button
-            block="MyAccountOverlay-SSO-Buttons"
-            elem="Facebook"
-            mods={{ disabled: !!!SSO_LOGIN_PROVIDERS?.includes("Facebook") }}
-            onClick={this.facebookLogin}
-          >
-            {__("FACEBOOK")}
-          </button>
-          <button
-            id="g-signin2"
-            block="MyAccountOverlay-SSO-Buttons"
-            elem="Google"
-            mods={{ disabled: !!!SSO_LOGIN_PROVIDERS?.includes("Google") }}
-          >
-            {__("GOOGLE")}
-          </button>
-        </div>
-      </div>
-    );
-  }
+  // renderSocials(renderer) {
+  //   // change mods after api integration
+  //   return (
+  //     <div
+  //       block="MyAccountOverlay"
+  //       elem="SSO"
+  //       mods={{ disabled: !!!SSO_LOGIN_PROVIDERS?.length }}
+  //     >
+  //       <div block="MyAccountOverlay-SSO" elem="title">
+  //         {renderer === "SignIn"
+  //           ? __("OR SIGN IN WITH")
+  //           : __("OR REGISTER IN WITH")}
+  //       </div>
+  //       <div block="MyAccountOverlay-SSO" elem="Buttons">
+  //         <button
+  //           block="MyAccountOverlay-SSO-Buttons"
+  //           elem="Facebook"
+  //           mods={{ disabled: !!!SSO_LOGIN_PROVIDERS?.includes("Facebook") }}
+  //           onClick={this.facebookLogin}
+  //         >
+  //           {__("FACEBOOK")}
+  //         </button>
+  //         <button
+  //           id="g-signin2"
+  //           block="MyAccountOverlay-SSO-Buttons"
+  //           elem="Google"
+  //           mods={{ disabled: !!!SSO_LOGIN_PROVIDERS?.includes("Google") }}
+  //         >
+  //           {__("GOOGLE")}
+  //         </button>
+  //       </div>
+  //     </div>
+  //   );
+  // }
   renderSignIn() {
     const {
       email,

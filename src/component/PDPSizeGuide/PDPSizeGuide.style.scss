@@ -115,6 +115,9 @@
     &_isArabic {
       padding-left: 0;
     }
+    @include mobile {
+      padding: 0;
+    }
   }
 
   &-Modal {

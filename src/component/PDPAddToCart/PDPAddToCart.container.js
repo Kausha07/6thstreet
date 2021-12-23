@@ -24,8 +24,11 @@ import { NOTIFY_EMAIL } from "./PDPAddToCard.config";
 import PDPAddToCart from "./PDPAddToCart.component";
 import PDPClickAndCollectPopup from "../PDPClickAndCollectPopup";
 
-import { PDP_CLICK_AND_COLLECT_POPUP_ID } from '../PDPClickAndCollectPopup/PDPClickAndCollectPopup.config';
-import { hideActiveOverlay, toggleOverlayByKey } from 'Store/Overlay/Overlay.action';
+import { PDP_CLICK_AND_COLLECT_POPUP_ID } from "../PDPClickAndCollectPopup/PDPClickAndCollectPopup.config";
+import {
+  hideActiveOverlay,
+  toggleOverlayByKey,
+} from "Store/Overlay/Overlay.action";
 
 export const mapStateToProps = (state) => ({
   product: state.PDP.product,
@@ -69,7 +72,7 @@ export const mapDispatchToProps = (dispatch) => ({
     dispatch(setMinicartOpen(isMinicartOpen)),
   sendNotifyMeEmail: (data) => PDPDispatcher.sendNotifyMeEmail(data),
   showOverlay: (overlayKey) => dispatch(toggleOverlayByKey(overlayKey)),
-  hideActiveOverlay: () => dispatch(hideActiveOverlay())
+  hideActiveOverlay: () => dispatch(hideActiveOverlay()),
 });
 
 export class PDPAddToCartContainer extends PureComponent {
@@ -88,7 +91,7 @@ export class PDPAddToCartContainer extends PureComponent {
     guestUserEmail: PropTypes.string,
     showOverlay: PropTypes.func.isRequired,
     hideActiveOverlay: PropTypes.func.isRequired,
-    setSize: PropTypes.func.isRequired
+    setSize: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
@@ -107,9 +110,10 @@ export class PDPAddToCartContainer extends PureComponent {
     showAlertNotification: this.showAlertNotification.bind(this),
     sendNotifyMeEmail: this.sendNotifyMeEmail.bind(this),
     setGuestUserEmail: this.setGuestUserEmail.bind(this),
-    togglePDPClickAndCollectPopup: this.togglePDPClickAndCollectPopup.bind(this),
+    togglePDPClickAndCollectPopup:
+      this.togglePDPClickAndCollectPopup.bind(this),
     selectClickAndCollectStore: this.selectClickAndCollectStore.bind(this),
-    confirmClickAndCollect: this.confirmClickAndCollect.bind(this)
+    confirmClickAndCollect: this.confirmClickAndCollect.bind(this),
   };
 
   constructor(props) {
@@ -133,7 +137,7 @@ export class PDPAddToCartContainer extends PureComponent {
       notifyMeLoading: false,
       notifyMeSuccess: false,
       openClickAndCollectPopup: false,
-      selectedClickAndCollectStore: null
+      selectedClickAndCollectStore: null,
     };
 
     this.fullCheckoutHide = null;
@@ -217,7 +221,7 @@ export class PDPAddToCartContainer extends PureComponent {
     const {
       product: { sku, size_eu, size_uk, size_us, in_stock, stock_qty },
       setGuestUserEmail,
-      simple_products= []
+      simple_products = [],
     } = this.props;
     const email = BrowserDatabase.getItem(NOTIFY_EMAIL);
     if (email) {
@@ -226,45 +230,45 @@ export class PDPAddToCartContainer extends PureComponent {
     const {
       sizeObject: { sizeTypes },
     } = this.state;
-      const allSizes = Object.entries(simple_products).reduce((acc, size) => {
-        const sizeCode = size[0];
-        const { quantity } = size[1];
+    const allSizes = Object.entries(simple_products).reduce((acc, size) => {
+      const sizeCode = size[0];
+      const { quantity } = size[1];
 
-        if (quantity !== null && quantity !== undefined) {
-          acc.push(sizeCode);
-        }
-
-        return acc;
-      }, []);
-      const object = {
-        sizeTypes,
-        sizeCodes: allSizes,
-      };
-      let outOfStockStatus;
-      if (size_us && size_uk && size_eu) {
-        outOfStockStatus =
-          size_us.length === 0 &&
-          size_uk.length === 0 &&
-          size_eu.length === 0 &&
-          in_stock === 0
-            ? true
-            : in_stock === 1 && stock_qty === 0
-            ? true
-            : false;
-      } else {
-        outOfStockStatus =
-          in_stock === 0
-            ? true
-            : in_stock === 1 && stock_qty === 0
-            ? true
-            : false;
+      if (quantity !== null && quantity !== undefined) {
+        acc.push(sizeCode);
       }
 
-      this.setState({
-        mappedSizeObject: object,
-        productStock: simple_products,
-        isOutOfStock: outOfStockStatus,
-      });
+      return acc;
+    }, []);
+    const object = {
+      sizeTypes,
+      sizeCodes: allSizes,
+    };
+    let outOfStockStatus;
+    if (size_us && size_uk && size_eu) {
+      outOfStockStatus =
+        size_us.length === 0 &&
+        size_uk.length === 0 &&
+        size_eu.length === 0 &&
+        in_stock === 0
+          ? true
+          : in_stock === 1 && stock_qty === 0
+          ? true
+          : false;
+    } else {
+      outOfStockStatus =
+        in_stock === 0
+          ? true
+          : in_stock === 1 && stock_qty === 0
+          ? true
+          : false;
+    }
+
+    this.setState({
+      mappedSizeObject: object,
+      productStock: simple_products,
+      isOutOfStock: outOfStockStatus,
+    });
   }
 
   setGuestUserEmail(email) {
@@ -294,16 +298,16 @@ export class PDPAddToCartContainer extends PureComponent {
         //if success
         if (response.message) {
           showNotification("error", response.message);
-          this.setState({ notifyMeSuccess: false, isOutOfStock: false });
+          this.setState({ notifyMeSuccess: false, isOutOfStock: true });
         } else {
-          this.setState({ notifyMeSuccess: true, isOutOfStock: false });
+          this.setState({ notifyMeSuccess: true, isOutOfStock: true });
           if (customer && customer.id) {
             //if user is logged in then change email
             const loginEvent = new CustomEvent("userLogin");
             window.dispatchEvent(loginEvent);
           }
           setTimeout(() => {
-            this.setState({ notifyMeSuccess: false, isOutOfStock: false });
+            this.setState({ notifyMeSuccess: false, isOutOfStock: true });
           }, 4000);
         }
       } else {
@@ -330,14 +334,27 @@ export class PDPAddToCartContainer extends PureComponent {
 
     const { setSize } = this.props;
     const { prevSelectedSizeType, prevSelectedSizeCode } = prevState;
-    if( (selectedSizeType !== prevSelectedSizeType) || (selectedSizeCode !== prevSelectedSizeCode) ){
+    if (
+      selectedSizeType !== prevSelectedSizeType ||
+      selectedSizeCode !== prevSelectedSizeCode
+    ) {
       setSize(selectedSizeType, selectedSizeCode);
     }
   }
 
   containerProps = () => {
-    const { product, setStockAvailability, customer, guestUserEmail, clickAndCollectStores } = this.props;
-    const { mappedSizeObject, selectedClickAndCollectStore, openClickAndCollectPopup } = this.state;
+    const {
+      product,
+      setStockAvailability,
+      customer,
+      guestUserEmail,
+      clickAndCollectStores,
+    } = this.props;
+    const {
+      mappedSizeObject,
+      selectedClickAndCollectStore,
+      openClickAndCollectPopup,
+    } = this.state;
     const basePrice =
       product.price[0] &&
       product.price[0][Object.keys(product.price[0])[0]]["6s_base_price"];
@@ -352,7 +369,7 @@ export class PDPAddToCartContainer extends PureComponent {
       guestUserEmail,
       stores: clickAndCollectStores,
       selectedClickAndCollectStore,
-      openClickAndCollectPopup
+      openClickAndCollectPopup,
     };
   };
 
@@ -387,7 +404,7 @@ export class PDPAddToCartContainer extends PureComponent {
     });
   }
 
-  addToCart(isClickAndCollect =  false) {
+  addToCart(isClickAndCollect = false) {
     const {
       product: {
         thumbnail_url,
@@ -449,7 +466,8 @@ export class PDPAddToCartContainer extends PureComponent {
           qty: 1,
           optionId,
           optionValue,
-          selectedClickAndCollectStore: selectedClickAndCollectStore?.value || ""
+          selectedClickAndCollectStore:
+            selectedClickAndCollectStore?.value || "",
         },
         color,
         optionValue,
@@ -464,11 +482,11 @@ export class PDPAddToCartContainer extends PureComponent {
         if (response) {
           showNotification("error", __(response));
           this.afterAddToCart(false, {
-            isClickAndCollect: !!isClickAndCollect
+            isClickAndCollect: !!isClickAndCollect,
           });
         } else {
           this.afterAddToCart(true, {
-            isClickAndCollect: !!isClickAndCollect
+            isClickAndCollect: !!isClickAndCollect,
           });
         }
       });
@@ -529,11 +547,11 @@ export class PDPAddToCartContainer extends PureComponent {
         if (response) {
           showNotification("error", __(response));
           this.afterAddToCart(false, {
-            isClickAndCollect: !!isClickAndCollect
+            isClickAndCollect: !!isClickAndCollect,
           });
         } else {
           this.afterAddToCart(true, {
-            isClickAndCollect: !!isClickAndCollect
+            isClickAndCollect: !!isClickAndCollect,
           });
         }
       });
@@ -573,7 +591,7 @@ export class PDPAddToCartContainer extends PureComponent {
 
   afterAddToCart(isAdded = "true", options) {
     const { buttonRefreshTimeout, openClickAndCollectPopup } = this.state;
-    if(openClickAndCollectPopup) {
+    if (openClickAndCollectPopup) {
       this.togglePDPClickAndCollectPopup();
     }
     const { setMinicartOpen } = this.props;
@@ -582,14 +600,13 @@ export class PDPAddToCartContainer extends PureComponent {
     // TODO props for addedToCart
     const timeout = 1250;
 
-
     if (isAdded) {
-      if(!!!options?.isClickAndCollect) {
+      if (!!!options?.isClickAndCollect) {
         setMinicartOpen(true);
       }
       this.setState(
         { addedToCart: true },
-        () => options?.isClickAndCollect && history.push('/cart')
+        () => options?.isClickAndCollect && history.push("/cart")
       );
     }
 
@@ -632,12 +649,12 @@ export class PDPAddToCartContainer extends PureComponent {
   }
 
   confirmClickAndCollect() {
-    this.addToCart(true)
+    this.addToCart(true);
   }
 
   selectClickAndCollectStore(value) {
     this.setState({
-      selectedClickAndCollectStore : value
+      selectedClickAndCollectStore: value,
     });
   }
 
@@ -654,22 +671,22 @@ export class PDPAddToCartContainer extends PureComponent {
     const {
       showOverlay,
       hideActiveOverlay,
-      product: {
-        price = {},
-        size_uk = [],
-        size_eu = [],
-        size_us = []
-      },
-      showNotification
+      product: { price = {}, size_uk = [], size_eu = [], size_us = [] },
+      showNotification,
     } = this.props;
 
-    if(!openClickAndCollectPopup) {
+    if (!openClickAndCollectPopup) {
       if (!price[0]) {
         showNotification("error", __("Unable to add product to cart."));
         return;
       }
 
-      if ( (size_uk.length !== 0 || size_eu.length !== 0 || size_us.length !== 0) && selectedSizeCode === "") {
+      if (
+        (size_uk.length !== 0 ||
+          size_eu.length !== 0 ||
+          size_us.length !== 0) &&
+        selectedSizeCode === ""
+      ) {
         showNotification("error", __("Please select a size."));
         return;
       }
@@ -677,15 +694,17 @@ export class PDPAddToCartContainer extends PureComponent {
       showOverlay(PDP_CLICK_AND_COLLECT_POPUP_ID);
     }
 
-    if(openClickAndCollectPopup) {
+    if (openClickAndCollectPopup) {
       hideActiveOverlay(PDP_CLICK_AND_COLLECT_POPUP_ID);
     }
-    this.setState({
-      openClickAndCollectPopup: !openClickAndCollectPopup
-    },
-    () => {
-      this.toggleRootElementsOpacity();
-    })
+    this.setState(
+      {
+        openClickAndCollectPopup: !openClickAndCollectPopup,
+      },
+      () => {
+        this.toggleRootElementsOpacity();
+      }
+    );
   }
 
   render() {
@@ -693,12 +712,12 @@ export class PDPAddToCartContainer extends PureComponent {
     return (
       <>
         <PDPAddToCart {...this.containerFunctions} {...this.containerProps()} />
-        {
-          openClickAndCollectPopup && <PDPClickAndCollectPopup
+        {openClickAndCollectPopup && (
+          <PDPClickAndCollectPopup
             {...this.containerFunctions}
             {...this.containerProps()}
           />
-        }
+        )}
       </>
     );
   }
