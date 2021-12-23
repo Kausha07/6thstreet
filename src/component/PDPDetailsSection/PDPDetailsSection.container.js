@@ -27,6 +27,9 @@ export class PDPDetailsSectionContainer extends PureComponent {
       config,
       country,
       language,
+      brandDescription,
+      brandImg,
+      brandName,
     } = this.props;
     return {
       product,
@@ -37,6 +40,9 @@ export class PDPDetailsSectionContainer extends PureComponent {
       config,
       country,
       language,
+      brandDescription,
+      brandImg,
+      brandName,
     };
   };
 

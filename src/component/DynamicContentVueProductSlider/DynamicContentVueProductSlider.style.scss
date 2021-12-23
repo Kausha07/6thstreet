@@ -260,20 +260,19 @@
 
         color: #d12228;
         font-weight: var(--fw-bold);
-        @media (max-width: 411px) {
-          font-size: 12px;
+        @media (max-width: 450px) {
+          font-size: 11px;
         }
-        .Price-Discount{
+        .Price-Discount {
           margin-left: 3px;
         }
       }
-
     }
 
     .Price {
       &-Wrapper {
         display: inline-block;
-        margin-right: 10px;
+        margin-right: 5px;
       }
     }
   }
