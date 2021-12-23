@@ -54,18 +54,17 @@
       }
     }
     .Price > span:first-child {
-      
-        color: #000000;
-        font-family: "Avenir Next";
-        font-size: 14px;
-        font-weight: bold;
-        letter-spacing: -0.5px;
-        line-height: 19px;
-        text-align: start;
-        @include mobile {
-          text-align: center;
-        }
-      
+      color: #000000;
+      font-family: "Avenir Next";
+      font-size: 14px;
+      font-weight: bold;
+      letter-spacing: -0.5px;
+      line-height: 19px;
+      text-align: start;
+      @include mobile {
+        text-align: center;
+        font-size: 12px;
+      }
     }
   }
 }
