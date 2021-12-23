@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { PureComponent } from "react";
 import { Products } from "Util/API/endpoint/Product/Product.type";
 import "./PLPPages.style";
+import { Close } from "Component/Icons";
 
 class PLPPages extends PureComponent {
   static propTypes = {
@@ -21,7 +22,11 @@ class PLPPages extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      showSortDropdown: false
+      showSortDropdown: false,
+      activeFilter: undefined,
+      activeFilters: {},
+      isReset: false,
+      defaultFilters: false,
     };
   }
 
@@ -32,7 +37,7 @@ class PLPPages extends PureComponent {
       query,
       renderMySignInPopup,
       prevPath = null,
-      filters
+      filters,
     } = this.props;
 
     if (isPlaceholder) {
@@ -74,69 +79,85 @@ class PLPPages extends PureComponent {
   }
   renderSelectedFilters() {
     const selectedFilters = this.props.filters;
+    const thisRef = this;
     if (selectedFilters) {
       return (
         <ul>
-
-          {
-            Object.values(selectedFilters).map(function (values, index) {
-
-              if (values.data) {
-                return Object.values(values.data).map(function (value, index) {
-                  if (value.subcategories) {
-                    return Object.values(value.subcategories).map(function (val, index) {
-                      if (val.is_selected === true) {
-                        return (
-                          <li>{val.label}</li>
-                        )
-                      }
-                    })
-                  } else {
-                    if (value.is_selected === true) {
+          {Object.values(selectedFilters).map(function (values, index) {
+            if (values.data) {
+              return Object.values(values.data).map(function (value, index) {
+                if (value.subcategories) {
+                  return Object.values(value.subcategories).map(function (
+                    val,
+                    index
+                  ) {
+                    if (val.is_selected === true) {
                       return (
-                        <li>{value.label}</li>
-                      )
+                        <li>{thisRef.renderButtonView(val.label, () => {})}</li>
+                      );
                     }
+                  });
+                } else {
+                  if (value.is_selected === true) {
+                    return (
+                      <li>{thisRef.renderButtonView(value.label, () => {})}</li>
+                    );
                   }
-
-                })
-              }
-            })
-          }
+                }
+              });
+            }
+          })}
         </ul>
-      )
-
+      );
     }
   }
+
   toggleSortDropdown = () => {
     this.setState({ showSortDropdown: !this.state.showSortDropdown });
-  }
+  };
 
   renderSortBy() {
-    const { sort: { data: sortByFilters } } = this.props.filters;
+    const {
+      filters: { sort: data },
+    } = this.props;
+    const { data: sortData } = data;
     return (
       <div block="sort-box">
         <ul>
-          {
-            Object.values(sortByFilters).map(function (value, index) {
-              return <li>{value.label}</li>
-            })
-          }
+          {Object.values(sortData).map((value, index) => {
+            return <li key={index}>{value.label}</li>;
+          })}
         </ul>
-
       </div>
-    )
+    );
+  }
+
+  renderButtonView(label, onClick) {
+    return (
+      <button
+        onClick={onClick}
+        onKeyDown={() => {}}
+        aria-label="Dismiss"
+        tabIndex={0}
+        block="PLPPageFilter"
+      >
+        {label}
+        <Close />
+      </button>
+    );
   }
 
   render() {
+    const { showSortDropdown } = this.state;
+    console.log("muskan", showSortDropdown);
     return (
       <div block="PLPPages Products-Lists">
         <div class="ProductToolBar">
-          <div block="ProductSelectedFilters">{this.renderSelectedFilters()}</div>
-          <div block="ProductSortby">
-            <div onClick={this.toggleSortDropdown}>Sort by</div>
-            {this.state.showSortDropdown && this.renderSortBy()}
+          <div block="ProductSelectedFilters">
+            {this.renderSelectedFilters()}
           </div>
+
+          {this.renderButtonView("sort ", this.toggleSortDropdown)}
         </div>
         {this.renderPages()}
       </div>
