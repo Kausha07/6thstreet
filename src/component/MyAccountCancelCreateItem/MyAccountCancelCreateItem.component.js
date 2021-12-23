@@ -42,7 +42,6 @@ export class MyAccountCancelCreateItem extends SourceComponent {
         },
       },
     ];
-    console.log("muskan", getCountryCurrencyCode());
     return (
       <div block="MyAccountReturnCreateItem" elem="Details">
         <h2>{name}</h2>
