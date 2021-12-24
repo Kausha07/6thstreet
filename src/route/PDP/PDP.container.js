@@ -98,6 +98,7 @@ export class PDPContainer extends PureComponent {
 
   state = {
     productSku: null,
+    prevPathname: "",
   };
 
   constructor(props) {
@@ -106,6 +107,11 @@ export class PDPContainer extends PureComponent {
   }
 
   componentDidMount() {
+    const { pathname: urlParam = "" } = location;
+    this.setState({ prevPathname: urlParam });
+  }
+
+  renderVueHits() {
     const {
       product: { product_type_6s, sku, url },
       location: { state },
@@ -127,7 +133,6 @@ export class PDPContainer extends PureComponent {
       },
     });
   }
-
   componentDidUpdate(prevProps) {
     const {
       id,
@@ -137,10 +142,15 @@ export class PDPContainer extends PureComponent {
       product,
       menuCategories = [],
     } = this.props;
+    const { pathname } = location;
+
     const currentIsLoading = this.getIsLoading();
     const { id: prevId } = prevProps;
-    const { productSku } = this.state;
+    const { productSku, prevPathname } = this.state;
 
+    if (productSku !== sku && productSku !== null) {
+      this.renderVueHits();
+    }
     // Request product, if URL rewrite has changed
     if (id !== prevId) {
       this.requestProduct();

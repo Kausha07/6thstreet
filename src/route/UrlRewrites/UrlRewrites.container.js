@@ -49,15 +49,22 @@ export class UrlRewritesContainer extends PureComponent {
   }
 
   componentDidMount() {
-    this.requestUrlRewrite();
+    const possibleSku = this.getPossibleSku();
+    this.setState({
+      sku: possibleSku,
+    });
   }
   componentDidUpdate(prevProps, prevState) {
     const { pathname } = location;
     const { locale, hideActiveOverlay } = this.props;
     const { locale: prevLocale } = prevProps;
 
-    const { prevPathname, query } = this.state;
-    const { prevPathname: prevStatePathname, query: prevQuery } = prevState;
+    const { prevPathname, query, sku } = this.state;
+    const {
+      prevPathname: prevStatePathname,
+      query: prevQuery,
+      sku: prevSku,
+    } = prevState;
 
     if (query && query !== prevQuery) {
       let partialQuery = location.search;
@@ -79,8 +86,10 @@ export class UrlRewritesContainer extends PureComponent {
     if (
       pathname !== prevPathname ||
       locale !== prevLocale ||
+      sku !== prevSku ||
       !prevStatePathname
     ) {
+      console.log("url rewrite");
       hideActiveOverlay();
       document.body.style.overflow = "visible";
       // Request URL rewrite if pathname or locale changed
