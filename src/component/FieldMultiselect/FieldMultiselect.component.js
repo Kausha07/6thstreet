@@ -6,8 +6,9 @@ import { Filter } from "Util/API/endpoint/Product/Product.type";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 import "./FieldMultiselect.style";
-import Field from "Component/Field";
-
+import Image from "Component/Image";
+import selectedImage from "./icons/select.png";
+import selectImage from "./icons/add.png";
 
 class FieldMultiselect extends PureComponent {
   static propTypes = {
@@ -31,10 +32,10 @@ class FieldMultiselect extends PureComponent {
     currentActiveFilter: "",
     isHidden: false,
     defaultFilters: false,
-    parentCallback: () => { },
-    changeActiveFilter: () => { },
-    updateFilters: () => { },
-    setDefaultFilters: () => { },
+    parentCallback: () => {},
+    changeActiveFilter: () => {},
+    updateFilters: () => {},
+    setDefaultFilters: () => {},
   };
 
   filterDropdownRef = createRef();
@@ -47,13 +48,12 @@ class FieldMultiselect extends PureComponent {
       toggleOptionsList: false,
       isArabic: isArabic(),
       subcategoryOptions: {},
-      parentActiveFilters:null,
+      parentActiveFilters: null,
       currentActiveFilter: null,
       brandList: {},
       brandSearchKey: "",
       sizeDropDownList: {},
       sizeDropDownKey: "",
-
     };
     this.toggelOptionList = this.toggelOptionList.bind(this);
     this.handleFilterSearch = this.handleFilterSearch.bind(this);
@@ -80,7 +80,6 @@ class FieldMultiselect extends PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
-
     if (
       JSON.stringify(prevProps.parentActiveFilters) !==
       JSON.stringify(this.props.parentActiveFilters)
@@ -184,11 +183,10 @@ class FieldMultiselect extends PureComponent {
       setDefaultFilters,
       defaultFilters,
       parentActiveFilters,
-      currentActiveFilter
+      currentActiveFilter,
     } = this.props;
 
     const { subcategories = {} } = option;
-
 
     if (Object.keys(subcategories).length !== 0) {
       return !isMobile.any()
@@ -217,46 +215,84 @@ class FieldMultiselect extends PureComponent {
     const { subcategories = {} } = option;
     if (key === this.state.sizeDropDownKey) {
       return Object.values(subcategories).map(function (value) {
-
-        return <h3>{value.label}</h3>
-      })
+        return (
+          <div block="FieldMultiselect" elem="sizesOption">
+            {value.label}
+            {!value.is_selected ? (
+              <Image lazyLoad={false} src={selectImage} alt="fitler" />
+            ) : (
+              <Image lazyLoad={false} src={selectedImage} alt="fitler" />
+            )}
+          </div>
+        );
+      });
     }
-  }
-  renderSizesDropdown(sizesdrops) {
-    const thisref = this;
-    return (
-      <>
-        <div block="sizesDropDown">
-          <button>{this.state.sizeDropDownKey}</button>
-        </div>
+  };
 
-        <div>
-          {
-            sizesdrops.map(function (data) {
-              return (
-                <div key={data.key}>
-                  <button onClick={(e) => { thisref.handleSizeDropDownClick(e, data.key) }} id={data.key}>{data.value}</button>
-                </div>
-              )
-            })
-          }
-        </div>
-      </>
-    )
+  renderUnselectButton() {
+    return (
+      <div block="FieldMultiselect" elem="SizeSelector">
+        Unselect All
+      </div>
+    );
   }
-  handleSizeDropDownClick = (e, key) => {
+
+  getSizeTypeSelect(sizeObject) {
+    const { sizeDropDownKey } = this.state;
+
+    return (
+      <div block="FieldMultiselect" elem="SizeTypeSelector">
+        <select
+          key="SizeTypeSelect"
+          block="FieldMultiselect"
+          elem="SizeTypeSelectElement"
+          value={sizeDropDownKey}
+          onChange={this.handleSizeDropDownClick}
+        >
+          {sizeObject.map((size = "") => {
+            return (
+              <option
+                key={size.key}
+                block="FieldMultiselect"
+                elem="SizeTypeOption"
+                value={size.key}
+              >
+                {size.value.toUpperCase()}
+              </option>
+            );
+          })}
+        </select>
+      </div>
+    );
+  }
+
+  renderSizeDropDown(sizeObject = []) {
+    return (
+      <div block="FieldMultiselect" elem="SizeSelect">
+        {this.renderUnselectButton()}
+        {this.getSizeTypeSelect(sizeObject)}
+      </div>
+    );
+  }
+
+  handleSizeDropDownClick = (e) => {
     e.preventDefault();
-    const {filter: { data = {} }} = this.props;
     this.setState({
-      sizeDropDownKey: key
-    })
-  }
+      sizeDropDownKey: e.target.value,
+    });
+  };
 
   renderOptions() {
     const {
       filter: { data = {}, subcategories = {}, category },
     } = this.props;
     let finalData = data ? data : subcategories;
+    const datakeys = [];
+    if (category === "sizes") {
+      Object.keys(data).map((key) => {
+        datakeys.push({ key: key, value: data[key].label.split(" ")[1] });
+      });
+    }
     if (category === "in_stock") {
       if (finalData) {
         Object.values(finalData).map((subData) => {
@@ -271,72 +307,71 @@ class FieldMultiselect extends PureComponent {
     let brandSearchData = data;
     if (category === "brand_name") {
       if (this.state.brandSearchKey != "") {
-        brandSearchData = this.state.brandList
+        brandSearchData = this.state.brandList;
       }
     }
     let sizeData = data;
-    if (this.state.sizeDropDownKey == "" ) {
+    if (this.state.sizeDropDownKey === "") {
       this.setState({
         sizeDropDownKey: "size_eu",
-        sizeDropDownList: data
-      })
+        sizeDropDownList: data,
+      });
     }
-    
-    
-    const datakeys = [];
-    if (category === "sizes") {            
-      Object.keys(data).map((key) => {
-        datakeys.push({ "key": key, "value": data[key].label })
-      })      
-      // if (this.state.sizeDropDownKey != "") {
-      //   sizeData = this.state.sizeDropDownList
-      // }
-    }
+    let conditionalData = data ? data : subcategories;
+
     return (
       <>
-        {category === "brand_name" ? this.renderFilterSearchbox() : null}
-        {category === "sizes" && !isMobile.any() ? this.renderSizesDropdown(datakeys) : null}
-        <ul>
-          {
-            category === "in_stock" ? Object.entries(finalData).map(this.renderOption) :
-              category === "brand_name" ? Object.entries(brandSearchData).map(this.renderOption) :
-                category === "sizes" && !isMobile.any() ? Object.entries(sizeData).map(this.renderOption) :
-                  Object.keys(data).length ? Object.entries(data).map(this.renderOption) :
-                    Object.entries(subcategories).map(this.renderOption)
-          }
+        <ul
+          block="FieldMultiselect"
+          elem={category === "sizes" ? "sizesOptionContainer" : ""}
+        >
+          {Object.keys(conditionalData).length > 10
+            ? this.renderFilterSearchbox()
+            : null}
+          {category === "sizes" && !isMobile.any()
+            ? this.renderSizeDropDown(datakeys)
+            : null}
+          {category !== "sizes" && this.renderUnselectButton()}
+          {category === "in_stock"
+            ? Object.entries(finalData).map(this.renderOption)
+            : category === "brand_name"
+            ? Object.entries(brandSearchData).map(this.renderOption)
+            : category === "sizes" && !isMobile.any()
+            ? Object.entries(sizeData).map(this.renderSizeOption)
+            : Object.keys(data).length
+            ? Object.entries(data).map(this.renderOption)
+            : Object.entries(subcategories).map(this.renderOption)}
         </ul>
       </>
     );
   }
 
-
-
   renderFilterSearchbox() {
     return (
       <input type="text" onChange={(event) => this.handleFilterSearch(event)} />
-    )
+    );
   }
 
   handleFilterSearch(event) {
-    const { filter: { data = {} } } = this.props;
+    const {
+      filter: { data = {} },
+    } = this.props;
     let allData = data ? data : null;
     let value = event.target.value;
-    let finalSearchedData = {}
-    Object.keys(allData).filter(key => {
+    let finalSearchedData = {};
+    Object.keys(allData).filter((key) => {
       if (key.toLowerCase().includes(value.toLowerCase())) {
-        finalSearchedData[key] = allData[key]
+        finalSearchedData[key] = allData[key];
       }
-    })
+    });
 
     if (finalSearchedData) {
       this.setState({
         brandList: finalSearchedData,
-        brandSearchKey: value
-      })
+        brandSearchKey: value,
+      });
     }
-
   }
-
 
   onCheckboxOptionClick = () => {
     this.filterButtonRef.current.focus();
@@ -365,9 +400,11 @@ class FieldMultiselect extends PureComponent {
   };
 
   renderOptionSelected() {
-    const { filter: { data } } = this.props;
-    if(this.props.isSortBy){
-      return null
+    const {
+      filter: { data },
+    } = this.props;
+    if (this.props.isSortBy) {
+      return null;
     }
     if (data) {
       return (
@@ -375,32 +412,29 @@ class FieldMultiselect extends PureComponent {
           <ul block="selectedOptionLists">
             {Object.values(data).map(function (values, keys) {
               if (values.subcategories) {
-                return Object.values(values.subcategories).map(function (val, key) {
+                return Object.values(values.subcategories).map(function (
+                  val,
+                  key
+                ) {
                   if (val.is_selected === true) {
-                    return (
-                      <li key={key}>{val.label}, </li>
-                    )
+                    return <li key={key}>{val.label}, </li>;
                   }
-                })
+                });
               } else {
                 if (values.is_selected === true) {
-                  return (
-                    <li key={keys}>{values.label}, </li>
-                  )
+                  return <li key={keys}>{values.label}, </li>;
                 }
               }
             })}
           </ul>
         </div>
-      )
-
+      );
     }
-
   }
 
   renderMultiselectContainer() {
     const { toggleOptionsList, isArabic } = this.state;
-    const { placeholder, isHidden, filter } = this.props;
+    const { placeholder, isHidden } = this.props;
 
     return (
       <div
@@ -426,7 +460,6 @@ class FieldMultiselect extends PureComponent {
           {placeholder}
         </button>
         {isMobile.any() ? null : this.renderOptionSelected()}
-
         <div
           block="FieldMultiselect"
           elem="OptionListContainer"
