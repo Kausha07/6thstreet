@@ -60,6 +60,11 @@
 
 .Products-Wrapper {
     display: grid;
-    grid-template-columns: 1fr 3fr;
-    grid-gap: 51px;
+    padding-top: 25px;
+    //grid-template-columns: 252px 1fr;
+    //grid-template-columns: repeat(auto-fit, minmax(768px 1fr));
+    grid-gap: 52px;
+    @include desktop() {
+        grid-template-columns: 251.5px 1fr;
+    }
 }

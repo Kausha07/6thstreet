@@ -14,6 +14,7 @@ import Algolia from "Util/API/provider/Algolia";
 import { isArabic } from "Util/App";
 import { getUUIDToken } from "Util/Auth";
 import BrowserDatabase from "Util/BrowserDatabase";
+import isMobile from 'Util/Mobile';
 import Event, {
   EVENT_GTM_PRODUCT_CLICK,
   SELECT_ITEM_ALGOLIA,
@@ -150,13 +151,16 @@ class ProductItem extends PureComponent {
       product: { thumbnail_url },
       lazyLoad = true,
     } = this.props;
-
+    let imageHight = "314px";
+    if (isMobile.any()){
+      imageHight = "271px"
+    } 
     return (
       <div block="ProductItem" elem="ImageBox">
-        <Image lazyLoad={lazyLoad} src={thumbnail_url} />
+        <Image lazyLoad={lazyLoad} src={thumbnail_url} height={imageHight}/>
         {/* {this.renderOutOfStock()} */}
         {this.renderExclusive()}
-        {this.renderColors()}
+        {/* {this.renderColors()} */}
       </div>
     );
   }

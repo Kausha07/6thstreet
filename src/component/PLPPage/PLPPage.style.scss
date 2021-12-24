@@ -3,22 +3,23 @@
     ul {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        grid-gap: 24px 16px;
+        grid-gap: 19.7px 28.6px;
         @include mobile() {
             grid-template-columns: repeat(2, 1fr);
             margin: 0;
+            grid-gap: 35px 4px;
         }
     }
     .ProductItem {
         &-ImageBox {
             padding-top: unset!important;
+            margin-bottom: 6px;
             .Image {
                 position: unset!important;
                 top: unset!important;
                 left: unset!important;
                 padding-bottom: unset!important;
             }
-            margin-bottom: 16px;
         }
         &-Brand {
             text-align: left;
@@ -93,6 +94,14 @@
                     margin-right: 4px;
                 }
             }
+        }
+    }
+}
+
+.EmptySearch {
+    .PLPPage {
+        ul {
+            grid-template-columns: repeat(4, 1fr);
         }
     }
 }

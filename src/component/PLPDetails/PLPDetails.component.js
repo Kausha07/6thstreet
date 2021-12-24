@@ -22,7 +22,11 @@ class PLPDetails extends PureComponent {
 
   renderBrandImage = () => {
     const { brandImg } = this.props;
-    return <Image lazyLoad={true} src={brandImg} />
+    return (
+      <div block="PLPDetails" elem="BrandImage">
+        <Image lazyLoad={true} src={brandImg} />
+      </div>
+    )
   };
 
   renderBrandName = () => {
@@ -63,16 +67,22 @@ class PLPDetails extends PureComponent {
     if (isMobile) {
       return null;
     }
+    console.log("error", !brandImg && !isMobile)
+    console.log("error", !isMobile)
+    console.log("error", !brandImg )
     return (
       <>
-        <div block="PLPDetails" elem="BrandImage">
+        {isMobile ? "" : this.renderBrandName()}
+        {!brandImg && !isMobile ? this.renderBrandHtml() : ""}
+        {!brandImg ? "" :
+         <div block="PLPDetails" elem="BrandDescription">
           {isMobile ? "" : this.renderBrandImage()}
-        </div>
-        <div block="PLPDetails" elem="BrandDescription">
-          {/* {this.renderActionButtons()} */}
-          {isMobile ? "" : this.renderBrandName()}
           {isMobile ? "" : this.renderBrandHtml()}
         </div>
+        }
+        
+
+       
       </>
     );
   };
