@@ -45,12 +45,12 @@ class UrlRewrites extends PureComponent {
   render404;
 
   renderPDP() {
-    const { id, sku, brandDescription, brandImg, brandName } = this.props;
+    const { id, string_sku, brandDescription, brandImg, brandName } = this.props;
     return (
       <GTMRouteWrapper route={PRODUCT_PAGE}>
         <PDP
           id={id}
-          sku={sku}
+          sku={string_sku}
           brandDescription={brandDescription}
           brandImg={brandImg}
           brandName={brandName}
