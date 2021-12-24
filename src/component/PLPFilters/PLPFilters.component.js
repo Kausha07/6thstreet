@@ -466,8 +466,6 @@ class PLPFilters extends PureComponent {
             true
           );
 
-          localStorage.setItem("lastSelectedKey", facet_key);
-
           updatePLPInitialFilters(filters, facet_key, facet_value);
           this.setState(
             {
@@ -492,8 +490,6 @@ class PLPFilters extends PureComponent {
             categoryLevel1,
             false
           );
-          localStorage.setItem("lastSelectedKey", facet_key);
-
           updatePLPInitialFilters(filters, facet_key, facet_value);
 
           const index = filterArray.indexOf(facet_value);
@@ -520,8 +516,6 @@ class PLPFilters extends PureComponent {
             categoryLevel1,
             false
           );
-          localStorage.setItem("lastSelectedKey", facet_key);
-
           updatePLPInitialFilters(filters, facet_key, facet_value);
           this.setState(
             {
@@ -542,8 +536,6 @@ class PLPFilters extends PureComponent {
           categoryLevel1,
           true
         );
-        localStorage.setItem("lastSelectedKey", facet_key);
-
         updatePLPInitialFilters(filters, facet_key, facet_value);
         this.setState(
           {

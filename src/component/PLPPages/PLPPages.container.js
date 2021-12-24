@@ -3,12 +3,17 @@ import { connect } from "react-redux";
 import { PLPContainer } from "Route/PLP/PLP.container";
 import { Meta, Pages } from "Util/API/endpoint/Product/Product.type";
 import PLPPages from "./PLPPages.component";
+import { updatePLPInitialFilters } from "Store/PLP/PLP.action";
 
 export const mapStateToProps = (state) => ({
   pages: state.PLP.pages,
+  initialOptions: state.PLP.initialOptions,
   meta: state.PLP.meta,
 });
-
+export const mapDispatchToProps = (_dispatch) => ({
+  updatePLPInitialFilters: (filters,facet_key,facet_value) =>
+  _dispatch(updatePLPInitialFilters(filters,facet_key,facet_value)),
+});
 export class PLPPagesContainer extends PureComponent {
   static propTypes = {
     pages: Pages.isRequired,
@@ -36,8 +41,16 @@ export class PLPPagesContainer extends PureComponent {
     pages: this.getPages(),
     query: this.props.query,
     filters: this.props.filters,
+    initialOptions:this.props.initialOptions,
     renderMySignInPopup: this.props.renderMySignInPopup
   });
+
+  
+  containerFunctions = () => {
+    const { updatePLPInitialFilters } = this.props;
+
+    return { updatePLPInitialFilters };
+  };
 
   getPages() {
     const { pages = {}, meta } = this.props;
@@ -76,9 +89,10 @@ export class PLPPagesContainer extends PureComponent {
         prevPath={prevPath}
         impressions={impressions}
         {...this.containerProps()}
+        {...this.containerFunctions()}
       />
     );
   }
 }
 
-export default connect(mapStateToProps)(PLPPagesContainer);
+export default connect(mapStateToProps,mapDispatchToProps)(PLPPagesContainer);

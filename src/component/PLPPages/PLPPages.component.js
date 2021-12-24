@@ -32,13 +32,6 @@ class PLPPages extends PureComponent {
     };
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    const { filters } = this.props;
-    const { filters: prevFilters } = prevProps;
-    if (JSON.stringify(prevFilters) !== JSON.stringify(filters)) {
-      this.renderActiveFilter();
-    }
-  }
   renderPage = ([key, page]) => {
     const { products, isPlaceholder, isFirst = false } = page;
     const {
@@ -87,56 +80,6 @@ class PLPPages extends PureComponent {
     return Object.entries(pages).map(this.renderPage);
   }
 
-  renderActiveFilter() {
-    const { filters } = this.props;
-    const thisRef = this;
-    {
-      Object.values(filters).map(function (values, index) {
-        if (values.data) {
-          return Object.values(values.data).map(function (value, index) {
-            if (value.subcategories) {
-              return Object.values(value.subcategories).map(function (
-                val,
-                index
-              ) {
-                if (val.is_selected === true) {
-                  const { facet_key, facet_value } = val;
-                  thisRef.selectActiveFilter(facet_key, facet_value);
-                }
-              });
-            } else {
-              if (
-                value.is_selected === true &&
-                value.facet_key !== "categories.level1"
-              ) {
-                const { facet_key, facet_value } = value;
-                thisRef.selectActiveFilter(facet_key, facet_value);
-              }
-            }
-          });
-        }
-      });
-    }
-  }
-
-  selectActiveFilter(initialFacetKey, facet_value) {
-    const { activeFilters } = this.state;
-    const filterArray = activeFilters[initialFacetKey];
-
-    this.setState(
-      {
-        activeFilters: {
-          ...activeFilters,
-          [initialFacetKey]: filterArray
-            ? [...filterArray, facet_value]
-            : [facet_value],
-        },
-      },
-      () => {
-        this.select(false);
-      }
-    );
-  }
   renderSelectedFilters() {
     const selectedFilters = this.props.filters;
     const thisRef = this;
@@ -234,6 +177,55 @@ class PLPPages extends PureComponent {
     );
   }
 
+  updateInitialFilters = (
+    data,
+    facet_value,
+    newFilterArray,
+    categoryLevel1,
+    checked
+  ) => {
+    if (data[facet_value]) {
+      data[facet_value].is_selected = checked;
+      if (checked) {
+        newFilterArray.selected_filters_count += 1;
+      } else {
+        newFilterArray.selected_filters_count -= 1;
+      }
+    } else {
+      if (categoryLevel1) {
+        if (
+          data[categoryLevel1].subcategories &&
+          data[categoryLevel1].subcategories[facet_value]
+        ) {
+          data[categoryLevel1].subcategories[facet_value].is_selected = checked;
+          if (checked) {
+            data[categoryLevel1].selected_filters_count += 1;
+            newFilterArray.selected_filters_count += 1;
+          } else {
+            data[categoryLevel1].selected_filters_count -= 1;
+            newFilterArray.selected_filters_count -= 1;
+          }
+        }
+      } else {
+        Object.keys(data).map((value) => {
+          if (
+            data[value].subcategories &&
+            data[value].subcategories[facet_value]
+          ) {
+            data[value].subcategories[facet_value].is_selected = checked;
+            if (checked) {
+              data[value].selected_filters_count += 1;
+              newFilterArray.selected_filters_count += 1;
+            } else {
+              data[value].selected_filters_count -= 1;
+              newFilterArray.selected_filters_count -= 1;
+            }
+          }
+        });
+      }
+    }
+  };
+
   handleCallback = (
     initialFacetKey,
     facet_value,
@@ -242,42 +234,80 @@ class PLPPages extends PureComponent {
     isQuickFilters = false
   ) => {
     const { activeFilters } = this.state;
+    const { filters, updatePLPInitialFilters,initialOptions } = this.props;
     const filterArray = activeFilters[initialFacetKey];
+    let newFilterArray = filters[initialFacetKey];
+    let categoryLevel1 = initialOptions.q.split(" ")[1];
 
     if (!isRadio) {
       if (filterArray) {
-        const index = filterArray.indexOf(facet_value);
-        if (index > -1) {
-          filterArray.splice(index, 1);
-        }
-        this.setState(
-          {
-            activeFilters: {
-              [initialFacetKey]: filterArray,
+        if (newFilterArray) {
+          const { data = {} } = newFilterArray;
+
+          this.updateInitialFilters(
+            data,
+            facet_value,
+            newFilterArray,
+            categoryLevel1,
+            false
+          );
+          updatePLPInitialFilters(filters, initialFacetKey, facet_value);
+
+          const index = filterArray.indexOf(facet_value);
+          if (index > -1) {
+            filterArray.splice(index, 1);
+          }
+          this.setState(
+            {
+              activeFilters: {
+                [initialFacetKey]: filterArray,
+              },
             },
-          },
-          () => this.select()
-        );
+            () => this.select()
+          );
+        }
       } else {
+        if (newFilterArray) {
+          const { data = {} } = newFilterArray;
+
+          this.updateInitialFilters(
+            data,
+            facet_value,
+            newFilterArray,
+            categoryLevel1,
+            false
+          );
+          updatePLPInitialFilters(filters, initialFacetKey, facet_value);
+          this.setState(
+            {
+              activeFilters: {
+                [initialFacetKey]: [],
+              },
+            },
+            () => this.select()
+          );
+        }
+      }
+    } else {
+      if (newFilterArray) {
+        this.updateRadioFilters(
+          data,
+          facet_value,
+          newFilterArray,
+          categoryLevel1,
+          true
+        );
+        updatePLPInitialFilters(filters, initialFacetKey, facet_value);
         this.setState(
           {
+            ...activeFilters,
             activeFilters: {
-              [initialFacetKey]: [],
+              [initialFacetKey]: facet_value,
             },
           },
           () => this.select()
         );
       }
-    } else {
-      this.setState(
-        {
-          ...activeFilters,
-          activeFilters: {
-            [initialFacetKey]: facet_value,
-          },
-        },
-        () => this.select()
-      );
     }
   };
 
@@ -292,7 +322,6 @@ class PLPPages extends PureComponent {
   };
 
   render() {
-
     return (
       <div block="PLPPages Products-Lists">
         <div class="ProductToolBar">
