@@ -119,9 +119,8 @@ $select-arrow-width: 6px !default;
 
   &-sizesOption {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
-    box-sizing: border-box;
     height: 34px;
     min-width: 70px;
     border: 1px solid #dedede;
@@ -132,7 +131,7 @@ $select-arrow-width: 6px !default;
     &::before {
       content: none;
     }
-    padding: 0;
+    padding: 0px 4px;
     @include before-desktop {
       width: 86%;
     }

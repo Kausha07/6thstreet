@@ -187,7 +187,6 @@ class FieldMultiselect extends PureComponent {
     } = this.props;
 
     const { subcategories = {} } = option;
-
     if (Object.keys(subcategories).length !== 0) {
       return !isMobile.any()
         ? Object.entries(subcategories).map(this.renderOption)
@@ -289,6 +288,8 @@ class FieldMultiselect extends PureComponent {
     let finalData = data ? data : subcategories;
     const datakeys = [];
     if (category === "sizes") {
+      console.log("muskan otpion", data);
+
       Object.keys(data).map((key) => {
         datakeys.push({ key: key, value: data[key].label.split(" ")[1] });
       });
