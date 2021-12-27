@@ -17,6 +17,7 @@ import LanguageSwitcher from 'Component/LanguageSwitcher';
 import logo from './icons/6thstreet_logo.png'
 import isMobile from "Util/Mobile";
 import facebook from "./icons/facebook.png";
+import close from "../Icons/Close/icon.svg"
 import instagram from "./icons/instagram.png";
 import './WelcomeHomePage.style';
 
@@ -93,6 +94,12 @@ class WelcomeHomePage extends PureComponent {
         })
     }
 
+    closePopup = () => {
+        this.setState({
+            isPopupOpen: false
+        })
+    }
+
     onGenderSelect = (val) => {
         const { country, language } = this.props;
         console.log(val, country, language)
@@ -151,7 +158,8 @@ class WelcomeHomePage extends PureComponent {
 
     render() {
         const { isArabic } = this.state;
-        let lang = this.props.language
+        let lang = this.props.language;
+        let showSotreSwitcher = !this.state.isPopupOpen || isMobile.any()
         return (
             <div>
                 <div block="WelcomeHomePage">
@@ -160,18 +168,25 @@ class WelcomeHomePage extends PureComponent {
                             <img src={logo} />
                         </div>
                     </div>
-                    <div block="WelcomeHomePage" elem="StoreSwitcher">
-                        {
+                    {   showSotreSwitcher &&
+                        <div block="WelcomeHomePage" elem="StoreSwitcher">
+                            {   isMobile.any() &&
+                                <div block="Text">
+                                    <div block="Text-welcome">Welcome,</div>
+                                    <div block="Text-shop">You are shopping in</div>
+                                </div>
+
+                            }
+
                             <div  block="WelcomeHomePage" elem="LanguageSwitcher">
                                 <LanguageSwitcher/>
                             </div>
-                        }
-                        {
                             <div  block="WelcomeHomePage" elem="CountrySwitcher">
                                 <CountrySwitcher/>
                             </div>
-                        }
-                    </div>
+                        </div>
+                    }
+
                     { this.state.isPopupOpen &&
                         <div block="WelcomeHomePage" elem="Popup">
                             <div  block="WelcomeHomePage" elem="Popup-LanguageSwitcher">
@@ -184,7 +199,9 @@ class WelcomeHomePage extends PureComponent {
                             <div  block="WelcomeHomePage" elem="Popup-CountrySwitcher">
                                 <CountrySwitcher/>
                             </div>
-                            <button block="WelcomeHomePage" elem="Popup-Button">OK</button>
+                            <button block="WelcomeHomePage" elem="Popup-Button" onClick={this.closePopup}>OK</button>
+                            <img  block="WelcomeHomePage" elem="Popup-Close" src={close} onClick={this.closePopup}/>
+
                         </div>
                     }
 
@@ -205,11 +222,13 @@ class WelcomeHomePage extends PureComponent {
                             </div>
                         </div>
                     }
+                    {this.state.isPopupOpen && <div block="WelcomeHomePage" elem="ShadeWrapper"></div>}
                 </div>
                 <div block="WelcomeHomePage" elem="Bottom">
                     {this.renderAppColumn()}
                 </div>
                 <Footer />
+
             </div>
 
         );

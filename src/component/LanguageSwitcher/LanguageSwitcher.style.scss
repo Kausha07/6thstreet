@@ -45,7 +45,6 @@
             text-transform: uppercase;
             padding: 11px 30px;
             text-decoration: none;
-            margin-right: 20px;
             width: 117px;
         }
         .Language-Inactive{
@@ -61,6 +60,11 @@
             background-color: #9B9B9B;
             color: white;
             width: 117px;
+        }
+        span{
+            &:first-child{
+                margin-right: 20px;
+            }
         }
     }
 

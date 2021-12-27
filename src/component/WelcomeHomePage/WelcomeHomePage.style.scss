@@ -29,6 +29,7 @@
             flex-direction: column;
         }
         .WelcomeHomePage-GenderSelection{
+
             img{
                 width: 362px;
                 cursor: pointer;
@@ -52,6 +53,7 @@
                 width: 276px;
                 border-radius: 6px;
                 background-color: #FFFFFF;
+                z-index: 1;
                 @include tablet{
                     height: 46px;
                     width: 180px;
@@ -67,6 +69,20 @@
                     background-color: transparent;
                     bottom: 50px;
                 }
+            }
+
+            @include mobile{
+                margin-bottom: 5px;
+                height: 157px;
+                // &::after{
+                //     content: '\A';
+                //     position: absolute;
+                //     width: 100%; height:100%;
+                //     top:0; left:0;
+                //     background:rgba(0,0,0,0.4);
+                //     transition: all 1s;
+                //     -webkit-transition: all 1s;
+                // }
             }
         }
     }
@@ -109,23 +125,64 @@
     }
     &-StoreSwitcher{
         display: flex;
+        @include mobile{
+            display: block;
+            padding-left: 30px;
+        }
         @include tablet{
             padding-left: 30px;
         }
         @include desktop{
             display: none;
         }
+        .Text{
+            display: flex;
+            align-items: center;
+
+            &-welcome{
+                font-size: 22px;
+                font-weight: 600;
+                letter-spacing: 0;
+                line-height: 30px;
+            }
+            &-shop{
+                font-size: 15px;
+                letter-spacing: 0;
+                line-height: 20px;
+                text-align: center;
+                margin-left: 5px;
+            }
+        }
+
     }
 
     &-CountrySwitcher{
         @include desktop{
             display: none;
         }
+        @include mobile{
+            margin-left: 3px;
+        }
         .CountrySwitcher{
             padding-left: 40px;
             padding-bottom: 40px;
             @include mobile{
                 padding-left: 0px;
+                &-CountryBtn{
+                    span{
+                        font-size: 18px;
+                        font-weight: 600;
+                        text-transform: capitalize;
+                    }
+                    &::after{
+                        width: 18px;
+                        height: 18px;
+                        background-size: 18px;
+                        top: 3px;
+                        right: -5px;
+
+                    }
+                }
             }
             @include tablet{
                 padding-left: 0px;
@@ -133,15 +190,60 @@
         }
         .StoreSwitcherPopup{
             &-Container{
-                @include mobile{
-                    right: unset;
-                    top: 95px;
-                    left: 30px;
+                .WelcomeScreen-Content{
+                    .WelcomeScreen-List{
+                        .WelcomeScreen-CountryItem{
+                            &:last-child{
+                                border-bottom: none;
+                            }
+                        }
+                    }
                 }
-                @include tablet{
-                    right: unset;
-                    top: 165px;
-                    left: 30px;
+            }
+        }
+    }
+    &-LanguageSwitcher{
+        @include mobile{
+            margin-bottom: 40px;
+            button{
+                margin-top: 20px;
+                height: 40px;
+                display: flex;
+                padding: unset;
+                .Language-Active{
+                    display: block;
+                    border: 1px solid #000000;
+                    border-radius: 6px;
+                    font-size: 12px;
+                    font-weight: 800;
+                    letter-spacing: 0;
+                    line-height: 16px;
+                    text-align: center;
+                    text-transform: uppercase;
+                    padding: 11px 30px;
+                    text-decoration: none;
+                    width: 117px;
+                    background-color: black;
+                    color: white;
+                }
+                .Language-Inactive{
+                    font-size: 12px;
+                    font-weight: 800;
+                    letter-spacing: 0;
+                    line-height: 16px;
+                    text-align: center;
+                    text-transform: uppercase;
+                    padding: 12px 30px;
+                    text-decoration: none;
+                    border-radius: 6px;
+                    background-color: #9B9B9B;
+                    color: white;
+                    width: 117px;
+                }
+                span{
+                    &:first-child{
+                        margin-right: 20px;
+                    }
                 }
 
             }
@@ -149,16 +251,29 @@
     }
 
     &-Popup{
-        width: auto;
+        width: var(--main-container-width-dsk);
         height: 147px;
-        margin-right: 30px;
-        margin-left: 30px;
-        margin-bottom: 40px;
         padding: 30px;
         border-radius: 12px;
         background-color: #FFFFFF;
         box-shadow: 0 0 10px 0 rgba(0,0,0,0.15);
         display: flex;
+        justify-content: center;
+        max-width: var(--container-max-width);
+        margin: 0 auto;
+        margin-bottom: 50px;
+        z-index: 3;
+        pointer-events: all;
+        @include tablet{
+            width: auto;
+            margin-right: 30px;
+            margin-left: 30px;
+            margin-bottom: 40px;
+            max-width: 100%;
+        }
+        @include mobile{
+            display: none;
+        }
         &-LanguageSwitcher{
             .Popup-text{
                 display: flex;
@@ -185,13 +300,62 @@
         }
         &-CountrySwitcher{
             align-self: end;
-            margin-bottom: 5px;
-            margin-left: 20px;
+            margin-bottom: 15px;
+            margin-left: 35px;;
             .CountrySwitcher{
+                &-CountryBtn{
+                    span{
+                        font-size: 13px;
+                        font-weight: bold;
+                        text-transform: uppercase;
+                    }
+                    &::after{
+                        width: 14px;
+                        height: 14px;
+                        background-size: 14px;
+                        top: 5px;
+
+                    }
+                }
+
 
             }
         }
+        &-Button{
+            align-self: end;
+            height: 40px;
+            width: 95px;
+            border-radius: 6px;
+            background-color: #000000;
+            color: white;
+            margin-left: 80px;
+            margin-bottom: 5px;
+        }
+
+        &-Close{
+            width: 16px;
+            height: 16px;
+            position: absolute;
+            top: 20px;
+            right: 17px;
+            cursor: pointer;
+        }
 
     }
+    &-ShadeWrapper{
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,.7);
+        position: fixed;
+        left: 0;
+        top: 0;
+        content: "/A";
+        color: transparent;
+        z-index: 2;
+        @include mobile{
+            display: none;
+        }
+    }
+
 
 }
