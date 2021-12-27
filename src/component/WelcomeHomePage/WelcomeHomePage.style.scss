@@ -158,6 +158,7 @@
         border-radius: 12px;
         background-color: #FFFFFF;
         box-shadow: 0 0 10px 0 rgba(0,0,0,0.15);
+        display: flex;
         &-LanguageSwitcher{
             .Popup-text{
                 display: flex;
@@ -178,6 +179,15 @@
                 }
             }
             .LanguageSwitcher{
+
+            }
+
+        }
+        &-CountrySwitcher{
+            align-self: end;
+            margin-bottom: 5px;
+            margin-left: 20px;
+            .CountrySwitcher{
 
             }
         }

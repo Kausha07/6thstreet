@@ -89,9 +89,10 @@ class LanguageSwitcher extends PureComponent {
             <button
                 /* eslint-disable-next-line */
               onClick={ () => onLanguageSelect(buttonLabelObject[0].id) }
+              block={this.props.welcomePagePopup ? 'Popup-button' : ''}
             >
-                <span block={ language === 'en' ? 'Language-Active' : ''}>English</span>
-                <span block={  language === 'ar' ? 'Language-Active' : '' }>العربية</span>
+                <span block={ language === 'en' ? 'Language-Active' : 'Language-Inactive'}>English</span>
+                <span block={  language === 'ar' ? 'Language-Active' : 'Language-Inactive' }>العربية</span>
             </button>
         );
     }
@@ -100,12 +101,13 @@ class LanguageSwitcher extends PureComponent {
         const {
             isArabic
         } = this.state;
+        let k = this.props.welcomePagePopup
 
         return (
             <div block="LanguageSwitcher" mods={ { isArabic } }>
                 { this.renderLanguageSelect() }
                 {
-                    this.state.isMobile ?
+                    (this.state.isMobile || this.props.welcomePagePopup) ?
                     this.renderLanguageButtonForMobile() :
                     this.renderLanguageButton()
                 }

@@ -179,7 +179,7 @@ class WelcomeHomePage extends PureComponent {
                                     <div block="Popup-text-welcome">Welcome,</div>
                                     <div block="Popup-text-shop">You are shopping in</div>
                                 </div>
-                                <LanguageSwitcher/>
+                                <LanguageSwitcher welcomePagePopup={true}/>
                             </div>
                             <div  block="WelcomeHomePage" elem="Popup-CountrySwitcher">
                                 <CountrySwitcher/>
