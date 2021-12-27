@@ -80,6 +80,12 @@ class PLPPages extends PureComponent {
     return Object.entries(pages).map(this.renderPage);
   }
 
+  OnDeselectFilter = (val, values) => {
+    const { facet_key, facet_value } = val;
+    const { is_radio } = values;
+    this.handleCallback(facet_key, facet_value, false, is_radio, false);
+  };
+
   renderSelectedFilters() {
     const selectedFilters = this.props.filters;
     const thisRef = this;
@@ -97,17 +103,19 @@ class PLPPages extends PureComponent {
                     if (val.is_selected === true) {
                       return (
                         <li>
-                          {thisRef.renderButtonView(val.label, () => {
-                            const { facet_key, facet_value } = val;
-                            const { is_radio } = values;
-                            thisRef.handleCallback(
-                              facet_key,
-                              facet_value,
-                              false,
-                              is_radio,
-                              false
-                            );
-                          })}
+                          {thisRef.renderButtonView(
+                            val.label,
+                            ()=>thisRef.OnDeselectFilter(val, values)
+                          )}
+                          {/* <button
+                            onClick={()=>thisRef.OnDeselectFilter(val, values)}
+                            aria-label="Dismiss"
+                            tabIndex={0}
+                            block="PLPPageFilter"
+                          >
+                            {label}
+                            <Close />
+                          </button> */}
                         </li>
                       );
                     }
@@ -119,17 +127,10 @@ class PLPPages extends PureComponent {
                   ) {
                     return (
                       <li>
-                        {thisRef.renderButtonView(value.label, () => {
-                          const { facet_key, facet_value } = value;
-                          const { is_radio } = values;
-                          thisRef.handleCallback(
-                            facet_key,
-                            facet_value,
-                            false,
-                            is_radio,
-                            false
-                          );
-                        })}
+                        {thisRef.renderButtonView(
+                          value.label,
+                          ()=>thisRef.OnDeselectFilter(value, values)
+                        )}
                       </li>
                     );
                   }
@@ -166,7 +167,6 @@ class PLPPages extends PureComponent {
     return (
       <button
         onClick={onClick}
-        onKeyDown={() => {}}
         aria-label="Dismiss"
         tabIndex={0}
         block="PLPPageFilter"
@@ -182,7 +182,8 @@ class PLPPages extends PureComponent {
     facet_value,
     newFilterArray,
     categoryLevel1,
-    checked
+    checked,
+    facet_key
   ) => {
     if (data[facet_value]) {
       data[facet_value].is_selected = checked;
@@ -192,17 +193,21 @@ class PLPPages extends PureComponent {
         newFilterArray.selected_filters_count -= 1;
       }
     } else {
-      if (categoryLevel1) {
+      let categoryDataStatus = categoryLevel1 || facet_key.includes("size");
+      if (categoryDataStatus) {
+        let categoryData = categoryLevel1
+          ? data[categoryLevel1]
+          : data[facet_key];
         if (
-          data[categoryLevel1].subcategories &&
-          data[categoryLevel1].subcategories[facet_value]
+          categoryData.subcategories &&
+          categoryData.subcategories[facet_value]
         ) {
-          data[categoryLevel1].subcategories[facet_value].is_selected = checked;
+          categoryData.subcategories[facet_value].is_selected = checked;
           if (checked) {
-            data[categoryLevel1].selected_filters_count += 1;
+            categoryData.selected_filters_count += 1;
             newFilterArray.selected_filters_count += 1;
           } else {
-            data[categoryLevel1].selected_filters_count -= 1;
+            categoryData.selected_filters_count -= 1;
             newFilterArray.selected_filters_count -= 1;
           }
         }
@@ -226,6 +231,20 @@ class PLPPages extends PureComponent {
     }
   };
 
+  updateRadioFilters = (data, facet_value, newFilterArray) => {
+    if (data[facet_value]) {
+      Object.values(data).map((value) => {
+        if (value.facet_value === facet_value) {
+          value.is_selected = false;
+        }
+      });
+
+      if (newFilterArray.selected_filters_count === 1) {
+        newFilterArray.selected_filters_count = 0;
+      }
+    }
+  };
+
   handleCallback = (
     initialFacetKey,
     facet_value,
@@ -234,9 +253,12 @@ class PLPPages extends PureComponent {
     isQuickFilters = false
   ) => {
     const { activeFilters } = this.state;
-    const { filters, updatePLPInitialFilters,initialOptions } = this.props;
+    const { filters, updatePLPInitialFilters, initialOptions } = this.props;
     const filterArray = activeFilters[initialFacetKey];
     let newFilterArray = filters[initialFacetKey];
+    if (initialFacetKey.includes("size")) {
+      newFilterArray = filters["sizes"];
+    }
     let categoryLevel1 = initialOptions.q.split(" ")[1];
 
     if (!isRadio) {
@@ -249,7 +271,8 @@ class PLPPages extends PureComponent {
             facet_value,
             newFilterArray,
             categoryLevel1,
-            false
+            false,
+            initialFacetKey
           );
           updatePLPInitialFilters(filters, initialFacetKey, facet_value);
 
@@ -275,7 +298,8 @@ class PLPPages extends PureComponent {
             facet_value,
             newFilterArray,
             categoryLevel1,
-            false
+            false,
+            initialFacetKey
           );
           updatePLPInitialFilters(filters, initialFacetKey, facet_value);
           this.setState(
@@ -289,6 +313,8 @@ class PLPPages extends PureComponent {
         }
       }
     } else {
+      const { data = {} } = newFilterArray;
+
       if (newFilterArray) {
         this.updateRadioFilters(
           data,
@@ -302,7 +328,7 @@ class PLPPages extends PureComponent {
           {
             ...activeFilters,
             activeFilters: {
-              [initialFacetKey]: facet_value,
+              [initialFacetKey]: [],
             },
           },
           () => this.select()
@@ -328,8 +354,6 @@ class PLPPages extends PureComponent {
           <div block="ProductSelectedFilters">
             {this.renderSelectedFilters()}
           </div>
-
-          {/* {this.renderButtonView("sort ", this.toggleSortDropdown)} */}
         </div>
         {this.renderPages()}
       </div>

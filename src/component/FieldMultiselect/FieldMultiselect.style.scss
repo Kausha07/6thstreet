@@ -131,14 +131,18 @@ $select-arrow-width: 6px !default;
     &::before {
       content: none;
     }
-    padding: 0px 4px;
+    padding: 0px 6px;
     @include before-desktop {
       width: 86%;
     }
     .Image {
       height: 18px;
       width: 18px;
-      left: 4px;
+    }
+
+    &_selectedSize{
+      color: #ffffff;
+      background-color: #000000;
     }
   }
 

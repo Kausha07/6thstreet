@@ -377,7 +377,8 @@ class PLPFilters extends PureComponent {
     facet_value,
     newFilterArray,
     categoryLevel1,
-    checked
+    checked,
+    facet_key
   ) => {
     if (data[facet_value]) {
       data[facet_value].is_selected = checked;
@@ -387,17 +388,21 @@ class PLPFilters extends PureComponent {
         newFilterArray.selected_filters_count -= 1;
       }
     } else {
-      if (categoryLevel1) {
+      let categoryDataStatus = categoryLevel1 || facet_key.includes("size");
+      if (categoryDataStatus) {
+        let categoryData = categoryLevel1
+          ? data[categoryLevel1]
+          : data[facet_key];
         if (
-          data[categoryLevel1].subcategories &&
-          data[categoryLevel1].subcategories[facet_value]
+          categoryData.subcategories &&
+          categoryData.subcategories[facet_value]
         ) {
-          data[categoryLevel1].subcategories[facet_value].is_selected = checked;
+          categoryData.subcategories[facet_value].is_selected = checked;
           if (checked) {
-            data[categoryLevel1].selected_filters_count += 1;
+            categoryData.selected_filters_count += 1;
             newFilterArray.selected_filters_count += 1;
           } else {
-            data[categoryLevel1].selected_filters_count -= 1;
+            categoryData.selected_filters_count -= 1;
             newFilterArray.selected_filters_count -= 1;
           }
         }
@@ -449,6 +454,10 @@ class PLPFilters extends PureComponent {
     const { filters, updatePLPInitialFilters, initialOptions } = this.props;
     const filterArray = activeFilters[initialFacetKey];
     let newFilterArray = filters[initialFacetKey];
+    if (initialFacetKey.includes("size")) {
+      newFilterArray = filters["sizes"];
+    }
+
     let categoryLevel1 = initialOptions.q.split(" ")[1];
     if (isMobile.any()) {
       this.delayFilterUpdate();
@@ -457,16 +466,15 @@ class PLPFilters extends PureComponent {
       if (checked) {
         if (newFilterArray) {
           const { data = {} } = newFilterArray;
-
           this.updateInitialFilters(
             data,
             facet_value,
             newFilterArray,
             categoryLevel1,
-            true
+            true,
+            initialFacetKey
           );
-
-          updatePLPInitialFilters(filters, facet_key, facet_value);
+          updatePLPInitialFilters(filters, initialFacetKey, facet_value);
           this.setState(
             {
               activeFilters: {
@@ -488,9 +496,10 @@ class PLPFilters extends PureComponent {
             facet_value,
             newFilterArray,
             categoryLevel1,
-            false
+            false,
+            initialFacetKey
           );
-          updatePLPInitialFilters(filters, facet_key, facet_value);
+          updatePLPInitialFilters(filters, initialFacetKey, facet_value);
 
           const index = filterArray.indexOf(facet_value);
           if (index > -1) {
@@ -514,9 +523,10 @@ class PLPFilters extends PureComponent {
             facet_value,
             newFilterArray,
             categoryLevel1,
-            false
+            false,
+            initialFacetKey
           );
-          updatePLPInitialFilters(filters, facet_key, facet_value);
+          updatePLPInitialFilters(filters, initialFacetKey, facet_value);
           this.setState(
             {
               activeFilters: {
@@ -538,7 +548,7 @@ class PLPFilters extends PureComponent {
           categoryLevel1,
           true
         );
-        updatePLPInitialFilters(filters, facet_key, facet_value);
+        updatePLPInitialFilters(filters, initialFacetKey, facet_value);
         this.setState(
           {
             ...activeFilters,

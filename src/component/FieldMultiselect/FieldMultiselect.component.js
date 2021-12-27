@@ -222,16 +222,18 @@ class FieldMultiselect extends PureComponent {
     const { subcategories = {} } = option;
     const thisRef = this;
     if (key === this.state.sizeDropDownKey) {
-      return Object.values(subcategories).map(function (value) {
+      return Object.values(subcategories).map(function (value, index) {
         const { facet_key, facet_value } = value;
         return (
           <div
             block="FieldMultiselect"
             elem="sizesOption"
+            mods={{ selectedSize: value.is_selected }}
+            key={index}
             id={facet_key}
             name={facet_value}
             value={value.is_selected}
-            onClick={thisRef.handleSizeSelection}
+            onClick={(e)=>thisRef.handleSizeSelection(e)}
           >
             {value.label}
             {!value.is_selected ? (
