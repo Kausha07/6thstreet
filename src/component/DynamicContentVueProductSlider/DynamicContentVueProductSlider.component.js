@@ -43,7 +43,7 @@ class DynamicContentVueProductSlider extends PureComponent {
   componentWillUnmount() {}
 
   registerViewPortEvent() {
-    const { index } = this.props;
+    const { index = 0 } = this.props;
     let observer;
     const elem = document.querySelector(`#productSlider-${index}`);
 

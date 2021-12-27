@@ -31,6 +31,7 @@ import Event, {
   EVENT_GTM_PRODUCT_ADD_TO_CART,
   EVENT_GTM_PRODUCT_REMOVE_FROM_CART,
   VUE_REMOVE_FROM_CART,
+  VUE_PAGE_VIEW,
 } from "Util/Event";
 import isMobile from "Util/Mobile";
 import CartItem from "./CartItem.component";
