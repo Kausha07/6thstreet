@@ -147,7 +147,8 @@ export class CheckoutSuccess extends PureComponent {
     const countryCode = phone ? phone.slice(0, "4") : null;
     const phoneNumber = phone ? phone.slice("4") : null;
 
-    if (!isPhoneVerified && isVerificationCodeSent) {
+    // if (!isPhoneVerified && isVerificationCodeSent) {
+      if (!false ) {
       return (
         <div
           mix={{ block: "TrackOrder", mods: { isArabic, isPhoneVerification } }}

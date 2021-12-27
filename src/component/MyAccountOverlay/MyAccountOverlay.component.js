@@ -25,6 +25,7 @@ import { COUNTRY_CODES_FOR_PHONE_VALIDATION } from "Component/MyAccountAddressFo
 import { Close } from "Component/Icons";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
+import Spinner from "react-spinkit";
 import {
   deleteAuthorizationToken,
   deleteMobileAuthorizationToken,
@@ -32,6 +33,7 @@ import {
 import BrowserDatabase from "Util/BrowserDatabase";
 import Image from "Component/Image";
 import { CART_ID_CACHE_KEY } from "Store/MyAccount/MyAccount.dispatcher";
+import confirmIcon from "./icons/confirmIcon.png";
 import {
   CUSTOMER_ACCOUNT_OVERLAY_KEY,
   STATE_CONFIRM_EMAIL,
@@ -41,6 +43,7 @@ import {
   STATE_LOGGED_IN,
   STATE_SIGN_IN,
   ENABLE_OTP_LOGIN,
+  STATE_OTP_LOGIN,
   SSO_LOGIN_PROVIDERS,
 } from "./MyAccountOverlay.config";
 
@@ -165,7 +168,68 @@ export class MyAccountOverlay extends PureComponent {
       render: () => this.renderConfirmEmail(),
       title: __("Confirm the email"),
     },
+    [STATE_OTP_LOGIN]: {
+      render: () => this.renderOtpLogin(),
+    },
   };
+
+  renderOtpLogin() {
+    // const { countryCode, phoneNumber } = this.state;
+    return (
+      <div block="MyAccountOverlay" elem="OTP">
+        <div block="MyAccountOverlay-OTP" elem="Heading">
+          {__("Please Verify your Number")}
+        </div>
+        <div block="MyAccountOverlay-OTP" elem="title">
+          {__("Verification code has been sent to")}
+        </div>
+        <div block="MyAccountOverlay-OTP" elem="number">
+          <button>
+            +971 52009878
+            {/* {`${countryCode} ${phoneNumber}`} */}
+          </button>
+        </div>
+        <Form>
+          <div
+            block="MyAccountOverlay-OTP"
+            elem="Code"
+            mods={{ isArabic, isValidatedField: true }}
+          >
+            <Field
+              maxlength="5"
+              type="text"
+              placeholder="&#9679; &nbsp; &#9679; &nbsp; &#9679; &nbsp; &#9679; &nbsp; &#9679;"
+              name="otp"
+              id="otp"
+            />
+            <div
+              block="MyAccountOverlay-OTP"
+              elem="ErrMessage"
+              mods={{ isValidated: true }}
+            >
+              {__("Wrong Verification Code. Please re-enter.")}
+            </div>
+            <div>
+              <div
+                block="MyAccountOverlay-OTP"
+                elem="loaderOtp"
+                mods={{ isSubmitted: false }}
+              >
+                <Spinner name="line-spin-fade-loader" />
+              </div>
+            </div>
+          </div>
+        </Form>
+        <div
+          block="MyAccountOverlay-OTP"
+          elem="ResendCode"
+          mods={{ otpSubmitted: true }}
+        >
+          <button>{__("Resend Verification Code")}</button>
+        </div>
+      </div>
+    );
+  }
 
   renderMyAccount() {
     const {
@@ -222,22 +286,25 @@ export class MyAccountOverlay extends PureComponent {
             </>
           )}
         </div>
-        <div block="MyAccountOverlay" elem="Buttons">
-          <button block="Button" mods={{ isSignIn }} onClick={handleSignIn}>
-            {__("Sign in")}
-          </button>
-          <button
-            block="Button"
-            mods={{ isCreateAccount }}
-            onClick={handleCreateAccount}
-          >
-            {__("Create account")}
-          </button>
-        </div>
+        {state !== STATE_OTP_LOGIN && (
+          <div block="MyAccountOverlay" elem="Buttons">
+            <button block="Button" mods={{ isSignIn }} onClick={handleSignIn}>
+              {__("Sign in")}
+            </button>
+            <button
+              block="Button"
+              mods={{ isCreateAccount }}
+              onClick={handleCreateAccount}
+            >
+              {__("Create account")}
+            </button>
+          </div>
+        )}
         <p block="MyAccountOverlay" elem="Heading">
           {title}
         </p>
         {render()}
+
         {/* {isSignIn
           ? this.renderSocials("SignIn")
           : isCreateAccount
@@ -747,7 +814,21 @@ export class MyAccountOverlay extends PureComponent {
 
     return null;
   }
-
+  renderOtpSuccess() {
+    return (
+      <div block="LoadingOverlay" dir="ltr">
+        <Image
+          src={confirmIcon}
+          lazyLoad={false}
+          mix={{
+            block: "MyAccountOverlay",
+            elem: "ConfirmImg",
+          }}
+        />
+        <p>{__("Phone Verified")}</p>
+      </div>
+    );
+  }
   render() {
     const { isLoading, onVisible, isCheckout, isHidden } = this.props;
     const { isPopup, isArabic } = this.state;
@@ -765,6 +846,7 @@ export class MyAccountOverlay extends PureComponent {
         >
           <Loader isLoading={isLoading} />
           {this.renderMyAccount()}
+          {/* {this.renderOtpSuccess()} */}
         </Overlay>
       </div>
     );

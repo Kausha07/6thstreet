@@ -39,6 +39,7 @@ import {
   STATE_FORGOT_PASSWORD_SUCCESS,
   STATE_LOGGED_IN,
   STATE_SIGN_IN,
+  STATE_OTP_LOGIN,
 } from "./MyAccountOverlay.config";
 
 export const MyAccountDispatcher = import(
@@ -244,9 +245,11 @@ export class MyAccountOverlayContainer extends PureComponent {
   async onSignInSuccess(fields) {
     const { signIn, showNotification, onSignIn } = this.props;
     try {
-      await signIn(fields);
-      onSignIn();
-      this.checkForOrder();
+      console.log("fields", fields);
+      this.setState({ state: STATE_OTP_LOGIN });
+      // await signIn(fields);
+      // onSignIn();
+      // this.checkForOrder();
     } catch (e) {
       this.setState({ isLoading: false });
       showNotification("error", e.message);
@@ -271,7 +274,7 @@ export class MyAccountOverlayContainer extends PureComponent {
   }
 
   onSignInAttempt() {
-    this.setState({ isLoading: true });
+    // this.setState({ isLoading: true });
   }
 
   onCreateAccountAttempt(_, invalidFields) {
