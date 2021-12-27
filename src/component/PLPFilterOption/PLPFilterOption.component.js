@@ -77,6 +77,7 @@ class PLPFilterOption extends PureComponent {
         onSelectChecked
       );
     }
+
     return (
       <Field
         formRef={this.fieldRef}

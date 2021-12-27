@@ -9,6 +9,7 @@ import "./FieldMultiselect.style";
 import Image from "Component/Image";
 import selectedImage from "./icons/select.png";
 import selectImage from "./icons/add.png";
+import searchPng from "../HeaderSearch/icons/search.svg";
 
 class FieldMultiselect extends PureComponent {
   static propTypes = {
@@ -50,8 +51,9 @@ class FieldMultiselect extends PureComponent {
       subcategoryOptions: {},
       parentActiveFilters: null,
       currentActiveFilter: null,
-      brandList: {},
-      brandSearchKey: "",
+      searchList: {},
+      searchKey: "",
+      searchFacetKey: "",
       sizeDropDownList: {},
       sizeDropDownKey: "",
     };
@@ -233,7 +235,7 @@ class FieldMultiselect extends PureComponent {
             id={facet_key}
             name={facet_value}
             value={value.is_selected}
-            onClick={(e)=>thisRef.handleSizeSelection(e)}
+            onClick={(e) => thisRef.handleSizeSelection(e)}
           >
             {value.label}
             {!value.is_selected ? (
@@ -302,8 +304,9 @@ class FieldMultiselect extends PureComponent {
 
   renderOptions() {
     const {
-      filter: { data = {}, subcategories = {}, category, is_radio },
+      filter: { data = {}, subcategories = {}, category, is_radio, label },
     } = this.props;
+    const { searchFacetKey, searchKey, searchList } = this.state;
     let finalData = data ? data : subcategories;
     const datakeys = [];
     if (category === "sizes") {
@@ -322,12 +325,8 @@ class FieldMultiselect extends PureComponent {
         });
       }
     }
-    let brandSearchData = data;
-    if (category === "brand_name") {
-      if (this.state.brandSearchKey != "") {
-        brandSearchData = this.state.brandList;
-      }
-    }
+    let conditionalData = data ? data : subcategories;
+
     let sizeData = data;
     if (this.state.sizeDropDownKey === "") {
       this.setState({
@@ -335,8 +334,13 @@ class FieldMultiselect extends PureComponent {
         sizeDropDownList: data,
       });
     }
-    let conditionalData = data ? data : subcategories;
 
+    let searchData = data;
+    if (Object.keys(conditionalData).length > 10) {
+      if (searchKey != "" && searchFacetKey === category) {
+        searchData = searchList;
+      }
+    }
     return (
       <>
         <ul
@@ -344,7 +348,7 @@ class FieldMultiselect extends PureComponent {
           elem={category === "sizes" ? "sizesOptionContainer" : ""}
         >
           {Object.keys(conditionalData).length > 10
-            ? this.renderFilterSearchbox()
+            ? this.renderFilterSearchbox(label, category)
             : null}
           {category === "sizes" && !isMobile.any()
             ? this.renderSizeDropDown(datakeys)
@@ -352,8 +356,8 @@ class FieldMultiselect extends PureComponent {
           {category !== "sizes" && !is_radio && this.renderUnselectButton()}
           {category === "in_stock"
             ? Object.entries(finalData).map(this.renderOption)
-            : category === "brand_name"
-            ? Object.entries(brandSearchData).map(this.renderOption)
+            : category === searchFacetKey
+            ? Object.entries(searchData).map(this.renderOption)
             : category === "sizes" && !isMobile.any()
             ? Object.entries(sizeData).map(this.renderSizeOption)
             : Object.keys(data).length
@@ -364,9 +368,30 @@ class FieldMultiselect extends PureComponent {
     );
   }
 
-  renderFilterSearchbox() {
+  renderFilterSearchbox(label, category) {
+    let placeholder = label
+      ? label
+      : `${category.charAt(0).toUpperCase()}${
+          category.split(category.charAt(0))[1]
+        }`;
+    const { isArabic } = this.state;
     return (
-      <input type="text" onChange={(event) => this.handleFilterSearch(event)} />
+      <div block="Search-Container">
+        <input
+          type="text"
+          id={category}
+          placeholder={`Search ${placeholder}`}
+          onChange={(event) => this.handleFilterSearch(event)}
+        />
+        <button
+          block="FilterSearch"
+          elem="SubmitBtn"
+          mods={{ isArabic }}
+          type="submit"
+        >
+          <Image lazyLoad={false} src={searchPng} alt="search" />
+        </button>
+      </div>
     );
   }
 
@@ -374,6 +399,7 @@ class FieldMultiselect extends PureComponent {
     const {
       filter: { data = {} },
     } = this.props;
+    const facet_key = event.target.id;
     let allData = data ? data : null;
     let value = event.target.value;
     let finalSearchedData = {};
@@ -385,8 +411,9 @@ class FieldMultiselect extends PureComponent {
 
     if (finalSearchedData) {
       this.setState({
-        brandList: finalSearchedData,
-        brandSearchKey: value,
+        searchList: finalSearchedData,
+        searchKey: value,
+        searchFacetKey: facet_key,
       });
     }
   }
