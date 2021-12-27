@@ -283,13 +283,11 @@ class FieldMultiselect extends PureComponent {
 
   renderOptions() {
     const {
-      filter: { data = {}, subcategories = {}, category },
+      filter: { data = {}, subcategories = {}, category, is_radio },
     } = this.props;
     let finalData = data ? data : subcategories;
     const datakeys = [];
     if (category === "sizes") {
-      console.log("muskan otpion", data);
-
       Object.keys(data).map((key) => {
         datakeys.push({ key: key, value: data[key].label.split(" ")[1] });
       });
@@ -332,7 +330,7 @@ class FieldMultiselect extends PureComponent {
           {category === "sizes" && !isMobile.any()
             ? this.renderSizeDropDown(datakeys)
             : null}
-          {category !== "sizes" && this.renderUnselectButton()}
+          {category !== "sizes" && !is_radio && this.renderUnselectButton()}
           {category === "in_stock"
             ? Object.entries(finalData).map(this.renderOption)
             : category === "brand_name"
