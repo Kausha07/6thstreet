@@ -732,5 +732,6 @@
     "Delivery Failed": null,
     "Description": null,
     "Out of Stock": null,
-    "In Stock": null
+    "In Stock": null,
+    "Select a size up for the right fit": null
 }
