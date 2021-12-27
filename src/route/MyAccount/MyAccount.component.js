@@ -112,7 +112,7 @@ export class MyAccount extends SourceMyAccount {
         const { name, alternativePageName, alternateName } = tabMap[activeTab];
         const returnTitle = activeTab === RETURN_ITEM ? __('Return Statement') : null;
         const isCancel = pathname.includes('/return-item/cancel');
-        const isReturn = pathname.includes("/my-account/return-item")
+        const isReturnButton = pathname === "/my-account/return-item"
         return (
             <ContentWrapper
                 label={__('My Account page')}
@@ -126,7 +126,7 @@ export class MyAccount extends SourceMyAccount {
                 />
                 <div block="MyAccount" elem="TabContent" mods={{ isArabic }}>
                     {alternativePageName === 'Club Apparel Loyalty' || name === 'Club Apparel Loyalty'
-                        ? null : !isReturn ? (
+                        ? null : !isReturnButton ? (
                             <h1 block="MyAccount" elem="Heading">
                                 {isCancel ? alternateName : alternativePageName
                                     || (returnTitle || name)}

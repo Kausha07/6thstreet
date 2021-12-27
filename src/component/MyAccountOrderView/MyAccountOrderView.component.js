@@ -112,14 +112,15 @@ class MyAccountOrderView extends PureComponent {
       order: { groups = [], status, increment_id, is_returnable },
     } = this.props;
     const isReturnItemPresent = groups?.some(item => item.status === DELIVERY_SUCCESSFUL)
-    const isItemReturnDisabled = groups?.some(item => item.status === DELIVERY_SUCCESSFUL && item.items?.every(item => item.return_date))
-    const isItemProcessing = groups
-      ?.reduce((acc, { items }) => [...acc, ...items], [])
-      ?.filter(
-        ({ qty_canceled, qty_ordered }) => +qty_canceled < +qty_ordered
-      )
-      .length > 0
-
+    let isItemReturnDisabled = true
+    groups?.some(item => {
+      if (item.status === DELIVERY_SUCCESSFUL) {
+        if (!item.items?.every(item => item.return_date)) {
+          isItemReturnDisabled = false
+        }
+      }
+    })
+    const isItemProcessing = groups?.some(item => item.status !== DELIVERY_SUCCESSFUL)
     const buttonText =
       status === STATUS_COMPLETE ? RETURN_ITEM_LABEL : CANCEL_ITEM_LABEL;
     return (
