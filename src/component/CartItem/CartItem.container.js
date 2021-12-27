@@ -31,6 +31,7 @@ import Event, {
   EVENT_GTM_PRODUCT_ADD_TO_CART,
   EVENT_GTM_PRODUCT_REMOVE_FROM_CART,
   VUE_REMOVE_FROM_CART,
+  VUE_PAGE_VIEW,
 } from "Util/Event";
 import isMobile from "Util/Mobile";
 import CartItem from "./CartItem.component";
@@ -109,6 +110,25 @@ export class CartItemContainer extends PureComponent {
     getCurrentProduct: this.getCurrentProduct.bind(this),
     toggleCartItemQuantityPopup: () => this.toggleCartItemQuantityPopup(),
   };
+
+  componentDidMount() {
+    const {location: { state },} = this.props;
+    const locale = VueIntegrationQueries.getLocaleFromUrl();
+    const customer = BrowserDatabase.getItem("customer");
+    const userID = customer && customer.id ? customer.id : null;
+    VueIntegrationQueries.vueAnalayticsLogger({
+      event_name: VUE_PAGE_VIEW,
+      params: {
+        clicked: Date.now(),
+        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
+        event: VUE_PAGE_VIEW,
+        pageType: "cart",
+        referrer: state?.prevPath ? state?.prevPath : null,
+        userID: userID,
+        uuid: getUUID(),
+      },
+    });
+  }
 
   componentWillUnmount() {
     if (this.handlers.length) {
