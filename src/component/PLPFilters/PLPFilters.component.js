@@ -323,7 +323,7 @@ class PLPFilters extends PureComponent {
 
   renderFilter = ([key, filter]) => {
     const { activeFilter, isReset, activeFilters, defaultFilters } = this.state;
-
+    const { initialOptions } = this.props;
     return (
       <PLPFilter
         key={key}
@@ -332,6 +332,7 @@ class PLPFilters extends PureComponent {
         currentActiveFilter={activeFilter}
         changeActiveFilter={this.changeActiveFilter}
         isReset={isReset}
+        initialOptions={initialOptions}
         resetParentState={this.resetParentState}
         parentActiveFilters={activeFilters}
         updateFilters={this.updateFilters}

@@ -131,7 +131,7 @@ $select-arrow-width: 6px !default;
     &::before {
       content: none;
     }
-    padding: 0px 6px;
+    padding: 0px 8px;
     @include before-desktop {
       width: 86%;
     }

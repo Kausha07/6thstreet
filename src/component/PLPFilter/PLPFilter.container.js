@@ -118,6 +118,7 @@ class PLPFilterContainer extends PureComponent {
       defaultFilters,
       currentActiveFilter,
       isSortBy,
+      initialOptions
     } = this.props;
 
     const { parentActiveFilters } = this.state;
@@ -130,6 +131,7 @@ class PLPFilterContainer extends PureComponent {
       currentActiveFilter,
       parentActiveFilters,
       isSortBy,
+      initialOptions
     };
   };
 

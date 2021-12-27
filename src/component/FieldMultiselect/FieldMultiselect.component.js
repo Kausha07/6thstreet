@@ -305,6 +305,7 @@ class FieldMultiselect extends PureComponent {
   renderOptions() {
     const {
       filter: { data = {}, subcategories = {}, category, is_radio, label },
+      initialOptions,
     } = this.props;
     const { searchFacetKey, searchKey, searchList } = this.state;
     let finalData = data ? data : subcategories;
@@ -328,11 +329,16 @@ class FieldMultiselect extends PureComponent {
     let conditionalData = data ? data : subcategories;
 
     let sizeData = data;
-    if (this.state.sizeDropDownKey === "") {
+    if (this.state.sizeDropDownKey === "" && category === "sizes") {
       this.setState({
         sizeDropDownKey: "size_eu",
         sizeDropDownList: data,
       });
+    }
+
+    if (category === "categories_without_path") {
+      let categoryLevel1 = initialOptions.q.split(" ")[1];
+      conditionalData = data[categoryLevel1].subcategories;
     }
 
     let searchData = data;
@@ -341,6 +347,7 @@ class FieldMultiselect extends PureComponent {
         searchData = searchList;
       }
     }
+
     return (
       <>
         <ul
@@ -398,16 +405,27 @@ class FieldMultiselect extends PureComponent {
   handleFilterSearch(event) {
     const {
       filter: { data = {} },
+      initialOptions,
     } = this.props;
     const facet_key = event.target.id;
     let allData = data ? data : null;
     let value = event.target.value;
     let finalSearchedData = {};
-    Object.keys(allData).filter((key) => {
-      if (key.toLowerCase().includes(value.toLowerCase())) {
-        finalSearchedData[key] = allData[key];
-      }
-    });
+    if (facet_key === "categories_without_path") {
+      let categoryLevel1 = initialOptions.q.split(" ")[1];
+      let categoryData = data[categoryLevel1].subcategories;
+      Object.keys(categoryData).filter((key) => {
+        if (key.toLowerCase().includes(value.toLowerCase())) {
+          finalSearchedData[key] = categoryData[key];
+        }
+      });
+    } else {
+      Object.keys(allData).filter((key) => {
+        if (key.toLowerCase().includes(value.toLowerCase())) {
+          finalSearchedData[key] = allData[key];
+        }
+      });
+    }
 
     if (finalSearchedData) {
       this.setState({
