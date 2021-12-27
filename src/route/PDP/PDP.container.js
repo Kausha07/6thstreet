@@ -105,6 +105,9 @@ export class PDPContainer extends PureComponent {
     this.requestProduct();
   }
 
+  componentDidMount() {
+    console.log('all well')
+  }
   componentDidUpdate(prevProps) {
     const {
       id,
@@ -118,8 +121,6 @@ export class PDPContainer extends PureComponent {
     const currentIsLoading = this.getIsLoading();
     const { id: prevId } = prevProps;
     const { productSku } = this.state;
-
-    console.log("prevProps", prevProps);
 
     if (productSku !== sku) {
       this.renderVueHits();

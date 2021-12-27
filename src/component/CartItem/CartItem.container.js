@@ -111,25 +111,6 @@ export class CartItemContainer extends PureComponent {
     toggleCartItemQuantityPopup: () => this.toggleCartItemQuantityPopup(),
   };
 
-  componentDidMount() {
-    const {location: { state },} = this.props;
-    const locale = VueIntegrationQueries.getLocaleFromUrl();
-    const customer = BrowserDatabase.getItem("customer");
-    const userID = customer && customer.id ? customer.id : null;
-    VueIntegrationQueries.vueAnalayticsLogger({
-      event_name: VUE_PAGE_VIEW,
-      params: {
-        clicked: Date.now(),
-        currency: VueIntegrationQueries.getCurrencyCodeFromLocale(locale),
-        event: VUE_PAGE_VIEW,
-        pageType: "cart",
-        referrer: state?.prevPath ? state?.prevPath : null,
-        userID: userID,
-        uuid: getUUID(),
-      },
-    });
-  }
-
   componentWillUnmount() {
     if (this.handlers.length) {
       [].forEach.call(this.handlers, (cancelablePromise) =>
