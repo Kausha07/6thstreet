@@ -1,41 +1,70 @@
 .PLPDetails {
-  display: flex;
-  align-items: center;
-  grid-gap: 20px;
-  &-ShareIcon {
-    display: flex;
-    justify-content: flex-end;
-    grid-gap: 25px;
-    margin-bottom: 20px;
-    img {
-      width: 25px !important;
-      margin-left: 15px;
-
-      &:hover {
-        cursor: pointer;
-      }
+    // display: flex;
+    // align-items: center;
+    // grid-gap: 20px;
+    margin-bottom: 57px;
+    &-ShareIcon {
+        display: flex;
+        justify-content: flex-end;
+        grid-gap: 25px;
+        margin-bottom: 20px;
+        img {
+            width: 25px !important;
+            margin-left: 15px;
+            &:hover {
+                cursor: pointer;
+            }
+        }
     }
-  }
-  &-BrandName {
-    font-size: 40px;
-    font-weight: 600;
-    letter-spacing: -1px;
-    line-height: 55px;
-  }
-  &-BrandHTML {
-    * {
-      font-size: 18px;
-      letter-spacing: 0;
-      line-height: 25px;
+    &-BrandName {
+        font-size: 40px;
+        font-weight: 600;
+        letter-spacing: -1px;
+        line-height: 55px;
+        text-align: center;
+        margin: 16px 0;
     }
-  }
-  &-BrandImage {
-    flex: 1;
-    padding-block: 1rem;
-  }
-
-  &-BrandDescription {
-    flex: 1;
-    padding-block: 1rem;
-  }
+    &-BrandHTML {
+        font-size: 18px;
+        letter-spacing: 0;
+        line-height: 25px;
+        text-align: center;
+        * {
+            font-size: 18px;
+            letter-spacing: 0;
+            line-height: 25px;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+    }
+    &-BrandDescription {
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: 20px;
+        flex-wrap: wrap;
+        @include mobile {
+            flex-direction: column;
+        }
+        .PLPDetails {
+            &-BrandImage {
+                flex: 1;
+            }
+            &-BrandHTML {
+                flex: 1;
+                font-size: 18px;
+                letter-spacing: 0;
+                line-height: 25px;
+                text-align: left;
+                text-align: justify;
+                * {
+                    // font-size: 18px;
+                    // letter-spacing: 0;
+                    // line-height: 25px;
+                    margin: 0 !important;
+                    padding: 0 !important;
+                }
+            }
+        }
+    }
 }
