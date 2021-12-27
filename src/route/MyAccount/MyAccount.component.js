@@ -25,13 +25,14 @@ import {
 import { isArabic } from 'Util/App';
 import { deleteAuthorizationToken } from 'Util/Auth';
 import isMobile from 'Util/Mobile';
-
+import { RETURN_ITEM_LABEL } from "Component/MyAccountOrderView/MyAccountOrderView.config.js"
 export class MyAccount extends SourceMyAccount {
     constructor(props) {
         super(props);
         this.handleClick = this.handleClick.bind(this);
         this.handleTabChange = this.handleTabChange.bind(this);
         this.handleSignOut = this.handleSignOut.bind(this);
+        this.returnItemButtonClick = this.returnItemButtonClick.bind(this)
     }
 
     static propTypes = {
@@ -85,12 +86,18 @@ export class MyAccount extends SourceMyAccount {
         history.push('/');
     }
 
+    returnItemButtonClick() {
+        const { history } = this.props;
+
+        history.push("/my-account/my-orders");
+    }
+
     renderDesktop() {
         const {
             activeTab,
             tabMap,
             changeActiveTab,
-            isSignedIn
+            isSignedIn,
         } = this.props;
         const { pathname = '' } = location;
 
@@ -105,25 +112,32 @@ export class MyAccount extends SourceMyAccount {
         const { name, alternativePageName, alternateName } = tabMap[activeTab];
         const returnTitle = activeTab === RETURN_ITEM ? __('Return Statement') : null;
         const isCancel = pathname.includes('/return-item/cancel');
+        const isReturn = pathname.includes("/my-account/return-item")
         return (
             <ContentWrapper
-              label={ __('My Account page') }
-              wrapperMix={ { block: 'MyAccount', elem: 'Wrapper', mods: { isArabic } } }
+                label={__('My Account page')}
+                wrapperMix={{ block: 'MyAccount', elem: 'Wrapper', mods: { isArabic } }}
             >
                 <MyAccountTabList
-                  tabMap={ tabMap }
-                  activeTab={ activeTab }
-                  changeActiveTab={ changeActiveTab }
-                  onSignOut={ this.handleSignOut }
+                    tabMap={tabMap}
+                    activeTab={activeTab}
+                    changeActiveTab={changeActiveTab}
+                    onSignOut={this.handleSignOut}
                 />
-                <div block="MyAccount" elem="TabContent" mods={ { isArabic } }>
-                    { alternativePageName === 'Club Apparel Loyalty' || name === 'Club Apparel Loyalty'
-                        ? null : (
+                <div block="MyAccount" elem="TabContent" mods={{ isArabic }}>
+                    {alternativePageName === 'Club Apparel Loyalty' || name === 'Club Apparel Loyalty'
+                        ? null : !isReturn ? (
                             <h1 block="MyAccount" elem="Heading">
-                                { isCancel ? alternateName : alternativePageName
-                                || (returnTitle || name) }
+                                {isCancel ? alternateName : alternativePageName
+                                    || (returnTitle || name)}
                             </h1>
-                        ) }
+                        ) : <div block="MyAccount" elem="HeadingBlock">
+                                <h1 block="MyAccount" elem="Heading">
+                                    {alternativePageName
+                                        || (returnTitle || name)}
+                                </h1>
+                                <button block="MyAccount" elem="ReturnButton" onClick={this.returnItemButtonClick}>{RETURN_ITEM_LABEL}</button>
+                            </div>}
                     <TabContent />
                 </div>
             </ContentWrapper>
@@ -153,24 +167,24 @@ export class MyAccount extends SourceMyAccount {
         const isCancel = pathname.includes('/return-item/cancel');
         return (
             <ContentWrapper
-              label={ __('My Account page') }
-              wrapperMix={ { block: 'MyAccount', elem: 'Wrapper', mods: { isArabic } } }
+                label={__('My Account page')}
+                wrapperMix={{ block: 'MyAccount', elem: 'Wrapper', mods: { isArabic } }}
             >
                 <MyAccountMobileHeader
-                  onClose={ this.handleClick }
-                  isHiddenTabContent={ hiddenTabContent === 'Active' }
-                  alternativePageName={ alternativePageName }
-                  name={ isCancel? alternateName: name }
+                    onClose={this.handleClick}
+                    isHiddenTabContent={hiddenTabContent === 'Active'}
+                    alternativePageName={alternativePageName}
+                    name={isCancel ? alternateName : name}
                 />
-                <div block={ hiddenTabList }>
+                <div block={hiddenTabList}>
                     <MyAccountTabList
-                      tabMap={ tabMap }
-                      activeTab={ activeTab }
-                      changeActiveTab={ this.handleTabChange }
-                      onSignOut={ this.handleSignOut }
+                        tabMap={tabMap}
+                        activeTab={activeTab}
+                        changeActiveTab={this.handleTabChange}
+                        onSignOut={this.handleSignOut}
                     />
                 </div>
-                <div block={ hiddenTabContent }>
+                <div block={hiddenTabContent}>
                     <div block="MyAccount" elem="TabContent">
                         <TabContent />
                     </div>

@@ -887,5 +887,7 @@
     "International Shipment": "شحن دولي",
     "Non Discountable": null,
     "In Stock": null,
-    "Out of Stock": null
+    "Out of Stock": null,
+    "Dispatched": null,
+    "In Transit": null
 }

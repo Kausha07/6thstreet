@@ -66,8 +66,8 @@ export class MyAccountReturnCreateContainer extends PureComponent {
     };
     onDiscardClick() {
         const { history } = this.props;
-        const { orderId } = this.state;
-        history.push(`/my-account/my-orders/${ orderId }`);
+        const orderId = this.getOrderId();
+        history.push(`/my-account/my-orders/${orderId}`);
     }
 
     getOrderId() {
@@ -88,11 +88,11 @@ export class MyAccountReturnCreateContainer extends PureComponent {
 
         this.setState({ isLoading: true });
 
-        MagentoAPI.get(`orders/${ orderId }/returnable-items`)
-            .then(({ data: { items, order_id, resolution_options } }) => {
+        MagentoAPI.get(`orders/${orderId}/returnable-items`)
+            .then(({ data: { items, order_increment_id, resolution_options } }) => {
                 this.setState({
                     items,
-                    incrementId: order_id,
+                    incrementId: order_increment_id,
                     isLoading: false,
                     resolutions: resolution_options
                 });
@@ -129,12 +129,12 @@ export class MyAccountReturnCreateContainer extends PureComponent {
             selectedItems: { ...selectedItems, [itemId]: { ...item, reasonId } }
         }));
     }
-    onResolutionChangeValue(value) {  
-        this.setState({resolutionId:value  })
+    onResolutionChangeValue(value) {
+        this.setState({ resolutionId: value })
     }
     onFormSubmit() {
         const { history, showErrorMessage } = this.props;
-        const { selectedItems = {}, items , resolutionId} = this.state;
+        const { selectedItems = {}, items, resolutionId } = this.state;
         const payload = {
             order_id: this.getOrderId(),
             items: Object.entries(selectedItems).map(([order_item_id, { reasonId, resolutionIdd }]) => {
@@ -164,7 +164,7 @@ export class MyAccountReturnCreateContainer extends PureComponent {
         this.setState({ isLoading: true });
 
         MagentoAPI.post('returns/request', payload).then(({ data: { id } }) => {
-            history.push(`/my-account/return-item/create/success/${ id }`);
+            history.push(`/my-account/return-item/create/success/${id}`);
         }).catch(() => {
             showErrorMessage(__('Error appeared while requesting a return'));
             this.setState({ isLoading: false });
@@ -174,8 +174,8 @@ export class MyAccountReturnCreateContainer extends PureComponent {
     render() {
         return (
             <MyAccountReturnCreate
-              { ...this.containerFunctions }
-              { ...this.containerProps() }
+                {...this.containerFunctions}
+                {...this.containerProps()}
             />
         );
     }
