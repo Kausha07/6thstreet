@@ -210,12 +210,29 @@ class FieldMultiselect extends PureComponent {
     );
   };
 
+  handleSizeSelection = (e) => {
+    const { parentCallback } = this.props;
+    const { id: facet_key } = e.target;
+    const facet_value = e.target.getAttribute("name");
+    const checked = e.target.getAttribute("value") === "false" ? true : false;
+    parentCallback(facet_key, facet_value, checked, false);
+  };
+
   renderSizeOption = ([key, option = {}]) => {
     const { subcategories = {} } = option;
+    const thisRef = this;
     if (key === this.state.sizeDropDownKey) {
       return Object.values(subcategories).map(function (value) {
+        const { facet_key, facet_value } = value;
         return (
-          <div block="FieldMultiselect" elem="sizesOption">
+          <div
+            block="FieldMultiselect"
+            elem="sizesOption"
+            id={facet_key}
+            name={facet_value}
+            value={value.is_selected}
+            onClick={thisRef.handleSizeSelection}
+          >
             {value.label}
             {!value.is_selected ? (
               <Image lazyLoad={false} src={selectImage} alt="fitler" />

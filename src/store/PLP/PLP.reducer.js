@@ -86,7 +86,6 @@ export const PLPReducer = (state = getInitialState(), action) => {
 
     case UPDATE_PLP_INIT_FILTERS:
       const { updatedFilters, facet_key, facet_value } = action;
-      console.log("muskan",action);
       return {
         ...state,
         filters: updatedFilters,

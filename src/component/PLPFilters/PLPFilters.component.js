@@ -607,7 +607,7 @@ class PLPFilters extends PureComponent {
           {count ? __("Products") : null}
         </div>
         <div block="FilterHeader">
-          <h2>{__("Filters")}</h2>
+          {!isMobile.any() && <h2>{__("Filters")}</h2>}
           <div
             block="PLPFilters"
             elem="Reset"
@@ -625,15 +625,17 @@ class PLPFilters extends PureComponent {
         <form block="PLPFilters" name="filters">
           {this.renderFilters()}
         </form>
-        {/* <div block="PLPFilters" elem="ToolBar" mods={{ isArabic }}>
-          <div block="PLPFilters" elem="QuickCategories" mods={{ isArabic }}>
-            {this.renderQuickFilters()}
+        {isMobile.any() && (
+          <div block="PLPFilters" elem="ToolBar" mods={{ isArabic }}>
+            <div block="PLPFilters" elem="QuickCategories" mods={{ isArabic }}>
+              {this.renderQuickFilters()}
+            </div>
+            <div block="PLPFilters" elem="ProductsCount" mods={{ isArabic }}>
+              <span>{count}</span>
+              {count ? __("Products") : null}
+            </div>
           </div>
-          <div block="PLPFilters" elem="ProductsCount" mods={{ isArabic }}>
-            <span>{count}</span>
-            {count ? __("Products") : null}
-          </div>
-        </div> */}
+        )}
       </div>
     );
   }

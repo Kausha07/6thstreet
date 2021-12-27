@@ -104,7 +104,6 @@ export class PLPContainer extends PureComponent {
 
     if (JSON.stringify(restOptions) !== JSON.stringify(prevRestOptions)) {
       // if queries match (excluding pages) => not inital
-      console.log("muskan 78");
       PLPContainer.requestProductList(props);
     } else if (page !== prevPage && !pages[page]) {
       // if only page has changed, and it is not yet loaded => request that page
