@@ -248,7 +248,6 @@ class DynamicContentVueProductSlider extends PureComponent {
       sourceProdID = null,
       sourceCatgID = null,
     } = this.props;
-    //
     return (
       <DragScroll data={{ rootClass: "ScrollWrapper", ref: this.cmpRef }}>
         <>

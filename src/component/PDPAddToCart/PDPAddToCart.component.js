@@ -581,6 +581,7 @@ class PDPAddToCart extends PureComponent {
         {sizeObject.sizeTypes !== undefined &&
         sizeObject.sizeTypes.length !== 0 ? (
           <>
+            <div block="SeperatorAddtoCart" />
             <div block="PDPAddToCart" elem="SizeInfoContainer">
               <span block="PDPAddToCart-SizeInfoContainer" elem="title">
                 {__("Size:")}

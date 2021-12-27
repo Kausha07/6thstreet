@@ -7,6 +7,7 @@
     bottom: 0;
     left: 0;
     z-index: 8;
+    height: 1px;
 
     &-Container {
         display: flex;
@@ -26,6 +27,10 @@
         top: 35px;
         @include mobile{
 
+        }
+        &_isArabic{
+            left: 150px;
+            right: unset;
         }
     }
 

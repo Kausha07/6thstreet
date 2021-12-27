@@ -96,7 +96,6 @@ class MyAccountOrderView extends PureComponent {
       order: { base_currency_code: currency },
       displayDiscountPercentage,
     } = this.props;
-
     return (
       <MyAccountOrderViewItem
         item={item}

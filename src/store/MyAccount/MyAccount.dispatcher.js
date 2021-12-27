@@ -163,7 +163,6 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
   }
 
   async signInCommonBlock(dispatch) {
-    console.log("common block ran");
     const wishlistItem = localStorage.getItem("Wishlist_Item");
     if (wishlistItem) {
       await Wishlist.addSkuToWishlist(dispatch, wishlistItem);
@@ -178,10 +177,7 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
   }
 
   async signIn(options = {}, dispatch) {
-    console.log("sign in options payload", options)
-    console.log("options condition result", options.hasOwnProperty("type"))
     if (options.hasOwnProperty("type")) {
-      console.log("Social Login Started.");
       try {
         await this.handleMobileAuthorization(dispatch, options);
         dispatch(updateCustomerSignInStatus(true));
@@ -194,10 +190,8 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
       }
     } else {
       const mutation = MyAccountQuery.getSignInMutation(options);
-      console.log("mutation", mutation);
       try {
         const result = await fetchMutation(mutation);
-        console.log("result", result);
         const {
           generateCustomerToken: { token },
         } = result;
@@ -230,7 +224,6 @@ export class MyAccountDispatcher extends SourceMyAccountDispatcher {
   }
   // handleMobileAuthCommonBlock(){}
   async handleMobileAuthorization(dispatch, options) {
-    console.log("options", options)
     const { email: username, password } = options;
     const { data: { token, t, user: { custom_attributes, gender, id } } = {} } =
       await getMobileApiAuthorizationToken(
