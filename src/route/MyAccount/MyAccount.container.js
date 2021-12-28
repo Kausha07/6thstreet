@@ -54,15 +54,15 @@ export const tabMap = {
     },
     [DASHBOARD]: {
         url: '/dashboard',
-        name: __('My Account')
+        name: __('My Profile')
     },
     [MY_ORDERS]: {
         url: '/my-orders',
-        name: __('Order history')
+        name: __('My Orders')
     },
     [RETURN_ITEM]: {
         url: '/return-item',
-        name: __('Return an item'),
+        name: __('My Returns'),
         alternateName: __('Cancel an item')
     },
     [MY_WISHLIST]: {
@@ -71,7 +71,7 @@ export const tabMap = {
     },
     [ADDRESS_BOOK]: {
         url: '/address-book',
-        name: __('Delivery addresses')
+        name: __('My Address Book')
     }
 };
 
