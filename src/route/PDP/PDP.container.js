@@ -113,7 +113,7 @@ export class PDPContainer extends PureComponent {
       id,
       isLoading,
       setIsLoading,
-      product: { product_type_6s, sku, brand_name: brandName, url,price } = {},
+      product: { product_type_6s, sku, brand_name: brandName, url, price } = {},
       location: { state },
       product,
       menuCategories = [],
@@ -121,6 +121,8 @@ export class PDPContainer extends PureComponent {
     const currentIsLoading = this.getIsLoading();
     const { id: prevId } = prevProps;
     const { productSku } = this.state;
+    console.log("did update run (product sku)", productSku)
+    console.log("did update run (sku)", sku)
 
     if (productSku !== sku) {
       this.renderVueHits();
@@ -150,12 +152,12 @@ export class PDPContainer extends PureComponent {
 
   renderVueHits() {
     const {
-      product: { product_type_6s, sku, url,price },
+      product: { product_type_6s, sku, url, price },
       location: { state },
       product,
     } = this.props;
     const itemPrice = price ? price[0][Object.keys(price[0])[0]]["6s_special_price"] : null;
-    const basePrice = price? price[0][Object.keys(price[0])[0]]["6s_base_price"] : null;
+    const basePrice = price ? price[0][Object.keys(price[0])[0]]["6s_base_price"] : null;
     const locale = VueIntegrationQueries.getLocaleFromUrl();
     VueIntegrationQueries.vueAnalayticsLogger({
       event_name: VUE_PAGE_VIEW,
@@ -169,7 +171,7 @@ export class PDPContainer extends PureComponent {
         url: window.location.href,
         sourceProdID: sku,
         sourceCatgID: product_type_6s, // TODO: replace with category id
-        prodPrice:itemPrice,
+        prodPrice: itemPrice,
       },
     });
   }
@@ -219,7 +221,7 @@ export class PDPContainer extends PureComponent {
     if (nbHits === 1) {
       const rawCategoriesLastLevel =
         categories[
-          Object.keys(categories)[Object.keys(categories).length - 1]
+        Object.keys(categories)[Object.keys(categories).length - 1]
         ]?.[0];
       const categoriesLastLevel = rawCategoriesLastLevel
         ? rawCategoriesLastLevel.split(" /// ")
