@@ -66,12 +66,18 @@ class PLPFilters extends PureComponent {
         };
       }
     }
-
     return {
       isOpen: activeOverlay === "PLPFilter",
     };
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.plpPageActiveFilters !== prevProps.plpPageActiveFilters) {
+      this.setState({
+        activeFilters:this.props.plpPageActiveFilters
+      })
+    }
+  }
   delayFilterUpdate() {
     clearTimeout(this.timer);
     // eslint-disable-next-line no-magic-numbers
@@ -147,6 +153,20 @@ class PLPFilters extends PureComponent {
     this.setState({ activeFilters: {}, isReset: true, defaultFilters: false });
 
     onReset();
+  };
+
+  onClearFilterState = (initialFacetKey) => {
+    const { activeFilters } = this.state;
+    const filterArray = activeFilters[initialFacetKey];
+    const index = filterArray.indexOf(facet_value);
+    if (index > -1) {
+      filterArray.splice(index, 1);
+    }
+    this.setState({
+      activeFilters: {
+        [initialFacetKey]: filterArray,
+      },
+    });
   };
 
   onShowResultButton = () => {

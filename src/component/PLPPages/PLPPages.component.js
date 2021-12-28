@@ -103,19 +103,9 @@ class PLPPages extends PureComponent {
                     if (val.is_selected === true) {
                       return (
                         <li>
-                          {thisRef.renderButtonView(
-                            val.label,
-                            ()=>thisRef.OnDeselectFilter(val, values)
+                          {thisRef.renderButtonView(val.label, () =>
+                            thisRef.OnDeselectFilter(val, values)
                           )}
-                          {/* <button
-                            onClick={()=>thisRef.OnDeselectFilter(val, values)}
-                            aria-label="Dismiss"
-                            tabIndex={0}
-                            block="PLPPageFilter"
-                          >
-                            {label}
-                            <Close />
-                          </button> */}
                         </li>
                       );
                     }
@@ -127,9 +117,8 @@ class PLPPages extends PureComponent {
                   ) {
                     return (
                       <li>
-                        {thisRef.renderButtonView(
-                          value.label,
-                          ()=>thisRef.OnDeselectFilter(value, values)
+                        {thisRef.renderButtonView(value.label, () =>
+                          thisRef.OnDeselectFilter(value, values)
                         )}
                       </li>
                     );
@@ -339,8 +328,9 @@ class PLPPages extends PureComponent {
 
   select = (isQuickFilters) => {
     const { activeFilters = {} } = this.state;
-    const { query } = this.props;
+    const { query, updateFiltersState } = this.props;
     if (!isMobile.any() || isQuickFilters) {
+      updateFiltersState(activeFilters);
       Object.keys(activeFilters).map((key) =>
         WebUrlParser.setParam(key, activeFilters[key], query)
       );

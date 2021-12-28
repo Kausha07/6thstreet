@@ -309,6 +309,7 @@ class FieldMultiselect extends PureComponent {
     } = this.props;
     const { searchFacetKey, searchKey, searchList } = this.state;
     let finalData = data ? data : subcategories;
+
     const datakeys = [];
     if (category === "sizes") {
       Object.keys(data).map((key) => {
@@ -338,7 +339,9 @@ class FieldMultiselect extends PureComponent {
 
     if (category === "categories_without_path") {
       let categoryLevel1 = initialOptions.q.split(" ")[1];
-      conditionalData = data[categoryLevel1].subcategories;
+      if (data[categoryLevel1]) {
+        conditionalData = data[categoryLevel1].subcategories;
+      }
     }
 
     let searchData = data;
