@@ -340,11 +340,14 @@ class PLPPages extends PureComponent {
   render() {
     return (
       <div block="PLPPages Products-Lists">
-        <div class="ProductToolBar">
-          <div block="ProductSelectedFilters">
-            {this.renderSelectedFilters()}
+        {!isMobile.any() && (
+          <div class="ProductToolBar">
+            <div block="ProductSelectedFilters">
+              {this.renderSelectedFilters()}
+            </div>
           </div>
-        </div>
+        )}
+
         {this.renderPages()}
       </div>
     );

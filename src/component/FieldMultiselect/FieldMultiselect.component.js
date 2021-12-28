@@ -10,6 +10,7 @@ import Image from "Component/Image";
 import selectedImage from "./icons/select.png";
 import selectImage from "./icons/add.png";
 import searchPng from "../HeaderSearch/icons/search.svg";
+import Field from "Component/Field";
 
 class FieldMultiselect extends PureComponent {
   static propTypes = {
@@ -42,6 +43,10 @@ class FieldMultiselect extends PureComponent {
   filterDropdownRef = createRef();
 
   filterButtonRef = createRef();
+
+  allFieldRef = createRef();
+
+  allOptionRef = createRef();
 
   constructor(props) {
     super(props);
@@ -304,18 +309,35 @@ class FieldMultiselect extends PureComponent {
 
   renderOptions() {
     const {
-      filter: { data = {}, subcategories = {}, category, is_radio, label },
-      initialOptions,
+      filter: {
+        data = {},
+        subcategories = {},
+        category,
+        is_radio,
+        label,
+        selected_filters_count,
+      },
+      initialOptions
     } = this.props;
     const { searchFacetKey, searchKey, searchList } = this.state;
     let finalData = data ? data : subcategories;
-
-    const datakeys = [];
-    if (category === "sizes") {
-      Object.keys(data).map((key) => {
-        datakeys.push({ key: key, value: data[key].label.split(" ")[1] });
-      });
+    let totalCount = 0;
+    if (!is_radio) {
+      if (data && category !== "categories_without_path") {
+        Object.values(data).map((category) => {
+          totalCount = totalCount + category.product_count;
+        });
+      } else {
+        let categoryLevel1 = initialOptions.q.split(" ")[1];
+        if (data[categoryLevel1]) {
+          let filterData = data[categoryLevel1].subcategories;
+          Object.values(filterData).map((category) => {
+            totalCount = totalCount + category.product_count;
+          });
+        }
+      }
     }
+
     if (category === "in_stock") {
       if (finalData) {
         Object.values(finalData).map((subData) => {
@@ -327,7 +349,6 @@ class FieldMultiselect extends PureComponent {
         });
       }
     }
-    let conditionalData = data ? data : subcategories;
 
     let sizeData = data;
     if (this.state.sizeDropDownKey === "" && category === "sizes") {
@@ -337,26 +358,26 @@ class FieldMultiselect extends PureComponent {
       });
     }
 
-    if (category === "categories_without_path") {
-      let categoryLevel1 = initialOptions.q.split(" ")[1];
-      if (data[categoryLevel1]) {
-        conditionalData = data[categoryLevel1].subcategories;
-      }
-    }
-
     let searchData = data;
-    if (Object.keys(conditionalData).length > 10) {
-      if (searchKey != "" && searchFacetKey === category) {
-        searchData = searchList;
-      }
+    if (searchKey != "" && searchFacetKey === category) {
+      searchData = searchList;
     }
-
+    const type = is_radio ? "radio" : "checkbox";
+    const selectAllCheckbox = selected_filters_count === 0 ? true : false;
     return (
       <>
         <ul
           block="FieldMultiselect"
           elem={category === "sizes" ? "sizesOptionContainer" : ""}
         >
+          {!is_radio &&
+            category !== "sizes" &&
+            this.renderAllFilterOption(
+              type,
+              category,
+              selectAllCheckbox,
+              totalCount
+            )}
           {category === "in_stock"
             ? Object.entries(finalData).map(this.renderOption)
             : category === searchFacetKey
@@ -368,6 +389,37 @@ class FieldMultiselect extends PureComponent {
             : Object.entries(subcategories).map(this.renderOption)}
         </ul>
       </>
+    );
+  }
+
+  renderAllFilterOption(type, initialFacetKey, checked, totalCount) {
+    let product_count = totalCount;
+    const { isArabic } = this.state;
+    return (
+      <li
+        ref={this.allOptionRef}
+        block="PLPFilterOption"
+        elem="List"
+        mods={{ isArabic }}
+      >
+        <Field
+          formRef={this.allFieldRef}
+          onClick={() => {}}
+          mix={{
+            block: "PLPFilterOption",
+            elem: "Input",
+          }}
+          type={type}
+          id={"all" + initialFacetKey}
+          name={initialFacetKey}
+          value={"all"}
+          checked={checked}
+        />
+        <label block="PLPFilterOption" htmlFor={"all"}>
+          All
+          <span>{`(${product_count})`}</span>
+        </label>
+      </li>
     );
   }
 
@@ -522,6 +574,7 @@ class FieldMultiselect extends PureComponent {
         conditionalData = data[categoryLevel1].subcategories;
       }
     }
+
     return (
       <div
         ref={this.filterDropdownRef}
@@ -546,7 +599,7 @@ class FieldMultiselect extends PureComponent {
           {placeholder}
         </button>
         {isMobile.any() ? null : this.renderOptionSelected()}
-        {toggleOptionsList && (
+        {!isMobile.any() && toggleOptionsList && (
           <>
             {Object.keys(conditionalData).length > 10
               ? this.renderFilterSearchbox(label, category)
