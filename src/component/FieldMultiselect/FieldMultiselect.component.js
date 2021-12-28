@@ -357,13 +357,6 @@ class FieldMultiselect extends PureComponent {
           block="FieldMultiselect"
           elem={category === "sizes" ? "sizesOptionContainer" : ""}
         >
-          {Object.keys(conditionalData).length > 10
-            ? this.renderFilterSearchbox(label, category)
-            : null}
-          {category === "sizes" && !isMobile.any()
-            ? this.renderSizeDropDown(datakeys)
-            : null}
-          {category !== "sizes" && !is_radio && this.renderUnselectButton()}
           {category === "in_stock"
             ? Object.entries(finalData).map(this.renderOption)
             : category === searchFacetKey
@@ -483,12 +476,20 @@ class FieldMultiselect extends PureComponent {
                   key
                 ) {
                   if (val.is_selected === true) {
-                    return <li key={key}>{val.label}, </li>;
+                    return (
+                      <li key={key} block="selectedListItem">
+                        {val.label}
+                      </li>
+                    );
                   }
                 });
               } else {
                 if (values.is_selected === true) {
-                  return <li key={keys}>{values.label}, </li>;
+                  return (
+                    <li key={keys} block="selectedListItem">
+                      {values.label}
+                    </li>
+                  );
                 }
               }
             })}
@@ -500,8 +501,27 @@ class FieldMultiselect extends PureComponent {
 
   renderMultiselectContainer() {
     const { toggleOptionsList, isArabic } = this.state;
-    const { placeholder, isHidden } = this.props;
+    const {
+      placeholder,
+      isHidden,
+      filter: { data = {}, subcategories = {}, category, is_radio, label },
+      initialOptions,
+    } = this.props;
 
+    const datakeys = [];
+    if (category === "sizes") {
+      Object.keys(data).map((key) => {
+        datakeys.push({ key: key, value: data[key].label.split(" ")[1] });
+      });
+    }
+    let conditionalData = data ? data : subcategories;
+
+    if (category === "categories_without_path") {
+      let categoryLevel1 = initialOptions.q.split(" ")[1];
+      if (data[categoryLevel1]) {
+        conditionalData = data[categoryLevel1].subcategories;
+      }
+    }
     return (
       <div
         ref={this.filterDropdownRef}
@@ -526,6 +546,17 @@ class FieldMultiselect extends PureComponent {
           {placeholder}
         </button>
         {isMobile.any() ? null : this.renderOptionSelected()}
+        {toggleOptionsList && (
+          <>
+            {Object.keys(conditionalData).length > 10
+              ? this.renderFilterSearchbox(label, category)
+              : null}
+            {category === "sizes" && !isMobile.any()
+              ? this.renderSizeDropDown(datakeys)
+              : null}
+            {category !== "sizes" && !is_radio && this.renderUnselectButton()}
+          </>
+        )}
         <div
           block="FieldMultiselect"
           elem="OptionListContainer"

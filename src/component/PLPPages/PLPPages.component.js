@@ -184,9 +184,9 @@ class PLPPages extends PureComponent {
     } else {
       let categoryDataStatus = categoryLevel1 || facet_key.includes("size");
       if (categoryDataStatus) {
-        let categoryData = categoryLevel1
-          ? data[categoryLevel1]
-          : data[facet_key];
+        let categoryData = facet_key.includes("size")
+          ? data[facet_key]
+          : data[categoryLevel1];
         if (
           categoryData.subcategories &&
           categoryData.subcategories[facet_value]

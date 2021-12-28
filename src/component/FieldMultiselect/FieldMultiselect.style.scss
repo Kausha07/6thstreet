@@ -117,6 +117,32 @@ $select-arrow-width: 6px !default;
   //   &-sizesOption:nth-child(1){
   //   }
 
+  .MultiSelectOption {
+    ul {
+      height: 100%;
+      width: 100%;
+      list-style: none;
+      flex-wrap: wrap;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      .selectedListItem:not(:last-child)::after {
+        content: ", ";
+        margin-right: 4px;
+      }
+      li {
+        display: inline-flex;
+        min-height: 27px;
+        font-size: 13px;
+        vertical-align: baseline;
+        margin: 0 !important;
+        padding: 0 !important;
+        &::before {
+          content: none;
+        }
+      }
+    }
+  }
   &-sizesOption {
     display: flex;
     justify-content: space-between;
@@ -207,8 +233,7 @@ $select-arrow-width: 6px !default;
       }
     }
   }
-  ul {
-    list-style-type: none;
+ 
     .Search-Container {
       input {
         background-color: #f5f5f5;
@@ -241,7 +266,7 @@ $select-arrow-width: 6px !default;
         }
       }
     }
-  }
+  
 
   &-SizeSelect {
     position: relative;
