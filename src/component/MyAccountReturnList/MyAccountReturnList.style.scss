@@ -1,45 +1,46 @@
 .MyAccountReturnList {
-    @include tablet{
-        margin-top: 594px;
+  @include tablet {
+    margin-top: 594px;
+  }
+  &-Header {
+    display: flex;
+    justify-content: center;
+    margin: 5px 0 0;
+
+    @include desktop {
+      align-items: center;
+      justify-content: space-between;
+      margin: 5px 0 30px;
     }
-    &-Header {
-        display: flex;
-        justify-content: center;
-        margin: 5px 0 30px;
+  }
 
-        @include desktop {
-            align-items: center;
-            justify-content: space-between;
-        }
+  &-Heading {
+    font-weight: var(--fw-regular);
+    font-size: 22px;
+    margin: 0;
+    text-transform: capitalize;
+
+    @include before-desktop {
+      display: none;
     }
+  }
 
-    &-Heading {
-        font-weight: var(--fw-regular);
-        font-size: 22px;
-        margin: 0;
-        text-transform: capitalize;
+  &-Button {
+    border: 1px solid #000000;
+    border-radius: 5px;
+    display: block;
+    font-weight: var(--fw-regular);
+    font-size: 14px;
+    height: auto;
+    padding: 5px 10px;
+    text-transform: none;
 
-        @include before-desktop {
-            display: none;
-        }
+    @include desktop {
+      display: none;
     }
+  }
 
-    &-Button {
-        border: 1px solid #000000;
-        border-radius: 5px;
-        display: block;
-        font-weight: var(--fw-regular);
-        font-size: 14px;
-        height: auto;
-        padding: 5px 10px;
-        text-transform: none;
-
-        @include desktop {
-            display: none;
-        }
-    }
-
-    a + a {
-        margin: 0;
-    }
+  a + a {
+    margin: 0;
+  }
 }

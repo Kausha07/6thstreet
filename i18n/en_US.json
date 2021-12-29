@@ -729,5 +729,15 @@
     "My Orders": null,
     "My Returns": null,
     "My Address Book": null,
-    "My Profile": null
+    "My Profile": null,
+    "About ": null,
+    "Dispatched": null,
+    "In Transit": null,
+    "Delivery Failed": null,
+    "Description": null,
+    "Out of Stock": null,
+    "In Stock": null,
+    "Select a size up for the right fit": null,
+    "My Address Book1": null,
+    "Contact & Help": null
 }

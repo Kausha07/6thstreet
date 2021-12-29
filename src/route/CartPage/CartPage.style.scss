@@ -561,6 +561,7 @@
 
         @include mobile {
           padding: 1rem;
+          max-height: 100%;
         }
       }
     }

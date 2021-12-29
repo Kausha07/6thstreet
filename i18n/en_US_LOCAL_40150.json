@@ -921,6 +921,8 @@
     "BY AGE": null,
     "International Shipment": null,
     "Non Discountable": null,
+    "Dispatched": null,
+    "In Transit": null,
     "PRODUCT DETAILS": null,
     "PRODUCT DETAILS:": null,
     "SHOW MORE DETAILS": null,
@@ -934,5 +936,11 @@
     "My Orders": null,
     "My Returns": null,
     "My Address Book": null,
-    "My Profile": null
+    "My Profile": null,
+    "Out of Stock": null,
+    "In Stock": null,
+    "Choose one size above your actual size": null,
+    "Select a size up for the right fit": null,
+    "My Address Book1": null,
+    "Contact & Help": null
 }
