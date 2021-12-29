@@ -31,7 +31,7 @@ export class PDPDispatcher {
   }
   async resetProduct(payload, dispatch) {
     // remove product from state if not pdp
-    dispatch(setPDPData({}, options));
+    dispatch(setPDPData({}, {}));
   }
 
   async requestProductBySku(payload, dispatch) {

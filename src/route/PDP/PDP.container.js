@@ -104,13 +104,10 @@ export class PDPContainer extends PureComponent {
   constructor(props) {
     super(props);
     this.requestProduct();
-    console.log("hello")
   }
 
   componentDidMount() {
-    // console.log('all well')
     const { location: { pathname } } = this.props
-    console.log("pathname", pathname)
     this.setState({ currentLocation: pathname })
   }
   componentDidUpdate(prevProps) {
@@ -126,21 +123,15 @@ export class PDPContainer extends PureComponent {
     const currentIsLoading = this.getIsLoading();
     const { id: prevId } = prevProps;
     const { productSku, currentLocation } = this.state;
-    // console.log("lets review changes")
-    console.log("product sku", productSku)
-    console.log("sku", sku)
-    console.log("id ", id)
-    console.log("previous id", prevId)
+
 
     // if (sku != undefined)
     if (productSku != sku && (currentLocation === this.props.location.pathname)) {
-      console.log("view rendered")
       this.renderVueHits();
     }
 
     // Request product, if URL rewrite has changed
     if (id !== prevId) {
-      console.log("requested data")
       this.requestProduct();
     }
 

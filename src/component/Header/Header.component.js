@@ -48,20 +48,16 @@ export class Header extends PureComponent {
   componentDidMount() {
     const { delay } = this.state;
     this.timer = setInterval(this.tick, delay);
-    console.log("did mount called")
   }
 
   componentDidUpdate(prevProps, prevState) {
     const { delay, type } = this.state;
     const { resetProduct } = this.props;
-    if (prevState !== delay) {
+    if (prevProps !== delay) {
       clearInterval(this.timer);
       this.timer = setInterval(this.tick, delay);
     }
-    console.log("current type", type)
-    console.log("prev type", prevState)
-    if (type !== TYPE_PRODUCT) {
-      console.log("reset product called")
+    if (prevState.type !== type && type !== TYPE_PRODUCT) {
       resetProduct()
     }
   }
