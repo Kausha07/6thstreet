@@ -2,6 +2,7 @@ import { getStore } from "Store";
 import { VIEW_SEARCH_RESULTS_ALGOLIA } from "Util/Event";
 import AlgoliaSDK from "../../../../packages/algolia-sdk";
 import { queryString } from "../helper/Object";
+import isMobile from "Util/Mobile";
 
 export const PRODUCT_HIGHLIGHTS = [
   "color",
@@ -35,12 +36,14 @@ export class Algolia {
   }
 
   async getPLP(params = {}) {
+    const productCount = isMobile.any() ? 16 : 15;
     const {
       AppState: { locale = process.env.REACT_APP_LOCATE },
     } = getStore().getState();
 
     const url = queryString({
       ...params,
+      limit: productCount,
       // TODO: get proper locale
       locale,
     });
