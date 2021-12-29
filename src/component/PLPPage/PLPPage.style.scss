@@ -7,7 +7,7 @@
         @include mobile() {
             grid-template-columns: repeat(2, 1fr);
             margin: 0;
-            grid-gap: 35px 4px;
+            grid-gap: 29px 4px;
         }
     }
     .ProductItem {
@@ -44,15 +44,15 @@
                 line-height: 17px;
                 &-Wrapper {
                     display: block;
-                    text-align: center;
+                    //text-align: center;
                 }
                 &-Discount {
                     display: block;
-                    text-align: center;
+                    //text-align: center;
                 }
                 &-Base {
                     display: block;
-                    text-align: center;
+                    //text-align: center;
                 }
                 &-Base_discount {
                     display: inline;

@@ -21,6 +21,7 @@ class PLPPagePlaceholder extends PureComponent {
     const placeholderCount = this.state.isMobile ? 8 : 9;
     return Array.from({ length: placeholderCount }, this.renderPlaceholder);
   }
+  
 
   render() {
     const { onVisibilityChange, isFirst } = this.props;
@@ -30,7 +31,7 @@ class PLPPagePlaceholder extends PureComponent {
         delayedCall
         partialVisibility={["top", "bottom"]}
         minTopValue="1"
-        onChange={onVisibilityChange}
+        onChange={this.state.isMobile?onVisibilityChange : ()=>{} }
       >
         <div block="PLPPagePlaceholder" mods={{ isFirst }}>
           {this.renderPlaceholders()}
