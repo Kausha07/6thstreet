@@ -537,18 +537,30 @@ class FieldMultiselect extends PureComponent {
                   key
                 ) {
                   if (val.is_selected === true) {
+                    let label =
+                      val.facet_key === "in_stock" && val.label === 1
+                        ? "In Stock"
+                        : val.facet_key === "in_stock" && val.label === 0
+                        ? "Out of Stock"
+                        : val.label;
                     return (
                       <li key={key} block="selectedListItem">
-                        {val.label}
+                        {label}
                       </li>
                     );
                   }
                 });
               } else {
                 if (values.is_selected === true) {
+                  let label =
+                    values.facet_key === "in_stock" && values.label === "1"
+                      ? "In Stock"
+                      : values.facet_key === "in_stock" && values.label === "0"
+                      ? "Out of Stock"
+                      : values.label;
                   return (
                     <li key={keys} block="selectedListItem">
-                      {values.label}
+                      {label}
                     </li>
                   );
                 }
