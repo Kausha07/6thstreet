@@ -175,6 +175,18 @@
 }
 
 .Products-Filter {
+  .FilterHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .Reset {
+      width: auto;
+    }
+    button {
+      height: 0px;
+      padding: 0px;
+    }
+  }
   .PLPFilters {
     // margin: 0 20px;
     // display: flex;

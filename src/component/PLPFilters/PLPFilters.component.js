@@ -300,7 +300,8 @@ class PLPFilters extends PureComponent {
           count = count + 1;
         }
       });
-    const displayCount = count - 1;
+    const displayCount = count;
+    console.log("muskan count",count,displayCount);
     return displayCount;
   }
 
