@@ -91,22 +91,17 @@ export class UrlRewritesContainer extends PureComponent {
       hideActiveOverlay();
       document.body.style.overflow = "visible";
       // Request URL rewrite if pathname or locale changed
-      console.log('pathname',pathname);
-      console.log('prevPathname',prevPathname);
-      console.log('prevStatePathname',prevStatePathname);
       this.requestUrlRewrite(true);
     }
   }
 
   async requestUrlRewrite(isUpdate = false) {
-    console.log("isUpdate",isUpdate);
     // TODO: rename this to pathname, urlParam is strange
     const { pathname: urlParam = "", search } = location;
     const slicedUrl = urlParam.slice(urlParam.search("id/"));
     // eslint-disable-next-line no-magic-numbers
     const magentoProductId = Number(slicedUrl.slice("3").split("/")[0]);
     const possibleSku = this.getPossibleSku();
-    console.log("possibleSku",possibleSku)
     if (isUpdate) {
       this.setState({
         isLoading: true,
@@ -214,7 +209,6 @@ export class UrlRewritesContainer extends PureComponent {
     const { isLoading, type, id, sku, brandDescription, brandImg, brandName } =
       this.state;
     const string_sku = sku.toString();
-    console.log("string_sku",string_sku)
     return {
       isLoading,
       type,
@@ -227,7 +221,6 @@ export class UrlRewritesContainer extends PureComponent {
   };
 
   render() {
-    console.log("this.state",this.state)
     return (
       <UrlRewrites {...this.containerFunctions} {...this.containerProps()} />
     );
