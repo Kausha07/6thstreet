@@ -1,10 +1,13 @@
 import { Fragment, PureComponent } from 'react';
+import BrowserDatabase from 'Util/BrowserDatabase';
 import { isArabic } from 'Util/App';
 import PropTypes from 'prop-types';
 import CDN from "../../util/API/provider/CDN";
 import Link from "Component/Link";
 import { connect } from 'react-redux';
-import { setCountry, setLanguage } from 'Store/AppState/AppState.action';
+import { LocationType } from "Type/Common";
+import history from "Util/History";
+import { setCountry, setLanguage, setLanguageForWelcome } from 'Store/AppState/AppState.action';
 import { setAppConfig } from 'Store/AppConfig/AppConfig.action'
 import StoreCreditDispatcher from 'Store/StoreCredit/StoreCredit.dispatcher';
 import { getCountriesForSelect, getCountryLocaleForSelect } from 'Util/API/endpoint/Config/Config.format';
@@ -33,15 +36,49 @@ export const mapDispatchToProps = (dispatch) => ({
     setCountry: (value) => dispatch(setCountry(value)),
     setLanguage: (value) => dispatch(setLanguage(value)),
     setAppConfig: (value) => dispatch(setAppConfig(value)),
-    updateStoreCredits: () => StoreCreditDispatcher.getStoreCredit(dispatch)
+    updateStoreCredits: () => StoreCreditDispatcher.getStoreCredit(dispatch),
+    setLanguageForWelcome: (value) => dispatch(setLanguageForWelcome(value))
+
 });
 
+export const APP_STATE_CACHE_KEY = 'APP_STATE_CACHE_KEY';
+
 class WelcomeHomePage extends PureComponent {
-    state = {
-        isArabic: false,
-        welcomeImg: null,
-        isPopupOpen: true
-    };
+    static propTypes = {
+        location: LocationType.isRequired
+      };
+
+
+    constructor(props) {
+        super(props);
+        let k = BrowserDatabase.getItem(APP_STATE_CACHE_KEY)
+        if (k){
+            this.state = {
+                isPopupOpen: false,
+                isArabic: false,
+                welcomeImg: null
+            }
+            const {
+                country,
+                language,
+                locale,
+                gender
+            } = k;
+            // if(locale !== ""){
+
+
+            // }
+
+        }
+        else{
+            this.state = {
+                isPopupOpen: true,
+                isArabic: false,
+                welcomeImg: null
+            }
+        }
+    }
+
 
     linkMap = {
         title: __("Download The App"),
@@ -95,6 +132,10 @@ class WelcomeHomePage extends PureComponent {
     }
 
     closePopup = () => {
+        let lang = this.props.language
+        let country = this.props.country
+        this.props.setLanguageForWelcome(lang)
+
         this.setState({
             isPopupOpen: false
         })
@@ -102,7 +143,6 @@ class WelcomeHomePage extends PureComponent {
 
     onGenderSelect = (val) => {
         const { country, language } = this.props;
-        console.log(val, country, language)
         const locale = `${language}-${country.toLowerCase()}`;
         let url = URLS[locale] + `/${val}.html`
         window.location.href = url
