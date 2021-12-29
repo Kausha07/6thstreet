@@ -660,7 +660,6 @@ class PDPDetailsSection extends PureComponent {
               const widgetID = pdpWidgetsData[index]["type"];
               const { data } = item;
               if (data && data.length > 0) {
-                console.log("pdp detail section data",data)
                 return (
                   <>
                     <div block="PDPWidgets" elem="Slider">
