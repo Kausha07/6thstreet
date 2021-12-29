@@ -17,7 +17,7 @@ import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 import fitlerImage from "./icons/filter-button.png";
 import { SIZES } from "./PLPFilters.config";
-import Refine from "../Icons/Refine/icon.png"
+import Refine from "../Icons/Refine/icon.png";
 import "./PLPFilters.style";
 class PLPFilters extends PureComponent {
   static propTypes = {
@@ -228,7 +228,7 @@ class PLPFilters extends PureComponent {
   renderResetFilterButton() {
     const { isArabic } = this.state;
 
-    const isClear = this.getFilterCount() >= 0;
+    const isClear = this.getFilterCount() > 0;
 
     return isClear || isMobile.any() ? (
       <button
@@ -296,8 +296,8 @@ class PLPFilters extends PureComponent {
       : { count: 0 };
     Object.keys(activeFilters).length > 0 &&
       Object.keys(activeFilters).map((key) => {
-        if (key === "categories.level1") {
-          count = count - 1;
+        if (key !== "categories.level1") {
+          count = count + 1;
         }
       });
     const displayCount = count - 1;
@@ -387,7 +387,7 @@ class PLPFilters extends PureComponent {
           defaultFilters={defaultFilters}
           isSortBy={true}
         />
-        <img src={Refine}/>
+        <img src={Refine} />
       </div>
     );
   };
@@ -597,11 +597,10 @@ class PLPFilters extends PureComponent {
   };
 
   onUnselectAllPress = (category) => {
-    const { activeFilters } = this.state;
     const { filters, initialOptions, updatePLPInitialFilters, query } =
       this.props;
     let categoryLevel1 = initialOptions.q.split(" ")[1];
-
+    let activeFilters = {};
     let newFilterArray = filters;
     Object.entries(newFilterArray).map((filter) => {
       if (filter[0] === category && filter[1].selected_filters_count > 0) {
@@ -611,20 +610,51 @@ class PLPFilters extends PureComponent {
           return Object.entries(
             filter[1].data[categoryLevel1].subcategories
           ).map((filterData) => {
-            filterData[1].is_selected = false;
+            if (filterData[1].is_selected) {
+              filterData[1].is_selected = false;
+              activeFilters[filter[0]] = [];
+            }
           });
         } else {
           filter[1].selected_filters_count = 0;
           Object.entries(filter[1].data).map((filterData) => {
-            filterData[1].is_selected = false;
+            if (filterData[1].is_selected) {
+              filterData[1].is_selected = false;
+              activeFilters[filter[0]] = [];
+            }
           });
+        }
+      } else {
+        if (
+          filter[0] !== "categories.level1" &&
+          filter[1].selected_filters_count > 0
+        ) {
+          let categoryLevel1 = initialOptions.q.split(" ")[1];
+          activeFilters[filter[0]] = [];
+
+          if (filter[0] === "categories_without_path") {
+            Object.entries(filter[1].data[categoryLevel1].subcategories).map(
+              (filterData) => {
+                if (filterData[1].is_selected) {
+                  activeFilters[filter[0]].push(filterData[0]);
+                }
+              }
+            );
+          } else {
+            Object.entries(filter[1].data).map((filterData) => {
+              if (filterData[1].is_selected) {
+                activeFilters[filter[0]].push(filterData[0]);
+              }
+            });
+          }
         }
       }
     });
-    // updatePLPInitialFilters(filters, category, null);
-    // Object.keys(filters).map((key) =>
-    //   WebUrlParser.setParam(key, activeFilters[key], query)
-    // );
+
+    updatePLPInitialFilters(filters, category, null);
+    Object.keys(activeFilters).map((key) => {
+      WebUrlParser.setParam(key, activeFilters[key]);
+    });
   };
   renderQuickFilter = ([key, filter]) => {
     const genders = [__("women"), __("men"), __("kids")];
