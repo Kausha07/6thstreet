@@ -52,9 +52,9 @@ export class Accordion extends PureComponent {
           onClick={this.toggleAccordion}
         >
           {isExpanded ? (
-            // <ChevronUp alt={`Close ${title}`} />
-            <ChevronRight alt={`Close ${title}`} />
+            <ChevronUp alt={`Close ${title}`} />
           ) : (
+            // <ChevronRight alt={`Close ${title}`} />
             <ChevronRight alt={`Expand ${title}`} />
           )}
         </button>

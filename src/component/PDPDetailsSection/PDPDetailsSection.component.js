@@ -16,6 +16,7 @@ import isMobile from "Util/Mobile";
 import { Phone, Chat, Email } from "Component/Icons";
 import { EMAIL_LINK } from "Component/CheckoutSuccess/CheckoutSuccess.config";
 import Link from "Component/Link";
+import PDPDetail from "Component/PDPDetail";
 
 class PDPDetailsSection extends PureComponent {
   static propTypes = {
@@ -29,7 +30,7 @@ class PDPDetailsSection extends PureComponent {
       0: true,
       1: true,
       2: true,
-      3: true,
+      3: false,
       4: true,
       5: true,
     },
@@ -548,8 +549,10 @@ class PDPDetailsSection extends PureComponent {
       >
         <h4>{__("Highlights")}</h4>
         <ul>{this.renderListItems(highlights)}</ul>
-        {this.renderModelDetails(model_height, model_wearing_size)}
-        {this.renderSKU(sku)}
+        <div block="BottomHighlights">
+          {this.renderModelDetails(model_height, model_wearing_size)}
+          {this.renderSKU(sku)}
+        </div>
         {/* {this.renderMoreDetailsList()} */}
       </div>
     );
@@ -769,6 +772,37 @@ class PDPDetailsSection extends PureComponent {
     );
   }
 
+  renderBrandDetail() {
+    const { isMobile } = this.state;
+    // if (isMobile) {
+    //   return null;
+    // }
+    return <PDPDetail {...this.props} />;
+  }
+  renderAboutBrand() {
+    const {
+      product: { brand_name },
+      brandDescription,
+      brandImg,
+      brandName,
+    } = this.props;
+    if (!(brandDescription && brandImg && brandName)) {
+      return null;
+    }
+    return (
+      <>
+        <Accordion
+          mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
+          title={__("About ") + brand_name}
+          is_expanded={this.state.isExpanded["3"]}
+        >
+          {this.renderBrandDetail()}
+        </Accordion>
+        {this.renderAccordionSeperator()}
+      </>
+    );
+  }
+
   renderSeperator() {
     return <div block="Seperator"></div>;
   }
@@ -801,6 +835,16 @@ class PDPDetailsSection extends PureComponent {
       </div>
     );
   };
+  renderContactUsSection() {
+    return (
+      <div block="ContactUsWrapper">
+        <div block="ContactUsWrapper" elem="Detail">
+          {this.renderAccordionSeperator()}
+          {this.renderContactUs()}
+        </div>
+      </div>
+    );
+  }
   render() {
     const {
       product: { brand_name },
@@ -816,10 +860,9 @@ class PDPDetailsSection extends PureComponent {
           ""
         )}
         <div block="AccordionWrapper">
-          {/* {this.renderAccordionSeperator()} */}
           <Accordion
             mix={{ block: "PDPDetailsSection", elem: "Accordion" }}
-            title={__(isMobile ? "Description" : "PRODUCT DETAILS:")}
+            title={isMobile ? __("Description") : __("PRODUCT DETAILS:")}
             is_expanded={this.state.isExpanded["0"]}
           >
             {!isMobile ? this.renderIconsSection() : ""}
@@ -827,14 +870,13 @@ class PDPDetailsSection extends PureComponent {
           </Accordion>
           {this.renderAccordionSeperator()}
           {this.renderShareButton()}
-
-          {this.renderContactAccordion()}
-          {this.renderAccordionSeperator()}
+          {isMobile ? this.renderAboutBrand() : ""}
         </div>
 
         <div block="PDPWidgets">{this.renderPdpWidgets()}</div>
-        <div block="Seperator2" />
         {isMobile ? this.renderMoreFromTheBrand() : ""}
+        {isMobile ? this.renderContactUsSection() : ""}
+        <div block="Seperator2" />
 
         {/* <Accordion
             mix={ { block: 'PDPDetailsSection', elem: 'Accordion' } }

@@ -297,16 +297,16 @@ export class PDPAddToCartContainer extends PureComponent {
         //if success
         if (response.message) {
           showNotification("error", response.message);
-          this.setState({ notifyMeSuccess: false, isOutOfStock: false });
+          this.setState({ notifyMeSuccess: false, isOutOfStock: true });
         } else {
-          this.setState({ notifyMeSuccess: true, isOutOfStock: false });
+          this.setState({ notifyMeSuccess: true, isOutOfStock: true });
           if (customer && customer.id) {
             //if user is logged in then change email
             const loginEvent = new CustomEvent("userLogin");
             window.dispatchEvent(loginEvent);
           }
           setTimeout(() => {
-            this.setState({ notifyMeSuccess: false, isOutOfStock: false });
+            this.setState({ notifyMeSuccess: false, isOutOfStock: true });
           }, 4000);
         }
       } else {
