@@ -254,13 +254,22 @@ class FieldMultiselect extends PureComponent {
     }
   };
 
-  renderUnselectButton() {
+  renderUnselectButton(category) {
     return (
-      <div block="FieldMultiselect" elem="SizeSelector">
+      <div
+        block="FieldMultiselect"
+        elem="SizeSelector"
+        onClick={() => this.onDeselectAllCategory(category)}
+      >
         Unselect All
       </div>
     );
   }
+
+  onDeselectAllCategory = (category) => {
+    const { onUnselectAllPress } = this.props;
+    onUnselectAllPress(category);
+  };
 
   getSizeTypeSelect(sizeObject) {
     const { sizeDropDownKey } = this.state;
@@ -294,7 +303,7 @@ class FieldMultiselect extends PureComponent {
   renderSizeDropDown(sizeObject = []) {
     return (
       <div block="FieldMultiselect" elem="SizeSelect">
-        {this.renderUnselectButton()}
+        {this.renderUnselectButton("sizes")}
         {this.getSizeTypeSelect(sizeObject)}
       </div>
     );
@@ -317,7 +326,7 @@ class FieldMultiselect extends PureComponent {
         label,
         selected_filters_count,
       },
-      initialOptions
+      initialOptions,
     } = this.props;
     const { searchFacetKey, searchKey, searchList } = this.state;
     let finalData = data ? data : subcategories;
@@ -607,7 +616,9 @@ class FieldMultiselect extends PureComponent {
             {category === "sizes" && !isMobile.any()
               ? this.renderSizeDropDown(datakeys)
               : null}
-            {category !== "sizes" && !is_radio && this.renderUnselectButton()}
+            {category !== "sizes" &&
+              !is_radio &&
+              this.renderUnselectButton(category)}
           </>
         )}
         <div

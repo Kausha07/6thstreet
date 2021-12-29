@@ -102,7 +102,13 @@ class PLPFilterContainer extends PureComponent {
 
   containerFunctions = {
     handleCallback: this.handleCallback.bind(this),
+    handleUnselectAllPress:this.handleUnselectAllPress.bind(this)
   };
+
+  handleUnselectAllPress (category){
+    const { onDeselectAllCategory } = this.props;
+    onDeselectAllCategory(category)
+  }
 
   handleCallback(initialFacetKey, facet_value, checked, isRadio) {
     const { parentCallback } = this.props;
@@ -118,7 +124,7 @@ class PLPFilterContainer extends PureComponent {
       defaultFilters,
       currentActiveFilter,
       isSortBy,
-      initialOptions
+      initialOptions,
     } = this.props;
 
     const { parentActiveFilters } = this.state;
@@ -131,7 +137,7 @@ class PLPFilterContainer extends PureComponent {
       currentActiveFilter,
       parentActiveFilters,
       isSortBy,
-      initialOptions
+      initialOptions,
     };
   };
 

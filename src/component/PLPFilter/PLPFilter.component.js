@@ -63,6 +63,7 @@ class PLPFilter extends PureComponent {
       parentActiveFilters,
       isSortBy,
       initialOptions,
+      handleUnselectAllPress
     } = this.props;
 
     if (category === "categories.level1") {
@@ -85,6 +86,7 @@ class PLPFilter extends PureComponent {
         initialOptions={initialOptions}
         activeFilter={activeFilter}
         isChecked={isChecked}
+        onUnselectAllPress={handleUnselectAllPress}
         parentActiveFilters={parentActiveFilters}
         currentActiveFilter={currentActiveFilter}
         changeActiveFilter={changeActiveFilter}

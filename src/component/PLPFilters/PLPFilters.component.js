@@ -351,6 +351,7 @@ class PLPFilters extends PureComponent {
         parentCallback={this.handleCallback}
         currentActiveFilter={activeFilter}
         changeActiveFilter={this.changeActiveFilter}
+        onDeselectAllCategory={this.onUnselectAllPress}
         isReset={isReset}
         initialOptions={initialOptions}
         resetParentState={this.resetParentState}
@@ -593,6 +594,36 @@ class PLPFilters extends PureComponent {
     }
   };
 
+  onUnselectAllPress = (category) => {
+    const { activeFilters } = this.state;
+    const { filters, initialOptions, updatePLPInitialFilters, query } =
+      this.props;
+    let categoryLevel1 = initialOptions.q.split(" ")[1];
+
+    let newFilterArray = filters;
+    Object.entries(newFilterArray).map((filter) => {
+      if (filter[0] === category && filter[1].selected_filters_count > 0) {
+        if (category === "categories_without_path") {
+          filter[1].data[categoryLevel1].selected_filters_count = 0;
+          filter[1].selected_filters_count = 0;
+          return Object.entries(
+            filter[1].data[categoryLevel1].subcategories
+          ).map((filterData) => {
+            filterData[1].is_selected = false;
+          });
+        } else {
+          filter[1].selected_filters_count = 0;
+          Object.entries(filter[1].data).map((filterData) => {
+            filterData[1].is_selected = false;
+          });
+        }
+      }
+    });
+    // updatePLPInitialFilters(filters, category, null);
+    // Object.keys(filters).map((key) =>
+    //   WebUrlParser.setParam(key, activeFilters[key], query)
+    // );
+  };
   renderQuickFilter = ([key, filter]) => {
     const genders = [__("women"), __("men"), __("kids")];
     const brandsCategoryName = "brand_name";
@@ -638,7 +669,7 @@ class PLPFilters extends PureComponent {
           {count ? __("Products") : null}
         </div>
         <div block="FilterHeader">
-          {/* {!isMobile.any() && <h2>{__("Filters")}</h2>} */}
+          {!isMobile.any() && <h2>{__("Filters")}</h2>}
           <div
             block="PLPFilters"
             elem="Reset"
