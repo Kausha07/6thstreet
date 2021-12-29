@@ -17,6 +17,7 @@ import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 import fitlerImage from "./icons/filter-button.png";
 import { SIZES } from "./PLPFilters.config";
+import Refine from "../Icons/Refine/icon.png"
 import "./PLPFilters.style";
 class PLPFilters extends PureComponent {
   static propTypes = {
@@ -364,6 +365,7 @@ class PLPFilters extends PureComponent {
           defaultFilters={defaultFilters}
           isSortBy={true}
         />
+        <img src={Refine}/>
       </div>
     );
   };
