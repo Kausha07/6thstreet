@@ -14,7 +14,7 @@ import Footer from "Component/Footer";
 import Image from "Component/Image";
 import CountrySwitcher from 'Component/CountrySwitcher';
 import LanguageSwitcher from 'Component/LanguageSwitcher';
-import logo from './icons/6thstreet_logo.png'
+import logo from './icons/6TH_Logo.svg'
 import isMobile from "Util/Mobile";
 import facebook from "./icons/facebook.png";
 import close from "../Icons/Close/icon.svg"
@@ -111,11 +111,11 @@ class WelcomeHomePage extends PureComponent {
     getWelcomeImageUrl = () => {
         let device = isMobile.any() ? 'm' : 'd'
         console.log("hiiiiii", device);
-        let url = 'homepage/m/home.json';
+        let url = `homepage/${device}/home.json`;
         const directory = process.env.REACT_APP_REMOTE_CONFIG_DIR;
 
         try {
-            const resp = CDN.get(`${directory}/${url}`)
+            const resp = CDN.get(`config_staging/${url}`)
                 .then((res) => {
                     if (res.men) {
                         this.setState({
