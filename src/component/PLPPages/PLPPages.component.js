@@ -7,6 +7,7 @@ import "./PLPPages.style";
 import { Close } from "Component/Icons";
 import WebUrlParser from "Util/API/helper/WebUrlParser";
 import isMobile from "Util/Mobile";
+import ProductLoad from "Component/PLPLoadMore";
 
 class PLPPages extends PureComponent {
   static propTypes = {
@@ -29,11 +30,15 @@ class PLPPages extends PureComponent {
       activeFilters: {},
       isReset: false,
       defaultFilters: false,
+      pageKey: 0
     };
   }
 
   renderPage = ([key, page]) => {
-    const { products, isPlaceholder, isFirst = false } = page;
+    const { products, isPlaceholder, isFirst = false } = page; 
+    this.setState({
+      pageKey : key
+    })   
     const {
       impressions,
       query,
@@ -52,7 +57,7 @@ class PLPPages extends PureComponent {
         />
       );
     }
-
+    
     return (
       <PLPPage
         key={key}
@@ -151,6 +156,7 @@ class PLPPages extends PureComponent {
       </div>
     );
   }
+  
 
   renderButtonView(label, onClick) {
     return (
@@ -337,6 +343,12 @@ class PLPPages extends PureComponent {
     }
   };
 
+  renderLoadMore(){
+    return (
+      <ProductLoad pageKey={this.state.pageKey}/>
+    )
+  }
+
   render() {
     return (
       <div block="PLPPages Products-Lists">
@@ -349,6 +361,7 @@ class PLPPages extends PureComponent {
         )}
 
         {this.renderPages()}
+        {this.renderLoadMore()}
       </div>
     );
   }
