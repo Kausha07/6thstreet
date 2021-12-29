@@ -38,7 +38,6 @@ class PLPFilter extends PureComponent {
   };
 
   componentDidUpdate(prevProps, prevState) {
-
     if (
       JSON.stringify(prevProps.parentActiveFilters) !==
       JSON.stringify(this.props.parentActiveFilters)
@@ -62,21 +61,21 @@ class PLPFilter extends PureComponent {
       setDefaultFilters,
       defaultFilters,
       parentActiveFilters,
-      isSortBy
+      isSortBy,
+      initialOptions,
+      handleUnselectAllPress
     } = this.props;
 
     if (category === "categories.level1") {
       return null;
     }
 
-
-
     let placeholder =
       category === "in_stock"
         ? __("BY STOCK")
         : category === "age"
-          ? __("BY AGE")
-          : label;
+        ? __("BY AGE")
+        : label;
 
     return (
       <FieldMultiselect
@@ -84,8 +83,10 @@ class PLPFilter extends PureComponent {
         showCheckbox
         isRadio={is_radio}
         filter={filter}
+        initialOptions={initialOptions}
         activeFilter={activeFilter}
         isChecked={isChecked}
+        onUnselectAllPress={handleUnselectAllPress}
         parentActiveFilters={parentActiveFilters}
         currentActiveFilter={currentActiveFilter}
         changeActiveFilter={changeActiveFilter}
@@ -94,7 +95,6 @@ class PLPFilter extends PureComponent {
         setDefaultFilters={setDefaultFilters}
         defaultFilters={defaultFilters}
         isSortBy={isSortBy}
-
       />
     );
   }

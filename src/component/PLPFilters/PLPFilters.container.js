@@ -40,8 +40,8 @@ export const mapStateToProps = (_state) => ({
 export const mapDispatchToProps = (_dispatch) => ({
   showOverlay: (overlayKey) => _dispatch(toggleOverlayByKey(overlayKey)),
   hideActiveOverlay: () => _dispatch(hideActiveOverlay()),
-  updatePLPInitialFilters: (filters,facet_key,facet_value) =>
-  _dispatch(updatePLPInitialFilters(filters,facet_key,facet_value)),
+  updatePLPInitialFilters: (filters, facet_key, facet_value) =>
+    _dispatch(updatePLPInitialFilters(filters, facet_key, facet_value)),
   goToPreviousNavigationState: () =>
     _dispatch(goToPreviousNavigationState(BOTTOM_NAVIGATION_TYPE)),
   goToPreviousHeaderState: () =>
@@ -179,23 +179,31 @@ export class PLPFiltersContainer extends PureComponent {
   }
 
   containerFunctions = () => {
-    const { showOverlay,updatePLPInitialFilters } = this.props;
+    const { showOverlay, updatePLPInitialFilters, updateFiltersState } =
+      this.props;
 
-    return { showOverlay,updatePLPInitialFilters };
+    return { showOverlay, updatePLPInitialFilters, updateFiltersState };
   };
-  
+
   // eslint-disable-next-line consistent-return
   onReset() {
     const { initialFilters = {} } = this.state;
     const { query } = this.props;
     // eslint-disable-next-line fp/no-let
     for (let i = 0; i < Object.keys(initialFilters).length; i++) {
-      WebUrlParser.setParam(Object.keys(initialFilters)[i], "",query);
+      WebUrlParser.setParam(Object.keys(initialFilters)[i], "", query);
     }
   }
 
   containerProps = () => {
-    const { filters, isLoading, activeOverlay, query,initialOptions } = this.props;
+    const {
+      filters,
+      isLoading,
+      activeOverlay,
+      query,
+      initialOptions,
+      plpPageActiveFilters,
+    } = this.props;
     const { activeFilters } = this.state;
 
     return {
@@ -205,6 +213,7 @@ export class PLPFiltersContainer extends PureComponent {
       activeFilters,
       initialOptions,
       query,
+      plpPageActiveFilters,
     };
   };
 
