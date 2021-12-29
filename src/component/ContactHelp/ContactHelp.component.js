@@ -11,156 +11,104 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import MyAccountAddressPopup from "Component/MyAccountAddressPopup";
-import MyAccountAddressTable from "Component/MyAccountAddressTable";
-import PropTypes from "prop-types";
+import { EMAIL_LINK } from "Component/CheckoutSuccess/CheckoutSuccess.config";
+import { Chat, Email, Phone } from "Component/Icons";
 import { PureComponent } from "react";
-import { addressType, customerType } from "Type/Account";
 import isMobile from "Util/Mobile";
 import "./ContactHelp.style";
 
 export class ContactHelp extends PureComponent {
-  static propTypes = {
-    customer: customerType.isRequired,
-    formContent: PropTypes.bool.isRequired,
-    getDefaultPostfix: PropTypes.func.isRequired,
-    closeForm: PropTypes.func.isRequired,
-    openForm: PropTypes.func.isRequired,
-    showCreateNewPopup: PropTypes.func.isRequired,
-    payload: PropTypes.shape({
-      address: addressType,
-    }),
-  };
+  static propTypes = {};
 
   static defaultProps = {
     payload: {},
   };
 
   state = {
-    hideCards: false,
+    isMobile: isMobile.any() || isMobile.tablet(),
   };
 
-  hideCards = () => {
-    this.setState({ hideCards: true });
-  };
+  getCountryConfigs() {
+    const {
+      config: { countries },
+      country,
+      language,
+    } = this.props;
 
-  showCards = () => {
-    const { closeForm } = this.props;
-    closeForm();
-    this.setState({ hideCards: false });
-  };
+    const {
+      opening_hours: { [language]: openHoursLabel },
+      // toll_free: phone,
+    } = countries[country];
 
-  openNewForm = () => {
-    const { showCreateNewPopup } = this.props;
-
-    if (isMobile.any()) {
-      this.hideCards();
-    }
-    showCreateNewPopup();
-
-    if (!isMobile.any()) {
-      const elmnts =
-        document.getElementsByClassName("MyAccountAddressBook-NewAddress") ||
-        [];
-      if (elmnts && elmnts.length > 0) {
-        elmnts[0].scrollIntoView();
-      }
-    }
-  };
-
-  renderPopup() {
-    const { formContent, closeForm, openForm, customer } = this.props;
-
-    return (
-      <MyAccountAddressPopup
-        formContent={formContent}
-        closeForm={closeForm}
-        openForm={openForm}
-        showCards={this.showCards}
-        customer={customer}
-      />
-    );
+    return {
+      openHoursLabel,
+      // toll_free,
+    };
+  }
+  chat() {
+    document.querySelector(".ori-cursor-ptr").click();
   }
 
-  renderAddress = (address, index) => {
-    const { getDefaultPostfix, closeForm, openForm, hideCards } = this.props;
-    const addressNumber = index + 1;
-    const postfix = getDefaultPostfix(address);
-
+  renderContactUs() {
+    const { config } = this.props;
+    const { openHoursLabel, toll_free } = this.getCountryConfigs();
     return (
-      <MyAccountAddressTable
-        title={__("Address #%s%s", addressNumber, postfix)}
-        showActions
-        hideCards={hideCards}
-        address={address}
-        key={addressNumber}
-        closeForm={closeForm}
-        openForm={openForm}
-      />
-    );
-  };
-
-  renderNoAddresses() {
-    return (
-      <div>
-        <p>{__("You have no configured addresses.")}</p>
+      <div block="ContactUs">
+        <div block="ContactUs" elem="Icons">
+          <div block="IconWrapper">
+            <div block="IconWrapper" elem="Icon">
+              <a href={`tel:${toll_free}`} target="_blank" rel="noreferrer">
+                <Phone />
+              </a>
+            </div>
+            <p block="IconWrapper" elem="IconTitle">
+              {__("Phone")}
+            </p>
+          </div>
+          <div block="divider"></div>
+          <div block="IconWrapper">
+            <div block="IconWrapper" elem="Icon" onClick={this.chat}>
+              <Chat />
+            </div>
+            <p block="IconWrapper" elem="IconTitle">
+              {__("Live Chat")}
+            </p>
+          </div>
+          <div block="divider"></div>
+          <div block="IconWrapper">
+            <div block="IconWrapper" elem="Icon">
+              <a href={`mailto:${EMAIL_LINK}`} target="_blank" rel="noreferrer">
+                <Email />
+              </a>
+            </div>
+            <p block="IconWrapper" elem="IconTitle">
+              {__("Email")}
+            </p>
+          </div>
+        </div>
+        <p block="ContactUs" elem="Message">
+          {__("Customer Service available all days from: ")}
+          {openHoursLabel}
+        </p>
       </div>
     );
   }
 
-  renderActions() {
+  renderContactUsSection() {
     return (
-      <button
-        block="MyAccountAddressBook"
-        elem="NewAddress"
-        onClick={this.openNewForm}
-      >
-        {__("Add new address")}
-      </button>
+      <div block="ContactUsWrapper">
+        <div block="ContactUsWrapper" elem="Detail">
+          {this.renderContactUs()}
+        </div>
+      </div>
     );
-  }
-
-  renderAddressList() {
-    const {
-      customer: { addresses = [] },
-    } = this.props;
-
-    if (!addresses.length) {
-      return this.renderNoAddresses();
-    }
-
-    const defaultAddress = addresses.filter(
-      ({ default_billing }) => default_billing
-    );
-    const simpleAddresses = addresses.filter(
-      ({ default_billing }) => !default_billing
-    );
-    const sortedAddresses = [...defaultAddress, ...simpleAddresses];
-
-    return sortedAddresses.map(this.renderAddress);
   }
 
   render() {
-    const { hideCards } = this.state;
-
-    if (hideCards) {
-      return (
-        <div block="MyAccountAddressBook">
-          <button
-            block="MyAccountAddressBook"
-            elem="backBtn"
-            onClick={this.showCards}
-          />
-          {this.renderPopup()}
-        </div>
-      );
-    }
-
+    const { isMobile } = this.state;
     return (
-      <div block="MyAccountAddressBook">
-        {this.renderAddressList()}
-        {this.renderActions()}
-        {this.renderPopup()}
+      <div block="ContactAndHelp">
+        {isMobile ? this.renderContactUsSection() : ""}
       </div>
     );
   }

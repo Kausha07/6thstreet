@@ -12,20 +12,17 @@
 
 import { PureComponent } from "react";
 import { connect } from "react-redux";
-import { customerType } from "Type/Account";
 import ContactHelp from "./ContactHelp.component";
 
 export const mapStateToProps = (state) => ({
-  customer: state.MyAccountReducer.customer,
+  config: state.AppConfig.config,
+  country: state.AppState.country,
+  language: state.AppState.language,
 });
 
+export const mapDispatchToProps = (dispatch) => ({});
+
 export class ContactHelpContainer extends PureComponent {
-  static propTypes = {
-    customer: customerType.isRequired,
-  };
-
-  state = {};
-
   containerFunctions = {};
 
   render() {
@@ -39,4 +36,7 @@ export class ContactHelpContainer extends PureComponent {
   }
 }
 
-export default connect(mapStateToProps)(ContactHelpContainer);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ContactHelpContainer);

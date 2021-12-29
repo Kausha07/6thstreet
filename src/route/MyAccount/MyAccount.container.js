@@ -70,7 +70,7 @@ export const tabMap = {
     name: __("My Address Book"),
   },
   [CONTACT_HELP]: {
-    url: "/contact-and-help",
+    url: "/contact-help",
     name: __("Contact & Help"),
   },
 };
@@ -96,6 +96,7 @@ export class MyAccountContainer extends SourceMyAccountContainer {
   updateBreadcrumbs() {
     const { updateBreadcrumbs } = this.props;
     const { activeTab } = this.state;
+    console.log("tabMap[activeTab]", tabMap[activeTab]);
     const { url, name, alternativePageName } = tabMap[activeTab];
 
     updateBreadcrumbs([
