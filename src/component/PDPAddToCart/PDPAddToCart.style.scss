@@ -697,3 +697,13 @@ $select-arrow-width: 6px !default;
     margin: 15px 0 0 0;
   }
 }
+.AppParity {
+  &-Text {
+    text-align: center;
+    margin-top: -20px;
+    margin-bottom: 10px !important;
+    @include mobile {
+      margin-top: 0;
+    }
+  }
+}
