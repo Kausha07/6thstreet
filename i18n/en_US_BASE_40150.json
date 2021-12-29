@@ -815,6 +815,8 @@
     "BY AGE": null,
     "International Shipment": null,
     "Non Discountable": null,
+    "Dispatched": null,
+    "In Transit": null,
     "PRODUCT DETAILS": null,
     "PRODUCT DETAILS:": null,
     "SHOW MORE DETAILS": null,
@@ -826,5 +828,8 @@
     "Also available in:": null,
     "OR REGISTER IN WITH": null,
     "Out of Stock": null,
-    "In Stock": null
+    "In Stock": null,
+    "OTP sent successfully": null,
+    "Choose one size above your actual size": null,
+    "Select a size up for the right fit": null
 }
