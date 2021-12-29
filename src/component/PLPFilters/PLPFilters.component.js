@@ -536,6 +536,8 @@ class PLPFilters extends PureComponent {
         }
       }
     } else {
+      const { data = {} } = newFilterArray;
+
       if (newFilterArray) {
         this.updateRadioFilters(
           data,
