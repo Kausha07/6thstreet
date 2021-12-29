@@ -650,12 +650,15 @@ class PLPFilters extends PureComponent {
         }
       }
     });
-
+    this.setState({
+      activeFilters: activeFilters,
+    });
     updatePLPInitialFilters(filters, category, null);
     Object.keys(activeFilters).map((key) => {
       WebUrlParser.setParam(key, activeFilters[key]);
     });
   };
+
   renderQuickFilter = ([key, filter]) => {
     const genders = [__("women"), __("men"), __("kids")];
     const brandsCategoryName = "brand_name";
