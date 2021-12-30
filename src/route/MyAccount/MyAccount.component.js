@@ -1,5 +1,7 @@
 import ContactHelp from "Component/ContactHelp";
 import ContentWrapper from "Component/ContentWrapper";
+import Image from "Component/Image";
+import Link from "Component/Link";
 import MyAccountAddressBook from "Component/MyAccountAddressBook";
 import MyAccountClubApparel from "Component/MyAccountClubApparel";
 import MyAccountDashboard from "Component/MyAccountDashboard";
@@ -11,6 +13,7 @@ import MyAccountReturns from "Component/MyAccountReturns";
 import MyAccountStoreCredit from "Component/MyAccountStoreCredit";
 import MyAccountTabList from "Component/MyAccountTabList";
 import PropTypes from "prop-types";
+import { Fragment } from "react";
 import { MyAccount as SourceMyAccount } from "SourceRoute/MyAccount/MyAccount.component";
 import {
   activeTabType,
@@ -63,6 +66,68 @@ export class MyAccount extends SourceMyAccount {
     [CONTACT_HELP]: ContactHelp,
   };
 
+  linksMap = [
+    {
+      title: __("Download The App"),
+      items: [
+        {
+          id_app: "App1",
+          app_store:
+            "https://static.6media.me/static/version1600320971/frontend/6SNEW/6snew/en_US/images/apple-store-badge.svg",
+          app_onclick:
+            "https://apps.apple.com/ro/app/6thstreet-com/id1370217070",
+          id_google: "Google1",
+          google_play:
+            "https://static.6media.me/static/version1600320042/frontend/6SNEW/6snew/en_US/images/google-play-badge.svg",
+          google_onclick:
+            "https://play.google.com/store/apps/details?id=com.apparel.app6thstreet",
+          id_gallery: "Gallery1",
+          app_gallery:
+            "https://6thstreetmobileapp-eu-c.s3.eu-central-1.amazonaws.com/resources/20190121/en-ae/d/icon_huaweiappgallery.svg",
+          gallery_onclick: "https://appgallery.huawei.com/#/app/C102324663",
+          header: __("Follow the latest trends"),
+        },
+      ],
+    },
+  ];
+
+  renderAppColumn() {
+    return this.linksMap.map((column) => (
+      <div block="FooterMain" elem="LastColumn" key={column.title}>
+        <h4>{column.title}</h4>
+        <div block="FooterMain" elem="Nav">
+          {column.items.map((items) => (
+            <Fragment key="last_main_footer_column">
+              <div block="FooterMain" elem="WrapperFirst">
+                <Link to={items.app_onclick} key={items.id_app}>
+                  <Image
+                    lazyLoad={true}
+                    src={items.app_store}
+                    alt="app store download"
+                  />
+                </Link>
+                <Link to={items.google_onclick} key={items.id_google}>
+                  <Image
+                    lazyLoad={true}
+                    src={items.google_play}
+                    alt="google play download"
+                  />{" "}
+                </Link>
+                <Link to={items.gallery_onclick} key={items.id_gallery}>
+                  <Image
+                    lazyLoad={true}
+                    src={items.app_gallery}
+                    alt="app gallery download"
+                    className="appGallery"
+                  />
+                </Link>
+              </div>
+            </Fragment>
+          ))}
+        </div>
+      </div>
+    ));
+  }
   handleTabChange(key) {
     const { changeActiveTab, mobileTabActive, setMobileTabActive } = this.props;
 
@@ -185,6 +250,7 @@ export class MyAccount extends SourceMyAccount {
             changeActiveTab={this.handleTabChange}
             onSignOut={this.handleSignOut}
           />
+          <div>{isMobile ? this.renderAppColumn() : null}</div>
         </div>
         <div block={hiddenTabContent}>
           <div block="MyAccount" elem="TabContent">

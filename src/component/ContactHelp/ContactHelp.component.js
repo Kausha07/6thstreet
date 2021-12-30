@@ -11,8 +11,12 @@
  * @link https://github.com/scandipwa/base-theme
  */
 
-import { EMAIL_LINK } from "Component/CheckoutSuccess/CheckoutSuccess.config";
+import {
+  EMAIL_LINK,
+  TEL_LINK,
+} from "Component/CheckoutSuccess/CheckoutSuccess.config";
 import { Chat, Email, Phone } from "Component/Icons";
+import Link from "Component/Link";
 import { PureComponent } from "react";
 import isMobile from "Util/Mobile";
 import "./ContactHelp.style";
@@ -57,7 +61,7 @@ export class ContactHelp extends PureComponent {
         <div block="ContactUs" elem="Icons">
           <div block="IconWrapper">
             <div block="IconWrapper" elem="Icon">
-              <a href={`tel:${toll_free}`} target="_blank" rel="noreferrer">
+              <a href={`tel:${TEL_LINK}`} target="_blank" rel="noreferrer">
                 <Phone />
               </a>
             </div>
@@ -109,6 +113,18 @@ export class ContactHelp extends PureComponent {
     return (
       <div block="ContactAndHelp">
         {isMobile ? this.renderContactUsSection() : ""}
+        <ul block="contactHelpList">
+          <li block="MyAccountTabListItem">
+            <button block="MyAccountTabListItem" elem="Button" role="link">
+              <Link to="/faq">{__("Q&A")}</Link>
+            </button>
+          </li>
+          <li block="MyAccountTabListItem">
+            <button block="MyAccountTabListItem" elem="Button" role="link">
+              <Link to="/return-information">{__("Return Policy")}</Link>
+            </button>
+          </li>
+        </ul>
       </div>
     );
   }

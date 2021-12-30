@@ -24,7 +24,7 @@ export const mapDispatchToProps = (dispatch) => ({});
 
 export class ContactHelpContainer extends PureComponent {
   containerFunctions = {};
-
+  state;
   render() {
     return (
       <ContactHelp

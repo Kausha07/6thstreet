@@ -28,5 +28,7 @@ export const STORE_CREDIT = "storecredit";
 export const CLUB_APPAREL = "club-apparel";
 export const RETURN_ITEM = "return-item";
 export const CONTACT_HELP = "contact-help";
+export const FAQ = "faq";
+export const RETURN_POLICY = "return-information";
 
 export const activeTabType = PropTypes.string;

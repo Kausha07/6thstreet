@@ -96,7 +96,6 @@ export class MyAccountContainer extends SourceMyAccountContainer {
   updateBreadcrumbs() {
     const { updateBreadcrumbs } = this.props;
     const { activeTab } = this.state;
-    console.log("tabMap[activeTab]", tabMap[activeTab]);
     const { url, name, alternativePageName } = tabMap[activeTab];
 
     updateBreadcrumbs([
