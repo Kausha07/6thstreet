@@ -427,7 +427,7 @@ class FieldMultiselect extends PureComponent {
         />
         <label block="PLPFilterOption" htmlFor={"all"}>
           All
-          <span>{`(${product_count})`}</span>
+          {!isMobile.any() && <span>{`(${product_count})`}</span>}
         </label>
       </li>
     );
@@ -445,17 +445,19 @@ class FieldMultiselect extends PureComponent {
         <input
           type="text"
           id={category}
-          placeholder={`Search ${placeholder}`}
+          placeholder={isMobile.any() ? "Search..." : `Search ${placeholder}`}
           onChange={(event) => this.handleFilterSearch(event)}
         />
-        <button
-          block="FilterSearch"
-          elem="SubmitBtn"
-          mods={{ isArabic }}
-          type="submit"
-        >
-          <Image lazyLoad={false} src={searchPng} alt="search" />
-        </button>
+        {!isMobile.any() && (
+          <button
+            block="FilterSearch"
+            elem="SubmitBtn"
+            mods={{ isArabic }}
+            type="submit"
+          >
+            <Image lazyLoad={false} src={searchPng} alt="search" />
+          </button>
+        )}
       </div>
     );
   }
@@ -528,7 +530,6 @@ class FieldMultiselect extends PureComponent {
     if (this.props.isSortBy) {
       return null;
     }
-    console.log("muskan--->",this.props.filter);
     if (data) {
       return (
         <div block="MultiSelectOption">
@@ -641,7 +642,6 @@ class FieldMultiselect extends PureComponent {
         conditionalData = data[categoryLevel1].subcategories;
       }
     }
-
     return (
       <div
         ref={this.filterDropdownRef}
@@ -666,15 +666,16 @@ class FieldMultiselect extends PureComponent {
           {placeholder}
         </button>
         {isMobile.any() ? null : this.renderOptionSelected()}
-        {!isMobile.any() && toggleOptionsList && (
+        {toggleOptionsList && !isMobile.any() && (
           <>
-            {Object.keys(conditionalData).length > 10
+            {/* {Object.keys(conditionalData).length > 10
               ? this.renderFilterSearchbox(label, category)
-              : null}
+              : null} */}
             {category === "sizes" && !isMobile.any()
               ? this.renderSizeDropDown(datakeys)
               : null}
             {category !== "sizes" &&
+              !isMobile.any() &&
               !is_radio &&
               this.renderUnselectButton(category)}
           </>
@@ -689,6 +690,15 @@ class FieldMultiselect extends PureComponent {
             mods: { isArabic },
           }}
         >
+          {console.log(
+            "muskan",
+            Object.keys(conditionalData).length,
+            Object.keys(conditionalData).length > 10,
+            category
+          )}
+          {isMobile.any() && Object.keys(conditionalData).length > 10
+            ? this.renderFilterSearchbox(label, category)
+            : null}
           <fieldset block="PLPFilter">{this.renderOptions()}</fieldset>
         </div>
       </div>

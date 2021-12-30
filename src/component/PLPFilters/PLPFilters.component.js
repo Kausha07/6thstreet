@@ -110,7 +110,7 @@ class PLPFilters extends PureComponent {
       //     this.renderFilter([size, data[size]])
       //   );
       // }
-      if (filter[0] === "sort") {
+      if (filter[0] === "sort" && !isMobile.any()) {
         return this.renderSortBy([filter[0], filter[1]]);
       }
       return this.renderFilter([filter[0], filter[1]]);
@@ -239,7 +239,7 @@ class PLPFilters extends PureComponent {
         aria-label={__("Reset")}
         onClick={this.resetFilters}
       >
-        {__("Clear all")}
+        {!isMobile.any() ? __("Clear all") : __("Clear")}
       </button>
     ) : null;
   }
@@ -301,7 +301,6 @@ class PLPFilters extends PureComponent {
         }
       });
     const displayCount = count;
-    console.log("muskan count",count,displayCount);
     return displayCount;
   }
 
@@ -367,7 +366,6 @@ class PLPFilters extends PureComponent {
 
   renderSortBy = ([key, filter]) => {
     const { activeFilter, isReset, activeFilters, defaultFilters } = this.state;
-
     // return (
 
     // );
@@ -704,21 +702,24 @@ class PLPFilters extends PureComponent {
           <span>{count}</span>
           {count ? __("Products") : null}
         </div>
-        <div block="FilterHeader">
-          {!isMobile.any() && <h2>{__("Filters")}</h2>}
-          <div
-            block="PLPFilters"
-            elem="Reset"
-            mix={{
-              block: "Reset",
-              mods: {
-                isArabic,
-              },
-            }}
-          >
-            {this.renderResetFilterButton()}
+        {!isMobile.any() && (
+          <div block="FilterHeader">
+            <h2>{__("Filters")}</h2>
+            <div
+              block="PLPFilters"
+              elem="Reset"
+              mix={{
+                block: "Reset",
+                mods: {
+                  isArabic,
+                },
+              }}
+            >
+              {this.renderResetFilterButton()}
+            </div>
           </div>
-        </div>
+        )}
+
         {isOpen ? this.renderPopupFilters() : this.renderFilterButton()}
         <form block="PLPFilters" name="filters">
           {this.renderFilters()}

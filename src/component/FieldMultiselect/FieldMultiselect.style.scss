@@ -83,6 +83,13 @@ $select-arrow-width: 6px !default;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+
+    @include mobile {
+      // border: 1px solid var(--field-multiselect-border);
+      padding: 0 15px;
+      font-size: 12px;
+      height: 40px;
+    }
     &:after {
       position: absolute;
       content: "";
@@ -97,12 +104,20 @@ $select-arrow-width: 6px !default;
       right: 1px;
       top: 18px;
       background: transparent;
+
+      @include mobile {
+        top: 13px;
+        right: 10px;
+      }
     }
     &_toggleOptionsList {
       //max-height: 400px;
       &::after {
         top: 22px;
         transform: rotate(-135deg);
+        @include mobile {
+          top: 17px;
+        }
       }
     }
     &_isArabic {
@@ -173,10 +188,12 @@ $select-arrow-width: 6px !default;
   }
 
   &-sizesOptionContainer {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    flex-wrap: wrap;
+    @include desktop {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      flex-wrap: wrap;
+    }
   }
   &-OptionListContainer {
     position: absolute;
@@ -219,7 +236,7 @@ $select-arrow-width: 6px !default;
     }
     @include mobile {
       position: fixed;
-      top: 50px;
+      top: 86px;
       right: 0;
       left: unset;
       width: 65%;
@@ -229,44 +246,59 @@ $select-arrow-width: 6px !default;
       }
       &_toggleOptionsList {
         border: none;
-        max-height: calc(100% - 130px);
+        max-height: calc(100% - 166px);
       }
     }
   }
- 
-    .Search-Container {
-      input {
-        background-color: #f5f5f5;
-        border: none;
-        border-radius: 5px;
-        font-weight: var(--fw-regular);
-        font-size: 14px;
-        padding-left: 10px;
-        text-transform: none;
-        width: 100%;
-        color: $black;
-        height: 30px;
-        &::placeholder {
-          color: #4a4a4a;
-          letter-spacing: -0.1px;
-          line-height: 19px;
-          text-align: left;
-          padding-left: 0px;
-        }
+
+  .Search-Container {
+    @include mobile {
+      position: fixed;
+      width: 65%;
+      top: 52px;
+    }
+    input {
+      background-color: #f5f5f5;
+      border: none;
+      border-radius: 6px;
+      font-weight: var(--fw-regular);
+      font-size: 14px;
+      padding-left: 10px;
+      text-transform: none;
+      width: 100%;
+      color: $black;
+      height: 34px;
+      &::placeholder {
+        color: #4a4a4a;
+        letter-spacing: -0.1px;
+        line-height: 19px;
+        text-align: left;
+        padding-left: 0px;
       }
 
-      .FilterSearch {
-        &-SubmitBtn {
-          height: 15px;
-          width: 15px;
-          position: absolute;
-          padding: 0;
-          right: 9px;
-          top: 7px;
+      @include mobile {
+      border-radius: 10px;
+      width: 87%;
+      height: 36px;
+      }
+    }
+
+    .FilterSearch {
+      &-SubmitBtn {
+        height: 15px;
+        width: 15px;
+        position: absolute;
+        padding: 0;
+        right: 9px;
+        top: 7px;
+
+        @include mobile {
+          position: relative;
+          top: 3px;
         }
       }
     }
-  
+  }
 
   &-SizeSelect {
     position: relative;
