@@ -381,9 +381,7 @@ class HeaderMainSection extends NavigationAbstract {
       isMobile.any() ? null : (
       <div
         block="HeaderMainSection"
-        data-visible={
-          this.isPDP() && isMobile.any() ? this.state.visible : true
-        }
+        data-visible={ this.isPDP() && isMobile.any() ? this.state.visible : true }
       >
         {this.renderMySignInPopup()}
         {this.renderNavigationState()}
