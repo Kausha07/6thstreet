@@ -327,7 +327,7 @@ export class MyAccountOverlayContainer extends PureComponent {
   async OTPFieldChange(field) {
     this.setState({ otpError: "" });
     try {
-      const { createAccountNew,  loginAccount } = this.props;
+      const { createAccountNew, loginAccount } = this.props;
       const { customerLoginData, customerRegisterData } = this.state;
       if (
         field?.length === 5 &&

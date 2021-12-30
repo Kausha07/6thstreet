@@ -142,19 +142,38 @@ export class Header extends PureComponent {
     this.setState({ newMenuGender: gender });
   };
 
-  render() {
-    const {
-      navigationState: { name },
-      checkoutDetails
-    } = this.props;
-    const { isMobile } = this.state;
+  renderHeaderSections() {
+    const { checkoutDetails } = this.props;
     const isCheckout = this.getIsCheckout();
     const hideHeaderFooter = this.getHideHeaderFooter();
+    const { isMobile } = this.state;
+  
+    if(isCheckout && !checkoutDetails) {
+      return null;
+    }
+
+    if(isMobile && checkoutDetails) {
+      return null;
+    }
+
+    if(hideHeaderFooter) {
+      return this.headerSectionsTwo.map(this.renderSection);
+    }
+
+    return this.headerSections.map(this.renderSection);
+  }
+
+  render() {
+    const {
+      navigationState: { name }
+    } = this.props;
+    
     this.shouldChatBeHidden();
+    
     return (
       <>
         <header block="Header" mods={{ name }}>
-          {(isCheckout   && !checkoutDetails) ?  null :isMobile && checkoutDetails ? null : hideHeaderFooter ?this.headerSectionsTwo.map(this.renderSection) :  this.headerSections.map(this.renderSection)}
+          { this.renderHeaderSections() }
           <MobileMenuSidebar activeOverlay={MOBILE_MENU_SIDEBAR_ID} />
         </header>
         <OfflineNotice />
