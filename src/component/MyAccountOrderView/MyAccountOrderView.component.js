@@ -109,33 +109,28 @@ class MyAccountOrderView extends PureComponent {
     const { isArabic } = this.state;
     const {
       openOrderCancelation,
-      order: { groups = [], status, increment_id, is_returnable },
+      order: { groups = [], status, increment_id, is_returnable, is_cancelable },
     } = this.props;
-    const isReturnItemPresent = groups?.some(item => item.status === DELIVERY_SUCCESSFUL)
-    const isItemReturnDisabled = groups?.some(item => item.status === DELIVERY_SUCCESSFUL && item.items?.every(item => item.return_date))
-    const isItemProcessing = groups
-      ?.reduce((acc, { items }) => [...acc, ...items], [])
-      ?.filter(
-        ({ qty_canceled, qty_ordered }) => +qty_canceled < +qty_ordered
-      )
-      .length > 0
-
     const buttonText =
       status === STATUS_COMPLETE ? RETURN_ITEM_LABEL : CANCEL_ITEM_LABEL;
     return (
       <div block="MyAccountOrderView" elem="Heading" mods={{ isArabic }}>
         <h3 block="Heading" elem="HeadingText">{__("Order #%s", increment_id)}</h3>
         {(STATUS_BEING_PROCESSED.includes(status) ||
-          (status === STATUS_COMPLETE && is_returnable)) ? isReturnItemPresent && isItemProcessing ? (
-            <div block="MyAccountOrderView" elem="HeadingButtons">
-              <button disabled={isItemReturnDisabled} onClick={() => openOrderCancelation(RETURN_ITEM_LABEL)}>{RETURN_ITEM_LABEL}</button>
-              <button onClick={() => openOrderCancelation(CANCEL_ITEM_LABEL)}>{CANCEL_ITEM_LABEL}</button>
-            </div>
-          ) : (
+          (status === STATUS_COMPLETE && is_returnable)) ?
+          is_returnable && is_cancelable ?
+            (
+              <div block="MyAccountOrderView" elem="HeadingButtons">
+                <button onClick={() => openOrderCancelation(RETURN_ITEM_LABEL)}>{RETURN_ITEM_LABEL}</button>
+                <button onClick={() => openOrderCancelation(CANCEL_ITEM_LABEL)}>{CANCEL_ITEM_LABEL}</button>
+              </div>
+            ) : (
               <div block="MyAccountOrderView" elem="HeadingButton">
                 <button onClick={() => openOrderCancelation(buttonText)}>{buttonText}</button>
               </div>
-            ) : null}
+            )
+          : null
+        }
       </div>
     );
   }

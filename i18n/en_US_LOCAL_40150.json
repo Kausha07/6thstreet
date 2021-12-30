@@ -731,10 +731,9 @@
     "ADULT SIZES": null,
     "MEN’S CLOTHING SIZE GUIDE": null,
     "WOMEN’S CLOTHING SIZE GUIDE": null,
-    "KIDS’ SHOES SIZE GUIDE": null,
-    "KIDS’ CLOTHING SIZE GUIDE": null,
     "KID’S CLOTHING SIZE GUIDE": null,
     "KID’S SHOES SIZE GUIDE": null,
+    "KIDS’ CLOTHING SIZE GUIDE": null,
     "EUR": null,
     "USA": null,
     "CM": null,
@@ -936,5 +935,6 @@
     "Out of Stock": null,
     "In Stock": null,
     "Choose one size above your actual size": null,
-    "Select a size up for the right fit": null
+    "Select a size up for the right fit": null,
+    "OTP sent successfully": null
 }
