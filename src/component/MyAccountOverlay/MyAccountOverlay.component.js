@@ -105,7 +105,7 @@ export class MyAccountOverlay extends PureComponent {
     isCreateValidated: false,
     isForgotValidated: false,
     isOTP: ENABLE_OTP_LOGIN,
-    countryCode: "+965",
+    countryCode: PHONE_CODES[getCountryFromUrl()],
   };
 
   componentDidMount() {
