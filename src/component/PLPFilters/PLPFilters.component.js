@@ -67,12 +67,18 @@ class PLPFilters extends PureComponent {
         };
       }
     }
-
     return {
       isOpen: activeOverlay === "PLPFilter",
     };
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.plpPageActiveFilters !== prevProps.plpPageActiveFilters) {
+      this.setState({
+        activeFilters: this.props.plpPageActiveFilters,
+      });
+    }
+  }
   delayFilterUpdate() {
     clearTimeout(this.timer);
     // eslint-disable-next-line no-magic-numbers
@@ -148,6 +154,20 @@ class PLPFilters extends PureComponent {
     this.setState({ activeFilters: {}, isReset: true, defaultFilters: false });
 
     onReset();
+  };
+
+  onClearFilterState = (initialFacetKey) => {
+    const { activeFilters } = this.state;
+    const filterArray = activeFilters[initialFacetKey];
+    const index = filterArray.indexOf(facet_value);
+    if (index > -1) {
+      filterArray.splice(index, 1);
+    }
+    this.setState({
+      activeFilters: {
+        [initialFacetKey]: filterArray,
+      },
+    });
   };
 
   onShowResultButton = () => {
@@ -324,7 +344,7 @@ class PLPFilters extends PureComponent {
 
   renderFilter = ([key, filter]) => {
     const { activeFilter, isReset, activeFilters, defaultFilters } = this.state;
-
+    const { initialOptions } = this.props;
     return (
       <PLPFilter
         key={key}
@@ -332,7 +352,9 @@ class PLPFilters extends PureComponent {
         parentCallback={this.handleCallback}
         currentActiveFilter={activeFilter}
         changeActiveFilter={this.changeActiveFilter}
+        onDeselectAllCategory={this.onUnselectAllPress}
         isReset={isReset}
+        initialOptions={initialOptions}
         resetParentState={this.resetParentState}
         parentActiveFilters={activeFilters}
         updateFilters={this.updateFilters}
@@ -379,7 +401,8 @@ class PLPFilters extends PureComponent {
     facet_value,
     newFilterArray,
     categoryLevel1,
-    checked
+    checked,
+    facet_key
   ) => {
     if (data[facet_value]) {
       data[facet_value].is_selected = checked;
@@ -389,17 +412,21 @@ class PLPFilters extends PureComponent {
         newFilterArray.selected_filters_count -= 1;
       }
     } else {
-      if (categoryLevel1) {
+      let categoryDataStatus = categoryLevel1 || facet_key.includes("size");
+      if (categoryDataStatus) {
+        let categoryData = facet_key.includes("size")
+          ? data[facet_key]
+          : data[categoryLevel1];
         if (
-          data[categoryLevel1].subcategories &&
-          data[categoryLevel1].subcategories[facet_value]
+          categoryData.subcategories &&
+          categoryData.subcategories[facet_value]
         ) {
-          data[categoryLevel1].subcategories[facet_value].is_selected = checked;
+          categoryData.subcategories[facet_value].is_selected = checked;
           if (checked) {
-            data[categoryLevel1].selected_filters_count += 1;
+            categoryData.selected_filters_count += 1;
             newFilterArray.selected_filters_count += 1;
           } else {
-            data[categoryLevel1].selected_filters_count -= 1;
+            categoryData.selected_filters_count -= 1;
             newFilterArray.selected_filters_count -= 1;
           }
         }
@@ -451,6 +478,10 @@ class PLPFilters extends PureComponent {
     const { filters, updatePLPInitialFilters, initialOptions } = this.props;
     const filterArray = activeFilters[initialFacetKey];
     let newFilterArray = filters[initialFacetKey];
+    if (initialFacetKey.includes("size")) {
+      newFilterArray = filters["sizes"];
+    }
+
     let categoryLevel1 = initialOptions.q.split(" ")[1];
     if (isMobile.any()) {
       this.delayFilterUpdate();
@@ -459,18 +490,15 @@ class PLPFilters extends PureComponent {
       if (checked) {
         if (newFilterArray) {
           const { data = {} } = newFilterArray;
-
           this.updateInitialFilters(
             data,
             facet_value,
             newFilterArray,
             categoryLevel1,
-            true
+            true,
+            initialFacetKey
           );
-
-          localStorage.setItem("lastSelectedKey", facet_key);
-
-          updatePLPInitialFilters(filters, facet_key, facet_value);
+          updatePLPInitialFilters(filters, initialFacetKey, facet_value);
           this.setState(
             {
               activeFilters: {
@@ -492,11 +520,10 @@ class PLPFilters extends PureComponent {
             facet_value,
             newFilterArray,
             categoryLevel1,
-            false
+            false,
+            initialFacetKey
           );
-          localStorage.setItem("lastSelectedKey", facet_key);
-
-          updatePLPInitialFilters(filters, facet_key, facet_value);
+          updatePLPInitialFilters(filters, initialFacetKey, facet_value);
 
           const index = filterArray.indexOf(facet_value);
           if (index > -1) {
@@ -520,11 +547,10 @@ class PLPFilters extends PureComponent {
             facet_value,
             newFilterArray,
             categoryLevel1,
-            false
+            false,
+            initialFacetKey
           );
-          localStorage.setItem("lastSelectedKey", facet_key);
-
-          updatePLPInitialFilters(filters, facet_key, facet_value);
+          updatePLPInitialFilters(filters, initialFacetKey, facet_value);
           this.setState(
             {
               activeFilters: {
@@ -546,9 +572,7 @@ class PLPFilters extends PureComponent {
           categoryLevel1,
           true
         );
-        localStorage.setItem("lastSelectedKey", facet_key);
-
-        updatePLPInitialFilters(filters, facet_key, facet_value);
+        updatePLPInitialFilters(filters, initialFacetKey, facet_value);
         this.setState(
           {
             ...activeFilters,
@@ -572,6 +596,36 @@ class PLPFilters extends PureComponent {
     }
   };
 
+  onUnselectAllPress = (category) => {
+    const { activeFilters } = this.state;
+    const { filters, initialOptions, updatePLPInitialFilters, query } =
+      this.props;
+    let categoryLevel1 = initialOptions.q.split(" ")[1];
+
+    let newFilterArray = filters;
+    Object.entries(newFilterArray).map((filter) => {
+      if (filter[0] === category && filter[1].selected_filters_count > 0) {
+        if (category === "categories_without_path") {
+          filter[1].data[categoryLevel1].selected_filters_count = 0;
+          filter[1].selected_filters_count = 0;
+          return Object.entries(
+            filter[1].data[categoryLevel1].subcategories
+          ).map((filterData) => {
+            filterData[1].is_selected = false;
+          });
+        } else {
+          filter[1].selected_filters_count = 0;
+          Object.entries(filter[1].data).map((filterData) => {
+            filterData[1].is_selected = false;
+          });
+        }
+      }
+    });
+    // updatePLPInitialFilters(filters, category, null);
+    // Object.keys(filters).map((key) =>
+    //   WebUrlParser.setParam(key, activeFilters[key], query)
+    // );
+  };
   renderQuickFilter = ([key, filter]) => {
     const genders = [__("women"), __("men"), __("kids")];
     const brandsCategoryName = "brand_name";
@@ -617,7 +671,7 @@ class PLPFilters extends PureComponent {
           {count ? __("Products") : null}
         </div>
         <div block="FilterHeader">
-          <h2>{__("Filters")}</h2>
+          {!isMobile.any() && <h2>{__("Filters")}</h2>}
           <div
             block="PLPFilters"
             elem="Reset"
@@ -635,15 +689,17 @@ class PLPFilters extends PureComponent {
         <form block="PLPFilters" name="filters">
           {this.renderFilters()}
         </form>
-        {/* <div block="PLPFilters" elem="ToolBar" mods={{ isArabic }}>
-          <div block="PLPFilters" elem="QuickCategories" mods={{ isArabic }}>
-            {this.renderQuickFilters()}
+        {isMobile.any() && (
+          <div block="PLPFilters" elem="ToolBar" mods={{ isArabic }}>
+            <div block="PLPFilters" elem="QuickCategories" mods={{ isArabic }}>
+              {this.renderQuickFilters()}
+            </div>
+            <div block="PLPFilters" elem="ProductsCount" mods={{ isArabic }}>
+              <span>{count}</span>
+              {count ? __("Products") : null}
+            </div>
           </div>
-          <div block="PLPFilters" elem="ProductsCount" mods={{ isArabic }}>
-            <span>{count}</span>
-            {count ? __("Products") : null}
-          </div>
-        </div> */}
+        )}
       </div>
     );
   }

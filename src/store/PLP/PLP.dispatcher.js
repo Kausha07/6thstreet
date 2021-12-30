@@ -15,7 +15,6 @@ import isMobile from "Util/Mobile";
 export class PLPDispatcher {
   async setInitialPLPFilter(payload, dispatch, state) {
     const { initialOptions = {} } = payload;
-    console.log("muskan initial");
     try {
       const { filters: initialFilters } = await new Algolia().getPLP(
         initialOptions
@@ -29,7 +28,6 @@ export class PLPDispatcher {
 
   async requestProductList(payload, dispatch, state) {
     const { options = {} } = payload;
-    console.log("muskan withoutpage");
 
     if (Object.keys(options).length !== 0) {
       dispatch(setPLPLoading(true));

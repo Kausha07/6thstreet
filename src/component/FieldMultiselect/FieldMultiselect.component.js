@@ -6,8 +6,11 @@ import { Filter } from "Util/API/endpoint/Product/Product.type";
 import { isArabic } from "Util/App";
 import isMobile from "Util/Mobile";
 import "./FieldMultiselect.style";
+import Image from "Component/Image";
+import selectedImage from "./icons/select.png";
+import selectImage from "./icons/add.png";
+import searchPng from "../HeaderSearch/icons/search.svg";
 import Field from "Component/Field";
-
 
 class FieldMultiselect extends PureComponent {
   static propTypes = {
@@ -31,15 +34,19 @@ class FieldMultiselect extends PureComponent {
     currentActiveFilter: "",
     isHidden: false,
     defaultFilters: false,
-    parentCallback: () => { },
-    changeActiveFilter: () => { },
-    updateFilters: () => { },
-    setDefaultFilters: () => { },
+    parentCallback: () => {},
+    changeActiveFilter: () => {},
+    updateFilters: () => {},
+    setDefaultFilters: () => {},
   };
 
   filterDropdownRef = createRef();
 
   filterButtonRef = createRef();
+
+  allFieldRef = createRef();
+
+  allOptionRef = createRef();
 
   constructor(props) {
     super(props);
@@ -47,13 +54,13 @@ class FieldMultiselect extends PureComponent {
       toggleOptionsList: false,
       isArabic: isArabic(),
       subcategoryOptions: {},
-      parentActiveFilters:null,
+      parentActiveFilters: null,
       currentActiveFilter: null,
-      brandList: {},
-      brandSearchKey: "",
+      searchList: {},
+      searchKey: "",
+      searchFacetKey: "",
       sizeDropDownList: {},
       sizeDropDownKey: "",
-
     };
     this.toggelOptionList = this.toggelOptionList.bind(this);
     this.handleFilterSearch = this.handleFilterSearch.bind(this);
@@ -80,7 +87,6 @@ class FieldMultiselect extends PureComponent {
   }
 
   componentDidUpdate(prevProps, prevState) {
-
     if (
       JSON.stringify(prevProps.parentActiveFilters) !==
       JSON.stringify(this.props.parentActiveFilters)
@@ -184,12 +190,10 @@ class FieldMultiselect extends PureComponent {
       setDefaultFilters,
       defaultFilters,
       parentActiveFilters,
-      currentActiveFilter
+      currentActiveFilter,
     } = this.props;
 
     const { subcategories = {} } = option;
-
-
     if (Object.keys(subcategories).length !== 0) {
       return !isMobile.any()
         ? Object.entries(subcategories).map(this.renderOption)
@@ -213,50 +217,136 @@ class FieldMultiselect extends PureComponent {
     );
   };
 
+  handleSizeSelection = (e) => {
+    const { parentCallback } = this.props;
+    const { id: facet_key } = e.target;
+    const facet_value = e.target.getAttribute("name");
+    const checked = e.target.getAttribute("value") === "false" ? true : false;
+    parentCallback(facet_key, facet_value, checked, false);
+  };
+
   renderSizeOption = ([key, option = {}]) => {
     const { subcategories = {} } = option;
+    const thisRef = this;
     if (key === this.state.sizeDropDownKey) {
-      return Object.values(subcategories).map(function (value) {
-
-        return <h3>{value.label}</h3>
-      })
+      return Object.values(subcategories).map(function (value, index) {
+        const { facet_key, facet_value } = value;
+        return (
+          <div
+            block="FieldMultiselect"
+            elem="sizesOption"
+            mods={{ selectedSize: value.is_selected }}
+            key={index}
+            id={facet_key}
+            name={facet_value}
+            value={value.is_selected}
+            onClick={(e) => thisRef.handleSizeSelection(e)}
+          >
+            {value.label}
+            {!value.is_selected ? (
+              <Image lazyLoad={false} src={selectImage} alt="fitler" />
+            ) : (
+              <Image lazyLoad={false} src={selectedImage} alt="fitler" />
+            )}
+          </div>
+        );
+      });
     }
-  }
-  renderSizesDropdown(sizesdrops) {
-    const thisref = this;
-    return (
-      <>
-        <div block="sizesDropDown">
-          <button>{this.state.sizeDropDownKey}</button>
-        </div>
+  };
 
-        <div>
-          {
-            sizesdrops.map(function (data) {
-              return (
-                <div key={data.key}>
-                  <button onClick={(e) => { thisref.handleSizeDropDownClick(e, data.key) }} id={data.key}>{data.value}</button>
-                </div>
-              )
-            })
-          }
-        </div>
-      </>
-    )
+  renderUnselectButton(category) {
+    return (
+      <div
+        block="FieldMultiselect"
+        elem="SizeSelector"
+        onClick={() => this.onDeselectAllCategory(category)}
+      >
+        Unselect All
+      </div>
+    );
   }
-  handleSizeDropDownClick = (e, key) => {
+
+  onDeselectAllCategory = (category) => {
+    const { onUnselectAllPress } = this.props;
+    onUnselectAllPress(category);
+  };
+
+  getSizeTypeSelect(sizeObject) {
+    const { sizeDropDownKey } = this.state;
+
+    return (
+      <div block="FieldMultiselect" elem="SizeTypeSelector">
+        <select
+          key="SizeTypeSelect"
+          block="FieldMultiselect"
+          elem="SizeTypeSelectElement"
+          value={sizeDropDownKey}
+          onChange={this.handleSizeDropDownClick}
+        >
+          {sizeObject.map((size = "") => {
+            return (
+              <option
+                key={size.key}
+                block="FieldMultiselect"
+                elem="SizeTypeOption"
+                value={size.key}
+              >
+                {size.value.toUpperCase()}
+              </option>
+            );
+          })}
+        </select>
+      </div>
+    );
+  }
+
+  renderSizeDropDown(sizeObject = []) {
+    return (
+      <div block="FieldMultiselect" elem="SizeSelect">
+        {this.renderUnselectButton("sizes")}
+        {this.getSizeTypeSelect(sizeObject)}
+      </div>
+    );
+  }
+
+  handleSizeDropDownClick = (e) => {
     e.preventDefault();
-    const {filter: { data = {} }} = this.props;
     this.setState({
-      sizeDropDownKey: key
-    })
-  }
+      sizeDropDownKey: e.target.value,
+    });
+  };
 
   renderOptions() {
     const {
-      filter: { data = {}, subcategories = {}, category },
+      filter: {
+        data = {},
+        subcategories = {},
+        category,
+        is_radio,
+        label,
+        selected_filters_count,
+      },
+      initialOptions,
     } = this.props;
+    const { searchFacetKey, searchKey, searchList } = this.state;
     let finalData = data ? data : subcategories;
+    let totalCount = 0;
+    if (!is_radio) {
+      if (data && category !== "categories_without_path") {
+        Object.values(data).map((category) => {
+          totalCount = totalCount + category.product_count;
+        });
+      } else {
+        let categoryLevel1 = initialOptions.q.split(" ")[1];
+        if (data[categoryLevel1]) {
+          let filterData = data[categoryLevel1].subcategories;
+          Object.values(filterData).map((category) => {
+            totalCount = totalCount + category.product_count;
+          });
+        }
+      }
+    }
+
     if (category === "in_stock") {
       if (finalData) {
         Object.values(finalData).map((subData) => {
@@ -268,75 +358,140 @@ class FieldMultiselect extends PureComponent {
         });
       }
     }
-    let brandSearchData = data;
-    if (category === "brand_name") {
-      if (this.state.brandSearchKey != "") {
-        brandSearchData = this.state.brandList
-      }
-    }
+
     let sizeData = data;
-    if (this.state.sizeDropDownKey == "" ) {
+    if (this.state.sizeDropDownKey === "" && category === "sizes") {
       this.setState({
         sizeDropDownKey: "size_eu",
-        sizeDropDownList: data
-      })
+        sizeDropDownList: data,
+      });
     }
-    
-    
-    const datakeys = [];
-    if (category === "sizes") {            
-      Object.keys(data).map((key) => {
-        datakeys.push({ "key": key, "value": data[key].label })
-      })      
-      // if (this.state.sizeDropDownKey != "") {
-      //   sizeData = this.state.sizeDropDownList
-      // }
+
+    let searchData = data;
+    if (searchKey != "" && searchFacetKey === category) {
+      searchData = searchList;
     }
+    const type = is_radio ? "radio" : "checkbox";
+    const selectAllCheckbox = selected_filters_count === 0 ? true : false;
     return (
       <>
-        {category === "brand_name" ? this.renderFilterSearchbox() : null}
-        {category === "sizes" && !isMobile.any() ? this.renderSizesDropdown(datakeys) : null}
-        <ul>
-          {
-            category === "in_stock" ? Object.entries(finalData).map(this.renderOption) :
-              category === "brand_name" ? Object.entries(brandSearchData).map(this.renderOption) :
-                category === "sizes" && !isMobile.any() ? Object.entries(sizeData).map(this.renderOption) :
-                  Object.keys(data).length ? Object.entries(data).map(this.renderOption) :
-                    Object.entries(subcategories).map(this.renderOption)
-          }
+        <ul
+          block="FieldMultiselect"
+          elem={category === "sizes" ? "sizesOptionContainer" : ""}
+        >
+          {!is_radio &&
+            category !== "sizes" &&
+            this.renderAllFilterOption(
+              type,
+              category,
+              selectAllCheckbox,
+              totalCount
+            )}
+          {category === "in_stock"
+            ? Object.entries(finalData).map(this.renderOption)
+            : category === searchFacetKey
+            ? Object.entries(searchData).map(this.renderOption)
+            : category === "sizes" && !isMobile.any()
+            ? Object.entries(sizeData).map(this.renderSizeOption)
+            : Object.keys(data).length
+            ? Object.entries(data).map(this.renderOption)
+            : Object.entries(subcategories).map(this.renderOption)}
         </ul>
       </>
     );
   }
 
-
-
-  renderFilterSearchbox() {
+  renderAllFilterOption(type, initialFacetKey, checked, totalCount) {
+    let product_count = totalCount;
+    const { isArabic } = this.state;
     return (
-      <input type="text" onChange={(event) => this.handleFilterSearch(event)} />
-    )
+      <li
+        ref={this.allOptionRef}
+        block="PLPFilterOption"
+        elem="List"
+        mods={{ isArabic }}
+      >
+        <Field
+          formRef={this.allFieldRef}
+          onClick={() => {}}
+          mix={{
+            block: "PLPFilterOption",
+            elem: "Input",
+          }}
+          type={type}
+          id={"all" + initialFacetKey}
+          name={initialFacetKey}
+          value={"all"}
+          checked={checked}
+        />
+        <label block="PLPFilterOption" htmlFor={"all"}>
+          All
+          <span>{`(${product_count})`}</span>
+        </label>
+      </li>
+    );
+  }
+
+  renderFilterSearchbox(label, category) {
+    let placeholder = label
+      ? label
+      : `${category.charAt(0).toUpperCase()}${
+          category.split(category.charAt(0))[1]
+        }`;
+    const { isArabic } = this.state;
+    return (
+      <div block="Search-Container">
+        <input
+          type="text"
+          id={category}
+          placeholder={`Search ${placeholder}`}
+          onChange={(event) => this.handleFilterSearch(event)}
+        />
+        <button
+          block="FilterSearch"
+          elem="SubmitBtn"
+          mods={{ isArabic }}
+          type="submit"
+        >
+          <Image lazyLoad={false} src={searchPng} alt="search" />
+        </button>
+      </div>
+    );
   }
 
   handleFilterSearch(event) {
-    const { filter: { data = {} } } = this.props;
+    const {
+      filter: { data = {} },
+      initialOptions,
+    } = this.props;
+    const facet_key = event.target.id;
     let allData = data ? data : null;
     let value = event.target.value;
-    let finalSearchedData = {}
-    Object.keys(allData).filter(key => {
-      if (key.toLowerCase().includes(value.toLowerCase())) {
-        finalSearchedData[key] = allData[key]
-      }
-    })
+    let finalSearchedData = {};
+    if (facet_key === "categories_without_path") {
+      let categoryLevel1 = initialOptions.q.split(" ")[1];
+      let categoryData = data[categoryLevel1].subcategories;
+      Object.keys(categoryData).filter((key) => {
+        if (key.toLowerCase().includes(value.toLowerCase())) {
+          finalSearchedData[key] = categoryData[key];
+        }
+      });
+    } else {
+      Object.keys(allData).filter((key) => {
+        if (key.toLowerCase().includes(value.toLowerCase())) {
+          finalSearchedData[key] = allData[key];
+        }
+      });
+    }
 
     if (finalSearchedData) {
       this.setState({
-        brandList: finalSearchedData,
-        brandSearchKey: value
-      })
+        searchList: finalSearchedData,
+        searchKey: value,
+        searchFacetKey: facet_key,
+      });
     }
-
   }
-
 
   onCheckboxOptionClick = () => {
     this.filterButtonRef.current.focus();
@@ -365,9 +520,11 @@ class FieldMultiselect extends PureComponent {
   };
 
   renderOptionSelected() {
-    const { filter: { data } } = this.props;
-    if(this.props.isSortBy){
-      return null
+    const {
+      filter: { data },
+    } = this.props;
+    if (this.props.isSortBy) {
+      return null;
     }
     if (data) {
       return (
@@ -375,32 +532,57 @@ class FieldMultiselect extends PureComponent {
           <ul block="selectedOptionLists">
             {Object.values(data).map(function (values, keys) {
               if (values.subcategories) {
-                return Object.values(values.subcategories).map(function (val, key) {
+                return Object.values(values.subcategories).map(function (
+                  val,
+                  key
+                ) {
                   if (val.is_selected === true) {
                     return (
-                      <li key={key}>{val.label}, </li>
-                    )
+                      <li key={key} block="selectedListItem">
+                        {val.label}
+                      </li>
+                    );
                   }
-                })
+                });
               } else {
                 if (values.is_selected === true) {
                   return (
-                    <li key={keys}>{values.label}, </li>
-                  )
+                    <li key={keys} block="selectedListItem">
+                      {values.label}
+                    </li>
+                  );
                 }
               }
             })}
           </ul>
         </div>
-      )
-
+      );
     }
-
   }
 
   renderMultiselectContainer() {
     const { toggleOptionsList, isArabic } = this.state;
-    const { placeholder, isHidden, filter } = this.props;
+    const {
+      placeholder,
+      isHidden,
+      filter: { data = {}, subcategories = {}, category, is_radio, label },
+      initialOptions,
+    } = this.props;
+
+    const datakeys = [];
+    if (category === "sizes") {
+      Object.keys(data).map((key) => {
+        datakeys.push({ key: key, value: data[key].label.split(" ")[1] });
+      });
+    }
+    let conditionalData = data ? data : subcategories;
+
+    if (category === "categories_without_path") {
+      let categoryLevel1 = initialOptions.q.split(" ")[1];
+      if (data[categoryLevel1]) {
+        conditionalData = data[categoryLevel1].subcategories;
+      }
+    }
 
     return (
       <div
@@ -426,7 +608,19 @@ class FieldMultiselect extends PureComponent {
           {placeholder}
         </button>
         {isMobile.any() ? null : this.renderOptionSelected()}
-
+        {!isMobile.any() && toggleOptionsList && (
+          <>
+            {Object.keys(conditionalData).length > 10
+              ? this.renderFilterSearchbox(label, category)
+              : null}
+            {category === "sizes" && !isMobile.any()
+              ? this.renderSizeDropDown(datakeys)
+              : null}
+            {category !== "sizes" &&
+              !is_radio &&
+              this.renderUnselectButton(category)}
+          </>
+        )}
         <div
           block="FieldMultiselect"
           elem="OptionListContainer"

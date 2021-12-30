@@ -34,13 +34,6 @@ class PLPPages extends PureComponent {
     };
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    const { filters } = this.props;
-    const { filters: prevFilters } = prevProps;
-    if (JSON.stringify(prevFilters) !== JSON.stringify(filters)) {
-      this.renderActiveFilter();
-    }
-  }
   renderPage = ([key, page]) => {
     const { products, isPlaceholder, isFirst = false } = page; 
     this.setState({
@@ -92,56 +85,12 @@ class PLPPages extends PureComponent {
     return Object.entries(pages).map(this.renderPage);
   }
 
-  renderActiveFilter() {
-    const { filters } = this.props;
-    const thisRef = this;
-    {
-      Object.values(filters).map(function (values, index) {
-        if (values.data) {
-          return Object.values(values.data).map(function (value, index) {
-            if (value.subcategories) {
-              return Object.values(value.subcategories).map(function (
-                val,
-                index
-              ) {
-                if (val.is_selected === true) {
-                  const { facet_key, facet_value } = val;
-                  thisRef.selectActiveFilter(facet_key, facet_value);
-                }
-              });
-            } else {
-              if (
-                value.is_selected === true &&
-                value.facet_key !== "categories.level1"
-              ) {
-                const { facet_key, facet_value } = value;
-                thisRef.selectActiveFilter(facet_key, facet_value);
-              }
-            }
-          });
-        }
-      });
-    }
-  }
+  OnDeselectFilter = (val, values) => {
+    const { facet_key, facet_value } = val;
+    const { is_radio } = values;
+    this.handleCallback(facet_key, facet_value, false, is_radio, false);
+  };
 
-  selectActiveFilter(initialFacetKey, facet_value) {
-    const { activeFilters } = this.state;
-    const filterArray = activeFilters[initialFacetKey];
-
-    this.setState(
-      {
-        activeFilters: {
-          ...activeFilters,
-          [initialFacetKey]: filterArray
-            ? [...filterArray, facet_value]
-            : [facet_value],
-        },
-      },
-      () => {
-        this.select(false);
-      }
-    );
-  }
   renderSelectedFilters() {
     const selectedFilters = this.props.filters;
     const thisRef = this;
@@ -159,17 +108,9 @@ class PLPPages extends PureComponent {
                     if (val.is_selected === true) {
                       return (
                         <li>
-                          {thisRef.renderButtonView(val.label, () => {
-                            const { facet_key, facet_value } = val;
-                            const { is_radio } = values;
-                            thisRef.handleCallback(
-                              facet_key,
-                              facet_value,
-                              false,
-                              is_radio,
-                              false
-                            );
-                          })}
+                          {thisRef.renderButtonView(val.label, () =>
+                            thisRef.OnDeselectFilter(val, values)
+                          )}
                         </li>
                       );
                     }
@@ -181,17 +122,9 @@ class PLPPages extends PureComponent {
                   ) {
                     return (
                       <li>
-                        {thisRef.renderButtonView(value.label, () => {
-                          const { facet_key, facet_value } = value;
-                          const { is_radio } = values;
-                          thisRef.handleCallback(
-                            facet_key,
-                            facet_value,
-                            false,
-                            is_radio,
-                            false
-                          );
-                        })}
+                        {thisRef.renderButtonView(value.label, () =>
+                          thisRef.OnDeselectFilter(value, values)
+                        )}
                       </li>
                     );
                   }
@@ -229,7 +162,6 @@ class PLPPages extends PureComponent {
     return (
       <button
         onClick={onClick}
-        onKeyDown={() => {}}
         aria-label="Dismiss"
         tabIndex={0}
         block="PLPPageFilter"
@@ -240,6 +172,74 @@ class PLPPages extends PureComponent {
     );
   }
 
+  updateInitialFilters = (
+    data,
+    facet_value,
+    newFilterArray,
+    categoryLevel1,
+    checked,
+    facet_key
+  ) => {
+    if (data[facet_value]) {
+      data[facet_value].is_selected = checked;
+      if (checked) {
+        newFilterArray.selected_filters_count += 1;
+      } else {
+        newFilterArray.selected_filters_count -= 1;
+      }
+    } else {
+      let categoryDataStatus = categoryLevel1 || facet_key.includes("size");
+      if (categoryDataStatus) {
+        let categoryData = facet_key.includes("size")
+          ? data[facet_key]
+          : data[categoryLevel1];
+        if (
+          categoryData.subcategories &&
+          categoryData.subcategories[facet_value]
+        ) {
+          categoryData.subcategories[facet_value].is_selected = checked;
+          if (checked) {
+            categoryData.selected_filters_count += 1;
+            newFilterArray.selected_filters_count += 1;
+          } else {
+            categoryData.selected_filters_count -= 1;
+            newFilterArray.selected_filters_count -= 1;
+          }
+        }
+      } else {
+        Object.keys(data).map((value) => {
+          if (
+            data[value].subcategories &&
+            data[value].subcategories[facet_value]
+          ) {
+            data[value].subcategories[facet_value].is_selected = checked;
+            if (checked) {
+              data[value].selected_filters_count += 1;
+              newFilterArray.selected_filters_count += 1;
+            } else {
+              data[value].selected_filters_count -= 1;
+              newFilterArray.selected_filters_count -= 1;
+            }
+          }
+        });
+      }
+    }
+  };
+
+  updateRadioFilters = (data, facet_value, newFilterArray) => {
+    if (data[facet_value]) {
+      Object.values(data).map((value) => {
+        if (value.facet_value === facet_value) {
+          value.is_selected = false;
+        }
+      });
+
+      if (newFilterArray.selected_filters_count === 1) {
+        newFilterArray.selected_filters_count = 0;
+      }
+    }
+  };
+
   handleCallback = (
     initialFacetKey,
     facet_value,
@@ -248,25 +248,80 @@ class PLPPages extends PureComponent {
     isQuickFilters = false
   ) => {
     const { activeFilters } = this.state;
+    const { filters, updatePLPInitialFilters, initialOptions } = this.props;
     const filterArray = activeFilters[initialFacetKey];
+    let newFilterArray = filters[initialFacetKey];
+    if (initialFacetKey.includes("size")) {
+      newFilterArray = filters["sizes"];
+    }
+    let categoryLevel1 = initialOptions.q.split(" ")[1];
 
     if (!isRadio) {
       if (filterArray) {
-        const index = filterArray.indexOf(facet_value);
-        if (index > -1) {
-          filterArray.splice(index, 1);
-        }
-        this.setState(
-          {
-            activeFilters: {
-              [initialFacetKey]: filterArray,
+        if (newFilterArray) {
+          const { data = {} } = newFilterArray;
+
+          this.updateInitialFilters(
+            data,
+            facet_value,
+            newFilterArray,
+            categoryLevel1,
+            false,
+            initialFacetKey
+          );
+          updatePLPInitialFilters(filters, initialFacetKey, facet_value);
+
+          const index = filterArray.indexOf(facet_value);
+          if (index > -1) {
+            filterArray.splice(index, 1);
+          }
+          this.setState(
+            {
+              activeFilters: {
+                [initialFacetKey]: filterArray,
+              },
             },
-          },
-          () => this.select()
-        );
+            () => this.select()
+          );
+        }
       } else {
+        if (newFilterArray) {
+          const { data = {} } = newFilterArray;
+
+          this.updateInitialFilters(
+            data,
+            facet_value,
+            newFilterArray,
+            categoryLevel1,
+            false,
+            initialFacetKey
+          );
+          updatePLPInitialFilters(filters, initialFacetKey, facet_value);
+          this.setState(
+            {
+              activeFilters: {
+                [initialFacetKey]: [],
+              },
+            },
+            () => this.select()
+          );
+        }
+      }
+    } else {
+      const { data = {} } = newFilterArray;
+
+      if (newFilterArray) {
+        this.updateRadioFilters(
+          data,
+          facet_value,
+          newFilterArray,
+          categoryLevel1,
+          true
+        );
+        updatePLPInitialFilters(filters, initialFacetKey, facet_value);
         this.setState(
           {
+            ...activeFilters,
             activeFilters: {
               [initialFacetKey]: [],
             },
@@ -274,23 +329,14 @@ class PLPPages extends PureComponent {
           () => this.select()
         );
       }
-    } else {
-      this.setState(
-        {
-          ...activeFilters,
-          activeFilters: {
-            [initialFacetKey]: facet_value,
-          },
-        },
-        () => this.select()
-      );
     }
   };
 
   select = (isQuickFilters) => {
     const { activeFilters = {} } = this.state;
-    const { query } = this.props;
+    const { query, updateFiltersState } = this.props;
     if (!isMobile.any() || isQuickFilters) {
+      updateFiltersState(activeFilters);
       Object.keys(activeFilters).map((key) =>
         WebUrlParser.setParam(key, activeFilters[key], query)
       );
@@ -304,16 +350,16 @@ class PLPPages extends PureComponent {
   }
 
   render() {
-
     return (
       <div block="PLPPages Products-Lists">
-        <div class="ProductToolBar">
-          <div block="ProductSelectedFilters">
-            {this.renderSelectedFilters()}
+        {!isMobile.any() && (
+          <div class="ProductToolBar">
+            <div block="ProductSelectedFilters">
+              {this.renderSelectedFilters()}
+            </div>
           </div>
+        )}
 
-          {/* {this.renderButtonView("sort ", this.toggleSortDropdown)} */}
-        </div>
         {this.renderPages()}
         {this.renderLoadMore()}
       </div>

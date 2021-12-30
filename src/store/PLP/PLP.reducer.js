@@ -109,21 +109,10 @@ export const PLPReducer = (state = getInitialState(), action) => {
         isInitial,
       } = action;
       const { page: initialPage } = requestedOptions;
-      const {
-        filters: stateInitialFilters,
-        lastSelectedKey,
-        lastSelectedValue,
-      } = state;
-      // const combinedFilters = combineFilters(
-      //   filters,
-      //   stateInitialFilters,
-      //   lastSelectedKey,
-      //   lastSelectedValue
-      // );
+
       return {
         ...state,
         filters: filters,
-        // filters: combinedFilters,
         options: requestedOptions,
         meta,
         pages: {

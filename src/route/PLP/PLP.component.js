@@ -18,6 +18,7 @@ export class PLP extends PureComponent {
       signInPopUp: "",
       showPopup: false,
       circleBannerUrl: null,
+      activeFilters: {},
     };
   }
 
@@ -66,12 +67,18 @@ export class PLP extends PureComponent {
   //     localStorage.removeItem("bannerData");
   // }
 
+  updateFiltersState = (activeFilters) => {
+    console.log("active filters", activeFilters);
+    this.setState({ activeFilters });
+  }
+
   renderPLPDetails() {
     return <PLPDetails {...this.props} />;
   }
 
   renderPLPFilters() {
-    return <PLPFilters {...this.props} />;
+    const { activeFilters } = this.state;
+    return <PLPFilters {...this.props} plpPageActiveFilters={activeFilters} />;
   }
 
   renderPLPPages() {
@@ -79,6 +86,7 @@ export class PLP extends PureComponent {
     return (
       <PLPPages
         {...this.props}
+        updateFiltersState={this.updateFiltersState}
         renderMySignInPopup={this.showMyAccountPopup}
         prevPath={prevPath}
       />
