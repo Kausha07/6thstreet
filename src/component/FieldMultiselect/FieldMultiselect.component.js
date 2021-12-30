@@ -690,12 +690,6 @@ class FieldMultiselect extends PureComponent {
             mods: { isArabic },
           }}
         >
-          {console.log(
-            "muskan",
-            Object.keys(conditionalData).length,
-            Object.keys(conditionalData).length > 10,
-            category
-          )}
           {isMobile.any() && Object.keys(conditionalData).length > 10
             ? this.renderFilterSearchbox(label, category)
             : null}

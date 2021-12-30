@@ -206,6 +206,9 @@
       padding: 0px;
     }
   }
+    @include desktop{
+        position: unset;
+    }
   .PLPFilters {
     // margin: 0 20px;
     // display: flex;
@@ -218,6 +221,7 @@
     ////margin-block: 10px;
     @include desktop() {
       margin-top: 22px;
+      position: unset;
     }
     .FieldMultiselect {
       direction: unset;
@@ -385,55 +389,56 @@
         }
       }
     }
-    .SortBy {
-      position: fixed;
-      right: 168px;
-      z-index: 5;
-      top: 220px;
-      height: 34px;
-      width: 87px;
-      border: 1px solid #000000;
-      border-radius: 8px;
-      background-color: #ffffff;
-      .FieldMultiselect {
-        height: 34px;
-        &-FilterButton {
-          padding: 7px 0;
-          font-size: 13px;
-          font-weight: 600;
-          letter-spacing: 0;
-          text-align: right;
-          padding-right: 7px;
-          &::after {
-            display: none;
-          }
-        }
-        &-OptionListContainer {
-          width: 180px;
-          padding-left: 10px;
-          padding-right: 10px;
-          margin-top: 5px;
-          &_toggleOptionsList {
-            max-height: 245px;
-            box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.15);
-            border-radius: 12px;
-            .PLPFilter {
-              ul {
-                li {
-                  border-bottom: 1px solid #e6e6e6;
-                }
-              }
-            }
-          }
-        }
-      }
-      img {
+    .SortBy{
         position: absolute;
-        width: 20px;
-        height: 20px;
-        top: 7px;
-        left: 2px;
-      }
+        z-index: 2;
+        top: 25px;
+        right: 0;
+        height: 34px;
+        width: 87px;
+        border: 1px solid #000000;
+        border-radius: 8px;
+        background-color: #FFFFFF;
+        .FieldMultiselect{
+            height: 34px;
+            border-bottom: unset;
+            &-FilterButton{
+                padding: 7px 0;
+                font-size: 13px;
+                font-weight: 600;
+                letter-spacing: 0;
+                text-align: right;
+                padding-right: 7px;
+                &::after{
+                    display: none;
+                }
+            }
+            &-OptionListContainer{
+                width: 180px;
+                padding-left: 10px;
+                padding-right: 10px;
+                margin-top: 5px;
+                &_toggleOptionsList{
+                    max-height: 245px;
+                    box-shadow: 0 0 10px 0 rgba(0, 0, 0,  0.15);
+                    border-radius: 12px;
+                    .PLPFilter{
+                        ul{
+                            li{
+                                border-bottom: 1px solid #e6e6e6;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        img{
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 7px;
+            left: 2px;
+        }
     }
-  }
+    }
 }
